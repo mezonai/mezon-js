@@ -1,0 +1,16 @@
+{
+    "name": "@heroiclabs/nakama-js-webpack-example",
+    "version": "1.0.0",
+    "description": "An example project that utilizes nakama-js and Webpack",
+    "private": true,
+    "license": "Apache-2.0",
+    "dependencies": {
+        "@heroiclabs/nakama-js": "file:../nakama-js",
+        "ts-loader": "^8.0.14",
+        "webpack": "^5.76.0",
+        "webpack-cli": "^4.3.1"
+    },
+    "scripts": {
+        "build": "npx webpack --config webpack.config.js"
+    }
+}
