@@ -213,6 +213,9 @@ npx protoc \
 $GOPATH/src/github.com/heroiclabs/nakama-common/rtapi/realtime.proto \
 $GOPATH/src/github.com/heroiclabs/nakama-common/api/api.proto
 ```
+```shell
+npx protoc --plugin="./node_modules/.bin/protoc-gen-ts_proto.cmd" --proto_path=../../../mezon-common --ts_proto_out=./ --ts_proto_opt=snakeToCamel=false --ts_proto_opt=esModuleInterop=true ../../../mezon-common/rtapi/realtime.proto ../../../mezon-common/api/api.proto
+```
 
 ### Release Process
 
