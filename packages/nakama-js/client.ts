@@ -1585,13 +1585,14 @@ export class Client {
   }
 
   /** Execute an RPC function on the server. */
-  async rpc(session: Session, id: string, input: object): Promise<RpcResponse> {
+  async rpc(session: Session, basicAuthUsername: string,
+		basicAuthPassword: string, id: string, input: object): Promise<RpcResponse> {
     if (this.autoRefreshSession && session.refresh_token &&
         session.isexpired((Date.now() + this.expiredTimespanMs)/1000)) {
         await this.sessionRefresh(session);
     }
 
-    return this.apiClient.rpcFunc(session.token, id, JSON.stringify(input)).then((response: ApiRpc) => {
+    return this.apiClient.rpcFunc(session.token, basicAuthUsername, basicAuthPassword, id, JSON.stringify(input)).then((response: ApiRpc) => {
       return Promise.resolve({
         id: response.id,
         payload: (!response.payload) ? undefined : JSON.parse(response.payload)
