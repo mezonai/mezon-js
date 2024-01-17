@@ -485,7 +485,7 @@ export declare class Client {
     /** Fetch storage objects. */
     readStorageObjects(session: Session, request: ApiReadStorageObjectsRequest): Promise<StorageObjects>;
     /** Execute an RPC function on the server. */
-    rpc(session: Session, id: string, input: object): Promise<RpcResponse>;
+    rpc(session: Session, basicAuthUsername: string, basicAuthPassword: string, id: string, input: object): Promise<RpcResponse>;
     /** Execute an RPC function on the server. */
     rpcHttpKey(httpKey: string, id: string, input?: object): Promise<RpcResponse>;
     /** Log out a session, invalidate a refresh token, or log out all sessions/refresh tokens for a user. */
