@@ -11,7 +11,7 @@
     "exports": {
         "./package.json": "./package.json",
         ".": {
-	    "types": "./dist/index.d.ts",
+            "types": "./dist/index.d.ts",
             "import": "./dist/nakama-js.esm.mjs",
             "require": "./dist/nakama-js.cjs.js"
         }
@@ -36,6 +36,7 @@
     "dependencies": {
         "@scarf/scarf": "^1.1.1",
         "base64-arraybuffer": "^1.0.2",
+        "esbuild": "^0.19.11",
         "js-base64": "^3.7.4",
         "whatwg-fetch": "^3.6.2"
     },

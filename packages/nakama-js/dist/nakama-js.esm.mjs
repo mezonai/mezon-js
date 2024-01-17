@@ -541,7 +541,7 @@ var b64tab = ((a) => {
 })(b64chs);
 var b64re = /^(?:[A-Za-z\d+\/]{4})*?(?:[A-Za-z\d+\/]{2}(?:==)?|[A-Za-z\d+\/]{3}=?)?$/;
 var _fromCC = String.fromCharCode.bind(String);
-var _U8Afrom = typeof Uint8Array.from === "function" ? Uint8Array.from.bind(Uint8Array) : (it) => new Uint8Array(Array.prototype.slice.call(it, 0));
+var _U8Afrom = typeof Uint8Array.from === "function" ? Uint8Array.from.bind(Uint8Array) : (it, fn = (x) => x) => new Uint8Array(Array.prototype.slice.call(it, 0).map(fn));
 var _mkUriSafe = (src) => src.replace(/=/g, "").replace(/[+\/]/g, (m0) => m0 == "+" ? "-" : "_");
 var _tidyB64 = (s) => s.replace(/[^A-Za-z0-9\+\/]/g, "");
 var btoaPolyfill = (bin) => {
@@ -603,7 +603,7 @@ var atobPolyfill = (asc) => {
   return bin;
 };
 var _atob = _hasatob ? (asc) => atob(_tidyB64(asc)) : _hasBuffer ? (asc) => Buffer.from(asc, "base64").toString("binary") : atobPolyfill;
-var _toUint8Array = _hasBuffer ? (a) => _U8Afrom(Buffer.from(a, "base64")) : (a) => _U8Afrom(_atob(a).split("").map((c) => c.charCodeAt(0)));
+var _toUint8Array = _hasBuffer ? (a) => _U8Afrom(Buffer.from(a, "base64")) : (a) => _U8Afrom(_atob(a), (c) => c.charCodeAt(0));
 var _decode = _hasBuffer ? (a) => Buffer.from(a, "base64").toString("utf8") : _TD ? (a) => _TD.decode(_toUint8Array(a)) : (a) => btou(_atob(a));
 var _unURI = (a) => _tidyB64(a.replace(/[-_]/g, (m0) => m0 == "-" ? "+" : "/"));
 var decode2 = (src) => _decode(_unURI(src));
@@ -2922,7 +2922,7 @@ var NakamaApi = class {
 };
 
 // session.ts
-var Session = class {
+var Session = class _Session {
   constructor(token, refresh_token, created) {
     this.created = created;
     this.token = token;
@@ -2960,7 +2960,7 @@ var Session = class {
     this.vars = tokenDecoded["vrs"];
   }
   static restore(token, refreshToken) {
-    return new Session(token, refreshToken, false);
+    return new _Session(token, refreshToken, false);
   }
 };
 
@@ -3080,7 +3080,7 @@ var WebSocketAdapterText = class {
 };
 
 // socket.ts
-var _DefaultSocket = class {
+var _DefaultSocket = class _DefaultSocket {
   constructor(host, port, useSSL = false, verbose = false, adapter = new WebSocketAdapterText(), sendTimeoutMs = _DefaultSocket.DefaultSendTimeoutMs) {
     this.host = host;
     this.port = port;
@@ -3557,10 +3557,10 @@ var _DefaultSocket = class {
     });
   }
 };
+_DefaultSocket.DefaultHeartbeatTimeoutMs = 1e4;
+_DefaultSocket.DefaultSendTimeoutMs = 1e4;
+_DefaultSocket.DefaultConnectTimeoutMs = 3e4;
 var DefaultSocket = _DefaultSocket;
-DefaultSocket.DefaultHeartbeatTimeoutMs = 1e4;
-DefaultSocket.DefaultSendTimeoutMs = 1e4;
-DefaultSocket.DefaultConnectTimeoutMs = 3e4;
 
 // client.ts
 var DEFAULT_HOST = "127.0.0.1";
