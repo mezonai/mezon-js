@@ -6,413 +6,427 @@ import { encode } from 'js-base64';
 
 /** A single user-role pair. */
 export interface GroupUserListGroupUser {
-  // Their relationship to the group.
+  //Their relationship to the group.
   state?: number;
-  // User.
+  //User.
   user?: ApiUser;
 }
 
 /** A single group-role pair. */
 export interface UserGroupListUserGroup {
-  // Group.
+  //Group.
   group?: ApiGroup;
-  // The user's relationship to the group.
+  //The user's relationship to the group.
   state?: number;
-}
-
-/**
-* Environment where the purchase took place
-*/
-export enum ValidatedPurchaseEnvironment
-{
-    /* - UNKNOWN: Unknown environment. */
-    UNKNOWN = 0,
-    /*  - SANDBOX: Sandbox/test environment. */
-    SANDBOX = 1,
-    /*  - PRODUCTION: Production environment. */
-    PRODUCTION = 2,
-}
-
-/**
-* Validation Provider
-*/
-export enum ValidatedPurchaseStore
-{
-    /* - APPLE_APP_STORE: Apple App Store */
-    APPLE_APP_STORE = 0,
-    /*  - GOOGLE_PLAY_STORE: Google Play Store */
-    GOOGLE_PLAY_STORE = 1,
-    /*  - HUAWEI_APP_GALLERY: Huawei App Gallery */
-    HUAWEI_APP_GALLERY = 2,
 }
 
 /** Record values to write. */
 export interface WriteLeaderboardRecordRequestLeaderboardRecordWrite {
-  // Optional record metadata.
+  //Optional record metadata.
   metadata?: string;
-  // Operator override.
+  //Operator override.
   operator?: ApiOperator;
-  // The score value to submit.
+  //The score value to submit.
   score?: string;
-  // An optional secondary value.
+  //An optional secondary value.
   subscore?: string;
 }
 
 /** Record values to write. */
 export interface WriteTournamentRecordRequestTournamentRecordWrite {
-  // A JSON object of additional properties (optional).
+  //A JSON object of additional properties (optional).
   metadata?: string;
-  // Operator override.
+  //Operator override.
   operator?: ApiOperator;
-  // The score value to submit.
+  //The score value to submit.
   score?: string;
-  // An optional secondary value.
+  //An optional secondary value.
   subscore?: string;
 }
 
 /** A user with additional account details. Always the current user. */
 export interface ApiAccount {
-  // The custom id in the user's account.
+  //The custom id in the user's account.
   custom_id?: string;
-  // The devices which belong to the user's account.
+  //The devices which belong to the user's account.
   devices?: Array<ApiAccountDevice>;
-  // The UNIX time when the user's account was disabled/banned.
+  //The UNIX time (for gRPC clients) or ISO string (for REST clients) when the user's account was disabled/banned.
   disable_time?: string;
-  // The email address of the user.
+  //The email address of the user.
   email?: string;
-  // The user object.
+  //The user object.
   user?: ApiUser;
-  // The UNIX time when the user's email was verified.
+  //The UNIX time (for gRPC clients) or ISO string (for REST clients) when the user's email was verified.
   verify_time?: string;
-  // The user's wallet data.
+  //The user's wallet data.
   wallet?: string;
 }
 
 /** Send a Apple Sign In token to the server. Used with authenticate/link/unlink. */
 export interface ApiAccountApple {
-  // The ID token received from Apple to validate.
+  //The ID token received from Apple to validate.
   token?: string;
-  // Extra information that will be bundled in the session token.
+  //Extra information that will be bundled in the session token.
   vars?: Record<string, string>;
 }
 
 /** Send a custom ID to the server. Used with authenticate/link/unlink. */
 export interface ApiAccountCustom {
-  // A custom identifier.
+  //A custom identifier.
   id?: string;
-  // Extra information that will be bundled in the session token.
+  //Extra information that will be bundled in the session token.
   vars?: Record<string, string>;
 }
 
 /** Send a device to the server. Used with authenticate/link/unlink and user. */
 export interface ApiAccountDevice {
-  // A device identifier. Should be obtained by a platform-specific device API.
+  //A device identifier. Should be obtained by a platform-specific device API.
   id?: string;
-  // Extra information that will be bundled in the session token.
+  //Extra information that will be bundled in the session token.
   vars?: Record<string, string>;
 }
 
 /** Send an email with password to the server. Used with authenticate/link/unlink. */
 export interface ApiAccountEmail {
-  // A valid RFC-5322 email address.
+  //A valid RFC-5322 email address.
   email?: string;
-  // A password for the user account.
+  //A password for the user account.  Ignored with unlink operations.
   password?: string;
-  // Extra information that will be bundled in the session token.
+  //Extra information that will be bundled in the session token.
   vars?: Record<string, string>;
 }
 
 /** Send a Facebook token to the server. Used with authenticate/link/unlink. */
 export interface ApiAccountFacebook {
-  // The OAuth token received from Facebook to access their profile API.
+  //The OAuth token received from Facebook to access their profile API.
   token?: string;
-  // Extra information that will be bundled in the session token.
+  //Extra information that will be bundled in the session token.
   vars?: Record<string, string>;
 }
 
 /** Send a Facebook Instant Game token to the server. Used with authenticate/link/unlink. */
 export interface ApiAccountFacebookInstantGame {
-  // 
+  //
   signed_player_info?: string;
-  // Extra information that will be bundled in the session token.
+  //Extra information that will be bundled in the session token.
   vars?: Record<string, string>;
 }
 
-/** Send Apple's Game Center account credentials to the server. Used with authenticate/link/unlink. */
+/** Send Apple's Game Center account credentials to the server. Used with authenticate/link/unlink.
+
+https://developer.apple.com/documentation/gamekit/gklocalplayer/1515407-generateidentityverificationsign */
 export interface ApiAccountGameCenter {
-  // Bundle ID (generated by GameCenter).
+  //Bundle ID (generated by GameCenter).
   bundle_id?: string;
-  // Player ID (generated by GameCenter).
+  //Player ID (generated by GameCenter).
   player_id?: string;
-  // The URL for the public encryption key.
+  //The URL for the public encryption key.
   public_key_url?: string;
-  // A random "NSString" used to compute the hash and keep it randomized.
+  //A random "NSString" used to compute the hash and keep it randomized.
   salt?: string;
-  // The verification signature data generated.
+  //The verification signature data generated.
   signature?: string;
-  // Time since UNIX epoch when the signature was created.
+  //Time since UNIX epoch when the signature was created.
   timestamp_seconds?: string;
-  // Extra information that will be bundled in the session token.
+  //Extra information that will be bundled in the session token.
   vars?: Record<string, string>;
 }
 
 /** Send a Google token to the server. Used with authenticate/link/unlink. */
 export interface ApiAccountGoogle {
-  // The OAuth token received from Google to access their profile API.
+  //The OAuth token received from Google to access their profile API.
   token?: string;
-  // Extra information that will be bundled in the session token.
+  //Extra information that will be bundled in the session token.
   vars?: Record<string, string>;
 }
 
 /** Send a Steam token to the server. Used with authenticate/link/unlink. */
 export interface ApiAccountSteam {
-  // The account token received from Steam to access their profile API.
+  //The account token received from Steam to access their profile API.
   token?: string;
-  // Extra information that will be bundled in the session token.
+  //Extra information that will be bundled in the session token.
   vars?: Record<string, string>;
+}
+
+/** A list of channel description, usually a result of a list operation. */
+export interface ApiChannelDescList {
+  //Cacheable cursor to list newer channel description. Durable and designed to be stored, unlike next/prev cursors.
+  cacheable_cursor?: string;
+  //A list of channel.
+  channeldesc?: Array<ApiChannelDescription>;
+  //The cursor to send when retrieving the next page, if any.
+  next_cursor?: string;
+  //The cursor to send when retrieving the previous page, if any.
+  prev_cursor?: string;
+}
+
+/**  */
+export interface ApiChannelDescription {
+  //The username of the message sender, if any.
+  change_lable?: string;
+  //The channel this message belongs to.
+  channel_id?: string;
+  //
+  clan_id?: string;
+  //The code representing a message type or category.
+  code?: number;
+  //The unique ID of this message.
+  message_id?: string;
+  //Message sender, usually a user ID.
+  sender_id?: string;
 }
 
 /** A message sent on a channel. */
 export interface ApiChannelMessage {
-  // The channel this message belongs to.
+  //The channel this message belongs to.
   channel_id?: string;
-  // The code representing a message type or category.
+  //The code representing a message type or category.
   code?: number;
-  // The content payload.
+  //The content payload.
   content?: string;
-  // The UNIX time when the message was created.
+  //The UNIX time (for gRPC clients) or ISO string (for REST clients) when the message was created.
   create_time?: string;
-  // The ID of the group, or an empty string if this message was not sent through a group channel.
+  //The ID of the group, or an empty string if this message was not sent through a group channel.
   group_id?: string;
-  // The unique ID of this message.
+  //The unique ID of this message.
   message_id?: string;
-  // True if the message was persisted to the channel's history, false otherwise.
+  //True if the message was persisted to the channel's history, false otherwise.
   persistent?: boolean;
-  // The name of the chat room, or an empty string if this message was not sent through a chat room.
+  //The name of the chat room, or an empty string if this message was not sent through a chat room.
   room_name?: string;
-  // Message sender, usually a user ID.
+  //Message sender, usually a user ID.
   sender_id?: string;
-  // The UNIX time when the message was last updated.
+  //The UNIX time (for gRPC clients) or ISO string (for REST clients) when the message was last updated.
   update_time?: string;
-  // The ID of the first DM user, or an empty string if this message was not sent through a DM chat.
+  //The ID of the first DM user, or an empty string if this message was not sent through a DM chat.
   user_id_one?: string;
-  // The ID of the second DM user, or an empty string if this message was not sent through a DM chat.
+  //The ID of the second DM user, or an empty string if this message was not sent through a DM chat.
   user_id_two?: string;
-  // The username of the message sender, if any.
+  //The username of the message sender, if any.
   username?: string;
 }
 
 /** A list of channel messages, usually a result of a list operation. */
 export interface ApiChannelMessageList {
-  // Cacheable cursor to list newer messages. Durable and designed to be stored, unlike next/prev cursors.
+  //Cacheable cursor to list newer messages. Durable and designed to be stored, unlike next/prev cursors.
   cacheable_cursor?: string;
-  // A list of messages.
+  //A list of messages.
   messages?: Array<ApiChannelMessage>;
-  // The cursor to send when retrieving the next page, if any.
+  //The cursor to send when retrieving the next page, if any.
   next_cursor?: string;
-  // The cursor to send when retrieving the previous page, if any.
+  //The cursor to send when retrieving the previous page, if any.
   prev_cursor?: string;
 }
 
 /** Create a group with the current user as owner. */
 export interface ApiCreateGroupRequest {
-  // A URL for an avatar image.
+  //A URL for an avatar image.
   avatar_url?: string;
-  // A description for the group.
+  //A description for the group.
   description?: string;
-  // The language expected to be a tag which follows the BCP-47 spec.
+  //The language expected to be a tag which follows the BCP-47 spec.
   lang_tag?: string;
-  // Maximum number of group members.
+  //Maximum number of group members.
   max_count?: number;
-  // A unique name for the group.
+  //A unique name for the group.
   name?: string;
-  // Mark a group as open or not where only admins can accept members.
+  //Mark a group as open or not where only admins can accept members.
   open?: boolean;
 }
 
 /** Storage objects to delete. */
 export interface ApiDeleteStorageObjectId {
-  // The collection which stores the object.
+  //The collection which stores the object.
   collection?: string;
-  // The key of the object within the collection.
+  //The key of the object within the collection.
   key?: string;
-  // The version hash of the object.
+  //The version hash of the object.
   version?: string;
 }
 
 /** Batch delete storage objects. */
 export interface ApiDeleteStorageObjectsRequest {
-  // Batch of storage objects.
+  //Batch of storage objects.
   object_ids?: Array<ApiDeleteStorageObjectId>;
 }
 
 /** Represents an event to be passed through the server to registered event handlers. */
 export interface ApiEvent {
-  // True if the event came directly from a client call, false otherwise.
+  //True if the event came directly from a client call, false otherwise.
   external?: boolean;
-  // An event name, type, category, or identifier.
+  //An event name, type, category, or identifier.
   name?: string;
-  // Arbitrary event property values.
+  //Arbitrary event property values.
   properties?: Record<string, string>;
-  // The time when the event was triggered.
+  //The time when the event was triggered.
   timestamp?: string;
 }
 
 /** A friend of a user. */
 export interface ApiFriend {
-  // The friend status.
+  //The friend status.  one of "Friend.State".
   state?: number;
-  // Time of the latest relationship update.
+  //Time of the latest relationship update.
   update_time?: string;
-  // The user object.
+  //The user object.
   user?: ApiUser;
 }
 
 /** A collection of zero or more friends of the user. */
 export interface ApiFriendList {
-  // Cursor for the next page of results, if any.
+  //Cursor for the next page of results, if any.
   cursor?: string;
-  // The Friend objects.
+  //The Friend objects.
   friends?: Array<ApiFriend>;
 }
 
 /** A group in the server. */
 export interface ApiGroup {
-  // A URL for an avatar image.
+  //A URL for an avatar image.
   avatar_url?: string;
-  // The UNIX time when the group was created.
+  //The UNIX time (for gRPC clients) or ISO string (for REST clients) when the group was created.
   create_time?: string;
-  // The id of the user who created the group.
+  //The id of the user who created the group.
   creator_id?: string;
-  // A description for the group.
+  //A description for the group.
   description?: string;
-  // The current count of all members in the group.
+  //The current count of all members in the group.
   edge_count?: number;
-  // The id of a group.
+  //The id of a group.
   id?: string;
-  // The language expected to be a tag which follows the BCP-47 spec.
+  //The language expected to be a tag which follows the BCP-47 spec.
   lang_tag?: string;
-  // The maximum number of members allowed.
+  //The maximum number of members allowed.
   max_count?: number;
-  // Additional information stored as a JSON object.
+  //Additional information stored as a JSON object.
   metadata?: string;
-  // The unique name of the group.
+  //The unique name of the group.
   name?: string;
-  // Anyone can join open groups, otherwise only admins can accept members.
+  //Anyone can join open groups, otherwise only admins can accept members.
   open?: boolean;
-  // The UNIX time when the group was last updated.
+  //The UNIX time (for gRPC clients) or ISO string (for REST clients) when the group was last updated.
   update_time?: string;
 }
 
 /** One or more groups returned from a listing operation. */
 export interface ApiGroupList {
-  // A cursor used to get the next page.
+  //A cursor used to get the next page.
   cursor?: string;
-  // One or more groups.
+  //One or more groups.
   groups?: Array<ApiGroup>;
 }
 
 /** A list of users belonging to a group, along with their role. */
 export interface ApiGroupUserList {
-  // Cursor for the next page of results, if any.
+  //Cursor for the next page of results, if any.
   cursor?: string;
-  // User-role pairs for a group.
+  //User-role pairs for a group.
   group_users?: Array<GroupUserListGroupUser>;
 }
 
 /** Represents a complete leaderboard record with all scores and associated metadata. */
 export interface ApiLeaderboardRecord {
-  // The UNIX time when the leaderboard record was created.
+  //The UNIX time (for gRPC clients) or ISO string (for REST clients) when the leaderboard record was created.
   create_time?: string;
-  // The UNIX time when the leaderboard record expires.
+  //The UNIX time (for gRPC clients) or ISO string (for REST clients) when the leaderboard record expires.
   expiry_time?: string;
-  // The ID of the leaderboard this score belongs to.
+  //The ID of the leaderboard this score belongs to.
   leaderboard_id?: string;
-  // The maximum number of score updates allowed by the owner.
+  //The maximum number of score updates allowed by the owner.
   max_num_score?: number;
-  // Metadata.
+  //Metadata.
   metadata?: string;
-  // The number of submissions to this score record.
+  //The number of submissions to this score record.
   num_score?: number;
-  // The ID of the score owner, usually a user or group.
+  //The ID of the score owner, usually a user or group.
   owner_id?: string;
-  // The rank of this record.
+  //The rank of this record.
   rank?: string;
-  // The score value.
+  //The score value.
   score?: string;
-  // An optional subscore value.
+  //An optional subscore value.
   subscore?: string;
-  // The UNIX time when the leaderboard record was updated.
+  //The UNIX time (for gRPC clients) or ISO string (for REST clients) when the leaderboard record was updated.
   update_time?: string;
-  // The username of the score owner, if the owner is a user.
+  //The username of the score owner, if the owner is a user.
   username?: string;
 }
 
 /** A set of leaderboard records, may be part of a leaderboard records page or a batch of individual records. */
 export interface ApiLeaderboardRecordList {
-  // The cursor to send when retrieving the next page, if any.
+  //The cursor to send when retrieving the next page, if any.
   next_cursor?: string;
-  // A batched set of leaderboard records belonging to specified owners.
+  //A batched set of leaderboard records belonging to specified owners.
   owner_records?: Array<ApiLeaderboardRecord>;
-  // The cursor to send when retrieving the previous page, if any.
+  //The cursor to send when retrieving the previous page, if any.
   prev_cursor?: string;
-  // A list of leaderboard records.
+  //The total number of ranks available.
+  rank_count?: string;
+  //A list of leaderboard records.
   records?: Array<ApiLeaderboardRecord>;
 }
 
 /** Link Steam to the current user's account. */
 export interface ApiLinkSteamRequest {
-  // The Facebook account details.
+  //The Facebook account details.
   account?: ApiAccountSteam;
-  // Import Steam friends for the user.
+  //Import Steam friends for the user.
   sync?: boolean;
+}
+
+/** List user subscriptions. */
+export interface ApiListSubscriptionsRequest {
+  //
+  cursor?: string;
+  //
+  limit?: number;
 }
 
 /** Represents a realtime match. */
 export interface ApiMatch {
-  // True if it's an server-managed authoritative match, false otherwise.
+  //True if it's an server-managed authoritative match, false otherwise.
   authoritative?: boolean;
-  // 
+  //
   handler_name?: string;
-  // Match label, if any.
+  //Match label, if any.
   label?: string;
-  // The ID of the match, can be used to join.
+  //The ID of the match, can be used to join.
   match_id?: string;
-  // Current number of users in the match.
+  //Current number of users in the match.
   size?: number;
-  // 
+  //
   tick_rate?: number;
 }
 
 /** A list of realtime matches. */
 export interface ApiMatchList {
-  // A number of matches corresponding to a list operation.
+  //A number of matches corresponding to a list operation.
   matches?: Array<ApiMatch>;
 }
 
 /** A notification in the server. */
 export interface ApiNotification {
-  // Category code for this notification.
+  //Category code for this notification.
   code?: number;
-  // Content of the notification in JSON.
+  //Content of the notification in JSON.
   content?: string;
-  // The UNIX time when the notification was created.
+  //The UNIX time (for gRPC clients) or ISO string (for REST clients) when the notification was created.
   create_time?: string;
-  // ID of the Notification.
+  //ID of the Notification.
   id?: string;
-  // True if this notification was persisted to the database.
+  //True if this notification was persisted to the database.
   persistent?: boolean;
-  // ID of the sender, if a user. Otherwise 'null'.
+  //ID of the sender, if a user. Otherwise 'null'.
   sender_id?: string;
-  // Subject of the notification.
+  //Subject of the notification.
   subject?: string;
 }
 
 /** A collection of zero or more notifications. */
 export interface ApiNotificationList {
-  // Use this cursor to paginate notifications. Cache this to catch up to new notifications.
+  //Use this cursor to paginate notifications. Cache this to catch up to new notifications.
   cacheable_cursor?: string;
-  // Collection of notifications.
+  //Collection of notifications.
   notifications?: Array<ApiNotification>;
 }
 
@@ -435,343 +449,441 @@ export enum ApiOperator
 
 /** Storage objects to get. */
 export interface ApiReadStorageObjectId {
-  // The collection which stores the object.
+  //The collection which stores the object.
   collection?: string;
-  // The key of the object within the collection.
+  //The key of the object within the collection.
   key?: string;
-  // The user owner of the object.
+  //The user owner of the object.
   user_id?: string;
 }
 
 /** Batch get storage objects. */
 export interface ApiReadStorageObjectsRequest {
-  // Batch of storage objects.
+  //Batch of storage objects.
   object_ids?: Array<ApiReadStorageObjectId>;
 }
 
 /** Execute an Lua function on the server. */
 export interface ApiRpc {
-  // The authentication key used when executed as a non-client HTTP request.
+  //The authentication key used when executed as a non-client HTTP request.
   http_key?: string;
-  // The identifier of the function.
+  //The identifier of the function.
   id?: string;
-  // The payload of the function which must be a JSON object.
+  //The payload of the function which must be a JSON object.
   payload?: string;
 }
 
 /** A user's session used to authenticate messages. */
 export interface ApiSession {
-  // True if the corresponding account was just created, false otherwise.
+  //True if the corresponding account was just created, false otherwise.
   created?: boolean;
-  // Refresh token that can be used for session token renewal.
+  //Refresh token that can be used for session token renewal.
   refresh_token?: string;
-  // Authentication credentials.
+  //Authentication credentials.
   token?: string;
 }
 
 /** Log out a session, invalidate a refresh token, or log out all sessions/refresh tokens for a user. */
 export interface ApiSessionLogoutRequest {
-  // Refresh token to invalidate.
+  //Refresh token to invalidate.
   refresh_token?: string;
-  // Session token to log out.
+  //Session token to log out.
   token?: string;
 }
 
 /** Authenticate against the server with a refresh token. */
 export interface ApiSessionRefreshRequest {
-  // Refresh token.
+  //Refresh token.
   token?: string;
-  // Extra information that will be bundled in the session token.
+  //Extra information that will be bundled in the session token.
   vars?: Record<string, string>;
 }
 
 /** An object within the storage engine. */
 export interface ApiStorageObject {
-  // The collection which stores the object.
+  //The collection which stores the object.
   collection?: string;
-  // The UNIX time when the object was created.
+  //The UNIX time (for gRPC clients) or ISO string (for REST clients) when the object was created.
   create_time?: string;
-  // The key of the object within the collection.
+  //The key of the object within the collection.
   key?: string;
-  // The read access permissions for the object.
+  //The read access permissions for the object.
   permission_read?: number;
-  // The write access permissions for the object.
+  //The write access permissions for the object.
   permission_write?: number;
-  // The UNIX time when the object was last updated.
+  //The UNIX time (for gRPC clients) or ISO string (for REST clients) when the object was last updated.
   update_time?: string;
-  // The user owner of the object.
+  //The user owner of the object.
   user_id?: string;
-  // The value of the object.
+  //The value of the object.
   value?: string;
-  // The version hash of the object.
+  //The version hash of the object.
   version?: string;
 }
 
 /** A storage acknowledgement. */
 export interface ApiStorageObjectAck {
-  // The collection which stores the object.
+  //The collection which stores the object.
   collection?: string;
-  // The key of the object within the collection.
+  //The UNIX time (for gRPC clients) or ISO string (for REST clients) when the object was created.
+  create_time?: string;
+  //The key of the object within the collection.
   key?: string;
-  // The owner of the object.
+  //The UNIX time (for gRPC clients) or ISO string (for REST clients) when the object was last updated.
+  update_time?: string;
+  //The owner of the object.
   user_id?: string;
-  // The version hash of the object.
+  //The version hash of the object.
   version?: string;
 }
 
 /** Batch of acknowledgements for the storage object write. */
 export interface ApiStorageObjectAcks {
-  // Batch of storage write acknowledgements.
+  //Batch of storage write acknowledgements.
   acks?: Array<ApiStorageObjectAck>;
 }
 
 /** List of storage objects. */
 export interface ApiStorageObjectList {
-  // The cursor for the next page of results, if any.
+  //The cursor for the next page of results, if any.
   cursor?: string;
-  // The list of storage objects.
+  //The list of storage objects.
   objects?: Array<ApiStorageObject>;
 }
 
 /** Batch of storage objects. */
 export interface ApiStorageObjects {
-  // The batch of storage objects.
+  //The batch of storage objects.
   objects?: Array<ApiStorageObject>;
+}
+
+/**
+* Environment where a purchase/subscription took place,
+*/
+export enum ApiStoreEnvironment
+{
+    /* - UNKNOWN: Unknown environment. */
+    UNKNOWN = 0,
+    /*  - SANDBOX: Sandbox/test environment. */
+    SANDBOX = 1,
+    /*  - PRODUCTION: Production environment. */
+    PRODUCTION = 2,
+}
+
+/**
+* Validation Provider,
+*/
+export enum ApiStoreProvider
+{
+    /* - APPLE_APP_STORE: Apple App Store */
+    APPLE_APP_STORE = 0,
+    /*  - GOOGLE_PLAY_STORE: Google Play Store */
+    GOOGLE_PLAY_STORE = 1,
+    /*  - HUAWEI_APP_GALLERY: Huawei App Gallery */
+    HUAWEI_APP_GALLERY = 2,
+    /*  - FACEBOOK_INSTANT_STORE: Facebook Instant Store */
+    FACEBOOK_INSTANT_STORE = 3,
+}
+
+/** A list of validated subscriptions stored by Nakama. */
+export interface ApiSubscriptionList {
+  //The cursor to send when retrieving the next page, if any.
+  cursor?: string;
+  //The cursor to send when retrieving the previous page, if any.
+  prev_cursor?: string;
+  //Stored validated subscriptions.
+  validated_subscriptions?: Array<ApiValidatedSubscription>;
 }
 
 /** A tournament on the server. */
 export interface ApiTournament {
-  // True if the tournament is active and can enter. A computed value.
+  //Whether the leaderboard was created authoritatively or not.
+  authoritative?: boolean;
+  //True if the tournament is active and can enter. A computed value.
   can_enter?: boolean;
-  // The category of the tournament. e.g. "vip" could be category 1.
+  //The category of the tournament. e.g. "vip" could be category 1.
   category?: number;
-  // The UNIX time when the tournament was created.
+  //The UNIX time (for gRPC clients) or ISO string (for REST clients) when the tournament was created.
   create_time?: string;
-  // The description of the tournament. May be blank.
+  //The description of the tournament. May be blank.
   description?: string;
-  // Duration of the tournament in seconds.
+  //Duration of the tournament in seconds.
   duration?: number;
-  // The UNIX time when the tournament stops being active until next reset. A computed value.
+  //The UNIX time when the tournament stops being active until next reset. A computed value.
   end_active?: number;
-  // The UNIX time when the tournament will be stopped.
+  //The UNIX time (for gRPC clients) or ISO string (for REST clients) when the tournament will be stopped.
   end_time?: string;
-  // The ID of the tournament.
+  //The ID of the tournament.
   id?: string;
-  // The maximum score updates allowed per player for the current tournament.
+  //The maximum score updates allowed per player for the current tournament.
   max_num_score?: number;
-  // The maximum number of players for the tournament.
+  //The maximum number of players for the tournament.
   max_size?: number;
-  // Additional information stored as a JSON object.
+  //Additional information stored as a JSON object.
   metadata?: string;
-  // The UNIX time when the tournament is next playable. A computed value.
+  //The UNIX time when the tournament is next playable. A computed value.
   next_reset?: number;
-  // Operator.
+  //Operator.
   operator?: ApiOperator;
-  // The UNIX time when the tournament was last reset. A computed value.
+  //The UNIX time when the tournament was last reset. A computed value.
   prev_reset?: number;
-  // The current number of players in the tournament.
+  //The current number of players in the tournament.
   size?: number;
-  // ASC (0) or DESC (1) sort mode of scores in the tournament.
+  //ASC (0) or DESC (1) sort mode of scores in the tournament.
   sort_order?: number;
-  // The UNIX time when the tournament start being active. A computed value.
+  //The UNIX time when the tournament start being active. A computed value.
   start_active?: number;
-  // The UNIX time when the tournament will start.
+  //The UNIX time (for gRPC clients) or ISO string (for REST clients) when the tournament will start.
   start_time?: string;
-  // The title for the tournament.
+  //The title for the tournament.
   title?: string;
 }
 
 /** A list of tournaments. */
 export interface ApiTournamentList {
-  // A pagination cursor (optional).
+  //A pagination cursor (optional).
   cursor?: string;
-  // The list of tournaments returned.
+  //The list of tournaments returned.
   tournaments?: Array<ApiTournament>;
 }
 
 /** A set of tournament records which may be part of a tournament records page or a batch of individual records. */
 export interface ApiTournamentRecordList {
-  // The cursor to send when retireving the next page (optional).
+  //The cursor to send when retireving the next page (optional).
   next_cursor?: string;
-  // A batched set of tournament records belonging to specified owners.
+  //A batched set of tournament records belonging to specified owners.
   owner_records?: Array<ApiLeaderboardRecord>;
-  // The cursor to send when retrieving the previous page (optional).
+  //The cursor to send when retrieving the previous page (optional).
   prev_cursor?: string;
-  // A list of tournament records.
+  //The total number of ranks available.
+  rank_count?: string;
+  //A list of tournament records.
   records?: Array<ApiLeaderboardRecord>;
 }
 
 /** Update a user's account details. */
 export interface ApiUpdateAccountRequest {
-  // A URL for an avatar image.
+  //A URL for an avatar image.
   avatar_url?: string;
-  // The display name of the user.
+  //The display name of the user.
   display_name?: string;
-  // The language expected to be a tag which follows the BCP-47 spec.
+  //The language expected to be a tag which follows the BCP-47 spec.
   lang_tag?: string;
-  // The location set by the user.
+  //The location set by the user.
   location?: string;
-  // The timezone set by the user.
+  //The timezone set by the user.
   timezone?: string;
-  // The username of the user's account.
+  //The username of the user's account.
   username?: string;
-}
-
-/** Update fields in a given group. */
-export interface ApiUpdateGroupRequest {
-  // Avatar URL.
-  avatar_url?: string;
-  // Description string.
-  description?: string;
-  // The ID of the group to update.
-  group_id?: string;
-  // Lang tag.
-  lang_tag?: string;
-  // Name.
-  name?: string;
-  // Open is true if anyone should be allowed to join, or false if joins must be approved by a group admin.
-  open?: boolean;
 }
 
 /** A user in the server. */
 export interface ApiUser {
-  // The Apple Sign In ID in the user's account.
+  //The Apple Sign In ID in the user's account.
   apple_id?: string;
-  // A URL for an avatar image.
+  //A URL for an avatar image.
   avatar_url?: string;
-  // The UNIX time when the user was created.
+  //The UNIX time (for gRPC clients) or ISO string (for REST clients) when the user was created.
   create_time?: string;
-  // The display name of the user.
+  //The display name of the user.
   display_name?: string;
-  // Number of related edges to this user.
+  //Number of related edges to this user.
   edge_count?: number;
-  // The Facebook id in the user's account.
+  //The Facebook id in the user's account.
   facebook_id?: string;
-  // The Facebook Instant Game ID in the user's account.
+  //The Facebook Instant Game ID in the user's account.
   facebook_instant_game_id?: string;
-  // The Apple Game Center in of the user's account.
+  //The Apple Game Center in of the user's account.
   gamecenter_id?: string;
-  // The Google id in the user's account.
+  //The Google id in the user's account.
   google_id?: string;
-  // The id of the user's account.
+  //The id of the user's account.
   id?: string;
-  // The language expected to be a tag which follows the BCP-47 spec.
+  //The language expected to be a tag which follows the BCP-47 spec.
   lang_tag?: string;
-  // The location set by the user.
+  //The location set by the user.
   location?: string;
-  // Additional information stored as a JSON object.
+  //Additional information stored as a JSON object.
   metadata?: string;
-  // Indicates whether the user is currently online.
+  //Indicates whether the user is currently online.
   online?: boolean;
-  // The Steam id in the user's account.
+  //The Steam id in the user's account.
   steam_id?: string;
-  // The timezone set by the user.
+  //The timezone set by the user.
   timezone?: string;
-  // The UNIX time when the user was last updated.
+  //The UNIX time (for gRPC clients) or ISO string (for REST clients) when the user was last updated.
   update_time?: string;
-  // The username of the user's account.
+  //The username of the user's account.
   username?: string;
 }
 
 /** A list of groups belonging to a user, along with the user's role in each group. */
 export interface ApiUserGroupList {
-  // Cursor for the next page of results, if any.
+  //Cursor for the next page of results, if any.
   cursor?: string;
-  // Group-role pairs for a user.
+  //Group-role pairs for a user.
   user_groups?: Array<UserGroupListUserGroup>;
 }
 
 /** A collection of zero or more users. */
 export interface ApiUsers {
-  // The User objects.
+  //The User objects.
   users?: Array<ApiUser>;
 }
 
 /**  */
 export interface ApiValidatePurchaseAppleRequest {
-  // Base64 encoded Apple receipt data payload.
+  //
+  persist?: boolean;
+  //Base64 encoded Apple receipt data payload.
   receipt?: string;
 }
 
 /**  */
+export interface ApiValidatePurchaseFacebookInstantRequest {
+  //
+  persist?: boolean;
+  //Base64 encoded Facebook Instant signedRequest receipt data payload.
+  signed_request?: string;
+}
+
+/**  */
 export interface ApiValidatePurchaseGoogleRequest {
-  // JSON encoded Google purchase payload.
+  //
+  persist?: boolean;
+  //JSON encoded Google purchase payload.
   purchase?: string;
 }
 
 /**  */
 export interface ApiValidatePurchaseHuaweiRequest {
-  // JSON encoded Huawei InAppPurchaseData.
+  //
+  persist?: boolean;
+  //JSON encoded Huawei InAppPurchaseData.
   purchase?: string;
-  // InAppPurchaseData signature.
+  //InAppPurchaseData signature.
   signature?: string;
 }
 
-/**  */
+/** Validate IAP response. */
 export interface ApiValidatePurchaseResponse {
-  // Newly seen validated purchases.
+  //Newly seen validated purchases.
   validated_purchases?: Array<ApiValidatedPurchase>;
+}
+
+/**  */
+export interface ApiValidateSubscriptionAppleRequest {
+  //Persist the subscription.
+  persist?: boolean;
+  //Base64 encoded Apple receipt data payload.
+  receipt?: string;
+}
+
+/**  */
+export interface ApiValidateSubscriptionGoogleRequest {
+  //Persist the subscription.
+  persist?: boolean;
+  //JSON encoded Google purchase payload.
+  receipt?: string;
+}
+
+/** Validate Subscription response. */
+export interface ApiValidateSubscriptionResponse {
+  //
+  validated_subscription?: ApiValidatedSubscription;
 }
 
 /** Validated Purchase stored by Nakama. */
 export interface ApiValidatedPurchase {
-  // UNIX Timestamp when the receipt validation was stored in DB.
+  //Timestamp when the receipt validation was stored in DB.
   create_time?: string;
-  // Whether the purchase was done in production or sandbox environment.
-  environment?: ValidatedPurchaseEnvironment;
-  // Purchase Product ID.
+  //Whether the purchase was done in production or sandbox environment.
+  environment?: ApiStoreEnvironment;
+  //Purchase Product ID.
   product_id?: string;
-  // Raw provider validation response.
+  //Raw provider validation response.
   provider_response?: string;
-  // UNIX Timestamp when the purchase was done.
+  //Timestamp when the purchase was done.
   purchase_time?: string;
-  // Whether the purchase had already been validated by Nakama before.
+  //
+  refund_time?: string;
+  //Whether the purchase had already been validated by Nakama before.
   seen_before?: boolean;
-  // 
-  store?: ValidatedPurchaseStore;
-  // Purchase Transaction ID.
+  //
+  store?: ApiStoreProvider;
+  //Purchase Transaction ID.
   transaction_id?: string;
-  // UNIX Timestamp when the receipt validation was updated in DB.
+  //Timestamp when the receipt validation was updated in DB.
   update_time?: string;
+  //Purchase User ID.
+  user_id?: string;
+}
+
+/**  */
+export interface ApiValidatedSubscription {
+  //Whether the subscription is currently active or not.
+  active?: boolean;
+  //UNIX Timestamp when the receipt validation was stored in DB.
+  create_time?: string;
+  //Whether the purchase was done in production or sandbox environment.
+  environment?: ApiStoreEnvironment;
+  //Subscription expiration time. The subscription can still be auto-renewed to extend the expiration time further.
+  expiry_time?: string;
+  //Purchase Original transaction ID (we only keep track of the original subscription, not subsequent renewals).
+  original_transaction_id?: string;
+  //Purchase Product ID.
+  product_id?: string;
+  //Raw provider notification body.
+  provider_notification?: string;
+  //Raw provider validation response body.
+  provider_response?: string;
+  //UNIX Timestamp when the purchase was done.
+  purchase_time?: string;
+  //Subscription refund time. If this time is set, the subscription was refunded.
+  refund_time?: string;
+  //
+  store?: ApiStoreProvider;
+  //UNIX Timestamp when the receipt validation was updated in DB.
+  update_time?: string;
+  //Subscription User ID.
+  user_id?: string;
 }
 
 /** The object to store. */
 export interface ApiWriteStorageObject {
-  // The collection to store the object.
+  //The collection to store the object.
   collection?: string;
-  // The key for the object within the collection.
+  //The key for the object within the collection.
   key?: string;
-  // The read access permissions for the object.
+  //The read access permissions for the object.
   permission_read?: number;
-  // The write access permissions for the object.
+  //The write access permissions for the object.
   permission_write?: number;
-  // The value of the object.
+  //The value of the object.
   value?: string;
-  // The version hash of the object to check. Possible values are: ["", "*", "#hash#"].
+  //The version hash of the object to check. Possible values are: ["", "*", "#hash#"].  if-match and if-none-match
   version?: string;
 }
 
 /** Write objects to the storage engine. */
 export interface ApiWriteStorageObjectsRequest {
-  // The objects to store on the server.
+  //The objects to store on the server.
   objects?: Array<ApiWriteStorageObject>;
 }
 
 /**  */
 export interface ProtobufAny {
-  // 
-  type_url?: string;
-  // 
-  value?: string;
+  //
+  _@type?: string;
 }
 
 /**  */
 export interface RpcStatus {
-  // 
+  //
   code?: number;
-  // 
+  //
   details?: Array<ProtobufAny>;
-  // 
+  //
   message?: string;
 }
 
@@ -790,6 +902,37 @@ export class NakamaApi {
 
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("GET", options, bodyJson);
+    if (bearerToken) {
+        fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+    }
+
+    return Promise.race([
+      fetch(fullUrl, fetchOptions).then((response) => {
+        if (response.status == 204) {
+          return response;
+        } else if (response.status >= 200 && response.status < 300) {
+          return response.json();
+        } else {
+          throw response;
+        }
+      }),
+      new Promise((_, reject) =>
+        setTimeout(reject, this.timeoutMs, "Request timed out.")
+      ),
+    ]);
+}
+
+  /** Delete the current user's account. */
+  deleteAccount(bearerToken: string,
+      options: any = {}): Promise<any> {
+    
+    const urlPath = "/v2/account";
+    const queryParams = new Map<string, any>();
+
+    let bodyJson : string = "";
+
+    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
+    const fetchOptions = buildFetchOptions("DELETE", options, bodyJson);
     if (bearerToken) {
         fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
     }
@@ -880,13 +1023,13 @@ export class NakamaApi {
   /** Authenticate a user with an Apple ID against the server. */
   authenticateApple(basicAuthUsername: string,
     basicAuthPassword: string,
-      body:ApiAccountApple,
+      account:ApiAccountApple,
       create?:boolean,
       username?:string,
       options: any = {}): Promise<ApiSession> {
     
-    if (body === null || body === undefined) {
-      throw new Error("'body' is a required parameter but is null or undefined.");
+    if (account === null || account === undefined) {
+      throw new Error("'account' is a required parameter but is null or undefined.");
     }
     const urlPath = "/v2/account/authenticate/apple";
     const queryParams = new Map<string, any>();
@@ -894,11 +1037,13 @@ export class NakamaApi {
     queryParams.set("username", username);
 
     let bodyJson : string = "";
-    bodyJson = JSON.stringify(body || {});
+    bodyJson = JSON.stringify(account || {});
 
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("POST", options, bodyJson);
-    fetchOptions.headers["Authorization"] = "Basic " + encode(basicAuthUsername + ":" + basicAuthPassword);
+		if (basicAuthUsername) {
+			fetchOptions.headers["Authorization"] = "Basic " + encode(basicAuthUsername + ":" + basicAuthPassword);
+		}
 
     return Promise.race([
       fetch(fullUrl, fetchOptions).then((response) => {
@@ -919,13 +1064,13 @@ export class NakamaApi {
   /** Authenticate a user with a custom id against the server. */
   authenticateCustom(basicAuthUsername: string,
     basicAuthPassword: string,
-      body:ApiAccountCustom,
+      account:ApiAccountCustom,
       create?:boolean,
       username?:string,
       options: any = {}): Promise<ApiSession> {
     
-    if (body === null || body === undefined) {
-      throw new Error("'body' is a required parameter but is null or undefined.");
+    if (account === null || account === undefined) {
+      throw new Error("'account' is a required parameter but is null or undefined.");
     }
     const urlPath = "/v2/account/authenticate/custom";
     const queryParams = new Map<string, any>();
@@ -933,11 +1078,13 @@ export class NakamaApi {
     queryParams.set("username", username);
 
     let bodyJson : string = "";
-    bodyJson = JSON.stringify(body || {});
+    bodyJson = JSON.stringify(account || {});
 
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("POST", options, bodyJson);
-    fetchOptions.headers["Authorization"] = "Basic " + encode(basicAuthUsername + ":" + basicAuthPassword);
+		if (basicAuthUsername) {
+			fetchOptions.headers["Authorization"] = "Basic " + encode(basicAuthUsername + ":" + basicAuthPassword);
+		}
 
     return Promise.race([
       fetch(fullUrl, fetchOptions).then((response) => {
@@ -958,13 +1105,13 @@ export class NakamaApi {
   /** Authenticate a user with a device id against the server. */
   authenticateDevice(basicAuthUsername: string,
     basicAuthPassword: string,
-      body:ApiAccountDevice,
+      account:ApiAccountDevice,
       create?:boolean,
       username?:string,
       options: any = {}): Promise<ApiSession> {
     
-    if (body === null || body === undefined) {
-      throw new Error("'body' is a required parameter but is null or undefined.");
+    if (account === null || account === undefined) {
+      throw new Error("'account' is a required parameter but is null or undefined.");
     }
     const urlPath = "/v2/account/authenticate/device";
     const queryParams = new Map<string, any>();
@@ -972,11 +1119,13 @@ export class NakamaApi {
     queryParams.set("username", username);
 
     let bodyJson : string = "";
-    bodyJson = JSON.stringify(body || {});
+    bodyJson = JSON.stringify(account || {});
 
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("POST", options, bodyJson);
-    fetchOptions.headers["Authorization"] = "Basic " + encode(basicAuthUsername + ":" + basicAuthPassword);
+		if (basicAuthUsername) {
+			fetchOptions.headers["Authorization"] = "Basic " + encode(basicAuthUsername + ":" + basicAuthPassword);
+		}
 
     return Promise.race([
       fetch(fullUrl, fetchOptions).then((response) => {
@@ -997,13 +1146,13 @@ export class NakamaApi {
   /** Authenticate a user with an email+password against the server. */
   authenticateEmail(basicAuthUsername: string,
     basicAuthPassword: string,
-      body:ApiAccountEmail,
+      account:ApiAccountEmail,
       create?:boolean,
       username?:string,
       options: any = {}): Promise<ApiSession> {
     
-    if (body === null || body === undefined) {
-      throw new Error("'body' is a required parameter but is null or undefined.");
+    if (account === null || account === undefined) {
+      throw new Error("'account' is a required parameter but is null or undefined.");
     }
     const urlPath = "/v2/account/authenticate/email";
     const queryParams = new Map<string, any>();
@@ -1011,11 +1160,13 @@ export class NakamaApi {
     queryParams.set("username", username);
 
     let bodyJson : string = "";
-    bodyJson = JSON.stringify(body || {});
+    bodyJson = JSON.stringify(account || {});
 
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("POST", options, bodyJson);
-    fetchOptions.headers["Authorization"] = "Basic " + encode(basicAuthUsername + ":" + basicAuthPassword);
+		if (basicAuthUsername) {
+			fetchOptions.headers["Authorization"] = "Basic " + encode(basicAuthUsername + ":" + basicAuthPassword);
+		}
 
     return Promise.race([
       fetch(fullUrl, fetchOptions).then((response) => {
@@ -1036,14 +1187,14 @@ export class NakamaApi {
   /** Authenticate a user with a Facebook OAuth token against the server. */
   authenticateFacebook(basicAuthUsername: string,
     basicAuthPassword: string,
-      body:ApiAccountFacebook,
+      account:ApiAccountFacebook,
       create?:boolean,
       username?:string,
       sync?:boolean,
       options: any = {}): Promise<ApiSession> {
     
-    if (body === null || body === undefined) {
-      throw new Error("'body' is a required parameter but is null or undefined.");
+    if (account === null || account === undefined) {
+      throw new Error("'account' is a required parameter but is null or undefined.");
     }
     const urlPath = "/v2/account/authenticate/facebook";
     const queryParams = new Map<string, any>();
@@ -1052,11 +1203,13 @@ export class NakamaApi {
     queryParams.set("sync", sync);
 
     let bodyJson : string = "";
-    bodyJson = JSON.stringify(body || {});
+    bodyJson = JSON.stringify(account || {});
 
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("POST", options, bodyJson);
-    fetchOptions.headers["Authorization"] = "Basic " + encode(basicAuthUsername + ":" + basicAuthPassword);
+		if (basicAuthUsername) {
+			fetchOptions.headers["Authorization"] = "Basic " + encode(basicAuthUsername + ":" + basicAuthPassword);
+		}
 
     return Promise.race([
       fetch(fullUrl, fetchOptions).then((response) => {
@@ -1077,13 +1230,13 @@ export class NakamaApi {
   /** Authenticate a user with a Facebook Instant Game token against the server. */
   authenticateFacebookInstantGame(basicAuthUsername: string,
     basicAuthPassword: string,
-      body:ApiAccountFacebookInstantGame,
+      account:ApiAccountFacebookInstantGame,
       create?:boolean,
       username?:string,
       options: any = {}): Promise<ApiSession> {
     
-    if (body === null || body === undefined) {
-      throw new Error("'body' is a required parameter but is null or undefined.");
+    if (account === null || account === undefined) {
+      throw new Error("'account' is a required parameter but is null or undefined.");
     }
     const urlPath = "/v2/account/authenticate/facebookinstantgame";
     const queryParams = new Map<string, any>();
@@ -1091,11 +1244,13 @@ export class NakamaApi {
     queryParams.set("username", username);
 
     let bodyJson : string = "";
-    bodyJson = JSON.stringify(body || {});
+    bodyJson = JSON.stringify(account || {});
 
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("POST", options, bodyJson);
-    fetchOptions.headers["Authorization"] = "Basic " + encode(basicAuthUsername + ":" + basicAuthPassword);
+		if (basicAuthUsername) {
+			fetchOptions.headers["Authorization"] = "Basic " + encode(basicAuthUsername + ":" + basicAuthPassword);
+		}
 
     return Promise.race([
       fetch(fullUrl, fetchOptions).then((response) => {
@@ -1116,13 +1271,13 @@ export class NakamaApi {
   /** Authenticate a user with Apple's GameCenter against the server. */
   authenticateGameCenter(basicAuthUsername: string,
     basicAuthPassword: string,
-      body:ApiAccountGameCenter,
+      account:ApiAccountGameCenter,
       create?:boolean,
       username?:string,
       options: any = {}): Promise<ApiSession> {
     
-    if (body === null || body === undefined) {
-      throw new Error("'body' is a required parameter but is null or undefined.");
+    if (account === null || account === undefined) {
+      throw new Error("'account' is a required parameter but is null or undefined.");
     }
     const urlPath = "/v2/account/authenticate/gamecenter";
     const queryParams = new Map<string, any>();
@@ -1130,11 +1285,13 @@ export class NakamaApi {
     queryParams.set("username", username);
 
     let bodyJson : string = "";
-    bodyJson = JSON.stringify(body || {});
+    bodyJson = JSON.stringify(account || {});
 
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("POST", options, bodyJson);
-    fetchOptions.headers["Authorization"] = "Basic " + encode(basicAuthUsername + ":" + basicAuthPassword);
+		if (basicAuthUsername) {
+			fetchOptions.headers["Authorization"] = "Basic " + encode(basicAuthUsername + ":" + basicAuthPassword);
+		}
 
     return Promise.race([
       fetch(fullUrl, fetchOptions).then((response) => {
@@ -1155,13 +1312,13 @@ export class NakamaApi {
   /** Authenticate a user with Google against the server. */
   authenticateGoogle(basicAuthUsername: string,
     basicAuthPassword: string,
-      body:ApiAccountGoogle,
+      account:ApiAccountGoogle,
       create?:boolean,
       username?:string,
       options: any = {}): Promise<ApiSession> {
     
-    if (body === null || body === undefined) {
-      throw new Error("'body' is a required parameter but is null or undefined.");
+    if (account === null || account === undefined) {
+      throw new Error("'account' is a required parameter but is null or undefined.");
     }
     const urlPath = "/v2/account/authenticate/google";
     const queryParams = new Map<string, any>();
@@ -1169,11 +1326,13 @@ export class NakamaApi {
     queryParams.set("username", username);
 
     let bodyJson : string = "";
-    bodyJson = JSON.stringify(body || {});
+    bodyJson = JSON.stringify(account || {});
 
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("POST", options, bodyJson);
-    fetchOptions.headers["Authorization"] = "Basic " + encode(basicAuthUsername + ":" + basicAuthPassword);
+		if (basicAuthUsername) {
+			fetchOptions.headers["Authorization"] = "Basic " + encode(basicAuthUsername + ":" + basicAuthPassword);
+		}
 
     return Promise.race([
       fetch(fullUrl, fetchOptions).then((response) => {
@@ -1194,14 +1353,14 @@ export class NakamaApi {
   /** Authenticate a user with Steam against the server. */
   authenticateSteam(basicAuthUsername: string,
     basicAuthPassword: string,
-      body:ApiAccountSteam,
+      account:ApiAccountSteam,
       create?:boolean,
       username?:string,
       sync?:boolean,
       options: any = {}): Promise<ApiSession> {
     
-    if (body === null || body === undefined) {
-      throw new Error("'body' is a required parameter but is null or undefined.");
+    if (account === null || account === undefined) {
+      throw new Error("'account' is a required parameter but is null or undefined.");
     }
     const urlPath = "/v2/account/authenticate/steam";
     const queryParams = new Map<string, any>();
@@ -1210,11 +1369,13 @@ export class NakamaApi {
     queryParams.set("sync", sync);
 
     let bodyJson : string = "";
-    bodyJson = JSON.stringify(body || {});
+    bodyJson = JSON.stringify(account || {});
 
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("POST", options, bodyJson);
-    fetchOptions.headers["Authorization"] = "Basic " + encode(basicAuthUsername + ":" + basicAuthPassword);
+		if (basicAuthUsername) {
+			fetchOptions.headers["Authorization"] = "Basic " + encode(basicAuthUsername + ":" + basicAuthPassword);
+		}
 
     return Promise.race([
       fetch(fullUrl, fetchOptions).then((response) => {
@@ -1378,19 +1539,19 @@ export class NakamaApi {
 
   /** Add Facebook to the social profiles on the current user's account. */
   linkFacebook(bearerToken: string,
-      body:ApiAccountFacebook,
+      account:ApiAccountFacebook,
       sync?:boolean,
       options: any = {}): Promise<any> {
     
-    if (body === null || body === undefined) {
-      throw new Error("'body' is a required parameter but is null or undefined.");
+    if (account === null || account === undefined) {
+      throw new Error("'account' is a required parameter but is null or undefined.");
     }
     const urlPath = "/v2/account/link/facebook";
     const queryParams = new Map<string, any>();
     queryParams.set("sync", sync);
 
     let bodyJson : string = "";
-    bodyJson = JSON.stringify(body || {});
+    bodyJson = JSON.stringify(account || {});
 
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("POST", options, bodyJson);
@@ -1575,7 +1736,9 @@ export class NakamaApi {
 
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("POST", options, bodyJson);
-    fetchOptions.headers["Authorization"] = "Basic " + encode(basicAuthUsername + ":" + basicAuthPassword);
+		if (basicAuthUsername) {
+			fetchOptions.headers["Authorization"] = "Basic " + encode(basicAuthUsername + ":" + basicAuthPassword);
+		}
 
     return Promise.race([
       fetch(fullUrl, fetchOptions).then((response) => {
@@ -1959,6 +2122,43 @@ export class NakamaApi {
     ]);
 }
 
+  /** List user channels */
+  listChannelDescs(bearerToken: string,
+      limit?:number,
+      state?:number,
+      cursor?:string,
+      options: any = {}): Promise<ApiChannelDescList> {
+    
+    const urlPath = "/v2/channeldesc";
+    const queryParams = new Map<string, any>();
+    queryParams.set("limit", limit);
+    queryParams.set("state", state);
+    queryParams.set("cursor", cursor);
+
+    let bodyJson : string = "";
+
+    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
+    const fetchOptions = buildFetchOptions("GET", options, bodyJson);
+    if (bearerToken) {
+        fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+    }
+
+    return Promise.race([
+      fetch(fullUrl, fetchOptions).then((response) => {
+        if (response.status == 204) {
+          return response;
+        } else if (response.status >= 200 && response.status < 300) {
+          return response.json();
+        } else {
+          throw response;
+        }
+      }),
+      new Promise((_, reject) =>
+        setTimeout(reject, this.timeoutMs, "Request timed out.")
+      ),
+    ]);
+}
+
   /** Submit an event for processing in the server's registered runtime custom events handler. */
   event(bearerToken: string,
       body:ApiEvent,
@@ -2139,19 +2339,19 @@ export class NakamaApi {
 
   /** Import Facebook friends and add them to a user's account. */
   importFacebookFriends(bearerToken: string,
-      body:ApiAccountFacebook,
+      account:ApiAccountFacebook,
       reset?:boolean,
       options: any = {}): Promise<any> {
     
-    if (body === null || body === undefined) {
-      throw new Error("'body' is a required parameter but is null or undefined.");
+    if (account === null || account === undefined) {
+      throw new Error("'account' is a required parameter but is null or undefined.");
     }
     const urlPath = "/v2/friend/facebook";
     const queryParams = new Map<string, any>();
     queryParams.set("reset", reset);
 
     let bodyJson : string = "";
-    bodyJson = JSON.stringify(body || {});
+    bodyJson = JSON.stringify(account || {});
 
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("POST", options, bodyJson);
@@ -2177,19 +2377,19 @@ export class NakamaApi {
 
   /** Import Steam friends and add them to a user's account. */
   importSteamFriends(bearerToken: string,
-      body:ApiAccountSteam,
+      account:ApiAccountSteam,
       reset?:boolean,
       options: any = {}): Promise<any> {
     
-    if (body === null || body === undefined) {
-      throw new Error("'body' is a required parameter but is null or undefined.");
+    if (account === null || account === undefined) {
+      throw new Error("'account' is a required parameter but is null or undefined.");
     }
     const urlPath = "/v2/friend/steam";
     const queryParams = new Map<string, any>();
     queryParams.set("reset", reset);
 
     let bodyJson : string = "";
-    bodyJson = JSON.stringify(body || {});
+    bodyJson = JSON.stringify(account || {});
 
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("POST", options, bodyJson);
@@ -2331,7 +2531,7 @@ export class NakamaApi {
   /** Update fields in a given group. */
   updateGroup(bearerToken: string,
       groupId:string,
-      body:ApiUpdateGroupRequest,
+      body:,
       options: any = {}): Promise<any> {
     
     if (groupId === null || groupId === undefined) {
@@ -2448,14 +2648,11 @@ export class NakamaApi {
   /** Demote a set of users in a group to the next role down. */
   demoteGroupUsers(bearerToken: string,
       groupId:string,
-      userIds:Array<string>,
+      userIds?:Array<string>,
       options: any = {}): Promise<any> {
     
     if (groupId === null || groupId === undefined) {
       throw new Error("'groupId' is a required parameter but is null or undefined.");
-    }
-    if (userIds === null || userIds === undefined) {
-      throw new Error("'userIds' is a required parameter but is null or undefined.");
     }
     const urlPath = "/v2/group/{groupId}/demote"
         .replace("{groupId}", encodeURIComponent(String(groupId)));
@@ -2712,6 +2909,42 @@ export class NakamaApi {
     ]);
 }
 
+  /** Validate FB Instant IAP Receipt */
+  validatePurchaseFacebookInstant(bearerToken: string,
+      body:ApiValidatePurchaseFacebookInstantRequest,
+      options: any = {}): Promise<ApiValidatePurchaseResponse> {
+    
+    if (body === null || body === undefined) {
+      throw new Error("'body' is a required parameter but is null or undefined.");
+    }
+    const urlPath = "/v2/iap/purchase/facebookinstant";
+    const queryParams = new Map<string, any>();
+
+    let bodyJson : string = "";
+    bodyJson = JSON.stringify(body || {});
+
+    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
+    const fetchOptions = buildFetchOptions("POST", options, bodyJson);
+    if (bearerToken) {
+        fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+    }
+
+    return Promise.race([
+      fetch(fullUrl, fetchOptions).then((response) => {
+        if (response.status == 204) {
+          return response;
+        } else if (response.status >= 200 && response.status < 300) {
+          return response.json();
+        } else {
+          throw response;
+        }
+      }),
+      new Promise((_, reject) =>
+        setTimeout(reject, this.timeoutMs, "Request timed out.")
+      ),
+    ]);
+}
+
   /** Validate Google IAP Receipt */
   validatePurchaseGoogle(bearerToken: string,
       body:ApiValidatePurchaseGoogleRequest,
@@ -2764,6 +2997,150 @@ export class NakamaApi {
 
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("POST", options, bodyJson);
+    if (bearerToken) {
+        fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+    }
+
+    return Promise.race([
+      fetch(fullUrl, fetchOptions).then((response) => {
+        if (response.status == 204) {
+          return response;
+        } else if (response.status >= 200 && response.status < 300) {
+          return response.json();
+        } else {
+          throw response;
+        }
+      }),
+      new Promise((_, reject) =>
+        setTimeout(reject, this.timeoutMs, "Request timed out.")
+      ),
+    ]);
+}
+
+  /** List user's subscriptions. */
+  listSubscriptions(bearerToken: string,
+      body:ApiListSubscriptionsRequest,
+      options: any = {}): Promise<ApiSubscriptionList> {
+    
+    if (body === null || body === undefined) {
+      throw new Error("'body' is a required parameter but is null or undefined.");
+    }
+    const urlPath = "/v2/iap/subscription";
+    const queryParams = new Map<string, any>();
+
+    let bodyJson : string = "";
+    bodyJson = JSON.stringify(body || {});
+
+    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
+    const fetchOptions = buildFetchOptions("POST", options, bodyJson);
+    if (bearerToken) {
+        fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+    }
+
+    return Promise.race([
+      fetch(fullUrl, fetchOptions).then((response) => {
+        if (response.status == 204) {
+          return response;
+        } else if (response.status >= 200 && response.status < 300) {
+          return response.json();
+        } else {
+          throw response;
+        }
+      }),
+      new Promise((_, reject) =>
+        setTimeout(reject, this.timeoutMs, "Request timed out.")
+      ),
+    ]);
+}
+
+  /** Validate Apple Subscription Receipt */
+  validateSubscriptionApple(bearerToken: string,
+      body:ApiValidateSubscriptionAppleRequest,
+      options: any = {}): Promise<ApiValidateSubscriptionResponse> {
+    
+    if (body === null || body === undefined) {
+      throw new Error("'body' is a required parameter but is null or undefined.");
+    }
+    const urlPath = "/v2/iap/subscription/apple";
+    const queryParams = new Map<string, any>();
+
+    let bodyJson : string = "";
+    bodyJson = JSON.stringify(body || {});
+
+    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
+    const fetchOptions = buildFetchOptions("POST", options, bodyJson);
+    if (bearerToken) {
+        fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+    }
+
+    return Promise.race([
+      fetch(fullUrl, fetchOptions).then((response) => {
+        if (response.status == 204) {
+          return response;
+        } else if (response.status >= 200 && response.status < 300) {
+          return response.json();
+        } else {
+          throw response;
+        }
+      }),
+      new Promise((_, reject) =>
+        setTimeout(reject, this.timeoutMs, "Request timed out.")
+      ),
+    ]);
+}
+
+  /** Validate Google Subscription Receipt */
+  validateSubscriptionGoogle(bearerToken: string,
+      body:ApiValidateSubscriptionGoogleRequest,
+      options: any = {}): Promise<ApiValidateSubscriptionResponse> {
+    
+    if (body === null || body === undefined) {
+      throw new Error("'body' is a required parameter but is null or undefined.");
+    }
+    const urlPath = "/v2/iap/subscription/google";
+    const queryParams = new Map<string, any>();
+
+    let bodyJson : string = "";
+    bodyJson = JSON.stringify(body || {});
+
+    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
+    const fetchOptions = buildFetchOptions("POST", options, bodyJson);
+    if (bearerToken) {
+        fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+    }
+
+    return Promise.race([
+      fetch(fullUrl, fetchOptions).then((response) => {
+        if (response.status == 204) {
+          return response;
+        } else if (response.status >= 200 && response.status < 300) {
+          return response.json();
+        } else {
+          throw response;
+        }
+      }),
+      new Promise((_, reject) =>
+        setTimeout(reject, this.timeoutMs, "Request timed out.")
+      ),
+    ]);
+}
+
+  /** Get subscription by product id. */
+  getSubscription(bearerToken: string,
+      productId:string,
+      options: any = {}): Promise<ApiValidatedSubscription> {
+    
+    if (productId === null || productId === undefined) {
+      throw new Error("'productId' is a required parameter but is null or undefined.");
+    }
+    const urlPath = "/v2/iap/subscription/{productId}"
+        .replace("{productId}", encodeURIComponent(String(productId)));
+    const queryParams = new Map<string, any>();
+
+    let bodyJson : string = "";
+
+    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
+    const fetchOptions = buildFetchOptions("GET", options, bodyJson);
     if (bearerToken) {
         fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
     }
@@ -2867,21 +3244,21 @@ export class NakamaApi {
   /** Write a record to a leaderboard. */
   writeLeaderboardRecord(bearerToken: string,
       leaderboardId:string,
-      body:WriteLeaderboardRecordRequestLeaderboardRecordWrite,
+      record:WriteLeaderboardRecordRequestLeaderboardRecordWrite,
       options: any = {}): Promise<ApiLeaderboardRecord> {
     
     if (leaderboardId === null || leaderboardId === undefined) {
       throw new Error("'leaderboardId' is a required parameter but is null or undefined.");
     }
-    if (body === null || body === undefined) {
-      throw new Error("'body' is a required parameter but is null or undefined.");
+    if (record === null || record === undefined) {
+      throw new Error("'record' is a required parameter but is null or undefined.");
     }
     const urlPath = "/v2/leaderboard/{leaderboardId}"
         .replace("{leaderboardId}", encodeURIComponent(String(leaderboardId)));
     const queryParams = new Map<string, any>();
 
     let bodyJson : string = "";
-    bodyJson = JSON.stringify(body || {});
+    bodyJson = JSON.stringify(record || {});
 
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("POST", options, bodyJson);
@@ -2911,6 +3288,7 @@ export class NakamaApi {
       ownerId:string,
       limit?:number,
       expiry?:string,
+      cursor?:string,
       options: any = {}): Promise<ApiLeaderboardRecordList> {
     
     if (leaderboardId === null || leaderboardId === undefined) {
@@ -2925,6 +3303,7 @@ export class NakamaApi {
     const queryParams = new Map<string, any>();
     queryParams.set("limit", limit);
     queryParams.set("expiry", expiry);
+    queryParams.set("cursor", cursor);
 
     let bodyJson : string = "";
 
@@ -3062,7 +3441,8 @@ export class NakamaApi {
 }
 
   /** Execute a Lua function on the server. */
-  rpcFunc2(bearerToken: string,
+  rpcFunc2(bearerToken: string,basicAuthUsername: string,
+		basicAuthPassword: string,
       id:string,
       payload?:string,
       httpKey?:string,
@@ -3081,9 +3461,12 @@ export class NakamaApi {
 
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("GET", options, bodyJson);
-    if (bearerToken) {
-        fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-    }
+		if (bearerToken) {
+				fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+		}
+		if (basicAuthUsername) {
+			fetchOptions.headers["Authorization"] = "Basic " + encode(basicAuthUsername + ":" + basicAuthPassword);
+		}
 
     return Promise.race([
       fetch(fullUrl, fetchOptions).then((response) => {
@@ -3102,17 +3485,18 @@ export class NakamaApi {
 }
 
   /** Execute a Lua function on the server. */
-  rpcFunc(bearerToken: string,
+  rpcFunc(bearerToken: string,basicAuthUsername: string,
+		basicAuthPassword: string,
       id:string,
-      body:string,
+      payload:string,
       httpKey?:string,
       options: any = {}): Promise<ApiRpc> {
     
     if (id === null || id === undefined) {
       throw new Error("'id' is a required parameter but is null or undefined.");
     }
-    if (body === null || body === undefined) {
-      throw new Error("'body' is a required parameter but is null or undefined.");
+    if (payload === null || payload === undefined) {
+      throw new Error("'payload' is a required parameter but is null or undefined.");
     }
     const urlPath = "/v2/rpc/{id}"
         .replace("{id}", encodeURIComponent(String(id)));
@@ -3120,13 +3504,16 @@ export class NakamaApi {
     queryParams.set("http_key", httpKey);
 
     let bodyJson : string = "";
-    bodyJson = JSON.stringify(body || {});
+    bodyJson = JSON.stringify(payload || {});
 
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("POST", options, bodyJson);
-    if (bearerToken) {
-        fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-    }
+		if (bearerToken) {
+				fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+		}
+		if (basicAuthUsername) {
+			fetchOptions.headers["Authorization"] = "Basic " + encode(basicAuthUsername + ":" + basicAuthPassword);
+		}
 
     return Promise.race([
       fetch(fullUrl, fetchOptions).then((response) => {
@@ -3418,6 +3805,42 @@ export class NakamaApi {
     ]);
 }
 
+  /** Delete a tournament record. */
+  deleteTournamentRecord(bearerToken: string,
+      tournamentId:string,
+      options: any = {}): Promise<any> {
+    
+    if (tournamentId === null || tournamentId === undefined) {
+      throw new Error("'tournamentId' is a required parameter but is null or undefined.");
+    }
+    const urlPath = "/v2/tournament/{tournamentId}"
+        .replace("{tournamentId}", encodeURIComponent(String(tournamentId)));
+    const queryParams = new Map<string, any>();
+
+    let bodyJson : string = "";
+
+    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
+    const fetchOptions = buildFetchOptions("DELETE", options, bodyJson);
+    if (bearerToken) {
+        fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+    }
+
+    return Promise.race([
+      fetch(fullUrl, fetchOptions).then((response) => {
+        if (response.status == 204) {
+          return response;
+        } else if (response.status >= 200 && response.status < 300) {
+          return response.json();
+        } else {
+          throw response;
+        }
+      }),
+      new Promise((_, reject) =>
+        setTimeout(reject, this.timeoutMs, "Request timed out.")
+      ),
+    ]);
+}
+
   /** List tournament records. */
   listTournamentRecords(bearerToken: string,
       tournamentId:string,
@@ -3465,21 +3888,21 @@ export class NakamaApi {
   /** Write a record to a tournament. */
   writeTournamentRecord2(bearerToken: string,
       tournamentId:string,
-      body:WriteTournamentRecordRequestTournamentRecordWrite,
+      record:WriteTournamentRecordRequestTournamentRecordWrite,
       options: any = {}): Promise<ApiLeaderboardRecord> {
     
     if (tournamentId === null || tournamentId === undefined) {
       throw new Error("'tournamentId' is a required parameter but is null or undefined.");
     }
-    if (body === null || body === undefined) {
-      throw new Error("'body' is a required parameter but is null or undefined.");
+    if (record === null || record === undefined) {
+      throw new Error("'record' is a required parameter but is null or undefined.");
     }
     const urlPath = "/v2/tournament/{tournamentId}"
         .replace("{tournamentId}", encodeURIComponent(String(tournamentId)));
     const queryParams = new Map<string, any>();
 
     let bodyJson : string = "";
-    bodyJson = JSON.stringify(body || {});
+    bodyJson = JSON.stringify(record || {});
 
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("POST", options, bodyJson);
@@ -3506,21 +3929,21 @@ export class NakamaApi {
   /** Write a record to a tournament. */
   writeTournamentRecord(bearerToken: string,
       tournamentId:string,
-      body:WriteTournamentRecordRequestTournamentRecordWrite,
+      record:WriteTournamentRecordRequestTournamentRecordWrite,
       options: any = {}): Promise<ApiLeaderboardRecord> {
     
     if (tournamentId === null || tournamentId === undefined) {
       throw new Error("'tournamentId' is a required parameter but is null or undefined.");
     }
-    if (body === null || body === undefined) {
-      throw new Error("'body' is a required parameter but is null or undefined.");
+    if (record === null || record === undefined) {
+      throw new Error("'record' is a required parameter but is null or undefined.");
     }
     const urlPath = "/v2/tournament/{tournamentId}"
         .replace("{tournamentId}", encodeURIComponent(String(tournamentId)));
     const queryParams = new Map<string, any>();
 
     let bodyJson : string = "";
-    bodyJson = JSON.stringify(body || {});
+    bodyJson = JSON.stringify(record || {});
 
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("PUT", options, bodyJson);
@@ -3586,6 +4009,7 @@ export class NakamaApi {
       ownerId:string,
       limit?:number,
       expiry?:string,
+      cursor?:string,
       options: any = {}): Promise<ApiTournamentRecordList> {
     
     if (tournamentId === null || tournamentId === undefined) {
@@ -3600,6 +4024,7 @@ export class NakamaApi {
     const queryParams = new Map<string, any>();
     queryParams.set("limit", limit);
     queryParams.set("expiry", expiry);
+    queryParams.set("cursor", cursor);
 
     let bodyJson : string = "";
 
