@@ -366,10 +366,18 @@ export interface ChannelMessage {
     /** The ID of the second DM user, or an empty string if this message was not sent through a DM chat. */
     user_id_two: string;
 }
+export interface UnreadMessage {
+    /** The unique ID of this message. */
+    message_id: string;
+    /** The unique ID of this message. */
+    user_id: string;
+}
 /** A list of channel messages, usually a result of a list operation. */
 export interface ChannelMessageList {
     /** A list of messages. */
     messages: ChannelMessage[];
+    /** A list of unread message with userid */
+    unread_messages: UnreadMessage[];
     /** The cursor to send when retrieving the next page, if any. */
     next_cursor: string;
     /** The cursor to send when retrieving the previous page, if any. */
@@ -1452,10 +1460,12 @@ export interface ChannelDescList {
 export interface ListChannelDescsRequest {
     /** Max number of records to return. Between 1 and 100. */
     limit: number | undefined;
-    /** The friend state to list. */
+    /** The channel state to list. */
     state: number | undefined;
     /** Cursor to start from */
     cursor: string;
+    /** The clan of this channel */
+    clan_id: string;
 }
 /** Create a channel within clan. */
 export interface CreateChannelDescRequest {
@@ -3047,6 +3057,26 @@ export declare const ChannelMessage: {
         user_id_two?: string | undefined;
     } & { [K_1 in Exclude<keyof I_1, keyof ChannelMessage>]: never; }>(object: I_1): ChannelMessage;
 };
+export declare const UnreadMessage: {
+    encode(message: UnreadMessage, writer?: _m0.Writer): _m0.Writer;
+    decode(input: _m0.Reader | Uint8Array, length?: number): UnreadMessage;
+    fromJSON(object: any): UnreadMessage;
+    toJSON(message: UnreadMessage): unknown;
+    create<I extends {
+        message_id?: string | undefined;
+        user_id?: string | undefined;
+    } & {
+        message_id?: string | undefined;
+        user_id?: string | undefined;
+    } & { [K in Exclude<keyof I, keyof UnreadMessage>]: never; }>(base?: I | undefined): UnreadMessage;
+    fromPartial<I_1 extends {
+        message_id?: string | undefined;
+        user_id?: string | undefined;
+    } & {
+        message_id?: string | undefined;
+        user_id?: string | undefined;
+    } & { [K_1 in Exclude<keyof I_1, keyof UnreadMessage>]: never; }>(object: I_1): UnreadMessage;
+};
 export declare const ChannelMessageList: {
     encode(message: ChannelMessageList, writer?: _m0.Writer): _m0.Writer;
     decode(input: _m0.Reader | Uint8Array, length?: number): ChannelMessageList;
@@ -3068,6 +3098,10 @@ export declare const ChannelMessageList: {
             group_id?: string | undefined;
             user_id_one?: string | undefined;
             user_id_two?: string | undefined;
+        }[] | undefined;
+        unread_messages?: {
+            message_id?: string | undefined;
+            user_id?: string | undefined;
         }[] | undefined;
         next_cursor?: string | undefined;
         prev_cursor?: string | undefined;
@@ -3134,10 +3168,23 @@ export declare const ChannelMessageList: {
             user_id_one?: string | undefined;
             user_id_two?: string | undefined;
         }[]>]: never; }) | undefined;
+        unread_messages?: ({
+            message_id?: string | undefined;
+            user_id?: string | undefined;
+        }[] & ({
+            message_id?: string | undefined;
+            user_id?: string | undefined;
+        } & {
+            message_id?: string | undefined;
+            user_id?: string | undefined;
+        } & { [K_2 in Exclude<keyof I["unread_messages"][number], keyof UnreadMessage>]: never; })[] & { [K_3 in Exclude<keyof I["unread_messages"], keyof {
+            message_id?: string | undefined;
+            user_id?: string | undefined;
+        }[]>]: never; }) | undefined;
         next_cursor?: string | undefined;
         prev_cursor?: string | undefined;
         cacheable_cursor?: string | undefined;
-    } & { [K_2 in Exclude<keyof I, keyof ChannelMessageList>]: never; }>(base?: I | undefined): ChannelMessageList;
+    } & { [K_4 in Exclude<keyof I, keyof ChannelMessageList>]: never; }>(base?: I | undefined): ChannelMessageList;
     fromPartial<I_1 extends {
         messages?: {
             clan_id?: string | undefined;
@@ -3154,6 +3201,10 @@ export declare const ChannelMessageList: {
             group_id?: string | undefined;
             user_id_one?: string | undefined;
             user_id_two?: string | undefined;
+        }[] | undefined;
+        unread_messages?: {
+            message_id?: string | undefined;
+            user_id?: string | undefined;
         }[] | undefined;
         next_cursor?: string | undefined;
         prev_cursor?: string | undefined;
@@ -3204,7 +3255,7 @@ export declare const ChannelMessageList: {
             group_id?: string | undefined;
             user_id_one?: string | undefined;
             user_id_two?: string | undefined;
-        } & { [K_3 in Exclude<keyof I_1["messages"][number], keyof ChannelMessage>]: never; })[] & { [K_4 in Exclude<keyof I_1["messages"], keyof {
+        } & { [K_5 in Exclude<keyof I_1["messages"][number], keyof ChannelMessage>]: never; })[] & { [K_6 in Exclude<keyof I_1["messages"], keyof {
             clan_id?: string | undefined;
             channel_id?: string | undefined;
             message_id?: string | undefined;
@@ -3220,10 +3271,23 @@ export declare const ChannelMessageList: {
             user_id_one?: string | undefined;
             user_id_two?: string | undefined;
         }[]>]: never; }) | undefined;
+        unread_messages?: ({
+            message_id?: string | undefined;
+            user_id?: string | undefined;
+        }[] & ({
+            message_id?: string | undefined;
+            user_id?: string | undefined;
+        } & {
+            message_id?: string | undefined;
+            user_id?: string | undefined;
+        } & { [K_7 in Exclude<keyof I_1["unread_messages"][number], keyof UnreadMessage>]: never; })[] & { [K_8 in Exclude<keyof I_1["unread_messages"], keyof {
+            message_id?: string | undefined;
+            user_id?: string | undefined;
+        }[]>]: never; }) | undefined;
         next_cursor?: string | undefined;
         prev_cursor?: string | undefined;
         cacheable_cursor?: string | undefined;
-    } & { [K_5 in Exclude<keyof I_1, keyof ChannelMessageList>]: never; }>(object: I_1): ChannelMessageList;
+    } & { [K_9 in Exclude<keyof I_1, keyof ChannelMessageList>]: never; }>(object: I_1): ChannelMessageList;
 };
 export declare const CreateGroupRequest: {
     encode(message: CreateGroupRequest, writer?: _m0.Writer): _m0.Writer;
@@ -9518,19 +9582,23 @@ export declare const ListChannelDescsRequest: {
         limit?: number | undefined;
         state?: number | undefined;
         cursor?: string | undefined;
+        clan_id?: string | undefined;
     } & {
         limit?: number | undefined;
         state?: number | undefined;
         cursor?: string | undefined;
+        clan_id?: string | undefined;
     } & { [K in Exclude<keyof I, keyof ListChannelDescsRequest>]: never; }>(base?: I | undefined): ListChannelDescsRequest;
     fromPartial<I_1 extends {
         limit?: number | undefined;
         state?: number | undefined;
         cursor?: string | undefined;
+        clan_id?: string | undefined;
     } & {
         limit?: number | undefined;
         state?: number | undefined;
         cursor?: string | undefined;
+        clan_id?: string | undefined;
     } & { [K_1 in Exclude<keyof I_1, keyof ListChannelDescsRequest>]: never; }>(object: I_1): ListChannelDescsRequest;
 };
 export declare const CreateChannelDescRequest: {

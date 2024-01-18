@@ -240,6 +240,8 @@ export interface ApiChannelMessageList {
   next_cursor?: string;
   //The cursor to send when retrieving the previous page, if any.
   prev_cursor?: string;
+  //
+  unread_messages?: Array<ApiUnreadMessage>;
 }
 
 /**  */
@@ -747,6 +749,14 @@ export interface ApiTournamentRecordList {
   rank_count?: string;
   //A list of tournament records.
   records?: Array<ApiLeaderboardRecord>;
+}
+
+/**  */
+export interface ApiUnreadMessage {
+  //The unique ID of this message.
+  message_id?: string;
+  //The unique ID of this message.
+  user_id?: string;
 }
 
 /** Update a user's account details. */
@@ -2281,6 +2291,7 @@ export class NakamaApi {
       limit?:number,
       state?:number,
       cursor?:string,
+      clanId?:string,
       options: any = {}): Promise<ApiChannelDescList> {
     
     const urlPath = "/v2/channeldesc";
@@ -2288,6 +2299,7 @@ export class NakamaApi {
     queryParams.set("limit", limit);
     queryParams.set("state", state);
     queryParams.set("cursor", cursor);
+    queryParams.set("clan_id", clanId);
 
     let bodyJson : string = "";
 
@@ -3135,7 +3147,7 @@ export class NakamaApi {
   /** Update fields in a given group. */
   updateGroup(bearerToken: string,
       groupId:string,
-      body:ApiUpdateGroupRequest,
+      body:{},
       options: any = {}): Promise<any> {
     
     if (groupId === null || groupId === undefined) {
@@ -4654,7 +4666,7 @@ export class NakamaApi {
     ]);
 }
 
-  /**  */
+  /** Update fields in a given category. */
   updateCategory(bearerToken: string,
       body:ApiUpdateCategoryDescRequest,
       options: any = {}): Promise<any> {

@@ -545,10 +545,19 @@ export interface ChannelMessage {
   user_id_two: string;
 }
 
+export interface UnreadMessage {
+  /** The unique ID of this message. */
+  message_id: string;
+  /** The unique ID of this message. */
+  user_id: string;
+}
+
 /** A list of channel messages, usually a result of a list operation. */
 export interface ChannelMessageList {
   /** A list of messages. */
   messages: ChannelMessage[];
+  /** A list of unread message with userid */
+  unread_messages: UnreadMessage[];
   /** The cursor to send when retrieving the next page, if any. */
   next_cursor: string;
   /** The cursor to send when retrieving the previous page, if any. */
@@ -1996,12 +2005,14 @@ export interface ListChannelDescsRequest {
   limit:
     | number
     | undefined;
-  /** The friend state to list. */
+  /** The channel state to list. */
   state:
     | number
     | undefined;
   /** Cursor to start from */
   cursor: string;
+  /** The clan of this channel */
+  clan_id: string;
 }
 
 /** Create a channel within clan. */
@@ -4980,8 +4991,70 @@ export const ChannelMessage = {
   },
 };
 
+function createBaseUnreadMessage(): UnreadMessage {
+  return { message_id: "", user_id: "" };
+}
+
+export const UnreadMessage = {
+  encode(message: UnreadMessage, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.message_id !== "") {
+      writer.uint32(10).string(message.message_id);
+    }
+    if (message.user_id !== "") {
+      writer.uint32(18).string(message.user_id);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): UnreadMessage {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseUnreadMessage();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.message_id = reader.string();
+          break;
+        case 2:
+          message.user_id = reader.string();
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): UnreadMessage {
+    return {
+      message_id: isSet(object.message_id) ? String(object.message_id) : "",
+      user_id: isSet(object.user_id) ? String(object.user_id) : "",
+    };
+  },
+
+  toJSON(message: UnreadMessage): unknown {
+    const obj: any = {};
+    message.message_id !== undefined && (obj.message_id = message.message_id);
+    message.user_id !== undefined && (obj.user_id = message.user_id);
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<UnreadMessage>, I>>(base?: I): UnreadMessage {
+    return UnreadMessage.fromPartial(base ?? {});
+  },
+
+  fromPartial<I extends Exact<DeepPartial<UnreadMessage>, I>>(object: I): UnreadMessage {
+    const message = createBaseUnreadMessage();
+    message.message_id = object.message_id ?? "";
+    message.user_id = object.user_id ?? "";
+    return message;
+  },
+};
+
 function createBaseChannelMessageList(): ChannelMessageList {
-  return { messages: [], next_cursor: "", prev_cursor: "", cacheable_cursor: "" };
+  return { messages: [], unread_messages: [], next_cursor: "", prev_cursor: "", cacheable_cursor: "" };
 }
 
 export const ChannelMessageList = {
@@ -4989,14 +5062,17 @@ export const ChannelMessageList = {
     for (const v of message.messages) {
       ChannelMessage.encode(v!, writer.uint32(10).fork()).ldelim();
     }
+    for (const v of message.unread_messages) {
+      UnreadMessage.encode(v!, writer.uint32(18).fork()).ldelim();
+    }
     if (message.next_cursor !== "") {
-      writer.uint32(18).string(message.next_cursor);
+      writer.uint32(26).string(message.next_cursor);
     }
     if (message.prev_cursor !== "") {
-      writer.uint32(26).string(message.prev_cursor);
+      writer.uint32(34).string(message.prev_cursor);
     }
     if (message.cacheable_cursor !== "") {
-      writer.uint32(34).string(message.cacheable_cursor);
+      writer.uint32(42).string(message.cacheable_cursor);
     }
     return writer;
   },
@@ -5012,12 +5088,15 @@ export const ChannelMessageList = {
           message.messages.push(ChannelMessage.decode(reader, reader.uint32()));
           break;
         case 2:
-          message.next_cursor = reader.string();
+          message.unread_messages.push(UnreadMessage.decode(reader, reader.uint32()));
           break;
         case 3:
-          message.prev_cursor = reader.string();
+          message.next_cursor = reader.string();
           break;
         case 4:
+          message.prev_cursor = reader.string();
+          break;
+        case 5:
           message.cacheable_cursor = reader.string();
           break;
         default:
@@ -5031,6 +5110,9 @@ export const ChannelMessageList = {
   fromJSON(object: any): ChannelMessageList {
     return {
       messages: Array.isArray(object?.messages) ? object.messages.map((e: any) => ChannelMessage.fromJSON(e)) : [],
+      unread_messages: Array.isArray(object?.unread_messages)
+        ? object.unread_messages.map((e: any) => UnreadMessage.fromJSON(e))
+        : [],
       next_cursor: isSet(object.next_cursor) ? String(object.next_cursor) : "",
       prev_cursor: isSet(object.prev_cursor) ? String(object.prev_cursor) : "",
       cacheable_cursor: isSet(object.cacheable_cursor) ? String(object.cacheable_cursor) : "",
@@ -5043,6 +5125,11 @@ export const ChannelMessageList = {
       obj.messages = message.messages.map((e) => e ? ChannelMessage.toJSON(e) : undefined);
     } else {
       obj.messages = [];
+    }
+    if (message.unread_messages) {
+      obj.unread_messages = message.unread_messages.map((e) => e ? UnreadMessage.toJSON(e) : undefined);
+    } else {
+      obj.unread_messages = [];
     }
     message.next_cursor !== undefined && (obj.next_cursor = message.next_cursor);
     message.prev_cursor !== undefined && (obj.prev_cursor = message.prev_cursor);
@@ -5057,6 +5144,7 @@ export const ChannelMessageList = {
   fromPartial<I extends Exact<DeepPartial<ChannelMessageList>, I>>(object: I): ChannelMessageList {
     const message = createBaseChannelMessageList();
     message.messages = object.messages?.map((e) => ChannelMessage.fromPartial(e)) || [];
+    message.unread_messages = object.unread_messages?.map((e) => UnreadMessage.fromPartial(e)) || [];
     message.next_cursor = object.next_cursor ?? "";
     message.prev_cursor = object.prev_cursor ?? "";
     message.cacheable_cursor = object.cacheable_cursor ?? "";
@@ -13189,7 +13277,7 @@ export const ChannelDescList = {
 };
 
 function createBaseListChannelDescsRequest(): ListChannelDescsRequest {
-  return { limit: undefined, state: undefined, cursor: "" };
+  return { limit: undefined, state: undefined, cursor: "", clan_id: "" };
 }
 
 export const ListChannelDescsRequest = {
@@ -13202,6 +13290,9 @@ export const ListChannelDescsRequest = {
     }
     if (message.cursor !== "") {
       writer.uint32(26).string(message.cursor);
+    }
+    if (message.clan_id !== "") {
+      writer.uint32(34).string(message.clan_id);
     }
     return writer;
   },
@@ -13222,6 +13313,9 @@ export const ListChannelDescsRequest = {
         case 3:
           message.cursor = reader.string();
           break;
+        case 4:
+          message.clan_id = reader.string();
+          break;
         default:
           reader.skipType(tag & 7);
           break;
@@ -13235,6 +13329,7 @@ export const ListChannelDescsRequest = {
       limit: isSet(object.limit) ? Number(object.limit) : undefined,
       state: isSet(object.state) ? Number(object.state) : undefined,
       cursor: isSet(object.cursor) ? String(object.cursor) : "",
+      clan_id: isSet(object.clan_id) ? String(object.clan_id) : "",
     };
   },
 
@@ -13243,6 +13338,7 @@ export const ListChannelDescsRequest = {
     message.limit !== undefined && (obj.limit = message.limit);
     message.state !== undefined && (obj.state = message.state);
     message.cursor !== undefined && (obj.cursor = message.cursor);
+    message.clan_id !== undefined && (obj.clan_id = message.clan_id);
     return obj;
   },
 
@@ -13255,6 +13351,7 @@ export const ListChannelDescsRequest = {
     message.limit = object.limit ?? undefined;
     message.state = object.state ?? undefined;
     message.cursor = object.cursor ?? "";
+    message.clan_id = object.clan_id ?? "";
     return message;
   },
 };
