@@ -2,22 +2,8 @@ var __create = Object.create;
 var __defProp = Object.defineProperty;
 var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
 var __getOwnPropNames = Object.getOwnPropertyNames;
-var __getOwnPropSymbols = Object.getOwnPropertySymbols;
 var __getProtoOf = Object.getPrototypeOf;
 var __hasOwnProp = Object.prototype.hasOwnProperty;
-var __propIsEnum = Object.prototype.propertyIsEnumerable;
-var __defNormalProp = (obj, key, value) => key in obj ? __defProp(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
-var __spreadValues = (a, b) => {
-  for (var prop in b || (b = {}))
-    if (__hasOwnProp.call(b, prop))
-      __defNormalProp(a, prop, b[prop]);
-  if (__getOwnPropSymbols)
-    for (var prop of __getOwnPropSymbols(b)) {
-      if (__propIsEnum.call(b, prop))
-        __defNormalProp(a, prop, b[prop]);
-    }
-  return a;
-};
 var __commonJS = (cb, mod2) => function __require() {
   return mod2 || (0, cb[__getOwnPropNames(cb)[0]])((mod2 = { exports: {} }).exports, mod2), mod2.exports;
 };
@@ -1406,7 +1392,7 @@ var require_longbits = __commonJS({
   "../../node_modules/protobufjs/src/util/longbits.js"(exports2, module2) {
     "use strict";
     module2.exports = LongBits;
-    var util3 = require_minimal();
+    var util = require_minimal();
     function LongBits(lo, hi) {
       this.lo = lo >>> 0;
       this.hi = hi >>> 0;
@@ -1443,9 +1429,9 @@ var require_longbits = __commonJS({
     LongBits.from = function from(value) {
       if (typeof value === "number")
         return LongBits.fromNumber(value);
-      if (util3.isString(value)) {
-        if (util3.Long)
-          value = util3.Long.fromString(value);
+      if (util.isString(value)) {
+        if (util.Long)
+          value = util.Long.fromString(value);
         else
           return LongBits.fromNumber(parseInt(value, 10));
       }
@@ -1461,7 +1447,7 @@ var require_longbits = __commonJS({
       return this.lo + this.hi * 4294967296;
     };
     LongBits.prototype.toLong = function toLong(unsigned) {
-      return util3.Long ? new util3.Long(this.lo | 0, this.hi | 0, Boolean(unsigned)) : { low: this.lo | 0, high: this.hi | 0, unsigned: Boolean(unsigned) };
+      return util.Long ? new util.Long(this.lo | 0, this.hi | 0, Boolean(unsigned)) : { low: this.lo | 0, high: this.hi | 0, unsigned: Boolean(unsigned) };
     };
     var charCodeAt = String.prototype.charCodeAt;
     LongBits.fromHash = function fromHash(hash) {
@@ -1507,50 +1493,50 @@ var require_longbits = __commonJS({
 var require_minimal = __commonJS({
   "../../node_modules/protobufjs/src/util/minimal.js"(exports2) {
     "use strict";
-    var util3 = exports2;
-    util3.asPromise = require_aspromise();
-    util3.base64 = require_base64();
-    util3.EventEmitter = require_eventemitter();
-    util3.float = require_float();
-    util3.inquire = require_inquire();
-    util3.utf8 = require_utf8();
-    util3.pool = require_pool();
-    util3.LongBits = require_longbits();
-    util3.isNode = Boolean(typeof global !== "undefined" && global && global.process && global.process.versions && global.process.versions.node);
-    util3.global = util3.isNode && global || typeof window !== "undefined" && window || typeof self !== "undefined" && self || exports2;
-    util3.emptyArray = Object.freeze ? Object.freeze([]) : (
+    var util = exports2;
+    util.asPromise = require_aspromise();
+    util.base64 = require_base64();
+    util.EventEmitter = require_eventemitter();
+    util.float = require_float();
+    util.inquire = require_inquire();
+    util.utf8 = require_utf8();
+    util.pool = require_pool();
+    util.LongBits = require_longbits();
+    util.isNode = Boolean(typeof global !== "undefined" && global && global.process && global.process.versions && global.process.versions.node);
+    util.global = util.isNode && global || typeof window !== "undefined" && window || typeof self !== "undefined" && self || exports2;
+    util.emptyArray = Object.freeze ? Object.freeze([]) : (
       /* istanbul ignore next */
       []
     );
-    util3.emptyObject = Object.freeze ? Object.freeze({}) : (
+    util.emptyObject = Object.freeze ? Object.freeze({}) : (
       /* istanbul ignore next */
       {}
     );
-    util3.isInteger = Number.isInteger || /* istanbul ignore next */
+    util.isInteger = Number.isInteger || /* istanbul ignore next */
     function isInteger(value) {
       return typeof value === "number" && isFinite(value) && Math.floor(value) === value;
     };
-    util3.isString = function isString(value) {
+    util.isString = function isString(value) {
       return typeof value === "string" || value instanceof String;
     };
-    util3.isObject = function isObject(value) {
+    util.isObject = function isObject2(value) {
       return value && typeof value === "object";
     };
-    util3.isset = /**
+    util.isset = /**
      * Checks if a property on a message is considered to be present.
      * @param {Object} obj Plain object or message instance
      * @param {string} prop Property name
      * @returns {boolean} `true` if considered to be present, otherwise `false`
      */
-    util3.isSet = function isSet(obj, prop) {
+    util.isSet = function isSet5(obj, prop) {
       var value = obj[prop];
       if (value != null && obj.hasOwnProperty(prop))
         return typeof value !== "object" || (Array.isArray(value) ? value.length : Object.keys(value).length) > 0;
       return false;
     };
-    util3.Buffer = function() {
+    util.Buffer = function() {
       try {
-        var Buffer2 = util3.inquire("buffer").Buffer;
+        var Buffer2 = util.inquire("buffer").Buffer;
         return Buffer2.prototype.utf8Write ? Buffer2 : (
           /* istanbul ignore next */
           null
@@ -1559,26 +1545,26 @@ var require_minimal = __commonJS({
         return null;
       }
     }();
-    util3._Buffer_from = null;
-    util3._Buffer_allocUnsafe = null;
-    util3.newBuffer = function newBuffer(sizeOrArray) {
-      return typeof sizeOrArray === "number" ? util3.Buffer ? util3._Buffer_allocUnsafe(sizeOrArray) : new util3.Array(sizeOrArray) : util3.Buffer ? util3._Buffer_from(sizeOrArray) : typeof Uint8Array === "undefined" ? sizeOrArray : new Uint8Array(sizeOrArray);
+    util._Buffer_from = null;
+    util._Buffer_allocUnsafe = null;
+    util.newBuffer = function newBuffer(sizeOrArray) {
+      return typeof sizeOrArray === "number" ? util.Buffer ? util._Buffer_allocUnsafe(sizeOrArray) : new util.Array(sizeOrArray) : util.Buffer ? util._Buffer_from(sizeOrArray) : typeof Uint8Array === "undefined" ? sizeOrArray : new Uint8Array(sizeOrArray);
     };
-    util3.Array = typeof Uint8Array !== "undefined" ? Uint8Array : Array;
-    util3.Long = /* istanbul ignore next */
-    util3.global.dcodeIO && /* istanbul ignore next */
-    util3.global.dcodeIO.Long || /* istanbul ignore next */
-    util3.global.Long || util3.inquire("long");
-    util3.key2Re = /^true|false|0|1$/;
-    util3.key32Re = /^-?(?:0|[1-9][0-9]*)$/;
-    util3.key64Re = /^(?:[\\x00-\\xff]{8}|-?(?:0|[1-9][0-9]*))$/;
-    util3.longToHash = function longToHash(value) {
-      return value ? util3.LongBits.from(value).toHash() : util3.LongBits.zeroHash;
+    util.Array = typeof Uint8Array !== "undefined" ? Uint8Array : Array;
+    util.Long = /* istanbul ignore next */
+    util.global.dcodeIO && /* istanbul ignore next */
+    util.global.dcodeIO.Long || /* istanbul ignore next */
+    util.global.Long || util.inquire("long");
+    util.key2Re = /^true|false|0|1$/;
+    util.key32Re = /^-?(?:0|[1-9][0-9]*)$/;
+    util.key64Re = /^(?:[\\x00-\\xff]{8}|-?(?:0|[1-9][0-9]*))$/;
+    util.longToHash = function longToHash(value) {
+      return value ? util.LongBits.from(value).toHash() : util.LongBits.zeroHash;
     };
-    util3.longFromHash = function longFromHash(hash, unsigned) {
-      var bits = util3.LongBits.fromHash(hash);
-      if (util3.Long)
-        return util3.Long.fromBits(bits.lo, bits.hi, unsigned);
+    util.longFromHash = function longFromHash(hash, unsigned) {
+      var bits = util.LongBits.fromHash(hash);
+      if (util.Long)
+        return util.Long.fromBits(bits.lo, bits.hi, unsigned);
       return bits.toNumber(Boolean(unsigned));
     };
     function merge(dst, src, ifNotSet) {
@@ -1587,8 +1573,8 @@ var require_minimal = __commonJS({
           dst[keys[i]] = src[keys[i]];
       return dst;
     }
-    util3.merge = merge;
-    util3.lcFirst = function lcFirst(str) {
+    util.merge = merge;
+    util.lcFirst = function lcFirst(str) {
       return str.charAt(0).toLowerCase() + str.substring(1);
     };
     function newError(name) {
@@ -1614,9 +1600,9 @@ var require_minimal = __commonJS({
       };
       return CustomError;
     }
-    util3.newError = newError;
-    util3.ProtocolError = newError("ProtocolError");
-    util3.oneOfGetter = function getOneOf(fieldNames) {
+    util.newError = newError;
+    util.ProtocolError = newError("ProtocolError");
+    util.oneOfGetter = function getOneOf(fieldNames) {
       var fieldMap = {};
       for (var i = 0; i < fieldNames.length; ++i)
         fieldMap[fieldNames[i]] = 1;
@@ -1626,30 +1612,30 @@ var require_minimal = __commonJS({
             return keys[i2];
       };
     };
-    util3.oneOfSetter = function setOneOf(fieldNames) {
+    util.oneOfSetter = function setOneOf(fieldNames) {
       return function(name) {
         for (var i = 0; i < fieldNames.length; ++i)
           if (fieldNames[i] !== name)
             delete this[fieldNames[i]];
       };
     };
-    util3.toJSONOptions = {
+    util.toJSONOptions = {
       longs: String,
       enums: String,
       bytes: String,
       json: true
     };
-    util3._configure = function() {
-      var Buffer2 = util3.Buffer;
+    util._configure = function() {
+      var Buffer2 = util.Buffer;
       if (!Buffer2) {
-        util3._Buffer_from = util3._Buffer_allocUnsafe = null;
+        util._Buffer_from = util._Buffer_allocUnsafe = null;
         return;
       }
-      util3._Buffer_from = Buffer2.from !== Uint8Array.from && Buffer2.from || /* istanbul ignore next */
+      util._Buffer_from = Buffer2.from !== Uint8Array.from && Buffer2.from || /* istanbul ignore next */
       function Buffer_from(value, encoding) {
         return new Buffer2(value, encoding);
       };
-      util3._Buffer_allocUnsafe = Buffer2.allocUnsafe || /* istanbul ignore next */
+      util._Buffer_allocUnsafe = Buffer2.allocUnsafe || /* istanbul ignore next */
       function Buffer_allocUnsafe(size) {
         return new Buffer2(size);
       };
@@ -1661,12 +1647,12 @@ var require_minimal = __commonJS({
 var require_writer = __commonJS({
   "../../node_modules/protobufjs/src/writer.js"(exports2, module2) {
     "use strict";
-    module2.exports = Writer3;
-    var util3 = require_minimal();
+    module2.exports = Writer;
+    var util = require_minimal();
     var BufferWriter;
-    var LongBits = util3.LongBits;
-    var base64 = util3.base64;
-    var utf8 = util3.utf8;
+    var LongBits = util.LongBits;
+    var base64 = util.base64;
+    var utf8 = util.utf8;
     function Op(fn, len, val) {
       this.fn = fn;
       this.len = len;
@@ -1681,28 +1667,28 @@ var require_writer = __commonJS({
       this.len = writer.len;
       this.next = writer.states;
     }
-    function Writer3() {
+    function Writer() {
       this.len = 0;
       this.head = new Op(noop, 0, 0);
       this.tail = this.head;
       this.states = null;
     }
     var create = function create2() {
-      return util3.Buffer ? function create_buffer_setup() {
-        return (Writer3.create = function create_buffer() {
+      return util.Buffer ? function create_buffer_setup() {
+        return (Writer.create = function create_buffer() {
           return new BufferWriter();
         })();
       } : function create_array() {
-        return new Writer3();
+        return new Writer();
       };
     };
-    Writer3.create = create();
-    Writer3.alloc = function alloc(size) {
-      return new util3.Array(size);
+    Writer.create = create();
+    Writer.alloc = function alloc(size) {
+      return new util.Array(size);
     };
-    if (util3.Array !== Array)
-      Writer3.alloc = util3.pool(Writer3.alloc, util3.Array.prototype.subarray);
-    Writer3.prototype._push = function push(fn, len, val) {
+    if (util.Array !== Array)
+      Writer.alloc = util.pool(Writer.alloc, util.Array.prototype.subarray);
+    Writer.prototype._push = function push(fn, len, val) {
       this.tail = this.tail.next = new Op(fn, len, val);
       this.len += len;
       return this;
@@ -1724,17 +1710,17 @@ var require_writer = __commonJS({
     }
     VarintOp.prototype = Object.create(Op.prototype);
     VarintOp.prototype.fn = writeVarint32;
-    Writer3.prototype.uint32 = function write_uint32(value) {
+    Writer.prototype.uint32 = function write_uint32(value) {
       this.len += (this.tail = this.tail.next = new VarintOp(
         (value = value >>> 0) < 128 ? 1 : value < 16384 ? 2 : value < 2097152 ? 3 : value < 268435456 ? 4 : 5,
         value
       )).len;
       return this;
     };
-    Writer3.prototype.int32 = function write_int32(value) {
+    Writer.prototype.int32 = function write_int32(value) {
       return value < 0 ? this._push(writeVarint64, 10, LongBits.fromNumber(value)) : this.uint32(value);
     };
-    Writer3.prototype.sint32 = function write_sint32(value) {
+    Writer.prototype.sint32 = function write_sint32(value) {
       return this.uint32((value << 1 ^ value >> 31) >>> 0);
     };
     function writeVarint64(val, buf, pos) {
@@ -1749,16 +1735,16 @@ var require_writer = __commonJS({
       }
       buf[pos++] = val.lo;
     }
-    Writer3.prototype.uint64 = function write_uint64(value) {
+    Writer.prototype.uint64 = function write_uint64(value) {
       var bits = LongBits.from(value);
       return this._push(writeVarint64, bits.length(), bits);
     };
-    Writer3.prototype.int64 = Writer3.prototype.uint64;
-    Writer3.prototype.sint64 = function write_sint64(value) {
+    Writer.prototype.int64 = Writer.prototype.uint64;
+    Writer.prototype.sint64 = function write_sint64(value) {
       var bits = LongBits.from(value).zzEncode();
       return this._push(writeVarint64, bits.length(), bits);
     };
-    Writer3.prototype.bool = function write_bool(value) {
+    Writer.prototype.bool = function write_bool(value) {
       return this._push(writeByte, 1, value ? 1 : 0);
     };
     function writeFixed32(val, buf, pos) {
@@ -1767,49 +1753,49 @@ var require_writer = __commonJS({
       buf[pos + 2] = val >>> 16 & 255;
       buf[pos + 3] = val >>> 24;
     }
-    Writer3.prototype.fixed32 = function write_fixed32(value) {
+    Writer.prototype.fixed32 = function write_fixed32(value) {
       return this._push(writeFixed32, 4, value >>> 0);
     };
-    Writer3.prototype.sfixed32 = Writer3.prototype.fixed32;
-    Writer3.prototype.fixed64 = function write_fixed64(value) {
+    Writer.prototype.sfixed32 = Writer.prototype.fixed32;
+    Writer.prototype.fixed64 = function write_fixed64(value) {
       var bits = LongBits.from(value);
       return this._push(writeFixed32, 4, bits.lo)._push(writeFixed32, 4, bits.hi);
     };
-    Writer3.prototype.sfixed64 = Writer3.prototype.fixed64;
-    Writer3.prototype.float = function write_float(value) {
-      return this._push(util3.float.writeFloatLE, 4, value);
+    Writer.prototype.sfixed64 = Writer.prototype.fixed64;
+    Writer.prototype.float = function write_float(value) {
+      return this._push(util.float.writeFloatLE, 4, value);
     };
-    Writer3.prototype.double = function write_double(value) {
-      return this._push(util3.float.writeDoubleLE, 8, value);
+    Writer.prototype.double = function write_double(value) {
+      return this._push(util.float.writeDoubleLE, 8, value);
     };
-    var writeBytes = util3.Array.prototype.set ? function writeBytes_set(val, buf, pos) {
+    var writeBytes = util.Array.prototype.set ? function writeBytes_set(val, buf, pos) {
       buf.set(val, pos);
     } : function writeBytes_for(val, buf, pos) {
       for (var i = 0; i < val.length; ++i)
         buf[pos + i] = val[i];
     };
-    Writer3.prototype.bytes = function write_bytes(value) {
+    Writer.prototype.bytes = function write_bytes(value) {
       var len = value.length >>> 0;
       if (!len)
         return this._push(writeByte, 1, 0);
-      if (util3.isString(value)) {
-        var buf = Writer3.alloc(len = base64.length(value));
+      if (util.isString(value)) {
+        var buf = Writer.alloc(len = base64.length(value));
         base64.decode(value, buf, 0);
         value = buf;
       }
       return this.uint32(len)._push(writeBytes, len, value);
     };
-    Writer3.prototype.string = function write_string(value) {
+    Writer.prototype.string = function write_string(value) {
       var len = utf8.length(value);
       return len ? this.uint32(len)._push(utf8.write, len, value) : this._push(writeByte, 1, 0);
     };
-    Writer3.prototype.fork = function fork() {
+    Writer.prototype.fork = function fork() {
       this.states = new State(this);
       this.head = this.tail = new Op(noop, 0, 0);
       this.len = 0;
       return this;
     };
-    Writer3.prototype.reset = function reset() {
+    Writer.prototype.reset = function reset() {
       if (this.states) {
         this.head = this.states.head;
         this.tail = this.states.tail;
@@ -1821,7 +1807,7 @@ var require_writer = __commonJS({
       }
       return this;
     };
-    Writer3.prototype.ldelim = function ldelim() {
+    Writer.prototype.ldelim = function ldelim() {
       var head = this.head, tail = this.tail, len = this.len;
       this.reset().uint32(len);
       if (len) {
@@ -1831,7 +1817,7 @@ var require_writer = __commonJS({
       }
       return this;
     };
-    Writer3.prototype.finish = function finish() {
+    Writer.prototype.finish = function finish() {
       var head = this.head.next, buf = this.constructor.alloc(this.len), pos = 0;
       while (head) {
         head.fn(head.val, buf, pos);
@@ -1840,9 +1826,9 @@ var require_writer = __commonJS({
       }
       return buf;
     };
-    Writer3._configure = function(BufferWriter_) {
+    Writer._configure = function(BufferWriter_) {
       BufferWriter = BufferWriter_;
-      Writer3.create = create();
+      Writer.create = create();
       BufferWriter._configure();
     };
   }
@@ -1853,15 +1839,15 @@ var require_writer_buffer = __commonJS({
   "../../node_modules/protobufjs/src/writer_buffer.js"(exports2, module2) {
     "use strict";
     module2.exports = BufferWriter;
-    var Writer3 = require_writer();
-    (BufferWriter.prototype = Object.create(Writer3.prototype)).constructor = BufferWriter;
-    var util3 = require_minimal();
+    var Writer = require_writer();
+    (BufferWriter.prototype = Object.create(Writer.prototype)).constructor = BufferWriter;
+    var util = require_minimal();
     function BufferWriter() {
-      Writer3.call(this);
+      Writer.call(this);
     }
     BufferWriter._configure = function() {
-      BufferWriter.alloc = util3._Buffer_allocUnsafe;
-      BufferWriter.writeBytesBuffer = util3.Buffer && util3.Buffer.prototype instanceof Uint8Array && util3.Buffer.prototype.set.name === "set" ? function writeBytesBuffer_set(val, buf, pos) {
+      BufferWriter.alloc = util._Buffer_allocUnsafe;
+      BufferWriter.writeBytesBuffer = util.Buffer && util.Buffer.prototype instanceof Uint8Array && util.Buffer.prototype.set.name === "set" ? function writeBytesBuffer_set(val, buf, pos) {
         buf.set(val, pos);
       } : function writeBytesBuffer_copy(val, buf, pos) {
         if (val.copy)
@@ -1872,8 +1858,8 @@ var require_writer_buffer = __commonJS({
       };
     };
     BufferWriter.prototype.bytes = function write_bytes_buffer(value) {
-      if (util3.isString(value))
-        value = util3._Buffer_from(value, "base64");
+      if (util.isString(value))
+        value = util._Buffer_from(value, "base64");
       var len = value.length >>> 0;
       this.uint32(len);
       if (len)
@@ -1882,14 +1868,14 @@ var require_writer_buffer = __commonJS({
     };
     function writeStringBuffer(val, buf, pos) {
       if (val.length < 40)
-        util3.utf8.write(val, buf, pos);
+        util.utf8.write(val, buf, pos);
       else if (buf.utf8Write)
         buf.utf8Write(val, pos);
       else
         buf.write(val, pos);
     }
     BufferWriter.prototype.string = function write_string_buffer(value) {
-      var len = util3.Buffer.byteLength(value);
+      var len = util.Buffer.byteLength(value);
       this.uint32(len);
       if (len)
         this._push(writeStringBuffer, len, value);
@@ -1903,39 +1889,39 @@ var require_writer_buffer = __commonJS({
 var require_reader = __commonJS({
   "../../node_modules/protobufjs/src/reader.js"(exports2, module2) {
     "use strict";
-    module2.exports = Reader3;
-    var util3 = require_minimal();
+    module2.exports = Reader;
+    var util = require_minimal();
     var BufferReader;
-    var LongBits = util3.LongBits;
-    var utf8 = util3.utf8;
+    var LongBits = util.LongBits;
+    var utf8 = util.utf8;
     function indexOutOfRange(reader, writeLength) {
       return RangeError("index out of range: " + reader.pos + " + " + (writeLength || 1) + " > " + reader.len);
     }
-    function Reader3(buffer) {
+    function Reader(buffer) {
       this.buf = buffer;
       this.pos = 0;
       this.len = buffer.length;
     }
     var create_array = typeof Uint8Array !== "undefined" ? function create_typed_array(buffer) {
       if (buffer instanceof Uint8Array || Array.isArray(buffer))
-        return new Reader3(buffer);
+        return new Reader(buffer);
       throw Error("illegal buffer");
     } : function create_array2(buffer) {
       if (Array.isArray(buffer))
-        return new Reader3(buffer);
+        return new Reader(buffer);
       throw Error("illegal buffer");
     };
     var create = function create2() {
-      return util3.Buffer ? function create_buffer_setup(buffer) {
-        return (Reader3.create = function create_buffer(buffer2) {
-          return util3.Buffer.isBuffer(buffer2) ? new BufferReader(buffer2) : create_array(buffer2);
+      return util.Buffer ? function create_buffer_setup(buffer) {
+        return (Reader.create = function create_buffer(buffer2) {
+          return util.Buffer.isBuffer(buffer2) ? new BufferReader(buffer2) : create_array(buffer2);
         })(buffer);
       } : create_array;
     };
-    Reader3.create = create();
-    Reader3.prototype._slice = util3.Array.prototype.subarray || /* istanbul ignore next */
-    util3.Array.prototype.slice;
-    Reader3.prototype.uint32 = function read_uint32_setup() {
+    Reader.create = create();
+    Reader.prototype._slice = util.Array.prototype.subarray || /* istanbul ignore next */
+    util.Array.prototype.slice;
+    Reader.prototype.uint32 = function read_uint32_setup() {
       var value = 4294967295;
       return function read_uint32() {
         value = (this.buf[this.pos] & 127) >>> 0;
@@ -1960,10 +1946,10 @@ var require_reader = __commonJS({
         return value;
       };
     }();
-    Reader3.prototype.int32 = function read_int32() {
+    Reader.prototype.int32 = function read_int32() {
       return this.uint32() | 0;
     };
-    Reader3.prototype.sint32 = function read_sint32() {
+    Reader.prototype.sint32 = function read_sint32() {
       var value = this.uint32();
       return value >>> 1 ^ -(value & 1) | 0;
     };
@@ -2009,18 +1995,18 @@ var require_reader = __commonJS({
       }
       throw Error("invalid varint encoding");
     }
-    Reader3.prototype.bool = function read_bool() {
+    Reader.prototype.bool = function read_bool() {
       return this.uint32() !== 0;
     };
     function readFixed32_end(buf, end) {
       return (buf[end - 4] | buf[end - 3] << 8 | buf[end - 2] << 16 | buf[end - 1] << 24) >>> 0;
     }
-    Reader3.prototype.fixed32 = function read_fixed32() {
+    Reader.prototype.fixed32 = function read_fixed32() {
       if (this.pos + 4 > this.len)
         throw indexOutOfRange(this, 4);
       return readFixed32_end(this.buf, this.pos += 4);
     };
-    Reader3.prototype.sfixed32 = function read_sfixed32() {
+    Reader.prototype.sfixed32 = function read_sfixed32() {
       if (this.pos + 4 > this.len)
         throw indexOutOfRange(this, 4);
       return readFixed32_end(this.buf, this.pos += 4) | 0;
@@ -2030,21 +2016,21 @@ var require_reader = __commonJS({
         throw indexOutOfRange(this, 8);
       return new LongBits(readFixed32_end(this.buf, this.pos += 4), readFixed32_end(this.buf, this.pos += 4));
     }
-    Reader3.prototype.float = function read_float() {
+    Reader.prototype.float = function read_float() {
       if (this.pos + 4 > this.len)
         throw indexOutOfRange(this, 4);
-      var value = util3.float.readFloatLE(this.buf, this.pos);
+      var value = util.float.readFloatLE(this.buf, this.pos);
       this.pos += 4;
       return value;
     };
-    Reader3.prototype.double = function read_double() {
+    Reader.prototype.double = function read_double() {
       if (this.pos + 8 > this.len)
         throw indexOutOfRange(this, 4);
-      var value = util3.float.readDoubleLE(this.buf, this.pos);
+      var value = util.float.readDoubleLE(this.buf, this.pos);
       this.pos += 8;
       return value;
     };
-    Reader3.prototype.bytes = function read_bytes() {
+    Reader.prototype.bytes = function read_bytes() {
       var length = this.uint32(), start = this.pos, end = this.pos + length;
       if (end > this.len)
         throw indexOutOfRange(this, length);
@@ -2053,11 +2039,11 @@ var require_reader = __commonJS({
         return this.buf.slice(start, end);
       return start === end ? new this.buf.constructor(0) : this._slice.call(this.buf, start, end);
     };
-    Reader3.prototype.string = function read_string() {
+    Reader.prototype.string = function read_string() {
       var bytes = this.bytes();
       return utf8.read(bytes, 0, bytes.length);
     };
-    Reader3.prototype.skip = function skip(length) {
+    Reader.prototype.skip = function skip(length) {
       if (typeof length === "number") {
         if (this.pos + length > this.len)
           throw indexOutOfRange(this, length);
@@ -2070,7 +2056,7 @@ var require_reader = __commonJS({
       }
       return this;
     };
-    Reader3.prototype.skipType = function(wireType) {
+    Reader.prototype.skipType = function(wireType) {
       switch (wireType) {
         case 0:
           this.skip();
@@ -2094,15 +2080,15 @@ var require_reader = __commonJS({
       }
       return this;
     };
-    Reader3._configure = function(BufferReader_) {
+    Reader._configure = function(BufferReader_) {
       BufferReader = BufferReader_;
-      Reader3.create = create();
+      Reader.create = create();
       BufferReader._configure();
-      var fn = util3.Long ? "toLong" : (
+      var fn = util.Long ? "toLong" : (
         /* istanbul ignore next */
         "toNumber"
       );
-      util3.merge(Reader3.prototype, {
+      util.merge(Reader.prototype, {
         int64: function read_int64() {
           return readLongVarint.call(this)[fn](false);
         },
@@ -2128,15 +2114,15 @@ var require_reader_buffer = __commonJS({
   "../../node_modules/protobufjs/src/reader_buffer.js"(exports2, module2) {
     "use strict";
     module2.exports = BufferReader;
-    var Reader3 = require_reader();
-    (BufferReader.prototype = Object.create(Reader3.prototype)).constructor = BufferReader;
-    var util3 = require_minimal();
+    var Reader = require_reader();
+    (BufferReader.prototype = Object.create(Reader.prototype)).constructor = BufferReader;
+    var util = require_minimal();
     function BufferReader(buffer) {
-      Reader3.call(this, buffer);
+      Reader.call(this, buffer);
     }
     BufferReader._configure = function() {
-      if (util3.Buffer)
-        BufferReader.prototype._slice = util3.Buffer.prototype.slice;
+      if (util.Buffer)
+        BufferReader.prototype._slice = util.Buffer.prototype.slice;
     };
     BufferReader.prototype.string = function read_string_buffer() {
       var len = this.uint32();
@@ -2151,12 +2137,12 @@ var require_service = __commonJS({
   "../../node_modules/protobufjs/src/rpc/service.js"(exports2, module2) {
     "use strict";
     module2.exports = Service;
-    var util3 = require_minimal();
-    (Service.prototype = Object.create(util3.EventEmitter.prototype)).constructor = Service;
+    var util = require_minimal();
+    (Service.prototype = Object.create(util.EventEmitter.prototype)).constructor = Service;
     function Service(rpcImpl, requestDelimited, responseDelimited) {
       if (typeof rpcImpl !== "function")
         throw TypeError("rpcImpl must be a function");
-      util3.EventEmitter.call(this);
+      util.EventEmitter.call(this);
       this.rpcImpl = rpcImpl;
       this.requestDelimited = Boolean(requestDelimited);
       this.responseDelimited = Boolean(responseDelimited);
@@ -2166,7 +2152,7 @@ var require_service = __commonJS({
         throw TypeError("request must be specified");
       var self2 = this;
       if (!callback)
-        return util3.asPromise(rpcCall, self2, method, requestCtor, responseCtor, request);
+        return util.asPromise(rpcCall, self2, method, requestCtor, responseCtor, request);
       if (!self2.rpcImpl) {
         setTimeout(function() {
           callback(Error("already ended"));
@@ -2251,13 +2237,13 @@ var require_index_minimal = __commonJS({
     protobuf.util = require_minimal();
     protobuf.rpc = require_rpc();
     protobuf.roots = require_roots();
-    protobuf.configure = configure3;
-    function configure3() {
+    protobuf.configure = configure;
+    function configure() {
       protobuf.util._configure();
       protobuf.Writer._configure(protobuf.BufferWriter);
       protobuf.Reader._configure(protobuf.BufferReader);
     }
-    configure3();
+    configure();
   }
 });
 
@@ -2270,32 +2256,33 @@ var require_minimal2 = __commonJS({
 });
 
 // rtapi/realtime.ts
-var import_long2 = __toESM(require_long());
+var import_long4 = __toESM(require_long());
 var import_minimal4 = __toESM(require_minimal2());
 
+// api/api.ts
+var import_long3 = __toESM(require_long());
+var import_minimal3 = __toESM(require_minimal2());
+
 // google/protobuf/timestamp.ts
-var Long = __toESM(require_long());
+var import_long = __toESM(require_long());
 var import_minimal = __toESM(require_minimal2());
-var baseTimestamp = {
-  seconds: 0,
-  nanos: 0
-};
-function longToNumber(long) {
-  if (long.gt(Number.MAX_SAFE_INTEGER)) {
-    throw new globalThis.Error("Value is larger than Number.MAX_SAFE_INTEGER");
-  }
-  return long.toNumber();
+function createBaseTimestamp() {
+  return { seconds: 0, nanos: 0 };
 }
 var Timestamp = {
-  encode(message, writer = import_minimal.Writer.create()) {
-    writer.uint32(8).int64(message.seconds);
-    writer.uint32(16).int32(message.nanos);
+  encode(message, writer = import_minimal.default.Writer.create()) {
+    if (message.seconds !== 0) {
+      writer.uint32(8).int64(message.seconds);
+    }
+    if (message.nanos !== 0) {
+      writer.uint32(16).int32(message.nanos);
+    }
     return writer;
   },
   decode(input, length) {
-    const reader = input instanceof Uint8Array ? new import_minimal.Reader(input) : input;
+    const reader = input instanceof import_minimal.default.Reader ? input : new import_minimal.default.Reader(input);
     let end = length === void 0 ? reader.len : reader.pos + length;
-    const message = __spreadValues({}, baseTimestamp);
+    const message = createBaseTimestamp();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -2313,62 +2300,74 @@ var Timestamp = {
     return message;
   },
   fromJSON(object) {
-    const message = __spreadValues({}, baseTimestamp);
-    if (object.seconds !== void 0 && object.seconds !== null) {
-      message.seconds = Number(object.seconds);
-    }
-    if (object.nanos !== void 0 && object.nanos !== null) {
-      message.nanos = Number(object.nanos);
-    }
-    return message;
-  },
-  fromPartial(object) {
-    const message = __spreadValues({}, baseTimestamp);
-    if (object.seconds !== void 0 && object.seconds !== null) {
-      message.seconds = object.seconds;
-    }
-    if (object.nanos !== void 0 && object.nanos !== null) {
-      message.nanos = object.nanos;
-    }
-    return message;
+    return {
+      seconds: isSet(object.seconds) ? Number(object.seconds) : 0,
+      nanos: isSet(object.nanos) ? Number(object.nanos) : 0
+    };
   },
   toJSON(message) {
     const obj = {};
-    message.seconds !== void 0 && (obj.seconds = message.seconds);
-    message.nanos !== void 0 && (obj.nanos = message.nanos);
+    message.seconds !== void 0 && (obj.seconds = Math.round(message.seconds));
+    message.nanos !== void 0 && (obj.nanos = Math.round(message.nanos));
     return obj;
+  },
+  create(base) {
+    return Timestamp.fromPartial(base != null ? base : {});
+  },
+  fromPartial(object) {
+    var _a, _b;
+    const message = createBaseTimestamp();
+    message.seconds = (_a = object.seconds) != null ? _a : 0;
+    message.nanos = (_b = object.nanos) != null ? _b : 0;
+    return message;
   }
 };
-if (import_minimal.util.Long !== Long) {
-  import_minimal.util.Long = Long;
-  (0, import_minimal.configure)();
+var tsProtoGlobalThis = (() => {
+  if (typeof globalThis !== "undefined") {
+    return globalThis;
+  }
+  if (typeof self !== "undefined") {
+    return self;
+  }
+  if (typeof window !== "undefined") {
+    return window;
+  }
+  if (typeof global !== "undefined") {
+    return global;
+  }
+  throw "Unable to locate global object";
+})();
+function longToNumber(long) {
+  if (long.gt(Number.MAX_SAFE_INTEGER)) {
+    throw new tsProtoGlobalThis.Error("Value is larger than Number.MAX_SAFE_INTEGER");
+  }
+  return long.toNumber();
+}
+if (import_minimal.default.util.Long !== import_long.default) {
+  import_minimal.default.util.Long = import_long.default;
+  import_minimal.default.configure();
+}
+function isSet(value) {
+  return value !== null && value !== void 0;
 }
 
-// api/api.ts
-var import_long = __toESM(require_long());
-var import_minimal3 = __toESM(require_minimal2());
-
 // google/protobuf/wrappers.ts
-var Long2 = __toESM(require_long());
+var import_long2 = __toESM(require_long());
 var import_minimal2 = __toESM(require_minimal2());
-var baseInt32Value = {
-  value: 0
-};
-var baseBoolValue = {
-  value: false
-};
-var baseStringValue = {
-  value: ""
-};
+function createBaseInt32Value() {
+  return { value: 0 };
+}
 var Int32Value = {
-  encode(message, writer = import_minimal2.Writer.create()) {
-    writer.uint32(8).int32(message.value);
+  encode(message, writer = import_minimal2.default.Writer.create()) {
+    if (message.value !== 0) {
+      writer.uint32(8).int32(message.value);
+    }
     return writer;
   },
   decode(input, length) {
-    const reader = input instanceof Uint8Array ? new import_minimal2.Reader(input) : input;
+    const reader = input instanceof import_minimal2.default.Reader ? input : new import_minimal2.default.Reader(input);
     let end = length === void 0 ? reader.len : reader.pos + length;
-    const message = __spreadValues({}, baseInt32Value);
+    const message = createBaseInt32Value();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -2383,34 +2382,37 @@ var Int32Value = {
     return message;
   },
   fromJSON(object) {
-    const message = __spreadValues({}, baseInt32Value);
-    if (object.value !== void 0 && object.value !== null) {
-      message.value = Number(object.value);
-    }
-    return message;
-  },
-  fromPartial(object) {
-    const message = __spreadValues({}, baseInt32Value);
-    if (object.value !== void 0 && object.value !== null) {
-      message.value = object.value;
-    }
-    return message;
+    return { value: isSet2(object.value) ? Number(object.value) : 0 };
   },
   toJSON(message) {
     const obj = {};
-    message.value !== void 0 && (obj.value = message.value);
+    message.value !== void 0 && (obj.value = Math.round(message.value));
     return obj;
+  },
+  create(base) {
+    return Int32Value.fromPartial(base != null ? base : {});
+  },
+  fromPartial(object) {
+    var _a;
+    const message = createBaseInt32Value();
+    message.value = (_a = object.value) != null ? _a : 0;
+    return message;
   }
 };
+function createBaseBoolValue() {
+  return { value: false };
+}
 var BoolValue = {
-  encode(message, writer = import_minimal2.Writer.create()) {
-    writer.uint32(8).bool(message.value);
+  encode(message, writer = import_minimal2.default.Writer.create()) {
+    if (message.value === true) {
+      writer.uint32(8).bool(message.value);
+    }
     return writer;
   },
   decode(input, length) {
-    const reader = input instanceof Uint8Array ? new import_minimal2.Reader(input) : input;
+    const reader = input instanceof import_minimal2.default.Reader ? input : new import_minimal2.default.Reader(input);
     let end = length === void 0 ? reader.len : reader.pos + length;
-    const message = __spreadValues({}, baseBoolValue);
+    const message = createBaseBoolValue();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -2425,34 +2427,37 @@ var BoolValue = {
     return message;
   },
   fromJSON(object) {
-    const message = __spreadValues({}, baseBoolValue);
-    if (object.value !== void 0 && object.value !== null) {
-      message.value = Boolean(object.value);
-    }
-    return message;
-  },
-  fromPartial(object) {
-    const message = __spreadValues({}, baseBoolValue);
-    if (object.value !== void 0 && object.value !== null) {
-      message.value = object.value;
-    }
-    return message;
+    return { value: isSet2(object.value) ? Boolean(object.value) : false };
   },
   toJSON(message) {
     const obj = {};
     message.value !== void 0 && (obj.value = message.value);
     return obj;
+  },
+  create(base) {
+    return BoolValue.fromPartial(base != null ? base : {});
+  },
+  fromPartial(object) {
+    var _a;
+    const message = createBaseBoolValue();
+    message.value = (_a = object.value) != null ? _a : false;
+    return message;
   }
 };
+function createBaseStringValue() {
+  return { value: "" };
+}
 var StringValue = {
-  encode(message, writer = import_minimal2.Writer.create()) {
-    writer.uint32(10).string(message.value);
+  encode(message, writer = import_minimal2.default.Writer.create()) {
+    if (message.value !== "") {
+      writer.uint32(10).string(message.value);
+    }
     return writer;
   },
   decode(input, length) {
-    const reader = input instanceof Uint8Array ? new import_minimal2.Reader(input) : input;
+    const reader = input instanceof import_minimal2.default.Reader ? input : new import_minimal2.default.Reader(input);
     let end = length === void 0 ? reader.len : reader.pos + length;
-    const message = __spreadValues({}, baseStringValue);
+    const message = createBaseStringValue();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -2467,148 +2472,158 @@ var StringValue = {
     return message;
   },
   fromJSON(object) {
-    const message = __spreadValues({}, baseStringValue);
-    if (object.value !== void 0 && object.value !== null) {
-      message.value = String(object.value);
-    }
-    return message;
-  },
-  fromPartial(object) {
-    const message = __spreadValues({}, baseStringValue);
-    if (object.value !== void 0 && object.value !== null) {
-      message.value = object.value;
-    }
-    return message;
+    return { value: isSet2(object.value) ? String(object.value) : "" };
   },
   toJSON(message) {
     const obj = {};
     message.value !== void 0 && (obj.value = message.value);
     return obj;
+  },
+  create(base) {
+    return StringValue.fromPartial(base != null ? base : {});
+  },
+  fromPartial(object) {
+    var _a;
+    const message = createBaseStringValue();
+    message.value = (_a = object.value) != null ? _a : "";
+    return message;
   }
 };
-if (import_minimal2.util.Long !== Long2) {
-  import_minimal2.util.Long = Long2;
-  (0, import_minimal2.configure)();
+var tsProtoGlobalThis2 = (() => {
+  if (typeof globalThis !== "undefined") {
+    return globalThis;
+  }
+  if (typeof self !== "undefined") {
+    return self;
+  }
+  if (typeof window !== "undefined") {
+    return window;
+  }
+  if (typeof global !== "undefined") {
+    return global;
+  }
+  throw "Unable to locate global object";
+})();
+if (import_minimal2.default.util.Long !== import_long2.default) {
+  import_minimal2.default.util.Long = import_long2.default;
+  import_minimal2.default.configure();
 }
-var windowBase64 = globalThis;
-var atob = windowBase64.atob || ((b64) => Buffer.from(b64, "base64").toString("binary"));
-var btoa = windowBase64.btoa || ((bin) => Buffer.from(bin, "binary").toString("base64"));
+function isSet2(value) {
+  return value !== null && value !== void 0;
+}
 
 // api/api.ts
-var baseChannelMessage = {
-  channel_id: "",
-  message_id: "",
-  sender_id: "",
-  username: "",
-  content: "",
-  room_name: "",
-  group_id: "",
-  user_id_one: "",
-  user_id_two: ""
-};
+function createBaseChannelMessage() {
+  return {
+    clan_id: "",
+    channel_id: "",
+    message_id: "",
+    code: void 0,
+    sender_id: "",
+    username: "",
+    content: "",
+    create_time: void 0,
+    update_time: void 0,
+    persistent: void 0,
+    room_name: "",
+    group_id: "",
+    user_id_one: "",
+    user_id_two: ""
+  };
+}
 var ChannelMessage = {
   encode(message, writer = import_minimal3.default.Writer.create()) {
+    if (message.clan_id !== "") {
+      writer.uint32(10).string(message.clan_id);
+    }
     if (message.channel_id !== "") {
-      writer.uint32(10).string(message.channel_id);
+      writer.uint32(18).string(message.channel_id);
     }
     if (message.message_id !== "") {
-      writer.uint32(18).string(message.message_id);
+      writer.uint32(26).string(message.message_id);
     }
     if (message.code !== void 0) {
-      Int32Value.encode(
-        { value: message.code },
-        writer.uint32(26).fork()
-      ).ldelim();
+      Int32Value.encode({ value: message.code }, writer.uint32(34).fork()).ldelim();
     }
     if (message.sender_id !== "") {
-      writer.uint32(34).string(message.sender_id);
+      writer.uint32(42).string(message.sender_id);
     }
     if (message.username !== "") {
-      writer.uint32(42).string(message.username);
+      writer.uint32(50).string(message.username);
     }
     if (message.content !== "") {
-      writer.uint32(50).string(message.content);
+      writer.uint32(58).string(message.content);
     }
     if (message.create_time !== void 0) {
-      Timestamp.encode(
-        toTimestamp(message.create_time),
-        writer.uint32(58).fork()
-      ).ldelim();
+      Timestamp.encode(toTimestamp(message.create_time), writer.uint32(66).fork()).ldelim();
     }
     if (message.update_time !== void 0) {
-      Timestamp.encode(
-        toTimestamp(message.update_time),
-        writer.uint32(66).fork()
-      ).ldelim();
+      Timestamp.encode(toTimestamp(message.update_time), writer.uint32(74).fork()).ldelim();
     }
     if (message.persistent !== void 0) {
-      BoolValue.encode(
-        { value: message.persistent },
-        writer.uint32(74).fork()
-      ).ldelim();
+      BoolValue.encode({ value: message.persistent }, writer.uint32(82).fork()).ldelim();
     }
     if (message.room_name !== "") {
-      writer.uint32(82).string(message.room_name);
+      writer.uint32(90).string(message.room_name);
     }
     if (message.group_id !== "") {
-      writer.uint32(90).string(message.group_id);
+      writer.uint32(98).string(message.group_id);
     }
     if (message.user_id_one !== "") {
-      writer.uint32(98).string(message.user_id_one);
+      writer.uint32(106).string(message.user_id_one);
     }
     if (message.user_id_two !== "") {
-      writer.uint32(106).string(message.user_id_two);
+      writer.uint32(114).string(message.user_id_two);
     }
     return writer;
   },
   decode(input, length) {
     const reader = input instanceof import_minimal3.default.Reader ? input : new import_minimal3.default.Reader(input);
     let end = length === void 0 ? reader.len : reader.pos + length;
-    const message = __spreadValues({}, baseChannelMessage);
+    const message = createBaseChannelMessage();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          message.channel_id = reader.string();
+          message.clan_id = reader.string();
           break;
         case 2:
-          message.message_id = reader.string();
+          message.channel_id = reader.string();
           break;
         case 3:
-          message.code = Int32Value.decode(reader, reader.uint32()).value;
+          message.message_id = reader.string();
           break;
         case 4:
-          message.sender_id = reader.string();
+          message.code = Int32Value.decode(reader, reader.uint32()).value;
           break;
         case 5:
-          message.username = reader.string();
+          message.sender_id = reader.string();
           break;
         case 6:
-          message.content = reader.string();
+          message.username = reader.string();
           break;
         case 7:
-          message.create_time = fromTimestamp(
-            Timestamp.decode(reader, reader.uint32())
-          );
+          message.content = reader.string();
           break;
         case 8:
-          message.update_time = fromTimestamp(
-            Timestamp.decode(reader, reader.uint32())
-          );
+          message.create_time = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
           break;
         case 9:
-          message.persistent = BoolValue.decode(reader, reader.uint32()).value;
+          message.update_time = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
           break;
         case 10:
-          message.room_name = reader.string();
+          message.persistent = BoolValue.decode(reader, reader.uint32()).value;
           break;
         case 11:
-          message.group_id = reader.string();
+          message.room_name = reader.string();
           break;
         case 12:
-          message.user_id_one = reader.string();
+          message.group_id = reader.string();
           break;
         case 13:
+          message.user_id_one = reader.string();
+          break;
+        case 14:
           message.user_id_two = reader.string();
           break;
         default:
@@ -2619,76 +2634,26 @@ var ChannelMessage = {
     return message;
   },
   fromJSON(object) {
-    const message = __spreadValues({}, baseChannelMessage);
-    if (object.channel_id !== void 0 && object.channel_id !== null) {
-      message.channel_id = String(object.channel_id);
-    } else {
-      message.channel_id = "";
-    }
-    if (object.message_id !== void 0 && object.message_id !== null) {
-      message.message_id = String(object.message_id);
-    } else {
-      message.message_id = "";
-    }
-    if (object.code !== void 0 && object.code !== null) {
-      message.code = Number(object.code);
-    } else {
-      message.code = void 0;
-    }
-    if (object.sender_id !== void 0 && object.sender_id !== null) {
-      message.sender_id = String(object.sender_id);
-    } else {
-      message.sender_id = "";
-    }
-    if (object.username !== void 0 && object.username !== null) {
-      message.username = String(object.username);
-    } else {
-      message.username = "";
-    }
-    if (object.content !== void 0 && object.content !== null) {
-      message.content = String(object.content);
-    } else {
-      message.content = "";
-    }
-    if (object.create_time !== void 0 && object.create_time !== null) {
-      message.create_time = fromJsonTimestamp(object.create_time);
-    } else {
-      message.create_time = void 0;
-    }
-    if (object.update_time !== void 0 && object.update_time !== null) {
-      message.update_time = fromJsonTimestamp(object.update_time);
-    } else {
-      message.update_time = void 0;
-    }
-    if (object.persistent !== void 0 && object.persistent !== null) {
-      message.persistent = Boolean(object.persistent);
-    } else {
-      message.persistent = void 0;
-    }
-    if (object.room_name !== void 0 && object.room_name !== null) {
-      message.room_name = String(object.room_name);
-    } else {
-      message.room_name = "";
-    }
-    if (object.group_id !== void 0 && object.group_id !== null) {
-      message.group_id = String(object.group_id);
-    } else {
-      message.group_id = "";
-    }
-    if (object.user_id_one !== void 0 && object.user_id_one !== null) {
-      message.user_id_one = String(object.user_id_one);
-    } else {
-      message.user_id_one = "";
-    }
-    if (object.user_id_two !== void 0 && object.user_id_two !== null) {
-      message.user_id_two = String(object.user_id_two);
-    } else {
-      message.user_id_two = "";
-    }
-    return message;
+    return {
+      clan_id: isSet3(object.clan_id) ? String(object.clan_id) : "",
+      channel_id: isSet3(object.channel_id) ? String(object.channel_id) : "",
+      message_id: isSet3(object.message_id) ? String(object.message_id) : "",
+      code: isSet3(object.code) ? Number(object.code) : void 0,
+      sender_id: isSet3(object.sender_id) ? String(object.sender_id) : "",
+      username: isSet3(object.username) ? String(object.username) : "",
+      content: isSet3(object.content) ? String(object.content) : "",
+      create_time: isSet3(object.create_time) ? fromJsonTimestamp(object.create_time) : void 0,
+      update_time: isSet3(object.update_time) ? fromJsonTimestamp(object.update_time) : void 0,
+      persistent: isSet3(object.persistent) ? Boolean(object.persistent) : void 0,
+      room_name: isSet3(object.room_name) ? String(object.room_name) : "",
+      group_id: isSet3(object.group_id) ? String(object.group_id) : "",
+      user_id_one: isSet3(object.user_id_one) ? String(object.user_id_one) : "",
+      user_id_two: isSet3(object.user_id_two) ? String(object.user_id_two) : ""
+    };
   },
   toJSON(message) {
     const obj = {};
+    message.clan_id !== void 0 && (obj.clan_id = message.clan_id);
     message.channel_id !== void 0 && (obj.channel_id = message.channel_id);
     message.message_id !== void 0 && (obj.message_id = message.message_id);
     message.code !== void 0 && (obj.code = message.code);
@@ -2704,84 +2669,32 @@ var ChannelMessage = {
     message.user_id_two !== void 0 && (obj.user_id_two = message.user_id_two);
     return obj;
   },
+  create(base) {
+    return ChannelMessage.fromPartial(base != null ? base : {});
+  },
   fromPartial(object) {
-    const message = __spreadValues({}, baseChannelMessage);
-    if (object.channel_id !== void 0 && object.channel_id !== null) {
-      message.channel_id = object.channel_id;
-    } else {
-      message.channel_id = "";
-    }
-    if (object.message_id !== void 0 && object.message_id !== null) {
-      message.message_id = object.message_id;
-    } else {
-      message.message_id = "";
-    }
-    if (object.code !== void 0 && object.code !== null) {
-      message.code = object.code;
-    } else {
-      message.code = void 0;
-    }
-    if (object.sender_id !== void 0 && object.sender_id !== null) {
-      message.sender_id = object.sender_id;
-    } else {
-      message.sender_id = "";
-    }
-    if (object.username !== void 0 && object.username !== null) {
-      message.username = object.username;
-    } else {
-      message.username = "";
-    }
-    if (object.content !== void 0 && object.content !== null) {
-      message.content = object.content;
-    } else {
-      message.content = "";
-    }
-    if (object.create_time !== void 0 && object.create_time !== null) {
-      message.create_time = object.create_time;
-    } else {
-      message.create_time = void 0;
-    }
-    if (object.update_time !== void 0 && object.update_time !== null) {
-      message.update_time = object.update_time;
-    } else {
-      message.update_time = void 0;
-    }
-    if (object.persistent !== void 0 && object.persistent !== null) {
-      message.persistent = object.persistent;
-    } else {
-      message.persistent = void 0;
-    }
-    if (object.room_name !== void 0 && object.room_name !== null) {
-      message.room_name = object.room_name;
-    } else {
-      message.room_name = "";
-    }
-    if (object.group_id !== void 0 && object.group_id !== null) {
-      message.group_id = object.group_id;
-    } else {
-      message.group_id = "";
-    }
-    if (object.user_id_one !== void 0 && object.user_id_one !== null) {
-      message.user_id_one = object.user_id_one;
-    } else {
-      message.user_id_one = "";
-    }
-    if (object.user_id_two !== void 0 && object.user_id_two !== null) {
-      message.user_id_two = object.user_id_two;
-    } else {
-      message.user_id_two = "";
-    }
+    var _a, _b, _c, _d, _e, _f, _g, _h, _i, _j, _k, _l, _m, _n;
+    const message = createBaseChannelMessage();
+    message.clan_id = (_a = object.clan_id) != null ? _a : "";
+    message.channel_id = (_b = object.channel_id) != null ? _b : "";
+    message.message_id = (_c = object.message_id) != null ? _c : "";
+    message.code = (_d = object.code) != null ? _d : void 0;
+    message.sender_id = (_e = object.sender_id) != null ? _e : "";
+    message.username = (_f = object.username) != null ? _f : "";
+    message.content = (_g = object.content) != null ? _g : "";
+    message.create_time = (_h = object.create_time) != null ? _h : void 0;
+    message.update_time = (_i = object.update_time) != null ? _i : void 0;
+    message.persistent = (_j = object.persistent) != null ? _j : void 0;
+    message.room_name = (_k = object.room_name) != null ? _k : "";
+    message.group_id = (_l = object.group_id) != null ? _l : "";
+    message.user_id_one = (_m = object.user_id_one) != null ? _m : "";
+    message.user_id_two = (_n = object.user_id_two) != null ? _n : "";
     return message;
   }
 };
-var baseNotification = {
-  id: "",
-  subject: "",
-  content: "",
-  code: 0,
-  sender_id: "",
-  persistent: false
-};
+function createBaseNotification() {
+  return { id: "", subject: "", content: "", code: 0, sender_id: "", create_time: void 0, persistent: false };
+}
 var Notification = {
   encode(message, writer = import_minimal3.default.Writer.create()) {
     if (message.id !== "") {
@@ -2800,10 +2713,7 @@ var Notification = {
       writer.uint32(42).string(message.sender_id);
     }
     if (message.create_time !== void 0) {
-      Timestamp.encode(
-        toTimestamp(message.create_time),
-        writer.uint32(50).fork()
-      ).ldelim();
+      Timestamp.encode(toTimestamp(message.create_time), writer.uint32(50).fork()).ldelim();
     }
     if (message.persistent === true) {
       writer.uint32(56).bool(message.persistent);
@@ -2813,7 +2723,7 @@ var Notification = {
   decode(input, length) {
     const reader = input instanceof import_minimal3.default.Reader ? input : new import_minimal3.default.Reader(input);
     let end = length === void 0 ? reader.len : reader.pos + length;
-    const message = __spreadValues({}, baseNotification);
+    const message = createBaseNotification();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -2833,9 +2743,7 @@ var Notification = {
           message.sender_id = reader.string();
           break;
         case 6:
-          message.create_time = fromTimestamp(
-            Timestamp.decode(reader, reader.uint32())
-          );
+          message.create_time = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
           break;
         case 7:
           message.persistent = reader.bool();
@@ -2848,96 +2756,46 @@ var Notification = {
     return message;
   },
   fromJSON(object) {
-    const message = __spreadValues({}, baseNotification);
-    if (object.id !== void 0 && object.id !== null) {
-      message.id = String(object.id);
-    } else {
-      message.id = "";
-    }
-    if (object.subject !== void 0 && object.subject !== null) {
-      message.subject = String(object.subject);
-    } else {
-      message.subject = "";
-    }
-    if (object.content !== void 0 && object.content !== null) {
-      message.content = String(object.content);
-    } else {
-      message.content = "";
-    }
-    if (object.code !== void 0 && object.code !== null) {
-      message.code = Number(object.code);
-    } else {
-      message.code = 0;
-    }
-    if (object.sender_id !== void 0 && object.sender_id !== null) {
-      message.sender_id = String(object.sender_id);
-    } else {
-      message.sender_id = "";
-    }
-    if (object.create_time !== void 0 && object.create_time !== null) {
-      message.create_time = fromJsonTimestamp(object.create_time);
-    } else {
-      message.create_time = void 0;
-    }
-    if (object.persistent !== void 0 && object.persistent !== null) {
-      message.persistent = Boolean(object.persistent);
-    } else {
-      message.persistent = false;
-    }
-    return message;
+    return {
+      id: isSet3(object.id) ? String(object.id) : "",
+      subject: isSet3(object.subject) ? String(object.subject) : "",
+      content: isSet3(object.content) ? String(object.content) : "",
+      code: isSet3(object.code) ? Number(object.code) : 0,
+      sender_id: isSet3(object.sender_id) ? String(object.sender_id) : "",
+      create_time: isSet3(object.create_time) ? fromJsonTimestamp(object.create_time) : void 0,
+      persistent: isSet3(object.persistent) ? Boolean(object.persistent) : false
+    };
   },
   toJSON(message) {
     const obj = {};
     message.id !== void 0 && (obj.id = message.id);
     message.subject !== void 0 && (obj.subject = message.subject);
     message.content !== void 0 && (obj.content = message.content);
-    message.code !== void 0 && (obj.code = message.code);
+    message.code !== void 0 && (obj.code = Math.round(message.code));
     message.sender_id !== void 0 && (obj.sender_id = message.sender_id);
     message.create_time !== void 0 && (obj.create_time = message.create_time.toISOString());
     message.persistent !== void 0 && (obj.persistent = message.persistent);
     return obj;
   },
+  create(base) {
+    return Notification.fromPartial(base != null ? base : {});
+  },
   fromPartial(object) {
-    const message = __spreadValues({}, baseNotification);
-    if (object.id !== void 0 && object.id !== null) {
-      message.id = object.id;
-    } else {
-      message.id = "";
-    }
-    if (object.subject !== void 0 && object.subject !== null) {
-      message.subject = object.subject;
-    } else {
-      message.subject = "";
-    }
-    if (object.content !== void 0 && object.content !== null) {
-      message.content = object.content;
-    } else {
-      message.content = "";
-    }
-    if (object.code !== void 0 && object.code !== null) {
-      message.code = object.code;
-    } else {
-      message.code = 0;
-    }
-    if (object.sender_id !== void 0 && object.sender_id !== null) {
-      message.sender_id = object.sender_id;
-    } else {
-      message.sender_id = "";
-    }
-    if (object.create_time !== void 0 && object.create_time !== null) {
-      message.create_time = object.create_time;
-    } else {
-      message.create_time = void 0;
-    }
-    if (object.persistent !== void 0 && object.persistent !== null) {
-      message.persistent = object.persistent;
-    } else {
-      message.persistent = false;
-    }
+    var _a, _b, _c, _d, _e, _f, _g;
+    const message = createBaseNotification();
+    message.id = (_a = object.id) != null ? _a : "";
+    message.subject = (_b = object.subject) != null ? _b : "";
+    message.content = (_c = object.content) != null ? _c : "";
+    message.code = (_d = object.code) != null ? _d : 0;
+    message.sender_id = (_e = object.sender_id) != null ? _e : "";
+    message.create_time = (_f = object.create_time) != null ? _f : void 0;
+    message.persistent = (_g = object.persistent) != null ? _g : false;
     return message;
   }
 };
-var baseRpc = { id: "", payload: "", http_key: "" };
+function createBaseRpc() {
+  return { id: "", payload: "", http_key: "" };
+}
 var Rpc = {
   encode(message, writer = import_minimal3.default.Writer.create()) {
     if (message.id !== "") {
@@ -2954,7 +2812,7 @@ var Rpc = {
   decode(input, length) {
     const reader = input instanceof import_minimal3.default.Reader ? input : new import_minimal3.default.Reader(input);
     let end = length === void 0 ? reader.len : reader.pos + length;
-    const message = __spreadValues({}, baseRpc);
+    const message = createBaseRpc();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -2975,23 +2833,11 @@ var Rpc = {
     return message;
   },
   fromJSON(object) {
-    const message = __spreadValues({}, baseRpc);
-    if (object.id !== void 0 && object.id !== null) {
-      message.id = String(object.id);
-    } else {
-      message.id = "";
-    }
-    if (object.payload !== void 0 && object.payload !== null) {
-      message.payload = String(object.payload);
-    } else {
-      message.payload = "";
-    }
-    if (object.http_key !== void 0 && object.http_key !== null) {
-      message.http_key = String(object.http_key);
-    } else {
-      message.http_key = "";
-    }
-    return message;
+    return {
+      id: isSet3(object.id) ? String(object.id) : "",
+      payload: isSet3(object.payload) ? String(object.payload) : "",
+      http_key: isSet3(object.http_key) ? String(object.http_key) : ""
+    };
   },
   toJSON(message) {
     const obj = {};
@@ -3000,35 +2846,31 @@ var Rpc = {
     message.http_key !== void 0 && (obj.http_key = message.http_key);
     return obj;
   },
+  create(base) {
+    return Rpc.fromPartial(base != null ? base : {});
+  },
   fromPartial(object) {
-    const message = __spreadValues({}, baseRpc);
-    if (object.id !== void 0 && object.id !== null) {
-      message.id = object.id;
-    } else {
-      message.id = "";
-    }
-    if (object.payload !== void 0 && object.payload !== null) {
-      message.payload = object.payload;
-    } else {
-      message.payload = "";
-    }
-    if (object.http_key !== void 0 && object.http_key !== null) {
-      message.http_key = object.http_key;
-    } else {
-      message.http_key = "";
-    }
+    var _a, _b, _c;
+    const message = createBaseRpc();
+    message.id = (_a = object.id) != null ? _a : "";
+    message.payload = (_b = object.payload) != null ? _b : "";
+    message.http_key = (_c = object.http_key) != null ? _c : "";
     return message;
   }
 };
-var globalThis2 = (() => {
-  if (typeof globalThis2 !== "undefined")
-    return globalThis2;
-  if (typeof self !== "undefined")
+var tsProtoGlobalThis3 = (() => {
+  if (typeof globalThis !== "undefined") {
+    return globalThis;
+  }
+  if (typeof self !== "undefined") {
     return self;
-  if (typeof window !== "undefined")
+  }
+  if (typeof window !== "undefined") {
     return window;
-  if (typeof global !== "undefined")
+  }
+  if (typeof global !== "undefined") {
     return global;
+  }
   throw "Unable to locate global object";
 })();
 function toTimestamp(date) {
@@ -3050,13 +2892,69 @@ function fromJsonTimestamp(o) {
     return fromTimestamp(Timestamp.fromJSON(o));
   }
 }
-if (import_minimal3.default.util.Long !== import_long.default) {
-  import_minimal3.default.util.Long = import_long.default;
+if (import_minimal3.default.util.Long !== import_long3.default) {
+  import_minimal3.default.util.Long = import_long3.default;
   import_minimal3.default.configure();
+}
+function isSet3(value) {
+  return value !== null && value !== void 0;
 }
 
 // rtapi/realtime.ts
-var baseEnvelope = { cid: "" };
+function createBaseEnvelope() {
+  return {
+    cid: "",
+    channel: void 0,
+    channel_join: void 0,
+    channel_leave: void 0,
+    channel_message: void 0,
+    channel_message_ack: void 0,
+    channel_message_send: void 0,
+    channel_message_update: void 0,
+    channel_message_remove: void 0,
+    channel_presence_event: void 0,
+    error: void 0,
+    match: void 0,
+    match_create: void 0,
+    match_data: void 0,
+    match_data_send: void 0,
+    match_join: void 0,
+    match_leave: void 0,
+    match_presence_event: void 0,
+    matchmaker_add: void 0,
+    matchmaker_matched: void 0,
+    matchmaker_remove: void 0,
+    matchmaker_ticket: void 0,
+    notifications: void 0,
+    rpc: void 0,
+    status: void 0,
+    status_follow: void 0,
+    status_presence_event: void 0,
+    status_unfollow: void 0,
+    status_update: void 0,
+    stream_data: void 0,
+    stream_presence_event: void 0,
+    ping: void 0,
+    pong: void 0,
+    party: void 0,
+    party_create: void 0,
+    party_join: void 0,
+    party_leave: void 0,
+    party_promote: void 0,
+    party_leader: void 0,
+    party_accept: void 0,
+    party_remove: void 0,
+    party_close: void 0,
+    party_join_request_list: void 0,
+    party_join_request: void 0,
+    party_matchmaker_add: void 0,
+    party_matchmaker_remove: void 0,
+    party_matchmaker_ticket: void 0,
+    party_data: void 0,
+    party_data_send: void 0,
+    party_presence_event: void 0
+  };
+}
 var Envelope = {
   encode(message, writer = import_minimal4.default.Writer.create()) {
     if (message.cid !== "") {
@@ -3066,52 +2964,28 @@ var Envelope = {
       Channel.encode(message.channel, writer.uint32(18).fork()).ldelim();
     }
     if (message.channel_join !== void 0) {
-      ChannelJoin.encode(
-        message.channel_join,
-        writer.uint32(26).fork()
-      ).ldelim();
+      ChannelJoin.encode(message.channel_join, writer.uint32(26).fork()).ldelim();
     }
     if (message.channel_leave !== void 0) {
-      ChannelLeave.encode(
-        message.channel_leave,
-        writer.uint32(34).fork()
-      ).ldelim();
+      ChannelLeave.encode(message.channel_leave, writer.uint32(34).fork()).ldelim();
     }
     if (message.channel_message !== void 0) {
-      ChannelMessage.encode(
-        message.channel_message,
-        writer.uint32(42).fork()
-      ).ldelim();
+      ChannelMessage.encode(message.channel_message, writer.uint32(42).fork()).ldelim();
     }
     if (message.channel_message_ack !== void 0) {
-      ChannelMessageAck.encode(
-        message.channel_message_ack,
-        writer.uint32(50).fork()
-      ).ldelim();
+      ChannelMessageAck.encode(message.channel_message_ack, writer.uint32(50).fork()).ldelim();
     }
     if (message.channel_message_send !== void 0) {
-      ChannelMessageSend.encode(
-        message.channel_message_send,
-        writer.uint32(58).fork()
-      ).ldelim();
+      ChannelMessageSend.encode(message.channel_message_send, writer.uint32(58).fork()).ldelim();
     }
     if (message.channel_message_update !== void 0) {
-      ChannelMessageUpdate.encode(
-        message.channel_message_update,
-        writer.uint32(66).fork()
-      ).ldelim();
+      ChannelMessageUpdate.encode(message.channel_message_update, writer.uint32(66).fork()).ldelim();
     }
     if (message.channel_message_remove !== void 0) {
-      ChannelMessageRemove.encode(
-        message.channel_message_remove,
-        writer.uint32(74).fork()
-      ).ldelim();
+      ChannelMessageRemove.encode(message.channel_message_remove, writer.uint32(74).fork()).ldelim();
     }
     if (message.channel_presence_event !== void 0) {
-      ChannelPresenceEvent.encode(
-        message.channel_presence_event,
-        writer.uint32(82).fork()
-      ).ldelim();
+      ChannelPresenceEvent.encode(message.channel_presence_event, writer.uint32(82).fork()).ldelim();
     }
     if (message.error !== void 0) {
       Error2.encode(message.error, writer.uint32(90).fork()).ldelim();
@@ -3120,64 +2994,37 @@ var Envelope = {
       Match.encode(message.match, writer.uint32(98).fork()).ldelim();
     }
     if (message.match_create !== void 0) {
-      MatchCreate.encode(
-        message.match_create,
-        writer.uint32(106).fork()
-      ).ldelim();
+      MatchCreate.encode(message.match_create, writer.uint32(106).fork()).ldelim();
     }
     if (message.match_data !== void 0) {
       MatchData.encode(message.match_data, writer.uint32(114).fork()).ldelim();
     }
     if (message.match_data_send !== void 0) {
-      MatchDataSend.encode(
-        message.match_data_send,
-        writer.uint32(122).fork()
-      ).ldelim();
+      MatchDataSend.encode(message.match_data_send, writer.uint32(122).fork()).ldelim();
     }
     if (message.match_join !== void 0) {
       MatchJoin.encode(message.match_join, writer.uint32(130).fork()).ldelim();
     }
     if (message.match_leave !== void 0) {
-      MatchLeave.encode(
-        message.match_leave,
-        writer.uint32(138).fork()
-      ).ldelim();
+      MatchLeave.encode(message.match_leave, writer.uint32(138).fork()).ldelim();
     }
     if (message.match_presence_event !== void 0) {
-      MatchPresenceEvent.encode(
-        message.match_presence_event,
-        writer.uint32(146).fork()
-      ).ldelim();
+      MatchPresenceEvent.encode(message.match_presence_event, writer.uint32(146).fork()).ldelim();
     }
     if (message.matchmaker_add !== void 0) {
-      MatchmakerAdd.encode(
-        message.matchmaker_add,
-        writer.uint32(154).fork()
-      ).ldelim();
+      MatchmakerAdd.encode(message.matchmaker_add, writer.uint32(154).fork()).ldelim();
     }
     if (message.matchmaker_matched !== void 0) {
-      MatchmakerMatched.encode(
-        message.matchmaker_matched,
-        writer.uint32(162).fork()
-      ).ldelim();
+      MatchmakerMatched.encode(message.matchmaker_matched, writer.uint32(162).fork()).ldelim();
     }
     if (message.matchmaker_remove !== void 0) {
-      MatchmakerRemove.encode(
-        message.matchmaker_remove,
-        writer.uint32(170).fork()
-      ).ldelim();
+      MatchmakerRemove.encode(message.matchmaker_remove, writer.uint32(170).fork()).ldelim();
     }
     if (message.matchmaker_ticket !== void 0) {
-      MatchmakerTicket.encode(
-        message.matchmaker_ticket,
-        writer.uint32(178).fork()
-      ).ldelim();
+      MatchmakerTicket.encode(message.matchmaker_ticket, writer.uint32(178).fork()).ldelim();
     }
     if (message.notifications !== void 0) {
-      Notifications.encode(
-        message.notifications,
-        writer.uint32(186).fork()
-      ).ldelim();
+      Notifications.encode(message.notifications, writer.uint32(186).fork()).ldelim();
     }
     if (message.rpc !== void 0) {
       Rpc.encode(message.rpc, writer.uint32(194).fork()).ldelim();
@@ -3186,40 +3033,22 @@ var Envelope = {
       Status.encode(message.status, writer.uint32(202).fork()).ldelim();
     }
     if (message.status_follow !== void 0) {
-      StatusFollow.encode(
-        message.status_follow,
-        writer.uint32(210).fork()
-      ).ldelim();
+      StatusFollow.encode(message.status_follow, writer.uint32(210).fork()).ldelim();
     }
     if (message.status_presence_event !== void 0) {
-      StatusPresenceEvent.encode(
-        message.status_presence_event,
-        writer.uint32(218).fork()
-      ).ldelim();
+      StatusPresenceEvent.encode(message.status_presence_event, writer.uint32(218).fork()).ldelim();
     }
     if (message.status_unfollow !== void 0) {
-      StatusUnfollow.encode(
-        message.status_unfollow,
-        writer.uint32(226).fork()
-      ).ldelim();
+      StatusUnfollow.encode(message.status_unfollow, writer.uint32(226).fork()).ldelim();
     }
     if (message.status_update !== void 0) {
-      StatusUpdate.encode(
-        message.status_update,
-        writer.uint32(234).fork()
-      ).ldelim();
+      StatusUpdate.encode(message.status_update, writer.uint32(234).fork()).ldelim();
     }
     if (message.stream_data !== void 0) {
-      StreamData.encode(
-        message.stream_data,
-        writer.uint32(242).fork()
-      ).ldelim();
+      StreamData.encode(message.stream_data, writer.uint32(242).fork()).ldelim();
     }
     if (message.stream_presence_event !== void 0) {
-      StreamPresenceEvent.encode(
-        message.stream_presence_event,
-        writer.uint32(250).fork()
-      ).ldelim();
+      StreamPresenceEvent.encode(message.stream_presence_event, writer.uint32(250).fork()).ldelim();
     }
     if (message.ping !== void 0) {
       Ping.encode(message.ping, writer.uint32(258).fork()).ldelim();
@@ -3231,101 +3060,59 @@ var Envelope = {
       Party.encode(message.party, writer.uint32(274).fork()).ldelim();
     }
     if (message.party_create !== void 0) {
-      PartyCreate.encode(
-        message.party_create,
-        writer.uint32(282).fork()
-      ).ldelim();
+      PartyCreate.encode(message.party_create, writer.uint32(282).fork()).ldelim();
     }
     if (message.party_join !== void 0) {
       PartyJoin.encode(message.party_join, writer.uint32(290).fork()).ldelim();
     }
     if (message.party_leave !== void 0) {
-      PartyLeave.encode(
-        message.party_leave,
-        writer.uint32(298).fork()
-      ).ldelim();
+      PartyLeave.encode(message.party_leave, writer.uint32(298).fork()).ldelim();
     }
     if (message.party_promote !== void 0) {
-      PartyPromote.encode(
-        message.party_promote,
-        writer.uint32(306).fork()
-      ).ldelim();
+      PartyPromote.encode(message.party_promote, writer.uint32(306).fork()).ldelim();
     }
     if (message.party_leader !== void 0) {
-      PartyLeader.encode(
-        message.party_leader,
-        writer.uint32(314).fork()
-      ).ldelim();
+      PartyLeader.encode(message.party_leader, writer.uint32(314).fork()).ldelim();
     }
     if (message.party_accept !== void 0) {
-      PartyAccept.encode(
-        message.party_accept,
-        writer.uint32(322).fork()
-      ).ldelim();
+      PartyAccept.encode(message.party_accept, writer.uint32(322).fork()).ldelim();
     }
     if (message.party_remove !== void 0) {
-      PartyRemove.encode(
-        message.party_remove,
-        writer.uint32(330).fork()
-      ).ldelim();
+      PartyRemove.encode(message.party_remove, writer.uint32(330).fork()).ldelim();
     }
     if (message.party_close !== void 0) {
-      PartyClose.encode(
-        message.party_close,
-        writer.uint32(338).fork()
-      ).ldelim();
+      PartyClose.encode(message.party_close, writer.uint32(338).fork()).ldelim();
     }
     if (message.party_join_request_list !== void 0) {
-      PartyJoinRequestList.encode(
-        message.party_join_request_list,
-        writer.uint32(346).fork()
-      ).ldelim();
+      PartyJoinRequestList.encode(message.party_join_request_list, writer.uint32(346).fork()).ldelim();
     }
     if (message.party_join_request !== void 0) {
-      PartyJoinRequest.encode(
-        message.party_join_request,
-        writer.uint32(354).fork()
-      ).ldelim();
+      PartyJoinRequest.encode(message.party_join_request, writer.uint32(354).fork()).ldelim();
     }
     if (message.party_matchmaker_add !== void 0) {
-      PartyMatchmakerAdd.encode(
-        message.party_matchmaker_add,
-        writer.uint32(362).fork()
-      ).ldelim();
+      PartyMatchmakerAdd.encode(message.party_matchmaker_add, writer.uint32(362).fork()).ldelim();
     }
     if (message.party_matchmaker_remove !== void 0) {
-      PartyMatchmakerRemove.encode(
-        message.party_matchmaker_remove,
-        writer.uint32(370).fork()
-      ).ldelim();
+      PartyMatchmakerRemove.encode(message.party_matchmaker_remove, writer.uint32(370).fork()).ldelim();
     }
     if (message.party_matchmaker_ticket !== void 0) {
-      PartyMatchmakerTicket.encode(
-        message.party_matchmaker_ticket,
-        writer.uint32(378).fork()
-      ).ldelim();
+      PartyMatchmakerTicket.encode(message.party_matchmaker_ticket, writer.uint32(378).fork()).ldelim();
     }
     if (message.party_data !== void 0) {
       PartyData.encode(message.party_data, writer.uint32(386).fork()).ldelim();
     }
     if (message.party_data_send !== void 0) {
-      PartyDataSend.encode(
-        message.party_data_send,
-        writer.uint32(394).fork()
-      ).ldelim();
+      PartyDataSend.encode(message.party_data_send, writer.uint32(394).fork()).ldelim();
     }
     if (message.party_presence_event !== void 0) {
-      PartyPresenceEvent.encode(
-        message.party_presence_event,
-        writer.uint32(402).fork()
-      ).ldelim();
+      PartyPresenceEvent.encode(message.party_presence_event, writer.uint32(402).fork()).ldelim();
     }
     return writer;
   },
   decode(input, length) {
     const reader = input instanceof import_minimal4.default.Reader ? input : new import_minimal4.default.Reader(input);
     let end = length === void 0 ? reader.len : reader.pos + length;
-    const message = __spreadValues({}, baseEnvelope);
+    const message = createBaseEnvelope();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -3342,40 +3129,22 @@ var Envelope = {
           message.channel_leave = ChannelLeave.decode(reader, reader.uint32());
           break;
         case 5:
-          message.channel_message = ChannelMessage.decode(
-            reader,
-            reader.uint32()
-          );
+          message.channel_message = ChannelMessage.decode(reader, reader.uint32());
           break;
         case 6:
-          message.channel_message_ack = ChannelMessageAck.decode(
-            reader,
-            reader.uint32()
-          );
+          message.channel_message_ack = ChannelMessageAck.decode(reader, reader.uint32());
           break;
         case 7:
-          message.channel_message_send = ChannelMessageSend.decode(
-            reader,
-            reader.uint32()
-          );
+          message.channel_message_send = ChannelMessageSend.decode(reader, reader.uint32());
           break;
         case 8:
-          message.channel_message_update = ChannelMessageUpdate.decode(
-            reader,
-            reader.uint32()
-          );
+          message.channel_message_update = ChannelMessageUpdate.decode(reader, reader.uint32());
           break;
         case 9:
-          message.channel_message_remove = ChannelMessageRemove.decode(
-            reader,
-            reader.uint32()
-          );
+          message.channel_message_remove = ChannelMessageRemove.decode(reader, reader.uint32());
           break;
         case 10:
-          message.channel_presence_event = ChannelPresenceEvent.decode(
-            reader,
-            reader.uint32()
-          );
+          message.channel_presence_event = ChannelPresenceEvent.decode(reader, reader.uint32());
           break;
         case 11:
           message.error = Error2.decode(reader, reader.uint32());
@@ -3390,10 +3159,7 @@ var Envelope = {
           message.match_data = MatchData.decode(reader, reader.uint32());
           break;
         case 15:
-          message.match_data_send = MatchDataSend.decode(
-            reader,
-            reader.uint32()
-          );
+          message.match_data_send = MatchDataSend.decode(reader, reader.uint32());
           break;
         case 16:
           message.match_join = MatchJoin.decode(reader, reader.uint32());
@@ -3402,34 +3168,19 @@ var Envelope = {
           message.match_leave = MatchLeave.decode(reader, reader.uint32());
           break;
         case 18:
-          message.match_presence_event = MatchPresenceEvent.decode(
-            reader,
-            reader.uint32()
-          );
+          message.match_presence_event = MatchPresenceEvent.decode(reader, reader.uint32());
           break;
         case 19:
-          message.matchmaker_add = MatchmakerAdd.decode(
-            reader,
-            reader.uint32()
-          );
+          message.matchmaker_add = MatchmakerAdd.decode(reader, reader.uint32());
           break;
         case 20:
-          message.matchmaker_matched = MatchmakerMatched.decode(
-            reader,
-            reader.uint32()
-          );
+          message.matchmaker_matched = MatchmakerMatched.decode(reader, reader.uint32());
           break;
         case 21:
-          message.matchmaker_remove = MatchmakerRemove.decode(
-            reader,
-            reader.uint32()
-          );
+          message.matchmaker_remove = MatchmakerRemove.decode(reader, reader.uint32());
           break;
         case 22:
-          message.matchmaker_ticket = MatchmakerTicket.decode(
-            reader,
-            reader.uint32()
-          );
+          message.matchmaker_ticket = MatchmakerTicket.decode(reader, reader.uint32());
           break;
         case 23:
           message.notifications = Notifications.decode(reader, reader.uint32());
@@ -3444,16 +3195,10 @@ var Envelope = {
           message.status_follow = StatusFollow.decode(reader, reader.uint32());
           break;
         case 27:
-          message.status_presence_event = StatusPresenceEvent.decode(
-            reader,
-            reader.uint32()
-          );
+          message.status_presence_event = StatusPresenceEvent.decode(reader, reader.uint32());
           break;
         case 28:
-          message.status_unfollow = StatusUnfollow.decode(
-            reader,
-            reader.uint32()
-          );
+          message.status_unfollow = StatusUnfollow.decode(reader, reader.uint32());
           break;
         case 29:
           message.status_update = StatusUpdate.decode(reader, reader.uint32());
@@ -3462,10 +3207,7 @@ var Envelope = {
           message.stream_data = StreamData.decode(reader, reader.uint32());
           break;
         case 31:
-          message.stream_presence_event = StreamPresenceEvent.decode(
-            reader,
-            reader.uint32()
-          );
+          message.stream_presence_event = StreamPresenceEvent.decode(reader, reader.uint32());
           break;
         case 32:
           message.ping = Ping.decode(reader, reader.uint32());
@@ -3501,49 +3243,28 @@ var Envelope = {
           message.party_close = PartyClose.decode(reader, reader.uint32());
           break;
         case 43:
-          message.party_join_request_list = PartyJoinRequestList.decode(
-            reader,
-            reader.uint32()
-          );
+          message.party_join_request_list = PartyJoinRequestList.decode(reader, reader.uint32());
           break;
         case 44:
-          message.party_join_request = PartyJoinRequest.decode(
-            reader,
-            reader.uint32()
-          );
+          message.party_join_request = PartyJoinRequest.decode(reader, reader.uint32());
           break;
         case 45:
-          message.party_matchmaker_add = PartyMatchmakerAdd.decode(
-            reader,
-            reader.uint32()
-          );
+          message.party_matchmaker_add = PartyMatchmakerAdd.decode(reader, reader.uint32());
           break;
         case 46:
-          message.party_matchmaker_remove = PartyMatchmakerRemove.decode(
-            reader,
-            reader.uint32()
-          );
+          message.party_matchmaker_remove = PartyMatchmakerRemove.decode(reader, reader.uint32());
           break;
         case 47:
-          message.party_matchmaker_ticket = PartyMatchmakerTicket.decode(
-            reader,
-            reader.uint32()
-          );
+          message.party_matchmaker_ticket = PartyMatchmakerTicket.decode(reader, reader.uint32());
           break;
         case 48:
           message.party_data = PartyData.decode(reader, reader.uint32());
           break;
         case 49:
-          message.party_data_send = PartyDataSend.decode(
-            reader,
-            reader.uint32()
-          );
+          message.party_data_send = PartyDataSend.decode(reader, reader.uint32());
           break;
         case 50:
-          message.party_presence_event = PartyPresenceEvent.decode(
-            reader,
-            reader.uint32()
-          );
+          message.party_presence_event = PartyPresenceEvent.decode(reader, reader.uint32());
           break;
         default:
           reader.skipType(tag & 7);
@@ -3553,292 +3274,58 @@ var Envelope = {
     return message;
   },
   fromJSON(object) {
-    const message = __spreadValues({}, baseEnvelope);
-    if (object.cid !== void 0 && object.cid !== null) {
-      message.cid = String(object.cid);
-    } else {
-      message.cid = "";
-    }
-    if (object.channel !== void 0 && object.channel !== null) {
-      message.channel = Channel.fromJSON(object.channel);
-    } else {
-      message.channel = void 0;
-    }
-    if (object.channel_join !== void 0 && object.channel_join !== null) {
-      message.channel_join = ChannelJoin.fromJSON(object.channel_join);
-    } else {
-      message.channel_join = void 0;
-    }
-    if (object.channel_leave !== void 0 && object.channel_leave !== null) {
-      message.channel_leave = ChannelLeave.fromJSON(object.channel_leave);
-    } else {
-      message.channel_leave = void 0;
-    }
-    if (object.channel_message !== void 0 && object.channel_message !== null) {
-      message.channel_message = ChannelMessage.fromJSON(object.channel_message);
-    } else {
-      message.channel_message = void 0;
-    }
-    if (object.channel_message_ack !== void 0 && object.channel_message_ack !== null) {
-      message.channel_message_ack = ChannelMessageAck.fromJSON(
-        object.channel_message_ack
-      );
-    } else {
-      message.channel_message_ack = void 0;
-    }
-    if (object.channel_message_send !== void 0 && object.channel_message_send !== null) {
-      message.channel_message_send = ChannelMessageSend.fromJSON(
-        object.channel_message_send
-      );
-    } else {
-      message.channel_message_send = void 0;
-    }
-    if (object.channel_message_update !== void 0 && object.channel_message_update !== null) {
-      message.channel_message_update = ChannelMessageUpdate.fromJSON(
-        object.channel_message_update
-      );
-    } else {
-      message.channel_message_update = void 0;
-    }
-    if (object.channel_message_remove !== void 0 && object.channel_message_remove !== null) {
-      message.channel_message_remove = ChannelMessageRemove.fromJSON(
-        object.channel_message_remove
-      );
-    } else {
-      message.channel_message_remove = void 0;
-    }
-    if (object.channel_presence_event !== void 0 && object.channel_presence_event !== null) {
-      message.channel_presence_event = ChannelPresenceEvent.fromJSON(
-        object.channel_presence_event
-      );
-    } else {
-      message.channel_presence_event = void 0;
-    }
-    if (object.error !== void 0 && object.error !== null) {
-      message.error = Error2.fromJSON(object.error);
-    } else {
-      message.error = void 0;
-    }
-    if (object.match !== void 0 && object.match !== null) {
-      message.match = Match.fromJSON(object.match);
-    } else {
-      message.match = void 0;
-    }
-    if (object.match_create !== void 0 && object.match_create !== null) {
-      message.match_create = MatchCreate.fromJSON(object.match_create);
-    } else {
-      message.match_create = void 0;
-    }
-    if (object.match_data !== void 0 && object.match_data !== null) {
-      message.match_data = MatchData.fromJSON(object.match_data);
-    } else {
-      message.match_data = void 0;
-    }
-    if (object.match_data_send !== void 0 && object.match_data_send !== null) {
-      message.match_data_send = MatchDataSend.fromJSON(object.match_data_send);
-    } else {
-      message.match_data_send = void 0;
-    }
-    if (object.match_join !== void 0 && object.match_join !== null) {
-      message.match_join = MatchJoin.fromJSON(object.match_join);
-    } else {
-      message.match_join = void 0;
-    }
-    if (object.match_leave !== void 0 && object.match_leave !== null) {
-      message.match_leave = MatchLeave.fromJSON(object.match_leave);
-    } else {
-      message.match_leave = void 0;
-    }
-    if (object.match_presence_event !== void 0 && object.match_presence_event !== null) {
-      message.match_presence_event = MatchPresenceEvent.fromJSON(
-        object.match_presence_event
-      );
-    } else {
-      message.match_presence_event = void 0;
-    }
-    if (object.matchmaker_add !== void 0 && object.matchmaker_add !== null) {
-      message.matchmaker_add = MatchmakerAdd.fromJSON(object.matchmaker_add);
-    } else {
-      message.matchmaker_add = void 0;
-    }
-    if (object.matchmaker_matched !== void 0 && object.matchmaker_matched !== null) {
-      message.matchmaker_matched = MatchmakerMatched.fromJSON(
-        object.matchmaker_matched
-      );
-    } else {
-      message.matchmaker_matched = void 0;
-    }
-    if (object.matchmaker_remove !== void 0 && object.matchmaker_remove !== null) {
-      message.matchmaker_remove = MatchmakerRemove.fromJSON(
-        object.matchmaker_remove
-      );
-    } else {
-      message.matchmaker_remove = void 0;
-    }
-    if (object.matchmaker_ticket !== void 0 && object.matchmaker_ticket !== null) {
-      message.matchmaker_ticket = MatchmakerTicket.fromJSON(
-        object.matchmaker_ticket
-      );
-    } else {
-      message.matchmaker_ticket = void 0;
-    }
-    if (object.notifications !== void 0 && object.notifications !== null) {
-      message.notifications = Notifications.fromJSON(object.notifications);
-    } else {
-      message.notifications = void 0;
-    }
-    if (object.rpc !== void 0 && object.rpc !== null) {
-      message.rpc = Rpc.fromJSON(object.rpc);
-    } else {
-      message.rpc = void 0;
-    }
-    if (object.status !== void 0 && object.status !== null) {
-      message.status = Status.fromJSON(object.status);
-    } else {
-      message.status = void 0;
-    }
-    if (object.status_follow !== void 0 && object.status_follow !== null) {
-      message.status_follow = StatusFollow.fromJSON(object.status_follow);
-    } else {
-      message.status_follow = void 0;
-    }
-    if (object.status_presence_event !== void 0 && object.status_presence_event !== null) {
-      message.status_presence_event = StatusPresenceEvent.fromJSON(
-        object.status_presence_event
-      );
-    } else {
-      message.status_presence_event = void 0;
-    }
-    if (object.status_unfollow !== void 0 && object.status_unfollow !== null) {
-      message.status_unfollow = StatusUnfollow.fromJSON(object.status_unfollow);
-    } else {
-      message.status_unfollow = void 0;
-    }
-    if (object.status_update !== void 0 && object.status_update !== null) {
-      message.status_update = StatusUpdate.fromJSON(object.status_update);
-    } else {
-      message.status_update = void 0;
-    }
-    if (object.stream_data !== void 0 && object.stream_data !== null) {
-      message.stream_data = StreamData.fromJSON(object.stream_data);
-    } else {
-      message.stream_data = void 0;
-    }
-    if (object.stream_presence_event !== void 0 && object.stream_presence_event !== null) {
-      message.stream_presence_event = StreamPresenceEvent.fromJSON(
-        object.stream_presence_event
-      );
-    } else {
-      message.stream_presence_event = void 0;
-    }
-    if (object.ping !== void 0 && object.ping !== null) {
-      message.ping = Ping.fromJSON(object.ping);
-    } else {
-      message.ping = void 0;
-    }
-    if (object.pong !== void 0 && object.pong !== null) {
-      message.pong = Pong.fromJSON(object.pong);
-    } else {
-      message.pong = void 0;
-    }
-    if (object.party !== void 0 && object.party !== null) {
-      message.party = Party.fromJSON(object.party);
-    } else {
-      message.party = void 0;
-    }
-    if (object.party_create !== void 0 && object.party_create !== null) {
-      message.party_create = PartyCreate.fromJSON(object.party_create);
-    } else {
-      message.party_create = void 0;
-    }
-    if (object.party_join !== void 0 && object.party_join !== null) {
-      message.party_join = PartyJoin.fromJSON(object.party_join);
-    } else {
-      message.party_join = void 0;
-    }
-    if (object.party_leave !== void 0 && object.party_leave !== null) {
-      message.party_leave = PartyLeave.fromJSON(object.party_leave);
-    } else {
-      message.party_leave = void 0;
-    }
-    if (object.party_promote !== void 0 && object.party_promote !== null) {
-      message.party_promote = PartyPromote.fromJSON(object.party_promote);
-    } else {
-      message.party_promote = void 0;
-    }
-    if (object.party_leader !== void 0 && object.party_leader !== null) {
-      message.party_leader = PartyLeader.fromJSON(object.party_leader);
-    } else {
-      message.party_leader = void 0;
-    }
-    if (object.party_accept !== void 0 && object.party_accept !== null) {
-      message.party_accept = PartyAccept.fromJSON(object.party_accept);
-    } else {
-      message.party_accept = void 0;
-    }
-    if (object.party_remove !== void 0 && object.party_remove !== null) {
-      message.party_remove = PartyRemove.fromJSON(object.party_remove);
-    } else {
-      message.party_remove = void 0;
-    }
-    if (object.party_close !== void 0 && object.party_close !== null) {
-      message.party_close = PartyClose.fromJSON(object.party_close);
-    } else {
-      message.party_close = void 0;
-    }
-    if (object.party_join_request_list !== void 0 && object.party_join_request_list !== null) {
-      message.party_join_request_list = PartyJoinRequestList.fromJSON(
-        object.party_join_request_list
-      );
-    } else {
-      message.party_join_request_list = void 0;
-    }
-    if (object.party_join_request !== void 0 && object.party_join_request !== null) {
-      message.party_join_request = PartyJoinRequest.fromJSON(
-        object.party_join_request
-      );
-    } else {
-      message.party_join_request = void 0;
-    }
-    if (object.party_matchmaker_add !== void 0 && object.party_matchmaker_add !== null) {
-      message.party_matchmaker_add = PartyMatchmakerAdd.fromJSON(
-        object.party_matchmaker_add
-      );
-    } else {
-      message.party_matchmaker_add = void 0;
-    }
-    if (object.party_matchmaker_remove !== void 0 && object.party_matchmaker_remove !== null) {
-      message.party_matchmaker_remove = PartyMatchmakerRemove.fromJSON(
-        object.party_matchmaker_remove
-      );
-    } else {
-      message.party_matchmaker_remove = void 0;
-    }
-    if (object.party_matchmaker_ticket !== void 0 && object.party_matchmaker_ticket !== null) {
-      message.party_matchmaker_ticket = PartyMatchmakerTicket.fromJSON(
-        object.party_matchmaker_ticket
-      );
-    } else {
-      message.party_matchmaker_ticket = void 0;
-    }
-    if (object.party_data !== void 0 && object.party_data !== null) {
-      message.party_data = PartyData.fromJSON(object.party_data);
-    } else {
-      message.party_data = void 0;
-    }
-    if (object.party_data_send !== void 0 && object.party_data_send !== null) {
-      message.party_data_send = PartyDataSend.fromJSON(object.party_data_send);
-    } else {
-      message.party_data_send = void 0;
-    }
-    if (object.party_presence_event !== void 0 && object.party_presence_event !== null) {
-      message.party_presence_event = PartyPresenceEvent.fromJSON(
-        object.party_presence_event
-      );
-    } else {
-      message.party_presence_event = void 0;
-    }
-    return message;
+    return {
+      cid: isSet4(object.cid) ? String(object.cid) : "",
+      channel: isSet4(object.channel) ? Channel.fromJSON(object.channel) : void 0,
+      channel_join: isSet4(object.channel_join) ? ChannelJoin.fromJSON(object.channel_join) : void 0,
+      channel_leave: isSet4(object.channel_leave) ? ChannelLeave.fromJSON(object.channel_leave) : void 0,
+      channel_message: isSet4(object.channel_message) ? ChannelMessage.fromJSON(object.channel_message) : void 0,
+      channel_message_ack: isSet4(object.channel_message_ack) ? ChannelMessageAck.fromJSON(object.channel_message_ack) : void 0,
+      channel_message_send: isSet4(object.channel_message_send) ? ChannelMessageSend.fromJSON(object.channel_message_send) : void 0,
+      channel_message_update: isSet4(object.channel_message_update) ? ChannelMessageUpdate.fromJSON(object.channel_message_update) : void 0,
+      channel_message_remove: isSet4(object.channel_message_remove) ? ChannelMessageRemove.fromJSON(object.channel_message_remove) : void 0,
+      channel_presence_event: isSet4(object.channel_presence_event) ? ChannelPresenceEvent.fromJSON(object.channel_presence_event) : void 0,
+      error: isSet4(object.error) ? Error2.fromJSON(object.error) : void 0,
+      match: isSet4(object.match) ? Match.fromJSON(object.match) : void 0,
+      match_create: isSet4(object.match_create) ? MatchCreate.fromJSON(object.match_create) : void 0,
+      match_data: isSet4(object.match_data) ? MatchData.fromJSON(object.match_data) : void 0,
+      match_data_send: isSet4(object.match_data_send) ? MatchDataSend.fromJSON(object.match_data_send) : void 0,
+      match_join: isSet4(object.match_join) ? MatchJoin.fromJSON(object.match_join) : void 0,
+      match_leave: isSet4(object.match_leave) ? MatchLeave.fromJSON(object.match_leave) : void 0,
+      match_presence_event: isSet4(object.match_presence_event) ? MatchPresenceEvent.fromJSON(object.match_presence_event) : void 0,
+      matchmaker_add: isSet4(object.matchmaker_add) ? MatchmakerAdd.fromJSON(object.matchmaker_add) : void 0,
+      matchmaker_matched: isSet4(object.matchmaker_matched) ? MatchmakerMatched.fromJSON(object.matchmaker_matched) : void 0,
+      matchmaker_remove: isSet4(object.matchmaker_remove) ? MatchmakerRemove.fromJSON(object.matchmaker_remove) : void 0,
+      matchmaker_ticket: isSet4(object.matchmaker_ticket) ? MatchmakerTicket.fromJSON(object.matchmaker_ticket) : void 0,
+      notifications: isSet4(object.notifications) ? Notifications.fromJSON(object.notifications) : void 0,
+      rpc: isSet4(object.rpc) ? Rpc.fromJSON(object.rpc) : void 0,
+      status: isSet4(object.status) ? Status.fromJSON(object.status) : void 0,
+      status_follow: isSet4(object.status_follow) ? StatusFollow.fromJSON(object.status_follow) : void 0,
+      status_presence_event: isSet4(object.status_presence_event) ? StatusPresenceEvent.fromJSON(object.status_presence_event) : void 0,
+      status_unfollow: isSet4(object.status_unfollow) ? StatusUnfollow.fromJSON(object.status_unfollow) : void 0,
+      status_update: isSet4(object.status_update) ? StatusUpdate.fromJSON(object.status_update) : void 0,
+      stream_data: isSet4(object.stream_data) ? StreamData.fromJSON(object.stream_data) : void 0,
+      stream_presence_event: isSet4(object.stream_presence_event) ? StreamPresenceEvent.fromJSON(object.stream_presence_event) : void 0,
+      ping: isSet4(object.ping) ? Ping.fromJSON(object.ping) : void 0,
+      pong: isSet4(object.pong) ? Pong.fromJSON(object.pong) : void 0,
+      party: isSet4(object.party) ? Party.fromJSON(object.party) : void 0,
+      party_create: isSet4(object.party_create) ? PartyCreate.fromJSON(object.party_create) : void 0,
+      party_join: isSet4(object.party_join) ? PartyJoin.fromJSON(object.party_join) : void 0,
+      party_leave: isSet4(object.party_leave) ? PartyLeave.fromJSON(object.party_leave) : void 0,
+      party_promote: isSet4(object.party_promote) ? PartyPromote.fromJSON(object.party_promote) : void 0,
+      party_leader: isSet4(object.party_leader) ? PartyLeader.fromJSON(object.party_leader) : void 0,
+      party_accept: isSet4(object.party_accept) ? PartyAccept.fromJSON(object.party_accept) : void 0,
+      party_remove: isSet4(object.party_remove) ? PartyRemove.fromJSON(object.party_remove) : void 0,
+      party_close: isSet4(object.party_close) ? PartyClose.fromJSON(object.party_close) : void 0,
+      party_join_request_list: isSet4(object.party_join_request_list) ? PartyJoinRequestList.fromJSON(object.party_join_request_list) : void 0,
+      party_join_request: isSet4(object.party_join_request) ? PartyJoinRequest.fromJSON(object.party_join_request) : void 0,
+      party_matchmaker_add: isSet4(object.party_matchmaker_add) ? PartyMatchmakerAdd.fromJSON(object.party_matchmaker_add) : void 0,
+      party_matchmaker_remove: isSet4(object.party_matchmaker_remove) ? PartyMatchmakerRemove.fromJSON(object.party_matchmaker_remove) : void 0,
+      party_matchmaker_ticket: isSet4(object.party_matchmaker_ticket) ? PartyMatchmakerTicket.fromJSON(object.party_matchmaker_ticket) : void 0,
+      party_data: isSet4(object.party_data) ? PartyData.fromJSON(object.party_data) : void 0,
+      party_data_send: isSet4(object.party_data_send) ? PartyDataSend.fromJSON(object.party_data_send) : void 0,
+      party_presence_event: isSet4(object.party_presence_event) ? PartyPresenceEvent.fromJSON(object.party_presence_event) : void 0
+    };
   },
   toJSON(message) {
     const obj = {};
@@ -3894,310 +3381,68 @@ var Envelope = {
     message.party_presence_event !== void 0 && (obj.party_presence_event = message.party_presence_event ? PartyPresenceEvent.toJSON(message.party_presence_event) : void 0);
     return obj;
   },
+  create(base) {
+    return Envelope.fromPartial(base != null ? base : {});
+  },
   fromPartial(object) {
-    const message = __spreadValues({}, baseEnvelope);
-    if (object.cid !== void 0 && object.cid !== null) {
-      message.cid = object.cid;
-    } else {
-      message.cid = "";
-    }
-    if (object.channel !== void 0 && object.channel !== null) {
-      message.channel = Channel.fromPartial(object.channel);
-    } else {
-      message.channel = void 0;
-    }
-    if (object.channel_join !== void 0 && object.channel_join !== null) {
-      message.channel_join = ChannelJoin.fromPartial(object.channel_join);
-    } else {
-      message.channel_join = void 0;
-    }
-    if (object.channel_leave !== void 0 && object.channel_leave !== null) {
-      message.channel_leave = ChannelLeave.fromPartial(object.channel_leave);
-    } else {
-      message.channel_leave = void 0;
-    }
-    if (object.channel_message !== void 0 && object.channel_message !== null) {
-      message.channel_message = ChannelMessage.fromPartial(
-        object.channel_message
-      );
-    } else {
-      message.channel_message = void 0;
-    }
-    if (object.channel_message_ack !== void 0 && object.channel_message_ack !== null) {
-      message.channel_message_ack = ChannelMessageAck.fromPartial(
-        object.channel_message_ack
-      );
-    } else {
-      message.channel_message_ack = void 0;
-    }
-    if (object.channel_message_send !== void 0 && object.channel_message_send !== null) {
-      message.channel_message_send = ChannelMessageSend.fromPartial(
-        object.channel_message_send
-      );
-    } else {
-      message.channel_message_send = void 0;
-    }
-    if (object.channel_message_update !== void 0 && object.channel_message_update !== null) {
-      message.channel_message_update = ChannelMessageUpdate.fromPartial(
-        object.channel_message_update
-      );
-    } else {
-      message.channel_message_update = void 0;
-    }
-    if (object.channel_message_remove !== void 0 && object.channel_message_remove !== null) {
-      message.channel_message_remove = ChannelMessageRemove.fromPartial(
-        object.channel_message_remove
-      );
-    } else {
-      message.channel_message_remove = void 0;
-    }
-    if (object.channel_presence_event !== void 0 && object.channel_presence_event !== null) {
-      message.channel_presence_event = ChannelPresenceEvent.fromPartial(
-        object.channel_presence_event
-      );
-    } else {
-      message.channel_presence_event = void 0;
-    }
-    if (object.error !== void 0 && object.error !== null) {
-      message.error = Error2.fromPartial(object.error);
-    } else {
-      message.error = void 0;
-    }
-    if (object.match !== void 0 && object.match !== null) {
-      message.match = Match.fromPartial(object.match);
-    } else {
-      message.match = void 0;
-    }
-    if (object.match_create !== void 0 && object.match_create !== null) {
-      message.match_create = MatchCreate.fromPartial(object.match_create);
-    } else {
-      message.match_create = void 0;
-    }
-    if (object.match_data !== void 0 && object.match_data !== null) {
-      message.match_data = MatchData.fromPartial(object.match_data);
-    } else {
-      message.match_data = void 0;
-    }
-    if (object.match_data_send !== void 0 && object.match_data_send !== null) {
-      message.match_data_send = MatchDataSend.fromPartial(
-        object.match_data_send
-      );
-    } else {
-      message.match_data_send = void 0;
-    }
-    if (object.match_join !== void 0 && object.match_join !== null) {
-      message.match_join = MatchJoin.fromPartial(object.match_join);
-    } else {
-      message.match_join = void 0;
-    }
-    if (object.match_leave !== void 0 && object.match_leave !== null) {
-      message.match_leave = MatchLeave.fromPartial(object.match_leave);
-    } else {
-      message.match_leave = void 0;
-    }
-    if (object.match_presence_event !== void 0 && object.match_presence_event !== null) {
-      message.match_presence_event = MatchPresenceEvent.fromPartial(
-        object.match_presence_event
-      );
-    } else {
-      message.match_presence_event = void 0;
-    }
-    if (object.matchmaker_add !== void 0 && object.matchmaker_add !== null) {
-      message.matchmaker_add = MatchmakerAdd.fromPartial(object.matchmaker_add);
-    } else {
-      message.matchmaker_add = void 0;
-    }
-    if (object.matchmaker_matched !== void 0 && object.matchmaker_matched !== null) {
-      message.matchmaker_matched = MatchmakerMatched.fromPartial(
-        object.matchmaker_matched
-      );
-    } else {
-      message.matchmaker_matched = void 0;
-    }
-    if (object.matchmaker_remove !== void 0 && object.matchmaker_remove !== null) {
-      message.matchmaker_remove = MatchmakerRemove.fromPartial(
-        object.matchmaker_remove
-      );
-    } else {
-      message.matchmaker_remove = void 0;
-    }
-    if (object.matchmaker_ticket !== void 0 && object.matchmaker_ticket !== null) {
-      message.matchmaker_ticket = MatchmakerTicket.fromPartial(
-        object.matchmaker_ticket
-      );
-    } else {
-      message.matchmaker_ticket = void 0;
-    }
-    if (object.notifications !== void 0 && object.notifications !== null) {
-      message.notifications = Notifications.fromPartial(object.notifications);
-    } else {
-      message.notifications = void 0;
-    }
-    if (object.rpc !== void 0 && object.rpc !== null) {
-      message.rpc = Rpc.fromPartial(object.rpc);
-    } else {
-      message.rpc = void 0;
-    }
-    if (object.status !== void 0 && object.status !== null) {
-      message.status = Status.fromPartial(object.status);
-    } else {
-      message.status = void 0;
-    }
-    if (object.status_follow !== void 0 && object.status_follow !== null) {
-      message.status_follow = StatusFollow.fromPartial(object.status_follow);
-    } else {
-      message.status_follow = void 0;
-    }
-    if (object.status_presence_event !== void 0 && object.status_presence_event !== null) {
-      message.status_presence_event = StatusPresenceEvent.fromPartial(
-        object.status_presence_event
-      );
-    } else {
-      message.status_presence_event = void 0;
-    }
-    if (object.status_unfollow !== void 0 && object.status_unfollow !== null) {
-      message.status_unfollow = StatusUnfollow.fromPartial(
-        object.status_unfollow
-      );
-    } else {
-      message.status_unfollow = void 0;
-    }
-    if (object.status_update !== void 0 && object.status_update !== null) {
-      message.status_update = StatusUpdate.fromPartial(object.status_update);
-    } else {
-      message.status_update = void 0;
-    }
-    if (object.stream_data !== void 0 && object.stream_data !== null) {
-      message.stream_data = StreamData.fromPartial(object.stream_data);
-    } else {
-      message.stream_data = void 0;
-    }
-    if (object.stream_presence_event !== void 0 && object.stream_presence_event !== null) {
-      message.stream_presence_event = StreamPresenceEvent.fromPartial(
-        object.stream_presence_event
-      );
-    } else {
-      message.stream_presence_event = void 0;
-    }
-    if (object.ping !== void 0 && object.ping !== null) {
-      message.ping = Ping.fromPartial(object.ping);
-    } else {
-      message.ping = void 0;
-    }
-    if (object.pong !== void 0 && object.pong !== null) {
-      message.pong = Pong.fromPartial(object.pong);
-    } else {
-      message.pong = void 0;
-    }
-    if (object.party !== void 0 && object.party !== null) {
-      message.party = Party.fromPartial(object.party);
-    } else {
-      message.party = void 0;
-    }
-    if (object.party_create !== void 0 && object.party_create !== null) {
-      message.party_create = PartyCreate.fromPartial(object.party_create);
-    } else {
-      message.party_create = void 0;
-    }
-    if (object.party_join !== void 0 && object.party_join !== null) {
-      message.party_join = PartyJoin.fromPartial(object.party_join);
-    } else {
-      message.party_join = void 0;
-    }
-    if (object.party_leave !== void 0 && object.party_leave !== null) {
-      message.party_leave = PartyLeave.fromPartial(object.party_leave);
-    } else {
-      message.party_leave = void 0;
-    }
-    if (object.party_promote !== void 0 && object.party_promote !== null) {
-      message.party_promote = PartyPromote.fromPartial(object.party_promote);
-    } else {
-      message.party_promote = void 0;
-    }
-    if (object.party_leader !== void 0 && object.party_leader !== null) {
-      message.party_leader = PartyLeader.fromPartial(object.party_leader);
-    } else {
-      message.party_leader = void 0;
-    }
-    if (object.party_accept !== void 0 && object.party_accept !== null) {
-      message.party_accept = PartyAccept.fromPartial(object.party_accept);
-    } else {
-      message.party_accept = void 0;
-    }
-    if (object.party_remove !== void 0 && object.party_remove !== null) {
-      message.party_remove = PartyRemove.fromPartial(object.party_remove);
-    } else {
-      message.party_remove = void 0;
-    }
-    if (object.party_close !== void 0 && object.party_close !== null) {
-      message.party_close = PartyClose.fromPartial(object.party_close);
-    } else {
-      message.party_close = void 0;
-    }
-    if (object.party_join_request_list !== void 0 && object.party_join_request_list !== null) {
-      message.party_join_request_list = PartyJoinRequestList.fromPartial(
-        object.party_join_request_list
-      );
-    } else {
-      message.party_join_request_list = void 0;
-    }
-    if (object.party_join_request !== void 0 && object.party_join_request !== null) {
-      message.party_join_request = PartyJoinRequest.fromPartial(
-        object.party_join_request
-      );
-    } else {
-      message.party_join_request = void 0;
-    }
-    if (object.party_matchmaker_add !== void 0 && object.party_matchmaker_add !== null) {
-      message.party_matchmaker_add = PartyMatchmakerAdd.fromPartial(
-        object.party_matchmaker_add
-      );
-    } else {
-      message.party_matchmaker_add = void 0;
-    }
-    if (object.party_matchmaker_remove !== void 0 && object.party_matchmaker_remove !== null) {
-      message.party_matchmaker_remove = PartyMatchmakerRemove.fromPartial(
-        object.party_matchmaker_remove
-      );
-    } else {
-      message.party_matchmaker_remove = void 0;
-    }
-    if (object.party_matchmaker_ticket !== void 0 && object.party_matchmaker_ticket !== null) {
-      message.party_matchmaker_ticket = PartyMatchmakerTicket.fromPartial(
-        object.party_matchmaker_ticket
-      );
-    } else {
-      message.party_matchmaker_ticket = void 0;
-    }
-    if (object.party_data !== void 0 && object.party_data !== null) {
-      message.party_data = PartyData.fromPartial(object.party_data);
-    } else {
-      message.party_data = void 0;
-    }
-    if (object.party_data_send !== void 0 && object.party_data_send !== null) {
-      message.party_data_send = PartyDataSend.fromPartial(
-        object.party_data_send
-      );
-    } else {
-      message.party_data_send = void 0;
-    }
-    if (object.party_presence_event !== void 0 && object.party_presence_event !== null) {
-      message.party_presence_event = PartyPresenceEvent.fromPartial(
-        object.party_presence_event
-      );
-    } else {
-      message.party_presence_event = void 0;
-    }
+    var _a;
+    const message = createBaseEnvelope();
+    message.cid = (_a = object.cid) != null ? _a : "";
+    message.channel = object.channel !== void 0 && object.channel !== null ? Channel.fromPartial(object.channel) : void 0;
+    message.channel_join = object.channel_join !== void 0 && object.channel_join !== null ? ChannelJoin.fromPartial(object.channel_join) : void 0;
+    message.channel_leave = object.channel_leave !== void 0 && object.channel_leave !== null ? ChannelLeave.fromPartial(object.channel_leave) : void 0;
+    message.channel_message = object.channel_message !== void 0 && object.channel_message !== null ? ChannelMessage.fromPartial(object.channel_message) : void 0;
+    message.channel_message_ack = object.channel_message_ack !== void 0 && object.channel_message_ack !== null ? ChannelMessageAck.fromPartial(object.channel_message_ack) : void 0;
+    message.channel_message_send = object.channel_message_send !== void 0 && object.channel_message_send !== null ? ChannelMessageSend.fromPartial(object.channel_message_send) : void 0;
+    message.channel_message_update = object.channel_message_update !== void 0 && object.channel_message_update !== null ? ChannelMessageUpdate.fromPartial(object.channel_message_update) : void 0;
+    message.channel_message_remove = object.channel_message_remove !== void 0 && object.channel_message_remove !== null ? ChannelMessageRemove.fromPartial(object.channel_message_remove) : void 0;
+    message.channel_presence_event = object.channel_presence_event !== void 0 && object.channel_presence_event !== null ? ChannelPresenceEvent.fromPartial(object.channel_presence_event) : void 0;
+    message.error = object.error !== void 0 && object.error !== null ? Error2.fromPartial(object.error) : void 0;
+    message.match = object.match !== void 0 && object.match !== null ? Match.fromPartial(object.match) : void 0;
+    message.match_create = object.match_create !== void 0 && object.match_create !== null ? MatchCreate.fromPartial(object.match_create) : void 0;
+    message.match_data = object.match_data !== void 0 && object.match_data !== null ? MatchData.fromPartial(object.match_data) : void 0;
+    message.match_data_send = object.match_data_send !== void 0 && object.match_data_send !== null ? MatchDataSend.fromPartial(object.match_data_send) : void 0;
+    message.match_join = object.match_join !== void 0 && object.match_join !== null ? MatchJoin.fromPartial(object.match_join) : void 0;
+    message.match_leave = object.match_leave !== void 0 && object.match_leave !== null ? MatchLeave.fromPartial(object.match_leave) : void 0;
+    message.match_presence_event = object.match_presence_event !== void 0 && object.match_presence_event !== null ? MatchPresenceEvent.fromPartial(object.match_presence_event) : void 0;
+    message.matchmaker_add = object.matchmaker_add !== void 0 && object.matchmaker_add !== null ? MatchmakerAdd.fromPartial(object.matchmaker_add) : void 0;
+    message.matchmaker_matched = object.matchmaker_matched !== void 0 && object.matchmaker_matched !== null ? MatchmakerMatched.fromPartial(object.matchmaker_matched) : void 0;
+    message.matchmaker_remove = object.matchmaker_remove !== void 0 && object.matchmaker_remove !== null ? MatchmakerRemove.fromPartial(object.matchmaker_remove) : void 0;
+    message.matchmaker_ticket = object.matchmaker_ticket !== void 0 && object.matchmaker_ticket !== null ? MatchmakerTicket.fromPartial(object.matchmaker_ticket) : void 0;
+    message.notifications = object.notifications !== void 0 && object.notifications !== null ? Notifications.fromPartial(object.notifications) : void 0;
+    message.rpc = object.rpc !== void 0 && object.rpc !== null ? Rpc.fromPartial(object.rpc) : void 0;
+    message.status = object.status !== void 0 && object.status !== null ? Status.fromPartial(object.status) : void 0;
+    message.status_follow = object.status_follow !== void 0 && object.status_follow !== null ? StatusFollow.fromPartial(object.status_follow) : void 0;
+    message.status_presence_event = object.status_presence_event !== void 0 && object.status_presence_event !== null ? StatusPresenceEvent.fromPartial(object.status_presence_event) : void 0;
+    message.status_unfollow = object.status_unfollow !== void 0 && object.status_unfollow !== null ? StatusUnfollow.fromPartial(object.status_unfollow) : void 0;
+    message.status_update = object.status_update !== void 0 && object.status_update !== null ? StatusUpdate.fromPartial(object.status_update) : void 0;
+    message.stream_data = object.stream_data !== void 0 && object.stream_data !== null ? StreamData.fromPartial(object.stream_data) : void 0;
+    message.stream_presence_event = object.stream_presence_event !== void 0 && object.stream_presence_event !== null ? StreamPresenceEvent.fromPartial(object.stream_presence_event) : void 0;
+    message.ping = object.ping !== void 0 && object.ping !== null ? Ping.fromPartial(object.ping) : void 0;
+    message.pong = object.pong !== void 0 && object.pong !== null ? Pong.fromPartial(object.pong) : void 0;
+    message.party = object.party !== void 0 && object.party !== null ? Party.fromPartial(object.party) : void 0;
+    message.party_create = object.party_create !== void 0 && object.party_create !== null ? PartyCreate.fromPartial(object.party_create) : void 0;
+    message.party_join = object.party_join !== void 0 && object.party_join !== null ? PartyJoin.fromPartial(object.party_join) : void 0;
+    message.party_leave = object.party_leave !== void 0 && object.party_leave !== null ? PartyLeave.fromPartial(object.party_leave) : void 0;
+    message.party_promote = object.party_promote !== void 0 && object.party_promote !== null ? PartyPromote.fromPartial(object.party_promote) : void 0;
+    message.party_leader = object.party_leader !== void 0 && object.party_leader !== null ? PartyLeader.fromPartial(object.party_leader) : void 0;
+    message.party_accept = object.party_accept !== void 0 && object.party_accept !== null ? PartyAccept.fromPartial(object.party_accept) : void 0;
+    message.party_remove = object.party_remove !== void 0 && object.party_remove !== null ? PartyRemove.fromPartial(object.party_remove) : void 0;
+    message.party_close = object.party_close !== void 0 && object.party_close !== null ? PartyClose.fromPartial(object.party_close) : void 0;
+    message.party_join_request_list = object.party_join_request_list !== void 0 && object.party_join_request_list !== null ? PartyJoinRequestList.fromPartial(object.party_join_request_list) : void 0;
+    message.party_join_request = object.party_join_request !== void 0 && object.party_join_request !== null ? PartyJoinRequest.fromPartial(object.party_join_request) : void 0;
+    message.party_matchmaker_add = object.party_matchmaker_add !== void 0 && object.party_matchmaker_add !== null ? PartyMatchmakerAdd.fromPartial(object.party_matchmaker_add) : void 0;
+    message.party_matchmaker_remove = object.party_matchmaker_remove !== void 0 && object.party_matchmaker_remove !== null ? PartyMatchmakerRemove.fromPartial(object.party_matchmaker_remove) : void 0;
+    message.party_matchmaker_ticket = object.party_matchmaker_ticket !== void 0 && object.party_matchmaker_ticket !== null ? PartyMatchmakerTicket.fromPartial(object.party_matchmaker_ticket) : void 0;
+    message.party_data = object.party_data !== void 0 && object.party_data !== null ? PartyData.fromPartial(object.party_data) : void 0;
+    message.party_data_send = object.party_data_send !== void 0 && object.party_data_send !== null ? PartyDataSend.fromPartial(object.party_data_send) : void 0;
+    message.party_presence_event = object.party_presence_event !== void 0 && object.party_presence_event !== null ? PartyPresenceEvent.fromPartial(object.party_presence_event) : void 0;
     return message;
   }
 };
-var baseChannel = {
-  id: "",
-  room_name: "",
-  group_id: "",
-  user_id_one: "",
-  user_id_two: ""
-};
+function createBaseChannel() {
+  return { id: "", presences: [], self: void 0, room_name: "", group_id: "", user_id_one: "", user_id_two: "" };
+}
 var Channel = {
   encode(message, writer = import_minimal4.default.Writer.create()) {
     if (message.id !== "") {
@@ -4226,8 +3471,7 @@ var Channel = {
   decode(input, length) {
     const reader = input instanceof import_minimal4.default.Reader ? input : new import_minimal4.default.Reader(input);
     let end = length === void 0 ? reader.len : reader.pos + length;
-    const message = __spreadValues({}, baseChannel);
-    message.presences = [];
+    const message = createBaseChannel();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -4260,52 +3504,21 @@ var Channel = {
     return message;
   },
   fromJSON(object) {
-    const message = __spreadValues({}, baseChannel);
-    message.presences = [];
-    if (object.id !== void 0 && object.id !== null) {
-      message.id = String(object.id);
-    } else {
-      message.id = "";
-    }
-    if (object.presences !== void 0 && object.presences !== null) {
-      for (const e of object.presences) {
-        message.presences.push(UserPresence.fromJSON(e));
-      }
-    }
-    if (object.self !== void 0 && object.self !== null) {
-      message.self = UserPresence.fromJSON(object.self);
-    } else {
-      message.self = void 0;
-    }
-    if (object.room_name !== void 0 && object.room_name !== null) {
-      message.room_name = String(object.room_name);
-    } else {
-      message.room_name = "";
-    }
-    if (object.group_id !== void 0 && object.group_id !== null) {
-      message.group_id = String(object.group_id);
-    } else {
-      message.group_id = "";
-    }
-    if (object.user_id_one !== void 0 && object.user_id_one !== null) {
-      message.user_id_one = String(object.user_id_one);
-    } else {
-      message.user_id_one = "";
-    }
-    if (object.user_id_two !== void 0 && object.user_id_two !== null) {
-      message.user_id_two = String(object.user_id_two);
-    } else {
-      message.user_id_two = "";
-    }
-    return message;
+    return {
+      id: isSet4(object.id) ? String(object.id) : "",
+      presences: Array.isArray(object == null ? void 0 : object.presences) ? object.presences.map((e) => UserPresence.fromJSON(e)) : [],
+      self: isSet4(object.self) ? UserPresence.fromJSON(object.self) : void 0,
+      room_name: isSet4(object.room_name) ? String(object.room_name) : "",
+      group_id: isSet4(object.group_id) ? String(object.group_id) : "",
+      user_id_one: isSet4(object.user_id_one) ? String(object.user_id_one) : "",
+      user_id_two: isSet4(object.user_id_two) ? String(object.user_id_two) : ""
+    };
   },
   toJSON(message) {
     const obj = {};
     message.id !== void 0 && (obj.id = message.id);
     if (message.presences) {
-      obj.presences = message.presences.map(
-        (e) => e ? UserPresence.toJSON(e) : void 0
-      );
+      obj.presences = message.presences.map((e) => e ? UserPresence.toJSON(e) : void 0);
     } else {
       obj.presences = [];
     }
@@ -4316,48 +3529,25 @@ var Channel = {
     message.user_id_two !== void 0 && (obj.user_id_two = message.user_id_two);
     return obj;
   },
+  create(base) {
+    return Channel.fromPartial(base != null ? base : {});
+  },
   fromPartial(object) {
-    const message = __spreadValues({}, baseChannel);
-    message.presences = [];
-    if (object.id !== void 0 && object.id !== null) {
-      message.id = object.id;
-    } else {
-      message.id = "";
-    }
-    if (object.presences !== void 0 && object.presences !== null) {
-      for (const e of object.presences) {
-        message.presences.push(UserPresence.fromPartial(e));
-      }
-    }
-    if (object.self !== void 0 && object.self !== null) {
-      message.self = UserPresence.fromPartial(object.self);
-    } else {
-      message.self = void 0;
-    }
-    if (object.room_name !== void 0 && object.room_name !== null) {
-      message.room_name = object.room_name;
-    } else {
-      message.room_name = "";
-    }
-    if (object.group_id !== void 0 && object.group_id !== null) {
-      message.group_id = object.group_id;
-    } else {
-      message.group_id = "";
-    }
-    if (object.user_id_one !== void 0 && object.user_id_one !== null) {
-      message.user_id_one = object.user_id_one;
-    } else {
-      message.user_id_one = "";
-    }
-    if (object.user_id_two !== void 0 && object.user_id_two !== null) {
-      message.user_id_two = object.user_id_two;
-    } else {
-      message.user_id_two = "";
-    }
+    var _a, _b, _c, _d, _e, _f;
+    const message = createBaseChannel();
+    message.id = (_a = object.id) != null ? _a : "";
+    message.presences = ((_b = object.presences) == null ? void 0 : _b.map((e) => UserPresence.fromPartial(e))) || [];
+    message.self = object.self !== void 0 && object.self !== null ? UserPresence.fromPartial(object.self) : void 0;
+    message.room_name = (_c = object.room_name) != null ? _c : "";
+    message.group_id = (_d = object.group_id) != null ? _d : "";
+    message.user_id_one = (_e = object.user_id_one) != null ? _e : "";
+    message.user_id_two = (_f = object.user_id_two) != null ? _f : "";
     return message;
   }
 };
-var baseChannelJoin = { target: "", type: 0 };
+function createBaseChannelJoin() {
+  return { target: "", type: 0, persistence: void 0, hidden: void 0 };
+}
 var ChannelJoin = {
   encode(message, writer = import_minimal4.default.Writer.create()) {
     if (message.target !== "") {
@@ -4367,23 +3557,17 @@ var ChannelJoin = {
       writer.uint32(16).int32(message.type);
     }
     if (message.persistence !== void 0) {
-      BoolValue.encode(
-        { value: message.persistence },
-        writer.uint32(26).fork()
-      ).ldelim();
+      BoolValue.encode({ value: message.persistence }, writer.uint32(26).fork()).ldelim();
     }
     if (message.hidden !== void 0) {
-      BoolValue.encode(
-        { value: message.hidden },
-        writer.uint32(34).fork()
-      ).ldelim();
+      BoolValue.encode({ value: message.hidden }, writer.uint32(34).fork()).ldelim();
     }
     return writer;
   },
   decode(input, length) {
     const reader = input instanceof import_minimal4.default.Reader ? input : new import_minimal4.default.Reader(input);
     let end = length === void 0 ? reader.len : reader.pos + length;
-    const message = __spreadValues({}, baseChannelJoin);
+    const message = createBaseChannelJoin();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -4407,63 +3591,37 @@ var ChannelJoin = {
     return message;
   },
   fromJSON(object) {
-    const message = __spreadValues({}, baseChannelJoin);
-    if (object.target !== void 0 && object.target !== null) {
-      message.target = String(object.target);
-    } else {
-      message.target = "";
-    }
-    if (object.type !== void 0 && object.type !== null) {
-      message.type = Number(object.type);
-    } else {
-      message.type = 0;
-    }
-    if (object.persistence !== void 0 && object.persistence !== null) {
-      message.persistence = Boolean(object.persistence);
-    } else {
-      message.persistence = void 0;
-    }
-    if (object.hidden !== void 0 && object.hidden !== null) {
-      message.hidden = Boolean(object.hidden);
-    } else {
-      message.hidden = void 0;
-    }
-    return message;
+    return {
+      target: isSet4(object.target) ? String(object.target) : "",
+      type: isSet4(object.type) ? Number(object.type) : 0,
+      persistence: isSet4(object.persistence) ? Boolean(object.persistence) : void 0,
+      hidden: isSet4(object.hidden) ? Boolean(object.hidden) : void 0
+    };
   },
   toJSON(message) {
     const obj = {};
     message.target !== void 0 && (obj.target = message.target);
-    message.type !== void 0 && (obj.type = message.type);
+    message.type !== void 0 && (obj.type = Math.round(message.type));
     message.persistence !== void 0 && (obj.persistence = message.persistence);
     message.hidden !== void 0 && (obj.hidden = message.hidden);
     return obj;
   },
+  create(base) {
+    return ChannelJoin.fromPartial(base != null ? base : {});
+  },
   fromPartial(object) {
-    const message = __spreadValues({}, baseChannelJoin);
-    if (object.target !== void 0 && object.target !== null) {
-      message.target = object.target;
-    } else {
-      message.target = "";
-    }
-    if (object.type !== void 0 && object.type !== null) {
-      message.type = object.type;
-    } else {
-      message.type = 0;
-    }
-    if (object.persistence !== void 0 && object.persistence !== null) {
-      message.persistence = object.persistence;
-    } else {
-      message.persistence = void 0;
-    }
-    if (object.hidden !== void 0 && object.hidden !== null) {
-      message.hidden = object.hidden;
-    } else {
-      message.hidden = void 0;
-    }
+    var _a, _b, _c, _d;
+    const message = createBaseChannelJoin();
+    message.target = (_a = object.target) != null ? _a : "";
+    message.type = (_b = object.type) != null ? _b : 0;
+    message.persistence = (_c = object.persistence) != null ? _c : void 0;
+    message.hidden = (_d = object.hidden) != null ? _d : void 0;
     return message;
   }
 };
-var baseChannelLeave = { channel_id: "" };
+function createBaseChannelLeave() {
+  return { channel_id: "" };
+}
 var ChannelLeave = {
   encode(message, writer = import_minimal4.default.Writer.create()) {
     if (message.channel_id !== "") {
@@ -4474,7 +3632,7 @@ var ChannelLeave = {
   decode(input, length) {
     const reader = input instanceof import_minimal4.default.Reader ? input : new import_minimal4.default.Reader(input);
     let end = length === void 0 ? reader.len : reader.pos + length;
-    const message = __spreadValues({}, baseChannelLeave);
+    const message = createBaseChannelLeave();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -4489,38 +3647,38 @@ var ChannelLeave = {
     return message;
   },
   fromJSON(object) {
-    const message = __spreadValues({}, baseChannelLeave);
-    if (object.channel_id !== void 0 && object.channel_id !== null) {
-      message.channel_id = String(object.channel_id);
-    } else {
-      message.channel_id = "";
-    }
-    return message;
+    return { channel_id: isSet4(object.channel_id) ? String(object.channel_id) : "" };
   },
   toJSON(message) {
     const obj = {};
     message.channel_id !== void 0 && (obj.channel_id = message.channel_id);
     return obj;
   },
+  create(base) {
+    return ChannelLeave.fromPartial(base != null ? base : {});
+  },
   fromPartial(object) {
-    const message = __spreadValues({}, baseChannelLeave);
-    if (object.channel_id !== void 0 && object.channel_id !== null) {
-      message.channel_id = object.channel_id;
-    } else {
-      message.channel_id = "";
-    }
+    var _a;
+    const message = createBaseChannelLeave();
+    message.channel_id = (_a = object.channel_id) != null ? _a : "";
     return message;
   }
 };
-var baseChannelMessageAck = {
-  channel_id: "",
-  message_id: "",
-  username: "",
-  room_name: "",
-  group_id: "",
-  user_id_one: "",
-  user_id_two: ""
-};
+function createBaseChannelMessageAck() {
+  return {
+    channel_id: "",
+    message_id: "",
+    code: void 0,
+    username: "",
+    create_time: void 0,
+    update_time: void 0,
+    persistent: void 0,
+    room_name: "",
+    group_id: "",
+    user_id_one: "",
+    user_id_two: ""
+  };
+}
 var ChannelMessageAck = {
   encode(message, writer = import_minimal4.default.Writer.create()) {
     if (message.channel_id !== "") {
@@ -4530,31 +3688,19 @@ var ChannelMessageAck = {
       writer.uint32(18).string(message.message_id);
     }
     if (message.code !== void 0) {
-      Int32Value.encode(
-        { value: message.code },
-        writer.uint32(26).fork()
-      ).ldelim();
+      Int32Value.encode({ value: message.code }, writer.uint32(26).fork()).ldelim();
     }
     if (message.username !== "") {
       writer.uint32(34).string(message.username);
     }
     if (message.create_time !== void 0) {
-      Timestamp.encode(
-        toTimestamp2(message.create_time),
-        writer.uint32(42).fork()
-      ).ldelim();
+      Timestamp.encode(toTimestamp2(message.create_time), writer.uint32(42).fork()).ldelim();
     }
     if (message.update_time !== void 0) {
-      Timestamp.encode(
-        toTimestamp2(message.update_time),
-        writer.uint32(50).fork()
-      ).ldelim();
+      Timestamp.encode(toTimestamp2(message.update_time), writer.uint32(50).fork()).ldelim();
     }
     if (message.persistent !== void 0) {
-      BoolValue.encode(
-        { value: message.persistent },
-        writer.uint32(58).fork()
-      ).ldelim();
+      BoolValue.encode({ value: message.persistent }, writer.uint32(58).fork()).ldelim();
     }
     if (message.room_name !== "") {
       writer.uint32(66).string(message.room_name);
@@ -4573,7 +3719,7 @@ var ChannelMessageAck = {
   decode(input, length) {
     const reader = input instanceof import_minimal4.default.Reader ? input : new import_minimal4.default.Reader(input);
     let end = length === void 0 ? reader.len : reader.pos + length;
-    const message = __spreadValues({}, baseChannelMessageAck);
+    const message = createBaseChannelMessageAck();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -4590,14 +3736,10 @@ var ChannelMessageAck = {
           message.username = reader.string();
           break;
         case 5:
-          message.create_time = fromTimestamp2(
-            Timestamp.decode(reader, reader.uint32())
-          );
+          message.create_time = fromTimestamp2(Timestamp.decode(reader, reader.uint32()));
           break;
         case 6:
-          message.update_time = fromTimestamp2(
-            Timestamp.decode(reader, reader.uint32())
-          );
+          message.update_time = fromTimestamp2(Timestamp.decode(reader, reader.uint32()));
           break;
         case 7:
           message.persistent = BoolValue.decode(reader, reader.uint32()).value;
@@ -4622,63 +3764,19 @@ var ChannelMessageAck = {
     return message;
   },
   fromJSON(object) {
-    const message = __spreadValues({}, baseChannelMessageAck);
-    if (object.channel_id !== void 0 && object.channel_id !== null) {
-      message.channel_id = String(object.channel_id);
-    } else {
-      message.channel_id = "";
-    }
-    if (object.message_id !== void 0 && object.message_id !== null) {
-      message.message_id = String(object.message_id);
-    } else {
-      message.message_id = "";
-    }
-    if (object.code !== void 0 && object.code !== null) {
-      message.code = Number(object.code);
-    } else {
-      message.code = void 0;
-    }
-    if (object.username !== void 0 && object.username !== null) {
-      message.username = String(object.username);
-    } else {
-      message.username = "";
-    }
-    if (object.create_time !== void 0 && object.create_time !== null) {
-      message.create_time = fromJsonTimestamp2(object.create_time);
-    } else {
-      message.create_time = void 0;
-    }
-    if (object.update_time !== void 0 && object.update_time !== null) {
-      message.update_time = fromJsonTimestamp2(object.update_time);
-    } else {
-      message.update_time = void 0;
-    }
-    if (object.persistent !== void 0 && object.persistent !== null) {
-      message.persistent = Boolean(object.persistent);
-    } else {
-      message.persistent = void 0;
-    }
-    if (object.room_name !== void 0 && object.room_name !== null) {
-      message.room_name = String(object.room_name);
-    } else {
-      message.room_name = "";
-    }
-    if (object.group_id !== void 0 && object.group_id !== null) {
-      message.group_id = String(object.group_id);
-    } else {
-      message.group_id = "";
-    }
-    if (object.user_id_one !== void 0 && object.user_id_one !== null) {
-      message.user_id_one = String(object.user_id_one);
-    } else {
-      message.user_id_one = "";
-    }
-    if (object.user_id_two !== void 0 && object.user_id_two !== null) {
-      message.user_id_two = String(object.user_id_two);
-    } else {
-      message.user_id_two = "";
-    }
-    return message;
+    return {
+      channel_id: isSet4(object.channel_id) ? String(object.channel_id) : "",
+      message_id: isSet4(object.message_id) ? String(object.message_id) : "",
+      code: isSet4(object.code) ? Number(object.code) : void 0,
+      username: isSet4(object.username) ? String(object.username) : "",
+      create_time: isSet4(object.create_time) ? fromJsonTimestamp2(object.create_time) : void 0,
+      update_time: isSet4(object.update_time) ? fromJsonTimestamp2(object.update_time) : void 0,
+      persistent: isSet4(object.persistent) ? Boolean(object.persistent) : void 0,
+      room_name: isSet4(object.room_name) ? String(object.room_name) : "",
+      group_id: isSet4(object.group_id) ? String(object.group_id) : "",
+      user_id_one: isSet4(object.user_id_one) ? String(object.user_id_one) : "",
+      user_id_two: isSet4(object.user_id_two) ? String(object.user_id_two) : ""
+    };
   },
   toJSON(message) {
     const obj = {};
@@ -4695,88 +3793,56 @@ var ChannelMessageAck = {
     message.user_id_two !== void 0 && (obj.user_id_two = message.user_id_two);
     return obj;
   },
+  create(base) {
+    return ChannelMessageAck.fromPartial(base != null ? base : {});
+  },
   fromPartial(object) {
-    const message = __spreadValues({}, baseChannelMessageAck);
-    if (object.channel_id !== void 0 && object.channel_id !== null) {
-      message.channel_id = object.channel_id;
-    } else {
-      message.channel_id = "";
-    }
-    if (object.message_id !== void 0 && object.message_id !== null) {
-      message.message_id = object.message_id;
-    } else {
-      message.message_id = "";
-    }
-    if (object.code !== void 0 && object.code !== null) {
-      message.code = object.code;
-    } else {
-      message.code = void 0;
-    }
-    if (object.username !== void 0 && object.username !== null) {
-      message.username = object.username;
-    } else {
-      message.username = "";
-    }
-    if (object.create_time !== void 0 && object.create_time !== null) {
-      message.create_time = object.create_time;
-    } else {
-      message.create_time = void 0;
-    }
-    if (object.update_time !== void 0 && object.update_time !== null) {
-      message.update_time = object.update_time;
-    } else {
-      message.update_time = void 0;
-    }
-    if (object.persistent !== void 0 && object.persistent !== null) {
-      message.persistent = object.persistent;
-    } else {
-      message.persistent = void 0;
-    }
-    if (object.room_name !== void 0 && object.room_name !== null) {
-      message.room_name = object.room_name;
-    } else {
-      message.room_name = "";
-    }
-    if (object.group_id !== void 0 && object.group_id !== null) {
-      message.group_id = object.group_id;
-    } else {
-      message.group_id = "";
-    }
-    if (object.user_id_one !== void 0 && object.user_id_one !== null) {
-      message.user_id_one = object.user_id_one;
-    } else {
-      message.user_id_one = "";
-    }
-    if (object.user_id_two !== void 0 && object.user_id_two !== null) {
-      message.user_id_two = object.user_id_two;
-    } else {
-      message.user_id_two = "";
-    }
+    var _a, _b, _c, _d, _e, _f, _g, _h, _i, _j, _k;
+    const message = createBaseChannelMessageAck();
+    message.channel_id = (_a = object.channel_id) != null ? _a : "";
+    message.message_id = (_b = object.message_id) != null ? _b : "";
+    message.code = (_c = object.code) != null ? _c : void 0;
+    message.username = (_d = object.username) != null ? _d : "";
+    message.create_time = (_e = object.create_time) != null ? _e : void 0;
+    message.update_time = (_f = object.update_time) != null ? _f : void 0;
+    message.persistent = (_g = object.persistent) != null ? _g : void 0;
+    message.room_name = (_h = object.room_name) != null ? _h : "";
+    message.group_id = (_i = object.group_id) != null ? _i : "";
+    message.user_id_one = (_j = object.user_id_one) != null ? _j : "";
+    message.user_id_two = (_k = object.user_id_two) != null ? _k : "";
     return message;
   }
 };
-var baseChannelMessageSend = { channel_id: "", content: "" };
+function createBaseChannelMessageSend() {
+  return { clan_id: "", channel_id: "", content: "" };
+}
 var ChannelMessageSend = {
   encode(message, writer = import_minimal4.default.Writer.create()) {
+    if (message.clan_id !== "") {
+      writer.uint32(10).string(message.clan_id);
+    }
     if (message.channel_id !== "") {
-      writer.uint32(10).string(message.channel_id);
+      writer.uint32(18).string(message.channel_id);
     }
     if (message.content !== "") {
-      writer.uint32(18).string(message.content);
+      writer.uint32(26).string(message.content);
     }
     return writer;
   },
   decode(input, length) {
     const reader = input instanceof import_minimal4.default.Reader ? input : new import_minimal4.default.Reader(input);
     let end = length === void 0 ? reader.len : reader.pos + length;
-    const message = __spreadValues({}, baseChannelMessageSend);
+    const message = createBaseChannelMessageSend();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          message.channel_id = reader.string();
+          message.clan_id = reader.string();
           break;
         case 2:
+          message.channel_id = reader.string();
+          break;
+        case 3:
           message.content = reader.string();
           break;
         default:
@@ -4787,45 +3853,34 @@ var ChannelMessageSend = {
     return message;
   },
   fromJSON(object) {
-    const message = __spreadValues({}, baseChannelMessageSend);
-    if (object.channel_id !== void 0 && object.channel_id !== null) {
-      message.channel_id = String(object.channel_id);
-    } else {
-      message.channel_id = "";
-    }
-    if (object.content !== void 0 && object.content !== null) {
-      message.content = String(object.content);
-    } else {
-      message.content = "";
-    }
-    return message;
+    return {
+      clan_id: isSet4(object.clan_id) ? String(object.clan_id) : "",
+      channel_id: isSet4(object.channel_id) ? String(object.channel_id) : "",
+      content: isSet4(object.content) ? String(object.content) : ""
+    };
   },
   toJSON(message) {
     const obj = {};
+    message.clan_id !== void 0 && (obj.clan_id = message.clan_id);
     message.channel_id !== void 0 && (obj.channel_id = message.channel_id);
     message.content !== void 0 && (obj.content = message.content);
     return obj;
   },
+  create(base) {
+    return ChannelMessageSend.fromPartial(base != null ? base : {});
+  },
   fromPartial(object) {
-    const message = __spreadValues({}, baseChannelMessageSend);
-    if (object.channel_id !== void 0 && object.channel_id !== null) {
-      message.channel_id = object.channel_id;
-    } else {
-      message.channel_id = "";
-    }
-    if (object.content !== void 0 && object.content !== null) {
-      message.content = object.content;
-    } else {
-      message.content = "";
-    }
+    var _a, _b, _c;
+    const message = createBaseChannelMessageSend();
+    message.clan_id = (_a = object.clan_id) != null ? _a : "";
+    message.channel_id = (_b = object.channel_id) != null ? _b : "";
+    message.content = (_c = object.content) != null ? _c : "";
     return message;
   }
 };
-var baseChannelMessageUpdate = {
-  channel_id: "",
-  message_id: "",
-  content: ""
-};
+function createBaseChannelMessageUpdate() {
+  return { channel_id: "", message_id: "", content: "" };
+}
 var ChannelMessageUpdate = {
   encode(message, writer = import_minimal4.default.Writer.create()) {
     if (message.channel_id !== "") {
@@ -4842,7 +3897,7 @@ var ChannelMessageUpdate = {
   decode(input, length) {
     const reader = input instanceof import_minimal4.default.Reader ? input : new import_minimal4.default.Reader(input);
     let end = length === void 0 ? reader.len : reader.pos + length;
-    const message = __spreadValues({}, baseChannelMessageUpdate);
+    const message = createBaseChannelMessageUpdate();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -4863,23 +3918,11 @@ var ChannelMessageUpdate = {
     return message;
   },
   fromJSON(object) {
-    const message = __spreadValues({}, baseChannelMessageUpdate);
-    if (object.channel_id !== void 0 && object.channel_id !== null) {
-      message.channel_id = String(object.channel_id);
-    } else {
-      message.channel_id = "";
-    }
-    if (object.message_id !== void 0 && object.message_id !== null) {
-      message.message_id = String(object.message_id);
-    } else {
-      message.message_id = "";
-    }
-    if (object.content !== void 0 && object.content !== null) {
-      message.content = String(object.content);
-    } else {
-      message.content = "";
-    }
-    return message;
+    return {
+      channel_id: isSet4(object.channel_id) ? String(object.channel_id) : "",
+      message_id: isSet4(object.message_id) ? String(object.message_id) : "",
+      content: isSet4(object.content) ? String(object.content) : ""
+    };
   },
   toJSON(message) {
     const obj = {};
@@ -4888,27 +3931,21 @@ var ChannelMessageUpdate = {
     message.content !== void 0 && (obj.content = message.content);
     return obj;
   },
+  create(base) {
+    return ChannelMessageUpdate.fromPartial(base != null ? base : {});
+  },
   fromPartial(object) {
-    const message = __spreadValues({}, baseChannelMessageUpdate);
-    if (object.channel_id !== void 0 && object.channel_id !== null) {
-      message.channel_id = object.channel_id;
-    } else {
-      message.channel_id = "";
-    }
-    if (object.message_id !== void 0 && object.message_id !== null) {
-      message.message_id = object.message_id;
-    } else {
-      message.message_id = "";
-    }
-    if (object.content !== void 0 && object.content !== null) {
-      message.content = object.content;
-    } else {
-      message.content = "";
-    }
+    var _a, _b, _c;
+    const message = createBaseChannelMessageUpdate();
+    message.channel_id = (_a = object.channel_id) != null ? _a : "";
+    message.message_id = (_b = object.message_id) != null ? _b : "";
+    message.content = (_c = object.content) != null ? _c : "";
     return message;
   }
 };
-var baseChannelMessageRemove = { channel_id: "", message_id: "" };
+function createBaseChannelMessageRemove() {
+  return { channel_id: "", message_id: "" };
+}
 var ChannelMessageRemove = {
   encode(message, writer = import_minimal4.default.Writer.create()) {
     if (message.channel_id !== "") {
@@ -4922,7 +3959,7 @@ var ChannelMessageRemove = {
   decode(input, length) {
     const reader = input instanceof import_minimal4.default.Reader ? input : new import_minimal4.default.Reader(input);
     let end = length === void 0 ? reader.len : reader.pos + length;
-    const message = __spreadValues({}, baseChannelMessageRemove);
+    const message = createBaseChannelMessageRemove();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -4940,18 +3977,10 @@ var ChannelMessageRemove = {
     return message;
   },
   fromJSON(object) {
-    const message = __spreadValues({}, baseChannelMessageRemove);
-    if (object.channel_id !== void 0 && object.channel_id !== null) {
-      message.channel_id = String(object.channel_id);
-    } else {
-      message.channel_id = "";
-    }
-    if (object.message_id !== void 0 && object.message_id !== null) {
-      message.message_id = String(object.message_id);
-    } else {
-      message.message_id = "";
-    }
-    return message;
+    return {
+      channel_id: isSet4(object.channel_id) ? String(object.channel_id) : "",
+      message_id: isSet4(object.message_id) ? String(object.message_id) : ""
+    };
   },
   toJSON(message) {
     const obj = {};
@@ -4959,28 +3988,20 @@ var ChannelMessageRemove = {
     message.message_id !== void 0 && (obj.message_id = message.message_id);
     return obj;
   },
+  create(base) {
+    return ChannelMessageRemove.fromPartial(base != null ? base : {});
+  },
   fromPartial(object) {
-    const message = __spreadValues({}, baseChannelMessageRemove);
-    if (object.channel_id !== void 0 && object.channel_id !== null) {
-      message.channel_id = object.channel_id;
-    } else {
-      message.channel_id = "";
-    }
-    if (object.message_id !== void 0 && object.message_id !== null) {
-      message.message_id = object.message_id;
-    } else {
-      message.message_id = "";
-    }
+    var _a, _b;
+    const message = createBaseChannelMessageRemove();
+    message.channel_id = (_a = object.channel_id) != null ? _a : "";
+    message.message_id = (_b = object.message_id) != null ? _b : "";
     return message;
   }
 };
-var baseChannelPresenceEvent = {
-  channel_id: "",
-  room_name: "",
-  group_id: "",
-  user_id_one: "",
-  user_id_two: ""
-};
+function createBaseChannelPresenceEvent() {
+  return { channel_id: "", joins: [], leaves: [], room_name: "", group_id: "", user_id_one: "", user_id_two: "" };
+}
 var ChannelPresenceEvent = {
   encode(message, writer = import_minimal4.default.Writer.create()) {
     if (message.channel_id !== "") {
@@ -5009,9 +4030,7 @@ var ChannelPresenceEvent = {
   decode(input, length) {
     const reader = input instanceof import_minimal4.default.Reader ? input : new import_minimal4.default.Reader(input);
     let end = length === void 0 ? reader.len : reader.pos + length;
-    const message = __spreadValues({}, baseChannelPresenceEvent);
-    message.joins = [];
-    message.leaves = [];
+    const message = createBaseChannelPresenceEvent();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -5044,60 +4063,26 @@ var ChannelPresenceEvent = {
     return message;
   },
   fromJSON(object) {
-    const message = __spreadValues({}, baseChannelPresenceEvent);
-    message.joins = [];
-    message.leaves = [];
-    if (object.channel_id !== void 0 && object.channel_id !== null) {
-      message.channel_id = String(object.channel_id);
-    } else {
-      message.channel_id = "";
-    }
-    if (object.joins !== void 0 && object.joins !== null) {
-      for (const e of object.joins) {
-        message.joins.push(UserPresence.fromJSON(e));
-      }
-    }
-    if (object.leaves !== void 0 && object.leaves !== null) {
-      for (const e of object.leaves) {
-        message.leaves.push(UserPresence.fromJSON(e));
-      }
-    }
-    if (object.room_name !== void 0 && object.room_name !== null) {
-      message.room_name = String(object.room_name);
-    } else {
-      message.room_name = "";
-    }
-    if (object.group_id !== void 0 && object.group_id !== null) {
-      message.group_id = String(object.group_id);
-    } else {
-      message.group_id = "";
-    }
-    if (object.user_id_one !== void 0 && object.user_id_one !== null) {
-      message.user_id_one = String(object.user_id_one);
-    } else {
-      message.user_id_one = "";
-    }
-    if (object.user_id_two !== void 0 && object.user_id_two !== null) {
-      message.user_id_two = String(object.user_id_two);
-    } else {
-      message.user_id_two = "";
-    }
-    return message;
+    return {
+      channel_id: isSet4(object.channel_id) ? String(object.channel_id) : "",
+      joins: Array.isArray(object == null ? void 0 : object.joins) ? object.joins.map((e) => UserPresence.fromJSON(e)) : [],
+      leaves: Array.isArray(object == null ? void 0 : object.leaves) ? object.leaves.map((e) => UserPresence.fromJSON(e)) : [],
+      room_name: isSet4(object.room_name) ? String(object.room_name) : "",
+      group_id: isSet4(object.group_id) ? String(object.group_id) : "",
+      user_id_one: isSet4(object.user_id_one) ? String(object.user_id_one) : "",
+      user_id_two: isSet4(object.user_id_two) ? String(object.user_id_two) : ""
+    };
   },
   toJSON(message) {
     const obj = {};
     message.channel_id !== void 0 && (obj.channel_id = message.channel_id);
     if (message.joins) {
-      obj.joins = message.joins.map(
-        (e) => e ? UserPresence.toJSON(e) : void 0
-      );
+      obj.joins = message.joins.map((e) => e ? UserPresence.toJSON(e) : void 0);
     } else {
       obj.joins = [];
     }
     if (message.leaves) {
-      obj.leaves = message.leaves.map(
-        (e) => e ? UserPresence.toJSON(e) : void 0
-      );
+      obj.leaves = message.leaves.map((e) => e ? UserPresence.toJSON(e) : void 0);
     } else {
       obj.leaves = [];
     }
@@ -5107,49 +4092,25 @@ var ChannelPresenceEvent = {
     message.user_id_two !== void 0 && (obj.user_id_two = message.user_id_two);
     return obj;
   },
+  create(base) {
+    return ChannelPresenceEvent.fromPartial(base != null ? base : {});
+  },
   fromPartial(object) {
-    const message = __spreadValues({}, baseChannelPresenceEvent);
-    message.joins = [];
-    message.leaves = [];
-    if (object.channel_id !== void 0 && object.channel_id !== null) {
-      message.channel_id = object.channel_id;
-    } else {
-      message.channel_id = "";
-    }
-    if (object.joins !== void 0 && object.joins !== null) {
-      for (const e of object.joins) {
-        message.joins.push(UserPresence.fromPartial(e));
-      }
-    }
-    if (object.leaves !== void 0 && object.leaves !== null) {
-      for (const e of object.leaves) {
-        message.leaves.push(UserPresence.fromPartial(e));
-      }
-    }
-    if (object.room_name !== void 0 && object.room_name !== null) {
-      message.room_name = object.room_name;
-    } else {
-      message.room_name = "";
-    }
-    if (object.group_id !== void 0 && object.group_id !== null) {
-      message.group_id = object.group_id;
-    } else {
-      message.group_id = "";
-    }
-    if (object.user_id_one !== void 0 && object.user_id_one !== null) {
-      message.user_id_one = object.user_id_one;
-    } else {
-      message.user_id_one = "";
-    }
-    if (object.user_id_two !== void 0 && object.user_id_two !== null) {
-      message.user_id_two = object.user_id_two;
-    } else {
-      message.user_id_two = "";
-    }
+    var _a, _b, _c, _d, _e, _f, _g;
+    const message = createBaseChannelPresenceEvent();
+    message.channel_id = (_a = object.channel_id) != null ? _a : "";
+    message.joins = ((_b = object.joins) == null ? void 0 : _b.map((e) => UserPresence.fromPartial(e))) || [];
+    message.leaves = ((_c = object.leaves) == null ? void 0 : _c.map((e) => UserPresence.fromPartial(e))) || [];
+    message.room_name = (_d = object.room_name) != null ? _d : "";
+    message.group_id = (_e = object.group_id) != null ? _e : "";
+    message.user_id_one = (_f = object.user_id_one) != null ? _f : "";
+    message.user_id_two = (_g = object.user_id_two) != null ? _g : "";
     return message;
   }
 };
-var baseError = { code: 0, message: "" };
+function createBaseError() {
+  return { code: 0, message: "", context: {} };
+}
 var Error2 = {
   encode(message, writer = import_minimal4.default.Writer.create()) {
     if (message.code !== 0) {
@@ -5159,18 +4120,14 @@ var Error2 = {
       writer.uint32(18).string(message.message);
     }
     Object.entries(message.context).forEach(([key, value]) => {
-      Error_ContextEntry.encode(
-        { key, value },
-        writer.uint32(26).fork()
-      ).ldelim();
+      Error_ContextEntry.encode({ key, value }, writer.uint32(26).fork()).ldelim();
     });
     return writer;
   },
   decode(input, length) {
     const reader = input instanceof import_minimal4.default.Reader ? input : new import_minimal4.default.Reader(input);
     let end = length === void 0 ? reader.len : reader.pos + length;
-    const message = __spreadValues({}, baseError);
-    message.context = {};
+    const message = createBaseError();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -5194,28 +4151,18 @@ var Error2 = {
     return message;
   },
   fromJSON(object) {
-    const message = __spreadValues({}, baseError);
-    message.context = {};
-    if (object.code !== void 0 && object.code !== null) {
-      message.code = Number(object.code);
-    } else {
-      message.code = 0;
-    }
-    if (object.message !== void 0 && object.message !== null) {
-      message.message = String(object.message);
-    } else {
-      message.message = "";
-    }
-    if (object.context !== void 0 && object.context !== null) {
-      Object.entries(object.context).forEach(([key, value]) => {
-        message.context[key] = String(value);
-      });
-    }
-    return message;
+    return {
+      code: isSet4(object.code) ? Number(object.code) : 0,
+      message: isSet4(object.message) ? String(object.message) : "",
+      context: isObject(object.context) ? Object.entries(object.context).reduce((acc, [key, value]) => {
+        acc[key] = String(value);
+        return acc;
+      }, {}) : {}
+    };
   },
   toJSON(message) {
     const obj = {};
-    message.code !== void 0 && (obj.code = message.code);
+    message.code !== void 0 && (obj.code = Math.round(message.code));
     message.message !== void 0 && (obj.message = message.message);
     obj.context = {};
     if (message.context) {
@@ -5225,30 +4172,26 @@ var Error2 = {
     }
     return obj;
   },
+  create(base) {
+    return Error2.fromPartial(base != null ? base : {});
+  },
   fromPartial(object) {
-    const message = __spreadValues({}, baseError);
-    message.context = {};
-    if (object.code !== void 0 && object.code !== null) {
-      message.code = object.code;
-    } else {
-      message.code = 0;
-    }
-    if (object.message !== void 0 && object.message !== null) {
-      message.message = object.message;
-    } else {
-      message.message = "";
-    }
-    if (object.context !== void 0 && object.context !== null) {
-      Object.entries(object.context).forEach(([key, value]) => {
-        if (value !== void 0) {
-          message.context[key] = String(value);
-        }
-      });
-    }
+    var _a, _b, _c;
+    const message = createBaseError();
+    message.code = (_a = object.code) != null ? _a : 0;
+    message.message = (_b = object.message) != null ? _b : "";
+    message.context = Object.entries((_c = object.context) != null ? _c : {}).reduce((acc, [key, value]) => {
+      if (value !== void 0) {
+        acc[key] = String(value);
+      }
+      return acc;
+    }, {});
     return message;
   }
 };
-var baseError_ContextEntry = { key: "", value: "" };
+function createBaseError_ContextEntry() {
+  return { key: "", value: "" };
+}
 var Error_ContextEntry = {
   encode(message, writer = import_minimal4.default.Writer.create()) {
     if (message.key !== "") {
@@ -5262,7 +4205,7 @@ var Error_ContextEntry = {
   decode(input, length) {
     const reader = input instanceof import_minimal4.default.Reader ? input : new import_minimal4.default.Reader(input);
     let end = length === void 0 ? reader.len : reader.pos + length;
-    const message = __spreadValues({}, baseError_ContextEntry);
+    const message = createBaseError_ContextEntry();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -5280,18 +4223,7 @@ var Error_ContextEntry = {
     return message;
   },
   fromJSON(object) {
-    const message = __spreadValues({}, baseError_ContextEntry);
-    if (object.key !== void 0 && object.key !== null) {
-      message.key = String(object.key);
-    } else {
-      message.key = "";
-    }
-    if (object.value !== void 0 && object.value !== null) {
-      message.value = String(object.value);
-    } else {
-      message.value = "";
-    }
-    return message;
+    return { key: isSet4(object.key) ? String(object.key) : "", value: isSet4(object.value) ? String(object.value) : "" };
   },
   toJSON(message) {
     const obj = {};
@@ -5299,22 +4231,20 @@ var Error_ContextEntry = {
     message.value !== void 0 && (obj.value = message.value);
     return obj;
   },
+  create(base) {
+    return Error_ContextEntry.fromPartial(base != null ? base : {});
+  },
   fromPartial(object) {
-    const message = __spreadValues({}, baseError_ContextEntry);
-    if (object.key !== void 0 && object.key !== null) {
-      message.key = object.key;
-    } else {
-      message.key = "";
-    }
-    if (object.value !== void 0 && object.value !== null) {
-      message.value = object.value;
-    } else {
-      message.value = "";
-    }
+    var _a, _b;
+    const message = createBaseError_ContextEntry();
+    message.key = (_a = object.key) != null ? _a : "";
+    message.value = (_b = object.value) != null ? _b : "";
     return message;
   }
 };
-var baseMatch = { match_id: "", authoritative: false, size: 0 };
+function createBaseMatch() {
+  return { match_id: "", authoritative: false, label: void 0, size: 0, presences: [], self: void 0 };
+}
 var Match = {
   encode(message, writer = import_minimal4.default.Writer.create()) {
     if (message.match_id !== "") {
@@ -5324,10 +4254,7 @@ var Match = {
       writer.uint32(16).bool(message.authoritative);
     }
     if (message.label !== void 0) {
-      StringValue.encode(
-        { value: message.label },
-        writer.uint32(26).fork()
-      ).ldelim();
+      StringValue.encode({ value: message.label }, writer.uint32(26).fork()).ldelim();
     }
     if (message.size !== 0) {
       writer.uint32(32).int32(message.size);
@@ -5343,8 +4270,7 @@ var Match = {
   decode(input, length) {
     const reader = input instanceof import_minimal4.default.Reader ? input : new import_minimal4.default.Reader(input);
     let end = length === void 0 ? reader.len : reader.pos + length;
-    const message = __spreadValues({}, baseMatch);
-    message.presences = [];
+    const message = createBaseMatch();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -5374,104 +4300,64 @@ var Match = {
     return message;
   },
   fromJSON(object) {
-    const message = __spreadValues({}, baseMatch);
-    message.presences = [];
-    if (object.match_id !== void 0 && object.match_id !== null) {
-      message.match_id = String(object.match_id);
-    } else {
-      message.match_id = "";
-    }
-    if (object.authoritative !== void 0 && object.authoritative !== null) {
-      message.authoritative = Boolean(object.authoritative);
-    } else {
-      message.authoritative = false;
-    }
-    if (object.label !== void 0 && object.label !== null) {
-      message.label = String(object.label);
-    } else {
-      message.label = void 0;
-    }
-    if (object.size !== void 0 && object.size !== null) {
-      message.size = Number(object.size);
-    } else {
-      message.size = 0;
-    }
-    if (object.presences !== void 0 && object.presences !== null) {
-      for (const e of object.presences) {
-        message.presences.push(UserPresence.fromJSON(e));
-      }
-    }
-    if (object.self !== void 0 && object.self !== null) {
-      message.self = UserPresence.fromJSON(object.self);
-    } else {
-      message.self = void 0;
-    }
-    return message;
+    return {
+      match_id: isSet4(object.match_id) ? String(object.match_id) : "",
+      authoritative: isSet4(object.authoritative) ? Boolean(object.authoritative) : false,
+      label: isSet4(object.label) ? String(object.label) : void 0,
+      size: isSet4(object.size) ? Number(object.size) : 0,
+      presences: Array.isArray(object == null ? void 0 : object.presences) ? object.presences.map((e) => UserPresence.fromJSON(e)) : [],
+      self: isSet4(object.self) ? UserPresence.fromJSON(object.self) : void 0
+    };
   },
   toJSON(message) {
     const obj = {};
     message.match_id !== void 0 && (obj.match_id = message.match_id);
     message.authoritative !== void 0 && (obj.authoritative = message.authoritative);
     message.label !== void 0 && (obj.label = message.label);
-    message.size !== void 0 && (obj.size = message.size);
+    message.size !== void 0 && (obj.size = Math.round(message.size));
     if (message.presences) {
-      obj.presences = message.presences.map(
-        (e) => e ? UserPresence.toJSON(e) : void 0
-      );
+      obj.presences = message.presences.map((e) => e ? UserPresence.toJSON(e) : void 0);
     } else {
       obj.presences = [];
     }
     message.self !== void 0 && (obj.self = message.self ? UserPresence.toJSON(message.self) : void 0);
     return obj;
   },
+  create(base) {
+    return Match.fromPartial(base != null ? base : {});
+  },
   fromPartial(object) {
-    const message = __spreadValues({}, baseMatch);
-    message.presences = [];
-    if (object.match_id !== void 0 && object.match_id !== null) {
-      message.match_id = object.match_id;
-    } else {
-      message.match_id = "";
-    }
-    if (object.authoritative !== void 0 && object.authoritative !== null) {
-      message.authoritative = object.authoritative;
-    } else {
-      message.authoritative = false;
-    }
-    if (object.label !== void 0 && object.label !== null) {
-      message.label = object.label;
-    } else {
-      message.label = void 0;
-    }
-    if (object.size !== void 0 && object.size !== null) {
-      message.size = object.size;
-    } else {
-      message.size = 0;
-    }
-    if (object.presences !== void 0 && object.presences !== null) {
-      for (const e of object.presences) {
-        message.presences.push(UserPresence.fromPartial(e));
-      }
-    }
-    if (object.self !== void 0 && object.self !== null) {
-      message.self = UserPresence.fromPartial(object.self);
-    } else {
-      message.self = void 0;
-    }
+    var _a, _b, _c, _d, _e;
+    const message = createBaseMatch();
+    message.match_id = (_a = object.match_id) != null ? _a : "";
+    message.authoritative = (_b = object.authoritative) != null ? _b : false;
+    message.label = (_c = object.label) != null ? _c : void 0;
+    message.size = (_d = object.size) != null ? _d : 0;
+    message.presences = ((_e = object.presences) == null ? void 0 : _e.map((e) => UserPresence.fromPartial(e))) || [];
+    message.self = object.self !== void 0 && object.self !== null ? UserPresence.fromPartial(object.self) : void 0;
     return message;
   }
 };
-var baseMatchCreate = {};
+function createBaseMatchCreate() {
+  return { name: "" };
+}
 var MatchCreate = {
-  encode(_, writer = import_minimal4.default.Writer.create()) {
+  encode(message, writer = import_minimal4.default.Writer.create()) {
+    if (message.name !== "") {
+      writer.uint32(10).string(message.name);
+    }
     return writer;
   },
   decode(input, length) {
     const reader = input instanceof import_minimal4.default.Reader ? input : new import_minimal4.default.Reader(input);
     let end = length === void 0 ? reader.len : reader.pos + length;
-    const message = __spreadValues({}, baseMatchCreate);
+    const message = createBaseMatchCreate();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
+        case 1:
+          message.name = reader.string();
+          break;
         default:
           reader.skipType(tag & 7);
           break;
@@ -5479,20 +4365,27 @@ var MatchCreate = {
     }
     return message;
   },
-  fromJSON(_) {
-    const message = __spreadValues({}, baseMatchCreate);
-    return message;
+  fromJSON(object) {
+    return { name: isSet4(object.name) ? String(object.name) : "" };
   },
-  toJSON(_) {
+  toJSON(message) {
     const obj = {};
+    message.name !== void 0 && (obj.name = message.name);
     return obj;
   },
-  fromPartial(_) {
-    const message = __spreadValues({}, baseMatchCreate);
+  create(base) {
+    return MatchCreate.fromPartial(base != null ? base : {});
+  },
+  fromPartial(object) {
+    var _a;
+    const message = createBaseMatchCreate();
+    message.name = (_a = object.name) != null ? _a : "";
     return message;
   }
 };
-var baseMatchData = { match_id: "", op_code: 0, reliable: false };
+function createBaseMatchData() {
+  return { match_id: "", presence: void 0, op_code: 0, data: new Uint8Array(), reliable: false };
+}
 var MatchData = {
   encode(message, writer = import_minimal4.default.Writer.create()) {
     if (message.match_id !== "") {
@@ -5515,8 +4408,7 @@ var MatchData = {
   decode(input, length) {
     const reader = input instanceof import_minimal4.default.Reader ? input : new import_minimal4.default.Reader(input);
     let end = length === void 0 ? reader.len : reader.pos + length;
-    const message = __spreadValues({}, baseMatchData);
-    message.data = new Uint8Array();
+    const message = createBaseMatchData();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -5543,75 +4435,40 @@ var MatchData = {
     return message;
   },
   fromJSON(object) {
-    const message = __spreadValues({}, baseMatchData);
-    message.data = new Uint8Array();
-    if (object.match_id !== void 0 && object.match_id !== null) {
-      message.match_id = String(object.match_id);
-    } else {
-      message.match_id = "";
-    }
-    if (object.presence !== void 0 && object.presence !== null) {
-      message.presence = UserPresence.fromJSON(object.presence);
-    } else {
-      message.presence = void 0;
-    }
-    if (object.op_code !== void 0 && object.op_code !== null) {
-      message.op_code = Number(object.op_code);
-    } else {
-      message.op_code = 0;
-    }
-    if (object.data !== void 0 && object.data !== null) {
-      message.data = bytesFromBase64(object.data);
-    }
-    if (object.reliable !== void 0 && object.reliable !== null) {
-      message.reliable = Boolean(object.reliable);
-    } else {
-      message.reliable = false;
-    }
-    return message;
+    return {
+      match_id: isSet4(object.match_id) ? String(object.match_id) : "",
+      presence: isSet4(object.presence) ? UserPresence.fromJSON(object.presence) : void 0,
+      op_code: isSet4(object.op_code) ? Number(object.op_code) : 0,
+      data: isSet4(object.data) ? bytesFromBase64(object.data) : new Uint8Array(),
+      reliable: isSet4(object.reliable) ? Boolean(object.reliable) : false
+    };
   },
   toJSON(message) {
     const obj = {};
     message.match_id !== void 0 && (obj.match_id = message.match_id);
     message.presence !== void 0 && (obj.presence = message.presence ? UserPresence.toJSON(message.presence) : void 0);
-    message.op_code !== void 0 && (obj.op_code = message.op_code);
-    message.data !== void 0 && (obj.data = base64FromBytes(
-      message.data !== void 0 ? message.data : new Uint8Array()
-    ));
+    message.op_code !== void 0 && (obj.op_code = Math.round(message.op_code));
+    message.data !== void 0 && (obj.data = base64FromBytes(message.data !== void 0 ? message.data : new Uint8Array()));
     message.reliable !== void 0 && (obj.reliable = message.reliable);
     return obj;
   },
+  create(base) {
+    return MatchData.fromPartial(base != null ? base : {});
+  },
   fromPartial(object) {
-    const message = __spreadValues({}, baseMatchData);
-    if (object.match_id !== void 0 && object.match_id !== null) {
-      message.match_id = object.match_id;
-    } else {
-      message.match_id = "";
-    }
-    if (object.presence !== void 0 && object.presence !== null) {
-      message.presence = UserPresence.fromPartial(object.presence);
-    } else {
-      message.presence = void 0;
-    }
-    if (object.op_code !== void 0 && object.op_code !== null) {
-      message.op_code = object.op_code;
-    } else {
-      message.op_code = 0;
-    }
-    if (object.data !== void 0 && object.data !== null) {
-      message.data = object.data;
-    } else {
-      message.data = new Uint8Array();
-    }
-    if (object.reliable !== void 0 && object.reliable !== null) {
-      message.reliable = object.reliable;
-    } else {
-      message.reliable = false;
-    }
+    var _a, _b, _c, _d;
+    const message = createBaseMatchData();
+    message.match_id = (_a = object.match_id) != null ? _a : "";
+    message.presence = object.presence !== void 0 && object.presence !== null ? UserPresence.fromPartial(object.presence) : void 0;
+    message.op_code = (_b = object.op_code) != null ? _b : 0;
+    message.data = (_c = object.data) != null ? _c : new Uint8Array();
+    message.reliable = (_d = object.reliable) != null ? _d : false;
     return message;
   }
 };
-var baseMatchDataSend = { match_id: "", op_code: 0, reliable: false };
+function createBaseMatchDataSend() {
+  return { match_id: "", op_code: 0, data: new Uint8Array(), presences: [], reliable: false };
+}
 var MatchDataSend = {
   encode(message, writer = import_minimal4.default.Writer.create()) {
     if (message.match_id !== "") {
@@ -5634,9 +4491,7 @@ var MatchDataSend = {
   decode(input, length) {
     const reader = input instanceof import_minimal4.default.Reader ? input : new import_minimal4.default.Reader(input);
     let end = length === void 0 ? reader.len : reader.pos + length;
-    const message = __spreadValues({}, baseMatchDataSend);
-    message.presences = [];
-    message.data = new Uint8Array();
+    const message = createBaseMatchDataSend();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -5663,83 +4518,44 @@ var MatchDataSend = {
     return message;
   },
   fromJSON(object) {
-    const message = __spreadValues({}, baseMatchDataSend);
-    message.presences = [];
-    message.data = new Uint8Array();
-    if (object.match_id !== void 0 && object.match_id !== null) {
-      message.match_id = String(object.match_id);
-    } else {
-      message.match_id = "";
-    }
-    if (object.op_code !== void 0 && object.op_code !== null) {
-      message.op_code = Number(object.op_code);
-    } else {
-      message.op_code = 0;
-    }
-    if (object.data !== void 0 && object.data !== null) {
-      message.data = bytesFromBase64(object.data);
-    }
-    if (object.presences !== void 0 && object.presences !== null) {
-      for (const e of object.presences) {
-        message.presences.push(UserPresence.fromJSON(e));
-      }
-    }
-    if (object.reliable !== void 0 && object.reliable !== null) {
-      message.reliable = Boolean(object.reliable);
-    } else {
-      message.reliable = false;
-    }
-    return message;
+    return {
+      match_id: isSet4(object.match_id) ? String(object.match_id) : "",
+      op_code: isSet4(object.op_code) ? Number(object.op_code) : 0,
+      data: isSet4(object.data) ? bytesFromBase64(object.data) : new Uint8Array(),
+      presences: Array.isArray(object == null ? void 0 : object.presences) ? object.presences.map((e) => UserPresence.fromJSON(e)) : [],
+      reliable: isSet4(object.reliable) ? Boolean(object.reliable) : false
+    };
   },
   toJSON(message) {
     const obj = {};
     message.match_id !== void 0 && (obj.match_id = message.match_id);
-    message.op_code !== void 0 && (obj.op_code = message.op_code);
-    message.data !== void 0 && (obj.data = base64FromBytes(
-      message.data !== void 0 ? message.data : new Uint8Array()
-    ));
+    message.op_code !== void 0 && (obj.op_code = Math.round(message.op_code));
+    message.data !== void 0 && (obj.data = base64FromBytes(message.data !== void 0 ? message.data : new Uint8Array()));
     if (message.presences) {
-      obj.presences = message.presences.map(
-        (e) => e ? UserPresence.toJSON(e) : void 0
-      );
+      obj.presences = message.presences.map((e) => e ? UserPresence.toJSON(e) : void 0);
     } else {
       obj.presences = [];
     }
     message.reliable !== void 0 && (obj.reliable = message.reliable);
     return obj;
   },
+  create(base) {
+    return MatchDataSend.fromPartial(base != null ? base : {});
+  },
   fromPartial(object) {
-    const message = __spreadValues({}, baseMatchDataSend);
-    message.presences = [];
-    if (object.match_id !== void 0 && object.match_id !== null) {
-      message.match_id = object.match_id;
-    } else {
-      message.match_id = "";
-    }
-    if (object.op_code !== void 0 && object.op_code !== null) {
-      message.op_code = object.op_code;
-    } else {
-      message.op_code = 0;
-    }
-    if (object.data !== void 0 && object.data !== null) {
-      message.data = object.data;
-    } else {
-      message.data = new Uint8Array();
-    }
-    if (object.presences !== void 0 && object.presences !== null) {
-      for (const e of object.presences) {
-        message.presences.push(UserPresence.fromPartial(e));
-      }
-    }
-    if (object.reliable !== void 0 && object.reliable !== null) {
-      message.reliable = object.reliable;
-    } else {
-      message.reliable = false;
-    }
+    var _a, _b, _c, _d, _e;
+    const message = createBaseMatchDataSend();
+    message.match_id = (_a = object.match_id) != null ? _a : "";
+    message.op_code = (_b = object.op_code) != null ? _b : 0;
+    message.data = (_c = object.data) != null ? _c : new Uint8Array();
+    message.presences = ((_d = object.presences) == null ? void 0 : _d.map((e) => UserPresence.fromPartial(e))) || [];
+    message.reliable = (_e = object.reliable) != null ? _e : false;
     return message;
   }
 };
-var baseMatchJoin = {};
+function createBaseMatchJoin() {
+  return { match_id: void 0, token: void 0, metadata: {} };
+}
 var MatchJoin = {
   encode(message, writer = import_minimal4.default.Writer.create()) {
     if (message.match_id !== void 0) {
@@ -5749,18 +4565,14 @@ var MatchJoin = {
       writer.uint32(18).string(message.token);
     }
     Object.entries(message.metadata).forEach(([key, value]) => {
-      MatchJoin_MetadataEntry.encode(
-        { key, value },
-        writer.uint32(26).fork()
-      ).ldelim();
+      MatchJoin_MetadataEntry.encode({ key, value }, writer.uint32(26).fork()).ldelim();
     });
     return writer;
   },
   decode(input, length) {
     const reader = input instanceof import_minimal4.default.Reader ? input : new import_minimal4.default.Reader(input);
     let end = length === void 0 ? reader.len : reader.pos + length;
-    const message = __spreadValues({}, baseMatchJoin);
-    message.metadata = {};
+    const message = createBaseMatchJoin();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -5771,10 +4583,7 @@ var MatchJoin = {
           message.token = reader.string();
           break;
         case 3:
-          const entry3 = MatchJoin_MetadataEntry.decode(
-            reader,
-            reader.uint32()
-          );
+          const entry3 = MatchJoin_MetadataEntry.decode(reader, reader.uint32());
           if (entry3.value !== void 0) {
             message.metadata[entry3.key] = entry3.value;
           }
@@ -5787,24 +4596,14 @@ var MatchJoin = {
     return message;
   },
   fromJSON(object) {
-    const message = __spreadValues({}, baseMatchJoin);
-    message.metadata = {};
-    if (object.match_id !== void 0 && object.match_id !== null) {
-      message.match_id = String(object.match_id);
-    } else {
-      message.match_id = void 0;
-    }
-    if (object.token !== void 0 && object.token !== null) {
-      message.token = String(object.token);
-    } else {
-      message.token = void 0;
-    }
-    if (object.metadata !== void 0 && object.metadata !== null) {
-      Object.entries(object.metadata).forEach(([key, value]) => {
-        message.metadata[key] = String(value);
-      });
-    }
-    return message;
+    return {
+      match_id: isSet4(object.match_id) ? String(object.match_id) : void 0,
+      token: isSet4(object.token) ? String(object.token) : void 0,
+      metadata: isObject(object.metadata) ? Object.entries(object.metadata).reduce((acc, [key, value]) => {
+        acc[key] = String(value);
+        return acc;
+      }, {}) : {}
+    };
   },
   toJSON(message) {
     const obj = {};
@@ -5818,30 +4617,26 @@ var MatchJoin = {
     }
     return obj;
   },
+  create(base) {
+    return MatchJoin.fromPartial(base != null ? base : {});
+  },
   fromPartial(object) {
-    const message = __spreadValues({}, baseMatchJoin);
-    message.metadata = {};
-    if (object.match_id !== void 0 && object.match_id !== null) {
-      message.match_id = object.match_id;
-    } else {
-      message.match_id = void 0;
-    }
-    if (object.token !== void 0 && object.token !== null) {
-      message.token = object.token;
-    } else {
-      message.token = void 0;
-    }
-    if (object.metadata !== void 0 && object.metadata !== null) {
-      Object.entries(object.metadata).forEach(([key, value]) => {
-        if (value !== void 0) {
-          message.metadata[key] = String(value);
-        }
-      });
-    }
+    var _a, _b, _c;
+    const message = createBaseMatchJoin();
+    message.match_id = (_a = object.match_id) != null ? _a : void 0;
+    message.token = (_b = object.token) != null ? _b : void 0;
+    message.metadata = Object.entries((_c = object.metadata) != null ? _c : {}).reduce((acc, [key, value]) => {
+      if (value !== void 0) {
+        acc[key] = String(value);
+      }
+      return acc;
+    }, {});
     return message;
   }
 };
-var baseMatchJoin_MetadataEntry = { key: "", value: "" };
+function createBaseMatchJoin_MetadataEntry() {
+  return { key: "", value: "" };
+}
 var MatchJoin_MetadataEntry = {
   encode(message, writer = import_minimal4.default.Writer.create()) {
     if (message.key !== "") {
@@ -5855,7 +4650,7 @@ var MatchJoin_MetadataEntry = {
   decode(input, length) {
     const reader = input instanceof import_minimal4.default.Reader ? input : new import_minimal4.default.Reader(input);
     let end = length === void 0 ? reader.len : reader.pos + length;
-    const message = __spreadValues({}, baseMatchJoin_MetadataEntry);
+    const message = createBaseMatchJoin_MetadataEntry();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -5873,18 +4668,7 @@ var MatchJoin_MetadataEntry = {
     return message;
   },
   fromJSON(object) {
-    const message = __spreadValues({}, baseMatchJoin_MetadataEntry);
-    if (object.key !== void 0 && object.key !== null) {
-      message.key = String(object.key);
-    } else {
-      message.key = "";
-    }
-    if (object.value !== void 0 && object.value !== null) {
-      message.value = String(object.value);
-    } else {
-      message.value = "";
-    }
-    return message;
+    return { key: isSet4(object.key) ? String(object.key) : "", value: isSet4(object.value) ? String(object.value) : "" };
   },
   toJSON(message) {
     const obj = {};
@@ -5892,22 +4676,20 @@ var MatchJoin_MetadataEntry = {
     message.value !== void 0 && (obj.value = message.value);
     return obj;
   },
+  create(base) {
+    return MatchJoin_MetadataEntry.fromPartial(base != null ? base : {});
+  },
   fromPartial(object) {
-    const message = __spreadValues({}, baseMatchJoin_MetadataEntry);
-    if (object.key !== void 0 && object.key !== null) {
-      message.key = object.key;
-    } else {
-      message.key = "";
-    }
-    if (object.value !== void 0 && object.value !== null) {
-      message.value = object.value;
-    } else {
-      message.value = "";
-    }
+    var _a, _b;
+    const message = createBaseMatchJoin_MetadataEntry();
+    message.key = (_a = object.key) != null ? _a : "";
+    message.value = (_b = object.value) != null ? _b : "";
     return message;
   }
 };
-var baseMatchLeave = { match_id: "" };
+function createBaseMatchLeave() {
+  return { match_id: "" };
+}
 var MatchLeave = {
   encode(message, writer = import_minimal4.default.Writer.create()) {
     if (message.match_id !== "") {
@@ -5918,7 +4700,7 @@ var MatchLeave = {
   decode(input, length) {
     const reader = input instanceof import_minimal4.default.Reader ? input : new import_minimal4.default.Reader(input);
     let end = length === void 0 ? reader.len : reader.pos + length;
-    const message = __spreadValues({}, baseMatchLeave);
+    const message = createBaseMatchLeave();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -5933,30 +4715,26 @@ var MatchLeave = {
     return message;
   },
   fromJSON(object) {
-    const message = __spreadValues({}, baseMatchLeave);
-    if (object.match_id !== void 0 && object.match_id !== null) {
-      message.match_id = String(object.match_id);
-    } else {
-      message.match_id = "";
-    }
-    return message;
+    return { match_id: isSet4(object.match_id) ? String(object.match_id) : "" };
   },
   toJSON(message) {
     const obj = {};
     message.match_id !== void 0 && (obj.match_id = message.match_id);
     return obj;
   },
+  create(base) {
+    return MatchLeave.fromPartial(base != null ? base : {});
+  },
   fromPartial(object) {
-    const message = __spreadValues({}, baseMatchLeave);
-    if (object.match_id !== void 0 && object.match_id !== null) {
-      message.match_id = object.match_id;
-    } else {
-      message.match_id = "";
-    }
+    var _a;
+    const message = createBaseMatchLeave();
+    message.match_id = (_a = object.match_id) != null ? _a : "";
     return message;
   }
 };
-var baseMatchPresenceEvent = { match_id: "" };
+function createBaseMatchPresenceEvent() {
+  return { match_id: "", joins: [], leaves: [] };
+}
 var MatchPresenceEvent = {
   encode(message, writer = import_minimal4.default.Writer.create()) {
     if (message.match_id !== "") {
@@ -5973,9 +4751,7 @@ var MatchPresenceEvent = {
   decode(input, length) {
     const reader = input instanceof import_minimal4.default.Reader ? input : new import_minimal4.default.Reader(input);
     let end = length === void 0 ? reader.len : reader.pos + length;
-    const message = __spreadValues({}, baseMatchPresenceEvent);
-    message.joins = [];
-    message.leaves = [];
+    const message = createBaseMatchPresenceEvent();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -5996,68 +4772,49 @@ var MatchPresenceEvent = {
     return message;
   },
   fromJSON(object) {
-    const message = __spreadValues({}, baseMatchPresenceEvent);
-    message.joins = [];
-    message.leaves = [];
-    if (object.match_id !== void 0 && object.match_id !== null) {
-      message.match_id = String(object.match_id);
-    } else {
-      message.match_id = "";
-    }
-    if (object.joins !== void 0 && object.joins !== null) {
-      for (const e of object.joins) {
-        message.joins.push(UserPresence.fromJSON(e));
-      }
-    }
-    if (object.leaves !== void 0 && object.leaves !== null) {
-      for (const e of object.leaves) {
-        message.leaves.push(UserPresence.fromJSON(e));
-      }
-    }
-    return message;
+    return {
+      match_id: isSet4(object.match_id) ? String(object.match_id) : "",
+      joins: Array.isArray(object == null ? void 0 : object.joins) ? object.joins.map((e) => UserPresence.fromJSON(e)) : [],
+      leaves: Array.isArray(object == null ? void 0 : object.leaves) ? object.leaves.map((e) => UserPresence.fromJSON(e)) : []
+    };
   },
   toJSON(message) {
     const obj = {};
     message.match_id !== void 0 && (obj.match_id = message.match_id);
     if (message.joins) {
-      obj.joins = message.joins.map(
-        (e) => e ? UserPresence.toJSON(e) : void 0
-      );
+      obj.joins = message.joins.map((e) => e ? UserPresence.toJSON(e) : void 0);
     } else {
       obj.joins = [];
     }
     if (message.leaves) {
-      obj.leaves = message.leaves.map(
-        (e) => e ? UserPresence.toJSON(e) : void 0
-      );
+      obj.leaves = message.leaves.map((e) => e ? UserPresence.toJSON(e) : void 0);
     } else {
       obj.leaves = [];
     }
     return obj;
   },
+  create(base) {
+    return MatchPresenceEvent.fromPartial(base != null ? base : {});
+  },
   fromPartial(object) {
-    const message = __spreadValues({}, baseMatchPresenceEvent);
-    message.joins = [];
-    message.leaves = [];
-    if (object.match_id !== void 0 && object.match_id !== null) {
-      message.match_id = object.match_id;
-    } else {
-      message.match_id = "";
-    }
-    if (object.joins !== void 0 && object.joins !== null) {
-      for (const e of object.joins) {
-        message.joins.push(UserPresence.fromPartial(e));
-      }
-    }
-    if (object.leaves !== void 0 && object.leaves !== null) {
-      for (const e of object.leaves) {
-        message.leaves.push(UserPresence.fromPartial(e));
-      }
-    }
+    var _a, _b, _c;
+    const message = createBaseMatchPresenceEvent();
+    message.match_id = (_a = object.match_id) != null ? _a : "";
+    message.joins = ((_b = object.joins) == null ? void 0 : _b.map((e) => UserPresence.fromPartial(e))) || [];
+    message.leaves = ((_c = object.leaves) == null ? void 0 : _c.map((e) => UserPresence.fromPartial(e))) || [];
     return message;
   }
 };
-var baseMatchmakerAdd = { min_count: 0, max_count: 0, query: "" };
+function createBaseMatchmakerAdd() {
+  return {
+    min_count: 0,
+    max_count: 0,
+    query: "",
+    string_properties: {},
+    numeric_properties: {},
+    count_multiple: void 0
+  };
+}
 var MatchmakerAdd = {
   encode(message, writer = import_minimal4.default.Writer.create()) {
     if (message.min_count !== 0) {
@@ -6070,25 +4827,20 @@ var MatchmakerAdd = {
       writer.uint32(26).string(message.query);
     }
     Object.entries(message.string_properties).forEach(([key, value]) => {
-      MatchmakerAdd_StringPropertiesEntry.encode(
-        { key, value },
-        writer.uint32(34).fork()
-      ).ldelim();
+      MatchmakerAdd_StringPropertiesEntry.encode({ key, value }, writer.uint32(34).fork()).ldelim();
     });
     Object.entries(message.numeric_properties).forEach(([key, value]) => {
-      MatchmakerAdd_NumericPropertiesEntry.encode(
-        { key, value },
-        writer.uint32(42).fork()
-      ).ldelim();
+      MatchmakerAdd_NumericPropertiesEntry.encode({ key, value }, writer.uint32(42).fork()).ldelim();
     });
+    if (message.count_multiple !== void 0) {
+      Int32Value.encode({ value: message.count_multiple }, writer.uint32(50).fork()).ldelim();
+    }
     return writer;
   },
   decode(input, length) {
     const reader = input instanceof import_minimal4.default.Reader ? input : new import_minimal4.default.Reader(input);
     let end = length === void 0 ? reader.len : reader.pos + length;
-    const message = __spreadValues({}, baseMatchmakerAdd);
-    message.string_properties = {};
-    message.numeric_properties = {};
+    const message = createBaseMatchmakerAdd();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -6102,22 +4854,19 @@ var MatchmakerAdd = {
           message.query = reader.string();
           break;
         case 4:
-          const entry4 = MatchmakerAdd_StringPropertiesEntry.decode(
-            reader,
-            reader.uint32()
-          );
+          const entry4 = MatchmakerAdd_StringPropertiesEntry.decode(reader, reader.uint32());
           if (entry4.value !== void 0) {
             message.string_properties[entry4.key] = entry4.value;
           }
           break;
         case 5:
-          const entry5 = MatchmakerAdd_NumericPropertiesEntry.decode(
-            reader,
-            reader.uint32()
-          );
+          const entry5 = MatchmakerAdd_NumericPropertiesEntry.decode(reader, reader.uint32());
           if (entry5.value !== void 0) {
             message.numeric_properties[entry5.key] = entry5.value;
           }
+          break;
+        case 6:
+          message.count_multiple = Int32Value.decode(reader, reader.uint32()).value;
           break;
         default:
           reader.skipType(tag & 7);
@@ -6127,40 +4876,25 @@ var MatchmakerAdd = {
     return message;
   },
   fromJSON(object) {
-    const message = __spreadValues({}, baseMatchmakerAdd);
-    message.string_properties = {};
-    message.numeric_properties = {};
-    if (object.min_count !== void 0 && object.min_count !== null) {
-      message.min_count = Number(object.min_count);
-    } else {
-      message.min_count = 0;
-    }
-    if (object.max_count !== void 0 && object.max_count !== null) {
-      message.max_count = Number(object.max_count);
-    } else {
-      message.max_count = 0;
-    }
-    if (object.query !== void 0 && object.query !== null) {
-      message.query = String(object.query);
-    } else {
-      message.query = "";
-    }
-    if (object.string_properties !== void 0 && object.string_properties !== null) {
-      Object.entries(object.string_properties).forEach(([key, value]) => {
-        message.string_properties[key] = String(value);
-      });
-    }
-    if (object.numeric_properties !== void 0 && object.numeric_properties !== null) {
-      Object.entries(object.numeric_properties).forEach(([key, value]) => {
-        message.numeric_properties[key] = Number(value);
-      });
-    }
-    return message;
+    return {
+      min_count: isSet4(object.min_count) ? Number(object.min_count) : 0,
+      max_count: isSet4(object.max_count) ? Number(object.max_count) : 0,
+      query: isSet4(object.query) ? String(object.query) : "",
+      string_properties: isObject(object.string_properties) ? Object.entries(object.string_properties).reduce((acc, [key, value]) => {
+        acc[key] = String(value);
+        return acc;
+      }, {}) : {},
+      numeric_properties: isObject(object.numeric_properties) ? Object.entries(object.numeric_properties).reduce((acc, [key, value]) => {
+        acc[key] = Number(value);
+        return acc;
+      }, {}) : {},
+      count_multiple: isSet4(object.count_multiple) ? Number(object.count_multiple) : void 0
+    };
   },
   toJSON(message) {
     const obj = {};
-    message.min_count !== void 0 && (obj.min_count = message.min_count);
-    message.max_count !== void 0 && (obj.max_count = message.max_count);
+    message.min_count !== void 0 && (obj.min_count = Math.round(message.min_count));
+    message.max_count !== void 0 && (obj.max_count = Math.round(message.max_count));
     message.query !== void 0 && (obj.query = message.query);
     obj.string_properties = {};
     if (message.string_properties) {
@@ -6174,45 +4908,43 @@ var MatchmakerAdd = {
         obj.numeric_properties[k] = v;
       });
     }
+    message.count_multiple !== void 0 && (obj.count_multiple = message.count_multiple);
     return obj;
   },
+  create(base) {
+    return MatchmakerAdd.fromPartial(base != null ? base : {});
+  },
   fromPartial(object) {
-    const message = __spreadValues({}, baseMatchmakerAdd);
-    message.string_properties = {};
-    message.numeric_properties = {};
-    if (object.min_count !== void 0 && object.min_count !== null) {
-      message.min_count = object.min_count;
-    } else {
-      message.min_count = 0;
-    }
-    if (object.max_count !== void 0 && object.max_count !== null) {
-      message.max_count = object.max_count;
-    } else {
-      message.max_count = 0;
-    }
-    if (object.query !== void 0 && object.query !== null) {
-      message.query = object.query;
-    } else {
-      message.query = "";
-    }
-    if (object.string_properties !== void 0 && object.string_properties !== null) {
-      Object.entries(object.string_properties).forEach(([key, value]) => {
+    var _a, _b, _c, _d, _e, _f;
+    const message = createBaseMatchmakerAdd();
+    message.min_count = (_a = object.min_count) != null ? _a : 0;
+    message.max_count = (_b = object.max_count) != null ? _b : 0;
+    message.query = (_c = object.query) != null ? _c : "";
+    message.string_properties = Object.entries((_d = object.string_properties) != null ? _d : {}).reduce(
+      (acc, [key, value]) => {
         if (value !== void 0) {
-          message.string_properties[key] = String(value);
+          acc[key] = String(value);
         }
-      });
-    }
-    if (object.numeric_properties !== void 0 && object.numeric_properties !== null) {
-      Object.entries(object.numeric_properties).forEach(([key, value]) => {
+        return acc;
+      },
+      {}
+    );
+    message.numeric_properties = Object.entries((_e = object.numeric_properties) != null ? _e : {}).reduce(
+      (acc, [key, value]) => {
         if (value !== void 0) {
-          message.numeric_properties[key] = Number(value);
+          acc[key] = Number(value);
         }
-      });
-    }
+        return acc;
+      },
+      {}
+    );
+    message.count_multiple = (_f = object.count_multiple) != null ? _f : void 0;
     return message;
   }
 };
-var baseMatchmakerAdd_StringPropertiesEntry = { key: "", value: "" };
+function createBaseMatchmakerAdd_StringPropertiesEntry() {
+  return { key: "", value: "" };
+}
 var MatchmakerAdd_StringPropertiesEntry = {
   encode(message, writer = import_minimal4.default.Writer.create()) {
     if (message.key !== "") {
@@ -6226,7 +4958,7 @@ var MatchmakerAdd_StringPropertiesEntry = {
   decode(input, length) {
     const reader = input instanceof import_minimal4.default.Reader ? input : new import_minimal4.default.Reader(input);
     let end = length === void 0 ? reader.len : reader.pos + length;
-    const message = __spreadValues({}, baseMatchmakerAdd_StringPropertiesEntry);
+    const message = createBaseMatchmakerAdd_StringPropertiesEntry();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -6244,18 +4976,7 @@ var MatchmakerAdd_StringPropertiesEntry = {
     return message;
   },
   fromJSON(object) {
-    const message = __spreadValues({}, baseMatchmakerAdd_StringPropertiesEntry);
-    if (object.key !== void 0 && object.key !== null) {
-      message.key = String(object.key);
-    } else {
-      message.key = "";
-    }
-    if (object.value !== void 0 && object.value !== null) {
-      message.value = String(object.value);
-    } else {
-      message.value = "";
-    }
-    return message;
+    return { key: isSet4(object.key) ? String(object.key) : "", value: isSet4(object.value) ? String(object.value) : "" };
   },
   toJSON(message) {
     const obj = {};
@@ -6263,22 +4984,20 @@ var MatchmakerAdd_StringPropertiesEntry = {
     message.value !== void 0 && (obj.value = message.value);
     return obj;
   },
+  create(base) {
+    return MatchmakerAdd_StringPropertiesEntry.fromPartial(base != null ? base : {});
+  },
   fromPartial(object) {
-    const message = __spreadValues({}, baseMatchmakerAdd_StringPropertiesEntry);
-    if (object.key !== void 0 && object.key !== null) {
-      message.key = object.key;
-    } else {
-      message.key = "";
-    }
-    if (object.value !== void 0 && object.value !== null) {
-      message.value = object.value;
-    } else {
-      message.value = "";
-    }
+    var _a, _b;
+    const message = createBaseMatchmakerAdd_StringPropertiesEntry();
+    message.key = (_a = object.key) != null ? _a : "";
+    message.value = (_b = object.value) != null ? _b : "";
     return message;
   }
 };
-var baseMatchmakerAdd_NumericPropertiesEntry = { key: "", value: 0 };
+function createBaseMatchmakerAdd_NumericPropertiesEntry() {
+  return { key: "", value: 0 };
+}
 var MatchmakerAdd_NumericPropertiesEntry = {
   encode(message, writer = import_minimal4.default.Writer.create()) {
     if (message.key !== "") {
@@ -6292,7 +5011,7 @@ var MatchmakerAdd_NumericPropertiesEntry = {
   decode(input, length) {
     const reader = input instanceof import_minimal4.default.Reader ? input : new import_minimal4.default.Reader(input);
     let end = length === void 0 ? reader.len : reader.pos + length;
-    const message = __spreadValues({}, baseMatchmakerAdd_NumericPropertiesEntry);
+    const message = createBaseMatchmakerAdd_NumericPropertiesEntry();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -6310,18 +5029,7 @@ var MatchmakerAdd_NumericPropertiesEntry = {
     return message;
   },
   fromJSON(object) {
-    const message = __spreadValues({}, baseMatchmakerAdd_NumericPropertiesEntry);
-    if (object.key !== void 0 && object.key !== null) {
-      message.key = String(object.key);
-    } else {
-      message.key = "";
-    }
-    if (object.value !== void 0 && object.value !== null) {
-      message.value = Number(object.value);
-    } else {
-      message.value = 0;
-    }
-    return message;
+    return { key: isSet4(object.key) ? String(object.key) : "", value: isSet4(object.value) ? Number(object.value) : 0 };
   },
   toJSON(message) {
     const obj = {};
@@ -6329,22 +5037,20 @@ var MatchmakerAdd_NumericPropertiesEntry = {
     message.value !== void 0 && (obj.value = message.value);
     return obj;
   },
+  create(base) {
+    return MatchmakerAdd_NumericPropertiesEntry.fromPartial(base != null ? base : {});
+  },
   fromPartial(object) {
-    const message = __spreadValues({}, baseMatchmakerAdd_NumericPropertiesEntry);
-    if (object.key !== void 0 && object.key !== null) {
-      message.key = object.key;
-    } else {
-      message.key = "";
-    }
-    if (object.value !== void 0 && object.value !== null) {
-      message.value = object.value;
-    } else {
-      message.value = 0;
-    }
+    var _a, _b;
+    const message = createBaseMatchmakerAdd_NumericPropertiesEntry();
+    message.key = (_a = object.key) != null ? _a : "";
+    message.value = (_b = object.value) != null ? _b : 0;
     return message;
   }
 };
-var baseMatchmakerMatched = { ticket: "" };
+function createBaseMatchmakerMatched() {
+  return { ticket: "", match_id: void 0, token: void 0, users: [], self: void 0 };
+}
 var MatchmakerMatched = {
   encode(message, writer = import_minimal4.default.Writer.create()) {
     if (message.ticket !== "") {
@@ -6357,24 +5063,17 @@ var MatchmakerMatched = {
       writer.uint32(26).string(message.token);
     }
     for (const v of message.users) {
-      MatchmakerMatched_MatchmakerUser.encode(
-        v,
-        writer.uint32(34).fork()
-      ).ldelim();
+      MatchmakerMatched_MatchmakerUser.encode(v, writer.uint32(34).fork()).ldelim();
     }
     if (message.self !== void 0) {
-      MatchmakerMatched_MatchmakerUser.encode(
-        message.self,
-        writer.uint32(42).fork()
-      ).ldelim();
+      MatchmakerMatched_MatchmakerUser.encode(message.self, writer.uint32(42).fork()).ldelim();
     }
     return writer;
   },
   decode(input, length) {
     const reader = input instanceof import_minimal4.default.Reader ? input : new import_minimal4.default.Reader(input);
     let end = length === void 0 ? reader.len : reader.pos + length;
-    const message = __spreadValues({}, baseMatchmakerMatched);
-    message.users = [];
+    const message = createBaseMatchmakerMatched();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -6388,15 +5087,10 @@ var MatchmakerMatched = {
           message.token = reader.string();
           break;
         case 4:
-          message.users.push(
-            MatchmakerMatched_MatchmakerUser.decode(reader, reader.uint32())
-          );
+          message.users.push(MatchmakerMatched_MatchmakerUser.decode(reader, reader.uint32()));
           break;
         case 5:
-          message.self = MatchmakerMatched_MatchmakerUser.decode(
-            reader,
-            reader.uint32()
-          );
+          message.self = MatchmakerMatched_MatchmakerUser.decode(reader, reader.uint32());
           break;
         default:
           reader.skipType(tag & 7);
@@ -6406,34 +5100,13 @@ var MatchmakerMatched = {
     return message;
   },
   fromJSON(object) {
-    const message = __spreadValues({}, baseMatchmakerMatched);
-    message.users = [];
-    if (object.ticket !== void 0 && object.ticket !== null) {
-      message.ticket = String(object.ticket);
-    } else {
-      message.ticket = "";
-    }
-    if (object.match_id !== void 0 && object.match_id !== null) {
-      message.match_id = String(object.match_id);
-    } else {
-      message.match_id = void 0;
-    }
-    if (object.token !== void 0 && object.token !== null) {
-      message.token = String(object.token);
-    } else {
-      message.token = void 0;
-    }
-    if (object.users !== void 0 && object.users !== null) {
-      for (const e of object.users) {
-        message.users.push(MatchmakerMatched_MatchmakerUser.fromJSON(e));
-      }
-    }
-    if (object.self !== void 0 && object.self !== null) {
-      message.self = MatchmakerMatched_MatchmakerUser.fromJSON(object.self);
-    } else {
-      message.self = void 0;
-    }
-    return message;
+    return {
+      ticket: isSet4(object.ticket) ? String(object.ticket) : "",
+      match_id: isSet4(object.match_id) ? String(object.match_id) : void 0,
+      token: isSet4(object.token) ? String(object.token) : void 0,
+      users: Array.isArray(object == null ? void 0 : object.users) ? object.users.map((e) => MatchmakerMatched_MatchmakerUser.fromJSON(e)) : [],
+      self: isSet4(object.self) ? MatchmakerMatched_MatchmakerUser.fromJSON(object.self) : void 0
+    };
   },
   toJSON(message) {
     const obj = {};
@@ -6441,47 +5114,30 @@ var MatchmakerMatched = {
     message.match_id !== void 0 && (obj.match_id = message.match_id);
     message.token !== void 0 && (obj.token = message.token);
     if (message.users) {
-      obj.users = message.users.map(
-        (e) => e ? MatchmakerMatched_MatchmakerUser.toJSON(e) : void 0
-      );
+      obj.users = message.users.map((e) => e ? MatchmakerMatched_MatchmakerUser.toJSON(e) : void 0);
     } else {
       obj.users = [];
     }
     message.self !== void 0 && (obj.self = message.self ? MatchmakerMatched_MatchmakerUser.toJSON(message.self) : void 0);
     return obj;
   },
+  create(base) {
+    return MatchmakerMatched.fromPartial(base != null ? base : {});
+  },
   fromPartial(object) {
-    const message = __spreadValues({}, baseMatchmakerMatched);
-    message.users = [];
-    if (object.ticket !== void 0 && object.ticket !== null) {
-      message.ticket = object.ticket;
-    } else {
-      message.ticket = "";
-    }
-    if (object.match_id !== void 0 && object.match_id !== null) {
-      message.match_id = object.match_id;
-    } else {
-      message.match_id = void 0;
-    }
-    if (object.token !== void 0 && object.token !== null) {
-      message.token = object.token;
-    } else {
-      message.token = void 0;
-    }
-    if (object.users !== void 0 && object.users !== null) {
-      for (const e of object.users) {
-        message.users.push(MatchmakerMatched_MatchmakerUser.fromPartial(e));
-      }
-    }
-    if (object.self !== void 0 && object.self !== null) {
-      message.self = MatchmakerMatched_MatchmakerUser.fromPartial(object.self);
-    } else {
-      message.self = void 0;
-    }
+    var _a, _b, _c, _d;
+    const message = createBaseMatchmakerMatched();
+    message.ticket = (_a = object.ticket) != null ? _a : "";
+    message.match_id = (_b = object.match_id) != null ? _b : void 0;
+    message.token = (_c = object.token) != null ? _c : void 0;
+    message.users = ((_d = object.users) == null ? void 0 : _d.map((e) => MatchmakerMatched_MatchmakerUser.fromPartial(e))) || [];
+    message.self = object.self !== void 0 && object.self !== null ? MatchmakerMatched_MatchmakerUser.fromPartial(object.self) : void 0;
     return message;
   }
 };
-var baseMatchmakerMatched_MatchmakerUser = { party_id: "" };
+function createBaseMatchmakerMatched_MatchmakerUser() {
+  return { presence: void 0, party_id: "", string_properties: {}, numeric_properties: {} };
+}
 var MatchmakerMatched_MatchmakerUser = {
   encode(message, writer = import_minimal4.default.Writer.create()) {
     if (message.presence !== void 0) {
@@ -6507,9 +5163,7 @@ var MatchmakerMatched_MatchmakerUser = {
   decode(input, length) {
     const reader = input instanceof import_minimal4.default.Reader ? input : new import_minimal4.default.Reader(input);
     let end = length === void 0 ? reader.len : reader.pos + length;
-    const message = __spreadValues({}, baseMatchmakerMatched_MatchmakerUser);
-    message.string_properties = {};
-    message.numeric_properties = {};
+    const message = createBaseMatchmakerMatched_MatchmakerUser();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -6520,19 +5174,13 @@ var MatchmakerMatched_MatchmakerUser = {
           message.party_id = reader.string();
           break;
         case 5:
-          const entry5 = MatchmakerMatched_MatchmakerUser_StringPropertiesEntry.decode(
-            reader,
-            reader.uint32()
-          );
+          const entry5 = MatchmakerMatched_MatchmakerUser_StringPropertiesEntry.decode(reader, reader.uint32());
           if (entry5.value !== void 0) {
             message.string_properties[entry5.key] = entry5.value;
           }
           break;
         case 6:
-          const entry6 = MatchmakerMatched_MatchmakerUser_NumericPropertiesEntry.decode(
-            reader,
-            reader.uint32()
-          );
+          const entry6 = MatchmakerMatched_MatchmakerUser_NumericPropertiesEntry.decode(reader, reader.uint32());
           if (entry6.value !== void 0) {
             message.numeric_properties[entry6.key] = entry6.value;
           }
@@ -6545,30 +5193,18 @@ var MatchmakerMatched_MatchmakerUser = {
     return message;
   },
   fromJSON(object) {
-    const message = __spreadValues({}, baseMatchmakerMatched_MatchmakerUser);
-    message.string_properties = {};
-    message.numeric_properties = {};
-    if (object.presence !== void 0 && object.presence !== null) {
-      message.presence = UserPresence.fromJSON(object.presence);
-    } else {
-      message.presence = void 0;
-    }
-    if (object.party_id !== void 0 && object.party_id !== null) {
-      message.party_id = String(object.party_id);
-    } else {
-      message.party_id = "";
-    }
-    if (object.string_properties !== void 0 && object.string_properties !== null) {
-      Object.entries(object.string_properties).forEach(([key, value]) => {
-        message.string_properties[key] = String(value);
-      });
-    }
-    if (object.numeric_properties !== void 0 && object.numeric_properties !== null) {
-      Object.entries(object.numeric_properties).forEach(([key, value]) => {
-        message.numeric_properties[key] = Number(value);
-      });
-    }
-    return message;
+    return {
+      presence: isSet4(object.presence) ? UserPresence.fromJSON(object.presence) : void 0,
+      party_id: isSet4(object.party_id) ? String(object.party_id) : "",
+      string_properties: isObject(object.string_properties) ? Object.entries(object.string_properties).reduce((acc, [key, value]) => {
+        acc[key] = String(value);
+        return acc;
+      }, {}) : {},
+      numeric_properties: isObject(object.numeric_properties) ? Object.entries(object.numeric_properties).reduce((acc, [key, value]) => {
+        acc[key] = Number(value);
+        return acc;
+      }, {}) : {}
+    };
   },
   toJSON(message) {
     const obj = {};
@@ -6588,41 +5224,38 @@ var MatchmakerMatched_MatchmakerUser = {
     }
     return obj;
   },
+  create(base) {
+    return MatchmakerMatched_MatchmakerUser.fromPartial(base != null ? base : {});
+  },
   fromPartial(object) {
-    const message = __spreadValues({}, baseMatchmakerMatched_MatchmakerUser);
-    message.string_properties = {};
-    message.numeric_properties = {};
-    if (object.presence !== void 0 && object.presence !== null) {
-      message.presence = UserPresence.fromPartial(object.presence);
-    } else {
-      message.presence = void 0;
-    }
-    if (object.party_id !== void 0 && object.party_id !== null) {
-      message.party_id = object.party_id;
-    } else {
-      message.party_id = "";
-    }
-    if (object.string_properties !== void 0 && object.string_properties !== null) {
-      Object.entries(object.string_properties).forEach(([key, value]) => {
+    var _a, _b, _c;
+    const message = createBaseMatchmakerMatched_MatchmakerUser();
+    message.presence = object.presence !== void 0 && object.presence !== null ? UserPresence.fromPartial(object.presence) : void 0;
+    message.party_id = (_a = object.party_id) != null ? _a : "";
+    message.string_properties = Object.entries((_b = object.string_properties) != null ? _b : {}).reduce(
+      (acc, [key, value]) => {
         if (value !== void 0) {
-          message.string_properties[key] = String(value);
+          acc[key] = String(value);
         }
-      });
-    }
-    if (object.numeric_properties !== void 0 && object.numeric_properties !== null) {
-      Object.entries(object.numeric_properties).forEach(([key, value]) => {
+        return acc;
+      },
+      {}
+    );
+    message.numeric_properties = Object.entries((_c = object.numeric_properties) != null ? _c : {}).reduce(
+      (acc, [key, value]) => {
         if (value !== void 0) {
-          message.numeric_properties[key] = Number(value);
+          acc[key] = Number(value);
         }
-      });
-    }
+        return acc;
+      },
+      {}
+    );
     return message;
   }
 };
-var baseMatchmakerMatched_MatchmakerUser_StringPropertiesEntry = {
-  key: "",
-  value: ""
-};
+function createBaseMatchmakerMatched_MatchmakerUser_StringPropertiesEntry() {
+  return { key: "", value: "" };
+}
 var MatchmakerMatched_MatchmakerUser_StringPropertiesEntry = {
   encode(message, writer = import_minimal4.default.Writer.create()) {
     if (message.key !== "") {
@@ -6636,7 +5269,7 @@ var MatchmakerMatched_MatchmakerUser_StringPropertiesEntry = {
   decode(input, length) {
     const reader = input instanceof import_minimal4.default.Reader ? input : new import_minimal4.default.Reader(input);
     let end = length === void 0 ? reader.len : reader.pos + length;
-    const message = __spreadValues({}, baseMatchmakerMatched_MatchmakerUser_StringPropertiesEntry);
+    const message = createBaseMatchmakerMatched_MatchmakerUser_StringPropertiesEntry();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -6654,18 +5287,7 @@ var MatchmakerMatched_MatchmakerUser_StringPropertiesEntry = {
     return message;
   },
   fromJSON(object) {
-    const message = __spreadValues({}, baseMatchmakerMatched_MatchmakerUser_StringPropertiesEntry);
-    if (object.key !== void 0 && object.key !== null) {
-      message.key = String(object.key);
-    } else {
-      message.key = "";
-    }
-    if (object.value !== void 0 && object.value !== null) {
-      message.value = String(object.value);
-    } else {
-      message.value = "";
-    }
-    return message;
+    return { key: isSet4(object.key) ? String(object.key) : "", value: isSet4(object.value) ? String(object.value) : "" };
   },
   toJSON(message) {
     const obj = {};
@@ -6673,25 +5295,20 @@ var MatchmakerMatched_MatchmakerUser_StringPropertiesEntry = {
     message.value !== void 0 && (obj.value = message.value);
     return obj;
   },
+  create(base) {
+    return MatchmakerMatched_MatchmakerUser_StringPropertiesEntry.fromPartial(base != null ? base : {});
+  },
   fromPartial(object) {
-    const message = __spreadValues({}, baseMatchmakerMatched_MatchmakerUser_StringPropertiesEntry);
-    if (object.key !== void 0 && object.key !== null) {
-      message.key = object.key;
-    } else {
-      message.key = "";
-    }
-    if (object.value !== void 0 && object.value !== null) {
-      message.value = object.value;
-    } else {
-      message.value = "";
-    }
+    var _a, _b;
+    const message = createBaseMatchmakerMatched_MatchmakerUser_StringPropertiesEntry();
+    message.key = (_a = object.key) != null ? _a : "";
+    message.value = (_b = object.value) != null ? _b : "";
     return message;
   }
 };
-var baseMatchmakerMatched_MatchmakerUser_NumericPropertiesEntry = {
-  key: "",
-  value: 0
-};
+function createBaseMatchmakerMatched_MatchmakerUser_NumericPropertiesEntry() {
+  return { key: "", value: 0 };
+}
 var MatchmakerMatched_MatchmakerUser_NumericPropertiesEntry = {
   encode(message, writer = import_minimal4.default.Writer.create()) {
     if (message.key !== "") {
@@ -6705,7 +5322,7 @@ var MatchmakerMatched_MatchmakerUser_NumericPropertiesEntry = {
   decode(input, length) {
     const reader = input instanceof import_minimal4.default.Reader ? input : new import_minimal4.default.Reader(input);
     let end = length === void 0 ? reader.len : reader.pos + length;
-    const message = __spreadValues({}, baseMatchmakerMatched_MatchmakerUser_NumericPropertiesEntry);
+    const message = createBaseMatchmakerMatched_MatchmakerUser_NumericPropertiesEntry();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -6723,18 +5340,7 @@ var MatchmakerMatched_MatchmakerUser_NumericPropertiesEntry = {
     return message;
   },
   fromJSON(object) {
-    const message = __spreadValues({}, baseMatchmakerMatched_MatchmakerUser_NumericPropertiesEntry);
-    if (object.key !== void 0 && object.key !== null) {
-      message.key = String(object.key);
-    } else {
-      message.key = "";
-    }
-    if (object.value !== void 0 && object.value !== null) {
-      message.value = Number(object.value);
-    } else {
-      message.value = 0;
-    }
-    return message;
+    return { key: isSet4(object.key) ? String(object.key) : "", value: isSet4(object.value) ? Number(object.value) : 0 };
   },
   toJSON(message) {
     const obj = {};
@@ -6742,22 +5348,20 @@ var MatchmakerMatched_MatchmakerUser_NumericPropertiesEntry = {
     message.value !== void 0 && (obj.value = message.value);
     return obj;
   },
+  create(base) {
+    return MatchmakerMatched_MatchmakerUser_NumericPropertiesEntry.fromPartial(base != null ? base : {});
+  },
   fromPartial(object) {
-    const message = __spreadValues({}, baseMatchmakerMatched_MatchmakerUser_NumericPropertiesEntry);
-    if (object.key !== void 0 && object.key !== null) {
-      message.key = object.key;
-    } else {
-      message.key = "";
-    }
-    if (object.value !== void 0 && object.value !== null) {
-      message.value = object.value;
-    } else {
-      message.value = 0;
-    }
+    var _a, _b;
+    const message = createBaseMatchmakerMatched_MatchmakerUser_NumericPropertiesEntry();
+    message.key = (_a = object.key) != null ? _a : "";
+    message.value = (_b = object.value) != null ? _b : 0;
     return message;
   }
 };
-var baseMatchmakerRemove = { ticket: "" };
+function createBaseMatchmakerRemove() {
+  return { ticket: "" };
+}
 var MatchmakerRemove = {
   encode(message, writer = import_minimal4.default.Writer.create()) {
     if (message.ticket !== "") {
@@ -6768,7 +5372,7 @@ var MatchmakerRemove = {
   decode(input, length) {
     const reader = input instanceof import_minimal4.default.Reader ? input : new import_minimal4.default.Reader(input);
     let end = length === void 0 ? reader.len : reader.pos + length;
-    const message = __spreadValues({}, baseMatchmakerRemove);
+    const message = createBaseMatchmakerRemove();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -6783,30 +5387,26 @@ var MatchmakerRemove = {
     return message;
   },
   fromJSON(object) {
-    const message = __spreadValues({}, baseMatchmakerRemove);
-    if (object.ticket !== void 0 && object.ticket !== null) {
-      message.ticket = String(object.ticket);
-    } else {
-      message.ticket = "";
-    }
-    return message;
+    return { ticket: isSet4(object.ticket) ? String(object.ticket) : "" };
   },
   toJSON(message) {
     const obj = {};
     message.ticket !== void 0 && (obj.ticket = message.ticket);
     return obj;
   },
+  create(base) {
+    return MatchmakerRemove.fromPartial(base != null ? base : {});
+  },
   fromPartial(object) {
-    const message = __spreadValues({}, baseMatchmakerRemove);
-    if (object.ticket !== void 0 && object.ticket !== null) {
-      message.ticket = object.ticket;
-    } else {
-      message.ticket = "";
-    }
+    var _a;
+    const message = createBaseMatchmakerRemove();
+    message.ticket = (_a = object.ticket) != null ? _a : "";
     return message;
   }
 };
-var baseMatchmakerTicket = { ticket: "" };
+function createBaseMatchmakerTicket() {
+  return { ticket: "" };
+}
 var MatchmakerTicket = {
   encode(message, writer = import_minimal4.default.Writer.create()) {
     if (message.ticket !== "") {
@@ -6817,7 +5417,7 @@ var MatchmakerTicket = {
   decode(input, length) {
     const reader = input instanceof import_minimal4.default.Reader ? input : new import_minimal4.default.Reader(input);
     let end = length === void 0 ? reader.len : reader.pos + length;
-    const message = __spreadValues({}, baseMatchmakerTicket);
+    const message = createBaseMatchmakerTicket();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -6832,30 +5432,26 @@ var MatchmakerTicket = {
     return message;
   },
   fromJSON(object) {
-    const message = __spreadValues({}, baseMatchmakerTicket);
-    if (object.ticket !== void 0 && object.ticket !== null) {
-      message.ticket = String(object.ticket);
-    } else {
-      message.ticket = "";
-    }
-    return message;
+    return { ticket: isSet4(object.ticket) ? String(object.ticket) : "" };
   },
   toJSON(message) {
     const obj = {};
     message.ticket !== void 0 && (obj.ticket = message.ticket);
     return obj;
   },
+  create(base) {
+    return MatchmakerTicket.fromPartial(base != null ? base : {});
+  },
   fromPartial(object) {
-    const message = __spreadValues({}, baseMatchmakerTicket);
-    if (object.ticket !== void 0 && object.ticket !== null) {
-      message.ticket = object.ticket;
-    } else {
-      message.ticket = "";
-    }
+    var _a;
+    const message = createBaseMatchmakerTicket();
+    message.ticket = (_a = object.ticket) != null ? _a : "";
     return message;
   }
 };
-var baseNotifications = {};
+function createBaseNotifications() {
+  return { notifications: [] };
+}
 var Notifications = {
   encode(message, writer = import_minimal4.default.Writer.create()) {
     for (const v of message.notifications) {
@@ -6866,15 +5462,12 @@ var Notifications = {
   decode(input, length) {
     const reader = input instanceof import_minimal4.default.Reader ? input : new import_minimal4.default.Reader(input);
     let end = length === void 0 ? reader.len : reader.pos + length;
-    const message = __spreadValues({}, baseNotifications);
-    message.notifications = [];
+    const message = createBaseNotifications();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          message.notifications.push(
-            Notification.decode(reader, reader.uint32())
-          );
+          message.notifications.push(Notification.decode(reader, reader.uint32()));
           break;
         default:
           reader.skipType(tag & 7);
@@ -6884,38 +5477,32 @@ var Notifications = {
     return message;
   },
   fromJSON(object) {
-    const message = __spreadValues({}, baseNotifications);
-    message.notifications = [];
-    if (object.notifications !== void 0 && object.notifications !== null) {
-      for (const e of object.notifications) {
-        message.notifications.push(Notification.fromJSON(e));
-      }
-    }
-    return message;
+    return {
+      notifications: Array.isArray(object == null ? void 0 : object.notifications) ? object.notifications.map((e) => Notification.fromJSON(e)) : []
+    };
   },
   toJSON(message) {
     const obj = {};
     if (message.notifications) {
-      obj.notifications = message.notifications.map(
-        (e) => e ? Notification.toJSON(e) : void 0
-      );
+      obj.notifications = message.notifications.map((e) => e ? Notification.toJSON(e) : void 0);
     } else {
       obj.notifications = [];
     }
     return obj;
   },
+  create(base) {
+    return Notifications.fromPartial(base != null ? base : {});
+  },
   fromPartial(object) {
-    const message = __spreadValues({}, baseNotifications);
-    message.notifications = [];
-    if (object.notifications !== void 0 && object.notifications !== null) {
-      for (const e of object.notifications) {
-        message.notifications.push(Notification.fromPartial(e));
-      }
-    }
+    var _a;
+    const message = createBaseNotifications();
+    message.notifications = ((_a = object.notifications) == null ? void 0 : _a.map((e) => Notification.fromPartial(e))) || [];
     return message;
   }
 };
-var baseParty = { party_id: "", open: false, max_size: 0 };
+function createBaseParty() {
+  return { party_id: "", open: false, max_size: 0, self: void 0, leader: void 0, presences: [] };
+}
 var Party = {
   encode(message, writer = import_minimal4.default.Writer.create()) {
     if (message.party_id !== "") {
@@ -6941,8 +5528,7 @@ var Party = {
   decode(input, length) {
     const reader = input instanceof import_minimal4.default.Reader ? input : new import_minimal4.default.Reader(input);
     let end = length === void 0 ? reader.len : reader.pos + length;
-    const message = __spreadValues({}, baseParty);
-    message.presences = [];
+    const message = createBaseParty();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -6972,93 +5558,47 @@ var Party = {
     return message;
   },
   fromJSON(object) {
-    const message = __spreadValues({}, baseParty);
-    message.presences = [];
-    if (object.party_id !== void 0 && object.party_id !== null) {
-      message.party_id = String(object.party_id);
-    } else {
-      message.party_id = "";
-    }
-    if (object.open !== void 0 && object.open !== null) {
-      message.open = Boolean(object.open);
-    } else {
-      message.open = false;
-    }
-    if (object.max_size !== void 0 && object.max_size !== null) {
-      message.max_size = Number(object.max_size);
-    } else {
-      message.max_size = 0;
-    }
-    if (object.self !== void 0 && object.self !== null) {
-      message.self = UserPresence.fromJSON(object.self);
-    } else {
-      message.self = void 0;
-    }
-    if (object.leader !== void 0 && object.leader !== null) {
-      message.leader = UserPresence.fromJSON(object.leader);
-    } else {
-      message.leader = void 0;
-    }
-    if (object.presences !== void 0 && object.presences !== null) {
-      for (const e of object.presences) {
-        message.presences.push(UserPresence.fromJSON(e));
-      }
-    }
-    return message;
+    return {
+      party_id: isSet4(object.party_id) ? String(object.party_id) : "",
+      open: isSet4(object.open) ? Boolean(object.open) : false,
+      max_size: isSet4(object.max_size) ? Number(object.max_size) : 0,
+      self: isSet4(object.self) ? UserPresence.fromJSON(object.self) : void 0,
+      leader: isSet4(object.leader) ? UserPresence.fromJSON(object.leader) : void 0,
+      presences: Array.isArray(object == null ? void 0 : object.presences) ? object.presences.map((e) => UserPresence.fromJSON(e)) : []
+    };
   },
   toJSON(message) {
     const obj = {};
     message.party_id !== void 0 && (obj.party_id = message.party_id);
     message.open !== void 0 && (obj.open = message.open);
-    message.max_size !== void 0 && (obj.max_size = message.max_size);
+    message.max_size !== void 0 && (obj.max_size = Math.round(message.max_size));
     message.self !== void 0 && (obj.self = message.self ? UserPresence.toJSON(message.self) : void 0);
     message.leader !== void 0 && (obj.leader = message.leader ? UserPresence.toJSON(message.leader) : void 0);
     if (message.presences) {
-      obj.presences = message.presences.map(
-        (e) => e ? UserPresence.toJSON(e) : void 0
-      );
+      obj.presences = message.presences.map((e) => e ? UserPresence.toJSON(e) : void 0);
     } else {
       obj.presences = [];
     }
     return obj;
   },
+  create(base) {
+    return Party.fromPartial(base != null ? base : {});
+  },
   fromPartial(object) {
-    const message = __spreadValues({}, baseParty);
-    message.presences = [];
-    if (object.party_id !== void 0 && object.party_id !== null) {
-      message.party_id = object.party_id;
-    } else {
-      message.party_id = "";
-    }
-    if (object.open !== void 0 && object.open !== null) {
-      message.open = object.open;
-    } else {
-      message.open = false;
-    }
-    if (object.max_size !== void 0 && object.max_size !== null) {
-      message.max_size = object.max_size;
-    } else {
-      message.max_size = 0;
-    }
-    if (object.self !== void 0 && object.self !== null) {
-      message.self = UserPresence.fromPartial(object.self);
-    } else {
-      message.self = void 0;
-    }
-    if (object.leader !== void 0 && object.leader !== null) {
-      message.leader = UserPresence.fromPartial(object.leader);
-    } else {
-      message.leader = void 0;
-    }
-    if (object.presences !== void 0 && object.presences !== null) {
-      for (const e of object.presences) {
-        message.presences.push(UserPresence.fromPartial(e));
-      }
-    }
+    var _a, _b, _c, _d;
+    const message = createBaseParty();
+    message.party_id = (_a = object.party_id) != null ? _a : "";
+    message.open = (_b = object.open) != null ? _b : false;
+    message.max_size = (_c = object.max_size) != null ? _c : 0;
+    message.self = object.self !== void 0 && object.self !== null ? UserPresence.fromPartial(object.self) : void 0;
+    message.leader = object.leader !== void 0 && object.leader !== null ? UserPresence.fromPartial(object.leader) : void 0;
+    message.presences = ((_d = object.presences) == null ? void 0 : _d.map((e) => UserPresence.fromPartial(e))) || [];
     return message;
   }
 };
-var basePartyCreate = { open: false, max_size: 0 };
+function createBasePartyCreate() {
+  return { open: false, max_size: 0 };
+}
 var PartyCreate = {
   encode(message, writer = import_minimal4.default.Writer.create()) {
     if (message.open === true) {
@@ -7072,7 +5612,7 @@ var PartyCreate = {
   decode(input, length) {
     const reader = input instanceof import_minimal4.default.Reader ? input : new import_minimal4.default.Reader(input);
     let end = length === void 0 ? reader.len : reader.pos + length;
-    const message = __spreadValues({}, basePartyCreate);
+    const message = createBasePartyCreate();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -7090,41 +5630,31 @@ var PartyCreate = {
     return message;
   },
   fromJSON(object) {
-    const message = __spreadValues({}, basePartyCreate);
-    if (object.open !== void 0 && object.open !== null) {
-      message.open = Boolean(object.open);
-    } else {
-      message.open = false;
-    }
-    if (object.max_size !== void 0 && object.max_size !== null) {
-      message.max_size = Number(object.max_size);
-    } else {
-      message.max_size = 0;
-    }
-    return message;
+    return {
+      open: isSet4(object.open) ? Boolean(object.open) : false,
+      max_size: isSet4(object.max_size) ? Number(object.max_size) : 0
+    };
   },
   toJSON(message) {
     const obj = {};
     message.open !== void 0 && (obj.open = message.open);
-    message.max_size !== void 0 && (obj.max_size = message.max_size);
+    message.max_size !== void 0 && (obj.max_size = Math.round(message.max_size));
     return obj;
   },
+  create(base) {
+    return PartyCreate.fromPartial(base != null ? base : {});
+  },
   fromPartial(object) {
-    const message = __spreadValues({}, basePartyCreate);
-    if (object.open !== void 0 && object.open !== null) {
-      message.open = object.open;
-    } else {
-      message.open = false;
-    }
-    if (object.max_size !== void 0 && object.max_size !== null) {
-      message.max_size = object.max_size;
-    } else {
-      message.max_size = 0;
-    }
+    var _a, _b;
+    const message = createBasePartyCreate();
+    message.open = (_a = object.open) != null ? _a : false;
+    message.max_size = (_b = object.max_size) != null ? _b : 0;
     return message;
   }
 };
-var basePartyJoin = { party_id: "" };
+function createBasePartyJoin() {
+  return { party_id: "" };
+}
 var PartyJoin = {
   encode(message, writer = import_minimal4.default.Writer.create()) {
     if (message.party_id !== "") {
@@ -7135,7 +5665,7 @@ var PartyJoin = {
   decode(input, length) {
     const reader = input instanceof import_minimal4.default.Reader ? input : new import_minimal4.default.Reader(input);
     let end = length === void 0 ? reader.len : reader.pos + length;
-    const message = __spreadValues({}, basePartyJoin);
+    const message = createBasePartyJoin();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -7150,30 +5680,26 @@ var PartyJoin = {
     return message;
   },
   fromJSON(object) {
-    const message = __spreadValues({}, basePartyJoin);
-    if (object.party_id !== void 0 && object.party_id !== null) {
-      message.party_id = String(object.party_id);
-    } else {
-      message.party_id = "";
-    }
-    return message;
+    return { party_id: isSet4(object.party_id) ? String(object.party_id) : "" };
   },
   toJSON(message) {
     const obj = {};
     message.party_id !== void 0 && (obj.party_id = message.party_id);
     return obj;
   },
+  create(base) {
+    return PartyJoin.fromPartial(base != null ? base : {});
+  },
   fromPartial(object) {
-    const message = __spreadValues({}, basePartyJoin);
-    if (object.party_id !== void 0 && object.party_id !== null) {
-      message.party_id = object.party_id;
-    } else {
-      message.party_id = "";
-    }
+    var _a;
+    const message = createBasePartyJoin();
+    message.party_id = (_a = object.party_id) != null ? _a : "";
     return message;
   }
 };
-var basePartyLeave = { party_id: "" };
+function createBasePartyLeave() {
+  return { party_id: "" };
+}
 var PartyLeave = {
   encode(message, writer = import_minimal4.default.Writer.create()) {
     if (message.party_id !== "") {
@@ -7184,7 +5710,7 @@ var PartyLeave = {
   decode(input, length) {
     const reader = input instanceof import_minimal4.default.Reader ? input : new import_minimal4.default.Reader(input);
     let end = length === void 0 ? reader.len : reader.pos + length;
-    const message = __spreadValues({}, basePartyLeave);
+    const message = createBasePartyLeave();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -7199,30 +5725,26 @@ var PartyLeave = {
     return message;
   },
   fromJSON(object) {
-    const message = __spreadValues({}, basePartyLeave);
-    if (object.party_id !== void 0 && object.party_id !== null) {
-      message.party_id = String(object.party_id);
-    } else {
-      message.party_id = "";
-    }
-    return message;
+    return { party_id: isSet4(object.party_id) ? String(object.party_id) : "" };
   },
   toJSON(message) {
     const obj = {};
     message.party_id !== void 0 && (obj.party_id = message.party_id);
     return obj;
   },
+  create(base) {
+    return PartyLeave.fromPartial(base != null ? base : {});
+  },
   fromPartial(object) {
-    const message = __spreadValues({}, basePartyLeave);
-    if (object.party_id !== void 0 && object.party_id !== null) {
-      message.party_id = object.party_id;
-    } else {
-      message.party_id = "";
-    }
+    var _a;
+    const message = createBasePartyLeave();
+    message.party_id = (_a = object.party_id) != null ? _a : "";
     return message;
   }
 };
-var basePartyPromote = { party_id: "" };
+function createBasePartyPromote() {
+  return { party_id: "", presence: void 0 };
+}
 var PartyPromote = {
   encode(message, writer = import_minimal4.default.Writer.create()) {
     if (message.party_id !== "") {
@@ -7236,7 +5758,7 @@ var PartyPromote = {
   decode(input, length) {
     const reader = input instanceof import_minimal4.default.Reader ? input : new import_minimal4.default.Reader(input);
     let end = length === void 0 ? reader.len : reader.pos + length;
-    const message = __spreadValues({}, basePartyPromote);
+    const message = createBasePartyPromote();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -7254,18 +5776,10 @@ var PartyPromote = {
     return message;
   },
   fromJSON(object) {
-    const message = __spreadValues({}, basePartyPromote);
-    if (object.party_id !== void 0 && object.party_id !== null) {
-      message.party_id = String(object.party_id);
-    } else {
-      message.party_id = "";
-    }
-    if (object.presence !== void 0 && object.presence !== null) {
-      message.presence = UserPresence.fromJSON(object.presence);
-    } else {
-      message.presence = void 0;
-    }
-    return message;
+    return {
+      party_id: isSet4(object.party_id) ? String(object.party_id) : "",
+      presence: isSet4(object.presence) ? UserPresence.fromJSON(object.presence) : void 0
+    };
   },
   toJSON(message) {
     const obj = {};
@@ -7273,22 +5787,20 @@ var PartyPromote = {
     message.presence !== void 0 && (obj.presence = message.presence ? UserPresence.toJSON(message.presence) : void 0);
     return obj;
   },
+  create(base) {
+    return PartyPromote.fromPartial(base != null ? base : {});
+  },
   fromPartial(object) {
-    const message = __spreadValues({}, basePartyPromote);
-    if (object.party_id !== void 0 && object.party_id !== null) {
-      message.party_id = object.party_id;
-    } else {
-      message.party_id = "";
-    }
-    if (object.presence !== void 0 && object.presence !== null) {
-      message.presence = UserPresence.fromPartial(object.presence);
-    } else {
-      message.presence = void 0;
-    }
+    var _a;
+    const message = createBasePartyPromote();
+    message.party_id = (_a = object.party_id) != null ? _a : "";
+    message.presence = object.presence !== void 0 && object.presence !== null ? UserPresence.fromPartial(object.presence) : void 0;
     return message;
   }
 };
-var basePartyLeader = { party_id: "" };
+function createBasePartyLeader() {
+  return { party_id: "", presence: void 0 };
+}
 var PartyLeader = {
   encode(message, writer = import_minimal4.default.Writer.create()) {
     if (message.party_id !== "") {
@@ -7302,7 +5814,7 @@ var PartyLeader = {
   decode(input, length) {
     const reader = input instanceof import_minimal4.default.Reader ? input : new import_minimal4.default.Reader(input);
     let end = length === void 0 ? reader.len : reader.pos + length;
-    const message = __spreadValues({}, basePartyLeader);
+    const message = createBasePartyLeader();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -7320,18 +5832,10 @@ var PartyLeader = {
     return message;
   },
   fromJSON(object) {
-    const message = __spreadValues({}, basePartyLeader);
-    if (object.party_id !== void 0 && object.party_id !== null) {
-      message.party_id = String(object.party_id);
-    } else {
-      message.party_id = "";
-    }
-    if (object.presence !== void 0 && object.presence !== null) {
-      message.presence = UserPresence.fromJSON(object.presence);
-    } else {
-      message.presence = void 0;
-    }
-    return message;
+    return {
+      party_id: isSet4(object.party_id) ? String(object.party_id) : "",
+      presence: isSet4(object.presence) ? UserPresence.fromJSON(object.presence) : void 0
+    };
   },
   toJSON(message) {
     const obj = {};
@@ -7339,22 +5843,20 @@ var PartyLeader = {
     message.presence !== void 0 && (obj.presence = message.presence ? UserPresence.toJSON(message.presence) : void 0);
     return obj;
   },
+  create(base) {
+    return PartyLeader.fromPartial(base != null ? base : {});
+  },
   fromPartial(object) {
-    const message = __spreadValues({}, basePartyLeader);
-    if (object.party_id !== void 0 && object.party_id !== null) {
-      message.party_id = object.party_id;
-    } else {
-      message.party_id = "";
-    }
-    if (object.presence !== void 0 && object.presence !== null) {
-      message.presence = UserPresence.fromPartial(object.presence);
-    } else {
-      message.presence = void 0;
-    }
+    var _a;
+    const message = createBasePartyLeader();
+    message.party_id = (_a = object.party_id) != null ? _a : "";
+    message.presence = object.presence !== void 0 && object.presence !== null ? UserPresence.fromPartial(object.presence) : void 0;
     return message;
   }
 };
-var basePartyAccept = { party_id: "" };
+function createBasePartyAccept() {
+  return { party_id: "", presence: void 0 };
+}
 var PartyAccept = {
   encode(message, writer = import_minimal4.default.Writer.create()) {
     if (message.party_id !== "") {
@@ -7368,7 +5870,7 @@ var PartyAccept = {
   decode(input, length) {
     const reader = input instanceof import_minimal4.default.Reader ? input : new import_minimal4.default.Reader(input);
     let end = length === void 0 ? reader.len : reader.pos + length;
-    const message = __spreadValues({}, basePartyAccept);
+    const message = createBasePartyAccept();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -7386,18 +5888,10 @@ var PartyAccept = {
     return message;
   },
   fromJSON(object) {
-    const message = __spreadValues({}, basePartyAccept);
-    if (object.party_id !== void 0 && object.party_id !== null) {
-      message.party_id = String(object.party_id);
-    } else {
-      message.party_id = "";
-    }
-    if (object.presence !== void 0 && object.presence !== null) {
-      message.presence = UserPresence.fromJSON(object.presence);
-    } else {
-      message.presence = void 0;
-    }
-    return message;
+    return {
+      party_id: isSet4(object.party_id) ? String(object.party_id) : "",
+      presence: isSet4(object.presence) ? UserPresence.fromJSON(object.presence) : void 0
+    };
   },
   toJSON(message) {
     const obj = {};
@@ -7405,22 +5899,20 @@ var PartyAccept = {
     message.presence !== void 0 && (obj.presence = message.presence ? UserPresence.toJSON(message.presence) : void 0);
     return obj;
   },
+  create(base) {
+    return PartyAccept.fromPartial(base != null ? base : {});
+  },
   fromPartial(object) {
-    const message = __spreadValues({}, basePartyAccept);
-    if (object.party_id !== void 0 && object.party_id !== null) {
-      message.party_id = object.party_id;
-    } else {
-      message.party_id = "";
-    }
-    if (object.presence !== void 0 && object.presence !== null) {
-      message.presence = UserPresence.fromPartial(object.presence);
-    } else {
-      message.presence = void 0;
-    }
+    var _a;
+    const message = createBasePartyAccept();
+    message.party_id = (_a = object.party_id) != null ? _a : "";
+    message.presence = object.presence !== void 0 && object.presence !== null ? UserPresence.fromPartial(object.presence) : void 0;
     return message;
   }
 };
-var basePartyRemove = { party_id: "" };
+function createBasePartyRemove() {
+  return { party_id: "", presence: void 0 };
+}
 var PartyRemove = {
   encode(message, writer = import_minimal4.default.Writer.create()) {
     if (message.party_id !== "") {
@@ -7434,7 +5926,7 @@ var PartyRemove = {
   decode(input, length) {
     const reader = input instanceof import_minimal4.default.Reader ? input : new import_minimal4.default.Reader(input);
     let end = length === void 0 ? reader.len : reader.pos + length;
-    const message = __spreadValues({}, basePartyRemove);
+    const message = createBasePartyRemove();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -7452,18 +5944,10 @@ var PartyRemove = {
     return message;
   },
   fromJSON(object) {
-    const message = __spreadValues({}, basePartyRemove);
-    if (object.party_id !== void 0 && object.party_id !== null) {
-      message.party_id = String(object.party_id);
-    } else {
-      message.party_id = "";
-    }
-    if (object.presence !== void 0 && object.presence !== null) {
-      message.presence = UserPresence.fromJSON(object.presence);
-    } else {
-      message.presence = void 0;
-    }
-    return message;
+    return {
+      party_id: isSet4(object.party_id) ? String(object.party_id) : "",
+      presence: isSet4(object.presence) ? UserPresence.fromJSON(object.presence) : void 0
+    };
   },
   toJSON(message) {
     const obj = {};
@@ -7471,22 +5955,20 @@ var PartyRemove = {
     message.presence !== void 0 && (obj.presence = message.presence ? UserPresence.toJSON(message.presence) : void 0);
     return obj;
   },
+  create(base) {
+    return PartyRemove.fromPartial(base != null ? base : {});
+  },
   fromPartial(object) {
-    const message = __spreadValues({}, basePartyRemove);
-    if (object.party_id !== void 0 && object.party_id !== null) {
-      message.party_id = object.party_id;
-    } else {
-      message.party_id = "";
-    }
-    if (object.presence !== void 0 && object.presence !== null) {
-      message.presence = UserPresence.fromPartial(object.presence);
-    } else {
-      message.presence = void 0;
-    }
+    var _a;
+    const message = createBasePartyRemove();
+    message.party_id = (_a = object.party_id) != null ? _a : "";
+    message.presence = object.presence !== void 0 && object.presence !== null ? UserPresence.fromPartial(object.presence) : void 0;
     return message;
   }
 };
-var basePartyClose = { party_id: "" };
+function createBasePartyClose() {
+  return { party_id: "" };
+}
 var PartyClose = {
   encode(message, writer = import_minimal4.default.Writer.create()) {
     if (message.party_id !== "") {
@@ -7497,7 +5979,7 @@ var PartyClose = {
   decode(input, length) {
     const reader = input instanceof import_minimal4.default.Reader ? input : new import_minimal4.default.Reader(input);
     let end = length === void 0 ? reader.len : reader.pos + length;
-    const message = __spreadValues({}, basePartyClose);
+    const message = createBasePartyClose();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -7512,30 +5994,26 @@ var PartyClose = {
     return message;
   },
   fromJSON(object) {
-    const message = __spreadValues({}, basePartyClose);
-    if (object.party_id !== void 0 && object.party_id !== null) {
-      message.party_id = String(object.party_id);
-    } else {
-      message.party_id = "";
-    }
-    return message;
+    return { party_id: isSet4(object.party_id) ? String(object.party_id) : "" };
   },
   toJSON(message) {
     const obj = {};
     message.party_id !== void 0 && (obj.party_id = message.party_id);
     return obj;
   },
+  create(base) {
+    return PartyClose.fromPartial(base != null ? base : {});
+  },
   fromPartial(object) {
-    const message = __spreadValues({}, basePartyClose);
-    if (object.party_id !== void 0 && object.party_id !== null) {
-      message.party_id = object.party_id;
-    } else {
-      message.party_id = "";
-    }
+    var _a;
+    const message = createBasePartyClose();
+    message.party_id = (_a = object.party_id) != null ? _a : "";
     return message;
   }
 };
-var basePartyJoinRequestList = { party_id: "" };
+function createBasePartyJoinRequestList() {
+  return { party_id: "" };
+}
 var PartyJoinRequestList = {
   encode(message, writer = import_minimal4.default.Writer.create()) {
     if (message.party_id !== "") {
@@ -7546,7 +6024,7 @@ var PartyJoinRequestList = {
   decode(input, length) {
     const reader = input instanceof import_minimal4.default.Reader ? input : new import_minimal4.default.Reader(input);
     let end = length === void 0 ? reader.len : reader.pos + length;
-    const message = __spreadValues({}, basePartyJoinRequestList);
+    const message = createBasePartyJoinRequestList();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -7561,30 +6039,26 @@ var PartyJoinRequestList = {
     return message;
   },
   fromJSON(object) {
-    const message = __spreadValues({}, basePartyJoinRequestList);
-    if (object.party_id !== void 0 && object.party_id !== null) {
-      message.party_id = String(object.party_id);
-    } else {
-      message.party_id = "";
-    }
-    return message;
+    return { party_id: isSet4(object.party_id) ? String(object.party_id) : "" };
   },
   toJSON(message) {
     const obj = {};
     message.party_id !== void 0 && (obj.party_id = message.party_id);
     return obj;
   },
+  create(base) {
+    return PartyJoinRequestList.fromPartial(base != null ? base : {});
+  },
   fromPartial(object) {
-    const message = __spreadValues({}, basePartyJoinRequestList);
-    if (object.party_id !== void 0 && object.party_id !== null) {
-      message.party_id = object.party_id;
-    } else {
-      message.party_id = "";
-    }
+    var _a;
+    const message = createBasePartyJoinRequestList();
+    message.party_id = (_a = object.party_id) != null ? _a : "";
     return message;
   }
 };
-var basePartyJoinRequest = { party_id: "" };
+function createBasePartyJoinRequest() {
+  return { party_id: "", presences: [] };
+}
 var PartyJoinRequest = {
   encode(message, writer = import_minimal4.default.Writer.create()) {
     if (message.party_id !== "") {
@@ -7598,8 +6072,7 @@ var PartyJoinRequest = {
   decode(input, length) {
     const reader = input instanceof import_minimal4.default.Reader ? input : new import_minimal4.default.Reader(input);
     let end = length === void 0 ? reader.len : reader.pos + length;
-    const message = __spreadValues({}, basePartyJoinRequest);
-    message.presences = [];
+    const message = createBasePartyJoinRequest();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -7617,54 +6090,43 @@ var PartyJoinRequest = {
     return message;
   },
   fromJSON(object) {
-    const message = __spreadValues({}, basePartyJoinRequest);
-    message.presences = [];
-    if (object.party_id !== void 0 && object.party_id !== null) {
-      message.party_id = String(object.party_id);
-    } else {
-      message.party_id = "";
-    }
-    if (object.presences !== void 0 && object.presences !== null) {
-      for (const e of object.presences) {
-        message.presences.push(UserPresence.fromJSON(e));
-      }
-    }
-    return message;
+    return {
+      party_id: isSet4(object.party_id) ? String(object.party_id) : "",
+      presences: Array.isArray(object == null ? void 0 : object.presences) ? object.presences.map((e) => UserPresence.fromJSON(e)) : []
+    };
   },
   toJSON(message) {
     const obj = {};
     message.party_id !== void 0 && (obj.party_id = message.party_id);
     if (message.presences) {
-      obj.presences = message.presences.map(
-        (e) => e ? UserPresence.toJSON(e) : void 0
-      );
+      obj.presences = message.presences.map((e) => e ? UserPresence.toJSON(e) : void 0);
     } else {
       obj.presences = [];
     }
     return obj;
   },
+  create(base) {
+    return PartyJoinRequest.fromPartial(base != null ? base : {});
+  },
   fromPartial(object) {
-    const message = __spreadValues({}, basePartyJoinRequest);
-    message.presences = [];
-    if (object.party_id !== void 0 && object.party_id !== null) {
-      message.party_id = object.party_id;
-    } else {
-      message.party_id = "";
-    }
-    if (object.presences !== void 0 && object.presences !== null) {
-      for (const e of object.presences) {
-        message.presences.push(UserPresence.fromPartial(e));
-      }
-    }
+    var _a, _b;
+    const message = createBasePartyJoinRequest();
+    message.party_id = (_a = object.party_id) != null ? _a : "";
+    message.presences = ((_b = object.presences) == null ? void 0 : _b.map((e) => UserPresence.fromPartial(e))) || [];
     return message;
   }
 };
-var basePartyMatchmakerAdd = {
-  party_id: "",
-  min_count: 0,
-  max_count: 0,
-  query: ""
-};
+function createBasePartyMatchmakerAdd() {
+  return {
+    party_id: "",
+    min_count: 0,
+    max_count: 0,
+    query: "",
+    string_properties: {},
+    numeric_properties: {},
+    count_multiple: void 0
+  };
+}
 var PartyMatchmakerAdd = {
   encode(message, writer = import_minimal4.default.Writer.create()) {
     if (message.party_id !== "") {
@@ -7680,25 +6142,20 @@ var PartyMatchmakerAdd = {
       writer.uint32(34).string(message.query);
     }
     Object.entries(message.string_properties).forEach(([key, value]) => {
-      PartyMatchmakerAdd_StringPropertiesEntry.encode(
-        { key, value },
-        writer.uint32(42).fork()
-      ).ldelim();
+      PartyMatchmakerAdd_StringPropertiesEntry.encode({ key, value }, writer.uint32(42).fork()).ldelim();
     });
     Object.entries(message.numeric_properties).forEach(([key, value]) => {
-      PartyMatchmakerAdd_NumericPropertiesEntry.encode(
-        { key, value },
-        writer.uint32(50).fork()
-      ).ldelim();
+      PartyMatchmakerAdd_NumericPropertiesEntry.encode({ key, value }, writer.uint32(50).fork()).ldelim();
     });
+    if (message.count_multiple !== void 0) {
+      Int32Value.encode({ value: message.count_multiple }, writer.uint32(58).fork()).ldelim();
+    }
     return writer;
   },
   decode(input, length) {
     const reader = input instanceof import_minimal4.default.Reader ? input : new import_minimal4.default.Reader(input);
     let end = length === void 0 ? reader.len : reader.pos + length;
-    const message = __spreadValues({}, basePartyMatchmakerAdd);
-    message.string_properties = {};
-    message.numeric_properties = {};
+    const message = createBasePartyMatchmakerAdd();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -7715,22 +6172,19 @@ var PartyMatchmakerAdd = {
           message.query = reader.string();
           break;
         case 5:
-          const entry5 = PartyMatchmakerAdd_StringPropertiesEntry.decode(
-            reader,
-            reader.uint32()
-          );
+          const entry5 = PartyMatchmakerAdd_StringPropertiesEntry.decode(reader, reader.uint32());
           if (entry5.value !== void 0) {
             message.string_properties[entry5.key] = entry5.value;
           }
           break;
         case 6:
-          const entry6 = PartyMatchmakerAdd_NumericPropertiesEntry.decode(
-            reader,
-            reader.uint32()
-          );
+          const entry6 = PartyMatchmakerAdd_NumericPropertiesEntry.decode(reader, reader.uint32());
           if (entry6.value !== void 0) {
             message.numeric_properties[entry6.key] = entry6.value;
           }
+          break;
+        case 7:
+          message.count_multiple = Int32Value.decode(reader, reader.uint32()).value;
           break;
         default:
           reader.skipType(tag & 7);
@@ -7740,46 +6194,27 @@ var PartyMatchmakerAdd = {
     return message;
   },
   fromJSON(object) {
-    const message = __spreadValues({}, basePartyMatchmakerAdd);
-    message.string_properties = {};
-    message.numeric_properties = {};
-    if (object.party_id !== void 0 && object.party_id !== null) {
-      message.party_id = String(object.party_id);
-    } else {
-      message.party_id = "";
-    }
-    if (object.min_count !== void 0 && object.min_count !== null) {
-      message.min_count = Number(object.min_count);
-    } else {
-      message.min_count = 0;
-    }
-    if (object.max_count !== void 0 && object.max_count !== null) {
-      message.max_count = Number(object.max_count);
-    } else {
-      message.max_count = 0;
-    }
-    if (object.query !== void 0 && object.query !== null) {
-      message.query = String(object.query);
-    } else {
-      message.query = "";
-    }
-    if (object.string_properties !== void 0 && object.string_properties !== null) {
-      Object.entries(object.string_properties).forEach(([key, value]) => {
-        message.string_properties[key] = String(value);
-      });
-    }
-    if (object.numeric_properties !== void 0 && object.numeric_properties !== null) {
-      Object.entries(object.numeric_properties).forEach(([key, value]) => {
-        message.numeric_properties[key] = Number(value);
-      });
-    }
-    return message;
+    return {
+      party_id: isSet4(object.party_id) ? String(object.party_id) : "",
+      min_count: isSet4(object.min_count) ? Number(object.min_count) : 0,
+      max_count: isSet4(object.max_count) ? Number(object.max_count) : 0,
+      query: isSet4(object.query) ? String(object.query) : "",
+      string_properties: isObject(object.string_properties) ? Object.entries(object.string_properties).reduce((acc, [key, value]) => {
+        acc[key] = String(value);
+        return acc;
+      }, {}) : {},
+      numeric_properties: isObject(object.numeric_properties) ? Object.entries(object.numeric_properties).reduce((acc, [key, value]) => {
+        acc[key] = Number(value);
+        return acc;
+      }, {}) : {},
+      count_multiple: isSet4(object.count_multiple) ? Number(object.count_multiple) : void 0
+    };
   },
   toJSON(message) {
     const obj = {};
     message.party_id !== void 0 && (obj.party_id = message.party_id);
-    message.min_count !== void 0 && (obj.min_count = message.min_count);
-    message.max_count !== void 0 && (obj.max_count = message.max_count);
+    message.min_count !== void 0 && (obj.min_count = Math.round(message.min_count));
+    message.max_count !== void 0 && (obj.max_count = Math.round(message.max_count));
     message.query !== void 0 && (obj.query = message.query);
     obj.string_properties = {};
     if (message.string_properties) {
@@ -7793,53 +6228,44 @@ var PartyMatchmakerAdd = {
         obj.numeric_properties[k] = v;
       });
     }
+    message.count_multiple !== void 0 && (obj.count_multiple = message.count_multiple);
     return obj;
   },
+  create(base) {
+    return PartyMatchmakerAdd.fromPartial(base != null ? base : {});
+  },
   fromPartial(object) {
-    const message = __spreadValues({}, basePartyMatchmakerAdd);
-    message.string_properties = {};
-    message.numeric_properties = {};
-    if (object.party_id !== void 0 && object.party_id !== null) {
-      message.party_id = object.party_id;
-    } else {
-      message.party_id = "";
-    }
-    if (object.min_count !== void 0 && object.min_count !== null) {
-      message.min_count = object.min_count;
-    } else {
-      message.min_count = 0;
-    }
-    if (object.max_count !== void 0 && object.max_count !== null) {
-      message.max_count = object.max_count;
-    } else {
-      message.max_count = 0;
-    }
-    if (object.query !== void 0 && object.query !== null) {
-      message.query = object.query;
-    } else {
-      message.query = "";
-    }
-    if (object.string_properties !== void 0 && object.string_properties !== null) {
-      Object.entries(object.string_properties).forEach(([key, value]) => {
+    var _a, _b, _c, _d, _e, _f, _g;
+    const message = createBasePartyMatchmakerAdd();
+    message.party_id = (_a = object.party_id) != null ? _a : "";
+    message.min_count = (_b = object.min_count) != null ? _b : 0;
+    message.max_count = (_c = object.max_count) != null ? _c : 0;
+    message.query = (_d = object.query) != null ? _d : "";
+    message.string_properties = Object.entries((_e = object.string_properties) != null ? _e : {}).reduce(
+      (acc, [key, value]) => {
         if (value !== void 0) {
-          message.string_properties[key] = String(value);
+          acc[key] = String(value);
         }
-      });
-    }
-    if (object.numeric_properties !== void 0 && object.numeric_properties !== null) {
-      Object.entries(object.numeric_properties).forEach(([key, value]) => {
+        return acc;
+      },
+      {}
+    );
+    message.numeric_properties = Object.entries((_f = object.numeric_properties) != null ? _f : {}).reduce(
+      (acc, [key, value]) => {
         if (value !== void 0) {
-          message.numeric_properties[key] = Number(value);
+          acc[key] = Number(value);
         }
-      });
-    }
+        return acc;
+      },
+      {}
+    );
+    message.count_multiple = (_g = object.count_multiple) != null ? _g : void 0;
     return message;
   }
 };
-var basePartyMatchmakerAdd_StringPropertiesEntry = {
-  key: "",
-  value: ""
-};
+function createBasePartyMatchmakerAdd_StringPropertiesEntry() {
+  return { key: "", value: "" };
+}
 var PartyMatchmakerAdd_StringPropertiesEntry = {
   encode(message, writer = import_minimal4.default.Writer.create()) {
     if (message.key !== "") {
@@ -7853,7 +6279,7 @@ var PartyMatchmakerAdd_StringPropertiesEntry = {
   decode(input, length) {
     const reader = input instanceof import_minimal4.default.Reader ? input : new import_minimal4.default.Reader(input);
     let end = length === void 0 ? reader.len : reader.pos + length;
-    const message = __spreadValues({}, basePartyMatchmakerAdd_StringPropertiesEntry);
+    const message = createBasePartyMatchmakerAdd_StringPropertiesEntry();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -7871,18 +6297,7 @@ var PartyMatchmakerAdd_StringPropertiesEntry = {
     return message;
   },
   fromJSON(object) {
-    const message = __spreadValues({}, basePartyMatchmakerAdd_StringPropertiesEntry);
-    if (object.key !== void 0 && object.key !== null) {
-      message.key = String(object.key);
-    } else {
-      message.key = "";
-    }
-    if (object.value !== void 0 && object.value !== null) {
-      message.value = String(object.value);
-    } else {
-      message.value = "";
-    }
-    return message;
+    return { key: isSet4(object.key) ? String(object.key) : "", value: isSet4(object.value) ? String(object.value) : "" };
   },
   toJSON(message) {
     const obj = {};
@@ -7890,25 +6305,20 @@ var PartyMatchmakerAdd_StringPropertiesEntry = {
     message.value !== void 0 && (obj.value = message.value);
     return obj;
   },
+  create(base) {
+    return PartyMatchmakerAdd_StringPropertiesEntry.fromPartial(base != null ? base : {});
+  },
   fromPartial(object) {
-    const message = __spreadValues({}, basePartyMatchmakerAdd_StringPropertiesEntry);
-    if (object.key !== void 0 && object.key !== null) {
-      message.key = object.key;
-    } else {
-      message.key = "";
-    }
-    if (object.value !== void 0 && object.value !== null) {
-      message.value = object.value;
-    } else {
-      message.value = "";
-    }
+    var _a, _b;
+    const message = createBasePartyMatchmakerAdd_StringPropertiesEntry();
+    message.key = (_a = object.key) != null ? _a : "";
+    message.value = (_b = object.value) != null ? _b : "";
     return message;
   }
 };
-var basePartyMatchmakerAdd_NumericPropertiesEntry = {
-  key: "",
-  value: 0
-};
+function createBasePartyMatchmakerAdd_NumericPropertiesEntry() {
+  return { key: "", value: 0 };
+}
 var PartyMatchmakerAdd_NumericPropertiesEntry = {
   encode(message, writer = import_minimal4.default.Writer.create()) {
     if (message.key !== "") {
@@ -7922,7 +6332,7 @@ var PartyMatchmakerAdd_NumericPropertiesEntry = {
   decode(input, length) {
     const reader = input instanceof import_minimal4.default.Reader ? input : new import_minimal4.default.Reader(input);
     let end = length === void 0 ? reader.len : reader.pos + length;
-    const message = __spreadValues({}, basePartyMatchmakerAdd_NumericPropertiesEntry);
+    const message = createBasePartyMatchmakerAdd_NumericPropertiesEntry();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -7940,18 +6350,7 @@ var PartyMatchmakerAdd_NumericPropertiesEntry = {
     return message;
   },
   fromJSON(object) {
-    const message = __spreadValues({}, basePartyMatchmakerAdd_NumericPropertiesEntry);
-    if (object.key !== void 0 && object.key !== null) {
-      message.key = String(object.key);
-    } else {
-      message.key = "";
-    }
-    if (object.value !== void 0 && object.value !== null) {
-      message.value = Number(object.value);
-    } else {
-      message.value = 0;
-    }
-    return message;
+    return { key: isSet4(object.key) ? String(object.key) : "", value: isSet4(object.value) ? Number(object.value) : 0 };
   },
   toJSON(message) {
     const obj = {};
@@ -7959,22 +6358,20 @@ var PartyMatchmakerAdd_NumericPropertiesEntry = {
     message.value !== void 0 && (obj.value = message.value);
     return obj;
   },
+  create(base) {
+    return PartyMatchmakerAdd_NumericPropertiesEntry.fromPartial(base != null ? base : {});
+  },
   fromPartial(object) {
-    const message = __spreadValues({}, basePartyMatchmakerAdd_NumericPropertiesEntry);
-    if (object.key !== void 0 && object.key !== null) {
-      message.key = object.key;
-    } else {
-      message.key = "";
-    }
-    if (object.value !== void 0 && object.value !== null) {
-      message.value = object.value;
-    } else {
-      message.value = 0;
-    }
+    var _a, _b;
+    const message = createBasePartyMatchmakerAdd_NumericPropertiesEntry();
+    message.key = (_a = object.key) != null ? _a : "";
+    message.value = (_b = object.value) != null ? _b : 0;
     return message;
   }
 };
-var basePartyMatchmakerRemove = { party_id: "", ticket: "" };
+function createBasePartyMatchmakerRemove() {
+  return { party_id: "", ticket: "" };
+}
 var PartyMatchmakerRemove = {
   encode(message, writer = import_minimal4.default.Writer.create()) {
     if (message.party_id !== "") {
@@ -7988,7 +6385,7 @@ var PartyMatchmakerRemove = {
   decode(input, length) {
     const reader = input instanceof import_minimal4.default.Reader ? input : new import_minimal4.default.Reader(input);
     let end = length === void 0 ? reader.len : reader.pos + length;
-    const message = __spreadValues({}, basePartyMatchmakerRemove);
+    const message = createBasePartyMatchmakerRemove();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -8006,18 +6403,10 @@ var PartyMatchmakerRemove = {
     return message;
   },
   fromJSON(object) {
-    const message = __spreadValues({}, basePartyMatchmakerRemove);
-    if (object.party_id !== void 0 && object.party_id !== null) {
-      message.party_id = String(object.party_id);
-    } else {
-      message.party_id = "";
-    }
-    if (object.ticket !== void 0 && object.ticket !== null) {
-      message.ticket = String(object.ticket);
-    } else {
-      message.ticket = "";
-    }
-    return message;
+    return {
+      party_id: isSet4(object.party_id) ? String(object.party_id) : "",
+      ticket: isSet4(object.ticket) ? String(object.ticket) : ""
+    };
   },
   toJSON(message) {
     const obj = {};
@@ -8025,22 +6414,20 @@ var PartyMatchmakerRemove = {
     message.ticket !== void 0 && (obj.ticket = message.ticket);
     return obj;
   },
+  create(base) {
+    return PartyMatchmakerRemove.fromPartial(base != null ? base : {});
+  },
   fromPartial(object) {
-    const message = __spreadValues({}, basePartyMatchmakerRemove);
-    if (object.party_id !== void 0 && object.party_id !== null) {
-      message.party_id = object.party_id;
-    } else {
-      message.party_id = "";
-    }
-    if (object.ticket !== void 0 && object.ticket !== null) {
-      message.ticket = object.ticket;
-    } else {
-      message.ticket = "";
-    }
+    var _a, _b;
+    const message = createBasePartyMatchmakerRemove();
+    message.party_id = (_a = object.party_id) != null ? _a : "";
+    message.ticket = (_b = object.ticket) != null ? _b : "";
     return message;
   }
 };
-var basePartyMatchmakerTicket = { party_id: "", ticket: "" };
+function createBasePartyMatchmakerTicket() {
+  return { party_id: "", ticket: "" };
+}
 var PartyMatchmakerTicket = {
   encode(message, writer = import_minimal4.default.Writer.create()) {
     if (message.party_id !== "") {
@@ -8054,7 +6441,7 @@ var PartyMatchmakerTicket = {
   decode(input, length) {
     const reader = input instanceof import_minimal4.default.Reader ? input : new import_minimal4.default.Reader(input);
     let end = length === void 0 ? reader.len : reader.pos + length;
-    const message = __spreadValues({}, basePartyMatchmakerTicket);
+    const message = createBasePartyMatchmakerTicket();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -8072,18 +6459,10 @@ var PartyMatchmakerTicket = {
     return message;
   },
   fromJSON(object) {
-    const message = __spreadValues({}, basePartyMatchmakerTicket);
-    if (object.party_id !== void 0 && object.party_id !== null) {
-      message.party_id = String(object.party_id);
-    } else {
-      message.party_id = "";
-    }
-    if (object.ticket !== void 0 && object.ticket !== null) {
-      message.ticket = String(object.ticket);
-    } else {
-      message.ticket = "";
-    }
-    return message;
+    return {
+      party_id: isSet4(object.party_id) ? String(object.party_id) : "",
+      ticket: isSet4(object.ticket) ? String(object.ticket) : ""
+    };
   },
   toJSON(message) {
     const obj = {};
@@ -8091,22 +6470,20 @@ var PartyMatchmakerTicket = {
     message.ticket !== void 0 && (obj.ticket = message.ticket);
     return obj;
   },
+  create(base) {
+    return PartyMatchmakerTicket.fromPartial(base != null ? base : {});
+  },
   fromPartial(object) {
-    const message = __spreadValues({}, basePartyMatchmakerTicket);
-    if (object.party_id !== void 0 && object.party_id !== null) {
-      message.party_id = object.party_id;
-    } else {
-      message.party_id = "";
-    }
-    if (object.ticket !== void 0 && object.ticket !== null) {
-      message.ticket = object.ticket;
-    } else {
-      message.ticket = "";
-    }
+    var _a, _b;
+    const message = createBasePartyMatchmakerTicket();
+    message.party_id = (_a = object.party_id) != null ? _a : "";
+    message.ticket = (_b = object.ticket) != null ? _b : "";
     return message;
   }
 };
-var basePartyData = { party_id: "", op_code: 0 };
+function createBasePartyData() {
+  return { party_id: "", presence: void 0, op_code: 0, data: new Uint8Array() };
+}
 var PartyData = {
   encode(message, writer = import_minimal4.default.Writer.create()) {
     if (message.party_id !== "") {
@@ -8126,8 +6503,7 @@ var PartyData = {
   decode(input, length) {
     const reader = input instanceof import_minimal4.default.Reader ? input : new import_minimal4.default.Reader(input);
     let end = length === void 0 ? reader.len : reader.pos + length;
-    const message = __spreadValues({}, basePartyData);
-    message.data = new Uint8Array();
+    const message = createBasePartyData();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -8151,64 +6527,37 @@ var PartyData = {
     return message;
   },
   fromJSON(object) {
-    const message = __spreadValues({}, basePartyData);
-    message.data = new Uint8Array();
-    if (object.party_id !== void 0 && object.party_id !== null) {
-      message.party_id = String(object.party_id);
-    } else {
-      message.party_id = "";
-    }
-    if (object.presence !== void 0 && object.presence !== null) {
-      message.presence = UserPresence.fromJSON(object.presence);
-    } else {
-      message.presence = void 0;
-    }
-    if (object.op_code !== void 0 && object.op_code !== null) {
-      message.op_code = Number(object.op_code);
-    } else {
-      message.op_code = 0;
-    }
-    if (object.data !== void 0 && object.data !== null) {
-      message.data = bytesFromBase64(object.data);
-    }
-    return message;
+    return {
+      party_id: isSet4(object.party_id) ? String(object.party_id) : "",
+      presence: isSet4(object.presence) ? UserPresence.fromJSON(object.presence) : void 0,
+      op_code: isSet4(object.op_code) ? Number(object.op_code) : 0,
+      data: isSet4(object.data) ? bytesFromBase64(object.data) : new Uint8Array()
+    };
   },
   toJSON(message) {
     const obj = {};
     message.party_id !== void 0 && (obj.party_id = message.party_id);
     message.presence !== void 0 && (obj.presence = message.presence ? UserPresence.toJSON(message.presence) : void 0);
-    message.op_code !== void 0 && (obj.op_code = message.op_code);
-    message.data !== void 0 && (obj.data = base64FromBytes(
-      message.data !== void 0 ? message.data : new Uint8Array()
-    ));
+    message.op_code !== void 0 && (obj.op_code = Math.round(message.op_code));
+    message.data !== void 0 && (obj.data = base64FromBytes(message.data !== void 0 ? message.data : new Uint8Array()));
     return obj;
   },
+  create(base) {
+    return PartyData.fromPartial(base != null ? base : {});
+  },
   fromPartial(object) {
-    const message = __spreadValues({}, basePartyData);
-    if (object.party_id !== void 0 && object.party_id !== null) {
-      message.party_id = object.party_id;
-    } else {
-      message.party_id = "";
-    }
-    if (object.presence !== void 0 && object.presence !== null) {
-      message.presence = UserPresence.fromPartial(object.presence);
-    } else {
-      message.presence = void 0;
-    }
-    if (object.op_code !== void 0 && object.op_code !== null) {
-      message.op_code = object.op_code;
-    } else {
-      message.op_code = 0;
-    }
-    if (object.data !== void 0 && object.data !== null) {
-      message.data = object.data;
-    } else {
-      message.data = new Uint8Array();
-    }
+    var _a, _b, _c;
+    const message = createBasePartyData();
+    message.party_id = (_a = object.party_id) != null ? _a : "";
+    message.presence = object.presence !== void 0 && object.presence !== null ? UserPresence.fromPartial(object.presence) : void 0;
+    message.op_code = (_b = object.op_code) != null ? _b : 0;
+    message.data = (_c = object.data) != null ? _c : new Uint8Array();
     return message;
   }
 };
-var basePartyDataSend = { party_id: "", op_code: 0 };
+function createBasePartyDataSend() {
+  return { party_id: "", op_code: 0, data: new Uint8Array() };
+}
 var PartyDataSend = {
   encode(message, writer = import_minimal4.default.Writer.create()) {
     if (message.party_id !== "") {
@@ -8225,8 +6574,7 @@ var PartyDataSend = {
   decode(input, length) {
     const reader = input instanceof import_minimal4.default.Reader ? input : new import_minimal4.default.Reader(input);
     let end = length === void 0 ? reader.len : reader.pos + length;
-    const message = __spreadValues({}, basePartyDataSend);
-    message.data = new Uint8Array();
+    const message = createBasePartyDataSend();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -8247,53 +6595,34 @@ var PartyDataSend = {
     return message;
   },
   fromJSON(object) {
-    const message = __spreadValues({}, basePartyDataSend);
-    message.data = new Uint8Array();
-    if (object.party_id !== void 0 && object.party_id !== null) {
-      message.party_id = String(object.party_id);
-    } else {
-      message.party_id = "";
-    }
-    if (object.op_code !== void 0 && object.op_code !== null) {
-      message.op_code = Number(object.op_code);
-    } else {
-      message.op_code = 0;
-    }
-    if (object.data !== void 0 && object.data !== null) {
-      message.data = bytesFromBase64(object.data);
-    }
-    return message;
+    return {
+      party_id: isSet4(object.party_id) ? String(object.party_id) : "",
+      op_code: isSet4(object.op_code) ? Number(object.op_code) : 0,
+      data: isSet4(object.data) ? bytesFromBase64(object.data) : new Uint8Array()
+    };
   },
   toJSON(message) {
     const obj = {};
     message.party_id !== void 0 && (obj.party_id = message.party_id);
-    message.op_code !== void 0 && (obj.op_code = message.op_code);
-    message.data !== void 0 && (obj.data = base64FromBytes(
-      message.data !== void 0 ? message.data : new Uint8Array()
-    ));
+    message.op_code !== void 0 && (obj.op_code = Math.round(message.op_code));
+    message.data !== void 0 && (obj.data = base64FromBytes(message.data !== void 0 ? message.data : new Uint8Array()));
     return obj;
   },
+  create(base) {
+    return PartyDataSend.fromPartial(base != null ? base : {});
+  },
   fromPartial(object) {
-    const message = __spreadValues({}, basePartyDataSend);
-    if (object.party_id !== void 0 && object.party_id !== null) {
-      message.party_id = object.party_id;
-    } else {
-      message.party_id = "";
-    }
-    if (object.op_code !== void 0 && object.op_code !== null) {
-      message.op_code = object.op_code;
-    } else {
-      message.op_code = 0;
-    }
-    if (object.data !== void 0 && object.data !== null) {
-      message.data = object.data;
-    } else {
-      message.data = new Uint8Array();
-    }
+    var _a, _b, _c;
+    const message = createBasePartyDataSend();
+    message.party_id = (_a = object.party_id) != null ? _a : "";
+    message.op_code = (_b = object.op_code) != null ? _b : 0;
+    message.data = (_c = object.data) != null ? _c : new Uint8Array();
     return message;
   }
 };
-var basePartyPresenceEvent = { party_id: "" };
+function createBasePartyPresenceEvent() {
+  return { party_id: "", joins: [], leaves: [] };
+}
 var PartyPresenceEvent = {
   encode(message, writer = import_minimal4.default.Writer.create()) {
     if (message.party_id !== "") {
@@ -8310,9 +6639,7 @@ var PartyPresenceEvent = {
   decode(input, length) {
     const reader = input instanceof import_minimal4.default.Reader ? input : new import_minimal4.default.Reader(input);
     let end = length === void 0 ? reader.len : reader.pos + length;
-    const message = __spreadValues({}, basePartyPresenceEvent);
-    message.joins = [];
-    message.leaves = [];
+    const message = createBasePartyPresenceEvent();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -8333,68 +6660,42 @@ var PartyPresenceEvent = {
     return message;
   },
   fromJSON(object) {
-    const message = __spreadValues({}, basePartyPresenceEvent);
-    message.joins = [];
-    message.leaves = [];
-    if (object.party_id !== void 0 && object.party_id !== null) {
-      message.party_id = String(object.party_id);
-    } else {
-      message.party_id = "";
-    }
-    if (object.joins !== void 0 && object.joins !== null) {
-      for (const e of object.joins) {
-        message.joins.push(UserPresence.fromJSON(e));
-      }
-    }
-    if (object.leaves !== void 0 && object.leaves !== null) {
-      for (const e of object.leaves) {
-        message.leaves.push(UserPresence.fromJSON(e));
-      }
-    }
-    return message;
+    return {
+      party_id: isSet4(object.party_id) ? String(object.party_id) : "",
+      joins: Array.isArray(object == null ? void 0 : object.joins) ? object.joins.map((e) => UserPresence.fromJSON(e)) : [],
+      leaves: Array.isArray(object == null ? void 0 : object.leaves) ? object.leaves.map((e) => UserPresence.fromJSON(e)) : []
+    };
   },
   toJSON(message) {
     const obj = {};
     message.party_id !== void 0 && (obj.party_id = message.party_id);
     if (message.joins) {
-      obj.joins = message.joins.map(
-        (e) => e ? UserPresence.toJSON(e) : void 0
-      );
+      obj.joins = message.joins.map((e) => e ? UserPresence.toJSON(e) : void 0);
     } else {
       obj.joins = [];
     }
     if (message.leaves) {
-      obj.leaves = message.leaves.map(
-        (e) => e ? UserPresence.toJSON(e) : void 0
-      );
+      obj.leaves = message.leaves.map((e) => e ? UserPresence.toJSON(e) : void 0);
     } else {
       obj.leaves = [];
     }
     return obj;
   },
+  create(base) {
+    return PartyPresenceEvent.fromPartial(base != null ? base : {});
+  },
   fromPartial(object) {
-    const message = __spreadValues({}, basePartyPresenceEvent);
-    message.joins = [];
-    message.leaves = [];
-    if (object.party_id !== void 0 && object.party_id !== null) {
-      message.party_id = object.party_id;
-    } else {
-      message.party_id = "";
-    }
-    if (object.joins !== void 0 && object.joins !== null) {
-      for (const e of object.joins) {
-        message.joins.push(UserPresence.fromPartial(e));
-      }
-    }
-    if (object.leaves !== void 0 && object.leaves !== null) {
-      for (const e of object.leaves) {
-        message.leaves.push(UserPresence.fromPartial(e));
-      }
-    }
+    var _a, _b, _c;
+    const message = createBasePartyPresenceEvent();
+    message.party_id = (_a = object.party_id) != null ? _a : "";
+    message.joins = ((_b = object.joins) == null ? void 0 : _b.map((e) => UserPresence.fromPartial(e))) || [];
+    message.leaves = ((_c = object.leaves) == null ? void 0 : _c.map((e) => UserPresence.fromPartial(e))) || [];
     return message;
   }
 };
-var basePing = {};
+function createBasePing() {
+  return {};
+}
 var Ping = {
   encode(_, writer = import_minimal4.default.Writer.create()) {
     return writer;
@@ -8402,7 +6703,7 @@ var Ping = {
   decode(input, length) {
     const reader = input instanceof import_minimal4.default.Reader ? input : new import_minimal4.default.Reader(input);
     let end = length === void 0 ? reader.len : reader.pos + length;
-    const message = __spreadValues({}, basePing);
+    const message = createBasePing();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -8414,19 +6715,23 @@ var Ping = {
     return message;
   },
   fromJSON(_) {
-    const message = __spreadValues({}, basePing);
-    return message;
+    return {};
   },
   toJSON(_) {
     const obj = {};
     return obj;
   },
+  create(base) {
+    return Ping.fromPartial(base != null ? base : {});
+  },
   fromPartial(_) {
-    const message = __spreadValues({}, basePing);
+    const message = createBasePing();
     return message;
   }
 };
-var basePong = {};
+function createBasePong() {
+  return {};
+}
 var Pong = {
   encode(_, writer = import_minimal4.default.Writer.create()) {
     return writer;
@@ -8434,7 +6739,7 @@ var Pong = {
   decode(input, length) {
     const reader = input instanceof import_minimal4.default.Reader ? input : new import_minimal4.default.Reader(input);
     let end = length === void 0 ? reader.len : reader.pos + length;
-    const message = __spreadValues({}, basePong);
+    const message = createBasePong();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -8446,19 +6751,23 @@ var Pong = {
     return message;
   },
   fromJSON(_) {
-    const message = __spreadValues({}, basePong);
-    return message;
+    return {};
   },
   toJSON(_) {
     const obj = {};
     return obj;
   },
+  create(base) {
+    return Pong.fromPartial(base != null ? base : {});
+  },
   fromPartial(_) {
-    const message = __spreadValues({}, basePong);
+    const message = createBasePong();
     return message;
   }
 };
-var baseStatus = {};
+function createBaseStatus() {
+  return { presences: [] };
+}
 var Status = {
   encode(message, writer = import_minimal4.default.Writer.create()) {
     for (const v of message.presences) {
@@ -8469,8 +6778,7 @@ var Status = {
   decode(input, length) {
     const reader = input instanceof import_minimal4.default.Reader ? input : new import_minimal4.default.Reader(input);
     let end = length === void 0 ? reader.len : reader.pos + length;
-    const message = __spreadValues({}, baseStatus);
-    message.presences = [];
+    const message = createBaseStatus();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -8485,38 +6793,32 @@ var Status = {
     return message;
   },
   fromJSON(object) {
-    const message = __spreadValues({}, baseStatus);
-    message.presences = [];
-    if (object.presences !== void 0 && object.presences !== null) {
-      for (const e of object.presences) {
-        message.presences.push(UserPresence.fromJSON(e));
-      }
-    }
-    return message;
+    return {
+      presences: Array.isArray(object == null ? void 0 : object.presences) ? object.presences.map((e) => UserPresence.fromJSON(e)) : []
+    };
   },
   toJSON(message) {
     const obj = {};
     if (message.presences) {
-      obj.presences = message.presences.map(
-        (e) => e ? UserPresence.toJSON(e) : void 0
-      );
+      obj.presences = message.presences.map((e) => e ? UserPresence.toJSON(e) : void 0);
     } else {
       obj.presences = [];
     }
     return obj;
   },
+  create(base) {
+    return Status.fromPartial(base != null ? base : {});
+  },
   fromPartial(object) {
-    const message = __spreadValues({}, baseStatus);
-    message.presences = [];
-    if (object.presences !== void 0 && object.presences !== null) {
-      for (const e of object.presences) {
-        message.presences.push(UserPresence.fromPartial(e));
-      }
-    }
+    var _a;
+    const message = createBaseStatus();
+    message.presences = ((_a = object.presences) == null ? void 0 : _a.map((e) => UserPresence.fromPartial(e))) || [];
     return message;
   }
 };
-var baseStatusFollow = { user_ids: "", usernames: "" };
+function createBaseStatusFollow() {
+  return { user_ids: [], usernames: [] };
+}
 var StatusFollow = {
   encode(message, writer = import_minimal4.default.Writer.create()) {
     for (const v of message.user_ids) {
@@ -8530,9 +6832,7 @@ var StatusFollow = {
   decode(input, length) {
     const reader = input instanceof import_minimal4.default.Reader ? input : new import_minimal4.default.Reader(input);
     let end = length === void 0 ? reader.len : reader.pos + length;
-    const message = __spreadValues({}, baseStatusFollow);
-    message.user_ids = [];
-    message.usernames = [];
+    const message = createBaseStatusFollow();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -8550,20 +6850,10 @@ var StatusFollow = {
     return message;
   },
   fromJSON(object) {
-    const message = __spreadValues({}, baseStatusFollow);
-    message.user_ids = [];
-    message.usernames = [];
-    if (object.user_ids !== void 0 && object.user_ids !== null) {
-      for (const e of object.user_ids) {
-        message.user_ids.push(String(e));
-      }
-    }
-    if (object.usernames !== void 0 && object.usernames !== null) {
-      for (const e of object.usernames) {
-        message.usernames.push(String(e));
-      }
-    }
-    return message;
+    return {
+      user_ids: Array.isArray(object == null ? void 0 : object.user_ids) ? object.user_ids.map((e) => String(e)) : [],
+      usernames: Array.isArray(object == null ? void 0 : object.usernames) ? object.usernames.map((e) => String(e)) : []
+    };
   },
   toJSON(message) {
     const obj = {};
@@ -8579,24 +6869,20 @@ var StatusFollow = {
     }
     return obj;
   },
+  create(base) {
+    return StatusFollow.fromPartial(base != null ? base : {});
+  },
   fromPartial(object) {
-    const message = __spreadValues({}, baseStatusFollow);
-    message.user_ids = [];
-    message.usernames = [];
-    if (object.user_ids !== void 0 && object.user_ids !== null) {
-      for (const e of object.user_ids) {
-        message.user_ids.push(e);
-      }
-    }
-    if (object.usernames !== void 0 && object.usernames !== null) {
-      for (const e of object.usernames) {
-        message.usernames.push(e);
-      }
-    }
+    var _a, _b;
+    const message = createBaseStatusFollow();
+    message.user_ids = ((_a = object.user_ids) == null ? void 0 : _a.map((e) => e)) || [];
+    message.usernames = ((_b = object.usernames) == null ? void 0 : _b.map((e) => e)) || [];
     return message;
   }
 };
-var baseStatusPresenceEvent = {};
+function createBaseStatusPresenceEvent() {
+  return { joins: [], leaves: [] };
+}
 var StatusPresenceEvent = {
   encode(message, writer = import_minimal4.default.Writer.create()) {
     for (const v of message.joins) {
@@ -8610,9 +6896,7 @@ var StatusPresenceEvent = {
   decode(input, length) {
     const reader = input instanceof import_minimal4.default.Reader ? input : new import_minimal4.default.Reader(input);
     let end = length === void 0 ? reader.len : reader.pos + length;
-    const message = __spreadValues({}, baseStatusPresenceEvent);
-    message.joins = [];
-    message.leaves = [];
+    const message = createBaseStatusPresenceEvent();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -8630,57 +6914,39 @@ var StatusPresenceEvent = {
     return message;
   },
   fromJSON(object) {
-    const message = __spreadValues({}, baseStatusPresenceEvent);
-    message.joins = [];
-    message.leaves = [];
-    if (object.joins !== void 0 && object.joins !== null) {
-      for (const e of object.joins) {
-        message.joins.push(UserPresence.fromJSON(e));
-      }
-    }
-    if (object.leaves !== void 0 && object.leaves !== null) {
-      for (const e of object.leaves) {
-        message.leaves.push(UserPresence.fromJSON(e));
-      }
-    }
-    return message;
+    return {
+      joins: Array.isArray(object == null ? void 0 : object.joins) ? object.joins.map((e) => UserPresence.fromJSON(e)) : [],
+      leaves: Array.isArray(object == null ? void 0 : object.leaves) ? object.leaves.map((e) => UserPresence.fromJSON(e)) : []
+    };
   },
   toJSON(message) {
     const obj = {};
     if (message.joins) {
-      obj.joins = message.joins.map(
-        (e) => e ? UserPresence.toJSON(e) : void 0
-      );
+      obj.joins = message.joins.map((e) => e ? UserPresence.toJSON(e) : void 0);
     } else {
       obj.joins = [];
     }
     if (message.leaves) {
-      obj.leaves = message.leaves.map(
-        (e) => e ? UserPresence.toJSON(e) : void 0
-      );
+      obj.leaves = message.leaves.map((e) => e ? UserPresence.toJSON(e) : void 0);
     } else {
       obj.leaves = [];
     }
     return obj;
   },
+  create(base) {
+    return StatusPresenceEvent.fromPartial(base != null ? base : {});
+  },
   fromPartial(object) {
-    const message = __spreadValues({}, baseStatusPresenceEvent);
-    message.joins = [];
-    message.leaves = [];
-    if (object.joins !== void 0 && object.joins !== null) {
-      for (const e of object.joins) {
-        message.joins.push(UserPresence.fromPartial(e));
-      }
-    }
-    if (object.leaves !== void 0 && object.leaves !== null) {
-      for (const e of object.leaves) {
-        message.leaves.push(UserPresence.fromPartial(e));
-      }
-    }
+    var _a, _b;
+    const message = createBaseStatusPresenceEvent();
+    message.joins = ((_a = object.joins) == null ? void 0 : _a.map((e) => UserPresence.fromPartial(e))) || [];
+    message.leaves = ((_b = object.leaves) == null ? void 0 : _b.map((e) => UserPresence.fromPartial(e))) || [];
     return message;
   }
 };
-var baseStatusUnfollow = { user_ids: "" };
+function createBaseStatusUnfollow() {
+  return { user_ids: [] };
+}
 var StatusUnfollow = {
   encode(message, writer = import_minimal4.default.Writer.create()) {
     for (const v of message.user_ids) {
@@ -8691,8 +6957,7 @@ var StatusUnfollow = {
   decode(input, length) {
     const reader = input instanceof import_minimal4.default.Reader ? input : new import_minimal4.default.Reader(input);
     let end = length === void 0 ? reader.len : reader.pos + length;
-    const message = __spreadValues({}, baseStatusUnfollow);
-    message.user_ids = [];
+    const message = createBaseStatusUnfollow();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -8707,14 +6972,7 @@ var StatusUnfollow = {
     return message;
   },
   fromJSON(object) {
-    const message = __spreadValues({}, baseStatusUnfollow);
-    message.user_ids = [];
-    if (object.user_ids !== void 0 && object.user_ids !== null) {
-      for (const e of object.user_ids) {
-        message.user_ids.push(String(e));
-      }
-    }
-    return message;
+    return { user_ids: Array.isArray(object == null ? void 0 : object.user_ids) ? object.user_ids.map((e) => String(e)) : [] };
   },
   toJSON(message) {
     const obj = {};
@@ -8725,32 +6983,30 @@ var StatusUnfollow = {
     }
     return obj;
   },
+  create(base) {
+    return StatusUnfollow.fromPartial(base != null ? base : {});
+  },
   fromPartial(object) {
-    const message = __spreadValues({}, baseStatusUnfollow);
-    message.user_ids = [];
-    if (object.user_ids !== void 0 && object.user_ids !== null) {
-      for (const e of object.user_ids) {
-        message.user_ids.push(e);
-      }
-    }
+    var _a;
+    const message = createBaseStatusUnfollow();
+    message.user_ids = ((_a = object.user_ids) == null ? void 0 : _a.map((e) => e)) || [];
     return message;
   }
 };
-var baseStatusUpdate = {};
+function createBaseStatusUpdate() {
+  return { status: void 0 };
+}
 var StatusUpdate = {
   encode(message, writer = import_minimal4.default.Writer.create()) {
     if (message.status !== void 0) {
-      StringValue.encode(
-        { value: message.status },
-        writer.uint32(10).fork()
-      ).ldelim();
+      StringValue.encode({ value: message.status }, writer.uint32(10).fork()).ldelim();
     }
     return writer;
   },
   decode(input, length) {
     const reader = input instanceof import_minimal4.default.Reader ? input : new import_minimal4.default.Reader(input);
     let end = length === void 0 ? reader.len : reader.pos + length;
-    const message = __spreadValues({}, baseStatusUpdate);
+    const message = createBaseStatusUpdate();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -8765,30 +7021,26 @@ var StatusUpdate = {
     return message;
   },
   fromJSON(object) {
-    const message = __spreadValues({}, baseStatusUpdate);
-    if (object.status !== void 0 && object.status !== null) {
-      message.status = String(object.status);
-    } else {
-      message.status = void 0;
-    }
-    return message;
+    return { status: isSet4(object.status) ? String(object.status) : void 0 };
   },
   toJSON(message) {
     const obj = {};
     message.status !== void 0 && (obj.status = message.status);
     return obj;
   },
+  create(base) {
+    return StatusUpdate.fromPartial(base != null ? base : {});
+  },
   fromPartial(object) {
-    const message = __spreadValues({}, baseStatusUpdate);
-    if (object.status !== void 0 && object.status !== null) {
-      message.status = object.status;
-    } else {
-      message.status = void 0;
-    }
+    var _a;
+    const message = createBaseStatusUpdate();
+    message.status = (_a = object.status) != null ? _a : void 0;
     return message;
   }
 };
-var baseStream = { mode: 0, subject: "", subcontext: "", label: "" };
+function createBaseStream() {
+  return { mode: 0, subject: "", subcontext: "", label: "" };
+}
 var Stream = {
   encode(message, writer = import_minimal4.default.Writer.create()) {
     if (message.mode !== 0) {
@@ -8808,7 +7060,7 @@ var Stream = {
   decode(input, length) {
     const reader = input instanceof import_minimal4.default.Reader ? input : new import_minimal4.default.Reader(input);
     let end = length === void 0 ? reader.len : reader.pos + length;
-    const message = __spreadValues({}, baseStream);
+    const message = createBaseStream();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -8832,63 +7084,37 @@ var Stream = {
     return message;
   },
   fromJSON(object) {
-    const message = __spreadValues({}, baseStream);
-    if (object.mode !== void 0 && object.mode !== null) {
-      message.mode = Number(object.mode);
-    } else {
-      message.mode = 0;
-    }
-    if (object.subject !== void 0 && object.subject !== null) {
-      message.subject = String(object.subject);
-    } else {
-      message.subject = "";
-    }
-    if (object.subcontext !== void 0 && object.subcontext !== null) {
-      message.subcontext = String(object.subcontext);
-    } else {
-      message.subcontext = "";
-    }
-    if (object.label !== void 0 && object.label !== null) {
-      message.label = String(object.label);
-    } else {
-      message.label = "";
-    }
-    return message;
+    return {
+      mode: isSet4(object.mode) ? Number(object.mode) : 0,
+      subject: isSet4(object.subject) ? String(object.subject) : "",
+      subcontext: isSet4(object.subcontext) ? String(object.subcontext) : "",
+      label: isSet4(object.label) ? String(object.label) : ""
+    };
   },
   toJSON(message) {
     const obj = {};
-    message.mode !== void 0 && (obj.mode = message.mode);
+    message.mode !== void 0 && (obj.mode = Math.round(message.mode));
     message.subject !== void 0 && (obj.subject = message.subject);
     message.subcontext !== void 0 && (obj.subcontext = message.subcontext);
     message.label !== void 0 && (obj.label = message.label);
     return obj;
   },
+  create(base) {
+    return Stream.fromPartial(base != null ? base : {});
+  },
   fromPartial(object) {
-    const message = __spreadValues({}, baseStream);
-    if (object.mode !== void 0 && object.mode !== null) {
-      message.mode = object.mode;
-    } else {
-      message.mode = 0;
-    }
-    if (object.subject !== void 0 && object.subject !== null) {
-      message.subject = object.subject;
-    } else {
-      message.subject = "";
-    }
-    if (object.subcontext !== void 0 && object.subcontext !== null) {
-      message.subcontext = object.subcontext;
-    } else {
-      message.subcontext = "";
-    }
-    if (object.label !== void 0 && object.label !== null) {
-      message.label = object.label;
-    } else {
-      message.label = "";
-    }
+    var _a, _b, _c, _d;
+    const message = createBaseStream();
+    message.mode = (_a = object.mode) != null ? _a : 0;
+    message.subject = (_b = object.subject) != null ? _b : "";
+    message.subcontext = (_c = object.subcontext) != null ? _c : "";
+    message.label = (_d = object.label) != null ? _d : "";
     return message;
   }
 };
-var baseStreamData = { data: "", reliable: false };
+function createBaseStreamData() {
+  return { stream: void 0, sender: void 0, data: "", reliable: false };
+}
 var StreamData = {
   encode(message, writer = import_minimal4.default.Writer.create()) {
     if (message.stream !== void 0) {
@@ -8908,7 +7134,7 @@ var StreamData = {
   decode(input, length) {
     const reader = input instanceof import_minimal4.default.Reader ? input : new import_minimal4.default.Reader(input);
     let end = length === void 0 ? reader.len : reader.pos + length;
-    const message = __spreadValues({}, baseStreamData);
+    const message = createBaseStreamData();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -8932,28 +7158,12 @@ var StreamData = {
     return message;
   },
   fromJSON(object) {
-    const message = __spreadValues({}, baseStreamData);
-    if (object.stream !== void 0 && object.stream !== null) {
-      message.stream = Stream.fromJSON(object.stream);
-    } else {
-      message.stream = void 0;
-    }
-    if (object.sender !== void 0 && object.sender !== null) {
-      message.sender = UserPresence.fromJSON(object.sender);
-    } else {
-      message.sender = void 0;
-    }
-    if (object.data !== void 0 && object.data !== null) {
-      message.data = String(object.data);
-    } else {
-      message.data = "";
-    }
-    if (object.reliable !== void 0 && object.reliable !== null) {
-      message.reliable = Boolean(object.reliable);
-    } else {
-      message.reliable = false;
-    }
-    return message;
+    return {
+      stream: isSet4(object.stream) ? Stream.fromJSON(object.stream) : void 0,
+      sender: isSet4(object.sender) ? UserPresence.fromJSON(object.sender) : void 0,
+      data: isSet4(object.data) ? String(object.data) : "",
+      reliable: isSet4(object.reliable) ? Boolean(object.reliable) : false
+    };
   },
   toJSON(message) {
     const obj = {};
@@ -8963,32 +7173,22 @@ var StreamData = {
     message.reliable !== void 0 && (obj.reliable = message.reliable);
     return obj;
   },
+  create(base) {
+    return StreamData.fromPartial(base != null ? base : {});
+  },
   fromPartial(object) {
-    const message = __spreadValues({}, baseStreamData);
-    if (object.stream !== void 0 && object.stream !== null) {
-      message.stream = Stream.fromPartial(object.stream);
-    } else {
-      message.stream = void 0;
-    }
-    if (object.sender !== void 0 && object.sender !== null) {
-      message.sender = UserPresence.fromPartial(object.sender);
-    } else {
-      message.sender = void 0;
-    }
-    if (object.data !== void 0 && object.data !== null) {
-      message.data = object.data;
-    } else {
-      message.data = "";
-    }
-    if (object.reliable !== void 0 && object.reliable !== null) {
-      message.reliable = object.reliable;
-    } else {
-      message.reliable = false;
-    }
+    var _a, _b;
+    const message = createBaseStreamData();
+    message.stream = object.stream !== void 0 && object.stream !== null ? Stream.fromPartial(object.stream) : void 0;
+    message.sender = object.sender !== void 0 && object.sender !== null ? UserPresence.fromPartial(object.sender) : void 0;
+    message.data = (_a = object.data) != null ? _a : "";
+    message.reliable = (_b = object.reliable) != null ? _b : false;
     return message;
   }
 };
-var baseStreamPresenceEvent = {};
+function createBaseStreamPresenceEvent() {
+  return { stream: void 0, joins: [], leaves: [] };
+}
 var StreamPresenceEvent = {
   encode(message, writer = import_minimal4.default.Writer.create()) {
     if (message.stream !== void 0) {
@@ -9005,9 +7205,7 @@ var StreamPresenceEvent = {
   decode(input, length) {
     const reader = input instanceof import_minimal4.default.Reader ? input : new import_minimal4.default.Reader(input);
     let end = length === void 0 ? reader.len : reader.pos + length;
-    const message = __spreadValues({}, baseStreamPresenceEvent);
-    message.joins = [];
-    message.leaves = [];
+    const message = createBaseStreamPresenceEvent();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -9028,73 +7226,42 @@ var StreamPresenceEvent = {
     return message;
   },
   fromJSON(object) {
-    const message = __spreadValues({}, baseStreamPresenceEvent);
-    message.joins = [];
-    message.leaves = [];
-    if (object.stream !== void 0 && object.stream !== null) {
-      message.stream = Stream.fromJSON(object.stream);
-    } else {
-      message.stream = void 0;
-    }
-    if (object.joins !== void 0 && object.joins !== null) {
-      for (const e of object.joins) {
-        message.joins.push(UserPresence.fromJSON(e));
-      }
-    }
-    if (object.leaves !== void 0 && object.leaves !== null) {
-      for (const e of object.leaves) {
-        message.leaves.push(UserPresence.fromJSON(e));
-      }
-    }
-    return message;
+    return {
+      stream: isSet4(object.stream) ? Stream.fromJSON(object.stream) : void 0,
+      joins: Array.isArray(object == null ? void 0 : object.joins) ? object.joins.map((e) => UserPresence.fromJSON(e)) : [],
+      leaves: Array.isArray(object == null ? void 0 : object.leaves) ? object.leaves.map((e) => UserPresence.fromJSON(e)) : []
+    };
   },
   toJSON(message) {
     const obj = {};
     message.stream !== void 0 && (obj.stream = message.stream ? Stream.toJSON(message.stream) : void 0);
     if (message.joins) {
-      obj.joins = message.joins.map(
-        (e) => e ? UserPresence.toJSON(e) : void 0
-      );
+      obj.joins = message.joins.map((e) => e ? UserPresence.toJSON(e) : void 0);
     } else {
       obj.joins = [];
     }
     if (message.leaves) {
-      obj.leaves = message.leaves.map(
-        (e) => e ? UserPresence.toJSON(e) : void 0
-      );
+      obj.leaves = message.leaves.map((e) => e ? UserPresence.toJSON(e) : void 0);
     } else {
       obj.leaves = [];
     }
     return obj;
   },
+  create(base) {
+    return StreamPresenceEvent.fromPartial(base != null ? base : {});
+  },
   fromPartial(object) {
-    const message = __spreadValues({}, baseStreamPresenceEvent);
-    message.joins = [];
-    message.leaves = [];
-    if (object.stream !== void 0 && object.stream !== null) {
-      message.stream = Stream.fromPartial(object.stream);
-    } else {
-      message.stream = void 0;
-    }
-    if (object.joins !== void 0 && object.joins !== null) {
-      for (const e of object.joins) {
-        message.joins.push(UserPresence.fromPartial(e));
-      }
-    }
-    if (object.leaves !== void 0 && object.leaves !== null) {
-      for (const e of object.leaves) {
-        message.leaves.push(UserPresence.fromPartial(e));
-      }
-    }
+    var _a, _b;
+    const message = createBaseStreamPresenceEvent();
+    message.stream = object.stream !== void 0 && object.stream !== null ? Stream.fromPartial(object.stream) : void 0;
+    message.joins = ((_a = object.joins) == null ? void 0 : _a.map((e) => UserPresence.fromPartial(e))) || [];
+    message.leaves = ((_b = object.leaves) == null ? void 0 : _b.map((e) => UserPresence.fromPartial(e))) || [];
     return message;
   }
 };
-var baseUserPresence = {
-  user_id: "",
-  session_id: "",
-  username: "",
-  persistence: false
-};
+function createBaseUserPresence() {
+  return { user_id: "", session_id: "", username: "", persistence: false, status: void 0 };
+}
 var UserPresence = {
   encode(message, writer = import_minimal4.default.Writer.create()) {
     if (message.user_id !== "") {
@@ -9110,17 +7277,14 @@ var UserPresence = {
       writer.uint32(32).bool(message.persistence);
     }
     if (message.status !== void 0) {
-      StringValue.encode(
-        { value: message.status },
-        writer.uint32(42).fork()
-      ).ldelim();
+      StringValue.encode({ value: message.status }, writer.uint32(42).fork()).ldelim();
     }
     return writer;
   },
   decode(input, length) {
     const reader = input instanceof import_minimal4.default.Reader ? input : new import_minimal4.default.Reader(input);
     let end = length === void 0 ? reader.len : reader.pos + length;
-    const message = __spreadValues({}, baseUserPresence);
+    const message = createBaseUserPresence();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -9147,33 +7311,13 @@ var UserPresence = {
     return message;
   },
   fromJSON(object) {
-    const message = __spreadValues({}, baseUserPresence);
-    if (object.user_id !== void 0 && object.user_id !== null) {
-      message.user_id = String(object.user_id);
-    } else {
-      message.user_id = "";
-    }
-    if (object.session_id !== void 0 && object.session_id !== null) {
-      message.session_id = String(object.session_id);
-    } else {
-      message.session_id = "";
-    }
-    if (object.username !== void 0 && object.username !== null) {
-      message.username = String(object.username);
-    } else {
-      message.username = "";
-    }
-    if (object.persistence !== void 0 && object.persistence !== null) {
-      message.persistence = Boolean(object.persistence);
-    } else {
-      message.persistence = false;
-    }
-    if (object.status !== void 0 && object.status !== null) {
-      message.status = String(object.status);
-    } else {
-      message.status = void 0;
-    }
-    return message;
+    return {
+      user_id: isSet4(object.user_id) ? String(object.user_id) : "",
+      session_id: isSet4(object.session_id) ? String(object.session_id) : "",
+      username: isSet4(object.username) ? String(object.username) : "",
+      persistence: isSet4(object.persistence) ? Boolean(object.persistence) : false,
+      status: isSet4(object.status) ? String(object.status) : void 0
+    };
   },
   toJSON(message) {
     const obj = {};
@@ -9184,63 +7328,57 @@ var UserPresence = {
     message.status !== void 0 && (obj.status = message.status);
     return obj;
   },
+  create(base) {
+    return UserPresence.fromPartial(base != null ? base : {});
+  },
   fromPartial(object) {
-    const message = __spreadValues({}, baseUserPresence);
-    if (object.user_id !== void 0 && object.user_id !== null) {
-      message.user_id = object.user_id;
-    } else {
-      message.user_id = "";
-    }
-    if (object.session_id !== void 0 && object.session_id !== null) {
-      message.session_id = object.session_id;
-    } else {
-      message.session_id = "";
-    }
-    if (object.username !== void 0 && object.username !== null) {
-      message.username = object.username;
-    } else {
-      message.username = "";
-    }
-    if (object.persistence !== void 0 && object.persistence !== null) {
-      message.persistence = object.persistence;
-    } else {
-      message.persistence = false;
-    }
-    if (object.status !== void 0 && object.status !== null) {
-      message.status = object.status;
-    } else {
-      message.status = void 0;
-    }
+    var _a, _b, _c, _d, _e;
+    const message = createBaseUserPresence();
+    message.user_id = (_a = object.user_id) != null ? _a : "";
+    message.session_id = (_b = object.session_id) != null ? _b : "";
+    message.username = (_c = object.username) != null ? _c : "";
+    message.persistence = (_d = object.persistence) != null ? _d : false;
+    message.status = (_e = object.status) != null ? _e : void 0;
     return message;
   }
 };
-var globalThis3 = (() => {
-  if (typeof globalThis3 !== "undefined")
-    return globalThis3;
-  if (typeof self !== "undefined")
+var tsProtoGlobalThis4 = (() => {
+  if (typeof globalThis !== "undefined") {
+    return globalThis;
+  }
+  if (typeof self !== "undefined") {
     return self;
-  if (typeof window !== "undefined")
+  }
+  if (typeof window !== "undefined") {
     return window;
-  if (typeof global !== "undefined")
+  }
+  if (typeof global !== "undefined") {
     return global;
+  }
   throw "Unable to locate global object";
 })();
-var atob2 = globalThis3.atob || ((b64) => globalThis3.Buffer.from(b64, "base64").toString("binary"));
 function bytesFromBase64(b64) {
-  const bin = atob2(b64);
-  const arr = new Uint8Array(bin.length);
-  for (let i = 0; i < bin.length; ++i) {
-    arr[i] = bin.charCodeAt(i);
+  if (tsProtoGlobalThis4.Buffer) {
+    return Uint8Array.from(tsProtoGlobalThis4.Buffer.from(b64, "base64"));
+  } else {
+    const bin = tsProtoGlobalThis4.atob(b64);
+    const arr = new Uint8Array(bin.length);
+    for (let i = 0; i < bin.length; ++i) {
+      arr[i] = bin.charCodeAt(i);
+    }
+    return arr;
   }
-  return arr;
 }
-var btoa2 = globalThis3.btoa || ((bin) => globalThis3.Buffer.from(bin, "binary").toString("base64"));
 function base64FromBytes(arr) {
-  const bin = [];
-  for (let i = 0; i < arr.byteLength; ++i) {
-    bin.push(String.fromCharCode(arr[i]));
+  if (tsProtoGlobalThis4.Buffer) {
+    return tsProtoGlobalThis4.Buffer.from(arr).toString("base64");
+  } else {
+    const bin = [];
+    arr.forEach((byte) => {
+      bin.push(String.fromCharCode(byte));
+    });
+    return tsProtoGlobalThis4.btoa(bin.join(""));
   }
-  return btoa2(bin.join(""));
 }
 function toTimestamp2(date) {
   const seconds = date.getTime() / 1e3;
@@ -9263,13 +7401,19 @@ function fromJsonTimestamp2(o) {
 }
 function longToNumber2(long) {
   if (long.gt(Number.MAX_SAFE_INTEGER)) {
-    throw new globalThis3.Error("Value is larger than Number.MAX_SAFE_INTEGER");
+    throw new tsProtoGlobalThis4.Error("Value is larger than Number.MAX_SAFE_INTEGER");
   }
   return long.toNumber();
 }
-if (import_minimal4.default.util.Long !== import_long2.default) {
-  import_minimal4.default.util.Long = import_long2.default;
+if (import_minimal4.default.util.Long !== import_long4.default) {
+  import_minimal4.default.util.Long = import_long4.default;
   import_minimal4.default.configure();
+}
+function isObject(value) {
+  return typeof value === "object" && value !== null;
+}
+function isSet4(value) {
+  return value !== null && value !== void 0;
 }
 
 // web_socket_adapter_pb.ts

@@ -25,6 +25,16 @@ import {
   ApiAccountGameCenter,
   ApiAccountSteam,
   ApiChannelMessageList,
+  ApiChannelDescList,
+  ApiChannelDescription,
+  ApiCreateChannelDescRequest,
+  ApiClanDescList,
+  ApiCreateClanDescRequest,
+  ApiClanDesc,
+  ApiCategoryDesc,
+  ApiCategoryDescList,
+  ApiCreateCategoryDescRequest,
+  ApiUpdateCategoryDescRequest,
   ApiCreateGroupRequest,
   ApiDeleteStorageObjectsRequest,
   ApiEvent,
@@ -441,6 +451,53 @@ export interface NotificationList {
   notifications?: Array<Notification>;
 }
 
+/** Update fields in a given channel. */
+export interface ApiUpdateChannelDescRequest {
+  /** The ID of the channel to update. */
+  channel_id: string;
+  /** The channel lable */
+  channel_lable:
+    | string
+    | undefined;
+  /** The category of channel */
+  category_id: string | undefined;
+}
+
+/** Add users to a channel. */
+export interface ApiAddChannelUsersRequest {
+  /** The channel to add users to. */
+  channel_id: string;
+  /** The users to add. */
+  user_ids: string[];
+}
+
+/** Kick a set of users from a channel. */
+export interface ApiKickChannelUsersRequest {
+  /** The channel ID to kick from. */
+  channel_id: string;
+  /** The users to kick. */
+  user_ids: string[];
+}
+
+/** Leave a channel. */
+export interface ApiLeaveChannelRequest {
+  /** The channel ID to leave. */
+  channel_id: string;
+}
+
+/** Update Clan information */
+export interface ApiUpdateClanDescRequest {
+  clan_id: string;
+  /** Clan creator */
+  creator_id: string;
+  /** Clan name */
+  clan_name: string;
+  /** Clan logo */
+  logo: string;
+  /** Clan banner */
+  banner: string;
+}
+
 /** A client for Nakama server. */
 export class Client {
 
@@ -690,6 +747,42 @@ export class Client {
         open: response.open,
         update_time: response.update_time
       });
+    });
+  }
+
+  /** Create a channel within clan */
+  async createChannelDesc(session: Session, request: ApiCreateChannelDescRequest): Promise<ApiChannelDescription> {
+    if (this.autoRefreshSession && session.refresh_token &&
+        session.isexpired((Date.now() + this.expiredTimespanMs)/1000)) {
+        await this.sessionRefresh(session);
+    }
+
+    return this.apiClient.createChannelDesc(session.token, request).then((response: ApiChannelDescription) => {
+      return Promise.resolve(response);
+    });
+  }
+
+  /** Create a clan */
+  async createClanDesc(session: Session, request: ApiCreateClanDescRequest): Promise<ApiClanDesc> {
+    if (this.autoRefreshSession && session.refresh_token &&
+        session.isexpired((Date.now() + this.expiredTimespanMs)/1000)) {
+        await this.sessionRefresh(session);
+    }
+
+    return this.apiClient.createClanDesc(session.token, request).then((response: ApiClanDesc) => {
+      return Promise.resolve(response);
+    });
+  }
+
+  /**  */
+  async createCategoryDesc(session: Session, request: ApiCreateCategoryDescRequest): Promise<ApiCategoryDesc> {
+    if (this.autoRefreshSession && session.refresh_token &&
+        session.isexpired((Date.now() + this.expiredTimespanMs)/1000)) {
+        await this.sessionRefresh(session);
+    }
+
+    return this.apiClient.createCategoryDesc(session.token, request).then((response: ApiCategoryDesc) => {
+      return Promise.resolve(response);
     });
   }
 
@@ -1049,6 +1142,72 @@ export class Client {
           update_time: ug!.update_time
         });
       });
+      return Promise.resolve(result);
+    });
+  }
+
+  /** List channels. */
+  async listChannelDescs(session: Session, limit?: number, state?:number, cursor?: string): Promise<ApiChannelDescList> {
+    if (this.autoRefreshSession && session.refresh_token &&
+        session.isexpired((Date.now() + this.expiredTimespanMs)/1000)) {
+        await this.sessionRefresh(session);
+    }
+
+    return this.apiClient.listChannelDescs(session.token, limit, state, cursor).then((response: ApiChannelDescList) => {
+      var result: ApiChannelDescList = {
+        channeldesc: [],
+        next_cursor: response.next_cursor,
+        prev_cursor: response.prev_cursor,
+        cacheable_cursor: response.cacheable_cursor
+      };
+
+      if (response.channeldesc == null) {
+        return Promise.resolve(result);
+      }
+      
+      result.channeldesc = response.channeldesc;
+      return Promise.resolve(result);
+    });
+  }
+
+  /** List clans */
+  async listClanDescs(session: Session, limit?: number, state?:number, cursor?: string): Promise<ApiClanDescList> {
+    if (this.autoRefreshSession && session.refresh_token &&
+        session.isexpired((Date.now() + this.expiredTimespanMs)/1000)) {
+        await this.sessionRefresh(session);
+    }
+
+    return this.apiClient.listClanDescs(session.token, limit, state, cursor).then((response: ApiClanDescList) => {
+      var result: ApiClanDescList = {
+        clandesc: [],
+      };
+
+      if (response.clandesc == null) {
+        return Promise.resolve(result);
+      }
+      
+      result.clandesc = response.clandesc;
+      return Promise.resolve(result);
+    });
+  }
+
+  /** List categories. */
+  async listCategoryDescs(session: Session, clanId:string, creatorId?:string, categoryName?:string,): Promise<ApiCategoryDescList> {
+    if (this.autoRefreshSession && session.refresh_token &&
+        session.isexpired((Date.now() + this.expiredTimespanMs)/1000)) {
+        await this.sessionRefresh(session);
+    }
+
+    return this.apiClient.listCategoryDescs(session.token, clanId, creatorId, categoryName).then((response: ApiCategoryDescList) => {
+      var result: ApiCategoryDescList = {
+        categorydesc: [],
+      };
+
+      if (response.categorydesc == null) {
+        return Promise.resolve(result);
+      }
+      
+      result.categorydesc = response.categorydesc;
       return Promise.resolve(result);
     });
   }
@@ -1777,6 +1936,43 @@ export class Client {
       return response !== undefined;
     });
   }
+
+  /** Update fields in a given channel */
+  async updateChannelDesc(session: Session, channelId: string, request: ApiUpdateChannelDescRequest): Promise<boolean> {
+    if (this.autoRefreshSession && session.refresh_token &&
+        session.isexpired((Date.now() + this.expiredTimespanMs)/1000)) {
+        await this.sessionRefresh(session);
+    }
+
+    return this.apiClient.updateChannelDesc(session.token, channelId, request).then((response: any) => {
+      return response !== undefined;
+    });
+  }
+
+  /** Update fields in a given clan. */
+  async updateClanDesc(session: Session, clanId: string, request: ApiUpdateClanDescRequest): Promise<boolean> {
+    if (this.autoRefreshSession && session.refresh_token &&
+        session.isexpired((Date.now() + this.expiredTimespanMs)/1000)) {
+        await this.sessionRefresh(session);
+    }
+
+    return this.apiClient.updateClanDesc(session.token, clanId, request?.creator_id, request?.clan_name, request?.logo, request?.banner).then((response: any) => {
+      return response !== undefined;
+    });
+  }
+
+  /** Update fields in a given category. */
+  async updateCategory(session: Session, request: ApiUpdateCategoryDescRequest): Promise<boolean> {
+    if (this.autoRefreshSession && session.refresh_token &&
+        session.isexpired((Date.now() + this.expiredTimespanMs)/1000)) {
+        await this.sessionRefresh(session);
+    }
+
+    return this.apiClient.updateCategory(session.token, request).then((response: any) => {
+      return response !== undefined;
+    });
+  }
+  
 
   /** Validate an Apple IAP receipt. */
   async validatePurchaseApple(session: Session, receipt?: string)  : Promise<ApiValidatePurchaseResponse> {
