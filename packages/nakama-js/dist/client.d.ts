@@ -422,6 +422,8 @@ export declare class Client {
     constructor(serverkey?: string, host?: string, port?: string, useSSL?: boolean, timeout?: number, autoRefreshSession?: boolean);
     /** Add users to a group, or accept their join requests. */
     addGroupUsers(session: Session, groupId: string, ids?: Array<string>): Promise<boolean>;
+    /** Add users to a channel, or accept their join requests. */
+    addChannelUsers(session: Session, channelId: string, ids?: Array<string>): Promise<boolean>;
     /** Add friends by ID or username to a user's account. */
     addFriends(session: Session, ids?: Array<string>, usernames?: Array<string>): Promise<boolean>;
     /** Authenticate a user with an Apple ID against the server. */
@@ -460,6 +462,12 @@ export declare class Client {
     deleteFriends(session: Session, ids?: Array<string>, usernames?: Array<string>): Promise<boolean>;
     /** Delete a group the user is part of and has permissions to delete. */
     deleteGroup(session: Session, groupId: string): Promise<boolean>;
+    /** Delete a channel by ID. */
+    deleteChannelDesc(session: Session, channelId: string): Promise<boolean>;
+    /** Delete a clan desc by ID. */
+    deleteClanDesc(session: Session, clanDescId: string): Promise<boolean>;
+    /** Delete a category by ID. */
+    deleteCategoryDesc(session: Session, creatorId: string): Promise<boolean>;
     /** Delete one or more notifications */
     deleteNotifications(session: Session, ids?: Array<string>): Promise<boolean>;
     /** Delete one or more storage objects */
@@ -481,6 +489,8 @@ export declare class Client {
     joinTournament(session: Session, tournamentId: string): Promise<boolean>;
     /** Kick users from a group, or decline their join requests. */
     kickGroupUsers(session: Session, groupId: string, ids?: Array<string>): Promise<boolean>;
+    /** Kick users from a channel, or decline their join requests. */
+    kickChannelUsers(session: Session, channelId: string, ids?: Array<string>): Promise<boolean>;
     /** Leave a group the user is part of. */
     leaveGroup(session: Session, groupId: string): Promise<boolean>;
     /** List a channel's message history. */

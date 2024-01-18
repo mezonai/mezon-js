@@ -4251,6 +4251,17 @@ var Client = class {
       });
     });
   }
+  /** Add users to a channel, or accept their join requests. */
+  addChannelUsers(session, channelId, ids) {
+    return __async(this, null, function* () {
+      if (this.autoRefreshSession && session.refresh_token && session.isexpired((Date.now() + this.expiredTimespanMs) / 1e3)) {
+        yield this.sessionRefresh(session);
+      }
+      return this.apiClient.addChannelUsers(session.token, channelId, ids).then((response) => {
+        return response !== void 0;
+      });
+    });
+  }
   /** Add friends by ID or username to a user's account. */
   addFriends(session, ids, usernames) {
     return __async(this, null, function* () {
@@ -4499,6 +4510,39 @@ var Client = class {
       });
     });
   }
+  /** Delete a channel by ID. */
+  deleteChannelDesc(session, channelId) {
+    return __async(this, null, function* () {
+      if (this.autoRefreshSession && session.refresh_token && session.isexpired((Date.now() + this.expiredTimespanMs) / 1e3)) {
+        yield this.sessionRefresh(session);
+      }
+      return this.apiClient.deleteChannelDesc(session.token, channelId).then((response) => {
+        return response !== void 0;
+      });
+    });
+  }
+  /** Delete a clan desc by ID. */
+  deleteClanDesc(session, clanDescId) {
+    return __async(this, null, function* () {
+      if (this.autoRefreshSession && session.refresh_token && session.isexpired((Date.now() + this.expiredTimespanMs) / 1e3)) {
+        yield this.sessionRefresh(session);
+      }
+      return this.apiClient.deleteClanDesc(session.token, clanDescId).then((response) => {
+        return response !== void 0;
+      });
+    });
+  }
+  /** Delete a category by ID. */
+  deleteCategoryDesc(session, creatorId) {
+    return __async(this, null, function* () {
+      if (this.autoRefreshSession && session.refresh_token && session.isexpired((Date.now() + this.expiredTimespanMs) / 1e3)) {
+        yield this.sessionRefresh(session);
+      }
+      return this.apiClient.deleteCategoryDesc(session.token, creatorId).then((response) => {
+        return response !== void 0;
+      });
+    });
+  }
   /** Delete one or more notifications */
   deleteNotifications(session, ids) {
     return __async(this, null, function* () {
@@ -4639,6 +4683,17 @@ var Client = class {
         yield this.sessionRefresh(session);
       }
       return this.apiClient.kickGroupUsers(session.token, groupId, ids).then((response) => {
+        return Promise.resolve(response != void 0);
+      });
+    });
+  }
+  /** Kick users from a channel, or decline their join requests. */
+  kickChannelUsers(session, channelId, ids) {
+    return __async(this, null, function* () {
+      if (this.autoRefreshSession && session.refresh_token && session.isexpired((Date.now() + this.expiredTimespanMs) / 1e3)) {
+        yield this.sessionRefresh(session);
+      }
+      return this.apiClient.kickChannelUsers(session.token, channelId, ids).then((response) => {
         return Promise.resolve(response != void 0);
       });
     });
