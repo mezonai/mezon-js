@@ -1,6 +1,32 @@
 import _m0 from "protobufjs/minimal";
 export declare const protobufPackage = "nakama.api";
 /** The Nakama server RPC protocol for games and apps. */
+/** Validation Provider, */
+export declare enum StoreProvider {
+    /** APPLE_APP_STORE - Apple App Store */
+    APPLE_APP_STORE = 0,
+    /** GOOGLE_PLAY_STORE - Google Play Store */
+    GOOGLE_PLAY_STORE = 1,
+    /** HUAWEI_APP_GALLERY - Huawei App Gallery */
+    HUAWEI_APP_GALLERY = 2,
+    /** FACEBOOK_INSTANT_STORE - Facebook Instant Store */
+    FACEBOOK_INSTANT_STORE = 3,
+    UNRECOGNIZED = -1
+}
+export declare function storeProviderFromJSON(object: any): StoreProvider;
+export declare function storeProviderToJSON(object: StoreProvider): string;
+/** Environment where a purchase/subscription took place, */
+export declare enum StoreEnvironment {
+    /** UNKNOWN - Unknown environment. */
+    UNKNOWN = 0,
+    /** SANDBOX - Sandbox/test environment. */
+    SANDBOX = 1,
+    /** PRODUCTION - Production environment. */
+    PRODUCTION = 2,
+    UNRECOGNIZED = -1
+}
+export declare function storeEnvironmentFromJSON(object: any): StoreEnvironment;
+export declare function storeEnvironmentToJSON(object: StoreEnvironment): string;
 /** Operator that can be used to override the one set in the leaderboard. */
 export declare enum Operator {
     /** NO_OVERRIDE - Do not override the leaderboard operator. */
@@ -29,9 +55,9 @@ export interface Account {
     devices: AccountDevice[];
     /** The custom id in the user's account. */
     custom_id: string;
-    /** The UNIX time when the user's email was verified. */
+    /** The UNIX time (for gRPC clients) or ISO string (for REST clients) when the user's email was verified. */
     verify_time: Date | undefined;
-    /** The UNIX time when the user's account was disabled/banned. */
+    /** The UNIX time (for gRPC clients) or ISO string (for REST clients) when the user's account was disabled/banned. */
     disable_time: Date | undefined;
 }
 /** Obtain a new authentication token using a refresh token. */
@@ -311,6 +337,8 @@ export interface BlockFriendsRequest {
 }
 /** A message sent on a channel. */
 export interface ChannelMessage {
+    /** The clan this message belong to. */
+    clan_id: string;
     /** The channel this message belongs to. */
     channel_id: string;
     /** The unique ID of this message. */
@@ -323,9 +351,9 @@ export interface ChannelMessage {
     username: string;
     /** The content payload. */
     content: string;
-    /** The UNIX time when the message was created. */
+    /** The UNIX time (for gRPC clients) or ISO string (for REST clients) when the message was created. */
     create_time: Date | undefined;
-    /** The UNIX time when the message was last updated. */
+    /** The UNIX time (for gRPC clients) or ISO string (for REST clients) when the message was last updated. */
     update_time: Date | undefined;
     /** True if the message was persisted to the channel's history, false otherwise. */
     persistent: boolean | undefined;
@@ -385,6 +413,11 @@ export interface DeleteLeaderboardRecordRequest {
 export interface DeleteNotificationsRequest {
     /** The id of notifications. */
     ids: string[];
+}
+/** Delete a leaderboard record. */
+export interface DeleteTournamentRecordRequest {
+    /** The tournament ID to delete from. */
+    tournament_id: string;
 }
 /** Storage objects to delete. */
 export interface DeleteStorageObjectId {
@@ -456,6 +489,11 @@ export interface GetUsersRequest {
     /** The Facebook ID of a user. */
     facebook_ids: string[];
 }
+/** Fetch a subscription by product id. */
+export interface GetSubscriptionRequest {
+    /** Product id of the subscription */
+    product_id: string;
+}
 /** A group in the server. */
 export interface Group {
     /** The id of a group. */
@@ -478,9 +516,9 @@ export interface Group {
     edge_count: number;
     /** The maximum number of members allowed. */
     max_count: number;
-    /** The UNIX time when the group was created. */
+    /** The UNIX time (for gRPC clients) or ISO string (for REST clients) when the group was created. */
     create_time: Date | undefined;
-    /** The UNIX time when the group was last updated. */
+    /** The UNIX time (for gRPC clients) or ISO string (for REST clients) when the group was last updated. */
     update_time: Date | undefined;
 }
 /** One or more groups returned from a listing operation. */
@@ -563,9 +601,9 @@ export interface Leaderboard {
     next_reset: number;
     /** Additional information stored as a JSON object. */
     metadata: string;
-    /** The UNIX time when the leaderboard was created. */
+    /** The UNIX time (for gRPC clients) or ISO string (for REST clients) when the leaderboard was created. */
     create_time: Date | undefined;
-    /** Wether the leaderboard was created authoritatively or not. */
+    /** Whether the leaderboard was created authoritatively or not. */
     authoritative: boolean;
 }
 /** A list of leaderboards */
@@ -591,11 +629,11 @@ export interface LeaderboardRecord {
     num_score: number;
     /** Metadata. */
     metadata: string;
-    /** The UNIX time when the leaderboard record was created. */
+    /** The UNIX time (for gRPC clients) or ISO string (for REST clients) when the leaderboard record was created. */
     create_time: Date | undefined;
-    /** The UNIX time when the leaderboard record was updated. */
+    /** The UNIX time (for gRPC clients) or ISO string (for REST clients) when the leaderboard record was updated. */
     update_time: Date | undefined;
-    /** The UNIX time when the leaderboard record expires. */
+    /** The UNIX time (for gRPC clients) or ISO string (for REST clients) when the leaderboard record expires. */
     expiry_time: Date | undefined;
     /** The rank of this record. */
     rank: number;
@@ -612,6 +650,8 @@ export interface LeaderboardRecordList {
     next_cursor: string;
     /** The cursor to send when retrieving the previous page, if any. */
     prev_cursor: string;
+    /** The total number of ranks available. */
+    rank_count: number;
 }
 /** Leave a group. */
 export interface LeaveGroupRequest {
@@ -688,6 +728,8 @@ export interface ListLeaderboardRecordsAroundOwnerRequest {
     owner_id: string;
     /** Expiry in seconds (since epoch) to begin fetching records from. */
     expiry: number | undefined;
+    /** A next or previous page cursor. */
+    cursor: string;
 }
 /** List leaderboard records from a given leaderboard. */
 export interface ListLeaderboardRecordsRequest {
@@ -735,6 +777,13 @@ export interface ListStorageObjectsRequest {
     /** The cursor to page through results from. */
     cursor: string;
 }
+/** List user subscriptions. */
+export interface ListSubscriptionsRequest {
+    /** Max number of results per page */
+    limit: number | undefined;
+    /** Cursor to retrieve a page of records from */
+    cursor: string;
+}
 /** List tournament records from a given tournament around the owner. */
 export interface ListTournamentRecordsAroundOwnerRequest {
     /** The ID of the tournament to list for. */
@@ -745,6 +794,8 @@ export interface ListTournamentRecordsAroundOwnerRequest {
     owner_id: string;
     /** Expiry in seconds (since epoch) to begin fetching records from. */
     expiry: number | undefined;
+    /** A next or previous page cursor. */
+    cursor: string;
 }
 /** List tournament records from a given tournament. */
 export interface ListTournamentRecordsRequest {
@@ -817,7 +868,7 @@ export interface Notification {
     code: number;
     /** ID of the sender, if a user. Otherwise 'null'. */
     sender_id: string;
-    /** The UNIX time when the notification was created. */
+    /** The UNIX time (for gRPC clients) or ISO string (for REST clients) when the notification was created. */
     create_time: Date | undefined;
     /** True if this notification was persisted to the database. */
     persistent: boolean;
@@ -891,9 +942,9 @@ export interface StorageObject {
     permission_read: number;
     /** The write access permissions for the object. */
     permission_write: number;
-    /** The UNIX time when the object was created. */
+    /** The UNIX time (for gRPC clients) or ISO string (for REST clients) when the object was created. */
     create_time: Date | undefined;
-    /** The UNIX time when the object was last updated. */
+    /** The UNIX time (for gRPC clients) or ISO string (for REST clients) when the object was last updated. */
     update_time: Date | undefined;
 }
 /** A storage acknowledgement. */
@@ -906,6 +957,10 @@ export interface StorageObjectAck {
     version: string;
     /** The owner of the object. */
     user_id: string;
+    /** The UNIX time (for gRPC clients) or ISO string (for REST clients) when the object was created. */
+    create_time: Date | undefined;
+    /** The UNIX time (for gRPC clients) or ISO string (for REST clients) when the object was last updated. */
+    update_time: Date | undefined;
 }
 /** Batch of acknowledgements for the storage object write. */
 export interface StorageObjectAcks {
@@ -950,11 +1005,11 @@ export interface Tournament {
     next_reset: number;
     /** Additional information stored as a JSON object. */
     metadata: string;
-    /** The UNIX time when the tournament was created. */
+    /** The UNIX time (for gRPC clients) or ISO string (for REST clients) when the tournament was created. */
     create_time: Date | undefined;
-    /** The UNIX time when the tournament will start. */
+    /** The UNIX time (for gRPC clients) or ISO string (for REST clients) when the tournament will start. */
     start_time: Date | undefined;
-    /** The UNIX time when the tournament will be stopped. */
+    /** The UNIX time (for gRPC clients) or ISO string (for REST clients) when the tournament will be stopped. */
     end_time: Date | undefined;
     /** Duration of the tournament in seconds. */
     duration: number;
@@ -964,6 +1019,8 @@ export interface Tournament {
     prev_reset: number;
     /** Operator. */
     operator: Operator;
+    /** Whether the leaderboard was created authoritatively or not. */
+    authoritative: boolean;
 }
 /** A list of tournaments. */
 export interface TournamentList {
@@ -982,6 +1039,8 @@ export interface TournamentRecordList {
     next_cursor: string;
     /** The cursor to send when retrieving the previous page (optional). */
     prev_cursor: string;
+    /** The total number of ranks available. */
+    rank_count: number;
 }
 /** Update a user's account details. */
 export interface UpdateAccountRequest {
@@ -1013,6 +1072,11 @@ export interface UpdateGroupRequest {
     /** Open is true if anyone should be allowed to join, or false if joins must be approved by a group admin. */
     open: boolean | undefined;
 }
+export interface UpdateCategoryDescRequest {
+    /** The ID of the group to update. */
+    category_id: string;
+    category_name: string;
+}
 /** A user in the server. */
 export interface User {
     /** The id of the user's account. */
@@ -1043,9 +1107,9 @@ export interface User {
     online: boolean;
     /** Number of related edges to this user. */
     edge_count: number;
-    /** The UNIX time when the user was created. */
+    /** The UNIX time (for gRPC clients) or ISO string (for REST clients) when the user was created. */
     create_time: Date | undefined;
-    /** The UNIX time when the user was last updated. */
+    /** The UNIX time (for gRPC clients) or ISO string (for REST clients) when the user was last updated. */
     update_time: Date | undefined;
     /** The Facebook Instant Game ID in the user's account. */
     facebook_instant_game_id: string;
@@ -1089,11 +1153,29 @@ export interface Users {
 export interface ValidatePurchaseAppleRequest {
     /** Base64 encoded Apple receipt data payload. */
     receipt: string;
+    /** Persist the purchase */
+    persist: boolean | undefined;
+}
+/** Apple Subscription validation request */
+export interface ValidateSubscriptionAppleRequest {
+    /** Base64 encoded Apple receipt data payload. */
+    receipt: string;
+    /** Persist the subscription. */
+    persist: boolean | undefined;
 }
 /** Google IAP Purchase validation request */
 export interface ValidatePurchaseGoogleRequest {
     /** JSON encoded Google purchase payload. */
     purchase: string;
+    /** Persist the purchase */
+    persist: boolean | undefined;
+}
+/** Google Subscription validation request */
+export interface ValidateSubscriptionGoogleRequest {
+    /** JSON encoded Google purchase payload. */
+    receipt: string;
+    /** Persist the subscription. */
+    persist: boolean | undefined;
 }
 /** Huawei IAP Purchase validation request */
 export interface ValidatePurchaseHuaweiRequest {
@@ -1101,56 +1183,77 @@ export interface ValidatePurchaseHuaweiRequest {
     purchase: string;
     /** InAppPurchaseData signature. */
     signature: string;
+    /** Persist the purchase */
+    persist: boolean | undefined;
+}
+/** Facebook Instant IAP Purchase validation request */
+export interface ValidatePurchaseFacebookInstantRequest {
+    /** Base64 encoded Facebook Instant signedRequest receipt data payload. */
+    signed_request: string;
+    /** Persist the purchase */
+    persist: boolean | undefined;
 }
 /** Validated Purchase stored by Nakama. */
 export interface ValidatedPurchase {
+    /** Purchase User ID. */
+    user_id: string;
     /** Purchase Product ID. */
     product_id: string;
     /** Purchase Transaction ID. */
     transaction_id: string;
     /** Store identifier */
-    store: ValidatedPurchase_Store;
+    store: StoreProvider;
+    /** Timestamp when the purchase was done. */
+    purchase_time: Date | undefined;
+    /** Timestamp when the receipt validation was stored in DB. */
+    create_time: Date | undefined;
+    /** Timestamp when the receipt validation was updated in DB. */
+    update_time: Date | undefined;
+    /** Timestamp when the purchase was refunded. Set to UNIX */
+    refund_time: Date | undefined;
+    /** Raw provider validation response. */
+    provider_response: string;
+    /** Whether the purchase was done in production or sandbox environment. */
+    environment: StoreEnvironment;
+    /** Whether the purchase had already been validated by Nakama before. */
+    seen_before: boolean;
+}
+/** Validate IAP response. */
+export interface ValidatePurchaseResponse {
+    /** Newly seen validated purchases. */
+    validated_purchases: ValidatedPurchase[];
+}
+/** Validate Subscription response. */
+export interface ValidateSubscriptionResponse {
+    validated_subscription: ValidatedSubscription | undefined;
+}
+export interface ValidatedSubscription {
+    /** Subscription User ID. */
+    user_id: string;
+    /** Purchase Product ID. */
+    product_id: string;
+    /** Purchase Original transaction ID (we only keep track of the original subscription, not subsequent renewals). */
+    original_transaction_id: string;
+    /** Store identifier */
+    store: StoreProvider;
     /** UNIX Timestamp when the purchase was done. */
     purchase_time: Date | undefined;
     /** UNIX Timestamp when the receipt validation was stored in DB. */
     create_time: Date | undefined;
     /** UNIX Timestamp when the receipt validation was updated in DB. */
     update_time: Date | undefined;
-    /** Raw provider validation response. */
-    provider_response: string;
     /** Whether the purchase was done in production or sandbox environment. */
-    environment: ValidatedPurchase_Environment;
-    /** Whether the purchase had already been validated by Nakama before. */
-    seen_before: boolean;
-}
-/** Validation Provider */
-export declare enum ValidatedPurchase_Store {
-    /** APPLE_APP_STORE - Apple App Store */
-    APPLE_APP_STORE = 0,
-    /** GOOGLE_PLAY_STORE - Google Play Store */
-    GOOGLE_PLAY_STORE = 1,
-    /** HUAWEI_APP_GALLERY - Huawei App Gallery */
-    HUAWEI_APP_GALLERY = 2,
-    UNRECOGNIZED = -1
-}
-export declare function validatedPurchase_StoreFromJSON(object: any): ValidatedPurchase_Store;
-export declare function validatedPurchase_StoreToJSON(object: ValidatedPurchase_Store): string;
-/** Environment where the purchase took place */
-export declare enum ValidatedPurchase_Environment {
-    /** UNKNOWN - Unknown environment. */
-    UNKNOWN = 0,
-    /** SANDBOX - Sandbox/test environment. */
-    SANDBOX = 1,
-    /** PRODUCTION - Production environment. */
-    PRODUCTION = 2,
-    UNRECOGNIZED = -1
-}
-export declare function validatedPurchase_EnvironmentFromJSON(object: any): ValidatedPurchase_Environment;
-export declare function validatedPurchase_EnvironmentToJSON(object: ValidatedPurchase_Environment): string;
-/** Validate IAP response */
-export interface ValidatePurchaseResponse {
-    /** Newly seen validated purchases. */
-    validated_purchases: ValidatedPurchase[];
+    environment: StoreEnvironment;
+    /** Subscription expiration time. The subscription can still be auto-renewed to extend the expiration time further. */
+    expiry_time: Date | undefined;
+    /** Subscription refund time. If this time is set, the subscription was refunded. */
+    refund_time: Date | undefined;
+    /** Raw provider validation response body. */
+    provider_response: string;
+    /** Raw provider notification body. */
+    provider_notification: string;
+    /** Whether the subscription is currently active or not. */
+    active: boolean;
 }
 /** A list of validated purchases stored by Nakama. */
 export interface PurchaseList {
@@ -1158,6 +1261,17 @@ export interface PurchaseList {
     validated_purchases: ValidatedPurchase[];
     /** The cursor to send when retrieving the next page, if any. */
     cursor: string;
+    /** The cursor to send when retrieving the previous page, if any. */
+    prev_cursor: string;
+}
+/** A list of validated subscriptions stored by Nakama. */
+export interface SubscriptionList {
+    /** Stored validated subscriptions. */
+    validated_subscriptions: ValidatedSubscription[];
+    /** The cursor to send when retrieving the next page, if any. */
+    cursor: string;
+    /** The cursor to send when retrieving the previous page, if any. */
+    prev_cursor: string;
 }
 /** A request to submit a score to a leaderboard. */
 export interface WriteLeaderboardRecordRequest {
@@ -1215,820 +1329,8358 @@ export interface WriteTournamentRecordRequest_TournamentRecordWrite {
     /** Operator override. */
     operator: Operator;
 }
+/** Clan information */
+export interface ClanDesc {
+    /** Clan creator */
+    creator_id: string;
+    /** Clan name */
+    clan_name: string;
+    /** Clan logo */
+    logo: string;
+    /** Clan banner */
+    banner: string;
+    /** Clan id */
+    clan_id: string;
+}
+/** Clan information */
+export interface CreateClanDescRequest {
+    /** Clan creator */
+    creator_id: string;
+    /** Clan name */
+    clan_name: string;
+    /** Clan logo */
+    logo: string;
+    /** Clan banner */
+    banner: string;
+}
+/** Update Clan information */
+export interface UpdateClanDescRequest {
+    clan_id: string;
+    /** Clan creator */
+    creator_id: string;
+    /** Clan name */
+    clan_name: string;
+    /** Clan logo */
+    logo: string;
+    /** Clan banner */
+    banner: string;
+}
+/** Delete a clan the user has access to. */
+export interface DeleteClanDescRequest {
+    /** The id of a group. */
+    clan_desc_id: string;
+}
+/** List (and optionally filter) channels. */
+export interface ListClanDescRequest {
+    /** Max number of records to return. Between 1 and 100. */
+    limit: number | undefined;
+    /** The friend state to list. */
+    state: number | undefined;
+    /** Cursor to start from */
+    cursor: string;
+}
+/** A list of clan */
+export interface ClanDescList {
+    /** A list of channel. */
+    clandesc: ClanDesc[];
+}
+/** Category to group the channel */
+export interface CategoryDesc {
+    /** Category creator */
+    creator_id: string;
+    /** the Clan that category belong to */
+    clan_id: string;
+    /** Category name */
+    category_name: string;
+}
+export interface CreateCategoryDescRequest {
+    category_name: string;
+    clan_id: string;
+    creator_id: string;
+    category_id: string;
+}
+export interface DeleteCategoryDescRequest {
+    creator_id: string;
+}
+/** A list of clan */
+export interface CategoryDescList {
+    /** A list of channel. */
+    categorydesc: CategoryDesc[];
+}
+/** List (and optionally filter) channels. */
+export interface ListCategoryDescsRequest {
+    /** Max number of records to return. Between 1 and 100. */
+    limit: number | undefined;
+    /** The friend state to list. */
+    state: number | undefined;
+    /** Cursor to start from */
+    cursor: string;
+}
+/** Channel description record */
+export interface ChannelDescription {
+    /** The clan of this channel */
+    clan_id: string;
+    /** The parrent channel this message belongs to. */
+    parrent_id: string;
+    /** The channel this message belongs to. */
+    channel_id: string;
+    /** The category of channel */
+    category_id: string;
+    /** The category name */
+    category_name: string;
+    /** The channel type. */
+    type: number | undefined;
+    /** creator ID. */
+    creator_id: string;
+    /** The channel lable */
+    channel_lable: string;
+    /** The channel private */
+    channel_private: number;
+}
+/** A list of channel description, usually a result of a list operation. */
+export interface ChannelDescList {
+    /** A list of channel. */
+    channeldesc: ChannelDescription[];
+    /** The cursor to send when retrieving the next page, if any. */
+    next_cursor: string;
+    /** The cursor to send when retrieving the previous page, if any. */
+    prev_cursor: string;
+    /** Cacheable cursor to list newer channel description. Durable and designed to be stored, unlike next/prev cursors. */
+    cacheable_cursor: string;
+}
+/** List (and optionally filter) channels. */
+export interface ListChannelDescsRequest {
+    /** Max number of records to return. Between 1 and 100. */
+    limit: number | undefined;
+    /** The friend state to list. */
+    state: number | undefined;
+    /** Cursor to start from */
+    cursor: string;
+}
+/** Create a channel within clan. */
+export interface CreateChannelDescRequest {
+    /** The clan of this channel */
+    clan_id: string;
+    /** The parrent channel this message belongs to. */
+    parrent_id: string;
+    /** The channel this message belongs to. */
+    channel_id: string;
+    /** The category of channel */
+    category_id: string;
+    /** The channel type. */
+    type: number | undefined;
+    /** creator ID. */
+    creator_id: string;
+    /** The channel lable */
+    channel_lable: string;
+    /** The channel private */
+    channel_private: number;
+}
+/** Delete a channel the user has access to. */
+export interface DeleteChannelDescRequest {
+    /** The id of a channel. */
+    channel_id: string;
+}
+/** Update fields in a given channel. */
+export interface UpdateChannelDescRequest {
+    /** The ID of the channel to update. */
+    channel_id: string;
+    /** The channel lable */
+    channel_lable: string | undefined;
+    /** The category of channel */
+    category_id: string | undefined;
+}
+/** Add users to a channel. */
+export interface AddChannelUsersRequest {
+    /** The channel to add users to. */
+    channel_id: string;
+    /** The users to add. */
+    user_ids: string[];
+}
+/** Kick a set of users from a channel. */
+export interface KickChannelUsersRequest {
+    /** The channel ID to kick from. */
+    channel_id: string;
+    /** The users to kick. */
+    user_ids: string[];
+}
+/** Leave a channel. */
+export interface LeaveChannelRequest {
+    /** The channel ID to leave. */
+    channel_id: string;
+}
 export declare const Account: {
     encode(message: Account, writer?: _m0.Writer): _m0.Writer;
     decode(input: _m0.Reader | Uint8Array, length?: number): Account;
     fromJSON(object: any): Account;
     toJSON(message: Account): unknown;
-    fromPartial(object: DeepPartial<Account>): Account;
+    create<I extends {
+        user?: {
+            id?: string | undefined;
+            username?: string | undefined;
+            display_name?: string | undefined;
+            avatar_url?: string | undefined;
+            lang_tag?: string | undefined;
+            location?: string | undefined;
+            timezone?: string | undefined;
+            metadata?: string | undefined;
+            facebook_id?: string | undefined;
+            google_id?: string | undefined;
+            gamecenter_id?: string | undefined;
+            steam_id?: string | undefined;
+            online?: boolean | undefined;
+            edge_count?: number | undefined;
+            create_time?: Date | undefined;
+            update_time?: Date | undefined;
+            facebook_instant_game_id?: string | undefined;
+            apple_id?: string | undefined;
+        } | undefined;
+        wallet?: string | undefined;
+        email?: string | undefined;
+        devices?: {
+            id?: string | undefined;
+            vars?: {
+                [x: string]: string | undefined;
+            } | undefined;
+        }[] | undefined;
+        custom_id?: string | undefined;
+        verify_time?: Date | undefined;
+        disable_time?: Date | undefined;
+    } & {
+        user?: ({
+            id?: string | undefined;
+            username?: string | undefined;
+            display_name?: string | undefined;
+            avatar_url?: string | undefined;
+            lang_tag?: string | undefined;
+            location?: string | undefined;
+            timezone?: string | undefined;
+            metadata?: string | undefined;
+            facebook_id?: string | undefined;
+            google_id?: string | undefined;
+            gamecenter_id?: string | undefined;
+            steam_id?: string | undefined;
+            online?: boolean | undefined;
+            edge_count?: number | undefined;
+            create_time?: Date | undefined;
+            update_time?: Date | undefined;
+            facebook_instant_game_id?: string | undefined;
+            apple_id?: string | undefined;
+        } & {
+            id?: string | undefined;
+            username?: string | undefined;
+            display_name?: string | undefined;
+            avatar_url?: string | undefined;
+            lang_tag?: string | undefined;
+            location?: string | undefined;
+            timezone?: string | undefined;
+            metadata?: string | undefined;
+            facebook_id?: string | undefined;
+            google_id?: string | undefined;
+            gamecenter_id?: string | undefined;
+            steam_id?: string | undefined;
+            online?: boolean | undefined;
+            edge_count?: number | undefined;
+            create_time?: Date | undefined;
+            update_time?: Date | undefined;
+            facebook_instant_game_id?: string | undefined;
+            apple_id?: string | undefined;
+        } & { [K in Exclude<keyof I["user"], keyof User>]: never; }) | undefined;
+        wallet?: string | undefined;
+        email?: string | undefined;
+        devices?: ({
+            id?: string | undefined;
+            vars?: {
+                [x: string]: string | undefined;
+            } | undefined;
+        }[] & ({
+            id?: string | undefined;
+            vars?: {
+                [x: string]: string | undefined;
+            } | undefined;
+        } & {
+            id?: string | undefined;
+            vars?: ({
+                [x: string]: string | undefined;
+            } & {
+                [x: string]: string | undefined;
+            } & { [K_1 in Exclude<keyof I["devices"][number]["vars"], string | number>]: never; }) | undefined;
+        } & { [K_2 in Exclude<keyof I["devices"][number], keyof AccountDevice>]: never; })[] & { [K_3 in Exclude<keyof I["devices"], keyof {
+            id?: string | undefined;
+            vars?: {
+                [x: string]: string | undefined;
+            } | undefined;
+        }[]>]: never; }) | undefined;
+        custom_id?: string | undefined;
+        verify_time?: Date | undefined;
+        disable_time?: Date | undefined;
+    } & { [K_4 in Exclude<keyof I, keyof Account>]: never; }>(base?: I | undefined): Account;
+    fromPartial<I_1 extends {
+        user?: {
+            id?: string | undefined;
+            username?: string | undefined;
+            display_name?: string | undefined;
+            avatar_url?: string | undefined;
+            lang_tag?: string | undefined;
+            location?: string | undefined;
+            timezone?: string | undefined;
+            metadata?: string | undefined;
+            facebook_id?: string | undefined;
+            google_id?: string | undefined;
+            gamecenter_id?: string | undefined;
+            steam_id?: string | undefined;
+            online?: boolean | undefined;
+            edge_count?: number | undefined;
+            create_time?: Date | undefined;
+            update_time?: Date | undefined;
+            facebook_instant_game_id?: string | undefined;
+            apple_id?: string | undefined;
+        } | undefined;
+        wallet?: string | undefined;
+        email?: string | undefined;
+        devices?: {
+            id?: string | undefined;
+            vars?: {
+                [x: string]: string | undefined;
+            } | undefined;
+        }[] | undefined;
+        custom_id?: string | undefined;
+        verify_time?: Date | undefined;
+        disable_time?: Date | undefined;
+    } & {
+        user?: ({
+            id?: string | undefined;
+            username?: string | undefined;
+            display_name?: string | undefined;
+            avatar_url?: string | undefined;
+            lang_tag?: string | undefined;
+            location?: string | undefined;
+            timezone?: string | undefined;
+            metadata?: string | undefined;
+            facebook_id?: string | undefined;
+            google_id?: string | undefined;
+            gamecenter_id?: string | undefined;
+            steam_id?: string | undefined;
+            online?: boolean | undefined;
+            edge_count?: number | undefined;
+            create_time?: Date | undefined;
+            update_time?: Date | undefined;
+            facebook_instant_game_id?: string | undefined;
+            apple_id?: string | undefined;
+        } & {
+            id?: string | undefined;
+            username?: string | undefined;
+            display_name?: string | undefined;
+            avatar_url?: string | undefined;
+            lang_tag?: string | undefined;
+            location?: string | undefined;
+            timezone?: string | undefined;
+            metadata?: string | undefined;
+            facebook_id?: string | undefined;
+            google_id?: string | undefined;
+            gamecenter_id?: string | undefined;
+            steam_id?: string | undefined;
+            online?: boolean | undefined;
+            edge_count?: number | undefined;
+            create_time?: Date | undefined;
+            update_time?: Date | undefined;
+            facebook_instant_game_id?: string | undefined;
+            apple_id?: string | undefined;
+        } & { [K_5 in Exclude<keyof I_1["user"], keyof User>]: never; }) | undefined;
+        wallet?: string | undefined;
+        email?: string | undefined;
+        devices?: ({
+            id?: string | undefined;
+            vars?: {
+                [x: string]: string | undefined;
+            } | undefined;
+        }[] & ({
+            id?: string | undefined;
+            vars?: {
+                [x: string]: string | undefined;
+            } | undefined;
+        } & {
+            id?: string | undefined;
+            vars?: ({
+                [x: string]: string | undefined;
+            } & {
+                [x: string]: string | undefined;
+            } & { [K_6 in Exclude<keyof I_1["devices"][number]["vars"], string | number>]: never; }) | undefined;
+        } & { [K_7 in Exclude<keyof I_1["devices"][number], keyof AccountDevice>]: never; })[] & { [K_8 in Exclude<keyof I_1["devices"], keyof {
+            id?: string | undefined;
+            vars?: {
+                [x: string]: string | undefined;
+            } | undefined;
+        }[]>]: never; }) | undefined;
+        custom_id?: string | undefined;
+        verify_time?: Date | undefined;
+        disable_time?: Date | undefined;
+    } & { [K_9 in Exclude<keyof I_1, keyof Account>]: never; }>(object: I_1): Account;
 };
 export declare const AccountRefresh: {
     encode(message: AccountRefresh, writer?: _m0.Writer): _m0.Writer;
     decode(input: _m0.Reader | Uint8Array, length?: number): AccountRefresh;
     fromJSON(object: any): AccountRefresh;
     toJSON(message: AccountRefresh): unknown;
-    fromPartial(object: DeepPartial<AccountRefresh>): AccountRefresh;
+    create<I extends {
+        token?: string | undefined;
+        vars?: {
+            [x: string]: string | undefined;
+        } | undefined;
+    } & {
+        token?: string | undefined;
+        vars?: ({
+            [x: string]: string | undefined;
+        } & {
+            [x: string]: string | undefined;
+        } & { [K in Exclude<keyof I["vars"], string | number>]: never; }) | undefined;
+    } & { [K_1 in Exclude<keyof I, keyof AccountRefresh>]: never; }>(base?: I | undefined): AccountRefresh;
+    fromPartial<I_1 extends {
+        token?: string | undefined;
+        vars?: {
+            [x: string]: string | undefined;
+        } | undefined;
+    } & {
+        token?: string | undefined;
+        vars?: ({
+            [x: string]: string | undefined;
+        } & {
+            [x: string]: string | undefined;
+        } & { [K_2 in Exclude<keyof I_1["vars"], string | number>]: never; }) | undefined;
+    } & { [K_3 in Exclude<keyof I_1, keyof AccountRefresh>]: never; }>(object: I_1): AccountRefresh;
 };
 export declare const AccountRefresh_VarsEntry: {
     encode(message: AccountRefresh_VarsEntry, writer?: _m0.Writer): _m0.Writer;
     decode(input: _m0.Reader | Uint8Array, length?: number): AccountRefresh_VarsEntry;
     fromJSON(object: any): AccountRefresh_VarsEntry;
     toJSON(message: AccountRefresh_VarsEntry): unknown;
-    fromPartial(object: DeepPartial<AccountRefresh_VarsEntry>): AccountRefresh_VarsEntry;
+    create<I extends {
+        key?: string | undefined;
+        value?: string | undefined;
+    } & {
+        key?: string | undefined;
+        value?: string | undefined;
+    } & { [K in Exclude<keyof I, keyof AccountRefresh_VarsEntry>]: never; }>(base?: I | undefined): AccountRefresh_VarsEntry;
+    fromPartial<I_1 extends {
+        key?: string | undefined;
+        value?: string | undefined;
+    } & {
+        key?: string | undefined;
+        value?: string | undefined;
+    } & { [K_1 in Exclude<keyof I_1, keyof AccountRefresh_VarsEntry>]: never; }>(object: I_1): AccountRefresh_VarsEntry;
 };
 export declare const AccountApple: {
     encode(message: AccountApple, writer?: _m0.Writer): _m0.Writer;
     decode(input: _m0.Reader | Uint8Array, length?: number): AccountApple;
     fromJSON(object: any): AccountApple;
     toJSON(message: AccountApple): unknown;
-    fromPartial(object: DeepPartial<AccountApple>): AccountApple;
+    create<I extends {
+        token?: string | undefined;
+        vars?: {
+            [x: string]: string | undefined;
+        } | undefined;
+    } & {
+        token?: string | undefined;
+        vars?: ({
+            [x: string]: string | undefined;
+        } & {
+            [x: string]: string | undefined;
+        } & { [K in Exclude<keyof I["vars"], string | number>]: never; }) | undefined;
+    } & { [K_1 in Exclude<keyof I, keyof AccountApple>]: never; }>(base?: I | undefined): AccountApple;
+    fromPartial<I_1 extends {
+        token?: string | undefined;
+        vars?: {
+            [x: string]: string | undefined;
+        } | undefined;
+    } & {
+        token?: string | undefined;
+        vars?: ({
+            [x: string]: string | undefined;
+        } & {
+            [x: string]: string | undefined;
+        } & { [K_2 in Exclude<keyof I_1["vars"], string | number>]: never; }) | undefined;
+    } & { [K_3 in Exclude<keyof I_1, keyof AccountApple>]: never; }>(object: I_1): AccountApple;
 };
 export declare const AccountApple_VarsEntry: {
     encode(message: AccountApple_VarsEntry, writer?: _m0.Writer): _m0.Writer;
     decode(input: _m0.Reader | Uint8Array, length?: number): AccountApple_VarsEntry;
     fromJSON(object: any): AccountApple_VarsEntry;
     toJSON(message: AccountApple_VarsEntry): unknown;
-    fromPartial(object: DeepPartial<AccountApple_VarsEntry>): AccountApple_VarsEntry;
+    create<I extends {
+        key?: string | undefined;
+        value?: string | undefined;
+    } & {
+        key?: string | undefined;
+        value?: string | undefined;
+    } & { [K in Exclude<keyof I, keyof AccountApple_VarsEntry>]: never; }>(base?: I | undefined): AccountApple_VarsEntry;
+    fromPartial<I_1 extends {
+        key?: string | undefined;
+        value?: string | undefined;
+    } & {
+        key?: string | undefined;
+        value?: string | undefined;
+    } & { [K_1 in Exclude<keyof I_1, keyof AccountApple_VarsEntry>]: never; }>(object: I_1): AccountApple_VarsEntry;
 };
 export declare const AccountCustom: {
     encode(message: AccountCustom, writer?: _m0.Writer): _m0.Writer;
     decode(input: _m0.Reader | Uint8Array, length?: number): AccountCustom;
     fromJSON(object: any): AccountCustom;
     toJSON(message: AccountCustom): unknown;
-    fromPartial(object: DeepPartial<AccountCustom>): AccountCustom;
+    create<I extends {
+        id?: string | undefined;
+        vars?: {
+            [x: string]: string | undefined;
+        } | undefined;
+    } & {
+        id?: string | undefined;
+        vars?: ({
+            [x: string]: string | undefined;
+        } & {
+            [x: string]: string | undefined;
+        } & { [K in Exclude<keyof I["vars"], string | number>]: never; }) | undefined;
+    } & { [K_1 in Exclude<keyof I, keyof AccountCustom>]: never; }>(base?: I | undefined): AccountCustom;
+    fromPartial<I_1 extends {
+        id?: string | undefined;
+        vars?: {
+            [x: string]: string | undefined;
+        } | undefined;
+    } & {
+        id?: string | undefined;
+        vars?: ({
+            [x: string]: string | undefined;
+        } & {
+            [x: string]: string | undefined;
+        } & { [K_2 in Exclude<keyof I_1["vars"], string | number>]: never; }) | undefined;
+    } & { [K_3 in Exclude<keyof I_1, keyof AccountCustom>]: never; }>(object: I_1): AccountCustom;
 };
 export declare const AccountCustom_VarsEntry: {
     encode(message: AccountCustom_VarsEntry, writer?: _m0.Writer): _m0.Writer;
     decode(input: _m0.Reader | Uint8Array, length?: number): AccountCustom_VarsEntry;
     fromJSON(object: any): AccountCustom_VarsEntry;
     toJSON(message: AccountCustom_VarsEntry): unknown;
-    fromPartial(object: DeepPartial<AccountCustom_VarsEntry>): AccountCustom_VarsEntry;
+    create<I extends {
+        key?: string | undefined;
+        value?: string | undefined;
+    } & {
+        key?: string | undefined;
+        value?: string | undefined;
+    } & { [K in Exclude<keyof I, keyof AccountCustom_VarsEntry>]: never; }>(base?: I | undefined): AccountCustom_VarsEntry;
+    fromPartial<I_1 extends {
+        key?: string | undefined;
+        value?: string | undefined;
+    } & {
+        key?: string | undefined;
+        value?: string | undefined;
+    } & { [K_1 in Exclude<keyof I_1, keyof AccountCustom_VarsEntry>]: never; }>(object: I_1): AccountCustom_VarsEntry;
 };
 export declare const AccountDevice: {
     encode(message: AccountDevice, writer?: _m0.Writer): _m0.Writer;
     decode(input: _m0.Reader | Uint8Array, length?: number): AccountDevice;
     fromJSON(object: any): AccountDevice;
     toJSON(message: AccountDevice): unknown;
-    fromPartial(object: DeepPartial<AccountDevice>): AccountDevice;
+    create<I extends {
+        id?: string | undefined;
+        vars?: {
+            [x: string]: string | undefined;
+        } | undefined;
+    } & {
+        id?: string | undefined;
+        vars?: ({
+            [x: string]: string | undefined;
+        } & {
+            [x: string]: string | undefined;
+        } & { [K in Exclude<keyof I["vars"], string | number>]: never; }) | undefined;
+    } & { [K_1 in Exclude<keyof I, keyof AccountDevice>]: never; }>(base?: I | undefined): AccountDevice;
+    fromPartial<I_1 extends {
+        id?: string | undefined;
+        vars?: {
+            [x: string]: string | undefined;
+        } | undefined;
+    } & {
+        id?: string | undefined;
+        vars?: ({
+            [x: string]: string | undefined;
+        } & {
+            [x: string]: string | undefined;
+        } & { [K_2 in Exclude<keyof I_1["vars"], string | number>]: never; }) | undefined;
+    } & { [K_3 in Exclude<keyof I_1, keyof AccountDevice>]: never; }>(object: I_1): AccountDevice;
 };
 export declare const AccountDevice_VarsEntry: {
     encode(message: AccountDevice_VarsEntry, writer?: _m0.Writer): _m0.Writer;
     decode(input: _m0.Reader | Uint8Array, length?: number): AccountDevice_VarsEntry;
     fromJSON(object: any): AccountDevice_VarsEntry;
     toJSON(message: AccountDevice_VarsEntry): unknown;
-    fromPartial(object: DeepPartial<AccountDevice_VarsEntry>): AccountDevice_VarsEntry;
+    create<I extends {
+        key?: string | undefined;
+        value?: string | undefined;
+    } & {
+        key?: string | undefined;
+        value?: string | undefined;
+    } & { [K in Exclude<keyof I, keyof AccountDevice_VarsEntry>]: never; }>(base?: I | undefined): AccountDevice_VarsEntry;
+    fromPartial<I_1 extends {
+        key?: string | undefined;
+        value?: string | undefined;
+    } & {
+        key?: string | undefined;
+        value?: string | undefined;
+    } & { [K_1 in Exclude<keyof I_1, keyof AccountDevice_VarsEntry>]: never; }>(object: I_1): AccountDevice_VarsEntry;
 };
 export declare const AccountEmail: {
     encode(message: AccountEmail, writer?: _m0.Writer): _m0.Writer;
     decode(input: _m0.Reader | Uint8Array, length?: number): AccountEmail;
     fromJSON(object: any): AccountEmail;
     toJSON(message: AccountEmail): unknown;
-    fromPartial(object: DeepPartial<AccountEmail>): AccountEmail;
+    create<I extends {
+        email?: string | undefined;
+        password?: string | undefined;
+        vars?: {
+            [x: string]: string | undefined;
+        } | undefined;
+    } & {
+        email?: string | undefined;
+        password?: string | undefined;
+        vars?: ({
+            [x: string]: string | undefined;
+        } & {
+            [x: string]: string | undefined;
+        } & { [K in Exclude<keyof I["vars"], string | number>]: never; }) | undefined;
+    } & { [K_1 in Exclude<keyof I, keyof AccountEmail>]: never; }>(base?: I | undefined): AccountEmail;
+    fromPartial<I_1 extends {
+        email?: string | undefined;
+        password?: string | undefined;
+        vars?: {
+            [x: string]: string | undefined;
+        } | undefined;
+    } & {
+        email?: string | undefined;
+        password?: string | undefined;
+        vars?: ({
+            [x: string]: string | undefined;
+        } & {
+            [x: string]: string | undefined;
+        } & { [K_2 in Exclude<keyof I_1["vars"], string | number>]: never; }) | undefined;
+    } & { [K_3 in Exclude<keyof I_1, keyof AccountEmail>]: never; }>(object: I_1): AccountEmail;
 };
 export declare const AccountEmail_VarsEntry: {
     encode(message: AccountEmail_VarsEntry, writer?: _m0.Writer): _m0.Writer;
     decode(input: _m0.Reader | Uint8Array, length?: number): AccountEmail_VarsEntry;
     fromJSON(object: any): AccountEmail_VarsEntry;
     toJSON(message: AccountEmail_VarsEntry): unknown;
-    fromPartial(object: DeepPartial<AccountEmail_VarsEntry>): AccountEmail_VarsEntry;
+    create<I extends {
+        key?: string | undefined;
+        value?: string | undefined;
+    } & {
+        key?: string | undefined;
+        value?: string | undefined;
+    } & { [K in Exclude<keyof I, keyof AccountEmail_VarsEntry>]: never; }>(base?: I | undefined): AccountEmail_VarsEntry;
+    fromPartial<I_1 extends {
+        key?: string | undefined;
+        value?: string | undefined;
+    } & {
+        key?: string | undefined;
+        value?: string | undefined;
+    } & { [K_1 in Exclude<keyof I_1, keyof AccountEmail_VarsEntry>]: never; }>(object: I_1): AccountEmail_VarsEntry;
 };
 export declare const AccountFacebook: {
     encode(message: AccountFacebook, writer?: _m0.Writer): _m0.Writer;
     decode(input: _m0.Reader | Uint8Array, length?: number): AccountFacebook;
     fromJSON(object: any): AccountFacebook;
     toJSON(message: AccountFacebook): unknown;
-    fromPartial(object: DeepPartial<AccountFacebook>): AccountFacebook;
+    create<I extends {
+        token?: string | undefined;
+        vars?: {
+            [x: string]: string | undefined;
+        } | undefined;
+    } & {
+        token?: string | undefined;
+        vars?: ({
+            [x: string]: string | undefined;
+        } & {
+            [x: string]: string | undefined;
+        } & { [K in Exclude<keyof I["vars"], string | number>]: never; }) | undefined;
+    } & { [K_1 in Exclude<keyof I, keyof AccountFacebook>]: never; }>(base?: I | undefined): AccountFacebook;
+    fromPartial<I_1 extends {
+        token?: string | undefined;
+        vars?: {
+            [x: string]: string | undefined;
+        } | undefined;
+    } & {
+        token?: string | undefined;
+        vars?: ({
+            [x: string]: string | undefined;
+        } & {
+            [x: string]: string | undefined;
+        } & { [K_2 in Exclude<keyof I_1["vars"], string | number>]: never; }) | undefined;
+    } & { [K_3 in Exclude<keyof I_1, keyof AccountFacebook>]: never; }>(object: I_1): AccountFacebook;
 };
 export declare const AccountFacebook_VarsEntry: {
     encode(message: AccountFacebook_VarsEntry, writer?: _m0.Writer): _m0.Writer;
     decode(input: _m0.Reader | Uint8Array, length?: number): AccountFacebook_VarsEntry;
     fromJSON(object: any): AccountFacebook_VarsEntry;
     toJSON(message: AccountFacebook_VarsEntry): unknown;
-    fromPartial(object: DeepPartial<AccountFacebook_VarsEntry>): AccountFacebook_VarsEntry;
+    create<I extends {
+        key?: string | undefined;
+        value?: string | undefined;
+    } & {
+        key?: string | undefined;
+        value?: string | undefined;
+    } & { [K in Exclude<keyof I, keyof AccountFacebook_VarsEntry>]: never; }>(base?: I | undefined): AccountFacebook_VarsEntry;
+    fromPartial<I_1 extends {
+        key?: string | undefined;
+        value?: string | undefined;
+    } & {
+        key?: string | undefined;
+        value?: string | undefined;
+    } & { [K_1 in Exclude<keyof I_1, keyof AccountFacebook_VarsEntry>]: never; }>(object: I_1): AccountFacebook_VarsEntry;
 };
 export declare const AccountFacebookInstantGame: {
     encode(message: AccountFacebookInstantGame, writer?: _m0.Writer): _m0.Writer;
     decode(input: _m0.Reader | Uint8Array, length?: number): AccountFacebookInstantGame;
     fromJSON(object: any): AccountFacebookInstantGame;
     toJSON(message: AccountFacebookInstantGame): unknown;
-    fromPartial(object: DeepPartial<AccountFacebookInstantGame>): AccountFacebookInstantGame;
+    create<I extends {
+        signed_player_info?: string | undefined;
+        vars?: {
+            [x: string]: string | undefined;
+        } | undefined;
+    } & {
+        signed_player_info?: string | undefined;
+        vars?: ({
+            [x: string]: string | undefined;
+        } & {
+            [x: string]: string | undefined;
+        } & { [K in Exclude<keyof I["vars"], string | number>]: never; }) | undefined;
+    } & { [K_1 in Exclude<keyof I, keyof AccountFacebookInstantGame>]: never; }>(base?: I | undefined): AccountFacebookInstantGame;
+    fromPartial<I_1 extends {
+        signed_player_info?: string | undefined;
+        vars?: {
+            [x: string]: string | undefined;
+        } | undefined;
+    } & {
+        signed_player_info?: string | undefined;
+        vars?: ({
+            [x: string]: string | undefined;
+        } & {
+            [x: string]: string | undefined;
+        } & { [K_2 in Exclude<keyof I_1["vars"], string | number>]: never; }) | undefined;
+    } & { [K_3 in Exclude<keyof I_1, keyof AccountFacebookInstantGame>]: never; }>(object: I_1): AccountFacebookInstantGame;
 };
 export declare const AccountFacebookInstantGame_VarsEntry: {
     encode(message: AccountFacebookInstantGame_VarsEntry, writer?: _m0.Writer): _m0.Writer;
     decode(input: _m0.Reader | Uint8Array, length?: number): AccountFacebookInstantGame_VarsEntry;
     fromJSON(object: any): AccountFacebookInstantGame_VarsEntry;
     toJSON(message: AccountFacebookInstantGame_VarsEntry): unknown;
-    fromPartial(object: DeepPartial<AccountFacebookInstantGame_VarsEntry>): AccountFacebookInstantGame_VarsEntry;
+    create<I extends {
+        key?: string | undefined;
+        value?: string | undefined;
+    } & {
+        key?: string | undefined;
+        value?: string | undefined;
+    } & { [K in Exclude<keyof I, keyof AccountFacebookInstantGame_VarsEntry>]: never; }>(base?: I | undefined): AccountFacebookInstantGame_VarsEntry;
+    fromPartial<I_1 extends {
+        key?: string | undefined;
+        value?: string | undefined;
+    } & {
+        key?: string | undefined;
+        value?: string | undefined;
+    } & { [K_1 in Exclude<keyof I_1, keyof AccountFacebookInstantGame_VarsEntry>]: never; }>(object: I_1): AccountFacebookInstantGame_VarsEntry;
 };
 export declare const AccountGameCenter: {
     encode(message: AccountGameCenter, writer?: _m0.Writer): _m0.Writer;
     decode(input: _m0.Reader | Uint8Array, length?: number): AccountGameCenter;
     fromJSON(object: any): AccountGameCenter;
     toJSON(message: AccountGameCenter): unknown;
-    fromPartial(object: DeepPartial<AccountGameCenter>): AccountGameCenter;
+    create<I extends {
+        player_id?: string | undefined;
+        bundle_id?: string | undefined;
+        timestamp_seconds?: number | undefined;
+        salt?: string | undefined;
+        signature?: string | undefined;
+        public_key_url?: string | undefined;
+        vars?: {
+            [x: string]: string | undefined;
+        } | undefined;
+    } & {
+        player_id?: string | undefined;
+        bundle_id?: string | undefined;
+        timestamp_seconds?: number | undefined;
+        salt?: string | undefined;
+        signature?: string | undefined;
+        public_key_url?: string | undefined;
+        vars?: ({
+            [x: string]: string | undefined;
+        } & {
+            [x: string]: string | undefined;
+        } & { [K in Exclude<keyof I["vars"], string | number>]: never; }) | undefined;
+    } & { [K_1 in Exclude<keyof I, keyof AccountGameCenter>]: never; }>(base?: I | undefined): AccountGameCenter;
+    fromPartial<I_1 extends {
+        player_id?: string | undefined;
+        bundle_id?: string | undefined;
+        timestamp_seconds?: number | undefined;
+        salt?: string | undefined;
+        signature?: string | undefined;
+        public_key_url?: string | undefined;
+        vars?: {
+            [x: string]: string | undefined;
+        } | undefined;
+    } & {
+        player_id?: string | undefined;
+        bundle_id?: string | undefined;
+        timestamp_seconds?: number | undefined;
+        salt?: string | undefined;
+        signature?: string | undefined;
+        public_key_url?: string | undefined;
+        vars?: ({
+            [x: string]: string | undefined;
+        } & {
+            [x: string]: string | undefined;
+        } & { [K_2 in Exclude<keyof I_1["vars"], string | number>]: never; }) | undefined;
+    } & { [K_3 in Exclude<keyof I_1, keyof AccountGameCenter>]: never; }>(object: I_1): AccountGameCenter;
 };
 export declare const AccountGameCenter_VarsEntry: {
     encode(message: AccountGameCenter_VarsEntry, writer?: _m0.Writer): _m0.Writer;
     decode(input: _m0.Reader | Uint8Array, length?: number): AccountGameCenter_VarsEntry;
     fromJSON(object: any): AccountGameCenter_VarsEntry;
     toJSON(message: AccountGameCenter_VarsEntry): unknown;
-    fromPartial(object: DeepPartial<AccountGameCenter_VarsEntry>): AccountGameCenter_VarsEntry;
+    create<I extends {
+        key?: string | undefined;
+        value?: string | undefined;
+    } & {
+        key?: string | undefined;
+        value?: string | undefined;
+    } & { [K in Exclude<keyof I, keyof AccountGameCenter_VarsEntry>]: never; }>(base?: I | undefined): AccountGameCenter_VarsEntry;
+    fromPartial<I_1 extends {
+        key?: string | undefined;
+        value?: string | undefined;
+    } & {
+        key?: string | undefined;
+        value?: string | undefined;
+    } & { [K_1 in Exclude<keyof I_1, keyof AccountGameCenter_VarsEntry>]: never; }>(object: I_1): AccountGameCenter_VarsEntry;
 };
 export declare const AccountGoogle: {
     encode(message: AccountGoogle, writer?: _m0.Writer): _m0.Writer;
     decode(input: _m0.Reader | Uint8Array, length?: number): AccountGoogle;
     fromJSON(object: any): AccountGoogle;
     toJSON(message: AccountGoogle): unknown;
-    fromPartial(object: DeepPartial<AccountGoogle>): AccountGoogle;
+    create<I extends {
+        token?: string | undefined;
+        vars?: {
+            [x: string]: string | undefined;
+        } | undefined;
+    } & {
+        token?: string | undefined;
+        vars?: ({
+            [x: string]: string | undefined;
+        } & {
+            [x: string]: string | undefined;
+        } & { [K in Exclude<keyof I["vars"], string | number>]: never; }) | undefined;
+    } & { [K_1 in Exclude<keyof I, keyof AccountGoogle>]: never; }>(base?: I | undefined): AccountGoogle;
+    fromPartial<I_1 extends {
+        token?: string | undefined;
+        vars?: {
+            [x: string]: string | undefined;
+        } | undefined;
+    } & {
+        token?: string | undefined;
+        vars?: ({
+            [x: string]: string | undefined;
+        } & {
+            [x: string]: string | undefined;
+        } & { [K_2 in Exclude<keyof I_1["vars"], string | number>]: never; }) | undefined;
+    } & { [K_3 in Exclude<keyof I_1, keyof AccountGoogle>]: never; }>(object: I_1): AccountGoogle;
 };
 export declare const AccountGoogle_VarsEntry: {
     encode(message: AccountGoogle_VarsEntry, writer?: _m0.Writer): _m0.Writer;
     decode(input: _m0.Reader | Uint8Array, length?: number): AccountGoogle_VarsEntry;
     fromJSON(object: any): AccountGoogle_VarsEntry;
     toJSON(message: AccountGoogle_VarsEntry): unknown;
-    fromPartial(object: DeepPartial<AccountGoogle_VarsEntry>): AccountGoogle_VarsEntry;
+    create<I extends {
+        key?: string | undefined;
+        value?: string | undefined;
+    } & {
+        key?: string | undefined;
+        value?: string | undefined;
+    } & { [K in Exclude<keyof I, keyof AccountGoogle_VarsEntry>]: never; }>(base?: I | undefined): AccountGoogle_VarsEntry;
+    fromPartial<I_1 extends {
+        key?: string | undefined;
+        value?: string | undefined;
+    } & {
+        key?: string | undefined;
+        value?: string | undefined;
+    } & { [K_1 in Exclude<keyof I_1, keyof AccountGoogle_VarsEntry>]: never; }>(object: I_1): AccountGoogle_VarsEntry;
 };
 export declare const AccountSteam: {
     encode(message: AccountSteam, writer?: _m0.Writer): _m0.Writer;
     decode(input: _m0.Reader | Uint8Array, length?: number): AccountSteam;
     fromJSON(object: any): AccountSteam;
     toJSON(message: AccountSteam): unknown;
-    fromPartial(object: DeepPartial<AccountSteam>): AccountSteam;
+    create<I extends {
+        token?: string | undefined;
+        vars?: {
+            [x: string]: string | undefined;
+        } | undefined;
+    } & {
+        token?: string | undefined;
+        vars?: ({
+            [x: string]: string | undefined;
+        } & {
+            [x: string]: string | undefined;
+        } & { [K in Exclude<keyof I["vars"], string | number>]: never; }) | undefined;
+    } & { [K_1 in Exclude<keyof I, keyof AccountSteam>]: never; }>(base?: I | undefined): AccountSteam;
+    fromPartial<I_1 extends {
+        token?: string | undefined;
+        vars?: {
+            [x: string]: string | undefined;
+        } | undefined;
+    } & {
+        token?: string | undefined;
+        vars?: ({
+            [x: string]: string | undefined;
+        } & {
+            [x: string]: string | undefined;
+        } & { [K_2 in Exclude<keyof I_1["vars"], string | number>]: never; }) | undefined;
+    } & { [K_3 in Exclude<keyof I_1, keyof AccountSteam>]: never; }>(object: I_1): AccountSteam;
 };
 export declare const AccountSteam_VarsEntry: {
     encode(message: AccountSteam_VarsEntry, writer?: _m0.Writer): _m0.Writer;
     decode(input: _m0.Reader | Uint8Array, length?: number): AccountSteam_VarsEntry;
     fromJSON(object: any): AccountSteam_VarsEntry;
     toJSON(message: AccountSteam_VarsEntry): unknown;
-    fromPartial(object: DeepPartial<AccountSteam_VarsEntry>): AccountSteam_VarsEntry;
+    create<I extends {
+        key?: string | undefined;
+        value?: string | undefined;
+    } & {
+        key?: string | undefined;
+        value?: string | undefined;
+    } & { [K in Exclude<keyof I, keyof AccountSteam_VarsEntry>]: never; }>(base?: I | undefined): AccountSteam_VarsEntry;
+    fromPartial<I_1 extends {
+        key?: string | undefined;
+        value?: string | undefined;
+    } & {
+        key?: string | undefined;
+        value?: string | undefined;
+    } & { [K_1 in Exclude<keyof I_1, keyof AccountSteam_VarsEntry>]: never; }>(object: I_1): AccountSteam_VarsEntry;
 };
 export declare const AddFriendsRequest: {
     encode(message: AddFriendsRequest, writer?: _m0.Writer): _m0.Writer;
     decode(input: _m0.Reader | Uint8Array, length?: number): AddFriendsRequest;
     fromJSON(object: any): AddFriendsRequest;
     toJSON(message: AddFriendsRequest): unknown;
-    fromPartial(object: DeepPartial<AddFriendsRequest>): AddFriendsRequest;
+    create<I extends {
+        ids?: string[] | undefined;
+        usernames?: string[] | undefined;
+    } & {
+        ids?: (string[] & string[] & { [K in Exclude<keyof I["ids"], keyof string[]>]: never; }) | undefined;
+        usernames?: (string[] & string[] & { [K_1 in Exclude<keyof I["usernames"], keyof string[]>]: never; }) | undefined;
+    } & { [K_2 in Exclude<keyof I, keyof AddFriendsRequest>]: never; }>(base?: I | undefined): AddFriendsRequest;
+    fromPartial<I_1 extends {
+        ids?: string[] | undefined;
+        usernames?: string[] | undefined;
+    } & {
+        ids?: (string[] & string[] & { [K_3 in Exclude<keyof I_1["ids"], keyof string[]>]: never; }) | undefined;
+        usernames?: (string[] & string[] & { [K_4 in Exclude<keyof I_1["usernames"], keyof string[]>]: never; }) | undefined;
+    } & { [K_5 in Exclude<keyof I_1, keyof AddFriendsRequest>]: never; }>(object: I_1): AddFriendsRequest;
 };
 export declare const AddGroupUsersRequest: {
     encode(message: AddGroupUsersRequest, writer?: _m0.Writer): _m0.Writer;
     decode(input: _m0.Reader | Uint8Array, length?: number): AddGroupUsersRequest;
     fromJSON(object: any): AddGroupUsersRequest;
     toJSON(message: AddGroupUsersRequest): unknown;
-    fromPartial(object: DeepPartial<AddGroupUsersRequest>): AddGroupUsersRequest;
+    create<I extends {
+        group_id?: string | undefined;
+        user_ids?: string[] | undefined;
+    } & {
+        group_id?: string | undefined;
+        user_ids?: (string[] & string[] & { [K in Exclude<keyof I["user_ids"], keyof string[]>]: never; }) | undefined;
+    } & { [K_1 in Exclude<keyof I, keyof AddGroupUsersRequest>]: never; }>(base?: I | undefined): AddGroupUsersRequest;
+    fromPartial<I_1 extends {
+        group_id?: string | undefined;
+        user_ids?: string[] | undefined;
+    } & {
+        group_id?: string | undefined;
+        user_ids?: (string[] & string[] & { [K_2 in Exclude<keyof I_1["user_ids"], keyof string[]>]: never; }) | undefined;
+    } & { [K_3 in Exclude<keyof I_1, keyof AddGroupUsersRequest>]: never; }>(object: I_1): AddGroupUsersRequest;
 };
 export declare const SessionRefreshRequest: {
     encode(message: SessionRefreshRequest, writer?: _m0.Writer): _m0.Writer;
     decode(input: _m0.Reader | Uint8Array, length?: number): SessionRefreshRequest;
     fromJSON(object: any): SessionRefreshRequest;
     toJSON(message: SessionRefreshRequest): unknown;
-    fromPartial(object: DeepPartial<SessionRefreshRequest>): SessionRefreshRequest;
+    create<I extends {
+        token?: string | undefined;
+        vars?: {
+            [x: string]: string | undefined;
+        } | undefined;
+    } & {
+        token?: string | undefined;
+        vars?: ({
+            [x: string]: string | undefined;
+        } & {
+            [x: string]: string | undefined;
+        } & { [K in Exclude<keyof I["vars"], string | number>]: never; }) | undefined;
+    } & { [K_1 in Exclude<keyof I, keyof SessionRefreshRequest>]: never; }>(base?: I | undefined): SessionRefreshRequest;
+    fromPartial<I_1 extends {
+        token?: string | undefined;
+        vars?: {
+            [x: string]: string | undefined;
+        } | undefined;
+    } & {
+        token?: string | undefined;
+        vars?: ({
+            [x: string]: string | undefined;
+        } & {
+            [x: string]: string | undefined;
+        } & { [K_2 in Exclude<keyof I_1["vars"], string | number>]: never; }) | undefined;
+    } & { [K_3 in Exclude<keyof I_1, keyof SessionRefreshRequest>]: never; }>(object: I_1): SessionRefreshRequest;
 };
 export declare const SessionRefreshRequest_VarsEntry: {
     encode(message: SessionRefreshRequest_VarsEntry, writer?: _m0.Writer): _m0.Writer;
     decode(input: _m0.Reader | Uint8Array, length?: number): SessionRefreshRequest_VarsEntry;
     fromJSON(object: any): SessionRefreshRequest_VarsEntry;
     toJSON(message: SessionRefreshRequest_VarsEntry): unknown;
-    fromPartial(object: DeepPartial<SessionRefreshRequest_VarsEntry>): SessionRefreshRequest_VarsEntry;
+    create<I extends {
+        key?: string | undefined;
+        value?: string | undefined;
+    } & {
+        key?: string | undefined;
+        value?: string | undefined;
+    } & { [K in Exclude<keyof I, keyof SessionRefreshRequest_VarsEntry>]: never; }>(base?: I | undefined): SessionRefreshRequest_VarsEntry;
+    fromPartial<I_1 extends {
+        key?: string | undefined;
+        value?: string | undefined;
+    } & {
+        key?: string | undefined;
+        value?: string | undefined;
+    } & { [K_1 in Exclude<keyof I_1, keyof SessionRefreshRequest_VarsEntry>]: never; }>(object: I_1): SessionRefreshRequest_VarsEntry;
 };
 export declare const SessionLogoutRequest: {
     encode(message: SessionLogoutRequest, writer?: _m0.Writer): _m0.Writer;
     decode(input: _m0.Reader | Uint8Array, length?: number): SessionLogoutRequest;
     fromJSON(object: any): SessionLogoutRequest;
     toJSON(message: SessionLogoutRequest): unknown;
-    fromPartial(object: DeepPartial<SessionLogoutRequest>): SessionLogoutRequest;
+    create<I extends {
+        token?: string | undefined;
+        refresh_token?: string | undefined;
+    } & {
+        token?: string | undefined;
+        refresh_token?: string | undefined;
+    } & { [K in Exclude<keyof I, keyof SessionLogoutRequest>]: never; }>(base?: I | undefined): SessionLogoutRequest;
+    fromPartial<I_1 extends {
+        token?: string | undefined;
+        refresh_token?: string | undefined;
+    } & {
+        token?: string | undefined;
+        refresh_token?: string | undefined;
+    } & { [K_1 in Exclude<keyof I_1, keyof SessionLogoutRequest>]: never; }>(object: I_1): SessionLogoutRequest;
 };
 export declare const AuthenticateAppleRequest: {
     encode(message: AuthenticateAppleRequest, writer?: _m0.Writer): _m0.Writer;
     decode(input: _m0.Reader | Uint8Array, length?: number): AuthenticateAppleRequest;
     fromJSON(object: any): AuthenticateAppleRequest;
     toJSON(message: AuthenticateAppleRequest): unknown;
-    fromPartial(object: DeepPartial<AuthenticateAppleRequest>): AuthenticateAppleRequest;
+    create<I extends {
+        account?: {
+            token?: string | undefined;
+            vars?: {
+                [x: string]: string | undefined;
+            } | undefined;
+        } | undefined;
+        create?: boolean | undefined;
+        username?: string | undefined;
+    } & {
+        account?: ({
+            token?: string | undefined;
+            vars?: {
+                [x: string]: string | undefined;
+            } | undefined;
+        } & {
+            token?: string | undefined;
+            vars?: ({
+                [x: string]: string | undefined;
+            } & {
+                [x: string]: string | undefined;
+            } & { [K in Exclude<keyof I["account"]["vars"], string | number>]: never; }) | undefined;
+        } & { [K_1 in Exclude<keyof I["account"], keyof AccountApple>]: never; }) | undefined;
+        create?: boolean | undefined;
+        username?: string | undefined;
+    } & { [K_2 in Exclude<keyof I, keyof AuthenticateAppleRequest>]: never; }>(base?: I | undefined): AuthenticateAppleRequest;
+    fromPartial<I_1 extends {
+        account?: {
+            token?: string | undefined;
+            vars?: {
+                [x: string]: string | undefined;
+            } | undefined;
+        } | undefined;
+        create?: boolean | undefined;
+        username?: string | undefined;
+    } & {
+        account?: ({
+            token?: string | undefined;
+            vars?: {
+                [x: string]: string | undefined;
+            } | undefined;
+        } & {
+            token?: string | undefined;
+            vars?: ({
+                [x: string]: string | undefined;
+            } & {
+                [x: string]: string | undefined;
+            } & { [K_3 in Exclude<keyof I_1["account"]["vars"], string | number>]: never; }) | undefined;
+        } & { [K_4 in Exclude<keyof I_1["account"], keyof AccountApple>]: never; }) | undefined;
+        create?: boolean | undefined;
+        username?: string | undefined;
+    } & { [K_5 in Exclude<keyof I_1, keyof AuthenticateAppleRequest>]: never; }>(object: I_1): AuthenticateAppleRequest;
 };
 export declare const AuthenticateCustomRequest: {
     encode(message: AuthenticateCustomRequest, writer?: _m0.Writer): _m0.Writer;
     decode(input: _m0.Reader | Uint8Array, length?: number): AuthenticateCustomRequest;
     fromJSON(object: any): AuthenticateCustomRequest;
     toJSON(message: AuthenticateCustomRequest): unknown;
-    fromPartial(object: DeepPartial<AuthenticateCustomRequest>): AuthenticateCustomRequest;
+    create<I extends {
+        account?: {
+            id?: string | undefined;
+            vars?: {
+                [x: string]: string | undefined;
+            } | undefined;
+        } | undefined;
+        create?: boolean | undefined;
+        username?: string | undefined;
+    } & {
+        account?: ({
+            id?: string | undefined;
+            vars?: {
+                [x: string]: string | undefined;
+            } | undefined;
+        } & {
+            id?: string | undefined;
+            vars?: ({
+                [x: string]: string | undefined;
+            } & {
+                [x: string]: string | undefined;
+            } & { [K in Exclude<keyof I["account"]["vars"], string | number>]: never; }) | undefined;
+        } & { [K_1 in Exclude<keyof I["account"], keyof AccountCustom>]: never; }) | undefined;
+        create?: boolean | undefined;
+        username?: string | undefined;
+    } & { [K_2 in Exclude<keyof I, keyof AuthenticateCustomRequest>]: never; }>(base?: I | undefined): AuthenticateCustomRequest;
+    fromPartial<I_1 extends {
+        account?: {
+            id?: string | undefined;
+            vars?: {
+                [x: string]: string | undefined;
+            } | undefined;
+        } | undefined;
+        create?: boolean | undefined;
+        username?: string | undefined;
+    } & {
+        account?: ({
+            id?: string | undefined;
+            vars?: {
+                [x: string]: string | undefined;
+            } | undefined;
+        } & {
+            id?: string | undefined;
+            vars?: ({
+                [x: string]: string | undefined;
+            } & {
+                [x: string]: string | undefined;
+            } & { [K_3 in Exclude<keyof I_1["account"]["vars"], string | number>]: never; }) | undefined;
+        } & { [K_4 in Exclude<keyof I_1["account"], keyof AccountCustom>]: never; }) | undefined;
+        create?: boolean | undefined;
+        username?: string | undefined;
+    } & { [K_5 in Exclude<keyof I_1, keyof AuthenticateCustomRequest>]: never; }>(object: I_1): AuthenticateCustomRequest;
 };
 export declare const AuthenticateDeviceRequest: {
     encode(message: AuthenticateDeviceRequest, writer?: _m0.Writer): _m0.Writer;
     decode(input: _m0.Reader | Uint8Array, length?: number): AuthenticateDeviceRequest;
     fromJSON(object: any): AuthenticateDeviceRequest;
     toJSON(message: AuthenticateDeviceRequest): unknown;
-    fromPartial(object: DeepPartial<AuthenticateDeviceRequest>): AuthenticateDeviceRequest;
+    create<I extends {
+        account?: {
+            id?: string | undefined;
+            vars?: {
+                [x: string]: string | undefined;
+            } | undefined;
+        } | undefined;
+        create?: boolean | undefined;
+        username?: string | undefined;
+    } & {
+        account?: ({
+            id?: string | undefined;
+            vars?: {
+                [x: string]: string | undefined;
+            } | undefined;
+        } & {
+            id?: string | undefined;
+            vars?: ({
+                [x: string]: string | undefined;
+            } & {
+                [x: string]: string | undefined;
+            } & { [K in Exclude<keyof I["account"]["vars"], string | number>]: never; }) | undefined;
+        } & { [K_1 in Exclude<keyof I["account"], keyof AccountDevice>]: never; }) | undefined;
+        create?: boolean | undefined;
+        username?: string | undefined;
+    } & { [K_2 in Exclude<keyof I, keyof AuthenticateDeviceRequest>]: never; }>(base?: I | undefined): AuthenticateDeviceRequest;
+    fromPartial<I_1 extends {
+        account?: {
+            id?: string | undefined;
+            vars?: {
+                [x: string]: string | undefined;
+            } | undefined;
+        } | undefined;
+        create?: boolean | undefined;
+        username?: string | undefined;
+    } & {
+        account?: ({
+            id?: string | undefined;
+            vars?: {
+                [x: string]: string | undefined;
+            } | undefined;
+        } & {
+            id?: string | undefined;
+            vars?: ({
+                [x: string]: string | undefined;
+            } & {
+                [x: string]: string | undefined;
+            } & { [K_3 in Exclude<keyof I_1["account"]["vars"], string | number>]: never; }) | undefined;
+        } & { [K_4 in Exclude<keyof I_1["account"], keyof AccountDevice>]: never; }) | undefined;
+        create?: boolean | undefined;
+        username?: string | undefined;
+    } & { [K_5 in Exclude<keyof I_1, keyof AuthenticateDeviceRequest>]: never; }>(object: I_1): AuthenticateDeviceRequest;
 };
 export declare const AuthenticateEmailRequest: {
     encode(message: AuthenticateEmailRequest, writer?: _m0.Writer): _m0.Writer;
     decode(input: _m0.Reader | Uint8Array, length?: number): AuthenticateEmailRequest;
     fromJSON(object: any): AuthenticateEmailRequest;
     toJSON(message: AuthenticateEmailRequest): unknown;
-    fromPartial(object: DeepPartial<AuthenticateEmailRequest>): AuthenticateEmailRequest;
+    create<I extends {
+        account?: {
+            email?: string | undefined;
+            password?: string | undefined;
+            vars?: {
+                [x: string]: string | undefined;
+            } | undefined;
+        } | undefined;
+        create?: boolean | undefined;
+        username?: string | undefined;
+    } & {
+        account?: ({
+            email?: string | undefined;
+            password?: string | undefined;
+            vars?: {
+                [x: string]: string | undefined;
+            } | undefined;
+        } & {
+            email?: string | undefined;
+            password?: string | undefined;
+            vars?: ({
+                [x: string]: string | undefined;
+            } & {
+                [x: string]: string | undefined;
+            } & { [K in Exclude<keyof I["account"]["vars"], string | number>]: never; }) | undefined;
+        } & { [K_1 in Exclude<keyof I["account"], keyof AccountEmail>]: never; }) | undefined;
+        create?: boolean | undefined;
+        username?: string | undefined;
+    } & { [K_2 in Exclude<keyof I, keyof AuthenticateEmailRequest>]: never; }>(base?: I | undefined): AuthenticateEmailRequest;
+    fromPartial<I_1 extends {
+        account?: {
+            email?: string | undefined;
+            password?: string | undefined;
+            vars?: {
+                [x: string]: string | undefined;
+            } | undefined;
+        } | undefined;
+        create?: boolean | undefined;
+        username?: string | undefined;
+    } & {
+        account?: ({
+            email?: string | undefined;
+            password?: string | undefined;
+            vars?: {
+                [x: string]: string | undefined;
+            } | undefined;
+        } & {
+            email?: string | undefined;
+            password?: string | undefined;
+            vars?: ({
+                [x: string]: string | undefined;
+            } & {
+                [x: string]: string | undefined;
+            } & { [K_3 in Exclude<keyof I_1["account"]["vars"], string | number>]: never; }) | undefined;
+        } & { [K_4 in Exclude<keyof I_1["account"], keyof AccountEmail>]: never; }) | undefined;
+        create?: boolean | undefined;
+        username?: string | undefined;
+    } & { [K_5 in Exclude<keyof I_1, keyof AuthenticateEmailRequest>]: never; }>(object: I_1): AuthenticateEmailRequest;
 };
 export declare const AuthenticateFacebookRequest: {
     encode(message: AuthenticateFacebookRequest, writer?: _m0.Writer): _m0.Writer;
     decode(input: _m0.Reader | Uint8Array, length?: number): AuthenticateFacebookRequest;
     fromJSON(object: any): AuthenticateFacebookRequest;
     toJSON(message: AuthenticateFacebookRequest): unknown;
-    fromPartial(object: DeepPartial<AuthenticateFacebookRequest>): AuthenticateFacebookRequest;
+    create<I extends {
+        account?: {
+            token?: string | undefined;
+            vars?: {
+                [x: string]: string | undefined;
+            } | undefined;
+        } | undefined;
+        create?: boolean | undefined;
+        username?: string | undefined;
+        sync?: boolean | undefined;
+    } & {
+        account?: ({
+            token?: string | undefined;
+            vars?: {
+                [x: string]: string | undefined;
+            } | undefined;
+        } & {
+            token?: string | undefined;
+            vars?: ({
+                [x: string]: string | undefined;
+            } & {
+                [x: string]: string | undefined;
+            } & { [K in Exclude<keyof I["account"]["vars"], string | number>]: never; }) | undefined;
+        } & { [K_1 in Exclude<keyof I["account"], keyof AccountFacebook>]: never; }) | undefined;
+        create?: boolean | undefined;
+        username?: string | undefined;
+        sync?: boolean | undefined;
+    } & { [K_2 in Exclude<keyof I, keyof AuthenticateFacebookRequest>]: never; }>(base?: I | undefined): AuthenticateFacebookRequest;
+    fromPartial<I_1 extends {
+        account?: {
+            token?: string | undefined;
+            vars?: {
+                [x: string]: string | undefined;
+            } | undefined;
+        } | undefined;
+        create?: boolean | undefined;
+        username?: string | undefined;
+        sync?: boolean | undefined;
+    } & {
+        account?: ({
+            token?: string | undefined;
+            vars?: {
+                [x: string]: string | undefined;
+            } | undefined;
+        } & {
+            token?: string | undefined;
+            vars?: ({
+                [x: string]: string | undefined;
+            } & {
+                [x: string]: string | undefined;
+            } & { [K_3 in Exclude<keyof I_1["account"]["vars"], string | number>]: never; }) | undefined;
+        } & { [K_4 in Exclude<keyof I_1["account"], keyof AccountFacebook>]: never; }) | undefined;
+        create?: boolean | undefined;
+        username?: string | undefined;
+        sync?: boolean | undefined;
+    } & { [K_5 in Exclude<keyof I_1, keyof AuthenticateFacebookRequest>]: never; }>(object: I_1): AuthenticateFacebookRequest;
 };
 export declare const AuthenticateFacebookInstantGameRequest: {
     encode(message: AuthenticateFacebookInstantGameRequest, writer?: _m0.Writer): _m0.Writer;
     decode(input: _m0.Reader | Uint8Array, length?: number): AuthenticateFacebookInstantGameRequest;
     fromJSON(object: any): AuthenticateFacebookInstantGameRequest;
     toJSON(message: AuthenticateFacebookInstantGameRequest): unknown;
-    fromPartial(object: DeepPartial<AuthenticateFacebookInstantGameRequest>): AuthenticateFacebookInstantGameRequest;
+    create<I extends {
+        account?: {
+            signed_player_info?: string | undefined;
+            vars?: {
+                [x: string]: string | undefined;
+            } | undefined;
+        } | undefined;
+        create?: boolean | undefined;
+        username?: string | undefined;
+    } & {
+        account?: ({
+            signed_player_info?: string | undefined;
+            vars?: {
+                [x: string]: string | undefined;
+            } | undefined;
+        } & {
+            signed_player_info?: string | undefined;
+            vars?: ({
+                [x: string]: string | undefined;
+            } & {
+                [x: string]: string | undefined;
+            } & { [K in Exclude<keyof I["account"]["vars"], string | number>]: never; }) | undefined;
+        } & { [K_1 in Exclude<keyof I["account"], keyof AccountFacebookInstantGame>]: never; }) | undefined;
+        create?: boolean | undefined;
+        username?: string | undefined;
+    } & { [K_2 in Exclude<keyof I, keyof AuthenticateFacebookInstantGameRequest>]: never; }>(base?: I | undefined): AuthenticateFacebookInstantGameRequest;
+    fromPartial<I_1 extends {
+        account?: {
+            signed_player_info?: string | undefined;
+            vars?: {
+                [x: string]: string | undefined;
+            } | undefined;
+        } | undefined;
+        create?: boolean | undefined;
+        username?: string | undefined;
+    } & {
+        account?: ({
+            signed_player_info?: string | undefined;
+            vars?: {
+                [x: string]: string | undefined;
+            } | undefined;
+        } & {
+            signed_player_info?: string | undefined;
+            vars?: ({
+                [x: string]: string | undefined;
+            } & {
+                [x: string]: string | undefined;
+            } & { [K_3 in Exclude<keyof I_1["account"]["vars"], string | number>]: never; }) | undefined;
+        } & { [K_4 in Exclude<keyof I_1["account"], keyof AccountFacebookInstantGame>]: never; }) | undefined;
+        create?: boolean | undefined;
+        username?: string | undefined;
+    } & { [K_5 in Exclude<keyof I_1, keyof AuthenticateFacebookInstantGameRequest>]: never; }>(object: I_1): AuthenticateFacebookInstantGameRequest;
 };
 export declare const AuthenticateGameCenterRequest: {
     encode(message: AuthenticateGameCenterRequest, writer?: _m0.Writer): _m0.Writer;
     decode(input: _m0.Reader | Uint8Array, length?: number): AuthenticateGameCenterRequest;
     fromJSON(object: any): AuthenticateGameCenterRequest;
     toJSON(message: AuthenticateGameCenterRequest): unknown;
-    fromPartial(object: DeepPartial<AuthenticateGameCenterRequest>): AuthenticateGameCenterRequest;
+    create<I extends {
+        account?: {
+            player_id?: string | undefined;
+            bundle_id?: string | undefined;
+            timestamp_seconds?: number | undefined;
+            salt?: string | undefined;
+            signature?: string | undefined;
+            public_key_url?: string | undefined;
+            vars?: {
+                [x: string]: string | undefined;
+            } | undefined;
+        } | undefined;
+        create?: boolean | undefined;
+        username?: string | undefined;
+    } & {
+        account?: ({
+            player_id?: string | undefined;
+            bundle_id?: string | undefined;
+            timestamp_seconds?: number | undefined;
+            salt?: string | undefined;
+            signature?: string | undefined;
+            public_key_url?: string | undefined;
+            vars?: {
+                [x: string]: string | undefined;
+            } | undefined;
+        } & {
+            player_id?: string | undefined;
+            bundle_id?: string | undefined;
+            timestamp_seconds?: number | undefined;
+            salt?: string | undefined;
+            signature?: string | undefined;
+            public_key_url?: string | undefined;
+            vars?: ({
+                [x: string]: string | undefined;
+            } & {
+                [x: string]: string | undefined;
+            } & { [K in Exclude<keyof I["account"]["vars"], string | number>]: never; }) | undefined;
+        } & { [K_1 in Exclude<keyof I["account"], keyof AccountGameCenter>]: never; }) | undefined;
+        create?: boolean | undefined;
+        username?: string | undefined;
+    } & { [K_2 in Exclude<keyof I, keyof AuthenticateGameCenterRequest>]: never; }>(base?: I | undefined): AuthenticateGameCenterRequest;
+    fromPartial<I_1 extends {
+        account?: {
+            player_id?: string | undefined;
+            bundle_id?: string | undefined;
+            timestamp_seconds?: number | undefined;
+            salt?: string | undefined;
+            signature?: string | undefined;
+            public_key_url?: string | undefined;
+            vars?: {
+                [x: string]: string | undefined;
+            } | undefined;
+        } | undefined;
+        create?: boolean | undefined;
+        username?: string | undefined;
+    } & {
+        account?: ({
+            player_id?: string | undefined;
+            bundle_id?: string | undefined;
+            timestamp_seconds?: number | undefined;
+            salt?: string | undefined;
+            signature?: string | undefined;
+            public_key_url?: string | undefined;
+            vars?: {
+                [x: string]: string | undefined;
+            } | undefined;
+        } & {
+            player_id?: string | undefined;
+            bundle_id?: string | undefined;
+            timestamp_seconds?: number | undefined;
+            salt?: string | undefined;
+            signature?: string | undefined;
+            public_key_url?: string | undefined;
+            vars?: ({
+                [x: string]: string | undefined;
+            } & {
+                [x: string]: string | undefined;
+            } & { [K_3 in Exclude<keyof I_1["account"]["vars"], string | number>]: never; }) | undefined;
+        } & { [K_4 in Exclude<keyof I_1["account"], keyof AccountGameCenter>]: never; }) | undefined;
+        create?: boolean | undefined;
+        username?: string | undefined;
+    } & { [K_5 in Exclude<keyof I_1, keyof AuthenticateGameCenterRequest>]: never; }>(object: I_1): AuthenticateGameCenterRequest;
 };
 export declare const AuthenticateGoogleRequest: {
     encode(message: AuthenticateGoogleRequest, writer?: _m0.Writer): _m0.Writer;
     decode(input: _m0.Reader | Uint8Array, length?: number): AuthenticateGoogleRequest;
     fromJSON(object: any): AuthenticateGoogleRequest;
     toJSON(message: AuthenticateGoogleRequest): unknown;
-    fromPartial(object: DeepPartial<AuthenticateGoogleRequest>): AuthenticateGoogleRequest;
+    create<I extends {
+        account?: {
+            token?: string | undefined;
+            vars?: {
+                [x: string]: string | undefined;
+            } | undefined;
+        } | undefined;
+        create?: boolean | undefined;
+        username?: string | undefined;
+    } & {
+        account?: ({
+            token?: string | undefined;
+            vars?: {
+                [x: string]: string | undefined;
+            } | undefined;
+        } & {
+            token?: string | undefined;
+            vars?: ({
+                [x: string]: string | undefined;
+            } & {
+                [x: string]: string | undefined;
+            } & { [K in Exclude<keyof I["account"]["vars"], string | number>]: never; }) | undefined;
+        } & { [K_1 in Exclude<keyof I["account"], keyof AccountGoogle>]: never; }) | undefined;
+        create?: boolean | undefined;
+        username?: string | undefined;
+    } & { [K_2 in Exclude<keyof I, keyof AuthenticateGoogleRequest>]: never; }>(base?: I | undefined): AuthenticateGoogleRequest;
+    fromPartial<I_1 extends {
+        account?: {
+            token?: string | undefined;
+            vars?: {
+                [x: string]: string | undefined;
+            } | undefined;
+        } | undefined;
+        create?: boolean | undefined;
+        username?: string | undefined;
+    } & {
+        account?: ({
+            token?: string | undefined;
+            vars?: {
+                [x: string]: string | undefined;
+            } | undefined;
+        } & {
+            token?: string | undefined;
+            vars?: ({
+                [x: string]: string | undefined;
+            } & {
+                [x: string]: string | undefined;
+            } & { [K_3 in Exclude<keyof I_1["account"]["vars"], string | number>]: never; }) | undefined;
+        } & { [K_4 in Exclude<keyof I_1["account"], keyof AccountGoogle>]: never; }) | undefined;
+        create?: boolean | undefined;
+        username?: string | undefined;
+    } & { [K_5 in Exclude<keyof I_1, keyof AuthenticateGoogleRequest>]: never; }>(object: I_1): AuthenticateGoogleRequest;
 };
 export declare const AuthenticateSteamRequest: {
     encode(message: AuthenticateSteamRequest, writer?: _m0.Writer): _m0.Writer;
     decode(input: _m0.Reader | Uint8Array, length?: number): AuthenticateSteamRequest;
     fromJSON(object: any): AuthenticateSteamRequest;
     toJSON(message: AuthenticateSteamRequest): unknown;
-    fromPartial(object: DeepPartial<AuthenticateSteamRequest>): AuthenticateSteamRequest;
+    create<I extends {
+        account?: {
+            token?: string | undefined;
+            vars?: {
+                [x: string]: string | undefined;
+            } | undefined;
+        } | undefined;
+        create?: boolean | undefined;
+        username?: string | undefined;
+        sync?: boolean | undefined;
+    } & {
+        account?: ({
+            token?: string | undefined;
+            vars?: {
+                [x: string]: string | undefined;
+            } | undefined;
+        } & {
+            token?: string | undefined;
+            vars?: ({
+                [x: string]: string | undefined;
+            } & {
+                [x: string]: string | undefined;
+            } & { [K in Exclude<keyof I["account"]["vars"], string | number>]: never; }) | undefined;
+        } & { [K_1 in Exclude<keyof I["account"], keyof AccountSteam>]: never; }) | undefined;
+        create?: boolean | undefined;
+        username?: string | undefined;
+        sync?: boolean | undefined;
+    } & { [K_2 in Exclude<keyof I, keyof AuthenticateSteamRequest>]: never; }>(base?: I | undefined): AuthenticateSteamRequest;
+    fromPartial<I_1 extends {
+        account?: {
+            token?: string | undefined;
+            vars?: {
+                [x: string]: string | undefined;
+            } | undefined;
+        } | undefined;
+        create?: boolean | undefined;
+        username?: string | undefined;
+        sync?: boolean | undefined;
+    } & {
+        account?: ({
+            token?: string | undefined;
+            vars?: {
+                [x: string]: string | undefined;
+            } | undefined;
+        } & {
+            token?: string | undefined;
+            vars?: ({
+                [x: string]: string | undefined;
+            } & {
+                [x: string]: string | undefined;
+            } & { [K_3 in Exclude<keyof I_1["account"]["vars"], string | number>]: never; }) | undefined;
+        } & { [K_4 in Exclude<keyof I_1["account"], keyof AccountSteam>]: never; }) | undefined;
+        create?: boolean | undefined;
+        username?: string | undefined;
+        sync?: boolean | undefined;
+    } & { [K_5 in Exclude<keyof I_1, keyof AuthenticateSteamRequest>]: never; }>(object: I_1): AuthenticateSteamRequest;
 };
 export declare const BanGroupUsersRequest: {
     encode(message: BanGroupUsersRequest, writer?: _m0.Writer): _m0.Writer;
     decode(input: _m0.Reader | Uint8Array, length?: number): BanGroupUsersRequest;
     fromJSON(object: any): BanGroupUsersRequest;
     toJSON(message: BanGroupUsersRequest): unknown;
-    fromPartial(object: DeepPartial<BanGroupUsersRequest>): BanGroupUsersRequest;
+    create<I extends {
+        group_id?: string | undefined;
+        user_ids?: string[] | undefined;
+    } & {
+        group_id?: string | undefined;
+        user_ids?: (string[] & string[] & { [K in Exclude<keyof I["user_ids"], keyof string[]>]: never; }) | undefined;
+    } & { [K_1 in Exclude<keyof I, keyof BanGroupUsersRequest>]: never; }>(base?: I | undefined): BanGroupUsersRequest;
+    fromPartial<I_1 extends {
+        group_id?: string | undefined;
+        user_ids?: string[] | undefined;
+    } & {
+        group_id?: string | undefined;
+        user_ids?: (string[] & string[] & { [K_2 in Exclude<keyof I_1["user_ids"], keyof string[]>]: never; }) | undefined;
+    } & { [K_3 in Exclude<keyof I_1, keyof BanGroupUsersRequest>]: never; }>(object: I_1): BanGroupUsersRequest;
 };
 export declare const BlockFriendsRequest: {
     encode(message: BlockFriendsRequest, writer?: _m0.Writer): _m0.Writer;
     decode(input: _m0.Reader | Uint8Array, length?: number): BlockFriendsRequest;
     fromJSON(object: any): BlockFriendsRequest;
     toJSON(message: BlockFriendsRequest): unknown;
-    fromPartial(object: DeepPartial<BlockFriendsRequest>): BlockFriendsRequest;
+    create<I extends {
+        ids?: string[] | undefined;
+        usernames?: string[] | undefined;
+    } & {
+        ids?: (string[] & string[] & { [K in Exclude<keyof I["ids"], keyof string[]>]: never; }) | undefined;
+        usernames?: (string[] & string[] & { [K_1 in Exclude<keyof I["usernames"], keyof string[]>]: never; }) | undefined;
+    } & { [K_2 in Exclude<keyof I, keyof BlockFriendsRequest>]: never; }>(base?: I | undefined): BlockFriendsRequest;
+    fromPartial<I_1 extends {
+        ids?: string[] | undefined;
+        usernames?: string[] | undefined;
+    } & {
+        ids?: (string[] & string[] & { [K_3 in Exclude<keyof I_1["ids"], keyof string[]>]: never; }) | undefined;
+        usernames?: (string[] & string[] & { [K_4 in Exclude<keyof I_1["usernames"], keyof string[]>]: never; }) | undefined;
+    } & { [K_5 in Exclude<keyof I_1, keyof BlockFriendsRequest>]: never; }>(object: I_1): BlockFriendsRequest;
 };
 export declare const ChannelMessage: {
     encode(message: ChannelMessage, writer?: _m0.Writer): _m0.Writer;
     decode(input: _m0.Reader | Uint8Array, length?: number): ChannelMessage;
     fromJSON(object: any): ChannelMessage;
     toJSON(message: ChannelMessage): unknown;
-    fromPartial(object: DeepPartial<ChannelMessage>): ChannelMessage;
+    create<I extends {
+        clan_id?: string | undefined;
+        channel_id?: string | undefined;
+        message_id?: string | undefined;
+        code?: number | undefined;
+        sender_id?: string | undefined;
+        username?: string | undefined;
+        content?: string | undefined;
+        create_time?: Date | undefined;
+        update_time?: Date | undefined;
+        persistent?: boolean | undefined;
+        room_name?: string | undefined;
+        group_id?: string | undefined;
+        user_id_one?: string | undefined;
+        user_id_two?: string | undefined;
+    } & {
+        clan_id?: string | undefined;
+        channel_id?: string | undefined;
+        message_id?: string | undefined;
+        code?: number | undefined;
+        sender_id?: string | undefined;
+        username?: string | undefined;
+        content?: string | undefined;
+        create_time?: Date | undefined;
+        update_time?: Date | undefined;
+        persistent?: boolean | undefined;
+        room_name?: string | undefined;
+        group_id?: string | undefined;
+        user_id_one?: string | undefined;
+        user_id_two?: string | undefined;
+    } & { [K in Exclude<keyof I, keyof ChannelMessage>]: never; }>(base?: I | undefined): ChannelMessage;
+    fromPartial<I_1 extends {
+        clan_id?: string | undefined;
+        channel_id?: string | undefined;
+        message_id?: string | undefined;
+        code?: number | undefined;
+        sender_id?: string | undefined;
+        username?: string | undefined;
+        content?: string | undefined;
+        create_time?: Date | undefined;
+        update_time?: Date | undefined;
+        persistent?: boolean | undefined;
+        room_name?: string | undefined;
+        group_id?: string | undefined;
+        user_id_one?: string | undefined;
+        user_id_two?: string | undefined;
+    } & {
+        clan_id?: string | undefined;
+        channel_id?: string | undefined;
+        message_id?: string | undefined;
+        code?: number | undefined;
+        sender_id?: string | undefined;
+        username?: string | undefined;
+        content?: string | undefined;
+        create_time?: Date | undefined;
+        update_time?: Date | undefined;
+        persistent?: boolean | undefined;
+        room_name?: string | undefined;
+        group_id?: string | undefined;
+        user_id_one?: string | undefined;
+        user_id_two?: string | undefined;
+    } & { [K_1 in Exclude<keyof I_1, keyof ChannelMessage>]: never; }>(object: I_1): ChannelMessage;
 };
 export declare const ChannelMessageList: {
     encode(message: ChannelMessageList, writer?: _m0.Writer): _m0.Writer;
     decode(input: _m0.Reader | Uint8Array, length?: number): ChannelMessageList;
     fromJSON(object: any): ChannelMessageList;
     toJSON(message: ChannelMessageList): unknown;
-    fromPartial(object: DeepPartial<ChannelMessageList>): ChannelMessageList;
+    create<I extends {
+        messages?: {
+            clan_id?: string | undefined;
+            channel_id?: string | undefined;
+            message_id?: string | undefined;
+            code?: number | undefined;
+            sender_id?: string | undefined;
+            username?: string | undefined;
+            content?: string | undefined;
+            create_time?: Date | undefined;
+            update_time?: Date | undefined;
+            persistent?: boolean | undefined;
+            room_name?: string | undefined;
+            group_id?: string | undefined;
+            user_id_one?: string | undefined;
+            user_id_two?: string | undefined;
+        }[] | undefined;
+        next_cursor?: string | undefined;
+        prev_cursor?: string | undefined;
+        cacheable_cursor?: string | undefined;
+    } & {
+        messages?: ({
+            clan_id?: string | undefined;
+            channel_id?: string | undefined;
+            message_id?: string | undefined;
+            code?: number | undefined;
+            sender_id?: string | undefined;
+            username?: string | undefined;
+            content?: string | undefined;
+            create_time?: Date | undefined;
+            update_time?: Date | undefined;
+            persistent?: boolean | undefined;
+            room_name?: string | undefined;
+            group_id?: string | undefined;
+            user_id_one?: string | undefined;
+            user_id_two?: string | undefined;
+        }[] & ({
+            clan_id?: string | undefined;
+            channel_id?: string | undefined;
+            message_id?: string | undefined;
+            code?: number | undefined;
+            sender_id?: string | undefined;
+            username?: string | undefined;
+            content?: string | undefined;
+            create_time?: Date | undefined;
+            update_time?: Date | undefined;
+            persistent?: boolean | undefined;
+            room_name?: string | undefined;
+            group_id?: string | undefined;
+            user_id_one?: string | undefined;
+            user_id_two?: string | undefined;
+        } & {
+            clan_id?: string | undefined;
+            channel_id?: string | undefined;
+            message_id?: string | undefined;
+            code?: number | undefined;
+            sender_id?: string | undefined;
+            username?: string | undefined;
+            content?: string | undefined;
+            create_time?: Date | undefined;
+            update_time?: Date | undefined;
+            persistent?: boolean | undefined;
+            room_name?: string | undefined;
+            group_id?: string | undefined;
+            user_id_one?: string | undefined;
+            user_id_two?: string | undefined;
+        } & { [K in Exclude<keyof I["messages"][number], keyof ChannelMessage>]: never; })[] & { [K_1 in Exclude<keyof I["messages"], keyof {
+            clan_id?: string | undefined;
+            channel_id?: string | undefined;
+            message_id?: string | undefined;
+            code?: number | undefined;
+            sender_id?: string | undefined;
+            username?: string | undefined;
+            content?: string | undefined;
+            create_time?: Date | undefined;
+            update_time?: Date | undefined;
+            persistent?: boolean | undefined;
+            room_name?: string | undefined;
+            group_id?: string | undefined;
+            user_id_one?: string | undefined;
+            user_id_two?: string | undefined;
+        }[]>]: never; }) | undefined;
+        next_cursor?: string | undefined;
+        prev_cursor?: string | undefined;
+        cacheable_cursor?: string | undefined;
+    } & { [K_2 in Exclude<keyof I, keyof ChannelMessageList>]: never; }>(base?: I | undefined): ChannelMessageList;
+    fromPartial<I_1 extends {
+        messages?: {
+            clan_id?: string | undefined;
+            channel_id?: string | undefined;
+            message_id?: string | undefined;
+            code?: number | undefined;
+            sender_id?: string | undefined;
+            username?: string | undefined;
+            content?: string | undefined;
+            create_time?: Date | undefined;
+            update_time?: Date | undefined;
+            persistent?: boolean | undefined;
+            room_name?: string | undefined;
+            group_id?: string | undefined;
+            user_id_one?: string | undefined;
+            user_id_two?: string | undefined;
+        }[] | undefined;
+        next_cursor?: string | undefined;
+        prev_cursor?: string | undefined;
+        cacheable_cursor?: string | undefined;
+    } & {
+        messages?: ({
+            clan_id?: string | undefined;
+            channel_id?: string | undefined;
+            message_id?: string | undefined;
+            code?: number | undefined;
+            sender_id?: string | undefined;
+            username?: string | undefined;
+            content?: string | undefined;
+            create_time?: Date | undefined;
+            update_time?: Date | undefined;
+            persistent?: boolean | undefined;
+            room_name?: string | undefined;
+            group_id?: string | undefined;
+            user_id_one?: string | undefined;
+            user_id_two?: string | undefined;
+        }[] & ({
+            clan_id?: string | undefined;
+            channel_id?: string | undefined;
+            message_id?: string | undefined;
+            code?: number | undefined;
+            sender_id?: string | undefined;
+            username?: string | undefined;
+            content?: string | undefined;
+            create_time?: Date | undefined;
+            update_time?: Date | undefined;
+            persistent?: boolean | undefined;
+            room_name?: string | undefined;
+            group_id?: string | undefined;
+            user_id_one?: string | undefined;
+            user_id_two?: string | undefined;
+        } & {
+            clan_id?: string | undefined;
+            channel_id?: string | undefined;
+            message_id?: string | undefined;
+            code?: number | undefined;
+            sender_id?: string | undefined;
+            username?: string | undefined;
+            content?: string | undefined;
+            create_time?: Date | undefined;
+            update_time?: Date | undefined;
+            persistent?: boolean | undefined;
+            room_name?: string | undefined;
+            group_id?: string | undefined;
+            user_id_one?: string | undefined;
+            user_id_two?: string | undefined;
+        } & { [K_3 in Exclude<keyof I_1["messages"][number], keyof ChannelMessage>]: never; })[] & { [K_4 in Exclude<keyof I_1["messages"], keyof {
+            clan_id?: string | undefined;
+            channel_id?: string | undefined;
+            message_id?: string | undefined;
+            code?: number | undefined;
+            sender_id?: string | undefined;
+            username?: string | undefined;
+            content?: string | undefined;
+            create_time?: Date | undefined;
+            update_time?: Date | undefined;
+            persistent?: boolean | undefined;
+            room_name?: string | undefined;
+            group_id?: string | undefined;
+            user_id_one?: string | undefined;
+            user_id_two?: string | undefined;
+        }[]>]: never; }) | undefined;
+        next_cursor?: string | undefined;
+        prev_cursor?: string | undefined;
+        cacheable_cursor?: string | undefined;
+    } & { [K_5 in Exclude<keyof I_1, keyof ChannelMessageList>]: never; }>(object: I_1): ChannelMessageList;
 };
 export declare const CreateGroupRequest: {
     encode(message: CreateGroupRequest, writer?: _m0.Writer): _m0.Writer;
     decode(input: _m0.Reader | Uint8Array, length?: number): CreateGroupRequest;
     fromJSON(object: any): CreateGroupRequest;
     toJSON(message: CreateGroupRequest): unknown;
-    fromPartial(object: DeepPartial<CreateGroupRequest>): CreateGroupRequest;
+    create<I extends {
+        name?: string | undefined;
+        description?: string | undefined;
+        lang_tag?: string | undefined;
+        avatar_url?: string | undefined;
+        open?: boolean | undefined;
+        max_count?: number | undefined;
+    } & {
+        name?: string | undefined;
+        description?: string | undefined;
+        lang_tag?: string | undefined;
+        avatar_url?: string | undefined;
+        open?: boolean | undefined;
+        max_count?: number | undefined;
+    } & { [K in Exclude<keyof I, keyof CreateGroupRequest>]: never; }>(base?: I | undefined): CreateGroupRequest;
+    fromPartial<I_1 extends {
+        name?: string | undefined;
+        description?: string | undefined;
+        lang_tag?: string | undefined;
+        avatar_url?: string | undefined;
+        open?: boolean | undefined;
+        max_count?: number | undefined;
+    } & {
+        name?: string | undefined;
+        description?: string | undefined;
+        lang_tag?: string | undefined;
+        avatar_url?: string | undefined;
+        open?: boolean | undefined;
+        max_count?: number | undefined;
+    } & { [K_1 in Exclude<keyof I_1, keyof CreateGroupRequest>]: never; }>(object: I_1): CreateGroupRequest;
 };
 export declare const DeleteFriendsRequest: {
     encode(message: DeleteFriendsRequest, writer?: _m0.Writer): _m0.Writer;
     decode(input: _m0.Reader | Uint8Array, length?: number): DeleteFriendsRequest;
     fromJSON(object: any): DeleteFriendsRequest;
     toJSON(message: DeleteFriendsRequest): unknown;
-    fromPartial(object: DeepPartial<DeleteFriendsRequest>): DeleteFriendsRequest;
+    create<I extends {
+        ids?: string[] | undefined;
+        usernames?: string[] | undefined;
+    } & {
+        ids?: (string[] & string[] & { [K in Exclude<keyof I["ids"], keyof string[]>]: never; }) | undefined;
+        usernames?: (string[] & string[] & { [K_1 in Exclude<keyof I["usernames"], keyof string[]>]: never; }) | undefined;
+    } & { [K_2 in Exclude<keyof I, keyof DeleteFriendsRequest>]: never; }>(base?: I | undefined): DeleteFriendsRequest;
+    fromPartial<I_1 extends {
+        ids?: string[] | undefined;
+        usernames?: string[] | undefined;
+    } & {
+        ids?: (string[] & string[] & { [K_3 in Exclude<keyof I_1["ids"], keyof string[]>]: never; }) | undefined;
+        usernames?: (string[] & string[] & { [K_4 in Exclude<keyof I_1["usernames"], keyof string[]>]: never; }) | undefined;
+    } & { [K_5 in Exclude<keyof I_1, keyof DeleteFriendsRequest>]: never; }>(object: I_1): DeleteFriendsRequest;
 };
 export declare const DeleteGroupRequest: {
     encode(message: DeleteGroupRequest, writer?: _m0.Writer): _m0.Writer;
     decode(input: _m0.Reader | Uint8Array, length?: number): DeleteGroupRequest;
     fromJSON(object: any): DeleteGroupRequest;
     toJSON(message: DeleteGroupRequest): unknown;
-    fromPartial(object: DeepPartial<DeleteGroupRequest>): DeleteGroupRequest;
+    create<I extends {
+        group_id?: string | undefined;
+    } & {
+        group_id?: string | undefined;
+    } & { [K in Exclude<keyof I, "group_id">]: never; }>(base?: I | undefined): DeleteGroupRequest;
+    fromPartial<I_1 extends {
+        group_id?: string | undefined;
+    } & {
+        group_id?: string | undefined;
+    } & { [K_1 in Exclude<keyof I_1, "group_id">]: never; }>(object: I_1): DeleteGroupRequest;
 };
 export declare const DeleteLeaderboardRecordRequest: {
     encode(message: DeleteLeaderboardRecordRequest, writer?: _m0.Writer): _m0.Writer;
     decode(input: _m0.Reader | Uint8Array, length?: number): DeleteLeaderboardRecordRequest;
     fromJSON(object: any): DeleteLeaderboardRecordRequest;
     toJSON(message: DeleteLeaderboardRecordRequest): unknown;
-    fromPartial(object: DeepPartial<DeleteLeaderboardRecordRequest>): DeleteLeaderboardRecordRequest;
+    create<I extends {
+        leaderboard_id?: string | undefined;
+    } & {
+        leaderboard_id?: string | undefined;
+    } & { [K in Exclude<keyof I, "leaderboard_id">]: never; }>(base?: I | undefined): DeleteLeaderboardRecordRequest;
+    fromPartial<I_1 extends {
+        leaderboard_id?: string | undefined;
+    } & {
+        leaderboard_id?: string | undefined;
+    } & { [K_1 in Exclude<keyof I_1, "leaderboard_id">]: never; }>(object: I_1): DeleteLeaderboardRecordRequest;
 };
 export declare const DeleteNotificationsRequest: {
     encode(message: DeleteNotificationsRequest, writer?: _m0.Writer): _m0.Writer;
     decode(input: _m0.Reader | Uint8Array, length?: number): DeleteNotificationsRequest;
     fromJSON(object: any): DeleteNotificationsRequest;
     toJSON(message: DeleteNotificationsRequest): unknown;
-    fromPartial(object: DeepPartial<DeleteNotificationsRequest>): DeleteNotificationsRequest;
+    create<I extends {
+        ids?: string[] | undefined;
+    } & {
+        ids?: (string[] & string[] & { [K in Exclude<keyof I["ids"], keyof string[]>]: never; }) | undefined;
+    } & { [K_1 in Exclude<keyof I, "ids">]: never; }>(base?: I | undefined): DeleteNotificationsRequest;
+    fromPartial<I_1 extends {
+        ids?: string[] | undefined;
+    } & {
+        ids?: (string[] & string[] & { [K_2 in Exclude<keyof I_1["ids"], keyof string[]>]: never; }) | undefined;
+    } & { [K_3 in Exclude<keyof I_1, "ids">]: never; }>(object: I_1): DeleteNotificationsRequest;
+};
+export declare const DeleteTournamentRecordRequest: {
+    encode(message: DeleteTournamentRecordRequest, writer?: _m0.Writer): _m0.Writer;
+    decode(input: _m0.Reader | Uint8Array, length?: number): DeleteTournamentRecordRequest;
+    fromJSON(object: any): DeleteTournamentRecordRequest;
+    toJSON(message: DeleteTournamentRecordRequest): unknown;
+    create<I extends {
+        tournament_id?: string | undefined;
+    } & {
+        tournament_id?: string | undefined;
+    } & { [K in Exclude<keyof I, "tournament_id">]: never; }>(base?: I | undefined): DeleteTournamentRecordRequest;
+    fromPartial<I_1 extends {
+        tournament_id?: string | undefined;
+    } & {
+        tournament_id?: string | undefined;
+    } & { [K_1 in Exclude<keyof I_1, "tournament_id">]: never; }>(object: I_1): DeleteTournamentRecordRequest;
 };
 export declare const DeleteStorageObjectId: {
     encode(message: DeleteStorageObjectId, writer?: _m0.Writer): _m0.Writer;
     decode(input: _m0.Reader | Uint8Array, length?: number): DeleteStorageObjectId;
     fromJSON(object: any): DeleteStorageObjectId;
     toJSON(message: DeleteStorageObjectId): unknown;
-    fromPartial(object: DeepPartial<DeleteStorageObjectId>): DeleteStorageObjectId;
+    create<I extends {
+        collection?: string | undefined;
+        key?: string | undefined;
+        version?: string | undefined;
+    } & {
+        collection?: string | undefined;
+        key?: string | undefined;
+        version?: string | undefined;
+    } & { [K in Exclude<keyof I, keyof DeleteStorageObjectId>]: never; }>(base?: I | undefined): DeleteStorageObjectId;
+    fromPartial<I_1 extends {
+        collection?: string | undefined;
+        key?: string | undefined;
+        version?: string | undefined;
+    } & {
+        collection?: string | undefined;
+        key?: string | undefined;
+        version?: string | undefined;
+    } & { [K_1 in Exclude<keyof I_1, keyof DeleteStorageObjectId>]: never; }>(object: I_1): DeleteStorageObjectId;
 };
 export declare const DeleteStorageObjectsRequest: {
     encode(message: DeleteStorageObjectsRequest, writer?: _m0.Writer): _m0.Writer;
     decode(input: _m0.Reader | Uint8Array, length?: number): DeleteStorageObjectsRequest;
     fromJSON(object: any): DeleteStorageObjectsRequest;
     toJSON(message: DeleteStorageObjectsRequest): unknown;
-    fromPartial(object: DeepPartial<DeleteStorageObjectsRequest>): DeleteStorageObjectsRequest;
+    create<I extends {
+        object_ids?: {
+            collection?: string | undefined;
+            key?: string | undefined;
+            version?: string | undefined;
+        }[] | undefined;
+    } & {
+        object_ids?: ({
+            collection?: string | undefined;
+            key?: string | undefined;
+            version?: string | undefined;
+        }[] & ({
+            collection?: string | undefined;
+            key?: string | undefined;
+            version?: string | undefined;
+        } & {
+            collection?: string | undefined;
+            key?: string | undefined;
+            version?: string | undefined;
+        } & { [K in Exclude<keyof I["object_ids"][number], keyof DeleteStorageObjectId>]: never; })[] & { [K_1 in Exclude<keyof I["object_ids"], keyof {
+            collection?: string | undefined;
+            key?: string | undefined;
+            version?: string | undefined;
+        }[]>]: never; }) | undefined;
+    } & { [K_2 in Exclude<keyof I, "object_ids">]: never; }>(base?: I | undefined): DeleteStorageObjectsRequest;
+    fromPartial<I_1 extends {
+        object_ids?: {
+            collection?: string | undefined;
+            key?: string | undefined;
+            version?: string | undefined;
+        }[] | undefined;
+    } & {
+        object_ids?: ({
+            collection?: string | undefined;
+            key?: string | undefined;
+            version?: string | undefined;
+        }[] & ({
+            collection?: string | undefined;
+            key?: string | undefined;
+            version?: string | undefined;
+        } & {
+            collection?: string | undefined;
+            key?: string | undefined;
+            version?: string | undefined;
+        } & { [K_3 in Exclude<keyof I_1["object_ids"][number], keyof DeleteStorageObjectId>]: never; })[] & { [K_4 in Exclude<keyof I_1["object_ids"], keyof {
+            collection?: string | undefined;
+            key?: string | undefined;
+            version?: string | undefined;
+        }[]>]: never; }) | undefined;
+    } & { [K_5 in Exclude<keyof I_1, "object_ids">]: never; }>(object: I_1): DeleteStorageObjectsRequest;
 };
 export declare const Event: {
     encode(message: Event, writer?: _m0.Writer): _m0.Writer;
     decode(input: _m0.Reader | Uint8Array, length?: number): Event;
     fromJSON(object: any): Event;
     toJSON(message: Event): unknown;
-    fromPartial(object: DeepPartial<Event>): Event;
+    create<I extends {
+        name?: string | undefined;
+        properties?: {
+            [x: string]: string | undefined;
+        } | undefined;
+        timestamp?: Date | undefined;
+        external?: boolean | undefined;
+    } & {
+        name?: string | undefined;
+        properties?: ({
+            [x: string]: string | undefined;
+        } & {
+            [x: string]: string | undefined;
+        } & { [K in Exclude<keyof I["properties"], string | number>]: never; }) | undefined;
+        timestamp?: Date | undefined;
+        external?: boolean | undefined;
+    } & { [K_1 in Exclude<keyof I, keyof Event>]: never; }>(base?: I | undefined): Event;
+    fromPartial<I_1 extends {
+        name?: string | undefined;
+        properties?: {
+            [x: string]: string | undefined;
+        } | undefined;
+        timestamp?: Date | undefined;
+        external?: boolean | undefined;
+    } & {
+        name?: string | undefined;
+        properties?: ({
+            [x: string]: string | undefined;
+        } & {
+            [x: string]: string | undefined;
+        } & { [K_2 in Exclude<keyof I_1["properties"], string | number>]: never; }) | undefined;
+        timestamp?: Date | undefined;
+        external?: boolean | undefined;
+    } & { [K_3 in Exclude<keyof I_1, keyof Event>]: never; }>(object: I_1): Event;
 };
 export declare const Event_PropertiesEntry: {
     encode(message: Event_PropertiesEntry, writer?: _m0.Writer): _m0.Writer;
     decode(input: _m0.Reader | Uint8Array, length?: number): Event_PropertiesEntry;
     fromJSON(object: any): Event_PropertiesEntry;
     toJSON(message: Event_PropertiesEntry): unknown;
-    fromPartial(object: DeepPartial<Event_PropertiesEntry>): Event_PropertiesEntry;
+    create<I extends {
+        key?: string | undefined;
+        value?: string | undefined;
+    } & {
+        key?: string | undefined;
+        value?: string | undefined;
+    } & { [K in Exclude<keyof I, keyof Event_PropertiesEntry>]: never; }>(base?: I | undefined): Event_PropertiesEntry;
+    fromPartial<I_1 extends {
+        key?: string | undefined;
+        value?: string | undefined;
+    } & {
+        key?: string | undefined;
+        value?: string | undefined;
+    } & { [K_1 in Exclude<keyof I_1, keyof Event_PropertiesEntry>]: never; }>(object: I_1): Event_PropertiesEntry;
 };
 export declare const Friend: {
     encode(message: Friend, writer?: _m0.Writer): _m0.Writer;
     decode(input: _m0.Reader | Uint8Array, length?: number): Friend;
     fromJSON(object: any): Friend;
     toJSON(message: Friend): unknown;
-    fromPartial(object: DeepPartial<Friend>): Friend;
+    create<I extends {
+        user?: {
+            id?: string | undefined;
+            username?: string | undefined;
+            display_name?: string | undefined;
+            avatar_url?: string | undefined;
+            lang_tag?: string | undefined;
+            location?: string | undefined;
+            timezone?: string | undefined;
+            metadata?: string | undefined;
+            facebook_id?: string | undefined;
+            google_id?: string | undefined;
+            gamecenter_id?: string | undefined;
+            steam_id?: string | undefined;
+            online?: boolean | undefined;
+            edge_count?: number | undefined;
+            create_time?: Date | undefined;
+            update_time?: Date | undefined;
+            facebook_instant_game_id?: string | undefined;
+            apple_id?: string | undefined;
+        } | undefined;
+        state?: number | undefined;
+        update_time?: Date | undefined;
+    } & {
+        user?: ({
+            id?: string | undefined;
+            username?: string | undefined;
+            display_name?: string | undefined;
+            avatar_url?: string | undefined;
+            lang_tag?: string | undefined;
+            location?: string | undefined;
+            timezone?: string | undefined;
+            metadata?: string | undefined;
+            facebook_id?: string | undefined;
+            google_id?: string | undefined;
+            gamecenter_id?: string | undefined;
+            steam_id?: string | undefined;
+            online?: boolean | undefined;
+            edge_count?: number | undefined;
+            create_time?: Date | undefined;
+            update_time?: Date | undefined;
+            facebook_instant_game_id?: string | undefined;
+            apple_id?: string | undefined;
+        } & {
+            id?: string | undefined;
+            username?: string | undefined;
+            display_name?: string | undefined;
+            avatar_url?: string | undefined;
+            lang_tag?: string | undefined;
+            location?: string | undefined;
+            timezone?: string | undefined;
+            metadata?: string | undefined;
+            facebook_id?: string | undefined;
+            google_id?: string | undefined;
+            gamecenter_id?: string | undefined;
+            steam_id?: string | undefined;
+            online?: boolean | undefined;
+            edge_count?: number | undefined;
+            create_time?: Date | undefined;
+            update_time?: Date | undefined;
+            facebook_instant_game_id?: string | undefined;
+            apple_id?: string | undefined;
+        } & { [K in Exclude<keyof I["user"], keyof User>]: never; }) | undefined;
+        state?: number | undefined;
+        update_time?: Date | undefined;
+    } & { [K_1 in Exclude<keyof I, keyof Friend>]: never; }>(base?: I | undefined): Friend;
+    fromPartial<I_1 extends {
+        user?: {
+            id?: string | undefined;
+            username?: string | undefined;
+            display_name?: string | undefined;
+            avatar_url?: string | undefined;
+            lang_tag?: string | undefined;
+            location?: string | undefined;
+            timezone?: string | undefined;
+            metadata?: string | undefined;
+            facebook_id?: string | undefined;
+            google_id?: string | undefined;
+            gamecenter_id?: string | undefined;
+            steam_id?: string | undefined;
+            online?: boolean | undefined;
+            edge_count?: number | undefined;
+            create_time?: Date | undefined;
+            update_time?: Date | undefined;
+            facebook_instant_game_id?: string | undefined;
+            apple_id?: string | undefined;
+        } | undefined;
+        state?: number | undefined;
+        update_time?: Date | undefined;
+    } & {
+        user?: ({
+            id?: string | undefined;
+            username?: string | undefined;
+            display_name?: string | undefined;
+            avatar_url?: string | undefined;
+            lang_tag?: string | undefined;
+            location?: string | undefined;
+            timezone?: string | undefined;
+            metadata?: string | undefined;
+            facebook_id?: string | undefined;
+            google_id?: string | undefined;
+            gamecenter_id?: string | undefined;
+            steam_id?: string | undefined;
+            online?: boolean | undefined;
+            edge_count?: number | undefined;
+            create_time?: Date | undefined;
+            update_time?: Date | undefined;
+            facebook_instant_game_id?: string | undefined;
+            apple_id?: string | undefined;
+        } & {
+            id?: string | undefined;
+            username?: string | undefined;
+            display_name?: string | undefined;
+            avatar_url?: string | undefined;
+            lang_tag?: string | undefined;
+            location?: string | undefined;
+            timezone?: string | undefined;
+            metadata?: string | undefined;
+            facebook_id?: string | undefined;
+            google_id?: string | undefined;
+            gamecenter_id?: string | undefined;
+            steam_id?: string | undefined;
+            online?: boolean | undefined;
+            edge_count?: number | undefined;
+            create_time?: Date | undefined;
+            update_time?: Date | undefined;
+            facebook_instant_game_id?: string | undefined;
+            apple_id?: string | undefined;
+        } & { [K_2 in Exclude<keyof I_1["user"], keyof User>]: never; }) | undefined;
+        state?: number | undefined;
+        update_time?: Date | undefined;
+    } & { [K_3 in Exclude<keyof I_1, keyof Friend>]: never; }>(object: I_1): Friend;
 };
 export declare const FriendList: {
     encode(message: FriendList, writer?: _m0.Writer): _m0.Writer;
     decode(input: _m0.Reader | Uint8Array, length?: number): FriendList;
     fromJSON(object: any): FriendList;
     toJSON(message: FriendList): unknown;
-    fromPartial(object: DeepPartial<FriendList>): FriendList;
+    create<I extends {
+        friends?: {
+            user?: {
+                id?: string | undefined;
+                username?: string | undefined;
+                display_name?: string | undefined;
+                avatar_url?: string | undefined;
+                lang_tag?: string | undefined;
+                location?: string | undefined;
+                timezone?: string | undefined;
+                metadata?: string | undefined;
+                facebook_id?: string | undefined;
+                google_id?: string | undefined;
+                gamecenter_id?: string | undefined;
+                steam_id?: string | undefined;
+                online?: boolean | undefined;
+                edge_count?: number | undefined;
+                create_time?: Date | undefined;
+                update_time?: Date | undefined;
+                facebook_instant_game_id?: string | undefined;
+                apple_id?: string | undefined;
+            } | undefined;
+            state?: number | undefined;
+            update_time?: Date | undefined;
+        }[] | undefined;
+        cursor?: string | undefined;
+    } & {
+        friends?: ({
+            user?: {
+                id?: string | undefined;
+                username?: string | undefined;
+                display_name?: string | undefined;
+                avatar_url?: string | undefined;
+                lang_tag?: string | undefined;
+                location?: string | undefined;
+                timezone?: string | undefined;
+                metadata?: string | undefined;
+                facebook_id?: string | undefined;
+                google_id?: string | undefined;
+                gamecenter_id?: string | undefined;
+                steam_id?: string | undefined;
+                online?: boolean | undefined;
+                edge_count?: number | undefined;
+                create_time?: Date | undefined;
+                update_time?: Date | undefined;
+                facebook_instant_game_id?: string | undefined;
+                apple_id?: string | undefined;
+            } | undefined;
+            state?: number | undefined;
+            update_time?: Date | undefined;
+        }[] & ({
+            user?: {
+                id?: string | undefined;
+                username?: string | undefined;
+                display_name?: string | undefined;
+                avatar_url?: string | undefined;
+                lang_tag?: string | undefined;
+                location?: string | undefined;
+                timezone?: string | undefined;
+                metadata?: string | undefined;
+                facebook_id?: string | undefined;
+                google_id?: string | undefined;
+                gamecenter_id?: string | undefined;
+                steam_id?: string | undefined;
+                online?: boolean | undefined;
+                edge_count?: number | undefined;
+                create_time?: Date | undefined;
+                update_time?: Date | undefined;
+                facebook_instant_game_id?: string | undefined;
+                apple_id?: string | undefined;
+            } | undefined;
+            state?: number | undefined;
+            update_time?: Date | undefined;
+        } & {
+            user?: ({
+                id?: string | undefined;
+                username?: string | undefined;
+                display_name?: string | undefined;
+                avatar_url?: string | undefined;
+                lang_tag?: string | undefined;
+                location?: string | undefined;
+                timezone?: string | undefined;
+                metadata?: string | undefined;
+                facebook_id?: string | undefined;
+                google_id?: string | undefined;
+                gamecenter_id?: string | undefined;
+                steam_id?: string | undefined;
+                online?: boolean | undefined;
+                edge_count?: number | undefined;
+                create_time?: Date | undefined;
+                update_time?: Date | undefined;
+                facebook_instant_game_id?: string | undefined;
+                apple_id?: string | undefined;
+            } & {
+                id?: string | undefined;
+                username?: string | undefined;
+                display_name?: string | undefined;
+                avatar_url?: string | undefined;
+                lang_tag?: string | undefined;
+                location?: string | undefined;
+                timezone?: string | undefined;
+                metadata?: string | undefined;
+                facebook_id?: string | undefined;
+                google_id?: string | undefined;
+                gamecenter_id?: string | undefined;
+                steam_id?: string | undefined;
+                online?: boolean | undefined;
+                edge_count?: number | undefined;
+                create_time?: Date | undefined;
+                update_time?: Date | undefined;
+                facebook_instant_game_id?: string | undefined;
+                apple_id?: string | undefined;
+            } & { [K in Exclude<keyof I["friends"][number]["user"], keyof User>]: never; }) | undefined;
+            state?: number | undefined;
+            update_time?: Date | undefined;
+        } & { [K_1 in Exclude<keyof I["friends"][number], keyof Friend>]: never; })[] & { [K_2 in Exclude<keyof I["friends"], keyof {
+            user?: {
+                id?: string | undefined;
+                username?: string | undefined;
+                display_name?: string | undefined;
+                avatar_url?: string | undefined;
+                lang_tag?: string | undefined;
+                location?: string | undefined;
+                timezone?: string | undefined;
+                metadata?: string | undefined;
+                facebook_id?: string | undefined;
+                google_id?: string | undefined;
+                gamecenter_id?: string | undefined;
+                steam_id?: string | undefined;
+                online?: boolean | undefined;
+                edge_count?: number | undefined;
+                create_time?: Date | undefined;
+                update_time?: Date | undefined;
+                facebook_instant_game_id?: string | undefined;
+                apple_id?: string | undefined;
+            } | undefined;
+            state?: number | undefined;
+            update_time?: Date | undefined;
+        }[]>]: never; }) | undefined;
+        cursor?: string | undefined;
+    } & { [K_3 in Exclude<keyof I, keyof FriendList>]: never; }>(base?: I | undefined): FriendList;
+    fromPartial<I_1 extends {
+        friends?: {
+            user?: {
+                id?: string | undefined;
+                username?: string | undefined;
+                display_name?: string | undefined;
+                avatar_url?: string | undefined;
+                lang_tag?: string | undefined;
+                location?: string | undefined;
+                timezone?: string | undefined;
+                metadata?: string | undefined;
+                facebook_id?: string | undefined;
+                google_id?: string | undefined;
+                gamecenter_id?: string | undefined;
+                steam_id?: string | undefined;
+                online?: boolean | undefined;
+                edge_count?: number | undefined;
+                create_time?: Date | undefined;
+                update_time?: Date | undefined;
+                facebook_instant_game_id?: string | undefined;
+                apple_id?: string | undefined;
+            } | undefined;
+            state?: number | undefined;
+            update_time?: Date | undefined;
+        }[] | undefined;
+        cursor?: string | undefined;
+    } & {
+        friends?: ({
+            user?: {
+                id?: string | undefined;
+                username?: string | undefined;
+                display_name?: string | undefined;
+                avatar_url?: string | undefined;
+                lang_tag?: string | undefined;
+                location?: string | undefined;
+                timezone?: string | undefined;
+                metadata?: string | undefined;
+                facebook_id?: string | undefined;
+                google_id?: string | undefined;
+                gamecenter_id?: string | undefined;
+                steam_id?: string | undefined;
+                online?: boolean | undefined;
+                edge_count?: number | undefined;
+                create_time?: Date | undefined;
+                update_time?: Date | undefined;
+                facebook_instant_game_id?: string | undefined;
+                apple_id?: string | undefined;
+            } | undefined;
+            state?: number | undefined;
+            update_time?: Date | undefined;
+        }[] & ({
+            user?: {
+                id?: string | undefined;
+                username?: string | undefined;
+                display_name?: string | undefined;
+                avatar_url?: string | undefined;
+                lang_tag?: string | undefined;
+                location?: string | undefined;
+                timezone?: string | undefined;
+                metadata?: string | undefined;
+                facebook_id?: string | undefined;
+                google_id?: string | undefined;
+                gamecenter_id?: string | undefined;
+                steam_id?: string | undefined;
+                online?: boolean | undefined;
+                edge_count?: number | undefined;
+                create_time?: Date | undefined;
+                update_time?: Date | undefined;
+                facebook_instant_game_id?: string | undefined;
+                apple_id?: string | undefined;
+            } | undefined;
+            state?: number | undefined;
+            update_time?: Date | undefined;
+        } & {
+            user?: ({
+                id?: string | undefined;
+                username?: string | undefined;
+                display_name?: string | undefined;
+                avatar_url?: string | undefined;
+                lang_tag?: string | undefined;
+                location?: string | undefined;
+                timezone?: string | undefined;
+                metadata?: string | undefined;
+                facebook_id?: string | undefined;
+                google_id?: string | undefined;
+                gamecenter_id?: string | undefined;
+                steam_id?: string | undefined;
+                online?: boolean | undefined;
+                edge_count?: number | undefined;
+                create_time?: Date | undefined;
+                update_time?: Date | undefined;
+                facebook_instant_game_id?: string | undefined;
+                apple_id?: string | undefined;
+            } & {
+                id?: string | undefined;
+                username?: string | undefined;
+                display_name?: string | undefined;
+                avatar_url?: string | undefined;
+                lang_tag?: string | undefined;
+                location?: string | undefined;
+                timezone?: string | undefined;
+                metadata?: string | undefined;
+                facebook_id?: string | undefined;
+                google_id?: string | undefined;
+                gamecenter_id?: string | undefined;
+                steam_id?: string | undefined;
+                online?: boolean | undefined;
+                edge_count?: number | undefined;
+                create_time?: Date | undefined;
+                update_time?: Date | undefined;
+                facebook_instant_game_id?: string | undefined;
+                apple_id?: string | undefined;
+            } & { [K_4 in Exclude<keyof I_1["friends"][number]["user"], keyof User>]: never; }) | undefined;
+            state?: number | undefined;
+            update_time?: Date | undefined;
+        } & { [K_5 in Exclude<keyof I_1["friends"][number], keyof Friend>]: never; })[] & { [K_6 in Exclude<keyof I_1["friends"], keyof {
+            user?: {
+                id?: string | undefined;
+                username?: string | undefined;
+                display_name?: string | undefined;
+                avatar_url?: string | undefined;
+                lang_tag?: string | undefined;
+                location?: string | undefined;
+                timezone?: string | undefined;
+                metadata?: string | undefined;
+                facebook_id?: string | undefined;
+                google_id?: string | undefined;
+                gamecenter_id?: string | undefined;
+                steam_id?: string | undefined;
+                online?: boolean | undefined;
+                edge_count?: number | undefined;
+                create_time?: Date | undefined;
+                update_time?: Date | undefined;
+                facebook_instant_game_id?: string | undefined;
+                apple_id?: string | undefined;
+            } | undefined;
+            state?: number | undefined;
+            update_time?: Date | undefined;
+        }[]>]: never; }) | undefined;
+        cursor?: string | undefined;
+    } & { [K_7 in Exclude<keyof I_1, keyof FriendList>]: never; }>(object: I_1): FriendList;
 };
 export declare const GetUsersRequest: {
     encode(message: GetUsersRequest, writer?: _m0.Writer): _m0.Writer;
     decode(input: _m0.Reader | Uint8Array, length?: number): GetUsersRequest;
     fromJSON(object: any): GetUsersRequest;
     toJSON(message: GetUsersRequest): unknown;
-    fromPartial(object: DeepPartial<GetUsersRequest>): GetUsersRequest;
+    create<I extends {
+        ids?: string[] | undefined;
+        usernames?: string[] | undefined;
+        facebook_ids?: string[] | undefined;
+    } & {
+        ids?: (string[] & string[] & { [K in Exclude<keyof I["ids"], keyof string[]>]: never; }) | undefined;
+        usernames?: (string[] & string[] & { [K_1 in Exclude<keyof I["usernames"], keyof string[]>]: never; }) | undefined;
+        facebook_ids?: (string[] & string[] & { [K_2 in Exclude<keyof I["facebook_ids"], keyof string[]>]: never; }) | undefined;
+    } & { [K_3 in Exclude<keyof I, keyof GetUsersRequest>]: never; }>(base?: I | undefined): GetUsersRequest;
+    fromPartial<I_1 extends {
+        ids?: string[] | undefined;
+        usernames?: string[] | undefined;
+        facebook_ids?: string[] | undefined;
+    } & {
+        ids?: (string[] & string[] & { [K_4 in Exclude<keyof I_1["ids"], keyof string[]>]: never; }) | undefined;
+        usernames?: (string[] & string[] & { [K_5 in Exclude<keyof I_1["usernames"], keyof string[]>]: never; }) | undefined;
+        facebook_ids?: (string[] & string[] & { [K_6 in Exclude<keyof I_1["facebook_ids"], keyof string[]>]: never; }) | undefined;
+    } & { [K_7 in Exclude<keyof I_1, keyof GetUsersRequest>]: never; }>(object: I_1): GetUsersRequest;
+};
+export declare const GetSubscriptionRequest: {
+    encode(message: GetSubscriptionRequest, writer?: _m0.Writer): _m0.Writer;
+    decode(input: _m0.Reader | Uint8Array, length?: number): GetSubscriptionRequest;
+    fromJSON(object: any): GetSubscriptionRequest;
+    toJSON(message: GetSubscriptionRequest): unknown;
+    create<I extends {
+        product_id?: string | undefined;
+    } & {
+        product_id?: string | undefined;
+    } & { [K in Exclude<keyof I, "product_id">]: never; }>(base?: I | undefined): GetSubscriptionRequest;
+    fromPartial<I_1 extends {
+        product_id?: string | undefined;
+    } & {
+        product_id?: string | undefined;
+    } & { [K_1 in Exclude<keyof I_1, "product_id">]: never; }>(object: I_1): GetSubscriptionRequest;
 };
 export declare const Group: {
     encode(message: Group, writer?: _m0.Writer): _m0.Writer;
     decode(input: _m0.Reader | Uint8Array, length?: number): Group;
     fromJSON(object: any): Group;
     toJSON(message: Group): unknown;
-    fromPartial(object: DeepPartial<Group>): Group;
+    create<I extends {
+        id?: string | undefined;
+        creator_id?: string | undefined;
+        name?: string | undefined;
+        description?: string | undefined;
+        lang_tag?: string | undefined;
+        metadata?: string | undefined;
+        avatar_url?: string | undefined;
+        open?: boolean | undefined;
+        edge_count?: number | undefined;
+        max_count?: number | undefined;
+        create_time?: Date | undefined;
+        update_time?: Date | undefined;
+    } & {
+        id?: string | undefined;
+        creator_id?: string | undefined;
+        name?: string | undefined;
+        description?: string | undefined;
+        lang_tag?: string | undefined;
+        metadata?: string | undefined;
+        avatar_url?: string | undefined;
+        open?: boolean | undefined;
+        edge_count?: number | undefined;
+        max_count?: number | undefined;
+        create_time?: Date | undefined;
+        update_time?: Date | undefined;
+    } & { [K in Exclude<keyof I, keyof Group>]: never; }>(base?: I | undefined): Group;
+    fromPartial<I_1 extends {
+        id?: string | undefined;
+        creator_id?: string | undefined;
+        name?: string | undefined;
+        description?: string | undefined;
+        lang_tag?: string | undefined;
+        metadata?: string | undefined;
+        avatar_url?: string | undefined;
+        open?: boolean | undefined;
+        edge_count?: number | undefined;
+        max_count?: number | undefined;
+        create_time?: Date | undefined;
+        update_time?: Date | undefined;
+    } & {
+        id?: string | undefined;
+        creator_id?: string | undefined;
+        name?: string | undefined;
+        description?: string | undefined;
+        lang_tag?: string | undefined;
+        metadata?: string | undefined;
+        avatar_url?: string | undefined;
+        open?: boolean | undefined;
+        edge_count?: number | undefined;
+        max_count?: number | undefined;
+        create_time?: Date | undefined;
+        update_time?: Date | undefined;
+    } & { [K_1 in Exclude<keyof I_1, keyof Group>]: never; }>(object: I_1): Group;
 };
 export declare const GroupList: {
     encode(message: GroupList, writer?: _m0.Writer): _m0.Writer;
     decode(input: _m0.Reader | Uint8Array, length?: number): GroupList;
     fromJSON(object: any): GroupList;
     toJSON(message: GroupList): unknown;
-    fromPartial(object: DeepPartial<GroupList>): GroupList;
+    create<I extends {
+        groups?: {
+            id?: string | undefined;
+            creator_id?: string | undefined;
+            name?: string | undefined;
+            description?: string | undefined;
+            lang_tag?: string | undefined;
+            metadata?: string | undefined;
+            avatar_url?: string | undefined;
+            open?: boolean | undefined;
+            edge_count?: number | undefined;
+            max_count?: number | undefined;
+            create_time?: Date | undefined;
+            update_time?: Date | undefined;
+        }[] | undefined;
+        cursor?: string | undefined;
+    } & {
+        groups?: ({
+            id?: string | undefined;
+            creator_id?: string | undefined;
+            name?: string | undefined;
+            description?: string | undefined;
+            lang_tag?: string | undefined;
+            metadata?: string | undefined;
+            avatar_url?: string | undefined;
+            open?: boolean | undefined;
+            edge_count?: number | undefined;
+            max_count?: number | undefined;
+            create_time?: Date | undefined;
+            update_time?: Date | undefined;
+        }[] & ({
+            id?: string | undefined;
+            creator_id?: string | undefined;
+            name?: string | undefined;
+            description?: string | undefined;
+            lang_tag?: string | undefined;
+            metadata?: string | undefined;
+            avatar_url?: string | undefined;
+            open?: boolean | undefined;
+            edge_count?: number | undefined;
+            max_count?: number | undefined;
+            create_time?: Date | undefined;
+            update_time?: Date | undefined;
+        } & {
+            id?: string | undefined;
+            creator_id?: string | undefined;
+            name?: string | undefined;
+            description?: string | undefined;
+            lang_tag?: string | undefined;
+            metadata?: string | undefined;
+            avatar_url?: string | undefined;
+            open?: boolean | undefined;
+            edge_count?: number | undefined;
+            max_count?: number | undefined;
+            create_time?: Date | undefined;
+            update_time?: Date | undefined;
+        } & { [K in Exclude<keyof I["groups"][number], keyof Group>]: never; })[] & { [K_1 in Exclude<keyof I["groups"], keyof {
+            id?: string | undefined;
+            creator_id?: string | undefined;
+            name?: string | undefined;
+            description?: string | undefined;
+            lang_tag?: string | undefined;
+            metadata?: string | undefined;
+            avatar_url?: string | undefined;
+            open?: boolean | undefined;
+            edge_count?: number | undefined;
+            max_count?: number | undefined;
+            create_time?: Date | undefined;
+            update_time?: Date | undefined;
+        }[]>]: never; }) | undefined;
+        cursor?: string | undefined;
+    } & { [K_2 in Exclude<keyof I, keyof GroupList>]: never; }>(base?: I | undefined): GroupList;
+    fromPartial<I_1 extends {
+        groups?: {
+            id?: string | undefined;
+            creator_id?: string | undefined;
+            name?: string | undefined;
+            description?: string | undefined;
+            lang_tag?: string | undefined;
+            metadata?: string | undefined;
+            avatar_url?: string | undefined;
+            open?: boolean | undefined;
+            edge_count?: number | undefined;
+            max_count?: number | undefined;
+            create_time?: Date | undefined;
+            update_time?: Date | undefined;
+        }[] | undefined;
+        cursor?: string | undefined;
+    } & {
+        groups?: ({
+            id?: string | undefined;
+            creator_id?: string | undefined;
+            name?: string | undefined;
+            description?: string | undefined;
+            lang_tag?: string | undefined;
+            metadata?: string | undefined;
+            avatar_url?: string | undefined;
+            open?: boolean | undefined;
+            edge_count?: number | undefined;
+            max_count?: number | undefined;
+            create_time?: Date | undefined;
+            update_time?: Date | undefined;
+        }[] & ({
+            id?: string | undefined;
+            creator_id?: string | undefined;
+            name?: string | undefined;
+            description?: string | undefined;
+            lang_tag?: string | undefined;
+            metadata?: string | undefined;
+            avatar_url?: string | undefined;
+            open?: boolean | undefined;
+            edge_count?: number | undefined;
+            max_count?: number | undefined;
+            create_time?: Date | undefined;
+            update_time?: Date | undefined;
+        } & {
+            id?: string | undefined;
+            creator_id?: string | undefined;
+            name?: string | undefined;
+            description?: string | undefined;
+            lang_tag?: string | undefined;
+            metadata?: string | undefined;
+            avatar_url?: string | undefined;
+            open?: boolean | undefined;
+            edge_count?: number | undefined;
+            max_count?: number | undefined;
+            create_time?: Date | undefined;
+            update_time?: Date | undefined;
+        } & { [K_3 in Exclude<keyof I_1["groups"][number], keyof Group>]: never; })[] & { [K_4 in Exclude<keyof I_1["groups"], keyof {
+            id?: string | undefined;
+            creator_id?: string | undefined;
+            name?: string | undefined;
+            description?: string | undefined;
+            lang_tag?: string | undefined;
+            metadata?: string | undefined;
+            avatar_url?: string | undefined;
+            open?: boolean | undefined;
+            edge_count?: number | undefined;
+            max_count?: number | undefined;
+            create_time?: Date | undefined;
+            update_time?: Date | undefined;
+        }[]>]: never; }) | undefined;
+        cursor?: string | undefined;
+    } & { [K_5 in Exclude<keyof I_1, keyof GroupList>]: never; }>(object: I_1): GroupList;
 };
 export declare const GroupUserList: {
     encode(message: GroupUserList, writer?: _m0.Writer): _m0.Writer;
     decode(input: _m0.Reader | Uint8Array, length?: number): GroupUserList;
     fromJSON(object: any): GroupUserList;
     toJSON(message: GroupUserList): unknown;
-    fromPartial(object: DeepPartial<GroupUserList>): GroupUserList;
+    create<I extends {
+        group_users?: {
+            user?: {
+                id?: string | undefined;
+                username?: string | undefined;
+                display_name?: string | undefined;
+                avatar_url?: string | undefined;
+                lang_tag?: string | undefined;
+                location?: string | undefined;
+                timezone?: string | undefined;
+                metadata?: string | undefined;
+                facebook_id?: string | undefined;
+                google_id?: string | undefined;
+                gamecenter_id?: string | undefined;
+                steam_id?: string | undefined;
+                online?: boolean | undefined;
+                edge_count?: number | undefined;
+                create_time?: Date | undefined;
+                update_time?: Date | undefined;
+                facebook_instant_game_id?: string | undefined;
+                apple_id?: string | undefined;
+            } | undefined;
+            state?: number | undefined;
+        }[] | undefined;
+        cursor?: string | undefined;
+    } & {
+        group_users?: ({
+            user?: {
+                id?: string | undefined;
+                username?: string | undefined;
+                display_name?: string | undefined;
+                avatar_url?: string | undefined;
+                lang_tag?: string | undefined;
+                location?: string | undefined;
+                timezone?: string | undefined;
+                metadata?: string | undefined;
+                facebook_id?: string | undefined;
+                google_id?: string | undefined;
+                gamecenter_id?: string | undefined;
+                steam_id?: string | undefined;
+                online?: boolean | undefined;
+                edge_count?: number | undefined;
+                create_time?: Date | undefined;
+                update_time?: Date | undefined;
+                facebook_instant_game_id?: string | undefined;
+                apple_id?: string | undefined;
+            } | undefined;
+            state?: number | undefined;
+        }[] & ({
+            user?: {
+                id?: string | undefined;
+                username?: string | undefined;
+                display_name?: string | undefined;
+                avatar_url?: string | undefined;
+                lang_tag?: string | undefined;
+                location?: string | undefined;
+                timezone?: string | undefined;
+                metadata?: string | undefined;
+                facebook_id?: string | undefined;
+                google_id?: string | undefined;
+                gamecenter_id?: string | undefined;
+                steam_id?: string | undefined;
+                online?: boolean | undefined;
+                edge_count?: number | undefined;
+                create_time?: Date | undefined;
+                update_time?: Date | undefined;
+                facebook_instant_game_id?: string | undefined;
+                apple_id?: string | undefined;
+            } | undefined;
+            state?: number | undefined;
+        } & {
+            user?: ({
+                id?: string | undefined;
+                username?: string | undefined;
+                display_name?: string | undefined;
+                avatar_url?: string | undefined;
+                lang_tag?: string | undefined;
+                location?: string | undefined;
+                timezone?: string | undefined;
+                metadata?: string | undefined;
+                facebook_id?: string | undefined;
+                google_id?: string | undefined;
+                gamecenter_id?: string | undefined;
+                steam_id?: string | undefined;
+                online?: boolean | undefined;
+                edge_count?: number | undefined;
+                create_time?: Date | undefined;
+                update_time?: Date | undefined;
+                facebook_instant_game_id?: string | undefined;
+                apple_id?: string | undefined;
+            } & {
+                id?: string | undefined;
+                username?: string | undefined;
+                display_name?: string | undefined;
+                avatar_url?: string | undefined;
+                lang_tag?: string | undefined;
+                location?: string | undefined;
+                timezone?: string | undefined;
+                metadata?: string | undefined;
+                facebook_id?: string | undefined;
+                google_id?: string | undefined;
+                gamecenter_id?: string | undefined;
+                steam_id?: string | undefined;
+                online?: boolean | undefined;
+                edge_count?: number | undefined;
+                create_time?: Date | undefined;
+                update_time?: Date | undefined;
+                facebook_instant_game_id?: string | undefined;
+                apple_id?: string | undefined;
+            } & { [K in Exclude<keyof I["group_users"][number]["user"], keyof User>]: never; }) | undefined;
+            state?: number | undefined;
+        } & { [K_1 in Exclude<keyof I["group_users"][number], keyof GroupUserList_GroupUser>]: never; })[] & { [K_2 in Exclude<keyof I["group_users"], keyof {
+            user?: {
+                id?: string | undefined;
+                username?: string | undefined;
+                display_name?: string | undefined;
+                avatar_url?: string | undefined;
+                lang_tag?: string | undefined;
+                location?: string | undefined;
+                timezone?: string | undefined;
+                metadata?: string | undefined;
+                facebook_id?: string | undefined;
+                google_id?: string | undefined;
+                gamecenter_id?: string | undefined;
+                steam_id?: string | undefined;
+                online?: boolean | undefined;
+                edge_count?: number | undefined;
+                create_time?: Date | undefined;
+                update_time?: Date | undefined;
+                facebook_instant_game_id?: string | undefined;
+                apple_id?: string | undefined;
+            } | undefined;
+            state?: number | undefined;
+        }[]>]: never; }) | undefined;
+        cursor?: string | undefined;
+    } & { [K_3 in Exclude<keyof I, keyof GroupUserList>]: never; }>(base?: I | undefined): GroupUserList;
+    fromPartial<I_1 extends {
+        group_users?: {
+            user?: {
+                id?: string | undefined;
+                username?: string | undefined;
+                display_name?: string | undefined;
+                avatar_url?: string | undefined;
+                lang_tag?: string | undefined;
+                location?: string | undefined;
+                timezone?: string | undefined;
+                metadata?: string | undefined;
+                facebook_id?: string | undefined;
+                google_id?: string | undefined;
+                gamecenter_id?: string | undefined;
+                steam_id?: string | undefined;
+                online?: boolean | undefined;
+                edge_count?: number | undefined;
+                create_time?: Date | undefined;
+                update_time?: Date | undefined;
+                facebook_instant_game_id?: string | undefined;
+                apple_id?: string | undefined;
+            } | undefined;
+            state?: number | undefined;
+        }[] | undefined;
+        cursor?: string | undefined;
+    } & {
+        group_users?: ({
+            user?: {
+                id?: string | undefined;
+                username?: string | undefined;
+                display_name?: string | undefined;
+                avatar_url?: string | undefined;
+                lang_tag?: string | undefined;
+                location?: string | undefined;
+                timezone?: string | undefined;
+                metadata?: string | undefined;
+                facebook_id?: string | undefined;
+                google_id?: string | undefined;
+                gamecenter_id?: string | undefined;
+                steam_id?: string | undefined;
+                online?: boolean | undefined;
+                edge_count?: number | undefined;
+                create_time?: Date | undefined;
+                update_time?: Date | undefined;
+                facebook_instant_game_id?: string | undefined;
+                apple_id?: string | undefined;
+            } | undefined;
+            state?: number | undefined;
+        }[] & ({
+            user?: {
+                id?: string | undefined;
+                username?: string | undefined;
+                display_name?: string | undefined;
+                avatar_url?: string | undefined;
+                lang_tag?: string | undefined;
+                location?: string | undefined;
+                timezone?: string | undefined;
+                metadata?: string | undefined;
+                facebook_id?: string | undefined;
+                google_id?: string | undefined;
+                gamecenter_id?: string | undefined;
+                steam_id?: string | undefined;
+                online?: boolean | undefined;
+                edge_count?: number | undefined;
+                create_time?: Date | undefined;
+                update_time?: Date | undefined;
+                facebook_instant_game_id?: string | undefined;
+                apple_id?: string | undefined;
+            } | undefined;
+            state?: number | undefined;
+        } & {
+            user?: ({
+                id?: string | undefined;
+                username?: string | undefined;
+                display_name?: string | undefined;
+                avatar_url?: string | undefined;
+                lang_tag?: string | undefined;
+                location?: string | undefined;
+                timezone?: string | undefined;
+                metadata?: string | undefined;
+                facebook_id?: string | undefined;
+                google_id?: string | undefined;
+                gamecenter_id?: string | undefined;
+                steam_id?: string | undefined;
+                online?: boolean | undefined;
+                edge_count?: number | undefined;
+                create_time?: Date | undefined;
+                update_time?: Date | undefined;
+                facebook_instant_game_id?: string | undefined;
+                apple_id?: string | undefined;
+            } & {
+                id?: string | undefined;
+                username?: string | undefined;
+                display_name?: string | undefined;
+                avatar_url?: string | undefined;
+                lang_tag?: string | undefined;
+                location?: string | undefined;
+                timezone?: string | undefined;
+                metadata?: string | undefined;
+                facebook_id?: string | undefined;
+                google_id?: string | undefined;
+                gamecenter_id?: string | undefined;
+                steam_id?: string | undefined;
+                online?: boolean | undefined;
+                edge_count?: number | undefined;
+                create_time?: Date | undefined;
+                update_time?: Date | undefined;
+                facebook_instant_game_id?: string | undefined;
+                apple_id?: string | undefined;
+            } & { [K_4 in Exclude<keyof I_1["group_users"][number]["user"], keyof User>]: never; }) | undefined;
+            state?: number | undefined;
+        } & { [K_5 in Exclude<keyof I_1["group_users"][number], keyof GroupUserList_GroupUser>]: never; })[] & { [K_6 in Exclude<keyof I_1["group_users"], keyof {
+            user?: {
+                id?: string | undefined;
+                username?: string | undefined;
+                display_name?: string | undefined;
+                avatar_url?: string | undefined;
+                lang_tag?: string | undefined;
+                location?: string | undefined;
+                timezone?: string | undefined;
+                metadata?: string | undefined;
+                facebook_id?: string | undefined;
+                google_id?: string | undefined;
+                gamecenter_id?: string | undefined;
+                steam_id?: string | undefined;
+                online?: boolean | undefined;
+                edge_count?: number | undefined;
+                create_time?: Date | undefined;
+                update_time?: Date | undefined;
+                facebook_instant_game_id?: string | undefined;
+                apple_id?: string | undefined;
+            } | undefined;
+            state?: number | undefined;
+        }[]>]: never; }) | undefined;
+        cursor?: string | undefined;
+    } & { [K_7 in Exclude<keyof I_1, keyof GroupUserList>]: never; }>(object: I_1): GroupUserList;
 };
 export declare const GroupUserList_GroupUser: {
     encode(message: GroupUserList_GroupUser, writer?: _m0.Writer): _m0.Writer;
     decode(input: _m0.Reader | Uint8Array, length?: number): GroupUserList_GroupUser;
     fromJSON(object: any): GroupUserList_GroupUser;
     toJSON(message: GroupUserList_GroupUser): unknown;
-    fromPartial(object: DeepPartial<GroupUserList_GroupUser>): GroupUserList_GroupUser;
+    create<I extends {
+        user?: {
+            id?: string | undefined;
+            username?: string | undefined;
+            display_name?: string | undefined;
+            avatar_url?: string | undefined;
+            lang_tag?: string | undefined;
+            location?: string | undefined;
+            timezone?: string | undefined;
+            metadata?: string | undefined;
+            facebook_id?: string | undefined;
+            google_id?: string | undefined;
+            gamecenter_id?: string | undefined;
+            steam_id?: string | undefined;
+            online?: boolean | undefined;
+            edge_count?: number | undefined;
+            create_time?: Date | undefined;
+            update_time?: Date | undefined;
+            facebook_instant_game_id?: string | undefined;
+            apple_id?: string | undefined;
+        } | undefined;
+        state?: number | undefined;
+    } & {
+        user?: ({
+            id?: string | undefined;
+            username?: string | undefined;
+            display_name?: string | undefined;
+            avatar_url?: string | undefined;
+            lang_tag?: string | undefined;
+            location?: string | undefined;
+            timezone?: string | undefined;
+            metadata?: string | undefined;
+            facebook_id?: string | undefined;
+            google_id?: string | undefined;
+            gamecenter_id?: string | undefined;
+            steam_id?: string | undefined;
+            online?: boolean | undefined;
+            edge_count?: number | undefined;
+            create_time?: Date | undefined;
+            update_time?: Date | undefined;
+            facebook_instant_game_id?: string | undefined;
+            apple_id?: string | undefined;
+        } & {
+            id?: string | undefined;
+            username?: string | undefined;
+            display_name?: string | undefined;
+            avatar_url?: string | undefined;
+            lang_tag?: string | undefined;
+            location?: string | undefined;
+            timezone?: string | undefined;
+            metadata?: string | undefined;
+            facebook_id?: string | undefined;
+            google_id?: string | undefined;
+            gamecenter_id?: string | undefined;
+            steam_id?: string | undefined;
+            online?: boolean | undefined;
+            edge_count?: number | undefined;
+            create_time?: Date | undefined;
+            update_time?: Date | undefined;
+            facebook_instant_game_id?: string | undefined;
+            apple_id?: string | undefined;
+        } & { [K in Exclude<keyof I["user"], keyof User>]: never; }) | undefined;
+        state?: number | undefined;
+    } & { [K_1 in Exclude<keyof I, keyof GroupUserList_GroupUser>]: never; }>(base?: I | undefined): GroupUserList_GroupUser;
+    fromPartial<I_1 extends {
+        user?: {
+            id?: string | undefined;
+            username?: string | undefined;
+            display_name?: string | undefined;
+            avatar_url?: string | undefined;
+            lang_tag?: string | undefined;
+            location?: string | undefined;
+            timezone?: string | undefined;
+            metadata?: string | undefined;
+            facebook_id?: string | undefined;
+            google_id?: string | undefined;
+            gamecenter_id?: string | undefined;
+            steam_id?: string | undefined;
+            online?: boolean | undefined;
+            edge_count?: number | undefined;
+            create_time?: Date | undefined;
+            update_time?: Date | undefined;
+            facebook_instant_game_id?: string | undefined;
+            apple_id?: string | undefined;
+        } | undefined;
+        state?: number | undefined;
+    } & {
+        user?: ({
+            id?: string | undefined;
+            username?: string | undefined;
+            display_name?: string | undefined;
+            avatar_url?: string | undefined;
+            lang_tag?: string | undefined;
+            location?: string | undefined;
+            timezone?: string | undefined;
+            metadata?: string | undefined;
+            facebook_id?: string | undefined;
+            google_id?: string | undefined;
+            gamecenter_id?: string | undefined;
+            steam_id?: string | undefined;
+            online?: boolean | undefined;
+            edge_count?: number | undefined;
+            create_time?: Date | undefined;
+            update_time?: Date | undefined;
+            facebook_instant_game_id?: string | undefined;
+            apple_id?: string | undefined;
+        } & {
+            id?: string | undefined;
+            username?: string | undefined;
+            display_name?: string | undefined;
+            avatar_url?: string | undefined;
+            lang_tag?: string | undefined;
+            location?: string | undefined;
+            timezone?: string | undefined;
+            metadata?: string | undefined;
+            facebook_id?: string | undefined;
+            google_id?: string | undefined;
+            gamecenter_id?: string | undefined;
+            steam_id?: string | undefined;
+            online?: boolean | undefined;
+            edge_count?: number | undefined;
+            create_time?: Date | undefined;
+            update_time?: Date | undefined;
+            facebook_instant_game_id?: string | undefined;
+            apple_id?: string | undefined;
+        } & { [K_2 in Exclude<keyof I_1["user"], keyof User>]: never; }) | undefined;
+        state?: number | undefined;
+    } & { [K_3 in Exclude<keyof I_1, keyof GroupUserList_GroupUser>]: never; }>(object: I_1): GroupUserList_GroupUser;
 };
 export declare const ImportFacebookFriendsRequest: {
     encode(message: ImportFacebookFriendsRequest, writer?: _m0.Writer): _m0.Writer;
     decode(input: _m0.Reader | Uint8Array, length?: number): ImportFacebookFriendsRequest;
     fromJSON(object: any): ImportFacebookFriendsRequest;
     toJSON(message: ImportFacebookFriendsRequest): unknown;
-    fromPartial(object: DeepPartial<ImportFacebookFriendsRequest>): ImportFacebookFriendsRequest;
+    create<I extends {
+        account?: {
+            token?: string | undefined;
+            vars?: {
+                [x: string]: string | undefined;
+            } | undefined;
+        } | undefined;
+        reset?: boolean | undefined;
+    } & {
+        account?: ({
+            token?: string | undefined;
+            vars?: {
+                [x: string]: string | undefined;
+            } | undefined;
+        } & {
+            token?: string | undefined;
+            vars?: ({
+                [x: string]: string | undefined;
+            } & {
+                [x: string]: string | undefined;
+            } & { [K in Exclude<keyof I["account"]["vars"], string | number>]: never; }) | undefined;
+        } & { [K_1 in Exclude<keyof I["account"], keyof AccountFacebook>]: never; }) | undefined;
+        reset?: boolean | undefined;
+    } & { [K_2 in Exclude<keyof I, keyof ImportFacebookFriendsRequest>]: never; }>(base?: I | undefined): ImportFacebookFriendsRequest;
+    fromPartial<I_1 extends {
+        account?: {
+            token?: string | undefined;
+            vars?: {
+                [x: string]: string | undefined;
+            } | undefined;
+        } | undefined;
+        reset?: boolean | undefined;
+    } & {
+        account?: ({
+            token?: string | undefined;
+            vars?: {
+                [x: string]: string | undefined;
+            } | undefined;
+        } & {
+            token?: string | undefined;
+            vars?: ({
+                [x: string]: string | undefined;
+            } & {
+                [x: string]: string | undefined;
+            } & { [K_3 in Exclude<keyof I_1["account"]["vars"], string | number>]: never; }) | undefined;
+        } & { [K_4 in Exclude<keyof I_1["account"], keyof AccountFacebook>]: never; }) | undefined;
+        reset?: boolean | undefined;
+    } & { [K_5 in Exclude<keyof I_1, keyof ImportFacebookFriendsRequest>]: never; }>(object: I_1): ImportFacebookFriendsRequest;
 };
 export declare const ImportSteamFriendsRequest: {
     encode(message: ImportSteamFriendsRequest, writer?: _m0.Writer): _m0.Writer;
     decode(input: _m0.Reader | Uint8Array, length?: number): ImportSteamFriendsRequest;
     fromJSON(object: any): ImportSteamFriendsRequest;
     toJSON(message: ImportSteamFriendsRequest): unknown;
-    fromPartial(object: DeepPartial<ImportSteamFriendsRequest>): ImportSteamFriendsRequest;
+    create<I extends {
+        account?: {
+            token?: string | undefined;
+            vars?: {
+                [x: string]: string | undefined;
+            } | undefined;
+        } | undefined;
+        reset?: boolean | undefined;
+    } & {
+        account?: ({
+            token?: string | undefined;
+            vars?: {
+                [x: string]: string | undefined;
+            } | undefined;
+        } & {
+            token?: string | undefined;
+            vars?: ({
+                [x: string]: string | undefined;
+            } & {
+                [x: string]: string | undefined;
+            } & { [K in Exclude<keyof I["account"]["vars"], string | number>]: never; }) | undefined;
+        } & { [K_1 in Exclude<keyof I["account"], keyof AccountSteam>]: never; }) | undefined;
+        reset?: boolean | undefined;
+    } & { [K_2 in Exclude<keyof I, keyof ImportSteamFriendsRequest>]: never; }>(base?: I | undefined): ImportSteamFriendsRequest;
+    fromPartial<I_1 extends {
+        account?: {
+            token?: string | undefined;
+            vars?: {
+                [x: string]: string | undefined;
+            } | undefined;
+        } | undefined;
+        reset?: boolean | undefined;
+    } & {
+        account?: ({
+            token?: string | undefined;
+            vars?: {
+                [x: string]: string | undefined;
+            } | undefined;
+        } & {
+            token?: string | undefined;
+            vars?: ({
+                [x: string]: string | undefined;
+            } & {
+                [x: string]: string | undefined;
+            } & { [K_3 in Exclude<keyof I_1["account"]["vars"], string | number>]: never; }) | undefined;
+        } & { [K_4 in Exclude<keyof I_1["account"], keyof AccountSteam>]: never; }) | undefined;
+        reset?: boolean | undefined;
+    } & { [K_5 in Exclude<keyof I_1, keyof ImportSteamFriendsRequest>]: never; }>(object: I_1): ImportSteamFriendsRequest;
 };
 export declare const JoinGroupRequest: {
     encode(message: JoinGroupRequest, writer?: _m0.Writer): _m0.Writer;
     decode(input: _m0.Reader | Uint8Array, length?: number): JoinGroupRequest;
     fromJSON(object: any): JoinGroupRequest;
     toJSON(message: JoinGroupRequest): unknown;
-    fromPartial(object: DeepPartial<JoinGroupRequest>): JoinGroupRequest;
+    create<I extends {
+        group_id?: string | undefined;
+    } & {
+        group_id?: string | undefined;
+    } & { [K in Exclude<keyof I, "group_id">]: never; }>(base?: I | undefined): JoinGroupRequest;
+    fromPartial<I_1 extends {
+        group_id?: string | undefined;
+    } & {
+        group_id?: string | undefined;
+    } & { [K_1 in Exclude<keyof I_1, "group_id">]: never; }>(object: I_1): JoinGroupRequest;
 };
 export declare const JoinTournamentRequest: {
     encode(message: JoinTournamentRequest, writer?: _m0.Writer): _m0.Writer;
     decode(input: _m0.Reader | Uint8Array, length?: number): JoinTournamentRequest;
     fromJSON(object: any): JoinTournamentRequest;
     toJSON(message: JoinTournamentRequest): unknown;
-    fromPartial(object: DeepPartial<JoinTournamentRequest>): JoinTournamentRequest;
+    create<I extends {
+        tournament_id?: string | undefined;
+    } & {
+        tournament_id?: string | undefined;
+    } & { [K in Exclude<keyof I, "tournament_id">]: never; }>(base?: I | undefined): JoinTournamentRequest;
+    fromPartial<I_1 extends {
+        tournament_id?: string | undefined;
+    } & {
+        tournament_id?: string | undefined;
+    } & { [K_1 in Exclude<keyof I_1, "tournament_id">]: never; }>(object: I_1): JoinTournamentRequest;
 };
 export declare const KickGroupUsersRequest: {
     encode(message: KickGroupUsersRequest, writer?: _m0.Writer): _m0.Writer;
     decode(input: _m0.Reader | Uint8Array, length?: number): KickGroupUsersRequest;
     fromJSON(object: any): KickGroupUsersRequest;
     toJSON(message: KickGroupUsersRequest): unknown;
-    fromPartial(object: DeepPartial<KickGroupUsersRequest>): KickGroupUsersRequest;
+    create<I extends {
+        group_id?: string | undefined;
+        user_ids?: string[] | undefined;
+    } & {
+        group_id?: string | undefined;
+        user_ids?: (string[] & string[] & { [K in Exclude<keyof I["user_ids"], keyof string[]>]: never; }) | undefined;
+    } & { [K_1 in Exclude<keyof I, keyof KickGroupUsersRequest>]: never; }>(base?: I | undefined): KickGroupUsersRequest;
+    fromPartial<I_1 extends {
+        group_id?: string | undefined;
+        user_ids?: string[] | undefined;
+    } & {
+        group_id?: string | undefined;
+        user_ids?: (string[] & string[] & { [K_2 in Exclude<keyof I_1["user_ids"], keyof string[]>]: never; }) | undefined;
+    } & { [K_3 in Exclude<keyof I_1, keyof KickGroupUsersRequest>]: never; }>(object: I_1): KickGroupUsersRequest;
 };
 export declare const Leaderboard: {
     encode(message: Leaderboard, writer?: _m0.Writer): _m0.Writer;
     decode(input: _m0.Reader | Uint8Array, length?: number): Leaderboard;
     fromJSON(object: any): Leaderboard;
     toJSON(message: Leaderboard): unknown;
-    fromPartial(object: DeepPartial<Leaderboard>): Leaderboard;
+    create<I extends {
+        id?: string | undefined;
+        sort_order?: number | undefined;
+        operator?: Operator | undefined;
+        prev_reset?: number | undefined;
+        next_reset?: number | undefined;
+        metadata?: string | undefined;
+        create_time?: Date | undefined;
+        authoritative?: boolean | undefined;
+    } & {
+        id?: string | undefined;
+        sort_order?: number | undefined;
+        operator?: Operator | undefined;
+        prev_reset?: number | undefined;
+        next_reset?: number | undefined;
+        metadata?: string | undefined;
+        create_time?: Date | undefined;
+        authoritative?: boolean | undefined;
+    } & { [K in Exclude<keyof I, keyof Leaderboard>]: never; }>(base?: I | undefined): Leaderboard;
+    fromPartial<I_1 extends {
+        id?: string | undefined;
+        sort_order?: number | undefined;
+        operator?: Operator | undefined;
+        prev_reset?: number | undefined;
+        next_reset?: number | undefined;
+        metadata?: string | undefined;
+        create_time?: Date | undefined;
+        authoritative?: boolean | undefined;
+    } & {
+        id?: string | undefined;
+        sort_order?: number | undefined;
+        operator?: Operator | undefined;
+        prev_reset?: number | undefined;
+        next_reset?: number | undefined;
+        metadata?: string | undefined;
+        create_time?: Date | undefined;
+        authoritative?: boolean | undefined;
+    } & { [K_1 in Exclude<keyof I_1, keyof Leaderboard>]: never; }>(object: I_1): Leaderboard;
 };
 export declare const LeaderboardList: {
     encode(message: LeaderboardList, writer?: _m0.Writer): _m0.Writer;
     decode(input: _m0.Reader | Uint8Array, length?: number): LeaderboardList;
     fromJSON(object: any): LeaderboardList;
     toJSON(message: LeaderboardList): unknown;
-    fromPartial(object: DeepPartial<LeaderboardList>): LeaderboardList;
+    create<I extends {
+        leaderboards?: {
+            id?: string | undefined;
+            sort_order?: number | undefined;
+            operator?: Operator | undefined;
+            prev_reset?: number | undefined;
+            next_reset?: number | undefined;
+            metadata?: string | undefined;
+            create_time?: Date | undefined;
+            authoritative?: boolean | undefined;
+        }[] | undefined;
+        cursor?: string | undefined;
+    } & {
+        leaderboards?: ({
+            id?: string | undefined;
+            sort_order?: number | undefined;
+            operator?: Operator | undefined;
+            prev_reset?: number | undefined;
+            next_reset?: number | undefined;
+            metadata?: string | undefined;
+            create_time?: Date | undefined;
+            authoritative?: boolean | undefined;
+        }[] & ({
+            id?: string | undefined;
+            sort_order?: number | undefined;
+            operator?: Operator | undefined;
+            prev_reset?: number | undefined;
+            next_reset?: number | undefined;
+            metadata?: string | undefined;
+            create_time?: Date | undefined;
+            authoritative?: boolean | undefined;
+        } & {
+            id?: string | undefined;
+            sort_order?: number | undefined;
+            operator?: Operator | undefined;
+            prev_reset?: number | undefined;
+            next_reset?: number | undefined;
+            metadata?: string | undefined;
+            create_time?: Date | undefined;
+            authoritative?: boolean | undefined;
+        } & { [K in Exclude<keyof I["leaderboards"][number], keyof Leaderboard>]: never; })[] & { [K_1 in Exclude<keyof I["leaderboards"], keyof {
+            id?: string | undefined;
+            sort_order?: number | undefined;
+            operator?: Operator | undefined;
+            prev_reset?: number | undefined;
+            next_reset?: number | undefined;
+            metadata?: string | undefined;
+            create_time?: Date | undefined;
+            authoritative?: boolean | undefined;
+        }[]>]: never; }) | undefined;
+        cursor?: string | undefined;
+    } & { [K_2 in Exclude<keyof I, keyof LeaderboardList>]: never; }>(base?: I | undefined): LeaderboardList;
+    fromPartial<I_1 extends {
+        leaderboards?: {
+            id?: string | undefined;
+            sort_order?: number | undefined;
+            operator?: Operator | undefined;
+            prev_reset?: number | undefined;
+            next_reset?: number | undefined;
+            metadata?: string | undefined;
+            create_time?: Date | undefined;
+            authoritative?: boolean | undefined;
+        }[] | undefined;
+        cursor?: string | undefined;
+    } & {
+        leaderboards?: ({
+            id?: string | undefined;
+            sort_order?: number | undefined;
+            operator?: Operator | undefined;
+            prev_reset?: number | undefined;
+            next_reset?: number | undefined;
+            metadata?: string | undefined;
+            create_time?: Date | undefined;
+            authoritative?: boolean | undefined;
+        }[] & ({
+            id?: string | undefined;
+            sort_order?: number | undefined;
+            operator?: Operator | undefined;
+            prev_reset?: number | undefined;
+            next_reset?: number | undefined;
+            metadata?: string | undefined;
+            create_time?: Date | undefined;
+            authoritative?: boolean | undefined;
+        } & {
+            id?: string | undefined;
+            sort_order?: number | undefined;
+            operator?: Operator | undefined;
+            prev_reset?: number | undefined;
+            next_reset?: number | undefined;
+            metadata?: string | undefined;
+            create_time?: Date | undefined;
+            authoritative?: boolean | undefined;
+        } & { [K_3 in Exclude<keyof I_1["leaderboards"][number], keyof Leaderboard>]: never; })[] & { [K_4 in Exclude<keyof I_1["leaderboards"], keyof {
+            id?: string | undefined;
+            sort_order?: number | undefined;
+            operator?: Operator | undefined;
+            prev_reset?: number | undefined;
+            next_reset?: number | undefined;
+            metadata?: string | undefined;
+            create_time?: Date | undefined;
+            authoritative?: boolean | undefined;
+        }[]>]: never; }) | undefined;
+        cursor?: string | undefined;
+    } & { [K_5 in Exclude<keyof I_1, keyof LeaderboardList>]: never; }>(object: I_1): LeaderboardList;
 };
 export declare const LeaderboardRecord: {
     encode(message: LeaderboardRecord, writer?: _m0.Writer): _m0.Writer;
     decode(input: _m0.Reader | Uint8Array, length?: number): LeaderboardRecord;
     fromJSON(object: any): LeaderboardRecord;
     toJSON(message: LeaderboardRecord): unknown;
-    fromPartial(object: DeepPartial<LeaderboardRecord>): LeaderboardRecord;
+    create<I extends {
+        leaderboard_id?: string | undefined;
+        owner_id?: string | undefined;
+        username?: string | undefined;
+        score?: number | undefined;
+        subscore?: number | undefined;
+        num_score?: number | undefined;
+        metadata?: string | undefined;
+        create_time?: Date | undefined;
+        update_time?: Date | undefined;
+        expiry_time?: Date | undefined;
+        rank?: number | undefined;
+        max_num_score?: number | undefined;
+    } & {
+        leaderboard_id?: string | undefined;
+        owner_id?: string | undefined;
+        username?: string | undefined;
+        score?: number | undefined;
+        subscore?: number | undefined;
+        num_score?: number | undefined;
+        metadata?: string | undefined;
+        create_time?: Date | undefined;
+        update_time?: Date | undefined;
+        expiry_time?: Date | undefined;
+        rank?: number | undefined;
+        max_num_score?: number | undefined;
+    } & { [K in Exclude<keyof I, keyof LeaderboardRecord>]: never; }>(base?: I | undefined): LeaderboardRecord;
+    fromPartial<I_1 extends {
+        leaderboard_id?: string | undefined;
+        owner_id?: string | undefined;
+        username?: string | undefined;
+        score?: number | undefined;
+        subscore?: number | undefined;
+        num_score?: number | undefined;
+        metadata?: string | undefined;
+        create_time?: Date | undefined;
+        update_time?: Date | undefined;
+        expiry_time?: Date | undefined;
+        rank?: number | undefined;
+        max_num_score?: number | undefined;
+    } & {
+        leaderboard_id?: string | undefined;
+        owner_id?: string | undefined;
+        username?: string | undefined;
+        score?: number | undefined;
+        subscore?: number | undefined;
+        num_score?: number | undefined;
+        metadata?: string | undefined;
+        create_time?: Date | undefined;
+        update_time?: Date | undefined;
+        expiry_time?: Date | undefined;
+        rank?: number | undefined;
+        max_num_score?: number | undefined;
+    } & { [K_1 in Exclude<keyof I_1, keyof LeaderboardRecord>]: never; }>(object: I_1): LeaderboardRecord;
 };
 export declare const LeaderboardRecordList: {
     encode(message: LeaderboardRecordList, writer?: _m0.Writer): _m0.Writer;
     decode(input: _m0.Reader | Uint8Array, length?: number): LeaderboardRecordList;
     fromJSON(object: any): LeaderboardRecordList;
     toJSON(message: LeaderboardRecordList): unknown;
-    fromPartial(object: DeepPartial<LeaderboardRecordList>): LeaderboardRecordList;
+    create<I extends {
+        records?: {
+            leaderboard_id?: string | undefined;
+            owner_id?: string | undefined;
+            username?: string | undefined;
+            score?: number | undefined;
+            subscore?: number | undefined;
+            num_score?: number | undefined;
+            metadata?: string | undefined;
+            create_time?: Date | undefined;
+            update_time?: Date | undefined;
+            expiry_time?: Date | undefined;
+            rank?: number | undefined;
+            max_num_score?: number | undefined;
+        }[] | undefined;
+        owner_records?: {
+            leaderboard_id?: string | undefined;
+            owner_id?: string | undefined;
+            username?: string | undefined;
+            score?: number | undefined;
+            subscore?: number | undefined;
+            num_score?: number | undefined;
+            metadata?: string | undefined;
+            create_time?: Date | undefined;
+            update_time?: Date | undefined;
+            expiry_time?: Date | undefined;
+            rank?: number | undefined;
+            max_num_score?: number | undefined;
+        }[] | undefined;
+        next_cursor?: string | undefined;
+        prev_cursor?: string | undefined;
+        rank_count?: number | undefined;
+    } & {
+        records?: ({
+            leaderboard_id?: string | undefined;
+            owner_id?: string | undefined;
+            username?: string | undefined;
+            score?: number | undefined;
+            subscore?: number | undefined;
+            num_score?: number | undefined;
+            metadata?: string | undefined;
+            create_time?: Date | undefined;
+            update_time?: Date | undefined;
+            expiry_time?: Date | undefined;
+            rank?: number | undefined;
+            max_num_score?: number | undefined;
+        }[] & ({
+            leaderboard_id?: string | undefined;
+            owner_id?: string | undefined;
+            username?: string | undefined;
+            score?: number | undefined;
+            subscore?: number | undefined;
+            num_score?: number | undefined;
+            metadata?: string | undefined;
+            create_time?: Date | undefined;
+            update_time?: Date | undefined;
+            expiry_time?: Date | undefined;
+            rank?: number | undefined;
+            max_num_score?: number | undefined;
+        } & {
+            leaderboard_id?: string | undefined;
+            owner_id?: string | undefined;
+            username?: string | undefined;
+            score?: number | undefined;
+            subscore?: number | undefined;
+            num_score?: number | undefined;
+            metadata?: string | undefined;
+            create_time?: Date | undefined;
+            update_time?: Date | undefined;
+            expiry_time?: Date | undefined;
+            rank?: number | undefined;
+            max_num_score?: number | undefined;
+        } & { [K in Exclude<keyof I["records"][number], keyof LeaderboardRecord>]: never; })[] & { [K_1 in Exclude<keyof I["records"], keyof {
+            leaderboard_id?: string | undefined;
+            owner_id?: string | undefined;
+            username?: string | undefined;
+            score?: number | undefined;
+            subscore?: number | undefined;
+            num_score?: number | undefined;
+            metadata?: string | undefined;
+            create_time?: Date | undefined;
+            update_time?: Date | undefined;
+            expiry_time?: Date | undefined;
+            rank?: number | undefined;
+            max_num_score?: number | undefined;
+        }[]>]: never; }) | undefined;
+        owner_records?: ({
+            leaderboard_id?: string | undefined;
+            owner_id?: string | undefined;
+            username?: string | undefined;
+            score?: number | undefined;
+            subscore?: number | undefined;
+            num_score?: number | undefined;
+            metadata?: string | undefined;
+            create_time?: Date | undefined;
+            update_time?: Date | undefined;
+            expiry_time?: Date | undefined;
+            rank?: number | undefined;
+            max_num_score?: number | undefined;
+        }[] & ({
+            leaderboard_id?: string | undefined;
+            owner_id?: string | undefined;
+            username?: string | undefined;
+            score?: number | undefined;
+            subscore?: number | undefined;
+            num_score?: number | undefined;
+            metadata?: string | undefined;
+            create_time?: Date | undefined;
+            update_time?: Date | undefined;
+            expiry_time?: Date | undefined;
+            rank?: number | undefined;
+            max_num_score?: number | undefined;
+        } & {
+            leaderboard_id?: string | undefined;
+            owner_id?: string | undefined;
+            username?: string | undefined;
+            score?: number | undefined;
+            subscore?: number | undefined;
+            num_score?: number | undefined;
+            metadata?: string | undefined;
+            create_time?: Date | undefined;
+            update_time?: Date | undefined;
+            expiry_time?: Date | undefined;
+            rank?: number | undefined;
+            max_num_score?: number | undefined;
+        } & { [K_2 in Exclude<keyof I["owner_records"][number], keyof LeaderboardRecord>]: never; })[] & { [K_3 in Exclude<keyof I["owner_records"], keyof {
+            leaderboard_id?: string | undefined;
+            owner_id?: string | undefined;
+            username?: string | undefined;
+            score?: number | undefined;
+            subscore?: number | undefined;
+            num_score?: number | undefined;
+            metadata?: string | undefined;
+            create_time?: Date | undefined;
+            update_time?: Date | undefined;
+            expiry_time?: Date | undefined;
+            rank?: number | undefined;
+            max_num_score?: number | undefined;
+        }[]>]: never; }) | undefined;
+        next_cursor?: string | undefined;
+        prev_cursor?: string | undefined;
+        rank_count?: number | undefined;
+    } & { [K_4 in Exclude<keyof I, keyof LeaderboardRecordList>]: never; }>(base?: I | undefined): LeaderboardRecordList;
+    fromPartial<I_1 extends {
+        records?: {
+            leaderboard_id?: string | undefined;
+            owner_id?: string | undefined;
+            username?: string | undefined;
+            score?: number | undefined;
+            subscore?: number | undefined;
+            num_score?: number | undefined;
+            metadata?: string | undefined;
+            create_time?: Date | undefined;
+            update_time?: Date | undefined;
+            expiry_time?: Date | undefined;
+            rank?: number | undefined;
+            max_num_score?: number | undefined;
+        }[] | undefined;
+        owner_records?: {
+            leaderboard_id?: string | undefined;
+            owner_id?: string | undefined;
+            username?: string | undefined;
+            score?: number | undefined;
+            subscore?: number | undefined;
+            num_score?: number | undefined;
+            metadata?: string | undefined;
+            create_time?: Date | undefined;
+            update_time?: Date | undefined;
+            expiry_time?: Date | undefined;
+            rank?: number | undefined;
+            max_num_score?: number | undefined;
+        }[] | undefined;
+        next_cursor?: string | undefined;
+        prev_cursor?: string | undefined;
+        rank_count?: number | undefined;
+    } & {
+        records?: ({
+            leaderboard_id?: string | undefined;
+            owner_id?: string | undefined;
+            username?: string | undefined;
+            score?: number | undefined;
+            subscore?: number | undefined;
+            num_score?: number | undefined;
+            metadata?: string | undefined;
+            create_time?: Date | undefined;
+            update_time?: Date | undefined;
+            expiry_time?: Date | undefined;
+            rank?: number | undefined;
+            max_num_score?: number | undefined;
+        }[] & ({
+            leaderboard_id?: string | undefined;
+            owner_id?: string | undefined;
+            username?: string | undefined;
+            score?: number | undefined;
+            subscore?: number | undefined;
+            num_score?: number | undefined;
+            metadata?: string | undefined;
+            create_time?: Date | undefined;
+            update_time?: Date | undefined;
+            expiry_time?: Date | undefined;
+            rank?: number | undefined;
+            max_num_score?: number | undefined;
+        } & {
+            leaderboard_id?: string | undefined;
+            owner_id?: string | undefined;
+            username?: string | undefined;
+            score?: number | undefined;
+            subscore?: number | undefined;
+            num_score?: number | undefined;
+            metadata?: string | undefined;
+            create_time?: Date | undefined;
+            update_time?: Date | undefined;
+            expiry_time?: Date | undefined;
+            rank?: number | undefined;
+            max_num_score?: number | undefined;
+        } & { [K_5 in Exclude<keyof I_1["records"][number], keyof LeaderboardRecord>]: never; })[] & { [K_6 in Exclude<keyof I_1["records"], keyof {
+            leaderboard_id?: string | undefined;
+            owner_id?: string | undefined;
+            username?: string | undefined;
+            score?: number | undefined;
+            subscore?: number | undefined;
+            num_score?: number | undefined;
+            metadata?: string | undefined;
+            create_time?: Date | undefined;
+            update_time?: Date | undefined;
+            expiry_time?: Date | undefined;
+            rank?: number | undefined;
+            max_num_score?: number | undefined;
+        }[]>]: never; }) | undefined;
+        owner_records?: ({
+            leaderboard_id?: string | undefined;
+            owner_id?: string | undefined;
+            username?: string | undefined;
+            score?: number | undefined;
+            subscore?: number | undefined;
+            num_score?: number | undefined;
+            metadata?: string | undefined;
+            create_time?: Date | undefined;
+            update_time?: Date | undefined;
+            expiry_time?: Date | undefined;
+            rank?: number | undefined;
+            max_num_score?: number | undefined;
+        }[] & ({
+            leaderboard_id?: string | undefined;
+            owner_id?: string | undefined;
+            username?: string | undefined;
+            score?: number | undefined;
+            subscore?: number | undefined;
+            num_score?: number | undefined;
+            metadata?: string | undefined;
+            create_time?: Date | undefined;
+            update_time?: Date | undefined;
+            expiry_time?: Date | undefined;
+            rank?: number | undefined;
+            max_num_score?: number | undefined;
+        } & {
+            leaderboard_id?: string | undefined;
+            owner_id?: string | undefined;
+            username?: string | undefined;
+            score?: number | undefined;
+            subscore?: number | undefined;
+            num_score?: number | undefined;
+            metadata?: string | undefined;
+            create_time?: Date | undefined;
+            update_time?: Date | undefined;
+            expiry_time?: Date | undefined;
+            rank?: number | undefined;
+            max_num_score?: number | undefined;
+        } & { [K_7 in Exclude<keyof I_1["owner_records"][number], keyof LeaderboardRecord>]: never; })[] & { [K_8 in Exclude<keyof I_1["owner_records"], keyof {
+            leaderboard_id?: string | undefined;
+            owner_id?: string | undefined;
+            username?: string | undefined;
+            score?: number | undefined;
+            subscore?: number | undefined;
+            num_score?: number | undefined;
+            metadata?: string | undefined;
+            create_time?: Date | undefined;
+            update_time?: Date | undefined;
+            expiry_time?: Date | undefined;
+            rank?: number | undefined;
+            max_num_score?: number | undefined;
+        }[]>]: never; }) | undefined;
+        next_cursor?: string | undefined;
+        prev_cursor?: string | undefined;
+        rank_count?: number | undefined;
+    } & { [K_9 in Exclude<keyof I_1, keyof LeaderboardRecordList>]: never; }>(object: I_1): LeaderboardRecordList;
 };
 export declare const LeaveGroupRequest: {
     encode(message: LeaveGroupRequest, writer?: _m0.Writer): _m0.Writer;
     decode(input: _m0.Reader | Uint8Array, length?: number): LeaveGroupRequest;
     fromJSON(object: any): LeaveGroupRequest;
     toJSON(message: LeaveGroupRequest): unknown;
-    fromPartial(object: DeepPartial<LeaveGroupRequest>): LeaveGroupRequest;
+    create<I extends {
+        group_id?: string | undefined;
+    } & {
+        group_id?: string | undefined;
+    } & { [K in Exclude<keyof I, "group_id">]: never; }>(base?: I | undefined): LeaveGroupRequest;
+    fromPartial<I_1 extends {
+        group_id?: string | undefined;
+    } & {
+        group_id?: string | undefined;
+    } & { [K_1 in Exclude<keyof I_1, "group_id">]: never; }>(object: I_1): LeaveGroupRequest;
 };
 export declare const LinkFacebookRequest: {
     encode(message: LinkFacebookRequest, writer?: _m0.Writer): _m0.Writer;
     decode(input: _m0.Reader | Uint8Array, length?: number): LinkFacebookRequest;
     fromJSON(object: any): LinkFacebookRequest;
     toJSON(message: LinkFacebookRequest): unknown;
-    fromPartial(object: DeepPartial<LinkFacebookRequest>): LinkFacebookRequest;
+    create<I extends {
+        account?: {
+            token?: string | undefined;
+            vars?: {
+                [x: string]: string | undefined;
+            } | undefined;
+        } | undefined;
+        sync?: boolean | undefined;
+    } & {
+        account?: ({
+            token?: string | undefined;
+            vars?: {
+                [x: string]: string | undefined;
+            } | undefined;
+        } & {
+            token?: string | undefined;
+            vars?: ({
+                [x: string]: string | undefined;
+            } & {
+                [x: string]: string | undefined;
+            } & { [K in Exclude<keyof I["account"]["vars"], string | number>]: never; }) | undefined;
+        } & { [K_1 in Exclude<keyof I["account"], keyof AccountFacebook>]: never; }) | undefined;
+        sync?: boolean | undefined;
+    } & { [K_2 in Exclude<keyof I, keyof LinkFacebookRequest>]: never; }>(base?: I | undefined): LinkFacebookRequest;
+    fromPartial<I_1 extends {
+        account?: {
+            token?: string | undefined;
+            vars?: {
+                [x: string]: string | undefined;
+            } | undefined;
+        } | undefined;
+        sync?: boolean | undefined;
+    } & {
+        account?: ({
+            token?: string | undefined;
+            vars?: {
+                [x: string]: string | undefined;
+            } | undefined;
+        } & {
+            token?: string | undefined;
+            vars?: ({
+                [x: string]: string | undefined;
+            } & {
+                [x: string]: string | undefined;
+            } & { [K_3 in Exclude<keyof I_1["account"]["vars"], string | number>]: never; }) | undefined;
+        } & { [K_4 in Exclude<keyof I_1["account"], keyof AccountFacebook>]: never; }) | undefined;
+        sync?: boolean | undefined;
+    } & { [K_5 in Exclude<keyof I_1, keyof LinkFacebookRequest>]: never; }>(object: I_1): LinkFacebookRequest;
 };
 export declare const LinkSteamRequest: {
     encode(message: LinkSteamRequest, writer?: _m0.Writer): _m0.Writer;
     decode(input: _m0.Reader | Uint8Array, length?: number): LinkSteamRequest;
     fromJSON(object: any): LinkSteamRequest;
     toJSON(message: LinkSteamRequest): unknown;
-    fromPartial(object: DeepPartial<LinkSteamRequest>): LinkSteamRequest;
+    create<I extends {
+        account?: {
+            token?: string | undefined;
+            vars?: {
+                [x: string]: string | undefined;
+            } | undefined;
+        } | undefined;
+        sync?: boolean | undefined;
+    } & {
+        account?: ({
+            token?: string | undefined;
+            vars?: {
+                [x: string]: string | undefined;
+            } | undefined;
+        } & {
+            token?: string | undefined;
+            vars?: ({
+                [x: string]: string | undefined;
+            } & {
+                [x: string]: string | undefined;
+            } & { [K in Exclude<keyof I["account"]["vars"], string | number>]: never; }) | undefined;
+        } & { [K_1 in Exclude<keyof I["account"], keyof AccountSteam>]: never; }) | undefined;
+        sync?: boolean | undefined;
+    } & { [K_2 in Exclude<keyof I, keyof LinkSteamRequest>]: never; }>(base?: I | undefined): LinkSteamRequest;
+    fromPartial<I_1 extends {
+        account?: {
+            token?: string | undefined;
+            vars?: {
+                [x: string]: string | undefined;
+            } | undefined;
+        } | undefined;
+        sync?: boolean | undefined;
+    } & {
+        account?: ({
+            token?: string | undefined;
+            vars?: {
+                [x: string]: string | undefined;
+            } | undefined;
+        } & {
+            token?: string | undefined;
+            vars?: ({
+                [x: string]: string | undefined;
+            } & {
+                [x: string]: string | undefined;
+            } & { [K_3 in Exclude<keyof I_1["account"]["vars"], string | number>]: never; }) | undefined;
+        } & { [K_4 in Exclude<keyof I_1["account"], keyof AccountSteam>]: never; }) | undefined;
+        sync?: boolean | undefined;
+    } & { [K_5 in Exclude<keyof I_1, keyof LinkSteamRequest>]: never; }>(object: I_1): LinkSteamRequest;
 };
 export declare const ListChannelMessagesRequest: {
     encode(message: ListChannelMessagesRequest, writer?: _m0.Writer): _m0.Writer;
     decode(input: _m0.Reader | Uint8Array, length?: number): ListChannelMessagesRequest;
     fromJSON(object: any): ListChannelMessagesRequest;
     toJSON(message: ListChannelMessagesRequest): unknown;
-    fromPartial(object: DeepPartial<ListChannelMessagesRequest>): ListChannelMessagesRequest;
+    create<I extends {
+        channel_id?: string | undefined;
+        limit?: number | undefined;
+        forward?: boolean | undefined;
+        cursor?: string | undefined;
+    } & {
+        channel_id?: string | undefined;
+        limit?: number | undefined;
+        forward?: boolean | undefined;
+        cursor?: string | undefined;
+    } & { [K in Exclude<keyof I, keyof ListChannelMessagesRequest>]: never; }>(base?: I | undefined): ListChannelMessagesRequest;
+    fromPartial<I_1 extends {
+        channel_id?: string | undefined;
+        limit?: number | undefined;
+        forward?: boolean | undefined;
+        cursor?: string | undefined;
+    } & {
+        channel_id?: string | undefined;
+        limit?: number | undefined;
+        forward?: boolean | undefined;
+        cursor?: string | undefined;
+    } & { [K_1 in Exclude<keyof I_1, keyof ListChannelMessagesRequest>]: never; }>(object: I_1): ListChannelMessagesRequest;
 };
 export declare const ListFriendsRequest: {
     encode(message: ListFriendsRequest, writer?: _m0.Writer): _m0.Writer;
     decode(input: _m0.Reader | Uint8Array, length?: number): ListFriendsRequest;
     fromJSON(object: any): ListFriendsRequest;
     toJSON(message: ListFriendsRequest): unknown;
-    fromPartial(object: DeepPartial<ListFriendsRequest>): ListFriendsRequest;
+    create<I extends {
+        limit?: number | undefined;
+        state?: number | undefined;
+        cursor?: string | undefined;
+    } & {
+        limit?: number | undefined;
+        state?: number | undefined;
+        cursor?: string | undefined;
+    } & { [K in Exclude<keyof I, keyof ListFriendsRequest>]: never; }>(base?: I | undefined): ListFriendsRequest;
+    fromPartial<I_1 extends {
+        limit?: number | undefined;
+        state?: number | undefined;
+        cursor?: string | undefined;
+    } & {
+        limit?: number | undefined;
+        state?: number | undefined;
+        cursor?: string | undefined;
+    } & { [K_1 in Exclude<keyof I_1, keyof ListFriendsRequest>]: never; }>(object: I_1): ListFriendsRequest;
 };
 export declare const ListGroupsRequest: {
     encode(message: ListGroupsRequest, writer?: _m0.Writer): _m0.Writer;
     decode(input: _m0.Reader | Uint8Array, length?: number): ListGroupsRequest;
     fromJSON(object: any): ListGroupsRequest;
     toJSON(message: ListGroupsRequest): unknown;
-    fromPartial(object: DeepPartial<ListGroupsRequest>): ListGroupsRequest;
+    create<I extends {
+        name?: string | undefined;
+        cursor?: string | undefined;
+        limit?: number | undefined;
+        lang_tag?: string | undefined;
+        members?: number | undefined;
+        open?: boolean | undefined;
+    } & {
+        name?: string | undefined;
+        cursor?: string | undefined;
+        limit?: number | undefined;
+        lang_tag?: string | undefined;
+        members?: number | undefined;
+        open?: boolean | undefined;
+    } & { [K in Exclude<keyof I, keyof ListGroupsRequest>]: never; }>(base?: I | undefined): ListGroupsRequest;
+    fromPartial<I_1 extends {
+        name?: string | undefined;
+        cursor?: string | undefined;
+        limit?: number | undefined;
+        lang_tag?: string | undefined;
+        members?: number | undefined;
+        open?: boolean | undefined;
+    } & {
+        name?: string | undefined;
+        cursor?: string | undefined;
+        limit?: number | undefined;
+        lang_tag?: string | undefined;
+        members?: number | undefined;
+        open?: boolean | undefined;
+    } & { [K_1 in Exclude<keyof I_1, keyof ListGroupsRequest>]: never; }>(object: I_1): ListGroupsRequest;
 };
 export declare const ListGroupUsersRequest: {
     encode(message: ListGroupUsersRequest, writer?: _m0.Writer): _m0.Writer;
     decode(input: _m0.Reader | Uint8Array, length?: number): ListGroupUsersRequest;
     fromJSON(object: any): ListGroupUsersRequest;
     toJSON(message: ListGroupUsersRequest): unknown;
-    fromPartial(object: DeepPartial<ListGroupUsersRequest>): ListGroupUsersRequest;
+    create<I extends {
+        group_id?: string | undefined;
+        limit?: number | undefined;
+        state?: number | undefined;
+        cursor?: string | undefined;
+    } & {
+        group_id?: string | undefined;
+        limit?: number | undefined;
+        state?: number | undefined;
+        cursor?: string | undefined;
+    } & { [K in Exclude<keyof I, keyof ListGroupUsersRequest>]: never; }>(base?: I | undefined): ListGroupUsersRequest;
+    fromPartial<I_1 extends {
+        group_id?: string | undefined;
+        limit?: number | undefined;
+        state?: number | undefined;
+        cursor?: string | undefined;
+    } & {
+        group_id?: string | undefined;
+        limit?: number | undefined;
+        state?: number | undefined;
+        cursor?: string | undefined;
+    } & { [K_1 in Exclude<keyof I_1, keyof ListGroupUsersRequest>]: never; }>(object: I_1): ListGroupUsersRequest;
 };
 export declare const ListLeaderboardRecordsAroundOwnerRequest: {
     encode(message: ListLeaderboardRecordsAroundOwnerRequest, writer?: _m0.Writer): _m0.Writer;
     decode(input: _m0.Reader | Uint8Array, length?: number): ListLeaderboardRecordsAroundOwnerRequest;
     fromJSON(object: any): ListLeaderboardRecordsAroundOwnerRequest;
     toJSON(message: ListLeaderboardRecordsAroundOwnerRequest): unknown;
-    fromPartial(object: DeepPartial<ListLeaderboardRecordsAroundOwnerRequest>): ListLeaderboardRecordsAroundOwnerRequest;
+    create<I extends {
+        leaderboard_id?: string | undefined;
+        limit?: number | undefined;
+        owner_id?: string | undefined;
+        expiry?: number | undefined;
+        cursor?: string | undefined;
+    } & {
+        leaderboard_id?: string | undefined;
+        limit?: number | undefined;
+        owner_id?: string | undefined;
+        expiry?: number | undefined;
+        cursor?: string | undefined;
+    } & { [K in Exclude<keyof I, keyof ListLeaderboardRecordsAroundOwnerRequest>]: never; }>(base?: I | undefined): ListLeaderboardRecordsAroundOwnerRequest;
+    fromPartial<I_1 extends {
+        leaderboard_id?: string | undefined;
+        limit?: number | undefined;
+        owner_id?: string | undefined;
+        expiry?: number | undefined;
+        cursor?: string | undefined;
+    } & {
+        leaderboard_id?: string | undefined;
+        limit?: number | undefined;
+        owner_id?: string | undefined;
+        expiry?: number | undefined;
+        cursor?: string | undefined;
+    } & { [K_1 in Exclude<keyof I_1, keyof ListLeaderboardRecordsAroundOwnerRequest>]: never; }>(object: I_1): ListLeaderboardRecordsAroundOwnerRequest;
 };
 export declare const ListLeaderboardRecordsRequest: {
     encode(message: ListLeaderboardRecordsRequest, writer?: _m0.Writer): _m0.Writer;
     decode(input: _m0.Reader | Uint8Array, length?: number): ListLeaderboardRecordsRequest;
     fromJSON(object: any): ListLeaderboardRecordsRequest;
     toJSON(message: ListLeaderboardRecordsRequest): unknown;
-    fromPartial(object: DeepPartial<ListLeaderboardRecordsRequest>): ListLeaderboardRecordsRequest;
+    create<I extends {
+        leaderboard_id?: string | undefined;
+        owner_ids?: string[] | undefined;
+        limit?: number | undefined;
+        cursor?: string | undefined;
+        expiry?: number | undefined;
+    } & {
+        leaderboard_id?: string | undefined;
+        owner_ids?: (string[] & string[] & { [K in Exclude<keyof I["owner_ids"], keyof string[]>]: never; }) | undefined;
+        limit?: number | undefined;
+        cursor?: string | undefined;
+        expiry?: number | undefined;
+    } & { [K_1 in Exclude<keyof I, keyof ListLeaderboardRecordsRequest>]: never; }>(base?: I | undefined): ListLeaderboardRecordsRequest;
+    fromPartial<I_1 extends {
+        leaderboard_id?: string | undefined;
+        owner_ids?: string[] | undefined;
+        limit?: number | undefined;
+        cursor?: string | undefined;
+        expiry?: number | undefined;
+    } & {
+        leaderboard_id?: string | undefined;
+        owner_ids?: (string[] & string[] & { [K_2 in Exclude<keyof I_1["owner_ids"], keyof string[]>]: never; }) | undefined;
+        limit?: number | undefined;
+        cursor?: string | undefined;
+        expiry?: number | undefined;
+    } & { [K_3 in Exclude<keyof I_1, keyof ListLeaderboardRecordsRequest>]: never; }>(object: I_1): ListLeaderboardRecordsRequest;
 };
 export declare const ListMatchesRequest: {
     encode(message: ListMatchesRequest, writer?: _m0.Writer): _m0.Writer;
     decode(input: _m0.Reader | Uint8Array, length?: number): ListMatchesRequest;
     fromJSON(object: any): ListMatchesRequest;
     toJSON(message: ListMatchesRequest): unknown;
-    fromPartial(object: DeepPartial<ListMatchesRequest>): ListMatchesRequest;
+    create<I extends {
+        limit?: number | undefined;
+        authoritative?: boolean | undefined;
+        label?: string | undefined;
+        min_size?: number | undefined;
+        max_size?: number | undefined;
+        query?: string | undefined;
+    } & {
+        limit?: number | undefined;
+        authoritative?: boolean | undefined;
+        label?: string | undefined;
+        min_size?: number | undefined;
+        max_size?: number | undefined;
+        query?: string | undefined;
+    } & { [K in Exclude<keyof I, keyof ListMatchesRequest>]: never; }>(base?: I | undefined): ListMatchesRequest;
+    fromPartial<I_1 extends {
+        limit?: number | undefined;
+        authoritative?: boolean | undefined;
+        label?: string | undefined;
+        min_size?: number | undefined;
+        max_size?: number | undefined;
+        query?: string | undefined;
+    } & {
+        limit?: number | undefined;
+        authoritative?: boolean | undefined;
+        label?: string | undefined;
+        min_size?: number | undefined;
+        max_size?: number | undefined;
+        query?: string | undefined;
+    } & { [K_1 in Exclude<keyof I_1, keyof ListMatchesRequest>]: never; }>(object: I_1): ListMatchesRequest;
 };
 export declare const ListNotificationsRequest: {
     encode(message: ListNotificationsRequest, writer?: _m0.Writer): _m0.Writer;
     decode(input: _m0.Reader | Uint8Array, length?: number): ListNotificationsRequest;
     fromJSON(object: any): ListNotificationsRequest;
     toJSON(message: ListNotificationsRequest): unknown;
-    fromPartial(object: DeepPartial<ListNotificationsRequest>): ListNotificationsRequest;
+    create<I extends {
+        limit?: number | undefined;
+        cacheable_cursor?: string | undefined;
+    } & {
+        limit?: number | undefined;
+        cacheable_cursor?: string | undefined;
+    } & { [K in Exclude<keyof I, keyof ListNotificationsRequest>]: never; }>(base?: I | undefined): ListNotificationsRequest;
+    fromPartial<I_1 extends {
+        limit?: number | undefined;
+        cacheable_cursor?: string | undefined;
+    } & {
+        limit?: number | undefined;
+        cacheable_cursor?: string | undefined;
+    } & { [K_1 in Exclude<keyof I_1, keyof ListNotificationsRequest>]: never; }>(object: I_1): ListNotificationsRequest;
 };
 export declare const ListStorageObjectsRequest: {
     encode(message: ListStorageObjectsRequest, writer?: _m0.Writer): _m0.Writer;
     decode(input: _m0.Reader | Uint8Array, length?: number): ListStorageObjectsRequest;
     fromJSON(object: any): ListStorageObjectsRequest;
     toJSON(message: ListStorageObjectsRequest): unknown;
-    fromPartial(object: DeepPartial<ListStorageObjectsRequest>): ListStorageObjectsRequest;
+    create<I extends {
+        user_id?: string | undefined;
+        collection?: string | undefined;
+        limit?: number | undefined;
+        cursor?: string | undefined;
+    } & {
+        user_id?: string | undefined;
+        collection?: string | undefined;
+        limit?: number | undefined;
+        cursor?: string | undefined;
+    } & { [K in Exclude<keyof I, keyof ListStorageObjectsRequest>]: never; }>(base?: I | undefined): ListStorageObjectsRequest;
+    fromPartial<I_1 extends {
+        user_id?: string | undefined;
+        collection?: string | undefined;
+        limit?: number | undefined;
+        cursor?: string | undefined;
+    } & {
+        user_id?: string | undefined;
+        collection?: string | undefined;
+        limit?: number | undefined;
+        cursor?: string | undefined;
+    } & { [K_1 in Exclude<keyof I_1, keyof ListStorageObjectsRequest>]: never; }>(object: I_1): ListStorageObjectsRequest;
+};
+export declare const ListSubscriptionsRequest: {
+    encode(message: ListSubscriptionsRequest, writer?: _m0.Writer): _m0.Writer;
+    decode(input: _m0.Reader | Uint8Array, length?: number): ListSubscriptionsRequest;
+    fromJSON(object: any): ListSubscriptionsRequest;
+    toJSON(message: ListSubscriptionsRequest): unknown;
+    create<I extends {
+        limit?: number | undefined;
+        cursor?: string | undefined;
+    } & {
+        limit?: number | undefined;
+        cursor?: string | undefined;
+    } & { [K in Exclude<keyof I, keyof ListSubscriptionsRequest>]: never; }>(base?: I | undefined): ListSubscriptionsRequest;
+    fromPartial<I_1 extends {
+        limit?: number | undefined;
+        cursor?: string | undefined;
+    } & {
+        limit?: number | undefined;
+        cursor?: string | undefined;
+    } & { [K_1 in Exclude<keyof I_1, keyof ListSubscriptionsRequest>]: never; }>(object: I_1): ListSubscriptionsRequest;
 };
 export declare const ListTournamentRecordsAroundOwnerRequest: {
     encode(message: ListTournamentRecordsAroundOwnerRequest, writer?: _m0.Writer): _m0.Writer;
     decode(input: _m0.Reader | Uint8Array, length?: number): ListTournamentRecordsAroundOwnerRequest;
     fromJSON(object: any): ListTournamentRecordsAroundOwnerRequest;
     toJSON(message: ListTournamentRecordsAroundOwnerRequest): unknown;
-    fromPartial(object: DeepPartial<ListTournamentRecordsAroundOwnerRequest>): ListTournamentRecordsAroundOwnerRequest;
+    create<I extends {
+        tournament_id?: string | undefined;
+        limit?: number | undefined;
+        owner_id?: string | undefined;
+        expiry?: number | undefined;
+        cursor?: string | undefined;
+    } & {
+        tournament_id?: string | undefined;
+        limit?: number | undefined;
+        owner_id?: string | undefined;
+        expiry?: number | undefined;
+        cursor?: string | undefined;
+    } & { [K in Exclude<keyof I, keyof ListTournamentRecordsAroundOwnerRequest>]: never; }>(base?: I | undefined): ListTournamentRecordsAroundOwnerRequest;
+    fromPartial<I_1 extends {
+        tournament_id?: string | undefined;
+        limit?: number | undefined;
+        owner_id?: string | undefined;
+        expiry?: number | undefined;
+        cursor?: string | undefined;
+    } & {
+        tournament_id?: string | undefined;
+        limit?: number | undefined;
+        owner_id?: string | undefined;
+        expiry?: number | undefined;
+        cursor?: string | undefined;
+    } & { [K_1 in Exclude<keyof I_1, keyof ListTournamentRecordsAroundOwnerRequest>]: never; }>(object: I_1): ListTournamentRecordsAroundOwnerRequest;
 };
 export declare const ListTournamentRecordsRequest: {
     encode(message: ListTournamentRecordsRequest, writer?: _m0.Writer): _m0.Writer;
     decode(input: _m0.Reader | Uint8Array, length?: number): ListTournamentRecordsRequest;
     fromJSON(object: any): ListTournamentRecordsRequest;
     toJSON(message: ListTournamentRecordsRequest): unknown;
-    fromPartial(object: DeepPartial<ListTournamentRecordsRequest>): ListTournamentRecordsRequest;
+    create<I extends {
+        tournament_id?: string | undefined;
+        owner_ids?: string[] | undefined;
+        limit?: number | undefined;
+        cursor?: string | undefined;
+        expiry?: number | undefined;
+    } & {
+        tournament_id?: string | undefined;
+        owner_ids?: (string[] & string[] & { [K in Exclude<keyof I["owner_ids"], keyof string[]>]: never; }) | undefined;
+        limit?: number | undefined;
+        cursor?: string | undefined;
+        expiry?: number | undefined;
+    } & { [K_1 in Exclude<keyof I, keyof ListTournamentRecordsRequest>]: never; }>(base?: I | undefined): ListTournamentRecordsRequest;
+    fromPartial<I_1 extends {
+        tournament_id?: string | undefined;
+        owner_ids?: string[] | undefined;
+        limit?: number | undefined;
+        cursor?: string | undefined;
+        expiry?: number | undefined;
+    } & {
+        tournament_id?: string | undefined;
+        owner_ids?: (string[] & string[] & { [K_2 in Exclude<keyof I_1["owner_ids"], keyof string[]>]: never; }) | undefined;
+        limit?: number | undefined;
+        cursor?: string | undefined;
+        expiry?: number | undefined;
+    } & { [K_3 in Exclude<keyof I_1, keyof ListTournamentRecordsRequest>]: never; }>(object: I_1): ListTournamentRecordsRequest;
 };
 export declare const ListTournamentsRequest: {
     encode(message: ListTournamentsRequest, writer?: _m0.Writer): _m0.Writer;
     decode(input: _m0.Reader | Uint8Array, length?: number): ListTournamentsRequest;
     fromJSON(object: any): ListTournamentsRequest;
     toJSON(message: ListTournamentsRequest): unknown;
-    fromPartial(object: DeepPartial<ListTournamentsRequest>): ListTournamentsRequest;
+    create<I extends {
+        category_start?: number | undefined;
+        category_end?: number | undefined;
+        start_time?: number | undefined;
+        end_time?: number | undefined;
+        limit?: number | undefined;
+        cursor?: string | undefined;
+    } & {
+        category_start?: number | undefined;
+        category_end?: number | undefined;
+        start_time?: number | undefined;
+        end_time?: number | undefined;
+        limit?: number | undefined;
+        cursor?: string | undefined;
+    } & { [K in Exclude<keyof I, keyof ListTournamentsRequest>]: never; }>(base?: I | undefined): ListTournamentsRequest;
+    fromPartial<I_1 extends {
+        category_start?: number | undefined;
+        category_end?: number | undefined;
+        start_time?: number | undefined;
+        end_time?: number | undefined;
+        limit?: number | undefined;
+        cursor?: string | undefined;
+    } & {
+        category_start?: number | undefined;
+        category_end?: number | undefined;
+        start_time?: number | undefined;
+        end_time?: number | undefined;
+        limit?: number | undefined;
+        cursor?: string | undefined;
+    } & { [K_1 in Exclude<keyof I_1, keyof ListTournamentsRequest>]: never; }>(object: I_1): ListTournamentsRequest;
 };
 export declare const ListUserGroupsRequest: {
     encode(message: ListUserGroupsRequest, writer?: _m0.Writer): _m0.Writer;
     decode(input: _m0.Reader | Uint8Array, length?: number): ListUserGroupsRequest;
     fromJSON(object: any): ListUserGroupsRequest;
     toJSON(message: ListUserGroupsRequest): unknown;
-    fromPartial(object: DeepPartial<ListUserGroupsRequest>): ListUserGroupsRequest;
+    create<I extends {
+        user_id?: string | undefined;
+        limit?: number | undefined;
+        state?: number | undefined;
+        cursor?: string | undefined;
+    } & {
+        user_id?: string | undefined;
+        limit?: number | undefined;
+        state?: number | undefined;
+        cursor?: string | undefined;
+    } & { [K in Exclude<keyof I, keyof ListUserGroupsRequest>]: never; }>(base?: I | undefined): ListUserGroupsRequest;
+    fromPartial<I_1 extends {
+        user_id?: string | undefined;
+        limit?: number | undefined;
+        state?: number | undefined;
+        cursor?: string | undefined;
+    } & {
+        user_id?: string | undefined;
+        limit?: number | undefined;
+        state?: number | undefined;
+        cursor?: string | undefined;
+    } & { [K_1 in Exclude<keyof I_1, keyof ListUserGroupsRequest>]: never; }>(object: I_1): ListUserGroupsRequest;
 };
 export declare const Match: {
     encode(message: Match, writer?: _m0.Writer): _m0.Writer;
     decode(input: _m0.Reader | Uint8Array, length?: number): Match;
     fromJSON(object: any): Match;
     toJSON(message: Match): unknown;
-    fromPartial(object: DeepPartial<Match>): Match;
+    create<I extends {
+        match_id?: string | undefined;
+        authoritative?: boolean | undefined;
+        label?: string | undefined;
+        size?: number | undefined;
+        tick_rate?: number | undefined;
+        handler_name?: string | undefined;
+    } & {
+        match_id?: string | undefined;
+        authoritative?: boolean | undefined;
+        label?: string | undefined;
+        size?: number | undefined;
+        tick_rate?: number | undefined;
+        handler_name?: string | undefined;
+    } & { [K in Exclude<keyof I, keyof Match>]: never; }>(base?: I | undefined): Match;
+    fromPartial<I_1 extends {
+        match_id?: string | undefined;
+        authoritative?: boolean | undefined;
+        label?: string | undefined;
+        size?: number | undefined;
+        tick_rate?: number | undefined;
+        handler_name?: string | undefined;
+    } & {
+        match_id?: string | undefined;
+        authoritative?: boolean | undefined;
+        label?: string | undefined;
+        size?: number | undefined;
+        tick_rate?: number | undefined;
+        handler_name?: string | undefined;
+    } & { [K_1 in Exclude<keyof I_1, keyof Match>]: never; }>(object: I_1): Match;
 };
 export declare const MatchList: {
     encode(message: MatchList, writer?: _m0.Writer): _m0.Writer;
     decode(input: _m0.Reader | Uint8Array, length?: number): MatchList;
     fromJSON(object: any): MatchList;
     toJSON(message: MatchList): unknown;
-    fromPartial(object: DeepPartial<MatchList>): MatchList;
+    create<I extends {
+        matches?: {
+            match_id?: string | undefined;
+            authoritative?: boolean | undefined;
+            label?: string | undefined;
+            size?: number | undefined;
+            tick_rate?: number | undefined;
+            handler_name?: string | undefined;
+        }[] | undefined;
+    } & {
+        matches?: ({
+            match_id?: string | undefined;
+            authoritative?: boolean | undefined;
+            label?: string | undefined;
+            size?: number | undefined;
+            tick_rate?: number | undefined;
+            handler_name?: string | undefined;
+        }[] & ({
+            match_id?: string | undefined;
+            authoritative?: boolean | undefined;
+            label?: string | undefined;
+            size?: number | undefined;
+            tick_rate?: number | undefined;
+            handler_name?: string | undefined;
+        } & {
+            match_id?: string | undefined;
+            authoritative?: boolean | undefined;
+            label?: string | undefined;
+            size?: number | undefined;
+            tick_rate?: number | undefined;
+            handler_name?: string | undefined;
+        } & { [K in Exclude<keyof I["matches"][number], keyof Match>]: never; })[] & { [K_1 in Exclude<keyof I["matches"], keyof {
+            match_id?: string | undefined;
+            authoritative?: boolean | undefined;
+            label?: string | undefined;
+            size?: number | undefined;
+            tick_rate?: number | undefined;
+            handler_name?: string | undefined;
+        }[]>]: never; }) | undefined;
+    } & { [K_2 in Exclude<keyof I, "matches">]: never; }>(base?: I | undefined): MatchList;
+    fromPartial<I_1 extends {
+        matches?: {
+            match_id?: string | undefined;
+            authoritative?: boolean | undefined;
+            label?: string | undefined;
+            size?: number | undefined;
+            tick_rate?: number | undefined;
+            handler_name?: string | undefined;
+        }[] | undefined;
+    } & {
+        matches?: ({
+            match_id?: string | undefined;
+            authoritative?: boolean | undefined;
+            label?: string | undefined;
+            size?: number | undefined;
+            tick_rate?: number | undefined;
+            handler_name?: string | undefined;
+        }[] & ({
+            match_id?: string | undefined;
+            authoritative?: boolean | undefined;
+            label?: string | undefined;
+            size?: number | undefined;
+            tick_rate?: number | undefined;
+            handler_name?: string | undefined;
+        } & {
+            match_id?: string | undefined;
+            authoritative?: boolean | undefined;
+            label?: string | undefined;
+            size?: number | undefined;
+            tick_rate?: number | undefined;
+            handler_name?: string | undefined;
+        } & { [K_3 in Exclude<keyof I_1["matches"][number], keyof Match>]: never; })[] & { [K_4 in Exclude<keyof I_1["matches"], keyof {
+            match_id?: string | undefined;
+            authoritative?: boolean | undefined;
+            label?: string | undefined;
+            size?: number | undefined;
+            tick_rate?: number | undefined;
+            handler_name?: string | undefined;
+        }[]>]: never; }) | undefined;
+    } & { [K_5 in Exclude<keyof I_1, "matches">]: never; }>(object: I_1): MatchList;
 };
 export declare const Notification: {
     encode(message: Notification, writer?: _m0.Writer): _m0.Writer;
     decode(input: _m0.Reader | Uint8Array, length?: number): Notification;
     fromJSON(object: any): Notification;
     toJSON(message: Notification): unknown;
-    fromPartial(object: DeepPartial<Notification>): Notification;
+    create<I extends {
+        id?: string | undefined;
+        subject?: string | undefined;
+        content?: string | undefined;
+        code?: number | undefined;
+        sender_id?: string | undefined;
+        create_time?: Date | undefined;
+        persistent?: boolean | undefined;
+    } & {
+        id?: string | undefined;
+        subject?: string | undefined;
+        content?: string | undefined;
+        code?: number | undefined;
+        sender_id?: string | undefined;
+        create_time?: Date | undefined;
+        persistent?: boolean | undefined;
+    } & { [K in Exclude<keyof I, keyof Notification>]: never; }>(base?: I | undefined): Notification;
+    fromPartial<I_1 extends {
+        id?: string | undefined;
+        subject?: string | undefined;
+        content?: string | undefined;
+        code?: number | undefined;
+        sender_id?: string | undefined;
+        create_time?: Date | undefined;
+        persistent?: boolean | undefined;
+    } & {
+        id?: string | undefined;
+        subject?: string | undefined;
+        content?: string | undefined;
+        code?: number | undefined;
+        sender_id?: string | undefined;
+        create_time?: Date | undefined;
+        persistent?: boolean | undefined;
+    } & { [K_1 in Exclude<keyof I_1, keyof Notification>]: never; }>(object: I_1): Notification;
 };
 export declare const NotificationList: {
     encode(message: NotificationList, writer?: _m0.Writer): _m0.Writer;
     decode(input: _m0.Reader | Uint8Array, length?: number): NotificationList;
     fromJSON(object: any): NotificationList;
     toJSON(message: NotificationList): unknown;
-    fromPartial(object: DeepPartial<NotificationList>): NotificationList;
+    create<I extends {
+        notifications?: {
+            id?: string | undefined;
+            subject?: string | undefined;
+            content?: string | undefined;
+            code?: number | undefined;
+            sender_id?: string | undefined;
+            create_time?: Date | undefined;
+            persistent?: boolean | undefined;
+        }[] | undefined;
+        cacheable_cursor?: string | undefined;
+    } & {
+        notifications?: ({
+            id?: string | undefined;
+            subject?: string | undefined;
+            content?: string | undefined;
+            code?: number | undefined;
+            sender_id?: string | undefined;
+            create_time?: Date | undefined;
+            persistent?: boolean | undefined;
+        }[] & ({
+            id?: string | undefined;
+            subject?: string | undefined;
+            content?: string | undefined;
+            code?: number | undefined;
+            sender_id?: string | undefined;
+            create_time?: Date | undefined;
+            persistent?: boolean | undefined;
+        } & {
+            id?: string | undefined;
+            subject?: string | undefined;
+            content?: string | undefined;
+            code?: number | undefined;
+            sender_id?: string | undefined;
+            create_time?: Date | undefined;
+            persistent?: boolean | undefined;
+        } & { [K in Exclude<keyof I["notifications"][number], keyof Notification>]: never; })[] & { [K_1 in Exclude<keyof I["notifications"], keyof {
+            id?: string | undefined;
+            subject?: string | undefined;
+            content?: string | undefined;
+            code?: number | undefined;
+            sender_id?: string | undefined;
+            create_time?: Date | undefined;
+            persistent?: boolean | undefined;
+        }[]>]: never; }) | undefined;
+        cacheable_cursor?: string | undefined;
+    } & { [K_2 in Exclude<keyof I, keyof NotificationList>]: never; }>(base?: I | undefined): NotificationList;
+    fromPartial<I_1 extends {
+        notifications?: {
+            id?: string | undefined;
+            subject?: string | undefined;
+            content?: string | undefined;
+            code?: number | undefined;
+            sender_id?: string | undefined;
+            create_time?: Date | undefined;
+            persistent?: boolean | undefined;
+        }[] | undefined;
+        cacheable_cursor?: string | undefined;
+    } & {
+        notifications?: ({
+            id?: string | undefined;
+            subject?: string | undefined;
+            content?: string | undefined;
+            code?: number | undefined;
+            sender_id?: string | undefined;
+            create_time?: Date | undefined;
+            persistent?: boolean | undefined;
+        }[] & ({
+            id?: string | undefined;
+            subject?: string | undefined;
+            content?: string | undefined;
+            code?: number | undefined;
+            sender_id?: string | undefined;
+            create_time?: Date | undefined;
+            persistent?: boolean | undefined;
+        } & {
+            id?: string | undefined;
+            subject?: string | undefined;
+            content?: string | undefined;
+            code?: number | undefined;
+            sender_id?: string | undefined;
+            create_time?: Date | undefined;
+            persistent?: boolean | undefined;
+        } & { [K_3 in Exclude<keyof I_1["notifications"][number], keyof Notification>]: never; })[] & { [K_4 in Exclude<keyof I_1["notifications"], keyof {
+            id?: string | undefined;
+            subject?: string | undefined;
+            content?: string | undefined;
+            code?: number | undefined;
+            sender_id?: string | undefined;
+            create_time?: Date | undefined;
+            persistent?: boolean | undefined;
+        }[]>]: never; }) | undefined;
+        cacheable_cursor?: string | undefined;
+    } & { [K_5 in Exclude<keyof I_1, keyof NotificationList>]: never; }>(object: I_1): NotificationList;
 };
 export declare const PromoteGroupUsersRequest: {
     encode(message: PromoteGroupUsersRequest, writer?: _m0.Writer): _m0.Writer;
     decode(input: _m0.Reader | Uint8Array, length?: number): PromoteGroupUsersRequest;
     fromJSON(object: any): PromoteGroupUsersRequest;
     toJSON(message: PromoteGroupUsersRequest): unknown;
-    fromPartial(object: DeepPartial<PromoteGroupUsersRequest>): PromoteGroupUsersRequest;
+    create<I extends {
+        group_id?: string | undefined;
+        user_ids?: string[] | undefined;
+    } & {
+        group_id?: string | undefined;
+        user_ids?: (string[] & string[] & { [K in Exclude<keyof I["user_ids"], keyof string[]>]: never; }) | undefined;
+    } & { [K_1 in Exclude<keyof I, keyof PromoteGroupUsersRequest>]: never; }>(base?: I | undefined): PromoteGroupUsersRequest;
+    fromPartial<I_1 extends {
+        group_id?: string | undefined;
+        user_ids?: string[] | undefined;
+    } & {
+        group_id?: string | undefined;
+        user_ids?: (string[] & string[] & { [K_2 in Exclude<keyof I_1["user_ids"], keyof string[]>]: never; }) | undefined;
+    } & { [K_3 in Exclude<keyof I_1, keyof PromoteGroupUsersRequest>]: never; }>(object: I_1): PromoteGroupUsersRequest;
 };
 export declare const DemoteGroupUsersRequest: {
     encode(message: DemoteGroupUsersRequest, writer?: _m0.Writer): _m0.Writer;
     decode(input: _m0.Reader | Uint8Array, length?: number): DemoteGroupUsersRequest;
     fromJSON(object: any): DemoteGroupUsersRequest;
     toJSON(message: DemoteGroupUsersRequest): unknown;
-    fromPartial(object: DeepPartial<DemoteGroupUsersRequest>): DemoteGroupUsersRequest;
+    create<I extends {
+        group_id?: string | undefined;
+        user_ids?: string[] | undefined;
+    } & {
+        group_id?: string | undefined;
+        user_ids?: (string[] & string[] & { [K in Exclude<keyof I["user_ids"], keyof string[]>]: never; }) | undefined;
+    } & { [K_1 in Exclude<keyof I, keyof DemoteGroupUsersRequest>]: never; }>(base?: I | undefined): DemoteGroupUsersRequest;
+    fromPartial<I_1 extends {
+        group_id?: string | undefined;
+        user_ids?: string[] | undefined;
+    } & {
+        group_id?: string | undefined;
+        user_ids?: (string[] & string[] & { [K_2 in Exclude<keyof I_1["user_ids"], keyof string[]>]: never; }) | undefined;
+    } & { [K_3 in Exclude<keyof I_1, keyof DemoteGroupUsersRequest>]: never; }>(object: I_1): DemoteGroupUsersRequest;
 };
 export declare const ReadStorageObjectId: {
     encode(message: ReadStorageObjectId, writer?: _m0.Writer): _m0.Writer;
     decode(input: _m0.Reader | Uint8Array, length?: number): ReadStorageObjectId;
     fromJSON(object: any): ReadStorageObjectId;
     toJSON(message: ReadStorageObjectId): unknown;
-    fromPartial(object: DeepPartial<ReadStorageObjectId>): ReadStorageObjectId;
+    create<I extends {
+        collection?: string | undefined;
+        key?: string | undefined;
+        user_id?: string | undefined;
+    } & {
+        collection?: string | undefined;
+        key?: string | undefined;
+        user_id?: string | undefined;
+    } & { [K in Exclude<keyof I, keyof ReadStorageObjectId>]: never; }>(base?: I | undefined): ReadStorageObjectId;
+    fromPartial<I_1 extends {
+        collection?: string | undefined;
+        key?: string | undefined;
+        user_id?: string | undefined;
+    } & {
+        collection?: string | undefined;
+        key?: string | undefined;
+        user_id?: string | undefined;
+    } & { [K_1 in Exclude<keyof I_1, keyof ReadStorageObjectId>]: never; }>(object: I_1): ReadStorageObjectId;
 };
 export declare const ReadStorageObjectsRequest: {
     encode(message: ReadStorageObjectsRequest, writer?: _m0.Writer): _m0.Writer;
     decode(input: _m0.Reader | Uint8Array, length?: number): ReadStorageObjectsRequest;
     fromJSON(object: any): ReadStorageObjectsRequest;
     toJSON(message: ReadStorageObjectsRequest): unknown;
-    fromPartial(object: DeepPartial<ReadStorageObjectsRequest>): ReadStorageObjectsRequest;
+    create<I extends {
+        object_ids?: {
+            collection?: string | undefined;
+            key?: string | undefined;
+            user_id?: string | undefined;
+        }[] | undefined;
+    } & {
+        object_ids?: ({
+            collection?: string | undefined;
+            key?: string | undefined;
+            user_id?: string | undefined;
+        }[] & ({
+            collection?: string | undefined;
+            key?: string | undefined;
+            user_id?: string | undefined;
+        } & {
+            collection?: string | undefined;
+            key?: string | undefined;
+            user_id?: string | undefined;
+        } & { [K in Exclude<keyof I["object_ids"][number], keyof ReadStorageObjectId>]: never; })[] & { [K_1 in Exclude<keyof I["object_ids"], keyof {
+            collection?: string | undefined;
+            key?: string | undefined;
+            user_id?: string | undefined;
+        }[]>]: never; }) | undefined;
+    } & { [K_2 in Exclude<keyof I, "object_ids">]: never; }>(base?: I | undefined): ReadStorageObjectsRequest;
+    fromPartial<I_1 extends {
+        object_ids?: {
+            collection?: string | undefined;
+            key?: string | undefined;
+            user_id?: string | undefined;
+        }[] | undefined;
+    } & {
+        object_ids?: ({
+            collection?: string | undefined;
+            key?: string | undefined;
+            user_id?: string | undefined;
+        }[] & ({
+            collection?: string | undefined;
+            key?: string | undefined;
+            user_id?: string | undefined;
+        } & {
+            collection?: string | undefined;
+            key?: string | undefined;
+            user_id?: string | undefined;
+        } & { [K_3 in Exclude<keyof I_1["object_ids"][number], keyof ReadStorageObjectId>]: never; })[] & { [K_4 in Exclude<keyof I_1["object_ids"], keyof {
+            collection?: string | undefined;
+            key?: string | undefined;
+            user_id?: string | undefined;
+        }[]>]: never; }) | undefined;
+    } & { [K_5 in Exclude<keyof I_1, "object_ids">]: never; }>(object: I_1): ReadStorageObjectsRequest;
 };
 export declare const Rpc: {
     encode(message: Rpc, writer?: _m0.Writer): _m0.Writer;
     decode(input: _m0.Reader | Uint8Array, length?: number): Rpc;
     fromJSON(object: any): Rpc;
     toJSON(message: Rpc): unknown;
-    fromPartial(object: DeepPartial<Rpc>): Rpc;
+    create<I extends {
+        id?: string | undefined;
+        payload?: string | undefined;
+        http_key?: string | undefined;
+    } & {
+        id?: string | undefined;
+        payload?: string | undefined;
+        http_key?: string | undefined;
+    } & { [K in Exclude<keyof I, keyof Rpc>]: never; }>(base?: I | undefined): Rpc;
+    fromPartial<I_1 extends {
+        id?: string | undefined;
+        payload?: string | undefined;
+        http_key?: string | undefined;
+    } & {
+        id?: string | undefined;
+        payload?: string | undefined;
+        http_key?: string | undefined;
+    } & { [K_1 in Exclude<keyof I_1, keyof Rpc>]: never; }>(object: I_1): Rpc;
 };
 export declare const Session: {
     encode(message: Session, writer?: _m0.Writer): _m0.Writer;
     decode(input: _m0.Reader | Uint8Array, length?: number): Session;
     fromJSON(object: any): Session;
     toJSON(message: Session): unknown;
-    fromPartial(object: DeepPartial<Session>): Session;
+    create<I extends {
+        created?: boolean | undefined;
+        token?: string | undefined;
+        refresh_token?: string | undefined;
+    } & {
+        created?: boolean | undefined;
+        token?: string | undefined;
+        refresh_token?: string | undefined;
+    } & { [K in Exclude<keyof I, keyof Session>]: never; }>(base?: I | undefined): Session;
+    fromPartial<I_1 extends {
+        created?: boolean | undefined;
+        token?: string | undefined;
+        refresh_token?: string | undefined;
+    } & {
+        created?: boolean | undefined;
+        token?: string | undefined;
+        refresh_token?: string | undefined;
+    } & { [K_1 in Exclude<keyof I_1, keyof Session>]: never; }>(object: I_1): Session;
 };
 export declare const StorageObject: {
     encode(message: StorageObject, writer?: _m0.Writer): _m0.Writer;
     decode(input: _m0.Reader | Uint8Array, length?: number): StorageObject;
     fromJSON(object: any): StorageObject;
     toJSON(message: StorageObject): unknown;
-    fromPartial(object: DeepPartial<StorageObject>): StorageObject;
+    create<I extends {
+        collection?: string | undefined;
+        key?: string | undefined;
+        user_id?: string | undefined;
+        value?: string | undefined;
+        version?: string | undefined;
+        permission_read?: number | undefined;
+        permission_write?: number | undefined;
+        create_time?: Date | undefined;
+        update_time?: Date | undefined;
+    } & {
+        collection?: string | undefined;
+        key?: string | undefined;
+        user_id?: string | undefined;
+        value?: string | undefined;
+        version?: string | undefined;
+        permission_read?: number | undefined;
+        permission_write?: number | undefined;
+        create_time?: Date | undefined;
+        update_time?: Date | undefined;
+    } & { [K in Exclude<keyof I, keyof StorageObject>]: never; }>(base?: I | undefined): StorageObject;
+    fromPartial<I_1 extends {
+        collection?: string | undefined;
+        key?: string | undefined;
+        user_id?: string | undefined;
+        value?: string | undefined;
+        version?: string | undefined;
+        permission_read?: number | undefined;
+        permission_write?: number | undefined;
+        create_time?: Date | undefined;
+        update_time?: Date | undefined;
+    } & {
+        collection?: string | undefined;
+        key?: string | undefined;
+        user_id?: string | undefined;
+        value?: string | undefined;
+        version?: string | undefined;
+        permission_read?: number | undefined;
+        permission_write?: number | undefined;
+        create_time?: Date | undefined;
+        update_time?: Date | undefined;
+    } & { [K_1 in Exclude<keyof I_1, keyof StorageObject>]: never; }>(object: I_1): StorageObject;
 };
 export declare const StorageObjectAck: {
     encode(message: StorageObjectAck, writer?: _m0.Writer): _m0.Writer;
     decode(input: _m0.Reader | Uint8Array, length?: number): StorageObjectAck;
     fromJSON(object: any): StorageObjectAck;
     toJSON(message: StorageObjectAck): unknown;
-    fromPartial(object: DeepPartial<StorageObjectAck>): StorageObjectAck;
+    create<I extends {
+        collection?: string | undefined;
+        key?: string | undefined;
+        version?: string | undefined;
+        user_id?: string | undefined;
+        create_time?: Date | undefined;
+        update_time?: Date | undefined;
+    } & {
+        collection?: string | undefined;
+        key?: string | undefined;
+        version?: string | undefined;
+        user_id?: string | undefined;
+        create_time?: Date | undefined;
+        update_time?: Date | undefined;
+    } & { [K in Exclude<keyof I, keyof StorageObjectAck>]: never; }>(base?: I | undefined): StorageObjectAck;
+    fromPartial<I_1 extends {
+        collection?: string | undefined;
+        key?: string | undefined;
+        version?: string | undefined;
+        user_id?: string | undefined;
+        create_time?: Date | undefined;
+        update_time?: Date | undefined;
+    } & {
+        collection?: string | undefined;
+        key?: string | undefined;
+        version?: string | undefined;
+        user_id?: string | undefined;
+        create_time?: Date | undefined;
+        update_time?: Date | undefined;
+    } & { [K_1 in Exclude<keyof I_1, keyof StorageObjectAck>]: never; }>(object: I_1): StorageObjectAck;
 };
 export declare const StorageObjectAcks: {
     encode(message: StorageObjectAcks, writer?: _m0.Writer): _m0.Writer;
     decode(input: _m0.Reader | Uint8Array, length?: number): StorageObjectAcks;
     fromJSON(object: any): StorageObjectAcks;
     toJSON(message: StorageObjectAcks): unknown;
-    fromPartial(object: DeepPartial<StorageObjectAcks>): StorageObjectAcks;
+    create<I extends {
+        acks?: {
+            collection?: string | undefined;
+            key?: string | undefined;
+            version?: string | undefined;
+            user_id?: string | undefined;
+            create_time?: Date | undefined;
+            update_time?: Date | undefined;
+        }[] | undefined;
+    } & {
+        acks?: ({
+            collection?: string | undefined;
+            key?: string | undefined;
+            version?: string | undefined;
+            user_id?: string | undefined;
+            create_time?: Date | undefined;
+            update_time?: Date | undefined;
+        }[] & ({
+            collection?: string | undefined;
+            key?: string | undefined;
+            version?: string | undefined;
+            user_id?: string | undefined;
+            create_time?: Date | undefined;
+            update_time?: Date | undefined;
+        } & {
+            collection?: string | undefined;
+            key?: string | undefined;
+            version?: string | undefined;
+            user_id?: string | undefined;
+            create_time?: Date | undefined;
+            update_time?: Date | undefined;
+        } & { [K in Exclude<keyof I["acks"][number], keyof StorageObjectAck>]: never; })[] & { [K_1 in Exclude<keyof I["acks"], keyof {
+            collection?: string | undefined;
+            key?: string | undefined;
+            version?: string | undefined;
+            user_id?: string | undefined;
+            create_time?: Date | undefined;
+            update_time?: Date | undefined;
+        }[]>]: never; }) | undefined;
+    } & { [K_2 in Exclude<keyof I, "acks">]: never; }>(base?: I | undefined): StorageObjectAcks;
+    fromPartial<I_1 extends {
+        acks?: {
+            collection?: string | undefined;
+            key?: string | undefined;
+            version?: string | undefined;
+            user_id?: string | undefined;
+            create_time?: Date | undefined;
+            update_time?: Date | undefined;
+        }[] | undefined;
+    } & {
+        acks?: ({
+            collection?: string | undefined;
+            key?: string | undefined;
+            version?: string | undefined;
+            user_id?: string | undefined;
+            create_time?: Date | undefined;
+            update_time?: Date | undefined;
+        }[] & ({
+            collection?: string | undefined;
+            key?: string | undefined;
+            version?: string | undefined;
+            user_id?: string | undefined;
+            create_time?: Date | undefined;
+            update_time?: Date | undefined;
+        } & {
+            collection?: string | undefined;
+            key?: string | undefined;
+            version?: string | undefined;
+            user_id?: string | undefined;
+            create_time?: Date | undefined;
+            update_time?: Date | undefined;
+        } & { [K_3 in Exclude<keyof I_1["acks"][number], keyof StorageObjectAck>]: never; })[] & { [K_4 in Exclude<keyof I_1["acks"], keyof {
+            collection?: string | undefined;
+            key?: string | undefined;
+            version?: string | undefined;
+            user_id?: string | undefined;
+            create_time?: Date | undefined;
+            update_time?: Date | undefined;
+        }[]>]: never; }) | undefined;
+    } & { [K_5 in Exclude<keyof I_1, "acks">]: never; }>(object: I_1): StorageObjectAcks;
 };
 export declare const StorageObjects: {
     encode(message: StorageObjects, writer?: _m0.Writer): _m0.Writer;
     decode(input: _m0.Reader | Uint8Array, length?: number): StorageObjects;
     fromJSON(object: any): StorageObjects;
     toJSON(message: StorageObjects): unknown;
-    fromPartial(object: DeepPartial<StorageObjects>): StorageObjects;
+    create<I extends {
+        objects?: {
+            collection?: string | undefined;
+            key?: string | undefined;
+            user_id?: string | undefined;
+            value?: string | undefined;
+            version?: string | undefined;
+            permission_read?: number | undefined;
+            permission_write?: number | undefined;
+            create_time?: Date | undefined;
+            update_time?: Date | undefined;
+        }[] | undefined;
+    } & {
+        objects?: ({
+            collection?: string | undefined;
+            key?: string | undefined;
+            user_id?: string | undefined;
+            value?: string | undefined;
+            version?: string | undefined;
+            permission_read?: number | undefined;
+            permission_write?: number | undefined;
+            create_time?: Date | undefined;
+            update_time?: Date | undefined;
+        }[] & ({
+            collection?: string | undefined;
+            key?: string | undefined;
+            user_id?: string | undefined;
+            value?: string | undefined;
+            version?: string | undefined;
+            permission_read?: number | undefined;
+            permission_write?: number | undefined;
+            create_time?: Date | undefined;
+            update_time?: Date | undefined;
+        } & {
+            collection?: string | undefined;
+            key?: string | undefined;
+            user_id?: string | undefined;
+            value?: string | undefined;
+            version?: string | undefined;
+            permission_read?: number | undefined;
+            permission_write?: number | undefined;
+            create_time?: Date | undefined;
+            update_time?: Date | undefined;
+        } & { [K in Exclude<keyof I["objects"][number], keyof StorageObject>]: never; })[] & { [K_1 in Exclude<keyof I["objects"], keyof {
+            collection?: string | undefined;
+            key?: string | undefined;
+            user_id?: string | undefined;
+            value?: string | undefined;
+            version?: string | undefined;
+            permission_read?: number | undefined;
+            permission_write?: number | undefined;
+            create_time?: Date | undefined;
+            update_time?: Date | undefined;
+        }[]>]: never; }) | undefined;
+    } & { [K_2 in Exclude<keyof I, "objects">]: never; }>(base?: I | undefined): StorageObjects;
+    fromPartial<I_1 extends {
+        objects?: {
+            collection?: string | undefined;
+            key?: string | undefined;
+            user_id?: string | undefined;
+            value?: string | undefined;
+            version?: string | undefined;
+            permission_read?: number | undefined;
+            permission_write?: number | undefined;
+            create_time?: Date | undefined;
+            update_time?: Date | undefined;
+        }[] | undefined;
+    } & {
+        objects?: ({
+            collection?: string | undefined;
+            key?: string | undefined;
+            user_id?: string | undefined;
+            value?: string | undefined;
+            version?: string | undefined;
+            permission_read?: number | undefined;
+            permission_write?: number | undefined;
+            create_time?: Date | undefined;
+            update_time?: Date | undefined;
+        }[] & ({
+            collection?: string | undefined;
+            key?: string | undefined;
+            user_id?: string | undefined;
+            value?: string | undefined;
+            version?: string | undefined;
+            permission_read?: number | undefined;
+            permission_write?: number | undefined;
+            create_time?: Date | undefined;
+            update_time?: Date | undefined;
+        } & {
+            collection?: string | undefined;
+            key?: string | undefined;
+            user_id?: string | undefined;
+            value?: string | undefined;
+            version?: string | undefined;
+            permission_read?: number | undefined;
+            permission_write?: number | undefined;
+            create_time?: Date | undefined;
+            update_time?: Date | undefined;
+        } & { [K_3 in Exclude<keyof I_1["objects"][number], keyof StorageObject>]: never; })[] & { [K_4 in Exclude<keyof I_1["objects"], keyof {
+            collection?: string | undefined;
+            key?: string | undefined;
+            user_id?: string | undefined;
+            value?: string | undefined;
+            version?: string | undefined;
+            permission_read?: number | undefined;
+            permission_write?: number | undefined;
+            create_time?: Date | undefined;
+            update_time?: Date | undefined;
+        }[]>]: never; }) | undefined;
+    } & { [K_5 in Exclude<keyof I_1, "objects">]: never; }>(object: I_1): StorageObjects;
 };
 export declare const StorageObjectList: {
     encode(message: StorageObjectList, writer?: _m0.Writer): _m0.Writer;
     decode(input: _m0.Reader | Uint8Array, length?: number): StorageObjectList;
     fromJSON(object: any): StorageObjectList;
     toJSON(message: StorageObjectList): unknown;
-    fromPartial(object: DeepPartial<StorageObjectList>): StorageObjectList;
+    create<I extends {
+        objects?: {
+            collection?: string | undefined;
+            key?: string | undefined;
+            user_id?: string | undefined;
+            value?: string | undefined;
+            version?: string | undefined;
+            permission_read?: number | undefined;
+            permission_write?: number | undefined;
+            create_time?: Date | undefined;
+            update_time?: Date | undefined;
+        }[] | undefined;
+        cursor?: string | undefined;
+    } & {
+        objects?: ({
+            collection?: string | undefined;
+            key?: string | undefined;
+            user_id?: string | undefined;
+            value?: string | undefined;
+            version?: string | undefined;
+            permission_read?: number | undefined;
+            permission_write?: number | undefined;
+            create_time?: Date | undefined;
+            update_time?: Date | undefined;
+        }[] & ({
+            collection?: string | undefined;
+            key?: string | undefined;
+            user_id?: string | undefined;
+            value?: string | undefined;
+            version?: string | undefined;
+            permission_read?: number | undefined;
+            permission_write?: number | undefined;
+            create_time?: Date | undefined;
+            update_time?: Date | undefined;
+        } & {
+            collection?: string | undefined;
+            key?: string | undefined;
+            user_id?: string | undefined;
+            value?: string | undefined;
+            version?: string | undefined;
+            permission_read?: number | undefined;
+            permission_write?: number | undefined;
+            create_time?: Date | undefined;
+            update_time?: Date | undefined;
+        } & { [K in Exclude<keyof I["objects"][number], keyof StorageObject>]: never; })[] & { [K_1 in Exclude<keyof I["objects"], keyof {
+            collection?: string | undefined;
+            key?: string | undefined;
+            user_id?: string | undefined;
+            value?: string | undefined;
+            version?: string | undefined;
+            permission_read?: number | undefined;
+            permission_write?: number | undefined;
+            create_time?: Date | undefined;
+            update_time?: Date | undefined;
+        }[]>]: never; }) | undefined;
+        cursor?: string | undefined;
+    } & { [K_2 in Exclude<keyof I, keyof StorageObjectList>]: never; }>(base?: I | undefined): StorageObjectList;
+    fromPartial<I_1 extends {
+        objects?: {
+            collection?: string | undefined;
+            key?: string | undefined;
+            user_id?: string | undefined;
+            value?: string | undefined;
+            version?: string | undefined;
+            permission_read?: number | undefined;
+            permission_write?: number | undefined;
+            create_time?: Date | undefined;
+            update_time?: Date | undefined;
+        }[] | undefined;
+        cursor?: string | undefined;
+    } & {
+        objects?: ({
+            collection?: string | undefined;
+            key?: string | undefined;
+            user_id?: string | undefined;
+            value?: string | undefined;
+            version?: string | undefined;
+            permission_read?: number | undefined;
+            permission_write?: number | undefined;
+            create_time?: Date | undefined;
+            update_time?: Date | undefined;
+        }[] & ({
+            collection?: string | undefined;
+            key?: string | undefined;
+            user_id?: string | undefined;
+            value?: string | undefined;
+            version?: string | undefined;
+            permission_read?: number | undefined;
+            permission_write?: number | undefined;
+            create_time?: Date | undefined;
+            update_time?: Date | undefined;
+        } & {
+            collection?: string | undefined;
+            key?: string | undefined;
+            user_id?: string | undefined;
+            value?: string | undefined;
+            version?: string | undefined;
+            permission_read?: number | undefined;
+            permission_write?: number | undefined;
+            create_time?: Date | undefined;
+            update_time?: Date | undefined;
+        } & { [K_3 in Exclude<keyof I_1["objects"][number], keyof StorageObject>]: never; })[] & { [K_4 in Exclude<keyof I_1["objects"], keyof {
+            collection?: string | undefined;
+            key?: string | undefined;
+            user_id?: string | undefined;
+            value?: string | undefined;
+            version?: string | undefined;
+            permission_read?: number | undefined;
+            permission_write?: number | undefined;
+            create_time?: Date | undefined;
+            update_time?: Date | undefined;
+        }[]>]: never; }) | undefined;
+        cursor?: string | undefined;
+    } & { [K_5 in Exclude<keyof I_1, keyof StorageObjectList>]: never; }>(object: I_1): StorageObjectList;
 };
 export declare const Tournament: {
     encode(message: Tournament, writer?: _m0.Writer): _m0.Writer;
     decode(input: _m0.Reader | Uint8Array, length?: number): Tournament;
     fromJSON(object: any): Tournament;
     toJSON(message: Tournament): unknown;
-    fromPartial(object: DeepPartial<Tournament>): Tournament;
+    create<I extends {
+        id?: string | undefined;
+        title?: string | undefined;
+        description?: string | undefined;
+        category?: number | undefined;
+        sort_order?: number | undefined;
+        size?: number | undefined;
+        max_size?: number | undefined;
+        max_num_score?: number | undefined;
+        can_enter?: boolean | undefined;
+        end_active?: number | undefined;
+        next_reset?: number | undefined;
+        metadata?: string | undefined;
+        create_time?: Date | undefined;
+        start_time?: Date | undefined;
+        end_time?: Date | undefined;
+        duration?: number | undefined;
+        start_active?: number | undefined;
+        prev_reset?: number | undefined;
+        operator?: Operator | undefined;
+        authoritative?: boolean | undefined;
+    } & {
+        id?: string | undefined;
+        title?: string | undefined;
+        description?: string | undefined;
+        category?: number | undefined;
+        sort_order?: number | undefined;
+        size?: number | undefined;
+        max_size?: number | undefined;
+        max_num_score?: number | undefined;
+        can_enter?: boolean | undefined;
+        end_active?: number | undefined;
+        next_reset?: number | undefined;
+        metadata?: string | undefined;
+        create_time?: Date | undefined;
+        start_time?: Date | undefined;
+        end_time?: Date | undefined;
+        duration?: number | undefined;
+        start_active?: number | undefined;
+        prev_reset?: number | undefined;
+        operator?: Operator | undefined;
+        authoritative?: boolean | undefined;
+    } & { [K in Exclude<keyof I, keyof Tournament>]: never; }>(base?: I | undefined): Tournament;
+    fromPartial<I_1 extends {
+        id?: string | undefined;
+        title?: string | undefined;
+        description?: string | undefined;
+        category?: number | undefined;
+        sort_order?: number | undefined;
+        size?: number | undefined;
+        max_size?: number | undefined;
+        max_num_score?: number | undefined;
+        can_enter?: boolean | undefined;
+        end_active?: number | undefined;
+        next_reset?: number | undefined;
+        metadata?: string | undefined;
+        create_time?: Date | undefined;
+        start_time?: Date | undefined;
+        end_time?: Date | undefined;
+        duration?: number | undefined;
+        start_active?: number | undefined;
+        prev_reset?: number | undefined;
+        operator?: Operator | undefined;
+        authoritative?: boolean | undefined;
+    } & {
+        id?: string | undefined;
+        title?: string | undefined;
+        description?: string | undefined;
+        category?: number | undefined;
+        sort_order?: number | undefined;
+        size?: number | undefined;
+        max_size?: number | undefined;
+        max_num_score?: number | undefined;
+        can_enter?: boolean | undefined;
+        end_active?: number | undefined;
+        next_reset?: number | undefined;
+        metadata?: string | undefined;
+        create_time?: Date | undefined;
+        start_time?: Date | undefined;
+        end_time?: Date | undefined;
+        duration?: number | undefined;
+        start_active?: number | undefined;
+        prev_reset?: number | undefined;
+        operator?: Operator | undefined;
+        authoritative?: boolean | undefined;
+    } & { [K_1 in Exclude<keyof I_1, keyof Tournament>]: never; }>(object: I_1): Tournament;
 };
 export declare const TournamentList: {
     encode(message: TournamentList, writer?: _m0.Writer): _m0.Writer;
     decode(input: _m0.Reader | Uint8Array, length?: number): TournamentList;
     fromJSON(object: any): TournamentList;
     toJSON(message: TournamentList): unknown;
-    fromPartial(object: DeepPartial<TournamentList>): TournamentList;
+    create<I extends {
+        tournaments?: {
+            id?: string | undefined;
+            title?: string | undefined;
+            description?: string | undefined;
+            category?: number | undefined;
+            sort_order?: number | undefined;
+            size?: number | undefined;
+            max_size?: number | undefined;
+            max_num_score?: number | undefined;
+            can_enter?: boolean | undefined;
+            end_active?: number | undefined;
+            next_reset?: number | undefined;
+            metadata?: string | undefined;
+            create_time?: Date | undefined;
+            start_time?: Date | undefined;
+            end_time?: Date | undefined;
+            duration?: number | undefined;
+            start_active?: number | undefined;
+            prev_reset?: number | undefined;
+            operator?: Operator | undefined;
+            authoritative?: boolean | undefined;
+        }[] | undefined;
+        cursor?: string | undefined;
+    } & {
+        tournaments?: ({
+            id?: string | undefined;
+            title?: string | undefined;
+            description?: string | undefined;
+            category?: number | undefined;
+            sort_order?: number | undefined;
+            size?: number | undefined;
+            max_size?: number | undefined;
+            max_num_score?: number | undefined;
+            can_enter?: boolean | undefined;
+            end_active?: number | undefined;
+            next_reset?: number | undefined;
+            metadata?: string | undefined;
+            create_time?: Date | undefined;
+            start_time?: Date | undefined;
+            end_time?: Date | undefined;
+            duration?: number | undefined;
+            start_active?: number | undefined;
+            prev_reset?: number | undefined;
+            operator?: Operator | undefined;
+            authoritative?: boolean | undefined;
+        }[] & ({
+            id?: string | undefined;
+            title?: string | undefined;
+            description?: string | undefined;
+            category?: number | undefined;
+            sort_order?: number | undefined;
+            size?: number | undefined;
+            max_size?: number | undefined;
+            max_num_score?: number | undefined;
+            can_enter?: boolean | undefined;
+            end_active?: number | undefined;
+            next_reset?: number | undefined;
+            metadata?: string | undefined;
+            create_time?: Date | undefined;
+            start_time?: Date | undefined;
+            end_time?: Date | undefined;
+            duration?: number | undefined;
+            start_active?: number | undefined;
+            prev_reset?: number | undefined;
+            operator?: Operator | undefined;
+            authoritative?: boolean | undefined;
+        } & {
+            id?: string | undefined;
+            title?: string | undefined;
+            description?: string | undefined;
+            category?: number | undefined;
+            sort_order?: number | undefined;
+            size?: number | undefined;
+            max_size?: number | undefined;
+            max_num_score?: number | undefined;
+            can_enter?: boolean | undefined;
+            end_active?: number | undefined;
+            next_reset?: number | undefined;
+            metadata?: string | undefined;
+            create_time?: Date | undefined;
+            start_time?: Date | undefined;
+            end_time?: Date | undefined;
+            duration?: number | undefined;
+            start_active?: number | undefined;
+            prev_reset?: number | undefined;
+            operator?: Operator | undefined;
+            authoritative?: boolean | undefined;
+        } & { [K in Exclude<keyof I["tournaments"][number], keyof Tournament>]: never; })[] & { [K_1 in Exclude<keyof I["tournaments"], keyof {
+            id?: string | undefined;
+            title?: string | undefined;
+            description?: string | undefined;
+            category?: number | undefined;
+            sort_order?: number | undefined;
+            size?: number | undefined;
+            max_size?: number | undefined;
+            max_num_score?: number | undefined;
+            can_enter?: boolean | undefined;
+            end_active?: number | undefined;
+            next_reset?: number | undefined;
+            metadata?: string | undefined;
+            create_time?: Date | undefined;
+            start_time?: Date | undefined;
+            end_time?: Date | undefined;
+            duration?: number | undefined;
+            start_active?: number | undefined;
+            prev_reset?: number | undefined;
+            operator?: Operator | undefined;
+            authoritative?: boolean | undefined;
+        }[]>]: never; }) | undefined;
+        cursor?: string | undefined;
+    } & { [K_2 in Exclude<keyof I, keyof TournamentList>]: never; }>(base?: I | undefined): TournamentList;
+    fromPartial<I_1 extends {
+        tournaments?: {
+            id?: string | undefined;
+            title?: string | undefined;
+            description?: string | undefined;
+            category?: number | undefined;
+            sort_order?: number | undefined;
+            size?: number | undefined;
+            max_size?: number | undefined;
+            max_num_score?: number | undefined;
+            can_enter?: boolean | undefined;
+            end_active?: number | undefined;
+            next_reset?: number | undefined;
+            metadata?: string | undefined;
+            create_time?: Date | undefined;
+            start_time?: Date | undefined;
+            end_time?: Date | undefined;
+            duration?: number | undefined;
+            start_active?: number | undefined;
+            prev_reset?: number | undefined;
+            operator?: Operator | undefined;
+            authoritative?: boolean | undefined;
+        }[] | undefined;
+        cursor?: string | undefined;
+    } & {
+        tournaments?: ({
+            id?: string | undefined;
+            title?: string | undefined;
+            description?: string | undefined;
+            category?: number | undefined;
+            sort_order?: number | undefined;
+            size?: number | undefined;
+            max_size?: number | undefined;
+            max_num_score?: number | undefined;
+            can_enter?: boolean | undefined;
+            end_active?: number | undefined;
+            next_reset?: number | undefined;
+            metadata?: string | undefined;
+            create_time?: Date | undefined;
+            start_time?: Date | undefined;
+            end_time?: Date | undefined;
+            duration?: number | undefined;
+            start_active?: number | undefined;
+            prev_reset?: number | undefined;
+            operator?: Operator | undefined;
+            authoritative?: boolean | undefined;
+        }[] & ({
+            id?: string | undefined;
+            title?: string | undefined;
+            description?: string | undefined;
+            category?: number | undefined;
+            sort_order?: number | undefined;
+            size?: number | undefined;
+            max_size?: number | undefined;
+            max_num_score?: number | undefined;
+            can_enter?: boolean | undefined;
+            end_active?: number | undefined;
+            next_reset?: number | undefined;
+            metadata?: string | undefined;
+            create_time?: Date | undefined;
+            start_time?: Date | undefined;
+            end_time?: Date | undefined;
+            duration?: number | undefined;
+            start_active?: number | undefined;
+            prev_reset?: number | undefined;
+            operator?: Operator | undefined;
+            authoritative?: boolean | undefined;
+        } & {
+            id?: string | undefined;
+            title?: string | undefined;
+            description?: string | undefined;
+            category?: number | undefined;
+            sort_order?: number | undefined;
+            size?: number | undefined;
+            max_size?: number | undefined;
+            max_num_score?: number | undefined;
+            can_enter?: boolean | undefined;
+            end_active?: number | undefined;
+            next_reset?: number | undefined;
+            metadata?: string | undefined;
+            create_time?: Date | undefined;
+            start_time?: Date | undefined;
+            end_time?: Date | undefined;
+            duration?: number | undefined;
+            start_active?: number | undefined;
+            prev_reset?: number | undefined;
+            operator?: Operator | undefined;
+            authoritative?: boolean | undefined;
+        } & { [K_3 in Exclude<keyof I_1["tournaments"][number], keyof Tournament>]: never; })[] & { [K_4 in Exclude<keyof I_1["tournaments"], keyof {
+            id?: string | undefined;
+            title?: string | undefined;
+            description?: string | undefined;
+            category?: number | undefined;
+            sort_order?: number | undefined;
+            size?: number | undefined;
+            max_size?: number | undefined;
+            max_num_score?: number | undefined;
+            can_enter?: boolean | undefined;
+            end_active?: number | undefined;
+            next_reset?: number | undefined;
+            metadata?: string | undefined;
+            create_time?: Date | undefined;
+            start_time?: Date | undefined;
+            end_time?: Date | undefined;
+            duration?: number | undefined;
+            start_active?: number | undefined;
+            prev_reset?: number | undefined;
+            operator?: Operator | undefined;
+            authoritative?: boolean | undefined;
+        }[]>]: never; }) | undefined;
+        cursor?: string | undefined;
+    } & { [K_5 in Exclude<keyof I_1, keyof TournamentList>]: never; }>(object: I_1): TournamentList;
 };
 export declare const TournamentRecordList: {
     encode(message: TournamentRecordList, writer?: _m0.Writer): _m0.Writer;
     decode(input: _m0.Reader | Uint8Array, length?: number): TournamentRecordList;
     fromJSON(object: any): TournamentRecordList;
     toJSON(message: TournamentRecordList): unknown;
-    fromPartial(object: DeepPartial<TournamentRecordList>): TournamentRecordList;
+    create<I extends {
+        records?: {
+            leaderboard_id?: string | undefined;
+            owner_id?: string | undefined;
+            username?: string | undefined;
+            score?: number | undefined;
+            subscore?: number | undefined;
+            num_score?: number | undefined;
+            metadata?: string | undefined;
+            create_time?: Date | undefined;
+            update_time?: Date | undefined;
+            expiry_time?: Date | undefined;
+            rank?: number | undefined;
+            max_num_score?: number | undefined;
+        }[] | undefined;
+        owner_records?: {
+            leaderboard_id?: string | undefined;
+            owner_id?: string | undefined;
+            username?: string | undefined;
+            score?: number | undefined;
+            subscore?: number | undefined;
+            num_score?: number | undefined;
+            metadata?: string | undefined;
+            create_time?: Date | undefined;
+            update_time?: Date | undefined;
+            expiry_time?: Date | undefined;
+            rank?: number | undefined;
+            max_num_score?: number | undefined;
+        }[] | undefined;
+        next_cursor?: string | undefined;
+        prev_cursor?: string | undefined;
+        rank_count?: number | undefined;
+    } & {
+        records?: ({
+            leaderboard_id?: string | undefined;
+            owner_id?: string | undefined;
+            username?: string | undefined;
+            score?: number | undefined;
+            subscore?: number | undefined;
+            num_score?: number | undefined;
+            metadata?: string | undefined;
+            create_time?: Date | undefined;
+            update_time?: Date | undefined;
+            expiry_time?: Date | undefined;
+            rank?: number | undefined;
+            max_num_score?: number | undefined;
+        }[] & ({
+            leaderboard_id?: string | undefined;
+            owner_id?: string | undefined;
+            username?: string | undefined;
+            score?: number | undefined;
+            subscore?: number | undefined;
+            num_score?: number | undefined;
+            metadata?: string | undefined;
+            create_time?: Date | undefined;
+            update_time?: Date | undefined;
+            expiry_time?: Date | undefined;
+            rank?: number | undefined;
+            max_num_score?: number | undefined;
+        } & {
+            leaderboard_id?: string | undefined;
+            owner_id?: string | undefined;
+            username?: string | undefined;
+            score?: number | undefined;
+            subscore?: number | undefined;
+            num_score?: number | undefined;
+            metadata?: string | undefined;
+            create_time?: Date | undefined;
+            update_time?: Date | undefined;
+            expiry_time?: Date | undefined;
+            rank?: number | undefined;
+            max_num_score?: number | undefined;
+        } & { [K in Exclude<keyof I["records"][number], keyof LeaderboardRecord>]: never; })[] & { [K_1 in Exclude<keyof I["records"], keyof {
+            leaderboard_id?: string | undefined;
+            owner_id?: string | undefined;
+            username?: string | undefined;
+            score?: number | undefined;
+            subscore?: number | undefined;
+            num_score?: number | undefined;
+            metadata?: string | undefined;
+            create_time?: Date | undefined;
+            update_time?: Date | undefined;
+            expiry_time?: Date | undefined;
+            rank?: number | undefined;
+            max_num_score?: number | undefined;
+        }[]>]: never; }) | undefined;
+        owner_records?: ({
+            leaderboard_id?: string | undefined;
+            owner_id?: string | undefined;
+            username?: string | undefined;
+            score?: number | undefined;
+            subscore?: number | undefined;
+            num_score?: number | undefined;
+            metadata?: string | undefined;
+            create_time?: Date | undefined;
+            update_time?: Date | undefined;
+            expiry_time?: Date | undefined;
+            rank?: number | undefined;
+            max_num_score?: number | undefined;
+        }[] & ({
+            leaderboard_id?: string | undefined;
+            owner_id?: string | undefined;
+            username?: string | undefined;
+            score?: number | undefined;
+            subscore?: number | undefined;
+            num_score?: number | undefined;
+            metadata?: string | undefined;
+            create_time?: Date | undefined;
+            update_time?: Date | undefined;
+            expiry_time?: Date | undefined;
+            rank?: number | undefined;
+            max_num_score?: number | undefined;
+        } & {
+            leaderboard_id?: string | undefined;
+            owner_id?: string | undefined;
+            username?: string | undefined;
+            score?: number | undefined;
+            subscore?: number | undefined;
+            num_score?: number | undefined;
+            metadata?: string | undefined;
+            create_time?: Date | undefined;
+            update_time?: Date | undefined;
+            expiry_time?: Date | undefined;
+            rank?: number | undefined;
+            max_num_score?: number | undefined;
+        } & { [K_2 in Exclude<keyof I["owner_records"][number], keyof LeaderboardRecord>]: never; })[] & { [K_3 in Exclude<keyof I["owner_records"], keyof {
+            leaderboard_id?: string | undefined;
+            owner_id?: string | undefined;
+            username?: string | undefined;
+            score?: number | undefined;
+            subscore?: number | undefined;
+            num_score?: number | undefined;
+            metadata?: string | undefined;
+            create_time?: Date | undefined;
+            update_time?: Date | undefined;
+            expiry_time?: Date | undefined;
+            rank?: number | undefined;
+            max_num_score?: number | undefined;
+        }[]>]: never; }) | undefined;
+        next_cursor?: string | undefined;
+        prev_cursor?: string | undefined;
+        rank_count?: number | undefined;
+    } & { [K_4 in Exclude<keyof I, keyof TournamentRecordList>]: never; }>(base?: I | undefined): TournamentRecordList;
+    fromPartial<I_1 extends {
+        records?: {
+            leaderboard_id?: string | undefined;
+            owner_id?: string | undefined;
+            username?: string | undefined;
+            score?: number | undefined;
+            subscore?: number | undefined;
+            num_score?: number | undefined;
+            metadata?: string | undefined;
+            create_time?: Date | undefined;
+            update_time?: Date | undefined;
+            expiry_time?: Date | undefined;
+            rank?: number | undefined;
+            max_num_score?: number | undefined;
+        }[] | undefined;
+        owner_records?: {
+            leaderboard_id?: string | undefined;
+            owner_id?: string | undefined;
+            username?: string | undefined;
+            score?: number | undefined;
+            subscore?: number | undefined;
+            num_score?: number | undefined;
+            metadata?: string | undefined;
+            create_time?: Date | undefined;
+            update_time?: Date | undefined;
+            expiry_time?: Date | undefined;
+            rank?: number | undefined;
+            max_num_score?: number | undefined;
+        }[] | undefined;
+        next_cursor?: string | undefined;
+        prev_cursor?: string | undefined;
+        rank_count?: number | undefined;
+    } & {
+        records?: ({
+            leaderboard_id?: string | undefined;
+            owner_id?: string | undefined;
+            username?: string | undefined;
+            score?: number | undefined;
+            subscore?: number | undefined;
+            num_score?: number | undefined;
+            metadata?: string | undefined;
+            create_time?: Date | undefined;
+            update_time?: Date | undefined;
+            expiry_time?: Date | undefined;
+            rank?: number | undefined;
+            max_num_score?: number | undefined;
+        }[] & ({
+            leaderboard_id?: string | undefined;
+            owner_id?: string | undefined;
+            username?: string | undefined;
+            score?: number | undefined;
+            subscore?: number | undefined;
+            num_score?: number | undefined;
+            metadata?: string | undefined;
+            create_time?: Date | undefined;
+            update_time?: Date | undefined;
+            expiry_time?: Date | undefined;
+            rank?: number | undefined;
+            max_num_score?: number | undefined;
+        } & {
+            leaderboard_id?: string | undefined;
+            owner_id?: string | undefined;
+            username?: string | undefined;
+            score?: number | undefined;
+            subscore?: number | undefined;
+            num_score?: number | undefined;
+            metadata?: string | undefined;
+            create_time?: Date | undefined;
+            update_time?: Date | undefined;
+            expiry_time?: Date | undefined;
+            rank?: number | undefined;
+            max_num_score?: number | undefined;
+        } & { [K_5 in Exclude<keyof I_1["records"][number], keyof LeaderboardRecord>]: never; })[] & { [K_6 in Exclude<keyof I_1["records"], keyof {
+            leaderboard_id?: string | undefined;
+            owner_id?: string | undefined;
+            username?: string | undefined;
+            score?: number | undefined;
+            subscore?: number | undefined;
+            num_score?: number | undefined;
+            metadata?: string | undefined;
+            create_time?: Date | undefined;
+            update_time?: Date | undefined;
+            expiry_time?: Date | undefined;
+            rank?: number | undefined;
+            max_num_score?: number | undefined;
+        }[]>]: never; }) | undefined;
+        owner_records?: ({
+            leaderboard_id?: string | undefined;
+            owner_id?: string | undefined;
+            username?: string | undefined;
+            score?: number | undefined;
+            subscore?: number | undefined;
+            num_score?: number | undefined;
+            metadata?: string | undefined;
+            create_time?: Date | undefined;
+            update_time?: Date | undefined;
+            expiry_time?: Date | undefined;
+            rank?: number | undefined;
+            max_num_score?: number | undefined;
+        }[] & ({
+            leaderboard_id?: string | undefined;
+            owner_id?: string | undefined;
+            username?: string | undefined;
+            score?: number | undefined;
+            subscore?: number | undefined;
+            num_score?: number | undefined;
+            metadata?: string | undefined;
+            create_time?: Date | undefined;
+            update_time?: Date | undefined;
+            expiry_time?: Date | undefined;
+            rank?: number | undefined;
+            max_num_score?: number | undefined;
+        } & {
+            leaderboard_id?: string | undefined;
+            owner_id?: string | undefined;
+            username?: string | undefined;
+            score?: number | undefined;
+            subscore?: number | undefined;
+            num_score?: number | undefined;
+            metadata?: string | undefined;
+            create_time?: Date | undefined;
+            update_time?: Date | undefined;
+            expiry_time?: Date | undefined;
+            rank?: number | undefined;
+            max_num_score?: number | undefined;
+        } & { [K_7 in Exclude<keyof I_1["owner_records"][number], keyof LeaderboardRecord>]: never; })[] & { [K_8 in Exclude<keyof I_1["owner_records"], keyof {
+            leaderboard_id?: string | undefined;
+            owner_id?: string | undefined;
+            username?: string | undefined;
+            score?: number | undefined;
+            subscore?: number | undefined;
+            num_score?: number | undefined;
+            metadata?: string | undefined;
+            create_time?: Date | undefined;
+            update_time?: Date | undefined;
+            expiry_time?: Date | undefined;
+            rank?: number | undefined;
+            max_num_score?: number | undefined;
+        }[]>]: never; }) | undefined;
+        next_cursor?: string | undefined;
+        prev_cursor?: string | undefined;
+        rank_count?: number | undefined;
+    } & { [K_9 in Exclude<keyof I_1, keyof TournamentRecordList>]: never; }>(object: I_1): TournamentRecordList;
 };
 export declare const UpdateAccountRequest: {
     encode(message: UpdateAccountRequest, writer?: _m0.Writer): _m0.Writer;
     decode(input: _m0.Reader | Uint8Array, length?: number): UpdateAccountRequest;
     fromJSON(object: any): UpdateAccountRequest;
     toJSON(message: UpdateAccountRequest): unknown;
-    fromPartial(object: DeepPartial<UpdateAccountRequest>): UpdateAccountRequest;
+    create<I extends {
+        username?: string | undefined;
+        display_name?: string | undefined;
+        avatar_url?: string | undefined;
+        lang_tag?: string | undefined;
+        location?: string | undefined;
+        timezone?: string | undefined;
+    } & {
+        username?: string | undefined;
+        display_name?: string | undefined;
+        avatar_url?: string | undefined;
+        lang_tag?: string | undefined;
+        location?: string | undefined;
+        timezone?: string | undefined;
+    } & { [K in Exclude<keyof I, keyof UpdateAccountRequest>]: never; }>(base?: I | undefined): UpdateAccountRequest;
+    fromPartial<I_1 extends {
+        username?: string | undefined;
+        display_name?: string | undefined;
+        avatar_url?: string | undefined;
+        lang_tag?: string | undefined;
+        location?: string | undefined;
+        timezone?: string | undefined;
+    } & {
+        username?: string | undefined;
+        display_name?: string | undefined;
+        avatar_url?: string | undefined;
+        lang_tag?: string | undefined;
+        location?: string | undefined;
+        timezone?: string | undefined;
+    } & { [K_1 in Exclude<keyof I_1, keyof UpdateAccountRequest>]: never; }>(object: I_1): UpdateAccountRequest;
 };
 export declare const UpdateGroupRequest: {
     encode(message: UpdateGroupRequest, writer?: _m0.Writer): _m0.Writer;
     decode(input: _m0.Reader | Uint8Array, length?: number): UpdateGroupRequest;
     fromJSON(object: any): UpdateGroupRequest;
     toJSON(message: UpdateGroupRequest): unknown;
-    fromPartial(object: DeepPartial<UpdateGroupRequest>): UpdateGroupRequest;
+    create<I extends {
+        group_id?: string | undefined;
+        name?: string | undefined;
+        description?: string | undefined;
+        lang_tag?: string | undefined;
+        avatar_url?: string | undefined;
+        open?: boolean | undefined;
+    } & {
+        group_id?: string | undefined;
+        name?: string | undefined;
+        description?: string | undefined;
+        lang_tag?: string | undefined;
+        avatar_url?: string | undefined;
+        open?: boolean | undefined;
+    } & { [K in Exclude<keyof I, keyof UpdateGroupRequest>]: never; }>(base?: I | undefined): UpdateGroupRequest;
+    fromPartial<I_1 extends {
+        group_id?: string | undefined;
+        name?: string | undefined;
+        description?: string | undefined;
+        lang_tag?: string | undefined;
+        avatar_url?: string | undefined;
+        open?: boolean | undefined;
+    } & {
+        group_id?: string | undefined;
+        name?: string | undefined;
+        description?: string | undefined;
+        lang_tag?: string | undefined;
+        avatar_url?: string | undefined;
+        open?: boolean | undefined;
+    } & { [K_1 in Exclude<keyof I_1, keyof UpdateGroupRequest>]: never; }>(object: I_1): UpdateGroupRequest;
+};
+export declare const UpdateCategoryDescRequest: {
+    encode(message: UpdateCategoryDescRequest, writer?: _m0.Writer): _m0.Writer;
+    decode(input: _m0.Reader | Uint8Array, length?: number): UpdateCategoryDescRequest;
+    fromJSON(object: any): UpdateCategoryDescRequest;
+    toJSON(message: UpdateCategoryDescRequest): unknown;
+    create<I extends {
+        category_id?: string | undefined;
+        category_name?: string | undefined;
+    } & {
+        category_id?: string | undefined;
+        category_name?: string | undefined;
+    } & { [K in Exclude<keyof I, keyof UpdateCategoryDescRequest>]: never; }>(base?: I | undefined): UpdateCategoryDescRequest;
+    fromPartial<I_1 extends {
+        category_id?: string | undefined;
+        category_name?: string | undefined;
+    } & {
+        category_id?: string | undefined;
+        category_name?: string | undefined;
+    } & { [K_1 in Exclude<keyof I_1, keyof UpdateCategoryDescRequest>]: never; }>(object: I_1): UpdateCategoryDescRequest;
 };
 export declare const User: {
     encode(message: User, writer?: _m0.Writer): _m0.Writer;
     decode(input: _m0.Reader | Uint8Array, length?: number): User;
     fromJSON(object: any): User;
     toJSON(message: User): unknown;
-    fromPartial(object: DeepPartial<User>): User;
+    create<I extends {
+        id?: string | undefined;
+        username?: string | undefined;
+        display_name?: string | undefined;
+        avatar_url?: string | undefined;
+        lang_tag?: string | undefined;
+        location?: string | undefined;
+        timezone?: string | undefined;
+        metadata?: string | undefined;
+        facebook_id?: string | undefined;
+        google_id?: string | undefined;
+        gamecenter_id?: string | undefined;
+        steam_id?: string | undefined;
+        online?: boolean | undefined;
+        edge_count?: number | undefined;
+        create_time?: Date | undefined;
+        update_time?: Date | undefined;
+        facebook_instant_game_id?: string | undefined;
+        apple_id?: string | undefined;
+    } & {
+        id?: string | undefined;
+        username?: string | undefined;
+        display_name?: string | undefined;
+        avatar_url?: string | undefined;
+        lang_tag?: string | undefined;
+        location?: string | undefined;
+        timezone?: string | undefined;
+        metadata?: string | undefined;
+        facebook_id?: string | undefined;
+        google_id?: string | undefined;
+        gamecenter_id?: string | undefined;
+        steam_id?: string | undefined;
+        online?: boolean | undefined;
+        edge_count?: number | undefined;
+        create_time?: Date | undefined;
+        update_time?: Date | undefined;
+        facebook_instant_game_id?: string | undefined;
+        apple_id?: string | undefined;
+    } & { [K in Exclude<keyof I, keyof User>]: never; }>(base?: I | undefined): User;
+    fromPartial<I_1 extends {
+        id?: string | undefined;
+        username?: string | undefined;
+        display_name?: string | undefined;
+        avatar_url?: string | undefined;
+        lang_tag?: string | undefined;
+        location?: string | undefined;
+        timezone?: string | undefined;
+        metadata?: string | undefined;
+        facebook_id?: string | undefined;
+        google_id?: string | undefined;
+        gamecenter_id?: string | undefined;
+        steam_id?: string | undefined;
+        online?: boolean | undefined;
+        edge_count?: number | undefined;
+        create_time?: Date | undefined;
+        update_time?: Date | undefined;
+        facebook_instant_game_id?: string | undefined;
+        apple_id?: string | undefined;
+    } & {
+        id?: string | undefined;
+        username?: string | undefined;
+        display_name?: string | undefined;
+        avatar_url?: string | undefined;
+        lang_tag?: string | undefined;
+        location?: string | undefined;
+        timezone?: string | undefined;
+        metadata?: string | undefined;
+        facebook_id?: string | undefined;
+        google_id?: string | undefined;
+        gamecenter_id?: string | undefined;
+        steam_id?: string | undefined;
+        online?: boolean | undefined;
+        edge_count?: number | undefined;
+        create_time?: Date | undefined;
+        update_time?: Date | undefined;
+        facebook_instant_game_id?: string | undefined;
+        apple_id?: string | undefined;
+    } & { [K_1 in Exclude<keyof I_1, keyof User>]: never; }>(object: I_1): User;
 };
 export declare const UserGroupList: {
     encode(message: UserGroupList, writer?: _m0.Writer): _m0.Writer;
     decode(input: _m0.Reader | Uint8Array, length?: number): UserGroupList;
     fromJSON(object: any): UserGroupList;
     toJSON(message: UserGroupList): unknown;
-    fromPartial(object: DeepPartial<UserGroupList>): UserGroupList;
+    create<I extends {
+        user_groups?: {
+            group?: {
+                id?: string | undefined;
+                creator_id?: string | undefined;
+                name?: string | undefined;
+                description?: string | undefined;
+                lang_tag?: string | undefined;
+                metadata?: string | undefined;
+                avatar_url?: string | undefined;
+                open?: boolean | undefined;
+                edge_count?: number | undefined;
+                max_count?: number | undefined;
+                create_time?: Date | undefined;
+                update_time?: Date | undefined;
+            } | undefined;
+            state?: number | undefined;
+        }[] | undefined;
+        cursor?: string | undefined;
+    } & {
+        user_groups?: ({
+            group?: {
+                id?: string | undefined;
+                creator_id?: string | undefined;
+                name?: string | undefined;
+                description?: string | undefined;
+                lang_tag?: string | undefined;
+                metadata?: string | undefined;
+                avatar_url?: string | undefined;
+                open?: boolean | undefined;
+                edge_count?: number | undefined;
+                max_count?: number | undefined;
+                create_time?: Date | undefined;
+                update_time?: Date | undefined;
+            } | undefined;
+            state?: number | undefined;
+        }[] & ({
+            group?: {
+                id?: string | undefined;
+                creator_id?: string | undefined;
+                name?: string | undefined;
+                description?: string | undefined;
+                lang_tag?: string | undefined;
+                metadata?: string | undefined;
+                avatar_url?: string | undefined;
+                open?: boolean | undefined;
+                edge_count?: number | undefined;
+                max_count?: number | undefined;
+                create_time?: Date | undefined;
+                update_time?: Date | undefined;
+            } | undefined;
+            state?: number | undefined;
+        } & {
+            group?: ({
+                id?: string | undefined;
+                creator_id?: string | undefined;
+                name?: string | undefined;
+                description?: string | undefined;
+                lang_tag?: string | undefined;
+                metadata?: string | undefined;
+                avatar_url?: string | undefined;
+                open?: boolean | undefined;
+                edge_count?: number | undefined;
+                max_count?: number | undefined;
+                create_time?: Date | undefined;
+                update_time?: Date | undefined;
+            } & {
+                id?: string | undefined;
+                creator_id?: string | undefined;
+                name?: string | undefined;
+                description?: string | undefined;
+                lang_tag?: string | undefined;
+                metadata?: string | undefined;
+                avatar_url?: string | undefined;
+                open?: boolean | undefined;
+                edge_count?: number | undefined;
+                max_count?: number | undefined;
+                create_time?: Date | undefined;
+                update_time?: Date | undefined;
+            } & { [K in Exclude<keyof I["user_groups"][number]["group"], keyof Group>]: never; }) | undefined;
+            state?: number | undefined;
+        } & { [K_1 in Exclude<keyof I["user_groups"][number], keyof UserGroupList_UserGroup>]: never; })[] & { [K_2 in Exclude<keyof I["user_groups"], keyof {
+            group?: {
+                id?: string | undefined;
+                creator_id?: string | undefined;
+                name?: string | undefined;
+                description?: string | undefined;
+                lang_tag?: string | undefined;
+                metadata?: string | undefined;
+                avatar_url?: string | undefined;
+                open?: boolean | undefined;
+                edge_count?: number | undefined;
+                max_count?: number | undefined;
+                create_time?: Date | undefined;
+                update_time?: Date | undefined;
+            } | undefined;
+            state?: number | undefined;
+        }[]>]: never; }) | undefined;
+        cursor?: string | undefined;
+    } & { [K_3 in Exclude<keyof I, keyof UserGroupList>]: never; }>(base?: I | undefined): UserGroupList;
+    fromPartial<I_1 extends {
+        user_groups?: {
+            group?: {
+                id?: string | undefined;
+                creator_id?: string | undefined;
+                name?: string | undefined;
+                description?: string | undefined;
+                lang_tag?: string | undefined;
+                metadata?: string | undefined;
+                avatar_url?: string | undefined;
+                open?: boolean | undefined;
+                edge_count?: number | undefined;
+                max_count?: number | undefined;
+                create_time?: Date | undefined;
+                update_time?: Date | undefined;
+            } | undefined;
+            state?: number | undefined;
+        }[] | undefined;
+        cursor?: string | undefined;
+    } & {
+        user_groups?: ({
+            group?: {
+                id?: string | undefined;
+                creator_id?: string | undefined;
+                name?: string | undefined;
+                description?: string | undefined;
+                lang_tag?: string | undefined;
+                metadata?: string | undefined;
+                avatar_url?: string | undefined;
+                open?: boolean | undefined;
+                edge_count?: number | undefined;
+                max_count?: number | undefined;
+                create_time?: Date | undefined;
+                update_time?: Date | undefined;
+            } | undefined;
+            state?: number | undefined;
+        }[] & ({
+            group?: {
+                id?: string | undefined;
+                creator_id?: string | undefined;
+                name?: string | undefined;
+                description?: string | undefined;
+                lang_tag?: string | undefined;
+                metadata?: string | undefined;
+                avatar_url?: string | undefined;
+                open?: boolean | undefined;
+                edge_count?: number | undefined;
+                max_count?: number | undefined;
+                create_time?: Date | undefined;
+                update_time?: Date | undefined;
+            } | undefined;
+            state?: number | undefined;
+        } & {
+            group?: ({
+                id?: string | undefined;
+                creator_id?: string | undefined;
+                name?: string | undefined;
+                description?: string | undefined;
+                lang_tag?: string | undefined;
+                metadata?: string | undefined;
+                avatar_url?: string | undefined;
+                open?: boolean | undefined;
+                edge_count?: number | undefined;
+                max_count?: number | undefined;
+                create_time?: Date | undefined;
+                update_time?: Date | undefined;
+            } & {
+                id?: string | undefined;
+                creator_id?: string | undefined;
+                name?: string | undefined;
+                description?: string | undefined;
+                lang_tag?: string | undefined;
+                metadata?: string | undefined;
+                avatar_url?: string | undefined;
+                open?: boolean | undefined;
+                edge_count?: number | undefined;
+                max_count?: number | undefined;
+                create_time?: Date | undefined;
+                update_time?: Date | undefined;
+            } & { [K_4 in Exclude<keyof I_1["user_groups"][number]["group"], keyof Group>]: never; }) | undefined;
+            state?: number | undefined;
+        } & { [K_5 in Exclude<keyof I_1["user_groups"][number], keyof UserGroupList_UserGroup>]: never; })[] & { [K_6 in Exclude<keyof I_1["user_groups"], keyof {
+            group?: {
+                id?: string | undefined;
+                creator_id?: string | undefined;
+                name?: string | undefined;
+                description?: string | undefined;
+                lang_tag?: string | undefined;
+                metadata?: string | undefined;
+                avatar_url?: string | undefined;
+                open?: boolean | undefined;
+                edge_count?: number | undefined;
+                max_count?: number | undefined;
+                create_time?: Date | undefined;
+                update_time?: Date | undefined;
+            } | undefined;
+            state?: number | undefined;
+        }[]>]: never; }) | undefined;
+        cursor?: string | undefined;
+    } & { [K_7 in Exclude<keyof I_1, keyof UserGroupList>]: never; }>(object: I_1): UserGroupList;
 };
 export declare const UserGroupList_UserGroup: {
     encode(message: UserGroupList_UserGroup, writer?: _m0.Writer): _m0.Writer;
     decode(input: _m0.Reader | Uint8Array, length?: number): UserGroupList_UserGroup;
     fromJSON(object: any): UserGroupList_UserGroup;
     toJSON(message: UserGroupList_UserGroup): unknown;
-    fromPartial(object: DeepPartial<UserGroupList_UserGroup>): UserGroupList_UserGroup;
+    create<I extends {
+        group?: {
+            id?: string | undefined;
+            creator_id?: string | undefined;
+            name?: string | undefined;
+            description?: string | undefined;
+            lang_tag?: string | undefined;
+            metadata?: string | undefined;
+            avatar_url?: string | undefined;
+            open?: boolean | undefined;
+            edge_count?: number | undefined;
+            max_count?: number | undefined;
+            create_time?: Date | undefined;
+            update_time?: Date | undefined;
+        } | undefined;
+        state?: number | undefined;
+    } & {
+        group?: ({
+            id?: string | undefined;
+            creator_id?: string | undefined;
+            name?: string | undefined;
+            description?: string | undefined;
+            lang_tag?: string | undefined;
+            metadata?: string | undefined;
+            avatar_url?: string | undefined;
+            open?: boolean | undefined;
+            edge_count?: number | undefined;
+            max_count?: number | undefined;
+            create_time?: Date | undefined;
+            update_time?: Date | undefined;
+        } & {
+            id?: string | undefined;
+            creator_id?: string | undefined;
+            name?: string | undefined;
+            description?: string | undefined;
+            lang_tag?: string | undefined;
+            metadata?: string | undefined;
+            avatar_url?: string | undefined;
+            open?: boolean | undefined;
+            edge_count?: number | undefined;
+            max_count?: number | undefined;
+            create_time?: Date | undefined;
+            update_time?: Date | undefined;
+        } & { [K in Exclude<keyof I["group"], keyof Group>]: never; }) | undefined;
+        state?: number | undefined;
+    } & { [K_1 in Exclude<keyof I, keyof UserGroupList_UserGroup>]: never; }>(base?: I | undefined): UserGroupList_UserGroup;
+    fromPartial<I_1 extends {
+        group?: {
+            id?: string | undefined;
+            creator_id?: string | undefined;
+            name?: string | undefined;
+            description?: string | undefined;
+            lang_tag?: string | undefined;
+            metadata?: string | undefined;
+            avatar_url?: string | undefined;
+            open?: boolean | undefined;
+            edge_count?: number | undefined;
+            max_count?: number | undefined;
+            create_time?: Date | undefined;
+            update_time?: Date | undefined;
+        } | undefined;
+        state?: number | undefined;
+    } & {
+        group?: ({
+            id?: string | undefined;
+            creator_id?: string | undefined;
+            name?: string | undefined;
+            description?: string | undefined;
+            lang_tag?: string | undefined;
+            metadata?: string | undefined;
+            avatar_url?: string | undefined;
+            open?: boolean | undefined;
+            edge_count?: number | undefined;
+            max_count?: number | undefined;
+            create_time?: Date | undefined;
+            update_time?: Date | undefined;
+        } & {
+            id?: string | undefined;
+            creator_id?: string | undefined;
+            name?: string | undefined;
+            description?: string | undefined;
+            lang_tag?: string | undefined;
+            metadata?: string | undefined;
+            avatar_url?: string | undefined;
+            open?: boolean | undefined;
+            edge_count?: number | undefined;
+            max_count?: number | undefined;
+            create_time?: Date | undefined;
+            update_time?: Date | undefined;
+        } & { [K_2 in Exclude<keyof I_1["group"], keyof Group>]: never; }) | undefined;
+        state?: number | undefined;
+    } & { [K_3 in Exclude<keyof I_1, keyof UserGroupList_UserGroup>]: never; }>(object: I_1): UserGroupList_UserGroup;
 };
 export declare const Users: {
     encode(message: Users, writer?: _m0.Writer): _m0.Writer;
     decode(input: _m0.Reader | Uint8Array, length?: number): Users;
     fromJSON(object: any): Users;
     toJSON(message: Users): unknown;
-    fromPartial(object: DeepPartial<Users>): Users;
+    create<I extends {
+        users?: {
+            id?: string | undefined;
+            username?: string | undefined;
+            display_name?: string | undefined;
+            avatar_url?: string | undefined;
+            lang_tag?: string | undefined;
+            location?: string | undefined;
+            timezone?: string | undefined;
+            metadata?: string | undefined;
+            facebook_id?: string | undefined;
+            google_id?: string | undefined;
+            gamecenter_id?: string | undefined;
+            steam_id?: string | undefined;
+            online?: boolean | undefined;
+            edge_count?: number | undefined;
+            create_time?: Date | undefined;
+            update_time?: Date | undefined;
+            facebook_instant_game_id?: string | undefined;
+            apple_id?: string | undefined;
+        }[] | undefined;
+    } & {
+        users?: ({
+            id?: string | undefined;
+            username?: string | undefined;
+            display_name?: string | undefined;
+            avatar_url?: string | undefined;
+            lang_tag?: string | undefined;
+            location?: string | undefined;
+            timezone?: string | undefined;
+            metadata?: string | undefined;
+            facebook_id?: string | undefined;
+            google_id?: string | undefined;
+            gamecenter_id?: string | undefined;
+            steam_id?: string | undefined;
+            online?: boolean | undefined;
+            edge_count?: number | undefined;
+            create_time?: Date | undefined;
+            update_time?: Date | undefined;
+            facebook_instant_game_id?: string | undefined;
+            apple_id?: string | undefined;
+        }[] & ({
+            id?: string | undefined;
+            username?: string | undefined;
+            display_name?: string | undefined;
+            avatar_url?: string | undefined;
+            lang_tag?: string | undefined;
+            location?: string | undefined;
+            timezone?: string | undefined;
+            metadata?: string | undefined;
+            facebook_id?: string | undefined;
+            google_id?: string | undefined;
+            gamecenter_id?: string | undefined;
+            steam_id?: string | undefined;
+            online?: boolean | undefined;
+            edge_count?: number | undefined;
+            create_time?: Date | undefined;
+            update_time?: Date | undefined;
+            facebook_instant_game_id?: string | undefined;
+            apple_id?: string | undefined;
+        } & {
+            id?: string | undefined;
+            username?: string | undefined;
+            display_name?: string | undefined;
+            avatar_url?: string | undefined;
+            lang_tag?: string | undefined;
+            location?: string | undefined;
+            timezone?: string | undefined;
+            metadata?: string | undefined;
+            facebook_id?: string | undefined;
+            google_id?: string | undefined;
+            gamecenter_id?: string | undefined;
+            steam_id?: string | undefined;
+            online?: boolean | undefined;
+            edge_count?: number | undefined;
+            create_time?: Date | undefined;
+            update_time?: Date | undefined;
+            facebook_instant_game_id?: string | undefined;
+            apple_id?: string | undefined;
+        } & { [K in Exclude<keyof I["users"][number], keyof User>]: never; })[] & { [K_1 in Exclude<keyof I["users"], keyof {
+            id?: string | undefined;
+            username?: string | undefined;
+            display_name?: string | undefined;
+            avatar_url?: string | undefined;
+            lang_tag?: string | undefined;
+            location?: string | undefined;
+            timezone?: string | undefined;
+            metadata?: string | undefined;
+            facebook_id?: string | undefined;
+            google_id?: string | undefined;
+            gamecenter_id?: string | undefined;
+            steam_id?: string | undefined;
+            online?: boolean | undefined;
+            edge_count?: number | undefined;
+            create_time?: Date | undefined;
+            update_time?: Date | undefined;
+            facebook_instant_game_id?: string | undefined;
+            apple_id?: string | undefined;
+        }[]>]: never; }) | undefined;
+    } & { [K_2 in Exclude<keyof I, "users">]: never; }>(base?: I | undefined): Users;
+    fromPartial<I_1 extends {
+        users?: {
+            id?: string | undefined;
+            username?: string | undefined;
+            display_name?: string | undefined;
+            avatar_url?: string | undefined;
+            lang_tag?: string | undefined;
+            location?: string | undefined;
+            timezone?: string | undefined;
+            metadata?: string | undefined;
+            facebook_id?: string | undefined;
+            google_id?: string | undefined;
+            gamecenter_id?: string | undefined;
+            steam_id?: string | undefined;
+            online?: boolean | undefined;
+            edge_count?: number | undefined;
+            create_time?: Date | undefined;
+            update_time?: Date | undefined;
+            facebook_instant_game_id?: string | undefined;
+            apple_id?: string | undefined;
+        }[] | undefined;
+    } & {
+        users?: ({
+            id?: string | undefined;
+            username?: string | undefined;
+            display_name?: string | undefined;
+            avatar_url?: string | undefined;
+            lang_tag?: string | undefined;
+            location?: string | undefined;
+            timezone?: string | undefined;
+            metadata?: string | undefined;
+            facebook_id?: string | undefined;
+            google_id?: string | undefined;
+            gamecenter_id?: string | undefined;
+            steam_id?: string | undefined;
+            online?: boolean | undefined;
+            edge_count?: number | undefined;
+            create_time?: Date | undefined;
+            update_time?: Date | undefined;
+            facebook_instant_game_id?: string | undefined;
+            apple_id?: string | undefined;
+        }[] & ({
+            id?: string | undefined;
+            username?: string | undefined;
+            display_name?: string | undefined;
+            avatar_url?: string | undefined;
+            lang_tag?: string | undefined;
+            location?: string | undefined;
+            timezone?: string | undefined;
+            metadata?: string | undefined;
+            facebook_id?: string | undefined;
+            google_id?: string | undefined;
+            gamecenter_id?: string | undefined;
+            steam_id?: string | undefined;
+            online?: boolean | undefined;
+            edge_count?: number | undefined;
+            create_time?: Date | undefined;
+            update_time?: Date | undefined;
+            facebook_instant_game_id?: string | undefined;
+            apple_id?: string | undefined;
+        } & {
+            id?: string | undefined;
+            username?: string | undefined;
+            display_name?: string | undefined;
+            avatar_url?: string | undefined;
+            lang_tag?: string | undefined;
+            location?: string | undefined;
+            timezone?: string | undefined;
+            metadata?: string | undefined;
+            facebook_id?: string | undefined;
+            google_id?: string | undefined;
+            gamecenter_id?: string | undefined;
+            steam_id?: string | undefined;
+            online?: boolean | undefined;
+            edge_count?: number | undefined;
+            create_time?: Date | undefined;
+            update_time?: Date | undefined;
+            facebook_instant_game_id?: string | undefined;
+            apple_id?: string | undefined;
+        } & { [K_3 in Exclude<keyof I_1["users"][number], keyof User>]: never; })[] & { [K_4 in Exclude<keyof I_1["users"], keyof {
+            id?: string | undefined;
+            username?: string | undefined;
+            display_name?: string | undefined;
+            avatar_url?: string | undefined;
+            lang_tag?: string | undefined;
+            location?: string | undefined;
+            timezone?: string | undefined;
+            metadata?: string | undefined;
+            facebook_id?: string | undefined;
+            google_id?: string | undefined;
+            gamecenter_id?: string | undefined;
+            steam_id?: string | undefined;
+            online?: boolean | undefined;
+            edge_count?: number | undefined;
+            create_time?: Date | undefined;
+            update_time?: Date | undefined;
+            facebook_instant_game_id?: string | undefined;
+            apple_id?: string | undefined;
+        }[]>]: never; }) | undefined;
+    } & { [K_5 in Exclude<keyof I_1, "users">]: never; }>(object: I_1): Users;
 };
 export declare const ValidatePurchaseAppleRequest: {
     encode(message: ValidatePurchaseAppleRequest, writer?: _m0.Writer): _m0.Writer;
     decode(input: _m0.Reader | Uint8Array, length?: number): ValidatePurchaseAppleRequest;
     fromJSON(object: any): ValidatePurchaseAppleRequest;
     toJSON(message: ValidatePurchaseAppleRequest): unknown;
-    fromPartial(object: DeepPartial<ValidatePurchaseAppleRequest>): ValidatePurchaseAppleRequest;
+    create<I extends {
+        receipt?: string | undefined;
+        persist?: boolean | undefined;
+    } & {
+        receipt?: string | undefined;
+        persist?: boolean | undefined;
+    } & { [K in Exclude<keyof I, keyof ValidatePurchaseAppleRequest>]: never; }>(base?: I | undefined): ValidatePurchaseAppleRequest;
+    fromPartial<I_1 extends {
+        receipt?: string | undefined;
+        persist?: boolean | undefined;
+    } & {
+        receipt?: string | undefined;
+        persist?: boolean | undefined;
+    } & { [K_1 in Exclude<keyof I_1, keyof ValidatePurchaseAppleRequest>]: never; }>(object: I_1): ValidatePurchaseAppleRequest;
+};
+export declare const ValidateSubscriptionAppleRequest: {
+    encode(message: ValidateSubscriptionAppleRequest, writer?: _m0.Writer): _m0.Writer;
+    decode(input: _m0.Reader | Uint8Array, length?: number): ValidateSubscriptionAppleRequest;
+    fromJSON(object: any): ValidateSubscriptionAppleRequest;
+    toJSON(message: ValidateSubscriptionAppleRequest): unknown;
+    create<I extends {
+        receipt?: string | undefined;
+        persist?: boolean | undefined;
+    } & {
+        receipt?: string | undefined;
+        persist?: boolean | undefined;
+    } & { [K in Exclude<keyof I, keyof ValidateSubscriptionAppleRequest>]: never; }>(base?: I | undefined): ValidateSubscriptionAppleRequest;
+    fromPartial<I_1 extends {
+        receipt?: string | undefined;
+        persist?: boolean | undefined;
+    } & {
+        receipt?: string | undefined;
+        persist?: boolean | undefined;
+    } & { [K_1 in Exclude<keyof I_1, keyof ValidateSubscriptionAppleRequest>]: never; }>(object: I_1): ValidateSubscriptionAppleRequest;
 };
 export declare const ValidatePurchaseGoogleRequest: {
     encode(message: ValidatePurchaseGoogleRequest, writer?: _m0.Writer): _m0.Writer;
     decode(input: _m0.Reader | Uint8Array, length?: number): ValidatePurchaseGoogleRequest;
     fromJSON(object: any): ValidatePurchaseGoogleRequest;
     toJSON(message: ValidatePurchaseGoogleRequest): unknown;
-    fromPartial(object: DeepPartial<ValidatePurchaseGoogleRequest>): ValidatePurchaseGoogleRequest;
+    create<I extends {
+        purchase?: string | undefined;
+        persist?: boolean | undefined;
+    } & {
+        purchase?: string | undefined;
+        persist?: boolean | undefined;
+    } & { [K in Exclude<keyof I, keyof ValidatePurchaseGoogleRequest>]: never; }>(base?: I | undefined): ValidatePurchaseGoogleRequest;
+    fromPartial<I_1 extends {
+        purchase?: string | undefined;
+        persist?: boolean | undefined;
+    } & {
+        purchase?: string | undefined;
+        persist?: boolean | undefined;
+    } & { [K_1 in Exclude<keyof I_1, keyof ValidatePurchaseGoogleRequest>]: never; }>(object: I_1): ValidatePurchaseGoogleRequest;
+};
+export declare const ValidateSubscriptionGoogleRequest: {
+    encode(message: ValidateSubscriptionGoogleRequest, writer?: _m0.Writer): _m0.Writer;
+    decode(input: _m0.Reader | Uint8Array, length?: number): ValidateSubscriptionGoogleRequest;
+    fromJSON(object: any): ValidateSubscriptionGoogleRequest;
+    toJSON(message: ValidateSubscriptionGoogleRequest): unknown;
+    create<I extends {
+        receipt?: string | undefined;
+        persist?: boolean | undefined;
+    } & {
+        receipt?: string | undefined;
+        persist?: boolean | undefined;
+    } & { [K in Exclude<keyof I, keyof ValidateSubscriptionGoogleRequest>]: never; }>(base?: I | undefined): ValidateSubscriptionGoogleRequest;
+    fromPartial<I_1 extends {
+        receipt?: string | undefined;
+        persist?: boolean | undefined;
+    } & {
+        receipt?: string | undefined;
+        persist?: boolean | undefined;
+    } & { [K_1 in Exclude<keyof I_1, keyof ValidateSubscriptionGoogleRequest>]: never; }>(object: I_1): ValidateSubscriptionGoogleRequest;
 };
 export declare const ValidatePurchaseHuaweiRequest: {
     encode(message: ValidatePurchaseHuaweiRequest, writer?: _m0.Writer): _m0.Writer;
     decode(input: _m0.Reader | Uint8Array, length?: number): ValidatePurchaseHuaweiRequest;
     fromJSON(object: any): ValidatePurchaseHuaweiRequest;
     toJSON(message: ValidatePurchaseHuaweiRequest): unknown;
-    fromPartial(object: DeepPartial<ValidatePurchaseHuaweiRequest>): ValidatePurchaseHuaweiRequest;
+    create<I extends {
+        purchase?: string | undefined;
+        signature?: string | undefined;
+        persist?: boolean | undefined;
+    } & {
+        purchase?: string | undefined;
+        signature?: string | undefined;
+        persist?: boolean | undefined;
+    } & { [K in Exclude<keyof I, keyof ValidatePurchaseHuaweiRequest>]: never; }>(base?: I | undefined): ValidatePurchaseHuaweiRequest;
+    fromPartial<I_1 extends {
+        purchase?: string | undefined;
+        signature?: string | undefined;
+        persist?: boolean | undefined;
+    } & {
+        purchase?: string | undefined;
+        signature?: string | undefined;
+        persist?: boolean | undefined;
+    } & { [K_1 in Exclude<keyof I_1, keyof ValidatePurchaseHuaweiRequest>]: never; }>(object: I_1): ValidatePurchaseHuaweiRequest;
+};
+export declare const ValidatePurchaseFacebookInstantRequest: {
+    encode(message: ValidatePurchaseFacebookInstantRequest, writer?: _m0.Writer): _m0.Writer;
+    decode(input: _m0.Reader | Uint8Array, length?: number): ValidatePurchaseFacebookInstantRequest;
+    fromJSON(object: any): ValidatePurchaseFacebookInstantRequest;
+    toJSON(message: ValidatePurchaseFacebookInstantRequest): unknown;
+    create<I extends {
+        signed_request?: string | undefined;
+        persist?: boolean | undefined;
+    } & {
+        signed_request?: string | undefined;
+        persist?: boolean | undefined;
+    } & { [K in Exclude<keyof I, keyof ValidatePurchaseFacebookInstantRequest>]: never; }>(base?: I | undefined): ValidatePurchaseFacebookInstantRequest;
+    fromPartial<I_1 extends {
+        signed_request?: string | undefined;
+        persist?: boolean | undefined;
+    } & {
+        signed_request?: string | undefined;
+        persist?: boolean | undefined;
+    } & { [K_1 in Exclude<keyof I_1, keyof ValidatePurchaseFacebookInstantRequest>]: never; }>(object: I_1): ValidatePurchaseFacebookInstantRequest;
 };
 export declare const ValidatedPurchase: {
     encode(message: ValidatedPurchase, writer?: _m0.Writer): _m0.Writer;
     decode(input: _m0.Reader | Uint8Array, length?: number): ValidatedPurchase;
     fromJSON(object: any): ValidatedPurchase;
     toJSON(message: ValidatedPurchase): unknown;
-    fromPartial(object: DeepPartial<ValidatedPurchase>): ValidatedPurchase;
+    create<I extends {
+        user_id?: string | undefined;
+        product_id?: string | undefined;
+        transaction_id?: string | undefined;
+        store?: StoreProvider | undefined;
+        purchase_time?: Date | undefined;
+        create_time?: Date | undefined;
+        update_time?: Date | undefined;
+        refund_time?: Date | undefined;
+        provider_response?: string | undefined;
+        environment?: StoreEnvironment | undefined;
+        seen_before?: boolean | undefined;
+    } & {
+        user_id?: string | undefined;
+        product_id?: string | undefined;
+        transaction_id?: string | undefined;
+        store?: StoreProvider | undefined;
+        purchase_time?: Date | undefined;
+        create_time?: Date | undefined;
+        update_time?: Date | undefined;
+        refund_time?: Date | undefined;
+        provider_response?: string | undefined;
+        environment?: StoreEnvironment | undefined;
+        seen_before?: boolean | undefined;
+    } & { [K in Exclude<keyof I, keyof ValidatedPurchase>]: never; }>(base?: I | undefined): ValidatedPurchase;
+    fromPartial<I_1 extends {
+        user_id?: string | undefined;
+        product_id?: string | undefined;
+        transaction_id?: string | undefined;
+        store?: StoreProvider | undefined;
+        purchase_time?: Date | undefined;
+        create_time?: Date | undefined;
+        update_time?: Date | undefined;
+        refund_time?: Date | undefined;
+        provider_response?: string | undefined;
+        environment?: StoreEnvironment | undefined;
+        seen_before?: boolean | undefined;
+    } & {
+        user_id?: string | undefined;
+        product_id?: string | undefined;
+        transaction_id?: string | undefined;
+        store?: StoreProvider | undefined;
+        purchase_time?: Date | undefined;
+        create_time?: Date | undefined;
+        update_time?: Date | undefined;
+        refund_time?: Date | undefined;
+        provider_response?: string | undefined;
+        environment?: StoreEnvironment | undefined;
+        seen_before?: boolean | undefined;
+    } & { [K_1 in Exclude<keyof I_1, keyof ValidatedPurchase>]: never; }>(object: I_1): ValidatedPurchase;
 };
 export declare const ValidatePurchaseResponse: {
     encode(message: ValidatePurchaseResponse, writer?: _m0.Writer): _m0.Writer;
     decode(input: _m0.Reader | Uint8Array, length?: number): ValidatePurchaseResponse;
     fromJSON(object: any): ValidatePurchaseResponse;
     toJSON(message: ValidatePurchaseResponse): unknown;
-    fromPartial(object: DeepPartial<ValidatePurchaseResponse>): ValidatePurchaseResponse;
+    create<I extends {
+        validated_purchases?: {
+            user_id?: string | undefined;
+            product_id?: string | undefined;
+            transaction_id?: string | undefined;
+            store?: StoreProvider | undefined;
+            purchase_time?: Date | undefined;
+            create_time?: Date | undefined;
+            update_time?: Date | undefined;
+            refund_time?: Date | undefined;
+            provider_response?: string | undefined;
+            environment?: StoreEnvironment | undefined;
+            seen_before?: boolean | undefined;
+        }[] | undefined;
+    } & {
+        validated_purchases?: ({
+            user_id?: string | undefined;
+            product_id?: string | undefined;
+            transaction_id?: string | undefined;
+            store?: StoreProvider | undefined;
+            purchase_time?: Date | undefined;
+            create_time?: Date | undefined;
+            update_time?: Date | undefined;
+            refund_time?: Date | undefined;
+            provider_response?: string | undefined;
+            environment?: StoreEnvironment | undefined;
+            seen_before?: boolean | undefined;
+        }[] & ({
+            user_id?: string | undefined;
+            product_id?: string | undefined;
+            transaction_id?: string | undefined;
+            store?: StoreProvider | undefined;
+            purchase_time?: Date | undefined;
+            create_time?: Date | undefined;
+            update_time?: Date | undefined;
+            refund_time?: Date | undefined;
+            provider_response?: string | undefined;
+            environment?: StoreEnvironment | undefined;
+            seen_before?: boolean | undefined;
+        } & {
+            user_id?: string | undefined;
+            product_id?: string | undefined;
+            transaction_id?: string | undefined;
+            store?: StoreProvider | undefined;
+            purchase_time?: Date | undefined;
+            create_time?: Date | undefined;
+            update_time?: Date | undefined;
+            refund_time?: Date | undefined;
+            provider_response?: string | undefined;
+            environment?: StoreEnvironment | undefined;
+            seen_before?: boolean | undefined;
+        } & { [K in Exclude<keyof I["validated_purchases"][number], keyof ValidatedPurchase>]: never; })[] & { [K_1 in Exclude<keyof I["validated_purchases"], keyof {
+            user_id?: string | undefined;
+            product_id?: string | undefined;
+            transaction_id?: string | undefined;
+            store?: StoreProvider | undefined;
+            purchase_time?: Date | undefined;
+            create_time?: Date | undefined;
+            update_time?: Date | undefined;
+            refund_time?: Date | undefined;
+            provider_response?: string | undefined;
+            environment?: StoreEnvironment | undefined;
+            seen_before?: boolean | undefined;
+        }[]>]: never; }) | undefined;
+    } & { [K_2 in Exclude<keyof I, "validated_purchases">]: never; }>(base?: I | undefined): ValidatePurchaseResponse;
+    fromPartial<I_1 extends {
+        validated_purchases?: {
+            user_id?: string | undefined;
+            product_id?: string | undefined;
+            transaction_id?: string | undefined;
+            store?: StoreProvider | undefined;
+            purchase_time?: Date | undefined;
+            create_time?: Date | undefined;
+            update_time?: Date | undefined;
+            refund_time?: Date | undefined;
+            provider_response?: string | undefined;
+            environment?: StoreEnvironment | undefined;
+            seen_before?: boolean | undefined;
+        }[] | undefined;
+    } & {
+        validated_purchases?: ({
+            user_id?: string | undefined;
+            product_id?: string | undefined;
+            transaction_id?: string | undefined;
+            store?: StoreProvider | undefined;
+            purchase_time?: Date | undefined;
+            create_time?: Date | undefined;
+            update_time?: Date | undefined;
+            refund_time?: Date | undefined;
+            provider_response?: string | undefined;
+            environment?: StoreEnvironment | undefined;
+            seen_before?: boolean | undefined;
+        }[] & ({
+            user_id?: string | undefined;
+            product_id?: string | undefined;
+            transaction_id?: string | undefined;
+            store?: StoreProvider | undefined;
+            purchase_time?: Date | undefined;
+            create_time?: Date | undefined;
+            update_time?: Date | undefined;
+            refund_time?: Date | undefined;
+            provider_response?: string | undefined;
+            environment?: StoreEnvironment | undefined;
+            seen_before?: boolean | undefined;
+        } & {
+            user_id?: string | undefined;
+            product_id?: string | undefined;
+            transaction_id?: string | undefined;
+            store?: StoreProvider | undefined;
+            purchase_time?: Date | undefined;
+            create_time?: Date | undefined;
+            update_time?: Date | undefined;
+            refund_time?: Date | undefined;
+            provider_response?: string | undefined;
+            environment?: StoreEnvironment | undefined;
+            seen_before?: boolean | undefined;
+        } & { [K_3 in Exclude<keyof I_1["validated_purchases"][number], keyof ValidatedPurchase>]: never; })[] & { [K_4 in Exclude<keyof I_1["validated_purchases"], keyof {
+            user_id?: string | undefined;
+            product_id?: string | undefined;
+            transaction_id?: string | undefined;
+            store?: StoreProvider | undefined;
+            purchase_time?: Date | undefined;
+            create_time?: Date | undefined;
+            update_time?: Date | undefined;
+            refund_time?: Date | undefined;
+            provider_response?: string | undefined;
+            environment?: StoreEnvironment | undefined;
+            seen_before?: boolean | undefined;
+        }[]>]: never; }) | undefined;
+    } & { [K_5 in Exclude<keyof I_1, "validated_purchases">]: never; }>(object: I_1): ValidatePurchaseResponse;
+};
+export declare const ValidateSubscriptionResponse: {
+    encode(message: ValidateSubscriptionResponse, writer?: _m0.Writer): _m0.Writer;
+    decode(input: _m0.Reader | Uint8Array, length?: number): ValidateSubscriptionResponse;
+    fromJSON(object: any): ValidateSubscriptionResponse;
+    toJSON(message: ValidateSubscriptionResponse): unknown;
+    create<I extends {
+        validated_subscription?: {
+            user_id?: string | undefined;
+            product_id?: string | undefined;
+            original_transaction_id?: string | undefined;
+            store?: StoreProvider | undefined;
+            purchase_time?: Date | undefined;
+            create_time?: Date | undefined;
+            update_time?: Date | undefined;
+            environment?: StoreEnvironment | undefined;
+            expiry_time?: Date | undefined;
+            refund_time?: Date | undefined;
+            provider_response?: string | undefined;
+            provider_notification?: string | undefined;
+            active?: boolean | undefined;
+        } | undefined;
+    } & {
+        validated_subscription?: ({
+            user_id?: string | undefined;
+            product_id?: string | undefined;
+            original_transaction_id?: string | undefined;
+            store?: StoreProvider | undefined;
+            purchase_time?: Date | undefined;
+            create_time?: Date | undefined;
+            update_time?: Date | undefined;
+            environment?: StoreEnvironment | undefined;
+            expiry_time?: Date | undefined;
+            refund_time?: Date | undefined;
+            provider_response?: string | undefined;
+            provider_notification?: string | undefined;
+            active?: boolean | undefined;
+        } & {
+            user_id?: string | undefined;
+            product_id?: string | undefined;
+            original_transaction_id?: string | undefined;
+            store?: StoreProvider | undefined;
+            purchase_time?: Date | undefined;
+            create_time?: Date | undefined;
+            update_time?: Date | undefined;
+            environment?: StoreEnvironment | undefined;
+            expiry_time?: Date | undefined;
+            refund_time?: Date | undefined;
+            provider_response?: string | undefined;
+            provider_notification?: string | undefined;
+            active?: boolean | undefined;
+        } & { [K in Exclude<keyof I["validated_subscription"], keyof ValidatedSubscription>]: never; }) | undefined;
+    } & { [K_1 in Exclude<keyof I, "validated_subscription">]: never; }>(base?: I | undefined): ValidateSubscriptionResponse;
+    fromPartial<I_1 extends {
+        validated_subscription?: {
+            user_id?: string | undefined;
+            product_id?: string | undefined;
+            original_transaction_id?: string | undefined;
+            store?: StoreProvider | undefined;
+            purchase_time?: Date | undefined;
+            create_time?: Date | undefined;
+            update_time?: Date | undefined;
+            environment?: StoreEnvironment | undefined;
+            expiry_time?: Date | undefined;
+            refund_time?: Date | undefined;
+            provider_response?: string | undefined;
+            provider_notification?: string | undefined;
+            active?: boolean | undefined;
+        } | undefined;
+    } & {
+        validated_subscription?: ({
+            user_id?: string | undefined;
+            product_id?: string | undefined;
+            original_transaction_id?: string | undefined;
+            store?: StoreProvider | undefined;
+            purchase_time?: Date | undefined;
+            create_time?: Date | undefined;
+            update_time?: Date | undefined;
+            environment?: StoreEnvironment | undefined;
+            expiry_time?: Date | undefined;
+            refund_time?: Date | undefined;
+            provider_response?: string | undefined;
+            provider_notification?: string | undefined;
+            active?: boolean | undefined;
+        } & {
+            user_id?: string | undefined;
+            product_id?: string | undefined;
+            original_transaction_id?: string | undefined;
+            store?: StoreProvider | undefined;
+            purchase_time?: Date | undefined;
+            create_time?: Date | undefined;
+            update_time?: Date | undefined;
+            environment?: StoreEnvironment | undefined;
+            expiry_time?: Date | undefined;
+            refund_time?: Date | undefined;
+            provider_response?: string | undefined;
+            provider_notification?: string | undefined;
+            active?: boolean | undefined;
+        } & { [K_2 in Exclude<keyof I_1["validated_subscription"], keyof ValidatedSubscription>]: never; }) | undefined;
+    } & { [K_3 in Exclude<keyof I_1, "validated_subscription">]: never; }>(object: I_1): ValidateSubscriptionResponse;
+};
+export declare const ValidatedSubscription: {
+    encode(message: ValidatedSubscription, writer?: _m0.Writer): _m0.Writer;
+    decode(input: _m0.Reader | Uint8Array, length?: number): ValidatedSubscription;
+    fromJSON(object: any): ValidatedSubscription;
+    toJSON(message: ValidatedSubscription): unknown;
+    create<I extends {
+        user_id?: string | undefined;
+        product_id?: string | undefined;
+        original_transaction_id?: string | undefined;
+        store?: StoreProvider | undefined;
+        purchase_time?: Date | undefined;
+        create_time?: Date | undefined;
+        update_time?: Date | undefined;
+        environment?: StoreEnvironment | undefined;
+        expiry_time?: Date | undefined;
+        refund_time?: Date | undefined;
+        provider_response?: string | undefined;
+        provider_notification?: string | undefined;
+        active?: boolean | undefined;
+    } & {
+        user_id?: string | undefined;
+        product_id?: string | undefined;
+        original_transaction_id?: string | undefined;
+        store?: StoreProvider | undefined;
+        purchase_time?: Date | undefined;
+        create_time?: Date | undefined;
+        update_time?: Date | undefined;
+        environment?: StoreEnvironment | undefined;
+        expiry_time?: Date | undefined;
+        refund_time?: Date | undefined;
+        provider_response?: string | undefined;
+        provider_notification?: string | undefined;
+        active?: boolean | undefined;
+    } & { [K in Exclude<keyof I, keyof ValidatedSubscription>]: never; }>(base?: I | undefined): ValidatedSubscription;
+    fromPartial<I_1 extends {
+        user_id?: string | undefined;
+        product_id?: string | undefined;
+        original_transaction_id?: string | undefined;
+        store?: StoreProvider | undefined;
+        purchase_time?: Date | undefined;
+        create_time?: Date | undefined;
+        update_time?: Date | undefined;
+        environment?: StoreEnvironment | undefined;
+        expiry_time?: Date | undefined;
+        refund_time?: Date | undefined;
+        provider_response?: string | undefined;
+        provider_notification?: string | undefined;
+        active?: boolean | undefined;
+    } & {
+        user_id?: string | undefined;
+        product_id?: string | undefined;
+        original_transaction_id?: string | undefined;
+        store?: StoreProvider | undefined;
+        purchase_time?: Date | undefined;
+        create_time?: Date | undefined;
+        update_time?: Date | undefined;
+        environment?: StoreEnvironment | undefined;
+        expiry_time?: Date | undefined;
+        refund_time?: Date | undefined;
+        provider_response?: string | undefined;
+        provider_notification?: string | undefined;
+        active?: boolean | undefined;
+    } & { [K_1 in Exclude<keyof I_1, keyof ValidatedSubscription>]: never; }>(object: I_1): ValidatedSubscription;
 };
 export declare const PurchaseList: {
     encode(message: PurchaseList, writer?: _m0.Writer): _m0.Writer;
     decode(input: _m0.Reader | Uint8Array, length?: number): PurchaseList;
     fromJSON(object: any): PurchaseList;
     toJSON(message: PurchaseList): unknown;
-    fromPartial(object: DeepPartial<PurchaseList>): PurchaseList;
+    create<I extends {
+        validated_purchases?: {
+            user_id?: string | undefined;
+            product_id?: string | undefined;
+            transaction_id?: string | undefined;
+            store?: StoreProvider | undefined;
+            purchase_time?: Date | undefined;
+            create_time?: Date | undefined;
+            update_time?: Date | undefined;
+            refund_time?: Date | undefined;
+            provider_response?: string | undefined;
+            environment?: StoreEnvironment | undefined;
+            seen_before?: boolean | undefined;
+        }[] | undefined;
+        cursor?: string | undefined;
+        prev_cursor?: string | undefined;
+    } & {
+        validated_purchases?: ({
+            user_id?: string | undefined;
+            product_id?: string | undefined;
+            transaction_id?: string | undefined;
+            store?: StoreProvider | undefined;
+            purchase_time?: Date | undefined;
+            create_time?: Date | undefined;
+            update_time?: Date | undefined;
+            refund_time?: Date | undefined;
+            provider_response?: string | undefined;
+            environment?: StoreEnvironment | undefined;
+            seen_before?: boolean | undefined;
+        }[] & ({
+            user_id?: string | undefined;
+            product_id?: string | undefined;
+            transaction_id?: string | undefined;
+            store?: StoreProvider | undefined;
+            purchase_time?: Date | undefined;
+            create_time?: Date | undefined;
+            update_time?: Date | undefined;
+            refund_time?: Date | undefined;
+            provider_response?: string | undefined;
+            environment?: StoreEnvironment | undefined;
+            seen_before?: boolean | undefined;
+        } & {
+            user_id?: string | undefined;
+            product_id?: string | undefined;
+            transaction_id?: string | undefined;
+            store?: StoreProvider | undefined;
+            purchase_time?: Date | undefined;
+            create_time?: Date | undefined;
+            update_time?: Date | undefined;
+            refund_time?: Date | undefined;
+            provider_response?: string | undefined;
+            environment?: StoreEnvironment | undefined;
+            seen_before?: boolean | undefined;
+        } & { [K in Exclude<keyof I["validated_purchases"][number], keyof ValidatedPurchase>]: never; })[] & { [K_1 in Exclude<keyof I["validated_purchases"], keyof {
+            user_id?: string | undefined;
+            product_id?: string | undefined;
+            transaction_id?: string | undefined;
+            store?: StoreProvider | undefined;
+            purchase_time?: Date | undefined;
+            create_time?: Date | undefined;
+            update_time?: Date | undefined;
+            refund_time?: Date | undefined;
+            provider_response?: string | undefined;
+            environment?: StoreEnvironment | undefined;
+            seen_before?: boolean | undefined;
+        }[]>]: never; }) | undefined;
+        cursor?: string | undefined;
+        prev_cursor?: string | undefined;
+    } & { [K_2 in Exclude<keyof I, keyof PurchaseList>]: never; }>(base?: I | undefined): PurchaseList;
+    fromPartial<I_1 extends {
+        validated_purchases?: {
+            user_id?: string | undefined;
+            product_id?: string | undefined;
+            transaction_id?: string | undefined;
+            store?: StoreProvider | undefined;
+            purchase_time?: Date | undefined;
+            create_time?: Date | undefined;
+            update_time?: Date | undefined;
+            refund_time?: Date | undefined;
+            provider_response?: string | undefined;
+            environment?: StoreEnvironment | undefined;
+            seen_before?: boolean | undefined;
+        }[] | undefined;
+        cursor?: string | undefined;
+        prev_cursor?: string | undefined;
+    } & {
+        validated_purchases?: ({
+            user_id?: string | undefined;
+            product_id?: string | undefined;
+            transaction_id?: string | undefined;
+            store?: StoreProvider | undefined;
+            purchase_time?: Date | undefined;
+            create_time?: Date | undefined;
+            update_time?: Date | undefined;
+            refund_time?: Date | undefined;
+            provider_response?: string | undefined;
+            environment?: StoreEnvironment | undefined;
+            seen_before?: boolean | undefined;
+        }[] & ({
+            user_id?: string | undefined;
+            product_id?: string | undefined;
+            transaction_id?: string | undefined;
+            store?: StoreProvider | undefined;
+            purchase_time?: Date | undefined;
+            create_time?: Date | undefined;
+            update_time?: Date | undefined;
+            refund_time?: Date | undefined;
+            provider_response?: string | undefined;
+            environment?: StoreEnvironment | undefined;
+            seen_before?: boolean | undefined;
+        } & {
+            user_id?: string | undefined;
+            product_id?: string | undefined;
+            transaction_id?: string | undefined;
+            store?: StoreProvider | undefined;
+            purchase_time?: Date | undefined;
+            create_time?: Date | undefined;
+            update_time?: Date | undefined;
+            refund_time?: Date | undefined;
+            provider_response?: string | undefined;
+            environment?: StoreEnvironment | undefined;
+            seen_before?: boolean | undefined;
+        } & { [K_3 in Exclude<keyof I_1["validated_purchases"][number], keyof ValidatedPurchase>]: never; })[] & { [K_4 in Exclude<keyof I_1["validated_purchases"], keyof {
+            user_id?: string | undefined;
+            product_id?: string | undefined;
+            transaction_id?: string | undefined;
+            store?: StoreProvider | undefined;
+            purchase_time?: Date | undefined;
+            create_time?: Date | undefined;
+            update_time?: Date | undefined;
+            refund_time?: Date | undefined;
+            provider_response?: string | undefined;
+            environment?: StoreEnvironment | undefined;
+            seen_before?: boolean | undefined;
+        }[]>]: never; }) | undefined;
+        cursor?: string | undefined;
+        prev_cursor?: string | undefined;
+    } & { [K_5 in Exclude<keyof I_1, keyof PurchaseList>]: never; }>(object: I_1): PurchaseList;
+};
+export declare const SubscriptionList: {
+    encode(message: SubscriptionList, writer?: _m0.Writer): _m0.Writer;
+    decode(input: _m0.Reader | Uint8Array, length?: number): SubscriptionList;
+    fromJSON(object: any): SubscriptionList;
+    toJSON(message: SubscriptionList): unknown;
+    create<I extends {
+        validated_subscriptions?: {
+            user_id?: string | undefined;
+            product_id?: string | undefined;
+            original_transaction_id?: string | undefined;
+            store?: StoreProvider | undefined;
+            purchase_time?: Date | undefined;
+            create_time?: Date | undefined;
+            update_time?: Date | undefined;
+            environment?: StoreEnvironment | undefined;
+            expiry_time?: Date | undefined;
+            refund_time?: Date | undefined;
+            provider_response?: string | undefined;
+            provider_notification?: string | undefined;
+            active?: boolean | undefined;
+        }[] | undefined;
+        cursor?: string | undefined;
+        prev_cursor?: string | undefined;
+    } & {
+        validated_subscriptions?: ({
+            user_id?: string | undefined;
+            product_id?: string | undefined;
+            original_transaction_id?: string | undefined;
+            store?: StoreProvider | undefined;
+            purchase_time?: Date | undefined;
+            create_time?: Date | undefined;
+            update_time?: Date | undefined;
+            environment?: StoreEnvironment | undefined;
+            expiry_time?: Date | undefined;
+            refund_time?: Date | undefined;
+            provider_response?: string | undefined;
+            provider_notification?: string | undefined;
+            active?: boolean | undefined;
+        }[] & ({
+            user_id?: string | undefined;
+            product_id?: string | undefined;
+            original_transaction_id?: string | undefined;
+            store?: StoreProvider | undefined;
+            purchase_time?: Date | undefined;
+            create_time?: Date | undefined;
+            update_time?: Date | undefined;
+            environment?: StoreEnvironment | undefined;
+            expiry_time?: Date | undefined;
+            refund_time?: Date | undefined;
+            provider_response?: string | undefined;
+            provider_notification?: string | undefined;
+            active?: boolean | undefined;
+        } & {
+            user_id?: string | undefined;
+            product_id?: string | undefined;
+            original_transaction_id?: string | undefined;
+            store?: StoreProvider | undefined;
+            purchase_time?: Date | undefined;
+            create_time?: Date | undefined;
+            update_time?: Date | undefined;
+            environment?: StoreEnvironment | undefined;
+            expiry_time?: Date | undefined;
+            refund_time?: Date | undefined;
+            provider_response?: string | undefined;
+            provider_notification?: string | undefined;
+            active?: boolean | undefined;
+        } & { [K in Exclude<keyof I["validated_subscriptions"][number], keyof ValidatedSubscription>]: never; })[] & { [K_1 in Exclude<keyof I["validated_subscriptions"], keyof {
+            user_id?: string | undefined;
+            product_id?: string | undefined;
+            original_transaction_id?: string | undefined;
+            store?: StoreProvider | undefined;
+            purchase_time?: Date | undefined;
+            create_time?: Date | undefined;
+            update_time?: Date | undefined;
+            environment?: StoreEnvironment | undefined;
+            expiry_time?: Date | undefined;
+            refund_time?: Date | undefined;
+            provider_response?: string | undefined;
+            provider_notification?: string | undefined;
+            active?: boolean | undefined;
+        }[]>]: never; }) | undefined;
+        cursor?: string | undefined;
+        prev_cursor?: string | undefined;
+    } & { [K_2 in Exclude<keyof I, keyof SubscriptionList>]: never; }>(base?: I | undefined): SubscriptionList;
+    fromPartial<I_1 extends {
+        validated_subscriptions?: {
+            user_id?: string | undefined;
+            product_id?: string | undefined;
+            original_transaction_id?: string | undefined;
+            store?: StoreProvider | undefined;
+            purchase_time?: Date | undefined;
+            create_time?: Date | undefined;
+            update_time?: Date | undefined;
+            environment?: StoreEnvironment | undefined;
+            expiry_time?: Date | undefined;
+            refund_time?: Date | undefined;
+            provider_response?: string | undefined;
+            provider_notification?: string | undefined;
+            active?: boolean | undefined;
+        }[] | undefined;
+        cursor?: string | undefined;
+        prev_cursor?: string | undefined;
+    } & {
+        validated_subscriptions?: ({
+            user_id?: string | undefined;
+            product_id?: string | undefined;
+            original_transaction_id?: string | undefined;
+            store?: StoreProvider | undefined;
+            purchase_time?: Date | undefined;
+            create_time?: Date | undefined;
+            update_time?: Date | undefined;
+            environment?: StoreEnvironment | undefined;
+            expiry_time?: Date | undefined;
+            refund_time?: Date | undefined;
+            provider_response?: string | undefined;
+            provider_notification?: string | undefined;
+            active?: boolean | undefined;
+        }[] & ({
+            user_id?: string | undefined;
+            product_id?: string | undefined;
+            original_transaction_id?: string | undefined;
+            store?: StoreProvider | undefined;
+            purchase_time?: Date | undefined;
+            create_time?: Date | undefined;
+            update_time?: Date | undefined;
+            environment?: StoreEnvironment | undefined;
+            expiry_time?: Date | undefined;
+            refund_time?: Date | undefined;
+            provider_response?: string | undefined;
+            provider_notification?: string | undefined;
+            active?: boolean | undefined;
+        } & {
+            user_id?: string | undefined;
+            product_id?: string | undefined;
+            original_transaction_id?: string | undefined;
+            store?: StoreProvider | undefined;
+            purchase_time?: Date | undefined;
+            create_time?: Date | undefined;
+            update_time?: Date | undefined;
+            environment?: StoreEnvironment | undefined;
+            expiry_time?: Date | undefined;
+            refund_time?: Date | undefined;
+            provider_response?: string | undefined;
+            provider_notification?: string | undefined;
+            active?: boolean | undefined;
+        } & { [K_3 in Exclude<keyof I_1["validated_subscriptions"][number], keyof ValidatedSubscription>]: never; })[] & { [K_4 in Exclude<keyof I_1["validated_subscriptions"], keyof {
+            user_id?: string | undefined;
+            product_id?: string | undefined;
+            original_transaction_id?: string | undefined;
+            store?: StoreProvider | undefined;
+            purchase_time?: Date | undefined;
+            create_time?: Date | undefined;
+            update_time?: Date | undefined;
+            environment?: StoreEnvironment | undefined;
+            expiry_time?: Date | undefined;
+            refund_time?: Date | undefined;
+            provider_response?: string | undefined;
+            provider_notification?: string | undefined;
+            active?: boolean | undefined;
+        }[]>]: never; }) | undefined;
+        cursor?: string | undefined;
+        prev_cursor?: string | undefined;
+    } & { [K_5 in Exclude<keyof I_1, keyof SubscriptionList>]: never; }>(object: I_1): SubscriptionList;
 };
 export declare const WriteLeaderboardRecordRequest: {
     encode(message: WriteLeaderboardRecordRequest, writer?: _m0.Writer): _m0.Writer;
     decode(input: _m0.Reader | Uint8Array, length?: number): WriteLeaderboardRecordRequest;
     fromJSON(object: any): WriteLeaderboardRecordRequest;
     toJSON(message: WriteLeaderboardRecordRequest): unknown;
-    fromPartial(object: DeepPartial<WriteLeaderboardRecordRequest>): WriteLeaderboardRecordRequest;
+    create<I extends {
+        leaderboard_id?: string | undefined;
+        record?: {
+            score?: number | undefined;
+            subscore?: number | undefined;
+            metadata?: string | undefined;
+            operator?: Operator | undefined;
+        } | undefined;
+    } & {
+        leaderboard_id?: string | undefined;
+        record?: ({
+            score?: number | undefined;
+            subscore?: number | undefined;
+            metadata?: string | undefined;
+            operator?: Operator | undefined;
+        } & {
+            score?: number | undefined;
+            subscore?: number | undefined;
+            metadata?: string | undefined;
+            operator?: Operator | undefined;
+        } & { [K in Exclude<keyof I["record"], keyof WriteLeaderboardRecordRequest_LeaderboardRecordWrite>]: never; }) | undefined;
+    } & { [K_1 in Exclude<keyof I, keyof WriteLeaderboardRecordRequest>]: never; }>(base?: I | undefined): WriteLeaderboardRecordRequest;
+    fromPartial<I_1 extends {
+        leaderboard_id?: string | undefined;
+        record?: {
+            score?: number | undefined;
+            subscore?: number | undefined;
+            metadata?: string | undefined;
+            operator?: Operator | undefined;
+        } | undefined;
+    } & {
+        leaderboard_id?: string | undefined;
+        record?: ({
+            score?: number | undefined;
+            subscore?: number | undefined;
+            metadata?: string | undefined;
+            operator?: Operator | undefined;
+        } & {
+            score?: number | undefined;
+            subscore?: number | undefined;
+            metadata?: string | undefined;
+            operator?: Operator | undefined;
+        } & { [K_2 in Exclude<keyof I_1["record"], keyof WriteLeaderboardRecordRequest_LeaderboardRecordWrite>]: never; }) | undefined;
+    } & { [K_3 in Exclude<keyof I_1, keyof WriteLeaderboardRecordRequest>]: never; }>(object: I_1): WriteLeaderboardRecordRequest;
 };
 export declare const WriteLeaderboardRecordRequest_LeaderboardRecordWrite: {
     encode(message: WriteLeaderboardRecordRequest_LeaderboardRecordWrite, writer?: _m0.Writer): _m0.Writer;
     decode(input: _m0.Reader | Uint8Array, length?: number): WriteLeaderboardRecordRequest_LeaderboardRecordWrite;
     fromJSON(object: any): WriteLeaderboardRecordRequest_LeaderboardRecordWrite;
     toJSON(message: WriteLeaderboardRecordRequest_LeaderboardRecordWrite): unknown;
-    fromPartial(object: DeepPartial<WriteLeaderboardRecordRequest_LeaderboardRecordWrite>): WriteLeaderboardRecordRequest_LeaderboardRecordWrite;
+    create<I extends {
+        score?: number | undefined;
+        subscore?: number | undefined;
+        metadata?: string | undefined;
+        operator?: Operator | undefined;
+    } & {
+        score?: number | undefined;
+        subscore?: number | undefined;
+        metadata?: string | undefined;
+        operator?: Operator | undefined;
+    } & { [K in Exclude<keyof I, keyof WriteLeaderboardRecordRequest_LeaderboardRecordWrite>]: never; }>(base?: I | undefined): WriteLeaderboardRecordRequest_LeaderboardRecordWrite;
+    fromPartial<I_1 extends {
+        score?: number | undefined;
+        subscore?: number | undefined;
+        metadata?: string | undefined;
+        operator?: Operator | undefined;
+    } & {
+        score?: number | undefined;
+        subscore?: number | undefined;
+        metadata?: string | undefined;
+        operator?: Operator | undefined;
+    } & { [K_1 in Exclude<keyof I_1, keyof WriteLeaderboardRecordRequest_LeaderboardRecordWrite>]: never; }>(object: I_1): WriteLeaderboardRecordRequest_LeaderboardRecordWrite;
 };
 export declare const WriteStorageObject: {
     encode(message: WriteStorageObject, writer?: _m0.Writer): _m0.Writer;
     decode(input: _m0.Reader | Uint8Array, length?: number): WriteStorageObject;
     fromJSON(object: any): WriteStorageObject;
     toJSON(message: WriteStorageObject): unknown;
-    fromPartial(object: DeepPartial<WriteStorageObject>): WriteStorageObject;
+    create<I extends {
+        collection?: string | undefined;
+        key?: string | undefined;
+        value?: string | undefined;
+        version?: string | undefined;
+        permission_read?: number | undefined;
+        permission_write?: number | undefined;
+    } & {
+        collection?: string | undefined;
+        key?: string | undefined;
+        value?: string | undefined;
+        version?: string | undefined;
+        permission_read?: number | undefined;
+        permission_write?: number | undefined;
+    } & { [K in Exclude<keyof I, keyof WriteStorageObject>]: never; }>(base?: I | undefined): WriteStorageObject;
+    fromPartial<I_1 extends {
+        collection?: string | undefined;
+        key?: string | undefined;
+        value?: string | undefined;
+        version?: string | undefined;
+        permission_read?: number | undefined;
+        permission_write?: number | undefined;
+    } & {
+        collection?: string | undefined;
+        key?: string | undefined;
+        value?: string | undefined;
+        version?: string | undefined;
+        permission_read?: number | undefined;
+        permission_write?: number | undefined;
+    } & { [K_1 in Exclude<keyof I_1, keyof WriteStorageObject>]: never; }>(object: I_1): WriteStorageObject;
 };
 export declare const WriteStorageObjectsRequest: {
     encode(message: WriteStorageObjectsRequest, writer?: _m0.Writer): _m0.Writer;
     decode(input: _m0.Reader | Uint8Array, length?: number): WriteStorageObjectsRequest;
     fromJSON(object: any): WriteStorageObjectsRequest;
     toJSON(message: WriteStorageObjectsRequest): unknown;
-    fromPartial(object: DeepPartial<WriteStorageObjectsRequest>): WriteStorageObjectsRequest;
+    create<I extends {
+        objects?: {
+            collection?: string | undefined;
+            key?: string | undefined;
+            value?: string | undefined;
+            version?: string | undefined;
+            permission_read?: number | undefined;
+            permission_write?: number | undefined;
+        }[] | undefined;
+    } & {
+        objects?: ({
+            collection?: string | undefined;
+            key?: string | undefined;
+            value?: string | undefined;
+            version?: string | undefined;
+            permission_read?: number | undefined;
+            permission_write?: number | undefined;
+        }[] & ({
+            collection?: string | undefined;
+            key?: string | undefined;
+            value?: string | undefined;
+            version?: string | undefined;
+            permission_read?: number | undefined;
+            permission_write?: number | undefined;
+        } & {
+            collection?: string | undefined;
+            key?: string | undefined;
+            value?: string | undefined;
+            version?: string | undefined;
+            permission_read?: number | undefined;
+            permission_write?: number | undefined;
+        } & { [K in Exclude<keyof I["objects"][number], keyof WriteStorageObject>]: never; })[] & { [K_1 in Exclude<keyof I["objects"], keyof {
+            collection?: string | undefined;
+            key?: string | undefined;
+            value?: string | undefined;
+            version?: string | undefined;
+            permission_read?: number | undefined;
+            permission_write?: number | undefined;
+        }[]>]: never; }) | undefined;
+    } & { [K_2 in Exclude<keyof I, "objects">]: never; }>(base?: I | undefined): WriteStorageObjectsRequest;
+    fromPartial<I_1 extends {
+        objects?: {
+            collection?: string | undefined;
+            key?: string | undefined;
+            value?: string | undefined;
+            version?: string | undefined;
+            permission_read?: number | undefined;
+            permission_write?: number | undefined;
+        }[] | undefined;
+    } & {
+        objects?: ({
+            collection?: string | undefined;
+            key?: string | undefined;
+            value?: string | undefined;
+            version?: string | undefined;
+            permission_read?: number | undefined;
+            permission_write?: number | undefined;
+        }[] & ({
+            collection?: string | undefined;
+            key?: string | undefined;
+            value?: string | undefined;
+            version?: string | undefined;
+            permission_read?: number | undefined;
+            permission_write?: number | undefined;
+        } & {
+            collection?: string | undefined;
+            key?: string | undefined;
+            value?: string | undefined;
+            version?: string | undefined;
+            permission_read?: number | undefined;
+            permission_write?: number | undefined;
+        } & { [K_3 in Exclude<keyof I_1["objects"][number], keyof WriteStorageObject>]: never; })[] & { [K_4 in Exclude<keyof I_1["objects"], keyof {
+            collection?: string | undefined;
+            key?: string | undefined;
+            value?: string | undefined;
+            version?: string | undefined;
+            permission_read?: number | undefined;
+            permission_write?: number | undefined;
+        }[]>]: never; }) | undefined;
+    } & { [K_5 in Exclude<keyof I_1, "objects">]: never; }>(object: I_1): WriteStorageObjectsRequest;
 };
 export declare const WriteTournamentRecordRequest: {
     encode(message: WriteTournamentRecordRequest, writer?: _m0.Writer): _m0.Writer;
     decode(input: _m0.Reader | Uint8Array, length?: number): WriteTournamentRecordRequest;
     fromJSON(object: any): WriteTournamentRecordRequest;
     toJSON(message: WriteTournamentRecordRequest): unknown;
-    fromPartial(object: DeepPartial<WriteTournamentRecordRequest>): WriteTournamentRecordRequest;
+    create<I extends {
+        tournament_id?: string | undefined;
+        record?: {
+            score?: number | undefined;
+            subscore?: number | undefined;
+            metadata?: string | undefined;
+            operator?: Operator | undefined;
+        } | undefined;
+    } & {
+        tournament_id?: string | undefined;
+        record?: ({
+            score?: number | undefined;
+            subscore?: number | undefined;
+            metadata?: string | undefined;
+            operator?: Operator | undefined;
+        } & {
+            score?: number | undefined;
+            subscore?: number | undefined;
+            metadata?: string | undefined;
+            operator?: Operator | undefined;
+        } & { [K in Exclude<keyof I["record"], keyof WriteTournamentRecordRequest_TournamentRecordWrite>]: never; }) | undefined;
+    } & { [K_1 in Exclude<keyof I, keyof WriteTournamentRecordRequest>]: never; }>(base?: I | undefined): WriteTournamentRecordRequest;
+    fromPartial<I_1 extends {
+        tournament_id?: string | undefined;
+        record?: {
+            score?: number | undefined;
+            subscore?: number | undefined;
+            metadata?: string | undefined;
+            operator?: Operator | undefined;
+        } | undefined;
+    } & {
+        tournament_id?: string | undefined;
+        record?: ({
+            score?: number | undefined;
+            subscore?: number | undefined;
+            metadata?: string | undefined;
+            operator?: Operator | undefined;
+        } & {
+            score?: number | undefined;
+            subscore?: number | undefined;
+            metadata?: string | undefined;
+            operator?: Operator | undefined;
+        } & { [K_2 in Exclude<keyof I_1["record"], keyof WriteTournamentRecordRequest_TournamentRecordWrite>]: never; }) | undefined;
+    } & { [K_3 in Exclude<keyof I_1, keyof WriteTournamentRecordRequest>]: never; }>(object: I_1): WriteTournamentRecordRequest;
 };
 export declare const WriteTournamentRecordRequest_TournamentRecordWrite: {
     encode(message: WriteTournamentRecordRequest_TournamentRecordWrite, writer?: _m0.Writer): _m0.Writer;
     decode(input: _m0.Reader | Uint8Array, length?: number): WriteTournamentRecordRequest_TournamentRecordWrite;
     fromJSON(object: any): WriteTournamentRecordRequest_TournamentRecordWrite;
     toJSON(message: WriteTournamentRecordRequest_TournamentRecordWrite): unknown;
-    fromPartial(object: DeepPartial<WriteTournamentRecordRequest_TournamentRecordWrite>): WriteTournamentRecordRequest_TournamentRecordWrite;
+    create<I extends {
+        score?: number | undefined;
+        subscore?: number | undefined;
+        metadata?: string | undefined;
+        operator?: Operator | undefined;
+    } & {
+        score?: number | undefined;
+        subscore?: number | undefined;
+        metadata?: string | undefined;
+        operator?: Operator | undefined;
+    } & { [K in Exclude<keyof I, keyof WriteTournamentRecordRequest_TournamentRecordWrite>]: never; }>(base?: I | undefined): WriteTournamentRecordRequest_TournamentRecordWrite;
+    fromPartial<I_1 extends {
+        score?: number | undefined;
+        subscore?: number | undefined;
+        metadata?: string | undefined;
+        operator?: Operator | undefined;
+    } & {
+        score?: number | undefined;
+        subscore?: number | undefined;
+        metadata?: string | undefined;
+        operator?: Operator | undefined;
+    } & { [K_1 in Exclude<keyof I_1, keyof WriteTournamentRecordRequest_TournamentRecordWrite>]: never; }>(object: I_1): WriteTournamentRecordRequest_TournamentRecordWrite;
+};
+export declare const ClanDesc: {
+    encode(message: ClanDesc, writer?: _m0.Writer): _m0.Writer;
+    decode(input: _m0.Reader | Uint8Array, length?: number): ClanDesc;
+    fromJSON(object: any): ClanDesc;
+    toJSON(message: ClanDesc): unknown;
+    create<I extends {
+        creator_id?: string | undefined;
+        clan_name?: string | undefined;
+        logo?: string | undefined;
+        banner?: string | undefined;
+        clan_id?: string | undefined;
+    } & {
+        creator_id?: string | undefined;
+        clan_name?: string | undefined;
+        logo?: string | undefined;
+        banner?: string | undefined;
+        clan_id?: string | undefined;
+    } & { [K in Exclude<keyof I, keyof ClanDesc>]: never; }>(base?: I | undefined): ClanDesc;
+    fromPartial<I_1 extends {
+        creator_id?: string | undefined;
+        clan_name?: string | undefined;
+        logo?: string | undefined;
+        banner?: string | undefined;
+        clan_id?: string | undefined;
+    } & {
+        creator_id?: string | undefined;
+        clan_name?: string | undefined;
+        logo?: string | undefined;
+        banner?: string | undefined;
+        clan_id?: string | undefined;
+    } & { [K_1 in Exclude<keyof I_1, keyof ClanDesc>]: never; }>(object: I_1): ClanDesc;
+};
+export declare const CreateClanDescRequest: {
+    encode(message: CreateClanDescRequest, writer?: _m0.Writer): _m0.Writer;
+    decode(input: _m0.Reader | Uint8Array, length?: number): CreateClanDescRequest;
+    fromJSON(object: any): CreateClanDescRequest;
+    toJSON(message: CreateClanDescRequest): unknown;
+    create<I extends {
+        creator_id?: string | undefined;
+        clan_name?: string | undefined;
+        logo?: string | undefined;
+        banner?: string | undefined;
+    } & {
+        creator_id?: string | undefined;
+        clan_name?: string | undefined;
+        logo?: string | undefined;
+        banner?: string | undefined;
+    } & { [K in Exclude<keyof I, keyof CreateClanDescRequest>]: never; }>(base?: I | undefined): CreateClanDescRequest;
+    fromPartial<I_1 extends {
+        creator_id?: string | undefined;
+        clan_name?: string | undefined;
+        logo?: string | undefined;
+        banner?: string | undefined;
+    } & {
+        creator_id?: string | undefined;
+        clan_name?: string | undefined;
+        logo?: string | undefined;
+        banner?: string | undefined;
+    } & { [K_1 in Exclude<keyof I_1, keyof CreateClanDescRequest>]: never; }>(object: I_1): CreateClanDescRequest;
+};
+export declare const UpdateClanDescRequest: {
+    encode(message: UpdateClanDescRequest, writer?: _m0.Writer): _m0.Writer;
+    decode(input: _m0.Reader | Uint8Array, length?: number): UpdateClanDescRequest;
+    fromJSON(object: any): UpdateClanDescRequest;
+    toJSON(message: UpdateClanDescRequest): unknown;
+    create<I extends {
+        clan_id?: string | undefined;
+        creator_id?: string | undefined;
+        clan_name?: string | undefined;
+        logo?: string | undefined;
+        banner?: string | undefined;
+    } & {
+        clan_id?: string | undefined;
+        creator_id?: string | undefined;
+        clan_name?: string | undefined;
+        logo?: string | undefined;
+        banner?: string | undefined;
+    } & { [K in Exclude<keyof I, keyof UpdateClanDescRequest>]: never; }>(base?: I | undefined): UpdateClanDescRequest;
+    fromPartial<I_1 extends {
+        clan_id?: string | undefined;
+        creator_id?: string | undefined;
+        clan_name?: string | undefined;
+        logo?: string | undefined;
+        banner?: string | undefined;
+    } & {
+        clan_id?: string | undefined;
+        creator_id?: string | undefined;
+        clan_name?: string | undefined;
+        logo?: string | undefined;
+        banner?: string | undefined;
+    } & { [K_1 in Exclude<keyof I_1, keyof UpdateClanDescRequest>]: never; }>(object: I_1): UpdateClanDescRequest;
+};
+export declare const DeleteClanDescRequest: {
+    encode(message: DeleteClanDescRequest, writer?: _m0.Writer): _m0.Writer;
+    decode(input: _m0.Reader | Uint8Array, length?: number): DeleteClanDescRequest;
+    fromJSON(object: any): DeleteClanDescRequest;
+    toJSON(message: DeleteClanDescRequest): unknown;
+    create<I extends {
+        clan_desc_id?: string | undefined;
+    } & {
+        clan_desc_id?: string | undefined;
+    } & { [K in Exclude<keyof I, "clan_desc_id">]: never; }>(base?: I | undefined): DeleteClanDescRequest;
+    fromPartial<I_1 extends {
+        clan_desc_id?: string | undefined;
+    } & {
+        clan_desc_id?: string | undefined;
+    } & { [K_1 in Exclude<keyof I_1, "clan_desc_id">]: never; }>(object: I_1): DeleteClanDescRequest;
+};
+export declare const ListClanDescRequest: {
+    encode(message: ListClanDescRequest, writer?: _m0.Writer): _m0.Writer;
+    decode(input: _m0.Reader | Uint8Array, length?: number): ListClanDescRequest;
+    fromJSON(object: any): ListClanDescRequest;
+    toJSON(message: ListClanDescRequest): unknown;
+    create<I extends {
+        limit?: number | undefined;
+        state?: number | undefined;
+        cursor?: string | undefined;
+    } & {
+        limit?: number | undefined;
+        state?: number | undefined;
+        cursor?: string | undefined;
+    } & { [K in Exclude<keyof I, keyof ListClanDescRequest>]: never; }>(base?: I | undefined): ListClanDescRequest;
+    fromPartial<I_1 extends {
+        limit?: number | undefined;
+        state?: number | undefined;
+        cursor?: string | undefined;
+    } & {
+        limit?: number | undefined;
+        state?: number | undefined;
+        cursor?: string | undefined;
+    } & { [K_1 in Exclude<keyof I_1, keyof ListClanDescRequest>]: never; }>(object: I_1): ListClanDescRequest;
+};
+export declare const ClanDescList: {
+    encode(message: ClanDescList, writer?: _m0.Writer): _m0.Writer;
+    decode(input: _m0.Reader | Uint8Array, length?: number): ClanDescList;
+    fromJSON(object: any): ClanDescList;
+    toJSON(message: ClanDescList): unknown;
+    create<I extends {
+        clandesc?: {
+            creator_id?: string | undefined;
+            clan_name?: string | undefined;
+            logo?: string | undefined;
+            banner?: string | undefined;
+            clan_id?: string | undefined;
+        }[] | undefined;
+    } & {
+        clandesc?: ({
+            creator_id?: string | undefined;
+            clan_name?: string | undefined;
+            logo?: string | undefined;
+            banner?: string | undefined;
+            clan_id?: string | undefined;
+        }[] & ({
+            creator_id?: string | undefined;
+            clan_name?: string | undefined;
+            logo?: string | undefined;
+            banner?: string | undefined;
+            clan_id?: string | undefined;
+        } & {
+            creator_id?: string | undefined;
+            clan_name?: string | undefined;
+            logo?: string | undefined;
+            banner?: string | undefined;
+            clan_id?: string | undefined;
+        } & { [K in Exclude<keyof I["clandesc"][number], keyof ClanDesc>]: never; })[] & { [K_1 in Exclude<keyof I["clandesc"], keyof {
+            creator_id?: string | undefined;
+            clan_name?: string | undefined;
+            logo?: string | undefined;
+            banner?: string | undefined;
+            clan_id?: string | undefined;
+        }[]>]: never; }) | undefined;
+    } & { [K_2 in Exclude<keyof I, "clandesc">]: never; }>(base?: I | undefined): ClanDescList;
+    fromPartial<I_1 extends {
+        clandesc?: {
+            creator_id?: string | undefined;
+            clan_name?: string | undefined;
+            logo?: string | undefined;
+            banner?: string | undefined;
+            clan_id?: string | undefined;
+        }[] | undefined;
+    } & {
+        clandesc?: ({
+            creator_id?: string | undefined;
+            clan_name?: string | undefined;
+            logo?: string | undefined;
+            banner?: string | undefined;
+            clan_id?: string | undefined;
+        }[] & ({
+            creator_id?: string | undefined;
+            clan_name?: string | undefined;
+            logo?: string | undefined;
+            banner?: string | undefined;
+            clan_id?: string | undefined;
+        } & {
+            creator_id?: string | undefined;
+            clan_name?: string | undefined;
+            logo?: string | undefined;
+            banner?: string | undefined;
+            clan_id?: string | undefined;
+        } & { [K_3 in Exclude<keyof I_1["clandesc"][number], keyof ClanDesc>]: never; })[] & { [K_4 in Exclude<keyof I_1["clandesc"], keyof {
+            creator_id?: string | undefined;
+            clan_name?: string | undefined;
+            logo?: string | undefined;
+            banner?: string | undefined;
+            clan_id?: string | undefined;
+        }[]>]: never; }) | undefined;
+    } & { [K_5 in Exclude<keyof I_1, "clandesc">]: never; }>(object: I_1): ClanDescList;
+};
+export declare const CategoryDesc: {
+    encode(message: CategoryDesc, writer?: _m0.Writer): _m0.Writer;
+    decode(input: _m0.Reader | Uint8Array, length?: number): CategoryDesc;
+    fromJSON(object: any): CategoryDesc;
+    toJSON(message: CategoryDesc): unknown;
+    create<I extends {
+        creator_id?: string | undefined;
+        clan_id?: string | undefined;
+        category_name?: string | undefined;
+    } & {
+        creator_id?: string | undefined;
+        clan_id?: string | undefined;
+        category_name?: string | undefined;
+    } & { [K in Exclude<keyof I, keyof CategoryDesc>]: never; }>(base?: I | undefined): CategoryDesc;
+    fromPartial<I_1 extends {
+        creator_id?: string | undefined;
+        clan_id?: string | undefined;
+        category_name?: string | undefined;
+    } & {
+        creator_id?: string | undefined;
+        clan_id?: string | undefined;
+        category_name?: string | undefined;
+    } & { [K_1 in Exclude<keyof I_1, keyof CategoryDesc>]: never; }>(object: I_1): CategoryDesc;
+};
+export declare const CreateCategoryDescRequest: {
+    encode(message: CreateCategoryDescRequest, writer?: _m0.Writer): _m0.Writer;
+    decode(input: _m0.Reader | Uint8Array, length?: number): CreateCategoryDescRequest;
+    fromJSON(object: any): CreateCategoryDescRequest;
+    toJSON(message: CreateCategoryDescRequest): unknown;
+    create<I extends {
+        category_name?: string | undefined;
+        clan_id?: string | undefined;
+        creator_id?: string | undefined;
+        category_id?: string | undefined;
+    } & {
+        category_name?: string | undefined;
+        clan_id?: string | undefined;
+        creator_id?: string | undefined;
+        category_id?: string | undefined;
+    } & { [K in Exclude<keyof I, keyof CreateCategoryDescRequest>]: never; }>(base?: I | undefined): CreateCategoryDescRequest;
+    fromPartial<I_1 extends {
+        category_name?: string | undefined;
+        clan_id?: string | undefined;
+        creator_id?: string | undefined;
+        category_id?: string | undefined;
+    } & {
+        category_name?: string | undefined;
+        clan_id?: string | undefined;
+        creator_id?: string | undefined;
+        category_id?: string | undefined;
+    } & { [K_1 in Exclude<keyof I_1, keyof CreateCategoryDescRequest>]: never; }>(object: I_1): CreateCategoryDescRequest;
+};
+export declare const DeleteCategoryDescRequest: {
+    encode(message: DeleteCategoryDescRequest, writer?: _m0.Writer): _m0.Writer;
+    decode(input: _m0.Reader | Uint8Array, length?: number): DeleteCategoryDescRequest;
+    fromJSON(object: any): DeleteCategoryDescRequest;
+    toJSON(message: DeleteCategoryDescRequest): unknown;
+    create<I extends {
+        creator_id?: string | undefined;
+    } & {
+        creator_id?: string | undefined;
+    } & { [K in Exclude<keyof I, "creator_id">]: never; }>(base?: I | undefined): DeleteCategoryDescRequest;
+    fromPartial<I_1 extends {
+        creator_id?: string | undefined;
+    } & {
+        creator_id?: string | undefined;
+    } & { [K_1 in Exclude<keyof I_1, "creator_id">]: never; }>(object: I_1): DeleteCategoryDescRequest;
+};
+export declare const CategoryDescList: {
+    encode(message: CategoryDescList, writer?: _m0.Writer): _m0.Writer;
+    decode(input: _m0.Reader | Uint8Array, length?: number): CategoryDescList;
+    fromJSON(object: any): CategoryDescList;
+    toJSON(message: CategoryDescList): unknown;
+    create<I extends {
+        categorydesc?: {
+            creator_id?: string | undefined;
+            clan_id?: string | undefined;
+            category_name?: string | undefined;
+        }[] | undefined;
+    } & {
+        categorydesc?: ({
+            creator_id?: string | undefined;
+            clan_id?: string | undefined;
+            category_name?: string | undefined;
+        }[] & ({
+            creator_id?: string | undefined;
+            clan_id?: string | undefined;
+            category_name?: string | undefined;
+        } & {
+            creator_id?: string | undefined;
+            clan_id?: string | undefined;
+            category_name?: string | undefined;
+        } & { [K in Exclude<keyof I["categorydesc"][number], keyof CategoryDesc>]: never; })[] & { [K_1 in Exclude<keyof I["categorydesc"], keyof {
+            creator_id?: string | undefined;
+            clan_id?: string | undefined;
+            category_name?: string | undefined;
+        }[]>]: never; }) | undefined;
+    } & { [K_2 in Exclude<keyof I, "categorydesc">]: never; }>(base?: I | undefined): CategoryDescList;
+    fromPartial<I_1 extends {
+        categorydesc?: {
+            creator_id?: string | undefined;
+            clan_id?: string | undefined;
+            category_name?: string | undefined;
+        }[] | undefined;
+    } & {
+        categorydesc?: ({
+            creator_id?: string | undefined;
+            clan_id?: string | undefined;
+            category_name?: string | undefined;
+        }[] & ({
+            creator_id?: string | undefined;
+            clan_id?: string | undefined;
+            category_name?: string | undefined;
+        } & {
+            creator_id?: string | undefined;
+            clan_id?: string | undefined;
+            category_name?: string | undefined;
+        } & { [K_3 in Exclude<keyof I_1["categorydesc"][number], keyof CategoryDesc>]: never; })[] & { [K_4 in Exclude<keyof I_1["categorydesc"], keyof {
+            creator_id?: string | undefined;
+            clan_id?: string | undefined;
+            category_name?: string | undefined;
+        }[]>]: never; }) | undefined;
+    } & { [K_5 in Exclude<keyof I_1, "categorydesc">]: never; }>(object: I_1): CategoryDescList;
+};
+export declare const ListCategoryDescsRequest: {
+    encode(message: ListCategoryDescsRequest, writer?: _m0.Writer): _m0.Writer;
+    decode(input: _m0.Reader | Uint8Array, length?: number): ListCategoryDescsRequest;
+    fromJSON(object: any): ListCategoryDescsRequest;
+    toJSON(message: ListCategoryDescsRequest): unknown;
+    create<I extends {
+        limit?: number | undefined;
+        state?: number | undefined;
+        cursor?: string | undefined;
+    } & {
+        limit?: number | undefined;
+        state?: number | undefined;
+        cursor?: string | undefined;
+    } & { [K in Exclude<keyof I, keyof ListCategoryDescsRequest>]: never; }>(base?: I | undefined): ListCategoryDescsRequest;
+    fromPartial<I_1 extends {
+        limit?: number | undefined;
+        state?: number | undefined;
+        cursor?: string | undefined;
+    } & {
+        limit?: number | undefined;
+        state?: number | undefined;
+        cursor?: string | undefined;
+    } & { [K_1 in Exclude<keyof I_1, keyof ListCategoryDescsRequest>]: never; }>(object: I_1): ListCategoryDescsRequest;
+};
+export declare const ChannelDescription: {
+    encode(message: ChannelDescription, writer?: _m0.Writer): _m0.Writer;
+    decode(input: _m0.Reader | Uint8Array, length?: number): ChannelDescription;
+    fromJSON(object: any): ChannelDescription;
+    toJSON(message: ChannelDescription): unknown;
+    create<I extends {
+        clan_id?: string | undefined;
+        parrent_id?: string | undefined;
+        channel_id?: string | undefined;
+        category_id?: string | undefined;
+        category_name?: string | undefined;
+        type?: number | undefined;
+        creator_id?: string | undefined;
+        channel_lable?: string | undefined;
+        channel_private?: number | undefined;
+    } & {
+        clan_id?: string | undefined;
+        parrent_id?: string | undefined;
+        channel_id?: string | undefined;
+        category_id?: string | undefined;
+        category_name?: string | undefined;
+        type?: number | undefined;
+        creator_id?: string | undefined;
+        channel_lable?: string | undefined;
+        channel_private?: number | undefined;
+    } & { [K in Exclude<keyof I, keyof ChannelDescription>]: never; }>(base?: I | undefined): ChannelDescription;
+    fromPartial<I_1 extends {
+        clan_id?: string | undefined;
+        parrent_id?: string | undefined;
+        channel_id?: string | undefined;
+        category_id?: string | undefined;
+        category_name?: string | undefined;
+        type?: number | undefined;
+        creator_id?: string | undefined;
+        channel_lable?: string | undefined;
+        channel_private?: number | undefined;
+    } & {
+        clan_id?: string | undefined;
+        parrent_id?: string | undefined;
+        channel_id?: string | undefined;
+        category_id?: string | undefined;
+        category_name?: string | undefined;
+        type?: number | undefined;
+        creator_id?: string | undefined;
+        channel_lable?: string | undefined;
+        channel_private?: number | undefined;
+    } & { [K_1 in Exclude<keyof I_1, keyof ChannelDescription>]: never; }>(object: I_1): ChannelDescription;
+};
+export declare const ChannelDescList: {
+    encode(message: ChannelDescList, writer?: _m0.Writer): _m0.Writer;
+    decode(input: _m0.Reader | Uint8Array, length?: number): ChannelDescList;
+    fromJSON(object: any): ChannelDescList;
+    toJSON(message: ChannelDescList): unknown;
+    create<I extends {
+        channeldesc?: {
+            clan_id?: string | undefined;
+            parrent_id?: string | undefined;
+            channel_id?: string | undefined;
+            category_id?: string | undefined;
+            category_name?: string | undefined;
+            type?: number | undefined;
+            creator_id?: string | undefined;
+            channel_lable?: string | undefined;
+            channel_private?: number | undefined;
+        }[] | undefined;
+        next_cursor?: string | undefined;
+        prev_cursor?: string | undefined;
+        cacheable_cursor?: string | undefined;
+    } & {
+        channeldesc?: ({
+            clan_id?: string | undefined;
+            parrent_id?: string | undefined;
+            channel_id?: string | undefined;
+            category_id?: string | undefined;
+            category_name?: string | undefined;
+            type?: number | undefined;
+            creator_id?: string | undefined;
+            channel_lable?: string | undefined;
+            channel_private?: number | undefined;
+        }[] & ({
+            clan_id?: string | undefined;
+            parrent_id?: string | undefined;
+            channel_id?: string | undefined;
+            category_id?: string | undefined;
+            category_name?: string | undefined;
+            type?: number | undefined;
+            creator_id?: string | undefined;
+            channel_lable?: string | undefined;
+            channel_private?: number | undefined;
+        } & {
+            clan_id?: string | undefined;
+            parrent_id?: string | undefined;
+            channel_id?: string | undefined;
+            category_id?: string | undefined;
+            category_name?: string | undefined;
+            type?: number | undefined;
+            creator_id?: string | undefined;
+            channel_lable?: string | undefined;
+            channel_private?: number | undefined;
+        } & { [K in Exclude<keyof I["channeldesc"][number], keyof ChannelDescription>]: never; })[] & { [K_1 in Exclude<keyof I["channeldesc"], keyof {
+            clan_id?: string | undefined;
+            parrent_id?: string | undefined;
+            channel_id?: string | undefined;
+            category_id?: string | undefined;
+            category_name?: string | undefined;
+            type?: number | undefined;
+            creator_id?: string | undefined;
+            channel_lable?: string | undefined;
+            channel_private?: number | undefined;
+        }[]>]: never; }) | undefined;
+        next_cursor?: string | undefined;
+        prev_cursor?: string | undefined;
+        cacheable_cursor?: string | undefined;
+    } & { [K_2 in Exclude<keyof I, keyof ChannelDescList>]: never; }>(base?: I | undefined): ChannelDescList;
+    fromPartial<I_1 extends {
+        channeldesc?: {
+            clan_id?: string | undefined;
+            parrent_id?: string | undefined;
+            channel_id?: string | undefined;
+            category_id?: string | undefined;
+            category_name?: string | undefined;
+            type?: number | undefined;
+            creator_id?: string | undefined;
+            channel_lable?: string | undefined;
+            channel_private?: number | undefined;
+        }[] | undefined;
+        next_cursor?: string | undefined;
+        prev_cursor?: string | undefined;
+        cacheable_cursor?: string | undefined;
+    } & {
+        channeldesc?: ({
+            clan_id?: string | undefined;
+            parrent_id?: string | undefined;
+            channel_id?: string | undefined;
+            category_id?: string | undefined;
+            category_name?: string | undefined;
+            type?: number | undefined;
+            creator_id?: string | undefined;
+            channel_lable?: string | undefined;
+            channel_private?: number | undefined;
+        }[] & ({
+            clan_id?: string | undefined;
+            parrent_id?: string | undefined;
+            channel_id?: string | undefined;
+            category_id?: string | undefined;
+            category_name?: string | undefined;
+            type?: number | undefined;
+            creator_id?: string | undefined;
+            channel_lable?: string | undefined;
+            channel_private?: number | undefined;
+        } & {
+            clan_id?: string | undefined;
+            parrent_id?: string | undefined;
+            channel_id?: string | undefined;
+            category_id?: string | undefined;
+            category_name?: string | undefined;
+            type?: number | undefined;
+            creator_id?: string | undefined;
+            channel_lable?: string | undefined;
+            channel_private?: number | undefined;
+        } & { [K_3 in Exclude<keyof I_1["channeldesc"][number], keyof ChannelDescription>]: never; })[] & { [K_4 in Exclude<keyof I_1["channeldesc"], keyof {
+            clan_id?: string | undefined;
+            parrent_id?: string | undefined;
+            channel_id?: string | undefined;
+            category_id?: string | undefined;
+            category_name?: string | undefined;
+            type?: number | undefined;
+            creator_id?: string | undefined;
+            channel_lable?: string | undefined;
+            channel_private?: number | undefined;
+        }[]>]: never; }) | undefined;
+        next_cursor?: string | undefined;
+        prev_cursor?: string | undefined;
+        cacheable_cursor?: string | undefined;
+    } & { [K_5 in Exclude<keyof I_1, keyof ChannelDescList>]: never; }>(object: I_1): ChannelDescList;
+};
+export declare const ListChannelDescsRequest: {
+    encode(message: ListChannelDescsRequest, writer?: _m0.Writer): _m0.Writer;
+    decode(input: _m0.Reader | Uint8Array, length?: number): ListChannelDescsRequest;
+    fromJSON(object: any): ListChannelDescsRequest;
+    toJSON(message: ListChannelDescsRequest): unknown;
+    create<I extends {
+        limit?: number | undefined;
+        state?: number | undefined;
+        cursor?: string | undefined;
+    } & {
+        limit?: number | undefined;
+        state?: number | undefined;
+        cursor?: string | undefined;
+    } & { [K in Exclude<keyof I, keyof ListChannelDescsRequest>]: never; }>(base?: I | undefined): ListChannelDescsRequest;
+    fromPartial<I_1 extends {
+        limit?: number | undefined;
+        state?: number | undefined;
+        cursor?: string | undefined;
+    } & {
+        limit?: number | undefined;
+        state?: number | undefined;
+        cursor?: string | undefined;
+    } & { [K_1 in Exclude<keyof I_1, keyof ListChannelDescsRequest>]: never; }>(object: I_1): ListChannelDescsRequest;
+};
+export declare const CreateChannelDescRequest: {
+    encode(message: CreateChannelDescRequest, writer?: _m0.Writer): _m0.Writer;
+    decode(input: _m0.Reader | Uint8Array, length?: number): CreateChannelDescRequest;
+    fromJSON(object: any): CreateChannelDescRequest;
+    toJSON(message: CreateChannelDescRequest): unknown;
+    create<I extends {
+        clan_id?: string | undefined;
+        parrent_id?: string | undefined;
+        channel_id?: string | undefined;
+        category_id?: string | undefined;
+        type?: number | undefined;
+        creator_id?: string | undefined;
+        channel_lable?: string | undefined;
+        channel_private?: number | undefined;
+    } & {
+        clan_id?: string | undefined;
+        parrent_id?: string | undefined;
+        channel_id?: string | undefined;
+        category_id?: string | undefined;
+        type?: number | undefined;
+        creator_id?: string | undefined;
+        channel_lable?: string | undefined;
+        channel_private?: number | undefined;
+    } & { [K in Exclude<keyof I, keyof CreateChannelDescRequest>]: never; }>(base?: I | undefined): CreateChannelDescRequest;
+    fromPartial<I_1 extends {
+        clan_id?: string | undefined;
+        parrent_id?: string | undefined;
+        channel_id?: string | undefined;
+        category_id?: string | undefined;
+        type?: number | undefined;
+        creator_id?: string | undefined;
+        channel_lable?: string | undefined;
+        channel_private?: number | undefined;
+    } & {
+        clan_id?: string | undefined;
+        parrent_id?: string | undefined;
+        channel_id?: string | undefined;
+        category_id?: string | undefined;
+        type?: number | undefined;
+        creator_id?: string | undefined;
+        channel_lable?: string | undefined;
+        channel_private?: number | undefined;
+    } & { [K_1 in Exclude<keyof I_1, keyof CreateChannelDescRequest>]: never; }>(object: I_1): CreateChannelDescRequest;
+};
+export declare const DeleteChannelDescRequest: {
+    encode(message: DeleteChannelDescRequest, writer?: _m0.Writer): _m0.Writer;
+    decode(input: _m0.Reader | Uint8Array, length?: number): DeleteChannelDescRequest;
+    fromJSON(object: any): DeleteChannelDescRequest;
+    toJSON(message: DeleteChannelDescRequest): unknown;
+    create<I extends {
+        channel_id?: string | undefined;
+    } & {
+        channel_id?: string | undefined;
+    } & { [K in Exclude<keyof I, "channel_id">]: never; }>(base?: I | undefined): DeleteChannelDescRequest;
+    fromPartial<I_1 extends {
+        channel_id?: string | undefined;
+    } & {
+        channel_id?: string | undefined;
+    } & { [K_1 in Exclude<keyof I_1, "channel_id">]: never; }>(object: I_1): DeleteChannelDescRequest;
+};
+export declare const UpdateChannelDescRequest: {
+    encode(message: UpdateChannelDescRequest, writer?: _m0.Writer): _m0.Writer;
+    decode(input: _m0.Reader | Uint8Array, length?: number): UpdateChannelDescRequest;
+    fromJSON(object: any): UpdateChannelDescRequest;
+    toJSON(message: UpdateChannelDescRequest): unknown;
+    create<I extends {
+        channel_id?: string | undefined;
+        channel_lable?: string | undefined;
+        category_id?: string | undefined;
+    } & {
+        channel_id?: string | undefined;
+        channel_lable?: string | undefined;
+        category_id?: string | undefined;
+    } & { [K in Exclude<keyof I, keyof UpdateChannelDescRequest>]: never; }>(base?: I | undefined): UpdateChannelDescRequest;
+    fromPartial<I_1 extends {
+        channel_id?: string | undefined;
+        channel_lable?: string | undefined;
+        category_id?: string | undefined;
+    } & {
+        channel_id?: string | undefined;
+        channel_lable?: string | undefined;
+        category_id?: string | undefined;
+    } & { [K_1 in Exclude<keyof I_1, keyof UpdateChannelDescRequest>]: never; }>(object: I_1): UpdateChannelDescRequest;
+};
+export declare const AddChannelUsersRequest: {
+    encode(message: AddChannelUsersRequest, writer?: _m0.Writer): _m0.Writer;
+    decode(input: _m0.Reader | Uint8Array, length?: number): AddChannelUsersRequest;
+    fromJSON(object: any): AddChannelUsersRequest;
+    toJSON(message: AddChannelUsersRequest): unknown;
+    create<I extends {
+        channel_id?: string | undefined;
+        user_ids?: string[] | undefined;
+    } & {
+        channel_id?: string | undefined;
+        user_ids?: (string[] & string[] & { [K in Exclude<keyof I["user_ids"], keyof string[]>]: never; }) | undefined;
+    } & { [K_1 in Exclude<keyof I, keyof AddChannelUsersRequest>]: never; }>(base?: I | undefined): AddChannelUsersRequest;
+    fromPartial<I_1 extends {
+        channel_id?: string | undefined;
+        user_ids?: string[] | undefined;
+    } & {
+        channel_id?: string | undefined;
+        user_ids?: (string[] & string[] & { [K_2 in Exclude<keyof I_1["user_ids"], keyof string[]>]: never; }) | undefined;
+    } & { [K_3 in Exclude<keyof I_1, keyof AddChannelUsersRequest>]: never; }>(object: I_1): AddChannelUsersRequest;
+};
+export declare const KickChannelUsersRequest: {
+    encode(message: KickChannelUsersRequest, writer?: _m0.Writer): _m0.Writer;
+    decode(input: _m0.Reader | Uint8Array, length?: number): KickChannelUsersRequest;
+    fromJSON(object: any): KickChannelUsersRequest;
+    toJSON(message: KickChannelUsersRequest): unknown;
+    create<I extends {
+        channel_id?: string | undefined;
+        user_ids?: string[] | undefined;
+    } & {
+        channel_id?: string | undefined;
+        user_ids?: (string[] & string[] & { [K in Exclude<keyof I["user_ids"], keyof string[]>]: never; }) | undefined;
+    } & { [K_1 in Exclude<keyof I, keyof KickChannelUsersRequest>]: never; }>(base?: I | undefined): KickChannelUsersRequest;
+    fromPartial<I_1 extends {
+        channel_id?: string | undefined;
+        user_ids?: string[] | undefined;
+    } & {
+        channel_id?: string | undefined;
+        user_ids?: (string[] & string[] & { [K_2 in Exclude<keyof I_1["user_ids"], keyof string[]>]: never; }) | undefined;
+    } & { [K_3 in Exclude<keyof I_1, keyof KickChannelUsersRequest>]: never; }>(object: I_1): KickChannelUsersRequest;
+};
+export declare const LeaveChannelRequest: {
+    encode(message: LeaveChannelRequest, writer?: _m0.Writer): _m0.Writer;
+    decode(input: _m0.Reader | Uint8Array, length?: number): LeaveChannelRequest;
+    fromJSON(object: any): LeaveChannelRequest;
+    toJSON(message: LeaveChannelRequest): unknown;
+    create<I extends {
+        channel_id?: string | undefined;
+    } & {
+        channel_id?: string | undefined;
+    } & { [K in Exclude<keyof I, "channel_id">]: never; }>(base?: I | undefined): LeaveChannelRequest;
+    fromPartial<I_1 extends {
+        channel_id?: string | undefined;
+    } & {
+        channel_id?: string | undefined;
+    } & { [K_1 in Exclude<keyof I_1, "channel_id">]: never; }>(object: I_1): LeaveChannelRequest;
 };
 type Builtin = Date | Function | Uint8Array | string | number | boolean | undefined;
 export type DeepPartial<T> = T extends Builtin ? T : T extends Array<infer U> ? Array<DeepPartial<U>> : T extends ReadonlyArray<infer U> ? ReadonlyArray<DeepPartial<U>> : T extends {} ? {
     [K in keyof T]?: DeepPartial<T[K]>;
 } : Partial<T>;
+type KeysOfUnion<T> = T extends T ? keyof T : never;
+export type Exact<P, I extends P> = P extends Builtin ? P : P & {
+    [K in keyof P]: Exact<P[K], I[K]>;
+} & {
+    [K in Exclude<keyof I, KeysOfUnion<P>>]: never;
+};
 export {};

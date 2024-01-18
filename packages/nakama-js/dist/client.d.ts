@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { ApiAccount, ApiAccountCustom, ApiAccountDevice, ApiAccountEmail, ApiAccountFacebook, ApiAccountFacebookInstantGame, ApiAccountGoogle, ApiAccountGameCenter, ApiAccountSteam, ApiCreateGroupRequest, ApiDeleteStorageObjectsRequest, ApiEvent, ApiMatchList, ApiReadStorageObjectsRequest, ApiStorageObjectAcks, ApiUpdateAccountRequest, ApiUpdateGroupRequest, ApiAccountApple, ApiLinkSteamRequest, ApiValidatePurchaseResponse } from "./api.gen";
+import { ApiAccount, ApiAccountCustom, ApiAccountDevice, ApiAccountEmail, ApiAccountFacebook, ApiAccountFacebookInstantGame, ApiAccountGoogle, ApiAccountGameCenter, ApiAccountSteam, ApiChannelDescList, ApiChannelDescription, ApiCreateChannelDescRequest, ApiClanDescList, ApiCreateClanDescRequest, ApiClanDesc, ApiCategoryDesc, ApiCategoryDescList, ApiCreateCategoryDescRequest, ApiUpdateCategoryDescRequest, ApiCreateGroupRequest, ApiDeleteStorageObjectsRequest, ApiEvent, ApiMatchList, ApiReadStorageObjectsRequest, ApiStorageObjectAcks, ApiUpdateAccountRequest, ApiUpdateGroupRequest, ApiAccountApple, ApiLinkSteamRequest, ApiValidatePurchaseResponse } from "./api.gen";
 import { Session } from "./session";
 import { Socket } from "./socket";
 import { WebSocketAdapter } from "./web_socket_adapter";
@@ -367,6 +367,46 @@ export interface NotificationList {
     /** Collection of notifications. */
     notifications?: Array<Notification>;
 }
+/** Update fields in a given channel. */
+export interface ApiUpdateChannelDescRequest {
+    /** The ID of the channel to update. */
+    channel_id: string;
+    /** The channel lable */
+    channel_lable: string | undefined;
+    /** The category of channel */
+    category_id: string | undefined;
+}
+/** Add users to a channel. */
+export interface ApiAddChannelUsersRequest {
+    /** The channel to add users to. */
+    channel_id: string;
+    /** The users to add. */
+    user_ids: string[];
+}
+/** Kick a set of users from a channel. */
+export interface ApiKickChannelUsersRequest {
+    /** The channel ID to kick from. */
+    channel_id: string;
+    /** The users to kick. */
+    user_ids: string[];
+}
+/** Leave a channel. */
+export interface ApiLeaveChannelRequest {
+    /** The channel ID to leave. */
+    channel_id: string;
+}
+/** Update Clan information */
+export interface ApiUpdateClanDescRequest {
+    clan_id: string;
+    /** Clan creator */
+    creator_id: string;
+    /** Clan name */
+    clan_name: string;
+    /** Clan logo */
+    logo: string;
+    /** Clan banner */
+    banner: string;
+}
 /** A client for Nakama server. */
 export declare class Client {
     readonly serverkey: string;
@@ -408,6 +448,12 @@ export declare class Client {
     blockFriends(session: Session, ids?: Array<string>, usernames?: Array<string>): Promise<boolean>;
     /** Create a new group with the current user as the creator and superadmin. */
     createGroup(session: Session, request: ApiCreateGroupRequest): Promise<Group>;
+    /** Create a channel within clan */
+    createChannelDesc(session: Session, request: ApiCreateChannelDescRequest): Promise<ApiChannelDescription>;
+    /** Create a clan */
+    createClanDesc(session: Session, request: ApiCreateClanDescRequest): Promise<ApiClanDesc>;
+    /**  */
+    createCategoryDesc(session: Session, request: ApiCreateCategoryDescRequest): Promise<ApiCategoryDesc>;
     /** A socket created with the client's configuration. */
     createSocket(useSSL?: boolean, verbose?: boolean, adapter?: WebSocketAdapter, sendTimeoutMs?: number): Socket;
     /** Delete one or more users by ID or username. */
@@ -445,6 +491,12 @@ export declare class Client {
     listUserGroups(session: Session, userId: string, state?: number, limit?: number, cursor?: string): Promise<UserGroupList>;
     /** List groups based on given filters. */
     listGroups(session: Session, name?: string, cursor?: string, limit?: number): Promise<GroupList>;
+    /** List channels. */
+    listChannelDescs(session: Session, limit?: number, state?: number, cursor?: string): Promise<ApiChannelDescList>;
+    /** List clans */
+    listClanDescs(session: Session, limit?: number, state?: number, cursor?: string): Promise<ApiClanDescList>;
+    /** List categories. */
+    listCategoryDescs(session: Session, clanId: string, creatorId?: string, categoryName?: string): Promise<ApiCategoryDescList>;
     /** Add an Apple ID to the social profiles on the current user's account. */
     linkApple(session: Session, request: ApiAccountApple): Promise<boolean>;
     /** Add a custom ID to the social profiles on the current user's account. */
@@ -514,6 +566,12 @@ export declare class Client {
     updateAccount(session: Session, request: ApiUpdateAccountRequest): Promise<boolean>;
     /** Update a group the user is part of and has permissions to update. */
     updateGroup(session: Session, groupId: string, request: ApiUpdateGroupRequest): Promise<boolean>;
+    /** Update fields in a given channel */
+    updateChannelDesc(session: Session, channelId: string, request: ApiUpdateChannelDescRequest): Promise<boolean>;
+    /** Update fields in a given clan. */
+    updateClanDesc(session: Session, clanId: string, request: ApiUpdateClanDescRequest): Promise<boolean>;
+    /** Update fields in a given category. */
+    updateCategory(session: Session, request: ApiUpdateCategoryDescRequest): Promise<boolean>;
     /** Validate an Apple IAP receipt. */
     validatePurchaseApple(session: Session, receipt?: string): Promise<ApiValidatePurchaseResponse>;
     /** Validate a Google IAP receipt. */

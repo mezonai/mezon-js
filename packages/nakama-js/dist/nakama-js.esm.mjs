@@ -4440,6 +4440,39 @@ var Client = class {
       });
     });
   }
+  /** Create a channel within clan */
+  createChannelDesc(session, request) {
+    return __async(this, null, function* () {
+      if (this.autoRefreshSession && session.refresh_token && session.isexpired((Date.now() + this.expiredTimespanMs) / 1e3)) {
+        yield this.sessionRefresh(session);
+      }
+      return this.apiClient.createChannelDesc(session.token, request).then((response) => {
+        return Promise.resolve(response);
+      });
+    });
+  }
+  /** Create a clan */
+  createClanDesc(session, request) {
+    return __async(this, null, function* () {
+      if (this.autoRefreshSession && session.refresh_token && session.isexpired((Date.now() + this.expiredTimespanMs) / 1e3)) {
+        yield this.sessionRefresh(session);
+      }
+      return this.apiClient.createClanDesc(session.token, request).then((response) => {
+        return Promise.resolve(response);
+      });
+    });
+  }
+  /**  */
+  createCategoryDesc(session, request) {
+    return __async(this, null, function* () {
+      if (this.autoRefreshSession && session.refresh_token && session.isexpired((Date.now() + this.expiredTimespanMs) / 1e3)) {
+        yield this.sessionRefresh(session);
+      }
+      return this.apiClient.createCategoryDesc(session.token, request).then((response) => {
+        return Promise.resolve(response);
+      });
+    });
+  }
   /** A socket created with the client's configuration. */
   createSocket(useSSL = false, verbose = false, adapter = new WebSocketAdapterText(), sendTimeoutMs = DefaultSocket.DefaultSendTimeoutMs) {
     return new DefaultSocket(this.host, this.port, useSSL, verbose, adapter, sendTimeoutMs);
@@ -4766,6 +4799,63 @@ var Client = class {
             update_time: ug.update_time
           });
         });
+        return Promise.resolve(result);
+      });
+    });
+  }
+  /** List channels. */
+  listChannelDescs(session, limit, state, cursor) {
+    return __async(this, null, function* () {
+      if (this.autoRefreshSession && session.refresh_token && session.isexpired((Date.now() + this.expiredTimespanMs) / 1e3)) {
+        yield this.sessionRefresh(session);
+      }
+      return this.apiClient.listChannelDescs(session.token, limit, state, cursor).then((response) => {
+        var result = {
+          channeldesc: [],
+          next_cursor: response.next_cursor,
+          prev_cursor: response.prev_cursor,
+          cacheable_cursor: response.cacheable_cursor
+        };
+        if (response.channeldesc == null) {
+          return Promise.resolve(result);
+        }
+        result.channeldesc = response.channeldesc;
+        return Promise.resolve(result);
+      });
+    });
+  }
+  /** List clans */
+  listClanDescs(session, limit, state, cursor) {
+    return __async(this, null, function* () {
+      if (this.autoRefreshSession && session.refresh_token && session.isexpired((Date.now() + this.expiredTimespanMs) / 1e3)) {
+        yield this.sessionRefresh(session);
+      }
+      return this.apiClient.listClanDescs(session.token, limit, state, cursor).then((response) => {
+        var result = {
+          clandesc: []
+        };
+        if (response.clandesc == null) {
+          return Promise.resolve(result);
+        }
+        result.clandesc = response.clandesc;
+        return Promise.resolve(result);
+      });
+    });
+  }
+  /** List categories. */
+  listCategoryDescs(session, clanId, creatorId, categoryName) {
+    return __async(this, null, function* () {
+      if (this.autoRefreshSession && session.refresh_token && session.isexpired((Date.now() + this.expiredTimespanMs) / 1e3)) {
+        yield this.sessionRefresh(session);
+      }
+      return this.apiClient.listCategoryDescs(session.token, clanId, creatorId, categoryName).then((response) => {
+        var result = {
+          categorydesc: []
+        };
+        if (response.categorydesc == null) {
+          return Promise.resolve(result);
+        }
+        result.categorydesc = response.categorydesc;
         return Promise.resolve(result);
       });
     });
@@ -5431,6 +5521,39 @@ var Client = class {
         yield this.sessionRefresh(session);
       }
       return this.apiClient.updateGroup(session.token, groupId, request).then((response) => {
+        return response !== void 0;
+      });
+    });
+  }
+  /** Update fields in a given channel */
+  updateChannelDesc(session, channelId, request) {
+    return __async(this, null, function* () {
+      if (this.autoRefreshSession && session.refresh_token && session.isexpired((Date.now() + this.expiredTimespanMs) / 1e3)) {
+        yield this.sessionRefresh(session);
+      }
+      return this.apiClient.updateChannelDesc(session.token, channelId, request).then((response) => {
+        return response !== void 0;
+      });
+    });
+  }
+  /** Update fields in a given clan. */
+  updateClanDesc(session, clanId, request) {
+    return __async(this, null, function* () {
+      if (this.autoRefreshSession && session.refresh_token && session.isexpired((Date.now() + this.expiredTimespanMs) / 1e3)) {
+        yield this.sessionRefresh(session);
+      }
+      return this.apiClient.updateClanDesc(session.token, clanId, request == null ? void 0 : request.creator_id, request == null ? void 0 : request.clan_name, request == null ? void 0 : request.logo, request == null ? void 0 : request.banner).then((response) => {
+        return response !== void 0;
+      });
+    });
+  }
+  /** Update fields in a given category. */
+  updateCategory(session, request) {
+    return __async(this, null, function* () {
+      if (this.autoRefreshSession && session.refresh_token && session.isexpired((Date.now() + this.expiredTimespanMs) / 1e3)) {
+        yield this.sessionRefresh(session);
+      }
+      return this.apiClient.updateCategory(session.token, request).then((response) => {
         return response !== void 0;
       });
     });
