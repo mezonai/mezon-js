@@ -3147,7 +3147,7 @@ export class NakamaApi {
   /** Update fields in a given group. */
   updateGroup(bearerToken: string,
       groupId:string,
-      body:{},
+      body:ApiUpdateGroupRequest,
       options: any = {}): Promise<any> {
     
     if (groupId === null || groupId === undefined) {

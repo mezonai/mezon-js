@@ -705,7 +705,7 @@ export declare class NakamaApi {
     /** Delete a group by ID. */
     deleteGroup(bearerToken: string, groupId: string, options?: any): Promise<any>;
     /** Update fields in a given group. */
-    updateGroup(bearerToken: string, groupId: string, body: {}, options?: any): Promise<any>;
+    updateGroup(bearerToken: string, groupId: string, body: ApiUpdateGroupRequest, options?: any): Promise<any>;
     /** Add users to a group. */
     addGroupUsers(bearerToken: string, groupId: string, userIds?: Array<string>, options?: any): Promise<any>;
     /** Ban a set of users from a group. */
