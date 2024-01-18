@@ -1208,13 +1208,13 @@ export class Client {
   }
 
   /** List channels. */
-  async listChannelDescs(session: Session, limit?: number, state?:number, cursor?: string): Promise<ApiChannelDescList> {
+  async listChannelDescs(session: Session, limit?: number, state?:number, cursor?: string, clanId?: string): Promise<ApiChannelDescList> {
     if (this.autoRefreshSession && session.refresh_token &&
         session.isexpired((Date.now() + this.expiredTimespanMs)/1000)) {
         await this.sessionRefresh(session);
     }
 
-    return this.apiClient.listChannelDescs(session.token, limit, state, cursor).then((response: ApiChannelDescList) => {
+    return this.apiClient.listChannelDescs(session.token, limit, state, cursor, clanId).then((response: ApiChannelDescList) => {
       var result: ApiChannelDescList = {
         channeldesc: [],
         next_cursor: response.next_cursor,

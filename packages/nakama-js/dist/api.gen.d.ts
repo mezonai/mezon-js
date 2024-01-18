@@ -137,6 +137,7 @@ export interface ApiChannelMessageList {
     messages?: Array<ApiChannelMessage>;
     next_cursor?: string;
     prev_cursor?: string;
+    unread_messages?: Array<ApiUnreadMessage>;
 }
 /**  */
 export interface ApiClanDesc {
@@ -433,6 +434,11 @@ export interface ApiTournamentRecordList {
     rank_count?: string;
     records?: Array<ApiLeaderboardRecord>;
 }
+/**  */
+export interface ApiUnreadMessage {
+    message_id?: string;
+    user_id?: string;
+}
 /** Update a user's account details. */
 export interface ApiUpdateAccountRequest {
     avatar_url?: string;
@@ -653,7 +659,7 @@ export declare class NakamaApi {
     /** List a channel's message history. */
     listChannelMessages(bearerToken: string, channelId: string, limit?: number, forward?: boolean, cursor?: string, options?: any): Promise<ApiChannelMessageList>;
     /** List user channels */
-    listChannelDescs(bearerToken: string, limit?: number, state?: number, cursor?: string, options?: any): Promise<ApiChannelDescList>;
+    listChannelDescs(bearerToken: string, limit?: number, state?: number, cursor?: string, clanId?: string, options?: any): Promise<ApiChannelDescList>;
     /** Create a new channel with the current user as the owner. */
     createChannelDesc(bearerToken: string, body: ApiCreateChannelDescRequest, options?: any): Promise<ApiChannelDescription>;
     /** Delete a channel by ID. */
@@ -776,7 +782,7 @@ export declare class NakamaApi {
     joinTournament(bearerToken: string, tournamentId: string, options?: any): Promise<any>;
     /** List tournament records for a given owner. */
     listTournamentRecordsAroundOwner(bearerToken: string, tournamentId: string, ownerId: string, limit?: number, expiry?: string, cursor?: string, options?: any): Promise<ApiTournamentRecordList>;
-    /**  */
+    /** Update fields in a given category. */
     updateCategory(bearerToken: string, body: ApiUpdateCategoryDescRequest, options?: any): Promise<any>;
     /** Fetch zero or more users by ID and/or username. */
     getUsers(bearerToken: string, ids?: Array<string>, usernames?: Array<string>, facebookIds?: Array<string>, options?: any): Promise<ApiUsers>;

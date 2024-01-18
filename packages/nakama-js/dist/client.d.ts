@@ -502,7 +502,7 @@ export declare class Client {
     /** List groups based on given filters. */
     listGroups(session: Session, name?: string, cursor?: string, limit?: number): Promise<GroupList>;
     /** List channels. */
-    listChannelDescs(session: Session, limit?: number, state?: number, cursor?: string): Promise<ApiChannelDescList>;
+    listChannelDescs(session: Session, limit?: number, state?: number, cursor?: string, clanId?: string): Promise<ApiChannelDescList>;
     /** List clans */
     listClanDescs(session: Session, limit?: number, state?: number, cursor?: string): Promise<ApiClanDescList>;
     /** List categories. */

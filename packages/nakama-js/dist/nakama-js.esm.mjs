@@ -1641,12 +1641,13 @@ var NakamaApi = class {
     ]);
   }
   /** List user channels */
-  listChannelDescs(bearerToken, limit, state, cursor, options = {}) {
+  listChannelDescs(bearerToken, limit, state, cursor, clanId, options = {}) {
     const urlPath = "/v2/channeldesc";
     const queryParams = /* @__PURE__ */ new Map();
     queryParams.set("limit", limit);
     queryParams.set("state", state);
     queryParams.set("cursor", cursor);
+    queryParams.set("clan_id", clanId);
     let bodyJson = "";
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("GET", options, bodyJson);
@@ -3474,7 +3475,7 @@ var NakamaApi = class {
       )
     ]);
   }
-  /**  */
+  /** Update fields in a given category. */
   updateCategory(bearerToken, body, options = {}) {
     if (body === null || body === void 0) {
       throw new Error("'body' is a required parameter but is null or undefined.");
@@ -4859,12 +4860,12 @@ var Client = class {
     });
   }
   /** List channels. */
-  listChannelDescs(session, limit, state, cursor) {
+  listChannelDescs(session, limit, state, cursor, clanId) {
     return __async(this, null, function* () {
       if (this.autoRefreshSession && session.refresh_token && session.isexpired((Date.now() + this.expiredTimespanMs) / 1e3)) {
         yield this.sessionRefresh(session);
       }
-      return this.apiClient.listChannelDescs(session.token, limit, state, cursor).then((response) => {
+      return this.apiClient.listChannelDescs(session.token, limit, state, cursor, clanId).then((response) => {
         var result = {
           channeldesc: [],
           next_cursor: response.next_cursor,
