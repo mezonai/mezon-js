@@ -1857,6 +1857,42 @@ export interface WriteTournamentRecordRequest_TournamentRecordWrite {
   operator: Operator;
 }
 
+/** Clan profile information */
+export interface ClanDescProfile {
+  /** Clan id */
+  clan_id: string;
+  /** Clan creator */
+  creator_id: string;
+  /** Clan nick name */
+  nick_name: string;
+  /** Clan profile banner */
+  profile_banner: string;
+  /** Clan profile theme */
+  profile_theme: string;
+  /** Clan profile avatar */
+  avatar_url: string;
+}
+
+/** Update Clan profile information */
+export interface UpdateClanDescProfileRequest {
+  /** Clan id */
+  clan_id: string;
+  /** Clan nick name */
+  nick_name: string;
+  /** Clan profile banner */
+  profile_banner: string;
+  /** Clan profile theme */
+  profile_theme: string;
+  /** Clan profile avatar */
+  avatar_url: string;
+}
+
+/** Clan profile information */
+export interface ClanDescProfileRequest {
+  /** Clan id */
+  clan_id: string;
+}
+
 /** Clan information */
 export interface ClanDesc {
   /** Clan creator */
@@ -12284,6 +12320,244 @@ export const WriteTournamentRecordRequest_TournamentRecordWrite = {
     message.subscore = object.subscore ?? 0;
     message.metadata = object.metadata ?? "";
     message.operator = object.operator ?? 0;
+    return message;
+  },
+};
+
+function createBaseClanDescProfile(): ClanDescProfile {
+  return { clan_id: "", creator_id: "", nick_name: "", profile_banner: "", profile_theme: "", avatar_url: "" };
+}
+
+export const ClanDescProfile = {
+  encode(message: ClanDescProfile, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.clan_id !== "") {
+      writer.uint32(10).string(message.clan_id);
+    }
+    if (message.creator_id !== "") {
+      writer.uint32(18).string(message.creator_id);
+    }
+    if (message.nick_name !== "") {
+      writer.uint32(26).string(message.nick_name);
+    }
+    if (message.profile_banner !== "") {
+      writer.uint32(34).string(message.profile_banner);
+    }
+    if (message.profile_theme !== "") {
+      writer.uint32(42).string(message.profile_theme);
+    }
+    if (message.avatar_url !== "") {
+      writer.uint32(50).string(message.avatar_url);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): ClanDescProfile {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseClanDescProfile();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.clan_id = reader.string();
+          break;
+        case 2:
+          message.creator_id = reader.string();
+          break;
+        case 3:
+          message.nick_name = reader.string();
+          break;
+        case 4:
+          message.profile_banner = reader.string();
+          break;
+        case 5:
+          message.profile_theme = reader.string();
+          break;
+        case 6:
+          message.avatar_url = reader.string();
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): ClanDescProfile {
+    return {
+      clan_id: isSet(object.clan_id) ? String(object.clan_id) : "",
+      creator_id: isSet(object.creator_id) ? String(object.creator_id) : "",
+      nick_name: isSet(object.nick_name) ? String(object.nick_name) : "",
+      profile_banner: isSet(object.profile_banner) ? String(object.profile_banner) : "",
+      profile_theme: isSet(object.profile_theme) ? String(object.profile_theme) : "",
+      avatar_url: isSet(object.avatar_url) ? String(object.avatar_url) : "",
+    };
+  },
+
+  toJSON(message: ClanDescProfile): unknown {
+    const obj: any = {};
+    message.clan_id !== undefined && (obj.clan_id = message.clan_id);
+    message.creator_id !== undefined && (obj.creator_id = message.creator_id);
+    message.nick_name !== undefined && (obj.nick_name = message.nick_name);
+    message.profile_banner !== undefined && (obj.profile_banner = message.profile_banner);
+    message.profile_theme !== undefined && (obj.profile_theme = message.profile_theme);
+    message.avatar_url !== undefined && (obj.avatar_url = message.avatar_url);
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<ClanDescProfile>, I>>(base?: I): ClanDescProfile {
+    return ClanDescProfile.fromPartial(base ?? {});
+  },
+
+  fromPartial<I extends Exact<DeepPartial<ClanDescProfile>, I>>(object: I): ClanDescProfile {
+    const message = createBaseClanDescProfile();
+    message.clan_id = object.clan_id ?? "";
+    message.creator_id = object.creator_id ?? "";
+    message.nick_name = object.nick_name ?? "";
+    message.profile_banner = object.profile_banner ?? "";
+    message.profile_theme = object.profile_theme ?? "";
+    message.avatar_url = object.avatar_url ?? "";
+    return message;
+  },
+};
+
+function createBaseUpdateClanDescProfileRequest(): UpdateClanDescProfileRequest {
+  return { clan_id: "", nick_name: "", profile_banner: "", profile_theme: "", avatar_url: "" };
+}
+
+export const UpdateClanDescProfileRequest = {
+  encode(message: UpdateClanDescProfileRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.clan_id !== "") {
+      writer.uint32(10).string(message.clan_id);
+    }
+    if (message.nick_name !== "") {
+      writer.uint32(18).string(message.nick_name);
+    }
+    if (message.profile_banner !== "") {
+      writer.uint32(26).string(message.profile_banner);
+    }
+    if (message.profile_theme !== "") {
+      writer.uint32(34).string(message.profile_theme);
+    }
+    if (message.avatar_url !== "") {
+      writer.uint32(42).string(message.avatar_url);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): UpdateClanDescProfileRequest {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseUpdateClanDescProfileRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.clan_id = reader.string();
+          break;
+        case 2:
+          message.nick_name = reader.string();
+          break;
+        case 3:
+          message.profile_banner = reader.string();
+          break;
+        case 4:
+          message.profile_theme = reader.string();
+          break;
+        case 5:
+          message.avatar_url = reader.string();
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): UpdateClanDescProfileRequest {
+    return {
+      clan_id: isSet(object.clan_id) ? String(object.clan_id) : "",
+      nick_name: isSet(object.nick_name) ? String(object.nick_name) : "",
+      profile_banner: isSet(object.profile_banner) ? String(object.profile_banner) : "",
+      profile_theme: isSet(object.profile_theme) ? String(object.profile_theme) : "",
+      avatar_url: isSet(object.avatar_url) ? String(object.avatar_url) : "",
+    };
+  },
+
+  toJSON(message: UpdateClanDescProfileRequest): unknown {
+    const obj: any = {};
+    message.clan_id !== undefined && (obj.clan_id = message.clan_id);
+    message.nick_name !== undefined && (obj.nick_name = message.nick_name);
+    message.profile_banner !== undefined && (obj.profile_banner = message.profile_banner);
+    message.profile_theme !== undefined && (obj.profile_theme = message.profile_theme);
+    message.avatar_url !== undefined && (obj.avatar_url = message.avatar_url);
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<UpdateClanDescProfileRequest>, I>>(base?: I): UpdateClanDescProfileRequest {
+    return UpdateClanDescProfileRequest.fromPartial(base ?? {});
+  },
+
+  fromPartial<I extends Exact<DeepPartial<UpdateClanDescProfileRequest>, I>>(object: I): UpdateClanDescProfileRequest {
+    const message = createBaseUpdateClanDescProfileRequest();
+    message.clan_id = object.clan_id ?? "";
+    message.nick_name = object.nick_name ?? "";
+    message.profile_banner = object.profile_banner ?? "";
+    message.profile_theme = object.profile_theme ?? "";
+    message.avatar_url = object.avatar_url ?? "";
+    return message;
+  },
+};
+
+function createBaseClanDescProfileRequest(): ClanDescProfileRequest {
+  return { clan_id: "" };
+}
+
+export const ClanDescProfileRequest = {
+  encode(message: ClanDescProfileRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.clan_id !== "") {
+      writer.uint32(10).string(message.clan_id);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): ClanDescProfileRequest {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseClanDescProfileRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.clan_id = reader.string();
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): ClanDescProfileRequest {
+    return { clan_id: isSet(object.clan_id) ? String(object.clan_id) : "" };
+  },
+
+  toJSON(message: ClanDescProfileRequest): unknown {
+    const obj: any = {};
+    message.clan_id !== undefined && (obj.clan_id = message.clan_id);
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<ClanDescProfileRequest>, I>>(base?: I): ClanDescProfileRequest {
+    return ClanDescProfileRequest.fromPartial(base ?? {});
+  },
+
+  fromPartial<I extends Exact<DeepPartial<ClanDescProfileRequest>, I>>(object: I): ClanDescProfileRequest {
+    const message = createBaseClanDescProfileRequest();
+    message.clan_id = object.clan_id ?? "";
     return message;
   },
 };

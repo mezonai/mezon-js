@@ -63,6 +63,7 @@ import {
   ApiAccountApple,
   ApiLinkSteamRequest,
   ApiValidatePurchaseResponse,
+  ApiClanDescProfile,
 } from "./api.gen";
 
 import { Session } from "./session";
@@ -496,6 +497,20 @@ export interface ApiUpdateClanDescRequest {
   logo: string;
   /** Clan banner */
   banner: string;
+}
+
+/** Update Clan profile information */
+export interface ApiUpdateClanDescProfileRequest {
+  /** Clan id */
+  clan_id: string;
+  /** Clan nick name */
+  nick_name: string;
+  /** Clan profile banner */
+  profile_banner: string;
+  /** Clan profile theme */
+  profile_theme: string;
+  /** Clan profile avatar */
+  avatar_url: string;
 }
 
 /** A client for Nakama server. */
@@ -1273,6 +1288,18 @@ export class Client {
     });
   }
 
+  /** Get a clan desc profile */
+  async getClanDescProfile(session: Session, clanId:string): Promise<ApiClanDescProfile> {
+    if (this.autoRefreshSession && session.refresh_token &&
+        session.isexpired((Date.now() + this.expiredTimespanMs)/1000)) {
+        await this.sessionRefresh(session);
+    }
+
+    return this.apiClient.getClanDescProfile(session.token, clanId).then((response: ApiClanDescProfile) => {
+      return Promise.resolve(response);
+    });
+  }
+
   /** Add an Apple ID to the social profiles on the current user's account. */
   async linkApple(session: Session, request: ApiAccountApple): Promise<boolean> {
     if (this.autoRefreshSession && session.refresh_token &&
@@ -2030,6 +2057,18 @@ export class Client {
     }
 
     return this.apiClient.updateCategory(session.token, request).then((response: any) => {
+      return response !== undefined;
+    });
+  }
+
+  /** Update fields in a given clan profile. */
+  async updateClanDescProfile(session: Session, clanId: string, request: ApiUpdateClanDescProfileRequest): Promise<boolean> {
+    if (this.autoRefreshSession && session.refresh_token &&
+        session.isexpired((Date.now() + this.expiredTimespanMs)/1000)) {
+        await this.sessionRefresh(session);
+    }
+
+    return this.apiClient.updateClanDescProfile(session.token, clanId, request).then((response: any) => {
       return response !== undefined;
     });
   }
