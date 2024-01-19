@@ -151,6 +151,8 @@ export interface ApiAccountSteam {
 /**  */
 export interface ApiCategoryDesc {
   //
+  category_id?: string;
+  //
   category_name?: string;
   //
   clan_id?: string;
@@ -256,6 +258,8 @@ export interface ApiClanDesc {
   creator_id?: string;
   //
   logo?: string;
+  //
+  status?: number;
 }
 
 /**  */
@@ -1016,6 +1020,7 @@ export interface ProtobufAny {
   // 
   value?: string;
 }
+
 /**  */
 export interface RpcStatus {
   //
@@ -2224,6 +2229,7 @@ export class NakamaApi {
       clanId:string,
       creatorId?:string,
       categoryName?:string,
+      categoryId?:string,
       options: any = {}): Promise<ApiCategoryDescList> {
     
     if (clanId === null || clanId === undefined) {
@@ -2234,6 +2240,7 @@ export class NakamaApi {
     const queryParams = new Map<string, any>();
     queryParams.set("creator_id", creatorId);
     queryParams.set("category_name", categoryName);
+    queryParams.set("category_id", categoryId);
 
     let bodyJson : string = "";
 
@@ -2542,6 +2549,42 @@ export class NakamaApi {
     const queryParams = new Map<string, any>();
 
     let bodyJson : string = "";
+
+    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
+    const fetchOptions = buildFetchOptions("POST", options, bodyJson);
+    if (bearerToken) {
+        fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+    }
+
+    return Promise.race([
+      fetch(fullUrl, fetchOptions).then((response) => {
+        if (response.status == 204) {
+          return response;
+        } else if (response.status >= 200 && response.status < 300) {
+          return response.json();
+        } else {
+          throw response;
+        }
+      }),
+      new Promise((_, reject) =>
+        setTimeout(reject, this.timeoutMs, "Request timed out.")
+      ),
+    ]);
+}
+
+  /**  */
+  channelMessageTyping(bearerToken: string,
+      body:ApiChannelMessage,
+      options: any = {}): Promise<any> {
+    
+    if (body === null || body === undefined) {
+      throw new Error("'body' is a required parameter but is null or undefined.");
+    }
+    const urlPath = "/v2/channelmessagetyping";
+    const queryParams = new Map<string, any>();
+
+    let bodyJson : string = "";
+    bodyJson = JSON.stringify(body || {});
 
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("POST", options, bodyJson);

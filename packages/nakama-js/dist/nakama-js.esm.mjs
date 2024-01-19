@@ -1580,7 +1580,7 @@ var NakamaApi = class {
     ]);
   }
   /**  */
-  listCategoryDescs(bearerToken, clanId, creatorId, categoryName, options = {}) {
+  listCategoryDescs(bearerToken, clanId, creatorId, categoryName, categoryId, options = {}) {
     if (clanId === null || clanId === void 0) {
       throw new Error("'clanId' is a required parameter but is null or undefined.");
     }
@@ -1588,6 +1588,7 @@ var NakamaApi = class {
     const queryParams = /* @__PURE__ */ new Map();
     queryParams.set("creator_id", creatorId);
     queryParams.set("category_name", categoryName);
+    queryParams.set("category_id", categoryId);
     let bodyJson = "";
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("GET", options, bodyJson);
@@ -1824,6 +1825,35 @@ var NakamaApi = class {
     const urlPath = "/v2/channeldesc/{channelId}/leave".replace("{channelId}", encodeURIComponent(String(channelId)));
     const queryParams = /* @__PURE__ */ new Map();
     let bodyJson = "";
+    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
+    const fetchOptions = buildFetchOptions("POST", options, bodyJson);
+    if (bearerToken) {
+      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+    }
+    return Promise.race([
+      fetch(fullUrl, fetchOptions).then((response) => {
+        if (response.status == 204) {
+          return response;
+        } else if (response.status >= 200 && response.status < 300) {
+          return response.json();
+        } else {
+          throw response;
+        }
+      }),
+      new Promise(
+        (_, reject) => setTimeout(reject, this.timeoutMs, "Request timed out.")
+      )
+    ]);
+  }
+  /**  */
+  channelMessageTyping(bearerToken, body, options = {}) {
+    if (body === null || body === void 0) {
+      throw new Error("'body' is a required parameter but is null or undefined.");
+    }
+    const urlPath = "/v2/channelmessagetyping";
+    const queryParams = /* @__PURE__ */ new Map();
+    let bodyJson = "";
+    bodyJson = JSON.stringify(body || {});
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("POST", options, bodyJson);
     if (bearerToken) {
