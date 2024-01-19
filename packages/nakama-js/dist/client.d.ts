@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { ApiAccount, ApiAccountCustom, ApiAccountDevice, ApiAccountEmail, ApiAccountFacebook, ApiAccountFacebookInstantGame, ApiAccountGoogle, ApiAccountGameCenter, ApiAccountSteam, ApiChannelDescList, ApiChannelDescription, ApiCreateChannelDescRequest, ApiClanDescList, ApiCreateClanDescRequest, ApiClanDesc, ApiCategoryDesc, ApiCategoryDescList, ApiCreateCategoryDescRequest, ApiUpdateCategoryDescRequest, ApiCreateGroupRequest, ApiDeleteStorageObjectsRequest, ApiEvent, ApiMatchList, ApiReadStorageObjectsRequest, ApiStorageObjectAcks, ApiUpdateAccountRequest, ApiUpdateGroupRequest, ApiAccountApple, ApiLinkSteamRequest, ApiValidatePurchaseResponse } from "./api.gen";
+import { ApiAccount, ApiAccountCustom, ApiAccountDevice, ApiAccountEmail, ApiAccountFacebook, ApiAccountFacebookInstantGame, ApiAccountGoogle, ApiAccountGameCenter, ApiAccountSteam, ApiChannelDescList, ApiChannelDescription, ApiCreateChannelDescRequest, ApiClanDescList, ApiCreateClanDescRequest, ApiClanDesc, ApiCategoryDesc, ApiCategoryDescList, ApiCreateCategoryDescRequest, ApiUpdateCategoryDescRequest, ApiCreateGroupRequest, ApiDeleteStorageObjectsRequest, ApiEvent, ApiMatchList, ApiReadStorageObjectsRequest, ApiStorageObjectAcks, ApiUpdateAccountRequest, ApiUpdateGroupRequest, ApiAccountApple, ApiLinkSteamRequest, ApiValidatePurchaseResponse, ApiClanDescProfile } from "./api.gen";
 import { Session } from "./session";
 import { Socket } from "./socket";
 import { WebSocketAdapter } from "./web_socket_adapter";
@@ -407,6 +407,19 @@ export interface ApiUpdateClanDescRequest {
     /** Clan banner */
     banner: string;
 }
+/** Update Clan profile information */
+export interface ApiUpdateClanDescProfileRequest {
+    /** Clan id */
+    clan_id: string;
+    /** Clan nick name */
+    nick_name: string;
+    /** Clan profile banner */
+    profile_banner: string;
+    /** Clan profile theme */
+    profile_theme: string;
+    /** Clan profile avatar */
+    avatar_url: string;
+}
 /** A client for Nakama server. */
 export declare class Client {
     readonly serverkey: string;
@@ -507,6 +520,8 @@ export declare class Client {
     listClanDescs(session: Session, limit?: number, state?: number, cursor?: string): Promise<ApiClanDescList>;
     /** List categories. */
     listCategoryDescs(session: Session, clanId: string, creatorId?: string, categoryName?: string): Promise<ApiCategoryDescList>;
+    /** Get a clan desc profile */
+    getClanDescProfile(session: Session, clanId: string): Promise<ApiClanDescProfile>;
     /** Add an Apple ID to the social profiles on the current user's account. */
     linkApple(session: Session, request: ApiAccountApple): Promise<boolean>;
     /** Add a custom ID to the social profiles on the current user's account. */
@@ -582,6 +597,8 @@ export declare class Client {
     updateClanDesc(session: Session, clanId: string, request: ApiUpdateClanDescRequest): Promise<boolean>;
     /** Update fields in a given category. */
     updateCategory(session: Session, request: ApiUpdateCategoryDescRequest): Promise<boolean>;
+    /** Update fields in a given clan profile. */
+    updateClanDescProfile(session: Session, clanId: string, request: ApiUpdateClanDescProfileRequest): Promise<boolean>;
     /** Validate an Apple IAP receipt. */
     validatePurchaseApple(session: Session, receipt?: string): Promise<ApiValidatePurchaseResponse>;
     /** Validate a Google IAP receipt. */

@@ -1337,6 +1337,39 @@ export interface WriteTournamentRecordRequest_TournamentRecordWrite {
     /** Operator override. */
     operator: Operator;
 }
+/** Clan profile information */
+export interface ClanDescProfile {
+    /** Clan id */
+    clan_id: string;
+    /** Clan creator */
+    creator_id: string;
+    /** Clan nick name */
+    nick_name: string;
+    /** Clan profile banner */
+    profile_banner: string;
+    /** Clan profile theme */
+    profile_theme: string;
+    /** Clan profile avatar */
+    avatar_url: string;
+}
+/** Update Clan profile information */
+export interface UpdateClanDescProfileRequest {
+    /** Clan id */
+    clan_id: string;
+    /** Clan nick name */
+    nick_name: string;
+    /** Clan profile banner */
+    profile_banner: string;
+    /** Clan profile theme */
+    profile_theme: string;
+    /** Clan profile avatar */
+    avatar_url: string;
+}
+/** Clan profile information */
+export interface ClanDescProfileRequest {
+    /** Clan id */
+    clan_id: string;
+}
 /** Clan information */
 export interface ClanDesc {
     /** Clan creator */
@@ -9040,6 +9073,90 @@ export declare const WriteTournamentRecordRequest_TournamentRecordWrite: {
         metadata?: string | undefined;
         operator?: Operator | undefined;
     } & { [K_1 in Exclude<keyof I_1, keyof WriteTournamentRecordRequest_TournamentRecordWrite>]: never; }>(object: I_1): WriteTournamentRecordRequest_TournamentRecordWrite;
+};
+export declare const ClanDescProfile: {
+    encode(message: ClanDescProfile, writer?: _m0.Writer): _m0.Writer;
+    decode(input: _m0.Reader | Uint8Array, length?: number): ClanDescProfile;
+    fromJSON(object: any): ClanDescProfile;
+    toJSON(message: ClanDescProfile): unknown;
+    create<I extends {
+        clan_id?: string | undefined;
+        creator_id?: string | undefined;
+        nick_name?: string | undefined;
+        profile_banner?: string | undefined;
+        profile_theme?: string | undefined;
+        avatar_url?: string | undefined;
+    } & {
+        clan_id?: string | undefined;
+        creator_id?: string | undefined;
+        nick_name?: string | undefined;
+        profile_banner?: string | undefined;
+        profile_theme?: string | undefined;
+        avatar_url?: string | undefined;
+    } & { [K in Exclude<keyof I, keyof ClanDescProfile>]: never; }>(base?: I | undefined): ClanDescProfile;
+    fromPartial<I_1 extends {
+        clan_id?: string | undefined;
+        creator_id?: string | undefined;
+        nick_name?: string | undefined;
+        profile_banner?: string | undefined;
+        profile_theme?: string | undefined;
+        avatar_url?: string | undefined;
+    } & {
+        clan_id?: string | undefined;
+        creator_id?: string | undefined;
+        nick_name?: string | undefined;
+        profile_banner?: string | undefined;
+        profile_theme?: string | undefined;
+        avatar_url?: string | undefined;
+    } & { [K_1 in Exclude<keyof I_1, keyof ClanDescProfile>]: never; }>(object: I_1): ClanDescProfile;
+};
+export declare const UpdateClanDescProfileRequest: {
+    encode(message: UpdateClanDescProfileRequest, writer?: _m0.Writer): _m0.Writer;
+    decode(input: _m0.Reader | Uint8Array, length?: number): UpdateClanDescProfileRequest;
+    fromJSON(object: any): UpdateClanDescProfileRequest;
+    toJSON(message: UpdateClanDescProfileRequest): unknown;
+    create<I extends {
+        clan_id?: string | undefined;
+        nick_name?: string | undefined;
+        profile_banner?: string | undefined;
+        profile_theme?: string | undefined;
+        avatar_url?: string | undefined;
+    } & {
+        clan_id?: string | undefined;
+        nick_name?: string | undefined;
+        profile_banner?: string | undefined;
+        profile_theme?: string | undefined;
+        avatar_url?: string | undefined;
+    } & { [K in Exclude<keyof I, keyof UpdateClanDescProfileRequest>]: never; }>(base?: I | undefined): UpdateClanDescProfileRequest;
+    fromPartial<I_1 extends {
+        clan_id?: string | undefined;
+        nick_name?: string | undefined;
+        profile_banner?: string | undefined;
+        profile_theme?: string | undefined;
+        avatar_url?: string | undefined;
+    } & {
+        clan_id?: string | undefined;
+        nick_name?: string | undefined;
+        profile_banner?: string | undefined;
+        profile_theme?: string | undefined;
+        avatar_url?: string | undefined;
+    } & { [K_1 in Exclude<keyof I_1, keyof UpdateClanDescProfileRequest>]: never; }>(object: I_1): UpdateClanDescProfileRequest;
+};
+export declare const ClanDescProfileRequest: {
+    encode(message: ClanDescProfileRequest, writer?: _m0.Writer): _m0.Writer;
+    decode(input: _m0.Reader | Uint8Array, length?: number): ClanDescProfileRequest;
+    fromJSON(object: any): ClanDescProfileRequest;
+    toJSON(message: ClanDescProfileRequest): unknown;
+    create<I extends {
+        clan_id?: string | undefined;
+    } & {
+        clan_id?: string | undefined;
+    } & { [K in Exclude<keyof I, "clan_id">]: never; }>(base?: I | undefined): ClanDescProfileRequest;
+    fromPartial<I_1 extends {
+        clan_id?: string | undefined;
+    } & {
+        clan_id?: string | undefined;
+    } & { [K_1 in Exclude<keyof I_1, "clan_id">]: never; }>(object: I_1): ClanDescProfileRequest;
 };
 export declare const ClanDesc: {
     encode(message: ClanDesc, writer?: _m0.Writer): _m0.Writer;

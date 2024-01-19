@@ -1961,6 +1961,66 @@ var NakamaApi = class {
       )
     ]);
   }
+  /** Get a clan desc profile */
+  getClanDescProfile(bearerToken, clanId, options = {}) {
+    if (clanId === null || clanId === void 0) {
+      throw new Error("'clanId' is a required parameter but is null or undefined.");
+    }
+    const urlPath = "/v2/clandescprofile/{clanId}".replace("{clanId}", encodeURIComponent(String(clanId)));
+    const queryParams = /* @__PURE__ */ new Map();
+    let bodyJson = "";
+    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
+    const fetchOptions = buildFetchOptions("GET", options, bodyJson);
+    if (bearerToken) {
+      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+    }
+    return Promise.race([
+      fetch(fullUrl, fetchOptions).then((response) => {
+        if (response.status == 204) {
+          return response;
+        } else if (response.status >= 200 && response.status < 300) {
+          return response.json();
+        } else {
+          throw response;
+        }
+      }),
+      new Promise(
+        (_, reject) => setTimeout(reject, this.timeoutMs, "Request timed out.")
+      )
+    ]);
+  }
+  /** Update fields in a given clan profile. */
+  updateClanDescProfile(bearerToken, clanId, body, options = {}) {
+    if (clanId === null || clanId === void 0) {
+      throw new Error("'clanId' is a required parameter but is null or undefined.");
+    }
+    if (body === null || body === void 0) {
+      throw new Error("'body' is a required parameter but is null or undefined.");
+    }
+    const urlPath = "/v2/clandescprofile/{clanId}".replace("{clanId}", encodeURIComponent(String(clanId)));
+    const queryParams = /* @__PURE__ */ new Map();
+    let bodyJson = "";
+    bodyJson = JSON.stringify(body || {});
+    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
+    const fetchOptions = buildFetchOptions("PUT", options, bodyJson);
+    if (bearerToken) {
+      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+    }
+    return Promise.race([
+      fetch(fullUrl, fetchOptions).then((response) => {
+        if (response.status == 204) {
+          return response;
+        } else if (response.status >= 200 && response.status < 300) {
+          return response.json();
+        } else {
+          throw response;
+        }
+      }),
+      new Promise(
+        (_, reject) => setTimeout(reject, this.timeoutMs, "Request timed out.")
+      )
+    ]);
+  }
   /**  */
   createCategoryDesc(bearerToken, body, options = {}) {
     if (body === null || body === void 0) {
@@ -4916,6 +4976,17 @@ var Client = class {
       });
     });
   }
+  /** Get a clan desc profile */
+  getClanDescProfile(session, clanId) {
+    return __async(this, null, function* () {
+      if (this.autoRefreshSession && session.refresh_token && session.isexpired((Date.now() + this.expiredTimespanMs) / 1e3)) {
+        yield this.sessionRefresh(session);
+      }
+      return this.apiClient.getClanDescProfile(session.token, clanId).then((response) => {
+        return Promise.resolve(response);
+      });
+    });
+  }
   /** Add an Apple ID to the social profiles on the current user's account. */
   linkApple(session, request) {
     return __async(this, null, function* () {
@@ -5610,6 +5681,17 @@ var Client = class {
         yield this.sessionRefresh(session);
       }
       return this.apiClient.updateCategory(session.token, request).then((response) => {
+        return response !== void 0;
+      });
+    });
+  }
+  /** Update fields in a given clan profile. */
+  updateClanDescProfile(session, clanId, request) {
+    return __async(this, null, function* () {
+      if (this.autoRefreshSession && session.refresh_token && session.isexpired((Date.now() + this.expiredTimespanMs) / 1e3)) {
+        yield this.sessionRefresh(session);
+      }
+      return this.apiClient.updateClanDescProfile(session.token, clanId, request).then((response) => {
         return response !== void 0;
       });
     });

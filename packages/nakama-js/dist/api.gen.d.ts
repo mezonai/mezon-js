@@ -152,6 +152,15 @@ export interface ApiClanDescList {
     clandesc?: Array<ApiClanDesc>;
 }
 /**  */
+export interface ApiClanDescProfile {
+    avatar_url?: string;
+    clan_id?: string;
+    creator_id?: string;
+    nick_name?: string;
+    profile_banner?: string;
+    profile_theme?: string;
+}
+/**  */
 export interface ApiCreateCategoryDescRequest {
     category_id?: string;
     category_name?: string;
@@ -680,6 +689,10 @@ export declare class NakamaApi {
     deleteClanDesc(bearerToken: string, clanDescId: string, options?: any): Promise<any>;
     /** Update fields in a given clan. */
     updateClanDesc(bearerToken: string, clanId: string, creatorId?: string, clanName?: string, logo?: string, banner?: string, options?: any): Promise<any>;
+    /** Get a clan desc profile */
+    getClanDescProfile(bearerToken: string, clanId: string, options?: any): Promise<ApiClanDescProfile>;
+    /** Update fields in a given clan profile. */
+    updateClanDescProfile(bearerToken: string, clanId: string, body: {}, options?: any): Promise<any>;
     /**  */
     createCategoryDesc(bearerToken: string, body: ApiCreateCategoryDescRequest, options?: any): Promise<ApiCategoryDesc>;
     /**  */
