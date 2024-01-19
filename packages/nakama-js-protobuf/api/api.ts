@@ -545,19 +545,18 @@ export interface ChannelMessage {
   user_id_two: string;
 }
 
-export interface UnreadMessage {
+/** last seen message seen by users */
+export interface LastSeenMessageRequest {
+  /** The unique ID of this channel. */
+  channel_id: string;
   /** The unique ID of this message. */
   message_id: string;
-  /** The unique ID of this message. */
-  user_id: string;
 }
 
 /** A list of channel messages, usually a result of a list operation. */
 export interface ChannelMessageList {
   /** A list of messages. */
   messages: ChannelMessage[];
-  /** A list of unread message with userid */
-  unread_messages: UnreadMessage[];
   /** The cursor to send when retrieving the next page, if any. */
   next_cursor: string;
   /** The cursor to send when retrieving the previous page, if any. */
@@ -1905,6 +1904,8 @@ export interface ClanDesc {
   banner: string;
   /** Clan id */
   clan_id: string;
+  /** Clan status */
+  status: number;
 }
 
 /** Clan information */
@@ -1930,6 +1931,8 @@ export interface UpdateClanDescRequest {
   logo: string;
   /** Clan banner */
   banner: string;
+  /** Clan status */
+  status: number;
 }
 
 /** Delete a clan the user has access to. */
@@ -1966,6 +1969,7 @@ export interface CategoryDesc {
   clan_id: string;
   /** Category name */
   category_name: string;
+  category_id: string;
 }
 
 export interface CreateCategoryDescRequest {
@@ -5027,33 +5031,33 @@ export const ChannelMessage = {
   },
 };
 
-function createBaseUnreadMessage(): UnreadMessage {
-  return { message_id: "", user_id: "" };
+function createBaseLastSeenMessageRequest(): LastSeenMessageRequest {
+  return { channel_id: "", message_id: "" };
 }
 
-export const UnreadMessage = {
-  encode(message: UnreadMessage, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.message_id !== "") {
-      writer.uint32(10).string(message.message_id);
+export const LastSeenMessageRequest = {
+  encode(message: LastSeenMessageRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.channel_id !== "") {
+      writer.uint32(10).string(message.channel_id);
     }
-    if (message.user_id !== "") {
-      writer.uint32(18).string(message.user_id);
+    if (message.message_id !== "") {
+      writer.uint32(18).string(message.message_id);
     }
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): UnreadMessage {
+  decode(input: _m0.Reader | Uint8Array, length?: number): LastSeenMessageRequest {
     const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseUnreadMessage();
+    const message = createBaseLastSeenMessageRequest();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          message.message_id = reader.string();
+          message.channel_id = reader.string();
           break;
         case 2:
-          message.user_id = reader.string();
+          message.message_id = reader.string();
           break;
         default:
           reader.skipType(tag & 7);
@@ -5063,34 +5067,34 @@ export const UnreadMessage = {
     return message;
   },
 
-  fromJSON(object: any): UnreadMessage {
+  fromJSON(object: any): LastSeenMessageRequest {
     return {
+      channel_id: isSet(object.channel_id) ? String(object.channel_id) : "",
       message_id: isSet(object.message_id) ? String(object.message_id) : "",
-      user_id: isSet(object.user_id) ? String(object.user_id) : "",
     };
   },
 
-  toJSON(message: UnreadMessage): unknown {
+  toJSON(message: LastSeenMessageRequest): unknown {
     const obj: any = {};
+    message.channel_id !== undefined && (obj.channel_id = message.channel_id);
     message.message_id !== undefined && (obj.message_id = message.message_id);
-    message.user_id !== undefined && (obj.user_id = message.user_id);
     return obj;
   },
 
-  create<I extends Exact<DeepPartial<UnreadMessage>, I>>(base?: I): UnreadMessage {
-    return UnreadMessage.fromPartial(base ?? {});
+  create<I extends Exact<DeepPartial<LastSeenMessageRequest>, I>>(base?: I): LastSeenMessageRequest {
+    return LastSeenMessageRequest.fromPartial(base ?? {});
   },
 
-  fromPartial<I extends Exact<DeepPartial<UnreadMessage>, I>>(object: I): UnreadMessage {
-    const message = createBaseUnreadMessage();
+  fromPartial<I extends Exact<DeepPartial<LastSeenMessageRequest>, I>>(object: I): LastSeenMessageRequest {
+    const message = createBaseLastSeenMessageRequest();
+    message.channel_id = object.channel_id ?? "";
     message.message_id = object.message_id ?? "";
-    message.user_id = object.user_id ?? "";
     return message;
   },
 };
 
 function createBaseChannelMessageList(): ChannelMessageList {
-  return { messages: [], unread_messages: [], next_cursor: "", prev_cursor: "", cacheable_cursor: "" };
+  return { messages: [], next_cursor: "", prev_cursor: "", cacheable_cursor: "" };
 }
 
 export const ChannelMessageList = {
@@ -5098,17 +5102,14 @@ export const ChannelMessageList = {
     for (const v of message.messages) {
       ChannelMessage.encode(v!, writer.uint32(10).fork()).ldelim();
     }
-    for (const v of message.unread_messages) {
-      UnreadMessage.encode(v!, writer.uint32(18).fork()).ldelim();
-    }
     if (message.next_cursor !== "") {
-      writer.uint32(26).string(message.next_cursor);
+      writer.uint32(18).string(message.next_cursor);
     }
     if (message.prev_cursor !== "") {
-      writer.uint32(34).string(message.prev_cursor);
+      writer.uint32(26).string(message.prev_cursor);
     }
     if (message.cacheable_cursor !== "") {
-      writer.uint32(42).string(message.cacheable_cursor);
+      writer.uint32(34).string(message.cacheable_cursor);
     }
     return writer;
   },
@@ -5124,15 +5125,12 @@ export const ChannelMessageList = {
           message.messages.push(ChannelMessage.decode(reader, reader.uint32()));
           break;
         case 2:
-          message.unread_messages.push(UnreadMessage.decode(reader, reader.uint32()));
-          break;
-        case 3:
           message.next_cursor = reader.string();
           break;
-        case 4:
+        case 3:
           message.prev_cursor = reader.string();
           break;
-        case 5:
+        case 4:
           message.cacheable_cursor = reader.string();
           break;
         default:
@@ -5146,9 +5144,6 @@ export const ChannelMessageList = {
   fromJSON(object: any): ChannelMessageList {
     return {
       messages: Array.isArray(object?.messages) ? object.messages.map((e: any) => ChannelMessage.fromJSON(e)) : [],
-      unread_messages: Array.isArray(object?.unread_messages)
-        ? object.unread_messages.map((e: any) => UnreadMessage.fromJSON(e))
-        : [],
       next_cursor: isSet(object.next_cursor) ? String(object.next_cursor) : "",
       prev_cursor: isSet(object.prev_cursor) ? String(object.prev_cursor) : "",
       cacheable_cursor: isSet(object.cacheable_cursor) ? String(object.cacheable_cursor) : "",
@@ -5161,11 +5156,6 @@ export const ChannelMessageList = {
       obj.messages = message.messages.map((e) => e ? ChannelMessage.toJSON(e) : undefined);
     } else {
       obj.messages = [];
-    }
-    if (message.unread_messages) {
-      obj.unread_messages = message.unread_messages.map((e) => e ? UnreadMessage.toJSON(e) : undefined);
-    } else {
-      obj.unread_messages = [];
     }
     message.next_cursor !== undefined && (obj.next_cursor = message.next_cursor);
     message.prev_cursor !== undefined && (obj.prev_cursor = message.prev_cursor);
@@ -5180,7 +5170,6 @@ export const ChannelMessageList = {
   fromPartial<I extends Exact<DeepPartial<ChannelMessageList>, I>>(object: I): ChannelMessageList {
     const message = createBaseChannelMessageList();
     message.messages = object.messages?.map((e) => ChannelMessage.fromPartial(e)) || [];
-    message.unread_messages = object.unread_messages?.map((e) => UnreadMessage.fromPartial(e)) || [];
     message.next_cursor = object.next_cursor ?? "";
     message.prev_cursor = object.prev_cursor ?? "";
     message.cacheable_cursor = object.cacheable_cursor ?? "";
@@ -12563,7 +12552,7 @@ export const ClanDescProfileRequest = {
 };
 
 function createBaseClanDesc(): ClanDesc {
-  return { creator_id: "", clan_name: "", logo: "", banner: "", clan_id: "" };
+  return { creator_id: "", clan_name: "", logo: "", banner: "", clan_id: "", status: 0 };
 }
 
 export const ClanDesc = {
@@ -12582,6 +12571,9 @@ export const ClanDesc = {
     }
     if (message.clan_id !== "") {
       writer.uint32(42).string(message.clan_id);
+    }
+    if (message.status !== 0) {
+      writer.uint32(48).int32(message.status);
     }
     return writer;
   },
@@ -12608,6 +12600,9 @@ export const ClanDesc = {
         case 5:
           message.clan_id = reader.string();
           break;
+        case 6:
+          message.status = reader.int32();
+          break;
         default:
           reader.skipType(tag & 7);
           break;
@@ -12623,6 +12618,7 @@ export const ClanDesc = {
       logo: isSet(object.logo) ? String(object.logo) : "",
       banner: isSet(object.banner) ? String(object.banner) : "",
       clan_id: isSet(object.clan_id) ? String(object.clan_id) : "",
+      status: isSet(object.status) ? Number(object.status) : 0,
     };
   },
 
@@ -12633,6 +12629,7 @@ export const ClanDesc = {
     message.logo !== undefined && (obj.logo = message.logo);
     message.banner !== undefined && (obj.banner = message.banner);
     message.clan_id !== undefined && (obj.clan_id = message.clan_id);
+    message.status !== undefined && (obj.status = Math.round(message.status));
     return obj;
   },
 
@@ -12647,6 +12644,7 @@ export const ClanDesc = {
     message.logo = object.logo ?? "";
     message.banner = object.banner ?? "";
     message.clan_id = object.clan_id ?? "";
+    message.status = object.status ?? 0;
     return message;
   },
 };
@@ -12732,7 +12730,7 @@ export const CreateClanDescRequest = {
 };
 
 function createBaseUpdateClanDescRequest(): UpdateClanDescRequest {
-  return { clan_id: "", creator_id: "", clan_name: "", logo: "", banner: "" };
+  return { clan_id: "", creator_id: "", clan_name: "", logo: "", banner: "", status: 0 };
 }
 
 export const UpdateClanDescRequest = {
@@ -12751,6 +12749,9 @@ export const UpdateClanDescRequest = {
     }
     if (message.banner !== "") {
       writer.uint32(42).string(message.banner);
+    }
+    if (message.status !== 0) {
+      writer.uint32(48).int32(message.status);
     }
     return writer;
   },
@@ -12777,6 +12778,9 @@ export const UpdateClanDescRequest = {
         case 5:
           message.banner = reader.string();
           break;
+        case 6:
+          message.status = reader.int32();
+          break;
         default:
           reader.skipType(tag & 7);
           break;
@@ -12792,6 +12796,7 @@ export const UpdateClanDescRequest = {
       clan_name: isSet(object.clan_name) ? String(object.clan_name) : "",
       logo: isSet(object.logo) ? String(object.logo) : "",
       banner: isSet(object.banner) ? String(object.banner) : "",
+      status: isSet(object.status) ? Number(object.status) : 0,
     };
   },
 
@@ -12802,6 +12807,7 @@ export const UpdateClanDescRequest = {
     message.clan_name !== undefined && (obj.clan_name = message.clan_name);
     message.logo !== undefined && (obj.logo = message.logo);
     message.banner !== undefined && (obj.banner = message.banner);
+    message.status !== undefined && (obj.status = Math.round(message.status));
     return obj;
   },
 
@@ -12816,6 +12822,7 @@ export const UpdateClanDescRequest = {
     message.clan_name = object.clan_name ?? "";
     message.logo = object.logo ?? "";
     message.banner = object.banner ?? "";
+    message.status = object.status ?? 0;
     return message;
   },
 };
@@ -12998,7 +13005,7 @@ export const ClanDescList = {
 };
 
 function createBaseCategoryDesc(): CategoryDesc {
-  return { creator_id: "", clan_id: "", category_name: "" };
+  return { creator_id: "", clan_id: "", category_name: "", category_id: "" };
 }
 
 export const CategoryDesc = {
@@ -13011,6 +13018,9 @@ export const CategoryDesc = {
     }
     if (message.category_name !== "") {
       writer.uint32(26).string(message.category_name);
+    }
+    if (message.category_id !== "") {
+      writer.uint32(34).string(message.category_id);
     }
     return writer;
   },
@@ -13031,6 +13041,9 @@ export const CategoryDesc = {
         case 3:
           message.category_name = reader.string();
           break;
+        case 4:
+          message.category_id = reader.string();
+          break;
         default:
           reader.skipType(tag & 7);
           break;
@@ -13044,6 +13057,7 @@ export const CategoryDesc = {
       creator_id: isSet(object.creator_id) ? String(object.creator_id) : "",
       clan_id: isSet(object.clan_id) ? String(object.clan_id) : "",
       category_name: isSet(object.category_name) ? String(object.category_name) : "",
+      category_id: isSet(object.category_id) ? String(object.category_id) : "",
     };
   },
 
@@ -13052,6 +13066,7 @@ export const CategoryDesc = {
     message.creator_id !== undefined && (obj.creator_id = message.creator_id);
     message.clan_id !== undefined && (obj.clan_id = message.clan_id);
     message.category_name !== undefined && (obj.category_name = message.category_name);
+    message.category_id !== undefined && (obj.category_id = message.category_id);
     return obj;
   },
 
@@ -13064,6 +13079,7 @@ export const CategoryDesc = {
     message.creator_id = object.creator_id ?? "";
     message.clan_id = object.clan_id ?? "";
     message.category_name = object.category_name ?? "";
+    message.category_id = object.category_id ?? "";
     return message;
   },
 };

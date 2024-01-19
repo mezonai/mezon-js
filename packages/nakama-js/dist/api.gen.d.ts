@@ -87,6 +87,7 @@ export interface ApiAccountSteam {
 }
 /**  */
 export interface ApiCategoryDesc {
+    category_id?: string;
     category_name?: string;
     clan_id?: string;
     creator_id?: string;
@@ -146,6 +147,7 @@ export interface ApiClanDesc {
     clan_name?: string;
     creator_id?: string;
     logo?: string;
+    status?: number;
 }
 /**  */
 export interface ApiClanDescList {
@@ -664,7 +666,7 @@ export declare class NakamaApi {
     /** Remove Steam from the social profiles on the current user's account. */
     unlinkSteam(bearerToken: string, body: ApiAccountSteam, options?: any): Promise<any>;
     /**  */
-    listCategoryDescs(bearerToken: string, clanId: string, creatorId?: string, categoryName?: string, options?: any): Promise<ApiCategoryDescList>;
+    listCategoryDescs(bearerToken: string, clanId: string, creatorId?: string, categoryName?: string, categoryId?: string, options?: any): Promise<ApiCategoryDescList>;
     /** List a channel's message history. */
     listChannelMessages(bearerToken: string, channelId: string, limit?: number, forward?: boolean, cursor?: string, options?: any): Promise<ApiChannelMessageList>;
     /** List user channels */
@@ -681,6 +683,8 @@ export declare class NakamaApi {
     kickChannelUsers(bearerToken: string, channelId: string, userIds?: Array<string>, options?: any): Promise<any>;
     /** Leave a channel the user is a member of. */
     leaveChannel(bearerToken: string, channelId: string, options?: any): Promise<any>;
+    /**  */
+    channelMessageTyping(bearerToken: string, body: ApiChannelMessage, options?: any): Promise<any>;
     /** List clans */
     listClanDescs(bearerToken: string, limit?: number, state?: number, cursor?: string, options?: any): Promise<ApiClanDescList>;
     /** Create a clan */

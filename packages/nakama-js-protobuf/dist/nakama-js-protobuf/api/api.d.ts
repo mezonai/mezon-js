@@ -366,18 +366,17 @@ export interface ChannelMessage {
     /** The ID of the second DM user, or an empty string if this message was not sent through a DM chat. */
     user_id_two: string;
 }
-export interface UnreadMessage {
+/** last seen message seen by users */
+export interface LastSeenMessageRequest {
+    /** The unique ID of this channel. */
+    channel_id: string;
     /** The unique ID of this message. */
     message_id: string;
-    /** The unique ID of this message. */
-    user_id: string;
 }
 /** A list of channel messages, usually a result of a list operation. */
 export interface ChannelMessageList {
     /** A list of messages. */
     messages: ChannelMessage[];
-    /** A list of unread message with userid */
-    unread_messages: UnreadMessage[];
     /** The cursor to send when retrieving the next page, if any. */
     next_cursor: string;
     /** The cursor to send when retrieving the previous page, if any. */
@@ -1382,6 +1381,8 @@ export interface ClanDesc {
     banner: string;
     /** Clan id */
     clan_id: string;
+    /** Clan status */
+    status: number;
 }
 /** Clan information */
 export interface CreateClanDescRequest {
@@ -1405,6 +1406,8 @@ export interface UpdateClanDescRequest {
     logo: string;
     /** Clan banner */
     banner: string;
+    /** Clan status */
+    status: number;
 }
 /** Delete a clan the user has access to. */
 export interface DeleteClanDescRequest {
@@ -1433,6 +1436,7 @@ export interface CategoryDesc {
     clan_id: string;
     /** Category name */
     category_name: string;
+    category_id: string;
 }
 export interface CreateCategoryDescRequest {
     category_name: string;
@@ -3090,25 +3094,25 @@ export declare const ChannelMessage: {
         user_id_two?: string | undefined;
     } & { [K_1 in Exclude<keyof I_1, keyof ChannelMessage>]: never; }>(object: I_1): ChannelMessage;
 };
-export declare const UnreadMessage: {
-    encode(message: UnreadMessage, writer?: _m0.Writer): _m0.Writer;
-    decode(input: _m0.Reader | Uint8Array, length?: number): UnreadMessage;
-    fromJSON(object: any): UnreadMessage;
-    toJSON(message: UnreadMessage): unknown;
+export declare const LastSeenMessageRequest: {
+    encode(message: LastSeenMessageRequest, writer?: _m0.Writer): _m0.Writer;
+    decode(input: _m0.Reader | Uint8Array, length?: number): LastSeenMessageRequest;
+    fromJSON(object: any): LastSeenMessageRequest;
+    toJSON(message: LastSeenMessageRequest): unknown;
     create<I extends {
+        channel_id?: string | undefined;
         message_id?: string | undefined;
-        user_id?: string | undefined;
     } & {
+        channel_id?: string | undefined;
         message_id?: string | undefined;
-        user_id?: string | undefined;
-    } & { [K in Exclude<keyof I, keyof UnreadMessage>]: never; }>(base?: I | undefined): UnreadMessage;
+    } & { [K in Exclude<keyof I, keyof LastSeenMessageRequest>]: never; }>(base?: I | undefined): LastSeenMessageRequest;
     fromPartial<I_1 extends {
+        channel_id?: string | undefined;
         message_id?: string | undefined;
-        user_id?: string | undefined;
     } & {
+        channel_id?: string | undefined;
         message_id?: string | undefined;
-        user_id?: string | undefined;
-    } & { [K_1 in Exclude<keyof I_1, keyof UnreadMessage>]: never; }>(object: I_1): UnreadMessage;
+    } & { [K_1 in Exclude<keyof I_1, keyof LastSeenMessageRequest>]: never; }>(object: I_1): LastSeenMessageRequest;
 };
 export declare const ChannelMessageList: {
     encode(message: ChannelMessageList, writer?: _m0.Writer): _m0.Writer;
@@ -3131,10 +3135,6 @@ export declare const ChannelMessageList: {
             group_id?: string | undefined;
             user_id_one?: string | undefined;
             user_id_two?: string | undefined;
-        }[] | undefined;
-        unread_messages?: {
-            message_id?: string | undefined;
-            user_id?: string | undefined;
         }[] | undefined;
         next_cursor?: string | undefined;
         prev_cursor?: string | undefined;
@@ -3201,23 +3201,10 @@ export declare const ChannelMessageList: {
             user_id_one?: string | undefined;
             user_id_two?: string | undefined;
         }[]>]: never; }) | undefined;
-        unread_messages?: ({
-            message_id?: string | undefined;
-            user_id?: string | undefined;
-        }[] & ({
-            message_id?: string | undefined;
-            user_id?: string | undefined;
-        } & {
-            message_id?: string | undefined;
-            user_id?: string | undefined;
-        } & { [K_2 in Exclude<keyof I["unread_messages"][number], keyof UnreadMessage>]: never; })[] & { [K_3 in Exclude<keyof I["unread_messages"], keyof {
-            message_id?: string | undefined;
-            user_id?: string | undefined;
-        }[]>]: never; }) | undefined;
         next_cursor?: string | undefined;
         prev_cursor?: string | undefined;
         cacheable_cursor?: string | undefined;
-    } & { [K_4 in Exclude<keyof I, keyof ChannelMessageList>]: never; }>(base?: I | undefined): ChannelMessageList;
+    } & { [K_2 in Exclude<keyof I, keyof ChannelMessageList>]: never; }>(base?: I | undefined): ChannelMessageList;
     fromPartial<I_1 extends {
         messages?: {
             clan_id?: string | undefined;
@@ -3234,10 +3221,6 @@ export declare const ChannelMessageList: {
             group_id?: string | undefined;
             user_id_one?: string | undefined;
             user_id_two?: string | undefined;
-        }[] | undefined;
-        unread_messages?: {
-            message_id?: string | undefined;
-            user_id?: string | undefined;
         }[] | undefined;
         next_cursor?: string | undefined;
         prev_cursor?: string | undefined;
@@ -3288,7 +3271,7 @@ export declare const ChannelMessageList: {
             group_id?: string | undefined;
             user_id_one?: string | undefined;
             user_id_two?: string | undefined;
-        } & { [K_5 in Exclude<keyof I_1["messages"][number], keyof ChannelMessage>]: never; })[] & { [K_6 in Exclude<keyof I_1["messages"], keyof {
+        } & { [K_3 in Exclude<keyof I_1["messages"][number], keyof ChannelMessage>]: never; })[] & { [K_4 in Exclude<keyof I_1["messages"], keyof {
             clan_id?: string | undefined;
             channel_id?: string | undefined;
             message_id?: string | undefined;
@@ -3304,23 +3287,10 @@ export declare const ChannelMessageList: {
             user_id_one?: string | undefined;
             user_id_two?: string | undefined;
         }[]>]: never; }) | undefined;
-        unread_messages?: ({
-            message_id?: string | undefined;
-            user_id?: string | undefined;
-        }[] & ({
-            message_id?: string | undefined;
-            user_id?: string | undefined;
-        } & {
-            message_id?: string | undefined;
-            user_id?: string | undefined;
-        } & { [K_7 in Exclude<keyof I_1["unread_messages"][number], keyof UnreadMessage>]: never; })[] & { [K_8 in Exclude<keyof I_1["unread_messages"], keyof {
-            message_id?: string | undefined;
-            user_id?: string | undefined;
-        }[]>]: never; }) | undefined;
         next_cursor?: string | undefined;
         prev_cursor?: string | undefined;
         cacheable_cursor?: string | undefined;
-    } & { [K_9 in Exclude<keyof I_1, keyof ChannelMessageList>]: never; }>(object: I_1): ChannelMessageList;
+    } & { [K_5 in Exclude<keyof I_1, keyof ChannelMessageList>]: never; }>(object: I_1): ChannelMessageList;
 };
 export declare const CreateGroupRequest: {
     encode(message: CreateGroupRequest, writer?: _m0.Writer): _m0.Writer;
@@ -9169,12 +9139,14 @@ export declare const ClanDesc: {
         logo?: string | undefined;
         banner?: string | undefined;
         clan_id?: string | undefined;
+        status?: number | undefined;
     } & {
         creator_id?: string | undefined;
         clan_name?: string | undefined;
         logo?: string | undefined;
         banner?: string | undefined;
         clan_id?: string | undefined;
+        status?: number | undefined;
     } & { [K in Exclude<keyof I, keyof ClanDesc>]: never; }>(base?: I | undefined): ClanDesc;
     fromPartial<I_1 extends {
         creator_id?: string | undefined;
@@ -9182,12 +9154,14 @@ export declare const ClanDesc: {
         logo?: string | undefined;
         banner?: string | undefined;
         clan_id?: string | undefined;
+        status?: number | undefined;
     } & {
         creator_id?: string | undefined;
         clan_name?: string | undefined;
         logo?: string | undefined;
         banner?: string | undefined;
         clan_id?: string | undefined;
+        status?: number | undefined;
     } & { [K_1 in Exclude<keyof I_1, keyof ClanDesc>]: never; }>(object: I_1): ClanDesc;
 };
 export declare const CreateClanDescRequest: {
@@ -9229,12 +9203,14 @@ export declare const UpdateClanDescRequest: {
         clan_name?: string | undefined;
         logo?: string | undefined;
         banner?: string | undefined;
+        status?: number | undefined;
     } & {
         clan_id?: string | undefined;
         creator_id?: string | undefined;
         clan_name?: string | undefined;
         logo?: string | undefined;
         banner?: string | undefined;
+        status?: number | undefined;
     } & { [K in Exclude<keyof I, keyof UpdateClanDescRequest>]: never; }>(base?: I | undefined): UpdateClanDescRequest;
     fromPartial<I_1 extends {
         clan_id?: string | undefined;
@@ -9242,12 +9218,14 @@ export declare const UpdateClanDescRequest: {
         clan_name?: string | undefined;
         logo?: string | undefined;
         banner?: string | undefined;
+        status?: number | undefined;
     } & {
         clan_id?: string | undefined;
         creator_id?: string | undefined;
         clan_name?: string | undefined;
         logo?: string | undefined;
         banner?: string | undefined;
+        status?: number | undefined;
     } & { [K_1 in Exclude<keyof I_1, keyof UpdateClanDescRequest>]: never; }>(object: I_1): UpdateClanDescRequest;
 };
 export declare const DeleteClanDescRequest: {
@@ -9302,6 +9280,7 @@ export declare const ClanDescList: {
             logo?: string | undefined;
             banner?: string | undefined;
             clan_id?: string | undefined;
+            status?: number | undefined;
         }[] | undefined;
     } & {
         clandesc?: ({
@@ -9310,24 +9289,28 @@ export declare const ClanDescList: {
             logo?: string | undefined;
             banner?: string | undefined;
             clan_id?: string | undefined;
+            status?: number | undefined;
         }[] & ({
             creator_id?: string | undefined;
             clan_name?: string | undefined;
             logo?: string | undefined;
             banner?: string | undefined;
             clan_id?: string | undefined;
+            status?: number | undefined;
         } & {
             creator_id?: string | undefined;
             clan_name?: string | undefined;
             logo?: string | undefined;
             banner?: string | undefined;
             clan_id?: string | undefined;
+            status?: number | undefined;
         } & { [K in Exclude<keyof I["clandesc"][number], keyof ClanDesc>]: never; })[] & { [K_1 in Exclude<keyof I["clandesc"], keyof {
             creator_id?: string | undefined;
             clan_name?: string | undefined;
             logo?: string | undefined;
             banner?: string | undefined;
             clan_id?: string | undefined;
+            status?: number | undefined;
         }[]>]: never; }) | undefined;
     } & { [K_2 in Exclude<keyof I, "clandesc">]: never; }>(base?: I | undefined): ClanDescList;
     fromPartial<I_1 extends {
@@ -9337,6 +9320,7 @@ export declare const ClanDescList: {
             logo?: string | undefined;
             banner?: string | undefined;
             clan_id?: string | undefined;
+            status?: number | undefined;
         }[] | undefined;
     } & {
         clandesc?: ({
@@ -9345,24 +9329,28 @@ export declare const ClanDescList: {
             logo?: string | undefined;
             banner?: string | undefined;
             clan_id?: string | undefined;
+            status?: number | undefined;
         }[] & ({
             creator_id?: string | undefined;
             clan_name?: string | undefined;
             logo?: string | undefined;
             banner?: string | undefined;
             clan_id?: string | undefined;
+            status?: number | undefined;
         } & {
             creator_id?: string | undefined;
             clan_name?: string | undefined;
             logo?: string | undefined;
             banner?: string | undefined;
             clan_id?: string | undefined;
+            status?: number | undefined;
         } & { [K_3 in Exclude<keyof I_1["clandesc"][number], keyof ClanDesc>]: never; })[] & { [K_4 in Exclude<keyof I_1["clandesc"], keyof {
             creator_id?: string | undefined;
             clan_name?: string | undefined;
             logo?: string | undefined;
             banner?: string | undefined;
             clan_id?: string | undefined;
+            status?: number | undefined;
         }[]>]: never; }) | undefined;
     } & { [K_5 in Exclude<keyof I_1, "clandesc">]: never; }>(object: I_1): ClanDescList;
 };
@@ -9375,19 +9363,23 @@ export declare const CategoryDesc: {
         creator_id?: string | undefined;
         clan_id?: string | undefined;
         category_name?: string | undefined;
+        category_id?: string | undefined;
     } & {
         creator_id?: string | undefined;
         clan_id?: string | undefined;
         category_name?: string | undefined;
+        category_id?: string | undefined;
     } & { [K in Exclude<keyof I, keyof CategoryDesc>]: never; }>(base?: I | undefined): CategoryDesc;
     fromPartial<I_1 extends {
         creator_id?: string | undefined;
         clan_id?: string | undefined;
         category_name?: string | undefined;
+        category_id?: string | undefined;
     } & {
         creator_id?: string | undefined;
         clan_id?: string | undefined;
         category_name?: string | undefined;
+        category_id?: string | undefined;
     } & { [K_1 in Exclude<keyof I_1, keyof CategoryDesc>]: never; }>(object: I_1): CategoryDesc;
 };
 export declare const CreateCategoryDescRequest: {
@@ -9444,24 +9436,29 @@ export declare const CategoryDescList: {
             creator_id?: string | undefined;
             clan_id?: string | undefined;
             category_name?: string | undefined;
+            category_id?: string | undefined;
         }[] | undefined;
     } & {
         categorydesc?: ({
             creator_id?: string | undefined;
             clan_id?: string | undefined;
             category_name?: string | undefined;
+            category_id?: string | undefined;
         }[] & ({
             creator_id?: string | undefined;
             clan_id?: string | undefined;
             category_name?: string | undefined;
+            category_id?: string | undefined;
         } & {
             creator_id?: string | undefined;
             clan_id?: string | undefined;
             category_name?: string | undefined;
+            category_id?: string | undefined;
         } & { [K in Exclude<keyof I["categorydesc"][number], keyof CategoryDesc>]: never; })[] & { [K_1 in Exclude<keyof I["categorydesc"], keyof {
             creator_id?: string | undefined;
             clan_id?: string | undefined;
             category_name?: string | undefined;
+            category_id?: string | undefined;
         }[]>]: never; }) | undefined;
     } & { [K_2 in Exclude<keyof I, "categorydesc">]: never; }>(base?: I | undefined): CategoryDescList;
     fromPartial<I_1 extends {
@@ -9469,24 +9466,29 @@ export declare const CategoryDescList: {
             creator_id?: string | undefined;
             clan_id?: string | undefined;
             category_name?: string | undefined;
+            category_id?: string | undefined;
         }[] | undefined;
     } & {
         categorydesc?: ({
             creator_id?: string | undefined;
             clan_id?: string | undefined;
             category_name?: string | undefined;
+            category_id?: string | undefined;
         }[] & ({
             creator_id?: string | undefined;
             clan_id?: string | undefined;
             category_name?: string | undefined;
+            category_id?: string | undefined;
         } & {
             creator_id?: string | undefined;
             clan_id?: string | undefined;
             category_name?: string | undefined;
+            category_id?: string | undefined;
         } & { [K_3 in Exclude<keyof I_1["categorydesc"][number], keyof CategoryDesc>]: never; })[] & { [K_4 in Exclude<keyof I_1["categorydesc"], keyof {
             creator_id?: string | undefined;
             clan_id?: string | undefined;
             category_name?: string | undefined;
+            category_id?: string | undefined;
         }[]>]: never; }) | undefined;
     } & { [K_5 in Exclude<keyof I_1, "categorydesc">]: never; }>(object: I_1): CategoryDescList;
 };
