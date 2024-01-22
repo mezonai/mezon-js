@@ -8,17 +8,17 @@ cd packages/nakama-js-protobuf
 ```
 npx protoc \
 --plugin="./node_modules/.bin/protoc-gen-ts_proto" \
---proto_path=$GOPATH/src/github.com/heroiclabs/nakama-common \
+--proto_path=$GOPATH/src/github.com/nccasia/mezon-server/common \
 --ts_proto_out=. \
 --ts_proto_opt=snakeToCamel=false \
 --ts_proto_opt=esModuleInterop=true \
-$GOPATH/src/github.com/heroiclabs/nakama-common/rtapi/realtime.proto \
-$GOPATH/src/github.com/heroiclabs/nakama-common/api/api.proto
+$GOPATH/src/github.com/nccasia/mezon-server/common/rtapi/realtime.proto \
+$GOPATH/src/github.com/nccasia/mezon-server/common/api/api.proto
 ```
 
 
 * genarate js
 
 ```
-go run main.go "$GOPATH/src/github.com/heroiclabs/mezon-server/apigrpc/apigrpc.swagger.json" "Nakama" > ../packages/nakama-js/api.gen.ts
+go run main.go "$GOPATH/src/github.com/nccasia/mezon-server/apigrpc/apigrpc.swagger.json" "Nakama" > ../packages/nakama-js/api.gen.ts
 ```

@@ -1,4 +1,9 @@
 /** A single user-role pair. */
+export interface ChannelUserListChannelUser {
+    role_id?: string;
+    user?: ApiUser;
+}
+/** A single user-role pair. */
 export interface GroupUserListGroupUser {
     state?: number;
     user?: ApiUser;
@@ -140,6 +145,11 @@ export interface ApiChannelMessageList {
     prev_cursor?: string;
     unread_messages?: Array<ApiUnreadMessage>;
 }
+/** A list of users belonging to a channel, along with their role. */
+export interface ApiChannelUserList {
+    channel_users?: Array<ChannelUserListChannelUser>;
+    cursor?: string;
+}
 /**  */
 export interface ApiClanDesc {
     banner?: string;
@@ -176,9 +186,10 @@ export interface ApiCreateChannelDescRequest {
     channel_lable?: string;
     channel_private?: number;
     clan_id?: string;
-    creator_id?: string;
+    group_id?: string;
     parrent_id?: string;
     type?: number;
+    user_ids?: Array<string>;
 }
 /**  */
 export interface ApiCreateClanDescRequest {
@@ -683,6 +694,8 @@ export declare class NakamaApi {
     kickChannelUsers(bearerToken: string, channelId: string, userIds?: Array<string>, options?: any): Promise<any>;
     /** Leave a channel the user is a member of. */
     leaveChannel(bearerToken: string, channelId: string, options?: any): Promise<any>;
+    /** List all users that are part of a channel. */
+    listChannelUsers(bearerToken: string, channelId: string, limit?: number, state?: number, cursor?: string, options?: any): Promise<ApiChannelUserList>;
     /**  */
     channelMessageTyping(bearerToken: string, body: ApiChannelMessage, options?: any): Promise<any>;
     /** List clans */

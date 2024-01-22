@@ -5,6 +5,14 @@ import { buildFetchOptions } from './utils';
 import { encode } from 'js-base64';
 
 /** A single user-role pair. */
+export interface ChannelUserListChannelUser {
+  //Their relationship to the role.
+  role_id?: string;
+  //User.
+  user?: ApiUser;
+}
+
+/** A single user-role pair. */
 export interface GroupUserListGroupUser {
   //Their relationship to the group.
   state?: number;
@@ -242,8 +250,15 @@ export interface ApiChannelMessageList {
   next_cursor?: string;
   //The cursor to send when retrieving the previous page, if any.
   prev_cursor?: string;
-  //
   unread_messages?: Array<ApiUnreadMessage>;
+}
+
+/** A list of users belonging to a channel, along with their role. */
+export interface ApiChannelUserList {
+  //User-role pairs for a channel.
+  channel_users?: Array<ChannelUserListChannelUser>;
+  //Cursor for the next page of results, if any.
+  cursor?: string;
 }
 
 /**  */
@@ -308,12 +323,14 @@ export interface ApiCreateChannelDescRequest {
   channel_private?: number;
   //
   clan_id?: string;
-  //creator ID.
-  creator_id?: string;
+  //Group ID.
+  group_id?: string;
   //The parrent channel this message belongs to.
   parrent_id?: string;
   //The channel type.
   type?: number;
+  //The users to add.
+  user_ids?: Array<string>;
 }
 
 /**  */
@@ -2552,6 +2569,48 @@ export class NakamaApi {
 
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("POST", options, bodyJson);
+    if (bearerToken) {
+        fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+    }
+
+    return Promise.race([
+      fetch(fullUrl, fetchOptions).then((response) => {
+        if (response.status == 204) {
+          return response;
+        } else if (response.status >= 200 && response.status < 300) {
+          return response.json();
+        } else {
+          throw response;
+        }
+      }),
+      new Promise((_, reject) =>
+        setTimeout(reject, this.timeoutMs, "Request timed out.")
+      ),
+    ]);
+}
+
+  /** List all users that are part of a channel. */
+  listChannelUsers(bearerToken: string,
+      channelId:string,
+      limit?:number,
+      state?:number,
+      cursor?:string,
+      options: any = {}): Promise<ApiChannelUserList> {
+    
+    if (channelId === null || channelId === undefined) {
+      throw new Error("'channelId' is a required parameter but is null or undefined.");
+    }
+    const urlPath = "/v2/channeldesc/{channelId}/user"
+        .replace("{channelId}", encodeURIComponent(String(channelId)));
+    const queryParams = new Map<string, any>();
+    queryParams.set("limit", limit);
+    queryParams.set("state", state);
+    queryParams.set("cursor", cursor);
+
+    let bodyJson : string = "";
+
+    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
+    const fetchOptions = buildFetchOptions("GET", options, bodyJson);
     if (bearerToken) {
         fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
     }
