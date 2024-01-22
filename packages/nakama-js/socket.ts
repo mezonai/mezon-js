@@ -51,9 +51,11 @@ export interface Channel {
 /** Join a realtime chat channel. */
 interface ChannelJoin {
   channel_join: {
+    /** The id of the channel to join. */
+    target_id: string;
     /** The name of the channel to join. */
     target: string;
-    /** The channel type: 1 = Room, 2 = Direct Message, 3 = Group. */
+    /** The channel type: 1 = Channel, 2 = Direct Message, 3 = Group. */
     type: number;
     /** Whether channel messages are persisted in the database. */
     persistence: boolean;
@@ -583,7 +585,7 @@ export interface Socket {
   followUsers(user_ids: string[]) : Promise<Status>;
 
   /** Join a chat channel on the server. */
-  joinChat(target: string, type: number, persistence: boolean, hidden: boolean) : Promise<Channel>;
+  joinChat(target_id: string, target: string, type: number, persistence: boolean, hidden: boolean) : Promise<Channel>;
 
   /** Join a party. */
   joinParty(party_id: string) : Promise<void>;
@@ -1104,10 +1106,11 @@ export class DefaultSocket implements Socket {
     return response.status;
   }
 
-  async joinChat(target: string, type: number, persistence: boolean, hidden: boolean): Promise<Channel> {
+  async joinChat(target_id: string, target: string, type: number, persistence: boolean, hidden: boolean): Promise<Channel> {
 
     const response = await this.send({
         channel_join: {
+            target_id: target_id,
             target: target,
             type: type,
             persistence: persistence,
