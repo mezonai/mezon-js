@@ -140,7 +140,7 @@ socket.onchannelmessage = (message) => {
 };
 
 
-// 1 = room, 2 = Direct Message, 3 = Group
+// 1 = channel, 2 = Direct Message, 3 = Group
 const type : number = 1;
 const roomname = "mychannel";
 const persistence : boolean = false;

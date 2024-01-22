@@ -4148,11 +4148,12 @@ var _DefaultSocket = class _DefaultSocket {
       return response.status;
     });
   }
-  joinChat(target, type, persistence, hidden) {
+  joinChat(target_id, target, type, persistence, hidden) {
     return __async(this, null, function* () {
       const response = yield this.send(
         {
           channel_join: {
+            target_id,
             target,
             type,
             persistence,
