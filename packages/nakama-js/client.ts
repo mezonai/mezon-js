@@ -64,6 +64,7 @@ import {
   ApiLinkSteamRequest,
   ApiValidatePurchaseResponse,
   ApiClanDescProfile,
+  ApiChannelUserList,
 } from "./api.gen";
 
 import { Session } from "./session";
@@ -1095,6 +1096,50 @@ export class Client {
           room_name: m.room_name,
           user_id_one: m.user_id_one,
           user_id_two: m.user_id_two
+        })
+      });
+      return Promise.resolve(result);
+    });
+  }
+
+  /** List a channel's users. */
+  async listChannelUsers(session: Session, channelId: string, state?: number, limit?: number, cursor?: string): Promise<ApiChannelUserList> {
+    if (this.autoRefreshSession && session.refresh_token &&
+        session.isexpired((Date.now() + this.expiredTimespanMs)/1000)) {
+        await this.sessionRefresh(session);
+    }
+
+    return this.apiClient.listChannelUsers(session.token, channelId, limit, state, cursor).then((response: ApiChannelUserList) => {
+      var result: ApiChannelUserList = {
+        channel_users: [],
+        cursor: response.cursor
+      };
+
+      if (response.channel_users == null) {
+        return Promise.resolve(result);
+      }
+
+      response.channel_users!.forEach(gu => {
+        result.channel_users!.push({
+          user: {
+            avatar_url: gu.user!.avatar_url,
+            create_time: gu.user!.create_time,
+            display_name: gu.user!.display_name,
+            edge_count: gu.user!.edge_count ? Number(gu.user!.edge_count): 0,
+            facebook_id: gu.user!.facebook_id,
+            gamecenter_id: gu.user!.gamecenter_id,
+            google_id: gu.user!.google_id,
+            id: gu.user!.id,
+            lang_tag: gu.user!.lang_tag,
+            location: gu.user!.location,
+            online: gu.user!.online,
+            steam_id: gu.user!.steam_id,
+            timezone: gu.user!.timezone,
+            update_time: gu.user!.update_time,
+            username: gu.user!.username,
+            metadata: gu.user!.metadata ? JSON.parse(gu.user!.metadata!) : undefined
+          },
+          role_id: gu!.role_id 
         })
       });
       return Promise.resolve(result);

@@ -844,6 +844,24 @@ export function groupUserList_GroupUser_StateToJSON(object: GroupUserList_GroupU
   }
 }
 
+/** A list of users belonging to a channel, along with their role. */
+export interface ChannelUserList {
+  /** User-role pairs for a channel. */
+  channel_users: ChannelUserList_ChannelUser[];
+  /** Cursor for the next page of results, if any. */
+  cursor: string;
+}
+
+/** A single user-role pair. */
+export interface ChannelUserList_ChannelUser {
+  /** User. */
+  user:
+    | User
+    | undefined;
+  /** Their relationship to the role. */
+  role_id: string | undefined;
+}
+
 /** Import Facebook friends into the current user's account. */
 export interface ImportFacebookFriendsRequest {
   /** The Facebook account details. */
@@ -1044,6 +1062,22 @@ export interface ListGroupsRequest {
 export interface ListGroupUsersRequest {
   /** The group ID to list from. */
   group_id: string;
+  /** Max number of records to return. Between 1 and 100. */
+  limit:
+    | number
+    | undefined;
+  /** The group user state to list. */
+  state:
+    | number
+    | undefined;
+  /** An optional next page cursor. */
+  cursor: string;
+}
+
+/** List all users that are part of a channel. */
+export interface ListChannelUsersRequest {
+  /** The channel ID to list from. */
+  channel_id: string;
   /** Max number of records to return. Between 1 and 100. */
   limit:
     | number
@@ -2069,12 +2103,14 @@ export interface CreateChannelDescRequest {
   type:
     | number
     | undefined;
-  /** creator ID. */
-  creator_id: string;
+  /** Group ID. */
+  group_id: string;
   /** The channel lable */
   channel_lable: string;
   /** The channel private */
   channel_private: number;
+  /** The users to add. */
+  user_ids: string[];
 }
 
 /** Delete a channel the user has access to. */
@@ -6479,6 +6515,136 @@ export const GroupUserList_GroupUser = {
   },
 };
 
+function createBaseChannelUserList(): ChannelUserList {
+  return { channel_users: [], cursor: "" };
+}
+
+export const ChannelUserList = {
+  encode(message: ChannelUserList, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    for (const v of message.channel_users) {
+      ChannelUserList_ChannelUser.encode(v!, writer.uint32(10).fork()).ldelim();
+    }
+    if (message.cursor !== "") {
+      writer.uint32(18).string(message.cursor);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): ChannelUserList {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseChannelUserList();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.channel_users.push(ChannelUserList_ChannelUser.decode(reader, reader.uint32()));
+          break;
+        case 2:
+          message.cursor = reader.string();
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): ChannelUserList {
+    return {
+      channel_users: Array.isArray(object?.channel_users)
+        ? object.channel_users.map((e: any) => ChannelUserList_ChannelUser.fromJSON(e))
+        : [],
+      cursor: isSet(object.cursor) ? String(object.cursor) : "",
+    };
+  },
+
+  toJSON(message: ChannelUserList): unknown {
+    const obj: any = {};
+    if (message.channel_users) {
+      obj.channel_users = message.channel_users.map((e) => e ? ChannelUserList_ChannelUser.toJSON(e) : undefined);
+    } else {
+      obj.channel_users = [];
+    }
+    message.cursor !== undefined && (obj.cursor = message.cursor);
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<ChannelUserList>, I>>(base?: I): ChannelUserList {
+    return ChannelUserList.fromPartial(base ?? {});
+  },
+
+  fromPartial<I extends Exact<DeepPartial<ChannelUserList>, I>>(object: I): ChannelUserList {
+    const message = createBaseChannelUserList();
+    message.channel_users = object.channel_users?.map((e) => ChannelUserList_ChannelUser.fromPartial(e)) || [];
+    message.cursor = object.cursor ?? "";
+    return message;
+  },
+};
+
+function createBaseChannelUserList_ChannelUser(): ChannelUserList_ChannelUser {
+  return { user: undefined, role_id: undefined };
+}
+
+export const ChannelUserList_ChannelUser = {
+  encode(message: ChannelUserList_ChannelUser, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.user !== undefined) {
+      User.encode(message.user, writer.uint32(10).fork()).ldelim();
+    }
+    if (message.role_id !== undefined) {
+      StringValue.encode({ value: message.role_id! }, writer.uint32(18).fork()).ldelim();
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): ChannelUserList_ChannelUser {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseChannelUserList_ChannelUser();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.user = User.decode(reader, reader.uint32());
+          break;
+        case 2:
+          message.role_id = StringValue.decode(reader, reader.uint32()).value;
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): ChannelUserList_ChannelUser {
+    return {
+      user: isSet(object.user) ? User.fromJSON(object.user) : undefined,
+      role_id: isSet(object.role_id) ? String(object.role_id) : undefined,
+    };
+  },
+
+  toJSON(message: ChannelUserList_ChannelUser): unknown {
+    const obj: any = {};
+    message.user !== undefined && (obj.user = message.user ? User.toJSON(message.user) : undefined);
+    message.role_id !== undefined && (obj.role_id = message.role_id);
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<ChannelUserList_ChannelUser>, I>>(base?: I): ChannelUserList_ChannelUser {
+    return ChannelUserList_ChannelUser.fromPartial(base ?? {});
+  },
+
+  fromPartial<I extends Exact<DeepPartial<ChannelUserList_ChannelUser>, I>>(object: I): ChannelUserList_ChannelUser {
+    const message = createBaseChannelUserList_ChannelUser();
+    message.user = (object.user !== undefined && object.user !== null) ? User.fromPartial(object.user) : undefined;
+    message.role_id = object.role_id ?? undefined;
+    return message;
+  },
+};
+
 function createBaseImportFacebookFriendsRequest(): ImportFacebookFriendsRequest {
   return { account: undefined, reset: undefined };
 }
@@ -7735,6 +7901,86 @@ export const ListGroupUsersRequest = {
   fromPartial<I extends Exact<DeepPartial<ListGroupUsersRequest>, I>>(object: I): ListGroupUsersRequest {
     const message = createBaseListGroupUsersRequest();
     message.group_id = object.group_id ?? "";
+    message.limit = object.limit ?? undefined;
+    message.state = object.state ?? undefined;
+    message.cursor = object.cursor ?? "";
+    return message;
+  },
+};
+
+function createBaseListChannelUsersRequest(): ListChannelUsersRequest {
+  return { channel_id: "", limit: undefined, state: undefined, cursor: "" };
+}
+
+export const ListChannelUsersRequest = {
+  encode(message: ListChannelUsersRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.channel_id !== "") {
+      writer.uint32(10).string(message.channel_id);
+    }
+    if (message.limit !== undefined) {
+      Int32Value.encode({ value: message.limit! }, writer.uint32(18).fork()).ldelim();
+    }
+    if (message.state !== undefined) {
+      Int32Value.encode({ value: message.state! }, writer.uint32(26).fork()).ldelim();
+    }
+    if (message.cursor !== "") {
+      writer.uint32(34).string(message.cursor);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): ListChannelUsersRequest {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseListChannelUsersRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.channel_id = reader.string();
+          break;
+        case 2:
+          message.limit = Int32Value.decode(reader, reader.uint32()).value;
+          break;
+        case 3:
+          message.state = Int32Value.decode(reader, reader.uint32()).value;
+          break;
+        case 4:
+          message.cursor = reader.string();
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): ListChannelUsersRequest {
+    return {
+      channel_id: isSet(object.channel_id) ? String(object.channel_id) : "",
+      limit: isSet(object.limit) ? Number(object.limit) : undefined,
+      state: isSet(object.state) ? Number(object.state) : undefined,
+      cursor: isSet(object.cursor) ? String(object.cursor) : "",
+    };
+  },
+
+  toJSON(message: ListChannelUsersRequest): unknown {
+    const obj: any = {};
+    message.channel_id !== undefined && (obj.channel_id = message.channel_id);
+    message.limit !== undefined && (obj.limit = message.limit);
+    message.state !== undefined && (obj.state = message.state);
+    message.cursor !== undefined && (obj.cursor = message.cursor);
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<ListChannelUsersRequest>, I>>(base?: I): ListChannelUsersRequest {
+    return ListChannelUsersRequest.fromPartial(base ?? {});
+  },
+
+  fromPartial<I extends Exact<DeepPartial<ListChannelUsersRequest>, I>>(object: I): ListChannelUsersRequest {
+    const message = createBaseListChannelUsersRequest();
+    message.channel_id = object.channel_id ?? "";
     message.limit = object.limit ?? undefined;
     message.state = object.state ?? undefined;
     message.cursor = object.cursor ?? "";
@@ -13653,9 +13899,10 @@ function createBaseCreateChannelDescRequest(): CreateChannelDescRequest {
     channel_id: "",
     category_id: "",
     type: undefined,
-    creator_id: "",
+    group_id: "",
     channel_lable: "",
     channel_private: 0,
+    user_ids: [],
   };
 }
 
@@ -13676,14 +13923,17 @@ export const CreateChannelDescRequest = {
     if (message.type !== undefined) {
       Int32Value.encode({ value: message.type! }, writer.uint32(42).fork()).ldelim();
     }
-    if (message.creator_id !== "") {
-      writer.uint32(50).string(message.creator_id);
+    if (message.group_id !== "") {
+      writer.uint32(50).string(message.group_id);
     }
     if (message.channel_lable !== "") {
       writer.uint32(58).string(message.channel_lable);
     }
     if (message.channel_private !== 0) {
       writer.uint32(64).int32(message.channel_private);
+    }
+    for (const v of message.user_ids) {
+      writer.uint32(74).string(v!);
     }
     return writer;
   },
@@ -13711,13 +13961,16 @@ export const CreateChannelDescRequest = {
           message.type = Int32Value.decode(reader, reader.uint32()).value;
           break;
         case 6:
-          message.creator_id = reader.string();
+          message.group_id = reader.string();
           break;
         case 7:
           message.channel_lable = reader.string();
           break;
         case 8:
           message.channel_private = reader.int32();
+          break;
+        case 9:
+          message.user_ids.push(reader.string());
           break;
         default:
           reader.skipType(tag & 7);
@@ -13734,9 +13987,10 @@ export const CreateChannelDescRequest = {
       channel_id: isSet(object.channel_id) ? String(object.channel_id) : "",
       category_id: isSet(object.category_id) ? String(object.category_id) : "",
       type: isSet(object.type) ? Number(object.type) : undefined,
-      creator_id: isSet(object.creator_id) ? String(object.creator_id) : "",
+      group_id: isSet(object.group_id) ? String(object.group_id) : "",
       channel_lable: isSet(object.channel_lable) ? String(object.channel_lable) : "",
       channel_private: isSet(object.channel_private) ? Number(object.channel_private) : 0,
+      user_ids: Array.isArray(object?.user_ids) ? object.user_ids.map((e: any) => String(e)) : [],
     };
   },
 
@@ -13747,9 +14001,14 @@ export const CreateChannelDescRequest = {
     message.channel_id !== undefined && (obj.channel_id = message.channel_id);
     message.category_id !== undefined && (obj.category_id = message.category_id);
     message.type !== undefined && (obj.type = message.type);
-    message.creator_id !== undefined && (obj.creator_id = message.creator_id);
+    message.group_id !== undefined && (obj.group_id = message.group_id);
     message.channel_lable !== undefined && (obj.channel_lable = message.channel_lable);
     message.channel_private !== undefined && (obj.channel_private = Math.round(message.channel_private));
+    if (message.user_ids) {
+      obj.user_ids = message.user_ids.map((e) => e);
+    } else {
+      obj.user_ids = [];
+    }
     return obj;
   },
 
@@ -13764,9 +14023,10 @@ export const CreateChannelDescRequest = {
     message.channel_id = object.channel_id ?? "";
     message.category_id = object.category_id ?? "";
     message.type = object.type ?? undefined;
-    message.creator_id = object.creator_id ?? "";
+    message.group_id = object.group_id ?? "";
     message.channel_lable = object.channel_lable ?? "";
     message.channel_private = object.channel_private ?? 0;
+    message.user_ids = object.user_ids?.map((e) => e) || [];
     return message;
   },
 };
