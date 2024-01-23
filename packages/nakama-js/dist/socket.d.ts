@@ -108,6 +108,8 @@ export interface ChannelMessageAck {
 /** Send a message to a realtime chat channel. */
 interface ChannelMessageSend {
     channel_message_send: {
+        /** Clan Id */
+        clan_id: string;
         /** The server-assigned channel ID. */
         channel_id: string;
         /** The content payload. */
@@ -556,7 +558,7 @@ export interface Socket {
     /** Update the status for the current user online. */
     updateStatus(status?: string): Promise<void>;
     /** Send a chat message to a chat channel on the server. */
-    writeChatMessage(channel_id: string, content: any): Promise<ChannelMessageAck>;
+    writeChatMessage(clan_id: string, channel_id: string, content: any): Promise<ChannelMessageAck>;
     /** Handle disconnect events received from the socket. */
     ondisconnect: (evt: Event) => void;
     /** Handle error events received from the socket. */
@@ -678,7 +680,7 @@ export declare class DefaultSocket implements Socket {
     unfollowUsers(user_ids: string[]): Promise<void>;
     updateChatMessage(channel_id: string, message_id: string, content: any): Promise<ChannelMessageAck>;
     updateStatus(status?: string): Promise<void>;
-    writeChatMessage(channel_id: string, content: any): Promise<ChannelMessageAck>;
+    writeChatMessage(clan_id: string, channel_id: string, content: any): Promise<ChannelMessageAck>;
     private pingPong;
 }
 export {};
