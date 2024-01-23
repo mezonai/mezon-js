@@ -140,6 +140,7 @@ export interface ApiChannelMessage {
 /** A list of channel messages, usually a result of a list operation. */
 export interface ApiChannelMessageList {
     cacheable_cursor?: string;
+    last_seen_message_uuid?: string;
     messages?: Array<ApiChannelMessage>;
     next_cursor?: string;
     prev_cursor?: string;
