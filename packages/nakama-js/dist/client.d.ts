@@ -505,7 +505,7 @@ export declare class Client {
     /** Kick users from a group, or decline their join requests. */
     kickGroupUsers(session: Session, groupId: string, ids?: Array<string>): Promise<boolean>;
     /** Kick users from a channel, or decline their join requests. */
-    kickChannelUsers(session: Session, channelId: string, ids?: Array<string>): Promise<boolean>;
+    removeChannelUsers(session: Session, channelId: string, ids?: Array<string>): Promise<boolean>;
     /** Leave a group the user is part of. */
     leaveGroup(session: Session, groupId: string): Promise<boolean>;
     /** List a channel's message history. */

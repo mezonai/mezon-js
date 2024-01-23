@@ -2518,7 +2518,7 @@ export class NakamaApi {
 }
 
   /** Kick a set of users from a channel. */
-  kickChannelUsers(bearerToken: string,
+  removeChannelUsers(bearerToken: string,
       channelId:string,
       userIds?:Array<string>,
       options: any = {}): Promise<any> {
@@ -2526,7 +2526,7 @@ export class NakamaApi {
     if (channelId === null || channelId === undefined) {
       throw new Error("'channelId' is a required parameter but is null or undefined.");
     }
-    const urlPath = "/v2/channeldesc/{channelId}/kick"
+    const urlPath = "/v2/channeldesc/{channelId}/remove"
         .replace("{channelId}", encodeURIComponent(String(channelId)));
     const queryParams = new Map<string, any>();
     queryParams.set("user_ids", userIds);

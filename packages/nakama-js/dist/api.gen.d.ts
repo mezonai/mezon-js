@@ -692,7 +692,7 @@ export declare class NakamaApi {
     /** Add users to a channel. */
     addChannelUsers(bearerToken: string, channelId: string, userIds?: Array<string>, options?: any): Promise<any>;
     /** Kick a set of users from a channel. */
-    kickChannelUsers(bearerToken: string, channelId: string, userIds?: Array<string>, options?: any): Promise<any>;
+    removeChannelUsers(bearerToken: string, channelId: string, userIds?: Array<string>, options?: any): Promise<any>;
     /** Leave a channel the user is a member of. */
     leaveChannel(bearerToken: string, channelId: string, options?: any): Promise<any>;
     /** List all users that are part of a channel. */

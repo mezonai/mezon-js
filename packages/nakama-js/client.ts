@@ -1041,13 +1041,13 @@ export class Client {
   }
 
   /** Kick users from a channel, or decline their join requests. */
-  async kickChannelUsers(session: Session, channelId: string, ids?: Array<string>): Promise<boolean> {
+  async removeChannelUsers(session: Session, channelId: string, ids?: Array<string>): Promise<boolean> {
     if (this.autoRefreshSession && session.refresh_token &&
         session.isexpired((Date.now() + this.expiredTimespanMs)/1000)) {
         await this.sessionRefresh(session);
     }
 
-    return this.apiClient.kickChannelUsers(session.token, channelId, ids).then((response: any) => {
+    return this.apiClient.removeChannelUsers(session.token, channelId, ids).then((response: any) => {
       return Promise.resolve(response != undefined);
     });
   }
