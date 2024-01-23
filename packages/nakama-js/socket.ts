@@ -123,6 +123,8 @@ export interface ChannelMessageAck {
 /** Send a message to a realtime chat channel. */
 interface ChannelMessageSend {
   channel_message_send: {
+    /** Clan Id */
+    clan_id: string;
     /** The server-assigned channel ID. */
     channel_id: string;
     /** The content payload. */
@@ -640,7 +642,7 @@ export interface Socket {
   updateStatus(status? : string) : Promise<void>;
 
   /** Send a chat message to a chat channel on the server. */
-  writeChatMessage(channel_id: string, content: any) : Promise<ChannelMessageAck>;
+  writeChatMessage(clan_id: string, channel_id: string, content: any) : Promise<ChannelMessageAck>;
 
   /** Handle disconnect events received from the socket. */
   ondisconnect: (evt: Event) => void;
@@ -1242,8 +1244,8 @@ export class DefaultSocket implements Socket {
     return this.send({status_update: {status: status}});
   }
 
-  async writeChatMessage(channel_id: string, content: any): Promise<ChannelMessageAck> {
-    const response = await this.send({channel_message_send: {channel_id: channel_id, content: content}});
+  async writeChatMessage(clan_id: string, channel_id: string, content: any): Promise<ChannelMessageAck> {
+    const response = await this.send({channel_message_send: {clan_id: clan_id, channel_id: channel_id, content: content}});
     return response.channel_message_ack;
   }
 
