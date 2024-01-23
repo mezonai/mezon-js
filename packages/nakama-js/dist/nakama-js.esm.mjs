@@ -4841,6 +4841,7 @@ var Client = class {
       return this.apiClient.listChannelMessages(session.token, channelId, limit, forward, cursor).then((response) => {
         var result = {
           messages: [],
+          last_seen_message_uuid: response.last_seen_message_uuid,
           next_cursor: response.next_cursor,
           prev_cursor: response.prev_cursor,
           cacheable_cursor: response.cacheable_cursor
