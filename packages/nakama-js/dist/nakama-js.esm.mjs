@@ -1789,11 +1789,11 @@ var NakamaApi = class {
     ]);
   }
   /** Kick a set of users from a channel. */
-  kickChannelUsers(bearerToken, channelId, userIds, options = {}) {
+  removeChannelUsers(bearerToken, channelId, userIds, options = {}) {
     if (channelId === null || channelId === void 0) {
       throw new Error("'channelId' is a required parameter but is null or undefined.");
     }
-    const urlPath = "/v2/channeldesc/{channelId}/kick".replace("{channelId}", encodeURIComponent(String(channelId)));
+    const urlPath = "/v2/channeldesc/{channelId}/remove".replace("{channelId}", encodeURIComponent(String(channelId)));
     const queryParams = /* @__PURE__ */ new Map();
     queryParams.set("user_ids", userIds);
     let bodyJson = "";
@@ -4811,12 +4811,12 @@ var Client = class {
     });
   }
   /** Kick users from a channel, or decline their join requests. */
-  kickChannelUsers(session, channelId, ids) {
+  removeChannelUsers(session, channelId, ids) {
     return __async(this, null, function* () {
       if (this.autoRefreshSession && session.refresh_token && session.isexpired((Date.now() + this.expiredTimespanMs) / 1e3)) {
         yield this.sessionRefresh(session);
       }
-      return this.apiClient.kickChannelUsers(session.token, channelId, ids).then((response) => {
+      return this.apiClient.removeChannelUsers(session.token, channelId, ids).then((response) => {
         return Promise.resolve(response != void 0);
       });
     });
