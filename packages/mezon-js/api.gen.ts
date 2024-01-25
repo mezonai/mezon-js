@@ -2661,7 +2661,7 @@ export class NakamaApi {
   /** Kick a set of users from a channel. */
   removeChannelUsers(bearerToken: string,
       channelId:string,
-userIds?:Array<string>,
+      userIds?:Array<string>,
       options: any = {}): Promise<any> {
     
     if (channelId === null || channelId === undefined) {
@@ -2670,7 +2670,7 @@ userIds?:Array<string>,
     const urlPath = "/v2/channeldesc/{channelId}/remove"
         .replace("{channelId}", encodeURIComponent(String(channelId)));
     const queryParams = new Map<string, any>();
-queryParams.set("user_ids", userIds);
+    queryParams.set("user_ids", userIds);
 
     let bodyJson : string = "";
 
@@ -2699,7 +2699,7 @@ queryParams.set("user_ids", userIds);
   /** Leave a channel the user is a member of. */
   leaveChannel(bearerToken: string,
       channelId:string,
-            options: any = {}): Promise<any> {
+      options: any = {}): Promise<any> {
     
     if (channelId === null || channelId === undefined) {
       throw new Error("'channelId' is a required parameter but is null or undefined.");
