@@ -1124,374 +1124,173 @@ export const Envelope = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): Envelope {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseEnvelope();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 10) {
-            break;
-          }
-
           message.cid = reader.string();
-          continue;
+          break;
         case 2:
-          if (tag !== 18) {
-            break;
-          }
-
           message.channel = Channel.decode(reader, reader.uint32());
-          continue;
+          break;
         case 3:
-          if (tag !== 26) {
-            break;
-          }
-
           message.channel_join = ChannelJoin.decode(reader, reader.uint32());
-          continue;
+          break;
         case 4:
-          if (tag !== 34) {
-            break;
-          }
-
           message.channel_leave = ChannelLeave.decode(reader, reader.uint32());
-          continue;
+          break;
         case 5:
-          if (tag !== 42) {
-            break;
-          }
-
           message.channel_message = ChannelMessage.decode(reader, reader.uint32());
-          continue;
+          break;
         case 6:
-          if (tag !== 50) {
-            break;
-          }
-
           message.channel_message_ack = ChannelMessageAck.decode(reader, reader.uint32());
-          continue;
+          break;
         case 7:
-          if (tag !== 58) {
-            break;
-          }
-
           message.channel_message_send = ChannelMessageSend.decode(reader, reader.uint32());
-          continue;
+          break;
         case 8:
-          if (tag !== 66) {
-            break;
-          }
-
           message.channel_message_update = ChannelMessageUpdate.decode(reader, reader.uint32());
-          continue;
+          break;
         case 9:
-          if (tag !== 74) {
-            break;
-          }
-
           message.channel_message_remove = ChannelMessageRemove.decode(reader, reader.uint32());
-          continue;
+          break;
         case 10:
-          if (tag !== 82) {
-            break;
-          }
-
           message.channel_presence_event = ChannelPresenceEvent.decode(reader, reader.uint32());
-          continue;
+          break;
         case 11:
-          if (tag !== 90) {
-            break;
-          }
-
           message.error = Error.decode(reader, reader.uint32());
-          continue;
+          break;
         case 12:
-          if (tag !== 98) {
-            break;
-          }
-
           message.match = Match.decode(reader, reader.uint32());
-          continue;
+          break;
         case 13:
-          if (tag !== 106) {
-            break;
-          }
-
           message.match_create = MatchCreate.decode(reader, reader.uint32());
-          continue;
+          break;
         case 14:
-          if (tag !== 114) {
-            break;
-          }
-
           message.match_data = MatchData.decode(reader, reader.uint32());
-          continue;
+          break;
         case 15:
-          if (tag !== 122) {
-            break;
-          }
-
           message.match_data_send = MatchDataSend.decode(reader, reader.uint32());
-          continue;
+          break;
         case 16:
-          if (tag !== 130) {
-            break;
-          }
-
           message.match_join = MatchJoin.decode(reader, reader.uint32());
-          continue;
+          break;
         case 17:
-          if (tag !== 138) {
-            break;
-          }
-
           message.match_leave = MatchLeave.decode(reader, reader.uint32());
-          continue;
+          break;
         case 18:
-          if (tag !== 146) {
-            break;
-          }
-
           message.match_presence_event = MatchPresenceEvent.decode(reader, reader.uint32());
-          continue;
+          break;
         case 19:
-          if (tag !== 154) {
-            break;
-          }
-
           message.matchmaker_add = MatchmakerAdd.decode(reader, reader.uint32());
-          continue;
+          break;
         case 20:
-          if (tag !== 162) {
-            break;
-          }
-
           message.matchmaker_matched = MatchmakerMatched.decode(reader, reader.uint32());
-          continue;
+          break;
         case 21:
-          if (tag !== 170) {
-            break;
-          }
-
           message.matchmaker_remove = MatchmakerRemove.decode(reader, reader.uint32());
-          continue;
+          break;
         case 22:
-          if (tag !== 178) {
-            break;
-          }
-
           message.matchmaker_ticket = MatchmakerTicket.decode(reader, reader.uint32());
-          continue;
+          break;
         case 23:
-          if (tag !== 186) {
-            break;
-          }
-
           message.notifications = Notifications.decode(reader, reader.uint32());
-          continue;
+          break;
         case 24:
-          if (tag !== 194) {
-            break;
-          }
-
           message.rpc = Rpc.decode(reader, reader.uint32());
-          continue;
+          break;
         case 25:
-          if (tag !== 202) {
-            break;
-          }
-
           message.status = Status.decode(reader, reader.uint32());
-          continue;
+          break;
         case 26:
-          if (tag !== 210) {
-            break;
-          }
-
           message.status_follow = StatusFollow.decode(reader, reader.uint32());
-          continue;
+          break;
         case 27:
-          if (tag !== 218) {
-            break;
-          }
-
           message.status_presence_event = StatusPresenceEvent.decode(reader, reader.uint32());
-          continue;
+          break;
         case 28:
-          if (tag !== 226) {
-            break;
-          }
-
           message.status_unfollow = StatusUnfollow.decode(reader, reader.uint32());
-          continue;
+          break;
         case 29:
-          if (tag !== 234) {
-            break;
-          }
-
           message.status_update = StatusUpdate.decode(reader, reader.uint32());
-          continue;
+          break;
         case 30:
-          if (tag !== 242) {
-            break;
-          }
-
           message.stream_data = StreamData.decode(reader, reader.uint32());
-          continue;
+          break;
         case 31:
-          if (tag !== 250) {
-            break;
-          }
-
           message.stream_presence_event = StreamPresenceEvent.decode(reader, reader.uint32());
-          continue;
+          break;
         case 32:
-          if (tag !== 258) {
-            break;
-          }
-
           message.ping = Ping.decode(reader, reader.uint32());
-          continue;
+          break;
         case 33:
-          if (tag !== 266) {
-            break;
-          }
-
           message.pong = Pong.decode(reader, reader.uint32());
-          continue;
+          break;
         case 34:
-          if (tag !== 274) {
-            break;
-          }
-
           message.party = Party.decode(reader, reader.uint32());
-          continue;
+          break;
         case 35:
-          if (tag !== 282) {
-            break;
-          }
-
           message.party_create = PartyCreate.decode(reader, reader.uint32());
-          continue;
+          break;
         case 36:
-          if (tag !== 290) {
-            break;
-          }
-
           message.party_join = PartyJoin.decode(reader, reader.uint32());
-          continue;
+          break;
         case 37:
-          if (tag !== 298) {
-            break;
-          }
-
           message.party_leave = PartyLeave.decode(reader, reader.uint32());
-          continue;
+          break;
         case 38:
-          if (tag !== 306) {
-            break;
-          }
-
           message.party_promote = PartyPromote.decode(reader, reader.uint32());
-          continue;
+          break;
         case 39:
-          if (tag !== 314) {
-            break;
-          }
-
           message.party_leader = PartyLeader.decode(reader, reader.uint32());
-          continue;
+          break;
         case 40:
-          if (tag !== 322) {
-            break;
-          }
-
           message.party_accept = PartyAccept.decode(reader, reader.uint32());
-          continue;
+          break;
         case 41:
-          if (tag !== 330) {
-            break;
-          }
-
           message.party_remove = PartyRemove.decode(reader, reader.uint32());
-          continue;
+          break;
         case 42:
-          if (tag !== 338) {
-            break;
-          }
-
           message.party_close = PartyClose.decode(reader, reader.uint32());
-          continue;
+          break;
         case 43:
-          if (tag !== 346) {
-            break;
-          }
-
           message.party_join_request_list = PartyJoinRequestList.decode(reader, reader.uint32());
-          continue;
+          break;
         case 44:
-          if (tag !== 354) {
-            break;
-          }
-
           message.party_join_request = PartyJoinRequest.decode(reader, reader.uint32());
-          continue;
+          break;
         case 45:
-          if (tag !== 362) {
-            break;
-          }
-
           message.party_matchmaker_add = PartyMatchmakerAdd.decode(reader, reader.uint32());
-          continue;
+          break;
         case 46:
-          if (tag !== 370) {
-            break;
-          }
-
           message.party_matchmaker_remove = PartyMatchmakerRemove.decode(reader, reader.uint32());
-          continue;
+          break;
         case 47:
-          if (tag !== 378) {
-            break;
-          }
-
           message.party_matchmaker_ticket = PartyMatchmakerTicket.decode(reader, reader.uint32());
-          continue;
+          break;
         case 48:
-          if (tag !== 386) {
-            break;
-          }
-
           message.party_data = PartyData.decode(reader, reader.uint32());
-          continue;
+          break;
         case 49:
-          if (tag !== 394) {
-            break;
-          }
-
           message.party_data_send = PartyDataSend.decode(reader, reader.uint32());
-          continue;
+          break;
         case 50:
-          if (tag !== 402) {
-            break;
-          }
-
           message.party_presence_event = PartyPresenceEvent.decode(reader, reader.uint32());
-          continue;
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
       }
-      if ((tag & 7) === 4 || tag === 0) {
-        break;
-      }
-      reader.skipType(tag & 7);
     }
     return message;
   },
 
   fromJSON(object: any): Envelope {
     return {
-      cid: isSet(object.cid) ? globalThis.String(object.cid) : "",
+      cid: isSet(object.cid) ? String(object.cid) : "",
       channel: isSet(object.channel) ? Channel.fromJSON(object.channel) : undefined,
       channel_join: isSet(object.channel_join) ? ChannelJoin.fromJSON(object.channel_join) : undefined,
       channel_leave: isSet(object.channel_leave) ? ChannelLeave.fromJSON(object.channel_leave) : undefined,
@@ -1580,162 +1379,121 @@ export const Envelope = {
 
   toJSON(message: Envelope): unknown {
     const obj: any = {};
-    if (message.cid !== "") {
-      obj.cid = message.cid;
-    }
-    if (message.channel !== undefined) {
-      obj.channel = Channel.toJSON(message.channel);
-    }
-    if (message.channel_join !== undefined) {
-      obj.channel_join = ChannelJoin.toJSON(message.channel_join);
-    }
-    if (message.channel_leave !== undefined) {
-      obj.channel_leave = ChannelLeave.toJSON(message.channel_leave);
-    }
-    if (message.channel_message !== undefined) {
-      obj.channel_message = ChannelMessage.toJSON(message.channel_message);
-    }
-    if (message.channel_message_ack !== undefined) {
-      obj.channel_message_ack = ChannelMessageAck.toJSON(message.channel_message_ack);
-    }
-    if (message.channel_message_send !== undefined) {
-      obj.channel_message_send = ChannelMessageSend.toJSON(message.channel_message_send);
-    }
-    if (message.channel_message_update !== undefined) {
-      obj.channel_message_update = ChannelMessageUpdate.toJSON(message.channel_message_update);
-    }
-    if (message.channel_message_remove !== undefined) {
-      obj.channel_message_remove = ChannelMessageRemove.toJSON(message.channel_message_remove);
-    }
-    if (message.channel_presence_event !== undefined) {
-      obj.channel_presence_event = ChannelPresenceEvent.toJSON(message.channel_presence_event);
-    }
-    if (message.error !== undefined) {
-      obj.error = Error.toJSON(message.error);
-    }
-    if (message.match !== undefined) {
-      obj.match = Match.toJSON(message.match);
-    }
-    if (message.match_create !== undefined) {
-      obj.match_create = MatchCreate.toJSON(message.match_create);
-    }
-    if (message.match_data !== undefined) {
-      obj.match_data = MatchData.toJSON(message.match_data);
-    }
-    if (message.match_data_send !== undefined) {
-      obj.match_data_send = MatchDataSend.toJSON(message.match_data_send);
-    }
-    if (message.match_join !== undefined) {
-      obj.match_join = MatchJoin.toJSON(message.match_join);
-    }
-    if (message.match_leave !== undefined) {
-      obj.match_leave = MatchLeave.toJSON(message.match_leave);
-    }
-    if (message.match_presence_event !== undefined) {
-      obj.match_presence_event = MatchPresenceEvent.toJSON(message.match_presence_event);
-    }
-    if (message.matchmaker_add !== undefined) {
-      obj.matchmaker_add = MatchmakerAdd.toJSON(message.matchmaker_add);
-    }
-    if (message.matchmaker_matched !== undefined) {
-      obj.matchmaker_matched = MatchmakerMatched.toJSON(message.matchmaker_matched);
-    }
-    if (message.matchmaker_remove !== undefined) {
-      obj.matchmaker_remove = MatchmakerRemove.toJSON(message.matchmaker_remove);
-    }
-    if (message.matchmaker_ticket !== undefined) {
-      obj.matchmaker_ticket = MatchmakerTicket.toJSON(message.matchmaker_ticket);
-    }
-    if (message.notifications !== undefined) {
-      obj.notifications = Notifications.toJSON(message.notifications);
-    }
-    if (message.rpc !== undefined) {
-      obj.rpc = Rpc.toJSON(message.rpc);
-    }
-    if (message.status !== undefined) {
-      obj.status = Status.toJSON(message.status);
-    }
-    if (message.status_follow !== undefined) {
-      obj.status_follow = StatusFollow.toJSON(message.status_follow);
-    }
-    if (message.status_presence_event !== undefined) {
-      obj.status_presence_event = StatusPresenceEvent.toJSON(message.status_presence_event);
-    }
-    if (message.status_unfollow !== undefined) {
-      obj.status_unfollow = StatusUnfollow.toJSON(message.status_unfollow);
-    }
-    if (message.status_update !== undefined) {
-      obj.status_update = StatusUpdate.toJSON(message.status_update);
-    }
-    if (message.stream_data !== undefined) {
-      obj.stream_data = StreamData.toJSON(message.stream_data);
-    }
-    if (message.stream_presence_event !== undefined) {
-      obj.stream_presence_event = StreamPresenceEvent.toJSON(message.stream_presence_event);
-    }
-    if (message.ping !== undefined) {
-      obj.ping = Ping.toJSON(message.ping);
-    }
-    if (message.pong !== undefined) {
-      obj.pong = Pong.toJSON(message.pong);
-    }
-    if (message.party !== undefined) {
-      obj.party = Party.toJSON(message.party);
-    }
-    if (message.party_create !== undefined) {
-      obj.party_create = PartyCreate.toJSON(message.party_create);
-    }
-    if (message.party_join !== undefined) {
-      obj.party_join = PartyJoin.toJSON(message.party_join);
-    }
-    if (message.party_leave !== undefined) {
-      obj.party_leave = PartyLeave.toJSON(message.party_leave);
-    }
-    if (message.party_promote !== undefined) {
-      obj.party_promote = PartyPromote.toJSON(message.party_promote);
-    }
-    if (message.party_leader !== undefined) {
-      obj.party_leader = PartyLeader.toJSON(message.party_leader);
-    }
-    if (message.party_accept !== undefined) {
-      obj.party_accept = PartyAccept.toJSON(message.party_accept);
-    }
-    if (message.party_remove !== undefined) {
-      obj.party_remove = PartyRemove.toJSON(message.party_remove);
-    }
-    if (message.party_close !== undefined) {
-      obj.party_close = PartyClose.toJSON(message.party_close);
-    }
-    if (message.party_join_request_list !== undefined) {
-      obj.party_join_request_list = PartyJoinRequestList.toJSON(message.party_join_request_list);
-    }
-    if (message.party_join_request !== undefined) {
-      obj.party_join_request = PartyJoinRequest.toJSON(message.party_join_request);
-    }
-    if (message.party_matchmaker_add !== undefined) {
-      obj.party_matchmaker_add = PartyMatchmakerAdd.toJSON(message.party_matchmaker_add);
-    }
-    if (message.party_matchmaker_remove !== undefined) {
-      obj.party_matchmaker_remove = PartyMatchmakerRemove.toJSON(message.party_matchmaker_remove);
-    }
-    if (message.party_matchmaker_ticket !== undefined) {
-      obj.party_matchmaker_ticket = PartyMatchmakerTicket.toJSON(message.party_matchmaker_ticket);
-    }
-    if (message.party_data !== undefined) {
-      obj.party_data = PartyData.toJSON(message.party_data);
-    }
-    if (message.party_data_send !== undefined) {
-      obj.party_data_send = PartyDataSend.toJSON(message.party_data_send);
-    }
-    if (message.party_presence_event !== undefined) {
-      obj.party_presence_event = PartyPresenceEvent.toJSON(message.party_presence_event);
-    }
+    message.cid !== undefined && (obj.cid = message.cid);
+    message.channel !== undefined && (obj.channel = message.channel ? Channel.toJSON(message.channel) : undefined);
+    message.channel_join !== undefined &&
+      (obj.channel_join = message.channel_join ? ChannelJoin.toJSON(message.channel_join) : undefined);
+    message.channel_leave !== undefined &&
+      (obj.channel_leave = message.channel_leave ? ChannelLeave.toJSON(message.channel_leave) : undefined);
+    message.channel_message !== undefined &&
+      (obj.channel_message = message.channel_message ? ChannelMessage.toJSON(message.channel_message) : undefined);
+    message.channel_message_ack !== undefined && (obj.channel_message_ack = message.channel_message_ack
+      ? ChannelMessageAck.toJSON(message.channel_message_ack)
+      : undefined);
+    message.channel_message_send !== undefined && (obj.channel_message_send = message.channel_message_send
+      ? ChannelMessageSend.toJSON(message.channel_message_send)
+      : undefined);
+    message.channel_message_update !== undefined && (obj.channel_message_update = message.channel_message_update
+      ? ChannelMessageUpdate.toJSON(message.channel_message_update)
+      : undefined);
+    message.channel_message_remove !== undefined && (obj.channel_message_remove = message.channel_message_remove
+      ? ChannelMessageRemove.toJSON(message.channel_message_remove)
+      : undefined);
+    message.channel_presence_event !== undefined && (obj.channel_presence_event = message.channel_presence_event
+      ? ChannelPresenceEvent.toJSON(message.channel_presence_event)
+      : undefined);
+    message.error !== undefined && (obj.error = message.error ? Error.toJSON(message.error) : undefined);
+    message.match !== undefined && (obj.match = message.match ? Match.toJSON(message.match) : undefined);
+    message.match_create !== undefined &&
+      (obj.match_create = message.match_create ? MatchCreate.toJSON(message.match_create) : undefined);
+    message.match_data !== undefined &&
+      (obj.match_data = message.match_data ? MatchData.toJSON(message.match_data) : undefined);
+    message.match_data_send !== undefined &&
+      (obj.match_data_send = message.match_data_send ? MatchDataSend.toJSON(message.match_data_send) : undefined);
+    message.match_join !== undefined &&
+      (obj.match_join = message.match_join ? MatchJoin.toJSON(message.match_join) : undefined);
+    message.match_leave !== undefined &&
+      (obj.match_leave = message.match_leave ? MatchLeave.toJSON(message.match_leave) : undefined);
+    message.match_presence_event !== undefined && (obj.match_presence_event = message.match_presence_event
+      ? MatchPresenceEvent.toJSON(message.match_presence_event)
+      : undefined);
+    message.matchmaker_add !== undefined &&
+      (obj.matchmaker_add = message.matchmaker_add ? MatchmakerAdd.toJSON(message.matchmaker_add) : undefined);
+    message.matchmaker_matched !== undefined && (obj.matchmaker_matched = message.matchmaker_matched
+      ? MatchmakerMatched.toJSON(message.matchmaker_matched)
+      : undefined);
+    message.matchmaker_remove !== undefined && (obj.matchmaker_remove = message.matchmaker_remove
+      ? MatchmakerRemove.toJSON(message.matchmaker_remove)
+      : undefined);
+    message.matchmaker_ticket !== undefined && (obj.matchmaker_ticket = message.matchmaker_ticket
+      ? MatchmakerTicket.toJSON(message.matchmaker_ticket)
+      : undefined);
+    message.notifications !== undefined &&
+      (obj.notifications = message.notifications ? Notifications.toJSON(message.notifications) : undefined);
+    message.rpc !== undefined && (obj.rpc = message.rpc ? Rpc.toJSON(message.rpc) : undefined);
+    message.status !== undefined && (obj.status = message.status ? Status.toJSON(message.status) : undefined);
+    message.status_follow !== undefined &&
+      (obj.status_follow = message.status_follow ? StatusFollow.toJSON(message.status_follow) : undefined);
+    message.status_presence_event !== undefined && (obj.status_presence_event = message.status_presence_event
+      ? StatusPresenceEvent.toJSON(message.status_presence_event)
+      : undefined);
+    message.status_unfollow !== undefined &&
+      (obj.status_unfollow = message.status_unfollow ? StatusUnfollow.toJSON(message.status_unfollow) : undefined);
+    message.status_update !== undefined &&
+      (obj.status_update = message.status_update ? StatusUpdate.toJSON(message.status_update) : undefined);
+    message.stream_data !== undefined &&
+      (obj.stream_data = message.stream_data ? StreamData.toJSON(message.stream_data) : undefined);
+    message.stream_presence_event !== undefined && (obj.stream_presence_event = message.stream_presence_event
+      ? StreamPresenceEvent.toJSON(message.stream_presence_event)
+      : undefined);
+    message.ping !== undefined && (obj.ping = message.ping ? Ping.toJSON(message.ping) : undefined);
+    message.pong !== undefined && (obj.pong = message.pong ? Pong.toJSON(message.pong) : undefined);
+    message.party !== undefined && (obj.party = message.party ? Party.toJSON(message.party) : undefined);
+    message.party_create !== undefined &&
+      (obj.party_create = message.party_create ? PartyCreate.toJSON(message.party_create) : undefined);
+    message.party_join !== undefined &&
+      (obj.party_join = message.party_join ? PartyJoin.toJSON(message.party_join) : undefined);
+    message.party_leave !== undefined &&
+      (obj.party_leave = message.party_leave ? PartyLeave.toJSON(message.party_leave) : undefined);
+    message.party_promote !== undefined &&
+      (obj.party_promote = message.party_promote ? PartyPromote.toJSON(message.party_promote) : undefined);
+    message.party_leader !== undefined &&
+      (obj.party_leader = message.party_leader ? PartyLeader.toJSON(message.party_leader) : undefined);
+    message.party_accept !== undefined &&
+      (obj.party_accept = message.party_accept ? PartyAccept.toJSON(message.party_accept) : undefined);
+    message.party_remove !== undefined &&
+      (obj.party_remove = message.party_remove ? PartyRemove.toJSON(message.party_remove) : undefined);
+    message.party_close !== undefined &&
+      (obj.party_close = message.party_close ? PartyClose.toJSON(message.party_close) : undefined);
+    message.party_join_request_list !== undefined && (obj.party_join_request_list = message.party_join_request_list
+      ? PartyJoinRequestList.toJSON(message.party_join_request_list)
+      : undefined);
+    message.party_join_request !== undefined && (obj.party_join_request = message.party_join_request
+      ? PartyJoinRequest.toJSON(message.party_join_request)
+      : undefined);
+    message.party_matchmaker_add !== undefined && (obj.party_matchmaker_add = message.party_matchmaker_add
+      ? PartyMatchmakerAdd.toJSON(message.party_matchmaker_add)
+      : undefined);
+    message.party_matchmaker_remove !== undefined && (obj.party_matchmaker_remove = message.party_matchmaker_remove
+      ? PartyMatchmakerRemove.toJSON(message.party_matchmaker_remove)
+      : undefined);
+    message.party_matchmaker_ticket !== undefined && (obj.party_matchmaker_ticket = message.party_matchmaker_ticket
+      ? PartyMatchmakerTicket.toJSON(message.party_matchmaker_ticket)
+      : undefined);
+    message.party_data !== undefined &&
+      (obj.party_data = message.party_data ? PartyData.toJSON(message.party_data) : undefined);
+    message.party_data_send !== undefined &&
+      (obj.party_data_send = message.party_data_send ? PartyDataSend.toJSON(message.party_data_send) : undefined);
+    message.party_presence_event !== undefined && (obj.party_presence_event = message.party_presence_event
+      ? PartyPresenceEvent.toJSON(message.party_presence_event)
+      : undefined);
     return obj;
   },
 
   create<I extends Exact<DeepPartial<Envelope>, I>>(base?: I): Envelope {
-    return Envelope.fromPartial(base ?? ({} as any));
+    return Envelope.fromPartial(base ?? {});
   },
+
   fromPartial<I extends Exact<DeepPartial<Envelope>, I>>(object: I): Envelope {
     const message = createBaseEnvelope();
     message.cid = object.cid ?? "";
@@ -1917,113 +1675,73 @@ export const Channel = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): Channel {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseChannel();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 10) {
-            break;
-          }
-
           message.id = reader.string();
-          continue;
+          break;
         case 2:
-          if (tag !== 18) {
-            break;
-          }
-
           message.presences.push(UserPresence.decode(reader, reader.uint32()));
-          continue;
+          break;
         case 3:
-          if (tag !== 26) {
-            break;
-          }
-
           message.self = UserPresence.decode(reader, reader.uint32());
-          continue;
+          break;
         case 4:
-          if (tag !== 34) {
-            break;
-          }
-
           message.room_name = reader.string();
-          continue;
+          break;
         case 5:
-          if (tag !== 42) {
-            break;
-          }
-
           message.group_id = reader.string();
-          continue;
+          break;
         case 6:
-          if (tag !== 50) {
-            break;
-          }
-
           message.user_id_one = reader.string();
-          continue;
+          break;
         case 7:
-          if (tag !== 58) {
-            break;
-          }
-
           message.user_id_two = reader.string();
-          continue;
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
       }
-      if ((tag & 7) === 4 || tag === 0) {
-        break;
-      }
-      reader.skipType(tag & 7);
     }
     return message;
   },
 
   fromJSON(object: any): Channel {
     return {
-      id: isSet(object.id) ? globalThis.String(object.id) : "",
-      presences: globalThis.Array.isArray(object?.presences)
-        ? object.presences.map((e: any) => UserPresence.fromJSON(e))
-        : [],
+      id: isSet(object.id) ? String(object.id) : "",
+      presences: Array.isArray(object?.presences) ? object.presences.map((e: any) => UserPresence.fromJSON(e)) : [],
       self: isSet(object.self) ? UserPresence.fromJSON(object.self) : undefined,
-      room_name: isSet(object.room_name) ? globalThis.String(object.room_name) : "",
-      group_id: isSet(object.group_id) ? globalThis.String(object.group_id) : "",
-      user_id_one: isSet(object.user_id_one) ? globalThis.String(object.user_id_one) : "",
-      user_id_two: isSet(object.user_id_two) ? globalThis.String(object.user_id_two) : "",
+      room_name: isSet(object.room_name) ? String(object.room_name) : "",
+      group_id: isSet(object.group_id) ? String(object.group_id) : "",
+      user_id_one: isSet(object.user_id_one) ? String(object.user_id_one) : "",
+      user_id_two: isSet(object.user_id_two) ? String(object.user_id_two) : "",
     };
   },
 
   toJSON(message: Channel): unknown {
     const obj: any = {};
-    if (message.id !== "") {
-      obj.id = message.id;
+    message.id !== undefined && (obj.id = message.id);
+    if (message.presences) {
+      obj.presences = message.presences.map((e) => e ? UserPresence.toJSON(e) : undefined);
+    } else {
+      obj.presences = [];
     }
-    if (message.presences?.length) {
-      obj.presences = message.presences.map((e) => UserPresence.toJSON(e));
-    }
-    if (message.self !== undefined) {
-      obj.self = UserPresence.toJSON(message.self);
-    }
-    if (message.room_name !== "") {
-      obj.room_name = message.room_name;
-    }
-    if (message.group_id !== "") {
-      obj.group_id = message.group_id;
-    }
-    if (message.user_id_one !== "") {
-      obj.user_id_one = message.user_id_one;
-    }
-    if (message.user_id_two !== "") {
-      obj.user_id_two = message.user_id_two;
-    }
+    message.self !== undefined && (obj.self = message.self ? UserPresence.toJSON(message.self) : undefined);
+    message.room_name !== undefined && (obj.room_name = message.room_name);
+    message.group_id !== undefined && (obj.group_id = message.group_id);
+    message.user_id_one !== undefined && (obj.user_id_one = message.user_id_one);
+    message.user_id_two !== undefined && (obj.user_id_two = message.user_id_two);
     return obj;
   },
 
   create<I extends Exact<DeepPartial<Channel>, I>>(base?: I): Channel {
-    return Channel.fromPartial(base ?? ({} as any));
+    return Channel.fromPartial(base ?? {});
   },
+
   fromPartial<I extends Exact<DeepPartial<Channel>, I>>(object: I): Channel {
     const message = createBaseChannel();
     message.id = object.id ?? "";
@@ -2064,61 +1782,40 @@ export const ChannelJoin = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): ChannelJoin {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseChannelJoin();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 10) {
-            break;
-          }
-
           message.target_id = reader.string();
-          continue;
+          break;
         case 2:
-          if (tag !== 18) {
-            break;
-          }
-
           message.target = reader.string();
-          continue;
+          break;
         case 3:
-          if (tag !== 24) {
-            break;
-          }
-
           message.type = reader.int32();
-          continue;
+          break;
         case 4:
-          if (tag !== 34) {
-            break;
-          }
-
           message.persistence = BoolValue.decode(reader, reader.uint32()).value;
-          continue;
+          break;
         case 5:
-          if (tag !== 42) {
-            break;
-          }
-
           message.hidden = BoolValue.decode(reader, reader.uint32()).value;
-          continue;
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
       }
-      if ((tag & 7) === 4 || tag === 0) {
-        break;
-      }
-      reader.skipType(tag & 7);
     }
     return message;
   },
 
   fromJSON(object: any): ChannelJoin {
     return {
-      target_id: isSet(object.target_id) ? globalThis.String(object.target_id) : "",
-      target: isSet(object.target) ? globalThis.String(object.target) : "",
-      type: isSet(object.type) ? globalThis.Number(object.type) : 0,
+      target_id: isSet(object.target_id) ? String(object.target_id) : "",
+      target: isSet(object.target) ? String(object.target) : "",
+      type: isSet(object.type) ? Number(object.type) : 0,
       persistence: isSet(object.persistence) ? Boolean(object.persistence) : undefined,
       hidden: isSet(object.hidden) ? Boolean(object.hidden) : undefined,
     };
@@ -2126,27 +1823,18 @@ export const ChannelJoin = {
 
   toJSON(message: ChannelJoin): unknown {
     const obj: any = {};
-    if (message.target_id !== "") {
-      obj.target_id = message.target_id;
-    }
-    if (message.target !== "") {
-      obj.target = message.target;
-    }
-    if (message.type !== 0) {
-      obj.type = Math.round(message.type);
-    }
-    if (message.persistence !== undefined) {
-      obj.persistence = message.persistence;
-    }
-    if (message.hidden !== undefined) {
-      obj.hidden = message.hidden;
-    }
+    message.target_id !== undefined && (obj.target_id = message.target_id);
+    message.target !== undefined && (obj.target = message.target);
+    message.type !== undefined && (obj.type = Math.round(message.type));
+    message.persistence !== undefined && (obj.persistence = message.persistence);
+    message.hidden !== undefined && (obj.hidden = message.hidden);
     return obj;
   },
 
   create<I extends Exact<DeepPartial<ChannelJoin>, I>>(base?: I): ChannelJoin {
-    return ChannelJoin.fromPartial(base ?? ({} as any));
+    return ChannelJoin.fromPartial(base ?? {});
   },
+
   fromPartial<I extends Exact<DeepPartial<ChannelJoin>, I>>(object: I): ChannelJoin {
     const message = createBaseChannelJoin();
     message.target_id = object.target_id ?? "";
@@ -2171,43 +1859,37 @@ export const ChannelLeave = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): ChannelLeave {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseChannelLeave();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 10) {
-            break;
-          }
-
           message.channel_id = reader.string();
-          continue;
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
       }
-      if ((tag & 7) === 4 || tag === 0) {
-        break;
-      }
-      reader.skipType(tag & 7);
     }
     return message;
   },
 
   fromJSON(object: any): ChannelLeave {
-    return { channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "" };
+    return { channel_id: isSet(object.channel_id) ? String(object.channel_id) : "" };
   },
 
   toJSON(message: ChannelLeave): unknown {
     const obj: any = {};
-    if (message.channel_id !== "") {
-      obj.channel_id = message.channel_id;
-    }
+    message.channel_id !== undefined && (obj.channel_id = message.channel_id);
     return obj;
   },
 
   create<I extends Exact<DeepPartial<ChannelLeave>, I>>(base?: I): ChannelLeave {
-    return ChannelLeave.fromPartial(base ?? ({} as any));
+    return ChannelLeave.fromPartial(base ?? {});
   },
+
   fromPartial<I extends Exact<DeepPartial<ChannelLeave>, I>>(object: I): ChannelLeave {
     const message = createBaseChannelLeave();
     message.channel_id = object.channel_id ?? "";
@@ -2270,155 +1952,89 @@ export const ChannelMessageAck = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): ChannelMessageAck {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseChannelMessageAck();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 10) {
-            break;
-          }
-
           message.channel_id = reader.string();
-          continue;
+          break;
         case 2:
-          if (tag !== 18) {
-            break;
-          }
-
           message.message_id = reader.string();
-          continue;
+          break;
         case 3:
-          if (tag !== 26) {
-            break;
-          }
-
           message.code = Int32Value.decode(reader, reader.uint32()).value;
-          continue;
+          break;
         case 4:
-          if (tag !== 34) {
-            break;
-          }
-
           message.username = reader.string();
-          continue;
+          break;
         case 5:
-          if (tag !== 42) {
-            break;
-          }
-
           message.create_time = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
-          continue;
+          break;
         case 6:
-          if (tag !== 50) {
-            break;
-          }
-
           message.update_time = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
-          continue;
+          break;
         case 7:
-          if (tag !== 58) {
-            break;
-          }
-
           message.persistent = BoolValue.decode(reader, reader.uint32()).value;
-          continue;
+          break;
         case 8:
-          if (tag !== 66) {
-            break;
-          }
-
           message.room_name = reader.string();
-          continue;
+          break;
         case 9:
-          if (tag !== 74) {
-            break;
-          }
-
           message.group_id = reader.string();
-          continue;
+          break;
         case 10:
-          if (tag !== 82) {
-            break;
-          }
-
           message.user_id_one = reader.string();
-          continue;
+          break;
         case 11:
-          if (tag !== 90) {
-            break;
-          }
-
           message.user_id_two = reader.string();
-          continue;
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
       }
-      if ((tag & 7) === 4 || tag === 0) {
-        break;
-      }
-      reader.skipType(tag & 7);
     }
     return message;
   },
 
   fromJSON(object: any): ChannelMessageAck {
     return {
-      channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "",
-      message_id: isSet(object.message_id) ? globalThis.String(object.message_id) : "",
+      channel_id: isSet(object.channel_id) ? String(object.channel_id) : "",
+      message_id: isSet(object.message_id) ? String(object.message_id) : "",
       code: isSet(object.code) ? Number(object.code) : undefined,
-      username: isSet(object.username) ? globalThis.String(object.username) : "",
+      username: isSet(object.username) ? String(object.username) : "",
       create_time: isSet(object.create_time) ? fromJsonTimestamp(object.create_time) : undefined,
       update_time: isSet(object.update_time) ? fromJsonTimestamp(object.update_time) : undefined,
       persistent: isSet(object.persistent) ? Boolean(object.persistent) : undefined,
-      room_name: isSet(object.room_name) ? globalThis.String(object.room_name) : "",
-      group_id: isSet(object.group_id) ? globalThis.String(object.group_id) : "",
-      user_id_one: isSet(object.user_id_one) ? globalThis.String(object.user_id_one) : "",
-      user_id_two: isSet(object.user_id_two) ? globalThis.String(object.user_id_two) : "",
+      room_name: isSet(object.room_name) ? String(object.room_name) : "",
+      group_id: isSet(object.group_id) ? String(object.group_id) : "",
+      user_id_one: isSet(object.user_id_one) ? String(object.user_id_one) : "",
+      user_id_two: isSet(object.user_id_two) ? String(object.user_id_two) : "",
     };
   },
 
   toJSON(message: ChannelMessageAck): unknown {
     const obj: any = {};
-    if (message.channel_id !== "") {
-      obj.channel_id = message.channel_id;
-    }
-    if (message.message_id !== "") {
-      obj.message_id = message.message_id;
-    }
-    if (message.code !== undefined) {
-      obj.code = message.code;
-    }
-    if (message.username !== "") {
-      obj.username = message.username;
-    }
-    if (message.create_time !== undefined) {
-      obj.create_time = message.create_time.toISOString();
-    }
-    if (message.update_time !== undefined) {
-      obj.update_time = message.update_time.toISOString();
-    }
-    if (message.persistent !== undefined) {
-      obj.persistent = message.persistent;
-    }
-    if (message.room_name !== "") {
-      obj.room_name = message.room_name;
-    }
-    if (message.group_id !== "") {
-      obj.group_id = message.group_id;
-    }
-    if (message.user_id_one !== "") {
-      obj.user_id_one = message.user_id_one;
-    }
-    if (message.user_id_two !== "") {
-      obj.user_id_two = message.user_id_two;
-    }
+    message.channel_id !== undefined && (obj.channel_id = message.channel_id);
+    message.message_id !== undefined && (obj.message_id = message.message_id);
+    message.code !== undefined && (obj.code = message.code);
+    message.username !== undefined && (obj.username = message.username);
+    message.create_time !== undefined && (obj.create_time = message.create_time.toISOString());
+    message.update_time !== undefined && (obj.update_time = message.update_time.toISOString());
+    message.persistent !== undefined && (obj.persistent = message.persistent);
+    message.room_name !== undefined && (obj.room_name = message.room_name);
+    message.group_id !== undefined && (obj.group_id = message.group_id);
+    message.user_id_one !== undefined && (obj.user_id_one = message.user_id_one);
+    message.user_id_two !== undefined && (obj.user_id_two = message.user_id_two);
     return obj;
   },
 
   create<I extends Exact<DeepPartial<ChannelMessageAck>, I>>(base?: I): ChannelMessageAck {
-    return ChannelMessageAck.fromPartial(base ?? ({} as any));
+    return ChannelMessageAck.fromPartial(base ?? {});
   },
+
   fromPartial<I extends Exact<DeepPartial<ChannelMessageAck>, I>>(object: I): ChannelMessageAck {
     const message = createBaseChannelMessageAck();
     message.channel_id = object.channel_id ?? "";
@@ -2455,67 +2071,49 @@ export const ChannelMessageSend = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): ChannelMessageSend {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseChannelMessageSend();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 10) {
-            break;
-          }
-
           message.clan_id = reader.string();
-          continue;
+          break;
         case 2:
-          if (tag !== 18) {
-            break;
-          }
-
           message.channel_id = reader.string();
-          continue;
+          break;
         case 3:
-          if (tag !== 26) {
-            break;
-          }
-
           message.content = reader.string();
-          continue;
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
       }
-      if ((tag & 7) === 4 || tag === 0) {
-        break;
-      }
-      reader.skipType(tag & 7);
     }
     return message;
   },
 
   fromJSON(object: any): ChannelMessageSend {
     return {
-      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
-      channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "",
-      content: isSet(object.content) ? globalThis.String(object.content) : "",
+      clan_id: isSet(object.clan_id) ? String(object.clan_id) : "",
+      channel_id: isSet(object.channel_id) ? String(object.channel_id) : "",
+      content: isSet(object.content) ? String(object.content) : "",
     };
   },
 
   toJSON(message: ChannelMessageSend): unknown {
     const obj: any = {};
-    if (message.clan_id !== "") {
-      obj.clan_id = message.clan_id;
-    }
-    if (message.channel_id !== "") {
-      obj.channel_id = message.channel_id;
-    }
-    if (message.content !== "") {
-      obj.content = message.content;
-    }
+    message.clan_id !== undefined && (obj.clan_id = message.clan_id);
+    message.channel_id !== undefined && (obj.channel_id = message.channel_id);
+    message.content !== undefined && (obj.content = message.content);
     return obj;
   },
 
   create<I extends Exact<DeepPartial<ChannelMessageSend>, I>>(base?: I): ChannelMessageSend {
-    return ChannelMessageSend.fromPartial(base ?? ({} as any));
+    return ChannelMessageSend.fromPartial(base ?? {});
   },
+
   fromPartial<I extends Exact<DeepPartial<ChannelMessageSend>, I>>(object: I): ChannelMessageSend {
     const message = createBaseChannelMessageSend();
     message.clan_id = object.clan_id ?? "";
@@ -2544,67 +2142,49 @@ export const ChannelMessageUpdate = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): ChannelMessageUpdate {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseChannelMessageUpdate();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 10) {
-            break;
-          }
-
           message.channel_id = reader.string();
-          continue;
+          break;
         case 2:
-          if (tag !== 18) {
-            break;
-          }
-
           message.message_id = reader.string();
-          continue;
+          break;
         case 3:
-          if (tag !== 26) {
-            break;
-          }
-
           message.content = reader.string();
-          continue;
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
       }
-      if ((tag & 7) === 4 || tag === 0) {
-        break;
-      }
-      reader.skipType(tag & 7);
     }
     return message;
   },
 
   fromJSON(object: any): ChannelMessageUpdate {
     return {
-      channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "",
-      message_id: isSet(object.message_id) ? globalThis.String(object.message_id) : "",
-      content: isSet(object.content) ? globalThis.String(object.content) : "",
+      channel_id: isSet(object.channel_id) ? String(object.channel_id) : "",
+      message_id: isSet(object.message_id) ? String(object.message_id) : "",
+      content: isSet(object.content) ? String(object.content) : "",
     };
   },
 
   toJSON(message: ChannelMessageUpdate): unknown {
     const obj: any = {};
-    if (message.channel_id !== "") {
-      obj.channel_id = message.channel_id;
-    }
-    if (message.message_id !== "") {
-      obj.message_id = message.message_id;
-    }
-    if (message.content !== "") {
-      obj.content = message.content;
-    }
+    message.channel_id !== undefined && (obj.channel_id = message.channel_id);
+    message.message_id !== undefined && (obj.message_id = message.message_id);
+    message.content !== undefined && (obj.content = message.content);
     return obj;
   },
 
   create<I extends Exact<DeepPartial<ChannelMessageUpdate>, I>>(base?: I): ChannelMessageUpdate {
-    return ChannelMessageUpdate.fromPartial(base ?? ({} as any));
+    return ChannelMessageUpdate.fromPartial(base ?? {});
   },
+
   fromPartial<I extends Exact<DeepPartial<ChannelMessageUpdate>, I>>(object: I): ChannelMessageUpdate {
     const message = createBaseChannelMessageUpdate();
     message.channel_id = object.channel_id ?? "";
@@ -2630,56 +2210,44 @@ export const ChannelMessageRemove = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): ChannelMessageRemove {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseChannelMessageRemove();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 10) {
-            break;
-          }
-
           message.channel_id = reader.string();
-          continue;
+          break;
         case 2:
-          if (tag !== 18) {
-            break;
-          }
-
           message.message_id = reader.string();
-          continue;
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
       }
-      if ((tag & 7) === 4 || tag === 0) {
-        break;
-      }
-      reader.skipType(tag & 7);
     }
     return message;
   },
 
   fromJSON(object: any): ChannelMessageRemove {
     return {
-      channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "",
-      message_id: isSet(object.message_id) ? globalThis.String(object.message_id) : "",
+      channel_id: isSet(object.channel_id) ? String(object.channel_id) : "",
+      message_id: isSet(object.message_id) ? String(object.message_id) : "",
     };
   },
 
   toJSON(message: ChannelMessageRemove): unknown {
     const obj: any = {};
-    if (message.channel_id !== "") {
-      obj.channel_id = message.channel_id;
-    }
-    if (message.message_id !== "") {
-      obj.message_id = message.message_id;
-    }
+    message.channel_id !== undefined && (obj.channel_id = message.channel_id);
+    message.message_id !== undefined && (obj.message_id = message.message_id);
     return obj;
   },
 
   create<I extends Exact<DeepPartial<ChannelMessageRemove>, I>>(base?: I): ChannelMessageRemove {
-    return ChannelMessageRemove.fromPartial(base ?? ({} as any));
+    return ChannelMessageRemove.fromPartial(base ?? {});
   },
+
   fromPartial<I extends Exact<DeepPartial<ChannelMessageRemove>, I>>(object: I): ChannelMessageRemove {
     const message = createBaseChannelMessageRemove();
     message.channel_id = object.channel_id ?? "";
@@ -2719,111 +2287,77 @@ export const ChannelPresenceEvent = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): ChannelPresenceEvent {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseChannelPresenceEvent();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 10) {
-            break;
-          }
-
           message.channel_id = reader.string();
-          continue;
+          break;
         case 2:
-          if (tag !== 18) {
-            break;
-          }
-
           message.joins.push(UserPresence.decode(reader, reader.uint32()));
-          continue;
+          break;
         case 3:
-          if (tag !== 26) {
-            break;
-          }
-
           message.leaves.push(UserPresence.decode(reader, reader.uint32()));
-          continue;
+          break;
         case 4:
-          if (tag !== 34) {
-            break;
-          }
-
           message.room_name = reader.string();
-          continue;
+          break;
         case 5:
-          if (tag !== 42) {
-            break;
-          }
-
           message.group_id = reader.string();
-          continue;
+          break;
         case 6:
-          if (tag !== 50) {
-            break;
-          }
-
           message.user_id_one = reader.string();
-          continue;
+          break;
         case 7:
-          if (tag !== 58) {
-            break;
-          }
-
           message.user_id_two = reader.string();
-          continue;
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
       }
-      if ((tag & 7) === 4 || tag === 0) {
-        break;
-      }
-      reader.skipType(tag & 7);
     }
     return message;
   },
 
   fromJSON(object: any): ChannelPresenceEvent {
     return {
-      channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "",
-      joins: globalThis.Array.isArray(object?.joins) ? object.joins.map((e: any) => UserPresence.fromJSON(e)) : [],
-      leaves: globalThis.Array.isArray(object?.leaves) ? object.leaves.map((e: any) => UserPresence.fromJSON(e)) : [],
-      room_name: isSet(object.room_name) ? globalThis.String(object.room_name) : "",
-      group_id: isSet(object.group_id) ? globalThis.String(object.group_id) : "",
-      user_id_one: isSet(object.user_id_one) ? globalThis.String(object.user_id_one) : "",
-      user_id_two: isSet(object.user_id_two) ? globalThis.String(object.user_id_two) : "",
+      channel_id: isSet(object.channel_id) ? String(object.channel_id) : "",
+      joins: Array.isArray(object?.joins) ? object.joins.map((e: any) => UserPresence.fromJSON(e)) : [],
+      leaves: Array.isArray(object?.leaves) ? object.leaves.map((e: any) => UserPresence.fromJSON(e)) : [],
+      room_name: isSet(object.room_name) ? String(object.room_name) : "",
+      group_id: isSet(object.group_id) ? String(object.group_id) : "",
+      user_id_one: isSet(object.user_id_one) ? String(object.user_id_one) : "",
+      user_id_two: isSet(object.user_id_two) ? String(object.user_id_two) : "",
     };
   },
 
   toJSON(message: ChannelPresenceEvent): unknown {
     const obj: any = {};
-    if (message.channel_id !== "") {
-      obj.channel_id = message.channel_id;
+    message.channel_id !== undefined && (obj.channel_id = message.channel_id);
+    if (message.joins) {
+      obj.joins = message.joins.map((e) => e ? UserPresence.toJSON(e) : undefined);
+    } else {
+      obj.joins = [];
     }
-    if (message.joins?.length) {
-      obj.joins = message.joins.map((e) => UserPresence.toJSON(e));
+    if (message.leaves) {
+      obj.leaves = message.leaves.map((e) => e ? UserPresence.toJSON(e) : undefined);
+    } else {
+      obj.leaves = [];
     }
-    if (message.leaves?.length) {
-      obj.leaves = message.leaves.map((e) => UserPresence.toJSON(e));
-    }
-    if (message.room_name !== "") {
-      obj.room_name = message.room_name;
-    }
-    if (message.group_id !== "") {
-      obj.group_id = message.group_id;
-    }
-    if (message.user_id_one !== "") {
-      obj.user_id_one = message.user_id_one;
-    }
-    if (message.user_id_two !== "") {
-      obj.user_id_two = message.user_id_two;
-    }
+    message.room_name !== undefined && (obj.room_name = message.room_name);
+    message.group_id !== undefined && (obj.group_id = message.group_id);
+    message.user_id_one !== undefined && (obj.user_id_one = message.user_id_one);
+    message.user_id_two !== undefined && (obj.user_id_two = message.user_id_two);
     return obj;
   },
 
   create<I extends Exact<DeepPartial<ChannelPresenceEvent>, I>>(base?: I): ChannelPresenceEvent {
-    return ChannelPresenceEvent.fromPartial(base ?? ({} as any));
+    return ChannelPresenceEvent.fromPartial(base ?? {});
   },
+
   fromPartial<I extends Exact<DeepPartial<ChannelPresenceEvent>, I>>(object: I): ChannelPresenceEvent {
     const message = createBaseChannelPresenceEvent();
     message.channel_id = object.channel_id ?? "";
@@ -2856,49 +2390,36 @@ export const Error = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): Error {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseError();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 8) {
-            break;
-          }
-
           message.code = reader.int32();
-          continue;
+          break;
         case 2:
-          if (tag !== 18) {
-            break;
-          }
-
           message.message = reader.string();
-          continue;
+          break;
         case 3:
-          if (tag !== 26) {
-            break;
-          }
-
           const entry3 = Error_ContextEntry.decode(reader, reader.uint32());
           if (entry3.value !== undefined) {
             message.context[entry3.key] = entry3.value;
           }
-          continue;
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
       }
-      if ((tag & 7) === 4 || tag === 0) {
-        break;
-      }
-      reader.skipType(tag & 7);
     }
     return message;
   },
 
   fromJSON(object: any): Error {
     return {
-      code: isSet(object.code) ? globalThis.Number(object.code) : 0,
-      message: isSet(object.message) ? globalThis.String(object.message) : "",
+      code: isSet(object.code) ? Number(object.code) : 0,
+      message: isSet(object.message) ? String(object.message) : "",
       context: isObject(object.context)
         ? Object.entries(object.context).reduce<{ [key: string]: string }>((acc, [key, value]) => {
           acc[key] = String(value);
@@ -2910,34 +2431,28 @@ export const Error = {
 
   toJSON(message: Error): unknown {
     const obj: any = {};
-    if (message.code !== 0) {
-      obj.code = Math.round(message.code);
-    }
-    if (message.message !== "") {
-      obj.message = message.message;
-    }
+    message.code !== undefined && (obj.code = Math.round(message.code));
+    message.message !== undefined && (obj.message = message.message);
+    obj.context = {};
     if (message.context) {
-      const entries = Object.entries(message.context);
-      if (entries.length > 0) {
-        obj.context = {};
-        entries.forEach(([k, v]) => {
-          obj.context[k] = v;
-        });
-      }
+      Object.entries(message.context).forEach(([k, v]) => {
+        obj.context[k] = v;
+      });
     }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<Error>, I>>(base?: I): Error {
-    return Error.fromPartial(base ?? ({} as any));
+    return Error.fromPartial(base ?? {});
   },
+
   fromPartial<I extends Exact<DeepPartial<Error>, I>>(object: I): Error {
     const message = createBaseError();
     message.code = object.code ?? 0;
     message.message = object.message ?? "";
     message.context = Object.entries(object.context ?? {}).reduce<{ [key: string]: string }>((acc, [key, value]) => {
       if (value !== undefined) {
-        acc[key] = globalThis.String(value);
+        acc[key] = String(value);
       }
       return acc;
     }, {});
@@ -2961,56 +2476,41 @@ export const Error_ContextEntry = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): Error_ContextEntry {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseError_ContextEntry();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 10) {
-            break;
-          }
-
           message.key = reader.string();
-          continue;
+          break;
         case 2:
-          if (tag !== 18) {
-            break;
-          }
-
           message.value = reader.string();
-          continue;
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
       }
-      if ((tag & 7) === 4 || tag === 0) {
-        break;
-      }
-      reader.skipType(tag & 7);
     }
     return message;
   },
 
   fromJSON(object: any): Error_ContextEntry {
-    return {
-      key: isSet(object.key) ? globalThis.String(object.key) : "",
-      value: isSet(object.value) ? globalThis.String(object.value) : "",
-    };
+    return { key: isSet(object.key) ? String(object.key) : "", value: isSet(object.value) ? String(object.value) : "" };
   },
 
   toJSON(message: Error_ContextEntry): unknown {
     const obj: any = {};
-    if (message.key !== "") {
-      obj.key = message.key;
-    }
-    if (message.value !== "") {
-      obj.value = message.value;
-    }
+    message.key !== undefined && (obj.key = message.key);
+    message.value !== undefined && (obj.value = message.value);
     return obj;
   },
 
   create<I extends Exact<DeepPartial<Error_ContextEntry>, I>>(base?: I): Error_ContextEntry {
-    return Error_ContextEntry.fromPartial(base ?? ({} as any));
+    return Error_ContextEntry.fromPartial(base ?? {});
   },
+
   fromPartial<I extends Exact<DeepPartial<Error_ContextEntry>, I>>(object: I): Error_ContextEntry {
     const message = createBaseError_ContextEntry();
     message.key = object.key ?? "";
@@ -3047,102 +2547,68 @@ export const Match = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): Match {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseMatch();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 10) {
-            break;
-          }
-
           message.match_id = reader.string();
-          continue;
+          break;
         case 2:
-          if (tag !== 16) {
-            break;
-          }
-
           message.authoritative = reader.bool();
-          continue;
+          break;
         case 3:
-          if (tag !== 26) {
-            break;
-          }
-
           message.label = StringValue.decode(reader, reader.uint32()).value;
-          continue;
+          break;
         case 4:
-          if (tag !== 32) {
-            break;
-          }
-
           message.size = reader.int32();
-          continue;
+          break;
         case 5:
-          if (tag !== 42) {
-            break;
-          }
-
           message.presences.push(UserPresence.decode(reader, reader.uint32()));
-          continue;
+          break;
         case 6:
-          if (tag !== 50) {
-            break;
-          }
-
           message.self = UserPresence.decode(reader, reader.uint32());
-          continue;
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
       }
-      if ((tag & 7) === 4 || tag === 0) {
-        break;
-      }
-      reader.skipType(tag & 7);
     }
     return message;
   },
 
   fromJSON(object: any): Match {
     return {
-      match_id: isSet(object.match_id) ? globalThis.String(object.match_id) : "",
-      authoritative: isSet(object.authoritative) ? globalThis.Boolean(object.authoritative) : false,
+      match_id: isSet(object.match_id) ? String(object.match_id) : "",
+      authoritative: isSet(object.authoritative) ? Boolean(object.authoritative) : false,
       label: isSet(object.label) ? String(object.label) : undefined,
-      size: isSet(object.size) ? globalThis.Number(object.size) : 0,
-      presences: globalThis.Array.isArray(object?.presences)
-        ? object.presences.map((e: any) => UserPresence.fromJSON(e))
-        : [],
+      size: isSet(object.size) ? Number(object.size) : 0,
+      presences: Array.isArray(object?.presences) ? object.presences.map((e: any) => UserPresence.fromJSON(e)) : [],
       self: isSet(object.self) ? UserPresence.fromJSON(object.self) : undefined,
     };
   },
 
   toJSON(message: Match): unknown {
     const obj: any = {};
-    if (message.match_id !== "") {
-      obj.match_id = message.match_id;
+    message.match_id !== undefined && (obj.match_id = message.match_id);
+    message.authoritative !== undefined && (obj.authoritative = message.authoritative);
+    message.label !== undefined && (obj.label = message.label);
+    message.size !== undefined && (obj.size = Math.round(message.size));
+    if (message.presences) {
+      obj.presences = message.presences.map((e) => e ? UserPresence.toJSON(e) : undefined);
+    } else {
+      obj.presences = [];
     }
-    if (message.authoritative === true) {
-      obj.authoritative = message.authoritative;
-    }
-    if (message.label !== undefined) {
-      obj.label = message.label;
-    }
-    if (message.size !== 0) {
-      obj.size = Math.round(message.size);
-    }
-    if (message.presences?.length) {
-      obj.presences = message.presences.map((e) => UserPresence.toJSON(e));
-    }
-    if (message.self !== undefined) {
-      obj.self = UserPresence.toJSON(message.self);
-    }
+    message.self !== undefined && (obj.self = message.self ? UserPresence.toJSON(message.self) : undefined);
     return obj;
   },
 
   create<I extends Exact<DeepPartial<Match>, I>>(base?: I): Match {
-    return Match.fromPartial(base ?? ({} as any));
+    return Match.fromPartial(base ?? {});
   },
+
   fromPartial<I extends Exact<DeepPartial<Match>, I>>(object: I): Match {
     const message = createBaseMatch();
     message.match_id = object.match_id ?? "";
@@ -3170,43 +2636,37 @@ export const MatchCreate = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): MatchCreate {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseMatchCreate();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 10) {
-            break;
-          }
-
           message.name = reader.string();
-          continue;
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
       }
-      if ((tag & 7) === 4 || tag === 0) {
-        break;
-      }
-      reader.skipType(tag & 7);
     }
     return message;
   },
 
   fromJSON(object: any): MatchCreate {
-    return { name: isSet(object.name) ? globalThis.String(object.name) : "" };
+    return { name: isSet(object.name) ? String(object.name) : "" };
   },
 
   toJSON(message: MatchCreate): unknown {
     const obj: any = {};
-    if (message.name !== "") {
-      obj.name = message.name;
-    }
+    message.name !== undefined && (obj.name = message.name);
     return obj;
   },
 
   create<I extends Exact<DeepPartial<MatchCreate>, I>>(base?: I): MatchCreate {
-    return MatchCreate.fromPartial(base ?? ({} as any));
+    return MatchCreate.fromPartial(base ?? {});
   },
+
   fromPartial<I extends Exact<DeepPartial<MatchCreate>, I>>(object: I): MatchCreate {
     const message = createBaseMatchCreate();
     message.name = object.name ?? "";
@@ -3215,7 +2675,7 @@ export const MatchCreate = {
 };
 
 function createBaseMatchData(): MatchData {
-  return { match_id: "", presence: undefined, op_code: 0, data: new Uint8Array(0), reliable: false };
+  return { match_id: "", presence: undefined, op_code: 0, data: new Uint8Array(), reliable: false };
 }
 
 export const MatchData = {
@@ -3239,89 +2699,61 @@ export const MatchData = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): MatchData {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseMatchData();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 10) {
-            break;
-          }
-
           message.match_id = reader.string();
-          continue;
+          break;
         case 2:
-          if (tag !== 18) {
-            break;
-          }
-
           message.presence = UserPresence.decode(reader, reader.uint32());
-          continue;
+          break;
         case 3:
-          if (tag !== 24) {
-            break;
-          }
-
           message.op_code = longToNumber(reader.int64() as Long);
-          continue;
+          break;
         case 4:
-          if (tag !== 34) {
-            break;
-          }
-
           message.data = reader.bytes();
-          continue;
+          break;
         case 5:
-          if (tag !== 40) {
-            break;
-          }
-
           message.reliable = reader.bool();
-          continue;
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
       }
-      if ((tag & 7) === 4 || tag === 0) {
-        break;
-      }
-      reader.skipType(tag & 7);
     }
     return message;
   },
 
   fromJSON(object: any): MatchData {
     return {
-      match_id: isSet(object.match_id) ? globalThis.String(object.match_id) : "",
+      match_id: isSet(object.match_id) ? String(object.match_id) : "",
       presence: isSet(object.presence) ? UserPresence.fromJSON(object.presence) : undefined,
-      op_code: isSet(object.op_code) ? globalThis.Number(object.op_code) : 0,
-      data: isSet(object.data) ? bytesFromBase64(object.data) : new Uint8Array(0),
-      reliable: isSet(object.reliable) ? globalThis.Boolean(object.reliable) : false,
+      op_code: isSet(object.op_code) ? Number(object.op_code) : 0,
+      data: isSet(object.data) ? bytesFromBase64(object.data) : new Uint8Array(),
+      reliable: isSet(object.reliable) ? Boolean(object.reliable) : false,
     };
   },
 
   toJSON(message: MatchData): unknown {
     const obj: any = {};
-    if (message.match_id !== "") {
-      obj.match_id = message.match_id;
-    }
-    if (message.presence !== undefined) {
-      obj.presence = UserPresence.toJSON(message.presence);
-    }
-    if (message.op_code !== 0) {
-      obj.op_code = Math.round(message.op_code);
-    }
-    if (message.data.length !== 0) {
-      obj.data = base64FromBytes(message.data);
-    }
-    if (message.reliable === true) {
-      obj.reliable = message.reliable;
-    }
+    message.match_id !== undefined && (obj.match_id = message.match_id);
+    message.presence !== undefined &&
+      (obj.presence = message.presence ? UserPresence.toJSON(message.presence) : undefined);
+    message.op_code !== undefined && (obj.op_code = Math.round(message.op_code));
+    message.data !== undefined &&
+      (obj.data = base64FromBytes(message.data !== undefined ? message.data : new Uint8Array()));
+    message.reliable !== undefined && (obj.reliable = message.reliable);
     return obj;
   },
 
   create<I extends Exact<DeepPartial<MatchData>, I>>(base?: I): MatchData {
-    return MatchData.fromPartial(base ?? ({} as any));
+    return MatchData.fromPartial(base ?? {});
   },
+
   fromPartial<I extends Exact<DeepPartial<MatchData>, I>>(object: I): MatchData {
     const message = createBaseMatchData();
     message.match_id = object.match_id ?? "";
@@ -3329,14 +2761,14 @@ export const MatchData = {
       ? UserPresence.fromPartial(object.presence)
       : undefined;
     message.op_code = object.op_code ?? 0;
-    message.data = object.data ?? new Uint8Array(0);
+    message.data = object.data ?? new Uint8Array();
     message.reliable = object.reliable ?? false;
     return message;
   },
 };
 
 function createBaseMatchDataSend(): MatchDataSend {
-  return { match_id: "", op_code: 0, data: new Uint8Array(0), presences: [], reliable: false };
+  return { match_id: "", op_code: 0, data: new Uint8Array(), presences: [], reliable: false };
 }
 
 export const MatchDataSend = {
@@ -3360,96 +2792,69 @@ export const MatchDataSend = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): MatchDataSend {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseMatchDataSend();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 10) {
-            break;
-          }
-
           message.match_id = reader.string();
-          continue;
+          break;
         case 2:
-          if (tag !== 16) {
-            break;
-          }
-
           message.op_code = longToNumber(reader.int64() as Long);
-          continue;
+          break;
         case 3:
-          if (tag !== 26) {
-            break;
-          }
-
           message.data = reader.bytes();
-          continue;
+          break;
         case 4:
-          if (tag !== 34) {
-            break;
-          }
-
           message.presences.push(UserPresence.decode(reader, reader.uint32()));
-          continue;
+          break;
         case 5:
-          if (tag !== 40) {
-            break;
-          }
-
           message.reliable = reader.bool();
-          continue;
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
       }
-      if ((tag & 7) === 4 || tag === 0) {
-        break;
-      }
-      reader.skipType(tag & 7);
     }
     return message;
   },
 
   fromJSON(object: any): MatchDataSend {
     return {
-      match_id: isSet(object.match_id) ? globalThis.String(object.match_id) : "",
-      op_code: isSet(object.op_code) ? globalThis.Number(object.op_code) : 0,
-      data: isSet(object.data) ? bytesFromBase64(object.data) : new Uint8Array(0),
-      presences: globalThis.Array.isArray(object?.presences)
-        ? object.presences.map((e: any) => UserPresence.fromJSON(e))
-        : [],
-      reliable: isSet(object.reliable) ? globalThis.Boolean(object.reliable) : false,
+      match_id: isSet(object.match_id) ? String(object.match_id) : "",
+      op_code: isSet(object.op_code) ? Number(object.op_code) : 0,
+      data: isSet(object.data) ? bytesFromBase64(object.data) : new Uint8Array(),
+      presences: Array.isArray(object?.presences) ? object.presences.map((e: any) => UserPresence.fromJSON(e)) : [],
+      reliable: isSet(object.reliable) ? Boolean(object.reliable) : false,
     };
   },
 
   toJSON(message: MatchDataSend): unknown {
     const obj: any = {};
-    if (message.match_id !== "") {
-      obj.match_id = message.match_id;
+    message.match_id !== undefined && (obj.match_id = message.match_id);
+    message.op_code !== undefined && (obj.op_code = Math.round(message.op_code));
+    message.data !== undefined &&
+      (obj.data = base64FromBytes(message.data !== undefined ? message.data : new Uint8Array()));
+    if (message.presences) {
+      obj.presences = message.presences.map((e) => e ? UserPresence.toJSON(e) : undefined);
+    } else {
+      obj.presences = [];
     }
-    if (message.op_code !== 0) {
-      obj.op_code = Math.round(message.op_code);
-    }
-    if (message.data.length !== 0) {
-      obj.data = base64FromBytes(message.data);
-    }
-    if (message.presences?.length) {
-      obj.presences = message.presences.map((e) => UserPresence.toJSON(e));
-    }
-    if (message.reliable === true) {
-      obj.reliable = message.reliable;
-    }
+    message.reliable !== undefined && (obj.reliable = message.reliable);
     return obj;
   },
 
   create<I extends Exact<DeepPartial<MatchDataSend>, I>>(base?: I): MatchDataSend {
-    return MatchDataSend.fromPartial(base ?? ({} as any));
+    return MatchDataSend.fromPartial(base ?? {});
   },
+
   fromPartial<I extends Exact<DeepPartial<MatchDataSend>, I>>(object: I): MatchDataSend {
     const message = createBaseMatchDataSend();
     message.match_id = object.match_id ?? "";
     message.op_code = object.op_code ?? 0;
-    message.data = object.data ?? new Uint8Array(0);
+    message.data = object.data ?? new Uint8Array();
     message.presences = object.presences?.map((e) => UserPresence.fromPartial(e)) || [];
     message.reliable = object.reliable ?? false;
     return message;
@@ -3475,49 +2880,36 @@ export const MatchJoin = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): MatchJoin {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseMatchJoin();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 10) {
-            break;
-          }
-
           message.match_id = reader.string();
-          continue;
+          break;
         case 2:
-          if (tag !== 18) {
-            break;
-          }
-
           message.token = reader.string();
-          continue;
+          break;
         case 3:
-          if (tag !== 26) {
-            break;
-          }
-
           const entry3 = MatchJoin_MetadataEntry.decode(reader, reader.uint32());
           if (entry3.value !== undefined) {
             message.metadata[entry3.key] = entry3.value;
           }
-          continue;
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
       }
-      if ((tag & 7) === 4 || tag === 0) {
-        break;
-      }
-      reader.skipType(tag & 7);
     }
     return message;
   },
 
   fromJSON(object: any): MatchJoin {
     return {
-      match_id: isSet(object.match_id) ? globalThis.String(object.match_id) : undefined,
-      token: isSet(object.token) ? globalThis.String(object.token) : undefined,
+      match_id: isSet(object.match_id) ? String(object.match_id) : undefined,
+      token: isSet(object.token) ? String(object.token) : undefined,
       metadata: isObject(object.metadata)
         ? Object.entries(object.metadata).reduce<{ [key: string]: string }>((acc, [key, value]) => {
           acc[key] = String(value);
@@ -3529,34 +2921,28 @@ export const MatchJoin = {
 
   toJSON(message: MatchJoin): unknown {
     const obj: any = {};
-    if (message.match_id !== undefined) {
-      obj.match_id = message.match_id;
-    }
-    if (message.token !== undefined) {
-      obj.token = message.token;
-    }
+    message.match_id !== undefined && (obj.match_id = message.match_id);
+    message.token !== undefined && (obj.token = message.token);
+    obj.metadata = {};
     if (message.metadata) {
-      const entries = Object.entries(message.metadata);
-      if (entries.length > 0) {
-        obj.metadata = {};
-        entries.forEach(([k, v]) => {
-          obj.metadata[k] = v;
-        });
-      }
+      Object.entries(message.metadata).forEach(([k, v]) => {
+        obj.metadata[k] = v;
+      });
     }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<MatchJoin>, I>>(base?: I): MatchJoin {
-    return MatchJoin.fromPartial(base ?? ({} as any));
+    return MatchJoin.fromPartial(base ?? {});
   },
+
   fromPartial<I extends Exact<DeepPartial<MatchJoin>, I>>(object: I): MatchJoin {
     const message = createBaseMatchJoin();
     message.match_id = object.match_id ?? undefined;
     message.token = object.token ?? undefined;
     message.metadata = Object.entries(object.metadata ?? {}).reduce<{ [key: string]: string }>((acc, [key, value]) => {
       if (value !== undefined) {
-        acc[key] = globalThis.String(value);
+        acc[key] = String(value);
       }
       return acc;
     }, {});
@@ -3580,56 +2966,41 @@ export const MatchJoin_MetadataEntry = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): MatchJoin_MetadataEntry {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseMatchJoin_MetadataEntry();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 10) {
-            break;
-          }
-
           message.key = reader.string();
-          continue;
+          break;
         case 2:
-          if (tag !== 18) {
-            break;
-          }
-
           message.value = reader.string();
-          continue;
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
       }
-      if ((tag & 7) === 4 || tag === 0) {
-        break;
-      }
-      reader.skipType(tag & 7);
     }
     return message;
   },
 
   fromJSON(object: any): MatchJoin_MetadataEntry {
-    return {
-      key: isSet(object.key) ? globalThis.String(object.key) : "",
-      value: isSet(object.value) ? globalThis.String(object.value) : "",
-    };
+    return { key: isSet(object.key) ? String(object.key) : "", value: isSet(object.value) ? String(object.value) : "" };
   },
 
   toJSON(message: MatchJoin_MetadataEntry): unknown {
     const obj: any = {};
-    if (message.key !== "") {
-      obj.key = message.key;
-    }
-    if (message.value !== "") {
-      obj.value = message.value;
-    }
+    message.key !== undefined && (obj.key = message.key);
+    message.value !== undefined && (obj.value = message.value);
     return obj;
   },
 
   create<I extends Exact<DeepPartial<MatchJoin_MetadataEntry>, I>>(base?: I): MatchJoin_MetadataEntry {
-    return MatchJoin_MetadataEntry.fromPartial(base ?? ({} as any));
+    return MatchJoin_MetadataEntry.fromPartial(base ?? {});
   },
+
   fromPartial<I extends Exact<DeepPartial<MatchJoin_MetadataEntry>, I>>(object: I): MatchJoin_MetadataEntry {
     const message = createBaseMatchJoin_MetadataEntry();
     message.key = object.key ?? "";
@@ -3651,43 +3022,37 @@ export const MatchLeave = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): MatchLeave {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseMatchLeave();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 10) {
-            break;
-          }
-
           message.match_id = reader.string();
-          continue;
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
       }
-      if ((tag & 7) === 4 || tag === 0) {
-        break;
-      }
-      reader.skipType(tag & 7);
     }
     return message;
   },
 
   fromJSON(object: any): MatchLeave {
-    return { match_id: isSet(object.match_id) ? globalThis.String(object.match_id) : "" };
+    return { match_id: isSet(object.match_id) ? String(object.match_id) : "" };
   },
 
   toJSON(message: MatchLeave): unknown {
     const obj: any = {};
-    if (message.match_id !== "") {
-      obj.match_id = message.match_id;
-    }
+    message.match_id !== undefined && (obj.match_id = message.match_id);
     return obj;
   },
 
   create<I extends Exact<DeepPartial<MatchLeave>, I>>(base?: I): MatchLeave {
-    return MatchLeave.fromPartial(base ?? ({} as any));
+    return MatchLeave.fromPartial(base ?? {});
   },
+
   fromPartial<I extends Exact<DeepPartial<MatchLeave>, I>>(object: I): MatchLeave {
     const message = createBaseMatchLeave();
     message.match_id = object.match_id ?? "";
@@ -3714,67 +3079,57 @@ export const MatchPresenceEvent = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): MatchPresenceEvent {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseMatchPresenceEvent();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 10) {
-            break;
-          }
-
           message.match_id = reader.string();
-          continue;
+          break;
         case 2:
-          if (tag !== 18) {
-            break;
-          }
-
           message.joins.push(UserPresence.decode(reader, reader.uint32()));
-          continue;
+          break;
         case 3:
-          if (tag !== 26) {
-            break;
-          }
-
           message.leaves.push(UserPresence.decode(reader, reader.uint32()));
-          continue;
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
       }
-      if ((tag & 7) === 4 || tag === 0) {
-        break;
-      }
-      reader.skipType(tag & 7);
     }
     return message;
   },
 
   fromJSON(object: any): MatchPresenceEvent {
     return {
-      match_id: isSet(object.match_id) ? globalThis.String(object.match_id) : "",
-      joins: globalThis.Array.isArray(object?.joins) ? object.joins.map((e: any) => UserPresence.fromJSON(e)) : [],
-      leaves: globalThis.Array.isArray(object?.leaves) ? object.leaves.map((e: any) => UserPresence.fromJSON(e)) : [],
+      match_id: isSet(object.match_id) ? String(object.match_id) : "",
+      joins: Array.isArray(object?.joins) ? object.joins.map((e: any) => UserPresence.fromJSON(e)) : [],
+      leaves: Array.isArray(object?.leaves) ? object.leaves.map((e: any) => UserPresence.fromJSON(e)) : [],
     };
   },
 
   toJSON(message: MatchPresenceEvent): unknown {
     const obj: any = {};
-    if (message.match_id !== "") {
-      obj.match_id = message.match_id;
+    message.match_id !== undefined && (obj.match_id = message.match_id);
+    if (message.joins) {
+      obj.joins = message.joins.map((e) => e ? UserPresence.toJSON(e) : undefined);
+    } else {
+      obj.joins = [];
     }
-    if (message.joins?.length) {
-      obj.joins = message.joins.map((e) => UserPresence.toJSON(e));
-    }
-    if (message.leaves?.length) {
-      obj.leaves = message.leaves.map((e) => UserPresence.toJSON(e));
+    if (message.leaves) {
+      obj.leaves = message.leaves.map((e) => e ? UserPresence.toJSON(e) : undefined);
+    } else {
+      obj.leaves = [];
     }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<MatchPresenceEvent>, I>>(base?: I): MatchPresenceEvent {
-    return MatchPresenceEvent.fromPartial(base ?? ({} as any));
+    return MatchPresenceEvent.fromPartial(base ?? {});
   },
+
   fromPartial<I extends Exact<DeepPartial<MatchPresenceEvent>, I>>(object: I): MatchPresenceEvent {
     const message = createBaseMatchPresenceEvent();
     message.match_id = object.match_id ?? "";
@@ -3819,74 +3174,49 @@ export const MatchmakerAdd = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): MatchmakerAdd {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseMatchmakerAdd();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 8) {
-            break;
-          }
-
           message.min_count = reader.int32();
-          continue;
+          break;
         case 2:
-          if (tag !== 16) {
-            break;
-          }
-
           message.max_count = reader.int32();
-          continue;
+          break;
         case 3:
-          if (tag !== 26) {
-            break;
-          }
-
           message.query = reader.string();
-          continue;
+          break;
         case 4:
-          if (tag !== 34) {
-            break;
-          }
-
           const entry4 = MatchmakerAdd_StringPropertiesEntry.decode(reader, reader.uint32());
           if (entry4.value !== undefined) {
             message.string_properties[entry4.key] = entry4.value;
           }
-          continue;
+          break;
         case 5:
-          if (tag !== 42) {
-            break;
-          }
-
           const entry5 = MatchmakerAdd_NumericPropertiesEntry.decode(reader, reader.uint32());
           if (entry5.value !== undefined) {
             message.numeric_properties[entry5.key] = entry5.value;
           }
-          continue;
+          break;
         case 6:
-          if (tag !== 50) {
-            break;
-          }
-
           message.count_multiple = Int32Value.decode(reader, reader.uint32()).value;
-          continue;
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
       }
-      if ((tag & 7) === 4 || tag === 0) {
-        break;
-      }
-      reader.skipType(tag & 7);
     }
     return message;
   },
 
   fromJSON(object: any): MatchmakerAdd {
     return {
-      min_count: isSet(object.min_count) ? globalThis.Number(object.min_count) : 0,
-      max_count: isSet(object.max_count) ? globalThis.Number(object.max_count) : 0,
-      query: isSet(object.query) ? globalThis.String(object.query) : "",
+      min_count: isSet(object.min_count) ? Number(object.min_count) : 0,
+      max_count: isSet(object.max_count) ? Number(object.max_count) : 0,
+      query: isSet(object.query) ? String(object.query) : "",
       string_properties: isObject(object.string_properties)
         ? Object.entries(object.string_properties).reduce<{ [key: string]: string }>((acc, [key, value]) => {
           acc[key] = String(value);
@@ -3905,42 +3235,29 @@ export const MatchmakerAdd = {
 
   toJSON(message: MatchmakerAdd): unknown {
     const obj: any = {};
-    if (message.min_count !== 0) {
-      obj.min_count = Math.round(message.min_count);
-    }
-    if (message.max_count !== 0) {
-      obj.max_count = Math.round(message.max_count);
-    }
-    if (message.query !== "") {
-      obj.query = message.query;
-    }
+    message.min_count !== undefined && (obj.min_count = Math.round(message.min_count));
+    message.max_count !== undefined && (obj.max_count = Math.round(message.max_count));
+    message.query !== undefined && (obj.query = message.query);
+    obj.string_properties = {};
     if (message.string_properties) {
-      const entries = Object.entries(message.string_properties);
-      if (entries.length > 0) {
-        obj.string_properties = {};
-        entries.forEach(([k, v]) => {
-          obj.string_properties[k] = v;
-        });
-      }
+      Object.entries(message.string_properties).forEach(([k, v]) => {
+        obj.string_properties[k] = v;
+      });
     }
+    obj.numeric_properties = {};
     if (message.numeric_properties) {
-      const entries = Object.entries(message.numeric_properties);
-      if (entries.length > 0) {
-        obj.numeric_properties = {};
-        entries.forEach(([k, v]) => {
-          obj.numeric_properties[k] = v;
-        });
-      }
+      Object.entries(message.numeric_properties).forEach(([k, v]) => {
+        obj.numeric_properties[k] = v;
+      });
     }
-    if (message.count_multiple !== undefined) {
-      obj.count_multiple = message.count_multiple;
-    }
+    message.count_multiple !== undefined && (obj.count_multiple = message.count_multiple);
     return obj;
   },
 
   create<I extends Exact<DeepPartial<MatchmakerAdd>, I>>(base?: I): MatchmakerAdd {
-    return MatchmakerAdd.fromPartial(base ?? ({} as any));
+    return MatchmakerAdd.fromPartial(base ?? {});
   },
+
   fromPartial<I extends Exact<DeepPartial<MatchmakerAdd>, I>>(object: I): MatchmakerAdd {
     const message = createBaseMatchmakerAdd();
     message.min_count = object.min_count ?? 0;
@@ -3949,7 +3266,7 @@ export const MatchmakerAdd = {
     message.string_properties = Object.entries(object.string_properties ?? {}).reduce<{ [key: string]: string }>(
       (acc, [key, value]) => {
         if (value !== undefined) {
-          acc[key] = globalThis.String(value);
+          acc[key] = String(value);
         }
         return acc;
       },
@@ -3958,7 +3275,7 @@ export const MatchmakerAdd = {
     message.numeric_properties = Object.entries(object.numeric_properties ?? {}).reduce<{ [key: string]: number }>(
       (acc, [key, value]) => {
         if (value !== undefined) {
-          acc[key] = globalThis.Number(value);
+          acc[key] = Number(value);
         }
         return acc;
       },
@@ -3985,58 +3302,43 @@ export const MatchmakerAdd_StringPropertiesEntry = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): MatchmakerAdd_StringPropertiesEntry {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseMatchmakerAdd_StringPropertiesEntry();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 10) {
-            break;
-          }
-
           message.key = reader.string();
-          continue;
+          break;
         case 2:
-          if (tag !== 18) {
-            break;
-          }
-
           message.value = reader.string();
-          continue;
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
       }
-      if ((tag & 7) === 4 || tag === 0) {
-        break;
-      }
-      reader.skipType(tag & 7);
     }
     return message;
   },
 
   fromJSON(object: any): MatchmakerAdd_StringPropertiesEntry {
-    return {
-      key: isSet(object.key) ? globalThis.String(object.key) : "",
-      value: isSet(object.value) ? globalThis.String(object.value) : "",
-    };
+    return { key: isSet(object.key) ? String(object.key) : "", value: isSet(object.value) ? String(object.value) : "" };
   },
 
   toJSON(message: MatchmakerAdd_StringPropertiesEntry): unknown {
     const obj: any = {};
-    if (message.key !== "") {
-      obj.key = message.key;
-    }
-    if (message.value !== "") {
-      obj.value = message.value;
-    }
+    message.key !== undefined && (obj.key = message.key);
+    message.value !== undefined && (obj.value = message.value);
     return obj;
   },
 
   create<I extends Exact<DeepPartial<MatchmakerAdd_StringPropertiesEntry>, I>>(
     base?: I,
   ): MatchmakerAdd_StringPropertiesEntry {
-    return MatchmakerAdd_StringPropertiesEntry.fromPartial(base ?? ({} as any));
+    return MatchmakerAdd_StringPropertiesEntry.fromPartial(base ?? {});
   },
+
   fromPartial<I extends Exact<DeepPartial<MatchmakerAdd_StringPropertiesEntry>, I>>(
     object: I,
   ): MatchmakerAdd_StringPropertiesEntry {
@@ -4063,58 +3365,43 @@ export const MatchmakerAdd_NumericPropertiesEntry = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): MatchmakerAdd_NumericPropertiesEntry {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseMatchmakerAdd_NumericPropertiesEntry();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 10) {
-            break;
-          }
-
           message.key = reader.string();
-          continue;
+          break;
         case 2:
-          if (tag !== 17) {
-            break;
-          }
-
           message.value = reader.double();
-          continue;
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
       }
-      if ((tag & 7) === 4 || tag === 0) {
-        break;
-      }
-      reader.skipType(tag & 7);
     }
     return message;
   },
 
   fromJSON(object: any): MatchmakerAdd_NumericPropertiesEntry {
-    return {
-      key: isSet(object.key) ? globalThis.String(object.key) : "",
-      value: isSet(object.value) ? globalThis.Number(object.value) : 0,
-    };
+    return { key: isSet(object.key) ? String(object.key) : "", value: isSet(object.value) ? Number(object.value) : 0 };
   },
 
   toJSON(message: MatchmakerAdd_NumericPropertiesEntry): unknown {
     const obj: any = {};
-    if (message.key !== "") {
-      obj.key = message.key;
-    }
-    if (message.value !== 0) {
-      obj.value = message.value;
-    }
+    message.key !== undefined && (obj.key = message.key);
+    message.value !== undefined && (obj.value = message.value);
     return obj;
   },
 
   create<I extends Exact<DeepPartial<MatchmakerAdd_NumericPropertiesEntry>, I>>(
     base?: I,
   ): MatchmakerAdd_NumericPropertiesEntry {
-    return MatchmakerAdd_NumericPropertiesEntry.fromPartial(base ?? ({} as any));
+    return MatchmakerAdd_NumericPropertiesEntry.fromPartial(base ?? {});
   },
+
   fromPartial<I extends Exact<DeepPartial<MatchmakerAdd_NumericPropertiesEntry>, I>>(
     object: I,
   ): MatchmakerAdd_NumericPropertiesEntry {
@@ -4150,62 +3437,41 @@ export const MatchmakerMatched = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): MatchmakerMatched {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseMatchmakerMatched();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 10) {
-            break;
-          }
-
           message.ticket = reader.string();
-          continue;
+          break;
         case 2:
-          if (tag !== 18) {
-            break;
-          }
-
           message.match_id = reader.string();
-          continue;
+          break;
         case 3:
-          if (tag !== 26) {
-            break;
-          }
-
           message.token = reader.string();
-          continue;
+          break;
         case 4:
-          if (tag !== 34) {
-            break;
-          }
-
           message.users.push(MatchmakerMatched_MatchmakerUser.decode(reader, reader.uint32()));
-          continue;
+          break;
         case 5:
-          if (tag !== 42) {
-            break;
-          }
-
           message.self = MatchmakerMatched_MatchmakerUser.decode(reader, reader.uint32());
-          continue;
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
       }
-      if ((tag & 7) === 4 || tag === 0) {
-        break;
-      }
-      reader.skipType(tag & 7);
     }
     return message;
   },
 
   fromJSON(object: any): MatchmakerMatched {
     return {
-      ticket: isSet(object.ticket) ? globalThis.String(object.ticket) : "",
-      match_id: isSet(object.match_id) ? globalThis.String(object.match_id) : undefined,
-      token: isSet(object.token) ? globalThis.String(object.token) : undefined,
-      users: globalThis.Array.isArray(object?.users)
+      ticket: isSet(object.ticket) ? String(object.ticket) : "",
+      match_id: isSet(object.match_id) ? String(object.match_id) : undefined,
+      token: isSet(object.token) ? String(object.token) : undefined,
+      users: Array.isArray(object?.users)
         ? object.users.map((e: any) => MatchmakerMatched_MatchmakerUser.fromJSON(e))
         : [],
       self: isSet(object.self) ? MatchmakerMatched_MatchmakerUser.fromJSON(object.self) : undefined,
@@ -4214,27 +3480,23 @@ export const MatchmakerMatched = {
 
   toJSON(message: MatchmakerMatched): unknown {
     const obj: any = {};
-    if (message.ticket !== "") {
-      obj.ticket = message.ticket;
+    message.ticket !== undefined && (obj.ticket = message.ticket);
+    message.match_id !== undefined && (obj.match_id = message.match_id);
+    message.token !== undefined && (obj.token = message.token);
+    if (message.users) {
+      obj.users = message.users.map((e) => e ? MatchmakerMatched_MatchmakerUser.toJSON(e) : undefined);
+    } else {
+      obj.users = [];
     }
-    if (message.match_id !== undefined) {
-      obj.match_id = message.match_id;
-    }
-    if (message.token !== undefined) {
-      obj.token = message.token;
-    }
-    if (message.users?.length) {
-      obj.users = message.users.map((e) => MatchmakerMatched_MatchmakerUser.toJSON(e));
-    }
-    if (message.self !== undefined) {
-      obj.self = MatchmakerMatched_MatchmakerUser.toJSON(message.self);
-    }
+    message.self !== undefined &&
+      (obj.self = message.self ? MatchmakerMatched_MatchmakerUser.toJSON(message.self) : undefined);
     return obj;
   },
 
   create<I extends Exact<DeepPartial<MatchmakerMatched>, I>>(base?: I): MatchmakerMatched {
-    return MatchmakerMatched.fromPartial(base ?? ({} as any));
+    return MatchmakerMatched.fromPartial(base ?? {});
   },
+
   fromPartial<I extends Exact<DeepPartial<MatchmakerMatched>, I>>(object: I): MatchmakerMatched {
     const message = createBaseMatchmakerMatched();
     message.ticket = object.ticket ?? "";
@@ -4276,51 +3538,34 @@ export const MatchmakerMatched_MatchmakerUser = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): MatchmakerMatched_MatchmakerUser {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseMatchmakerMatched_MatchmakerUser();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 10) {
-            break;
-          }
-
           message.presence = UserPresence.decode(reader, reader.uint32());
-          continue;
+          break;
         case 2:
-          if (tag !== 18) {
-            break;
-          }
-
           message.party_id = reader.string();
-          continue;
+          break;
         case 5:
-          if (tag !== 42) {
-            break;
-          }
-
           const entry5 = MatchmakerMatched_MatchmakerUser_StringPropertiesEntry.decode(reader, reader.uint32());
           if (entry5.value !== undefined) {
             message.string_properties[entry5.key] = entry5.value;
           }
-          continue;
+          break;
         case 6:
-          if (tag !== 50) {
-            break;
-          }
-
           const entry6 = MatchmakerMatched_MatchmakerUser_NumericPropertiesEntry.decode(reader, reader.uint32());
           if (entry6.value !== undefined) {
             message.numeric_properties[entry6.key] = entry6.value;
           }
-          continue;
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
       }
-      if ((tag & 7) === 4 || tag === 0) {
-        break;
-      }
-      reader.skipType(tag & 7);
     }
     return message;
   },
@@ -4328,7 +3573,7 @@ export const MatchmakerMatched_MatchmakerUser = {
   fromJSON(object: any): MatchmakerMatched_MatchmakerUser {
     return {
       presence: isSet(object.presence) ? UserPresence.fromJSON(object.presence) : undefined,
-      party_id: isSet(object.party_id) ? globalThis.String(object.party_id) : "",
+      party_id: isSet(object.party_id) ? String(object.party_id) : "",
       string_properties: isObject(object.string_properties)
         ? Object.entries(object.string_properties).reduce<{ [key: string]: string }>((acc, [key, value]) => {
           acc[key] = String(value);
@@ -4346,29 +3591,20 @@ export const MatchmakerMatched_MatchmakerUser = {
 
   toJSON(message: MatchmakerMatched_MatchmakerUser): unknown {
     const obj: any = {};
-    if (message.presence !== undefined) {
-      obj.presence = UserPresence.toJSON(message.presence);
-    }
-    if (message.party_id !== "") {
-      obj.party_id = message.party_id;
-    }
+    message.presence !== undefined &&
+      (obj.presence = message.presence ? UserPresence.toJSON(message.presence) : undefined);
+    message.party_id !== undefined && (obj.party_id = message.party_id);
+    obj.string_properties = {};
     if (message.string_properties) {
-      const entries = Object.entries(message.string_properties);
-      if (entries.length > 0) {
-        obj.string_properties = {};
-        entries.forEach(([k, v]) => {
-          obj.string_properties[k] = v;
-        });
-      }
+      Object.entries(message.string_properties).forEach(([k, v]) => {
+        obj.string_properties[k] = v;
+      });
     }
+    obj.numeric_properties = {};
     if (message.numeric_properties) {
-      const entries = Object.entries(message.numeric_properties);
-      if (entries.length > 0) {
-        obj.numeric_properties = {};
-        entries.forEach(([k, v]) => {
-          obj.numeric_properties[k] = v;
-        });
-      }
+      Object.entries(message.numeric_properties).forEach(([k, v]) => {
+        obj.numeric_properties[k] = v;
+      });
     }
     return obj;
   },
@@ -4376,8 +3612,9 @@ export const MatchmakerMatched_MatchmakerUser = {
   create<I extends Exact<DeepPartial<MatchmakerMatched_MatchmakerUser>, I>>(
     base?: I,
   ): MatchmakerMatched_MatchmakerUser {
-    return MatchmakerMatched_MatchmakerUser.fromPartial(base ?? ({} as any));
+    return MatchmakerMatched_MatchmakerUser.fromPartial(base ?? {});
   },
+
   fromPartial<I extends Exact<DeepPartial<MatchmakerMatched_MatchmakerUser>, I>>(
     object: I,
   ): MatchmakerMatched_MatchmakerUser {
@@ -4389,7 +3626,7 @@ export const MatchmakerMatched_MatchmakerUser = {
     message.string_properties = Object.entries(object.string_properties ?? {}).reduce<{ [key: string]: string }>(
       (acc, [key, value]) => {
         if (value !== undefined) {
-          acc[key] = globalThis.String(value);
+          acc[key] = String(value);
         }
         return acc;
       },
@@ -4398,7 +3635,7 @@ export const MatchmakerMatched_MatchmakerUser = {
     message.numeric_properties = Object.entries(object.numeric_properties ?? {}).reduce<{ [key: string]: number }>(
       (acc, [key, value]) => {
         if (value !== undefined) {
-          acc[key] = globalThis.Number(value);
+          acc[key] = Number(value);
         }
         return acc;
       },
@@ -4427,58 +3664,43 @@ export const MatchmakerMatched_MatchmakerUser_StringPropertiesEntry = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): MatchmakerMatched_MatchmakerUser_StringPropertiesEntry {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseMatchmakerMatched_MatchmakerUser_StringPropertiesEntry();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 10) {
-            break;
-          }
-
           message.key = reader.string();
-          continue;
+          break;
         case 2:
-          if (tag !== 18) {
-            break;
-          }
-
           message.value = reader.string();
-          continue;
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
       }
-      if ((tag & 7) === 4 || tag === 0) {
-        break;
-      }
-      reader.skipType(tag & 7);
     }
     return message;
   },
 
   fromJSON(object: any): MatchmakerMatched_MatchmakerUser_StringPropertiesEntry {
-    return {
-      key: isSet(object.key) ? globalThis.String(object.key) : "",
-      value: isSet(object.value) ? globalThis.String(object.value) : "",
-    };
+    return { key: isSet(object.key) ? String(object.key) : "", value: isSet(object.value) ? String(object.value) : "" };
   },
 
   toJSON(message: MatchmakerMatched_MatchmakerUser_StringPropertiesEntry): unknown {
     const obj: any = {};
-    if (message.key !== "") {
-      obj.key = message.key;
-    }
-    if (message.value !== "") {
-      obj.value = message.value;
-    }
+    message.key !== undefined && (obj.key = message.key);
+    message.value !== undefined && (obj.value = message.value);
     return obj;
   },
 
   create<I extends Exact<DeepPartial<MatchmakerMatched_MatchmakerUser_StringPropertiesEntry>, I>>(
     base?: I,
   ): MatchmakerMatched_MatchmakerUser_StringPropertiesEntry {
-    return MatchmakerMatched_MatchmakerUser_StringPropertiesEntry.fromPartial(base ?? ({} as any));
+    return MatchmakerMatched_MatchmakerUser_StringPropertiesEntry.fromPartial(base ?? {});
   },
+
   fromPartial<I extends Exact<DeepPartial<MatchmakerMatched_MatchmakerUser_StringPropertiesEntry>, I>>(
     object: I,
   ): MatchmakerMatched_MatchmakerUser_StringPropertiesEntry {
@@ -4508,58 +3730,43 @@ export const MatchmakerMatched_MatchmakerUser_NumericPropertiesEntry = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): MatchmakerMatched_MatchmakerUser_NumericPropertiesEntry {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseMatchmakerMatched_MatchmakerUser_NumericPropertiesEntry();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 10) {
-            break;
-          }
-
           message.key = reader.string();
-          continue;
+          break;
         case 2:
-          if (tag !== 17) {
-            break;
-          }
-
           message.value = reader.double();
-          continue;
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
       }
-      if ((tag & 7) === 4 || tag === 0) {
-        break;
-      }
-      reader.skipType(tag & 7);
     }
     return message;
   },
 
   fromJSON(object: any): MatchmakerMatched_MatchmakerUser_NumericPropertiesEntry {
-    return {
-      key: isSet(object.key) ? globalThis.String(object.key) : "",
-      value: isSet(object.value) ? globalThis.Number(object.value) : 0,
-    };
+    return { key: isSet(object.key) ? String(object.key) : "", value: isSet(object.value) ? Number(object.value) : 0 };
   },
 
   toJSON(message: MatchmakerMatched_MatchmakerUser_NumericPropertiesEntry): unknown {
     const obj: any = {};
-    if (message.key !== "") {
-      obj.key = message.key;
-    }
-    if (message.value !== 0) {
-      obj.value = message.value;
-    }
+    message.key !== undefined && (obj.key = message.key);
+    message.value !== undefined && (obj.value = message.value);
     return obj;
   },
 
   create<I extends Exact<DeepPartial<MatchmakerMatched_MatchmakerUser_NumericPropertiesEntry>, I>>(
     base?: I,
   ): MatchmakerMatched_MatchmakerUser_NumericPropertiesEntry {
-    return MatchmakerMatched_MatchmakerUser_NumericPropertiesEntry.fromPartial(base ?? ({} as any));
+    return MatchmakerMatched_MatchmakerUser_NumericPropertiesEntry.fromPartial(base ?? {});
   },
+
   fromPartial<I extends Exact<DeepPartial<MatchmakerMatched_MatchmakerUser_NumericPropertiesEntry>, I>>(
     object: I,
   ): MatchmakerMatched_MatchmakerUser_NumericPropertiesEntry {
@@ -4583,43 +3790,37 @@ export const MatchmakerRemove = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): MatchmakerRemove {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseMatchmakerRemove();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 10) {
-            break;
-          }
-
           message.ticket = reader.string();
-          continue;
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
       }
-      if ((tag & 7) === 4 || tag === 0) {
-        break;
-      }
-      reader.skipType(tag & 7);
     }
     return message;
   },
 
   fromJSON(object: any): MatchmakerRemove {
-    return { ticket: isSet(object.ticket) ? globalThis.String(object.ticket) : "" };
+    return { ticket: isSet(object.ticket) ? String(object.ticket) : "" };
   },
 
   toJSON(message: MatchmakerRemove): unknown {
     const obj: any = {};
-    if (message.ticket !== "") {
-      obj.ticket = message.ticket;
-    }
+    message.ticket !== undefined && (obj.ticket = message.ticket);
     return obj;
   },
 
   create<I extends Exact<DeepPartial<MatchmakerRemove>, I>>(base?: I): MatchmakerRemove {
-    return MatchmakerRemove.fromPartial(base ?? ({} as any));
+    return MatchmakerRemove.fromPartial(base ?? {});
   },
+
   fromPartial<I extends Exact<DeepPartial<MatchmakerRemove>, I>>(object: I): MatchmakerRemove {
     const message = createBaseMatchmakerRemove();
     message.ticket = object.ticket ?? "";
@@ -4640,43 +3841,37 @@ export const MatchmakerTicket = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): MatchmakerTicket {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseMatchmakerTicket();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 10) {
-            break;
-          }
-
           message.ticket = reader.string();
-          continue;
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
       }
-      if ((tag & 7) === 4 || tag === 0) {
-        break;
-      }
-      reader.skipType(tag & 7);
     }
     return message;
   },
 
   fromJSON(object: any): MatchmakerTicket {
-    return { ticket: isSet(object.ticket) ? globalThis.String(object.ticket) : "" };
+    return { ticket: isSet(object.ticket) ? String(object.ticket) : "" };
   },
 
   toJSON(message: MatchmakerTicket): unknown {
     const obj: any = {};
-    if (message.ticket !== "") {
-      obj.ticket = message.ticket;
-    }
+    message.ticket !== undefined && (obj.ticket = message.ticket);
     return obj;
   },
 
   create<I extends Exact<DeepPartial<MatchmakerTicket>, I>>(base?: I): MatchmakerTicket {
-    return MatchmakerTicket.fromPartial(base ?? ({} as any));
+    return MatchmakerTicket.fromPartial(base ?? {});
   },
+
   fromPartial<I extends Exact<DeepPartial<MatchmakerTicket>, I>>(object: I): MatchmakerTicket {
     const message = createBaseMatchmakerTicket();
     message.ticket = object.ticket ?? "";
@@ -4697,31 +3892,26 @@ export const Notifications = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): Notifications {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseNotifications();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 10) {
-            break;
-          }
-
           message.notifications.push(Notification.decode(reader, reader.uint32()));
-          continue;
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
       }
-      if ((tag & 7) === 4 || tag === 0) {
-        break;
-      }
-      reader.skipType(tag & 7);
     }
     return message;
   },
 
   fromJSON(object: any): Notifications {
     return {
-      notifications: globalThis.Array.isArray(object?.notifications)
+      notifications: Array.isArray(object?.notifications)
         ? object.notifications.map((e: any) => Notification.fromJSON(e))
         : [],
     };
@@ -4729,15 +3919,18 @@ export const Notifications = {
 
   toJSON(message: Notifications): unknown {
     const obj: any = {};
-    if (message.notifications?.length) {
-      obj.notifications = message.notifications.map((e) => Notification.toJSON(e));
+    if (message.notifications) {
+      obj.notifications = message.notifications.map((e) => e ? Notification.toJSON(e) : undefined);
+    } else {
+      obj.notifications = [];
     }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<Notifications>, I>>(base?: I): Notifications {
-    return Notifications.fromPartial(base ?? ({} as any));
+    return Notifications.fromPartial(base ?? {});
   },
+
   fromPartial<I extends Exact<DeepPartial<Notifications>, I>>(object: I): Notifications {
     const message = createBaseNotifications();
     message.notifications = object.notifications?.map((e) => Notification.fromPartial(e)) || [];
@@ -4773,102 +3966,68 @@ export const Party = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): Party {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseParty();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 10) {
-            break;
-          }
-
           message.party_id = reader.string();
-          continue;
+          break;
         case 2:
-          if (tag !== 16) {
-            break;
-          }
-
           message.open = reader.bool();
-          continue;
+          break;
         case 3:
-          if (tag !== 24) {
-            break;
-          }
-
           message.max_size = reader.int32();
-          continue;
+          break;
         case 4:
-          if (tag !== 34) {
-            break;
-          }
-
           message.self = UserPresence.decode(reader, reader.uint32());
-          continue;
+          break;
         case 5:
-          if (tag !== 42) {
-            break;
-          }
-
           message.leader = UserPresence.decode(reader, reader.uint32());
-          continue;
+          break;
         case 6:
-          if (tag !== 50) {
-            break;
-          }
-
           message.presences.push(UserPresence.decode(reader, reader.uint32()));
-          continue;
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
       }
-      if ((tag & 7) === 4 || tag === 0) {
-        break;
-      }
-      reader.skipType(tag & 7);
     }
     return message;
   },
 
   fromJSON(object: any): Party {
     return {
-      party_id: isSet(object.party_id) ? globalThis.String(object.party_id) : "",
-      open: isSet(object.open) ? globalThis.Boolean(object.open) : false,
-      max_size: isSet(object.max_size) ? globalThis.Number(object.max_size) : 0,
+      party_id: isSet(object.party_id) ? String(object.party_id) : "",
+      open: isSet(object.open) ? Boolean(object.open) : false,
+      max_size: isSet(object.max_size) ? Number(object.max_size) : 0,
       self: isSet(object.self) ? UserPresence.fromJSON(object.self) : undefined,
       leader: isSet(object.leader) ? UserPresence.fromJSON(object.leader) : undefined,
-      presences: globalThis.Array.isArray(object?.presences)
-        ? object.presences.map((e: any) => UserPresence.fromJSON(e))
-        : [],
+      presences: Array.isArray(object?.presences) ? object.presences.map((e: any) => UserPresence.fromJSON(e)) : [],
     };
   },
 
   toJSON(message: Party): unknown {
     const obj: any = {};
-    if (message.party_id !== "") {
-      obj.party_id = message.party_id;
-    }
-    if (message.open === true) {
-      obj.open = message.open;
-    }
-    if (message.max_size !== 0) {
-      obj.max_size = Math.round(message.max_size);
-    }
-    if (message.self !== undefined) {
-      obj.self = UserPresence.toJSON(message.self);
-    }
-    if (message.leader !== undefined) {
-      obj.leader = UserPresence.toJSON(message.leader);
-    }
-    if (message.presences?.length) {
-      obj.presences = message.presences.map((e) => UserPresence.toJSON(e));
+    message.party_id !== undefined && (obj.party_id = message.party_id);
+    message.open !== undefined && (obj.open = message.open);
+    message.max_size !== undefined && (obj.max_size = Math.round(message.max_size));
+    message.self !== undefined && (obj.self = message.self ? UserPresence.toJSON(message.self) : undefined);
+    message.leader !== undefined && (obj.leader = message.leader ? UserPresence.toJSON(message.leader) : undefined);
+    if (message.presences) {
+      obj.presences = message.presences.map((e) => e ? UserPresence.toJSON(e) : undefined);
+    } else {
+      obj.presences = [];
     }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<Party>, I>>(base?: I): Party {
-    return Party.fromPartial(base ?? ({} as any));
+    return Party.fromPartial(base ?? {});
   },
+
   fromPartial<I extends Exact<DeepPartial<Party>, I>>(object: I): Party {
     const message = createBaseParty();
     message.party_id = object.party_id ?? "";
@@ -4901,56 +4060,44 @@ export const PartyCreate = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): PartyCreate {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBasePartyCreate();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 8) {
-            break;
-          }
-
           message.open = reader.bool();
-          continue;
+          break;
         case 2:
-          if (tag !== 16) {
-            break;
-          }
-
           message.max_size = reader.int32();
-          continue;
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
       }
-      if ((tag & 7) === 4 || tag === 0) {
-        break;
-      }
-      reader.skipType(tag & 7);
     }
     return message;
   },
 
   fromJSON(object: any): PartyCreate {
     return {
-      open: isSet(object.open) ? globalThis.Boolean(object.open) : false,
-      max_size: isSet(object.max_size) ? globalThis.Number(object.max_size) : 0,
+      open: isSet(object.open) ? Boolean(object.open) : false,
+      max_size: isSet(object.max_size) ? Number(object.max_size) : 0,
     };
   },
 
   toJSON(message: PartyCreate): unknown {
     const obj: any = {};
-    if (message.open === true) {
-      obj.open = message.open;
-    }
-    if (message.max_size !== 0) {
-      obj.max_size = Math.round(message.max_size);
-    }
+    message.open !== undefined && (obj.open = message.open);
+    message.max_size !== undefined && (obj.max_size = Math.round(message.max_size));
     return obj;
   },
 
   create<I extends Exact<DeepPartial<PartyCreate>, I>>(base?: I): PartyCreate {
-    return PartyCreate.fromPartial(base ?? ({} as any));
+    return PartyCreate.fromPartial(base ?? {});
   },
+
   fromPartial<I extends Exact<DeepPartial<PartyCreate>, I>>(object: I): PartyCreate {
     const message = createBasePartyCreate();
     message.open = object.open ?? false;
@@ -4972,43 +4119,37 @@ export const PartyJoin = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): PartyJoin {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBasePartyJoin();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 10) {
-            break;
-          }
-
           message.party_id = reader.string();
-          continue;
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
       }
-      if ((tag & 7) === 4 || tag === 0) {
-        break;
-      }
-      reader.skipType(tag & 7);
     }
     return message;
   },
 
   fromJSON(object: any): PartyJoin {
-    return { party_id: isSet(object.party_id) ? globalThis.String(object.party_id) : "" };
+    return { party_id: isSet(object.party_id) ? String(object.party_id) : "" };
   },
 
   toJSON(message: PartyJoin): unknown {
     const obj: any = {};
-    if (message.party_id !== "") {
-      obj.party_id = message.party_id;
-    }
+    message.party_id !== undefined && (obj.party_id = message.party_id);
     return obj;
   },
 
   create<I extends Exact<DeepPartial<PartyJoin>, I>>(base?: I): PartyJoin {
-    return PartyJoin.fromPartial(base ?? ({} as any));
+    return PartyJoin.fromPartial(base ?? {});
   },
+
   fromPartial<I extends Exact<DeepPartial<PartyJoin>, I>>(object: I): PartyJoin {
     const message = createBasePartyJoin();
     message.party_id = object.party_id ?? "";
@@ -5029,43 +4170,37 @@ export const PartyLeave = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): PartyLeave {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBasePartyLeave();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 10) {
-            break;
-          }
-
           message.party_id = reader.string();
-          continue;
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
       }
-      if ((tag & 7) === 4 || tag === 0) {
-        break;
-      }
-      reader.skipType(tag & 7);
     }
     return message;
   },
 
   fromJSON(object: any): PartyLeave {
-    return { party_id: isSet(object.party_id) ? globalThis.String(object.party_id) : "" };
+    return { party_id: isSet(object.party_id) ? String(object.party_id) : "" };
   },
 
   toJSON(message: PartyLeave): unknown {
     const obj: any = {};
-    if (message.party_id !== "") {
-      obj.party_id = message.party_id;
-    }
+    message.party_id !== undefined && (obj.party_id = message.party_id);
     return obj;
   },
 
   create<I extends Exact<DeepPartial<PartyLeave>, I>>(base?: I): PartyLeave {
-    return PartyLeave.fromPartial(base ?? ({} as any));
+    return PartyLeave.fromPartial(base ?? {});
   },
+
   fromPartial<I extends Exact<DeepPartial<PartyLeave>, I>>(object: I): PartyLeave {
     const message = createBasePartyLeave();
     message.party_id = object.party_id ?? "";
@@ -5089,56 +4224,45 @@ export const PartyPromote = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): PartyPromote {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBasePartyPromote();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 10) {
-            break;
-          }
-
           message.party_id = reader.string();
-          continue;
+          break;
         case 2:
-          if (tag !== 18) {
-            break;
-          }
-
           message.presence = UserPresence.decode(reader, reader.uint32());
-          continue;
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
       }
-      if ((tag & 7) === 4 || tag === 0) {
-        break;
-      }
-      reader.skipType(tag & 7);
     }
     return message;
   },
 
   fromJSON(object: any): PartyPromote {
     return {
-      party_id: isSet(object.party_id) ? globalThis.String(object.party_id) : "",
+      party_id: isSet(object.party_id) ? String(object.party_id) : "",
       presence: isSet(object.presence) ? UserPresence.fromJSON(object.presence) : undefined,
     };
   },
 
   toJSON(message: PartyPromote): unknown {
     const obj: any = {};
-    if (message.party_id !== "") {
-      obj.party_id = message.party_id;
-    }
-    if (message.presence !== undefined) {
-      obj.presence = UserPresence.toJSON(message.presence);
-    }
+    message.party_id !== undefined && (obj.party_id = message.party_id);
+    message.presence !== undefined &&
+      (obj.presence = message.presence ? UserPresence.toJSON(message.presence) : undefined);
     return obj;
   },
 
   create<I extends Exact<DeepPartial<PartyPromote>, I>>(base?: I): PartyPromote {
-    return PartyPromote.fromPartial(base ?? ({} as any));
+    return PartyPromote.fromPartial(base ?? {});
   },
+
   fromPartial<I extends Exact<DeepPartial<PartyPromote>, I>>(object: I): PartyPromote {
     const message = createBasePartyPromote();
     message.party_id = object.party_id ?? "";
@@ -5165,56 +4289,45 @@ export const PartyLeader = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): PartyLeader {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBasePartyLeader();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 10) {
-            break;
-          }
-
           message.party_id = reader.string();
-          continue;
+          break;
         case 2:
-          if (tag !== 18) {
-            break;
-          }
-
           message.presence = UserPresence.decode(reader, reader.uint32());
-          continue;
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
       }
-      if ((tag & 7) === 4 || tag === 0) {
-        break;
-      }
-      reader.skipType(tag & 7);
     }
     return message;
   },
 
   fromJSON(object: any): PartyLeader {
     return {
-      party_id: isSet(object.party_id) ? globalThis.String(object.party_id) : "",
+      party_id: isSet(object.party_id) ? String(object.party_id) : "",
       presence: isSet(object.presence) ? UserPresence.fromJSON(object.presence) : undefined,
     };
   },
 
   toJSON(message: PartyLeader): unknown {
     const obj: any = {};
-    if (message.party_id !== "") {
-      obj.party_id = message.party_id;
-    }
-    if (message.presence !== undefined) {
-      obj.presence = UserPresence.toJSON(message.presence);
-    }
+    message.party_id !== undefined && (obj.party_id = message.party_id);
+    message.presence !== undefined &&
+      (obj.presence = message.presence ? UserPresence.toJSON(message.presence) : undefined);
     return obj;
   },
 
   create<I extends Exact<DeepPartial<PartyLeader>, I>>(base?: I): PartyLeader {
-    return PartyLeader.fromPartial(base ?? ({} as any));
+    return PartyLeader.fromPartial(base ?? {});
   },
+
   fromPartial<I extends Exact<DeepPartial<PartyLeader>, I>>(object: I): PartyLeader {
     const message = createBasePartyLeader();
     message.party_id = object.party_id ?? "";
@@ -5241,56 +4354,45 @@ export const PartyAccept = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): PartyAccept {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBasePartyAccept();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 10) {
-            break;
-          }
-
           message.party_id = reader.string();
-          continue;
+          break;
         case 2:
-          if (tag !== 18) {
-            break;
-          }
-
           message.presence = UserPresence.decode(reader, reader.uint32());
-          continue;
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
       }
-      if ((tag & 7) === 4 || tag === 0) {
-        break;
-      }
-      reader.skipType(tag & 7);
     }
     return message;
   },
 
   fromJSON(object: any): PartyAccept {
     return {
-      party_id: isSet(object.party_id) ? globalThis.String(object.party_id) : "",
+      party_id: isSet(object.party_id) ? String(object.party_id) : "",
       presence: isSet(object.presence) ? UserPresence.fromJSON(object.presence) : undefined,
     };
   },
 
   toJSON(message: PartyAccept): unknown {
     const obj: any = {};
-    if (message.party_id !== "") {
-      obj.party_id = message.party_id;
-    }
-    if (message.presence !== undefined) {
-      obj.presence = UserPresence.toJSON(message.presence);
-    }
+    message.party_id !== undefined && (obj.party_id = message.party_id);
+    message.presence !== undefined &&
+      (obj.presence = message.presence ? UserPresence.toJSON(message.presence) : undefined);
     return obj;
   },
 
   create<I extends Exact<DeepPartial<PartyAccept>, I>>(base?: I): PartyAccept {
-    return PartyAccept.fromPartial(base ?? ({} as any));
+    return PartyAccept.fromPartial(base ?? {});
   },
+
   fromPartial<I extends Exact<DeepPartial<PartyAccept>, I>>(object: I): PartyAccept {
     const message = createBasePartyAccept();
     message.party_id = object.party_id ?? "";
@@ -5317,56 +4419,45 @@ export const PartyRemove = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): PartyRemove {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBasePartyRemove();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 10) {
-            break;
-          }
-
           message.party_id = reader.string();
-          continue;
+          break;
         case 2:
-          if (tag !== 18) {
-            break;
-          }
-
           message.presence = UserPresence.decode(reader, reader.uint32());
-          continue;
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
       }
-      if ((tag & 7) === 4 || tag === 0) {
-        break;
-      }
-      reader.skipType(tag & 7);
     }
     return message;
   },
 
   fromJSON(object: any): PartyRemove {
     return {
-      party_id: isSet(object.party_id) ? globalThis.String(object.party_id) : "",
+      party_id: isSet(object.party_id) ? String(object.party_id) : "",
       presence: isSet(object.presence) ? UserPresence.fromJSON(object.presence) : undefined,
     };
   },
 
   toJSON(message: PartyRemove): unknown {
     const obj: any = {};
-    if (message.party_id !== "") {
-      obj.party_id = message.party_id;
-    }
-    if (message.presence !== undefined) {
-      obj.presence = UserPresence.toJSON(message.presence);
-    }
+    message.party_id !== undefined && (obj.party_id = message.party_id);
+    message.presence !== undefined &&
+      (obj.presence = message.presence ? UserPresence.toJSON(message.presence) : undefined);
     return obj;
   },
 
   create<I extends Exact<DeepPartial<PartyRemove>, I>>(base?: I): PartyRemove {
-    return PartyRemove.fromPartial(base ?? ({} as any));
+    return PartyRemove.fromPartial(base ?? {});
   },
+
   fromPartial<I extends Exact<DeepPartial<PartyRemove>, I>>(object: I): PartyRemove {
     const message = createBasePartyRemove();
     message.party_id = object.party_id ?? "";
@@ -5390,43 +4481,37 @@ export const PartyClose = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): PartyClose {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBasePartyClose();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 10) {
-            break;
-          }
-
           message.party_id = reader.string();
-          continue;
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
       }
-      if ((tag & 7) === 4 || tag === 0) {
-        break;
-      }
-      reader.skipType(tag & 7);
     }
     return message;
   },
 
   fromJSON(object: any): PartyClose {
-    return { party_id: isSet(object.party_id) ? globalThis.String(object.party_id) : "" };
+    return { party_id: isSet(object.party_id) ? String(object.party_id) : "" };
   },
 
   toJSON(message: PartyClose): unknown {
     const obj: any = {};
-    if (message.party_id !== "") {
-      obj.party_id = message.party_id;
-    }
+    message.party_id !== undefined && (obj.party_id = message.party_id);
     return obj;
   },
 
   create<I extends Exact<DeepPartial<PartyClose>, I>>(base?: I): PartyClose {
-    return PartyClose.fromPartial(base ?? ({} as any));
+    return PartyClose.fromPartial(base ?? {});
   },
+
   fromPartial<I extends Exact<DeepPartial<PartyClose>, I>>(object: I): PartyClose {
     const message = createBasePartyClose();
     message.party_id = object.party_id ?? "";
@@ -5447,43 +4532,37 @@ export const PartyJoinRequestList = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): PartyJoinRequestList {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBasePartyJoinRequestList();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 10) {
-            break;
-          }
-
           message.party_id = reader.string();
-          continue;
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
       }
-      if ((tag & 7) === 4 || tag === 0) {
-        break;
-      }
-      reader.skipType(tag & 7);
     }
     return message;
   },
 
   fromJSON(object: any): PartyJoinRequestList {
-    return { party_id: isSet(object.party_id) ? globalThis.String(object.party_id) : "" };
+    return { party_id: isSet(object.party_id) ? String(object.party_id) : "" };
   },
 
   toJSON(message: PartyJoinRequestList): unknown {
     const obj: any = {};
-    if (message.party_id !== "") {
-      obj.party_id = message.party_id;
-    }
+    message.party_id !== undefined && (obj.party_id = message.party_id);
     return obj;
   },
 
   create<I extends Exact<DeepPartial<PartyJoinRequestList>, I>>(base?: I): PartyJoinRequestList {
-    return PartyJoinRequestList.fromPartial(base ?? ({} as any));
+    return PartyJoinRequestList.fromPartial(base ?? {});
   },
+
   fromPartial<I extends Exact<DeepPartial<PartyJoinRequestList>, I>>(object: I): PartyJoinRequestList {
     const message = createBasePartyJoinRequestList();
     message.party_id = object.party_id ?? "";
@@ -5507,58 +4586,48 @@ export const PartyJoinRequest = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): PartyJoinRequest {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBasePartyJoinRequest();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 10) {
-            break;
-          }
-
           message.party_id = reader.string();
-          continue;
+          break;
         case 2:
-          if (tag !== 18) {
-            break;
-          }
-
           message.presences.push(UserPresence.decode(reader, reader.uint32()));
-          continue;
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
       }
-      if ((tag & 7) === 4 || tag === 0) {
-        break;
-      }
-      reader.skipType(tag & 7);
     }
     return message;
   },
 
   fromJSON(object: any): PartyJoinRequest {
     return {
-      party_id: isSet(object.party_id) ? globalThis.String(object.party_id) : "",
-      presences: globalThis.Array.isArray(object?.presences)
-        ? object.presences.map((e: any) => UserPresence.fromJSON(e))
-        : [],
+      party_id: isSet(object.party_id) ? String(object.party_id) : "",
+      presences: Array.isArray(object?.presences) ? object.presences.map((e: any) => UserPresence.fromJSON(e)) : [],
     };
   },
 
   toJSON(message: PartyJoinRequest): unknown {
     const obj: any = {};
-    if (message.party_id !== "") {
-      obj.party_id = message.party_id;
-    }
-    if (message.presences?.length) {
-      obj.presences = message.presences.map((e) => UserPresence.toJSON(e));
+    message.party_id !== undefined && (obj.party_id = message.party_id);
+    if (message.presences) {
+      obj.presences = message.presences.map((e) => e ? UserPresence.toJSON(e) : undefined);
+    } else {
+      obj.presences = [];
     }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<PartyJoinRequest>, I>>(base?: I): PartyJoinRequest {
-    return PartyJoinRequest.fromPartial(base ?? ({} as any));
+    return PartyJoinRequest.fromPartial(base ?? {});
   },
+
   fromPartial<I extends Exact<DeepPartial<PartyJoinRequest>, I>>(object: I): PartyJoinRequest {
     const message = createBasePartyJoinRequest();
     message.party_id = object.party_id ?? "";
@@ -5606,82 +4675,53 @@ export const PartyMatchmakerAdd = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): PartyMatchmakerAdd {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBasePartyMatchmakerAdd();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 10) {
-            break;
-          }
-
           message.party_id = reader.string();
-          continue;
+          break;
         case 2:
-          if (tag !== 16) {
-            break;
-          }
-
           message.min_count = reader.int32();
-          continue;
+          break;
         case 3:
-          if (tag !== 24) {
-            break;
-          }
-
           message.max_count = reader.int32();
-          continue;
+          break;
         case 4:
-          if (tag !== 34) {
-            break;
-          }
-
           message.query = reader.string();
-          continue;
+          break;
         case 5:
-          if (tag !== 42) {
-            break;
-          }
-
           const entry5 = PartyMatchmakerAdd_StringPropertiesEntry.decode(reader, reader.uint32());
           if (entry5.value !== undefined) {
             message.string_properties[entry5.key] = entry5.value;
           }
-          continue;
+          break;
         case 6:
-          if (tag !== 50) {
-            break;
-          }
-
           const entry6 = PartyMatchmakerAdd_NumericPropertiesEntry.decode(reader, reader.uint32());
           if (entry6.value !== undefined) {
             message.numeric_properties[entry6.key] = entry6.value;
           }
-          continue;
+          break;
         case 7:
-          if (tag !== 58) {
-            break;
-          }
-
           message.count_multiple = Int32Value.decode(reader, reader.uint32()).value;
-          continue;
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
       }
-      if ((tag & 7) === 4 || tag === 0) {
-        break;
-      }
-      reader.skipType(tag & 7);
     }
     return message;
   },
 
   fromJSON(object: any): PartyMatchmakerAdd {
     return {
-      party_id: isSet(object.party_id) ? globalThis.String(object.party_id) : "",
-      min_count: isSet(object.min_count) ? globalThis.Number(object.min_count) : 0,
-      max_count: isSet(object.max_count) ? globalThis.Number(object.max_count) : 0,
-      query: isSet(object.query) ? globalThis.String(object.query) : "",
+      party_id: isSet(object.party_id) ? String(object.party_id) : "",
+      min_count: isSet(object.min_count) ? Number(object.min_count) : 0,
+      max_count: isSet(object.max_count) ? Number(object.max_count) : 0,
+      query: isSet(object.query) ? String(object.query) : "",
       string_properties: isObject(object.string_properties)
         ? Object.entries(object.string_properties).reduce<{ [key: string]: string }>((acc, [key, value]) => {
           acc[key] = String(value);
@@ -5700,45 +4740,30 @@ export const PartyMatchmakerAdd = {
 
   toJSON(message: PartyMatchmakerAdd): unknown {
     const obj: any = {};
-    if (message.party_id !== "") {
-      obj.party_id = message.party_id;
-    }
-    if (message.min_count !== 0) {
-      obj.min_count = Math.round(message.min_count);
-    }
-    if (message.max_count !== 0) {
-      obj.max_count = Math.round(message.max_count);
-    }
-    if (message.query !== "") {
-      obj.query = message.query;
-    }
+    message.party_id !== undefined && (obj.party_id = message.party_id);
+    message.min_count !== undefined && (obj.min_count = Math.round(message.min_count));
+    message.max_count !== undefined && (obj.max_count = Math.round(message.max_count));
+    message.query !== undefined && (obj.query = message.query);
+    obj.string_properties = {};
     if (message.string_properties) {
-      const entries = Object.entries(message.string_properties);
-      if (entries.length > 0) {
-        obj.string_properties = {};
-        entries.forEach(([k, v]) => {
-          obj.string_properties[k] = v;
-        });
-      }
+      Object.entries(message.string_properties).forEach(([k, v]) => {
+        obj.string_properties[k] = v;
+      });
     }
+    obj.numeric_properties = {};
     if (message.numeric_properties) {
-      const entries = Object.entries(message.numeric_properties);
-      if (entries.length > 0) {
-        obj.numeric_properties = {};
-        entries.forEach(([k, v]) => {
-          obj.numeric_properties[k] = v;
-        });
-      }
+      Object.entries(message.numeric_properties).forEach(([k, v]) => {
+        obj.numeric_properties[k] = v;
+      });
     }
-    if (message.count_multiple !== undefined) {
-      obj.count_multiple = message.count_multiple;
-    }
+    message.count_multiple !== undefined && (obj.count_multiple = message.count_multiple);
     return obj;
   },
 
   create<I extends Exact<DeepPartial<PartyMatchmakerAdd>, I>>(base?: I): PartyMatchmakerAdd {
-    return PartyMatchmakerAdd.fromPartial(base ?? ({} as any));
+    return PartyMatchmakerAdd.fromPartial(base ?? {});
   },
+
   fromPartial<I extends Exact<DeepPartial<PartyMatchmakerAdd>, I>>(object: I): PartyMatchmakerAdd {
     const message = createBasePartyMatchmakerAdd();
     message.party_id = object.party_id ?? "";
@@ -5748,7 +4773,7 @@ export const PartyMatchmakerAdd = {
     message.string_properties = Object.entries(object.string_properties ?? {}).reduce<{ [key: string]: string }>(
       (acc, [key, value]) => {
         if (value !== undefined) {
-          acc[key] = globalThis.String(value);
+          acc[key] = String(value);
         }
         return acc;
       },
@@ -5757,7 +4782,7 @@ export const PartyMatchmakerAdd = {
     message.numeric_properties = Object.entries(object.numeric_properties ?? {}).reduce<{ [key: string]: number }>(
       (acc, [key, value]) => {
         if (value !== undefined) {
-          acc[key] = globalThis.Number(value);
+          acc[key] = Number(value);
         }
         return acc;
       },
@@ -5784,58 +4809,43 @@ export const PartyMatchmakerAdd_StringPropertiesEntry = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): PartyMatchmakerAdd_StringPropertiesEntry {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBasePartyMatchmakerAdd_StringPropertiesEntry();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 10) {
-            break;
-          }
-
           message.key = reader.string();
-          continue;
+          break;
         case 2:
-          if (tag !== 18) {
-            break;
-          }
-
           message.value = reader.string();
-          continue;
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
       }
-      if ((tag & 7) === 4 || tag === 0) {
-        break;
-      }
-      reader.skipType(tag & 7);
     }
     return message;
   },
 
   fromJSON(object: any): PartyMatchmakerAdd_StringPropertiesEntry {
-    return {
-      key: isSet(object.key) ? globalThis.String(object.key) : "",
-      value: isSet(object.value) ? globalThis.String(object.value) : "",
-    };
+    return { key: isSet(object.key) ? String(object.key) : "", value: isSet(object.value) ? String(object.value) : "" };
   },
 
   toJSON(message: PartyMatchmakerAdd_StringPropertiesEntry): unknown {
     const obj: any = {};
-    if (message.key !== "") {
-      obj.key = message.key;
-    }
-    if (message.value !== "") {
-      obj.value = message.value;
-    }
+    message.key !== undefined && (obj.key = message.key);
+    message.value !== undefined && (obj.value = message.value);
     return obj;
   },
 
   create<I extends Exact<DeepPartial<PartyMatchmakerAdd_StringPropertiesEntry>, I>>(
     base?: I,
   ): PartyMatchmakerAdd_StringPropertiesEntry {
-    return PartyMatchmakerAdd_StringPropertiesEntry.fromPartial(base ?? ({} as any));
+    return PartyMatchmakerAdd_StringPropertiesEntry.fromPartial(base ?? {});
   },
+
   fromPartial<I extends Exact<DeepPartial<PartyMatchmakerAdd_StringPropertiesEntry>, I>>(
     object: I,
   ): PartyMatchmakerAdd_StringPropertiesEntry {
@@ -5862,58 +4872,43 @@ export const PartyMatchmakerAdd_NumericPropertiesEntry = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): PartyMatchmakerAdd_NumericPropertiesEntry {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBasePartyMatchmakerAdd_NumericPropertiesEntry();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 10) {
-            break;
-          }
-
           message.key = reader.string();
-          continue;
+          break;
         case 2:
-          if (tag !== 17) {
-            break;
-          }
-
           message.value = reader.double();
-          continue;
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
       }
-      if ((tag & 7) === 4 || tag === 0) {
-        break;
-      }
-      reader.skipType(tag & 7);
     }
     return message;
   },
 
   fromJSON(object: any): PartyMatchmakerAdd_NumericPropertiesEntry {
-    return {
-      key: isSet(object.key) ? globalThis.String(object.key) : "",
-      value: isSet(object.value) ? globalThis.Number(object.value) : 0,
-    };
+    return { key: isSet(object.key) ? String(object.key) : "", value: isSet(object.value) ? Number(object.value) : 0 };
   },
 
   toJSON(message: PartyMatchmakerAdd_NumericPropertiesEntry): unknown {
     const obj: any = {};
-    if (message.key !== "") {
-      obj.key = message.key;
-    }
-    if (message.value !== 0) {
-      obj.value = message.value;
-    }
+    message.key !== undefined && (obj.key = message.key);
+    message.value !== undefined && (obj.value = message.value);
     return obj;
   },
 
   create<I extends Exact<DeepPartial<PartyMatchmakerAdd_NumericPropertiesEntry>, I>>(
     base?: I,
   ): PartyMatchmakerAdd_NumericPropertiesEntry {
-    return PartyMatchmakerAdd_NumericPropertiesEntry.fromPartial(base ?? ({} as any));
+    return PartyMatchmakerAdd_NumericPropertiesEntry.fromPartial(base ?? {});
   },
+
   fromPartial<I extends Exact<DeepPartial<PartyMatchmakerAdd_NumericPropertiesEntry>, I>>(
     object: I,
   ): PartyMatchmakerAdd_NumericPropertiesEntry {
@@ -5940,56 +4935,44 @@ export const PartyMatchmakerRemove = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): PartyMatchmakerRemove {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBasePartyMatchmakerRemove();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 10) {
-            break;
-          }
-
           message.party_id = reader.string();
-          continue;
+          break;
         case 2:
-          if (tag !== 18) {
-            break;
-          }
-
           message.ticket = reader.string();
-          continue;
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
       }
-      if ((tag & 7) === 4 || tag === 0) {
-        break;
-      }
-      reader.skipType(tag & 7);
     }
     return message;
   },
 
   fromJSON(object: any): PartyMatchmakerRemove {
     return {
-      party_id: isSet(object.party_id) ? globalThis.String(object.party_id) : "",
-      ticket: isSet(object.ticket) ? globalThis.String(object.ticket) : "",
+      party_id: isSet(object.party_id) ? String(object.party_id) : "",
+      ticket: isSet(object.ticket) ? String(object.ticket) : "",
     };
   },
 
   toJSON(message: PartyMatchmakerRemove): unknown {
     const obj: any = {};
-    if (message.party_id !== "") {
-      obj.party_id = message.party_id;
-    }
-    if (message.ticket !== "") {
-      obj.ticket = message.ticket;
-    }
+    message.party_id !== undefined && (obj.party_id = message.party_id);
+    message.ticket !== undefined && (obj.ticket = message.ticket);
     return obj;
   },
 
   create<I extends Exact<DeepPartial<PartyMatchmakerRemove>, I>>(base?: I): PartyMatchmakerRemove {
-    return PartyMatchmakerRemove.fromPartial(base ?? ({} as any));
+    return PartyMatchmakerRemove.fromPartial(base ?? {});
   },
+
   fromPartial<I extends Exact<DeepPartial<PartyMatchmakerRemove>, I>>(object: I): PartyMatchmakerRemove {
     const message = createBasePartyMatchmakerRemove();
     message.party_id = object.party_id ?? "";
@@ -6014,56 +4997,44 @@ export const PartyMatchmakerTicket = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): PartyMatchmakerTicket {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBasePartyMatchmakerTicket();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 10) {
-            break;
-          }
-
           message.party_id = reader.string();
-          continue;
+          break;
         case 2:
-          if (tag !== 18) {
-            break;
-          }
-
           message.ticket = reader.string();
-          continue;
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
       }
-      if ((tag & 7) === 4 || tag === 0) {
-        break;
-      }
-      reader.skipType(tag & 7);
     }
     return message;
   },
 
   fromJSON(object: any): PartyMatchmakerTicket {
     return {
-      party_id: isSet(object.party_id) ? globalThis.String(object.party_id) : "",
-      ticket: isSet(object.ticket) ? globalThis.String(object.ticket) : "",
+      party_id: isSet(object.party_id) ? String(object.party_id) : "",
+      ticket: isSet(object.ticket) ? String(object.ticket) : "",
     };
   },
 
   toJSON(message: PartyMatchmakerTicket): unknown {
     const obj: any = {};
-    if (message.party_id !== "") {
-      obj.party_id = message.party_id;
-    }
-    if (message.ticket !== "") {
-      obj.ticket = message.ticket;
-    }
+    message.party_id !== undefined && (obj.party_id = message.party_id);
+    message.ticket !== undefined && (obj.ticket = message.ticket);
     return obj;
   },
 
   create<I extends Exact<DeepPartial<PartyMatchmakerTicket>, I>>(base?: I): PartyMatchmakerTicket {
-    return PartyMatchmakerTicket.fromPartial(base ?? ({} as any));
+    return PartyMatchmakerTicket.fromPartial(base ?? {});
   },
+
   fromPartial<I extends Exact<DeepPartial<PartyMatchmakerTicket>, I>>(object: I): PartyMatchmakerTicket {
     const message = createBasePartyMatchmakerTicket();
     message.party_id = object.party_id ?? "";
@@ -6073,7 +5044,7 @@ export const PartyMatchmakerTicket = {
 };
 
 function createBasePartyData(): PartyData {
-  return { party_id: "", presence: undefined, op_code: 0, data: new Uint8Array(0) };
+  return { party_id: "", presence: undefined, op_code: 0, data: new Uint8Array() };
 }
 
 export const PartyData = {
@@ -6094,78 +5065,56 @@ export const PartyData = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): PartyData {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBasePartyData();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 10) {
-            break;
-          }
-
           message.party_id = reader.string();
-          continue;
+          break;
         case 2:
-          if (tag !== 18) {
-            break;
-          }
-
           message.presence = UserPresence.decode(reader, reader.uint32());
-          continue;
+          break;
         case 3:
-          if (tag !== 24) {
-            break;
-          }
-
           message.op_code = longToNumber(reader.int64() as Long);
-          continue;
+          break;
         case 4:
-          if (tag !== 34) {
-            break;
-          }
-
           message.data = reader.bytes();
-          continue;
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
       }
-      if ((tag & 7) === 4 || tag === 0) {
-        break;
-      }
-      reader.skipType(tag & 7);
     }
     return message;
   },
 
   fromJSON(object: any): PartyData {
     return {
-      party_id: isSet(object.party_id) ? globalThis.String(object.party_id) : "",
+      party_id: isSet(object.party_id) ? String(object.party_id) : "",
       presence: isSet(object.presence) ? UserPresence.fromJSON(object.presence) : undefined,
-      op_code: isSet(object.op_code) ? globalThis.Number(object.op_code) : 0,
-      data: isSet(object.data) ? bytesFromBase64(object.data) : new Uint8Array(0),
+      op_code: isSet(object.op_code) ? Number(object.op_code) : 0,
+      data: isSet(object.data) ? bytesFromBase64(object.data) : new Uint8Array(),
     };
   },
 
   toJSON(message: PartyData): unknown {
     const obj: any = {};
-    if (message.party_id !== "") {
-      obj.party_id = message.party_id;
-    }
-    if (message.presence !== undefined) {
-      obj.presence = UserPresence.toJSON(message.presence);
-    }
-    if (message.op_code !== 0) {
-      obj.op_code = Math.round(message.op_code);
-    }
-    if (message.data.length !== 0) {
-      obj.data = base64FromBytes(message.data);
-    }
+    message.party_id !== undefined && (obj.party_id = message.party_id);
+    message.presence !== undefined &&
+      (obj.presence = message.presence ? UserPresence.toJSON(message.presence) : undefined);
+    message.op_code !== undefined && (obj.op_code = Math.round(message.op_code));
+    message.data !== undefined &&
+      (obj.data = base64FromBytes(message.data !== undefined ? message.data : new Uint8Array()));
     return obj;
   },
 
   create<I extends Exact<DeepPartial<PartyData>, I>>(base?: I): PartyData {
-    return PartyData.fromPartial(base ?? ({} as any));
+    return PartyData.fromPartial(base ?? {});
   },
+
   fromPartial<I extends Exact<DeepPartial<PartyData>, I>>(object: I): PartyData {
     const message = createBasePartyData();
     message.party_id = object.party_id ?? "";
@@ -6173,13 +5122,13 @@ export const PartyData = {
       ? UserPresence.fromPartial(object.presence)
       : undefined;
     message.op_code = object.op_code ?? 0;
-    message.data = object.data ?? new Uint8Array(0);
+    message.data = object.data ?? new Uint8Array();
     return message;
   },
 };
 
 function createBasePartyDataSend(): PartyDataSend {
-  return { party_id: "", op_code: 0, data: new Uint8Array(0) };
+  return { party_id: "", op_code: 0, data: new Uint8Array() };
 }
 
 export const PartyDataSend = {
@@ -6197,72 +5146,55 @@ export const PartyDataSend = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): PartyDataSend {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBasePartyDataSend();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 10) {
-            break;
-          }
-
           message.party_id = reader.string();
-          continue;
+          break;
         case 2:
-          if (tag !== 16) {
-            break;
-          }
-
           message.op_code = longToNumber(reader.int64() as Long);
-          continue;
+          break;
         case 3:
-          if (tag !== 26) {
-            break;
-          }
-
           message.data = reader.bytes();
-          continue;
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
       }
-      if ((tag & 7) === 4 || tag === 0) {
-        break;
-      }
-      reader.skipType(tag & 7);
     }
     return message;
   },
 
   fromJSON(object: any): PartyDataSend {
     return {
-      party_id: isSet(object.party_id) ? globalThis.String(object.party_id) : "",
-      op_code: isSet(object.op_code) ? globalThis.Number(object.op_code) : 0,
-      data: isSet(object.data) ? bytesFromBase64(object.data) : new Uint8Array(0),
+      party_id: isSet(object.party_id) ? String(object.party_id) : "",
+      op_code: isSet(object.op_code) ? Number(object.op_code) : 0,
+      data: isSet(object.data) ? bytesFromBase64(object.data) : new Uint8Array(),
     };
   },
 
   toJSON(message: PartyDataSend): unknown {
     const obj: any = {};
-    if (message.party_id !== "") {
-      obj.party_id = message.party_id;
-    }
-    if (message.op_code !== 0) {
-      obj.op_code = Math.round(message.op_code);
-    }
-    if (message.data.length !== 0) {
-      obj.data = base64FromBytes(message.data);
-    }
+    message.party_id !== undefined && (obj.party_id = message.party_id);
+    message.op_code !== undefined && (obj.op_code = Math.round(message.op_code));
+    message.data !== undefined &&
+      (obj.data = base64FromBytes(message.data !== undefined ? message.data : new Uint8Array()));
     return obj;
   },
 
   create<I extends Exact<DeepPartial<PartyDataSend>, I>>(base?: I): PartyDataSend {
-    return PartyDataSend.fromPartial(base ?? ({} as any));
+    return PartyDataSend.fromPartial(base ?? {});
   },
+
   fromPartial<I extends Exact<DeepPartial<PartyDataSend>, I>>(object: I): PartyDataSend {
     const message = createBasePartyDataSend();
     message.party_id = object.party_id ?? "";
     message.op_code = object.op_code ?? 0;
-    message.data = object.data ?? new Uint8Array(0);
+    message.data = object.data ?? new Uint8Array();
     return message;
   },
 };
@@ -6286,67 +5218,57 @@ export const PartyPresenceEvent = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): PartyPresenceEvent {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBasePartyPresenceEvent();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 10) {
-            break;
-          }
-
           message.party_id = reader.string();
-          continue;
+          break;
         case 2:
-          if (tag !== 18) {
-            break;
-          }
-
           message.joins.push(UserPresence.decode(reader, reader.uint32()));
-          continue;
+          break;
         case 3:
-          if (tag !== 26) {
-            break;
-          }
-
           message.leaves.push(UserPresence.decode(reader, reader.uint32()));
-          continue;
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
       }
-      if ((tag & 7) === 4 || tag === 0) {
-        break;
-      }
-      reader.skipType(tag & 7);
     }
     return message;
   },
 
   fromJSON(object: any): PartyPresenceEvent {
     return {
-      party_id: isSet(object.party_id) ? globalThis.String(object.party_id) : "",
-      joins: globalThis.Array.isArray(object?.joins) ? object.joins.map((e: any) => UserPresence.fromJSON(e)) : [],
-      leaves: globalThis.Array.isArray(object?.leaves) ? object.leaves.map((e: any) => UserPresence.fromJSON(e)) : [],
+      party_id: isSet(object.party_id) ? String(object.party_id) : "",
+      joins: Array.isArray(object?.joins) ? object.joins.map((e: any) => UserPresence.fromJSON(e)) : [],
+      leaves: Array.isArray(object?.leaves) ? object.leaves.map((e: any) => UserPresence.fromJSON(e)) : [],
     };
   },
 
   toJSON(message: PartyPresenceEvent): unknown {
     const obj: any = {};
-    if (message.party_id !== "") {
-      obj.party_id = message.party_id;
+    message.party_id !== undefined && (obj.party_id = message.party_id);
+    if (message.joins) {
+      obj.joins = message.joins.map((e) => e ? UserPresence.toJSON(e) : undefined);
+    } else {
+      obj.joins = [];
     }
-    if (message.joins?.length) {
-      obj.joins = message.joins.map((e) => UserPresence.toJSON(e));
-    }
-    if (message.leaves?.length) {
-      obj.leaves = message.leaves.map((e) => UserPresence.toJSON(e));
+    if (message.leaves) {
+      obj.leaves = message.leaves.map((e) => e ? UserPresence.toJSON(e) : undefined);
+    } else {
+      obj.leaves = [];
     }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<PartyPresenceEvent>, I>>(base?: I): PartyPresenceEvent {
-    return PartyPresenceEvent.fromPartial(base ?? ({} as any));
+    return PartyPresenceEvent.fromPartial(base ?? {});
   },
+
   fromPartial<I extends Exact<DeepPartial<PartyPresenceEvent>, I>>(object: I): PartyPresenceEvent {
     const message = createBasePartyPresenceEvent();
     message.party_id = object.party_id ?? "";
@@ -6366,17 +5288,16 @@ export const Ping = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): Ping {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBasePing();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
+        default:
+          reader.skipType(tag & 7);
+          break;
       }
-      if ((tag & 7) === 4 || tag === 0) {
-        break;
-      }
-      reader.skipType(tag & 7);
     }
     return message;
   },
@@ -6391,8 +5312,9 @@ export const Ping = {
   },
 
   create<I extends Exact<DeepPartial<Ping>, I>>(base?: I): Ping {
-    return Ping.fromPartial(base ?? ({} as any));
+    return Ping.fromPartial(base ?? {});
   },
+
   fromPartial<I extends Exact<DeepPartial<Ping>, I>>(_: I): Ping {
     const message = createBasePing();
     return message;
@@ -6409,17 +5331,16 @@ export const Pong = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): Pong {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBasePong();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
+        default:
+          reader.skipType(tag & 7);
+          break;
       }
-      if ((tag & 7) === 4 || tag === 0) {
-        break;
-      }
-      reader.skipType(tag & 7);
     }
     return message;
   },
@@ -6434,8 +5355,9 @@ export const Pong = {
   },
 
   create<I extends Exact<DeepPartial<Pong>, I>>(base?: I): Pong {
-    return Pong.fromPartial(base ?? ({} as any));
+    return Pong.fromPartial(base ?? {});
   },
+
   fromPartial<I extends Exact<DeepPartial<Pong>, I>>(_: I): Pong {
     const message = createBasePong();
     return message;
@@ -6455,47 +5377,43 @@ export const Status = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): Status {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseStatus();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 10) {
-            break;
-          }
-
           message.presences.push(UserPresence.decode(reader, reader.uint32()));
-          continue;
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
       }
-      if ((tag & 7) === 4 || tag === 0) {
-        break;
-      }
-      reader.skipType(tag & 7);
     }
     return message;
   },
 
   fromJSON(object: any): Status {
     return {
-      presences: globalThis.Array.isArray(object?.presences)
-        ? object.presences.map((e: any) => UserPresence.fromJSON(e))
-        : [],
+      presences: Array.isArray(object?.presences) ? object.presences.map((e: any) => UserPresence.fromJSON(e)) : [],
     };
   },
 
   toJSON(message: Status): unknown {
     const obj: any = {};
-    if (message.presences?.length) {
-      obj.presences = message.presences.map((e) => UserPresence.toJSON(e));
+    if (message.presences) {
+      obj.presences = message.presences.map((e) => e ? UserPresence.toJSON(e) : undefined);
+    } else {
+      obj.presences = [];
     }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<Status>, I>>(base?: I): Status {
-    return Status.fromPartial(base ?? ({} as any));
+    return Status.fromPartial(base ?? {});
   },
+
   fromPartial<I extends Exact<DeepPartial<Status>, I>>(object: I): Status {
     const message = createBaseStatus();
     message.presences = object.presences?.map((e) => UserPresence.fromPartial(e)) || [];
@@ -6519,58 +5437,52 @@ export const StatusFollow = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): StatusFollow {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseStatusFollow();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 10) {
-            break;
-          }
-
           message.user_ids.push(reader.string());
-          continue;
+          break;
         case 2:
-          if (tag !== 18) {
-            break;
-          }
-
           message.usernames.push(reader.string());
-          continue;
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
       }
-      if ((tag & 7) === 4 || tag === 0) {
-        break;
-      }
-      reader.skipType(tag & 7);
     }
     return message;
   },
 
   fromJSON(object: any): StatusFollow {
     return {
-      user_ids: globalThis.Array.isArray(object?.user_ids) ? object.user_ids.map((e: any) => globalThis.String(e)) : [],
-      usernames: globalThis.Array.isArray(object?.usernames)
-        ? object.usernames.map((e: any) => globalThis.String(e))
-        : [],
+      user_ids: Array.isArray(object?.user_ids) ? object.user_ids.map((e: any) => String(e)) : [],
+      usernames: Array.isArray(object?.usernames) ? object.usernames.map((e: any) => String(e)) : [],
     };
   },
 
   toJSON(message: StatusFollow): unknown {
     const obj: any = {};
-    if (message.user_ids?.length) {
-      obj.user_ids = message.user_ids;
+    if (message.user_ids) {
+      obj.user_ids = message.user_ids.map((e) => e);
+    } else {
+      obj.user_ids = [];
     }
-    if (message.usernames?.length) {
-      obj.usernames = message.usernames;
+    if (message.usernames) {
+      obj.usernames = message.usernames.map((e) => e);
+    } else {
+      obj.usernames = [];
     }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<StatusFollow>, I>>(base?: I): StatusFollow {
-    return StatusFollow.fromPartial(base ?? ({} as any));
+    return StatusFollow.fromPartial(base ?? {});
   },
+
   fromPartial<I extends Exact<DeepPartial<StatusFollow>, I>>(object: I): StatusFollow {
     const message = createBaseStatusFollow();
     message.user_ids = object.user_ids?.map((e) => e) || [];
@@ -6595,56 +5507,52 @@ export const StatusPresenceEvent = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): StatusPresenceEvent {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseStatusPresenceEvent();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 2:
-          if (tag !== 18) {
-            break;
-          }
-
           message.joins.push(UserPresence.decode(reader, reader.uint32()));
-          continue;
+          break;
         case 3:
-          if (tag !== 26) {
-            break;
-          }
-
           message.leaves.push(UserPresence.decode(reader, reader.uint32()));
-          continue;
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
       }
-      if ((tag & 7) === 4 || tag === 0) {
-        break;
-      }
-      reader.skipType(tag & 7);
     }
     return message;
   },
 
   fromJSON(object: any): StatusPresenceEvent {
     return {
-      joins: globalThis.Array.isArray(object?.joins) ? object.joins.map((e: any) => UserPresence.fromJSON(e)) : [],
-      leaves: globalThis.Array.isArray(object?.leaves) ? object.leaves.map((e: any) => UserPresence.fromJSON(e)) : [],
+      joins: Array.isArray(object?.joins) ? object.joins.map((e: any) => UserPresence.fromJSON(e)) : [],
+      leaves: Array.isArray(object?.leaves) ? object.leaves.map((e: any) => UserPresence.fromJSON(e)) : [],
     };
   },
 
   toJSON(message: StatusPresenceEvent): unknown {
     const obj: any = {};
-    if (message.joins?.length) {
-      obj.joins = message.joins.map((e) => UserPresence.toJSON(e));
+    if (message.joins) {
+      obj.joins = message.joins.map((e) => e ? UserPresence.toJSON(e) : undefined);
+    } else {
+      obj.joins = [];
     }
-    if (message.leaves?.length) {
-      obj.leaves = message.leaves.map((e) => UserPresence.toJSON(e));
+    if (message.leaves) {
+      obj.leaves = message.leaves.map((e) => e ? UserPresence.toJSON(e) : undefined);
+    } else {
+      obj.leaves = [];
     }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<StatusPresenceEvent>, I>>(base?: I): StatusPresenceEvent {
-    return StatusPresenceEvent.fromPartial(base ?? ({} as any));
+    return StatusPresenceEvent.fromPartial(base ?? {});
   },
+
   fromPartial<I extends Exact<DeepPartial<StatusPresenceEvent>, I>>(object: I): StatusPresenceEvent {
     const message = createBaseStatusPresenceEvent();
     message.joins = object.joins?.map((e) => UserPresence.fromPartial(e)) || [];
@@ -6666,45 +5574,41 @@ export const StatusUnfollow = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): StatusUnfollow {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseStatusUnfollow();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 10) {
-            break;
-          }
-
           message.user_ids.push(reader.string());
-          continue;
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
       }
-      if ((tag & 7) === 4 || tag === 0) {
-        break;
-      }
-      reader.skipType(tag & 7);
     }
     return message;
   },
 
   fromJSON(object: any): StatusUnfollow {
-    return {
-      user_ids: globalThis.Array.isArray(object?.user_ids) ? object.user_ids.map((e: any) => globalThis.String(e)) : [],
-    };
+    return { user_ids: Array.isArray(object?.user_ids) ? object.user_ids.map((e: any) => String(e)) : [] };
   },
 
   toJSON(message: StatusUnfollow): unknown {
     const obj: any = {};
-    if (message.user_ids?.length) {
-      obj.user_ids = message.user_ids;
+    if (message.user_ids) {
+      obj.user_ids = message.user_ids.map((e) => e);
+    } else {
+      obj.user_ids = [];
     }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<StatusUnfollow>, I>>(base?: I): StatusUnfollow {
-    return StatusUnfollow.fromPartial(base ?? ({} as any));
+    return StatusUnfollow.fromPartial(base ?? {});
   },
+
   fromPartial<I extends Exact<DeepPartial<StatusUnfollow>, I>>(object: I): StatusUnfollow {
     const message = createBaseStatusUnfollow();
     message.user_ids = object.user_ids?.map((e) => e) || [];
@@ -6725,24 +5629,19 @@ export const StatusUpdate = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): StatusUpdate {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseStatusUpdate();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 10) {
-            break;
-          }
-
           message.status = StringValue.decode(reader, reader.uint32()).value;
-          continue;
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
       }
-      if ((tag & 7) === 4 || tag === 0) {
-        break;
-      }
-      reader.skipType(tag & 7);
     }
     return message;
   },
@@ -6753,15 +5652,14 @@ export const StatusUpdate = {
 
   toJSON(message: StatusUpdate): unknown {
     const obj: any = {};
-    if (message.status !== undefined) {
-      obj.status = message.status;
-    }
+    message.status !== undefined && (obj.status = message.status);
     return obj;
   },
 
   create<I extends Exact<DeepPartial<StatusUpdate>, I>>(base?: I): StatusUpdate {
-    return StatusUpdate.fromPartial(base ?? ({} as any));
+    return StatusUpdate.fromPartial(base ?? {});
   },
+
   fromPartial<I extends Exact<DeepPartial<StatusUpdate>, I>>(object: I): StatusUpdate {
     const message = createBaseStatusUpdate();
     message.status = object.status ?? undefined;
@@ -6791,78 +5689,54 @@ export const Stream = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): Stream {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseStream();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 8) {
-            break;
-          }
-
           message.mode = reader.int32();
-          continue;
+          break;
         case 2:
-          if (tag !== 18) {
-            break;
-          }
-
           message.subject = reader.string();
-          continue;
+          break;
         case 3:
-          if (tag !== 26) {
-            break;
-          }
-
           message.subcontext = reader.string();
-          continue;
+          break;
         case 4:
-          if (tag !== 34) {
-            break;
-          }
-
           message.label = reader.string();
-          continue;
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
       }
-      if ((tag & 7) === 4 || tag === 0) {
-        break;
-      }
-      reader.skipType(tag & 7);
     }
     return message;
   },
 
   fromJSON(object: any): Stream {
     return {
-      mode: isSet(object.mode) ? globalThis.Number(object.mode) : 0,
-      subject: isSet(object.subject) ? globalThis.String(object.subject) : "",
-      subcontext: isSet(object.subcontext) ? globalThis.String(object.subcontext) : "",
-      label: isSet(object.label) ? globalThis.String(object.label) : "",
+      mode: isSet(object.mode) ? Number(object.mode) : 0,
+      subject: isSet(object.subject) ? String(object.subject) : "",
+      subcontext: isSet(object.subcontext) ? String(object.subcontext) : "",
+      label: isSet(object.label) ? String(object.label) : "",
     };
   },
 
   toJSON(message: Stream): unknown {
     const obj: any = {};
-    if (message.mode !== 0) {
-      obj.mode = Math.round(message.mode);
-    }
-    if (message.subject !== "") {
-      obj.subject = message.subject;
-    }
-    if (message.subcontext !== "") {
-      obj.subcontext = message.subcontext;
-    }
-    if (message.label !== "") {
-      obj.label = message.label;
-    }
+    message.mode !== undefined && (obj.mode = Math.round(message.mode));
+    message.subject !== undefined && (obj.subject = message.subject);
+    message.subcontext !== undefined && (obj.subcontext = message.subcontext);
+    message.label !== undefined && (obj.label = message.label);
     return obj;
   },
 
   create<I extends Exact<DeepPartial<Stream>, I>>(base?: I): Stream {
-    return Stream.fromPartial(base ?? ({} as any));
+    return Stream.fromPartial(base ?? {});
   },
+
   fromPartial<I extends Exact<DeepPartial<Stream>, I>>(object: I): Stream {
     const message = createBaseStream();
     message.mode = object.mode ?? 0;
@@ -6895,45 +5769,28 @@ export const StreamData = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): StreamData {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseStreamData();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 10) {
-            break;
-          }
-
           message.stream = Stream.decode(reader, reader.uint32());
-          continue;
+          break;
         case 2:
-          if (tag !== 18) {
-            break;
-          }
-
           message.sender = UserPresence.decode(reader, reader.uint32());
-          continue;
+          break;
         case 3:
-          if (tag !== 26) {
-            break;
-          }
-
           message.data = reader.string();
-          continue;
+          break;
         case 4:
-          if (tag !== 32) {
-            break;
-          }
-
           message.reliable = reader.bool();
-          continue;
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
       }
-      if ((tag & 7) === 4 || tag === 0) {
-        break;
-      }
-      reader.skipType(tag & 7);
     }
     return message;
   },
@@ -6942,31 +5799,24 @@ export const StreamData = {
     return {
       stream: isSet(object.stream) ? Stream.fromJSON(object.stream) : undefined,
       sender: isSet(object.sender) ? UserPresence.fromJSON(object.sender) : undefined,
-      data: isSet(object.data) ? globalThis.String(object.data) : "",
-      reliable: isSet(object.reliable) ? globalThis.Boolean(object.reliable) : false,
+      data: isSet(object.data) ? String(object.data) : "",
+      reliable: isSet(object.reliable) ? Boolean(object.reliable) : false,
     };
   },
 
   toJSON(message: StreamData): unknown {
     const obj: any = {};
-    if (message.stream !== undefined) {
-      obj.stream = Stream.toJSON(message.stream);
-    }
-    if (message.sender !== undefined) {
-      obj.sender = UserPresence.toJSON(message.sender);
-    }
-    if (message.data !== "") {
-      obj.data = message.data;
-    }
-    if (message.reliable === true) {
-      obj.reliable = message.reliable;
-    }
+    message.stream !== undefined && (obj.stream = message.stream ? Stream.toJSON(message.stream) : undefined);
+    message.sender !== undefined && (obj.sender = message.sender ? UserPresence.toJSON(message.sender) : undefined);
+    message.data !== undefined && (obj.data = message.data);
+    message.reliable !== undefined && (obj.reliable = message.reliable);
     return obj;
   },
 
   create<I extends Exact<DeepPartial<StreamData>, I>>(base?: I): StreamData {
-    return StreamData.fromPartial(base ?? ({} as any));
+    return StreamData.fromPartial(base ?? {});
   },
+
   fromPartial<I extends Exact<DeepPartial<StreamData>, I>>(object: I): StreamData {
     const message = createBaseStreamData();
     message.stream = (object.stream !== undefined && object.stream !== null)
@@ -7000,38 +5850,25 @@ export const StreamPresenceEvent = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): StreamPresenceEvent {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseStreamPresenceEvent();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 10) {
-            break;
-          }
-
           message.stream = Stream.decode(reader, reader.uint32());
-          continue;
+          break;
         case 2:
-          if (tag !== 18) {
-            break;
-          }
-
           message.joins.push(UserPresence.decode(reader, reader.uint32()));
-          continue;
+          break;
         case 3:
-          if (tag !== 26) {
-            break;
-          }
-
           message.leaves.push(UserPresence.decode(reader, reader.uint32()));
-          continue;
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
       }
-      if ((tag & 7) === 4 || tag === 0) {
-        break;
-      }
-      reader.skipType(tag & 7);
     }
     return message;
   },
@@ -7039,28 +5876,31 @@ export const StreamPresenceEvent = {
   fromJSON(object: any): StreamPresenceEvent {
     return {
       stream: isSet(object.stream) ? Stream.fromJSON(object.stream) : undefined,
-      joins: globalThis.Array.isArray(object?.joins) ? object.joins.map((e: any) => UserPresence.fromJSON(e)) : [],
-      leaves: globalThis.Array.isArray(object?.leaves) ? object.leaves.map((e: any) => UserPresence.fromJSON(e)) : [],
+      joins: Array.isArray(object?.joins) ? object.joins.map((e: any) => UserPresence.fromJSON(e)) : [],
+      leaves: Array.isArray(object?.leaves) ? object.leaves.map((e: any) => UserPresence.fromJSON(e)) : [],
     };
   },
 
   toJSON(message: StreamPresenceEvent): unknown {
     const obj: any = {};
-    if (message.stream !== undefined) {
-      obj.stream = Stream.toJSON(message.stream);
+    message.stream !== undefined && (obj.stream = message.stream ? Stream.toJSON(message.stream) : undefined);
+    if (message.joins) {
+      obj.joins = message.joins.map((e) => e ? UserPresence.toJSON(e) : undefined);
+    } else {
+      obj.joins = [];
     }
-    if (message.joins?.length) {
-      obj.joins = message.joins.map((e) => UserPresence.toJSON(e));
-    }
-    if (message.leaves?.length) {
-      obj.leaves = message.leaves.map((e) => UserPresence.toJSON(e));
+    if (message.leaves) {
+      obj.leaves = message.leaves.map((e) => e ? UserPresence.toJSON(e) : undefined);
+    } else {
+      obj.leaves = [];
     }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<StreamPresenceEvent>, I>>(base?: I): StreamPresenceEvent {
-    return StreamPresenceEvent.fromPartial(base ?? ({} as any));
+    return StreamPresenceEvent.fromPartial(base ?? {});
   },
+
   fromPartial<I extends Exact<DeepPartial<StreamPresenceEvent>, I>>(object: I): StreamPresenceEvent {
     const message = createBaseStreamPresenceEvent();
     message.stream = (object.stream !== undefined && object.stream !== null)
@@ -7097,89 +5937,59 @@ export const UserPresence = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): UserPresence {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseUserPresence();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 10) {
-            break;
-          }
-
           message.user_id = reader.string();
-          continue;
+          break;
         case 2:
-          if (tag !== 18) {
-            break;
-          }
-
           message.session_id = reader.string();
-          continue;
+          break;
         case 3:
-          if (tag !== 26) {
-            break;
-          }
-
           message.username = reader.string();
-          continue;
+          break;
         case 4:
-          if (tag !== 32) {
-            break;
-          }
-
           message.persistence = reader.bool();
-          continue;
+          break;
         case 5:
-          if (tag !== 42) {
-            break;
-          }
-
           message.status = StringValue.decode(reader, reader.uint32()).value;
-          continue;
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
       }
-      if ((tag & 7) === 4 || tag === 0) {
-        break;
-      }
-      reader.skipType(tag & 7);
     }
     return message;
   },
 
   fromJSON(object: any): UserPresence {
     return {
-      user_id: isSet(object.user_id) ? globalThis.String(object.user_id) : "",
-      session_id: isSet(object.session_id) ? globalThis.String(object.session_id) : "",
-      username: isSet(object.username) ? globalThis.String(object.username) : "",
-      persistence: isSet(object.persistence) ? globalThis.Boolean(object.persistence) : false,
+      user_id: isSet(object.user_id) ? String(object.user_id) : "",
+      session_id: isSet(object.session_id) ? String(object.session_id) : "",
+      username: isSet(object.username) ? String(object.username) : "",
+      persistence: isSet(object.persistence) ? Boolean(object.persistence) : false,
       status: isSet(object.status) ? String(object.status) : undefined,
     };
   },
 
   toJSON(message: UserPresence): unknown {
     const obj: any = {};
-    if (message.user_id !== "") {
-      obj.user_id = message.user_id;
-    }
-    if (message.session_id !== "") {
-      obj.session_id = message.session_id;
-    }
-    if (message.username !== "") {
-      obj.username = message.username;
-    }
-    if (message.persistence === true) {
-      obj.persistence = message.persistence;
-    }
-    if (message.status !== undefined) {
-      obj.status = message.status;
-    }
+    message.user_id !== undefined && (obj.user_id = message.user_id);
+    message.session_id !== undefined && (obj.session_id = message.session_id);
+    message.username !== undefined && (obj.username = message.username);
+    message.persistence !== undefined && (obj.persistence = message.persistence);
+    message.status !== undefined && (obj.status = message.status);
     return obj;
   },
 
   create<I extends Exact<DeepPartial<UserPresence>, I>>(base?: I): UserPresence {
-    return UserPresence.fromPartial(base ?? ({} as any));
+    return UserPresence.fromPartial(base ?? {});
   },
+
   fromPartial<I extends Exact<DeepPartial<UserPresence>, I>>(object: I): UserPresence {
     const message = createBaseUserPresence();
     message.user_id = object.user_id ?? "";
@@ -7191,11 +6001,30 @@ export const UserPresence = {
   },
 };
 
+declare var self: any | undefined;
+declare var window: any | undefined;
+declare var global: any | undefined;
+var tsProtoGlobalThis: any = (() => {
+  if (typeof globalThis !== "undefined") {
+    return globalThis;
+  }
+  if (typeof self !== "undefined") {
+    return self;
+  }
+  if (typeof window !== "undefined") {
+    return window;
+  }
+  if (typeof global !== "undefined") {
+    return global;
+  }
+  throw "Unable to locate global object";
+})();
+
 function bytesFromBase64(b64: string): Uint8Array {
-  if (globalThis.Buffer) {
-    return Uint8Array.from(globalThis.Buffer.from(b64, "base64"));
+  if (tsProtoGlobalThis.Buffer) {
+    return Uint8Array.from(tsProtoGlobalThis.Buffer.from(b64, "base64"));
   } else {
-    const bin = globalThis.atob(b64);
+    const bin = tsProtoGlobalThis.atob(b64);
     const arr = new Uint8Array(bin.length);
     for (let i = 0; i < bin.length; ++i) {
       arr[i] = bin.charCodeAt(i);
@@ -7205,22 +6034,21 @@ function bytesFromBase64(b64: string): Uint8Array {
 }
 
 function base64FromBytes(arr: Uint8Array): string {
-  if (globalThis.Buffer) {
-    return globalThis.Buffer.from(arr).toString("base64");
+  if (tsProtoGlobalThis.Buffer) {
+    return tsProtoGlobalThis.Buffer.from(arr).toString("base64");
   } else {
     const bin: string[] = [];
     arr.forEach((byte) => {
-      bin.push(globalThis.String.fromCharCode(byte));
+      bin.push(String.fromCharCode(byte));
     });
-    return globalThis.btoa(bin.join(""));
+    return tsProtoGlobalThis.btoa(bin.join(""));
   }
 }
 
 type Builtin = Date | Function | Uint8Array | string | number | boolean | undefined;
 
 export type DeepPartial<T> = T extends Builtin ? T
-  : T extends globalThis.Array<infer U> ? globalThis.Array<DeepPartial<U>>
-  : T extends ReadonlyArray<infer U> ? ReadonlyArray<DeepPartial<U>>
+  : T extends Array<infer U> ? Array<DeepPartial<U>> : T extends ReadonlyArray<infer U> ? ReadonlyArray<DeepPartial<U>>
   : T extends {} ? { [K in keyof T]?: DeepPartial<T[K]> }
   : Partial<T>;
 
@@ -7229,30 +6057,30 @@ export type Exact<P, I extends P> = P extends Builtin ? P
   : P & { [K in keyof P]: Exact<P[K], I[K]> } & { [K in Exclude<keyof I, KeysOfUnion<P>>]: never };
 
 function toTimestamp(date: Date): Timestamp {
-  const seconds = Math.trunc(date.getTime() / 1_000);
+  const seconds = date.getTime() / 1_000;
   const nanos = (date.getTime() % 1_000) * 1_000_000;
   return { seconds, nanos };
 }
 
 function fromTimestamp(t: Timestamp): Date {
-  let millis = (t.seconds || 0) * 1_000;
-  millis += (t.nanos || 0) / 1_000_000;
-  return new globalThis.Date(millis);
+  let millis = t.seconds * 1_000;
+  millis += t.nanos / 1_000_000;
+  return new Date(millis);
 }
 
 function fromJsonTimestamp(o: any): Date {
-  if (o instanceof globalThis.Date) {
+  if (o instanceof Date) {
     return o;
   } else if (typeof o === "string") {
-    return new globalThis.Date(o);
+    return new Date(o);
   } else {
     return fromTimestamp(Timestamp.fromJSON(o));
   }
 }
 
 function longToNumber(long: Long): number {
-  if (long.gt(globalThis.Number.MAX_SAFE_INTEGER)) {
-    throw new globalThis.Error("Value is larger than Number.MAX_SAFE_INTEGER");
+  if (long.gt(Number.MAX_SAFE_INTEGER)) {
+    throw new tsProtoGlobalThis.Error("Value is larger than Number.MAX_SAFE_INTEGER");
   }
   return long.toNumber();
 }

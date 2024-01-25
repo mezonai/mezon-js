@@ -244,15 +244,14 @@ export interface ApiChannelMessage {
 export interface ApiChannelMessageList {
   //Cacheable cursor to list newer messages. Durable and designed to be stored, unlike next/prev cursors.
   cacheable_cursor?: string;
-  //last seen message id
-  last_seen_message_uuid?: string;
+  //
+  last_seen_message_id?: string;
   //A list of messages.
   messages?: Array<ApiChannelMessage>;
   //The cursor to send when retrieving the next page, if any.
   next_cursor?: string;
   //The cursor to send when retrieving the previous page, if any.
   prev_cursor?: string;
-  unread_messages?: Array<ApiUnreadMessage>;
 }
 
 /** A list of users belonging to a channel, along with their role. */
@@ -894,14 +893,6 @@ export interface ApiTournamentRecordList {
   rank_count?: string;
   //A list of tournament records.
   records?: Array<ApiLeaderboardRecord>;
-}
-
-/**  */
-export interface ApiUnreadMessage {
-  //The unique ID of this message.
-  message_id?: string;
-  //The unique ID of this message.
-  user_id?: string;
 }
 
 /** Update a user's account details. */
@@ -2670,7 +2661,7 @@ export class NakamaApi {
   /** Kick a set of users from a channel. */
   removeChannelUsers(bearerToken: string,
       channelId:string,
-      userIds?:Array<string>,
+userIds?:Array<string>,
       options: any = {}): Promise<any> {
     
     if (channelId === null || channelId === undefined) {
@@ -2679,7 +2670,7 @@ export class NakamaApi {
     const urlPath = "/v2/channeldesc/{channelId}/remove"
         .replace("{channelId}", encodeURIComponent(String(channelId)));
     const queryParams = new Map<string, any>();
-    queryParams.set("user_ids", userIds);
+queryParams.set("user_ids", userIds);
 
     let bodyJson : string = "";
 
@@ -2708,7 +2699,7 @@ export class NakamaApi {
   /** Leave a channel the user is a member of. */
   leaveChannel(bearerToken: string,
       channelId:string,
-      options: any = {}): Promise<any> {
+            options: any = {}): Promise<any> {
     
     if (channelId === null || channelId === undefined) {
       throw new Error("'channelId' is a required parameter but is null or undefined.");
@@ -2716,7 +2707,7 @@ export class NakamaApi {
     const urlPath = "/v2/channeldesc/{channelId}/leave"
         .replace("{channelId}", encodeURIComponent(String(channelId)));
     const queryParams = new Map<string, any>();
-
+    
     let bodyJson : string = "";
 
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
@@ -3684,7 +3675,7 @@ queryParams.set("creator_id", creatorId);
   /** Kick a set of users from a group. */
   kickGroupUsers(bearerToken: string,
       groupId:string,
-      userIds?:Array<string>,
+userIds?:Array<string>,
       options: any = {}): Promise<any> {
     
     if (groupId === null || groupId === undefined) {
@@ -3693,7 +3684,7 @@ queryParams.set("creator_id", creatorId);
     const urlPath = "/v2/group/{groupId}/kick"
         .replace("{groupId}", encodeURIComponent(String(groupId)));
     const queryParams = new Map<string, any>();
-    queryParams.set("user_ids", userIds);
+queryParams.set("user_ids", userIds);
 
     let bodyJson : string = "";
 
@@ -3722,7 +3713,7 @@ queryParams.set("creator_id", creatorId);
   /** Leave a group the user is a member of. */
   leaveGroup(bearerToken: string,
       groupId:string,
-      options: any = {}): Promise<any> {
+            options: any = {}): Promise<any> {
     
     if (groupId === null || groupId === undefined) {
       throw new Error("'groupId' is a required parameter but is null or undefined.");
@@ -3730,7 +3721,7 @@ queryParams.set("creator_id", creatorId);
     const urlPath = "/v2/group/{groupId}/leave"
         .replace("{groupId}", encodeURIComponent(String(groupId)));
     const queryParams = new Map<string, any>();
-
+    
     let bodyJson : string = "";
 
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
