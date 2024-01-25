@@ -245,7 +245,7 @@ export interface ApiChannelMessageList {
   //Cacheable cursor to list newer messages. Durable and designed to be stored, unlike next/prev cursors.
   cacheable_cursor?: string;
   //last seen message id
-  last_seen_message_uuid?: string;
+  last_seen_message_id?: string;
   //A list of messages.
   messages?: Array<ApiChannelMessage>;
   //The cursor to send when retrieving the next page, if any.

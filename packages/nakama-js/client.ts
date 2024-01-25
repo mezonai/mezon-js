@@ -1082,7 +1082,6 @@ export class Client {
         prev_cursor: response.prev_cursor,
         cacheable_cursor: response.cacheable_cursor
       };
-      console.log("response", response)
       if (response.messages == null) {
         return Promise.resolve(result);
       }
