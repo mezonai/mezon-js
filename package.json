@@ -35,5 +35,8 @@
     "packages/nakama-js-iife-example",
     "packages/nakama-js-protobuf",
     "packages/nakama-js-webpack-example"
-  ]
+  ],
+  "dependencies": {
+    "@protobuf-ts/protoc": "^2.9.3"
+  }
 }

@@ -208,6 +208,19 @@ export interface ApiCreateGroupRequest {
     name?: string;
     open?: boolean;
 }
+/** Create a role within clan. */
+export interface ApiCreateRoleRequest {
+    allow_mention?: number;
+    clan_id?: string;
+    color?: string;
+    description?: string;
+    display_online?: number;
+    permission_ids?: Array<string>;
+    role_icon?: string;
+    slug?: string;
+    title?: string;
+    user_ids?: Array<string>;
+}
 /** Storage objects to delete. */
 export interface ApiDeleteStorageObjectId {
     collection?: string;
@@ -261,6 +274,16 @@ export interface ApiGroupUserList {
     cursor?: string;
     group_users?: Array<GroupUserListGroupUser>;
 }
+/** Add link invite users to. */
+export interface ApiInviteUserRes {
+    channel_id?: string;
+    clan_id?: string;
+}
+/**  */
+export interface ApiLastSeenMessageRequest {
+    channel_id?: string;
+    message_id?: string;
+}
 /** Represents a complete leaderboard record with all scores and associated metadata. */
 export interface ApiLeaderboardRecord {
     create_time?: string;
@@ -283,6 +306,22 @@ export interface ApiLeaderboardRecordList {
     prev_cursor?: string;
     rank_count?: string;
     records?: Array<ApiLeaderboardRecord>;
+}
+/** Add link invite users to. */
+export interface ApiLinkInviteUser {
+    channel_id?: string;
+    clan_id?: string;
+    create_time?: string;
+    creator_id?: string;
+    expiry_time?: string;
+    id?: string;
+    invite_link?: string;
+}
+/** Add link invite users to. */
+export interface ApiLinkInviteUserRequest {
+    channel_id?: string;
+    clan_id?: string;
+    expiry_time?: number;
 }
 /** Link Steam to the current user's account. */
 export interface ApiLinkSteamRequest {
@@ -341,6 +380,27 @@ export interface ApiReadStorageObjectId {
 /** Batch get storage objects. */
 export interface ApiReadStorageObjectsRequest {
     object_ids?: Array<ApiReadStorageObjectId>;
+}
+/**  */
+export interface ApiRole {
+    active?: number;
+    allow_mention?: number;
+    clan_id?: string;
+    color?: string;
+    creator_id?: string;
+    description?: string;
+    display_online?: number;
+    id?: string;
+    role_icon?: string;
+    slug?: string;
+    title?: string;
+}
+/** A list of role description, usually a result of a list operation. */
+export interface ApiRoleList {
+    cacheable_cursor?: string;
+    next_cursor?: string;
+    prev_cursor?: string;
+    roles?: Array<ApiRole>;
 }
 /** Execute an Lua function on the server. */
 export interface ApiRpc {
@@ -484,6 +544,11 @@ export interface ApiUpdateGroupRequest {
 export interface ApiUpdateCategoryDescRequest {
     category_id?: string;
     category_name?: string;
+}
+/** Fetch a batch of zero or more users from the server. */
+export interface ApiUpdateUsersRequest {
+    avatar_url?: string;
+    display_name?: string;
 }
 /** A user in the server. */
 export interface ApiUser {
@@ -685,6 +750,8 @@ export declare class NakamaApi {
     listChannelDescs(bearerToken: string, limit?: number, state?: number, cursor?: string, clanId?: string, options?: any): Promise<ApiChannelDescList>;
     /** Create a new channel with the current user as the owner. */
     createChannelDesc(bearerToken: string, body: ApiCreateChannelDescRequest, options?: any): Promise<ApiChannelDescription>;
+    /** Update Last seen message by user */
+    postLastSeenMessage(bearerToken: string, body: ApiLastSeenMessageRequest, options?: any): Promise<any>;
     /** Delete a channel by ID. */
     deleteChannelDesc(bearerToken: string, channelId: string, options?: any): Promise<any>;
     /** Update fields in a given channel. */
@@ -769,6 +836,12 @@ export declare class NakamaApi {
     validateSubscriptionGoogle(bearerToken: string, body: ApiValidateSubscriptionGoogleRequest, options?: any): Promise<ApiValidateSubscriptionResponse>;
     /** Get subscription by product id. */
     getSubscription(bearerToken: string, productId: string, options?: any): Promise<ApiValidatedSubscription>;
+    /** Add users to a channel. */
+    createLinkInviteUser(bearerToken: string, body: ApiLinkInviteUserRequest, options?: any): Promise<ApiLinkInviteUser>;
+    /** Add users to a channel. */
+    getLinkInvite(bearerToken: string, inviteId: string, options?: any): Promise<ApiInviteUserRes>;
+    /** Add users to a channel. */
+    inviteUser(bearerToken: string, inviteId: string, options?: any): Promise<ApiInviteUserRes>;
     /** Delete a leaderboard record. */
     deleteLeaderboardRecord(bearerToken: string, leaderboardId: string, options?: any): Promise<any>;
     /** List leaderboard records. */
@@ -783,6 +856,14 @@ export declare class NakamaApi {
     deleteNotifications(bearerToken: string, ids?: Array<string>, options?: any): Promise<any>;
     /** Fetch list of notifications. */
     listNotifications(bearerToken: string, limit?: number, cacheableCursor?: string, options?: any): Promise<ApiNotificationList>;
+    /** List user roles */
+    listRoles(bearerToken: string, limit?: number, state?: number, cursor?: string, clanId?: string, options?: any): Promise<ApiRoleList>;
+    /** Create a new role for clan. */
+    createRole(bearerToken: string, body: ApiCreateRoleRequest, options?: any): Promise<ApiRole>;
+    /** Delete a role by ID. */
+    deleteRole(bearerToken: string, roleId: string, options?: any): Promise<any>;
+    /** Update fields in a given role. */
+    updateRole(bearerToken: string, roleId: string, body: {}, options?: any): Promise<any>;
     /** Execute a Lua function on the server. */
     rpcFunc2(bearerToken: string, basicAuthUsername: string, basicAuthPassword: string, id: string, payload?: string, httpKey?: string, options?: any): Promise<ApiRpc>;
     /** Execute a Lua function on the server. */
@@ -817,6 +898,8 @@ export declare class NakamaApi {
     updateCategory(bearerToken: string, body: ApiUpdateCategoryDescRequest, options?: any): Promise<any>;
     /** Fetch zero or more users by ID and/or username. */
     getUsers(bearerToken: string, ids?: Array<string>, usernames?: Array<string>, facebookIds?: Array<string>, options?: any): Promise<ApiUsers>;
+    /**  */
+    updateUser(bearerToken: string, body: ApiUpdateUsersRequest, options?: any): Promise<any>;
     /** List groups the current user belongs to. */
     listUserGroups(bearerToken: string, userId: string, limit?: number, state?: number, cursor?: string, options?: any): Promise<ApiUserGroupList>;
     buildFullUrl(basePath: string, fragment: string, queryParams: Map<string, any>): string;
