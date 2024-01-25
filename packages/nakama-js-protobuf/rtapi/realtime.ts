@@ -230,7 +230,9 @@ export interface Channel {
 
 /** Join operation for a realtime chat channel. */
 export interface ChannelJoin {
-  /** The user ID to DM with, group ID to chat with, or room channel name to join. */
+  /** The id of channel or group */
+  target_id: string;
+  /** The user ID to DM with, group ID to chat with, or channel id to join. */
   target: string;
   /** The type of the chat channel. */
   type: number;
@@ -244,10 +246,10 @@ export interface ChannelJoin {
 
 /** The type of chat channel. */
 export enum ChannelJoin_Type {
-  /** TYPE_UNSPECIFIED - Default case. Assumed as ROOM type. */
+  /** TYPE_UNSPECIFIED - Default case. Assumed as CHANNEL type. */
   TYPE_UNSPECIFIED = 0,
-  /** ROOM - A room which anyone can join to chat. */
-  ROOM = 1,
+  /** CHANNEL - A room which anyone can join to chat. */
+  CHANNEL = 1,
   /** DIRECT_MESSAGE - A private channel for 1-on-1 chat. */
   DIRECT_MESSAGE = 2,
   /** GROUP - A channel for group chat. */
@@ -261,8 +263,8 @@ export function channelJoin_TypeFromJSON(object: any): ChannelJoin_Type {
     case "TYPE_UNSPECIFIED":
       return ChannelJoin_Type.TYPE_UNSPECIFIED;
     case 1:
-    case "ROOM":
-      return ChannelJoin_Type.ROOM;
+    case "CHANNEL":
+      return ChannelJoin_Type.CHANNEL;
     case 2:
     case "DIRECT_MESSAGE":
       return ChannelJoin_Type.DIRECT_MESSAGE;
@@ -280,8 +282,8 @@ export function channelJoin_TypeToJSON(object: ChannelJoin_Type): string {
   switch (object) {
     case ChannelJoin_Type.TYPE_UNSPECIFIED:
       return "TYPE_UNSPECIFIED";
-    case ChannelJoin_Type.ROOM:
-      return "ROOM";
+    case ChannelJoin_Type.CHANNEL:
+      return "CHANNEL";
     case ChannelJoin_Type.DIRECT_MESSAGE:
       return "DIRECT_MESSAGE";
     case ChannelJoin_Type.GROUP:
@@ -1756,22 +1758,25 @@ export const Channel = {
 };
 
 function createBaseChannelJoin(): ChannelJoin {
-  return { target: "", type: 0, persistence: undefined, hidden: undefined };
+  return { target_id: "", target: "", type: 0, persistence: undefined, hidden: undefined };
 }
 
 export const ChannelJoin = {
   encode(message: ChannelJoin, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.target_id !== "") {
+      writer.uint32(10).string(message.target_id);
+    }
     if (message.target !== "") {
-      writer.uint32(10).string(message.target);
+      writer.uint32(18).string(message.target);
     }
     if (message.type !== 0) {
-      writer.uint32(16).int32(message.type);
+      writer.uint32(24).int32(message.type);
     }
     if (message.persistence !== undefined) {
-      BoolValue.encode({ value: message.persistence! }, writer.uint32(26).fork()).ldelim();
+      BoolValue.encode({ value: message.persistence! }, writer.uint32(34).fork()).ldelim();
     }
     if (message.hidden !== undefined) {
-      BoolValue.encode({ value: message.hidden! }, writer.uint32(34).fork()).ldelim();
+      BoolValue.encode({ value: message.hidden! }, writer.uint32(42).fork()).ldelim();
     }
     return writer;
   },
@@ -1784,15 +1789,18 @@ export const ChannelJoin = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          message.target = reader.string();
+          message.target_id = reader.string();
           break;
         case 2:
-          message.type = reader.int32();
+          message.target = reader.string();
           break;
         case 3:
-          message.persistence = BoolValue.decode(reader, reader.uint32()).value;
+          message.type = reader.int32();
           break;
         case 4:
+          message.persistence = BoolValue.decode(reader, reader.uint32()).value;
+          break;
+        case 5:
           message.hidden = BoolValue.decode(reader, reader.uint32()).value;
           break;
         default:
@@ -1805,6 +1813,7 @@ export const ChannelJoin = {
 
   fromJSON(object: any): ChannelJoin {
     return {
+      target_id: isSet(object.target_id) ? String(object.target_id) : "",
       target: isSet(object.target) ? String(object.target) : "",
       type: isSet(object.type) ? Number(object.type) : 0,
       persistence: isSet(object.persistence) ? Boolean(object.persistence) : undefined,
@@ -1814,6 +1823,7 @@ export const ChannelJoin = {
 
   toJSON(message: ChannelJoin): unknown {
     const obj: any = {};
+    message.target_id !== undefined && (obj.target_id = message.target_id);
     message.target !== undefined && (obj.target = message.target);
     message.type !== undefined && (obj.type = Math.round(message.type));
     message.persistence !== undefined && (obj.persistence = message.persistence);
@@ -1827,6 +1837,7 @@ export const ChannelJoin = {
 
   fromPartial<I extends Exact<DeepPartial<ChannelJoin>, I>>(object: I): ChannelJoin {
     const message = createBaseChannelJoin();
+    message.target_id = object.target_id ?? "";
     message.target = object.target ?? "";
     message.type = object.type ?? 0;
     message.persistence = object.persistence ?? undefined;

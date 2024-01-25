@@ -65,6 +65,9 @@ import {
   ApiValidatePurchaseResponse,
   ApiClanDescProfile,
   ApiChannelUserList,
+  ApiLinkInviteUserRequest,
+  ApiLinkInviteUser,
+  ApiInviteUserRes
 } from "./api.gen";
 
 import { Session } from "./session";
@@ -2120,7 +2123,45 @@ export class Client {
       return response !== undefined;
     });
   }
+
+  /** Update fields in a given clan profile. */
+  async createLinkInviteUser(session: Session, request: ApiLinkInviteUserRequest): Promise<ApiLinkInviteUser> {
+    if (this.autoRefreshSession && session.refresh_token &&
+        session.isexpired((Date.now() + this.expiredTimespanMs)/1000)) {
+        await this.sessionRefresh(session);
+    }
+
+    return this.apiClient.createLinkInviteUser(session.token, request).then((response: ApiLinkInviteUser) => {
+      return Promise.resolve(response);
+      
+    });
+  }
+
+  /** Get link invite user */
+  async getLinkInvite(session: Session, inviteId:string): Promise<ApiInviteUserRes> {
+    if (this.autoRefreshSession && session.refresh_token &&
+        session.isexpired((Date.now() + this.expiredTimespanMs)/1000)) {
+        await this.sessionRefresh(session);
+    }
+    
+    return this.apiClient.getLinkInvite(session.token, inviteId).then((response: ApiInviteUserRes) => {
+      return Promise.resolve(response);
+      
+    });
+  }
   
+  /** invite user */
+  async inviteUser(session: Session, inviteId:string): Promise<ApiInviteUserRes> {
+    if (this.autoRefreshSession && session.refresh_token &&
+        session.isexpired((Date.now() + this.expiredTimespanMs)/1000)) {
+        await this.sessionRefresh(session);
+    }
+    
+    return this.apiClient.inviteUser(session.token, inviteId).then((response: ApiInviteUserRes) => {
+      return Promise.resolve(response);
+      
+    });
+  }
 
   /** Validate an Apple IAP receipt. */
   async validatePurchaseApple(session: Session, receipt?: string)  : Promise<ApiValidatePurchaseResponse> {

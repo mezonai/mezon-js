@@ -363,6 +363,30 @@ export interface ApiCreateGroupRequest {
   open?: boolean;
 }
 
+/** Create a role within clan. */
+export interface ApiCreateRoleRequest {
+  //
+  allow_mention?: number;
+  //
+  clan_id?: string;
+  //
+  color?: string;
+  //
+  description?: string;
+  //
+  display_online?: number;
+  //The permissions to add.
+  permission_ids?: Array<string>;
+  //
+  role_icon?: string;
+  //
+  slug?: string;
+  //
+  title?: string;
+  //The users to add.
+  user_ids?: Array<string>;
+}
+
 /** Storage objects to delete. */
 export interface ApiDeleteStorageObjectId {
   //The collection which stores the object.
@@ -453,6 +477,22 @@ export interface ApiGroupUserList {
   group_users?: Array<GroupUserListGroupUser>;
 }
 
+/** Add link invite users to. */
+export interface ApiInviteUserRes {
+  //id channel to add link to.
+  channel_id?: string;
+  //id clan to add link to .
+  clan_id?: string;
+}
+
+/**  */
+export interface ApiLastSeenMessageRequest {
+  //The unique ID of this channel.
+  channel_id?: string;
+  //The unique ID of this message.
+  message_id?: string;
+}
+
 /** Represents a complete leaderboard record with all scores and associated metadata. */
 export interface ApiLeaderboardRecord {
   //The UNIX time (for gRPC clients) or ISO string (for REST clients) when the leaderboard record was created.
@@ -493,6 +533,34 @@ export interface ApiLeaderboardRecordList {
   rank_count?: string;
   //A list of leaderboard records.
   records?: Array<ApiLeaderboardRecord>;
+}
+
+/** Add link invite users to. */
+export interface ApiLinkInviteUser {
+  //
+  channel_id?: string;
+  //
+  clan_id?: string;
+  //
+  create_time?: string;
+  //The user to add.
+  creator_id?: string;
+  //
+  expiry_time?: string;
+  //
+  id?: string;
+  //
+  invite_link?: string;
+}
+
+/** Add link invite users to. */
+export interface ApiLinkInviteUserRequest {
+  //id channel to add link to.
+  channel_id?: string;
+  //id clan to add link to .
+  clan_id?: string;
+  //
+  expiry_time?: number;
 }
 
 /** Link Steam to the current user's account. */
@@ -590,6 +658,44 @@ export interface ApiReadStorageObjectId {
 export interface ApiReadStorageObjectsRequest {
   //Batch of storage objects.
   object_ids?: Array<ApiReadStorageObjectId>;
+}
+
+/**  */
+export interface ApiRole {
+  //
+  active?: number;
+  //
+  allow_mention?: number;
+  //
+  clan_id?: string;
+  //
+  color?: string;
+  //
+  creator_id?: string;
+  //
+  description?: string;
+  //
+  display_online?: number;
+  //
+  id?: string;
+  //
+  role_icon?: string;
+  //
+  slug?: string;
+  //
+  title?: string;
+}
+
+/** A list of role description, usually a result of a list operation. */
+export interface ApiRoleList {
+  //Cacheable cursor to list newer role description. Durable and designed to be stored, unlike next/prev cursors.
+  cacheable_cursor?: string;
+  //The cursor to send when retrieving the next page, if any.
+  next_cursor?: string;
+  //The cursor to send when retrieving the previous page, if any.
+  prev_cursor?: string;
+  //A list of role.
+  roles?: Array<ApiRole>;
 }
 
 /** Execute an Lua function on the server. */
@@ -838,6 +944,14 @@ export interface ApiUpdateCategoryDescRequest {
   category_name?: string;
 }
 
+/** Fetch a batch of zero or more users from the server. */
+export interface ApiUpdateUsersRequest {
+  //The avarar_url of a user.
+  avatar_url?: string;
+  //The account username of a user.
+  display_name?: string;
+}
+
 /** A user in the server. */
 export interface ApiUser {
   //The Apple Sign In ID in the user's account.
@@ -1034,7 +1148,7 @@ export interface ApiWriteStorageObjectsRequest {
 
 /**  */
 export interface ProtobufAny {
-  // 
+  //
   type_url?: string;
   // 
   value?: string;
@@ -2402,6 +2516,42 @@ export class NakamaApi {
     ]);
 }
 
+  /** Update Last seen message by user */
+  postLastSeenMessage(bearerToken: string,
+      body:ApiLastSeenMessageRequest,
+      options: any = {}): Promise<any> {
+    
+    if (body === null || body === undefined) {
+      throw new Error("'body' is a required parameter but is null or undefined.");
+    }
+    const urlPath = "/v2/channeldesc/last-message-seen";
+    const queryParams = new Map<string, any>();
+
+    let bodyJson : string = "";
+    bodyJson = JSON.stringify(body || {});
+
+    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
+    const fetchOptions = buildFetchOptions("POST", options, bodyJson);
+    if (bearerToken) {
+        fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+    }
+
+    return Promise.race([
+      fetch(fullUrl, fetchOptions).then((response) => {
+        if (response.status == 204) {
+          return response;
+        } else if (response.status >= 200 && response.status < 300) {
+          return response.json();
+        } else {
+          throw response;
+        }
+      }),
+      new Promise((_, reject) =>
+        setTimeout(reject, this.timeoutMs, "Request timed out.")
+      ),
+    ]);
+}
+
   /** Delete a channel by ID. */
   deleteChannelDesc(bearerToken: string,
       channelId:string,
@@ -2790,16 +2940,16 @@ export class NakamaApi {
     if (clanId === null || clanId === undefined) {
       throw new Error("'clanId' is a required parameter but is null or undefined.");
     }
-    const urlPath = "/v2/clandesc/{clanId}"
+        const urlPath = "/v2/clandesc/{clanId}"
         .replace("{clanId}", encodeURIComponent(String(clanId)));
     const queryParams = new Map<string, any>();
-    queryParams.set("creator_id", creatorId);
+queryParams.set("creator_id", creatorId);
     queryParams.set("clan_name", clanName);
     queryParams.set("logo", logo);
     queryParams.set("banner", banner);
 
     let bodyJson : string = "";
-
+    
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("PUT", options, bodyJson);
     if (bearerToken) {
@@ -3973,6 +4123,114 @@ export class NakamaApi {
     ]);
 }
 
+  /** Add users to a channel. */
+  createLinkInviteUser(bearerToken: string,
+      body:ApiLinkInviteUserRequest,
+      options: any = {}): Promise<ApiLinkInviteUser> {
+    
+    if (body === null || body === undefined) {
+      throw new Error("'body' is a required parameter but is null or undefined.");
+    }
+    const urlPath = "/v2/invite";
+    const queryParams = new Map<string, any>();
+
+    let bodyJson : string = "";
+    bodyJson = JSON.stringify(body || {});
+
+    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
+    const fetchOptions = buildFetchOptions("POST", options, bodyJson);
+    if (bearerToken) {
+        fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+    }
+
+    return Promise.race([
+      fetch(fullUrl, fetchOptions).then((response) => {
+        if (response.status == 204) {
+          return response;
+        } else if (response.status >= 200 && response.status < 300) {
+          return response.json();
+        } else {
+          throw response;
+        }
+      }),
+      new Promise((_, reject) =>
+        setTimeout(reject, this.timeoutMs, "Request timed out.")
+      ),
+    ]);
+}
+
+  /** Add users to a channel. */
+  getLinkInvite(bearerToken: string,
+      inviteId:string,
+      options: any = {}): Promise<ApiInviteUserRes> {
+    
+    if (inviteId === null || inviteId === undefined) {
+      throw new Error("'inviteId' is a required parameter but is null or undefined.");
+    }
+    const urlPath = "/v2/invite/{inviteId}"
+        .replace("{inviteId}", encodeURIComponent(String(inviteId)));
+    const queryParams = new Map<string, any>();
+
+    let bodyJson : string = "";
+
+    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
+    const fetchOptions = buildFetchOptions("GET", options, bodyJson);
+    if (bearerToken) {
+        fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+    }
+
+    return Promise.race([
+      fetch(fullUrl, fetchOptions).then((response) => {
+        if (response.status == 204) {
+          return response;
+        } else if (response.status >= 200 && response.status < 300) {
+          return response.json();
+        } else {
+          throw response;
+        }
+      }),
+      new Promise((_, reject) =>
+        setTimeout(reject, this.timeoutMs, "Request timed out.")
+      ),
+    ]);
+}
+
+  /** Add users to a channel. */
+  inviteUser(bearerToken: string,
+      inviteId:string,
+      options: any = {}): Promise<ApiInviteUserRes> {
+    
+    if (inviteId === null || inviteId === undefined) {
+      throw new Error("'inviteId' is a required parameter but is null or undefined.");
+    }
+    const urlPath = "/v2/invite/{inviteId}"
+        .replace("{inviteId}", encodeURIComponent(String(inviteId)));
+    const queryParams = new Map<string, any>();
+
+    let bodyJson : string = "";
+
+    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
+    const fetchOptions = buildFetchOptions("POST", options, bodyJson);
+    if (bearerToken) {
+        fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+    }
+
+    return Promise.race([
+      fetch(fullUrl, fetchOptions).then((response) => {
+        if (response.status == 204) {
+          return response;
+        } else if (response.status >= 200 && response.status < 300) {
+          return response.json();
+        } else {
+          throw response;
+        }
+      }),
+      new Promise((_, reject) =>
+        setTimeout(reject, this.timeoutMs, "Request timed out.")
+      ),
+    ]);
+}
+
   /** Delete a leaderboard record. */
   deleteLeaderboardRecord(bearerToken: string,
       leaderboardId:string,
@@ -4232,6 +4490,158 @@ export class NakamaApi {
 
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("GET", options, bodyJson);
+    if (bearerToken) {
+        fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+    }
+
+    return Promise.race([
+      fetch(fullUrl, fetchOptions).then((response) => {
+        if (response.status == 204) {
+          return response;
+        } else if (response.status >= 200 && response.status < 300) {
+          return response.json();
+        } else {
+          throw response;
+        }
+      }),
+      new Promise((_, reject) =>
+        setTimeout(reject, this.timeoutMs, "Request timed out.")
+      ),
+    ]);
+}
+
+  /** List user roles */
+  listRoles(bearerToken: string,
+      limit?:number,
+      state?:number,
+      cursor?:string,
+      clanId?:string,
+      options: any = {}): Promise<ApiRoleList> {
+    
+    const urlPath = "/v2/roles";
+    const queryParams = new Map<string, any>();
+    queryParams.set("limit", limit);
+    queryParams.set("state", state);
+    queryParams.set("cursor", cursor);
+    queryParams.set("clan_id", clanId);
+
+    let bodyJson : string = "";
+
+    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
+    const fetchOptions = buildFetchOptions("GET", options, bodyJson);
+    if (bearerToken) {
+        fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+    }
+
+    return Promise.race([
+      fetch(fullUrl, fetchOptions).then((response) => {
+        if (response.status == 204) {
+          return response;
+        } else if (response.status >= 200 && response.status < 300) {
+          return response.json();
+        } else {
+          throw response;
+        }
+      }),
+      new Promise((_, reject) =>
+        setTimeout(reject, this.timeoutMs, "Request timed out.")
+      ),
+    ]);
+}
+
+  /** Create a new role for clan. */
+  createRole(bearerToken: string,
+      body:ApiCreateRoleRequest,
+      options: any = {}): Promise<ApiRole> {
+    
+    if (body === null || body === undefined) {
+      throw new Error("'body' is a required parameter but is null or undefined.");
+    }
+    const urlPath = "/v2/roles";
+    const queryParams = new Map<string, any>();
+
+    let bodyJson : string = "";
+    bodyJson = JSON.stringify(body || {});
+
+    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
+    const fetchOptions = buildFetchOptions("POST", options, bodyJson);
+    if (bearerToken) {
+        fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+    }
+
+    return Promise.race([
+      fetch(fullUrl, fetchOptions).then((response) => {
+        if (response.status == 204) {
+          return response;
+        } else if (response.status >= 200 && response.status < 300) {
+          return response.json();
+        } else {
+          throw response;
+        }
+      }),
+      new Promise((_, reject) =>
+        setTimeout(reject, this.timeoutMs, "Request timed out.")
+      ),
+    ]);
+}
+
+  /** Delete a role by ID. */
+  deleteRole(bearerToken: string,
+      roleId:string,
+      options: any = {}): Promise<any> {
+    
+    if (roleId === null || roleId === undefined) {
+      throw new Error("'roleId' is a required parameter but is null or undefined.");
+    }
+    const urlPath = "/v2/roles/{roleId}"
+        .replace("{roleId}", encodeURIComponent(String(roleId)));
+    const queryParams = new Map<string, any>();
+
+    let bodyJson : string = "";
+
+    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
+    const fetchOptions = buildFetchOptions("DELETE", options, bodyJson);
+    if (bearerToken) {
+        fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+    }
+
+    return Promise.race([
+      fetch(fullUrl, fetchOptions).then((response) => {
+        if (response.status == 204) {
+          return response;
+        } else if (response.status >= 200 && response.status < 300) {
+          return response.json();
+        } else {
+          throw response;
+        }
+      }),
+      new Promise((_, reject) =>
+        setTimeout(reject, this.timeoutMs, "Request timed out.")
+      ),
+    ]);
+}
+
+  /** Update fields in a given role. */
+  updateRole(bearerToken: string,
+      roleId:string,
+      body:{},
+      options: any = {}): Promise<any> {
+    
+    if (roleId === null || roleId === undefined) {
+      throw new Error("'roleId' is a required parameter but is null or undefined.");
+    }
+    if (body === null || body === undefined) {
+      throw new Error("'body' is a required parameter but is null or undefined.");
+    }
+    const urlPath = "/v2/roles/{roleId}"
+        .replace("{roleId}", encodeURIComponent(String(roleId)));
+    const queryParams = new Map<string, any>();
+
+    let bodyJson : string = "";
+    bodyJson = JSON.stringify(body || {});
+
+    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
+    const fetchOptions = buildFetchOptions("PUT", options, bodyJson);
     if (bearerToken) {
         fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
     }
@@ -4915,6 +5325,42 @@ export class NakamaApi {
 
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("GET", options, bodyJson);
+    if (bearerToken) {
+        fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+    }
+
+    return Promise.race([
+      fetch(fullUrl, fetchOptions).then((response) => {
+        if (response.status == 204) {
+          return response;
+        } else if (response.status >= 200 && response.status < 300) {
+          return response.json();
+        } else {
+          throw response;
+        }
+      }),
+      new Promise((_, reject) =>
+        setTimeout(reject, this.timeoutMs, "Request timed out.")
+      ),
+    ]);
+}
+
+  /**  */
+  updateUser(bearerToken: string,
+      body:ApiUpdateUsersRequest,
+      options: any = {}): Promise<any> {
+    
+    if (body === null || body === undefined) {
+      throw new Error("'body' is a required parameter but is null or undefined.");
+    }
+    const urlPath = "/v2/user/update";
+    const queryParams = new Map<string, any>();
+
+    let bodyJson : string = "";
+    bodyJson = JSON.stringify(body || {});
+
+    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
+    const fetchOptions = buildFetchOptions("PUT", options, bodyJson);
     if (bearerToken) {
         fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
     }
