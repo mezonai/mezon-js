@@ -3675,7 +3675,7 @@ queryParams.set("creator_id", creatorId);
   /** Kick a set of users from a group. */
   kickGroupUsers(bearerToken: string,
       groupId:string,
-userIds?:Array<string>,
+      userIds?:Array<string>,
       options: any = {}): Promise<any> {
     
     if (groupId === null || groupId === undefined) {
@@ -3684,7 +3684,7 @@ userIds?:Array<string>,
     const urlPath = "/v2/group/{groupId}/kick"
         .replace("{groupId}", encodeURIComponent(String(groupId)));
     const queryParams = new Map<string, any>();
-queryParams.set("user_ids", userIds);
+    queryParams.set("user_ids", userIds);
 
     let bodyJson : string = "";
 
@@ -3713,7 +3713,7 @@ queryParams.set("user_ids", userIds);
   /** Leave a group the user is a member of. */
   leaveGroup(bearerToken: string,
       groupId:string,
-            options: any = {}): Promise<any> {
+      options: any = {}): Promise<any> {
     
     if (groupId === null || groupId === undefined) {
       throw new Error("'groupId' is a required parameter but is null or undefined.");
