@@ -377,6 +377,8 @@ export interface LastSeenMessageRequest {
 export interface ChannelMessageList {
     /** A list of messages. */
     messages: ChannelMessage[];
+    /** last seen message id by user */
+    last_seen_message_id: string;
     /** The cursor to send when retrieving the next page, if any. */
     next_cursor: string;
     /** The cursor to send when retrieving the previous page, if any. */
@@ -495,6 +497,13 @@ export interface GetUsersRequest {
     usernames: string[];
     /** The Facebook ID of a user. */
     facebook_ids: string[];
+}
+/** Fetch a batch of zero or more users from the server. */
+export interface UpdateUsersRequest {
+    /** The account username of a user. */
+    display_name: string;
+    /** The avarar_url of a user. */
+    avatar_url: string;
 }
 /** Fetch a subscription by product id. */
 export interface GetSubscriptionRequest {
@@ -1453,6 +1462,50 @@ export interface ClanDescList {
     /** A list of channel. */
     clandesc: ClanDesc[];
 }
+/** Add link invite users to. */
+export interface LinkInviteUserRequest {
+    /** id clan to add link to . */
+    clan_id: string;
+    /** id channel to add link to. */
+    channel_id: string;
+    /** expiry time */
+    expiry_time: number;
+}
+/** Add link invite users to. */
+export interface InviteUserRequest {
+    /** id clan to add link to . */
+    invite_id: string;
+}
+/** Add link invite users to. */
+export interface InviteUserRes {
+    /** id clan to add link to . */
+    clan_id: string;
+    /** id channel to add link to. */
+    channel_id: string;
+}
+/** Add link invite users to. */
+export interface JoinClanChannelRequest {
+    /** id clan to add link to . */
+    clan_id: string;
+    /** id channel to add link to. */
+    channel_id: string;
+}
+/** Add link invite users to. */
+export interface LinkInviteUser {
+    /** id clan */
+    clan_id: string;
+    /** The user to add. */
+    creator_id: string;
+    /** is clan invite */
+    channel_id: string;
+    /** link invite */
+    invite_link: string;
+    /** create time */
+    create_time: Date | undefined;
+    /** expiry time */
+    expiry_time: Date | undefined;
+    id: string;
+}
 /** Category to group the channel */
 export interface CategoryDesc {
     /** Category creator */
@@ -1582,6 +1635,78 @@ export interface KickChannelUsersRequest {
 export interface LeaveChannelRequest {
     /** The channel ID to leave. */
     channel_id: string;
+}
+/** Role record */
+export interface Role {
+    /** Role id */
+    id: string;
+    title: string;
+    color: string;
+    role_icon: string;
+    slug: string;
+    description: string;
+    creator_id: string;
+    clan_id: string;
+    active: number;
+    display_online: number;
+    allow_mention: number;
+}
+/** A list of role description, usually a result of a list operation. */
+export interface RoleList {
+    /** A list of role. */
+    roles: Role[];
+    /** The cursor to send when retrieving the next page, if any. */
+    next_cursor: string;
+    /** The cursor to send when retrieving the previous page, if any. */
+    prev_cursor: string;
+    /** Cacheable cursor to list newer role description. Durable and designed to be stored, unlike next/prev cursors. */
+    cacheable_cursor: string;
+}
+/** List (and optionally filter) roles. */
+export interface ListRolesRequest {
+    /** Max number of records to return. Between 1 and 100. */
+    limit: number | undefined;
+    /** The role state to list. */
+    state: number | undefined;
+    /** Cursor to start from */
+    cursor: string;
+    /** The clan of this role */
+    clan_id: string;
+}
+/** Create a role within clan. */
+export interface CreateRoleRequest {
+    title: string;
+    color: string;
+    role_icon: string;
+    slug: string;
+    description: string;
+    clan_id: string;
+    display_online: number;
+    allow_mention: number;
+    /** The users to add. */
+    user_ids: string[];
+    /** The permissions to add. */
+    permission_ids: string[];
+}
+/** Delete a role the user has access to. */
+export interface DeleteRoleRequest {
+    /** The id of a role. */
+    role_id: string;
+}
+/** Update fields in a given role. */
+export interface UpdateRoleRequest {
+    title: string | undefined;
+    color: string | undefined;
+    role_icon: string | undefined;
+    slug: string | undefined;
+    description: string | undefined;
+    display_online: number | undefined;
+    allow_mention: number | undefined;
+    /** The users to add. */
+    user_ids: string[];
+    /** The permissions to add. */
+    permission_ids: string[];
+    role_id: string;
 }
 export declare const Account: {
     encode(message: Account, writer?: _m0.Writer): _m0.Writer;
@@ -3163,6 +3288,7 @@ export declare const ChannelMessageList: {
             user_id_one?: string | undefined;
             user_id_two?: string | undefined;
         }[] | undefined;
+        last_seen_message_id?: string | undefined;
         next_cursor?: string | undefined;
         prev_cursor?: string | undefined;
         cacheable_cursor?: string | undefined;
@@ -3228,6 +3354,7 @@ export declare const ChannelMessageList: {
             user_id_one?: string | undefined;
             user_id_two?: string | undefined;
         }[]>]: never; }) | undefined;
+        last_seen_message_id?: string | undefined;
         next_cursor?: string | undefined;
         prev_cursor?: string | undefined;
         cacheable_cursor?: string | undefined;
@@ -3249,6 +3376,7 @@ export declare const ChannelMessageList: {
             user_id_one?: string | undefined;
             user_id_two?: string | undefined;
         }[] | undefined;
+        last_seen_message_id?: string | undefined;
         next_cursor?: string | undefined;
         prev_cursor?: string | undefined;
         cacheable_cursor?: string | undefined;
@@ -3314,6 +3442,7 @@ export declare const ChannelMessageList: {
             user_id_one?: string | undefined;
             user_id_two?: string | undefined;
         }[]>]: never; }) | undefined;
+        last_seen_message_id?: string | undefined;
         next_cursor?: string | undefined;
         prev_cursor?: string | undefined;
         cacheable_cursor?: string | undefined;
@@ -4028,6 +4157,26 @@ export declare const GetUsersRequest: {
         usernames?: (string[] & string[] & { [K_5 in Exclude<keyof I_1["usernames"], keyof string[]>]: never; }) | undefined;
         facebook_ids?: (string[] & string[] & { [K_6 in Exclude<keyof I_1["facebook_ids"], keyof string[]>]: never; }) | undefined;
     } & { [K_7 in Exclude<keyof I_1, keyof GetUsersRequest>]: never; }>(object: I_1): GetUsersRequest;
+};
+export declare const UpdateUsersRequest: {
+    encode(message: UpdateUsersRequest, writer?: _m0.Writer): _m0.Writer;
+    decode(input: _m0.Reader | Uint8Array, length?: number): UpdateUsersRequest;
+    fromJSON(object: any): UpdateUsersRequest;
+    toJSON(message: UpdateUsersRequest): unknown;
+    create<I extends {
+        display_name?: string | undefined;
+        avatar_url?: string | undefined;
+    } & {
+        display_name?: string | undefined;
+        avatar_url?: string | undefined;
+    } & { [K in Exclude<keyof I, keyof UpdateUsersRequest>]: never; }>(base?: I | undefined): UpdateUsersRequest;
+    fromPartial<I_1 extends {
+        display_name?: string | undefined;
+        avatar_url?: string | undefined;
+    } & {
+        display_name?: string | undefined;
+        avatar_url?: string | undefined;
+    } & { [K_1 in Exclude<keyof I_1, keyof UpdateUsersRequest>]: never; }>(object: I_1): UpdateUsersRequest;
 };
 export declare const GetSubscriptionRequest: {
     encode(message: GetSubscriptionRequest, writer?: _m0.Writer): _m0.Writer;
@@ -9821,6 +9970,126 @@ export declare const ClanDescList: {
         }[]>]: never; }) | undefined;
     } & { [K_5 in Exclude<keyof I_1, "clandesc">]: never; }>(object: I_1): ClanDescList;
 };
+export declare const LinkInviteUserRequest: {
+    encode(message: LinkInviteUserRequest, writer?: _m0.Writer): _m0.Writer;
+    decode(input: _m0.Reader | Uint8Array, length?: number): LinkInviteUserRequest;
+    fromJSON(object: any): LinkInviteUserRequest;
+    toJSON(message: LinkInviteUserRequest): unknown;
+    create<I extends {
+        clan_id?: string | undefined;
+        channel_id?: string | undefined;
+        expiry_time?: number | undefined;
+    } & {
+        clan_id?: string | undefined;
+        channel_id?: string | undefined;
+        expiry_time?: number | undefined;
+    } & { [K in Exclude<keyof I, keyof LinkInviteUserRequest>]: never; }>(base?: I | undefined): LinkInviteUserRequest;
+    fromPartial<I_1 extends {
+        clan_id?: string | undefined;
+        channel_id?: string | undefined;
+        expiry_time?: number | undefined;
+    } & {
+        clan_id?: string | undefined;
+        channel_id?: string | undefined;
+        expiry_time?: number | undefined;
+    } & { [K_1 in Exclude<keyof I_1, keyof LinkInviteUserRequest>]: never; }>(object: I_1): LinkInviteUserRequest;
+};
+export declare const InviteUserRequest: {
+    encode(message: InviteUserRequest, writer?: _m0.Writer): _m0.Writer;
+    decode(input: _m0.Reader | Uint8Array, length?: number): InviteUserRequest;
+    fromJSON(object: any): InviteUserRequest;
+    toJSON(message: InviteUserRequest): unknown;
+    create<I extends {
+        invite_id?: string | undefined;
+    } & {
+        invite_id?: string | undefined;
+    } & { [K in Exclude<keyof I, "invite_id">]: never; }>(base?: I | undefined): InviteUserRequest;
+    fromPartial<I_1 extends {
+        invite_id?: string | undefined;
+    } & {
+        invite_id?: string | undefined;
+    } & { [K_1 in Exclude<keyof I_1, "invite_id">]: never; }>(object: I_1): InviteUserRequest;
+};
+export declare const InviteUserRes: {
+    encode(message: InviteUserRes, writer?: _m0.Writer): _m0.Writer;
+    decode(input: _m0.Reader | Uint8Array, length?: number): InviteUserRes;
+    fromJSON(object: any): InviteUserRes;
+    toJSON(message: InviteUserRes): unknown;
+    create<I extends {
+        clan_id?: string | undefined;
+        channel_id?: string | undefined;
+    } & {
+        clan_id?: string | undefined;
+        channel_id?: string | undefined;
+    } & { [K in Exclude<keyof I, keyof InviteUserRes>]: never; }>(base?: I | undefined): InviteUserRes;
+    fromPartial<I_1 extends {
+        clan_id?: string | undefined;
+        channel_id?: string | undefined;
+    } & {
+        clan_id?: string | undefined;
+        channel_id?: string | undefined;
+    } & { [K_1 in Exclude<keyof I_1, keyof InviteUserRes>]: never; }>(object: I_1): InviteUserRes;
+};
+export declare const JoinClanChannelRequest: {
+    encode(message: JoinClanChannelRequest, writer?: _m0.Writer): _m0.Writer;
+    decode(input: _m0.Reader | Uint8Array, length?: number): JoinClanChannelRequest;
+    fromJSON(object: any): JoinClanChannelRequest;
+    toJSON(message: JoinClanChannelRequest): unknown;
+    create<I extends {
+        clan_id?: string | undefined;
+        channel_id?: string | undefined;
+    } & {
+        clan_id?: string | undefined;
+        channel_id?: string | undefined;
+    } & { [K in Exclude<keyof I, keyof JoinClanChannelRequest>]: never; }>(base?: I | undefined): JoinClanChannelRequest;
+    fromPartial<I_1 extends {
+        clan_id?: string | undefined;
+        channel_id?: string | undefined;
+    } & {
+        clan_id?: string | undefined;
+        channel_id?: string | undefined;
+    } & { [K_1 in Exclude<keyof I_1, keyof JoinClanChannelRequest>]: never; }>(object: I_1): JoinClanChannelRequest;
+};
+export declare const LinkInviteUser: {
+    encode(message: LinkInviteUser, writer?: _m0.Writer): _m0.Writer;
+    decode(input: _m0.Reader | Uint8Array, length?: number): LinkInviteUser;
+    fromJSON(object: any): LinkInviteUser;
+    toJSON(message: LinkInviteUser): unknown;
+    create<I extends {
+        clan_id?: string | undefined;
+        creator_id?: string | undefined;
+        channel_id?: string | undefined;
+        invite_link?: string | undefined;
+        create_time?: Date | undefined;
+        expiry_time?: Date | undefined;
+        id?: string | undefined;
+    } & {
+        clan_id?: string | undefined;
+        creator_id?: string | undefined;
+        channel_id?: string | undefined;
+        invite_link?: string | undefined;
+        create_time?: Date | undefined;
+        expiry_time?: Date | undefined;
+        id?: string | undefined;
+    } & { [K in Exclude<keyof I, keyof LinkInviteUser>]: never; }>(base?: I | undefined): LinkInviteUser;
+    fromPartial<I_1 extends {
+        clan_id?: string | undefined;
+        creator_id?: string | undefined;
+        channel_id?: string | undefined;
+        invite_link?: string | undefined;
+        create_time?: Date | undefined;
+        expiry_time?: Date | undefined;
+        id?: string | undefined;
+    } & {
+        clan_id?: string | undefined;
+        creator_id?: string | undefined;
+        channel_id?: string | undefined;
+        invite_link?: string | undefined;
+        create_time?: Date | undefined;
+        expiry_time?: Date | undefined;
+        id?: string | undefined;
+    } & { [K_1 in Exclude<keyof I_1, keyof LinkInviteUser>]: never; }>(object: I_1): LinkInviteUser;
+};
 export declare const CategoryDesc: {
     encode(message: CategoryDesc, writer?: _m0.Writer): _m0.Writer;
     decode(input: _m0.Reader | Uint8Array, length?: number): CategoryDesc;
@@ -10330,6 +10599,358 @@ export declare const LeaveChannelRequest: {
     } & {
         channel_id?: string | undefined;
     } & { [K_1 in Exclude<keyof I_1, "channel_id">]: never; }>(object: I_1): LeaveChannelRequest;
+};
+export declare const Role: {
+    encode(message: Role, writer?: _m0.Writer): _m0.Writer;
+    decode(input: _m0.Reader | Uint8Array, length?: number): Role;
+    fromJSON(object: any): Role;
+    toJSON(message: Role): unknown;
+    create<I extends {
+        id?: string | undefined;
+        title?: string | undefined;
+        color?: string | undefined;
+        role_icon?: string | undefined;
+        slug?: string | undefined;
+        description?: string | undefined;
+        creator_id?: string | undefined;
+        clan_id?: string | undefined;
+        active?: number | undefined;
+        display_online?: number | undefined;
+        allow_mention?: number | undefined;
+    } & {
+        id?: string | undefined;
+        title?: string | undefined;
+        color?: string | undefined;
+        role_icon?: string | undefined;
+        slug?: string | undefined;
+        description?: string | undefined;
+        creator_id?: string | undefined;
+        clan_id?: string | undefined;
+        active?: number | undefined;
+        display_online?: number | undefined;
+        allow_mention?: number | undefined;
+    } & { [K in Exclude<keyof I, keyof Role>]: never; }>(base?: I | undefined): Role;
+    fromPartial<I_1 extends {
+        id?: string | undefined;
+        title?: string | undefined;
+        color?: string | undefined;
+        role_icon?: string | undefined;
+        slug?: string | undefined;
+        description?: string | undefined;
+        creator_id?: string | undefined;
+        clan_id?: string | undefined;
+        active?: number | undefined;
+        display_online?: number | undefined;
+        allow_mention?: number | undefined;
+    } & {
+        id?: string | undefined;
+        title?: string | undefined;
+        color?: string | undefined;
+        role_icon?: string | undefined;
+        slug?: string | undefined;
+        description?: string | undefined;
+        creator_id?: string | undefined;
+        clan_id?: string | undefined;
+        active?: number | undefined;
+        display_online?: number | undefined;
+        allow_mention?: number | undefined;
+    } & { [K_1 in Exclude<keyof I_1, keyof Role>]: never; }>(object: I_1): Role;
+};
+export declare const RoleList: {
+    encode(message: RoleList, writer?: _m0.Writer): _m0.Writer;
+    decode(input: _m0.Reader | Uint8Array, length?: number): RoleList;
+    fromJSON(object: any): RoleList;
+    toJSON(message: RoleList): unknown;
+    create<I extends {
+        roles?: {
+            id?: string | undefined;
+            title?: string | undefined;
+            color?: string | undefined;
+            role_icon?: string | undefined;
+            slug?: string | undefined;
+            description?: string | undefined;
+            creator_id?: string | undefined;
+            clan_id?: string | undefined;
+            active?: number | undefined;
+            display_online?: number | undefined;
+            allow_mention?: number | undefined;
+        }[] | undefined;
+        next_cursor?: string | undefined;
+        prev_cursor?: string | undefined;
+        cacheable_cursor?: string | undefined;
+    } & {
+        roles?: ({
+            id?: string | undefined;
+            title?: string | undefined;
+            color?: string | undefined;
+            role_icon?: string | undefined;
+            slug?: string | undefined;
+            description?: string | undefined;
+            creator_id?: string | undefined;
+            clan_id?: string | undefined;
+            active?: number | undefined;
+            display_online?: number | undefined;
+            allow_mention?: number | undefined;
+        }[] & ({
+            id?: string | undefined;
+            title?: string | undefined;
+            color?: string | undefined;
+            role_icon?: string | undefined;
+            slug?: string | undefined;
+            description?: string | undefined;
+            creator_id?: string | undefined;
+            clan_id?: string | undefined;
+            active?: number | undefined;
+            display_online?: number | undefined;
+            allow_mention?: number | undefined;
+        } & {
+            id?: string | undefined;
+            title?: string | undefined;
+            color?: string | undefined;
+            role_icon?: string | undefined;
+            slug?: string | undefined;
+            description?: string | undefined;
+            creator_id?: string | undefined;
+            clan_id?: string | undefined;
+            active?: number | undefined;
+            display_online?: number | undefined;
+            allow_mention?: number | undefined;
+        } & { [K in Exclude<keyof I["roles"][number], keyof Role>]: never; })[] & { [K_1 in Exclude<keyof I["roles"], keyof {
+            id?: string | undefined;
+            title?: string | undefined;
+            color?: string | undefined;
+            role_icon?: string | undefined;
+            slug?: string | undefined;
+            description?: string | undefined;
+            creator_id?: string | undefined;
+            clan_id?: string | undefined;
+            active?: number | undefined;
+            display_online?: number | undefined;
+            allow_mention?: number | undefined;
+        }[]>]: never; }) | undefined;
+        next_cursor?: string | undefined;
+        prev_cursor?: string | undefined;
+        cacheable_cursor?: string | undefined;
+    } & { [K_2 in Exclude<keyof I, keyof RoleList>]: never; }>(base?: I | undefined): RoleList;
+    fromPartial<I_1 extends {
+        roles?: {
+            id?: string | undefined;
+            title?: string | undefined;
+            color?: string | undefined;
+            role_icon?: string | undefined;
+            slug?: string | undefined;
+            description?: string | undefined;
+            creator_id?: string | undefined;
+            clan_id?: string | undefined;
+            active?: number | undefined;
+            display_online?: number | undefined;
+            allow_mention?: number | undefined;
+        }[] | undefined;
+        next_cursor?: string | undefined;
+        prev_cursor?: string | undefined;
+        cacheable_cursor?: string | undefined;
+    } & {
+        roles?: ({
+            id?: string | undefined;
+            title?: string | undefined;
+            color?: string | undefined;
+            role_icon?: string | undefined;
+            slug?: string | undefined;
+            description?: string | undefined;
+            creator_id?: string | undefined;
+            clan_id?: string | undefined;
+            active?: number | undefined;
+            display_online?: number | undefined;
+            allow_mention?: number | undefined;
+        }[] & ({
+            id?: string | undefined;
+            title?: string | undefined;
+            color?: string | undefined;
+            role_icon?: string | undefined;
+            slug?: string | undefined;
+            description?: string | undefined;
+            creator_id?: string | undefined;
+            clan_id?: string | undefined;
+            active?: number | undefined;
+            display_online?: number | undefined;
+            allow_mention?: number | undefined;
+        } & {
+            id?: string | undefined;
+            title?: string | undefined;
+            color?: string | undefined;
+            role_icon?: string | undefined;
+            slug?: string | undefined;
+            description?: string | undefined;
+            creator_id?: string | undefined;
+            clan_id?: string | undefined;
+            active?: number | undefined;
+            display_online?: number | undefined;
+            allow_mention?: number | undefined;
+        } & { [K_3 in Exclude<keyof I_1["roles"][number], keyof Role>]: never; })[] & { [K_4 in Exclude<keyof I_1["roles"], keyof {
+            id?: string | undefined;
+            title?: string | undefined;
+            color?: string | undefined;
+            role_icon?: string | undefined;
+            slug?: string | undefined;
+            description?: string | undefined;
+            creator_id?: string | undefined;
+            clan_id?: string | undefined;
+            active?: number | undefined;
+            display_online?: number | undefined;
+            allow_mention?: number | undefined;
+        }[]>]: never; }) | undefined;
+        next_cursor?: string | undefined;
+        prev_cursor?: string | undefined;
+        cacheable_cursor?: string | undefined;
+    } & { [K_5 in Exclude<keyof I_1, keyof RoleList>]: never; }>(object: I_1): RoleList;
+};
+export declare const ListRolesRequest: {
+    encode(message: ListRolesRequest, writer?: _m0.Writer): _m0.Writer;
+    decode(input: _m0.Reader | Uint8Array, length?: number): ListRolesRequest;
+    fromJSON(object: any): ListRolesRequest;
+    toJSON(message: ListRolesRequest): unknown;
+    create<I extends {
+        limit?: number | undefined;
+        state?: number | undefined;
+        cursor?: string | undefined;
+        clan_id?: string | undefined;
+    } & {
+        limit?: number | undefined;
+        state?: number | undefined;
+        cursor?: string | undefined;
+        clan_id?: string | undefined;
+    } & { [K in Exclude<keyof I, keyof ListRolesRequest>]: never; }>(base?: I | undefined): ListRolesRequest;
+    fromPartial<I_1 extends {
+        limit?: number | undefined;
+        state?: number | undefined;
+        cursor?: string | undefined;
+        clan_id?: string | undefined;
+    } & {
+        limit?: number | undefined;
+        state?: number | undefined;
+        cursor?: string | undefined;
+        clan_id?: string | undefined;
+    } & { [K_1 in Exclude<keyof I_1, keyof ListRolesRequest>]: never; }>(object: I_1): ListRolesRequest;
+};
+export declare const CreateRoleRequest: {
+    encode(message: CreateRoleRequest, writer?: _m0.Writer): _m0.Writer;
+    decode(input: _m0.Reader | Uint8Array, length?: number): CreateRoleRequest;
+    fromJSON(object: any): CreateRoleRequest;
+    toJSON(message: CreateRoleRequest): unknown;
+    create<I extends {
+        title?: string | undefined;
+        color?: string | undefined;
+        role_icon?: string | undefined;
+        slug?: string | undefined;
+        description?: string | undefined;
+        clan_id?: string | undefined;
+        display_online?: number | undefined;
+        allow_mention?: number | undefined;
+        user_ids?: string[] | undefined;
+        permission_ids?: string[] | undefined;
+    } & {
+        title?: string | undefined;
+        color?: string | undefined;
+        role_icon?: string | undefined;
+        slug?: string | undefined;
+        description?: string | undefined;
+        clan_id?: string | undefined;
+        display_online?: number | undefined;
+        allow_mention?: number | undefined;
+        user_ids?: (string[] & string[] & { [K in Exclude<keyof I["user_ids"], keyof string[]>]: never; }) | undefined;
+        permission_ids?: (string[] & string[] & { [K_1 in Exclude<keyof I["permission_ids"], keyof string[]>]: never; }) | undefined;
+    } & { [K_2 in Exclude<keyof I, keyof CreateRoleRequest>]: never; }>(base?: I | undefined): CreateRoleRequest;
+    fromPartial<I_1 extends {
+        title?: string | undefined;
+        color?: string | undefined;
+        role_icon?: string | undefined;
+        slug?: string | undefined;
+        description?: string | undefined;
+        clan_id?: string | undefined;
+        display_online?: number | undefined;
+        allow_mention?: number | undefined;
+        user_ids?: string[] | undefined;
+        permission_ids?: string[] | undefined;
+    } & {
+        title?: string | undefined;
+        color?: string | undefined;
+        role_icon?: string | undefined;
+        slug?: string | undefined;
+        description?: string | undefined;
+        clan_id?: string | undefined;
+        display_online?: number | undefined;
+        allow_mention?: number | undefined;
+        user_ids?: (string[] & string[] & { [K_3 in Exclude<keyof I_1["user_ids"], keyof string[]>]: never; }) | undefined;
+        permission_ids?: (string[] & string[] & { [K_4 in Exclude<keyof I_1["permission_ids"], keyof string[]>]: never; }) | undefined;
+    } & { [K_5 in Exclude<keyof I_1, keyof CreateRoleRequest>]: never; }>(object: I_1): CreateRoleRequest;
+};
+export declare const DeleteRoleRequest: {
+    encode(message: DeleteRoleRequest, writer?: _m0.Writer): _m0.Writer;
+    decode(input: _m0.Reader | Uint8Array, length?: number): DeleteRoleRequest;
+    fromJSON(object: any): DeleteRoleRequest;
+    toJSON(message: DeleteRoleRequest): unknown;
+    create<I extends {
+        role_id?: string | undefined;
+    } & {
+        role_id?: string | undefined;
+    } & { [K in Exclude<keyof I, "role_id">]: never; }>(base?: I | undefined): DeleteRoleRequest;
+    fromPartial<I_1 extends {
+        role_id?: string | undefined;
+    } & {
+        role_id?: string | undefined;
+    } & { [K_1 in Exclude<keyof I_1, "role_id">]: never; }>(object: I_1): DeleteRoleRequest;
+};
+export declare const UpdateRoleRequest: {
+    encode(message: UpdateRoleRequest, writer?: _m0.Writer): _m0.Writer;
+    decode(input: _m0.Reader | Uint8Array, length?: number): UpdateRoleRequest;
+    fromJSON(object: any): UpdateRoleRequest;
+    toJSON(message: UpdateRoleRequest): unknown;
+    create<I extends {
+        title?: string | undefined;
+        color?: string | undefined;
+        role_icon?: string | undefined;
+        slug?: string | undefined;
+        description?: string | undefined;
+        display_online?: number | undefined;
+        allow_mention?: number | undefined;
+        user_ids?: string[] | undefined;
+        permission_ids?: string[] | undefined;
+        role_id?: string | undefined;
+    } & {
+        title?: string | undefined;
+        color?: string | undefined;
+        role_icon?: string | undefined;
+        slug?: string | undefined;
+        description?: string | undefined;
+        display_online?: number | undefined;
+        allow_mention?: number | undefined;
+        user_ids?: (string[] & string[] & { [K in Exclude<keyof I["user_ids"], keyof string[]>]: never; }) | undefined;
+        permission_ids?: (string[] & string[] & { [K_1 in Exclude<keyof I["permission_ids"], keyof string[]>]: never; }) | undefined;
+        role_id?: string | undefined;
+    } & { [K_2 in Exclude<keyof I, keyof UpdateRoleRequest>]: never; }>(base?: I | undefined): UpdateRoleRequest;
+    fromPartial<I_1 extends {
+        title?: string | undefined;
+        color?: string | undefined;
+        role_icon?: string | undefined;
+        slug?: string | undefined;
+        description?: string | undefined;
+        display_online?: number | undefined;
+        allow_mention?: number | undefined;
+        user_ids?: string[] | undefined;
+        permission_ids?: string[] | undefined;
+        role_id?: string | undefined;
+    } & {
+        title?: string | undefined;
+        color?: string | undefined;
+        role_icon?: string | undefined;
+        slug?: string | undefined;
+        description?: string | undefined;
+        display_online?: number | undefined;
+        allow_mention?: number | undefined;
+        user_ids?: (string[] & string[] & { [K_3 in Exclude<keyof I_1["user_ids"], keyof string[]>]: never; }) | undefined;
+        permission_ids?: (string[] & string[] & { [K_4 in Exclude<keyof I_1["permission_ids"], keyof string[]>]: never; }) | undefined;
+        role_id?: string | undefined;
+    } & { [K_5 in Exclude<keyof I_1, keyof UpdateRoleRequest>]: never; }>(object: I_1): UpdateRoleRequest;
 };
 type Builtin = Date | Function | Uint8Array | string | number | boolean | undefined;
 export type DeepPartial<T> = T extends Builtin ? T : T extends Array<infer U> ? Array<DeepPartial<U>> : T extends ReadonlyArray<infer U> ? ReadonlyArray<DeepPartial<U>> : T extends {} ? {

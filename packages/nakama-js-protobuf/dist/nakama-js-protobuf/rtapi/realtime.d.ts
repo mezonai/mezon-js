@@ -123,7 +123,9 @@ export interface Channel {
 }
 /** Join operation for a realtime chat channel. */
 export interface ChannelJoin {
-    /** The user ID to DM with, group ID to chat with, or room channel name to join. */
+    /** The id of channel or group */
+    target_id: string;
+    /** The user ID to DM with, group ID to chat with, or channel id to join. */
     target: string;
     /** The type of the chat channel. */
     type: number;
@@ -134,10 +136,10 @@ export interface ChannelJoin {
 }
 /** The type of chat channel. */
 export declare enum ChannelJoin_Type {
-    /** TYPE_UNSPECIFIED - Default case. Assumed as ROOM type. */
+    /** TYPE_UNSPECIFIED - Default case. Assumed as CHANNEL type. */
     TYPE_UNSPECIFIED = 0,
-    /** ROOM - A room which anyone can join to chat. */
-    ROOM = 1,
+    /** CHANNEL - A room which anyone can join to chat. */
+    CHANNEL = 1,
     /** DIRECT_MESSAGE - A private channel for 1-on-1 chat. */
     DIRECT_MESSAGE = 2,
     /** GROUP - A channel for group chat. */
@@ -664,6 +666,7 @@ export declare const Envelope: {
             user_id_two?: string | undefined;
         } | undefined;
         channel_join?: {
+            target_id?: string | undefined;
             target?: string | undefined;
             type?: number | undefined;
             persistence?: boolean | undefined;
@@ -1181,11 +1184,13 @@ export declare const Envelope: {
             user_id_two?: string | undefined;
         } & { [K_3 in Exclude<keyof I["channel"], keyof Channel>]: never; }) | undefined;
         channel_join?: ({
+            target_id?: string | undefined;
             target?: string | undefined;
             type?: number | undefined;
             persistence?: boolean | undefined;
             hidden?: boolean | undefined;
         } & {
+            target_id?: string | undefined;
             target?: string | undefined;
             type?: number | undefined;
             persistence?: boolean | undefined;
@@ -2513,6 +2518,7 @@ export declare const Envelope: {
             user_id_two?: string | undefined;
         } | undefined;
         channel_join?: {
+            target_id?: string | undefined;
             target?: string | undefined;
             type?: number | undefined;
             persistence?: boolean | undefined;
@@ -3030,11 +3036,13 @@ export declare const Envelope: {
             user_id_two?: string | undefined;
         } & { [K_118 in Exclude<keyof I_1["channel"], keyof Channel>]: never; }) | undefined;
         channel_join?: ({
+            target_id?: string | undefined;
             target?: string | undefined;
             type?: number | undefined;
             persistence?: boolean | undefined;
             hidden?: boolean | undefined;
         } & {
+            target_id?: string | undefined;
             target?: string | undefined;
             type?: number | undefined;
             persistence?: boolean | undefined;
@@ -4481,22 +4489,26 @@ export declare const ChannelJoin: {
     fromJSON(object: any): ChannelJoin;
     toJSON(message: ChannelJoin): unknown;
     create<I extends {
+        target_id?: string | undefined;
         target?: string | undefined;
         type?: number | undefined;
         persistence?: boolean | undefined;
         hidden?: boolean | undefined;
     } & {
+        target_id?: string | undefined;
         target?: string | undefined;
         type?: number | undefined;
         persistence?: boolean | undefined;
         hidden?: boolean | undefined;
     } & { [K in Exclude<keyof I, keyof ChannelJoin>]: never; }>(base?: I | undefined): ChannelJoin;
     fromPartial<I_1 extends {
+        target_id?: string | undefined;
         target?: string | undefined;
         type?: number | undefined;
         persistence?: boolean | undefined;
         hidden?: boolean | undefined;
     } & {
+        target_id?: string | undefined;
         target?: string | undefined;
         type?: number | undefined;
         persistence?: boolean | undefined;

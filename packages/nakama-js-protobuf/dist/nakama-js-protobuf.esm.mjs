@@ -3546,21 +3546,24 @@ var Channel = {
   }
 };
 function createBaseChannelJoin() {
-  return { target: "", type: 0, persistence: void 0, hidden: void 0 };
+  return { target_id: "", target: "", type: 0, persistence: void 0, hidden: void 0 };
 }
 var ChannelJoin = {
   encode(message, writer = import_minimal4.default.Writer.create()) {
+    if (message.target_id !== "") {
+      writer.uint32(10).string(message.target_id);
+    }
     if (message.target !== "") {
-      writer.uint32(10).string(message.target);
+      writer.uint32(18).string(message.target);
     }
     if (message.type !== 0) {
-      writer.uint32(16).int32(message.type);
+      writer.uint32(24).int32(message.type);
     }
     if (message.persistence !== void 0) {
-      BoolValue.encode({ value: message.persistence }, writer.uint32(26).fork()).ldelim();
+      BoolValue.encode({ value: message.persistence }, writer.uint32(34).fork()).ldelim();
     }
     if (message.hidden !== void 0) {
-      BoolValue.encode({ value: message.hidden }, writer.uint32(34).fork()).ldelim();
+      BoolValue.encode({ value: message.hidden }, writer.uint32(42).fork()).ldelim();
     }
     return writer;
   },
@@ -3572,15 +3575,18 @@ var ChannelJoin = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          message.target = reader.string();
+          message.target_id = reader.string();
           break;
         case 2:
-          message.type = reader.int32();
+          message.target = reader.string();
           break;
         case 3:
-          message.persistence = BoolValue.decode(reader, reader.uint32()).value;
+          message.type = reader.int32();
           break;
         case 4:
+          message.persistence = BoolValue.decode(reader, reader.uint32()).value;
+          break;
+        case 5:
           message.hidden = BoolValue.decode(reader, reader.uint32()).value;
           break;
         default:
@@ -3592,6 +3598,7 @@ var ChannelJoin = {
   },
   fromJSON(object) {
     return {
+      target_id: isSet4(object.target_id) ? String(object.target_id) : "",
       target: isSet4(object.target) ? String(object.target) : "",
       type: isSet4(object.type) ? Number(object.type) : 0,
       persistence: isSet4(object.persistence) ? Boolean(object.persistence) : void 0,
@@ -3600,6 +3607,7 @@ var ChannelJoin = {
   },
   toJSON(message) {
     const obj = {};
+    message.target_id !== void 0 && (obj.target_id = message.target_id);
     message.target !== void 0 && (obj.target = message.target);
     message.type !== void 0 && (obj.type = Math.round(message.type));
     message.persistence !== void 0 && (obj.persistence = message.persistence);
@@ -3610,12 +3618,13 @@ var ChannelJoin = {
     return ChannelJoin.fromPartial(base != null ? base : {});
   },
   fromPartial(object) {
-    var _a, _b, _c, _d;
+    var _a, _b, _c, _d, _e;
     const message = createBaseChannelJoin();
-    message.target = (_a = object.target) != null ? _a : "";
-    message.type = (_b = object.type) != null ? _b : 0;
-    message.persistence = (_c = object.persistence) != null ? _c : void 0;
-    message.hidden = (_d = object.hidden) != null ? _d : void 0;
+    message.target_id = (_a = object.target_id) != null ? _a : "";
+    message.target = (_b = object.target) != null ? _b : "";
+    message.type = (_c = object.type) != null ? _c : 0;
+    message.persistence = (_d = object.persistence) != null ? _d : void 0;
+    message.hidden = (_e = object.hidden) != null ? _e : void 0;
     return message;
   }
 };
