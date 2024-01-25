@@ -140,11 +140,10 @@ export interface ApiChannelMessage {
 /** A list of channel messages, usually a result of a list operation. */
 export interface ApiChannelMessageList {
     cacheable_cursor?: string;
-    last_seen_message_uuid?: string;
+    last_seen_message_id?: string;
     messages?: Array<ApiChannelMessage>;
     next_cursor?: string;
     prev_cursor?: string;
-    unread_messages?: Array<ApiUnreadMessage>;
 }
 /** A list of users belonging to a channel, along with their role. */
 export interface ApiChannelUserList {
@@ -516,11 +515,6 @@ export interface ApiTournamentRecordList {
     prev_cursor?: string;
     rank_count?: string;
     records?: Array<ApiLeaderboardRecord>;
-}
-/**  */
-export interface ApiUnreadMessage {
-    message_id?: string;
-    user_id?: string;
 }
 /** Update a user's account details. */
 export interface ApiUpdateAccountRequest {

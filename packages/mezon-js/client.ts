@@ -295,7 +295,7 @@ export interface ChannelMessageList {
   /** Cacheable cursor to list newer messages. Durable and designed to be stored, unlike next/prev cursors. */
   cacheable_cursor?: string;
   /**last seen message from user on channel */
-  last_seen_message_uuid?: string;
+  last_seen_message_id?: string;
   /** A list of messages. */
   messages?: Array<ChannelMessage>;
   /** The cursor to send when retireving the next page, if any. */
@@ -1077,7 +1077,7 @@ export class Client {
     return this.apiClient.listChannelMessages(session.token, channelId, limit, forward, cursor).then((response: ApiChannelMessageList) => {
       var result: ChannelMessageList = {
         messages: [],
-        last_seen_message_uuid: response.last_seen_message_uuid,
+        last_seen_message_id: response.last_seen_message_id,
         next_cursor: response.next_cursor,
         prev_cursor: response.prev_cursor,
         cacheable_cursor: response.cacheable_cursor

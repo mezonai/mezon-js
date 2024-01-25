@@ -36,12 +36,11 @@ var __async = (__this, __arguments, generator) => {
 };
 
 // ../../node_modules/whatwg-fetch/fetch.js
-var g = typeof globalThis !== "undefined" && globalThis || typeof self !== "undefined" && self || // eslint-disable-next-line no-undef
-typeof global !== "undefined" && global || {};
+var global = typeof globalThis !== "undefined" && globalThis || typeof self !== "undefined" && self || typeof global !== "undefined" && global;
 var support = {
-  searchParams: "URLSearchParams" in g,
-  iterable: "Symbol" in g && "iterator" in Symbol,
-  blob: "FileReader" in g && "Blob" in g && function() {
+  searchParams: "URLSearchParams" in global,
+  iterable: "Symbol" in global && "iterator" in Symbol,
+  blob: "FileReader" in global && "Blob" in global && function() {
     try {
       new Blob();
       return true;
@@ -49,8 +48,8 @@ var support = {
       return false;
     }
   }(),
-  formData: "FormData" in g,
-  arrayBuffer: "ArrayBuffer" in g
+  formData: "FormData" in global,
+  arrayBuffer: "ArrayBuffer" in global
 };
 function isDataView(obj) {
   return obj && DataView.prototype.isPrototypeOf(obj);
@@ -110,9 +109,6 @@ function Headers(headers) {
     }, this);
   } else if (Array.isArray(headers)) {
     headers.forEach(function(header) {
-      if (header.length != 2) {
-        throw new TypeError("Headers constructor: expected name/value pair to be length 2, found" + header.length);
-      }
       this.append(header[0], header[1]);
     }, this);
   } else if (headers) {
@@ -172,8 +168,6 @@ if (support.iterable) {
   Headers.prototype[Symbol.iterator] = Headers.prototype.entries;
 }
 function consumed(body) {
-  if (body._noBody)
-    return;
   if (body.bodyUsed) {
     return Promise.reject(new TypeError("Already read"));
   }
@@ -198,9 +192,7 @@ function readBlobAsArrayBuffer(blob) {
 function readBlobAsText(blob) {
   var reader = new FileReader();
   var promise = fileReaderReady(reader);
-  var match = /charset=([A-Za-z0-9_-]+)/.exec(blob.type);
-  var encoding = match ? match[1] : "utf-8";
-  reader.readAsText(blob, encoding);
+  reader.readAsText(blob);
   return promise;
 }
 function readArrayBufferAsText(buf) {
@@ -226,7 +218,6 @@ function Body() {
     this.bodyUsed = this.bodyUsed;
     this._bodyInit = body;
     if (!body) {
-      this._noBody = true;
       this._bodyText = "";
     } else if (typeof body === "string") {
       this._bodyText = body;
@@ -270,28 +261,27 @@ function Body() {
         return Promise.resolve(new Blob([this._bodyText]));
       }
     };
-  }
-  this.arrayBuffer = function() {
-    if (this._bodyArrayBuffer) {
-      var isConsumed = consumed(this);
-      if (isConsumed) {
-        return isConsumed;
-      } else if (ArrayBuffer.isView(this._bodyArrayBuffer)) {
-        return Promise.resolve(
-          this._bodyArrayBuffer.buffer.slice(
-            this._bodyArrayBuffer.byteOffset,
-            this._bodyArrayBuffer.byteOffset + this._bodyArrayBuffer.byteLength
-          )
-        );
+    this.arrayBuffer = function() {
+      if (this._bodyArrayBuffer) {
+        var isConsumed = consumed(this);
+        if (isConsumed) {
+          return isConsumed;
+        }
+        if (ArrayBuffer.isView(this._bodyArrayBuffer)) {
+          return Promise.resolve(
+            this._bodyArrayBuffer.buffer.slice(
+              this._bodyArrayBuffer.byteOffset,
+              this._bodyArrayBuffer.byteOffset + this._bodyArrayBuffer.byteLength
+            )
+          );
+        } else {
+          return Promise.resolve(this._bodyArrayBuffer);
+        }
       } else {
-        return Promise.resolve(this._bodyArrayBuffer);
+        return this.blob().then(readBlobAsArrayBuffer);
       }
-    } else if (support.blob) {
-      return this.blob().then(readBlobAsArrayBuffer);
-    } else {
-      throw new Error("could not read as ArrayBuffer");
-    }
-  };
+    };
+  }
   this.text = function() {
     var rejected = consumed(this);
     if (rejected) {
@@ -317,7 +307,7 @@ function Body() {
   };
   return this;
 }
-var methods = ["CONNECT", "DELETE", "GET", "HEAD", "OPTIONS", "PATCH", "POST", "PUT", "TRACE"];
+var methods = ["DELETE", "GET", "HEAD", "OPTIONS", "POST", "PUT"];
 function normalizeMethod(method) {
   var upcased = method.toUpperCase();
   return methods.indexOf(upcased) > -1 ? upcased : method;
@@ -353,12 +343,7 @@ function Request(input, options) {
   }
   this.method = normalizeMethod(options.method || this.method || "GET");
   this.mode = options.mode || this.mode || null;
-  this.signal = options.signal || this.signal || function() {
-    if ("AbortController" in g) {
-      var ctrl = new AbortController();
-      return ctrl.signal;
-    }
-  }();
+  this.signal = options.signal || this.signal;
   this.referrer = null;
   if ((this.method === "GET" || this.method === "HEAD") && body) {
     throw new TypeError("Body not allowed for GET or HEAD requests");
@@ -368,10 +353,10 @@ function Request(input, options) {
     if (options.cache === "no-store" || options.cache === "no-cache") {
       var reParamSearch = /([?&])_=[^&]*/;
       if (reParamSearch.test(this.url)) {
-        this.url = this.url.replace(reParamSearch, "$1_=" + (/* @__PURE__ */ new Date()).getTime());
+        this.url = this.url.replace(reParamSearch, "$1_=" + new Date().getTime());
       } else {
         var reQueryString = /\?/;
-        this.url += (reQueryString.test(this.url) ? "&" : "?") + "_=" + (/* @__PURE__ */ new Date()).getTime();
+        this.url += (reQueryString.test(this.url) ? "&" : "?") + "_=" + new Date().getTime();
       }
     }
   }
@@ -401,11 +386,7 @@ function parseHeaders(rawHeaders) {
     var key = parts.shift().trim();
     if (key) {
       var value = parts.join(":").trim();
-      try {
-        headers.append(key, value);
-      } catch (error) {
-        console.warn("Response " + error.message);
-      }
+      headers.append(key, value);
     }
   });
   return headers;
@@ -420,9 +401,6 @@ function Response(bodyInit, options) {
   }
   this.type = "default";
   this.status = options.status === void 0 ? 200 : options.status;
-  if (this.status < 200 || this.status > 599) {
-    throw new RangeError("Failed to construct 'Response': The status provided (0) is outside the range [200, 599].");
-  }
   this.ok = this.status >= 200 && this.status < 300;
   this.statusText = options.statusText === void 0 ? "" : "" + options.statusText;
   this.headers = new Headers(options.headers);
@@ -439,9 +417,7 @@ Response.prototype.clone = function() {
   });
 };
 Response.error = function() {
-  var response = new Response(null, { status: 200, statusText: "" });
-  response.ok = false;
-  response.status = 0;
+  var response = new Response(null, { status: 0, statusText: "" });
   response.type = "error";
   return response;
 };
@@ -452,7 +428,7 @@ Response.redirect = function(url, status) {
   }
   return new Response(null, { status, headers: { location: url } });
 };
-var DOMException = g.DOMException;
+var DOMException = global.DOMException;
 try {
   new DOMException();
 } catch (err) {
@@ -477,14 +453,10 @@ function fetch2(input, init) {
     }
     xhr.onload = function() {
       var options = {
+        status: xhr.status,
         statusText: xhr.statusText,
         headers: parseHeaders(xhr.getAllResponseHeaders() || "")
       };
-      if (request.url.indexOf("file://") === 0 && (xhr.status < 200 || xhr.status > 599)) {
-        options.status = 200;
-      } else {
-        options.status = xhr.status;
-      }
       options.url = "responseURL" in xhr ? xhr.responseURL : options.headers.get("X-Request-URL");
       var body = "response" in xhr ? xhr.response : xhr.responseText;
       setTimeout(function() {
@@ -498,7 +470,7 @@ function fetch2(input, init) {
     };
     xhr.ontimeout = function() {
       setTimeout(function() {
-        reject(new TypeError("Network request timed out"));
+        reject(new TypeError("Network request failed"));
       }, 0);
     };
     xhr.onabort = function() {
@@ -508,7 +480,7 @@ function fetch2(input, init) {
     };
     function fixUrl(url) {
       try {
-        return url === "" && g.location.href ? g.location.href : url;
+        return url === "" && global.location.href ? global.location.href : url;
       } catch (e) {
         return url;
       }
@@ -522,20 +494,13 @@ function fetch2(input, init) {
     if ("responseType" in xhr) {
       if (support.blob) {
         xhr.responseType = "blob";
-      } else if (support.arrayBuffer) {
+      } else if (support.arrayBuffer && request.headers.get("Content-Type") && request.headers.get("Content-Type").indexOf("application/octet-stream") !== -1) {
         xhr.responseType = "arraybuffer";
       }
     }
-    if (init && typeof init.headers === "object" && !(init.headers instanceof Headers || g.Headers && init.headers instanceof g.Headers)) {
-      var names = [];
+    if (init && typeof init.headers === "object" && !(init.headers instanceof Headers)) {
       Object.getOwnPropertyNames(init.headers).forEach(function(name) {
-        names.push(normalizeName(name));
         xhr.setRequestHeader(name, normalizeValue(init.headers[name]));
-      });
-      request.headers.forEach(function(value, name) {
-        if (names.indexOf(name) === -1) {
-          xhr.setRequestHeader(name, value);
-        }
       });
     } else {
       request.headers.forEach(function(value, name) {
@@ -554,11 +519,11 @@ function fetch2(input, init) {
   });
 }
 fetch2.polyfill = true;
-if (!g.fetch) {
-  g.fetch = fetch2;
-  g.Headers = Headers;
-  g.Request = Request;
-  g.Response = Response;
+if (!global.fetch) {
+  global.fetch = fetch2;
+  global.Headers = Headers;
+  global.Request = Request;
+  global.Response = Response;
 }
 
 // ../../node_modules/js-base64/base64.mjs
@@ -576,7 +541,7 @@ var b64tab = ((a) => {
 })(b64chs);
 var b64re = /^(?:[A-Za-z\d+\/]{4})*?(?:[A-Za-z\d+\/]{2}(?:==)?|[A-Za-z\d+\/]{3}=?)?$/;
 var _fromCC = String.fromCharCode.bind(String);
-var _U8Afrom = typeof Uint8Array.from === "function" ? Uint8Array.from.bind(Uint8Array) : (it) => new Uint8Array(Array.prototype.slice.call(it, 0));
+var _U8Afrom = typeof Uint8Array.from === "function" ? Uint8Array.from.bind(Uint8Array) : (it, fn = (x) => x) => new Uint8Array(Array.prototype.slice.call(it, 0).map(fn));
 var _mkUriSafe = (src) => src.replace(/=/g, "").replace(/[+\/]/g, (m0) => m0 == "+" ? "-" : "_");
 var _tidyB64 = (s) => s.replace(/[^A-Za-z0-9\+\/]/g, "");
 var btoaPolyfill = (bin) => {
@@ -638,7 +603,7 @@ var atobPolyfill = (asc) => {
   return bin;
 };
 var _atob = _hasatob ? (asc) => atob(_tidyB64(asc)) : _hasBuffer ? (asc) => Buffer.from(asc, "base64").toString("binary") : atobPolyfill;
-var _toUint8Array = _hasBuffer ? (a) => _U8Afrom(Buffer.from(a, "base64")) : (a) => _U8Afrom(_atob(a).split("").map((c) => c.charCodeAt(0)));
+var _toUint8Array = _hasBuffer ? (a) => _U8Afrom(Buffer.from(a, "base64")) : (a) => _U8Afrom(_atob(a), (c) => c.charCodeAt(0));
 var _decode = _hasBuffer ? (a) => Buffer.from(a, "base64").toString("utf8") : _TD ? (a) => _TD.decode(_toUint8Array(a)) : (a) => btou(_atob(a));
 var _unURI = (a) => _tidyB64(a.replace(/[-_]/g, (m0) => m0 == "-" ? "+" : "/"));
 var decode2 = (src) => _decode(_unURI(src));
@@ -3998,12 +3963,12 @@ var NakamaApi = class {
 };
 
 // session.ts
-var Session = class _Session {
+var Session = class {
   constructor(token, refresh_token, created) {
     this.created = created;
     this.token = token;
     this.refresh_token = refresh_token;
-    this.created_at = Math.floor((/* @__PURE__ */ new Date()).getTime() / 1e3);
+    this.created_at = Math.floor(new Date().getTime() / 1e3);
     this.update(token, refresh_token);
   }
   isexpired(currenttime) {
@@ -4036,7 +4001,7 @@ var Session = class _Session {
     this.vars = tokenDecoded["vrs"];
   }
   static restore(token, refreshToken) {
-    return new _Session(token, refreshToken, false);
+    return new Session(token, refreshToken, false);
   }
 };
 
@@ -4156,7 +4121,7 @@ var WebSocketAdapterText = class {
 };
 
 // socket.ts
-var _DefaultSocket = class _DefaultSocket {
+var _DefaultSocket = class {
   constructor(host, port, useSSL = false, verbose = false, adapter = new WebSocketAdapterText(), sendTimeoutMs = _DefaultSocket.DefaultSendTimeoutMs) {
     this.host = host;
     this.port = port;
@@ -4634,10 +4599,10 @@ var _DefaultSocket = class _DefaultSocket {
     });
   }
 };
-_DefaultSocket.DefaultHeartbeatTimeoutMs = 1e4;
-_DefaultSocket.DefaultSendTimeoutMs = 1e4;
-_DefaultSocket.DefaultConnectTimeoutMs = 3e4;
 var DefaultSocket = _DefaultSocket;
+DefaultSocket.DefaultHeartbeatTimeoutMs = 1e4;
+DefaultSocket.DefaultSendTimeoutMs = 1e4;
+DefaultSocket.DefaultConnectTimeoutMs = 3e4;
 
 // client.ts
 var DEFAULT_HOST = "127.0.0.1";
@@ -5137,7 +5102,7 @@ var Client = class {
       return this.apiClient.listChannelMessages(session.token, channelId, limit, forward, cursor).then((response) => {
         var result = {
           messages: [],
-          last_seen_message_uuid: response.last_seen_message_uuid,
+          last_seen_message_id: response.last_seen_message_id,
           next_cursor: response.next_cursor,
           prev_cursor: response.prev_cursor,
           cacheable_cursor: response.cacheable_cursor
