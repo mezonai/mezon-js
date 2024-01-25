@@ -2201,7 +2201,7 @@ export interface AddChannelUsersRequest {
 }
 
 /** Kick a set of users from a channel. */
-export interface KickChannelUsersRequest {
+export interface RemoveChannelUsersRequest {
   /** The channel ID to kick from. */
   channel_id: string;
   /** The users to kick. */
@@ -2337,37 +2337,66 @@ export const Account = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): Account {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseAccount();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag !== 10) {
+            break;
+          }
+
           message.user = User.decode(reader, reader.uint32());
-          break;
+          continue;
         case 2:
+          if (tag !== 18) {
+            break;
+          }
+
           message.wallet = reader.string();
-          break;
+          continue;
         case 3:
+          if (tag !== 26) {
+            break;
+          }
+
           message.email = reader.string();
-          break;
+          continue;
         case 4:
+          if (tag !== 34) {
+            break;
+          }
+
           message.devices.push(AccountDevice.decode(reader, reader.uint32()));
-          break;
+          continue;
         case 5:
+          if (tag !== 42) {
+            break;
+          }
+
           message.custom_id = reader.string();
-          break;
+          continue;
         case 6:
+          if (tag !== 50) {
+            break;
+          }
+
           message.verify_time = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
-          break;
+          continue;
         case 7:
+          if (tag !== 58) {
+            break;
+          }
+
           message.disable_time = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
@@ -2375,10 +2404,12 @@ export const Account = {
   fromJSON(object: any): Account {
     return {
       user: isSet(object.user) ? User.fromJSON(object.user) : undefined,
-      wallet: isSet(object.wallet) ? String(object.wallet) : "",
-      email: isSet(object.email) ? String(object.email) : "",
-      devices: Array.isArray(object?.devices) ? object.devices.map((e: any) => AccountDevice.fromJSON(e)) : [],
-      custom_id: isSet(object.custom_id) ? String(object.custom_id) : "",
+      wallet: isSet(object.wallet) ? globalThis.String(object.wallet) : "",
+      email: isSet(object.email) ? globalThis.String(object.email) : "",
+      devices: globalThis.Array.isArray(object?.devices)
+        ? object.devices.map((e: any) => AccountDevice.fromJSON(e))
+        : [],
+      custom_id: isSet(object.custom_id) ? globalThis.String(object.custom_id) : "",
       verify_time: isSet(object.verify_time) ? fromJsonTimestamp(object.verify_time) : undefined,
       disable_time: isSet(object.disable_time) ? fromJsonTimestamp(object.disable_time) : undefined,
     };
@@ -2386,24 +2417,33 @@ export const Account = {
 
   toJSON(message: Account): unknown {
     const obj: any = {};
-    message.user !== undefined && (obj.user = message.user ? User.toJSON(message.user) : undefined);
-    message.wallet !== undefined && (obj.wallet = message.wallet);
-    message.email !== undefined && (obj.email = message.email);
-    if (message.devices) {
-      obj.devices = message.devices.map((e) => e ? AccountDevice.toJSON(e) : undefined);
-    } else {
-      obj.devices = [];
+    if (message.user !== undefined) {
+      obj.user = User.toJSON(message.user);
     }
-    message.custom_id !== undefined && (obj.custom_id = message.custom_id);
-    message.verify_time !== undefined && (obj.verify_time = message.verify_time.toISOString());
-    message.disable_time !== undefined && (obj.disable_time = message.disable_time.toISOString());
+    if (message.wallet !== "") {
+      obj.wallet = message.wallet;
+    }
+    if (message.email !== "") {
+      obj.email = message.email;
+    }
+    if (message.devices?.length) {
+      obj.devices = message.devices.map((e) => AccountDevice.toJSON(e));
+    }
+    if (message.custom_id !== "") {
+      obj.custom_id = message.custom_id;
+    }
+    if (message.verify_time !== undefined) {
+      obj.verify_time = message.verify_time.toISOString();
+    }
+    if (message.disable_time !== undefined) {
+      obj.disable_time = message.disable_time.toISOString();
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<Account>, I>>(base?: I): Account {
-    return Account.fromPartial(base ?? {});
+    return Account.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<Account>, I>>(object: I): Account {
     const message = createBaseAccount();
     message.user = (object.user !== undefined && object.user !== null) ? User.fromPartial(object.user) : undefined;
@@ -2433,32 +2473,41 @@ export const AccountRefresh = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): AccountRefresh {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseAccountRefresh();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag !== 10) {
+            break;
+          }
+
           message.token = reader.string();
-          break;
+          continue;
         case 2:
+          if (tag !== 18) {
+            break;
+          }
+
           const entry2 = AccountRefresh_VarsEntry.decode(reader, reader.uint32());
           if (entry2.value !== undefined) {
             message.vars[entry2.key] = entry2.value;
           }
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
 
   fromJSON(object: any): AccountRefresh {
     return {
-      token: isSet(object.token) ? String(object.token) : "",
+      token: isSet(object.token) ? globalThis.String(object.token) : "",
       vars: isObject(object.vars)
         ? Object.entries(object.vars).reduce<{ [key: string]: string }>((acc, [key, value]) => {
           acc[key] = String(value);
@@ -2470,26 +2519,30 @@ export const AccountRefresh = {
 
   toJSON(message: AccountRefresh): unknown {
     const obj: any = {};
-    message.token !== undefined && (obj.token = message.token);
-    obj.vars = {};
+    if (message.token !== "") {
+      obj.token = message.token;
+    }
     if (message.vars) {
-      Object.entries(message.vars).forEach(([k, v]) => {
-        obj.vars[k] = v;
-      });
+      const entries = Object.entries(message.vars);
+      if (entries.length > 0) {
+        obj.vars = {};
+        entries.forEach(([k, v]) => {
+          obj.vars[k] = v;
+        });
+      }
     }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<AccountRefresh>, I>>(base?: I): AccountRefresh {
-    return AccountRefresh.fromPartial(base ?? {});
+    return AccountRefresh.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<AccountRefresh>, I>>(object: I): AccountRefresh {
     const message = createBaseAccountRefresh();
     message.token = object.token ?? "";
     message.vars = Object.entries(object.vars ?? {}).reduce<{ [key: string]: string }>((acc, [key, value]) => {
       if (value !== undefined) {
-        acc[key] = String(value);
+        acc[key] = globalThis.String(value);
       }
       return acc;
     }, {});
@@ -2513,41 +2566,56 @@ export const AccountRefresh_VarsEntry = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): AccountRefresh_VarsEntry {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseAccountRefresh_VarsEntry();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag !== 10) {
+            break;
+          }
+
           message.key = reader.string();
-          break;
+          continue;
         case 2:
+          if (tag !== 18) {
+            break;
+          }
+
           message.value = reader.string();
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
 
   fromJSON(object: any): AccountRefresh_VarsEntry {
-    return { key: isSet(object.key) ? String(object.key) : "", value: isSet(object.value) ? String(object.value) : "" };
+    return {
+      key: isSet(object.key) ? globalThis.String(object.key) : "",
+      value: isSet(object.value) ? globalThis.String(object.value) : "",
+    };
   },
 
   toJSON(message: AccountRefresh_VarsEntry): unknown {
     const obj: any = {};
-    message.key !== undefined && (obj.key = message.key);
-    message.value !== undefined && (obj.value = message.value);
+    if (message.key !== "") {
+      obj.key = message.key;
+    }
+    if (message.value !== "") {
+      obj.value = message.value;
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<AccountRefresh_VarsEntry>, I>>(base?: I): AccountRefresh_VarsEntry {
-    return AccountRefresh_VarsEntry.fromPartial(base ?? {});
+    return AccountRefresh_VarsEntry.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<AccountRefresh_VarsEntry>, I>>(object: I): AccountRefresh_VarsEntry {
     const message = createBaseAccountRefresh_VarsEntry();
     message.key = object.key ?? "";
@@ -2572,32 +2640,41 @@ export const AccountApple = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): AccountApple {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseAccountApple();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag !== 10) {
+            break;
+          }
+
           message.token = reader.string();
-          break;
+          continue;
         case 2:
+          if (tag !== 18) {
+            break;
+          }
+
           const entry2 = AccountApple_VarsEntry.decode(reader, reader.uint32());
           if (entry2.value !== undefined) {
             message.vars[entry2.key] = entry2.value;
           }
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
 
   fromJSON(object: any): AccountApple {
     return {
-      token: isSet(object.token) ? String(object.token) : "",
+      token: isSet(object.token) ? globalThis.String(object.token) : "",
       vars: isObject(object.vars)
         ? Object.entries(object.vars).reduce<{ [key: string]: string }>((acc, [key, value]) => {
           acc[key] = String(value);
@@ -2609,26 +2686,30 @@ export const AccountApple = {
 
   toJSON(message: AccountApple): unknown {
     const obj: any = {};
-    message.token !== undefined && (obj.token = message.token);
-    obj.vars = {};
+    if (message.token !== "") {
+      obj.token = message.token;
+    }
     if (message.vars) {
-      Object.entries(message.vars).forEach(([k, v]) => {
-        obj.vars[k] = v;
-      });
+      const entries = Object.entries(message.vars);
+      if (entries.length > 0) {
+        obj.vars = {};
+        entries.forEach(([k, v]) => {
+          obj.vars[k] = v;
+        });
+      }
     }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<AccountApple>, I>>(base?: I): AccountApple {
-    return AccountApple.fromPartial(base ?? {});
+    return AccountApple.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<AccountApple>, I>>(object: I): AccountApple {
     const message = createBaseAccountApple();
     message.token = object.token ?? "";
     message.vars = Object.entries(object.vars ?? {}).reduce<{ [key: string]: string }>((acc, [key, value]) => {
       if (value !== undefined) {
-        acc[key] = String(value);
+        acc[key] = globalThis.String(value);
       }
       return acc;
     }, {});
@@ -2652,41 +2733,56 @@ export const AccountApple_VarsEntry = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): AccountApple_VarsEntry {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseAccountApple_VarsEntry();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag !== 10) {
+            break;
+          }
+
           message.key = reader.string();
-          break;
+          continue;
         case 2:
+          if (tag !== 18) {
+            break;
+          }
+
           message.value = reader.string();
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
 
   fromJSON(object: any): AccountApple_VarsEntry {
-    return { key: isSet(object.key) ? String(object.key) : "", value: isSet(object.value) ? String(object.value) : "" };
+    return {
+      key: isSet(object.key) ? globalThis.String(object.key) : "",
+      value: isSet(object.value) ? globalThis.String(object.value) : "",
+    };
   },
 
   toJSON(message: AccountApple_VarsEntry): unknown {
     const obj: any = {};
-    message.key !== undefined && (obj.key = message.key);
-    message.value !== undefined && (obj.value = message.value);
+    if (message.key !== "") {
+      obj.key = message.key;
+    }
+    if (message.value !== "") {
+      obj.value = message.value;
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<AccountApple_VarsEntry>, I>>(base?: I): AccountApple_VarsEntry {
-    return AccountApple_VarsEntry.fromPartial(base ?? {});
+    return AccountApple_VarsEntry.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<AccountApple_VarsEntry>, I>>(object: I): AccountApple_VarsEntry {
     const message = createBaseAccountApple_VarsEntry();
     message.key = object.key ?? "";
@@ -2711,32 +2807,41 @@ export const AccountCustom = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): AccountCustom {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseAccountCustom();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag !== 10) {
+            break;
+          }
+
           message.id = reader.string();
-          break;
+          continue;
         case 2:
+          if (tag !== 18) {
+            break;
+          }
+
           const entry2 = AccountCustom_VarsEntry.decode(reader, reader.uint32());
           if (entry2.value !== undefined) {
             message.vars[entry2.key] = entry2.value;
           }
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
 
   fromJSON(object: any): AccountCustom {
     return {
-      id: isSet(object.id) ? String(object.id) : "",
+      id: isSet(object.id) ? globalThis.String(object.id) : "",
       vars: isObject(object.vars)
         ? Object.entries(object.vars).reduce<{ [key: string]: string }>((acc, [key, value]) => {
           acc[key] = String(value);
@@ -2748,26 +2853,30 @@ export const AccountCustom = {
 
   toJSON(message: AccountCustom): unknown {
     const obj: any = {};
-    message.id !== undefined && (obj.id = message.id);
-    obj.vars = {};
+    if (message.id !== "") {
+      obj.id = message.id;
+    }
     if (message.vars) {
-      Object.entries(message.vars).forEach(([k, v]) => {
-        obj.vars[k] = v;
-      });
+      const entries = Object.entries(message.vars);
+      if (entries.length > 0) {
+        obj.vars = {};
+        entries.forEach(([k, v]) => {
+          obj.vars[k] = v;
+        });
+      }
     }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<AccountCustom>, I>>(base?: I): AccountCustom {
-    return AccountCustom.fromPartial(base ?? {});
+    return AccountCustom.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<AccountCustom>, I>>(object: I): AccountCustom {
     const message = createBaseAccountCustom();
     message.id = object.id ?? "";
     message.vars = Object.entries(object.vars ?? {}).reduce<{ [key: string]: string }>((acc, [key, value]) => {
       if (value !== undefined) {
-        acc[key] = String(value);
+        acc[key] = globalThis.String(value);
       }
       return acc;
     }, {});
@@ -2791,41 +2900,56 @@ export const AccountCustom_VarsEntry = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): AccountCustom_VarsEntry {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseAccountCustom_VarsEntry();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag !== 10) {
+            break;
+          }
+
           message.key = reader.string();
-          break;
+          continue;
         case 2:
+          if (tag !== 18) {
+            break;
+          }
+
           message.value = reader.string();
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
 
   fromJSON(object: any): AccountCustom_VarsEntry {
-    return { key: isSet(object.key) ? String(object.key) : "", value: isSet(object.value) ? String(object.value) : "" };
+    return {
+      key: isSet(object.key) ? globalThis.String(object.key) : "",
+      value: isSet(object.value) ? globalThis.String(object.value) : "",
+    };
   },
 
   toJSON(message: AccountCustom_VarsEntry): unknown {
     const obj: any = {};
-    message.key !== undefined && (obj.key = message.key);
-    message.value !== undefined && (obj.value = message.value);
+    if (message.key !== "") {
+      obj.key = message.key;
+    }
+    if (message.value !== "") {
+      obj.value = message.value;
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<AccountCustom_VarsEntry>, I>>(base?: I): AccountCustom_VarsEntry {
-    return AccountCustom_VarsEntry.fromPartial(base ?? {});
+    return AccountCustom_VarsEntry.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<AccountCustom_VarsEntry>, I>>(object: I): AccountCustom_VarsEntry {
     const message = createBaseAccountCustom_VarsEntry();
     message.key = object.key ?? "";
@@ -2850,32 +2974,41 @@ export const AccountDevice = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): AccountDevice {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseAccountDevice();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag !== 10) {
+            break;
+          }
+
           message.id = reader.string();
-          break;
+          continue;
         case 2:
+          if (tag !== 18) {
+            break;
+          }
+
           const entry2 = AccountDevice_VarsEntry.decode(reader, reader.uint32());
           if (entry2.value !== undefined) {
             message.vars[entry2.key] = entry2.value;
           }
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
 
   fromJSON(object: any): AccountDevice {
     return {
-      id: isSet(object.id) ? String(object.id) : "",
+      id: isSet(object.id) ? globalThis.String(object.id) : "",
       vars: isObject(object.vars)
         ? Object.entries(object.vars).reduce<{ [key: string]: string }>((acc, [key, value]) => {
           acc[key] = String(value);
@@ -2887,26 +3020,30 @@ export const AccountDevice = {
 
   toJSON(message: AccountDevice): unknown {
     const obj: any = {};
-    message.id !== undefined && (obj.id = message.id);
-    obj.vars = {};
+    if (message.id !== "") {
+      obj.id = message.id;
+    }
     if (message.vars) {
-      Object.entries(message.vars).forEach(([k, v]) => {
-        obj.vars[k] = v;
-      });
+      const entries = Object.entries(message.vars);
+      if (entries.length > 0) {
+        obj.vars = {};
+        entries.forEach(([k, v]) => {
+          obj.vars[k] = v;
+        });
+      }
     }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<AccountDevice>, I>>(base?: I): AccountDevice {
-    return AccountDevice.fromPartial(base ?? {});
+    return AccountDevice.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<AccountDevice>, I>>(object: I): AccountDevice {
     const message = createBaseAccountDevice();
     message.id = object.id ?? "";
     message.vars = Object.entries(object.vars ?? {}).reduce<{ [key: string]: string }>((acc, [key, value]) => {
       if (value !== undefined) {
-        acc[key] = String(value);
+        acc[key] = globalThis.String(value);
       }
       return acc;
     }, {});
@@ -2930,41 +3067,56 @@ export const AccountDevice_VarsEntry = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): AccountDevice_VarsEntry {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseAccountDevice_VarsEntry();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag !== 10) {
+            break;
+          }
+
           message.key = reader.string();
-          break;
+          continue;
         case 2:
+          if (tag !== 18) {
+            break;
+          }
+
           message.value = reader.string();
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
 
   fromJSON(object: any): AccountDevice_VarsEntry {
-    return { key: isSet(object.key) ? String(object.key) : "", value: isSet(object.value) ? String(object.value) : "" };
+    return {
+      key: isSet(object.key) ? globalThis.String(object.key) : "",
+      value: isSet(object.value) ? globalThis.String(object.value) : "",
+    };
   },
 
   toJSON(message: AccountDevice_VarsEntry): unknown {
     const obj: any = {};
-    message.key !== undefined && (obj.key = message.key);
-    message.value !== undefined && (obj.value = message.value);
+    if (message.key !== "") {
+      obj.key = message.key;
+    }
+    if (message.value !== "") {
+      obj.value = message.value;
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<AccountDevice_VarsEntry>, I>>(base?: I): AccountDevice_VarsEntry {
-    return AccountDevice_VarsEntry.fromPartial(base ?? {});
+    return AccountDevice_VarsEntry.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<AccountDevice_VarsEntry>, I>>(object: I): AccountDevice_VarsEntry {
     const message = createBaseAccountDevice_VarsEntry();
     message.key = object.key ?? "";
@@ -2992,36 +3144,49 @@ export const AccountEmail = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): AccountEmail {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseAccountEmail();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag !== 10) {
+            break;
+          }
+
           message.email = reader.string();
-          break;
+          continue;
         case 2:
+          if (tag !== 18) {
+            break;
+          }
+
           message.password = reader.string();
-          break;
+          continue;
         case 3:
+          if (tag !== 26) {
+            break;
+          }
+
           const entry3 = AccountEmail_VarsEntry.decode(reader, reader.uint32());
           if (entry3.value !== undefined) {
             message.vars[entry3.key] = entry3.value;
           }
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
 
   fromJSON(object: any): AccountEmail {
     return {
-      email: isSet(object.email) ? String(object.email) : "",
-      password: isSet(object.password) ? String(object.password) : "",
+      email: isSet(object.email) ? globalThis.String(object.email) : "",
+      password: isSet(object.password) ? globalThis.String(object.password) : "",
       vars: isObject(object.vars)
         ? Object.entries(object.vars).reduce<{ [key: string]: string }>((acc, [key, value]) => {
           acc[key] = String(value);
@@ -3033,28 +3198,34 @@ export const AccountEmail = {
 
   toJSON(message: AccountEmail): unknown {
     const obj: any = {};
-    message.email !== undefined && (obj.email = message.email);
-    message.password !== undefined && (obj.password = message.password);
-    obj.vars = {};
+    if (message.email !== "") {
+      obj.email = message.email;
+    }
+    if (message.password !== "") {
+      obj.password = message.password;
+    }
     if (message.vars) {
-      Object.entries(message.vars).forEach(([k, v]) => {
-        obj.vars[k] = v;
-      });
+      const entries = Object.entries(message.vars);
+      if (entries.length > 0) {
+        obj.vars = {};
+        entries.forEach(([k, v]) => {
+          obj.vars[k] = v;
+        });
+      }
     }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<AccountEmail>, I>>(base?: I): AccountEmail {
-    return AccountEmail.fromPartial(base ?? {});
+    return AccountEmail.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<AccountEmail>, I>>(object: I): AccountEmail {
     const message = createBaseAccountEmail();
     message.email = object.email ?? "";
     message.password = object.password ?? "";
     message.vars = Object.entries(object.vars ?? {}).reduce<{ [key: string]: string }>((acc, [key, value]) => {
       if (value !== undefined) {
-        acc[key] = String(value);
+        acc[key] = globalThis.String(value);
       }
       return acc;
     }, {});
@@ -3078,41 +3249,56 @@ export const AccountEmail_VarsEntry = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): AccountEmail_VarsEntry {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseAccountEmail_VarsEntry();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag !== 10) {
+            break;
+          }
+
           message.key = reader.string();
-          break;
+          continue;
         case 2:
+          if (tag !== 18) {
+            break;
+          }
+
           message.value = reader.string();
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
 
   fromJSON(object: any): AccountEmail_VarsEntry {
-    return { key: isSet(object.key) ? String(object.key) : "", value: isSet(object.value) ? String(object.value) : "" };
+    return {
+      key: isSet(object.key) ? globalThis.String(object.key) : "",
+      value: isSet(object.value) ? globalThis.String(object.value) : "",
+    };
   },
 
   toJSON(message: AccountEmail_VarsEntry): unknown {
     const obj: any = {};
-    message.key !== undefined && (obj.key = message.key);
-    message.value !== undefined && (obj.value = message.value);
+    if (message.key !== "") {
+      obj.key = message.key;
+    }
+    if (message.value !== "") {
+      obj.value = message.value;
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<AccountEmail_VarsEntry>, I>>(base?: I): AccountEmail_VarsEntry {
-    return AccountEmail_VarsEntry.fromPartial(base ?? {});
+    return AccountEmail_VarsEntry.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<AccountEmail_VarsEntry>, I>>(object: I): AccountEmail_VarsEntry {
     const message = createBaseAccountEmail_VarsEntry();
     message.key = object.key ?? "";
@@ -3137,32 +3323,41 @@ export const AccountFacebook = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): AccountFacebook {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseAccountFacebook();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag !== 10) {
+            break;
+          }
+
           message.token = reader.string();
-          break;
+          continue;
         case 2:
+          if (tag !== 18) {
+            break;
+          }
+
           const entry2 = AccountFacebook_VarsEntry.decode(reader, reader.uint32());
           if (entry2.value !== undefined) {
             message.vars[entry2.key] = entry2.value;
           }
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
 
   fromJSON(object: any): AccountFacebook {
     return {
-      token: isSet(object.token) ? String(object.token) : "",
+      token: isSet(object.token) ? globalThis.String(object.token) : "",
       vars: isObject(object.vars)
         ? Object.entries(object.vars).reduce<{ [key: string]: string }>((acc, [key, value]) => {
           acc[key] = String(value);
@@ -3174,26 +3369,30 @@ export const AccountFacebook = {
 
   toJSON(message: AccountFacebook): unknown {
     const obj: any = {};
-    message.token !== undefined && (obj.token = message.token);
-    obj.vars = {};
+    if (message.token !== "") {
+      obj.token = message.token;
+    }
     if (message.vars) {
-      Object.entries(message.vars).forEach(([k, v]) => {
-        obj.vars[k] = v;
-      });
+      const entries = Object.entries(message.vars);
+      if (entries.length > 0) {
+        obj.vars = {};
+        entries.forEach(([k, v]) => {
+          obj.vars[k] = v;
+        });
+      }
     }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<AccountFacebook>, I>>(base?: I): AccountFacebook {
-    return AccountFacebook.fromPartial(base ?? {});
+    return AccountFacebook.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<AccountFacebook>, I>>(object: I): AccountFacebook {
     const message = createBaseAccountFacebook();
     message.token = object.token ?? "";
     message.vars = Object.entries(object.vars ?? {}).reduce<{ [key: string]: string }>((acc, [key, value]) => {
       if (value !== undefined) {
-        acc[key] = String(value);
+        acc[key] = globalThis.String(value);
       }
       return acc;
     }, {});
@@ -3217,41 +3416,56 @@ export const AccountFacebook_VarsEntry = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): AccountFacebook_VarsEntry {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseAccountFacebook_VarsEntry();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag !== 10) {
+            break;
+          }
+
           message.key = reader.string();
-          break;
+          continue;
         case 2:
+          if (tag !== 18) {
+            break;
+          }
+
           message.value = reader.string();
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
 
   fromJSON(object: any): AccountFacebook_VarsEntry {
-    return { key: isSet(object.key) ? String(object.key) : "", value: isSet(object.value) ? String(object.value) : "" };
+    return {
+      key: isSet(object.key) ? globalThis.String(object.key) : "",
+      value: isSet(object.value) ? globalThis.String(object.value) : "",
+    };
   },
 
   toJSON(message: AccountFacebook_VarsEntry): unknown {
     const obj: any = {};
-    message.key !== undefined && (obj.key = message.key);
-    message.value !== undefined && (obj.value = message.value);
+    if (message.key !== "") {
+      obj.key = message.key;
+    }
+    if (message.value !== "") {
+      obj.value = message.value;
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<AccountFacebook_VarsEntry>, I>>(base?: I): AccountFacebook_VarsEntry {
-    return AccountFacebook_VarsEntry.fromPartial(base ?? {});
+    return AccountFacebook_VarsEntry.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<AccountFacebook_VarsEntry>, I>>(object: I): AccountFacebook_VarsEntry {
     const message = createBaseAccountFacebook_VarsEntry();
     message.key = object.key ?? "";
@@ -3276,32 +3490,41 @@ export const AccountFacebookInstantGame = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): AccountFacebookInstantGame {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseAccountFacebookInstantGame();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag !== 10) {
+            break;
+          }
+
           message.signed_player_info = reader.string();
-          break;
+          continue;
         case 2:
+          if (tag !== 18) {
+            break;
+          }
+
           const entry2 = AccountFacebookInstantGame_VarsEntry.decode(reader, reader.uint32());
           if (entry2.value !== undefined) {
             message.vars[entry2.key] = entry2.value;
           }
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
 
   fromJSON(object: any): AccountFacebookInstantGame {
     return {
-      signed_player_info: isSet(object.signed_player_info) ? String(object.signed_player_info) : "",
+      signed_player_info: isSet(object.signed_player_info) ? globalThis.String(object.signed_player_info) : "",
       vars: isObject(object.vars)
         ? Object.entries(object.vars).reduce<{ [key: string]: string }>((acc, [key, value]) => {
           acc[key] = String(value);
@@ -3313,26 +3536,30 @@ export const AccountFacebookInstantGame = {
 
   toJSON(message: AccountFacebookInstantGame): unknown {
     const obj: any = {};
-    message.signed_player_info !== undefined && (obj.signed_player_info = message.signed_player_info);
-    obj.vars = {};
+    if (message.signed_player_info !== "") {
+      obj.signed_player_info = message.signed_player_info;
+    }
     if (message.vars) {
-      Object.entries(message.vars).forEach(([k, v]) => {
-        obj.vars[k] = v;
-      });
+      const entries = Object.entries(message.vars);
+      if (entries.length > 0) {
+        obj.vars = {};
+        entries.forEach(([k, v]) => {
+          obj.vars[k] = v;
+        });
+      }
     }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<AccountFacebookInstantGame>, I>>(base?: I): AccountFacebookInstantGame {
-    return AccountFacebookInstantGame.fromPartial(base ?? {});
+    return AccountFacebookInstantGame.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<AccountFacebookInstantGame>, I>>(object: I): AccountFacebookInstantGame {
     const message = createBaseAccountFacebookInstantGame();
     message.signed_player_info = object.signed_player_info ?? "";
     message.vars = Object.entries(object.vars ?? {}).reduce<{ [key: string]: string }>((acc, [key, value]) => {
       if (value !== undefined) {
-        acc[key] = String(value);
+        acc[key] = globalThis.String(value);
       }
       return acc;
     }, {});
@@ -3356,43 +3583,58 @@ export const AccountFacebookInstantGame_VarsEntry = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): AccountFacebookInstantGame_VarsEntry {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseAccountFacebookInstantGame_VarsEntry();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag !== 10) {
+            break;
+          }
+
           message.key = reader.string();
-          break;
+          continue;
         case 2:
+          if (tag !== 18) {
+            break;
+          }
+
           message.value = reader.string();
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
 
   fromJSON(object: any): AccountFacebookInstantGame_VarsEntry {
-    return { key: isSet(object.key) ? String(object.key) : "", value: isSet(object.value) ? String(object.value) : "" };
+    return {
+      key: isSet(object.key) ? globalThis.String(object.key) : "",
+      value: isSet(object.value) ? globalThis.String(object.value) : "",
+    };
   },
 
   toJSON(message: AccountFacebookInstantGame_VarsEntry): unknown {
     const obj: any = {};
-    message.key !== undefined && (obj.key = message.key);
-    message.value !== undefined && (obj.value = message.value);
+    if (message.key !== "") {
+      obj.key = message.key;
+    }
+    if (message.value !== "") {
+      obj.value = message.value;
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<AccountFacebookInstantGame_VarsEntry>, I>>(
     base?: I,
   ): AccountFacebookInstantGame_VarsEntry {
-    return AccountFacebookInstantGame_VarsEntry.fromPartial(base ?? {});
+    return AccountFacebookInstantGame_VarsEntry.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<AccountFacebookInstantGame_VarsEntry>, I>>(
     object: I,
   ): AccountFacebookInstantGame_VarsEntry {
@@ -3434,52 +3676,81 @@ export const AccountGameCenter = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): AccountGameCenter {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseAccountGameCenter();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag !== 10) {
+            break;
+          }
+
           message.player_id = reader.string();
-          break;
+          continue;
         case 2:
+          if (tag !== 18) {
+            break;
+          }
+
           message.bundle_id = reader.string();
-          break;
+          continue;
         case 3:
+          if (tag !== 24) {
+            break;
+          }
+
           message.timestamp_seconds = longToNumber(reader.int64() as Long);
-          break;
+          continue;
         case 4:
+          if (tag !== 34) {
+            break;
+          }
+
           message.salt = reader.string();
-          break;
+          continue;
         case 5:
+          if (tag !== 42) {
+            break;
+          }
+
           message.signature = reader.string();
-          break;
+          continue;
         case 6:
+          if (tag !== 50) {
+            break;
+          }
+
           message.public_key_url = reader.string();
-          break;
+          continue;
         case 7:
+          if (tag !== 58) {
+            break;
+          }
+
           const entry7 = AccountGameCenter_VarsEntry.decode(reader, reader.uint32());
           if (entry7.value !== undefined) {
             message.vars[entry7.key] = entry7.value;
           }
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
 
   fromJSON(object: any): AccountGameCenter {
     return {
-      player_id: isSet(object.player_id) ? String(object.player_id) : "",
-      bundle_id: isSet(object.bundle_id) ? String(object.bundle_id) : "",
-      timestamp_seconds: isSet(object.timestamp_seconds) ? Number(object.timestamp_seconds) : 0,
-      salt: isSet(object.salt) ? String(object.salt) : "",
-      signature: isSet(object.signature) ? String(object.signature) : "",
-      public_key_url: isSet(object.public_key_url) ? String(object.public_key_url) : "",
+      player_id: isSet(object.player_id) ? globalThis.String(object.player_id) : "",
+      bundle_id: isSet(object.bundle_id) ? globalThis.String(object.bundle_id) : "",
+      timestamp_seconds: isSet(object.timestamp_seconds) ? globalThis.Number(object.timestamp_seconds) : 0,
+      salt: isSet(object.salt) ? globalThis.String(object.salt) : "",
+      signature: isSet(object.signature) ? globalThis.String(object.signature) : "",
+      public_key_url: isSet(object.public_key_url) ? globalThis.String(object.public_key_url) : "",
       vars: isObject(object.vars)
         ? Object.entries(object.vars).reduce<{ [key: string]: string }>((acc, [key, value]) => {
           acc[key] = String(value);
@@ -3491,25 +3762,39 @@ export const AccountGameCenter = {
 
   toJSON(message: AccountGameCenter): unknown {
     const obj: any = {};
-    message.player_id !== undefined && (obj.player_id = message.player_id);
-    message.bundle_id !== undefined && (obj.bundle_id = message.bundle_id);
-    message.timestamp_seconds !== undefined && (obj.timestamp_seconds = Math.round(message.timestamp_seconds));
-    message.salt !== undefined && (obj.salt = message.salt);
-    message.signature !== undefined && (obj.signature = message.signature);
-    message.public_key_url !== undefined && (obj.public_key_url = message.public_key_url);
-    obj.vars = {};
+    if (message.player_id !== "") {
+      obj.player_id = message.player_id;
+    }
+    if (message.bundle_id !== "") {
+      obj.bundle_id = message.bundle_id;
+    }
+    if (message.timestamp_seconds !== 0) {
+      obj.timestamp_seconds = Math.round(message.timestamp_seconds);
+    }
+    if (message.salt !== "") {
+      obj.salt = message.salt;
+    }
+    if (message.signature !== "") {
+      obj.signature = message.signature;
+    }
+    if (message.public_key_url !== "") {
+      obj.public_key_url = message.public_key_url;
+    }
     if (message.vars) {
-      Object.entries(message.vars).forEach(([k, v]) => {
-        obj.vars[k] = v;
-      });
+      const entries = Object.entries(message.vars);
+      if (entries.length > 0) {
+        obj.vars = {};
+        entries.forEach(([k, v]) => {
+          obj.vars[k] = v;
+        });
+      }
     }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<AccountGameCenter>, I>>(base?: I): AccountGameCenter {
-    return AccountGameCenter.fromPartial(base ?? {});
+    return AccountGameCenter.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<AccountGameCenter>, I>>(object: I): AccountGameCenter {
     const message = createBaseAccountGameCenter();
     message.player_id = object.player_id ?? "";
@@ -3520,7 +3805,7 @@ export const AccountGameCenter = {
     message.public_key_url = object.public_key_url ?? "";
     message.vars = Object.entries(object.vars ?? {}).reduce<{ [key: string]: string }>((acc, [key, value]) => {
       if (value !== undefined) {
-        acc[key] = String(value);
+        acc[key] = globalThis.String(value);
       }
       return acc;
     }, {});
@@ -3544,41 +3829,56 @@ export const AccountGameCenter_VarsEntry = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): AccountGameCenter_VarsEntry {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseAccountGameCenter_VarsEntry();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag !== 10) {
+            break;
+          }
+
           message.key = reader.string();
-          break;
+          continue;
         case 2:
+          if (tag !== 18) {
+            break;
+          }
+
           message.value = reader.string();
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
 
   fromJSON(object: any): AccountGameCenter_VarsEntry {
-    return { key: isSet(object.key) ? String(object.key) : "", value: isSet(object.value) ? String(object.value) : "" };
+    return {
+      key: isSet(object.key) ? globalThis.String(object.key) : "",
+      value: isSet(object.value) ? globalThis.String(object.value) : "",
+    };
   },
 
   toJSON(message: AccountGameCenter_VarsEntry): unknown {
     const obj: any = {};
-    message.key !== undefined && (obj.key = message.key);
-    message.value !== undefined && (obj.value = message.value);
+    if (message.key !== "") {
+      obj.key = message.key;
+    }
+    if (message.value !== "") {
+      obj.value = message.value;
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<AccountGameCenter_VarsEntry>, I>>(base?: I): AccountGameCenter_VarsEntry {
-    return AccountGameCenter_VarsEntry.fromPartial(base ?? {});
+    return AccountGameCenter_VarsEntry.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<AccountGameCenter_VarsEntry>, I>>(object: I): AccountGameCenter_VarsEntry {
     const message = createBaseAccountGameCenter_VarsEntry();
     message.key = object.key ?? "";
@@ -3603,32 +3903,41 @@ export const AccountGoogle = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): AccountGoogle {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseAccountGoogle();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag !== 10) {
+            break;
+          }
+
           message.token = reader.string();
-          break;
+          continue;
         case 2:
+          if (tag !== 18) {
+            break;
+          }
+
           const entry2 = AccountGoogle_VarsEntry.decode(reader, reader.uint32());
           if (entry2.value !== undefined) {
             message.vars[entry2.key] = entry2.value;
           }
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
 
   fromJSON(object: any): AccountGoogle {
     return {
-      token: isSet(object.token) ? String(object.token) : "",
+      token: isSet(object.token) ? globalThis.String(object.token) : "",
       vars: isObject(object.vars)
         ? Object.entries(object.vars).reduce<{ [key: string]: string }>((acc, [key, value]) => {
           acc[key] = String(value);
@@ -3640,26 +3949,30 @@ export const AccountGoogle = {
 
   toJSON(message: AccountGoogle): unknown {
     const obj: any = {};
-    message.token !== undefined && (obj.token = message.token);
-    obj.vars = {};
+    if (message.token !== "") {
+      obj.token = message.token;
+    }
     if (message.vars) {
-      Object.entries(message.vars).forEach(([k, v]) => {
-        obj.vars[k] = v;
-      });
+      const entries = Object.entries(message.vars);
+      if (entries.length > 0) {
+        obj.vars = {};
+        entries.forEach(([k, v]) => {
+          obj.vars[k] = v;
+        });
+      }
     }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<AccountGoogle>, I>>(base?: I): AccountGoogle {
-    return AccountGoogle.fromPartial(base ?? {});
+    return AccountGoogle.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<AccountGoogle>, I>>(object: I): AccountGoogle {
     const message = createBaseAccountGoogle();
     message.token = object.token ?? "";
     message.vars = Object.entries(object.vars ?? {}).reduce<{ [key: string]: string }>((acc, [key, value]) => {
       if (value !== undefined) {
-        acc[key] = String(value);
+        acc[key] = globalThis.String(value);
       }
       return acc;
     }, {});
@@ -3683,41 +3996,56 @@ export const AccountGoogle_VarsEntry = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): AccountGoogle_VarsEntry {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseAccountGoogle_VarsEntry();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag !== 10) {
+            break;
+          }
+
           message.key = reader.string();
-          break;
+          continue;
         case 2:
+          if (tag !== 18) {
+            break;
+          }
+
           message.value = reader.string();
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
 
   fromJSON(object: any): AccountGoogle_VarsEntry {
-    return { key: isSet(object.key) ? String(object.key) : "", value: isSet(object.value) ? String(object.value) : "" };
+    return {
+      key: isSet(object.key) ? globalThis.String(object.key) : "",
+      value: isSet(object.value) ? globalThis.String(object.value) : "",
+    };
   },
 
   toJSON(message: AccountGoogle_VarsEntry): unknown {
     const obj: any = {};
-    message.key !== undefined && (obj.key = message.key);
-    message.value !== undefined && (obj.value = message.value);
+    if (message.key !== "") {
+      obj.key = message.key;
+    }
+    if (message.value !== "") {
+      obj.value = message.value;
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<AccountGoogle_VarsEntry>, I>>(base?: I): AccountGoogle_VarsEntry {
-    return AccountGoogle_VarsEntry.fromPartial(base ?? {});
+    return AccountGoogle_VarsEntry.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<AccountGoogle_VarsEntry>, I>>(object: I): AccountGoogle_VarsEntry {
     const message = createBaseAccountGoogle_VarsEntry();
     message.key = object.key ?? "";
@@ -3742,32 +4070,41 @@ export const AccountSteam = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): AccountSteam {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseAccountSteam();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag !== 10) {
+            break;
+          }
+
           message.token = reader.string();
-          break;
+          continue;
         case 2:
+          if (tag !== 18) {
+            break;
+          }
+
           const entry2 = AccountSteam_VarsEntry.decode(reader, reader.uint32());
           if (entry2.value !== undefined) {
             message.vars[entry2.key] = entry2.value;
           }
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
 
   fromJSON(object: any): AccountSteam {
     return {
-      token: isSet(object.token) ? String(object.token) : "",
+      token: isSet(object.token) ? globalThis.String(object.token) : "",
       vars: isObject(object.vars)
         ? Object.entries(object.vars).reduce<{ [key: string]: string }>((acc, [key, value]) => {
           acc[key] = String(value);
@@ -3779,26 +4116,30 @@ export const AccountSteam = {
 
   toJSON(message: AccountSteam): unknown {
     const obj: any = {};
-    message.token !== undefined && (obj.token = message.token);
-    obj.vars = {};
+    if (message.token !== "") {
+      obj.token = message.token;
+    }
     if (message.vars) {
-      Object.entries(message.vars).forEach(([k, v]) => {
-        obj.vars[k] = v;
-      });
+      const entries = Object.entries(message.vars);
+      if (entries.length > 0) {
+        obj.vars = {};
+        entries.forEach(([k, v]) => {
+          obj.vars[k] = v;
+        });
+      }
     }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<AccountSteam>, I>>(base?: I): AccountSteam {
-    return AccountSteam.fromPartial(base ?? {});
+    return AccountSteam.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<AccountSteam>, I>>(object: I): AccountSteam {
     const message = createBaseAccountSteam();
     message.token = object.token ?? "";
     message.vars = Object.entries(object.vars ?? {}).reduce<{ [key: string]: string }>((acc, [key, value]) => {
       if (value !== undefined) {
-        acc[key] = String(value);
+        acc[key] = globalThis.String(value);
       }
       return acc;
     }, {});
@@ -3822,41 +4163,56 @@ export const AccountSteam_VarsEntry = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): AccountSteam_VarsEntry {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseAccountSteam_VarsEntry();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag !== 10) {
+            break;
+          }
+
           message.key = reader.string();
-          break;
+          continue;
         case 2:
+          if (tag !== 18) {
+            break;
+          }
+
           message.value = reader.string();
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
 
   fromJSON(object: any): AccountSteam_VarsEntry {
-    return { key: isSet(object.key) ? String(object.key) : "", value: isSet(object.value) ? String(object.value) : "" };
+    return {
+      key: isSet(object.key) ? globalThis.String(object.key) : "",
+      value: isSet(object.value) ? globalThis.String(object.value) : "",
+    };
   },
 
   toJSON(message: AccountSteam_VarsEntry): unknown {
     const obj: any = {};
-    message.key !== undefined && (obj.key = message.key);
-    message.value !== undefined && (obj.value = message.value);
+    if (message.key !== "") {
+      obj.key = message.key;
+    }
+    if (message.value !== "") {
+      obj.value = message.value;
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<AccountSteam_VarsEntry>, I>>(base?: I): AccountSteam_VarsEntry {
-    return AccountSteam_VarsEntry.fromPartial(base ?? {});
+    return AccountSteam_VarsEntry.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<AccountSteam_VarsEntry>, I>>(object: I): AccountSteam_VarsEntry {
     const message = createBaseAccountSteam_VarsEntry();
     message.key = object.key ?? "";
@@ -3881,52 +4237,58 @@ export const AddFriendsRequest = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): AddFriendsRequest {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseAddFriendsRequest();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag !== 10) {
+            break;
+          }
+
           message.ids.push(reader.string());
-          break;
+          continue;
         case 2:
+          if (tag !== 18) {
+            break;
+          }
+
           message.usernames.push(reader.string());
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
 
   fromJSON(object: any): AddFriendsRequest {
     return {
-      ids: Array.isArray(object?.ids) ? object.ids.map((e: any) => String(e)) : [],
-      usernames: Array.isArray(object?.usernames) ? object.usernames.map((e: any) => String(e)) : [],
+      ids: globalThis.Array.isArray(object?.ids) ? object.ids.map((e: any) => globalThis.String(e)) : [],
+      usernames: globalThis.Array.isArray(object?.usernames)
+        ? object.usernames.map((e: any) => globalThis.String(e))
+        : [],
     };
   },
 
   toJSON(message: AddFriendsRequest): unknown {
     const obj: any = {};
-    if (message.ids) {
-      obj.ids = message.ids.map((e) => e);
-    } else {
-      obj.ids = [];
+    if (message.ids?.length) {
+      obj.ids = message.ids;
     }
-    if (message.usernames) {
-      obj.usernames = message.usernames.map((e) => e);
-    } else {
-      obj.usernames = [];
+    if (message.usernames?.length) {
+      obj.usernames = message.usernames;
     }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<AddFriendsRequest>, I>>(base?: I): AddFriendsRequest {
-    return AddFriendsRequest.fromPartial(base ?? {});
+    return AddFriendsRequest.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<AddFriendsRequest>, I>>(object: I): AddFriendsRequest {
     const message = createBaseAddFriendsRequest();
     message.ids = object.ids?.map((e) => e) || [];
@@ -3951,48 +4313,56 @@ export const AddGroupUsersRequest = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): AddGroupUsersRequest {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseAddGroupUsersRequest();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag !== 10) {
+            break;
+          }
+
           message.group_id = reader.string();
-          break;
+          continue;
         case 2:
+          if (tag !== 18) {
+            break;
+          }
+
           message.user_ids.push(reader.string());
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
 
   fromJSON(object: any): AddGroupUsersRequest {
     return {
-      group_id: isSet(object.group_id) ? String(object.group_id) : "",
-      user_ids: Array.isArray(object?.user_ids) ? object.user_ids.map((e: any) => String(e)) : [],
+      group_id: isSet(object.group_id) ? globalThis.String(object.group_id) : "",
+      user_ids: globalThis.Array.isArray(object?.user_ids) ? object.user_ids.map((e: any) => globalThis.String(e)) : [],
     };
   },
 
   toJSON(message: AddGroupUsersRequest): unknown {
     const obj: any = {};
-    message.group_id !== undefined && (obj.group_id = message.group_id);
-    if (message.user_ids) {
-      obj.user_ids = message.user_ids.map((e) => e);
-    } else {
-      obj.user_ids = [];
+    if (message.group_id !== "") {
+      obj.group_id = message.group_id;
+    }
+    if (message.user_ids?.length) {
+      obj.user_ids = message.user_ids;
     }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<AddGroupUsersRequest>, I>>(base?: I): AddGroupUsersRequest {
-    return AddGroupUsersRequest.fromPartial(base ?? {});
+    return AddGroupUsersRequest.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<AddGroupUsersRequest>, I>>(object: I): AddGroupUsersRequest {
     const message = createBaseAddGroupUsersRequest();
     message.group_id = object.group_id ?? "";
@@ -4017,32 +4387,41 @@ export const SessionRefreshRequest = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): SessionRefreshRequest {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseSessionRefreshRequest();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag !== 10) {
+            break;
+          }
+
           message.token = reader.string();
-          break;
+          continue;
         case 2:
+          if (tag !== 18) {
+            break;
+          }
+
           const entry2 = SessionRefreshRequest_VarsEntry.decode(reader, reader.uint32());
           if (entry2.value !== undefined) {
             message.vars[entry2.key] = entry2.value;
           }
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
 
   fromJSON(object: any): SessionRefreshRequest {
     return {
-      token: isSet(object.token) ? String(object.token) : "",
+      token: isSet(object.token) ? globalThis.String(object.token) : "",
       vars: isObject(object.vars)
         ? Object.entries(object.vars).reduce<{ [key: string]: string }>((acc, [key, value]) => {
           acc[key] = String(value);
@@ -4054,26 +4433,30 @@ export const SessionRefreshRequest = {
 
   toJSON(message: SessionRefreshRequest): unknown {
     const obj: any = {};
-    message.token !== undefined && (obj.token = message.token);
-    obj.vars = {};
+    if (message.token !== "") {
+      obj.token = message.token;
+    }
     if (message.vars) {
-      Object.entries(message.vars).forEach(([k, v]) => {
-        obj.vars[k] = v;
-      });
+      const entries = Object.entries(message.vars);
+      if (entries.length > 0) {
+        obj.vars = {};
+        entries.forEach(([k, v]) => {
+          obj.vars[k] = v;
+        });
+      }
     }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<SessionRefreshRequest>, I>>(base?: I): SessionRefreshRequest {
-    return SessionRefreshRequest.fromPartial(base ?? {});
+    return SessionRefreshRequest.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<SessionRefreshRequest>, I>>(object: I): SessionRefreshRequest {
     const message = createBaseSessionRefreshRequest();
     message.token = object.token ?? "";
     message.vars = Object.entries(object.vars ?? {}).reduce<{ [key: string]: string }>((acc, [key, value]) => {
       if (value !== undefined) {
-        acc[key] = String(value);
+        acc[key] = globalThis.String(value);
       }
       return acc;
     }, {});
@@ -4097,41 +4480,56 @@ export const SessionRefreshRequest_VarsEntry = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): SessionRefreshRequest_VarsEntry {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseSessionRefreshRequest_VarsEntry();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag !== 10) {
+            break;
+          }
+
           message.key = reader.string();
-          break;
+          continue;
         case 2:
+          if (tag !== 18) {
+            break;
+          }
+
           message.value = reader.string();
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
 
   fromJSON(object: any): SessionRefreshRequest_VarsEntry {
-    return { key: isSet(object.key) ? String(object.key) : "", value: isSet(object.value) ? String(object.value) : "" };
+    return {
+      key: isSet(object.key) ? globalThis.String(object.key) : "",
+      value: isSet(object.value) ? globalThis.String(object.value) : "",
+    };
   },
 
   toJSON(message: SessionRefreshRequest_VarsEntry): unknown {
     const obj: any = {};
-    message.key !== undefined && (obj.key = message.key);
-    message.value !== undefined && (obj.value = message.value);
+    if (message.key !== "") {
+      obj.key = message.key;
+    }
+    if (message.value !== "") {
+      obj.value = message.value;
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<SessionRefreshRequest_VarsEntry>, I>>(base?: I): SessionRefreshRequest_VarsEntry {
-    return SessionRefreshRequest_VarsEntry.fromPartial(base ?? {});
+    return SessionRefreshRequest_VarsEntry.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<SessionRefreshRequest_VarsEntry>, I>>(
     object: I,
   ): SessionRefreshRequest_VarsEntry {
@@ -4158,44 +4556,56 @@ export const SessionLogoutRequest = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): SessionLogoutRequest {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseSessionLogoutRequest();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag !== 10) {
+            break;
+          }
+
           message.token = reader.string();
-          break;
+          continue;
         case 2:
+          if (tag !== 18) {
+            break;
+          }
+
           message.refresh_token = reader.string();
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
 
   fromJSON(object: any): SessionLogoutRequest {
     return {
-      token: isSet(object.token) ? String(object.token) : "",
-      refresh_token: isSet(object.refresh_token) ? String(object.refresh_token) : "",
+      token: isSet(object.token) ? globalThis.String(object.token) : "",
+      refresh_token: isSet(object.refresh_token) ? globalThis.String(object.refresh_token) : "",
     };
   },
 
   toJSON(message: SessionLogoutRequest): unknown {
     const obj: any = {};
-    message.token !== undefined && (obj.token = message.token);
-    message.refresh_token !== undefined && (obj.refresh_token = message.refresh_token);
+    if (message.token !== "") {
+      obj.token = message.token;
+    }
+    if (message.refresh_token !== "") {
+      obj.refresh_token = message.refresh_token;
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<SessionLogoutRequest>, I>>(base?: I): SessionLogoutRequest {
-    return SessionLogoutRequest.fromPartial(base ?? {});
+    return SessionLogoutRequest.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<SessionLogoutRequest>, I>>(object: I): SessionLogoutRequest {
     const message = createBaseSessionLogoutRequest();
     message.token = object.token ?? "";
@@ -4223,25 +4633,38 @@ export const AuthenticateAppleRequest = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): AuthenticateAppleRequest {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseAuthenticateAppleRequest();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag !== 10) {
+            break;
+          }
+
           message.account = AccountApple.decode(reader, reader.uint32());
-          break;
+          continue;
         case 2:
+          if (tag !== 18) {
+            break;
+          }
+
           message.create = BoolValue.decode(reader, reader.uint32()).value;
-          break;
+          continue;
         case 3:
+          if (tag !== 26) {
+            break;
+          }
+
           message.username = reader.string();
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
@@ -4250,22 +4673,27 @@ export const AuthenticateAppleRequest = {
     return {
       account: isSet(object.account) ? AccountApple.fromJSON(object.account) : undefined,
       create: isSet(object.create) ? Boolean(object.create) : undefined,
-      username: isSet(object.username) ? String(object.username) : "",
+      username: isSet(object.username) ? globalThis.String(object.username) : "",
     };
   },
 
   toJSON(message: AuthenticateAppleRequest): unknown {
     const obj: any = {};
-    message.account !== undefined && (obj.account = message.account ? AccountApple.toJSON(message.account) : undefined);
-    message.create !== undefined && (obj.create = message.create);
-    message.username !== undefined && (obj.username = message.username);
+    if (message.account !== undefined) {
+      obj.account = AccountApple.toJSON(message.account);
+    }
+    if (message.create !== undefined) {
+      obj.create = message.create;
+    }
+    if (message.username !== "") {
+      obj.username = message.username;
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<AuthenticateAppleRequest>, I>>(base?: I): AuthenticateAppleRequest {
-    return AuthenticateAppleRequest.fromPartial(base ?? {});
+    return AuthenticateAppleRequest.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<AuthenticateAppleRequest>, I>>(object: I): AuthenticateAppleRequest {
     const message = createBaseAuthenticateAppleRequest();
     message.account = (object.account !== undefined && object.account !== null)
@@ -4296,25 +4724,38 @@ export const AuthenticateCustomRequest = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): AuthenticateCustomRequest {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseAuthenticateCustomRequest();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag !== 10) {
+            break;
+          }
+
           message.account = AccountCustom.decode(reader, reader.uint32());
-          break;
+          continue;
         case 2:
+          if (tag !== 18) {
+            break;
+          }
+
           message.create = BoolValue.decode(reader, reader.uint32()).value;
-          break;
+          continue;
         case 3:
+          if (tag !== 26) {
+            break;
+          }
+
           message.username = reader.string();
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
@@ -4323,23 +4764,27 @@ export const AuthenticateCustomRequest = {
     return {
       account: isSet(object.account) ? AccountCustom.fromJSON(object.account) : undefined,
       create: isSet(object.create) ? Boolean(object.create) : undefined,
-      username: isSet(object.username) ? String(object.username) : "",
+      username: isSet(object.username) ? globalThis.String(object.username) : "",
     };
   },
 
   toJSON(message: AuthenticateCustomRequest): unknown {
     const obj: any = {};
-    message.account !== undefined &&
-      (obj.account = message.account ? AccountCustom.toJSON(message.account) : undefined);
-    message.create !== undefined && (obj.create = message.create);
-    message.username !== undefined && (obj.username = message.username);
+    if (message.account !== undefined) {
+      obj.account = AccountCustom.toJSON(message.account);
+    }
+    if (message.create !== undefined) {
+      obj.create = message.create;
+    }
+    if (message.username !== "") {
+      obj.username = message.username;
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<AuthenticateCustomRequest>, I>>(base?: I): AuthenticateCustomRequest {
-    return AuthenticateCustomRequest.fromPartial(base ?? {});
+    return AuthenticateCustomRequest.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<AuthenticateCustomRequest>, I>>(object: I): AuthenticateCustomRequest {
     const message = createBaseAuthenticateCustomRequest();
     message.account = (object.account !== undefined && object.account !== null)
@@ -4370,25 +4815,38 @@ export const AuthenticateDeviceRequest = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): AuthenticateDeviceRequest {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseAuthenticateDeviceRequest();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag !== 10) {
+            break;
+          }
+
           message.account = AccountDevice.decode(reader, reader.uint32());
-          break;
+          continue;
         case 2:
+          if (tag !== 18) {
+            break;
+          }
+
           message.create = BoolValue.decode(reader, reader.uint32()).value;
-          break;
+          continue;
         case 3:
+          if (tag !== 26) {
+            break;
+          }
+
           message.username = reader.string();
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
@@ -4397,23 +4855,27 @@ export const AuthenticateDeviceRequest = {
     return {
       account: isSet(object.account) ? AccountDevice.fromJSON(object.account) : undefined,
       create: isSet(object.create) ? Boolean(object.create) : undefined,
-      username: isSet(object.username) ? String(object.username) : "",
+      username: isSet(object.username) ? globalThis.String(object.username) : "",
     };
   },
 
   toJSON(message: AuthenticateDeviceRequest): unknown {
     const obj: any = {};
-    message.account !== undefined &&
-      (obj.account = message.account ? AccountDevice.toJSON(message.account) : undefined);
-    message.create !== undefined && (obj.create = message.create);
-    message.username !== undefined && (obj.username = message.username);
+    if (message.account !== undefined) {
+      obj.account = AccountDevice.toJSON(message.account);
+    }
+    if (message.create !== undefined) {
+      obj.create = message.create;
+    }
+    if (message.username !== "") {
+      obj.username = message.username;
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<AuthenticateDeviceRequest>, I>>(base?: I): AuthenticateDeviceRequest {
-    return AuthenticateDeviceRequest.fromPartial(base ?? {});
+    return AuthenticateDeviceRequest.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<AuthenticateDeviceRequest>, I>>(object: I): AuthenticateDeviceRequest {
     const message = createBaseAuthenticateDeviceRequest();
     message.account = (object.account !== undefined && object.account !== null)
@@ -4444,25 +4906,38 @@ export const AuthenticateEmailRequest = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): AuthenticateEmailRequest {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseAuthenticateEmailRequest();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag !== 10) {
+            break;
+          }
+
           message.account = AccountEmail.decode(reader, reader.uint32());
-          break;
+          continue;
         case 2:
+          if (tag !== 18) {
+            break;
+          }
+
           message.create = BoolValue.decode(reader, reader.uint32()).value;
-          break;
+          continue;
         case 3:
+          if (tag !== 26) {
+            break;
+          }
+
           message.username = reader.string();
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
@@ -4471,22 +4946,27 @@ export const AuthenticateEmailRequest = {
     return {
       account: isSet(object.account) ? AccountEmail.fromJSON(object.account) : undefined,
       create: isSet(object.create) ? Boolean(object.create) : undefined,
-      username: isSet(object.username) ? String(object.username) : "",
+      username: isSet(object.username) ? globalThis.String(object.username) : "",
     };
   },
 
   toJSON(message: AuthenticateEmailRequest): unknown {
     const obj: any = {};
-    message.account !== undefined && (obj.account = message.account ? AccountEmail.toJSON(message.account) : undefined);
-    message.create !== undefined && (obj.create = message.create);
-    message.username !== undefined && (obj.username = message.username);
+    if (message.account !== undefined) {
+      obj.account = AccountEmail.toJSON(message.account);
+    }
+    if (message.create !== undefined) {
+      obj.create = message.create;
+    }
+    if (message.username !== "") {
+      obj.username = message.username;
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<AuthenticateEmailRequest>, I>>(base?: I): AuthenticateEmailRequest {
-    return AuthenticateEmailRequest.fromPartial(base ?? {});
+    return AuthenticateEmailRequest.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<AuthenticateEmailRequest>, I>>(object: I): AuthenticateEmailRequest {
     const message = createBaseAuthenticateEmailRequest();
     message.account = (object.account !== undefined && object.account !== null)
@@ -4520,28 +5000,45 @@ export const AuthenticateFacebookRequest = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): AuthenticateFacebookRequest {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseAuthenticateFacebookRequest();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag !== 10) {
+            break;
+          }
+
           message.account = AccountFacebook.decode(reader, reader.uint32());
-          break;
+          continue;
         case 2:
+          if (tag !== 18) {
+            break;
+          }
+
           message.create = BoolValue.decode(reader, reader.uint32()).value;
-          break;
+          continue;
         case 3:
+          if (tag !== 26) {
+            break;
+          }
+
           message.username = reader.string();
-          break;
+          continue;
         case 4:
+          if (tag !== 34) {
+            break;
+          }
+
           message.sync = BoolValue.decode(reader, reader.uint32()).value;
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
@@ -4550,25 +5047,31 @@ export const AuthenticateFacebookRequest = {
     return {
       account: isSet(object.account) ? AccountFacebook.fromJSON(object.account) : undefined,
       create: isSet(object.create) ? Boolean(object.create) : undefined,
-      username: isSet(object.username) ? String(object.username) : "",
+      username: isSet(object.username) ? globalThis.String(object.username) : "",
       sync: isSet(object.sync) ? Boolean(object.sync) : undefined,
     };
   },
 
   toJSON(message: AuthenticateFacebookRequest): unknown {
     const obj: any = {};
-    message.account !== undefined &&
-      (obj.account = message.account ? AccountFacebook.toJSON(message.account) : undefined);
-    message.create !== undefined && (obj.create = message.create);
-    message.username !== undefined && (obj.username = message.username);
-    message.sync !== undefined && (obj.sync = message.sync);
+    if (message.account !== undefined) {
+      obj.account = AccountFacebook.toJSON(message.account);
+    }
+    if (message.create !== undefined) {
+      obj.create = message.create;
+    }
+    if (message.username !== "") {
+      obj.username = message.username;
+    }
+    if (message.sync !== undefined) {
+      obj.sync = message.sync;
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<AuthenticateFacebookRequest>, I>>(base?: I): AuthenticateFacebookRequest {
-    return AuthenticateFacebookRequest.fromPartial(base ?? {});
+    return AuthenticateFacebookRequest.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<AuthenticateFacebookRequest>, I>>(object: I): AuthenticateFacebookRequest {
     const message = createBaseAuthenticateFacebookRequest();
     message.account = (object.account !== undefined && object.account !== null)
@@ -4600,25 +5103,38 @@ export const AuthenticateFacebookInstantGameRequest = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): AuthenticateFacebookInstantGameRequest {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseAuthenticateFacebookInstantGameRequest();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag !== 10) {
+            break;
+          }
+
           message.account = AccountFacebookInstantGame.decode(reader, reader.uint32());
-          break;
+          continue;
         case 2:
+          if (tag !== 18) {
+            break;
+          }
+
           message.create = BoolValue.decode(reader, reader.uint32()).value;
-          break;
+          continue;
         case 3:
+          if (tag !== 26) {
+            break;
+          }
+
           message.username = reader.string();
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
@@ -4627,25 +5143,29 @@ export const AuthenticateFacebookInstantGameRequest = {
     return {
       account: isSet(object.account) ? AccountFacebookInstantGame.fromJSON(object.account) : undefined,
       create: isSet(object.create) ? Boolean(object.create) : undefined,
-      username: isSet(object.username) ? String(object.username) : "",
+      username: isSet(object.username) ? globalThis.String(object.username) : "",
     };
   },
 
   toJSON(message: AuthenticateFacebookInstantGameRequest): unknown {
     const obj: any = {};
-    message.account !== undefined &&
-      (obj.account = message.account ? AccountFacebookInstantGame.toJSON(message.account) : undefined);
-    message.create !== undefined && (obj.create = message.create);
-    message.username !== undefined && (obj.username = message.username);
+    if (message.account !== undefined) {
+      obj.account = AccountFacebookInstantGame.toJSON(message.account);
+    }
+    if (message.create !== undefined) {
+      obj.create = message.create;
+    }
+    if (message.username !== "") {
+      obj.username = message.username;
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<AuthenticateFacebookInstantGameRequest>, I>>(
     base?: I,
   ): AuthenticateFacebookInstantGameRequest {
-    return AuthenticateFacebookInstantGameRequest.fromPartial(base ?? {});
+    return AuthenticateFacebookInstantGameRequest.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<AuthenticateFacebookInstantGameRequest>, I>>(
     object: I,
   ): AuthenticateFacebookInstantGameRequest {
@@ -4678,25 +5198,38 @@ export const AuthenticateGameCenterRequest = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): AuthenticateGameCenterRequest {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseAuthenticateGameCenterRequest();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag !== 10) {
+            break;
+          }
+
           message.account = AccountGameCenter.decode(reader, reader.uint32());
-          break;
+          continue;
         case 2:
+          if (tag !== 18) {
+            break;
+          }
+
           message.create = BoolValue.decode(reader, reader.uint32()).value;
-          break;
+          continue;
         case 3:
+          if (tag !== 26) {
+            break;
+          }
+
           message.username = reader.string();
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
@@ -4705,23 +5238,27 @@ export const AuthenticateGameCenterRequest = {
     return {
       account: isSet(object.account) ? AccountGameCenter.fromJSON(object.account) : undefined,
       create: isSet(object.create) ? Boolean(object.create) : undefined,
-      username: isSet(object.username) ? String(object.username) : "",
+      username: isSet(object.username) ? globalThis.String(object.username) : "",
     };
   },
 
   toJSON(message: AuthenticateGameCenterRequest): unknown {
     const obj: any = {};
-    message.account !== undefined &&
-      (obj.account = message.account ? AccountGameCenter.toJSON(message.account) : undefined);
-    message.create !== undefined && (obj.create = message.create);
-    message.username !== undefined && (obj.username = message.username);
+    if (message.account !== undefined) {
+      obj.account = AccountGameCenter.toJSON(message.account);
+    }
+    if (message.create !== undefined) {
+      obj.create = message.create;
+    }
+    if (message.username !== "") {
+      obj.username = message.username;
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<AuthenticateGameCenterRequest>, I>>(base?: I): AuthenticateGameCenterRequest {
-    return AuthenticateGameCenterRequest.fromPartial(base ?? {});
+    return AuthenticateGameCenterRequest.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<AuthenticateGameCenterRequest>, I>>(
     object: I,
   ): AuthenticateGameCenterRequest {
@@ -4754,25 +5291,38 @@ export const AuthenticateGoogleRequest = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): AuthenticateGoogleRequest {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseAuthenticateGoogleRequest();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag !== 10) {
+            break;
+          }
+
           message.account = AccountGoogle.decode(reader, reader.uint32());
-          break;
+          continue;
         case 2:
+          if (tag !== 18) {
+            break;
+          }
+
           message.create = BoolValue.decode(reader, reader.uint32()).value;
-          break;
+          continue;
         case 3:
+          if (tag !== 26) {
+            break;
+          }
+
           message.username = reader.string();
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
@@ -4781,23 +5331,27 @@ export const AuthenticateGoogleRequest = {
     return {
       account: isSet(object.account) ? AccountGoogle.fromJSON(object.account) : undefined,
       create: isSet(object.create) ? Boolean(object.create) : undefined,
-      username: isSet(object.username) ? String(object.username) : "",
+      username: isSet(object.username) ? globalThis.String(object.username) : "",
     };
   },
 
   toJSON(message: AuthenticateGoogleRequest): unknown {
     const obj: any = {};
-    message.account !== undefined &&
-      (obj.account = message.account ? AccountGoogle.toJSON(message.account) : undefined);
-    message.create !== undefined && (obj.create = message.create);
-    message.username !== undefined && (obj.username = message.username);
+    if (message.account !== undefined) {
+      obj.account = AccountGoogle.toJSON(message.account);
+    }
+    if (message.create !== undefined) {
+      obj.create = message.create;
+    }
+    if (message.username !== "") {
+      obj.username = message.username;
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<AuthenticateGoogleRequest>, I>>(base?: I): AuthenticateGoogleRequest {
-    return AuthenticateGoogleRequest.fromPartial(base ?? {});
+    return AuthenticateGoogleRequest.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<AuthenticateGoogleRequest>, I>>(object: I): AuthenticateGoogleRequest {
     const message = createBaseAuthenticateGoogleRequest();
     message.account = (object.account !== undefined && object.account !== null)
@@ -4831,28 +5385,45 @@ export const AuthenticateSteamRequest = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): AuthenticateSteamRequest {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseAuthenticateSteamRequest();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag !== 10) {
+            break;
+          }
+
           message.account = AccountSteam.decode(reader, reader.uint32());
-          break;
+          continue;
         case 2:
+          if (tag !== 18) {
+            break;
+          }
+
           message.create = BoolValue.decode(reader, reader.uint32()).value;
-          break;
+          continue;
         case 3:
+          if (tag !== 26) {
+            break;
+          }
+
           message.username = reader.string();
-          break;
+          continue;
         case 4:
+          if (tag !== 34) {
+            break;
+          }
+
           message.sync = BoolValue.decode(reader, reader.uint32()).value;
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
@@ -4861,24 +5432,31 @@ export const AuthenticateSteamRequest = {
     return {
       account: isSet(object.account) ? AccountSteam.fromJSON(object.account) : undefined,
       create: isSet(object.create) ? Boolean(object.create) : undefined,
-      username: isSet(object.username) ? String(object.username) : "",
+      username: isSet(object.username) ? globalThis.String(object.username) : "",
       sync: isSet(object.sync) ? Boolean(object.sync) : undefined,
     };
   },
 
   toJSON(message: AuthenticateSteamRequest): unknown {
     const obj: any = {};
-    message.account !== undefined && (obj.account = message.account ? AccountSteam.toJSON(message.account) : undefined);
-    message.create !== undefined && (obj.create = message.create);
-    message.username !== undefined && (obj.username = message.username);
-    message.sync !== undefined && (obj.sync = message.sync);
+    if (message.account !== undefined) {
+      obj.account = AccountSteam.toJSON(message.account);
+    }
+    if (message.create !== undefined) {
+      obj.create = message.create;
+    }
+    if (message.username !== "") {
+      obj.username = message.username;
+    }
+    if (message.sync !== undefined) {
+      obj.sync = message.sync;
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<AuthenticateSteamRequest>, I>>(base?: I): AuthenticateSteamRequest {
-    return AuthenticateSteamRequest.fromPartial(base ?? {});
+    return AuthenticateSteamRequest.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<AuthenticateSteamRequest>, I>>(object: I): AuthenticateSteamRequest {
     const message = createBaseAuthenticateSteamRequest();
     message.account = (object.account !== undefined && object.account !== null)
@@ -4907,48 +5485,56 @@ export const BanGroupUsersRequest = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): BanGroupUsersRequest {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseBanGroupUsersRequest();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag !== 10) {
+            break;
+          }
+
           message.group_id = reader.string();
-          break;
+          continue;
         case 2:
+          if (tag !== 18) {
+            break;
+          }
+
           message.user_ids.push(reader.string());
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
 
   fromJSON(object: any): BanGroupUsersRequest {
     return {
-      group_id: isSet(object.group_id) ? String(object.group_id) : "",
-      user_ids: Array.isArray(object?.user_ids) ? object.user_ids.map((e: any) => String(e)) : [],
+      group_id: isSet(object.group_id) ? globalThis.String(object.group_id) : "",
+      user_ids: globalThis.Array.isArray(object?.user_ids) ? object.user_ids.map((e: any) => globalThis.String(e)) : [],
     };
   },
 
   toJSON(message: BanGroupUsersRequest): unknown {
     const obj: any = {};
-    message.group_id !== undefined && (obj.group_id = message.group_id);
-    if (message.user_ids) {
-      obj.user_ids = message.user_ids.map((e) => e);
-    } else {
-      obj.user_ids = [];
+    if (message.group_id !== "") {
+      obj.group_id = message.group_id;
+    }
+    if (message.user_ids?.length) {
+      obj.user_ids = message.user_ids;
     }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<BanGroupUsersRequest>, I>>(base?: I): BanGroupUsersRequest {
-    return BanGroupUsersRequest.fromPartial(base ?? {});
+    return BanGroupUsersRequest.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<BanGroupUsersRequest>, I>>(object: I): BanGroupUsersRequest {
     const message = createBaseBanGroupUsersRequest();
     message.group_id = object.group_id ?? "";
@@ -4973,52 +5559,58 @@ export const BlockFriendsRequest = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): BlockFriendsRequest {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseBlockFriendsRequest();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag !== 10) {
+            break;
+          }
+
           message.ids.push(reader.string());
-          break;
+          continue;
         case 2:
+          if (tag !== 18) {
+            break;
+          }
+
           message.usernames.push(reader.string());
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
 
   fromJSON(object: any): BlockFriendsRequest {
     return {
-      ids: Array.isArray(object?.ids) ? object.ids.map((e: any) => String(e)) : [],
-      usernames: Array.isArray(object?.usernames) ? object.usernames.map((e: any) => String(e)) : [],
+      ids: globalThis.Array.isArray(object?.ids) ? object.ids.map((e: any) => globalThis.String(e)) : [],
+      usernames: globalThis.Array.isArray(object?.usernames)
+        ? object.usernames.map((e: any) => globalThis.String(e))
+        : [],
     };
   },
 
   toJSON(message: BlockFriendsRequest): unknown {
     const obj: any = {};
-    if (message.ids) {
-      obj.ids = message.ids.map((e) => e);
-    } else {
-      obj.ids = [];
+    if (message.ids?.length) {
+      obj.ids = message.ids;
     }
-    if (message.usernames) {
-      obj.usernames = message.usernames.map((e) => e);
-    } else {
-      obj.usernames = [];
+    if (message.usernames?.length) {
+      obj.usernames = message.usernames;
     }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<BlockFriendsRequest>, I>>(base?: I): BlockFriendsRequest {
-    return BlockFriendsRequest.fromPartial(base ?? {});
+    return BlockFriendsRequest.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<BlockFriendsRequest>, I>>(object: I): BlockFriendsRequest {
     const message = createBaseBlockFriendsRequest();
     message.ids = object.ids?.map((e) => e) || [];
@@ -5094,104 +5686,188 @@ export const ChannelMessage = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): ChannelMessage {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseChannelMessage();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag !== 10) {
+            break;
+          }
+
           message.clan_id = reader.string();
-          break;
+          continue;
         case 2:
+          if (tag !== 18) {
+            break;
+          }
+
           message.channel_id = reader.string();
-          break;
+          continue;
         case 3:
+          if (tag !== 26) {
+            break;
+          }
+
           message.message_id = reader.string();
-          break;
+          continue;
         case 4:
+          if (tag !== 34) {
+            break;
+          }
+
           message.code = Int32Value.decode(reader, reader.uint32()).value;
-          break;
+          continue;
         case 5:
+          if (tag !== 42) {
+            break;
+          }
+
           message.sender_id = reader.string();
-          break;
+          continue;
         case 6:
+          if (tag !== 50) {
+            break;
+          }
+
           message.username = reader.string();
-          break;
+          continue;
         case 7:
+          if (tag !== 58) {
+            break;
+          }
+
           message.content = reader.string();
-          break;
+          continue;
         case 8:
+          if (tag !== 66) {
+            break;
+          }
+
           message.create_time = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
-          break;
+          continue;
         case 9:
+          if (tag !== 74) {
+            break;
+          }
+
           message.update_time = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
-          break;
+          continue;
         case 10:
+          if (tag !== 82) {
+            break;
+          }
+
           message.persistent = BoolValue.decode(reader, reader.uint32()).value;
-          break;
+          continue;
         case 11:
+          if (tag !== 90) {
+            break;
+          }
+
           message.room_name = reader.string();
-          break;
+          continue;
         case 12:
+          if (tag !== 98) {
+            break;
+          }
+
           message.group_id = reader.string();
-          break;
+          continue;
         case 13:
+          if (tag !== 106) {
+            break;
+          }
+
           message.user_id_one = reader.string();
-          break;
+          continue;
         case 14:
+          if (tag !== 114) {
+            break;
+          }
+
           message.user_id_two = reader.string();
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
 
   fromJSON(object: any): ChannelMessage {
     return {
-      clan_id: isSet(object.clan_id) ? String(object.clan_id) : "",
-      channel_id: isSet(object.channel_id) ? String(object.channel_id) : "",
-      message_id: isSet(object.message_id) ? String(object.message_id) : "",
+      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
+      channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "",
+      message_id: isSet(object.message_id) ? globalThis.String(object.message_id) : "",
       code: isSet(object.code) ? Number(object.code) : undefined,
-      sender_id: isSet(object.sender_id) ? String(object.sender_id) : "",
-      username: isSet(object.username) ? String(object.username) : "",
-      content: isSet(object.content) ? String(object.content) : "",
+      sender_id: isSet(object.sender_id) ? globalThis.String(object.sender_id) : "",
+      username: isSet(object.username) ? globalThis.String(object.username) : "",
+      content: isSet(object.content) ? globalThis.String(object.content) : "",
       create_time: isSet(object.create_time) ? fromJsonTimestamp(object.create_time) : undefined,
       update_time: isSet(object.update_time) ? fromJsonTimestamp(object.update_time) : undefined,
       persistent: isSet(object.persistent) ? Boolean(object.persistent) : undefined,
-      room_name: isSet(object.room_name) ? String(object.room_name) : "",
-      group_id: isSet(object.group_id) ? String(object.group_id) : "",
-      user_id_one: isSet(object.user_id_one) ? String(object.user_id_one) : "",
-      user_id_two: isSet(object.user_id_two) ? String(object.user_id_two) : "",
+      room_name: isSet(object.room_name) ? globalThis.String(object.room_name) : "",
+      group_id: isSet(object.group_id) ? globalThis.String(object.group_id) : "",
+      user_id_one: isSet(object.user_id_one) ? globalThis.String(object.user_id_one) : "",
+      user_id_two: isSet(object.user_id_two) ? globalThis.String(object.user_id_two) : "",
     };
   },
 
   toJSON(message: ChannelMessage): unknown {
     const obj: any = {};
-    message.clan_id !== undefined && (obj.clan_id = message.clan_id);
-    message.channel_id !== undefined && (obj.channel_id = message.channel_id);
-    message.message_id !== undefined && (obj.message_id = message.message_id);
-    message.code !== undefined && (obj.code = message.code);
-    message.sender_id !== undefined && (obj.sender_id = message.sender_id);
-    message.username !== undefined && (obj.username = message.username);
-    message.content !== undefined && (obj.content = message.content);
-    message.create_time !== undefined && (obj.create_time = message.create_time.toISOString());
-    message.update_time !== undefined && (obj.update_time = message.update_time.toISOString());
-    message.persistent !== undefined && (obj.persistent = message.persistent);
-    message.room_name !== undefined && (obj.room_name = message.room_name);
-    message.group_id !== undefined && (obj.group_id = message.group_id);
-    message.user_id_one !== undefined && (obj.user_id_one = message.user_id_one);
-    message.user_id_two !== undefined && (obj.user_id_two = message.user_id_two);
+    if (message.clan_id !== "") {
+      obj.clan_id = message.clan_id;
+    }
+    if (message.channel_id !== "") {
+      obj.channel_id = message.channel_id;
+    }
+    if (message.message_id !== "") {
+      obj.message_id = message.message_id;
+    }
+    if (message.code !== undefined) {
+      obj.code = message.code;
+    }
+    if (message.sender_id !== "") {
+      obj.sender_id = message.sender_id;
+    }
+    if (message.username !== "") {
+      obj.username = message.username;
+    }
+    if (message.content !== "") {
+      obj.content = message.content;
+    }
+    if (message.create_time !== undefined) {
+      obj.create_time = message.create_time.toISOString();
+    }
+    if (message.update_time !== undefined) {
+      obj.update_time = message.update_time.toISOString();
+    }
+    if (message.persistent !== undefined) {
+      obj.persistent = message.persistent;
+    }
+    if (message.room_name !== "") {
+      obj.room_name = message.room_name;
+    }
+    if (message.group_id !== "") {
+      obj.group_id = message.group_id;
+    }
+    if (message.user_id_one !== "") {
+      obj.user_id_one = message.user_id_one;
+    }
+    if (message.user_id_two !== "") {
+      obj.user_id_two = message.user_id_two;
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<ChannelMessage>, I>>(base?: I): ChannelMessage {
-    return ChannelMessage.fromPartial(base ?? {});
+    return ChannelMessage.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<ChannelMessage>, I>>(object: I): ChannelMessage {
     const message = createBaseChannelMessage();
     message.clan_id = object.clan_id ?? "";
@@ -5228,44 +5904,56 @@ export const LastSeenMessageRequest = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): LastSeenMessageRequest {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseLastSeenMessageRequest();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag !== 10) {
+            break;
+          }
+
           message.channel_id = reader.string();
-          break;
+          continue;
         case 2:
+          if (tag !== 18) {
+            break;
+          }
+
           message.message_id = reader.string();
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
 
   fromJSON(object: any): LastSeenMessageRequest {
     return {
-      channel_id: isSet(object.channel_id) ? String(object.channel_id) : "",
-      message_id: isSet(object.message_id) ? String(object.message_id) : "",
+      channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "",
+      message_id: isSet(object.message_id) ? globalThis.String(object.message_id) : "",
     };
   },
 
   toJSON(message: LastSeenMessageRequest): unknown {
     const obj: any = {};
-    message.channel_id !== undefined && (obj.channel_id = message.channel_id);
-    message.message_id !== undefined && (obj.message_id = message.message_id);
+    if (message.channel_id !== "") {
+      obj.channel_id = message.channel_id;
+    }
+    if (message.message_id !== "") {
+      obj.message_id = message.message_id;
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<LastSeenMessageRequest>, I>>(base?: I): LastSeenMessageRequest {
-    return LastSeenMessageRequest.fromPartial(base ?? {});
+    return LastSeenMessageRequest.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<LastSeenMessageRequest>, I>>(object: I): LastSeenMessageRequest {
     const message = createBaseLastSeenMessageRequest();
     message.channel_id = object.channel_id ?? "";
@@ -5299,63 +5987,91 @@ export const ChannelMessageList = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): ChannelMessageList {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseChannelMessageList();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag !== 10) {
+            break;
+          }
+
           message.messages.push(ChannelMessage.decode(reader, reader.uint32()));
-          break;
+          continue;
         case 2:
+          if (tag !== 18) {
+            break;
+          }
+
           message.last_seen_message_id = reader.string();
-          break;
+          continue;
         case 3:
+          if (tag !== 26) {
+            break;
+          }
+
           message.next_cursor = reader.string();
-          break;
+          continue;
         case 4:
+          if (tag !== 34) {
+            break;
+          }
+
           message.prev_cursor = reader.string();
-          break;
+          continue;
         case 5:
+          if (tag !== 42) {
+            break;
+          }
+
           message.cacheable_cursor = reader.string();
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
 
   fromJSON(object: any): ChannelMessageList {
     return {
-      messages: Array.isArray(object?.messages) ? object.messages.map((e: any) => ChannelMessage.fromJSON(e)) : [],
-      last_seen_message_id: isSet(object.last_seen_message_id) ? String(object.last_seen_message_id) : "",
-      next_cursor: isSet(object.next_cursor) ? String(object.next_cursor) : "",
-      prev_cursor: isSet(object.prev_cursor) ? String(object.prev_cursor) : "",
-      cacheable_cursor: isSet(object.cacheable_cursor) ? String(object.cacheable_cursor) : "",
+      messages: globalThis.Array.isArray(object?.messages)
+        ? object.messages.map((e: any) => ChannelMessage.fromJSON(e))
+        : [],
+      last_seen_message_id: isSet(object.last_seen_message_id) ? globalThis.String(object.last_seen_message_id) : "",
+      next_cursor: isSet(object.next_cursor) ? globalThis.String(object.next_cursor) : "",
+      prev_cursor: isSet(object.prev_cursor) ? globalThis.String(object.prev_cursor) : "",
+      cacheable_cursor: isSet(object.cacheable_cursor) ? globalThis.String(object.cacheable_cursor) : "",
     };
   },
 
   toJSON(message: ChannelMessageList): unknown {
     const obj: any = {};
-    if (message.messages) {
-      obj.messages = message.messages.map((e) => e ? ChannelMessage.toJSON(e) : undefined);
-    } else {
-      obj.messages = [];
+    if (message.messages?.length) {
+      obj.messages = message.messages.map((e) => ChannelMessage.toJSON(e));
     }
-    message.last_seen_message_id !== undefined && (obj.last_seen_message_id = message.last_seen_message_id);
-    message.next_cursor !== undefined && (obj.next_cursor = message.next_cursor);
-    message.prev_cursor !== undefined && (obj.prev_cursor = message.prev_cursor);
-    message.cacheable_cursor !== undefined && (obj.cacheable_cursor = message.cacheable_cursor);
+    if (message.last_seen_message_id !== "") {
+      obj.last_seen_message_id = message.last_seen_message_id;
+    }
+    if (message.next_cursor !== "") {
+      obj.next_cursor = message.next_cursor;
+    }
+    if (message.prev_cursor !== "") {
+      obj.prev_cursor = message.prev_cursor;
+    }
+    if (message.cacheable_cursor !== "") {
+      obj.cacheable_cursor = message.cacheable_cursor;
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<ChannelMessageList>, I>>(base?: I): ChannelMessageList {
-    return ChannelMessageList.fromPartial(base ?? {});
+    return ChannelMessageList.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<ChannelMessageList>, I>>(object: I): ChannelMessageList {
     const message = createBaseChannelMessageList();
     message.messages = object.messages?.map((e) => ChannelMessage.fromPartial(e)) || [];
@@ -5395,64 +6111,100 @@ export const CreateGroupRequest = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): CreateGroupRequest {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseCreateGroupRequest();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag !== 10) {
+            break;
+          }
+
           message.name = reader.string();
-          break;
+          continue;
         case 2:
+          if (tag !== 18) {
+            break;
+          }
+
           message.description = reader.string();
-          break;
+          continue;
         case 3:
+          if (tag !== 26) {
+            break;
+          }
+
           message.lang_tag = reader.string();
-          break;
+          continue;
         case 4:
+          if (tag !== 34) {
+            break;
+          }
+
           message.avatar_url = reader.string();
-          break;
+          continue;
         case 5:
+          if (tag !== 40) {
+            break;
+          }
+
           message.open = reader.bool();
-          break;
+          continue;
         case 6:
+          if (tag !== 48) {
+            break;
+          }
+
           message.max_count = reader.int32();
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
 
   fromJSON(object: any): CreateGroupRequest {
     return {
-      name: isSet(object.name) ? String(object.name) : "",
-      description: isSet(object.description) ? String(object.description) : "",
-      lang_tag: isSet(object.lang_tag) ? String(object.lang_tag) : "",
-      avatar_url: isSet(object.avatar_url) ? String(object.avatar_url) : "",
-      open: isSet(object.open) ? Boolean(object.open) : false,
-      max_count: isSet(object.max_count) ? Number(object.max_count) : 0,
+      name: isSet(object.name) ? globalThis.String(object.name) : "",
+      description: isSet(object.description) ? globalThis.String(object.description) : "",
+      lang_tag: isSet(object.lang_tag) ? globalThis.String(object.lang_tag) : "",
+      avatar_url: isSet(object.avatar_url) ? globalThis.String(object.avatar_url) : "",
+      open: isSet(object.open) ? globalThis.Boolean(object.open) : false,
+      max_count: isSet(object.max_count) ? globalThis.Number(object.max_count) : 0,
     };
   },
 
   toJSON(message: CreateGroupRequest): unknown {
     const obj: any = {};
-    message.name !== undefined && (obj.name = message.name);
-    message.description !== undefined && (obj.description = message.description);
-    message.lang_tag !== undefined && (obj.lang_tag = message.lang_tag);
-    message.avatar_url !== undefined && (obj.avatar_url = message.avatar_url);
-    message.open !== undefined && (obj.open = message.open);
-    message.max_count !== undefined && (obj.max_count = Math.round(message.max_count));
+    if (message.name !== "") {
+      obj.name = message.name;
+    }
+    if (message.description !== "") {
+      obj.description = message.description;
+    }
+    if (message.lang_tag !== "") {
+      obj.lang_tag = message.lang_tag;
+    }
+    if (message.avatar_url !== "") {
+      obj.avatar_url = message.avatar_url;
+    }
+    if (message.open === true) {
+      obj.open = message.open;
+    }
+    if (message.max_count !== 0) {
+      obj.max_count = Math.round(message.max_count);
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<CreateGroupRequest>, I>>(base?: I): CreateGroupRequest {
-    return CreateGroupRequest.fromPartial(base ?? {});
+    return CreateGroupRequest.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<CreateGroupRequest>, I>>(object: I): CreateGroupRequest {
     const message = createBaseCreateGroupRequest();
     message.name = object.name ?? "";
@@ -5481,52 +6233,58 @@ export const DeleteFriendsRequest = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): DeleteFriendsRequest {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseDeleteFriendsRequest();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag !== 10) {
+            break;
+          }
+
           message.ids.push(reader.string());
-          break;
+          continue;
         case 2:
+          if (tag !== 18) {
+            break;
+          }
+
           message.usernames.push(reader.string());
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
 
   fromJSON(object: any): DeleteFriendsRequest {
     return {
-      ids: Array.isArray(object?.ids) ? object.ids.map((e: any) => String(e)) : [],
-      usernames: Array.isArray(object?.usernames) ? object.usernames.map((e: any) => String(e)) : [],
+      ids: globalThis.Array.isArray(object?.ids) ? object.ids.map((e: any) => globalThis.String(e)) : [],
+      usernames: globalThis.Array.isArray(object?.usernames)
+        ? object.usernames.map((e: any) => globalThis.String(e))
+        : [],
     };
   },
 
   toJSON(message: DeleteFriendsRequest): unknown {
     const obj: any = {};
-    if (message.ids) {
-      obj.ids = message.ids.map((e) => e);
-    } else {
-      obj.ids = [];
+    if (message.ids?.length) {
+      obj.ids = message.ids;
     }
-    if (message.usernames) {
-      obj.usernames = message.usernames.map((e) => e);
-    } else {
-      obj.usernames = [];
+    if (message.usernames?.length) {
+      obj.usernames = message.usernames;
     }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<DeleteFriendsRequest>, I>>(base?: I): DeleteFriendsRequest {
-    return DeleteFriendsRequest.fromPartial(base ?? {});
+    return DeleteFriendsRequest.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<DeleteFriendsRequest>, I>>(object: I): DeleteFriendsRequest {
     const message = createBaseDeleteFriendsRequest();
     message.ids = object.ids?.map((e) => e) || [];
@@ -5548,37 +6306,43 @@ export const DeleteGroupRequest = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): DeleteGroupRequest {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseDeleteGroupRequest();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag !== 10) {
+            break;
+          }
+
           message.group_id = reader.string();
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
 
   fromJSON(object: any): DeleteGroupRequest {
-    return { group_id: isSet(object.group_id) ? String(object.group_id) : "" };
+    return { group_id: isSet(object.group_id) ? globalThis.String(object.group_id) : "" };
   },
 
   toJSON(message: DeleteGroupRequest): unknown {
     const obj: any = {};
-    message.group_id !== undefined && (obj.group_id = message.group_id);
+    if (message.group_id !== "") {
+      obj.group_id = message.group_id;
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<DeleteGroupRequest>, I>>(base?: I): DeleteGroupRequest {
-    return DeleteGroupRequest.fromPartial(base ?? {});
+    return DeleteGroupRequest.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<DeleteGroupRequest>, I>>(object: I): DeleteGroupRequest {
     const message = createBaseDeleteGroupRequest();
     message.group_id = object.group_id ?? "";
@@ -5599,37 +6363,43 @@ export const DeleteLeaderboardRecordRequest = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): DeleteLeaderboardRecordRequest {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseDeleteLeaderboardRecordRequest();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag !== 10) {
+            break;
+          }
+
           message.leaderboard_id = reader.string();
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
 
   fromJSON(object: any): DeleteLeaderboardRecordRequest {
-    return { leaderboard_id: isSet(object.leaderboard_id) ? String(object.leaderboard_id) : "" };
+    return { leaderboard_id: isSet(object.leaderboard_id) ? globalThis.String(object.leaderboard_id) : "" };
   },
 
   toJSON(message: DeleteLeaderboardRecordRequest): unknown {
     const obj: any = {};
-    message.leaderboard_id !== undefined && (obj.leaderboard_id = message.leaderboard_id);
+    if (message.leaderboard_id !== "") {
+      obj.leaderboard_id = message.leaderboard_id;
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<DeleteLeaderboardRecordRequest>, I>>(base?: I): DeleteLeaderboardRecordRequest {
-    return DeleteLeaderboardRecordRequest.fromPartial(base ?? {});
+    return DeleteLeaderboardRecordRequest.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<DeleteLeaderboardRecordRequest>, I>>(
     object: I,
   ): DeleteLeaderboardRecordRequest {
@@ -5652,41 +6422,43 @@ export const DeleteNotificationsRequest = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): DeleteNotificationsRequest {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseDeleteNotificationsRequest();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag !== 10) {
+            break;
+          }
+
           message.ids.push(reader.string());
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
 
   fromJSON(object: any): DeleteNotificationsRequest {
-    return { ids: Array.isArray(object?.ids) ? object.ids.map((e: any) => String(e)) : [] };
+    return { ids: globalThis.Array.isArray(object?.ids) ? object.ids.map((e: any) => globalThis.String(e)) : [] };
   },
 
   toJSON(message: DeleteNotificationsRequest): unknown {
     const obj: any = {};
-    if (message.ids) {
-      obj.ids = message.ids.map((e) => e);
-    } else {
-      obj.ids = [];
+    if (message.ids?.length) {
+      obj.ids = message.ids;
     }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<DeleteNotificationsRequest>, I>>(base?: I): DeleteNotificationsRequest {
-    return DeleteNotificationsRequest.fromPartial(base ?? {});
+    return DeleteNotificationsRequest.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<DeleteNotificationsRequest>, I>>(object: I): DeleteNotificationsRequest {
     const message = createBaseDeleteNotificationsRequest();
     message.ids = object.ids?.map((e) => e) || [];
@@ -5707,37 +6479,43 @@ export const DeleteTournamentRecordRequest = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): DeleteTournamentRecordRequest {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseDeleteTournamentRecordRequest();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag !== 10) {
+            break;
+          }
+
           message.tournament_id = reader.string();
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
 
   fromJSON(object: any): DeleteTournamentRecordRequest {
-    return { tournament_id: isSet(object.tournament_id) ? String(object.tournament_id) : "" };
+    return { tournament_id: isSet(object.tournament_id) ? globalThis.String(object.tournament_id) : "" };
   },
 
   toJSON(message: DeleteTournamentRecordRequest): unknown {
     const obj: any = {};
-    message.tournament_id !== undefined && (obj.tournament_id = message.tournament_id);
+    if (message.tournament_id !== "") {
+      obj.tournament_id = message.tournament_id;
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<DeleteTournamentRecordRequest>, I>>(base?: I): DeleteTournamentRecordRequest {
-    return DeleteTournamentRecordRequest.fromPartial(base ?? {});
+    return DeleteTournamentRecordRequest.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<DeleteTournamentRecordRequest>, I>>(
     object: I,
   ): DeleteTournamentRecordRequest {
@@ -5766,49 +6544,67 @@ export const DeleteStorageObjectId = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): DeleteStorageObjectId {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseDeleteStorageObjectId();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag !== 10) {
+            break;
+          }
+
           message.collection = reader.string();
-          break;
+          continue;
         case 2:
+          if (tag !== 18) {
+            break;
+          }
+
           message.key = reader.string();
-          break;
+          continue;
         case 3:
+          if (tag !== 26) {
+            break;
+          }
+
           message.version = reader.string();
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
 
   fromJSON(object: any): DeleteStorageObjectId {
     return {
-      collection: isSet(object.collection) ? String(object.collection) : "",
-      key: isSet(object.key) ? String(object.key) : "",
-      version: isSet(object.version) ? String(object.version) : "",
+      collection: isSet(object.collection) ? globalThis.String(object.collection) : "",
+      key: isSet(object.key) ? globalThis.String(object.key) : "",
+      version: isSet(object.version) ? globalThis.String(object.version) : "",
     };
   },
 
   toJSON(message: DeleteStorageObjectId): unknown {
     const obj: any = {};
-    message.collection !== undefined && (obj.collection = message.collection);
-    message.key !== undefined && (obj.key = message.key);
-    message.version !== undefined && (obj.version = message.version);
+    if (message.collection !== "") {
+      obj.collection = message.collection;
+    }
+    if (message.key !== "") {
+      obj.key = message.key;
+    }
+    if (message.version !== "") {
+      obj.version = message.version;
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<DeleteStorageObjectId>, I>>(base?: I): DeleteStorageObjectId {
-    return DeleteStorageObjectId.fromPartial(base ?? {});
+    return DeleteStorageObjectId.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<DeleteStorageObjectId>, I>>(object: I): DeleteStorageObjectId {
     const message = createBaseDeleteStorageObjectId();
     message.collection = object.collection ?? "";
@@ -5831,26 +6627,31 @@ export const DeleteStorageObjectsRequest = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): DeleteStorageObjectsRequest {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseDeleteStorageObjectsRequest();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag !== 10) {
+            break;
+          }
+
           message.object_ids.push(DeleteStorageObjectId.decode(reader, reader.uint32()));
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
 
   fromJSON(object: any): DeleteStorageObjectsRequest {
     return {
-      object_ids: Array.isArray(object?.object_ids)
+      object_ids: globalThis.Array.isArray(object?.object_ids)
         ? object.object_ids.map((e: any) => DeleteStorageObjectId.fromJSON(e))
         : [],
     };
@@ -5858,18 +6659,15 @@ export const DeleteStorageObjectsRequest = {
 
   toJSON(message: DeleteStorageObjectsRequest): unknown {
     const obj: any = {};
-    if (message.object_ids) {
-      obj.object_ids = message.object_ids.map((e) => e ? DeleteStorageObjectId.toJSON(e) : undefined);
-    } else {
-      obj.object_ids = [];
+    if (message.object_ids?.length) {
+      obj.object_ids = message.object_ids.map((e) => DeleteStorageObjectId.toJSON(e));
     }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<DeleteStorageObjectsRequest>, I>>(base?: I): DeleteStorageObjectsRequest {
-    return DeleteStorageObjectsRequest.fromPartial(base ?? {});
+    return DeleteStorageObjectsRequest.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<DeleteStorageObjectsRequest>, I>>(object: I): DeleteStorageObjectsRequest {
     const message = createBaseDeleteStorageObjectsRequest();
     message.object_ids = object.object_ids?.map((e) => DeleteStorageObjectId.fromPartial(e)) || [];
@@ -5899,38 +6697,55 @@ export const Event = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): Event {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseEvent();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag !== 10) {
+            break;
+          }
+
           message.name = reader.string();
-          break;
+          continue;
         case 2:
+          if (tag !== 18) {
+            break;
+          }
+
           const entry2 = Event_PropertiesEntry.decode(reader, reader.uint32());
           if (entry2.value !== undefined) {
             message.properties[entry2.key] = entry2.value;
           }
-          break;
+          continue;
         case 3:
+          if (tag !== 26) {
+            break;
+          }
+
           message.timestamp = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
-          break;
+          continue;
         case 4:
+          if (tag !== 32) {
+            break;
+          }
+
           message.external = reader.bool();
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
 
   fromJSON(object: any): Event {
     return {
-      name: isSet(object.name) ? String(object.name) : "",
+      name: isSet(object.name) ? globalThis.String(object.name) : "",
       properties: isObject(object.properties)
         ? Object.entries(object.properties).reduce<{ [key: string]: string }>((acc, [key, value]) => {
           acc[key] = String(value);
@@ -5938,35 +6753,43 @@ export const Event = {
         }, {})
         : {},
       timestamp: isSet(object.timestamp) ? fromJsonTimestamp(object.timestamp) : undefined,
-      external: isSet(object.external) ? Boolean(object.external) : false,
+      external: isSet(object.external) ? globalThis.Boolean(object.external) : false,
     };
   },
 
   toJSON(message: Event): unknown {
     const obj: any = {};
-    message.name !== undefined && (obj.name = message.name);
-    obj.properties = {};
-    if (message.properties) {
-      Object.entries(message.properties).forEach(([k, v]) => {
-        obj.properties[k] = v;
-      });
+    if (message.name !== "") {
+      obj.name = message.name;
     }
-    message.timestamp !== undefined && (obj.timestamp = message.timestamp.toISOString());
-    message.external !== undefined && (obj.external = message.external);
+    if (message.properties) {
+      const entries = Object.entries(message.properties);
+      if (entries.length > 0) {
+        obj.properties = {};
+        entries.forEach(([k, v]) => {
+          obj.properties[k] = v;
+        });
+      }
+    }
+    if (message.timestamp !== undefined) {
+      obj.timestamp = message.timestamp.toISOString();
+    }
+    if (message.external === true) {
+      obj.external = message.external;
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<Event>, I>>(base?: I): Event {
-    return Event.fromPartial(base ?? {});
+    return Event.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<Event>, I>>(object: I): Event {
     const message = createBaseEvent();
     message.name = object.name ?? "";
     message.properties = Object.entries(object.properties ?? {}).reduce<{ [key: string]: string }>(
       (acc, [key, value]) => {
         if (value !== undefined) {
-          acc[key] = String(value);
+          acc[key] = globalThis.String(value);
         }
         return acc;
       },
@@ -5994,41 +6817,56 @@ export const Event_PropertiesEntry = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): Event_PropertiesEntry {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseEvent_PropertiesEntry();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag !== 10) {
+            break;
+          }
+
           message.key = reader.string();
-          break;
+          continue;
         case 2:
+          if (tag !== 18) {
+            break;
+          }
+
           message.value = reader.string();
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
 
   fromJSON(object: any): Event_PropertiesEntry {
-    return { key: isSet(object.key) ? String(object.key) : "", value: isSet(object.value) ? String(object.value) : "" };
+    return {
+      key: isSet(object.key) ? globalThis.String(object.key) : "",
+      value: isSet(object.value) ? globalThis.String(object.value) : "",
+    };
   },
 
   toJSON(message: Event_PropertiesEntry): unknown {
     const obj: any = {};
-    message.key !== undefined && (obj.key = message.key);
-    message.value !== undefined && (obj.value = message.value);
+    if (message.key !== "") {
+      obj.key = message.key;
+    }
+    if (message.value !== "") {
+      obj.value = message.value;
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<Event_PropertiesEntry>, I>>(base?: I): Event_PropertiesEntry {
-    return Event_PropertiesEntry.fromPartial(base ?? {});
+    return Event_PropertiesEntry.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<Event_PropertiesEntry>, I>>(object: I): Event_PropertiesEntry {
     const message = createBaseEvent_PropertiesEntry();
     message.key = object.key ?? "";
@@ -6056,25 +6894,38 @@ export const Friend = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): Friend {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseFriend();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag !== 10) {
+            break;
+          }
+
           message.user = User.decode(reader, reader.uint32());
-          break;
+          continue;
         case 2:
+          if (tag !== 18) {
+            break;
+          }
+
           message.state = Int32Value.decode(reader, reader.uint32()).value;
-          break;
+          continue;
         case 3:
+          if (tag !== 26) {
+            break;
+          }
+
           message.update_time = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
@@ -6089,16 +6940,21 @@ export const Friend = {
 
   toJSON(message: Friend): unknown {
     const obj: any = {};
-    message.user !== undefined && (obj.user = message.user ? User.toJSON(message.user) : undefined);
-    message.state !== undefined && (obj.state = message.state);
-    message.update_time !== undefined && (obj.update_time = message.update_time.toISOString());
+    if (message.user !== undefined) {
+      obj.user = User.toJSON(message.user);
+    }
+    if (message.state !== undefined) {
+      obj.state = message.state;
+    }
+    if (message.update_time !== undefined) {
+      obj.update_time = message.update_time.toISOString();
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<Friend>, I>>(base?: I): Friend {
-    return Friend.fromPartial(base ?? {});
+    return Friend.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<Friend>, I>>(object: I): Friend {
     const message = createBaseFriend();
     message.user = (object.user !== undefined && object.user !== null) ? User.fromPartial(object.user) : undefined;
@@ -6124,48 +6980,56 @@ export const FriendList = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): FriendList {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseFriendList();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag !== 10) {
+            break;
+          }
+
           message.friends.push(Friend.decode(reader, reader.uint32()));
-          break;
+          continue;
         case 2:
+          if (tag !== 18) {
+            break;
+          }
+
           message.cursor = reader.string();
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
 
   fromJSON(object: any): FriendList {
     return {
-      friends: Array.isArray(object?.friends) ? object.friends.map((e: any) => Friend.fromJSON(e)) : [],
-      cursor: isSet(object.cursor) ? String(object.cursor) : "",
+      friends: globalThis.Array.isArray(object?.friends) ? object.friends.map((e: any) => Friend.fromJSON(e)) : [],
+      cursor: isSet(object.cursor) ? globalThis.String(object.cursor) : "",
     };
   },
 
   toJSON(message: FriendList): unknown {
     const obj: any = {};
-    if (message.friends) {
-      obj.friends = message.friends.map((e) => e ? Friend.toJSON(e) : undefined);
-    } else {
-      obj.friends = [];
+    if (message.friends?.length) {
+      obj.friends = message.friends.map((e) => Friend.toJSON(e));
     }
-    message.cursor !== undefined && (obj.cursor = message.cursor);
+    if (message.cursor !== "") {
+      obj.cursor = message.cursor;
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<FriendList>, I>>(base?: I): FriendList {
-    return FriendList.fromPartial(base ?? {});
+    return FriendList.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<FriendList>, I>>(object: I): FriendList {
     const message = createBaseFriendList();
     message.friends = object.friends?.map((e) => Friend.fromPartial(e)) || [];
@@ -6193,61 +7057,71 @@ export const GetUsersRequest = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): GetUsersRequest {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseGetUsersRequest();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag !== 10) {
+            break;
+          }
+
           message.ids.push(reader.string());
-          break;
+          continue;
         case 2:
+          if (tag !== 18) {
+            break;
+          }
+
           message.usernames.push(reader.string());
-          break;
+          continue;
         case 3:
+          if (tag !== 26) {
+            break;
+          }
+
           message.facebook_ids.push(reader.string());
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
 
   fromJSON(object: any): GetUsersRequest {
     return {
-      ids: Array.isArray(object?.ids) ? object.ids.map((e: any) => String(e)) : [],
-      usernames: Array.isArray(object?.usernames) ? object.usernames.map((e: any) => String(e)) : [],
-      facebook_ids: Array.isArray(object?.facebook_ids) ? object.facebook_ids.map((e: any) => String(e)) : [],
+      ids: globalThis.Array.isArray(object?.ids) ? object.ids.map((e: any) => globalThis.String(e)) : [],
+      usernames: globalThis.Array.isArray(object?.usernames)
+        ? object.usernames.map((e: any) => globalThis.String(e))
+        : [],
+      facebook_ids: globalThis.Array.isArray(object?.facebook_ids)
+        ? object.facebook_ids.map((e: any) => globalThis.String(e))
+        : [],
     };
   },
 
   toJSON(message: GetUsersRequest): unknown {
     const obj: any = {};
-    if (message.ids) {
-      obj.ids = message.ids.map((e) => e);
-    } else {
-      obj.ids = [];
+    if (message.ids?.length) {
+      obj.ids = message.ids;
     }
-    if (message.usernames) {
-      obj.usernames = message.usernames.map((e) => e);
-    } else {
-      obj.usernames = [];
+    if (message.usernames?.length) {
+      obj.usernames = message.usernames;
     }
-    if (message.facebook_ids) {
-      obj.facebook_ids = message.facebook_ids.map((e) => e);
-    } else {
-      obj.facebook_ids = [];
+    if (message.facebook_ids?.length) {
+      obj.facebook_ids = message.facebook_ids;
     }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<GetUsersRequest>, I>>(base?: I): GetUsersRequest {
-    return GetUsersRequest.fromPartial(base ?? {});
+    return GetUsersRequest.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<GetUsersRequest>, I>>(object: I): GetUsersRequest {
     const message = createBaseGetUsersRequest();
     message.ids = object.ids?.map((e) => e) || [];
@@ -6273,44 +7147,56 @@ export const UpdateUsersRequest = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): UpdateUsersRequest {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseUpdateUsersRequest();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 2:
+          if (tag !== 18) {
+            break;
+          }
+
           message.display_name = reader.string();
-          break;
+          continue;
         case 3:
+          if (tag !== 26) {
+            break;
+          }
+
           message.avatar_url = reader.string();
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
 
   fromJSON(object: any): UpdateUsersRequest {
     return {
-      display_name: isSet(object.display_name) ? String(object.display_name) : "",
-      avatar_url: isSet(object.avatar_url) ? String(object.avatar_url) : "",
+      display_name: isSet(object.display_name) ? globalThis.String(object.display_name) : "",
+      avatar_url: isSet(object.avatar_url) ? globalThis.String(object.avatar_url) : "",
     };
   },
 
   toJSON(message: UpdateUsersRequest): unknown {
     const obj: any = {};
-    message.display_name !== undefined && (obj.display_name = message.display_name);
-    message.avatar_url !== undefined && (obj.avatar_url = message.avatar_url);
+    if (message.display_name !== "") {
+      obj.display_name = message.display_name;
+    }
+    if (message.avatar_url !== "") {
+      obj.avatar_url = message.avatar_url;
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<UpdateUsersRequest>, I>>(base?: I): UpdateUsersRequest {
-    return UpdateUsersRequest.fromPartial(base ?? {});
+    return UpdateUsersRequest.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<UpdateUsersRequest>, I>>(object: I): UpdateUsersRequest {
     const message = createBaseUpdateUsersRequest();
     message.display_name = object.display_name ?? "";
@@ -6332,37 +7218,43 @@ export const GetSubscriptionRequest = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): GetSubscriptionRequest {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseGetSubscriptionRequest();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag !== 10) {
+            break;
+          }
+
           message.product_id = reader.string();
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
 
   fromJSON(object: any): GetSubscriptionRequest {
-    return { product_id: isSet(object.product_id) ? String(object.product_id) : "" };
+    return { product_id: isSet(object.product_id) ? globalThis.String(object.product_id) : "" };
   },
 
   toJSON(message: GetSubscriptionRequest): unknown {
     const obj: any = {};
-    message.product_id !== undefined && (obj.product_id = message.product_id);
+    if (message.product_id !== "") {
+      obj.product_id = message.product_id;
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<GetSubscriptionRequest>, I>>(base?: I): GetSubscriptionRequest {
-    return GetSubscriptionRequest.fromPartial(base ?? {});
+    return GetSubscriptionRequest.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<GetSubscriptionRequest>, I>>(object: I): GetSubscriptionRequest {
     const message = createBaseGetSubscriptionRequest();
     message.product_id = object.product_id ?? "";
@@ -6429,68 +7321,117 @@ export const Group = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): Group {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseGroup();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag !== 10) {
+            break;
+          }
+
           message.id = reader.string();
-          break;
+          continue;
         case 2:
+          if (tag !== 18) {
+            break;
+          }
+
           message.creator_id = reader.string();
-          break;
+          continue;
         case 3:
+          if (tag !== 26) {
+            break;
+          }
+
           message.name = reader.string();
-          break;
+          continue;
         case 4:
+          if (tag !== 34) {
+            break;
+          }
+
           message.description = reader.string();
-          break;
+          continue;
         case 5:
+          if (tag !== 42) {
+            break;
+          }
+
           message.lang_tag = reader.string();
-          break;
+          continue;
         case 6:
+          if (tag !== 50) {
+            break;
+          }
+
           message.metadata = reader.string();
-          break;
+          continue;
         case 7:
+          if (tag !== 58) {
+            break;
+          }
+
           message.avatar_url = reader.string();
-          break;
+          continue;
         case 8:
+          if (tag !== 66) {
+            break;
+          }
+
           message.open = BoolValue.decode(reader, reader.uint32()).value;
-          break;
+          continue;
         case 9:
+          if (tag !== 72) {
+            break;
+          }
+
           message.edge_count = reader.int32();
-          break;
+          continue;
         case 10:
+          if (tag !== 80) {
+            break;
+          }
+
           message.max_count = reader.int32();
-          break;
+          continue;
         case 11:
+          if (tag !== 90) {
+            break;
+          }
+
           message.create_time = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
-          break;
+          continue;
         case 12:
+          if (tag !== 98) {
+            break;
+          }
+
           message.update_time = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
 
   fromJSON(object: any): Group {
     return {
-      id: isSet(object.id) ? String(object.id) : "",
-      creator_id: isSet(object.creator_id) ? String(object.creator_id) : "",
-      name: isSet(object.name) ? String(object.name) : "",
-      description: isSet(object.description) ? String(object.description) : "",
-      lang_tag: isSet(object.lang_tag) ? String(object.lang_tag) : "",
-      metadata: isSet(object.metadata) ? String(object.metadata) : "",
-      avatar_url: isSet(object.avatar_url) ? String(object.avatar_url) : "",
+      id: isSet(object.id) ? globalThis.String(object.id) : "",
+      creator_id: isSet(object.creator_id) ? globalThis.String(object.creator_id) : "",
+      name: isSet(object.name) ? globalThis.String(object.name) : "",
+      description: isSet(object.description) ? globalThis.String(object.description) : "",
+      lang_tag: isSet(object.lang_tag) ? globalThis.String(object.lang_tag) : "",
+      metadata: isSet(object.metadata) ? globalThis.String(object.metadata) : "",
+      avatar_url: isSet(object.avatar_url) ? globalThis.String(object.avatar_url) : "",
       open: isSet(object.open) ? Boolean(object.open) : undefined,
-      edge_count: isSet(object.edge_count) ? Number(object.edge_count) : 0,
-      max_count: isSet(object.max_count) ? Number(object.max_count) : 0,
+      edge_count: isSet(object.edge_count) ? globalThis.Number(object.edge_count) : 0,
+      max_count: isSet(object.max_count) ? globalThis.Number(object.max_count) : 0,
       create_time: isSet(object.create_time) ? fromJsonTimestamp(object.create_time) : undefined,
       update_time: isSet(object.update_time) ? fromJsonTimestamp(object.update_time) : undefined,
     };
@@ -6498,25 +7439,48 @@ export const Group = {
 
   toJSON(message: Group): unknown {
     const obj: any = {};
-    message.id !== undefined && (obj.id = message.id);
-    message.creator_id !== undefined && (obj.creator_id = message.creator_id);
-    message.name !== undefined && (obj.name = message.name);
-    message.description !== undefined && (obj.description = message.description);
-    message.lang_tag !== undefined && (obj.lang_tag = message.lang_tag);
-    message.metadata !== undefined && (obj.metadata = message.metadata);
-    message.avatar_url !== undefined && (obj.avatar_url = message.avatar_url);
-    message.open !== undefined && (obj.open = message.open);
-    message.edge_count !== undefined && (obj.edge_count = Math.round(message.edge_count));
-    message.max_count !== undefined && (obj.max_count = Math.round(message.max_count));
-    message.create_time !== undefined && (obj.create_time = message.create_time.toISOString());
-    message.update_time !== undefined && (obj.update_time = message.update_time.toISOString());
+    if (message.id !== "") {
+      obj.id = message.id;
+    }
+    if (message.creator_id !== "") {
+      obj.creator_id = message.creator_id;
+    }
+    if (message.name !== "") {
+      obj.name = message.name;
+    }
+    if (message.description !== "") {
+      obj.description = message.description;
+    }
+    if (message.lang_tag !== "") {
+      obj.lang_tag = message.lang_tag;
+    }
+    if (message.metadata !== "") {
+      obj.metadata = message.metadata;
+    }
+    if (message.avatar_url !== "") {
+      obj.avatar_url = message.avatar_url;
+    }
+    if (message.open !== undefined) {
+      obj.open = message.open;
+    }
+    if (message.edge_count !== 0) {
+      obj.edge_count = Math.round(message.edge_count);
+    }
+    if (message.max_count !== 0) {
+      obj.max_count = Math.round(message.max_count);
+    }
+    if (message.create_time !== undefined) {
+      obj.create_time = message.create_time.toISOString();
+    }
+    if (message.update_time !== undefined) {
+      obj.update_time = message.update_time.toISOString();
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<Group>, I>>(base?: I): Group {
-    return Group.fromPartial(base ?? {});
+    return Group.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<Group>, I>>(object: I): Group {
     const message = createBaseGroup();
     message.id = object.id ?? "";
@@ -6551,48 +7515,56 @@ export const GroupList = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): GroupList {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseGroupList();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag !== 10) {
+            break;
+          }
+
           message.groups.push(Group.decode(reader, reader.uint32()));
-          break;
+          continue;
         case 2:
+          if (tag !== 18) {
+            break;
+          }
+
           message.cursor = reader.string();
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
 
   fromJSON(object: any): GroupList {
     return {
-      groups: Array.isArray(object?.groups) ? object.groups.map((e: any) => Group.fromJSON(e)) : [],
-      cursor: isSet(object.cursor) ? String(object.cursor) : "",
+      groups: globalThis.Array.isArray(object?.groups) ? object.groups.map((e: any) => Group.fromJSON(e)) : [],
+      cursor: isSet(object.cursor) ? globalThis.String(object.cursor) : "",
     };
   },
 
   toJSON(message: GroupList): unknown {
     const obj: any = {};
-    if (message.groups) {
-      obj.groups = message.groups.map((e) => e ? Group.toJSON(e) : undefined);
-    } else {
-      obj.groups = [];
+    if (message.groups?.length) {
+      obj.groups = message.groups.map((e) => Group.toJSON(e));
     }
-    message.cursor !== undefined && (obj.cursor = message.cursor);
+    if (message.cursor !== "") {
+      obj.cursor = message.cursor;
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<GroupList>, I>>(base?: I): GroupList {
-    return GroupList.fromPartial(base ?? {});
+    return GroupList.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<GroupList>, I>>(object: I): GroupList {
     const message = createBaseGroupList();
     message.groups = object.groups?.map((e) => Group.fromPartial(e)) || [];
@@ -6617,50 +7589,58 @@ export const GroupUserList = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): GroupUserList {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseGroupUserList();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag !== 10) {
+            break;
+          }
+
           message.group_users.push(GroupUserList_GroupUser.decode(reader, reader.uint32()));
-          break;
+          continue;
         case 2:
+          if (tag !== 18) {
+            break;
+          }
+
           message.cursor = reader.string();
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
 
   fromJSON(object: any): GroupUserList {
     return {
-      group_users: Array.isArray(object?.group_users)
+      group_users: globalThis.Array.isArray(object?.group_users)
         ? object.group_users.map((e: any) => GroupUserList_GroupUser.fromJSON(e))
         : [],
-      cursor: isSet(object.cursor) ? String(object.cursor) : "",
+      cursor: isSet(object.cursor) ? globalThis.String(object.cursor) : "",
     };
   },
 
   toJSON(message: GroupUserList): unknown {
     const obj: any = {};
-    if (message.group_users) {
-      obj.group_users = message.group_users.map((e) => e ? GroupUserList_GroupUser.toJSON(e) : undefined);
-    } else {
-      obj.group_users = [];
+    if (message.group_users?.length) {
+      obj.group_users = message.group_users.map((e) => GroupUserList_GroupUser.toJSON(e));
     }
-    message.cursor !== undefined && (obj.cursor = message.cursor);
+    if (message.cursor !== "") {
+      obj.cursor = message.cursor;
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<GroupUserList>, I>>(base?: I): GroupUserList {
-    return GroupUserList.fromPartial(base ?? {});
+    return GroupUserList.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<GroupUserList>, I>>(object: I): GroupUserList {
     const message = createBaseGroupUserList();
     message.group_users = object.group_users?.map((e) => GroupUserList_GroupUser.fromPartial(e)) || [];
@@ -6685,22 +7665,31 @@ export const GroupUserList_GroupUser = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): GroupUserList_GroupUser {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseGroupUserList_GroupUser();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag !== 10) {
+            break;
+          }
+
           message.user = User.decode(reader, reader.uint32());
-          break;
+          continue;
         case 2:
+          if (tag !== 18) {
+            break;
+          }
+
           message.state = Int32Value.decode(reader, reader.uint32()).value;
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
@@ -6714,15 +7703,18 @@ export const GroupUserList_GroupUser = {
 
   toJSON(message: GroupUserList_GroupUser): unknown {
     const obj: any = {};
-    message.user !== undefined && (obj.user = message.user ? User.toJSON(message.user) : undefined);
-    message.state !== undefined && (obj.state = message.state);
+    if (message.user !== undefined) {
+      obj.user = User.toJSON(message.user);
+    }
+    if (message.state !== undefined) {
+      obj.state = message.state;
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<GroupUserList_GroupUser>, I>>(base?: I): GroupUserList_GroupUser {
-    return GroupUserList_GroupUser.fromPartial(base ?? {});
+    return GroupUserList_GroupUser.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<GroupUserList_GroupUser>, I>>(object: I): GroupUserList_GroupUser {
     const message = createBaseGroupUserList_GroupUser();
     message.user = (object.user !== undefined && object.user !== null) ? User.fromPartial(object.user) : undefined;
@@ -6747,50 +7739,58 @@ export const ChannelUserList = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): ChannelUserList {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseChannelUserList();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag !== 10) {
+            break;
+          }
+
           message.channel_users.push(ChannelUserList_ChannelUser.decode(reader, reader.uint32()));
-          break;
+          continue;
         case 2:
+          if (tag !== 18) {
+            break;
+          }
+
           message.cursor = reader.string();
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
 
   fromJSON(object: any): ChannelUserList {
     return {
-      channel_users: Array.isArray(object?.channel_users)
+      channel_users: globalThis.Array.isArray(object?.channel_users)
         ? object.channel_users.map((e: any) => ChannelUserList_ChannelUser.fromJSON(e))
         : [],
-      cursor: isSet(object.cursor) ? String(object.cursor) : "",
+      cursor: isSet(object.cursor) ? globalThis.String(object.cursor) : "",
     };
   },
 
   toJSON(message: ChannelUserList): unknown {
     const obj: any = {};
-    if (message.channel_users) {
-      obj.channel_users = message.channel_users.map((e) => e ? ChannelUserList_ChannelUser.toJSON(e) : undefined);
-    } else {
-      obj.channel_users = [];
+    if (message.channel_users?.length) {
+      obj.channel_users = message.channel_users.map((e) => ChannelUserList_ChannelUser.toJSON(e));
     }
-    message.cursor !== undefined && (obj.cursor = message.cursor);
+    if (message.cursor !== "") {
+      obj.cursor = message.cursor;
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<ChannelUserList>, I>>(base?: I): ChannelUserList {
-    return ChannelUserList.fromPartial(base ?? {});
+    return ChannelUserList.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<ChannelUserList>, I>>(object: I): ChannelUserList {
     const message = createBaseChannelUserList();
     message.channel_users = object.channel_users?.map((e) => ChannelUserList_ChannelUser.fromPartial(e)) || [];
@@ -6815,22 +7815,31 @@ export const ChannelUserList_ChannelUser = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): ChannelUserList_ChannelUser {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseChannelUserList_ChannelUser();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag !== 10) {
+            break;
+          }
+
           message.user = User.decode(reader, reader.uint32());
-          break;
+          continue;
         case 2:
+          if (tag !== 18) {
+            break;
+          }
+
           message.role_id = StringValue.decode(reader, reader.uint32()).value;
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
@@ -6844,15 +7853,18 @@ export const ChannelUserList_ChannelUser = {
 
   toJSON(message: ChannelUserList_ChannelUser): unknown {
     const obj: any = {};
-    message.user !== undefined && (obj.user = message.user ? User.toJSON(message.user) : undefined);
-    message.role_id !== undefined && (obj.role_id = message.role_id);
+    if (message.user !== undefined) {
+      obj.user = User.toJSON(message.user);
+    }
+    if (message.role_id !== undefined) {
+      obj.role_id = message.role_id;
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<ChannelUserList_ChannelUser>, I>>(base?: I): ChannelUserList_ChannelUser {
-    return ChannelUserList_ChannelUser.fromPartial(base ?? {});
+    return ChannelUserList_ChannelUser.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<ChannelUserList_ChannelUser>, I>>(object: I): ChannelUserList_ChannelUser {
     const message = createBaseChannelUserList_ChannelUser();
     message.user = (object.user !== undefined && object.user !== null) ? User.fromPartial(object.user) : undefined;
@@ -6877,22 +7889,31 @@ export const ImportFacebookFriendsRequest = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): ImportFacebookFriendsRequest {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseImportFacebookFriendsRequest();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag !== 10) {
+            break;
+          }
+
           message.account = AccountFacebook.decode(reader, reader.uint32());
-          break;
+          continue;
         case 2:
+          if (tag !== 18) {
+            break;
+          }
+
           message.reset = BoolValue.decode(reader, reader.uint32()).value;
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
@@ -6906,16 +7927,18 @@ export const ImportFacebookFriendsRequest = {
 
   toJSON(message: ImportFacebookFriendsRequest): unknown {
     const obj: any = {};
-    message.account !== undefined &&
-      (obj.account = message.account ? AccountFacebook.toJSON(message.account) : undefined);
-    message.reset !== undefined && (obj.reset = message.reset);
+    if (message.account !== undefined) {
+      obj.account = AccountFacebook.toJSON(message.account);
+    }
+    if (message.reset !== undefined) {
+      obj.reset = message.reset;
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<ImportFacebookFriendsRequest>, I>>(base?: I): ImportFacebookFriendsRequest {
-    return ImportFacebookFriendsRequest.fromPartial(base ?? {});
+    return ImportFacebookFriendsRequest.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<ImportFacebookFriendsRequest>, I>>(object: I): ImportFacebookFriendsRequest {
     const message = createBaseImportFacebookFriendsRequest();
     message.account = (object.account !== undefined && object.account !== null)
@@ -6942,22 +7965,31 @@ export const ImportSteamFriendsRequest = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): ImportSteamFriendsRequest {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseImportSteamFriendsRequest();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag !== 10) {
+            break;
+          }
+
           message.account = AccountSteam.decode(reader, reader.uint32());
-          break;
+          continue;
         case 2:
+          if (tag !== 18) {
+            break;
+          }
+
           message.reset = BoolValue.decode(reader, reader.uint32()).value;
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
@@ -6971,15 +8003,18 @@ export const ImportSteamFriendsRequest = {
 
   toJSON(message: ImportSteamFriendsRequest): unknown {
     const obj: any = {};
-    message.account !== undefined && (obj.account = message.account ? AccountSteam.toJSON(message.account) : undefined);
-    message.reset !== undefined && (obj.reset = message.reset);
+    if (message.account !== undefined) {
+      obj.account = AccountSteam.toJSON(message.account);
+    }
+    if (message.reset !== undefined) {
+      obj.reset = message.reset;
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<ImportSteamFriendsRequest>, I>>(base?: I): ImportSteamFriendsRequest {
-    return ImportSteamFriendsRequest.fromPartial(base ?? {});
+    return ImportSteamFriendsRequest.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<ImportSteamFriendsRequest>, I>>(object: I): ImportSteamFriendsRequest {
     const message = createBaseImportSteamFriendsRequest();
     message.account = (object.account !== undefined && object.account !== null)
@@ -7003,37 +8038,43 @@ export const JoinGroupRequest = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): JoinGroupRequest {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseJoinGroupRequest();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag !== 10) {
+            break;
+          }
+
           message.group_id = reader.string();
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
 
   fromJSON(object: any): JoinGroupRequest {
-    return { group_id: isSet(object.group_id) ? String(object.group_id) : "" };
+    return { group_id: isSet(object.group_id) ? globalThis.String(object.group_id) : "" };
   },
 
   toJSON(message: JoinGroupRequest): unknown {
     const obj: any = {};
-    message.group_id !== undefined && (obj.group_id = message.group_id);
+    if (message.group_id !== "") {
+      obj.group_id = message.group_id;
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<JoinGroupRequest>, I>>(base?: I): JoinGroupRequest {
-    return JoinGroupRequest.fromPartial(base ?? {});
+    return JoinGroupRequest.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<JoinGroupRequest>, I>>(object: I): JoinGroupRequest {
     const message = createBaseJoinGroupRequest();
     message.group_id = object.group_id ?? "";
@@ -7054,37 +8095,43 @@ export const JoinTournamentRequest = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): JoinTournamentRequest {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseJoinTournamentRequest();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag !== 10) {
+            break;
+          }
+
           message.tournament_id = reader.string();
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
 
   fromJSON(object: any): JoinTournamentRequest {
-    return { tournament_id: isSet(object.tournament_id) ? String(object.tournament_id) : "" };
+    return { tournament_id: isSet(object.tournament_id) ? globalThis.String(object.tournament_id) : "" };
   },
 
   toJSON(message: JoinTournamentRequest): unknown {
     const obj: any = {};
-    message.tournament_id !== undefined && (obj.tournament_id = message.tournament_id);
+    if (message.tournament_id !== "") {
+      obj.tournament_id = message.tournament_id;
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<JoinTournamentRequest>, I>>(base?: I): JoinTournamentRequest {
-    return JoinTournamentRequest.fromPartial(base ?? {});
+    return JoinTournamentRequest.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<JoinTournamentRequest>, I>>(object: I): JoinTournamentRequest {
     const message = createBaseJoinTournamentRequest();
     message.tournament_id = object.tournament_id ?? "";
@@ -7108,48 +8155,56 @@ export const KickGroupUsersRequest = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): KickGroupUsersRequest {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseKickGroupUsersRequest();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag !== 10) {
+            break;
+          }
+
           message.group_id = reader.string();
-          break;
+          continue;
         case 2:
+          if (tag !== 18) {
+            break;
+          }
+
           message.user_ids.push(reader.string());
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
 
   fromJSON(object: any): KickGroupUsersRequest {
     return {
-      group_id: isSet(object.group_id) ? String(object.group_id) : "",
-      user_ids: Array.isArray(object?.user_ids) ? object.user_ids.map((e: any) => String(e)) : [],
+      group_id: isSet(object.group_id) ? globalThis.String(object.group_id) : "",
+      user_ids: globalThis.Array.isArray(object?.user_ids) ? object.user_ids.map((e: any) => globalThis.String(e)) : [],
     };
   },
 
   toJSON(message: KickGroupUsersRequest): unknown {
     const obj: any = {};
-    message.group_id !== undefined && (obj.group_id = message.group_id);
-    if (message.user_ids) {
-      obj.user_ids = message.user_ids.map((e) => e);
-    } else {
-      obj.user_ids = [];
+    if (message.group_id !== "") {
+      obj.group_id = message.group_id;
+    }
+    if (message.user_ids?.length) {
+      obj.user_ids = message.user_ids;
     }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<KickGroupUsersRequest>, I>>(base?: I): KickGroupUsersRequest {
-    return KickGroupUsersRequest.fromPartial(base ?? {});
+    return KickGroupUsersRequest.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<KickGroupUsersRequest>, I>>(object: I): KickGroupUsersRequest {
     const message = createBaseKickGroupUsersRequest();
     message.group_id = object.group_id ?? "";
@@ -7201,74 +8256,122 @@ export const Leaderboard = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): Leaderboard {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseLeaderboard();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag !== 10) {
+            break;
+          }
+
           message.id = reader.string();
-          break;
+          continue;
         case 2:
+          if (tag !== 16) {
+            break;
+          }
+
           message.sort_order = reader.uint32();
-          break;
+          continue;
         case 3:
+          if (tag !== 24) {
+            break;
+          }
+
           message.operator = reader.int32() as any;
-          break;
+          continue;
         case 4:
+          if (tag !== 32) {
+            break;
+          }
+
           message.prev_reset = reader.uint32();
-          break;
+          continue;
         case 5:
+          if (tag !== 40) {
+            break;
+          }
+
           message.next_reset = reader.uint32();
-          break;
+          continue;
         case 6:
+          if (tag !== 50) {
+            break;
+          }
+
           message.metadata = reader.string();
-          break;
+          continue;
         case 7:
+          if (tag !== 58) {
+            break;
+          }
+
           message.create_time = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
-          break;
+          continue;
         case 8:
+          if (tag !== 64) {
+            break;
+          }
+
           message.authoritative = reader.bool();
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
 
   fromJSON(object: any): Leaderboard {
     return {
-      id: isSet(object.id) ? String(object.id) : "",
-      sort_order: isSet(object.sort_order) ? Number(object.sort_order) : 0,
+      id: isSet(object.id) ? globalThis.String(object.id) : "",
+      sort_order: isSet(object.sort_order) ? globalThis.Number(object.sort_order) : 0,
       operator: isSet(object.operator) ? operatorFromJSON(object.operator) : 0,
-      prev_reset: isSet(object.prev_reset) ? Number(object.prev_reset) : 0,
-      next_reset: isSet(object.next_reset) ? Number(object.next_reset) : 0,
-      metadata: isSet(object.metadata) ? String(object.metadata) : "",
+      prev_reset: isSet(object.prev_reset) ? globalThis.Number(object.prev_reset) : 0,
+      next_reset: isSet(object.next_reset) ? globalThis.Number(object.next_reset) : 0,
+      metadata: isSet(object.metadata) ? globalThis.String(object.metadata) : "",
       create_time: isSet(object.create_time) ? fromJsonTimestamp(object.create_time) : undefined,
-      authoritative: isSet(object.authoritative) ? Boolean(object.authoritative) : false,
+      authoritative: isSet(object.authoritative) ? globalThis.Boolean(object.authoritative) : false,
     };
   },
 
   toJSON(message: Leaderboard): unknown {
     const obj: any = {};
-    message.id !== undefined && (obj.id = message.id);
-    message.sort_order !== undefined && (obj.sort_order = Math.round(message.sort_order));
-    message.operator !== undefined && (obj.operator = operatorToJSON(message.operator));
-    message.prev_reset !== undefined && (obj.prev_reset = Math.round(message.prev_reset));
-    message.next_reset !== undefined && (obj.next_reset = Math.round(message.next_reset));
-    message.metadata !== undefined && (obj.metadata = message.metadata);
-    message.create_time !== undefined && (obj.create_time = message.create_time.toISOString());
-    message.authoritative !== undefined && (obj.authoritative = message.authoritative);
+    if (message.id !== "") {
+      obj.id = message.id;
+    }
+    if (message.sort_order !== 0) {
+      obj.sort_order = Math.round(message.sort_order);
+    }
+    if (message.operator !== 0) {
+      obj.operator = operatorToJSON(message.operator);
+    }
+    if (message.prev_reset !== 0) {
+      obj.prev_reset = Math.round(message.prev_reset);
+    }
+    if (message.next_reset !== 0) {
+      obj.next_reset = Math.round(message.next_reset);
+    }
+    if (message.metadata !== "") {
+      obj.metadata = message.metadata;
+    }
+    if (message.create_time !== undefined) {
+      obj.create_time = message.create_time.toISOString();
+    }
+    if (message.authoritative === true) {
+      obj.authoritative = message.authoritative;
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<Leaderboard>, I>>(base?: I): Leaderboard {
-    return Leaderboard.fromPartial(base ?? {});
+    return Leaderboard.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<Leaderboard>, I>>(object: I): Leaderboard {
     const message = createBaseLeaderboard();
     message.id = object.id ?? "";
@@ -7299,50 +8402,58 @@ export const LeaderboardList = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): LeaderboardList {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseLeaderboardList();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag !== 10) {
+            break;
+          }
+
           message.leaderboards.push(Leaderboard.decode(reader, reader.uint32()));
-          break;
+          continue;
         case 2:
+          if (tag !== 18) {
+            break;
+          }
+
           message.cursor = reader.string();
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
 
   fromJSON(object: any): LeaderboardList {
     return {
-      leaderboards: Array.isArray(object?.leaderboards)
+      leaderboards: globalThis.Array.isArray(object?.leaderboards)
         ? object.leaderboards.map((e: any) => Leaderboard.fromJSON(e))
         : [],
-      cursor: isSet(object.cursor) ? String(object.cursor) : "",
+      cursor: isSet(object.cursor) ? globalThis.String(object.cursor) : "",
     };
   },
 
   toJSON(message: LeaderboardList): unknown {
     const obj: any = {};
-    if (message.leaderboards) {
-      obj.leaderboards = message.leaderboards.map((e) => e ? Leaderboard.toJSON(e) : undefined);
-    } else {
-      obj.leaderboards = [];
+    if (message.leaderboards?.length) {
+      obj.leaderboards = message.leaderboards.map((e) => Leaderboard.toJSON(e));
     }
-    message.cursor !== undefined && (obj.cursor = message.cursor);
+    if (message.cursor !== "") {
+      obj.cursor = message.cursor;
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<LeaderboardList>, I>>(base?: I): LeaderboardList {
-    return LeaderboardList.fromPartial(base ?? {});
+    return LeaderboardList.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<LeaderboardList>, I>>(object: I): LeaderboardList {
     const message = createBaseLeaderboardList();
     message.leaderboards = object.leaderboards?.map((e) => Leaderboard.fromPartial(e)) || [];
@@ -7410,94 +8521,166 @@ export const LeaderboardRecord = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): LeaderboardRecord {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseLeaderboardRecord();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag !== 10) {
+            break;
+          }
+
           message.leaderboard_id = reader.string();
-          break;
+          continue;
         case 2:
+          if (tag !== 18) {
+            break;
+          }
+
           message.owner_id = reader.string();
-          break;
+          continue;
         case 3:
+          if (tag !== 26) {
+            break;
+          }
+
           message.username = StringValue.decode(reader, reader.uint32()).value;
-          break;
+          continue;
         case 4:
+          if (tag !== 32) {
+            break;
+          }
+
           message.score = longToNumber(reader.int64() as Long);
-          break;
+          continue;
         case 5:
+          if (tag !== 40) {
+            break;
+          }
+
           message.subscore = longToNumber(reader.int64() as Long);
-          break;
+          continue;
         case 6:
+          if (tag !== 48) {
+            break;
+          }
+
           message.num_score = reader.int32();
-          break;
+          continue;
         case 7:
+          if (tag !== 58) {
+            break;
+          }
+
           message.metadata = reader.string();
-          break;
+          continue;
         case 8:
+          if (tag !== 66) {
+            break;
+          }
+
           message.create_time = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
-          break;
+          continue;
         case 9:
+          if (tag !== 74) {
+            break;
+          }
+
           message.update_time = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
-          break;
+          continue;
         case 10:
+          if (tag !== 82) {
+            break;
+          }
+
           message.expiry_time = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
-          break;
+          continue;
         case 11:
+          if (tag !== 88) {
+            break;
+          }
+
           message.rank = longToNumber(reader.int64() as Long);
-          break;
+          continue;
         case 12:
+          if (tag !== 96) {
+            break;
+          }
+
           message.max_num_score = reader.uint32();
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
 
   fromJSON(object: any): LeaderboardRecord {
     return {
-      leaderboard_id: isSet(object.leaderboard_id) ? String(object.leaderboard_id) : "",
-      owner_id: isSet(object.owner_id) ? String(object.owner_id) : "",
+      leaderboard_id: isSet(object.leaderboard_id) ? globalThis.String(object.leaderboard_id) : "",
+      owner_id: isSet(object.owner_id) ? globalThis.String(object.owner_id) : "",
       username: isSet(object.username) ? String(object.username) : undefined,
-      score: isSet(object.score) ? Number(object.score) : 0,
-      subscore: isSet(object.subscore) ? Number(object.subscore) : 0,
-      num_score: isSet(object.num_score) ? Number(object.num_score) : 0,
-      metadata: isSet(object.metadata) ? String(object.metadata) : "",
+      score: isSet(object.score) ? globalThis.Number(object.score) : 0,
+      subscore: isSet(object.subscore) ? globalThis.Number(object.subscore) : 0,
+      num_score: isSet(object.num_score) ? globalThis.Number(object.num_score) : 0,
+      metadata: isSet(object.metadata) ? globalThis.String(object.metadata) : "",
       create_time: isSet(object.create_time) ? fromJsonTimestamp(object.create_time) : undefined,
       update_time: isSet(object.update_time) ? fromJsonTimestamp(object.update_time) : undefined,
       expiry_time: isSet(object.expiry_time) ? fromJsonTimestamp(object.expiry_time) : undefined,
-      rank: isSet(object.rank) ? Number(object.rank) : 0,
-      max_num_score: isSet(object.max_num_score) ? Number(object.max_num_score) : 0,
+      rank: isSet(object.rank) ? globalThis.Number(object.rank) : 0,
+      max_num_score: isSet(object.max_num_score) ? globalThis.Number(object.max_num_score) : 0,
     };
   },
 
   toJSON(message: LeaderboardRecord): unknown {
     const obj: any = {};
-    message.leaderboard_id !== undefined && (obj.leaderboard_id = message.leaderboard_id);
-    message.owner_id !== undefined && (obj.owner_id = message.owner_id);
-    message.username !== undefined && (obj.username = message.username);
-    message.score !== undefined && (obj.score = Math.round(message.score));
-    message.subscore !== undefined && (obj.subscore = Math.round(message.subscore));
-    message.num_score !== undefined && (obj.num_score = Math.round(message.num_score));
-    message.metadata !== undefined && (obj.metadata = message.metadata);
-    message.create_time !== undefined && (obj.create_time = message.create_time.toISOString());
-    message.update_time !== undefined && (obj.update_time = message.update_time.toISOString());
-    message.expiry_time !== undefined && (obj.expiry_time = message.expiry_time.toISOString());
-    message.rank !== undefined && (obj.rank = Math.round(message.rank));
-    message.max_num_score !== undefined && (obj.max_num_score = Math.round(message.max_num_score));
+    if (message.leaderboard_id !== "") {
+      obj.leaderboard_id = message.leaderboard_id;
+    }
+    if (message.owner_id !== "") {
+      obj.owner_id = message.owner_id;
+    }
+    if (message.username !== undefined) {
+      obj.username = message.username;
+    }
+    if (message.score !== 0) {
+      obj.score = Math.round(message.score);
+    }
+    if (message.subscore !== 0) {
+      obj.subscore = Math.round(message.subscore);
+    }
+    if (message.num_score !== 0) {
+      obj.num_score = Math.round(message.num_score);
+    }
+    if (message.metadata !== "") {
+      obj.metadata = message.metadata;
+    }
+    if (message.create_time !== undefined) {
+      obj.create_time = message.create_time.toISOString();
+    }
+    if (message.update_time !== undefined) {
+      obj.update_time = message.update_time.toISOString();
+    }
+    if (message.expiry_time !== undefined) {
+      obj.expiry_time = message.expiry_time.toISOString();
+    }
+    if (message.rank !== 0) {
+      obj.rank = Math.round(message.rank);
+    }
+    if (message.max_num_score !== 0) {
+      obj.max_num_score = Math.round(message.max_num_score);
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<LeaderboardRecord>, I>>(base?: I): LeaderboardRecord {
-    return LeaderboardRecord.fromPartial(base ?? {});
+    return LeaderboardRecord.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<LeaderboardRecord>, I>>(object: I): LeaderboardRecord {
     const message = createBaseLeaderboardRecord();
     message.leaderboard_id = object.leaderboard_id ?? "";
@@ -7541,69 +8724,93 @@ export const LeaderboardRecordList = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): LeaderboardRecordList {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseLeaderboardRecordList();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag !== 10) {
+            break;
+          }
+
           message.records.push(LeaderboardRecord.decode(reader, reader.uint32()));
-          break;
+          continue;
         case 2:
+          if (tag !== 18) {
+            break;
+          }
+
           message.owner_records.push(LeaderboardRecord.decode(reader, reader.uint32()));
-          break;
+          continue;
         case 3:
+          if (tag !== 26) {
+            break;
+          }
+
           message.next_cursor = reader.string();
-          break;
+          continue;
         case 4:
+          if (tag !== 34) {
+            break;
+          }
+
           message.prev_cursor = reader.string();
-          break;
+          continue;
         case 5:
+          if (tag !== 40) {
+            break;
+          }
+
           message.rank_count = longToNumber(reader.int64() as Long);
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
 
   fromJSON(object: any): LeaderboardRecordList {
     return {
-      records: Array.isArray(object?.records) ? object.records.map((e: any) => LeaderboardRecord.fromJSON(e)) : [],
-      owner_records: Array.isArray(object?.owner_records)
+      records: globalThis.Array.isArray(object?.records)
+        ? object.records.map((e: any) => LeaderboardRecord.fromJSON(e))
+        : [],
+      owner_records: globalThis.Array.isArray(object?.owner_records)
         ? object.owner_records.map((e: any) => LeaderboardRecord.fromJSON(e))
         : [],
-      next_cursor: isSet(object.next_cursor) ? String(object.next_cursor) : "",
-      prev_cursor: isSet(object.prev_cursor) ? String(object.prev_cursor) : "",
-      rank_count: isSet(object.rank_count) ? Number(object.rank_count) : 0,
+      next_cursor: isSet(object.next_cursor) ? globalThis.String(object.next_cursor) : "",
+      prev_cursor: isSet(object.prev_cursor) ? globalThis.String(object.prev_cursor) : "",
+      rank_count: isSet(object.rank_count) ? globalThis.Number(object.rank_count) : 0,
     };
   },
 
   toJSON(message: LeaderboardRecordList): unknown {
     const obj: any = {};
-    if (message.records) {
-      obj.records = message.records.map((e) => e ? LeaderboardRecord.toJSON(e) : undefined);
-    } else {
-      obj.records = [];
+    if (message.records?.length) {
+      obj.records = message.records.map((e) => LeaderboardRecord.toJSON(e));
     }
-    if (message.owner_records) {
-      obj.owner_records = message.owner_records.map((e) => e ? LeaderboardRecord.toJSON(e) : undefined);
-    } else {
-      obj.owner_records = [];
+    if (message.owner_records?.length) {
+      obj.owner_records = message.owner_records.map((e) => LeaderboardRecord.toJSON(e));
     }
-    message.next_cursor !== undefined && (obj.next_cursor = message.next_cursor);
-    message.prev_cursor !== undefined && (obj.prev_cursor = message.prev_cursor);
-    message.rank_count !== undefined && (obj.rank_count = Math.round(message.rank_count));
+    if (message.next_cursor !== "") {
+      obj.next_cursor = message.next_cursor;
+    }
+    if (message.prev_cursor !== "") {
+      obj.prev_cursor = message.prev_cursor;
+    }
+    if (message.rank_count !== 0) {
+      obj.rank_count = Math.round(message.rank_count);
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<LeaderboardRecordList>, I>>(base?: I): LeaderboardRecordList {
-    return LeaderboardRecordList.fromPartial(base ?? {});
+    return LeaderboardRecordList.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<LeaderboardRecordList>, I>>(object: I): LeaderboardRecordList {
     const message = createBaseLeaderboardRecordList();
     message.records = object.records?.map((e) => LeaderboardRecord.fromPartial(e)) || [];
@@ -7628,37 +8835,43 @@ export const LeaveGroupRequest = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): LeaveGroupRequest {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseLeaveGroupRequest();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag !== 10) {
+            break;
+          }
+
           message.group_id = reader.string();
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
 
   fromJSON(object: any): LeaveGroupRequest {
-    return { group_id: isSet(object.group_id) ? String(object.group_id) : "" };
+    return { group_id: isSet(object.group_id) ? globalThis.String(object.group_id) : "" };
   },
 
   toJSON(message: LeaveGroupRequest): unknown {
     const obj: any = {};
-    message.group_id !== undefined && (obj.group_id = message.group_id);
+    if (message.group_id !== "") {
+      obj.group_id = message.group_id;
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<LeaveGroupRequest>, I>>(base?: I): LeaveGroupRequest {
-    return LeaveGroupRequest.fromPartial(base ?? {});
+    return LeaveGroupRequest.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<LeaveGroupRequest>, I>>(object: I): LeaveGroupRequest {
     const message = createBaseLeaveGroupRequest();
     message.group_id = object.group_id ?? "";
@@ -7682,22 +8895,31 @@ export const LinkFacebookRequest = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): LinkFacebookRequest {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseLinkFacebookRequest();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag !== 10) {
+            break;
+          }
+
           message.account = AccountFacebook.decode(reader, reader.uint32());
-          break;
+          continue;
         case 2:
+          if (tag !== 18) {
+            break;
+          }
+
           message.sync = BoolValue.decode(reader, reader.uint32()).value;
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
@@ -7711,16 +8933,18 @@ export const LinkFacebookRequest = {
 
   toJSON(message: LinkFacebookRequest): unknown {
     const obj: any = {};
-    message.account !== undefined &&
-      (obj.account = message.account ? AccountFacebook.toJSON(message.account) : undefined);
-    message.sync !== undefined && (obj.sync = message.sync);
+    if (message.account !== undefined) {
+      obj.account = AccountFacebook.toJSON(message.account);
+    }
+    if (message.sync !== undefined) {
+      obj.sync = message.sync;
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<LinkFacebookRequest>, I>>(base?: I): LinkFacebookRequest {
-    return LinkFacebookRequest.fromPartial(base ?? {});
+    return LinkFacebookRequest.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<LinkFacebookRequest>, I>>(object: I): LinkFacebookRequest {
     const message = createBaseLinkFacebookRequest();
     message.account = (object.account !== undefined && object.account !== null)
@@ -7747,22 +8971,31 @@ export const LinkSteamRequest = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): LinkSteamRequest {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseLinkSteamRequest();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag !== 10) {
+            break;
+          }
+
           message.account = AccountSteam.decode(reader, reader.uint32());
-          break;
+          continue;
         case 2:
+          if (tag !== 18) {
+            break;
+          }
+
           message.sync = BoolValue.decode(reader, reader.uint32()).value;
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
@@ -7776,15 +9009,18 @@ export const LinkSteamRequest = {
 
   toJSON(message: LinkSteamRequest): unknown {
     const obj: any = {};
-    message.account !== undefined && (obj.account = message.account ? AccountSteam.toJSON(message.account) : undefined);
-    message.sync !== undefined && (obj.sync = message.sync);
+    if (message.account !== undefined) {
+      obj.account = AccountSteam.toJSON(message.account);
+    }
+    if (message.sync !== undefined) {
+      obj.sync = message.sync;
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<LinkSteamRequest>, I>>(base?: I): LinkSteamRequest {
-    return LinkSteamRequest.fromPartial(base ?? {});
+    return LinkSteamRequest.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<LinkSteamRequest>, I>>(object: I): LinkSteamRequest {
     const message = createBaseLinkSteamRequest();
     message.account = (object.account !== undefined && object.account !== null)
@@ -7817,54 +9053,78 @@ export const ListChannelMessagesRequest = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): ListChannelMessagesRequest {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseListChannelMessagesRequest();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag !== 10) {
+            break;
+          }
+
           message.channel_id = reader.string();
-          break;
+          continue;
         case 2:
+          if (tag !== 18) {
+            break;
+          }
+
           message.limit = Int32Value.decode(reader, reader.uint32()).value;
-          break;
+          continue;
         case 3:
+          if (tag !== 26) {
+            break;
+          }
+
           message.forward = BoolValue.decode(reader, reader.uint32()).value;
-          break;
+          continue;
         case 4:
+          if (tag !== 34) {
+            break;
+          }
+
           message.cursor = reader.string();
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
 
   fromJSON(object: any): ListChannelMessagesRequest {
     return {
-      channel_id: isSet(object.channel_id) ? String(object.channel_id) : "",
+      channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "",
       limit: isSet(object.limit) ? Number(object.limit) : undefined,
       forward: isSet(object.forward) ? Boolean(object.forward) : undefined,
-      cursor: isSet(object.cursor) ? String(object.cursor) : "",
+      cursor: isSet(object.cursor) ? globalThis.String(object.cursor) : "",
     };
   },
 
   toJSON(message: ListChannelMessagesRequest): unknown {
     const obj: any = {};
-    message.channel_id !== undefined && (obj.channel_id = message.channel_id);
-    message.limit !== undefined && (obj.limit = message.limit);
-    message.forward !== undefined && (obj.forward = message.forward);
-    message.cursor !== undefined && (obj.cursor = message.cursor);
+    if (message.channel_id !== "") {
+      obj.channel_id = message.channel_id;
+    }
+    if (message.limit !== undefined) {
+      obj.limit = message.limit;
+    }
+    if (message.forward !== undefined) {
+      obj.forward = message.forward;
+    }
+    if (message.cursor !== "") {
+      obj.cursor = message.cursor;
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<ListChannelMessagesRequest>, I>>(base?: I): ListChannelMessagesRequest {
-    return ListChannelMessagesRequest.fromPartial(base ?? {});
+    return ListChannelMessagesRequest.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<ListChannelMessagesRequest>, I>>(object: I): ListChannelMessagesRequest {
     const message = createBaseListChannelMessagesRequest();
     message.channel_id = object.channel_id ?? "";
@@ -7894,25 +9154,38 @@ export const ListFriendsRequest = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): ListFriendsRequest {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseListFriendsRequest();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag !== 10) {
+            break;
+          }
+
           message.limit = Int32Value.decode(reader, reader.uint32()).value;
-          break;
+          continue;
         case 2:
+          if (tag !== 18) {
+            break;
+          }
+
           message.state = Int32Value.decode(reader, reader.uint32()).value;
-          break;
+          continue;
         case 3:
+          if (tag !== 26) {
+            break;
+          }
+
           message.cursor = reader.string();
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
@@ -7921,22 +9194,27 @@ export const ListFriendsRequest = {
     return {
       limit: isSet(object.limit) ? Number(object.limit) : undefined,
       state: isSet(object.state) ? Number(object.state) : undefined,
-      cursor: isSet(object.cursor) ? String(object.cursor) : "",
+      cursor: isSet(object.cursor) ? globalThis.String(object.cursor) : "",
     };
   },
 
   toJSON(message: ListFriendsRequest): unknown {
     const obj: any = {};
-    message.limit !== undefined && (obj.limit = message.limit);
-    message.state !== undefined && (obj.state = message.state);
-    message.cursor !== undefined && (obj.cursor = message.cursor);
+    if (message.limit !== undefined) {
+      obj.limit = message.limit;
+    }
+    if (message.state !== undefined) {
+      obj.state = message.state;
+    }
+    if (message.cursor !== "") {
+      obj.cursor = message.cursor;
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<ListFriendsRequest>, I>>(base?: I): ListFriendsRequest {
-    return ListFriendsRequest.fromPartial(base ?? {});
+    return ListFriendsRequest.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<ListFriendsRequest>, I>>(object: I): ListFriendsRequest {
     const message = createBaseListFriendsRequest();
     message.limit = object.limit ?? undefined;
@@ -7974,44 +9252,69 @@ export const ListGroupsRequest = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): ListGroupsRequest {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseListGroupsRequest();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag !== 10) {
+            break;
+          }
+
           message.name = reader.string();
-          break;
+          continue;
         case 2:
+          if (tag !== 18) {
+            break;
+          }
+
           message.cursor = reader.string();
-          break;
+          continue;
         case 3:
+          if (tag !== 26) {
+            break;
+          }
+
           message.limit = Int32Value.decode(reader, reader.uint32()).value;
-          break;
+          continue;
         case 4:
+          if (tag !== 34) {
+            break;
+          }
+
           message.lang_tag = reader.string();
-          break;
+          continue;
         case 5:
+          if (tag !== 42) {
+            break;
+          }
+
           message.members = Int32Value.decode(reader, reader.uint32()).value;
-          break;
+          continue;
         case 6:
+          if (tag !== 50) {
+            break;
+          }
+
           message.open = BoolValue.decode(reader, reader.uint32()).value;
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
 
   fromJSON(object: any): ListGroupsRequest {
     return {
-      name: isSet(object.name) ? String(object.name) : "",
-      cursor: isSet(object.cursor) ? String(object.cursor) : "",
+      name: isSet(object.name) ? globalThis.String(object.name) : "",
+      cursor: isSet(object.cursor) ? globalThis.String(object.cursor) : "",
       limit: isSet(object.limit) ? Number(object.limit) : undefined,
-      lang_tag: isSet(object.lang_tag) ? String(object.lang_tag) : "",
+      lang_tag: isSet(object.lang_tag) ? globalThis.String(object.lang_tag) : "",
       members: isSet(object.members) ? Number(object.members) : undefined,
       open: isSet(object.open) ? Boolean(object.open) : undefined,
     };
@@ -8019,19 +9322,30 @@ export const ListGroupsRequest = {
 
   toJSON(message: ListGroupsRequest): unknown {
     const obj: any = {};
-    message.name !== undefined && (obj.name = message.name);
-    message.cursor !== undefined && (obj.cursor = message.cursor);
-    message.limit !== undefined && (obj.limit = message.limit);
-    message.lang_tag !== undefined && (obj.lang_tag = message.lang_tag);
-    message.members !== undefined && (obj.members = message.members);
-    message.open !== undefined && (obj.open = message.open);
+    if (message.name !== "") {
+      obj.name = message.name;
+    }
+    if (message.cursor !== "") {
+      obj.cursor = message.cursor;
+    }
+    if (message.limit !== undefined) {
+      obj.limit = message.limit;
+    }
+    if (message.lang_tag !== "") {
+      obj.lang_tag = message.lang_tag;
+    }
+    if (message.members !== undefined) {
+      obj.members = message.members;
+    }
+    if (message.open !== undefined) {
+      obj.open = message.open;
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<ListGroupsRequest>, I>>(base?: I): ListGroupsRequest {
-    return ListGroupsRequest.fromPartial(base ?? {});
+    return ListGroupsRequest.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<ListGroupsRequest>, I>>(object: I): ListGroupsRequest {
     const message = createBaseListGroupsRequest();
     message.name = object.name ?? "";
@@ -8066,54 +9380,78 @@ export const ListGroupUsersRequest = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): ListGroupUsersRequest {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseListGroupUsersRequest();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag !== 10) {
+            break;
+          }
+
           message.group_id = reader.string();
-          break;
+          continue;
         case 2:
+          if (tag !== 18) {
+            break;
+          }
+
           message.limit = Int32Value.decode(reader, reader.uint32()).value;
-          break;
+          continue;
         case 3:
+          if (tag !== 26) {
+            break;
+          }
+
           message.state = Int32Value.decode(reader, reader.uint32()).value;
-          break;
+          continue;
         case 4:
+          if (tag !== 34) {
+            break;
+          }
+
           message.cursor = reader.string();
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
 
   fromJSON(object: any): ListGroupUsersRequest {
     return {
-      group_id: isSet(object.group_id) ? String(object.group_id) : "",
+      group_id: isSet(object.group_id) ? globalThis.String(object.group_id) : "",
       limit: isSet(object.limit) ? Number(object.limit) : undefined,
       state: isSet(object.state) ? Number(object.state) : undefined,
-      cursor: isSet(object.cursor) ? String(object.cursor) : "",
+      cursor: isSet(object.cursor) ? globalThis.String(object.cursor) : "",
     };
   },
 
   toJSON(message: ListGroupUsersRequest): unknown {
     const obj: any = {};
-    message.group_id !== undefined && (obj.group_id = message.group_id);
-    message.limit !== undefined && (obj.limit = message.limit);
-    message.state !== undefined && (obj.state = message.state);
-    message.cursor !== undefined && (obj.cursor = message.cursor);
+    if (message.group_id !== "") {
+      obj.group_id = message.group_id;
+    }
+    if (message.limit !== undefined) {
+      obj.limit = message.limit;
+    }
+    if (message.state !== undefined) {
+      obj.state = message.state;
+    }
+    if (message.cursor !== "") {
+      obj.cursor = message.cursor;
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<ListGroupUsersRequest>, I>>(base?: I): ListGroupUsersRequest {
-    return ListGroupUsersRequest.fromPartial(base ?? {});
+    return ListGroupUsersRequest.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<ListGroupUsersRequest>, I>>(object: I): ListGroupUsersRequest {
     const message = createBaseListGroupUsersRequest();
     message.group_id = object.group_id ?? "";
@@ -8146,54 +9484,78 @@ export const ListChannelUsersRequest = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): ListChannelUsersRequest {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseListChannelUsersRequest();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag !== 10) {
+            break;
+          }
+
           message.channel_id = reader.string();
-          break;
+          continue;
         case 2:
+          if (tag !== 18) {
+            break;
+          }
+
           message.limit = Int32Value.decode(reader, reader.uint32()).value;
-          break;
+          continue;
         case 3:
+          if (tag !== 26) {
+            break;
+          }
+
           message.state = Int32Value.decode(reader, reader.uint32()).value;
-          break;
+          continue;
         case 4:
+          if (tag !== 34) {
+            break;
+          }
+
           message.cursor = reader.string();
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
 
   fromJSON(object: any): ListChannelUsersRequest {
     return {
-      channel_id: isSet(object.channel_id) ? String(object.channel_id) : "",
+      channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "",
       limit: isSet(object.limit) ? Number(object.limit) : undefined,
       state: isSet(object.state) ? Number(object.state) : undefined,
-      cursor: isSet(object.cursor) ? String(object.cursor) : "",
+      cursor: isSet(object.cursor) ? globalThis.String(object.cursor) : "",
     };
   },
 
   toJSON(message: ListChannelUsersRequest): unknown {
     const obj: any = {};
-    message.channel_id !== undefined && (obj.channel_id = message.channel_id);
-    message.limit !== undefined && (obj.limit = message.limit);
-    message.state !== undefined && (obj.state = message.state);
-    message.cursor !== undefined && (obj.cursor = message.cursor);
+    if (message.channel_id !== "") {
+      obj.channel_id = message.channel_id;
+    }
+    if (message.limit !== undefined) {
+      obj.limit = message.limit;
+    }
+    if (message.state !== undefined) {
+      obj.state = message.state;
+    }
+    if (message.cursor !== "") {
+      obj.cursor = message.cursor;
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<ListChannelUsersRequest>, I>>(base?: I): ListChannelUsersRequest {
-    return ListChannelUsersRequest.fromPartial(base ?? {});
+    return ListChannelUsersRequest.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<ListChannelUsersRequest>, I>>(object: I): ListChannelUsersRequest {
     const message = createBaseListChannelUsersRequest();
     message.channel_id = object.channel_id ?? "";
@@ -8229,61 +9591,91 @@ export const ListLeaderboardRecordsAroundOwnerRequest = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): ListLeaderboardRecordsAroundOwnerRequest {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseListLeaderboardRecordsAroundOwnerRequest();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag !== 10) {
+            break;
+          }
+
           message.leaderboard_id = reader.string();
-          break;
+          continue;
         case 2:
+          if (tag !== 18) {
+            break;
+          }
+
           message.limit = UInt32Value.decode(reader, reader.uint32()).value;
-          break;
+          continue;
         case 3:
+          if (tag !== 26) {
+            break;
+          }
+
           message.owner_id = reader.string();
-          break;
+          continue;
         case 4:
+          if (tag !== 34) {
+            break;
+          }
+
           message.expiry = Int64Value.decode(reader, reader.uint32()).value;
-          break;
+          continue;
         case 5:
+          if (tag !== 42) {
+            break;
+          }
+
           message.cursor = reader.string();
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
 
   fromJSON(object: any): ListLeaderboardRecordsAroundOwnerRequest {
     return {
-      leaderboard_id: isSet(object.leaderboard_id) ? String(object.leaderboard_id) : "",
+      leaderboard_id: isSet(object.leaderboard_id) ? globalThis.String(object.leaderboard_id) : "",
       limit: isSet(object.limit) ? Number(object.limit) : undefined,
-      owner_id: isSet(object.owner_id) ? String(object.owner_id) : "",
+      owner_id: isSet(object.owner_id) ? globalThis.String(object.owner_id) : "",
       expiry: isSet(object.expiry) ? Number(object.expiry) : undefined,
-      cursor: isSet(object.cursor) ? String(object.cursor) : "",
+      cursor: isSet(object.cursor) ? globalThis.String(object.cursor) : "",
     };
   },
 
   toJSON(message: ListLeaderboardRecordsAroundOwnerRequest): unknown {
     const obj: any = {};
-    message.leaderboard_id !== undefined && (obj.leaderboard_id = message.leaderboard_id);
-    message.limit !== undefined && (obj.limit = message.limit);
-    message.owner_id !== undefined && (obj.owner_id = message.owner_id);
-    message.expiry !== undefined && (obj.expiry = message.expiry);
-    message.cursor !== undefined && (obj.cursor = message.cursor);
+    if (message.leaderboard_id !== "") {
+      obj.leaderboard_id = message.leaderboard_id;
+    }
+    if (message.limit !== undefined) {
+      obj.limit = message.limit;
+    }
+    if (message.owner_id !== "") {
+      obj.owner_id = message.owner_id;
+    }
+    if (message.expiry !== undefined) {
+      obj.expiry = message.expiry;
+    }
+    if (message.cursor !== "") {
+      obj.cursor = message.cursor;
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<ListLeaderboardRecordsAroundOwnerRequest>, I>>(
     base?: I,
   ): ListLeaderboardRecordsAroundOwnerRequest {
-    return ListLeaderboardRecordsAroundOwnerRequest.fromPartial(base ?? {});
+    return ListLeaderboardRecordsAroundOwnerRequest.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<ListLeaderboardRecordsAroundOwnerRequest>, I>>(
     object: I,
   ): ListLeaderboardRecordsAroundOwnerRequest {
@@ -8322,63 +9714,91 @@ export const ListLeaderboardRecordsRequest = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): ListLeaderboardRecordsRequest {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseListLeaderboardRecordsRequest();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag !== 10) {
+            break;
+          }
+
           message.leaderboard_id = reader.string();
-          break;
+          continue;
         case 2:
+          if (tag !== 18) {
+            break;
+          }
+
           message.owner_ids.push(reader.string());
-          break;
+          continue;
         case 3:
+          if (tag !== 26) {
+            break;
+          }
+
           message.limit = Int32Value.decode(reader, reader.uint32()).value;
-          break;
+          continue;
         case 4:
+          if (tag !== 34) {
+            break;
+          }
+
           message.cursor = reader.string();
-          break;
+          continue;
         case 5:
+          if (tag !== 42) {
+            break;
+          }
+
           message.expiry = Int64Value.decode(reader, reader.uint32()).value;
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
 
   fromJSON(object: any): ListLeaderboardRecordsRequest {
     return {
-      leaderboard_id: isSet(object.leaderboard_id) ? String(object.leaderboard_id) : "",
-      owner_ids: Array.isArray(object?.owner_ids) ? object.owner_ids.map((e: any) => String(e)) : [],
+      leaderboard_id: isSet(object.leaderboard_id) ? globalThis.String(object.leaderboard_id) : "",
+      owner_ids: globalThis.Array.isArray(object?.owner_ids)
+        ? object.owner_ids.map((e: any) => globalThis.String(e))
+        : [],
       limit: isSet(object.limit) ? Number(object.limit) : undefined,
-      cursor: isSet(object.cursor) ? String(object.cursor) : "",
+      cursor: isSet(object.cursor) ? globalThis.String(object.cursor) : "",
       expiry: isSet(object.expiry) ? Number(object.expiry) : undefined,
     };
   },
 
   toJSON(message: ListLeaderboardRecordsRequest): unknown {
     const obj: any = {};
-    message.leaderboard_id !== undefined && (obj.leaderboard_id = message.leaderboard_id);
-    if (message.owner_ids) {
-      obj.owner_ids = message.owner_ids.map((e) => e);
-    } else {
-      obj.owner_ids = [];
+    if (message.leaderboard_id !== "") {
+      obj.leaderboard_id = message.leaderboard_id;
     }
-    message.limit !== undefined && (obj.limit = message.limit);
-    message.cursor !== undefined && (obj.cursor = message.cursor);
-    message.expiry !== undefined && (obj.expiry = message.expiry);
+    if (message.owner_ids?.length) {
+      obj.owner_ids = message.owner_ids;
+    }
+    if (message.limit !== undefined) {
+      obj.limit = message.limit;
+    }
+    if (message.cursor !== "") {
+      obj.cursor = message.cursor;
+    }
+    if (message.expiry !== undefined) {
+      obj.expiry = message.expiry;
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<ListLeaderboardRecordsRequest>, I>>(base?: I): ListLeaderboardRecordsRequest {
-    return ListLeaderboardRecordsRequest.fromPartial(base ?? {});
+    return ListLeaderboardRecordsRequest.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<ListLeaderboardRecordsRequest>, I>>(
     object: I,
   ): ListLeaderboardRecordsRequest {
@@ -8427,34 +9847,59 @@ export const ListMatchesRequest = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): ListMatchesRequest {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseListMatchesRequest();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag !== 10) {
+            break;
+          }
+
           message.limit = Int32Value.decode(reader, reader.uint32()).value;
-          break;
+          continue;
         case 2:
+          if (tag !== 18) {
+            break;
+          }
+
           message.authoritative = BoolValue.decode(reader, reader.uint32()).value;
-          break;
+          continue;
         case 3:
+          if (tag !== 26) {
+            break;
+          }
+
           message.label = StringValue.decode(reader, reader.uint32()).value;
-          break;
+          continue;
         case 4:
+          if (tag !== 34) {
+            break;
+          }
+
           message.min_size = Int32Value.decode(reader, reader.uint32()).value;
-          break;
+          continue;
         case 5:
+          if (tag !== 42) {
+            break;
+          }
+
           message.max_size = Int32Value.decode(reader, reader.uint32()).value;
-          break;
+          continue;
         case 6:
+          if (tag !== 50) {
+            break;
+          }
+
           message.query = StringValue.decode(reader, reader.uint32()).value;
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
@@ -8472,19 +9917,30 @@ export const ListMatchesRequest = {
 
   toJSON(message: ListMatchesRequest): unknown {
     const obj: any = {};
-    message.limit !== undefined && (obj.limit = message.limit);
-    message.authoritative !== undefined && (obj.authoritative = message.authoritative);
-    message.label !== undefined && (obj.label = message.label);
-    message.min_size !== undefined && (obj.min_size = message.min_size);
-    message.max_size !== undefined && (obj.max_size = message.max_size);
-    message.query !== undefined && (obj.query = message.query);
+    if (message.limit !== undefined) {
+      obj.limit = message.limit;
+    }
+    if (message.authoritative !== undefined) {
+      obj.authoritative = message.authoritative;
+    }
+    if (message.label !== undefined) {
+      obj.label = message.label;
+    }
+    if (message.min_size !== undefined) {
+      obj.min_size = message.min_size;
+    }
+    if (message.max_size !== undefined) {
+      obj.max_size = message.max_size;
+    }
+    if (message.query !== undefined) {
+      obj.query = message.query;
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<ListMatchesRequest>, I>>(base?: I): ListMatchesRequest {
-    return ListMatchesRequest.fromPartial(base ?? {});
+    return ListMatchesRequest.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<ListMatchesRequest>, I>>(object: I): ListMatchesRequest {
     const message = createBaseListMatchesRequest();
     message.limit = object.limit ?? undefined;
@@ -8513,22 +9969,31 @@ export const ListNotificationsRequest = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): ListNotificationsRequest {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseListNotificationsRequest();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag !== 10) {
+            break;
+          }
+
           message.limit = Int32Value.decode(reader, reader.uint32()).value;
-          break;
+          continue;
         case 2:
+          if (tag !== 18) {
+            break;
+          }
+
           message.cacheable_cursor = reader.string();
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
@@ -8536,21 +10001,24 @@ export const ListNotificationsRequest = {
   fromJSON(object: any): ListNotificationsRequest {
     return {
       limit: isSet(object.limit) ? Number(object.limit) : undefined,
-      cacheable_cursor: isSet(object.cacheable_cursor) ? String(object.cacheable_cursor) : "",
+      cacheable_cursor: isSet(object.cacheable_cursor) ? globalThis.String(object.cacheable_cursor) : "",
     };
   },
 
   toJSON(message: ListNotificationsRequest): unknown {
     const obj: any = {};
-    message.limit !== undefined && (obj.limit = message.limit);
-    message.cacheable_cursor !== undefined && (obj.cacheable_cursor = message.cacheable_cursor);
+    if (message.limit !== undefined) {
+      obj.limit = message.limit;
+    }
+    if (message.cacheable_cursor !== "") {
+      obj.cacheable_cursor = message.cacheable_cursor;
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<ListNotificationsRequest>, I>>(base?: I): ListNotificationsRequest {
-    return ListNotificationsRequest.fromPartial(base ?? {});
+    return ListNotificationsRequest.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<ListNotificationsRequest>, I>>(object: I): ListNotificationsRequest {
     const message = createBaseListNotificationsRequest();
     message.limit = object.limit ?? undefined;
@@ -8581,54 +10049,78 @@ export const ListStorageObjectsRequest = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): ListStorageObjectsRequest {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseListStorageObjectsRequest();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag !== 10) {
+            break;
+          }
+
           message.user_id = reader.string();
-          break;
+          continue;
         case 2:
+          if (tag !== 18) {
+            break;
+          }
+
           message.collection = reader.string();
-          break;
+          continue;
         case 3:
+          if (tag !== 26) {
+            break;
+          }
+
           message.limit = Int32Value.decode(reader, reader.uint32()).value;
-          break;
+          continue;
         case 4:
+          if (tag !== 34) {
+            break;
+          }
+
           message.cursor = reader.string();
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
 
   fromJSON(object: any): ListStorageObjectsRequest {
     return {
-      user_id: isSet(object.user_id) ? String(object.user_id) : "",
-      collection: isSet(object.collection) ? String(object.collection) : "",
+      user_id: isSet(object.user_id) ? globalThis.String(object.user_id) : "",
+      collection: isSet(object.collection) ? globalThis.String(object.collection) : "",
       limit: isSet(object.limit) ? Number(object.limit) : undefined,
-      cursor: isSet(object.cursor) ? String(object.cursor) : "",
+      cursor: isSet(object.cursor) ? globalThis.String(object.cursor) : "",
     };
   },
 
   toJSON(message: ListStorageObjectsRequest): unknown {
     const obj: any = {};
-    message.user_id !== undefined && (obj.user_id = message.user_id);
-    message.collection !== undefined && (obj.collection = message.collection);
-    message.limit !== undefined && (obj.limit = message.limit);
-    message.cursor !== undefined && (obj.cursor = message.cursor);
+    if (message.user_id !== "") {
+      obj.user_id = message.user_id;
+    }
+    if (message.collection !== "") {
+      obj.collection = message.collection;
+    }
+    if (message.limit !== undefined) {
+      obj.limit = message.limit;
+    }
+    if (message.cursor !== "") {
+      obj.cursor = message.cursor;
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<ListStorageObjectsRequest>, I>>(base?: I): ListStorageObjectsRequest {
-    return ListStorageObjectsRequest.fromPartial(base ?? {});
+    return ListStorageObjectsRequest.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<ListStorageObjectsRequest>, I>>(object: I): ListStorageObjectsRequest {
     const message = createBaseListStorageObjectsRequest();
     message.user_id = object.user_id ?? "";
@@ -8655,22 +10147,31 @@ export const ListSubscriptionsRequest = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): ListSubscriptionsRequest {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseListSubscriptionsRequest();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag !== 10) {
+            break;
+          }
+
           message.limit = Int32Value.decode(reader, reader.uint32()).value;
-          break;
+          continue;
         case 2:
+          if (tag !== 18) {
+            break;
+          }
+
           message.cursor = reader.string();
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
@@ -8678,21 +10179,24 @@ export const ListSubscriptionsRequest = {
   fromJSON(object: any): ListSubscriptionsRequest {
     return {
       limit: isSet(object.limit) ? Number(object.limit) : undefined,
-      cursor: isSet(object.cursor) ? String(object.cursor) : "",
+      cursor: isSet(object.cursor) ? globalThis.String(object.cursor) : "",
     };
   },
 
   toJSON(message: ListSubscriptionsRequest): unknown {
     const obj: any = {};
-    message.limit !== undefined && (obj.limit = message.limit);
-    message.cursor !== undefined && (obj.cursor = message.cursor);
+    if (message.limit !== undefined) {
+      obj.limit = message.limit;
+    }
+    if (message.cursor !== "") {
+      obj.cursor = message.cursor;
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<ListSubscriptionsRequest>, I>>(base?: I): ListSubscriptionsRequest {
-    return ListSubscriptionsRequest.fromPartial(base ?? {});
+    return ListSubscriptionsRequest.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<ListSubscriptionsRequest>, I>>(object: I): ListSubscriptionsRequest {
     const message = createBaseListSubscriptionsRequest();
     message.limit = object.limit ?? undefined;
@@ -8726,61 +10230,91 @@ export const ListTournamentRecordsAroundOwnerRequest = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): ListTournamentRecordsAroundOwnerRequest {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseListTournamentRecordsAroundOwnerRequest();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag !== 10) {
+            break;
+          }
+
           message.tournament_id = reader.string();
-          break;
+          continue;
         case 2:
+          if (tag !== 18) {
+            break;
+          }
+
           message.limit = UInt32Value.decode(reader, reader.uint32()).value;
-          break;
+          continue;
         case 3:
+          if (tag !== 26) {
+            break;
+          }
+
           message.owner_id = reader.string();
-          break;
+          continue;
         case 4:
+          if (tag !== 34) {
+            break;
+          }
+
           message.expiry = Int64Value.decode(reader, reader.uint32()).value;
-          break;
+          continue;
         case 5:
+          if (tag !== 42) {
+            break;
+          }
+
           message.cursor = reader.string();
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
 
   fromJSON(object: any): ListTournamentRecordsAroundOwnerRequest {
     return {
-      tournament_id: isSet(object.tournament_id) ? String(object.tournament_id) : "",
+      tournament_id: isSet(object.tournament_id) ? globalThis.String(object.tournament_id) : "",
       limit: isSet(object.limit) ? Number(object.limit) : undefined,
-      owner_id: isSet(object.owner_id) ? String(object.owner_id) : "",
+      owner_id: isSet(object.owner_id) ? globalThis.String(object.owner_id) : "",
       expiry: isSet(object.expiry) ? Number(object.expiry) : undefined,
-      cursor: isSet(object.cursor) ? String(object.cursor) : "",
+      cursor: isSet(object.cursor) ? globalThis.String(object.cursor) : "",
     };
   },
 
   toJSON(message: ListTournamentRecordsAroundOwnerRequest): unknown {
     const obj: any = {};
-    message.tournament_id !== undefined && (obj.tournament_id = message.tournament_id);
-    message.limit !== undefined && (obj.limit = message.limit);
-    message.owner_id !== undefined && (obj.owner_id = message.owner_id);
-    message.expiry !== undefined && (obj.expiry = message.expiry);
-    message.cursor !== undefined && (obj.cursor = message.cursor);
+    if (message.tournament_id !== "") {
+      obj.tournament_id = message.tournament_id;
+    }
+    if (message.limit !== undefined) {
+      obj.limit = message.limit;
+    }
+    if (message.owner_id !== "") {
+      obj.owner_id = message.owner_id;
+    }
+    if (message.expiry !== undefined) {
+      obj.expiry = message.expiry;
+    }
+    if (message.cursor !== "") {
+      obj.cursor = message.cursor;
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<ListTournamentRecordsAroundOwnerRequest>, I>>(
     base?: I,
   ): ListTournamentRecordsAroundOwnerRequest {
-    return ListTournamentRecordsAroundOwnerRequest.fromPartial(base ?? {});
+    return ListTournamentRecordsAroundOwnerRequest.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<ListTournamentRecordsAroundOwnerRequest>, I>>(
     object: I,
   ): ListTournamentRecordsAroundOwnerRequest {
@@ -8819,63 +10353,91 @@ export const ListTournamentRecordsRequest = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): ListTournamentRecordsRequest {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseListTournamentRecordsRequest();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag !== 10) {
+            break;
+          }
+
           message.tournament_id = reader.string();
-          break;
+          continue;
         case 2:
+          if (tag !== 18) {
+            break;
+          }
+
           message.owner_ids.push(reader.string());
-          break;
+          continue;
         case 3:
+          if (tag !== 26) {
+            break;
+          }
+
           message.limit = Int32Value.decode(reader, reader.uint32()).value;
-          break;
+          continue;
         case 4:
+          if (tag !== 34) {
+            break;
+          }
+
           message.cursor = reader.string();
-          break;
+          continue;
         case 5:
+          if (tag !== 42) {
+            break;
+          }
+
           message.expiry = Int64Value.decode(reader, reader.uint32()).value;
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
 
   fromJSON(object: any): ListTournamentRecordsRequest {
     return {
-      tournament_id: isSet(object.tournament_id) ? String(object.tournament_id) : "",
-      owner_ids: Array.isArray(object?.owner_ids) ? object.owner_ids.map((e: any) => String(e)) : [],
+      tournament_id: isSet(object.tournament_id) ? globalThis.String(object.tournament_id) : "",
+      owner_ids: globalThis.Array.isArray(object?.owner_ids)
+        ? object.owner_ids.map((e: any) => globalThis.String(e))
+        : [],
       limit: isSet(object.limit) ? Number(object.limit) : undefined,
-      cursor: isSet(object.cursor) ? String(object.cursor) : "",
+      cursor: isSet(object.cursor) ? globalThis.String(object.cursor) : "",
       expiry: isSet(object.expiry) ? Number(object.expiry) : undefined,
     };
   },
 
   toJSON(message: ListTournamentRecordsRequest): unknown {
     const obj: any = {};
-    message.tournament_id !== undefined && (obj.tournament_id = message.tournament_id);
-    if (message.owner_ids) {
-      obj.owner_ids = message.owner_ids.map((e) => e);
-    } else {
-      obj.owner_ids = [];
+    if (message.tournament_id !== "") {
+      obj.tournament_id = message.tournament_id;
     }
-    message.limit !== undefined && (obj.limit = message.limit);
-    message.cursor !== undefined && (obj.cursor = message.cursor);
-    message.expiry !== undefined && (obj.expiry = message.expiry);
+    if (message.owner_ids?.length) {
+      obj.owner_ids = message.owner_ids;
+    }
+    if (message.limit !== undefined) {
+      obj.limit = message.limit;
+    }
+    if (message.cursor !== "") {
+      obj.cursor = message.cursor;
+    }
+    if (message.expiry !== undefined) {
+      obj.expiry = message.expiry;
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<ListTournamentRecordsRequest>, I>>(base?: I): ListTournamentRecordsRequest {
-    return ListTournamentRecordsRequest.fromPartial(base ?? {});
+    return ListTournamentRecordsRequest.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<ListTournamentRecordsRequest>, I>>(object: I): ListTournamentRecordsRequest {
     const message = createBaseListTournamentRecordsRequest();
     message.tournament_id = object.tournament_id ?? "";
@@ -8922,34 +10484,59 @@ export const ListTournamentsRequest = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): ListTournamentsRequest {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseListTournamentsRequest();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag !== 10) {
+            break;
+          }
+
           message.category_start = UInt32Value.decode(reader, reader.uint32()).value;
-          break;
+          continue;
         case 2:
+          if (tag !== 18) {
+            break;
+          }
+
           message.category_end = UInt32Value.decode(reader, reader.uint32()).value;
-          break;
+          continue;
         case 3:
+          if (tag !== 26) {
+            break;
+          }
+
           message.start_time = UInt32Value.decode(reader, reader.uint32()).value;
-          break;
+          continue;
         case 4:
+          if (tag !== 34) {
+            break;
+          }
+
           message.end_time = UInt32Value.decode(reader, reader.uint32()).value;
-          break;
+          continue;
         case 6:
+          if (tag !== 50) {
+            break;
+          }
+
           message.limit = Int32Value.decode(reader, reader.uint32()).value;
-          break;
+          continue;
         case 8:
+          if (tag !== 66) {
+            break;
+          }
+
           message.cursor = reader.string();
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
@@ -8961,25 +10548,36 @@ export const ListTournamentsRequest = {
       start_time: isSet(object.start_time) ? Number(object.start_time) : undefined,
       end_time: isSet(object.end_time) ? Number(object.end_time) : undefined,
       limit: isSet(object.limit) ? Number(object.limit) : undefined,
-      cursor: isSet(object.cursor) ? String(object.cursor) : "",
+      cursor: isSet(object.cursor) ? globalThis.String(object.cursor) : "",
     };
   },
 
   toJSON(message: ListTournamentsRequest): unknown {
     const obj: any = {};
-    message.category_start !== undefined && (obj.category_start = message.category_start);
-    message.category_end !== undefined && (obj.category_end = message.category_end);
-    message.start_time !== undefined && (obj.start_time = message.start_time);
-    message.end_time !== undefined && (obj.end_time = message.end_time);
-    message.limit !== undefined && (obj.limit = message.limit);
-    message.cursor !== undefined && (obj.cursor = message.cursor);
+    if (message.category_start !== undefined) {
+      obj.category_start = message.category_start;
+    }
+    if (message.category_end !== undefined) {
+      obj.category_end = message.category_end;
+    }
+    if (message.start_time !== undefined) {
+      obj.start_time = message.start_time;
+    }
+    if (message.end_time !== undefined) {
+      obj.end_time = message.end_time;
+    }
+    if (message.limit !== undefined) {
+      obj.limit = message.limit;
+    }
+    if (message.cursor !== "") {
+      obj.cursor = message.cursor;
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<ListTournamentsRequest>, I>>(base?: I): ListTournamentsRequest {
-    return ListTournamentsRequest.fromPartial(base ?? {});
+    return ListTournamentsRequest.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<ListTournamentsRequest>, I>>(object: I): ListTournamentsRequest {
     const message = createBaseListTournamentsRequest();
     message.category_start = object.category_start ?? undefined;
@@ -9014,54 +10612,78 @@ export const ListUserGroupsRequest = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): ListUserGroupsRequest {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseListUserGroupsRequest();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag !== 10) {
+            break;
+          }
+
           message.user_id = reader.string();
-          break;
+          continue;
         case 2:
+          if (tag !== 18) {
+            break;
+          }
+
           message.limit = Int32Value.decode(reader, reader.uint32()).value;
-          break;
+          continue;
         case 3:
+          if (tag !== 26) {
+            break;
+          }
+
           message.state = Int32Value.decode(reader, reader.uint32()).value;
-          break;
+          continue;
         case 4:
+          if (tag !== 34) {
+            break;
+          }
+
           message.cursor = reader.string();
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
 
   fromJSON(object: any): ListUserGroupsRequest {
     return {
-      user_id: isSet(object.user_id) ? String(object.user_id) : "",
+      user_id: isSet(object.user_id) ? globalThis.String(object.user_id) : "",
       limit: isSet(object.limit) ? Number(object.limit) : undefined,
       state: isSet(object.state) ? Number(object.state) : undefined,
-      cursor: isSet(object.cursor) ? String(object.cursor) : "",
+      cursor: isSet(object.cursor) ? globalThis.String(object.cursor) : "",
     };
   },
 
   toJSON(message: ListUserGroupsRequest): unknown {
     const obj: any = {};
-    message.user_id !== undefined && (obj.user_id = message.user_id);
-    message.limit !== undefined && (obj.limit = message.limit);
-    message.state !== undefined && (obj.state = message.state);
-    message.cursor !== undefined && (obj.cursor = message.cursor);
+    if (message.user_id !== "") {
+      obj.user_id = message.user_id;
+    }
+    if (message.limit !== undefined) {
+      obj.limit = message.limit;
+    }
+    if (message.state !== undefined) {
+      obj.state = message.state;
+    }
+    if (message.cursor !== "") {
+      obj.cursor = message.cursor;
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<ListUserGroupsRequest>, I>>(base?: I): ListUserGroupsRequest {
-    return ListUserGroupsRequest.fromPartial(base ?? {});
+    return ListUserGroupsRequest.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<ListUserGroupsRequest>, I>>(object: I): ListUserGroupsRequest {
     const message = createBaseListUserGroupsRequest();
     message.user_id = object.user_id ?? "";
@@ -9100,64 +10722,100 @@ export const Match = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): Match {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseMatch();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag !== 10) {
+            break;
+          }
+
           message.match_id = reader.string();
-          break;
+          continue;
         case 2:
+          if (tag !== 16) {
+            break;
+          }
+
           message.authoritative = reader.bool();
-          break;
+          continue;
         case 3:
+          if (tag !== 26) {
+            break;
+          }
+
           message.label = StringValue.decode(reader, reader.uint32()).value;
-          break;
+          continue;
         case 4:
+          if (tag !== 32) {
+            break;
+          }
+
           message.size = reader.int32();
-          break;
+          continue;
         case 5:
+          if (tag !== 40) {
+            break;
+          }
+
           message.tick_rate = reader.int32();
-          break;
+          continue;
         case 6:
+          if (tag !== 50) {
+            break;
+          }
+
           message.handler_name = reader.string();
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
 
   fromJSON(object: any): Match {
     return {
-      match_id: isSet(object.match_id) ? String(object.match_id) : "",
-      authoritative: isSet(object.authoritative) ? Boolean(object.authoritative) : false,
+      match_id: isSet(object.match_id) ? globalThis.String(object.match_id) : "",
+      authoritative: isSet(object.authoritative) ? globalThis.Boolean(object.authoritative) : false,
       label: isSet(object.label) ? String(object.label) : undefined,
-      size: isSet(object.size) ? Number(object.size) : 0,
-      tick_rate: isSet(object.tick_rate) ? Number(object.tick_rate) : 0,
-      handler_name: isSet(object.handler_name) ? String(object.handler_name) : "",
+      size: isSet(object.size) ? globalThis.Number(object.size) : 0,
+      tick_rate: isSet(object.tick_rate) ? globalThis.Number(object.tick_rate) : 0,
+      handler_name: isSet(object.handler_name) ? globalThis.String(object.handler_name) : "",
     };
   },
 
   toJSON(message: Match): unknown {
     const obj: any = {};
-    message.match_id !== undefined && (obj.match_id = message.match_id);
-    message.authoritative !== undefined && (obj.authoritative = message.authoritative);
-    message.label !== undefined && (obj.label = message.label);
-    message.size !== undefined && (obj.size = Math.round(message.size));
-    message.tick_rate !== undefined && (obj.tick_rate = Math.round(message.tick_rate));
-    message.handler_name !== undefined && (obj.handler_name = message.handler_name);
+    if (message.match_id !== "") {
+      obj.match_id = message.match_id;
+    }
+    if (message.authoritative === true) {
+      obj.authoritative = message.authoritative;
+    }
+    if (message.label !== undefined) {
+      obj.label = message.label;
+    }
+    if (message.size !== 0) {
+      obj.size = Math.round(message.size);
+    }
+    if (message.tick_rate !== 0) {
+      obj.tick_rate = Math.round(message.tick_rate);
+    }
+    if (message.handler_name !== "") {
+      obj.handler_name = message.handler_name;
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<Match>, I>>(base?: I): Match {
-    return Match.fromPartial(base ?? {});
+    return Match.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<Match>, I>>(object: I): Match {
     const message = createBaseMatch();
     message.match_id = object.match_id ?? "";
@@ -9183,41 +10841,45 @@ export const MatchList = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): MatchList {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseMatchList();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag !== 10) {
+            break;
+          }
+
           message.matches.push(Match.decode(reader, reader.uint32()));
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
 
   fromJSON(object: any): MatchList {
-    return { matches: Array.isArray(object?.matches) ? object.matches.map((e: any) => Match.fromJSON(e)) : [] };
+    return {
+      matches: globalThis.Array.isArray(object?.matches) ? object.matches.map((e: any) => Match.fromJSON(e)) : [],
+    };
   },
 
   toJSON(message: MatchList): unknown {
     const obj: any = {};
-    if (message.matches) {
-      obj.matches = message.matches.map((e) => e ? Match.toJSON(e) : undefined);
-    } else {
-      obj.matches = [];
+    if (message.matches?.length) {
+      obj.matches = message.matches.map((e) => Match.toJSON(e));
     }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<MatchList>, I>>(base?: I): MatchList {
-    return MatchList.fromPartial(base ?? {});
+    return MatchList.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<MatchList>, I>>(object: I): MatchList {
     const message = createBaseMatchList();
     message.matches = object.matches?.map((e) => Match.fromPartial(e)) || [];
@@ -9256,69 +10918,111 @@ export const Notification = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): Notification {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseNotification();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag !== 10) {
+            break;
+          }
+
           message.id = reader.string();
-          break;
+          continue;
         case 2:
+          if (tag !== 18) {
+            break;
+          }
+
           message.subject = reader.string();
-          break;
+          continue;
         case 3:
+          if (tag !== 26) {
+            break;
+          }
+
           message.content = reader.string();
-          break;
+          continue;
         case 4:
+          if (tag !== 32) {
+            break;
+          }
+
           message.code = reader.int32();
-          break;
+          continue;
         case 5:
+          if (tag !== 42) {
+            break;
+          }
+
           message.sender_id = reader.string();
-          break;
+          continue;
         case 6:
+          if (tag !== 50) {
+            break;
+          }
+
           message.create_time = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
-          break;
+          continue;
         case 7:
+          if (tag !== 56) {
+            break;
+          }
+
           message.persistent = reader.bool();
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
 
   fromJSON(object: any): Notification {
     return {
-      id: isSet(object.id) ? String(object.id) : "",
-      subject: isSet(object.subject) ? String(object.subject) : "",
-      content: isSet(object.content) ? String(object.content) : "",
-      code: isSet(object.code) ? Number(object.code) : 0,
-      sender_id: isSet(object.sender_id) ? String(object.sender_id) : "",
+      id: isSet(object.id) ? globalThis.String(object.id) : "",
+      subject: isSet(object.subject) ? globalThis.String(object.subject) : "",
+      content: isSet(object.content) ? globalThis.String(object.content) : "",
+      code: isSet(object.code) ? globalThis.Number(object.code) : 0,
+      sender_id: isSet(object.sender_id) ? globalThis.String(object.sender_id) : "",
       create_time: isSet(object.create_time) ? fromJsonTimestamp(object.create_time) : undefined,
-      persistent: isSet(object.persistent) ? Boolean(object.persistent) : false,
+      persistent: isSet(object.persistent) ? globalThis.Boolean(object.persistent) : false,
     };
   },
 
   toJSON(message: Notification): unknown {
     const obj: any = {};
-    message.id !== undefined && (obj.id = message.id);
-    message.subject !== undefined && (obj.subject = message.subject);
-    message.content !== undefined && (obj.content = message.content);
-    message.code !== undefined && (obj.code = Math.round(message.code));
-    message.sender_id !== undefined && (obj.sender_id = message.sender_id);
-    message.create_time !== undefined && (obj.create_time = message.create_time.toISOString());
-    message.persistent !== undefined && (obj.persistent = message.persistent);
+    if (message.id !== "") {
+      obj.id = message.id;
+    }
+    if (message.subject !== "") {
+      obj.subject = message.subject;
+    }
+    if (message.content !== "") {
+      obj.content = message.content;
+    }
+    if (message.code !== 0) {
+      obj.code = Math.round(message.code);
+    }
+    if (message.sender_id !== "") {
+      obj.sender_id = message.sender_id;
+    }
+    if (message.create_time !== undefined) {
+      obj.create_time = message.create_time.toISOString();
+    }
+    if (message.persistent === true) {
+      obj.persistent = message.persistent;
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<Notification>, I>>(base?: I): Notification {
-    return Notification.fromPartial(base ?? {});
+    return Notification.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<Notification>, I>>(object: I): Notification {
     const message = createBaseNotification();
     message.id = object.id ?? "";
@@ -9348,50 +11052,58 @@ export const NotificationList = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): NotificationList {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseNotificationList();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag !== 10) {
+            break;
+          }
+
           message.notifications.push(Notification.decode(reader, reader.uint32()));
-          break;
+          continue;
         case 2:
+          if (tag !== 18) {
+            break;
+          }
+
           message.cacheable_cursor = reader.string();
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
 
   fromJSON(object: any): NotificationList {
     return {
-      notifications: Array.isArray(object?.notifications)
+      notifications: globalThis.Array.isArray(object?.notifications)
         ? object.notifications.map((e: any) => Notification.fromJSON(e))
         : [],
-      cacheable_cursor: isSet(object.cacheable_cursor) ? String(object.cacheable_cursor) : "",
+      cacheable_cursor: isSet(object.cacheable_cursor) ? globalThis.String(object.cacheable_cursor) : "",
     };
   },
 
   toJSON(message: NotificationList): unknown {
     const obj: any = {};
-    if (message.notifications) {
-      obj.notifications = message.notifications.map((e) => e ? Notification.toJSON(e) : undefined);
-    } else {
-      obj.notifications = [];
+    if (message.notifications?.length) {
+      obj.notifications = message.notifications.map((e) => Notification.toJSON(e));
     }
-    message.cacheable_cursor !== undefined && (obj.cacheable_cursor = message.cacheable_cursor);
+    if (message.cacheable_cursor !== "") {
+      obj.cacheable_cursor = message.cacheable_cursor;
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<NotificationList>, I>>(base?: I): NotificationList {
-    return NotificationList.fromPartial(base ?? {});
+    return NotificationList.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<NotificationList>, I>>(object: I): NotificationList {
     const message = createBaseNotificationList();
     message.notifications = object.notifications?.map((e) => Notification.fromPartial(e)) || [];
@@ -9416,48 +11128,56 @@ export const PromoteGroupUsersRequest = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): PromoteGroupUsersRequest {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBasePromoteGroupUsersRequest();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag !== 10) {
+            break;
+          }
+
           message.group_id = reader.string();
-          break;
+          continue;
         case 2:
+          if (tag !== 18) {
+            break;
+          }
+
           message.user_ids.push(reader.string());
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
 
   fromJSON(object: any): PromoteGroupUsersRequest {
     return {
-      group_id: isSet(object.group_id) ? String(object.group_id) : "",
-      user_ids: Array.isArray(object?.user_ids) ? object.user_ids.map((e: any) => String(e)) : [],
+      group_id: isSet(object.group_id) ? globalThis.String(object.group_id) : "",
+      user_ids: globalThis.Array.isArray(object?.user_ids) ? object.user_ids.map((e: any) => globalThis.String(e)) : [],
     };
   },
 
   toJSON(message: PromoteGroupUsersRequest): unknown {
     const obj: any = {};
-    message.group_id !== undefined && (obj.group_id = message.group_id);
-    if (message.user_ids) {
-      obj.user_ids = message.user_ids.map((e) => e);
-    } else {
-      obj.user_ids = [];
+    if (message.group_id !== "") {
+      obj.group_id = message.group_id;
+    }
+    if (message.user_ids?.length) {
+      obj.user_ids = message.user_ids;
     }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<PromoteGroupUsersRequest>, I>>(base?: I): PromoteGroupUsersRequest {
-    return PromoteGroupUsersRequest.fromPartial(base ?? {});
+    return PromoteGroupUsersRequest.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<PromoteGroupUsersRequest>, I>>(object: I): PromoteGroupUsersRequest {
     const message = createBasePromoteGroupUsersRequest();
     message.group_id = object.group_id ?? "";
@@ -9482,48 +11202,56 @@ export const DemoteGroupUsersRequest = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): DemoteGroupUsersRequest {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseDemoteGroupUsersRequest();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag !== 10) {
+            break;
+          }
+
           message.group_id = reader.string();
-          break;
+          continue;
         case 2:
+          if (tag !== 18) {
+            break;
+          }
+
           message.user_ids.push(reader.string());
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
 
   fromJSON(object: any): DemoteGroupUsersRequest {
     return {
-      group_id: isSet(object.group_id) ? String(object.group_id) : "",
-      user_ids: Array.isArray(object?.user_ids) ? object.user_ids.map((e: any) => String(e)) : [],
+      group_id: isSet(object.group_id) ? globalThis.String(object.group_id) : "",
+      user_ids: globalThis.Array.isArray(object?.user_ids) ? object.user_ids.map((e: any) => globalThis.String(e)) : [],
     };
   },
 
   toJSON(message: DemoteGroupUsersRequest): unknown {
     const obj: any = {};
-    message.group_id !== undefined && (obj.group_id = message.group_id);
-    if (message.user_ids) {
-      obj.user_ids = message.user_ids.map((e) => e);
-    } else {
-      obj.user_ids = [];
+    if (message.group_id !== "") {
+      obj.group_id = message.group_id;
+    }
+    if (message.user_ids?.length) {
+      obj.user_ids = message.user_ids;
     }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<DemoteGroupUsersRequest>, I>>(base?: I): DemoteGroupUsersRequest {
-    return DemoteGroupUsersRequest.fromPartial(base ?? {});
+    return DemoteGroupUsersRequest.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<DemoteGroupUsersRequest>, I>>(object: I): DemoteGroupUsersRequest {
     const message = createBaseDemoteGroupUsersRequest();
     message.group_id = object.group_id ?? "";
@@ -9551,49 +11279,67 @@ export const ReadStorageObjectId = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): ReadStorageObjectId {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseReadStorageObjectId();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag !== 10) {
+            break;
+          }
+
           message.collection = reader.string();
-          break;
+          continue;
         case 2:
+          if (tag !== 18) {
+            break;
+          }
+
           message.key = reader.string();
-          break;
+          continue;
         case 3:
+          if (tag !== 26) {
+            break;
+          }
+
           message.user_id = reader.string();
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
 
   fromJSON(object: any): ReadStorageObjectId {
     return {
-      collection: isSet(object.collection) ? String(object.collection) : "",
-      key: isSet(object.key) ? String(object.key) : "",
-      user_id: isSet(object.user_id) ? String(object.user_id) : "",
+      collection: isSet(object.collection) ? globalThis.String(object.collection) : "",
+      key: isSet(object.key) ? globalThis.String(object.key) : "",
+      user_id: isSet(object.user_id) ? globalThis.String(object.user_id) : "",
     };
   },
 
   toJSON(message: ReadStorageObjectId): unknown {
     const obj: any = {};
-    message.collection !== undefined && (obj.collection = message.collection);
-    message.key !== undefined && (obj.key = message.key);
-    message.user_id !== undefined && (obj.user_id = message.user_id);
+    if (message.collection !== "") {
+      obj.collection = message.collection;
+    }
+    if (message.key !== "") {
+      obj.key = message.key;
+    }
+    if (message.user_id !== "") {
+      obj.user_id = message.user_id;
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<ReadStorageObjectId>, I>>(base?: I): ReadStorageObjectId {
-    return ReadStorageObjectId.fromPartial(base ?? {});
+    return ReadStorageObjectId.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<ReadStorageObjectId>, I>>(object: I): ReadStorageObjectId {
     const message = createBaseReadStorageObjectId();
     message.collection = object.collection ?? "";
@@ -9616,26 +11362,31 @@ export const ReadStorageObjectsRequest = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): ReadStorageObjectsRequest {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseReadStorageObjectsRequest();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag !== 10) {
+            break;
+          }
+
           message.object_ids.push(ReadStorageObjectId.decode(reader, reader.uint32()));
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
 
   fromJSON(object: any): ReadStorageObjectsRequest {
     return {
-      object_ids: Array.isArray(object?.object_ids)
+      object_ids: globalThis.Array.isArray(object?.object_ids)
         ? object.object_ids.map((e: any) => ReadStorageObjectId.fromJSON(e))
         : [],
     };
@@ -9643,18 +11394,15 @@ export const ReadStorageObjectsRequest = {
 
   toJSON(message: ReadStorageObjectsRequest): unknown {
     const obj: any = {};
-    if (message.object_ids) {
-      obj.object_ids = message.object_ids.map((e) => e ? ReadStorageObjectId.toJSON(e) : undefined);
-    } else {
-      obj.object_ids = [];
+    if (message.object_ids?.length) {
+      obj.object_ids = message.object_ids.map((e) => ReadStorageObjectId.toJSON(e));
     }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<ReadStorageObjectsRequest>, I>>(base?: I): ReadStorageObjectsRequest {
-    return ReadStorageObjectsRequest.fromPartial(base ?? {});
+    return ReadStorageObjectsRequest.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<ReadStorageObjectsRequest>, I>>(object: I): ReadStorageObjectsRequest {
     const message = createBaseReadStorageObjectsRequest();
     message.object_ids = object.object_ids?.map((e) => ReadStorageObjectId.fromPartial(e)) || [];
@@ -9681,49 +11429,67 @@ export const Rpc = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): Rpc {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseRpc();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag !== 10) {
+            break;
+          }
+
           message.id = reader.string();
-          break;
+          continue;
         case 2:
+          if (tag !== 18) {
+            break;
+          }
+
           message.payload = reader.string();
-          break;
+          continue;
         case 3:
+          if (tag !== 26) {
+            break;
+          }
+
           message.http_key = reader.string();
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
 
   fromJSON(object: any): Rpc {
     return {
-      id: isSet(object.id) ? String(object.id) : "",
-      payload: isSet(object.payload) ? String(object.payload) : "",
-      http_key: isSet(object.http_key) ? String(object.http_key) : "",
+      id: isSet(object.id) ? globalThis.String(object.id) : "",
+      payload: isSet(object.payload) ? globalThis.String(object.payload) : "",
+      http_key: isSet(object.http_key) ? globalThis.String(object.http_key) : "",
     };
   },
 
   toJSON(message: Rpc): unknown {
     const obj: any = {};
-    message.id !== undefined && (obj.id = message.id);
-    message.payload !== undefined && (obj.payload = message.payload);
-    message.http_key !== undefined && (obj.http_key = message.http_key);
+    if (message.id !== "") {
+      obj.id = message.id;
+    }
+    if (message.payload !== "") {
+      obj.payload = message.payload;
+    }
+    if (message.http_key !== "") {
+      obj.http_key = message.http_key;
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<Rpc>, I>>(base?: I): Rpc {
-    return Rpc.fromPartial(base ?? {});
+    return Rpc.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<Rpc>, I>>(object: I): Rpc {
     const message = createBaseRpc();
     message.id = object.id ?? "";
@@ -9752,49 +11518,67 @@ export const Session = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): Session {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseSession();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag !== 8) {
+            break;
+          }
+
           message.created = reader.bool();
-          break;
+          continue;
         case 2:
+          if (tag !== 18) {
+            break;
+          }
+
           message.token = reader.string();
-          break;
+          continue;
         case 3:
+          if (tag !== 26) {
+            break;
+          }
+
           message.refresh_token = reader.string();
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
 
   fromJSON(object: any): Session {
     return {
-      created: isSet(object.created) ? Boolean(object.created) : false,
-      token: isSet(object.token) ? String(object.token) : "",
-      refresh_token: isSet(object.refresh_token) ? String(object.refresh_token) : "",
+      created: isSet(object.created) ? globalThis.Boolean(object.created) : false,
+      token: isSet(object.token) ? globalThis.String(object.token) : "",
+      refresh_token: isSet(object.refresh_token) ? globalThis.String(object.refresh_token) : "",
     };
   },
 
   toJSON(message: Session): unknown {
     const obj: any = {};
-    message.created !== undefined && (obj.created = message.created);
-    message.token !== undefined && (obj.token = message.token);
-    message.refresh_token !== undefined && (obj.refresh_token = message.refresh_token);
+    if (message.created === true) {
+      obj.created = message.created;
+    }
+    if (message.token !== "") {
+      obj.token = message.token;
+    }
+    if (message.refresh_token !== "") {
+      obj.refresh_token = message.refresh_token;
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<Session>, I>>(base?: I): Session {
-    return Session.fromPartial(base ?? {});
+    return Session.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<Session>, I>>(object: I): Session {
     const message = createBaseSession();
     message.created = object.created ?? false;
@@ -9851,56 +11635,93 @@ export const StorageObject = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): StorageObject {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseStorageObject();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag !== 10) {
+            break;
+          }
+
           message.collection = reader.string();
-          break;
+          continue;
         case 2:
+          if (tag !== 18) {
+            break;
+          }
+
           message.key = reader.string();
-          break;
+          continue;
         case 3:
+          if (tag !== 26) {
+            break;
+          }
+
           message.user_id = reader.string();
-          break;
+          continue;
         case 4:
+          if (tag !== 34) {
+            break;
+          }
+
           message.value = reader.string();
-          break;
+          continue;
         case 5:
+          if (tag !== 42) {
+            break;
+          }
+
           message.version = reader.string();
-          break;
+          continue;
         case 6:
+          if (tag !== 48) {
+            break;
+          }
+
           message.permission_read = reader.int32();
-          break;
+          continue;
         case 7:
+          if (tag !== 56) {
+            break;
+          }
+
           message.permission_write = reader.int32();
-          break;
+          continue;
         case 8:
+          if (tag !== 66) {
+            break;
+          }
+
           message.create_time = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
-          break;
+          continue;
         case 9:
+          if (tag !== 74) {
+            break;
+          }
+
           message.update_time = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
 
   fromJSON(object: any): StorageObject {
     return {
-      collection: isSet(object.collection) ? String(object.collection) : "",
-      key: isSet(object.key) ? String(object.key) : "",
-      user_id: isSet(object.user_id) ? String(object.user_id) : "",
-      value: isSet(object.value) ? String(object.value) : "",
-      version: isSet(object.version) ? String(object.version) : "",
-      permission_read: isSet(object.permission_read) ? Number(object.permission_read) : 0,
-      permission_write: isSet(object.permission_write) ? Number(object.permission_write) : 0,
+      collection: isSet(object.collection) ? globalThis.String(object.collection) : "",
+      key: isSet(object.key) ? globalThis.String(object.key) : "",
+      user_id: isSet(object.user_id) ? globalThis.String(object.user_id) : "",
+      value: isSet(object.value) ? globalThis.String(object.value) : "",
+      version: isSet(object.version) ? globalThis.String(object.version) : "",
+      permission_read: isSet(object.permission_read) ? globalThis.Number(object.permission_read) : 0,
+      permission_write: isSet(object.permission_write) ? globalThis.Number(object.permission_write) : 0,
       create_time: isSet(object.create_time) ? fromJsonTimestamp(object.create_time) : undefined,
       update_time: isSet(object.update_time) ? fromJsonTimestamp(object.update_time) : undefined,
     };
@@ -9908,22 +11729,39 @@ export const StorageObject = {
 
   toJSON(message: StorageObject): unknown {
     const obj: any = {};
-    message.collection !== undefined && (obj.collection = message.collection);
-    message.key !== undefined && (obj.key = message.key);
-    message.user_id !== undefined && (obj.user_id = message.user_id);
-    message.value !== undefined && (obj.value = message.value);
-    message.version !== undefined && (obj.version = message.version);
-    message.permission_read !== undefined && (obj.permission_read = Math.round(message.permission_read));
-    message.permission_write !== undefined && (obj.permission_write = Math.round(message.permission_write));
-    message.create_time !== undefined && (obj.create_time = message.create_time.toISOString());
-    message.update_time !== undefined && (obj.update_time = message.update_time.toISOString());
+    if (message.collection !== "") {
+      obj.collection = message.collection;
+    }
+    if (message.key !== "") {
+      obj.key = message.key;
+    }
+    if (message.user_id !== "") {
+      obj.user_id = message.user_id;
+    }
+    if (message.value !== "") {
+      obj.value = message.value;
+    }
+    if (message.version !== "") {
+      obj.version = message.version;
+    }
+    if (message.permission_read !== 0) {
+      obj.permission_read = Math.round(message.permission_read);
+    }
+    if (message.permission_write !== 0) {
+      obj.permission_write = Math.round(message.permission_write);
+    }
+    if (message.create_time !== undefined) {
+      obj.create_time = message.create_time.toISOString();
+    }
+    if (message.update_time !== undefined) {
+      obj.update_time = message.update_time.toISOString();
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<StorageObject>, I>>(base?: I): StorageObject {
-    return StorageObject.fromPartial(base ?? {});
+    return StorageObject.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<StorageObject>, I>>(object: I): StorageObject {
     const message = createBaseStorageObject();
     message.collection = object.collection ?? "";
@@ -9967,44 +11805,69 @@ export const StorageObjectAck = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): StorageObjectAck {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseStorageObjectAck();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag !== 10) {
+            break;
+          }
+
           message.collection = reader.string();
-          break;
+          continue;
         case 2:
+          if (tag !== 18) {
+            break;
+          }
+
           message.key = reader.string();
-          break;
+          continue;
         case 3:
+          if (tag !== 26) {
+            break;
+          }
+
           message.version = reader.string();
-          break;
+          continue;
         case 4:
+          if (tag !== 34) {
+            break;
+          }
+
           message.user_id = reader.string();
-          break;
+          continue;
         case 5:
+          if (tag !== 42) {
+            break;
+          }
+
           message.create_time = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
-          break;
+          continue;
         case 6:
+          if (tag !== 50) {
+            break;
+          }
+
           message.update_time = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
 
   fromJSON(object: any): StorageObjectAck {
     return {
-      collection: isSet(object.collection) ? String(object.collection) : "",
-      key: isSet(object.key) ? String(object.key) : "",
-      version: isSet(object.version) ? String(object.version) : "",
-      user_id: isSet(object.user_id) ? String(object.user_id) : "",
+      collection: isSet(object.collection) ? globalThis.String(object.collection) : "",
+      key: isSet(object.key) ? globalThis.String(object.key) : "",
+      version: isSet(object.version) ? globalThis.String(object.version) : "",
+      user_id: isSet(object.user_id) ? globalThis.String(object.user_id) : "",
       create_time: isSet(object.create_time) ? fromJsonTimestamp(object.create_time) : undefined,
       update_time: isSet(object.update_time) ? fromJsonTimestamp(object.update_time) : undefined,
     };
@@ -10012,19 +11875,30 @@ export const StorageObjectAck = {
 
   toJSON(message: StorageObjectAck): unknown {
     const obj: any = {};
-    message.collection !== undefined && (obj.collection = message.collection);
-    message.key !== undefined && (obj.key = message.key);
-    message.version !== undefined && (obj.version = message.version);
-    message.user_id !== undefined && (obj.user_id = message.user_id);
-    message.create_time !== undefined && (obj.create_time = message.create_time.toISOString());
-    message.update_time !== undefined && (obj.update_time = message.update_time.toISOString());
+    if (message.collection !== "") {
+      obj.collection = message.collection;
+    }
+    if (message.key !== "") {
+      obj.key = message.key;
+    }
+    if (message.version !== "") {
+      obj.version = message.version;
+    }
+    if (message.user_id !== "") {
+      obj.user_id = message.user_id;
+    }
+    if (message.create_time !== undefined) {
+      obj.create_time = message.create_time.toISOString();
+    }
+    if (message.update_time !== undefined) {
+      obj.update_time = message.update_time.toISOString();
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<StorageObjectAck>, I>>(base?: I): StorageObjectAck {
-    return StorageObjectAck.fromPartial(base ?? {});
+    return StorageObjectAck.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<StorageObjectAck>, I>>(object: I): StorageObjectAck {
     const message = createBaseStorageObjectAck();
     message.collection = object.collection ?? "";
@@ -10050,41 +11924,45 @@ export const StorageObjectAcks = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): StorageObjectAcks {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseStorageObjectAcks();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag !== 10) {
+            break;
+          }
+
           message.acks.push(StorageObjectAck.decode(reader, reader.uint32()));
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
 
   fromJSON(object: any): StorageObjectAcks {
-    return { acks: Array.isArray(object?.acks) ? object.acks.map((e: any) => StorageObjectAck.fromJSON(e)) : [] };
+    return {
+      acks: globalThis.Array.isArray(object?.acks) ? object.acks.map((e: any) => StorageObjectAck.fromJSON(e)) : [],
+    };
   },
 
   toJSON(message: StorageObjectAcks): unknown {
     const obj: any = {};
-    if (message.acks) {
-      obj.acks = message.acks.map((e) => e ? StorageObjectAck.toJSON(e) : undefined);
-    } else {
-      obj.acks = [];
+    if (message.acks?.length) {
+      obj.acks = message.acks.map((e) => StorageObjectAck.toJSON(e));
     }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<StorageObjectAcks>, I>>(base?: I): StorageObjectAcks {
-    return StorageObjectAcks.fromPartial(base ?? {});
+    return StorageObjectAcks.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<StorageObjectAcks>, I>>(object: I): StorageObjectAcks {
     const message = createBaseStorageObjectAcks();
     message.acks = object.acks?.map((e) => StorageObjectAck.fromPartial(e)) || [];
@@ -10105,41 +11983,47 @@ export const StorageObjects = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): StorageObjects {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseStorageObjects();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag !== 10) {
+            break;
+          }
+
           message.objects.push(StorageObject.decode(reader, reader.uint32()));
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
 
   fromJSON(object: any): StorageObjects {
-    return { objects: Array.isArray(object?.objects) ? object.objects.map((e: any) => StorageObject.fromJSON(e)) : [] };
+    return {
+      objects: globalThis.Array.isArray(object?.objects)
+        ? object.objects.map((e: any) => StorageObject.fromJSON(e))
+        : [],
+    };
   },
 
   toJSON(message: StorageObjects): unknown {
     const obj: any = {};
-    if (message.objects) {
-      obj.objects = message.objects.map((e) => e ? StorageObject.toJSON(e) : undefined);
-    } else {
-      obj.objects = [];
+    if (message.objects?.length) {
+      obj.objects = message.objects.map((e) => StorageObject.toJSON(e));
     }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<StorageObjects>, I>>(base?: I): StorageObjects {
-    return StorageObjects.fromPartial(base ?? {});
+    return StorageObjects.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<StorageObjects>, I>>(object: I): StorageObjects {
     const message = createBaseStorageObjects();
     message.objects = object.objects?.map((e) => StorageObject.fromPartial(e)) || [];
@@ -10163,48 +12047,58 @@ export const StorageObjectList = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): StorageObjectList {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseStorageObjectList();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag !== 10) {
+            break;
+          }
+
           message.objects.push(StorageObject.decode(reader, reader.uint32()));
-          break;
+          continue;
         case 2:
+          if (tag !== 18) {
+            break;
+          }
+
           message.cursor = reader.string();
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
 
   fromJSON(object: any): StorageObjectList {
     return {
-      objects: Array.isArray(object?.objects) ? object.objects.map((e: any) => StorageObject.fromJSON(e)) : [],
-      cursor: isSet(object.cursor) ? String(object.cursor) : "",
+      objects: globalThis.Array.isArray(object?.objects)
+        ? object.objects.map((e: any) => StorageObject.fromJSON(e))
+        : [],
+      cursor: isSet(object.cursor) ? globalThis.String(object.cursor) : "",
     };
   },
 
   toJSON(message: StorageObjectList): unknown {
     const obj: any = {};
-    if (message.objects) {
-      obj.objects = message.objects.map((e) => e ? StorageObject.toJSON(e) : undefined);
-    } else {
-      obj.objects = [];
+    if (message.objects?.length) {
+      obj.objects = message.objects.map((e) => StorageObject.toJSON(e));
     }
-    message.cursor !== undefined && (obj.cursor = message.cursor);
+    if (message.cursor !== "") {
+      obj.cursor = message.cursor;
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<StorageObjectList>, I>>(base?: I): StorageObjectList {
-    return StorageObjectList.fromPartial(base ?? {});
+    return StorageObjectList.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<StorageObjectList>, I>>(object: I): StorageObjectList {
     const message = createBaseStorageObjectList();
     message.objects = object.objects?.map((e) => StorageObject.fromPartial(e)) || [];
@@ -10304,134 +12198,254 @@ export const Tournament = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): Tournament {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseTournament();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag !== 10) {
+            break;
+          }
+
           message.id = reader.string();
-          break;
+          continue;
         case 2:
+          if (tag !== 18) {
+            break;
+          }
+
           message.title = reader.string();
-          break;
+          continue;
         case 3:
+          if (tag !== 26) {
+            break;
+          }
+
           message.description = reader.string();
-          break;
+          continue;
         case 4:
+          if (tag !== 32) {
+            break;
+          }
+
           message.category = reader.uint32();
-          break;
+          continue;
         case 5:
+          if (tag !== 40) {
+            break;
+          }
+
           message.sort_order = reader.uint32();
-          break;
+          continue;
         case 6:
+          if (tag !== 48) {
+            break;
+          }
+
           message.size = reader.uint32();
-          break;
+          continue;
         case 7:
+          if (tag !== 56) {
+            break;
+          }
+
           message.max_size = reader.uint32();
-          break;
+          continue;
         case 8:
+          if (tag !== 64) {
+            break;
+          }
+
           message.max_num_score = reader.uint32();
-          break;
+          continue;
         case 9:
+          if (tag !== 72) {
+            break;
+          }
+
           message.can_enter = reader.bool();
-          break;
+          continue;
         case 10:
+          if (tag !== 80) {
+            break;
+          }
+
           message.end_active = reader.uint32();
-          break;
+          continue;
         case 11:
+          if (tag !== 88) {
+            break;
+          }
+
           message.next_reset = reader.uint32();
-          break;
+          continue;
         case 12:
+          if (tag !== 98) {
+            break;
+          }
+
           message.metadata = reader.string();
-          break;
+          continue;
         case 13:
+          if (tag !== 106) {
+            break;
+          }
+
           message.create_time = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
-          break;
+          continue;
         case 14:
+          if (tag !== 114) {
+            break;
+          }
+
           message.start_time = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
-          break;
+          continue;
         case 15:
+          if (tag !== 122) {
+            break;
+          }
+
           message.end_time = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
-          break;
+          continue;
         case 16:
+          if (tag !== 128) {
+            break;
+          }
+
           message.duration = reader.uint32();
-          break;
+          continue;
         case 17:
+          if (tag !== 136) {
+            break;
+          }
+
           message.start_active = reader.uint32();
-          break;
+          continue;
         case 18:
+          if (tag !== 144) {
+            break;
+          }
+
           message.prev_reset = reader.uint32();
-          break;
+          continue;
         case 19:
+          if (tag !== 152) {
+            break;
+          }
+
           message.operator = reader.int32() as any;
-          break;
+          continue;
         case 20:
+          if (tag !== 160) {
+            break;
+          }
+
           message.authoritative = reader.bool();
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
 
   fromJSON(object: any): Tournament {
     return {
-      id: isSet(object.id) ? String(object.id) : "",
-      title: isSet(object.title) ? String(object.title) : "",
-      description: isSet(object.description) ? String(object.description) : "",
-      category: isSet(object.category) ? Number(object.category) : 0,
-      sort_order: isSet(object.sort_order) ? Number(object.sort_order) : 0,
-      size: isSet(object.size) ? Number(object.size) : 0,
-      max_size: isSet(object.max_size) ? Number(object.max_size) : 0,
-      max_num_score: isSet(object.max_num_score) ? Number(object.max_num_score) : 0,
-      can_enter: isSet(object.can_enter) ? Boolean(object.can_enter) : false,
-      end_active: isSet(object.end_active) ? Number(object.end_active) : 0,
-      next_reset: isSet(object.next_reset) ? Number(object.next_reset) : 0,
-      metadata: isSet(object.metadata) ? String(object.metadata) : "",
+      id: isSet(object.id) ? globalThis.String(object.id) : "",
+      title: isSet(object.title) ? globalThis.String(object.title) : "",
+      description: isSet(object.description) ? globalThis.String(object.description) : "",
+      category: isSet(object.category) ? globalThis.Number(object.category) : 0,
+      sort_order: isSet(object.sort_order) ? globalThis.Number(object.sort_order) : 0,
+      size: isSet(object.size) ? globalThis.Number(object.size) : 0,
+      max_size: isSet(object.max_size) ? globalThis.Number(object.max_size) : 0,
+      max_num_score: isSet(object.max_num_score) ? globalThis.Number(object.max_num_score) : 0,
+      can_enter: isSet(object.can_enter) ? globalThis.Boolean(object.can_enter) : false,
+      end_active: isSet(object.end_active) ? globalThis.Number(object.end_active) : 0,
+      next_reset: isSet(object.next_reset) ? globalThis.Number(object.next_reset) : 0,
+      metadata: isSet(object.metadata) ? globalThis.String(object.metadata) : "",
       create_time: isSet(object.create_time) ? fromJsonTimestamp(object.create_time) : undefined,
       start_time: isSet(object.start_time) ? fromJsonTimestamp(object.start_time) : undefined,
       end_time: isSet(object.end_time) ? fromJsonTimestamp(object.end_time) : undefined,
-      duration: isSet(object.duration) ? Number(object.duration) : 0,
-      start_active: isSet(object.start_active) ? Number(object.start_active) : 0,
-      prev_reset: isSet(object.prev_reset) ? Number(object.prev_reset) : 0,
+      duration: isSet(object.duration) ? globalThis.Number(object.duration) : 0,
+      start_active: isSet(object.start_active) ? globalThis.Number(object.start_active) : 0,
+      prev_reset: isSet(object.prev_reset) ? globalThis.Number(object.prev_reset) : 0,
       operator: isSet(object.operator) ? operatorFromJSON(object.operator) : 0,
-      authoritative: isSet(object.authoritative) ? Boolean(object.authoritative) : false,
+      authoritative: isSet(object.authoritative) ? globalThis.Boolean(object.authoritative) : false,
     };
   },
 
   toJSON(message: Tournament): unknown {
     const obj: any = {};
-    message.id !== undefined && (obj.id = message.id);
-    message.title !== undefined && (obj.title = message.title);
-    message.description !== undefined && (obj.description = message.description);
-    message.category !== undefined && (obj.category = Math.round(message.category));
-    message.sort_order !== undefined && (obj.sort_order = Math.round(message.sort_order));
-    message.size !== undefined && (obj.size = Math.round(message.size));
-    message.max_size !== undefined && (obj.max_size = Math.round(message.max_size));
-    message.max_num_score !== undefined && (obj.max_num_score = Math.round(message.max_num_score));
-    message.can_enter !== undefined && (obj.can_enter = message.can_enter);
-    message.end_active !== undefined && (obj.end_active = Math.round(message.end_active));
-    message.next_reset !== undefined && (obj.next_reset = Math.round(message.next_reset));
-    message.metadata !== undefined && (obj.metadata = message.metadata);
-    message.create_time !== undefined && (obj.create_time = message.create_time.toISOString());
-    message.start_time !== undefined && (obj.start_time = message.start_time.toISOString());
-    message.end_time !== undefined && (obj.end_time = message.end_time.toISOString());
-    message.duration !== undefined && (obj.duration = Math.round(message.duration));
-    message.start_active !== undefined && (obj.start_active = Math.round(message.start_active));
-    message.prev_reset !== undefined && (obj.prev_reset = Math.round(message.prev_reset));
-    message.operator !== undefined && (obj.operator = operatorToJSON(message.operator));
-    message.authoritative !== undefined && (obj.authoritative = message.authoritative);
+    if (message.id !== "") {
+      obj.id = message.id;
+    }
+    if (message.title !== "") {
+      obj.title = message.title;
+    }
+    if (message.description !== "") {
+      obj.description = message.description;
+    }
+    if (message.category !== 0) {
+      obj.category = Math.round(message.category);
+    }
+    if (message.sort_order !== 0) {
+      obj.sort_order = Math.round(message.sort_order);
+    }
+    if (message.size !== 0) {
+      obj.size = Math.round(message.size);
+    }
+    if (message.max_size !== 0) {
+      obj.max_size = Math.round(message.max_size);
+    }
+    if (message.max_num_score !== 0) {
+      obj.max_num_score = Math.round(message.max_num_score);
+    }
+    if (message.can_enter === true) {
+      obj.can_enter = message.can_enter;
+    }
+    if (message.end_active !== 0) {
+      obj.end_active = Math.round(message.end_active);
+    }
+    if (message.next_reset !== 0) {
+      obj.next_reset = Math.round(message.next_reset);
+    }
+    if (message.metadata !== "") {
+      obj.metadata = message.metadata;
+    }
+    if (message.create_time !== undefined) {
+      obj.create_time = message.create_time.toISOString();
+    }
+    if (message.start_time !== undefined) {
+      obj.start_time = message.start_time.toISOString();
+    }
+    if (message.end_time !== undefined) {
+      obj.end_time = message.end_time.toISOString();
+    }
+    if (message.duration !== 0) {
+      obj.duration = Math.round(message.duration);
+    }
+    if (message.start_active !== 0) {
+      obj.start_active = Math.round(message.start_active);
+    }
+    if (message.prev_reset !== 0) {
+      obj.prev_reset = Math.round(message.prev_reset);
+    }
+    if (message.operator !== 0) {
+      obj.operator = operatorToJSON(message.operator);
+    }
+    if (message.authoritative === true) {
+      obj.authoritative = message.authoritative;
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<Tournament>, I>>(base?: I): Tournament {
-    return Tournament.fromPartial(base ?? {});
+    return Tournament.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<Tournament>, I>>(object: I): Tournament {
     const message = createBaseTournament();
     message.id = object.id ?? "";
@@ -10474,48 +12488,58 @@ export const TournamentList = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): TournamentList {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseTournamentList();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag !== 10) {
+            break;
+          }
+
           message.tournaments.push(Tournament.decode(reader, reader.uint32()));
-          break;
+          continue;
         case 2:
+          if (tag !== 18) {
+            break;
+          }
+
           message.cursor = reader.string();
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
 
   fromJSON(object: any): TournamentList {
     return {
-      tournaments: Array.isArray(object?.tournaments) ? object.tournaments.map((e: any) => Tournament.fromJSON(e)) : [],
-      cursor: isSet(object.cursor) ? String(object.cursor) : "",
+      tournaments: globalThis.Array.isArray(object?.tournaments)
+        ? object.tournaments.map((e: any) => Tournament.fromJSON(e))
+        : [],
+      cursor: isSet(object.cursor) ? globalThis.String(object.cursor) : "",
     };
   },
 
   toJSON(message: TournamentList): unknown {
     const obj: any = {};
-    if (message.tournaments) {
-      obj.tournaments = message.tournaments.map((e) => e ? Tournament.toJSON(e) : undefined);
-    } else {
-      obj.tournaments = [];
+    if (message.tournaments?.length) {
+      obj.tournaments = message.tournaments.map((e) => Tournament.toJSON(e));
     }
-    message.cursor !== undefined && (obj.cursor = message.cursor);
+    if (message.cursor !== "") {
+      obj.cursor = message.cursor;
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<TournamentList>, I>>(base?: I): TournamentList {
-    return TournamentList.fromPartial(base ?? {});
+    return TournamentList.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<TournamentList>, I>>(object: I): TournamentList {
     const message = createBaseTournamentList();
     message.tournaments = object.tournaments?.map((e) => Tournament.fromPartial(e)) || [];
@@ -10549,69 +12573,93 @@ export const TournamentRecordList = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): TournamentRecordList {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseTournamentRecordList();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag !== 10) {
+            break;
+          }
+
           message.records.push(LeaderboardRecord.decode(reader, reader.uint32()));
-          break;
+          continue;
         case 2:
+          if (tag !== 18) {
+            break;
+          }
+
           message.owner_records.push(LeaderboardRecord.decode(reader, reader.uint32()));
-          break;
+          continue;
         case 3:
+          if (tag !== 26) {
+            break;
+          }
+
           message.next_cursor = reader.string();
-          break;
+          continue;
         case 4:
+          if (tag !== 34) {
+            break;
+          }
+
           message.prev_cursor = reader.string();
-          break;
+          continue;
         case 5:
+          if (tag !== 40) {
+            break;
+          }
+
           message.rank_count = longToNumber(reader.int64() as Long);
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
 
   fromJSON(object: any): TournamentRecordList {
     return {
-      records: Array.isArray(object?.records) ? object.records.map((e: any) => LeaderboardRecord.fromJSON(e)) : [],
-      owner_records: Array.isArray(object?.owner_records)
+      records: globalThis.Array.isArray(object?.records)
+        ? object.records.map((e: any) => LeaderboardRecord.fromJSON(e))
+        : [],
+      owner_records: globalThis.Array.isArray(object?.owner_records)
         ? object.owner_records.map((e: any) => LeaderboardRecord.fromJSON(e))
         : [],
-      next_cursor: isSet(object.next_cursor) ? String(object.next_cursor) : "",
-      prev_cursor: isSet(object.prev_cursor) ? String(object.prev_cursor) : "",
-      rank_count: isSet(object.rank_count) ? Number(object.rank_count) : 0,
+      next_cursor: isSet(object.next_cursor) ? globalThis.String(object.next_cursor) : "",
+      prev_cursor: isSet(object.prev_cursor) ? globalThis.String(object.prev_cursor) : "",
+      rank_count: isSet(object.rank_count) ? globalThis.Number(object.rank_count) : 0,
     };
   },
 
   toJSON(message: TournamentRecordList): unknown {
     const obj: any = {};
-    if (message.records) {
-      obj.records = message.records.map((e) => e ? LeaderboardRecord.toJSON(e) : undefined);
-    } else {
-      obj.records = [];
+    if (message.records?.length) {
+      obj.records = message.records.map((e) => LeaderboardRecord.toJSON(e));
     }
-    if (message.owner_records) {
-      obj.owner_records = message.owner_records.map((e) => e ? LeaderboardRecord.toJSON(e) : undefined);
-    } else {
-      obj.owner_records = [];
+    if (message.owner_records?.length) {
+      obj.owner_records = message.owner_records.map((e) => LeaderboardRecord.toJSON(e));
     }
-    message.next_cursor !== undefined && (obj.next_cursor = message.next_cursor);
-    message.prev_cursor !== undefined && (obj.prev_cursor = message.prev_cursor);
-    message.rank_count !== undefined && (obj.rank_count = Math.round(message.rank_count));
+    if (message.next_cursor !== "") {
+      obj.next_cursor = message.next_cursor;
+    }
+    if (message.prev_cursor !== "") {
+      obj.prev_cursor = message.prev_cursor;
+    }
+    if (message.rank_count !== 0) {
+      obj.rank_count = Math.round(message.rank_count);
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<TournamentRecordList>, I>>(base?: I): TournamentRecordList {
-    return TournamentRecordList.fromPartial(base ?? {});
+    return TournamentRecordList.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<TournamentRecordList>, I>>(object: I): TournamentRecordList {
     const message = createBaseTournamentRecordList();
     message.records = object.records?.map((e) => LeaderboardRecord.fromPartial(e)) || [];
@@ -10658,34 +12706,59 @@ export const UpdateAccountRequest = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): UpdateAccountRequest {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseUpdateAccountRequest();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag !== 10) {
+            break;
+          }
+
           message.username = StringValue.decode(reader, reader.uint32()).value;
-          break;
+          continue;
         case 2:
+          if (tag !== 18) {
+            break;
+          }
+
           message.display_name = StringValue.decode(reader, reader.uint32()).value;
-          break;
+          continue;
         case 3:
+          if (tag !== 26) {
+            break;
+          }
+
           message.avatar_url = StringValue.decode(reader, reader.uint32()).value;
-          break;
+          continue;
         case 4:
+          if (tag !== 34) {
+            break;
+          }
+
           message.lang_tag = StringValue.decode(reader, reader.uint32()).value;
-          break;
+          continue;
         case 5:
+          if (tag !== 42) {
+            break;
+          }
+
           message.location = StringValue.decode(reader, reader.uint32()).value;
-          break;
+          continue;
         case 6:
+          if (tag !== 50) {
+            break;
+          }
+
           message.timezone = StringValue.decode(reader, reader.uint32()).value;
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
@@ -10703,19 +12776,30 @@ export const UpdateAccountRequest = {
 
   toJSON(message: UpdateAccountRequest): unknown {
     const obj: any = {};
-    message.username !== undefined && (obj.username = message.username);
-    message.display_name !== undefined && (obj.display_name = message.display_name);
-    message.avatar_url !== undefined && (obj.avatar_url = message.avatar_url);
-    message.lang_tag !== undefined && (obj.lang_tag = message.lang_tag);
-    message.location !== undefined && (obj.location = message.location);
-    message.timezone !== undefined && (obj.timezone = message.timezone);
+    if (message.username !== undefined) {
+      obj.username = message.username;
+    }
+    if (message.display_name !== undefined) {
+      obj.display_name = message.display_name;
+    }
+    if (message.avatar_url !== undefined) {
+      obj.avatar_url = message.avatar_url;
+    }
+    if (message.lang_tag !== undefined) {
+      obj.lang_tag = message.lang_tag;
+    }
+    if (message.location !== undefined) {
+      obj.location = message.location;
+    }
+    if (message.timezone !== undefined) {
+      obj.timezone = message.timezone;
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<UpdateAccountRequest>, I>>(base?: I): UpdateAccountRequest {
-    return UpdateAccountRequest.fromPartial(base ?? {});
+    return UpdateAccountRequest.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<UpdateAccountRequest>, I>>(object: I): UpdateAccountRequest {
     const message = createBaseUpdateAccountRequest();
     message.username = object.username ?? undefined;
@@ -10763,41 +12847,66 @@ export const UpdateGroupRequest = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): UpdateGroupRequest {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseUpdateGroupRequest();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag !== 10) {
+            break;
+          }
+
           message.group_id = reader.string();
-          break;
+          continue;
         case 2:
+          if (tag !== 18) {
+            break;
+          }
+
           message.name = StringValue.decode(reader, reader.uint32()).value;
-          break;
+          continue;
         case 3:
+          if (tag !== 26) {
+            break;
+          }
+
           message.description = StringValue.decode(reader, reader.uint32()).value;
-          break;
+          continue;
         case 4:
+          if (tag !== 34) {
+            break;
+          }
+
           message.lang_tag = StringValue.decode(reader, reader.uint32()).value;
-          break;
+          continue;
         case 5:
+          if (tag !== 42) {
+            break;
+          }
+
           message.avatar_url = StringValue.decode(reader, reader.uint32()).value;
-          break;
+          continue;
         case 6:
+          if (tag !== 50) {
+            break;
+          }
+
           message.open = BoolValue.decode(reader, reader.uint32()).value;
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
 
   fromJSON(object: any): UpdateGroupRequest {
     return {
-      group_id: isSet(object.group_id) ? String(object.group_id) : "",
+      group_id: isSet(object.group_id) ? globalThis.String(object.group_id) : "",
       name: isSet(object.name) ? String(object.name) : undefined,
       description: isSet(object.description) ? String(object.description) : undefined,
       lang_tag: isSet(object.lang_tag) ? String(object.lang_tag) : undefined,
@@ -10808,19 +12917,30 @@ export const UpdateGroupRequest = {
 
   toJSON(message: UpdateGroupRequest): unknown {
     const obj: any = {};
-    message.group_id !== undefined && (obj.group_id = message.group_id);
-    message.name !== undefined && (obj.name = message.name);
-    message.description !== undefined && (obj.description = message.description);
-    message.lang_tag !== undefined && (obj.lang_tag = message.lang_tag);
-    message.avatar_url !== undefined && (obj.avatar_url = message.avatar_url);
-    message.open !== undefined && (obj.open = message.open);
+    if (message.group_id !== "") {
+      obj.group_id = message.group_id;
+    }
+    if (message.name !== undefined) {
+      obj.name = message.name;
+    }
+    if (message.description !== undefined) {
+      obj.description = message.description;
+    }
+    if (message.lang_tag !== undefined) {
+      obj.lang_tag = message.lang_tag;
+    }
+    if (message.avatar_url !== undefined) {
+      obj.avatar_url = message.avatar_url;
+    }
+    if (message.open !== undefined) {
+      obj.open = message.open;
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<UpdateGroupRequest>, I>>(base?: I): UpdateGroupRequest {
-    return UpdateGroupRequest.fromPartial(base ?? {});
+    return UpdateGroupRequest.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<UpdateGroupRequest>, I>>(object: I): UpdateGroupRequest {
     const message = createBaseUpdateGroupRequest();
     message.group_id = object.group_id ?? "";
@@ -10849,44 +12969,56 @@ export const UpdateCategoryDescRequest = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): UpdateCategoryDescRequest {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseUpdateCategoryDescRequest();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag !== 10) {
+            break;
+          }
+
           message.category_id = reader.string();
-          break;
+          continue;
         case 2:
+          if (tag !== 18) {
+            break;
+          }
+
           message.category_name = reader.string();
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
 
   fromJSON(object: any): UpdateCategoryDescRequest {
     return {
-      category_id: isSet(object.category_id) ? String(object.category_id) : "",
-      category_name: isSet(object.category_name) ? String(object.category_name) : "",
+      category_id: isSet(object.category_id) ? globalThis.String(object.category_id) : "",
+      category_name: isSet(object.category_name) ? globalThis.String(object.category_name) : "",
     };
   },
 
   toJSON(message: UpdateCategoryDescRequest): unknown {
     const obj: any = {};
-    message.category_id !== undefined && (obj.category_id = message.category_id);
-    message.category_name !== undefined && (obj.category_name = message.category_name);
+    if (message.category_id !== "") {
+      obj.category_id = message.category_id;
+    }
+    if (message.category_name !== "") {
+      obj.category_name = message.category_name;
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<UpdateCategoryDescRequest>, I>>(base?: I): UpdateCategoryDescRequest {
-    return UpdateCategoryDescRequest.fromPartial(base ?? {});
+    return UpdateCategoryDescRequest.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<UpdateCategoryDescRequest>, I>>(object: I): UpdateCategoryDescRequest {
     const message = createBaseUpdateCategoryDescRequest();
     message.category_id = object.category_id ?? "";
@@ -10978,124 +13110,234 @@ export const User = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): User {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseUser();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag !== 10) {
+            break;
+          }
+
           message.id = reader.string();
-          break;
+          continue;
         case 2:
+          if (tag !== 18) {
+            break;
+          }
+
           message.username = reader.string();
-          break;
+          continue;
         case 3:
+          if (tag !== 26) {
+            break;
+          }
+
           message.display_name = reader.string();
-          break;
+          continue;
         case 4:
+          if (tag !== 34) {
+            break;
+          }
+
           message.avatar_url = reader.string();
-          break;
+          continue;
         case 5:
+          if (tag !== 42) {
+            break;
+          }
+
           message.lang_tag = reader.string();
-          break;
+          continue;
         case 6:
+          if (tag !== 50) {
+            break;
+          }
+
           message.location = reader.string();
-          break;
+          continue;
         case 7:
+          if (tag !== 58) {
+            break;
+          }
+
           message.timezone = reader.string();
-          break;
+          continue;
         case 8:
+          if (tag !== 66) {
+            break;
+          }
+
           message.metadata = reader.string();
-          break;
+          continue;
         case 9:
+          if (tag !== 74) {
+            break;
+          }
+
           message.facebook_id = reader.string();
-          break;
+          continue;
         case 10:
+          if (tag !== 82) {
+            break;
+          }
+
           message.google_id = reader.string();
-          break;
+          continue;
         case 11:
+          if (tag !== 90) {
+            break;
+          }
+
           message.gamecenter_id = reader.string();
-          break;
+          continue;
         case 12:
+          if (tag !== 98) {
+            break;
+          }
+
           message.steam_id = reader.string();
-          break;
+          continue;
         case 13:
+          if (tag !== 104) {
+            break;
+          }
+
           message.online = reader.bool();
-          break;
+          continue;
         case 14:
+          if (tag !== 112) {
+            break;
+          }
+
           message.edge_count = reader.int32();
-          break;
+          continue;
         case 15:
+          if (tag !== 122) {
+            break;
+          }
+
           message.create_time = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
-          break;
+          continue;
         case 16:
+          if (tag !== 130) {
+            break;
+          }
+
           message.update_time = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
-          break;
+          continue;
         case 17:
+          if (tag !== 138) {
+            break;
+          }
+
           message.facebook_instant_game_id = reader.string();
-          break;
+          continue;
         case 18:
+          if (tag !== 146) {
+            break;
+          }
+
           message.apple_id = reader.string();
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
 
   fromJSON(object: any): User {
     return {
-      id: isSet(object.id) ? String(object.id) : "",
-      username: isSet(object.username) ? String(object.username) : "",
-      display_name: isSet(object.display_name) ? String(object.display_name) : "",
-      avatar_url: isSet(object.avatar_url) ? String(object.avatar_url) : "",
-      lang_tag: isSet(object.lang_tag) ? String(object.lang_tag) : "",
-      location: isSet(object.location) ? String(object.location) : "",
-      timezone: isSet(object.timezone) ? String(object.timezone) : "",
-      metadata: isSet(object.metadata) ? String(object.metadata) : "",
-      facebook_id: isSet(object.facebook_id) ? String(object.facebook_id) : "",
-      google_id: isSet(object.google_id) ? String(object.google_id) : "",
-      gamecenter_id: isSet(object.gamecenter_id) ? String(object.gamecenter_id) : "",
-      steam_id: isSet(object.steam_id) ? String(object.steam_id) : "",
-      online: isSet(object.online) ? Boolean(object.online) : false,
-      edge_count: isSet(object.edge_count) ? Number(object.edge_count) : 0,
+      id: isSet(object.id) ? globalThis.String(object.id) : "",
+      username: isSet(object.username) ? globalThis.String(object.username) : "",
+      display_name: isSet(object.display_name) ? globalThis.String(object.display_name) : "",
+      avatar_url: isSet(object.avatar_url) ? globalThis.String(object.avatar_url) : "",
+      lang_tag: isSet(object.lang_tag) ? globalThis.String(object.lang_tag) : "",
+      location: isSet(object.location) ? globalThis.String(object.location) : "",
+      timezone: isSet(object.timezone) ? globalThis.String(object.timezone) : "",
+      metadata: isSet(object.metadata) ? globalThis.String(object.metadata) : "",
+      facebook_id: isSet(object.facebook_id) ? globalThis.String(object.facebook_id) : "",
+      google_id: isSet(object.google_id) ? globalThis.String(object.google_id) : "",
+      gamecenter_id: isSet(object.gamecenter_id) ? globalThis.String(object.gamecenter_id) : "",
+      steam_id: isSet(object.steam_id) ? globalThis.String(object.steam_id) : "",
+      online: isSet(object.online) ? globalThis.Boolean(object.online) : false,
+      edge_count: isSet(object.edge_count) ? globalThis.Number(object.edge_count) : 0,
       create_time: isSet(object.create_time) ? fromJsonTimestamp(object.create_time) : undefined,
       update_time: isSet(object.update_time) ? fromJsonTimestamp(object.update_time) : undefined,
-      facebook_instant_game_id: isSet(object.facebook_instant_game_id) ? String(object.facebook_instant_game_id) : "",
-      apple_id: isSet(object.apple_id) ? String(object.apple_id) : "",
+      facebook_instant_game_id: isSet(object.facebook_instant_game_id)
+        ? globalThis.String(object.facebook_instant_game_id)
+        : "",
+      apple_id: isSet(object.apple_id) ? globalThis.String(object.apple_id) : "",
     };
   },
 
   toJSON(message: User): unknown {
     const obj: any = {};
-    message.id !== undefined && (obj.id = message.id);
-    message.username !== undefined && (obj.username = message.username);
-    message.display_name !== undefined && (obj.display_name = message.display_name);
-    message.avatar_url !== undefined && (obj.avatar_url = message.avatar_url);
-    message.lang_tag !== undefined && (obj.lang_tag = message.lang_tag);
-    message.location !== undefined && (obj.location = message.location);
-    message.timezone !== undefined && (obj.timezone = message.timezone);
-    message.metadata !== undefined && (obj.metadata = message.metadata);
-    message.facebook_id !== undefined && (obj.facebook_id = message.facebook_id);
-    message.google_id !== undefined && (obj.google_id = message.google_id);
-    message.gamecenter_id !== undefined && (obj.gamecenter_id = message.gamecenter_id);
-    message.steam_id !== undefined && (obj.steam_id = message.steam_id);
-    message.online !== undefined && (obj.online = message.online);
-    message.edge_count !== undefined && (obj.edge_count = Math.round(message.edge_count));
-    message.create_time !== undefined && (obj.create_time = message.create_time.toISOString());
-    message.update_time !== undefined && (obj.update_time = message.update_time.toISOString());
-    message.facebook_instant_game_id !== undefined && (obj.facebook_instant_game_id = message.facebook_instant_game_id);
-    message.apple_id !== undefined && (obj.apple_id = message.apple_id);
+    if (message.id !== "") {
+      obj.id = message.id;
+    }
+    if (message.username !== "") {
+      obj.username = message.username;
+    }
+    if (message.display_name !== "") {
+      obj.display_name = message.display_name;
+    }
+    if (message.avatar_url !== "") {
+      obj.avatar_url = message.avatar_url;
+    }
+    if (message.lang_tag !== "") {
+      obj.lang_tag = message.lang_tag;
+    }
+    if (message.location !== "") {
+      obj.location = message.location;
+    }
+    if (message.timezone !== "") {
+      obj.timezone = message.timezone;
+    }
+    if (message.metadata !== "") {
+      obj.metadata = message.metadata;
+    }
+    if (message.facebook_id !== "") {
+      obj.facebook_id = message.facebook_id;
+    }
+    if (message.google_id !== "") {
+      obj.google_id = message.google_id;
+    }
+    if (message.gamecenter_id !== "") {
+      obj.gamecenter_id = message.gamecenter_id;
+    }
+    if (message.steam_id !== "") {
+      obj.steam_id = message.steam_id;
+    }
+    if (message.online === true) {
+      obj.online = message.online;
+    }
+    if (message.edge_count !== 0) {
+      obj.edge_count = Math.round(message.edge_count);
+    }
+    if (message.create_time !== undefined) {
+      obj.create_time = message.create_time.toISOString();
+    }
+    if (message.update_time !== undefined) {
+      obj.update_time = message.update_time.toISOString();
+    }
+    if (message.facebook_instant_game_id !== "") {
+      obj.facebook_instant_game_id = message.facebook_instant_game_id;
+    }
+    if (message.apple_id !== "") {
+      obj.apple_id = message.apple_id;
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<User>, I>>(base?: I): User {
-    return User.fromPartial(base ?? {});
+    return User.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<User>, I>>(object: I): User {
     const message = createBaseUser();
     message.id = object.id ?? "";
@@ -11136,50 +13378,58 @@ export const UserGroupList = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): UserGroupList {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseUserGroupList();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag !== 10) {
+            break;
+          }
+
           message.user_groups.push(UserGroupList_UserGroup.decode(reader, reader.uint32()));
-          break;
+          continue;
         case 2:
+          if (tag !== 18) {
+            break;
+          }
+
           message.cursor = reader.string();
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
 
   fromJSON(object: any): UserGroupList {
     return {
-      user_groups: Array.isArray(object?.user_groups)
+      user_groups: globalThis.Array.isArray(object?.user_groups)
         ? object.user_groups.map((e: any) => UserGroupList_UserGroup.fromJSON(e))
         : [],
-      cursor: isSet(object.cursor) ? String(object.cursor) : "",
+      cursor: isSet(object.cursor) ? globalThis.String(object.cursor) : "",
     };
   },
 
   toJSON(message: UserGroupList): unknown {
     const obj: any = {};
-    if (message.user_groups) {
-      obj.user_groups = message.user_groups.map((e) => e ? UserGroupList_UserGroup.toJSON(e) : undefined);
-    } else {
-      obj.user_groups = [];
+    if (message.user_groups?.length) {
+      obj.user_groups = message.user_groups.map((e) => UserGroupList_UserGroup.toJSON(e));
     }
-    message.cursor !== undefined && (obj.cursor = message.cursor);
+    if (message.cursor !== "") {
+      obj.cursor = message.cursor;
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<UserGroupList>, I>>(base?: I): UserGroupList {
-    return UserGroupList.fromPartial(base ?? {});
+    return UserGroupList.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<UserGroupList>, I>>(object: I): UserGroupList {
     const message = createBaseUserGroupList();
     message.user_groups = object.user_groups?.map((e) => UserGroupList_UserGroup.fromPartial(e)) || [];
@@ -11204,22 +13454,31 @@ export const UserGroupList_UserGroup = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): UserGroupList_UserGroup {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseUserGroupList_UserGroup();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag !== 10) {
+            break;
+          }
+
           message.group = Group.decode(reader, reader.uint32());
-          break;
+          continue;
         case 2:
+          if (tag !== 18) {
+            break;
+          }
+
           message.state = Int32Value.decode(reader, reader.uint32()).value;
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
@@ -11233,15 +13492,18 @@ export const UserGroupList_UserGroup = {
 
   toJSON(message: UserGroupList_UserGroup): unknown {
     const obj: any = {};
-    message.group !== undefined && (obj.group = message.group ? Group.toJSON(message.group) : undefined);
-    message.state !== undefined && (obj.state = message.state);
+    if (message.group !== undefined) {
+      obj.group = Group.toJSON(message.group);
+    }
+    if (message.state !== undefined) {
+      obj.state = message.state;
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<UserGroupList_UserGroup>, I>>(base?: I): UserGroupList_UserGroup {
-    return UserGroupList_UserGroup.fromPartial(base ?? {});
+    return UserGroupList_UserGroup.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<UserGroupList_UserGroup>, I>>(object: I): UserGroupList_UserGroup {
     const message = createBaseUserGroupList_UserGroup();
     message.group = (object.group !== undefined && object.group !== null) ? Group.fromPartial(object.group) : undefined;
@@ -11263,41 +13525,43 @@ export const Users = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): Users {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseUsers();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag !== 10) {
+            break;
+          }
+
           message.users.push(User.decode(reader, reader.uint32()));
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
 
   fromJSON(object: any): Users {
-    return { users: Array.isArray(object?.users) ? object.users.map((e: any) => User.fromJSON(e)) : [] };
+    return { users: globalThis.Array.isArray(object?.users) ? object.users.map((e: any) => User.fromJSON(e)) : [] };
   },
 
   toJSON(message: Users): unknown {
     const obj: any = {};
-    if (message.users) {
-      obj.users = message.users.map((e) => e ? User.toJSON(e) : undefined);
-    } else {
-      obj.users = [];
+    if (message.users?.length) {
+      obj.users = message.users.map((e) => User.toJSON(e));
     }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<Users>, I>>(base?: I): Users {
-    return Users.fromPartial(base ?? {});
+    return Users.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<Users>, I>>(object: I): Users {
     const message = createBaseUsers();
     message.users = object.users?.map((e) => User.fromPartial(e)) || [];
@@ -11321,44 +13585,56 @@ export const ValidatePurchaseAppleRequest = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): ValidatePurchaseAppleRequest {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseValidatePurchaseAppleRequest();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag !== 10) {
+            break;
+          }
+
           message.receipt = reader.string();
-          break;
+          continue;
         case 2:
+          if (tag !== 18) {
+            break;
+          }
+
           message.persist = BoolValue.decode(reader, reader.uint32()).value;
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
 
   fromJSON(object: any): ValidatePurchaseAppleRequest {
     return {
-      receipt: isSet(object.receipt) ? String(object.receipt) : "",
+      receipt: isSet(object.receipt) ? globalThis.String(object.receipt) : "",
       persist: isSet(object.persist) ? Boolean(object.persist) : undefined,
     };
   },
 
   toJSON(message: ValidatePurchaseAppleRequest): unknown {
     const obj: any = {};
-    message.receipt !== undefined && (obj.receipt = message.receipt);
-    message.persist !== undefined && (obj.persist = message.persist);
+    if (message.receipt !== "") {
+      obj.receipt = message.receipt;
+    }
+    if (message.persist !== undefined) {
+      obj.persist = message.persist;
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<ValidatePurchaseAppleRequest>, I>>(base?: I): ValidatePurchaseAppleRequest {
-    return ValidatePurchaseAppleRequest.fromPartial(base ?? {});
+    return ValidatePurchaseAppleRequest.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<ValidatePurchaseAppleRequest>, I>>(object: I): ValidatePurchaseAppleRequest {
     const message = createBaseValidatePurchaseAppleRequest();
     message.receipt = object.receipt ?? "";
@@ -11383,46 +13659,58 @@ export const ValidateSubscriptionAppleRequest = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): ValidateSubscriptionAppleRequest {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseValidateSubscriptionAppleRequest();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag !== 10) {
+            break;
+          }
+
           message.receipt = reader.string();
-          break;
+          continue;
         case 2:
+          if (tag !== 18) {
+            break;
+          }
+
           message.persist = BoolValue.decode(reader, reader.uint32()).value;
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
 
   fromJSON(object: any): ValidateSubscriptionAppleRequest {
     return {
-      receipt: isSet(object.receipt) ? String(object.receipt) : "",
+      receipt: isSet(object.receipt) ? globalThis.String(object.receipt) : "",
       persist: isSet(object.persist) ? Boolean(object.persist) : undefined,
     };
   },
 
   toJSON(message: ValidateSubscriptionAppleRequest): unknown {
     const obj: any = {};
-    message.receipt !== undefined && (obj.receipt = message.receipt);
-    message.persist !== undefined && (obj.persist = message.persist);
+    if (message.receipt !== "") {
+      obj.receipt = message.receipt;
+    }
+    if (message.persist !== undefined) {
+      obj.persist = message.persist;
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<ValidateSubscriptionAppleRequest>, I>>(
     base?: I,
   ): ValidateSubscriptionAppleRequest {
-    return ValidateSubscriptionAppleRequest.fromPartial(base ?? {});
+    return ValidateSubscriptionAppleRequest.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<ValidateSubscriptionAppleRequest>, I>>(
     object: I,
   ): ValidateSubscriptionAppleRequest {
@@ -11449,44 +13737,56 @@ export const ValidatePurchaseGoogleRequest = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): ValidatePurchaseGoogleRequest {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseValidatePurchaseGoogleRequest();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag !== 10) {
+            break;
+          }
+
           message.purchase = reader.string();
-          break;
+          continue;
         case 2:
+          if (tag !== 18) {
+            break;
+          }
+
           message.persist = BoolValue.decode(reader, reader.uint32()).value;
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
 
   fromJSON(object: any): ValidatePurchaseGoogleRequest {
     return {
-      purchase: isSet(object.purchase) ? String(object.purchase) : "",
+      purchase: isSet(object.purchase) ? globalThis.String(object.purchase) : "",
       persist: isSet(object.persist) ? Boolean(object.persist) : undefined,
     };
   },
 
   toJSON(message: ValidatePurchaseGoogleRequest): unknown {
     const obj: any = {};
-    message.purchase !== undefined && (obj.purchase = message.purchase);
-    message.persist !== undefined && (obj.persist = message.persist);
+    if (message.purchase !== "") {
+      obj.purchase = message.purchase;
+    }
+    if (message.persist !== undefined) {
+      obj.persist = message.persist;
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<ValidatePurchaseGoogleRequest>, I>>(base?: I): ValidatePurchaseGoogleRequest {
-    return ValidatePurchaseGoogleRequest.fromPartial(base ?? {});
+    return ValidatePurchaseGoogleRequest.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<ValidatePurchaseGoogleRequest>, I>>(
     object: I,
   ): ValidatePurchaseGoogleRequest {
@@ -11513,46 +13813,58 @@ export const ValidateSubscriptionGoogleRequest = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): ValidateSubscriptionGoogleRequest {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseValidateSubscriptionGoogleRequest();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag !== 10) {
+            break;
+          }
+
           message.receipt = reader.string();
-          break;
+          continue;
         case 2:
+          if (tag !== 18) {
+            break;
+          }
+
           message.persist = BoolValue.decode(reader, reader.uint32()).value;
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
 
   fromJSON(object: any): ValidateSubscriptionGoogleRequest {
     return {
-      receipt: isSet(object.receipt) ? String(object.receipt) : "",
+      receipt: isSet(object.receipt) ? globalThis.String(object.receipt) : "",
       persist: isSet(object.persist) ? Boolean(object.persist) : undefined,
     };
   },
 
   toJSON(message: ValidateSubscriptionGoogleRequest): unknown {
     const obj: any = {};
-    message.receipt !== undefined && (obj.receipt = message.receipt);
-    message.persist !== undefined && (obj.persist = message.persist);
+    if (message.receipt !== "") {
+      obj.receipt = message.receipt;
+    }
+    if (message.persist !== undefined) {
+      obj.persist = message.persist;
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<ValidateSubscriptionGoogleRequest>, I>>(
     base?: I,
   ): ValidateSubscriptionGoogleRequest {
-    return ValidateSubscriptionGoogleRequest.fromPartial(base ?? {});
+    return ValidateSubscriptionGoogleRequest.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<ValidateSubscriptionGoogleRequest>, I>>(
     object: I,
   ): ValidateSubscriptionGoogleRequest {
@@ -11582,49 +13894,67 @@ export const ValidatePurchaseHuaweiRequest = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): ValidatePurchaseHuaweiRequest {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseValidatePurchaseHuaweiRequest();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag !== 10) {
+            break;
+          }
+
           message.purchase = reader.string();
-          break;
+          continue;
         case 2:
+          if (tag !== 18) {
+            break;
+          }
+
           message.signature = reader.string();
-          break;
+          continue;
         case 3:
+          if (tag !== 26) {
+            break;
+          }
+
           message.persist = BoolValue.decode(reader, reader.uint32()).value;
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
 
   fromJSON(object: any): ValidatePurchaseHuaweiRequest {
     return {
-      purchase: isSet(object.purchase) ? String(object.purchase) : "",
-      signature: isSet(object.signature) ? String(object.signature) : "",
+      purchase: isSet(object.purchase) ? globalThis.String(object.purchase) : "",
+      signature: isSet(object.signature) ? globalThis.String(object.signature) : "",
       persist: isSet(object.persist) ? Boolean(object.persist) : undefined,
     };
   },
 
   toJSON(message: ValidatePurchaseHuaweiRequest): unknown {
     const obj: any = {};
-    message.purchase !== undefined && (obj.purchase = message.purchase);
-    message.signature !== undefined && (obj.signature = message.signature);
-    message.persist !== undefined && (obj.persist = message.persist);
+    if (message.purchase !== "") {
+      obj.purchase = message.purchase;
+    }
+    if (message.signature !== "") {
+      obj.signature = message.signature;
+    }
+    if (message.persist !== undefined) {
+      obj.persist = message.persist;
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<ValidatePurchaseHuaweiRequest>, I>>(base?: I): ValidatePurchaseHuaweiRequest {
-    return ValidatePurchaseHuaweiRequest.fromPartial(base ?? {});
+    return ValidatePurchaseHuaweiRequest.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<ValidatePurchaseHuaweiRequest>, I>>(
     object: I,
   ): ValidatePurchaseHuaweiRequest {
@@ -11652,46 +13982,58 @@ export const ValidatePurchaseFacebookInstantRequest = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): ValidatePurchaseFacebookInstantRequest {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseValidatePurchaseFacebookInstantRequest();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag !== 10) {
+            break;
+          }
+
           message.signed_request = reader.string();
-          break;
+          continue;
         case 2:
+          if (tag !== 18) {
+            break;
+          }
+
           message.persist = BoolValue.decode(reader, reader.uint32()).value;
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
 
   fromJSON(object: any): ValidatePurchaseFacebookInstantRequest {
     return {
-      signed_request: isSet(object.signed_request) ? String(object.signed_request) : "",
+      signed_request: isSet(object.signed_request) ? globalThis.String(object.signed_request) : "",
       persist: isSet(object.persist) ? Boolean(object.persist) : undefined,
     };
   },
 
   toJSON(message: ValidatePurchaseFacebookInstantRequest): unknown {
     const obj: any = {};
-    message.signed_request !== undefined && (obj.signed_request = message.signed_request);
-    message.persist !== undefined && (obj.persist = message.persist);
+    if (message.signed_request !== "") {
+      obj.signed_request = message.signed_request;
+    }
+    if (message.persist !== undefined) {
+      obj.persist = message.persist;
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<ValidatePurchaseFacebookInstantRequest>, I>>(
     base?: I,
   ): ValidatePurchaseFacebookInstantRequest {
-    return ValidatePurchaseFacebookInstantRequest.fromPartial(base ?? {});
+    return ValidatePurchaseFacebookInstantRequest.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<ValidatePurchaseFacebookInstantRequest>, I>>(
     object: I,
   ): ValidatePurchaseFacebookInstantRequest {
@@ -11757,89 +14099,155 @@ export const ValidatedPurchase = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): ValidatedPurchase {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseValidatedPurchase();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag !== 10) {
+            break;
+          }
+
           message.user_id = reader.string();
-          break;
+          continue;
         case 2:
+          if (tag !== 18) {
+            break;
+          }
+
           message.product_id = reader.string();
-          break;
+          continue;
         case 3:
+          if (tag !== 26) {
+            break;
+          }
+
           message.transaction_id = reader.string();
-          break;
+          continue;
         case 4:
+          if (tag !== 32) {
+            break;
+          }
+
           message.store = reader.int32() as any;
-          break;
+          continue;
         case 5:
+          if (tag !== 42) {
+            break;
+          }
+
           message.purchase_time = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
-          break;
+          continue;
         case 6:
+          if (tag !== 50) {
+            break;
+          }
+
           message.create_time = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
-          break;
+          continue;
         case 7:
+          if (tag !== 58) {
+            break;
+          }
+
           message.update_time = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
-          break;
+          continue;
         case 8:
+          if (tag !== 66) {
+            break;
+          }
+
           message.refund_time = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
-          break;
+          continue;
         case 9:
+          if (tag !== 74) {
+            break;
+          }
+
           message.provider_response = reader.string();
-          break;
+          continue;
         case 10:
+          if (tag !== 80) {
+            break;
+          }
+
           message.environment = reader.int32() as any;
-          break;
+          continue;
         case 11:
+          if (tag !== 88) {
+            break;
+          }
+
           message.seen_before = reader.bool();
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
 
   fromJSON(object: any): ValidatedPurchase {
     return {
-      user_id: isSet(object.user_id) ? String(object.user_id) : "",
-      product_id: isSet(object.product_id) ? String(object.product_id) : "",
-      transaction_id: isSet(object.transaction_id) ? String(object.transaction_id) : "",
+      user_id: isSet(object.user_id) ? globalThis.String(object.user_id) : "",
+      product_id: isSet(object.product_id) ? globalThis.String(object.product_id) : "",
+      transaction_id: isSet(object.transaction_id) ? globalThis.String(object.transaction_id) : "",
       store: isSet(object.store) ? storeProviderFromJSON(object.store) : 0,
       purchase_time: isSet(object.purchase_time) ? fromJsonTimestamp(object.purchase_time) : undefined,
       create_time: isSet(object.create_time) ? fromJsonTimestamp(object.create_time) : undefined,
       update_time: isSet(object.update_time) ? fromJsonTimestamp(object.update_time) : undefined,
       refund_time: isSet(object.refund_time) ? fromJsonTimestamp(object.refund_time) : undefined,
-      provider_response: isSet(object.provider_response) ? String(object.provider_response) : "",
+      provider_response: isSet(object.provider_response) ? globalThis.String(object.provider_response) : "",
       environment: isSet(object.environment) ? storeEnvironmentFromJSON(object.environment) : 0,
-      seen_before: isSet(object.seen_before) ? Boolean(object.seen_before) : false,
+      seen_before: isSet(object.seen_before) ? globalThis.Boolean(object.seen_before) : false,
     };
   },
 
   toJSON(message: ValidatedPurchase): unknown {
     const obj: any = {};
-    message.user_id !== undefined && (obj.user_id = message.user_id);
-    message.product_id !== undefined && (obj.product_id = message.product_id);
-    message.transaction_id !== undefined && (obj.transaction_id = message.transaction_id);
-    message.store !== undefined && (obj.store = storeProviderToJSON(message.store));
-    message.purchase_time !== undefined && (obj.purchase_time = message.purchase_time.toISOString());
-    message.create_time !== undefined && (obj.create_time = message.create_time.toISOString());
-    message.update_time !== undefined && (obj.update_time = message.update_time.toISOString());
-    message.refund_time !== undefined && (obj.refund_time = message.refund_time.toISOString());
-    message.provider_response !== undefined && (obj.provider_response = message.provider_response);
-    message.environment !== undefined && (obj.environment = storeEnvironmentToJSON(message.environment));
-    message.seen_before !== undefined && (obj.seen_before = message.seen_before);
+    if (message.user_id !== "") {
+      obj.user_id = message.user_id;
+    }
+    if (message.product_id !== "") {
+      obj.product_id = message.product_id;
+    }
+    if (message.transaction_id !== "") {
+      obj.transaction_id = message.transaction_id;
+    }
+    if (message.store !== 0) {
+      obj.store = storeProviderToJSON(message.store);
+    }
+    if (message.purchase_time !== undefined) {
+      obj.purchase_time = message.purchase_time.toISOString();
+    }
+    if (message.create_time !== undefined) {
+      obj.create_time = message.create_time.toISOString();
+    }
+    if (message.update_time !== undefined) {
+      obj.update_time = message.update_time.toISOString();
+    }
+    if (message.refund_time !== undefined) {
+      obj.refund_time = message.refund_time.toISOString();
+    }
+    if (message.provider_response !== "") {
+      obj.provider_response = message.provider_response;
+    }
+    if (message.environment !== 0) {
+      obj.environment = storeEnvironmentToJSON(message.environment);
+    }
+    if (message.seen_before === true) {
+      obj.seen_before = message.seen_before;
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<ValidatedPurchase>, I>>(base?: I): ValidatedPurchase {
-    return ValidatedPurchase.fromPartial(base ?? {});
+    return ValidatedPurchase.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<ValidatedPurchase>, I>>(object: I): ValidatedPurchase {
     const message = createBaseValidatedPurchase();
     message.user_id = object.user_id ?? "";
@@ -11870,26 +14278,31 @@ export const ValidatePurchaseResponse = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): ValidatePurchaseResponse {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseValidatePurchaseResponse();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag !== 10) {
+            break;
+          }
+
           message.validated_purchases.push(ValidatedPurchase.decode(reader, reader.uint32()));
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
 
   fromJSON(object: any): ValidatePurchaseResponse {
     return {
-      validated_purchases: Array.isArray(object?.validated_purchases)
+      validated_purchases: globalThis.Array.isArray(object?.validated_purchases)
         ? object.validated_purchases.map((e: any) => ValidatedPurchase.fromJSON(e))
         : [],
     };
@@ -11897,18 +14310,15 @@ export const ValidatePurchaseResponse = {
 
   toJSON(message: ValidatePurchaseResponse): unknown {
     const obj: any = {};
-    if (message.validated_purchases) {
-      obj.validated_purchases = message.validated_purchases.map((e) => e ? ValidatedPurchase.toJSON(e) : undefined);
-    } else {
-      obj.validated_purchases = [];
+    if (message.validated_purchases?.length) {
+      obj.validated_purchases = message.validated_purchases.map((e) => ValidatedPurchase.toJSON(e));
     }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<ValidatePurchaseResponse>, I>>(base?: I): ValidatePurchaseResponse {
-    return ValidatePurchaseResponse.fromPartial(base ?? {});
+    return ValidatePurchaseResponse.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<ValidatePurchaseResponse>, I>>(object: I): ValidatePurchaseResponse {
     const message = createBaseValidatePurchaseResponse();
     message.validated_purchases = object.validated_purchases?.map((e) => ValidatedPurchase.fromPartial(e)) || [];
@@ -11929,19 +14339,24 @@ export const ValidateSubscriptionResponse = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): ValidateSubscriptionResponse {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseValidateSubscriptionResponse();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag !== 10) {
+            break;
+          }
+
           message.validated_subscription = ValidatedSubscription.decode(reader, reader.uint32());
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
@@ -11956,16 +14371,15 @@ export const ValidateSubscriptionResponse = {
 
   toJSON(message: ValidateSubscriptionResponse): unknown {
     const obj: any = {};
-    message.validated_subscription !== undefined && (obj.validated_subscription = message.validated_subscription
-      ? ValidatedSubscription.toJSON(message.validated_subscription)
-      : undefined);
+    if (message.validated_subscription !== undefined) {
+      obj.validated_subscription = ValidatedSubscription.toJSON(message.validated_subscription);
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<ValidateSubscriptionResponse>, I>>(base?: I): ValidateSubscriptionResponse {
-    return ValidateSubscriptionResponse.fromPartial(base ?? {});
+    return ValidateSubscriptionResponse.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<ValidateSubscriptionResponse>, I>>(object: I): ValidateSubscriptionResponse {
     const message = createBaseValidateSubscriptionResponse();
     message.validated_subscription =
@@ -12039,64 +14453,119 @@ export const ValidatedSubscription = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): ValidatedSubscription {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseValidatedSubscription();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag !== 10) {
+            break;
+          }
+
           message.user_id = reader.string();
-          break;
+          continue;
         case 2:
+          if (tag !== 18) {
+            break;
+          }
+
           message.product_id = reader.string();
-          break;
+          continue;
         case 3:
+          if (tag !== 26) {
+            break;
+          }
+
           message.original_transaction_id = reader.string();
-          break;
+          continue;
         case 4:
+          if (tag !== 32) {
+            break;
+          }
+
           message.store = reader.int32() as any;
-          break;
+          continue;
         case 5:
+          if (tag !== 42) {
+            break;
+          }
+
           message.purchase_time = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
-          break;
+          continue;
         case 6:
+          if (tag !== 50) {
+            break;
+          }
+
           message.create_time = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
-          break;
+          continue;
         case 7:
+          if (tag !== 58) {
+            break;
+          }
+
           message.update_time = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
-          break;
+          continue;
         case 8:
+          if (tag !== 64) {
+            break;
+          }
+
           message.environment = reader.int32() as any;
-          break;
+          continue;
         case 9:
+          if (tag !== 74) {
+            break;
+          }
+
           message.expiry_time = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
-          break;
+          continue;
         case 10:
+          if (tag !== 82) {
+            break;
+          }
+
           message.refund_time = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
-          break;
+          continue;
         case 11:
+          if (tag !== 90) {
+            break;
+          }
+
           message.provider_response = reader.string();
-          break;
+          continue;
         case 12:
+          if (tag !== 98) {
+            break;
+          }
+
           message.provider_notification = reader.string();
-          break;
+          continue;
         case 13:
+          if (tag !== 104) {
+            break;
+          }
+
           message.active = reader.bool();
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
 
   fromJSON(object: any): ValidatedSubscription {
     return {
-      user_id: isSet(object.user_id) ? String(object.user_id) : "",
-      product_id: isSet(object.product_id) ? String(object.product_id) : "",
-      original_transaction_id: isSet(object.original_transaction_id) ? String(object.original_transaction_id) : "",
+      user_id: isSet(object.user_id) ? globalThis.String(object.user_id) : "",
+      product_id: isSet(object.product_id) ? globalThis.String(object.product_id) : "",
+      original_transaction_id: isSet(object.original_transaction_id)
+        ? globalThis.String(object.original_transaction_id)
+        : "",
       store: isSet(object.store) ? storeProviderFromJSON(object.store) : 0,
       purchase_time: isSet(object.purchase_time) ? fromJsonTimestamp(object.purchase_time) : undefined,
       create_time: isSet(object.create_time) ? fromJsonTimestamp(object.create_time) : undefined,
@@ -12104,34 +14573,59 @@ export const ValidatedSubscription = {
       environment: isSet(object.environment) ? storeEnvironmentFromJSON(object.environment) : 0,
       expiry_time: isSet(object.expiry_time) ? fromJsonTimestamp(object.expiry_time) : undefined,
       refund_time: isSet(object.refund_time) ? fromJsonTimestamp(object.refund_time) : undefined,
-      provider_response: isSet(object.provider_response) ? String(object.provider_response) : "",
-      provider_notification: isSet(object.provider_notification) ? String(object.provider_notification) : "",
-      active: isSet(object.active) ? Boolean(object.active) : false,
+      provider_response: isSet(object.provider_response) ? globalThis.String(object.provider_response) : "",
+      provider_notification: isSet(object.provider_notification) ? globalThis.String(object.provider_notification) : "",
+      active: isSet(object.active) ? globalThis.Boolean(object.active) : false,
     };
   },
 
   toJSON(message: ValidatedSubscription): unknown {
     const obj: any = {};
-    message.user_id !== undefined && (obj.user_id = message.user_id);
-    message.product_id !== undefined && (obj.product_id = message.product_id);
-    message.original_transaction_id !== undefined && (obj.original_transaction_id = message.original_transaction_id);
-    message.store !== undefined && (obj.store = storeProviderToJSON(message.store));
-    message.purchase_time !== undefined && (obj.purchase_time = message.purchase_time.toISOString());
-    message.create_time !== undefined && (obj.create_time = message.create_time.toISOString());
-    message.update_time !== undefined && (obj.update_time = message.update_time.toISOString());
-    message.environment !== undefined && (obj.environment = storeEnvironmentToJSON(message.environment));
-    message.expiry_time !== undefined && (obj.expiry_time = message.expiry_time.toISOString());
-    message.refund_time !== undefined && (obj.refund_time = message.refund_time.toISOString());
-    message.provider_response !== undefined && (obj.provider_response = message.provider_response);
-    message.provider_notification !== undefined && (obj.provider_notification = message.provider_notification);
-    message.active !== undefined && (obj.active = message.active);
+    if (message.user_id !== "") {
+      obj.user_id = message.user_id;
+    }
+    if (message.product_id !== "") {
+      obj.product_id = message.product_id;
+    }
+    if (message.original_transaction_id !== "") {
+      obj.original_transaction_id = message.original_transaction_id;
+    }
+    if (message.store !== 0) {
+      obj.store = storeProviderToJSON(message.store);
+    }
+    if (message.purchase_time !== undefined) {
+      obj.purchase_time = message.purchase_time.toISOString();
+    }
+    if (message.create_time !== undefined) {
+      obj.create_time = message.create_time.toISOString();
+    }
+    if (message.update_time !== undefined) {
+      obj.update_time = message.update_time.toISOString();
+    }
+    if (message.environment !== 0) {
+      obj.environment = storeEnvironmentToJSON(message.environment);
+    }
+    if (message.expiry_time !== undefined) {
+      obj.expiry_time = message.expiry_time.toISOString();
+    }
+    if (message.refund_time !== undefined) {
+      obj.refund_time = message.refund_time.toISOString();
+    }
+    if (message.provider_response !== "") {
+      obj.provider_response = message.provider_response;
+    }
+    if (message.provider_notification !== "") {
+      obj.provider_notification = message.provider_notification;
+    }
+    if (message.active === true) {
+      obj.active = message.active;
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<ValidatedSubscription>, I>>(base?: I): ValidatedSubscription {
-    return ValidatedSubscription.fromPartial(base ?? {});
+    return ValidatedSubscription.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<ValidatedSubscription>, I>>(object: I): ValidatedSubscription {
     const message = createBaseValidatedSubscription();
     message.user_id = object.user_id ?? "";
@@ -12170,55 +14664,69 @@ export const PurchaseList = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): PurchaseList {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBasePurchaseList();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag !== 10) {
+            break;
+          }
+
           message.validated_purchases.push(ValidatedPurchase.decode(reader, reader.uint32()));
-          break;
+          continue;
         case 2:
+          if (tag !== 18) {
+            break;
+          }
+
           message.cursor = reader.string();
-          break;
+          continue;
         case 3:
+          if (tag !== 26) {
+            break;
+          }
+
           message.prev_cursor = reader.string();
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
 
   fromJSON(object: any): PurchaseList {
     return {
-      validated_purchases: Array.isArray(object?.validated_purchases)
+      validated_purchases: globalThis.Array.isArray(object?.validated_purchases)
         ? object.validated_purchases.map((e: any) => ValidatedPurchase.fromJSON(e))
         : [],
-      cursor: isSet(object.cursor) ? String(object.cursor) : "",
-      prev_cursor: isSet(object.prev_cursor) ? String(object.prev_cursor) : "",
+      cursor: isSet(object.cursor) ? globalThis.String(object.cursor) : "",
+      prev_cursor: isSet(object.prev_cursor) ? globalThis.String(object.prev_cursor) : "",
     };
   },
 
   toJSON(message: PurchaseList): unknown {
     const obj: any = {};
-    if (message.validated_purchases) {
-      obj.validated_purchases = message.validated_purchases.map((e) => e ? ValidatedPurchase.toJSON(e) : undefined);
-    } else {
-      obj.validated_purchases = [];
+    if (message.validated_purchases?.length) {
+      obj.validated_purchases = message.validated_purchases.map((e) => ValidatedPurchase.toJSON(e));
     }
-    message.cursor !== undefined && (obj.cursor = message.cursor);
-    message.prev_cursor !== undefined && (obj.prev_cursor = message.prev_cursor);
+    if (message.cursor !== "") {
+      obj.cursor = message.cursor;
+    }
+    if (message.prev_cursor !== "") {
+      obj.prev_cursor = message.prev_cursor;
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<PurchaseList>, I>>(base?: I): PurchaseList {
-    return PurchaseList.fromPartial(base ?? {});
+    return PurchaseList.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<PurchaseList>, I>>(object: I): PurchaseList {
     const message = createBasePurchaseList();
     message.validated_purchases = object.validated_purchases?.map((e) => ValidatedPurchase.fromPartial(e)) || [];
@@ -12247,57 +14755,69 @@ export const SubscriptionList = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): SubscriptionList {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseSubscriptionList();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag !== 10) {
+            break;
+          }
+
           message.validated_subscriptions.push(ValidatedSubscription.decode(reader, reader.uint32()));
-          break;
+          continue;
         case 2:
+          if (tag !== 18) {
+            break;
+          }
+
           message.cursor = reader.string();
-          break;
+          continue;
         case 3:
+          if (tag !== 26) {
+            break;
+          }
+
           message.prev_cursor = reader.string();
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
 
   fromJSON(object: any): SubscriptionList {
     return {
-      validated_subscriptions: Array.isArray(object?.validated_subscriptions)
+      validated_subscriptions: globalThis.Array.isArray(object?.validated_subscriptions)
         ? object.validated_subscriptions.map((e: any) => ValidatedSubscription.fromJSON(e))
         : [],
-      cursor: isSet(object.cursor) ? String(object.cursor) : "",
-      prev_cursor: isSet(object.prev_cursor) ? String(object.prev_cursor) : "",
+      cursor: isSet(object.cursor) ? globalThis.String(object.cursor) : "",
+      prev_cursor: isSet(object.prev_cursor) ? globalThis.String(object.prev_cursor) : "",
     };
   },
 
   toJSON(message: SubscriptionList): unknown {
     const obj: any = {};
-    if (message.validated_subscriptions) {
-      obj.validated_subscriptions = message.validated_subscriptions.map((e) =>
-        e ? ValidatedSubscription.toJSON(e) : undefined
-      );
-    } else {
-      obj.validated_subscriptions = [];
+    if (message.validated_subscriptions?.length) {
+      obj.validated_subscriptions = message.validated_subscriptions.map((e) => ValidatedSubscription.toJSON(e));
     }
-    message.cursor !== undefined && (obj.cursor = message.cursor);
-    message.prev_cursor !== undefined && (obj.prev_cursor = message.prev_cursor);
+    if (message.cursor !== "") {
+      obj.cursor = message.cursor;
+    }
+    if (message.prev_cursor !== "") {
+      obj.prev_cursor = message.prev_cursor;
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<SubscriptionList>, I>>(base?: I): SubscriptionList {
-    return SubscriptionList.fromPartial(base ?? {});
+    return SubscriptionList.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<SubscriptionList>, I>>(object: I): SubscriptionList {
     const message = createBaseSubscriptionList();
     message.validated_subscriptions =
@@ -12324,29 +14844,38 @@ export const WriteLeaderboardRecordRequest = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): WriteLeaderboardRecordRequest {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseWriteLeaderboardRecordRequest();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag !== 10) {
+            break;
+          }
+
           message.leaderboard_id = reader.string();
-          break;
+          continue;
         case 2:
+          if (tag !== 18) {
+            break;
+          }
+
           message.record = WriteLeaderboardRecordRequest_LeaderboardRecordWrite.decode(reader, reader.uint32());
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
 
   fromJSON(object: any): WriteLeaderboardRecordRequest {
     return {
-      leaderboard_id: isSet(object.leaderboard_id) ? String(object.leaderboard_id) : "",
+      leaderboard_id: isSet(object.leaderboard_id) ? globalThis.String(object.leaderboard_id) : "",
       record: isSet(object.record)
         ? WriteLeaderboardRecordRequest_LeaderboardRecordWrite.fromJSON(object.record)
         : undefined,
@@ -12355,17 +14884,18 @@ export const WriteLeaderboardRecordRequest = {
 
   toJSON(message: WriteLeaderboardRecordRequest): unknown {
     const obj: any = {};
-    message.leaderboard_id !== undefined && (obj.leaderboard_id = message.leaderboard_id);
-    message.record !== undefined && (obj.record = message.record
-      ? WriteLeaderboardRecordRequest_LeaderboardRecordWrite.toJSON(message.record)
-      : undefined);
+    if (message.leaderboard_id !== "") {
+      obj.leaderboard_id = message.leaderboard_id;
+    }
+    if (message.record !== undefined) {
+      obj.record = WriteLeaderboardRecordRequest_LeaderboardRecordWrite.toJSON(message.record);
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<WriteLeaderboardRecordRequest>, I>>(base?: I): WriteLeaderboardRecordRequest {
-    return WriteLeaderboardRecordRequest.fromPartial(base ?? {});
+    return WriteLeaderboardRecordRequest.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<WriteLeaderboardRecordRequest>, I>>(
     object: I,
   ): WriteLeaderboardRecordRequest {
@@ -12403,56 +14933,80 @@ export const WriteLeaderboardRecordRequest_LeaderboardRecordWrite = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): WriteLeaderboardRecordRequest_LeaderboardRecordWrite {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseWriteLeaderboardRecordRequest_LeaderboardRecordWrite();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag !== 8) {
+            break;
+          }
+
           message.score = longToNumber(reader.int64() as Long);
-          break;
+          continue;
         case 2:
+          if (tag !== 16) {
+            break;
+          }
+
           message.subscore = longToNumber(reader.int64() as Long);
-          break;
+          continue;
         case 3:
+          if (tag !== 26) {
+            break;
+          }
+
           message.metadata = reader.string();
-          break;
+          continue;
         case 4:
+          if (tag !== 32) {
+            break;
+          }
+
           message.operator = reader.int32() as any;
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
 
   fromJSON(object: any): WriteLeaderboardRecordRequest_LeaderboardRecordWrite {
     return {
-      score: isSet(object.score) ? Number(object.score) : 0,
-      subscore: isSet(object.subscore) ? Number(object.subscore) : 0,
-      metadata: isSet(object.metadata) ? String(object.metadata) : "",
+      score: isSet(object.score) ? globalThis.Number(object.score) : 0,
+      subscore: isSet(object.subscore) ? globalThis.Number(object.subscore) : 0,
+      metadata: isSet(object.metadata) ? globalThis.String(object.metadata) : "",
       operator: isSet(object.operator) ? operatorFromJSON(object.operator) : 0,
     };
   },
 
   toJSON(message: WriteLeaderboardRecordRequest_LeaderboardRecordWrite): unknown {
     const obj: any = {};
-    message.score !== undefined && (obj.score = Math.round(message.score));
-    message.subscore !== undefined && (obj.subscore = Math.round(message.subscore));
-    message.metadata !== undefined && (obj.metadata = message.metadata);
-    message.operator !== undefined && (obj.operator = operatorToJSON(message.operator));
+    if (message.score !== 0) {
+      obj.score = Math.round(message.score);
+    }
+    if (message.subscore !== 0) {
+      obj.subscore = Math.round(message.subscore);
+    }
+    if (message.metadata !== "") {
+      obj.metadata = message.metadata;
+    }
+    if (message.operator !== 0) {
+      obj.operator = operatorToJSON(message.operator);
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<WriteLeaderboardRecordRequest_LeaderboardRecordWrite>, I>>(
     base?: I,
   ): WriteLeaderboardRecordRequest_LeaderboardRecordWrite {
-    return WriteLeaderboardRecordRequest_LeaderboardRecordWrite.fromPartial(base ?? {});
+    return WriteLeaderboardRecordRequest_LeaderboardRecordWrite.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<WriteLeaderboardRecordRequest_LeaderboardRecordWrite>, I>>(
     object: I,
   ): WriteLeaderboardRecordRequest_LeaderboardRecordWrite {
@@ -12493,44 +15047,69 @@ export const WriteStorageObject = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): WriteStorageObject {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseWriteStorageObject();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag !== 10) {
+            break;
+          }
+
           message.collection = reader.string();
-          break;
+          continue;
         case 2:
+          if (tag !== 18) {
+            break;
+          }
+
           message.key = reader.string();
-          break;
+          continue;
         case 3:
+          if (tag !== 26) {
+            break;
+          }
+
           message.value = reader.string();
-          break;
+          continue;
         case 4:
+          if (tag !== 34) {
+            break;
+          }
+
           message.version = reader.string();
-          break;
+          continue;
         case 5:
+          if (tag !== 42) {
+            break;
+          }
+
           message.permission_read = Int32Value.decode(reader, reader.uint32()).value;
-          break;
+          continue;
         case 6:
+          if (tag !== 50) {
+            break;
+          }
+
           message.permission_write = Int32Value.decode(reader, reader.uint32()).value;
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
 
   fromJSON(object: any): WriteStorageObject {
     return {
-      collection: isSet(object.collection) ? String(object.collection) : "",
-      key: isSet(object.key) ? String(object.key) : "",
-      value: isSet(object.value) ? String(object.value) : "",
-      version: isSet(object.version) ? String(object.version) : "",
+      collection: isSet(object.collection) ? globalThis.String(object.collection) : "",
+      key: isSet(object.key) ? globalThis.String(object.key) : "",
+      value: isSet(object.value) ? globalThis.String(object.value) : "",
+      version: isSet(object.version) ? globalThis.String(object.version) : "",
       permission_read: isSet(object.permission_read) ? Number(object.permission_read) : undefined,
       permission_write: isSet(object.permission_write) ? Number(object.permission_write) : undefined,
     };
@@ -12538,19 +15117,30 @@ export const WriteStorageObject = {
 
   toJSON(message: WriteStorageObject): unknown {
     const obj: any = {};
-    message.collection !== undefined && (obj.collection = message.collection);
-    message.key !== undefined && (obj.key = message.key);
-    message.value !== undefined && (obj.value = message.value);
-    message.version !== undefined && (obj.version = message.version);
-    message.permission_read !== undefined && (obj.permission_read = message.permission_read);
-    message.permission_write !== undefined && (obj.permission_write = message.permission_write);
+    if (message.collection !== "") {
+      obj.collection = message.collection;
+    }
+    if (message.key !== "") {
+      obj.key = message.key;
+    }
+    if (message.value !== "") {
+      obj.value = message.value;
+    }
+    if (message.version !== "") {
+      obj.version = message.version;
+    }
+    if (message.permission_read !== undefined) {
+      obj.permission_read = message.permission_read;
+    }
+    if (message.permission_write !== undefined) {
+      obj.permission_write = message.permission_write;
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<WriteStorageObject>, I>>(base?: I): WriteStorageObject {
-    return WriteStorageObject.fromPartial(base ?? {});
+    return WriteStorageObject.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<WriteStorageObject>, I>>(object: I): WriteStorageObject {
     const message = createBaseWriteStorageObject();
     message.collection = object.collection ?? "";
@@ -12576,43 +15166,47 @@ export const WriteStorageObjectsRequest = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): WriteStorageObjectsRequest {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseWriteStorageObjectsRequest();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag !== 10) {
+            break;
+          }
+
           message.objects.push(WriteStorageObject.decode(reader, reader.uint32()));
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
 
   fromJSON(object: any): WriteStorageObjectsRequest {
     return {
-      objects: Array.isArray(object?.objects) ? object.objects.map((e: any) => WriteStorageObject.fromJSON(e)) : [],
+      objects: globalThis.Array.isArray(object?.objects)
+        ? object.objects.map((e: any) => WriteStorageObject.fromJSON(e))
+        : [],
     };
   },
 
   toJSON(message: WriteStorageObjectsRequest): unknown {
     const obj: any = {};
-    if (message.objects) {
-      obj.objects = message.objects.map((e) => e ? WriteStorageObject.toJSON(e) : undefined);
-    } else {
-      obj.objects = [];
+    if (message.objects?.length) {
+      obj.objects = message.objects.map((e) => WriteStorageObject.toJSON(e));
     }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<WriteStorageObjectsRequest>, I>>(base?: I): WriteStorageObjectsRequest {
-    return WriteStorageObjectsRequest.fromPartial(base ?? {});
+    return WriteStorageObjectsRequest.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<WriteStorageObjectsRequest>, I>>(object: I): WriteStorageObjectsRequest {
     const message = createBaseWriteStorageObjectsRequest();
     message.objects = object.objects?.map((e) => WriteStorageObject.fromPartial(e)) || [];
@@ -12636,29 +15230,38 @@ export const WriteTournamentRecordRequest = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): WriteTournamentRecordRequest {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseWriteTournamentRecordRequest();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag !== 10) {
+            break;
+          }
+
           message.tournament_id = reader.string();
-          break;
+          continue;
         case 2:
+          if (tag !== 18) {
+            break;
+          }
+
           message.record = WriteTournamentRecordRequest_TournamentRecordWrite.decode(reader, reader.uint32());
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
 
   fromJSON(object: any): WriteTournamentRecordRequest {
     return {
-      tournament_id: isSet(object.tournament_id) ? String(object.tournament_id) : "",
+      tournament_id: isSet(object.tournament_id) ? globalThis.String(object.tournament_id) : "",
       record: isSet(object.record)
         ? WriteTournamentRecordRequest_TournamentRecordWrite.fromJSON(object.record)
         : undefined,
@@ -12667,17 +15270,18 @@ export const WriteTournamentRecordRequest = {
 
   toJSON(message: WriteTournamentRecordRequest): unknown {
     const obj: any = {};
-    message.tournament_id !== undefined && (obj.tournament_id = message.tournament_id);
-    message.record !== undefined && (obj.record = message.record
-      ? WriteTournamentRecordRequest_TournamentRecordWrite.toJSON(message.record)
-      : undefined);
+    if (message.tournament_id !== "") {
+      obj.tournament_id = message.tournament_id;
+    }
+    if (message.record !== undefined) {
+      obj.record = WriteTournamentRecordRequest_TournamentRecordWrite.toJSON(message.record);
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<WriteTournamentRecordRequest>, I>>(base?: I): WriteTournamentRecordRequest {
-    return WriteTournamentRecordRequest.fromPartial(base ?? {});
+    return WriteTournamentRecordRequest.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<WriteTournamentRecordRequest>, I>>(object: I): WriteTournamentRecordRequest {
     const message = createBaseWriteTournamentRecordRequest();
     message.tournament_id = object.tournament_id ?? "";
@@ -12713,56 +15317,80 @@ export const WriteTournamentRecordRequest_TournamentRecordWrite = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): WriteTournamentRecordRequest_TournamentRecordWrite {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseWriteTournamentRecordRequest_TournamentRecordWrite();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag !== 8) {
+            break;
+          }
+
           message.score = longToNumber(reader.int64() as Long);
-          break;
+          continue;
         case 2:
+          if (tag !== 16) {
+            break;
+          }
+
           message.subscore = longToNumber(reader.int64() as Long);
-          break;
+          continue;
         case 3:
+          if (tag !== 26) {
+            break;
+          }
+
           message.metadata = reader.string();
-          break;
+          continue;
         case 4:
+          if (tag !== 32) {
+            break;
+          }
+
           message.operator = reader.int32() as any;
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
 
   fromJSON(object: any): WriteTournamentRecordRequest_TournamentRecordWrite {
     return {
-      score: isSet(object.score) ? Number(object.score) : 0,
-      subscore: isSet(object.subscore) ? Number(object.subscore) : 0,
-      metadata: isSet(object.metadata) ? String(object.metadata) : "",
+      score: isSet(object.score) ? globalThis.Number(object.score) : 0,
+      subscore: isSet(object.subscore) ? globalThis.Number(object.subscore) : 0,
+      metadata: isSet(object.metadata) ? globalThis.String(object.metadata) : "",
       operator: isSet(object.operator) ? operatorFromJSON(object.operator) : 0,
     };
   },
 
   toJSON(message: WriteTournamentRecordRequest_TournamentRecordWrite): unknown {
     const obj: any = {};
-    message.score !== undefined && (obj.score = Math.round(message.score));
-    message.subscore !== undefined && (obj.subscore = Math.round(message.subscore));
-    message.metadata !== undefined && (obj.metadata = message.metadata);
-    message.operator !== undefined && (obj.operator = operatorToJSON(message.operator));
+    if (message.score !== 0) {
+      obj.score = Math.round(message.score);
+    }
+    if (message.subscore !== 0) {
+      obj.subscore = Math.round(message.subscore);
+    }
+    if (message.metadata !== "") {
+      obj.metadata = message.metadata;
+    }
+    if (message.operator !== 0) {
+      obj.operator = operatorToJSON(message.operator);
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<WriteTournamentRecordRequest_TournamentRecordWrite>, I>>(
     base?: I,
   ): WriteTournamentRecordRequest_TournamentRecordWrite {
-    return WriteTournamentRecordRequest_TournamentRecordWrite.fromPartial(base ?? {});
+    return WriteTournamentRecordRequest_TournamentRecordWrite.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<WriteTournamentRecordRequest_TournamentRecordWrite>, I>>(
     object: I,
   ): WriteTournamentRecordRequest_TournamentRecordWrite {
@@ -12803,64 +15431,100 @@ export const ClanDescProfile = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): ClanDescProfile {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseClanDescProfile();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag !== 10) {
+            break;
+          }
+
           message.clan_id = reader.string();
-          break;
+          continue;
         case 2:
+          if (tag !== 18) {
+            break;
+          }
+
           message.creator_id = reader.string();
-          break;
+          continue;
         case 3:
+          if (tag !== 26) {
+            break;
+          }
+
           message.nick_name = reader.string();
-          break;
+          continue;
         case 4:
+          if (tag !== 34) {
+            break;
+          }
+
           message.profile_banner = reader.string();
-          break;
+          continue;
         case 5:
+          if (tag !== 42) {
+            break;
+          }
+
           message.profile_theme = reader.string();
-          break;
+          continue;
         case 6:
+          if (tag !== 50) {
+            break;
+          }
+
           message.avatar_url = reader.string();
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
 
   fromJSON(object: any): ClanDescProfile {
     return {
-      clan_id: isSet(object.clan_id) ? String(object.clan_id) : "",
-      creator_id: isSet(object.creator_id) ? String(object.creator_id) : "",
-      nick_name: isSet(object.nick_name) ? String(object.nick_name) : "",
-      profile_banner: isSet(object.profile_banner) ? String(object.profile_banner) : "",
-      profile_theme: isSet(object.profile_theme) ? String(object.profile_theme) : "",
-      avatar_url: isSet(object.avatar_url) ? String(object.avatar_url) : "",
+      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
+      creator_id: isSet(object.creator_id) ? globalThis.String(object.creator_id) : "",
+      nick_name: isSet(object.nick_name) ? globalThis.String(object.nick_name) : "",
+      profile_banner: isSet(object.profile_banner) ? globalThis.String(object.profile_banner) : "",
+      profile_theme: isSet(object.profile_theme) ? globalThis.String(object.profile_theme) : "",
+      avatar_url: isSet(object.avatar_url) ? globalThis.String(object.avatar_url) : "",
     };
   },
 
   toJSON(message: ClanDescProfile): unknown {
     const obj: any = {};
-    message.clan_id !== undefined && (obj.clan_id = message.clan_id);
-    message.creator_id !== undefined && (obj.creator_id = message.creator_id);
-    message.nick_name !== undefined && (obj.nick_name = message.nick_name);
-    message.profile_banner !== undefined && (obj.profile_banner = message.profile_banner);
-    message.profile_theme !== undefined && (obj.profile_theme = message.profile_theme);
-    message.avatar_url !== undefined && (obj.avatar_url = message.avatar_url);
+    if (message.clan_id !== "") {
+      obj.clan_id = message.clan_id;
+    }
+    if (message.creator_id !== "") {
+      obj.creator_id = message.creator_id;
+    }
+    if (message.nick_name !== "") {
+      obj.nick_name = message.nick_name;
+    }
+    if (message.profile_banner !== "") {
+      obj.profile_banner = message.profile_banner;
+    }
+    if (message.profile_theme !== "") {
+      obj.profile_theme = message.profile_theme;
+    }
+    if (message.avatar_url !== "") {
+      obj.avatar_url = message.avatar_url;
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<ClanDescProfile>, I>>(base?: I): ClanDescProfile {
-    return ClanDescProfile.fromPartial(base ?? {});
+    return ClanDescProfile.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<ClanDescProfile>, I>>(object: I): ClanDescProfile {
     const message = createBaseClanDescProfile();
     message.clan_id = object.clan_id ?? "";
@@ -12898,59 +15562,89 @@ export const UpdateClanDescProfileRequest = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): UpdateClanDescProfileRequest {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseUpdateClanDescProfileRequest();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag !== 10) {
+            break;
+          }
+
           message.clan_id = reader.string();
-          break;
+          continue;
         case 2:
+          if (tag !== 18) {
+            break;
+          }
+
           message.nick_name = reader.string();
-          break;
+          continue;
         case 3:
+          if (tag !== 26) {
+            break;
+          }
+
           message.profile_banner = reader.string();
-          break;
+          continue;
         case 4:
+          if (tag !== 34) {
+            break;
+          }
+
           message.profile_theme = reader.string();
-          break;
+          continue;
         case 5:
+          if (tag !== 42) {
+            break;
+          }
+
           message.avatar_url = reader.string();
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
 
   fromJSON(object: any): UpdateClanDescProfileRequest {
     return {
-      clan_id: isSet(object.clan_id) ? String(object.clan_id) : "",
-      nick_name: isSet(object.nick_name) ? String(object.nick_name) : "",
-      profile_banner: isSet(object.profile_banner) ? String(object.profile_banner) : "",
-      profile_theme: isSet(object.profile_theme) ? String(object.profile_theme) : "",
-      avatar_url: isSet(object.avatar_url) ? String(object.avatar_url) : "",
+      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
+      nick_name: isSet(object.nick_name) ? globalThis.String(object.nick_name) : "",
+      profile_banner: isSet(object.profile_banner) ? globalThis.String(object.profile_banner) : "",
+      profile_theme: isSet(object.profile_theme) ? globalThis.String(object.profile_theme) : "",
+      avatar_url: isSet(object.avatar_url) ? globalThis.String(object.avatar_url) : "",
     };
   },
 
   toJSON(message: UpdateClanDescProfileRequest): unknown {
     const obj: any = {};
-    message.clan_id !== undefined && (obj.clan_id = message.clan_id);
-    message.nick_name !== undefined && (obj.nick_name = message.nick_name);
-    message.profile_banner !== undefined && (obj.profile_banner = message.profile_banner);
-    message.profile_theme !== undefined && (obj.profile_theme = message.profile_theme);
-    message.avatar_url !== undefined && (obj.avatar_url = message.avatar_url);
+    if (message.clan_id !== "") {
+      obj.clan_id = message.clan_id;
+    }
+    if (message.nick_name !== "") {
+      obj.nick_name = message.nick_name;
+    }
+    if (message.profile_banner !== "") {
+      obj.profile_banner = message.profile_banner;
+    }
+    if (message.profile_theme !== "") {
+      obj.profile_theme = message.profile_theme;
+    }
+    if (message.avatar_url !== "") {
+      obj.avatar_url = message.avatar_url;
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<UpdateClanDescProfileRequest>, I>>(base?: I): UpdateClanDescProfileRequest {
-    return UpdateClanDescProfileRequest.fromPartial(base ?? {});
+    return UpdateClanDescProfileRequest.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<UpdateClanDescProfileRequest>, I>>(object: I): UpdateClanDescProfileRequest {
     const message = createBaseUpdateClanDescProfileRequest();
     message.clan_id = object.clan_id ?? "";
@@ -12975,37 +15669,43 @@ export const ClanDescProfileRequest = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): ClanDescProfileRequest {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseClanDescProfileRequest();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag !== 10) {
+            break;
+          }
+
           message.clan_id = reader.string();
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
 
   fromJSON(object: any): ClanDescProfileRequest {
-    return { clan_id: isSet(object.clan_id) ? String(object.clan_id) : "" };
+    return { clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "" };
   },
 
   toJSON(message: ClanDescProfileRequest): unknown {
     const obj: any = {};
-    message.clan_id !== undefined && (obj.clan_id = message.clan_id);
+    if (message.clan_id !== "") {
+      obj.clan_id = message.clan_id;
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<ClanDescProfileRequest>, I>>(base?: I): ClanDescProfileRequest {
-    return ClanDescProfileRequest.fromPartial(base ?? {});
+    return ClanDescProfileRequest.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<ClanDescProfileRequest>, I>>(object: I): ClanDescProfileRequest {
     const message = createBaseClanDescProfileRequest();
     message.clan_id = object.clan_id ?? "";
@@ -13041,64 +15741,100 @@ export const ClanDesc = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): ClanDesc {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseClanDesc();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag !== 10) {
+            break;
+          }
+
           message.creator_id = reader.string();
-          break;
+          continue;
         case 2:
+          if (tag !== 18) {
+            break;
+          }
+
           message.clan_name = reader.string();
-          break;
+          continue;
         case 3:
+          if (tag !== 26) {
+            break;
+          }
+
           message.logo = reader.string();
-          break;
+          continue;
         case 4:
+          if (tag !== 34) {
+            break;
+          }
+
           message.banner = reader.string();
-          break;
+          continue;
         case 5:
+          if (tag !== 42) {
+            break;
+          }
+
           message.clan_id = reader.string();
-          break;
+          continue;
         case 6:
+          if (tag !== 48) {
+            break;
+          }
+
           message.status = reader.int32();
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
 
   fromJSON(object: any): ClanDesc {
     return {
-      creator_id: isSet(object.creator_id) ? String(object.creator_id) : "",
-      clan_name: isSet(object.clan_name) ? String(object.clan_name) : "",
-      logo: isSet(object.logo) ? String(object.logo) : "",
-      banner: isSet(object.banner) ? String(object.banner) : "",
-      clan_id: isSet(object.clan_id) ? String(object.clan_id) : "",
-      status: isSet(object.status) ? Number(object.status) : 0,
+      creator_id: isSet(object.creator_id) ? globalThis.String(object.creator_id) : "",
+      clan_name: isSet(object.clan_name) ? globalThis.String(object.clan_name) : "",
+      logo: isSet(object.logo) ? globalThis.String(object.logo) : "",
+      banner: isSet(object.banner) ? globalThis.String(object.banner) : "",
+      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
+      status: isSet(object.status) ? globalThis.Number(object.status) : 0,
     };
   },
 
   toJSON(message: ClanDesc): unknown {
     const obj: any = {};
-    message.creator_id !== undefined && (obj.creator_id = message.creator_id);
-    message.clan_name !== undefined && (obj.clan_name = message.clan_name);
-    message.logo !== undefined && (obj.logo = message.logo);
-    message.banner !== undefined && (obj.banner = message.banner);
-    message.clan_id !== undefined && (obj.clan_id = message.clan_id);
-    message.status !== undefined && (obj.status = Math.round(message.status));
+    if (message.creator_id !== "") {
+      obj.creator_id = message.creator_id;
+    }
+    if (message.clan_name !== "") {
+      obj.clan_name = message.clan_name;
+    }
+    if (message.logo !== "") {
+      obj.logo = message.logo;
+    }
+    if (message.banner !== "") {
+      obj.banner = message.banner;
+    }
+    if (message.clan_id !== "") {
+      obj.clan_id = message.clan_id;
+    }
+    if (message.status !== 0) {
+      obj.status = Math.round(message.status);
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<ClanDesc>, I>>(base?: I): ClanDesc {
-    return ClanDesc.fromPartial(base ?? {});
+    return ClanDesc.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<ClanDesc>, I>>(object: I): ClanDesc {
     const message = createBaseClanDesc();
     message.creator_id = object.creator_id ?? "";
@@ -13133,54 +15869,78 @@ export const CreateClanDescRequest = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): CreateClanDescRequest {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseCreateClanDescRequest();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag !== 10) {
+            break;
+          }
+
           message.creator_id = reader.string();
-          break;
+          continue;
         case 2:
+          if (tag !== 18) {
+            break;
+          }
+
           message.clan_name = reader.string();
-          break;
+          continue;
         case 3:
+          if (tag !== 26) {
+            break;
+          }
+
           message.logo = reader.string();
-          break;
+          continue;
         case 4:
+          if (tag !== 34) {
+            break;
+          }
+
           message.banner = reader.string();
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
 
   fromJSON(object: any): CreateClanDescRequest {
     return {
-      creator_id: isSet(object.creator_id) ? String(object.creator_id) : "",
-      clan_name: isSet(object.clan_name) ? String(object.clan_name) : "",
-      logo: isSet(object.logo) ? String(object.logo) : "",
-      banner: isSet(object.banner) ? String(object.banner) : "",
+      creator_id: isSet(object.creator_id) ? globalThis.String(object.creator_id) : "",
+      clan_name: isSet(object.clan_name) ? globalThis.String(object.clan_name) : "",
+      logo: isSet(object.logo) ? globalThis.String(object.logo) : "",
+      banner: isSet(object.banner) ? globalThis.String(object.banner) : "",
     };
   },
 
   toJSON(message: CreateClanDescRequest): unknown {
     const obj: any = {};
-    message.creator_id !== undefined && (obj.creator_id = message.creator_id);
-    message.clan_name !== undefined && (obj.clan_name = message.clan_name);
-    message.logo !== undefined && (obj.logo = message.logo);
-    message.banner !== undefined && (obj.banner = message.banner);
+    if (message.creator_id !== "") {
+      obj.creator_id = message.creator_id;
+    }
+    if (message.clan_name !== "") {
+      obj.clan_name = message.clan_name;
+    }
+    if (message.logo !== "") {
+      obj.logo = message.logo;
+    }
+    if (message.banner !== "") {
+      obj.banner = message.banner;
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<CreateClanDescRequest>, I>>(base?: I): CreateClanDescRequest {
-    return CreateClanDescRequest.fromPartial(base ?? {});
+    return CreateClanDescRequest.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<CreateClanDescRequest>, I>>(object: I): CreateClanDescRequest {
     const message = createBaseCreateClanDescRequest();
     message.creator_id = object.creator_id ?? "";
@@ -13219,64 +15979,100 @@ export const UpdateClanDescRequest = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): UpdateClanDescRequest {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseUpdateClanDescRequest();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag !== 10) {
+            break;
+          }
+
           message.clan_id = reader.string();
-          break;
+          continue;
         case 2:
+          if (tag !== 18) {
+            break;
+          }
+
           message.creator_id = reader.string();
-          break;
+          continue;
         case 3:
+          if (tag !== 26) {
+            break;
+          }
+
           message.clan_name = reader.string();
-          break;
+          continue;
         case 4:
+          if (tag !== 34) {
+            break;
+          }
+
           message.logo = reader.string();
-          break;
+          continue;
         case 5:
+          if (tag !== 42) {
+            break;
+          }
+
           message.banner = reader.string();
-          break;
+          continue;
         case 6:
+          if (tag !== 48) {
+            break;
+          }
+
           message.status = reader.int32();
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
 
   fromJSON(object: any): UpdateClanDescRequest {
     return {
-      clan_id: isSet(object.clan_id) ? String(object.clan_id) : "",
-      creator_id: isSet(object.creator_id) ? String(object.creator_id) : "",
-      clan_name: isSet(object.clan_name) ? String(object.clan_name) : "",
-      logo: isSet(object.logo) ? String(object.logo) : "",
-      banner: isSet(object.banner) ? String(object.banner) : "",
-      status: isSet(object.status) ? Number(object.status) : 0,
+      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
+      creator_id: isSet(object.creator_id) ? globalThis.String(object.creator_id) : "",
+      clan_name: isSet(object.clan_name) ? globalThis.String(object.clan_name) : "",
+      logo: isSet(object.logo) ? globalThis.String(object.logo) : "",
+      banner: isSet(object.banner) ? globalThis.String(object.banner) : "",
+      status: isSet(object.status) ? globalThis.Number(object.status) : 0,
     };
   },
 
   toJSON(message: UpdateClanDescRequest): unknown {
     const obj: any = {};
-    message.clan_id !== undefined && (obj.clan_id = message.clan_id);
-    message.creator_id !== undefined && (obj.creator_id = message.creator_id);
-    message.clan_name !== undefined && (obj.clan_name = message.clan_name);
-    message.logo !== undefined && (obj.logo = message.logo);
-    message.banner !== undefined && (obj.banner = message.banner);
-    message.status !== undefined && (obj.status = Math.round(message.status));
+    if (message.clan_id !== "") {
+      obj.clan_id = message.clan_id;
+    }
+    if (message.creator_id !== "") {
+      obj.creator_id = message.creator_id;
+    }
+    if (message.clan_name !== "") {
+      obj.clan_name = message.clan_name;
+    }
+    if (message.logo !== "") {
+      obj.logo = message.logo;
+    }
+    if (message.banner !== "") {
+      obj.banner = message.banner;
+    }
+    if (message.status !== 0) {
+      obj.status = Math.round(message.status);
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<UpdateClanDescRequest>, I>>(base?: I): UpdateClanDescRequest {
-    return UpdateClanDescRequest.fromPartial(base ?? {});
+    return UpdateClanDescRequest.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<UpdateClanDescRequest>, I>>(object: I): UpdateClanDescRequest {
     const message = createBaseUpdateClanDescRequest();
     message.clan_id = object.clan_id ?? "";
@@ -13302,37 +16098,43 @@ export const DeleteClanDescRequest = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): DeleteClanDescRequest {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseDeleteClanDescRequest();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag !== 10) {
+            break;
+          }
+
           message.clan_desc_id = reader.string();
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
 
   fromJSON(object: any): DeleteClanDescRequest {
-    return { clan_desc_id: isSet(object.clan_desc_id) ? String(object.clan_desc_id) : "" };
+    return { clan_desc_id: isSet(object.clan_desc_id) ? globalThis.String(object.clan_desc_id) : "" };
   },
 
   toJSON(message: DeleteClanDescRequest): unknown {
     const obj: any = {};
-    message.clan_desc_id !== undefined && (obj.clan_desc_id = message.clan_desc_id);
+    if (message.clan_desc_id !== "") {
+      obj.clan_desc_id = message.clan_desc_id;
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<DeleteClanDescRequest>, I>>(base?: I): DeleteClanDescRequest {
-    return DeleteClanDescRequest.fromPartial(base ?? {});
+    return DeleteClanDescRequest.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<DeleteClanDescRequest>, I>>(object: I): DeleteClanDescRequest {
     const message = createBaseDeleteClanDescRequest();
     message.clan_desc_id = object.clan_desc_id ?? "";
@@ -13359,25 +16161,38 @@ export const ListClanDescRequest = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): ListClanDescRequest {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseListClanDescRequest();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag !== 10) {
+            break;
+          }
+
           message.limit = Int32Value.decode(reader, reader.uint32()).value;
-          break;
+          continue;
         case 2:
+          if (tag !== 18) {
+            break;
+          }
+
           message.state = Int32Value.decode(reader, reader.uint32()).value;
-          break;
+          continue;
         case 3:
+          if (tag !== 26) {
+            break;
+          }
+
           message.cursor = reader.string();
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
@@ -13386,22 +16201,27 @@ export const ListClanDescRequest = {
     return {
       limit: isSet(object.limit) ? Number(object.limit) : undefined,
       state: isSet(object.state) ? Number(object.state) : undefined,
-      cursor: isSet(object.cursor) ? String(object.cursor) : "",
+      cursor: isSet(object.cursor) ? globalThis.String(object.cursor) : "",
     };
   },
 
   toJSON(message: ListClanDescRequest): unknown {
     const obj: any = {};
-    message.limit !== undefined && (obj.limit = message.limit);
-    message.state !== undefined && (obj.state = message.state);
-    message.cursor !== undefined && (obj.cursor = message.cursor);
+    if (message.limit !== undefined) {
+      obj.limit = message.limit;
+    }
+    if (message.state !== undefined) {
+      obj.state = message.state;
+    }
+    if (message.cursor !== "") {
+      obj.cursor = message.cursor;
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<ListClanDescRequest>, I>>(base?: I): ListClanDescRequest {
-    return ListClanDescRequest.fromPartial(base ?? {});
+    return ListClanDescRequest.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<ListClanDescRequest>, I>>(object: I): ListClanDescRequest {
     const message = createBaseListClanDescRequest();
     message.limit = object.limit ?? undefined;
@@ -13424,41 +16244,45 @@ export const ClanDescList = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): ClanDescList {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseClanDescList();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag !== 10) {
+            break;
+          }
+
           message.clandesc.push(ClanDesc.decode(reader, reader.uint32()));
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
 
   fromJSON(object: any): ClanDescList {
-    return { clandesc: Array.isArray(object?.clandesc) ? object.clandesc.map((e: any) => ClanDesc.fromJSON(e)) : [] };
+    return {
+      clandesc: globalThis.Array.isArray(object?.clandesc) ? object.clandesc.map((e: any) => ClanDesc.fromJSON(e)) : [],
+    };
   },
 
   toJSON(message: ClanDescList): unknown {
     const obj: any = {};
-    if (message.clandesc) {
-      obj.clandesc = message.clandesc.map((e) => e ? ClanDesc.toJSON(e) : undefined);
-    } else {
-      obj.clandesc = [];
+    if (message.clandesc?.length) {
+      obj.clandesc = message.clandesc.map((e) => ClanDesc.toJSON(e));
     }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<ClanDescList>, I>>(base?: I): ClanDescList {
-    return ClanDescList.fromPartial(base ?? {});
+    return ClanDescList.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<ClanDescList>, I>>(object: I): ClanDescList {
     const message = createBaseClanDescList();
     message.clandesc = object.clandesc?.map((e) => ClanDesc.fromPartial(e)) || [];
@@ -13485,49 +16309,67 @@ export const LinkInviteUserRequest = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): LinkInviteUserRequest {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseLinkInviteUserRequest();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag !== 10) {
+            break;
+          }
+
           message.clan_id = reader.string();
-          break;
+          continue;
         case 2:
+          if (tag !== 18) {
+            break;
+          }
+
           message.channel_id = reader.string();
-          break;
+          continue;
         case 3:
+          if (tag !== 24) {
+            break;
+          }
+
           message.expiry_time = reader.int32();
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
 
   fromJSON(object: any): LinkInviteUserRequest {
     return {
-      clan_id: isSet(object.clan_id) ? String(object.clan_id) : "",
-      channel_id: isSet(object.channel_id) ? String(object.channel_id) : "",
-      expiry_time: isSet(object.expiry_time) ? Number(object.expiry_time) : 0,
+      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
+      channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "",
+      expiry_time: isSet(object.expiry_time) ? globalThis.Number(object.expiry_time) : 0,
     };
   },
 
   toJSON(message: LinkInviteUserRequest): unknown {
     const obj: any = {};
-    message.clan_id !== undefined && (obj.clan_id = message.clan_id);
-    message.channel_id !== undefined && (obj.channel_id = message.channel_id);
-    message.expiry_time !== undefined && (obj.expiry_time = Math.round(message.expiry_time));
+    if (message.clan_id !== "") {
+      obj.clan_id = message.clan_id;
+    }
+    if (message.channel_id !== "") {
+      obj.channel_id = message.channel_id;
+    }
+    if (message.expiry_time !== 0) {
+      obj.expiry_time = Math.round(message.expiry_time);
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<LinkInviteUserRequest>, I>>(base?: I): LinkInviteUserRequest {
-    return LinkInviteUserRequest.fromPartial(base ?? {});
+    return LinkInviteUserRequest.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<LinkInviteUserRequest>, I>>(object: I): LinkInviteUserRequest {
     const message = createBaseLinkInviteUserRequest();
     message.clan_id = object.clan_id ?? "";
@@ -13550,37 +16392,43 @@ export const InviteUserRequest = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): InviteUserRequest {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseInviteUserRequest();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag !== 10) {
+            break;
+          }
+
           message.invite_id = reader.string();
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
 
   fromJSON(object: any): InviteUserRequest {
-    return { invite_id: isSet(object.invite_id) ? String(object.invite_id) : "" };
+    return { invite_id: isSet(object.invite_id) ? globalThis.String(object.invite_id) : "" };
   },
 
   toJSON(message: InviteUserRequest): unknown {
     const obj: any = {};
-    message.invite_id !== undefined && (obj.invite_id = message.invite_id);
+    if (message.invite_id !== "") {
+      obj.invite_id = message.invite_id;
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<InviteUserRequest>, I>>(base?: I): InviteUserRequest {
-    return InviteUserRequest.fromPartial(base ?? {});
+    return InviteUserRequest.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<InviteUserRequest>, I>>(object: I): InviteUserRequest {
     const message = createBaseInviteUserRequest();
     message.invite_id = object.invite_id ?? "";
@@ -13604,44 +16452,56 @@ export const InviteUserRes = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): InviteUserRes {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseInviteUserRes();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag !== 10) {
+            break;
+          }
+
           message.clan_id = reader.string();
-          break;
+          continue;
         case 2:
+          if (tag !== 18) {
+            break;
+          }
+
           message.channel_id = reader.string();
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
 
   fromJSON(object: any): InviteUserRes {
     return {
-      clan_id: isSet(object.clan_id) ? String(object.clan_id) : "",
-      channel_id: isSet(object.channel_id) ? String(object.channel_id) : "",
+      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
+      channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "",
     };
   },
 
   toJSON(message: InviteUserRes): unknown {
     const obj: any = {};
-    message.clan_id !== undefined && (obj.clan_id = message.clan_id);
-    message.channel_id !== undefined && (obj.channel_id = message.channel_id);
+    if (message.clan_id !== "") {
+      obj.clan_id = message.clan_id;
+    }
+    if (message.channel_id !== "") {
+      obj.channel_id = message.channel_id;
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<InviteUserRes>, I>>(base?: I): InviteUserRes {
-    return InviteUserRes.fromPartial(base ?? {});
+    return InviteUserRes.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<InviteUserRes>, I>>(object: I): InviteUserRes {
     const message = createBaseInviteUserRes();
     message.clan_id = object.clan_id ?? "";
@@ -13666,44 +16526,56 @@ export const JoinClanChannelRequest = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): JoinClanChannelRequest {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseJoinClanChannelRequest();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag !== 10) {
+            break;
+          }
+
           message.clan_id = reader.string();
-          break;
+          continue;
         case 2:
+          if (tag !== 18) {
+            break;
+          }
+
           message.channel_id = reader.string();
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
 
   fromJSON(object: any): JoinClanChannelRequest {
     return {
-      clan_id: isSet(object.clan_id) ? String(object.clan_id) : "",
-      channel_id: isSet(object.channel_id) ? String(object.channel_id) : "",
+      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
+      channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "",
     };
   },
 
   toJSON(message: JoinClanChannelRequest): unknown {
     const obj: any = {};
-    message.clan_id !== undefined && (obj.clan_id = message.clan_id);
-    message.channel_id !== undefined && (obj.channel_id = message.channel_id);
+    if (message.clan_id !== "") {
+      obj.clan_id = message.clan_id;
+    }
+    if (message.channel_id !== "") {
+      obj.channel_id = message.channel_id;
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<JoinClanChannelRequest>, I>>(base?: I): JoinClanChannelRequest {
-    return JoinClanChannelRequest.fromPartial(base ?? {});
+    return JoinClanChannelRequest.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<JoinClanChannelRequest>, I>>(object: I): JoinClanChannelRequest {
     const message = createBaseJoinClanChannelRequest();
     message.clan_id = object.clan_id ?? "";
@@ -13751,69 +16623,111 @@ export const LinkInviteUser = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): LinkInviteUser {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseLinkInviteUser();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag !== 10) {
+            break;
+          }
+
           message.clan_id = reader.string();
-          break;
+          continue;
         case 2:
+          if (tag !== 18) {
+            break;
+          }
+
           message.creator_id = reader.string();
-          break;
+          continue;
         case 3:
+          if (tag !== 26) {
+            break;
+          }
+
           message.channel_id = reader.string();
-          break;
+          continue;
         case 4:
+          if (tag !== 34) {
+            break;
+          }
+
           message.invite_link = reader.string();
-          break;
+          continue;
         case 5:
+          if (tag !== 42) {
+            break;
+          }
+
           message.create_time = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
-          break;
+          continue;
         case 6:
+          if (tag !== 50) {
+            break;
+          }
+
           message.expiry_time = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
-          break;
+          continue;
         case 7:
+          if (tag !== 58) {
+            break;
+          }
+
           message.id = reader.string();
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
 
   fromJSON(object: any): LinkInviteUser {
     return {
-      clan_id: isSet(object.clan_id) ? String(object.clan_id) : "",
-      creator_id: isSet(object.creator_id) ? String(object.creator_id) : "",
-      channel_id: isSet(object.channel_id) ? String(object.channel_id) : "",
-      invite_link: isSet(object.invite_link) ? String(object.invite_link) : "",
+      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
+      creator_id: isSet(object.creator_id) ? globalThis.String(object.creator_id) : "",
+      channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "",
+      invite_link: isSet(object.invite_link) ? globalThis.String(object.invite_link) : "",
       create_time: isSet(object.create_time) ? fromJsonTimestamp(object.create_time) : undefined,
       expiry_time: isSet(object.expiry_time) ? fromJsonTimestamp(object.expiry_time) : undefined,
-      id: isSet(object.id) ? String(object.id) : "",
+      id: isSet(object.id) ? globalThis.String(object.id) : "",
     };
   },
 
   toJSON(message: LinkInviteUser): unknown {
     const obj: any = {};
-    message.clan_id !== undefined && (obj.clan_id = message.clan_id);
-    message.creator_id !== undefined && (obj.creator_id = message.creator_id);
-    message.channel_id !== undefined && (obj.channel_id = message.channel_id);
-    message.invite_link !== undefined && (obj.invite_link = message.invite_link);
-    message.create_time !== undefined && (obj.create_time = message.create_time.toISOString());
-    message.expiry_time !== undefined && (obj.expiry_time = message.expiry_time.toISOString());
-    message.id !== undefined && (obj.id = message.id);
+    if (message.clan_id !== "") {
+      obj.clan_id = message.clan_id;
+    }
+    if (message.creator_id !== "") {
+      obj.creator_id = message.creator_id;
+    }
+    if (message.channel_id !== "") {
+      obj.channel_id = message.channel_id;
+    }
+    if (message.invite_link !== "") {
+      obj.invite_link = message.invite_link;
+    }
+    if (message.create_time !== undefined) {
+      obj.create_time = message.create_time.toISOString();
+    }
+    if (message.expiry_time !== undefined) {
+      obj.expiry_time = message.expiry_time.toISOString();
+    }
+    if (message.id !== "") {
+      obj.id = message.id;
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<LinkInviteUser>, I>>(base?: I): LinkInviteUser {
-    return LinkInviteUser.fromPartial(base ?? {});
+    return LinkInviteUser.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<LinkInviteUser>, I>>(object: I): LinkInviteUser {
     const message = createBaseLinkInviteUser();
     message.clan_id = object.clan_id ?? "";
@@ -13849,54 +16763,78 @@ export const CategoryDesc = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): CategoryDesc {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseCategoryDesc();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag !== 10) {
+            break;
+          }
+
           message.creator_id = reader.string();
-          break;
+          continue;
         case 2:
+          if (tag !== 18) {
+            break;
+          }
+
           message.clan_id = reader.string();
-          break;
+          continue;
         case 3:
+          if (tag !== 26) {
+            break;
+          }
+
           message.category_name = reader.string();
-          break;
+          continue;
         case 4:
+          if (tag !== 34) {
+            break;
+          }
+
           message.category_id = reader.string();
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
 
   fromJSON(object: any): CategoryDesc {
     return {
-      creator_id: isSet(object.creator_id) ? String(object.creator_id) : "",
-      clan_id: isSet(object.clan_id) ? String(object.clan_id) : "",
-      category_name: isSet(object.category_name) ? String(object.category_name) : "",
-      category_id: isSet(object.category_id) ? String(object.category_id) : "",
+      creator_id: isSet(object.creator_id) ? globalThis.String(object.creator_id) : "",
+      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
+      category_name: isSet(object.category_name) ? globalThis.String(object.category_name) : "",
+      category_id: isSet(object.category_id) ? globalThis.String(object.category_id) : "",
     };
   },
 
   toJSON(message: CategoryDesc): unknown {
     const obj: any = {};
-    message.creator_id !== undefined && (obj.creator_id = message.creator_id);
-    message.clan_id !== undefined && (obj.clan_id = message.clan_id);
-    message.category_name !== undefined && (obj.category_name = message.category_name);
-    message.category_id !== undefined && (obj.category_id = message.category_id);
+    if (message.creator_id !== "") {
+      obj.creator_id = message.creator_id;
+    }
+    if (message.clan_id !== "") {
+      obj.clan_id = message.clan_id;
+    }
+    if (message.category_name !== "") {
+      obj.category_name = message.category_name;
+    }
+    if (message.category_id !== "") {
+      obj.category_id = message.category_id;
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<CategoryDesc>, I>>(base?: I): CategoryDesc {
-    return CategoryDesc.fromPartial(base ?? {});
+    return CategoryDesc.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<CategoryDesc>, I>>(object: I): CategoryDesc {
     const message = createBaseCategoryDesc();
     message.creator_id = object.creator_id ?? "";
@@ -13929,54 +16867,78 @@ export const CreateCategoryDescRequest = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): CreateCategoryDescRequest {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseCreateCategoryDescRequest();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag !== 10) {
+            break;
+          }
+
           message.category_name = reader.string();
-          break;
+          continue;
         case 2:
+          if (tag !== 18) {
+            break;
+          }
+
           message.clan_id = reader.string();
-          break;
+          continue;
         case 3:
+          if (tag !== 26) {
+            break;
+          }
+
           message.creator_id = reader.string();
-          break;
+          continue;
         case 4:
+          if (tag !== 34) {
+            break;
+          }
+
           message.category_id = reader.string();
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
 
   fromJSON(object: any): CreateCategoryDescRequest {
     return {
-      category_name: isSet(object.category_name) ? String(object.category_name) : "",
-      clan_id: isSet(object.clan_id) ? String(object.clan_id) : "",
-      creator_id: isSet(object.creator_id) ? String(object.creator_id) : "",
-      category_id: isSet(object.category_id) ? String(object.category_id) : "",
+      category_name: isSet(object.category_name) ? globalThis.String(object.category_name) : "",
+      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
+      creator_id: isSet(object.creator_id) ? globalThis.String(object.creator_id) : "",
+      category_id: isSet(object.category_id) ? globalThis.String(object.category_id) : "",
     };
   },
 
   toJSON(message: CreateCategoryDescRequest): unknown {
     const obj: any = {};
-    message.category_name !== undefined && (obj.category_name = message.category_name);
-    message.clan_id !== undefined && (obj.clan_id = message.clan_id);
-    message.creator_id !== undefined && (obj.creator_id = message.creator_id);
-    message.category_id !== undefined && (obj.category_id = message.category_id);
+    if (message.category_name !== "") {
+      obj.category_name = message.category_name;
+    }
+    if (message.clan_id !== "") {
+      obj.clan_id = message.clan_id;
+    }
+    if (message.creator_id !== "") {
+      obj.creator_id = message.creator_id;
+    }
+    if (message.category_id !== "") {
+      obj.category_id = message.category_id;
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<CreateCategoryDescRequest>, I>>(base?: I): CreateCategoryDescRequest {
-    return CreateCategoryDescRequest.fromPartial(base ?? {});
+    return CreateCategoryDescRequest.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<CreateCategoryDescRequest>, I>>(object: I): CreateCategoryDescRequest {
     const message = createBaseCreateCategoryDescRequest();
     message.category_name = object.category_name ?? "";
@@ -14000,37 +16962,43 @@ export const DeleteCategoryDescRequest = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): DeleteCategoryDescRequest {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseDeleteCategoryDescRequest();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag !== 10) {
+            break;
+          }
+
           message.creator_id = reader.string();
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
 
   fromJSON(object: any): DeleteCategoryDescRequest {
-    return { creator_id: isSet(object.creator_id) ? String(object.creator_id) : "" };
+    return { creator_id: isSet(object.creator_id) ? globalThis.String(object.creator_id) : "" };
   },
 
   toJSON(message: DeleteCategoryDescRequest): unknown {
     const obj: any = {};
-    message.creator_id !== undefined && (obj.creator_id = message.creator_id);
+    if (message.creator_id !== "") {
+      obj.creator_id = message.creator_id;
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<DeleteCategoryDescRequest>, I>>(base?: I): DeleteCategoryDescRequest {
-    return DeleteCategoryDescRequest.fromPartial(base ?? {});
+    return DeleteCategoryDescRequest.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<DeleteCategoryDescRequest>, I>>(object: I): DeleteCategoryDescRequest {
     const message = createBaseDeleteCategoryDescRequest();
     message.creator_id = object.creator_id ?? "";
@@ -14051,26 +17019,31 @@ export const CategoryDescList = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): CategoryDescList {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseCategoryDescList();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag !== 10) {
+            break;
+          }
+
           message.categorydesc.push(CategoryDesc.decode(reader, reader.uint32()));
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
 
   fromJSON(object: any): CategoryDescList {
     return {
-      categorydesc: Array.isArray(object?.categorydesc)
+      categorydesc: globalThis.Array.isArray(object?.categorydesc)
         ? object.categorydesc.map((e: any) => CategoryDesc.fromJSON(e))
         : [],
     };
@@ -14078,18 +17051,15 @@ export const CategoryDescList = {
 
   toJSON(message: CategoryDescList): unknown {
     const obj: any = {};
-    if (message.categorydesc) {
-      obj.categorydesc = message.categorydesc.map((e) => e ? CategoryDesc.toJSON(e) : undefined);
-    } else {
-      obj.categorydesc = [];
+    if (message.categorydesc?.length) {
+      obj.categorydesc = message.categorydesc.map((e) => CategoryDesc.toJSON(e));
     }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<CategoryDescList>, I>>(base?: I): CategoryDescList {
-    return CategoryDescList.fromPartial(base ?? {});
+    return CategoryDescList.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<CategoryDescList>, I>>(object: I): CategoryDescList {
     const message = createBaseCategoryDescList();
     message.categorydesc = object.categorydesc?.map((e) => CategoryDesc.fromPartial(e)) || [];
@@ -14116,25 +17086,38 @@ export const ListCategoryDescsRequest = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): ListCategoryDescsRequest {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseListCategoryDescsRequest();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag !== 10) {
+            break;
+          }
+
           message.limit = Int32Value.decode(reader, reader.uint32()).value;
-          break;
+          continue;
         case 2:
+          if (tag !== 18) {
+            break;
+          }
+
           message.state = Int32Value.decode(reader, reader.uint32()).value;
-          break;
+          continue;
         case 3:
+          if (tag !== 26) {
+            break;
+          }
+
           message.cursor = reader.string();
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
@@ -14143,22 +17126,27 @@ export const ListCategoryDescsRequest = {
     return {
       limit: isSet(object.limit) ? Number(object.limit) : undefined,
       state: isSet(object.state) ? Number(object.state) : undefined,
-      cursor: isSet(object.cursor) ? String(object.cursor) : "",
+      cursor: isSet(object.cursor) ? globalThis.String(object.cursor) : "",
     };
   },
 
   toJSON(message: ListCategoryDescsRequest): unknown {
     const obj: any = {};
-    message.limit !== undefined && (obj.limit = message.limit);
-    message.state !== undefined && (obj.state = message.state);
-    message.cursor !== undefined && (obj.cursor = message.cursor);
+    if (message.limit !== undefined) {
+      obj.limit = message.limit;
+    }
+    if (message.state !== undefined) {
+      obj.state = message.state;
+    }
+    if (message.cursor !== "") {
+      obj.cursor = message.cursor;
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<ListCategoryDescsRequest>, I>>(base?: I): ListCategoryDescsRequest {
-    return ListCategoryDescsRequest.fromPartial(base ?? {});
+    return ListCategoryDescsRequest.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<ListCategoryDescsRequest>, I>>(object: I): ListCategoryDescsRequest {
     const message = createBaseListCategoryDescsRequest();
     message.limit = object.limit ?? undefined;
@@ -14215,79 +17203,133 @@ export const ChannelDescription = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): ChannelDescription {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseChannelDescription();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag !== 10) {
+            break;
+          }
+
           message.clan_id = reader.string();
-          break;
+          continue;
         case 2:
+          if (tag !== 18) {
+            break;
+          }
+
           message.parrent_id = reader.string();
-          break;
+          continue;
         case 3:
+          if (tag !== 26) {
+            break;
+          }
+
           message.channel_id = reader.string();
-          break;
+          continue;
         case 4:
+          if (tag !== 34) {
+            break;
+          }
+
           message.category_id = reader.string();
-          break;
+          continue;
         case 5:
+          if (tag !== 42) {
+            break;
+          }
+
           message.category_name = reader.string();
-          break;
+          continue;
         case 6:
+          if (tag !== 50) {
+            break;
+          }
+
           message.type = Int32Value.decode(reader, reader.uint32()).value;
-          break;
+          continue;
         case 7:
+          if (tag !== 58) {
+            break;
+          }
+
           message.creator_id = reader.string();
-          break;
+          continue;
         case 8:
+          if (tag !== 66) {
+            break;
+          }
+
           message.channel_lable = reader.string();
-          break;
+          continue;
         case 9:
+          if (tag !== 72) {
+            break;
+          }
+
           message.channel_private = reader.int32();
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
 
   fromJSON(object: any): ChannelDescription {
     return {
-      clan_id: isSet(object.clan_id) ? String(object.clan_id) : "",
-      parrent_id: isSet(object.parrent_id) ? String(object.parrent_id) : "",
-      channel_id: isSet(object.channel_id) ? String(object.channel_id) : "",
-      category_id: isSet(object.category_id) ? String(object.category_id) : "",
-      category_name: isSet(object.category_name) ? String(object.category_name) : "",
+      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
+      parrent_id: isSet(object.parrent_id) ? globalThis.String(object.parrent_id) : "",
+      channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "",
+      category_id: isSet(object.category_id) ? globalThis.String(object.category_id) : "",
+      category_name: isSet(object.category_name) ? globalThis.String(object.category_name) : "",
       type: isSet(object.type) ? Number(object.type) : undefined,
-      creator_id: isSet(object.creator_id) ? String(object.creator_id) : "",
-      channel_lable: isSet(object.channel_lable) ? String(object.channel_lable) : "",
-      channel_private: isSet(object.channel_private) ? Number(object.channel_private) : 0,
+      creator_id: isSet(object.creator_id) ? globalThis.String(object.creator_id) : "",
+      channel_lable: isSet(object.channel_lable) ? globalThis.String(object.channel_lable) : "",
+      channel_private: isSet(object.channel_private) ? globalThis.Number(object.channel_private) : 0,
     };
   },
 
   toJSON(message: ChannelDescription): unknown {
     const obj: any = {};
-    message.clan_id !== undefined && (obj.clan_id = message.clan_id);
-    message.parrent_id !== undefined && (obj.parrent_id = message.parrent_id);
-    message.channel_id !== undefined && (obj.channel_id = message.channel_id);
-    message.category_id !== undefined && (obj.category_id = message.category_id);
-    message.category_name !== undefined && (obj.category_name = message.category_name);
-    message.type !== undefined && (obj.type = message.type);
-    message.creator_id !== undefined && (obj.creator_id = message.creator_id);
-    message.channel_lable !== undefined && (obj.channel_lable = message.channel_lable);
-    message.channel_private !== undefined && (obj.channel_private = Math.round(message.channel_private));
+    if (message.clan_id !== "") {
+      obj.clan_id = message.clan_id;
+    }
+    if (message.parrent_id !== "") {
+      obj.parrent_id = message.parrent_id;
+    }
+    if (message.channel_id !== "") {
+      obj.channel_id = message.channel_id;
+    }
+    if (message.category_id !== "") {
+      obj.category_id = message.category_id;
+    }
+    if (message.category_name !== "") {
+      obj.category_name = message.category_name;
+    }
+    if (message.type !== undefined) {
+      obj.type = message.type;
+    }
+    if (message.creator_id !== "") {
+      obj.creator_id = message.creator_id;
+    }
+    if (message.channel_lable !== "") {
+      obj.channel_lable = message.channel_lable;
+    }
+    if (message.channel_private !== 0) {
+      obj.channel_private = Math.round(message.channel_private);
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<ChannelDescription>, I>>(base?: I): ChannelDescription {
-    return ChannelDescription.fromPartial(base ?? {});
+    return ChannelDescription.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<ChannelDescription>, I>>(object: I): ChannelDescription {
     const message = createBaseChannelDescription();
     message.clan_id = object.clan_id ?? "";
@@ -14325,60 +17367,80 @@ export const ChannelDescList = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): ChannelDescList {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseChannelDescList();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag !== 10) {
+            break;
+          }
+
           message.channeldesc.push(ChannelDescription.decode(reader, reader.uint32()));
-          break;
+          continue;
         case 2:
+          if (tag !== 18) {
+            break;
+          }
+
           message.next_cursor = reader.string();
-          break;
+          continue;
         case 3:
+          if (tag !== 26) {
+            break;
+          }
+
           message.prev_cursor = reader.string();
-          break;
+          continue;
         case 4:
+          if (tag !== 34) {
+            break;
+          }
+
           message.cacheable_cursor = reader.string();
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
 
   fromJSON(object: any): ChannelDescList {
     return {
-      channeldesc: Array.isArray(object?.channeldesc)
+      channeldesc: globalThis.Array.isArray(object?.channeldesc)
         ? object.channeldesc.map((e: any) => ChannelDescription.fromJSON(e))
         : [],
-      next_cursor: isSet(object.next_cursor) ? String(object.next_cursor) : "",
-      prev_cursor: isSet(object.prev_cursor) ? String(object.prev_cursor) : "",
-      cacheable_cursor: isSet(object.cacheable_cursor) ? String(object.cacheable_cursor) : "",
+      next_cursor: isSet(object.next_cursor) ? globalThis.String(object.next_cursor) : "",
+      prev_cursor: isSet(object.prev_cursor) ? globalThis.String(object.prev_cursor) : "",
+      cacheable_cursor: isSet(object.cacheable_cursor) ? globalThis.String(object.cacheable_cursor) : "",
     };
   },
 
   toJSON(message: ChannelDescList): unknown {
     const obj: any = {};
-    if (message.channeldesc) {
-      obj.channeldesc = message.channeldesc.map((e) => e ? ChannelDescription.toJSON(e) : undefined);
-    } else {
-      obj.channeldesc = [];
+    if (message.channeldesc?.length) {
+      obj.channeldesc = message.channeldesc.map((e) => ChannelDescription.toJSON(e));
     }
-    message.next_cursor !== undefined && (obj.next_cursor = message.next_cursor);
-    message.prev_cursor !== undefined && (obj.prev_cursor = message.prev_cursor);
-    message.cacheable_cursor !== undefined && (obj.cacheable_cursor = message.cacheable_cursor);
+    if (message.next_cursor !== "") {
+      obj.next_cursor = message.next_cursor;
+    }
+    if (message.prev_cursor !== "") {
+      obj.prev_cursor = message.prev_cursor;
+    }
+    if (message.cacheable_cursor !== "") {
+      obj.cacheable_cursor = message.cacheable_cursor;
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<ChannelDescList>, I>>(base?: I): ChannelDescList {
-    return ChannelDescList.fromPartial(base ?? {});
+    return ChannelDescList.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<ChannelDescList>, I>>(object: I): ChannelDescList {
     const message = createBaseChannelDescList();
     message.channeldesc = object.channeldesc?.map((e) => ChannelDescription.fromPartial(e)) || [];
@@ -14411,28 +17473,45 @@ export const ListChannelDescsRequest = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): ListChannelDescsRequest {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseListChannelDescsRequest();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag !== 10) {
+            break;
+          }
+
           message.limit = Int32Value.decode(reader, reader.uint32()).value;
-          break;
+          continue;
         case 2:
+          if (tag !== 18) {
+            break;
+          }
+
           message.state = Int32Value.decode(reader, reader.uint32()).value;
-          break;
+          continue;
         case 3:
+          if (tag !== 26) {
+            break;
+          }
+
           message.cursor = reader.string();
-          break;
+          continue;
         case 4:
+          if (tag !== 34) {
+            break;
+          }
+
           message.clan_id = reader.string();
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
@@ -14441,24 +17520,31 @@ export const ListChannelDescsRequest = {
     return {
       limit: isSet(object.limit) ? Number(object.limit) : undefined,
       state: isSet(object.state) ? Number(object.state) : undefined,
-      cursor: isSet(object.cursor) ? String(object.cursor) : "",
-      clan_id: isSet(object.clan_id) ? String(object.clan_id) : "",
+      cursor: isSet(object.cursor) ? globalThis.String(object.cursor) : "",
+      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
     };
   },
 
   toJSON(message: ListChannelDescsRequest): unknown {
     const obj: any = {};
-    message.limit !== undefined && (obj.limit = message.limit);
-    message.state !== undefined && (obj.state = message.state);
-    message.cursor !== undefined && (obj.cursor = message.cursor);
-    message.clan_id !== undefined && (obj.clan_id = message.clan_id);
+    if (message.limit !== undefined) {
+      obj.limit = message.limit;
+    }
+    if (message.state !== undefined) {
+      obj.state = message.state;
+    }
+    if (message.cursor !== "") {
+      obj.cursor = message.cursor;
+    }
+    if (message.clan_id !== "") {
+      obj.clan_id = message.clan_id;
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<ListChannelDescsRequest>, I>>(base?: I): ListChannelDescsRequest {
-    return ListChannelDescsRequest.fromPartial(base ?? {});
+    return ListChannelDescsRequest.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<ListChannelDescsRequest>, I>>(object: I): ListChannelDescsRequest {
     const message = createBaseListChannelDescsRequest();
     message.limit = object.limit ?? undefined;
@@ -14516,83 +17602,133 @@ export const CreateChannelDescRequest = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): CreateChannelDescRequest {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseCreateChannelDescRequest();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag !== 10) {
+            break;
+          }
+
           message.clan_id = reader.string();
-          break;
+          continue;
         case 2:
+          if (tag !== 18) {
+            break;
+          }
+
           message.parrent_id = reader.string();
-          break;
+          continue;
         case 3:
+          if (tag !== 26) {
+            break;
+          }
+
           message.channel_id = reader.string();
-          break;
+          continue;
         case 4:
+          if (tag !== 34) {
+            break;
+          }
+
           message.category_id = reader.string();
-          break;
+          continue;
         case 5:
+          if (tag !== 42) {
+            break;
+          }
+
           message.type = Int32Value.decode(reader, reader.uint32()).value;
-          break;
+          continue;
         case 6:
+          if (tag !== 50) {
+            break;
+          }
+
           message.group_id = reader.string();
-          break;
+          continue;
         case 7:
+          if (tag !== 58) {
+            break;
+          }
+
           message.channel_lable = reader.string();
-          break;
+          continue;
         case 8:
+          if (tag !== 64) {
+            break;
+          }
+
           message.channel_private = reader.int32();
-          break;
+          continue;
         case 9:
+          if (tag !== 74) {
+            break;
+          }
+
           message.user_ids.push(reader.string());
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
 
   fromJSON(object: any): CreateChannelDescRequest {
     return {
-      clan_id: isSet(object.clan_id) ? String(object.clan_id) : "",
-      parrent_id: isSet(object.parrent_id) ? String(object.parrent_id) : "",
-      channel_id: isSet(object.channel_id) ? String(object.channel_id) : "",
-      category_id: isSet(object.category_id) ? String(object.category_id) : "",
+      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
+      parrent_id: isSet(object.parrent_id) ? globalThis.String(object.parrent_id) : "",
+      channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "",
+      category_id: isSet(object.category_id) ? globalThis.String(object.category_id) : "",
       type: isSet(object.type) ? Number(object.type) : undefined,
-      group_id: isSet(object.group_id) ? String(object.group_id) : "",
-      channel_lable: isSet(object.channel_lable) ? String(object.channel_lable) : "",
-      channel_private: isSet(object.channel_private) ? Number(object.channel_private) : 0,
-      user_ids: Array.isArray(object?.user_ids) ? object.user_ids.map((e: any) => String(e)) : [],
+      group_id: isSet(object.group_id) ? globalThis.String(object.group_id) : "",
+      channel_lable: isSet(object.channel_lable) ? globalThis.String(object.channel_lable) : "",
+      channel_private: isSet(object.channel_private) ? globalThis.Number(object.channel_private) : 0,
+      user_ids: globalThis.Array.isArray(object?.user_ids) ? object.user_ids.map((e: any) => globalThis.String(e)) : [],
     };
   },
 
   toJSON(message: CreateChannelDescRequest): unknown {
     const obj: any = {};
-    message.clan_id !== undefined && (obj.clan_id = message.clan_id);
-    message.parrent_id !== undefined && (obj.parrent_id = message.parrent_id);
-    message.channel_id !== undefined && (obj.channel_id = message.channel_id);
-    message.category_id !== undefined && (obj.category_id = message.category_id);
-    message.type !== undefined && (obj.type = message.type);
-    message.group_id !== undefined && (obj.group_id = message.group_id);
-    message.channel_lable !== undefined && (obj.channel_lable = message.channel_lable);
-    message.channel_private !== undefined && (obj.channel_private = Math.round(message.channel_private));
-    if (message.user_ids) {
-      obj.user_ids = message.user_ids.map((e) => e);
-    } else {
-      obj.user_ids = [];
+    if (message.clan_id !== "") {
+      obj.clan_id = message.clan_id;
+    }
+    if (message.parrent_id !== "") {
+      obj.parrent_id = message.parrent_id;
+    }
+    if (message.channel_id !== "") {
+      obj.channel_id = message.channel_id;
+    }
+    if (message.category_id !== "") {
+      obj.category_id = message.category_id;
+    }
+    if (message.type !== undefined) {
+      obj.type = message.type;
+    }
+    if (message.group_id !== "") {
+      obj.group_id = message.group_id;
+    }
+    if (message.channel_lable !== "") {
+      obj.channel_lable = message.channel_lable;
+    }
+    if (message.channel_private !== 0) {
+      obj.channel_private = Math.round(message.channel_private);
+    }
+    if (message.user_ids?.length) {
+      obj.user_ids = message.user_ids;
     }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<CreateChannelDescRequest>, I>>(base?: I): CreateChannelDescRequest {
-    return CreateChannelDescRequest.fromPartial(base ?? {});
+    return CreateChannelDescRequest.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<CreateChannelDescRequest>, I>>(object: I): CreateChannelDescRequest {
     const message = createBaseCreateChannelDescRequest();
     message.clan_id = object.clan_id ?? "";
@@ -14621,37 +17757,43 @@ export const DeleteChannelDescRequest = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): DeleteChannelDescRequest {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseDeleteChannelDescRequest();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag !== 10) {
+            break;
+          }
+
           message.channel_id = reader.string();
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
 
   fromJSON(object: any): DeleteChannelDescRequest {
-    return { channel_id: isSet(object.channel_id) ? String(object.channel_id) : "" };
+    return { channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "" };
   },
 
   toJSON(message: DeleteChannelDescRequest): unknown {
     const obj: any = {};
-    message.channel_id !== undefined && (obj.channel_id = message.channel_id);
+    if (message.channel_id !== "") {
+      obj.channel_id = message.channel_id;
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<DeleteChannelDescRequest>, I>>(base?: I): DeleteChannelDescRequest {
-    return DeleteChannelDescRequest.fromPartial(base ?? {});
+    return DeleteChannelDescRequest.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<DeleteChannelDescRequest>, I>>(object: I): DeleteChannelDescRequest {
     const message = createBaseDeleteChannelDescRequest();
     message.channel_id = object.channel_id ?? "";
@@ -14678,32 +17820,45 @@ export const UpdateChannelDescRequest = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): UpdateChannelDescRequest {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseUpdateChannelDescRequest();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag !== 10) {
+            break;
+          }
+
           message.channel_id = reader.string();
-          break;
+          continue;
         case 2:
+          if (tag !== 18) {
+            break;
+          }
+
           message.channel_lable = StringValue.decode(reader, reader.uint32()).value;
-          break;
+          continue;
         case 3:
+          if (tag !== 26) {
+            break;
+          }
+
           message.category_id = StringValue.decode(reader, reader.uint32()).value;
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
 
   fromJSON(object: any): UpdateChannelDescRequest {
     return {
-      channel_id: isSet(object.channel_id) ? String(object.channel_id) : "",
+      channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "",
       channel_lable: isSet(object.channel_lable) ? String(object.channel_lable) : undefined,
       category_id: isSet(object.category_id) ? String(object.category_id) : undefined,
     };
@@ -14711,16 +17866,21 @@ export const UpdateChannelDescRequest = {
 
   toJSON(message: UpdateChannelDescRequest): unknown {
     const obj: any = {};
-    message.channel_id !== undefined && (obj.channel_id = message.channel_id);
-    message.channel_lable !== undefined && (obj.channel_lable = message.channel_lable);
-    message.category_id !== undefined && (obj.category_id = message.category_id);
+    if (message.channel_id !== "") {
+      obj.channel_id = message.channel_id;
+    }
+    if (message.channel_lable !== undefined) {
+      obj.channel_lable = message.channel_lable;
+    }
+    if (message.category_id !== undefined) {
+      obj.category_id = message.category_id;
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<UpdateChannelDescRequest>, I>>(base?: I): UpdateChannelDescRequest {
-    return UpdateChannelDescRequest.fromPartial(base ?? {});
+    return UpdateChannelDescRequest.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<UpdateChannelDescRequest>, I>>(object: I): UpdateChannelDescRequest {
     const message = createBaseUpdateChannelDescRequest();
     message.channel_id = object.channel_id ?? "";
@@ -14746,48 +17906,56 @@ export const AddChannelUsersRequest = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): AddChannelUsersRequest {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseAddChannelUsersRequest();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag !== 10) {
+            break;
+          }
+
           message.channel_id = reader.string();
-          break;
+          continue;
         case 2:
+          if (tag !== 18) {
+            break;
+          }
+
           message.user_ids.push(reader.string());
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
 
   fromJSON(object: any): AddChannelUsersRequest {
     return {
-      channel_id: isSet(object.channel_id) ? String(object.channel_id) : "",
-      user_ids: Array.isArray(object?.user_ids) ? object.user_ids.map((e: any) => String(e)) : [],
+      channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "",
+      user_ids: globalThis.Array.isArray(object?.user_ids) ? object.user_ids.map((e: any) => globalThis.String(e)) : [],
     };
   },
 
   toJSON(message: AddChannelUsersRequest): unknown {
     const obj: any = {};
-    message.channel_id !== undefined && (obj.channel_id = message.channel_id);
-    if (message.user_ids) {
-      obj.user_ids = message.user_ids.map((e) => e);
-    } else {
-      obj.user_ids = [];
+    if (message.channel_id !== "") {
+      obj.channel_id = message.channel_id;
+    }
+    if (message.user_ids?.length) {
+      obj.user_ids = message.user_ids;
     }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<AddChannelUsersRequest>, I>>(base?: I): AddChannelUsersRequest {
-    return AddChannelUsersRequest.fromPartial(base ?? {});
+    return AddChannelUsersRequest.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<AddChannelUsersRequest>, I>>(object: I): AddChannelUsersRequest {
     const message = createBaseAddChannelUsersRequest();
     message.channel_id = object.channel_id ?? "";
@@ -14796,12 +17964,12 @@ export const AddChannelUsersRequest = {
   },
 };
 
-function createBaseKickChannelUsersRequest(): KickChannelUsersRequest {
+function createBaseRemoveChannelUsersRequest(): RemoveChannelUsersRequest {
   return { channel_id: "", user_ids: [] };
 }
 
-export const KickChannelUsersRequest = {
-  encode(message: KickChannelUsersRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+export const RemoveChannelUsersRequest = {
+  encode(message: RemoveChannelUsersRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.channel_id !== "") {
       writer.uint32(10).string(message.channel_id);
     }
@@ -14811,51 +17979,59 @@ export const KickChannelUsersRequest = {
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): KickChannelUsersRequest {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+  decode(input: _m0.Reader | Uint8Array, length?: number): RemoveChannelUsersRequest {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseKickChannelUsersRequest();
+    const message = createBaseRemoveChannelUsersRequest();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag !== 10) {
+            break;
+          }
+
           message.channel_id = reader.string();
-          break;
+          continue;
         case 2:
+          if (tag !== 18) {
+            break;
+          }
+
           message.user_ids.push(reader.string());
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
 
-  fromJSON(object: any): KickChannelUsersRequest {
+  fromJSON(object: any): RemoveChannelUsersRequest {
     return {
-      channel_id: isSet(object.channel_id) ? String(object.channel_id) : "",
-      user_ids: Array.isArray(object?.user_ids) ? object.user_ids.map((e: any) => String(e)) : [],
+      channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "",
+      user_ids: globalThis.Array.isArray(object?.user_ids) ? object.user_ids.map((e: any) => globalThis.String(e)) : [],
     };
   },
 
-  toJSON(message: KickChannelUsersRequest): unknown {
+  toJSON(message: RemoveChannelUsersRequest): unknown {
     const obj: any = {};
-    message.channel_id !== undefined && (obj.channel_id = message.channel_id);
-    if (message.user_ids) {
-      obj.user_ids = message.user_ids.map((e) => e);
-    } else {
-      obj.user_ids = [];
+    if (message.channel_id !== "") {
+      obj.channel_id = message.channel_id;
+    }
+    if (message.user_ids?.length) {
+      obj.user_ids = message.user_ids;
     }
     return obj;
   },
 
-  create<I extends Exact<DeepPartial<KickChannelUsersRequest>, I>>(base?: I): KickChannelUsersRequest {
-    return KickChannelUsersRequest.fromPartial(base ?? {});
+  create<I extends Exact<DeepPartial<RemoveChannelUsersRequest>, I>>(base?: I): RemoveChannelUsersRequest {
+    return RemoveChannelUsersRequest.fromPartial(base ?? ({} as any));
   },
-
-  fromPartial<I extends Exact<DeepPartial<KickChannelUsersRequest>, I>>(object: I): KickChannelUsersRequest {
-    const message = createBaseKickChannelUsersRequest();
+  fromPartial<I extends Exact<DeepPartial<RemoveChannelUsersRequest>, I>>(object: I): RemoveChannelUsersRequest {
+    const message = createBaseRemoveChannelUsersRequest();
     message.channel_id = object.channel_id ?? "";
     message.user_ids = object.user_ids?.map((e) => e) || [];
     return message;
@@ -14875,37 +18051,43 @@ export const LeaveChannelRequest = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): LeaveChannelRequest {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseLeaveChannelRequest();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag !== 10) {
+            break;
+          }
+
           message.channel_id = reader.string();
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
 
   fromJSON(object: any): LeaveChannelRequest {
-    return { channel_id: isSet(object.channel_id) ? String(object.channel_id) : "" };
+    return { channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "" };
   },
 
   toJSON(message: LeaveChannelRequest): unknown {
     const obj: any = {};
-    message.channel_id !== undefined && (obj.channel_id = message.channel_id);
+    if (message.channel_id !== "") {
+      obj.channel_id = message.channel_id;
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<LeaveChannelRequest>, I>>(base?: I): LeaveChannelRequest {
-    return LeaveChannelRequest.fromPartial(base ?? {});
+    return LeaveChannelRequest.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<LeaveChannelRequest>, I>>(object: I): LeaveChannelRequest {
     const message = createBaseLeaveChannelRequest();
     message.channel_id = object.channel_id ?? "";
@@ -14968,89 +18150,155 @@ export const Role = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): Role {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseRole();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag !== 10) {
+            break;
+          }
+
           message.id = reader.string();
-          break;
+          continue;
         case 2:
+          if (tag !== 18) {
+            break;
+          }
+
           message.title = reader.string();
-          break;
+          continue;
         case 3:
+          if (tag !== 26) {
+            break;
+          }
+
           message.color = reader.string();
-          break;
+          continue;
         case 4:
+          if (tag !== 34) {
+            break;
+          }
+
           message.role_icon = reader.string();
-          break;
+          continue;
         case 5:
+          if (tag !== 42) {
+            break;
+          }
+
           message.slug = reader.string();
-          break;
+          continue;
         case 6:
+          if (tag !== 50) {
+            break;
+          }
+
           message.description = reader.string();
-          break;
+          continue;
         case 7:
+          if (tag !== 58) {
+            break;
+          }
+
           message.creator_id = reader.string();
-          break;
+          continue;
         case 8:
+          if (tag !== 66) {
+            break;
+          }
+
           message.clan_id = reader.string();
-          break;
+          continue;
         case 9:
+          if (tag !== 72) {
+            break;
+          }
+
           message.active = reader.int32();
-          break;
+          continue;
         case 10:
+          if (tag !== 80) {
+            break;
+          }
+
           message.display_online = reader.int32();
-          break;
+          continue;
         case 11:
+          if (tag !== 88) {
+            break;
+          }
+
           message.allow_mention = reader.int32();
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
 
   fromJSON(object: any): Role {
     return {
-      id: isSet(object.id) ? String(object.id) : "",
-      title: isSet(object.title) ? String(object.title) : "",
-      color: isSet(object.color) ? String(object.color) : "",
-      role_icon: isSet(object.role_icon) ? String(object.role_icon) : "",
-      slug: isSet(object.slug) ? String(object.slug) : "",
-      description: isSet(object.description) ? String(object.description) : "",
-      creator_id: isSet(object.creator_id) ? String(object.creator_id) : "",
-      clan_id: isSet(object.clan_id) ? String(object.clan_id) : "",
-      active: isSet(object.active) ? Number(object.active) : 0,
-      display_online: isSet(object.display_online) ? Number(object.display_online) : 0,
-      allow_mention: isSet(object.allow_mention) ? Number(object.allow_mention) : 0,
+      id: isSet(object.id) ? globalThis.String(object.id) : "",
+      title: isSet(object.title) ? globalThis.String(object.title) : "",
+      color: isSet(object.color) ? globalThis.String(object.color) : "",
+      role_icon: isSet(object.role_icon) ? globalThis.String(object.role_icon) : "",
+      slug: isSet(object.slug) ? globalThis.String(object.slug) : "",
+      description: isSet(object.description) ? globalThis.String(object.description) : "",
+      creator_id: isSet(object.creator_id) ? globalThis.String(object.creator_id) : "",
+      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
+      active: isSet(object.active) ? globalThis.Number(object.active) : 0,
+      display_online: isSet(object.display_online) ? globalThis.Number(object.display_online) : 0,
+      allow_mention: isSet(object.allow_mention) ? globalThis.Number(object.allow_mention) : 0,
     };
   },
 
   toJSON(message: Role): unknown {
     const obj: any = {};
-    message.id !== undefined && (obj.id = message.id);
-    message.title !== undefined && (obj.title = message.title);
-    message.color !== undefined && (obj.color = message.color);
-    message.role_icon !== undefined && (obj.role_icon = message.role_icon);
-    message.slug !== undefined && (obj.slug = message.slug);
-    message.description !== undefined && (obj.description = message.description);
-    message.creator_id !== undefined && (obj.creator_id = message.creator_id);
-    message.clan_id !== undefined && (obj.clan_id = message.clan_id);
-    message.active !== undefined && (obj.active = Math.round(message.active));
-    message.display_online !== undefined && (obj.display_online = Math.round(message.display_online));
-    message.allow_mention !== undefined && (obj.allow_mention = Math.round(message.allow_mention));
+    if (message.id !== "") {
+      obj.id = message.id;
+    }
+    if (message.title !== "") {
+      obj.title = message.title;
+    }
+    if (message.color !== "") {
+      obj.color = message.color;
+    }
+    if (message.role_icon !== "") {
+      obj.role_icon = message.role_icon;
+    }
+    if (message.slug !== "") {
+      obj.slug = message.slug;
+    }
+    if (message.description !== "") {
+      obj.description = message.description;
+    }
+    if (message.creator_id !== "") {
+      obj.creator_id = message.creator_id;
+    }
+    if (message.clan_id !== "") {
+      obj.clan_id = message.clan_id;
+    }
+    if (message.active !== 0) {
+      obj.active = Math.round(message.active);
+    }
+    if (message.display_online !== 0) {
+      obj.display_online = Math.round(message.display_online);
+    }
+    if (message.allow_mention !== 0) {
+      obj.allow_mention = Math.round(message.allow_mention);
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<Role>, I>>(base?: I): Role {
-    return Role.fromPartial(base ?? {});
+    return Role.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<Role>, I>>(object: I): Role {
     const message = createBaseRole();
     message.id = object.id ?? "";
@@ -15090,58 +18338,78 @@ export const RoleList = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): RoleList {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseRoleList();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag !== 10) {
+            break;
+          }
+
           message.roles.push(Role.decode(reader, reader.uint32()));
-          break;
+          continue;
         case 2:
+          if (tag !== 18) {
+            break;
+          }
+
           message.next_cursor = reader.string();
-          break;
+          continue;
         case 3:
+          if (tag !== 26) {
+            break;
+          }
+
           message.prev_cursor = reader.string();
-          break;
+          continue;
         case 4:
+          if (tag !== 34) {
+            break;
+          }
+
           message.cacheable_cursor = reader.string();
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
 
   fromJSON(object: any): RoleList {
     return {
-      roles: Array.isArray(object?.roles) ? object.roles.map((e: any) => Role.fromJSON(e)) : [],
-      next_cursor: isSet(object.next_cursor) ? String(object.next_cursor) : "",
-      prev_cursor: isSet(object.prev_cursor) ? String(object.prev_cursor) : "",
-      cacheable_cursor: isSet(object.cacheable_cursor) ? String(object.cacheable_cursor) : "",
+      roles: globalThis.Array.isArray(object?.roles) ? object.roles.map((e: any) => Role.fromJSON(e)) : [],
+      next_cursor: isSet(object.next_cursor) ? globalThis.String(object.next_cursor) : "",
+      prev_cursor: isSet(object.prev_cursor) ? globalThis.String(object.prev_cursor) : "",
+      cacheable_cursor: isSet(object.cacheable_cursor) ? globalThis.String(object.cacheable_cursor) : "",
     };
   },
 
   toJSON(message: RoleList): unknown {
     const obj: any = {};
-    if (message.roles) {
-      obj.roles = message.roles.map((e) => e ? Role.toJSON(e) : undefined);
-    } else {
-      obj.roles = [];
+    if (message.roles?.length) {
+      obj.roles = message.roles.map((e) => Role.toJSON(e));
     }
-    message.next_cursor !== undefined && (obj.next_cursor = message.next_cursor);
-    message.prev_cursor !== undefined && (obj.prev_cursor = message.prev_cursor);
-    message.cacheable_cursor !== undefined && (obj.cacheable_cursor = message.cacheable_cursor);
+    if (message.next_cursor !== "") {
+      obj.next_cursor = message.next_cursor;
+    }
+    if (message.prev_cursor !== "") {
+      obj.prev_cursor = message.prev_cursor;
+    }
+    if (message.cacheable_cursor !== "") {
+      obj.cacheable_cursor = message.cacheable_cursor;
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<RoleList>, I>>(base?: I): RoleList {
-    return RoleList.fromPartial(base ?? {});
+    return RoleList.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<RoleList>, I>>(object: I): RoleList {
     const message = createBaseRoleList();
     message.roles = object.roles?.map((e) => Role.fromPartial(e)) || [];
@@ -15174,28 +18442,45 @@ export const ListRolesRequest = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): ListRolesRequest {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseListRolesRequest();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag !== 10) {
+            break;
+          }
+
           message.limit = Int32Value.decode(reader, reader.uint32()).value;
-          break;
+          continue;
         case 2:
+          if (tag !== 18) {
+            break;
+          }
+
           message.state = Int32Value.decode(reader, reader.uint32()).value;
-          break;
+          continue;
         case 3:
+          if (tag !== 26) {
+            break;
+          }
+
           message.cursor = reader.string();
-          break;
+          continue;
         case 4:
+          if (tag !== 34) {
+            break;
+          }
+
           message.clan_id = reader.string();
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
@@ -15204,24 +18489,31 @@ export const ListRolesRequest = {
     return {
       limit: isSet(object.limit) ? Number(object.limit) : undefined,
       state: isSet(object.state) ? Number(object.state) : undefined,
-      cursor: isSet(object.cursor) ? String(object.cursor) : "",
-      clan_id: isSet(object.clan_id) ? String(object.clan_id) : "",
+      cursor: isSet(object.cursor) ? globalThis.String(object.cursor) : "",
+      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
     };
   },
 
   toJSON(message: ListRolesRequest): unknown {
     const obj: any = {};
-    message.limit !== undefined && (obj.limit = message.limit);
-    message.state !== undefined && (obj.state = message.state);
-    message.cursor !== undefined && (obj.cursor = message.cursor);
-    message.clan_id !== undefined && (obj.clan_id = message.clan_id);
+    if (message.limit !== undefined) {
+      obj.limit = message.limit;
+    }
+    if (message.state !== undefined) {
+      obj.state = message.state;
+    }
+    if (message.cursor !== "") {
+      obj.cursor = message.cursor;
+    }
+    if (message.clan_id !== "") {
+      obj.clan_id = message.clan_id;
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<ListRolesRequest>, I>>(base?: I): ListRolesRequest {
-    return ListRolesRequest.fromPartial(base ?? {});
+    return ListRolesRequest.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<ListRolesRequest>, I>>(object: I): ListRolesRequest {
     const message = createBaseListRolesRequest();
     message.limit = object.limit ?? undefined;
@@ -15283,92 +18575,146 @@ export const CreateRoleRequest = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): CreateRoleRequest {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseCreateRoleRequest();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag !== 10) {
+            break;
+          }
+
           message.title = reader.string();
-          break;
+          continue;
         case 2:
+          if (tag !== 18) {
+            break;
+          }
+
           message.color = reader.string();
-          break;
+          continue;
         case 3:
+          if (tag !== 26) {
+            break;
+          }
+
           message.role_icon = reader.string();
-          break;
+          continue;
         case 4:
+          if (tag !== 34) {
+            break;
+          }
+
           message.slug = reader.string();
-          break;
+          continue;
         case 5:
+          if (tag !== 42) {
+            break;
+          }
+
           message.description = reader.string();
-          break;
+          continue;
         case 6:
+          if (tag !== 50) {
+            break;
+          }
+
           message.clan_id = reader.string();
-          break;
+          continue;
         case 7:
+          if (tag !== 56) {
+            break;
+          }
+
           message.display_online = reader.int32();
-          break;
+          continue;
         case 8:
+          if (tag !== 64) {
+            break;
+          }
+
           message.allow_mention = reader.int32();
-          break;
+          continue;
         case 9:
+          if (tag !== 74) {
+            break;
+          }
+
           message.user_ids.push(reader.string());
-          break;
+          continue;
         case 10:
+          if (tag !== 82) {
+            break;
+          }
+
           message.permission_ids.push(reader.string());
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
 
   fromJSON(object: any): CreateRoleRequest {
     return {
-      title: isSet(object.title) ? String(object.title) : "",
-      color: isSet(object.color) ? String(object.color) : "",
-      role_icon: isSet(object.role_icon) ? String(object.role_icon) : "",
-      slug: isSet(object.slug) ? String(object.slug) : "",
-      description: isSet(object.description) ? String(object.description) : "",
-      clan_id: isSet(object.clan_id) ? String(object.clan_id) : "",
-      display_online: isSet(object.display_online) ? Number(object.display_online) : 0,
-      allow_mention: isSet(object.allow_mention) ? Number(object.allow_mention) : 0,
-      user_ids: Array.isArray(object?.user_ids) ? object.user_ids.map((e: any) => String(e)) : [],
-      permission_ids: Array.isArray(object?.permission_ids) ? object.permission_ids.map((e: any) => String(e)) : [],
+      title: isSet(object.title) ? globalThis.String(object.title) : "",
+      color: isSet(object.color) ? globalThis.String(object.color) : "",
+      role_icon: isSet(object.role_icon) ? globalThis.String(object.role_icon) : "",
+      slug: isSet(object.slug) ? globalThis.String(object.slug) : "",
+      description: isSet(object.description) ? globalThis.String(object.description) : "",
+      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
+      display_online: isSet(object.display_online) ? globalThis.Number(object.display_online) : 0,
+      allow_mention: isSet(object.allow_mention) ? globalThis.Number(object.allow_mention) : 0,
+      user_ids: globalThis.Array.isArray(object?.user_ids) ? object.user_ids.map((e: any) => globalThis.String(e)) : [],
+      permission_ids: globalThis.Array.isArray(object?.permission_ids)
+        ? object.permission_ids.map((e: any) => globalThis.String(e))
+        : [],
     };
   },
 
   toJSON(message: CreateRoleRequest): unknown {
     const obj: any = {};
-    message.title !== undefined && (obj.title = message.title);
-    message.color !== undefined && (obj.color = message.color);
-    message.role_icon !== undefined && (obj.role_icon = message.role_icon);
-    message.slug !== undefined && (obj.slug = message.slug);
-    message.description !== undefined && (obj.description = message.description);
-    message.clan_id !== undefined && (obj.clan_id = message.clan_id);
-    message.display_online !== undefined && (obj.display_online = Math.round(message.display_online));
-    message.allow_mention !== undefined && (obj.allow_mention = Math.round(message.allow_mention));
-    if (message.user_ids) {
-      obj.user_ids = message.user_ids.map((e) => e);
-    } else {
-      obj.user_ids = [];
+    if (message.title !== "") {
+      obj.title = message.title;
     }
-    if (message.permission_ids) {
-      obj.permission_ids = message.permission_ids.map((e) => e);
-    } else {
-      obj.permission_ids = [];
+    if (message.color !== "") {
+      obj.color = message.color;
+    }
+    if (message.role_icon !== "") {
+      obj.role_icon = message.role_icon;
+    }
+    if (message.slug !== "") {
+      obj.slug = message.slug;
+    }
+    if (message.description !== "") {
+      obj.description = message.description;
+    }
+    if (message.clan_id !== "") {
+      obj.clan_id = message.clan_id;
+    }
+    if (message.display_online !== 0) {
+      obj.display_online = Math.round(message.display_online);
+    }
+    if (message.allow_mention !== 0) {
+      obj.allow_mention = Math.round(message.allow_mention);
+    }
+    if (message.user_ids?.length) {
+      obj.user_ids = message.user_ids;
+    }
+    if (message.permission_ids?.length) {
+      obj.permission_ids = message.permission_ids;
     }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<CreateRoleRequest>, I>>(base?: I): CreateRoleRequest {
-    return CreateRoleRequest.fromPartial(base ?? {});
+    return CreateRoleRequest.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<CreateRoleRequest>, I>>(object: I): CreateRoleRequest {
     const message = createBaseCreateRoleRequest();
     message.title = object.title ?? "";
@@ -15398,37 +18744,43 @@ export const DeleteRoleRequest = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): DeleteRoleRequest {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseDeleteRoleRequest();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag !== 10) {
+            break;
+          }
+
           message.role_id = reader.string();
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
 
   fromJSON(object: any): DeleteRoleRequest {
-    return { role_id: isSet(object.role_id) ? String(object.role_id) : "" };
+    return { role_id: isSet(object.role_id) ? globalThis.String(object.role_id) : "" };
   },
 
   toJSON(message: DeleteRoleRequest): unknown {
     const obj: any = {};
-    message.role_id !== undefined && (obj.role_id = message.role_id);
+    if (message.role_id !== "") {
+      obj.role_id = message.role_id;
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<DeleteRoleRequest>, I>>(base?: I): DeleteRoleRequest {
-    return DeleteRoleRequest.fromPartial(base ?? {});
+    return DeleteRoleRequest.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<DeleteRoleRequest>, I>>(object: I): DeleteRoleRequest {
     const message = createBaseDeleteRoleRequest();
     message.role_id = object.role_id ?? "";
@@ -15487,46 +18839,87 @@ export const UpdateRoleRequest = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): UpdateRoleRequest {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseUpdateRoleRequest();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag !== 10) {
+            break;
+          }
+
           message.title = StringValue.decode(reader, reader.uint32()).value;
-          break;
+          continue;
         case 2:
+          if (tag !== 18) {
+            break;
+          }
+
           message.color = StringValue.decode(reader, reader.uint32()).value;
-          break;
+          continue;
         case 3:
+          if (tag !== 26) {
+            break;
+          }
+
           message.role_icon = StringValue.decode(reader, reader.uint32()).value;
-          break;
+          continue;
         case 4:
+          if (tag !== 34) {
+            break;
+          }
+
           message.slug = StringValue.decode(reader, reader.uint32()).value;
-          break;
+          continue;
         case 5:
+          if (tag !== 42) {
+            break;
+          }
+
           message.description = StringValue.decode(reader, reader.uint32()).value;
-          break;
+          continue;
         case 6:
+          if (tag !== 50) {
+            break;
+          }
+
           message.display_online = Int32Value.decode(reader, reader.uint32()).value;
-          break;
+          continue;
         case 7:
+          if (tag !== 58) {
+            break;
+          }
+
           message.allow_mention = Int32Value.decode(reader, reader.uint32()).value;
-          break;
+          continue;
         case 8:
+          if (tag !== 66) {
+            break;
+          }
+
           message.user_ids.push(reader.string());
-          break;
+          continue;
         case 9:
+          if (tag !== 74) {
+            break;
+          }
+
           message.permission_ids.push(reader.string());
-          break;
+          continue;
         case 10:
+          if (tag !== 82) {
+            break;
+          }
+
           message.role_id = reader.string();
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
@@ -15540,39 +18933,52 @@ export const UpdateRoleRequest = {
       description: isSet(object.description) ? String(object.description) : undefined,
       display_online: isSet(object.display_online) ? Number(object.display_online) : undefined,
       allow_mention: isSet(object.allow_mention) ? Number(object.allow_mention) : undefined,
-      user_ids: Array.isArray(object?.user_ids) ? object.user_ids.map((e: any) => String(e)) : [],
-      permission_ids: Array.isArray(object?.permission_ids) ? object.permission_ids.map((e: any) => String(e)) : [],
-      role_id: isSet(object.role_id) ? String(object.role_id) : "",
+      user_ids: globalThis.Array.isArray(object?.user_ids) ? object.user_ids.map((e: any) => globalThis.String(e)) : [],
+      permission_ids: globalThis.Array.isArray(object?.permission_ids)
+        ? object.permission_ids.map((e: any) => globalThis.String(e))
+        : [],
+      role_id: isSet(object.role_id) ? globalThis.String(object.role_id) : "",
     };
   },
 
   toJSON(message: UpdateRoleRequest): unknown {
     const obj: any = {};
-    message.title !== undefined && (obj.title = message.title);
-    message.color !== undefined && (obj.color = message.color);
-    message.role_icon !== undefined && (obj.role_icon = message.role_icon);
-    message.slug !== undefined && (obj.slug = message.slug);
-    message.description !== undefined && (obj.description = message.description);
-    message.display_online !== undefined && (obj.display_online = message.display_online);
-    message.allow_mention !== undefined && (obj.allow_mention = message.allow_mention);
-    if (message.user_ids) {
-      obj.user_ids = message.user_ids.map((e) => e);
-    } else {
-      obj.user_ids = [];
+    if (message.title !== undefined) {
+      obj.title = message.title;
     }
-    if (message.permission_ids) {
-      obj.permission_ids = message.permission_ids.map((e) => e);
-    } else {
-      obj.permission_ids = [];
+    if (message.color !== undefined) {
+      obj.color = message.color;
     }
-    message.role_id !== undefined && (obj.role_id = message.role_id);
+    if (message.role_icon !== undefined) {
+      obj.role_icon = message.role_icon;
+    }
+    if (message.slug !== undefined) {
+      obj.slug = message.slug;
+    }
+    if (message.description !== undefined) {
+      obj.description = message.description;
+    }
+    if (message.display_online !== undefined) {
+      obj.display_online = message.display_online;
+    }
+    if (message.allow_mention !== undefined) {
+      obj.allow_mention = message.allow_mention;
+    }
+    if (message.user_ids?.length) {
+      obj.user_ids = message.user_ids;
+    }
+    if (message.permission_ids?.length) {
+      obj.permission_ids = message.permission_ids;
+    }
+    if (message.role_id !== "") {
+      obj.role_id = message.role_id;
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<UpdateRoleRequest>, I>>(base?: I): UpdateRoleRequest {
-    return UpdateRoleRequest.fromPartial(base ?? {});
+    return UpdateRoleRequest.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<UpdateRoleRequest>, I>>(object: I): UpdateRoleRequest {
     const message = createBaseUpdateRoleRequest();
     message.title = object.title ?? undefined;
@@ -15589,29 +18995,11 @@ export const UpdateRoleRequest = {
   },
 };
 
-declare var self: any | undefined;
-declare var window: any | undefined;
-declare var global: any | undefined;
-var tsProtoGlobalThis: any = (() => {
-  if (typeof globalThis !== "undefined") {
-    return globalThis;
-  }
-  if (typeof self !== "undefined") {
-    return self;
-  }
-  if (typeof window !== "undefined") {
-    return window;
-  }
-  if (typeof global !== "undefined") {
-    return global;
-  }
-  throw "Unable to locate global object";
-})();
-
 type Builtin = Date | Function | Uint8Array | string | number | boolean | undefined;
 
 export type DeepPartial<T> = T extends Builtin ? T
-  : T extends Array<infer U> ? Array<DeepPartial<U>> : T extends ReadonlyArray<infer U> ? ReadonlyArray<DeepPartial<U>>
+  : T extends globalThis.Array<infer U> ? globalThis.Array<DeepPartial<U>>
+  : T extends ReadonlyArray<infer U> ? ReadonlyArray<DeepPartial<U>>
   : T extends {} ? { [K in keyof T]?: DeepPartial<T[K]> }
   : Partial<T>;
 
@@ -15620,30 +19008,30 @@ export type Exact<P, I extends P> = P extends Builtin ? P
   : P & { [K in keyof P]: Exact<P[K], I[K]> } & { [K in Exclude<keyof I, KeysOfUnion<P>>]: never };
 
 function toTimestamp(date: Date): Timestamp {
-  const seconds = date.getTime() / 1_000;
+  const seconds = Math.trunc(date.getTime() / 1_000);
   const nanos = (date.getTime() % 1_000) * 1_000_000;
   return { seconds, nanos };
 }
 
 function fromTimestamp(t: Timestamp): Date {
-  let millis = t.seconds * 1_000;
-  millis += t.nanos / 1_000_000;
-  return new Date(millis);
+  let millis = (t.seconds || 0) * 1_000;
+  millis += (t.nanos || 0) / 1_000_000;
+  return new globalThis.Date(millis);
 }
 
 function fromJsonTimestamp(o: any): Date {
-  if (o instanceof Date) {
+  if (o instanceof globalThis.Date) {
     return o;
   } else if (typeof o === "string") {
-    return new Date(o);
+    return new globalThis.Date(o);
   } else {
     return fromTimestamp(Timestamp.fromJSON(o));
   }
 }
 
 function longToNumber(long: Long): number {
-  if (long.gt(Number.MAX_SAFE_INTEGER)) {
-    throw new tsProtoGlobalThis.Error("Value is larger than Number.MAX_SAFE_INTEGER");
+  if (long.gt(globalThis.Number.MAX_SAFE_INTEGER)) {
+    throw new globalThis.Error("Value is larger than Number.MAX_SAFE_INTEGER");
   }
   return long.toNumber();
 }
