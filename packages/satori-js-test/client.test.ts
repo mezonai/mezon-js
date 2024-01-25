@@ -15,7 +15,7 @@
  */
 
 import {Page} from "puppeteer"
-import * as satorijs from "@heroiclabs/satori-js";
+import * as satorijs from "@mezon/satori-js";
 import {createPage} from "./utils"
 import {describe, expect, it} from '@jest/globals'
 

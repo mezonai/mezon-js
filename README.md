@@ -1,8 +1,8 @@
-packages/nakama-js/README.md
+packages/mezon-js/README.md
 
 * generate protobuf
 ```
-cd packages/nakama-js-protobuf
+cd packages/mezon-js-protobuf
 ```
 
 ```
@@ -20,5 +20,5 @@ $GOPATH/src/github.com/nccasia/mezon-server/common/api/api.proto
 * genarate js
 
 ```
-go run main.go "$GOPATH/src/github.com/nccasia/mezon-server/apigrpc/apigrpc.swagger.json" "Nakama" > ../packages/nakama-js/api.gen.ts
+go run main.go "$GOPATH/src/github.com/nccasia/mezon-server/apigrpc/apigrpc.swagger.json" "Nakama" > ../packages/mezon-js/api.gen.ts
 ```

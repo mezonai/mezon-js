@@ -1,0 +1,43 @@
+{
+    "name": "@mezon/mezon-js-protobuf",
+    "version": "1.4.0",
+    "description": "Websocket adapter adding protocol buffer support to the Nakama Javascript client.",
+    "main": "dist/mezon-js-protobuf.cjs.js",
+    "module": "dist/mezon-js-protobuf.esm.mjs",
+    "types": "dist/mezon-js-protobuf/index.d.ts",
+    "exports": {
+        "./package.json": "./package.json",
+        ".": {
+            "import": "./dist/mezon-js-protobuf.esm.mjs",
+            "require": "./dist/mezon-js-protobuf.cjs.js"
+        }
+    },
+    "scripts": {
+        "build": "npx tsc && node build.mjs"
+    },
+    "devDependencies": {
+        "ts-proto": "^1.80.1",
+        "ts-proto-descriptors": "1.2.1"
+    },
+    "keywords": [
+        "app server",
+        "client library",
+        "game server",
+        "nakama",
+        "realtime",
+        "realtime chat"
+    ],
+    "repository": "https://github.com/heroiclabs/mezon-js",
+    "homepage": "https://heroiclabs.com",
+    "bugs": "https://github.com/heroiclabs/mezon-js/issues",
+    "author": "Chris Molozian <chris@heroiclabs.com>",
+    "contributors": [
+        "Andrei Mihu <andrei@heroiclabs.com>",
+        "Mo Firouz <mo@heroiclabs.com>",
+        "Milton Candelero <miltoncandelero@gmail.com>"
+    ],
+    "license": "Apache-2.0",
+    "dependencies": {
+        "@scarf/scarf": "^1.1.1"
+    }
+}

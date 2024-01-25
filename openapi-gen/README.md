@@ -8,7 +8,7 @@ openapi-gen
 ### Nakama
 
 ```shell
-go run main.go "$GOPATH/src/github.com/nccasia/mezon-server/apigrpc/apigrpc.swagger.json" "Nakama" > ../packages/nakama-js/api.gen.ts
+go run main.go "$GOPATH/src/github.com/nccasia/mezon-server/apigrpc/apigrpc.swagger.json" "Nakama" > ../packages/mezon-js/api.gen.ts
 ```
 
 ### Satori

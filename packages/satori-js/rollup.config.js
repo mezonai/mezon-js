@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-// Rollup is the legacy build system for nakama-js and is only used for cocos2d-x-js support.
+// Rollup is the legacy build system for mezon-js and is only used for cocos2d-x-js support.
 
 import typescript from '@rollup/plugin-typescript';
 import { nodeResolve } from '@rollup/plugin-node-resolve';

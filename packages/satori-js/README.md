@@ -11,10 +11,10 @@ Full documentation is online - https://heroiclabs.com/docs/javascript-client-gui
 
 You'll need access to an instance of the Satori server before you can connect with the client.
 
-1. Import the client into your project. It's [available on NPM](https://www.npmjs/package/@heroiclabs/satori-js).
+1. Import the client into your project. It's [available on NPM](https://www.npmjs/package/@mezon/satori-js).
 
   ```shell
-  npm install @heroiclabs/satori-js
+  npm install @mezon/satori-js
   ```
 
 You'll now see the code in the "node_modules" folder and package listed in your "package.json".
@@ -22,7 +22,7 @@ You'll now see the code in the "node_modules" folder and package listed in your 
 2. Use the connection credentials to build a client object.
 
   ```js
-  import {Client} from "@heroiclabs/satori-js";
+  import {Client} from "@mezon/satori-js";
 
   const useSSL = false;
   const client = new Client("apiKey", "127.0.0.1", 7450, useSSL);
@@ -109,7 +109,7 @@ The codebase is multi-package monorepo written in TypeScript and can be built wi
 To build from source, install dependencies and build the `satori-js` package:
 
 ```shell
-npm install --workspace=@heroiclabs/satori-js && npm run build --workspace=@heroiclabs/satori-js
+npm install --workspace=@mezon/satori-js && npm run build --workspace=@mezon/satori-js
 ```
 
 ### Run Tests
@@ -119,7 +119,7 @@ To run tests you will need access to an instance of the Satori server.
 Tests are run against each workspace bundle; if you have made source code changes, you should `npm run build --workspace=<workspace>` prior to running tests.
 
 ```shell
-npm run test --workspace=@heroiclabs/satori-js-test
+npm run test --workspace=@mezon/satori-js-test
 ```
 
 ### Release Process
@@ -142,4 +142,4 @@ npm install && npm run docs
 
 ### License
 
-This project is licensed under the [Apache-2 License](https://github.com/heroiclabs/nakama-js/blob/master/LICENSE).
+This project is licensed under the [Apache-2 License](https://github.com/heroiclabs/mezon-js/blob/master/LICENSE).

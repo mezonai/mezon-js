@@ -1,7 +1,7 @@
 {
   "extends": "./tsconfig.base.json",
   "include": [
-    "packages/nakama-js/**/*",
+    "packages/mezon-js/**/*",
     "packages/satori-js/**/*"
   ],
   "exclude": [
