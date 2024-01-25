@@ -1,5 +1,5 @@
 {
-    "name": "@heroiclabs/satori-js",
+    "name": "@mezon/satori-js",
     "version": "2.7.1",
     "scripts": {
         "build": "npx tsc && npx rollup -c --bundleConfigAsCjs && node build.mjs",
@@ -23,9 +23,9 @@
         "satori",
         "live ops"
     ],
-    "repository": "https://github.com/heroiclabs/nakama-js",
+    "repository": "https://github.com/heroiclabs/mezon-js",
     "homepage": "https://heroiclabs.com",
-    "bugs": "https://github.com/heroiclabs/nakama-js/issues",
+    "bugs": "https://github.com/heroiclabs/mezon-js/issues",
     "author": "Chris Molozian <chris@heroiclabs.com>",
     "contributors": [
         "Andrei Mihu <andrei@heroiclabs.com>",
