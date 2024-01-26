@@ -2230,6 +2230,16 @@ export interface Role {
   allow_mention: number;
 }
 
+/** Permission record */
+export interface Permission {
+  /** Permission id */
+  id: string;
+  title: string;
+  slug: string;
+  description: string;
+  active: number;
+}
+
 /** A list of role description, usually a result of a list operation. */
 export interface RoleList {
   /** A list of role. */
@@ -2240,6 +2250,55 @@ export interface RoleList {
   prev_cursor: string;
   /** Cacheable cursor to list newer role description. Durable and designed to be stored, unlike next/prev cursors. */
   cacheable_cursor: string;
+}
+
+/** A list of permission description, usually a result of a list operation. */
+export interface PermissionList {
+  /** A list of permission. */
+  permissions: Permission[];
+}
+
+/** List (and optionally filter) permissions. */
+export interface ListPermissionsRequest {
+  role_id: string | undefined;
+}
+
+/** List (and optionally filter) role-users. */
+export interface ListRoleUsersRequest {
+  role_id:
+    | string
+    | undefined;
+  /** Max number of records to return. Between 1 and 100. */
+  limit:
+    | number
+    | undefined;
+  /** An optional next page cursor. */
+  cursor: string;
+}
+
+export interface RoleUserList {
+  /** role_users pairs for a clan. */
+  role_users: RoleUserList_RoleUser[];
+  /** Cursor for the next page of results, if any. */
+  cursor: string;
+}
+
+/** A single user-role pair. */
+export interface RoleUserList_RoleUser {
+  /** The id of the user's account. */
+  id: string;
+  /** The username of the user's account. */
+  username: string;
+  /** The display name of the user. */
+  display_name: string;
+  /** A URL for an avatar image. */
+  avatar_url: string;
+  /** The language expected to be a tag which follows the BCP-47 spec. */
+  lang_tag: string;
+  /** The location set by the user. */
+  location: string;
+  /** The timezone set by the user. */
+  online: boolean;
 }
 
 /** List (and optionally filter) roles. */
@@ -2263,15 +2322,14 @@ export interface CreateRoleRequest {
   title: string;
   color: string;
   role_icon: string;
-  slug: string;
   description: string;
   clan_id: string;
   display_online: number;
   allow_mention: number;
   /** The users to add. */
-  user_ids: string[];
+  add_user_ids: string[];
   /** The permissions to add. */
-  permission_ids: string[];
+  active_permission_ids: string[];
 }
 
 /** Delete a role the user has access to. */
@@ -2282,20 +2340,24 @@ export interface DeleteRoleRequest {
 
 /** Update fields in a given role. */
 export interface UpdateRoleRequest {
+  /** The ID of the role to update. */
+  role_id: string;
   title: string | undefined;
   color: string | undefined;
   role_icon: string | undefined;
-  slug: string | undefined;
   description: string | undefined;
   display_online: number | undefined;
   allow_mention:
     | number
     | undefined;
   /** The users to add. */
-  user_ids: string[];
+  add_user_ids: string[];
   /** The permissions to add. */
-  permission_ids: string[];
-  role_id: string;
+  active_permission_ids: string[];
+  /** The users to remove. */
+  remove_user_ids: string[];
+  /** The permissions to remove. */
+  remove_permission_ids: string[];
 }
 
 function createBaseAccount(): Account {
@@ -15068,6 +15130,95 @@ export const Role = {
   },
 };
 
+function createBasePermission(): Permission {
+  return { id: "", title: "", slug: "", description: "", active: 0 };
+}
+
+export const Permission = {
+  encode(message: Permission, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.id !== "") {
+      writer.uint32(10).string(message.id);
+    }
+    if (message.title !== "") {
+      writer.uint32(18).string(message.title);
+    }
+    if (message.slug !== "") {
+      writer.uint32(26).string(message.slug);
+    }
+    if (message.description !== "") {
+      writer.uint32(34).string(message.description);
+    }
+    if (message.active !== 0) {
+      writer.uint32(40).int32(message.active);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): Permission {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBasePermission();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.id = reader.string();
+          break;
+        case 2:
+          message.title = reader.string();
+          break;
+        case 3:
+          message.slug = reader.string();
+          break;
+        case 4:
+          message.description = reader.string();
+          break;
+        case 5:
+          message.active = reader.int32();
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): Permission {
+    return {
+      id: isSet(object.id) ? String(object.id) : "",
+      title: isSet(object.title) ? String(object.title) : "",
+      slug: isSet(object.slug) ? String(object.slug) : "",
+      description: isSet(object.description) ? String(object.description) : "",
+      active: isSet(object.active) ? Number(object.active) : 0,
+    };
+  },
+
+  toJSON(message: Permission): unknown {
+    const obj: any = {};
+    message.id !== undefined && (obj.id = message.id);
+    message.title !== undefined && (obj.title = message.title);
+    message.slug !== undefined && (obj.slug = message.slug);
+    message.description !== undefined && (obj.description = message.description);
+    message.active !== undefined && (obj.active = Math.round(message.active));
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<Permission>, I>>(base?: I): Permission {
+    return Permission.fromPartial(base ?? {});
+  },
+
+  fromPartial<I extends Exact<DeepPartial<Permission>, I>>(object: I): Permission {
+    const message = createBasePermission();
+    message.id = object.id ?? "";
+    message.title = object.title ?? "";
+    message.slug = object.slug ?? "";
+    message.description = object.description ?? "";
+    message.active = object.active ?? 0;
+    return message;
+  },
+};
+
 function createBaseRoleList(): RoleList {
   return { roles: [], next_cursor: "", prev_cursor: "", cacheable_cursor: "" };
 }
@@ -15148,6 +15299,360 @@ export const RoleList = {
     message.next_cursor = object.next_cursor ?? "";
     message.prev_cursor = object.prev_cursor ?? "";
     message.cacheable_cursor = object.cacheable_cursor ?? "";
+    return message;
+  },
+};
+
+function createBasePermissionList(): PermissionList {
+  return { permissions: [] };
+}
+
+export const PermissionList = {
+  encode(message: PermissionList, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    for (const v of message.permissions) {
+      Permission.encode(v!, writer.uint32(10).fork()).ldelim();
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): PermissionList {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBasePermissionList();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.permissions.push(Permission.decode(reader, reader.uint32()));
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): PermissionList {
+    return {
+      permissions: Array.isArray(object?.permissions) ? object.permissions.map((e: any) => Permission.fromJSON(e)) : [],
+    };
+  },
+
+  toJSON(message: PermissionList): unknown {
+    const obj: any = {};
+    if (message.permissions) {
+      obj.permissions = message.permissions.map((e) => e ? Permission.toJSON(e) : undefined);
+    } else {
+      obj.permissions = [];
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<PermissionList>, I>>(base?: I): PermissionList {
+    return PermissionList.fromPartial(base ?? {});
+  },
+
+  fromPartial<I extends Exact<DeepPartial<PermissionList>, I>>(object: I): PermissionList {
+    const message = createBasePermissionList();
+    message.permissions = object.permissions?.map((e) => Permission.fromPartial(e)) || [];
+    return message;
+  },
+};
+
+function createBaseListPermissionsRequest(): ListPermissionsRequest {
+  return { role_id: undefined };
+}
+
+export const ListPermissionsRequest = {
+  encode(message: ListPermissionsRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.role_id !== undefined) {
+      StringValue.encode({ value: message.role_id! }, writer.uint32(10).fork()).ldelim();
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): ListPermissionsRequest {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseListPermissionsRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.role_id = StringValue.decode(reader, reader.uint32()).value;
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): ListPermissionsRequest {
+    return { role_id: isSet(object.role_id) ? String(object.role_id) : undefined };
+  },
+
+  toJSON(message: ListPermissionsRequest): unknown {
+    const obj: any = {};
+    message.role_id !== undefined && (obj.role_id = message.role_id);
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<ListPermissionsRequest>, I>>(base?: I): ListPermissionsRequest {
+    return ListPermissionsRequest.fromPartial(base ?? {});
+  },
+
+  fromPartial<I extends Exact<DeepPartial<ListPermissionsRequest>, I>>(object: I): ListPermissionsRequest {
+    const message = createBaseListPermissionsRequest();
+    message.role_id = object.role_id ?? undefined;
+    return message;
+  },
+};
+
+function createBaseListRoleUsersRequest(): ListRoleUsersRequest {
+  return { role_id: undefined, limit: undefined, cursor: "" };
+}
+
+export const ListRoleUsersRequest = {
+  encode(message: ListRoleUsersRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.role_id !== undefined) {
+      StringValue.encode({ value: message.role_id! }, writer.uint32(10).fork()).ldelim();
+    }
+    if (message.limit !== undefined) {
+      Int32Value.encode({ value: message.limit! }, writer.uint32(18).fork()).ldelim();
+    }
+    if (message.cursor !== "") {
+      writer.uint32(26).string(message.cursor);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): ListRoleUsersRequest {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseListRoleUsersRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.role_id = StringValue.decode(reader, reader.uint32()).value;
+          break;
+        case 2:
+          message.limit = Int32Value.decode(reader, reader.uint32()).value;
+          break;
+        case 3:
+          message.cursor = reader.string();
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): ListRoleUsersRequest {
+    return {
+      role_id: isSet(object.role_id) ? String(object.role_id) : undefined,
+      limit: isSet(object.limit) ? Number(object.limit) : undefined,
+      cursor: isSet(object.cursor) ? String(object.cursor) : "",
+    };
+  },
+
+  toJSON(message: ListRoleUsersRequest): unknown {
+    const obj: any = {};
+    message.role_id !== undefined && (obj.role_id = message.role_id);
+    message.limit !== undefined && (obj.limit = message.limit);
+    message.cursor !== undefined && (obj.cursor = message.cursor);
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<ListRoleUsersRequest>, I>>(base?: I): ListRoleUsersRequest {
+    return ListRoleUsersRequest.fromPartial(base ?? {});
+  },
+
+  fromPartial<I extends Exact<DeepPartial<ListRoleUsersRequest>, I>>(object: I): ListRoleUsersRequest {
+    const message = createBaseListRoleUsersRequest();
+    message.role_id = object.role_id ?? undefined;
+    message.limit = object.limit ?? undefined;
+    message.cursor = object.cursor ?? "";
+    return message;
+  },
+};
+
+function createBaseRoleUserList(): RoleUserList {
+  return { role_users: [], cursor: "" };
+}
+
+export const RoleUserList = {
+  encode(message: RoleUserList, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    for (const v of message.role_users) {
+      RoleUserList_RoleUser.encode(v!, writer.uint32(10).fork()).ldelim();
+    }
+    if (message.cursor !== "") {
+      writer.uint32(18).string(message.cursor);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): RoleUserList {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseRoleUserList();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.role_users.push(RoleUserList_RoleUser.decode(reader, reader.uint32()));
+          break;
+        case 2:
+          message.cursor = reader.string();
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): RoleUserList {
+    return {
+      role_users: Array.isArray(object?.role_users)
+        ? object.role_users.map((e: any) => RoleUserList_RoleUser.fromJSON(e))
+        : [],
+      cursor: isSet(object.cursor) ? String(object.cursor) : "",
+    };
+  },
+
+  toJSON(message: RoleUserList): unknown {
+    const obj: any = {};
+    if (message.role_users) {
+      obj.role_users = message.role_users.map((e) => e ? RoleUserList_RoleUser.toJSON(e) : undefined);
+    } else {
+      obj.role_users = [];
+    }
+    message.cursor !== undefined && (obj.cursor = message.cursor);
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<RoleUserList>, I>>(base?: I): RoleUserList {
+    return RoleUserList.fromPartial(base ?? {});
+  },
+
+  fromPartial<I extends Exact<DeepPartial<RoleUserList>, I>>(object: I): RoleUserList {
+    const message = createBaseRoleUserList();
+    message.role_users = object.role_users?.map((e) => RoleUserList_RoleUser.fromPartial(e)) || [];
+    message.cursor = object.cursor ?? "";
+    return message;
+  },
+};
+
+function createBaseRoleUserList_RoleUser(): RoleUserList_RoleUser {
+  return { id: "", username: "", display_name: "", avatar_url: "", lang_tag: "", location: "", online: false };
+}
+
+export const RoleUserList_RoleUser = {
+  encode(message: RoleUserList_RoleUser, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.id !== "") {
+      writer.uint32(10).string(message.id);
+    }
+    if (message.username !== "") {
+      writer.uint32(18).string(message.username);
+    }
+    if (message.display_name !== "") {
+      writer.uint32(26).string(message.display_name);
+    }
+    if (message.avatar_url !== "") {
+      writer.uint32(34).string(message.avatar_url);
+    }
+    if (message.lang_tag !== "") {
+      writer.uint32(42).string(message.lang_tag);
+    }
+    if (message.location !== "") {
+      writer.uint32(50).string(message.location);
+    }
+    if (message.online === true) {
+      writer.uint32(56).bool(message.online);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): RoleUserList_RoleUser {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseRoleUserList_RoleUser();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.id = reader.string();
+          break;
+        case 2:
+          message.username = reader.string();
+          break;
+        case 3:
+          message.display_name = reader.string();
+          break;
+        case 4:
+          message.avatar_url = reader.string();
+          break;
+        case 5:
+          message.lang_tag = reader.string();
+          break;
+        case 6:
+          message.location = reader.string();
+          break;
+        case 7:
+          message.online = reader.bool();
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): RoleUserList_RoleUser {
+    return {
+      id: isSet(object.id) ? String(object.id) : "",
+      username: isSet(object.username) ? String(object.username) : "",
+      display_name: isSet(object.display_name) ? String(object.display_name) : "",
+      avatar_url: isSet(object.avatar_url) ? String(object.avatar_url) : "",
+      lang_tag: isSet(object.lang_tag) ? String(object.lang_tag) : "",
+      location: isSet(object.location) ? String(object.location) : "",
+      online: isSet(object.online) ? Boolean(object.online) : false,
+    };
+  },
+
+  toJSON(message: RoleUserList_RoleUser): unknown {
+    const obj: any = {};
+    message.id !== undefined && (obj.id = message.id);
+    message.username !== undefined && (obj.username = message.username);
+    message.display_name !== undefined && (obj.display_name = message.display_name);
+    message.avatar_url !== undefined && (obj.avatar_url = message.avatar_url);
+    message.lang_tag !== undefined && (obj.lang_tag = message.lang_tag);
+    message.location !== undefined && (obj.location = message.location);
+    message.online !== undefined && (obj.online = message.online);
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<RoleUserList_RoleUser>, I>>(base?: I): RoleUserList_RoleUser {
+    return RoleUserList_RoleUser.fromPartial(base ?? {});
+  },
+
+  fromPartial<I extends Exact<DeepPartial<RoleUserList_RoleUser>, I>>(object: I): RoleUserList_RoleUser {
+    const message = createBaseRoleUserList_RoleUser();
+    message.id = object.id ?? "";
+    message.username = object.username ?? "";
+    message.display_name = object.display_name ?? "";
+    message.avatar_url = object.avatar_url ?? "";
+    message.lang_tag = object.lang_tag ?? "";
+    message.location = object.location ?? "";
+    message.online = object.online ?? false;
     return message;
   },
 };
@@ -15237,13 +15742,12 @@ function createBaseCreateRoleRequest(): CreateRoleRequest {
     title: "",
     color: "",
     role_icon: "",
-    slug: "",
     description: "",
     clan_id: "",
     display_online: 0,
     allow_mention: 0,
-    user_ids: [],
-    permission_ids: [],
+    add_user_ids: [],
+    active_permission_ids: [],
   };
 }
 
@@ -15258,26 +15762,23 @@ export const CreateRoleRequest = {
     if (message.role_icon !== "") {
       writer.uint32(26).string(message.role_icon);
     }
-    if (message.slug !== "") {
-      writer.uint32(34).string(message.slug);
-    }
     if (message.description !== "") {
-      writer.uint32(42).string(message.description);
+      writer.uint32(34).string(message.description);
     }
     if (message.clan_id !== "") {
-      writer.uint32(50).string(message.clan_id);
+      writer.uint32(42).string(message.clan_id);
     }
     if (message.display_online !== 0) {
-      writer.uint32(56).int32(message.display_online);
+      writer.uint32(48).int32(message.display_online);
     }
     if (message.allow_mention !== 0) {
-      writer.uint32(64).int32(message.allow_mention);
+      writer.uint32(56).int32(message.allow_mention);
     }
-    for (const v of message.user_ids) {
+    for (const v of message.add_user_ids) {
+      writer.uint32(66).string(v!);
+    }
+    for (const v of message.active_permission_ids) {
       writer.uint32(74).string(v!);
-    }
-    for (const v of message.permission_ids) {
-      writer.uint32(82).string(v!);
     }
     return writer;
   },
@@ -15299,25 +15800,22 @@ export const CreateRoleRequest = {
           message.role_icon = reader.string();
           break;
         case 4:
-          message.slug = reader.string();
-          break;
-        case 5:
           message.description = reader.string();
           break;
-        case 6:
+        case 5:
           message.clan_id = reader.string();
           break;
-        case 7:
+        case 6:
           message.display_online = reader.int32();
           break;
-        case 8:
+        case 7:
           message.allow_mention = reader.int32();
           break;
-        case 9:
-          message.user_ids.push(reader.string());
+        case 8:
+          message.add_user_ids.push(reader.string());
           break;
-        case 10:
-          message.permission_ids.push(reader.string());
+        case 9:
+          message.active_permission_ids.push(reader.string());
           break;
         default:
           reader.skipType(tag & 7);
@@ -15332,13 +15830,14 @@ export const CreateRoleRequest = {
       title: isSet(object.title) ? String(object.title) : "",
       color: isSet(object.color) ? String(object.color) : "",
       role_icon: isSet(object.role_icon) ? String(object.role_icon) : "",
-      slug: isSet(object.slug) ? String(object.slug) : "",
       description: isSet(object.description) ? String(object.description) : "",
       clan_id: isSet(object.clan_id) ? String(object.clan_id) : "",
       display_online: isSet(object.display_online) ? Number(object.display_online) : 0,
       allow_mention: isSet(object.allow_mention) ? Number(object.allow_mention) : 0,
-      user_ids: Array.isArray(object?.user_ids) ? object.user_ids.map((e: any) => String(e)) : [],
-      permission_ids: Array.isArray(object?.permission_ids) ? object.permission_ids.map((e: any) => String(e)) : [],
+      add_user_ids: Array.isArray(object?.add_user_ids) ? object.add_user_ids.map((e: any) => String(e)) : [],
+      active_permission_ids: Array.isArray(object?.active_permission_ids)
+        ? object.active_permission_ids.map((e: any) => String(e))
+        : [],
     };
   },
 
@@ -15347,20 +15846,19 @@ export const CreateRoleRequest = {
     message.title !== undefined && (obj.title = message.title);
     message.color !== undefined && (obj.color = message.color);
     message.role_icon !== undefined && (obj.role_icon = message.role_icon);
-    message.slug !== undefined && (obj.slug = message.slug);
     message.description !== undefined && (obj.description = message.description);
     message.clan_id !== undefined && (obj.clan_id = message.clan_id);
     message.display_online !== undefined && (obj.display_online = Math.round(message.display_online));
     message.allow_mention !== undefined && (obj.allow_mention = Math.round(message.allow_mention));
-    if (message.user_ids) {
-      obj.user_ids = message.user_ids.map((e) => e);
+    if (message.add_user_ids) {
+      obj.add_user_ids = message.add_user_ids.map((e) => e);
     } else {
-      obj.user_ids = [];
+      obj.add_user_ids = [];
     }
-    if (message.permission_ids) {
-      obj.permission_ids = message.permission_ids.map((e) => e);
+    if (message.active_permission_ids) {
+      obj.active_permission_ids = message.active_permission_ids.map((e) => e);
     } else {
-      obj.permission_ids = [];
+      obj.active_permission_ids = [];
     }
     return obj;
   },
@@ -15374,13 +15872,12 @@ export const CreateRoleRequest = {
     message.title = object.title ?? "";
     message.color = object.color ?? "";
     message.role_icon = object.role_icon ?? "";
-    message.slug = object.slug ?? "";
     message.description = object.description ?? "";
     message.clan_id = object.clan_id ?? "";
     message.display_online = object.display_online ?? 0;
     message.allow_mention = object.allow_mention ?? 0;
-    message.user_ids = object.user_ids?.map((e) => e) || [];
-    message.permission_ids = object.permission_ids?.map((e) => e) || [];
+    message.add_user_ids = object.add_user_ids?.map((e) => e) || [];
+    message.active_permission_ids = object.active_permission_ids?.map((e) => e) || [];
     return message;
   },
 };
@@ -15438,32 +15935,33 @@ export const DeleteRoleRequest = {
 
 function createBaseUpdateRoleRequest(): UpdateRoleRequest {
   return {
+    role_id: "",
     title: undefined,
     color: undefined,
     role_icon: undefined,
-    slug: undefined,
     description: undefined,
     display_online: undefined,
     allow_mention: undefined,
-    user_ids: [],
-    permission_ids: [],
-    role_id: "",
+    add_user_ids: [],
+    active_permission_ids: [],
+    remove_user_ids: [],
+    remove_permission_ids: [],
   };
 }
 
 export const UpdateRoleRequest = {
   encode(message: UpdateRoleRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.role_id !== "") {
+      writer.uint32(10).string(message.role_id);
+    }
     if (message.title !== undefined) {
-      StringValue.encode({ value: message.title! }, writer.uint32(10).fork()).ldelim();
+      StringValue.encode({ value: message.title! }, writer.uint32(18).fork()).ldelim();
     }
     if (message.color !== undefined) {
-      StringValue.encode({ value: message.color! }, writer.uint32(18).fork()).ldelim();
+      StringValue.encode({ value: message.color! }, writer.uint32(26).fork()).ldelim();
     }
     if (message.role_icon !== undefined) {
-      StringValue.encode({ value: message.role_icon! }, writer.uint32(26).fork()).ldelim();
-    }
-    if (message.slug !== undefined) {
-      StringValue.encode({ value: message.slug! }, writer.uint32(34).fork()).ldelim();
+      StringValue.encode({ value: message.role_icon! }, writer.uint32(34).fork()).ldelim();
     }
     if (message.description !== undefined) {
       StringValue.encode({ value: message.description! }, writer.uint32(42).fork()).ldelim();
@@ -15474,14 +15972,17 @@ export const UpdateRoleRequest = {
     if (message.allow_mention !== undefined) {
       Int32Value.encode({ value: message.allow_mention! }, writer.uint32(58).fork()).ldelim();
     }
-    for (const v of message.user_ids) {
+    for (const v of message.add_user_ids) {
       writer.uint32(66).string(v!);
     }
-    for (const v of message.permission_ids) {
+    for (const v of message.active_permission_ids) {
       writer.uint32(74).string(v!);
     }
-    if (message.role_id !== "") {
-      writer.uint32(82).string(message.role_id);
+    for (const v of message.remove_user_ids) {
+      writer.uint32(82).string(v!);
+    }
+    for (const v of message.remove_permission_ids) {
+      writer.uint32(90).string(v!);
     }
     return writer;
   },
@@ -15494,16 +15995,16 @@ export const UpdateRoleRequest = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          message.title = StringValue.decode(reader, reader.uint32()).value;
+          message.role_id = reader.string();
           break;
         case 2:
-          message.color = StringValue.decode(reader, reader.uint32()).value;
+          message.title = StringValue.decode(reader, reader.uint32()).value;
           break;
         case 3:
-          message.role_icon = StringValue.decode(reader, reader.uint32()).value;
+          message.color = StringValue.decode(reader, reader.uint32()).value;
           break;
         case 4:
-          message.slug = StringValue.decode(reader, reader.uint32()).value;
+          message.role_icon = StringValue.decode(reader, reader.uint32()).value;
           break;
         case 5:
           message.description = StringValue.decode(reader, reader.uint32()).value;
@@ -15515,13 +16016,16 @@ export const UpdateRoleRequest = {
           message.allow_mention = Int32Value.decode(reader, reader.uint32()).value;
           break;
         case 8:
-          message.user_ids.push(reader.string());
+          message.add_user_ids.push(reader.string());
           break;
         case 9:
-          message.permission_ids.push(reader.string());
+          message.active_permission_ids.push(reader.string());
           break;
         case 10:
-          message.role_id = reader.string();
+          message.remove_user_ids.push(reader.string());
+          break;
+        case 11:
+          message.remove_permission_ids.push(reader.string());
           break;
         default:
           reader.skipType(tag & 7);
@@ -15533,39 +16037,53 @@ export const UpdateRoleRequest = {
 
   fromJSON(object: any): UpdateRoleRequest {
     return {
+      role_id: isSet(object.role_id) ? String(object.role_id) : "",
       title: isSet(object.title) ? String(object.title) : undefined,
       color: isSet(object.color) ? String(object.color) : undefined,
       role_icon: isSet(object.role_icon) ? String(object.role_icon) : undefined,
-      slug: isSet(object.slug) ? String(object.slug) : undefined,
       description: isSet(object.description) ? String(object.description) : undefined,
       display_online: isSet(object.display_online) ? Number(object.display_online) : undefined,
       allow_mention: isSet(object.allow_mention) ? Number(object.allow_mention) : undefined,
-      user_ids: Array.isArray(object?.user_ids) ? object.user_ids.map((e: any) => String(e)) : [],
-      permission_ids: Array.isArray(object?.permission_ids) ? object.permission_ids.map((e: any) => String(e)) : [],
-      role_id: isSet(object.role_id) ? String(object.role_id) : "",
+      add_user_ids: Array.isArray(object?.add_user_ids) ? object.add_user_ids.map((e: any) => String(e)) : [],
+      active_permission_ids: Array.isArray(object?.active_permission_ids)
+        ? object.active_permission_ids.map((e: any) => String(e))
+        : [],
+      remove_user_ids: Array.isArray(object?.remove_user_ids) ? object.remove_user_ids.map((e: any) => String(e)) : [],
+      remove_permission_ids: Array.isArray(object?.remove_permission_ids)
+        ? object.remove_permission_ids.map((e: any) => String(e))
+        : [],
     };
   },
 
   toJSON(message: UpdateRoleRequest): unknown {
     const obj: any = {};
+    message.role_id !== undefined && (obj.role_id = message.role_id);
     message.title !== undefined && (obj.title = message.title);
     message.color !== undefined && (obj.color = message.color);
     message.role_icon !== undefined && (obj.role_icon = message.role_icon);
-    message.slug !== undefined && (obj.slug = message.slug);
     message.description !== undefined && (obj.description = message.description);
     message.display_online !== undefined && (obj.display_online = message.display_online);
     message.allow_mention !== undefined && (obj.allow_mention = message.allow_mention);
-    if (message.user_ids) {
-      obj.user_ids = message.user_ids.map((e) => e);
+    if (message.add_user_ids) {
+      obj.add_user_ids = message.add_user_ids.map((e) => e);
     } else {
-      obj.user_ids = [];
+      obj.add_user_ids = [];
     }
-    if (message.permission_ids) {
-      obj.permission_ids = message.permission_ids.map((e) => e);
+    if (message.active_permission_ids) {
+      obj.active_permission_ids = message.active_permission_ids.map((e) => e);
     } else {
-      obj.permission_ids = [];
+      obj.active_permission_ids = [];
     }
-    message.role_id !== undefined && (obj.role_id = message.role_id);
+    if (message.remove_user_ids) {
+      obj.remove_user_ids = message.remove_user_ids.map((e) => e);
+    } else {
+      obj.remove_user_ids = [];
+    }
+    if (message.remove_permission_ids) {
+      obj.remove_permission_ids = message.remove_permission_ids.map((e) => e);
+    } else {
+      obj.remove_permission_ids = [];
+    }
     return obj;
   },
 
@@ -15575,16 +16093,17 @@ export const UpdateRoleRequest = {
 
   fromPartial<I extends Exact<DeepPartial<UpdateRoleRequest>, I>>(object: I): UpdateRoleRequest {
     const message = createBaseUpdateRoleRequest();
+    message.role_id = object.role_id ?? "";
     message.title = object.title ?? undefined;
     message.color = object.color ?? undefined;
     message.role_icon = object.role_icon ?? undefined;
-    message.slug = object.slug ?? undefined;
     message.description = object.description ?? undefined;
     message.display_online = object.display_online ?? undefined;
     message.allow_mention = object.allow_mention ?? undefined;
-    message.user_ids = object.user_ids?.map((e) => e) || [];
-    message.permission_ids = object.permission_ids?.map((e) => e) || [];
-    message.role_id = object.role_id ?? "";
+    message.add_user_ids = object.add_user_ids?.map((e) => e) || [];
+    message.active_permission_ids = object.active_permission_ids?.map((e) => e) || [];
+    message.remove_user_ids = object.remove_user_ids?.map((e) => e) || [];
+    message.remove_permission_ids = object.remove_permission_ids?.map((e) => e) || [];
     return message;
   },
 };
