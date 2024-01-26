@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { ApiAccount, ApiAccountCustom, ApiAccountDevice, ApiAccountEmail, ApiAccountFacebook, ApiAccountFacebookInstantGame, ApiAccountGoogle, ApiAccountGameCenter, ApiAccountSteam, ApiChannelDescList, ApiChannelDescription, ApiCreateChannelDescRequest, ApiClanDescList, ApiCreateClanDescRequest, ApiClanDesc, ApiCategoryDesc, ApiCategoryDescList, ApiCreateCategoryDescRequest, ApiUpdateCategoryDescRequest, ApiCreateGroupRequest, ApiDeleteStorageObjectsRequest, ApiEvent, ApiMatchList, ApiReadStorageObjectsRequest, ApiStorageObjectAcks, ApiUpdateAccountRequest, ApiUpdateGroupRequest, ApiAccountApple, ApiLinkSteamRequest, ApiValidatePurchaseResponse, ApiClanDescProfile, ApiChannelUserList, ApiLinkInviteUserRequest, ApiLinkInviteUser, ApiInviteUserRes } from "./api.gen";
+import { ApiAccount, ApiAccountCustom, ApiAccountDevice, ApiAccountEmail, ApiAccountFacebook, ApiAccountFacebookInstantGame, ApiAccountGoogle, ApiAccountGameCenter, ApiAccountSteam, ApiChannelDescList, ApiChannelDescription, ApiCreateChannelDescRequest, ApiClanDescList, ApiCreateClanDescRequest, ApiClanDesc, ApiCategoryDesc, ApiCategoryDescList, ApiRoleList, ApiPermissionList, ApiRoleUserList, ApiRole, ApiCreateRoleRequest, ApiCreateCategoryDescRequest, ApiUpdateCategoryDescRequest, ApiCreateGroupRequest, ApiDeleteStorageObjectsRequest, ApiEvent, ApiMatchList, ApiReadStorageObjectsRequest, ApiStorageObjectAcks, ApiUpdateAccountRequest, ApiUpdateGroupRequest, ApiAccountApple, ApiLinkSteamRequest, ApiValidatePurchaseResponse, ApiClanDescProfile, ApiChannelUserList, ApiLinkInviteUserRequest, ApiLinkInviteUser, ApiInviteUserRes } from "./api.gen";
 import { Session } from "./session";
 import { Socket } from "./socket";
 import { WebSocketAdapter } from "./web_socket_adapter";
@@ -422,6 +422,25 @@ export interface ApiUpdateClanDescProfileRequest {
     /** Clan profile avatar */
     avatar_url: string;
 }
+/** Update fields in a given role. */
+export interface ApiUpdateRoleRequest {
+    /** The ID of the role to update. */
+    role_id: string;
+    title: string | undefined;
+    color: string | undefined;
+    role_icon: string | undefined;
+    description: string | undefined;
+    display_online: number | undefined;
+    allow_mention: number | undefined;
+    /** The users to add. */
+    add_user_ids: string[];
+    /** The permissions to add. */
+    active_permission_ids: string[];
+    /** The users to remove. */
+    remove_user_ids: string[];
+    /** The permissions to remove. */
+    remove_permission_ids: string[];
+}
 /** A client for Nakama server. */
 export declare class Client {
     readonly serverkey: string;
@@ -471,6 +490,8 @@ export declare class Client {
     createClanDesc(session: Session, request: ApiCreateClanDescRequest): Promise<ApiClanDesc>;
     /**  */
     createCategoryDesc(session: Session, request: ApiCreateCategoryDescRequest): Promise<ApiCategoryDesc>;
+    /** Create a new role for clan. */
+    createRole(session: Session, request: ApiCreateRoleRequest): Promise<ApiRole>;
     /** A socket created with the client's configuration. */
     createSocket(useSSL?: boolean, verbose?: boolean, adapter?: WebSocketAdapter, sendTimeoutMs?: number): Socket;
     /** Delete one or more users by ID or username. */
@@ -487,6 +508,8 @@ export declare class Client {
     deleteNotifications(session: Session, ids?: Array<string>): Promise<boolean>;
     /** Delete one or more storage objects */
     deleteStorageObjects(session: Session, request: ApiDeleteStorageObjectsRequest): Promise<boolean>;
+    /** Delete a role by ID. */
+    deleteRole(session: Session, roleId: string): Promise<boolean>;
     /** Demote a set of users in a group to the next role down. */
     demoteGroupUsers(session: Session, groupId: string, ids: Array<string>): Promise<boolean>;
     /** Submit an event for processing in the server's registered runtime custom events handler. */
@@ -524,6 +547,12 @@ export declare class Client {
     listClanDescs(session: Session, limit?: number, state?: number, cursor?: string): Promise<ApiClanDescList>;
     /** List categories. */
     listCategoryDescs(session: Session, clanId: string, creatorId?: string, categoryName?: string): Promise<ApiCategoryDescList>;
+    /** List user roles */
+    listRoles(session: Session, limit?: number, state?: number, cursor?: string, clanId?: string): Promise<ApiRoleList>;
+    /** List user roles */
+    listRolePermissions(session: Session, roleId: string): Promise<ApiPermissionList>;
+    /** List user roles */
+    listRoleUsers(session: Session, roleId: string, limit?: number, cursor?: string): Promise<ApiRoleUserList>;
     /** Get a clan desc profile */
     getClanDescProfile(session: Session, clanId: string): Promise<ApiClanDescProfile>;
     /** Add an Apple ID to the social profiles on the current user's account. */
@@ -603,6 +632,8 @@ export declare class Client {
     updateCategory(session: Session, request: ApiUpdateCategoryDescRequest): Promise<boolean>;
     /** Update fields in a given clan profile. */
     updateClanDescProfile(session: Session, clanId: string, request: ApiUpdateClanDescProfileRequest): Promise<boolean>;
+    /** Update fields in a given role. */
+    updateRole(session: Session, roleId: string, request: ApiUpdateRoleRequest): Promise<boolean>;
     /** Update fields in a given clan profile. */
     createLinkInviteUser(session: Session, request: ApiLinkInviteUserRequest): Promise<ApiLinkInviteUser>;
     /** Get link invite user */

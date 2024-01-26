@@ -8,6 +8,16 @@ export interface GroupUserListGroupUser {
     state?: number;
     user?: ApiUser;
 }
+/** A single user-role pair. */
+export interface RoleUserListRoleUser {
+    avatar_url?: string;
+    display_name?: string;
+    id?: string;
+    lang_tag?: string;
+    location?: string;
+    online?: boolean;
+    username?: string;
+}
 /** A single group-role pair. */
 export interface UserGroupListUserGroup {
     group?: ApiGroup;
@@ -209,16 +219,15 @@ export interface ApiCreateGroupRequest {
 }
 /** Create a role within clan. */
 export interface ApiCreateRoleRequest {
+    active_permission_ids?: Array<string>;
+    add_user_ids?: Array<string>;
     allow_mention?: number;
     clan_id?: string;
     color?: string;
     description?: string;
     display_online?: number;
-    permission_ids?: Array<string>;
     role_icon?: string;
-    slug?: string;
     title?: string;
-    user_ids?: Array<string>;
 }
 /** Storage objects to delete. */
 export interface ApiDeleteStorageObjectId {
@@ -370,6 +379,18 @@ export declare enum ApiOperator {
     INCREMENT = 3,
     DECREMENT = 4
 }
+/**  */
+export interface ApiPermission {
+    active?: number;
+    description?: string;
+    id?: string;
+    slug?: string;
+    title?: string;
+}
+/** A list of permission description, usually a result of a list operation. */
+export interface ApiPermissionList {
+    permissions?: Array<ApiPermission>;
+}
 /** Storage objects to get. */
 export interface ApiReadStorageObjectId {
     collection?: string;
@@ -400,6 +421,11 @@ export interface ApiRoleList {
     next_cursor?: string;
     prev_cursor?: string;
     roles?: Array<ApiRole>;
+}
+/**  */
+export interface ApiRoleUserList {
+    cursor?: string;
+    role_users?: Array<RoleUserListRoleUser>;
 }
 /** Execute an Lua function on the server. */
 export interface ApiRpc {
@@ -752,10 +778,10 @@ export declare class NakamaApi {
     updateChannelDesc(bearerToken: string, channelId: string, body: {}, options?: any): Promise<any>;
     /** Add users to a channel. */
     addChannelUsers(bearerToken: string, channelId: string, userIds?: Array<string>, options?: any): Promise<any>;
-    /** Kick a set of users from a channel. */
-    removeChannelUsers(bearerToken: string, channelId: string, userIds?: Array<string>, options?: any): Promise<any>;
     /** Leave a channel the user is a member of. */
     leaveChannel(bearerToken: string, channelId: string, options?: any): Promise<any>;
+    /** Kick a set of users from a channel. */
+    removeChannelUsers(bearerToken: string, channelId: string, userIds?: Array<string>, options?: any): Promise<any>;
     /** List all users that are part of a channel. */
     listChannelUsers(bearerToken: string, channelId: string, limit?: number, state?: number, cursor?: string, options?: any): Promise<ApiChannelUserList>;
     /**  */
@@ -806,12 +832,12 @@ export declare class NakamaApi {
     demoteGroupUsers(bearerToken: string, groupId: string, userIds?: Array<string>, options?: any): Promise<any>;
     /** Immediately join an open group, or request to join a closed one. */
     joinGroup(bearerToken: string, groupId: string, options?: any): Promise<any>;
-    /** Kick a set of users from a group. */
-    kickGroupUsers(bearerToken: string, groupId: string, userIds?: Array<string>, options?: any): Promise<any>;
     /** Leave a group the user is a member of. */
     leaveGroup(bearerToken: string, groupId: string, options?: any): Promise<any>;
     /** Promote a set of users in a group to the next role up. */
     promoteGroupUsers(bearerToken: string, groupId: string, userIds?: Array<string>, options?: any): Promise<any>;
+    /** Kick a set of users from a group. */
+    kickGroupUsers(bearerToken: string, groupId: string, userIds?: Array<string>, options?: any): Promise<any>;
     /** List all users that are part of a group. */
     listGroupUsers(bearerToken: string, groupId: string, limit?: number, state?: number, cursor?: string, options?: any): Promise<ApiGroupUserList>;
     /** Validate Apple IAP Receipt */
@@ -858,6 +884,10 @@ export declare class NakamaApi {
     deleteRole(bearerToken: string, roleId: string, options?: any): Promise<any>;
     /** Update fields in a given role. */
     updateRole(bearerToken: string, roleId: string, body: {}, options?: any): Promise<any>;
+    /** List role permissions */
+    listRolePermissions(bearerToken: string, roleId: string, options?: any): Promise<ApiPermissionList>;
+    /** List role permissions */
+    listRoleUsers(bearerToken: string, roleId: string, limit?: number, cursor?: string, options?: any): Promise<ApiRoleUserList>;
     /** Execute a Lua function on the server. */
     rpcFunc2(bearerToken: string, basicAuthUsername: string, basicAuthPassword: string, id: string, payload?: string, httpKey?: string, options?: any): Promise<ApiRpc>;
     /** Execute a Lua function on the server. */
