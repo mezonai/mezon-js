@@ -353,10 +353,10 @@ function Request(input, options) {
     if (options.cache === "no-store" || options.cache === "no-cache") {
       var reParamSearch = /([?&])_=[^&]*/;
       if (reParamSearch.test(this.url)) {
-        this.url = this.url.replace(reParamSearch, "$1_=" + new Date().getTime());
+        this.url = this.url.replace(reParamSearch, "$1_=" + (/* @__PURE__ */ new Date()).getTime());
       } else {
         var reQueryString = /\?/;
-        this.url += (reQueryString.test(this.url) ? "&" : "?") + "_=" + new Date().getTime();
+        this.url += (reQueryString.test(this.url) ? "&" : "?") + "_=" + (/* @__PURE__ */ new Date()).getTime();
       }
     }
   }
@@ -1817,14 +1817,13 @@ var NakamaApi = class {
       )
     ]);
   }
-  /** Kick a set of users from a channel. */
-  removeChannelUsers(bearerToken, channelId, userIds, options = {}) {
+  /** Leave a channel the user is a member of. */
+  leaveChannel(bearerToken, channelId, options = {}) {
     if (channelId === null || channelId === void 0) {
       throw new Error("'channelId' is a required parameter but is null or undefined.");
     }
-    const urlPath = "/v2/channeldesc/{channelId}/remove".replace("{channelId}", encodeURIComponent(String(channelId)));
+    const urlPath = "/v2/channeldesc/{channelId}/leave".replace("{channelId}", encodeURIComponent(String(channelId)));
     const queryParams = /* @__PURE__ */ new Map();
-    queryParams.set("user_ids", userIds);
     let bodyJson = "";
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("POST", options, bodyJson);
@@ -1846,13 +1845,14 @@ var NakamaApi = class {
       )
     ]);
   }
-  /** Leave a channel the user is a member of. */
-  leaveChannel(bearerToken, channelId, options = {}) {
+  /** Kick a set of users from a channel. */
+  removeChannelUsers(bearerToken, channelId, userIds, options = {}) {
     if (channelId === null || channelId === void 0) {
       throw new Error("'channelId' is a required parameter but is null or undefined.");
     }
-    const urlPath = "/v2/channeldesc/{channelId}/leave".replace("{channelId}", encodeURIComponent(String(channelId)));
+    const urlPath = "/v2/channeldesc/{channelId}/remove".replace("{channelId}", encodeURIComponent(String(channelId)));
     const queryParams = /* @__PURE__ */ new Map();
+    queryParams.set("user_ids", userIds);
     let bodyJson = "";
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("POST", options, bodyJson);
@@ -2116,7 +2116,7 @@ var NakamaApi = class {
     if (body === null || body === void 0) {
       throw new Error("'body' is a required parameter but is null or undefined.");
     }
-    const urlPath = "/v2/createcategory1";
+    const urlPath = "/v2/createcategory";
     const queryParams = /* @__PURE__ */ new Map();
     let bodyJson = "";
     bodyJson = JSON.stringify(body || {});
@@ -2601,35 +2601,6 @@ var NakamaApi = class {
       )
     ]);
   }
-  /** Kick a set of users from a group. */
-  kickGroupUsers(bearerToken, groupId, userIds, options = {}) {
-    if (groupId === null || groupId === void 0) {
-      throw new Error("'groupId' is a required parameter but is null or undefined.");
-    }
-    const urlPath = "/v2/group/{groupId}/kick".replace("{groupId}", encodeURIComponent(String(groupId)));
-    const queryParams = /* @__PURE__ */ new Map();
-    queryParams.set("user_ids", userIds);
-    let bodyJson = "";
-    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
-    const fetchOptions = buildFetchOptions("POST", options, bodyJson);
-    if (bearerToken) {
-      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-    }
-    return Promise.race([
-      fetch(fullUrl, fetchOptions).then((response) => {
-        if (response.status == 204) {
-          return response;
-        } else if (response.status >= 200 && response.status < 300) {
-          return response.json();
-        } else {
-          throw response;
-        }
-      }),
-      new Promise(
-        (_, reject) => setTimeout(reject, this.timeoutMs, "Request timed out.")
-      )
-    ]);
-  }
   /** Leave a group the user is a member of. */
   leaveGroup(bearerToken, groupId, options = {}) {
     if (groupId === null || groupId === void 0) {
@@ -2664,6 +2635,35 @@ var NakamaApi = class {
       throw new Error("'groupId' is a required parameter but is null or undefined.");
     }
     const urlPath = "/v2/group/{groupId}/promote".replace("{groupId}", encodeURIComponent(String(groupId)));
+    const queryParams = /* @__PURE__ */ new Map();
+    queryParams.set("user_ids", userIds);
+    let bodyJson = "";
+    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
+    const fetchOptions = buildFetchOptions("POST", options, bodyJson);
+    if (bearerToken) {
+      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+    }
+    return Promise.race([
+      fetch(fullUrl, fetchOptions).then((response) => {
+        if (response.status == 204) {
+          return response;
+        } else if (response.status >= 200 && response.status < 300) {
+          return response.json();
+        } else {
+          throw response;
+        }
+      }),
+      new Promise(
+        (_, reject) => setTimeout(reject, this.timeoutMs, "Request timed out.")
+      )
+    ]);
+  }
+  /** Kick a set of users from a group. */
+  kickGroupUsers(bearerToken, groupId, userIds, options = {}) {
+    if (groupId === null || groupId === void 0) {
+      throw new Error("'groupId' is a required parameter but is null or undefined.");
+    }
+    const urlPath = "/v2/group/{groupId}/remove".replace("{groupId}", encodeURIComponent(String(groupId)));
     const queryParams = /* @__PURE__ */ new Map();
     queryParams.set("user_ids", userIds);
     let bodyJson = "";
@@ -3362,6 +3362,64 @@ var NakamaApi = class {
       )
     ]);
   }
+  /** List role permissions */
+  listRolePermissions(bearerToken, roleId, options = {}) {
+    if (roleId === null || roleId === void 0) {
+      throw new Error("'roleId' is a required parameter but is null or undefined.");
+    }
+    const urlPath = "/v2/roles/{roleId}/permissions".replace("{roleId}", encodeURIComponent(String(roleId)));
+    const queryParams = /* @__PURE__ */ new Map();
+    let bodyJson = "";
+    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
+    const fetchOptions = buildFetchOptions("GET", options, bodyJson);
+    if (bearerToken) {
+      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+    }
+    return Promise.race([
+      fetch(fullUrl, fetchOptions).then((response) => {
+        if (response.status == 204) {
+          return response;
+        } else if (response.status >= 200 && response.status < 300) {
+          return response.json();
+        } else {
+          throw response;
+        }
+      }),
+      new Promise(
+        (_, reject) => setTimeout(reject, this.timeoutMs, "Request timed out.")
+      )
+    ]);
+  }
+  /** List role permissions */
+  listRoleUsers(bearerToken, roleId, limit, cursor, options = {}) {
+    if (roleId === null || roleId === void 0) {
+      throw new Error("'roleId' is a required parameter but is null or undefined.");
+    }
+    const urlPath = "/v2/roles/{roleId}/users".replace("{roleId}", encodeURIComponent(String(roleId)));
+    const queryParams = /* @__PURE__ */ new Map();
+    queryParams.set("limit", limit);
+    queryParams.set("cursor", cursor);
+    let bodyJson = "";
+    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
+    const fetchOptions = buildFetchOptions("GET", options, bodyJson);
+    if (bearerToken) {
+      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+    }
+    return Promise.race([
+      fetch(fullUrl, fetchOptions).then((response) => {
+        if (response.status == 204) {
+          return response;
+        } else if (response.status >= 200 && response.status < 300) {
+          return response.json();
+        } else {
+          throw response;
+        }
+      }),
+      new Promise(
+        (_, reject) => setTimeout(reject, this.timeoutMs, "Request timed out.")
+      )
+    ]);
+  }
   /** Execute a Lua function on the server. */
   rpcFunc2(bearerToken, basicAuthUsername, basicAuthPassword, id, payload, httpKey, options = {}) {
     if (id === null || id === void 0) {
@@ -3963,12 +4021,12 @@ var NakamaApi = class {
 };
 
 // session.ts
-var Session = class {
+var Session = class _Session {
   constructor(token, refresh_token, created) {
     this.created = created;
     this.token = token;
     this.refresh_token = refresh_token;
-    this.created_at = Math.floor(new Date().getTime() / 1e3);
+    this.created_at = Math.floor((/* @__PURE__ */ new Date()).getTime() / 1e3);
     this.update(token, refresh_token);
   }
   isexpired(currenttime) {
@@ -4001,7 +4059,7 @@ var Session = class {
     this.vars = tokenDecoded["vrs"];
   }
   static restore(token, refreshToken) {
-    return new Session(token, refreshToken, false);
+    return new _Session(token, refreshToken, false);
   }
 };
 
@@ -4121,7 +4179,7 @@ var WebSocketAdapterText = class {
 };
 
 // socket.ts
-var _DefaultSocket = class {
+var _DefaultSocket = class _DefaultSocket {
   constructor(host, port, useSSL = false, verbose = false, adapter = new WebSocketAdapterText(), sendTimeoutMs = _DefaultSocket.DefaultSendTimeoutMs) {
     this.host = host;
     this.port = port;
@@ -4599,10 +4657,10 @@ var _DefaultSocket = class {
     });
   }
 };
+_DefaultSocket.DefaultHeartbeatTimeoutMs = 1e4;
+_DefaultSocket.DefaultSendTimeoutMs = 1e4;
+_DefaultSocket.DefaultConnectTimeoutMs = 3e4;
 var DefaultSocket = _DefaultSocket;
-DefaultSocket.DefaultHeartbeatTimeoutMs = 1e4;
-DefaultSocket.DefaultSendTimeoutMs = 1e4;
-DefaultSocket.DefaultConnectTimeoutMs = 3e4;
 
 // client.ts
 var DEFAULT_HOST = "127.0.0.1";
@@ -4868,6 +4926,17 @@ var Client = class {
       });
     });
   }
+  /** Create a new role for clan. */
+  createRole(session, request) {
+    return __async(this, null, function* () {
+      if (this.autoRefreshSession && session.refresh_token && session.isexpired((Date.now() + this.expiredTimespanMs) / 1e3)) {
+        yield this.sessionRefresh(session);
+      }
+      return this.apiClient.createRole(session.token, request).then((response) => {
+        return Promise.resolve(response);
+      });
+    });
+  }
   /** A socket created with the client's configuration. */
   createSocket(useSSL = false, verbose = false, adapter = new WebSocketAdapterText(), sendTimeoutMs = DefaultSocket.DefaultSendTimeoutMs) {
     return new DefaultSocket(this.host, this.port, useSSL, verbose, adapter, sendTimeoutMs);
@@ -4946,6 +5015,17 @@ var Client = class {
       }
       return this.apiClient.deleteStorageObjects(session.token, request).then((response) => {
         return Promise.resolve(response != void 0);
+      });
+    });
+  }
+  /** Delete a role by ID. */
+  deleteRole(session, roleId) {
+    return __async(this, null, function* () {
+      if (this.autoRefreshSession && session.refresh_token && session.isexpired((Date.now() + this.expiredTimespanMs) / 1e3)) {
+        yield this.sessionRefresh(session);
+      }
+      return this.apiClient.deleteRole(session.token, roleId).then((response) => {
+        return response !== void 0;
       });
     });
   }
@@ -5338,6 +5418,39 @@ var Client = class {
         }
         result.categorydesc = response.categorydesc;
         return Promise.resolve(result);
+      });
+    });
+  }
+  /** List user roles */
+  listRoles(session, limit, state, cursor, clanId) {
+    return __async(this, null, function* () {
+      if (this.autoRefreshSession && session.refresh_token && session.isexpired((Date.now() + this.expiredTimespanMs) / 1e3)) {
+        yield this.sessionRefresh(session);
+      }
+      return this.apiClient.listRoles(session.token, limit, state, cursor, clanId).then((response) => {
+        return Promise.resolve(response);
+      });
+    });
+  }
+  /** List user roles */
+  listRolePermissions(session, roleId) {
+    return __async(this, null, function* () {
+      if (this.autoRefreshSession && session.refresh_token && session.isexpired((Date.now() + this.expiredTimespanMs) / 1e3)) {
+        yield this.sessionRefresh(session);
+      }
+      return this.apiClient.listRolePermissions(session.token, roleId).then((response) => {
+        return Promise.resolve(response);
+      });
+    });
+  }
+  /** List user roles */
+  listRoleUsers(session, roleId, limit, cursor) {
+    return __async(this, null, function* () {
+      if (this.autoRefreshSession && session.refresh_token && session.isexpired((Date.now() + this.expiredTimespanMs) / 1e3)) {
+        yield this.sessionRefresh(session);
+      }
+      return this.apiClient.listRoleUsers(session.token, roleId, limit, cursor).then((response) => {
+        return Promise.resolve(response);
       });
     });
   }
@@ -6057,6 +6170,17 @@ var Client = class {
         yield this.sessionRefresh(session);
       }
       return this.apiClient.updateClanDescProfile(session.token, clanId, request).then((response) => {
+        return response !== void 0;
+      });
+    });
+  }
+  /** Update fields in a given role. */
+  updateRole(session, roleId, request) {
+    return __async(this, null, function* () {
+      if (this.autoRefreshSession && session.refresh_token && session.isexpired((Date.now() + this.expiredTimespanMs) / 1e3)) {
+        yield this.sessionRefresh(session);
+      }
+      return this.apiClient.updateRole(session.token, roleId, request).then((response) => {
         return response !== void 0;
       });
     });

@@ -33,6 +33,11 @@ import {
   ApiClanDesc,
   ApiCategoryDesc,
   ApiCategoryDescList,
+  ApiRoleList,
+  ApiPermissionList,
+  ApiRoleUserList,
+  ApiRole,
+  ApiCreateRoleRequest,
   ApiCreateCategoryDescRequest,
   ApiUpdateCategoryDescRequest,
   ApiCreateGroupRequest,
@@ -519,6 +524,29 @@ export interface ApiUpdateClanDescProfileRequest {
   avatar_url: string;
 }
 
+
+/** Update fields in a given role. */
+export interface ApiUpdateRoleRequest {
+  /** The ID of the role to update. */
+  role_id: string;
+  title: string | undefined;
+  color: string | undefined;
+  role_icon: string | undefined;
+  description: string | undefined;
+  display_online: number | undefined;
+  allow_mention:
+    | number
+    | undefined;
+  /** The users to add. */
+  add_user_ids: string[];
+  /** The permissions to add. */
+  active_permission_ids: string[];
+  /** The users to remove. */
+  remove_user_ids: string[];
+  /** The permissions to remove. */
+  remove_permission_ids: string[];
+}
+
 /** A client for Nakama server. */
 export class Client {
 
@@ -820,6 +848,18 @@ export class Client {
     });
   }
 
+  /** Create a new role for clan. */
+  async createRole(session: Session, request: ApiCreateRoleRequest): Promise<ApiRole> {
+    if (this.autoRefreshSession && session.refresh_token &&
+        session.isexpired((Date.now() + this.expiredTimespanMs)/1000)) {
+        await this.sessionRefresh(session);
+    }
+
+    return this.apiClient.createRole(session.token, request).then((response: ApiRole) => {
+      return Promise.resolve(response);
+    });
+  }
+
   /** A socket created with the client's configuration. */
   createSocket(useSSL = false, verbose: boolean = false, adapter : WebSocketAdapter = new WebSocketAdapterText(), sendTimeoutMs : number = DefaultSocket.DefaultSendTimeoutMs): Socket {
     return new DefaultSocket(this.host, this.port, useSSL, verbose, adapter, sendTimeoutMs);
@@ -906,6 +946,18 @@ export class Client {
 
     return this.apiClient.deleteStorageObjects(session.token, request).then((response: any) => {
       return Promise.resolve(response != undefined);
+    });
+  }
+
+  /** Delete a role by ID. */
+  async deleteRole(session: Session, roleId: string): Promise<boolean> {
+    if (this.autoRefreshSession && session.refresh_token &&
+        session.isexpired((Date.now() + this.expiredTimespanMs)/1000)) {
+        await this.sessionRefresh(session);
+    }
+
+    return this.apiClient.deleteRole(session.token, roleId).then((response: any) => {
+      return response !== undefined;
     });
   }
 
@@ -1319,7 +1371,7 @@ export class Client {
   }
 
   /** List categories. */
-  async listCategoryDescs(session: Session, clanId:string, creatorId?:string, categoryName?:string,): Promise<ApiCategoryDescList> {
+  async listCategoryDescs(session: Session, clanId:string, creatorId?:string, categoryName?:string): Promise<ApiCategoryDescList> {
     if (this.autoRefreshSession && session.refresh_token &&
         session.isexpired((Date.now() + this.expiredTimespanMs)/1000)) {
         await this.sessionRefresh(session);
@@ -1336,6 +1388,42 @@ export class Client {
       
       result.categorydesc = response.categorydesc;
       return Promise.resolve(result);
+    });
+  }
+
+  /** List user roles */
+  async listRoles(session: Session, limit?:number, state?:number, cursor?:string, clanId?:string): Promise<ApiRoleList> {
+    if (this.autoRefreshSession && session.refresh_token &&
+        session.isexpired((Date.now() + this.expiredTimespanMs)/1000)) {
+        await this.sessionRefresh(session);
+    }
+
+    return this.apiClient.listRoles(session.token, limit, state, cursor, clanId).then((response: ApiRoleList) => {
+      return Promise.resolve(response);
+    });
+  }
+
+  /** List user roles */
+  async listRolePermissions(session: Session, roleId:string): Promise<ApiPermissionList> {
+    if (this.autoRefreshSession && session.refresh_token &&
+        session.isexpired((Date.now() + this.expiredTimespanMs)/1000)) {
+        await this.sessionRefresh(session);
+    }
+
+    return this.apiClient.listRolePermissions(session.token, roleId).then((response: ApiPermissionList) => {
+      return Promise.resolve(response);
+    });
+  }
+
+  /** List user roles */
+  async listRoleUsers(session: Session, roleId:string, limit?:number, cursor?:string): Promise<ApiRoleUserList> {
+    if (this.autoRefreshSession && session.refresh_token &&
+        session.isexpired((Date.now() + this.expiredTimespanMs)/1000)) {
+        await this.sessionRefresh(session);
+    }
+
+    return this.apiClient.listRoleUsers(session.token, roleId, limit, cursor).then((response: ApiRoleUserList) => {
+      return Promise.resolve(response);
     });
   }
 
@@ -2120,6 +2208,18 @@ export class Client {
     }
 
     return this.apiClient.updateClanDescProfile(session.token, clanId, request).then((response: any) => {
+      return response !== undefined;
+    });
+  }
+
+  /** Update fields in a given role. */
+  async updateRole(session: Session, roleId: string, request: ApiUpdateRoleRequest): Promise<boolean> {
+    if (this.autoRefreshSession && session.refresh_token &&
+        session.isexpired((Date.now() + this.expiredTimespanMs)/1000)) {
+        await this.sessionRefresh(session);
+    }
+
+    return this.apiClient.updateRole(session.token, roleId, request).then((response: any) => {
       return response !== undefined;
     });
   }

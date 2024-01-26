@@ -20,6 +20,24 @@ export interface GroupUserListGroupUser {
   user?: ApiUser;
 }
 
+/** A single user-role pair. */
+export interface RoleUserListRoleUser {
+  //A URL for an avatar image.
+  avatar_url?: string;
+  //The display name of the user.
+  display_name?: string;
+  //The id of the user's account.
+  id?: string;
+  //The language expected to be a tag which follows the BCP-47 spec.
+  lang_tag?: string;
+  //The location set by the user.
+  location?: string;
+  //The timezone set by the user.
+  online?: boolean;
+  //The username of the user's account.
+  username?: string;
+}
+
 /** A single group-role pair. */
 export interface UserGroupListUserGroup {
   //Group.
@@ -364,6 +382,10 @@ export interface ApiCreateGroupRequest {
 
 /** Create a role within clan. */
 export interface ApiCreateRoleRequest {
+  //The permissions to add.
+  active_permission_ids?: Array<string>;
+  //The users to add.
+  add_user_ids?: Array<string>;
   //
   allow_mention?: number;
   //
@@ -374,16 +396,10 @@ export interface ApiCreateRoleRequest {
   description?: string;
   //
   display_online?: number;
-  //The permissions to add.
-  permission_ids?: Array<string>;
   //
   role_icon?: string;
   //
-  slug?: string;
-  //
   title?: string;
-  //The users to add.
-  user_ids?: Array<string>;
 }
 
 /** Storage objects to delete. */
@@ -643,6 +659,26 @@ export enum ApiOperator
     DECREMENT = 4,
 }
 
+/**  */
+export interface ApiPermission {
+  //
+  active?: number;
+  //
+  description?: string;
+  //
+  id?: string;
+  //
+  slug?: string;
+  //
+  title?: string;
+}
+
+/** A list of permission description, usually a result of a list operation. */
+export interface ApiPermissionList {
+  //A list of permission.
+  permissions?: Array<ApiPermission>;
+}
+
 /** Storage objects to get. */
 export interface ApiReadStorageObjectId {
   //The collection which stores the object.
@@ -695,6 +731,14 @@ export interface ApiRoleList {
   prev_cursor?: string;
   //A list of role.
   roles?: Array<ApiRole>;
+}
+
+/**  */
+export interface ApiRoleUserList {
+  //Cursor for the next page of results, if any.
+  cursor?: string;
+  //role_users pairs for a clan.
+  role_users?: Array<RoleUserListRoleUser>;
 }
 
 /** Execute an Lua function on the server. */
@@ -2658,19 +2702,17 @@ export class NakamaApi {
     ]);
 }
 
-  /** Kick a set of users from a channel. */
-  removeChannelUsers(bearerToken: string,
+  /** Leave a channel the user is a member of. */
+  leaveChannel(bearerToken: string,
       channelId:string,
-      userIds?:Array<string>,
       options: any = {}): Promise<any> {
     
     if (channelId === null || channelId === undefined) {
       throw new Error("'channelId' is a required parameter but is null or undefined.");
     }
-    const urlPath = "/v2/channeldesc/{channelId}/remove"
+    const urlPath = "/v2/channeldesc/{channelId}/leave"
         .replace("{channelId}", encodeURIComponent(String(channelId)));
     const queryParams = new Map<string, any>();
-    queryParams.set("user_ids", userIds);
 
     let bodyJson : string = "";
 
@@ -2696,18 +2738,20 @@ export class NakamaApi {
     ]);
 }
 
-  /** Leave a channel the user is a member of. */
-  leaveChannel(bearerToken: string,
+  /** Kick a set of users from a channel. */
+  removeChannelUsers(bearerToken: string,
       channelId:string,
+      userIds?:Array<string>,
       options: any = {}): Promise<any> {
     
     if (channelId === null || channelId === undefined) {
       throw new Error("'channelId' is a required parameter but is null or undefined.");
     }
-    const urlPath = "/v2/channeldesc/{channelId}/leave"
+    const urlPath = "/v2/channeldesc/{channelId}/remove"
         .replace("{channelId}", encodeURIComponent(String(channelId)));
     const queryParams = new Map<string, any>();
-    
+    queryParams.set("user_ids", userIds);
+
     let bodyJson : string = "";
 
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
@@ -2931,16 +2975,16 @@ export class NakamaApi {
     if (clanId === null || clanId === undefined) {
       throw new Error("'clanId' is a required parameter but is null or undefined.");
     }
-        const urlPath = "/v2/clandesc/{clanId}"
+    const urlPath = "/v2/clandesc/{clanId}"
         .replace("{clanId}", encodeURIComponent(String(clanId)));
     const queryParams = new Map<string, any>();
-queryParams.set("creator_id", creatorId);
+    queryParams.set("creator_id", creatorId);
     queryParams.set("clan_name", clanName);
     queryParams.set("logo", logo);
     queryParams.set("banner", banner);
 
     let bodyJson : string = "";
-    
+
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("PUT", options, bodyJson);
     if (bearerToken) {
@@ -3048,7 +3092,7 @@ queryParams.set("creator_id", creatorId);
     if (body === null || body === undefined) {
       throw new Error("'body' is a required parameter but is null or undefined.");
     }
-    const urlPath = "/v2/createcategory1";
+    const urlPath = "/v2/createcategory";
     const queryParams = new Map<string, any>();
 
     let bodyJson : string = "";
@@ -3672,44 +3716,6 @@ queryParams.set("creator_id", creatorId);
     ]);
 }
 
-  /** Kick a set of users from a group. */
-  kickGroupUsers(bearerToken: string,
-      groupId:string,
-      userIds?:Array<string>,
-      options: any = {}): Promise<any> {
-    
-    if (groupId === null || groupId === undefined) {
-      throw new Error("'groupId' is a required parameter but is null or undefined.");
-    }
-    const urlPath = "/v2/group/{groupId}/kick"
-        .replace("{groupId}", encodeURIComponent(String(groupId)));
-    const queryParams = new Map<string, any>();
-    queryParams.set("user_ids", userIds);
-
-    let bodyJson : string = "";
-
-    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
-    const fetchOptions = buildFetchOptions("POST", options, bodyJson);
-    if (bearerToken) {
-        fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-    }
-
-    return Promise.race([
-      fetch(fullUrl, fetchOptions).then((response) => {
-        if (response.status == 204) {
-          return response;
-        } else if (response.status >= 200 && response.status < 300) {
-          return response.json();
-        } else {
-          throw response;
-        }
-      }),
-      new Promise((_, reject) =>
-        setTimeout(reject, this.timeoutMs, "Request timed out.")
-      ),
-    ]);
-}
-
   /** Leave a group the user is a member of. */
   leaveGroup(bearerToken: string,
       groupId:string,
@@ -3721,7 +3727,7 @@ queryParams.set("creator_id", creatorId);
     const urlPath = "/v2/group/{groupId}/leave"
         .replace("{groupId}", encodeURIComponent(String(groupId)));
     const queryParams = new Map<string, any>();
-    
+
     let bodyJson : string = "";
 
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
@@ -3756,6 +3762,44 @@ queryParams.set("creator_id", creatorId);
       throw new Error("'groupId' is a required parameter but is null or undefined.");
     }
     const urlPath = "/v2/group/{groupId}/promote"
+        .replace("{groupId}", encodeURIComponent(String(groupId)));
+    const queryParams = new Map<string, any>();
+    queryParams.set("user_ids", userIds);
+
+    let bodyJson : string = "";
+
+    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
+    const fetchOptions = buildFetchOptions("POST", options, bodyJson);
+    if (bearerToken) {
+        fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+    }
+
+    return Promise.race([
+      fetch(fullUrl, fetchOptions).then((response) => {
+        if (response.status == 204) {
+          return response;
+        } else if (response.status >= 200 && response.status < 300) {
+          return response.json();
+        } else {
+          throw response;
+        }
+      }),
+      new Promise((_, reject) =>
+        setTimeout(reject, this.timeoutMs, "Request timed out.")
+      ),
+    ]);
+}
+
+  /** Kick a set of users from a group. */
+  kickGroupUsers(bearerToken: string,
+      groupId:string,
+      userIds?:Array<string>,
+      options: any = {}): Promise<any> {
+    
+    if (groupId === null || groupId === undefined) {
+      throw new Error("'groupId' is a required parameter but is null or undefined.");
+    }
+    const urlPath = "/v2/group/{groupId}/remove"
         .replace("{groupId}", encodeURIComponent(String(groupId)));
     const queryParams = new Map<string, any>();
     queryParams.set("user_ids", userIds);
@@ -4633,6 +4677,82 @@ queryParams.set("creator_id", creatorId);
 
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("PUT", options, bodyJson);
+    if (bearerToken) {
+        fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+    }
+
+    return Promise.race([
+      fetch(fullUrl, fetchOptions).then((response) => {
+        if (response.status == 204) {
+          return response;
+        } else if (response.status >= 200 && response.status < 300) {
+          return response.json();
+        } else {
+          throw response;
+        }
+      }),
+      new Promise((_, reject) =>
+        setTimeout(reject, this.timeoutMs, "Request timed out.")
+      ),
+    ]);
+}
+
+  /** List role permissions */
+  listRolePermissions(bearerToken: string,
+      roleId:string,
+      options: any = {}): Promise<ApiPermissionList> {
+    
+    if (roleId === null || roleId === undefined) {
+      throw new Error("'roleId' is a required parameter but is null or undefined.");
+    }
+    const urlPath = "/v2/roles/{roleId}/permissions"
+        .replace("{roleId}", encodeURIComponent(String(roleId)));
+    const queryParams = new Map<string, any>();
+
+    let bodyJson : string = "";
+
+    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
+    const fetchOptions = buildFetchOptions("GET", options, bodyJson);
+    if (bearerToken) {
+        fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+    }
+
+    return Promise.race([
+      fetch(fullUrl, fetchOptions).then((response) => {
+        if (response.status == 204) {
+          return response;
+        } else if (response.status >= 200 && response.status < 300) {
+          return response.json();
+        } else {
+          throw response;
+        }
+      }),
+      new Promise((_, reject) =>
+        setTimeout(reject, this.timeoutMs, "Request timed out.")
+      ),
+    ]);
+}
+
+  /** List role permissions */
+  listRoleUsers(bearerToken: string,
+      roleId:string,
+      limit?:number,
+      cursor?:string,
+      options: any = {}): Promise<ApiRoleUserList> {
+    
+    if (roleId === null || roleId === undefined) {
+      throw new Error("'roleId' is a required parameter but is null or undefined.");
+    }
+    const urlPath = "/v2/roles/{roleId}/users"
+        .replace("{roleId}", encodeURIComponent(String(roleId)));
+    const queryParams = new Map<string, any>();
+    queryParams.set("limit", limit);
+    queryParams.set("cursor", cursor);
+
+    let bodyJson : string = "";
+
+    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
+    const fetchOptions = buildFetchOptions("GET", options, bodyJson);
     if (bearerToken) {
         fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
     }
