@@ -72,6 +72,14 @@ interface ChannelLeave {
   };
 }
 
+/** Last seen message by user */
+export interface LastSeenMessageEvent {
+  /** The channel this message belongs to. */
+  channel_id: string;
+  /** The unique ID of this message. */
+  message_id: string;
+}
+
 /** User is typing */
 export interface MessageTypingEvent {
   /** The channel this message belongs to. */
@@ -490,6 +498,9 @@ export interface Socket {
   /** Send message typing */
   writeMessageTyping(channel_id: string) : Promise<MessageTypingEvent>;
 
+  /** Send last seen message */
+  writeLastSeenMessage(channel_id: string, message_id: string) : Promise<LastSeenMessageEvent>;
+
   /** Handle disconnect events received from the socket. */
   ondisconnect: (evt: Event) => void;
 
@@ -812,7 +823,7 @@ export class DefaultSocket implements Socket {
   }
 
   send(message: ChannelJoin | ChannelLeave | ChannelMessageSend | ChannelMessageUpdate |
-    ChannelMessageRemove | MessageTypingEvent | PartyAccept | PartyClose | PartyCreate | PartyDataSend | PartyJoin |
+    ChannelMessageRemove | MessageTypingEvent | LastSeenMessageEvent | PartyAccept | PartyClose | PartyCreate | PartyDataSend | PartyJoin |
     PartyJoinRequestList | PartyLeave | PartyMatchmakerAdd | PartyMatchmakerRemove | PartyPromote |
     PartyRemove | Rpc | StatusFollow | StatusUnfollow | StatusUpdate | Ping, sendTimeout = DefaultSocket.DefaultSendTimeoutMs): Promise<any> {
     const untypedMessage = message as any;
@@ -978,6 +989,11 @@ export class DefaultSocket implements Socket {
   async writeMessageTyping(channel_id: string) : Promise<MessageTypingEvent> {
     const response = await this.send({message_typing_event: {channel_id: channel_id}});
     return response.message_typing_event
+  }
+
+  async writeLastSeenMessage(channel_id: string, message_id: string) : Promise<LastSeenMessageEvent> {
+    const response = await this.send({last_seen_message_event: {channel_id: channel_id, message_id: message_id}});
+    return response.last_seen_message_event
   }
 
   private async pingPong() : Promise<void> {

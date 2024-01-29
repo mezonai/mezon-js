@@ -275,11 +275,6 @@ export interface ApiInviteUserRes {
     clan_id?: string;
     clan_name?: string;
 }
-/**  */
-export interface ApiLastSeenMessageRequest {
-    channel_id?: string;
-    message_id?: string;
-}
 /** Add link invite users to. */
 export interface ApiLinkInviteUser {
     channel_id?: string;
@@ -579,8 +574,6 @@ export declare class NakamaApi {
     listChannelDescs(bearerToken: string, limit?: number, state?: number, cursor?: string, clanId?: string, options?: any): Promise<ApiChannelDescList>;
     /** Create a new channel with the current user as the owner. */
     createChannelDesc(bearerToken: string, body: ApiCreateChannelDescRequest, options?: any): Promise<ApiChannelDescription>;
-    /** Update Last seen message by user */
-    postLastSeenMessage(bearerToken: string, body: ApiLastSeenMessageRequest, options?: any): Promise<any>;
     /** Delete a channel by ID. */
     deleteChannelDesc(bearerToken: string, channelId: string, options?: any): Promise<any>;
     /** Update fields in a given channel. */

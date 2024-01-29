@@ -59,6 +59,13 @@ interface ChannelLeave {
         channel_id: string;
     };
 }
+/** Last seen message by user */
+export interface LastSeenMessageEvent {
+    /** The channel this message belongs to. */
+    channel_id: string;
+    /** The unique ID of this message. */
+    message_id: string;
+}
 /** User is typing */
 export interface MessageTypingEvent {
     /** The channel this message belongs to. */
@@ -426,6 +433,8 @@ export interface Socket {
     writeChatMessage(clan_id: string, channel_id: string, content: any): Promise<ChannelMessageAck>;
     /** Send message typing */
     writeMessageTyping(channel_id: string): Promise<MessageTypingEvent>;
+    /** Send last seen message */
+    writeLastSeenMessage(channel_id: string, message_id: string): Promise<LastSeenMessageEvent>;
     /** Handle disconnect events received from the socket. */
     ondisconnect: (evt: Event) => void;
     /** Handle error events received from the socket. */
@@ -512,7 +521,7 @@ export declare class DefaultSocket implements Socket {
     onstreampresence(streamPresence: StreamPresenceEvent): void;
     onstreamdata(streamData: StreamData): void;
     onheartbeattimeout(): void;
-    send(message: ChannelJoin | ChannelLeave | ChannelMessageSend | ChannelMessageUpdate | ChannelMessageRemove | MessageTypingEvent | PartyAccept | PartyClose | PartyCreate | PartyDataSend | PartyJoin | PartyJoinRequestList | PartyLeave | PartyMatchmakerAdd | PartyMatchmakerRemove | PartyPromote | PartyRemove | Rpc | StatusFollow | StatusUnfollow | StatusUpdate | Ping, sendTimeout?: number): Promise<any>;
+    send(message: ChannelJoin | ChannelLeave | ChannelMessageSend | ChannelMessageUpdate | ChannelMessageRemove | MessageTypingEvent | LastSeenMessageEvent | PartyAccept | PartyClose | PartyCreate | PartyDataSend | PartyJoin | PartyJoinRequestList | PartyLeave | PartyMatchmakerAdd | PartyMatchmakerRemove | PartyPromote | PartyRemove | Rpc | StatusFollow | StatusUnfollow | StatusUpdate | Ping, sendTimeout?: number): Promise<any>;
     acceptPartyMember(party_id: string, presence: Presence): Promise<void>;
     closeParty(party_id: string): Promise<void>;
     createParty(open: boolean, max_size: number): Promise<Party>;
@@ -533,6 +542,7 @@ export declare class DefaultSocket implements Socket {
     updateStatus(status?: string): Promise<void>;
     writeChatMessage(clan_id: string, channel_id: string, content: any): Promise<ChannelMessageAck>;
     writeMessageTyping(channel_id: string): Promise<MessageTypingEvent>;
+    writeLastSeenMessage(channel_id: string, message_id: string): Promise<LastSeenMessageEvent>;
     private pingPong;
 }
 export {};
