@@ -72,6 +72,14 @@ interface ChannelLeave {
   };
 }
 
+/** User is typing */
+export interface MessageTypingEvent {
+  /** The channel this message belongs to. */
+  channel_id: string;
+  /** Message sender, usually a user ID. */
+  sender_id: string;
+}
+
 /** An incoming message on a realtime chat channel. */
 export interface ChannelMessage {
   /** The channel this message belongs to. */
@@ -799,6 +807,8 @@ export class DefaultSocket implements Socket {
         } else if (message.channel_message) {
           message.channel_message.content = JSON.parse(message.channel_message.content);
           this.onchannelmessage(<ChannelMessage>message.channel_message);
+        } else if (message.message_typing_event) {          
+          this.onmessagetyping(<MessageTypingEvent>message);
         } else if (message.channel_presence_event) {
           this.onchannelpresence(<ChannelPresenceEvent>message.channel_presence_event);
         } else if (message.party_data) {
@@ -887,6 +897,12 @@ export class DefaultSocket implements Socket {
   onerror(evt: Event) {
     if (this.verbose && window && window.console) {
       console.log(evt);
+    }
+  }
+
+  onmessagetyping(messagetyping: MessageTypingEvent) {
+    if (this.verbose && window && window.console) {
+      console.log(messagetyping);
     }
   }
 
