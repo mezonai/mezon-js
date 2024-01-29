@@ -59,6 +59,13 @@ interface ChannelLeave {
         channel_id: string;
     };
 }
+/** User is typing */
+export interface MessageTypingEvent {
+    /** The channel this message belongs to. */
+    channel_id: string;
+    /** Message sender, usually a user ID. */
+    sender_id: string;
+}
 /** An incoming message on a realtime chat channel. */
 export interface ChannelMessage {
     /** The channel this message belongs to. */
@@ -602,6 +609,8 @@ export interface Socket {
     onheartbeattimeout: () => void;
     /** Receive channel message. */
     onchannelmessage: (channelMessage: ChannelMessage) => void;
+    /** Receive typing event */
+    onmessagetyping: (messageTypingEvent: MessageTypingEvent) => void;
     /** Receive channel presence updates. */
     onchannelpresence: (channelPresence: ChannelPresenceEvent) => void;
     setHeartbeatTimeoutMs(ms: number): void;
@@ -636,6 +645,7 @@ export declare class DefaultSocket implements Socket {
     getHeartbeatTimeoutMs(): number;
     ondisconnect(evt: Event): void;
     onerror(evt: Event): void;
+    onmessagetyping(messagetyping: MessageTypingEvent): void;
     onchannelmessage(channelMessage: ChannelMessage): void;
     onchannelpresence(channelPresence: ChannelPresenceEvent): void;
     onnotification(notification: Notification): void;

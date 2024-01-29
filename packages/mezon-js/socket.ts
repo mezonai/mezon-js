@@ -714,6 +714,9 @@ export interface Socket {
   /** Receive channel message. */
   onchannelmessage: (channelMessage: ChannelMessage) => void;
 
+  /** Receive typing event */
+  onmessagetyping: (messageTypingEvent: MessageTypingEvent) => void;
+
   /** Receive channel presence updates. */
   onchannelpresence: (channelPresence: ChannelPresenceEvent) => void;
 
