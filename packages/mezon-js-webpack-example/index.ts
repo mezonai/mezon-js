@@ -19,12 +19,12 @@ import {Client} from "@mezon/mezon-js";
 var useSSL = false; // Enable if server is run with an SSL certificate.
 var client = new Client("defaultkey", "127.0.0.1", "7350", useSSL);
 
-client.authenticateCustom("test_id").then(session => {
+client.authenticateEmail("user1@ncc.asia", "Aa12345678").then(session => {
     console.log("authenticated.");
     var socket = client.createSocket(useSSL, false);
 
     socket.connect(session, true).then(session => {
-        socket.joinChat("6e5e904c-b33d-4743-8829-3753fd50460b",
+        socket.joinChat("c35f5457-5ad5-46a4-a6c1-d1b97eb14d85",
             "Room1",
             1,
             true,
@@ -33,14 +33,15 @@ client.authenticateCustom("test_id").then(session => {
           console.log(
             "You can now send message to channel id ",
             response
-          );         
-        });
-        socket.writeChatMessage("00000000-0000-0000-0000-000000000000",
-          "6e5e904c-b33d-4743-8829-3753fd50460b",
-          { data: "Hello!" }
-        ).then(response => {
-          console.log("send message", response);
-        });
+          );
+          socket.writeChatMessage("093b8667-1ce3-4982-9140-790dfebcf3c9",
+            "c35f5457-5ad5-46a4-a6c1-d1b97eb14d85",
+            { data: "Hello!" }
+          ).then(response => {
+            console.log("send message", response);
+          });
+          socket.writeMessageTyping("c35f5457-5ad5-46a4-a6c1-d1b97eb14d85").then(response => console.log(response));      
+        });        
     });
 }).catch(e => {
     console.log("error authenticating.");
