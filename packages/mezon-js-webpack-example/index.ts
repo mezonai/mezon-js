@@ -39,7 +39,8 @@ client.authenticateEmail("user1@ncc.asia", "Aa12345678").then(session => {
             { data: "Hello!" }
           ).then(response => {
             console.log("send message", response);
-          });      
+          });
+          socket.writeMessageTyping("c35f5457-5ad5-46a4-a6c1-d1b97eb14d85").then(response => console.log(response));      
         });        
     });
 }).catch(e => {

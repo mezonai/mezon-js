@@ -3580,15 +3580,7 @@ var WebSocketAdapterText = class {
     this._socket = void 0;
   }
   send(msg) {
-    if (msg.match_data_send) {
-      msg.match_data_send.op_code = msg.match_data_send.op_code.toString();
-      let payload = msg.match_data_send.data;
-      if (payload && payload instanceof Uint8Array) {
-        msg.match_data_send.data = encode2(payload.buffer);
-      } else if (payload) {
-        msg.match_data_send.data = _btoa(payload);
-      }
-    } else if (msg.party_data_send) {
+    if (msg.party_data_send) {
       msg.party_data_send.op_code = msg.party_data_send.op_code.toString();
       let payload = msg.party_data_send.data;
       if (payload && payload instanceof Uint8Array) {
@@ -3641,15 +3633,6 @@ var _DefaultSocket = class _DefaultSocket {
             n.content = n.content ? JSON.parse(n.content) : void 0;
             this.onnotification(n);
           });
-        } else if (message.match_data) {
-          message.match_data.op_code = parseInt(message.match_data.op_code);
-          this.onmatchdata(message.match_data);
-        } else if (message.match_presence_event) {
-          this.onmatchpresence(message.match_presence_event);
-        } else if (message.matchmaker_ticket) {
-          this.onmatchmakerticket(message.matchmaker_ticket);
-        } else if (message.matchmaker_matched) {
-          this.onmatchmakermatched(message.matchmaker_matched);
         } else if (message.status_presence_event) {
           this.onstatuspresence(message.status_presence_event);
         } else if (message.stream_presence_event) {
@@ -3760,26 +3743,6 @@ var _DefaultSocket = class _DefaultSocket {
       console.log(notification);
     }
   }
-  onmatchdata(matchData) {
-    if (this.verbose && window && window.console) {
-      console.log(matchData);
-    }
-  }
-  onmatchpresence(matchPresence) {
-    if (this.verbose && window && window.console) {
-      console.log(matchPresence);
-    }
-  }
-  onmatchmakerticket(matchmakerTicket) {
-    if (this.verbose && window && window.console) {
-      console.log(matchmakerTicket);
-    }
-  }
-  onmatchmakermatched(matchmakerMatched) {
-    if (this.verbose && window && window.console) {
-      console.log(matchmakerMatched);
-    }
-  }
   onparty(party) {
     if (this.verbose && window && window.console) {
       console.log(party);
@@ -3841,10 +3804,7 @@ var _DefaultSocket = class _DefaultSocket {
       if (!this.adapter.isOpen()) {
         reject("Socket connection has not been established yet.");
       } else {
-        if (untypedMessage.match_data_send) {
-          this.adapter.send(untypedMessage);
-          resolve();
-        } else if (untypedMessage.party_data_send) {
+        if (untypedMessage.party_data_send) {
           this.adapter.send(untypedMessage);
           resolve();
         } else {
@@ -3876,44 +3836,9 @@ var _DefaultSocket = class _DefaultSocket {
   acceptPartyMember(party_id, presence) {
     return this.send({ party_accept: { party_id, presence } });
   }
-  addMatchmaker(query, min_count, max_count, string_properties, numeric_properties) {
-    return __async(this, null, function* () {
-      const response = yield this.send({
-        "matchmaker_add": {
-          min_count,
-          max_count,
-          query,
-          string_properties,
-          numeric_properties
-        }
-      });
-      return response.matchmaker_ticket;
-    });
-  }
-  addMatchmakerParty(party_id, query, min_count, max_count, string_properties, numeric_properties) {
-    return __async(this, null, function* () {
-      const response = yield this.send({
-        party_matchmaker_add: {
-          party_id,
-          min_count,
-          max_count,
-          query,
-          string_properties,
-          numeric_properties
-        }
-      });
-      return response.party_matchmaker_ticket;
-    });
-  }
   closeParty(party_id) {
     return __async(this, null, function* () {
       return yield this.send({ party_close: { party_id } });
-    });
-  }
-  createMatch(name) {
-    return __async(this, null, function* () {
-      const response = yield this.send({ match_create: { name } });
-      return response.match;
     });
   }
   createParty(open, max_size) {
@@ -3942,18 +3867,6 @@ var _DefaultSocket = class _DefaultSocket {
         }
       );
       return response.channel;
-    });
-  }
-  joinMatch(match_id, token, metadata) {
-    return __async(this, null, function* () {
-      const join = { match_join: { metadata } };
-      if (token) {
-        join.match_join.token = token;
-      } else {
-        join.match_join.match_id = match_id;
-      }
-      const response = yield this.send(join);
-      return response.match;
     });
   }
   joinParty(party_id) {
@@ -3995,19 +3908,6 @@ var _DefaultSocket = class _DefaultSocket {
       return response.channel_message_ack;
     });
   }
-  removeMatchmaker(ticket) {
-    return this.send({ matchmaker_remove: { ticket } });
-  }
-  removeMatchmakerParty(party_id, ticket) {
-    return this.send(
-      {
-        party_matchmaker_remove: {
-          party_id,
-          ticket
-        }
-      }
-    );
-  }
   removePartyMember(party_id, member) {
     return __async(this, null, function* () {
       return this.send({ party_remove: {
@@ -4030,21 +3930,6 @@ var _DefaultSocket = class _DefaultSocket {
       return response.rpc;
     });
   }
-  sendMatchState(matchId, opCode, data, presences, reliable) {
-    return __async(this, null, function* () {
-      return this.send(
-        {
-          match_data_send: {
-            match_id: matchId,
-            op_code: opCode,
-            data,
-            presences: presences != null ? presences : [],
-            reliable
-          }
-        }
-      );
-    });
-  }
   sendPartyData(party_id, op_code, data) {
     return this.send({ party_data_send: { party_id, op_code, data } });
   }
@@ -4064,6 +3949,12 @@ var _DefaultSocket = class _DefaultSocket {
     return __async(this, null, function* () {
       const response = yield this.send({ channel_message_send: { clan_id, channel_id, content } });
       return response.channel_message_ack;
+    });
+  }
+  writeMessageTyping(channel_id) {
+    return __async(this, null, function* () {
+      const response = yield this.send({ message_typing_event: { channel_id } });
+      return response.message_typing_event;
     });
   }
   pingPong() {

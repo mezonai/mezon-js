@@ -145,16 +145,7 @@ export class WebSocketAdapterText implements WebSocketAdapter {
     }
 
     send(msg: any): void {
-        if (msg.match_data_send) {
-            // according to protobuf docs, int64 is encoded to JSON as string.
-            msg.match_data_send.op_code = msg.match_data_send.op_code.toString();
-            let payload = msg.match_data_send.data;
-            if (payload && payload instanceof Uint8Array) {
-                msg.match_data_send.data = encode(payload.buffer);
-            } else if (payload) { // it's a string
-                msg.match_data_send.data = btoa(payload);
-            }
-        } else if (msg.party_data_send) {
+        if (msg.party_data_send) {
             // according to protobuf docs, int64 is encoded to JSON as string.
             msg.party_data_send.op_code = msg.party_data_send.op_code.toString();
             let payload = msg.party_data_send.data;
