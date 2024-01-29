@@ -23,20 +23,6 @@ export interface UserGroupListUserGroup {
     group?: ApiGroup;
     state?: number;
 }
-/** Record values to write. */
-export interface WriteLeaderboardRecordRequestLeaderboardRecordWrite {
-    metadata?: string;
-    operator?: ApiOperator;
-    score?: string;
-    subscore?: string;
-}
-/** Record values to write. */
-export interface WriteTournamentRecordRequestTournamentRecordWrite {
-    metadata?: string;
-    operator?: ApiOperator;
-    score?: string;
-    subscore?: string;
-}
 /** A user with additional account details. Always the current user. */
 export interface ApiAccount {
     custom_id?: string;
@@ -285,35 +271,14 @@ export interface ApiGroupUserList {
 /** Add link invite users to. */
 export interface ApiInviteUserRes {
     channel_id?: string;
+    channel_name?: string;
     clan_id?: string;
+    clan_name?: string;
 }
 /**  */
 export interface ApiLastSeenMessageRequest {
     channel_id?: string;
     message_id?: string;
-}
-/** Represents a complete leaderboard record with all scores and associated metadata. */
-export interface ApiLeaderboardRecord {
-    create_time?: string;
-    expiry_time?: string;
-    leaderboard_id?: string;
-    max_num_score?: number;
-    metadata?: string;
-    num_score?: number;
-    owner_id?: string;
-    rank?: string;
-    score?: string;
-    subscore?: string;
-    update_time?: string;
-    username?: string;
-}
-/** A set of leaderboard records, may be part of a leaderboard records page or a batch of individual records. */
-export interface ApiLeaderboardRecordList {
-    next_cursor?: string;
-    owner_records?: Array<ApiLeaderboardRecord>;
-    prev_cursor?: string;
-    rank_count?: string;
-    records?: Array<ApiLeaderboardRecord>;
 }
 /** Add link invite users to. */
 export interface ApiLinkInviteUser {
@@ -336,24 +301,6 @@ export interface ApiLinkSteamRequest {
     account?: ApiAccountSteam;
     sync?: boolean;
 }
-/** List user subscriptions. */
-export interface ApiListSubscriptionsRequest {
-    cursor?: string;
-    limit?: number;
-}
-/** Represents a realtime match. */
-export interface ApiMatch {
-    authoritative?: boolean;
-    handler_name?: string;
-    label?: string;
-    match_id?: string;
-    size?: number;
-    tick_rate?: number;
-}
-/** A list of realtime matches. */
-export interface ApiMatchList {
-    matches?: Array<ApiMatch>;
-}
 /** A notification in the server. */
 export interface ApiNotification {
     code?: number;
@@ -368,16 +315,6 @@ export interface ApiNotification {
 export interface ApiNotificationList {
     cacheable_cursor?: string;
     notifications?: Array<ApiNotification>;
-}
-/**
-* Operator that can be used to override the one set in the leaderboard.
-*/
-export declare enum ApiOperator {
-    NO_OVERRIDE = 0,
-    BEST = 1,
-    SET = 2,
-    INCREMENT = 3,
-    DECREMENT = 4
 }
 /**  */
 export interface ApiPermission {
@@ -483,65 +420,6 @@ export interface ApiStorageObjectList {
 export interface ApiStorageObjects {
     objects?: Array<ApiStorageObject>;
 }
-/**
-* Environment where a purchase/subscription took place,
-*/
-export declare enum ApiStoreEnvironment {
-    UNKNOWN = 0,
-    SANDBOX = 1,
-    PRODUCTION = 2
-}
-/**
-* Validation Provider,
-*/
-export declare enum ApiStoreProvider {
-    APPLE_APP_STORE = 0,
-    GOOGLE_PLAY_STORE = 1,
-    HUAWEI_APP_GALLERY = 2,
-    FACEBOOK_INSTANT_STORE = 3
-}
-/** A list of validated subscriptions stored by Nakama. */
-export interface ApiSubscriptionList {
-    cursor?: string;
-    prev_cursor?: string;
-    validated_subscriptions?: Array<ApiValidatedSubscription>;
-}
-/** A tournament on the server. */
-export interface ApiTournament {
-    authoritative?: boolean;
-    can_enter?: boolean;
-    category?: number;
-    create_time?: string;
-    description?: string;
-    duration?: number;
-    end_active?: number;
-    end_time?: string;
-    id?: string;
-    max_num_score?: number;
-    max_size?: number;
-    metadata?: string;
-    next_reset?: number;
-    operator?: ApiOperator;
-    prev_reset?: number;
-    size?: number;
-    sort_order?: number;
-    start_active?: number;
-    start_time?: string;
-    title?: string;
-}
-/** A list of tournaments. */
-export interface ApiTournamentList {
-    cursor?: string;
-    tournaments?: Array<ApiTournament>;
-}
-/** A set of tournament records which may be part of a tournament records page or a batch of individual records. */
-export interface ApiTournamentRecordList {
-    next_cursor?: string;
-    owner_records?: Array<ApiLeaderboardRecord>;
-    prev_cursor?: string;
-    rank_count?: string;
-    records?: Array<ApiLeaderboardRecord>;
-}
 /** Update a user's account details. */
 export interface ApiUpdateAccountRequest {
     avatar_url?: string;
@@ -599,75 +477,6 @@ export interface ApiUserGroupList {
 /** A collection of zero or more users. */
 export interface ApiUsers {
     users?: Array<ApiUser>;
-}
-/**  */
-export interface ApiValidatePurchaseAppleRequest {
-    persist?: boolean;
-    receipt?: string;
-}
-/**  */
-export interface ApiValidatePurchaseFacebookInstantRequest {
-    persist?: boolean;
-    signed_request?: string;
-}
-/**  */
-export interface ApiValidatePurchaseGoogleRequest {
-    persist?: boolean;
-    purchase?: string;
-}
-/**  */
-export interface ApiValidatePurchaseHuaweiRequest {
-    persist?: boolean;
-    purchase?: string;
-    signature?: string;
-}
-/** Validate IAP response. */
-export interface ApiValidatePurchaseResponse {
-    validated_purchases?: Array<ApiValidatedPurchase>;
-}
-/**  */
-export interface ApiValidateSubscriptionAppleRequest {
-    persist?: boolean;
-    receipt?: string;
-}
-/**  */
-export interface ApiValidateSubscriptionGoogleRequest {
-    persist?: boolean;
-    receipt?: string;
-}
-/** Validate Subscription response. */
-export interface ApiValidateSubscriptionResponse {
-    validated_subscription?: ApiValidatedSubscription;
-}
-/** Validated Purchase stored by Nakama. */
-export interface ApiValidatedPurchase {
-    create_time?: string;
-    environment?: ApiStoreEnvironment;
-    product_id?: string;
-    provider_response?: string;
-    purchase_time?: string;
-    refund_time?: string;
-    seen_before?: boolean;
-    store?: ApiStoreProvider;
-    transaction_id?: string;
-    update_time?: string;
-    user_id?: string;
-}
-/**  */
-export interface ApiValidatedSubscription {
-    active?: boolean;
-    create_time?: string;
-    environment?: ApiStoreEnvironment;
-    expiry_time?: string;
-    original_transaction_id?: string;
-    product_id?: string;
-    provider_notification?: string;
-    provider_response?: string;
-    purchase_time?: string;
-    refund_time?: string;
-    store?: ApiStoreProvider;
-    update_time?: string;
-    user_id?: string;
 }
 /** The object to store. */
 export interface ApiWriteStorageObject {
@@ -840,38 +649,12 @@ export declare class NakamaApi {
     kickGroupUsers(bearerToken: string, groupId: string, userIds?: Array<string>, options?: any): Promise<any>;
     /** List all users that are part of a group. */
     listGroupUsers(bearerToken: string, groupId: string, limit?: number, state?: number, cursor?: string, options?: any): Promise<ApiGroupUserList>;
-    /** Validate Apple IAP Receipt */
-    validatePurchaseApple(bearerToken: string, body: ApiValidatePurchaseAppleRequest, options?: any): Promise<ApiValidatePurchaseResponse>;
-    /** Validate FB Instant IAP Receipt */
-    validatePurchaseFacebookInstant(bearerToken: string, body: ApiValidatePurchaseFacebookInstantRequest, options?: any): Promise<ApiValidatePurchaseResponse>;
-    /** Validate Google IAP Receipt */
-    validatePurchaseGoogle(bearerToken: string, body: ApiValidatePurchaseGoogleRequest, options?: any): Promise<ApiValidatePurchaseResponse>;
-    /** Validate Huawei IAP Receipt */
-    validatePurchaseHuawei(bearerToken: string, body: ApiValidatePurchaseHuaweiRequest, options?: any): Promise<ApiValidatePurchaseResponse>;
-    /** List user's subscriptions. */
-    listSubscriptions(bearerToken: string, body: ApiListSubscriptionsRequest, options?: any): Promise<ApiSubscriptionList>;
-    /** Validate Apple Subscription Receipt */
-    validateSubscriptionApple(bearerToken: string, body: ApiValidateSubscriptionAppleRequest, options?: any): Promise<ApiValidateSubscriptionResponse>;
-    /** Validate Google Subscription Receipt */
-    validateSubscriptionGoogle(bearerToken: string, body: ApiValidateSubscriptionGoogleRequest, options?: any): Promise<ApiValidateSubscriptionResponse>;
-    /** Get subscription by product id. */
-    getSubscription(bearerToken: string, productId: string, options?: any): Promise<ApiValidatedSubscription>;
     /** Add users to a channel. */
     createLinkInviteUser(bearerToken: string, body: ApiLinkInviteUserRequest, options?: any): Promise<ApiLinkInviteUser>;
     /** Add users to a channel. */
     getLinkInvite(bearerToken: string, inviteId: string, options?: any): Promise<ApiInviteUserRes>;
     /** Add users to a channel. */
     inviteUser(bearerToken: string, inviteId: string, options?: any): Promise<ApiInviteUserRes>;
-    /** Delete a leaderboard record. */
-    deleteLeaderboardRecord(bearerToken: string, leaderboardId: string, options?: any): Promise<any>;
-    /** List leaderboard records. */
-    listLeaderboardRecords(bearerToken: string, leaderboardId: string, ownerIds?: Array<string>, limit?: number, cursor?: string, expiry?: string, options?: any): Promise<ApiLeaderboardRecordList>;
-    /** Write a record to a leaderboard. */
-    writeLeaderboardRecord(bearerToken: string, leaderboardId: string, record: WriteLeaderboardRecordRequestLeaderboardRecordWrite, options?: any): Promise<ApiLeaderboardRecord>;
-    /** List leaderboard records that belong to a user. */
-    listLeaderboardRecordsAroundOwner(bearerToken: string, leaderboardId: string, ownerId: string, limit?: number, expiry?: string, cursor?: string, options?: any): Promise<ApiLeaderboardRecordList>;
-    /** Fetch list of running matches. */
-    listMatches(bearerToken: string, limit?: number, authoritative?: boolean, label?: string, minSize?: number, maxSize?: number, query?: string, options?: any): Promise<ApiMatchList>;
     /** Delete one or more notifications for the current user. */
     deleteNotifications(bearerToken: string, ids?: Array<string>, options?: any): Promise<any>;
     /** Fetch list of notifications. */
@@ -904,20 +687,8 @@ export declare class NakamaApi {
     listStorageObjects(bearerToken: string, collection: string, userId?: string, limit?: number, cursor?: string, options?: any): Promise<ApiStorageObjectList>;
     /** List publicly readable storage objects in a given collection. */
     listStorageObjects2(bearerToken: string, collection: string, userId: string, limit?: number, cursor?: string, options?: any): Promise<ApiStorageObjectList>;
-    /** List current or upcoming tournaments. */
-    listTournaments(bearerToken: string, categoryStart?: number, categoryEnd?: number, startTime?: number, endTime?: number, limit?: number, cursor?: string, options?: any): Promise<ApiTournamentList>;
-    /** Delete a tournament record. */
-    deleteTournamentRecord(bearerToken: string, tournamentId: string, options?: any): Promise<any>;
-    /** List tournament records. */
-    listTournamentRecords(bearerToken: string, tournamentId: string, ownerIds?: Array<string>, limit?: number, cursor?: string, expiry?: string, options?: any): Promise<ApiTournamentRecordList>;
-    /** Write a record to a tournament. */
-    writeTournamentRecord2(bearerToken: string, tournamentId: string, record: WriteTournamentRecordRequestTournamentRecordWrite, options?: any): Promise<ApiLeaderboardRecord>;
-    /** Write a record to a tournament. */
-    writeTournamentRecord(bearerToken: string, tournamentId: string, record: WriteTournamentRecordRequestTournamentRecordWrite, options?: any): Promise<ApiLeaderboardRecord>;
     /** Attempt to join an open and running tournament. */
     joinTournament(bearerToken: string, tournamentId: string, options?: any): Promise<any>;
-    /** List tournament records for a given owner. */
-    listTournamentRecordsAroundOwner(bearerToken: string, tournamentId: string, ownerId: string, limit?: number, expiry?: string, cursor?: string, options?: any): Promise<ApiTournamentRecordList>;
     /** Update fields in a given category. */
     updateCategory(bearerToken: string, body: ApiUpdateCategoryDescRequest, options?: any): Promise<any>;
     /** Fetch zero or more users by ID and/or username. */

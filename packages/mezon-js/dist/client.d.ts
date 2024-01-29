@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { ApiAccount, ApiAccountCustom, ApiAccountDevice, ApiAccountEmail, ApiAccountFacebook, ApiAccountFacebookInstantGame, ApiAccountGoogle, ApiAccountGameCenter, ApiAccountSteam, ApiChannelDescList, ApiChannelDescription, ApiCreateChannelDescRequest, ApiClanDescList, ApiCreateClanDescRequest, ApiClanDesc, ApiCategoryDesc, ApiCategoryDescList, ApiRoleList, ApiPermissionList, ApiRoleUserList, ApiRole, ApiCreateRoleRequest, ApiCreateCategoryDescRequest, ApiUpdateCategoryDescRequest, ApiCreateGroupRequest, ApiDeleteStorageObjectsRequest, ApiEvent, ApiMatchList, ApiReadStorageObjectsRequest, ApiStorageObjectAcks, ApiUpdateAccountRequest, ApiUpdateGroupRequest, ApiAccountApple, ApiLinkSteamRequest, ApiValidatePurchaseResponse, ApiClanDescProfile, ApiChannelUserList, ApiLinkInviteUserRequest, ApiLinkInviteUser, ApiInviteUserRes } from "./api.gen";
+import { ApiAccount, ApiAccountCustom, ApiAccountDevice, ApiAccountEmail, ApiAccountFacebook, ApiAccountFacebookInstantGame, ApiAccountGoogle, ApiAccountGameCenter, ApiAccountSteam, ApiChannelDescList, ApiChannelDescription, ApiCreateChannelDescRequest, ApiClanDescList, ApiCreateClanDescRequest, ApiClanDesc, ApiCategoryDesc, ApiCategoryDescList, ApiRoleList, ApiPermissionList, ApiRoleUserList, ApiRole, ApiCreateRoleRequest, ApiCreateCategoryDescRequest, ApiUpdateCategoryDescRequest, ApiCreateGroupRequest, ApiDeleteStorageObjectsRequest, ApiEvent, ApiReadStorageObjectsRequest, ApiStorageObjectAcks, ApiUpdateAccountRequest, ApiUpdateGroupRequest, ApiAccountApple, ApiLinkSteamRequest, ApiClanDescProfile, ApiChannelUserList, ApiLinkInviteUserRequest, ApiLinkInviteUser, ApiInviteUserRes } from "./api.gen";
 import { Session } from "./session";
 import { Socket } from "./socket";
 import { WebSocketAdapter } from "./web_socket_adapter";
@@ -575,21 +575,10 @@ export declare class Client {
     linkSteam(session: Session, request: ApiLinkSteamRequest): Promise<boolean>;
     /** List all friends for the current user. */
     listFriends(session: Session, state?: number, limit?: number, cursor?: string): Promise<Friends>;
-    /** List leaderboard records */
-    listLeaderboardRecords(session: Session, leaderboardId: string, ownerIds?: Array<string>, limit?: number, cursor?: string, expiry?: string): Promise<LeaderboardRecordList>;
-    listLeaderboardRecordsAroundOwner(session: Session, leaderboardId: string, ownerId: string, limit?: number, expiry?: string): Promise<LeaderboardRecordList>;
-    /** Fetch list of running matches. */
-    listMatches(session: Session, limit?: number, authoritative?: boolean, label?: string, minSize?: number, maxSize?: number, query?: string): Promise<ApiMatchList>;
     /** Fetch list of notifications. */
     listNotifications(session: Session, limit?: number, cacheableCursor?: string): Promise<NotificationList>;
     /** List storage objects. */
     listStorageObjects(session: Session, collection: string, userId?: string, limit?: number, cursor?: string): Promise<StorageObjectList>;
-    /** List current or upcoming tournaments. */
-    listTournaments(session: Session, categoryStart?: number, categoryEnd?: number, startTime?: number, endTime?: number, limit?: number, cursor?: string): Promise<TournamentList>;
-    /** List tournament records from a given tournament. */
-    listTournamentRecords(session: Session, tournamentId: string, ownerIds?: Array<string>, limit?: number, cursor?: string, expiry?: string): Promise<TournamentRecordList>;
-    /** List tournament records from a given tournament around the owner. */
-    listTournamentRecordsAroundOwner(session: Session, tournamentId: string, ownerId: string, limit?: number, expiry?: string): Promise<TournamentRecordList>;
     /** Promote users in a group to the next role up. */
     promoteGroupUsers(session: Session, groupId: string, ids?: Array<string>): Promise<boolean>;
     /** Fetch storage objects. */
@@ -640,16 +629,6 @@ export declare class Client {
     getLinkInvite(session: Session, inviteId: string): Promise<ApiInviteUserRes>;
     /** invite user */
     inviteUser(session: Session, inviteId: string): Promise<ApiInviteUserRes>;
-    /** Validate an Apple IAP receipt. */
-    validatePurchaseApple(session: Session, receipt?: string): Promise<ApiValidatePurchaseResponse>;
-    /** Validate a Google IAP receipt. */
-    validatePurchaseGoogle(session: Session, purchase?: string): Promise<ApiValidatePurchaseResponse>;
-    /** Validate a Huawei IAP receipt. */
-    validatePurchaseHuawei(session: Session, purchase?: string, signature?: string): Promise<ApiValidatePurchaseResponse>;
-    /** Write a record to a leaderboard. */
-    writeLeaderboardRecord(session: Session, leaderboardId: string, request: WriteLeaderboardRecord): Promise<LeaderboardRecord>;
     /** Write storage objects. */
     writeStorageObjects(session: Session, objects: Array<WriteStorageObject>): Promise<ApiStorageObjectAcks>;
-    /** Write a record to a tournament. */
-    writeTournamentRecord(session: Session, tournamentId: string, request: WriteTournamentRecord): Promise<LeaderboardRecord>;
 }
