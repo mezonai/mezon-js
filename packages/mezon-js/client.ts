@@ -47,17 +47,12 @@ import {
   ApiGroup,
   ApiGroupList,
   ApiGroupUserList,
-  ApiLeaderboardRecord,
-  ApiLeaderboardRecordList,
-  ApiMatchList,
   ApiNotificationList,
   ApiReadStorageObjectsRequest,
   ApiRpc,
   ApiStorageObjectAcks,
   ApiStorageObjectList,
   ApiStorageObjects,
-  ApiTournamentList,
-  ApiTournamentRecordList,
   ApiUpdateAccountRequest,
   ApiUpdateGroupRequest,
   ApiUsers,
@@ -67,7 +62,6 @@ import {
   ApiSession,
   ApiAccountApple,
   ApiLinkSteamRequest,
-  ApiValidatePurchaseResponse,
   ApiClanDescProfile,
   ApiChannelUserList,
   ApiLinkInviteUserRequest,
@@ -1593,125 +1587,6 @@ export class Client {
     });
   }
 
-  /** List leaderboard records */
-  async listLeaderboardRecords(session: Session, leaderboardId: string, ownerIds?: Array<string>, limit?: number, cursor?: string, expiry?: string,): Promise<LeaderboardRecordList> {
-    if (this.autoRefreshSession && session.refresh_token &&
-        session.isexpired((Date.now() + this.expiredTimespanMs)/1000)) {
-        await this.sessionRefresh(session);
-    }
-
-    return this.apiClient.listLeaderboardRecords(session.token, leaderboardId, ownerIds, limit, cursor, expiry).then((response: ApiLeaderboardRecordList) => {
-      var list: LeaderboardRecordList = {
-        next_cursor: response.next_cursor,
-        prev_cursor: response.prev_cursor,
-        owner_records: [],
-        records: []
-      };
-
-      if (response.owner_records != null) {
-        response.owner_records!.forEach(o => {
-          list.owner_records!.push({
-            expiry_time: o.expiry_time,
-            leaderboard_id: o.leaderboard_id,
-            metadata: o.metadata ? JSON.parse(o.metadata) : undefined,
-            num_score: o.num_score ? Number(o.num_score) : 0,
-            owner_id: o.owner_id,
-            rank: o.rank ? Number(o.rank) : 0,
-            score: o.score ? Number(o.score) : 0,
-            subscore: o.subscore ? Number(o.subscore) : 0,
-            update_time: o.update_time,
-            username: o.username,
-            max_num_score: o.max_num_score ? Number(o.max_num_score) : 0,
-          })
-        })
-      }
-
-      if (response.records != null) {
-        response.records!.forEach(o => {
-          list.records!.push({
-            expiry_time: o.expiry_time,
-            leaderboard_id: o.leaderboard_id,
-            metadata: o.metadata ? JSON.parse(o.metadata) : undefined,
-            num_score: o.num_score ? Number(o.num_score): 0,
-            owner_id: o.owner_id,
-            rank: o.rank ? Number(o.rank) : 0,
-            score: o.score ? Number(o.score) : 0,
-            subscore: o.subscore ? Number(o.subscore) : 0,
-            update_time: o.update_time,
-            username: o.username,
-            max_num_score: o.max_num_score ? Number(o.max_num_score) : 0,
-          })
-        })
-      }
-
-      return Promise.resolve(list);
-    });
-  }
-
-  async listLeaderboardRecordsAroundOwner(session: Session, leaderboardId: string, ownerId: string, limit?: number, expiry?: string): Promise<LeaderboardRecordList> {
-    if (this.autoRefreshSession && session.refresh_token &&
-        session.isexpired((Date.now() + this.expiredTimespanMs)/1000)) {
-        await this.sessionRefresh(session);
-    }
-
-    return this.apiClient.listLeaderboardRecordsAroundOwner(session.token, leaderboardId, ownerId, limit, expiry).then((response: ApiLeaderboardRecordList) => {
-      var list: LeaderboardRecordList = {
-        next_cursor: response.next_cursor,
-        prev_cursor: response.prev_cursor,
-        owner_records: [],
-        records: []
-      };
-
-      if (response.owner_records != null) {
-        response.owner_records!.forEach(o => {
-          list.owner_records!.push({
-            expiry_time: o.expiry_time,
-            leaderboard_id: o.leaderboard_id,
-            metadata: o.metadata ? JSON.parse(o.metadata) : undefined,
-            num_score: o.num_score ? Number(o.num_score): 0,
-            owner_id: o.owner_id,
-            rank: o.rank ? Number(o.rank): 0,
-            score: o.score ? Number(o.score): 0,
-            subscore: o.subscore ? Number(o.subscore): 0,
-            update_time: o.update_time,
-            username: o.username,
-            max_num_score: o.max_num_score ? Number(o.max_num_score): 0,
-          })
-        })
-      }
-
-      if (response.records != null) {
-        response.records!.forEach(o => {
-          list.records!.push({
-            expiry_time: o.expiry_time,
-            leaderboard_id: o.leaderboard_id,
-            metadata: o.metadata ? JSON.parse(o.metadata) : undefined,
-            num_score: o.num_score ? Number(o.num_score): 0,
-            owner_id: o.owner_id,
-            rank: o.rank ? Number(o.rank) : 0,
-            score: o.score ? Number(o.score) : 0,
-            subscore: o.subscore ? Number(o.subscore) : 0,
-            update_time: o.update_time,
-            username: o.username,
-            max_num_score: o.max_num_score ? Number(o.max_num_score) : 0,
-          })
-        })
-      }
-
-      return Promise.resolve(list);
-    });
-  }
-
-  /** Fetch list of running matches. */
-  async listMatches(session: Session, limit?: number, authoritative?: boolean, label?: string, minSize?: number, maxSize?: number, query?: string): Promise<ApiMatchList> {
-    if (this.autoRefreshSession && session.refresh_token &&
-        session.isexpired((Date.now() + this.expiredTimespanMs)/1000)) {
-        await this.sessionRefresh(session);
-    }
-
-    return this.apiClient.listMatches(session.token, limit, authoritative, label, minSize, maxSize, query);
-  }
-
   /** Fetch list of notifications. */
   async listNotifications(session: Session, limit?: number, cacheableCursor?: string): Promise<NotificationList> {
     if (this.autoRefreshSession && session.refresh_token &&
@@ -1778,156 +1653,6 @@ export class Client {
     });
   }
 
-  /** List current or upcoming tournaments. */
-  async listTournaments(session: Session, categoryStart?: number, categoryEnd?: number, startTime?: number, endTime?: number, limit?: number, cursor?: string): Promise<TournamentList> {
-    if (this.autoRefreshSession && session.refresh_token &&
-        session.isexpired((Date.now() + this.expiredTimespanMs)/1000)) {
-        await this.sessionRefresh(session);
-    }
-
-    return this.apiClient.listTournaments(session.token, categoryStart, categoryEnd, startTime, endTime, limit, cursor).then((response: ApiTournamentList) => {
-      var list: TournamentList = {
-        cursor: response.cursor,
-        tournaments: [],
-      };
-
-      if (response.tournaments != null) {
-        response.tournaments!.forEach(o => {
-          list.tournaments!.push({
-            id: o.id,
-            title: o.title,
-            description: o.description,
-            duration: o.duration ? Number(o.duration) : 0,
-            category: o.category ? Number(o.category) : 0,
-            sort_order: o.sort_order ? Number(o.sort_order) : 0,
-            size: o.size ? Number(o.size) : 0,
-            max_size: o.max_size ? Number(o.max_size) : 0,
-            max_num_score: o.max_num_score ? Number(o.max_num_score) : 0,
-            can_enter: o.can_enter,
-            end_active: o.end_active ? Number(o.end_active) : 0,
-            next_reset: o.next_reset ? Number(o.next_reset) : 0,
-            metadata: o.metadata ? JSON.parse(o.metadata) : undefined,
-            create_time: o.create_time,
-            start_time: o.start_time,
-            end_time: o.end_time,
-            start_active: o.start_active,
-          })
-        })
-      }
-
-      return Promise.resolve(list);
-    });
-  }
-
-  /** List tournament records from a given tournament. */
-  async listTournamentRecords(session: Session, tournamentId: string, ownerIds?: Array<string>, limit?: number, cursor?: string, expiry?: string): Promise<TournamentRecordList> {
-    if (this.autoRefreshSession && session.refresh_token &&
-        session.isexpired((Date.now() + this.expiredTimespanMs)/1000)) {
-        await this.sessionRefresh(session);
-    }
-
-    return this.apiClient.listTournamentRecords(session.token, tournamentId, ownerIds, limit, cursor, expiry).then((response: ApiTournamentRecordList) => {
-      var list: TournamentRecordList = {
-        next_cursor: response.next_cursor,
-        prev_cursor: response.prev_cursor,
-        owner_records: [],
-        records: []
-      };
-
-      if (response.owner_records != null) {
-        response.owner_records!.forEach(o => {
-          list.owner_records!.push({
-            expiry_time: o.expiry_time,
-            leaderboard_id: o.leaderboard_id,
-            metadata: o.metadata ? JSON.parse(o.metadata) : undefined,
-            num_score: o.num_score ? Number(o.num_score) : 0,
-            owner_id: o.owner_id,
-            rank: o.rank ? Number(o.rank) : 0,
-            score: o.score ? Number(o.score) : 0,
-            subscore: o.subscore ? Number(o.subscore) : 0,
-            update_time: o.update_time,
-            username: o.username,
-            max_num_score: o.max_num_score ? Number(o.max_num_score) : 0,
-          })
-        })
-      }
-
-      if (response.records != null) {
-        response.records!.forEach(o => {
-          list.records!.push({
-            expiry_time: o.expiry_time,
-            leaderboard_id: o.leaderboard_id,
-            metadata: o.metadata ? JSON.parse(o.metadata) : undefined,
-            num_score: o.num_score ? Number(o.num_score) : 0,
-            owner_id: o.owner_id,
-            rank: o.rank ? Number(o.rank) : 0,
-            score: o.score ? Number(o.score) : 0,
-            subscore: o.subscore ? Number(o.subscore) : 0,
-            update_time: o.update_time,
-            username: o.username,
-            max_num_score: o.max_num_score ? Number(o.max_num_score) : 0,
-          })
-        })
-      }
-
-      return Promise.resolve(list);
-    });
-  }
-
-  /** List tournament records from a given tournament around the owner. */
-  async listTournamentRecordsAroundOwner(session: Session, tournamentId: string, ownerId: string, limit?: number, expiry?: string): Promise<TournamentRecordList> {
-    if (this.autoRefreshSession && session.refresh_token &&
-        session.isexpired((Date.now() + this.expiredTimespanMs)/1000)) {
-        await this.sessionRefresh(session);
-    }
-
-    return this.apiClient.listTournamentRecordsAroundOwner(session.token, tournamentId, ownerId, limit, expiry).then((response: ApiTournamentRecordList) => {
-      var list: TournamentRecordList = {
-        next_cursor: response.next_cursor,
-        prev_cursor: response.prev_cursor,
-        owner_records: [],
-        records: []
-      };
-
-      if (response.owner_records != null) {
-        response.owner_records!.forEach(o => {
-          list.owner_records!.push({
-            expiry_time: o.expiry_time,
-            leaderboard_id: o.leaderboard_id,
-            metadata: o.metadata ? JSON.parse(o.metadata) : undefined,
-            num_score: o.num_score ? Number(o.num_score) : 0,
-            owner_id: o.owner_id,
-            rank: o.rank ? Number(o.rank) : 0,
-            score: o.score ? Number(o.score) : 0,
-            subscore: o.subscore ? Number(o.subscore) : 0,
-            update_time: o.update_time,
-            username: o.username,
-            max_num_score: o.max_num_score ? Number(o.max_num_score) : 0,
-          })
-        })
-      }
-
-      if (response.records != null) {
-        response.records!.forEach(o => {
-          list.records!.push({
-            expiry_time: o.expiry_time,
-            leaderboard_id: o.leaderboard_id,
-            metadata: o.metadata ? JSON.parse(o.metadata) : undefined,
-            num_score: o.num_score ? Number(o.num_score) : 0,
-            owner_id: o.owner_id,
-            rank: o.rank ? Number(o.rank) : 0,
-            score: o.score ? Number(o.score) : 0,
-            subscore: o.subscore ? Number(o.subscore) : 0,
-            update_time: o.update_time,
-            username: o.username,
-            max_num_score: o.max_num_score ? Number(o.max_num_score) : 0,
-          })
-        })
-      }
-
-      return Promise.resolve(list);
-    });
-  }
 
   /** Promote users in a group to the next role up. */
   async promoteGroupUsers(session: Session, groupId: string, ids?: Array<string>): Promise<boolean> {
@@ -2263,64 +1988,6 @@ export class Client {
     });
   }
 
-  /** Validate an Apple IAP receipt. */
-  async validatePurchaseApple(session: Session, receipt?: string)  : Promise<ApiValidatePurchaseResponse> {
-    if (this.autoRefreshSession && session.refresh_token &&
-        session.isexpired((Date.now() + this.expiredTimespanMs)/1000)) {
-        await this.sessionRefresh(session);
-    }
-
-    return this.apiClient.validatePurchaseApple(session.token, {receipt: receipt})
-  }
-
-  /** Validate a Google IAP receipt. */
-  async validatePurchaseGoogle(session: Session, purchase?: string)  : Promise<ApiValidatePurchaseResponse> {
-    if (this.autoRefreshSession && session.refresh_token &&
-        session.isexpired((Date.now() + this.expiredTimespanMs)/1000)) {
-        await this.sessionRefresh(session);
-    }
-
-    return this.apiClient.validatePurchaseGoogle(session.token, {purchase: purchase})
-  }
-
-  /** Validate a Huawei IAP receipt. */
-  async validatePurchaseHuawei(session: Session, purchase?: string, signature?: string) : Promise<ApiValidatePurchaseResponse> {
-    if (this.autoRefreshSession && session.refresh_token &&
-        session.isexpired((Date.now() + this.expiredTimespanMs)/1000)) {
-        await this.sessionRefresh(session);
-    }
-
-    return this.apiClient.validatePurchaseHuawei(session.token, {purchase: purchase, signature: signature})
-  }
-
-  /** Write a record to a leaderboard. */
-  async writeLeaderboardRecord(session: Session, leaderboardId: string, request: WriteLeaderboardRecord): Promise<LeaderboardRecord> {
-    if (this.autoRefreshSession && session.refresh_token &&
-        session.isexpired((Date.now() + this.expiredTimespanMs)/1000)) {
-        await this.sessionRefresh(session);
-    }
-
-    return this.apiClient.writeLeaderboardRecord(session.token, leaderboardId, {
-      metadata: request.metadata ? JSON.stringify(request.metadata) : undefined,
-      score: request.score,
-      subscore: request.subscore
-    }).then((response: ApiLeaderboardRecord) => {
-      return Promise.resolve({
-        expiry_time: response.expiry_time,
-        leaderboard_id: response.leaderboard_id,
-        metadata: response.metadata ? JSON.parse(response.metadata) : undefined,
-        num_score: response.num_score ? Number(response.num_score) : 0,
-        owner_id: response.owner_id,
-        score: response.score ? Number(response.score) : 0,
-        subscore: response.subscore ? Number(response.subscore) : 0,
-        update_time: response.update_time,
-        username: response.username,
-        max_num_score: response.max_num_score ? Number(response.max_num_score) : 0,
-        rank: response.rank ? Number(response.rank) : 0,
-      });
-    });
-  }
-
   /** Write storage objects. */
   async writeStorageObjects(session: Session, objects: Array<WriteStorageObject>): Promise<ApiStorageObjectAcks> {
     if (this.autoRefreshSession && session.refresh_token &&
@@ -2341,28 +2008,5 @@ export class Client {
     })
 
     return this.apiClient.writeStorageObjects(session.token, request);
-  }
-
-  /** Write a record to a tournament. */
-  async writeTournamentRecord(session: Session, tournamentId: string, request: WriteTournamentRecord): Promise<LeaderboardRecord> {
-    return this.apiClient.writeTournamentRecord(session.token, tournamentId, {
-      metadata: request.metadata ? JSON.stringify(request.metadata) : undefined,
-      score: request.score,
-      subscore: request.subscore
-    }).then((response: ApiLeaderboardRecord) => {
-      return Promise.resolve({
-        expiry_time: response.expiry_time,
-        leaderboard_id: response.leaderboard_id,
-        metadata: response.metadata ? JSON.parse(response.metadata) : undefined,
-        num_score: response.num_score ? Number(response.num_score) : 0,
-        owner_id: response.owner_id,
-        score: response.score ? Number(response.score) : 0,
-        subscore: response.subscore ? Number(response.subscore) : 0,
-        update_time: response.update_time,
-        username: response.username,
-        max_num_score: response.max_num_score ? Number(response.max_num_score) : 0,
-        rank: response.rank ? Number(response.rank) : 0,
-      });
-    });
   }
 };
