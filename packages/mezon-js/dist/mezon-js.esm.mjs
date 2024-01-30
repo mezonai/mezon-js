@@ -1699,35 +1699,6 @@ var NakamaApi = class {
       )
     ]);
   }
-  /** Update Last seen message by user */
-  postLastSeenMessage(bearerToken, body, options = {}) {
-    if (body === null || body === void 0) {
-      throw new Error("'body' is a required parameter but is null or undefined.");
-    }
-    const urlPath = "/v2/channeldesc/last-message-seen";
-    const queryParams = /* @__PURE__ */ new Map();
-    let bodyJson = "";
-    bodyJson = JSON.stringify(body || {});
-    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
-    const fetchOptions = buildFetchOptions("POST", options, bodyJson);
-    if (bearerToken) {
-      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-    }
-    return Promise.race([
-      fetch(fullUrl, fetchOptions).then((response) => {
-        if (response.status == 204) {
-          return response;
-        } else if (response.status >= 200 && response.status < 300) {
-          return response.json();
-        } else {
-          throw response;
-        }
-      }),
-      new Promise(
-        (_, reject) => setTimeout(reject, this.timeoutMs, "Request timed out.")
-      )
-    ]);
-  }
   /** Delete a channel by ID. */
   deleteChannelDesc(bearerToken, channelId, options = {}) {
     if (channelId === null || channelId === void 0) {
