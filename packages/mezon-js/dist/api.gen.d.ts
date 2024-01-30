@@ -168,6 +168,13 @@ export interface ApiClanDescProfile {
     profile_banner?: string;
     profile_theme?: string;
 }
+/** Get clan profile. */
+export interface ApiClanProfile {
+    avartar?: string;
+    clan_id?: string;
+    nick_name?: string;
+    user_id?: string;
+}
 /**  */
 export interface ApiCreateCategoryDescRequest {
     category_id?: string;
@@ -274,6 +281,11 @@ export interface ApiInviteUserRes {
     channel_name?: string;
     clan_id?: string;
     clan_name?: string;
+}
+/**  */
+export interface ApiLastSeenMessageRequest {
+    channel_id?: string;
+    message_id?: string;
 }
 /** Add link invite users to. */
 export interface ApiLinkInviteUser {
@@ -574,6 +586,8 @@ export declare class NakamaApi {
     listChannelDescs(bearerToken: string, limit?: number, state?: number, cursor?: string, clanId?: string, options?: any): Promise<ApiChannelDescList>;
     /** Create a new channel with the current user as the owner. */
     createChannelDesc(bearerToken: string, body: ApiCreateChannelDescRequest, options?: any): Promise<ApiChannelDescription>;
+    /** Update Last seen message by user */
+    postLastSeenMessage(bearerToken: string, body: ApiLastSeenMessageRequest, options?: any): Promise<any>;
     /** Delete a channel by ID. */
     deleteChannelDesc(bearerToken: string, channelId: string, options?: any): Promise<any>;
     /** Update fields in a given channel. */
@@ -618,6 +632,8 @@ export declare class NakamaApi {
     importFacebookFriends(bearerToken: string, account: ApiAccountFacebook, reset?: boolean, options?: any): Promise<any>;
     /** Import Steam friends and add them to a user's account. */
     importSteamFriends(bearerToken: string, account: ApiAccountSteam, reset?: boolean, options?: any): Promise<any>;
+    /**  */
+    getUserProfileOnClan(bearerToken: string, clanId: string, options?: any): Promise<ApiClanProfile>;
     /** List groups based on given filters. */
     listGroups(bearerToken: string, name?: string, cursor?: string, limit?: number, langTag?: string, members?: number, open?: boolean, options?: any): Promise<ApiGroupList>;
     /** Create a new group with the current user as the owner. */
@@ -684,6 +700,8 @@ export declare class NakamaApi {
     joinTournament(bearerToken: string, tournamentId: string, options?: any): Promise<any>;
     /** Update fields in a given category. */
     updateCategory(bearerToken: string, body: ApiUpdateCategoryDescRequest, options?: any): Promise<any>;
+    /**  */
+    updateUserProfileByClan(bearerToken: string, clanId: string, body: {}, options?: any): Promise<any>;
     /** Fetch zero or more users by ID and/or username. */
     getUsers(bearerToken: string, ids?: Array<string>, usernames?: Array<string>, facebookIds?: Array<string>, options?: any): Promise<ApiUsers>;
     /**  */

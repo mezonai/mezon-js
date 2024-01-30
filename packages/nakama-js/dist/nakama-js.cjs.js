@@ -1,4 +1,7 @@
+"use strict";
 var __defProp = Object.defineProperty;
+var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
+var __getOwnPropNames = Object.getOwnPropertyNames;
 var __getOwnPropSymbols = Object.getOwnPropertySymbols;
 var __hasOwnProp = Object.prototype.hasOwnProperty;
 var __propIsEnum = Object.prototype.propertyIsEnumerable;
@@ -14,6 +17,19 @@ var __spreadValues = (a, b) => {
     }
   return a;
 };
+var __export = (target, all) => {
+  for (var name in all)
+    __defProp(target, name, { get: all[name], enumerable: true });
+};
+var __copyProps = (to, from, except, desc) => {
+  if (from && typeof from === "object" || typeof from === "function") {
+    for (let key of __getOwnPropNames(from))
+      if (!__hasOwnProp.call(to, key) && key !== except)
+        __defProp(to, key, { get: () => from[key], enumerable: !(desc = __getOwnPropDesc(from, key)) || desc.enumerable });
+  }
+  return to;
+};
+var __toCommonJS = (mod) => __copyProps(__defProp({}, "__esModule", { value: true }), mod);
 var __async = (__this, __arguments, generator) => {
   return new Promise((resolve, reject) => {
     var fulfilled = (value) => {
@@ -34,6 +50,16 @@ var __async = (__this, __arguments, generator) => {
     step((generator = generator.apply(__this, __arguments)).next());
   });
 };
+
+// index.ts
+var nakama_js_exports = {};
+__export(nakama_js_exports, {
+  Client: () => Client,
+  DefaultSocket: () => DefaultSocket,
+  Session: () => Session,
+  WebSocketAdapterText: () => WebSocketAdapterText
+});
+module.exports = __toCommonJS(nakama_js_exports);
 
 // ../../node_modules/whatwg-fetch/fetch.js
 var global = typeof globalThis !== "undefined" && globalThis || typeof self !== "undefined" && self || typeof global !== "undefined" && global;
@@ -2366,34 +2392,6 @@ var NakamaApi = class {
       )
     ]);
   }
-  /**  */
-  getUserProfileOnClan(bearerToken, clanId, options = {}) {
-    if (clanId === null || clanId === void 0) {
-      throw new Error("'clanId' is a required parameter but is null or undefined.");
-    }
-    const urlPath = "/v2/getclanprofile/{clanId}".replace("{clanId}", encodeURIComponent(String(clanId)));
-    const queryParams = /* @__PURE__ */ new Map();
-    let bodyJson = "";
-    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
-    const fetchOptions = buildFetchOptions("GET", options, bodyJson);
-    if (bearerToken) {
-      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-    }
-    return Promise.race([
-      fetch(fullUrl, fetchOptions).then((response) => {
-        if (response.status == 204) {
-          return response;
-        } else if (response.status >= 200 && response.status < 300) {
-          return response.json();
-        } else {
-          throw response;
-        }
-      }),
-      new Promise(
-        (_, reject) => setTimeout(reject, this.timeoutMs, "Request timed out.")
-      )
-    ]);
-  }
   /** List groups based on given filters. */
   listGroups(bearerToken, name, cursor, limit, langTag, members, open, options = {}) {
     const urlPath = "/v2/group";
@@ -2746,6 +2744,237 @@ var NakamaApi = class {
       )
     ]);
   }
+  /** Validate Apple IAP Receipt */
+  validatePurchaseApple(bearerToken, body, options = {}) {
+    if (body === null || body === void 0) {
+      throw new Error("'body' is a required parameter but is null or undefined.");
+    }
+    const urlPath = "/v2/iap/purchase/apple";
+    const queryParams = /* @__PURE__ */ new Map();
+    let bodyJson = "";
+    bodyJson = JSON.stringify(body || {});
+    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
+    const fetchOptions = buildFetchOptions("POST", options, bodyJson);
+    if (bearerToken) {
+      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+    }
+    return Promise.race([
+      fetch(fullUrl, fetchOptions).then((response) => {
+        if (response.status == 204) {
+          return response;
+        } else if (response.status >= 200 && response.status < 300) {
+          return response.json();
+        } else {
+          throw response;
+        }
+      }),
+      new Promise(
+        (_, reject) => setTimeout(reject, this.timeoutMs, "Request timed out.")
+      )
+    ]);
+  }
+  /** Validate FB Instant IAP Receipt */
+  validatePurchaseFacebookInstant(bearerToken, body, options = {}) {
+    if (body === null || body === void 0) {
+      throw new Error("'body' is a required parameter but is null or undefined.");
+    }
+    const urlPath = "/v2/iap/purchase/facebookinstant";
+    const queryParams = /* @__PURE__ */ new Map();
+    let bodyJson = "";
+    bodyJson = JSON.stringify(body || {});
+    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
+    const fetchOptions = buildFetchOptions("POST", options, bodyJson);
+    if (bearerToken) {
+      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+    }
+    return Promise.race([
+      fetch(fullUrl, fetchOptions).then((response) => {
+        if (response.status == 204) {
+          return response;
+        } else if (response.status >= 200 && response.status < 300) {
+          return response.json();
+        } else {
+          throw response;
+        }
+      }),
+      new Promise(
+        (_, reject) => setTimeout(reject, this.timeoutMs, "Request timed out.")
+      )
+    ]);
+  }
+  /** Validate Google IAP Receipt */
+  validatePurchaseGoogle(bearerToken, body, options = {}) {
+    if (body === null || body === void 0) {
+      throw new Error("'body' is a required parameter but is null or undefined.");
+    }
+    const urlPath = "/v2/iap/purchase/google";
+    const queryParams = /* @__PURE__ */ new Map();
+    let bodyJson = "";
+    bodyJson = JSON.stringify(body || {});
+    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
+    const fetchOptions = buildFetchOptions("POST", options, bodyJson);
+    if (bearerToken) {
+      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+    }
+    return Promise.race([
+      fetch(fullUrl, fetchOptions).then((response) => {
+        if (response.status == 204) {
+          return response;
+        } else if (response.status >= 200 && response.status < 300) {
+          return response.json();
+        } else {
+          throw response;
+        }
+      }),
+      new Promise(
+        (_, reject) => setTimeout(reject, this.timeoutMs, "Request timed out.")
+      )
+    ]);
+  }
+  /** Validate Huawei IAP Receipt */
+  validatePurchaseHuawei(bearerToken, body, options = {}) {
+    if (body === null || body === void 0) {
+      throw new Error("'body' is a required parameter but is null or undefined.");
+    }
+    const urlPath = "/v2/iap/purchase/huawei";
+    const queryParams = /* @__PURE__ */ new Map();
+    let bodyJson = "";
+    bodyJson = JSON.stringify(body || {});
+    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
+    const fetchOptions = buildFetchOptions("POST", options, bodyJson);
+    if (bearerToken) {
+      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+    }
+    return Promise.race([
+      fetch(fullUrl, fetchOptions).then((response) => {
+        if (response.status == 204) {
+          return response;
+        } else if (response.status >= 200 && response.status < 300) {
+          return response.json();
+        } else {
+          throw response;
+        }
+      }),
+      new Promise(
+        (_, reject) => setTimeout(reject, this.timeoutMs, "Request timed out.")
+      )
+    ]);
+  }
+  /** List user's subscriptions. */
+  listSubscriptions(bearerToken, body, options = {}) {
+    if (body === null || body === void 0) {
+      throw new Error("'body' is a required parameter but is null or undefined.");
+    }
+    const urlPath = "/v2/iap/subscription";
+    const queryParams = /* @__PURE__ */ new Map();
+    let bodyJson = "";
+    bodyJson = JSON.stringify(body || {});
+    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
+    const fetchOptions = buildFetchOptions("POST", options, bodyJson);
+    if (bearerToken) {
+      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+    }
+    return Promise.race([
+      fetch(fullUrl, fetchOptions).then((response) => {
+        if (response.status == 204) {
+          return response;
+        } else if (response.status >= 200 && response.status < 300) {
+          return response.json();
+        } else {
+          throw response;
+        }
+      }),
+      new Promise(
+        (_, reject) => setTimeout(reject, this.timeoutMs, "Request timed out.")
+      )
+    ]);
+  }
+  /** Validate Apple Subscription Receipt */
+  validateSubscriptionApple(bearerToken, body, options = {}) {
+    if (body === null || body === void 0) {
+      throw new Error("'body' is a required parameter but is null or undefined.");
+    }
+    const urlPath = "/v2/iap/subscription/apple";
+    const queryParams = /* @__PURE__ */ new Map();
+    let bodyJson = "";
+    bodyJson = JSON.stringify(body || {});
+    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
+    const fetchOptions = buildFetchOptions("POST", options, bodyJson);
+    if (bearerToken) {
+      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+    }
+    return Promise.race([
+      fetch(fullUrl, fetchOptions).then((response) => {
+        if (response.status == 204) {
+          return response;
+        } else if (response.status >= 200 && response.status < 300) {
+          return response.json();
+        } else {
+          throw response;
+        }
+      }),
+      new Promise(
+        (_, reject) => setTimeout(reject, this.timeoutMs, "Request timed out.")
+      )
+    ]);
+  }
+  /** Validate Google Subscription Receipt */
+  validateSubscriptionGoogle(bearerToken, body, options = {}) {
+    if (body === null || body === void 0) {
+      throw new Error("'body' is a required parameter but is null or undefined.");
+    }
+    const urlPath = "/v2/iap/subscription/google";
+    const queryParams = /* @__PURE__ */ new Map();
+    let bodyJson = "";
+    bodyJson = JSON.stringify(body || {});
+    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
+    const fetchOptions = buildFetchOptions("POST", options, bodyJson);
+    if (bearerToken) {
+      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+    }
+    return Promise.race([
+      fetch(fullUrl, fetchOptions).then((response) => {
+        if (response.status == 204) {
+          return response;
+        } else if (response.status >= 200 && response.status < 300) {
+          return response.json();
+        } else {
+          throw response;
+        }
+      }),
+      new Promise(
+        (_, reject) => setTimeout(reject, this.timeoutMs, "Request timed out.")
+      )
+    ]);
+  }
+  /** Get subscription by product id. */
+  getSubscription(bearerToken, productId, options = {}) {
+    if (productId === null || productId === void 0) {
+      throw new Error("'productId' is a required parameter but is null or undefined.");
+    }
+    const urlPath = "/v2/iap/subscription/{productId}".replace("{productId}", encodeURIComponent(String(productId)));
+    const queryParams = /* @__PURE__ */ new Map();
+    let bodyJson = "";
+    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
+    const fetchOptions = buildFetchOptions("GET", options, bodyJson);
+    if (bearerToken) {
+      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+    }
+    return Promise.race([
+      fetch(fullUrl, fetchOptions).then((response) => {
+        if (response.status == 204) {
+          return response;
+        } else if (response.status >= 200 && response.status < 300) {
+          return response.json();
+        } else {
+          throw response;
+        }
+      }),
+      new Promise(
+        (_, reject) => setTimeout(reject, this.timeoutMs, "Request timed out.")
+      )
+    ]);
+  }
   /** Add users to a channel. */
   createLinkInviteUser(bearerToken, body, options = {}) {
     if (body === null || body === void 0) {
@@ -2813,6 +3042,163 @@ var NakamaApi = class {
     let bodyJson = "";
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("POST", options, bodyJson);
+    if (bearerToken) {
+      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+    }
+    return Promise.race([
+      fetch(fullUrl, fetchOptions).then((response) => {
+        if (response.status == 204) {
+          return response;
+        } else if (response.status >= 200 && response.status < 300) {
+          return response.json();
+        } else {
+          throw response;
+        }
+      }),
+      new Promise(
+        (_, reject) => setTimeout(reject, this.timeoutMs, "Request timed out.")
+      )
+    ]);
+  }
+  /** Delete a leaderboard record. */
+  deleteLeaderboardRecord(bearerToken, leaderboardId, options = {}) {
+    if (leaderboardId === null || leaderboardId === void 0) {
+      throw new Error("'leaderboardId' is a required parameter but is null or undefined.");
+    }
+    const urlPath = "/v2/leaderboard/{leaderboardId}".replace("{leaderboardId}", encodeURIComponent(String(leaderboardId)));
+    const queryParams = /* @__PURE__ */ new Map();
+    let bodyJson = "";
+    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
+    const fetchOptions = buildFetchOptions("DELETE", options, bodyJson);
+    if (bearerToken) {
+      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+    }
+    return Promise.race([
+      fetch(fullUrl, fetchOptions).then((response) => {
+        if (response.status == 204) {
+          return response;
+        } else if (response.status >= 200 && response.status < 300) {
+          return response.json();
+        } else {
+          throw response;
+        }
+      }),
+      new Promise(
+        (_, reject) => setTimeout(reject, this.timeoutMs, "Request timed out.")
+      )
+    ]);
+  }
+  /** List leaderboard records. */
+  listLeaderboardRecords(bearerToken, leaderboardId, ownerIds, limit, cursor, expiry, options = {}) {
+    if (leaderboardId === null || leaderboardId === void 0) {
+      throw new Error("'leaderboardId' is a required parameter but is null or undefined.");
+    }
+    const urlPath = "/v2/leaderboard/{leaderboardId}".replace("{leaderboardId}", encodeURIComponent(String(leaderboardId)));
+    const queryParams = /* @__PURE__ */ new Map();
+    queryParams.set("owner_ids", ownerIds);
+    queryParams.set("limit", limit);
+    queryParams.set("cursor", cursor);
+    queryParams.set("expiry", expiry);
+    let bodyJson = "";
+    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
+    const fetchOptions = buildFetchOptions("GET", options, bodyJson);
+    if (bearerToken) {
+      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+    }
+    return Promise.race([
+      fetch(fullUrl, fetchOptions).then((response) => {
+        if (response.status == 204) {
+          return response;
+        } else if (response.status >= 200 && response.status < 300) {
+          return response.json();
+        } else {
+          throw response;
+        }
+      }),
+      new Promise(
+        (_, reject) => setTimeout(reject, this.timeoutMs, "Request timed out.")
+      )
+    ]);
+  }
+  /** Write a record to a leaderboard. */
+  writeLeaderboardRecord(bearerToken, leaderboardId, record, options = {}) {
+    if (leaderboardId === null || leaderboardId === void 0) {
+      throw new Error("'leaderboardId' is a required parameter but is null or undefined.");
+    }
+    if (record === null || record === void 0) {
+      throw new Error("'record' is a required parameter but is null or undefined.");
+    }
+    const urlPath = "/v2/leaderboard/{leaderboardId}".replace("{leaderboardId}", encodeURIComponent(String(leaderboardId)));
+    const queryParams = /* @__PURE__ */ new Map();
+    let bodyJson = "";
+    bodyJson = JSON.stringify(record || {});
+    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
+    const fetchOptions = buildFetchOptions("POST", options, bodyJson);
+    if (bearerToken) {
+      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+    }
+    return Promise.race([
+      fetch(fullUrl, fetchOptions).then((response) => {
+        if (response.status == 204) {
+          return response;
+        } else if (response.status >= 200 && response.status < 300) {
+          return response.json();
+        } else {
+          throw response;
+        }
+      }),
+      new Promise(
+        (_, reject) => setTimeout(reject, this.timeoutMs, "Request timed out.")
+      )
+    ]);
+  }
+  /** List leaderboard records that belong to a user. */
+  listLeaderboardRecordsAroundOwner(bearerToken, leaderboardId, ownerId, limit, expiry, cursor, options = {}) {
+    if (leaderboardId === null || leaderboardId === void 0) {
+      throw new Error("'leaderboardId' is a required parameter but is null or undefined.");
+    }
+    if (ownerId === null || ownerId === void 0) {
+      throw new Error("'ownerId' is a required parameter but is null or undefined.");
+    }
+    const urlPath = "/v2/leaderboard/{leaderboardId}/owner/{ownerId}".replace("{leaderboardId}", encodeURIComponent(String(leaderboardId))).replace("{ownerId}", encodeURIComponent(String(ownerId)));
+    const queryParams = /* @__PURE__ */ new Map();
+    queryParams.set("limit", limit);
+    queryParams.set("expiry", expiry);
+    queryParams.set("cursor", cursor);
+    let bodyJson = "";
+    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
+    const fetchOptions = buildFetchOptions("GET", options, bodyJson);
+    if (bearerToken) {
+      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+    }
+    return Promise.race([
+      fetch(fullUrl, fetchOptions).then((response) => {
+        if (response.status == 204) {
+          return response;
+        } else if (response.status >= 200 && response.status < 300) {
+          return response.json();
+        } else {
+          throw response;
+        }
+      }),
+      new Promise(
+        (_, reject) => setTimeout(reject, this.timeoutMs, "Request timed out.")
+      )
+    ]);
+  }
+  /** Fetch list of running matches. */
+  listMatches(bearerToken, limit, authoritative, label, minSize, maxSize, query, options = {}) {
+    const urlPath = "/v2/match";
+    const queryParams = /* @__PURE__ */ new Map();
+    queryParams.set("limit", limit);
+    queryParams.set("authoritative", authoritative);
+    queryParams.set("label", label);
+    queryParams.set("min_size", minSize);
+    queryParams.set("max_size", maxSize);
+    queryParams.set("query", query);
+    let bodyJson = "";
+    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
+    const fetchOptions = buildFetchOptions("GET", options, bodyJson);
     if (bearerToken) {
       fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
     }
@@ -2984,64 +3370,6 @@ var NakamaApi = class {
     bodyJson = JSON.stringify(body || {});
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("PUT", options, bodyJson);
-    if (bearerToken) {
-      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-    }
-    return Promise.race([
-      fetch(fullUrl, fetchOptions).then((response) => {
-        if (response.status == 204) {
-          return response;
-        } else if (response.status >= 200 && response.status < 300) {
-          return response.json();
-        } else {
-          throw response;
-        }
-      }),
-      new Promise(
-        (_, reject) => setTimeout(reject, this.timeoutMs, "Request timed out.")
-      )
-    ]);
-  }
-  /** List role permissions */
-  listRolePermissions(bearerToken, roleId, options = {}) {
-    if (roleId === null || roleId === void 0) {
-      throw new Error("'roleId' is a required parameter but is null or undefined.");
-    }
-    const urlPath = "/v2/roles/{roleId}/permissions".replace("{roleId}", encodeURIComponent(String(roleId)));
-    const queryParams = /* @__PURE__ */ new Map();
-    let bodyJson = "";
-    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
-    const fetchOptions = buildFetchOptions("GET", options, bodyJson);
-    if (bearerToken) {
-      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-    }
-    return Promise.race([
-      fetch(fullUrl, fetchOptions).then((response) => {
-        if (response.status == 204) {
-          return response;
-        } else if (response.status >= 200 && response.status < 300) {
-          return response.json();
-        } else {
-          throw response;
-        }
-      }),
-      new Promise(
-        (_, reject) => setTimeout(reject, this.timeoutMs, "Request timed out.")
-      )
-    ]);
-  }
-  /** List role permissions */
-  listRoleUsers(bearerToken, roleId, limit, cursor, options = {}) {
-    if (roleId === null || roleId === void 0) {
-      throw new Error("'roleId' is a required parameter but is null or undefined.");
-    }
-    const urlPath = "/v2/roles/{roleId}/users".replace("{roleId}", encodeURIComponent(String(roleId)));
-    const queryParams = /* @__PURE__ */ new Map();
-    queryParams.set("limit", limit);
-    queryParams.set("cursor", cursor);
-    let bodyJson = "";
-    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
-    const fetchOptions = buildFetchOptions("GET", options, bodyJson);
     if (bearerToken) {
       fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
     }
@@ -3309,6 +3637,161 @@ var NakamaApi = class {
       )
     ]);
   }
+  /** List current or upcoming tournaments. */
+  listTournaments(bearerToken, categoryStart, categoryEnd, startTime, endTime, limit, cursor, options = {}) {
+    const urlPath = "/v2/tournament";
+    const queryParams = /* @__PURE__ */ new Map();
+    queryParams.set("category_start", categoryStart);
+    queryParams.set("category_end", categoryEnd);
+    queryParams.set("start_time", startTime);
+    queryParams.set("end_time", endTime);
+    queryParams.set("limit", limit);
+    queryParams.set("cursor", cursor);
+    let bodyJson = "";
+    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
+    const fetchOptions = buildFetchOptions("GET", options, bodyJson);
+    if (bearerToken) {
+      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+    }
+    return Promise.race([
+      fetch(fullUrl, fetchOptions).then((response) => {
+        if (response.status == 204) {
+          return response;
+        } else if (response.status >= 200 && response.status < 300) {
+          return response.json();
+        } else {
+          throw response;
+        }
+      }),
+      new Promise(
+        (_, reject) => setTimeout(reject, this.timeoutMs, "Request timed out.")
+      )
+    ]);
+  }
+  /** Delete a tournament record. */
+  deleteTournamentRecord(bearerToken, tournamentId, options = {}) {
+    if (tournamentId === null || tournamentId === void 0) {
+      throw new Error("'tournamentId' is a required parameter but is null or undefined.");
+    }
+    const urlPath = "/v2/tournament/{tournamentId}".replace("{tournamentId}", encodeURIComponent(String(tournamentId)));
+    const queryParams = /* @__PURE__ */ new Map();
+    let bodyJson = "";
+    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
+    const fetchOptions = buildFetchOptions("DELETE", options, bodyJson);
+    if (bearerToken) {
+      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+    }
+    return Promise.race([
+      fetch(fullUrl, fetchOptions).then((response) => {
+        if (response.status == 204) {
+          return response;
+        } else if (response.status >= 200 && response.status < 300) {
+          return response.json();
+        } else {
+          throw response;
+        }
+      }),
+      new Promise(
+        (_, reject) => setTimeout(reject, this.timeoutMs, "Request timed out.")
+      )
+    ]);
+  }
+  /** List tournament records. */
+  listTournamentRecords(bearerToken, tournamentId, ownerIds, limit, cursor, expiry, options = {}) {
+    if (tournamentId === null || tournamentId === void 0) {
+      throw new Error("'tournamentId' is a required parameter but is null or undefined.");
+    }
+    const urlPath = "/v2/tournament/{tournamentId}".replace("{tournamentId}", encodeURIComponent(String(tournamentId)));
+    const queryParams = /* @__PURE__ */ new Map();
+    queryParams.set("owner_ids", ownerIds);
+    queryParams.set("limit", limit);
+    queryParams.set("cursor", cursor);
+    queryParams.set("expiry", expiry);
+    let bodyJson = "";
+    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
+    const fetchOptions = buildFetchOptions("GET", options, bodyJson);
+    if (bearerToken) {
+      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+    }
+    return Promise.race([
+      fetch(fullUrl, fetchOptions).then((response) => {
+        if (response.status == 204) {
+          return response;
+        } else if (response.status >= 200 && response.status < 300) {
+          return response.json();
+        } else {
+          throw response;
+        }
+      }),
+      new Promise(
+        (_, reject) => setTimeout(reject, this.timeoutMs, "Request timed out.")
+      )
+    ]);
+  }
+  /** Write a record to a tournament. */
+  writeTournamentRecord2(bearerToken, tournamentId, record, options = {}) {
+    if (tournamentId === null || tournamentId === void 0) {
+      throw new Error("'tournamentId' is a required parameter but is null or undefined.");
+    }
+    if (record === null || record === void 0) {
+      throw new Error("'record' is a required parameter but is null or undefined.");
+    }
+    const urlPath = "/v2/tournament/{tournamentId}".replace("{tournamentId}", encodeURIComponent(String(tournamentId)));
+    const queryParams = /* @__PURE__ */ new Map();
+    let bodyJson = "";
+    bodyJson = JSON.stringify(record || {});
+    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
+    const fetchOptions = buildFetchOptions("POST", options, bodyJson);
+    if (bearerToken) {
+      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+    }
+    return Promise.race([
+      fetch(fullUrl, fetchOptions).then((response) => {
+        if (response.status == 204) {
+          return response;
+        } else if (response.status >= 200 && response.status < 300) {
+          return response.json();
+        } else {
+          throw response;
+        }
+      }),
+      new Promise(
+        (_, reject) => setTimeout(reject, this.timeoutMs, "Request timed out.")
+      )
+    ]);
+  }
+  /** Write a record to a tournament. */
+  writeTournamentRecord(bearerToken, tournamentId, record, options = {}) {
+    if (tournamentId === null || tournamentId === void 0) {
+      throw new Error("'tournamentId' is a required parameter but is null or undefined.");
+    }
+    if (record === null || record === void 0) {
+      throw new Error("'record' is a required parameter but is null or undefined.");
+    }
+    const urlPath = "/v2/tournament/{tournamentId}".replace("{tournamentId}", encodeURIComponent(String(tournamentId)));
+    const queryParams = /* @__PURE__ */ new Map();
+    let bodyJson = "";
+    bodyJson = JSON.stringify(record || {});
+    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
+    const fetchOptions = buildFetchOptions("PUT", options, bodyJson);
+    if (bearerToken) {
+      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+    }
+    return Promise.race([
+      fetch(fullUrl, fetchOptions).then((response) => {
+        if (response.status == 204) {
+          return response;
+        } else if (response.status >= 200 && response.status < 300) {
+          return response.json();
+        } else {
+          throw response;
+        }
+      }),
+      new Promise(
+        (_, reject) => setTimeout(reject, this.timeoutMs, "Request timed out.")
+      )
+    ]);
+  }
   /** Attempt to join an open and running tournament. */
   joinTournament(bearerToken, tournamentId, options = {}) {
     if (tournamentId === null || tournamentId === void 0) {
@@ -3337,17 +3820,22 @@ var NakamaApi = class {
       )
     ]);
   }
-  /** Update fields in a given category. */
-  updateCategory(bearerToken, body, options = {}) {
-    if (body === null || body === void 0) {
-      throw new Error("'body' is a required parameter but is null or undefined.");
+  /** List tournament records for a given owner. */
+  listTournamentRecordsAroundOwner(bearerToken, tournamentId, ownerId, limit, expiry, cursor, options = {}) {
+    if (tournamentId === null || tournamentId === void 0) {
+      throw new Error("'tournamentId' is a required parameter but is null or undefined.");
     }
-    const urlPath = "/v2/updatecategory";
+    if (ownerId === null || ownerId === void 0) {
+      throw new Error("'ownerId' is a required parameter but is null or undefined.");
+    }
+    const urlPath = "/v2/tournament/{tournamentId}/owner/{ownerId}".replace("{tournamentId}", encodeURIComponent(String(tournamentId))).replace("{ownerId}", encodeURIComponent(String(ownerId)));
     const queryParams = /* @__PURE__ */ new Map();
+    queryParams.set("limit", limit);
+    queryParams.set("expiry", expiry);
+    queryParams.set("cursor", cursor);
     let bodyJson = "";
-    bodyJson = JSON.stringify(body || {});
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
-    const fetchOptions = buildFetchOptions("PUT", options, bodyJson);
+    const fetchOptions = buildFetchOptions("GET", options, bodyJson);
     if (bearerToken) {
       fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
     }
@@ -3366,15 +3854,12 @@ var NakamaApi = class {
       )
     ]);
   }
-  /**  */
-  updateUserProfileByClan(bearerToken, clanId, body, options = {}) {
-    if (clanId === null || clanId === void 0) {
-      throw new Error("'clanId' is a required parameter but is null or undefined.");
-    }
+  /** Update fields in a given category. */
+  updateCategory(bearerToken, body, options = {}) {
     if (body === null || body === void 0) {
       throw new Error("'body' is a required parameter but is null or undefined.");
     }
-    const urlPath = "/v2/updateclanprofile/{clanId}".replace("{clanId}", encodeURIComponent(String(clanId)));
+    const urlPath = "/v2/updatecategory";
     const queryParams = /* @__PURE__ */ new Map();
     let bodyJson = "";
     bodyJson = JSON.stringify(body || {});
@@ -3640,7 +4125,15 @@ var WebSocketAdapterText = class {
     this._socket = void 0;
   }
   send(msg) {
-    if (msg.party_data_send) {
+    if (msg.match_data_send) {
+      msg.match_data_send.op_code = msg.match_data_send.op_code.toString();
+      let payload = msg.match_data_send.data;
+      if (payload && payload instanceof Uint8Array) {
+        msg.match_data_send.data = encode2(payload.buffer);
+      } else if (payload) {
+        msg.match_data_send.data = _btoa(payload);
+      }
+    } else if (msg.party_data_send) {
       msg.party_data_send.op_code = msg.party_data_send.op_code.toString();
       let payload = msg.party_data_send.data;
       if (payload && payload instanceof Uint8Array) {
@@ -3693,6 +4186,15 @@ var _DefaultSocket = class _DefaultSocket {
             n.content = n.content ? JSON.parse(n.content) : void 0;
             this.onnotification(n);
           });
+        } else if (message.match_data) {
+          message.match_data.op_code = parseInt(message.match_data.op_code);
+          this.onmatchdata(message.match_data);
+        } else if (message.match_presence_event) {
+          this.onmatchpresence(message.match_presence_event);
+        } else if (message.matchmaker_ticket) {
+          this.onmatchmakerticket(message.matchmaker_ticket);
+        } else if (message.matchmaker_matched) {
+          this.onmatchmakermatched(message.matchmaker_matched);
         } else if (message.status_presence_event) {
           this.onstatuspresence(message.status_presence_event);
         } else if (message.stream_presence_event) {
@@ -3702,8 +4204,6 @@ var _DefaultSocket = class _DefaultSocket {
         } else if (message.channel_message) {
           message.channel_message.content = JSON.parse(message.channel_message.content);
           this.onchannelmessage(message.channel_message);
-        } else if (message.message_typing_event) {
-          this.onmessagetyping(message);
         } else if (message.channel_presence_event) {
           this.onchannelpresence(message.channel_presence_event);
         } else if (message.party_data) {
@@ -3783,11 +4283,6 @@ var _DefaultSocket = class _DefaultSocket {
       console.log(evt);
     }
   }
-  onmessagetyping(messagetyping) {
-    if (this.verbose && window && window.console) {
-      console.log(messagetyping);
-    }
-  }
   onchannelmessage(channelMessage) {
     if (this.verbose && window && window.console) {
       console.log(channelMessage);
@@ -3801,6 +4296,26 @@ var _DefaultSocket = class _DefaultSocket {
   onnotification(notification) {
     if (this.verbose && window && window.console) {
       console.log(notification);
+    }
+  }
+  onmatchdata(matchData) {
+    if (this.verbose && window && window.console) {
+      console.log(matchData);
+    }
+  }
+  onmatchpresence(matchPresence) {
+    if (this.verbose && window && window.console) {
+      console.log(matchPresence);
+    }
+  }
+  onmatchmakerticket(matchmakerTicket) {
+    if (this.verbose && window && window.console) {
+      console.log(matchmakerTicket);
+    }
+  }
+  onmatchmakermatched(matchmakerMatched) {
+    if (this.verbose && window && window.console) {
+      console.log(matchmakerMatched);
     }
   }
   onparty(party) {
@@ -3864,7 +4379,10 @@ var _DefaultSocket = class _DefaultSocket {
       if (!this.adapter.isOpen()) {
         reject("Socket connection has not been established yet.");
       } else {
-        if (untypedMessage.party_data_send) {
+        if (untypedMessage.match_data_send) {
+          this.adapter.send(untypedMessage);
+          resolve();
+        } else if (untypedMessage.party_data_send) {
           this.adapter.send(untypedMessage);
           resolve();
         } else {
@@ -3896,9 +4414,44 @@ var _DefaultSocket = class _DefaultSocket {
   acceptPartyMember(party_id, presence) {
     return this.send({ party_accept: { party_id, presence } });
   }
+  addMatchmaker(query, min_count, max_count, string_properties, numeric_properties) {
+    return __async(this, null, function* () {
+      const response = yield this.send({
+        "matchmaker_add": {
+          min_count,
+          max_count,
+          query,
+          string_properties,
+          numeric_properties
+        }
+      });
+      return response.matchmaker_ticket;
+    });
+  }
+  addMatchmakerParty(party_id, query, min_count, max_count, string_properties, numeric_properties) {
+    return __async(this, null, function* () {
+      const response = yield this.send({
+        party_matchmaker_add: {
+          party_id,
+          min_count,
+          max_count,
+          query,
+          string_properties,
+          numeric_properties
+        }
+      });
+      return response.party_matchmaker_ticket;
+    });
+  }
   closeParty(party_id) {
     return __async(this, null, function* () {
       return yield this.send({ party_close: { party_id } });
+    });
+  }
+  createMatch(name) {
+    return __async(this, null, function* () {
+      const response = yield this.send({ match_create: { name } });
+      return response.match;
     });
   }
   createParty(open, max_size) {
@@ -3927,6 +4480,18 @@ var _DefaultSocket = class _DefaultSocket {
         }
       );
       return response.channel;
+    });
+  }
+  joinMatch(match_id, token, metadata) {
+    return __async(this, null, function* () {
+      const join = { match_join: { metadata } };
+      if (token) {
+        join.match_join.token = token;
+      } else {
+        join.match_join.match_id = match_id;
+      }
+      const response = yield this.send(join);
+      return response.match;
     });
   }
   joinParty(party_id) {
@@ -3968,6 +4533,19 @@ var _DefaultSocket = class _DefaultSocket {
       return response.channel_message_ack;
     });
   }
+  removeMatchmaker(ticket) {
+    return this.send({ matchmaker_remove: { ticket } });
+  }
+  removeMatchmakerParty(party_id, ticket) {
+    return this.send(
+      {
+        party_matchmaker_remove: {
+          party_id,
+          ticket
+        }
+      }
+    );
+  }
   removePartyMember(party_id, member) {
     return __async(this, null, function* () {
       return this.send({ party_remove: {
@@ -3990,6 +4568,21 @@ var _DefaultSocket = class _DefaultSocket {
       return response.rpc;
     });
   }
+  sendMatchState(matchId, opCode, data, presences, reliable) {
+    return __async(this, null, function* () {
+      return this.send(
+        {
+          match_data_send: {
+            match_id: matchId,
+            op_code: opCode,
+            data,
+            presences: presences != null ? presences : [],
+            reliable
+          }
+        }
+      );
+    });
+  }
   sendPartyData(party_id, op_code, data) {
     return this.send({ party_data_send: { party_id, op_code, data } });
   }
@@ -4009,18 +4602,6 @@ var _DefaultSocket = class _DefaultSocket {
     return __async(this, null, function* () {
       const response = yield this.send({ channel_message_send: { clan_id, channel_id, content } });
       return response.channel_message_ack;
-    });
-  }
-  writeMessageTyping(channel_id) {
-    return __async(this, null, function* () {
-      const response = yield this.send({ message_typing_event: { channel_id } });
-      return response.message_typing_event;
-    });
-  }
-  writeLastSeenMessage(channel_id, message_id) {
-    return __async(this, null, function* () {
-      const response = yield this.send({ last_seen_message_event: { channel_id, message_id } });
-      return response.last_seen_message_event;
     });
   }
   pingPong() {
@@ -4313,17 +4894,6 @@ var Client = class {
       });
     });
   }
-  /** Create a new role for clan. */
-  createRole(session, request) {
-    return __async(this, null, function* () {
-      if (this.autoRefreshSession && session.refresh_token && session.isexpired((Date.now() + this.expiredTimespanMs) / 1e3)) {
-        yield this.sessionRefresh(session);
-      }
-      return this.apiClient.createRole(session.token, request).then((response) => {
-        return Promise.resolve(response);
-      });
-    });
-  }
   /** A socket created with the client's configuration. */
   createSocket(useSSL = false, verbose = false, adapter = new WebSocketAdapterText(), sendTimeoutMs = DefaultSocket.DefaultSendTimeoutMs) {
     return new DefaultSocket(this.host, this.port, useSSL, verbose, adapter, sendTimeoutMs);
@@ -4402,17 +4972,6 @@ var Client = class {
       }
       return this.apiClient.deleteStorageObjects(session.token, request).then((response) => {
         return Promise.resolve(response != void 0);
-      });
-    });
-  }
-  /** Delete a role by ID. */
-  deleteRole(session, roleId) {
-    return __async(this, null, function* () {
-      if (this.autoRefreshSession && session.refresh_token && session.isexpired((Date.now() + this.expiredTimespanMs) / 1e3)) {
-        yield this.sessionRefresh(session);
-      }
-      return this.apiClient.deleteRole(session.token, roleId).then((response) => {
-        return response !== void 0;
       });
     });
   }
@@ -4569,7 +5128,7 @@ var Client = class {
       return this.apiClient.listChannelMessages(session.token, channelId, limit, forward, cursor).then((response) => {
         var result = {
           messages: [],
-          last_seen_message_id: response.last_seen_message_id,
+          last_seen_message_uuid: response.last_seen_message_uuid,
           next_cursor: response.next_cursor,
           prev_cursor: response.prev_cursor,
           cacheable_cursor: response.cacheable_cursor
@@ -4808,39 +5367,6 @@ var Client = class {
       });
     });
   }
-  /** List user roles */
-  listRoles(session, limit, state, cursor, clanId) {
-    return __async(this, null, function* () {
-      if (this.autoRefreshSession && session.refresh_token && session.isexpired((Date.now() + this.expiredTimespanMs) / 1e3)) {
-        yield this.sessionRefresh(session);
-      }
-      return this.apiClient.listRoles(session.token, limit, state, cursor, clanId).then((response) => {
-        return Promise.resolve(response);
-      });
-    });
-  }
-  /** List user roles */
-  listRolePermissions(session, roleId) {
-    return __async(this, null, function* () {
-      if (this.autoRefreshSession && session.refresh_token && session.isexpired((Date.now() + this.expiredTimespanMs) / 1e3)) {
-        yield this.sessionRefresh(session);
-      }
-      return this.apiClient.listRolePermissions(session.token, roleId).then((response) => {
-        return Promise.resolve(response);
-      });
-    });
-  }
-  /** List user roles */
-  listRoleUsers(session, roleId, limit, cursor) {
-    return __async(this, null, function* () {
-      if (this.autoRefreshSession && session.refresh_token && session.isexpired((Date.now() + this.expiredTimespanMs) / 1e3)) {
-        yield this.sessionRefresh(session);
-      }
-      return this.apiClient.listRoleUsers(session.token, roleId, limit, cursor).then((response) => {
-        return Promise.resolve(response);
-      });
-    });
-  }
   /** Get a clan desc profile */
   getClanDescProfile(session, clanId) {
     return __async(this, null, function* () {
@@ -4848,16 +5374,6 @@ var Client = class {
         yield this.sessionRefresh(session);
       }
       return this.apiClient.getClanDescProfile(session.token, clanId).then((response) => {
-        return Promise.resolve(response);
-      });
-    });
-  }
-  getUserProfileOnClan(session, clanId) {
-    return __async(this, null, function* () {
-      if (this.autoRefreshSession && session.refresh_token && session.isexpired((Date.now() + this.expiredTimespanMs) / 1e3)) {
-        yield this.sessionRefresh(session);
-      }
-      return this.apiClient.getUserProfileOnClan(session.token, clanId).then((response) => {
         return Promise.resolve(response);
       });
     });
@@ -5003,6 +5519,116 @@ var Client = class {
       });
     });
   }
+  /** List leaderboard records */
+  listLeaderboardRecords(session, leaderboardId, ownerIds, limit, cursor, expiry) {
+    return __async(this, null, function* () {
+      if (this.autoRefreshSession && session.refresh_token && session.isexpired((Date.now() + this.expiredTimespanMs) / 1e3)) {
+        yield this.sessionRefresh(session);
+      }
+      return this.apiClient.listLeaderboardRecords(session.token, leaderboardId, ownerIds, limit, cursor, expiry).then((response) => {
+        var list = {
+          next_cursor: response.next_cursor,
+          prev_cursor: response.prev_cursor,
+          owner_records: [],
+          records: []
+        };
+        if (response.owner_records != null) {
+          response.owner_records.forEach((o) => {
+            list.owner_records.push({
+              expiry_time: o.expiry_time,
+              leaderboard_id: o.leaderboard_id,
+              metadata: o.metadata ? JSON.parse(o.metadata) : void 0,
+              num_score: o.num_score ? Number(o.num_score) : 0,
+              owner_id: o.owner_id,
+              rank: o.rank ? Number(o.rank) : 0,
+              score: o.score ? Number(o.score) : 0,
+              subscore: o.subscore ? Number(o.subscore) : 0,
+              update_time: o.update_time,
+              username: o.username,
+              max_num_score: o.max_num_score ? Number(o.max_num_score) : 0
+            });
+          });
+        }
+        if (response.records != null) {
+          response.records.forEach((o) => {
+            list.records.push({
+              expiry_time: o.expiry_time,
+              leaderboard_id: o.leaderboard_id,
+              metadata: o.metadata ? JSON.parse(o.metadata) : void 0,
+              num_score: o.num_score ? Number(o.num_score) : 0,
+              owner_id: o.owner_id,
+              rank: o.rank ? Number(o.rank) : 0,
+              score: o.score ? Number(o.score) : 0,
+              subscore: o.subscore ? Number(o.subscore) : 0,
+              update_time: o.update_time,
+              username: o.username,
+              max_num_score: o.max_num_score ? Number(o.max_num_score) : 0
+            });
+          });
+        }
+        return Promise.resolve(list);
+      });
+    });
+  }
+  listLeaderboardRecordsAroundOwner(session, leaderboardId, ownerId, limit, expiry) {
+    return __async(this, null, function* () {
+      if (this.autoRefreshSession && session.refresh_token && session.isexpired((Date.now() + this.expiredTimespanMs) / 1e3)) {
+        yield this.sessionRefresh(session);
+      }
+      return this.apiClient.listLeaderboardRecordsAroundOwner(session.token, leaderboardId, ownerId, limit, expiry).then((response) => {
+        var list = {
+          next_cursor: response.next_cursor,
+          prev_cursor: response.prev_cursor,
+          owner_records: [],
+          records: []
+        };
+        if (response.owner_records != null) {
+          response.owner_records.forEach((o) => {
+            list.owner_records.push({
+              expiry_time: o.expiry_time,
+              leaderboard_id: o.leaderboard_id,
+              metadata: o.metadata ? JSON.parse(o.metadata) : void 0,
+              num_score: o.num_score ? Number(o.num_score) : 0,
+              owner_id: o.owner_id,
+              rank: o.rank ? Number(o.rank) : 0,
+              score: o.score ? Number(o.score) : 0,
+              subscore: o.subscore ? Number(o.subscore) : 0,
+              update_time: o.update_time,
+              username: o.username,
+              max_num_score: o.max_num_score ? Number(o.max_num_score) : 0
+            });
+          });
+        }
+        if (response.records != null) {
+          response.records.forEach((o) => {
+            list.records.push({
+              expiry_time: o.expiry_time,
+              leaderboard_id: o.leaderboard_id,
+              metadata: o.metadata ? JSON.parse(o.metadata) : void 0,
+              num_score: o.num_score ? Number(o.num_score) : 0,
+              owner_id: o.owner_id,
+              rank: o.rank ? Number(o.rank) : 0,
+              score: o.score ? Number(o.score) : 0,
+              subscore: o.subscore ? Number(o.subscore) : 0,
+              update_time: o.update_time,
+              username: o.username,
+              max_num_score: o.max_num_score ? Number(o.max_num_score) : 0
+            });
+          });
+        }
+        return Promise.resolve(list);
+      });
+    });
+  }
+  /** Fetch list of running matches. */
+  listMatches(session, limit, authoritative, label, minSize, maxSize, query) {
+    return __async(this, null, function* () {
+      if (this.autoRefreshSession && session.refresh_token && session.isexpired((Date.now() + this.expiredTimespanMs) / 1e3)) {
+        yield this.sessionRefresh(session);
+      }
+      return this.apiClient.listMatches(session.token, limit, authoritative, label, minSize, maxSize, query);
+    });
+  }
   /** Fetch list of notifications. */
   listNotifications(session, limit, cacheableCursor) {
     return __async(this, null, function* () {
@@ -5060,6 +5686,146 @@ var Client = class {
           });
         });
         return Promise.resolve(result);
+      });
+    });
+  }
+  /** List current or upcoming tournaments. */
+  listTournaments(session, categoryStart, categoryEnd, startTime, endTime, limit, cursor) {
+    return __async(this, null, function* () {
+      if (this.autoRefreshSession && session.refresh_token && session.isexpired((Date.now() + this.expiredTimespanMs) / 1e3)) {
+        yield this.sessionRefresh(session);
+      }
+      return this.apiClient.listTournaments(session.token, categoryStart, categoryEnd, startTime, endTime, limit, cursor).then((response) => {
+        var list = {
+          cursor: response.cursor,
+          tournaments: []
+        };
+        if (response.tournaments != null) {
+          response.tournaments.forEach((o) => {
+            list.tournaments.push({
+              id: o.id,
+              title: o.title,
+              description: o.description,
+              duration: o.duration ? Number(o.duration) : 0,
+              category: o.category ? Number(o.category) : 0,
+              sort_order: o.sort_order ? Number(o.sort_order) : 0,
+              size: o.size ? Number(o.size) : 0,
+              max_size: o.max_size ? Number(o.max_size) : 0,
+              max_num_score: o.max_num_score ? Number(o.max_num_score) : 0,
+              can_enter: o.can_enter,
+              end_active: o.end_active ? Number(o.end_active) : 0,
+              next_reset: o.next_reset ? Number(o.next_reset) : 0,
+              metadata: o.metadata ? JSON.parse(o.metadata) : void 0,
+              create_time: o.create_time,
+              start_time: o.start_time,
+              end_time: o.end_time,
+              start_active: o.start_active
+            });
+          });
+        }
+        return Promise.resolve(list);
+      });
+    });
+  }
+  /** List tournament records from a given tournament. */
+  listTournamentRecords(session, tournamentId, ownerIds, limit, cursor, expiry) {
+    return __async(this, null, function* () {
+      if (this.autoRefreshSession && session.refresh_token && session.isexpired((Date.now() + this.expiredTimespanMs) / 1e3)) {
+        yield this.sessionRefresh(session);
+      }
+      return this.apiClient.listTournamentRecords(session.token, tournamentId, ownerIds, limit, cursor, expiry).then((response) => {
+        var list = {
+          next_cursor: response.next_cursor,
+          prev_cursor: response.prev_cursor,
+          owner_records: [],
+          records: []
+        };
+        if (response.owner_records != null) {
+          response.owner_records.forEach((o) => {
+            list.owner_records.push({
+              expiry_time: o.expiry_time,
+              leaderboard_id: o.leaderboard_id,
+              metadata: o.metadata ? JSON.parse(o.metadata) : void 0,
+              num_score: o.num_score ? Number(o.num_score) : 0,
+              owner_id: o.owner_id,
+              rank: o.rank ? Number(o.rank) : 0,
+              score: o.score ? Number(o.score) : 0,
+              subscore: o.subscore ? Number(o.subscore) : 0,
+              update_time: o.update_time,
+              username: o.username,
+              max_num_score: o.max_num_score ? Number(o.max_num_score) : 0
+            });
+          });
+        }
+        if (response.records != null) {
+          response.records.forEach((o) => {
+            list.records.push({
+              expiry_time: o.expiry_time,
+              leaderboard_id: o.leaderboard_id,
+              metadata: o.metadata ? JSON.parse(o.metadata) : void 0,
+              num_score: o.num_score ? Number(o.num_score) : 0,
+              owner_id: o.owner_id,
+              rank: o.rank ? Number(o.rank) : 0,
+              score: o.score ? Number(o.score) : 0,
+              subscore: o.subscore ? Number(o.subscore) : 0,
+              update_time: o.update_time,
+              username: o.username,
+              max_num_score: o.max_num_score ? Number(o.max_num_score) : 0
+            });
+          });
+        }
+        return Promise.resolve(list);
+      });
+    });
+  }
+  /** List tournament records from a given tournament around the owner. */
+  listTournamentRecordsAroundOwner(session, tournamentId, ownerId, limit, expiry) {
+    return __async(this, null, function* () {
+      if (this.autoRefreshSession && session.refresh_token && session.isexpired((Date.now() + this.expiredTimespanMs) / 1e3)) {
+        yield this.sessionRefresh(session);
+      }
+      return this.apiClient.listTournamentRecordsAroundOwner(session.token, tournamentId, ownerId, limit, expiry).then((response) => {
+        var list = {
+          next_cursor: response.next_cursor,
+          prev_cursor: response.prev_cursor,
+          owner_records: [],
+          records: []
+        };
+        if (response.owner_records != null) {
+          response.owner_records.forEach((o) => {
+            list.owner_records.push({
+              expiry_time: o.expiry_time,
+              leaderboard_id: o.leaderboard_id,
+              metadata: o.metadata ? JSON.parse(o.metadata) : void 0,
+              num_score: o.num_score ? Number(o.num_score) : 0,
+              owner_id: o.owner_id,
+              rank: o.rank ? Number(o.rank) : 0,
+              score: o.score ? Number(o.score) : 0,
+              subscore: o.subscore ? Number(o.subscore) : 0,
+              update_time: o.update_time,
+              username: o.username,
+              max_num_score: o.max_num_score ? Number(o.max_num_score) : 0
+            });
+          });
+        }
+        if (response.records != null) {
+          response.records.forEach((o) => {
+            list.records.push({
+              expiry_time: o.expiry_time,
+              leaderboard_id: o.leaderboard_id,
+              metadata: o.metadata ? JSON.parse(o.metadata) : void 0,
+              num_score: o.num_score ? Number(o.num_score) : 0,
+              owner_id: o.owner_id,
+              rank: o.rank ? Number(o.rank) : 0,
+              score: o.score ? Number(o.score) : 0,
+              subscore: o.subscore ? Number(o.subscore) : 0,
+              update_time: o.update_time,
+              username: o.username,
+              max_num_score: o.max_num_score ? Number(o.max_num_score) : 0
+            });
+          });
+        }
+        return Promise.resolve(list);
       });
     });
   }
@@ -5321,57 +6087,57 @@ var Client = class {
       });
     });
   }
-  updateUserProfileByClan(session, clanId, request) {
+  /** Validate an Apple IAP receipt. */
+  validatePurchaseApple(session, receipt) {
     return __async(this, null, function* () {
       if (this.autoRefreshSession && session.refresh_token && session.isexpired((Date.now() + this.expiredTimespanMs) / 1e3)) {
         yield this.sessionRefresh(session);
       }
-      return this.apiClient.updateUserProfileByClan(session.token, clanId, request).then((response) => {
-        return response !== void 0;
-      });
+      return this.apiClient.validatePurchaseApple(session.token, { receipt });
     });
   }
-  /** Update fields in a given role. */
-  updateRole(session, roleId, request) {
+  /** Validate a Google IAP receipt. */
+  validatePurchaseGoogle(session, purchase) {
     return __async(this, null, function* () {
       if (this.autoRefreshSession && session.refresh_token && session.isexpired((Date.now() + this.expiredTimespanMs) / 1e3)) {
         yield this.sessionRefresh(session);
       }
-      return this.apiClient.updateRole(session.token, roleId, request).then((response) => {
-        return response !== void 0;
-      });
+      return this.apiClient.validatePurchaseGoogle(session.token, { purchase });
     });
   }
-  /** Update fields in a given clan profile. */
-  createLinkInviteUser(session, request) {
+  /** Validate a Huawei IAP receipt. */
+  validatePurchaseHuawei(session, purchase, signature) {
     return __async(this, null, function* () {
       if (this.autoRefreshSession && session.refresh_token && session.isexpired((Date.now() + this.expiredTimespanMs) / 1e3)) {
         yield this.sessionRefresh(session);
       }
-      return this.apiClient.createLinkInviteUser(session.token, request).then((response) => {
-        return Promise.resolve(response);
-      });
+      return this.apiClient.validatePurchaseHuawei(session.token, { purchase, signature });
     });
   }
-  /** Get link invite user */
-  getLinkInvite(session, inviteId) {
+  /** Write a record to a leaderboard. */
+  writeLeaderboardRecord(session, leaderboardId, request) {
     return __async(this, null, function* () {
       if (this.autoRefreshSession && session.refresh_token && session.isexpired((Date.now() + this.expiredTimespanMs) / 1e3)) {
         yield this.sessionRefresh(session);
       }
-      return this.apiClient.getLinkInvite(session.token, inviteId).then((response) => {
-        return Promise.resolve(response);
-      });
-    });
-  }
-  /** invite user */
-  inviteUser(session, inviteId) {
-    return __async(this, null, function* () {
-      if (this.autoRefreshSession && session.refresh_token && session.isexpired((Date.now() + this.expiredTimespanMs) / 1e3)) {
-        yield this.sessionRefresh(session);
-      }
-      return this.apiClient.inviteUser(session.token, inviteId).then((response) => {
-        return Promise.resolve(response);
+      return this.apiClient.writeLeaderboardRecord(session.token, leaderboardId, {
+        metadata: request.metadata ? JSON.stringify(request.metadata) : void 0,
+        score: request.score,
+        subscore: request.subscore
+      }).then((response) => {
+        return Promise.resolve({
+          expiry_time: response.expiry_time,
+          leaderboard_id: response.leaderboard_id,
+          metadata: response.metadata ? JSON.parse(response.metadata) : void 0,
+          num_score: response.num_score ? Number(response.num_score) : 0,
+          owner_id: response.owner_id,
+          score: response.score ? Number(response.score) : 0,
+          subscore: response.subscore ? Number(response.subscore) : 0,
+          update_time: response.update_time,
+          username: response.username,
+          max_num_score: response.max_num_score ? Number(response.max_num_score) : 0,
+          rank: response.rank ? Number(response.rank) : 0
+        });
       });
     });
   }
@@ -5395,10 +6161,28 @@ var Client = class {
       return this.apiClient.writeStorageObjects(session.token, request);
     });
   }
-};
-export {
-  Client,
-  DefaultSocket,
-  Session,
-  WebSocketAdapterText
+  /** Write a record to a tournament. */
+  writeTournamentRecord(session, tournamentId, request) {
+    return __async(this, null, function* () {
+      return this.apiClient.writeTournamentRecord(session.token, tournamentId, {
+        metadata: request.metadata ? JSON.stringify(request.metadata) : void 0,
+        score: request.score,
+        subscore: request.subscore
+      }).then((response) => {
+        return Promise.resolve({
+          expiry_time: response.expiry_time,
+          leaderboard_id: response.leaderboard_id,
+          metadata: response.metadata ? JSON.parse(response.metadata) : void 0,
+          num_score: response.num_score ? Number(response.num_score) : 0,
+          owner_id: response.owner_id,
+          score: response.score ? Number(response.score) : 0,
+          subscore: response.subscore ? Number(response.subscore) : 0,
+          update_time: response.update_time,
+          username: response.username,
+          max_num_score: response.max_num_score ? Number(response.max_num_score) : 0,
+          rank: response.rank ? Number(response.rank) : 0
+        });
+      });
+    });
+  }
 };

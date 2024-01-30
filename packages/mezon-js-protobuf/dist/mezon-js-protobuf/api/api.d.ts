@@ -1115,6 +1115,31 @@ export interface LinkInviteUser {
     expiry_time: Date | undefined;
     id: string;
 }
+/** Get clan profile. */
+export interface ClanProfile {
+    /** id user to find user */
+    user_id: string;
+    /** name user */
+    nick_name: string;
+    /** id avartar */
+    avartar: string;
+    /** id clan */
+    clan_id: string;
+}
+/** information user by clan requset */
+export interface ClanProfileRequest {
+    /** id clanc */
+    clan_id: string;
+}
+/** update nickname user by clan requset */
+export interface UpdateClanProfileRequest {
+    /** id clanc */
+    clan_id: string;
+    /** nick_name new */
+    nick_name: string;
+    /** avartar */
+    avartar: string;
+}
 /** Category to group the channel */
 export interface CategoryDesc {
     /** Category creator */
@@ -7382,6 +7407,74 @@ export declare const LinkInviteUser: {
         expiry_time?: Date | undefined;
         id?: string | undefined;
     } & { [K_1 in Exclude<keyof I_1, keyof LinkInviteUser>]: never; }>(object: I_1): LinkInviteUser;
+};
+export declare const ClanProfile: {
+    encode(message: ClanProfile, writer?: _m0.Writer): _m0.Writer;
+    decode(input: _m0.Reader | Uint8Array, length?: number): ClanProfile;
+    fromJSON(object: any): ClanProfile;
+    toJSON(message: ClanProfile): unknown;
+    create<I extends {
+        user_id?: string | undefined;
+        nick_name?: string | undefined;
+        avartar?: string | undefined;
+        clan_id?: string | undefined;
+    } & {
+        user_id?: string | undefined;
+        nick_name?: string | undefined;
+        avartar?: string | undefined;
+        clan_id?: string | undefined;
+    } & { [K in Exclude<keyof I, keyof ClanProfile>]: never; }>(base?: I | undefined): ClanProfile;
+    fromPartial<I_1 extends {
+        user_id?: string | undefined;
+        nick_name?: string | undefined;
+        avartar?: string | undefined;
+        clan_id?: string | undefined;
+    } & {
+        user_id?: string | undefined;
+        nick_name?: string | undefined;
+        avartar?: string | undefined;
+        clan_id?: string | undefined;
+    } & { [K_1 in Exclude<keyof I_1, keyof ClanProfile>]: never; }>(object: I_1): ClanProfile;
+};
+export declare const ClanProfileRequest: {
+    encode(message: ClanProfileRequest, writer?: _m0.Writer): _m0.Writer;
+    decode(input: _m0.Reader | Uint8Array, length?: number): ClanProfileRequest;
+    fromJSON(object: any): ClanProfileRequest;
+    toJSON(message: ClanProfileRequest): unknown;
+    create<I extends {
+        clan_id?: string | undefined;
+    } & {
+        clan_id?: string | undefined;
+    } & { [K in Exclude<keyof I, "clan_id">]: never; }>(base?: I | undefined): ClanProfileRequest;
+    fromPartial<I_1 extends {
+        clan_id?: string | undefined;
+    } & {
+        clan_id?: string | undefined;
+    } & { [K_1 in Exclude<keyof I_1, "clan_id">]: never; }>(object: I_1): ClanProfileRequest;
+};
+export declare const UpdateClanProfileRequest: {
+    encode(message: UpdateClanProfileRequest, writer?: _m0.Writer): _m0.Writer;
+    decode(input: _m0.Reader | Uint8Array, length?: number): UpdateClanProfileRequest;
+    fromJSON(object: any): UpdateClanProfileRequest;
+    toJSON(message: UpdateClanProfileRequest): unknown;
+    create<I extends {
+        clan_id?: string | undefined;
+        nick_name?: string | undefined;
+        avartar?: string | undefined;
+    } & {
+        clan_id?: string | undefined;
+        nick_name?: string | undefined;
+        avartar?: string | undefined;
+    } & { [K in Exclude<keyof I, keyof UpdateClanProfileRequest>]: never; }>(base?: I | undefined): UpdateClanProfileRequest;
+    fromPartial<I_1 extends {
+        clan_id?: string | undefined;
+        nick_name?: string | undefined;
+        avartar?: string | undefined;
+    } & {
+        clan_id?: string | undefined;
+        nick_name?: string | undefined;
+        avartar?: string | undefined;
+    } & { [K_1 in Exclude<keyof I_1, keyof UpdateClanProfileRequest>]: never; }>(object: I_1): UpdateClanProfileRequest;
 };
 export declare const CategoryDesc: {
     encode(message: CategoryDesc, writer?: _m0.Writer): _m0.Writer;

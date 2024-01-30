@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { ApiAccount, ApiAccountCustom, ApiAccountDevice, ApiAccountEmail, ApiAccountFacebook, ApiAccountFacebookInstantGame, ApiAccountGoogle, ApiAccountGameCenter, ApiAccountSteam, ApiChannelDescList, ApiChannelDescription, ApiCreateChannelDescRequest, ApiClanDescList, ApiCreateClanDescRequest, ApiClanDesc, ApiCategoryDesc, ApiCategoryDescList, ApiRoleList, ApiPermissionList, ApiRoleUserList, ApiRole, ApiCreateRoleRequest, ApiCreateCategoryDescRequest, ApiUpdateCategoryDescRequest, ApiCreateGroupRequest, ApiDeleteStorageObjectsRequest, ApiEvent, ApiReadStorageObjectsRequest, ApiStorageObjectAcks, ApiUpdateAccountRequest, ApiUpdateGroupRequest, ApiAccountApple, ApiLinkSteamRequest, ApiClanDescProfile, ApiChannelUserList, ApiLinkInviteUserRequest, ApiLinkInviteUser, ApiInviteUserRes } from "./api.gen";
+import { ApiAccount, ApiAccountCustom, ApiAccountDevice, ApiAccountEmail, ApiAccountFacebook, ApiAccountFacebookInstantGame, ApiAccountGoogle, ApiAccountGameCenter, ApiAccountSteam, ApiChannelDescList, ApiChannelDescription, ApiCreateChannelDescRequest, ApiClanDescList, ApiCreateClanDescRequest, ApiClanDesc, ApiCategoryDesc, ApiCategoryDescList, ApiRoleList, ApiPermissionList, ApiRoleUserList, ApiRole, ApiCreateRoleRequest, ApiCreateCategoryDescRequest, ApiUpdateCategoryDescRequest, ApiCreateGroupRequest, ApiDeleteStorageObjectsRequest, ApiEvent, ApiReadStorageObjectsRequest, ApiStorageObjectAcks, ApiUpdateAccountRequest, ApiUpdateGroupRequest, ApiAccountApple, ApiLinkSteamRequest, ApiClanDescProfile, ApiClanProfile, ApiChannelUserList, ApiLinkInviteUserRequest, ApiLinkInviteUser, ApiInviteUserRes } from "./api.gen";
 import { Session } from "./session";
 import { Socket } from "./socket";
 import { WebSocketAdapter } from "./web_socket_adapter";
@@ -422,6 +422,14 @@ export interface ApiUpdateClanDescProfileRequest {
     /** Clan profile avatar */
     avatar_url: string;
 }
+export interface ApiUpdateClanProfileRequest {
+    /** Clan id */
+    clan_id: string;
+    /** Clan nick name */
+    nick_name: string;
+    /** Clan profile avatar */
+    avatar_url: string;
+}
 /** Update fields in a given role. */
 export interface ApiUpdateRoleRequest {
     /** The ID of the role to update. */
@@ -555,6 +563,7 @@ export declare class Client {
     listRoleUsers(session: Session, roleId: string, limit?: number, cursor?: string): Promise<ApiRoleUserList>;
     /** Get a clan desc profile */
     getClanDescProfile(session: Session, clanId: string): Promise<ApiClanDescProfile>;
+    getUserProfileOnClan(session: Session, clanId: string): Promise<ApiClanProfile>;
     /** Add an Apple ID to the social profiles on the current user's account. */
     linkApple(session: Session, request: ApiAccountApple): Promise<boolean>;
     /** Add a custom ID to the social profiles on the current user's account. */
@@ -621,6 +630,7 @@ export declare class Client {
     updateCategory(session: Session, request: ApiUpdateCategoryDescRequest): Promise<boolean>;
     /** Update fields in a given clan profile. */
     updateClanDescProfile(session: Session, clanId: string, request: ApiUpdateClanDescProfileRequest): Promise<boolean>;
+    updateUserProfileByClan(session: Session, clanId: string, request: ApiUpdateClanProfileRequest): Promise<boolean>;
     /** Update fields in a given role. */
     updateRole(session: Session, roleId: string, request: ApiUpdateRoleRequest): Promise<boolean>;
     /** Update fields in a given clan profile. */
