@@ -528,9 +528,6 @@ export interface Socket {
   /** Receive a presence update for a party. */
   onpartypresence: (partyPresence : PartyPresenceEvent) => void;
 
-  /** Receive matchmaking results. */
-  onpartymatchmakerticket: (partyMatchmakerMatched: PartyMatchmakerTicket) => void;
-
   /** Receive status presence updates. */
   onstatuspresence: (statusPresence: StatusPresenceEvent) => void;
 
@@ -651,8 +648,6 @@ export class DefaultSocket implements Socket {
           this.onpartyjoinrequest(message.party_join_request);
         } else if (message.party_leader) {
           this.onpartyleader(<PartyLeader> message.party_leader);
-        } else if (message.party_matchmaker_ticket)  {
-          this.onpartymatchmakerticket(message.party_matchmaker_ticket);
         } else if (message.party_presence_event) {
           this.onpartypresence(<PartyPresenceEvent> message.party_presence_event);
         } else if (message.party) {

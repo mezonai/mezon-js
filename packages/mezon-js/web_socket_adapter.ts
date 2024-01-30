@@ -107,10 +107,8 @@ export class WebSocketAdapterText implements WebSocketAdapter {
         if (value) {
             this._socket!.onmessage = (evt: MessageEvent) => {
                 const message: any = JSON.parse(evt.data);
-
-                if (message.match_data && message.match_data.data) {
-                    message.match_data.data = new Uint8Array(decode(message.match_data.data));
-                } else if (message.party_data && message.party_data.data) {
+                
+                if (message.party_data && message.party_data.data) {
                     message.party_data.data = new Uint8Array(decode(message.party_data.data));
                 }
 
