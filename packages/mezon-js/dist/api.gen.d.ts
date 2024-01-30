@@ -282,11 +282,6 @@ export interface ApiInviteUserRes {
     clan_id?: string;
     clan_name?: string;
 }
-/**  */
-export interface ApiLastSeenMessageRequest {
-    channel_id?: string;
-    message_id?: string;
-}
 /** Add link invite users to. */
 export interface ApiLinkInviteUser {
     channel_id?: string;
