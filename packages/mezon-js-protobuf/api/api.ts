@@ -1562,6 +1562,34 @@ export interface LinkInviteUser {
   id: string;
 }
 
+/** Get clan profile. */
+export interface ClanProfile {
+  /** id user to find user */
+  user_id: string;
+  /** name user */
+  nick_name: string;
+  /** id avartar */
+  avartar: string;
+  /** id clan */
+  clan_id: string;
+}
+
+/** information user by clan requset */
+export interface ClanProfileRequest {
+  /** id clanc */
+  clan_id: string;
+}
+
+/** update nickname user by clan requset */
+export interface UpdateClanProfileRequest {
+  /** id clanc */
+  clan_id: string;
+  /** nick_name new */
+  nick_name: string;
+  /** avartar */
+  avartar: string;
+}
+
 /** Category to group the channel */
 export interface CategoryDesc {
   /** Category creator */
@@ -10426,6 +10454,208 @@ export const LinkInviteUser = {
     message.create_time = object.create_time ?? undefined;
     message.expiry_time = object.expiry_time ?? undefined;
     message.id = object.id ?? "";
+    return message;
+  },
+};
+
+function createBaseClanProfile(): ClanProfile {
+  return { user_id: "", nick_name: "", avartar: "", clan_id: "" };
+}
+
+export const ClanProfile = {
+  encode(message: ClanProfile, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.user_id !== "") {
+      writer.uint32(10).string(message.user_id);
+    }
+    if (message.nick_name !== "") {
+      writer.uint32(18).string(message.nick_name);
+    }
+    if (message.avartar !== "") {
+      writer.uint32(26).string(message.avartar);
+    }
+    if (message.clan_id !== "") {
+      writer.uint32(34).string(message.clan_id);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): ClanProfile {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseClanProfile();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.user_id = reader.string();
+          break;
+        case 2:
+          message.nick_name = reader.string();
+          break;
+        case 3:
+          message.avartar = reader.string();
+          break;
+        case 4:
+          message.clan_id = reader.string();
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): ClanProfile {
+    return {
+      user_id: isSet(object.user_id) ? String(object.user_id) : "",
+      nick_name: isSet(object.nick_name) ? String(object.nick_name) : "",
+      avartar: isSet(object.avartar) ? String(object.avartar) : "",
+      clan_id: isSet(object.clan_id) ? String(object.clan_id) : "",
+    };
+  },
+
+  toJSON(message: ClanProfile): unknown {
+    const obj: any = {};
+    message.user_id !== undefined && (obj.user_id = message.user_id);
+    message.nick_name !== undefined && (obj.nick_name = message.nick_name);
+    message.avartar !== undefined && (obj.avartar = message.avartar);
+    message.clan_id !== undefined && (obj.clan_id = message.clan_id);
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<ClanProfile>, I>>(base?: I): ClanProfile {
+    return ClanProfile.fromPartial(base ?? {});
+  },
+
+  fromPartial<I extends Exact<DeepPartial<ClanProfile>, I>>(object: I): ClanProfile {
+    const message = createBaseClanProfile();
+    message.user_id = object.user_id ?? "";
+    message.nick_name = object.nick_name ?? "";
+    message.avartar = object.avartar ?? "";
+    message.clan_id = object.clan_id ?? "";
+    return message;
+  },
+};
+
+function createBaseClanProfileRequest(): ClanProfileRequest {
+  return { clan_id: "" };
+}
+
+export const ClanProfileRequest = {
+  encode(message: ClanProfileRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.clan_id !== "") {
+      writer.uint32(10).string(message.clan_id);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): ClanProfileRequest {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseClanProfileRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.clan_id = reader.string();
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): ClanProfileRequest {
+    return { clan_id: isSet(object.clan_id) ? String(object.clan_id) : "" };
+  },
+
+  toJSON(message: ClanProfileRequest): unknown {
+    const obj: any = {};
+    message.clan_id !== undefined && (obj.clan_id = message.clan_id);
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<ClanProfileRequest>, I>>(base?: I): ClanProfileRequest {
+    return ClanProfileRequest.fromPartial(base ?? {});
+  },
+
+  fromPartial<I extends Exact<DeepPartial<ClanProfileRequest>, I>>(object: I): ClanProfileRequest {
+    const message = createBaseClanProfileRequest();
+    message.clan_id = object.clan_id ?? "";
+    return message;
+  },
+};
+
+function createBaseUpdateClanProfileRequest(): UpdateClanProfileRequest {
+  return { clan_id: "", nick_name: "", avartar: "" };
+}
+
+export const UpdateClanProfileRequest = {
+  encode(message: UpdateClanProfileRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.clan_id !== "") {
+      writer.uint32(10).string(message.clan_id);
+    }
+    if (message.nick_name !== "") {
+      writer.uint32(18).string(message.nick_name);
+    }
+    if (message.avartar !== "") {
+      writer.uint32(26).string(message.avartar);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): UpdateClanProfileRequest {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseUpdateClanProfileRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.clan_id = reader.string();
+          break;
+        case 2:
+          message.nick_name = reader.string();
+          break;
+        case 3:
+          message.avartar = reader.string();
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): UpdateClanProfileRequest {
+    return {
+      clan_id: isSet(object.clan_id) ? String(object.clan_id) : "",
+      nick_name: isSet(object.nick_name) ? String(object.nick_name) : "",
+      avartar: isSet(object.avartar) ? String(object.avartar) : "",
+    };
+  },
+
+  toJSON(message: UpdateClanProfileRequest): unknown {
+    const obj: any = {};
+    message.clan_id !== undefined && (obj.clan_id = message.clan_id);
+    message.nick_name !== undefined && (obj.nick_name = message.nick_name);
+    message.avartar !== undefined && (obj.avartar = message.avartar);
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<UpdateClanProfileRequest>, I>>(base?: I): UpdateClanProfileRequest {
+    return UpdateClanProfileRequest.fromPartial(base ?? {});
+  },
+
+  fromPartial<I extends Exact<DeepPartial<UpdateClanProfileRequest>, I>>(object: I): UpdateClanProfileRequest {
+    const message = createBaseUpdateClanProfileRequest();
+    message.clan_id = object.clan_id ?? "";
+    message.nick_name = object.nick_name ?? "";
+    message.avartar = object.avartar ?? "";
     return message;
   },
 };

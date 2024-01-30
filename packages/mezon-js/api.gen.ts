@@ -294,6 +294,18 @@ export interface ApiClanDescProfile {
   profile_theme?: string;
 }
 
+/** Get clan profile. */
+export interface ApiClanProfile {
+  //
+  avartar?: string;
+  //
+  clan_id?: string;
+  //
+  nick_name?: string;
+  //
+  user_id?: string;
+}
+
 /**  */
 export interface ApiCreateCategoryDescRequest {
   //
@@ -479,6 +491,8 @@ export interface ApiInviteUserRes {
   //
   clan_name?: string;
 }
+
+
 
 /** Add link invite users to. */
 export interface ApiLinkInviteUser {
@@ -2212,6 +2226,7 @@ export class NakamaApi {
     ]);
 }
 
+
   /** Delete a channel by ID. */
   deleteChannelDesc(bearerToken: string,
       channelId:string,
@@ -3015,6 +3030,42 @@ queryParams.set("creator_id", creatorId);
 
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("POST", options, bodyJson);
+    if (bearerToken) {
+        fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+    }
+
+    return Promise.race([
+      fetch(fullUrl, fetchOptions).then((response) => {
+        if (response.status == 204) {
+          return response;
+        } else if (response.status >= 200 && response.status < 300) {
+          return response.json();
+        } else {
+          throw response;
+        }
+      }),
+      new Promise((_, reject) =>
+        setTimeout(reject, this.timeoutMs, "Request timed out.")
+      ),
+    ]);
+}
+
+  /**  */
+  getUserProfileOnClan(bearerToken: string,
+      clanId:string,
+      options: any = {}): Promise<ApiClanProfile> {
+    
+    if (clanId === null || clanId === undefined) {
+      throw new Error("'clanId' is a required parameter but is null or undefined.");
+    }
+    const urlPath = "/v2/getclanprofile/{clanId}"
+        .replace("{clanId}", encodeURIComponent(String(clanId)));
+    const queryParams = new Map<string, any>();
+
+    let bodyJson : string = "";
+
+    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
+    const fetchOptions = buildFetchOptions("GET", options, bodyJson);
     if (bearerToken) {
         fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
     }
@@ -4266,6 +4317,47 @@ queryParams.set("creator_id", creatorId);
       throw new Error("'body' is a required parameter but is null or undefined.");
     }
     const urlPath = "/v2/updatecategory";
+    const queryParams = new Map<string, any>();
+
+    let bodyJson : string = "";
+    bodyJson = JSON.stringify(body || {});
+
+    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
+    const fetchOptions = buildFetchOptions("PUT", options, bodyJson);
+    if (bearerToken) {
+        fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+    }
+
+    return Promise.race([
+      fetch(fullUrl, fetchOptions).then((response) => {
+        if (response.status == 204) {
+          return response;
+        } else if (response.status >= 200 && response.status < 300) {
+          return response.json();
+        } else {
+          throw response;
+        }
+      }),
+      new Promise((_, reject) =>
+        setTimeout(reject, this.timeoutMs, "Request timed out.")
+      ),
+    ]);
+}
+
+  /**  */
+  updateUserProfileByClan(bearerToken: string,
+      clanId:string,
+      body:{},
+      options: any = {}): Promise<any> {
+    
+    if (clanId === null || clanId === undefined) {
+      throw new Error("'clanId' is a required parameter but is null or undefined.");
+    }
+    if (body === null || body === undefined) {
+      throw new Error("'body' is a required parameter but is null or undefined.");
+    }
+    const urlPath = "/v2/updateclanprofile/{clanId}"
+        .replace("{clanId}", encodeURIComponent(String(clanId)));
     const queryParams = new Map<string, any>();
 
     let bodyJson : string = "";

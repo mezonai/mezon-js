@@ -52,50 +52,6 @@ export interface Envelope {
   error?:
     | Error
     | undefined;
-  /** Incoming information about a realtime match. */
-  match?:
-    | Match
-    | undefined;
-  /** A client to server request to create a realtime match. */
-  match_create?:
-    | MatchCreate
-    | undefined;
-  /** Incoming realtime match data delivered from the server. */
-  match_data?:
-    | MatchData
-    | undefined;
-  /** A client to server request to send data to a realtime match. */
-  match_data_send?:
-    | MatchDataSend
-    | undefined;
-  /** A client to server request to join a realtime match. */
-  match_join?:
-    | MatchJoin
-    | undefined;
-  /** A client to server request to leave a realtime match. */
-  match_leave?:
-    | MatchLeave
-    | undefined;
-  /** Presence update for a particular realtime match. */
-  match_presence_event?:
-    | MatchPresenceEvent
-    | undefined;
-  /** Submit a new matchmaking process request. */
-  matchmaker_add?:
-    | MatchmakerAdd
-    | undefined;
-  /** A successful matchmaking result. */
-  matchmaker_matched?:
-    | MatchmakerMatched
-    | undefined;
-  /** Cancel a matchmaking process using a ticket. */
-  matchmaker_remove?:
-    | MatchmakerRemove
-    | undefined;
-  /** A response from starting a new matchmaking process. */
-  matchmaker_ticket?:
-    | MatchmakerTicket
-    | undefined;
   /** Notifications send by the server. */
   notifications?:
     | Notifications
@@ -184,18 +140,6 @@ export interface Envelope {
   party_join_request?:
     | PartyJoinRequest
     | undefined;
-  /** Begin matchmaking as a party. */
-  party_matchmaker_add?:
-    | PartyMatchmakerAdd
-    | undefined;
-  /** Cancel a party matchmaking process using a ticket. */
-  party_matchmaker_remove?:
-    | PartyMatchmakerRemove
-    | undefined;
-  /** A response from starting a new party matchmaking process. */
-  party_matchmaker_ticket?:
-    | PartyMatchmakerTicket
-    | undefined;
   /** Incoming party data delivered from the server. */
   party_data?:
     | PartyData
@@ -205,7 +149,11 @@ export interface Envelope {
     | PartyDataSend
     | undefined;
   /** Presence update for a particular party. */
-  party_presence_event?: PartyPresenceEvent | undefined;
+  party_presence_event?:
+    | PartyPresenceEvent
+    | undefined;
+  /** User typing event */
+  message_typing_event?: MessageTypingEvent | undefined;
 }
 
 /** A realtime chat channel. */
@@ -847,6 +795,14 @@ export interface StatusPresenceEvent {
   leaves: UserPresence[];
 }
 
+/** Message typing event data */
+export interface MessageTypingEvent {
+  /** The channel this message belongs to. */
+  channel_id: string;
+  /** Message sender, usually a user ID. */
+  sender_id: string;
+}
+
 /** Stop receiving status updates for some set of users. */
 export interface StatusUnfollow {
   /** Users to unfollow. */
@@ -926,17 +882,6 @@ function createBaseEnvelope(): Envelope {
     channel_message_remove: undefined,
     channel_presence_event: undefined,
     error: undefined,
-    match: undefined,
-    match_create: undefined,
-    match_data: undefined,
-    match_data_send: undefined,
-    match_join: undefined,
-    match_leave: undefined,
-    match_presence_event: undefined,
-    matchmaker_add: undefined,
-    matchmaker_matched: undefined,
-    matchmaker_remove: undefined,
-    matchmaker_ticket: undefined,
     notifications: undefined,
     rpc: undefined,
     status: undefined,
@@ -959,12 +904,10 @@ function createBaseEnvelope(): Envelope {
     party_close: undefined,
     party_join_request_list: undefined,
     party_join_request: undefined,
-    party_matchmaker_add: undefined,
-    party_matchmaker_remove: undefined,
-    party_matchmaker_ticket: undefined,
     party_data: undefined,
     party_data_send: undefined,
     party_presence_event: undefined,
+    message_typing_event: undefined,
   };
 }
 
@@ -1003,122 +946,83 @@ export const Envelope = {
     if (message.error !== undefined) {
       Error.encode(message.error, writer.uint32(90).fork()).ldelim();
     }
-    if (message.match !== undefined) {
-      Match.encode(message.match, writer.uint32(98).fork()).ldelim();
-    }
-    if (message.match_create !== undefined) {
-      MatchCreate.encode(message.match_create, writer.uint32(106).fork()).ldelim();
-    }
-    if (message.match_data !== undefined) {
-      MatchData.encode(message.match_data, writer.uint32(114).fork()).ldelim();
-    }
-    if (message.match_data_send !== undefined) {
-      MatchDataSend.encode(message.match_data_send, writer.uint32(122).fork()).ldelim();
-    }
-    if (message.match_join !== undefined) {
-      MatchJoin.encode(message.match_join, writer.uint32(130).fork()).ldelim();
-    }
-    if (message.match_leave !== undefined) {
-      MatchLeave.encode(message.match_leave, writer.uint32(138).fork()).ldelim();
-    }
-    if (message.match_presence_event !== undefined) {
-      MatchPresenceEvent.encode(message.match_presence_event, writer.uint32(146).fork()).ldelim();
-    }
-    if (message.matchmaker_add !== undefined) {
-      MatchmakerAdd.encode(message.matchmaker_add, writer.uint32(154).fork()).ldelim();
-    }
-    if (message.matchmaker_matched !== undefined) {
-      MatchmakerMatched.encode(message.matchmaker_matched, writer.uint32(162).fork()).ldelim();
-    }
-    if (message.matchmaker_remove !== undefined) {
-      MatchmakerRemove.encode(message.matchmaker_remove, writer.uint32(170).fork()).ldelim();
-    }
-    if (message.matchmaker_ticket !== undefined) {
-      MatchmakerTicket.encode(message.matchmaker_ticket, writer.uint32(178).fork()).ldelim();
-    }
     if (message.notifications !== undefined) {
-      Notifications.encode(message.notifications, writer.uint32(186).fork()).ldelim();
+      Notifications.encode(message.notifications, writer.uint32(98).fork()).ldelim();
     }
     if (message.rpc !== undefined) {
-      Rpc.encode(message.rpc, writer.uint32(194).fork()).ldelim();
+      Rpc.encode(message.rpc, writer.uint32(106).fork()).ldelim();
     }
     if (message.status !== undefined) {
-      Status.encode(message.status, writer.uint32(202).fork()).ldelim();
+      Status.encode(message.status, writer.uint32(114).fork()).ldelim();
     }
     if (message.status_follow !== undefined) {
-      StatusFollow.encode(message.status_follow, writer.uint32(210).fork()).ldelim();
+      StatusFollow.encode(message.status_follow, writer.uint32(122).fork()).ldelim();
     }
     if (message.status_presence_event !== undefined) {
-      StatusPresenceEvent.encode(message.status_presence_event, writer.uint32(218).fork()).ldelim();
+      StatusPresenceEvent.encode(message.status_presence_event, writer.uint32(130).fork()).ldelim();
     }
     if (message.status_unfollow !== undefined) {
-      StatusUnfollow.encode(message.status_unfollow, writer.uint32(226).fork()).ldelim();
+      StatusUnfollow.encode(message.status_unfollow, writer.uint32(138).fork()).ldelim();
     }
     if (message.status_update !== undefined) {
-      StatusUpdate.encode(message.status_update, writer.uint32(234).fork()).ldelim();
+      StatusUpdate.encode(message.status_update, writer.uint32(146).fork()).ldelim();
     }
     if (message.stream_data !== undefined) {
-      StreamData.encode(message.stream_data, writer.uint32(242).fork()).ldelim();
+      StreamData.encode(message.stream_data, writer.uint32(154).fork()).ldelim();
     }
     if (message.stream_presence_event !== undefined) {
-      StreamPresenceEvent.encode(message.stream_presence_event, writer.uint32(250).fork()).ldelim();
+      StreamPresenceEvent.encode(message.stream_presence_event, writer.uint32(162).fork()).ldelim();
     }
     if (message.ping !== undefined) {
-      Ping.encode(message.ping, writer.uint32(258).fork()).ldelim();
+      Ping.encode(message.ping, writer.uint32(170).fork()).ldelim();
     }
     if (message.pong !== undefined) {
-      Pong.encode(message.pong, writer.uint32(266).fork()).ldelim();
+      Pong.encode(message.pong, writer.uint32(178).fork()).ldelim();
     }
     if (message.party !== undefined) {
-      Party.encode(message.party, writer.uint32(274).fork()).ldelim();
+      Party.encode(message.party, writer.uint32(186).fork()).ldelim();
     }
     if (message.party_create !== undefined) {
-      PartyCreate.encode(message.party_create, writer.uint32(282).fork()).ldelim();
+      PartyCreate.encode(message.party_create, writer.uint32(194).fork()).ldelim();
     }
     if (message.party_join !== undefined) {
-      PartyJoin.encode(message.party_join, writer.uint32(290).fork()).ldelim();
+      PartyJoin.encode(message.party_join, writer.uint32(202).fork()).ldelim();
     }
     if (message.party_leave !== undefined) {
-      PartyLeave.encode(message.party_leave, writer.uint32(298).fork()).ldelim();
+      PartyLeave.encode(message.party_leave, writer.uint32(210).fork()).ldelim();
     }
     if (message.party_promote !== undefined) {
-      PartyPromote.encode(message.party_promote, writer.uint32(306).fork()).ldelim();
+      PartyPromote.encode(message.party_promote, writer.uint32(218).fork()).ldelim();
     }
     if (message.party_leader !== undefined) {
-      PartyLeader.encode(message.party_leader, writer.uint32(314).fork()).ldelim();
+      PartyLeader.encode(message.party_leader, writer.uint32(226).fork()).ldelim();
     }
     if (message.party_accept !== undefined) {
-      PartyAccept.encode(message.party_accept, writer.uint32(322).fork()).ldelim();
+      PartyAccept.encode(message.party_accept, writer.uint32(234).fork()).ldelim();
     }
     if (message.party_remove !== undefined) {
-      PartyRemove.encode(message.party_remove, writer.uint32(330).fork()).ldelim();
+      PartyRemove.encode(message.party_remove, writer.uint32(242).fork()).ldelim();
     }
     if (message.party_close !== undefined) {
-      PartyClose.encode(message.party_close, writer.uint32(338).fork()).ldelim();
+      PartyClose.encode(message.party_close, writer.uint32(250).fork()).ldelim();
     }
     if (message.party_join_request_list !== undefined) {
-      PartyJoinRequestList.encode(message.party_join_request_list, writer.uint32(346).fork()).ldelim();
+      PartyJoinRequestList.encode(message.party_join_request_list, writer.uint32(258).fork()).ldelim();
     }
     if (message.party_join_request !== undefined) {
-      PartyJoinRequest.encode(message.party_join_request, writer.uint32(354).fork()).ldelim();
-    }
-    if (message.party_matchmaker_add !== undefined) {
-      PartyMatchmakerAdd.encode(message.party_matchmaker_add, writer.uint32(362).fork()).ldelim();
-    }
-    if (message.party_matchmaker_remove !== undefined) {
-      PartyMatchmakerRemove.encode(message.party_matchmaker_remove, writer.uint32(370).fork()).ldelim();
-    }
-    if (message.party_matchmaker_ticket !== undefined) {
-      PartyMatchmakerTicket.encode(message.party_matchmaker_ticket, writer.uint32(378).fork()).ldelim();
+      PartyJoinRequest.encode(message.party_join_request, writer.uint32(266).fork()).ldelim();
     }
     if (message.party_data !== undefined) {
-      PartyData.encode(message.party_data, writer.uint32(386).fork()).ldelim();
+      PartyData.encode(message.party_data, writer.uint32(274).fork()).ldelim();
     }
     if (message.party_data_send !== undefined) {
-      PartyDataSend.encode(message.party_data_send, writer.uint32(394).fork()).ldelim();
+      PartyDataSend.encode(message.party_data_send, writer.uint32(282).fork()).ldelim();
     }
     if (message.party_presence_event !== undefined) {
-      PartyPresenceEvent.encode(message.party_presence_event, writer.uint32(402).fork()).ldelim();
+      PartyPresenceEvent.encode(message.party_presence_event, writer.uint32(290).fork()).ldelim();
+    }
+    if (message.message_typing_event !== undefined) {
+      MessageTypingEvent.encode(message.message_typing_event, writer.uint32(298).fork()).ldelim();
     }
     return writer;
   },
@@ -1164,121 +1068,82 @@ export const Envelope = {
           message.error = Error.decode(reader, reader.uint32());
           break;
         case 12:
-          message.match = Match.decode(reader, reader.uint32());
-          break;
-        case 13:
-          message.match_create = MatchCreate.decode(reader, reader.uint32());
-          break;
-        case 14:
-          message.match_data = MatchData.decode(reader, reader.uint32());
-          break;
-        case 15:
-          message.match_data_send = MatchDataSend.decode(reader, reader.uint32());
-          break;
-        case 16:
-          message.match_join = MatchJoin.decode(reader, reader.uint32());
-          break;
-        case 17:
-          message.match_leave = MatchLeave.decode(reader, reader.uint32());
-          break;
-        case 18:
-          message.match_presence_event = MatchPresenceEvent.decode(reader, reader.uint32());
-          break;
-        case 19:
-          message.matchmaker_add = MatchmakerAdd.decode(reader, reader.uint32());
-          break;
-        case 20:
-          message.matchmaker_matched = MatchmakerMatched.decode(reader, reader.uint32());
-          break;
-        case 21:
-          message.matchmaker_remove = MatchmakerRemove.decode(reader, reader.uint32());
-          break;
-        case 22:
-          message.matchmaker_ticket = MatchmakerTicket.decode(reader, reader.uint32());
-          break;
-        case 23:
           message.notifications = Notifications.decode(reader, reader.uint32());
           break;
-        case 24:
+        case 13:
           message.rpc = Rpc.decode(reader, reader.uint32());
           break;
-        case 25:
+        case 14:
           message.status = Status.decode(reader, reader.uint32());
           break;
-        case 26:
+        case 15:
           message.status_follow = StatusFollow.decode(reader, reader.uint32());
           break;
-        case 27:
+        case 16:
           message.status_presence_event = StatusPresenceEvent.decode(reader, reader.uint32());
           break;
-        case 28:
+        case 17:
           message.status_unfollow = StatusUnfollow.decode(reader, reader.uint32());
           break;
-        case 29:
+        case 18:
           message.status_update = StatusUpdate.decode(reader, reader.uint32());
           break;
-        case 30:
+        case 19:
           message.stream_data = StreamData.decode(reader, reader.uint32());
           break;
-        case 31:
+        case 20:
           message.stream_presence_event = StreamPresenceEvent.decode(reader, reader.uint32());
           break;
-        case 32:
+        case 21:
           message.ping = Ping.decode(reader, reader.uint32());
           break;
-        case 33:
+        case 22:
           message.pong = Pong.decode(reader, reader.uint32());
           break;
-        case 34:
+        case 23:
           message.party = Party.decode(reader, reader.uint32());
           break;
-        case 35:
+        case 24:
           message.party_create = PartyCreate.decode(reader, reader.uint32());
           break;
-        case 36:
+        case 25:
           message.party_join = PartyJoin.decode(reader, reader.uint32());
           break;
-        case 37:
+        case 26:
           message.party_leave = PartyLeave.decode(reader, reader.uint32());
           break;
-        case 38:
+        case 27:
           message.party_promote = PartyPromote.decode(reader, reader.uint32());
           break;
-        case 39:
+        case 28:
           message.party_leader = PartyLeader.decode(reader, reader.uint32());
           break;
-        case 40:
+        case 29:
           message.party_accept = PartyAccept.decode(reader, reader.uint32());
           break;
-        case 41:
+        case 30:
           message.party_remove = PartyRemove.decode(reader, reader.uint32());
           break;
-        case 42:
+        case 31:
           message.party_close = PartyClose.decode(reader, reader.uint32());
           break;
-        case 43:
+        case 32:
           message.party_join_request_list = PartyJoinRequestList.decode(reader, reader.uint32());
           break;
-        case 44:
+        case 33:
           message.party_join_request = PartyJoinRequest.decode(reader, reader.uint32());
           break;
-        case 45:
-          message.party_matchmaker_add = PartyMatchmakerAdd.decode(reader, reader.uint32());
-          break;
-        case 46:
-          message.party_matchmaker_remove = PartyMatchmakerRemove.decode(reader, reader.uint32());
-          break;
-        case 47:
-          message.party_matchmaker_ticket = PartyMatchmakerTicket.decode(reader, reader.uint32());
-          break;
-        case 48:
+        case 34:
           message.party_data = PartyData.decode(reader, reader.uint32());
           break;
-        case 49:
+        case 35:
           message.party_data_send = PartyDataSend.decode(reader, reader.uint32());
           break;
-        case 50:
+        case 36:
           message.party_presence_event = PartyPresenceEvent.decode(reader, reader.uint32());
+          break;
+        case 37:
+          message.message_typing_event = MessageTypingEvent.decode(reader, reader.uint32());
           break;
         default:
           reader.skipType(tag & 7);
@@ -1311,25 +1176,6 @@ export const Envelope = {
         ? ChannelPresenceEvent.fromJSON(object.channel_presence_event)
         : undefined,
       error: isSet(object.error) ? Error.fromJSON(object.error) : undefined,
-      match: isSet(object.match) ? Match.fromJSON(object.match) : undefined,
-      match_create: isSet(object.match_create) ? MatchCreate.fromJSON(object.match_create) : undefined,
-      match_data: isSet(object.match_data) ? MatchData.fromJSON(object.match_data) : undefined,
-      match_data_send: isSet(object.match_data_send) ? MatchDataSend.fromJSON(object.match_data_send) : undefined,
-      match_join: isSet(object.match_join) ? MatchJoin.fromJSON(object.match_join) : undefined,
-      match_leave: isSet(object.match_leave) ? MatchLeave.fromJSON(object.match_leave) : undefined,
-      match_presence_event: isSet(object.match_presence_event)
-        ? MatchPresenceEvent.fromJSON(object.match_presence_event)
-        : undefined,
-      matchmaker_add: isSet(object.matchmaker_add) ? MatchmakerAdd.fromJSON(object.matchmaker_add) : undefined,
-      matchmaker_matched: isSet(object.matchmaker_matched)
-        ? MatchmakerMatched.fromJSON(object.matchmaker_matched)
-        : undefined,
-      matchmaker_remove: isSet(object.matchmaker_remove)
-        ? MatchmakerRemove.fromJSON(object.matchmaker_remove)
-        : undefined,
-      matchmaker_ticket: isSet(object.matchmaker_ticket)
-        ? MatchmakerTicket.fromJSON(object.matchmaker_ticket)
-        : undefined,
       notifications: isSet(object.notifications) ? Notifications.fromJSON(object.notifications) : undefined,
       rpc: isSet(object.rpc) ? Rpc.fromJSON(object.rpc) : undefined,
       status: isSet(object.status) ? Status.fromJSON(object.status) : undefined,
@@ -1360,19 +1206,13 @@ export const Envelope = {
       party_join_request: isSet(object.party_join_request)
         ? PartyJoinRequest.fromJSON(object.party_join_request)
         : undefined,
-      party_matchmaker_add: isSet(object.party_matchmaker_add)
-        ? PartyMatchmakerAdd.fromJSON(object.party_matchmaker_add)
-        : undefined,
-      party_matchmaker_remove: isSet(object.party_matchmaker_remove)
-        ? PartyMatchmakerRemove.fromJSON(object.party_matchmaker_remove)
-        : undefined,
-      party_matchmaker_ticket: isSet(object.party_matchmaker_ticket)
-        ? PartyMatchmakerTicket.fromJSON(object.party_matchmaker_ticket)
-        : undefined,
       party_data: isSet(object.party_data) ? PartyData.fromJSON(object.party_data) : undefined,
       party_data_send: isSet(object.party_data_send) ? PartyDataSend.fromJSON(object.party_data_send) : undefined,
       party_presence_event: isSet(object.party_presence_event)
         ? PartyPresenceEvent.fromJSON(object.party_presence_event)
+        : undefined,
+      message_typing_event: isSet(object.message_typing_event)
+        ? MessageTypingEvent.fromJSON(object.message_typing_event)
         : undefined,
     };
   },
@@ -1403,31 +1243,6 @@ export const Envelope = {
       ? ChannelPresenceEvent.toJSON(message.channel_presence_event)
       : undefined);
     message.error !== undefined && (obj.error = message.error ? Error.toJSON(message.error) : undefined);
-    message.match !== undefined && (obj.match = message.match ? Match.toJSON(message.match) : undefined);
-    message.match_create !== undefined &&
-      (obj.match_create = message.match_create ? MatchCreate.toJSON(message.match_create) : undefined);
-    message.match_data !== undefined &&
-      (obj.match_data = message.match_data ? MatchData.toJSON(message.match_data) : undefined);
-    message.match_data_send !== undefined &&
-      (obj.match_data_send = message.match_data_send ? MatchDataSend.toJSON(message.match_data_send) : undefined);
-    message.match_join !== undefined &&
-      (obj.match_join = message.match_join ? MatchJoin.toJSON(message.match_join) : undefined);
-    message.match_leave !== undefined &&
-      (obj.match_leave = message.match_leave ? MatchLeave.toJSON(message.match_leave) : undefined);
-    message.match_presence_event !== undefined && (obj.match_presence_event = message.match_presence_event
-      ? MatchPresenceEvent.toJSON(message.match_presence_event)
-      : undefined);
-    message.matchmaker_add !== undefined &&
-      (obj.matchmaker_add = message.matchmaker_add ? MatchmakerAdd.toJSON(message.matchmaker_add) : undefined);
-    message.matchmaker_matched !== undefined && (obj.matchmaker_matched = message.matchmaker_matched
-      ? MatchmakerMatched.toJSON(message.matchmaker_matched)
-      : undefined);
-    message.matchmaker_remove !== undefined && (obj.matchmaker_remove = message.matchmaker_remove
-      ? MatchmakerRemove.toJSON(message.matchmaker_remove)
-      : undefined);
-    message.matchmaker_ticket !== undefined && (obj.matchmaker_ticket = message.matchmaker_ticket
-      ? MatchmakerTicket.toJSON(message.matchmaker_ticket)
-      : undefined);
     message.notifications !== undefined &&
       (obj.notifications = message.notifications ? Notifications.toJSON(message.notifications) : undefined);
     message.rpc !== undefined && (obj.rpc = message.rpc ? Rpc.toJSON(message.rpc) : undefined);
@@ -1471,21 +1286,15 @@ export const Envelope = {
     message.party_join_request !== undefined && (obj.party_join_request = message.party_join_request
       ? PartyJoinRequest.toJSON(message.party_join_request)
       : undefined);
-    message.party_matchmaker_add !== undefined && (obj.party_matchmaker_add = message.party_matchmaker_add
-      ? PartyMatchmakerAdd.toJSON(message.party_matchmaker_add)
-      : undefined);
-    message.party_matchmaker_remove !== undefined && (obj.party_matchmaker_remove = message.party_matchmaker_remove
-      ? PartyMatchmakerRemove.toJSON(message.party_matchmaker_remove)
-      : undefined);
-    message.party_matchmaker_ticket !== undefined && (obj.party_matchmaker_ticket = message.party_matchmaker_ticket
-      ? PartyMatchmakerTicket.toJSON(message.party_matchmaker_ticket)
-      : undefined);
     message.party_data !== undefined &&
       (obj.party_data = message.party_data ? PartyData.toJSON(message.party_data) : undefined);
     message.party_data_send !== undefined &&
       (obj.party_data_send = message.party_data_send ? PartyDataSend.toJSON(message.party_data_send) : undefined);
     message.party_presence_event !== undefined && (obj.party_presence_event = message.party_presence_event
       ? PartyPresenceEvent.toJSON(message.party_presence_event)
+      : undefined);
+    message.message_typing_event !== undefined && (obj.message_typing_event = message.message_typing_event
+      ? MessageTypingEvent.toJSON(message.message_typing_event)
       : undefined);
     return obj;
   },
@@ -1528,37 +1337,6 @@ export const Envelope = {
         ? ChannelPresenceEvent.fromPartial(object.channel_presence_event)
         : undefined;
     message.error = (object.error !== undefined && object.error !== null) ? Error.fromPartial(object.error) : undefined;
-    message.match = (object.match !== undefined && object.match !== null) ? Match.fromPartial(object.match) : undefined;
-    message.match_create = (object.match_create !== undefined && object.match_create !== null)
-      ? MatchCreate.fromPartial(object.match_create)
-      : undefined;
-    message.match_data = (object.match_data !== undefined && object.match_data !== null)
-      ? MatchData.fromPartial(object.match_data)
-      : undefined;
-    message.match_data_send = (object.match_data_send !== undefined && object.match_data_send !== null)
-      ? MatchDataSend.fromPartial(object.match_data_send)
-      : undefined;
-    message.match_join = (object.match_join !== undefined && object.match_join !== null)
-      ? MatchJoin.fromPartial(object.match_join)
-      : undefined;
-    message.match_leave = (object.match_leave !== undefined && object.match_leave !== null)
-      ? MatchLeave.fromPartial(object.match_leave)
-      : undefined;
-    message.match_presence_event = (object.match_presence_event !== undefined && object.match_presence_event !== null)
-      ? MatchPresenceEvent.fromPartial(object.match_presence_event)
-      : undefined;
-    message.matchmaker_add = (object.matchmaker_add !== undefined && object.matchmaker_add !== null)
-      ? MatchmakerAdd.fromPartial(object.matchmaker_add)
-      : undefined;
-    message.matchmaker_matched = (object.matchmaker_matched !== undefined && object.matchmaker_matched !== null)
-      ? MatchmakerMatched.fromPartial(object.matchmaker_matched)
-      : undefined;
-    message.matchmaker_remove = (object.matchmaker_remove !== undefined && object.matchmaker_remove !== null)
-      ? MatchmakerRemove.fromPartial(object.matchmaker_remove)
-      : undefined;
-    message.matchmaker_ticket = (object.matchmaker_ticket !== undefined && object.matchmaker_ticket !== null)
-      ? MatchmakerTicket.fromPartial(object.matchmaker_ticket)
-      : undefined;
     message.notifications = (object.notifications !== undefined && object.notifications !== null)
       ? Notifications.fromPartial(object.notifications)
       : undefined;
@@ -1620,17 +1398,6 @@ export const Envelope = {
     message.party_join_request = (object.party_join_request !== undefined && object.party_join_request !== null)
       ? PartyJoinRequest.fromPartial(object.party_join_request)
       : undefined;
-    message.party_matchmaker_add = (object.party_matchmaker_add !== undefined && object.party_matchmaker_add !== null)
-      ? PartyMatchmakerAdd.fromPartial(object.party_matchmaker_add)
-      : undefined;
-    message.party_matchmaker_remove =
-      (object.party_matchmaker_remove !== undefined && object.party_matchmaker_remove !== null)
-        ? PartyMatchmakerRemove.fromPartial(object.party_matchmaker_remove)
-        : undefined;
-    message.party_matchmaker_ticket =
-      (object.party_matchmaker_ticket !== undefined && object.party_matchmaker_ticket !== null)
-        ? PartyMatchmakerTicket.fromPartial(object.party_matchmaker_ticket)
-        : undefined;
     message.party_data = (object.party_data !== undefined && object.party_data !== null)
       ? PartyData.fromPartial(object.party_data)
       : undefined;
@@ -1639,6 +1406,9 @@ export const Envelope = {
       : undefined;
     message.party_presence_event = (object.party_presence_event !== undefined && object.party_presence_event !== null)
       ? PartyPresenceEvent.fromPartial(object.party_presence_event)
+      : undefined;
+    message.message_typing_event = (object.message_typing_event !== undefined && object.message_typing_event !== null)
+      ? MessageTypingEvent.fromPartial(object.message_typing_event)
       : undefined;
     return message;
   },
@@ -5557,6 +5327,68 @@ export const StatusPresenceEvent = {
     const message = createBaseStatusPresenceEvent();
     message.joins = object.joins?.map((e) => UserPresence.fromPartial(e)) || [];
     message.leaves = object.leaves?.map((e) => UserPresence.fromPartial(e)) || [];
+    return message;
+  },
+};
+
+function createBaseMessageTypingEvent(): MessageTypingEvent {
+  return { channel_id: "", sender_id: "" };
+}
+
+export const MessageTypingEvent = {
+  encode(message: MessageTypingEvent, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.channel_id !== "") {
+      writer.uint32(10).string(message.channel_id);
+    }
+    if (message.sender_id !== "") {
+      writer.uint32(18).string(message.sender_id);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): MessageTypingEvent {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseMessageTypingEvent();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.channel_id = reader.string();
+          break;
+        case 2:
+          message.sender_id = reader.string();
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): MessageTypingEvent {
+    return {
+      channel_id: isSet(object.channel_id) ? String(object.channel_id) : "",
+      sender_id: isSet(object.sender_id) ? String(object.sender_id) : "",
+    };
+  },
+
+  toJSON(message: MessageTypingEvent): unknown {
+    const obj: any = {};
+    message.channel_id !== undefined && (obj.channel_id = message.channel_id);
+    message.sender_id !== undefined && (obj.sender_id = message.sender_id);
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<MessageTypingEvent>, I>>(base?: I): MessageTypingEvent {
+    return MessageTypingEvent.fromPartial(base ?? {});
+  },
+
+  fromPartial<I extends Exact<DeepPartial<MessageTypingEvent>, I>>(object: I): MessageTypingEvent {
+    const message = createBaseMessageTypingEvent();
+    message.channel_id = object.channel_id ?? "";
+    message.sender_id = object.sender_id ?? "";
     return message;
   },
 };

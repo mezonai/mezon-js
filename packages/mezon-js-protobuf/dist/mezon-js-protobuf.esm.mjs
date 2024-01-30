@@ -2914,17 +2914,6 @@ function createBaseEnvelope() {
     channel_message_remove: void 0,
     channel_presence_event: void 0,
     error: void 0,
-    match: void 0,
-    match_create: void 0,
-    match_data: void 0,
-    match_data_send: void 0,
-    match_join: void 0,
-    match_leave: void 0,
-    match_presence_event: void 0,
-    matchmaker_add: void 0,
-    matchmaker_matched: void 0,
-    matchmaker_remove: void 0,
-    matchmaker_ticket: void 0,
     notifications: void 0,
     rpc: void 0,
     status: void 0,
@@ -2947,12 +2936,10 @@ function createBaseEnvelope() {
     party_close: void 0,
     party_join_request_list: void 0,
     party_join_request: void 0,
-    party_matchmaker_add: void 0,
-    party_matchmaker_remove: void 0,
-    party_matchmaker_ticket: void 0,
     party_data: void 0,
     party_data_send: void 0,
-    party_presence_event: void 0
+    party_presence_event: void 0,
+    message_typing_event: void 0
   };
 }
 var Envelope = {
@@ -2990,122 +2977,83 @@ var Envelope = {
     if (message.error !== void 0) {
       Error2.encode(message.error, writer.uint32(90).fork()).ldelim();
     }
-    if (message.match !== void 0) {
-      Match.encode(message.match, writer.uint32(98).fork()).ldelim();
-    }
-    if (message.match_create !== void 0) {
-      MatchCreate.encode(message.match_create, writer.uint32(106).fork()).ldelim();
-    }
-    if (message.match_data !== void 0) {
-      MatchData.encode(message.match_data, writer.uint32(114).fork()).ldelim();
-    }
-    if (message.match_data_send !== void 0) {
-      MatchDataSend.encode(message.match_data_send, writer.uint32(122).fork()).ldelim();
-    }
-    if (message.match_join !== void 0) {
-      MatchJoin.encode(message.match_join, writer.uint32(130).fork()).ldelim();
-    }
-    if (message.match_leave !== void 0) {
-      MatchLeave.encode(message.match_leave, writer.uint32(138).fork()).ldelim();
-    }
-    if (message.match_presence_event !== void 0) {
-      MatchPresenceEvent.encode(message.match_presence_event, writer.uint32(146).fork()).ldelim();
-    }
-    if (message.matchmaker_add !== void 0) {
-      MatchmakerAdd.encode(message.matchmaker_add, writer.uint32(154).fork()).ldelim();
-    }
-    if (message.matchmaker_matched !== void 0) {
-      MatchmakerMatched.encode(message.matchmaker_matched, writer.uint32(162).fork()).ldelim();
-    }
-    if (message.matchmaker_remove !== void 0) {
-      MatchmakerRemove.encode(message.matchmaker_remove, writer.uint32(170).fork()).ldelim();
-    }
-    if (message.matchmaker_ticket !== void 0) {
-      MatchmakerTicket.encode(message.matchmaker_ticket, writer.uint32(178).fork()).ldelim();
-    }
     if (message.notifications !== void 0) {
-      Notifications.encode(message.notifications, writer.uint32(186).fork()).ldelim();
+      Notifications.encode(message.notifications, writer.uint32(98).fork()).ldelim();
     }
     if (message.rpc !== void 0) {
-      Rpc.encode(message.rpc, writer.uint32(194).fork()).ldelim();
+      Rpc.encode(message.rpc, writer.uint32(106).fork()).ldelim();
     }
     if (message.status !== void 0) {
-      Status.encode(message.status, writer.uint32(202).fork()).ldelim();
+      Status.encode(message.status, writer.uint32(114).fork()).ldelim();
     }
     if (message.status_follow !== void 0) {
-      StatusFollow.encode(message.status_follow, writer.uint32(210).fork()).ldelim();
+      StatusFollow.encode(message.status_follow, writer.uint32(122).fork()).ldelim();
     }
     if (message.status_presence_event !== void 0) {
-      StatusPresenceEvent.encode(message.status_presence_event, writer.uint32(218).fork()).ldelim();
+      StatusPresenceEvent.encode(message.status_presence_event, writer.uint32(130).fork()).ldelim();
     }
     if (message.status_unfollow !== void 0) {
-      StatusUnfollow.encode(message.status_unfollow, writer.uint32(226).fork()).ldelim();
+      StatusUnfollow.encode(message.status_unfollow, writer.uint32(138).fork()).ldelim();
     }
     if (message.status_update !== void 0) {
-      StatusUpdate.encode(message.status_update, writer.uint32(234).fork()).ldelim();
+      StatusUpdate.encode(message.status_update, writer.uint32(146).fork()).ldelim();
     }
     if (message.stream_data !== void 0) {
-      StreamData.encode(message.stream_data, writer.uint32(242).fork()).ldelim();
+      StreamData.encode(message.stream_data, writer.uint32(154).fork()).ldelim();
     }
     if (message.stream_presence_event !== void 0) {
-      StreamPresenceEvent.encode(message.stream_presence_event, writer.uint32(250).fork()).ldelim();
+      StreamPresenceEvent.encode(message.stream_presence_event, writer.uint32(162).fork()).ldelim();
     }
     if (message.ping !== void 0) {
-      Ping.encode(message.ping, writer.uint32(258).fork()).ldelim();
+      Ping.encode(message.ping, writer.uint32(170).fork()).ldelim();
     }
     if (message.pong !== void 0) {
-      Pong.encode(message.pong, writer.uint32(266).fork()).ldelim();
+      Pong.encode(message.pong, writer.uint32(178).fork()).ldelim();
     }
     if (message.party !== void 0) {
-      Party.encode(message.party, writer.uint32(274).fork()).ldelim();
+      Party.encode(message.party, writer.uint32(186).fork()).ldelim();
     }
     if (message.party_create !== void 0) {
-      PartyCreate.encode(message.party_create, writer.uint32(282).fork()).ldelim();
+      PartyCreate.encode(message.party_create, writer.uint32(194).fork()).ldelim();
     }
     if (message.party_join !== void 0) {
-      PartyJoin.encode(message.party_join, writer.uint32(290).fork()).ldelim();
+      PartyJoin.encode(message.party_join, writer.uint32(202).fork()).ldelim();
     }
     if (message.party_leave !== void 0) {
-      PartyLeave.encode(message.party_leave, writer.uint32(298).fork()).ldelim();
+      PartyLeave.encode(message.party_leave, writer.uint32(210).fork()).ldelim();
     }
     if (message.party_promote !== void 0) {
-      PartyPromote.encode(message.party_promote, writer.uint32(306).fork()).ldelim();
+      PartyPromote.encode(message.party_promote, writer.uint32(218).fork()).ldelim();
     }
     if (message.party_leader !== void 0) {
-      PartyLeader.encode(message.party_leader, writer.uint32(314).fork()).ldelim();
+      PartyLeader.encode(message.party_leader, writer.uint32(226).fork()).ldelim();
     }
     if (message.party_accept !== void 0) {
-      PartyAccept.encode(message.party_accept, writer.uint32(322).fork()).ldelim();
+      PartyAccept.encode(message.party_accept, writer.uint32(234).fork()).ldelim();
     }
     if (message.party_remove !== void 0) {
-      PartyRemove.encode(message.party_remove, writer.uint32(330).fork()).ldelim();
+      PartyRemove.encode(message.party_remove, writer.uint32(242).fork()).ldelim();
     }
     if (message.party_close !== void 0) {
-      PartyClose.encode(message.party_close, writer.uint32(338).fork()).ldelim();
+      PartyClose.encode(message.party_close, writer.uint32(250).fork()).ldelim();
     }
     if (message.party_join_request_list !== void 0) {
-      PartyJoinRequestList.encode(message.party_join_request_list, writer.uint32(346).fork()).ldelim();
+      PartyJoinRequestList.encode(message.party_join_request_list, writer.uint32(258).fork()).ldelim();
     }
     if (message.party_join_request !== void 0) {
-      PartyJoinRequest.encode(message.party_join_request, writer.uint32(354).fork()).ldelim();
-    }
-    if (message.party_matchmaker_add !== void 0) {
-      PartyMatchmakerAdd.encode(message.party_matchmaker_add, writer.uint32(362).fork()).ldelim();
-    }
-    if (message.party_matchmaker_remove !== void 0) {
-      PartyMatchmakerRemove.encode(message.party_matchmaker_remove, writer.uint32(370).fork()).ldelim();
-    }
-    if (message.party_matchmaker_ticket !== void 0) {
-      PartyMatchmakerTicket.encode(message.party_matchmaker_ticket, writer.uint32(378).fork()).ldelim();
+      PartyJoinRequest.encode(message.party_join_request, writer.uint32(266).fork()).ldelim();
     }
     if (message.party_data !== void 0) {
-      PartyData.encode(message.party_data, writer.uint32(386).fork()).ldelim();
+      PartyData.encode(message.party_data, writer.uint32(274).fork()).ldelim();
     }
     if (message.party_data_send !== void 0) {
-      PartyDataSend.encode(message.party_data_send, writer.uint32(394).fork()).ldelim();
+      PartyDataSend.encode(message.party_data_send, writer.uint32(282).fork()).ldelim();
     }
     if (message.party_presence_event !== void 0) {
-      PartyPresenceEvent.encode(message.party_presence_event, writer.uint32(402).fork()).ldelim();
+      PartyPresenceEvent.encode(message.party_presence_event, writer.uint32(290).fork()).ldelim();
+    }
+    if (message.message_typing_event !== void 0) {
+      MessageTypingEvent.encode(message.message_typing_event, writer.uint32(298).fork()).ldelim();
     }
     return writer;
   },
@@ -3150,121 +3098,82 @@ var Envelope = {
           message.error = Error2.decode(reader, reader.uint32());
           break;
         case 12:
-          message.match = Match.decode(reader, reader.uint32());
-          break;
-        case 13:
-          message.match_create = MatchCreate.decode(reader, reader.uint32());
-          break;
-        case 14:
-          message.match_data = MatchData.decode(reader, reader.uint32());
-          break;
-        case 15:
-          message.match_data_send = MatchDataSend.decode(reader, reader.uint32());
-          break;
-        case 16:
-          message.match_join = MatchJoin.decode(reader, reader.uint32());
-          break;
-        case 17:
-          message.match_leave = MatchLeave.decode(reader, reader.uint32());
-          break;
-        case 18:
-          message.match_presence_event = MatchPresenceEvent.decode(reader, reader.uint32());
-          break;
-        case 19:
-          message.matchmaker_add = MatchmakerAdd.decode(reader, reader.uint32());
-          break;
-        case 20:
-          message.matchmaker_matched = MatchmakerMatched.decode(reader, reader.uint32());
-          break;
-        case 21:
-          message.matchmaker_remove = MatchmakerRemove.decode(reader, reader.uint32());
-          break;
-        case 22:
-          message.matchmaker_ticket = MatchmakerTicket.decode(reader, reader.uint32());
-          break;
-        case 23:
           message.notifications = Notifications.decode(reader, reader.uint32());
           break;
-        case 24:
+        case 13:
           message.rpc = Rpc.decode(reader, reader.uint32());
           break;
-        case 25:
+        case 14:
           message.status = Status.decode(reader, reader.uint32());
           break;
-        case 26:
+        case 15:
           message.status_follow = StatusFollow.decode(reader, reader.uint32());
           break;
-        case 27:
+        case 16:
           message.status_presence_event = StatusPresenceEvent.decode(reader, reader.uint32());
           break;
-        case 28:
+        case 17:
           message.status_unfollow = StatusUnfollow.decode(reader, reader.uint32());
           break;
-        case 29:
+        case 18:
           message.status_update = StatusUpdate.decode(reader, reader.uint32());
           break;
-        case 30:
+        case 19:
           message.stream_data = StreamData.decode(reader, reader.uint32());
           break;
-        case 31:
+        case 20:
           message.stream_presence_event = StreamPresenceEvent.decode(reader, reader.uint32());
           break;
-        case 32:
+        case 21:
           message.ping = Ping.decode(reader, reader.uint32());
           break;
-        case 33:
+        case 22:
           message.pong = Pong.decode(reader, reader.uint32());
           break;
-        case 34:
+        case 23:
           message.party = Party.decode(reader, reader.uint32());
           break;
-        case 35:
+        case 24:
           message.party_create = PartyCreate.decode(reader, reader.uint32());
           break;
-        case 36:
+        case 25:
           message.party_join = PartyJoin.decode(reader, reader.uint32());
           break;
-        case 37:
+        case 26:
           message.party_leave = PartyLeave.decode(reader, reader.uint32());
           break;
-        case 38:
+        case 27:
           message.party_promote = PartyPromote.decode(reader, reader.uint32());
           break;
-        case 39:
+        case 28:
           message.party_leader = PartyLeader.decode(reader, reader.uint32());
           break;
-        case 40:
+        case 29:
           message.party_accept = PartyAccept.decode(reader, reader.uint32());
           break;
-        case 41:
+        case 30:
           message.party_remove = PartyRemove.decode(reader, reader.uint32());
           break;
-        case 42:
+        case 31:
           message.party_close = PartyClose.decode(reader, reader.uint32());
           break;
-        case 43:
+        case 32:
           message.party_join_request_list = PartyJoinRequestList.decode(reader, reader.uint32());
           break;
-        case 44:
+        case 33:
           message.party_join_request = PartyJoinRequest.decode(reader, reader.uint32());
           break;
-        case 45:
-          message.party_matchmaker_add = PartyMatchmakerAdd.decode(reader, reader.uint32());
-          break;
-        case 46:
-          message.party_matchmaker_remove = PartyMatchmakerRemove.decode(reader, reader.uint32());
-          break;
-        case 47:
-          message.party_matchmaker_ticket = PartyMatchmakerTicket.decode(reader, reader.uint32());
-          break;
-        case 48:
+        case 34:
           message.party_data = PartyData.decode(reader, reader.uint32());
           break;
-        case 49:
+        case 35:
           message.party_data_send = PartyDataSend.decode(reader, reader.uint32());
           break;
-        case 50:
+        case 36:
           message.party_presence_event = PartyPresenceEvent.decode(reader, reader.uint32());
+          break;
+        case 37:
+          message.message_typing_event = MessageTypingEvent.decode(reader, reader.uint32());
           break;
         default:
           reader.skipType(tag & 7);
@@ -3286,17 +3195,6 @@ var Envelope = {
       channel_message_remove: isSet4(object.channel_message_remove) ? ChannelMessageRemove.fromJSON(object.channel_message_remove) : void 0,
       channel_presence_event: isSet4(object.channel_presence_event) ? ChannelPresenceEvent.fromJSON(object.channel_presence_event) : void 0,
       error: isSet4(object.error) ? Error2.fromJSON(object.error) : void 0,
-      match: isSet4(object.match) ? Match.fromJSON(object.match) : void 0,
-      match_create: isSet4(object.match_create) ? MatchCreate.fromJSON(object.match_create) : void 0,
-      match_data: isSet4(object.match_data) ? MatchData.fromJSON(object.match_data) : void 0,
-      match_data_send: isSet4(object.match_data_send) ? MatchDataSend.fromJSON(object.match_data_send) : void 0,
-      match_join: isSet4(object.match_join) ? MatchJoin.fromJSON(object.match_join) : void 0,
-      match_leave: isSet4(object.match_leave) ? MatchLeave.fromJSON(object.match_leave) : void 0,
-      match_presence_event: isSet4(object.match_presence_event) ? MatchPresenceEvent.fromJSON(object.match_presence_event) : void 0,
-      matchmaker_add: isSet4(object.matchmaker_add) ? MatchmakerAdd.fromJSON(object.matchmaker_add) : void 0,
-      matchmaker_matched: isSet4(object.matchmaker_matched) ? MatchmakerMatched.fromJSON(object.matchmaker_matched) : void 0,
-      matchmaker_remove: isSet4(object.matchmaker_remove) ? MatchmakerRemove.fromJSON(object.matchmaker_remove) : void 0,
-      matchmaker_ticket: isSet4(object.matchmaker_ticket) ? MatchmakerTicket.fromJSON(object.matchmaker_ticket) : void 0,
       notifications: isSet4(object.notifications) ? Notifications.fromJSON(object.notifications) : void 0,
       rpc: isSet4(object.rpc) ? Rpc.fromJSON(object.rpc) : void 0,
       status: isSet4(object.status) ? Status.fromJSON(object.status) : void 0,
@@ -3319,12 +3217,10 @@ var Envelope = {
       party_close: isSet4(object.party_close) ? PartyClose.fromJSON(object.party_close) : void 0,
       party_join_request_list: isSet4(object.party_join_request_list) ? PartyJoinRequestList.fromJSON(object.party_join_request_list) : void 0,
       party_join_request: isSet4(object.party_join_request) ? PartyJoinRequest.fromJSON(object.party_join_request) : void 0,
-      party_matchmaker_add: isSet4(object.party_matchmaker_add) ? PartyMatchmakerAdd.fromJSON(object.party_matchmaker_add) : void 0,
-      party_matchmaker_remove: isSet4(object.party_matchmaker_remove) ? PartyMatchmakerRemove.fromJSON(object.party_matchmaker_remove) : void 0,
-      party_matchmaker_ticket: isSet4(object.party_matchmaker_ticket) ? PartyMatchmakerTicket.fromJSON(object.party_matchmaker_ticket) : void 0,
       party_data: isSet4(object.party_data) ? PartyData.fromJSON(object.party_data) : void 0,
       party_data_send: isSet4(object.party_data_send) ? PartyDataSend.fromJSON(object.party_data_send) : void 0,
-      party_presence_event: isSet4(object.party_presence_event) ? PartyPresenceEvent.fromJSON(object.party_presence_event) : void 0
+      party_presence_event: isSet4(object.party_presence_event) ? PartyPresenceEvent.fromJSON(object.party_presence_event) : void 0,
+      message_typing_event: isSet4(object.message_typing_event) ? MessageTypingEvent.fromJSON(object.message_typing_event) : void 0
     };
   },
   toJSON(message) {
@@ -3340,17 +3236,6 @@ var Envelope = {
     message.channel_message_remove !== void 0 && (obj.channel_message_remove = message.channel_message_remove ? ChannelMessageRemove.toJSON(message.channel_message_remove) : void 0);
     message.channel_presence_event !== void 0 && (obj.channel_presence_event = message.channel_presence_event ? ChannelPresenceEvent.toJSON(message.channel_presence_event) : void 0);
     message.error !== void 0 && (obj.error = message.error ? Error2.toJSON(message.error) : void 0);
-    message.match !== void 0 && (obj.match = message.match ? Match.toJSON(message.match) : void 0);
-    message.match_create !== void 0 && (obj.match_create = message.match_create ? MatchCreate.toJSON(message.match_create) : void 0);
-    message.match_data !== void 0 && (obj.match_data = message.match_data ? MatchData.toJSON(message.match_data) : void 0);
-    message.match_data_send !== void 0 && (obj.match_data_send = message.match_data_send ? MatchDataSend.toJSON(message.match_data_send) : void 0);
-    message.match_join !== void 0 && (obj.match_join = message.match_join ? MatchJoin.toJSON(message.match_join) : void 0);
-    message.match_leave !== void 0 && (obj.match_leave = message.match_leave ? MatchLeave.toJSON(message.match_leave) : void 0);
-    message.match_presence_event !== void 0 && (obj.match_presence_event = message.match_presence_event ? MatchPresenceEvent.toJSON(message.match_presence_event) : void 0);
-    message.matchmaker_add !== void 0 && (obj.matchmaker_add = message.matchmaker_add ? MatchmakerAdd.toJSON(message.matchmaker_add) : void 0);
-    message.matchmaker_matched !== void 0 && (obj.matchmaker_matched = message.matchmaker_matched ? MatchmakerMatched.toJSON(message.matchmaker_matched) : void 0);
-    message.matchmaker_remove !== void 0 && (obj.matchmaker_remove = message.matchmaker_remove ? MatchmakerRemove.toJSON(message.matchmaker_remove) : void 0);
-    message.matchmaker_ticket !== void 0 && (obj.matchmaker_ticket = message.matchmaker_ticket ? MatchmakerTicket.toJSON(message.matchmaker_ticket) : void 0);
     message.notifications !== void 0 && (obj.notifications = message.notifications ? Notifications.toJSON(message.notifications) : void 0);
     message.rpc !== void 0 && (obj.rpc = message.rpc ? Rpc.toJSON(message.rpc) : void 0);
     message.status !== void 0 && (obj.status = message.status ? Status.toJSON(message.status) : void 0);
@@ -3373,12 +3258,10 @@ var Envelope = {
     message.party_close !== void 0 && (obj.party_close = message.party_close ? PartyClose.toJSON(message.party_close) : void 0);
     message.party_join_request_list !== void 0 && (obj.party_join_request_list = message.party_join_request_list ? PartyJoinRequestList.toJSON(message.party_join_request_list) : void 0);
     message.party_join_request !== void 0 && (obj.party_join_request = message.party_join_request ? PartyJoinRequest.toJSON(message.party_join_request) : void 0);
-    message.party_matchmaker_add !== void 0 && (obj.party_matchmaker_add = message.party_matchmaker_add ? PartyMatchmakerAdd.toJSON(message.party_matchmaker_add) : void 0);
-    message.party_matchmaker_remove !== void 0 && (obj.party_matchmaker_remove = message.party_matchmaker_remove ? PartyMatchmakerRemove.toJSON(message.party_matchmaker_remove) : void 0);
-    message.party_matchmaker_ticket !== void 0 && (obj.party_matchmaker_ticket = message.party_matchmaker_ticket ? PartyMatchmakerTicket.toJSON(message.party_matchmaker_ticket) : void 0);
     message.party_data !== void 0 && (obj.party_data = message.party_data ? PartyData.toJSON(message.party_data) : void 0);
     message.party_data_send !== void 0 && (obj.party_data_send = message.party_data_send ? PartyDataSend.toJSON(message.party_data_send) : void 0);
     message.party_presence_event !== void 0 && (obj.party_presence_event = message.party_presence_event ? PartyPresenceEvent.toJSON(message.party_presence_event) : void 0);
+    message.message_typing_event !== void 0 && (obj.message_typing_event = message.message_typing_event ? MessageTypingEvent.toJSON(message.message_typing_event) : void 0);
     return obj;
   },
   create(base) {
@@ -3398,17 +3281,6 @@ var Envelope = {
     message.channel_message_remove = object.channel_message_remove !== void 0 && object.channel_message_remove !== null ? ChannelMessageRemove.fromPartial(object.channel_message_remove) : void 0;
     message.channel_presence_event = object.channel_presence_event !== void 0 && object.channel_presence_event !== null ? ChannelPresenceEvent.fromPartial(object.channel_presence_event) : void 0;
     message.error = object.error !== void 0 && object.error !== null ? Error2.fromPartial(object.error) : void 0;
-    message.match = object.match !== void 0 && object.match !== null ? Match.fromPartial(object.match) : void 0;
-    message.match_create = object.match_create !== void 0 && object.match_create !== null ? MatchCreate.fromPartial(object.match_create) : void 0;
-    message.match_data = object.match_data !== void 0 && object.match_data !== null ? MatchData.fromPartial(object.match_data) : void 0;
-    message.match_data_send = object.match_data_send !== void 0 && object.match_data_send !== null ? MatchDataSend.fromPartial(object.match_data_send) : void 0;
-    message.match_join = object.match_join !== void 0 && object.match_join !== null ? MatchJoin.fromPartial(object.match_join) : void 0;
-    message.match_leave = object.match_leave !== void 0 && object.match_leave !== null ? MatchLeave.fromPartial(object.match_leave) : void 0;
-    message.match_presence_event = object.match_presence_event !== void 0 && object.match_presence_event !== null ? MatchPresenceEvent.fromPartial(object.match_presence_event) : void 0;
-    message.matchmaker_add = object.matchmaker_add !== void 0 && object.matchmaker_add !== null ? MatchmakerAdd.fromPartial(object.matchmaker_add) : void 0;
-    message.matchmaker_matched = object.matchmaker_matched !== void 0 && object.matchmaker_matched !== null ? MatchmakerMatched.fromPartial(object.matchmaker_matched) : void 0;
-    message.matchmaker_remove = object.matchmaker_remove !== void 0 && object.matchmaker_remove !== null ? MatchmakerRemove.fromPartial(object.matchmaker_remove) : void 0;
-    message.matchmaker_ticket = object.matchmaker_ticket !== void 0 && object.matchmaker_ticket !== null ? MatchmakerTicket.fromPartial(object.matchmaker_ticket) : void 0;
     message.notifications = object.notifications !== void 0 && object.notifications !== null ? Notifications.fromPartial(object.notifications) : void 0;
     message.rpc = object.rpc !== void 0 && object.rpc !== null ? Rpc.fromPartial(object.rpc) : void 0;
     message.status = object.status !== void 0 && object.status !== null ? Status.fromPartial(object.status) : void 0;
@@ -3431,12 +3303,10 @@ var Envelope = {
     message.party_close = object.party_close !== void 0 && object.party_close !== null ? PartyClose.fromPartial(object.party_close) : void 0;
     message.party_join_request_list = object.party_join_request_list !== void 0 && object.party_join_request_list !== null ? PartyJoinRequestList.fromPartial(object.party_join_request_list) : void 0;
     message.party_join_request = object.party_join_request !== void 0 && object.party_join_request !== null ? PartyJoinRequest.fromPartial(object.party_join_request) : void 0;
-    message.party_matchmaker_add = object.party_matchmaker_add !== void 0 && object.party_matchmaker_add !== null ? PartyMatchmakerAdd.fromPartial(object.party_matchmaker_add) : void 0;
-    message.party_matchmaker_remove = object.party_matchmaker_remove !== void 0 && object.party_matchmaker_remove !== null ? PartyMatchmakerRemove.fromPartial(object.party_matchmaker_remove) : void 0;
-    message.party_matchmaker_ticket = object.party_matchmaker_ticket !== void 0 && object.party_matchmaker_ticket !== null ? PartyMatchmakerTicket.fromPartial(object.party_matchmaker_ticket) : void 0;
     message.party_data = object.party_data !== void 0 && object.party_data !== null ? PartyData.fromPartial(object.party_data) : void 0;
     message.party_data_send = object.party_data_send !== void 0 && object.party_data_send !== null ? PartyDataSend.fromPartial(object.party_data_send) : void 0;
     message.party_presence_event = object.party_presence_event !== void 0 && object.party_presence_event !== null ? PartyPresenceEvent.fromPartial(object.party_presence_event) : void 0;
+    message.message_typing_event = object.message_typing_event !== void 0 && object.message_typing_event !== null ? MessageTypingEvent.fromPartial(object.message_typing_event) : void 0;
     return message;
   }
 };
@@ -4251,1213 +4121,6 @@ var Error_ContextEntry = {
     return message;
   }
 };
-function createBaseMatch() {
-  return { match_id: "", authoritative: false, label: void 0, size: 0, presences: [], self: void 0 };
-}
-var Match = {
-  encode(message, writer = import_minimal4.default.Writer.create()) {
-    if (message.match_id !== "") {
-      writer.uint32(10).string(message.match_id);
-    }
-    if (message.authoritative === true) {
-      writer.uint32(16).bool(message.authoritative);
-    }
-    if (message.label !== void 0) {
-      StringValue.encode({ value: message.label }, writer.uint32(26).fork()).ldelim();
-    }
-    if (message.size !== 0) {
-      writer.uint32(32).int32(message.size);
-    }
-    for (const v of message.presences) {
-      UserPresence.encode(v, writer.uint32(42).fork()).ldelim();
-    }
-    if (message.self !== void 0) {
-      UserPresence.encode(message.self, writer.uint32(50).fork()).ldelim();
-    }
-    return writer;
-  },
-  decode(input, length) {
-    const reader = input instanceof import_minimal4.default.Reader ? input : new import_minimal4.default.Reader(input);
-    let end = length === void 0 ? reader.len : reader.pos + length;
-    const message = createBaseMatch();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
-          message.match_id = reader.string();
-          break;
-        case 2:
-          message.authoritative = reader.bool();
-          break;
-        case 3:
-          message.label = StringValue.decode(reader, reader.uint32()).value;
-          break;
-        case 4:
-          message.size = reader.int32();
-          break;
-        case 5:
-          message.presences.push(UserPresence.decode(reader, reader.uint32()));
-          break;
-        case 6:
-          message.self = UserPresence.decode(reader, reader.uint32());
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
-      }
-    }
-    return message;
-  },
-  fromJSON(object) {
-    return {
-      match_id: isSet4(object.match_id) ? String(object.match_id) : "",
-      authoritative: isSet4(object.authoritative) ? Boolean(object.authoritative) : false,
-      label: isSet4(object.label) ? String(object.label) : void 0,
-      size: isSet4(object.size) ? Number(object.size) : 0,
-      presences: Array.isArray(object == null ? void 0 : object.presences) ? object.presences.map((e) => UserPresence.fromJSON(e)) : [],
-      self: isSet4(object.self) ? UserPresence.fromJSON(object.self) : void 0
-    };
-  },
-  toJSON(message) {
-    const obj = {};
-    message.match_id !== void 0 && (obj.match_id = message.match_id);
-    message.authoritative !== void 0 && (obj.authoritative = message.authoritative);
-    message.label !== void 0 && (obj.label = message.label);
-    message.size !== void 0 && (obj.size = Math.round(message.size));
-    if (message.presences) {
-      obj.presences = message.presences.map((e) => e ? UserPresence.toJSON(e) : void 0);
-    } else {
-      obj.presences = [];
-    }
-    message.self !== void 0 && (obj.self = message.self ? UserPresence.toJSON(message.self) : void 0);
-    return obj;
-  },
-  create(base) {
-    return Match.fromPartial(base != null ? base : {});
-  },
-  fromPartial(object) {
-    var _a, _b, _c, _d, _e;
-    const message = createBaseMatch();
-    message.match_id = (_a = object.match_id) != null ? _a : "";
-    message.authoritative = (_b = object.authoritative) != null ? _b : false;
-    message.label = (_c = object.label) != null ? _c : void 0;
-    message.size = (_d = object.size) != null ? _d : 0;
-    message.presences = ((_e = object.presences) == null ? void 0 : _e.map((e) => UserPresence.fromPartial(e))) || [];
-    message.self = object.self !== void 0 && object.self !== null ? UserPresence.fromPartial(object.self) : void 0;
-    return message;
-  }
-};
-function createBaseMatchCreate() {
-  return { name: "" };
-}
-var MatchCreate = {
-  encode(message, writer = import_minimal4.default.Writer.create()) {
-    if (message.name !== "") {
-      writer.uint32(10).string(message.name);
-    }
-    return writer;
-  },
-  decode(input, length) {
-    const reader = input instanceof import_minimal4.default.Reader ? input : new import_minimal4.default.Reader(input);
-    let end = length === void 0 ? reader.len : reader.pos + length;
-    const message = createBaseMatchCreate();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
-          message.name = reader.string();
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
-      }
-    }
-    return message;
-  },
-  fromJSON(object) {
-    return { name: isSet4(object.name) ? String(object.name) : "" };
-  },
-  toJSON(message) {
-    const obj = {};
-    message.name !== void 0 && (obj.name = message.name);
-    return obj;
-  },
-  create(base) {
-    return MatchCreate.fromPartial(base != null ? base : {});
-  },
-  fromPartial(object) {
-    var _a;
-    const message = createBaseMatchCreate();
-    message.name = (_a = object.name) != null ? _a : "";
-    return message;
-  }
-};
-function createBaseMatchData() {
-  return { match_id: "", presence: void 0, op_code: 0, data: new Uint8Array(), reliable: false };
-}
-var MatchData = {
-  encode(message, writer = import_minimal4.default.Writer.create()) {
-    if (message.match_id !== "") {
-      writer.uint32(10).string(message.match_id);
-    }
-    if (message.presence !== void 0) {
-      UserPresence.encode(message.presence, writer.uint32(18).fork()).ldelim();
-    }
-    if (message.op_code !== 0) {
-      writer.uint32(24).int64(message.op_code);
-    }
-    if (message.data.length !== 0) {
-      writer.uint32(34).bytes(message.data);
-    }
-    if (message.reliable === true) {
-      writer.uint32(40).bool(message.reliable);
-    }
-    return writer;
-  },
-  decode(input, length) {
-    const reader = input instanceof import_minimal4.default.Reader ? input : new import_minimal4.default.Reader(input);
-    let end = length === void 0 ? reader.len : reader.pos + length;
-    const message = createBaseMatchData();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
-          message.match_id = reader.string();
-          break;
-        case 2:
-          message.presence = UserPresence.decode(reader, reader.uint32());
-          break;
-        case 3:
-          message.op_code = longToNumber2(reader.int64());
-          break;
-        case 4:
-          message.data = reader.bytes();
-          break;
-        case 5:
-          message.reliable = reader.bool();
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
-      }
-    }
-    return message;
-  },
-  fromJSON(object) {
-    return {
-      match_id: isSet4(object.match_id) ? String(object.match_id) : "",
-      presence: isSet4(object.presence) ? UserPresence.fromJSON(object.presence) : void 0,
-      op_code: isSet4(object.op_code) ? Number(object.op_code) : 0,
-      data: isSet4(object.data) ? bytesFromBase64(object.data) : new Uint8Array(),
-      reliable: isSet4(object.reliable) ? Boolean(object.reliable) : false
-    };
-  },
-  toJSON(message) {
-    const obj = {};
-    message.match_id !== void 0 && (obj.match_id = message.match_id);
-    message.presence !== void 0 && (obj.presence = message.presence ? UserPresence.toJSON(message.presence) : void 0);
-    message.op_code !== void 0 && (obj.op_code = Math.round(message.op_code));
-    message.data !== void 0 && (obj.data = base64FromBytes(message.data !== void 0 ? message.data : new Uint8Array()));
-    message.reliable !== void 0 && (obj.reliable = message.reliable);
-    return obj;
-  },
-  create(base) {
-    return MatchData.fromPartial(base != null ? base : {});
-  },
-  fromPartial(object) {
-    var _a, _b, _c, _d;
-    const message = createBaseMatchData();
-    message.match_id = (_a = object.match_id) != null ? _a : "";
-    message.presence = object.presence !== void 0 && object.presence !== null ? UserPresence.fromPartial(object.presence) : void 0;
-    message.op_code = (_b = object.op_code) != null ? _b : 0;
-    message.data = (_c = object.data) != null ? _c : new Uint8Array();
-    message.reliable = (_d = object.reliable) != null ? _d : false;
-    return message;
-  }
-};
-function createBaseMatchDataSend() {
-  return { match_id: "", op_code: 0, data: new Uint8Array(), presences: [], reliable: false };
-}
-var MatchDataSend = {
-  encode(message, writer = import_minimal4.default.Writer.create()) {
-    if (message.match_id !== "") {
-      writer.uint32(10).string(message.match_id);
-    }
-    if (message.op_code !== 0) {
-      writer.uint32(16).int64(message.op_code);
-    }
-    if (message.data.length !== 0) {
-      writer.uint32(26).bytes(message.data);
-    }
-    for (const v of message.presences) {
-      UserPresence.encode(v, writer.uint32(34).fork()).ldelim();
-    }
-    if (message.reliable === true) {
-      writer.uint32(40).bool(message.reliable);
-    }
-    return writer;
-  },
-  decode(input, length) {
-    const reader = input instanceof import_minimal4.default.Reader ? input : new import_minimal4.default.Reader(input);
-    let end = length === void 0 ? reader.len : reader.pos + length;
-    const message = createBaseMatchDataSend();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
-          message.match_id = reader.string();
-          break;
-        case 2:
-          message.op_code = longToNumber2(reader.int64());
-          break;
-        case 3:
-          message.data = reader.bytes();
-          break;
-        case 4:
-          message.presences.push(UserPresence.decode(reader, reader.uint32()));
-          break;
-        case 5:
-          message.reliable = reader.bool();
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
-      }
-    }
-    return message;
-  },
-  fromJSON(object) {
-    return {
-      match_id: isSet4(object.match_id) ? String(object.match_id) : "",
-      op_code: isSet4(object.op_code) ? Number(object.op_code) : 0,
-      data: isSet4(object.data) ? bytesFromBase64(object.data) : new Uint8Array(),
-      presences: Array.isArray(object == null ? void 0 : object.presences) ? object.presences.map((e) => UserPresence.fromJSON(e)) : [],
-      reliable: isSet4(object.reliable) ? Boolean(object.reliable) : false
-    };
-  },
-  toJSON(message) {
-    const obj = {};
-    message.match_id !== void 0 && (obj.match_id = message.match_id);
-    message.op_code !== void 0 && (obj.op_code = Math.round(message.op_code));
-    message.data !== void 0 && (obj.data = base64FromBytes(message.data !== void 0 ? message.data : new Uint8Array()));
-    if (message.presences) {
-      obj.presences = message.presences.map((e) => e ? UserPresence.toJSON(e) : void 0);
-    } else {
-      obj.presences = [];
-    }
-    message.reliable !== void 0 && (obj.reliable = message.reliable);
-    return obj;
-  },
-  create(base) {
-    return MatchDataSend.fromPartial(base != null ? base : {});
-  },
-  fromPartial(object) {
-    var _a, _b, _c, _d, _e;
-    const message = createBaseMatchDataSend();
-    message.match_id = (_a = object.match_id) != null ? _a : "";
-    message.op_code = (_b = object.op_code) != null ? _b : 0;
-    message.data = (_c = object.data) != null ? _c : new Uint8Array();
-    message.presences = ((_d = object.presences) == null ? void 0 : _d.map((e) => UserPresence.fromPartial(e))) || [];
-    message.reliable = (_e = object.reliable) != null ? _e : false;
-    return message;
-  }
-};
-function createBaseMatchJoin() {
-  return { match_id: void 0, token: void 0, metadata: {} };
-}
-var MatchJoin = {
-  encode(message, writer = import_minimal4.default.Writer.create()) {
-    if (message.match_id !== void 0) {
-      writer.uint32(10).string(message.match_id);
-    }
-    if (message.token !== void 0) {
-      writer.uint32(18).string(message.token);
-    }
-    Object.entries(message.metadata).forEach(([key, value]) => {
-      MatchJoin_MetadataEntry.encode({ key, value }, writer.uint32(26).fork()).ldelim();
-    });
-    return writer;
-  },
-  decode(input, length) {
-    const reader = input instanceof import_minimal4.default.Reader ? input : new import_minimal4.default.Reader(input);
-    let end = length === void 0 ? reader.len : reader.pos + length;
-    const message = createBaseMatchJoin();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
-          message.match_id = reader.string();
-          break;
-        case 2:
-          message.token = reader.string();
-          break;
-        case 3:
-          const entry3 = MatchJoin_MetadataEntry.decode(reader, reader.uint32());
-          if (entry3.value !== void 0) {
-            message.metadata[entry3.key] = entry3.value;
-          }
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
-      }
-    }
-    return message;
-  },
-  fromJSON(object) {
-    return {
-      match_id: isSet4(object.match_id) ? String(object.match_id) : void 0,
-      token: isSet4(object.token) ? String(object.token) : void 0,
-      metadata: isObject(object.metadata) ? Object.entries(object.metadata).reduce((acc, [key, value]) => {
-        acc[key] = String(value);
-        return acc;
-      }, {}) : {}
-    };
-  },
-  toJSON(message) {
-    const obj = {};
-    message.match_id !== void 0 && (obj.match_id = message.match_id);
-    message.token !== void 0 && (obj.token = message.token);
-    obj.metadata = {};
-    if (message.metadata) {
-      Object.entries(message.metadata).forEach(([k, v]) => {
-        obj.metadata[k] = v;
-      });
-    }
-    return obj;
-  },
-  create(base) {
-    return MatchJoin.fromPartial(base != null ? base : {});
-  },
-  fromPartial(object) {
-    var _a, _b, _c;
-    const message = createBaseMatchJoin();
-    message.match_id = (_a = object.match_id) != null ? _a : void 0;
-    message.token = (_b = object.token) != null ? _b : void 0;
-    message.metadata = Object.entries((_c = object.metadata) != null ? _c : {}).reduce((acc, [key, value]) => {
-      if (value !== void 0) {
-        acc[key] = String(value);
-      }
-      return acc;
-    }, {});
-    return message;
-  }
-};
-function createBaseMatchJoin_MetadataEntry() {
-  return { key: "", value: "" };
-}
-var MatchJoin_MetadataEntry = {
-  encode(message, writer = import_minimal4.default.Writer.create()) {
-    if (message.key !== "") {
-      writer.uint32(10).string(message.key);
-    }
-    if (message.value !== "") {
-      writer.uint32(18).string(message.value);
-    }
-    return writer;
-  },
-  decode(input, length) {
-    const reader = input instanceof import_minimal4.default.Reader ? input : new import_minimal4.default.Reader(input);
-    let end = length === void 0 ? reader.len : reader.pos + length;
-    const message = createBaseMatchJoin_MetadataEntry();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
-          message.key = reader.string();
-          break;
-        case 2:
-          message.value = reader.string();
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
-      }
-    }
-    return message;
-  },
-  fromJSON(object) {
-    return { key: isSet4(object.key) ? String(object.key) : "", value: isSet4(object.value) ? String(object.value) : "" };
-  },
-  toJSON(message) {
-    const obj = {};
-    message.key !== void 0 && (obj.key = message.key);
-    message.value !== void 0 && (obj.value = message.value);
-    return obj;
-  },
-  create(base) {
-    return MatchJoin_MetadataEntry.fromPartial(base != null ? base : {});
-  },
-  fromPartial(object) {
-    var _a, _b;
-    const message = createBaseMatchJoin_MetadataEntry();
-    message.key = (_a = object.key) != null ? _a : "";
-    message.value = (_b = object.value) != null ? _b : "";
-    return message;
-  }
-};
-function createBaseMatchLeave() {
-  return { match_id: "" };
-}
-var MatchLeave = {
-  encode(message, writer = import_minimal4.default.Writer.create()) {
-    if (message.match_id !== "") {
-      writer.uint32(10).string(message.match_id);
-    }
-    return writer;
-  },
-  decode(input, length) {
-    const reader = input instanceof import_minimal4.default.Reader ? input : new import_minimal4.default.Reader(input);
-    let end = length === void 0 ? reader.len : reader.pos + length;
-    const message = createBaseMatchLeave();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
-          message.match_id = reader.string();
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
-      }
-    }
-    return message;
-  },
-  fromJSON(object) {
-    return { match_id: isSet4(object.match_id) ? String(object.match_id) : "" };
-  },
-  toJSON(message) {
-    const obj = {};
-    message.match_id !== void 0 && (obj.match_id = message.match_id);
-    return obj;
-  },
-  create(base) {
-    return MatchLeave.fromPartial(base != null ? base : {});
-  },
-  fromPartial(object) {
-    var _a;
-    const message = createBaseMatchLeave();
-    message.match_id = (_a = object.match_id) != null ? _a : "";
-    return message;
-  }
-};
-function createBaseMatchPresenceEvent() {
-  return { match_id: "", joins: [], leaves: [] };
-}
-var MatchPresenceEvent = {
-  encode(message, writer = import_minimal4.default.Writer.create()) {
-    if (message.match_id !== "") {
-      writer.uint32(10).string(message.match_id);
-    }
-    for (const v of message.joins) {
-      UserPresence.encode(v, writer.uint32(18).fork()).ldelim();
-    }
-    for (const v of message.leaves) {
-      UserPresence.encode(v, writer.uint32(26).fork()).ldelim();
-    }
-    return writer;
-  },
-  decode(input, length) {
-    const reader = input instanceof import_minimal4.default.Reader ? input : new import_minimal4.default.Reader(input);
-    let end = length === void 0 ? reader.len : reader.pos + length;
-    const message = createBaseMatchPresenceEvent();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
-          message.match_id = reader.string();
-          break;
-        case 2:
-          message.joins.push(UserPresence.decode(reader, reader.uint32()));
-          break;
-        case 3:
-          message.leaves.push(UserPresence.decode(reader, reader.uint32()));
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
-      }
-    }
-    return message;
-  },
-  fromJSON(object) {
-    return {
-      match_id: isSet4(object.match_id) ? String(object.match_id) : "",
-      joins: Array.isArray(object == null ? void 0 : object.joins) ? object.joins.map((e) => UserPresence.fromJSON(e)) : [],
-      leaves: Array.isArray(object == null ? void 0 : object.leaves) ? object.leaves.map((e) => UserPresence.fromJSON(e)) : []
-    };
-  },
-  toJSON(message) {
-    const obj = {};
-    message.match_id !== void 0 && (obj.match_id = message.match_id);
-    if (message.joins) {
-      obj.joins = message.joins.map((e) => e ? UserPresence.toJSON(e) : void 0);
-    } else {
-      obj.joins = [];
-    }
-    if (message.leaves) {
-      obj.leaves = message.leaves.map((e) => e ? UserPresence.toJSON(e) : void 0);
-    } else {
-      obj.leaves = [];
-    }
-    return obj;
-  },
-  create(base) {
-    return MatchPresenceEvent.fromPartial(base != null ? base : {});
-  },
-  fromPartial(object) {
-    var _a, _b, _c;
-    const message = createBaseMatchPresenceEvent();
-    message.match_id = (_a = object.match_id) != null ? _a : "";
-    message.joins = ((_b = object.joins) == null ? void 0 : _b.map((e) => UserPresence.fromPartial(e))) || [];
-    message.leaves = ((_c = object.leaves) == null ? void 0 : _c.map((e) => UserPresence.fromPartial(e))) || [];
-    return message;
-  }
-};
-function createBaseMatchmakerAdd() {
-  return {
-    min_count: 0,
-    max_count: 0,
-    query: "",
-    string_properties: {},
-    numeric_properties: {},
-    count_multiple: void 0
-  };
-}
-var MatchmakerAdd = {
-  encode(message, writer = import_minimal4.default.Writer.create()) {
-    if (message.min_count !== 0) {
-      writer.uint32(8).int32(message.min_count);
-    }
-    if (message.max_count !== 0) {
-      writer.uint32(16).int32(message.max_count);
-    }
-    if (message.query !== "") {
-      writer.uint32(26).string(message.query);
-    }
-    Object.entries(message.string_properties).forEach(([key, value]) => {
-      MatchmakerAdd_StringPropertiesEntry.encode({ key, value }, writer.uint32(34).fork()).ldelim();
-    });
-    Object.entries(message.numeric_properties).forEach(([key, value]) => {
-      MatchmakerAdd_NumericPropertiesEntry.encode({ key, value }, writer.uint32(42).fork()).ldelim();
-    });
-    if (message.count_multiple !== void 0) {
-      Int32Value.encode({ value: message.count_multiple }, writer.uint32(50).fork()).ldelim();
-    }
-    return writer;
-  },
-  decode(input, length) {
-    const reader = input instanceof import_minimal4.default.Reader ? input : new import_minimal4.default.Reader(input);
-    let end = length === void 0 ? reader.len : reader.pos + length;
-    const message = createBaseMatchmakerAdd();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
-          message.min_count = reader.int32();
-          break;
-        case 2:
-          message.max_count = reader.int32();
-          break;
-        case 3:
-          message.query = reader.string();
-          break;
-        case 4:
-          const entry4 = MatchmakerAdd_StringPropertiesEntry.decode(reader, reader.uint32());
-          if (entry4.value !== void 0) {
-            message.string_properties[entry4.key] = entry4.value;
-          }
-          break;
-        case 5:
-          const entry5 = MatchmakerAdd_NumericPropertiesEntry.decode(reader, reader.uint32());
-          if (entry5.value !== void 0) {
-            message.numeric_properties[entry5.key] = entry5.value;
-          }
-          break;
-        case 6:
-          message.count_multiple = Int32Value.decode(reader, reader.uint32()).value;
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
-      }
-    }
-    return message;
-  },
-  fromJSON(object) {
-    return {
-      min_count: isSet4(object.min_count) ? Number(object.min_count) : 0,
-      max_count: isSet4(object.max_count) ? Number(object.max_count) : 0,
-      query: isSet4(object.query) ? String(object.query) : "",
-      string_properties: isObject(object.string_properties) ? Object.entries(object.string_properties).reduce((acc, [key, value]) => {
-        acc[key] = String(value);
-        return acc;
-      }, {}) : {},
-      numeric_properties: isObject(object.numeric_properties) ? Object.entries(object.numeric_properties).reduce((acc, [key, value]) => {
-        acc[key] = Number(value);
-        return acc;
-      }, {}) : {},
-      count_multiple: isSet4(object.count_multiple) ? Number(object.count_multiple) : void 0
-    };
-  },
-  toJSON(message) {
-    const obj = {};
-    message.min_count !== void 0 && (obj.min_count = Math.round(message.min_count));
-    message.max_count !== void 0 && (obj.max_count = Math.round(message.max_count));
-    message.query !== void 0 && (obj.query = message.query);
-    obj.string_properties = {};
-    if (message.string_properties) {
-      Object.entries(message.string_properties).forEach(([k, v]) => {
-        obj.string_properties[k] = v;
-      });
-    }
-    obj.numeric_properties = {};
-    if (message.numeric_properties) {
-      Object.entries(message.numeric_properties).forEach(([k, v]) => {
-        obj.numeric_properties[k] = v;
-      });
-    }
-    message.count_multiple !== void 0 && (obj.count_multiple = message.count_multiple);
-    return obj;
-  },
-  create(base) {
-    return MatchmakerAdd.fromPartial(base != null ? base : {});
-  },
-  fromPartial(object) {
-    var _a, _b, _c, _d, _e, _f;
-    const message = createBaseMatchmakerAdd();
-    message.min_count = (_a = object.min_count) != null ? _a : 0;
-    message.max_count = (_b = object.max_count) != null ? _b : 0;
-    message.query = (_c = object.query) != null ? _c : "";
-    message.string_properties = Object.entries((_d = object.string_properties) != null ? _d : {}).reduce(
-      (acc, [key, value]) => {
-        if (value !== void 0) {
-          acc[key] = String(value);
-        }
-        return acc;
-      },
-      {}
-    );
-    message.numeric_properties = Object.entries((_e = object.numeric_properties) != null ? _e : {}).reduce(
-      (acc, [key, value]) => {
-        if (value !== void 0) {
-          acc[key] = Number(value);
-        }
-        return acc;
-      },
-      {}
-    );
-    message.count_multiple = (_f = object.count_multiple) != null ? _f : void 0;
-    return message;
-  }
-};
-function createBaseMatchmakerAdd_StringPropertiesEntry() {
-  return { key: "", value: "" };
-}
-var MatchmakerAdd_StringPropertiesEntry = {
-  encode(message, writer = import_minimal4.default.Writer.create()) {
-    if (message.key !== "") {
-      writer.uint32(10).string(message.key);
-    }
-    if (message.value !== "") {
-      writer.uint32(18).string(message.value);
-    }
-    return writer;
-  },
-  decode(input, length) {
-    const reader = input instanceof import_minimal4.default.Reader ? input : new import_minimal4.default.Reader(input);
-    let end = length === void 0 ? reader.len : reader.pos + length;
-    const message = createBaseMatchmakerAdd_StringPropertiesEntry();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
-          message.key = reader.string();
-          break;
-        case 2:
-          message.value = reader.string();
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
-      }
-    }
-    return message;
-  },
-  fromJSON(object) {
-    return { key: isSet4(object.key) ? String(object.key) : "", value: isSet4(object.value) ? String(object.value) : "" };
-  },
-  toJSON(message) {
-    const obj = {};
-    message.key !== void 0 && (obj.key = message.key);
-    message.value !== void 0 && (obj.value = message.value);
-    return obj;
-  },
-  create(base) {
-    return MatchmakerAdd_StringPropertiesEntry.fromPartial(base != null ? base : {});
-  },
-  fromPartial(object) {
-    var _a, _b;
-    const message = createBaseMatchmakerAdd_StringPropertiesEntry();
-    message.key = (_a = object.key) != null ? _a : "";
-    message.value = (_b = object.value) != null ? _b : "";
-    return message;
-  }
-};
-function createBaseMatchmakerAdd_NumericPropertiesEntry() {
-  return { key: "", value: 0 };
-}
-var MatchmakerAdd_NumericPropertiesEntry = {
-  encode(message, writer = import_minimal4.default.Writer.create()) {
-    if (message.key !== "") {
-      writer.uint32(10).string(message.key);
-    }
-    if (message.value !== 0) {
-      writer.uint32(17).double(message.value);
-    }
-    return writer;
-  },
-  decode(input, length) {
-    const reader = input instanceof import_minimal4.default.Reader ? input : new import_minimal4.default.Reader(input);
-    let end = length === void 0 ? reader.len : reader.pos + length;
-    const message = createBaseMatchmakerAdd_NumericPropertiesEntry();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
-          message.key = reader.string();
-          break;
-        case 2:
-          message.value = reader.double();
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
-      }
-    }
-    return message;
-  },
-  fromJSON(object) {
-    return { key: isSet4(object.key) ? String(object.key) : "", value: isSet4(object.value) ? Number(object.value) : 0 };
-  },
-  toJSON(message) {
-    const obj = {};
-    message.key !== void 0 && (obj.key = message.key);
-    message.value !== void 0 && (obj.value = message.value);
-    return obj;
-  },
-  create(base) {
-    return MatchmakerAdd_NumericPropertiesEntry.fromPartial(base != null ? base : {});
-  },
-  fromPartial(object) {
-    var _a, _b;
-    const message = createBaseMatchmakerAdd_NumericPropertiesEntry();
-    message.key = (_a = object.key) != null ? _a : "";
-    message.value = (_b = object.value) != null ? _b : 0;
-    return message;
-  }
-};
-function createBaseMatchmakerMatched() {
-  return { ticket: "", match_id: void 0, token: void 0, users: [], self: void 0 };
-}
-var MatchmakerMatched = {
-  encode(message, writer = import_minimal4.default.Writer.create()) {
-    if (message.ticket !== "") {
-      writer.uint32(10).string(message.ticket);
-    }
-    if (message.match_id !== void 0) {
-      writer.uint32(18).string(message.match_id);
-    }
-    if (message.token !== void 0) {
-      writer.uint32(26).string(message.token);
-    }
-    for (const v of message.users) {
-      MatchmakerMatched_MatchmakerUser.encode(v, writer.uint32(34).fork()).ldelim();
-    }
-    if (message.self !== void 0) {
-      MatchmakerMatched_MatchmakerUser.encode(message.self, writer.uint32(42).fork()).ldelim();
-    }
-    return writer;
-  },
-  decode(input, length) {
-    const reader = input instanceof import_minimal4.default.Reader ? input : new import_minimal4.default.Reader(input);
-    let end = length === void 0 ? reader.len : reader.pos + length;
-    const message = createBaseMatchmakerMatched();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
-          message.ticket = reader.string();
-          break;
-        case 2:
-          message.match_id = reader.string();
-          break;
-        case 3:
-          message.token = reader.string();
-          break;
-        case 4:
-          message.users.push(MatchmakerMatched_MatchmakerUser.decode(reader, reader.uint32()));
-          break;
-        case 5:
-          message.self = MatchmakerMatched_MatchmakerUser.decode(reader, reader.uint32());
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
-      }
-    }
-    return message;
-  },
-  fromJSON(object) {
-    return {
-      ticket: isSet4(object.ticket) ? String(object.ticket) : "",
-      match_id: isSet4(object.match_id) ? String(object.match_id) : void 0,
-      token: isSet4(object.token) ? String(object.token) : void 0,
-      users: Array.isArray(object == null ? void 0 : object.users) ? object.users.map((e) => MatchmakerMatched_MatchmakerUser.fromJSON(e)) : [],
-      self: isSet4(object.self) ? MatchmakerMatched_MatchmakerUser.fromJSON(object.self) : void 0
-    };
-  },
-  toJSON(message) {
-    const obj = {};
-    message.ticket !== void 0 && (obj.ticket = message.ticket);
-    message.match_id !== void 0 && (obj.match_id = message.match_id);
-    message.token !== void 0 && (obj.token = message.token);
-    if (message.users) {
-      obj.users = message.users.map((e) => e ? MatchmakerMatched_MatchmakerUser.toJSON(e) : void 0);
-    } else {
-      obj.users = [];
-    }
-    message.self !== void 0 && (obj.self = message.self ? MatchmakerMatched_MatchmakerUser.toJSON(message.self) : void 0);
-    return obj;
-  },
-  create(base) {
-    return MatchmakerMatched.fromPartial(base != null ? base : {});
-  },
-  fromPartial(object) {
-    var _a, _b, _c, _d;
-    const message = createBaseMatchmakerMatched();
-    message.ticket = (_a = object.ticket) != null ? _a : "";
-    message.match_id = (_b = object.match_id) != null ? _b : void 0;
-    message.token = (_c = object.token) != null ? _c : void 0;
-    message.users = ((_d = object.users) == null ? void 0 : _d.map((e) => MatchmakerMatched_MatchmakerUser.fromPartial(e))) || [];
-    message.self = object.self !== void 0 && object.self !== null ? MatchmakerMatched_MatchmakerUser.fromPartial(object.self) : void 0;
-    return message;
-  }
-};
-function createBaseMatchmakerMatched_MatchmakerUser() {
-  return { presence: void 0, party_id: "", string_properties: {}, numeric_properties: {} };
-}
-var MatchmakerMatched_MatchmakerUser = {
-  encode(message, writer = import_minimal4.default.Writer.create()) {
-    if (message.presence !== void 0) {
-      UserPresence.encode(message.presence, writer.uint32(10).fork()).ldelim();
-    }
-    if (message.party_id !== "") {
-      writer.uint32(18).string(message.party_id);
-    }
-    Object.entries(message.string_properties).forEach(([key, value]) => {
-      MatchmakerMatched_MatchmakerUser_StringPropertiesEntry.encode(
-        { key, value },
-        writer.uint32(42).fork()
-      ).ldelim();
-    });
-    Object.entries(message.numeric_properties).forEach(([key, value]) => {
-      MatchmakerMatched_MatchmakerUser_NumericPropertiesEntry.encode(
-        { key, value },
-        writer.uint32(50).fork()
-      ).ldelim();
-    });
-    return writer;
-  },
-  decode(input, length) {
-    const reader = input instanceof import_minimal4.default.Reader ? input : new import_minimal4.default.Reader(input);
-    let end = length === void 0 ? reader.len : reader.pos + length;
-    const message = createBaseMatchmakerMatched_MatchmakerUser();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
-          message.presence = UserPresence.decode(reader, reader.uint32());
-          break;
-        case 2:
-          message.party_id = reader.string();
-          break;
-        case 5:
-          const entry5 = MatchmakerMatched_MatchmakerUser_StringPropertiesEntry.decode(reader, reader.uint32());
-          if (entry5.value !== void 0) {
-            message.string_properties[entry5.key] = entry5.value;
-          }
-          break;
-        case 6:
-          const entry6 = MatchmakerMatched_MatchmakerUser_NumericPropertiesEntry.decode(reader, reader.uint32());
-          if (entry6.value !== void 0) {
-            message.numeric_properties[entry6.key] = entry6.value;
-          }
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
-      }
-    }
-    return message;
-  },
-  fromJSON(object) {
-    return {
-      presence: isSet4(object.presence) ? UserPresence.fromJSON(object.presence) : void 0,
-      party_id: isSet4(object.party_id) ? String(object.party_id) : "",
-      string_properties: isObject(object.string_properties) ? Object.entries(object.string_properties).reduce((acc, [key, value]) => {
-        acc[key] = String(value);
-        return acc;
-      }, {}) : {},
-      numeric_properties: isObject(object.numeric_properties) ? Object.entries(object.numeric_properties).reduce((acc, [key, value]) => {
-        acc[key] = Number(value);
-        return acc;
-      }, {}) : {}
-    };
-  },
-  toJSON(message) {
-    const obj = {};
-    message.presence !== void 0 && (obj.presence = message.presence ? UserPresence.toJSON(message.presence) : void 0);
-    message.party_id !== void 0 && (obj.party_id = message.party_id);
-    obj.string_properties = {};
-    if (message.string_properties) {
-      Object.entries(message.string_properties).forEach(([k, v]) => {
-        obj.string_properties[k] = v;
-      });
-    }
-    obj.numeric_properties = {};
-    if (message.numeric_properties) {
-      Object.entries(message.numeric_properties).forEach(([k, v]) => {
-        obj.numeric_properties[k] = v;
-      });
-    }
-    return obj;
-  },
-  create(base) {
-    return MatchmakerMatched_MatchmakerUser.fromPartial(base != null ? base : {});
-  },
-  fromPartial(object) {
-    var _a, _b, _c;
-    const message = createBaseMatchmakerMatched_MatchmakerUser();
-    message.presence = object.presence !== void 0 && object.presence !== null ? UserPresence.fromPartial(object.presence) : void 0;
-    message.party_id = (_a = object.party_id) != null ? _a : "";
-    message.string_properties = Object.entries((_b = object.string_properties) != null ? _b : {}).reduce(
-      (acc, [key, value]) => {
-        if (value !== void 0) {
-          acc[key] = String(value);
-        }
-        return acc;
-      },
-      {}
-    );
-    message.numeric_properties = Object.entries((_c = object.numeric_properties) != null ? _c : {}).reduce(
-      (acc, [key, value]) => {
-        if (value !== void 0) {
-          acc[key] = Number(value);
-        }
-        return acc;
-      },
-      {}
-    );
-    return message;
-  }
-};
-function createBaseMatchmakerMatched_MatchmakerUser_StringPropertiesEntry() {
-  return { key: "", value: "" };
-}
-var MatchmakerMatched_MatchmakerUser_StringPropertiesEntry = {
-  encode(message, writer = import_minimal4.default.Writer.create()) {
-    if (message.key !== "") {
-      writer.uint32(10).string(message.key);
-    }
-    if (message.value !== "") {
-      writer.uint32(18).string(message.value);
-    }
-    return writer;
-  },
-  decode(input, length) {
-    const reader = input instanceof import_minimal4.default.Reader ? input : new import_minimal4.default.Reader(input);
-    let end = length === void 0 ? reader.len : reader.pos + length;
-    const message = createBaseMatchmakerMatched_MatchmakerUser_StringPropertiesEntry();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
-          message.key = reader.string();
-          break;
-        case 2:
-          message.value = reader.string();
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
-      }
-    }
-    return message;
-  },
-  fromJSON(object) {
-    return { key: isSet4(object.key) ? String(object.key) : "", value: isSet4(object.value) ? String(object.value) : "" };
-  },
-  toJSON(message) {
-    const obj = {};
-    message.key !== void 0 && (obj.key = message.key);
-    message.value !== void 0 && (obj.value = message.value);
-    return obj;
-  },
-  create(base) {
-    return MatchmakerMatched_MatchmakerUser_StringPropertiesEntry.fromPartial(base != null ? base : {});
-  },
-  fromPartial(object) {
-    var _a, _b;
-    const message = createBaseMatchmakerMatched_MatchmakerUser_StringPropertiesEntry();
-    message.key = (_a = object.key) != null ? _a : "";
-    message.value = (_b = object.value) != null ? _b : "";
-    return message;
-  }
-};
-function createBaseMatchmakerMatched_MatchmakerUser_NumericPropertiesEntry() {
-  return { key: "", value: 0 };
-}
-var MatchmakerMatched_MatchmakerUser_NumericPropertiesEntry = {
-  encode(message, writer = import_minimal4.default.Writer.create()) {
-    if (message.key !== "") {
-      writer.uint32(10).string(message.key);
-    }
-    if (message.value !== 0) {
-      writer.uint32(17).double(message.value);
-    }
-    return writer;
-  },
-  decode(input, length) {
-    const reader = input instanceof import_minimal4.default.Reader ? input : new import_minimal4.default.Reader(input);
-    let end = length === void 0 ? reader.len : reader.pos + length;
-    const message = createBaseMatchmakerMatched_MatchmakerUser_NumericPropertiesEntry();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
-          message.key = reader.string();
-          break;
-        case 2:
-          message.value = reader.double();
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
-      }
-    }
-    return message;
-  },
-  fromJSON(object) {
-    return { key: isSet4(object.key) ? String(object.key) : "", value: isSet4(object.value) ? Number(object.value) : 0 };
-  },
-  toJSON(message) {
-    const obj = {};
-    message.key !== void 0 && (obj.key = message.key);
-    message.value !== void 0 && (obj.value = message.value);
-    return obj;
-  },
-  create(base) {
-    return MatchmakerMatched_MatchmakerUser_NumericPropertiesEntry.fromPartial(base != null ? base : {});
-  },
-  fromPartial(object) {
-    var _a, _b;
-    const message = createBaseMatchmakerMatched_MatchmakerUser_NumericPropertiesEntry();
-    message.key = (_a = object.key) != null ? _a : "";
-    message.value = (_b = object.value) != null ? _b : 0;
-    return message;
-  }
-};
-function createBaseMatchmakerRemove() {
-  return { ticket: "" };
-}
-var MatchmakerRemove = {
-  encode(message, writer = import_minimal4.default.Writer.create()) {
-    if (message.ticket !== "") {
-      writer.uint32(10).string(message.ticket);
-    }
-    return writer;
-  },
-  decode(input, length) {
-    const reader = input instanceof import_minimal4.default.Reader ? input : new import_minimal4.default.Reader(input);
-    let end = length === void 0 ? reader.len : reader.pos + length;
-    const message = createBaseMatchmakerRemove();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
-          message.ticket = reader.string();
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
-      }
-    }
-    return message;
-  },
-  fromJSON(object) {
-    return { ticket: isSet4(object.ticket) ? String(object.ticket) : "" };
-  },
-  toJSON(message) {
-    const obj = {};
-    message.ticket !== void 0 && (obj.ticket = message.ticket);
-    return obj;
-  },
-  create(base) {
-    return MatchmakerRemove.fromPartial(base != null ? base : {});
-  },
-  fromPartial(object) {
-    var _a;
-    const message = createBaseMatchmakerRemove();
-    message.ticket = (_a = object.ticket) != null ? _a : "";
-    return message;
-  }
-};
-function createBaseMatchmakerTicket() {
-  return { ticket: "" };
-}
-var MatchmakerTicket = {
-  encode(message, writer = import_minimal4.default.Writer.create()) {
-    if (message.ticket !== "") {
-      writer.uint32(10).string(message.ticket);
-    }
-    return writer;
-  },
-  decode(input, length) {
-    const reader = input instanceof import_minimal4.default.Reader ? input : new import_minimal4.default.Reader(input);
-    let end = length === void 0 ? reader.len : reader.pos + length;
-    const message = createBaseMatchmakerTicket();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
-          message.ticket = reader.string();
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
-      }
-    }
-    return message;
-  },
-  fromJSON(object) {
-    return { ticket: isSet4(object.ticket) ? String(object.ticket) : "" };
-  },
-  toJSON(message) {
-    const obj = {};
-    message.ticket !== void 0 && (obj.ticket = message.ticket);
-    return obj;
-  },
-  create(base) {
-    return MatchmakerTicket.fromPartial(base != null ? base : {});
-  },
-  fromPartial(object) {
-    var _a;
-    const message = createBaseMatchmakerTicket();
-    message.ticket = (_a = object.ticket) != null ? _a : "";
-    return message;
-  }
-};
 function createBaseNotifications() {
   return { notifications: [] };
 }
@@ -6125,371 +4788,6 @@ var PartyJoinRequest = {
     return message;
   }
 };
-function createBasePartyMatchmakerAdd() {
-  return {
-    party_id: "",
-    min_count: 0,
-    max_count: 0,
-    query: "",
-    string_properties: {},
-    numeric_properties: {},
-    count_multiple: void 0
-  };
-}
-var PartyMatchmakerAdd = {
-  encode(message, writer = import_minimal4.default.Writer.create()) {
-    if (message.party_id !== "") {
-      writer.uint32(10).string(message.party_id);
-    }
-    if (message.min_count !== 0) {
-      writer.uint32(16).int32(message.min_count);
-    }
-    if (message.max_count !== 0) {
-      writer.uint32(24).int32(message.max_count);
-    }
-    if (message.query !== "") {
-      writer.uint32(34).string(message.query);
-    }
-    Object.entries(message.string_properties).forEach(([key, value]) => {
-      PartyMatchmakerAdd_StringPropertiesEntry.encode({ key, value }, writer.uint32(42).fork()).ldelim();
-    });
-    Object.entries(message.numeric_properties).forEach(([key, value]) => {
-      PartyMatchmakerAdd_NumericPropertiesEntry.encode({ key, value }, writer.uint32(50).fork()).ldelim();
-    });
-    if (message.count_multiple !== void 0) {
-      Int32Value.encode({ value: message.count_multiple }, writer.uint32(58).fork()).ldelim();
-    }
-    return writer;
-  },
-  decode(input, length) {
-    const reader = input instanceof import_minimal4.default.Reader ? input : new import_minimal4.default.Reader(input);
-    let end = length === void 0 ? reader.len : reader.pos + length;
-    const message = createBasePartyMatchmakerAdd();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
-          message.party_id = reader.string();
-          break;
-        case 2:
-          message.min_count = reader.int32();
-          break;
-        case 3:
-          message.max_count = reader.int32();
-          break;
-        case 4:
-          message.query = reader.string();
-          break;
-        case 5:
-          const entry5 = PartyMatchmakerAdd_StringPropertiesEntry.decode(reader, reader.uint32());
-          if (entry5.value !== void 0) {
-            message.string_properties[entry5.key] = entry5.value;
-          }
-          break;
-        case 6:
-          const entry6 = PartyMatchmakerAdd_NumericPropertiesEntry.decode(reader, reader.uint32());
-          if (entry6.value !== void 0) {
-            message.numeric_properties[entry6.key] = entry6.value;
-          }
-          break;
-        case 7:
-          message.count_multiple = Int32Value.decode(reader, reader.uint32()).value;
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
-      }
-    }
-    return message;
-  },
-  fromJSON(object) {
-    return {
-      party_id: isSet4(object.party_id) ? String(object.party_id) : "",
-      min_count: isSet4(object.min_count) ? Number(object.min_count) : 0,
-      max_count: isSet4(object.max_count) ? Number(object.max_count) : 0,
-      query: isSet4(object.query) ? String(object.query) : "",
-      string_properties: isObject(object.string_properties) ? Object.entries(object.string_properties).reduce((acc, [key, value]) => {
-        acc[key] = String(value);
-        return acc;
-      }, {}) : {},
-      numeric_properties: isObject(object.numeric_properties) ? Object.entries(object.numeric_properties).reduce((acc, [key, value]) => {
-        acc[key] = Number(value);
-        return acc;
-      }, {}) : {},
-      count_multiple: isSet4(object.count_multiple) ? Number(object.count_multiple) : void 0
-    };
-  },
-  toJSON(message) {
-    const obj = {};
-    message.party_id !== void 0 && (obj.party_id = message.party_id);
-    message.min_count !== void 0 && (obj.min_count = Math.round(message.min_count));
-    message.max_count !== void 0 && (obj.max_count = Math.round(message.max_count));
-    message.query !== void 0 && (obj.query = message.query);
-    obj.string_properties = {};
-    if (message.string_properties) {
-      Object.entries(message.string_properties).forEach(([k, v]) => {
-        obj.string_properties[k] = v;
-      });
-    }
-    obj.numeric_properties = {};
-    if (message.numeric_properties) {
-      Object.entries(message.numeric_properties).forEach(([k, v]) => {
-        obj.numeric_properties[k] = v;
-      });
-    }
-    message.count_multiple !== void 0 && (obj.count_multiple = message.count_multiple);
-    return obj;
-  },
-  create(base) {
-    return PartyMatchmakerAdd.fromPartial(base != null ? base : {});
-  },
-  fromPartial(object) {
-    var _a, _b, _c, _d, _e, _f, _g;
-    const message = createBasePartyMatchmakerAdd();
-    message.party_id = (_a = object.party_id) != null ? _a : "";
-    message.min_count = (_b = object.min_count) != null ? _b : 0;
-    message.max_count = (_c = object.max_count) != null ? _c : 0;
-    message.query = (_d = object.query) != null ? _d : "";
-    message.string_properties = Object.entries((_e = object.string_properties) != null ? _e : {}).reduce(
-      (acc, [key, value]) => {
-        if (value !== void 0) {
-          acc[key] = String(value);
-        }
-        return acc;
-      },
-      {}
-    );
-    message.numeric_properties = Object.entries((_f = object.numeric_properties) != null ? _f : {}).reduce(
-      (acc, [key, value]) => {
-        if (value !== void 0) {
-          acc[key] = Number(value);
-        }
-        return acc;
-      },
-      {}
-    );
-    message.count_multiple = (_g = object.count_multiple) != null ? _g : void 0;
-    return message;
-  }
-};
-function createBasePartyMatchmakerAdd_StringPropertiesEntry() {
-  return { key: "", value: "" };
-}
-var PartyMatchmakerAdd_StringPropertiesEntry = {
-  encode(message, writer = import_minimal4.default.Writer.create()) {
-    if (message.key !== "") {
-      writer.uint32(10).string(message.key);
-    }
-    if (message.value !== "") {
-      writer.uint32(18).string(message.value);
-    }
-    return writer;
-  },
-  decode(input, length) {
-    const reader = input instanceof import_minimal4.default.Reader ? input : new import_minimal4.default.Reader(input);
-    let end = length === void 0 ? reader.len : reader.pos + length;
-    const message = createBasePartyMatchmakerAdd_StringPropertiesEntry();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
-          message.key = reader.string();
-          break;
-        case 2:
-          message.value = reader.string();
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
-      }
-    }
-    return message;
-  },
-  fromJSON(object) {
-    return { key: isSet4(object.key) ? String(object.key) : "", value: isSet4(object.value) ? String(object.value) : "" };
-  },
-  toJSON(message) {
-    const obj = {};
-    message.key !== void 0 && (obj.key = message.key);
-    message.value !== void 0 && (obj.value = message.value);
-    return obj;
-  },
-  create(base) {
-    return PartyMatchmakerAdd_StringPropertiesEntry.fromPartial(base != null ? base : {});
-  },
-  fromPartial(object) {
-    var _a, _b;
-    const message = createBasePartyMatchmakerAdd_StringPropertiesEntry();
-    message.key = (_a = object.key) != null ? _a : "";
-    message.value = (_b = object.value) != null ? _b : "";
-    return message;
-  }
-};
-function createBasePartyMatchmakerAdd_NumericPropertiesEntry() {
-  return { key: "", value: 0 };
-}
-var PartyMatchmakerAdd_NumericPropertiesEntry = {
-  encode(message, writer = import_minimal4.default.Writer.create()) {
-    if (message.key !== "") {
-      writer.uint32(10).string(message.key);
-    }
-    if (message.value !== 0) {
-      writer.uint32(17).double(message.value);
-    }
-    return writer;
-  },
-  decode(input, length) {
-    const reader = input instanceof import_minimal4.default.Reader ? input : new import_minimal4.default.Reader(input);
-    let end = length === void 0 ? reader.len : reader.pos + length;
-    const message = createBasePartyMatchmakerAdd_NumericPropertiesEntry();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
-          message.key = reader.string();
-          break;
-        case 2:
-          message.value = reader.double();
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
-      }
-    }
-    return message;
-  },
-  fromJSON(object) {
-    return { key: isSet4(object.key) ? String(object.key) : "", value: isSet4(object.value) ? Number(object.value) : 0 };
-  },
-  toJSON(message) {
-    const obj = {};
-    message.key !== void 0 && (obj.key = message.key);
-    message.value !== void 0 && (obj.value = message.value);
-    return obj;
-  },
-  create(base) {
-    return PartyMatchmakerAdd_NumericPropertiesEntry.fromPartial(base != null ? base : {});
-  },
-  fromPartial(object) {
-    var _a, _b;
-    const message = createBasePartyMatchmakerAdd_NumericPropertiesEntry();
-    message.key = (_a = object.key) != null ? _a : "";
-    message.value = (_b = object.value) != null ? _b : 0;
-    return message;
-  }
-};
-function createBasePartyMatchmakerRemove() {
-  return { party_id: "", ticket: "" };
-}
-var PartyMatchmakerRemove = {
-  encode(message, writer = import_minimal4.default.Writer.create()) {
-    if (message.party_id !== "") {
-      writer.uint32(10).string(message.party_id);
-    }
-    if (message.ticket !== "") {
-      writer.uint32(18).string(message.ticket);
-    }
-    return writer;
-  },
-  decode(input, length) {
-    const reader = input instanceof import_minimal4.default.Reader ? input : new import_minimal4.default.Reader(input);
-    let end = length === void 0 ? reader.len : reader.pos + length;
-    const message = createBasePartyMatchmakerRemove();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
-          message.party_id = reader.string();
-          break;
-        case 2:
-          message.ticket = reader.string();
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
-      }
-    }
-    return message;
-  },
-  fromJSON(object) {
-    return {
-      party_id: isSet4(object.party_id) ? String(object.party_id) : "",
-      ticket: isSet4(object.ticket) ? String(object.ticket) : ""
-    };
-  },
-  toJSON(message) {
-    const obj = {};
-    message.party_id !== void 0 && (obj.party_id = message.party_id);
-    message.ticket !== void 0 && (obj.ticket = message.ticket);
-    return obj;
-  },
-  create(base) {
-    return PartyMatchmakerRemove.fromPartial(base != null ? base : {});
-  },
-  fromPartial(object) {
-    var _a, _b;
-    const message = createBasePartyMatchmakerRemove();
-    message.party_id = (_a = object.party_id) != null ? _a : "";
-    message.ticket = (_b = object.ticket) != null ? _b : "";
-    return message;
-  }
-};
-function createBasePartyMatchmakerTicket() {
-  return { party_id: "", ticket: "" };
-}
-var PartyMatchmakerTicket = {
-  encode(message, writer = import_minimal4.default.Writer.create()) {
-    if (message.party_id !== "") {
-      writer.uint32(10).string(message.party_id);
-    }
-    if (message.ticket !== "") {
-      writer.uint32(18).string(message.ticket);
-    }
-    return writer;
-  },
-  decode(input, length) {
-    const reader = input instanceof import_minimal4.default.Reader ? input : new import_minimal4.default.Reader(input);
-    let end = length === void 0 ? reader.len : reader.pos + length;
-    const message = createBasePartyMatchmakerTicket();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
-          message.party_id = reader.string();
-          break;
-        case 2:
-          message.ticket = reader.string();
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
-      }
-    }
-    return message;
-  },
-  fromJSON(object) {
-    return {
-      party_id: isSet4(object.party_id) ? String(object.party_id) : "",
-      ticket: isSet4(object.ticket) ? String(object.ticket) : ""
-    };
-  },
-  toJSON(message) {
-    const obj = {};
-    message.party_id !== void 0 && (obj.party_id = message.party_id);
-    message.ticket !== void 0 && (obj.ticket = message.ticket);
-    return obj;
-  },
-  create(base) {
-    return PartyMatchmakerTicket.fromPartial(base != null ? base : {});
-  },
-  fromPartial(object) {
-    var _a, _b;
-    const message = createBasePartyMatchmakerTicket();
-    message.party_id = (_a = object.party_id) != null ? _a : "";
-    message.ticket = (_b = object.ticket) != null ? _b : "";
-    return message;
-  }
-};
 function createBasePartyData() {
   return { party_id: "", presence: void 0, op_code: 0, data: new Uint8Array() };
 }
@@ -6950,6 +5248,62 @@ var StatusPresenceEvent = {
     const message = createBaseStatusPresenceEvent();
     message.joins = ((_a = object.joins) == null ? void 0 : _a.map((e) => UserPresence.fromPartial(e))) || [];
     message.leaves = ((_b = object.leaves) == null ? void 0 : _b.map((e) => UserPresence.fromPartial(e))) || [];
+    return message;
+  }
+};
+function createBaseMessageTypingEvent() {
+  return { channel_id: "", sender_id: "" };
+}
+var MessageTypingEvent = {
+  encode(message, writer = import_minimal4.default.Writer.create()) {
+    if (message.channel_id !== "") {
+      writer.uint32(10).string(message.channel_id);
+    }
+    if (message.sender_id !== "") {
+      writer.uint32(18).string(message.sender_id);
+    }
+    return writer;
+  },
+  decode(input, length) {
+    const reader = input instanceof import_minimal4.default.Reader ? input : new import_minimal4.default.Reader(input);
+    let end = length === void 0 ? reader.len : reader.pos + length;
+    const message = createBaseMessageTypingEvent();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.channel_id = reader.string();
+          break;
+        case 2:
+          message.sender_id = reader.string();
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+  fromJSON(object) {
+    return {
+      channel_id: isSet4(object.channel_id) ? String(object.channel_id) : "",
+      sender_id: isSet4(object.sender_id) ? String(object.sender_id) : ""
+    };
+  },
+  toJSON(message) {
+    const obj = {};
+    message.channel_id !== void 0 && (obj.channel_id = message.channel_id);
+    message.sender_id !== void 0 && (obj.sender_id = message.sender_id);
+    return obj;
+  },
+  create(base) {
+    return MessageTypingEvent.fromPartial(base != null ? base : {});
+  },
+  fromPartial(object) {
+    var _a, _b;
+    const message = createBaseMessageTypingEvent();
+    message.channel_id = (_a = object.channel_id) != null ? _a : "";
+    message.sender_id = (_b = object.sender_id) != null ? _b : "";
     return message;
   }
 };

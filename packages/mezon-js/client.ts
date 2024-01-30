@@ -63,6 +63,7 @@ import {
   ApiAccountApple,
   ApiLinkSteamRequest,
   ApiClanDescProfile,
+  ApiClanProfile,
   ApiChannelUserList,
   ApiLinkInviteUserRequest,
   ApiLinkInviteUser,
@@ -518,6 +519,14 @@ export interface ApiUpdateClanDescProfileRequest {
   avatar_url: string;
 }
 
+export interface ApiUpdateClanProfileRequest {
+  /** Clan id */
+  clan_id: string;
+  /** Clan nick name */
+  nick_name: string;
+  /** Clan profile avatar */
+  avatar_url: string;
+}
 
 /** Update fields in a given role. */
 export interface ApiUpdateRoleRequest {
@@ -1433,6 +1442,17 @@ export class Client {
     });
   }
 
+  async getUserProfileOnClan(session: Session, clanId:string): Promise<ApiClanProfile> {
+    if (this.autoRefreshSession && session.refresh_token &&
+        session.isexpired((Date.now() + this.expiredTimespanMs)/1000)) {
+        await this.sessionRefresh(session);
+    }
+
+    return this.apiClient.getUserProfileOnClan(session.token, clanId).then((response: ApiClanProfile) => {
+      return Promise.resolve(response);
+    });
+  }
+
   /** Add an Apple ID to the social profiles on the current user's account. */
   async linkApple(session: Session, request: ApiAccountApple): Promise<boolean> {
     if (this.autoRefreshSession && session.refresh_token &&
@@ -1933,6 +1953,17 @@ export class Client {
     }
 
     return this.apiClient.updateClanDescProfile(session.token, clanId, request).then((response: any) => {
+      return response !== undefined;
+    });
+  }
+
+  async updateUserProfileByClan(session: Session, clanId: string, request: ApiUpdateClanProfileRequest): Promise<boolean> {
+    if (this.autoRefreshSession && session.refresh_token &&
+        session.isexpired((Date.now() + this.expiredTimespanMs)/1000)) {
+        await this.sessionRefresh(session);
+    }
+
+    return this.apiClient.updateUserProfileByClan(session.token, clanId, request).then((response: any) => {
       return response !== undefined;
     });
   }
