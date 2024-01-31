@@ -428,7 +428,7 @@ export interface ApiUpdateClanProfileRequest {
     /** Clan nick name */
     nick_name: string;
     /** Clan profile avatar */
-    avatar: string;
+    avartar: string;
 }
 /** Update fields in a given role. */
 export interface ApiUpdateRoleRequest {
