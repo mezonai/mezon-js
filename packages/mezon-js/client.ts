@@ -520,12 +520,12 @@ export interface ApiUpdateClanDescProfileRequest {
 }
 
 export interface ApiUpdateClanProfileRequest {
-  /** Clan id */
+  /** Clan id*/
   clan_id: string;
   /** Clan nick name */
   nick_name: string;
   /** Clan profile avatar */
-  avatar_url: string;
+  avatar: string;
 }
 
 /** Update fields in a given role. */
