@@ -520,6 +520,8 @@ export interface ApiUpdateClanDescProfileRequest {
 }
 
 export interface ApiUpdateClanProfileRequest {
+  /** Clan id*/
+  clan_id: string;
   /** Clan nick name */
   nick_name: string;
   /** Clan profile avatar */

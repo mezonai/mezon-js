@@ -423,6 +423,8 @@ export interface ApiUpdateClanDescProfileRequest {
     avatar_url: string;
 }
 export interface ApiUpdateClanProfileRequest {
+    /** Clan id*/
+    clan_id: string;
     /** Clan nick name */
     nick_name: string;
     /** Clan profile avatar */
