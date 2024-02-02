@@ -153,7 +153,11 @@ export interface Envelope {
     | PartyPresenceEvent
     | undefined;
   /** User typing event */
-  message_typing_event?: MessageTypingEvent | undefined;
+  message_typing_event?:
+    | MessageTypingEvent
+    | undefined;
+  /** Last seen message event */
+  last_seen_message_event?: LastSeenMessageEvent | undefined;
 }
 
 /** A realtime chat channel. */
@@ -167,9 +171,7 @@ export interface Channel {
     | UserPresence
     | undefined;
   /** The name of the chat room, or an empty string if this message was not sent through a chat room. */
-  room_name: string;
-  /** The ID of the group, or an empty string if this message was not sent through a group channel. */
-  group_id: string;
+  chanel_name: string;
   /** The ID of the first DM user, or an empty string if this message was not sent through a DM chat. */
   user_id_one: string;
   /** The ID of the second DM user, or an empty string if this message was not sent through a DM chat. */
@@ -273,9 +275,7 @@ export interface ChannelMessageAck {
     | boolean
     | undefined;
   /** The name of the chat room, or an empty string if this message was not sent through a chat room. */
-  room_name: string;
-  /** The ID of the group, or an empty string if this message was not sent through a group channel. */
-  group_id: string;
+  channel_name: string;
   /** The ID of the first DM user, or an empty string if this message was not sent through a DM chat. */
   user_id_one: string;
   /** The ID of the second DM user, or an empty string if this message was not sent through a DM chat. */
@@ -319,9 +319,7 @@ export interface ChannelPresenceEvent {
   /** Presences leaving the channel as part of this event, if any. */
   leaves: UserPresence[];
   /** The name of the chat room, or an empty string if this message was not sent through a chat room. */
-  room_name: string;
-  /** The ID of the group, or an empty string if this message was not sent through a group channel. */
-  group_id: string;
+  channel_name: string;
   /** The ID of the first DM user, or an empty string if this message was not sent through a DM chat. */
   user_id_one: string;
   /** The ID of the second DM user, or an empty string if this message was not sent through a DM chat. */
@@ -795,6 +793,14 @@ export interface StatusPresenceEvent {
   leaves: UserPresence[];
 }
 
+/** Last seen message by user */
+export interface LastSeenMessageEvent {
+  /** The unique ID of this channel. */
+  channel_id: string;
+  /** The unique ID of this message. */
+  message_id: string;
+}
+
 /** Message typing event data */
 export interface MessageTypingEvent {
   /** The channel this message belongs to. */
@@ -908,6 +914,7 @@ function createBaseEnvelope(): Envelope {
     party_data_send: undefined,
     party_presence_event: undefined,
     message_typing_event: undefined,
+    last_seen_message_event: undefined,
   };
 }
 
@@ -1023,6 +1030,9 @@ export const Envelope = {
     }
     if (message.message_typing_event !== undefined) {
       MessageTypingEvent.encode(message.message_typing_event, writer.uint32(298).fork()).ldelim();
+    }
+    if (message.last_seen_message_event !== undefined) {
+      LastSeenMessageEvent.encode(message.last_seen_message_event, writer.uint32(306).fork()).ldelim();
     }
     return writer;
   },
@@ -1145,6 +1155,9 @@ export const Envelope = {
         case 37:
           message.message_typing_event = MessageTypingEvent.decode(reader, reader.uint32());
           break;
+        case 38:
+          message.last_seen_message_event = LastSeenMessageEvent.decode(reader, reader.uint32());
+          break;
         default:
           reader.skipType(tag & 7);
           break;
@@ -1213,6 +1226,9 @@ export const Envelope = {
         : undefined,
       message_typing_event: isSet(object.message_typing_event)
         ? MessageTypingEvent.fromJSON(object.message_typing_event)
+        : undefined,
+      last_seen_message_event: isSet(object.last_seen_message_event)
+        ? LastSeenMessageEvent.fromJSON(object.last_seen_message_event)
         : undefined,
     };
   },
@@ -1295,6 +1311,9 @@ export const Envelope = {
       : undefined);
     message.message_typing_event !== undefined && (obj.message_typing_event = message.message_typing_event
       ? MessageTypingEvent.toJSON(message.message_typing_event)
+      : undefined);
+    message.last_seen_message_event !== undefined && (obj.last_seen_message_event = message.last_seen_message_event
+      ? LastSeenMessageEvent.toJSON(message.last_seen_message_event)
       : undefined);
     return obj;
   },
@@ -1410,12 +1429,16 @@ export const Envelope = {
     message.message_typing_event = (object.message_typing_event !== undefined && object.message_typing_event !== null)
       ? MessageTypingEvent.fromPartial(object.message_typing_event)
       : undefined;
+    message.last_seen_message_event =
+      (object.last_seen_message_event !== undefined && object.last_seen_message_event !== null)
+        ? LastSeenMessageEvent.fromPartial(object.last_seen_message_event)
+        : undefined;
     return message;
   },
 };
 
 function createBaseChannel(): Channel {
-  return { id: "", presences: [], self: undefined, room_name: "", group_id: "", user_id_one: "", user_id_two: "" };
+  return { id: "", presences: [], self: undefined, chanel_name: "", user_id_one: "", user_id_two: "" };
 }
 
 export const Channel = {
@@ -1429,17 +1452,14 @@ export const Channel = {
     if (message.self !== undefined) {
       UserPresence.encode(message.self, writer.uint32(26).fork()).ldelim();
     }
-    if (message.room_name !== "") {
-      writer.uint32(34).string(message.room_name);
-    }
-    if (message.group_id !== "") {
-      writer.uint32(42).string(message.group_id);
+    if (message.chanel_name !== "") {
+      writer.uint32(34).string(message.chanel_name);
     }
     if (message.user_id_one !== "") {
-      writer.uint32(50).string(message.user_id_one);
+      writer.uint32(42).string(message.user_id_one);
     }
     if (message.user_id_two !== "") {
-      writer.uint32(58).string(message.user_id_two);
+      writer.uint32(50).string(message.user_id_two);
     }
     return writer;
   },
@@ -1461,15 +1481,12 @@ export const Channel = {
           message.self = UserPresence.decode(reader, reader.uint32());
           break;
         case 4:
-          message.room_name = reader.string();
+          message.chanel_name = reader.string();
           break;
         case 5:
-          message.group_id = reader.string();
-          break;
-        case 6:
           message.user_id_one = reader.string();
           break;
-        case 7:
+        case 6:
           message.user_id_two = reader.string();
           break;
         default:
@@ -1485,8 +1502,7 @@ export const Channel = {
       id: isSet(object.id) ? String(object.id) : "",
       presences: Array.isArray(object?.presences) ? object.presences.map((e: any) => UserPresence.fromJSON(e)) : [],
       self: isSet(object.self) ? UserPresence.fromJSON(object.self) : undefined,
-      room_name: isSet(object.room_name) ? String(object.room_name) : "",
-      group_id: isSet(object.group_id) ? String(object.group_id) : "",
+      chanel_name: isSet(object.chanel_name) ? String(object.chanel_name) : "",
       user_id_one: isSet(object.user_id_one) ? String(object.user_id_one) : "",
       user_id_two: isSet(object.user_id_two) ? String(object.user_id_two) : "",
     };
@@ -1501,8 +1517,7 @@ export const Channel = {
       obj.presences = [];
     }
     message.self !== undefined && (obj.self = message.self ? UserPresence.toJSON(message.self) : undefined);
-    message.room_name !== undefined && (obj.room_name = message.room_name);
-    message.group_id !== undefined && (obj.group_id = message.group_id);
+    message.chanel_name !== undefined && (obj.chanel_name = message.chanel_name);
     message.user_id_one !== undefined && (obj.user_id_one = message.user_id_one);
     message.user_id_two !== undefined && (obj.user_id_two = message.user_id_two);
     return obj;
@@ -1519,8 +1534,7 @@ export const Channel = {
     message.self = (object.self !== undefined && object.self !== null)
       ? UserPresence.fromPartial(object.self)
       : undefined;
-    message.room_name = object.room_name ?? "";
-    message.group_id = object.group_id ?? "";
+    message.chanel_name = object.chanel_name ?? "";
     message.user_id_one = object.user_id_one ?? "";
     message.user_id_two = object.user_id_two ?? "";
     return message;
@@ -1676,8 +1690,7 @@ function createBaseChannelMessageAck(): ChannelMessageAck {
     create_time: undefined,
     update_time: undefined,
     persistent: undefined,
-    room_name: "",
-    group_id: "",
+    channel_name: "",
     user_id_one: "",
     user_id_two: "",
   };
@@ -1706,17 +1719,14 @@ export const ChannelMessageAck = {
     if (message.persistent !== undefined) {
       BoolValue.encode({ value: message.persistent! }, writer.uint32(58).fork()).ldelim();
     }
-    if (message.room_name !== "") {
-      writer.uint32(66).string(message.room_name);
-    }
-    if (message.group_id !== "") {
-      writer.uint32(74).string(message.group_id);
+    if (message.channel_name !== "") {
+      writer.uint32(66).string(message.channel_name);
     }
     if (message.user_id_one !== "") {
-      writer.uint32(82).string(message.user_id_one);
+      writer.uint32(74).string(message.user_id_one);
     }
     if (message.user_id_two !== "") {
-      writer.uint32(90).string(message.user_id_two);
+      writer.uint32(82).string(message.user_id_two);
     }
     return writer;
   },
@@ -1750,15 +1760,12 @@ export const ChannelMessageAck = {
           message.persistent = BoolValue.decode(reader, reader.uint32()).value;
           break;
         case 8:
-          message.room_name = reader.string();
+          message.channel_name = reader.string();
           break;
         case 9:
-          message.group_id = reader.string();
-          break;
-        case 10:
           message.user_id_one = reader.string();
           break;
-        case 11:
+        case 10:
           message.user_id_two = reader.string();
           break;
         default:
@@ -1778,8 +1785,7 @@ export const ChannelMessageAck = {
       create_time: isSet(object.create_time) ? fromJsonTimestamp(object.create_time) : undefined,
       update_time: isSet(object.update_time) ? fromJsonTimestamp(object.update_time) : undefined,
       persistent: isSet(object.persistent) ? Boolean(object.persistent) : undefined,
-      room_name: isSet(object.room_name) ? String(object.room_name) : "",
-      group_id: isSet(object.group_id) ? String(object.group_id) : "",
+      channel_name: isSet(object.channel_name) ? String(object.channel_name) : "",
       user_id_one: isSet(object.user_id_one) ? String(object.user_id_one) : "",
       user_id_two: isSet(object.user_id_two) ? String(object.user_id_two) : "",
     };
@@ -1794,8 +1800,7 @@ export const ChannelMessageAck = {
     message.create_time !== undefined && (obj.create_time = message.create_time.toISOString());
     message.update_time !== undefined && (obj.update_time = message.update_time.toISOString());
     message.persistent !== undefined && (obj.persistent = message.persistent);
-    message.room_name !== undefined && (obj.room_name = message.room_name);
-    message.group_id !== undefined && (obj.group_id = message.group_id);
+    message.channel_name !== undefined && (obj.channel_name = message.channel_name);
     message.user_id_one !== undefined && (obj.user_id_one = message.user_id_one);
     message.user_id_two !== undefined && (obj.user_id_two = message.user_id_two);
     return obj;
@@ -1814,8 +1819,7 @@ export const ChannelMessageAck = {
     message.create_time = object.create_time ?? undefined;
     message.update_time = object.update_time ?? undefined;
     message.persistent = object.persistent ?? undefined;
-    message.room_name = object.room_name ?? "";
-    message.group_id = object.group_id ?? "";
+    message.channel_name = object.channel_name ?? "";
     message.user_id_one = object.user_id_one ?? "";
     message.user_id_two = object.user_id_two ?? "";
     return message;
@@ -2027,7 +2031,7 @@ export const ChannelMessageRemove = {
 };
 
 function createBaseChannelPresenceEvent(): ChannelPresenceEvent {
-  return { channel_id: "", joins: [], leaves: [], room_name: "", group_id: "", user_id_one: "", user_id_two: "" };
+  return { channel_id: "", joins: [], leaves: [], channel_name: "", user_id_one: "", user_id_two: "" };
 }
 
 export const ChannelPresenceEvent = {
@@ -2041,17 +2045,14 @@ export const ChannelPresenceEvent = {
     for (const v of message.leaves) {
       UserPresence.encode(v!, writer.uint32(26).fork()).ldelim();
     }
-    if (message.room_name !== "") {
-      writer.uint32(34).string(message.room_name);
-    }
-    if (message.group_id !== "") {
-      writer.uint32(42).string(message.group_id);
+    if (message.channel_name !== "") {
+      writer.uint32(34).string(message.channel_name);
     }
     if (message.user_id_one !== "") {
-      writer.uint32(50).string(message.user_id_one);
+      writer.uint32(42).string(message.user_id_one);
     }
     if (message.user_id_two !== "") {
-      writer.uint32(58).string(message.user_id_two);
+      writer.uint32(50).string(message.user_id_two);
     }
     return writer;
   },
@@ -2073,15 +2074,12 @@ export const ChannelPresenceEvent = {
           message.leaves.push(UserPresence.decode(reader, reader.uint32()));
           break;
         case 4:
-          message.room_name = reader.string();
+          message.channel_name = reader.string();
           break;
         case 5:
-          message.group_id = reader.string();
-          break;
-        case 6:
           message.user_id_one = reader.string();
           break;
-        case 7:
+        case 6:
           message.user_id_two = reader.string();
           break;
         default:
@@ -2097,8 +2095,7 @@ export const ChannelPresenceEvent = {
       channel_id: isSet(object.channel_id) ? String(object.channel_id) : "",
       joins: Array.isArray(object?.joins) ? object.joins.map((e: any) => UserPresence.fromJSON(e)) : [],
       leaves: Array.isArray(object?.leaves) ? object.leaves.map((e: any) => UserPresence.fromJSON(e)) : [],
-      room_name: isSet(object.room_name) ? String(object.room_name) : "",
-      group_id: isSet(object.group_id) ? String(object.group_id) : "",
+      channel_name: isSet(object.channel_name) ? String(object.channel_name) : "",
       user_id_one: isSet(object.user_id_one) ? String(object.user_id_one) : "",
       user_id_two: isSet(object.user_id_two) ? String(object.user_id_two) : "",
     };
@@ -2117,8 +2114,7 @@ export const ChannelPresenceEvent = {
     } else {
       obj.leaves = [];
     }
-    message.room_name !== undefined && (obj.room_name = message.room_name);
-    message.group_id !== undefined && (obj.group_id = message.group_id);
+    message.channel_name !== undefined && (obj.channel_name = message.channel_name);
     message.user_id_one !== undefined && (obj.user_id_one = message.user_id_one);
     message.user_id_two !== undefined && (obj.user_id_two = message.user_id_two);
     return obj;
@@ -2133,8 +2129,7 @@ export const ChannelPresenceEvent = {
     message.channel_id = object.channel_id ?? "";
     message.joins = object.joins?.map((e) => UserPresence.fromPartial(e)) || [];
     message.leaves = object.leaves?.map((e) => UserPresence.fromPartial(e)) || [];
-    message.room_name = object.room_name ?? "";
-    message.group_id = object.group_id ?? "";
+    message.channel_name = object.channel_name ?? "";
     message.user_id_one = object.user_id_one ?? "";
     message.user_id_two = object.user_id_two ?? "";
     return message;
@@ -5327,6 +5322,68 @@ export const StatusPresenceEvent = {
     const message = createBaseStatusPresenceEvent();
     message.joins = object.joins?.map((e) => UserPresence.fromPartial(e)) || [];
     message.leaves = object.leaves?.map((e) => UserPresence.fromPartial(e)) || [];
+    return message;
+  },
+};
+
+function createBaseLastSeenMessageEvent(): LastSeenMessageEvent {
+  return { channel_id: "", message_id: "" };
+}
+
+export const LastSeenMessageEvent = {
+  encode(message: LastSeenMessageEvent, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.channel_id !== "") {
+      writer.uint32(10).string(message.channel_id);
+    }
+    if (message.message_id !== "") {
+      writer.uint32(18).string(message.message_id);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): LastSeenMessageEvent {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseLastSeenMessageEvent();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.channel_id = reader.string();
+          break;
+        case 2:
+          message.message_id = reader.string();
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): LastSeenMessageEvent {
+    return {
+      channel_id: isSet(object.channel_id) ? String(object.channel_id) : "",
+      message_id: isSet(object.message_id) ? String(object.message_id) : "",
+    };
+  },
+
+  toJSON(message: LastSeenMessageEvent): unknown {
+    const obj: any = {};
+    message.channel_id !== undefined && (obj.channel_id = message.channel_id);
+    message.message_id !== undefined && (obj.message_id = message.message_id);
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<LastSeenMessageEvent>, I>>(base?: I): LastSeenMessageEvent {
+    return LastSeenMessageEvent.fromPartial(base ?? {});
+  },
+
+  fromPartial<I extends Exact<DeepPartial<LastSeenMessageEvent>, I>>(object: I): LastSeenMessageEvent {
+    const message = createBaseLastSeenMessageEvent();
+    message.channel_id = object.channel_id ?? "";
+    message.message_id = object.message_id ?? "";
     return message;
   },
 };

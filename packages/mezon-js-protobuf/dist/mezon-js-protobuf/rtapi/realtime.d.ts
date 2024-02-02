@@ -77,6 +77,8 @@ export interface Envelope {
     party_presence_event?: PartyPresenceEvent | undefined;
     /** User typing event */
     message_typing_event?: MessageTypingEvent | undefined;
+    /** Last seen message event */
+    last_seen_message_event?: LastSeenMessageEvent | undefined;
 }
 /** A realtime chat channel. */
 export interface Channel {
@@ -87,9 +89,7 @@ export interface Channel {
     /** A reference to the current user's presence in the channel. */
     self: UserPresence | undefined;
     /** The name of the chat room, or an empty string if this message was not sent through a chat room. */
-    room_name: string;
-    /** The ID of the group, or an empty string if this message was not sent through a group channel. */
-    group_id: string;
+    chanel_name: string;
     /** The ID of the first DM user, or an empty string if this message was not sent through a DM chat. */
     user_id_one: string;
     /** The ID of the second DM user, or an empty string if this message was not sent through a DM chat. */
@@ -144,9 +144,7 @@ export interface ChannelMessageAck {
     /** True if the message was persisted to the channel's history, false otherwise. */
     persistent: boolean | undefined;
     /** The name of the chat room, or an empty string if this message was not sent through a chat room. */
-    room_name: string;
-    /** The ID of the group, or an empty string if this message was not sent through a group channel. */
-    group_id: string;
+    channel_name: string;
     /** The ID of the first DM user, or an empty string if this message was not sent through a DM chat. */
     user_id_one: string;
     /** The ID of the second DM user, or an empty string if this message was not sent through a DM chat. */
@@ -186,9 +184,7 @@ export interface ChannelPresenceEvent {
     /** Presences leaving the channel as part of this event, if any. */
     leaves: UserPresence[];
     /** The name of the chat room, or an empty string if this message was not sent through a chat room. */
-    room_name: string;
-    /** The ID of the group, or an empty string if this message was not sent through a group channel. */
-    group_id: string;
+    channel_name: string;
     /** The ID of the first DM user, or an empty string if this message was not sent through a DM chat. */
     user_id_one: string;
     /** The ID of the second DM user, or an empty string if this message was not sent through a DM chat. */
@@ -557,6 +553,13 @@ export interface StatusPresenceEvent {
     /** Previous statuses for the user. */
     leaves: UserPresence[];
 }
+/** Last seen message by user */
+export interface LastSeenMessageEvent {
+    /** The unique ID of this channel. */
+    channel_id: string;
+    /** The unique ID of this message. */
+    message_id: string;
+}
 /** Message typing event data */
 export interface MessageTypingEvent {
     /** The channel this message belongs to. */
@@ -641,8 +644,7 @@ export declare const Envelope: {
                 persistence?: boolean | undefined;
                 status?: string | undefined;
             } | undefined;
-            room_name?: string | undefined;
-            group_id?: string | undefined;
+            chanel_name?: string | undefined;
             user_id_one?: string | undefined;
             user_id_two?: string | undefined;
         } | undefined;
@@ -667,8 +669,7 @@ export declare const Envelope: {
             create_time?: Date | undefined;
             update_time?: Date | undefined;
             persistent?: boolean | undefined;
-            room_name?: string | undefined;
-            group_id?: string | undefined;
+            channel_name?: string | undefined;
             user_id_one?: string | undefined;
             user_id_two?: string | undefined;
         } | undefined;
@@ -680,8 +681,7 @@ export declare const Envelope: {
             create_time?: Date | undefined;
             update_time?: Date | undefined;
             persistent?: boolean | undefined;
-            room_name?: string | undefined;
-            group_id?: string | undefined;
+            channel_name?: string | undefined;
             user_id_one?: string | undefined;
             user_id_two?: string | undefined;
         } | undefined;
@@ -715,8 +715,7 @@ export declare const Envelope: {
                 persistence?: boolean | undefined;
                 status?: string | undefined;
             }[] | undefined;
-            room_name?: string | undefined;
-            group_id?: string | undefined;
+            channel_name?: string | undefined;
             user_id_one?: string | undefined;
             user_id_two?: string | undefined;
         } | undefined;
@@ -949,6 +948,10 @@ export declare const Envelope: {
             channel_id?: string | undefined;
             sender_id?: string | undefined;
         } | undefined;
+        last_seen_message_event?: {
+            channel_id?: string | undefined;
+            message_id?: string | undefined;
+        } | undefined;
     } & {
         cid?: string | undefined;
         channel?: ({
@@ -967,8 +970,7 @@ export declare const Envelope: {
                 persistence?: boolean | undefined;
                 status?: string | undefined;
             } | undefined;
-            room_name?: string | undefined;
-            group_id?: string | undefined;
+            chanel_name?: string | undefined;
             user_id_one?: string | undefined;
             user_id_two?: string | undefined;
         } & {
@@ -1011,8 +1013,7 @@ export declare const Envelope: {
                 persistence?: boolean | undefined;
                 status?: string | undefined;
             } & { [K_2 in Exclude<keyof I["channel"]["self"], keyof UserPresence>]: never; }) | undefined;
-            room_name?: string | undefined;
-            group_id?: string | undefined;
+            chanel_name?: string | undefined;
             user_id_one?: string | undefined;
             user_id_two?: string | undefined;
         } & { [K_3 in Exclude<keyof I["channel"], keyof Channel>]: never; }) | undefined;
@@ -1045,8 +1046,7 @@ export declare const Envelope: {
             create_time?: Date | undefined;
             update_time?: Date | undefined;
             persistent?: boolean | undefined;
-            room_name?: string | undefined;
-            group_id?: string | undefined;
+            channel_name?: string | undefined;
             user_id_one?: string | undefined;
             user_id_two?: string | undefined;
         } & {
@@ -1060,8 +1060,7 @@ export declare const Envelope: {
             create_time?: Date | undefined;
             update_time?: Date | undefined;
             persistent?: boolean | undefined;
-            room_name?: string | undefined;
-            group_id?: string | undefined;
+            channel_name?: string | undefined;
             user_id_one?: string | undefined;
             user_id_two?: string | undefined;
         } & { [K_6 in Exclude<keyof I["channel_message"], keyof ChannelMessage>]: never; }) | undefined;
@@ -1073,8 +1072,7 @@ export declare const Envelope: {
             create_time?: Date | undefined;
             update_time?: Date | undefined;
             persistent?: boolean | undefined;
-            room_name?: string | undefined;
-            group_id?: string | undefined;
+            channel_name?: string | undefined;
             user_id_one?: string | undefined;
             user_id_two?: string | undefined;
         } & {
@@ -1085,8 +1083,7 @@ export declare const Envelope: {
             create_time?: Date | undefined;
             update_time?: Date | undefined;
             persistent?: boolean | undefined;
-            room_name?: string | undefined;
-            group_id?: string | undefined;
+            channel_name?: string | undefined;
             user_id_one?: string | undefined;
             user_id_two?: string | undefined;
         } & { [K_7 in Exclude<keyof I["channel_message_ack"], keyof ChannelMessageAck>]: never; }) | undefined;
@@ -1131,8 +1128,7 @@ export declare const Envelope: {
                 persistence?: boolean | undefined;
                 status?: string | undefined;
             }[] | undefined;
-            room_name?: string | undefined;
-            group_id?: string | undefined;
+            channel_name?: string | undefined;
             user_id_one?: string | undefined;
             user_id_two?: string | undefined;
         } & {
@@ -1187,8 +1183,7 @@ export declare const Envelope: {
                 persistence?: boolean | undefined;
                 status?: string | undefined;
             }[]>]: never; }) | undefined;
-            room_name?: string | undefined;
-            group_id?: string | undefined;
+            channel_name?: string | undefined;
             user_id_one?: string | undefined;
             user_id_two?: string | undefined;
         } & { [K_15 in Exclude<keyof I["channel_presence_event"], keyof ChannelPresenceEvent>]: never; }) | undefined;
@@ -1869,7 +1864,14 @@ export declare const Envelope: {
             channel_id?: string | undefined;
             sender_id?: string | undefined;
         } & { [K_76 in Exclude<keyof I["message_typing_event"], keyof MessageTypingEvent>]: never; }) | undefined;
-    } & { [K_77 in Exclude<keyof I, keyof Envelope>]: never; }>(base?: I | undefined): Envelope;
+        last_seen_message_event?: ({
+            channel_id?: string | undefined;
+            message_id?: string | undefined;
+        } & {
+            channel_id?: string | undefined;
+            message_id?: string | undefined;
+        } & { [K_77 in Exclude<keyof I["last_seen_message_event"], keyof LastSeenMessageEvent>]: never; }) | undefined;
+    } & { [K_78 in Exclude<keyof I, keyof Envelope>]: never; }>(base?: I | undefined): Envelope;
     fromPartial<I_1 extends {
         cid?: string | undefined;
         channel?: {
@@ -1888,8 +1890,7 @@ export declare const Envelope: {
                 persistence?: boolean | undefined;
                 status?: string | undefined;
             } | undefined;
-            room_name?: string | undefined;
-            group_id?: string | undefined;
+            chanel_name?: string | undefined;
             user_id_one?: string | undefined;
             user_id_two?: string | undefined;
         } | undefined;
@@ -1914,8 +1915,7 @@ export declare const Envelope: {
             create_time?: Date | undefined;
             update_time?: Date | undefined;
             persistent?: boolean | undefined;
-            room_name?: string | undefined;
-            group_id?: string | undefined;
+            channel_name?: string | undefined;
             user_id_one?: string | undefined;
             user_id_two?: string | undefined;
         } | undefined;
@@ -1927,8 +1927,7 @@ export declare const Envelope: {
             create_time?: Date | undefined;
             update_time?: Date | undefined;
             persistent?: boolean | undefined;
-            room_name?: string | undefined;
-            group_id?: string | undefined;
+            channel_name?: string | undefined;
             user_id_one?: string | undefined;
             user_id_two?: string | undefined;
         } | undefined;
@@ -1962,8 +1961,7 @@ export declare const Envelope: {
                 persistence?: boolean | undefined;
                 status?: string | undefined;
             }[] | undefined;
-            room_name?: string | undefined;
-            group_id?: string | undefined;
+            channel_name?: string | undefined;
             user_id_one?: string | undefined;
             user_id_two?: string | undefined;
         } | undefined;
@@ -2196,6 +2194,10 @@ export declare const Envelope: {
             channel_id?: string | undefined;
             sender_id?: string | undefined;
         } | undefined;
+        last_seen_message_event?: {
+            channel_id?: string | undefined;
+            message_id?: string | undefined;
+        } | undefined;
     } & {
         cid?: string | undefined;
         channel?: ({
@@ -2214,8 +2216,7 @@ export declare const Envelope: {
                 persistence?: boolean | undefined;
                 status?: string | undefined;
             } | undefined;
-            room_name?: string | undefined;
-            group_id?: string | undefined;
+            chanel_name?: string | undefined;
             user_id_one?: string | undefined;
             user_id_two?: string | undefined;
         } & {
@@ -2238,7 +2239,7 @@ export declare const Envelope: {
                 username?: string | undefined;
                 persistence?: boolean | undefined;
                 status?: string | undefined;
-            } & { [K_78 in Exclude<keyof I_1["channel"]["presences"][number], keyof UserPresence>]: never; })[] & { [K_79 in Exclude<keyof I_1["channel"]["presences"], keyof {
+            } & { [K_79 in Exclude<keyof I_1["channel"]["presences"][number], keyof UserPresence>]: never; })[] & { [K_80 in Exclude<keyof I_1["channel"]["presences"], keyof {
                 user_id?: string | undefined;
                 session_id?: string | undefined;
                 username?: string | undefined;
@@ -2257,12 +2258,11 @@ export declare const Envelope: {
                 username?: string | undefined;
                 persistence?: boolean | undefined;
                 status?: string | undefined;
-            } & { [K_80 in Exclude<keyof I_1["channel"]["self"], keyof UserPresence>]: never; }) | undefined;
-            room_name?: string | undefined;
-            group_id?: string | undefined;
+            } & { [K_81 in Exclude<keyof I_1["channel"]["self"], keyof UserPresence>]: never; }) | undefined;
+            chanel_name?: string | undefined;
             user_id_one?: string | undefined;
             user_id_two?: string | undefined;
-        } & { [K_81 in Exclude<keyof I_1["channel"], keyof Channel>]: never; }) | undefined;
+        } & { [K_82 in Exclude<keyof I_1["channel"], keyof Channel>]: never; }) | undefined;
         channel_join?: ({
             target_id?: string | undefined;
             target?: string | undefined;
@@ -2275,12 +2275,12 @@ export declare const Envelope: {
             type?: number | undefined;
             persistence?: boolean | undefined;
             hidden?: boolean | undefined;
-        } & { [K_82 in Exclude<keyof I_1["channel_join"], keyof ChannelJoin>]: never; }) | undefined;
+        } & { [K_83 in Exclude<keyof I_1["channel_join"], keyof ChannelJoin>]: never; }) | undefined;
         channel_leave?: ({
             channel_id?: string | undefined;
         } & {
             channel_id?: string | undefined;
-        } & { [K_83 in Exclude<keyof I_1["channel_leave"], "channel_id">]: never; }) | undefined;
+        } & { [K_84 in Exclude<keyof I_1["channel_leave"], "channel_id">]: never; }) | undefined;
         channel_message?: ({
             clan_id?: string | undefined;
             channel_id?: string | undefined;
@@ -2292,8 +2292,7 @@ export declare const Envelope: {
             create_time?: Date | undefined;
             update_time?: Date | undefined;
             persistent?: boolean | undefined;
-            room_name?: string | undefined;
-            group_id?: string | undefined;
+            channel_name?: string | undefined;
             user_id_one?: string | undefined;
             user_id_two?: string | undefined;
         } & {
@@ -2307,11 +2306,10 @@ export declare const Envelope: {
             create_time?: Date | undefined;
             update_time?: Date | undefined;
             persistent?: boolean | undefined;
-            room_name?: string | undefined;
-            group_id?: string | undefined;
+            channel_name?: string | undefined;
             user_id_one?: string | undefined;
             user_id_two?: string | undefined;
-        } & { [K_84 in Exclude<keyof I_1["channel_message"], keyof ChannelMessage>]: never; }) | undefined;
+        } & { [K_85 in Exclude<keyof I_1["channel_message"], keyof ChannelMessage>]: never; }) | undefined;
         channel_message_ack?: ({
             channel_id?: string | undefined;
             message_id?: string | undefined;
@@ -2320,8 +2318,7 @@ export declare const Envelope: {
             create_time?: Date | undefined;
             update_time?: Date | undefined;
             persistent?: boolean | undefined;
-            room_name?: string | undefined;
-            group_id?: string | undefined;
+            channel_name?: string | undefined;
             user_id_one?: string | undefined;
             user_id_two?: string | undefined;
         } & {
@@ -2332,11 +2329,10 @@ export declare const Envelope: {
             create_time?: Date | undefined;
             update_time?: Date | undefined;
             persistent?: boolean | undefined;
-            room_name?: string | undefined;
-            group_id?: string | undefined;
+            channel_name?: string | undefined;
             user_id_one?: string | undefined;
             user_id_two?: string | undefined;
-        } & { [K_85 in Exclude<keyof I_1["channel_message_ack"], keyof ChannelMessageAck>]: never; }) | undefined;
+        } & { [K_86 in Exclude<keyof I_1["channel_message_ack"], keyof ChannelMessageAck>]: never; }) | undefined;
         channel_message_send?: ({
             clan_id?: string | undefined;
             channel_id?: string | undefined;
@@ -2345,7 +2341,7 @@ export declare const Envelope: {
             clan_id?: string | undefined;
             channel_id?: string | undefined;
             content?: string | undefined;
-        } & { [K_86 in Exclude<keyof I_1["channel_message_send"], keyof ChannelMessageSend>]: never; }) | undefined;
+        } & { [K_87 in Exclude<keyof I_1["channel_message_send"], keyof ChannelMessageSend>]: never; }) | undefined;
         channel_message_update?: ({
             channel_id?: string | undefined;
             message_id?: string | undefined;
@@ -2354,14 +2350,14 @@ export declare const Envelope: {
             channel_id?: string | undefined;
             message_id?: string | undefined;
             content?: string | undefined;
-        } & { [K_87 in Exclude<keyof I_1["channel_message_update"], keyof ChannelMessageUpdate>]: never; }) | undefined;
+        } & { [K_88 in Exclude<keyof I_1["channel_message_update"], keyof ChannelMessageUpdate>]: never; }) | undefined;
         channel_message_remove?: ({
             channel_id?: string | undefined;
             message_id?: string | undefined;
         } & {
             channel_id?: string | undefined;
             message_id?: string | undefined;
-        } & { [K_88 in Exclude<keyof I_1["channel_message_remove"], keyof ChannelMessageRemove>]: never; }) | undefined;
+        } & { [K_89 in Exclude<keyof I_1["channel_message_remove"], keyof ChannelMessageRemove>]: never; }) | undefined;
         channel_presence_event?: ({
             channel_id?: string | undefined;
             joins?: {
@@ -2378,8 +2374,7 @@ export declare const Envelope: {
                 persistence?: boolean | undefined;
                 status?: string | undefined;
             }[] | undefined;
-            room_name?: string | undefined;
-            group_id?: string | undefined;
+            channel_name?: string | undefined;
             user_id_one?: string | undefined;
             user_id_two?: string | undefined;
         } & {
@@ -2402,7 +2397,7 @@ export declare const Envelope: {
                 username?: string | undefined;
                 persistence?: boolean | undefined;
                 status?: string | undefined;
-            } & { [K_89 in Exclude<keyof I_1["channel_presence_event"]["joins"][number], keyof UserPresence>]: never; })[] & { [K_90 in Exclude<keyof I_1["channel_presence_event"]["joins"], keyof {
+            } & { [K_90 in Exclude<keyof I_1["channel_presence_event"]["joins"][number], keyof UserPresence>]: never; })[] & { [K_91 in Exclude<keyof I_1["channel_presence_event"]["joins"], keyof {
                 user_id?: string | undefined;
                 session_id?: string | undefined;
                 username?: string | undefined;
@@ -2427,18 +2422,17 @@ export declare const Envelope: {
                 username?: string | undefined;
                 persistence?: boolean | undefined;
                 status?: string | undefined;
-            } & { [K_91 in Exclude<keyof I_1["channel_presence_event"]["leaves"][number], keyof UserPresence>]: never; })[] & { [K_92 in Exclude<keyof I_1["channel_presence_event"]["leaves"], keyof {
+            } & { [K_92 in Exclude<keyof I_1["channel_presence_event"]["leaves"][number], keyof UserPresence>]: never; })[] & { [K_93 in Exclude<keyof I_1["channel_presence_event"]["leaves"], keyof {
                 user_id?: string | undefined;
                 session_id?: string | undefined;
                 username?: string | undefined;
                 persistence?: boolean | undefined;
                 status?: string | undefined;
             }[]>]: never; }) | undefined;
-            room_name?: string | undefined;
-            group_id?: string | undefined;
+            channel_name?: string | undefined;
             user_id_one?: string | undefined;
             user_id_two?: string | undefined;
-        } & { [K_93 in Exclude<keyof I_1["channel_presence_event"], keyof ChannelPresenceEvent>]: never; }) | undefined;
+        } & { [K_94 in Exclude<keyof I_1["channel_presence_event"], keyof ChannelPresenceEvent>]: never; }) | undefined;
         error?: ({
             code?: number | undefined;
             message?: string | undefined;
@@ -2452,8 +2446,8 @@ export declare const Envelope: {
                 [x: string]: string | undefined;
             } & {
                 [x: string]: string | undefined;
-            } & { [K_94 in Exclude<keyof I_1["error"]["context"], string | number>]: never; }) | undefined;
-        } & { [K_95 in Exclude<keyof I_1["error"], keyof Error>]: never; }) | undefined;
+            } & { [K_95 in Exclude<keyof I_1["error"]["context"], string | number>]: never; }) | undefined;
+        } & { [K_96 in Exclude<keyof I_1["error"], keyof Error>]: never; }) | undefined;
         notifications?: ({
             notifications?: {
                 id?: string | undefined;
@@ -2489,7 +2483,7 @@ export declare const Envelope: {
                 sender_id?: string | undefined;
                 create_time?: Date | undefined;
                 persistent?: boolean | undefined;
-            } & { [K_96 in Exclude<keyof I_1["notifications"]["notifications"][number], keyof Notification>]: never; })[] & { [K_97 in Exclude<keyof I_1["notifications"]["notifications"], keyof {
+            } & { [K_97 in Exclude<keyof I_1["notifications"]["notifications"][number], keyof Notification>]: never; })[] & { [K_98 in Exclude<keyof I_1["notifications"]["notifications"], keyof {
                 id?: string | undefined;
                 subject?: string | undefined;
                 content?: string | undefined;
@@ -2498,7 +2492,7 @@ export declare const Envelope: {
                 create_time?: Date | undefined;
                 persistent?: boolean | undefined;
             }[]>]: never; }) | undefined;
-        } & { [K_98 in Exclude<keyof I_1["notifications"], "notifications">]: never; }) | undefined;
+        } & { [K_99 in Exclude<keyof I_1["notifications"], "notifications">]: never; }) | undefined;
         rpc?: ({
             id?: string | undefined;
             payload?: string | undefined;
@@ -2507,7 +2501,7 @@ export declare const Envelope: {
             id?: string | undefined;
             payload?: string | undefined;
             http_key?: string | undefined;
-        } & { [K_99 in Exclude<keyof I_1["rpc"], keyof Rpc>]: never; }) | undefined;
+        } & { [K_100 in Exclude<keyof I_1["rpc"], keyof Rpc>]: never; }) | undefined;
         status?: ({
             presences?: {
                 user_id?: string | undefined;
@@ -2535,21 +2529,21 @@ export declare const Envelope: {
                 username?: string | undefined;
                 persistence?: boolean | undefined;
                 status?: string | undefined;
-            } & { [K_100 in Exclude<keyof I_1["status"]["presences"][number], keyof UserPresence>]: never; })[] & { [K_101 in Exclude<keyof I_1["status"]["presences"], keyof {
+            } & { [K_101 in Exclude<keyof I_1["status"]["presences"][number], keyof UserPresence>]: never; })[] & { [K_102 in Exclude<keyof I_1["status"]["presences"], keyof {
                 user_id?: string | undefined;
                 session_id?: string | undefined;
                 username?: string | undefined;
                 persistence?: boolean | undefined;
                 status?: string | undefined;
             }[]>]: never; }) | undefined;
-        } & { [K_102 in Exclude<keyof I_1["status"], "presences">]: never; }) | undefined;
+        } & { [K_103 in Exclude<keyof I_1["status"], "presences">]: never; }) | undefined;
         status_follow?: ({
             user_ids?: string[] | undefined;
             usernames?: string[] | undefined;
         } & {
-            user_ids?: (string[] & string[] & { [K_103 in Exclude<keyof I_1["status_follow"]["user_ids"], keyof string[]>]: never; }) | undefined;
-            usernames?: (string[] & string[] & { [K_104 in Exclude<keyof I_1["status_follow"]["usernames"], keyof string[]>]: never; }) | undefined;
-        } & { [K_105 in Exclude<keyof I_1["status_follow"], keyof StatusFollow>]: never; }) | undefined;
+            user_ids?: (string[] & string[] & { [K_104 in Exclude<keyof I_1["status_follow"]["user_ids"], keyof string[]>]: never; }) | undefined;
+            usernames?: (string[] & string[] & { [K_105 in Exclude<keyof I_1["status_follow"]["usernames"], keyof string[]>]: never; }) | undefined;
+        } & { [K_106 in Exclude<keyof I_1["status_follow"], keyof StatusFollow>]: never; }) | undefined;
         status_presence_event?: ({
             joins?: {
                 user_id?: string | undefined;
@@ -2584,7 +2578,7 @@ export declare const Envelope: {
                 username?: string | undefined;
                 persistence?: boolean | undefined;
                 status?: string | undefined;
-            } & { [K_106 in Exclude<keyof I_1["status_presence_event"]["joins"][number], keyof UserPresence>]: never; })[] & { [K_107 in Exclude<keyof I_1["status_presence_event"]["joins"], keyof {
+            } & { [K_107 in Exclude<keyof I_1["status_presence_event"]["joins"][number], keyof UserPresence>]: never; })[] & { [K_108 in Exclude<keyof I_1["status_presence_event"]["joins"], keyof {
                 user_id?: string | undefined;
                 session_id?: string | undefined;
                 username?: string | undefined;
@@ -2609,24 +2603,24 @@ export declare const Envelope: {
                 username?: string | undefined;
                 persistence?: boolean | undefined;
                 status?: string | undefined;
-            } & { [K_108 in Exclude<keyof I_1["status_presence_event"]["leaves"][number], keyof UserPresence>]: never; })[] & { [K_109 in Exclude<keyof I_1["status_presence_event"]["leaves"], keyof {
+            } & { [K_109 in Exclude<keyof I_1["status_presence_event"]["leaves"][number], keyof UserPresence>]: never; })[] & { [K_110 in Exclude<keyof I_1["status_presence_event"]["leaves"], keyof {
                 user_id?: string | undefined;
                 session_id?: string | undefined;
                 username?: string | undefined;
                 persistence?: boolean | undefined;
                 status?: string | undefined;
             }[]>]: never; }) | undefined;
-        } & { [K_110 in Exclude<keyof I_1["status_presence_event"], keyof StatusPresenceEvent>]: never; }) | undefined;
+        } & { [K_111 in Exclude<keyof I_1["status_presence_event"], keyof StatusPresenceEvent>]: never; }) | undefined;
         status_unfollow?: ({
             user_ids?: string[] | undefined;
         } & {
-            user_ids?: (string[] & string[] & { [K_111 in Exclude<keyof I_1["status_unfollow"]["user_ids"], keyof string[]>]: never; }) | undefined;
-        } & { [K_112 in Exclude<keyof I_1["status_unfollow"], "user_ids">]: never; }) | undefined;
+            user_ids?: (string[] & string[] & { [K_112 in Exclude<keyof I_1["status_unfollow"]["user_ids"], keyof string[]>]: never; }) | undefined;
+        } & { [K_113 in Exclude<keyof I_1["status_unfollow"], "user_ids">]: never; }) | undefined;
         status_update?: ({
             status?: string | undefined;
         } & {
             status?: string | undefined;
-        } & { [K_113 in Exclude<keyof I_1["status_update"], "status">]: never; }) | undefined;
+        } & { [K_114 in Exclude<keyof I_1["status_update"], "status">]: never; }) | undefined;
         stream_data?: ({
             stream?: {
                 mode?: number | undefined;
@@ -2654,7 +2648,7 @@ export declare const Envelope: {
                 subject?: string | undefined;
                 subcontext?: string | undefined;
                 label?: string | undefined;
-            } & { [K_114 in Exclude<keyof I_1["stream_data"]["stream"], keyof Stream>]: never; }) | undefined;
+            } & { [K_115 in Exclude<keyof I_1["stream_data"]["stream"], keyof Stream>]: never; }) | undefined;
             sender?: ({
                 user_id?: string | undefined;
                 session_id?: string | undefined;
@@ -2667,10 +2661,10 @@ export declare const Envelope: {
                 username?: string | undefined;
                 persistence?: boolean | undefined;
                 status?: string | undefined;
-            } & { [K_115 in Exclude<keyof I_1["stream_data"]["sender"], keyof UserPresence>]: never; }) | undefined;
+            } & { [K_116 in Exclude<keyof I_1["stream_data"]["sender"], keyof UserPresence>]: never; }) | undefined;
             data?: string | undefined;
             reliable?: boolean | undefined;
-        } & { [K_116 in Exclude<keyof I_1["stream_data"], keyof StreamData>]: never; }) | undefined;
+        } & { [K_117 in Exclude<keyof I_1["stream_data"], keyof StreamData>]: never; }) | undefined;
         stream_presence_event?: ({
             stream?: {
                 mode?: number | undefined;
@@ -2703,7 +2697,7 @@ export declare const Envelope: {
                 subject?: string | undefined;
                 subcontext?: string | undefined;
                 label?: string | undefined;
-            } & { [K_117 in Exclude<keyof I_1["stream_presence_event"]["stream"], keyof Stream>]: never; }) | undefined;
+            } & { [K_118 in Exclude<keyof I_1["stream_presence_event"]["stream"], keyof Stream>]: never; }) | undefined;
             joins?: ({
                 user_id?: string | undefined;
                 session_id?: string | undefined;
@@ -2722,7 +2716,7 @@ export declare const Envelope: {
                 username?: string | undefined;
                 persistence?: boolean | undefined;
                 status?: string | undefined;
-            } & { [K_118 in Exclude<keyof I_1["stream_presence_event"]["joins"][number], keyof UserPresence>]: never; })[] & { [K_119 in Exclude<keyof I_1["stream_presence_event"]["joins"], keyof {
+            } & { [K_119 in Exclude<keyof I_1["stream_presence_event"]["joins"][number], keyof UserPresence>]: never; })[] & { [K_120 in Exclude<keyof I_1["stream_presence_event"]["joins"], keyof {
                 user_id?: string | undefined;
                 session_id?: string | undefined;
                 username?: string | undefined;
@@ -2747,16 +2741,16 @@ export declare const Envelope: {
                 username?: string | undefined;
                 persistence?: boolean | undefined;
                 status?: string | undefined;
-            } & { [K_120 in Exclude<keyof I_1["stream_presence_event"]["leaves"][number], keyof UserPresence>]: never; })[] & { [K_121 in Exclude<keyof I_1["stream_presence_event"]["leaves"], keyof {
+            } & { [K_121 in Exclude<keyof I_1["stream_presence_event"]["leaves"][number], keyof UserPresence>]: never; })[] & { [K_122 in Exclude<keyof I_1["stream_presence_event"]["leaves"], keyof {
                 user_id?: string | undefined;
                 session_id?: string | undefined;
                 username?: string | undefined;
                 persistence?: boolean | undefined;
                 status?: string | undefined;
             }[]>]: never; }) | undefined;
-        } & { [K_122 in Exclude<keyof I_1["stream_presence_event"], keyof StreamPresenceEvent>]: never; }) | undefined;
-        ping?: ({} & {} & { [K_123 in Exclude<keyof I_1["ping"], never>]: never; }) | undefined;
-        pong?: ({} & {} & { [K_124 in Exclude<keyof I_1["pong"], never>]: never; }) | undefined;
+        } & { [K_123 in Exclude<keyof I_1["stream_presence_event"], keyof StreamPresenceEvent>]: never; }) | undefined;
+        ping?: ({} & {} & { [K_124 in Exclude<keyof I_1["ping"], never>]: never; }) | undefined;
+        pong?: ({} & {} & { [K_125 in Exclude<keyof I_1["pong"], never>]: never; }) | undefined;
         party?: ({
             party_id?: string | undefined;
             open?: boolean | undefined;
@@ -2798,7 +2792,7 @@ export declare const Envelope: {
                 username?: string | undefined;
                 persistence?: boolean | undefined;
                 status?: string | undefined;
-            } & { [K_125 in Exclude<keyof I_1["party"]["self"], keyof UserPresence>]: never; }) | undefined;
+            } & { [K_126 in Exclude<keyof I_1["party"]["self"], keyof UserPresence>]: never; }) | undefined;
             leader?: ({
                 user_id?: string | undefined;
                 session_id?: string | undefined;
@@ -2811,7 +2805,7 @@ export declare const Envelope: {
                 username?: string | undefined;
                 persistence?: boolean | undefined;
                 status?: string | undefined;
-            } & { [K_126 in Exclude<keyof I_1["party"]["leader"], keyof UserPresence>]: never; }) | undefined;
+            } & { [K_127 in Exclude<keyof I_1["party"]["leader"], keyof UserPresence>]: never; }) | undefined;
             presences?: ({
                 user_id?: string | undefined;
                 session_id?: string | undefined;
@@ -2830,31 +2824,31 @@ export declare const Envelope: {
                 username?: string | undefined;
                 persistence?: boolean | undefined;
                 status?: string | undefined;
-            } & { [K_127 in Exclude<keyof I_1["party"]["presences"][number], keyof UserPresence>]: never; })[] & { [K_128 in Exclude<keyof I_1["party"]["presences"], keyof {
+            } & { [K_128 in Exclude<keyof I_1["party"]["presences"][number], keyof UserPresence>]: never; })[] & { [K_129 in Exclude<keyof I_1["party"]["presences"], keyof {
                 user_id?: string | undefined;
                 session_id?: string | undefined;
                 username?: string | undefined;
                 persistence?: boolean | undefined;
                 status?: string | undefined;
             }[]>]: never; }) | undefined;
-        } & { [K_129 in Exclude<keyof I_1["party"], keyof Party>]: never; }) | undefined;
+        } & { [K_130 in Exclude<keyof I_1["party"], keyof Party>]: never; }) | undefined;
         party_create?: ({
             open?: boolean | undefined;
             max_size?: number | undefined;
         } & {
             open?: boolean | undefined;
             max_size?: number | undefined;
-        } & { [K_130 in Exclude<keyof I_1["party_create"], keyof PartyCreate>]: never; }) | undefined;
+        } & { [K_131 in Exclude<keyof I_1["party_create"], keyof PartyCreate>]: never; }) | undefined;
         party_join?: ({
             party_id?: string | undefined;
         } & {
             party_id?: string | undefined;
-        } & { [K_131 in Exclude<keyof I_1["party_join"], "party_id">]: never; }) | undefined;
+        } & { [K_132 in Exclude<keyof I_1["party_join"], "party_id">]: never; }) | undefined;
         party_leave?: ({
             party_id?: string | undefined;
         } & {
             party_id?: string | undefined;
-        } & { [K_132 in Exclude<keyof I_1["party_leave"], "party_id">]: never; }) | undefined;
+        } & { [K_133 in Exclude<keyof I_1["party_leave"], "party_id">]: never; }) | undefined;
         party_promote?: ({
             party_id?: string | undefined;
             presence?: {
@@ -2878,8 +2872,8 @@ export declare const Envelope: {
                 username?: string | undefined;
                 persistence?: boolean | undefined;
                 status?: string | undefined;
-            } & { [K_133 in Exclude<keyof I_1["party_promote"]["presence"], keyof UserPresence>]: never; }) | undefined;
-        } & { [K_134 in Exclude<keyof I_1["party_promote"], keyof PartyPromote>]: never; }) | undefined;
+            } & { [K_134 in Exclude<keyof I_1["party_promote"]["presence"], keyof UserPresence>]: never; }) | undefined;
+        } & { [K_135 in Exclude<keyof I_1["party_promote"], keyof PartyPromote>]: never; }) | undefined;
         party_leader?: ({
             party_id?: string | undefined;
             presence?: {
@@ -2903,8 +2897,8 @@ export declare const Envelope: {
                 username?: string | undefined;
                 persistence?: boolean | undefined;
                 status?: string | undefined;
-            } & { [K_135 in Exclude<keyof I_1["party_leader"]["presence"], keyof UserPresence>]: never; }) | undefined;
-        } & { [K_136 in Exclude<keyof I_1["party_leader"], keyof PartyLeader>]: never; }) | undefined;
+            } & { [K_136 in Exclude<keyof I_1["party_leader"]["presence"], keyof UserPresence>]: never; }) | undefined;
+        } & { [K_137 in Exclude<keyof I_1["party_leader"], keyof PartyLeader>]: never; }) | undefined;
         party_accept?: ({
             party_id?: string | undefined;
             presence?: {
@@ -2928,8 +2922,8 @@ export declare const Envelope: {
                 username?: string | undefined;
                 persistence?: boolean | undefined;
                 status?: string | undefined;
-            } & { [K_137 in Exclude<keyof I_1["party_accept"]["presence"], keyof UserPresence>]: never; }) | undefined;
-        } & { [K_138 in Exclude<keyof I_1["party_accept"], keyof PartyAccept>]: never; }) | undefined;
+            } & { [K_138 in Exclude<keyof I_1["party_accept"]["presence"], keyof UserPresence>]: never; }) | undefined;
+        } & { [K_139 in Exclude<keyof I_1["party_accept"], keyof PartyAccept>]: never; }) | undefined;
         party_remove?: ({
             party_id?: string | undefined;
             presence?: {
@@ -2953,18 +2947,18 @@ export declare const Envelope: {
                 username?: string | undefined;
                 persistence?: boolean | undefined;
                 status?: string | undefined;
-            } & { [K_139 in Exclude<keyof I_1["party_remove"]["presence"], keyof UserPresence>]: never; }) | undefined;
-        } & { [K_140 in Exclude<keyof I_1["party_remove"], keyof PartyRemove>]: never; }) | undefined;
+            } & { [K_140 in Exclude<keyof I_1["party_remove"]["presence"], keyof UserPresence>]: never; }) | undefined;
+        } & { [K_141 in Exclude<keyof I_1["party_remove"], keyof PartyRemove>]: never; }) | undefined;
         party_close?: ({
             party_id?: string | undefined;
         } & {
             party_id?: string | undefined;
-        } & { [K_141 in Exclude<keyof I_1["party_close"], "party_id">]: never; }) | undefined;
+        } & { [K_142 in Exclude<keyof I_1["party_close"], "party_id">]: never; }) | undefined;
         party_join_request_list?: ({
             party_id?: string | undefined;
         } & {
             party_id?: string | undefined;
-        } & { [K_142 in Exclude<keyof I_1["party_join_request_list"], "party_id">]: never; }) | undefined;
+        } & { [K_143 in Exclude<keyof I_1["party_join_request_list"], "party_id">]: never; }) | undefined;
         party_join_request?: ({
             party_id?: string | undefined;
             presences?: {
@@ -2994,14 +2988,14 @@ export declare const Envelope: {
                 username?: string | undefined;
                 persistence?: boolean | undefined;
                 status?: string | undefined;
-            } & { [K_143 in Exclude<keyof I_1["party_join_request"]["presences"][number], keyof UserPresence>]: never; })[] & { [K_144 in Exclude<keyof I_1["party_join_request"]["presences"], keyof {
+            } & { [K_144 in Exclude<keyof I_1["party_join_request"]["presences"][number], keyof UserPresence>]: never; })[] & { [K_145 in Exclude<keyof I_1["party_join_request"]["presences"], keyof {
                 user_id?: string | undefined;
                 session_id?: string | undefined;
                 username?: string | undefined;
                 persistence?: boolean | undefined;
                 status?: string | undefined;
             }[]>]: never; }) | undefined;
-        } & { [K_145 in Exclude<keyof I_1["party_join_request"], keyof PartyJoinRequest>]: never; }) | undefined;
+        } & { [K_146 in Exclude<keyof I_1["party_join_request"], keyof PartyJoinRequest>]: never; }) | undefined;
         party_data?: ({
             party_id?: string | undefined;
             presence?: {
@@ -3027,10 +3021,10 @@ export declare const Envelope: {
                 username?: string | undefined;
                 persistence?: boolean | undefined;
                 status?: string | undefined;
-            } & { [K_146 in Exclude<keyof I_1["party_data"]["presence"], keyof UserPresence>]: never; }) | undefined;
+            } & { [K_147 in Exclude<keyof I_1["party_data"]["presence"], keyof UserPresence>]: never; }) | undefined;
             op_code?: number | undefined;
             data?: Uint8Array | undefined;
-        } & { [K_147 in Exclude<keyof I_1["party_data"], keyof PartyData>]: never; }) | undefined;
+        } & { [K_148 in Exclude<keyof I_1["party_data"], keyof PartyData>]: never; }) | undefined;
         party_data_send?: ({
             party_id?: string | undefined;
             op_code?: number | undefined;
@@ -3039,7 +3033,7 @@ export declare const Envelope: {
             party_id?: string | undefined;
             op_code?: number | undefined;
             data?: Uint8Array | undefined;
-        } & { [K_148 in Exclude<keyof I_1["party_data_send"], keyof PartyDataSend>]: never; }) | undefined;
+        } & { [K_149 in Exclude<keyof I_1["party_data_send"], keyof PartyDataSend>]: never; }) | undefined;
         party_presence_event?: ({
             party_id?: string | undefined;
             joins?: {
@@ -3076,7 +3070,7 @@ export declare const Envelope: {
                 username?: string | undefined;
                 persistence?: boolean | undefined;
                 status?: string | undefined;
-            } & { [K_149 in Exclude<keyof I_1["party_presence_event"]["joins"][number], keyof UserPresence>]: never; })[] & { [K_150 in Exclude<keyof I_1["party_presence_event"]["joins"], keyof {
+            } & { [K_150 in Exclude<keyof I_1["party_presence_event"]["joins"][number], keyof UserPresence>]: never; })[] & { [K_151 in Exclude<keyof I_1["party_presence_event"]["joins"], keyof {
                 user_id?: string | undefined;
                 session_id?: string | undefined;
                 username?: string | undefined;
@@ -3101,22 +3095,29 @@ export declare const Envelope: {
                 username?: string | undefined;
                 persistence?: boolean | undefined;
                 status?: string | undefined;
-            } & { [K_151 in Exclude<keyof I_1["party_presence_event"]["leaves"][number], keyof UserPresence>]: never; })[] & { [K_152 in Exclude<keyof I_1["party_presence_event"]["leaves"], keyof {
+            } & { [K_152 in Exclude<keyof I_1["party_presence_event"]["leaves"][number], keyof UserPresence>]: never; })[] & { [K_153 in Exclude<keyof I_1["party_presence_event"]["leaves"], keyof {
                 user_id?: string | undefined;
                 session_id?: string | undefined;
                 username?: string | undefined;
                 persistence?: boolean | undefined;
                 status?: string | undefined;
             }[]>]: never; }) | undefined;
-        } & { [K_153 in Exclude<keyof I_1["party_presence_event"], keyof PartyPresenceEvent>]: never; }) | undefined;
+        } & { [K_154 in Exclude<keyof I_1["party_presence_event"], keyof PartyPresenceEvent>]: never; }) | undefined;
         message_typing_event?: ({
             channel_id?: string | undefined;
             sender_id?: string | undefined;
         } & {
             channel_id?: string | undefined;
             sender_id?: string | undefined;
-        } & { [K_154 in Exclude<keyof I_1["message_typing_event"], keyof MessageTypingEvent>]: never; }) | undefined;
-    } & { [K_155 in Exclude<keyof I_1, keyof Envelope>]: never; }>(object: I_1): Envelope;
+        } & { [K_155 in Exclude<keyof I_1["message_typing_event"], keyof MessageTypingEvent>]: never; }) | undefined;
+        last_seen_message_event?: ({
+            channel_id?: string | undefined;
+            message_id?: string | undefined;
+        } & {
+            channel_id?: string | undefined;
+            message_id?: string | undefined;
+        } & { [K_156 in Exclude<keyof I_1["last_seen_message_event"], keyof LastSeenMessageEvent>]: never; }) | undefined;
+    } & { [K_157 in Exclude<keyof I_1, keyof Envelope>]: never; }>(object: I_1): Envelope;
 };
 export declare const Channel: {
     encode(message: Channel, writer?: _m0.Writer): _m0.Writer;
@@ -3139,8 +3140,7 @@ export declare const Channel: {
             persistence?: boolean | undefined;
             status?: string | undefined;
         } | undefined;
-        room_name?: string | undefined;
-        group_id?: string | undefined;
+        chanel_name?: string | undefined;
         user_id_one?: string | undefined;
         user_id_two?: string | undefined;
     } & {
@@ -3183,8 +3183,7 @@ export declare const Channel: {
             persistence?: boolean | undefined;
             status?: string | undefined;
         } & { [K_2 in Exclude<keyof I["self"], keyof UserPresence>]: never; }) | undefined;
-        room_name?: string | undefined;
-        group_id?: string | undefined;
+        chanel_name?: string | undefined;
         user_id_one?: string | undefined;
         user_id_two?: string | undefined;
     } & { [K_3 in Exclude<keyof I, keyof Channel>]: never; }>(base?: I | undefined): Channel;
@@ -3204,8 +3203,7 @@ export declare const Channel: {
             persistence?: boolean | undefined;
             status?: string | undefined;
         } | undefined;
-        room_name?: string | undefined;
-        group_id?: string | undefined;
+        chanel_name?: string | undefined;
         user_id_one?: string | undefined;
         user_id_two?: string | undefined;
     } & {
@@ -3248,8 +3246,7 @@ export declare const Channel: {
             persistence?: boolean | undefined;
             status?: string | undefined;
         } & { [K_6 in Exclude<keyof I_1["self"], keyof UserPresence>]: never; }) | undefined;
-        room_name?: string | undefined;
-        group_id?: string | undefined;
+        chanel_name?: string | undefined;
         user_id_one?: string | undefined;
         user_id_two?: string | undefined;
     } & { [K_7 in Exclude<keyof I_1, keyof Channel>]: never; }>(object: I_1): Channel;
@@ -3315,8 +3312,7 @@ export declare const ChannelMessageAck: {
         create_time?: Date | undefined;
         update_time?: Date | undefined;
         persistent?: boolean | undefined;
-        room_name?: string | undefined;
-        group_id?: string | undefined;
+        channel_name?: string | undefined;
         user_id_one?: string | undefined;
         user_id_two?: string | undefined;
     } & {
@@ -3327,8 +3323,7 @@ export declare const ChannelMessageAck: {
         create_time?: Date | undefined;
         update_time?: Date | undefined;
         persistent?: boolean | undefined;
-        room_name?: string | undefined;
-        group_id?: string | undefined;
+        channel_name?: string | undefined;
         user_id_one?: string | undefined;
         user_id_two?: string | undefined;
     } & { [K in Exclude<keyof I, keyof ChannelMessageAck>]: never; }>(base?: I | undefined): ChannelMessageAck;
@@ -3340,8 +3335,7 @@ export declare const ChannelMessageAck: {
         create_time?: Date | undefined;
         update_time?: Date | undefined;
         persistent?: boolean | undefined;
-        room_name?: string | undefined;
-        group_id?: string | undefined;
+        channel_name?: string | undefined;
         user_id_one?: string | undefined;
         user_id_two?: string | undefined;
     } & {
@@ -3352,8 +3346,7 @@ export declare const ChannelMessageAck: {
         create_time?: Date | undefined;
         update_time?: Date | undefined;
         persistent?: boolean | undefined;
-        room_name?: string | undefined;
-        group_id?: string | undefined;
+        channel_name?: string | undefined;
         user_id_one?: string | undefined;
         user_id_two?: string | undefined;
     } & { [K_1 in Exclude<keyof I_1, keyof ChannelMessageAck>]: never; }>(object: I_1): ChannelMessageAck;
@@ -3447,8 +3440,7 @@ export declare const ChannelPresenceEvent: {
             persistence?: boolean | undefined;
             status?: string | undefined;
         }[] | undefined;
-        room_name?: string | undefined;
-        group_id?: string | undefined;
+        channel_name?: string | undefined;
         user_id_one?: string | undefined;
         user_id_two?: string | undefined;
     } & {
@@ -3503,8 +3495,7 @@ export declare const ChannelPresenceEvent: {
             persistence?: boolean | undefined;
             status?: string | undefined;
         }[]>]: never; }) | undefined;
-        room_name?: string | undefined;
-        group_id?: string | undefined;
+        channel_name?: string | undefined;
         user_id_one?: string | undefined;
         user_id_two?: string | undefined;
     } & { [K_4 in Exclude<keyof I, keyof ChannelPresenceEvent>]: never; }>(base?: I | undefined): ChannelPresenceEvent;
@@ -3524,8 +3515,7 @@ export declare const ChannelPresenceEvent: {
             persistence?: boolean | undefined;
             status?: string | undefined;
         }[] | undefined;
-        room_name?: string | undefined;
-        group_id?: string | undefined;
+        channel_name?: string | undefined;
         user_id_one?: string | undefined;
         user_id_two?: string | undefined;
     } & {
@@ -3580,8 +3570,7 @@ export declare const ChannelPresenceEvent: {
             persistence?: boolean | undefined;
             status?: string | undefined;
         }[]>]: never; }) | undefined;
-        room_name?: string | undefined;
-        group_id?: string | undefined;
+        channel_name?: string | undefined;
         user_id_one?: string | undefined;
         user_id_two?: string | undefined;
     } & { [K_9 in Exclude<keyof I_1, keyof ChannelPresenceEvent>]: never; }>(object: I_1): ChannelPresenceEvent;
@@ -6017,6 +6006,26 @@ export declare const StatusPresenceEvent: {
             status?: string | undefined;
         }[]>]: never; }) | undefined;
     } & { [K_9 in Exclude<keyof I_1, keyof StatusPresenceEvent>]: never; }>(object: I_1): StatusPresenceEvent;
+};
+export declare const LastSeenMessageEvent: {
+    encode(message: LastSeenMessageEvent, writer?: _m0.Writer): _m0.Writer;
+    decode(input: _m0.Reader | Uint8Array, length?: number): LastSeenMessageEvent;
+    fromJSON(object: any): LastSeenMessageEvent;
+    toJSON(message: LastSeenMessageEvent): unknown;
+    create<I extends {
+        channel_id?: string | undefined;
+        message_id?: string | undefined;
+    } & {
+        channel_id?: string | undefined;
+        message_id?: string | undefined;
+    } & { [K in Exclude<keyof I, keyof LastSeenMessageEvent>]: never; }>(base?: I | undefined): LastSeenMessageEvent;
+    fromPartial<I_1 extends {
+        channel_id?: string | undefined;
+        message_id?: string | undefined;
+    } & {
+        channel_id?: string | undefined;
+        message_id?: string | undefined;
+    } & { [K_1 in Exclude<keyof I_1, keyof LastSeenMessageEvent>]: never; }>(object: I_1): LastSeenMessageEvent;
 };
 export declare const MessageTypingEvent: {
     encode(message: MessageTypingEvent, writer?: _m0.Writer): _m0.Writer;
