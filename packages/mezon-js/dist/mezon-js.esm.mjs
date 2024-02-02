@@ -1642,13 +1642,14 @@ var NakamaApi = class {
     ]);
   }
   /** List user channels */
-  listChannelDescs(bearerToken, limit, state, cursor, clanId, options = {}) {
+  listChannelDescs(bearerToken, limit, state, cursor, clanId, channelType, options = {}) {
     const urlPath = "/v2/channeldesc";
     const queryParams = /* @__PURE__ */ new Map();
     queryParams.set("limit", limit);
     queryParams.set("state", state);
     queryParams.set("cursor", cursor);
     queryParams.set("clan_id", clanId);
+    queryParams.set("channel_type", channelType);
     let bodyJson = "";
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("GET", options, bodyJson);
@@ -3280,34 +3281,6 @@ var NakamaApi = class {
       )
     ]);
   }
-  /** Attempt to join an open and running tournament. */
-  joinTournament(bearerToken, tournamentId, options = {}) {
-    if (tournamentId === null || tournamentId === void 0) {
-      throw new Error("'tournamentId' is a required parameter but is null or undefined.");
-    }
-    const urlPath = "/v2/tournament/{tournamentId}/join".replace("{tournamentId}", encodeURIComponent(String(tournamentId)));
-    const queryParams = /* @__PURE__ */ new Map();
-    let bodyJson = "";
-    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
-    const fetchOptions = buildFetchOptions("POST", options, bodyJson);
-    if (bearerToken) {
-      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-    }
-    return Promise.race([
-      fetch(fullUrl, fetchOptions).then((response) => {
-        if (response.status == 204) {
-          return response;
-        } else if (response.status >= 200 && response.status < 300) {
-          return response.json();
-        } else {
-          throw response;
-        }
-      }),
-      new Promise(
-        (_, reject) => setTimeout(reject, this.timeoutMs, "Request timed out.")
-      )
-    ]);
-  }
   /** Update fields in a given category. */
   updateCategory(bearerToken, body, options = {}) {
     if (body === null || body === void 0) {
@@ -4484,16 +4457,6 @@ var Client = class {
       });
     });
   }
-  joinTournament(session, tournamentId) {
-    return __async(this, null, function* () {
-      if (this.autoRefreshSession && session.refresh_token && session.isexpired((Date.now() + this.expiredTimespanMs) / 1e3)) {
-        yield this.sessionRefresh(session);
-      }
-      return this.apiClient.joinTournament(session.token, tournamentId, {}).then((response) => {
-        return response !== void 0;
-      });
-    });
-  }
   /** Kick users from a group, or decline their join requests. */
   kickGroupUsers(session, groupId, ids) {
     return __async(this, null, function* () {
@@ -4555,8 +4518,7 @@ var Client = class {
             update_time: m.update_time,
             username: m.username,
             content: m.content ? JSON.parse(m.content) : void 0,
-            group_id: m.group_id,
-            room_name: m.room_name,
+            room_name: m.channel_name,
             user_id_one: m.user_id_one,
             user_id_two: m.user_id_two
           });
@@ -4719,12 +4681,12 @@ var Client = class {
     });
   }
   /** List channels. */
-  listChannelDescs(session, limit, state, cursor, clanId) {
+  listChannelDescs(session, limit, state, cursor, clanId, channelType) {
     return __async(this, null, function* () {
       if (this.autoRefreshSession && session.refresh_token && session.isexpired((Date.now() + this.expiredTimespanMs) / 1e3)) {
         yield this.sessionRefresh(session);
       }
-      return this.apiClient.listChannelDescs(session.token, limit, state, cursor, clanId).then((response) => {
+      return this.apiClient.listChannelDescs(session.token, limit, state, cursor, clanId, channelType).then((response) => {
         var result = {
           channeldesc: [],
           next_cursor: response.next_cursor,
@@ -4960,8 +4922,7 @@ var Client = class {
               timezone: f.user.timezone,
               update_time: f.user.update_time,
               username: f.user.username,
-              metadata: f.user.metadata ? JSON.parse(f.user.metadata) : void 0,
-              facebook_instant_game_id: f.user.facebook_instant_game_id
+              metadata: f.user.metadata ? JSON.parse(f.user.metadata) : void 0
             },
             state: f.state
           });

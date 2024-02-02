@@ -119,14 +119,13 @@ export interface ApiChannelDescription {
 /** A message sent on a channel. */
 export interface ApiChannelMessage {
     channel_id?: string;
+    channel_name?: string;
     clan_id?: string;
     code?: number;
     content?: string;
     create_time?: string;
-    group_id?: string;
     message_id?: string;
     persistent?: boolean;
-    room_name?: string;
     sender_id?: string;
     update_time?: string;
     user_id_one?: string;
@@ -458,7 +457,6 @@ export interface ApiUser {
     display_name?: string;
     edge_count?: number;
     facebook_id?: string;
-    facebook_instant_game_id?: string;
     gamecenter_id?: string;
     google_id?: string;
     id?: string;
@@ -578,7 +576,7 @@ export declare class NakamaApi {
     /** List a channel's message history. */
     listChannelMessages(bearerToken: string, channelId: string, limit?: number, forward?: boolean, cursor?: string, options?: any): Promise<ApiChannelMessageList>;
     /** List user channels */
-    listChannelDescs(bearerToken: string, limit?: number, state?: number, cursor?: string, clanId?: string, options?: any): Promise<ApiChannelDescList>;
+    listChannelDescs(bearerToken: string, limit?: number, state?: number, cursor?: string, clanId?: string, channelType?: number, options?: any): Promise<ApiChannelDescList>;
     /** Create a new channel with the current user as the owner. */
     createChannelDesc(bearerToken: string, body: ApiCreateChannelDescRequest, options?: any): Promise<ApiChannelDescription>;
     /** Delete a channel by ID. */
@@ -689,8 +687,6 @@ export declare class NakamaApi {
     listStorageObjects(bearerToken: string, collection: string, userId?: string, limit?: number, cursor?: string, options?: any): Promise<ApiStorageObjectList>;
     /** List publicly readable storage objects in a given collection. */
     listStorageObjects2(bearerToken: string, collection: string, userId: string, limit?: number, cursor?: string, options?: any): Promise<ApiStorageObjectList>;
-    /** Attempt to join an open and running tournament. */
-    joinTournament(bearerToken: string, tournamentId: string, options?: any): Promise<any>;
     /** Update fields in a given category. */
     updateCategory(bearerToken: string, body: ApiUpdateCategoryDescRequest, options?: any): Promise<any>;
     /**  */

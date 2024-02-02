@@ -358,20 +358,11 @@ export interface ChannelMessage {
     /** True if the message was persisted to the channel's history, false otherwise. */
     persistent: boolean | undefined;
     /** The name of the chat room, or an empty string if this message was not sent through a chat room. */
-    room_name: string;
-    /** The ID of the group, or an empty string if this message was not sent through a group channel. */
-    group_id: string;
+    channel_name: string;
     /** The ID of the first DM user, or an empty string if this message was not sent through a DM chat. */
     user_id_one: string;
     /** The ID of the second DM user, or an empty string if this message was not sent through a DM chat. */
     user_id_two: string;
-}
-/** last seen message seen by users */
-export interface LastSeenMessageRequest {
-    /** The unique ID of this channel. */
-    channel_id: string;
-    /** The unique ID of this message. */
-    message_id: string;
 }
 /** A list of channel messages, usually a result of a list operation. */
 export interface ChannelMessageList {
@@ -899,8 +890,6 @@ export interface User {
     create_time: Date | undefined;
     /** The UNIX time (for gRPC clients) or ISO string (for REST clients) when the user was last updated. */
     update_time: Date | undefined;
-    /** The Facebook Instant Game ID in the user's account. */
-    facebook_instant_game_id: string;
     /** The Apple Sign In ID in the user's account. */
     apple_id: string;
 }
@@ -1215,6 +1204,8 @@ export interface ListChannelDescsRequest {
     cursor: string;
     /** The clan of this channel */
     clan_id: string;
+    /** channel type */
+    channel_type: number;
 }
 /** Create a channel within clan. */
 export interface CreateChannelDescRequest {
@@ -1417,7 +1408,6 @@ export declare const Account: {
             edge_count?: number | undefined;
             create_time?: Date | undefined;
             update_time?: Date | undefined;
-            facebook_instant_game_id?: string | undefined;
             apple_id?: string | undefined;
         } | undefined;
         wallet?: string | undefined;
@@ -1449,7 +1439,6 @@ export declare const Account: {
             edge_count?: number | undefined;
             create_time?: Date | undefined;
             update_time?: Date | undefined;
-            facebook_instant_game_id?: string | undefined;
             apple_id?: string | undefined;
         } & {
             id?: string | undefined;
@@ -1468,7 +1457,6 @@ export declare const Account: {
             edge_count?: number | undefined;
             create_time?: Date | undefined;
             update_time?: Date | undefined;
-            facebook_instant_game_id?: string | undefined;
             apple_id?: string | undefined;
         } & { [K in Exclude<keyof I["user"], keyof User>]: never; }) | undefined;
         wallet?: string | undefined;
@@ -1518,7 +1506,6 @@ export declare const Account: {
             edge_count?: number | undefined;
             create_time?: Date | undefined;
             update_time?: Date | undefined;
-            facebook_instant_game_id?: string | undefined;
             apple_id?: string | undefined;
         } | undefined;
         wallet?: string | undefined;
@@ -1550,7 +1537,6 @@ export declare const Account: {
             edge_count?: number | undefined;
             create_time?: Date | undefined;
             update_time?: Date | undefined;
-            facebook_instant_game_id?: string | undefined;
             apple_id?: string | undefined;
         } & {
             id?: string | undefined;
@@ -1569,7 +1555,6 @@ export declare const Account: {
             edge_count?: number | undefined;
             create_time?: Date | undefined;
             update_time?: Date | undefined;
-            facebook_instant_game_id?: string | undefined;
             apple_id?: string | undefined;
         } & { [K_5 in Exclude<keyof I_1["user"], keyof User>]: never; }) | undefined;
         wallet?: string | undefined;
@@ -2880,8 +2865,7 @@ export declare const ChannelMessage: {
         create_time?: Date | undefined;
         update_time?: Date | undefined;
         persistent?: boolean | undefined;
-        room_name?: string | undefined;
-        group_id?: string | undefined;
+        channel_name?: string | undefined;
         user_id_one?: string | undefined;
         user_id_two?: string | undefined;
     } & {
@@ -2895,8 +2879,7 @@ export declare const ChannelMessage: {
         create_time?: Date | undefined;
         update_time?: Date | undefined;
         persistent?: boolean | undefined;
-        room_name?: string | undefined;
-        group_id?: string | undefined;
+        channel_name?: string | undefined;
         user_id_one?: string | undefined;
         user_id_two?: string | undefined;
     } & { [K in Exclude<keyof I, keyof ChannelMessage>]: never; }>(base?: I | undefined): ChannelMessage;
@@ -2911,8 +2894,7 @@ export declare const ChannelMessage: {
         create_time?: Date | undefined;
         update_time?: Date | undefined;
         persistent?: boolean | undefined;
-        room_name?: string | undefined;
-        group_id?: string | undefined;
+        channel_name?: string | undefined;
         user_id_one?: string | undefined;
         user_id_two?: string | undefined;
     } & {
@@ -2926,31 +2908,10 @@ export declare const ChannelMessage: {
         create_time?: Date | undefined;
         update_time?: Date | undefined;
         persistent?: boolean | undefined;
-        room_name?: string | undefined;
-        group_id?: string | undefined;
+        channel_name?: string | undefined;
         user_id_one?: string | undefined;
         user_id_two?: string | undefined;
     } & { [K_1 in Exclude<keyof I_1, keyof ChannelMessage>]: never; }>(object: I_1): ChannelMessage;
-};
-export declare const LastSeenMessageRequest: {
-    encode(message: LastSeenMessageRequest, writer?: _m0.Writer): _m0.Writer;
-    decode(input: _m0.Reader | Uint8Array, length?: number): LastSeenMessageRequest;
-    fromJSON(object: any): LastSeenMessageRequest;
-    toJSON(message: LastSeenMessageRequest): unknown;
-    create<I extends {
-        channel_id?: string | undefined;
-        message_id?: string | undefined;
-    } & {
-        channel_id?: string | undefined;
-        message_id?: string | undefined;
-    } & { [K in Exclude<keyof I, keyof LastSeenMessageRequest>]: never; }>(base?: I | undefined): LastSeenMessageRequest;
-    fromPartial<I_1 extends {
-        channel_id?: string | undefined;
-        message_id?: string | undefined;
-    } & {
-        channel_id?: string | undefined;
-        message_id?: string | undefined;
-    } & { [K_1 in Exclude<keyof I_1, keyof LastSeenMessageRequest>]: never; }>(object: I_1): LastSeenMessageRequest;
 };
 export declare const ChannelMessageList: {
     encode(message: ChannelMessageList, writer?: _m0.Writer): _m0.Writer;
@@ -2969,8 +2930,7 @@ export declare const ChannelMessageList: {
             create_time?: Date | undefined;
             update_time?: Date | undefined;
             persistent?: boolean | undefined;
-            room_name?: string | undefined;
-            group_id?: string | undefined;
+            channel_name?: string | undefined;
             user_id_one?: string | undefined;
             user_id_two?: string | undefined;
         }[] | undefined;
@@ -2990,8 +2950,7 @@ export declare const ChannelMessageList: {
             create_time?: Date | undefined;
             update_time?: Date | undefined;
             persistent?: boolean | undefined;
-            room_name?: string | undefined;
-            group_id?: string | undefined;
+            channel_name?: string | undefined;
             user_id_one?: string | undefined;
             user_id_two?: string | undefined;
         }[] & ({
@@ -3005,8 +2964,7 @@ export declare const ChannelMessageList: {
             create_time?: Date | undefined;
             update_time?: Date | undefined;
             persistent?: boolean | undefined;
-            room_name?: string | undefined;
-            group_id?: string | undefined;
+            channel_name?: string | undefined;
             user_id_one?: string | undefined;
             user_id_two?: string | undefined;
         } & {
@@ -3020,8 +2978,7 @@ export declare const ChannelMessageList: {
             create_time?: Date | undefined;
             update_time?: Date | undefined;
             persistent?: boolean | undefined;
-            room_name?: string | undefined;
-            group_id?: string | undefined;
+            channel_name?: string | undefined;
             user_id_one?: string | undefined;
             user_id_two?: string | undefined;
         } & { [K in Exclude<keyof I["messages"][number], keyof ChannelMessage>]: never; })[] & { [K_1 in Exclude<keyof I["messages"], keyof {
@@ -3035,8 +2992,7 @@ export declare const ChannelMessageList: {
             create_time?: Date | undefined;
             update_time?: Date | undefined;
             persistent?: boolean | undefined;
-            room_name?: string | undefined;
-            group_id?: string | undefined;
+            channel_name?: string | undefined;
             user_id_one?: string | undefined;
             user_id_two?: string | undefined;
         }[]>]: never; }) | undefined;
@@ -3057,8 +3013,7 @@ export declare const ChannelMessageList: {
             create_time?: Date | undefined;
             update_time?: Date | undefined;
             persistent?: boolean | undefined;
-            room_name?: string | undefined;
-            group_id?: string | undefined;
+            channel_name?: string | undefined;
             user_id_one?: string | undefined;
             user_id_two?: string | undefined;
         }[] | undefined;
@@ -3078,8 +3033,7 @@ export declare const ChannelMessageList: {
             create_time?: Date | undefined;
             update_time?: Date | undefined;
             persistent?: boolean | undefined;
-            room_name?: string | undefined;
-            group_id?: string | undefined;
+            channel_name?: string | undefined;
             user_id_one?: string | undefined;
             user_id_two?: string | undefined;
         }[] & ({
@@ -3093,8 +3047,7 @@ export declare const ChannelMessageList: {
             create_time?: Date | undefined;
             update_time?: Date | undefined;
             persistent?: boolean | undefined;
-            room_name?: string | undefined;
-            group_id?: string | undefined;
+            channel_name?: string | undefined;
             user_id_one?: string | undefined;
             user_id_two?: string | undefined;
         } & {
@@ -3108,8 +3061,7 @@ export declare const ChannelMessageList: {
             create_time?: Date | undefined;
             update_time?: Date | undefined;
             persistent?: boolean | undefined;
-            room_name?: string | undefined;
-            group_id?: string | undefined;
+            channel_name?: string | undefined;
             user_id_one?: string | undefined;
             user_id_two?: string | undefined;
         } & { [K_3 in Exclude<keyof I_1["messages"][number], keyof ChannelMessage>]: never; })[] & { [K_4 in Exclude<keyof I_1["messages"], keyof {
@@ -3123,8 +3075,7 @@ export declare const ChannelMessageList: {
             create_time?: Date | undefined;
             update_time?: Date | undefined;
             persistent?: boolean | undefined;
-            room_name?: string | undefined;
-            group_id?: string | undefined;
+            channel_name?: string | undefined;
             user_id_one?: string | undefined;
             user_id_two?: string | undefined;
         }[]>]: never; }) | undefined;
@@ -3385,7 +3336,6 @@ export declare const Friend: {
             edge_count?: number | undefined;
             create_time?: Date | undefined;
             update_time?: Date | undefined;
-            facebook_instant_game_id?: string | undefined;
             apple_id?: string | undefined;
         } | undefined;
         state?: number | undefined;
@@ -3408,7 +3358,6 @@ export declare const Friend: {
             edge_count?: number | undefined;
             create_time?: Date | undefined;
             update_time?: Date | undefined;
-            facebook_instant_game_id?: string | undefined;
             apple_id?: string | undefined;
         } & {
             id?: string | undefined;
@@ -3427,7 +3376,6 @@ export declare const Friend: {
             edge_count?: number | undefined;
             create_time?: Date | undefined;
             update_time?: Date | undefined;
-            facebook_instant_game_id?: string | undefined;
             apple_id?: string | undefined;
         } & { [K in Exclude<keyof I["user"], keyof User>]: never; }) | undefined;
         state?: number | undefined;
@@ -3451,7 +3399,6 @@ export declare const Friend: {
             edge_count?: number | undefined;
             create_time?: Date | undefined;
             update_time?: Date | undefined;
-            facebook_instant_game_id?: string | undefined;
             apple_id?: string | undefined;
         } | undefined;
         state?: number | undefined;
@@ -3474,7 +3421,6 @@ export declare const Friend: {
             edge_count?: number | undefined;
             create_time?: Date | undefined;
             update_time?: Date | undefined;
-            facebook_instant_game_id?: string | undefined;
             apple_id?: string | undefined;
         } & {
             id?: string | undefined;
@@ -3493,7 +3439,6 @@ export declare const Friend: {
             edge_count?: number | undefined;
             create_time?: Date | undefined;
             update_time?: Date | undefined;
-            facebook_instant_game_id?: string | undefined;
             apple_id?: string | undefined;
         } & { [K_2 in Exclude<keyof I_1["user"], keyof User>]: never; }) | undefined;
         state?: number | undefined;
@@ -3524,7 +3469,6 @@ export declare const FriendList: {
                 edge_count?: number | undefined;
                 create_time?: Date | undefined;
                 update_time?: Date | undefined;
-                facebook_instant_game_id?: string | undefined;
                 apple_id?: string | undefined;
             } | undefined;
             state?: number | undefined;
@@ -3550,7 +3494,6 @@ export declare const FriendList: {
                 edge_count?: number | undefined;
                 create_time?: Date | undefined;
                 update_time?: Date | undefined;
-                facebook_instant_game_id?: string | undefined;
                 apple_id?: string | undefined;
             } | undefined;
             state?: number | undefined;
@@ -3573,7 +3516,6 @@ export declare const FriendList: {
                 edge_count?: number | undefined;
                 create_time?: Date | undefined;
                 update_time?: Date | undefined;
-                facebook_instant_game_id?: string | undefined;
                 apple_id?: string | undefined;
             } | undefined;
             state?: number | undefined;
@@ -3596,7 +3538,6 @@ export declare const FriendList: {
                 edge_count?: number | undefined;
                 create_time?: Date | undefined;
                 update_time?: Date | undefined;
-                facebook_instant_game_id?: string | undefined;
                 apple_id?: string | undefined;
             } & {
                 id?: string | undefined;
@@ -3615,7 +3556,6 @@ export declare const FriendList: {
                 edge_count?: number | undefined;
                 create_time?: Date | undefined;
                 update_time?: Date | undefined;
-                facebook_instant_game_id?: string | undefined;
                 apple_id?: string | undefined;
             } & { [K in Exclude<keyof I["friends"][number]["user"], keyof User>]: never; }) | undefined;
             state?: number | undefined;
@@ -3638,7 +3578,6 @@ export declare const FriendList: {
                 edge_count?: number | undefined;
                 create_time?: Date | undefined;
                 update_time?: Date | undefined;
-                facebook_instant_game_id?: string | undefined;
                 apple_id?: string | undefined;
             } | undefined;
             state?: number | undefined;
@@ -3665,7 +3604,6 @@ export declare const FriendList: {
                 edge_count?: number | undefined;
                 create_time?: Date | undefined;
                 update_time?: Date | undefined;
-                facebook_instant_game_id?: string | undefined;
                 apple_id?: string | undefined;
             } | undefined;
             state?: number | undefined;
@@ -3691,7 +3629,6 @@ export declare const FriendList: {
                 edge_count?: number | undefined;
                 create_time?: Date | undefined;
                 update_time?: Date | undefined;
-                facebook_instant_game_id?: string | undefined;
                 apple_id?: string | undefined;
             } | undefined;
             state?: number | undefined;
@@ -3714,7 +3651,6 @@ export declare const FriendList: {
                 edge_count?: number | undefined;
                 create_time?: Date | undefined;
                 update_time?: Date | undefined;
-                facebook_instant_game_id?: string | undefined;
                 apple_id?: string | undefined;
             } | undefined;
             state?: number | undefined;
@@ -3737,7 +3673,6 @@ export declare const FriendList: {
                 edge_count?: number | undefined;
                 create_time?: Date | undefined;
                 update_time?: Date | undefined;
-                facebook_instant_game_id?: string | undefined;
                 apple_id?: string | undefined;
             } & {
                 id?: string | undefined;
@@ -3756,7 +3691,6 @@ export declare const FriendList: {
                 edge_count?: number | undefined;
                 create_time?: Date | undefined;
                 update_time?: Date | undefined;
-                facebook_instant_game_id?: string | undefined;
                 apple_id?: string | undefined;
             } & { [K_4 in Exclude<keyof I_1["friends"][number]["user"], keyof User>]: never; }) | undefined;
             state?: number | undefined;
@@ -3779,7 +3713,6 @@ export declare const FriendList: {
                 edge_count?: number | undefined;
                 create_time?: Date | undefined;
                 update_time?: Date | undefined;
-                facebook_instant_game_id?: string | undefined;
                 apple_id?: string | undefined;
             } | undefined;
             state?: number | undefined;
@@ -4066,7 +3999,6 @@ export declare const GroupUserList: {
                 edge_count?: number | undefined;
                 create_time?: Date | undefined;
                 update_time?: Date | undefined;
-                facebook_instant_game_id?: string | undefined;
                 apple_id?: string | undefined;
             } | undefined;
             state?: number | undefined;
@@ -4091,7 +4023,6 @@ export declare const GroupUserList: {
                 edge_count?: number | undefined;
                 create_time?: Date | undefined;
                 update_time?: Date | undefined;
-                facebook_instant_game_id?: string | undefined;
                 apple_id?: string | undefined;
             } | undefined;
             state?: number | undefined;
@@ -4113,7 +4044,6 @@ export declare const GroupUserList: {
                 edge_count?: number | undefined;
                 create_time?: Date | undefined;
                 update_time?: Date | undefined;
-                facebook_instant_game_id?: string | undefined;
                 apple_id?: string | undefined;
             } | undefined;
             state?: number | undefined;
@@ -4135,7 +4065,6 @@ export declare const GroupUserList: {
                 edge_count?: number | undefined;
                 create_time?: Date | undefined;
                 update_time?: Date | undefined;
-                facebook_instant_game_id?: string | undefined;
                 apple_id?: string | undefined;
             } & {
                 id?: string | undefined;
@@ -4154,7 +4083,6 @@ export declare const GroupUserList: {
                 edge_count?: number | undefined;
                 create_time?: Date | undefined;
                 update_time?: Date | undefined;
-                facebook_instant_game_id?: string | undefined;
                 apple_id?: string | undefined;
             } & { [K in Exclude<keyof I["group_users"][number]["user"], keyof User>]: never; }) | undefined;
             state?: number | undefined;
@@ -4176,7 +4104,6 @@ export declare const GroupUserList: {
                 edge_count?: number | undefined;
                 create_time?: Date | undefined;
                 update_time?: Date | undefined;
-                facebook_instant_game_id?: string | undefined;
                 apple_id?: string | undefined;
             } | undefined;
             state?: number | undefined;
@@ -4202,7 +4129,6 @@ export declare const GroupUserList: {
                 edge_count?: number | undefined;
                 create_time?: Date | undefined;
                 update_time?: Date | undefined;
-                facebook_instant_game_id?: string | undefined;
                 apple_id?: string | undefined;
             } | undefined;
             state?: number | undefined;
@@ -4227,7 +4153,6 @@ export declare const GroupUserList: {
                 edge_count?: number | undefined;
                 create_time?: Date | undefined;
                 update_time?: Date | undefined;
-                facebook_instant_game_id?: string | undefined;
                 apple_id?: string | undefined;
             } | undefined;
             state?: number | undefined;
@@ -4249,7 +4174,6 @@ export declare const GroupUserList: {
                 edge_count?: number | undefined;
                 create_time?: Date | undefined;
                 update_time?: Date | undefined;
-                facebook_instant_game_id?: string | undefined;
                 apple_id?: string | undefined;
             } | undefined;
             state?: number | undefined;
@@ -4271,7 +4195,6 @@ export declare const GroupUserList: {
                 edge_count?: number | undefined;
                 create_time?: Date | undefined;
                 update_time?: Date | undefined;
-                facebook_instant_game_id?: string | undefined;
                 apple_id?: string | undefined;
             } & {
                 id?: string | undefined;
@@ -4290,7 +4213,6 @@ export declare const GroupUserList: {
                 edge_count?: number | undefined;
                 create_time?: Date | undefined;
                 update_time?: Date | undefined;
-                facebook_instant_game_id?: string | undefined;
                 apple_id?: string | undefined;
             } & { [K_4 in Exclude<keyof I_1["group_users"][number]["user"], keyof User>]: never; }) | undefined;
             state?: number | undefined;
@@ -4312,7 +4234,6 @@ export declare const GroupUserList: {
                 edge_count?: number | undefined;
                 create_time?: Date | undefined;
                 update_time?: Date | undefined;
-                facebook_instant_game_id?: string | undefined;
                 apple_id?: string | undefined;
             } | undefined;
             state?: number | undefined;
@@ -4343,7 +4264,6 @@ export declare const GroupUserList_GroupUser: {
             edge_count?: number | undefined;
             create_time?: Date | undefined;
             update_time?: Date | undefined;
-            facebook_instant_game_id?: string | undefined;
             apple_id?: string | undefined;
         } | undefined;
         state?: number | undefined;
@@ -4365,7 +4285,6 @@ export declare const GroupUserList_GroupUser: {
             edge_count?: number | undefined;
             create_time?: Date | undefined;
             update_time?: Date | undefined;
-            facebook_instant_game_id?: string | undefined;
             apple_id?: string | undefined;
         } & {
             id?: string | undefined;
@@ -4384,7 +4303,6 @@ export declare const GroupUserList_GroupUser: {
             edge_count?: number | undefined;
             create_time?: Date | undefined;
             update_time?: Date | undefined;
-            facebook_instant_game_id?: string | undefined;
             apple_id?: string | undefined;
         } & { [K in Exclude<keyof I["user"], keyof User>]: never; }) | undefined;
         state?: number | undefined;
@@ -4407,7 +4325,6 @@ export declare const GroupUserList_GroupUser: {
             edge_count?: number | undefined;
             create_time?: Date | undefined;
             update_time?: Date | undefined;
-            facebook_instant_game_id?: string | undefined;
             apple_id?: string | undefined;
         } | undefined;
         state?: number | undefined;
@@ -4429,7 +4346,6 @@ export declare const GroupUserList_GroupUser: {
             edge_count?: number | undefined;
             create_time?: Date | undefined;
             update_time?: Date | undefined;
-            facebook_instant_game_id?: string | undefined;
             apple_id?: string | undefined;
         } & {
             id?: string | undefined;
@@ -4448,7 +4364,6 @@ export declare const GroupUserList_GroupUser: {
             edge_count?: number | undefined;
             create_time?: Date | undefined;
             update_time?: Date | undefined;
-            facebook_instant_game_id?: string | undefined;
             apple_id?: string | undefined;
         } & { [K_2 in Exclude<keyof I_1["user"], keyof User>]: never; }) | undefined;
         state?: number | undefined;
@@ -4478,7 +4393,6 @@ export declare const ChannelUserList: {
                 edge_count?: number | undefined;
                 create_time?: Date | undefined;
                 update_time?: Date | undefined;
-                facebook_instant_game_id?: string | undefined;
                 apple_id?: string | undefined;
             } | undefined;
             role_id?: string | undefined;
@@ -4503,7 +4417,6 @@ export declare const ChannelUserList: {
                 edge_count?: number | undefined;
                 create_time?: Date | undefined;
                 update_time?: Date | undefined;
-                facebook_instant_game_id?: string | undefined;
                 apple_id?: string | undefined;
             } | undefined;
             role_id?: string | undefined;
@@ -4525,7 +4438,6 @@ export declare const ChannelUserList: {
                 edge_count?: number | undefined;
                 create_time?: Date | undefined;
                 update_time?: Date | undefined;
-                facebook_instant_game_id?: string | undefined;
                 apple_id?: string | undefined;
             } | undefined;
             role_id?: string | undefined;
@@ -4547,7 +4459,6 @@ export declare const ChannelUserList: {
                 edge_count?: number | undefined;
                 create_time?: Date | undefined;
                 update_time?: Date | undefined;
-                facebook_instant_game_id?: string | undefined;
                 apple_id?: string | undefined;
             } & {
                 id?: string | undefined;
@@ -4566,7 +4477,6 @@ export declare const ChannelUserList: {
                 edge_count?: number | undefined;
                 create_time?: Date | undefined;
                 update_time?: Date | undefined;
-                facebook_instant_game_id?: string | undefined;
                 apple_id?: string | undefined;
             } & { [K in Exclude<keyof I["channel_users"][number]["user"], keyof User>]: never; }) | undefined;
             role_id?: string | undefined;
@@ -4588,7 +4498,6 @@ export declare const ChannelUserList: {
                 edge_count?: number | undefined;
                 create_time?: Date | undefined;
                 update_time?: Date | undefined;
-                facebook_instant_game_id?: string | undefined;
                 apple_id?: string | undefined;
             } | undefined;
             role_id?: string | undefined;
@@ -4614,7 +4523,6 @@ export declare const ChannelUserList: {
                 edge_count?: number | undefined;
                 create_time?: Date | undefined;
                 update_time?: Date | undefined;
-                facebook_instant_game_id?: string | undefined;
                 apple_id?: string | undefined;
             } | undefined;
             role_id?: string | undefined;
@@ -4639,7 +4547,6 @@ export declare const ChannelUserList: {
                 edge_count?: number | undefined;
                 create_time?: Date | undefined;
                 update_time?: Date | undefined;
-                facebook_instant_game_id?: string | undefined;
                 apple_id?: string | undefined;
             } | undefined;
             role_id?: string | undefined;
@@ -4661,7 +4568,6 @@ export declare const ChannelUserList: {
                 edge_count?: number | undefined;
                 create_time?: Date | undefined;
                 update_time?: Date | undefined;
-                facebook_instant_game_id?: string | undefined;
                 apple_id?: string | undefined;
             } | undefined;
             role_id?: string | undefined;
@@ -4683,7 +4589,6 @@ export declare const ChannelUserList: {
                 edge_count?: number | undefined;
                 create_time?: Date | undefined;
                 update_time?: Date | undefined;
-                facebook_instant_game_id?: string | undefined;
                 apple_id?: string | undefined;
             } & {
                 id?: string | undefined;
@@ -4702,7 +4607,6 @@ export declare const ChannelUserList: {
                 edge_count?: number | undefined;
                 create_time?: Date | undefined;
                 update_time?: Date | undefined;
-                facebook_instant_game_id?: string | undefined;
                 apple_id?: string | undefined;
             } & { [K_4 in Exclude<keyof I_1["channel_users"][number]["user"], keyof User>]: never; }) | undefined;
             role_id?: string | undefined;
@@ -4724,7 +4628,6 @@ export declare const ChannelUserList: {
                 edge_count?: number | undefined;
                 create_time?: Date | undefined;
                 update_time?: Date | undefined;
-                facebook_instant_game_id?: string | undefined;
                 apple_id?: string | undefined;
             } | undefined;
             role_id?: string | undefined;
@@ -4755,7 +4658,6 @@ export declare const ChannelUserList_ChannelUser: {
             edge_count?: number | undefined;
             create_time?: Date | undefined;
             update_time?: Date | undefined;
-            facebook_instant_game_id?: string | undefined;
             apple_id?: string | undefined;
         } | undefined;
         role_id?: string | undefined;
@@ -4777,7 +4679,6 @@ export declare const ChannelUserList_ChannelUser: {
             edge_count?: number | undefined;
             create_time?: Date | undefined;
             update_time?: Date | undefined;
-            facebook_instant_game_id?: string | undefined;
             apple_id?: string | undefined;
         } & {
             id?: string | undefined;
@@ -4796,7 +4697,6 @@ export declare const ChannelUserList_ChannelUser: {
             edge_count?: number | undefined;
             create_time?: Date | undefined;
             update_time?: Date | undefined;
-            facebook_instant_game_id?: string | undefined;
             apple_id?: string | undefined;
         } & { [K in Exclude<keyof I["user"], keyof User>]: never; }) | undefined;
         role_id?: string | undefined;
@@ -4819,7 +4719,6 @@ export declare const ChannelUserList_ChannelUser: {
             edge_count?: number | undefined;
             create_time?: Date | undefined;
             update_time?: Date | undefined;
-            facebook_instant_game_id?: string | undefined;
             apple_id?: string | undefined;
         } | undefined;
         role_id?: string | undefined;
@@ -4841,7 +4740,6 @@ export declare const ChannelUserList_ChannelUser: {
             edge_count?: number | undefined;
             create_time?: Date | undefined;
             update_time?: Date | undefined;
-            facebook_instant_game_id?: string | undefined;
             apple_id?: string | undefined;
         } & {
             id?: string | undefined;
@@ -4860,7 +4758,6 @@ export declare const ChannelUserList_ChannelUser: {
             edge_count?: number | undefined;
             create_time?: Date | undefined;
             update_time?: Date | undefined;
-            facebook_instant_game_id?: string | undefined;
             apple_id?: string | undefined;
         } & { [K_2 in Exclude<keyof I_1["user"], keyof User>]: never; }) | undefined;
         role_id?: string | undefined;
@@ -6198,7 +6095,6 @@ export declare const User: {
         edge_count?: number | undefined;
         create_time?: Date | undefined;
         update_time?: Date | undefined;
-        facebook_instant_game_id?: string | undefined;
         apple_id?: string | undefined;
     } & {
         id?: string | undefined;
@@ -6217,7 +6113,6 @@ export declare const User: {
         edge_count?: number | undefined;
         create_time?: Date | undefined;
         update_time?: Date | undefined;
-        facebook_instant_game_id?: string | undefined;
         apple_id?: string | undefined;
     } & { [K in Exclude<keyof I, keyof User>]: never; }>(base?: I | undefined): User;
     fromPartial<I_1 extends {
@@ -6237,7 +6132,6 @@ export declare const User: {
         edge_count?: number | undefined;
         create_time?: Date | undefined;
         update_time?: Date | undefined;
-        facebook_instant_game_id?: string | undefined;
         apple_id?: string | undefined;
     } & {
         id?: string | undefined;
@@ -6256,7 +6150,6 @@ export declare const User: {
         edge_count?: number | undefined;
         create_time?: Date | undefined;
         update_time?: Date | undefined;
-        facebook_instant_game_id?: string | undefined;
         apple_id?: string | undefined;
     } & { [K_1 in Exclude<keyof I_1, keyof User>]: never; }>(object: I_1): User;
 };
@@ -6587,7 +6480,6 @@ export declare const Users: {
             edge_count?: number | undefined;
             create_time?: Date | undefined;
             update_time?: Date | undefined;
-            facebook_instant_game_id?: string | undefined;
             apple_id?: string | undefined;
         }[] | undefined;
     } & {
@@ -6608,7 +6500,6 @@ export declare const Users: {
             edge_count?: number | undefined;
             create_time?: Date | undefined;
             update_time?: Date | undefined;
-            facebook_instant_game_id?: string | undefined;
             apple_id?: string | undefined;
         }[] & ({
             id?: string | undefined;
@@ -6627,7 +6518,6 @@ export declare const Users: {
             edge_count?: number | undefined;
             create_time?: Date | undefined;
             update_time?: Date | undefined;
-            facebook_instant_game_id?: string | undefined;
             apple_id?: string | undefined;
         } & {
             id?: string | undefined;
@@ -6646,7 +6536,6 @@ export declare const Users: {
             edge_count?: number | undefined;
             create_time?: Date | undefined;
             update_time?: Date | undefined;
-            facebook_instant_game_id?: string | undefined;
             apple_id?: string | undefined;
         } & { [K in Exclude<keyof I["users"][number], keyof User>]: never; })[] & { [K_1 in Exclude<keyof I["users"], keyof {
             id?: string | undefined;
@@ -6665,7 +6554,6 @@ export declare const Users: {
             edge_count?: number | undefined;
             create_time?: Date | undefined;
             update_time?: Date | undefined;
-            facebook_instant_game_id?: string | undefined;
             apple_id?: string | undefined;
         }[]>]: never; }) | undefined;
     } & { [K_2 in Exclude<keyof I, "users">]: never; }>(base?: I | undefined): Users;
@@ -6687,7 +6575,6 @@ export declare const Users: {
             edge_count?: number | undefined;
             create_time?: Date | undefined;
             update_time?: Date | undefined;
-            facebook_instant_game_id?: string | undefined;
             apple_id?: string | undefined;
         }[] | undefined;
     } & {
@@ -6708,7 +6595,6 @@ export declare const Users: {
             edge_count?: number | undefined;
             create_time?: Date | undefined;
             update_time?: Date | undefined;
-            facebook_instant_game_id?: string | undefined;
             apple_id?: string | undefined;
         }[] & ({
             id?: string | undefined;
@@ -6727,7 +6613,6 @@ export declare const Users: {
             edge_count?: number | undefined;
             create_time?: Date | undefined;
             update_time?: Date | undefined;
-            facebook_instant_game_id?: string | undefined;
             apple_id?: string | undefined;
         } & {
             id?: string | undefined;
@@ -6746,7 +6631,6 @@ export declare const Users: {
             edge_count?: number | undefined;
             create_time?: Date | undefined;
             update_time?: Date | undefined;
-            facebook_instant_game_id?: string | undefined;
             apple_id?: string | undefined;
         } & { [K_3 in Exclude<keyof I_1["users"][number], keyof User>]: never; })[] & { [K_4 in Exclude<keyof I_1["users"], keyof {
             id?: string | undefined;
@@ -6765,7 +6649,6 @@ export declare const Users: {
             edge_count?: number | undefined;
             create_time?: Date | undefined;
             update_time?: Date | undefined;
-            facebook_instant_game_id?: string | undefined;
             apple_id?: string | undefined;
         }[]>]: never; }) | undefined;
     } & { [K_5 in Exclude<keyof I_1, "users">]: never; }>(object: I_1): Users;
@@ -7824,22 +7707,26 @@ export declare const ListChannelDescsRequest: {
         state?: number | undefined;
         cursor?: string | undefined;
         clan_id?: string | undefined;
+        channel_type?: number | undefined;
     } & {
         limit?: number | undefined;
         state?: number | undefined;
         cursor?: string | undefined;
         clan_id?: string | undefined;
+        channel_type?: number | undefined;
     } & { [K in Exclude<keyof I, keyof ListChannelDescsRequest>]: never; }>(base?: I | undefined): ListChannelDescsRequest;
     fromPartial<I_1 extends {
         limit?: number | undefined;
         state?: number | undefined;
         cursor?: string | undefined;
         clan_id?: string | undefined;
+        channel_type?: number | undefined;
     } & {
         limit?: number | undefined;
         state?: number | undefined;
         cursor?: string | undefined;
         clan_id?: string | undefined;
+        channel_type?: number | undefined;
     } & { [K_1 in Exclude<keyof I_1, keyof ListChannelDescsRequest>]: never; }>(object: I_1): ListChannelDescsRequest;
 };
 export declare const CreateChannelDescRequest: {

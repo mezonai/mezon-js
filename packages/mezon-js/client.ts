@@ -1075,17 +1075,6 @@ export class Client {
     });
   }
 
-  async joinTournament(session: Session, tournamentId: string): Promise<boolean> {
-    if (this.autoRefreshSession && session.refresh_token &&
-        session.isexpired((Date.now() + this.expiredTimespanMs)/1000)) {
-        await this.sessionRefresh(session);
-    }
-
-    return this.apiClient.joinTournament(session.token, tournamentId, {}).then((response: any) => {
-      return response !== undefined;
-    });
-  }
-
   /** Kick users from a group, or decline their join requests. */
   async kickGroupUsers(session: Session, groupId: string, ids?: Array<string>): Promise<boolean> {
     if (this.autoRefreshSession && session.refresh_token &&
@@ -1153,8 +1142,7 @@ export class Client {
           update_time: m.update_time,
           username: m.username,
           content: m.content ? JSON.parse(m.content) : undefined,
-          group_id: m.group_id,
-          room_name: m.room_name,
+          room_name: m.channel_name,
           user_id_one: m.user_id_one,
           user_id_two: m.user_id_two
         })
@@ -1329,13 +1317,13 @@ export class Client {
   }
 
   /** List channels. */
-  async listChannelDescs(session: Session, limit?: number, state?:number, cursor?: string, clanId?: string): Promise<ApiChannelDescList> {
+  async listChannelDescs(session: Session, limit?: number, state?:number, cursor?: string, clanId?: string, channelType?:number): Promise<ApiChannelDescList> {
     if (this.autoRefreshSession && session.refresh_token &&
         session.isexpired((Date.now() + this.expiredTimespanMs)/1000)) {
         await this.sessionRefresh(session);
     }
 
-    return this.apiClient.listChannelDescs(session.token, limit, state, cursor, clanId).then((response: ApiChannelDescList) => {
+    return this.apiClient.listChannelDescs(session.token, limit, state, cursor, clanId, channelType).then((response: ApiChannelDescList) => {
       var result: ApiChannelDescList = {
         channeldesc: [],
         next_cursor: response.next_cursor,
@@ -1598,7 +1586,6 @@ export class Client {
             update_time: f.user!.update_time,
             username: f.user!.username,
             metadata: f.user!.metadata ? JSON.parse(f.user!.metadata!) : undefined,
-            facebook_instant_game_id: f.user!.facebook_instant_game_id!
           },
           state: f.state
         })

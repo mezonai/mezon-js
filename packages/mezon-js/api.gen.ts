@@ -206,6 +206,8 @@ export interface ApiChannelDescription {
 export interface ApiChannelMessage {
   //The channel this message belongs to.
   channel_id?: string;
+  //The name of the chat room, or an empty string if this message was not sent through a chat room.
+  channel_name?: string;
   //The clan this message belong to.
   clan_id?: string;
   //The code representing a message type or category.
@@ -214,14 +216,10 @@ export interface ApiChannelMessage {
   content?: string;
   //The UNIX time (for gRPC clients) or ISO string (for REST clients) when the message was created.
   create_time?: string;
-  //The ID of the group, or an empty string if this message was not sent through a group channel.
-  group_id?: string;
   //The unique ID of this message.
   message_id?: string;
   //True if the message was persisted to the channel's history, false otherwise.
   persistent?: boolean;
-  //The name of the chat room, or an empty string if this message was not sent through a chat room.
-  room_name?: string;
   //Message sender, usually a user ID.
   sender_id?: string;
   //The UNIX time (for gRPC clients) or ISO string (for REST clients) when the message was last updated.
@@ -491,8 +489,6 @@ export interface ApiInviteUserRes {
   //
   clan_name?: string;
 }
-
-
 
 /** Add link invite users to. */
 export interface ApiLinkInviteUser {
@@ -794,8 +790,6 @@ export interface ApiUser {
   edge_count?: number;
   //The Facebook id in the user's account.
   facebook_id?: string;
-  //The Facebook Instant Game ID in the user's account.
-  facebook_instant_game_id?: string;
   //The Apple Game Center in of the user's account.
   gamecenter_id?: string;
   //The Google id in the user's account.
@@ -2157,6 +2151,7 @@ export class NakamaApi {
       state?:number,
       cursor?:string,
       clanId?:string,
+      channelType?:number,
       options: any = {}): Promise<ApiChannelDescList> {
     
     const urlPath = "/v2/channeldesc";
@@ -2165,6 +2160,7 @@ export class NakamaApi {
     queryParams.set("state", state);
     queryParams.set("cursor", cursor);
     queryParams.set("clan_id", clanId);
+    queryParams.set("channel_type", channelType);
 
     let bodyJson : string = "";
 
@@ -4252,42 +4248,6 @@ queryParams.set("creator_id", creatorId);
 
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("GET", options, bodyJson);
-    if (bearerToken) {
-        fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-    }
-
-    return Promise.race([
-      fetch(fullUrl, fetchOptions).then((response) => {
-        if (response.status == 204) {
-          return response;
-        } else if (response.status >= 200 && response.status < 300) {
-          return response.json();
-        } else {
-          throw response;
-        }
-      }),
-      new Promise((_, reject) =>
-        setTimeout(reject, this.timeoutMs, "Request timed out.")
-      ),
-    ]);
-}
-
-  /** Attempt to join an open and running tournament. */
-  joinTournament(bearerToken: string,
-      tournamentId:string,
-      options: any = {}): Promise<any> {
-    
-    if (tournamentId === null || tournamentId === undefined) {
-      throw new Error("'tournamentId' is a required parameter but is null or undefined.");
-    }
-    const urlPath = "/v2/tournament/{tournamentId}/join"
-        .replace("{tournamentId}", encodeURIComponent(String(tournamentId)));
-    const queryParams = new Map<string, any>();
-
-    let bodyJson : string = "";
-
-    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
-    const fetchOptions = buildFetchOptions("POST", options, bodyJson);
     if (bearerToken) {
         fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
     }

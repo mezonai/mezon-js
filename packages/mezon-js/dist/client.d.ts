@@ -532,7 +532,6 @@ export declare class Client {
     getUsers(session: Session, ids?: Array<string>, usernames?: Array<string>, facebookIds?: Array<string>): Promise<Users>;
     /** Join a group that's open, or send a request to join a group that is closed. */
     joinGroup(session: Session, groupId: string): Promise<boolean>;
-    joinTournament(session: Session, tournamentId: string): Promise<boolean>;
     /** Kick users from a group, or decline their join requests. */
     kickGroupUsers(session: Session, groupId: string, ids?: Array<string>): Promise<boolean>;
     /** Kick users from a channel, or decline their join requests. */
@@ -550,7 +549,7 @@ export declare class Client {
     /** List groups based on given filters. */
     listGroups(session: Session, name?: string, cursor?: string, limit?: number): Promise<GroupList>;
     /** List channels. */
-    listChannelDescs(session: Session, limit?: number, state?: number, cursor?: string, clanId?: string): Promise<ApiChannelDescList>;
+    listChannelDescs(session: Session, limit?: number, state?: number, cursor?: string, clanId?: string, channelType?: number): Promise<ApiChannelDescList>;
     /** List clans */
     listClanDescs(session: Session, limit?: number, state?: number, cursor?: string): Promise<ApiClanDescList>;
     /** List categories. */
