@@ -980,6 +980,8 @@ export interface ListGroupUsersRequest {
 export interface ListChannelUsersRequest {
   /** The channel ID to list from. */
   channel_id: string;
+  /** The channel ID to list from. */
+  clan_id: string;
   /** Max number of records to return. Between 1 and 100. */
   limit:
     | number
@@ -7025,7 +7027,7 @@ export const ListGroupUsersRequest = {
 };
 
 function createBaseListChannelUsersRequest(): ListChannelUsersRequest {
-  return { channel_id: "", limit: undefined, state: undefined, cursor: "" };
+  return { channel_id: "", clan_id: "", limit: undefined, state: undefined, cursor: "" };
 }
 
 export const ListChannelUsersRequest = {
@@ -7033,14 +7035,17 @@ export const ListChannelUsersRequest = {
     if (message.channel_id !== "") {
       writer.uint32(10).string(message.channel_id);
     }
+    if (message.clan_id !== "") {
+      writer.uint32(18).string(message.clan_id);
+    }
     if (message.limit !== undefined) {
-      Int32Value.encode({ value: message.limit! }, writer.uint32(18).fork()).ldelim();
+      Int32Value.encode({ value: message.limit! }, writer.uint32(26).fork()).ldelim();
     }
     if (message.state !== undefined) {
-      Int32Value.encode({ value: message.state! }, writer.uint32(26).fork()).ldelim();
+      Int32Value.encode({ value: message.state! }, writer.uint32(34).fork()).ldelim();
     }
     if (message.cursor !== "") {
-      writer.uint32(34).string(message.cursor);
+      writer.uint32(42).string(message.cursor);
     }
     return writer;
   },
@@ -7056,12 +7061,15 @@ export const ListChannelUsersRequest = {
           message.channel_id = reader.string();
           break;
         case 2:
-          message.limit = Int32Value.decode(reader, reader.uint32()).value;
+          message.clan_id = reader.string();
           break;
         case 3:
-          message.state = Int32Value.decode(reader, reader.uint32()).value;
+          message.limit = Int32Value.decode(reader, reader.uint32()).value;
           break;
         case 4:
+          message.state = Int32Value.decode(reader, reader.uint32()).value;
+          break;
+        case 5:
           message.cursor = reader.string();
           break;
         default:
@@ -7075,6 +7083,7 @@ export const ListChannelUsersRequest = {
   fromJSON(object: any): ListChannelUsersRequest {
     return {
       channel_id: isSet(object.channel_id) ? String(object.channel_id) : "",
+      clan_id: isSet(object.clan_id) ? String(object.clan_id) : "",
       limit: isSet(object.limit) ? Number(object.limit) : undefined,
       state: isSet(object.state) ? Number(object.state) : undefined,
       cursor: isSet(object.cursor) ? String(object.cursor) : "",
@@ -7084,6 +7093,7 @@ export const ListChannelUsersRequest = {
   toJSON(message: ListChannelUsersRequest): unknown {
     const obj: any = {};
     message.channel_id !== undefined && (obj.channel_id = message.channel_id);
+    message.clan_id !== undefined && (obj.clan_id = message.clan_id);
     message.limit !== undefined && (obj.limit = message.limit);
     message.state !== undefined && (obj.state = message.state);
     message.cursor !== undefined && (obj.cursor = message.cursor);
@@ -7097,6 +7107,7 @@ export const ListChannelUsersRequest = {
   fromPartial<I extends Exact<DeepPartial<ListChannelUsersRequest>, I>>(object: I): ListChannelUsersRequest {
     const message = createBaseListChannelUsersRequest();
     message.channel_id = object.channel_id ?? "";
+    message.clan_id = object.clan_id ?? "";
     message.limit = object.limit ?? undefined;
     message.state = object.state ?? undefined;
     message.cursor = object.cursor ?? "";

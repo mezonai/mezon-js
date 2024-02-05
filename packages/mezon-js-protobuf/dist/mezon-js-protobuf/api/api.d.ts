@@ -662,6 +662,8 @@ export interface ListGroupUsersRequest {
 export interface ListChannelUsersRequest {
     /** The channel ID to list from. */
     channel_id: string;
+    /** The channel ID to list from. */
+    clan_id: string;
     /** Max number of records to return. Between 1 and 100. */
     limit: number | undefined;
     /** The group user state to list. */
@@ -5170,22 +5172,26 @@ export declare const ListChannelUsersRequest: {
     toJSON(message: ListChannelUsersRequest): unknown;
     create<I extends {
         channel_id?: string | undefined;
+        clan_id?: string | undefined;
         limit?: number | undefined;
         state?: number | undefined;
         cursor?: string | undefined;
     } & {
         channel_id?: string | undefined;
+        clan_id?: string | undefined;
         limit?: number | undefined;
         state?: number | undefined;
         cursor?: string | undefined;
     } & { [K in Exclude<keyof I, keyof ListChannelUsersRequest>]: never; }>(base?: I | undefined): ListChannelUsersRequest;
     fromPartial<I_1 extends {
         channel_id?: string | undefined;
+        clan_id?: string | undefined;
         limit?: number | undefined;
         state?: number | undefined;
         cursor?: string | undefined;
     } & {
         channel_id?: string | undefined;
+        clan_id?: string | undefined;
         limit?: number | undefined;
         state?: number | undefined;
         cursor?: string | undefined;

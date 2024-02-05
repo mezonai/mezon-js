@@ -541,7 +541,7 @@ export declare class Client {
     /** List a channel's message history. */
     listChannelMessages(session: Session, channelId: string, limit?: number, forward?: boolean, cursor?: string): Promise<ChannelMessageList>;
     /** List a channel's users. */
-    listChannelUsers(session: Session, channelId: string, state?: number, limit?: number, cursor?: string): Promise<ApiChannelUserList>;
+    listChannelUsers(session: Session, channelId: string, clanId: string, state?: number, limit?: number, cursor?: string): Promise<ApiChannelUserList>;
     /** List a group's users. */
     listGroupUsers(session: Session, groupId: string, state?: number, limit?: number, cursor?: string): Promise<GroupUserList>;
     /** List a user's groups. */
