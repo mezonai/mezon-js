@@ -1126,8 +1126,8 @@ export interface UpdateClanProfileRequest {
     clan_id: string;
     /** nick_name new */
     nick_name: string;
-    /** avartar */
-    avartar: string;
+    /** avatar */
+    avatar: string;
 }
 /** Category to group the channel */
 export interface CategoryDesc {
@@ -7343,20 +7343,20 @@ export declare const UpdateClanProfileRequest: {
     create<I extends {
         clan_id?: string | undefined;
         nick_name?: string | undefined;
-        avartar?: string | undefined;
+        avatar?: string | undefined;
     } & {
         clan_id?: string | undefined;
         nick_name?: string | undefined;
-        avartar?: string | undefined;
+        avatar?: string | undefined;
     } & { [K in Exclude<keyof I, keyof UpdateClanProfileRequest>]: never; }>(base?: I | undefined): UpdateClanProfileRequest;
     fromPartial<I_1 extends {
         clan_id?: string | undefined;
         nick_name?: string | undefined;
-        avartar?: string | undefined;
+        avatar?: string | undefined;
     } & {
         clan_id?: string | undefined;
         nick_name?: string | undefined;
-        avartar?: string | undefined;
+        avatar?: string | undefined;
     } & { [K_1 in Exclude<keyof I_1, keyof UpdateClanProfileRequest>]: never; }>(object: I_1): UpdateClanProfileRequest;
 };
 export declare const CategoryDesc: {

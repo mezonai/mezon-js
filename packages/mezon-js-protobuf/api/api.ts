@@ -1574,8 +1574,8 @@ export interface UpdateClanProfileRequest {
   clan_id: string;
   /** nick_name new */
   nick_name: string;
-  /** avartar */
-  avartar: string;
+  /** avatar */
+  avatar: string;
 }
 
 /** Category to group the channel */
@@ -10498,7 +10498,7 @@ export const ClanProfileRequest = {
 };
 
 function createBaseUpdateClanProfileRequest(): UpdateClanProfileRequest {
-  return { clan_id: "", nick_name: "", avartar: "" };
+  return { clan_id: "", nick_name: "", avatar: "" };
 }
 
 export const UpdateClanProfileRequest = {
@@ -10509,8 +10509,8 @@ export const UpdateClanProfileRequest = {
     if (message.nick_name !== "") {
       writer.uint32(18).string(message.nick_name);
     }
-    if (message.avartar !== "") {
-      writer.uint32(26).string(message.avartar);
+    if (message.avatar !== "") {
+      writer.uint32(26).string(message.avatar);
     }
     return writer;
   },
@@ -10529,7 +10529,7 @@ export const UpdateClanProfileRequest = {
           message.nick_name = reader.string();
           break;
         case 3:
-          message.avartar = reader.string();
+          message.avatar = reader.string();
           break;
         default:
           reader.skipType(tag & 7);
@@ -10543,7 +10543,7 @@ export const UpdateClanProfileRequest = {
     return {
       clan_id: isSet(object.clan_id) ? String(object.clan_id) : "",
       nick_name: isSet(object.nick_name) ? String(object.nick_name) : "",
-      avartar: isSet(object.avartar) ? String(object.avartar) : "",
+      avatar: isSet(object.avatar) ? String(object.avatar) : "",
     };
   },
 
@@ -10551,7 +10551,7 @@ export const UpdateClanProfileRequest = {
     const obj: any = {};
     message.clan_id !== undefined && (obj.clan_id = message.clan_id);
     message.nick_name !== undefined && (obj.nick_name = message.nick_name);
-    message.avartar !== undefined && (obj.avartar = message.avartar);
+    message.avatar !== undefined && (obj.avatar = message.avatar);
     return obj;
   },
 
@@ -10563,7 +10563,7 @@ export const UpdateClanProfileRequest = {
     const message = createBaseUpdateClanProfileRequest();
     message.clan_id = object.clan_id ?? "";
     message.nick_name = object.nick_name ?? "";
-    message.avartar = object.avartar ?? "";
+    message.avatar = object.avatar ?? "";
     return message;
   },
 };
