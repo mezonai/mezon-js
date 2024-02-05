@@ -1152,13 +1152,13 @@ export class Client {
   }
 
   /** List a channel's users. */
-  async listChannelUsers(session: Session, channelId: string, clanId: string, state?: number, limit?: number, cursor?: string): Promise<ApiChannelUserList> {
+  async listChannelUsers(session: Session, channelId: string, state?: number, limit?: number, cursor?: string): Promise<ApiChannelUserList> {
     if (this.autoRefreshSession && session.refresh_token &&
         session.isexpired((Date.now() + this.expiredTimespanMs)/1000)) {
         await this.sessionRefresh(session);
     }
 
-    return this.apiClient.listChannelUsers(session.token, channelId, clanId, limit, state, cursor).then((response: ApiChannelUserList) => {
+    return this.apiClient.listChannelUsers(session.token, channelId, limit, state, cursor).then((response: ApiChannelUserList) => {
       var result: ApiChannelUserList = {
         channel_users: [],
         cursor: response.cursor

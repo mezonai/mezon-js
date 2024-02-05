@@ -2415,7 +2415,6 @@ export class NakamaApi {
   /** List all users that are part of a channel. */
   listChannelUsers(bearerToken: string,
       channelId:string,
-      clanId?:string,
       limit?:number,
       state?:number,
       cursor?:string,
@@ -2427,7 +2426,6 @@ export class NakamaApi {
     const urlPath = "/v2/channeldesc/{channelId}/user"
         .replace("{channelId}", encodeURIComponent(String(channelId)));
     const queryParams = new Map<string, any>();
-    queryParams.set("clan_id", clanId);
     queryParams.set("limit", limit);
     queryParams.set("state", state);
     queryParams.set("cursor", cursor);
