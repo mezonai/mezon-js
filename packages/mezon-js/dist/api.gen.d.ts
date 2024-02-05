@@ -591,8 +591,6 @@ export declare class NakamaApi {
     removeChannelUsers(bearerToken: string, channelId: string, userIds?: Array<string>, options?: any): Promise<any>;
     /** List all users that are part of a channel. */
     listChannelUsers(bearerToken: string, channelId: string, limit?: number, state?: number, cursor?: string, options?: any): Promise<ApiChannelUserList>;
-    /**  */
-    channelMessageTyping(bearerToken: string, body: ApiChannelMessage, options?: any): Promise<any>;
     /** List clans */
     listClanDescs(bearerToken: string, limit?: number, state?: number, cursor?: string, options?: any): Promise<ApiClanDescList>;
     /** Create a clan */
