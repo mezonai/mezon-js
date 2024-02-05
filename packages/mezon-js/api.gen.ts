@@ -206,6 +206,8 @@ export interface ApiChannelDescription {
 export interface ApiChannelMessage {
   //The channel this message belongs to.
   channel_id?: string;
+  //The name of the chat room, or an empty string if this message was not sent through a chat room.
+  channel_name?: string;
   //The clan this message belong to.
   clan_id?: string;
   //The code representing a message type or category.
@@ -2157,6 +2159,7 @@ export class NakamaApi {
       state?:number,
       cursor?:string,
       clanId?:string,
+      channelType?:number,
       options: any = {}): Promise<ApiChannelDescList> {
     
     const urlPath = "/v2/channeldesc";
@@ -2165,6 +2168,7 @@ export class NakamaApi {
     queryParams.set("state", state);
     queryParams.set("cursor", cursor);
     queryParams.set("clan_id", clanId);
+    queryParams.set("channel_type", channelType);
 
     let bodyJson : string = "";
 

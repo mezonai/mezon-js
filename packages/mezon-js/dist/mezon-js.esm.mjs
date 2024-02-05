@@ -1642,13 +1642,14 @@ var NakamaApi = class {
     ]);
   }
   /** List user channels */
-  listChannelDescs(bearerToken, limit, state, cursor, clanId, options = {}) {
+  listChannelDescs(bearerToken, limit, state, cursor, clanId, channelType, options = {}) {
     const urlPath = "/v2/channeldesc";
     const queryParams = /* @__PURE__ */ new Map();
     queryParams.set("limit", limit);
     queryParams.set("state", state);
     queryParams.set("cursor", cursor);
     queryParams.set("clan_id", clanId);
+    queryParams.set("channel_type", channelType);
     let bodyJson = "";
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("GET", options, bodyJson);

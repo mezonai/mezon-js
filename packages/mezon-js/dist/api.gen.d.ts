@@ -119,6 +119,7 @@ export interface ApiChannelDescription {
 /** A message sent on a channel. */
 export interface ApiChannelMessage {
     channel_id?: string;
+    channel_name?: string;
     clan_id?: string;
     code?: number;
     content?: string;
@@ -578,7 +579,7 @@ export declare class NakamaApi {
     /** List a channel's message history. */
     listChannelMessages(bearerToken: string, channelId: string, limit?: number, forward?: boolean, cursor?: string, options?: any): Promise<ApiChannelMessageList>;
     /** List user channels */
-    listChannelDescs(bearerToken: string, limit?: number, state?: number, cursor?: string, clanId?: string, options?: any): Promise<ApiChannelDescList>;
+    listChannelDescs(bearerToken: string, limit?: number, state?: number, cursor?: string, clanId?: string, channelType?: number, options?: any): Promise<ApiChannelDescList>;
     /** Create a new channel with the current user as the owner. */
     createChannelDesc(bearerToken: string, body: ApiCreateChannelDescRequest, options?: any): Promise<ApiChannelDescription>;
     /** Delete a channel by ID. */

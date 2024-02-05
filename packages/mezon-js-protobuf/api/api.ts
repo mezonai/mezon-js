@@ -536,21 +536,11 @@ export interface ChannelMessage {
     | boolean
     | undefined;
   /** The name of the chat room, or an empty string if this message was not sent through a chat room. */
-  room_name: string;
-  /** The ID of the group, or an empty string if this message was not sent through a group channel. */
-  group_id: string;
+  channel_name: string;
   /** The ID of the first DM user, or an empty string if this message was not sent through a DM chat. */
   user_id_one: string;
   /** The ID of the second DM user, or an empty string if this message was not sent through a DM chat. */
   user_id_two: string;
-}
-
-/** last seen message seen by users */
-export interface LastSeenMessageRequest {
-  /** The unique ID of this channel. */
-  channel_id: string;
-  /** The unique ID of this message. */
-  message_id: string;
 }
 
 /** A list of channel messages, usually a result of a list operation. */
@@ -1278,8 +1268,6 @@ export interface User {
   update_time:
     | Date
     | undefined;
-  /** The Facebook Instant Game ID in the user's account. */
-  facebook_instant_game_id: string;
   /** The Apple Sign In ID in the user's account. */
   apple_id: string;
 }
@@ -1586,8 +1574,8 @@ export interface UpdateClanProfileRequest {
   clan_id: string;
   /** nick_name new */
   nick_name: string;
-  /** avartar */
-  avartar: string;
+  /** avatar */
+  avatar: string;
 }
 
 /** Category to group the channel */
@@ -1682,6 +1670,8 @@ export interface ListChannelDescsRequest {
   cursor: string;
   /** The clan of this channel */
   clan_id: string;
+  /** channel type */
+  channel_type: number;
 }
 
 /** Create a channel within clan. */
@@ -4635,8 +4625,7 @@ function createBaseChannelMessage(): ChannelMessage {
     create_time: undefined,
     update_time: undefined,
     persistent: undefined,
-    room_name: "",
-    group_id: "",
+    channel_name: "",
     user_id_one: "",
     user_id_two: "",
   };
@@ -4674,17 +4663,14 @@ export const ChannelMessage = {
     if (message.persistent !== undefined) {
       BoolValue.encode({ value: message.persistent! }, writer.uint32(82).fork()).ldelim();
     }
-    if (message.room_name !== "") {
-      writer.uint32(90).string(message.room_name);
-    }
-    if (message.group_id !== "") {
-      writer.uint32(98).string(message.group_id);
+    if (message.channel_name !== "") {
+      writer.uint32(90).string(message.channel_name);
     }
     if (message.user_id_one !== "") {
-      writer.uint32(106).string(message.user_id_one);
+      writer.uint32(98).string(message.user_id_one);
     }
     if (message.user_id_two !== "") {
-      writer.uint32(114).string(message.user_id_two);
+      writer.uint32(106).string(message.user_id_two);
     }
     return writer;
   },
@@ -4727,15 +4713,12 @@ export const ChannelMessage = {
           message.persistent = BoolValue.decode(reader, reader.uint32()).value;
           break;
         case 11:
-          message.room_name = reader.string();
+          message.channel_name = reader.string();
           break;
         case 12:
-          message.group_id = reader.string();
-          break;
-        case 13:
           message.user_id_one = reader.string();
           break;
-        case 14:
+        case 13:
           message.user_id_two = reader.string();
           break;
         default:
@@ -4758,8 +4741,7 @@ export const ChannelMessage = {
       create_time: isSet(object.create_time) ? fromJsonTimestamp(object.create_time) : undefined,
       update_time: isSet(object.update_time) ? fromJsonTimestamp(object.update_time) : undefined,
       persistent: isSet(object.persistent) ? Boolean(object.persistent) : undefined,
-      room_name: isSet(object.room_name) ? String(object.room_name) : "",
-      group_id: isSet(object.group_id) ? String(object.group_id) : "",
+      channel_name: isSet(object.channel_name) ? String(object.channel_name) : "",
       user_id_one: isSet(object.user_id_one) ? String(object.user_id_one) : "",
       user_id_two: isSet(object.user_id_two) ? String(object.user_id_two) : "",
     };
@@ -4777,8 +4759,7 @@ export const ChannelMessage = {
     message.create_time !== undefined && (obj.create_time = message.create_time.toISOString());
     message.update_time !== undefined && (obj.update_time = message.update_time.toISOString());
     message.persistent !== undefined && (obj.persistent = message.persistent);
-    message.room_name !== undefined && (obj.room_name = message.room_name);
-    message.group_id !== undefined && (obj.group_id = message.group_id);
+    message.channel_name !== undefined && (obj.channel_name = message.channel_name);
     message.user_id_one !== undefined && (obj.user_id_one = message.user_id_one);
     message.user_id_two !== undefined && (obj.user_id_two = message.user_id_two);
     return obj;
@@ -4800,72 +4781,9 @@ export const ChannelMessage = {
     message.create_time = object.create_time ?? undefined;
     message.update_time = object.update_time ?? undefined;
     message.persistent = object.persistent ?? undefined;
-    message.room_name = object.room_name ?? "";
-    message.group_id = object.group_id ?? "";
+    message.channel_name = object.channel_name ?? "";
     message.user_id_one = object.user_id_one ?? "";
     message.user_id_two = object.user_id_two ?? "";
-    return message;
-  },
-};
-
-function createBaseLastSeenMessageRequest(): LastSeenMessageRequest {
-  return { channel_id: "", message_id: "" };
-}
-
-export const LastSeenMessageRequest = {
-  encode(message: LastSeenMessageRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.channel_id !== "") {
-      writer.uint32(10).string(message.channel_id);
-    }
-    if (message.message_id !== "") {
-      writer.uint32(18).string(message.message_id);
-    }
-    return writer;
-  },
-
-  decode(input: _m0.Reader | Uint8Array, length?: number): LastSeenMessageRequest {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseLastSeenMessageRequest();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
-          message.channel_id = reader.string();
-          break;
-        case 2:
-          message.message_id = reader.string();
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
-      }
-    }
-    return message;
-  },
-
-  fromJSON(object: any): LastSeenMessageRequest {
-    return {
-      channel_id: isSet(object.channel_id) ? String(object.channel_id) : "",
-      message_id: isSet(object.message_id) ? String(object.message_id) : "",
-    };
-  },
-
-  toJSON(message: LastSeenMessageRequest): unknown {
-    const obj: any = {};
-    message.channel_id !== undefined && (obj.channel_id = message.channel_id);
-    message.message_id !== undefined && (obj.message_id = message.message_id);
-    return obj;
-  },
-
-  create<I extends Exact<DeepPartial<LastSeenMessageRequest>, I>>(base?: I): LastSeenMessageRequest {
-    return LastSeenMessageRequest.fromPartial(base ?? {});
-  },
-
-  fromPartial<I extends Exact<DeepPartial<LastSeenMessageRequest>, I>>(object: I): LastSeenMessageRequest {
-    const message = createBaseLastSeenMessageRequest();
-    message.channel_id = object.channel_id ?? "";
-    message.message_id = object.message_id ?? "";
     return message;
   },
 };
@@ -8686,7 +8604,6 @@ function createBaseUser(): User {
     edge_count: 0,
     create_time: undefined,
     update_time: undefined,
-    facebook_instant_game_id: "",
     apple_id: "",
   };
 }
@@ -8741,11 +8658,8 @@ export const User = {
     if (message.update_time !== undefined) {
       Timestamp.encode(toTimestamp(message.update_time), writer.uint32(130).fork()).ldelim();
     }
-    if (message.facebook_instant_game_id !== "") {
-      writer.uint32(138).string(message.facebook_instant_game_id);
-    }
     if (message.apple_id !== "") {
-      writer.uint32(146).string(message.apple_id);
+      writer.uint32(138).string(message.apple_id);
     }
     return writer;
   },
@@ -8806,9 +8720,6 @@ export const User = {
           message.update_time = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
           break;
         case 17:
-          message.facebook_instant_game_id = reader.string();
-          break;
-        case 18:
           message.apple_id = reader.string();
           break;
         default:
@@ -8837,7 +8748,6 @@ export const User = {
       edge_count: isSet(object.edge_count) ? Number(object.edge_count) : 0,
       create_time: isSet(object.create_time) ? fromJsonTimestamp(object.create_time) : undefined,
       update_time: isSet(object.update_time) ? fromJsonTimestamp(object.update_time) : undefined,
-      facebook_instant_game_id: isSet(object.facebook_instant_game_id) ? String(object.facebook_instant_game_id) : "",
       apple_id: isSet(object.apple_id) ? String(object.apple_id) : "",
     };
   },
@@ -8860,7 +8770,6 @@ export const User = {
     message.edge_count !== undefined && (obj.edge_count = Math.round(message.edge_count));
     message.create_time !== undefined && (obj.create_time = message.create_time.toISOString());
     message.update_time !== undefined && (obj.update_time = message.update_time.toISOString());
-    message.facebook_instant_game_id !== undefined && (obj.facebook_instant_game_id = message.facebook_instant_game_id);
     message.apple_id !== undefined && (obj.apple_id = message.apple_id);
     return obj;
   },
@@ -8887,7 +8796,6 @@ export const User = {
     message.edge_count = object.edge_count ?? 0;
     message.create_time = object.create_time ?? undefined;
     message.update_time = object.update_time ?? undefined;
-    message.facebook_instant_game_id = object.facebook_instant_game_id ?? "";
     message.apple_id = object.apple_id ?? "";
     return message;
   },
@@ -10590,7 +10498,7 @@ export const ClanProfileRequest = {
 };
 
 function createBaseUpdateClanProfileRequest(): UpdateClanProfileRequest {
-  return { clan_id: "", nick_name: "", avartar: "" };
+  return { clan_id: "", nick_name: "", avatar: "" };
 }
 
 export const UpdateClanProfileRequest = {
@@ -10601,8 +10509,8 @@ export const UpdateClanProfileRequest = {
     if (message.nick_name !== "") {
       writer.uint32(18).string(message.nick_name);
     }
-    if (message.avartar !== "") {
-      writer.uint32(26).string(message.avartar);
+    if (message.avatar !== "") {
+      writer.uint32(26).string(message.avatar);
     }
     return writer;
   },
@@ -10621,7 +10529,7 @@ export const UpdateClanProfileRequest = {
           message.nick_name = reader.string();
           break;
         case 3:
-          message.avartar = reader.string();
+          message.avatar = reader.string();
           break;
         default:
           reader.skipType(tag & 7);
@@ -10635,7 +10543,7 @@ export const UpdateClanProfileRequest = {
     return {
       clan_id: isSet(object.clan_id) ? String(object.clan_id) : "",
       nick_name: isSet(object.nick_name) ? String(object.nick_name) : "",
-      avartar: isSet(object.avartar) ? String(object.avartar) : "",
+      avatar: isSet(object.avatar) ? String(object.avatar) : "",
     };
   },
 
@@ -10643,7 +10551,7 @@ export const UpdateClanProfileRequest = {
     const obj: any = {};
     message.clan_id !== undefined && (obj.clan_id = message.clan_id);
     message.nick_name !== undefined && (obj.nick_name = message.nick_name);
-    message.avartar !== undefined && (obj.avartar = message.avartar);
+    message.avatar !== undefined && (obj.avatar = message.avatar);
     return obj;
   },
 
@@ -10655,7 +10563,7 @@ export const UpdateClanProfileRequest = {
     const message = createBaseUpdateClanProfileRequest();
     message.clan_id = object.clan_id ?? "";
     message.nick_name = object.nick_name ?? "";
-    message.avartar = object.avartar ?? "";
+    message.avatar = object.avatar ?? "";
     return message;
   },
 };
@@ -11223,7 +11131,7 @@ export const ChannelDescList = {
 };
 
 function createBaseListChannelDescsRequest(): ListChannelDescsRequest {
-  return { limit: undefined, state: undefined, cursor: "", clan_id: "" };
+  return { limit: undefined, state: undefined, cursor: "", clan_id: "", channel_type: 0 };
 }
 
 export const ListChannelDescsRequest = {
@@ -11239,6 +11147,9 @@ export const ListChannelDescsRequest = {
     }
     if (message.clan_id !== "") {
       writer.uint32(34).string(message.clan_id);
+    }
+    if (message.channel_type !== 0) {
+      writer.uint32(40).int32(message.channel_type);
     }
     return writer;
   },
@@ -11262,6 +11173,9 @@ export const ListChannelDescsRequest = {
         case 4:
           message.clan_id = reader.string();
           break;
+        case 5:
+          message.channel_type = reader.int32();
+          break;
         default:
           reader.skipType(tag & 7);
           break;
@@ -11276,6 +11190,7 @@ export const ListChannelDescsRequest = {
       state: isSet(object.state) ? Number(object.state) : undefined,
       cursor: isSet(object.cursor) ? String(object.cursor) : "",
       clan_id: isSet(object.clan_id) ? String(object.clan_id) : "",
+      channel_type: isSet(object.channel_type) ? Number(object.channel_type) : 0,
     };
   },
 
@@ -11285,6 +11200,7 @@ export const ListChannelDescsRequest = {
     message.state !== undefined && (obj.state = message.state);
     message.cursor !== undefined && (obj.cursor = message.cursor);
     message.clan_id !== undefined && (obj.clan_id = message.clan_id);
+    message.channel_type !== undefined && (obj.channel_type = Math.round(message.channel_type));
     return obj;
   },
 
@@ -11298,6 +11214,7 @@ export const ListChannelDescsRequest = {
     message.state = object.state ?? undefined;
     message.cursor = object.cursor ?? "";
     message.clan_id = object.clan_id ?? "";
+    message.channel_type = object.channel_type ?? 0;
     return message;
   },
 };
