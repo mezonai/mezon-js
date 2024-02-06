@@ -4507,7 +4507,8 @@ var Client = class {
       return this.apiClient.listChannelUsers(session.token, channelId, limit, state, cursor).then((response) => {
         var result = {
           channel_users: [],
-          cursor: response.cursor
+          cursor: response.cursor,
+          channel_id: response.channel_id
         };
         if (response.channel_users == null) {
           return Promise.resolve(result);

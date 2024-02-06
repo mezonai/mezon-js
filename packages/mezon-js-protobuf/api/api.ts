@@ -832,6 +832,8 @@ export interface ChannelUserList {
   channel_users: ChannelUserList_ChannelUser[];
   /** Cursor for the next page of results, if any. */
   cursor: string;
+  /** channel id */
+  channel_id: string;
 }
 
 /** A single user-role pair. */
@@ -6087,7 +6089,7 @@ export const GroupUserList_GroupUser = {
 };
 
 function createBaseChannelUserList(): ChannelUserList {
-  return { channel_users: [], cursor: "" };
+  return { channel_users: [], cursor: "", channel_id: "" };
 }
 
 export const ChannelUserList = {
@@ -6097,6 +6099,9 @@ export const ChannelUserList = {
     }
     if (message.cursor !== "") {
       writer.uint32(18).string(message.cursor);
+    }
+    if (message.channel_id !== "") {
+      writer.uint32(26).string(message.channel_id);
     }
     return writer;
   },
@@ -6114,6 +6119,9 @@ export const ChannelUserList = {
         case 2:
           message.cursor = reader.string();
           break;
+        case 3:
+          message.channel_id = reader.string();
+          break;
         default:
           reader.skipType(tag & 7);
           break;
@@ -6128,6 +6136,7 @@ export const ChannelUserList = {
         ? object.channel_users.map((e: any) => ChannelUserList_ChannelUser.fromJSON(e))
         : [],
       cursor: isSet(object.cursor) ? String(object.cursor) : "",
+      channel_id: isSet(object.channel_id) ? String(object.channel_id) : "",
     };
   },
 
@@ -6139,6 +6148,7 @@ export const ChannelUserList = {
       obj.channel_users = [];
     }
     message.cursor !== undefined && (obj.cursor = message.cursor);
+    message.channel_id !== undefined && (obj.channel_id = message.channel_id);
     return obj;
   },
 
@@ -6150,6 +6160,7 @@ export const ChannelUserList = {
     const message = createBaseChannelUserList();
     message.channel_users = object.channel_users?.map((e) => ChannelUserList_ChannelUser.fromPartial(e)) || [];
     message.cursor = object.cursor ?? "";
+    message.channel_id = object.channel_id ?? "";
     return message;
   },
 };

@@ -142,6 +142,7 @@ export interface ApiChannelMessageList {
 }
 /** A list of users belonging to a channel, along with their role. */
 export interface ApiChannelUserList {
+    channel_id?: string;
     channel_users?: Array<ChannelUserListChannelUser>;
     cursor?: string;
 }

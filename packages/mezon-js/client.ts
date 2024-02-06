@@ -1161,7 +1161,8 @@ export class Client {
     return this.apiClient.listChannelUsers(session.token, channelId, limit, state, cursor).then((response: ApiChannelUserList) => {
       var result: ApiChannelUserList = {
         channel_users: [],
-        cursor: response.cursor
+        cursor: response.cursor,
+        channel_id: response.channel_id
       };
 
       if (response.channel_users == null) {
