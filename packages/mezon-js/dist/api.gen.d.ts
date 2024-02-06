@@ -176,10 +176,8 @@ export interface ApiClanProfile {
 }
 /**  */
 export interface ApiCreateCategoryDescRequest {
-    category_id?: string;
     category_name?: string;
     clan_id?: string;
-    creator_id?: string;
 }
 /** Create a channel within clan. */
 export interface ApiCreateChannelDescRequest {

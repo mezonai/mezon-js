@@ -662,8 +662,6 @@ export interface ListGroupUsersRequest {
 export interface ListChannelUsersRequest {
     /** The channel ID to list from. */
     channel_id: string;
-    /** The channel ID to list from. */
-    clan_id: string;
     /** Max number of records to return. Between 1 and 100. */
     limit: number | undefined;
     /** The group user state to list. */
@@ -1144,8 +1142,6 @@ export interface CategoryDesc {
 export interface CreateCategoryDescRequest {
     category_name: string;
     clan_id: string;
-    creator_id: string;
-    category_id: string;
 }
 export interface DeleteCategoryDescRequest {
     creator_id: string;
@@ -5172,26 +5168,22 @@ export declare const ListChannelUsersRequest: {
     toJSON(message: ListChannelUsersRequest): unknown;
     create<I extends {
         channel_id?: string | undefined;
-        clan_id?: string | undefined;
         limit?: number | undefined;
         state?: number | undefined;
         cursor?: string | undefined;
     } & {
         channel_id?: string | undefined;
-        clan_id?: string | undefined;
         limit?: number | undefined;
         state?: number | undefined;
         cursor?: string | undefined;
     } & { [K in Exclude<keyof I, keyof ListChannelUsersRequest>]: never; }>(base?: I | undefined): ListChannelUsersRequest;
     fromPartial<I_1 extends {
         channel_id?: string | undefined;
-        clan_id?: string | undefined;
         limit?: number | undefined;
         state?: number | undefined;
         cursor?: string | undefined;
     } & {
         channel_id?: string | undefined;
-        clan_id?: string | undefined;
         limit?: number | undefined;
         state?: number | undefined;
         cursor?: string | undefined;
@@ -7401,24 +7393,16 @@ export declare const CreateCategoryDescRequest: {
     create<I extends {
         category_name?: string | undefined;
         clan_id?: string | undefined;
-        creator_id?: string | undefined;
-        category_id?: string | undefined;
     } & {
         category_name?: string | undefined;
         clan_id?: string | undefined;
-        creator_id?: string | undefined;
-        category_id?: string | undefined;
     } & { [K in Exclude<keyof I, keyof CreateCategoryDescRequest>]: never; }>(base?: I | undefined): CreateCategoryDescRequest;
     fromPartial<I_1 extends {
         category_name?: string | undefined;
         clan_id?: string | undefined;
-        creator_id?: string | undefined;
-        category_id?: string | undefined;
     } & {
         category_name?: string | undefined;
         clan_id?: string | undefined;
-        creator_id?: string | undefined;
-        category_id?: string | undefined;
     } & { [K_1 in Exclude<keyof I_1, keyof CreateCategoryDescRequest>]: never; }>(object: I_1): CreateCategoryDescRequest;
 };
 export declare const DeleteCategoryDescRequest: {
