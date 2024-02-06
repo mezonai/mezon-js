@@ -980,8 +980,6 @@ export interface ListGroupUsersRequest {
 export interface ListChannelUsersRequest {
   /** The channel ID to list from. */
   channel_id: string;
-  /** The channel ID to list from. */
-  clan_id: string;
   /** Max number of records to return. Between 1 and 100. */
   limit:
     | number
@@ -1594,8 +1592,6 @@ export interface CategoryDesc {
 export interface CreateCategoryDescRequest {
   category_name: string;
   clan_id: string;
-  creator_id: string;
-  category_id: string;
 }
 
 export interface DeleteCategoryDescRequest {
@@ -7027,7 +7023,7 @@ export const ListGroupUsersRequest = {
 };
 
 function createBaseListChannelUsersRequest(): ListChannelUsersRequest {
-  return { channel_id: "", clan_id: "", limit: undefined, state: undefined, cursor: "" };
+  return { channel_id: "", limit: undefined, state: undefined, cursor: "" };
 }
 
 export const ListChannelUsersRequest = {
@@ -7035,17 +7031,14 @@ export const ListChannelUsersRequest = {
     if (message.channel_id !== "") {
       writer.uint32(10).string(message.channel_id);
     }
-    if (message.clan_id !== "") {
-      writer.uint32(18).string(message.clan_id);
-    }
     if (message.limit !== undefined) {
-      Int32Value.encode({ value: message.limit! }, writer.uint32(26).fork()).ldelim();
+      Int32Value.encode({ value: message.limit! }, writer.uint32(18).fork()).ldelim();
     }
     if (message.state !== undefined) {
-      Int32Value.encode({ value: message.state! }, writer.uint32(34).fork()).ldelim();
+      Int32Value.encode({ value: message.state! }, writer.uint32(26).fork()).ldelim();
     }
     if (message.cursor !== "") {
-      writer.uint32(42).string(message.cursor);
+      writer.uint32(34).string(message.cursor);
     }
     return writer;
   },
@@ -7061,15 +7054,12 @@ export const ListChannelUsersRequest = {
           message.channel_id = reader.string();
           break;
         case 2:
-          message.clan_id = reader.string();
-          break;
-        case 3:
           message.limit = Int32Value.decode(reader, reader.uint32()).value;
           break;
-        case 4:
+        case 3:
           message.state = Int32Value.decode(reader, reader.uint32()).value;
           break;
-        case 5:
+        case 4:
           message.cursor = reader.string();
           break;
         default:
@@ -7083,7 +7073,6 @@ export const ListChannelUsersRequest = {
   fromJSON(object: any): ListChannelUsersRequest {
     return {
       channel_id: isSet(object.channel_id) ? String(object.channel_id) : "",
-      clan_id: isSet(object.clan_id) ? String(object.clan_id) : "",
       limit: isSet(object.limit) ? Number(object.limit) : undefined,
       state: isSet(object.state) ? Number(object.state) : undefined,
       cursor: isSet(object.cursor) ? String(object.cursor) : "",
@@ -7093,7 +7082,6 @@ export const ListChannelUsersRequest = {
   toJSON(message: ListChannelUsersRequest): unknown {
     const obj: any = {};
     message.channel_id !== undefined && (obj.channel_id = message.channel_id);
-    message.clan_id !== undefined && (obj.clan_id = message.clan_id);
     message.limit !== undefined && (obj.limit = message.limit);
     message.state !== undefined && (obj.state = message.state);
     message.cursor !== undefined && (obj.cursor = message.cursor);
@@ -7107,7 +7095,6 @@ export const ListChannelUsersRequest = {
   fromPartial<I extends Exact<DeepPartial<ListChannelUsersRequest>, I>>(object: I): ListChannelUsersRequest {
     const message = createBaseListChannelUsersRequest();
     message.channel_id = object.channel_id ?? "";
-    message.clan_id = object.clan_id ?? "";
     message.limit = object.limit ?? undefined;
     message.state = object.state ?? undefined;
     message.cursor = object.cursor ?? "";
@@ -10660,7 +10647,7 @@ export const CategoryDesc = {
 };
 
 function createBaseCreateCategoryDescRequest(): CreateCategoryDescRequest {
-  return { category_name: "", clan_id: "", creator_id: "", category_id: "" };
+  return { category_name: "", clan_id: "" };
 }
 
 export const CreateCategoryDescRequest = {
@@ -10670,12 +10657,6 @@ export const CreateCategoryDescRequest = {
     }
     if (message.clan_id !== "") {
       writer.uint32(18).string(message.clan_id);
-    }
-    if (message.creator_id !== "") {
-      writer.uint32(26).string(message.creator_id);
-    }
-    if (message.category_id !== "") {
-      writer.uint32(34).string(message.category_id);
     }
     return writer;
   },
@@ -10693,12 +10674,6 @@ export const CreateCategoryDescRequest = {
         case 2:
           message.clan_id = reader.string();
           break;
-        case 3:
-          message.creator_id = reader.string();
-          break;
-        case 4:
-          message.category_id = reader.string();
-          break;
         default:
           reader.skipType(tag & 7);
           break;
@@ -10711,8 +10686,6 @@ export const CreateCategoryDescRequest = {
     return {
       category_name: isSet(object.category_name) ? String(object.category_name) : "",
       clan_id: isSet(object.clan_id) ? String(object.clan_id) : "",
-      creator_id: isSet(object.creator_id) ? String(object.creator_id) : "",
-      category_id: isSet(object.category_id) ? String(object.category_id) : "",
     };
   },
 
@@ -10720,8 +10693,6 @@ export const CreateCategoryDescRequest = {
     const obj: any = {};
     message.category_name !== undefined && (obj.category_name = message.category_name);
     message.clan_id !== undefined && (obj.clan_id = message.clan_id);
-    message.creator_id !== undefined && (obj.creator_id = message.creator_id);
-    message.category_id !== undefined && (obj.category_id = message.category_id);
     return obj;
   },
 
@@ -10733,8 +10704,6 @@ export const CreateCategoryDescRequest = {
     const message = createBaseCreateCategoryDescRequest();
     message.category_name = object.category_name ?? "";
     message.clan_id = object.clan_id ?? "";
-    message.creator_id = object.creator_id ?? "";
-    message.category_id = object.category_id ?? "";
     return message;
   },
 };
