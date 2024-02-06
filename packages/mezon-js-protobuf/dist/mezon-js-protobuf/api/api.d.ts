@@ -554,6 +554,8 @@ export interface ChannelUserList {
     channel_users: ChannelUserList_ChannelUser[];
     /** Cursor for the next page of results, if any. */
     cursor: string;
+    /** channel id */
+    channel_id: string;
 }
 /** A single user-role pair. */
 export interface ChannelUserList_ChannelUser {
@@ -4396,6 +4398,7 @@ export declare const ChannelUserList: {
             role_id?: string | undefined;
         }[] | undefined;
         cursor?: string | undefined;
+        channel_id?: string | undefined;
     } & {
         channel_users?: ({
             user?: {
@@ -4501,6 +4504,7 @@ export declare const ChannelUserList: {
             role_id?: string | undefined;
         }[]>]: never; }) | undefined;
         cursor?: string | undefined;
+        channel_id?: string | undefined;
     } & { [K_3 in Exclude<keyof I, keyof ChannelUserList>]: never; }>(base?: I | undefined): ChannelUserList;
     fromPartial<I_1 extends {
         channel_users?: {
@@ -4526,6 +4530,7 @@ export declare const ChannelUserList: {
             role_id?: string | undefined;
         }[] | undefined;
         cursor?: string | undefined;
+        channel_id?: string | undefined;
     } & {
         channel_users?: ({
             user?: {
@@ -4631,6 +4636,7 @@ export declare const ChannelUserList: {
             role_id?: string | undefined;
         }[]>]: never; }) | undefined;
         cursor?: string | undefined;
+        channel_id?: string | undefined;
     } & { [K_7 in Exclude<keyof I_1, keyof ChannelUserList>]: never; }>(object: I_1): ChannelUserList;
 };
 export declare const ChannelUserList_ChannelUser: {
