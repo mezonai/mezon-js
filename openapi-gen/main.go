@@ -1,4 +1,4 @@
-// Copyright 2018 The Nakama Authors
+// Copyright 2018 The Mezon Authors
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -89,7 +89,7 @@ export interface {{$classname | title}} {
 
 export class {{ .Namespace }}Api {
 
-  constructor(readonly{{- if eq .Namespace "Nakama" }} serverKey{{- end }}{{- if eq .Namespace "Satori" }} apiKey{{- end }}: string, readonly basePath: string, readonly timeoutMs: number) {}
+  constructor(readonly{{- if eq .Namespace "Mezon" }} serverKey{{- end }}{{- if eq .Namespace "Satori" }} apiKey{{- end }}: string, readonly basePath: string, readonly timeoutMs: number) {}
 
 {{- range $url, $path := .Paths}}
   {{- range $method, $operation := $path}}

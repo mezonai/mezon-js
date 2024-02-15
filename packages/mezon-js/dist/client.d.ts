@@ -1,5 +1,5 @@
 /**
- * Copyright 2020 The Nakama Authors
+ * Copyright 2020 The Mezon Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -449,7 +449,7 @@ export interface ApiUpdateRoleRequest {
     /** The permissions to remove. */
     remove_permission_ids: string[];
 }
-/** A client for Nakama server. */
+/** A client for Mezon server. */
 export declare class Client {
     readonly serverkey: string;
     readonly host: string;
@@ -459,7 +459,7 @@ export declare class Client {
     readonly autoRefreshSession: boolean;
     /** The expired timespan used to check session lifetime. */
     expiredTimespanMs: number;
-    /** The low level API client for Nakama server. */
+    /** The low level API client for Mezon server. */
     private readonly apiClient;
     constructor(serverkey?: string, host?: string, port?: string, useSSL?: boolean, timeout?: number, autoRefreshSession?: boolean);
     /** Add users to a group, or accept their join requests. */

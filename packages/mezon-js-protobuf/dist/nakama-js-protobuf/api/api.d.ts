@@ -1,6 +1,6 @@
 import _m0 from "protobufjs/minimal";
-export declare const protobufPackage = "nakama.api";
-/** The Nakama server RPC protocol for games and apps. */
+export declare const protobufPackage = "mezon.api";
+/** The Mezon server RPC protocol for games and apps. */
 /** Validation Provider, */
 export declare enum StoreProvider {
     /** APPLE_APP_STORE - Apple App Store */
@@ -142,7 +142,7 @@ export interface AccountFacebook_VarsEntry {
 }
 /** Send a Facebook Instant Game token to the server. Used with authenticate/link/unlink. */
 export interface AccountFacebookInstantGame {
-    /** The OAuth token received from a Facebook Instant Game that may be decoded with the Application Secret (must be available with the nakama configuration) */
+    /** The OAuth token received from a Facebook Instant Game that may be decoded with the Application Secret (must be available with the mezon configuration) */
     signed_player_info: string;
     /** Extra information that will be bundled in the session token. */
     vars: {
@@ -1234,7 +1234,7 @@ export interface ValidatePurchaseFacebookInstantRequest {
     /** Persist the purchase */
     persist: boolean | undefined;
 }
-/** Validated Purchase stored by Nakama. */
+/** Validated Purchase stored by Mezon. */
 export interface ValidatedPurchase {
     /** Purchase User ID. */
     user_id: string;
@@ -1256,7 +1256,7 @@ export interface ValidatedPurchase {
     provider_response: string;
     /** Whether the purchase was done in production or sandbox environment. */
     environment: StoreEnvironment;
-    /** Whether the purchase had already been validated by Nakama before. */
+    /** Whether the purchase had already been validated by Mezon before. */
     seen_before: boolean;
 }
 /** Validate IAP response. */
@@ -1296,7 +1296,7 @@ export interface ValidatedSubscription {
     /** Whether the subscription is currently active or not. */
     active: boolean;
 }
-/** A list of validated purchases stored by Nakama. */
+/** A list of validated purchases stored by Mezon. */
 export interface PurchaseList {
     /** Stored validated purchases. */
     validated_purchases: ValidatedPurchase[];
@@ -1305,7 +1305,7 @@ export interface PurchaseList {
     /** The cursor to send when retrieving the previous page, if any. */
     prev_cursor: string;
 }
-/** A list of validated subscriptions stored by Nakama. */
+/** A list of validated subscriptions stored by Mezon. */
 export interface SubscriptionList {
     /** Stored validated subscriptions. */
     validated_subscriptions: ValidatedSubscription[];

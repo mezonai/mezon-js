@@ -20,5 +20,5 @@ $GOPATH/src/github.com/nccasia/mezon-server/common/api/api.proto
 * genarate js
 
 ```
-go run main.go "$GOPATH/src/github.com/nccasia/mezon-server/apigrpc/apigrpc.swagger.json" "Nakama" > ../packages/mezon-js/api.gen.ts
+go run main.go "$GOPATH/src/github.com/nccasia/mezon-server/apigrpc/apigrpc.swagger.json" "Mezon" > ../packages/mezon-js/api.gen.ts
 ```

@@ -1,7 +1,7 @@
 import _m0 from "protobufjs/minimal";
 import { ChannelMessage, Notification, Rpc } from "../api/api";
-export declare const protobufPackage = "nakama.realtime";
-/** The realtime protocol for Nakama server. */
+export declare const protobufPackage = "mezon.realtime";
+/** The realtime protocol for Mezon server. */
 /** An envelope for a realtime message. */
 export interface Envelope {
     cid: string;

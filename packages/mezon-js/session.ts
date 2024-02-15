@@ -1,5 +1,5 @@
 /**
- * Copyright 2022 The Nakama Authors
+ * Copyright 2022 The Mezon Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,7 +17,7 @@
 
 import * as base64 from "js-base64"
 
-/** A session authenticated for a user with Nakama server. */
+/** A session authenticated for a user with Mezon server. */
 export interface ISession {
   /** Claims */
   /** The authorization token used to construct this session. */

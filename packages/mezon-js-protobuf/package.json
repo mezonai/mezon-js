@@ -1,7 +1,7 @@
 {
     "name": "@mezon/mezon-js-protobuf",
     "version": "1.4.0",
-    "description": "Websocket adapter adding protocol buffer support to the Nakama Javascript client.",
+    "description": "Websocket adapter adding protocol buffer support to the Mezon Javascript client.",
     "main": "dist/mezon-js-protobuf.cjs.js",
     "module": "dist/mezon-js-protobuf.esm.mjs",
     "types": "dist/mezon-js-protobuf/index.d.ts",
@@ -23,7 +23,7 @@
         "app server",
         "client library",
         "game server",
-        "nakama",
+        "mezon",
         "realtime",
         "realtime chat"
     ],

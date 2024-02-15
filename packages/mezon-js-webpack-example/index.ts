@@ -1,5 +1,5 @@
 /**
- * Copyright 2021 The Nakama Authors
+ * Copyright 2021 The Mezon Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,16 +17,23 @@
 import {Client} from "@mezon/mezon-js";
 
 var useSSL = false; // Enable if server is run with an SSL certificate.
-var client = new Client("defaultkey", "127.0.0.1", "7350", useSSL);
+var client = new Client("defaultkey", "172.16.11.90", "7350", useSSL);
 
 client.authenticateEmail("user1@ncc.asia", "Aa12345678").then(session => {
-    console.log("authenticated.");
+    console.log("authenticated.", session);
     var socket = client.createSocket(useSSL, false);
 
     socket.connect(session, true).then(session => {
-        socket.joinChat("c35f5457-5ad5-46a4-a6c1-d1b97eb14d85",
-            "Room1",
-            1,
+      socket.followUsers(["4f0ab1da-d153-4965-841d-b8d0123b645d"]).then(status => {
+        console.log(status)
+        //status.presences.forEach((presence) => {
+        //  console.log("User %o has status %o", presence);
+        //});
+      });
+      
+        /*socket.joinChat("21ea6d0d-7f22-4882-8466-90aa882aa181",
+            "",
+            3,
             true,
             false
         ).then(response => {
@@ -34,14 +41,16 @@ client.authenticateEmail("user1@ncc.asia", "Aa12345678").then(session => {
             "You can now send message to channel id ",
             response
           );
-          socket.writeChatMessage("093b8667-1ce3-4982-9140-790dfebcf3c9",
-            "c35f5457-5ad5-46a4-a6c1-d1b97eb14d85",
+          socket.writeChatMessage("",
+            "21ea6d0d-7f22-4882-8466-90aa882aa180",
             { data: "Hello!" }
           ).then(response => {
             console.log("send message", response);
           });
-          socket.writeMessageTyping("c35f5457-5ad5-46a4-a6c1-d1b97eb14d85").then(response => console.log(response));      
-        });        
+          // socket.writeLastSeenMessage("c35f5457-5ad5-46a4-a6c1-d1b97eb14d85", "null"
+          // ).then(response => console.log(response)
+          // );          
+        });*/
     });
 }).catch(e => {
     console.log("error authenticating.");

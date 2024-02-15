@@ -5,9 +5,9 @@ import { ChannelMessage, Notification, Rpc } from "../api/api";
 import { Timestamp } from "../google/protobuf/timestamp";
 import { BoolValue, Int32Value, StringValue } from "../google/protobuf/wrappers";
 
-export const protobufPackage = "nakama.realtime";
+export const protobufPackage = "mezon.realtime";
 
-/** The realtime protocol for Nakama server. */
+/** The realtime protocol for Mezon server. */
 
 /** An envelope for a realtime message. */
 export interface Envelope {
