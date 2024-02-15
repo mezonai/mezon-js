@@ -23,7 +23,7 @@ export default {
     input: './index.ts',
     output:  {
         format: 'umd',
-        name: 'nakamajs',
+        name: 'mezonjs',
         dir: "dist",
         entryFileNames: "mezon-js.umd.js" // workaround for TS requirement that dir is specified in config
     },

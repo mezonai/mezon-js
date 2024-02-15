@@ -866,7 +866,7 @@ export interface RpcStatus {
   message?: string;
 }
 
-export class NakamaApi {
+export class MezonApi {
 
   constructor(readonly serverKey: string, readonly basePath: string, readonly timeoutMs: number) {}
 
