@@ -504,7 +504,7 @@ export interface RpcStatus {
     details?: Array<ProtobufAny>;
     message?: string;
 }
-export declare class NakamaApi {
+export declare class MezonApi {
     readonly serverKey: string;
     readonly basePath: string;
     readonly timeoutMs: number;

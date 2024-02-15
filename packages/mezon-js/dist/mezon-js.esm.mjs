@@ -636,7 +636,7 @@ function buildFetchOptions(method, options, bodyJson) {
 }
 
 // api.gen.ts
-var NakamaApi = class {
+var MezonApi = class {
   constructor(serverKey, basePath, timeoutMs) {
     this.serverKey = serverKey;
     this.basePath = basePath;
@@ -4034,7 +4034,7 @@ var Client = class {
     this.expiredTimespanMs = DEFAULT_EXPIRED_TIMESPAN_MS;
     const scheme = useSSL ? "https://" : "http://";
     const basePath = `${scheme}${host}:${port}`;
-    this.apiClient = new NakamaApi(serverkey, basePath, timeout);
+    this.apiClient = new MezonApi(serverkey, basePath, timeout);
   }
   /** Add users to a group, or accept their join requests. */
   addGroupUsers(session, groupId, ids) {

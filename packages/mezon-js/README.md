@@ -74,7 +74,7 @@ It is recommended to store the auth token from the session and check at startup 
 const authtoken = window.localStorage.getItem("nkauthtoken");
 const refreshtoken = window.localStorage.getItem("nkrefreshtoken");
 
-let session = nakamajs.Session.restore(authtoken, refreshtoken);
+let session = mezonjs.Session.restore(authtoken, refreshtoken);
 
 // Check whether a session is close to expiry.
 

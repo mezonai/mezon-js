@@ -58,7 +58,7 @@ import {
   ApiUsers,
   ApiUserGroupList,
   ApiWriteStorageObjectsRequest,
-  NakamaApi,
+  MezonApi,
   ApiSession,
   ApiAccountApple,
   ApiLinkSteamRequest,
@@ -557,7 +557,7 @@ export class Client {
   public expiredTimespanMs = DEFAULT_EXPIRED_TIMESPAN_MS;
 
   /** The low level API client for Mezon server. */
-  private readonly apiClient: NakamaApi;
+  private readonly apiClient: MezonApi;
 
   constructor(
       readonly serverkey = DEFAULT_SERVER_KEY,
@@ -569,7 +569,7 @@ export class Client {
     const scheme = (useSSL) ? "https://" : "http://";
     const basePath = `${scheme}${host}:${port}`;
 
-    this.apiClient = new NakamaApi(serverkey, basePath, timeout);
+    this.apiClient = new MezonApi(serverkey, basePath, timeout);
   }
 
   /** Add users to a group, or accept their join requests. */
