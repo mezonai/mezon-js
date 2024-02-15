@@ -3581,9 +3581,7 @@ var WebSocketAdapterText = class {
     if (value) {
       this._socket.onmessage = (evt) => {
         const message = JSON.parse(evt.data);
-        if (message.match_data && message.match_data.data) {
-          message.match_data.data = new Uint8Array(decode3(message.match_data.data));
-        } else if (message.party_data && message.party_data.data) {
+        if (message.party_data && message.party_data.data) {
           message.party_data.data = new Uint8Array(decode3(message.party_data.data));
         }
         value(message);
@@ -3686,8 +3684,6 @@ var _DefaultSocket = class _DefaultSocket {
           this.onpartyjoinrequest(message.party_join_request);
         } else if (message.party_leader) {
           this.onpartyleader(message.party_leader);
-        } else if (message.party_matchmaker_ticket) {
-          this.onpartymatchmakerticket(message.party_matchmaker_ticket);
         } else if (message.party_presence_event) {
           this.onpartypresence(message.party_presence_event);
         } else if (message.party) {

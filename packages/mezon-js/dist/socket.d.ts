@@ -453,8 +453,6 @@ export interface Socket {
     onpartyleader: (partyLeader: PartyLeader) => void;
     /** Receive a presence update for a party. */
     onpartypresence: (partyPresence: PartyPresenceEvent) => void;
-    /** Receive matchmaking results. */
-    onpartymatchmakerticket: (partyMatchmakerMatched: PartyMatchmakerTicket) => void;
     /** Receive status presence updates. */
     onstatuspresence: (statusPresence: StatusPresenceEvent) => void;
     /** Receive stream presence updates. */
