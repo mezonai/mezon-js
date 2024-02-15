@@ -4,7 +4,7 @@
     "scripts": {
         "build": "npx tsc && npx rollup -c --bundleConfigAsCjs && node build.mjs"
     },
-    "description": "JavaScript client for Nakama server written in TypeScript.",
+    "description": "JavaScript client for Mezon server written in TypeScript.",
     "main": "dist/mezon-js.cjs.js",
     "module": "dist/mezon-js.esm.mjs",
     "types": "dist/index.d.ts",
@@ -20,7 +20,7 @@
         "app server",
         "client library",
         "game server",
-        "nakama",
+        "mezon",
         "realtime",
         "realtime chat"
     ],

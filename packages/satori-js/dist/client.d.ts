@@ -1,5 +1,5 @@
 /**
- * Copyright 2020 The Nakama Authors
+ * Copyright 2020 The Mezon Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,7 +25,7 @@ export declare class Client {
     readonly autoRefreshSession: boolean;
     /** The expired timespan used to check session lifetime. */
     expiredTimespanMs: number;
-    /** The low level API client for Nakama server. */
+    /** The low level API client for Mezon server. */
     private readonly apiClient;
     constructor(apiKey?: string, host?: string, port?: string, useSSL?: boolean, timeout?: number, autoRefreshSession?: boolean);
     /** Authenticate a user with an ID against the server. */

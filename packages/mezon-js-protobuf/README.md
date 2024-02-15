@@ -1,9 +1,9 @@
-Nakama JavaScript Protobuf adapter
+Mezon JavaScript Protobuf adapter
 ========================
 
 > Websocket adapter adding protocol buffer support to the [mezon-js](https://www.npmjs.com/package/@mezon/mezon-js) client.
 
-[Nakama](https://github.com/heroiclabs/nakama) is an open-source server designed to power modern games and apps. Features include user accounts, chat, social, matchmaker, realtime multiplayer, and much [more](https://heroiclabs.com).
+[Mezon](https://github.com/heroiclabs/mezon) is an open-source server designed to power modern games and apps. Features include user accounts, chat, social, matchmaker, realtime multiplayer, and much [more](https://heroiclabs.com).
 
 
 ## Getting Started

@@ -11,15 +11,15 @@ The format is based on [keep a changelog](http://keepachangelog.com/) and this p
 - Satori: Added ability to add custom and default properties for a user at the point of authentication.
 - Satori: Add 'recompute' param to Satori's update-properties.
 - Satori: Added ability to delete identity.
-- Nakama: Added ability to create match by name.
+- Mezon: Added ability to create match by name.
 
 ### Changed
-- Nakama: Improves how outgoing messages are logged in verbose mode.
-- Nakama: Updated signature for Authenticate Game Center.
+- Mezon: Improves how outgoing messages are logged in verbose mode.
+- Mezon: Updated signature for Authenticate Game Center.
 
 ### Fixed
-- Nakama: Fixed typings distribution location for protobuf-js.
-- Nakama: Fixed how newer bundlers (such as those used by ViteJs) discover Nakama's type definitions.
+- Mezon: Fixed typings distribution location for protobuf-js.
+- Mezon: Fixed how newer bundlers (such as those used by ViteJs) discover Mezon's type definitions.
 - Satori: Return live event ID when getting all live events.
 
 ### [2.6.1]
@@ -47,7 +47,7 @@ The connect, send, and heartbeat timeouts are set to sensible default values.
 ### [2.5.3]
 
 ### Fixed
-- Nakama and Satori ESM module files now correctly end in the `.mjs` extension.
+- Mezon and Satori ESM module files now correctly end in the `.mjs` extension.
 
 ### [2.5.1]
 
@@ -164,7 +164,7 @@ by bundlers following conventional package.json load entries.
 - Added interface for Session object.
 - Support for Tournaments.
 - Support for events.
-- Update to support features through Nakama 2.14.0
+- Update to support features through Mezon 2.14.0
 - Implemented base64 encoder and decoder for unicode characters
 - Added support for protocol buffer payloads via Web Sockets.
 - Added support for Facebook Instant Game Authentication.
@@ -200,7 +200,7 @@ by bundlers following conventional package.json load entries.
 
 ### Changed
 - All source code now written in TypeScript.
-- Rewrite client and socket model for Nakama 2.0.
+- Rewrite client and socket model for Mezon 2.0.
 
 ---
 

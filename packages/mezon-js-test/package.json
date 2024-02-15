@@ -1,7 +1,7 @@
 {
     "name": "@mezon/mezon-js-test",
     "version": "1.0.0",
-    "description": "A subproject that houses tests for Nakama JS",
+    "description": "A subproject that houses tests for Mezon JS",
     "private": true,
     "license": "Apache-2.0",
     "dependencies": {

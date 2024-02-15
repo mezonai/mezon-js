@@ -1,5 +1,5 @@
 /**
- * Copyright 2020 The Nakama Authors
+ * Copyright 2020 The Mezon Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -30,7 +30,7 @@ export class Client {
   /** The expired timespan used to check session lifetime. */
   public expiredTimespanMs = DEFAULT_EXPIRED_TIMESPAN_MS;
 
-  /** The low level API client for Nakama server. */
+  /** The low level API client for Mezon server. */
   private readonly apiClient: SatoriApi;
 
   constructor(

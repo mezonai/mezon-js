@@ -1,6 +1,6 @@
 import _m0 from "protobufjs/minimal";
-export declare const protobufPackage = "nakama.api";
-/** The Nakama server RPC protocol for games and apps. */
+export declare const protobufPackage = "mezon.api";
+/** The Mezon server RPC protocol for games and apps. */
 /** Validation Provider, */
 export declare enum StoreProvider {
     /** APPLE_APP_STORE - Apple App Store */
@@ -142,7 +142,7 @@ export interface AccountFacebook_VarsEntry {
 }
 /** Send a Facebook Instant Game token to the server. Used with authenticate/link/unlink. */
 export interface AccountFacebookInstantGame {
-    /** The OAuth token received from a Facebook Instant Game that may be decoded with the Application Secret (must be available with the nakama configuration) */
+    /** The OAuth token received from a Facebook Instant Game that may be decoded with the Application Secret (must be available with the mezon configuration) */
     signed_player_info: string;
     /** Extra information that will be bundled in the session token. */
     vars: {

@@ -1,9 +1,9 @@
-Nakama JavaScript client
+Mezon JavaScript client
 ========================
 
-> JavaScript client for Nakama server written in TypeScript. For browser and React Native projects.
+> JavaScript client for Mezon server written in TypeScript. For browser and React Native projects.
 
-[Nakama](https://github.com/heroiclabs/nakama) is an open-source server designed to power modern games and apps. Features include user accounts, chat, social, matchmaker, realtime multiplayer, and much [more](https://heroiclabs.com).
+[Mezon](https://github.com/heroiclabs/mezon) is an open-source server designed to power modern games and apps. Features include user accounts, chat, social, matchmaker, realtime multiplayer, and much [more](https://heroiclabs.com).
 
 This client implements the full API and socket options with the server. It's written in TypeScript with minimal dependencies to be compatible with all modern browsers and React Native.
 
@@ -11,7 +11,7 @@ Full documentation is online - https://heroiclabs.com/docs/javascript-client-gui
 
 ## Getting Started
 
-You'll need to setup the server and database before you can connect with the client. The simplest way is to use Docker but have a look at the [server documentation](https://github.com/heroiclabs/nakama#getting-started) for other options.
+You'll need to setup the server and database before you can connect with the client. The simplest way is to use Docker but have a look at the [server documentation](https://github.com/heroiclabs/mezon#getting-started) for other options.
 
 1. Install and run the servers. Follow these [instructions](https://heroiclabs.com/docs/install-docker-quickstart).
 
@@ -156,7 +156,7 @@ socket.writeChatMessage(channel.channel.id, message);
 
 For any errors in client requests, we return the original error objects from the Fetch API: https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API
 
-In order to capture the Nakama server response associated with the error, when you wrap your client requests in a `try...catch` statement you can invoke `await error.json()` on the `error` object in the catch block:
+In order to capture the Mezon server response associated with the error, when you wrap your client requests in a `try...catch` statement you can invoke `await error.json()` on the `error` object in the catch block:
 
 ```js
 try {
@@ -165,7 +165,7 @@ try {
     console.info(account.user.username);
     console.info(account.wallet);
 } catch (error) {
-    console.info("Inner Nakama error", await error.json());
+    console.info("Inner Mezon error", await error.json());
 }
 ```
 
@@ -206,12 +206,12 @@ To update the generated Typescript required for using the protocol buffer adapte
 ```shell
 npx protoc \
 --plugin="./node_modules/.bin/protoc-gen-ts_proto" \
---proto_path=$GOPATH/src/github.com/heroiclabs/nakama-common \
+--proto_path=$GOPATH/src/github.com/heroiclabs/mezon-common \
 --ts_proto_out=. \
 --ts_proto_opt=snakeToCamel=false \
 --ts_proto_opt=esModuleInterop=true \
-$GOPATH/src/github.com/heroiclabs/nakama-common/rtapi/realtime.proto \
-$GOPATH/src/github.com/heroiclabs/nakama-common/api/api.proto
+$GOPATH/src/github.com/heroiclabs/mezon-common/rtapi/realtime.proto \
+$GOPATH/src/github.com/heroiclabs/mezon-common/api/api.proto
 ```
 ```shell
 npx protoc --plugin="./node_modules/.bin/protoc-gen-ts_proto.cmd" --proto_path=../../../mezon-common --ts_proto_out=./ --ts_proto_opt=snakeToCamel=false --ts_proto_opt=esModuleInterop=true ../../../mezon-common/rtapi/realtime.proto ../../../mezon-common/api/api.proto

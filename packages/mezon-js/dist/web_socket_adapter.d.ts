@@ -1,5 +1,5 @@
 /**
- * Copyright 2020 The Nakama Authors
+ * Copyright 2020 The Mezon Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 /**
- * An interface used by Nakama's web socket to determine the payload protocol.
+ * An interface used by Mezon's web socket to determine the payload protocol.
  */
 export interface WebSocketAdapter {
     /**

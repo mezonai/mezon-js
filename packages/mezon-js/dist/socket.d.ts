@@ -1,5 +1,5 @@
 /**
- * Copyright 2020 The Nakama Authors
+ * Copyright 2020 The Mezon Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -387,7 +387,7 @@ interface StatusUpdate {
         status?: string;
     };
 }
-/** A socket connection to Nakama server. */
+/** A socket connection to Mezon server. */
 export interface Socket {
     /** Connect to the server. */
     connect(session: Session, createStatus: boolean): Promise<Session>;
@@ -484,7 +484,7 @@ export interface SocketError {
     /** A message in English to help developers debug the response. */
     message: string;
 }
-/** A socket connection to Nakama server implemented with the DOM's WebSocket API. */
+/** A socket connection to Mezon server implemented with the DOM's WebSocket API. */
 export declare class DefaultSocket implements Socket {
     readonly host: string;
     readonly port: string;
