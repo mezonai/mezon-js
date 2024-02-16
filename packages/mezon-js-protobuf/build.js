@@ -15,7 +15,7 @@
 const { execSync } = require("child_process");
 
 function esbuild(args) {
-    execSync("npx esbuild --bundle index.ts --target=es6 --global-name=nakamajsprotobuf " + args)
+    execSync("npx esbuild --bundle index.ts --target=es6 --global-name=mezonjsprotobuf " + args)
 }
 
 // emit .d.ts files and perform type checking

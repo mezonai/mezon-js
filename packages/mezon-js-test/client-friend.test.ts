@@ -15,7 +15,7 @@
  */
 
 import {Page} from "puppeteer"
-import * as nakamajs from "@mezon/mezon-js/client";
+import * as mezonjs from "@mezon/mezon-js/client";
 import {createFacebookInstantGameAuthToken, createPage, generateid} from "./utils";
 import {describe, expect, it} from '@jest/globals'
 
@@ -28,9 +28,9 @@ describe('Friend Tests', () => {
     const customid2 = generateid();
 
     const result = await page.evaluate(async (customid1, customid2) => {
-      const client1 = new nakamajs.Client();
+      const client1 = new mezonjs.Client();
       const session1 = await client1.authenticateCustom(customid1);
-      const client2 = new nakamajs.Client();
+      const client2 = new mezonjs.Client();
       const session2 = await client2.authenticateCustom(customid2);
 
       await client1.addFriends(session1, [session2.user_id]);
@@ -49,9 +49,9 @@ describe('Friend Tests', () => {
     const customid2 = generateid();
 
     const result = await page.evaluate(async (customid1, customid2) => {
-      const client1 = new nakamajs.Client();
+      const client1 = new mezonjs.Client();
       const session1 = await client1.authenticateCustom(customid1);
-      const client2 = new nakamajs.Client();
+      const client2 = new mezonjs.Client();
       const session2 = await client2.authenticateCustom(customid2);
 
       await client1.addFriends(session1, [session2.user_id]);
@@ -70,9 +70,9 @@ describe('Friend Tests', () => {
     const customid2 = generateid();
 
     const result = await page.evaluate(async (customid1, customid2) => {
-      const client1 = new nakamajs.Client();
+      const client1 = new mezonjs.Client();
       const session1 = await client1.authenticateCustom(customid1);
-      const client2 = new nakamajs.Client();
+      const client2 = new mezonjs.Client();
       const session2 = await client2.authenticateCustom(customid2);
 
       await client1.blockFriends(session1, [session2.user_id]);
@@ -91,9 +91,9 @@ describe('Friend Tests', () => {
     const customid2 = generateid();
 
     const result = await page.evaluate(async (customid1, customid2) => {
-      const client1 = new nakamajs.Client();
+      const client1 = new mezonjs.Client();
       const session1 = await client1.authenticateCustom(customid1);
-      const client2 = new nakamajs.Client();
+      const client2 = new mezonjs.Client();
       const session2 = await client2.authenticateCustom(customid2);
 
       await client1.addFriends(session1, [session2.user_id]);
@@ -113,9 +113,9 @@ describe('Friend Tests', () => {
     const customid2 = generateid();
 
     const result = await page.evaluate(async (customid1, customid2) => {
-      const client1 = new nakamajs.Client();
+      const client1 = new mezonjs.Client();
       const session1 = await client1.authenticateCustom(customid1);
-      const client2 = new nakamajs.Client();
+      const client2 = new mezonjs.Client();
       const session2 = await client2.authenticateCustom(customid2);
 
       await client1.addFriends(session1, [session2.user_id]);
@@ -134,9 +134,9 @@ describe('Friend Tests', () => {
     const customid2 = generateid();
 
     const result = await page.evaluate(async (customid1, token2) => {
-      const client1 = new nakamajs.Client();
+      const client1 = new mezonjs.Client();
       const session1 = await client1.authenticateCustom(customid1);
-      const client2 = new nakamajs.Client();
+      const client2 = new mezonjs.Client();
       const session2 = await client2.authenticateFacebookInstantGame(token2, true);
       await client1.addFriends(session1, [session2.user_id]);
       return await client1.listFriends(session1);

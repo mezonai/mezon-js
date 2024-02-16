@@ -15,9 +15,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "2D02E47A1E0B4A5D006451C7"
-               BuildableName = "NakamaJsReactNativeExample-tvOS.app"
-               BlueprintName = "NakamaJsReactNativeExample-tvOS"
-               ReferencedContainer = "container:NakamaJsReactNativeExample.xcodeproj">
+               BuildableName = "MezonJsReactNativeExample-tvOS.app"
+               BlueprintName = "MezonJsReactNativeExample-tvOS"
+               ReferencedContainer = "container:MezonJsReactNativeExample.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -33,9 +33,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "2D02E48F1E0B4A5D006451C7"
-               BuildableName = "NakamaJsReactNativeExample-tvOSTests.xctest"
-               BlueprintName = "NakamaJsReactNativeExample-tvOSTests"
-               ReferencedContainer = "container:NakamaJsReactNativeExample.xcodeproj">
+               BuildableName = "MezonJsReactNativeExample-tvOSTests.xctest"
+               BlueprintName = "MezonJsReactNativeExample-tvOSTests"
+               ReferencedContainer = "container:MezonJsReactNativeExample.xcodeproj">
             </BuildableReference>
          </TestableReference>
       </Testables>
@@ -55,9 +55,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "2D02E47A1E0B4A5D006451C7"
-            BuildableName = "NakamaJsReactNativeExample-tvOS.app"
-            BlueprintName = "NakamaJsReactNativeExample-tvOS"
-            ReferencedContainer = "container:NakamaJsReactNativeExample.xcodeproj">
+            BuildableName = "MezonJsReactNativeExample-tvOS.app"
+            BlueprintName = "MezonJsReactNativeExample-tvOS"
+            ReferencedContainer = "container:MezonJsReactNativeExample.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </LaunchAction>
@@ -72,9 +72,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "2D02E47A1E0B4A5D006451C7"
-            BuildableName = "NakamaJsReactNativeExample-tvOS.app"
-            BlueprintName = "NakamaJsReactNativeExample-tvOS"
-            ReferencedContainer = "container:NakamaJsReactNativeExample.xcodeproj">
+            BuildableName = "MezonJsReactNativeExample-tvOS.app"
+            BlueprintName = "MezonJsReactNativeExample-tvOS"
+            ReferencedContainer = "container:MezonJsReactNativeExample.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </ProfileAction>

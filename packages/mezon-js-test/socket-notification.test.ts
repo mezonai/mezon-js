@@ -16,7 +16,7 @@
 
 
 import {Page} from "puppeteer";
-import * as nakamajs from "@mezon/mezon-js";
+import * as mezonjs from "@mezon/mezon-js";
 import {createPage, generateid} from "./utils";
 import {describe, expect, it} from '@jest/globals'
 
@@ -28,7 +28,7 @@ describe('Notification Tests', () => {
     const customid = generateid();
 
     const notifications = await page.evaluate(async (customid) => {
-      const client = new nakamajs.Client();
+      const client = new mezonjs.Client();
       const session = await client.authenticateCustom(customid);
       await client.rpc(session, "clientrpc.send_notification", {"user_id": session.user_id});
       await client.rpc(session, "clientrpc.send_notification", {"user_id": session.user_id});
@@ -51,7 +51,7 @@ describe('Notification Tests', () => {
     const customid = generateid();
 
     const response = await page.evaluate(async (customid) => {
-      const client = new nakamajs.Client();
+      const client = new mezonjs.Client();
       const session = await client.authenticateCustom(customid);
       const rpcSuccess = await client.rpc(session, "clientrpc.send_notification", {"user_id": session.user_id});
       const notificationsList = await client.listNotifications(session, 100, "");

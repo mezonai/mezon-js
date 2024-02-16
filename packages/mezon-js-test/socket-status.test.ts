@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-import * as nakamajs from "@mezon/mezon-js";
+import * as mezonjs from "@mezon/mezon-js";
 import {StatusPresenceEvent} from "@mezon/mezon-js/socket";
-import * as nakamajsprotobuf from "../mezon-js-protobuf";
+import * as mezonjsprotobuf from "../mezon-js-protobuf";
 import {generateid, createPage, adapters, AdapterType} from "./utils";
 import {describe, expect, it} from '@jest/globals'
 
@@ -29,9 +29,9 @@ describe('Status Tests', () => {
 
     const response = await page.evaluate(async (customid, adapter) => {
 
-      const client = new nakamajs.Client();
+      const client = new mezonjs.Client();
       const socket = client.createSocket(false, false,
-        adapter == AdapterType.Protobuf ? new nakamajsprotobuf.WebSocketAdapterPb() : new nakamajs.WebSocketAdapterText());
+        adapter == AdapterType.Protobuf ? new mezonjsprotobuf.WebSocketAdapterPb() : new mezonjs.WebSocketAdapterText());
 
       const session = await client.authenticateCustom(customid);
       await socket.connect(session, true);
@@ -49,13 +49,13 @@ describe('Status Tests', () => {
     const customid2 = generateid();
 
     const response = await page.evaluate(async (customid1, customid2, adapter) => {
-      const client1 = new nakamajs.Client();
-      const client2 = new nakamajs.Client();
+      const client1 = new mezonjs.Client();
+      const client2 = new mezonjs.Client();
       const socket2 = client2.createSocket(false, false,
-        adapter == AdapterType.Protobuf ? new nakamajsprotobuf.WebSocketAdapterPb() : new nakamajs.WebSocketAdapterText());
+        adapter == AdapterType.Protobuf ? new mezonjsprotobuf.WebSocketAdapterPb() : new mezonjs.WebSocketAdapterText());
 
       const socket1 = client1.createSocket(false, false,
-        adapter == AdapterType.Protobuf ? new nakamajsprotobuf.WebSocketAdapterPb() : new nakamajs.WebSocketAdapterText());
+        adapter == AdapterType.Protobuf ? new mezonjsprotobuf.WebSocketAdapterPb() : new mezonjs.WebSocketAdapterText());
 
       const session1 = await client1.authenticateCustom(customid1);
       const session2 = await client2.authenticateCustom(customid2);
@@ -88,10 +88,10 @@ describe('Status Tests', () => {
     const customid2 = generateid();
 
     const response = await page.evaluate(async (customid1, customid2, adapter) => {
-      const client1 = new nakamajs.Client();
-      const client2 = new nakamajs.Client();
+      const client1 = new mezonjs.Client();
+      const client2 = new mezonjs.Client();
       const socket1 = client1.createSocket(false, false,
-        adapter == AdapterType.Protobuf ? new nakamajsprotobuf.WebSocketAdapterPb() : new nakamajs.WebSocketAdapterText());
+        adapter == AdapterType.Protobuf ? new mezonjsprotobuf.WebSocketAdapterPb() : new mezonjs.WebSocketAdapterText());
 
       const session1 = await client1.authenticateCustom(customid1);
       const session2 = await client2.authenticateCustom(customid2);

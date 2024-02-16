@@ -15,7 +15,7 @@
  */
 
 
-import * as nakamajs from "@mezon/mezon-js";
+import * as mezonjs from "@mezon/mezon-js";
 import {createPage, generateid} from "./utils";
 import {Page} from "puppeteer";
 import {describe, expect, it} from '@jest/globals'
@@ -28,7 +28,7 @@ describe('Session Tests', () => {
     const expired = await page.evaluate(() => {
       const nowUnixEpoch = Math.floor(Date.now() / 1000);
       const expiredJwt = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1MTY5MTA5NzMsInVpZCI6ImY0MTU4ZjJiLTgwZjMtNDkyNi05NDZiLWE4Y2NmYzE2NTQ5MCIsInVzbiI6InZUR2RHSHl4dmwifQ.gzLaMQPaj5wEKoskOSALIeJLOYXEVFoPx3KY0Jm1EVU";
-      const session = nakamajs.Session.restore(expiredJwt, expiredJwt);
+      const session = mezonjs.Session.restore(expiredJwt, expiredJwt);
       return session.isexpired(nowUnixEpoch);
     });
 
@@ -40,7 +40,7 @@ describe('Session Tests', () => {
 
     const session = await page.evaluate(() => {
       const expiredJwt = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1MTY5MTA5NzMsInVpZCI6ImY0MTU4ZjJiLTgwZjMtNDkyNi05NDZiLWE4Y2NmYzE2NTQ5MCIsInVzbiI6InZUR2RHSHl4dmwifQ.gzLaMQPaj5wEKoskOSALIeJLOYXEVFoPx3KY0Jm1EVU";
-      return nakamajs.Session.restore(expiredJwt, expiredJwt);
+      return mezonjs.Session.restore(expiredJwt, expiredJwt);
     });
 
     expect(session.username).not.toBeNull();
@@ -54,7 +54,7 @@ describe('Session Tests', () => {
 
     const session = await page.evaluate(() => {
       const expiredJwt = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1MTY5MTA5NzMsInVpZCI6ImY0MTU4ZjJiLTgwZjMtNDkyNi05NDZiLWE4Y2NmYzE2NTQ5MCIsInVzbiI6InZUR2RHSHl4dmwifQ.gzLaMQPaj5wEKoskOSALIeJLOYXEVFoPx3KY0Jm1EVU";
-      return nakamajs.Session.restore(expiredJwt, expiredJwt);
+      return mezonjs.Session.restore(expiredJwt, expiredJwt);
     });
 
     expect(session.refresh_token).not.toBeNull();
@@ -67,7 +67,7 @@ describe('Session Tests', () => {
 
     await page.evaluate(() => {
       const expiredJwt = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1MTY5MTA5NzMsInVpZCI6ImY0MTU4ZjJiLTgwZjMtNDkyNi05NDZiLWE4Y2NmYzE2NTQ5MCIsInVzbiI6InZUR2RHSHl4dmwifQ.gzLaMQPaj5wEKoskOSALIeJLOYXEVFoPx3KY0Jm1EVU";
-      return nakamajs.Session.restore(expiredJwt, null);
+      return mezonjs.Session.restore(expiredJwt, null);
     });
   });
 
@@ -82,7 +82,7 @@ describe('Session Tests', () => {
             return new Promise(resolve => setTimeout(resolve, ms));
         }
 
-        const client = new nakamajs.Client();
+        const client = new mezonjs.Client();
         const session = await client.authenticateCustom(customId);
         const firstToken = session.token;
 
@@ -102,7 +102,7 @@ describe('Session Tests', () => {
     const customId = generateid();
 
     const status : any = await page.evaluate(async (customId) => {
-        const client = new nakamajs.Client();
+        const client = new mezonjs.Client();
         const session = await client.authenticateCustom(customId);
         await client.sessionLogout(session, session.token, session.refresh_token);
 
@@ -134,7 +134,7 @@ describe('Session Tests', () => {
             return new Promise(resolve => setTimeout(resolve, ms));
         }
 
-        const client = new nakamajs.Client();
+        const client = new mezonjs.Client();
         const session = await client.authenticateCustom(customId);
         const firstToken = session.token;
         session.expires_at = (Date.now() + client.expiredTimespanMs)/1000 - 1;

@@ -2,12 +2,12 @@
 <Workspace
    version = "1.0">
    <FileRef
-      location = "group:NakamaJsReactNativeExample.xcodeproj">
+      location = "group:MezonJsReactNativeExample.xcodeproj">
    </FileRef>
    <FileRef
       location = "group:Pods/Pods.xcodeproj">
    </FileRef>
    <FileRef
-      location = "group:NakamaJSReactNativeExample.xcodeproj">
+      location = "group:MezonJSReactNativeExample.xcodeproj">
    </FileRef>
 </Workspace>

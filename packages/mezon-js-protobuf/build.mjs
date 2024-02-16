@@ -20,7 +20,7 @@ const config = {
   entryPoints: ['index.ts'],
   bundle: true,
   target: 'es6',
-  globalName: 'nakamajsprotobuf'
+  globalName: 'mezonjsprotobuf'
 };
 
 // Build CommonJS

@@ -3,12 +3,12 @@ require_relative '../node_modules/@react-native-community/cli-platform-ios/nativ
 
 platform :ios, '14.0'
 
-target 'NakamaJsReactNativeExample' do
+target 'MezonJsReactNativeExample' do
   config = use_native_modules!
 
   use_react_native!(:path => config["reactNativePath"])
 
-  target 'NakamaJsReactNativeExampleTests' do
+  target 'MezonJsReactNativeExampleTests' do
     inherit! :complete
     # Pods for testing
   end
@@ -23,10 +23,10 @@ target 'NakamaJsReactNativeExample' do
   end
 end
 
-target 'NakamaJsReactNativeExample-tvOS' do
-  # Pods for NakamaJsReactNativeExample-tvOS
+target 'MezonJsReactNativeExample-tvOS' do
+  # Pods for MezonJsReactNativeExample-tvOS
 
-  target 'NakamaJsReactNativeExample-tvOSTests' do
+  target 'MezonJsReactNativeExample-tvOSTests' do
     inherit! :search_paths
     # Pods for testing
   end

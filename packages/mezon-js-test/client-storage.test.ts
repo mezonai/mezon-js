@@ -16,7 +16,7 @@
 
 
 import {Page} from "puppeteer"
-import * as nakamajs from "@mezon/mezon-js";
+import * as mezonjs from "@mezon/mezon-js";
 import {createPage, generateid} from "./utils"
 import {describe, expect, it} from '@jest/globals'
 
@@ -32,7 +32,7 @@ describe('Storage Tests', () => {
     const value = {"hello": "world"};
 
     const result = await page.evaluate(async (customid, collection, key, value) => {
-      const client = new nakamajs.Client();
+      const client = new mezonjs.Client();
       const session = await client.authenticateCustom(customid);
       await client.writeStorageObjects(session, [
         {
@@ -70,7 +70,7 @@ describe('Storage Tests', () => {
     const value = {"hello": "world"};
 
     const result = await page.evaluate(async (customid, collection, key, value) => {
-      const client = new nakamajs.Client();
+      const client = new mezonjs.Client();
       const session = await client.authenticateCustom(customid);
       await client.writeStorageObjects(session,[
         {
@@ -109,7 +109,7 @@ describe('Storage Tests', () => {
     const value = {"hello": "world"};
 
     const result = await page.evaluate(async (customid, collection, key, value) => {
-      const client = new nakamajs.Client();
+      const client = new mezonjs.Client();
       const session = await client.authenticateCustom(customid);
 
       await client.writeStorageObjects(session,[

@@ -17,7 +17,7 @@
 const base64url = require("base64url");
 const crypto = require("crypto");
 import {Page} from "puppeteer"
-import * as nakamajs from "@mezon/mezon-js";
+import * as mezonjs from "@mezon/mezon-js";
 import {createPage, generateid} from "./utils";
 import {describe, expect, it} from '@jest/globals'
 
@@ -30,7 +30,7 @@ describe('Link / Unlink Tests', () => {
     const deviceid = generateid();
 
     const account = await page.evaluate(async (customid, deviceid) => {
-      const client = new nakamajs.Client();
+      const client = new mezonjs.Client();
       const session = await client.authenticateCustom(customid)
       await client.linkDevice(session, { id: deviceid });
       return await client.getAccount(session);
@@ -48,7 +48,7 @@ describe('Link / Unlink Tests', () => {
     const deviceid = generateid();
 
     const account = await page.evaluate(async (customid, deviceid) => {
-      const client = new nakamajs.Client();
+      const client = new mezonjs.Client();
       const session = await client.authenticateCustom(customid);
       await client.linkDevice(session, { id: deviceid });
       await client.unlinkDevice(session, {id: deviceid });
@@ -85,7 +85,7 @@ describe('Link / Unlink Tests', () => {
     const customid = generateid();
 
     const account = await page.evaluate(async (customid, token) => {
-      const client = new nakamajs.Client();
+      const client = new mezonjs.Client();
       const session = await client.authenticateCustom(customid);
       await client.linkFacebookInstantGame(session, { signed_player_info: token });
       return await client.getAccount(session);
@@ -123,7 +123,7 @@ describe('Link / Unlink Tests', () => {
     const customid = generateid();
 
     const account = await page.evaluate(async (customid, token) => {
-      const client = new nakamajs.Client();
+      const client = new mezonjs.Client();
       const session = await client.authenticateCustom(customid);
       await client.linkFacebookInstantGame(session, { signed_player_info: token });
       await client.unlinkFacebookInstantGame(session, { signed_player_info: token });

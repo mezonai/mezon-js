@@ -533,7 +533,7 @@
   var _decode = _hasBuffer ? (a) => Buffer.from(a, "base64").toString("utf8") : _TD ? (a) => _TD.decode(_toUint8Array(a)) : (a) => btou(_atob(a));
   var _unURI = (a) => _tidyB64(a.replace(/[-_]/g, (m0) => m0 == "-" ? "+" : "/"));
   var decode = (src) => _decode(_unURI(src));
-  var NakamaApi = class {
+  var MezonApi = class {
     constructor(configuration) {
       this.configuration = configuration;
     }
@@ -1776,7 +1776,7 @@
         password: "",
         timeoutMs: timeout
       };
-      this.apiClient = new NakamaApi(this.configuration);
+      this.apiClient = new MezonApi(this.configuration);
     }
     addGroupUsers(session, groupId, ids) {
       this.configuration.bearerToken = session && session.token;

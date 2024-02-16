@@ -307,7 +307,7 @@ func enumDescriptions(def Definition) (output []string) {
 }
 
 func stripOperationPrefix(input string) string {
-	return strings.Replace(input, "Nakama_", "", 1)
+	return strings.Replace(input, "Mezon_", "", 1)
 }
 
 func convertRefToClassName(input string) (className string) {
