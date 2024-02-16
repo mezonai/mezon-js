@@ -636,6 +636,8 @@ export declare class Client {
     createLinkInviteUser(session: Session, request: ApiLinkInviteUserRequest): Promise<ApiLinkInviteUser>;
     /** Get link invite user */
     getLinkInvite(session: Session, inviteId: string): Promise<ApiInviteUserRes>;
+    /** Get permission of user in the clan */
+    GetPermissionOfUserInTheClan(session: Session, clanId: string): Promise<ApiPermissionList>;
     /** invite user */
     inviteUser(session: Session, inviteId: string): Promise<ApiInviteUserRes>;
     /** Write storage objects. */

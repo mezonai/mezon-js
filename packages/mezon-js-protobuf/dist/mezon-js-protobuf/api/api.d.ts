@@ -1313,6 +1313,11 @@ export interface ListRoleUsersRequest {
     /** An optional next page cursor. */
     cursor: string;
 }
+/** List Permission Of User In The Clan. */
+export interface ListPermissionOfUsersRequest {
+    /** clan_id. */
+    clan_id: string;
+}
 export interface RoleUserList {
     /** role_users pairs for a clan. */
     role_users: RoleUserList_RoleUser[];
@@ -8220,6 +8225,22 @@ export declare const ListRoleUsersRequest: {
         limit?: number | undefined;
         cursor?: string | undefined;
     } & { [K_1 in Exclude<keyof I_1, keyof ListRoleUsersRequest>]: never; }>(object: I_1): ListRoleUsersRequest;
+};
+export declare const ListPermissionOfUsersRequest: {
+    encode(message: ListPermissionOfUsersRequest, writer?: _m0.Writer): _m0.Writer;
+    decode(input: _m0.Reader | Uint8Array, length?: number): ListPermissionOfUsersRequest;
+    fromJSON(object: any): ListPermissionOfUsersRequest;
+    toJSON(message: ListPermissionOfUsersRequest): unknown;
+    create<I extends {
+        clan_id?: string | undefined;
+    } & {
+        clan_id?: string | undefined;
+    } & { [K in Exclude<keyof I, "clan_id">]: never; }>(base?: I | undefined): ListPermissionOfUsersRequest;
+    fromPartial<I_1 extends {
+        clan_id?: string | undefined;
+    } & {
+        clan_id?: string | undefined;
+    } & { [K_1 in Exclude<keyof I_1, "clan_id">]: never; }>(object: I_1): ListPermissionOfUsersRequest;
 };
 export declare const RoleUserList: {
     encode(message: RoleUserList, writer?: _m0.Writer): _m0.Writer;

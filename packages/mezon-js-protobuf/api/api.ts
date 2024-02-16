@@ -1800,6 +1800,12 @@ export interface ListRoleUsersRequest {
   cursor: string;
 }
 
+/** List Permission Of User In The Clan. */
+export interface ListPermissionOfUsersRequest {
+  /** clan_id. */
+  clan_id: string;
+}
+
 export interface RoleUserList {
   /** role_users pairs for a clan. */
   role_users: RoleUserList_RoleUser[];
@@ -12157,6 +12163,57 @@ export const ListRoleUsersRequest = {
     message.role_id = object.role_id ?? undefined;
     message.limit = object.limit ?? undefined;
     message.cursor = object.cursor ?? "";
+    return message;
+  },
+};
+
+function createBaseListPermissionOfUsersRequest(): ListPermissionOfUsersRequest {
+  return { clan_id: "" };
+}
+
+export const ListPermissionOfUsersRequest = {
+  encode(message: ListPermissionOfUsersRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.clan_id !== "") {
+      writer.uint32(10).string(message.clan_id);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): ListPermissionOfUsersRequest {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseListPermissionOfUsersRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.clan_id = reader.string();
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): ListPermissionOfUsersRequest {
+    return { clan_id: isSet(object.clan_id) ? String(object.clan_id) : "" };
+  },
+
+  toJSON(message: ListPermissionOfUsersRequest): unknown {
+    const obj: any = {};
+    message.clan_id !== undefined && (obj.clan_id = message.clan_id);
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<ListPermissionOfUsersRequest>, I>>(base?: I): ListPermissionOfUsersRequest {
+    return ListPermissionOfUsersRequest.fromPartial(base ?? {});
+  },
+
+  fromPartial<I extends Exact<DeepPartial<ListPermissionOfUsersRequest>, I>>(object: I): ListPermissionOfUsersRequest {
+    const message = createBaseListPermissionOfUsersRequest();
+    message.clan_id = object.clan_id ?? "";
     return message;
   },
 };

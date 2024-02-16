@@ -656,6 +656,8 @@ export declare class MezonApi {
     deleteNotifications(bearerToken: string, ids?: Array<string>, options?: any): Promise<any>;
     /** Fetch list of notifications. */
     listNotifications(bearerToken: string, limit?: number, cacheableCursor?: string, options?: any): Promise<ApiNotificationList>;
+    /**  */
+    GetPermissionOfUserInTheClan(bearerToken: string, clanId: string, options?: any): Promise<ApiPermissionList>;
     /** List user roles */
     listRoles(bearerToken: string, limit?: number, state?: number, cursor?: string, clanId?: string, options?: any): Promise<ApiRoleList>;
     /** Create a new role for clan. */
