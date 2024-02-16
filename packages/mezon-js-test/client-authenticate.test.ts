@@ -15,7 +15,7 @@
  */
 
 import {Page} from "puppeteer";
-import * as nakamajs from "@mezon/mezon-js";
+import * as mezonjs from "@mezon/mezon-js";
 import {createPage, createFacebookInstantGameAuthToken, generateid} from "./utils";
 import {describe, expect, it} from '@jest/globals'
 
@@ -28,7 +28,7 @@ describe('Authenticate Tests', () => {
     const password = generateid();
 
     const session = await page.evaluate(async (email, password) => {
-      const client = new nakamajs.Client();
+      const client = new mezonjs.Client();
       const promise = client.authenticateEmail(email, password);
       return promise;
     }, email, password);
@@ -43,7 +43,7 @@ describe('Authenticate Tests', () => {
     const deviceid = generateid();
 
     const session = await page.evaluate((deviceid) => {
-      const client = new nakamajs.Client();
+      const client = new mezonjs.Client();
       return client.authenticateDevice(deviceid);
     }, deviceid);
 
@@ -57,7 +57,7 @@ describe('Authenticate Tests', () => {
     const customid = generateid();
 
     const session = await page.evaluate((customid) => {
-      const client = new nakamajs.Client();
+      const client = new mezonjs.Client();
       return client.authenticateCustom(customid);
     }, customid);
 
@@ -75,7 +75,7 @@ describe('Authenticate Tests', () => {
       let vars = {};
       vars["testString"] = "testValue";
 
-      const client = new nakamajs.Client();
+      const client = new mezonjs.Client();
       return client.authenticateCustom(customid, true, customUsername, vars);
     }, customid, customUsername);
 
@@ -91,7 +91,7 @@ describe('Authenticate Tests', () => {
 
     const customid = generateid();
     const result = await page.evaluate(async (customid) => {
-      const client = new nakamajs.Client();
+      const client = new mezonjs.Client();
       try {
         // Expects exception.
         return await client.authenticateCustom(customid, false);
@@ -109,7 +109,7 @@ describe('Authenticate Tests', () => {
     const customid = "someuniquecustomid";
 
     const session = await page.evaluate(async (customid) => {
-      const client = new nakamajs.Client();
+      const client = new mezonjs.Client();
       await client.authenticateCustom(customid);
       return await client.authenticateCustom(customid);
     }, customid);
@@ -122,7 +122,7 @@ describe('Authenticate Tests', () => {
     const page : Page = await createPage();
 
     const result = await page.evaluate(async () => {
-      const client = new nakamajs.Client();
+      const client = new mezonjs.Client();
       try {
         // Expects exception.
         return await client.authenticateCustom("");
@@ -139,7 +139,7 @@ describe('Authenticate Tests', () => {
     const page : Page = await createPage();
 
     const session = await page.evaluate((token) => {
-      const client = new nakamajs.Client();
+      const client = new mezonjs.Client();
       return client.authenticateFacebookInstantGame(token);
     }, token);
 

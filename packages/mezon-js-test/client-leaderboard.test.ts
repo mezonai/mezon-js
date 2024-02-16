@@ -15,7 +15,7 @@
  */
 
 import {Page} from "puppeteer"
-import * as nakamajs from "@mezon/mezon-js";
+import * as mezonjs from "@mezon/mezon-js";
 import {createPage, generateid} from "./utils"
 import {describe, expect, it} from '@jest/globals'
 
@@ -34,7 +34,7 @@ describe('Leaderboard Tests', () => {
     };
 
     const result = await page.evaluate(async (customid, rpcid, operator, score) => {
-      const client = new nakamajs.Client();
+      const client = new mezonjs.Client();
       const session = await client.authenticateCustom(customid)
       const result = await client.rpc(session, rpcid, {"operator": operator});
       const leaderboardId =(<any>result.payload).leaderboard_id;
@@ -61,7 +61,7 @@ describe('Leaderboard Tests', () => {
     };
 
     const result = await page.evaluate(async (customid, rpcid, operator, score) => {
-      const client = new nakamajs.Client();
+      const client = new mezonjs.Client();
       const session = await client.authenticateCustom(customid)
       const result = await client.rpc(session, rpcid, {"operator": operator});
       const leaderboardId = (<any>result.payload).leaderboard_id;
@@ -92,7 +92,7 @@ describe('Leaderboard Tests', () => {
     };
 
     const result = await page.evaluate(async (customid, rpcid, operator, score) => {
-      const client = new nakamajs.Client();
+      const client = new mezonjs.Client();
       const session = await client.authenticateCustom(customid);
       const result = await client.rpc(session, rpcid, {"operator": operator});
       const leaderboardId = (<any>result.payload).leaderboard_id;
@@ -123,7 +123,7 @@ describe('Leaderboard Tests', () => {
     };
 
     const result = await page.evaluate(async (customid, rpcid, operator, score) => {
-      const client = new nakamajs.Client();
+      const client = new mezonjs.Client();
       const session = await client.authenticateCustom(customid);
 
       const result = await client.rpc(session, rpcid, {"operator": operator});

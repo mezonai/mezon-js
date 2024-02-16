@@ -16,7 +16,7 @@
 
 
 import {Page} from "puppeteer"
-import * as nakamajs from "@mezon/mezon-js";
+import * as mezonjs from "@mezon/mezon-js";
 import {createPage, generateid} from "./utils";
 import {describe, expect, it} from '@jest/globals'
 
@@ -28,7 +28,7 @@ describe('User Tests', () => {
     const customid = generateid();
 
     const account = await page.evaluate(async (customid) => {
-      const client = new nakamajs.Client();
+      const client = new mezonjs.Client();
       return client.authenticateCustom(customid)
         .then(session => {
           return client.getAccount(session);
@@ -59,7 +59,7 @@ describe('User Tests', () => {
     const loc = "california";
 
     const account = await page.evaluate(async (customid, displayName, avatar, lang, loc) => {
-      const client = new nakamajs.Client();
+      const client = new mezonjs.Client();
       const session = await client.authenticateCustom(customid);
 
       await client.updateAccount(session, {
@@ -89,7 +89,7 @@ describe('User Tests', () => {
     const customid = generateid();
 
     const account = await page.evaluate(async (customid) => {
-      const client = new nakamajs.Client();
+      const client = new mezonjs.Client();
       const session = await client.authenticateCustom(customid);
       const success = await client.updateAccount(session, {
         username: session.username
@@ -108,7 +108,7 @@ describe('User Tests', () => {
     const customid2 = generateid();
 
     const users = await page.evaluate(async (customid, customid2) => {
-      const client = new nakamajs.Client();
+      const client = new mezonjs.Client();
       const session1 = await client.authenticateCustom(customid);
       const session2 = await client.authenticateCustom(customid2)
       return await client.getUsers(session2, [session1.user_id], [session2.username], []);
@@ -125,7 +125,7 @@ describe('User Tests', () => {
     const customid = generateid();
 
     const response = await page.evaluate(async (customid) => {
-      const client = new nakamajs.Client();
+      const client = new mezonjs.Client();
       const session = await client.authenticateCustom(customid);
       return await client.getUsers(session, [], [], []);
     }, customid);

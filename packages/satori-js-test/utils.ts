@@ -44,11 +44,11 @@ export async function createPage(): Promise<Page> {
     page.on('error', handlePageError);
     page.on('pageerror', handlePageError);
 
-    const nakamaJsLib = fs.readFileSync(__dirname + '/../mezon-js/dist/mezon-js.iife.js', 'utf8');
-    const nakamaJsProtobufLib = fs.readFileSync(__dirname + '/../mezon-js-protobuf/dist/mezon-js-protobuf.iife.js', 'utf8');
+    const mezonJsLib = fs.readFileSync(__dirname + '/../mezon-js/dist/mezon-js.iife.js', 'utf8');
+    const mezonJsProtobufLib = fs.readFileSync(__dirname + '/../mezon-js-protobuf/dist/mezon-js-protobuf.iife.js', 'utf8');
 
-    await page.evaluateOnNewDocument(nakamaJsLib);
-    await page.evaluateOnNewDocument(nakamaJsProtobufLib);
+    await page.evaluateOnNewDocument(mezonJsLib);
+    await page.evaluateOnNewDocument(mezonJsProtobufLib);
     await page.evaluateOnNewDocument(() => {
         globalThis.timeoutPromise = function(ms) {
             return new Promise(resolve => setTimeout(resolve, ms));

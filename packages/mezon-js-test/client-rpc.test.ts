@@ -16,7 +16,7 @@
 
 
 import {Page} from "puppeteer"
-import * as nakamajs from "@mezon/mezon-js";
+import * as mezonjs from "@mezon/mezon-js";
 import {createPage, generateid} from "./utils"
 import {describe, expect, it} from '@jest/globals'
 
@@ -29,7 +29,7 @@ describe('RPC Tests', () => {
     const rpcid = "clientrpc.rpc_get";
 
     const rpcResult = await page.evaluate(async (customid, rpcid) => {
-      const client = new nakamajs.Client();
+      const client = new mezonjs.Client();
       const session = await client.authenticateCustom(customid)
       return await client.rpc(session, rpcid, {});
     }, customid, rpcid);
@@ -47,7 +47,7 @@ describe('RPC Tests', () => {
     };
 
     const rpcResult = await page.evaluate(async (customid, rpcid, request) => {
-      const client = new nakamajs.Client();
+      const client = new mezonjs.Client();
       const session = await client.authenticateCustom(customid)
       return await client.rpc(session, rpcid, request);
     }, customid, rpcid, request);
@@ -64,7 +64,7 @@ describe('RPC Tests', () => {
     const HTTP_KEY = "defaulthttpkey";
 
     const rpcResult = await page.evaluate(async (rpcid, HTTP_KEY) => {
-      const client = new nakamajs.Client();
+      const client = new mezonjs.Client();
       return await client.rpcHttpKey(HTTP_KEY, rpcid, null!);
     }, rpcid, HTTP_KEY);
 

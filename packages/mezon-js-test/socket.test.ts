@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-import * as nakamajs from "@mezon/mezon-js";
+import * as mezonjs from "@mezon/mezon-js";
 import {StreamData} from "@mezon/mezon-js/socket"
-import * as nakamajsprotobuf from "../mezon-js-protobuf";
+import * as mezonjsprotobuf from "../mezon-js-protobuf";
 import {generateid, createPage, adapters, AdapterType} from "./utils"
 import {describe, expect, it} from '@jest/globals'
 
@@ -28,11 +28,11 @@ describe('Socket Message Tests', () => {
     const customid = generateid();
 
     const session = await page.evaluate(async (customid, adapter) => {
-      const client = new nakamajs.Client();
+      const client = new mezonjs.Client();
       const session = await client.authenticateCustom(customid);
 
       const socket = client.createSocket(false, false,
-        adapter == AdapterType.Protobuf ? new nakamajsprotobuf.WebSocketAdapterPb() : new nakamajs.WebSocketAdapterText());
+        adapter == AdapterType.Protobuf ? new mezonjsprotobuf.WebSocketAdapterPb() : new mezonjs.WebSocketAdapterText());
 
       await socket.connect(session, false);
       socket.disconnect(false);
@@ -47,9 +47,9 @@ describe('Socket Message Tests', () => {
     const PAYLOAD = JSON.stringify({ "hello": "world" });
 
     const response = await page.evaluate(async (customid, id, payload, adapter) => {
-      const client = new nakamajs.Client();
+      const client = new mezonjs.Client();
       const socket = client.createSocket(false, false,
-        adapter == AdapterType.Protobuf ? new nakamajsprotobuf.WebSocketAdapterPb() : new nakamajs.WebSocketAdapterText());
+        adapter == AdapterType.Protobuf ? new mezonjsprotobuf.WebSocketAdapterPb() : new mezonjs.WebSocketAdapterText());
 
       var promise1 = new Promise<StreamData>((resolve, reject) => {
         socket.onstreamdata = (streamdata) => {

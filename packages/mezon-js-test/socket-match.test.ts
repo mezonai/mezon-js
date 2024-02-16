@@ -15,9 +15,9 @@
  */
 
 
-import * as nakamajs from "@mezon/mezon-js";
+import * as mezonjs from "@mezon/mezon-js";
 import {Match, MatchData, MatchPresenceEvent, Presence} from "@mezon/mezon-js/socket"
-import * as nakamajsprotobuf from "../mezon-js-protobuf";
+import * as mezonjsprotobuf from "../mezon-js-protobuf";
 import {adapters, createPage, generateid, AdapterType} from "./utils"
 import {describe, expect, it} from '@jest/globals'
 import { ApiMatch } from "@mezon/mezon-js/dist/api.gen";
@@ -29,9 +29,9 @@ describe('Match Tests', () => {
 
     const customid = generateid();
     const match = await page.evaluate(async (customid, adapter) => {
-      const client = new nakamajs.Client();
+      const client = new mezonjs.Client();
       const socket = client.createSocket(false, false,
-        adapter == AdapterType.Protobuf ? new nakamajsprotobuf.WebSocketAdapterPb() : new nakamajs.WebSocketAdapterText());
+        adapter == AdapterType.Protobuf ? new mezonjsprotobuf.WebSocketAdapterPb() : new mezonjs.WebSocketAdapterText());
 
       const session = await client.authenticateCustom(customid);
       await socket.connect(session, false);
@@ -52,9 +52,9 @@ describe('Match Tests', () => {
     const customid = generateid();
 
     const match : Match = await page.evaluate(async (customid, adapter) => {
-      const client = new nakamajs.Client();
+      const client = new mezonjs.Client();
       const socket = client.createSocket(false, false,
-        adapter == AdapterType.Protobuf ? new nakamajsprotobuf.WebSocketAdapterPb() : new nakamajs.WebSocketAdapterText());
+        adapter == AdapterType.Protobuf ? new mezonjsprotobuf.WebSocketAdapterPb() : new mezonjs.WebSocketAdapterText());
 
       const session = await client.authenticateCustom(customid);
       await socket.connect(session, false);
@@ -78,9 +78,9 @@ describe('Match Tests', () => {
     const customid = generateid();
 
     const response = await page.evaluate(async (customid, adapter) => {
-      const client = new nakamajs.Client();
+      const client = new mezonjs.Client();
       const socket = client.createSocket(false, false,
-        adapter == AdapterType.Protobuf ? new nakamajsprotobuf.WebSocketAdapterPb() : new nakamajs.WebSocketAdapterText());
+        adapter == AdapterType.Protobuf ? new mezonjsprotobuf.WebSocketAdapterPb() : new mezonjs.WebSocketAdapterText());
 
       const session = await client.authenticateCustom(customid);
       await socket.connect(session, false);
@@ -100,14 +100,14 @@ describe('Match Tests', () => {
     const outerPayload = { "hello": "world" };
 
     const matchDataString = await page.evaluate(async (customid1, customid2, innerPayload, adapter) => {
-      const client1 = new nakamajs.Client();
-      const client2 = new nakamajs.Client();
+      const client1 = new mezonjs.Client();
+      const client2 = new mezonjs.Client();
 
       const socket1 = client1.createSocket(false, false,
-        adapter == AdapterType.Protobuf ? new nakamajsprotobuf.WebSocketAdapterPb() : new nakamajs.WebSocketAdapterText());
+        adapter == AdapterType.Protobuf ? new mezonjsprotobuf.WebSocketAdapterPb() : new mezonjs.WebSocketAdapterText());
 
       const socket2 = client2.createSocket(false, false,
-        adapter == AdapterType.Protobuf ? new nakamajsprotobuf.WebSocketAdapterPb() : new nakamajs.WebSocketAdapterText());
+        adapter == AdapterType.Protobuf ? new mezonjsprotobuf.WebSocketAdapterPb() : new mezonjs.WebSocketAdapterText());
 
       var promise1 = new Promise<string>((resolve, reject) => {
         socket2.onmatchdata = (matchdata) => {
@@ -145,13 +145,13 @@ describe('Match Tests', () => {
     const outerPayload = { "hello": "world" };
 
     const matchDataString = await page.evaluate(async (customid1, customid2, customid3, innerPayload, adapter) => {
-      const client1 = new nakamajs.Client();
-      const client2 = new nakamajs.Client();
-      const client3 = new nakamajs.Client();
+      const client1 = new mezonjs.Client();
+      const client2 = new mezonjs.Client();
+      const client3 = new mezonjs.Client();
 
-      const socket1 = client1.createSocket(false, false, adapter == AdapterType.Protobuf ? new nakamajsprotobuf.WebSocketAdapterPb() : new nakamajs.WebSocketAdapterText());
-      const socket2 = client2.createSocket(false, false, adapter == AdapterType.Protobuf ? new nakamajsprotobuf.WebSocketAdapterPb() : new nakamajs.WebSocketAdapterText());
-      const socket3 = client3.createSocket(false, false, adapter == AdapterType.Protobuf ? new nakamajsprotobuf.WebSocketAdapterPb() : new nakamajs.WebSocketAdapterText());
+      const socket1 = client1.createSocket(false, false, adapter == AdapterType.Protobuf ? new mezonjsprotobuf.WebSocketAdapterPb() : new mezonjs.WebSocketAdapterText());
+      const socket2 = client2.createSocket(false, false, adapter == AdapterType.Protobuf ? new mezonjsprotobuf.WebSocketAdapterPb() : new mezonjs.WebSocketAdapterText());
+      const socket3 = client3.createSocket(false, false, adapter == AdapterType.Protobuf ? new mezonjsprotobuf.WebSocketAdapterPb() : new mezonjs.WebSocketAdapterText());
 
       const session1 = await client1.authenticateCustom(customid1);
       await socket1.connect(session1, false);
@@ -202,13 +202,13 @@ describe('Match Tests', () => {
     const PAYLOAD = { "hello": "world" };
 
     const timeout = await page.evaluate(async (customid1, customid2, customid3, payload, adapter) => {
-      const client1 = new nakamajs.Client();
-      const client2 = new nakamajs.Client();
-      const client3 = new nakamajs.Client();
+      const client1 = new mezonjs.Client();
+      const client2 = new mezonjs.Client();
+      const client3 = new mezonjs.Client();
 
-      const socket1 = client1.createSocket(false, false, adapter == AdapterType.Protobuf ? new nakamajsprotobuf.WebSocketAdapterPb() : new nakamajs.WebSocketAdapterText());
-      const socket2 = client2.createSocket(false, false, adapter == AdapterType.Protobuf ? new nakamajsprotobuf.WebSocketAdapterPb() : new nakamajs.WebSocketAdapterText());
-      const socket3 = client3.createSocket(false, false, adapter == AdapterType.Protobuf ? new nakamajsprotobuf.WebSocketAdapterPb() : new nakamajs.WebSocketAdapterText());
+      const socket1 = client1.createSocket(false, false, adapter == AdapterType.Protobuf ? new mezonjsprotobuf.WebSocketAdapterPb() : new mezonjs.WebSocketAdapterText());
+      const socket2 = client2.createSocket(false, false, adapter == AdapterType.Protobuf ? new mezonjsprotobuf.WebSocketAdapterPb() : new mezonjs.WebSocketAdapterText());
+      const socket3 = client3.createSocket(false, false, adapter == AdapterType.Protobuf ? new mezonjsprotobuf.WebSocketAdapterPb() : new mezonjs.WebSocketAdapterText());
 
       const session1 = await client1.authenticateCustom(customid1);
       await socket1.connect(session1, false);
@@ -261,8 +261,8 @@ describe('Match Tests', () => {
     const ID = "clientrpc.create_authoritative_match";
 
     const response = await page.evaluate(async (customid, id, adapter) => {
-      const client = new nakamajs.Client();
-      const socket = client.createSocket(false, false, adapter == AdapterType.Protobuf ? new nakamajsprotobuf.WebSocketAdapterPb() : new nakamajs.WebSocketAdapterText());
+      const client = new mezonjs.Client();
+      const socket = client.createSocket(false, false, adapter == AdapterType.Protobuf ? new mezonjsprotobuf.WebSocketAdapterPb() : new mezonjs.WebSocketAdapterText());
 
       const session = await client.authenticateCustom(customid);
       await socket.connect(session, false);
@@ -281,9 +281,9 @@ describe('Match Tests', () => {
     const ID = "clientrpc.create_authoritative_match";
 
     const response = await page.evaluate(async (customid, id, adapter) => {
-      const client = new nakamajs.Client();
+      const client = new mezonjs.Client();
       const socket = client.createSocket(false, false,
-        adapter == AdapterType.Protobuf ? new nakamajsprotobuf.WebSocketAdapterPb() : new nakamajs.WebSocketAdapterText());
+        adapter == AdapterType.Protobuf ? new mezonjsprotobuf.WebSocketAdapterPb() : new mezonjs.WebSocketAdapterText());
 
       const session = await client.authenticateCustom(customid);
       await socket.connect(session, false);
@@ -305,9 +305,9 @@ describe('Match Tests', () => {
     const ID = "clientrpc.create_authoritative_match";
 
     const response = await page.evaluate(async (customid, id, adapter) => {
-      const client = new nakamajs.Client();
+      const client = new mezonjs.Client();
       const socket = client.createSocket(false, false,
-        adapter == AdapterType.Protobuf ? new nakamajsprotobuf.WebSocketAdapterPb() : new nakamajs.WebSocketAdapterText());
+        adapter == AdapterType.Protobuf ? new mezonjsprotobuf.WebSocketAdapterPb() : new mezonjs.WebSocketAdapterText());
 
       const session = await client.authenticateCustom(customid);
       await socket.connect(session, false);
@@ -339,9 +339,9 @@ describe('Match Tests', () => {
     const ID = "clientrpc.create_authoritative_match";
 
     const response = await page.evaluate(async (customid, id, convoId1, convoId2, convoId3, adapter) => {
-      const client = new nakamajs.Client();
+      const client = new mezonjs.Client();
       const socket = client.createSocket(false, false,
-        adapter == AdapterType.Protobuf ? new nakamajsprotobuf.WebSocketAdapterPb() : new nakamajs.WebSocketAdapterText());
+        adapter == AdapterType.Protobuf ? new mezonjsprotobuf.WebSocketAdapterPb() : new mezonjs.WebSocketAdapterText());
 
       const session = await client.authenticateCustom(customid);
       await socket.connect(session, false);

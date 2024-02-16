@@ -15,8 +15,8 @@
  */
 
 
-import * as nakamajs from "@mezon/mezon-js";
-import * as nakamajsprotobuf from "../mezon-js-protobuf";
+import * as mezonjs from "@mezon/mezon-js";
+import * as mezonjsprotobuf from "../mezon-js-protobuf";
 import {generateid, createPage, adapters, AdapterType} from "./utils";
 import {describe, expect, it} from '@jest/globals'
 
@@ -30,10 +30,10 @@ describe('Channel Tests', () => {
 
     const response = await page.evaluate(async (customid, channelid, adapter) => {
 
-      const client = new nakamajs.Client();
+      const client = new mezonjs.Client();
 
         const socket = client.createSocket(false, false,
-           adapter == AdapterType.Protobuf ? new nakamajsprotobuf.WebSocketAdapterPb() : new nakamajs.WebSocketAdapterText());
+           adapter == AdapterType.Protobuf ? new mezonjsprotobuf.WebSocketAdapterPb() : new mezonjs.WebSocketAdapterText());
 
         const session = await client.authenticateCustom(customid)
         await socket.connect(session, false);
@@ -56,9 +56,9 @@ describe('Channel Tests', () => {
 
     const response = await page.evaluate(async (customid, channelid, adapter) => {
 
-      const client = new nakamajs.Client();
+      const client = new mezonjs.Client();
       const socket = client.createSocket(false, true,
-        adapter == AdapterType.Protobuf ? new nakamajsprotobuf.WebSocketAdapterPb() : new nakamajs.WebSocketAdapterText());
+        adapter == AdapterType.Protobuf ? new mezonjsprotobuf.WebSocketAdapterPb() : new mezonjs.WebSocketAdapterText());
 
       const session = await client.authenticateCustom(customid)
       await socket.connect(session, false);
@@ -79,9 +79,9 @@ describe('Channel Tests', () => {
 
     const response = await page.evaluate(async (customid, group_name, adapter) => {
 
-      const client = new nakamajs.Client();
+      const client = new mezonjs.Client();
       const socket = client.createSocket(false, false,
-        adapter == AdapterType.Protobuf ? new nakamajsprotobuf.WebSocketAdapterPb() : new nakamajs.WebSocketAdapterText());
+        adapter == AdapterType.Protobuf ? new mezonjsprotobuf.WebSocketAdapterPb() : new mezonjs.WebSocketAdapterText());
 
       const session = await client.authenticateCustom(customid)
       await socket.connect(session, false);
@@ -103,12 +103,12 @@ describe('Channel Tests', () => {
     const channelid = generateid();
     const payload = { "hello": "world" };
 
-    const message : nakamajs.ChannelMessage | null = await page.evaluate(async (customid, channelid, payload, adapter) => {
-      const client = new nakamajs.Client();
+    const message : mezonjs.ChannelMessage | null = await page.evaluate(async (customid, channelid, payload, adapter) => {
+      const client = new mezonjs.Client();
       const socket = client.createSocket(false, false,
-        adapter == AdapterType.Protobuf ? new nakamajsprotobuf.WebSocketAdapterPb() : new nakamajs.WebSocketAdapterText());
+        adapter == AdapterType.Protobuf ? new mezonjsprotobuf.WebSocketAdapterPb() : new mezonjs.WebSocketAdapterText());
 
-      var promise1 = new Promise<nakamajs.ChannelMessage>((resolve, reject) => {
+      var promise1 = new Promise<mezonjs.ChannelMessage>((resolve, reject) => {
         socket.onchannelmessage = (channelmessage) => {
           resolve(channelmessage);
         }
@@ -147,9 +147,9 @@ describe('Channel Tests', () => {
     const updatedPayload = { "hello": "world2" };
 
     const response = await page.evaluate(async (customid, channelid, payload, updatedPayload, adapter) => {
-      const client = new nakamajs.Client();
+      const client = new mezonjs.Client();
       const socket = client.createSocket(false, false,
-        adapter == AdapterType.Protobuf ? new nakamajsprotobuf.WebSocketAdapterPb() : new nakamajs.WebSocketAdapterText());
+        adapter == AdapterType.Protobuf ? new mezonjsprotobuf.WebSocketAdapterPb() : new mezonjs.WebSocketAdapterText());
 
       const session = await client.authenticateCustom(customid)
       await socket.connect(session, false);
@@ -190,9 +190,9 @@ describe('Channel Tests', () => {
 
     const response = await page.evaluate(async (customid, channelid, payload, adapter) => {
 
-      const client = new nakamajs.Client();
+      const client = new mezonjs.Client();
       const socket = client.createSocket(false, false,
-        adapter == AdapterType.Protobuf ? new nakamajsprotobuf.WebSocketAdapterPb() : new nakamajs.WebSocketAdapterText());
+        adapter == AdapterType.Protobuf ? new mezonjsprotobuf.WebSocketAdapterPb() : new mezonjs.WebSocketAdapterText());
 
       const session = await client.authenticateCustom(customid)
       await socket.connect(session, false);
