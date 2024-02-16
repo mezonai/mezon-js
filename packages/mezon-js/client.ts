@@ -1994,6 +1994,19 @@ export class Client {
     });
   }
   
+  /** Get permission of user in the clan */
+  async GetPermissionOfUserInTheClan(session: Session, clanId:string): Promise<ApiPermissionList> {
+    if (this.autoRefreshSession && session.refresh_token &&
+        session.isexpired((Date.now() + this.expiredTimespanMs)/1000)) {
+        await this.sessionRefresh(session);
+    }
+    
+    return this.apiClient.GetPermissionOfUserInTheClan(session.token, clanId).then((response: ApiPermissionList) => {
+      return Promise.resolve(response);
+      
+    });
+  }
+
   /** invite user */
   async inviteUser(session: Session, inviteId:string): Promise<ApiInviteUserRes> {
     if (this.autoRefreshSession && session.refresh_token &&
