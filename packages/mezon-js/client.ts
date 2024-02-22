@@ -1144,6 +1144,7 @@ export class Client {
           sender_id: m.sender_id,
           update_time: m.update_time,
           username: m.username,
+          avatar: m.avatar,
           content: m.content ? JSON.parse(m.content) : undefined,
           channel_name: m.channel_name,
           user_id_one: m.user_id_one,
