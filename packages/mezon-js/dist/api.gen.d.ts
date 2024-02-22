@@ -124,6 +124,7 @@ export interface ApiChannelMessage {
     code?: number;
     content?: string;
     create_time?: string;
+    last_seen?: boolean;
     message_id?: string;
     persistent?: boolean;
     sender_id?: string;
@@ -348,7 +349,9 @@ export interface ApiRole {
     description?: string;
     display_online?: number;
     id?: string;
+    permission_list?: ApiPermissionList;
     role_icon?: string;
+    role_user_list?: ApiRoleUserList;
     slug?: string;
     title?: string;
 }

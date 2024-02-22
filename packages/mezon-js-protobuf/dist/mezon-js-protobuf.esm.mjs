@@ -2527,7 +2527,8 @@ function createBaseChannelMessage() {
     persistent: void 0,
     channel_name: "",
     user_id_one: "",
-    user_id_two: ""
+    user_id_two: "",
+    last_seen: void 0
   };
 }
 var ChannelMessage = {
@@ -2570,6 +2571,9 @@ var ChannelMessage = {
     }
     if (message.user_id_two !== "") {
       writer.uint32(106).string(message.user_id_two);
+    }
+    if (message.last_seen !== void 0) {
+      BoolValue.encode({ value: message.last_seen }, writer.uint32(114).fork()).ldelim();
     }
     return writer;
   },
@@ -2619,6 +2623,9 @@ var ChannelMessage = {
         case 13:
           message.user_id_two = reader.string();
           break;
+        case 14:
+          message.last_seen = BoolValue.decode(reader, reader.uint32()).value;
+          break;
         default:
           reader.skipType(tag & 7);
           break;
@@ -2640,7 +2647,8 @@ var ChannelMessage = {
       persistent: isSet3(object.persistent) ? Boolean(object.persistent) : void 0,
       channel_name: isSet3(object.channel_name) ? String(object.channel_name) : "",
       user_id_one: isSet3(object.user_id_one) ? String(object.user_id_one) : "",
-      user_id_two: isSet3(object.user_id_two) ? String(object.user_id_two) : ""
+      user_id_two: isSet3(object.user_id_two) ? String(object.user_id_two) : "",
+      last_seen: isSet3(object.last_seen) ? Boolean(object.last_seen) : void 0
     };
   },
   toJSON(message) {
@@ -2658,13 +2666,14 @@ var ChannelMessage = {
     message.channel_name !== void 0 && (obj.channel_name = message.channel_name);
     message.user_id_one !== void 0 && (obj.user_id_one = message.user_id_one);
     message.user_id_two !== void 0 && (obj.user_id_two = message.user_id_two);
+    message.last_seen !== void 0 && (obj.last_seen = message.last_seen);
     return obj;
   },
   create(base) {
     return ChannelMessage.fromPartial(base != null ? base : {});
   },
   fromPartial(object) {
-    var _a, _b, _c, _d, _e, _f, _g, _h, _i, _j, _k, _l, _m;
+    var _a, _b, _c, _d, _e, _f, _g, _h, _i, _j, _k, _l, _m, _n;
     const message = createBaseChannelMessage();
     message.clan_id = (_a = object.clan_id) != null ? _a : "";
     message.channel_id = (_b = object.channel_id) != null ? _b : "";
@@ -2679,6 +2688,7 @@ var ChannelMessage = {
     message.channel_name = (_k = object.channel_name) != null ? _k : "";
     message.user_id_one = (_l = object.user_id_one) != null ? _l : "";
     message.user_id_two = (_m = object.user_id_two) != null ? _m : "";
+    message.last_seen = (_n = object.last_seen) != null ? _n : void 0;
     return message;
   }
 };
