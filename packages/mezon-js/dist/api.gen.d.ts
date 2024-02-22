@@ -119,20 +119,20 @@ export interface ApiChannelDescription {
 /** A message sent on a channel. */
 export interface ApiChannelMessage {
     avatar?: string;
-    channel_id?: string;
-    channel_name?: string;
+    channel_id: string;
+    channel_name: string;
     clan_id?: string;
-    code?: number;
-    content?: string;
-    create_time?: string;
+    code: number;
+    content: string;
+    create_time: string;
     last_seen?: boolean;
-    message_id?: string;
+    message_id: string;
     persistent?: boolean;
-    sender_id?: string;
+    sender_id: string;
     update_time?: string;
     user_id_one?: string;
     user_id_two?: string;
-    username?: string;
+    username: string;
 }
 /** A list of channel messages, usually a result of a list operation. */
 export interface ApiChannelMessageList {

@@ -207,25 +207,25 @@ export interface ApiChannelMessage {
   //
   avatar?: string;
   //The channel this message belongs to.
-  channel_id?: string;
+  channel_id: string;
   //The name of the chat room, or an empty string if this message was not sent through a chat room.
-  channel_name?: string;
+  channel_name: string;
   //The clan this message belong to.
   clan_id?: string;
   //The code representing a message type or category.
-  code?: number;
+  code: number;
   //The content payload.
-  content?: string;
+  content: string;
   //The UNIX time (for gRPC clients) or ISO string (for REST clients) when the message was created.
-  create_time?: string;
+  create_time: string;
   //
   last_seen?: boolean;
   //The unique ID of this message.
-  message_id?: string;
+  message_id: string;
   //True if the message was persisted to the channel's history, false otherwise.
   persistent?: boolean;
   //Message sender, usually a user ID.
-  sender_id?: string;
+  sender_id: string;
   //The UNIX time (for gRPC clients) or ISO string (for REST clients) when the message was last updated.
   update_time?: string;
   //The ID of the first DM user, or an empty string if this message was not sent through a DM chat.
@@ -233,7 +233,7 @@ export interface ApiChannelMessage {
   //The ID of the second DM user, or an empty string if this message was not sent through a DM chat.
   user_id_two?: string;
   //The username of the message sender, if any.
-  username?: string;
+  username: string;
 }
 
 /** A list of channel messages, usually a result of a list operation. */
