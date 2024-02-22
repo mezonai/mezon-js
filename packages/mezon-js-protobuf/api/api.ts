@@ -541,6 +541,8 @@ export interface ChannelMessage {
   user_id_one: string;
   /** The ID of the second DM user, or an empty string if this message was not sent through a DM chat. */
   user_id_two: string;
+  /** last seen for request user */
+  last_seen: boolean | undefined;
 }
 
 /** A list of channel messages, usually a result of a list operation. */
@@ -4634,6 +4636,7 @@ function createBaseChannelMessage(): ChannelMessage {
     channel_name: "",
     user_id_one: "",
     user_id_two: "",
+    last_seen: undefined,
   };
 }
 
@@ -4677,6 +4680,9 @@ export const ChannelMessage = {
     }
     if (message.user_id_two !== "") {
       writer.uint32(106).string(message.user_id_two);
+    }
+    if (message.last_seen !== undefined) {
+      BoolValue.encode({ value: message.last_seen! }, writer.uint32(114).fork()).ldelim();
     }
     return writer;
   },
@@ -4727,6 +4733,9 @@ export const ChannelMessage = {
         case 13:
           message.user_id_two = reader.string();
           break;
+        case 14:
+          message.last_seen = BoolValue.decode(reader, reader.uint32()).value;
+          break;
         default:
           reader.skipType(tag & 7);
           break;
@@ -4750,6 +4759,7 @@ export const ChannelMessage = {
       channel_name: isSet(object.channel_name) ? String(object.channel_name) : "",
       user_id_one: isSet(object.user_id_one) ? String(object.user_id_one) : "",
       user_id_two: isSet(object.user_id_two) ? String(object.user_id_two) : "",
+      last_seen: isSet(object.last_seen) ? Boolean(object.last_seen) : undefined,
     };
   },
 
@@ -4768,6 +4778,7 @@ export const ChannelMessage = {
     message.channel_name !== undefined && (obj.channel_name = message.channel_name);
     message.user_id_one !== undefined && (obj.user_id_one = message.user_id_one);
     message.user_id_two !== undefined && (obj.user_id_two = message.user_id_two);
+    message.last_seen !== undefined && (obj.last_seen = message.last_seen);
     return obj;
   },
 
@@ -4790,6 +4801,7 @@ export const ChannelMessage = {
     message.channel_name = object.channel_name ?? "";
     message.user_id_one = object.user_id_one ?? "";
     message.user_id_two = object.user_id_two ?? "";
+    message.last_seen = object.last_seen ?? undefined;
     return message;
   },
 };

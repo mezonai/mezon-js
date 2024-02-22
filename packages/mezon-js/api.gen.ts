@@ -216,6 +216,8 @@ export interface ApiChannelMessage {
   content?: string;
   //The UNIX time (for gRPC clients) or ISO string (for REST clients) when the message was created.
   create_time?: string;
+  //last seen for request user
+  last_seen?: boolean;
   //The unique ID of this message.
   message_id?: string;
   //True if the message was persisted to the channel's history, false otherwise.
