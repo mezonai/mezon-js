@@ -51,6 +51,16 @@ client.authenticateEmail("user1@ncc.asia", "Aa12345678").then(session => {
           // ).then(response => console.log(response)
           // );          
         });*/
+
+        client.listChannelMessages(session, "1fe7c3be-c02b-4fc2-8bc2-2f3e668f5ff7", 5, true).then(res => {
+          console.log(res);
+          client.listChannelMessages(session, "1fe7c3be-c02b-4fc2-8bc2-2f3e668f5ff7", 5, true, res.cacheable_cursor).then(res => {
+            console.log(res);
+            client.listChannelMessages(session, "1fe7c3be-c02b-4fc2-8bc2-2f3e668f5ff7", 5, true, res.prev_cursor).then(res => {
+              console.log(res);
+            });
+          });
+        });        
     });
 }).catch(e => {
     console.log("error authenticating.");
