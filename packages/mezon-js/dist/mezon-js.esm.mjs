@@ -10269,7 +10269,8 @@ var Client = class {
             content: m.content ? JSON.parse(m.content) : void 0,
             channel_name: m.channel_name,
             user_id_one: m.user_id_one,
-            user_id_two: m.user_id_two
+            user_id_two: m.user_id_two,
+            last_seen: m.last_seen
           });
         });
         return Promise.resolve(result);
