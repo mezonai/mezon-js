@@ -261,33 +261,35 @@ export interface StorageObjects {
 
 /** A message sent on a channel. */
 export interface ChannelMessage {
-  /** The channel this message belongs to. */
+  //
+  avatar?: string;
+  //The channel this message belongs to.
   channel_id?: string;
-  /** The code representing a message type or category. */
+  //The name of the chat room, or an empty string if this message was not sent through a chat room.
+  channel_name?: string;
+  //The clan this message belong to.
+  clan_id?: string;
+  //The code representing a message type or category.
   code?: number;
-  /** The content payload. */
-  content?: object;
-  /** The UNIX time when the message was created. */
+  //The content payload.
+  content?: string;
+  //The UNIX time (for gRPC clients) or ISO string (for REST clients) when the message was created.
   create_time?: string;
-  /** The ID of the group, or an empty string if this message was not sent through a group channel. */
-  group_id?: string;
-  /** The unique ID of this message. */
+  //
+  last_seen?: boolean;
+  //The unique ID of this message.
   message_id?: string;
-  /** True if the message was persisted to the channel's history, false otherwise. */
+  //True if the message was persisted to the channel's history, false otherwise.
   persistent?: boolean;
-  /** The name of the chat room, or an empty string if this message was not sent through a chat room. */
-  room_name?: string;
-  /** Another message ID reference, if any. */
-  reference_id?: string;
-  /** Message sender, usually a user ID. */
+  //Message sender, usually a user ID.
   sender_id?: string;
-  /** The UNIX time when the message was last updated. */
+  //The UNIX time (for gRPC clients) or ISO string (for REST clients) when the message was last updated.
   update_time?: string;
-  /** The ID of the first DM user, or an empty string if this message was not sent through a DM chat. */
+  //The ID of the first DM user, or an empty string if this message was not sent through a DM chat.
   user_id_one?: string;
-  /** The ID of the second DM user, or an empty string if this message was not sent through a DM chat. */
+  //The ID of the second DM user, or an empty string if this message was not sent through a DM chat.
   user_id_two?: string;
-  /** The username of the message sender, if any. */
+  //The username of the message sender, if any.
   username?: string;
 }
 
@@ -1143,7 +1145,7 @@ export class Client {
           update_time: m.update_time,
           username: m.username,
           content: m.content ? JSON.parse(m.content) : undefined,
-          room_name: m.channel_name,
+          channel_name: m.channel_name,
           user_id_one: m.user_id_one,
           user_id_two: m.user_id_two
         })

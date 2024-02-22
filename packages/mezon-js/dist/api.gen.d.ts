@@ -118,6 +118,7 @@ export interface ApiChannelDescription {
 }
 /** A message sent on a channel. */
 export interface ApiChannelMessage {
+    avatar?: string;
     channel_id?: string;
     channel_name?: string;
     clan_id?: string;
