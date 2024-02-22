@@ -1754,6 +1754,8 @@ export interface Role {
   active: number;
   display_online: number;
   allow_mention: number;
+  roleUserList: RoleUserList | undefined;
+  permissionList: PermissionList | undefined;
 }
 
 /** Permission record */
@@ -11685,6 +11687,8 @@ function createBaseRole(): Role {
     active: 0,
     display_online: 0,
     allow_mention: 0,
+    roleUserList: undefined,
+    permissionList: undefined,
   };
 }
 
@@ -11722,6 +11726,12 @@ export const Role = {
     }
     if (message.allow_mention !== 0) {
       writer.uint32(88).int32(message.allow_mention);
+    }
+    if (message.roleUserList !== undefined) {
+      RoleUserList.encode(message.roleUserList, writer.uint32(98).fork()).ldelim();
+    }
+    if (message.permissionList !== undefined) {
+      PermissionList.encode(message.permissionList, writer.uint32(106).fork()).ldelim();
     }
     return writer;
   },
@@ -11766,6 +11776,12 @@ export const Role = {
         case 11:
           message.allow_mention = reader.int32();
           break;
+        case 12:
+          message.roleUserList = RoleUserList.decode(reader, reader.uint32());
+          break;
+        case 13:
+          message.permissionList = PermissionList.decode(reader, reader.uint32());
+          break;
         default:
           reader.skipType(tag & 7);
           break;
@@ -11787,6 +11803,8 @@ export const Role = {
       active: isSet(object.active) ? Number(object.active) : 0,
       display_online: isSet(object.display_online) ? Number(object.display_online) : 0,
       allow_mention: isSet(object.allow_mention) ? Number(object.allow_mention) : 0,
+      roleUserList: isSet(object.roleUserList) ? RoleUserList.fromJSON(object.roleUserList) : undefined,
+      permissionList: isSet(object.permissionList) ? PermissionList.fromJSON(object.permissionList) : undefined,
     };
   },
 
@@ -11803,6 +11821,10 @@ export const Role = {
     message.active !== undefined && (obj.active = Math.round(message.active));
     message.display_online !== undefined && (obj.display_online = Math.round(message.display_online));
     message.allow_mention !== undefined && (obj.allow_mention = Math.round(message.allow_mention));
+    message.roleUserList !== undefined &&
+      (obj.roleUserList = message.roleUserList ? RoleUserList.toJSON(message.roleUserList) : undefined);
+    message.permissionList !== undefined &&
+      (obj.permissionList = message.permissionList ? PermissionList.toJSON(message.permissionList) : undefined);
     return obj;
   },
 
@@ -11823,6 +11845,12 @@ export const Role = {
     message.active = object.active ?? 0;
     message.display_online = object.display_online ?? 0;
     message.allow_mention = object.allow_mention ?? 0;
+    message.roleUserList = (object.roleUserList !== undefined && object.roleUserList !== null)
+      ? RoleUserList.fromPartial(object.roleUserList)
+      : undefined;
+    message.permissionList = (object.permissionList !== undefined && object.permissionList !== null)
+      ? PermissionList.fromPartial(object.permissionList)
+      : undefined;
     return message;
   },
 };

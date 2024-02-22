@@ -607,7 +607,11 @@ export interface ApiRole {
   //
   id?: string;
   //
+  permission_list?: ApiPermissionList;
+  //
   role_icon?: string;
+  //
+  role_user_list?: ApiRoleUserList;
   //
   slug?: string;
   //
