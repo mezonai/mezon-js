@@ -672,6 +672,7 @@ export declare const Envelope: {
             channel_name?: string | undefined;
             user_id_one?: string | undefined;
             user_id_two?: string | undefined;
+            last_seen?: boolean | undefined;
         } | undefined;
         channel_message_ack?: {
             channel_id?: string | undefined;
@@ -1049,6 +1050,7 @@ export declare const Envelope: {
             channel_name?: string | undefined;
             user_id_one?: string | undefined;
             user_id_two?: string | undefined;
+            last_seen?: boolean | undefined;
         } & {
             clan_id?: string | undefined;
             channel_id?: string | undefined;
@@ -1063,6 +1065,7 @@ export declare const Envelope: {
             channel_name?: string | undefined;
             user_id_one?: string | undefined;
             user_id_two?: string | undefined;
+            last_seen?: boolean | undefined;
         } & { [K_6 in Exclude<keyof I["channel_message"], keyof ChannelMessage>]: never; }) | undefined;
         channel_message_ack?: ({
             channel_id?: string | undefined;
@@ -1918,6 +1921,7 @@ export declare const Envelope: {
             channel_name?: string | undefined;
             user_id_one?: string | undefined;
             user_id_two?: string | undefined;
+            last_seen?: boolean | undefined;
         } | undefined;
         channel_message_ack?: {
             channel_id?: string | undefined;
@@ -2295,6 +2299,7 @@ export declare const Envelope: {
             channel_name?: string | undefined;
             user_id_one?: string | undefined;
             user_id_two?: string | undefined;
+            last_seen?: boolean | undefined;
         } & {
             clan_id?: string | undefined;
             channel_id?: string | undefined;
@@ -2309,6 +2314,7 @@ export declare const Envelope: {
             channel_name?: string | undefined;
             user_id_one?: string | undefined;
             user_id_two?: string | undefined;
+            last_seen?: boolean | undefined;
         } & { [K_85 in Exclude<keyof I_1["channel_message"], keyof ChannelMessage>]: never; }) | undefined;
         channel_message_ack?: ({
             channel_id?: string | undefined;

@@ -363,6 +363,8 @@ export interface ChannelMessage {
     user_id_one: string;
     /** The ID of the second DM user, or an empty string if this message was not sent through a DM chat. */
     user_id_two: string;
+    /** last seen for request user */
+    last_seen: boolean | undefined;
 }
 /** A list of channel messages, usually a result of a list operation. */
 export interface ChannelMessageList {
@@ -1275,6 +1277,8 @@ export interface Role {
     active: number;
     display_online: number;
     allow_mention: number;
+    roleUserList: RoleUserList | undefined;
+    permissionList: PermissionList | undefined;
 }
 /** Permission record */
 export interface Permission {
@@ -2873,6 +2877,7 @@ export declare const ChannelMessage: {
         channel_name?: string | undefined;
         user_id_one?: string | undefined;
         user_id_two?: string | undefined;
+        last_seen?: boolean | undefined;
     } & {
         clan_id?: string | undefined;
         channel_id?: string | undefined;
@@ -2887,6 +2892,7 @@ export declare const ChannelMessage: {
         channel_name?: string | undefined;
         user_id_one?: string | undefined;
         user_id_two?: string | undefined;
+        last_seen?: boolean | undefined;
     } & { [K in Exclude<keyof I, keyof ChannelMessage>]: never; }>(base?: I | undefined): ChannelMessage;
     fromPartial<I_1 extends {
         clan_id?: string | undefined;
@@ -2902,6 +2908,7 @@ export declare const ChannelMessage: {
         channel_name?: string | undefined;
         user_id_one?: string | undefined;
         user_id_two?: string | undefined;
+        last_seen?: boolean | undefined;
     } & {
         clan_id?: string | undefined;
         channel_id?: string | undefined;
@@ -2916,6 +2923,7 @@ export declare const ChannelMessage: {
         channel_name?: string | undefined;
         user_id_one?: string | undefined;
         user_id_two?: string | undefined;
+        last_seen?: boolean | undefined;
     } & { [K_1 in Exclude<keyof I_1, keyof ChannelMessage>]: never; }>(object: I_1): ChannelMessage;
 };
 export declare const ChannelMessageList: {
@@ -2938,6 +2946,7 @@ export declare const ChannelMessageList: {
             channel_name?: string | undefined;
             user_id_one?: string | undefined;
             user_id_two?: string | undefined;
+            last_seen?: boolean | undefined;
         }[] | undefined;
         last_seen_message_id?: string | undefined;
         next_cursor?: string | undefined;
@@ -2958,6 +2967,7 @@ export declare const ChannelMessageList: {
             channel_name?: string | undefined;
             user_id_one?: string | undefined;
             user_id_two?: string | undefined;
+            last_seen?: boolean | undefined;
         }[] & ({
             clan_id?: string | undefined;
             channel_id?: string | undefined;
@@ -2972,6 +2982,7 @@ export declare const ChannelMessageList: {
             channel_name?: string | undefined;
             user_id_one?: string | undefined;
             user_id_two?: string | undefined;
+            last_seen?: boolean | undefined;
         } & {
             clan_id?: string | undefined;
             channel_id?: string | undefined;
@@ -2986,6 +2997,7 @@ export declare const ChannelMessageList: {
             channel_name?: string | undefined;
             user_id_one?: string | undefined;
             user_id_two?: string | undefined;
+            last_seen?: boolean | undefined;
         } & { [K in Exclude<keyof I["messages"][number], keyof ChannelMessage>]: never; })[] & { [K_1 in Exclude<keyof I["messages"], keyof {
             clan_id?: string | undefined;
             channel_id?: string | undefined;
@@ -3000,6 +3012,7 @@ export declare const ChannelMessageList: {
             channel_name?: string | undefined;
             user_id_one?: string | undefined;
             user_id_two?: string | undefined;
+            last_seen?: boolean | undefined;
         }[]>]: never; }) | undefined;
         last_seen_message_id?: string | undefined;
         next_cursor?: string | undefined;
@@ -3021,6 +3034,7 @@ export declare const ChannelMessageList: {
             channel_name?: string | undefined;
             user_id_one?: string | undefined;
             user_id_two?: string | undefined;
+            last_seen?: boolean | undefined;
         }[] | undefined;
         last_seen_message_id?: string | undefined;
         next_cursor?: string | undefined;
@@ -3041,6 +3055,7 @@ export declare const ChannelMessageList: {
             channel_name?: string | undefined;
             user_id_one?: string | undefined;
             user_id_two?: string | undefined;
+            last_seen?: boolean | undefined;
         }[] & ({
             clan_id?: string | undefined;
             channel_id?: string | undefined;
@@ -3055,6 +3070,7 @@ export declare const ChannelMessageList: {
             channel_name?: string | undefined;
             user_id_one?: string | undefined;
             user_id_two?: string | undefined;
+            last_seen?: boolean | undefined;
         } & {
             clan_id?: string | undefined;
             channel_id?: string | undefined;
@@ -3069,6 +3085,7 @@ export declare const ChannelMessageList: {
             channel_name?: string | undefined;
             user_id_one?: string | undefined;
             user_id_two?: string | undefined;
+            last_seen?: boolean | undefined;
         } & { [K_3 in Exclude<keyof I_1["messages"][number], keyof ChannelMessage>]: never; })[] & { [K_4 in Exclude<keyof I_1["messages"], keyof {
             clan_id?: string | undefined;
             channel_id?: string | undefined;
@@ -3083,6 +3100,7 @@ export declare const ChannelMessageList: {
             channel_name?: string | undefined;
             user_id_one?: string | undefined;
             user_id_two?: string | undefined;
+            last_seen?: boolean | undefined;
         }[]>]: never; }) | undefined;
         last_seen_message_id?: string | undefined;
         next_cursor?: string | undefined;
@@ -7891,6 +7909,27 @@ export declare const Role: {
         active?: number | undefined;
         display_online?: number | undefined;
         allow_mention?: number | undefined;
+        roleUserList?: {
+            role_users?: {
+                id?: string | undefined;
+                username?: string | undefined;
+                display_name?: string | undefined;
+                avatar_url?: string | undefined;
+                lang_tag?: string | undefined;
+                location?: string | undefined;
+                online?: boolean | undefined;
+            }[] | undefined;
+            cursor?: string | undefined;
+        } | undefined;
+        permissionList?: {
+            permissions?: {
+                id?: string | undefined;
+                title?: string | undefined;
+                slug?: string | undefined;
+                description?: string | undefined;
+                active?: number | undefined;
+            }[] | undefined;
+        } | undefined;
     } & {
         id?: string | undefined;
         title?: string | undefined;
@@ -7903,7 +7942,89 @@ export declare const Role: {
         active?: number | undefined;
         display_online?: number | undefined;
         allow_mention?: number | undefined;
-    } & { [K in Exclude<keyof I, keyof Role>]: never; }>(base?: I | undefined): Role;
+        roleUserList?: ({
+            role_users?: {
+                id?: string | undefined;
+                username?: string | undefined;
+                display_name?: string | undefined;
+                avatar_url?: string | undefined;
+                lang_tag?: string | undefined;
+                location?: string | undefined;
+                online?: boolean | undefined;
+            }[] | undefined;
+            cursor?: string | undefined;
+        } & {
+            role_users?: ({
+                id?: string | undefined;
+                username?: string | undefined;
+                display_name?: string | undefined;
+                avatar_url?: string | undefined;
+                lang_tag?: string | undefined;
+                location?: string | undefined;
+                online?: boolean | undefined;
+            }[] & ({
+                id?: string | undefined;
+                username?: string | undefined;
+                display_name?: string | undefined;
+                avatar_url?: string | undefined;
+                lang_tag?: string | undefined;
+                location?: string | undefined;
+                online?: boolean | undefined;
+            } & {
+                id?: string | undefined;
+                username?: string | undefined;
+                display_name?: string | undefined;
+                avatar_url?: string | undefined;
+                lang_tag?: string | undefined;
+                location?: string | undefined;
+                online?: boolean | undefined;
+            } & { [K in Exclude<keyof I["roleUserList"]["role_users"][number], keyof RoleUserList_RoleUser>]: never; })[] & { [K_1 in Exclude<keyof I["roleUserList"]["role_users"], keyof {
+                id?: string | undefined;
+                username?: string | undefined;
+                display_name?: string | undefined;
+                avatar_url?: string | undefined;
+                lang_tag?: string | undefined;
+                location?: string | undefined;
+                online?: boolean | undefined;
+            }[]>]: never; }) | undefined;
+            cursor?: string | undefined;
+        } & { [K_2 in Exclude<keyof I["roleUserList"], keyof RoleUserList>]: never; }) | undefined;
+        permissionList?: ({
+            permissions?: {
+                id?: string | undefined;
+                title?: string | undefined;
+                slug?: string | undefined;
+                description?: string | undefined;
+                active?: number | undefined;
+            }[] | undefined;
+        } & {
+            permissions?: ({
+                id?: string | undefined;
+                title?: string | undefined;
+                slug?: string | undefined;
+                description?: string | undefined;
+                active?: number | undefined;
+            }[] & ({
+                id?: string | undefined;
+                title?: string | undefined;
+                slug?: string | undefined;
+                description?: string | undefined;
+                active?: number | undefined;
+            } & {
+                id?: string | undefined;
+                title?: string | undefined;
+                slug?: string | undefined;
+                description?: string | undefined;
+                active?: number | undefined;
+            } & { [K_3 in Exclude<keyof I["permissionList"]["permissions"][number], keyof Permission>]: never; })[] & { [K_4 in Exclude<keyof I["permissionList"]["permissions"], keyof {
+                id?: string | undefined;
+                title?: string | undefined;
+                slug?: string | undefined;
+                description?: string | undefined;
+                active?: number | undefined;
+            }[]>]: never; }) | undefined;
+        } & { [K_5 in Exclude<keyof I["permissionList"], "permissions">]: never; }) | undefined;
+    } & { [K_6 in Exclude<keyof I, keyof Role>]: never; }>(base?: I | undefined): Role;
     fromPartial<I_1 extends {
         id?: string | undefined;
         title?: string | undefined;
@@ -7916,6 +8037,27 @@ export declare const Role: {
         active?: number | undefined;
         display_online?: number | undefined;
         allow_mention?: number | undefined;
+        roleUserList?: {
+            role_users?: {
+                id?: string | undefined;
+                username?: string | undefined;
+                display_name?: string | undefined;
+                avatar_url?: string | undefined;
+                lang_tag?: string | undefined;
+                location?: string | undefined;
+                online?: boolean | undefined;
+            }[] | undefined;
+            cursor?: string | undefined;
+        } | undefined;
+        permissionList?: {
+            permissions?: {
+                id?: string | undefined;
+                title?: string | undefined;
+                slug?: string | undefined;
+                description?: string | undefined;
+                active?: number | undefined;
+            }[] | undefined;
+        } | undefined;
     } & {
         id?: string | undefined;
         title?: string | undefined;
@@ -7928,7 +8070,89 @@ export declare const Role: {
         active?: number | undefined;
         display_online?: number | undefined;
         allow_mention?: number | undefined;
-    } & { [K_1 in Exclude<keyof I_1, keyof Role>]: never; }>(object: I_1): Role;
+        roleUserList?: ({
+            role_users?: {
+                id?: string | undefined;
+                username?: string | undefined;
+                display_name?: string | undefined;
+                avatar_url?: string | undefined;
+                lang_tag?: string | undefined;
+                location?: string | undefined;
+                online?: boolean | undefined;
+            }[] | undefined;
+            cursor?: string | undefined;
+        } & {
+            role_users?: ({
+                id?: string | undefined;
+                username?: string | undefined;
+                display_name?: string | undefined;
+                avatar_url?: string | undefined;
+                lang_tag?: string | undefined;
+                location?: string | undefined;
+                online?: boolean | undefined;
+            }[] & ({
+                id?: string | undefined;
+                username?: string | undefined;
+                display_name?: string | undefined;
+                avatar_url?: string | undefined;
+                lang_tag?: string | undefined;
+                location?: string | undefined;
+                online?: boolean | undefined;
+            } & {
+                id?: string | undefined;
+                username?: string | undefined;
+                display_name?: string | undefined;
+                avatar_url?: string | undefined;
+                lang_tag?: string | undefined;
+                location?: string | undefined;
+                online?: boolean | undefined;
+            } & { [K_7 in Exclude<keyof I_1["roleUserList"]["role_users"][number], keyof RoleUserList_RoleUser>]: never; })[] & { [K_8 in Exclude<keyof I_1["roleUserList"]["role_users"], keyof {
+                id?: string | undefined;
+                username?: string | undefined;
+                display_name?: string | undefined;
+                avatar_url?: string | undefined;
+                lang_tag?: string | undefined;
+                location?: string | undefined;
+                online?: boolean | undefined;
+            }[]>]: never; }) | undefined;
+            cursor?: string | undefined;
+        } & { [K_9 in Exclude<keyof I_1["roleUserList"], keyof RoleUserList>]: never; }) | undefined;
+        permissionList?: ({
+            permissions?: {
+                id?: string | undefined;
+                title?: string | undefined;
+                slug?: string | undefined;
+                description?: string | undefined;
+                active?: number | undefined;
+            }[] | undefined;
+        } & {
+            permissions?: ({
+                id?: string | undefined;
+                title?: string | undefined;
+                slug?: string | undefined;
+                description?: string | undefined;
+                active?: number | undefined;
+            }[] & ({
+                id?: string | undefined;
+                title?: string | undefined;
+                slug?: string | undefined;
+                description?: string | undefined;
+                active?: number | undefined;
+            } & {
+                id?: string | undefined;
+                title?: string | undefined;
+                slug?: string | undefined;
+                description?: string | undefined;
+                active?: number | undefined;
+            } & { [K_10 in Exclude<keyof I_1["permissionList"]["permissions"][number], keyof Permission>]: never; })[] & { [K_11 in Exclude<keyof I_1["permissionList"]["permissions"], keyof {
+                id?: string | undefined;
+                title?: string | undefined;
+                slug?: string | undefined;
+                description?: string | undefined;
+                active?: number | undefined;
+            }[]>]: never; }) | undefined;
+        } & { [K_12 in Exclude<keyof I_1["permissionList"], "permissions">]: never; }) | undefined;
+    } & { [K_13 in Exclude<keyof I_1, keyof Role>]: never; }>(object: I_1): Role;
 };
 export declare const Permission: {
     encode(message: Permission, writer?: _m0.Writer): _m0.Writer;
@@ -7980,6 +8204,27 @@ export declare const RoleList: {
             active?: number | undefined;
             display_online?: number | undefined;
             allow_mention?: number | undefined;
+            roleUserList?: {
+                role_users?: {
+                    id?: string | undefined;
+                    username?: string | undefined;
+                    display_name?: string | undefined;
+                    avatar_url?: string | undefined;
+                    lang_tag?: string | undefined;
+                    location?: string | undefined;
+                    online?: boolean | undefined;
+                }[] | undefined;
+                cursor?: string | undefined;
+            } | undefined;
+            permissionList?: {
+                permissions?: {
+                    id?: string | undefined;
+                    title?: string | undefined;
+                    slug?: string | undefined;
+                    description?: string | undefined;
+                    active?: number | undefined;
+                }[] | undefined;
+            } | undefined;
         }[] | undefined;
         next_cursor?: string | undefined;
         prev_cursor?: string | undefined;
@@ -7997,6 +8242,27 @@ export declare const RoleList: {
             active?: number | undefined;
             display_online?: number | undefined;
             allow_mention?: number | undefined;
+            roleUserList?: {
+                role_users?: {
+                    id?: string | undefined;
+                    username?: string | undefined;
+                    display_name?: string | undefined;
+                    avatar_url?: string | undefined;
+                    lang_tag?: string | undefined;
+                    location?: string | undefined;
+                    online?: boolean | undefined;
+                }[] | undefined;
+                cursor?: string | undefined;
+            } | undefined;
+            permissionList?: {
+                permissions?: {
+                    id?: string | undefined;
+                    title?: string | undefined;
+                    slug?: string | undefined;
+                    description?: string | undefined;
+                    active?: number | undefined;
+                }[] | undefined;
+            } | undefined;
         }[] & ({
             id?: string | undefined;
             title?: string | undefined;
@@ -8009,6 +8275,27 @@ export declare const RoleList: {
             active?: number | undefined;
             display_online?: number | undefined;
             allow_mention?: number | undefined;
+            roleUserList?: {
+                role_users?: {
+                    id?: string | undefined;
+                    username?: string | undefined;
+                    display_name?: string | undefined;
+                    avatar_url?: string | undefined;
+                    lang_tag?: string | undefined;
+                    location?: string | undefined;
+                    online?: boolean | undefined;
+                }[] | undefined;
+                cursor?: string | undefined;
+            } | undefined;
+            permissionList?: {
+                permissions?: {
+                    id?: string | undefined;
+                    title?: string | undefined;
+                    slug?: string | undefined;
+                    description?: string | undefined;
+                    active?: number | undefined;
+                }[] | undefined;
+            } | undefined;
         } & {
             id?: string | undefined;
             title?: string | undefined;
@@ -8021,7 +8308,89 @@ export declare const RoleList: {
             active?: number | undefined;
             display_online?: number | undefined;
             allow_mention?: number | undefined;
-        } & { [K in Exclude<keyof I["roles"][number], keyof Role>]: never; })[] & { [K_1 in Exclude<keyof I["roles"], keyof {
+            roleUserList?: ({
+                role_users?: {
+                    id?: string | undefined;
+                    username?: string | undefined;
+                    display_name?: string | undefined;
+                    avatar_url?: string | undefined;
+                    lang_tag?: string | undefined;
+                    location?: string | undefined;
+                    online?: boolean | undefined;
+                }[] | undefined;
+                cursor?: string | undefined;
+            } & {
+                role_users?: ({
+                    id?: string | undefined;
+                    username?: string | undefined;
+                    display_name?: string | undefined;
+                    avatar_url?: string | undefined;
+                    lang_tag?: string | undefined;
+                    location?: string | undefined;
+                    online?: boolean | undefined;
+                }[] & ({
+                    id?: string | undefined;
+                    username?: string | undefined;
+                    display_name?: string | undefined;
+                    avatar_url?: string | undefined;
+                    lang_tag?: string | undefined;
+                    location?: string | undefined;
+                    online?: boolean | undefined;
+                } & {
+                    id?: string | undefined;
+                    username?: string | undefined;
+                    display_name?: string | undefined;
+                    avatar_url?: string | undefined;
+                    lang_tag?: string | undefined;
+                    location?: string | undefined;
+                    online?: boolean | undefined;
+                } & { [K in Exclude<keyof I["roles"][number]["roleUserList"]["role_users"][number], keyof RoleUserList_RoleUser>]: never; })[] & { [K_1 in Exclude<keyof I["roles"][number]["roleUserList"]["role_users"], keyof {
+                    id?: string | undefined;
+                    username?: string | undefined;
+                    display_name?: string | undefined;
+                    avatar_url?: string | undefined;
+                    lang_tag?: string | undefined;
+                    location?: string | undefined;
+                    online?: boolean | undefined;
+                }[]>]: never; }) | undefined;
+                cursor?: string | undefined;
+            } & { [K_2 in Exclude<keyof I["roles"][number]["roleUserList"], keyof RoleUserList>]: never; }) | undefined;
+            permissionList?: ({
+                permissions?: {
+                    id?: string | undefined;
+                    title?: string | undefined;
+                    slug?: string | undefined;
+                    description?: string | undefined;
+                    active?: number | undefined;
+                }[] | undefined;
+            } & {
+                permissions?: ({
+                    id?: string | undefined;
+                    title?: string | undefined;
+                    slug?: string | undefined;
+                    description?: string | undefined;
+                    active?: number | undefined;
+                }[] & ({
+                    id?: string | undefined;
+                    title?: string | undefined;
+                    slug?: string | undefined;
+                    description?: string | undefined;
+                    active?: number | undefined;
+                } & {
+                    id?: string | undefined;
+                    title?: string | undefined;
+                    slug?: string | undefined;
+                    description?: string | undefined;
+                    active?: number | undefined;
+                } & { [K_3 in Exclude<keyof I["roles"][number]["permissionList"]["permissions"][number], keyof Permission>]: never; })[] & { [K_4 in Exclude<keyof I["roles"][number]["permissionList"]["permissions"], keyof {
+                    id?: string | undefined;
+                    title?: string | undefined;
+                    slug?: string | undefined;
+                    description?: string | undefined;
+                    active?: number | undefined;
+                }[]>]: never; }) | undefined;
+            } & { [K_5 in Exclude<keyof I["roles"][number]["permissionList"], "permissions">]: never; }) | undefined;
+        } & { [K_6 in Exclude<keyof I["roles"][number], keyof Role>]: never; })[] & { [K_7 in Exclude<keyof I["roles"], keyof {
             id?: string | undefined;
             title?: string | undefined;
             color?: string | undefined;
@@ -8033,11 +8402,32 @@ export declare const RoleList: {
             active?: number | undefined;
             display_online?: number | undefined;
             allow_mention?: number | undefined;
+            roleUserList?: {
+                role_users?: {
+                    id?: string | undefined;
+                    username?: string | undefined;
+                    display_name?: string | undefined;
+                    avatar_url?: string | undefined;
+                    lang_tag?: string | undefined;
+                    location?: string | undefined;
+                    online?: boolean | undefined;
+                }[] | undefined;
+                cursor?: string | undefined;
+            } | undefined;
+            permissionList?: {
+                permissions?: {
+                    id?: string | undefined;
+                    title?: string | undefined;
+                    slug?: string | undefined;
+                    description?: string | undefined;
+                    active?: number | undefined;
+                }[] | undefined;
+            } | undefined;
         }[]>]: never; }) | undefined;
         next_cursor?: string | undefined;
         prev_cursor?: string | undefined;
         cacheable_cursor?: string | undefined;
-    } & { [K_2 in Exclude<keyof I, keyof RoleList>]: never; }>(base?: I | undefined): RoleList;
+    } & { [K_8 in Exclude<keyof I, keyof RoleList>]: never; }>(base?: I | undefined): RoleList;
     fromPartial<I_1 extends {
         roles?: {
             id?: string | undefined;
@@ -8051,6 +8441,27 @@ export declare const RoleList: {
             active?: number | undefined;
             display_online?: number | undefined;
             allow_mention?: number | undefined;
+            roleUserList?: {
+                role_users?: {
+                    id?: string | undefined;
+                    username?: string | undefined;
+                    display_name?: string | undefined;
+                    avatar_url?: string | undefined;
+                    lang_tag?: string | undefined;
+                    location?: string | undefined;
+                    online?: boolean | undefined;
+                }[] | undefined;
+                cursor?: string | undefined;
+            } | undefined;
+            permissionList?: {
+                permissions?: {
+                    id?: string | undefined;
+                    title?: string | undefined;
+                    slug?: string | undefined;
+                    description?: string | undefined;
+                    active?: number | undefined;
+                }[] | undefined;
+            } | undefined;
         }[] | undefined;
         next_cursor?: string | undefined;
         prev_cursor?: string | undefined;
@@ -8068,6 +8479,27 @@ export declare const RoleList: {
             active?: number | undefined;
             display_online?: number | undefined;
             allow_mention?: number | undefined;
+            roleUserList?: {
+                role_users?: {
+                    id?: string | undefined;
+                    username?: string | undefined;
+                    display_name?: string | undefined;
+                    avatar_url?: string | undefined;
+                    lang_tag?: string | undefined;
+                    location?: string | undefined;
+                    online?: boolean | undefined;
+                }[] | undefined;
+                cursor?: string | undefined;
+            } | undefined;
+            permissionList?: {
+                permissions?: {
+                    id?: string | undefined;
+                    title?: string | undefined;
+                    slug?: string | undefined;
+                    description?: string | undefined;
+                    active?: number | undefined;
+                }[] | undefined;
+            } | undefined;
         }[] & ({
             id?: string | undefined;
             title?: string | undefined;
@@ -8080,6 +8512,27 @@ export declare const RoleList: {
             active?: number | undefined;
             display_online?: number | undefined;
             allow_mention?: number | undefined;
+            roleUserList?: {
+                role_users?: {
+                    id?: string | undefined;
+                    username?: string | undefined;
+                    display_name?: string | undefined;
+                    avatar_url?: string | undefined;
+                    lang_tag?: string | undefined;
+                    location?: string | undefined;
+                    online?: boolean | undefined;
+                }[] | undefined;
+                cursor?: string | undefined;
+            } | undefined;
+            permissionList?: {
+                permissions?: {
+                    id?: string | undefined;
+                    title?: string | undefined;
+                    slug?: string | undefined;
+                    description?: string | undefined;
+                    active?: number | undefined;
+                }[] | undefined;
+            } | undefined;
         } & {
             id?: string | undefined;
             title?: string | undefined;
@@ -8092,7 +8545,89 @@ export declare const RoleList: {
             active?: number | undefined;
             display_online?: number | undefined;
             allow_mention?: number | undefined;
-        } & { [K_3 in Exclude<keyof I_1["roles"][number], keyof Role>]: never; })[] & { [K_4 in Exclude<keyof I_1["roles"], keyof {
+            roleUserList?: ({
+                role_users?: {
+                    id?: string | undefined;
+                    username?: string | undefined;
+                    display_name?: string | undefined;
+                    avatar_url?: string | undefined;
+                    lang_tag?: string | undefined;
+                    location?: string | undefined;
+                    online?: boolean | undefined;
+                }[] | undefined;
+                cursor?: string | undefined;
+            } & {
+                role_users?: ({
+                    id?: string | undefined;
+                    username?: string | undefined;
+                    display_name?: string | undefined;
+                    avatar_url?: string | undefined;
+                    lang_tag?: string | undefined;
+                    location?: string | undefined;
+                    online?: boolean | undefined;
+                }[] & ({
+                    id?: string | undefined;
+                    username?: string | undefined;
+                    display_name?: string | undefined;
+                    avatar_url?: string | undefined;
+                    lang_tag?: string | undefined;
+                    location?: string | undefined;
+                    online?: boolean | undefined;
+                } & {
+                    id?: string | undefined;
+                    username?: string | undefined;
+                    display_name?: string | undefined;
+                    avatar_url?: string | undefined;
+                    lang_tag?: string | undefined;
+                    location?: string | undefined;
+                    online?: boolean | undefined;
+                } & { [K_9 in Exclude<keyof I_1["roles"][number]["roleUserList"]["role_users"][number], keyof RoleUserList_RoleUser>]: never; })[] & { [K_10 in Exclude<keyof I_1["roles"][number]["roleUserList"]["role_users"], keyof {
+                    id?: string | undefined;
+                    username?: string | undefined;
+                    display_name?: string | undefined;
+                    avatar_url?: string | undefined;
+                    lang_tag?: string | undefined;
+                    location?: string | undefined;
+                    online?: boolean | undefined;
+                }[]>]: never; }) | undefined;
+                cursor?: string | undefined;
+            } & { [K_11 in Exclude<keyof I_1["roles"][number]["roleUserList"], keyof RoleUserList>]: never; }) | undefined;
+            permissionList?: ({
+                permissions?: {
+                    id?: string | undefined;
+                    title?: string | undefined;
+                    slug?: string | undefined;
+                    description?: string | undefined;
+                    active?: number | undefined;
+                }[] | undefined;
+            } & {
+                permissions?: ({
+                    id?: string | undefined;
+                    title?: string | undefined;
+                    slug?: string | undefined;
+                    description?: string | undefined;
+                    active?: number | undefined;
+                }[] & ({
+                    id?: string | undefined;
+                    title?: string | undefined;
+                    slug?: string | undefined;
+                    description?: string | undefined;
+                    active?: number | undefined;
+                } & {
+                    id?: string | undefined;
+                    title?: string | undefined;
+                    slug?: string | undefined;
+                    description?: string | undefined;
+                    active?: number | undefined;
+                } & { [K_12 in Exclude<keyof I_1["roles"][number]["permissionList"]["permissions"][number], keyof Permission>]: never; })[] & { [K_13 in Exclude<keyof I_1["roles"][number]["permissionList"]["permissions"], keyof {
+                    id?: string | undefined;
+                    title?: string | undefined;
+                    slug?: string | undefined;
+                    description?: string | undefined;
+                    active?: number | undefined;
+                }[]>]: never; }) | undefined;
+            } & { [K_14 in Exclude<keyof I_1["roles"][number]["permissionList"], "permissions">]: never; }) | undefined;
+        } & { [K_15 in Exclude<keyof I_1["roles"][number], keyof Role>]: never; })[] & { [K_16 in Exclude<keyof I_1["roles"], keyof {
             id?: string | undefined;
             title?: string | undefined;
             color?: string | undefined;
@@ -8104,11 +8639,32 @@ export declare const RoleList: {
             active?: number | undefined;
             display_online?: number | undefined;
             allow_mention?: number | undefined;
+            roleUserList?: {
+                role_users?: {
+                    id?: string | undefined;
+                    username?: string | undefined;
+                    display_name?: string | undefined;
+                    avatar_url?: string | undefined;
+                    lang_tag?: string | undefined;
+                    location?: string | undefined;
+                    online?: boolean | undefined;
+                }[] | undefined;
+                cursor?: string | undefined;
+            } | undefined;
+            permissionList?: {
+                permissions?: {
+                    id?: string | undefined;
+                    title?: string | undefined;
+                    slug?: string | undefined;
+                    description?: string | undefined;
+                    active?: number | undefined;
+                }[] | undefined;
+            } | undefined;
         }[]>]: never; }) | undefined;
         next_cursor?: string | undefined;
         prev_cursor?: string | undefined;
         cacheable_cursor?: string | undefined;
-    } & { [K_5 in Exclude<keyof I_1, keyof RoleList>]: never; }>(object: I_1): RoleList;
+    } & { [K_17 in Exclude<keyof I_1, keyof RoleList>]: never; }>(object: I_1): RoleList;
 };
 export declare const PermissionList: {
     encode(message: PermissionList, writer?: _m0.Writer): _m0.Writer;
