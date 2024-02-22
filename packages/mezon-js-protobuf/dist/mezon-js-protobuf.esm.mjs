@@ -2521,6 +2521,7 @@ function createBaseChannelMessage() {
     code: void 0,
     sender_id: "",
     username: "",
+    avatar: "",
     content: "",
     create_time: void 0,
     update_time: void 0,
@@ -2551,29 +2552,32 @@ var ChannelMessage = {
     if (message.username !== "") {
       writer.uint32(50).string(message.username);
     }
+    if (message.avatar !== "") {
+      writer.uint32(58).string(message.avatar);
+    }
     if (message.content !== "") {
-      writer.uint32(58).string(message.content);
+      writer.uint32(66).string(message.content);
     }
     if (message.create_time !== void 0) {
-      Timestamp.encode(toTimestamp(message.create_time), writer.uint32(66).fork()).ldelim();
+      Timestamp.encode(toTimestamp(message.create_time), writer.uint32(74).fork()).ldelim();
     }
     if (message.update_time !== void 0) {
-      Timestamp.encode(toTimestamp(message.update_time), writer.uint32(74).fork()).ldelim();
+      Timestamp.encode(toTimestamp(message.update_time), writer.uint32(82).fork()).ldelim();
     }
     if (message.persistent !== void 0) {
-      BoolValue.encode({ value: message.persistent }, writer.uint32(82).fork()).ldelim();
+      BoolValue.encode({ value: message.persistent }, writer.uint32(90).fork()).ldelim();
     }
     if (message.channel_name !== "") {
-      writer.uint32(90).string(message.channel_name);
+      writer.uint32(98).string(message.channel_name);
     }
     if (message.user_id_one !== "") {
-      writer.uint32(98).string(message.user_id_one);
+      writer.uint32(106).string(message.user_id_one);
     }
     if (message.user_id_two !== "") {
-      writer.uint32(106).string(message.user_id_two);
+      writer.uint32(114).string(message.user_id_two);
     }
     if (message.last_seen !== void 0) {
-      BoolValue.encode({ value: message.last_seen }, writer.uint32(114).fork()).ldelim();
+      BoolValue.encode({ value: message.last_seen }, writer.uint32(122).fork()).ldelim();
     }
     return writer;
   },
@@ -2603,27 +2607,30 @@ var ChannelMessage = {
           message.username = reader.string();
           break;
         case 7:
-          message.content = reader.string();
+          message.avatar = reader.string();
           break;
         case 8:
-          message.create_time = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
+          message.content = reader.string();
           break;
         case 9:
-          message.update_time = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
+          message.create_time = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
           break;
         case 10:
-          message.persistent = BoolValue.decode(reader, reader.uint32()).value;
+          message.update_time = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
           break;
         case 11:
-          message.channel_name = reader.string();
+          message.persistent = BoolValue.decode(reader, reader.uint32()).value;
           break;
         case 12:
-          message.user_id_one = reader.string();
+          message.channel_name = reader.string();
           break;
         case 13:
-          message.user_id_two = reader.string();
+          message.user_id_one = reader.string();
           break;
         case 14:
+          message.user_id_two = reader.string();
+          break;
+        case 15:
           message.last_seen = BoolValue.decode(reader, reader.uint32()).value;
           break;
         default:
@@ -2641,6 +2648,7 @@ var ChannelMessage = {
       code: isSet3(object.code) ? Number(object.code) : void 0,
       sender_id: isSet3(object.sender_id) ? String(object.sender_id) : "",
       username: isSet3(object.username) ? String(object.username) : "",
+      avatar: isSet3(object.avatar) ? String(object.avatar) : "",
       content: isSet3(object.content) ? String(object.content) : "",
       create_time: isSet3(object.create_time) ? fromJsonTimestamp(object.create_time) : void 0,
       update_time: isSet3(object.update_time) ? fromJsonTimestamp(object.update_time) : void 0,
@@ -2659,6 +2667,7 @@ var ChannelMessage = {
     message.code !== void 0 && (obj.code = message.code);
     message.sender_id !== void 0 && (obj.sender_id = message.sender_id);
     message.username !== void 0 && (obj.username = message.username);
+    message.avatar !== void 0 && (obj.avatar = message.avatar);
     message.content !== void 0 && (obj.content = message.content);
     message.create_time !== void 0 && (obj.create_time = message.create_time.toISOString());
     message.update_time !== void 0 && (obj.update_time = message.update_time.toISOString());
@@ -2673,7 +2682,7 @@ var ChannelMessage = {
     return ChannelMessage.fromPartial(base != null ? base : {});
   },
   fromPartial(object) {
-    var _a, _b, _c, _d, _e, _f, _g, _h, _i, _j, _k, _l, _m, _n;
+    var _a, _b, _c, _d, _e, _f, _g, _h, _i, _j, _k, _l, _m, _n, _o;
     const message = createBaseChannelMessage();
     message.clan_id = (_a = object.clan_id) != null ? _a : "";
     message.channel_id = (_b = object.channel_id) != null ? _b : "";
@@ -2681,14 +2690,15 @@ var ChannelMessage = {
     message.code = (_d = object.code) != null ? _d : void 0;
     message.sender_id = (_e = object.sender_id) != null ? _e : "";
     message.username = (_f = object.username) != null ? _f : "";
-    message.content = (_g = object.content) != null ? _g : "";
-    message.create_time = (_h = object.create_time) != null ? _h : void 0;
-    message.update_time = (_i = object.update_time) != null ? _i : void 0;
-    message.persistent = (_j = object.persistent) != null ? _j : void 0;
-    message.channel_name = (_k = object.channel_name) != null ? _k : "";
-    message.user_id_one = (_l = object.user_id_one) != null ? _l : "";
-    message.user_id_two = (_m = object.user_id_two) != null ? _m : "";
-    message.last_seen = (_n = object.last_seen) != null ? _n : void 0;
+    message.avatar = (_g = object.avatar) != null ? _g : "";
+    message.content = (_h = object.content) != null ? _h : "";
+    message.create_time = (_i = object.create_time) != null ? _i : void 0;
+    message.update_time = (_j = object.update_time) != null ? _j : void 0;
+    message.persistent = (_k = object.persistent) != null ? _k : void 0;
+    message.channel_name = (_l = object.channel_name) != null ? _l : "";
+    message.user_id_one = (_m = object.user_id_one) != null ? _m : "";
+    message.user_id_two = (_n = object.user_id_two) != null ? _n : "";
+    message.last_seen = (_o = object.last_seen) != null ? _o : void 0;
     return message;
   }
 };

@@ -75,32 +75,21 @@ export interface MessageTypingEvent {
 }
 /** An incoming message on a realtime chat channel. */
 export interface ChannelMessage {
-    /** The channel this message belongs to. */
+    avatar: string;
     channel_id: string;
-    /** The unique ID of this message. */
-    message_id: string;
-    /** The unique ID of this message. */
+    channel_name: string;
+    clan_id: string;
     code: number;
-    /** Message sender, usually a user ID. */
-    sender_id: string;
-    /** The username of the message sender, if any. */
-    username: string;
-    /** The content payload. */
-    content: any;
-    /** The UNIX time when the message was created. */
+    content: string;
     create_time: string;
-    /** The UNIX time when the message was last updated. */
-    update_time: string;
-    /** True if the message was persisted to the channel's history, false otherwise. */
+    last_seen: boolean;
+    message_id: string;
     persistent: boolean;
-    /** The ID of the group, or an empty string if this message was not sent through a group channel. */
-    group_id: string;
-    /** The name of the chat room, or an empty string if this message was not sent through a chat room. */
-    room_name: string;
-    /** The ID of the first DM user, or an empty string if this message was not sent through a DM chat. */
+    sender_id: string;
+    update_time: string;
     user_id_one: string;
-    /** The ID of the second DM user, or an empty string if this message was not sent through a DM chat. */
     user_id_two: string;
+    username: string;
 }
 /** An acknowledgement received in response to sending a message on a chat channel. */
 export interface ChannelMessageAck {

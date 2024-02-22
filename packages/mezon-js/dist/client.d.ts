@@ -185,33 +185,20 @@ export interface StorageObjects {
 }
 /** A message sent on a channel. */
 export interface ChannelMessage {
-    /** The channel this message belongs to. */
+    avatar?: string;
     channel_id?: string;
-    /** The code representing a message type or category. */
+    channel_name?: string;
+    clan_id?: string;
     code?: number;
-    /** The content payload. */
-    content?: object;
-    /** The UNIX time when the message was created. */
+    content?: string;
     create_time?: string;
-    /** The ID of the group, or an empty string if this message was not sent through a group channel. */
-    group_id?: string;
-    /** The unique ID of this message. */
+    last_seen?: boolean;
     message_id?: string;
-    /** True if the message was persisted to the channel's history, false otherwise. */
     persistent?: boolean;
-    /** The name of the chat room, or an empty string if this message was not sent through a chat room. */
-    room_name?: string;
-    /** Another message ID reference, if any. */
-    reference_id?: string;
-    /** Message sender, usually a user ID. */
     sender_id?: string;
-    /** The UNIX time when the message was last updated. */
     update_time?: string;
-    /** The ID of the first DM user, or an empty string if this message was not sent through a DM chat. */
     user_id_one?: string;
-    /** The ID of the second DM user, or an empty string if this message was not sent through a DM chat. */
     user_id_two?: string;
-    /** The username of the message sender, if any. */
     username?: string;
 }
 /** A list of channel messages, usually a result of a list operation. */

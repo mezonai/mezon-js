@@ -349,6 +349,8 @@ export interface ChannelMessage {
     sender_id: string;
     /** The username of the message sender, if any. */
     username: string;
+    /** The avatar of user who send message */
+    avatar: string;
     /** The content payload. */
     content: string;
     /** The UNIX time (for gRPC clients) or ISO string (for REST clients) when the message was created. */
@@ -2870,6 +2872,7 @@ export declare const ChannelMessage: {
         code?: number | undefined;
         sender_id?: string | undefined;
         username?: string | undefined;
+        avatar?: string | undefined;
         content?: string | undefined;
         create_time?: Date | undefined;
         update_time?: Date | undefined;
@@ -2885,6 +2888,7 @@ export declare const ChannelMessage: {
         code?: number | undefined;
         sender_id?: string | undefined;
         username?: string | undefined;
+        avatar?: string | undefined;
         content?: string | undefined;
         create_time?: Date | undefined;
         update_time?: Date | undefined;
@@ -2901,6 +2905,7 @@ export declare const ChannelMessage: {
         code?: number | undefined;
         sender_id?: string | undefined;
         username?: string | undefined;
+        avatar?: string | undefined;
         content?: string | undefined;
         create_time?: Date | undefined;
         update_time?: Date | undefined;
@@ -2916,6 +2921,7 @@ export declare const ChannelMessage: {
         code?: number | undefined;
         sender_id?: string | undefined;
         username?: string | undefined;
+        avatar?: string | undefined;
         content?: string | undefined;
         create_time?: Date | undefined;
         update_time?: Date | undefined;
@@ -2939,6 +2945,7 @@ export declare const ChannelMessageList: {
             code?: number | undefined;
             sender_id?: string | undefined;
             username?: string | undefined;
+            avatar?: string | undefined;
             content?: string | undefined;
             create_time?: Date | undefined;
             update_time?: Date | undefined;
@@ -2960,6 +2967,7 @@ export declare const ChannelMessageList: {
             code?: number | undefined;
             sender_id?: string | undefined;
             username?: string | undefined;
+            avatar?: string | undefined;
             content?: string | undefined;
             create_time?: Date | undefined;
             update_time?: Date | undefined;
@@ -2975,6 +2983,7 @@ export declare const ChannelMessageList: {
             code?: number | undefined;
             sender_id?: string | undefined;
             username?: string | undefined;
+            avatar?: string | undefined;
             content?: string | undefined;
             create_time?: Date | undefined;
             update_time?: Date | undefined;
@@ -2990,6 +2999,7 @@ export declare const ChannelMessageList: {
             code?: number | undefined;
             sender_id?: string | undefined;
             username?: string | undefined;
+            avatar?: string | undefined;
             content?: string | undefined;
             create_time?: Date | undefined;
             update_time?: Date | undefined;
@@ -3005,6 +3015,7 @@ export declare const ChannelMessageList: {
             code?: number | undefined;
             sender_id?: string | undefined;
             username?: string | undefined;
+            avatar?: string | undefined;
             content?: string | undefined;
             create_time?: Date | undefined;
             update_time?: Date | undefined;
@@ -3027,6 +3038,7 @@ export declare const ChannelMessageList: {
             code?: number | undefined;
             sender_id?: string | undefined;
             username?: string | undefined;
+            avatar?: string | undefined;
             content?: string | undefined;
             create_time?: Date | undefined;
             update_time?: Date | undefined;
@@ -3048,6 +3060,7 @@ export declare const ChannelMessageList: {
             code?: number | undefined;
             sender_id?: string | undefined;
             username?: string | undefined;
+            avatar?: string | undefined;
             content?: string | undefined;
             create_time?: Date | undefined;
             update_time?: Date | undefined;
@@ -3063,6 +3076,7 @@ export declare const ChannelMessageList: {
             code?: number | undefined;
             sender_id?: string | undefined;
             username?: string | undefined;
+            avatar?: string | undefined;
             content?: string | undefined;
             create_time?: Date | undefined;
             update_time?: Date | undefined;
@@ -3078,6 +3092,7 @@ export declare const ChannelMessageList: {
             code?: number | undefined;
             sender_id?: string | undefined;
             username?: string | undefined;
+            avatar?: string | undefined;
             content?: string | undefined;
             create_time?: Date | undefined;
             update_time?: Date | undefined;
@@ -3093,6 +3108,7 @@ export declare const ChannelMessageList: {
             code?: number | undefined;
             sender_id?: string | undefined;
             username?: string | undefined;
+            avatar?: string | undefined;
             content?: string | undefined;
             create_time?: Date | undefined;
             update_time?: Date | undefined;

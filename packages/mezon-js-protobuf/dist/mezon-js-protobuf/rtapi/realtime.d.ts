@@ -665,6 +665,7 @@ export declare const Envelope: {
             code?: number | undefined;
             sender_id?: string | undefined;
             username?: string | undefined;
+            avatar?: string | undefined;
             content?: string | undefined;
             create_time?: Date | undefined;
             update_time?: Date | undefined;
@@ -1043,6 +1044,7 @@ export declare const Envelope: {
             code?: number | undefined;
             sender_id?: string | undefined;
             username?: string | undefined;
+            avatar?: string | undefined;
             content?: string | undefined;
             create_time?: Date | undefined;
             update_time?: Date | undefined;
@@ -1058,6 +1060,7 @@ export declare const Envelope: {
             code?: number | undefined;
             sender_id?: string | undefined;
             username?: string | undefined;
+            avatar?: string | undefined;
             content?: string | undefined;
             create_time?: Date | undefined;
             update_time?: Date | undefined;
@@ -1914,6 +1917,7 @@ export declare const Envelope: {
             code?: number | undefined;
             sender_id?: string | undefined;
             username?: string | undefined;
+            avatar?: string | undefined;
             content?: string | undefined;
             create_time?: Date | undefined;
             update_time?: Date | undefined;
@@ -2292,6 +2296,7 @@ export declare const Envelope: {
             code?: number | undefined;
             sender_id?: string | undefined;
             username?: string | undefined;
+            avatar?: string | undefined;
             content?: string | undefined;
             create_time?: Date | undefined;
             update_time?: Date | undefined;
@@ -2307,6 +2312,7 @@ export declare const Envelope: {
             code?: number | undefined;
             sender_id?: string | undefined;
             username?: string | undefined;
+            avatar?: string | undefined;
             content?: string | undefined;
             create_time?: Date | undefined;
             update_time?: Date | undefined;
