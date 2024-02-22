@@ -204,6 +204,8 @@ export interface ApiChannelDescription {
 
 /** A message sent on a channel. */
 export interface ApiChannelMessage {
+  //
+  avatar?: string;
   //The channel this message belongs to.
   channel_id?: string;
   //The name of the chat room, or an empty string if this message was not sent through a chat room.
@@ -216,7 +218,7 @@ export interface ApiChannelMessage {
   content?: string;
   //The UNIX time (for gRPC clients) or ISO string (for REST clients) when the message was created.
   create_time?: string;
-  //last seen for request user
+  //
   last_seen?: boolean;
   //The unique ID of this message.
   message_id?: string;

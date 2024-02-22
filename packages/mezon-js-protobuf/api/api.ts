@@ -521,6 +521,8 @@ export interface ChannelMessage {
   sender_id: string;
   /** The username of the message sender, if any. */
   username: string;
+  /** The avatar of user who send message */
+  avatar: string;
   /** The content payload. */
   content: string;
   /** The UNIX time (for gRPC clients) or ISO string (for REST clients) when the message was created. */
@@ -4631,6 +4633,7 @@ function createBaseChannelMessage(): ChannelMessage {
     code: undefined,
     sender_id: "",
     username: "",
+    avatar: "",
     content: "",
     create_time: undefined,
     update_time: undefined,
@@ -4662,29 +4665,32 @@ export const ChannelMessage = {
     if (message.username !== "") {
       writer.uint32(50).string(message.username);
     }
+    if (message.avatar !== "") {
+      writer.uint32(58).string(message.avatar);
+    }
     if (message.content !== "") {
-      writer.uint32(58).string(message.content);
+      writer.uint32(66).string(message.content);
     }
     if (message.create_time !== undefined) {
-      Timestamp.encode(toTimestamp(message.create_time), writer.uint32(66).fork()).ldelim();
+      Timestamp.encode(toTimestamp(message.create_time), writer.uint32(74).fork()).ldelim();
     }
     if (message.update_time !== undefined) {
-      Timestamp.encode(toTimestamp(message.update_time), writer.uint32(74).fork()).ldelim();
+      Timestamp.encode(toTimestamp(message.update_time), writer.uint32(82).fork()).ldelim();
     }
     if (message.persistent !== undefined) {
-      BoolValue.encode({ value: message.persistent! }, writer.uint32(82).fork()).ldelim();
+      BoolValue.encode({ value: message.persistent! }, writer.uint32(90).fork()).ldelim();
     }
     if (message.channel_name !== "") {
-      writer.uint32(90).string(message.channel_name);
+      writer.uint32(98).string(message.channel_name);
     }
     if (message.user_id_one !== "") {
-      writer.uint32(98).string(message.user_id_one);
+      writer.uint32(106).string(message.user_id_one);
     }
     if (message.user_id_two !== "") {
-      writer.uint32(106).string(message.user_id_two);
+      writer.uint32(114).string(message.user_id_two);
     }
     if (message.last_seen !== undefined) {
-      BoolValue.encode({ value: message.last_seen! }, writer.uint32(114).fork()).ldelim();
+      BoolValue.encode({ value: message.last_seen! }, writer.uint32(122).fork()).ldelim();
     }
     return writer;
   },
@@ -4715,27 +4721,30 @@ export const ChannelMessage = {
           message.username = reader.string();
           break;
         case 7:
-          message.content = reader.string();
+          message.avatar = reader.string();
           break;
         case 8:
-          message.create_time = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
+          message.content = reader.string();
           break;
         case 9:
-          message.update_time = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
+          message.create_time = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
           break;
         case 10:
-          message.persistent = BoolValue.decode(reader, reader.uint32()).value;
+          message.update_time = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
           break;
         case 11:
-          message.channel_name = reader.string();
+          message.persistent = BoolValue.decode(reader, reader.uint32()).value;
           break;
         case 12:
-          message.user_id_one = reader.string();
+          message.channel_name = reader.string();
           break;
         case 13:
-          message.user_id_two = reader.string();
+          message.user_id_one = reader.string();
           break;
         case 14:
+          message.user_id_two = reader.string();
+          break;
+        case 15:
           message.last_seen = BoolValue.decode(reader, reader.uint32()).value;
           break;
         default:
@@ -4754,6 +4763,7 @@ export const ChannelMessage = {
       code: isSet(object.code) ? Number(object.code) : undefined,
       sender_id: isSet(object.sender_id) ? String(object.sender_id) : "",
       username: isSet(object.username) ? String(object.username) : "",
+      avatar: isSet(object.avatar) ? String(object.avatar) : "",
       content: isSet(object.content) ? String(object.content) : "",
       create_time: isSet(object.create_time) ? fromJsonTimestamp(object.create_time) : undefined,
       update_time: isSet(object.update_time) ? fromJsonTimestamp(object.update_time) : undefined,
@@ -4773,6 +4783,7 @@ export const ChannelMessage = {
     message.code !== undefined && (obj.code = message.code);
     message.sender_id !== undefined && (obj.sender_id = message.sender_id);
     message.username !== undefined && (obj.username = message.username);
+    message.avatar !== undefined && (obj.avatar = message.avatar);
     message.content !== undefined && (obj.content = message.content);
     message.create_time !== undefined && (obj.create_time = message.create_time.toISOString());
     message.update_time !== undefined && (obj.update_time = message.update_time.toISOString());
@@ -4796,6 +4807,7 @@ export const ChannelMessage = {
     message.code = object.code ?? undefined;
     message.sender_id = object.sender_id ?? "";
     message.username = object.username ?? "";
+    message.avatar = object.avatar ?? "";
     message.content = object.content ?? "";
     message.create_time = object.create_time ?? undefined;
     message.update_time = object.update_time ?? undefined;
