@@ -17,7 +17,8 @@
 import {Client} from "@mezon/mezon-js";
 
 var useSSL = false; // Enable if server is run with an SSL certificate.
-var client = new Client("defaultkey", "172.16.11.90", "7350", useSSL);
+//var client = new Client("defaultkey", "dev-mezon.nccsoft.vn", "7305", useSSL);
+var client = new Client("defaultkey", "127.0.0.1", "7349", useSSL);
 
 client.authenticateEmail("user1@ncc.asia", "Aa12345678").then(session => {
     console.log("authenticated.", session);
@@ -25,13 +26,13 @@ client.authenticateEmail("user1@ncc.asia", "Aa12345678").then(session => {
 
     socket.connect(session, true).then(session => {
       socket.followUsers(["4f0ab1da-d153-4965-841d-b8d0123b645d"]).then(status => {
-        console.log(status)
+        console.log("status", status)
         //status.presences.forEach((presence) => {
         //  console.log("User %o has status %o", presence);
         //});
       });
       
-        /*socket.joinChat("21ea6d0d-7f22-4882-8466-90aa882aa181",
+        socket.joinChat("21ea6d0d-7f22-4882-8466-90aa882aa181",
             "",
             3,
             true,
@@ -50,7 +51,7 @@ client.authenticateEmail("user1@ncc.asia", "Aa12345678").then(session => {
           // socket.writeLastSeenMessage("c35f5457-5ad5-46a4-a6c1-d1b97eb14d85", "null"
           // ).then(response => console.log(response)
           // );          
-        });*/
+        });
 
         client.listChannelMessages(session, "1fe7c3be-c02b-4fc2-8bc2-2f3e668f5ff7", 5, true).then(res => {
           console.log(res);
@@ -60,7 +61,7 @@ client.authenticateEmail("user1@ncc.asia", "Aa12345678").then(session => {
               console.log(res);
             });
           });
-        });        
+        });
     });
 }).catch(e => {
     console.log("error authenticating.");
