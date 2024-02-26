@@ -1896,6 +1896,17 @@ export interface UpdateRoleRequest {
   remove_permission_ids: string[];
 }
 
+export interface UploadFileRequest {
+  /** The name of file that need to upload */
+  filename: string;
+  /** The type of file that need to upload */
+  filetype: string;
+  /** The size of file that need to upload */
+  size: number;
+  /** stream bytes */
+  stream: Uint8Array;
+}
+
 function createBaseAccount(): Account {
   return {
     user: undefined,
@@ -12896,6 +12907,87 @@ export const UpdateRoleRequest = {
   },
 };
 
+function createBaseUploadFileRequest(): UploadFileRequest {
+  return { filename: "", filetype: "", size: 0, stream: new Uint8Array() };
+}
+
+export const UploadFileRequest = {
+  encode(message: UploadFileRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.filename !== "") {
+      writer.uint32(10).string(message.filename);
+    }
+    if (message.filetype !== "") {
+      writer.uint32(18).string(message.filetype);
+    }
+    if (message.size !== 0) {
+      writer.uint32(24).int32(message.size);
+    }
+    if (message.stream.length !== 0) {
+      writer.uint32(34).bytes(message.stream);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): UploadFileRequest {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseUploadFileRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.filename = reader.string();
+          break;
+        case 2:
+          message.filetype = reader.string();
+          break;
+        case 3:
+          message.size = reader.int32();
+          break;
+        case 4:
+          message.stream = reader.bytes();
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): UploadFileRequest {
+    return {
+      filename: isSet(object.filename) ? String(object.filename) : "",
+      filetype: isSet(object.filetype) ? String(object.filetype) : "",
+      size: isSet(object.size) ? Number(object.size) : 0,
+      stream: isSet(object.stream) ? bytesFromBase64(object.stream) : new Uint8Array(),
+    };
+  },
+
+  toJSON(message: UploadFileRequest): unknown {
+    const obj: any = {};
+    message.filename !== undefined && (obj.filename = message.filename);
+    message.filetype !== undefined && (obj.filetype = message.filetype);
+    message.size !== undefined && (obj.size = Math.round(message.size));
+    message.stream !== undefined &&
+      (obj.stream = base64FromBytes(message.stream !== undefined ? message.stream : new Uint8Array()));
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<UploadFileRequest>, I>>(base?: I): UploadFileRequest {
+    return UploadFileRequest.fromPartial(base ?? {});
+  },
+
+  fromPartial<I extends Exact<DeepPartial<UploadFileRequest>, I>>(object: I): UploadFileRequest {
+    const message = createBaseUploadFileRequest();
+    message.filename = object.filename ?? "";
+    message.filetype = object.filetype ?? "";
+    message.size = object.size ?? 0;
+    message.stream = object.stream ?? new Uint8Array();
+    return message;
+  },
+};
+
 declare var self: any | undefined;
 declare var window: any | undefined;
 declare var global: any | undefined;
@@ -12914,6 +13006,31 @@ var tsProtoGlobalThis: any = (() => {
   }
   throw "Unable to locate global object";
 })();
+
+function bytesFromBase64(b64: string): Uint8Array {
+  if (tsProtoGlobalThis.Buffer) {
+    return Uint8Array.from(tsProtoGlobalThis.Buffer.from(b64, "base64"));
+  } else {
+    const bin = tsProtoGlobalThis.atob(b64);
+    const arr = new Uint8Array(bin.length);
+    for (let i = 0; i < bin.length; ++i) {
+      arr[i] = bin.charCodeAt(i);
+    }
+    return arr;
+  }
+}
+
+function base64FromBytes(arr: Uint8Array): string {
+  if (tsProtoGlobalThis.Buffer) {
+    return tsProtoGlobalThis.Buffer.from(arr).toString("base64");
+  } else {
+    const bin: string[] = [];
+    arr.forEach((byte) => {
+      bin.push(String.fromCharCode(byte));
+    });
+    return tsProtoGlobalThis.btoa(bin.join(""));
+  }
+}
 
 type Builtin = Date | Function | Uint8Array | string | number | boolean | undefined;
 

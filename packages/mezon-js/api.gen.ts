@@ -352,22 +352,6 @@ export interface ApiCreateClanDescRequest {
   logo?: string;
 }
 
-/** Create a group with the current user as owner. */
-export interface ApiCreateGroupRequest {
-  //A URL for an avatar image.
-  avatar_url?: string;
-  //A description for the group.
-  description?: string;
-  //The language expected to be a tag which follows the BCP-47 spec.
-  lang_tag?: string;
-  //Maximum number of group members.
-  max_count?: number;
-  //A unique name for the group.
-  name?: string;
-  //Mark a group as open or not where only admins can accept members.
-  open?: boolean;
-}
-
 /** Create a role within clan. */
 export interface ApiCreateRoleRequest {
   //The permissions to add.
@@ -750,22 +734,6 @@ export interface ApiUpdateAccountRequest {
   username?: string;
 }
 
-/** Update fields in a given group. */
-export interface ApiUpdateGroupRequest {
-  // Avatar URL.
-  avatar_url?: string;
-  // Description string.
-  description?: string;
-  // The ID of the group to update.
-  group_id?: string;
-  // Lang tag.
-  lang_tag?: string;
-  // Name.
-  name?: string;
-  // Open is true if anyone should be allowed to join, or false if joins must be approved by a group admin.
-  open?: boolean;
-}
-
 /**  */
 export interface ApiUpdateCategoryDescRequest {
   //The ID of the group to update.
@@ -780,6 +748,18 @@ export interface ApiUpdateUsersRequest {
   avatar_url?: string;
   //The account username of a user.
   display_name?: string;
+}
+
+/**  */
+export interface ApiUploadFileRequest {
+  //
+  filename?: string;
+  //
+  filetype?: string;
+  //
+  size?: number;
+  //
+  stream?: string;
 }
 
 /** A user in the server. */
@@ -3095,42 +3075,6 @@ queryParams.set("creator_id", creatorId);
     ]);
 }
 
-  /** Create a new group with the current user as the owner. */
-  createGroup(bearerToken: string,
-      body:ApiCreateGroupRequest,
-      options: any = {}): Promise<ApiGroup> {
-    
-    if (body === null || body === undefined) {
-      throw new Error("'body' is a required parameter but is null or undefined.");
-    }
-    const urlPath = "/v2/group";
-    const queryParams = new Map<string, any>();
-
-    let bodyJson : string = "";
-    bodyJson = JSON.stringify(body || {});
-
-    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
-    const fetchOptions = buildFetchOptions("POST", options, bodyJson);
-    if (bearerToken) {
-        fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-    }
-
-    return Promise.race([
-      fetch(fullUrl, fetchOptions).then((response) => {
-        if (response.status == 204) {
-          return response;
-        } else if (response.status >= 200 && response.status < 300) {
-          return response.json();
-        } else {
-          throw response;
-        }
-      }),
-      new Promise((_, reject) =>
-        setTimeout(reject, this.timeoutMs, "Request timed out.")
-      ),
-    ]);
-}
-
   /** Delete a group by ID. */
   deleteGroup(bearerToken: string,
       groupId:string,
@@ -3218,44 +3162,6 @@ queryParams.set("creator_id", creatorId);
       throw new Error("'groupId' is a required parameter but is null or undefined.");
     }
     const urlPath = "/v2/group/{groupId}/add"
-        .replace("{groupId}", encodeURIComponent(String(groupId)));
-    const queryParams = new Map<string, any>();
-    queryParams.set("user_ids", userIds);
-
-    let bodyJson : string = "";
-
-    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
-    const fetchOptions = buildFetchOptions("POST", options, bodyJson);
-    if (bearerToken) {
-        fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-    }
-
-    return Promise.race([
-      fetch(fullUrl, fetchOptions).then((response) => {
-        if (response.status == 204) {
-          return response;
-        } else if (response.status >= 200 && response.status < 300) {
-          return response.json();
-        } else {
-          throw response;
-        }
-      }),
-      new Promise((_, reject) =>
-        setTimeout(reject, this.timeoutMs, "Request timed out.")
-      ),
-    ]);
-}
-
-  /** Ban a set of users from a group. */
-  banGroupUsers(bearerToken: string,
-      groupId:string,
-      userIds?:Array<string>,
-      options: any = {}): Promise<any> {
-    
-    if (groupId === null || groupId === undefined) {
-      throw new Error("'groupId' is a required parameter but is null or undefined.");
-    }
-    const urlPath = "/v2/group/{groupId}/ban"
         .replace("{groupId}", encodeURIComponent(String(groupId)));
     const queryParams = new Map<string, any>();
     queryParams.set("user_ids", userIds);
@@ -4331,6 +4237,42 @@ queryParams.set("creator_id", creatorId);
 
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("PUT", options, bodyJson);
+    if (bearerToken) {
+        fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+    }
+
+    return Promise.race([
+      fetch(fullUrl, fetchOptions).then((response) => {
+        if (response.status == 204) {
+          return response;
+        } else if (response.status >= 200 && response.status < 300) {
+          return response.json();
+        } else {
+          throw response;
+        }
+      }),
+      new Promise((_, reject) =>
+        setTimeout(reject, this.timeoutMs, "Request timed out.")
+      ),
+    ]);
+}
+
+  /** Create a new group with the current user as the owner. */
+  uploadFile(bearerToken: string,
+      body:ApiUploadFileRequest,
+      options: any = {}): Promise<any> {
+    
+    if (body === null || body === undefined) {
+      throw new Error("'body' is a required parameter but is null or undefined.");
+    }
+    const urlPath = "/v2/uploadfile";
+    const queryParams = new Map<string, any>();
+
+    let bodyJson : string = "";
+    bodyJson = JSON.stringify(body || {});
+
+    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
+    const fetchOptions = buildFetchOptions("POST", options, bodyJson);
     if (bearerToken) {
         fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
     }
