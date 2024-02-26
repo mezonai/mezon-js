@@ -543,6 +543,10 @@ export declare class Client {
     listCategoryDescs(session: Session, clanId: string, creatorId?: string, categoryName?: string): Promise<ApiCategoryDescList>;
     /** List user roles */
     listRoles(session: Session, limit?: number, state?: number, cursor?: string, clanId?: string): Promise<ApiRoleList>;
+    /** List permission */
+    getListPermission(session: Session): Promise<ApiPermissionList>;
+    /** Update action role when delete role */
+    updateRoleDelete(session: Session, roleId: string, request: {}): Promise<boolean>;
     /** List user roles */
     listRolePermissions(session: Session, roleId: string): Promise<ApiPermissionList>;
     /** List user roles */

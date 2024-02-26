@@ -1399,6 +1399,30 @@ export class Client {
     });
   }
 
+  /** List permission */
+  async getListPermission(session: Session): Promise<ApiPermissionList> {
+    if (this.autoRefreshSession && session.refresh_token &&
+        session.isexpired((Date.now() + this.expiredTimespanMs)/1000)) {
+        await this.sessionRefresh(session);
+    }
+
+    return this.apiClient.getListPermission(session.token).then((response: ApiPermissionList) => {
+      return Promise.resolve(response);
+    });
+  }
+
+  /** Update action role when delete role */
+  async updateRoleDelete(session: Session, roleId:string, request:{}): Promise<boolean> {
+    if (this.autoRefreshSession && session.refresh_token &&
+        session.isexpired((Date.now() + this.expiredTimespanMs)/1000)) {
+        await this.sessionRefresh(session);
+    }
+
+    return this.apiClient.updateRoleDelete(session.token, roleId, request).then((response: any) => {
+      return response !== undefined;
+    });
+  }
+
   /** List user roles */
   async listRolePermissions(session: Session, roleId:string): Promise<ApiPermissionList> {
     if (this.autoRefreshSession && session.refresh_token &&

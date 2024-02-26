@@ -2774,6 +2774,31 @@ var MezonApi = class {
       )
     ]);
   }
+  /**  */
+  getListPermission(bearerToken, options = {}) {
+    const urlPath = "/v2/listpermission";
+    const queryParams = /* @__PURE__ */ new Map();
+    let bodyJson = "";
+    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
+    const fetchOptions = buildFetchOptions("GET", options, bodyJson);
+    if (bearerToken) {
+      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+    }
+    return Promise.race([
+      fetch(fullUrl, fetchOptions).then((response) => {
+        if (response.status == 204) {
+          return response;
+        } else if (response.status >= 200 && response.status < 300) {
+          return response.json();
+        } else {
+          throw response;
+        }
+      }),
+      new Promise(
+        (_, reject) => setTimeout(reject, this.timeoutMs, "Request timed out.")
+      )
+    ]);
+  }
   /** Delete one or more notifications for the current user. */
   deleteNotifications(bearerToken, ids, options = {}) {
     const urlPath = "/v2/notification";
@@ -2895,6 +2920,38 @@ var MezonApi = class {
     bodyJson = JSON.stringify(body || {});
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("POST", options, bodyJson);
+    if (bearerToken) {
+      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+    }
+    return Promise.race([
+      fetch(fullUrl, fetchOptions).then((response) => {
+        if (response.status == 204) {
+          return response;
+        } else if (response.status >= 200 && response.status < 300) {
+          return response.json();
+        } else {
+          throw response;
+        }
+      }),
+      new Promise(
+        (_, reject) => setTimeout(reject, this.timeoutMs, "Request timed out.")
+      )
+    ]);
+  }
+  /** Update a role when Delete a role by ID. */
+  updateRoleDelete(bearerToken, roleId, body, options = {}) {
+    if (roleId === null || roleId === void 0) {
+      throw new Error("'roleId' is a required parameter but is null or undefined.");
+    }
+    if (body === null || body === void 0) {
+      throw new Error("'body' is a required parameter but is null or undefined.");
+    }
+    const urlPath = "/v2/roles/delete/{roleId}".replace("{roleId}", encodeURIComponent(String(roleId)));
+    const queryParams = /* @__PURE__ */ new Map();
+    let bodyJson = "";
+    bodyJson = JSON.stringify(body || {});
+    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
+    const fetchOptions = buildFetchOptions("PUT", options, bodyJson);
     if (bearerToken) {
       fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
     }
@@ -4747,6 +4804,28 @@ var Client = class {
       }
       return this.apiClient.listRoles(session.token, limit, state, cursor, clanId).then((response) => {
         return Promise.resolve(response);
+      });
+    });
+  }
+  /** List permission */
+  getListPermission(session) {
+    return __async(this, null, function* () {
+      if (this.autoRefreshSession && session.refresh_token && session.isexpired((Date.now() + this.expiredTimespanMs) / 1e3)) {
+        yield this.sessionRefresh(session);
+      }
+      return this.apiClient.getListPermission(session.token).then((response) => {
+        return Promise.resolve(response);
+      });
+    });
+  }
+  /** Update action role when delete role */
+  updateRoleDelete(session, roleId, request) {
+    return __async(this, null, function* () {
+      if (this.autoRefreshSession && session.refresh_token && session.isexpired((Date.now() + this.expiredTimespanMs) / 1e3)) {
+        yield this.sessionRefresh(session);
+      }
+      return this.apiClient.updateRoleDelete(session.token, roleId, request).then((response) => {
+        return response !== void 0;
       });
     });
   }
