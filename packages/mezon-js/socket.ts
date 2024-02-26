@@ -19,8 +19,7 @@ import { decode } from 'js-base64'
 import {ApiNotification, ApiRpc} from "./api.gen";
 import {Session} from "./session";
 import {Notification} from "./client";
-import {WebSocketAdapter } from "./web_socket_adapter"
-import { WebSocketAdapterPb } from '@mezon/mezon-js-protobuf'
+import {WebSocketAdapter, WebSocketAdapterText} from "./web_socket_adapter"
 
 /** Stores function references for resolve/reject with a DOM Promise. */
 interface PromiseExecutor {
@@ -588,7 +587,7 @@ export class DefaultSocket implements Socket {
       readonly port: string,
       readonly useSSL: boolean = false,
       public verbose: boolean = false,
-      readonly adapter : WebSocketAdapter = new WebSocketAdapterPb(),
+      readonly adapter : WebSocketAdapter = new WebSocketAdapterText(),
       readonly sendTimeoutMs : number = DefaultSocket.DefaultSendTimeoutMs
       ) {
     this.cIds = {};

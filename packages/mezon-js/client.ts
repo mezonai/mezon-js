@@ -72,8 +72,7 @@ import {
 
 import { Session } from "./session";
 import { DefaultSocket, Socket } from "./socket";
-import { WebSocketAdapter } from "./web_socket_adapter";
-import { WebSocketAdapterPb } from '@mezon/mezon-js-protobuf'
+import { WebSocketAdapter, WebSocketAdapterText } from "./web_socket_adapter";
 
 const DEFAULT_HOST = "127.0.0.1";
 const DEFAULT_PORT = "7350";
@@ -867,7 +866,7 @@ export class Client {
   }
 
   /** A socket created with the client's configuration. */
-  createSocket(useSSL = false, verbose: boolean = false, adapter : WebSocketAdapter = new WebSocketAdapterPb(), sendTimeoutMs : number = DefaultSocket.DefaultSendTimeoutMs): Socket {
+  createSocket(useSSL = false, verbose: boolean = false, adapter : WebSocketAdapter = new WebSocketAdapterText(), sendTimeoutMs : number = DefaultSocket.DefaultSendTimeoutMs): Socket {
     return new DefaultSocket(this.host, this.port, useSSL, verbose, adapter, sendTimeoutMs);
   }
 
