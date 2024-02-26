@@ -656,6 +656,8 @@ export declare class MezonApi {
     getLinkInvite(bearerToken: string, inviteId: string, options?: any): Promise<ApiInviteUserRes>;
     /** Add users to a channel. */
     inviteUser(bearerToken: string, inviteId: string, options?: any): Promise<ApiInviteUserRes>;
+    /**  */
+    getListPermission(bearerToken: string, options?: any): Promise<ApiPermissionList>;
     /** Delete one or more notifications for the current user. */
     deleteNotifications(bearerToken: string, ids?: Array<string>, options?: any): Promise<any>;
     /** Fetch list of notifications. */
@@ -666,6 +668,8 @@ export declare class MezonApi {
     listRoles(bearerToken: string, limit?: number, state?: number, cursor?: string, clanId?: string, options?: any): Promise<ApiRoleList>;
     /** Create a new role for clan. */
     createRole(bearerToken: string, body: ApiCreateRoleRequest, options?: any): Promise<ApiRole>;
+    /** Update a role when Delete a role by ID. */
+    updateRoleDelete(bearerToken: string, roleId: string, body: {}, options?: any): Promise<any>;
     /** Delete a role by ID. */
     deleteRole(bearerToken: string, roleId: string, options?: any): Promise<any>;
     /** Update fields in a given role. */
