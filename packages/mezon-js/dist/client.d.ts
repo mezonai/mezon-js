@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { ApiAccount, ApiAccountCustom, ApiAccountDevice, ApiAccountEmail, ApiAccountFacebook, ApiAccountFacebookInstantGame, ApiAccountGoogle, ApiAccountGameCenter, ApiAccountSteam, ApiChannelDescList, ApiChannelDescription, ApiCreateChannelDescRequest, ApiClanDescList, ApiCreateClanDescRequest, ApiClanDesc, ApiCategoryDesc, ApiCategoryDescList, ApiRoleList, ApiPermissionList, ApiRoleUserList, ApiRole, ApiCreateRoleRequest, ApiCreateCategoryDescRequest, ApiUpdateCategoryDescRequest, ApiCreateGroupRequest, ApiDeleteStorageObjectsRequest, ApiEvent, ApiReadStorageObjectsRequest, ApiStorageObjectAcks, ApiUpdateAccountRequest, ApiUpdateGroupRequest, ApiAccountApple, ApiLinkSteamRequest, ApiClanDescProfile, ApiClanProfile, ApiChannelUserList, ApiLinkInviteUserRequest, ApiLinkInviteUser, ApiInviteUserRes } from "./api.gen";
+import { ApiAccount, ApiAccountCustom, ApiAccountDevice, ApiAccountEmail, ApiAccountFacebook, ApiAccountFacebookInstantGame, ApiAccountGoogle, ApiAccountGameCenter, ApiAccountSteam, ApiChannelDescList, ApiChannelDescription, ApiCreateChannelDescRequest, ApiClanDescList, ApiCreateClanDescRequest, ApiClanDesc, ApiCategoryDesc, ApiCategoryDescList, ApiRoleList, ApiPermissionList, ApiRoleUserList, ApiRole, ApiCreateRoleRequest, ApiCreateCategoryDescRequest, ApiUpdateCategoryDescRequest, ApiDeleteStorageObjectsRequest, ApiEvent, ApiReadStorageObjectsRequest, ApiStorageObjectAcks, ApiUpdateAccountRequest, ApiAccountApple, ApiLinkSteamRequest, ApiClanDescProfile, ApiClanProfile, ApiChannelUserList, ApiLinkInviteUserRequest, ApiLinkInviteUser, ApiInviteUserRes, ApiUploadFileRequest } from "./api.gen";
 import { Session } from "./session";
 import { Socket } from "./socket";
 import { WebSocketAdapter } from "./web_socket_adapter";
@@ -473,12 +473,10 @@ export declare class Client {
     authenticateGameCenter(bundleId: string, playerId: string, publicKeyUrl: string, salt: string, signature: string, timestamp: string, username?: string, create?: boolean, vars?: Record<string, string>, options?: any): Promise<Session>;
     /** Authenticate a user with Steam against the server. */
     authenticateSteam(token: string, create?: boolean, username?: string, sync?: boolean, vars?: Record<string, string>): Promise<Session>;
-    /** Ban users from a group. */
-    banGroupUsers(session: Session, groupId: string, ids?: Array<string>): Promise<boolean>;
     /** Block one or more users by ID or username. */
     blockFriends(session: Session, ids?: Array<string>, usernames?: Array<string>): Promise<boolean>;
     /** Create a new group with the current user as the creator and superadmin. */
-    createGroup(session: Session, request: ApiCreateGroupRequest): Promise<Group>;
+    uploadFile(session: Session, request: ApiUploadFileRequest): Promise<boolean>;
     /** Create a channel within clan */
     createChannelDesc(session: Session, request: ApiCreateChannelDescRequest): Promise<ApiChannelDescription>;
     /** Create a clan */
@@ -610,8 +608,6 @@ export declare class Client {
     unlinkSteam(session: Session, request: ApiAccountSteam): Promise<boolean>;
     /** Update fields in the current user's account. */
     updateAccount(session: Session, request: ApiUpdateAccountRequest): Promise<boolean>;
-    /** Update a group the user is part of and has permissions to update. */
-    updateGroup(session: Session, groupId: string, request: ApiUpdateGroupRequest): Promise<boolean>;
     /** Update fields in a given channel */
     updateChannelDesc(session: Session, channelId: string, request: ApiUpdateChannelDescRequest): Promise<boolean>;
     /** Update fields in a given clan. */

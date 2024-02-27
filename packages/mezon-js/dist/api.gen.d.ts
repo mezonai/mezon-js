@@ -201,15 +201,6 @@ export interface ApiCreateClanDescRequest {
     creator_id?: string;
     logo?: string;
 }
-/** Create a group with the current user as owner. */
-export interface ApiCreateGroupRequest {
-    avatar_url?: string;
-    description?: string;
-    lang_tag?: string;
-    max_count?: number;
-    name?: string;
-    open?: boolean;
-}
 /** Create a role within clan. */
 export interface ApiCreateRoleRequest {
     active_permission_ids?: Array<string>;
@@ -433,15 +424,6 @@ export interface ApiUpdateAccountRequest {
     timezone?: string;
     username?: string;
 }
-/** Update fields in a given group. */
-export interface ApiUpdateGroupRequest {
-    avatar_url?: string;
-    description?: string;
-    group_id?: string;
-    lang_tag?: string;
-    name?: string;
-    open?: boolean;
-}
 /**  */
 export interface ApiUpdateCategoryDescRequest {
     category_id?: string;
@@ -451,6 +433,13 @@ export interface ApiUpdateCategoryDescRequest {
 export interface ApiUpdateUsersRequest {
     avatar_url?: string;
     display_name?: string;
+}
+/**  */
+export interface ApiUploadFileRequest {
+    filename?: string;
+    filetype?: string;
+    size?: number;
+    stream?: string;
 }
 /** A user in the server. */
 export interface ApiUser {
@@ -628,16 +617,10 @@ export declare class MezonApi {
     getUserProfileOnClan(bearerToken: string, clanId: string, options?: any): Promise<ApiClanProfile>;
     /** List groups based on given filters. */
     listGroups(bearerToken: string, name?: string, cursor?: string, limit?: number, langTag?: string, members?: number, open?: boolean, options?: any): Promise<ApiGroupList>;
-    /** Create a new group with the current user as the owner. */
-    createGroup(bearerToken: string, body: ApiCreateGroupRequest, options?: any): Promise<ApiGroup>;
     /** Delete a group by ID. */
     deleteGroup(bearerToken: string, groupId: string, options?: any): Promise<any>;
-    /** Update fields in a given group. */
-    updateGroup(bearerToken: string, groupId: string, body: ApiUpdateGroupRequest, options?: any): Promise<any>;
     /** Add users to a group. */
     addGroupUsers(bearerToken: string, groupId: string, userIds?: Array<string>, options?: any): Promise<any>;
-    /** Ban a set of users from a group. */
-    banGroupUsers(bearerToken: string, groupId: string, userIds?: Array<string>, options?: any): Promise<any>;
     /** Demote a set of users in a group to the next role down. */
     demoteGroupUsers(bearerToken: string, groupId: string, userIds?: Array<string>, options?: any): Promise<any>;
     /** Immediately join an open group, or request to join a closed one. */
@@ -698,6 +681,8 @@ export declare class MezonApi {
     updateCategory(bearerToken: string, body: ApiUpdateCategoryDescRequest, options?: any): Promise<any>;
     /**  */
     updateUserProfileByClan(bearerToken: string, clanId: string, body: {}, options?: any): Promise<any>;
+    /** Create a new group with the current user as the owner. */
+    uploadFile(bearerToken: string, body: ApiUploadFileRequest, options?: any): Promise<any>;
     /** Fetch zero or more users by ID and/or username. */
     getUsers(bearerToken: string, ids?: Array<string>, usernames?: Array<string>, facebookIds?: Array<string>, options?: any): Promise<ApiUsers>;
     /**  */

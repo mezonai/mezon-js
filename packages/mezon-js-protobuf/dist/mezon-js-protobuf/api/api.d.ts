@@ -1396,6 +1396,16 @@ export interface UpdateRoleRequest {
     /** The permissions to remove. */
     remove_permission_ids: string[];
 }
+export interface UploadFileRequest {
+    /** The name of file that need to upload */
+    filename: string;
+    /** The type of file that need to upload */
+    filetype: string;
+    /** The size of file that need to upload */
+    size: number;
+    /** stream bytes */
+    stream: Uint8Array;
+}
 export declare const Account: {
     encode(message: Account, writer?: _m0.Writer): _m0.Writer;
     decode(input: _m0.Reader | Uint8Array, length?: number): Account;
@@ -9101,6 +9111,34 @@ export declare const UpdateRoleRequest: {
         remove_user_ids?: (string[] & string[] & { [K_7 in Exclude<keyof I_1["remove_user_ids"], keyof string[]>]: never; }) | undefined;
         remove_permission_ids?: (string[] & string[] & { [K_8 in Exclude<keyof I_1["remove_permission_ids"], keyof string[]>]: never; }) | undefined;
     } & { [K_9 in Exclude<keyof I_1, keyof UpdateRoleRequest>]: never; }>(object: I_1): UpdateRoleRequest;
+};
+export declare const UploadFileRequest: {
+    encode(message: UploadFileRequest, writer?: _m0.Writer): _m0.Writer;
+    decode(input: _m0.Reader | Uint8Array, length?: number): UploadFileRequest;
+    fromJSON(object: any): UploadFileRequest;
+    toJSON(message: UploadFileRequest): unknown;
+    create<I extends {
+        filename?: string | undefined;
+        filetype?: string | undefined;
+        size?: number | undefined;
+        stream?: Uint8Array | undefined;
+    } & {
+        filename?: string | undefined;
+        filetype?: string | undefined;
+        size?: number | undefined;
+        stream?: Uint8Array | undefined;
+    } & { [K in Exclude<keyof I, keyof UploadFileRequest>]: never; }>(base?: I | undefined): UploadFileRequest;
+    fromPartial<I_1 extends {
+        filename?: string | undefined;
+        filetype?: string | undefined;
+        size?: number | undefined;
+        stream?: Uint8Array | undefined;
+    } & {
+        filename?: string | undefined;
+        filetype?: string | undefined;
+        size?: number | undefined;
+        stream?: Uint8Array | undefined;
+    } & { [K_1 in Exclude<keyof I_1, keyof UploadFileRequest>]: never; }>(object: I_1): UploadFileRequest;
 };
 type Builtin = Date | Function | Uint8Array | string | number | boolean | undefined;
 export type DeepPartial<T> = T extends Builtin ? T : T extends Array<infer U> ? Array<DeepPartial<U>> : T extends ReadonlyArray<infer U> ? ReadonlyArray<DeepPartial<U>> : T extends {} ? {

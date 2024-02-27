@@ -40,11 +40,9 @@ import {
   ApiCreateRoleRequest,
   ApiCreateCategoryDescRequest,
   ApiUpdateCategoryDescRequest,
-  ApiCreateGroupRequest,
   ApiDeleteStorageObjectsRequest,
   ApiEvent,
   ApiFriendList,
-  ApiGroup,
   ApiGroupList,
   ApiGroupUserList,
   ApiNotificationList,
@@ -54,7 +52,6 @@ import {
   ApiStorageObjectList,
   ApiStorageObjects,
   ApiUpdateAccountRequest,
-  ApiUpdateGroupRequest,
   ApiUsers,
   ApiUserGroupList,
   ApiWriteStorageObjectsRequest,
@@ -67,7 +64,8 @@ import {
   ApiChannelUserList,
   ApiLinkInviteUserRequest,
   ApiLinkInviteUser,
-  ApiInviteUserRes
+  ApiInviteUserRes,
+  ApiUploadFileRequest
 } from "./api.gen";
 
 import { Session } from "./session";
@@ -768,18 +766,6 @@ export class Client {
     });
   }
 
-    /** Ban users from a group. */
- async banGroupUsers(session: Session, groupId: string, ids?: Array<string>): Promise<boolean> {
-    if (this.autoRefreshSession && session.refresh_token &&
-        session.isexpired((Date.now() + this.expiredTimespanMs)/1000)) {
-        await this.sessionRefresh(session);
-    }
-
-    return this.apiClient.banGroupUsers(session.token, groupId, ids).then((response: any) => {
-        return response !== undefined;
-    });
-  }
-
   /** Block one or more users by ID or username. */
   async blockFriends(session: Session, ids?: Array<string>, usernames?: Array<string>): Promise<boolean> {
     if (this.autoRefreshSession && session.refresh_token &&
@@ -793,27 +779,14 @@ export class Client {
   }
 
   /** Create a new group with the current user as the creator and superadmin. */
-  async createGroup(session: Session, request: ApiCreateGroupRequest): Promise<Group> {
+  async uploadFile(session: Session, request: ApiUploadFileRequest): Promise<boolean> {
     if (this.autoRefreshSession && session.refresh_token &&
         session.isexpired((Date.now() + this.expiredTimespanMs)/1000)) {
         await this.sessionRefresh(session);
     }
 
-    return this.apiClient.createGroup(session.token, request).then((response: ApiGroup) => {
-      return Promise.resolve({
-        avatar_url: response.avatar_url,
-        create_time: response.create_time,
-        creator_id: response.creator_id,
-        description: response.description,
-        edge_count: response.edge_count? Number(response.edge_count) : 0,
-        id: response.id,
-        lang_tag: response.lang_tag,
-        max_count: response.max_count? Number(response.max_count) : 0,
-        metadata: response.metadata ? JSON.parse(response.metadata) : undefined,
-        name: response.name,
-        open: response.open,
-        update_time: response.update_time
-      });
+    return this.apiClient.uploadFile(session.token, request).then((response: any) => {
+      return response !== undefined;
     });
   }
 
@@ -1909,18 +1882,6 @@ export class Client {
     }
 
     return this.apiClient.updateAccount(session.token, request).then((response: any) => {
-      return response !== undefined;
-    });
-  }
-
-  /** Update a group the user is part of and has permissions to update. */
-  async updateGroup(session: Session, groupId: string, request: ApiUpdateGroupRequest): Promise<boolean> {
-    if (this.autoRefreshSession && session.refresh_token &&
-        session.isexpired((Date.now() + this.expiredTimespanMs)/1000)) {
-        await this.sessionRefresh(session);
-    }
-
-    return this.apiClient.updateGroup(session.token, groupId, request).then((response: any) => {
       return response !== undefined;
     });
   }
