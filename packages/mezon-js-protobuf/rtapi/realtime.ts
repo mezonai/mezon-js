@@ -821,6 +821,8 @@ export interface MessageReactionEvent {
   message_id: string;
   /** Message sender, usually a user ID. */
   sender_id: string;
+  /** emoji text */
+  emoji: string[];
 }
 
 /** Stop receiving status updates for some set of users. */
@@ -5482,7 +5484,7 @@ export const MessageTypingEvent = {
 };
 
 function createBaseMessageReactionEvent(): MessageReactionEvent {
-  return { channel_id: "", message_id: "", sender_id: "" };
+  return { channel_id: "", message_id: "", sender_id: "", emoji: [] };
 }
 
 export const MessageReactionEvent = {
@@ -5495,6 +5497,9 @@ export const MessageReactionEvent = {
     }
     if (message.sender_id !== "") {
       writer.uint32(26).string(message.sender_id);
+    }
+    for (const v of message.emoji) {
+      writer.uint32(34).string(v!);
     }
     return writer;
   },
@@ -5515,6 +5520,9 @@ export const MessageReactionEvent = {
         case 3:
           message.sender_id = reader.string();
           break;
+        case 4:
+          message.emoji.push(reader.string());
+          break;
         default:
           reader.skipType(tag & 7);
           break;
@@ -5528,6 +5536,7 @@ export const MessageReactionEvent = {
       channel_id: isSet(object.channel_id) ? String(object.channel_id) : "",
       message_id: isSet(object.message_id) ? String(object.message_id) : "",
       sender_id: isSet(object.sender_id) ? String(object.sender_id) : "",
+      emoji: Array.isArray(object?.emoji) ? object.emoji.map((e: any) => String(e)) : [],
     };
   },
 
@@ -5536,6 +5545,11 @@ export const MessageReactionEvent = {
     message.channel_id !== undefined && (obj.channel_id = message.channel_id);
     message.message_id !== undefined && (obj.message_id = message.message_id);
     message.sender_id !== undefined && (obj.sender_id = message.sender_id);
+    if (message.emoji) {
+      obj.emoji = message.emoji.map((e) => e);
+    } else {
+      obj.emoji = [];
+    }
     return obj;
   },
 
@@ -5548,6 +5562,7 @@ export const MessageReactionEvent = {
     message.channel_id = object.channel_id ?? "";
     message.message_id = object.message_id ?? "";
     message.sender_id = object.sender_id ?? "";
+    message.emoji = object.emoji?.map((e) => e) || [];
     return message;
   },
 };

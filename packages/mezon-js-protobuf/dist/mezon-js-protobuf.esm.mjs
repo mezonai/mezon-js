@@ -5366,7 +5366,7 @@ var MessageTypingEvent = {
   }
 };
 function createBaseMessageReactionEvent() {
-  return { channel_id: "", message_id: "", sender_id: "" };
+  return { channel_id: "", message_id: "", sender_id: "", emoji: [] };
 }
 var MessageReactionEvent = {
   encode(message, writer = import_minimal4.default.Writer.create()) {
@@ -5378,6 +5378,9 @@ var MessageReactionEvent = {
     }
     if (message.sender_id !== "") {
       writer.uint32(26).string(message.sender_id);
+    }
+    for (const v of message.emoji) {
+      writer.uint32(34).string(v);
     }
     return writer;
   },
@@ -5397,6 +5400,9 @@ var MessageReactionEvent = {
         case 3:
           message.sender_id = reader.string();
           break;
+        case 4:
+          message.emoji.push(reader.string());
+          break;
         default:
           reader.skipType(tag & 7);
           break;
@@ -5408,7 +5414,8 @@ var MessageReactionEvent = {
     return {
       channel_id: isSet4(object.channel_id) ? String(object.channel_id) : "",
       message_id: isSet4(object.message_id) ? String(object.message_id) : "",
-      sender_id: isSet4(object.sender_id) ? String(object.sender_id) : ""
+      sender_id: isSet4(object.sender_id) ? String(object.sender_id) : "",
+      emoji: Array.isArray(object == null ? void 0 : object.emoji) ? object.emoji.map((e) => String(e)) : []
     };
   },
   toJSON(message) {
@@ -5416,17 +5423,23 @@ var MessageReactionEvent = {
     message.channel_id !== void 0 && (obj.channel_id = message.channel_id);
     message.message_id !== void 0 && (obj.message_id = message.message_id);
     message.sender_id !== void 0 && (obj.sender_id = message.sender_id);
+    if (message.emoji) {
+      obj.emoji = message.emoji.map((e) => e);
+    } else {
+      obj.emoji = [];
+    }
     return obj;
   },
   create(base) {
     return MessageReactionEvent.fromPartial(base != null ? base : {});
   },
   fromPartial(object) {
-    var _a, _b, _c;
+    var _a, _b, _c, _d;
     const message = createBaseMessageReactionEvent();
     message.channel_id = (_a = object.channel_id) != null ? _a : "";
     message.message_id = (_b = object.message_id) != null ? _b : "";
     message.sender_id = (_c = object.sender_id) != null ? _c : "";
+    message.emoji = ((_d = object.emoji) == null ? void 0 : _d.map((e) => e)) || [];
     return message;
   }
 };

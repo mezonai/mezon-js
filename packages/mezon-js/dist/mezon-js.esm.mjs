@@ -3896,9 +3896,9 @@ var _DefaultSocket = class _DefaultSocket {
       return response.channel_message_ack;
     });
   }
-  writeMessageReaction(channel_id, message_id) {
+  writeMessageReaction(channel_id, message_id, emoji) {
     return __async(this, null, function* () {
-      const response = yield this.send({ message_reaction_event: { channel_id, message_id } });
+      const response = yield this.send({ message_reaction_event: { channel_id, message_id, emoji } });
       return response.message_reaction_event;
     });
   }
