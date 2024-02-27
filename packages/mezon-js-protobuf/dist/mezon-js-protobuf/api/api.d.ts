@@ -366,7 +366,16 @@ export interface ChannelMessage {
     /** The ID of the second DM user, or an empty string if this message was not sent through a DM chat. */
     user_id_two: string;
     /** last seen for request user */
-    last_seen: boolean | undefined;
+    emoji: EmojiReaction | undefined;
+}
+/** Emoji reaction by user */
+export interface EmojiReaction {
+    /** A list emoji */
+    emoji: string[];
+    /** User react to message */
+    user_id: string;
+    /** The time reaction */
+    create_time: Date[];
 }
 /** A list of channel messages, usually a result of a list operation. */
 export interface ChannelMessageList {
@@ -2890,7 +2899,11 @@ export declare const ChannelMessage: {
         channel_name?: string | undefined;
         user_id_one?: string | undefined;
         user_id_two?: string | undefined;
-        last_seen?: boolean | undefined;
+        emoji?: {
+            emoji?: string[] | undefined;
+            user_id?: string | undefined;
+            create_time?: Date[] | undefined;
+        } | undefined;
     } & {
         clan_id?: string | undefined;
         channel_id?: string | undefined;
@@ -2906,8 +2919,16 @@ export declare const ChannelMessage: {
         channel_name?: string | undefined;
         user_id_one?: string | undefined;
         user_id_two?: string | undefined;
-        last_seen?: boolean | undefined;
-    } & { [K in Exclude<keyof I, keyof ChannelMessage>]: never; }>(base?: I | undefined): ChannelMessage;
+        emoji?: ({
+            emoji?: string[] | undefined;
+            user_id?: string | undefined;
+            create_time?: Date[] | undefined;
+        } & {
+            emoji?: (string[] & string[] & { [K in Exclude<keyof I["emoji"]["emoji"], keyof string[]>]: never; }) | undefined;
+            user_id?: string | undefined;
+            create_time?: (Date[] & Date[] & { [K_1 in Exclude<keyof I["emoji"]["create_time"], keyof Date[]>]: never; }) | undefined;
+        } & { [K_2 in Exclude<keyof I["emoji"], keyof EmojiReaction>]: never; }) | undefined;
+    } & { [K_3 in Exclude<keyof I, keyof ChannelMessage>]: never; }>(base?: I | undefined): ChannelMessage;
     fromPartial<I_1 extends {
         clan_id?: string | undefined;
         channel_id?: string | undefined;
@@ -2923,7 +2944,11 @@ export declare const ChannelMessage: {
         channel_name?: string | undefined;
         user_id_one?: string | undefined;
         user_id_two?: string | undefined;
-        last_seen?: boolean | undefined;
+        emoji?: {
+            emoji?: string[] | undefined;
+            user_id?: string | undefined;
+            create_time?: Date[] | undefined;
+        } | undefined;
     } & {
         clan_id?: string | undefined;
         channel_id?: string | undefined;
@@ -2939,8 +2964,40 @@ export declare const ChannelMessage: {
         channel_name?: string | undefined;
         user_id_one?: string | undefined;
         user_id_two?: string | undefined;
-        last_seen?: boolean | undefined;
-    } & { [K_1 in Exclude<keyof I_1, keyof ChannelMessage>]: never; }>(object: I_1): ChannelMessage;
+        emoji?: ({
+            emoji?: string[] | undefined;
+            user_id?: string | undefined;
+            create_time?: Date[] | undefined;
+        } & {
+            emoji?: (string[] & string[] & { [K_4 in Exclude<keyof I_1["emoji"]["emoji"], keyof string[]>]: never; }) | undefined;
+            user_id?: string | undefined;
+            create_time?: (Date[] & Date[] & { [K_5 in Exclude<keyof I_1["emoji"]["create_time"], keyof Date[]>]: never; }) | undefined;
+        } & { [K_6 in Exclude<keyof I_1["emoji"], keyof EmojiReaction>]: never; }) | undefined;
+    } & { [K_7 in Exclude<keyof I_1, keyof ChannelMessage>]: never; }>(object: I_1): ChannelMessage;
+};
+export declare const EmojiReaction: {
+    encode(message: EmojiReaction, writer?: _m0.Writer): _m0.Writer;
+    decode(input: _m0.Reader | Uint8Array, length?: number): EmojiReaction;
+    fromJSON(object: any): EmojiReaction;
+    toJSON(message: EmojiReaction): unknown;
+    create<I extends {
+        emoji?: string[] | undefined;
+        user_id?: string | undefined;
+        create_time?: Date[] | undefined;
+    } & {
+        emoji?: (string[] & string[] & { [K in Exclude<keyof I["emoji"], keyof string[]>]: never; }) | undefined;
+        user_id?: string | undefined;
+        create_time?: (Date[] & Date[] & { [K_1 in Exclude<keyof I["create_time"], keyof Date[]>]: never; }) | undefined;
+    } & { [K_2 in Exclude<keyof I, keyof EmojiReaction>]: never; }>(base?: I | undefined): EmojiReaction;
+    fromPartial<I_1 extends {
+        emoji?: string[] | undefined;
+        user_id?: string | undefined;
+        create_time?: Date[] | undefined;
+    } & {
+        emoji?: (string[] & string[] & { [K_3 in Exclude<keyof I_1["emoji"], keyof string[]>]: never; }) | undefined;
+        user_id?: string | undefined;
+        create_time?: (Date[] & Date[] & { [K_4 in Exclude<keyof I_1["create_time"], keyof Date[]>]: never; }) | undefined;
+    } & { [K_5 in Exclude<keyof I_1, keyof EmojiReaction>]: never; }>(object: I_1): EmojiReaction;
 };
 export declare const ChannelMessageList: {
     encode(message: ChannelMessageList, writer?: _m0.Writer): _m0.Writer;
@@ -2963,7 +3020,11 @@ export declare const ChannelMessageList: {
             channel_name?: string | undefined;
             user_id_one?: string | undefined;
             user_id_two?: string | undefined;
-            last_seen?: boolean | undefined;
+            emoji?: {
+                emoji?: string[] | undefined;
+                user_id?: string | undefined;
+                create_time?: Date[] | undefined;
+            } | undefined;
         }[] | undefined;
         last_seen_message_id?: string | undefined;
         next_cursor?: string | undefined;
@@ -2985,7 +3046,11 @@ export declare const ChannelMessageList: {
             channel_name?: string | undefined;
             user_id_one?: string | undefined;
             user_id_two?: string | undefined;
-            last_seen?: boolean | undefined;
+            emoji?: {
+                emoji?: string[] | undefined;
+                user_id?: string | undefined;
+                create_time?: Date[] | undefined;
+            } | undefined;
         }[] & ({
             clan_id?: string | undefined;
             channel_id?: string | undefined;
@@ -3001,7 +3066,11 @@ export declare const ChannelMessageList: {
             channel_name?: string | undefined;
             user_id_one?: string | undefined;
             user_id_two?: string | undefined;
-            last_seen?: boolean | undefined;
+            emoji?: {
+                emoji?: string[] | undefined;
+                user_id?: string | undefined;
+                create_time?: Date[] | undefined;
+            } | undefined;
         } & {
             clan_id?: string | undefined;
             channel_id?: string | undefined;
@@ -3017,8 +3086,16 @@ export declare const ChannelMessageList: {
             channel_name?: string | undefined;
             user_id_one?: string | undefined;
             user_id_two?: string | undefined;
-            last_seen?: boolean | undefined;
-        } & { [K in Exclude<keyof I["messages"][number], keyof ChannelMessage>]: never; })[] & { [K_1 in Exclude<keyof I["messages"], keyof {
+            emoji?: ({
+                emoji?: string[] | undefined;
+                user_id?: string | undefined;
+                create_time?: Date[] | undefined;
+            } & {
+                emoji?: (string[] & string[] & { [K in Exclude<keyof I["messages"][number]["emoji"]["emoji"], keyof string[]>]: never; }) | undefined;
+                user_id?: string | undefined;
+                create_time?: (Date[] & Date[] & { [K_1 in Exclude<keyof I["messages"][number]["emoji"]["create_time"], keyof Date[]>]: never; }) | undefined;
+            } & { [K_2 in Exclude<keyof I["messages"][number]["emoji"], keyof EmojiReaction>]: never; }) | undefined;
+        } & { [K_3 in Exclude<keyof I["messages"][number], keyof ChannelMessage>]: never; })[] & { [K_4 in Exclude<keyof I["messages"], keyof {
             clan_id?: string | undefined;
             channel_id?: string | undefined;
             message_id?: string | undefined;
@@ -3033,13 +3110,17 @@ export declare const ChannelMessageList: {
             channel_name?: string | undefined;
             user_id_one?: string | undefined;
             user_id_two?: string | undefined;
-            last_seen?: boolean | undefined;
+            emoji?: {
+                emoji?: string[] | undefined;
+                user_id?: string | undefined;
+                create_time?: Date[] | undefined;
+            } | undefined;
         }[]>]: never; }) | undefined;
         last_seen_message_id?: string | undefined;
         next_cursor?: string | undefined;
         prev_cursor?: string | undefined;
         cacheable_cursor?: string | undefined;
-    } & { [K_2 in Exclude<keyof I, keyof ChannelMessageList>]: never; }>(base?: I | undefined): ChannelMessageList;
+    } & { [K_5 in Exclude<keyof I, keyof ChannelMessageList>]: never; }>(base?: I | undefined): ChannelMessageList;
     fromPartial<I_1 extends {
         messages?: {
             clan_id?: string | undefined;
@@ -3056,7 +3137,11 @@ export declare const ChannelMessageList: {
             channel_name?: string | undefined;
             user_id_one?: string | undefined;
             user_id_two?: string | undefined;
-            last_seen?: boolean | undefined;
+            emoji?: {
+                emoji?: string[] | undefined;
+                user_id?: string | undefined;
+                create_time?: Date[] | undefined;
+            } | undefined;
         }[] | undefined;
         last_seen_message_id?: string | undefined;
         next_cursor?: string | undefined;
@@ -3078,7 +3163,11 @@ export declare const ChannelMessageList: {
             channel_name?: string | undefined;
             user_id_one?: string | undefined;
             user_id_two?: string | undefined;
-            last_seen?: boolean | undefined;
+            emoji?: {
+                emoji?: string[] | undefined;
+                user_id?: string | undefined;
+                create_time?: Date[] | undefined;
+            } | undefined;
         }[] & ({
             clan_id?: string | undefined;
             channel_id?: string | undefined;
@@ -3094,7 +3183,11 @@ export declare const ChannelMessageList: {
             channel_name?: string | undefined;
             user_id_one?: string | undefined;
             user_id_two?: string | undefined;
-            last_seen?: boolean | undefined;
+            emoji?: {
+                emoji?: string[] | undefined;
+                user_id?: string | undefined;
+                create_time?: Date[] | undefined;
+            } | undefined;
         } & {
             clan_id?: string | undefined;
             channel_id?: string | undefined;
@@ -3110,8 +3203,16 @@ export declare const ChannelMessageList: {
             channel_name?: string | undefined;
             user_id_one?: string | undefined;
             user_id_two?: string | undefined;
-            last_seen?: boolean | undefined;
-        } & { [K_3 in Exclude<keyof I_1["messages"][number], keyof ChannelMessage>]: never; })[] & { [K_4 in Exclude<keyof I_1["messages"], keyof {
+            emoji?: ({
+                emoji?: string[] | undefined;
+                user_id?: string | undefined;
+                create_time?: Date[] | undefined;
+            } & {
+                emoji?: (string[] & string[] & { [K_6 in Exclude<keyof I_1["messages"][number]["emoji"]["emoji"], keyof string[]>]: never; }) | undefined;
+                user_id?: string | undefined;
+                create_time?: (Date[] & Date[] & { [K_7 in Exclude<keyof I_1["messages"][number]["emoji"]["create_time"], keyof Date[]>]: never; }) | undefined;
+            } & { [K_8 in Exclude<keyof I_1["messages"][number]["emoji"], keyof EmojiReaction>]: never; }) | undefined;
+        } & { [K_9 in Exclude<keyof I_1["messages"][number], keyof ChannelMessage>]: never; })[] & { [K_10 in Exclude<keyof I_1["messages"], keyof {
             clan_id?: string | undefined;
             channel_id?: string | undefined;
             message_id?: string | undefined;
@@ -3126,13 +3227,17 @@ export declare const ChannelMessageList: {
             channel_name?: string | undefined;
             user_id_one?: string | undefined;
             user_id_two?: string | undefined;
-            last_seen?: boolean | undefined;
+            emoji?: {
+                emoji?: string[] | undefined;
+                user_id?: string | undefined;
+                create_time?: Date[] | undefined;
+            } | undefined;
         }[]>]: never; }) | undefined;
         last_seen_message_id?: string | undefined;
         next_cursor?: string | undefined;
         prev_cursor?: string | undefined;
         cacheable_cursor?: string | undefined;
-    } & { [K_5 in Exclude<keyof I_1, keyof ChannelMessageList>]: never; }>(object: I_1): ChannelMessageList;
+    } & { [K_11 in Exclude<keyof I_1, keyof ChannelMessageList>]: never; }>(object: I_1): ChannelMessageList;
 };
 export declare const CreateGroupRequest: {
     encode(message: CreateGroupRequest, writer?: _m0.Writer): _m0.Writer;

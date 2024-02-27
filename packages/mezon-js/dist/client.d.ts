@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { ApiAccount, ApiAccountCustom, ApiAccountDevice, ApiAccountEmail, ApiAccountFacebook, ApiAccountFacebookInstantGame, ApiAccountGoogle, ApiAccountGameCenter, ApiAccountSteam, ApiChannelDescList, ApiChannelDescription, ApiCreateChannelDescRequest, ApiClanDescList, ApiCreateClanDescRequest, ApiClanDesc, ApiCategoryDesc, ApiCategoryDescList, ApiRoleList, ApiPermissionList, ApiRoleUserList, ApiRole, ApiCreateRoleRequest, ApiCreateCategoryDescRequest, ApiUpdateCategoryDescRequest, ApiDeleteStorageObjectsRequest, ApiEvent, ApiReadStorageObjectsRequest, ApiStorageObjectAcks, ApiUpdateAccountRequest, ApiAccountApple, ApiLinkSteamRequest, ApiClanDescProfile, ApiClanProfile, ApiChannelUserList, ApiLinkInviteUserRequest, ApiLinkInviteUser, ApiInviteUserRes, ApiUploadFileRequest } from "./api.gen";
+import { ApiAccount, ApiAccountCustom, ApiAccountDevice, ApiAccountEmail, ApiAccountFacebook, ApiAccountFacebookInstantGame, ApiAccountGoogle, ApiAccountGameCenter, ApiAccountSteam, ApiChannelDescList, ApiChannelDescription, ApiCreateChannelDescRequest, ApiClanDescList, ApiCreateClanDescRequest, ApiClanDesc, ApiCategoryDesc, ApiCategoryDescList, ApiRoleList, ApiPermissionList, ApiRoleUserList, ApiRole, ApiCreateRoleRequest, ApiCreateCategoryDescRequest, ApiUpdateCategoryDescRequest, ApiDeleteStorageObjectsRequest, ApiEvent, ApiReadStorageObjectsRequest, ApiStorageObjectAcks, ApiUpdateAccountRequest, ApiAccountApple, ApiLinkSteamRequest, ApiClanDescProfile, ApiClanProfile, ApiChannelUserList, ApiLinkInviteUserRequest, ApiLinkInviteUser, ApiInviteUserRes, ApiUploadFileRequest, ApiEmojiReaction } from "./api.gen";
 import { Session } from "./session";
 import { Socket } from "./socket";
 import { WebSocketAdapter } from "./web_socket_adapter";
@@ -23,117 +23,6 @@ export interface RpcResponse {
     id?: string;
     /** The payload of the function which must be a JSON object. */
     payload?: object;
-}
-/** Represents a complete leaderboard record with all scores and associated metadata. */
-export interface LeaderboardRecord {
-    /** The UNIX time when the leaderboard record was created. */
-    create_time?: string;
-    /** The UNIX time when the leaderboard record expires. */
-    expiry_time?: string;
-    /** The ID of the leaderboard this score belongs to. */
-    leaderboard_id?: string;
-    /** Metadata. */
-    metadata?: object;
-    /** The number of submissions to this score record. */
-    num_score?: number;
-    /** The ID of the score owner, usually a user or group. */
-    owner_id?: string;
-    /** The rank of this record. */
-    rank?: number;
-    /** The score value. */
-    score?: number;
-    /** An optional subscore value. */
-    subscore?: number;
-    /** The UNIX time when the leaderboard record was updated. */
-    update_time?: string;
-    /** The username of the score owner, if the owner is a user. */
-    username?: string;
-    /** The maximum number of score updates allowed by the owner. */
-    max_num_score?: number;
-}
-/** A set of leaderboard records, may be part of a leaderboard records page or a batch of individual records. */
-export interface LeaderboardRecordList {
-    /** The cursor to send when retrieving the next page, if any. */
-    next_cursor?: string;
-    /** A batched set of leaderboard records belonging to specified owners. */
-    owner_records?: Array<LeaderboardRecord>;
-    /** The cursor to send when retrieving the previous page, if any. */
-    prev_cursor?: string;
-    /** A list of leaderboard records. */
-    records?: Array<LeaderboardRecord>;
-}
-/** A Tournament on the server. */
-export interface Tournament {
-    /** The ID of the tournament. */
-    id?: string;
-    /** The title for the tournament. */
-    title?: string;
-    /** The description of the tournament. May be blank. */
-    description?: string;
-    /** The UNIX timestamp for duration of a tournament. */
-    duration?: number;
-    /** The category of the tournament. e.g. "vip" could be category 1. */
-    category?: number;
-    /** ASC or DESC sort mode of scores in the tournament. */
-    sort_order?: number;
-    /** The current number of players in the tournament. */
-    size?: number;
-    /** The maximum number of players for the tournament. */
-    max_size?: number;
-    /** The maximum score updates allowed per player for the current tournament. */
-    max_num_score?: number;
-    /** True if the tournament is active and can enter. A computed value. */
-    can_enter?: boolean;
-    /** The UNIX timestamp when the tournament stops being active until next reset. A computed value. */
-    end_active?: number;
-    /** The UNIX timestamp when the tournament is next playable. A computed value. */
-    next_reset?: number;
-    /** Additional information stored as a JSON object. */
-    metadata?: object;
-    /** The UNIX time when the tournament was created. */
-    create_time?: string;
-    /** The UNIX time when the tournament will start. */
-    start_time?: string;
-    /** The UNIX time when the tournament will be stopped. */
-    end_time?: string;
-    /** The UNIX time when the tournament start being active. A computed value. */
-    start_active?: number;
-}
-/** A list of tournaments. */
-export interface TournamentList {
-    /** The list of tournaments returned. */
-    tournaments?: Array<Tournament>;
-    /** A pagination cursor (optional). */
-    cursor?: string;
-}
-/** A set of tournament records, may be part of a tournament records page or a batch of individual records. */
-export interface TournamentRecordList {
-    /** The cursor to send when retireving the next page, if any. */
-    next_cursor?: string;
-    /** A batched set of tournament records belonging to specified owners. */
-    owner_records?: Array<LeaderboardRecord>;
-    /** The cursor to send when retrieving the previous page, if any. */
-    prev_cursor?: string;
-    /** A list of tournament records. */
-    records?: Array<LeaderboardRecord>;
-}
-/** Record values to write. */
-export interface WriteTournamentRecord {
-    /** Optional record metadata. */
-    metadata?: object;
-    /** The score value to submit. */
-    score?: string;
-    /** An optional secondary value. */
-    subscore?: string;
-}
-/** Record values to write. */
-export interface WriteLeaderboardRecord {
-    /** Optional record metadata. */
-    metadata?: object;
-    /** The score value to submit. */
-    score?: string;
-    /** An optional secondary value. */
-    subscore?: string;
 }
 /** The object to store. */
 export interface WriteStorageObject {
@@ -192,7 +81,7 @@ export interface ChannelMessage {
     code: number;
     content: string;
     create_time: string;
-    last_seen?: boolean;
+    emoji?: ApiEmojiReaction;
     message_id: string;
     persistent?: boolean;
     sender_id: string;

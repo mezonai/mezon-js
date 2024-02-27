@@ -219,7 +219,7 @@ export interface ApiChannelMessage {
   //The UNIX time (for gRPC clients) or ISO string (for REST clients) when the message was created.
   create_time: string;
   //
-  last_seen?: boolean;
+  emoji?: ApiEmojiReaction;
   //The unique ID of this message.
   message_id: string;
   //True if the message was persisted to the channel's history, false otherwise.
@@ -388,6 +388,16 @@ export interface ApiDeleteStorageObjectId {
 export interface ApiDeleteStorageObjectsRequest {
   //Batch of storage objects.
   object_ids?: Array<ApiDeleteStorageObjectId>;
+}
+
+/**  */
+export interface ApiEmojiReaction {
+  //
+  create_time?: Array<string>;
+  //
+  emoji?: Array<string>;
+  //
+  user_id?: string;
 }
 
 /** Represents an event to be passed through the server to registered event handlers. */

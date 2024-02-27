@@ -544,7 +544,17 @@ export interface ChannelMessage {
   /** The ID of the second DM user, or an empty string if this message was not sent through a DM chat. */
   user_id_two: string;
   /** last seen for request user */
-  last_seen: boolean | undefined;
+  emoji: EmojiReaction | undefined;
+}
+
+/** Emoji reaction by user */
+export interface EmojiReaction {
+  /** A list emoji */
+  emoji: string[];
+  /** User react to message */
+  user_id: string;
+  /** The time reaction */
+  create_time: Date[];
 }
 
 /** A list of channel messages, usually a result of a list operation. */
@@ -4652,7 +4662,7 @@ function createBaseChannelMessage(): ChannelMessage {
     channel_name: "",
     user_id_one: "",
     user_id_two: "",
-    last_seen: undefined,
+    emoji: undefined,
   };
 }
 
@@ -4700,8 +4710,8 @@ export const ChannelMessage = {
     if (message.user_id_two !== "") {
       writer.uint32(114).string(message.user_id_two);
     }
-    if (message.last_seen !== undefined) {
-      BoolValue.encode({ value: message.last_seen! }, writer.uint32(122).fork()).ldelim();
+    if (message.emoji !== undefined) {
+      EmojiReaction.encode(message.emoji, writer.uint32(122).fork()).ldelim();
     }
     return writer;
   },
@@ -4756,7 +4766,7 @@ export const ChannelMessage = {
           message.user_id_two = reader.string();
           break;
         case 15:
-          message.last_seen = BoolValue.decode(reader, reader.uint32()).value;
+          message.emoji = EmojiReaction.decode(reader, reader.uint32());
           break;
         default:
           reader.skipType(tag & 7);
@@ -4782,7 +4792,7 @@ export const ChannelMessage = {
       channel_name: isSet(object.channel_name) ? String(object.channel_name) : "",
       user_id_one: isSet(object.user_id_one) ? String(object.user_id_one) : "",
       user_id_two: isSet(object.user_id_two) ? String(object.user_id_two) : "",
-      last_seen: isSet(object.last_seen) ? Boolean(object.last_seen) : undefined,
+      emoji: isSet(object.emoji) ? EmojiReaction.fromJSON(object.emoji) : undefined,
     };
   },
 
@@ -4802,7 +4812,7 @@ export const ChannelMessage = {
     message.channel_name !== undefined && (obj.channel_name = message.channel_name);
     message.user_id_one !== undefined && (obj.user_id_one = message.user_id_one);
     message.user_id_two !== undefined && (obj.user_id_two = message.user_id_two);
-    message.last_seen !== undefined && (obj.last_seen = message.last_seen);
+    message.emoji !== undefined && (obj.emoji = message.emoji ? EmojiReaction.toJSON(message.emoji) : undefined);
     return obj;
   },
 
@@ -4826,7 +4836,88 @@ export const ChannelMessage = {
     message.channel_name = object.channel_name ?? "";
     message.user_id_one = object.user_id_one ?? "";
     message.user_id_two = object.user_id_two ?? "";
-    message.last_seen = object.last_seen ?? undefined;
+    message.emoji = (object.emoji !== undefined && object.emoji !== null)
+      ? EmojiReaction.fromPartial(object.emoji)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseEmojiReaction(): EmojiReaction {
+  return { emoji: [], user_id: "", create_time: [] };
+}
+
+export const EmojiReaction = {
+  encode(message: EmojiReaction, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    for (const v of message.emoji) {
+      writer.uint32(10).string(v!);
+    }
+    if (message.user_id !== "") {
+      writer.uint32(18).string(message.user_id);
+    }
+    for (const v of message.create_time) {
+      Timestamp.encode(toTimestamp(v!), writer.uint32(26).fork()).ldelim();
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): EmojiReaction {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseEmojiReaction();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.emoji.push(reader.string());
+          break;
+        case 2:
+          message.user_id = reader.string();
+          break;
+        case 3:
+          message.create_time.push(fromTimestamp(Timestamp.decode(reader, reader.uint32())));
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): EmojiReaction {
+    return {
+      emoji: Array.isArray(object?.emoji) ? object.emoji.map((e: any) => String(e)) : [],
+      user_id: isSet(object.user_id) ? String(object.user_id) : "",
+      create_time: Array.isArray(object?.create_time) ? object.create_time.map((e: any) => fromJsonTimestamp(e)) : [],
+    };
+  },
+
+  toJSON(message: EmojiReaction): unknown {
+    const obj: any = {};
+    if (message.emoji) {
+      obj.emoji = message.emoji.map((e) => e);
+    } else {
+      obj.emoji = [];
+    }
+    message.user_id !== undefined && (obj.user_id = message.user_id);
+    if (message.create_time) {
+      obj.create_time = message.create_time.map((e) => e.toISOString());
+    } else {
+      obj.create_time = [];
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<EmojiReaction>, I>>(base?: I): EmojiReaction {
+    return EmojiReaction.fromPartial(base ?? {});
+  },
+
+  fromPartial<I extends Exact<DeepPartial<EmojiReaction>, I>>(object: I): EmojiReaction {
+    const message = createBaseEmojiReaction();
+    message.emoji = object.emoji?.map((e) => e) || [];
+    message.user_id = object.user_id ?? "";
+    message.create_time = object.create_time?.map((e) => e) || [];
     return message;
   },
 };
