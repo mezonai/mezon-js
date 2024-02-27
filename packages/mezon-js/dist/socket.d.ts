@@ -431,6 +431,8 @@ export interface Socket {
     writeChatMessage(clan_id: string, channel_id: string, content: any): Promise<ChannelMessageAck>;
     /** Send message typing */
     writeMessageTyping(channel_id: string): Promise<MessageTypingEvent>;
+    /** Receive typing event */
+    onmessagetyping: (messageTypingEvent: MessageTypingEvent) => void;
     /** Send message reaction */
     writeMessageReaction(channel_id: string, message_id: string): Promise<MessageReactionEvent>;
     /** Send last seen message */
@@ -468,8 +470,8 @@ export interface Socket {
     onheartbeattimeout: () => void;
     /** Receive channel message. */
     onchannelmessage: (channelMessage: ChannelMessage) => void;
-    /** Receive typing event */
-    onmessagetyping: (messageTypingEvent: MessageTypingEvent) => void;
+    /** Receive reaction event */
+    onmessagereaction: (messageReactionEvent: MessageReactionEvent) => void;
     /** Receive channel presence updates. */
     onchannelpresence: (channelPresence: ChannelPresenceEvent) => void;
     setHeartbeatTimeoutMs(ms: number): void;
@@ -505,6 +507,7 @@ export declare class DefaultSocket implements Socket {
     ondisconnect(evt: Event): void;
     onerror(evt: Event): void;
     onmessagetyping(messagetyping: MessageTypingEvent): void;
+    onmessagereaction(messagetyping: MessageReactionEvent): void;
     onchannelmessage(channelMessage: ChannelMessage): void;
     onchannelpresence(channelPresence: ChannelPresenceEvent): void;
     onnotification(notification: Notification): void;

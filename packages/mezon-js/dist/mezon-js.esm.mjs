@@ -3584,6 +3584,8 @@ var _DefaultSocket = class _DefaultSocket {
           this.onchannelmessage(message.channel_message);
         } else if (message.message_typing_event) {
           this.onmessagetyping(message);
+        } else if (message.message_reaction_event) {
+          this.onmessagereaction(message);
         } else if (message.channel_presence_event) {
           this.onchannelpresence(message.channel_presence_event);
         } else if (message.party_data) {
@@ -3662,6 +3664,11 @@ var _DefaultSocket = class _DefaultSocket {
     }
   }
   onmessagetyping(messagetyping) {
+    if (this.verbose && window && window.console) {
+      console.log(messagetyping);
+    }
+  }
+  onmessagereaction(messagetyping) {
     if (this.verbose && window && window.console) {
       console.log(messagetyping);
     }

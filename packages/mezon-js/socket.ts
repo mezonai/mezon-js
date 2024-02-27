@@ -511,6 +511,9 @@ export interface Socket {
   /** Send message typing */
   writeMessageTyping(channel_id: string) : Promise<MessageTypingEvent>;
 
+  /** Receive typing event */
+  onmessagetyping: (messageTypingEvent: MessageTypingEvent) => void;
+
   /** Send message reaction */
   writeMessageReaction(channel_id: string, message_id: string) : Promise<MessageReactionEvent>;
 
@@ -564,8 +567,8 @@ export interface Socket {
   /** Receive channel message. */
   onchannelmessage: (channelMessage: ChannelMessage) => void;
 
-  /** Receive typing event */
-  onmessagetyping: (messageTypingEvent: MessageTypingEvent) => void;
+  /** Receive reaction event */
+  onmessagereaction: (messageReactionEvent: MessageReactionEvent) => void;
 
   /** Receive channel presence updates. */
   onchannelpresence: (channelPresence: ChannelPresenceEvent) => void;
@@ -653,6 +656,8 @@ export class DefaultSocket implements Socket {
           this.onchannelmessage(<ChannelMessage>message.channel_message);
         } else if (message.message_typing_event) {          
           this.onmessagetyping(<MessageTypingEvent>message);
+        } else if (message.message_reaction_event) {
+          this.onmessagereaction(<MessageReactionEvent>message);
         } else if (message.channel_presence_event) {
           this.onchannelpresence(<ChannelPresenceEvent>message.channel_presence_event);
         } else if (message.party_data) {
@@ -743,6 +748,12 @@ export class DefaultSocket implements Socket {
   }
 
   onmessagetyping(messagetyping: MessageTypingEvent) {
+    if (this.verbose && window && window.console) {
+      console.log(messagetyping);
+    }
+  }
+
+  onmessagereaction(messagetyping: MessageReactionEvent) {
     if (this.verbose && window && window.console) {
       console.log(messagetyping);
     }
