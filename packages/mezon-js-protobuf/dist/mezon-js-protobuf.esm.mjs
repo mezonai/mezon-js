@@ -2703,7 +2703,7 @@ var ChannelMessage = {
   }
 };
 function createBaseEmojiReaction() {
-  return { emoji: [], user_id: "", create_time: void 0 };
+  return { emoji: [], user_id: "", create_time: [] };
 }
 var EmojiReaction = {
   encode(message, writer = import_minimal3.default.Writer.create()) {
@@ -2713,8 +2713,8 @@ var EmojiReaction = {
     if (message.user_id !== "") {
       writer.uint32(18).string(message.user_id);
     }
-    if (message.create_time !== void 0) {
-      Timestamp.encode(toTimestamp(message.create_time), writer.uint32(26).fork()).ldelim();
+    for (const v of message.create_time) {
+      Timestamp.encode(toTimestamp(v), writer.uint32(26).fork()).ldelim();
     }
     return writer;
   },
@@ -2732,7 +2732,7 @@ var EmojiReaction = {
           message.user_id = reader.string();
           break;
         case 3:
-          message.create_time = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
+          message.create_time.push(fromTimestamp(Timestamp.decode(reader, reader.uint32())));
           break;
         default:
           reader.skipType(tag & 7);
@@ -2745,7 +2745,7 @@ var EmojiReaction = {
     return {
       emoji: Array.isArray(object == null ? void 0 : object.emoji) ? object.emoji.map((e) => String(e)) : [],
       user_id: isSet3(object.user_id) ? String(object.user_id) : "",
-      create_time: isSet3(object.create_time) ? fromJsonTimestamp(object.create_time) : void 0
+      create_time: Array.isArray(object == null ? void 0 : object.create_time) ? object.create_time.map((e) => fromJsonTimestamp(e)) : []
     };
   },
   toJSON(message) {
@@ -2756,7 +2756,11 @@ var EmojiReaction = {
       obj.emoji = [];
     }
     message.user_id !== void 0 && (obj.user_id = message.user_id);
-    message.create_time !== void 0 && (obj.create_time = message.create_time.toISOString());
+    if (message.create_time) {
+      obj.create_time = message.create_time.map((e) => e.toISOString());
+    } else {
+      obj.create_time = [];
+    }
     return obj;
   },
   create(base) {
@@ -2767,7 +2771,7 @@ var EmojiReaction = {
     const message = createBaseEmojiReaction();
     message.emoji = ((_a = object.emoji) == null ? void 0 : _a.map((e) => e)) || [];
     message.user_id = (_b = object.user_id) != null ? _b : "";
-    message.create_time = (_c = object.create_time) != null ? _c : void 0;
+    message.create_time = ((_c = object.create_time) == null ? void 0 : _c.map((e) => e)) || [];
     return message;
   }
 };

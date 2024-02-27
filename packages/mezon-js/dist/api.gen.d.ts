@@ -225,7 +225,7 @@ export interface ApiDeleteStorageObjectsRequest {
 }
 /**  */
 export interface ApiEmojiReaction {
-    create_time?: string;
+    create_time?: Array<string>;
     emoji?: Array<string>;
     user_id?: string;
 }

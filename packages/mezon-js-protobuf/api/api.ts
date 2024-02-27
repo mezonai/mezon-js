@@ -554,7 +554,7 @@ export interface EmojiReaction {
   /** User react to message */
   user_id: string;
   /** The time reaction */
-  create_time: Date | undefined;
+  create_time: Date[];
 }
 
 /** A list of channel messages, usually a result of a list operation. */
@@ -4844,7 +4844,7 @@ export const ChannelMessage = {
 };
 
 function createBaseEmojiReaction(): EmojiReaction {
-  return { emoji: [], user_id: "", create_time: undefined };
+  return { emoji: [], user_id: "", create_time: [] };
 }
 
 export const EmojiReaction = {
@@ -4855,8 +4855,8 @@ export const EmojiReaction = {
     if (message.user_id !== "") {
       writer.uint32(18).string(message.user_id);
     }
-    if (message.create_time !== undefined) {
-      Timestamp.encode(toTimestamp(message.create_time), writer.uint32(26).fork()).ldelim();
+    for (const v of message.create_time) {
+      Timestamp.encode(toTimestamp(v!), writer.uint32(26).fork()).ldelim();
     }
     return writer;
   },
@@ -4875,7 +4875,7 @@ export const EmojiReaction = {
           message.user_id = reader.string();
           break;
         case 3:
-          message.create_time = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
+          message.create_time.push(fromTimestamp(Timestamp.decode(reader, reader.uint32())));
           break;
         default:
           reader.skipType(tag & 7);
@@ -4889,7 +4889,7 @@ export const EmojiReaction = {
     return {
       emoji: Array.isArray(object?.emoji) ? object.emoji.map((e: any) => String(e)) : [],
       user_id: isSet(object.user_id) ? String(object.user_id) : "",
-      create_time: isSet(object.create_time) ? fromJsonTimestamp(object.create_time) : undefined,
+      create_time: Array.isArray(object?.create_time) ? object.create_time.map((e: any) => fromJsonTimestamp(e)) : [],
     };
   },
 
@@ -4901,7 +4901,11 @@ export const EmojiReaction = {
       obj.emoji = [];
     }
     message.user_id !== undefined && (obj.user_id = message.user_id);
-    message.create_time !== undefined && (obj.create_time = message.create_time.toISOString());
+    if (message.create_time) {
+      obj.create_time = message.create_time.map((e) => e.toISOString());
+    } else {
+      obj.create_time = [];
+    }
     return obj;
   },
 
@@ -4913,7 +4917,7 @@ export const EmojiReaction = {
     const message = createBaseEmojiReaction();
     message.emoji = object.emoji?.map((e) => e) || [];
     message.user_id = object.user_id ?? "";
-    message.create_time = object.create_time ?? undefined;
+    message.create_time = object.create_time?.map((e) => e) || [];
     return message;
   },
 };
