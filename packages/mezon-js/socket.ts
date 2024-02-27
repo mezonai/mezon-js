@@ -88,6 +88,8 @@ export interface MessageReactionEvent {
   message_id: string;
   /** Message sender, usually a user ID. */
   sender_id: string;
+  /** Emoji list. */
+  emoji: string[];
 }
 
 /** User is typing */
@@ -509,13 +511,10 @@ export interface Socket {
   writeChatMessage(clan_id: string, channel_id: string, content: any) : Promise<ChannelMessageAck>;
 
   /** Send message typing */
-  writeMessageTyping(channel_id: string) : Promise<MessageTypingEvent>;
-
-  /** Receive typing event */
-  onmessagetyping: (messageTypingEvent: MessageTypingEvent) => void;
+  writeMessageTyping(channel_id: string) : Promise<MessageTypingEvent>;  
 
   /** Send message reaction */
-  writeMessageReaction(channel_id: string, message_id: string) : Promise<MessageReactionEvent>;
+  writeMessageReaction(channel_id: string, message_id: string, emoji: string[]) : Promise<MessageReactionEvent>;
 
   /** Send last seen message */
   writeLastSeenMessage(channel_id: string, message_id: string) : Promise<LastSeenMessageEvent>;
@@ -566,6 +565,9 @@ export interface Socket {
 
   /** Receive channel message. */
   onchannelmessage: (channelMessage: ChannelMessage) => void;
+
+  /** Receive typing event */
+  onmessagetyping: (messageTypingEvent: MessageTypingEvent) => void;
 
   /** Receive reaction event */
   onmessagereaction: (messageReactionEvent: MessageReactionEvent) => void;
@@ -1008,8 +1010,8 @@ export class DefaultSocket implements Socket {
     return response.channel_message_ack;
   }
 
-  async writeMessageReaction(channel_id: string, message_id: string) : Promise<MessageReactionEvent> {
-    const response = await this.send({message_reaction_event: {channel_id: channel_id, message_id: message_id}});
+  async writeMessageReaction(channel_id: string, message_id: string, emoji: string[]) : Promise<MessageReactionEvent> {
+    const response = await this.send({message_reaction_event: {channel_id: channel_id, message_id: message_id, emoji: emoji}});
     return response.message_reaction_event
   }
 

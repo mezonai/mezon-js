@@ -74,6 +74,8 @@ export interface MessageReactionEvent {
     message_id: string;
     /** Message sender, usually a user ID. */
     sender_id: string;
+    /** Emoji list. */
+    emoji: string[];
 }
 /** User is typing */
 export interface MessageTypingEvent {
@@ -431,10 +433,8 @@ export interface Socket {
     writeChatMessage(clan_id: string, channel_id: string, content: any): Promise<ChannelMessageAck>;
     /** Send message typing */
     writeMessageTyping(channel_id: string): Promise<MessageTypingEvent>;
-    /** Receive typing event */
-    onmessagetyping: (messageTypingEvent: MessageTypingEvent) => void;
     /** Send message reaction */
-    writeMessageReaction(channel_id: string, message_id: string): Promise<MessageReactionEvent>;
+    writeMessageReaction(channel_id: string, message_id: string, emoji: string[]): Promise<MessageReactionEvent>;
     /** Send last seen message */
     writeLastSeenMessage(channel_id: string, message_id: string): Promise<LastSeenMessageEvent>;
     /** Handle disconnect events received from the socket. */
@@ -470,6 +470,8 @@ export interface Socket {
     onheartbeattimeout: () => void;
     /** Receive channel message. */
     onchannelmessage: (channelMessage: ChannelMessage) => void;
+    /** Receive typing event */
+    onmessagetyping: (messageTypingEvent: MessageTypingEvent) => void;
     /** Receive reaction event */
     onmessagereaction: (messageReactionEvent: MessageReactionEvent) => void;
     /** Receive channel presence updates. */
@@ -542,7 +544,7 @@ export declare class DefaultSocket implements Socket {
     updateChatMessage(channel_id: string, message_id: string, content: any): Promise<ChannelMessageAck>;
     updateStatus(status?: string): Promise<void>;
     writeChatMessage(clan_id: string, channel_id: string, content: any): Promise<ChannelMessageAck>;
-    writeMessageReaction(channel_id: string, message_id: string): Promise<MessageReactionEvent>;
+    writeMessageReaction(channel_id: string, message_id: string, emoji: string[]): Promise<MessageReactionEvent>;
     writeMessageTyping(channel_id: string): Promise<MessageTypingEvent>;
     writeLastSeenMessage(channel_id: string, message_id: string): Promise<LastSeenMessageEvent>;
     private pingPong;
