@@ -1,4 +1,3 @@
-/// <reference types="node" />
 /** A single user-role pair. */
 export interface ChannelUserListChannelUser {
     role_id?: string;
@@ -440,7 +439,7 @@ export interface ApiUploadFileRequest {
     filename?: string;
     filetype?: string;
     size?: number;
-    stream?: Buffer;
+    stream?: string;
 }
 /** A user in the server. */
 export interface ApiUser {
