@@ -2529,7 +2529,7 @@ function createBaseChannelMessage() {
     channel_name: "",
     user_id_one: "",
     user_id_two: "",
-    last_seen: void 0
+    emoji: void 0
   };
 }
 var ChannelMessage = {
@@ -2576,8 +2576,8 @@ var ChannelMessage = {
     if (message.user_id_two !== "") {
       writer.uint32(114).string(message.user_id_two);
     }
-    if (message.last_seen !== void 0) {
-      BoolValue.encode({ value: message.last_seen }, writer.uint32(122).fork()).ldelim();
+    if (message.emoji !== void 0) {
+      EmojiReaction.encode(message.emoji, writer.uint32(122).fork()).ldelim();
     }
     return writer;
   },
@@ -2631,7 +2631,7 @@ var ChannelMessage = {
           message.user_id_two = reader.string();
           break;
         case 15:
-          message.last_seen = BoolValue.decode(reader, reader.uint32()).value;
+          message.emoji = EmojiReaction.decode(reader, reader.uint32());
           break;
         default:
           reader.skipType(tag & 7);
@@ -2656,7 +2656,7 @@ var ChannelMessage = {
       channel_name: isSet3(object.channel_name) ? String(object.channel_name) : "",
       user_id_one: isSet3(object.user_id_one) ? String(object.user_id_one) : "",
       user_id_two: isSet3(object.user_id_two) ? String(object.user_id_two) : "",
-      last_seen: isSet3(object.last_seen) ? Boolean(object.last_seen) : void 0
+      emoji: isSet3(object.emoji) ? EmojiReaction.fromJSON(object.emoji) : void 0
     };
   },
   toJSON(message) {
@@ -2675,14 +2675,14 @@ var ChannelMessage = {
     message.channel_name !== void 0 && (obj.channel_name = message.channel_name);
     message.user_id_one !== void 0 && (obj.user_id_one = message.user_id_one);
     message.user_id_two !== void 0 && (obj.user_id_two = message.user_id_two);
-    message.last_seen !== void 0 && (obj.last_seen = message.last_seen);
+    message.emoji !== void 0 && (obj.emoji = message.emoji ? EmojiReaction.toJSON(message.emoji) : void 0);
     return obj;
   },
   create(base) {
     return ChannelMessage.fromPartial(base != null ? base : {});
   },
   fromPartial(object) {
-    var _a, _b, _c, _d, _e, _f, _g, _h, _i, _j, _k, _l, _m, _n, _o;
+    var _a, _b, _c, _d, _e, _f, _g, _h, _i, _j, _k, _l, _m, _n;
     const message = createBaseChannelMessage();
     message.clan_id = (_a = object.clan_id) != null ? _a : "";
     message.channel_id = (_b = object.channel_id) != null ? _b : "";
@@ -2698,7 +2698,76 @@ var ChannelMessage = {
     message.channel_name = (_l = object.channel_name) != null ? _l : "";
     message.user_id_one = (_m = object.user_id_one) != null ? _m : "";
     message.user_id_two = (_n = object.user_id_two) != null ? _n : "";
-    message.last_seen = (_o = object.last_seen) != null ? _o : void 0;
+    message.emoji = object.emoji !== void 0 && object.emoji !== null ? EmojiReaction.fromPartial(object.emoji) : void 0;
+    return message;
+  }
+};
+function createBaseEmojiReaction() {
+  return { emoji: [], user_id: "", create_time: void 0 };
+}
+var EmojiReaction = {
+  encode(message, writer = import_minimal3.default.Writer.create()) {
+    for (const v of message.emoji) {
+      writer.uint32(10).string(v);
+    }
+    if (message.user_id !== "") {
+      writer.uint32(18).string(message.user_id);
+    }
+    if (message.create_time !== void 0) {
+      Timestamp.encode(toTimestamp(message.create_time), writer.uint32(26).fork()).ldelim();
+    }
+    return writer;
+  },
+  decode(input, length) {
+    const reader = input instanceof import_minimal3.default.Reader ? input : new import_minimal3.default.Reader(input);
+    let end = length === void 0 ? reader.len : reader.pos + length;
+    const message = createBaseEmojiReaction();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.emoji.push(reader.string());
+          break;
+        case 2:
+          message.user_id = reader.string();
+          break;
+        case 3:
+          message.create_time = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+  fromJSON(object) {
+    return {
+      emoji: Array.isArray(object == null ? void 0 : object.emoji) ? object.emoji.map((e) => String(e)) : [],
+      user_id: isSet3(object.user_id) ? String(object.user_id) : "",
+      create_time: isSet3(object.create_time) ? fromJsonTimestamp(object.create_time) : void 0
+    };
+  },
+  toJSON(message) {
+    const obj = {};
+    if (message.emoji) {
+      obj.emoji = message.emoji.map((e) => e);
+    } else {
+      obj.emoji = [];
+    }
+    message.user_id !== void 0 && (obj.user_id = message.user_id);
+    message.create_time !== void 0 && (obj.create_time = message.create_time.toISOString());
+    return obj;
+  },
+  create(base) {
+    return EmojiReaction.fromPartial(base != null ? base : {});
+  },
+  fromPartial(object) {
+    var _a, _b, _c;
+    const message = createBaseEmojiReaction();
+    message.emoji = ((_a = object.emoji) == null ? void 0 : _a.map((e) => e)) || [];
+    message.user_id = (_b = object.user_id) != null ? _b : "";
+    message.create_time = (_c = object.create_time) != null ? _c : void 0;
     return message;
   }
 };

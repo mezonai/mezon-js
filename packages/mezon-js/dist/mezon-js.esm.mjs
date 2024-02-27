@@ -4449,7 +4449,7 @@ var Client = class {
             channel_name: m.channel_name,
             user_id_one: m.user_id_one,
             user_id_two: m.user_id_two,
-            last_seen: m.last_seen
+            emoji: m.emoji
           });
         });
         return Promise.resolve(result);

@@ -125,7 +125,7 @@ export interface ApiChannelMessage {
     code: number;
     content: string;
     create_time: string;
-    last_seen?: boolean;
+    emoji?: ApiEmojiReaction;
     message_id: string;
     persistent?: boolean;
     sender_id: string;
@@ -222,6 +222,12 @@ export interface ApiDeleteStorageObjectId {
 /** Batch delete storage objects. */
 export interface ApiDeleteStorageObjectsRequest {
     object_ids?: Array<ApiDeleteStorageObjectId>;
+}
+/**  */
+export interface ApiEmojiReaction {
+    create_time?: string;
+    emoji?: Array<string>;
+    user_id?: string;
 }
 /** Represents an event to be passed through the server to registered event handlers. */
 export interface ApiEvent {
