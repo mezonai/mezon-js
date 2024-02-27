@@ -3641,6 +3641,8 @@ var _DefaultSocket = class _DefaultSocket {
           this.onchannelmessage(message.channel_message);
         } else if (message.message_typing_event) {
           this.onmessagetyping(message);
+        } else if (message.message_reaction_event) {
+          this.onmessagereaction(message);
         } else if (message.channel_presence_event) {
           this.onchannelpresence(message.channel_presence_event);
         } else if (message.party_data) {
@@ -3719,6 +3721,11 @@ var _DefaultSocket = class _DefaultSocket {
     }
   }
   onmessagetyping(messagetyping) {
+    if (this.verbose && window && window.console) {
+      console.log(messagetyping);
+    }
+  }
+  onmessagereaction(messagetyping) {
     if (this.verbose && window && window.console) {
       console.log(messagetyping);
     }
@@ -3944,6 +3951,12 @@ var _DefaultSocket = class _DefaultSocket {
     return __async(this, null, function* () {
       const response = yield this.send({ channel_message_send: { clan_id, channel_id, content } });
       return response.channel_message_ack;
+    });
+  }
+  writeMessageReaction(channel_id, message_id) {
+    return __async(this, null, function* () {
+      const response = yield this.send({ message_reaction_event: { channel_id, message_id } });
+      return response.message_reaction_event;
     });
   }
   writeMessageTyping(channel_id) {

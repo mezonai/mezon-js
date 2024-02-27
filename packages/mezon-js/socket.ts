@@ -80,6 +80,16 @@ export interface LastSeenMessageEvent {
   message_id: string;
 }
 
+/** User is react to message */
+export interface MessageReactionEvent {
+  /** The channel this message belongs to. */
+  channel_id: string;
+  /** The message that user react */
+  message_id: string;
+  /** Message sender, usually a user ID. */
+  sender_id: string;
+}
+
 /** User is typing */
 export interface MessageTypingEvent {
   /** The channel this message belongs to. */
@@ -501,6 +511,12 @@ export interface Socket {
   /** Send message typing */
   writeMessageTyping(channel_id: string) : Promise<MessageTypingEvent>;
 
+  /** Receive typing event */
+  onmessagetyping: (messageTypingEvent: MessageTypingEvent) => void;
+
+  /** Send message reaction */
+  writeMessageReaction(channel_id: string, message_id: string) : Promise<MessageReactionEvent>;
+
   /** Send last seen message */
   writeLastSeenMessage(channel_id: string, message_id: string) : Promise<LastSeenMessageEvent>;
 
@@ -551,8 +567,8 @@ export interface Socket {
   /** Receive channel message. */
   onchannelmessage: (channelMessage: ChannelMessage) => void;
 
-  /** Receive typing event */
-  onmessagetyping: (messageTypingEvent: MessageTypingEvent) => void;
+  /** Receive reaction event */
+  onmessagereaction: (messageReactionEvent: MessageReactionEvent) => void;
 
   /** Receive channel presence updates. */
   onchannelpresence: (channelPresence: ChannelPresenceEvent) => void;
@@ -640,6 +656,8 @@ export class DefaultSocket implements Socket {
           this.onchannelmessage(<ChannelMessage>message.channel_message);
         } else if (message.message_typing_event) {          
           this.onmessagetyping(<MessageTypingEvent>message);
+        } else if (message.message_reaction_event) {
+          this.onmessagereaction(<MessageReactionEvent>message);
         } else if (message.channel_presence_event) {
           this.onchannelpresence(<ChannelPresenceEvent>message.channel_presence_event);
         } else if (message.party_data) {
@@ -730,6 +748,12 @@ export class DefaultSocket implements Socket {
   }
 
   onmessagetyping(messagetyping: MessageTypingEvent) {
+    if (this.verbose && window && window.console) {
+      console.log(messagetyping);
+    }
+  }
+
+  onmessagereaction(messagetyping: MessageReactionEvent) {
     if (this.verbose && window && window.console) {
       console.log(messagetyping);
     }
@@ -982,6 +1006,11 @@ export class DefaultSocket implements Socket {
   async writeChatMessage(clan_id: string, channel_id: string, content: any): Promise<ChannelMessageAck> {
     const response = await this.send({channel_message_send: {clan_id: clan_id, channel_id: channel_id, content: content}});
     return response.channel_message_ack;
+  }
+
+  async writeMessageReaction(channel_id: string, message_id: string) : Promise<MessageReactionEvent> {
+    const response = await this.send({message_reaction_event: {channel_id: channel_id, message_id: message_id}});
+    return response.message_reaction_event
   }
 
   async writeMessageTyping(channel_id: string) : Promise<MessageTypingEvent> {
