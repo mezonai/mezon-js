@@ -2950,7 +2950,8 @@ function createBaseEnvelope() {
     party_data_send: void 0,
     party_presence_event: void 0,
     message_typing_event: void 0,
-    last_seen_message_event: void 0
+    last_seen_message_event: void 0,
+    message_reaction_event: void 0
   };
 }
 var Envelope = {
@@ -3068,6 +3069,9 @@ var Envelope = {
     }
     if (message.last_seen_message_event !== void 0) {
       LastSeenMessageEvent.encode(message.last_seen_message_event, writer.uint32(306).fork()).ldelim();
+    }
+    if (message.message_reaction_event !== void 0) {
+      MessageReactionEvent.encode(message.message_reaction_event, writer.uint32(314).fork()).ldelim();
     }
     return writer;
   },
@@ -3192,6 +3196,9 @@ var Envelope = {
         case 38:
           message.last_seen_message_event = LastSeenMessageEvent.decode(reader, reader.uint32());
           break;
+        case 39:
+          message.message_reaction_event = MessageReactionEvent.decode(reader, reader.uint32());
+          break;
         default:
           reader.skipType(tag & 7);
           break;
@@ -3238,7 +3245,8 @@ var Envelope = {
       party_data_send: isSet4(object.party_data_send) ? PartyDataSend.fromJSON(object.party_data_send) : void 0,
       party_presence_event: isSet4(object.party_presence_event) ? PartyPresenceEvent.fromJSON(object.party_presence_event) : void 0,
       message_typing_event: isSet4(object.message_typing_event) ? MessageTypingEvent.fromJSON(object.message_typing_event) : void 0,
-      last_seen_message_event: isSet4(object.last_seen_message_event) ? LastSeenMessageEvent.fromJSON(object.last_seen_message_event) : void 0
+      last_seen_message_event: isSet4(object.last_seen_message_event) ? LastSeenMessageEvent.fromJSON(object.last_seen_message_event) : void 0,
+      message_reaction_event: isSet4(object.message_reaction_event) ? MessageReactionEvent.fromJSON(object.message_reaction_event) : void 0
     };
   },
   toJSON(message) {
@@ -3281,6 +3289,7 @@ var Envelope = {
     message.party_presence_event !== void 0 && (obj.party_presence_event = message.party_presence_event ? PartyPresenceEvent.toJSON(message.party_presence_event) : void 0);
     message.message_typing_event !== void 0 && (obj.message_typing_event = message.message_typing_event ? MessageTypingEvent.toJSON(message.message_typing_event) : void 0);
     message.last_seen_message_event !== void 0 && (obj.last_seen_message_event = message.last_seen_message_event ? LastSeenMessageEvent.toJSON(message.last_seen_message_event) : void 0);
+    message.message_reaction_event !== void 0 && (obj.message_reaction_event = message.message_reaction_event ? MessageReactionEvent.toJSON(message.message_reaction_event) : void 0);
     return obj;
   },
   create(base) {
@@ -3327,6 +3336,7 @@ var Envelope = {
     message.party_presence_event = object.party_presence_event !== void 0 && object.party_presence_event !== null ? PartyPresenceEvent.fromPartial(object.party_presence_event) : void 0;
     message.message_typing_event = object.message_typing_event !== void 0 && object.message_typing_event !== null ? MessageTypingEvent.fromPartial(object.message_typing_event) : void 0;
     message.last_seen_message_event = object.last_seen_message_event !== void 0 && object.last_seen_message_event !== null ? LastSeenMessageEvent.fromPartial(object.last_seen_message_event) : void 0;
+    message.message_reaction_event = object.message_reaction_event !== void 0 && object.message_reaction_event !== null ? MessageReactionEvent.fromPartial(object.message_reaction_event) : void 0;
     return message;
   }
 };
@@ -5352,6 +5362,71 @@ var MessageTypingEvent = {
     const message = createBaseMessageTypingEvent();
     message.channel_id = (_a = object.channel_id) != null ? _a : "";
     message.sender_id = (_b = object.sender_id) != null ? _b : "";
+    return message;
+  }
+};
+function createBaseMessageReactionEvent() {
+  return { channel_id: "", message_id: "", sender_id: "" };
+}
+var MessageReactionEvent = {
+  encode(message, writer = import_minimal4.default.Writer.create()) {
+    if (message.channel_id !== "") {
+      writer.uint32(10).string(message.channel_id);
+    }
+    if (message.message_id !== "") {
+      writer.uint32(18).string(message.message_id);
+    }
+    if (message.sender_id !== "") {
+      writer.uint32(26).string(message.sender_id);
+    }
+    return writer;
+  },
+  decode(input, length) {
+    const reader = input instanceof import_minimal4.default.Reader ? input : new import_minimal4.default.Reader(input);
+    let end = length === void 0 ? reader.len : reader.pos + length;
+    const message = createBaseMessageReactionEvent();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.channel_id = reader.string();
+          break;
+        case 2:
+          message.message_id = reader.string();
+          break;
+        case 3:
+          message.sender_id = reader.string();
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+  fromJSON(object) {
+    return {
+      channel_id: isSet4(object.channel_id) ? String(object.channel_id) : "",
+      message_id: isSet4(object.message_id) ? String(object.message_id) : "",
+      sender_id: isSet4(object.sender_id) ? String(object.sender_id) : ""
+    };
+  },
+  toJSON(message) {
+    const obj = {};
+    message.channel_id !== void 0 && (obj.channel_id = message.channel_id);
+    message.message_id !== void 0 && (obj.message_id = message.message_id);
+    message.sender_id !== void 0 && (obj.sender_id = message.sender_id);
+    return obj;
+  },
+  create(base) {
+    return MessageReactionEvent.fromPartial(base != null ? base : {});
+  },
+  fromPartial(object) {
+    var _a, _b, _c;
+    const message = createBaseMessageReactionEvent();
+    message.channel_id = (_a = object.channel_id) != null ? _a : "";
+    message.message_id = (_b = object.message_id) != null ? _b : "";
+    message.sender_id = (_c = object.sender_id) != null ? _c : "";
     return message;
   }
 };

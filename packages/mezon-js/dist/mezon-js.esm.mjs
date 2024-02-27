@@ -3889,6 +3889,12 @@ var _DefaultSocket = class _DefaultSocket {
       return response.channel_message_ack;
     });
   }
+  writeMessageReaction(channel_id, message_id) {
+    return __async(this, null, function* () {
+      const response = yield this.send({ message_reaction_event: { channel_id, message_id } });
+      return response.message_reaction_event;
+    });
+  }
   writeMessageTyping(channel_id) {
     return __async(this, null, function* () {
       const response = yield this.send({ message_typing_event: { channel_id } });

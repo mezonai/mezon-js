@@ -157,7 +157,11 @@ export interface Envelope {
     | MessageTypingEvent
     | undefined;
   /** Last seen message event */
-  last_seen_message_event?: LastSeenMessageEvent | undefined;
+  last_seen_message_event?:
+    | LastSeenMessageEvent
+    | undefined;
+  /** User send reactoin event */
+  message_reaction_event?: MessageReactionEvent | undefined;
 }
 
 /** A realtime chat channel. */
@@ -809,6 +813,16 @@ export interface MessageTypingEvent {
   sender_id: string;
 }
 
+/** Message reacton event data */
+export interface MessageReactionEvent {
+  /** The channel this message belongs to. */
+  channel_id: string;
+  /** React to message */
+  message_id: string;
+  /** Message sender, usually a user ID. */
+  sender_id: string;
+}
+
 /** Stop receiving status updates for some set of users. */
 export interface StatusUnfollow {
   /** Users to unfollow. */
@@ -915,6 +929,7 @@ function createBaseEnvelope(): Envelope {
     party_presence_event: undefined,
     message_typing_event: undefined,
     last_seen_message_event: undefined,
+    message_reaction_event: undefined,
   };
 }
 
@@ -1033,6 +1048,9 @@ export const Envelope = {
     }
     if (message.last_seen_message_event !== undefined) {
       LastSeenMessageEvent.encode(message.last_seen_message_event, writer.uint32(306).fork()).ldelim();
+    }
+    if (message.message_reaction_event !== undefined) {
+      MessageReactionEvent.encode(message.message_reaction_event, writer.uint32(314).fork()).ldelim();
     }
     return writer;
   },
@@ -1158,6 +1176,9 @@ export const Envelope = {
         case 38:
           message.last_seen_message_event = LastSeenMessageEvent.decode(reader, reader.uint32());
           break;
+        case 39:
+          message.message_reaction_event = MessageReactionEvent.decode(reader, reader.uint32());
+          break;
         default:
           reader.skipType(tag & 7);
           break;
@@ -1229,6 +1250,9 @@ export const Envelope = {
         : undefined,
       last_seen_message_event: isSet(object.last_seen_message_event)
         ? LastSeenMessageEvent.fromJSON(object.last_seen_message_event)
+        : undefined,
+      message_reaction_event: isSet(object.message_reaction_event)
+        ? MessageReactionEvent.fromJSON(object.message_reaction_event)
         : undefined,
     };
   },
@@ -1314,6 +1338,9 @@ export const Envelope = {
       : undefined);
     message.last_seen_message_event !== undefined && (obj.last_seen_message_event = message.last_seen_message_event
       ? LastSeenMessageEvent.toJSON(message.last_seen_message_event)
+      : undefined);
+    message.message_reaction_event !== undefined && (obj.message_reaction_event = message.message_reaction_event
+      ? MessageReactionEvent.toJSON(message.message_reaction_event)
       : undefined);
     return obj;
   },
@@ -1432,6 +1459,10 @@ export const Envelope = {
     message.last_seen_message_event =
       (object.last_seen_message_event !== undefined && object.last_seen_message_event !== null)
         ? LastSeenMessageEvent.fromPartial(object.last_seen_message_event)
+        : undefined;
+    message.message_reaction_event =
+      (object.message_reaction_event !== undefined && object.message_reaction_event !== null)
+        ? MessageReactionEvent.fromPartial(object.message_reaction_event)
         : undefined;
     return message;
   },
@@ -5445,6 +5476,77 @@ export const MessageTypingEvent = {
   fromPartial<I extends Exact<DeepPartial<MessageTypingEvent>, I>>(object: I): MessageTypingEvent {
     const message = createBaseMessageTypingEvent();
     message.channel_id = object.channel_id ?? "";
+    message.sender_id = object.sender_id ?? "";
+    return message;
+  },
+};
+
+function createBaseMessageReactionEvent(): MessageReactionEvent {
+  return { channel_id: "", message_id: "", sender_id: "" };
+}
+
+export const MessageReactionEvent = {
+  encode(message: MessageReactionEvent, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.channel_id !== "") {
+      writer.uint32(10).string(message.channel_id);
+    }
+    if (message.message_id !== "") {
+      writer.uint32(18).string(message.message_id);
+    }
+    if (message.sender_id !== "") {
+      writer.uint32(26).string(message.sender_id);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): MessageReactionEvent {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseMessageReactionEvent();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.channel_id = reader.string();
+          break;
+        case 2:
+          message.message_id = reader.string();
+          break;
+        case 3:
+          message.sender_id = reader.string();
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): MessageReactionEvent {
+    return {
+      channel_id: isSet(object.channel_id) ? String(object.channel_id) : "",
+      message_id: isSet(object.message_id) ? String(object.message_id) : "",
+      sender_id: isSet(object.sender_id) ? String(object.sender_id) : "",
+    };
+  },
+
+  toJSON(message: MessageReactionEvent): unknown {
+    const obj: any = {};
+    message.channel_id !== undefined && (obj.channel_id = message.channel_id);
+    message.message_id !== undefined && (obj.message_id = message.message_id);
+    message.sender_id !== undefined && (obj.sender_id = message.sender_id);
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<MessageReactionEvent>, I>>(base?: I): MessageReactionEvent {
+    return MessageReactionEvent.fromPartial(base ?? {});
+  },
+
+  fromPartial<I extends Exact<DeepPartial<MessageReactionEvent>, I>>(object: I): MessageReactionEvent {
+    const message = createBaseMessageReactionEvent();
+    message.channel_id = object.channel_id ?? "";
+    message.message_id = object.message_id ?? "";
     message.sender_id = object.sender_id ?? "";
     return message;
   },

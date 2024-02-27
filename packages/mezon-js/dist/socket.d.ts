@@ -66,6 +66,15 @@ export interface LastSeenMessageEvent {
     /** The unique ID of this message. */
     message_id: string;
 }
+/** User is react to message */
+export interface MessageReactionEvent {
+    /** The channel this message belongs to. */
+    channel_id: string;
+    /** The message that user react */
+    message_id: string;
+    /** Message sender, usually a user ID. */
+    sender_id: string;
+}
 /** User is typing */
 export interface MessageTypingEvent {
     /** The channel this message belongs to. */
@@ -422,6 +431,8 @@ export interface Socket {
     writeChatMessage(clan_id: string, channel_id: string, content: any): Promise<ChannelMessageAck>;
     /** Send message typing */
     writeMessageTyping(channel_id: string): Promise<MessageTypingEvent>;
+    /** Send message reaction */
+    writeMessageReaction(channel_id: string, message_id: string): Promise<MessageReactionEvent>;
     /** Send last seen message */
     writeLastSeenMessage(channel_id: string, message_id: string): Promise<LastSeenMessageEvent>;
     /** Handle disconnect events received from the socket. */
@@ -528,6 +539,7 @@ export declare class DefaultSocket implements Socket {
     updateChatMessage(channel_id: string, message_id: string, content: any): Promise<ChannelMessageAck>;
     updateStatus(status?: string): Promise<void>;
     writeChatMessage(clan_id: string, channel_id: string, content: any): Promise<ChannelMessageAck>;
+    writeMessageReaction(channel_id: string, message_id: string): Promise<MessageReactionEvent>;
     writeMessageTyping(channel_id: string): Promise<MessageTypingEvent>;
     writeLastSeenMessage(channel_id: string, message_id: string): Promise<LastSeenMessageEvent>;
     private pingPong;

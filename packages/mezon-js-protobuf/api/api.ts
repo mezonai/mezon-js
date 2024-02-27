@@ -1756,8 +1756,8 @@ export interface Role {
   active: number;
   display_online: number;
   allow_mention: number;
-  roleUserList: RoleUserList | undefined;
-  permissionList: PermissionList | undefined;
+  role_user_list: RoleUserList | undefined;
+  permission_list: PermissionList | undefined;
 }
 
 /** Permission record */
@@ -11710,8 +11710,8 @@ function createBaseRole(): Role {
     active: 0,
     display_online: 0,
     allow_mention: 0,
-    roleUserList: undefined,
-    permissionList: undefined,
+    role_user_list: undefined,
+    permission_list: undefined,
   };
 }
 
@@ -11750,11 +11750,11 @@ export const Role = {
     if (message.allow_mention !== 0) {
       writer.uint32(88).int32(message.allow_mention);
     }
-    if (message.roleUserList !== undefined) {
-      RoleUserList.encode(message.roleUserList, writer.uint32(98).fork()).ldelim();
+    if (message.role_user_list !== undefined) {
+      RoleUserList.encode(message.role_user_list, writer.uint32(98).fork()).ldelim();
     }
-    if (message.permissionList !== undefined) {
-      PermissionList.encode(message.permissionList, writer.uint32(106).fork()).ldelim();
+    if (message.permission_list !== undefined) {
+      PermissionList.encode(message.permission_list, writer.uint32(106).fork()).ldelim();
     }
     return writer;
   },
@@ -11800,10 +11800,10 @@ export const Role = {
           message.allow_mention = reader.int32();
           break;
         case 12:
-          message.roleUserList = RoleUserList.decode(reader, reader.uint32());
+          message.role_user_list = RoleUserList.decode(reader, reader.uint32());
           break;
         case 13:
-          message.permissionList = PermissionList.decode(reader, reader.uint32());
+          message.permission_list = PermissionList.decode(reader, reader.uint32());
           break;
         default:
           reader.skipType(tag & 7);
@@ -11826,8 +11826,8 @@ export const Role = {
       active: isSet(object.active) ? Number(object.active) : 0,
       display_online: isSet(object.display_online) ? Number(object.display_online) : 0,
       allow_mention: isSet(object.allow_mention) ? Number(object.allow_mention) : 0,
-      roleUserList: isSet(object.roleUserList) ? RoleUserList.fromJSON(object.roleUserList) : undefined,
-      permissionList: isSet(object.permissionList) ? PermissionList.fromJSON(object.permissionList) : undefined,
+      role_user_list: isSet(object.role_user_list) ? RoleUserList.fromJSON(object.role_user_list) : undefined,
+      permission_list: isSet(object.permission_list) ? PermissionList.fromJSON(object.permission_list) : undefined,
     };
   },
 
@@ -11844,10 +11844,10 @@ export const Role = {
     message.active !== undefined && (obj.active = Math.round(message.active));
     message.display_online !== undefined && (obj.display_online = Math.round(message.display_online));
     message.allow_mention !== undefined && (obj.allow_mention = Math.round(message.allow_mention));
-    message.roleUserList !== undefined &&
-      (obj.roleUserList = message.roleUserList ? RoleUserList.toJSON(message.roleUserList) : undefined);
-    message.permissionList !== undefined &&
-      (obj.permissionList = message.permissionList ? PermissionList.toJSON(message.permissionList) : undefined);
+    message.role_user_list !== undefined &&
+      (obj.role_user_list = message.role_user_list ? RoleUserList.toJSON(message.role_user_list) : undefined);
+    message.permission_list !== undefined &&
+      (obj.permission_list = message.permission_list ? PermissionList.toJSON(message.permission_list) : undefined);
     return obj;
   },
 
@@ -11868,11 +11868,11 @@ export const Role = {
     message.active = object.active ?? 0;
     message.display_online = object.display_online ?? 0;
     message.allow_mention = object.allow_mention ?? 0;
-    message.roleUserList = (object.roleUserList !== undefined && object.roleUserList !== null)
-      ? RoleUserList.fromPartial(object.roleUserList)
+    message.role_user_list = (object.role_user_list !== undefined && object.role_user_list !== null)
+      ? RoleUserList.fromPartial(object.role_user_list)
       : undefined;
-    message.permissionList = (object.permissionList !== undefined && object.permissionList !== null)
-      ? PermissionList.fromPartial(object.permissionList)
+    message.permission_list = (object.permission_list !== undefined && object.permission_list !== null)
+      ? PermissionList.fromPartial(object.permission_list)
       : undefined;
     return message;
   },
