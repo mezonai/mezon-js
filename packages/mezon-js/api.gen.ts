@@ -3111,47 +3111,6 @@ queryParams.set("creator_id", creatorId);
     ]);
 }
 
-  /** Update fields in a given group. */
-  updateGroup(bearerToken: string,
-      groupId:string,
-      body:ApiUpdateGroupRequest,
-      options: any = {}): Promise<any> {
-    
-    if (groupId === null || groupId === undefined) {
-      throw new Error("'groupId' is a required parameter but is null or undefined.");
-    }
-    if (body === null || body === undefined) {
-      throw new Error("'body' is a required parameter but is null or undefined.");
-    }
-    const urlPath = "/v2/group/{groupId}"
-        .replace("{groupId}", encodeURIComponent(String(groupId)));
-    const queryParams = new Map<string, any>();
-
-    let bodyJson : string = "";
-    bodyJson = JSON.stringify(body || {});
-
-    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
-    const fetchOptions = buildFetchOptions("PUT", options, bodyJson);
-    if (bearerToken) {
-        fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-    }
-
-    return Promise.race([
-      fetch(fullUrl, fetchOptions).then((response) => {
-        if (response.status == 204) {
-          return response;
-        } else if (response.status >= 200 && response.status < 300) {
-          return response.json();
-        } else {
-          throw response;
-        }
-      }),
-      new Promise((_, reject) =>
-        setTimeout(reject, this.timeoutMs, "Request timed out.")
-      ),
-    ]);
-}
-
   /** Add users to a group. */
   addGroupUsers(bearerToken: string,
       groupId:string,

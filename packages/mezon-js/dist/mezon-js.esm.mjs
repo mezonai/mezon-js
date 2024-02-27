@@ -2368,35 +2368,6 @@ var MezonApi = class {
       )
     ]);
   }
-  /** Create a new group with the current user as the owner. */
-  createGroup(bearerToken, body, options = {}) {
-    if (body === null || body === void 0) {
-      throw new Error("'body' is a required parameter but is null or undefined.");
-    }
-    const urlPath = "/v2/group";
-    const queryParams = /* @__PURE__ */ new Map();
-    let bodyJson = "";
-    bodyJson = JSON.stringify(body || {});
-    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
-    const fetchOptions = buildFetchOptions("POST", options, bodyJson);
-    if (bearerToken) {
-      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-    }
-    return Promise.race([
-      fetch(fullUrl, fetchOptions).then((response) => {
-        if (response.status == 204) {
-          return response;
-        } else if (response.status >= 200 && response.status < 300) {
-          return response.json();
-        } else {
-          throw response;
-        }
-      }),
-      new Promise(
-        (_, reject) => setTimeout(reject, this.timeoutMs, "Request timed out.")
-      )
-    ]);
-  }
   /** Delete a group by ID. */
   deleteGroup(bearerToken, groupId, options = {}) {
     if (groupId === null || groupId === void 0) {
@@ -2425,73 +2396,12 @@ var MezonApi = class {
       )
     ]);
   }
-  /** Update fields in a given group. */
-  updateGroup(bearerToken, groupId, body, options = {}) {
-    if (groupId === null || groupId === void 0) {
-      throw new Error("'groupId' is a required parameter but is null or undefined.");
-    }
-    if (body === null || body === void 0) {
-      throw new Error("'body' is a required parameter but is null or undefined.");
-    }
-    const urlPath = "/v2/group/{groupId}".replace("{groupId}", encodeURIComponent(String(groupId)));
-    const queryParams = /* @__PURE__ */ new Map();
-    let bodyJson = "";
-    bodyJson = JSON.stringify(body || {});
-    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
-    const fetchOptions = buildFetchOptions("PUT", options, bodyJson);
-    if (bearerToken) {
-      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-    }
-    return Promise.race([
-      fetch(fullUrl, fetchOptions).then((response) => {
-        if (response.status == 204) {
-          return response;
-        } else if (response.status >= 200 && response.status < 300) {
-          return response.json();
-        } else {
-          throw response;
-        }
-      }),
-      new Promise(
-        (_, reject) => setTimeout(reject, this.timeoutMs, "Request timed out.")
-      )
-    ]);
-  }
   /** Add users to a group. */
   addGroupUsers(bearerToken, groupId, userIds, options = {}) {
     if (groupId === null || groupId === void 0) {
       throw new Error("'groupId' is a required parameter but is null or undefined.");
     }
     const urlPath = "/v2/group/{groupId}/add".replace("{groupId}", encodeURIComponent(String(groupId)));
-    const queryParams = /* @__PURE__ */ new Map();
-    queryParams.set("user_ids", userIds);
-    let bodyJson = "";
-    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
-    const fetchOptions = buildFetchOptions("POST", options, bodyJson);
-    if (bearerToken) {
-      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-    }
-    return Promise.race([
-      fetch(fullUrl, fetchOptions).then((response) => {
-        if (response.status == 204) {
-          return response;
-        } else if (response.status >= 200 && response.status < 300) {
-          return response.json();
-        } else {
-          throw response;
-        }
-      }),
-      new Promise(
-        (_, reject) => setTimeout(reject, this.timeoutMs, "Request timed out.")
-      )
-    ]);
-  }
-  /** Ban a set of users from a group. */
-  banGroupUsers(bearerToken, groupId, userIds, options = {}) {
-    if (groupId === null || groupId === void 0) {
-      throw new Error("'groupId' is a required parameter but is null or undefined.");
-    }
-    const urlPath = "/v2/group/{groupId}/ban".replace("{groupId}", encodeURIComponent(String(groupId)));
     const queryParams = /* @__PURE__ */ new Map();
     queryParams.set("user_ids", userIds);
     let bodyJson = "";
@@ -3323,6 +3233,35 @@ var MezonApi = class {
     bodyJson = JSON.stringify(body || {});
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("PUT", options, bodyJson);
+    if (bearerToken) {
+      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+    }
+    return Promise.race([
+      fetch(fullUrl, fetchOptions).then((response) => {
+        if (response.status == 204) {
+          return response;
+        } else if (response.status >= 200 && response.status < 300) {
+          return response.json();
+        } else {
+          throw response;
+        }
+      }),
+      new Promise(
+        (_, reject) => setTimeout(reject, this.timeoutMs, "Request timed out.")
+      )
+    ]);
+  }
+  /** Create a new group with the current user as the owner. */
+  uploadFile(bearerToken, body, options = {}) {
+    if (body === null || body === void 0) {
+      throw new Error("'body' is a required parameter but is null or undefined.");
+    }
+    const urlPath = "/v2/uploadfile";
+    const queryParams = /* @__PURE__ */ new Map();
+    let bodyJson = "";
+    bodyJson = JSON.stringify(body || {});
+    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
+    const fetchOptions = buildFetchOptions("POST", options, bodyJson);
     if (bearerToken) {
       fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
     }
@@ -4173,17 +4112,6 @@ var Client = class {
       });
     });
   }
-  /** Ban users from a group. */
-  banGroupUsers(session, groupId, ids) {
-    return __async(this, null, function* () {
-      if (this.autoRefreshSession && session.refresh_token && session.isexpired((Date.now() + this.expiredTimespanMs) / 1e3)) {
-        yield this.sessionRefresh(session);
-      }
-      return this.apiClient.banGroupUsers(session.token, groupId, ids).then((response) => {
-        return response !== void 0;
-      });
-    });
-  }
   /** Block one or more users by ID or username. */
   blockFriends(session, ids, usernames) {
     return __async(this, null, function* () {
@@ -4196,26 +4124,13 @@ var Client = class {
     });
   }
   /** Create a new group with the current user as the creator and superadmin. */
-  createGroup(session, request) {
+  uploadFile(session, request) {
     return __async(this, null, function* () {
       if (this.autoRefreshSession && session.refresh_token && session.isexpired((Date.now() + this.expiredTimespanMs) / 1e3)) {
         yield this.sessionRefresh(session);
       }
-      return this.apiClient.createGroup(session.token, request).then((response) => {
-        return Promise.resolve({
-          avatar_url: response.avatar_url,
-          create_time: response.create_time,
-          creator_id: response.creator_id,
-          description: response.description,
-          edge_count: response.edge_count ? Number(response.edge_count) : 0,
-          id: response.id,
-          lang_tag: response.lang_tag,
-          max_count: response.max_count ? Number(response.max_count) : 0,
-          metadata: response.metadata ? JSON.parse(response.metadata) : void 0,
-          name: response.name,
-          open: response.open,
-          update_time: response.update_time
-        });
+      return this.apiClient.uploadFile(session.token, request).then((response) => {
+        return response !== void 0;
       });
     });
   }
@@ -5192,17 +5107,6 @@ var Client = class {
         yield this.sessionRefresh(session);
       }
       return this.apiClient.updateAccount(session.token, request).then((response) => {
-        return response !== void 0;
-      });
-    });
-  }
-  /** Update a group the user is part of and has permissions to update. */
-  updateGroup(session, groupId, request) {
-    return __async(this, null, function* () {
-      if (this.autoRefreshSession && session.refresh_token && session.isexpired((Date.now() + this.expiredTimespanMs) / 1e3)) {
-        yield this.sessionRefresh(session);
-      }
-      return this.apiClient.updateGroup(session.token, groupId, request).then((response) => {
         return response !== void 0;
       });
     });
