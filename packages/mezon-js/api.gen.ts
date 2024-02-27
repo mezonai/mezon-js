@@ -759,7 +759,7 @@ export interface ApiUploadFileRequest {
   //
   size?: number;
   //
-  stream?: Buffer;
+  stream?: string;
 }
 
 /** A user in the server. */
