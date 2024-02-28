@@ -67,7 +67,9 @@ import {
   ApiLinkInviteUser,
   ApiInviteUserRes,
   ApiUploadFileRequest,
-  ApiEmojiReaction
+  ApiMessageReaction,
+  ApiMessageMention,
+  ApiMessageAttachment,
 } from "./api.gen";
 
 import { Session } from "./session";
@@ -157,7 +159,11 @@ export interface ChannelMessage {
   //The UNIX time (for gRPC clients) or ISO string (for REST clients) when the message was created.
   create_time: string;
   //
-  emoji?: ApiEmojiReaction;
+  reactions?: Array<ApiMessageReaction>;
+  //
+  mentions?: Array<ApiMessageMention>;
+  //
+  attachments?: Array<ApiMessageAttachment>;
   //The unique ID of this message.
   message_id: string;
   //True if the message was persisted to the channel's history, false otherwise.
@@ -1005,7 +1011,9 @@ export class Client {
           channel_name: m.channel_name,
           user_id_one: m.user_id_one,
           user_id_two: m.user_id_two,
-          emoji: m.emoji
+          attachments: m.attachments,
+          mentions: m.mentions,
+          reactions: m.reactions
         })
       });
       return Promise.resolve(result);

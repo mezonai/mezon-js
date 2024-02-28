@@ -123,6 +123,7 @@ export interface ApiChannelDescription {
 }
 /** A message sent on a channel. */
 export interface ApiChannelMessage {
+    attachments?: Array<ApiMessageAttachment>;
     avatar?: string;
     channel_id: string;
     channel_name: string;
@@ -130,9 +131,10 @@ export interface ApiChannelMessage {
     code: number;
     content: string;
     create_time: string;
-    emoji?: ApiEmojiReaction;
+    mentions?: Array<ApiMessageMention>;
     message_id: string;
     persistent?: boolean;
+    reactions?: Array<ApiMessageReaction>;
     sender_id: string;
     update_time?: string;
     user_id_one?: string;
@@ -234,12 +236,6 @@ export interface ApiDeleteStorageObjectId {
 export interface ApiDeleteStorageObjectsRequest {
     object_ids?: Array<ApiDeleteStorageObjectId>;
 }
-/**  */
-export interface ApiEmojiReaction {
-    create_time?: Array<string>;
-    emoji?: Array<string>;
-    user_id?: string;
-}
 /** Represents an event to be passed through the server to registered event handlers. */
 export interface ApiEvent {
     external?: boolean;
@@ -310,6 +306,26 @@ export interface ApiLinkInviteUserRequest {
 export interface ApiLinkSteamRequest {
     account?: ApiAccountSteam;
     sync?: boolean;
+}
+/**  */
+export interface ApiMessageAttachment {
+    filename?: string;
+    filetype?: string;
+    height?: number;
+    size?: string;
+    url?: string;
+    width?: number;
+}
+/**  */
+export interface ApiMessageMention {
+    user_id?: string;
+    username?: string;
+}
+/**  */
+export interface ApiMessageReaction {
+    create_time?: string;
+    emoji?: string;
+    user_id?: string;
 }
 /** A notification in the server. */
 export interface ApiNotification {

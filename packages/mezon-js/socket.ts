@@ -89,7 +89,43 @@ export interface MessageReactionEvent {
   /** Message sender, usually a user ID. */
   sender_id: string;
   /** Emoji list. */
-  emoji: string[];
+  emoji: string;
+}
+
+/** User is react to message */
+export interface MessageMentionEvent {
+  /** The channel this message belongs to. */
+  channel_id: string;
+  /** The message that user react */
+  message_id: string;
+  /** Message sender, usually a user ID. */
+  sender_id: string;  
+  // mention user id
+  user_id: string;
+  // mention username
+  username: string;
+}
+
+/** User is react to message */
+export interface MessageAttachmentEvent {
+  /** The channel this message belongs to. */
+  channel_id: string;
+  /** The message that user react */
+  message_id: string;
+  /** Message sender, usually a user ID. */
+  sender_id: string; 
+  // Attachment file name
+  filename: string;
+  // Attachment file size
+  size: number;
+  // Attachment url
+  url: string;
+  // Attachment file type
+  filetype: string;
+  // Attachment width
+  width?: number;
+  // Attachment width
+  height?: number;
 }
 
 /** User is typing */
@@ -572,6 +608,10 @@ export interface Socket {
   /** Receive reaction event */
   onmessagereaction: (messageReactionEvent: MessageReactionEvent) => void;
 
+  onmessagemention: (messageMentionEvent: MessageMentionEvent) => void;
+
+  onmessageattachment: (messageAttachmentEvent: MessageAttachmentEvent) => void;
+
   /** Receive channel presence updates. */
   onchannelpresence: (channelPresence: ChannelPresenceEvent) => void;
 
@@ -660,6 +700,10 @@ export class DefaultSocket implements Socket {
           this.onmessagetyping(<MessageTypingEvent>message);
         } else if (message.message_reaction_event) {
           this.onmessagereaction(<MessageReactionEvent>message);
+        } else if (message.message_mention_event) {
+          this.onmessagemention(<MessageMentionEvent>message);
+        } else if (message.message_attachment_event) {
+          this.onmessageattachment(<MessageAttachmentEvent>message);
         } else if (message.channel_presence_event) {
           this.onchannelpresence(<ChannelPresenceEvent>message.channel_presence_event);
         } else if (message.party_data) {
@@ -756,6 +800,18 @@ export class DefaultSocket implements Socket {
   }
 
   onmessagereaction(messagetyping: MessageReactionEvent) {
+    if (this.verbose && window && window.console) {
+      console.log(messagetyping);
+    }
+  }
+
+  onmessagemention(messagetyping: MessageMentionEvent) {
+    if (this.verbose && window && window.console) {
+      console.log(messagetyping);
+    }
+  }
+
+  onmessageattachment(messagetyping: MessageAttachmentEvent) {
     if (this.verbose && window && window.console) {
       console.log(messagetyping);
     }

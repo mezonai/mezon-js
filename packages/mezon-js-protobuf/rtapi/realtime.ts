@@ -161,7 +161,15 @@ export interface Envelope {
     | LastSeenMessageEvent
     | undefined;
   /** User send reactoin event */
-  message_reaction_event?: MessageReactionEvent | undefined;
+  message_reaction_event?:
+    | MessageReactionEvent
+    | undefined;
+  /** User send reactoin event */
+  message_mention_event?:
+    | MessageMentionEvent
+    | undefined;
+  /** User send reactoin event */
+  message_attachment_event?: MessageAttachmentEvent | undefined;
 }
 
 /** A realtime chat channel. */
@@ -813,6 +821,20 @@ export interface MessageTypingEvent {
   sender_id: string;
 }
 
+/** Mention to message */
+export interface MessageMentionEvent {
+  /** The channel this message belongs to. */
+  channel_id: string;
+  /** React to message */
+  message_id: string;
+  /** mention user id */
+  user_id: string;
+  /** mention username */
+  username: string;
+  /** sender id */
+  sender_id: string;
+}
+
 /** Message reacton event data */
 export interface MessageReactionEvent {
   /** The channel this message belongs to. */
@@ -822,7 +844,29 @@ export interface MessageReactionEvent {
   /** Message sender, usually a user ID. */
   sender_id: string;
   /** emoji text */
-  emoji: string[];
+  emoji: string;
+}
+
+/** Message attachment */
+export interface MessageAttachmentEvent {
+  /** The channel this message belongs to. */
+  channel_id: string;
+  /** React to message */
+  message_id: string;
+  /** Attachment file name */
+  filename: string;
+  /** Attachment file size */
+  size: number;
+  /** Attachment url */
+  url: string;
+  /** Attachment file type */
+  filetype: string;
+  /** Attachment width */
+  width: number;
+  /** Attachment width */
+  height: number;
+  /** sender id */
+  sender_id: string;
 }
 
 /** Stop receiving status updates for some set of users. */
@@ -932,6 +976,8 @@ function createBaseEnvelope(): Envelope {
     message_typing_event: undefined,
     last_seen_message_event: undefined,
     message_reaction_event: undefined,
+    message_mention_event: undefined,
+    message_attachment_event: undefined,
   };
 }
 
@@ -1053,6 +1099,12 @@ export const Envelope = {
     }
     if (message.message_reaction_event !== undefined) {
       MessageReactionEvent.encode(message.message_reaction_event, writer.uint32(314).fork()).ldelim();
+    }
+    if (message.message_mention_event !== undefined) {
+      MessageMentionEvent.encode(message.message_mention_event, writer.uint32(322).fork()).ldelim();
+    }
+    if (message.message_attachment_event !== undefined) {
+      MessageAttachmentEvent.encode(message.message_attachment_event, writer.uint32(330).fork()).ldelim();
     }
     return writer;
   },
@@ -1181,6 +1233,12 @@ export const Envelope = {
         case 39:
           message.message_reaction_event = MessageReactionEvent.decode(reader, reader.uint32());
           break;
+        case 40:
+          message.message_mention_event = MessageMentionEvent.decode(reader, reader.uint32());
+          break;
+        case 41:
+          message.message_attachment_event = MessageAttachmentEvent.decode(reader, reader.uint32());
+          break;
         default:
           reader.skipType(tag & 7);
           break;
@@ -1255,6 +1313,12 @@ export const Envelope = {
         : undefined,
       message_reaction_event: isSet(object.message_reaction_event)
         ? MessageReactionEvent.fromJSON(object.message_reaction_event)
+        : undefined,
+      message_mention_event: isSet(object.message_mention_event)
+        ? MessageMentionEvent.fromJSON(object.message_mention_event)
+        : undefined,
+      message_attachment_event: isSet(object.message_attachment_event)
+        ? MessageAttachmentEvent.fromJSON(object.message_attachment_event)
         : undefined,
     };
   },
@@ -1343,6 +1407,12 @@ export const Envelope = {
       : undefined);
     message.message_reaction_event !== undefined && (obj.message_reaction_event = message.message_reaction_event
       ? MessageReactionEvent.toJSON(message.message_reaction_event)
+      : undefined);
+    message.message_mention_event !== undefined && (obj.message_mention_event = message.message_mention_event
+      ? MessageMentionEvent.toJSON(message.message_mention_event)
+      : undefined);
+    message.message_attachment_event !== undefined && (obj.message_attachment_event = message.message_attachment_event
+      ? MessageAttachmentEvent.toJSON(message.message_attachment_event)
       : undefined);
     return obj;
   },
@@ -1465,6 +1535,14 @@ export const Envelope = {
     message.message_reaction_event =
       (object.message_reaction_event !== undefined && object.message_reaction_event !== null)
         ? MessageReactionEvent.fromPartial(object.message_reaction_event)
+        : undefined;
+    message.message_mention_event =
+      (object.message_mention_event !== undefined && object.message_mention_event !== null)
+        ? MessageMentionEvent.fromPartial(object.message_mention_event)
+        : undefined;
+    message.message_attachment_event =
+      (object.message_attachment_event !== undefined && object.message_attachment_event !== null)
+        ? MessageAttachmentEvent.fromPartial(object.message_attachment_event)
         : undefined;
     return message;
   },
@@ -5483,8 +5561,97 @@ export const MessageTypingEvent = {
   },
 };
 
+function createBaseMessageMentionEvent(): MessageMentionEvent {
+  return { channel_id: "", message_id: "", user_id: "", username: "", sender_id: "" };
+}
+
+export const MessageMentionEvent = {
+  encode(message: MessageMentionEvent, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.channel_id !== "") {
+      writer.uint32(10).string(message.channel_id);
+    }
+    if (message.message_id !== "") {
+      writer.uint32(18).string(message.message_id);
+    }
+    if (message.user_id !== "") {
+      writer.uint32(26).string(message.user_id);
+    }
+    if (message.username !== "") {
+      writer.uint32(34).string(message.username);
+    }
+    if (message.sender_id !== "") {
+      writer.uint32(42).string(message.sender_id);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): MessageMentionEvent {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseMessageMentionEvent();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.channel_id = reader.string();
+          break;
+        case 2:
+          message.message_id = reader.string();
+          break;
+        case 3:
+          message.user_id = reader.string();
+          break;
+        case 4:
+          message.username = reader.string();
+          break;
+        case 5:
+          message.sender_id = reader.string();
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): MessageMentionEvent {
+    return {
+      channel_id: isSet(object.channel_id) ? String(object.channel_id) : "",
+      message_id: isSet(object.message_id) ? String(object.message_id) : "",
+      user_id: isSet(object.user_id) ? String(object.user_id) : "",
+      username: isSet(object.username) ? String(object.username) : "",
+      sender_id: isSet(object.sender_id) ? String(object.sender_id) : "",
+    };
+  },
+
+  toJSON(message: MessageMentionEvent): unknown {
+    const obj: any = {};
+    message.channel_id !== undefined && (obj.channel_id = message.channel_id);
+    message.message_id !== undefined && (obj.message_id = message.message_id);
+    message.user_id !== undefined && (obj.user_id = message.user_id);
+    message.username !== undefined && (obj.username = message.username);
+    message.sender_id !== undefined && (obj.sender_id = message.sender_id);
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<MessageMentionEvent>, I>>(base?: I): MessageMentionEvent {
+    return MessageMentionEvent.fromPartial(base ?? {});
+  },
+
+  fromPartial<I extends Exact<DeepPartial<MessageMentionEvent>, I>>(object: I): MessageMentionEvent {
+    const message = createBaseMessageMentionEvent();
+    message.channel_id = object.channel_id ?? "";
+    message.message_id = object.message_id ?? "";
+    message.user_id = object.user_id ?? "";
+    message.username = object.username ?? "";
+    message.sender_id = object.sender_id ?? "";
+    return message;
+  },
+};
+
 function createBaseMessageReactionEvent(): MessageReactionEvent {
-  return { channel_id: "", message_id: "", sender_id: "", emoji: [] };
+  return { channel_id: "", message_id: "", sender_id: "", emoji: "" };
 }
 
 export const MessageReactionEvent = {
@@ -5498,8 +5665,8 @@ export const MessageReactionEvent = {
     if (message.sender_id !== "") {
       writer.uint32(26).string(message.sender_id);
     }
-    for (const v of message.emoji) {
-      writer.uint32(34).string(v!);
+    if (message.emoji !== "") {
+      writer.uint32(34).string(message.emoji);
     }
     return writer;
   },
@@ -5521,7 +5688,7 @@ export const MessageReactionEvent = {
           message.sender_id = reader.string();
           break;
         case 4:
-          message.emoji.push(reader.string());
+          message.emoji = reader.string();
           break;
         default:
           reader.skipType(tag & 7);
@@ -5536,7 +5703,7 @@ export const MessageReactionEvent = {
       channel_id: isSet(object.channel_id) ? String(object.channel_id) : "",
       message_id: isSet(object.message_id) ? String(object.message_id) : "",
       sender_id: isSet(object.sender_id) ? String(object.sender_id) : "",
-      emoji: Array.isArray(object?.emoji) ? object.emoji.map((e: any) => String(e)) : [],
+      emoji: isSet(object.emoji) ? String(object.emoji) : "",
     };
   },
 
@@ -5545,11 +5712,7 @@ export const MessageReactionEvent = {
     message.channel_id !== undefined && (obj.channel_id = message.channel_id);
     message.message_id !== undefined && (obj.message_id = message.message_id);
     message.sender_id !== undefined && (obj.sender_id = message.sender_id);
-    if (message.emoji) {
-      obj.emoji = message.emoji.map((e) => e);
-    } else {
-      obj.emoji = [];
-    }
+    message.emoji !== undefined && (obj.emoji = message.emoji);
     return obj;
   },
 
@@ -5562,7 +5725,142 @@ export const MessageReactionEvent = {
     message.channel_id = object.channel_id ?? "";
     message.message_id = object.message_id ?? "";
     message.sender_id = object.sender_id ?? "";
-    message.emoji = object.emoji?.map((e) => e) || [];
+    message.emoji = object.emoji ?? "";
+    return message;
+  },
+};
+
+function createBaseMessageAttachmentEvent(): MessageAttachmentEvent {
+  return {
+    channel_id: "",
+    message_id: "",
+    filename: "",
+    size: 0,
+    url: "",
+    filetype: "",
+    width: 0,
+    height: 0,
+    sender_id: "",
+  };
+}
+
+export const MessageAttachmentEvent = {
+  encode(message: MessageAttachmentEvent, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.channel_id !== "") {
+      writer.uint32(10).string(message.channel_id);
+    }
+    if (message.message_id !== "") {
+      writer.uint32(18).string(message.message_id);
+    }
+    if (message.filename !== "") {
+      writer.uint32(26).string(message.filename);
+    }
+    if (message.size !== 0) {
+      writer.uint32(32).int64(message.size);
+    }
+    if (message.url !== "") {
+      writer.uint32(42).string(message.url);
+    }
+    if (message.filetype !== "") {
+      writer.uint32(50).string(message.filetype);
+    }
+    if (message.width !== 0) {
+      writer.uint32(56).int32(message.width);
+    }
+    if (message.height !== 0) {
+      writer.uint32(64).int32(message.height);
+    }
+    if (message.sender_id !== "") {
+      writer.uint32(74).string(message.sender_id);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): MessageAttachmentEvent {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseMessageAttachmentEvent();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.channel_id = reader.string();
+          break;
+        case 2:
+          message.message_id = reader.string();
+          break;
+        case 3:
+          message.filename = reader.string();
+          break;
+        case 4:
+          message.size = longToNumber(reader.int64() as Long);
+          break;
+        case 5:
+          message.url = reader.string();
+          break;
+        case 6:
+          message.filetype = reader.string();
+          break;
+        case 7:
+          message.width = reader.int32();
+          break;
+        case 8:
+          message.height = reader.int32();
+          break;
+        case 9:
+          message.sender_id = reader.string();
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): MessageAttachmentEvent {
+    return {
+      channel_id: isSet(object.channel_id) ? String(object.channel_id) : "",
+      message_id: isSet(object.message_id) ? String(object.message_id) : "",
+      filename: isSet(object.filename) ? String(object.filename) : "",
+      size: isSet(object.size) ? Number(object.size) : 0,
+      url: isSet(object.url) ? String(object.url) : "",
+      filetype: isSet(object.filetype) ? String(object.filetype) : "",
+      width: isSet(object.width) ? Number(object.width) : 0,
+      height: isSet(object.height) ? Number(object.height) : 0,
+      sender_id: isSet(object.sender_id) ? String(object.sender_id) : "",
+    };
+  },
+
+  toJSON(message: MessageAttachmentEvent): unknown {
+    const obj: any = {};
+    message.channel_id !== undefined && (obj.channel_id = message.channel_id);
+    message.message_id !== undefined && (obj.message_id = message.message_id);
+    message.filename !== undefined && (obj.filename = message.filename);
+    message.size !== undefined && (obj.size = Math.round(message.size));
+    message.url !== undefined && (obj.url = message.url);
+    message.filetype !== undefined && (obj.filetype = message.filetype);
+    message.width !== undefined && (obj.width = Math.round(message.width));
+    message.height !== undefined && (obj.height = Math.round(message.height));
+    message.sender_id !== undefined && (obj.sender_id = message.sender_id);
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<MessageAttachmentEvent>, I>>(base?: I): MessageAttachmentEvent {
+    return MessageAttachmentEvent.fromPartial(base ?? {});
+  },
+
+  fromPartial<I extends Exact<DeepPartial<MessageAttachmentEvent>, I>>(object: I): MessageAttachmentEvent {
+    const message = createBaseMessageAttachmentEvent();
+    message.channel_id = object.channel_id ?? "";
+    message.message_id = object.message_id ?? "";
+    message.filename = object.filename ?? "";
+    message.size = object.size ?? 0;
+    message.url = object.url ?? "";
+    message.filetype = object.filetype ?? "";
+    message.width = object.width ?? 0;
+    message.height = object.height ?? 0;
+    message.sender_id = object.sender_id ?? "";
     return message;
   },
 };
