@@ -3373,7 +3373,7 @@ var MezonApi = class {
     if (body === null || body === void 0) {
       throw new Error("'body' is a required parameter but is null or undefined.");
     }
-    const urlPath = "/v2/uploadfile";
+    const urlPath = "/v2/uploadattachmentfile";
     const queryParams = /* @__PURE__ */ new Map();
     let bodyJson = "";
     bodyJson = JSON.stringify(body || {});
