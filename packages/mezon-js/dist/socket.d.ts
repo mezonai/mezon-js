@@ -119,7 +119,6 @@ export interface ChannelMessageEvent {
     code: number;
     content: string;
     create_time: string;
-    last_seen: boolean;
     message_id: string;
     persistent: boolean;
     sender_id: string;

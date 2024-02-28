@@ -151,8 +151,6 @@ export interface ChannelMessageEvent {
   content: string;
   //The UNIX time (for gRPC clients) or ISO string (for REST clients) when the message was created.
   create_time: string;
-  //
-  last_seen: boolean;
   //The unique ID of this message.
   message_id: string;
   //True if the message was persisted to the channel's history, false otherwise.
