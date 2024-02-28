@@ -460,7 +460,11 @@ export interface Socket {
     /** Send message typing */
     writeMessageTyping(channel_id: string): Promise<MessageTypingEvent>;
     /** Send message reaction */
-    writeMessageReaction(channel_id: string, message_id: string, emoji: string[]): Promise<MessageReactionEvent>;
+    writeMessageReaction(channel_id: string, message_id: string, emoji: string): Promise<MessageReactionEvent>;
+    /** Send message mention */
+    writeMessageMention(channel_id: string, message_id: string, user_id: string, username: string): Promise<MessageMentionEvent>;
+    /** Send message reaction */
+    writeMessageAttachment(channel_id: string, message_id: string, filename: string, size: number, filetype: string, width?: number, height?: number): Promise<MessageAttachmentEvent>;
     /** Send last seen message */
     writeLastSeenMessage(channel_id: string, message_id: string): Promise<LastSeenMessageEvent>;
     /** Handle disconnect events received from the socket. */
@@ -574,7 +578,9 @@ export declare class DefaultSocket implements Socket {
     updateChatMessage(channel_id: string, message_id: string, content: any): Promise<ChannelMessageAck>;
     updateStatus(status?: string): Promise<void>;
     writeChatMessage(clan_id: string, channel_id: string, content: any): Promise<ChannelMessageAck>;
-    writeMessageReaction(channel_id: string, message_id: string, emoji: string[]): Promise<MessageReactionEvent>;
+    writeMessageReaction(channel_id: string, message_id: string, emoji: string): Promise<MessageReactionEvent>;
+    writeMessageMention(channel_id: string, message_id: string, user_id: string, username: string): Promise<MessageMentionEvent>;
+    writeMessageAttachment(channel_id: string, message_id: string, filename: string, size: number, filetype: string, width?: number, height?: number): Promise<MessageAttachmentEvent>;
     writeMessageTyping(channel_id: string): Promise<MessageTypingEvent>;
     writeLastSeenMessage(channel_id: string, message_id: string): Promise<LastSeenMessageEvent>;
     private pingPong;

@@ -4033,6 +4033,18 @@ var _DefaultSocket = class _DefaultSocket {
       return response.message_reaction_event;
     });
   }
+  writeMessageMention(channel_id, message_id, user_id, username) {
+    return __async(this, null, function* () {
+      const response = yield this.send({ message_mention_event: { channel_id, message_id, user_id, username } });
+      return response.message_mention_event;
+    });
+  }
+  writeMessageAttachment(channel_id, message_id, filename, size, filetype, width, height) {
+    return __async(this, null, function* () {
+      const response = yield this.send({ message_attachment_event: { channel_id, message_id, filename, size, filetype, width, height } });
+      return response.message_attachment_event;
+    });
+  }
   writeMessageTyping(channel_id) {
     return __async(this, null, function* () {
       const response = yield this.send({ message_typing_event: { channel_id } });
