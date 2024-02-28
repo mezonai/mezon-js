@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { ApiRpc } from "./api.gen";
+import { ApiMessageAttachment, ApiMessageMention, ApiRpc } from "./api.gen";
 import { Session } from "./session";
 import { Notification } from "./client";
 import { WebSocketAdapter } from "./web_socket_adapter";
@@ -112,10 +112,10 @@ export interface MessageTypingEvent {
 }
 /** An incoming message on a realtime chat channel. */
 export interface ChannelMessageEvent {
-    avatar: string;
+    avatar?: string;
     channel_id: string;
     channel_name: string;
-    clan_id: string;
+    clan_id?: string;
     code: number;
     content: string;
     create_time: string;
@@ -460,7 +460,7 @@ export interface Socket {
     /** Update the status for the current user online. */
     updateStatus(status?: string): Promise<void>;
     /** Send a chat message to a chat channel on the server. */
-    writeChatMessage(clan_id: string, channel_id: string, content: any): Promise<ChannelMessageAck>;
+    writeChatMessage(clan_id: string, channel_id: string, content?: any, mentions?: Array<ApiMessageMention>, attachments?: Array<ApiMessageAttachment>): Promise<ChannelMessageAck>;
     /** Send message typing */
     writeMessageTyping(channel_id: string): Promise<MessageTypingEvent>;
     /** Send message reaction */

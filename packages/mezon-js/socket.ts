@@ -16,7 +16,7 @@
 
 import { decode } from 'js-base64'
 
-import {ApiNotification, ApiRpc} from "./api.gen";
+import {ApiMessageAttachment, ApiMessageMention, ApiNotification, ApiRpc} from "./api.gen";
 import {Session} from "./session";
 import {Notification} from "./client";
 import {WebSocketAdapter, WebSocketAdapterText} from "./web_socket_adapter"
@@ -138,13 +138,13 @@ export interface MessageTypingEvent {
 
 /** An incoming message on a realtime chat channel. */
 export interface ChannelMessageEvent {
-  avatar: string;
+  avatar?: string;
   //The channel this message belongs to.
   channel_id: string;
   //The name of the chat room, or an empty string if this message was not sent through a chat room.
   channel_name: string;
   //The clan this message belong to.
-  clan_id: string;
+  clan_id?: string;
   //The code representing a message type or category.
   code: number;
   //The content payload.
@@ -552,7 +552,7 @@ export interface Socket {
   updateStatus(status? : string) : Promise<void>;
 
   /** Send a chat message to a chat channel on the server. */
-  writeChatMessage(clan_id: string, channel_id: string, content: any) : Promise<ChannelMessageAck>;
+  writeChatMessage(clan_id: string, channel_id: string, content?: any, mentions?: Array<ApiMessageMention>, attachments?: Array<ApiMessageAttachment>) : Promise<ChannelMessageAck>;
 
   /** Send message typing */
   writeMessageTyping(channel_id: string) : Promise<MessageTypingEvent>;  

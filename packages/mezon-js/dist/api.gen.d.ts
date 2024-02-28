@@ -312,7 +312,7 @@ export interface ApiMessageAttachment {
     filename?: string;
     filetype?: string;
     height?: number;
-    size?: string;
+    size?: number;
     url?: string;
     width?: number;
 }
