@@ -1967,6 +1967,14 @@ export interface UploadAttachmentRequest {
   filetype: string;
   /** The size of file that need to upload */
   size: number;
+  /** width */
+  width: number;
+  /** Height */
+  height: number;
+  /** Channel id */
+  channel_id: string;
+  /** Message id */
+  message_id: string;
 }
 
 export interface UploadAttachment {
@@ -13432,7 +13440,7 @@ export const UpdateRoleRequest = {
 };
 
 function createBaseUploadAttachmentRequest(): UploadAttachmentRequest {
-  return { filename: "", filetype: "", size: 0 };
+  return { filename: "", filetype: "", size: 0, width: 0, height: 0, channel_id: "", message_id: "" };
 }
 
 export const UploadAttachmentRequest = {
@@ -13445,6 +13453,18 @@ export const UploadAttachmentRequest = {
     }
     if (message.size !== 0) {
       writer.uint32(24).int32(message.size);
+    }
+    if (message.width !== 0) {
+      writer.uint32(32).int32(message.width);
+    }
+    if (message.height !== 0) {
+      writer.uint32(40).int32(message.height);
+    }
+    if (message.channel_id !== "") {
+      writer.uint32(50).string(message.channel_id);
+    }
+    if (message.message_id !== "") {
+      writer.uint32(58).string(message.message_id);
     }
     return writer;
   },
@@ -13465,6 +13485,18 @@ export const UploadAttachmentRequest = {
         case 3:
           message.size = reader.int32();
           break;
+        case 4:
+          message.width = reader.int32();
+          break;
+        case 5:
+          message.height = reader.int32();
+          break;
+        case 6:
+          message.channel_id = reader.string();
+          break;
+        case 7:
+          message.message_id = reader.string();
+          break;
         default:
           reader.skipType(tag & 7);
           break;
@@ -13478,6 +13510,10 @@ export const UploadAttachmentRequest = {
       filename: isSet(object.filename) ? String(object.filename) : "",
       filetype: isSet(object.filetype) ? String(object.filetype) : "",
       size: isSet(object.size) ? Number(object.size) : 0,
+      width: isSet(object.width) ? Number(object.width) : 0,
+      height: isSet(object.height) ? Number(object.height) : 0,
+      channel_id: isSet(object.channel_id) ? String(object.channel_id) : "",
+      message_id: isSet(object.message_id) ? String(object.message_id) : "",
     };
   },
 
@@ -13486,6 +13522,10 @@ export const UploadAttachmentRequest = {
     message.filename !== undefined && (obj.filename = message.filename);
     message.filetype !== undefined && (obj.filetype = message.filetype);
     message.size !== undefined && (obj.size = Math.round(message.size));
+    message.width !== undefined && (obj.width = Math.round(message.width));
+    message.height !== undefined && (obj.height = Math.round(message.height));
+    message.channel_id !== undefined && (obj.channel_id = message.channel_id);
+    message.message_id !== undefined && (obj.message_id = message.message_id);
     return obj;
   },
 
@@ -13498,6 +13538,10 @@ export const UploadAttachmentRequest = {
     message.filename = object.filename ?? "";
     message.filetype = object.filetype ?? "";
     message.size = object.size ?? 0;
+    message.width = object.width ?? 0;
+    message.height = object.height ?? 0;
+    message.channel_id = object.channel_id ?? "";
+    message.message_id = object.message_id ?? "";
     return message;
   },
 };

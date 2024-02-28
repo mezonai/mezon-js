@@ -816,12 +816,20 @@ export interface ApiUploadAttachment {
 
 /**  */
 export interface ApiUploadAttachmentRequest {
+ //
+  channel_id?: string;
   //
   filename?: string;
   //
   filetype?: string;
+ //
+  height?: number;
+  //
+  message_id?: string;
   //
   size?: number;
+  //
+  width?: number;
 }
 
 /** A user in the server. */
@@ -2626,7 +2634,7 @@ export class MezonApi {
         const urlPath = "/v2/clandesc/{clanId}"
         .replace("{clanId}", encodeURIComponent(String(clanId)));
     const queryParams = new Map<string, any>();
-queryParams.set("creator_id", creatorId);
+    queryParams.set("creator_id", creatorId);
     queryParams.set("clan_name", clanName);
     queryParams.set("logo", logo);
     queryParams.set("banner", banner);

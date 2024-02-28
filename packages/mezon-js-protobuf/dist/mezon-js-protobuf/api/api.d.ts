@@ -1459,6 +1459,14 @@ export interface UploadAttachmentRequest {
     filetype: string;
     /** The size of file that need to upload */
     size: number;
+    /** width */
+    width: number;
+    /** Height */
+    height: number;
+    /** Channel id */
+    channel_id: string;
+    /** Message id */
+    message_id: string;
 }
 export interface UploadAttachment {
     /** The name of file that need to upload */
@@ -10067,19 +10075,35 @@ export declare const UploadAttachmentRequest: {
         filename?: string | undefined;
         filetype?: string | undefined;
         size?: number | undefined;
+        width?: number | undefined;
+        height?: number | undefined;
+        channel_id?: string | undefined;
+        message_id?: string | undefined;
     } & {
         filename?: string | undefined;
         filetype?: string | undefined;
         size?: number | undefined;
+        width?: number | undefined;
+        height?: number | undefined;
+        channel_id?: string | undefined;
+        message_id?: string | undefined;
     } & { [K in Exclude<keyof I, keyof UploadAttachmentRequest>]: never; }>(base?: I | undefined): UploadAttachmentRequest;
     fromPartial<I_1 extends {
         filename?: string | undefined;
         filetype?: string | undefined;
         size?: number | undefined;
+        width?: number | undefined;
+        height?: number | undefined;
+        channel_id?: string | undefined;
+        message_id?: string | undefined;
     } & {
         filename?: string | undefined;
         filetype?: string | undefined;
         size?: number | undefined;
+        width?: number | undefined;
+        height?: number | undefined;
+        channel_id?: string | undefined;
+        message_id?: string | undefined;
     } & { [K_1 in Exclude<keyof I_1, keyof UploadAttachmentRequest>]: never; }>(object: I_1): UploadAttachmentRequest;
 };
 export declare const UploadAttachment: {

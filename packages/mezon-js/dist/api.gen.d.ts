@@ -474,9 +474,13 @@ export interface ApiUploadAttachment {
 }
 /**  */
 export interface ApiUploadAttachmentRequest {
+    channel_id?: string;
     filename?: string;
     filetype?: string;
+    height?: number;
+    message_id?: string;
     size?: number;
+    width?: number;
 }
 /** A user in the server. */
 export interface ApiUser {
