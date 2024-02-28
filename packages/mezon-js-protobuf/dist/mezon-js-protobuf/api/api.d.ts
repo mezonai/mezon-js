@@ -1452,15 +1452,19 @@ export interface UpdateRoleRequest {
     /** The permissions to remove. */
     remove_permission_ids: string[];
 }
-export interface UploadFileRequest {
+export interface UploadAttachmentRequest {
     /** The name of file that need to upload */
     filename: string;
     /** The type of file that need to upload */
     filetype: string;
     /** The size of file that need to upload */
     size: number;
-    /** stream bytes */
-    stream: Uint8Array;
+}
+export interface UploadAttachment {
+    /** The name of file that need to upload */
+    filename: string;
+    /** The url */
+    url: string;
 }
 export declare const Account: {
     encode(message: Account, writer?: _m0.Writer): _m0.Writer;
@@ -10054,33 +10058,49 @@ export declare const UpdateRoleRequest: {
         remove_permission_ids?: (string[] & string[] & { [K_8 in Exclude<keyof I_1["remove_permission_ids"], keyof string[]>]: never; }) | undefined;
     } & { [K_9 in Exclude<keyof I_1, keyof UpdateRoleRequest>]: never; }>(object: I_1): UpdateRoleRequest;
 };
-export declare const UploadFileRequest: {
-    encode(message: UploadFileRequest, writer?: _m0.Writer): _m0.Writer;
-    decode(input: _m0.Reader | Uint8Array, length?: number): UploadFileRequest;
-    fromJSON(object: any): UploadFileRequest;
-    toJSON(message: UploadFileRequest): unknown;
+export declare const UploadAttachmentRequest: {
+    encode(message: UploadAttachmentRequest, writer?: _m0.Writer): _m0.Writer;
+    decode(input: _m0.Reader | Uint8Array, length?: number): UploadAttachmentRequest;
+    fromJSON(object: any): UploadAttachmentRequest;
+    toJSON(message: UploadAttachmentRequest): unknown;
     create<I extends {
         filename?: string | undefined;
         filetype?: string | undefined;
         size?: number | undefined;
-        stream?: Uint8Array | undefined;
     } & {
         filename?: string | undefined;
         filetype?: string | undefined;
         size?: number | undefined;
-        stream?: Uint8Array | undefined;
-    } & { [K in Exclude<keyof I, keyof UploadFileRequest>]: never; }>(base?: I | undefined): UploadFileRequest;
+    } & { [K in Exclude<keyof I, keyof UploadAttachmentRequest>]: never; }>(base?: I | undefined): UploadAttachmentRequest;
     fromPartial<I_1 extends {
         filename?: string | undefined;
         filetype?: string | undefined;
         size?: number | undefined;
-        stream?: Uint8Array | undefined;
     } & {
         filename?: string | undefined;
         filetype?: string | undefined;
         size?: number | undefined;
-        stream?: Uint8Array | undefined;
-    } & { [K_1 in Exclude<keyof I_1, keyof UploadFileRequest>]: never; }>(object: I_1): UploadFileRequest;
+    } & { [K_1 in Exclude<keyof I_1, keyof UploadAttachmentRequest>]: never; }>(object: I_1): UploadAttachmentRequest;
+};
+export declare const UploadAttachment: {
+    encode(message: UploadAttachment, writer?: _m0.Writer): _m0.Writer;
+    decode(input: _m0.Reader | Uint8Array, length?: number): UploadAttachment;
+    fromJSON(object: any): UploadAttachment;
+    toJSON(message: UploadAttachment): unknown;
+    create<I extends {
+        filename?: string | undefined;
+        url?: string | undefined;
+    } & {
+        filename?: string | undefined;
+        url?: string | undefined;
+    } & { [K in Exclude<keyof I, keyof UploadAttachment>]: never; }>(base?: I | undefined): UploadAttachment;
+    fromPartial<I_1 extends {
+        filename?: string | undefined;
+        url?: string | undefined;
+    } & {
+        filename?: string | undefined;
+        url?: string | undefined;
+    } & { [K_1 in Exclude<keyof I_1, keyof UploadAttachment>]: never; }>(object: I_1): UploadAttachment;
 };
 type Builtin = Date | Function | Uint8Array | string | number | boolean | undefined;
 export type DeepPartial<T> = T extends Builtin ? T : T extends Array<infer U> ? Array<DeepPartial<U>> : T extends ReadonlyArray<infer U> ? ReadonlyArray<DeepPartial<U>> : T extends {} ? {

@@ -807,15 +807,21 @@ export interface ApiUpdateUsersRequest {
 }
 
 /**  */
-export interface ApiUploadFileRequest {
+export interface ApiUploadAttachment {
+  //
+  filename?: string;
+  //
+  url?: string;
+}
+
+/**  */
+export interface ApiUploadAttachmentRequest {
   //
   filename?: string;
   //
   filetype?: string;
   //
   size?: number;
-  //
-  stream?: string;
 }
 
 /** A user in the server. */
@@ -4422,8 +4428,8 @@ queryParams.set("creator_id", creatorId);
 }
 
   /** Create a new group with the current user as the owner. */
-  uploadFile(bearerToken: string,
-      body:ApiUploadFileRequest,
+  uploadAttachmentFile(bearerToken: string,
+      body:ApiUploadAttachmentRequest,
       options: any = {}): Promise<any> {
     
     if (body === null || body === undefined) {

@@ -66,10 +66,11 @@ import {
   ApiLinkInviteUserRequest,
   ApiLinkInviteUser,
   ApiInviteUserRes,
-  ApiUploadFileRequest,
+  ApiUploadAttachmentRequest,
   ApiMessageReaction,
   ApiMessageMention,
   ApiMessageAttachment,
+  ApiUploadAttachment,
 } from "./api.gen";
 
 import { Session } from "./session";
@@ -669,15 +670,13 @@ export class Client {
   }
 
   /** Create a new group with the current user as the creator and superadmin. */
-  async uploadFile(session: Session, request: ApiUploadFileRequest): Promise<boolean> {
+  async uploadAttachmentFile(session: Session, request: ApiUploadAttachmentRequest): Promise<ApiUploadAttachment> {
     if (this.autoRefreshSession && session.refresh_token &&
         session.isexpired((Date.now() + this.expiredTimespanMs)/1000)) {
         await this.sessionRefresh(session);
     }
 
-    return this.apiClient.uploadFile(session.token, request).then((response: any) => {
-      return response !== undefined;
-    });
+    return this.apiClient.uploadAttachmentFile(session.token, request);
   }
 
   /** Create a channel within clan */

@@ -556,7 +556,7 @@ export interface Socket {
   writeMessageMention(channel_id: string, message_id: string, user_id: string, username: string) : Promise<MessageMentionEvent>;
 
   /** Send message reaction */
-  writeMessageAttachment(channel_id: string, message_id: string, filename: string, size: number, filetype: string, width?: number, height?: number) : Promise<MessageAttachmentEvent>;
+  writeMessageAttachment(channel_id: string, message_id: string, filename: string, url: string, size: number, filetype: string, width?: number, height?: number) : Promise<MessageAttachmentEvent>;
 
   /** Send last seen message */
   writeLastSeenMessage(channel_id: string, message_id: string) : Promise<LastSeenMessageEvent>;
@@ -1082,8 +1082,8 @@ export class DefaultSocket implements Socket {
     return response.message_mention_event
   }
 
-  async writeMessageAttachment(channel_id: string, message_id: string, filename: string, size: number, filetype: string, width?: number, height?: number) : Promise<MessageAttachmentEvent> {
-    const response = await this.send({message_attachment_event: {channel_id: channel_id, message_id: message_id, filename: filename, size: size, filetype: filetype, width: width, height:height}});
+  async writeMessageAttachment(channel_id: string, message_id: string, filename: string, url: string, size: number, filetype: string, width?: number, height?: number) : Promise<MessageAttachmentEvent> {
+    const response = await this.send({message_attachment_event: {channel_id: channel_id, message_id: message_id, filename: filename, url:url, size: size, filetype: filetype, width: width, height:height}});
     return response.message_attachment_event
   }
 

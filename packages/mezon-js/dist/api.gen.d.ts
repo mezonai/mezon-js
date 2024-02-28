@@ -468,11 +468,15 @@ export interface ApiUpdateUsersRequest {
     display_name?: string;
 }
 /**  */
-export interface ApiUploadFileRequest {
+export interface ApiUploadAttachment {
+    filename?: string;
+    url?: string;
+}
+/**  */
+export interface ApiUploadAttachmentRequest {
     filename?: string;
     filetype?: string;
     size?: number;
-    stream?: string;
 }
 /** A user in the server. */
 export interface ApiUser {
@@ -719,7 +723,7 @@ export declare class MezonApi {
     /**  */
     updateUserProfileByClan(bearerToken: string, clanId: string, body: {}, options?: any): Promise<any>;
     /** Create a new group with the current user as the owner. */
-    uploadFile(bearerToken: string, body: ApiUploadFileRequest, options?: any): Promise<any>;
+    uploadAttachmentFile(bearerToken: string, body: ApiUploadAttachmentRequest, options?: any): Promise<any>;
     /** Fetch zero or more users by ID and/or username. */
     getUsers(bearerToken: string, ids?: Array<string>, usernames?: Array<string>, facebookIds?: Array<string>, options?: any): Promise<ApiUsers>;
     /**  */
