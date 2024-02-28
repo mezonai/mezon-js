@@ -323,7 +323,6 @@ export interface ApiMessageMention {
 }
 /**  */
 export interface ApiMessageReaction {
-    create_time?: string;
     emoji?: string;
     user_id?: string;
 }
@@ -470,16 +469,13 @@ export interface ApiUpdateUsersRequest {
 /**  */
 export interface ApiUploadAttachment {
     filename?: string;
-    id?: string;
     url?: string;
 }
 /**  */
 export interface ApiUploadAttachmentRequest {
-    channel_id?: string;
     filename?: string;
     filetype?: string;
     height?: number;
-    message_id?: string;
     size?: number;
     width?: number;
 }

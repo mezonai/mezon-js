@@ -565,8 +565,6 @@ export interface MessageReaction {
   emoji: string;
   /** User react to message */
   user_id: string;
-  /** The time reaction */
-  create_time: number;
 }
 
 /** Message attachment */
@@ -1971,15 +1969,9 @@ export interface UploadAttachmentRequest {
   width: number;
   /** Height */
   height: number;
-  /** Channel id */
-  channel_id: string;
-  /** Message id */
-  message_id: string;
 }
 
 export interface UploadAttachment {
-  /** The id of attachment */
-  id: string;
   /** The name of file that need to upload */
   filename: string;
   /** The url */
@@ -5007,7 +4999,7 @@ export const MessageMention = {
 };
 
 function createBaseMessageReaction(): MessageReaction {
-  return { emoji: "", user_id: "", create_time: 0 };
+  return { emoji: "", user_id: "" };
 }
 
 export const MessageReaction = {
@@ -5017,9 +5009,6 @@ export const MessageReaction = {
     }
     if (message.user_id !== "") {
       writer.uint32(18).string(message.user_id);
-    }
-    if (message.create_time !== 0) {
-      writer.uint32(24).int64(message.create_time);
     }
     return writer;
   },
@@ -5037,9 +5026,6 @@ export const MessageReaction = {
         case 2:
           message.user_id = reader.string();
           break;
-        case 3:
-          message.create_time = longToNumber(reader.int64() as Long);
-          break;
         default:
           reader.skipType(tag & 7);
           break;
@@ -5052,7 +5038,6 @@ export const MessageReaction = {
     return {
       emoji: isSet(object.emoji) ? String(object.emoji) : "",
       user_id: isSet(object.user_id) ? String(object.user_id) : "",
-      create_time: isSet(object.create_time) ? Number(object.create_time) : 0,
     };
   },
 
@@ -5060,7 +5045,6 @@ export const MessageReaction = {
     const obj: any = {};
     message.emoji !== undefined && (obj.emoji = message.emoji);
     message.user_id !== undefined && (obj.user_id = message.user_id);
-    message.create_time !== undefined && (obj.create_time = Math.round(message.create_time));
     return obj;
   },
 
@@ -5072,7 +5056,6 @@ export const MessageReaction = {
     const message = createBaseMessageReaction();
     message.emoji = object.emoji ?? "";
     message.user_id = object.user_id ?? "";
-    message.create_time = object.create_time ?? 0;
     return message;
   },
 };
@@ -13442,7 +13425,7 @@ export const UpdateRoleRequest = {
 };
 
 function createBaseUploadAttachmentRequest(): UploadAttachmentRequest {
-  return { filename: "", filetype: "", size: 0, width: 0, height: 0, channel_id: "", message_id: "" };
+  return { filename: "", filetype: "", size: 0, width: 0, height: 0 };
 }
 
 export const UploadAttachmentRequest = {
@@ -13461,12 +13444,6 @@ export const UploadAttachmentRequest = {
     }
     if (message.height !== 0) {
       writer.uint32(40).int32(message.height);
-    }
-    if (message.channel_id !== "") {
-      writer.uint32(50).string(message.channel_id);
-    }
-    if (message.message_id !== "") {
-      writer.uint32(58).string(message.message_id);
     }
     return writer;
   },
@@ -13493,12 +13470,6 @@ export const UploadAttachmentRequest = {
         case 5:
           message.height = reader.int32();
           break;
-        case 6:
-          message.channel_id = reader.string();
-          break;
-        case 7:
-          message.message_id = reader.string();
-          break;
         default:
           reader.skipType(tag & 7);
           break;
@@ -13514,8 +13485,6 @@ export const UploadAttachmentRequest = {
       size: isSet(object.size) ? Number(object.size) : 0,
       width: isSet(object.width) ? Number(object.width) : 0,
       height: isSet(object.height) ? Number(object.height) : 0,
-      channel_id: isSet(object.channel_id) ? String(object.channel_id) : "",
-      message_id: isSet(object.message_id) ? String(object.message_id) : "",
     };
   },
 
@@ -13526,8 +13495,6 @@ export const UploadAttachmentRequest = {
     message.size !== undefined && (obj.size = Math.round(message.size));
     message.width !== undefined && (obj.width = Math.round(message.width));
     message.height !== undefined && (obj.height = Math.round(message.height));
-    message.channel_id !== undefined && (obj.channel_id = message.channel_id);
-    message.message_id !== undefined && (obj.message_id = message.message_id);
     return obj;
   },
 
@@ -13542,26 +13509,21 @@ export const UploadAttachmentRequest = {
     message.size = object.size ?? 0;
     message.width = object.width ?? 0;
     message.height = object.height ?? 0;
-    message.channel_id = object.channel_id ?? "";
-    message.message_id = object.message_id ?? "";
     return message;
   },
 };
 
 function createBaseUploadAttachment(): UploadAttachment {
-  return { id: "", filename: "", url: "" };
+  return { filename: "", url: "" };
 }
 
 export const UploadAttachment = {
   encode(message: UploadAttachment, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.id !== "") {
-      writer.uint32(10).string(message.id);
-    }
     if (message.filename !== "") {
-      writer.uint32(18).string(message.filename);
+      writer.uint32(10).string(message.filename);
     }
     if (message.url !== "") {
-      writer.uint32(26).string(message.url);
+      writer.uint32(18).string(message.url);
     }
     return writer;
   },
@@ -13574,12 +13536,9 @@ export const UploadAttachment = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          message.id = reader.string();
-          break;
-        case 2:
           message.filename = reader.string();
           break;
-        case 3:
+        case 2:
           message.url = reader.string();
           break;
         default:
@@ -13592,7 +13551,6 @@ export const UploadAttachment = {
 
   fromJSON(object: any): UploadAttachment {
     return {
-      id: isSet(object.id) ? String(object.id) : "",
       filename: isSet(object.filename) ? String(object.filename) : "",
       url: isSet(object.url) ? String(object.url) : "",
     };
@@ -13600,7 +13558,6 @@ export const UploadAttachment = {
 
   toJSON(message: UploadAttachment): unknown {
     const obj: any = {};
-    message.id !== undefined && (obj.id = message.id);
     message.filename !== undefined && (obj.filename = message.filename);
     message.url !== undefined && (obj.url = message.url);
     return obj;
@@ -13612,7 +13569,6 @@ export const UploadAttachment = {
 
   fromPartial<I extends Exact<DeepPartial<UploadAttachment>, I>>(object: I): UploadAttachment {
     const message = createBaseUploadAttachment();
-    message.id = object.id ?? "";
     message.filename = object.filename ?? "";
     message.url = object.url ?? "";
     return message;

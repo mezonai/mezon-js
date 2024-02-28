@@ -167,6 +167,12 @@ export interface ChannelMessage {
   user_id_two: string;
   //The username of the message sender, if any.
   username: string;
+  //
+  mentions?: Array<MessageMentionEvent>;
+  //
+  reactions?: Array<MessageReactionEvent>;
+  //
+  attachments?: Array<MessageAttachmentEvent>;
 }
 
 /** An acknowledgement received in response to sending a message on a chat channel. */
@@ -196,6 +202,10 @@ interface ChannelMessageSend {
     channel_id: string;
     /** The content payload. */
     content: any;
+    //
+    mentions?: Array<MessageMentionEvent>;
+    //
+    attachments?: Array<MessageAttachmentEvent>;
   };
 }
 
