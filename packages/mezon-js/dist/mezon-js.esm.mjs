@@ -3369,7 +3369,7 @@ var MezonApi = class {
     ]);
   }
   /** Create a new group with the current user as the owner. */
-  uploadFile(bearerToken, body, options = {}) {
+  uploadAttachmentFile(bearerToken, body, options = {}) {
     if (body === null || body === void 0) {
       throw new Error("'body' is a required parameter but is null or undefined.");
     }
@@ -4039,9 +4039,9 @@ var _DefaultSocket = class _DefaultSocket {
       return response.message_mention_event;
     });
   }
-  writeMessageAttachment(channel_id, message_id, filename, size, filetype, width, height) {
+  writeMessageAttachment(channel_id, message_id, filename, url, size, filetype, width, height) {
     return __async(this, null, function* () {
-      const response = yield this.send({ message_attachment_event: { channel_id, message_id, filename, size, filetype, width, height } });
+      const response = yield this.send({ message_attachment_event: { channel_id, message_id, filename, url, size, filetype, width, height } });
       return response.message_attachment_event;
     });
   }
@@ -4280,14 +4280,12 @@ var Client = class {
     });
   }
   /** Create a new group with the current user as the creator and superadmin. */
-  uploadFile(session, request) {
+  uploadAttachmentFile(session, request) {
     return __async(this, null, function* () {
       if (this.autoRefreshSession && session.refresh_token && session.isexpired((Date.now() + this.expiredTimespanMs) / 1e3)) {
         yield this.sessionRefresh(session);
       }
-      return this.apiClient.uploadFile(session.token, request).then((response) => {
-        return response !== void 0;
-      });
+      return this.apiClient.uploadAttachmentFile(session.token, request);
     });
   }
   /** Create a channel within clan */
