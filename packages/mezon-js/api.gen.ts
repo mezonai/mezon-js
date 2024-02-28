@@ -543,7 +543,7 @@ export interface ApiMessageAttachment {
   //
   height?: number;
   //
-  size?: string;
+  size?: number;
   //
   url?: string;
   //
