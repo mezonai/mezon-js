@@ -4435,7 +4435,7 @@ queryParams.set("creator_id", creatorId);
     if (body === null || body === undefined) {
       throw new Error("'body' is a required parameter but is null or undefined.");
     }
-    const urlPath = "/v2/uploadfile";
+    const urlPath = "/v2/uploadattachmentfile";
     const queryParams = new Map<string, any>();
 
     let bodyJson : string = "";
