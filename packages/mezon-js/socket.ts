@@ -137,7 +137,7 @@ export interface MessageTypingEvent {
 }
 
 /** An incoming message on a realtime chat channel. */
-export interface ChannelMessage {
+export interface ChannelMessageEvent {
   avatar: string;
   //The channel this message belongs to.
   channel_id: string;
@@ -616,7 +616,7 @@ export interface Socket {
   onheartbeattimeout: () => void;
 
   /** Receive channel message. */
-  onchannelmessage: (channelMessage: ChannelMessage) => void;
+  onchannelmessage: (channelMessage: ChannelMessageEvent) => void;
 
   /** Receive typing event */
   onmessagetyping: (messageTypingEvent: MessageTypingEvent) => void;
@@ -711,7 +711,7 @@ export class DefaultSocket implements Socket {
           this.onstreamdata(<StreamData>message.stream_data);
         } else if (message.channel_message) {
           message.channel_message.content = JSON.parse(message.channel_message.content);
-          this.onchannelmessage(<ChannelMessage>message.channel_message);
+          this.onchannelmessage(<ChannelMessageEvent>message.channel_message);
         } else if (message.message_typing_event) {          
           this.onmessagetyping(<MessageTypingEvent>message);
         } else if (message.message_reaction_event) {
@@ -833,7 +833,7 @@ export class DefaultSocket implements Socket {
     }
   }
 
-  onchannelmessage(channelMessage: ChannelMessage) {
+  onchannelmessage(channelMessage: ChannelMessageEvent) {
     if (this.verbose && window && window.console) {
       console.log(channelMessage);
     }
