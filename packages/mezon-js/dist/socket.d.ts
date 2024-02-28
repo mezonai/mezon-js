@@ -111,7 +111,7 @@ export interface MessageTypingEvent {
     sender_id: string;
 }
 /** An incoming message on a realtime chat channel. */
-export interface ChannelMessage {
+export interface ChannelMessageEvent {
     avatar: string;
     channel_id: string;
     channel_name: string;
@@ -504,7 +504,7 @@ export interface Socket {
      */
     onheartbeattimeout: () => void;
     /** Receive channel message. */
-    onchannelmessage: (channelMessage: ChannelMessage) => void;
+    onchannelmessage: (channelMessage: ChannelMessageEvent) => void;
     /** Receive typing event */
     onmessagetyping: (messageTypingEvent: MessageTypingEvent) => void;
     /** Receive reaction event */
@@ -549,7 +549,7 @@ export declare class DefaultSocket implements Socket {
     onmessagereaction(messagetyping: MessageReactionEvent): void;
     onmessagemention(messagetyping: MessageMentionEvent): void;
     onmessageattachment(messagetyping: MessageAttachmentEvent): void;
-    onchannelmessage(channelMessage: ChannelMessage): void;
+    onchannelmessage(channelMessage: ChannelMessageEvent): void;
     onchannelpresence(channelPresence: ChannelPresenceEvent): void;
     onnotification(notification: Notification): void;
     onparty(party: Party): void;
