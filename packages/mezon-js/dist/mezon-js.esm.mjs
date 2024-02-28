@@ -1994,6 +1994,34 @@ var MezonApi = class {
       )
     ]);
   }
+  /** List all users that are part of a clan. */
+  listClanUsers(bearerToken, clanId, options = {}) {
+    if (clanId === null || clanId === void 0) {
+      throw new Error("'clanId' is a required parameter but is null or undefined.");
+    }
+    const urlPath = "/v2/clandesc/{clanId}/user".replace("{clanId}", encodeURIComponent(String(clanId)));
+    const queryParams = /* @__PURE__ */ new Map();
+    let bodyJson = "";
+    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
+    const fetchOptions = buildFetchOptions("GET", options, bodyJson);
+    if (bearerToken) {
+      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+    }
+    return Promise.race([
+      fetch(fullUrl, fetchOptions).then((response) => {
+        if (response.status == 204) {
+          return response;
+        } else if (response.status >= 200 && response.status < 300) {
+          return response.json();
+        } else {
+          throw response;
+        }
+      }),
+      new Promise(
+        (_, reject) => setTimeout(reject, this.timeoutMs, "Request timed out.")
+      )
+    ]);
+  }
   /** Get a clan desc profile */
   getClanDescProfile(bearerToken, clanId, options = {}) {
     if (clanId === null || clanId === void 0) {
@@ -2378,6 +2406,38 @@ var MezonApi = class {
     let bodyJson = "";
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("DELETE", options, bodyJson);
+    if (bearerToken) {
+      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+    }
+    return Promise.race([
+      fetch(fullUrl, fetchOptions).then((response) => {
+        if (response.status == 204) {
+          return response;
+        } else if (response.status >= 200 && response.status < 300) {
+          return response.json();
+        } else {
+          throw response;
+        }
+      }),
+      new Promise(
+        (_, reject) => setTimeout(reject, this.timeoutMs, "Request timed out.")
+      )
+    ]);
+  }
+  /** Update fields in a given group. */
+  updateGroup(bearerToken, groupId, body, options = {}) {
+    if (groupId === null || groupId === void 0) {
+      throw new Error("'groupId' is a required parameter but is null or undefined.");
+    }
+    if (body === null || body === void 0) {
+      throw new Error("'body' is a required parameter but is null or undefined.");
+    }
+    const urlPath = "/v2/group/{groupId}".replace("{groupId}", encodeURIComponent(String(groupId)));
+    const queryParams = /* @__PURE__ */ new Map();
+    let bodyJson = "";
+    bodyJson = JSON.stringify(body || {});
+    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
+    const fetchOptions = buildFetchOptions("PUT", options, bodyJson);
     if (bearerToken) {
       fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
     }
@@ -4530,6 +4590,48 @@ var Client = class {
         }
         response.channel_users.forEach((gu) => {
           result.channel_users.push({
+            user: {
+              avatar_url: gu.user.avatar_url,
+              create_time: gu.user.create_time,
+              display_name: gu.user.display_name,
+              edge_count: gu.user.edge_count ? Number(gu.user.edge_count) : 0,
+              facebook_id: gu.user.facebook_id,
+              gamecenter_id: gu.user.gamecenter_id,
+              google_id: gu.user.google_id,
+              id: gu.user.id,
+              lang_tag: gu.user.lang_tag,
+              location: gu.user.location,
+              online: gu.user.online,
+              steam_id: gu.user.steam_id,
+              timezone: gu.user.timezone,
+              update_time: gu.user.update_time,
+              username: gu.user.username,
+              metadata: gu.user.metadata ? JSON.parse(gu.user.metadata) : void 0
+            },
+            role_id: gu.role_id
+          });
+        });
+        return Promise.resolve(result);
+      });
+    });
+  }
+  /** List a channel's users. */
+  listClanUsers(session, clanId) {
+    return __async(this, null, function* () {
+      if (this.autoRefreshSession && session.refresh_token && session.isexpired((Date.now() + this.expiredTimespanMs) / 1e3)) {
+        yield this.sessionRefresh(session);
+      }
+      return this.apiClient.listClanUsers(session.token, clanId).then((response) => {
+        var result = {
+          clan_users: [],
+          cursor: response.cursor,
+          clan_id: response.clan_id
+        };
+        if (response.clan_users == null) {
+          return Promise.resolve(result);
+        }
+        response.clan_users.forEach((gu) => {
+          result.clan_users.push({
             user: {
               avatar_url: gu.user.avatar_url,
               create_time: gu.user.create_time,

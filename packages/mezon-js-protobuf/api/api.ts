@@ -860,6 +860,26 @@ export interface ChannelUserList_ChannelUser {
   role_id: string | undefined;
 }
 
+/** A list of users belonging to a clan, along with their role. */
+export interface ClanUserList {
+  /** User-role pairs for a clan. */
+  clan_users: ClanUserList_ClanUser[];
+  /** Cursor for the next page of results, if any. */
+  cursor: string;
+  /** clan id */
+  clan_id: string;
+}
+
+/** A single user-role pair. */
+export interface ClanUserList_ClanUser {
+  /** User. */
+  user:
+    | User
+    | undefined;
+  /** Their relationship to the role. */
+  role_id: string | undefined;
+}
+
 /** Import Facebook friends into the current user's account. */
 export interface ImportFacebookFriendsRequest {
   /** The Facebook account details. */
@@ -1006,6 +1026,12 @@ export interface ListChannelUsersRequest {
     | undefined;
   /** An optional next page cursor. */
   cursor: string;
+}
+
+/** List all users that are part of a clan. */
+export interface ListClanUsersRequest {
+  /** The clan ID to list from. */
+  clan_id: string;
 }
 
 /** Get a list of unexpired notifications. */
@@ -6361,6 +6387,145 @@ export const ChannelUserList_ChannelUser = {
   },
 };
 
+function createBaseClanUserList(): ClanUserList {
+  return { clan_users: [], cursor: "", clan_id: "" };
+}
+
+export const ClanUserList = {
+  encode(message: ClanUserList, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    for (const v of message.clan_users) {
+      ClanUserList_ClanUser.encode(v!, writer.uint32(10).fork()).ldelim();
+    }
+    if (message.cursor !== "") {
+      writer.uint32(18).string(message.cursor);
+    }
+    if (message.clan_id !== "") {
+      writer.uint32(26).string(message.clan_id);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): ClanUserList {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseClanUserList();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.clan_users.push(ClanUserList_ClanUser.decode(reader, reader.uint32()));
+          break;
+        case 2:
+          message.cursor = reader.string();
+          break;
+        case 3:
+          message.clan_id = reader.string();
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): ClanUserList {
+    return {
+      clan_users: Array.isArray(object?.clan_users)
+        ? object.clan_users.map((e: any) => ClanUserList_ClanUser.fromJSON(e))
+        : [],
+      cursor: isSet(object.cursor) ? String(object.cursor) : "",
+      clan_id: isSet(object.clan_id) ? String(object.clan_id) : "",
+    };
+  },
+
+  toJSON(message: ClanUserList): unknown {
+    const obj: any = {};
+    if (message.clan_users) {
+      obj.clan_users = message.clan_users.map((e) => e ? ClanUserList_ClanUser.toJSON(e) : undefined);
+    } else {
+      obj.clan_users = [];
+    }
+    message.cursor !== undefined && (obj.cursor = message.cursor);
+    message.clan_id !== undefined && (obj.clan_id = message.clan_id);
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<ClanUserList>, I>>(base?: I): ClanUserList {
+    return ClanUserList.fromPartial(base ?? {});
+  },
+
+  fromPartial<I extends Exact<DeepPartial<ClanUserList>, I>>(object: I): ClanUserList {
+    const message = createBaseClanUserList();
+    message.clan_users = object.clan_users?.map((e) => ClanUserList_ClanUser.fromPartial(e)) || [];
+    message.cursor = object.cursor ?? "";
+    message.clan_id = object.clan_id ?? "";
+    return message;
+  },
+};
+
+function createBaseClanUserList_ClanUser(): ClanUserList_ClanUser {
+  return { user: undefined, role_id: undefined };
+}
+
+export const ClanUserList_ClanUser = {
+  encode(message: ClanUserList_ClanUser, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.user !== undefined) {
+      User.encode(message.user, writer.uint32(10).fork()).ldelim();
+    }
+    if (message.role_id !== undefined) {
+      StringValue.encode({ value: message.role_id! }, writer.uint32(18).fork()).ldelim();
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): ClanUserList_ClanUser {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseClanUserList_ClanUser();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.user = User.decode(reader, reader.uint32());
+          break;
+        case 2:
+          message.role_id = StringValue.decode(reader, reader.uint32()).value;
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): ClanUserList_ClanUser {
+    return {
+      user: isSet(object.user) ? User.fromJSON(object.user) : undefined,
+      role_id: isSet(object.role_id) ? String(object.role_id) : undefined,
+    };
+  },
+
+  toJSON(message: ClanUserList_ClanUser): unknown {
+    const obj: any = {};
+    message.user !== undefined && (obj.user = message.user ? User.toJSON(message.user) : undefined);
+    message.role_id !== undefined && (obj.role_id = message.role_id);
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<ClanUserList_ClanUser>, I>>(base?: I): ClanUserList_ClanUser {
+    return ClanUserList_ClanUser.fromPartial(base ?? {});
+  },
+
+  fromPartial<I extends Exact<DeepPartial<ClanUserList_ClanUser>, I>>(object: I): ClanUserList_ClanUser {
+    const message = createBaseClanUserList_ClanUser();
+    message.user = (object.user !== undefined && object.user !== null) ? User.fromPartial(object.user) : undefined;
+    message.role_id = object.role_id ?? undefined;
+    return message;
+  },
+};
+
 function createBaseImportFacebookFriendsRequest(): ImportFacebookFriendsRequest {
   return { account: undefined, reset: undefined };
 }
@@ -7243,6 +7408,57 @@ export const ListChannelUsersRequest = {
     message.limit = object.limit ?? undefined;
     message.state = object.state ?? undefined;
     message.cursor = object.cursor ?? "";
+    return message;
+  },
+};
+
+function createBaseListClanUsersRequest(): ListClanUsersRequest {
+  return { clan_id: "" };
+}
+
+export const ListClanUsersRequest = {
+  encode(message: ListClanUsersRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.clan_id !== "") {
+      writer.uint32(10).string(message.clan_id);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): ListClanUsersRequest {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseListClanUsersRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.clan_id = reader.string();
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): ListClanUsersRequest {
+    return { clan_id: isSet(object.clan_id) ? String(object.clan_id) : "" };
+  },
+
+  toJSON(message: ListClanUsersRequest): unknown {
+    const obj: any = {};
+    message.clan_id !== undefined && (obj.clan_id = message.clan_id);
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<ListClanUsersRequest>, I>>(base?: I): ListClanUsersRequest {
+    return ListClanUsersRequest.fromPartial(base ?? {});
+  },
+
+  fromPartial<I extends Exact<DeepPartial<ListClanUsersRequest>, I>>(object: I): ListClanUsersRequest {
+    const message = createBaseListClanUsersRequest();
+    message.clan_id = object.clan_id ?? "";
     return message;
   },
 };
