@@ -4039,9 +4039,9 @@ var _DefaultSocket = class _DefaultSocket {
       return response.message_mention_event;
     });
   }
-  writeMessageAttachment(channel_id, message_id, filename) {
+  writeMessageAttachment(channel_id, message_id, filename, size, filetype, width, height) {
     return __async(this, null, function* () {
-      const response = yield this.send({ message_attachment_event: { channel_id, message_id, filename } });
+      const response = yield this.send({ message_attachment_event: { channel_id, message_id, filename, size, filetype, width, height } });
       return response.message_attachment_event;
     });
   }
