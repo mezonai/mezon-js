@@ -127,6 +127,9 @@ export interface ChannelMessage {
     user_id_one: string;
     user_id_two: string;
     username: string;
+    mentions?: Array<MessageMentionEvent>;
+    reactions?: Array<MessageReactionEvent>;
+    attachments?: Array<MessageAttachmentEvent>;
 }
 /** An acknowledgement received in response to sending a message on a chat channel. */
 export interface ChannelMessageAck {
@@ -154,6 +157,8 @@ interface ChannelMessageSend {
         channel_id: string;
         /** The content payload. */
         content: any;
+        mentions?: Array<MessageMentionEvent>;
+        attachments?: Array<MessageAttachmentEvent>;
     };
 }
 /** Update a message previously sent to a realtime chat channel. */
