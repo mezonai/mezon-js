@@ -3703,6 +3703,10 @@ var _DefaultSocket = class _DefaultSocket {
           this.onmessagetyping(message);
         } else if (message.message_reaction_event) {
           this.onmessagereaction(message);
+        } else if (message.message_mention_event) {
+          this.onmessagemention(message);
+        } else if (message.message_attachment_event) {
+          this.onmessageattachment(message);
         } else if (message.channel_presence_event) {
           this.onchannelpresence(message.channel_presence_event);
         } else if (message.party_data) {
@@ -3786,6 +3790,16 @@ var _DefaultSocket = class _DefaultSocket {
     }
   }
   onmessagereaction(messagetyping) {
+    if (this.verbose && window && window.console) {
+      console.log(messagetyping);
+    }
+  }
+  onmessagemention(messagetyping) {
+    if (this.verbose && window && window.console) {
+      console.log(messagetyping);
+    }
+  }
+  onmessageattachment(messagetyping) {
     if (this.verbose && window && window.console) {
       console.log(messagetyping);
     }
@@ -4566,7 +4580,9 @@ var Client = class {
             channel_name: m.channel_name,
             user_id_one: m.user_id_one,
             user_id_two: m.user_id_two,
-            emoji: m.emoji
+            attachments: m.attachments,
+            mentions: m.mentions,
+            reactions: m.reactions
           });
         });
         return Promise.resolve(result);

@@ -213,6 +213,8 @@ export interface ApiChannelDescription {
 /** A message sent on a channel. */
 export interface ApiChannelMessage {
   //
+  attachments?: Array<ApiMessageAttachment>;
+  //
   avatar?: string;
   //The channel this message belongs to.
   channel_id: string;
@@ -227,11 +229,13 @@ export interface ApiChannelMessage {
   //The UNIX time (for gRPC clients) or ISO string (for REST clients) when the message was created.
   create_time: string;
   //
-  emoji?: ApiEmojiReaction;
+  mentions?: Array<ApiMessageMention>;
   //The unique ID of this message.
   message_id: string;
   //True if the message was persisted to the channel's history, false otherwise.
   persistent?: boolean;
+  //
+  reactions?: Array<ApiMessageReaction>;
   //Message sender, usually a user ID.
   sender_id: string;
   //The UNIX time (for gRPC clients) or ISO string (for REST clients) when the message was last updated.
@@ -408,16 +412,6 @@ export interface ApiDeleteStorageObjectsRequest {
   object_ids?: Array<ApiDeleteStorageObjectId>;
 }
 
-/**  */
-export interface ApiEmojiReaction {
-  //
-  create_time?: Array<string>;
-  //
-  emoji?: Array<string>;
-  //
-  user_id?: string;
-}
-
 /** Represents an event to be passed through the server to registered event handlers. */
 export interface ApiEvent {
   //True if the event came directly from a client call, false otherwise.
@@ -538,6 +532,40 @@ export interface ApiLinkSteamRequest {
   account?: ApiAccountSteam;
   //Import Steam friends for the user.
   sync?: boolean;
+}
+
+/**  */
+export interface ApiMessageAttachment {
+  //
+  filename?: string;
+  //
+  filetype?: string;
+  //
+  height?: number;
+  //
+  size?: string;
+  //
+  url?: string;
+  //
+  width?: number;
+}
+
+/**  */
+export interface ApiMessageMention {
+  //
+  user_id?: string;
+  //
+  username?: string;
+}
+
+/**  */
+export interface ApiMessageReaction {
+  //
+  create_time?: string;
+  //
+  emoji?: string;
+  //
+  user_id?: string;
 }
 
 /** A notification in the server. */

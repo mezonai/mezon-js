@@ -365,17 +365,43 @@ export interface ChannelMessage {
     user_id_one: string;
     /** The ID of the second DM user, or an empty string if this message was not sent through a DM chat. */
     user_id_two: string;
-    /** last seen for request user */
-    emoji: EmojiReaction | undefined;
+    /** Emoji reaction */
+    reactions: MessageReaction[];
+    /** Message mention */
+    mentions: MessageMention[];
+    /** Message attachment */
+    attachments: MessageAttachment[];
+}
+/** Mention to message */
+export interface MessageMention {
+    /** mention user id */
+    user_id: string;
+    /** mention username */
+    username: string;
 }
 /** Emoji reaction by user */
-export interface EmojiReaction {
+export interface MessageReaction {
     /** A list emoji */
-    emoji: string[];
+    emoji: string;
     /** User react to message */
     user_id: string;
     /** The time reaction */
-    create_time: Date[];
+    create_time: number;
+}
+/** Message attachment */
+export interface MessageAttachment {
+    /** Attachment file name */
+    filename: string;
+    /** Attachment file size */
+    size: number;
+    /** Attachment url */
+    url: string;
+    /** Attachment file type */
+    filetype: string;
+    /** Attachment width */
+    width: number;
+    /** Attachment width */
+    height: number;
 }
 /** A list of channel messages, usually a result of a list operation. */
 export interface ChannelMessageList {
@@ -2920,11 +2946,23 @@ export declare const ChannelMessage: {
         channel_name?: string | undefined;
         user_id_one?: string | undefined;
         user_id_two?: string | undefined;
-        emoji?: {
-            emoji?: string[] | undefined;
+        reactions?: {
+            emoji?: string | undefined;
             user_id?: string | undefined;
-            create_time?: Date[] | undefined;
-        } | undefined;
+            create_time?: number | undefined;
+        }[] | undefined;
+        mentions?: {
+            user_id?: string | undefined;
+            username?: string | undefined;
+        }[] | undefined;
+        attachments?: {
+            filename?: string | undefined;
+            size?: number | undefined;
+            url?: string | undefined;
+            filetype?: string | undefined;
+            width?: number | undefined;
+            height?: number | undefined;
+        }[] | undefined;
     } & {
         clan_id?: string | undefined;
         channel_id?: string | undefined;
@@ -2940,16 +2978,66 @@ export declare const ChannelMessage: {
         channel_name?: string | undefined;
         user_id_one?: string | undefined;
         user_id_two?: string | undefined;
-        emoji?: ({
-            emoji?: string[] | undefined;
+        reactions?: ({
+            emoji?: string | undefined;
             user_id?: string | undefined;
-            create_time?: Date[] | undefined;
+            create_time?: number | undefined;
+        }[] & ({
+            emoji?: string | undefined;
+            user_id?: string | undefined;
+            create_time?: number | undefined;
         } & {
-            emoji?: (string[] & string[] & { [K in Exclude<keyof I["emoji"]["emoji"], keyof string[]>]: never; }) | undefined;
+            emoji?: string | undefined;
             user_id?: string | undefined;
-            create_time?: (Date[] & Date[] & { [K_1 in Exclude<keyof I["emoji"]["create_time"], keyof Date[]>]: never; }) | undefined;
-        } & { [K_2 in Exclude<keyof I["emoji"], keyof EmojiReaction>]: never; }) | undefined;
-    } & { [K_3 in Exclude<keyof I, keyof ChannelMessage>]: never; }>(base?: I | undefined): ChannelMessage;
+            create_time?: number | undefined;
+        } & { [K in Exclude<keyof I["reactions"][number], keyof MessageReaction>]: never; })[] & { [K_1 in Exclude<keyof I["reactions"], keyof {
+            emoji?: string | undefined;
+            user_id?: string | undefined;
+            create_time?: number | undefined;
+        }[]>]: never; }) | undefined;
+        mentions?: ({
+            user_id?: string | undefined;
+            username?: string | undefined;
+        }[] & ({
+            user_id?: string | undefined;
+            username?: string | undefined;
+        } & {
+            user_id?: string | undefined;
+            username?: string | undefined;
+        } & { [K_2 in Exclude<keyof I["mentions"][number], keyof MessageMention>]: never; })[] & { [K_3 in Exclude<keyof I["mentions"], keyof {
+            user_id?: string | undefined;
+            username?: string | undefined;
+        }[]>]: never; }) | undefined;
+        attachments?: ({
+            filename?: string | undefined;
+            size?: number | undefined;
+            url?: string | undefined;
+            filetype?: string | undefined;
+            width?: number | undefined;
+            height?: number | undefined;
+        }[] & ({
+            filename?: string | undefined;
+            size?: number | undefined;
+            url?: string | undefined;
+            filetype?: string | undefined;
+            width?: number | undefined;
+            height?: number | undefined;
+        } & {
+            filename?: string | undefined;
+            size?: number | undefined;
+            url?: string | undefined;
+            filetype?: string | undefined;
+            width?: number | undefined;
+            height?: number | undefined;
+        } & { [K_4 in Exclude<keyof I["attachments"][number], keyof MessageAttachment>]: never; })[] & { [K_5 in Exclude<keyof I["attachments"], keyof {
+            filename?: string | undefined;
+            size?: number | undefined;
+            url?: string | undefined;
+            filetype?: string | undefined;
+            width?: number | undefined;
+            height?: number | undefined;
+        }[]>]: never; }) | undefined;
+    } & { [K_6 in Exclude<keyof I, keyof ChannelMessage>]: never; }>(base?: I | undefined): ChannelMessage;
     fromPartial<I_1 extends {
         clan_id?: string | undefined;
         channel_id?: string | undefined;
@@ -2965,11 +3053,23 @@ export declare const ChannelMessage: {
         channel_name?: string | undefined;
         user_id_one?: string | undefined;
         user_id_two?: string | undefined;
-        emoji?: {
-            emoji?: string[] | undefined;
+        reactions?: {
+            emoji?: string | undefined;
             user_id?: string | undefined;
-            create_time?: Date[] | undefined;
-        } | undefined;
+            create_time?: number | undefined;
+        }[] | undefined;
+        mentions?: {
+            user_id?: string | undefined;
+            username?: string | undefined;
+        }[] | undefined;
+        attachments?: {
+            filename?: string | undefined;
+            size?: number | undefined;
+            url?: string | undefined;
+            filetype?: string | undefined;
+            width?: number | undefined;
+            height?: number | undefined;
+        }[] | undefined;
     } & {
         clan_id?: string | undefined;
         channel_id?: string | undefined;
@@ -2985,40 +3085,146 @@ export declare const ChannelMessage: {
         channel_name?: string | undefined;
         user_id_one?: string | undefined;
         user_id_two?: string | undefined;
-        emoji?: ({
-            emoji?: string[] | undefined;
+        reactions?: ({
+            emoji?: string | undefined;
             user_id?: string | undefined;
-            create_time?: Date[] | undefined;
+            create_time?: number | undefined;
+        }[] & ({
+            emoji?: string | undefined;
+            user_id?: string | undefined;
+            create_time?: number | undefined;
         } & {
-            emoji?: (string[] & string[] & { [K_4 in Exclude<keyof I_1["emoji"]["emoji"], keyof string[]>]: never; }) | undefined;
+            emoji?: string | undefined;
             user_id?: string | undefined;
-            create_time?: (Date[] & Date[] & { [K_5 in Exclude<keyof I_1["emoji"]["create_time"], keyof Date[]>]: never; }) | undefined;
-        } & { [K_6 in Exclude<keyof I_1["emoji"], keyof EmojiReaction>]: never; }) | undefined;
-    } & { [K_7 in Exclude<keyof I_1, keyof ChannelMessage>]: never; }>(object: I_1): ChannelMessage;
+            create_time?: number | undefined;
+        } & { [K_7 in Exclude<keyof I_1["reactions"][number], keyof MessageReaction>]: never; })[] & { [K_8 in Exclude<keyof I_1["reactions"], keyof {
+            emoji?: string | undefined;
+            user_id?: string | undefined;
+            create_time?: number | undefined;
+        }[]>]: never; }) | undefined;
+        mentions?: ({
+            user_id?: string | undefined;
+            username?: string | undefined;
+        }[] & ({
+            user_id?: string | undefined;
+            username?: string | undefined;
+        } & {
+            user_id?: string | undefined;
+            username?: string | undefined;
+        } & { [K_9 in Exclude<keyof I_1["mentions"][number], keyof MessageMention>]: never; })[] & { [K_10 in Exclude<keyof I_1["mentions"], keyof {
+            user_id?: string | undefined;
+            username?: string | undefined;
+        }[]>]: never; }) | undefined;
+        attachments?: ({
+            filename?: string | undefined;
+            size?: number | undefined;
+            url?: string | undefined;
+            filetype?: string | undefined;
+            width?: number | undefined;
+            height?: number | undefined;
+        }[] & ({
+            filename?: string | undefined;
+            size?: number | undefined;
+            url?: string | undefined;
+            filetype?: string | undefined;
+            width?: number | undefined;
+            height?: number | undefined;
+        } & {
+            filename?: string | undefined;
+            size?: number | undefined;
+            url?: string | undefined;
+            filetype?: string | undefined;
+            width?: number | undefined;
+            height?: number | undefined;
+        } & { [K_11 in Exclude<keyof I_1["attachments"][number], keyof MessageAttachment>]: never; })[] & { [K_12 in Exclude<keyof I_1["attachments"], keyof {
+            filename?: string | undefined;
+            size?: number | undefined;
+            url?: string | undefined;
+            filetype?: string | undefined;
+            width?: number | undefined;
+            height?: number | undefined;
+        }[]>]: never; }) | undefined;
+    } & { [K_13 in Exclude<keyof I_1, keyof ChannelMessage>]: never; }>(object: I_1): ChannelMessage;
 };
-export declare const EmojiReaction: {
-    encode(message: EmojiReaction, writer?: _m0.Writer): _m0.Writer;
-    decode(input: _m0.Reader | Uint8Array, length?: number): EmojiReaction;
-    fromJSON(object: any): EmojiReaction;
-    toJSON(message: EmojiReaction): unknown;
+export declare const MessageMention: {
+    encode(message: MessageMention, writer?: _m0.Writer): _m0.Writer;
+    decode(input: _m0.Reader | Uint8Array, length?: number): MessageMention;
+    fromJSON(object: any): MessageMention;
+    toJSON(message: MessageMention): unknown;
     create<I extends {
-        emoji?: string[] | undefined;
         user_id?: string | undefined;
-        create_time?: Date[] | undefined;
+        username?: string | undefined;
     } & {
-        emoji?: (string[] & string[] & { [K in Exclude<keyof I["emoji"], keyof string[]>]: never; }) | undefined;
         user_id?: string | undefined;
-        create_time?: (Date[] & Date[] & { [K_1 in Exclude<keyof I["create_time"], keyof Date[]>]: never; }) | undefined;
-    } & { [K_2 in Exclude<keyof I, keyof EmojiReaction>]: never; }>(base?: I | undefined): EmojiReaction;
+        username?: string | undefined;
+    } & { [K in Exclude<keyof I, keyof MessageMention>]: never; }>(base?: I | undefined): MessageMention;
     fromPartial<I_1 extends {
-        emoji?: string[] | undefined;
         user_id?: string | undefined;
-        create_time?: Date[] | undefined;
+        username?: string | undefined;
     } & {
-        emoji?: (string[] & string[] & { [K_3 in Exclude<keyof I_1["emoji"], keyof string[]>]: never; }) | undefined;
         user_id?: string | undefined;
-        create_time?: (Date[] & Date[] & { [K_4 in Exclude<keyof I_1["create_time"], keyof Date[]>]: never; }) | undefined;
-    } & { [K_5 in Exclude<keyof I_1, keyof EmojiReaction>]: never; }>(object: I_1): EmojiReaction;
+        username?: string | undefined;
+    } & { [K_1 in Exclude<keyof I_1, keyof MessageMention>]: never; }>(object: I_1): MessageMention;
+};
+export declare const MessageReaction: {
+    encode(message: MessageReaction, writer?: _m0.Writer): _m0.Writer;
+    decode(input: _m0.Reader | Uint8Array, length?: number): MessageReaction;
+    fromJSON(object: any): MessageReaction;
+    toJSON(message: MessageReaction): unknown;
+    create<I extends {
+        emoji?: string | undefined;
+        user_id?: string | undefined;
+        create_time?: number | undefined;
+    } & {
+        emoji?: string | undefined;
+        user_id?: string | undefined;
+        create_time?: number | undefined;
+    } & { [K in Exclude<keyof I, keyof MessageReaction>]: never; }>(base?: I | undefined): MessageReaction;
+    fromPartial<I_1 extends {
+        emoji?: string | undefined;
+        user_id?: string | undefined;
+        create_time?: number | undefined;
+    } & {
+        emoji?: string | undefined;
+        user_id?: string | undefined;
+        create_time?: number | undefined;
+    } & { [K_1 in Exclude<keyof I_1, keyof MessageReaction>]: never; }>(object: I_1): MessageReaction;
+};
+export declare const MessageAttachment: {
+    encode(message: MessageAttachment, writer?: _m0.Writer): _m0.Writer;
+    decode(input: _m0.Reader | Uint8Array, length?: number): MessageAttachment;
+    fromJSON(object: any): MessageAttachment;
+    toJSON(message: MessageAttachment): unknown;
+    create<I extends {
+        filename?: string | undefined;
+        size?: number | undefined;
+        url?: string | undefined;
+        filetype?: string | undefined;
+        width?: number | undefined;
+        height?: number | undefined;
+    } & {
+        filename?: string | undefined;
+        size?: number | undefined;
+        url?: string | undefined;
+        filetype?: string | undefined;
+        width?: number | undefined;
+        height?: number | undefined;
+    } & { [K in Exclude<keyof I, keyof MessageAttachment>]: never; }>(base?: I | undefined): MessageAttachment;
+    fromPartial<I_1 extends {
+        filename?: string | undefined;
+        size?: number | undefined;
+        url?: string | undefined;
+        filetype?: string | undefined;
+        width?: number | undefined;
+        height?: number | undefined;
+    } & {
+        filename?: string | undefined;
+        size?: number | undefined;
+        url?: string | undefined;
+        filetype?: string | undefined;
+        width?: number | undefined;
+        height?: number | undefined;
+    } & { [K_1 in Exclude<keyof I_1, keyof MessageAttachment>]: never; }>(object: I_1): MessageAttachment;
 };
 export declare const ChannelMessageList: {
     encode(message: ChannelMessageList, writer?: _m0.Writer): _m0.Writer;
@@ -3041,11 +3247,23 @@ export declare const ChannelMessageList: {
             channel_name?: string | undefined;
             user_id_one?: string | undefined;
             user_id_two?: string | undefined;
-            emoji?: {
-                emoji?: string[] | undefined;
+            reactions?: {
+                emoji?: string | undefined;
                 user_id?: string | undefined;
-                create_time?: Date[] | undefined;
-            } | undefined;
+                create_time?: number | undefined;
+            }[] | undefined;
+            mentions?: {
+                user_id?: string | undefined;
+                username?: string | undefined;
+            }[] | undefined;
+            attachments?: {
+                filename?: string | undefined;
+                size?: number | undefined;
+                url?: string | undefined;
+                filetype?: string | undefined;
+                width?: number | undefined;
+                height?: number | undefined;
+            }[] | undefined;
         }[] | undefined;
         last_seen_message_id?: string | undefined;
         next_cursor?: string | undefined;
@@ -3067,11 +3285,23 @@ export declare const ChannelMessageList: {
             channel_name?: string | undefined;
             user_id_one?: string | undefined;
             user_id_two?: string | undefined;
-            emoji?: {
-                emoji?: string[] | undefined;
+            reactions?: {
+                emoji?: string | undefined;
                 user_id?: string | undefined;
-                create_time?: Date[] | undefined;
-            } | undefined;
+                create_time?: number | undefined;
+            }[] | undefined;
+            mentions?: {
+                user_id?: string | undefined;
+                username?: string | undefined;
+            }[] | undefined;
+            attachments?: {
+                filename?: string | undefined;
+                size?: number | undefined;
+                url?: string | undefined;
+                filetype?: string | undefined;
+                width?: number | undefined;
+                height?: number | undefined;
+            }[] | undefined;
         }[] & ({
             clan_id?: string | undefined;
             channel_id?: string | undefined;
@@ -3087,11 +3317,23 @@ export declare const ChannelMessageList: {
             channel_name?: string | undefined;
             user_id_one?: string | undefined;
             user_id_two?: string | undefined;
-            emoji?: {
-                emoji?: string[] | undefined;
+            reactions?: {
+                emoji?: string | undefined;
                 user_id?: string | undefined;
-                create_time?: Date[] | undefined;
-            } | undefined;
+                create_time?: number | undefined;
+            }[] | undefined;
+            mentions?: {
+                user_id?: string | undefined;
+                username?: string | undefined;
+            }[] | undefined;
+            attachments?: {
+                filename?: string | undefined;
+                size?: number | undefined;
+                url?: string | undefined;
+                filetype?: string | undefined;
+                width?: number | undefined;
+                height?: number | undefined;
+            }[] | undefined;
         } & {
             clan_id?: string | undefined;
             channel_id?: string | undefined;
@@ -3107,16 +3349,66 @@ export declare const ChannelMessageList: {
             channel_name?: string | undefined;
             user_id_one?: string | undefined;
             user_id_two?: string | undefined;
-            emoji?: ({
-                emoji?: string[] | undefined;
+            reactions?: ({
+                emoji?: string | undefined;
                 user_id?: string | undefined;
-                create_time?: Date[] | undefined;
+                create_time?: number | undefined;
+            }[] & ({
+                emoji?: string | undefined;
+                user_id?: string | undefined;
+                create_time?: number | undefined;
             } & {
-                emoji?: (string[] & string[] & { [K in Exclude<keyof I["messages"][number]["emoji"]["emoji"], keyof string[]>]: never; }) | undefined;
+                emoji?: string | undefined;
                 user_id?: string | undefined;
-                create_time?: (Date[] & Date[] & { [K_1 in Exclude<keyof I["messages"][number]["emoji"]["create_time"], keyof Date[]>]: never; }) | undefined;
-            } & { [K_2 in Exclude<keyof I["messages"][number]["emoji"], keyof EmojiReaction>]: never; }) | undefined;
-        } & { [K_3 in Exclude<keyof I["messages"][number], keyof ChannelMessage>]: never; })[] & { [K_4 in Exclude<keyof I["messages"], keyof {
+                create_time?: number | undefined;
+            } & { [K in Exclude<keyof I["messages"][number]["reactions"][number], keyof MessageReaction>]: never; })[] & { [K_1 in Exclude<keyof I["messages"][number]["reactions"], keyof {
+                emoji?: string | undefined;
+                user_id?: string | undefined;
+                create_time?: number | undefined;
+            }[]>]: never; }) | undefined;
+            mentions?: ({
+                user_id?: string | undefined;
+                username?: string | undefined;
+            }[] & ({
+                user_id?: string | undefined;
+                username?: string | undefined;
+            } & {
+                user_id?: string | undefined;
+                username?: string | undefined;
+            } & { [K_2 in Exclude<keyof I["messages"][number]["mentions"][number], keyof MessageMention>]: never; })[] & { [K_3 in Exclude<keyof I["messages"][number]["mentions"], keyof {
+                user_id?: string | undefined;
+                username?: string | undefined;
+            }[]>]: never; }) | undefined;
+            attachments?: ({
+                filename?: string | undefined;
+                size?: number | undefined;
+                url?: string | undefined;
+                filetype?: string | undefined;
+                width?: number | undefined;
+                height?: number | undefined;
+            }[] & ({
+                filename?: string | undefined;
+                size?: number | undefined;
+                url?: string | undefined;
+                filetype?: string | undefined;
+                width?: number | undefined;
+                height?: number | undefined;
+            } & {
+                filename?: string | undefined;
+                size?: number | undefined;
+                url?: string | undefined;
+                filetype?: string | undefined;
+                width?: number | undefined;
+                height?: number | undefined;
+            } & { [K_4 in Exclude<keyof I["messages"][number]["attachments"][number], keyof MessageAttachment>]: never; })[] & { [K_5 in Exclude<keyof I["messages"][number]["attachments"], keyof {
+                filename?: string | undefined;
+                size?: number | undefined;
+                url?: string | undefined;
+                filetype?: string | undefined;
+                width?: number | undefined;
+                height?: number | undefined;
+            }[]>]: never; }) | undefined;
+        } & { [K_6 in Exclude<keyof I["messages"][number], keyof ChannelMessage>]: never; })[] & { [K_7 in Exclude<keyof I["messages"], keyof {
             clan_id?: string | undefined;
             channel_id?: string | undefined;
             message_id?: string | undefined;
@@ -3131,17 +3423,29 @@ export declare const ChannelMessageList: {
             channel_name?: string | undefined;
             user_id_one?: string | undefined;
             user_id_two?: string | undefined;
-            emoji?: {
-                emoji?: string[] | undefined;
+            reactions?: {
+                emoji?: string | undefined;
                 user_id?: string | undefined;
-                create_time?: Date[] | undefined;
-            } | undefined;
+                create_time?: number | undefined;
+            }[] | undefined;
+            mentions?: {
+                user_id?: string | undefined;
+                username?: string | undefined;
+            }[] | undefined;
+            attachments?: {
+                filename?: string | undefined;
+                size?: number | undefined;
+                url?: string | undefined;
+                filetype?: string | undefined;
+                width?: number | undefined;
+                height?: number | undefined;
+            }[] | undefined;
         }[]>]: never; }) | undefined;
         last_seen_message_id?: string | undefined;
         next_cursor?: string | undefined;
         prev_cursor?: string | undefined;
         cacheable_cursor?: string | undefined;
-    } & { [K_5 in Exclude<keyof I, keyof ChannelMessageList>]: never; }>(base?: I | undefined): ChannelMessageList;
+    } & { [K_8 in Exclude<keyof I, keyof ChannelMessageList>]: never; }>(base?: I | undefined): ChannelMessageList;
     fromPartial<I_1 extends {
         messages?: {
             clan_id?: string | undefined;
@@ -3158,11 +3462,23 @@ export declare const ChannelMessageList: {
             channel_name?: string | undefined;
             user_id_one?: string | undefined;
             user_id_two?: string | undefined;
-            emoji?: {
-                emoji?: string[] | undefined;
+            reactions?: {
+                emoji?: string | undefined;
                 user_id?: string | undefined;
-                create_time?: Date[] | undefined;
-            } | undefined;
+                create_time?: number | undefined;
+            }[] | undefined;
+            mentions?: {
+                user_id?: string | undefined;
+                username?: string | undefined;
+            }[] | undefined;
+            attachments?: {
+                filename?: string | undefined;
+                size?: number | undefined;
+                url?: string | undefined;
+                filetype?: string | undefined;
+                width?: number | undefined;
+                height?: number | undefined;
+            }[] | undefined;
         }[] | undefined;
         last_seen_message_id?: string | undefined;
         next_cursor?: string | undefined;
@@ -3184,11 +3500,23 @@ export declare const ChannelMessageList: {
             channel_name?: string | undefined;
             user_id_one?: string | undefined;
             user_id_two?: string | undefined;
-            emoji?: {
-                emoji?: string[] | undefined;
+            reactions?: {
+                emoji?: string | undefined;
                 user_id?: string | undefined;
-                create_time?: Date[] | undefined;
-            } | undefined;
+                create_time?: number | undefined;
+            }[] | undefined;
+            mentions?: {
+                user_id?: string | undefined;
+                username?: string | undefined;
+            }[] | undefined;
+            attachments?: {
+                filename?: string | undefined;
+                size?: number | undefined;
+                url?: string | undefined;
+                filetype?: string | undefined;
+                width?: number | undefined;
+                height?: number | undefined;
+            }[] | undefined;
         }[] & ({
             clan_id?: string | undefined;
             channel_id?: string | undefined;
@@ -3204,11 +3532,23 @@ export declare const ChannelMessageList: {
             channel_name?: string | undefined;
             user_id_one?: string | undefined;
             user_id_two?: string | undefined;
-            emoji?: {
-                emoji?: string[] | undefined;
+            reactions?: {
+                emoji?: string | undefined;
                 user_id?: string | undefined;
-                create_time?: Date[] | undefined;
-            } | undefined;
+                create_time?: number | undefined;
+            }[] | undefined;
+            mentions?: {
+                user_id?: string | undefined;
+                username?: string | undefined;
+            }[] | undefined;
+            attachments?: {
+                filename?: string | undefined;
+                size?: number | undefined;
+                url?: string | undefined;
+                filetype?: string | undefined;
+                width?: number | undefined;
+                height?: number | undefined;
+            }[] | undefined;
         } & {
             clan_id?: string | undefined;
             channel_id?: string | undefined;
@@ -3224,16 +3564,66 @@ export declare const ChannelMessageList: {
             channel_name?: string | undefined;
             user_id_one?: string | undefined;
             user_id_two?: string | undefined;
-            emoji?: ({
-                emoji?: string[] | undefined;
+            reactions?: ({
+                emoji?: string | undefined;
                 user_id?: string | undefined;
-                create_time?: Date[] | undefined;
+                create_time?: number | undefined;
+            }[] & ({
+                emoji?: string | undefined;
+                user_id?: string | undefined;
+                create_time?: number | undefined;
             } & {
-                emoji?: (string[] & string[] & { [K_6 in Exclude<keyof I_1["messages"][number]["emoji"]["emoji"], keyof string[]>]: never; }) | undefined;
+                emoji?: string | undefined;
                 user_id?: string | undefined;
-                create_time?: (Date[] & Date[] & { [K_7 in Exclude<keyof I_1["messages"][number]["emoji"]["create_time"], keyof Date[]>]: never; }) | undefined;
-            } & { [K_8 in Exclude<keyof I_1["messages"][number]["emoji"], keyof EmojiReaction>]: never; }) | undefined;
-        } & { [K_9 in Exclude<keyof I_1["messages"][number], keyof ChannelMessage>]: never; })[] & { [K_10 in Exclude<keyof I_1["messages"], keyof {
+                create_time?: number | undefined;
+            } & { [K_9 in Exclude<keyof I_1["messages"][number]["reactions"][number], keyof MessageReaction>]: never; })[] & { [K_10 in Exclude<keyof I_1["messages"][number]["reactions"], keyof {
+                emoji?: string | undefined;
+                user_id?: string | undefined;
+                create_time?: number | undefined;
+            }[]>]: never; }) | undefined;
+            mentions?: ({
+                user_id?: string | undefined;
+                username?: string | undefined;
+            }[] & ({
+                user_id?: string | undefined;
+                username?: string | undefined;
+            } & {
+                user_id?: string | undefined;
+                username?: string | undefined;
+            } & { [K_11 in Exclude<keyof I_1["messages"][number]["mentions"][number], keyof MessageMention>]: never; })[] & { [K_12 in Exclude<keyof I_1["messages"][number]["mentions"], keyof {
+                user_id?: string | undefined;
+                username?: string | undefined;
+            }[]>]: never; }) | undefined;
+            attachments?: ({
+                filename?: string | undefined;
+                size?: number | undefined;
+                url?: string | undefined;
+                filetype?: string | undefined;
+                width?: number | undefined;
+                height?: number | undefined;
+            }[] & ({
+                filename?: string | undefined;
+                size?: number | undefined;
+                url?: string | undefined;
+                filetype?: string | undefined;
+                width?: number | undefined;
+                height?: number | undefined;
+            } & {
+                filename?: string | undefined;
+                size?: number | undefined;
+                url?: string | undefined;
+                filetype?: string | undefined;
+                width?: number | undefined;
+                height?: number | undefined;
+            } & { [K_13 in Exclude<keyof I_1["messages"][number]["attachments"][number], keyof MessageAttachment>]: never; })[] & { [K_14 in Exclude<keyof I_1["messages"][number]["attachments"], keyof {
+                filename?: string | undefined;
+                size?: number | undefined;
+                url?: string | undefined;
+                filetype?: string | undefined;
+                width?: number | undefined;
+                height?: number | undefined;
+            }[]>]: never; }) | undefined;
+        } & { [K_15 in Exclude<keyof I_1["messages"][number], keyof ChannelMessage>]: never; })[] & { [K_16 in Exclude<keyof I_1["messages"], keyof {
             clan_id?: string | undefined;
             channel_id?: string | undefined;
             message_id?: string | undefined;
@@ -3248,17 +3638,29 @@ export declare const ChannelMessageList: {
             channel_name?: string | undefined;
             user_id_one?: string | undefined;
             user_id_two?: string | undefined;
-            emoji?: {
-                emoji?: string[] | undefined;
+            reactions?: {
+                emoji?: string | undefined;
                 user_id?: string | undefined;
-                create_time?: Date[] | undefined;
-            } | undefined;
+                create_time?: number | undefined;
+            }[] | undefined;
+            mentions?: {
+                user_id?: string | undefined;
+                username?: string | undefined;
+            }[] | undefined;
+            attachments?: {
+                filename?: string | undefined;
+                size?: number | undefined;
+                url?: string | undefined;
+                filetype?: string | undefined;
+                width?: number | undefined;
+                height?: number | undefined;
+            }[] | undefined;
         }[]>]: never; }) | undefined;
         last_seen_message_id?: string | undefined;
         next_cursor?: string | undefined;
         prev_cursor?: string | undefined;
         cacheable_cursor?: string | undefined;
-    } & { [K_11 in Exclude<keyof I_1, keyof ChannelMessageList>]: never; }>(object: I_1): ChannelMessageList;
+    } & { [K_17 in Exclude<keyof I_1, keyof ChannelMessageList>]: never; }>(object: I_1): ChannelMessageList;
 };
 export declare const CreateGroupRequest: {
     encode(message: CreateGroupRequest, writer?: _m0.Writer): _m0.Writer;

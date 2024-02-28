@@ -75,7 +75,33 @@ export interface MessageReactionEvent {
     /** Message sender, usually a user ID. */
     sender_id: string;
     /** Emoji list. */
-    emoji: string[];
+    emoji: string;
+}
+/** User is react to message */
+export interface MessageMentionEvent {
+    /** The channel this message belongs to. */
+    channel_id: string;
+    /** The message that user react */
+    message_id: string;
+    /** Message sender, usually a user ID. */
+    sender_id: string;
+    user_id: string;
+    username: string;
+}
+/** User is react to message */
+export interface MessageAttachmentEvent {
+    /** The channel this message belongs to. */
+    channel_id: string;
+    /** The message that user react */
+    message_id: string;
+    /** Message sender, usually a user ID. */
+    sender_id: string;
+    filename: string;
+    size: number;
+    url: string;
+    filetype: string;
+    width?: number;
+    height?: number;
 }
 /** User is typing */
 export interface MessageTypingEvent {
@@ -474,6 +500,8 @@ export interface Socket {
     onmessagetyping: (messageTypingEvent: MessageTypingEvent) => void;
     /** Receive reaction event */
     onmessagereaction: (messageReactionEvent: MessageReactionEvent) => void;
+    onmessagemention: (messageMentionEvent: MessageMentionEvent) => void;
+    onmessageattachment: (messageAttachmentEvent: MessageAttachmentEvent) => void;
     /** Receive channel presence updates. */
     onchannelpresence: (channelPresence: ChannelPresenceEvent) => void;
     setHeartbeatTimeoutMs(ms: number): void;
@@ -510,6 +538,8 @@ export declare class DefaultSocket implements Socket {
     onerror(evt: Event): void;
     onmessagetyping(messagetyping: MessageTypingEvent): void;
     onmessagereaction(messagetyping: MessageReactionEvent): void;
+    onmessagemention(messagetyping: MessageMentionEvent): void;
+    onmessageattachment(messagetyping: MessageAttachmentEvent): void;
     onchannelmessage(channelMessage: ChannelMessage): void;
     onchannelpresence(channelPresence: ChannelPresenceEvent): void;
     onnotification(notification: Notification): void;
