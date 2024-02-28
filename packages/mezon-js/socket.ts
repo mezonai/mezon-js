@@ -550,7 +550,13 @@ export interface Socket {
   writeMessageTyping(channel_id: string) : Promise<MessageTypingEvent>;  
 
   /** Send message reaction */
-  writeMessageReaction(channel_id: string, message_id: string, emoji: string[]) : Promise<MessageReactionEvent>;
+  writeMessageReaction(channel_id: string, message_id: string, emoji: string) : Promise<MessageReactionEvent>;
+
+  /** Send message mention */
+  writeMessageMention(channel_id: string, message_id: string, user_id: string, username: string) : Promise<MessageMentionEvent>;
+
+  /** Send message reaction */
+  writeMessageAttachment(channel_id: string, message_id: string, filename: string) : Promise<MessageAttachmentEvent>;
 
   /** Send last seen message */
   writeLastSeenMessage(channel_id: string, message_id: string) : Promise<LastSeenMessageEvent>;
@@ -1066,9 +1072,19 @@ export class DefaultSocket implements Socket {
     return response.channel_message_ack;
   }
 
-  async writeMessageReaction(channel_id: string, message_id: string, emoji: string[]) : Promise<MessageReactionEvent> {
+  async writeMessageReaction(channel_id: string, message_id: string, emoji: string) : Promise<MessageReactionEvent> {
     const response = await this.send({message_reaction_event: {channel_id: channel_id, message_id: message_id, emoji: emoji}});
     return response.message_reaction_event
+  }
+
+  async writeMessageMention(channel_id: string, message_id: string, user_id: string, username: string) : Promise<MessageMentionEvent> {
+    const response = await this.send({message_mention_event: {channel_id: channel_id, message_id: message_id, user_id: user_id, username: username}});
+    return response.message_mention_event
+  }
+
+  async writeMessageAttachment(channel_id: string, message_id: string, filename: string) : Promise<MessageAttachmentEvent> {
+    const response = await this.send({message_attachment_event: {channel_id: channel_id, message_id: message_id, filename: filename}});
+    return response.message_attachment_event
   }
 
   async writeMessageTyping(channel_id: string) : Promise<MessageTypingEvent> {
