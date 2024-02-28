@@ -1469,6 +1469,8 @@ export interface UploadAttachmentRequest {
     message_id: string;
 }
 export interface UploadAttachment {
+    /** The id of attachment */
+    id: string;
     /** The name of file that need to upload */
     filename: string;
     /** The url */
@@ -10112,16 +10114,20 @@ export declare const UploadAttachment: {
     fromJSON(object: any): UploadAttachment;
     toJSON(message: UploadAttachment): unknown;
     create<I extends {
+        id?: string | undefined;
         filename?: string | undefined;
         url?: string | undefined;
     } & {
+        id?: string | undefined;
         filename?: string | undefined;
         url?: string | undefined;
     } & { [K in Exclude<keyof I, keyof UploadAttachment>]: never; }>(base?: I | undefined): UploadAttachment;
     fromPartial<I_1 extends {
+        id?: string | undefined;
         filename?: string | undefined;
         url?: string | undefined;
     } & {
+        id?: string | undefined;
         filename?: string | undefined;
         url?: string | undefined;
     } & { [K_1 in Exclude<keyof I_1, keyof UploadAttachment>]: never; }>(object: I_1): UploadAttachment;

@@ -811,6 +811,8 @@ export interface ApiUploadAttachment {
   //
   filename?: string;
   //
+  id?: string;
+  //
   url?: string;
 }
 

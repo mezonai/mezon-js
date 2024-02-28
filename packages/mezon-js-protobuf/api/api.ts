@@ -1978,6 +1978,8 @@ export interface UploadAttachmentRequest {
 }
 
 export interface UploadAttachment {
+  /** The id of attachment */
+  id: string;
   /** The name of file that need to upload */
   filename: string;
   /** The url */
@@ -13547,16 +13549,19 @@ export const UploadAttachmentRequest = {
 };
 
 function createBaseUploadAttachment(): UploadAttachment {
-  return { filename: "", url: "" };
+  return { id: "", filename: "", url: "" };
 }
 
 export const UploadAttachment = {
   encode(message: UploadAttachment, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.id !== "") {
+      writer.uint32(10).string(message.id);
+    }
     if (message.filename !== "") {
-      writer.uint32(10).string(message.filename);
+      writer.uint32(18).string(message.filename);
     }
     if (message.url !== "") {
-      writer.uint32(18).string(message.url);
+      writer.uint32(26).string(message.url);
     }
     return writer;
   },
@@ -13569,9 +13574,12 @@ export const UploadAttachment = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          message.filename = reader.string();
+          message.id = reader.string();
           break;
         case 2:
+          message.filename = reader.string();
+          break;
+        case 3:
           message.url = reader.string();
           break;
         default:
@@ -13584,6 +13592,7 @@ export const UploadAttachment = {
 
   fromJSON(object: any): UploadAttachment {
     return {
+      id: isSet(object.id) ? String(object.id) : "",
       filename: isSet(object.filename) ? String(object.filename) : "",
       url: isSet(object.url) ? String(object.url) : "",
     };
@@ -13591,6 +13600,7 @@ export const UploadAttachment = {
 
   toJSON(message: UploadAttachment): unknown {
     const obj: any = {};
+    message.id !== undefined && (obj.id = message.id);
     message.filename !== undefined && (obj.filename = message.filename);
     message.url !== undefined && (obj.url = message.url);
     return obj;
@@ -13602,6 +13612,7 @@ export const UploadAttachment = {
 
   fromPartial<I extends Exact<DeepPartial<UploadAttachment>, I>>(object: I): UploadAttachment {
     const message = createBaseUploadAttachment();
+    message.id = object.id ?? "";
     message.filename = object.filename ?? "";
     message.url = object.url ?? "";
     return message;
