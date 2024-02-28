@@ -577,6 +577,22 @@ export interface ChannelUserList_ChannelUser {
     /** Their relationship to the role. */
     role_id: string | undefined;
 }
+/** A list of users belonging to a clan, along with their role. */
+export interface ClanUserList {
+    /** User-role pairs for a clan. */
+    clan_users: ClanUserList_ClanUser[];
+    /** Cursor for the next page of results, if any. */
+    cursor: string;
+    /** clan id */
+    clan_id: string;
+}
+/** A single user-role pair. */
+export interface ClanUserList_ClanUser {
+    /** User. */
+    user: User | undefined;
+    /** Their relationship to the role. */
+    role_id: string | undefined;
+}
 /** Import Facebook friends into the current user's account. */
 export interface ImportFacebookFriendsRequest {
     /** The Facebook account details. */
@@ -683,6 +699,11 @@ export interface ListChannelUsersRequest {
     state: number | undefined;
     /** An optional next page cursor. */
     cursor: string;
+}
+/** List all users that are part of a clan. */
+export interface ListClanUsersRequest {
+    /** The clan ID to list from. */
+    clan_id: string;
 }
 /** Get a list of unexpired notifications. */
 export interface ListNotificationsRequest {
@@ -4921,6 +4942,404 @@ export declare const ChannelUserList_ChannelUser: {
         role_id?: string | undefined;
     } & { [K_3 in Exclude<keyof I_1, keyof ChannelUserList_ChannelUser>]: never; }>(object: I_1): ChannelUserList_ChannelUser;
 };
+export declare const ClanUserList: {
+    encode(message: ClanUserList, writer?: _m0.Writer): _m0.Writer;
+    decode(input: _m0.Reader | Uint8Array, length?: number): ClanUserList;
+    fromJSON(object: any): ClanUserList;
+    toJSON(message: ClanUserList): unknown;
+    create<I extends {
+        clan_users?: {
+            user?: {
+                id?: string | undefined;
+                username?: string | undefined;
+                display_name?: string | undefined;
+                avatar_url?: string | undefined;
+                lang_tag?: string | undefined;
+                location?: string | undefined;
+                timezone?: string | undefined;
+                metadata?: string | undefined;
+                facebook_id?: string | undefined;
+                google_id?: string | undefined;
+                gamecenter_id?: string | undefined;
+                steam_id?: string | undefined;
+                online?: boolean | undefined;
+                edge_count?: number | undefined;
+                create_time?: Date | undefined;
+                update_time?: Date | undefined;
+                apple_id?: string | undefined;
+            } | undefined;
+            role_id?: string | undefined;
+        }[] | undefined;
+        cursor?: string | undefined;
+        clan_id?: string | undefined;
+    } & {
+        clan_users?: ({
+            user?: {
+                id?: string | undefined;
+                username?: string | undefined;
+                display_name?: string | undefined;
+                avatar_url?: string | undefined;
+                lang_tag?: string | undefined;
+                location?: string | undefined;
+                timezone?: string | undefined;
+                metadata?: string | undefined;
+                facebook_id?: string | undefined;
+                google_id?: string | undefined;
+                gamecenter_id?: string | undefined;
+                steam_id?: string | undefined;
+                online?: boolean | undefined;
+                edge_count?: number | undefined;
+                create_time?: Date | undefined;
+                update_time?: Date | undefined;
+                apple_id?: string | undefined;
+            } | undefined;
+            role_id?: string | undefined;
+        }[] & ({
+            user?: {
+                id?: string | undefined;
+                username?: string | undefined;
+                display_name?: string | undefined;
+                avatar_url?: string | undefined;
+                lang_tag?: string | undefined;
+                location?: string | undefined;
+                timezone?: string | undefined;
+                metadata?: string | undefined;
+                facebook_id?: string | undefined;
+                google_id?: string | undefined;
+                gamecenter_id?: string | undefined;
+                steam_id?: string | undefined;
+                online?: boolean | undefined;
+                edge_count?: number | undefined;
+                create_time?: Date | undefined;
+                update_time?: Date | undefined;
+                apple_id?: string | undefined;
+            } | undefined;
+            role_id?: string | undefined;
+        } & {
+            user?: ({
+                id?: string | undefined;
+                username?: string | undefined;
+                display_name?: string | undefined;
+                avatar_url?: string | undefined;
+                lang_tag?: string | undefined;
+                location?: string | undefined;
+                timezone?: string | undefined;
+                metadata?: string | undefined;
+                facebook_id?: string | undefined;
+                google_id?: string | undefined;
+                gamecenter_id?: string | undefined;
+                steam_id?: string | undefined;
+                online?: boolean | undefined;
+                edge_count?: number | undefined;
+                create_time?: Date | undefined;
+                update_time?: Date | undefined;
+                apple_id?: string | undefined;
+            } & {
+                id?: string | undefined;
+                username?: string | undefined;
+                display_name?: string | undefined;
+                avatar_url?: string | undefined;
+                lang_tag?: string | undefined;
+                location?: string | undefined;
+                timezone?: string | undefined;
+                metadata?: string | undefined;
+                facebook_id?: string | undefined;
+                google_id?: string | undefined;
+                gamecenter_id?: string | undefined;
+                steam_id?: string | undefined;
+                online?: boolean | undefined;
+                edge_count?: number | undefined;
+                create_time?: Date | undefined;
+                update_time?: Date | undefined;
+                apple_id?: string | undefined;
+            } & { [K in Exclude<keyof I["clan_users"][number]["user"], keyof User>]: never; }) | undefined;
+            role_id?: string | undefined;
+        } & { [K_1 in Exclude<keyof I["clan_users"][number], keyof ClanUserList_ClanUser>]: never; })[] & { [K_2 in Exclude<keyof I["clan_users"], keyof {
+            user?: {
+                id?: string | undefined;
+                username?: string | undefined;
+                display_name?: string | undefined;
+                avatar_url?: string | undefined;
+                lang_tag?: string | undefined;
+                location?: string | undefined;
+                timezone?: string | undefined;
+                metadata?: string | undefined;
+                facebook_id?: string | undefined;
+                google_id?: string | undefined;
+                gamecenter_id?: string | undefined;
+                steam_id?: string | undefined;
+                online?: boolean | undefined;
+                edge_count?: number | undefined;
+                create_time?: Date | undefined;
+                update_time?: Date | undefined;
+                apple_id?: string | undefined;
+            } | undefined;
+            role_id?: string | undefined;
+        }[]>]: never; }) | undefined;
+        cursor?: string | undefined;
+        clan_id?: string | undefined;
+    } & { [K_3 in Exclude<keyof I, keyof ClanUserList>]: never; }>(base?: I | undefined): ClanUserList;
+    fromPartial<I_1 extends {
+        clan_users?: {
+            user?: {
+                id?: string | undefined;
+                username?: string | undefined;
+                display_name?: string | undefined;
+                avatar_url?: string | undefined;
+                lang_tag?: string | undefined;
+                location?: string | undefined;
+                timezone?: string | undefined;
+                metadata?: string | undefined;
+                facebook_id?: string | undefined;
+                google_id?: string | undefined;
+                gamecenter_id?: string | undefined;
+                steam_id?: string | undefined;
+                online?: boolean | undefined;
+                edge_count?: number | undefined;
+                create_time?: Date | undefined;
+                update_time?: Date | undefined;
+                apple_id?: string | undefined;
+            } | undefined;
+            role_id?: string | undefined;
+        }[] | undefined;
+        cursor?: string | undefined;
+        clan_id?: string | undefined;
+    } & {
+        clan_users?: ({
+            user?: {
+                id?: string | undefined;
+                username?: string | undefined;
+                display_name?: string | undefined;
+                avatar_url?: string | undefined;
+                lang_tag?: string | undefined;
+                location?: string | undefined;
+                timezone?: string | undefined;
+                metadata?: string | undefined;
+                facebook_id?: string | undefined;
+                google_id?: string | undefined;
+                gamecenter_id?: string | undefined;
+                steam_id?: string | undefined;
+                online?: boolean | undefined;
+                edge_count?: number | undefined;
+                create_time?: Date | undefined;
+                update_time?: Date | undefined;
+                apple_id?: string | undefined;
+            } | undefined;
+            role_id?: string | undefined;
+        }[] & ({
+            user?: {
+                id?: string | undefined;
+                username?: string | undefined;
+                display_name?: string | undefined;
+                avatar_url?: string | undefined;
+                lang_tag?: string | undefined;
+                location?: string | undefined;
+                timezone?: string | undefined;
+                metadata?: string | undefined;
+                facebook_id?: string | undefined;
+                google_id?: string | undefined;
+                gamecenter_id?: string | undefined;
+                steam_id?: string | undefined;
+                online?: boolean | undefined;
+                edge_count?: number | undefined;
+                create_time?: Date | undefined;
+                update_time?: Date | undefined;
+                apple_id?: string | undefined;
+            } | undefined;
+            role_id?: string | undefined;
+        } & {
+            user?: ({
+                id?: string | undefined;
+                username?: string | undefined;
+                display_name?: string | undefined;
+                avatar_url?: string | undefined;
+                lang_tag?: string | undefined;
+                location?: string | undefined;
+                timezone?: string | undefined;
+                metadata?: string | undefined;
+                facebook_id?: string | undefined;
+                google_id?: string | undefined;
+                gamecenter_id?: string | undefined;
+                steam_id?: string | undefined;
+                online?: boolean | undefined;
+                edge_count?: number | undefined;
+                create_time?: Date | undefined;
+                update_time?: Date | undefined;
+                apple_id?: string | undefined;
+            } & {
+                id?: string | undefined;
+                username?: string | undefined;
+                display_name?: string | undefined;
+                avatar_url?: string | undefined;
+                lang_tag?: string | undefined;
+                location?: string | undefined;
+                timezone?: string | undefined;
+                metadata?: string | undefined;
+                facebook_id?: string | undefined;
+                google_id?: string | undefined;
+                gamecenter_id?: string | undefined;
+                steam_id?: string | undefined;
+                online?: boolean | undefined;
+                edge_count?: number | undefined;
+                create_time?: Date | undefined;
+                update_time?: Date | undefined;
+                apple_id?: string | undefined;
+            } & { [K_4 in Exclude<keyof I_1["clan_users"][number]["user"], keyof User>]: never; }) | undefined;
+            role_id?: string | undefined;
+        } & { [K_5 in Exclude<keyof I_1["clan_users"][number], keyof ClanUserList_ClanUser>]: never; })[] & { [K_6 in Exclude<keyof I_1["clan_users"], keyof {
+            user?: {
+                id?: string | undefined;
+                username?: string | undefined;
+                display_name?: string | undefined;
+                avatar_url?: string | undefined;
+                lang_tag?: string | undefined;
+                location?: string | undefined;
+                timezone?: string | undefined;
+                metadata?: string | undefined;
+                facebook_id?: string | undefined;
+                google_id?: string | undefined;
+                gamecenter_id?: string | undefined;
+                steam_id?: string | undefined;
+                online?: boolean | undefined;
+                edge_count?: number | undefined;
+                create_time?: Date | undefined;
+                update_time?: Date | undefined;
+                apple_id?: string | undefined;
+            } | undefined;
+            role_id?: string | undefined;
+        }[]>]: never; }) | undefined;
+        cursor?: string | undefined;
+        clan_id?: string | undefined;
+    } & { [K_7 in Exclude<keyof I_1, keyof ClanUserList>]: never; }>(object: I_1): ClanUserList;
+};
+export declare const ClanUserList_ClanUser: {
+    encode(message: ClanUserList_ClanUser, writer?: _m0.Writer): _m0.Writer;
+    decode(input: _m0.Reader | Uint8Array, length?: number): ClanUserList_ClanUser;
+    fromJSON(object: any): ClanUserList_ClanUser;
+    toJSON(message: ClanUserList_ClanUser): unknown;
+    create<I extends {
+        user?: {
+            id?: string | undefined;
+            username?: string | undefined;
+            display_name?: string | undefined;
+            avatar_url?: string | undefined;
+            lang_tag?: string | undefined;
+            location?: string | undefined;
+            timezone?: string | undefined;
+            metadata?: string | undefined;
+            facebook_id?: string | undefined;
+            google_id?: string | undefined;
+            gamecenter_id?: string | undefined;
+            steam_id?: string | undefined;
+            online?: boolean | undefined;
+            edge_count?: number | undefined;
+            create_time?: Date | undefined;
+            update_time?: Date | undefined;
+            apple_id?: string | undefined;
+        } | undefined;
+        role_id?: string | undefined;
+    } & {
+        user?: ({
+            id?: string | undefined;
+            username?: string | undefined;
+            display_name?: string | undefined;
+            avatar_url?: string | undefined;
+            lang_tag?: string | undefined;
+            location?: string | undefined;
+            timezone?: string | undefined;
+            metadata?: string | undefined;
+            facebook_id?: string | undefined;
+            google_id?: string | undefined;
+            gamecenter_id?: string | undefined;
+            steam_id?: string | undefined;
+            online?: boolean | undefined;
+            edge_count?: number | undefined;
+            create_time?: Date | undefined;
+            update_time?: Date | undefined;
+            apple_id?: string | undefined;
+        } & {
+            id?: string | undefined;
+            username?: string | undefined;
+            display_name?: string | undefined;
+            avatar_url?: string | undefined;
+            lang_tag?: string | undefined;
+            location?: string | undefined;
+            timezone?: string | undefined;
+            metadata?: string | undefined;
+            facebook_id?: string | undefined;
+            google_id?: string | undefined;
+            gamecenter_id?: string | undefined;
+            steam_id?: string | undefined;
+            online?: boolean | undefined;
+            edge_count?: number | undefined;
+            create_time?: Date | undefined;
+            update_time?: Date | undefined;
+            apple_id?: string | undefined;
+        } & { [K in Exclude<keyof I["user"], keyof User>]: never; }) | undefined;
+        role_id?: string | undefined;
+    } & { [K_1 in Exclude<keyof I, keyof ClanUserList_ClanUser>]: never; }>(base?: I | undefined): ClanUserList_ClanUser;
+    fromPartial<I_1 extends {
+        user?: {
+            id?: string | undefined;
+            username?: string | undefined;
+            display_name?: string | undefined;
+            avatar_url?: string | undefined;
+            lang_tag?: string | undefined;
+            location?: string | undefined;
+            timezone?: string | undefined;
+            metadata?: string | undefined;
+            facebook_id?: string | undefined;
+            google_id?: string | undefined;
+            gamecenter_id?: string | undefined;
+            steam_id?: string | undefined;
+            online?: boolean | undefined;
+            edge_count?: number | undefined;
+            create_time?: Date | undefined;
+            update_time?: Date | undefined;
+            apple_id?: string | undefined;
+        } | undefined;
+        role_id?: string | undefined;
+    } & {
+        user?: ({
+            id?: string | undefined;
+            username?: string | undefined;
+            display_name?: string | undefined;
+            avatar_url?: string | undefined;
+            lang_tag?: string | undefined;
+            location?: string | undefined;
+            timezone?: string | undefined;
+            metadata?: string | undefined;
+            facebook_id?: string | undefined;
+            google_id?: string | undefined;
+            gamecenter_id?: string | undefined;
+            steam_id?: string | undefined;
+            online?: boolean | undefined;
+            edge_count?: number | undefined;
+            create_time?: Date | undefined;
+            update_time?: Date | undefined;
+            apple_id?: string | undefined;
+        } & {
+            id?: string | undefined;
+            username?: string | undefined;
+            display_name?: string | undefined;
+            avatar_url?: string | undefined;
+            lang_tag?: string | undefined;
+            location?: string | undefined;
+            timezone?: string | undefined;
+            metadata?: string | undefined;
+            facebook_id?: string | undefined;
+            google_id?: string | undefined;
+            gamecenter_id?: string | undefined;
+            steam_id?: string | undefined;
+            online?: boolean | undefined;
+            edge_count?: number | undefined;
+            create_time?: Date | undefined;
+            update_time?: Date | undefined;
+            apple_id?: string | undefined;
+        } & { [K_2 in Exclude<keyof I_1["user"], keyof User>]: never; }) | undefined;
+        role_id?: string | undefined;
+    } & { [K_3 in Exclude<keyof I_1, keyof ClanUserList_ClanUser>]: never; }>(object: I_1): ClanUserList_ClanUser;
+};
 export declare const ImportFacebookFriendsRequest: {
     encode(message: ImportFacebookFriendsRequest, writer?: _m0.Writer): _m0.Writer;
     decode(input: _m0.Reader | Uint8Array, length?: number): ImportFacebookFriendsRequest;
@@ -5348,6 +5767,22 @@ export declare const ListChannelUsersRequest: {
         state?: number | undefined;
         cursor?: string | undefined;
     } & { [K_1 in Exclude<keyof I_1, keyof ListChannelUsersRequest>]: never; }>(object: I_1): ListChannelUsersRequest;
+};
+export declare const ListClanUsersRequest: {
+    encode(message: ListClanUsersRequest, writer?: _m0.Writer): _m0.Writer;
+    decode(input: _m0.Reader | Uint8Array, length?: number): ListClanUsersRequest;
+    fromJSON(object: any): ListClanUsersRequest;
+    toJSON(message: ListClanUsersRequest): unknown;
+    create<I extends {
+        clan_id?: string | undefined;
+    } & {
+        clan_id?: string | undefined;
+    } & { [K in Exclude<keyof I, "clan_id">]: never; }>(base?: I | undefined): ListClanUsersRequest;
+    fromPartial<I_1 extends {
+        clan_id?: string | undefined;
+    } & {
+        clan_id?: string | undefined;
+    } & { [K_1 in Exclude<keyof I_1, "clan_id">]: never; }>(object: I_1): ListClanUsersRequest;
 };
 export declare const ListNotificationsRequest: {
     encode(message: ListNotificationsRequest, writer?: _m0.Writer): _m0.Writer;

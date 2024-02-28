@@ -13,6 +13,14 @@ export interface ChannelUserListChannelUser {
 }
 
 /** A single user-role pair. */
+export interface ClanUserListClanUser {
+  //Their relationship to the role.
+  role_id?: string;
+  //User.
+  user?: ApiUser;
+}
+
+/** A single user-role pair. */
 export interface GroupUserListGroupUser {
   //Their relationship to the group.
   state?: number;
@@ -308,6 +316,16 @@ export interface ApiClanProfile {
   nick_name?: string;
   //
   user_id?: string;
+}
+
+/** A list of users belonging to a clan, along with their role. */
+export interface ApiClanUserList {
+  //
+  clan_id?: string;
+  //User-role pairs for a clan.
+  clan_users?: Array<ClanUserListClanUser>;
+  //Cursor for the next page of results, if any.
+  cursor?: string;
 }
 
 /**  */
@@ -2603,6 +2621,42 @@ queryParams.set("creator_id", creatorId);
     ]);
 }
 
+  /** List all users that are part of a clan. */
+  listClanUsers(bearerToken: string,
+      clanId:string,
+      options: any = {}): Promise<ApiClanUserList> {
+    
+    if (clanId === null || clanId === undefined) {
+      throw new Error("'clanId' is a required parameter but is null or undefined.");
+    }
+    const urlPath = "/v2/clandesc/{clanId}/user"
+        .replace("{clanId}", encodeURIComponent(String(clanId)));
+    const queryParams = new Map<string, any>();
+
+    let bodyJson : string = "";
+
+    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
+    const fetchOptions = buildFetchOptions("GET", options, bodyJson);
+    if (bearerToken) {
+        fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+    }
+
+    return Promise.race([
+      fetch(fullUrl, fetchOptions).then((response) => {
+        if (response.status == 204) {
+          return response;
+        } else if (response.status >= 200 && response.status < 300) {
+          return response.json();
+        } else {
+          throw response;
+        }
+      }),
+      new Promise((_, reject) =>
+        setTimeout(reject, this.timeoutMs, "Request timed out.")
+      ),
+    ]);
+}
+
   /** Get a clan desc profile */
   getClanDescProfile(bearerToken: string,
       clanId:string,
@@ -3101,6 +3155,47 @@ queryParams.set("creator_id", creatorId);
 
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("DELETE", options, bodyJson);
+    if (bearerToken) {
+        fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+    }
+
+    return Promise.race([
+      fetch(fullUrl, fetchOptions).then((response) => {
+        if (response.status == 204) {
+          return response;
+        } else if (response.status >= 200 && response.status < 300) {
+          return response.json();
+        } else {
+          throw response;
+        }
+      }),
+      new Promise((_, reject) =>
+        setTimeout(reject, this.timeoutMs, "Request timed out.")
+      ),
+    ]);
+}
+
+  /** Update fields in a given group. */
+  updateGroup(bearerToken: string,
+      groupId:string,
+      body:{},
+      options: any = {}): Promise<any> {
+    
+    if (groupId === null || groupId === undefined) {
+      throw new Error("'groupId' is a required parameter but is null or undefined.");
+    }
+    if (body === null || body === undefined) {
+      throw new Error("'body' is a required parameter but is null or undefined.");
+    }
+    const urlPath = "/v2/group/{groupId}"
+        .replace("{groupId}", encodeURIComponent(String(groupId)));
+    const queryParams = new Map<string, any>();
+
+    let bodyJson : string = "";
+    bodyJson = JSON.stringify(body || {});
+
+    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
+    const fetchOptions = buildFetchOptions("PUT", options, bodyJson);
     if (bearerToken) {
         fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
     }

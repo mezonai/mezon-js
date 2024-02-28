@@ -4,6 +4,11 @@ export interface ChannelUserListChannelUser {
     user?: ApiUser;
 }
 /** A single user-role pair. */
+export interface ClanUserListClanUser {
+    role_id?: string;
+    user?: ApiUser;
+}
+/** A single user-role pair. */
 export interface GroupUserListGroupUser {
     state?: number;
     user?: ApiUser;
@@ -176,6 +181,12 @@ export interface ApiClanProfile {
     clan_id?: string;
     nick_name?: string;
     user_id?: string;
+}
+/** A list of users belonging to a clan, along with their role. */
+export interface ApiClanUserList {
+    clan_id?: string;
+    clan_users?: Array<ClanUserListClanUser>;
+    cursor?: string;
 }
 /**  */
 export interface ApiCreateCategoryDescRequest {
@@ -597,6 +608,8 @@ export declare class MezonApi {
     deleteClanDesc(bearerToken: string, clanDescId: string, options?: any): Promise<any>;
     /** Update fields in a given clan. */
     updateClanDesc(bearerToken: string, clanId: string, creatorId?: string, clanName?: string, logo?: string, banner?: string, options?: any): Promise<any>;
+    /** List all users that are part of a clan. */
+    listClanUsers(bearerToken: string, clanId: string, options?: any): Promise<ApiClanUserList>;
     /** Get a clan desc profile */
     getClanDescProfile(bearerToken: string, clanId: string, options?: any): Promise<ApiClanDescProfile>;
     /** Update fields in a given clan profile. */
@@ -625,6 +638,8 @@ export declare class MezonApi {
     listGroups(bearerToken: string, name?: string, cursor?: string, limit?: number, langTag?: string, members?: number, open?: boolean, options?: any): Promise<ApiGroupList>;
     /** Delete a group by ID. */
     deleteGroup(bearerToken: string, groupId: string, options?: any): Promise<any>;
+    /** Update fields in a given group. */
+    updateGroup(bearerToken: string, groupId: string, body: {}, options?: any): Promise<any>;
     /** Add users to a group. */
     addGroupUsers(bearerToken: string, groupId: string, userIds?: Array<string>, options?: any): Promise<any>;
     /** Demote a set of users in a group to the next role down. */
