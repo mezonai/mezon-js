@@ -4014,9 +4014,9 @@ var _DefaultSocket = class _DefaultSocket {
   updateStatus(status) {
     return this.send({ status_update: { status } });
   }
-  writeChatMessage(clan_id, channel_id, content) {
+  writeChatMessage(clan_id, channel_id, content, mentions, attachments, refrences) {
     return __async(this, null, function* () {
-      const response = yield this.send({ channel_message_send: { clan_id, channel_id, content } });
+      const response = yield this.send({ channel_message_send: { clan_id, channel_id, content, mentions, attachments, refrences } });
       return response.channel_message_ack;
     });
   }
