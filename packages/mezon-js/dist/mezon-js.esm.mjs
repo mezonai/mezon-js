@@ -3703,10 +3703,8 @@ var _DefaultSocket = class _DefaultSocket {
           this.onmessagetyping(message);
         } else if (message.message_reaction_event) {
           this.onmessagereaction(message);
-        } else if (message.message_mention_event) {
-          this.onmessagemention(message);
-        } else if (message.message_attachment_event) {
-          this.onmessageattachment(message);
+        } else if (message.message_deleted_event) {
+          this.onmessagedeleted(message);
         } else if (message.channel_presence_event) {
           this.onchannelpresence(message.channel_presence_event);
         } else if (message.party_data) {
@@ -3789,19 +3787,14 @@ var _DefaultSocket = class _DefaultSocket {
       console.log(messagetyping);
     }
   }
-  onmessagereaction(messagetyping) {
+  onmessagereaction(messagereaction) {
     if (this.verbose && window && window.console) {
-      console.log(messagetyping);
+      console.log(messagereaction);
     }
   }
-  onmessagemention(messagetyping) {
+  onmessagedeleted(messagedeleted) {
     if (this.verbose && window && window.console) {
-      console.log(messagetyping);
-    }
-  }
-  onmessageattachment(messagetyping) {
-    if (this.verbose && window && window.console) {
-      console.log(messagetyping);
+      console.log(messagedeleted);
     }
   }
   onchannelmessage(channelMessage) {
@@ -4033,16 +4026,10 @@ var _DefaultSocket = class _DefaultSocket {
       return response.message_reaction_event;
     });
   }
-  writeMessageMention(channel_id, message_id, user_id, username) {
+  writeMessageDeleted(channel_id, message_id) {
     return __async(this, null, function* () {
-      const response = yield this.send({ message_mention_event: { channel_id, message_id, user_id, username } });
-      return response.message_mention_event;
-    });
-  }
-  writeMessageAttachment(channel_id, message_id, filename, url, size, filetype, width, height) {
-    return __async(this, null, function* () {
-      const response = yield this.send({ message_attachment_event: { channel_id, message_id, filename, url, size, filetype, width, height } });
-      return response.message_attachment_event;
+      const response = yield this.send({ message_deleted_event: { channel_id, message_id } });
+      return response.message_deleted_event;
     });
   }
   writeMessageTyping(channel_id) {
@@ -4579,7 +4566,7 @@ var Client = class {
           result.messages.push({
             channel_id: m.channel_id,
             code: m.code ? Number(m.code) : 0,
-            create_time: m.create_time,
+            create_time: m.create_time || "",
             message_id: m.message_id,
             persistent: m.persistent,
             sender_id: m.sender_id,
@@ -4592,7 +4579,9 @@ var Client = class {
             user_id_two: m.user_id_two,
             attachments: m.attachments,
             mentions: m.mentions,
-            reactions: m.reactions
+            reactions: m.reactions,
+            deleteds: m.deleteds,
+            references: m.references
           });
         });
         return Promise.resolve(result);

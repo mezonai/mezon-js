@@ -549,6 +549,10 @@ export interface ChannelMessage {
   mentions: MessageMention[];
   /** Message attachment */
   attachments: MessageAttachment[];
+  /** Message deleted */
+  deleteds: MessageDeleted[];
+  /** Message reference */
+  references: MessageRef[];
 }
 
 /** Mention to message */
@@ -581,6 +585,24 @@ export interface MessageAttachment {
   width: number;
   /** Attachment width */
   height: number;
+}
+
+/** Message reference */
+export interface MessageRef {
+  /** A message source */
+  message_id: string;
+  /** A message reference to */
+  message_ref_id: string;
+  /** Reference type. 0: reply */
+  ref_type: number;
+}
+
+/** Message reference */
+export interface MessageDeleted {
+  /** A deleted message source */
+  message_id: string;
+  /** Who delete it */
+  deletor: string;
 }
 
 /** A list of channel messages, usually a result of a list operation. */
@@ -4726,6 +4748,8 @@ function createBaseChannelMessage(): ChannelMessage {
     reactions: [],
     mentions: [],
     attachments: [],
+    deleteds: [],
+    references: [],
   };
 }
 
@@ -4781,6 +4805,12 @@ export const ChannelMessage = {
     }
     for (const v of message.attachments) {
       MessageAttachment.encode(v!, writer.uint32(138).fork()).ldelim();
+    }
+    for (const v of message.deleteds) {
+      MessageDeleted.encode(v!, writer.uint32(146).fork()).ldelim();
+    }
+    for (const v of message.references) {
+      MessageRef.encode(v!, writer.uint32(154).fork()).ldelim();
     }
     return writer;
   },
@@ -4843,6 +4873,12 @@ export const ChannelMessage = {
         case 17:
           message.attachments.push(MessageAttachment.decode(reader, reader.uint32()));
           break;
+        case 18:
+          message.deleteds.push(MessageDeleted.decode(reader, reader.uint32()));
+          break;
+        case 19:
+          message.references.push(MessageRef.decode(reader, reader.uint32()));
+          break;
         default:
           reader.skipType(tag & 7);
           break;
@@ -4872,6 +4908,8 @@ export const ChannelMessage = {
       attachments: Array.isArray(object?.attachments)
         ? object.attachments.map((e: any) => MessageAttachment.fromJSON(e))
         : [],
+      deleteds: Array.isArray(object?.deleteds) ? object.deleteds.map((e: any) => MessageDeleted.fromJSON(e)) : [],
+      references: Array.isArray(object?.references) ? object.references.map((e: any) => MessageRef.fromJSON(e)) : [],
     };
   },
 
@@ -4906,6 +4944,16 @@ export const ChannelMessage = {
     } else {
       obj.attachments = [];
     }
+    if (message.deleteds) {
+      obj.deleteds = message.deleteds.map((e) => e ? MessageDeleted.toJSON(e) : undefined);
+    } else {
+      obj.deleteds = [];
+    }
+    if (message.references) {
+      obj.references = message.references.map((e) => e ? MessageRef.toJSON(e) : undefined);
+    } else {
+      obj.references = [];
+    }
     return obj;
   },
 
@@ -4932,6 +4980,8 @@ export const ChannelMessage = {
     message.reactions = object.reactions?.map((e) => MessageReaction.fromPartial(e)) || [];
     message.mentions = object.mentions?.map((e) => MessageMention.fromPartial(e)) || [];
     message.attachments = object.attachments?.map((e) => MessageAttachment.fromPartial(e)) || [];
+    message.deleteds = object.deleteds?.map((e) => MessageDeleted.fromPartial(e)) || [];
+    message.references = object.references?.map((e) => MessageRef.fromPartial(e)) || [];
     return message;
   },
 };
@@ -5154,6 +5204,139 @@ export const MessageAttachment = {
     message.filetype = object.filetype ?? "";
     message.width = object.width ?? 0;
     message.height = object.height ?? 0;
+    return message;
+  },
+};
+
+function createBaseMessageRef(): MessageRef {
+  return { message_id: "", message_ref_id: "", ref_type: 0 };
+}
+
+export const MessageRef = {
+  encode(message: MessageRef, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.message_id !== "") {
+      writer.uint32(10).string(message.message_id);
+    }
+    if (message.message_ref_id !== "") {
+      writer.uint32(18).string(message.message_ref_id);
+    }
+    if (message.ref_type !== 0) {
+      writer.uint32(24).int32(message.ref_type);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): MessageRef {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseMessageRef();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.message_id = reader.string();
+          break;
+        case 2:
+          message.message_ref_id = reader.string();
+          break;
+        case 3:
+          message.ref_type = reader.int32();
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): MessageRef {
+    return {
+      message_id: isSet(object.message_id) ? String(object.message_id) : "",
+      message_ref_id: isSet(object.message_ref_id) ? String(object.message_ref_id) : "",
+      ref_type: isSet(object.ref_type) ? Number(object.ref_type) : 0,
+    };
+  },
+
+  toJSON(message: MessageRef): unknown {
+    const obj: any = {};
+    message.message_id !== undefined && (obj.message_id = message.message_id);
+    message.message_ref_id !== undefined && (obj.message_ref_id = message.message_ref_id);
+    message.ref_type !== undefined && (obj.ref_type = Math.round(message.ref_type));
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<MessageRef>, I>>(base?: I): MessageRef {
+    return MessageRef.fromPartial(base ?? {});
+  },
+
+  fromPartial<I extends Exact<DeepPartial<MessageRef>, I>>(object: I): MessageRef {
+    const message = createBaseMessageRef();
+    message.message_id = object.message_id ?? "";
+    message.message_ref_id = object.message_ref_id ?? "";
+    message.ref_type = object.ref_type ?? 0;
+    return message;
+  },
+};
+
+function createBaseMessageDeleted(): MessageDeleted {
+  return { message_id: "", deletor: "" };
+}
+
+export const MessageDeleted = {
+  encode(message: MessageDeleted, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.message_id !== "") {
+      writer.uint32(10).string(message.message_id);
+    }
+    if (message.deletor !== "") {
+      writer.uint32(18).string(message.deletor);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): MessageDeleted {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseMessageDeleted();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.message_id = reader.string();
+          break;
+        case 2:
+          message.deletor = reader.string();
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): MessageDeleted {
+    return {
+      message_id: isSet(object.message_id) ? String(object.message_id) : "",
+      deletor: isSet(object.deletor) ? String(object.deletor) : "",
+    };
+  },
+
+  toJSON(message: MessageDeleted): unknown {
+    const obj: any = {};
+    message.message_id !== undefined && (obj.message_id = message.message_id);
+    message.deletor !== undefined && (obj.deletor = message.deletor);
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<MessageDeleted>, I>>(base?: I): MessageDeleted {
+    return MessageDeleted.fromPartial(base ?? {});
+  },
+
+  fromPartial<I extends Exact<DeepPartial<MessageDeleted>, I>>(object: I): MessageDeleted {
+    const message = createBaseMessageDeleted();
+    message.message_id = object.message_id ?? "";
+    message.deletor = object.deletor ?? "";
     return message;
   },
 };

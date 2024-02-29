@@ -128,6 +128,29 @@ export interface MessageAttachmentEvent {
   height?: number;
 }
 
+/** User is delete to message */
+export interface MessageDeletedEvent {
+  /** The channel this message belongs to. */
+  channel_id: string;
+  /** The message that user react */
+  message_id: string;
+  /** Message sender, usually a user ID. */
+  deletor: string;  
+}
+
+
+/** User is delete to message */
+export interface MessageRefEvent {
+  /** The channel this message belongs to. */
+  channel_id: string;
+  /** The message that user react */
+  message_id: string;
+  /** Message reference ID. */
+  message_ref_id: string;
+  /** reference type */
+  ref_type: number;
+}
+
 /** User is typing */
 export interface MessageTypingEvent {
   /** The channel this message belongs to. */
@@ -171,6 +194,10 @@ export interface ChannelMessageEvent {
   reactions?: Array<MessageReactionEvent>;
   //
   attachments?: Array<MessageAttachmentEvent>;
+  //
+  deleteds?: Array<MessageDeletedEvent>;
+  //
+  references?: Array<MessageRefEvent>;
 }
 
 /** An acknowledgement received in response to sending a message on a chat channel. */
@@ -561,10 +588,7 @@ export interface Socket {
   writeMessageReaction(channel_id: string, message_id: string, emoji: string) : Promise<MessageReactionEvent>;
 
   /** Send message mention */
-  writeMessageMention(channel_id: string, message_id: string, user_id: string, username: string) : Promise<MessageMentionEvent>;
-
-  /** Send message reaction */
-  writeMessageAttachment(channel_id: string, message_id: string, filename: string, url: string, size: number, filetype: string, width?: number, height?: number) : Promise<MessageAttachmentEvent>;
+  writeMessageDeleted(channel_id: string, message_id: string, deletor: string) : Promise<MessageDeletedEvent>;
 
   /** Send last seen message */
   writeLastSeenMessage(channel_id: string, message_id: string) : Promise<LastSeenMessageEvent>;
@@ -622,9 +646,8 @@ export interface Socket {
   /** Receive reaction event */
   onmessagereaction: (messageReactionEvent: MessageReactionEvent) => void;
 
-  onmessagemention: (messageMentionEvent: MessageMentionEvent) => void;
-
-  onmessageattachment: (messageAttachmentEvent: MessageAttachmentEvent) => void;
+  /** Receive deleted message */
+  onmessagedeleted: (messageDeletedEvent: MessageDeletedEvent) => void;
 
   /** Receive channel presence updates. */
   onchannelpresence: (channelPresence: ChannelPresenceEvent) => void;
@@ -714,10 +737,8 @@ export class DefaultSocket implements Socket {
           this.onmessagetyping(<MessageTypingEvent>message);
         } else if (message.message_reaction_event) {
           this.onmessagereaction(<MessageReactionEvent>message);
-        } else if (message.message_mention_event) {
-          this.onmessagemention(<MessageMentionEvent>message);
-        } else if (message.message_attachment_event) {
-          this.onmessageattachment(<MessageAttachmentEvent>message);
+        } else if (message.message_deleted_event) {
+          this.onmessagedeleted(<MessageDeletedEvent>message);
         } else if (message.channel_presence_event) {
           this.onchannelpresence(<ChannelPresenceEvent>message.channel_presence_event);
         } else if (message.party_data) {
@@ -813,21 +834,15 @@ export class DefaultSocket implements Socket {
     }
   }
 
-  onmessagereaction(messagetyping: MessageReactionEvent) {
+  onmessagereaction(messagereaction: MessageReactionEvent) {
     if (this.verbose && window && window.console) {
-      console.log(messagetyping);
+      console.log(messagereaction);
     }
   }
 
-  onmessagemention(messagetyping: MessageMentionEvent) {
+  onmessagedeleted(messagedeleted: MessageDeletedEvent) {
     if (this.verbose && window && window.console) {
-      console.log(messagetyping);
-    }
-  }
-
-  onmessageattachment(messagetyping: MessageAttachmentEvent) {
-    if (this.verbose && window && window.console) {
-      console.log(messagetyping);
+      console.log(messagedeleted);
     }
   }
 
@@ -1085,14 +1100,9 @@ export class DefaultSocket implements Socket {
     return response.message_reaction_event
   }
 
-  async writeMessageMention(channel_id: string, message_id: string, user_id: string, username: string) : Promise<MessageMentionEvent> {
-    const response = await this.send({message_mention_event: {channel_id: channel_id, message_id: message_id, user_id: user_id, username: username}});
-    return response.message_mention_event
-  }
-
-  async writeMessageAttachment(channel_id: string, message_id: string, filename: string, url: string, size: number, filetype: string, width?: number, height?: number) : Promise<MessageAttachmentEvent> {
-    const response = await this.send({message_attachment_event: {channel_id: channel_id, message_id: message_id, filename: filename, url:url, size: size, filetype: filetype, width: width, height:height}});
-    return response.message_attachment_event
+  async writeMessageDeleted(channel_id: string, message_id: string) : Promise<MessageDeletedEvent> {
+    const response = await this.send({message_deleted_event: {channel_id: channel_id, message_id: message_id}});
+    return response.message_deleted_event
   }
 
   async writeMessageTyping(channel_id: string) : Promise<MessageTypingEvent> {

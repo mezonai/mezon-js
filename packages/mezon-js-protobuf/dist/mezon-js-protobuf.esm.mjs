@@ -2531,7 +2531,9 @@ function createBaseChannelMessage() {
     user_id_two: "",
     reactions: [],
     mentions: [],
-    attachments: []
+    attachments: [],
+    deleteds: [],
+    references: []
   };
 }
 var ChannelMessage = {
@@ -2586,6 +2588,12 @@ var ChannelMessage = {
     }
     for (const v of message.attachments) {
       MessageAttachment.encode(v, writer.uint32(138).fork()).ldelim();
+    }
+    for (const v of message.deleteds) {
+      MessageDeleted.encode(v, writer.uint32(146).fork()).ldelim();
+    }
+    for (const v of message.references) {
+      MessageRef.encode(v, writer.uint32(154).fork()).ldelim();
     }
     return writer;
   },
@@ -2647,6 +2655,12 @@ var ChannelMessage = {
         case 17:
           message.attachments.push(MessageAttachment.decode(reader, reader.uint32()));
           break;
+        case 18:
+          message.deleteds.push(MessageDeleted.decode(reader, reader.uint32()));
+          break;
+        case 19:
+          message.references.push(MessageRef.decode(reader, reader.uint32()));
+          break;
         default:
           reader.skipType(tag & 7);
           break;
@@ -2672,7 +2686,9 @@ var ChannelMessage = {
       user_id_two: isSet3(object.user_id_two) ? String(object.user_id_two) : "",
       reactions: Array.isArray(object == null ? void 0 : object.reactions) ? object.reactions.map((e) => MessageReaction.fromJSON(e)) : [],
       mentions: Array.isArray(object == null ? void 0 : object.mentions) ? object.mentions.map((e) => MessageMention.fromJSON(e)) : [],
-      attachments: Array.isArray(object == null ? void 0 : object.attachments) ? object.attachments.map((e) => MessageAttachment.fromJSON(e)) : []
+      attachments: Array.isArray(object == null ? void 0 : object.attachments) ? object.attachments.map((e) => MessageAttachment.fromJSON(e)) : [],
+      deleteds: Array.isArray(object == null ? void 0 : object.deleteds) ? object.deleteds.map((e) => MessageDeleted.fromJSON(e)) : [],
+      references: Array.isArray(object == null ? void 0 : object.references) ? object.references.map((e) => MessageRef.fromJSON(e)) : []
     };
   },
   toJSON(message) {
@@ -2706,13 +2722,23 @@ var ChannelMessage = {
     } else {
       obj.attachments = [];
     }
+    if (message.deleteds) {
+      obj.deleteds = message.deleteds.map((e) => e ? MessageDeleted.toJSON(e) : void 0);
+    } else {
+      obj.deleteds = [];
+    }
+    if (message.references) {
+      obj.references = message.references.map((e) => e ? MessageRef.toJSON(e) : void 0);
+    } else {
+      obj.references = [];
+    }
     return obj;
   },
   create(base) {
     return ChannelMessage.fromPartial(base != null ? base : {});
   },
   fromPartial(object) {
-    var _a, _b, _c, _d, _e, _f, _g, _h, _i, _j, _k, _l, _m, _n, _o, _p, _q;
+    var _a, _b, _c, _d, _e, _f, _g, _h, _i, _j, _k, _l, _m, _n, _o, _p, _q, _r, _s;
     const message = createBaseChannelMessage();
     message.clan_id = (_a = object.clan_id) != null ? _a : "";
     message.channel_id = (_b = object.channel_id) != null ? _b : "";
@@ -2731,6 +2757,8 @@ var ChannelMessage = {
     message.reactions = ((_o = object.reactions) == null ? void 0 : _o.map((e) => MessageReaction.fromPartial(e))) || [];
     message.mentions = ((_p = object.mentions) == null ? void 0 : _p.map((e) => MessageMention.fromPartial(e))) || [];
     message.attachments = ((_q = object.attachments) == null ? void 0 : _q.map((e) => MessageAttachment.fromPartial(e))) || [];
+    message.deleteds = ((_r = object.deleteds) == null ? void 0 : _r.map((e) => MessageDeleted.fromPartial(e))) || [];
+    message.references = ((_s = object.references) == null ? void 0 : _s.map((e) => MessageRef.fromPartial(e))) || [];
     return message;
   }
 };
@@ -2935,6 +2963,127 @@ var MessageAttachment = {
     message.filetype = (_d = object.filetype) != null ? _d : "";
     message.width = (_e = object.width) != null ? _e : 0;
     message.height = (_f = object.height) != null ? _f : 0;
+    return message;
+  }
+};
+function createBaseMessageRef() {
+  return { message_id: "", message_ref_id: "", ref_type: 0 };
+}
+var MessageRef = {
+  encode(message, writer = import_minimal3.default.Writer.create()) {
+    if (message.message_id !== "") {
+      writer.uint32(10).string(message.message_id);
+    }
+    if (message.message_ref_id !== "") {
+      writer.uint32(18).string(message.message_ref_id);
+    }
+    if (message.ref_type !== 0) {
+      writer.uint32(24).int32(message.ref_type);
+    }
+    return writer;
+  },
+  decode(input, length) {
+    const reader = input instanceof import_minimal3.default.Reader ? input : new import_minimal3.default.Reader(input);
+    let end = length === void 0 ? reader.len : reader.pos + length;
+    const message = createBaseMessageRef();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.message_id = reader.string();
+          break;
+        case 2:
+          message.message_ref_id = reader.string();
+          break;
+        case 3:
+          message.ref_type = reader.int32();
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+  fromJSON(object) {
+    return {
+      message_id: isSet3(object.message_id) ? String(object.message_id) : "",
+      message_ref_id: isSet3(object.message_ref_id) ? String(object.message_ref_id) : "",
+      ref_type: isSet3(object.ref_type) ? Number(object.ref_type) : 0
+    };
+  },
+  toJSON(message) {
+    const obj = {};
+    message.message_id !== void 0 && (obj.message_id = message.message_id);
+    message.message_ref_id !== void 0 && (obj.message_ref_id = message.message_ref_id);
+    message.ref_type !== void 0 && (obj.ref_type = Math.round(message.ref_type));
+    return obj;
+  },
+  create(base) {
+    return MessageRef.fromPartial(base != null ? base : {});
+  },
+  fromPartial(object) {
+    var _a, _b, _c;
+    const message = createBaseMessageRef();
+    message.message_id = (_a = object.message_id) != null ? _a : "";
+    message.message_ref_id = (_b = object.message_ref_id) != null ? _b : "";
+    message.ref_type = (_c = object.ref_type) != null ? _c : 0;
+    return message;
+  }
+};
+function createBaseMessageDeleted() {
+  return { message_id: "", deletor: "" };
+}
+var MessageDeleted = {
+  encode(message, writer = import_minimal3.default.Writer.create()) {
+    if (message.message_id !== "") {
+      writer.uint32(10).string(message.message_id);
+    }
+    if (message.deletor !== "") {
+      writer.uint32(18).string(message.deletor);
+    }
+    return writer;
+  },
+  decode(input, length) {
+    const reader = input instanceof import_minimal3.default.Reader ? input : new import_minimal3.default.Reader(input);
+    let end = length === void 0 ? reader.len : reader.pos + length;
+    const message = createBaseMessageDeleted();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.message_id = reader.string();
+          break;
+        case 2:
+          message.deletor = reader.string();
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+  fromJSON(object) {
+    return {
+      message_id: isSet3(object.message_id) ? String(object.message_id) : "",
+      deletor: isSet3(object.deletor) ? String(object.deletor) : ""
+    };
+  },
+  toJSON(message) {
+    const obj = {};
+    message.message_id !== void 0 && (obj.message_id = message.message_id);
+    message.deletor !== void 0 && (obj.deletor = message.deletor);
+    return obj;
+  },
+  create(base) {
+    return MessageDeleted.fromPartial(base != null ? base : {});
+  },
+  fromPartial(object) {
+    var _a, _b;
+    const message = createBaseMessageDeleted();
+    message.message_id = (_a = object.message_id) != null ? _a : "";
+    message.deletor = (_b = object.deletor) != null ? _b : "";
     return message;
   }
 };
@@ -3194,8 +3343,7 @@ function createBaseEnvelope() {
     message_typing_event: void 0,
     last_seen_message_event: void 0,
     message_reaction_event: void 0,
-    message_mention_event: void 0,
-    message_attachment_event: void 0
+    message_deleted_event: void 0
   };
 }
 var Envelope = {
@@ -3317,11 +3465,8 @@ var Envelope = {
     if (message.message_reaction_event !== void 0) {
       MessageReactionEvent.encode(message.message_reaction_event, writer.uint32(314).fork()).ldelim();
     }
-    if (message.message_mention_event !== void 0) {
-      MessageMentionEvent.encode(message.message_mention_event, writer.uint32(322).fork()).ldelim();
-    }
-    if (message.message_attachment_event !== void 0) {
-      MessageAttachmentEvent.encode(message.message_attachment_event, writer.uint32(330).fork()).ldelim();
+    if (message.message_deleted_event !== void 0) {
+      MessageDeletedEvent.encode(message.message_deleted_event, writer.uint32(322).fork()).ldelim();
     }
     return writer;
   },
@@ -3450,10 +3595,7 @@ var Envelope = {
           message.message_reaction_event = MessageReactionEvent.decode(reader, reader.uint32());
           break;
         case 40:
-          message.message_mention_event = MessageMentionEvent.decode(reader, reader.uint32());
-          break;
-        case 41:
-          message.message_attachment_event = MessageAttachmentEvent.decode(reader, reader.uint32());
+          message.message_deleted_event = MessageDeletedEvent.decode(reader, reader.uint32());
           break;
         default:
           reader.skipType(tag & 7);
@@ -3503,8 +3645,7 @@ var Envelope = {
       message_typing_event: isSet4(object.message_typing_event) ? MessageTypingEvent.fromJSON(object.message_typing_event) : void 0,
       last_seen_message_event: isSet4(object.last_seen_message_event) ? LastSeenMessageEvent.fromJSON(object.last_seen_message_event) : void 0,
       message_reaction_event: isSet4(object.message_reaction_event) ? MessageReactionEvent.fromJSON(object.message_reaction_event) : void 0,
-      message_mention_event: isSet4(object.message_mention_event) ? MessageMentionEvent.fromJSON(object.message_mention_event) : void 0,
-      message_attachment_event: isSet4(object.message_attachment_event) ? MessageAttachmentEvent.fromJSON(object.message_attachment_event) : void 0
+      message_deleted_event: isSet4(object.message_deleted_event) ? MessageDeletedEvent.fromJSON(object.message_deleted_event) : void 0
     };
   },
   toJSON(message) {
@@ -3548,8 +3689,7 @@ var Envelope = {
     message.message_typing_event !== void 0 && (obj.message_typing_event = message.message_typing_event ? MessageTypingEvent.toJSON(message.message_typing_event) : void 0);
     message.last_seen_message_event !== void 0 && (obj.last_seen_message_event = message.last_seen_message_event ? LastSeenMessageEvent.toJSON(message.last_seen_message_event) : void 0);
     message.message_reaction_event !== void 0 && (obj.message_reaction_event = message.message_reaction_event ? MessageReactionEvent.toJSON(message.message_reaction_event) : void 0);
-    message.message_mention_event !== void 0 && (obj.message_mention_event = message.message_mention_event ? MessageMentionEvent.toJSON(message.message_mention_event) : void 0);
-    message.message_attachment_event !== void 0 && (obj.message_attachment_event = message.message_attachment_event ? MessageAttachmentEvent.toJSON(message.message_attachment_event) : void 0);
+    message.message_deleted_event !== void 0 && (obj.message_deleted_event = message.message_deleted_event ? MessageDeletedEvent.toJSON(message.message_deleted_event) : void 0);
     return obj;
   },
   create(base) {
@@ -3597,8 +3737,7 @@ var Envelope = {
     message.message_typing_event = object.message_typing_event !== void 0 && object.message_typing_event !== null ? MessageTypingEvent.fromPartial(object.message_typing_event) : void 0;
     message.last_seen_message_event = object.last_seen_message_event !== void 0 && object.last_seen_message_event !== null ? LastSeenMessageEvent.fromPartial(object.last_seen_message_event) : void 0;
     message.message_reaction_event = object.message_reaction_event !== void 0 && object.message_reaction_event !== null ? MessageReactionEvent.fromPartial(object.message_reaction_event) : void 0;
-    message.message_mention_event = object.message_mention_event !== void 0 && object.message_mention_event !== null ? MessageMentionEvent.fromPartial(object.message_mention_event) : void 0;
-    message.message_attachment_event = object.message_attachment_event !== void 0 && object.message_attachment_event !== null ? MessageAttachmentEvent.fromPartial(object.message_attachment_event) : void 0;
+    message.message_deleted_event = object.message_deleted_event !== void 0 && object.message_deleted_event !== null ? MessageDeletedEvent.fromPartial(object.message_deleted_event) : void 0;
     return message;
   }
 };
@@ -4021,62 +4160,6 @@ var MessageMention2 = {
     return message;
   }
 };
-function createBaseMessageReaction2() {
-  return { emoji: "", user_id: "" };
-}
-var MessageReaction2 = {
-  encode(message, writer = import_minimal4.default.Writer.create()) {
-    if (message.emoji !== "") {
-      writer.uint32(10).string(message.emoji);
-    }
-    if (message.user_id !== "") {
-      writer.uint32(18).string(message.user_id);
-    }
-    return writer;
-  },
-  decode(input, length) {
-    const reader = input instanceof import_minimal4.default.Reader ? input : new import_minimal4.default.Reader(input);
-    let end = length === void 0 ? reader.len : reader.pos + length;
-    const message = createBaseMessageReaction2();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
-          message.emoji = reader.string();
-          break;
-        case 2:
-          message.user_id = reader.string();
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
-      }
-    }
-    return message;
-  },
-  fromJSON(object) {
-    return {
-      emoji: isSet4(object.emoji) ? String(object.emoji) : "",
-      user_id: isSet4(object.user_id) ? String(object.user_id) : ""
-    };
-  },
-  toJSON(message) {
-    const obj = {};
-    message.emoji !== void 0 && (obj.emoji = message.emoji);
-    message.user_id !== void 0 && (obj.user_id = message.user_id);
-    return obj;
-  },
-  create(base) {
-    return MessageReaction2.fromPartial(base != null ? base : {});
-  },
-  fromPartial(object) {
-    var _a, _b;
-    const message = createBaseMessageReaction2();
-    message.emoji = (_a = object.emoji) != null ? _a : "";
-    message.user_id = (_b = object.user_id) != null ? _b : "";
-    return message;
-  }
-};
 function createBaseMessageAttachment2() {
   return { filename: "", size: 0, url: "", filetype: "", width: 0, height: 0 };
 }
@@ -4169,8 +4252,73 @@ var MessageAttachment2 = {
     return message;
   }
 };
+function createBaseMessageRef2() {
+  return { message_id: "", message_ref_id: "", ref_type: 0 };
+}
+var MessageRef2 = {
+  encode(message, writer = import_minimal4.default.Writer.create()) {
+    if (message.message_id !== "") {
+      writer.uint32(10).string(message.message_id);
+    }
+    if (message.message_ref_id !== "") {
+      writer.uint32(18).string(message.message_ref_id);
+    }
+    if (message.ref_type !== 0) {
+      writer.uint32(24).int32(message.ref_type);
+    }
+    return writer;
+  },
+  decode(input, length) {
+    const reader = input instanceof import_minimal4.default.Reader ? input : new import_minimal4.default.Reader(input);
+    let end = length === void 0 ? reader.len : reader.pos + length;
+    const message = createBaseMessageRef2();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.message_id = reader.string();
+          break;
+        case 2:
+          message.message_ref_id = reader.string();
+          break;
+        case 3:
+          message.ref_type = reader.int32();
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+  fromJSON(object) {
+    return {
+      message_id: isSet4(object.message_id) ? String(object.message_id) : "",
+      message_ref_id: isSet4(object.message_ref_id) ? String(object.message_ref_id) : "",
+      ref_type: isSet4(object.ref_type) ? Number(object.ref_type) : 0
+    };
+  },
+  toJSON(message) {
+    const obj = {};
+    message.message_id !== void 0 && (obj.message_id = message.message_id);
+    message.message_ref_id !== void 0 && (obj.message_ref_id = message.message_ref_id);
+    message.ref_type !== void 0 && (obj.ref_type = Math.round(message.ref_type));
+    return obj;
+  },
+  create(base) {
+    return MessageRef2.fromPartial(base != null ? base : {});
+  },
+  fromPartial(object) {
+    var _a, _b, _c;
+    const message = createBaseMessageRef2();
+    message.message_id = (_a = object.message_id) != null ? _a : "";
+    message.message_ref_id = (_b = object.message_ref_id) != null ? _b : "";
+    message.ref_type = (_c = object.ref_type) != null ? _c : 0;
+    return message;
+  }
+};
 function createBaseChannelMessageSend() {
-  return { clan_id: "", channel_id: "", content: "", reactions: [], mentions: [], attachments: [] };
+  return { clan_id: "", channel_id: "", content: "", mentions: [], attachments: [], references: [] };
 }
 var ChannelMessageSend = {
   encode(message, writer = import_minimal4.default.Writer.create()) {
@@ -4183,14 +4331,14 @@ var ChannelMessageSend = {
     if (message.content !== "") {
       writer.uint32(26).string(message.content);
     }
-    for (const v of message.reactions) {
-      MessageReaction2.encode(v, writer.uint32(34).fork()).ldelim();
-    }
     for (const v of message.mentions) {
-      MessageMention2.encode(v, writer.uint32(42).fork()).ldelim();
+      MessageMention2.encode(v, writer.uint32(34).fork()).ldelim();
     }
     for (const v of message.attachments) {
-      MessageAttachment2.encode(v, writer.uint32(50).fork()).ldelim();
+      MessageAttachment2.encode(v, writer.uint32(42).fork()).ldelim();
+    }
+    for (const v of message.references) {
+      MessageRef2.encode(v, writer.uint32(50).fork()).ldelim();
     }
     return writer;
   },
@@ -4211,13 +4359,13 @@ var ChannelMessageSend = {
           message.content = reader.string();
           break;
         case 4:
-          message.reactions.push(MessageReaction2.decode(reader, reader.uint32()));
-          break;
-        case 5:
           message.mentions.push(MessageMention2.decode(reader, reader.uint32()));
           break;
-        case 6:
+        case 5:
           message.attachments.push(MessageAttachment2.decode(reader, reader.uint32()));
+          break;
+        case 6:
+          message.references.push(MessageRef2.decode(reader, reader.uint32()));
           break;
         default:
           reader.skipType(tag & 7);
@@ -4231,9 +4379,9 @@ var ChannelMessageSend = {
       clan_id: isSet4(object.clan_id) ? String(object.clan_id) : "",
       channel_id: isSet4(object.channel_id) ? String(object.channel_id) : "",
       content: isSet4(object.content) ? String(object.content) : "",
-      reactions: Array.isArray(object == null ? void 0 : object.reactions) ? object.reactions.map((e) => MessageReaction2.fromJSON(e)) : [],
       mentions: Array.isArray(object == null ? void 0 : object.mentions) ? object.mentions.map((e) => MessageMention2.fromJSON(e)) : [],
-      attachments: Array.isArray(object == null ? void 0 : object.attachments) ? object.attachments.map((e) => MessageAttachment2.fromJSON(e)) : []
+      attachments: Array.isArray(object == null ? void 0 : object.attachments) ? object.attachments.map((e) => MessageAttachment2.fromJSON(e)) : [],
+      references: Array.isArray(object == null ? void 0 : object.references) ? object.references.map((e) => MessageRef2.fromJSON(e)) : []
     };
   },
   toJSON(message) {
@@ -4241,11 +4389,6 @@ var ChannelMessageSend = {
     message.clan_id !== void 0 && (obj.clan_id = message.clan_id);
     message.channel_id !== void 0 && (obj.channel_id = message.channel_id);
     message.content !== void 0 && (obj.content = message.content);
-    if (message.reactions) {
-      obj.reactions = message.reactions.map((e) => e ? MessageReaction2.toJSON(e) : void 0);
-    } else {
-      obj.reactions = [];
-    }
     if (message.mentions) {
       obj.mentions = message.mentions.map((e) => e ? MessageMention2.toJSON(e) : void 0);
     } else {
@@ -4255,6 +4398,11 @@ var ChannelMessageSend = {
       obj.attachments = message.attachments.map((e) => e ? MessageAttachment2.toJSON(e) : void 0);
     } else {
       obj.attachments = [];
+    }
+    if (message.references) {
+      obj.references = message.references.map((e) => e ? MessageRef2.toJSON(e) : void 0);
+    } else {
+      obj.references = [];
     }
     return obj;
   },
@@ -4267,9 +4415,9 @@ var ChannelMessageSend = {
     message.clan_id = (_a = object.clan_id) != null ? _a : "";
     message.channel_id = (_b = object.channel_id) != null ? _b : "";
     message.content = (_c = object.content) != null ? _c : "";
-    message.reactions = ((_d = object.reactions) == null ? void 0 : _d.map((e) => MessageReaction2.fromPartial(e))) || [];
-    message.mentions = ((_e = object.mentions) == null ? void 0 : _e.map((e) => MessageMention2.fromPartial(e))) || [];
-    message.attachments = ((_f = object.attachments) == null ? void 0 : _f.map((e) => MessageAttachment2.fromPartial(e))) || [];
+    message.mentions = ((_d = object.mentions) == null ? void 0 : _d.map((e) => MessageMention2.fromPartial(e))) || [];
+    message.attachments = ((_e = object.attachments) == null ? void 0 : _e.map((e) => MessageAttachment2.fromPartial(e))) || [];
+    message.references = ((_f = object.references) == null ? void 0 : _f.map((e) => MessageRef2.fromPartial(e))) || [];
     return message;
   }
 };
@@ -5870,89 +6018,6 @@ var MessageTypingEvent = {
     return message;
   }
 };
-function createBaseMessageMentionEvent() {
-  return { channel_id: "", message_id: "", user_id: "", username: "", sender_id: "" };
-}
-var MessageMentionEvent = {
-  encode(message, writer = import_minimal4.default.Writer.create()) {
-    if (message.channel_id !== "") {
-      writer.uint32(10).string(message.channel_id);
-    }
-    if (message.message_id !== "") {
-      writer.uint32(18).string(message.message_id);
-    }
-    if (message.user_id !== "") {
-      writer.uint32(26).string(message.user_id);
-    }
-    if (message.username !== "") {
-      writer.uint32(34).string(message.username);
-    }
-    if (message.sender_id !== "") {
-      writer.uint32(42).string(message.sender_id);
-    }
-    return writer;
-  },
-  decode(input, length) {
-    const reader = input instanceof import_minimal4.default.Reader ? input : new import_minimal4.default.Reader(input);
-    let end = length === void 0 ? reader.len : reader.pos + length;
-    const message = createBaseMessageMentionEvent();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
-          message.channel_id = reader.string();
-          break;
-        case 2:
-          message.message_id = reader.string();
-          break;
-        case 3:
-          message.user_id = reader.string();
-          break;
-        case 4:
-          message.username = reader.string();
-          break;
-        case 5:
-          message.sender_id = reader.string();
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
-      }
-    }
-    return message;
-  },
-  fromJSON(object) {
-    return {
-      channel_id: isSet4(object.channel_id) ? String(object.channel_id) : "",
-      message_id: isSet4(object.message_id) ? String(object.message_id) : "",
-      user_id: isSet4(object.user_id) ? String(object.user_id) : "",
-      username: isSet4(object.username) ? String(object.username) : "",
-      sender_id: isSet4(object.sender_id) ? String(object.sender_id) : ""
-    };
-  },
-  toJSON(message) {
-    const obj = {};
-    message.channel_id !== void 0 && (obj.channel_id = message.channel_id);
-    message.message_id !== void 0 && (obj.message_id = message.message_id);
-    message.user_id !== void 0 && (obj.user_id = message.user_id);
-    message.username !== void 0 && (obj.username = message.username);
-    message.sender_id !== void 0 && (obj.sender_id = message.sender_id);
-    return obj;
-  },
-  create(base) {
-    return MessageMentionEvent.fromPartial(base != null ? base : {});
-  },
-  fromPartial(object) {
-    var _a, _b, _c, _d, _e;
-    const message = createBaseMessageMentionEvent();
-    message.channel_id = (_a = object.channel_id) != null ? _a : "";
-    message.message_id = (_b = object.message_id) != null ? _b : "";
-    message.user_id = (_c = object.user_id) != null ? _c : "";
-    message.username = (_d = object.username) != null ? _d : "";
-    message.sender_id = (_e = object.sender_id) != null ? _e : "";
-    return message;
-  }
-};
 function createBaseMessageReactionEvent() {
   return { channel_id: "", message_id: "", sender_id: "", emoji: "" };
 }
@@ -6027,20 +6092,10 @@ var MessageReactionEvent = {
     return message;
   }
 };
-function createBaseMessageAttachmentEvent() {
-  return {
-    channel_id: "",
-    message_id: "",
-    filename: "",
-    size: 0,
-    url: "",
-    filetype: "",
-    width: 0,
-    height: 0,
-    sender_id: ""
-  };
+function createBaseMessageDeletedEvent() {
+  return { channel_id: "", message_id: "", deletor: "" };
 }
-var MessageAttachmentEvent = {
+var MessageDeletedEvent = {
   encode(message, writer = import_minimal4.default.Writer.create()) {
     if (message.channel_id !== "") {
       writer.uint32(10).string(message.channel_id);
@@ -6048,33 +6103,15 @@ var MessageAttachmentEvent = {
     if (message.message_id !== "") {
       writer.uint32(18).string(message.message_id);
     }
-    if (message.filename !== "") {
-      writer.uint32(26).string(message.filename);
-    }
-    if (message.size !== 0) {
-      writer.uint32(32).int64(message.size);
-    }
-    if (message.url !== "") {
-      writer.uint32(42).string(message.url);
-    }
-    if (message.filetype !== "") {
-      writer.uint32(50).string(message.filetype);
-    }
-    if (message.width !== 0) {
-      writer.uint32(56).int32(message.width);
-    }
-    if (message.height !== 0) {
-      writer.uint32(64).int32(message.height);
-    }
-    if (message.sender_id !== "") {
-      writer.uint32(74).string(message.sender_id);
+    if (message.deletor !== "") {
+      writer.uint32(26).string(message.deletor);
     }
     return writer;
   },
   decode(input, length) {
     const reader = input instanceof import_minimal4.default.Reader ? input : new import_minimal4.default.Reader(input);
     let end = length === void 0 ? reader.len : reader.pos + length;
-    const message = createBaseMessageAttachmentEvent();
+    const message = createBaseMessageDeletedEvent();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -6085,25 +6122,7 @@ var MessageAttachmentEvent = {
           message.message_id = reader.string();
           break;
         case 3:
-          message.filename = reader.string();
-          break;
-        case 4:
-          message.size = longToNumber3(reader.int64());
-          break;
-        case 5:
-          message.url = reader.string();
-          break;
-        case 6:
-          message.filetype = reader.string();
-          break;
-        case 7:
-          message.width = reader.int32();
-          break;
-        case 8:
-          message.height = reader.int32();
-          break;
-        case 9:
-          message.sender_id = reader.string();
+          message.deletor = reader.string();
           break;
         default:
           reader.skipType(tag & 7);
@@ -6116,43 +6135,25 @@ var MessageAttachmentEvent = {
     return {
       channel_id: isSet4(object.channel_id) ? String(object.channel_id) : "",
       message_id: isSet4(object.message_id) ? String(object.message_id) : "",
-      filename: isSet4(object.filename) ? String(object.filename) : "",
-      size: isSet4(object.size) ? Number(object.size) : 0,
-      url: isSet4(object.url) ? String(object.url) : "",
-      filetype: isSet4(object.filetype) ? String(object.filetype) : "",
-      width: isSet4(object.width) ? Number(object.width) : 0,
-      height: isSet4(object.height) ? Number(object.height) : 0,
-      sender_id: isSet4(object.sender_id) ? String(object.sender_id) : ""
+      deletor: isSet4(object.deletor) ? String(object.deletor) : ""
     };
   },
   toJSON(message) {
     const obj = {};
     message.channel_id !== void 0 && (obj.channel_id = message.channel_id);
     message.message_id !== void 0 && (obj.message_id = message.message_id);
-    message.filename !== void 0 && (obj.filename = message.filename);
-    message.size !== void 0 && (obj.size = Math.round(message.size));
-    message.url !== void 0 && (obj.url = message.url);
-    message.filetype !== void 0 && (obj.filetype = message.filetype);
-    message.width !== void 0 && (obj.width = Math.round(message.width));
-    message.height !== void 0 && (obj.height = Math.round(message.height));
-    message.sender_id !== void 0 && (obj.sender_id = message.sender_id);
+    message.deletor !== void 0 && (obj.deletor = message.deletor);
     return obj;
   },
   create(base) {
-    return MessageAttachmentEvent.fromPartial(base != null ? base : {});
+    return MessageDeletedEvent.fromPartial(base != null ? base : {});
   },
   fromPartial(object) {
-    var _a, _b, _c, _d, _e, _f, _g, _h, _i;
-    const message = createBaseMessageAttachmentEvent();
+    var _a, _b, _c;
+    const message = createBaseMessageDeletedEvent();
     message.channel_id = (_a = object.channel_id) != null ? _a : "";
     message.message_id = (_b = object.message_id) != null ? _b : "";
-    message.filename = (_c = object.filename) != null ? _c : "";
-    message.size = (_d = object.size) != null ? _d : 0;
-    message.url = (_e = object.url) != null ? _e : "";
-    message.filetype = (_f = object.filetype) != null ? _f : "";
-    message.width = (_g = object.width) != null ? _g : 0;
-    message.height = (_h = object.height) != null ? _h : 0;
-    message.sender_id = (_i = object.sender_id) != null ? _i : "";
+    message.deletor = (_c = object.deletor) != null ? _c : "";
     return message;
   }
 };

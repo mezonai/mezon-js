@@ -130,11 +130,13 @@ export interface ApiChannelMessage {
     clan_id?: string;
     code: number;
     content: string;
-    create_time: string;
+    create_time?: string;
+    deleteds?: Array<ApiMessageDeleted>;
     mentions?: Array<ApiMessageMention>;
     message_id: string;
     persistent?: boolean;
     reactions?: Array<ApiMessageReaction>;
+    references?: Array<ApiMessageRef>;
     sender_id: string;
     update_time?: string;
     user_id_one?: string;
@@ -317,6 +319,11 @@ export interface ApiMessageAttachment {
     width?: number;
 }
 /**  */
+export interface ApiMessageDeleted {
+    deletor?: string;
+    message_id?: string;
+}
+/**  */
 export interface ApiMessageMention {
     user_id?: string;
     username?: string;
@@ -325,6 +332,12 @@ export interface ApiMessageMention {
 export interface ApiMessageReaction {
     emoji?: string;
     user_id?: string;
+}
+/**  */
+export interface ApiMessageRef {
+    message_id?: string;
+    message_ref_id?: string;
+    ref_type?: number;
 }
 /** A notification in the server. */
 export interface ApiNotification {

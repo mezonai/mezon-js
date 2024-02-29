@@ -371,6 +371,10 @@ export interface ChannelMessage {
     mentions: MessageMention[];
     /** Message attachment */
     attachments: MessageAttachment[];
+    /** Message deleted */
+    deleteds: MessageDeleted[];
+    /** Message reference */
+    references: MessageRef[];
 }
 /** Mention to message */
 export interface MessageMention {
@@ -400,6 +404,22 @@ export interface MessageAttachment {
     width: number;
     /** Attachment width */
     height: number;
+}
+/** Message reference */
+export interface MessageRef {
+    /** A message source */
+    message_id: string;
+    /** A message reference to */
+    message_ref_id: string;
+    /** Reference type. 0: reply */
+    ref_type: number;
+}
+/** Message reference */
+export interface MessageDeleted {
+    /** A deleted message source */
+    message_id: string;
+    /** Who delete it */
+    deletor: string;
 }
 /** A list of channel messages, usually a result of a list operation. */
 export interface ChannelMessageList {
@@ -2968,6 +2988,15 @@ export declare const ChannelMessage: {
             width?: number | undefined;
             height?: number | undefined;
         }[] | undefined;
+        deleteds?: {
+            message_id?: string | undefined;
+            deletor?: string | undefined;
+        }[] | undefined;
+        references?: {
+            message_id?: string | undefined;
+            message_ref_id?: string | undefined;
+            ref_type?: number | undefined;
+        }[] | undefined;
     } & {
         clan_id?: string | undefined;
         channel_id?: string | undefined;
@@ -3038,7 +3067,37 @@ export declare const ChannelMessage: {
             width?: number | undefined;
             height?: number | undefined;
         }[]>]: never; }) | undefined;
-    } & { [K_6 in Exclude<keyof I, keyof ChannelMessage>]: never; }>(base?: I | undefined): ChannelMessage;
+        deleteds?: ({
+            message_id?: string | undefined;
+            deletor?: string | undefined;
+        }[] & ({
+            message_id?: string | undefined;
+            deletor?: string | undefined;
+        } & {
+            message_id?: string | undefined;
+            deletor?: string | undefined;
+        } & { [K_6 in Exclude<keyof I["deleteds"][number], keyof MessageDeleted>]: never; })[] & { [K_7 in Exclude<keyof I["deleteds"], keyof {
+            message_id?: string | undefined;
+            deletor?: string | undefined;
+        }[]>]: never; }) | undefined;
+        references?: ({
+            message_id?: string | undefined;
+            message_ref_id?: string | undefined;
+            ref_type?: number | undefined;
+        }[] & ({
+            message_id?: string | undefined;
+            message_ref_id?: string | undefined;
+            ref_type?: number | undefined;
+        } & {
+            message_id?: string | undefined;
+            message_ref_id?: string | undefined;
+            ref_type?: number | undefined;
+        } & { [K_8 in Exclude<keyof I["references"][number], keyof MessageRef>]: never; })[] & { [K_9 in Exclude<keyof I["references"], keyof {
+            message_id?: string | undefined;
+            message_ref_id?: string | undefined;
+            ref_type?: number | undefined;
+        }[]>]: never; }) | undefined;
+    } & { [K_10 in Exclude<keyof I, keyof ChannelMessage>]: never; }>(base?: I | undefined): ChannelMessage;
     fromPartial<I_1 extends {
         clan_id?: string | undefined;
         channel_id?: string | undefined;
@@ -3070,6 +3129,15 @@ export declare const ChannelMessage: {
             width?: number | undefined;
             height?: number | undefined;
         }[] | undefined;
+        deleteds?: {
+            message_id?: string | undefined;
+            deletor?: string | undefined;
+        }[] | undefined;
+        references?: {
+            message_id?: string | undefined;
+            message_ref_id?: string | undefined;
+            ref_type?: number | undefined;
+        }[] | undefined;
     } & {
         clan_id?: string | undefined;
         channel_id?: string | undefined;
@@ -3094,7 +3162,7 @@ export declare const ChannelMessage: {
         } & {
             emoji?: string | undefined;
             user_id?: string | undefined;
-        } & { [K_7 in Exclude<keyof I_1["reactions"][number], keyof MessageReaction>]: never; })[] & { [K_8 in Exclude<keyof I_1["reactions"], keyof {
+        } & { [K_11 in Exclude<keyof I_1["reactions"][number], keyof MessageReaction>]: never; })[] & { [K_12 in Exclude<keyof I_1["reactions"], keyof {
             emoji?: string | undefined;
             user_id?: string | undefined;
         }[]>]: never; }) | undefined;
@@ -3107,7 +3175,7 @@ export declare const ChannelMessage: {
         } & {
             user_id?: string | undefined;
             username?: string | undefined;
-        } & { [K_9 in Exclude<keyof I_1["mentions"][number], keyof MessageMention>]: never; })[] & { [K_10 in Exclude<keyof I_1["mentions"], keyof {
+        } & { [K_13 in Exclude<keyof I_1["mentions"][number], keyof MessageMention>]: never; })[] & { [K_14 in Exclude<keyof I_1["mentions"], keyof {
             user_id?: string | undefined;
             username?: string | undefined;
         }[]>]: never; }) | undefined;
@@ -3132,7 +3200,7 @@ export declare const ChannelMessage: {
             filetype?: string | undefined;
             width?: number | undefined;
             height?: number | undefined;
-        } & { [K_11 in Exclude<keyof I_1["attachments"][number], keyof MessageAttachment>]: never; })[] & { [K_12 in Exclude<keyof I_1["attachments"], keyof {
+        } & { [K_15 in Exclude<keyof I_1["attachments"][number], keyof MessageAttachment>]: never; })[] & { [K_16 in Exclude<keyof I_1["attachments"], keyof {
             filename?: string | undefined;
             size?: number | undefined;
             url?: string | undefined;
@@ -3140,7 +3208,37 @@ export declare const ChannelMessage: {
             width?: number | undefined;
             height?: number | undefined;
         }[]>]: never; }) | undefined;
-    } & { [K_13 in Exclude<keyof I_1, keyof ChannelMessage>]: never; }>(object: I_1): ChannelMessage;
+        deleteds?: ({
+            message_id?: string | undefined;
+            deletor?: string | undefined;
+        }[] & ({
+            message_id?: string | undefined;
+            deletor?: string | undefined;
+        } & {
+            message_id?: string | undefined;
+            deletor?: string | undefined;
+        } & { [K_17 in Exclude<keyof I_1["deleteds"][number], keyof MessageDeleted>]: never; })[] & { [K_18 in Exclude<keyof I_1["deleteds"], keyof {
+            message_id?: string | undefined;
+            deletor?: string | undefined;
+        }[]>]: never; }) | undefined;
+        references?: ({
+            message_id?: string | undefined;
+            message_ref_id?: string | undefined;
+            ref_type?: number | undefined;
+        }[] & ({
+            message_id?: string | undefined;
+            message_ref_id?: string | undefined;
+            ref_type?: number | undefined;
+        } & {
+            message_id?: string | undefined;
+            message_ref_id?: string | undefined;
+            ref_type?: number | undefined;
+        } & { [K_19 in Exclude<keyof I_1["references"][number], keyof MessageRef>]: never; })[] & { [K_20 in Exclude<keyof I_1["references"], keyof {
+            message_id?: string | undefined;
+            message_ref_id?: string | undefined;
+            ref_type?: number | undefined;
+        }[]>]: never; }) | undefined;
+    } & { [K_21 in Exclude<keyof I_1, keyof ChannelMessage>]: never; }>(object: I_1): ChannelMessage;
 };
 export declare const MessageMention: {
     encode(message: MessageMention, writer?: _m0.Writer): _m0.Writer;
@@ -3218,6 +3316,50 @@ export declare const MessageAttachment: {
         height?: number | undefined;
     } & { [K_1 in Exclude<keyof I_1, keyof MessageAttachment>]: never; }>(object: I_1): MessageAttachment;
 };
+export declare const MessageRef: {
+    encode(message: MessageRef, writer?: _m0.Writer): _m0.Writer;
+    decode(input: _m0.Reader | Uint8Array, length?: number): MessageRef;
+    fromJSON(object: any): MessageRef;
+    toJSON(message: MessageRef): unknown;
+    create<I extends {
+        message_id?: string | undefined;
+        message_ref_id?: string | undefined;
+        ref_type?: number | undefined;
+    } & {
+        message_id?: string | undefined;
+        message_ref_id?: string | undefined;
+        ref_type?: number | undefined;
+    } & { [K in Exclude<keyof I, keyof MessageRef>]: never; }>(base?: I | undefined): MessageRef;
+    fromPartial<I_1 extends {
+        message_id?: string | undefined;
+        message_ref_id?: string | undefined;
+        ref_type?: number | undefined;
+    } & {
+        message_id?: string | undefined;
+        message_ref_id?: string | undefined;
+        ref_type?: number | undefined;
+    } & { [K_1 in Exclude<keyof I_1, keyof MessageRef>]: never; }>(object: I_1): MessageRef;
+};
+export declare const MessageDeleted: {
+    encode(message: MessageDeleted, writer?: _m0.Writer): _m0.Writer;
+    decode(input: _m0.Reader | Uint8Array, length?: number): MessageDeleted;
+    fromJSON(object: any): MessageDeleted;
+    toJSON(message: MessageDeleted): unknown;
+    create<I extends {
+        message_id?: string | undefined;
+        deletor?: string | undefined;
+    } & {
+        message_id?: string | undefined;
+        deletor?: string | undefined;
+    } & { [K in Exclude<keyof I, keyof MessageDeleted>]: never; }>(base?: I | undefined): MessageDeleted;
+    fromPartial<I_1 extends {
+        message_id?: string | undefined;
+        deletor?: string | undefined;
+    } & {
+        message_id?: string | undefined;
+        deletor?: string | undefined;
+    } & { [K_1 in Exclude<keyof I_1, keyof MessageDeleted>]: never; }>(object: I_1): MessageDeleted;
+};
 export declare const ChannelMessageList: {
     encode(message: ChannelMessageList, writer?: _m0.Writer): _m0.Writer;
     decode(input: _m0.Reader | Uint8Array, length?: number): ChannelMessageList;
@@ -3254,6 +3396,15 @@ export declare const ChannelMessageList: {
                 filetype?: string | undefined;
                 width?: number | undefined;
                 height?: number | undefined;
+            }[] | undefined;
+            deleteds?: {
+                message_id?: string | undefined;
+                deletor?: string | undefined;
+            }[] | undefined;
+            references?: {
+                message_id?: string | undefined;
+                message_ref_id?: string | undefined;
+                ref_type?: number | undefined;
             }[] | undefined;
         }[] | undefined;
         last_seen_message_id?: string | undefined;
@@ -3292,6 +3443,15 @@ export declare const ChannelMessageList: {
                 width?: number | undefined;
                 height?: number | undefined;
             }[] | undefined;
+            deleteds?: {
+                message_id?: string | undefined;
+                deletor?: string | undefined;
+            }[] | undefined;
+            references?: {
+                message_id?: string | undefined;
+                message_ref_id?: string | undefined;
+                ref_type?: number | undefined;
+            }[] | undefined;
         }[] & ({
             clan_id?: string | undefined;
             channel_id?: string | undefined;
@@ -3322,6 +3482,15 @@ export declare const ChannelMessageList: {
                 filetype?: string | undefined;
                 width?: number | undefined;
                 height?: number | undefined;
+            }[] | undefined;
+            deleteds?: {
+                message_id?: string | undefined;
+                deletor?: string | undefined;
+            }[] | undefined;
+            references?: {
+                message_id?: string | undefined;
+                message_ref_id?: string | undefined;
+                ref_type?: number | undefined;
             }[] | undefined;
         } & {
             clan_id?: string | undefined;
@@ -3393,7 +3562,37 @@ export declare const ChannelMessageList: {
                 width?: number | undefined;
                 height?: number | undefined;
             }[]>]: never; }) | undefined;
-        } & { [K_6 in Exclude<keyof I["messages"][number], keyof ChannelMessage>]: never; })[] & { [K_7 in Exclude<keyof I["messages"], keyof {
+            deleteds?: ({
+                message_id?: string | undefined;
+                deletor?: string | undefined;
+            }[] & ({
+                message_id?: string | undefined;
+                deletor?: string | undefined;
+            } & {
+                message_id?: string | undefined;
+                deletor?: string | undefined;
+            } & { [K_6 in Exclude<keyof I["messages"][number]["deleteds"][number], keyof MessageDeleted>]: never; })[] & { [K_7 in Exclude<keyof I["messages"][number]["deleteds"], keyof {
+                message_id?: string | undefined;
+                deletor?: string | undefined;
+            }[]>]: never; }) | undefined;
+            references?: ({
+                message_id?: string | undefined;
+                message_ref_id?: string | undefined;
+                ref_type?: number | undefined;
+            }[] & ({
+                message_id?: string | undefined;
+                message_ref_id?: string | undefined;
+                ref_type?: number | undefined;
+            } & {
+                message_id?: string | undefined;
+                message_ref_id?: string | undefined;
+                ref_type?: number | undefined;
+            } & { [K_8 in Exclude<keyof I["messages"][number]["references"][number], keyof MessageRef>]: never; })[] & { [K_9 in Exclude<keyof I["messages"][number]["references"], keyof {
+                message_id?: string | undefined;
+                message_ref_id?: string | undefined;
+                ref_type?: number | undefined;
+            }[]>]: never; }) | undefined;
+        } & { [K_10 in Exclude<keyof I["messages"][number], keyof ChannelMessage>]: never; })[] & { [K_11 in Exclude<keyof I["messages"], keyof {
             clan_id?: string | undefined;
             channel_id?: string | undefined;
             message_id?: string | undefined;
@@ -3424,12 +3623,21 @@ export declare const ChannelMessageList: {
                 width?: number | undefined;
                 height?: number | undefined;
             }[] | undefined;
+            deleteds?: {
+                message_id?: string | undefined;
+                deletor?: string | undefined;
+            }[] | undefined;
+            references?: {
+                message_id?: string | undefined;
+                message_ref_id?: string | undefined;
+                ref_type?: number | undefined;
+            }[] | undefined;
         }[]>]: never; }) | undefined;
         last_seen_message_id?: string | undefined;
         next_cursor?: string | undefined;
         prev_cursor?: string | undefined;
         cacheable_cursor?: string | undefined;
-    } & { [K_8 in Exclude<keyof I, keyof ChannelMessageList>]: never; }>(base?: I | undefined): ChannelMessageList;
+    } & { [K_12 in Exclude<keyof I, keyof ChannelMessageList>]: never; }>(base?: I | undefined): ChannelMessageList;
     fromPartial<I_1 extends {
         messages?: {
             clan_id?: string | undefined;
@@ -3461,6 +3669,15 @@ export declare const ChannelMessageList: {
                 filetype?: string | undefined;
                 width?: number | undefined;
                 height?: number | undefined;
+            }[] | undefined;
+            deleteds?: {
+                message_id?: string | undefined;
+                deletor?: string | undefined;
+            }[] | undefined;
+            references?: {
+                message_id?: string | undefined;
+                message_ref_id?: string | undefined;
+                ref_type?: number | undefined;
             }[] | undefined;
         }[] | undefined;
         last_seen_message_id?: string | undefined;
@@ -3499,6 +3716,15 @@ export declare const ChannelMessageList: {
                 width?: number | undefined;
                 height?: number | undefined;
             }[] | undefined;
+            deleteds?: {
+                message_id?: string | undefined;
+                deletor?: string | undefined;
+            }[] | undefined;
+            references?: {
+                message_id?: string | undefined;
+                message_ref_id?: string | undefined;
+                ref_type?: number | undefined;
+            }[] | undefined;
         }[] & ({
             clan_id?: string | undefined;
             channel_id?: string | undefined;
@@ -3530,6 +3756,15 @@ export declare const ChannelMessageList: {
                 width?: number | undefined;
                 height?: number | undefined;
             }[] | undefined;
+            deleteds?: {
+                message_id?: string | undefined;
+                deletor?: string | undefined;
+            }[] | undefined;
+            references?: {
+                message_id?: string | undefined;
+                message_ref_id?: string | undefined;
+                ref_type?: number | undefined;
+            }[] | undefined;
         } & {
             clan_id?: string | undefined;
             channel_id?: string | undefined;
@@ -3554,7 +3789,7 @@ export declare const ChannelMessageList: {
             } & {
                 emoji?: string | undefined;
                 user_id?: string | undefined;
-            } & { [K_9 in Exclude<keyof I_1["messages"][number]["reactions"][number], keyof MessageReaction>]: never; })[] & { [K_10 in Exclude<keyof I_1["messages"][number]["reactions"], keyof {
+            } & { [K_13 in Exclude<keyof I_1["messages"][number]["reactions"][number], keyof MessageReaction>]: never; })[] & { [K_14 in Exclude<keyof I_1["messages"][number]["reactions"], keyof {
                 emoji?: string | undefined;
                 user_id?: string | undefined;
             }[]>]: never; }) | undefined;
@@ -3567,7 +3802,7 @@ export declare const ChannelMessageList: {
             } & {
                 user_id?: string | undefined;
                 username?: string | undefined;
-            } & { [K_11 in Exclude<keyof I_1["messages"][number]["mentions"][number], keyof MessageMention>]: never; })[] & { [K_12 in Exclude<keyof I_1["messages"][number]["mentions"], keyof {
+            } & { [K_15 in Exclude<keyof I_1["messages"][number]["mentions"][number], keyof MessageMention>]: never; })[] & { [K_16 in Exclude<keyof I_1["messages"][number]["mentions"], keyof {
                 user_id?: string | undefined;
                 username?: string | undefined;
             }[]>]: never; }) | undefined;
@@ -3592,7 +3827,7 @@ export declare const ChannelMessageList: {
                 filetype?: string | undefined;
                 width?: number | undefined;
                 height?: number | undefined;
-            } & { [K_13 in Exclude<keyof I_1["messages"][number]["attachments"][number], keyof MessageAttachment>]: never; })[] & { [K_14 in Exclude<keyof I_1["messages"][number]["attachments"], keyof {
+            } & { [K_17 in Exclude<keyof I_1["messages"][number]["attachments"][number], keyof MessageAttachment>]: never; })[] & { [K_18 in Exclude<keyof I_1["messages"][number]["attachments"], keyof {
                 filename?: string | undefined;
                 size?: number | undefined;
                 url?: string | undefined;
@@ -3600,7 +3835,37 @@ export declare const ChannelMessageList: {
                 width?: number | undefined;
                 height?: number | undefined;
             }[]>]: never; }) | undefined;
-        } & { [K_15 in Exclude<keyof I_1["messages"][number], keyof ChannelMessage>]: never; })[] & { [K_16 in Exclude<keyof I_1["messages"], keyof {
+            deleteds?: ({
+                message_id?: string | undefined;
+                deletor?: string | undefined;
+            }[] & ({
+                message_id?: string | undefined;
+                deletor?: string | undefined;
+            } & {
+                message_id?: string | undefined;
+                deletor?: string | undefined;
+            } & { [K_19 in Exclude<keyof I_1["messages"][number]["deleteds"][number], keyof MessageDeleted>]: never; })[] & { [K_20 in Exclude<keyof I_1["messages"][number]["deleteds"], keyof {
+                message_id?: string | undefined;
+                deletor?: string | undefined;
+            }[]>]: never; }) | undefined;
+            references?: ({
+                message_id?: string | undefined;
+                message_ref_id?: string | undefined;
+                ref_type?: number | undefined;
+            }[] & ({
+                message_id?: string | undefined;
+                message_ref_id?: string | undefined;
+                ref_type?: number | undefined;
+            } & {
+                message_id?: string | undefined;
+                message_ref_id?: string | undefined;
+                ref_type?: number | undefined;
+            } & { [K_21 in Exclude<keyof I_1["messages"][number]["references"][number], keyof MessageRef>]: never; })[] & { [K_22 in Exclude<keyof I_1["messages"][number]["references"], keyof {
+                message_id?: string | undefined;
+                message_ref_id?: string | undefined;
+                ref_type?: number | undefined;
+            }[]>]: never; }) | undefined;
+        } & { [K_23 in Exclude<keyof I_1["messages"][number], keyof ChannelMessage>]: never; })[] & { [K_24 in Exclude<keyof I_1["messages"], keyof {
             clan_id?: string | undefined;
             channel_id?: string | undefined;
             message_id?: string | undefined;
@@ -3631,12 +3896,21 @@ export declare const ChannelMessageList: {
                 width?: number | undefined;
                 height?: number | undefined;
             }[] | undefined;
+            deleteds?: {
+                message_id?: string | undefined;
+                deletor?: string | undefined;
+            }[] | undefined;
+            references?: {
+                message_id?: string | undefined;
+                message_ref_id?: string | undefined;
+                ref_type?: number | undefined;
+            }[] | undefined;
         }[]>]: never; }) | undefined;
         last_seen_message_id?: string | undefined;
         next_cursor?: string | undefined;
         prev_cursor?: string | undefined;
         cacheable_cursor?: string | undefined;
-    } & { [K_17 in Exclude<keyof I_1, keyof ChannelMessageList>]: never; }>(object: I_1): ChannelMessageList;
+    } & { [K_25 in Exclude<keyof I_1, keyof ChannelMessageList>]: never; }>(object: I_1): ChannelMessageList;
 };
 export declare const CreateGroupRequest: {
     encode(message: CreateGroupRequest, writer?: _m0.Writer): _m0.Writer;
