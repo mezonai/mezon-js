@@ -71,6 +71,8 @@ import {
   ApiMessageMention,
   ApiMessageAttachment,
   ApiUploadAttachment,
+  ApiMessageDeleted,
+  ApiMessageRef,
 } from "./api.gen";
 
 import { Session } from "./session";
@@ -165,6 +167,10 @@ export interface ChannelMessage {
   mentions?: Array<ApiMessageMention>;
   //
   attachments?: Array<ApiMessageAttachment>;
+  //
+  deleteds?: Array<ApiMessageDeleted>;
+  //
+  references?: Array<ApiMessageRef>
   //The unique ID of this message.
   message_id: string;
   //True if the message was persisted to the channel's history, false otherwise.
@@ -999,7 +1005,7 @@ export class Client {
         result.messages!.push({
           channel_id: m.channel_id,
           code: m.code ? Number(m.code) : 0,
-          create_time: m.create_time,
+          create_time: m.create_time || '',
           message_id: m.message_id,
           persistent: m.persistent,
           sender_id: m.sender_id,
@@ -1012,7 +1018,9 @@ export class Client {
           user_id_two: m.user_id_two,
           attachments: m.attachments,
           mentions: m.mentions,
-          reactions: m.reactions
+          reactions: m.reactions,
+          deleteds: m.deleteds,
+          references: m.references,
         })
       });
       return Promise.resolve(result);

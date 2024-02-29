@@ -227,7 +227,9 @@ export interface ApiChannelMessage {
   //The content payload.
   content: string;
   //The UNIX time (for gRPC clients) or ISO string (for REST clients) when the message was created.
-  create_time: string;
+  create_time?: string;
+  //
+  deleteds?: Array<ApiMessageDeleted>;
   //
   mentions?: Array<ApiMessageMention>;
   //The unique ID of this message.
@@ -236,6 +238,8 @@ export interface ApiChannelMessage {
   persistent?: boolean;
   //
   reactions?: Array<ApiMessageReaction>;
+  //
+  references?: Array<ApiMessageRef>;
   //Message sender, usually a user ID.
   sender_id: string;
   //The UNIX time (for gRPC clients) or ISO string (for REST clients) when the message was last updated.
@@ -551,6 +555,14 @@ export interface ApiMessageAttachment {
 }
 
 /**  */
+export interface ApiMessageDeleted {
+  //
+  deletor?: string;
+  //
+  message_id?: string;
+}
+
+/**  */
 export interface ApiMessageMention {
   //
   user_id?: string;
@@ -564,6 +576,16 @@ export interface ApiMessageReaction {
   emoji?: string;
   //
   user_id?: string;
+}
+
+/**  */
+export interface ApiMessageRef {
+  //
+  message_id?: string;
+  //
+  message_ref_id?: string;
+  //
+  ref_type?: number;
 }
 
 /** A notification in the server. */

@@ -103,6 +103,26 @@ export interface MessageAttachmentEvent {
     width?: number;
     height?: number;
 }
+/** User is delete to message */
+export interface MessageDeletedEvent {
+    /** The channel this message belongs to. */
+    channel_id: string;
+    /** The message that user react */
+    message_id: string;
+    /** Message sender, usually a user ID. */
+    deletor: string;
+}
+/** User is delete to message */
+export interface MessageRefEvent {
+    /** The channel this message belongs to. */
+    channel_id: string;
+    /** The message that user react */
+    message_id: string;
+    /** Message reference ID. */
+    message_ref_id: string;
+    /** reference type */
+    ref_type: number;
+}
 /** User is typing */
 export interface MessageTypingEvent {
     /** The channel this message belongs to. */
@@ -129,6 +149,8 @@ export interface ChannelMessageEvent {
     mentions?: Array<MessageMentionEvent>;
     reactions?: Array<MessageReactionEvent>;
     attachments?: Array<MessageAttachmentEvent>;
+    deleteds?: Array<MessageDeletedEvent>;
+    references?: Array<MessageRefEvent>;
 }
 /** An acknowledgement received in response to sending a message on a chat channel. */
 export interface ChannelMessageAck {
@@ -466,9 +488,7 @@ export interface Socket {
     /** Send message reaction */
     writeMessageReaction(channel_id: string, message_id: string, emoji: string): Promise<MessageReactionEvent>;
     /** Send message mention */
-    writeMessageMention(channel_id: string, message_id: string, user_id: string, username: string): Promise<MessageMentionEvent>;
-    /** Send message reaction */
-    writeMessageAttachment(channel_id: string, message_id: string, filename: string, url: string, size: number, filetype: string, width?: number, height?: number): Promise<MessageAttachmentEvent>;
+    writeMessageDeleted(channel_id: string, message_id: string, deletor: string): Promise<MessageDeletedEvent>;
     /** Send last seen message */
     writeLastSeenMessage(channel_id: string, message_id: string): Promise<LastSeenMessageEvent>;
     /** Handle disconnect events received from the socket. */
@@ -508,8 +528,8 @@ export interface Socket {
     onmessagetyping: (messageTypingEvent: MessageTypingEvent) => void;
     /** Receive reaction event */
     onmessagereaction: (messageReactionEvent: MessageReactionEvent) => void;
-    onmessagemention: (messageMentionEvent: MessageMentionEvent) => void;
-    onmessageattachment: (messageAttachmentEvent: MessageAttachmentEvent) => void;
+    /** Receive deleted message */
+    onmessagedeleted: (messageDeletedEvent: MessageDeletedEvent) => void;
     /** Receive channel presence updates. */
     onchannelpresence: (channelPresence: ChannelPresenceEvent) => void;
     setHeartbeatTimeoutMs(ms: number): void;
@@ -545,9 +565,8 @@ export declare class DefaultSocket implements Socket {
     ondisconnect(evt: Event): void;
     onerror(evt: Event): void;
     onmessagetyping(messagetyping: MessageTypingEvent): void;
-    onmessagereaction(messagetyping: MessageReactionEvent): void;
-    onmessagemention(messagetyping: MessageMentionEvent): void;
-    onmessageattachment(messagetyping: MessageAttachmentEvent): void;
+    onmessagereaction(messagereaction: MessageReactionEvent): void;
+    onmessagedeleted(messagedeleted: MessageDeletedEvent): void;
     onchannelmessage(channelMessage: ChannelMessageEvent): void;
     onchannelpresence(channelPresence: ChannelPresenceEvent): void;
     onnotification(notification: Notification): void;
@@ -583,8 +602,7 @@ export declare class DefaultSocket implements Socket {
     updateStatus(status?: string): Promise<void>;
     writeChatMessage(clan_id: string, channel_id: string, content: any): Promise<ChannelMessageAck>;
     writeMessageReaction(channel_id: string, message_id: string, emoji: string): Promise<MessageReactionEvent>;
-    writeMessageMention(channel_id: string, message_id: string, user_id: string, username: string): Promise<MessageMentionEvent>;
-    writeMessageAttachment(channel_id: string, message_id: string, filename: string, url: string, size: number, filetype: string, width?: number, height?: number): Promise<MessageAttachmentEvent>;
+    writeMessageDeleted(channel_id: string, message_id: string): Promise<MessageDeletedEvent>;
     writeMessageTyping(channel_id: string): Promise<MessageTypingEvent>;
     writeLastSeenMessage(channel_id: string, message_id: string): Promise<LastSeenMessageEvent>;
     private pingPong;

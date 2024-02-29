@@ -164,12 +164,8 @@ export interface Envelope {
   message_reaction_event?:
     | MessageReactionEvent
     | undefined;
-  /** User send reactoin event */
-  message_mention_event?:
-    | MessageMentionEvent
-    | undefined;
-  /** User send reactoin event */
-  message_attachment_event?: MessageAttachmentEvent | undefined;
+  /** User delete message event */
+  message_deleted_event?: MessageDeletedEvent | undefined;
 }
 
 /** A realtime chat channel. */
@@ -302,14 +298,6 @@ export interface MessageMention {
   username: string;
 }
 
-/** Emoji reaction by user */
-export interface MessageReaction {
-  /** A list emoji */
-  emoji: string;
-  /** User react to message */
-  user_id: string;
-}
-
 /** Message attachment */
 export interface MessageAttachment {
   /** Attachment file name */
@@ -326,6 +314,16 @@ export interface MessageAttachment {
   height: number;
 }
 
+/** Message reference */
+export interface MessageRef {
+  /** A message source */
+  message_id: string;
+  /** A message reference to */
+  message_ref_id: string;
+  /** Reference type. 0: reply */
+  ref_type: number;
+}
+
 /** Send a message to a realtime channel. */
 export interface ChannelMessageSend {
   /** The clan that channel belong to. */
@@ -334,12 +332,12 @@ export interface ChannelMessageSend {
   channel_id: string;
   /** Message content. */
   content: string;
-  /** Emoji reaction */
-  reactions: MessageReaction[];
   /** Message mention */
   mentions: MessageMention[];
   /** Message attachment */
   attachments: MessageAttachment[];
+  /** Message reference */
+  references: MessageRef[];
 }
 
 /** Update a message previously sent to a realtime channel. */
@@ -907,6 +905,16 @@ export interface MessageAttachmentEvent {
   sender_id: string;
 }
 
+/** Mention to message */
+export interface MessageDeletedEvent {
+  /** The channel this message belongs to. */
+  channel_id: string;
+  /** React to message */
+  message_id: string;
+  /** sender id */
+  deletor: string;
+}
+
 /** Stop receiving status updates for some set of users. */
 export interface StatusUnfollow {
   /** Users to unfollow. */
@@ -1014,8 +1022,7 @@ function createBaseEnvelope(): Envelope {
     message_typing_event: undefined,
     last_seen_message_event: undefined,
     message_reaction_event: undefined,
-    message_mention_event: undefined,
-    message_attachment_event: undefined,
+    message_deleted_event: undefined,
   };
 }
 
@@ -1138,11 +1145,8 @@ export const Envelope = {
     if (message.message_reaction_event !== undefined) {
       MessageReactionEvent.encode(message.message_reaction_event, writer.uint32(314).fork()).ldelim();
     }
-    if (message.message_mention_event !== undefined) {
-      MessageMentionEvent.encode(message.message_mention_event, writer.uint32(322).fork()).ldelim();
-    }
-    if (message.message_attachment_event !== undefined) {
-      MessageAttachmentEvent.encode(message.message_attachment_event, writer.uint32(330).fork()).ldelim();
+    if (message.message_deleted_event !== undefined) {
+      MessageDeletedEvent.encode(message.message_deleted_event, writer.uint32(322).fork()).ldelim();
     }
     return writer;
   },
@@ -1272,10 +1276,7 @@ export const Envelope = {
           message.message_reaction_event = MessageReactionEvent.decode(reader, reader.uint32());
           break;
         case 40:
-          message.message_mention_event = MessageMentionEvent.decode(reader, reader.uint32());
-          break;
-        case 41:
-          message.message_attachment_event = MessageAttachmentEvent.decode(reader, reader.uint32());
+          message.message_deleted_event = MessageDeletedEvent.decode(reader, reader.uint32());
           break;
         default:
           reader.skipType(tag & 7);
@@ -1352,11 +1353,8 @@ export const Envelope = {
       message_reaction_event: isSet(object.message_reaction_event)
         ? MessageReactionEvent.fromJSON(object.message_reaction_event)
         : undefined,
-      message_mention_event: isSet(object.message_mention_event)
-        ? MessageMentionEvent.fromJSON(object.message_mention_event)
-        : undefined,
-      message_attachment_event: isSet(object.message_attachment_event)
-        ? MessageAttachmentEvent.fromJSON(object.message_attachment_event)
+      message_deleted_event: isSet(object.message_deleted_event)
+        ? MessageDeletedEvent.fromJSON(object.message_deleted_event)
         : undefined,
     };
   },
@@ -1446,11 +1444,8 @@ export const Envelope = {
     message.message_reaction_event !== undefined && (obj.message_reaction_event = message.message_reaction_event
       ? MessageReactionEvent.toJSON(message.message_reaction_event)
       : undefined);
-    message.message_mention_event !== undefined && (obj.message_mention_event = message.message_mention_event
-      ? MessageMentionEvent.toJSON(message.message_mention_event)
-      : undefined);
-    message.message_attachment_event !== undefined && (obj.message_attachment_event = message.message_attachment_event
-      ? MessageAttachmentEvent.toJSON(message.message_attachment_event)
+    message.message_deleted_event !== undefined && (obj.message_deleted_event = message.message_deleted_event
+      ? MessageDeletedEvent.toJSON(message.message_deleted_event)
       : undefined);
     return obj;
   },
@@ -1574,13 +1569,9 @@ export const Envelope = {
       (object.message_reaction_event !== undefined && object.message_reaction_event !== null)
         ? MessageReactionEvent.fromPartial(object.message_reaction_event)
         : undefined;
-    message.message_mention_event =
-      (object.message_mention_event !== undefined && object.message_mention_event !== null)
-        ? MessageMentionEvent.fromPartial(object.message_mention_event)
-        : undefined;
-    message.message_attachment_event =
-      (object.message_attachment_event !== undefined && object.message_attachment_event !== null)
-        ? MessageAttachmentEvent.fromPartial(object.message_attachment_event)
+    message.message_deleted_event =
+      (object.message_deleted_event !== undefined && object.message_deleted_event !== null)
+        ? MessageDeletedEvent.fromPartial(object.message_deleted_event)
         : undefined;
     return message;
   },
@@ -2037,68 +2028,6 @@ export const MessageMention = {
   },
 };
 
-function createBaseMessageReaction(): MessageReaction {
-  return { emoji: "", user_id: "" };
-}
-
-export const MessageReaction = {
-  encode(message: MessageReaction, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.emoji !== "") {
-      writer.uint32(10).string(message.emoji);
-    }
-    if (message.user_id !== "") {
-      writer.uint32(18).string(message.user_id);
-    }
-    return writer;
-  },
-
-  decode(input: _m0.Reader | Uint8Array, length?: number): MessageReaction {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseMessageReaction();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
-          message.emoji = reader.string();
-          break;
-        case 2:
-          message.user_id = reader.string();
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
-      }
-    }
-    return message;
-  },
-
-  fromJSON(object: any): MessageReaction {
-    return {
-      emoji: isSet(object.emoji) ? String(object.emoji) : "",
-      user_id: isSet(object.user_id) ? String(object.user_id) : "",
-    };
-  },
-
-  toJSON(message: MessageReaction): unknown {
-    const obj: any = {};
-    message.emoji !== undefined && (obj.emoji = message.emoji);
-    message.user_id !== undefined && (obj.user_id = message.user_id);
-    return obj;
-  },
-
-  create<I extends Exact<DeepPartial<MessageReaction>, I>>(base?: I): MessageReaction {
-    return MessageReaction.fromPartial(base ?? {});
-  },
-
-  fromPartial<I extends Exact<DeepPartial<MessageReaction>, I>>(object: I): MessageReaction {
-    const message = createBaseMessageReaction();
-    message.emoji = object.emoji ?? "";
-    message.user_id = object.user_id ?? "";
-    return message;
-  },
-};
-
 function createBaseMessageAttachment(): MessageAttachment {
   return { filename: "", size: 0, url: "", filetype: "", width: 0, height: 0 };
 }
@@ -2197,8 +2126,79 @@ export const MessageAttachment = {
   },
 };
 
+function createBaseMessageRef(): MessageRef {
+  return { message_id: "", message_ref_id: "", ref_type: 0 };
+}
+
+export const MessageRef = {
+  encode(message: MessageRef, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.message_id !== "") {
+      writer.uint32(10).string(message.message_id);
+    }
+    if (message.message_ref_id !== "") {
+      writer.uint32(18).string(message.message_ref_id);
+    }
+    if (message.ref_type !== 0) {
+      writer.uint32(24).int32(message.ref_type);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): MessageRef {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseMessageRef();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.message_id = reader.string();
+          break;
+        case 2:
+          message.message_ref_id = reader.string();
+          break;
+        case 3:
+          message.ref_type = reader.int32();
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): MessageRef {
+    return {
+      message_id: isSet(object.message_id) ? String(object.message_id) : "",
+      message_ref_id: isSet(object.message_ref_id) ? String(object.message_ref_id) : "",
+      ref_type: isSet(object.ref_type) ? Number(object.ref_type) : 0,
+    };
+  },
+
+  toJSON(message: MessageRef): unknown {
+    const obj: any = {};
+    message.message_id !== undefined && (obj.message_id = message.message_id);
+    message.message_ref_id !== undefined && (obj.message_ref_id = message.message_ref_id);
+    message.ref_type !== undefined && (obj.ref_type = Math.round(message.ref_type));
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<MessageRef>, I>>(base?: I): MessageRef {
+    return MessageRef.fromPartial(base ?? {});
+  },
+
+  fromPartial<I extends Exact<DeepPartial<MessageRef>, I>>(object: I): MessageRef {
+    const message = createBaseMessageRef();
+    message.message_id = object.message_id ?? "";
+    message.message_ref_id = object.message_ref_id ?? "";
+    message.ref_type = object.ref_type ?? 0;
+    return message;
+  },
+};
+
 function createBaseChannelMessageSend(): ChannelMessageSend {
-  return { clan_id: "", channel_id: "", content: "", reactions: [], mentions: [], attachments: [] };
+  return { clan_id: "", channel_id: "", content: "", mentions: [], attachments: [], references: [] };
 }
 
 export const ChannelMessageSend = {
@@ -2212,14 +2212,14 @@ export const ChannelMessageSend = {
     if (message.content !== "") {
       writer.uint32(26).string(message.content);
     }
-    for (const v of message.reactions) {
-      MessageReaction.encode(v!, writer.uint32(34).fork()).ldelim();
-    }
     for (const v of message.mentions) {
-      MessageMention.encode(v!, writer.uint32(42).fork()).ldelim();
+      MessageMention.encode(v!, writer.uint32(34).fork()).ldelim();
     }
     for (const v of message.attachments) {
-      MessageAttachment.encode(v!, writer.uint32(50).fork()).ldelim();
+      MessageAttachment.encode(v!, writer.uint32(42).fork()).ldelim();
+    }
+    for (const v of message.references) {
+      MessageRef.encode(v!, writer.uint32(50).fork()).ldelim();
     }
     return writer;
   },
@@ -2241,13 +2241,13 @@ export const ChannelMessageSend = {
           message.content = reader.string();
           break;
         case 4:
-          message.reactions.push(MessageReaction.decode(reader, reader.uint32()));
-          break;
-        case 5:
           message.mentions.push(MessageMention.decode(reader, reader.uint32()));
           break;
-        case 6:
+        case 5:
           message.attachments.push(MessageAttachment.decode(reader, reader.uint32()));
+          break;
+        case 6:
+          message.references.push(MessageRef.decode(reader, reader.uint32()));
           break;
         default:
           reader.skipType(tag & 7);
@@ -2262,11 +2262,11 @@ export const ChannelMessageSend = {
       clan_id: isSet(object.clan_id) ? String(object.clan_id) : "",
       channel_id: isSet(object.channel_id) ? String(object.channel_id) : "",
       content: isSet(object.content) ? String(object.content) : "",
-      reactions: Array.isArray(object?.reactions) ? object.reactions.map((e: any) => MessageReaction.fromJSON(e)) : [],
       mentions: Array.isArray(object?.mentions) ? object.mentions.map((e: any) => MessageMention.fromJSON(e)) : [],
       attachments: Array.isArray(object?.attachments)
         ? object.attachments.map((e: any) => MessageAttachment.fromJSON(e))
         : [],
+      references: Array.isArray(object?.references) ? object.references.map((e: any) => MessageRef.fromJSON(e)) : [],
     };
   },
 
@@ -2275,11 +2275,6 @@ export const ChannelMessageSend = {
     message.clan_id !== undefined && (obj.clan_id = message.clan_id);
     message.channel_id !== undefined && (obj.channel_id = message.channel_id);
     message.content !== undefined && (obj.content = message.content);
-    if (message.reactions) {
-      obj.reactions = message.reactions.map((e) => e ? MessageReaction.toJSON(e) : undefined);
-    } else {
-      obj.reactions = [];
-    }
     if (message.mentions) {
       obj.mentions = message.mentions.map((e) => e ? MessageMention.toJSON(e) : undefined);
     } else {
@@ -2289,6 +2284,11 @@ export const ChannelMessageSend = {
       obj.attachments = message.attachments.map((e) => e ? MessageAttachment.toJSON(e) : undefined);
     } else {
       obj.attachments = [];
+    }
+    if (message.references) {
+      obj.references = message.references.map((e) => e ? MessageRef.toJSON(e) : undefined);
+    } else {
+      obj.references = [];
     }
     return obj;
   },
@@ -2302,9 +2302,9 @@ export const ChannelMessageSend = {
     message.clan_id = object.clan_id ?? "";
     message.channel_id = object.channel_id ?? "";
     message.content = object.content ?? "";
-    message.reactions = object.reactions?.map((e) => MessageReaction.fromPartial(e)) || [];
     message.mentions = object.mentions?.map((e) => MessageMention.fromPartial(e)) || [];
     message.attachments = object.attachments?.map((e) => MessageAttachment.fromPartial(e)) || [];
+    message.references = object.references?.map((e) => MessageRef.fromPartial(e)) || [];
     return message;
   },
 };
@@ -6162,6 +6162,77 @@ export const MessageAttachmentEvent = {
     message.width = object.width ?? 0;
     message.height = object.height ?? 0;
     message.sender_id = object.sender_id ?? "";
+    return message;
+  },
+};
+
+function createBaseMessageDeletedEvent(): MessageDeletedEvent {
+  return { channel_id: "", message_id: "", deletor: "" };
+}
+
+export const MessageDeletedEvent = {
+  encode(message: MessageDeletedEvent, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.channel_id !== "") {
+      writer.uint32(10).string(message.channel_id);
+    }
+    if (message.message_id !== "") {
+      writer.uint32(18).string(message.message_id);
+    }
+    if (message.deletor !== "") {
+      writer.uint32(26).string(message.deletor);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): MessageDeletedEvent {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseMessageDeletedEvent();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.channel_id = reader.string();
+          break;
+        case 2:
+          message.message_id = reader.string();
+          break;
+        case 3:
+          message.deletor = reader.string();
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): MessageDeletedEvent {
+    return {
+      channel_id: isSet(object.channel_id) ? String(object.channel_id) : "",
+      message_id: isSet(object.message_id) ? String(object.message_id) : "",
+      deletor: isSet(object.deletor) ? String(object.deletor) : "",
+    };
+  },
+
+  toJSON(message: MessageDeletedEvent): unknown {
+    const obj: any = {};
+    message.channel_id !== undefined && (obj.channel_id = message.channel_id);
+    message.message_id !== undefined && (obj.message_id = message.message_id);
+    message.deletor !== undefined && (obj.deletor = message.deletor);
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<MessageDeletedEvent>, I>>(base?: I): MessageDeletedEvent {
+    return MessageDeletedEvent.fromPartial(base ?? {});
+  },
+
+  fromPartial<I extends Exact<DeepPartial<MessageDeletedEvent>, I>>(object: I): MessageDeletedEvent {
+    const message = createBaseMessageDeletedEvent();
+    message.channel_id = object.channel_id ?? "";
+    message.message_id = object.message_id ?? "";
+    message.deletor = object.deletor ?? "";
     return message;
   },
 };
