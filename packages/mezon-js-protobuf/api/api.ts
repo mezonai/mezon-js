@@ -533,10 +533,6 @@ export interface ChannelMessage {
   update_time:
     | Date
     | undefined;
-  /** True if the message was persisted to the channel's history, false otherwise. */
-  persistent:
-    | boolean
-    | undefined;
   /** The name of the chat room, or an empty string if this message was not sent through a chat room. */
   channel_name: string;
   /** The ID of the first DM user, or an empty string if this message was not sent through a DM chat. */
@@ -4741,7 +4737,6 @@ function createBaseChannelMessage(): ChannelMessage {
     content: "",
     create_time: undefined,
     update_time: undefined,
-    persistent: undefined,
     channel_name: "",
     user_id_one: "",
     user_id_two: "",
@@ -4785,32 +4780,29 @@ export const ChannelMessage = {
     if (message.update_time !== undefined) {
       Timestamp.encode(toTimestamp(message.update_time), writer.uint32(82).fork()).ldelim();
     }
-    if (message.persistent !== undefined) {
-      BoolValue.encode({ value: message.persistent! }, writer.uint32(90).fork()).ldelim();
-    }
     if (message.channel_name !== "") {
-      writer.uint32(98).string(message.channel_name);
+      writer.uint32(90).string(message.channel_name);
     }
     if (message.user_id_one !== "") {
-      writer.uint32(106).string(message.user_id_one);
+      writer.uint32(98).string(message.user_id_one);
     }
     if (message.user_id_two !== "") {
-      writer.uint32(114).string(message.user_id_two);
+      writer.uint32(106).string(message.user_id_two);
     }
     for (const v of message.reactions) {
-      MessageReaction.encode(v!, writer.uint32(122).fork()).ldelim();
+      MessageReaction.encode(v!, writer.uint32(114).fork()).ldelim();
     }
     for (const v of message.mentions) {
-      MessageMention.encode(v!, writer.uint32(130).fork()).ldelim();
+      MessageMention.encode(v!, writer.uint32(122).fork()).ldelim();
     }
     for (const v of message.attachments) {
-      MessageAttachment.encode(v!, writer.uint32(138).fork()).ldelim();
+      MessageAttachment.encode(v!, writer.uint32(130).fork()).ldelim();
     }
     for (const v of message.deleteds) {
-      MessageDeleted.encode(v!, writer.uint32(146).fork()).ldelim();
+      MessageDeleted.encode(v!, writer.uint32(138).fork()).ldelim();
     }
     for (const v of message.references) {
-      MessageRef.encode(v!, writer.uint32(154).fork()).ldelim();
+      MessageRef.encode(v!, writer.uint32(146).fork()).ldelim();
     }
     return writer;
   },
@@ -4853,30 +4845,27 @@ export const ChannelMessage = {
           message.update_time = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
           break;
         case 11:
-          message.persistent = BoolValue.decode(reader, reader.uint32()).value;
-          break;
-        case 12:
           message.channel_name = reader.string();
           break;
-        case 13:
+        case 12:
           message.user_id_one = reader.string();
           break;
-        case 14:
+        case 13:
           message.user_id_two = reader.string();
           break;
-        case 15:
+        case 14:
           message.reactions.push(MessageReaction.decode(reader, reader.uint32()));
           break;
-        case 16:
+        case 15:
           message.mentions.push(MessageMention.decode(reader, reader.uint32()));
           break;
-        case 17:
+        case 16:
           message.attachments.push(MessageAttachment.decode(reader, reader.uint32()));
           break;
-        case 18:
+        case 17:
           message.deleteds.push(MessageDeleted.decode(reader, reader.uint32()));
           break;
-        case 19:
+        case 18:
           message.references.push(MessageRef.decode(reader, reader.uint32()));
           break;
         default:
@@ -4899,7 +4888,6 @@ export const ChannelMessage = {
       content: isSet(object.content) ? String(object.content) : "",
       create_time: isSet(object.create_time) ? fromJsonTimestamp(object.create_time) : undefined,
       update_time: isSet(object.update_time) ? fromJsonTimestamp(object.update_time) : undefined,
-      persistent: isSet(object.persistent) ? Boolean(object.persistent) : undefined,
       channel_name: isSet(object.channel_name) ? String(object.channel_name) : "",
       user_id_one: isSet(object.user_id_one) ? String(object.user_id_one) : "",
       user_id_two: isSet(object.user_id_two) ? String(object.user_id_two) : "",
@@ -4925,7 +4913,6 @@ export const ChannelMessage = {
     message.content !== undefined && (obj.content = message.content);
     message.create_time !== undefined && (obj.create_time = message.create_time.toISOString());
     message.update_time !== undefined && (obj.update_time = message.update_time.toISOString());
-    message.persistent !== undefined && (obj.persistent = message.persistent);
     message.channel_name !== undefined && (obj.channel_name = message.channel_name);
     message.user_id_one !== undefined && (obj.user_id_one = message.user_id_one);
     message.user_id_two !== undefined && (obj.user_id_two = message.user_id_two);
@@ -4973,7 +4960,6 @@ export const ChannelMessage = {
     message.content = object.content ?? "";
     message.create_time = object.create_time ?? undefined;
     message.update_time = object.update_time ?? undefined;
-    message.persistent = object.persistent ?? undefined;
     message.channel_name = object.channel_name ?? "";
     message.user_id_one = object.user_id_one ?? "";
     message.user_id_two = object.user_id_two ?? "";

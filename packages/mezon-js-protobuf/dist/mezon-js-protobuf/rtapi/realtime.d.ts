@@ -764,7 +764,6 @@ export declare const Envelope: {
             content?: string | undefined;
             create_time?: Date | undefined;
             update_time?: Date | undefined;
-            persistent?: boolean | undefined;
             channel_name?: string | undefined;
             user_id_one?: string | undefined;
             user_id_two?: string | undefined;
@@ -1195,7 +1194,6 @@ export declare const Envelope: {
             content?: string | undefined;
             create_time?: Date | undefined;
             update_time?: Date | undefined;
-            persistent?: boolean | undefined;
             channel_name?: string | undefined;
             user_id_one?: string | undefined;
             user_id_two?: string | undefined;
@@ -1235,7 +1233,6 @@ export declare const Envelope: {
             content?: string | undefined;
             create_time?: Date | undefined;
             update_time?: Date | undefined;
-            persistent?: boolean | undefined;
             channel_name?: string | undefined;
             user_id_one?: string | undefined;
             user_id_two?: string | undefined;
@@ -2272,7 +2269,6 @@ export declare const Envelope: {
             content?: string | undefined;
             create_time?: Date | undefined;
             update_time?: Date | undefined;
-            persistent?: boolean | undefined;
             channel_name?: string | undefined;
             user_id_one?: string | undefined;
             user_id_two?: string | undefined;
@@ -2703,7 +2699,6 @@ export declare const Envelope: {
             content?: string | undefined;
             create_time?: Date | undefined;
             update_time?: Date | undefined;
-            persistent?: boolean | undefined;
             channel_name?: string | undefined;
             user_id_one?: string | undefined;
             user_id_two?: string | undefined;
@@ -2743,7 +2738,6 @@ export declare const Envelope: {
             content?: string | undefined;
             create_time?: Date | undefined;
             update_time?: Date | undefined;
-            persistent?: boolean | undefined;
             channel_name?: string | undefined;
             user_id_one?: string | undefined;
             user_id_two?: string | undefined;

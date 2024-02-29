@@ -60,10 +60,6 @@ export class WebSocketAdapterPb implements WebSocketAdapter {
                         //protobuf plugin does not default-initialize missing Int32Value fields
                         envelope.channel_message.code = 0;
                     }
-                    if (envelope.channel_message.persistent == undefined) {
-                        //protobuf plugin does not default-initialize missing BoolValue fields
-                        envelope.channel_message.persistent = false;
-                    }
                 }
 
                 value!(envelope);

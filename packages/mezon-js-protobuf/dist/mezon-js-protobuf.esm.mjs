@@ -2525,7 +2525,6 @@ function createBaseChannelMessage() {
     content: "",
     create_time: void 0,
     update_time: void 0,
-    persistent: void 0,
     channel_name: "",
     user_id_one: "",
     user_id_two: "",
@@ -2568,32 +2567,29 @@ var ChannelMessage = {
     if (message.update_time !== void 0) {
       Timestamp.encode(toTimestamp(message.update_time), writer.uint32(82).fork()).ldelim();
     }
-    if (message.persistent !== void 0) {
-      BoolValue.encode({ value: message.persistent }, writer.uint32(90).fork()).ldelim();
-    }
     if (message.channel_name !== "") {
-      writer.uint32(98).string(message.channel_name);
+      writer.uint32(90).string(message.channel_name);
     }
     if (message.user_id_one !== "") {
-      writer.uint32(106).string(message.user_id_one);
+      writer.uint32(98).string(message.user_id_one);
     }
     if (message.user_id_two !== "") {
-      writer.uint32(114).string(message.user_id_two);
+      writer.uint32(106).string(message.user_id_two);
     }
     for (const v of message.reactions) {
-      MessageReaction.encode(v, writer.uint32(122).fork()).ldelim();
+      MessageReaction.encode(v, writer.uint32(114).fork()).ldelim();
     }
     for (const v of message.mentions) {
-      MessageMention.encode(v, writer.uint32(130).fork()).ldelim();
+      MessageMention.encode(v, writer.uint32(122).fork()).ldelim();
     }
     for (const v of message.attachments) {
-      MessageAttachment.encode(v, writer.uint32(138).fork()).ldelim();
+      MessageAttachment.encode(v, writer.uint32(130).fork()).ldelim();
     }
     for (const v of message.deleteds) {
-      MessageDeleted.encode(v, writer.uint32(146).fork()).ldelim();
+      MessageDeleted.encode(v, writer.uint32(138).fork()).ldelim();
     }
     for (const v of message.references) {
-      MessageRef.encode(v, writer.uint32(154).fork()).ldelim();
+      MessageRef.encode(v, writer.uint32(146).fork()).ldelim();
     }
     return writer;
   },
@@ -2635,30 +2631,27 @@ var ChannelMessage = {
           message.update_time = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
           break;
         case 11:
-          message.persistent = BoolValue.decode(reader, reader.uint32()).value;
-          break;
-        case 12:
           message.channel_name = reader.string();
           break;
-        case 13:
+        case 12:
           message.user_id_one = reader.string();
           break;
-        case 14:
+        case 13:
           message.user_id_two = reader.string();
           break;
-        case 15:
+        case 14:
           message.reactions.push(MessageReaction.decode(reader, reader.uint32()));
           break;
-        case 16:
+        case 15:
           message.mentions.push(MessageMention.decode(reader, reader.uint32()));
           break;
-        case 17:
+        case 16:
           message.attachments.push(MessageAttachment.decode(reader, reader.uint32()));
           break;
-        case 18:
+        case 17:
           message.deleteds.push(MessageDeleted.decode(reader, reader.uint32()));
           break;
-        case 19:
+        case 18:
           message.references.push(MessageRef.decode(reader, reader.uint32()));
           break;
         default:
@@ -2680,7 +2673,6 @@ var ChannelMessage = {
       content: isSet3(object.content) ? String(object.content) : "",
       create_time: isSet3(object.create_time) ? fromJsonTimestamp(object.create_time) : void 0,
       update_time: isSet3(object.update_time) ? fromJsonTimestamp(object.update_time) : void 0,
-      persistent: isSet3(object.persistent) ? Boolean(object.persistent) : void 0,
       channel_name: isSet3(object.channel_name) ? String(object.channel_name) : "",
       user_id_one: isSet3(object.user_id_one) ? String(object.user_id_one) : "",
       user_id_two: isSet3(object.user_id_two) ? String(object.user_id_two) : "",
@@ -2703,7 +2695,6 @@ var ChannelMessage = {
     message.content !== void 0 && (obj.content = message.content);
     message.create_time !== void 0 && (obj.create_time = message.create_time.toISOString());
     message.update_time !== void 0 && (obj.update_time = message.update_time.toISOString());
-    message.persistent !== void 0 && (obj.persistent = message.persistent);
     message.channel_name !== void 0 && (obj.channel_name = message.channel_name);
     message.user_id_one !== void 0 && (obj.user_id_one = message.user_id_one);
     message.user_id_two !== void 0 && (obj.user_id_two = message.user_id_two);
@@ -2738,7 +2729,7 @@ var ChannelMessage = {
     return ChannelMessage.fromPartial(base != null ? base : {});
   },
   fromPartial(object) {
-    var _a, _b, _c, _d, _e, _f, _g, _h, _i, _j, _k, _l, _m, _n, _o, _p, _q, _r, _s;
+    var _a, _b, _c, _d, _e, _f, _g, _h, _i, _j, _k, _l, _m, _n, _o, _p, _q, _r;
     const message = createBaseChannelMessage();
     message.clan_id = (_a = object.clan_id) != null ? _a : "";
     message.channel_id = (_b = object.channel_id) != null ? _b : "";
@@ -2750,15 +2741,14 @@ var ChannelMessage = {
     message.content = (_h = object.content) != null ? _h : "";
     message.create_time = (_i = object.create_time) != null ? _i : void 0;
     message.update_time = (_j = object.update_time) != null ? _j : void 0;
-    message.persistent = (_k = object.persistent) != null ? _k : void 0;
-    message.channel_name = (_l = object.channel_name) != null ? _l : "";
-    message.user_id_one = (_m = object.user_id_one) != null ? _m : "";
-    message.user_id_two = (_n = object.user_id_two) != null ? _n : "";
-    message.reactions = ((_o = object.reactions) == null ? void 0 : _o.map((e) => MessageReaction.fromPartial(e))) || [];
-    message.mentions = ((_p = object.mentions) == null ? void 0 : _p.map((e) => MessageMention.fromPartial(e))) || [];
-    message.attachments = ((_q = object.attachments) == null ? void 0 : _q.map((e) => MessageAttachment.fromPartial(e))) || [];
-    message.deleteds = ((_r = object.deleteds) == null ? void 0 : _r.map((e) => MessageDeleted.fromPartial(e))) || [];
-    message.references = ((_s = object.references) == null ? void 0 : _s.map((e) => MessageRef.fromPartial(e))) || [];
+    message.channel_name = (_k = object.channel_name) != null ? _k : "";
+    message.user_id_one = (_l = object.user_id_one) != null ? _l : "";
+    message.user_id_two = (_m = object.user_id_two) != null ? _m : "";
+    message.reactions = ((_n = object.reactions) == null ? void 0 : _n.map((e) => MessageReaction.fromPartial(e))) || [];
+    message.mentions = ((_o = object.mentions) == null ? void 0 : _o.map((e) => MessageMention.fromPartial(e))) || [];
+    message.attachments = ((_p = object.attachments) == null ? void 0 : _p.map((e) => MessageAttachment.fromPartial(e))) || [];
+    message.deleteds = ((_q = object.deleteds) == null ? void 0 : _q.map((e) => MessageDeleted.fromPartial(e))) || [];
+    message.references = ((_r = object.references) == null ? void 0 : _r.map((e) => MessageRef.fromPartial(e))) || [];
     return message;
   }
 };
@@ -6657,9 +6647,6 @@ var WebSocketAdapterPb = class {
         if (envelope.channel_message) {
           if (envelope.channel_message.code == void 0) {
             envelope.channel_message.code = 0;
-          }
-          if (envelope.channel_message.persistent == void 0) {
-            envelope.channel_message.persistent = false;
           }
         }
         value(envelope);
