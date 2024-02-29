@@ -16,7 +16,7 @@
 
 import { decode } from 'js-base64'
 
-import {ApiMessageAttachment, ApiMessageMention, ApiNotification, ApiRpc} from "./api.gen";
+import {ApiMessageAttachment, ApiMessageMention, ApiMessageRef, ApiNotification, ApiRpc} from "./api.gen";
 import {Session} from "./session";
 import {Notification} from "./client";
 import {WebSocketAdapter, WebSocketAdapterText} from "./web_socket_adapter"
@@ -579,7 +579,7 @@ export interface Socket {
   updateStatus(status? : string) : Promise<void>;
 
   /** Send a chat message to a chat channel on the server. */
-  writeChatMessage(clan_id: string, channel_id: string, content?: any, mentions?: Array<ApiMessageMention>, attachments?: Array<ApiMessageAttachment>) : Promise<ChannelMessageAck>;
+  writeChatMessage(clan_id: string, channel_id: string, content?: any, mentions?: Array<ApiMessageMention>, attachments?: Array<ApiMessageAttachment>, refrences?: Array<ApiMessageRef>) : Promise<ChannelMessageAck>;
 
   /** Send message typing */
   writeMessageTyping(channel_id: string) : Promise<MessageTypingEvent>;  
@@ -1090,8 +1090,8 @@ export class DefaultSocket implements Socket {
     return this.send({status_update: {status: status}});
   }
 
-  async writeChatMessage(clan_id: string, channel_id: string, content: any): Promise<ChannelMessageAck> {
-    const response = await this.send({channel_message_send: {clan_id: clan_id, channel_id: channel_id, content: content}});
+  async writeChatMessage(clan_id: string, channel_id: string, content: any, mentions?: Array<ApiMessageMention>, attachments?: Array<ApiMessageAttachment>, refrences?: Array<ApiMessageRef> ): Promise<ChannelMessageAck> {
+    const response = await this.send({channel_message_send: {clan_id: clan_id, channel_id: channel_id, content: content, mentions: mentions, attachments: attachments, refrences: refrences}});
     return response.channel_message_ack;
   }
 
