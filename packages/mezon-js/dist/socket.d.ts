@@ -482,7 +482,7 @@ export interface Socket {
     /** Update the status for the current user online. */
     updateStatus(status?: string): Promise<void>;
     /** Send a chat message to a chat channel on the server. */
-    writeChatMessage(clan_id: string, channel_id: string, content?: any, mentions?: Array<ApiMessageMention>, attachments?: Array<ApiMessageAttachment>, refrences?: Array<ApiMessageRef>): Promise<ChannelMessageAck>;
+    writeChatMessage(clan_id: string, channel_id: string, content?: any, mentions?: Array<ApiMessageMention>, attachments?: Array<ApiMessageAttachment>, references?: Array<ApiMessageRef>): Promise<ChannelMessageAck>;
     /** Send message typing */
     writeMessageTyping(channel_id: string): Promise<MessageTypingEvent>;
     /** Send message reaction */
@@ -600,7 +600,7 @@ export declare class DefaultSocket implements Socket {
     unfollowUsers(user_ids: string[]): Promise<void>;
     updateChatMessage(channel_id: string, message_id: string, content: any): Promise<ChannelMessageAck>;
     updateStatus(status?: string): Promise<void>;
-    writeChatMessage(clan_id: string, channel_id: string, content: any, mentions?: Array<ApiMessageMention>, attachments?: Array<ApiMessageAttachment>, refrences?: Array<ApiMessageRef>): Promise<ChannelMessageAck>;
+    writeChatMessage(clan_id: string, channel_id: string, content: any, mentions?: Array<ApiMessageMention>, attachments?: Array<ApiMessageAttachment>, references?: Array<ApiMessageRef>): Promise<ChannelMessageAck>;
     writeMessageReaction(channel_id: string, message_id: string, emoji: string): Promise<MessageReactionEvent>;
     writeMessageDeleted(channel_id: string, message_id: string): Promise<MessageDeletedEvent>;
     writeMessageTyping(channel_id: string): Promise<MessageTypingEvent>;
