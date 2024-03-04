@@ -2809,15 +2809,21 @@ var MessageMention = {
   }
 };
 function createBaseMessageReaction() {
-  return { emoji: "", user_id: "" };
+  return { id: "", emoji: "", sender_id: "", action: false };
 }
 var MessageReaction = {
   encode(message, writer = import_minimal3.default.Writer.create()) {
-    if (message.emoji !== "") {
-      writer.uint32(10).string(message.emoji);
+    if (message.id !== "") {
+      writer.uint32(10).string(message.id);
     }
-    if (message.user_id !== "") {
-      writer.uint32(18).string(message.user_id);
+    if (message.emoji !== "") {
+      writer.uint32(18).string(message.emoji);
+    }
+    if (message.sender_id !== "") {
+      writer.uint32(26).string(message.sender_id);
+    }
+    if (message.action === true) {
+      writer.uint32(32).bool(message.action);
     }
     return writer;
   },
@@ -2829,10 +2835,16 @@ var MessageReaction = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          message.emoji = reader.string();
+          message.id = reader.string();
           break;
         case 2:
-          message.user_id = reader.string();
+          message.emoji = reader.string();
+          break;
+        case 3:
+          message.sender_id = reader.string();
+          break;
+        case 4:
+          message.action = reader.bool();
           break;
         default:
           reader.skipType(tag & 7);
@@ -2843,24 +2855,30 @@ var MessageReaction = {
   },
   fromJSON(object) {
     return {
+      id: isSet3(object.id) ? String(object.id) : "",
       emoji: isSet3(object.emoji) ? String(object.emoji) : "",
-      user_id: isSet3(object.user_id) ? String(object.user_id) : ""
+      sender_id: isSet3(object.sender_id) ? String(object.sender_id) : "",
+      action: isSet3(object.action) ? Boolean(object.action) : false
     };
   },
   toJSON(message) {
     const obj = {};
+    message.id !== void 0 && (obj.id = message.id);
     message.emoji !== void 0 && (obj.emoji = message.emoji);
-    message.user_id !== void 0 && (obj.user_id = message.user_id);
+    message.sender_id !== void 0 && (obj.sender_id = message.sender_id);
+    message.action !== void 0 && (obj.action = message.action);
     return obj;
   },
   create(base) {
     return MessageReaction.fromPartial(base != null ? base : {});
   },
   fromPartial(object) {
-    var _a, _b;
+    var _a, _b, _c, _d;
     const message = createBaseMessageReaction();
-    message.emoji = (_a = object.emoji) != null ? _a : "";
-    message.user_id = (_b = object.user_id) != null ? _b : "";
+    message.id = (_a = object.id) != null ? _a : "";
+    message.emoji = (_b = object.emoji) != null ? _b : "";
+    message.sender_id = (_c = object.sender_id) != null ? _c : "";
+    message.action = (_d = object.action) != null ? _d : false;
     return message;
   }
 };

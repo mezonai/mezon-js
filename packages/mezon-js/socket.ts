@@ -82,6 +82,8 @@ export interface LastSeenMessageEvent {
 
 /** User is react to message */
 export interface MessageReactionEvent {
+  // id of reaction message
+  id: string;
   /** The channel this message belongs to. */
   channel_id: string;
   /** The message that user react */

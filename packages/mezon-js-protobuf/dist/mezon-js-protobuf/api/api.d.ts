@@ -383,10 +383,14 @@ export interface MessageMention {
 }
 /** Emoji reaction by user */
 export interface MessageReaction {
+    /** Reaction id */
+    id: string;
     /** A list emoji */
     emoji: string;
     /** User react to message */
-    user_id: string;
+    sender_id: string;
+    /** Action reaction delete or add */
+    action: boolean;
 }
 /** Message attachment */
 export interface MessageAttachment {
@@ -2970,8 +2974,10 @@ export declare const ChannelMessage: {
         user_id_one?: string | undefined;
         user_id_two?: string | undefined;
         reactions?: {
+            id?: string | undefined;
             emoji?: string | undefined;
-            user_id?: string | undefined;
+            sender_id?: string | undefined;
+            action?: boolean | undefined;
         }[] | undefined;
         mentions?: {
             user_id?: string | undefined;
@@ -3009,17 +3015,25 @@ export declare const ChannelMessage: {
         user_id_one?: string | undefined;
         user_id_two?: string | undefined;
         reactions?: ({
+            id?: string | undefined;
             emoji?: string | undefined;
-            user_id?: string | undefined;
+            sender_id?: string | undefined;
+            action?: boolean | undefined;
         }[] & ({
+            id?: string | undefined;
             emoji?: string | undefined;
-            user_id?: string | undefined;
+            sender_id?: string | undefined;
+            action?: boolean | undefined;
         } & {
+            id?: string | undefined;
             emoji?: string | undefined;
-            user_id?: string | undefined;
+            sender_id?: string | undefined;
+            action?: boolean | undefined;
         } & { [K in Exclude<keyof I["reactions"][number], keyof MessageReaction>]: never; })[] & { [K_1 in Exclude<keyof I["reactions"], keyof {
+            id?: string | undefined;
             emoji?: string | undefined;
-            user_id?: string | undefined;
+            sender_id?: string | undefined;
+            action?: boolean | undefined;
         }[]>]: never; }) | undefined;
         mentions?: ({
             user_id?: string | undefined;
@@ -3109,8 +3123,10 @@ export declare const ChannelMessage: {
         user_id_one?: string | undefined;
         user_id_two?: string | undefined;
         reactions?: {
+            id?: string | undefined;
             emoji?: string | undefined;
-            user_id?: string | undefined;
+            sender_id?: string | undefined;
+            action?: boolean | undefined;
         }[] | undefined;
         mentions?: {
             user_id?: string | undefined;
@@ -3148,17 +3164,25 @@ export declare const ChannelMessage: {
         user_id_one?: string | undefined;
         user_id_two?: string | undefined;
         reactions?: ({
+            id?: string | undefined;
             emoji?: string | undefined;
-            user_id?: string | undefined;
+            sender_id?: string | undefined;
+            action?: boolean | undefined;
         }[] & ({
+            id?: string | undefined;
             emoji?: string | undefined;
-            user_id?: string | undefined;
+            sender_id?: string | undefined;
+            action?: boolean | undefined;
         } & {
+            id?: string | undefined;
             emoji?: string | undefined;
-            user_id?: string | undefined;
+            sender_id?: string | undefined;
+            action?: boolean | undefined;
         } & { [K_11 in Exclude<keyof I_1["reactions"][number], keyof MessageReaction>]: never; })[] & { [K_12 in Exclude<keyof I_1["reactions"], keyof {
+            id?: string | undefined;
             emoji?: string | undefined;
-            user_id?: string | undefined;
+            sender_id?: string | undefined;
+            action?: boolean | undefined;
         }[]>]: never; }) | undefined;
         mentions?: ({
             user_id?: string | undefined;
@@ -3260,18 +3284,26 @@ export declare const MessageReaction: {
     fromJSON(object: any): MessageReaction;
     toJSON(message: MessageReaction): unknown;
     create<I extends {
+        id?: string | undefined;
         emoji?: string | undefined;
-        user_id?: string | undefined;
+        sender_id?: string | undefined;
+        action?: boolean | undefined;
     } & {
+        id?: string | undefined;
         emoji?: string | undefined;
-        user_id?: string | undefined;
+        sender_id?: string | undefined;
+        action?: boolean | undefined;
     } & { [K in Exclude<keyof I, keyof MessageReaction>]: never; }>(base?: I | undefined): MessageReaction;
     fromPartial<I_1 extends {
+        id?: string | undefined;
         emoji?: string | undefined;
-        user_id?: string | undefined;
+        sender_id?: string | undefined;
+        action?: boolean | undefined;
     } & {
+        id?: string | undefined;
         emoji?: string | undefined;
-        user_id?: string | undefined;
+        sender_id?: string | undefined;
+        action?: boolean | undefined;
     } & { [K_1 in Exclude<keyof I_1, keyof MessageReaction>]: never; }>(object: I_1): MessageReaction;
 };
 export declare const MessageAttachment: {
@@ -3375,8 +3407,10 @@ export declare const ChannelMessageList: {
             user_id_one?: string | undefined;
             user_id_two?: string | undefined;
             reactions?: {
+                id?: string | undefined;
                 emoji?: string | undefined;
-                user_id?: string | undefined;
+                sender_id?: string | undefined;
+                action?: boolean | undefined;
             }[] | undefined;
             mentions?: {
                 user_id?: string | undefined;
@@ -3420,8 +3454,10 @@ export declare const ChannelMessageList: {
             user_id_one?: string | undefined;
             user_id_two?: string | undefined;
             reactions?: {
+                id?: string | undefined;
                 emoji?: string | undefined;
-                user_id?: string | undefined;
+                sender_id?: string | undefined;
+                action?: boolean | undefined;
             }[] | undefined;
             mentions?: {
                 user_id?: string | undefined;
@@ -3459,8 +3495,10 @@ export declare const ChannelMessageList: {
             user_id_one?: string | undefined;
             user_id_two?: string | undefined;
             reactions?: {
+                id?: string | undefined;
                 emoji?: string | undefined;
-                user_id?: string | undefined;
+                sender_id?: string | undefined;
+                action?: boolean | undefined;
             }[] | undefined;
             mentions?: {
                 user_id?: string | undefined;
@@ -3498,17 +3536,25 @@ export declare const ChannelMessageList: {
             user_id_one?: string | undefined;
             user_id_two?: string | undefined;
             reactions?: ({
+                id?: string | undefined;
                 emoji?: string | undefined;
-                user_id?: string | undefined;
+                sender_id?: string | undefined;
+                action?: boolean | undefined;
             }[] & ({
+                id?: string | undefined;
                 emoji?: string | undefined;
-                user_id?: string | undefined;
+                sender_id?: string | undefined;
+                action?: boolean | undefined;
             } & {
+                id?: string | undefined;
                 emoji?: string | undefined;
-                user_id?: string | undefined;
+                sender_id?: string | undefined;
+                action?: boolean | undefined;
             } & { [K in Exclude<keyof I["messages"][number]["reactions"][number], keyof MessageReaction>]: never; })[] & { [K_1 in Exclude<keyof I["messages"][number]["reactions"], keyof {
+                id?: string | undefined;
                 emoji?: string | undefined;
-                user_id?: string | undefined;
+                sender_id?: string | undefined;
+                action?: boolean | undefined;
             }[]>]: never; }) | undefined;
             mentions?: ({
                 user_id?: string | undefined;
@@ -3597,8 +3643,10 @@ export declare const ChannelMessageList: {
             user_id_one?: string | undefined;
             user_id_two?: string | undefined;
             reactions?: {
+                id?: string | undefined;
                 emoji?: string | undefined;
-                user_id?: string | undefined;
+                sender_id?: string | undefined;
+                action?: boolean | undefined;
             }[] | undefined;
             mentions?: {
                 user_id?: string | undefined;
@@ -3643,8 +3691,10 @@ export declare const ChannelMessageList: {
             user_id_one?: string | undefined;
             user_id_two?: string | undefined;
             reactions?: {
+                id?: string | undefined;
                 emoji?: string | undefined;
-                user_id?: string | undefined;
+                sender_id?: string | undefined;
+                action?: boolean | undefined;
             }[] | undefined;
             mentions?: {
                 user_id?: string | undefined;
@@ -3688,8 +3738,10 @@ export declare const ChannelMessageList: {
             user_id_one?: string | undefined;
             user_id_two?: string | undefined;
             reactions?: {
+                id?: string | undefined;
                 emoji?: string | undefined;
-                user_id?: string | undefined;
+                sender_id?: string | undefined;
+                action?: boolean | undefined;
             }[] | undefined;
             mentions?: {
                 user_id?: string | undefined;
@@ -3727,8 +3779,10 @@ export declare const ChannelMessageList: {
             user_id_one?: string | undefined;
             user_id_two?: string | undefined;
             reactions?: {
+                id?: string | undefined;
                 emoji?: string | undefined;
-                user_id?: string | undefined;
+                sender_id?: string | undefined;
+                action?: boolean | undefined;
             }[] | undefined;
             mentions?: {
                 user_id?: string | undefined;
@@ -3766,17 +3820,25 @@ export declare const ChannelMessageList: {
             user_id_one?: string | undefined;
             user_id_two?: string | undefined;
             reactions?: ({
+                id?: string | undefined;
                 emoji?: string | undefined;
-                user_id?: string | undefined;
+                sender_id?: string | undefined;
+                action?: boolean | undefined;
             }[] & ({
+                id?: string | undefined;
                 emoji?: string | undefined;
-                user_id?: string | undefined;
+                sender_id?: string | undefined;
+                action?: boolean | undefined;
             } & {
+                id?: string | undefined;
                 emoji?: string | undefined;
-                user_id?: string | undefined;
+                sender_id?: string | undefined;
+                action?: boolean | undefined;
             } & { [K_13 in Exclude<keyof I_1["messages"][number]["reactions"][number], keyof MessageReaction>]: never; })[] & { [K_14 in Exclude<keyof I_1["messages"][number]["reactions"], keyof {
+                id?: string | undefined;
                 emoji?: string | undefined;
-                user_id?: string | undefined;
+                sender_id?: string | undefined;
+                action?: boolean | undefined;
             }[]>]: never; }) | undefined;
             mentions?: ({
                 user_id?: string | undefined;
@@ -3865,8 +3927,10 @@ export declare const ChannelMessageList: {
             user_id_one?: string | undefined;
             user_id_two?: string | undefined;
             reactions?: {
+                id?: string | undefined;
                 emoji?: string | undefined;
-                user_id?: string | undefined;
+                sender_id?: string | undefined;
+                action?: boolean | undefined;
             }[] | undefined;
             mentions?: {
                 user_id?: string | undefined;
