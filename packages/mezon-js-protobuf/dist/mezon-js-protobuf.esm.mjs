@@ -6027,21 +6027,27 @@ var MessageTypingEvent = {
   }
 };
 function createBaseMessageReactionEvent() {
-  return { channel_id: "", message_id: "", sender_id: "", emoji: "" };
+  return { id: "", channel_id: "", message_id: "", sender_id: "", emoji: "", action: false };
 }
 var MessageReactionEvent = {
   encode(message, writer = import_minimal4.default.Writer.create()) {
+    if (message.id !== "") {
+      writer.uint32(10).string(message.id);
+    }
     if (message.channel_id !== "") {
-      writer.uint32(10).string(message.channel_id);
+      writer.uint32(18).string(message.channel_id);
     }
     if (message.message_id !== "") {
-      writer.uint32(18).string(message.message_id);
+      writer.uint32(26).string(message.message_id);
     }
     if (message.sender_id !== "") {
-      writer.uint32(26).string(message.sender_id);
+      writer.uint32(34).string(message.sender_id);
     }
     if (message.emoji !== "") {
-      writer.uint32(34).string(message.emoji);
+      writer.uint32(42).string(message.emoji);
+    }
+    if (message.action === true) {
+      writer.uint32(48).bool(message.action);
     }
     return writer;
   },
@@ -6053,16 +6059,22 @@ var MessageReactionEvent = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          message.channel_id = reader.string();
+          message.id = reader.string();
           break;
         case 2:
-          message.message_id = reader.string();
+          message.channel_id = reader.string();
           break;
         case 3:
-          message.sender_id = reader.string();
+          message.message_id = reader.string();
           break;
         case 4:
+          message.sender_id = reader.string();
+          break;
+        case 5:
           message.emoji = reader.string();
+          break;
+        case 6:
+          message.action = reader.bool();
           break;
         default:
           reader.skipType(tag & 7);
@@ -6073,30 +6085,36 @@ var MessageReactionEvent = {
   },
   fromJSON(object) {
     return {
+      id: isSet4(object.id) ? String(object.id) : "",
       channel_id: isSet4(object.channel_id) ? String(object.channel_id) : "",
       message_id: isSet4(object.message_id) ? String(object.message_id) : "",
       sender_id: isSet4(object.sender_id) ? String(object.sender_id) : "",
-      emoji: isSet4(object.emoji) ? String(object.emoji) : ""
+      emoji: isSet4(object.emoji) ? String(object.emoji) : "",
+      action: isSet4(object.action) ? Boolean(object.action) : false
     };
   },
   toJSON(message) {
     const obj = {};
+    message.id !== void 0 && (obj.id = message.id);
     message.channel_id !== void 0 && (obj.channel_id = message.channel_id);
     message.message_id !== void 0 && (obj.message_id = message.message_id);
     message.sender_id !== void 0 && (obj.sender_id = message.sender_id);
     message.emoji !== void 0 && (obj.emoji = message.emoji);
+    message.action !== void 0 && (obj.action = message.action);
     return obj;
   },
   create(base) {
     return MessageReactionEvent.fromPartial(base != null ? base : {});
   },
   fromPartial(object) {
-    var _a, _b, _c, _d;
+    var _a, _b, _c, _d, _e, _f;
     const message = createBaseMessageReactionEvent();
-    message.channel_id = (_a = object.channel_id) != null ? _a : "";
-    message.message_id = (_b = object.message_id) != null ? _b : "";
-    message.sender_id = (_c = object.sender_id) != null ? _c : "";
-    message.emoji = (_d = object.emoji) != null ? _d : "";
+    message.id = (_a = object.id) != null ? _a : "";
+    message.channel_id = (_b = object.channel_id) != null ? _b : "";
+    message.message_id = (_c = object.message_id) != null ? _c : "";
+    message.sender_id = (_d = object.sender_id) != null ? _d : "";
+    message.emoji = (_e = object.emoji) != null ? _e : "";
+    message.action = (_f = object.action) != null ? _f : false;
     return message;
   }
 };

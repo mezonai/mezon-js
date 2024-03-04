@@ -873,6 +873,8 @@ export interface MessageMentionEvent {
 
 /** Message reacton event data */
 export interface MessageReactionEvent {
+  /** reaction id */
+  id: string;
   /** The channel this message belongs to. */
   channel_id: string;
   /** React to message */
@@ -881,6 +883,8 @@ export interface MessageReactionEvent {
   sender_id: string;
   /** emoji text */
   emoji: string;
+  /** action (add, delete) */
+  action: boolean;
 }
 
 /** Message attachment */
@@ -5952,22 +5956,28 @@ export const MessageMentionEvent = {
 };
 
 function createBaseMessageReactionEvent(): MessageReactionEvent {
-  return { channel_id: "", message_id: "", sender_id: "", emoji: "" };
+  return { id: "", channel_id: "", message_id: "", sender_id: "", emoji: "", action: false };
 }
 
 export const MessageReactionEvent = {
   encode(message: MessageReactionEvent, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.id !== "") {
+      writer.uint32(10).string(message.id);
+    }
     if (message.channel_id !== "") {
-      writer.uint32(10).string(message.channel_id);
+      writer.uint32(18).string(message.channel_id);
     }
     if (message.message_id !== "") {
-      writer.uint32(18).string(message.message_id);
+      writer.uint32(26).string(message.message_id);
     }
     if (message.sender_id !== "") {
-      writer.uint32(26).string(message.sender_id);
+      writer.uint32(34).string(message.sender_id);
     }
     if (message.emoji !== "") {
-      writer.uint32(34).string(message.emoji);
+      writer.uint32(42).string(message.emoji);
+    }
+    if (message.action === true) {
+      writer.uint32(48).bool(message.action);
     }
     return writer;
   },
@@ -5980,16 +5990,22 @@ export const MessageReactionEvent = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          message.channel_id = reader.string();
+          message.id = reader.string();
           break;
         case 2:
-          message.message_id = reader.string();
+          message.channel_id = reader.string();
           break;
         case 3:
-          message.sender_id = reader.string();
+          message.message_id = reader.string();
           break;
         case 4:
+          message.sender_id = reader.string();
+          break;
+        case 5:
           message.emoji = reader.string();
+          break;
+        case 6:
+          message.action = reader.bool();
           break;
         default:
           reader.skipType(tag & 7);
@@ -6001,19 +6017,23 @@ export const MessageReactionEvent = {
 
   fromJSON(object: any): MessageReactionEvent {
     return {
+      id: isSet(object.id) ? String(object.id) : "",
       channel_id: isSet(object.channel_id) ? String(object.channel_id) : "",
       message_id: isSet(object.message_id) ? String(object.message_id) : "",
       sender_id: isSet(object.sender_id) ? String(object.sender_id) : "",
       emoji: isSet(object.emoji) ? String(object.emoji) : "",
+      action: isSet(object.action) ? Boolean(object.action) : false,
     };
   },
 
   toJSON(message: MessageReactionEvent): unknown {
     const obj: any = {};
+    message.id !== undefined && (obj.id = message.id);
     message.channel_id !== undefined && (obj.channel_id = message.channel_id);
     message.message_id !== undefined && (obj.message_id = message.message_id);
     message.sender_id !== undefined && (obj.sender_id = message.sender_id);
     message.emoji !== undefined && (obj.emoji = message.emoji);
+    message.action !== undefined && (obj.action = message.action);
     return obj;
   },
 
@@ -6023,10 +6043,12 @@ export const MessageReactionEvent = {
 
   fromPartial<I extends Exact<DeepPartial<MessageReactionEvent>, I>>(object: I): MessageReactionEvent {
     const message = createBaseMessageReactionEvent();
+    message.id = object.id ?? "";
     message.channel_id = object.channel_id ?? "";
     message.message_id = object.message_id ?? "";
     message.sender_id = object.sender_id ?? "";
     message.emoji = object.emoji ?? "";
+    message.action = object.action ?? false;
     return message;
   },
 };

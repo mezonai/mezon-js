@@ -1262,6 +1262,8 @@ export interface ChannelDescription {
     channel_lable: string;
     /** The channel private */
     channel_private: number;
+    /** The channel avatar */
+    channel_avatar: string;
 }
 /** A list of channel description, usually a result of a list operation. */
 export interface ChannelDescList {
@@ -8821,6 +8823,7 @@ export declare const ChannelDescription: {
         creator_id?: string | undefined;
         channel_lable?: string | undefined;
         channel_private?: number | undefined;
+        channel_avatar?: string | undefined;
     } & {
         clan_id?: string | undefined;
         parrent_id?: string | undefined;
@@ -8831,6 +8834,7 @@ export declare const ChannelDescription: {
         creator_id?: string | undefined;
         channel_lable?: string | undefined;
         channel_private?: number | undefined;
+        channel_avatar?: string | undefined;
     } & { [K in Exclude<keyof I, keyof ChannelDescription>]: never; }>(base?: I | undefined): ChannelDescription;
     fromPartial<I_1 extends {
         clan_id?: string | undefined;
@@ -8842,6 +8846,7 @@ export declare const ChannelDescription: {
         creator_id?: string | undefined;
         channel_lable?: string | undefined;
         channel_private?: number | undefined;
+        channel_avatar?: string | undefined;
     } & {
         clan_id?: string | undefined;
         parrent_id?: string | undefined;
@@ -8852,6 +8857,7 @@ export declare const ChannelDescription: {
         creator_id?: string | undefined;
         channel_lable?: string | undefined;
         channel_private?: number | undefined;
+        channel_avatar?: string | undefined;
     } & { [K_1 in Exclude<keyof I_1, keyof ChannelDescription>]: never; }>(object: I_1): ChannelDescription;
 };
 export declare const ChannelDescList: {
@@ -8870,6 +8876,7 @@ export declare const ChannelDescList: {
             creator_id?: string | undefined;
             channel_lable?: string | undefined;
             channel_private?: number | undefined;
+            channel_avatar?: string | undefined;
         }[] | undefined;
         next_cursor?: string | undefined;
         prev_cursor?: string | undefined;
@@ -8885,6 +8892,7 @@ export declare const ChannelDescList: {
             creator_id?: string | undefined;
             channel_lable?: string | undefined;
             channel_private?: number | undefined;
+            channel_avatar?: string | undefined;
         }[] & ({
             clan_id?: string | undefined;
             parrent_id?: string | undefined;
@@ -8895,6 +8903,7 @@ export declare const ChannelDescList: {
             creator_id?: string | undefined;
             channel_lable?: string | undefined;
             channel_private?: number | undefined;
+            channel_avatar?: string | undefined;
         } & {
             clan_id?: string | undefined;
             parrent_id?: string | undefined;
@@ -8905,6 +8914,7 @@ export declare const ChannelDescList: {
             creator_id?: string | undefined;
             channel_lable?: string | undefined;
             channel_private?: number | undefined;
+            channel_avatar?: string | undefined;
         } & { [K in Exclude<keyof I["channeldesc"][number], keyof ChannelDescription>]: never; })[] & { [K_1 in Exclude<keyof I["channeldesc"], keyof {
             clan_id?: string | undefined;
             parrent_id?: string | undefined;
@@ -8915,6 +8925,7 @@ export declare const ChannelDescList: {
             creator_id?: string | undefined;
             channel_lable?: string | undefined;
             channel_private?: number | undefined;
+            channel_avatar?: string | undefined;
         }[]>]: never; }) | undefined;
         next_cursor?: string | undefined;
         prev_cursor?: string | undefined;
@@ -8931,6 +8942,7 @@ export declare const ChannelDescList: {
             creator_id?: string | undefined;
             channel_lable?: string | undefined;
             channel_private?: number | undefined;
+            channel_avatar?: string | undefined;
         }[] | undefined;
         next_cursor?: string | undefined;
         prev_cursor?: string | undefined;
@@ -8946,6 +8958,7 @@ export declare const ChannelDescList: {
             creator_id?: string | undefined;
             channel_lable?: string | undefined;
             channel_private?: number | undefined;
+            channel_avatar?: string | undefined;
         }[] & ({
             clan_id?: string | undefined;
             parrent_id?: string | undefined;
@@ -8956,6 +8969,7 @@ export declare const ChannelDescList: {
             creator_id?: string | undefined;
             channel_lable?: string | undefined;
             channel_private?: number | undefined;
+            channel_avatar?: string | undefined;
         } & {
             clan_id?: string | undefined;
             parrent_id?: string | undefined;
@@ -8966,6 +8980,7 @@ export declare const ChannelDescList: {
             creator_id?: string | undefined;
             channel_lable?: string | undefined;
             channel_private?: number | undefined;
+            channel_avatar?: string | undefined;
         } & { [K_3 in Exclude<keyof I_1["channeldesc"][number], keyof ChannelDescription>]: never; })[] & { [K_4 in Exclude<keyof I_1["channeldesc"], keyof {
             clan_id?: string | undefined;
             parrent_id?: string | undefined;
@@ -8976,6 +8991,7 @@ export declare const ChannelDescList: {
             creator_id?: string | undefined;
             channel_lable?: string | undefined;
             channel_private?: number | undefined;
+            channel_avatar?: string | undefined;
         }[]>]: never; }) | undefined;
         next_cursor?: string | undefined;
         prev_cursor?: string | undefined;

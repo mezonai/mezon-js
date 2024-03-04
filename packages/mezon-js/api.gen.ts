@@ -194,6 +194,8 @@ export interface ApiChannelDescription {
   category_id?: string;
   //
   category_name?: string;
+  //
+  channel_avatar?: string;
   //The channel this message belongs to.
   channel_id?: string;
   //

@@ -113,6 +113,7 @@ export interface ApiChannelDescList {
 export interface ApiChannelDescription {
     category_id?: string;
     category_name?: string;
+    channel_avatar?: string;
     channel_id?: string;
     channel_lable?: string;
     channel_private?: number;
