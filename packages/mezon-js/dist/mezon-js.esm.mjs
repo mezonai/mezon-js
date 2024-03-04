@@ -3698,13 +3698,17 @@ var _DefaultSocket = class _DefaultSocket {
           this.onstreamdata(message.stream_data);
         } else if (message.channel_message) {
           message.channel_message.content = JSON.parse(message.channel_message.content);
+          message.channel_message.mentions = JSON.parse(message.channel_message.mentions);
+          message.channel_message.attachments = JSON.parse(message.channel_message.attachments);
+          message.channel_message.reactions = JSON.parse(message.channel_message.reactions);
+          message.channel_message.references = JSON.parse(message.channel_message.references);
           this.onchannelmessage(message.channel_message);
         } else if (message.message_typing_event) {
-          this.onmessagetyping(message);
+          this.onmessagetyping(message.message_typing_event);
         } else if (message.message_reaction_event) {
-          this.onmessagereaction(message);
+          this.onmessagereaction(message.message_reaction_event);
         } else if (message.message_deleted_event) {
-          this.onmessagedeleted(message);
+          this.onmessagedeleted(message.message_deleted_event);
         } else if (message.channel_presence_event) {
           this.onchannelpresence(message.channel_presence_event);
         } else if (message.party_data) {
@@ -4020,9 +4024,9 @@ var _DefaultSocket = class _DefaultSocket {
       return response.channel_message_ack;
     });
   }
-  writeMessageReaction(channel_id, message_id, emoji, action) {
+  writeMessageReaction(channel_id, message_id, emoji, action_delete) {
     return __async(this, null, function* () {
-      const response = yield this.send({ message_reaction_event: { channel_id, message_id, emoji, action } });
+      const response = yield this.send({ message_reaction_event: { channel_id, message_id, emoji, action: action_delete } });
       return response.message_reaction_event;
     });
   }
@@ -4577,11 +4581,10 @@ var Client = class {
             channel_name: m.channel_name,
             user_id_one: m.user_id_one,
             user_id_two: m.user_id_two,
-            attachments: m.attachments,
-            mentions: m.mentions,
-            reactions: m.reactions,
-            deleteds: m.deleteds,
-            references: m.references
+            attachments: m.attachments ? JSON.parse(m.attachments) : void 0,
+            mentions: m.mentions ? JSON.parse(m.mentions) : void 0,
+            reactions: m.reactions ? JSON.parse(m.reactions) : void 0,
+            references: m.references ? JSON.parse(m.references) : void 0
           });
         });
         return Promise.resolve(result);

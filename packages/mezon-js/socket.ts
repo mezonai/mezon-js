@@ -191,15 +191,13 @@ export interface ChannelMessageEvent {
   //The username of the message sender, if any.
   username: string;
   //
-  mentions?: Array<MessageMentionEvent>;
+  mentions?: string;
   //
-  reactions?: Array<MessageReactionEvent>;
+  reactions?: string;
   //
-  attachments?: Array<MessageAttachmentEvent>;
+  attachments?: string;
   //
-  deleteds?: Array<MessageDeletedEvent>;
-  //
-  references?: Array<MessageRefEvent>;
+  references?: string;
 }
 
 /** An acknowledgement received in response to sending a message on a chat channel. */
@@ -587,7 +585,7 @@ export interface Socket {
   writeMessageTyping(channel_id: string) : Promise<MessageTypingEvent>;  
 
   /** Send message reaction */
-  writeMessageReaction(channel_id: string, message_id: string, emoji: string, action: Number) : Promise<MessageReactionEvent>;
+  writeMessageReaction(channel_id: string, message_id: string, emoji: string, action_delete: boolean) : Promise<MessageReactionEvent>;
 
   /** Send message mention */
   writeMessageDeleted(channel_id: string, message_id: string, deletor: string) : Promise<MessageDeletedEvent>;
@@ -734,13 +732,17 @@ export class DefaultSocket implements Socket {
           this.onstreamdata(<StreamData>message.stream_data);
         } else if (message.channel_message) {
           message.channel_message.content = JSON.parse(message.channel_message.content);
+          message.channel_message.mentions = JSON.parse(message.channel_message.mentions);
+          message.channel_message.attachments = JSON.parse(message.channel_message.attachments);
+          message.channel_message.reactions = JSON.parse(message.channel_message.reactions);
+          message.channel_message.references = JSON.parse(message.channel_message.references);          
           this.onchannelmessage(<ChannelMessageEvent>message.channel_message);
-        } else if (message.message_typing_event) {          
-          this.onmessagetyping(<MessageTypingEvent>message);
+        } else if (message.message_typing_event) {
+          this.onmessagetyping(<MessageTypingEvent>message.message_typing_event);
         } else if (message.message_reaction_event) {
-          this.onmessagereaction(<MessageReactionEvent>message);
+          this.onmessagereaction(<MessageReactionEvent>message.message_reaction_event);
         } else if (message.message_deleted_event) {
-          this.onmessagedeleted(<MessageDeletedEvent>message);
+          this.onmessagedeleted(<MessageDeletedEvent>message.message_deleted_event);
         } else if (message.channel_presence_event) {
           this.onchannelpresence(<ChannelPresenceEvent>message.channel_presence_event);
         } else if (message.party_data) {
@@ -1097,8 +1099,8 @@ export class DefaultSocket implements Socket {
     return response.channel_message_ack;
   }
 
-  async writeMessageReaction(channel_id: string, message_id: string, emoji: string, action: Number) : Promise<MessageReactionEvent> {
-    const response = await this.send({message_reaction_event: {channel_id: channel_id, message_id: message_id, emoji: emoji, action: action}});
+  async writeMessageReaction(channel_id: string, message_id: string, emoji: string, action_delete: boolean) : Promise<MessageReactionEvent> {
+    const response = await this.send({message_reaction_event: {channel_id: channel_id, message_id: message_id, emoji: emoji, action: action_delete}});
     return response.message_reaction_event
   }
 

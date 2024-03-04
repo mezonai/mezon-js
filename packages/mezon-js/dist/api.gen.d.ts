@@ -124,7 +124,7 @@ export interface ApiChannelDescription {
 }
 /** A message sent on a channel. */
 export interface ApiChannelMessage {
-    attachments?: Array<ApiMessageAttachment>;
+    attachments?: string;
     avatar?: string;
     channel_id: string;
     channel_name: string;
@@ -132,12 +132,11 @@ export interface ApiChannelMessage {
     code: number;
     content: string;
     create_time?: string;
-    deleteds?: Array<ApiMessageDeleted>;
-    mentions?: Array<ApiMessageMention>;
+    mentions?: string;
     message_id: string;
     persistent?: boolean;
-    reactions?: Array<ApiMessageReaction>;
-    references?: Array<ApiMessageRef>;
+    reactions?: string;
+    references?: string;
     sender_id: string;
     update_time?: string;
     user_id_one?: string;

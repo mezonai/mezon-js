@@ -215,7 +215,7 @@ export interface ApiChannelDescription {
 /** A message sent on a channel. */
 export interface ApiChannelMessage {
   //
-  attachments?: Array<ApiMessageAttachment>;
+  attachments?: string;
   //
   avatar?: string;
   //The channel this message belongs to.
@@ -231,17 +231,15 @@ export interface ApiChannelMessage {
   //The UNIX time (for gRPC clients) or ISO string (for REST clients) when the message was created.
   create_time?: string;
   //
-  deleteds?: Array<ApiMessageDeleted>;
-  //
-  mentions?: Array<ApiMessageMention>;
+  mentions?: string;
   //The unique ID of this message.
   message_id: string;
   //True if the message was persisted to the channel's history, false otherwise.
   persistent?: boolean;
   //
-  reactions?: Array<ApiMessageReaction>;
+  reactions?: string;
   //
-  references?: Array<ApiMessageRef>;
+  references?: string;
   //Message sender, usually a user ID.
   sender_id: string;
   //The UNIX time (for gRPC clients) or ISO string (for REST clients) when the message was last updated.
