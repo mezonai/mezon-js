@@ -732,10 +732,14 @@ export class DefaultSocket implements Socket {
           this.onstreamdata(<StreamData>message.stream_data);
         } else if (message.channel_message) {
           message.channel_message.content = JSON.parse(message.channel_message.content);
-          message.channel_message.mentions = JSON.parse(message.channel_message.mentions);
-          message.channel_message.attachments = JSON.parse(message.channel_message.attachments);
-          message.channel_message.reactions = JSON.parse(message.channel_message.reactions);
-          message.channel_message.references = JSON.parse(message.channel_message.references);          
+          try {          
+            message.channel_message.mentions = JSON.parse(message.channel_message.mentions);
+            message.channel_message.attachments = JSON.parse(message.channel_message.attachments);
+            message.channel_message.reactions = JSON.parse(message.channel_message.reactions);
+            message.channel_message.references = JSON.parse(message.channel_message.references);
+          } catch(e) {
+            //console.log("error parse data", e);
+          }
           this.onchannelmessage(<ChannelMessageEvent>message.channel_message);
         } else if (message.message_typing_event) {
           this.onmessagetyping(<MessageTypingEvent>message.message_typing_event);
