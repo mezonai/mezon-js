@@ -330,8 +330,10 @@ export interface ApiMessageMention {
 }
 /**  */
 export interface ApiMessageReaction {
+    action?: boolean;
     emoji?: string;
-    user_id?: string;
+    id?: string;
+    sender_id?: string;
 }
 /**  */
 export interface ApiMessageRef {

@@ -585,7 +585,7 @@ export interface Socket {
   writeMessageTyping(channel_id: string) : Promise<MessageTypingEvent>;  
 
   /** Send message reaction */
-  writeMessageReaction(channel_id: string, message_id: string, emoji: string) : Promise<MessageReactionEvent>;
+  writeMessageReaction(channel_id: string, message_id: string, emoji: string, action: Number) : Promise<MessageReactionEvent>;
 
   /** Send message mention */
   writeMessageDeleted(channel_id: string, message_id: string, deletor: string) : Promise<MessageDeletedEvent>;
@@ -1095,8 +1095,8 @@ export class DefaultSocket implements Socket {
     return response.channel_message_ack;
   }
 
-  async writeMessageReaction(channel_id: string, message_id: string, emoji: string) : Promise<MessageReactionEvent> {
-    const response = await this.send({message_reaction_event: {channel_id: channel_id, message_id: message_id, emoji: emoji}});
+  async writeMessageReaction(channel_id: string, message_id: string, emoji: string, action: Number) : Promise<MessageReactionEvent> {
+    const response = await this.send({message_reaction_event: {channel_id: channel_id, message_id: message_id, emoji: emoji, action: action}});
     return response.message_reaction_event
   }
 

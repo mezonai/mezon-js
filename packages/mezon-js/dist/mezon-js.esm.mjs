@@ -4020,9 +4020,9 @@ var _DefaultSocket = class _DefaultSocket {
       return response.channel_message_ack;
     });
   }
-  writeMessageReaction(channel_id, message_id, emoji) {
+  writeMessageReaction(channel_id, message_id, emoji, action) {
     return __async(this, null, function* () {
-      const response = yield this.send({ message_reaction_event: { channel_id, message_id, emoji } });
+      const response = yield this.send({ message_reaction_event: { channel_id, message_id, emoji, action } });
       return response.message_reaction_event;
     });
   }
