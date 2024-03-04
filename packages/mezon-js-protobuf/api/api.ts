@@ -540,15 +540,13 @@ export interface ChannelMessage {
   /** The ID of the second DM user, or an empty string if this message was not sent through a DM chat. */
   user_id_two: string;
   /** Emoji reaction */
-  reactions: MessageReaction[];
+  reactions: string;
   /** Message mention */
-  mentions: MessageMention[];
+  mentions: string;
   /** Message attachment */
-  attachments: MessageAttachment[];
-  /** Message deleted */
-  deleteds: MessageDeleted[];
+  attachments: string;
   /** Message reference */
-  references: MessageRef[];
+  references: string;
 }
 
 /** Mention to message */
@@ -4746,11 +4744,10 @@ function createBaseChannelMessage(): ChannelMessage {
     channel_name: "",
     user_id_one: "",
     user_id_two: "",
-    reactions: [],
-    mentions: [],
-    attachments: [],
-    deleteds: [],
-    references: [],
+    reactions: "",
+    mentions: "",
+    attachments: "",
+    references: "",
   };
 }
 
@@ -4795,20 +4792,17 @@ export const ChannelMessage = {
     if (message.user_id_two !== "") {
       writer.uint32(106).string(message.user_id_two);
     }
-    for (const v of message.reactions) {
-      MessageReaction.encode(v!, writer.uint32(114).fork()).ldelim();
+    if (message.reactions !== "") {
+      writer.uint32(114).string(message.reactions);
     }
-    for (const v of message.mentions) {
-      MessageMention.encode(v!, writer.uint32(122).fork()).ldelim();
+    if (message.mentions !== "") {
+      writer.uint32(122).string(message.mentions);
     }
-    for (const v of message.attachments) {
-      MessageAttachment.encode(v!, writer.uint32(130).fork()).ldelim();
+    if (message.attachments !== "") {
+      writer.uint32(130).string(message.attachments);
     }
-    for (const v of message.deleteds) {
-      MessageDeleted.encode(v!, writer.uint32(138).fork()).ldelim();
-    }
-    for (const v of message.references) {
-      MessageRef.encode(v!, writer.uint32(146).fork()).ldelim();
+    if (message.references !== "") {
+      writer.uint32(138).string(message.references);
     }
     return writer;
   },
@@ -4860,19 +4854,16 @@ export const ChannelMessage = {
           message.user_id_two = reader.string();
           break;
         case 14:
-          message.reactions.push(MessageReaction.decode(reader, reader.uint32()));
+          message.reactions = reader.string();
           break;
         case 15:
-          message.mentions.push(MessageMention.decode(reader, reader.uint32()));
+          message.mentions = reader.string();
           break;
         case 16:
-          message.attachments.push(MessageAttachment.decode(reader, reader.uint32()));
+          message.attachments = reader.string();
           break;
         case 17:
-          message.deleteds.push(MessageDeleted.decode(reader, reader.uint32()));
-          break;
-        case 18:
-          message.references.push(MessageRef.decode(reader, reader.uint32()));
+          message.references = reader.string();
           break;
         default:
           reader.skipType(tag & 7);
@@ -4897,13 +4888,10 @@ export const ChannelMessage = {
       channel_name: isSet(object.channel_name) ? String(object.channel_name) : "",
       user_id_one: isSet(object.user_id_one) ? String(object.user_id_one) : "",
       user_id_two: isSet(object.user_id_two) ? String(object.user_id_two) : "",
-      reactions: Array.isArray(object?.reactions) ? object.reactions.map((e: any) => MessageReaction.fromJSON(e)) : [],
-      mentions: Array.isArray(object?.mentions) ? object.mentions.map((e: any) => MessageMention.fromJSON(e)) : [],
-      attachments: Array.isArray(object?.attachments)
-        ? object.attachments.map((e: any) => MessageAttachment.fromJSON(e))
-        : [],
-      deleteds: Array.isArray(object?.deleteds) ? object.deleteds.map((e: any) => MessageDeleted.fromJSON(e)) : [],
-      references: Array.isArray(object?.references) ? object.references.map((e: any) => MessageRef.fromJSON(e)) : [],
+      reactions: isSet(object.reactions) ? String(object.reactions) : "",
+      mentions: isSet(object.mentions) ? String(object.mentions) : "",
+      attachments: isSet(object.attachments) ? String(object.attachments) : "",
+      references: isSet(object.references) ? String(object.references) : "",
     };
   },
 
@@ -4922,31 +4910,10 @@ export const ChannelMessage = {
     message.channel_name !== undefined && (obj.channel_name = message.channel_name);
     message.user_id_one !== undefined && (obj.user_id_one = message.user_id_one);
     message.user_id_two !== undefined && (obj.user_id_two = message.user_id_two);
-    if (message.reactions) {
-      obj.reactions = message.reactions.map((e) => e ? MessageReaction.toJSON(e) : undefined);
-    } else {
-      obj.reactions = [];
-    }
-    if (message.mentions) {
-      obj.mentions = message.mentions.map((e) => e ? MessageMention.toJSON(e) : undefined);
-    } else {
-      obj.mentions = [];
-    }
-    if (message.attachments) {
-      obj.attachments = message.attachments.map((e) => e ? MessageAttachment.toJSON(e) : undefined);
-    } else {
-      obj.attachments = [];
-    }
-    if (message.deleteds) {
-      obj.deleteds = message.deleteds.map((e) => e ? MessageDeleted.toJSON(e) : undefined);
-    } else {
-      obj.deleteds = [];
-    }
-    if (message.references) {
-      obj.references = message.references.map((e) => e ? MessageRef.toJSON(e) : undefined);
-    } else {
-      obj.references = [];
-    }
+    message.reactions !== undefined && (obj.reactions = message.reactions);
+    message.mentions !== undefined && (obj.mentions = message.mentions);
+    message.attachments !== undefined && (obj.attachments = message.attachments);
+    message.references !== undefined && (obj.references = message.references);
     return obj;
   },
 
@@ -4969,11 +4936,10 @@ export const ChannelMessage = {
     message.channel_name = object.channel_name ?? "";
     message.user_id_one = object.user_id_one ?? "";
     message.user_id_two = object.user_id_two ?? "";
-    message.reactions = object.reactions?.map((e) => MessageReaction.fromPartial(e)) || [];
-    message.mentions = object.mentions?.map((e) => MessageMention.fromPartial(e)) || [];
-    message.attachments = object.attachments?.map((e) => MessageAttachment.fromPartial(e)) || [];
-    message.deleteds = object.deleteds?.map((e) => MessageDeleted.fromPartial(e)) || [];
-    message.references = object.references?.map((e) => MessageRef.fromPartial(e)) || [];
+    message.reactions = object.reactions ?? "";
+    message.mentions = object.mentions ?? "";
+    message.attachments = object.attachments ?? "";
+    message.references = object.references ?? "";
     return message;
   },
 };

@@ -147,11 +147,10 @@ export interface ChannelMessageEvent {
     user_id_one: string;
     user_id_two: string;
     username: string;
-    mentions?: Array<MessageMentionEvent>;
-    reactions?: Array<MessageReactionEvent>;
-    attachments?: Array<MessageAttachmentEvent>;
-    deleteds?: Array<MessageDeletedEvent>;
-    references?: Array<MessageRefEvent>;
+    mentions?: string;
+    reactions?: string;
+    attachments?: string;
+    references?: string;
 }
 /** An acknowledgement received in response to sending a message on a chat channel. */
 export interface ChannelMessageAck {
@@ -487,7 +486,7 @@ export interface Socket {
     /** Send message typing */
     writeMessageTyping(channel_id: string): Promise<MessageTypingEvent>;
     /** Send message reaction */
-    writeMessageReaction(channel_id: string, message_id: string, emoji: string, action: Number): Promise<MessageReactionEvent>;
+    writeMessageReaction(channel_id: string, message_id: string, emoji: string, action_delete: boolean): Promise<MessageReactionEvent>;
     /** Send message mention */
     writeMessageDeleted(channel_id: string, message_id: string, deletor: string): Promise<MessageDeletedEvent>;
     /** Send last seen message */
@@ -602,7 +601,7 @@ export declare class DefaultSocket implements Socket {
     updateChatMessage(channel_id: string, message_id: string, content: any): Promise<ChannelMessageAck>;
     updateStatus(status?: string): Promise<void>;
     writeChatMessage(clan_id: string, channel_id: string, content: any, mentions?: Array<ApiMessageMention>, attachments?: Array<ApiMessageAttachment>, references?: Array<ApiMessageRef>): Promise<ChannelMessageAck>;
-    writeMessageReaction(channel_id: string, message_id: string, emoji: string, action: Number): Promise<MessageReactionEvent>;
+    writeMessageReaction(channel_id: string, message_id: string, emoji: string, action_delete: boolean): Promise<MessageReactionEvent>;
     writeMessageDeleted(channel_id: string, message_id: string): Promise<MessageDeletedEvent>;
     writeMessageTyping(channel_id: string): Promise<MessageTypingEvent>;
     writeLastSeenMessage(channel_id: string, message_id: string): Promise<LastSeenMessageEvent>;

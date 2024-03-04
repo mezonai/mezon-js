@@ -67,12 +67,7 @@ import {
   ApiLinkInviteUser,
   ApiInviteUserRes,
   ApiUploadAttachmentRequest,
-  ApiMessageReaction,
-  ApiMessageMention,
-  ApiMessageAttachment,
   ApiUploadAttachment,
-  ApiMessageDeleted,
-  ApiMessageRef,
 } from "./api.gen";
 
 import { Session } from "./session";
@@ -162,15 +157,13 @@ export interface ChannelMessage {
   //The UNIX time (for gRPC clients) or ISO string (for REST clients) when the message was created.
   create_time: string;
   //
-  reactions?: Array<ApiMessageReaction>;
+  reactions?: string;
   //
-  mentions?: Array<ApiMessageMention>;
+  mentions?: string;
   //
-  attachments?: Array<ApiMessageAttachment>;
+  attachments?: string;
   //
-  deleteds?: Array<ApiMessageDeleted>;
-  //
-  references?: Array<ApiMessageRef>
+  references?: string;
   //The unique ID of this message.
   message_id: string;
   //True if the message was persisted to the channel's history, false otherwise.
@@ -1001,7 +994,7 @@ export class Client {
         return Promise.resolve(result);
       }
 
-      response.messages!.forEach(m => {
+      response.messages!.forEach(m => {        
         result.messages!.push({
           channel_id: m.channel_id,
           code: m.code ? Number(m.code) : 0,
@@ -1016,11 +1009,10 @@ export class Client {
           channel_name: m.channel_name,
           user_id_one: m.user_id_one,
           user_id_two: m.user_id_two,
-          attachments: m.attachments,
-          mentions: m.mentions,
-          reactions: m.reactions,
-          deleteds: m.deleteds,
-          references: m.references,
+          attachments: m.attachments ? JSON.parse(m.attachments) : undefined,
+          mentions: m.mentions ? JSON.parse(m.mentions) : undefined,
+          reactions: m.reactions ? JSON.parse(m.reactions) : undefined,
+          references: m.references ? JSON.parse(m.references) : undefined,
         })
       });
       return Promise.resolve(result);
