@@ -768,8 +768,10 @@ export declare const Envelope: {
             user_id_one?: string | undefined;
             user_id_two?: string | undefined;
             reactions?: {
+                id?: string | undefined;
                 emoji?: string | undefined;
-                user_id?: string | undefined;
+                sender_id?: string | undefined;
+                action?: boolean | undefined;
             }[] | undefined;
             mentions?: {
                 user_id?: string | undefined;
@@ -1198,8 +1200,10 @@ export declare const Envelope: {
             user_id_one?: string | undefined;
             user_id_two?: string | undefined;
             reactions?: {
+                id?: string | undefined;
                 emoji?: string | undefined;
-                user_id?: string | undefined;
+                sender_id?: string | undefined;
+                action?: boolean | undefined;
             }[] | undefined;
             mentions?: {
                 user_id?: string | undefined;
@@ -1237,17 +1241,25 @@ export declare const Envelope: {
             user_id_one?: string | undefined;
             user_id_two?: string | undefined;
             reactions?: ({
+                id?: string | undefined;
                 emoji?: string | undefined;
-                user_id?: string | undefined;
+                sender_id?: string | undefined;
+                action?: boolean | undefined;
             }[] & ({
+                id?: string | undefined;
                 emoji?: string | undefined;
-                user_id?: string | undefined;
+                sender_id?: string | undefined;
+                action?: boolean | undefined;
             } & {
+                id?: string | undefined;
                 emoji?: string | undefined;
-                user_id?: string | undefined;
+                sender_id?: string | undefined;
+                action?: boolean | undefined;
             } & { [K_6 in Exclude<keyof I["channel_message"]["reactions"][number], keyof import("../api/api").MessageReaction>]: never; })[] & { [K_7 in Exclude<keyof I["channel_message"]["reactions"], keyof {
+                id?: string | undefined;
                 emoji?: string | undefined;
-                user_id?: string | undefined;
+                sender_id?: string | undefined;
+                action?: boolean | undefined;
             }[]>]: never; }) | undefined;
             mentions?: ({
                 user_id?: string | undefined;
@@ -2273,8 +2285,10 @@ export declare const Envelope: {
             user_id_one?: string | undefined;
             user_id_two?: string | undefined;
             reactions?: {
+                id?: string | undefined;
                 emoji?: string | undefined;
-                user_id?: string | undefined;
+                sender_id?: string | undefined;
+                action?: boolean | undefined;
             }[] | undefined;
             mentions?: {
                 user_id?: string | undefined;
@@ -2703,8 +2717,10 @@ export declare const Envelope: {
             user_id_one?: string | undefined;
             user_id_two?: string | undefined;
             reactions?: {
+                id?: string | undefined;
                 emoji?: string | undefined;
-                user_id?: string | undefined;
+                sender_id?: string | undefined;
+                action?: boolean | undefined;
             }[] | undefined;
             mentions?: {
                 user_id?: string | undefined;
@@ -2742,17 +2758,25 @@ export declare const Envelope: {
             user_id_one?: string | undefined;
             user_id_two?: string | undefined;
             reactions?: ({
+                id?: string | undefined;
                 emoji?: string | undefined;
-                user_id?: string | undefined;
+                sender_id?: string | undefined;
+                action?: boolean | undefined;
             }[] & ({
+                id?: string | undefined;
                 emoji?: string | undefined;
-                user_id?: string | undefined;
+                sender_id?: string | undefined;
+                action?: boolean | undefined;
             } & {
+                id?: string | undefined;
                 emoji?: string | undefined;
-                user_id?: string | undefined;
+                sender_id?: string | undefined;
+                action?: boolean | undefined;
             } & { [K_103 in Exclude<keyof I_1["channel_message"]["reactions"][number], keyof import("../api/api").MessageReaction>]: never; })[] & { [K_104 in Exclude<keyof I_1["channel_message"]["reactions"], keyof {
+                id?: string | undefined;
                 emoji?: string | undefined;
-                user_id?: string | undefined;
+                sender_id?: string | undefined;
+                action?: boolean | undefined;
             }[]>]: never; }) | undefined;
             mentions?: ({
                 user_id?: string | undefined;

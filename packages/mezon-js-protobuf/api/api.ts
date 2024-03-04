@@ -561,10 +561,14 @@ export interface MessageMention {
 
 /** Emoji reaction by user */
 export interface MessageReaction {
+  /** Reaction id */
+  id: string;
   /** A list emoji */
   emoji: string;
   /** User react to message */
-  user_id: string;
+  sender_id: string;
+  /** Action reaction delete or add */
+  action: boolean;
 }
 
 /** Message attachment */
@@ -5035,16 +5039,22 @@ export const MessageMention = {
 };
 
 function createBaseMessageReaction(): MessageReaction {
-  return { emoji: "", user_id: "" };
+  return { id: "", emoji: "", sender_id: "", action: false };
 }
 
 export const MessageReaction = {
   encode(message: MessageReaction, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.emoji !== "") {
-      writer.uint32(10).string(message.emoji);
+    if (message.id !== "") {
+      writer.uint32(10).string(message.id);
     }
-    if (message.user_id !== "") {
-      writer.uint32(18).string(message.user_id);
+    if (message.emoji !== "") {
+      writer.uint32(18).string(message.emoji);
+    }
+    if (message.sender_id !== "") {
+      writer.uint32(26).string(message.sender_id);
+    }
+    if (message.action === true) {
+      writer.uint32(32).bool(message.action);
     }
     return writer;
   },
@@ -5057,10 +5067,16 @@ export const MessageReaction = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          message.emoji = reader.string();
+          message.id = reader.string();
           break;
         case 2:
-          message.user_id = reader.string();
+          message.emoji = reader.string();
+          break;
+        case 3:
+          message.sender_id = reader.string();
+          break;
+        case 4:
+          message.action = reader.bool();
           break;
         default:
           reader.skipType(tag & 7);
@@ -5072,15 +5088,19 @@ export const MessageReaction = {
 
   fromJSON(object: any): MessageReaction {
     return {
+      id: isSet(object.id) ? String(object.id) : "",
       emoji: isSet(object.emoji) ? String(object.emoji) : "",
-      user_id: isSet(object.user_id) ? String(object.user_id) : "",
+      sender_id: isSet(object.sender_id) ? String(object.sender_id) : "",
+      action: isSet(object.action) ? Boolean(object.action) : false,
     };
   },
 
   toJSON(message: MessageReaction): unknown {
     const obj: any = {};
+    message.id !== undefined && (obj.id = message.id);
     message.emoji !== undefined && (obj.emoji = message.emoji);
-    message.user_id !== undefined && (obj.user_id = message.user_id);
+    message.sender_id !== undefined && (obj.sender_id = message.sender_id);
+    message.action !== undefined && (obj.action = message.action);
     return obj;
   },
 
@@ -5090,8 +5110,10 @@ export const MessageReaction = {
 
   fromPartial<I extends Exact<DeepPartial<MessageReaction>, I>>(object: I): MessageReaction {
     const message = createBaseMessageReaction();
+    message.id = object.id ?? "";
     message.emoji = object.emoji ?? "";
-    message.user_id = object.user_id ?? "";
+    message.sender_id = object.sender_id ?? "";
+    message.action = object.action ?? false;
     return message;
   },
 };
