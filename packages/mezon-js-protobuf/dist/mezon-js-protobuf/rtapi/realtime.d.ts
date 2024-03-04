@@ -623,6 +623,8 @@ export interface MessageMentionEvent {
 }
 /** Message reacton event data */
 export interface MessageReactionEvent {
+    /** reaction id */
+    id: string;
     /** The channel this message belongs to. */
     channel_id: string;
     /** React to message */
@@ -631,6 +633,8 @@ export interface MessageReactionEvent {
     sender_id: string;
     /** emoji text */
     emoji: string;
+    /** action (add, delete) */
+    action: boolean;
 }
 /** Message attachment */
 export interface MessageAttachmentEvent {
@@ -1092,10 +1096,12 @@ export declare const Envelope: {
             message_id?: string | undefined;
         } | undefined;
         message_reaction_event?: {
+            id?: string | undefined;
             channel_id?: string | undefined;
             message_id?: string | undefined;
             sender_id?: string | undefined;
             emoji?: string | undefined;
+            action?: boolean | undefined;
         } | undefined;
         message_deleted_event?: {
             channel_id?: string | undefined;
@@ -2218,15 +2224,19 @@ export declare const Envelope: {
             message_id?: string | undefined;
         } & { [K_93 in Exclude<keyof I["last_seen_message_event"], keyof LastSeenMessageEvent>]: never; }) | undefined;
         message_reaction_event?: ({
+            id?: string | undefined;
             channel_id?: string | undefined;
             message_id?: string | undefined;
             sender_id?: string | undefined;
             emoji?: string | undefined;
+            action?: boolean | undefined;
         } & {
+            id?: string | undefined;
             channel_id?: string | undefined;
             message_id?: string | undefined;
             sender_id?: string | undefined;
             emoji?: string | undefined;
+            action?: boolean | undefined;
         } & { [K_94 in Exclude<keyof I["message_reaction_event"], keyof MessageReactionEvent>]: never; }) | undefined;
         message_deleted_event?: ({
             channel_id?: string | undefined;
@@ -2609,10 +2619,12 @@ export declare const Envelope: {
             message_id?: string | undefined;
         } | undefined;
         message_reaction_event?: {
+            id?: string | undefined;
             channel_id?: string | undefined;
             message_id?: string | undefined;
             sender_id?: string | undefined;
             emoji?: string | undefined;
+            action?: boolean | undefined;
         } | undefined;
         message_deleted_event?: {
             channel_id?: string | undefined;
@@ -3735,15 +3747,19 @@ export declare const Envelope: {
             message_id?: string | undefined;
         } & { [K_190 in Exclude<keyof I_1["last_seen_message_event"], keyof LastSeenMessageEvent>]: never; }) | undefined;
         message_reaction_event?: ({
+            id?: string | undefined;
             channel_id?: string | undefined;
             message_id?: string | undefined;
             sender_id?: string | undefined;
             emoji?: string | undefined;
+            action?: boolean | undefined;
         } & {
+            id?: string | undefined;
             channel_id?: string | undefined;
             message_id?: string | undefined;
             sender_id?: string | undefined;
             emoji?: string | undefined;
+            action?: boolean | undefined;
         } & { [K_191 in Exclude<keyof I_1["message_reaction_event"], keyof MessageReactionEvent>]: never; }) | undefined;
         message_deleted_event?: ({
             channel_id?: string | undefined;
@@ -6954,26 +6970,34 @@ export declare const MessageReactionEvent: {
     fromJSON(object: any): MessageReactionEvent;
     toJSON(message: MessageReactionEvent): unknown;
     create<I extends {
+        id?: string | undefined;
         channel_id?: string | undefined;
         message_id?: string | undefined;
         sender_id?: string | undefined;
         emoji?: string | undefined;
+        action?: boolean | undefined;
     } & {
+        id?: string | undefined;
         channel_id?: string | undefined;
         message_id?: string | undefined;
         sender_id?: string | undefined;
         emoji?: string | undefined;
+        action?: boolean | undefined;
     } & { [K in Exclude<keyof I, keyof MessageReactionEvent>]: never; }>(base?: I | undefined): MessageReactionEvent;
     fromPartial<I_1 extends {
+        id?: string | undefined;
         channel_id?: string | undefined;
         message_id?: string | undefined;
         sender_id?: string | undefined;
         emoji?: string | undefined;
+        action?: boolean | undefined;
     } & {
+        id?: string | undefined;
         channel_id?: string | undefined;
         message_id?: string | undefined;
         sender_id?: string | undefined;
         emoji?: string | undefined;
+        action?: boolean | undefined;
     } & { [K_1 in Exclude<keyof I_1, keyof MessageReactionEvent>]: never; }>(object: I_1): MessageReactionEvent;
 };
 export declare const MessageAttachmentEvent: {

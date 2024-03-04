@@ -1730,6 +1730,8 @@ export interface ChannelDescription {
   channel_lable: string;
   /** The channel private */
   channel_private: number;
+  /** The channel avatar */
+  channel_avatar: string;
 }
 
 /** A list of channel description, usually a result of a list operation. */
@@ -11662,6 +11664,7 @@ function createBaseChannelDescription(): ChannelDescription {
     creator_id: "",
     channel_lable: "",
     channel_private: 0,
+    channel_avatar: "",
   };
 }
 
@@ -11693,6 +11696,9 @@ export const ChannelDescription = {
     }
     if (message.channel_private !== 0) {
       writer.uint32(72).int32(message.channel_private);
+    }
+    if (message.channel_avatar !== "") {
+      writer.uint32(82).string(message.channel_avatar);
     }
     return writer;
   },
@@ -11731,6 +11737,9 @@ export const ChannelDescription = {
         case 9:
           message.channel_private = reader.int32();
           break;
+        case 10:
+          message.channel_avatar = reader.string();
+          break;
         default:
           reader.skipType(tag & 7);
           break;
@@ -11750,6 +11759,7 @@ export const ChannelDescription = {
       creator_id: isSet(object.creator_id) ? String(object.creator_id) : "",
       channel_lable: isSet(object.channel_lable) ? String(object.channel_lable) : "",
       channel_private: isSet(object.channel_private) ? Number(object.channel_private) : 0,
+      channel_avatar: isSet(object.channel_avatar) ? String(object.channel_avatar) : "",
     };
   },
 
@@ -11764,6 +11774,7 @@ export const ChannelDescription = {
     message.creator_id !== undefined && (obj.creator_id = message.creator_id);
     message.channel_lable !== undefined && (obj.channel_lable = message.channel_lable);
     message.channel_private !== undefined && (obj.channel_private = Math.round(message.channel_private));
+    message.channel_avatar !== undefined && (obj.channel_avatar = message.channel_avatar);
     return obj;
   },
 
@@ -11782,6 +11793,7 @@ export const ChannelDescription = {
     message.creator_id = object.creator_id ?? "";
     message.channel_lable = object.channel_lable ?? "";
     message.channel_private = object.channel_private ?? 0;
+    message.channel_avatar = object.channel_avatar ?? "";
     return message;
   },
 };
