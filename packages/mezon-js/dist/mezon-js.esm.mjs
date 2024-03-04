@@ -3698,10 +3698,13 @@ var _DefaultSocket = class _DefaultSocket {
           this.onstreamdata(message.stream_data);
         } else if (message.channel_message) {
           message.channel_message.content = JSON.parse(message.channel_message.content);
-          message.channel_message.mentions = JSON.parse(message.channel_message.mentions);
-          message.channel_message.attachments = JSON.parse(message.channel_message.attachments);
-          message.channel_message.reactions = JSON.parse(message.channel_message.reactions);
-          message.channel_message.references = JSON.parse(message.channel_message.references);
+          try {
+            message.channel_message.mentions = JSON.parse(message.channel_message.mentions);
+            message.channel_message.attachments = JSON.parse(message.channel_message.attachments);
+            message.channel_message.reactions = JSON.parse(message.channel_message.reactions);
+            message.channel_message.references = JSON.parse(message.channel_message.references);
+          } catch (e) {
+          }
           this.onchannelmessage(message.channel_message);
         } else if (message.message_typing_event) {
           this.onmessagetyping(message.message_typing_event);
