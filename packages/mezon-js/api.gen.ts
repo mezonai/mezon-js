@@ -210,6 +210,8 @@ export interface ApiChannelDescription {
   parrent_id?: string;
   //The channel type.
   type?: number;
+  //
+  user_id?: string;
 }
 
 /** A message sent on a channel. */
