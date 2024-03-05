@@ -43,8 +43,6 @@ import {
   ApiDeleteStorageObjectsRequest,
   ApiEvent,
   ApiFriendList,
-  ApiGroupList,
-  ApiGroupUserList,
   ApiNotificationList,
   ApiReadStorageObjectsRequest,
   ApiRpc,
@@ -53,7 +51,6 @@ import {
   ApiStorageObjects,
   ApiUpdateAccountRequest,
   ApiUsers,
-  ApiUserGroupList,
   ApiWriteStorageObjectsRequest,
   MezonApi,
   ApiSession,
@@ -68,6 +65,7 @@ import {
   ApiInviteUserRes,
   ApiUploadAttachmentRequest,
   ApiUploadAttachment,
+  ApiMessageMentionList,
 } from "./api.gen";
 
 import { Session } from "./session";
@@ -884,7 +882,7 @@ export class Client {
     return this.apiClient.importSteamFriends(session.token, request, reset).then((response: any) => {
         return response !== undefined;
     });
-}
+  }
 
   /** Fetch zero or more users by ID and/or username. */
   async getUsers(session: Session, ids?: Array<string>, usernames?: Array<string>, facebookIds?: Array<string>): Promise<Users> {
@@ -1104,127 +1102,6 @@ export class Client {
           },
           role_id: gu!.role_id 
         })
-      });
-      return Promise.resolve(result);
-    });
-  }
-
-  /** List a group's users. */
-  async listGroupUsers(session: Session, groupId: string, state?: number, limit?: number, cursor?: string): Promise<GroupUserList> {
-    if (this.autoRefreshSession && session.refresh_token &&
-        session.isexpired((Date.now() + this.expiredTimespanMs)/1000)) {
-        await this.sessionRefresh(session);
-    }
-
-    return this.apiClient.listGroupUsers(session.token, groupId, limit, state, cursor).then((response: ApiGroupUserList) => {
-      var result: GroupUserList = {
-        group_users: [],
-        cursor: response.cursor
-      };
-
-      if (response.group_users == null) {
-        return Promise.resolve(result);
-      }
-
-      response.group_users!.forEach(gu => {
-        result.group_users!.push({
-          user: {
-            avatar_url: gu.user!.avatar_url,
-            create_time: gu.user!.create_time,
-            display_name: gu.user!.display_name,
-            edge_count: gu.user!.edge_count ? Number(gu.user!.edge_count): 0,
-            facebook_id: gu.user!.facebook_id,
-            gamecenter_id: gu.user!.gamecenter_id,
-            google_id: gu.user!.google_id,
-            id: gu.user!.id,
-            lang_tag: gu.user!.lang_tag,
-            location: gu.user!.location,
-            online: gu.user!.online,
-            steam_id: gu.user!.steam_id,
-            timezone: gu.user!.timezone,
-            update_time: gu.user!.update_time,
-            username: gu.user!.username,
-            metadata: gu.user!.metadata ? JSON.parse(gu.user!.metadata!) : undefined
-          },
-          state: gu.state ? Number(gu.state) : 0
-        })
-      });
-      return Promise.resolve(result);
-    });
-  }
-
-  /** List a user's groups. */
-  async listUserGroups(session: Session, userId: string, state?: number, limit?: number, cursor?: string,): Promise<UserGroupList> {
-    if (this.autoRefreshSession && session.refresh_token &&
-        session.isexpired((Date.now() + this.expiredTimespanMs)/1000)) {
-        await this.sessionRefresh(session);
-    }
-
-    return this.apiClient.listUserGroups(session.token, userId, state, limit, cursor).then((response: ApiUserGroupList) => {
-      var result: UserGroupList = {
-        user_groups: [],
-        cursor: response.cursor,
-      };
-
-      if (response.user_groups == null) {
-        return Promise.resolve(result);
-      }
-
-      response.user_groups!.forEach(ug => {
-        result.user_groups!.push({
-          group: {
-            avatar_url: ug.group!.avatar_url,
-            create_time: ug.group!.create_time,
-            creator_id: ug.group!.creator_id,
-            description: ug.group!.description,
-            edge_count: ug.group!.edge_count ? Number(ug.group!.edge_count) : 0,
-            id: ug.group!.id,
-            lang_tag: ug.group!.lang_tag,
-            max_count: ug.group!.max_count,
-            metadata: ug.group!.metadata ? JSON.parse(ug.group!.metadata!) : undefined,
-            name: ug.group!.name,
-            open: ug.group!.open,
-            update_time: ug.group!.update_time
-          },
-          state: ug.state ? Number(ug.state) : 0
-        })
-      });
-      return Promise.resolve(result);
-    });
-  }
-
-  /** List groups based on given filters. */
-  async listGroups(session: Session, name?: string, cursor?: string, limit?: number): Promise<GroupList> {
-    if (this.autoRefreshSession && session.refresh_token &&
-        session.isexpired((Date.now() + this.expiredTimespanMs)/1000)) {
-        await this.sessionRefresh(session);
-    }
-
-    return this.apiClient.listGroups(session.token, name, cursor, limit).then((response: ApiGroupList) => {
-      var result: GroupList = {
-        groups: []
-      };
-
-      if (response.groups == null) {
-        return Promise.resolve(result);
-      }
-
-      result.cursor = response.cursor;
-      response.groups!.forEach(ug => {
-        result.groups!.push({
-          avatar_url: ug!.avatar_url,
-          create_time: ug!.create_time,
-          creator_id: ug!.creator_id,
-          description: ug!.description,
-          edge_count: ug!.edge_count ? Number(ug!.edge_count) : 0,
-          id: ug!.id,
-          lang_tag: ug!.lang_tag,
-          max_count: ug!.max_count,
-          metadata: ug!.metadata ? JSON.parse(ug!.metadata!) : undefined,
-          name: ug!.name,
-          open: ug!.open,
-          update_time: ug!.update_time
-        });
       });
       return Promise.resolve(result);
     });
@@ -1965,5 +1842,17 @@ export class Client {
     })
 
     return this.apiClient.writeStorageObjects(session.token, request);
+  }
+
+  /** List a channel's users. */
+  async listMessageMentions(session: Session, limit?: number, forward?: boolean, cursor?: string): Promise<ApiMessageMentionList> {
+    if (this.autoRefreshSession && session.refresh_token &&
+        session.isexpired((Date.now() + this.expiredTimespanMs)/1000)) {
+        await this.sessionRefresh(session);
+    }
+
+    return this.apiClient.listMessageMentions(session.token, limit, forward, cursor).then((response: ApiMessageMentionList) => {
+      return Promise.resolve(response);
+    });
   }
 };
