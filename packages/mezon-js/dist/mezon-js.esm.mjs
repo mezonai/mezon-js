@@ -2769,6 +2769,34 @@ var MezonApi = class {
       )
     ]);
   }
+  /** List a message mention history. */
+  listMessageMentions(bearerToken, limit, forward, cursor, options = {}) {
+    const urlPath = "/v2/mentions";
+    const queryParams = /* @__PURE__ */ new Map();
+    queryParams.set("limit", limit);
+    queryParams.set("forward", forward);
+    queryParams.set("cursor", cursor);
+    let bodyJson = "";
+    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
+    const fetchOptions = buildFetchOptions("GET", options, bodyJson);
+    if (bearerToken) {
+      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+    }
+    return Promise.race([
+      fetch(fullUrl, fetchOptions).then((response) => {
+        if (response.status == 204) {
+          return response;
+        } else if (response.status >= 200 && response.status < 300) {
+          return response.json();
+        } else {
+          throw response;
+        }
+      }),
+      new Promise(
+        (_, reject) => setTimeout(reject, this.timeoutMs, "Request timed out.")
+      )
+    ]);
+  }
   /** Delete one or more notifications for the current user. */
   deleteNotifications(bearerToken, ids, options = {}) {
     const urlPath = "/v2/notification";

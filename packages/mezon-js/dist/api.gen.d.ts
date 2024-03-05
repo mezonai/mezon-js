@@ -121,6 +121,7 @@ export interface ApiChannelDescription {
     creator_id?: string;
     parrent_id?: string;
     type?: number;
+    user_id?: string;
 }
 /** A message sent on a channel. */
 export interface ApiChannelMessage {
@@ -325,8 +326,17 @@ export interface ApiMessageDeleted {
 }
 /**  */
 export interface ApiMessageMention {
+    create_time?: string;
+    id?: string;
     user_id?: string;
     username?: string;
+}
+/**  */
+export interface ApiMessageMentionList {
+    cacheable_cursor?: string;
+    mentions?: Array<ApiMessageMention>;
+    next_cursor?: string;
+    prev_cursor?: string;
 }
 /**  */
 export interface ApiMessageReaction {
@@ -698,6 +708,8 @@ export declare class MezonApi {
     inviteUser(bearerToken: string, inviteId: string, options?: any): Promise<ApiInviteUserRes>;
     /**  */
     getListPermission(bearerToken: string, options?: any): Promise<ApiPermissionList>;
+    /** List a message mention history. */
+    listMessageMentions(bearerToken: string, limit?: number, forward?: boolean, cursor?: string, options?: any): Promise<ApiMessageMentionList>;
     /** Delete one or more notifications for the current user. */
     deleteNotifications(bearerToken: string, ids?: Array<string>, options?: any): Promise<any>;
     /** Fetch list of notifications. */

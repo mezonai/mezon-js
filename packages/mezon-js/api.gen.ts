@@ -566,10 +566,26 @@ export interface ApiMessageDeleted {
 
 /**  */
 export interface ApiMessageMention {
+  //The UNIX time (for gRPC clients) or ISO string (for REST clients) when the message was created.
+  create_time?: string;
+  //
+  id?: string;
   //
   user_id?: string;
   //
   username?: string;
+}
+
+/**  */
+export interface ApiMessageMentionList {
+  //Cacheable cursor to list newer messages. Durable and designed to be stored, unlike next/prev cursors.
+  cacheable_cursor?: string;
+  //A list of messages.
+  mentions?: Array<ApiMessageMention>;
+  //The cursor to send when retrieving the next page, if any.
+  next_cursor?: string;
+  //The cursor to send when retrieving the previous page, if any.
+  prev_cursor?: string;
 }
 
 /**  */
@@ -3660,6 +3676,43 @@ export class MezonApi {
     
     const urlPath = "/v2/listpermission";
     const queryParams = new Map<string, any>();
+
+    let bodyJson : string = "";
+
+    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
+    const fetchOptions = buildFetchOptions("GET", options, bodyJson);
+    if (bearerToken) {
+        fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+    }
+
+    return Promise.race([
+      fetch(fullUrl, fetchOptions).then((response) => {
+        if (response.status == 204) {
+          return response;
+        } else if (response.status >= 200 && response.status < 300) {
+          return response.json();
+        } else {
+          throw response;
+        }
+      }),
+      new Promise((_, reject) =>
+        setTimeout(reject, this.timeoutMs, "Request timed out.")
+      ),
+    ]);
+}
+
+  /** List a message mention history. */
+  listMessageMentions(bearerToken: string,
+      limit?:number,
+      forward?:boolean,
+      cursor?:string,
+      options: any = {}): Promise<ApiMessageMentionList> {
+    
+    const urlPath = "/v2/mentions";
+    const queryParams = new Map<string, any>();
+    queryParams.set("limit", limit);
+    queryParams.set("forward", forward);
+    queryParams.set("cursor", cursor);
 
     let bodyJson : string = "";
 
