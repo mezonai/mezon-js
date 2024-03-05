@@ -65,7 +65,6 @@ import {
   ApiInviteUserRes,
   ApiUploadAttachmentRequest,
   ApiUploadAttachment,
-  ApiMessageMentionList,
 } from "./api.gen";
 
 import { Session } from "./session";
@@ -1845,13 +1844,13 @@ export class Client {
   }
 
   /** List a channel's users. */
-  async listMessageMentions(session: Session, limit?: number, forward?: boolean, cursor?: string): Promise<ApiMessageMentionList> {
+  async listMessageMentions(session: Session, limit?: number, forward?: boolean, cursor?: string): Promise<ApiChannelMessageList> {
     if (this.autoRefreshSession && session.refresh_token &&
         session.isexpired((Date.now() + this.expiredTimespanMs)/1000)) {
         await this.sessionRefresh(session);
     }
 
-    return this.apiClient.listMessageMentions(session.token, limit, forward, cursor).then((response: ApiMessageMentionList) => {
+    return this.apiClient.listMessageMentions(session.token, limit, forward, cursor).then((response: ApiChannelMessageList) => {
       return Promise.resolve(response);
     });
   }
