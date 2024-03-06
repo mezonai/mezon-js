@@ -2531,7 +2531,8 @@ function createBaseChannelMessage() {
     reactions: "",
     mentions: "",
     attachments: "",
-    references: ""
+    references: "",
+    referenced_message: ""
   };
 }
 var ChannelMessage = {
@@ -2586,6 +2587,9 @@ var ChannelMessage = {
     }
     if (message.references !== "") {
       writer.uint32(138).string(message.references);
+    }
+    if (message.referenced_message !== "") {
+      writer.uint32(146).string(message.referenced_message);
     }
     return writer;
   },
@@ -2647,6 +2651,9 @@ var ChannelMessage = {
         case 17:
           message.references = reader.string();
           break;
+        case 18:
+          message.referenced_message = reader.string();
+          break;
         default:
           reader.skipType(tag & 7);
           break;
@@ -2672,7 +2679,8 @@ var ChannelMessage = {
       reactions: isSet3(object.reactions) ? String(object.reactions) : "",
       mentions: isSet3(object.mentions) ? String(object.mentions) : "",
       attachments: isSet3(object.attachments) ? String(object.attachments) : "",
-      references: isSet3(object.references) ? String(object.references) : ""
+      references: isSet3(object.references) ? String(object.references) : "",
+      referenced_message: isSet3(object.referenced_message) ? String(object.referenced_message) : ""
     };
   },
   toJSON(message) {
@@ -2694,13 +2702,14 @@ var ChannelMessage = {
     message.mentions !== void 0 && (obj.mentions = message.mentions);
     message.attachments !== void 0 && (obj.attachments = message.attachments);
     message.references !== void 0 && (obj.references = message.references);
+    message.referenced_message !== void 0 && (obj.referenced_message = message.referenced_message);
     return obj;
   },
   create(base) {
     return ChannelMessage.fromPartial(base != null ? base : {});
   },
   fromPartial(object) {
-    var _a, _b, _c, _d, _e, _f, _g, _h, _i, _j, _k, _l, _m, _n, _o, _p, _q;
+    var _a, _b, _c, _d, _e, _f, _g, _h, _i, _j, _k, _l, _m, _n, _o, _p, _q, _r;
     const message = createBaseChannelMessage();
     message.clan_id = (_a = object.clan_id) != null ? _a : "";
     message.channel_id = (_b = object.channel_id) != null ? _b : "";
@@ -2719,6 +2728,7 @@ var ChannelMessage = {
     message.mentions = (_o = object.mentions) != null ? _o : "";
     message.attachments = (_p = object.attachments) != null ? _p : "";
     message.references = (_q = object.references) != null ? _q : "";
+    message.referenced_message = (_r = object.referenced_message) != null ? _r : "";
     return message;
   }
 };
