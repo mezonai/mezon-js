@@ -5392,7 +5392,38 @@ var Client = class {
         yield this.sessionRefresh(session);
       }
       return this.apiClient.listMessageMentions(session.token, limit, forward, cursor).then((response) => {
-        return Promise.resolve(response);
+        var result = {
+          messages: [],
+          last_seen_message_id: response.last_seen_message_id,
+          next_cursor: response.next_cursor,
+          prev_cursor: response.prev_cursor,
+          cacheable_cursor: response.cacheable_cursor
+        };
+        if (response.messages == null) {
+          return Promise.resolve(result);
+        }
+        response.messages.forEach((m) => {
+          result.messages.push({
+            channel_id: m.channel_id,
+            code: m.code ? Number(m.code) : 0,
+            create_time: m.create_time || "",
+            message_id: m.message_id,
+            persistent: m.persistent,
+            sender_id: m.sender_id,
+            update_time: m.update_time,
+            username: m.username,
+            avatar: m.avatar,
+            content: m.content ? JSON.parse(m.content) : void 0,
+            channel_name: m.channel_name,
+            user_id_one: m.user_id_one,
+            user_id_two: m.user_id_two,
+            attachments: m.attachments ? JSON.parse(m.attachments) : [],
+            mentions: m.mentions ? JSON.parse(m.mentions) : [],
+            reactions: m.reactions ? JSON.parse(m.reactions) : [],
+            references: m.references ? JSON.parse(m.references) : []
+          });
+        });
+        return Promise.resolve(result);
       });
     });
   }
