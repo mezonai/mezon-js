@@ -547,14 +547,20 @@ export interface ChannelMessage {
   attachments: string;
   /** Message reference */
   references: string;
+  /** referenced message */
+  referenced_message: string;
 }
 
 /** Mention to message */
 export interface MessageMention {
+  /** Mention id */
+  id: string;
   /** mention user id */
   user_id: string;
   /** mention username */
   username: string;
+  /** The UNIX time (for gRPC clients) or ISO string (for REST clients) when the message was created. */
+  create_time: Date | undefined;
 }
 
 /** Emoji reaction by user */
@@ -567,6 +573,8 @@ export interface MessageReaction {
   sender_id: string;
   /** Action reaction delete or add */
   action: boolean;
+  /** Cacheable cursor to list newer messages. Durable and designed to be stored, unlike next/prev cursors. */
+  cacheable_cursor: string;
 }
 
 /** Message attachment */
@@ -1993,6 +2001,19 @@ export interface UploadAttachmentRequest {
   width: number;
   /** Height */
   height: number;
+}
+
+export interface ListMessageMentionRequest {
+  /** Max number of records to return. Between 1 and 100. */
+  limit:
+    | number
+    | undefined;
+  /** True if listing should be older messages to newer, false if reverse. */
+  forward:
+    | boolean
+    | undefined;
+  /** A pagination cursor, if any. */
+  cursor: string;
 }
 
 export interface UploadAttachment {
@@ -4750,6 +4771,7 @@ function createBaseChannelMessage(): ChannelMessage {
     mentions: "",
     attachments: "",
     references: "",
+    referenced_message: "",
   };
 }
 
@@ -4805,6 +4827,9 @@ export const ChannelMessage = {
     }
     if (message.references !== "") {
       writer.uint32(138).string(message.references);
+    }
+    if (message.referenced_message !== "") {
+      writer.uint32(146).string(message.referenced_message);
     }
     return writer;
   },
@@ -4867,6 +4892,9 @@ export const ChannelMessage = {
         case 17:
           message.references = reader.string();
           break;
+        case 18:
+          message.referenced_message = reader.string();
+          break;
         default:
           reader.skipType(tag & 7);
           break;
@@ -4894,6 +4922,7 @@ export const ChannelMessage = {
       mentions: isSet(object.mentions) ? String(object.mentions) : "",
       attachments: isSet(object.attachments) ? String(object.attachments) : "",
       references: isSet(object.references) ? String(object.references) : "",
+      referenced_message: isSet(object.referenced_message) ? String(object.referenced_message) : "",
     };
   },
 
@@ -4916,6 +4945,7 @@ export const ChannelMessage = {
     message.mentions !== undefined && (obj.mentions = message.mentions);
     message.attachments !== undefined && (obj.attachments = message.attachments);
     message.references !== undefined && (obj.references = message.references);
+    message.referenced_message !== undefined && (obj.referenced_message = message.referenced_message);
     return obj;
   },
 
@@ -4942,21 +4972,28 @@ export const ChannelMessage = {
     message.mentions = object.mentions ?? "";
     message.attachments = object.attachments ?? "";
     message.references = object.references ?? "";
+    message.referenced_message = object.referenced_message ?? "";
     return message;
   },
 };
 
 function createBaseMessageMention(): MessageMention {
-  return { user_id: "", username: "" };
+  return { id: "", user_id: "", username: "", create_time: undefined };
 }
 
 export const MessageMention = {
   encode(message: MessageMention, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.id !== "") {
+      writer.uint32(10).string(message.id);
+    }
     if (message.user_id !== "") {
-      writer.uint32(10).string(message.user_id);
+      writer.uint32(18).string(message.user_id);
     }
     if (message.username !== "") {
-      writer.uint32(18).string(message.username);
+      writer.uint32(26).string(message.username);
+    }
+    if (message.create_time !== undefined) {
+      Timestamp.encode(toTimestamp(message.create_time), writer.uint32(34).fork()).ldelim();
     }
     return writer;
   },
@@ -4969,10 +5006,16 @@ export const MessageMention = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          message.user_id = reader.string();
+          message.id = reader.string();
           break;
         case 2:
+          message.user_id = reader.string();
+          break;
+        case 3:
           message.username = reader.string();
+          break;
+        case 4:
+          message.create_time = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
           break;
         default:
           reader.skipType(tag & 7);
@@ -4984,15 +5027,19 @@ export const MessageMention = {
 
   fromJSON(object: any): MessageMention {
     return {
+      id: isSet(object.id) ? String(object.id) : "",
       user_id: isSet(object.user_id) ? String(object.user_id) : "",
       username: isSet(object.username) ? String(object.username) : "",
+      create_time: isSet(object.create_time) ? fromJsonTimestamp(object.create_time) : undefined,
     };
   },
 
   toJSON(message: MessageMention): unknown {
     const obj: any = {};
+    message.id !== undefined && (obj.id = message.id);
     message.user_id !== undefined && (obj.user_id = message.user_id);
     message.username !== undefined && (obj.username = message.username);
+    message.create_time !== undefined && (obj.create_time = message.create_time.toISOString());
     return obj;
   },
 
@@ -5002,14 +5049,16 @@ export const MessageMention = {
 
   fromPartial<I extends Exact<DeepPartial<MessageMention>, I>>(object: I): MessageMention {
     const message = createBaseMessageMention();
+    message.id = object.id ?? "";
     message.user_id = object.user_id ?? "";
     message.username = object.username ?? "";
+    message.create_time = object.create_time ?? undefined;
     return message;
   },
 };
 
 function createBaseMessageReaction(): MessageReaction {
-  return { id: "", emoji: "", sender_id: "", action: false };
+  return { id: "", emoji: "", sender_id: "", action: false, cacheable_cursor: "" };
 }
 
 export const MessageReaction = {
@@ -5025,6 +5074,9 @@ export const MessageReaction = {
     }
     if (message.action === true) {
       writer.uint32(32).bool(message.action);
+    }
+    if (message.cacheable_cursor !== "") {
+      writer.uint32(42).string(message.cacheable_cursor);
     }
     return writer;
   },
@@ -5048,6 +5100,9 @@ export const MessageReaction = {
         case 4:
           message.action = reader.bool();
           break;
+        case 5:
+          message.cacheable_cursor = reader.string();
+          break;
         default:
           reader.skipType(tag & 7);
           break;
@@ -5062,6 +5117,7 @@ export const MessageReaction = {
       emoji: isSet(object.emoji) ? String(object.emoji) : "",
       sender_id: isSet(object.sender_id) ? String(object.sender_id) : "",
       action: isSet(object.action) ? Boolean(object.action) : false,
+      cacheable_cursor: isSet(object.cacheable_cursor) ? String(object.cacheable_cursor) : "",
     };
   },
 
@@ -5071,6 +5127,7 @@ export const MessageReaction = {
     message.emoji !== undefined && (obj.emoji = message.emoji);
     message.sender_id !== undefined && (obj.sender_id = message.sender_id);
     message.action !== undefined && (obj.action = message.action);
+    message.cacheable_cursor !== undefined && (obj.cacheable_cursor = message.cacheable_cursor);
     return obj;
   },
 
@@ -5084,6 +5141,7 @@ export const MessageReaction = {
     message.emoji = object.emoji ?? "";
     message.sender_id = object.sender_id ?? "";
     message.action = object.action ?? false;
+    message.cacheable_cursor = object.cacheable_cursor ?? "";
     return message;
   },
 };
@@ -13698,6 +13756,77 @@ export const UploadAttachmentRequest = {
     message.size = object.size ?? 0;
     message.width = object.width ?? 0;
     message.height = object.height ?? 0;
+    return message;
+  },
+};
+
+function createBaseListMessageMentionRequest(): ListMessageMentionRequest {
+  return { limit: undefined, forward: undefined, cursor: "" };
+}
+
+export const ListMessageMentionRequest = {
+  encode(message: ListMessageMentionRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.limit !== undefined) {
+      Int32Value.encode({ value: message.limit! }, writer.uint32(10).fork()).ldelim();
+    }
+    if (message.forward !== undefined) {
+      BoolValue.encode({ value: message.forward! }, writer.uint32(18).fork()).ldelim();
+    }
+    if (message.cursor !== "") {
+      writer.uint32(26).string(message.cursor);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): ListMessageMentionRequest {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseListMessageMentionRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.limit = Int32Value.decode(reader, reader.uint32()).value;
+          break;
+        case 2:
+          message.forward = BoolValue.decode(reader, reader.uint32()).value;
+          break;
+        case 3:
+          message.cursor = reader.string();
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): ListMessageMentionRequest {
+    return {
+      limit: isSet(object.limit) ? Number(object.limit) : undefined,
+      forward: isSet(object.forward) ? Boolean(object.forward) : undefined,
+      cursor: isSet(object.cursor) ? String(object.cursor) : "",
+    };
+  },
+
+  toJSON(message: ListMessageMentionRequest): unknown {
+    const obj: any = {};
+    message.limit !== undefined && (obj.limit = message.limit);
+    message.forward !== undefined && (obj.forward = message.forward);
+    message.cursor !== undefined && (obj.cursor = message.cursor);
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<ListMessageMentionRequest>, I>>(base?: I): ListMessageMentionRequest {
+    return ListMessageMentionRequest.fromPartial(base ?? {});
+  },
+
+  fromPartial<I extends Exact<DeepPartial<ListMessageMentionRequest>, I>>(object: I): ListMessageMentionRequest {
+    const message = createBaseListMessageMentionRequest();
+    message.limit = object.limit ?? undefined;
+    message.forward = object.forward ?? undefined;
+    message.cursor = object.cursor ?? "";
     return message;
   },
 };

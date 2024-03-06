@@ -371,13 +371,19 @@ export interface ChannelMessage {
     attachments: string;
     /** Message reference */
     references: string;
+    /** referenced message */
+    referenced_message: string;
 }
 /** Mention to message */
 export interface MessageMention {
+    /** Mention id */
+    id: string;
     /** mention user id */
     user_id: string;
     /** mention username */
     username: string;
+    /** The UNIX time (for gRPC clients) or ISO string (for REST clients) when the message was created. */
+    create_time: Date | undefined;
 }
 /** Emoji reaction by user */
 export interface MessageReaction {
@@ -389,6 +395,8 @@ export interface MessageReaction {
     sender_id: string;
     /** Action reaction delete or add */
     action: boolean;
+    /** Cacheable cursor to list newer messages. Durable and designed to be stored, unlike next/prev cursors. */
+    cacheable_cursor: string;
 }
 /** Message attachment */
 export interface MessageAttachment {
@@ -1485,6 +1493,14 @@ export interface UploadAttachmentRequest {
     width: number;
     /** Height */
     height: number;
+}
+export interface ListMessageMentionRequest {
+    /** Max number of records to return. Between 1 and 100. */
+    limit: number | undefined;
+    /** True if listing should be older messages to newer, false if reverse. */
+    forward: boolean | undefined;
+    /** A pagination cursor, if any. */
+    cursor: string;
 }
 export interface UploadAttachment {
     /** The name of file that need to upload */
@@ -2979,6 +2995,7 @@ export declare const ChannelMessage: {
         mentions?: string | undefined;
         attachments?: string | undefined;
         references?: string | undefined;
+        referenced_message?: string | undefined;
     } & {
         clan_id?: string | undefined;
         channel_id?: string | undefined;
@@ -2997,6 +3014,7 @@ export declare const ChannelMessage: {
         mentions?: string | undefined;
         attachments?: string | undefined;
         references?: string | undefined;
+        referenced_message?: string | undefined;
     } & { [K in Exclude<keyof I, keyof ChannelMessage>]: never; }>(base?: I | undefined): ChannelMessage;
     fromPartial<I_1 extends {
         clan_id?: string | undefined;
@@ -3016,6 +3034,7 @@ export declare const ChannelMessage: {
         mentions?: string | undefined;
         attachments?: string | undefined;
         references?: string | undefined;
+        referenced_message?: string | undefined;
     } & {
         clan_id?: string | undefined;
         channel_id?: string | undefined;
@@ -3034,6 +3053,7 @@ export declare const ChannelMessage: {
         mentions?: string | undefined;
         attachments?: string | undefined;
         references?: string | undefined;
+        referenced_message?: string | undefined;
     } & { [K_1 in Exclude<keyof I_1, keyof ChannelMessage>]: never; }>(object: I_1): ChannelMessage;
 };
 export declare const MessageMention: {
@@ -3042,18 +3062,26 @@ export declare const MessageMention: {
     fromJSON(object: any): MessageMention;
     toJSON(message: MessageMention): unknown;
     create<I extends {
+        id?: string | undefined;
         user_id?: string | undefined;
         username?: string | undefined;
+        create_time?: Date | undefined;
     } & {
+        id?: string | undefined;
         user_id?: string | undefined;
         username?: string | undefined;
+        create_time?: Date | undefined;
     } & { [K in Exclude<keyof I, keyof MessageMention>]: never; }>(base?: I | undefined): MessageMention;
     fromPartial<I_1 extends {
+        id?: string | undefined;
         user_id?: string | undefined;
         username?: string | undefined;
+        create_time?: Date | undefined;
     } & {
+        id?: string | undefined;
         user_id?: string | undefined;
         username?: string | undefined;
+        create_time?: Date | undefined;
     } & { [K_1 in Exclude<keyof I_1, keyof MessageMention>]: never; }>(object: I_1): MessageMention;
 };
 export declare const MessageReaction: {
@@ -3066,22 +3094,26 @@ export declare const MessageReaction: {
         emoji?: string | undefined;
         sender_id?: string | undefined;
         action?: boolean | undefined;
+        cacheable_cursor?: string | undefined;
     } & {
         id?: string | undefined;
         emoji?: string | undefined;
         sender_id?: string | undefined;
         action?: boolean | undefined;
+        cacheable_cursor?: string | undefined;
     } & { [K in Exclude<keyof I, keyof MessageReaction>]: never; }>(base?: I | undefined): MessageReaction;
     fromPartial<I_1 extends {
         id?: string | undefined;
         emoji?: string | undefined;
         sender_id?: string | undefined;
         action?: boolean | undefined;
+        cacheable_cursor?: string | undefined;
     } & {
         id?: string | undefined;
         emoji?: string | undefined;
         sender_id?: string | undefined;
         action?: boolean | undefined;
+        cacheable_cursor?: string | undefined;
     } & { [K_1 in Exclude<keyof I_1, keyof MessageReaction>]: never; }>(object: I_1): MessageReaction;
 };
 export declare const MessageAttachment: {
@@ -3188,6 +3220,7 @@ export declare const ChannelMessageList: {
             mentions?: string | undefined;
             attachments?: string | undefined;
             references?: string | undefined;
+            referenced_message?: string | undefined;
         }[] | undefined;
         last_seen_message_id?: string | undefined;
         next_cursor?: string | undefined;
@@ -3212,6 +3245,7 @@ export declare const ChannelMessageList: {
             mentions?: string | undefined;
             attachments?: string | undefined;
             references?: string | undefined;
+            referenced_message?: string | undefined;
         }[] & ({
             clan_id?: string | undefined;
             channel_id?: string | undefined;
@@ -3230,6 +3264,7 @@ export declare const ChannelMessageList: {
             mentions?: string | undefined;
             attachments?: string | undefined;
             references?: string | undefined;
+            referenced_message?: string | undefined;
         } & {
             clan_id?: string | undefined;
             channel_id?: string | undefined;
@@ -3248,6 +3283,7 @@ export declare const ChannelMessageList: {
             mentions?: string | undefined;
             attachments?: string | undefined;
             references?: string | undefined;
+            referenced_message?: string | undefined;
         } & { [K in Exclude<keyof I["messages"][number], keyof ChannelMessage>]: never; })[] & { [K_1 in Exclude<keyof I["messages"], keyof {
             clan_id?: string | undefined;
             channel_id?: string | undefined;
@@ -3266,6 +3302,7 @@ export declare const ChannelMessageList: {
             mentions?: string | undefined;
             attachments?: string | undefined;
             references?: string | undefined;
+            referenced_message?: string | undefined;
         }[]>]: never; }) | undefined;
         last_seen_message_id?: string | undefined;
         next_cursor?: string | undefined;
@@ -3291,6 +3328,7 @@ export declare const ChannelMessageList: {
             mentions?: string | undefined;
             attachments?: string | undefined;
             references?: string | undefined;
+            referenced_message?: string | undefined;
         }[] | undefined;
         last_seen_message_id?: string | undefined;
         next_cursor?: string | undefined;
@@ -3315,6 +3353,7 @@ export declare const ChannelMessageList: {
             mentions?: string | undefined;
             attachments?: string | undefined;
             references?: string | undefined;
+            referenced_message?: string | undefined;
         }[] & ({
             clan_id?: string | undefined;
             channel_id?: string | undefined;
@@ -3333,6 +3372,7 @@ export declare const ChannelMessageList: {
             mentions?: string | undefined;
             attachments?: string | undefined;
             references?: string | undefined;
+            referenced_message?: string | undefined;
         } & {
             clan_id?: string | undefined;
             channel_id?: string | undefined;
@@ -3351,6 +3391,7 @@ export declare const ChannelMessageList: {
             mentions?: string | undefined;
             attachments?: string | undefined;
             references?: string | undefined;
+            referenced_message?: string | undefined;
         } & { [K_3 in Exclude<keyof I_1["messages"][number], keyof ChannelMessage>]: never; })[] & { [K_4 in Exclude<keyof I_1["messages"], keyof {
             clan_id?: string | undefined;
             channel_id?: string | undefined;
@@ -3369,6 +3410,7 @@ export declare const ChannelMessageList: {
             mentions?: string | undefined;
             attachments?: string | undefined;
             references?: string | undefined;
+            referenced_message?: string | undefined;
         }[]>]: never; }) | undefined;
         last_seen_message_id?: string | undefined;
         next_cursor?: string | undefined;
@@ -9827,6 +9869,30 @@ export declare const UploadAttachmentRequest: {
         width?: number | undefined;
         height?: number | undefined;
     } & { [K_1 in Exclude<keyof I_1, keyof UploadAttachmentRequest>]: never; }>(object: I_1): UploadAttachmentRequest;
+};
+export declare const ListMessageMentionRequest: {
+    encode(message: ListMessageMentionRequest, writer?: _m0.Writer): _m0.Writer;
+    decode(input: _m0.Reader | Uint8Array, length?: number): ListMessageMentionRequest;
+    fromJSON(object: any): ListMessageMentionRequest;
+    toJSON(message: ListMessageMentionRequest): unknown;
+    create<I extends {
+        limit?: number | undefined;
+        forward?: boolean | undefined;
+        cursor?: string | undefined;
+    } & {
+        limit?: number | undefined;
+        forward?: boolean | undefined;
+        cursor?: string | undefined;
+    } & { [K in Exclude<keyof I, keyof ListMessageMentionRequest>]: never; }>(base?: I | undefined): ListMessageMentionRequest;
+    fromPartial<I_1 extends {
+        limit?: number | undefined;
+        forward?: boolean | undefined;
+        cursor?: string | undefined;
+    } & {
+        limit?: number | undefined;
+        forward?: boolean | undefined;
+        cursor?: string | undefined;
+    } & { [K_1 in Exclude<keyof I_1, keyof ListMessageMentionRequest>]: never; }>(object: I_1): ListMessageMentionRequest;
 };
 export declare const UploadAttachment: {
     encode(message: UploadAttachment, writer?: _m0.Writer): _m0.Writer;

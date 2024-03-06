@@ -137,6 +137,7 @@ export interface ApiChannelMessage {
     message_id: string;
     persistent?: boolean;
     reactions?: string;
+    referenced_message?: string;
     references?: string;
     sender_id: string;
     update_time?: string;

@@ -241,6 +241,8 @@ export interface ApiChannelMessage {
   //
   reactions?: string;
   //
+  referenced_message?: string;
+  //
   references?: string;
   //Message sender, usually a user ID.
   sender_id: string;
