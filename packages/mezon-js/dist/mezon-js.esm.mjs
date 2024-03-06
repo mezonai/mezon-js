@@ -3725,15 +3725,29 @@ var _DefaultSocket = class _DefaultSocket {
         } else if (message.stream_data) {
           this.onstreamdata(message.stream_data);
         } else if (message.channel_message) {
-          message.channel_message.content = JSON.parse(message.channel_message.content);
           try {
-            message.channel_message.mentions = JSON.parse(message.channel_message.mentions);
-            message.channel_message.attachments = JSON.parse(message.channel_message.attachments);
-            message.channel_message.reactions = JSON.parse(message.channel_message.reactions);
-            message.channel_message.references = JSON.parse(message.channel_message.references);
-          } catch (e) {
+            var e = {
+              avatar: message.channel_message.avatar,
+              channel_id: message.channel_message.channel_id,
+              channel_name: message.channel_message.channel_name,
+              clan_id: message.channel_message.clan_id,
+              code: message.channel_message.code,
+              content: JSON.parse(message.channel_message.content),
+              create_time: message.channel_message.create_time,
+              message_id: message.channel_message.message_id,
+              sender_id: message.channel_message.sender_id,
+              update_time: message.channel_message.update_time,
+              user_id_one: message.channel_message.user_id_one,
+              user_id_two: message.channel_message.user_id_two,
+              username: message.channel_message.username,
+              reactions: JSON.parse(message.channel_message.reactions),
+              mentions: JSON.parse(message.channel_message.mentions),
+              attachments: JSON.parse(message.channel_message.attachments),
+              references: JSON.parse(message.channel_message.references)
+            };
+            this.onchannelmessage(e);
+          } catch (e2) {
           }
-          this.onchannelmessage(message.channel_message);
         } else if (message.message_typing_event) {
           this.onmessagetyping(message.message_typing_event);
         } else if (message.message_reaction_event) {
@@ -4612,10 +4626,10 @@ var Client = class {
             channel_name: m.channel_name,
             user_id_one: m.user_id_one,
             user_id_two: m.user_id_two,
-            attachments: m.attachments ? JSON.parse(m.attachments) : void 0,
-            mentions: m.mentions ? JSON.parse(m.mentions) : void 0,
-            reactions: m.reactions ? JSON.parse(m.reactions) : void 0,
-            references: m.references ? JSON.parse(m.references) : void 0
+            attachments: m.attachments ? JSON.parse(m.attachments) : [],
+            mentions: m.mentions ? JSON.parse(m.mentions) : [],
+            reactions: m.reactions ? JSON.parse(m.reactions) : [],
+            references: m.references ? JSON.parse(m.references) : []
           });
         });
         return Promise.resolve(result);

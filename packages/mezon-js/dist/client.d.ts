@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { ApiAccount, ApiAccountCustom, ApiAccountDevice, ApiAccountEmail, ApiAccountFacebook, ApiAccountFacebookInstantGame, ApiAccountGoogle, ApiAccountGameCenter, ApiAccountSteam, ApiChannelMessageList, ApiChannelDescList, ApiChannelDescription, ApiCreateChannelDescRequest, ApiClanDescList, ApiCreateClanDescRequest, ApiClanDesc, ApiCategoryDesc, ApiCategoryDescList, ApiRoleList, ApiPermissionList, ApiRoleUserList, ApiRole, ApiCreateRoleRequest, ApiCreateCategoryDescRequest, ApiUpdateCategoryDescRequest, ApiDeleteStorageObjectsRequest, ApiEvent, ApiReadStorageObjectsRequest, ApiStorageObjectAcks, ApiUpdateAccountRequest, ApiAccountApple, ApiLinkSteamRequest, ApiClanDescProfile, ApiClanProfile, ApiChannelUserList, ApiClanUserList, ApiLinkInviteUserRequest, ApiLinkInviteUser, ApiInviteUserRes, ApiUploadAttachmentRequest, ApiUploadAttachment } from "./api.gen";
+import { ApiAccount, ApiAccountCustom, ApiAccountDevice, ApiAccountEmail, ApiAccountFacebook, ApiAccountFacebookInstantGame, ApiAccountGoogle, ApiAccountGameCenter, ApiAccountSteam, ApiChannelMessageList, ApiChannelDescList, ApiChannelDescription, ApiCreateChannelDescRequest, ApiClanDescList, ApiCreateClanDescRequest, ApiClanDesc, ApiCategoryDesc, ApiCategoryDescList, ApiRoleList, ApiPermissionList, ApiRoleUserList, ApiRole, ApiCreateRoleRequest, ApiCreateCategoryDescRequest, ApiUpdateCategoryDescRequest, ApiDeleteStorageObjectsRequest, ApiEvent, ApiReadStorageObjectsRequest, ApiStorageObjectAcks, ApiUpdateAccountRequest, ApiAccountApple, ApiLinkSteamRequest, ApiClanDescProfile, ApiClanProfile, ApiChannelUserList, ApiClanUserList, ApiLinkInviteUserRequest, ApiLinkInviteUser, ApiInviteUserRes, ApiUploadAttachmentRequest, ApiUploadAttachment, ApiMessageReaction, ApiMessageMention, ApiMessageAttachment, ApiMessageRef } from "./api.gen";
 import { Session } from "./session";
 import { Socket } from "./socket";
 import { WebSocketAdapter } from "./web_socket_adapter";
@@ -93,6 +93,27 @@ export interface ChannelMessage {
     user_id_two?: string;
     username: string;
 }
+/** A message sent on a channel. */
+export interface ChannelMessageTS {
+    avatar?: string;
+    channel_id: string;
+    channel_name: string;
+    clan_id?: string;
+    code: number;
+    content: string;
+    create_time: string;
+    reactions?: Array<ApiMessageReaction>;
+    mentions?: Array<ApiMessageMention>;
+    attachments?: Array<ApiMessageAttachment>;
+    references?: Array<ApiMessageRef>;
+    message_id: string;
+    persistent?: boolean;
+    sender_id: string;
+    update_time?: string;
+    user_id_one?: string;
+    user_id_two?: string;
+    username: string;
+}
 /** A list of channel messages, usually a result of a list operation. */
 export interface ChannelMessageList {
     /** Cacheable cursor to list newer messages. Durable and designed to be stored, unlike next/prev cursors. */
@@ -101,6 +122,19 @@ export interface ChannelMessageList {
     last_seen_message_id?: string;
     /** A list of messages. */
     messages?: Array<ChannelMessage>;
+    /** The cursor to send when retireving the next page, if any. */
+    next_cursor?: string;
+    /** The cursor to send when retrieving the previous page, if any. */
+    prev_cursor?: string;
+}
+/** A list of channel messages, usually a result of a list operation. */
+export interface ChannelMessageListTS {
+    /** Cacheable cursor to list newer messages. Durable and designed to be stored, unlike next/prev cursors. */
+    cacheable_cursor?: string;
+    /**last seen message from user on channel */
+    last_seen_message_id?: string;
+    /** A list of messages. */
+    messages?: Array<ChannelMessageTS>;
     /** The cursor to send when retireving the next page, if any. */
     next_cursor?: string;
     /** The cursor to send when retrieving the previous page, if any. */
@@ -416,7 +450,7 @@ export declare class Client {
     /** Leave a group the user is part of. */
     leaveGroup(session: Session, groupId: string): Promise<boolean>;
     /** List a channel's message history. */
-    listChannelMessages(session: Session, channelId: string, limit?: number, forward?: boolean, cursor?: string): Promise<ChannelMessageList>;
+    listChannelMessages(session: Session, channelId: string, limit?: number, forward?: boolean, cursor?: string): Promise<ChannelMessageListTS>;
     /** List a channel's users. */
     listChannelUsers(session: Session, channelId: string, state?: number, limit?: number, cursor?: string): Promise<ApiChannelUserList>;
     /** List a channel's users. */
