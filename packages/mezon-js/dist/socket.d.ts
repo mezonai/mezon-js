@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { ApiMessageAttachment, ApiMessageMention, ApiMessageRef, ApiRpc } from "./api.gen";
+import { ApiMessageAttachment, ApiMessageMention, ApiMessageReaction, ApiMessageRef, ApiRpc } from "./api.gen";
 import { Session } from "./session";
 import { Notification } from "./client";
 import { WebSocketAdapter } from "./web_socket_adapter";
@@ -151,6 +151,27 @@ export interface ChannelMessageEvent {
     reactions?: string;
     attachments?: string;
     references?: string;
+}
+/** An incoming message on a realtime chat channel. */
+export interface ChannelMessageTSEvent {
+    avatar?: string;
+    channel_id: string;
+    channel_name: string;
+    clan_id?: string;
+    code: number;
+    content: string;
+    create_time: string;
+    message_id: string;
+    persistent?: boolean;
+    sender_id: string;
+    update_time: string;
+    user_id_one: string;
+    user_id_two: string;
+    username: string;
+    reactions?: Array<ApiMessageReaction>;
+    mentions?: Array<ApiMessageMention>;
+    attachments?: Array<ApiMessageAttachment>;
+    references?: Array<ApiMessageRef>;
 }
 /** An acknowledgement received in response to sending a message on a chat channel. */
 export interface ChannelMessageAck {
@@ -523,7 +544,7 @@ export interface Socket {
      */
     onheartbeattimeout: () => void;
     /** Receive channel message. */
-    onchannelmessage: (channelMessage: ChannelMessageEvent) => void;
+    onchannelmessage: (channelMessage: ChannelMessageTSEvent) => void;
     /** Receive typing event */
     onmessagetyping: (messageTypingEvent: MessageTypingEvent) => void;
     /** Receive reaction event */
@@ -567,7 +588,7 @@ export declare class DefaultSocket implements Socket {
     onmessagetyping(messagetyping: MessageTypingEvent): void;
     onmessagereaction(messagereaction: MessageReactionEvent): void;
     onmessagedeleted(messagedeleted: MessageDeletedEvent): void;
-    onchannelmessage(channelMessage: ChannelMessageEvent): void;
+    onchannelmessage(channelMessage: ChannelMessageTSEvent): void;
     onchannelpresence(channelPresence: ChannelPresenceEvent): void;
     onnotification(notification: Notification): void;
     onparty(party: Party): void;

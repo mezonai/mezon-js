@@ -16,7 +16,7 @@
 
 import { decode } from 'js-base64'
 
-import {ApiMessageAttachment, ApiMessageMention, ApiMessageRef, ApiNotification, ApiRpc} from "./api.gen";
+import {ApiMessageAttachment, ApiMessageMention, ApiMessageReaction, ApiMessageRef, ApiNotification, ApiRpc} from "./api.gen";
 import {Session} from "./session";
 import {Notification} from "./client";
 import {WebSocketAdapter, WebSocketAdapterText} from "./web_socket_adapter"
@@ -198,6 +198,45 @@ export interface ChannelMessageEvent {
   attachments?: string;
   //
   references?: string;
+}
+
+/** An incoming message on a realtime chat channel. */
+export interface ChannelMessageTSEvent {
+  avatar?: string;
+  //The channel this message belongs to.
+  channel_id: string;
+  //The name of the chat room, or an empty string if this message was not sent through a chat room.
+  channel_name: string;
+  //The clan this message belong to.
+  clan_id?: string;
+  //The code representing a message type or category.
+  code: number;
+  //The content payload.
+  content: string;
+  //The UNIX time (for gRPC clients) or ISO string (for REST clients) when the message was created.
+  create_time: string;
+  //The unique ID of this message.
+  message_id: string;
+  //True if the message was persisted to the channel's history, false otherwise.
+  persistent?: boolean;
+  //Message sender, usually a user ID.
+  sender_id: string;
+  //The UNIX time (for gRPC clients) or ISO string (for REST clients) when the message was last updated.
+  update_time: string;
+  //The ID of the first DM user, or an empty string if this message was not sent through a DM chat.
+  user_id_one: string;
+  //The ID of the second DM user, or an empty string if this message was not sent through a DM chat.
+  user_id_two: string;
+  //The username of the message sender, if any.
+  username: string;
+   //
+   reactions?: Array<ApiMessageReaction>;
+   //
+   mentions?: Array<ApiMessageMention>;
+   //
+   attachments?: Array<ApiMessageAttachment>;
+   //
+   references?: Array<ApiMessageRef>;
 }
 
 /** An acknowledgement received in response to sending a message on a chat channel. */
@@ -638,7 +677,7 @@ export interface Socket {
   onheartbeattimeout: () => void;
 
   /** Receive channel message. */
-  onchannelmessage: (channelMessage: ChannelMessageEvent) => void;
+  onchannelmessage: (channelMessage: ChannelMessageTSEvent) => void;
 
   /** Receive typing event */
   onmessagetyping: (messageTypingEvent: MessageTypingEvent) => void;
@@ -730,17 +769,31 @@ export class DefaultSocket implements Socket {
           this.onstreampresence(<StreamPresenceEvent>message.stream_presence_event);
         } else if (message.stream_data) {
           this.onstreamdata(<StreamData>message.stream_data);
-        } else if (message.channel_message) {
-          message.channel_message.content = JSON.parse(message.channel_message.content);
-          try {          
-            message.channel_message.mentions = JSON.parse(message.channel_message.mentions);
-            message.channel_message.attachments = JSON.parse(message.channel_message.attachments);
-            message.channel_message.reactions = JSON.parse(message.channel_message.reactions);
-            message.channel_message.references = JSON.parse(message.channel_message.references);
+        } else if (message.channel_message) {                    
+          try {
+            var e: ChannelMessageTSEvent = {
+              avatar: message.channel_message.avatar,
+              channel_id: message.channel_message.channel_id,
+              channel_name: message.channel_message.channel_name,
+              clan_id: message.channel_message.clan_id,
+              code: message.channel_message.code,
+              content: JSON.parse(message.channel_message.content),
+              create_time: message.channel_message.create_time,
+              message_id: message.channel_message.message_id,
+              sender_id: message.channel_message.sender_id,
+              update_time: message.channel_message.update_time,
+              user_id_one: message.channel_message.user_id_one,
+              user_id_two: message.channel_message.user_id_two,
+              username: message.channel_message.username,
+              reactions: JSON.parse(message.channel_message.reactions),
+              mentions: JSON.parse(message.channel_message.mentions),
+              attachments: JSON.parse(message.channel_message.attachments),
+              references: JSON.parse(message.channel_message.references)
+            };
+            this.onchannelmessage(e);
           } catch(e) {
             //console.log("error parse data", e);
-          }
-          this.onchannelmessage(<ChannelMessageEvent>message.channel_message);
+          }          
         } else if (message.message_typing_event) {
           this.onmessagetyping(<MessageTypingEvent>message.message_typing_event);
         } else if (message.message_reaction_event) {
@@ -854,7 +907,7 @@ export class DefaultSocket implements Socket {
     }
   }
 
-  onchannelmessage(channelMessage: ChannelMessageEvent) {
+  onchannelmessage(channelMessage: ChannelMessageTSEvent) {
     if (this.verbose && window && window.console) {
       console.log(channelMessage);
     }
