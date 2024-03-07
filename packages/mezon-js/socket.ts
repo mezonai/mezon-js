@@ -190,15 +190,15 @@ export interface ChannelMessageEvent {
   user_id_two: string;
   //The username of the message sender, if any.
   username: string;
-   //
-   reactions?: Array<ApiMessageReaction>;
-   //
-   mentions?: Array<ApiMessageMention>;
-   //
-   attachments?: Array<ApiMessageAttachment>;
-   //
-   references?: Array<ApiMessageRef>;
-   //
+  //
+  reactions?: Array<ApiMessageReaction>;
+  //
+  mentions?: Array<ApiMessageMention>;
+  //
+  attachments?: Array<ApiMessageAttachment>;
+  //
+  references?: Array<ApiMessageRef>;
+  //
   referenced_message?: ChannelMessageEvent;
 }
 
