@@ -85,6 +85,7 @@ export interface ChannelMessage {
     mentions?: Array<ApiMessageMention>;
     attachments?: Array<ApiMessageAttachment>;
     references?: Array<ApiMessageRef>;
+    referenced_message?: ChannelMessage;
     id: string;
     persistent?: boolean;
     sender_id: string;

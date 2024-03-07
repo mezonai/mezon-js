@@ -151,6 +151,7 @@ export interface ChannelMessageEvent {
     mentions?: Array<ApiMessageMention>;
     attachments?: Array<ApiMessageAttachment>;
     references?: Array<ApiMessageRef>;
+    referenced_message?: ChannelMessageEvent;
 }
 /** An acknowledgement received in response to sending a message on a chat channel. */
 export interface ChannelMessageAck {
