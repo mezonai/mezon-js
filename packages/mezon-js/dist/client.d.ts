@@ -81,32 +81,11 @@ export interface ChannelMessage {
     code: number;
     content: string;
     create_time: string;
-    reactions?: string;
-    mentions?: string;
-    attachments?: string;
-    references?: string;
-    message_id: string;
-    persistent?: boolean;
-    sender_id: string;
-    update_time?: string;
-    user_id_one?: string;
-    user_id_two?: string;
-    username: string;
-}
-/** A message sent on a channel. */
-export interface ChannelMessageTS {
-    avatar?: string;
-    channel_id: string;
-    channel_name: string;
-    clan_id?: string;
-    code: number;
-    content: string;
-    create_time: string;
     reactions?: Array<ApiMessageReaction>;
     mentions?: Array<ApiMessageMention>;
     attachments?: Array<ApiMessageAttachment>;
     references?: Array<ApiMessageRef>;
-    message_id: string;
+    id: string;
     persistent?: boolean;
     sender_id: string;
     update_time?: string;
@@ -122,19 +101,6 @@ export interface ChannelMessageList {
     last_seen_message_id?: string;
     /** A list of messages. */
     messages?: Array<ChannelMessage>;
-    /** The cursor to send when retireving the next page, if any. */
-    next_cursor?: string;
-    /** The cursor to send when retrieving the previous page, if any. */
-    prev_cursor?: string;
-}
-/** A list of channel messages, usually a result of a list operation. */
-export interface ChannelMessageListTS {
-    /** Cacheable cursor to list newer messages. Durable and designed to be stored, unlike next/prev cursors. */
-    cacheable_cursor?: string;
-    /**last seen message from user on channel */
-    last_seen_message_id?: string;
-    /** A list of messages. */
-    messages?: Array<ChannelMessageTS>;
     /** The cursor to send when retireving the next page, if any. */
     next_cursor?: string;
     /** The cursor to send when retrieving the previous page, if any. */
@@ -450,7 +416,7 @@ export declare class Client {
     /** Leave a group the user is part of. */
     leaveGroup(session: Session, groupId: string): Promise<boolean>;
     /** List a channel's message history. */
-    listChannelMessages(session: Session, channelId: string, limit?: number, forward?: boolean, cursor?: string): Promise<ChannelMessageListTS>;
+    listChannelMessages(session: Session, channelId: string, limit?: number, forward?: boolean, cursor?: string): Promise<ChannelMessageList>;
     /** List a channel's users. */
     listChannelUsers(session: Session, channelId: string, state?: number, limit?: number, cursor?: string): Promise<ApiChannelUserList>;
     /** List a channel's users. */
@@ -552,5 +518,5 @@ export declare class Client {
     /** Write storage objects. */
     writeStorageObjects(session: Session, objects: Array<WriteStorageObject>): Promise<ApiStorageObjectAcks>;
     /** List a channel's users. */
-    listMessageMentions(session: Session, limit?: number, forward?: boolean, cursor?: string): Promise<ChannelMessageListTS>;
+    listMessageMentions(session: Session, limit?: number, forward?: boolean, cursor?: string): Promise<ChannelMessageList>;
 }
