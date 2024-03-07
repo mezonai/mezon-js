@@ -5446,28 +5446,31 @@ function convertArrayToChannelMessage(strArray) {
     sender_id: "",
     username: ""
   };
-  if (strArray) {
-    const data = JSON.parse(strArray);
-    result.id = data[0];
-    result.code = data[1];
-    result.sender_id = data[2];
-    result.content = data[3];
-    result.create_time = data[4];
-    result.update_time = data[5];
-    (_a = result.reactions) == null ? void 0 : _a.push({
-      id: data[6][0],
-      sender_id: data[6][1],
-      emoji: data[6][2]
-    });
-    (_b = result.mentions) == null ? void 0 : _b.push({
-      user_id: data[7][1],
-      username: data[7][2]
-    });
-    (_c = result.attachments) == null ? void 0 : _c.push({
-      url: data[8][1],
-      filename: data[8][2],
-      filetype: data[8][3]
-    });
+  try {
+    if (strArray) {
+      const data = JSON.parse(strArray);
+      result.id = data[0];
+      result.code = data[1];
+      result.sender_id = data[2];
+      result.content = data[3];
+      result.create_time = data[4];
+      result.update_time = data[5];
+      (_a = result.reactions) == null ? void 0 : _a.push({
+        id: data[6][0],
+        sender_id: data[6][1],
+        emoji: data[6][2]
+      });
+      (_b = result.mentions) == null ? void 0 : _b.push({
+        user_id: data[7][1],
+        username: data[7][2]
+      });
+      (_c = result.attachments) == null ? void 0 : _c.push({
+        url: data[8][1],
+        filename: data[8][2],
+        filetype: data[8][3]
+      });
+    }
+  } catch (e) {
   }
   return result;
 }
