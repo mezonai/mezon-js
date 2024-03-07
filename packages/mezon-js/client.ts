@@ -165,6 +165,9 @@ export interface ChannelMessage {
   attachments?: Array<ApiMessageAttachment>;
   //
   references?: Array<ApiMessageRef>;
+  //
+  referenced_message?: ChannelMessage;
+
   //The unique ID of this message.
   id: string;
   //True if the message was persisted to the channel's history, false otherwise.
@@ -1014,6 +1017,7 @@ export class Client {
           mentions: m.mentions ? JSON.parse(m.mentions) : [],
           reactions: m.reactions ? JSON.parse(m.reactions) : [],
           references: m.references ? JSON.parse(m.references) : [],
+          referenced_message: convertArrayToChannelMessage(m.referenced_message),
         })
       });
       return Promise.resolve(result);
@@ -1868,7 +1872,7 @@ export class Client {
       }
 
       response.messages!.forEach(m => {        
-        result.messages!.push({
+        return result.messages!.push({
           channel_id: m.channel_id,
           code: m.code ? Number(m.code) : 0,
           create_time: m.create_time || '',
@@ -1886,9 +1890,56 @@ export class Client {
           mentions: m.mentions ? JSON.parse(m.mentions) : [],
           reactions: m.reactions ? JSON.parse(m.reactions) : [],
           references: m.references ? JSON.parse(m.references) : [],
-        })
+          referenced_message: convertArrayToChannelMessage(m.referenced_message),
+        });
       });
       return Promise.resolve(result);
     });
   }
 };
+
+function convertArrayToChannelMessage(strArray?: string): ChannelMessage {
+  var result: ChannelMessage = {
+    mentions: [],
+    attachments: [],
+    reactions: [],
+    references: [],
+    channel_id: "",
+    channel_name: "",
+    code: 0,
+    content: "",
+    create_time: "",
+    id: "",
+    sender_id: "",
+    username: ""
+  };
+
+  if (strArray) {  
+    const data = JSON.parse(strArray);
+    result.id = data[0];
+    result.code = data[1];
+    result.sender_id = data[2];
+    result.content = data[3];
+    result.create_time = data[4];
+    result.update_time = data[5];
+    result.reactions?.push({
+      id: data[6][0],
+      sender_id: data[6][1],
+      emoji: data[6][2]
+    });
+
+    result.mentions?.push({
+      user_id: data[7][1],
+      username: data[7][2]
+    });
+
+    result.attachments?.push({
+      url: data[8][1],
+      filename: data[8][2],
+      filetype: data[8][3]    
+    });
+  }
+  
+  return result;
+}
+
