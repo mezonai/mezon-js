@@ -1914,30 +1914,34 @@ function convertArrayToChannelMessage(strArray?: string): ChannelMessage {
     username: ""
   };
 
-  if (strArray) {  
-    const data = JSON.parse(strArray);
-    result.id = data[0];
-    result.code = data[1];
-    result.sender_id = data[2];
-    result.content = data[3];
-    result.create_time = data[4];
-    result.update_time = data[5];
-    result.reactions?.push({
-      id: data[6][0],
-      sender_id: data[6][1],
-      emoji: data[6][2]
-    });
+  try {
+    if (strArray) {    
+      const data = JSON.parse(strArray);
+      result.id = data[0];
+      result.code = data[1];
+      result.sender_id = data[2];
+      result.content = data[3];
+      result.create_time = data[4];
+      result.update_time = data[5];
+      result.reactions?.push({
+        id: data[6][0],
+        sender_id: data[6][1],
+        emoji: data[6][2]
+      });
 
-    result.mentions?.push({
-      user_id: data[7][1],
-      username: data[7][2]
-    });
+      result.mentions?.push({
+        user_id: data[7][1],
+        username: data[7][2]
+      });
 
-    result.attachments?.push({
-      url: data[8][1],
-      filename: data[8][2],
-      filetype: data[8][3]    
-    });
+      result.attachments?.push({
+        url: data[8][1],
+        filename: data[8][2],
+        filetype: data[8][3]    
+      });
+    }
+  } catch(e) {
+      
   }
   
   return result;
