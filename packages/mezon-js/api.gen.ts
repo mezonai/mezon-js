@@ -610,6 +610,8 @@ export interface ApiMessageRef {
   message_ref_id?: string;
   //
   ref_type?: number;
+  //
+  message_sender_id?: string;
 }
 
 /** A notification in the server. */

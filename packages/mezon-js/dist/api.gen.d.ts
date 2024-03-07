@@ -351,6 +351,7 @@ export interface ApiMessageRef {
     message_id?: string;
     message_ref_id?: string;
     ref_type?: number;
+    message_sender_id?: string;
 }
 /** A notification in the server. */
 export interface ApiNotification {

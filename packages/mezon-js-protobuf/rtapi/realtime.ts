@@ -322,6 +322,8 @@ export interface MessageRef {
   message_ref_id: string;
   /** Reference type. 0: reply */
   ref_type: number;
+  /** original message sender */
+  message_sender_id: string;
 }
 
 /** Send a message to a realtime channel. */
@@ -885,6 +887,8 @@ export interface MessageReactionEvent {
   emoji: string;
   /** action (add, delete) */
   action: boolean;
+  /** sender original message */
+  message_sender_id: string;
 }
 
 /** Message attachment */
@@ -2131,7 +2135,7 @@ export const MessageAttachment = {
 };
 
 function createBaseMessageRef(): MessageRef {
-  return { message_id: "", message_ref_id: "", ref_type: 0 };
+  return { message_id: "", message_ref_id: "", ref_type: 0, message_sender_id: "" };
 }
 
 export const MessageRef = {
@@ -2144,6 +2148,9 @@ export const MessageRef = {
     }
     if (message.ref_type !== 0) {
       writer.uint32(24).int32(message.ref_type);
+    }
+    if (message.message_sender_id !== "") {
+      writer.uint32(34).string(message.message_sender_id);
     }
     return writer;
   },
@@ -2164,6 +2171,9 @@ export const MessageRef = {
         case 3:
           message.ref_type = reader.int32();
           break;
+        case 4:
+          message.message_sender_id = reader.string();
+          break;
         default:
           reader.skipType(tag & 7);
           break;
@@ -2177,6 +2187,7 @@ export const MessageRef = {
       message_id: isSet(object.message_id) ? String(object.message_id) : "",
       message_ref_id: isSet(object.message_ref_id) ? String(object.message_ref_id) : "",
       ref_type: isSet(object.ref_type) ? Number(object.ref_type) : 0,
+      message_sender_id: isSet(object.message_sender_id) ? String(object.message_sender_id) : "",
     };
   },
 
@@ -2185,6 +2196,7 @@ export const MessageRef = {
     message.message_id !== undefined && (obj.message_id = message.message_id);
     message.message_ref_id !== undefined && (obj.message_ref_id = message.message_ref_id);
     message.ref_type !== undefined && (obj.ref_type = Math.round(message.ref_type));
+    message.message_sender_id !== undefined && (obj.message_sender_id = message.message_sender_id);
     return obj;
   },
 
@@ -2197,6 +2209,7 @@ export const MessageRef = {
     message.message_id = object.message_id ?? "";
     message.message_ref_id = object.message_ref_id ?? "";
     message.ref_type = object.ref_type ?? 0;
+    message.message_sender_id = object.message_sender_id ?? "";
     return message;
   },
 };
@@ -5956,7 +5969,7 @@ export const MessageMentionEvent = {
 };
 
 function createBaseMessageReactionEvent(): MessageReactionEvent {
-  return { id: "", channel_id: "", message_id: "", sender_id: "", emoji: "", action: false };
+  return { id: "", channel_id: "", message_id: "", sender_id: "", emoji: "", action: false, message_sender_id: "" };
 }
 
 export const MessageReactionEvent = {
@@ -5978,6 +5991,9 @@ export const MessageReactionEvent = {
     }
     if (message.action === true) {
       writer.uint32(48).bool(message.action);
+    }
+    if (message.message_sender_id !== "") {
+      writer.uint32(58).string(message.message_sender_id);
     }
     return writer;
   },
@@ -6007,6 +6023,9 @@ export const MessageReactionEvent = {
         case 6:
           message.action = reader.bool();
           break;
+        case 7:
+          message.message_sender_id = reader.string();
+          break;
         default:
           reader.skipType(tag & 7);
           break;
@@ -6023,6 +6042,7 @@ export const MessageReactionEvent = {
       sender_id: isSet(object.sender_id) ? String(object.sender_id) : "",
       emoji: isSet(object.emoji) ? String(object.emoji) : "",
       action: isSet(object.action) ? Boolean(object.action) : false,
+      message_sender_id: isSet(object.message_sender_id) ? String(object.message_sender_id) : "",
     };
   },
 
@@ -6034,6 +6054,7 @@ export const MessageReactionEvent = {
     message.sender_id !== undefined && (obj.sender_id = message.sender_id);
     message.emoji !== undefined && (obj.emoji = message.emoji);
     message.action !== undefined && (obj.action = message.action);
+    message.message_sender_id !== undefined && (obj.message_sender_id = message.message_sender_id);
     return obj;
   },
 
@@ -6049,6 +6070,7 @@ export const MessageReactionEvent = {
     message.sender_id = object.sender_id ?? "";
     message.emoji = object.emoji ?? "";
     message.action = object.action ?? false;
+    message.message_sender_id = object.message_sender_id ?? "";
     return message;
   },
 };
