@@ -158,47 +158,6 @@ export interface ChannelMessage {
   //The UNIX time (for gRPC clients) or ISO string (for REST clients) when the message was created.
   create_time: string;
   //
-  reactions?: string;
-  //
-  mentions?: string;
-  //
-  attachments?: string;
-  //
-  references?: string;
-  //The unique ID of this message.
-  message_id: string;
-  //True if the message was persisted to the channel's history, false otherwise.
-  persistent?: boolean;
-  //Message sender, usually a user ID.
-  sender_id: string;
-  //The UNIX time (for gRPC clients) or ISO string (for REST clients) when the message was last updated.
-  update_time?: string;
-  //The ID of the first DM user, or an empty string if this message was not sent through a DM chat.
-  user_id_one?: string;
-  //The ID of the second DM user, or an empty string if this message was not sent through a DM chat.
-  user_id_two?: string;
-  //The username of the message sender, if any.
-  username: string;
-}
-
-
-/** A message sent on a channel. */
-export interface ChannelMessageTS {
-  //
-  avatar?: string;
-  //The channel this message belongs to.
-  channel_id: string;
-  //The name of the chat room, or an empty string if this message was not sent through a chat room.
-  channel_name: string;
-  //The clan this message belong to.
-  clan_id?: string;
-  //The code representing a message type or category.
-  code: number;
-  //The content payload.
-  content: string;
-  //The UNIX time (for gRPC clients) or ISO string (for REST clients) when the message was created.
-  create_time: string;
-  //
   reactions?: Array<ApiMessageReaction>;
   //
   mentions?: Array<ApiMessageMention>;
@@ -207,7 +166,7 @@ export interface ChannelMessageTS {
   //
   references?: Array<ApiMessageRef>;
   //The unique ID of this message.
-  message_id: string;
+  id: string;
   //True if the message was persisted to the channel's history, false otherwise.
   persistent?: boolean;
   //Message sender, usually a user ID.
@@ -230,20 +189,6 @@ export interface ChannelMessageList {
   last_seen_message_id?: string;
   /** A list of messages. */
   messages?: Array<ChannelMessage>;
-  /** The cursor to send when retireving the next page, if any. */
-  next_cursor?: string;
-  /** The cursor to send when retrieving the previous page, if any. */
-  prev_cursor?: string;
-}
-
-/** A list of channel messages, usually a result of a list operation. */
-export interface ChannelMessageListTS {
-  /** Cacheable cursor to list newer messages. Durable and designed to be stored, unlike next/prev cursors. */
-  cacheable_cursor?: string;
-  /**last seen message from user on channel */
-  last_seen_message_id?: string;
-  /** A list of messages. */
-  messages?: Array<ChannelMessageTS>;
   /** The cursor to send when retireving the next page, if any. */
   next_cursor?: string;
   /** The cursor to send when retrieving the previous page, if any. */
@@ -1031,14 +976,14 @@ export class Client {
   }
 
   /** List a channel's message history. */
-  async listChannelMessages(session: Session, channelId: string, limit?: number, forward?: boolean, cursor?: string): Promise<ChannelMessageListTS> {
+  async listChannelMessages(session: Session, channelId: string, limit?: number, forward?: boolean, cursor?: string): Promise<ChannelMessageList> {
     if (this.autoRefreshSession && session.refresh_token &&
         session.isexpired((Date.now() + this.expiredTimespanMs)/1000)) {
         await this.sessionRefresh(session);
     }
 
     return this.apiClient.listChannelMessages(session.token, channelId, limit, forward, cursor).then((response: ApiChannelMessageList) => {
-      var result: ChannelMessageListTS = {
+      var result: ChannelMessageList = {
         messages: [],
         last_seen_message_id: response.last_seen_message_id,
         next_cursor: response.next_cursor,
@@ -1055,7 +1000,7 @@ export class Client {
           channel_id: m.channel_id,
           code: m.code ? Number(m.code) : 0,
           create_time: m.create_time || '',
-          message_id: m.message_id,
+          id: m.message_id,
           persistent: m.persistent,
           sender_id: m.sender_id,
           update_time: m.update_time,
@@ -1903,14 +1848,14 @@ export class Client {
   }
 
   /** List a channel's users. */
-  async listMessageMentions(session: Session, limit?: number, forward?: boolean, cursor?: string): Promise<ChannelMessageListTS> {
+  async listMessageMentions(session: Session, limit?: number, forward?: boolean, cursor?: string): Promise<ChannelMessageList> {
     if (this.autoRefreshSession && session.refresh_token &&
         session.isexpired((Date.now() + this.expiredTimespanMs)/1000)) {
         await this.sessionRefresh(session);
     }
 
     return this.apiClient.listMessageMentions(session.token, limit, forward, cursor).then((response: ApiChannelMessageList) => {
-      var result: ChannelMessageListTS = {
+      var result: ChannelMessageList = {
         messages: [],
         last_seen_message_id: response.last_seen_message_id,
         next_cursor: response.next_cursor,
@@ -1927,7 +1872,7 @@ export class Client {
           channel_id: m.channel_id,
           code: m.code ? Number(m.code) : 0,
           create_time: m.create_time || '',
-          message_id: m.message_id,
+          id: m.message_id,
           persistent: m.persistent,
           sender_id: m.sender_id,
           update_time: m.update_time,

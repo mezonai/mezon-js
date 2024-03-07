@@ -140,28 +140,7 @@ export interface ChannelMessageEvent {
     code: number;
     content: string;
     create_time: string;
-    message_id: string;
-    persistent: boolean;
-    sender_id: string;
-    update_time: string;
-    user_id_one: string;
-    user_id_two: string;
-    username: string;
-    mentions?: string;
-    reactions?: string;
-    attachments?: string;
-    references?: string;
-}
-/** An incoming message on a realtime chat channel. */
-export interface ChannelMessageTSEvent {
-    avatar?: string;
-    channel_id: string;
-    channel_name: string;
-    clan_id?: string;
-    code: number;
-    content: string;
-    create_time: string;
-    message_id: string;
+    id: string;
     persistent?: boolean;
     sender_id: string;
     update_time: string;
@@ -544,7 +523,7 @@ export interface Socket {
      */
     onheartbeattimeout: () => void;
     /** Receive channel message. */
-    onchannelmessage: (channelMessage: ChannelMessageTSEvent) => void;
+    onchannelmessage: (channelMessage: ChannelMessageEvent) => void;
     /** Receive typing event */
     onmessagetyping: (messageTypingEvent: MessageTypingEvent) => void;
     /** Receive reaction event */
@@ -588,7 +567,7 @@ export declare class DefaultSocket implements Socket {
     onmessagetyping(messagetyping: MessageTypingEvent): void;
     onmessagereaction(messagereaction: MessageReactionEvent): void;
     onmessagedeleted(messagedeleted: MessageDeletedEvent): void;
-    onchannelmessage(channelMessage: ChannelMessageTSEvent): void;
+    onchannelmessage(channelMessage: ChannelMessageEvent): void;
     onchannelpresence(channelPresence: ChannelPresenceEvent): void;
     onnotification(notification: Notification): void;
     onparty(party: Party): void;

@@ -177,46 +177,7 @@ export interface ChannelMessageEvent {
   //The UNIX time (for gRPC clients) or ISO string (for REST clients) when the message was created.
   create_time: string;
   //The unique ID of this message.
-  message_id: string;
-  //True if the message was persisted to the channel's history, false otherwise.
-  persistent: boolean;
-  //Message sender, usually a user ID.
-  sender_id: string;
-  //The UNIX time (for gRPC clients) or ISO string (for REST clients) when the message was last updated.
-  update_time: string;
-  //The ID of the first DM user, or an empty string if this message was not sent through a DM chat.
-  user_id_one: string;
-  //The ID of the second DM user, or an empty string if this message was not sent through a DM chat.
-  user_id_two: string;
-  //The username of the message sender, if any.
-  username: string;
-  //
-  mentions?: string;
-  //
-  reactions?: string;
-  //
-  attachments?: string;
-  //
-  references?: string;
-}
-
-/** An incoming message on a realtime chat channel. */
-export interface ChannelMessageTSEvent {
-  avatar?: string;
-  //The channel this message belongs to.
-  channel_id: string;
-  //The name of the chat room, or an empty string if this message was not sent through a chat room.
-  channel_name: string;
-  //The clan this message belong to.
-  clan_id?: string;
-  //The code representing a message type or category.
-  code: number;
-  //The content payload.
-  content: string;
-  //The UNIX time (for gRPC clients) or ISO string (for REST clients) when the message was created.
-  create_time: string;
-  //The unique ID of this message.
-  message_id: string;
+  id: string;
   //True if the message was persisted to the channel's history, false otherwise.
   persistent?: boolean;
   //Message sender, usually a user ID.
@@ -677,7 +638,7 @@ export interface Socket {
   onheartbeattimeout: () => void;
 
   /** Receive channel message. */
-  onchannelmessage: (channelMessage: ChannelMessageTSEvent) => void;
+  onchannelmessage: (channelMessage: ChannelMessageEvent) => void;
 
   /** Receive typing event */
   onmessagetyping: (messageTypingEvent: MessageTypingEvent) => void;
@@ -771,7 +732,7 @@ export class DefaultSocket implements Socket {
           this.onstreamdata(<StreamData>message.stream_data);
         } else if (message.channel_message) {                    
           try {
-            var e: ChannelMessageTSEvent = {
+            var e: ChannelMessageEvent = {
               avatar: message.channel_message.avatar,
               channel_id: message.channel_message.channel_id,
               channel_name: message.channel_message.channel_name,
@@ -779,7 +740,7 @@ export class DefaultSocket implements Socket {
               code: message.channel_message.code,
               content: JSON.parse(message.channel_message.content),
               create_time: message.channel_message.create_time,
-              message_id: message.channel_message.message_id,
+              id: message.channel_message.message_id,
               sender_id: message.channel_message.sender_id,
               update_time: message.channel_message.update_time,
               user_id_one: message.channel_message.user_id_one,
@@ -907,7 +868,7 @@ export class DefaultSocket implements Socket {
     }
   }
 
-  onchannelmessage(channelMessage: ChannelMessageTSEvent) {
+  onchannelmessage(channelMessage: ChannelMessageEvent) {
     if (this.verbose && window && window.console) {
       console.log(channelMessage);
     }
