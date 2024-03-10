@@ -3892,7 +3892,7 @@ var MessageAttachment = {
   }
 };
 function createBaseMessageRef() {
-  return { message_id: "", message_ref_id: "", ref_type: 0, message_sender_id: "" };
+  return { message_id: "", message_ref_id: "", message_sender_id: "", content: "", has_attachment: false, ref_type: 0 };
 }
 var MessageRef = {
   encode(message, writer = import_minimal4.default.Writer.create()) {
@@ -3902,11 +3902,17 @@ var MessageRef = {
     if (message.message_ref_id !== "") {
       writer.uint32(18).string(message.message_ref_id);
     }
-    if (message.ref_type !== 0) {
-      writer.uint32(24).int32(message.ref_type);
-    }
     if (message.message_sender_id !== "") {
-      writer.uint32(34).string(message.message_sender_id);
+      writer.uint32(26).string(message.message_sender_id);
+    }
+    if (message.content !== "") {
+      writer.uint32(34).string(message.content);
+    }
+    if (message.has_attachment === true) {
+      writer.uint32(40).bool(message.has_attachment);
+    }
+    if (message.ref_type !== 0) {
+      writer.uint32(48).int32(message.ref_type);
     }
     return writer;
   },
@@ -3924,10 +3930,16 @@ var MessageRef = {
           message.message_ref_id = reader.string();
           break;
         case 3:
-          message.ref_type = reader.int32();
+          message.message_sender_id = reader.string();
           break;
         case 4:
-          message.message_sender_id = reader.string();
+          message.content = reader.string();
+          break;
+        case 5:
+          message.has_attachment = reader.bool();
+          break;
+        case 6:
+          message.ref_type = reader.int32();
           break;
         default:
           reader.skipType(tag & 7);
@@ -3940,28 +3952,34 @@ var MessageRef = {
     return {
       message_id: isSet4(object.message_id) ? String(object.message_id) : "",
       message_ref_id: isSet4(object.message_ref_id) ? String(object.message_ref_id) : "",
-      ref_type: isSet4(object.ref_type) ? Number(object.ref_type) : 0,
-      message_sender_id: isSet4(object.message_sender_id) ? String(object.message_sender_id) : ""
+      message_sender_id: isSet4(object.message_sender_id) ? String(object.message_sender_id) : "",
+      content: isSet4(object.content) ? String(object.content) : "",
+      has_attachment: isSet4(object.has_attachment) ? Boolean(object.has_attachment) : false,
+      ref_type: isSet4(object.ref_type) ? Number(object.ref_type) : 0
     };
   },
   toJSON(message) {
     const obj = {};
     message.message_id !== void 0 && (obj.message_id = message.message_id);
     message.message_ref_id !== void 0 && (obj.message_ref_id = message.message_ref_id);
-    message.ref_type !== void 0 && (obj.ref_type = Math.round(message.ref_type));
     message.message_sender_id !== void 0 && (obj.message_sender_id = message.message_sender_id);
+    message.content !== void 0 && (obj.content = message.content);
+    message.has_attachment !== void 0 && (obj.has_attachment = message.has_attachment);
+    message.ref_type !== void 0 && (obj.ref_type = Math.round(message.ref_type));
     return obj;
   },
   create(base) {
     return MessageRef.fromPartial(base != null ? base : {});
   },
   fromPartial(object) {
-    var _a, _b, _c, _d;
+    var _a, _b, _c, _d, _e, _f;
     const message = createBaseMessageRef();
     message.message_id = (_a = object.message_id) != null ? _a : "";
     message.message_ref_id = (_b = object.message_ref_id) != null ? _b : "";
-    message.ref_type = (_c = object.ref_type) != null ? _c : 0;
-    message.message_sender_id = (_d = object.message_sender_id) != null ? _d : "";
+    message.message_sender_id = (_c = object.message_sender_id) != null ? _c : "";
+    message.content = (_d = object.content) != null ? _d : "";
+    message.has_attachment = (_e = object.has_attachment) != null ? _e : false;
+    message.ref_type = (_f = object.ref_type) != null ? _f : 0;
     return message;
   }
 };

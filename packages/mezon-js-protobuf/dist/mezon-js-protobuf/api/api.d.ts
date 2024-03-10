@@ -419,6 +419,10 @@ export interface MessageRef {
     message_id: string;
     /** A message reference to */
     message_ref_id: string;
+    /** content reference */
+    content: string;
+    /** has attachment */
+    has_attachment: boolean;
     /** Reference type. 0: reply */
     ref_type: number;
 }
@@ -3160,19 +3164,27 @@ export declare const MessageRef: {
     create<I extends {
         message_id?: string | undefined;
         message_ref_id?: string | undefined;
+        content?: string | undefined;
+        has_attachment?: boolean | undefined;
         ref_type?: number | undefined;
     } & {
         message_id?: string | undefined;
         message_ref_id?: string | undefined;
+        content?: string | undefined;
+        has_attachment?: boolean | undefined;
         ref_type?: number | undefined;
     } & { [K in Exclude<keyof I, keyof MessageRef>]: never; }>(base?: I | undefined): MessageRef;
     fromPartial<I_1 extends {
         message_id?: string | undefined;
         message_ref_id?: string | undefined;
+        content?: string | undefined;
+        has_attachment?: boolean | undefined;
         ref_type?: number | undefined;
     } & {
         message_id?: string | undefined;
         message_ref_id?: string | undefined;
+        content?: string | undefined;
+        has_attachment?: boolean | undefined;
         ref_type?: number | undefined;
     } & { [K_1 in Exclude<keyof I_1, keyof MessageRef>]: never; }>(object: I_1): MessageRef;
 };

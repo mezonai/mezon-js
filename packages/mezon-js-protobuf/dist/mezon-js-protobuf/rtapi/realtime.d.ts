@@ -182,10 +182,14 @@ export interface MessageRef {
     message_id: string;
     /** A message reference to */
     message_ref_id: string;
-    /** Reference type. 0: reply */
-    ref_type: number;
     /** original message sender */
     message_sender_id: string;
+    /** content reference */
+    content: string;
+    /** has attachment */
+    has_attachment: boolean;
+    /** Reference type. 0: reply */
+    ref_type: number;
 }
 /** Send a message to a realtime channel. */
 export interface ChannelMessageSend {
@@ -812,8 +816,10 @@ export declare const Envelope: {
             references?: {
                 message_id?: string | undefined;
                 message_ref_id?: string | undefined;
-                ref_type?: number | undefined;
                 message_sender_id?: string | undefined;
+                content?: string | undefined;
+                has_attachment?: boolean | undefined;
+                ref_type?: number | undefined;
             }[] | undefined;
         } | undefined;
         channel_message_update?: {
@@ -1256,8 +1262,10 @@ export declare const Envelope: {
             references?: {
                 message_id?: string | undefined;
                 message_ref_id?: string | undefined;
-                ref_type?: number | undefined;
                 message_sender_id?: string | undefined;
+                content?: string | undefined;
+                has_attachment?: boolean | undefined;
+                ref_type?: number | undefined;
             }[] | undefined;
         } & {
             clan_id?: string | undefined;
@@ -1308,23 +1316,31 @@ export declare const Envelope: {
             references?: ({
                 message_id?: string | undefined;
                 message_ref_id?: string | undefined;
-                ref_type?: number | undefined;
                 message_sender_id?: string | undefined;
+                content?: string | undefined;
+                has_attachment?: boolean | undefined;
+                ref_type?: number | undefined;
             }[] & ({
                 message_id?: string | undefined;
                 message_ref_id?: string | undefined;
-                ref_type?: number | undefined;
                 message_sender_id?: string | undefined;
+                content?: string | undefined;
+                has_attachment?: boolean | undefined;
+                ref_type?: number | undefined;
             } & {
                 message_id?: string | undefined;
                 message_ref_id?: string | undefined;
-                ref_type?: number | undefined;
                 message_sender_id?: string | undefined;
+                content?: string | undefined;
+                has_attachment?: boolean | undefined;
+                ref_type?: number | undefined;
             } & { [K_12 in Exclude<keyof I["channel_message_send"]["references"][number], keyof MessageRef>]: never; })[] & { [K_13 in Exclude<keyof I["channel_message_send"]["references"], keyof {
                 message_id?: string | undefined;
                 message_ref_id?: string | undefined;
-                ref_type?: number | undefined;
                 message_sender_id?: string | undefined;
+                content?: string | undefined;
+                has_attachment?: boolean | undefined;
+                ref_type?: number | undefined;
             }[]>]: never; }) | undefined;
         } & { [K_14 in Exclude<keyof I["channel_message_send"], keyof ChannelMessageSend>]: never; }) | undefined;
         channel_message_update?: ({
@@ -2212,8 +2228,10 @@ export declare const Envelope: {
             references?: {
                 message_id?: string | undefined;
                 message_ref_id?: string | undefined;
-                ref_type?: number | undefined;
                 message_sender_id?: string | undefined;
+                content?: string | undefined;
+                has_attachment?: boolean | undefined;
+                ref_type?: number | undefined;
             }[] | undefined;
         } | undefined;
         channel_message_update?: {
@@ -2656,8 +2674,10 @@ export declare const Envelope: {
             references?: {
                 message_id?: string | undefined;
                 message_ref_id?: string | undefined;
-                ref_type?: number | undefined;
                 message_sender_id?: string | undefined;
+                content?: string | undefined;
+                has_attachment?: boolean | undefined;
+                ref_type?: number | undefined;
             }[] | undefined;
         } & {
             clan_id?: string | undefined;
@@ -2708,23 +2728,31 @@ export declare const Envelope: {
             references?: ({
                 message_id?: string | undefined;
                 message_ref_id?: string | undefined;
-                ref_type?: number | undefined;
                 message_sender_id?: string | undefined;
+                content?: string | undefined;
+                has_attachment?: boolean | undefined;
+                ref_type?: number | undefined;
             }[] & ({
                 message_id?: string | undefined;
                 message_ref_id?: string | undefined;
-                ref_type?: number | undefined;
                 message_sender_id?: string | undefined;
+                content?: string | undefined;
+                has_attachment?: boolean | undefined;
+                ref_type?: number | undefined;
             } & {
                 message_id?: string | undefined;
                 message_ref_id?: string | undefined;
-                ref_type?: number | undefined;
                 message_sender_id?: string | undefined;
+                content?: string | undefined;
+                has_attachment?: boolean | undefined;
+                ref_type?: number | undefined;
             } & { [K_99 in Exclude<keyof I_1["channel_message_send"]["references"][number], keyof MessageRef>]: never; })[] & { [K_100 in Exclude<keyof I_1["channel_message_send"]["references"], keyof {
                 message_id?: string | undefined;
                 message_ref_id?: string | undefined;
-                ref_type?: number | undefined;
                 message_sender_id?: string | undefined;
+                content?: string | undefined;
+                has_attachment?: boolean | undefined;
+                ref_type?: number | undefined;
             }[]>]: never; }) | undefined;
         } & { [K_101 in Exclude<keyof I_1["channel_message_send"], keyof ChannelMessageSend>]: never; }) | undefined;
         channel_message_update?: ({
@@ -3826,24 +3854,32 @@ export declare const MessageRef: {
     create<I extends {
         message_id?: string | undefined;
         message_ref_id?: string | undefined;
-        ref_type?: number | undefined;
         message_sender_id?: string | undefined;
+        content?: string | undefined;
+        has_attachment?: boolean | undefined;
+        ref_type?: number | undefined;
     } & {
         message_id?: string | undefined;
         message_ref_id?: string | undefined;
-        ref_type?: number | undefined;
         message_sender_id?: string | undefined;
+        content?: string | undefined;
+        has_attachment?: boolean | undefined;
+        ref_type?: number | undefined;
     } & { [K in Exclude<keyof I, keyof MessageRef>]: never; }>(base?: I | undefined): MessageRef;
     fromPartial<I_1 extends {
         message_id?: string | undefined;
         message_ref_id?: string | undefined;
-        ref_type?: number | undefined;
         message_sender_id?: string | undefined;
+        content?: string | undefined;
+        has_attachment?: boolean | undefined;
+        ref_type?: number | undefined;
     } & {
         message_id?: string | undefined;
         message_ref_id?: string | undefined;
-        ref_type?: number | undefined;
         message_sender_id?: string | undefined;
+        content?: string | undefined;
+        has_attachment?: boolean | undefined;
+        ref_type?: number | undefined;
     } & { [K_1 in Exclude<keyof I_1, keyof MessageRef>]: never; }>(object: I_1): MessageRef;
 };
 export declare const ChannelMessageSend: {
@@ -3870,8 +3906,10 @@ export declare const ChannelMessageSend: {
         references?: {
             message_id?: string | undefined;
             message_ref_id?: string | undefined;
-            ref_type?: number | undefined;
             message_sender_id?: string | undefined;
+            content?: string | undefined;
+            has_attachment?: boolean | undefined;
+            ref_type?: number | undefined;
         }[] | undefined;
     } & {
         clan_id?: string | undefined;
@@ -3922,23 +3960,31 @@ export declare const ChannelMessageSend: {
         references?: ({
             message_id?: string | undefined;
             message_ref_id?: string | undefined;
-            ref_type?: number | undefined;
             message_sender_id?: string | undefined;
+            content?: string | undefined;
+            has_attachment?: boolean | undefined;
+            ref_type?: number | undefined;
         }[] & ({
             message_id?: string | undefined;
             message_ref_id?: string | undefined;
-            ref_type?: number | undefined;
             message_sender_id?: string | undefined;
+            content?: string | undefined;
+            has_attachment?: boolean | undefined;
+            ref_type?: number | undefined;
         } & {
             message_id?: string | undefined;
             message_ref_id?: string | undefined;
-            ref_type?: number | undefined;
             message_sender_id?: string | undefined;
+            content?: string | undefined;
+            has_attachment?: boolean | undefined;
+            ref_type?: number | undefined;
         } & { [K_4 in Exclude<keyof I["references"][number], keyof MessageRef>]: never; })[] & { [K_5 in Exclude<keyof I["references"], keyof {
             message_id?: string | undefined;
             message_ref_id?: string | undefined;
-            ref_type?: number | undefined;
             message_sender_id?: string | undefined;
+            content?: string | undefined;
+            has_attachment?: boolean | undefined;
+            ref_type?: number | undefined;
         }[]>]: never; }) | undefined;
     } & { [K_6 in Exclude<keyof I, keyof ChannelMessageSend>]: never; }>(base?: I | undefined): ChannelMessageSend;
     fromPartial<I_1 extends {
@@ -3960,8 +4006,10 @@ export declare const ChannelMessageSend: {
         references?: {
             message_id?: string | undefined;
             message_ref_id?: string | undefined;
-            ref_type?: number | undefined;
             message_sender_id?: string | undefined;
+            content?: string | undefined;
+            has_attachment?: boolean | undefined;
+            ref_type?: number | undefined;
         }[] | undefined;
     } & {
         clan_id?: string | undefined;
@@ -4012,23 +4060,31 @@ export declare const ChannelMessageSend: {
         references?: ({
             message_id?: string | undefined;
             message_ref_id?: string | undefined;
-            ref_type?: number | undefined;
             message_sender_id?: string | undefined;
+            content?: string | undefined;
+            has_attachment?: boolean | undefined;
+            ref_type?: number | undefined;
         }[] & ({
             message_id?: string | undefined;
             message_ref_id?: string | undefined;
-            ref_type?: number | undefined;
             message_sender_id?: string | undefined;
+            content?: string | undefined;
+            has_attachment?: boolean | undefined;
+            ref_type?: number | undefined;
         } & {
             message_id?: string | undefined;
             message_ref_id?: string | undefined;
-            ref_type?: number | undefined;
             message_sender_id?: string | undefined;
+            content?: string | undefined;
+            has_attachment?: boolean | undefined;
+            ref_type?: number | undefined;
         } & { [K_11 in Exclude<keyof I_1["references"][number], keyof MessageRef>]: never; })[] & { [K_12 in Exclude<keyof I_1["references"], keyof {
             message_id?: string | undefined;
             message_ref_id?: string | undefined;
-            ref_type?: number | undefined;
             message_sender_id?: string | undefined;
+            content?: string | undefined;
+            has_attachment?: boolean | undefined;
+            ref_type?: number | undefined;
         }[]>]: never; }) | undefined;
     } & { [K_13 in Exclude<keyof I_1, keyof ChannelMessageSend>]: never; }>(object: I_1): ChannelMessageSend;
 };

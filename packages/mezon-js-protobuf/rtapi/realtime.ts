@@ -320,10 +320,14 @@ export interface MessageRef {
   message_id: string;
   /** A message reference to */
   message_ref_id: string;
-  /** Reference type. 0: reply */
-  ref_type: number;
   /** original message sender */
   message_sender_id: string;
+  /** content reference */
+  content: string;
+  /** has attachment */
+  has_attachment: boolean;
+  /** Reference type. 0: reply */
+  ref_type: number;
 }
 
 /** Send a message to a realtime channel. */
@@ -2135,7 +2139,7 @@ export const MessageAttachment = {
 };
 
 function createBaseMessageRef(): MessageRef {
-  return { message_id: "", message_ref_id: "", ref_type: 0, message_sender_id: "" };
+  return { message_id: "", message_ref_id: "", message_sender_id: "", content: "", has_attachment: false, ref_type: 0 };
 }
 
 export const MessageRef = {
@@ -2146,11 +2150,17 @@ export const MessageRef = {
     if (message.message_ref_id !== "") {
       writer.uint32(18).string(message.message_ref_id);
     }
-    if (message.ref_type !== 0) {
-      writer.uint32(24).int32(message.ref_type);
-    }
     if (message.message_sender_id !== "") {
-      writer.uint32(34).string(message.message_sender_id);
+      writer.uint32(26).string(message.message_sender_id);
+    }
+    if (message.content !== "") {
+      writer.uint32(34).string(message.content);
+    }
+    if (message.has_attachment === true) {
+      writer.uint32(40).bool(message.has_attachment);
+    }
+    if (message.ref_type !== 0) {
+      writer.uint32(48).int32(message.ref_type);
     }
     return writer;
   },
@@ -2169,10 +2179,16 @@ export const MessageRef = {
           message.message_ref_id = reader.string();
           break;
         case 3:
-          message.ref_type = reader.int32();
+          message.message_sender_id = reader.string();
           break;
         case 4:
-          message.message_sender_id = reader.string();
+          message.content = reader.string();
+          break;
+        case 5:
+          message.has_attachment = reader.bool();
+          break;
+        case 6:
+          message.ref_type = reader.int32();
           break;
         default:
           reader.skipType(tag & 7);
@@ -2186,8 +2202,10 @@ export const MessageRef = {
     return {
       message_id: isSet(object.message_id) ? String(object.message_id) : "",
       message_ref_id: isSet(object.message_ref_id) ? String(object.message_ref_id) : "",
-      ref_type: isSet(object.ref_type) ? Number(object.ref_type) : 0,
       message_sender_id: isSet(object.message_sender_id) ? String(object.message_sender_id) : "",
+      content: isSet(object.content) ? String(object.content) : "",
+      has_attachment: isSet(object.has_attachment) ? Boolean(object.has_attachment) : false,
+      ref_type: isSet(object.ref_type) ? Number(object.ref_type) : 0,
     };
   },
 
@@ -2195,8 +2213,10 @@ export const MessageRef = {
     const obj: any = {};
     message.message_id !== undefined && (obj.message_id = message.message_id);
     message.message_ref_id !== undefined && (obj.message_ref_id = message.message_ref_id);
-    message.ref_type !== undefined && (obj.ref_type = Math.round(message.ref_type));
     message.message_sender_id !== undefined && (obj.message_sender_id = message.message_sender_id);
+    message.content !== undefined && (obj.content = message.content);
+    message.has_attachment !== undefined && (obj.has_attachment = message.has_attachment);
+    message.ref_type !== undefined && (obj.ref_type = Math.round(message.ref_type));
     return obj;
   },
 
@@ -2208,8 +2228,10 @@ export const MessageRef = {
     const message = createBaseMessageRef();
     message.message_id = object.message_id ?? "";
     message.message_ref_id = object.message_ref_id ?? "";
-    message.ref_type = object.ref_type ?? 0;
     message.message_sender_id = object.message_sender_id ?? "";
+    message.content = object.content ?? "";
+    message.has_attachment = object.has_attachment ?? false;
+    message.ref_type = object.ref_type ?? 0;
     return message;
   },
 };
