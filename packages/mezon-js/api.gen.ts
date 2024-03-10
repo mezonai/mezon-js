@@ -612,6 +612,10 @@ export interface ApiMessageRef {
   ref_type?: number;
   //
   message_sender_id?: string;
+  //
+  content?:string;
+  //
+  has_attachment: boolean;
 }
 
 /** A notification in the server. */
