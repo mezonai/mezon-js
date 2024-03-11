@@ -333,18 +333,12 @@ export interface ApiMessageMention {
     username?: string;
 }
 /**  */
-export interface ApiMessageMentionList {
-    cacheable_cursor?: string;
-    mentions?: Array<ApiMessageMention>;
-    next_cursor?: string;
-    prev_cursor?: string;
-}
-/**  */
 export interface ApiMessageReaction {
     action?: boolean;
     emoji?: string;
     id?: string;
     sender_id?: string;
+    count: number;
 }
 /**  */
 export interface ApiMessageRef {
@@ -712,8 +706,6 @@ export declare class MezonApi {
     inviteUser(bearerToken: string, inviteId: string, options?: any): Promise<ApiInviteUserRes>;
     /**  */
     getListPermission(bearerToken: string, options?: any): Promise<ApiPermissionList>;
-    /** List a message mention history. */
-    listMessageMentions(bearerToken: string, limit?: number, forward?: boolean, cursor?: string, options?: any): Promise<ApiMessageMentionList>;
     /** Delete one or more notifications for the current user. */
     deleteNotifications(bearerToken: string, ids?: Array<string>, options?: any): Promise<any>;
     /** Fetch list of notifications. */

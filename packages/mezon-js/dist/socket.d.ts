@@ -77,6 +77,7 @@ export interface MessageReactionEvent {
     sender_id: string;
     /** Emoji list. */
     emoji: string;
+    count: number;
 }
 /** User is react to message */
 export interface MessageMentionEvent {

@@ -2769,34 +2769,6 @@ var MezonApi = class {
       )
     ]);
   }
-  /** List a message mention history. */
-  listMessageMentions(bearerToken, limit, forward, cursor, options = {}) {
-    const urlPath = "/v2/mentions";
-    const queryParams = /* @__PURE__ */ new Map();
-    queryParams.set("limit", limit);
-    queryParams.set("forward", forward);
-    queryParams.set("cursor", cursor);
-    let bodyJson = "";
-    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
-    const fetchOptions = buildFetchOptions("GET", options, bodyJson);
-    if (bearerToken) {
-      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-    }
-    return Promise.race([
-      fetch(fullUrl, fetchOptions).then((response) => {
-        if (response.status == 204) {
-          return response;
-        } else if (response.status >= 200 && response.status < 300) {
-          return response.json();
-        } else {
-          throw response;
-        }
-      }),
-      new Promise(
-        (_, reject) => setTimeout(reject, this.timeoutMs, "Request timed out.")
-      )
-    ]);
-  }
   /** Delete one or more notifications for the current user. */
   deleteNotifications(bearerToken, ids, options = {}) {
     const urlPath = "/v2/notification";
@@ -4629,8 +4601,7 @@ var Client = class {
             attachments: m.attachments ? JSON.parse(m.attachments) : [],
             mentions: m.mentions ? JSON.parse(m.mentions) : [],
             reactions: m.reactions ? JSON.parse(m.reactions) : [],
-            references: m.references ? JSON.parse(m.references) : [],
-            referenced_message: convertArrayToChannelMessage(m.referenced_message)
+            references: m.references ? JSON.parse(m.references) : []
           });
         });
         return Promise.resolve(result);
@@ -5386,94 +5357,7 @@ var Client = class {
       return this.apiClient.writeStorageObjects(session.token, request);
     });
   }
-  /** List a channel's users. */
-  listMessageMentions(session, limit, forward, cursor) {
-    return __async(this, null, function* () {
-      if (this.autoRefreshSession && session.refresh_token && session.isexpired((Date.now() + this.expiredTimespanMs) / 1e3)) {
-        yield this.sessionRefresh(session);
-      }
-      return this.apiClient.listMessageMentions(session.token, limit, forward, cursor).then((response) => {
-        var result = {
-          messages: [],
-          last_seen_message_id: response.last_seen_message_id,
-          next_cursor: response.next_cursor,
-          prev_cursor: response.prev_cursor,
-          cacheable_cursor: response.cacheable_cursor
-        };
-        if (response.messages == null) {
-          return Promise.resolve(result);
-        }
-        response.messages.forEach((m) => {
-          return result.messages.push({
-            channel_id: m.channel_id,
-            code: m.code ? Number(m.code) : 0,
-            create_time: m.create_time || "",
-            id: m.message_id,
-            persistent: m.persistent,
-            sender_id: m.sender_id,
-            update_time: m.update_time,
-            username: m.username,
-            avatar: m.avatar,
-            content: m.content ? JSON.parse(m.content) : void 0,
-            channel_name: m.channel_name,
-            user_id_one: m.user_id_one,
-            user_id_two: m.user_id_two,
-            attachments: m.attachments ? JSON.parse(m.attachments) : [],
-            mentions: m.mentions ? JSON.parse(m.mentions) : [],
-            reactions: m.reactions ? JSON.parse(m.reactions) : [],
-            references: m.references ? JSON.parse(m.references) : [],
-            referenced_message: convertArrayToChannelMessage(m.referenced_message)
-          });
-        });
-        return Promise.resolve(result);
-      });
-    });
-  }
 };
-function convertArrayToChannelMessage(strArray) {
-  var _a, _b, _c;
-  var result = {
-    mentions: [],
-    attachments: [],
-    reactions: [],
-    references: [],
-    channel_id: "",
-    channel_name: "",
-    code: 0,
-    content: "",
-    create_time: "",
-    id: "",
-    sender_id: "",
-    username: ""
-  };
-  try {
-    if (strArray) {
-      const data = JSON.parse(strArray);
-      result.id = data[0];
-      result.code = data[1];
-      result.sender_id = data[2];
-      result.content = data[3];
-      result.create_time = data[4];
-      result.update_time = data[5];
-      (_a = result.reactions) == null ? void 0 : _a.push({
-        id: data[6][0],
-        sender_id: data[6][1],
-        emoji: data[6][2]
-      });
-      (_b = result.mentions) == null ? void 0 : _b.push({
-        user_id: data[7][1],
-        username: data[7][2]
-      });
-      (_c = result.attachments) == null ? void 0 : _c.push({
-        url: data[8][1],
-        filename: data[8][2],
-        filetype: data[8][3]
-      });
-    }
-  } catch (e) {
-  }
-  return result;
-}
 export {
   Client,
   DefaultSocket,

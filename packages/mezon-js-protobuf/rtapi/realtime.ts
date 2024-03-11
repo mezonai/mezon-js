@@ -893,6 +893,8 @@ export interface MessageReactionEvent {
   action: boolean;
   /** sender original message */
   message_sender_id: string;
+  /** count */
+  count: number;
 }
 
 /** Message attachment */
@@ -5991,7 +5993,16 @@ export const MessageMentionEvent = {
 };
 
 function createBaseMessageReactionEvent(): MessageReactionEvent {
-  return { id: "", channel_id: "", message_id: "", sender_id: "", emoji: "", action: false, message_sender_id: "" };
+  return {
+    id: "",
+    channel_id: "",
+    message_id: "",
+    sender_id: "",
+    emoji: "",
+    action: false,
+    message_sender_id: "",
+    count: 0,
+  };
 }
 
 export const MessageReactionEvent = {
@@ -6016,6 +6027,9 @@ export const MessageReactionEvent = {
     }
     if (message.message_sender_id !== "") {
       writer.uint32(58).string(message.message_sender_id);
+    }
+    if (message.count !== 0) {
+      writer.uint32(64).int32(message.count);
     }
     return writer;
   },
@@ -6048,6 +6062,9 @@ export const MessageReactionEvent = {
         case 7:
           message.message_sender_id = reader.string();
           break;
+        case 8:
+          message.count = reader.int32();
+          break;
         default:
           reader.skipType(tag & 7);
           break;
@@ -6065,6 +6082,7 @@ export const MessageReactionEvent = {
       emoji: isSet(object.emoji) ? String(object.emoji) : "",
       action: isSet(object.action) ? Boolean(object.action) : false,
       message_sender_id: isSet(object.message_sender_id) ? String(object.message_sender_id) : "",
+      count: isSet(object.count) ? Number(object.count) : 0,
     };
   },
 
@@ -6077,6 +6095,7 @@ export const MessageReactionEvent = {
     message.emoji !== undefined && (obj.emoji = message.emoji);
     message.action !== undefined && (obj.action = message.action);
     message.message_sender_id !== undefined && (obj.message_sender_id = message.message_sender_id);
+    message.count !== undefined && (obj.count = Math.round(message.count));
     return obj;
   },
 
@@ -6093,6 +6112,7 @@ export const MessageReactionEvent = {
     message.emoji = object.emoji ?? "";
     message.action = object.action ?? false;
     message.message_sender_id = object.message_sender_id ?? "";
+    message.count = object.count ?? 0;
     return message;
   },
 };

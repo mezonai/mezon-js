@@ -395,8 +395,8 @@ export interface MessageReaction {
     sender_id: string;
     /** Action reaction delete or add */
     action: boolean;
-    /** Cacheable cursor to list newer messages. Durable and designed to be stored, unlike next/prev cursors. */
-    cacheable_cursor: string;
+    /** count of emoji */
+    count: number;
 }
 /** Message attachment */
 export interface MessageAttachment {
@@ -3098,26 +3098,26 @@ export declare const MessageReaction: {
         emoji?: string | undefined;
         sender_id?: string | undefined;
         action?: boolean | undefined;
-        cacheable_cursor?: string | undefined;
+        count?: number | undefined;
     } & {
         id?: string | undefined;
         emoji?: string | undefined;
         sender_id?: string | undefined;
         action?: boolean | undefined;
-        cacheable_cursor?: string | undefined;
+        count?: number | undefined;
     } & { [K in Exclude<keyof I, keyof MessageReaction>]: never; }>(base?: I | undefined): MessageReaction;
     fromPartial<I_1 extends {
         id?: string | undefined;
         emoji?: string | undefined;
         sender_id?: string | undefined;
         action?: boolean | undefined;
-        cacheable_cursor?: string | undefined;
+        count?: number | undefined;
     } & {
         id?: string | undefined;
         emoji?: string | undefined;
         sender_id?: string | undefined;
         action?: boolean | undefined;
-        cacheable_cursor?: string | undefined;
+        count?: number | undefined;
     } & { [K_1 in Exclude<keyof I_1, keyof MessageReaction>]: never; }>(object: I_1): MessageReaction;
 };
 export declare const MessageAttachment: {

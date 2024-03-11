@@ -518,6 +518,4 @@ export declare class Client {
     inviteUser(session: Session, inviteId: string): Promise<ApiInviteUserRes>;
     /** Write storage objects. */
     writeStorageObjects(session: Session, objects: Array<WriteStorageObject>): Promise<ApiStorageObjectAcks>;
-    /** List a channel's users. */
-    listMessageMentions(session: Session, limit?: number, forward?: boolean, cursor?: string): Promise<ChannelMessageList>;
 }

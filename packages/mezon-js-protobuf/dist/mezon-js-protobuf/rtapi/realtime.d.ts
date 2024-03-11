@@ -643,6 +643,8 @@ export interface MessageReactionEvent {
     action: boolean;
     /** sender original message */
     message_sender_id: string;
+    /** count */
+    count: number;
 }
 /** Message attachment */
 export interface MessageAttachmentEvent {
@@ -1092,6 +1094,7 @@ export declare const Envelope: {
             emoji?: string | undefined;
             action?: boolean | undefined;
             message_sender_id?: string | undefined;
+            count?: number | undefined;
         } | undefined;
         message_deleted_event?: {
             channel_id?: string | undefined;
@@ -2126,6 +2129,7 @@ export declare const Envelope: {
             emoji?: string | undefined;
             action?: boolean | undefined;
             message_sender_id?: string | undefined;
+            count?: number | undefined;
         } & {
             id?: string | undefined;
             channel_id?: string | undefined;
@@ -2134,6 +2138,7 @@ export declare const Envelope: {
             emoji?: string | undefined;
             action?: boolean | undefined;
             message_sender_id?: string | undefined;
+            count?: number | undefined;
         } & { [K_84 in Exclude<keyof I["message_reaction_event"], keyof MessageReactionEvent>]: never; }) | undefined;
         message_deleted_event?: ({
             channel_id?: string | undefined;
@@ -2504,6 +2509,7 @@ export declare const Envelope: {
             emoji?: string | undefined;
             action?: boolean | undefined;
             message_sender_id?: string | undefined;
+            count?: number | undefined;
         } | undefined;
         message_deleted_event?: {
             channel_id?: string | undefined;
@@ -3538,6 +3544,7 @@ export declare const Envelope: {
             emoji?: string | undefined;
             action?: boolean | undefined;
             message_sender_id?: string | undefined;
+            count?: number | undefined;
         } & {
             id?: string | undefined;
             channel_id?: string | undefined;
@@ -3546,6 +3553,7 @@ export declare const Envelope: {
             emoji?: string | undefined;
             action?: boolean | undefined;
             message_sender_id?: string | undefined;
+            count?: number | undefined;
         } & { [K_171 in Exclude<keyof I_1["message_reaction_event"], keyof MessageReactionEvent>]: never; }) | undefined;
         message_deleted_event?: ({
             channel_id?: string | undefined;
@@ -6805,6 +6813,7 @@ export declare const MessageReactionEvent: {
         emoji?: string | undefined;
         action?: boolean | undefined;
         message_sender_id?: string | undefined;
+        count?: number | undefined;
     } & {
         id?: string | undefined;
         channel_id?: string | undefined;
@@ -6813,6 +6822,7 @@ export declare const MessageReactionEvent: {
         emoji?: string | undefined;
         action?: boolean | undefined;
         message_sender_id?: string | undefined;
+        count?: number | undefined;
     } & { [K in Exclude<keyof I, keyof MessageReactionEvent>]: never; }>(base?: I | undefined): MessageReactionEvent;
     fromPartial<I_1 extends {
         id?: string | undefined;
@@ -6822,6 +6832,7 @@ export declare const MessageReactionEvent: {
         emoji?: string | undefined;
         action?: boolean | undefined;
         message_sender_id?: string | undefined;
+        count?: number | undefined;
     } & {
         id?: string | undefined;
         channel_id?: string | undefined;
@@ -6830,6 +6841,7 @@ export declare const MessageReactionEvent: {
         emoji?: string | undefined;
         action?: boolean | undefined;
         message_sender_id?: string | undefined;
+        count?: number | undefined;
     } & { [K_1 in Exclude<keyof I_1, keyof MessageReactionEvent>]: never; }>(object: I_1): MessageReactionEvent;
 };
 export declare const MessageAttachmentEvent: {

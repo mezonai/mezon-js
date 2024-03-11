@@ -1017,7 +1017,6 @@ export class Client {
           mentions: m.mentions ? JSON.parse(m.mentions) : [],
           reactions: m.reactions ? JSON.parse(m.reactions) : [],
           references: m.references ? JSON.parse(m.references) : [],
-          referenced_message: convertArrayToChannelMessage(m.referenced_message),
         })
       });
       return Promise.resolve(result);
@@ -1850,100 +1849,6 @@ export class Client {
 
     return this.apiClient.writeStorageObjects(session.token, request);
   }
-
-  /** List a channel's users. */
-  async listMessageMentions(session: Session, limit?: number, forward?: boolean, cursor?: string): Promise<ChannelMessageList> {
-    if (this.autoRefreshSession && session.refresh_token &&
-        session.isexpired((Date.now() + this.expiredTimespanMs)/1000)) {
-        await this.sessionRefresh(session);
-    }
-
-    return this.apiClient.listMessageMentions(session.token, limit, forward, cursor).then((response: ApiChannelMessageList) => {
-      var result: ChannelMessageList = {
-        messages: [],
-        last_seen_message_id: response.last_seen_message_id,
-        next_cursor: response.next_cursor,
-        prev_cursor: response.prev_cursor,
-        cacheable_cursor: response.cacheable_cursor
-      };
-
-      if (response.messages == null) {
-        return Promise.resolve(result);
-      }
-
-      response.messages!.forEach(m => {        
-        return result.messages!.push({
-          channel_id: m.channel_id,
-          code: m.code ? Number(m.code) : 0,
-          create_time: m.create_time || '',
-          id: m.message_id,
-          persistent: m.persistent,
-          sender_id: m.sender_id,
-          update_time: m.update_time,
-          username: m.username,
-          avatar: m.avatar,
-          content: m.content ? JSON.parse(m.content) : undefined,
-          channel_name: m.channel_name,
-          user_id_one: m.user_id_one,
-          user_id_two: m.user_id_two,
-          attachments: m.attachments ? JSON.parse(m.attachments) : [],
-          mentions: m.mentions ? JSON.parse(m.mentions) : [],
-          reactions: m.reactions ? JSON.parse(m.reactions) : [],
-          references: m.references ? JSON.parse(m.references) : [],
-          referenced_message: convertArrayToChannelMessage(m.referenced_message),
-        });
-      });
-      return Promise.resolve(result);
-    });
-  }
 };
 
-function convertArrayToChannelMessage(strArray?: string): ChannelMessage {
-  var result: ChannelMessage = {
-    mentions: [],
-    attachments: [],
-    reactions: [],
-    references: [],
-    channel_id: "",
-    channel_name: "",
-    code: 0,
-    content: "",
-    create_time: "",
-    id: "",
-    sender_id: "",
-    username: ""
-  };
-
-  try {
-    if (strArray) {    
-      const data = JSON.parse(strArray);
-      result.id = data[0];
-      result.code = data[1];
-      result.sender_id = data[2];
-      result.content = data[3];
-      result.create_time = data[4];
-      result.update_time = data[5];
-      result.reactions?.push({
-        id: data[6][0],
-        sender_id: data[6][1],
-        emoji: data[6][2]
-      });
-
-      result.mentions?.push({
-        user_id: data[7][1],
-        username: data[7][2]
-      });
-
-      result.attachments?.push({
-        url: data[8][1],
-        filename: data[8][2],
-        filetype: data[8][3]    
-      });
-    }
-  } catch(e) {
-      
-  }
-  
-  return result;
-}
 
