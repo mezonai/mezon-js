@@ -5685,7 +5685,16 @@ var MessageTypingEvent = {
   }
 };
 function createBaseMessageReactionEvent() {
-  return { id: "", channel_id: "", message_id: "", sender_id: "", emoji: "", action: false, message_sender_id: "" };
+  return {
+    id: "",
+    channel_id: "",
+    message_id: "",
+    sender_id: "",
+    emoji: "",
+    action: false,
+    message_sender_id: "",
+    count: 0
+  };
 }
 var MessageReactionEvent = {
   encode(message, writer = import_minimal4.default.Writer.create()) {
@@ -5709,6 +5718,9 @@ var MessageReactionEvent = {
     }
     if (message.message_sender_id !== "") {
       writer.uint32(58).string(message.message_sender_id);
+    }
+    if (message.count !== 0) {
+      writer.uint32(64).int32(message.count);
     }
     return writer;
   },
@@ -5740,6 +5752,9 @@ var MessageReactionEvent = {
         case 7:
           message.message_sender_id = reader.string();
           break;
+        case 8:
+          message.count = reader.int32();
+          break;
         default:
           reader.skipType(tag & 7);
           break;
@@ -5755,7 +5770,8 @@ var MessageReactionEvent = {
       sender_id: isSet4(object.sender_id) ? String(object.sender_id) : "",
       emoji: isSet4(object.emoji) ? String(object.emoji) : "",
       action: isSet4(object.action) ? Boolean(object.action) : false,
-      message_sender_id: isSet4(object.message_sender_id) ? String(object.message_sender_id) : ""
+      message_sender_id: isSet4(object.message_sender_id) ? String(object.message_sender_id) : "",
+      count: isSet4(object.count) ? Number(object.count) : 0
     };
   },
   toJSON(message) {
@@ -5767,13 +5783,14 @@ var MessageReactionEvent = {
     message.emoji !== void 0 && (obj.emoji = message.emoji);
     message.action !== void 0 && (obj.action = message.action);
     message.message_sender_id !== void 0 && (obj.message_sender_id = message.message_sender_id);
+    message.count !== void 0 && (obj.count = Math.round(message.count));
     return obj;
   },
   create(base) {
     return MessageReactionEvent.fromPartial(base != null ? base : {});
   },
   fromPartial(object) {
-    var _a, _b, _c, _d, _e, _f, _g;
+    var _a, _b, _c, _d, _e, _f, _g, _h;
     const message = createBaseMessageReactionEvent();
     message.id = (_a = object.id) != null ? _a : "";
     message.channel_id = (_b = object.channel_id) != null ? _b : "";
@@ -5782,6 +5799,7 @@ var MessageReactionEvent = {
     message.emoji = (_e = object.emoji) != null ? _e : "";
     message.action = (_f = object.action) != null ? _f : false;
     message.message_sender_id = (_g = object.message_sender_id) != null ? _g : "";
+    message.count = (_h = object.count) != null ? _h : 0;
     return message;
   }
 };

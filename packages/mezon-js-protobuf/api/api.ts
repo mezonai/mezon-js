@@ -573,8 +573,8 @@ export interface MessageReaction {
   sender_id: string;
   /** Action reaction delete or add */
   action: boolean;
-  /** Cacheable cursor to list newer messages. Durable and designed to be stored, unlike next/prev cursors. */
-  cacheable_cursor: string;
+  /** count of emoji */
+  count: number;
 }
 
 /** Message attachment */
@@ -5062,7 +5062,7 @@ export const MessageMention = {
 };
 
 function createBaseMessageReaction(): MessageReaction {
-  return { id: "", emoji: "", sender_id: "", action: false, cacheable_cursor: "" };
+  return { id: "", emoji: "", sender_id: "", action: false, count: 0 };
 }
 
 export const MessageReaction = {
@@ -5079,8 +5079,8 @@ export const MessageReaction = {
     if (message.action === true) {
       writer.uint32(32).bool(message.action);
     }
-    if (message.cacheable_cursor !== "") {
-      writer.uint32(42).string(message.cacheable_cursor);
+    if (message.count !== 0) {
+      writer.uint32(40).int32(message.count);
     }
     return writer;
   },
@@ -5105,7 +5105,7 @@ export const MessageReaction = {
           message.action = reader.bool();
           break;
         case 5:
-          message.cacheable_cursor = reader.string();
+          message.count = reader.int32();
           break;
         default:
           reader.skipType(tag & 7);
@@ -5121,7 +5121,7 @@ export const MessageReaction = {
       emoji: isSet(object.emoji) ? String(object.emoji) : "",
       sender_id: isSet(object.sender_id) ? String(object.sender_id) : "",
       action: isSet(object.action) ? Boolean(object.action) : false,
-      cacheable_cursor: isSet(object.cacheable_cursor) ? String(object.cacheable_cursor) : "",
+      count: isSet(object.count) ? Number(object.count) : 0,
     };
   },
 
@@ -5131,7 +5131,7 @@ export const MessageReaction = {
     message.emoji !== undefined && (obj.emoji = message.emoji);
     message.sender_id !== undefined && (obj.sender_id = message.sender_id);
     message.action !== undefined && (obj.action = message.action);
-    message.cacheable_cursor !== undefined && (obj.cacheable_cursor = message.cacheable_cursor);
+    message.count !== undefined && (obj.count = Math.round(message.count));
     return obj;
   },
 
@@ -5145,7 +5145,7 @@ export const MessageReaction = {
     message.emoji = object.emoji ?? "";
     message.sender_id = object.sender_id ?? "";
     message.action = object.action ?? false;
-    message.cacheable_cursor = object.cacheable_cursor ?? "";
+    message.count = object.count ?? 0;
     return message;
   },
 };
