@@ -488,7 +488,7 @@ export interface Socket {
     /** Send message typing */
     writeMessageTyping(channel_id: string): Promise<MessageTypingEvent>;
     /** Send message reaction */
-    writeMessageReaction(channel_id: string, message_id: string, emoji: string, message_sender_id: string, action_delete: boolean): Promise<MessageReactionEvent>;
+    writeMessageReaction(id: string, channel_id: string, message_id: string, emoji: string, message_sender_id: string, action_delete: boolean): Promise<MessageReactionEvent>;
     /** Send message mention */
     writeMessageDeleted(channel_id: string, message_id: string, deletor: string): Promise<MessageDeletedEvent>;
     /** Send last seen message */
@@ -603,7 +603,7 @@ export declare class DefaultSocket implements Socket {
     updateChatMessage(channel_id: string, message_id: string, content: any): Promise<ChannelMessageAck>;
     updateStatus(status?: string): Promise<void>;
     writeChatMessage(clan_id: string, channel_id: string, content: any, mentions?: Array<ApiMessageMention>, attachments?: Array<ApiMessageAttachment>, references?: Array<ApiMessageRef>): Promise<ChannelMessageAck>;
-    writeMessageReaction(channel_id: string, message_id: string, emoji: string, message_sender_id: string, action_delete: boolean): Promise<MessageReactionEvent>;
+    writeMessageReaction(id: string, channel_id: string, message_id: string, emoji: string, message_sender_id: string, action_delete: boolean): Promise<MessageReactionEvent>;
     writeMessageDeleted(channel_id: string, message_id: string): Promise<MessageDeletedEvent>;
     writeMessageTyping(channel_id: string): Promise<MessageTypingEvent>;
     writeLastSeenMessage(channel_id: string, message_id: string): Promise<LastSeenMessageEvent>;
