@@ -915,7 +915,9 @@ export interface ChannelUserList_ChannelUser {
     | User
     | undefined;
   /** Their relationship to the role. */
-  role_id: string | undefined;
+  role_id: string;
+  /** Id */
+  id: string;
 }
 
 /** A list of users belonging to a clan, along with their role. */
@@ -1790,8 +1792,6 @@ export interface CreateChannelDescRequest {
   type:
     | number
     | undefined;
-  /** Group ID. */
-  group_id: string;
   /** The channel lable */
   channel_lable: string;
   /** The channel private */
@@ -1888,14 +1888,12 @@ export interface PermissionList {
 
 /** List (and optionally filter) permissions. */
 export interface ListPermissionsRequest {
-  role_id: string | undefined;
+  role_id: string;
 }
 
 /** List (and optionally filter) role-users. */
 export interface ListRoleUsersRequest {
-  role_id:
-    | string
-    | undefined;
+  role_id: string;
   /** Max number of records to return. Between 1 and 100. */
   limit:
     | number
@@ -6777,7 +6775,7 @@ export const ChannelUserList = {
 };
 
 function createBaseChannelUserList_ChannelUser(): ChannelUserList_ChannelUser {
-  return { user: undefined, role_id: undefined };
+  return { user: undefined, role_id: "", id: "" };
 }
 
 export const ChannelUserList_ChannelUser = {
@@ -6785,8 +6783,11 @@ export const ChannelUserList_ChannelUser = {
     if (message.user !== undefined) {
       User.encode(message.user, writer.uint32(10).fork()).ldelim();
     }
-    if (message.role_id !== undefined) {
-      StringValue.encode({ value: message.role_id! }, writer.uint32(18).fork()).ldelim();
+    if (message.role_id !== "") {
+      writer.uint32(18).string(message.role_id);
+    }
+    if (message.id !== "") {
+      writer.uint32(26).string(message.id);
     }
     return writer;
   },
@@ -6802,7 +6803,10 @@ export const ChannelUserList_ChannelUser = {
           message.user = User.decode(reader, reader.uint32());
           break;
         case 2:
-          message.role_id = StringValue.decode(reader, reader.uint32()).value;
+          message.role_id = reader.string();
+          break;
+        case 3:
+          message.id = reader.string();
           break;
         default:
           reader.skipType(tag & 7);
@@ -6815,7 +6819,8 @@ export const ChannelUserList_ChannelUser = {
   fromJSON(object: any): ChannelUserList_ChannelUser {
     return {
       user: isSet(object.user) ? User.fromJSON(object.user) : undefined,
-      role_id: isSet(object.role_id) ? String(object.role_id) : undefined,
+      role_id: isSet(object.role_id) ? String(object.role_id) : "",
+      id: isSet(object.id) ? String(object.id) : "",
     };
   },
 
@@ -6823,6 +6828,7 @@ export const ChannelUserList_ChannelUser = {
     const obj: any = {};
     message.user !== undefined && (obj.user = message.user ? User.toJSON(message.user) : undefined);
     message.role_id !== undefined && (obj.role_id = message.role_id);
+    message.id !== undefined && (obj.id = message.id);
     return obj;
   },
 
@@ -6833,7 +6839,8 @@ export const ChannelUserList_ChannelUser = {
   fromPartial<I extends Exact<DeepPartial<ChannelUserList_ChannelUser>, I>>(object: I): ChannelUserList_ChannelUser {
     const message = createBaseChannelUserList_ChannelUser();
     message.user = (object.user !== undefined && object.user !== null) ? User.fromPartial(object.user) : undefined;
-    message.role_id = object.role_id ?? undefined;
+    message.role_id = object.role_id ?? "";
+    message.id = object.id ?? "";
     return message;
   },
 };
@@ -12046,7 +12053,6 @@ function createBaseCreateChannelDescRequest(): CreateChannelDescRequest {
     channel_id: "",
     category_id: "",
     type: undefined,
-    group_id: "",
     channel_lable: "",
     channel_private: 0,
     user_ids: [],
@@ -12070,17 +12076,14 @@ export const CreateChannelDescRequest = {
     if (message.type !== undefined) {
       Int32Value.encode({ value: message.type! }, writer.uint32(42).fork()).ldelim();
     }
-    if (message.group_id !== "") {
-      writer.uint32(50).string(message.group_id);
-    }
     if (message.channel_lable !== "") {
-      writer.uint32(58).string(message.channel_lable);
+      writer.uint32(50).string(message.channel_lable);
     }
     if (message.channel_private !== 0) {
-      writer.uint32(64).int32(message.channel_private);
+      writer.uint32(56).int32(message.channel_private);
     }
     for (const v of message.user_ids) {
-      writer.uint32(74).string(v!);
+      writer.uint32(66).string(v!);
     }
     return writer;
   },
@@ -12108,15 +12111,12 @@ export const CreateChannelDescRequest = {
           message.type = Int32Value.decode(reader, reader.uint32()).value;
           break;
         case 6:
-          message.group_id = reader.string();
-          break;
-        case 7:
           message.channel_lable = reader.string();
           break;
-        case 8:
+        case 7:
           message.channel_private = reader.int32();
           break;
-        case 9:
+        case 8:
           message.user_ids.push(reader.string());
           break;
         default:
@@ -12134,7 +12134,6 @@ export const CreateChannelDescRequest = {
       channel_id: isSet(object.channel_id) ? String(object.channel_id) : "",
       category_id: isSet(object.category_id) ? String(object.category_id) : "",
       type: isSet(object.type) ? Number(object.type) : undefined,
-      group_id: isSet(object.group_id) ? String(object.group_id) : "",
       channel_lable: isSet(object.channel_lable) ? String(object.channel_lable) : "",
       channel_private: isSet(object.channel_private) ? Number(object.channel_private) : 0,
       user_ids: Array.isArray(object?.user_ids) ? object.user_ids.map((e: any) => String(e)) : [],
@@ -12148,7 +12147,6 @@ export const CreateChannelDescRequest = {
     message.channel_id !== undefined && (obj.channel_id = message.channel_id);
     message.category_id !== undefined && (obj.category_id = message.category_id);
     message.type !== undefined && (obj.type = message.type);
-    message.group_id !== undefined && (obj.group_id = message.group_id);
     message.channel_lable !== undefined && (obj.channel_lable = message.channel_lable);
     message.channel_private !== undefined && (obj.channel_private = Math.round(message.channel_private));
     if (message.user_ids) {
@@ -12170,7 +12168,6 @@ export const CreateChannelDescRequest = {
     message.channel_id = object.channel_id ?? "";
     message.category_id = object.category_id ?? "";
     message.type = object.type ?? undefined;
-    message.group_id = object.group_id ?? "";
     message.channel_lable = object.channel_lable ?? "";
     message.channel_private = object.channel_private ?? 0;
     message.user_ids = object.user_ids?.map((e) => e) || [];
@@ -12895,13 +12892,13 @@ export const PermissionList = {
 };
 
 function createBaseListPermissionsRequest(): ListPermissionsRequest {
-  return { role_id: undefined };
+  return { role_id: "" };
 }
 
 export const ListPermissionsRequest = {
   encode(message: ListPermissionsRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.role_id !== undefined) {
-      StringValue.encode({ value: message.role_id! }, writer.uint32(10).fork()).ldelim();
+    if (message.role_id !== "") {
+      writer.uint32(10).string(message.role_id);
     }
     return writer;
   },
@@ -12914,7 +12911,7 @@ export const ListPermissionsRequest = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          message.role_id = StringValue.decode(reader, reader.uint32()).value;
+          message.role_id = reader.string();
           break;
         default:
           reader.skipType(tag & 7);
@@ -12925,7 +12922,7 @@ export const ListPermissionsRequest = {
   },
 
   fromJSON(object: any): ListPermissionsRequest {
-    return { role_id: isSet(object.role_id) ? String(object.role_id) : undefined };
+    return { role_id: isSet(object.role_id) ? String(object.role_id) : "" };
   },
 
   toJSON(message: ListPermissionsRequest): unknown {
@@ -12940,19 +12937,19 @@ export const ListPermissionsRequest = {
 
   fromPartial<I extends Exact<DeepPartial<ListPermissionsRequest>, I>>(object: I): ListPermissionsRequest {
     const message = createBaseListPermissionsRequest();
-    message.role_id = object.role_id ?? undefined;
+    message.role_id = object.role_id ?? "";
     return message;
   },
 };
 
 function createBaseListRoleUsersRequest(): ListRoleUsersRequest {
-  return { role_id: undefined, limit: undefined, cursor: "" };
+  return { role_id: "", limit: undefined, cursor: "" };
 }
 
 export const ListRoleUsersRequest = {
   encode(message: ListRoleUsersRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.role_id !== undefined) {
-      StringValue.encode({ value: message.role_id! }, writer.uint32(10).fork()).ldelim();
+    if (message.role_id !== "") {
+      writer.uint32(10).string(message.role_id);
     }
     if (message.limit !== undefined) {
       Int32Value.encode({ value: message.limit! }, writer.uint32(18).fork()).ldelim();
@@ -12971,7 +12968,7 @@ export const ListRoleUsersRequest = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          message.role_id = StringValue.decode(reader, reader.uint32()).value;
+          message.role_id = reader.string();
           break;
         case 2:
           message.limit = Int32Value.decode(reader, reader.uint32()).value;
@@ -12989,7 +12986,7 @@ export const ListRoleUsersRequest = {
 
   fromJSON(object: any): ListRoleUsersRequest {
     return {
-      role_id: isSet(object.role_id) ? String(object.role_id) : undefined,
+      role_id: isSet(object.role_id) ? String(object.role_id) : "",
       limit: isSet(object.limit) ? Number(object.limit) : undefined,
       cursor: isSet(object.cursor) ? String(object.cursor) : "",
     };
@@ -13009,7 +13006,7 @@ export const ListRoleUsersRequest = {
 
   fromPartial<I extends Exact<DeepPartial<ListRoleUsersRequest>, I>>(object: I): ListRoleUsersRequest {
     const message = createBaseListRoleUsersRequest();
-    message.role_id = object.role_id ?? undefined;
+    message.role_id = object.role_id ?? "";
     message.limit = object.limit ?? undefined;
     message.cursor = object.cursor ?? "";
     return message;

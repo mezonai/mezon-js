@@ -631,7 +631,9 @@ export interface ChannelUserList_ChannelUser {
     /** User. */
     user: User | undefined;
     /** Their relationship to the role. */
-    role_id: string | undefined;
+    role_id: string;
+    /** Id */
+    id: string;
 }
 /** A list of users belonging to a clan, along with their role. */
 export interface ClanUserList {
@@ -1313,8 +1315,6 @@ export interface CreateChannelDescRequest {
     category_id: string;
     /** The channel type. */
     type: number | undefined;
-    /** Group ID. */
-    group_id: string;
     /** The channel lable */
     channel_lable: string;
     /** The channel private */
@@ -1399,11 +1399,11 @@ export interface PermissionList {
 }
 /** List (and optionally filter) permissions. */
 export interface ListPermissionsRequest {
-    role_id: string | undefined;
+    role_id: string;
 }
 /** List (and optionally filter) role-users. */
 export interface ListRoleUsersRequest {
-    role_id: string | undefined;
+    role_id: string;
     /** Max number of records to return. Between 1 and 100. */
     limit: number | undefined;
     /** An optional next page cursor. */
@@ -4741,6 +4741,7 @@ export declare const ChannelUserList: {
                 apple_id?: string | undefined;
             } | undefined;
             role_id?: string | undefined;
+            id?: string | undefined;
         }[] | undefined;
         cursor?: string | undefined;
         channel_id?: string | undefined;
@@ -4766,6 +4767,7 @@ export declare const ChannelUserList: {
                 apple_id?: string | undefined;
             } | undefined;
             role_id?: string | undefined;
+            id?: string | undefined;
         }[] & ({
             user?: {
                 id?: string | undefined;
@@ -4787,6 +4789,7 @@ export declare const ChannelUserList: {
                 apple_id?: string | undefined;
             } | undefined;
             role_id?: string | undefined;
+            id?: string | undefined;
         } & {
             user?: ({
                 id?: string | undefined;
@@ -4826,6 +4829,7 @@ export declare const ChannelUserList: {
                 apple_id?: string | undefined;
             } & { [K in Exclude<keyof I["channel_users"][number]["user"], keyof User>]: never; }) | undefined;
             role_id?: string | undefined;
+            id?: string | undefined;
         } & { [K_1 in Exclude<keyof I["channel_users"][number], keyof ChannelUserList_ChannelUser>]: never; })[] & { [K_2 in Exclude<keyof I["channel_users"], keyof {
             user?: {
                 id?: string | undefined;
@@ -4847,6 +4851,7 @@ export declare const ChannelUserList: {
                 apple_id?: string | undefined;
             } | undefined;
             role_id?: string | undefined;
+            id?: string | undefined;
         }[]>]: never; }) | undefined;
         cursor?: string | undefined;
         channel_id?: string | undefined;
@@ -4873,6 +4878,7 @@ export declare const ChannelUserList: {
                 apple_id?: string | undefined;
             } | undefined;
             role_id?: string | undefined;
+            id?: string | undefined;
         }[] | undefined;
         cursor?: string | undefined;
         channel_id?: string | undefined;
@@ -4898,6 +4904,7 @@ export declare const ChannelUserList: {
                 apple_id?: string | undefined;
             } | undefined;
             role_id?: string | undefined;
+            id?: string | undefined;
         }[] & ({
             user?: {
                 id?: string | undefined;
@@ -4919,6 +4926,7 @@ export declare const ChannelUserList: {
                 apple_id?: string | undefined;
             } | undefined;
             role_id?: string | undefined;
+            id?: string | undefined;
         } & {
             user?: ({
                 id?: string | undefined;
@@ -4958,6 +4966,7 @@ export declare const ChannelUserList: {
                 apple_id?: string | undefined;
             } & { [K_4 in Exclude<keyof I_1["channel_users"][number]["user"], keyof User>]: never; }) | undefined;
             role_id?: string | undefined;
+            id?: string | undefined;
         } & { [K_5 in Exclude<keyof I_1["channel_users"][number], keyof ChannelUserList_ChannelUser>]: never; })[] & { [K_6 in Exclude<keyof I_1["channel_users"], keyof {
             user?: {
                 id?: string | undefined;
@@ -4979,6 +4988,7 @@ export declare const ChannelUserList: {
                 apple_id?: string | undefined;
             } | undefined;
             role_id?: string | undefined;
+            id?: string | undefined;
         }[]>]: never; }) | undefined;
         cursor?: string | undefined;
         channel_id?: string | undefined;
@@ -5010,6 +5020,7 @@ export declare const ChannelUserList_ChannelUser: {
             apple_id?: string | undefined;
         } | undefined;
         role_id?: string | undefined;
+        id?: string | undefined;
     } & {
         user?: ({
             id?: string | undefined;
@@ -5049,6 +5060,7 @@ export declare const ChannelUserList_ChannelUser: {
             apple_id?: string | undefined;
         } & { [K in Exclude<keyof I["user"], keyof User>]: never; }) | undefined;
         role_id?: string | undefined;
+        id?: string | undefined;
     } & { [K_1 in Exclude<keyof I, keyof ChannelUserList_ChannelUser>]: never; }>(base?: I | undefined): ChannelUserList_ChannelUser;
     fromPartial<I_1 extends {
         user?: {
@@ -5071,6 +5083,7 @@ export declare const ChannelUserList_ChannelUser: {
             apple_id?: string | undefined;
         } | undefined;
         role_id?: string | undefined;
+        id?: string | undefined;
     } & {
         user?: ({
             id?: string | undefined;
@@ -5110,6 +5123,7 @@ export declare const ChannelUserList_ChannelUser: {
             apple_id?: string | undefined;
         } & { [K_2 in Exclude<keyof I_1["user"], keyof User>]: never; }) | undefined;
         role_id?: string | undefined;
+        id?: string | undefined;
     } & { [K_3 in Exclude<keyof I_1, keyof ChannelUserList_ChannelUser>]: never; }>(object: I_1): ChannelUserList_ChannelUser;
 };
 export declare const ClanUserList: {
@@ -8523,7 +8537,6 @@ export declare const CreateChannelDescRequest: {
         channel_id?: string | undefined;
         category_id?: string | undefined;
         type?: number | undefined;
-        group_id?: string | undefined;
         channel_lable?: string | undefined;
         channel_private?: number | undefined;
         user_ids?: string[] | undefined;
@@ -8533,7 +8546,6 @@ export declare const CreateChannelDescRequest: {
         channel_id?: string | undefined;
         category_id?: string | undefined;
         type?: number | undefined;
-        group_id?: string | undefined;
         channel_lable?: string | undefined;
         channel_private?: number | undefined;
         user_ids?: (string[] & string[] & { [K in Exclude<keyof I["user_ids"], keyof string[]>]: never; }) | undefined;
@@ -8544,7 +8556,6 @@ export declare const CreateChannelDescRequest: {
         channel_id?: string | undefined;
         category_id?: string | undefined;
         type?: number | undefined;
-        group_id?: string | undefined;
         channel_lable?: string | undefined;
         channel_private?: number | undefined;
         user_ids?: string[] | undefined;
@@ -8554,7 +8565,6 @@ export declare const CreateChannelDescRequest: {
         channel_id?: string | undefined;
         category_id?: string | undefined;
         type?: number | undefined;
-        group_id?: string | undefined;
         channel_lable?: string | undefined;
         channel_private?: number | undefined;
         user_ids?: (string[] & string[] & { [K_2 in Exclude<keyof I_1["user_ids"], keyof string[]>]: never; }) | undefined;
