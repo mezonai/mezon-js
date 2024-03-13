@@ -1,5 +1,6 @@
 /** A single user-role pair. */
 export interface ChannelUserListChannelUser {
+    id?: string;
     role_id?: string;
     user?: ApiUser;
 }
@@ -289,6 +290,7 @@ export interface ApiInviteUserRes {
     channel_name?: string;
     clan_id?: string;
     clan_name?: string;
+    user_joined?: boolean;
 }
 /** Add link invite users to. */
 export interface ApiLinkInviteUser {
