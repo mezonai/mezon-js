@@ -6,6 +6,8 @@ import { encode } from 'js-base64';
 
 /** A single user-role pair. */
 export interface ChannelUserListChannelUser {
+  //
+  id?: string;
   //Their relationship to the role.
   role_id?: string;
   //User.
@@ -504,6 +506,8 @@ export interface ApiInviteUserRes {
   clan_id?: string;
   //
   clan_name?: string;
+  //
+  user_joined?: boolean;
 }
 
 /** Add link invite users to. */

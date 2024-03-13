@@ -1174,6 +1174,8 @@ export interface InviteUserRes {
     clan_name: string;
     /** channel name */
     channel_name: string;
+    /** check user exist */
+    user_joined: boolean;
 }
 /** Add link invite users to. */
 export interface JoinClanChannelRequest {
@@ -7990,22 +7992,26 @@ export declare const InviteUserRes: {
         channel_id?: string | undefined;
         clan_name?: string | undefined;
         channel_name?: string | undefined;
+        user_joined?: boolean | undefined;
     } & {
         clan_id?: string | undefined;
         channel_id?: string | undefined;
         clan_name?: string | undefined;
         channel_name?: string | undefined;
+        user_joined?: boolean | undefined;
     } & { [K in Exclude<keyof I, keyof InviteUserRes>]: never; }>(base?: I | undefined): InviteUserRes;
     fromPartial<I_1 extends {
         clan_id?: string | undefined;
         channel_id?: string | undefined;
         clan_name?: string | undefined;
         channel_name?: string | undefined;
+        user_joined?: boolean | undefined;
     } & {
         clan_id?: string | undefined;
         channel_id?: string | undefined;
         clan_name?: string | undefined;
         channel_name?: string | undefined;
+        user_joined?: boolean | undefined;
     } & { [K_1 in Exclude<keyof I_1, keyof InviteUserRes>]: never; }>(object: I_1): InviteUserRes;
 };
 export declare const JoinClanChannelRequest: {

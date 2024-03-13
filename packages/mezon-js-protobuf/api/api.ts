@@ -1623,6 +1623,8 @@ export interface InviteUserRes {
   clan_name: string;
   /** channel name */
   channel_name: string;
+  /** check user exist */
+  user_joined: boolean;
 }
 
 /** Add link invite users to. */
@@ -10927,7 +10929,7 @@ export const InviteUserRequest = {
 };
 
 function createBaseInviteUserRes(): InviteUserRes {
-  return { clan_id: "", channel_id: "", clan_name: "", channel_name: "" };
+  return { clan_id: "", channel_id: "", clan_name: "", channel_name: "", user_joined: false };
 }
 
 export const InviteUserRes = {
@@ -10943,6 +10945,9 @@ export const InviteUserRes = {
     }
     if (message.channel_name !== "") {
       writer.uint32(34).string(message.channel_name);
+    }
+    if (message.user_joined === true) {
+      writer.uint32(40).bool(message.user_joined);
     }
     return writer;
   },
@@ -10966,6 +10971,9 @@ export const InviteUserRes = {
         case 4:
           message.channel_name = reader.string();
           break;
+        case 5:
+          message.user_joined = reader.bool();
+          break;
         default:
           reader.skipType(tag & 7);
           break;
@@ -10980,6 +10988,7 @@ export const InviteUserRes = {
       channel_id: isSet(object.channel_id) ? String(object.channel_id) : "",
       clan_name: isSet(object.clan_name) ? String(object.clan_name) : "",
       channel_name: isSet(object.channel_name) ? String(object.channel_name) : "",
+      user_joined: isSet(object.user_joined) ? Boolean(object.user_joined) : false,
     };
   },
 
@@ -10989,6 +10998,7 @@ export const InviteUserRes = {
     message.channel_id !== undefined && (obj.channel_id = message.channel_id);
     message.clan_name !== undefined && (obj.clan_name = message.clan_name);
     message.channel_name !== undefined && (obj.channel_name = message.channel_name);
+    message.user_joined !== undefined && (obj.user_joined = message.user_joined);
     return obj;
   },
 
@@ -11002,6 +11012,7 @@ export const InviteUserRes = {
     message.channel_id = object.channel_id ?? "";
     message.clan_name = object.clan_name ?? "";
     message.channel_name = object.channel_name ?? "";
+    message.user_joined = object.user_joined ?? false;
     return message;
   },
 };
