@@ -1733,7 +1733,7 @@ export interface ChannelDescription {
   /** creator ID. */
   creator_id: string;
   /** The channel lable */
-  channel_lable: string;
+  channel_label: string;
   /** The channel private */
   channel_private: number;
   /** The channel avatar */
@@ -1787,7 +1787,7 @@ export interface CreateChannelDescRequest {
     | number
     | undefined;
   /** The channel lable */
-  channel_lable: string;
+  channel_label: string;
   /** The channel private */
   channel_private: number;
   /** The users to add. */
@@ -1805,7 +1805,7 @@ export interface UpdateChannelDescRequest {
   /** The ID of the channel to update. */
   channel_id: string;
   /** The channel lable */
-  channel_lable:
+  channel_label:
     | string
     | undefined;
   /** The category of channel */
@@ -11693,7 +11693,7 @@ function createBaseChannelDescription(): ChannelDescription {
     category_name: "",
     type: undefined,
     creator_id: "",
-    channel_lable: "",
+    channel_label: "",
     channel_private: 0,
     channel_avatar: [],
     user_id: [],
@@ -11723,8 +11723,8 @@ export const ChannelDescription = {
     if (message.creator_id !== "") {
       writer.uint32(58).string(message.creator_id);
     }
-    if (message.channel_lable !== "") {
-      writer.uint32(66).string(message.channel_lable);
+    if (message.channel_label !== "") {
+      writer.uint32(66).string(message.channel_label);
     }
     if (message.channel_private !== 0) {
       writer.uint32(72).int32(message.channel_private);
@@ -11767,7 +11767,7 @@ export const ChannelDescription = {
           message.creator_id = reader.string();
           break;
         case 8:
-          message.channel_lable = reader.string();
+          message.channel_label = reader.string();
           break;
         case 9:
           message.channel_private = reader.int32();
@@ -11795,7 +11795,7 @@ export const ChannelDescription = {
       category_name: isSet(object.category_name) ? String(object.category_name) : "",
       type: isSet(object.type) ? Number(object.type) : undefined,
       creator_id: isSet(object.creator_id) ? String(object.creator_id) : "",
-      channel_lable: isSet(object.channel_lable) ? String(object.channel_lable) : "",
+      channel_label: isSet(object.channel_label) ? String(object.channel_label) : "",
       channel_private: isSet(object.channel_private) ? Number(object.channel_private) : 0,
       channel_avatar: Array.isArray(object?.channel_avatar) ? object.channel_avatar.map((e: any) => String(e)) : [],
       user_id: Array.isArray(object?.user_id) ? object.user_id.map((e: any) => String(e)) : [],
@@ -11811,7 +11811,7 @@ export const ChannelDescription = {
     message.category_name !== undefined && (obj.category_name = message.category_name);
     message.type !== undefined && (obj.type = message.type);
     message.creator_id !== undefined && (obj.creator_id = message.creator_id);
-    message.channel_lable !== undefined && (obj.channel_lable = message.channel_lable);
+    message.channel_label !== undefined && (obj.channel_label = message.channel_label);
     message.channel_private !== undefined && (obj.channel_private = Math.round(message.channel_private));
     if (message.channel_avatar) {
       obj.channel_avatar = message.channel_avatar.map((e) => e);
@@ -11839,7 +11839,7 @@ export const ChannelDescription = {
     message.category_name = object.category_name ?? "";
     message.type = object.type ?? undefined;
     message.creator_id = object.creator_id ?? "";
-    message.channel_lable = object.channel_lable ?? "";
+    message.channel_label = object.channel_label ?? "";
     message.channel_private = object.channel_private ?? 0;
     message.channel_avatar = object.channel_avatar?.map((e) => e) || [];
     message.user_id = object.user_id?.map((e) => e) || [];
@@ -12029,7 +12029,7 @@ function createBaseCreateChannelDescRequest(): CreateChannelDescRequest {
     channel_id: "",
     category_id: "",
     type: undefined,
-    channel_lable: "",
+    channel_label: "",
     channel_private: 0,
     user_ids: [],
   };
@@ -12052,8 +12052,8 @@ export const CreateChannelDescRequest = {
     if (message.type !== undefined) {
       Int32Value.encode({ value: message.type! }, writer.uint32(42).fork()).ldelim();
     }
-    if (message.channel_lable !== "") {
-      writer.uint32(50).string(message.channel_lable);
+    if (message.channel_label !== "") {
+      writer.uint32(50).string(message.channel_label);
     }
     if (message.channel_private !== 0) {
       writer.uint32(56).int32(message.channel_private);
@@ -12087,7 +12087,7 @@ export const CreateChannelDescRequest = {
           message.type = Int32Value.decode(reader, reader.uint32()).value;
           break;
         case 6:
-          message.channel_lable = reader.string();
+          message.channel_label = reader.string();
           break;
         case 7:
           message.channel_private = reader.int32();
@@ -12110,7 +12110,7 @@ export const CreateChannelDescRequest = {
       channel_id: isSet(object.channel_id) ? String(object.channel_id) : "",
       category_id: isSet(object.category_id) ? String(object.category_id) : "",
       type: isSet(object.type) ? Number(object.type) : undefined,
-      channel_lable: isSet(object.channel_lable) ? String(object.channel_lable) : "",
+      channel_label: isSet(object.channel_label) ? String(object.channel_label) : "",
       channel_private: isSet(object.channel_private) ? Number(object.channel_private) : 0,
       user_ids: Array.isArray(object?.user_ids) ? object.user_ids.map((e: any) => String(e)) : [],
     };
@@ -12123,7 +12123,7 @@ export const CreateChannelDescRequest = {
     message.channel_id !== undefined && (obj.channel_id = message.channel_id);
     message.category_id !== undefined && (obj.category_id = message.category_id);
     message.type !== undefined && (obj.type = message.type);
-    message.channel_lable !== undefined && (obj.channel_lable = message.channel_lable);
+    message.channel_label !== undefined && (obj.channel_label = message.channel_label);
     message.channel_private !== undefined && (obj.channel_private = Math.round(message.channel_private));
     if (message.user_ids) {
       obj.user_ids = message.user_ids.map((e) => e);
@@ -12144,7 +12144,7 @@ export const CreateChannelDescRequest = {
     message.channel_id = object.channel_id ?? "";
     message.category_id = object.category_id ?? "";
     message.type = object.type ?? undefined;
-    message.channel_lable = object.channel_lable ?? "";
+    message.channel_label = object.channel_label ?? "";
     message.channel_private = object.channel_private ?? 0;
     message.user_ids = object.user_ids?.map((e) => e) || [];
     return message;
@@ -12203,7 +12203,7 @@ export const DeleteChannelDescRequest = {
 };
 
 function createBaseUpdateChannelDescRequest(): UpdateChannelDescRequest {
-  return { channel_id: "", channel_lable: undefined, category_id: undefined };
+  return { channel_id: "", channel_label: undefined, category_id: undefined };
 }
 
 export const UpdateChannelDescRequest = {
@@ -12211,8 +12211,8 @@ export const UpdateChannelDescRequest = {
     if (message.channel_id !== "") {
       writer.uint32(10).string(message.channel_id);
     }
-    if (message.channel_lable !== undefined) {
-      StringValue.encode({ value: message.channel_lable! }, writer.uint32(18).fork()).ldelim();
+    if (message.channel_label !== undefined) {
+      StringValue.encode({ value: message.channel_label! }, writer.uint32(18).fork()).ldelim();
     }
     if (message.category_id !== undefined) {
       StringValue.encode({ value: message.category_id! }, writer.uint32(26).fork()).ldelim();
@@ -12231,7 +12231,7 @@ export const UpdateChannelDescRequest = {
           message.channel_id = reader.string();
           break;
         case 2:
-          message.channel_lable = StringValue.decode(reader, reader.uint32()).value;
+          message.channel_label = StringValue.decode(reader, reader.uint32()).value;
           break;
         case 3:
           message.category_id = StringValue.decode(reader, reader.uint32()).value;
@@ -12247,7 +12247,7 @@ export const UpdateChannelDescRequest = {
   fromJSON(object: any): UpdateChannelDescRequest {
     return {
       channel_id: isSet(object.channel_id) ? String(object.channel_id) : "",
-      channel_lable: isSet(object.channel_lable) ? String(object.channel_lable) : undefined,
+      channel_label: isSet(object.channel_label) ? String(object.channel_label) : undefined,
       category_id: isSet(object.category_id) ? String(object.category_id) : undefined,
     };
   },
@@ -12255,7 +12255,7 @@ export const UpdateChannelDescRequest = {
   toJSON(message: UpdateChannelDescRequest): unknown {
     const obj: any = {};
     message.channel_id !== undefined && (obj.channel_id = message.channel_id);
-    message.channel_lable !== undefined && (obj.channel_lable = message.channel_lable);
+    message.channel_label !== undefined && (obj.channel_label = message.channel_label);
     message.category_id !== undefined && (obj.category_id = message.category_id);
     return obj;
   },
@@ -12267,7 +12267,7 @@ export const UpdateChannelDescRequest = {
   fromPartial<I extends Exact<DeepPartial<UpdateChannelDescRequest>, I>>(object: I): UpdateChannelDescRequest {
     const message = createBaseUpdateChannelDescRequest();
     message.channel_id = object.channel_id ?? "";
-    message.channel_lable = object.channel_lable ?? undefined;
+    message.channel_label = object.channel_label ?? undefined;
     message.category_id = object.category_id ?? undefined;
     return message;
   },

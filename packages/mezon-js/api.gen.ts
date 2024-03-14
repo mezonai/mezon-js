@@ -201,7 +201,7 @@ export interface ApiChannelDescription {
   //The channel this message belongs to.
   channel_id?: string;
   //
-  channel_lable?: string;
+  channel_label?: string;
   //
   channel_private?: number;
   //
@@ -351,7 +351,7 @@ export interface ApiCreateChannelDescRequest {
   //The channel this message belongs to.
   channel_id?: string;
   //
-  channel_lable?: string;
+  channel_label?: string;
   //
   channel_private?: number;
   //
