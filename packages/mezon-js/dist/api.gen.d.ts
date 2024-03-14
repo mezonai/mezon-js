@@ -148,11 +148,8 @@ export interface ApiChannelMessage {
 }
 /** A list of channel messages, usually a result of a list operation. */
 export interface ApiChannelMessageList {
-    cacheable_cursor?: string;
     last_seen_message_id?: string;
     messages?: Array<ApiChannelMessage>;
-    next_cursor?: string;
-    prev_cursor?: string;
 }
 /** A list of users belonging to a channel, along with their role. */
 export interface ApiChannelUserList {
@@ -207,7 +204,6 @@ export interface ApiCreateChannelDescRequest {
     channel_lable?: string;
     channel_private?: number;
     clan_id?: string;
-    group_id?: string;
     parrent_id?: string;
     type?: number;
     user_ids?: Array<string>;
@@ -629,7 +625,7 @@ export declare class MezonApi {
     /**  */
     listCategoryDescs(bearerToken: string, clanId: string, creatorId?: string, categoryName?: string, categoryId?: string, options?: any): Promise<ApiCategoryDescList>;
     /** List a channel's message history. */
-    listChannelMessages(bearerToken: string, channelId: string, limit?: number, forward?: boolean, cursor?: string, options?: any): Promise<ApiChannelMessageList>;
+    listChannelMessages(bearerToken: string, channelId: string, messageId?: string, direction?: number, limit?: number, options?: any): Promise<ApiChannelMessageList>;
     /** List user channels */
     listChannelDescs(bearerToken: string, limit?: number, state?: number, cursor?: string, clanId?: string, channelType?: number, options?: any): Promise<ApiChannelDescList>;
     /** Create a new channel with the current user as the owner. */
