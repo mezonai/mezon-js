@@ -1267,7 +1267,7 @@ export interface ChannelDescription {
     /** creator ID. */
     creator_id: string;
     /** The channel lable */
-    channel_lable: string;
+    channel_label: string;
     /** The channel private */
     channel_private: number;
     /** The channel avatar */
@@ -1312,7 +1312,7 @@ export interface CreateChannelDescRequest {
     /** The channel type. */
     type: number | undefined;
     /** The channel lable */
-    channel_lable: string;
+    channel_label: string;
     /** The channel private */
     channel_private: number;
     /** The users to add. */
@@ -1328,7 +1328,7 @@ export interface UpdateChannelDescRequest {
     /** The ID of the channel to update. */
     channel_id: string;
     /** The channel lable */
-    channel_lable: string | undefined;
+    channel_label: string | undefined;
     /** The category of channel */
     category_id: string | undefined;
 }
@@ -8291,7 +8291,7 @@ export declare const ChannelDescription: {
         category_name?: string | undefined;
         type?: number | undefined;
         creator_id?: string | undefined;
-        channel_lable?: string | undefined;
+        channel_label?: string | undefined;
         channel_private?: number | undefined;
         channel_avatar?: string[] | undefined;
         user_id?: string[] | undefined;
@@ -8303,7 +8303,7 @@ export declare const ChannelDescription: {
         category_name?: string | undefined;
         type?: number | undefined;
         creator_id?: string | undefined;
-        channel_lable?: string | undefined;
+        channel_label?: string | undefined;
         channel_private?: number | undefined;
         channel_avatar?: (string[] & string[] & { [K in Exclude<keyof I["channel_avatar"], keyof string[]>]: never; }) | undefined;
         user_id?: (string[] & string[] & { [K_1 in Exclude<keyof I["user_id"], keyof string[]>]: never; }) | undefined;
@@ -8316,7 +8316,7 @@ export declare const ChannelDescription: {
         category_name?: string | undefined;
         type?: number | undefined;
         creator_id?: string | undefined;
-        channel_lable?: string | undefined;
+        channel_label?: string | undefined;
         channel_private?: number | undefined;
         channel_avatar?: string[] | undefined;
         user_id?: string[] | undefined;
@@ -8328,7 +8328,7 @@ export declare const ChannelDescription: {
         category_name?: string | undefined;
         type?: number | undefined;
         creator_id?: string | undefined;
-        channel_lable?: string | undefined;
+        channel_label?: string | undefined;
         channel_private?: number | undefined;
         channel_avatar?: (string[] & string[] & { [K_3 in Exclude<keyof I_1["channel_avatar"], keyof string[]>]: never; }) | undefined;
         user_id?: (string[] & string[] & { [K_4 in Exclude<keyof I_1["user_id"], keyof string[]>]: never; }) | undefined;
@@ -8348,7 +8348,7 @@ export declare const ChannelDescList: {
             category_name?: string | undefined;
             type?: number | undefined;
             creator_id?: string | undefined;
-            channel_lable?: string | undefined;
+            channel_label?: string | undefined;
             channel_private?: number | undefined;
             channel_avatar?: string[] | undefined;
             user_id?: string[] | undefined;
@@ -8365,7 +8365,7 @@ export declare const ChannelDescList: {
             category_name?: string | undefined;
             type?: number | undefined;
             creator_id?: string | undefined;
-            channel_lable?: string | undefined;
+            channel_label?: string | undefined;
             channel_private?: number | undefined;
             channel_avatar?: string[] | undefined;
             user_id?: string[] | undefined;
@@ -8377,7 +8377,7 @@ export declare const ChannelDescList: {
             category_name?: string | undefined;
             type?: number | undefined;
             creator_id?: string | undefined;
-            channel_lable?: string | undefined;
+            channel_label?: string | undefined;
             channel_private?: number | undefined;
             channel_avatar?: string[] | undefined;
             user_id?: string[] | undefined;
@@ -8389,7 +8389,7 @@ export declare const ChannelDescList: {
             category_name?: string | undefined;
             type?: number | undefined;
             creator_id?: string | undefined;
-            channel_lable?: string | undefined;
+            channel_label?: string | undefined;
             channel_private?: number | undefined;
             channel_avatar?: (string[] & string[] & { [K in Exclude<keyof I["channeldesc"][number]["channel_avatar"], keyof string[]>]: never; }) | undefined;
             user_id?: (string[] & string[] & { [K_1 in Exclude<keyof I["channeldesc"][number]["user_id"], keyof string[]>]: never; }) | undefined;
@@ -8401,7 +8401,7 @@ export declare const ChannelDescList: {
             category_name?: string | undefined;
             type?: number | undefined;
             creator_id?: string | undefined;
-            channel_lable?: string | undefined;
+            channel_label?: string | undefined;
             channel_private?: number | undefined;
             channel_avatar?: string[] | undefined;
             user_id?: string[] | undefined;
@@ -8419,7 +8419,7 @@ export declare const ChannelDescList: {
             category_name?: string | undefined;
             type?: number | undefined;
             creator_id?: string | undefined;
-            channel_lable?: string | undefined;
+            channel_label?: string | undefined;
             channel_private?: number | undefined;
             channel_avatar?: string[] | undefined;
             user_id?: string[] | undefined;
@@ -8436,7 +8436,7 @@ export declare const ChannelDescList: {
             category_name?: string | undefined;
             type?: number | undefined;
             creator_id?: string | undefined;
-            channel_lable?: string | undefined;
+            channel_label?: string | undefined;
             channel_private?: number | undefined;
             channel_avatar?: string[] | undefined;
             user_id?: string[] | undefined;
@@ -8448,7 +8448,7 @@ export declare const ChannelDescList: {
             category_name?: string | undefined;
             type?: number | undefined;
             creator_id?: string | undefined;
-            channel_lable?: string | undefined;
+            channel_label?: string | undefined;
             channel_private?: number | undefined;
             channel_avatar?: string[] | undefined;
             user_id?: string[] | undefined;
@@ -8460,7 +8460,7 @@ export declare const ChannelDescList: {
             category_name?: string | undefined;
             type?: number | undefined;
             creator_id?: string | undefined;
-            channel_lable?: string | undefined;
+            channel_label?: string | undefined;
             channel_private?: number | undefined;
             channel_avatar?: (string[] & string[] & { [K_5 in Exclude<keyof I_1["channeldesc"][number]["channel_avatar"], keyof string[]>]: never; }) | undefined;
             user_id?: (string[] & string[] & { [K_6 in Exclude<keyof I_1["channeldesc"][number]["user_id"], keyof string[]>]: never; }) | undefined;
@@ -8472,7 +8472,7 @@ export declare const ChannelDescList: {
             category_name?: string | undefined;
             type?: number | undefined;
             creator_id?: string | undefined;
-            channel_lable?: string | undefined;
+            channel_label?: string | undefined;
             channel_private?: number | undefined;
             channel_avatar?: string[] | undefined;
             user_id?: string[] | undefined;
@@ -8525,7 +8525,7 @@ export declare const CreateChannelDescRequest: {
         channel_id?: string | undefined;
         category_id?: string | undefined;
         type?: number | undefined;
-        channel_lable?: string | undefined;
+        channel_label?: string | undefined;
         channel_private?: number | undefined;
         user_ids?: string[] | undefined;
     } & {
@@ -8534,7 +8534,7 @@ export declare const CreateChannelDescRequest: {
         channel_id?: string | undefined;
         category_id?: string | undefined;
         type?: number | undefined;
-        channel_lable?: string | undefined;
+        channel_label?: string | undefined;
         channel_private?: number | undefined;
         user_ids?: (string[] & string[] & { [K in Exclude<keyof I["user_ids"], keyof string[]>]: never; }) | undefined;
     } & { [K_1 in Exclude<keyof I, keyof CreateChannelDescRequest>]: never; }>(base?: I | undefined): CreateChannelDescRequest;
@@ -8544,7 +8544,7 @@ export declare const CreateChannelDescRequest: {
         channel_id?: string | undefined;
         category_id?: string | undefined;
         type?: number | undefined;
-        channel_lable?: string | undefined;
+        channel_label?: string | undefined;
         channel_private?: number | undefined;
         user_ids?: string[] | undefined;
     } & {
@@ -8553,7 +8553,7 @@ export declare const CreateChannelDescRequest: {
         channel_id?: string | undefined;
         category_id?: string | undefined;
         type?: number | undefined;
-        channel_lable?: string | undefined;
+        channel_label?: string | undefined;
         channel_private?: number | undefined;
         user_ids?: (string[] & string[] & { [K_2 in Exclude<keyof I_1["user_ids"], keyof string[]>]: never; }) | undefined;
     } & { [K_3 in Exclude<keyof I_1, keyof CreateChannelDescRequest>]: never; }>(object: I_1): CreateChannelDescRequest;
@@ -8581,20 +8581,20 @@ export declare const UpdateChannelDescRequest: {
     toJSON(message: UpdateChannelDescRequest): unknown;
     create<I extends {
         channel_id?: string | undefined;
-        channel_lable?: string | undefined;
+        channel_label?: string | undefined;
         category_id?: string | undefined;
     } & {
         channel_id?: string | undefined;
-        channel_lable?: string | undefined;
+        channel_label?: string | undefined;
         category_id?: string | undefined;
     } & { [K in Exclude<keyof I, keyof UpdateChannelDescRequest>]: never; }>(base?: I | undefined): UpdateChannelDescRequest;
     fromPartial<I_1 extends {
         channel_id?: string | undefined;
-        channel_lable?: string | undefined;
+        channel_label?: string | undefined;
         category_id?: string | undefined;
     } & {
         channel_id?: string | undefined;
-        channel_lable?: string | undefined;
+        channel_label?: string | undefined;
         category_id?: string | undefined;
     } & { [K_1 in Exclude<keyof I_1, keyof UpdateChannelDescRequest>]: never; }>(object: I_1): UpdateChannelDescRequest;
 };

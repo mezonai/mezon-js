@@ -116,7 +116,7 @@ export interface ApiChannelDescription {
     category_name?: string;
     channel_avatar?: string;
     channel_id?: string;
-    channel_lable?: string;
+    channel_label?: string;
     channel_private?: number;
     clan_id?: string;
     creator_id?: string;
@@ -201,7 +201,7 @@ export interface ApiCreateCategoryDescRequest {
 export interface ApiCreateChannelDescRequest {
     category_id?: string;
     channel_id?: string;
-    channel_lable?: string;
+    channel_label?: string;
     channel_private?: number;
     clan_id?: string;
     parrent_id?: string;
