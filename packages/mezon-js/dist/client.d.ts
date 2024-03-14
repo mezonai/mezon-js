@@ -417,7 +417,7 @@ export declare class Client {
     /** Leave a group the user is part of. */
     leaveGroup(session: Session, groupId: string): Promise<boolean>;
     /** List a channel's message history. */
-    listChannelMessages(session: Session, channelId: string, limit?: number, forward?: boolean, cursor?: string): Promise<ChannelMessageList>;
+    listChannelMessages(session: Session, channelId: string, messageId?: string, direction?: number, limit?: number): Promise<ChannelMessageList>;
     /** List a channel's users. */
     listChannelUsers(session: Session, channelId: string, state?: number, limit?: number, cursor?: string): Promise<ApiChannelUserList>;
     /** List a channel's users. */

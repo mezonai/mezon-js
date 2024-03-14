@@ -1611,15 +1611,15 @@ var MezonApi = class {
     ]);
   }
   /** List a channel's message history. */
-  listChannelMessages(bearerToken, channelId, limit, forward, cursor, options = {}) {
+  listChannelMessages(bearerToken, channelId, messageId, direction, limit, options = {}) {
     if (channelId === null || channelId === void 0) {
       throw new Error("'channelId' is a required parameter but is null or undefined.");
     }
     const urlPath = "/v2/channel/{channelId}".replace("{channelId}", encodeURIComponent(String(channelId)));
     const queryParams = /* @__PURE__ */ new Map();
+    queryParams.set("message_id", messageId);
     queryParams.set("limit", limit);
-    queryParams.set("forward", forward);
-    queryParams.set("cursor", cursor);
+    queryParams.set("direction", direction);
     let bodyJson = "";
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("GET", options, bodyJson);
@@ -4567,18 +4567,15 @@ var Client = class {
     });
   }
   /** List a channel's message history. */
-  listChannelMessages(session, channelId, limit, forward, cursor) {
+  listChannelMessages(session, channelId, messageId, direction, limit) {
     return __async(this, null, function* () {
       if (this.autoRefreshSession && session.refresh_token && session.isexpired((Date.now() + this.expiredTimespanMs) / 1e3)) {
         yield this.sessionRefresh(session);
       }
-      return this.apiClient.listChannelMessages(session.token, channelId, limit, forward, cursor).then((response) => {
+      return this.apiClient.listChannelMessages(session.token, channelId, messageId, direction, limit).then((response) => {
         var result = {
           messages: [],
-          last_seen_message_id: response.last_seen_message_id,
-          next_cursor: response.next_cursor,
-          prev_cursor: response.prev_cursor,
-          cacheable_cursor: response.cacheable_cursor
+          last_seen_message_id: response.last_seen_message_id
         };
         if (response.messages == null) {
           return Promise.resolve(result);

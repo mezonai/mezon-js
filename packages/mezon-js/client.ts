@@ -979,19 +979,16 @@ export class Client {
   }
 
   /** List a channel's message history. */
-  async listChannelMessages(session: Session, channelId: string, limit?: number, forward?: boolean, cursor?: string): Promise<ChannelMessageList> {
+  async listChannelMessages(session: Session, channelId: string, messageId?: string, direction?: number, limit?: number): Promise<ChannelMessageList> {
     if (this.autoRefreshSession && session.refresh_token &&
         session.isexpired((Date.now() + this.expiredTimespanMs)/1000)) {
         await this.sessionRefresh(session);
     }
 
-    return this.apiClient.listChannelMessages(session.token, channelId, limit, forward, cursor).then((response: ApiChannelMessageList) => {
+    return this.apiClient.listChannelMessages(session.token, channelId, messageId, direction, limit).then((response: ApiChannelMessageList) => {
       var result: ChannelMessageList = {
         messages: [],
-        last_seen_message_id: response.last_seen_message_id,
-        next_cursor: response.next_cursor,
-        prev_cursor: response.prev_cursor,
-        cacheable_cursor: response.cacheable_cursor
+        last_seen_message_id: response.last_seen_message_id
       };
 
       if (response.messages == null) {

@@ -439,12 +439,6 @@ export interface ChannelMessageList {
     messages: ChannelMessage[];
     /** last seen message id by user */
     last_seen_message_id: string;
-    /** The cursor to send when retrieving the next page, if any. */
-    next_cursor: string;
-    /** The cursor to send when retrieving the previous page, if any. */
-    prev_cursor: string;
-    /** Cacheable cursor to list newer messages. Durable and designed to be stored, unlike next/prev cursors. */
-    cacheable_cursor: string;
 }
 /** Create a group with the current user as owner. */
 export interface CreateGroupRequest {
@@ -705,12 +699,12 @@ export interface LinkSteamRequest {
 export interface ListChannelMessagesRequest {
     /** The channel ID to list from. */
     channel_id: string;
+    /** The current message ID. */
+    message_id: string;
     /** Max number of records to return. Between 1 and 100. */
     limit: number | undefined;
     /** True if listing should be older messages to newer, false if reverse. */
-    forward: boolean | undefined;
-    /** A pagination cursor, if any. */
-    cursor: string;
+    direction: number | undefined;
 }
 /** List friends for a user. */
 export interface ListFriendsRequest {
@@ -3237,9 +3231,6 @@ export declare const ChannelMessageList: {
             referenced_message?: string | undefined;
         }[] | undefined;
         last_seen_message_id?: string | undefined;
-        next_cursor?: string | undefined;
-        prev_cursor?: string | undefined;
-        cacheable_cursor?: string | undefined;
     } & {
         messages?: ({
             clan_id?: string | undefined;
@@ -3319,9 +3310,6 @@ export declare const ChannelMessageList: {
             referenced_message?: string | undefined;
         }[]>]: never; }) | undefined;
         last_seen_message_id?: string | undefined;
-        next_cursor?: string | undefined;
-        prev_cursor?: string | undefined;
-        cacheable_cursor?: string | undefined;
     } & { [K_2 in Exclude<keyof I, keyof ChannelMessageList>]: never; }>(base?: I | undefined): ChannelMessageList;
     fromPartial<I_1 extends {
         messages?: {
@@ -3345,9 +3333,6 @@ export declare const ChannelMessageList: {
             referenced_message?: string | undefined;
         }[] | undefined;
         last_seen_message_id?: string | undefined;
-        next_cursor?: string | undefined;
-        prev_cursor?: string | undefined;
-        cacheable_cursor?: string | undefined;
     } & {
         messages?: ({
             clan_id?: string | undefined;
@@ -3427,9 +3412,6 @@ export declare const ChannelMessageList: {
             referenced_message?: string | undefined;
         }[]>]: never; }) | undefined;
         last_seen_message_id?: string | undefined;
-        next_cursor?: string | undefined;
-        prev_cursor?: string | undefined;
-        cacheable_cursor?: string | undefined;
     } & { [K_5 in Exclude<keyof I_1, keyof ChannelMessageList>]: never; }>(object: I_1): ChannelMessageList;
 };
 export declare const CreateGroupRequest: {
@@ -5817,25 +5799,25 @@ export declare const ListChannelMessagesRequest: {
     toJSON(message: ListChannelMessagesRequest): unknown;
     create<I extends {
         channel_id?: string | undefined;
+        message_id?: string | undefined;
         limit?: number | undefined;
-        forward?: boolean | undefined;
-        cursor?: string | undefined;
+        direction?: number | undefined;
     } & {
         channel_id?: string | undefined;
+        message_id?: string | undefined;
         limit?: number | undefined;
-        forward?: boolean | undefined;
-        cursor?: string | undefined;
+        direction?: number | undefined;
     } & { [K in Exclude<keyof I, keyof ListChannelMessagesRequest>]: never; }>(base?: I | undefined): ListChannelMessagesRequest;
     fromPartial<I_1 extends {
         channel_id?: string | undefined;
+        message_id?: string | undefined;
         limit?: number | undefined;
-        forward?: boolean | undefined;
-        cursor?: string | undefined;
+        direction?: number | undefined;
     } & {
         channel_id?: string | undefined;
+        message_id?: string | undefined;
         limit?: number | undefined;
-        forward?: boolean | undefined;
-        cursor?: string | undefined;
+        direction?: number | undefined;
     } & { [K_1 in Exclude<keyof I_1, keyof ListChannelMessagesRequest>]: never; }>(object: I_1): ListChannelMessagesRequest;
 };
 export declare const ListFriendsRequest: {

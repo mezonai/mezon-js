@@ -260,17 +260,11 @@ export interface ApiChannelMessage {
 
 /** A list of channel messages, usually a result of a list operation. */
 export interface ApiChannelMessageList {
-  //Cacheable cursor to list newer messages. Durable and designed to be stored, unlike next/prev cursors.
-  cacheable_cursor?: string;
-  //
+    //
   last_seen_message_id?: string;
   //A list of messages.
   messages?: Array<ApiChannelMessage>;
-  //The cursor to send when retrieving the next page, if any.
-  next_cursor?: string;
-  //The cursor to send when retrieving the previous page, if any.
-  prev_cursor?: string;
-}
+  }
 
 /** A list of users belonging to a channel, along with their role. */
 export interface ApiChannelUserList {
@@ -362,8 +356,6 @@ export interface ApiCreateChannelDescRequest {
   channel_private?: number;
   //
   clan_id?: string;
-  //Group ID.
-  group_id?: string;
   //The parrent channel this message belongs to.
   parrent_id?: string;
   //The channel type.
@@ -2202,9 +2194,9 @@ export class MezonApi {
   /** List a channel's message history. */
   listChannelMessages(bearerToken: string,
       channelId:string,
+      messageId?:string,      
+      direction?:number,
       limit?:number,
-      forward?:boolean,
-      cursor?:string,
       options: any = {}): Promise<ApiChannelMessageList> {
     
     if (channelId === null || channelId === undefined) {
@@ -2213,10 +2205,10 @@ export class MezonApi {
     const urlPath = "/v2/channel/{channelId}"
         .replace("{channelId}", encodeURIComponent(String(channelId)));
     const queryParams = new Map<string, any>();
+    queryParams.set("message_id", messageId);    
     queryParams.set("limit", limit);
-    queryParams.set("forward", forward);
-    queryParams.set("cursor", cursor);
-
+    queryParams.set("direction", direction);
+    
     let bodyJson : string = "";
 
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
