@@ -92,6 +92,8 @@ export interface MessageReactionEvent {
   sender_id: string;
   //
   sender_name?: string;
+  //
+  sender_avatar?: string;
   /** Emoji list. */
   emoji: string;
   // count of emoji

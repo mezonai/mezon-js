@@ -524,6 +524,8 @@ export interface ApiMessageReaction {
   sender_id?: string;
   //
   sender_name?: string;
+  //
+  sender_avatar?: string;
   // count of emoji
   count: number;
 }
