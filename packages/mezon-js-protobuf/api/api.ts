@@ -573,6 +573,8 @@ export interface MessageReaction {
   sender_id: string;
   /** Sender name */
   sender_name: string;
+  /** avatar */
+  sender_avatar: string;
   /** Action reaction delete or add */
   action: boolean;
   /** count of emoji */
@@ -5036,7 +5038,7 @@ export const MessageMention = {
 };
 
 function createBaseMessageReaction(): MessageReaction {
-  return { id: "", emoji: "", sender_id: "", sender_name: "", action: false, count: 0 };
+  return { id: "", emoji: "", sender_id: "", sender_name: "", sender_avatar: "", action: false, count: 0 };
 }
 
 export const MessageReaction = {
@@ -5053,11 +5055,14 @@ export const MessageReaction = {
     if (message.sender_name !== "") {
       writer.uint32(34).string(message.sender_name);
     }
+    if (message.sender_avatar !== "") {
+      writer.uint32(42).string(message.sender_avatar);
+    }
     if (message.action === true) {
-      writer.uint32(40).bool(message.action);
+      writer.uint32(48).bool(message.action);
     }
     if (message.count !== 0) {
-      writer.uint32(48).int32(message.count);
+      writer.uint32(56).int32(message.count);
     }
     return writer;
   },
@@ -5082,9 +5087,12 @@ export const MessageReaction = {
           message.sender_name = reader.string();
           break;
         case 5:
-          message.action = reader.bool();
+          message.sender_avatar = reader.string();
           break;
         case 6:
+          message.action = reader.bool();
+          break;
+        case 7:
           message.count = reader.int32();
           break;
         default:
@@ -5101,6 +5109,7 @@ export const MessageReaction = {
       emoji: isSet(object.emoji) ? String(object.emoji) : "",
       sender_id: isSet(object.sender_id) ? String(object.sender_id) : "",
       sender_name: isSet(object.sender_name) ? String(object.sender_name) : "",
+      sender_avatar: isSet(object.sender_avatar) ? String(object.sender_avatar) : "",
       action: isSet(object.action) ? Boolean(object.action) : false,
       count: isSet(object.count) ? Number(object.count) : 0,
     };
@@ -5112,6 +5121,7 @@ export const MessageReaction = {
     message.emoji !== undefined && (obj.emoji = message.emoji);
     message.sender_id !== undefined && (obj.sender_id = message.sender_id);
     message.sender_name !== undefined && (obj.sender_name = message.sender_name);
+    message.sender_avatar !== undefined && (obj.sender_avatar = message.sender_avatar);
     message.action !== undefined && (obj.action = message.action);
     message.count !== undefined && (obj.count = Math.round(message.count));
     return obj;
@@ -5127,6 +5137,7 @@ export const MessageReaction = {
     message.emoji = object.emoji ?? "";
     message.sender_id = object.sender_id ?? "";
     message.sender_name = object.sender_name ?? "";
+    message.sender_avatar = object.sender_avatar ?? "";
     message.action = object.action ?? false;
     message.count = object.count ?? 0;
     return message;

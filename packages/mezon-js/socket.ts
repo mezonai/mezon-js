@@ -1126,7 +1126,7 @@ export class DefaultSocket implements Socket {
   }
 
   async writeMessageReaction(id: string, channel_id: string, message_id: string, emoji: string, message_sender_id: string, action_delete: boolean) : Promise<MessageReactionEvent> {
-    const response = await this.send({message_reaction_event: {id: id, channel_id: channel_id, message_id: message_id, emoji: emoji, message_sender_id:message_sender_id, action: action_delete}});
+    const response = await this.send({message_reaction_event: {id: id, channel_id: channel_id, message_id: message_id, emoji: emoji, message_sender_id: message_sender_id, action: action_delete}});
     return response.message_reaction_event
   }
 

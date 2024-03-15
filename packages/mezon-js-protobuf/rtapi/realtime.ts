@@ -887,6 +887,10 @@ export interface MessageReactionEvent {
   message_id: string;
   /** Message sender, usually a user ID. */
   sender_id: string;
+  /** Sender name */
+  sender_name: string;
+  /** avatar */
+  sender_avatar: string;
   /** emoji text */
   emoji: string;
   /** action (add, delete) */
@@ -5998,6 +6002,8 @@ function createBaseMessageReactionEvent(): MessageReactionEvent {
     channel_id: "",
     message_id: "",
     sender_id: "",
+    sender_name: "",
+    sender_avatar: "",
     emoji: "",
     action: false,
     message_sender_id: "",
@@ -6019,17 +6025,23 @@ export const MessageReactionEvent = {
     if (message.sender_id !== "") {
       writer.uint32(34).string(message.sender_id);
     }
+    if (message.sender_name !== "") {
+      writer.uint32(42).string(message.sender_name);
+    }
+    if (message.sender_avatar !== "") {
+      writer.uint32(50).string(message.sender_avatar);
+    }
     if (message.emoji !== "") {
-      writer.uint32(42).string(message.emoji);
+      writer.uint32(58).string(message.emoji);
     }
     if (message.action === true) {
-      writer.uint32(48).bool(message.action);
+      writer.uint32(64).bool(message.action);
     }
     if (message.message_sender_id !== "") {
-      writer.uint32(58).string(message.message_sender_id);
+      writer.uint32(74).string(message.message_sender_id);
     }
     if (message.count !== 0) {
-      writer.uint32(64).int32(message.count);
+      writer.uint32(80).int32(message.count);
     }
     return writer;
   },
@@ -6054,15 +6066,21 @@ export const MessageReactionEvent = {
           message.sender_id = reader.string();
           break;
         case 5:
-          message.emoji = reader.string();
+          message.sender_name = reader.string();
           break;
         case 6:
-          message.action = reader.bool();
+          message.sender_avatar = reader.string();
           break;
         case 7:
-          message.message_sender_id = reader.string();
+          message.emoji = reader.string();
           break;
         case 8:
+          message.action = reader.bool();
+          break;
+        case 9:
+          message.message_sender_id = reader.string();
+          break;
+        case 10:
           message.count = reader.int32();
           break;
         default:
@@ -6079,6 +6097,8 @@ export const MessageReactionEvent = {
       channel_id: isSet(object.channel_id) ? String(object.channel_id) : "",
       message_id: isSet(object.message_id) ? String(object.message_id) : "",
       sender_id: isSet(object.sender_id) ? String(object.sender_id) : "",
+      sender_name: isSet(object.sender_name) ? String(object.sender_name) : "",
+      sender_avatar: isSet(object.sender_avatar) ? String(object.sender_avatar) : "",
       emoji: isSet(object.emoji) ? String(object.emoji) : "",
       action: isSet(object.action) ? Boolean(object.action) : false,
       message_sender_id: isSet(object.message_sender_id) ? String(object.message_sender_id) : "",
@@ -6092,6 +6112,8 @@ export const MessageReactionEvent = {
     message.channel_id !== undefined && (obj.channel_id = message.channel_id);
     message.message_id !== undefined && (obj.message_id = message.message_id);
     message.sender_id !== undefined && (obj.sender_id = message.sender_id);
+    message.sender_name !== undefined && (obj.sender_name = message.sender_name);
+    message.sender_avatar !== undefined && (obj.sender_avatar = message.sender_avatar);
     message.emoji !== undefined && (obj.emoji = message.emoji);
     message.action !== undefined && (obj.action = message.action);
     message.message_sender_id !== undefined && (obj.message_sender_id = message.message_sender_id);
@@ -6109,6 +6131,8 @@ export const MessageReactionEvent = {
     message.channel_id = object.channel_id ?? "";
     message.message_id = object.message_id ?? "";
     message.sender_id = object.sender_id ?? "";
+    message.sender_name = object.sender_name ?? "";
+    message.sender_avatar = object.sender_avatar ?? "";
     message.emoji = object.emoji ?? "";
     message.action = object.action ?? false;
     message.message_sender_id = object.message_sender_id ?? "";
