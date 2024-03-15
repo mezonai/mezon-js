@@ -2139,6 +2139,32 @@ var MezonApi = class {
       )
     ]);
   }
+  /** Immediately join an open group, or request to join a closed one. */
+  registFCMDeviceToken(bearerToken, token, options = {}) {
+    const urlPath = "/v2/devicetoken";
+    const queryParams = /* @__PURE__ */ new Map();
+    queryParams.set("token", token);
+    let bodyJson = "";
+    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
+    const fetchOptions = buildFetchOptions("POST", options, bodyJson);
+    if (bearerToken) {
+      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+    }
+    return Promise.race([
+      fetch(fullUrl, fetchOptions).then((response) => {
+        if (response.status == 204) {
+          return response;
+        } else if (response.status >= 200 && response.status < 300) {
+          return response.json();
+        } else {
+          throw response;
+        }
+      }),
+      new Promise(
+        (_, reject) => setTimeout(reject, this.timeoutMs, "Request timed out.")
+      )
+    ]);
+  }
   /** Submit an event for processing in the server's registered runtime custom events handler. */
   event(bearerToken, body, options = {}) {
     if (body === null || body === void 0) {
@@ -2344,300 +2370,6 @@ var MezonApi = class {
     }
     const urlPath = "/v2/getclanprofile/{clanId}".replace("{clanId}", encodeURIComponent(String(clanId)));
     const queryParams = /* @__PURE__ */ new Map();
-    let bodyJson = "";
-    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
-    const fetchOptions = buildFetchOptions("GET", options, bodyJson);
-    if (bearerToken) {
-      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-    }
-    return Promise.race([
-      fetch(fullUrl, fetchOptions).then((response) => {
-        if (response.status == 204) {
-          return response;
-        } else if (response.status >= 200 && response.status < 300) {
-          return response.json();
-        } else {
-          throw response;
-        }
-      }),
-      new Promise(
-        (_, reject) => setTimeout(reject, this.timeoutMs, "Request timed out.")
-      )
-    ]);
-  }
-  /** List groups based on given filters. */
-  listGroups(bearerToken, name, cursor, limit, langTag, members, open, options = {}) {
-    const urlPath = "/v2/group";
-    const queryParams = /* @__PURE__ */ new Map();
-    queryParams.set("name", name);
-    queryParams.set("cursor", cursor);
-    queryParams.set("limit", limit);
-    queryParams.set("lang_tag", langTag);
-    queryParams.set("members", members);
-    queryParams.set("open", open);
-    let bodyJson = "";
-    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
-    const fetchOptions = buildFetchOptions("GET", options, bodyJson);
-    if (bearerToken) {
-      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-    }
-    return Promise.race([
-      fetch(fullUrl, fetchOptions).then((response) => {
-        if (response.status == 204) {
-          return response;
-        } else if (response.status >= 200 && response.status < 300) {
-          return response.json();
-        } else {
-          throw response;
-        }
-      }),
-      new Promise(
-        (_, reject) => setTimeout(reject, this.timeoutMs, "Request timed out.")
-      )
-    ]);
-  }
-  /** Delete a group by ID. */
-  deleteGroup(bearerToken, groupId, options = {}) {
-    if (groupId === null || groupId === void 0) {
-      throw new Error("'groupId' is a required parameter but is null or undefined.");
-    }
-    const urlPath = "/v2/group/{groupId}".replace("{groupId}", encodeURIComponent(String(groupId)));
-    const queryParams = /* @__PURE__ */ new Map();
-    let bodyJson = "";
-    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
-    const fetchOptions = buildFetchOptions("DELETE", options, bodyJson);
-    if (bearerToken) {
-      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-    }
-    return Promise.race([
-      fetch(fullUrl, fetchOptions).then((response) => {
-        if (response.status == 204) {
-          return response;
-        } else if (response.status >= 200 && response.status < 300) {
-          return response.json();
-        } else {
-          throw response;
-        }
-      }),
-      new Promise(
-        (_, reject) => setTimeout(reject, this.timeoutMs, "Request timed out.")
-      )
-    ]);
-  }
-  /** Update fields in a given group. */
-  updateGroup(bearerToken, groupId, body, options = {}) {
-    if (groupId === null || groupId === void 0) {
-      throw new Error("'groupId' is a required parameter but is null or undefined.");
-    }
-    if (body === null || body === void 0) {
-      throw new Error("'body' is a required parameter but is null or undefined.");
-    }
-    const urlPath = "/v2/group/{groupId}".replace("{groupId}", encodeURIComponent(String(groupId)));
-    const queryParams = /* @__PURE__ */ new Map();
-    let bodyJson = "";
-    bodyJson = JSON.stringify(body || {});
-    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
-    const fetchOptions = buildFetchOptions("PUT", options, bodyJson);
-    if (bearerToken) {
-      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-    }
-    return Promise.race([
-      fetch(fullUrl, fetchOptions).then((response) => {
-        if (response.status == 204) {
-          return response;
-        } else if (response.status >= 200 && response.status < 300) {
-          return response.json();
-        } else {
-          throw response;
-        }
-      }),
-      new Promise(
-        (_, reject) => setTimeout(reject, this.timeoutMs, "Request timed out.")
-      )
-    ]);
-  }
-  /** Add users to a group. */
-  addGroupUsers(bearerToken, groupId, userIds, options = {}) {
-    if (groupId === null || groupId === void 0) {
-      throw new Error("'groupId' is a required parameter but is null or undefined.");
-    }
-    const urlPath = "/v2/group/{groupId}/add".replace("{groupId}", encodeURIComponent(String(groupId)));
-    const queryParams = /* @__PURE__ */ new Map();
-    queryParams.set("user_ids", userIds);
-    let bodyJson = "";
-    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
-    const fetchOptions = buildFetchOptions("POST", options, bodyJson);
-    if (bearerToken) {
-      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-    }
-    return Promise.race([
-      fetch(fullUrl, fetchOptions).then((response) => {
-        if (response.status == 204) {
-          return response;
-        } else if (response.status >= 200 && response.status < 300) {
-          return response.json();
-        } else {
-          throw response;
-        }
-      }),
-      new Promise(
-        (_, reject) => setTimeout(reject, this.timeoutMs, "Request timed out.")
-      )
-    ]);
-  }
-  /** Demote a set of users in a group to the next role down. */
-  demoteGroupUsers(bearerToken, groupId, userIds, options = {}) {
-    if (groupId === null || groupId === void 0) {
-      throw new Error("'groupId' is a required parameter but is null or undefined.");
-    }
-    const urlPath = "/v2/group/{groupId}/demote".replace("{groupId}", encodeURIComponent(String(groupId)));
-    const queryParams = /* @__PURE__ */ new Map();
-    queryParams.set("user_ids", userIds);
-    let bodyJson = "";
-    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
-    const fetchOptions = buildFetchOptions("POST", options, bodyJson);
-    if (bearerToken) {
-      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-    }
-    return Promise.race([
-      fetch(fullUrl, fetchOptions).then((response) => {
-        if (response.status == 204) {
-          return response;
-        } else if (response.status >= 200 && response.status < 300) {
-          return response.json();
-        } else {
-          throw response;
-        }
-      }),
-      new Promise(
-        (_, reject) => setTimeout(reject, this.timeoutMs, "Request timed out.")
-      )
-    ]);
-  }
-  /** Immediately join an open group, or request to join a closed one. */
-  joinGroup(bearerToken, groupId, options = {}) {
-    if (groupId === null || groupId === void 0) {
-      throw new Error("'groupId' is a required parameter but is null or undefined.");
-    }
-    const urlPath = "/v2/group/{groupId}/join".replace("{groupId}", encodeURIComponent(String(groupId)));
-    const queryParams = /* @__PURE__ */ new Map();
-    let bodyJson = "";
-    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
-    const fetchOptions = buildFetchOptions("POST", options, bodyJson);
-    if (bearerToken) {
-      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-    }
-    return Promise.race([
-      fetch(fullUrl, fetchOptions).then((response) => {
-        if (response.status == 204) {
-          return response;
-        } else if (response.status >= 200 && response.status < 300) {
-          return response.json();
-        } else {
-          throw response;
-        }
-      }),
-      new Promise(
-        (_, reject) => setTimeout(reject, this.timeoutMs, "Request timed out.")
-      )
-    ]);
-  }
-  /** Leave a group the user is a member of. */
-  leaveGroup(bearerToken, groupId, options = {}) {
-    if (groupId === null || groupId === void 0) {
-      throw new Error("'groupId' is a required parameter but is null or undefined.");
-    }
-    const urlPath = "/v2/group/{groupId}/leave".replace("{groupId}", encodeURIComponent(String(groupId)));
-    const queryParams = /* @__PURE__ */ new Map();
-    let bodyJson = "";
-    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
-    const fetchOptions = buildFetchOptions("POST", options, bodyJson);
-    if (bearerToken) {
-      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-    }
-    return Promise.race([
-      fetch(fullUrl, fetchOptions).then((response) => {
-        if (response.status == 204) {
-          return response;
-        } else if (response.status >= 200 && response.status < 300) {
-          return response.json();
-        } else {
-          throw response;
-        }
-      }),
-      new Promise(
-        (_, reject) => setTimeout(reject, this.timeoutMs, "Request timed out.")
-      )
-    ]);
-  }
-  /** Promote a set of users in a group to the next role up. */
-  promoteGroupUsers(bearerToken, groupId, userIds, options = {}) {
-    if (groupId === null || groupId === void 0) {
-      throw new Error("'groupId' is a required parameter but is null or undefined.");
-    }
-    const urlPath = "/v2/group/{groupId}/promote".replace("{groupId}", encodeURIComponent(String(groupId)));
-    const queryParams = /* @__PURE__ */ new Map();
-    queryParams.set("user_ids", userIds);
-    let bodyJson = "";
-    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
-    const fetchOptions = buildFetchOptions("POST", options, bodyJson);
-    if (bearerToken) {
-      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-    }
-    return Promise.race([
-      fetch(fullUrl, fetchOptions).then((response) => {
-        if (response.status == 204) {
-          return response;
-        } else if (response.status >= 200 && response.status < 300) {
-          return response.json();
-        } else {
-          throw response;
-        }
-      }),
-      new Promise(
-        (_, reject) => setTimeout(reject, this.timeoutMs, "Request timed out.")
-      )
-    ]);
-  }
-  /** Kick a set of users from a group. */
-  kickGroupUsers(bearerToken, groupId, userIds, options = {}) {
-    if (groupId === null || groupId === void 0) {
-      throw new Error("'groupId' is a required parameter but is null or undefined.");
-    }
-    const urlPath = "/v2/group/{groupId}/remove".replace("{groupId}", encodeURIComponent(String(groupId)));
-    const queryParams = /* @__PURE__ */ new Map();
-    queryParams.set("user_ids", userIds);
-    let bodyJson = "";
-    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
-    const fetchOptions = buildFetchOptions("POST", options, bodyJson);
-    if (bearerToken) {
-      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-    }
-    return Promise.race([
-      fetch(fullUrl, fetchOptions).then((response) => {
-        if (response.status == 204) {
-          return response;
-        } else if (response.status >= 200 && response.status < 300) {
-          return response.json();
-        } else {
-          throw response;
-        }
-      }),
-      new Promise(
-        (_, reject) => setTimeout(reject, this.timeoutMs, "Request timed out.")
-      )
-    ]);
-  }
-  /** List all users that are part of a group. */
-  listGroupUsers(bearerToken, groupId, limit, state, cursor, options = {}) {
-    if (groupId === null || groupId === void 0) {
-      throw new Error("'groupId' is a required parameter but is null or undefined.");
-    }
-    const urlPath = "/v2/group/{groupId}/user".replace("{groupId}", encodeURIComponent(String(groupId)));
-    const queryParams = /* @__PURE__ */ new Map();
-    queryParams.set("limit", limit);
-    queryParams.set("state", state);
-    queryParams.set("cursor", cursor);
     let bodyJson = "";
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("GET", options, bodyJson);
@@ -3454,37 +3186,6 @@ var MezonApi = class {
       )
     ]);
   }
-  /** List groups the current user belongs to. */
-  listUserGroups(bearerToken, userId, limit, state, cursor, options = {}) {
-    if (userId === null || userId === void 0) {
-      throw new Error("'userId' is a required parameter but is null or undefined.");
-    }
-    const urlPath = "/v2/user/{userId}/group".replace("{userId}", encodeURIComponent(String(userId)));
-    const queryParams = /* @__PURE__ */ new Map();
-    queryParams.set("limit", limit);
-    queryParams.set("state", state);
-    queryParams.set("cursor", cursor);
-    let bodyJson = "";
-    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
-    const fetchOptions = buildFetchOptions("GET", options, bodyJson);
-    if (bearerToken) {
-      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-    }
-    return Promise.race([
-      fetch(fullUrl, fetchOptions).then((response) => {
-        if (response.status == 204) {
-          return response;
-        } else if (response.status >= 200 && response.status < 300) {
-          return response.json();
-        } else {
-          throw response;
-        }
-      }),
-      new Promise(
-        (_, reject) => setTimeout(reject, this.timeoutMs, "Request timed out.")
-      )
-    ]);
-  }
   buildFullUrl(basePath, fragment, queryParams) {
     let fullPath = basePath + fragment + "?";
     for (let [k, v] of queryParams) {
@@ -4111,17 +3812,6 @@ var Client = class {
     const basePath = `${scheme}${host}:${port}`;
     this.apiClient = new MezonApi(serverkey, basePath, timeout);
   }
-  /** Add users to a group, or accept their join requests. */
-  addGroupUsers(session, groupId, ids) {
-    return __async(this, null, function* () {
-      if (this.autoRefreshSession && session.refresh_token && session.isexpired((Date.now() + this.expiredTimespanMs) / 1e3)) {
-        yield this.sessionRefresh(session);
-      }
-      return this.apiClient.addGroupUsers(session.token, groupId, ids).then((response) => {
-        return response !== void 0;
-      });
-    });
-  }
   /** Add users to a channel, or accept their join requests. */
   addChannelUsers(session, channelId, ids) {
     return __async(this, null, function* () {
@@ -4355,17 +4045,6 @@ var Client = class {
       });
     });
   }
-  /** Delete a group the user is part of and has permissions to delete. */
-  deleteGroup(session, groupId) {
-    return __async(this, null, function* () {
-      if (this.autoRefreshSession && session.refresh_token && session.isexpired((Date.now() + this.expiredTimespanMs) / 1e3)) {
-        yield this.sessionRefresh(session);
-      }
-      return this.apiClient.deleteGroup(session.token, groupId).then((response) => {
-        return response !== void 0;
-      });
-    });
-  }
   /** Delete a channel by ID. */
   deleteChannelDesc(session, channelId) {
     return __async(this, null, function* () {
@@ -4429,17 +4108,6 @@ var Client = class {
       }
       return this.apiClient.deleteRole(session.token, roleId).then((response) => {
         return response !== void 0;
-      });
-    });
-  }
-  /** Demote a set of users in a group to the next role down. */
-  demoteGroupUsers(session, groupId, ids) {
-    return __async(this, null, function* () {
-      if (this.autoRefreshSession && session.refresh_token && session.isexpired((Date.now() + this.expiredTimespanMs) / 1e3)) {
-        yield this.sessionRefresh(session);
-      }
-      return this.apiClient.demoteGroupUsers(session.token, groupId, ids).then((response) => {
-        return Promise.resolve(response != void 0);
       });
     });
   }
@@ -4522,28 +4190,6 @@ var Client = class {
       });
     });
   }
-  /** Join a group that's open, or send a request to join a group that is closed. */
-  joinGroup(session, groupId) {
-    return __async(this, null, function* () {
-      if (this.autoRefreshSession && session.refresh_token && session.isexpired((Date.now() + this.expiredTimespanMs) / 1e3)) {
-        yield this.sessionRefresh(session);
-      }
-      return this.apiClient.joinGroup(session.token, groupId, {}).then((response) => {
-        return response !== void 0;
-      });
-    });
-  }
-  /** Kick users from a group, or decline their join requests. */
-  kickGroupUsers(session, groupId, ids) {
-    return __async(this, null, function* () {
-      if (this.autoRefreshSession && session.refresh_token && session.isexpired((Date.now() + this.expiredTimespanMs) / 1e3)) {
-        yield this.sessionRefresh(session);
-      }
-      return this.apiClient.kickGroupUsers(session.token, groupId, ids).then((response) => {
-        return Promise.resolve(response != void 0);
-      });
-    });
-  }
   /** Kick users from a channel, or decline their join requests. */
   removeChannelUsers(session, channelId, ids) {
     return __async(this, null, function* () {
@@ -4552,17 +4198,6 @@ var Client = class {
       }
       return this.apiClient.removeChannelUsers(session.token, channelId, ids).then((response) => {
         return Promise.resolve(response != void 0);
-      });
-    });
-  }
-  /** Leave a group the user is part of. */
-  leaveGroup(session, groupId) {
-    return __async(this, null, function* () {
-      if (this.autoRefreshSession && session.refresh_token && session.isexpired((Date.now() + this.expiredTimespanMs) / 1e3)) {
-        yield this.sessionRefresh(session);
-      }
-      return this.apiClient.leaveGroup(session.token, groupId, {}).then((response) => {
-        return response !== void 0;
       });
     });
   }
@@ -4586,7 +4221,6 @@ var Client = class {
             code: m.code ? Number(m.code) : 0,
             create_time: m.create_time || "",
             id: m.message_id,
-            persistent: m.persistent,
             sender_id: m.sender_id,
             update_time: m.update_time,
             username: m.username,
@@ -4798,6 +4432,16 @@ var Client = class {
       }
       return this.apiClient.listRoleUsers(session.token, roleId, limit, cursor).then((response) => {
         return Promise.resolve(response);
+      });
+    });
+  }
+  registFCMDeviceToken(session, tokenId) {
+    return __async(this, null, function* () {
+      if (this.autoRefreshSession && session.refresh_token && session.isexpired((Date.now() + this.expiredTimespanMs) / 1e3)) {
+        yield this.sessionRefresh(session);
+      }
+      return this.apiClient.registFCMDeviceToken(session.token, tokenId).then((response) => {
+        return response !== void 0;
       });
     });
   }
@@ -5020,15 +4664,6 @@ var Client = class {
         });
         return Promise.resolve(result);
       });
-    });
-  }
-  /** Promote users in a group to the next role up. */
-  promoteGroupUsers(session, groupId, ids) {
-    return __async(this, null, function* () {
-      if (this.autoRefreshSession && session.refresh_token && session.isexpired((Date.now() + this.expiredTimespanMs) / 1e3)) {
-        yield this.sessionRefresh(session);
-      }
-      return this.apiClient.promoteGroupUsers(session.token, groupId, ids);
     });
   }
   /** Fetch storage objects. */

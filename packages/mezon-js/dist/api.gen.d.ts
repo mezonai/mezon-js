@@ -10,11 +10,6 @@ export interface ClanUserListClanUser {
     user?: ApiUser;
 }
 /** A single user-role pair. */
-export interface GroupUserListGroupUser {
-    state?: number;
-    user?: ApiUser;
-}
-/** A single user-role pair. */
 export interface RoleUserListRoleUser {
     avatar_url?: string;
     display_name?: string;
@@ -23,11 +18,6 @@ export interface RoleUserListRoleUser {
     location?: string;
     online?: boolean;
     username?: string;
-}
-/** A single group-role pair. */
-export interface UserGroupListUserGroup {
-    group?: ApiGroup;
-    state?: number;
 }
 /** A user with additional account details. Always the current user. */
 export interface ApiAccount {
@@ -136,7 +126,6 @@ export interface ApiChannelMessage {
     create_time?: string;
     mentions?: string;
     message_id: string;
-    persistent?: boolean;
     reactions?: string;
     referenced_message?: string;
     references?: string;
@@ -255,31 +244,6 @@ export interface ApiFriendList {
     cursor?: string;
     friends?: Array<ApiFriend>;
 }
-/** A group in the server. */
-export interface ApiGroup {
-    avatar_url?: string;
-    create_time?: string;
-    creator_id?: string;
-    description?: string;
-    edge_count?: number;
-    id?: string;
-    lang_tag?: string;
-    max_count?: number;
-    metadata?: string;
-    name?: string;
-    open?: boolean;
-    update_time?: string;
-}
-/** One or more groups returned from a listing operation. */
-export interface ApiGroupList {
-    cursor?: string;
-    groups?: Array<ApiGroup>;
-}
-/** A list of users belonging to a group, along with their role. */
-export interface ApiGroupUserList {
-    cursor?: string;
-    group_users?: Array<GroupUserListGroupUser>;
-}
 /** Add link invite users to. */
 export interface ApiInviteUserRes {
     channel_id?: string;
@@ -336,6 +300,7 @@ export interface ApiMessageReaction {
     emoji?: string;
     id?: string;
     sender_id?: string;
+    sender_name?: string;
     count: number;
 }
 /**  */
@@ -520,11 +485,6 @@ export interface ApiUser {
     update_time?: string;
     username?: string;
 }
-/** A list of groups belonging to a user, along with the user's role in each group. */
-export interface ApiUserGroupList {
-    cursor?: string;
-    user_groups?: Array<UserGroupListUserGroup>;
-}
 /** A collection of zero or more users. */
 export interface ApiUsers {
     users?: Array<ApiUser>;
@@ -660,6 +620,8 @@ export declare class MezonApi {
     createCategoryDesc(bearerToken: string, body: ApiCreateCategoryDescRequest, options?: any): Promise<ApiCategoryDesc>;
     /**  */
     deleteCategoryDesc(bearerToken: string, creatorId: string, options?: any): Promise<any>;
+    /** Immediately join an open group, or request to join a closed one. */
+    registFCMDeviceToken(bearerToken: string, token?: string, options?: any): Promise<any>;
     /** Submit an event for processing in the server's registered runtime custom events handler. */
     event(bearerToken: string, body: ApiEvent, options?: any): Promise<any>;
     /** Delete one or more users by ID or username. */
@@ -676,26 +638,6 @@ export declare class MezonApi {
     importSteamFriends(bearerToken: string, account: ApiAccountSteam, reset?: boolean, options?: any): Promise<any>;
     /**  */
     getUserProfileOnClan(bearerToken: string, clanId: string, options?: any): Promise<ApiClanProfile>;
-    /** List groups based on given filters. */
-    listGroups(bearerToken: string, name?: string, cursor?: string, limit?: number, langTag?: string, members?: number, open?: boolean, options?: any): Promise<ApiGroupList>;
-    /** Delete a group by ID. */
-    deleteGroup(bearerToken: string, groupId: string, options?: any): Promise<any>;
-    /** Update fields in a given group. */
-    updateGroup(bearerToken: string, groupId: string, body: {}, options?: any): Promise<any>;
-    /** Add users to a group. */
-    addGroupUsers(bearerToken: string, groupId: string, userIds?: Array<string>, options?: any): Promise<any>;
-    /** Demote a set of users in a group to the next role down. */
-    demoteGroupUsers(bearerToken: string, groupId: string, userIds?: Array<string>, options?: any): Promise<any>;
-    /** Immediately join an open group, or request to join a closed one. */
-    joinGroup(bearerToken: string, groupId: string, options?: any): Promise<any>;
-    /** Leave a group the user is a member of. */
-    leaveGroup(bearerToken: string, groupId: string, options?: any): Promise<any>;
-    /** Promote a set of users in a group to the next role up. */
-    promoteGroupUsers(bearerToken: string, groupId: string, userIds?: Array<string>, options?: any): Promise<any>;
-    /** Kick a set of users from a group. */
-    kickGroupUsers(bearerToken: string, groupId: string, userIds?: Array<string>, options?: any): Promise<any>;
-    /** List all users that are part of a group. */
-    listGroupUsers(bearerToken: string, groupId: string, limit?: number, state?: number, cursor?: string, options?: any): Promise<ApiGroupUserList>;
     /** Add users to a channel. */
     createLinkInviteUser(bearerToken: string, body: ApiLinkInviteUserRequest, options?: any): Promise<ApiLinkInviteUser>;
     /** Add users to a channel. */
@@ -750,7 +692,5 @@ export declare class MezonApi {
     getUsers(bearerToken: string, ids?: Array<string>, usernames?: Array<string>, facebookIds?: Array<string>, options?: any): Promise<ApiUsers>;
     /**  */
     updateUser(bearerToken: string, body: ApiUpdateUsersRequest, options?: any): Promise<any>;
-    /** List groups the current user belongs to. */
-    listUserGroups(bearerToken: string, userId: string, limit?: number, state?: number, cursor?: string, options?: any): Promise<ApiUserGroupList>;
     buildFullUrl(basePath: string, fragment: string, queryParams: Map<string, any>): string;
 }

@@ -342,8 +342,6 @@ export declare class Client {
     /** The low level API client for Mezon server. */
     private readonly apiClient;
     constructor(serverkey?: string, host?: string, port?: string, useSSL?: boolean, timeout?: number, autoRefreshSession?: boolean);
-    /** Add users to a group, or accept their join requests. */
-    addGroupUsers(session: Session, groupId: string, ids?: Array<string>): Promise<boolean>;
     /** Add users to a channel, or accept their join requests. */
     addChannelUsers(session: Session, channelId: string, ids?: Array<string>): Promise<boolean>;
     /** Add friends by ID or username to a user's account. */
@@ -382,8 +380,6 @@ export declare class Client {
     createSocket(useSSL?: boolean, verbose?: boolean, adapter?: WebSocketAdapter, sendTimeoutMs?: number): Socket;
     /** Delete one or more users by ID or username. */
     deleteFriends(session: Session, ids?: Array<string>, usernames?: Array<string>): Promise<boolean>;
-    /** Delete a group the user is part of and has permissions to delete. */
-    deleteGroup(session: Session, groupId: string): Promise<boolean>;
     /** Delete a channel by ID. */
     deleteChannelDesc(session: Session, channelId: string): Promise<boolean>;
     /** Delete a clan desc by ID. */
@@ -396,8 +392,6 @@ export declare class Client {
     deleteStorageObjects(session: Session, request: ApiDeleteStorageObjectsRequest): Promise<boolean>;
     /** Delete a role by ID. */
     deleteRole(session: Session, roleId: string): Promise<boolean>;
-    /** Demote a set of users in a group to the next role down. */
-    demoteGroupUsers(session: Session, groupId: string, ids: Array<string>): Promise<boolean>;
     /** Submit an event for processing in the server's registered runtime custom events handler. */
     emitEvent(session: Session, request: ApiEvent): Promise<boolean>;
     /** Fetch the current user's account. */
@@ -408,14 +402,8 @@ export declare class Client {
     importSteamFriends(session: Session, request: ApiAccountSteam, reset: boolean): Promise<boolean>;
     /** Fetch zero or more users by ID and/or username. */
     getUsers(session: Session, ids?: Array<string>, usernames?: Array<string>, facebookIds?: Array<string>): Promise<Users>;
-    /** Join a group that's open, or send a request to join a group that is closed. */
-    joinGroup(session: Session, groupId: string): Promise<boolean>;
-    /** Kick users from a group, or decline their join requests. */
-    kickGroupUsers(session: Session, groupId: string, ids?: Array<string>): Promise<boolean>;
     /** Kick users from a channel, or decline their join requests. */
     removeChannelUsers(session: Session, channelId: string, ids?: Array<string>): Promise<boolean>;
-    /** Leave a group the user is part of. */
-    leaveGroup(session: Session, groupId: string): Promise<boolean>;
     /** List a channel's message history. */
     listChannelMessages(session: Session, channelId: string, messageId?: string, direction?: number, limit?: number): Promise<ChannelMessageList>;
     /** List a channel's users. */
@@ -438,6 +426,7 @@ export declare class Client {
     listRolePermissions(session: Session, roleId: string): Promise<ApiPermissionList>;
     /** List user roles */
     listRoleUsers(session: Session, roleId: string, limit?: number, cursor?: string): Promise<ApiRoleUserList>;
+    registFCMDeviceToken(session: Session, tokenId: string): Promise<boolean>;
     /** Get a clan desc profile */
     getClanDescProfile(session: Session, clanId: string): Promise<ApiClanDescProfile>;
     getUserProfileOnClan(session: Session, clanId: string): Promise<ApiClanProfile>;
@@ -465,8 +454,6 @@ export declare class Client {
     listNotifications(session: Session, limit?: number, cacheableCursor?: string): Promise<NotificationList>;
     /** List storage objects. */
     listStorageObjects(session: Session, collection: string, userId?: string, limit?: number, cursor?: string): Promise<StorageObjectList>;
-    /** Promote users in a group to the next role up. */
-    promoteGroupUsers(session: Session, groupId: string, ids?: Array<string>): Promise<boolean>;
     /** Fetch storage objects. */
     readStorageObjects(session: Session, request: ApiReadStorageObjectsRequest): Promise<StorageObjects>;
     /** Execute an RPC function on the server. */

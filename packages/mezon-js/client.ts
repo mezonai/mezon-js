@@ -466,19 +466,6 @@ export class Client {
     this.apiClient = new MezonApi(serverkey, basePath, timeout);
   }
 
-  /** Add users to a group, or accept their join requests. */
-  async addGroupUsers(session: Session, groupId: string, ids?: Array<string>): Promise<boolean> {
-
-    if (this.autoRefreshSession && session.refresh_token &&
-        session.isexpired((Date.now() + this.expiredTimespanMs)/1000)) {
-        await this.sessionRefresh(session);
-    }
-
-    return this.apiClient.addGroupUsers(session.token, groupId, ids).then((response: any) => {
-      return response !== undefined;
-    });
-  }
-
   /** Add users to a channel, or accept their join requests. */
   async addChannelUsers(session: Session, channelId: string, ids?: Array<string>): Promise<boolean> {
 
@@ -747,18 +734,6 @@ export class Client {
     });
   }
 
-  /** Delete a group the user is part of and has permissions to delete. */
-  async deleteGroup(session: Session, groupId: string): Promise<boolean> {
-    if (this.autoRefreshSession && session.refresh_token &&
-        session.isexpired((Date.now() + this.expiredTimespanMs)/1000)) {
-        await this.sessionRefresh(session);
-    }
-
-    return this.apiClient.deleteGroup(session.token, groupId).then((response: any) => {
-      return response !== undefined;
-    });
-  }
-
   /** Delete a channel by ID. */
   async deleteChannelDesc(session: Session, channelId: string): Promise<boolean> {
     if (this.autoRefreshSession && session.refresh_token &&
@@ -828,18 +803,6 @@ export class Client {
 
     return this.apiClient.deleteRole(session.token, roleId).then((response: any) => {
       return response !== undefined;
-    });
-  }
-
-  /** Demote a set of users in a group to the next role down. */
-  async demoteGroupUsers(session: Session, groupId: string, ids: Array<string>): Promise<boolean> {
-    if (this.autoRefreshSession && session.refresh_token &&
-        session.isexpired((Date.now() + this.expiredTimespanMs)/1000)) {
-        await this.sessionRefresh(session);
-    }
-
-    return this.apiClient.demoteGroupUsers(session.token, groupId, ids).then((response: any) => {
-        return Promise.resolve(response != undefined);
     });
   }
 
@@ -930,30 +893,6 @@ export class Client {
     });
   }
 
-  /** Join a group that's open, or send a request to join a group that is closed. */
-  async joinGroup(session: Session, groupId: string): Promise<boolean> {
-    if (this.autoRefreshSession && session.refresh_token &&
-        session.isexpired((Date.now() + this.expiredTimespanMs)/1000)) {
-        await this.sessionRefresh(session);
-    }
-
-    return this.apiClient.joinGroup(session.token, groupId, {}).then((response: any) => {
-      return response !== undefined;
-    });
-  }
-
-  /** Kick users from a group, or decline their join requests. */
-  async kickGroupUsers(session: Session, groupId: string, ids?: Array<string>): Promise<boolean> {
-    if (this.autoRefreshSession && session.refresh_token &&
-        session.isexpired((Date.now() + this.expiredTimespanMs)/1000)) {
-        await this.sessionRefresh(session);
-    }
-
-    return this.apiClient.kickGroupUsers(session.token, groupId, ids).then((response: any) => {
-      return Promise.resolve(response != undefined);
-    });
-  }
-
   /** Kick users from a channel, or decline their join requests. */
   async removeChannelUsers(session: Session, channelId: string, ids?: Array<string>): Promise<boolean> {
     if (this.autoRefreshSession && session.refresh_token &&
@@ -963,18 +902,6 @@ export class Client {
 
     return this.apiClient.removeChannelUsers(session.token, channelId, ids).then((response: any) => {
       return Promise.resolve(response != undefined);
-    });
-  }
-
-  /** Leave a group the user is part of. */
-  async leaveGroup(session: Session, groupId: string): Promise<boolean> {
-    if (this.autoRefreshSession && session.refresh_token &&
-        session.isexpired((Date.now() + this.expiredTimespanMs)/1000)) {
-        await this.sessionRefresh(session);
-    }
-
-    return this.apiClient.leaveGroup(session.token, groupId, {}).then((response: any) => {
-      return response !== undefined;
     });
   }
 
@@ -1001,7 +928,6 @@ export class Client {
           code: m.code ? Number(m.code) : 0,
           create_time: m.create_time || '',
           id: m.message_id,
-          persistent: m.persistent,
           sender_id: m.sender_id,
           update_time: m.update_time,
           username: m.username,
@@ -1233,6 +1159,17 @@ export class Client {
 
     return this.apiClient.listRoleUsers(session.token, roleId, limit, cursor).then((response: ApiRoleUserList) => {
       return Promise.resolve(response);
+    });
+  }
+
+  async registFCMDeviceToken(session: Session, tokenId:string): Promise<boolean> {
+    if (this.autoRefreshSession && session.refresh_token &&
+        session.isexpired((Date.now() + this.expiredTimespanMs)/1000)) {
+        await this.sessionRefresh(session);
+    }
+
+    return this.apiClient.registFCMDeviceToken(session.token, tokenId).then((response: any) => {
+      return response !== undefined;
     });
   }
 
@@ -1476,17 +1413,6 @@ export class Client {
       });
       return Promise.resolve(result);
     });
-  }
-
-
-  /** Promote users in a group to the next role up. */
-  async promoteGroupUsers(session: Session, groupId: string, ids?: Array<string>): Promise<boolean> {
-    if (this.autoRefreshSession && session.refresh_token &&
-        session.isexpired((Date.now() + this.expiredTimespanMs)/1000)) {
-        await this.sessionRefresh(session);
-    }
-
-    return this.apiClient.promoteGroupUsers(session.token, groupId, ids);
   }
 
   /** Fetch storage objects. */

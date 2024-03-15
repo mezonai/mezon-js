@@ -75,6 +75,7 @@ export interface MessageReactionEvent {
     message_id: string;
     /** Message sender, usually a user ID. */
     sender_id: string;
+    sender_name?: string;
     /** Emoji list. */
     emoji: string;
     count: number;
