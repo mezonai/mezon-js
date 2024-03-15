@@ -637,6 +637,10 @@ export interface MessageReactionEvent {
     message_id: string;
     /** Message sender, usually a user ID. */
     sender_id: string;
+    /** Sender name */
+    sender_name: string;
+    /** avatar */
+    sender_avatar: string;
     /** emoji text */
     emoji: string;
     /** action (add, delete) */
@@ -1091,6 +1095,8 @@ export declare const Envelope: {
             channel_id?: string | undefined;
             message_id?: string | undefined;
             sender_id?: string | undefined;
+            sender_name?: string | undefined;
+            sender_avatar?: string | undefined;
             emoji?: string | undefined;
             action?: boolean | undefined;
             message_sender_id?: string | undefined;
@@ -2126,6 +2132,8 @@ export declare const Envelope: {
             channel_id?: string | undefined;
             message_id?: string | undefined;
             sender_id?: string | undefined;
+            sender_name?: string | undefined;
+            sender_avatar?: string | undefined;
             emoji?: string | undefined;
             action?: boolean | undefined;
             message_sender_id?: string | undefined;
@@ -2135,6 +2143,8 @@ export declare const Envelope: {
             channel_id?: string | undefined;
             message_id?: string | undefined;
             sender_id?: string | undefined;
+            sender_name?: string | undefined;
+            sender_avatar?: string | undefined;
             emoji?: string | undefined;
             action?: boolean | undefined;
             message_sender_id?: string | undefined;
@@ -2506,6 +2516,8 @@ export declare const Envelope: {
             channel_id?: string | undefined;
             message_id?: string | undefined;
             sender_id?: string | undefined;
+            sender_name?: string | undefined;
+            sender_avatar?: string | undefined;
             emoji?: string | undefined;
             action?: boolean | undefined;
             message_sender_id?: string | undefined;
@@ -3541,6 +3553,8 @@ export declare const Envelope: {
             channel_id?: string | undefined;
             message_id?: string | undefined;
             sender_id?: string | undefined;
+            sender_name?: string | undefined;
+            sender_avatar?: string | undefined;
             emoji?: string | undefined;
             action?: boolean | undefined;
             message_sender_id?: string | undefined;
@@ -3550,6 +3564,8 @@ export declare const Envelope: {
             channel_id?: string | undefined;
             message_id?: string | undefined;
             sender_id?: string | undefined;
+            sender_name?: string | undefined;
+            sender_avatar?: string | undefined;
             emoji?: string | undefined;
             action?: boolean | undefined;
             message_sender_id?: string | undefined;
@@ -6810,6 +6826,8 @@ export declare const MessageReactionEvent: {
         channel_id?: string | undefined;
         message_id?: string | undefined;
         sender_id?: string | undefined;
+        sender_name?: string | undefined;
+        sender_avatar?: string | undefined;
         emoji?: string | undefined;
         action?: boolean | undefined;
         message_sender_id?: string | undefined;
@@ -6819,6 +6837,8 @@ export declare const MessageReactionEvent: {
         channel_id?: string | undefined;
         message_id?: string | undefined;
         sender_id?: string | undefined;
+        sender_name?: string | undefined;
+        sender_avatar?: string | undefined;
         emoji?: string | undefined;
         action?: boolean | undefined;
         message_sender_id?: string | undefined;
@@ -6829,6 +6849,8 @@ export declare const MessageReactionEvent: {
         channel_id?: string | undefined;
         message_id?: string | undefined;
         sender_id?: string | undefined;
+        sender_name?: string | undefined;
+        sender_avatar?: string | undefined;
         emoji?: string | undefined;
         action?: boolean | undefined;
         message_sender_id?: string | undefined;
@@ -6838,6 +6860,8 @@ export declare const MessageReactionEvent: {
         channel_id?: string | undefined;
         message_id?: string | undefined;
         sender_id?: string | undefined;
+        sender_name?: string | undefined;
+        sender_avatar?: string | undefined;
         emoji?: string | undefined;
         action?: boolean | undefined;
         message_sender_id?: string | undefined;

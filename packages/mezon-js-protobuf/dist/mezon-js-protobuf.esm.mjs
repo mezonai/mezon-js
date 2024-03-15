@@ -5690,6 +5690,8 @@ function createBaseMessageReactionEvent() {
     channel_id: "",
     message_id: "",
     sender_id: "",
+    sender_name: "",
+    sender_avatar: "",
     emoji: "",
     action: false,
     message_sender_id: "",
@@ -5710,17 +5712,23 @@ var MessageReactionEvent = {
     if (message.sender_id !== "") {
       writer.uint32(34).string(message.sender_id);
     }
+    if (message.sender_name !== "") {
+      writer.uint32(42).string(message.sender_name);
+    }
+    if (message.sender_avatar !== "") {
+      writer.uint32(50).string(message.sender_avatar);
+    }
     if (message.emoji !== "") {
-      writer.uint32(42).string(message.emoji);
+      writer.uint32(58).string(message.emoji);
     }
     if (message.action === true) {
-      writer.uint32(48).bool(message.action);
+      writer.uint32(64).bool(message.action);
     }
     if (message.message_sender_id !== "") {
-      writer.uint32(58).string(message.message_sender_id);
+      writer.uint32(74).string(message.message_sender_id);
     }
     if (message.count !== 0) {
-      writer.uint32(64).int32(message.count);
+      writer.uint32(80).int32(message.count);
     }
     return writer;
   },
@@ -5744,15 +5752,21 @@ var MessageReactionEvent = {
           message.sender_id = reader.string();
           break;
         case 5:
-          message.emoji = reader.string();
+          message.sender_name = reader.string();
           break;
         case 6:
-          message.action = reader.bool();
+          message.sender_avatar = reader.string();
           break;
         case 7:
-          message.message_sender_id = reader.string();
+          message.emoji = reader.string();
           break;
         case 8:
+          message.action = reader.bool();
+          break;
+        case 9:
+          message.message_sender_id = reader.string();
+          break;
+        case 10:
           message.count = reader.int32();
           break;
         default:
@@ -5768,6 +5782,8 @@ var MessageReactionEvent = {
       channel_id: isSet4(object.channel_id) ? String(object.channel_id) : "",
       message_id: isSet4(object.message_id) ? String(object.message_id) : "",
       sender_id: isSet4(object.sender_id) ? String(object.sender_id) : "",
+      sender_name: isSet4(object.sender_name) ? String(object.sender_name) : "",
+      sender_avatar: isSet4(object.sender_avatar) ? String(object.sender_avatar) : "",
       emoji: isSet4(object.emoji) ? String(object.emoji) : "",
       action: isSet4(object.action) ? Boolean(object.action) : false,
       message_sender_id: isSet4(object.message_sender_id) ? String(object.message_sender_id) : "",
@@ -5780,6 +5796,8 @@ var MessageReactionEvent = {
     message.channel_id !== void 0 && (obj.channel_id = message.channel_id);
     message.message_id !== void 0 && (obj.message_id = message.message_id);
     message.sender_id !== void 0 && (obj.sender_id = message.sender_id);
+    message.sender_name !== void 0 && (obj.sender_name = message.sender_name);
+    message.sender_avatar !== void 0 && (obj.sender_avatar = message.sender_avatar);
     message.emoji !== void 0 && (obj.emoji = message.emoji);
     message.action !== void 0 && (obj.action = message.action);
     message.message_sender_id !== void 0 && (obj.message_sender_id = message.message_sender_id);
@@ -5790,16 +5808,18 @@ var MessageReactionEvent = {
     return MessageReactionEvent.fromPartial(base != null ? base : {});
   },
   fromPartial(object) {
-    var _a, _b, _c, _d, _e, _f, _g, _h;
+    var _a, _b, _c, _d, _e, _f, _g, _h, _i, _j;
     const message = createBaseMessageReactionEvent();
     message.id = (_a = object.id) != null ? _a : "";
     message.channel_id = (_b = object.channel_id) != null ? _b : "";
     message.message_id = (_c = object.message_id) != null ? _c : "";
     message.sender_id = (_d = object.sender_id) != null ? _d : "";
-    message.emoji = (_e = object.emoji) != null ? _e : "";
-    message.action = (_f = object.action) != null ? _f : false;
-    message.message_sender_id = (_g = object.message_sender_id) != null ? _g : "";
-    message.count = (_h = object.count) != null ? _h : 0;
+    message.sender_name = (_e = object.sender_name) != null ? _e : "";
+    message.sender_avatar = (_f = object.sender_avatar) != null ? _f : "";
+    message.emoji = (_g = object.emoji) != null ? _g : "";
+    message.action = (_h = object.action) != null ? _h : false;
+    message.message_sender_id = (_i = object.message_sender_id) != null ? _i : "";
+    message.count = (_j = object.count) != null ? _j : 0;
     return message;
   }
 };

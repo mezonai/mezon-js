@@ -395,6 +395,8 @@ export interface MessageReaction {
     sender_id: string;
     /** Sender name */
     sender_name: string;
+    /** avatar */
+    sender_avatar: string;
     /** Action reaction delete or add */
     action: boolean;
     /** count of emoji */
@@ -3079,6 +3081,7 @@ export declare const MessageReaction: {
         emoji?: string | undefined;
         sender_id?: string | undefined;
         sender_name?: string | undefined;
+        sender_avatar?: string | undefined;
         action?: boolean | undefined;
         count?: number | undefined;
     } & {
@@ -3086,6 +3089,7 @@ export declare const MessageReaction: {
         emoji?: string | undefined;
         sender_id?: string | undefined;
         sender_name?: string | undefined;
+        sender_avatar?: string | undefined;
         action?: boolean | undefined;
         count?: number | undefined;
     } & { [K in Exclude<keyof I, keyof MessageReaction>]: never; }>(base?: I | undefined): MessageReaction;
@@ -3094,6 +3098,7 @@ export declare const MessageReaction: {
         emoji?: string | undefined;
         sender_id?: string | undefined;
         sender_name?: string | undefined;
+        sender_avatar?: string | undefined;
         action?: boolean | undefined;
         count?: number | undefined;
     } & {
@@ -3101,6 +3106,7 @@ export declare const MessageReaction: {
         emoji?: string | undefined;
         sender_id?: string | undefined;
         sender_name?: string | undefined;
+        sender_avatar?: string | undefined;
         action?: boolean | undefined;
         count?: number | undefined;
     } & { [K_1 in Exclude<keyof I_1, keyof MessageReaction>]: never; }>(object: I_1): MessageReaction;
