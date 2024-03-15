@@ -571,6 +571,8 @@ export interface MessageReaction {
   emoji: string;
   /** User react to message */
   sender_id: string;
+  /** Sender name */
+  sender_name: string;
   /** Action reaction delete or add */
   action: boolean;
   /** count of emoji */
@@ -955,29 +957,9 @@ export interface ImportSteamFriendsRequest {
 }
 
 /** Immediately join an open group, or request to join a closed one. */
-export interface JoinGroupRequest {
-  /** The group ID to join. The group must already exist. */
-  group_id: string;
-}
-
-/** The request to join a tournament. */
-export interface JoinTournamentRequest {
-  /** The ID of the tournament to join. The tournament must already exist. */
-  tournament_id: string;
-}
-
-/** Kick a set of users from a group. */
-export interface KickGroupUsersRequest {
-  /** The group ID to kick from. */
-  group_id: string;
-  /** The users to kick. */
-  user_ids: string[];
-}
-
-/** Leave a group. */
-export interface LeaveGroupRequest {
-  /** The group ID to leave. */
-  group_id: string;
+export interface RegistFcmDeviceTokenRequest {
+  /** The token */
+  token: string;
 }
 
 /** Link Facebook to the current user's account. */
@@ -5054,7 +5036,7 @@ export const MessageMention = {
 };
 
 function createBaseMessageReaction(): MessageReaction {
-  return { id: "", emoji: "", sender_id: "", action: false, count: 0 };
+  return { id: "", emoji: "", sender_id: "", sender_name: "", action: false, count: 0 };
 }
 
 export const MessageReaction = {
@@ -5068,11 +5050,14 @@ export const MessageReaction = {
     if (message.sender_id !== "") {
       writer.uint32(26).string(message.sender_id);
     }
+    if (message.sender_name !== "") {
+      writer.uint32(34).string(message.sender_name);
+    }
     if (message.action === true) {
-      writer.uint32(32).bool(message.action);
+      writer.uint32(40).bool(message.action);
     }
     if (message.count !== 0) {
-      writer.uint32(40).int32(message.count);
+      writer.uint32(48).int32(message.count);
     }
     return writer;
   },
@@ -5094,9 +5079,12 @@ export const MessageReaction = {
           message.sender_id = reader.string();
           break;
         case 4:
-          message.action = reader.bool();
+          message.sender_name = reader.string();
           break;
         case 5:
+          message.action = reader.bool();
+          break;
+        case 6:
           message.count = reader.int32();
           break;
         default:
@@ -5112,6 +5100,7 @@ export const MessageReaction = {
       id: isSet(object.id) ? String(object.id) : "",
       emoji: isSet(object.emoji) ? String(object.emoji) : "",
       sender_id: isSet(object.sender_id) ? String(object.sender_id) : "",
+      sender_name: isSet(object.sender_name) ? String(object.sender_name) : "",
       action: isSet(object.action) ? Boolean(object.action) : false,
       count: isSet(object.count) ? Number(object.count) : 0,
     };
@@ -5122,6 +5111,7 @@ export const MessageReaction = {
     message.id !== undefined && (obj.id = message.id);
     message.emoji !== undefined && (obj.emoji = message.emoji);
     message.sender_id !== undefined && (obj.sender_id = message.sender_id);
+    message.sender_name !== undefined && (obj.sender_name = message.sender_name);
     message.action !== undefined && (obj.action = message.action);
     message.count !== undefined && (obj.count = Math.round(message.count));
     return obj;
@@ -5136,6 +5126,7 @@ export const MessageReaction = {
     message.id = object.id ?? "";
     message.emoji = object.emoji ?? "";
     message.sender_id = object.sender_id ?? "";
+    message.sender_name = object.sender_name ?? "";
     message.action = object.action ?? false;
     message.count = object.count ?? 0;
     return message;
@@ -7080,27 +7071,27 @@ export const ImportSteamFriendsRequest = {
   },
 };
 
-function createBaseJoinGroupRequest(): JoinGroupRequest {
-  return { group_id: "" };
+function createBaseRegistFcmDeviceTokenRequest(): RegistFcmDeviceTokenRequest {
+  return { token: "" };
 }
 
-export const JoinGroupRequest = {
-  encode(message: JoinGroupRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.group_id !== "") {
-      writer.uint32(10).string(message.group_id);
+export const RegistFcmDeviceTokenRequest = {
+  encode(message: RegistFcmDeviceTokenRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.token !== "") {
+      writer.uint32(10).string(message.token);
     }
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): JoinGroupRequest {
+  decode(input: _m0.Reader | Uint8Array, length?: number): RegistFcmDeviceTokenRequest {
     const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseJoinGroupRequest();
+    const message = createBaseRegistFcmDeviceTokenRequest();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          message.group_id = reader.string();
+          message.token = reader.string();
           break;
         default:
           reader.skipType(tag & 7);
@@ -7110,191 +7101,23 @@ export const JoinGroupRequest = {
     return message;
   },
 
-  fromJSON(object: any): JoinGroupRequest {
-    return { group_id: isSet(object.group_id) ? String(object.group_id) : "" };
+  fromJSON(object: any): RegistFcmDeviceTokenRequest {
+    return { token: isSet(object.token) ? String(object.token) : "" };
   },
 
-  toJSON(message: JoinGroupRequest): unknown {
+  toJSON(message: RegistFcmDeviceTokenRequest): unknown {
     const obj: any = {};
-    message.group_id !== undefined && (obj.group_id = message.group_id);
+    message.token !== undefined && (obj.token = message.token);
     return obj;
   },
 
-  create<I extends Exact<DeepPartial<JoinGroupRequest>, I>>(base?: I): JoinGroupRequest {
-    return JoinGroupRequest.fromPartial(base ?? {});
+  create<I extends Exact<DeepPartial<RegistFcmDeviceTokenRequest>, I>>(base?: I): RegistFcmDeviceTokenRequest {
+    return RegistFcmDeviceTokenRequest.fromPartial(base ?? {});
   },
 
-  fromPartial<I extends Exact<DeepPartial<JoinGroupRequest>, I>>(object: I): JoinGroupRequest {
-    const message = createBaseJoinGroupRequest();
-    message.group_id = object.group_id ?? "";
-    return message;
-  },
-};
-
-function createBaseJoinTournamentRequest(): JoinTournamentRequest {
-  return { tournament_id: "" };
-}
-
-export const JoinTournamentRequest = {
-  encode(message: JoinTournamentRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.tournament_id !== "") {
-      writer.uint32(10).string(message.tournament_id);
-    }
-    return writer;
-  },
-
-  decode(input: _m0.Reader | Uint8Array, length?: number): JoinTournamentRequest {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseJoinTournamentRequest();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
-          message.tournament_id = reader.string();
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
-      }
-    }
-    return message;
-  },
-
-  fromJSON(object: any): JoinTournamentRequest {
-    return { tournament_id: isSet(object.tournament_id) ? String(object.tournament_id) : "" };
-  },
-
-  toJSON(message: JoinTournamentRequest): unknown {
-    const obj: any = {};
-    message.tournament_id !== undefined && (obj.tournament_id = message.tournament_id);
-    return obj;
-  },
-
-  create<I extends Exact<DeepPartial<JoinTournamentRequest>, I>>(base?: I): JoinTournamentRequest {
-    return JoinTournamentRequest.fromPartial(base ?? {});
-  },
-
-  fromPartial<I extends Exact<DeepPartial<JoinTournamentRequest>, I>>(object: I): JoinTournamentRequest {
-    const message = createBaseJoinTournamentRequest();
-    message.tournament_id = object.tournament_id ?? "";
-    return message;
-  },
-};
-
-function createBaseKickGroupUsersRequest(): KickGroupUsersRequest {
-  return { group_id: "", user_ids: [] };
-}
-
-export const KickGroupUsersRequest = {
-  encode(message: KickGroupUsersRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.group_id !== "") {
-      writer.uint32(10).string(message.group_id);
-    }
-    for (const v of message.user_ids) {
-      writer.uint32(18).string(v!);
-    }
-    return writer;
-  },
-
-  decode(input: _m0.Reader | Uint8Array, length?: number): KickGroupUsersRequest {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseKickGroupUsersRequest();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
-          message.group_id = reader.string();
-          break;
-        case 2:
-          message.user_ids.push(reader.string());
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
-      }
-    }
-    return message;
-  },
-
-  fromJSON(object: any): KickGroupUsersRequest {
-    return {
-      group_id: isSet(object.group_id) ? String(object.group_id) : "",
-      user_ids: Array.isArray(object?.user_ids) ? object.user_ids.map((e: any) => String(e)) : [],
-    };
-  },
-
-  toJSON(message: KickGroupUsersRequest): unknown {
-    const obj: any = {};
-    message.group_id !== undefined && (obj.group_id = message.group_id);
-    if (message.user_ids) {
-      obj.user_ids = message.user_ids.map((e) => e);
-    } else {
-      obj.user_ids = [];
-    }
-    return obj;
-  },
-
-  create<I extends Exact<DeepPartial<KickGroupUsersRequest>, I>>(base?: I): KickGroupUsersRequest {
-    return KickGroupUsersRequest.fromPartial(base ?? {});
-  },
-
-  fromPartial<I extends Exact<DeepPartial<KickGroupUsersRequest>, I>>(object: I): KickGroupUsersRequest {
-    const message = createBaseKickGroupUsersRequest();
-    message.group_id = object.group_id ?? "";
-    message.user_ids = object.user_ids?.map((e) => e) || [];
-    return message;
-  },
-};
-
-function createBaseLeaveGroupRequest(): LeaveGroupRequest {
-  return { group_id: "" };
-}
-
-export const LeaveGroupRequest = {
-  encode(message: LeaveGroupRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.group_id !== "") {
-      writer.uint32(10).string(message.group_id);
-    }
-    return writer;
-  },
-
-  decode(input: _m0.Reader | Uint8Array, length?: number): LeaveGroupRequest {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseLeaveGroupRequest();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
-          message.group_id = reader.string();
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
-      }
-    }
-    return message;
-  },
-
-  fromJSON(object: any): LeaveGroupRequest {
-    return { group_id: isSet(object.group_id) ? String(object.group_id) : "" };
-  },
-
-  toJSON(message: LeaveGroupRequest): unknown {
-    const obj: any = {};
-    message.group_id !== undefined && (obj.group_id = message.group_id);
-    return obj;
-  },
-
-  create<I extends Exact<DeepPartial<LeaveGroupRequest>, I>>(base?: I): LeaveGroupRequest {
-    return LeaveGroupRequest.fromPartial(base ?? {});
-  },
-
-  fromPartial<I extends Exact<DeepPartial<LeaveGroupRequest>, I>>(object: I): LeaveGroupRequest {
-    const message = createBaseLeaveGroupRequest();
-    message.group_id = object.group_id ?? "";
+  fromPartial<I extends Exact<DeepPartial<RegistFcmDeviceTokenRequest>, I>>(object: I): RegistFcmDeviceTokenRequest {
+    const message = createBaseRegistFcmDeviceTokenRequest();
+    message.token = object.token ?? "";
     return message;
   },
 };

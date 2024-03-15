@@ -393,6 +393,8 @@ export interface MessageReaction {
     emoji: string;
     /** User react to message */
     sender_id: string;
+    /** Sender name */
+    sender_name: string;
     /** Action reaction delete or add */
     action: boolean;
     /** count of emoji */
@@ -660,26 +662,9 @@ export interface ImportSteamFriendsRequest {
     reset: boolean | undefined;
 }
 /** Immediately join an open group, or request to join a closed one. */
-export interface JoinGroupRequest {
-    /** The group ID to join. The group must already exist. */
-    group_id: string;
-}
-/** The request to join a tournament. */
-export interface JoinTournamentRequest {
-    /** The ID of the tournament to join. The tournament must already exist. */
-    tournament_id: string;
-}
-/** Kick a set of users from a group. */
-export interface KickGroupUsersRequest {
-    /** The group ID to kick from. */
-    group_id: string;
-    /** The users to kick. */
-    user_ids: string[];
-}
-/** Leave a group. */
-export interface LeaveGroupRequest {
-    /** The group ID to leave. */
-    group_id: string;
+export interface RegistFcmDeviceTokenRequest {
+    /** The token */
+    token: string;
 }
 /** Link Facebook to the current user's account. */
 export interface LinkFacebookRequest {
@@ -3093,12 +3078,14 @@ export declare const MessageReaction: {
         id?: string | undefined;
         emoji?: string | undefined;
         sender_id?: string | undefined;
+        sender_name?: string | undefined;
         action?: boolean | undefined;
         count?: number | undefined;
     } & {
         id?: string | undefined;
         emoji?: string | undefined;
         sender_id?: string | undefined;
+        sender_name?: string | undefined;
         action?: boolean | undefined;
         count?: number | undefined;
     } & { [K in Exclude<keyof I, keyof MessageReaction>]: never; }>(base?: I | undefined): MessageReaction;
@@ -3106,12 +3093,14 @@ export declare const MessageReaction: {
         id?: string | undefined;
         emoji?: string | undefined;
         sender_id?: string | undefined;
+        sender_name?: string | undefined;
         action?: boolean | undefined;
         count?: number | undefined;
     } & {
         id?: string | undefined;
         emoji?: string | undefined;
         sender_id?: string | undefined;
+        sender_name?: string | undefined;
         action?: boolean | undefined;
         count?: number | undefined;
     } & { [K_1 in Exclude<keyof I_1, keyof MessageReaction>]: never; }>(object: I_1): MessageReaction;
@@ -5616,73 +5605,21 @@ export declare const ImportSteamFriendsRequest: {
         reset?: boolean | undefined;
     } & { [K_5 in Exclude<keyof I_1, keyof ImportSteamFriendsRequest>]: never; }>(object: I_1): ImportSteamFriendsRequest;
 };
-export declare const JoinGroupRequest: {
-    encode(message: JoinGroupRequest, writer?: _m0.Writer): _m0.Writer;
-    decode(input: _m0.Reader | Uint8Array, length?: number): JoinGroupRequest;
-    fromJSON(object: any): JoinGroupRequest;
-    toJSON(message: JoinGroupRequest): unknown;
+export declare const RegistFcmDeviceTokenRequest: {
+    encode(message: RegistFcmDeviceTokenRequest, writer?: _m0.Writer): _m0.Writer;
+    decode(input: _m0.Reader | Uint8Array, length?: number): RegistFcmDeviceTokenRequest;
+    fromJSON(object: any): RegistFcmDeviceTokenRequest;
+    toJSON(message: RegistFcmDeviceTokenRequest): unknown;
     create<I extends {
-        group_id?: string | undefined;
+        token?: string | undefined;
     } & {
-        group_id?: string | undefined;
-    } & { [K in Exclude<keyof I, "group_id">]: never; }>(base?: I | undefined): JoinGroupRequest;
+        token?: string | undefined;
+    } & { [K in Exclude<keyof I, "token">]: never; }>(base?: I | undefined): RegistFcmDeviceTokenRequest;
     fromPartial<I_1 extends {
-        group_id?: string | undefined;
+        token?: string | undefined;
     } & {
-        group_id?: string | undefined;
-    } & { [K_1 in Exclude<keyof I_1, "group_id">]: never; }>(object: I_1): JoinGroupRequest;
-};
-export declare const JoinTournamentRequest: {
-    encode(message: JoinTournamentRequest, writer?: _m0.Writer): _m0.Writer;
-    decode(input: _m0.Reader | Uint8Array, length?: number): JoinTournamentRequest;
-    fromJSON(object: any): JoinTournamentRequest;
-    toJSON(message: JoinTournamentRequest): unknown;
-    create<I extends {
-        tournament_id?: string | undefined;
-    } & {
-        tournament_id?: string | undefined;
-    } & { [K in Exclude<keyof I, "tournament_id">]: never; }>(base?: I | undefined): JoinTournamentRequest;
-    fromPartial<I_1 extends {
-        tournament_id?: string | undefined;
-    } & {
-        tournament_id?: string | undefined;
-    } & { [K_1 in Exclude<keyof I_1, "tournament_id">]: never; }>(object: I_1): JoinTournamentRequest;
-};
-export declare const KickGroupUsersRequest: {
-    encode(message: KickGroupUsersRequest, writer?: _m0.Writer): _m0.Writer;
-    decode(input: _m0.Reader | Uint8Array, length?: number): KickGroupUsersRequest;
-    fromJSON(object: any): KickGroupUsersRequest;
-    toJSON(message: KickGroupUsersRequest): unknown;
-    create<I extends {
-        group_id?: string | undefined;
-        user_ids?: string[] | undefined;
-    } & {
-        group_id?: string | undefined;
-        user_ids?: (string[] & string[] & { [K in Exclude<keyof I["user_ids"], keyof string[]>]: never; }) | undefined;
-    } & { [K_1 in Exclude<keyof I, keyof KickGroupUsersRequest>]: never; }>(base?: I | undefined): KickGroupUsersRequest;
-    fromPartial<I_1 extends {
-        group_id?: string | undefined;
-        user_ids?: string[] | undefined;
-    } & {
-        group_id?: string | undefined;
-        user_ids?: (string[] & string[] & { [K_2 in Exclude<keyof I_1["user_ids"], keyof string[]>]: never; }) | undefined;
-    } & { [K_3 in Exclude<keyof I_1, keyof KickGroupUsersRequest>]: never; }>(object: I_1): KickGroupUsersRequest;
-};
-export declare const LeaveGroupRequest: {
-    encode(message: LeaveGroupRequest, writer?: _m0.Writer): _m0.Writer;
-    decode(input: _m0.Reader | Uint8Array, length?: number): LeaveGroupRequest;
-    fromJSON(object: any): LeaveGroupRequest;
-    toJSON(message: LeaveGroupRequest): unknown;
-    create<I extends {
-        group_id?: string | undefined;
-    } & {
-        group_id?: string | undefined;
-    } & { [K in Exclude<keyof I, "group_id">]: never; }>(base?: I | undefined): LeaveGroupRequest;
-    fromPartial<I_1 extends {
-        group_id?: string | undefined;
-    } & {
-        group_id?: string | undefined;
-    } & { [K_1 in Exclude<keyof I_1, "group_id">]: never; }>(object: I_1): LeaveGroupRequest;
+        token?: string | undefined;
+    } & { [K_1 in Exclude<keyof I_1, "token">]: never; }>(object: I_1): RegistFcmDeviceTokenRequest;
 };
 export declare const LinkFacebookRequest: {
     encode(message: LinkFacebookRequest, writer?: _m0.Writer): _m0.Writer;
