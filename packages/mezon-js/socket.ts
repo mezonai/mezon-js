@@ -233,6 +233,8 @@ interface ChannelMessageSend {
     clan_id: string;
     /** The server-assigned channel ID. */
     channel_id: string;
+    // channel label
+    channel_label: string;
     /** The content payload. */
     content: any;
     //
@@ -587,7 +589,7 @@ export interface Socket {
   updateStatus(status? : string) : Promise<void>;
 
   /** Send a chat message to a chat channel on the server. */
-  writeChatMessage(clan_id: string, channel_id: string, content?: any, mentions?: Array<ApiMessageMention>, attachments?: Array<ApiMessageAttachment>, references?: Array<ApiMessageRef>) : Promise<ChannelMessageAck>;
+  writeChatMessage(clan_id: string, channel_id: string, channel_label: string, content?: any, mentions?: Array<ApiMessageMention>, attachments?: Array<ApiMessageAttachment>, references?: Array<ApiMessageRef>) : Promise<ChannelMessageAck>;
 
   /** Send message typing */
   writeMessageTyping(channel_id: string) : Promise<MessageTypingEvent>;  
@@ -1120,8 +1122,8 @@ export class DefaultSocket implements Socket {
     return this.send({status_update: {status: status}});
   }
 
-  async writeChatMessage(clan_id: string, channel_id: string, content: any, mentions?: Array<ApiMessageMention>, attachments?: Array<ApiMessageAttachment>, references?: Array<ApiMessageRef> ): Promise<ChannelMessageAck> {
-    const response = await this.send({channel_message_send: {clan_id: clan_id, channel_id: channel_id, content: content, mentions: mentions, attachments: attachments, references: references}});
+  async writeChatMessage(clan_id: string, channel_id: string, channel_label: string, content: any, mentions?: Array<ApiMessageMention>, attachments?: Array<ApiMessageAttachment>, references?: Array<ApiMessageRef> ): Promise<ChannelMessageAck> {
+    const response = await this.send({channel_message_send: {clan_id: clan_id, channel_id: channel_id, channel_label:channel_label, content: content, mentions: mentions, attachments: attachments, references: references}});
     return response.channel_message_ack;
   }
 

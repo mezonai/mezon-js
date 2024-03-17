@@ -336,6 +336,8 @@ export interface ChannelMessageSend {
   clan_id: string;
   /** The channel to sent to. */
   channel_id: string;
+  /** The channel label to sent to. */
+  channel_label: string;
   /** Message content. */
   content: string;
   /** Message mention */
@@ -2243,7 +2245,7 @@ export const MessageRef = {
 };
 
 function createBaseChannelMessageSend(): ChannelMessageSend {
-  return { clan_id: "", channel_id: "", content: "", mentions: [], attachments: [], references: [] };
+  return { clan_id: "", channel_id: "", channel_label: "", content: "", mentions: [], attachments: [], references: [] };
 }
 
 export const ChannelMessageSend = {
@@ -2254,17 +2256,20 @@ export const ChannelMessageSend = {
     if (message.channel_id !== "") {
       writer.uint32(18).string(message.channel_id);
     }
+    if (message.channel_label !== "") {
+      writer.uint32(26).string(message.channel_label);
+    }
     if (message.content !== "") {
-      writer.uint32(26).string(message.content);
+      writer.uint32(34).string(message.content);
     }
     for (const v of message.mentions) {
-      MessageMention.encode(v!, writer.uint32(34).fork()).ldelim();
+      MessageMention.encode(v!, writer.uint32(42).fork()).ldelim();
     }
     for (const v of message.attachments) {
-      MessageAttachment.encode(v!, writer.uint32(42).fork()).ldelim();
+      MessageAttachment.encode(v!, writer.uint32(50).fork()).ldelim();
     }
     for (const v of message.references) {
-      MessageRef.encode(v!, writer.uint32(50).fork()).ldelim();
+      MessageRef.encode(v!, writer.uint32(58).fork()).ldelim();
     }
     return writer;
   },
@@ -2283,15 +2288,18 @@ export const ChannelMessageSend = {
           message.channel_id = reader.string();
           break;
         case 3:
-          message.content = reader.string();
+          message.channel_label = reader.string();
           break;
         case 4:
-          message.mentions.push(MessageMention.decode(reader, reader.uint32()));
+          message.content = reader.string();
           break;
         case 5:
-          message.attachments.push(MessageAttachment.decode(reader, reader.uint32()));
+          message.mentions.push(MessageMention.decode(reader, reader.uint32()));
           break;
         case 6:
+          message.attachments.push(MessageAttachment.decode(reader, reader.uint32()));
+          break;
+        case 7:
           message.references.push(MessageRef.decode(reader, reader.uint32()));
           break;
         default:
@@ -2306,6 +2314,7 @@ export const ChannelMessageSend = {
     return {
       clan_id: isSet(object.clan_id) ? String(object.clan_id) : "",
       channel_id: isSet(object.channel_id) ? String(object.channel_id) : "",
+      channel_label: isSet(object.channel_label) ? String(object.channel_label) : "",
       content: isSet(object.content) ? String(object.content) : "",
       mentions: Array.isArray(object?.mentions) ? object.mentions.map((e: any) => MessageMention.fromJSON(e)) : [],
       attachments: Array.isArray(object?.attachments)
@@ -2319,6 +2328,7 @@ export const ChannelMessageSend = {
     const obj: any = {};
     message.clan_id !== undefined && (obj.clan_id = message.clan_id);
     message.channel_id !== undefined && (obj.channel_id = message.channel_id);
+    message.channel_label !== undefined && (obj.channel_label = message.channel_label);
     message.content !== undefined && (obj.content = message.content);
     if (message.mentions) {
       obj.mentions = message.mentions.map((e) => e ? MessageMention.toJSON(e) : undefined);
@@ -2346,6 +2356,7 @@ export const ChannelMessageSend = {
     const message = createBaseChannelMessageSend();
     message.clan_id = object.clan_id ?? "";
     message.channel_id = object.channel_id ?? "";
+    message.channel_label = object.channel_label ?? "";
     message.content = object.content ?? "";
     message.mentions = object.mentions?.map((e) => MessageMention.fromPartial(e)) || [];
     message.attachments = object.attachments?.map((e) => MessageAttachment.fromPartial(e)) || [];

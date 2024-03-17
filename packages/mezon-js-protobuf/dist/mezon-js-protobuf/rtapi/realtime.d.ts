@@ -197,6 +197,8 @@ export interface ChannelMessageSend {
     clan_id: string;
     /** The channel to sent to. */
     channel_id: string;
+    /** The channel label to sent to. */
+    channel_label: string;
     /** Message content. */
     content: string;
     /** Message mention */
@@ -806,6 +808,7 @@ export declare const Envelope: {
         channel_message_send?: {
             clan_id?: string | undefined;
             channel_id?: string | undefined;
+            channel_label?: string | undefined;
             content?: string | undefined;
             mentions?: {
                 user_id?: string | undefined;
@@ -1255,6 +1258,7 @@ export declare const Envelope: {
         channel_message_send?: ({
             clan_id?: string | undefined;
             channel_id?: string | undefined;
+            channel_label?: string | undefined;
             content?: string | undefined;
             mentions?: {
                 user_id?: string | undefined;
@@ -1279,6 +1283,7 @@ export declare const Envelope: {
         } & {
             clan_id?: string | undefined;
             channel_id?: string | undefined;
+            channel_label?: string | undefined;
             content?: string | undefined;
             mentions?: ({
                 user_id?: string | undefined;
@@ -2227,6 +2232,7 @@ export declare const Envelope: {
         channel_message_send?: {
             clan_id?: string | undefined;
             channel_id?: string | undefined;
+            channel_label?: string | undefined;
             content?: string | undefined;
             mentions?: {
                 user_id?: string | undefined;
@@ -2676,6 +2682,7 @@ export declare const Envelope: {
         channel_message_send?: ({
             clan_id?: string | undefined;
             channel_id?: string | undefined;
+            channel_label?: string | undefined;
             content?: string | undefined;
             mentions?: {
                 user_id?: string | undefined;
@@ -2700,6 +2707,7 @@ export declare const Envelope: {
         } & {
             clan_id?: string | undefined;
             channel_id?: string | undefined;
+            channel_label?: string | undefined;
             content?: string | undefined;
             mentions?: ({
                 user_id?: string | undefined;
@@ -3914,6 +3922,7 @@ export declare const ChannelMessageSend: {
     create<I extends {
         clan_id?: string | undefined;
         channel_id?: string | undefined;
+        channel_label?: string | undefined;
         content?: string | undefined;
         mentions?: {
             user_id?: string | undefined;
@@ -3938,6 +3947,7 @@ export declare const ChannelMessageSend: {
     } & {
         clan_id?: string | undefined;
         channel_id?: string | undefined;
+        channel_label?: string | undefined;
         content?: string | undefined;
         mentions?: ({
             user_id?: string | undefined;
@@ -4014,6 +4024,7 @@ export declare const ChannelMessageSend: {
     fromPartial<I_1 extends {
         clan_id?: string | undefined;
         channel_id?: string | undefined;
+        channel_label?: string | undefined;
         content?: string | undefined;
         mentions?: {
             user_id?: string | undefined;
@@ -4038,6 +4049,7 @@ export declare const ChannelMessageSend: {
     } & {
         clan_id?: string | undefined;
         channel_id?: string | undefined;
+        channel_label?: string | undefined;
         content?: string | undefined;
         mentions?: ({
             user_id?: string | undefined;
