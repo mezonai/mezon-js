@@ -3984,7 +3984,7 @@ var MessageRef = {
   }
 };
 function createBaseChannelMessageSend() {
-  return { clan_id: "", channel_id: "", content: "", mentions: [], attachments: [], references: [] };
+  return { clan_id: "", channel_id: "", channel_label: "", content: "", mentions: [], attachments: [], references: [] };
 }
 var ChannelMessageSend = {
   encode(message, writer = import_minimal4.default.Writer.create()) {
@@ -3994,17 +3994,20 @@ var ChannelMessageSend = {
     if (message.channel_id !== "") {
       writer.uint32(18).string(message.channel_id);
     }
+    if (message.channel_label !== "") {
+      writer.uint32(26).string(message.channel_label);
+    }
     if (message.content !== "") {
-      writer.uint32(26).string(message.content);
+      writer.uint32(34).string(message.content);
     }
     for (const v of message.mentions) {
-      MessageMention.encode(v, writer.uint32(34).fork()).ldelim();
+      MessageMention.encode(v, writer.uint32(42).fork()).ldelim();
     }
     for (const v of message.attachments) {
-      MessageAttachment.encode(v, writer.uint32(42).fork()).ldelim();
+      MessageAttachment.encode(v, writer.uint32(50).fork()).ldelim();
     }
     for (const v of message.references) {
-      MessageRef.encode(v, writer.uint32(50).fork()).ldelim();
+      MessageRef.encode(v, writer.uint32(58).fork()).ldelim();
     }
     return writer;
   },
@@ -4022,15 +4025,18 @@ var ChannelMessageSend = {
           message.channel_id = reader.string();
           break;
         case 3:
-          message.content = reader.string();
+          message.channel_label = reader.string();
           break;
         case 4:
-          message.mentions.push(MessageMention.decode(reader, reader.uint32()));
+          message.content = reader.string();
           break;
         case 5:
-          message.attachments.push(MessageAttachment.decode(reader, reader.uint32()));
+          message.mentions.push(MessageMention.decode(reader, reader.uint32()));
           break;
         case 6:
+          message.attachments.push(MessageAttachment.decode(reader, reader.uint32()));
+          break;
+        case 7:
           message.references.push(MessageRef.decode(reader, reader.uint32()));
           break;
         default:
@@ -4044,6 +4050,7 @@ var ChannelMessageSend = {
     return {
       clan_id: isSet4(object.clan_id) ? String(object.clan_id) : "",
       channel_id: isSet4(object.channel_id) ? String(object.channel_id) : "",
+      channel_label: isSet4(object.channel_label) ? String(object.channel_label) : "",
       content: isSet4(object.content) ? String(object.content) : "",
       mentions: Array.isArray(object == null ? void 0 : object.mentions) ? object.mentions.map((e) => MessageMention.fromJSON(e)) : [],
       attachments: Array.isArray(object == null ? void 0 : object.attachments) ? object.attachments.map((e) => MessageAttachment.fromJSON(e)) : [],
@@ -4054,6 +4061,7 @@ var ChannelMessageSend = {
     const obj = {};
     message.clan_id !== void 0 && (obj.clan_id = message.clan_id);
     message.channel_id !== void 0 && (obj.channel_id = message.channel_id);
+    message.channel_label !== void 0 && (obj.channel_label = message.channel_label);
     message.content !== void 0 && (obj.content = message.content);
     if (message.mentions) {
       obj.mentions = message.mentions.map((e) => e ? MessageMention.toJSON(e) : void 0);
@@ -4076,14 +4084,15 @@ var ChannelMessageSend = {
     return ChannelMessageSend.fromPartial(base != null ? base : {});
   },
   fromPartial(object) {
-    var _a, _b, _c, _d, _e, _f;
+    var _a, _b, _c, _d, _e, _f, _g;
     const message = createBaseChannelMessageSend();
     message.clan_id = (_a = object.clan_id) != null ? _a : "";
     message.channel_id = (_b = object.channel_id) != null ? _b : "";
-    message.content = (_c = object.content) != null ? _c : "";
-    message.mentions = ((_d = object.mentions) == null ? void 0 : _d.map((e) => MessageMention.fromPartial(e))) || [];
-    message.attachments = ((_e = object.attachments) == null ? void 0 : _e.map((e) => MessageAttachment.fromPartial(e))) || [];
-    message.references = ((_f = object.references) == null ? void 0 : _f.map((e) => MessageRef.fromPartial(e))) || [];
+    message.channel_label = (_c = object.channel_label) != null ? _c : "";
+    message.content = (_d = object.content) != null ? _d : "";
+    message.mentions = ((_e = object.mentions) == null ? void 0 : _e.map((e) => MessageMention.fromPartial(e))) || [];
+    message.attachments = ((_f = object.attachments) == null ? void 0 : _f.map((e) => MessageAttachment.fromPartial(e))) || [];
+    message.references = ((_g = object.references) == null ? void 0 : _g.map((e) => MessageRef.fromPartial(e))) || [];
     return message;
   }
 };
