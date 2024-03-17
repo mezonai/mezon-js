@@ -209,7 +209,7 @@ export interface ApiChannelMessage {
   //The channel this message belongs to.
   channel_id: string;
   //The name of the chat room, or an empty string if this message was not sent through a chat room.
-  channel_name: string;
+  channel_label: string;
   //The clan this message belong to.
   clan_id?: string;
   //The code representing a message type or category.
@@ -431,7 +431,7 @@ export interface ApiInviteUserRes {
   //id channel to add link to.
   channel_id?: string;
   //
-  channel_name?: string;
+  channel_label?: string;
   //id clan to add link to .
   clan_id?: string;
   //

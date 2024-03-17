@@ -3402,7 +3402,8 @@ var _DefaultSocket = class _DefaultSocket {
             var e = {
               avatar: message.channel_message.avatar,
               channel_id: message.channel_message.channel_id,
-              channel_name: message.channel_message.channel_name,
+              mode: message.channel_message.mode,
+              channel_label: message.channel_message.channel_label,
               clan_id: message.channel_message.clan_id,
               code: message.channel_message.code,
               content: JSON.parse(message.channel_message.content),
@@ -3644,13 +3645,14 @@ var _DefaultSocket = class _DefaultSocket {
       return response.status;
     });
   }
-  joinChat(target_id, target, type, persistence, hidden) {
+  joinChat(channel_id, channel_label, mode, type, persistence, hidden) {
     return __async(this, null, function* () {
       const response = yield this.send(
         {
           channel_join: {
-            target_id,
-            target,
+            channel_id,
+            channel_label,
+            mode,
             type,
             persistence,
             hidden
@@ -3665,8 +3667,8 @@ var _DefaultSocket = class _DefaultSocket {
       return yield this.send({ party_join: { party_id } });
     });
   }
-  leaveChat(channel_id) {
-    return this.send({ channel_leave: { channel_id } });
+  leaveChat(channel_id, channel_label, mode) {
+    return this.send({ channel_leave: { channel_id, channel_label, mode } });
   }
   leaveMatch(matchId) {
     return this.send({ match_leave: { match_id: matchId } });
@@ -3686,12 +3688,14 @@ var _DefaultSocket = class _DefaultSocket {
       return response.party_leader;
     });
   }
-  removeChatMessage(channel_id, message_id) {
+  removeChatMessage(channel_id, channel_label, mode, message_id) {
     return __async(this, null, function* () {
       const response = yield this.send(
         {
           channel_message_remove: {
             channel_id,
+            channel_label,
+            mode,
             message_id
           }
         }
@@ -3736,33 +3740,33 @@ var _DefaultSocket = class _DefaultSocket {
   updateStatus(status) {
     return this.send({ status_update: { status } });
   }
-  writeChatMessage(clan_id, channel_id, channel_label, content, mentions, attachments, references) {
+  writeChatMessage(clan_id, channel_id, channel_label, mode, content, mentions, attachments, references) {
     return __async(this, null, function* () {
-      const response = yield this.send({ channel_message_send: { clan_id, channel_id, channel_label, content, mentions, attachments, references } });
+      const response = yield this.send({ channel_message_send: { clan_id, channel_id, channel_label, mode, content, mentions, attachments, references } });
       return response.channel_message_ack;
     });
   }
-  writeMessageReaction(id, channel_id, message_id, emoji, message_sender_id, action_delete) {
+  writeMessageReaction(id, channel_id, channel_label, mode, message_id, emoji, message_sender_id, action_delete) {
     return __async(this, null, function* () {
-      const response = yield this.send({ message_reaction_event: { id, channel_id, message_id, emoji, message_sender_id, action: action_delete } });
+      const response = yield this.send({ message_reaction_event: { id, channel_id, channel_label, mode, message_id, emoji, message_sender_id, action: action_delete } });
       return response.message_reaction_event;
     });
   }
-  writeMessageDeleted(channel_id, message_id) {
+  writeMessageDeleted(channel_id, channel_label, mode, message_id) {
     return __async(this, null, function* () {
-      const response = yield this.send({ message_deleted_event: { channel_id, message_id } });
+      const response = yield this.send({ message_deleted_event: { channel_id, channel_label, mode, message_id } });
       return response.message_deleted_event;
     });
   }
-  writeMessageTyping(channel_id) {
+  writeMessageTyping(channel_id, channel_label, mode) {
     return __async(this, null, function* () {
-      const response = yield this.send({ message_typing_event: { channel_id } });
+      const response = yield this.send({ message_typing_event: { channel_id, channel_label, mode } });
       return response.message_typing_event;
     });
   }
-  writeLastSeenMessage(channel_id, message_id) {
+  writeLastSeenMessage(channel_id, channel_label, mode, message_id) {
     return __async(this, null, function* () {
-      const response = yield this.send({ last_seen_message_event: { channel_id, message_id } });
+      const response = yield this.send({ last_seen_message_event: { channel_id, channel_label, mode, message_id } });
       return response.last_seen_message_event;
     });
   }
@@ -4226,7 +4230,7 @@ var Client = class {
             username: m.username,
             avatar: m.avatar,
             content: m.content ? JSON.parse(m.content) : void 0,
-            channel_name: m.channel_name,
+            channel_label: m.channel_label,
             user_id_one: m.user_id_one,
             user_id_two: m.user_id_two,
             attachments: m.attachments ? JSON.parse(m.attachments) : [],

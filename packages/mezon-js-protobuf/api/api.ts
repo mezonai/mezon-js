@@ -534,7 +534,7 @@ export interface ChannelMessage {
     | Date
     | undefined;
   /** The name of the chat room, or an empty string if this message was not sent through a chat room. */
-  channel_name: string;
+  channel_label: string;
   /** The ID of the first DM user, or an empty string if this message was not sent through a DM chat. */
   user_id_one: string;
   /** The ID of the second DM user, or an empty string if this message was not sent through a DM chat. */
@@ -1598,7 +1598,7 @@ export interface InviteUserRes {
   /** clan name */
   clan_name: string;
   /** channel name */
-  channel_name: string;
+  channel_label: string;
   /** check user exist */
   user_joined: boolean;
 }
@@ -4744,7 +4744,7 @@ function createBaseChannelMessage(): ChannelMessage {
     content: "",
     create_time: undefined,
     update_time: undefined,
-    channel_name: "",
+    channel_label: "",
     user_id_one: "",
     user_id_two: "",
     reactions: "",
@@ -4787,8 +4787,8 @@ export const ChannelMessage = {
     if (message.update_time !== undefined) {
       Timestamp.encode(toTimestamp(message.update_time), writer.uint32(82).fork()).ldelim();
     }
-    if (message.channel_name !== "") {
-      writer.uint32(90).string(message.channel_name);
+    if (message.channel_label !== "") {
+      writer.uint32(90).string(message.channel_label);
     }
     if (message.user_id_one !== "") {
       writer.uint32(98).string(message.user_id_one);
@@ -4852,7 +4852,7 @@ export const ChannelMessage = {
           message.update_time = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
           break;
         case 11:
-          message.channel_name = reader.string();
+          message.channel_label = reader.string();
           break;
         case 12:
           message.user_id_one = reader.string();
@@ -4895,7 +4895,7 @@ export const ChannelMessage = {
       content: isSet(object.content) ? String(object.content) : "",
       create_time: isSet(object.create_time) ? fromJsonTimestamp(object.create_time) : undefined,
       update_time: isSet(object.update_time) ? fromJsonTimestamp(object.update_time) : undefined,
-      channel_name: isSet(object.channel_name) ? String(object.channel_name) : "",
+      channel_label: isSet(object.channel_label) ? String(object.channel_label) : "",
       user_id_one: isSet(object.user_id_one) ? String(object.user_id_one) : "",
       user_id_two: isSet(object.user_id_two) ? String(object.user_id_two) : "",
       reactions: isSet(object.reactions) ? String(object.reactions) : "",
@@ -4918,7 +4918,7 @@ export const ChannelMessage = {
     message.content !== undefined && (obj.content = message.content);
     message.create_time !== undefined && (obj.create_time = message.create_time.toISOString());
     message.update_time !== undefined && (obj.update_time = message.update_time.toISOString());
-    message.channel_name !== undefined && (obj.channel_name = message.channel_name);
+    message.channel_label !== undefined && (obj.channel_label = message.channel_label);
     message.user_id_one !== undefined && (obj.user_id_one = message.user_id_one);
     message.user_id_two !== undefined && (obj.user_id_two = message.user_id_two);
     message.reactions !== undefined && (obj.reactions = message.reactions);
@@ -4945,7 +4945,7 @@ export const ChannelMessage = {
     message.content = object.content ?? "";
     message.create_time = object.create_time ?? undefined;
     message.update_time = object.update_time ?? undefined;
-    message.channel_name = object.channel_name ?? "";
+    message.channel_label = object.channel_label ?? "";
     message.user_id_one = object.user_id_one ?? "";
     message.user_id_two = object.user_id_two ?? "";
     message.reactions = object.reactions ?? "";
@@ -10728,7 +10728,7 @@ export const InviteUserRequest = {
 };
 
 function createBaseInviteUserRes(): InviteUserRes {
-  return { clan_id: "", channel_id: "", clan_name: "", channel_name: "", user_joined: false };
+  return { clan_id: "", channel_id: "", clan_name: "", channel_label: "", user_joined: false };
 }
 
 export const InviteUserRes = {
@@ -10742,8 +10742,8 @@ export const InviteUserRes = {
     if (message.clan_name !== "") {
       writer.uint32(26).string(message.clan_name);
     }
-    if (message.channel_name !== "") {
-      writer.uint32(34).string(message.channel_name);
+    if (message.channel_label !== "") {
+      writer.uint32(34).string(message.channel_label);
     }
     if (message.user_joined === true) {
       writer.uint32(40).bool(message.user_joined);
@@ -10768,7 +10768,7 @@ export const InviteUserRes = {
           message.clan_name = reader.string();
           break;
         case 4:
-          message.channel_name = reader.string();
+          message.channel_label = reader.string();
           break;
         case 5:
           message.user_joined = reader.bool();
@@ -10786,7 +10786,7 @@ export const InviteUserRes = {
       clan_id: isSet(object.clan_id) ? String(object.clan_id) : "",
       channel_id: isSet(object.channel_id) ? String(object.channel_id) : "",
       clan_name: isSet(object.clan_name) ? String(object.clan_name) : "",
-      channel_name: isSet(object.channel_name) ? String(object.channel_name) : "",
+      channel_label: isSet(object.channel_label) ? String(object.channel_label) : "",
       user_joined: isSet(object.user_joined) ? Boolean(object.user_joined) : false,
     };
   },
@@ -10796,7 +10796,7 @@ export const InviteUserRes = {
     message.clan_id !== undefined && (obj.clan_id = message.clan_id);
     message.channel_id !== undefined && (obj.channel_id = message.channel_id);
     message.clan_name !== undefined && (obj.clan_name = message.clan_name);
-    message.channel_name !== undefined && (obj.channel_name = message.channel_name);
+    message.channel_label !== undefined && (obj.channel_label = message.channel_label);
     message.user_joined !== undefined && (obj.user_joined = message.user_joined);
     return obj;
   },
@@ -10810,7 +10810,7 @@ export const InviteUserRes = {
     message.clan_id = object.clan_id ?? "";
     message.channel_id = object.channel_id ?? "";
     message.clan_name = object.clan_name ?? "";
-    message.channel_name = object.channel_name ?? "";
+    message.channel_label = object.channel_label ?? "";
     message.user_joined = object.user_joined ?? false;
     return message;
   },

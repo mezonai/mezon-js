@@ -76,7 +76,7 @@ export interface StorageObjects {
 export interface ChannelMessage {
     avatar?: string;
     channel_id: string;
-    channel_name: string;
+    channel_label: string;
     clan_id?: string;
     code: number;
     content: string;
