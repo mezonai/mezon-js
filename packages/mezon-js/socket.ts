@@ -42,10 +42,16 @@ export interface Presence {
 export interface Channel {
   /** The server-assigned channel id. */
   id: string;
+  // label
+  chanel_name: string;
   /** The presences visible on the chat channel. */
   presences: Presence[];
   /** The presence of the current user, i.e. yourself. */
   self: Presence;
+  // The ID of the first DM user, or an empty string if this message was not sent through a DM chat.
+  user_id_one: string;
+  // The ID of the second DM user, or an empty string if this message was not sent through a DM chat.
+  user_id_two: string;
 }
 
 /** Join a realtime chat channel. */

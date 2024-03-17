@@ -32,10 +32,13 @@ export interface Presence {
 export interface Channel {
     /** The server-assigned channel id. */
     id: string;
+    chanel_name: string;
     /** The presences visible on the chat channel. */
     presences: Presence[];
     /** The presence of the current user, i.e. yourself. */
     self: Presence;
+    user_id_one: string;
+    user_id_two: string;
 }
 /** Join a realtime chat channel. */
 interface ChannelJoin {
