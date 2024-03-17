@@ -179,7 +179,7 @@ export interface Channel {
     | UserPresence
     | undefined;
   /** The name of the chat room, or an empty string if this message was not sent through a chat room. */
-  chanel_name: string;
+  chanel_label: string;
   /** The ID of the first DM user, or an empty string if this message was not sent through a DM chat. */
   user_id_one: string;
   /** The ID of the second DM user, or an empty string if this message was not sent through a DM chat. */
@@ -189,9 +189,9 @@ export interface Channel {
 /** Join operation for a realtime chat channel. */
 export interface ChannelJoin {
   /** The id of channel or group */
-  target_id: string;
+  channel_id: string;
   /** The user ID to DM with, group ID to chat with, or channel id to join. */
-  target: string;
+  channel_label: string;
   /** The type of the chat channel. */
   type: number;
   /** Whether messages sent on this channel should be persistent. */
@@ -199,7 +199,11 @@ export interface ChannelJoin {
     | boolean
     | undefined;
   /** Whether the user should appear in the channel's presence list and events. */
-  hidden: boolean | undefined;
+  hidden:
+    | boolean
+    | undefined;
+  /** mode */
+  mode: number;
 }
 
 /** The type of chat channel. */
@@ -256,6 +260,10 @@ export function channelJoin_TypeToJSON(object: ChannelJoin_Type): string {
 export interface ChannelLeave {
   /** The ID of the channel to leave. */
   channel_id: string;
+  /** The channe name */
+  channel_label: string;
+  /** mode */
+  mode: number;
 }
 
 /** A receipt reply from a channel message send operation. */
@@ -283,7 +291,7 @@ export interface ChannelMessageAck {
     | boolean
     | undefined;
   /** The name of the chat room, or an empty string if this message was not sent through a chat room. */
-  channel_name: string;
+  channel_label: string;
   /** The ID of the first DM user, or an empty string if this message was not sent through a DM chat. */
   user_id_one: string;
   /** The ID of the second DM user, or an empty string if this message was not sent through a DM chat. */
@@ -346,24 +354,34 @@ export interface ChannelMessageSend {
   attachments: MessageAttachment[];
   /** Message reference */
   references: MessageRef[];
+  /** Mode */
+  mode: number;
 }
 
 /** Update a message previously sent to a realtime channel. */
 export interface ChannelMessageUpdate {
   /** The channel the message was sent to. */
   channel_id: string;
+  /** channel label */
+  channel_label: string;
   /** The ID assigned to the message to update. */
   message_id: string;
   /** New message content. */
   content: string;
+  /** The mode */
+  mode: number;
 }
 
 /** Remove a message previously sent to a realtime channel. */
 export interface ChannelMessageRemove {
   /** The channel the message was sent to. */
   channel_id: string;
+  /** The channel label */
+  channel_label: string;
   /** The ID assigned to the message to update. */
   message_id: string;
+  /** The mode */
+  mode: number;
 }
 
 /** A set of joins and leaves on a particular channel. */
@@ -375,11 +393,13 @@ export interface ChannelPresenceEvent {
   /** Presences leaving the channel as part of this event, if any. */
   leaves: UserPresence[];
   /** The name of the chat room, or an empty string if this message was not sent through a chat room. */
-  channel_name: string;
+  channel_label: string;
   /** The ID of the first DM user, or an empty string if this message was not sent through a DM chat. */
   user_id_one: string;
   /** The ID of the second DM user, or an empty string if this message was not sent through a DM chat. */
   user_id_two: string;
+  /** The mode */
+  mode: number;
 }
 
 /** A logical error which may occur on the server. */
@@ -497,150 +517,6 @@ export interface Match {
 export interface MatchCreate {
   /** Optional name to use when creating the match. */
   name: string;
-}
-
-/** Realtime match data received from the server. */
-export interface MatchData {
-  /** The match unique ID. */
-  match_id: string;
-  /** A reference to the user presence that sent this data, if any. */
-  presence:
-    | UserPresence
-    | undefined;
-  /** Op code value. */
-  op_code: number;
-  /** Data payload, if any. */
-  data: Uint8Array;
-  /** True if this data was delivered reliably, false otherwise. */
-  reliable: boolean;
-}
-
-/** Send realtime match data to the server. */
-export interface MatchDataSend {
-  /** The match unique ID. */
-  match_id: string;
-  /** Op code value. */
-  op_code: number;
-  /** Data payload, if any. */
-  data: Uint8Array;
-  /** List of presences in the match to deliver to, if filtering is required. Otherwise deliver to everyone in the match. */
-  presences: UserPresence[];
-  /** True if the data should be sent reliably, false otherwise. */
-  reliable: boolean;
-}
-
-/** Join an existing realtime match. */
-export interface MatchJoin {
-  /** The match unique ID. */
-  match_id?:
-    | string
-    | undefined;
-  /** A matchmaking result token. */
-  token?:
-    | string
-    | undefined;
-  /** An optional set of key-value metadata pairs to be passed to the match handler, if any. */
-  metadata: { [key: string]: string };
-}
-
-export interface MatchJoin_MetadataEntry {
-  key: string;
-  value: string;
-}
-
-/** Leave a realtime match. */
-export interface MatchLeave {
-  /** The match unique ID. */
-  match_id: string;
-}
-
-/** A set of joins and leaves on a particular realtime match. */
-export interface MatchPresenceEvent {
-  /** The match unique ID. */
-  match_id: string;
-  /** User presences that have just joined the match. */
-  joins: UserPresence[];
-  /** User presences that have just left the match. */
-  leaves: UserPresence[];
-}
-
-/** Start a new matchmaking process. */
-export interface MatchmakerAdd {
-  /** Minimum total user count to match together. */
-  min_count: number;
-  /** Maximum total user count to match together. */
-  max_count: number;
-  /** Filter query used to identify suitable users. */
-  query: string;
-  /** String properties. */
-  string_properties: { [key: string]: string };
-  /** Numeric properties. */
-  numeric_properties: { [key: string]: number };
-  /** Optional multiple of the count that must be satisfied. */
-  count_multiple: number | undefined;
-}
-
-export interface MatchmakerAdd_StringPropertiesEntry {
-  key: string;
-  value: string;
-}
-
-export interface MatchmakerAdd_NumericPropertiesEntry {
-  key: string;
-  value: number;
-}
-
-/** A successful matchmaking result. */
-export interface MatchmakerMatched {
-  /** The matchmaking ticket that has completed. */
-  ticket: string;
-  /** Match ID. */
-  match_id?:
-    | string
-    | undefined;
-  /** Match join token. */
-  token?:
-    | string
-    | undefined;
-  /** The users that have been matched together, and information about their matchmaking data. */
-  users: MatchmakerMatched_MatchmakerUser[];
-  /** A reference to the current user and their properties. */
-  self: MatchmakerMatched_MatchmakerUser | undefined;
-}
-
-export interface MatchmakerMatched_MatchmakerUser {
-  /** User info. */
-  presence:
-    | UserPresence
-    | undefined;
-  /** Party identifier, if this user was matched as a party member. */
-  party_id: string;
-  /** String properties. */
-  string_properties: { [key: string]: string };
-  /** Numeric properties. */
-  numeric_properties: { [key: string]: number };
-}
-
-export interface MatchmakerMatched_MatchmakerUser_StringPropertiesEntry {
-  key: string;
-  value: string;
-}
-
-export interface MatchmakerMatched_MatchmakerUser_NumericPropertiesEntry {
-  key: string;
-  value: number;
-}
-
-/** Cancel an existing ongoing matchmaking process. */
-export interface MatchmakerRemove {
-  /** The ticket to cancel. */
-  ticket: string;
-}
-
-/** A ticket representing a new matchmaking process. */
-export interface MatchmakerTicket {
-  /** The ticket that can be used to cancel matchmaking. */
-  ticket: string;
 }
 
 /** A collection of zero or more notifications. */
@@ -853,22 +729,32 @@ export interface StatusPresenceEvent {
 export interface LastSeenMessageEvent {
   /** The unique ID of this channel. */
   channel_id: string;
+  /** The channel label */
+  channel_label: string;
   /** The unique ID of this message. */
   message_id: string;
+  /** mode */
+  mode: number;
 }
 
 /** Message typing event data */
 export interface MessageTypingEvent {
   /** The channel this message belongs to. */
   channel_id: string;
+  /** The channel label */
+  channel_label: string;
   /** Message sender, usually a user ID. */
   sender_id: string;
+  /** mode */
+  mode: number;
 }
 
 /** Mention to message */
 export interface MessageMentionEvent {
   /** The channel this message belongs to. */
   channel_id: string;
+  /** The channel label */
+  channel_label: string;
   /** React to message */
   message_id: string;
   /** mention user id */
@@ -877,6 +763,8 @@ export interface MessageMentionEvent {
   username: string;
   /** sender id */
   sender_id: string;
+  /** mode */
+  mode: number;
 }
 
 /** Message reacton event data */
@@ -885,6 +773,8 @@ export interface MessageReactionEvent {
   id: string;
   /** The channel this message belongs to. */
   channel_id: string;
+  /** The channel label */
+  channel_label: string;
   /** React to message */
   message_id: string;
   /** Message sender, usually a user ID. */
@@ -901,12 +791,16 @@ export interface MessageReactionEvent {
   message_sender_id: string;
   /** count */
   count: number;
+  /** mode */
+  mode: number;
 }
 
 /** Message attachment */
 export interface MessageAttachmentEvent {
   /** The channel this message belongs to. */
   channel_id: string;
+  /** The channel label */
+  channel_label: string;
   /** React to message */
   message_id: string;
   /** Attachment file name */
@@ -923,16 +817,22 @@ export interface MessageAttachmentEvent {
   height: number;
   /** sender id */
   sender_id: string;
+  /** mode */
+  mode: number;
 }
 
 /** Mention to message */
 export interface MessageDeletedEvent {
   /** The channel this message belongs to. */
   channel_id: string;
+  /** The channel name */
+  channel_label: string;
   /** React to message */
   message_id: string;
   /** sender id */
   deletor: string;
+  /** mode */
+  mode: number;
 }
 
 /** Stop receiving status updates for some set of users. */
@@ -1598,7 +1498,7 @@ export const Envelope = {
 };
 
 function createBaseChannel(): Channel {
-  return { id: "", presences: [], self: undefined, chanel_name: "", user_id_one: "", user_id_two: "" };
+  return { id: "", presences: [], self: undefined, chanel_label: "", user_id_one: "", user_id_two: "" };
 }
 
 export const Channel = {
@@ -1612,8 +1512,8 @@ export const Channel = {
     if (message.self !== undefined) {
       UserPresence.encode(message.self, writer.uint32(26).fork()).ldelim();
     }
-    if (message.chanel_name !== "") {
-      writer.uint32(34).string(message.chanel_name);
+    if (message.chanel_label !== "") {
+      writer.uint32(34).string(message.chanel_label);
     }
     if (message.user_id_one !== "") {
       writer.uint32(42).string(message.user_id_one);
@@ -1641,7 +1541,7 @@ export const Channel = {
           message.self = UserPresence.decode(reader, reader.uint32());
           break;
         case 4:
-          message.chanel_name = reader.string();
+          message.chanel_label = reader.string();
           break;
         case 5:
           message.user_id_one = reader.string();
@@ -1662,7 +1562,7 @@ export const Channel = {
       id: isSet(object.id) ? String(object.id) : "",
       presences: Array.isArray(object?.presences) ? object.presences.map((e: any) => UserPresence.fromJSON(e)) : [],
       self: isSet(object.self) ? UserPresence.fromJSON(object.self) : undefined,
-      chanel_name: isSet(object.chanel_name) ? String(object.chanel_name) : "",
+      chanel_label: isSet(object.chanel_label) ? String(object.chanel_label) : "",
       user_id_one: isSet(object.user_id_one) ? String(object.user_id_one) : "",
       user_id_two: isSet(object.user_id_two) ? String(object.user_id_two) : "",
     };
@@ -1677,7 +1577,7 @@ export const Channel = {
       obj.presences = [];
     }
     message.self !== undefined && (obj.self = message.self ? UserPresence.toJSON(message.self) : undefined);
-    message.chanel_name !== undefined && (obj.chanel_name = message.chanel_name);
+    message.chanel_label !== undefined && (obj.chanel_label = message.chanel_label);
     message.user_id_one !== undefined && (obj.user_id_one = message.user_id_one);
     message.user_id_two !== undefined && (obj.user_id_two = message.user_id_two);
     return obj;
@@ -1694,7 +1594,7 @@ export const Channel = {
     message.self = (object.self !== undefined && object.self !== null)
       ? UserPresence.fromPartial(object.self)
       : undefined;
-    message.chanel_name = object.chanel_name ?? "";
+    message.chanel_label = object.chanel_label ?? "";
     message.user_id_one = object.user_id_one ?? "";
     message.user_id_two = object.user_id_two ?? "";
     return message;
@@ -1702,16 +1602,16 @@ export const Channel = {
 };
 
 function createBaseChannelJoin(): ChannelJoin {
-  return { target_id: "", target: "", type: 0, persistence: undefined, hidden: undefined };
+  return { channel_id: "", channel_label: "", type: 0, persistence: undefined, hidden: undefined, mode: 0 };
 }
 
 export const ChannelJoin = {
   encode(message: ChannelJoin, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.target_id !== "") {
-      writer.uint32(10).string(message.target_id);
+    if (message.channel_id !== "") {
+      writer.uint32(10).string(message.channel_id);
     }
-    if (message.target !== "") {
-      writer.uint32(18).string(message.target);
+    if (message.channel_label !== "") {
+      writer.uint32(18).string(message.channel_label);
     }
     if (message.type !== 0) {
       writer.uint32(24).int32(message.type);
@@ -1721,6 +1621,9 @@ export const ChannelJoin = {
     }
     if (message.hidden !== undefined) {
       BoolValue.encode({ value: message.hidden! }, writer.uint32(42).fork()).ldelim();
+    }
+    if (message.mode !== 0) {
+      writer.uint32(48).int32(message.mode);
     }
     return writer;
   },
@@ -1733,10 +1636,10 @@ export const ChannelJoin = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          message.target_id = reader.string();
+          message.channel_id = reader.string();
           break;
         case 2:
-          message.target = reader.string();
+          message.channel_label = reader.string();
           break;
         case 3:
           message.type = reader.int32();
@@ -1746,6 +1649,9 @@ export const ChannelJoin = {
           break;
         case 5:
           message.hidden = BoolValue.decode(reader, reader.uint32()).value;
+          break;
+        case 6:
+          message.mode = reader.int32();
           break;
         default:
           reader.skipType(tag & 7);
@@ -1757,21 +1663,23 @@ export const ChannelJoin = {
 
   fromJSON(object: any): ChannelJoin {
     return {
-      target_id: isSet(object.target_id) ? String(object.target_id) : "",
-      target: isSet(object.target) ? String(object.target) : "",
+      channel_id: isSet(object.channel_id) ? String(object.channel_id) : "",
+      channel_label: isSet(object.channel_label) ? String(object.channel_label) : "",
       type: isSet(object.type) ? Number(object.type) : 0,
       persistence: isSet(object.persistence) ? Boolean(object.persistence) : undefined,
       hidden: isSet(object.hidden) ? Boolean(object.hidden) : undefined,
+      mode: isSet(object.mode) ? Number(object.mode) : 0,
     };
   },
 
   toJSON(message: ChannelJoin): unknown {
     const obj: any = {};
-    message.target_id !== undefined && (obj.target_id = message.target_id);
-    message.target !== undefined && (obj.target = message.target);
+    message.channel_id !== undefined && (obj.channel_id = message.channel_id);
+    message.channel_label !== undefined && (obj.channel_label = message.channel_label);
     message.type !== undefined && (obj.type = Math.round(message.type));
     message.persistence !== undefined && (obj.persistence = message.persistence);
     message.hidden !== undefined && (obj.hidden = message.hidden);
+    message.mode !== undefined && (obj.mode = Math.round(message.mode));
     return obj;
   },
 
@@ -1781,23 +1689,30 @@ export const ChannelJoin = {
 
   fromPartial<I extends Exact<DeepPartial<ChannelJoin>, I>>(object: I): ChannelJoin {
     const message = createBaseChannelJoin();
-    message.target_id = object.target_id ?? "";
-    message.target = object.target ?? "";
+    message.channel_id = object.channel_id ?? "";
+    message.channel_label = object.channel_label ?? "";
     message.type = object.type ?? 0;
     message.persistence = object.persistence ?? undefined;
     message.hidden = object.hidden ?? undefined;
+    message.mode = object.mode ?? 0;
     return message;
   },
 };
 
 function createBaseChannelLeave(): ChannelLeave {
-  return { channel_id: "" };
+  return { channel_id: "", channel_label: "", mode: 0 };
 }
 
 export const ChannelLeave = {
   encode(message: ChannelLeave, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.channel_id !== "") {
       writer.uint32(10).string(message.channel_id);
+    }
+    if (message.channel_label !== "") {
+      writer.uint32(18).string(message.channel_label);
+    }
+    if (message.mode !== 0) {
+      writer.uint32(24).int32(message.mode);
     }
     return writer;
   },
@@ -1812,6 +1727,12 @@ export const ChannelLeave = {
         case 1:
           message.channel_id = reader.string();
           break;
+        case 2:
+          message.channel_label = reader.string();
+          break;
+        case 3:
+          message.mode = reader.int32();
+          break;
         default:
           reader.skipType(tag & 7);
           break;
@@ -1821,12 +1742,18 @@ export const ChannelLeave = {
   },
 
   fromJSON(object: any): ChannelLeave {
-    return { channel_id: isSet(object.channel_id) ? String(object.channel_id) : "" };
+    return {
+      channel_id: isSet(object.channel_id) ? String(object.channel_id) : "",
+      channel_label: isSet(object.channel_label) ? String(object.channel_label) : "",
+      mode: isSet(object.mode) ? Number(object.mode) : 0,
+    };
   },
 
   toJSON(message: ChannelLeave): unknown {
     const obj: any = {};
     message.channel_id !== undefined && (obj.channel_id = message.channel_id);
+    message.channel_label !== undefined && (obj.channel_label = message.channel_label);
+    message.mode !== undefined && (obj.mode = Math.round(message.mode));
     return obj;
   },
 
@@ -1837,6 +1764,8 @@ export const ChannelLeave = {
   fromPartial<I extends Exact<DeepPartial<ChannelLeave>, I>>(object: I): ChannelLeave {
     const message = createBaseChannelLeave();
     message.channel_id = object.channel_id ?? "";
+    message.channel_label = object.channel_label ?? "";
+    message.mode = object.mode ?? 0;
     return message;
   },
 };
@@ -1850,7 +1779,7 @@ function createBaseChannelMessageAck(): ChannelMessageAck {
     create_time: undefined,
     update_time: undefined,
     persistent: undefined,
-    channel_name: "",
+    channel_label: "",
     user_id_one: "",
     user_id_two: "",
   };
@@ -1879,8 +1808,8 @@ export const ChannelMessageAck = {
     if (message.persistent !== undefined) {
       BoolValue.encode({ value: message.persistent! }, writer.uint32(58).fork()).ldelim();
     }
-    if (message.channel_name !== "") {
-      writer.uint32(66).string(message.channel_name);
+    if (message.channel_label !== "") {
+      writer.uint32(66).string(message.channel_label);
     }
     if (message.user_id_one !== "") {
       writer.uint32(74).string(message.user_id_one);
@@ -1920,7 +1849,7 @@ export const ChannelMessageAck = {
           message.persistent = BoolValue.decode(reader, reader.uint32()).value;
           break;
         case 8:
-          message.channel_name = reader.string();
+          message.channel_label = reader.string();
           break;
         case 9:
           message.user_id_one = reader.string();
@@ -1945,7 +1874,7 @@ export const ChannelMessageAck = {
       create_time: isSet(object.create_time) ? fromJsonTimestamp(object.create_time) : undefined,
       update_time: isSet(object.update_time) ? fromJsonTimestamp(object.update_time) : undefined,
       persistent: isSet(object.persistent) ? Boolean(object.persistent) : undefined,
-      channel_name: isSet(object.channel_name) ? String(object.channel_name) : "",
+      channel_label: isSet(object.channel_label) ? String(object.channel_label) : "",
       user_id_one: isSet(object.user_id_one) ? String(object.user_id_one) : "",
       user_id_two: isSet(object.user_id_two) ? String(object.user_id_two) : "",
     };
@@ -1960,7 +1889,7 @@ export const ChannelMessageAck = {
     message.create_time !== undefined && (obj.create_time = message.create_time.toISOString());
     message.update_time !== undefined && (obj.update_time = message.update_time.toISOString());
     message.persistent !== undefined && (obj.persistent = message.persistent);
-    message.channel_name !== undefined && (obj.channel_name = message.channel_name);
+    message.channel_label !== undefined && (obj.channel_label = message.channel_label);
     message.user_id_one !== undefined && (obj.user_id_one = message.user_id_one);
     message.user_id_two !== undefined && (obj.user_id_two = message.user_id_two);
     return obj;
@@ -1979,7 +1908,7 @@ export const ChannelMessageAck = {
     message.create_time = object.create_time ?? undefined;
     message.update_time = object.update_time ?? undefined;
     message.persistent = object.persistent ?? undefined;
-    message.channel_name = object.channel_name ?? "";
+    message.channel_label = object.channel_label ?? "";
     message.user_id_one = object.user_id_one ?? "";
     message.user_id_two = object.user_id_two ?? "";
     return message;
@@ -2245,7 +2174,16 @@ export const MessageRef = {
 };
 
 function createBaseChannelMessageSend(): ChannelMessageSend {
-  return { clan_id: "", channel_id: "", channel_label: "", content: "", mentions: [], attachments: [], references: [] };
+  return {
+    clan_id: "",
+    channel_id: "",
+    channel_label: "",
+    content: "",
+    mentions: [],
+    attachments: [],
+    references: [],
+    mode: 0,
+  };
 }
 
 export const ChannelMessageSend = {
@@ -2270,6 +2208,9 @@ export const ChannelMessageSend = {
     }
     for (const v of message.references) {
       MessageRef.encode(v!, writer.uint32(58).fork()).ldelim();
+    }
+    if (message.mode !== 0) {
+      writer.uint32(64).int32(message.mode);
     }
     return writer;
   },
@@ -2302,6 +2243,9 @@ export const ChannelMessageSend = {
         case 7:
           message.references.push(MessageRef.decode(reader, reader.uint32()));
           break;
+        case 8:
+          message.mode = reader.int32();
+          break;
         default:
           reader.skipType(tag & 7);
           break;
@@ -2321,6 +2265,7 @@ export const ChannelMessageSend = {
         ? object.attachments.map((e: any) => MessageAttachment.fromJSON(e))
         : [],
       references: Array.isArray(object?.references) ? object.references.map((e: any) => MessageRef.fromJSON(e)) : [],
+      mode: isSet(object.mode) ? Number(object.mode) : 0,
     };
   },
 
@@ -2345,6 +2290,7 @@ export const ChannelMessageSend = {
     } else {
       obj.references = [];
     }
+    message.mode !== undefined && (obj.mode = Math.round(message.mode));
     return obj;
   },
 
@@ -2361,12 +2307,13 @@ export const ChannelMessageSend = {
     message.mentions = object.mentions?.map((e) => MessageMention.fromPartial(e)) || [];
     message.attachments = object.attachments?.map((e) => MessageAttachment.fromPartial(e)) || [];
     message.references = object.references?.map((e) => MessageRef.fromPartial(e)) || [];
+    message.mode = object.mode ?? 0;
     return message;
   },
 };
 
 function createBaseChannelMessageUpdate(): ChannelMessageUpdate {
-  return { channel_id: "", message_id: "", content: "" };
+  return { channel_id: "", channel_label: "", message_id: "", content: "", mode: 0 };
 }
 
 export const ChannelMessageUpdate = {
@@ -2374,11 +2321,17 @@ export const ChannelMessageUpdate = {
     if (message.channel_id !== "") {
       writer.uint32(10).string(message.channel_id);
     }
+    if (message.channel_label !== "") {
+      writer.uint32(18).string(message.channel_label);
+    }
     if (message.message_id !== "") {
-      writer.uint32(18).string(message.message_id);
+      writer.uint32(26).string(message.message_id);
     }
     if (message.content !== "") {
-      writer.uint32(26).string(message.content);
+      writer.uint32(34).string(message.content);
+    }
+    if (message.mode !== 0) {
+      writer.uint32(40).int32(message.mode);
     }
     return writer;
   },
@@ -2394,10 +2347,16 @@ export const ChannelMessageUpdate = {
           message.channel_id = reader.string();
           break;
         case 2:
-          message.message_id = reader.string();
+          message.channel_label = reader.string();
           break;
         case 3:
+          message.message_id = reader.string();
+          break;
+        case 4:
           message.content = reader.string();
+          break;
+        case 5:
+          message.mode = reader.int32();
           break;
         default:
           reader.skipType(tag & 7);
@@ -2410,16 +2369,20 @@ export const ChannelMessageUpdate = {
   fromJSON(object: any): ChannelMessageUpdate {
     return {
       channel_id: isSet(object.channel_id) ? String(object.channel_id) : "",
+      channel_label: isSet(object.channel_label) ? String(object.channel_label) : "",
       message_id: isSet(object.message_id) ? String(object.message_id) : "",
       content: isSet(object.content) ? String(object.content) : "",
+      mode: isSet(object.mode) ? Number(object.mode) : 0,
     };
   },
 
   toJSON(message: ChannelMessageUpdate): unknown {
     const obj: any = {};
     message.channel_id !== undefined && (obj.channel_id = message.channel_id);
+    message.channel_label !== undefined && (obj.channel_label = message.channel_label);
     message.message_id !== undefined && (obj.message_id = message.message_id);
     message.content !== undefined && (obj.content = message.content);
+    message.mode !== undefined && (obj.mode = Math.round(message.mode));
     return obj;
   },
 
@@ -2430,14 +2393,16 @@ export const ChannelMessageUpdate = {
   fromPartial<I extends Exact<DeepPartial<ChannelMessageUpdate>, I>>(object: I): ChannelMessageUpdate {
     const message = createBaseChannelMessageUpdate();
     message.channel_id = object.channel_id ?? "";
+    message.channel_label = object.channel_label ?? "";
     message.message_id = object.message_id ?? "";
     message.content = object.content ?? "";
+    message.mode = object.mode ?? 0;
     return message;
   },
 };
 
 function createBaseChannelMessageRemove(): ChannelMessageRemove {
-  return { channel_id: "", message_id: "" };
+  return { channel_id: "", channel_label: "", message_id: "", mode: 0 };
 }
 
 export const ChannelMessageRemove = {
@@ -2445,8 +2410,14 @@ export const ChannelMessageRemove = {
     if (message.channel_id !== "") {
       writer.uint32(10).string(message.channel_id);
     }
+    if (message.channel_label !== "") {
+      writer.uint32(18).string(message.channel_label);
+    }
     if (message.message_id !== "") {
-      writer.uint32(18).string(message.message_id);
+      writer.uint32(26).string(message.message_id);
+    }
+    if (message.mode !== 0) {
+      writer.uint32(32).int32(message.mode);
     }
     return writer;
   },
@@ -2462,7 +2433,13 @@ export const ChannelMessageRemove = {
           message.channel_id = reader.string();
           break;
         case 2:
+          message.channel_label = reader.string();
+          break;
+        case 3:
           message.message_id = reader.string();
+          break;
+        case 4:
+          message.mode = reader.int32();
           break;
         default:
           reader.skipType(tag & 7);
@@ -2475,14 +2452,18 @@ export const ChannelMessageRemove = {
   fromJSON(object: any): ChannelMessageRemove {
     return {
       channel_id: isSet(object.channel_id) ? String(object.channel_id) : "",
+      channel_label: isSet(object.channel_label) ? String(object.channel_label) : "",
       message_id: isSet(object.message_id) ? String(object.message_id) : "",
+      mode: isSet(object.mode) ? Number(object.mode) : 0,
     };
   },
 
   toJSON(message: ChannelMessageRemove): unknown {
     const obj: any = {};
     message.channel_id !== undefined && (obj.channel_id = message.channel_id);
+    message.channel_label !== undefined && (obj.channel_label = message.channel_label);
     message.message_id !== undefined && (obj.message_id = message.message_id);
+    message.mode !== undefined && (obj.mode = Math.round(message.mode));
     return obj;
   },
 
@@ -2493,13 +2474,15 @@ export const ChannelMessageRemove = {
   fromPartial<I extends Exact<DeepPartial<ChannelMessageRemove>, I>>(object: I): ChannelMessageRemove {
     const message = createBaseChannelMessageRemove();
     message.channel_id = object.channel_id ?? "";
+    message.channel_label = object.channel_label ?? "";
     message.message_id = object.message_id ?? "";
+    message.mode = object.mode ?? 0;
     return message;
   },
 };
 
 function createBaseChannelPresenceEvent(): ChannelPresenceEvent {
-  return { channel_id: "", joins: [], leaves: [], channel_name: "", user_id_one: "", user_id_two: "" };
+  return { channel_id: "", joins: [], leaves: [], channel_label: "", user_id_one: "", user_id_two: "", mode: 0 };
 }
 
 export const ChannelPresenceEvent = {
@@ -2513,14 +2496,17 @@ export const ChannelPresenceEvent = {
     for (const v of message.leaves) {
       UserPresence.encode(v!, writer.uint32(26).fork()).ldelim();
     }
-    if (message.channel_name !== "") {
-      writer.uint32(34).string(message.channel_name);
+    if (message.channel_label !== "") {
+      writer.uint32(34).string(message.channel_label);
     }
     if (message.user_id_one !== "") {
       writer.uint32(42).string(message.user_id_one);
     }
     if (message.user_id_two !== "") {
       writer.uint32(50).string(message.user_id_two);
+    }
+    if (message.mode !== 0) {
+      writer.uint32(56).int32(message.mode);
     }
     return writer;
   },
@@ -2542,13 +2528,16 @@ export const ChannelPresenceEvent = {
           message.leaves.push(UserPresence.decode(reader, reader.uint32()));
           break;
         case 4:
-          message.channel_name = reader.string();
+          message.channel_label = reader.string();
           break;
         case 5:
           message.user_id_one = reader.string();
           break;
         case 6:
           message.user_id_two = reader.string();
+          break;
+        case 7:
+          message.mode = reader.int32();
           break;
         default:
           reader.skipType(tag & 7);
@@ -2563,9 +2552,10 @@ export const ChannelPresenceEvent = {
       channel_id: isSet(object.channel_id) ? String(object.channel_id) : "",
       joins: Array.isArray(object?.joins) ? object.joins.map((e: any) => UserPresence.fromJSON(e)) : [],
       leaves: Array.isArray(object?.leaves) ? object.leaves.map((e: any) => UserPresence.fromJSON(e)) : [],
-      channel_name: isSet(object.channel_name) ? String(object.channel_name) : "",
+      channel_label: isSet(object.channel_label) ? String(object.channel_label) : "",
       user_id_one: isSet(object.user_id_one) ? String(object.user_id_one) : "",
       user_id_two: isSet(object.user_id_two) ? String(object.user_id_two) : "",
+      mode: isSet(object.mode) ? Number(object.mode) : 0,
     };
   },
 
@@ -2582,9 +2572,10 @@ export const ChannelPresenceEvent = {
     } else {
       obj.leaves = [];
     }
-    message.channel_name !== undefined && (obj.channel_name = message.channel_name);
+    message.channel_label !== undefined && (obj.channel_label = message.channel_label);
     message.user_id_one !== undefined && (obj.user_id_one = message.user_id_one);
     message.user_id_two !== undefined && (obj.user_id_two = message.user_id_two);
+    message.mode !== undefined && (obj.mode = Math.round(message.mode));
     return obj;
   },
 
@@ -2597,9 +2588,10 @@ export const ChannelPresenceEvent = {
     message.channel_id = object.channel_id ?? "";
     message.joins = object.joins?.map((e) => UserPresence.fromPartial(e)) || [];
     message.leaves = object.leaves?.map((e) => UserPresence.fromPartial(e)) || [];
-    message.channel_name = object.channel_name ?? "";
+    message.channel_label = object.channel_label ?? "";
     message.user_id_one = object.user_id_one ?? "";
     message.user_id_two = object.user_id_two ?? "";
+    message.mode = object.mode ?? 0;
     return message;
   },
 };
@@ -2903,1211 +2895,6 @@ export const MatchCreate = {
   fromPartial<I extends Exact<DeepPartial<MatchCreate>, I>>(object: I): MatchCreate {
     const message = createBaseMatchCreate();
     message.name = object.name ?? "";
-    return message;
-  },
-};
-
-function createBaseMatchData(): MatchData {
-  return { match_id: "", presence: undefined, op_code: 0, data: new Uint8Array(), reliable: false };
-}
-
-export const MatchData = {
-  encode(message: MatchData, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.match_id !== "") {
-      writer.uint32(10).string(message.match_id);
-    }
-    if (message.presence !== undefined) {
-      UserPresence.encode(message.presence, writer.uint32(18).fork()).ldelim();
-    }
-    if (message.op_code !== 0) {
-      writer.uint32(24).int64(message.op_code);
-    }
-    if (message.data.length !== 0) {
-      writer.uint32(34).bytes(message.data);
-    }
-    if (message.reliable === true) {
-      writer.uint32(40).bool(message.reliable);
-    }
-    return writer;
-  },
-
-  decode(input: _m0.Reader | Uint8Array, length?: number): MatchData {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseMatchData();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
-          message.match_id = reader.string();
-          break;
-        case 2:
-          message.presence = UserPresence.decode(reader, reader.uint32());
-          break;
-        case 3:
-          message.op_code = longToNumber(reader.int64() as Long);
-          break;
-        case 4:
-          message.data = reader.bytes();
-          break;
-        case 5:
-          message.reliable = reader.bool();
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
-      }
-    }
-    return message;
-  },
-
-  fromJSON(object: any): MatchData {
-    return {
-      match_id: isSet(object.match_id) ? String(object.match_id) : "",
-      presence: isSet(object.presence) ? UserPresence.fromJSON(object.presence) : undefined,
-      op_code: isSet(object.op_code) ? Number(object.op_code) : 0,
-      data: isSet(object.data) ? bytesFromBase64(object.data) : new Uint8Array(),
-      reliable: isSet(object.reliable) ? Boolean(object.reliable) : false,
-    };
-  },
-
-  toJSON(message: MatchData): unknown {
-    const obj: any = {};
-    message.match_id !== undefined && (obj.match_id = message.match_id);
-    message.presence !== undefined &&
-      (obj.presence = message.presence ? UserPresence.toJSON(message.presence) : undefined);
-    message.op_code !== undefined && (obj.op_code = Math.round(message.op_code));
-    message.data !== undefined &&
-      (obj.data = base64FromBytes(message.data !== undefined ? message.data : new Uint8Array()));
-    message.reliable !== undefined && (obj.reliable = message.reliable);
-    return obj;
-  },
-
-  create<I extends Exact<DeepPartial<MatchData>, I>>(base?: I): MatchData {
-    return MatchData.fromPartial(base ?? {});
-  },
-
-  fromPartial<I extends Exact<DeepPartial<MatchData>, I>>(object: I): MatchData {
-    const message = createBaseMatchData();
-    message.match_id = object.match_id ?? "";
-    message.presence = (object.presence !== undefined && object.presence !== null)
-      ? UserPresence.fromPartial(object.presence)
-      : undefined;
-    message.op_code = object.op_code ?? 0;
-    message.data = object.data ?? new Uint8Array();
-    message.reliable = object.reliable ?? false;
-    return message;
-  },
-};
-
-function createBaseMatchDataSend(): MatchDataSend {
-  return { match_id: "", op_code: 0, data: new Uint8Array(), presences: [], reliable: false };
-}
-
-export const MatchDataSend = {
-  encode(message: MatchDataSend, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.match_id !== "") {
-      writer.uint32(10).string(message.match_id);
-    }
-    if (message.op_code !== 0) {
-      writer.uint32(16).int64(message.op_code);
-    }
-    if (message.data.length !== 0) {
-      writer.uint32(26).bytes(message.data);
-    }
-    for (const v of message.presences) {
-      UserPresence.encode(v!, writer.uint32(34).fork()).ldelim();
-    }
-    if (message.reliable === true) {
-      writer.uint32(40).bool(message.reliable);
-    }
-    return writer;
-  },
-
-  decode(input: _m0.Reader | Uint8Array, length?: number): MatchDataSend {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseMatchDataSend();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
-          message.match_id = reader.string();
-          break;
-        case 2:
-          message.op_code = longToNumber(reader.int64() as Long);
-          break;
-        case 3:
-          message.data = reader.bytes();
-          break;
-        case 4:
-          message.presences.push(UserPresence.decode(reader, reader.uint32()));
-          break;
-        case 5:
-          message.reliable = reader.bool();
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
-      }
-    }
-    return message;
-  },
-
-  fromJSON(object: any): MatchDataSend {
-    return {
-      match_id: isSet(object.match_id) ? String(object.match_id) : "",
-      op_code: isSet(object.op_code) ? Number(object.op_code) : 0,
-      data: isSet(object.data) ? bytesFromBase64(object.data) : new Uint8Array(),
-      presences: Array.isArray(object?.presences) ? object.presences.map((e: any) => UserPresence.fromJSON(e)) : [],
-      reliable: isSet(object.reliable) ? Boolean(object.reliable) : false,
-    };
-  },
-
-  toJSON(message: MatchDataSend): unknown {
-    const obj: any = {};
-    message.match_id !== undefined && (obj.match_id = message.match_id);
-    message.op_code !== undefined && (obj.op_code = Math.round(message.op_code));
-    message.data !== undefined &&
-      (obj.data = base64FromBytes(message.data !== undefined ? message.data : new Uint8Array()));
-    if (message.presences) {
-      obj.presences = message.presences.map((e) => e ? UserPresence.toJSON(e) : undefined);
-    } else {
-      obj.presences = [];
-    }
-    message.reliable !== undefined && (obj.reliable = message.reliable);
-    return obj;
-  },
-
-  create<I extends Exact<DeepPartial<MatchDataSend>, I>>(base?: I): MatchDataSend {
-    return MatchDataSend.fromPartial(base ?? {});
-  },
-
-  fromPartial<I extends Exact<DeepPartial<MatchDataSend>, I>>(object: I): MatchDataSend {
-    const message = createBaseMatchDataSend();
-    message.match_id = object.match_id ?? "";
-    message.op_code = object.op_code ?? 0;
-    message.data = object.data ?? new Uint8Array();
-    message.presences = object.presences?.map((e) => UserPresence.fromPartial(e)) || [];
-    message.reliable = object.reliable ?? false;
-    return message;
-  },
-};
-
-function createBaseMatchJoin(): MatchJoin {
-  return { match_id: undefined, token: undefined, metadata: {} };
-}
-
-export const MatchJoin = {
-  encode(message: MatchJoin, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.match_id !== undefined) {
-      writer.uint32(10).string(message.match_id);
-    }
-    if (message.token !== undefined) {
-      writer.uint32(18).string(message.token);
-    }
-    Object.entries(message.metadata).forEach(([key, value]) => {
-      MatchJoin_MetadataEntry.encode({ key: key as any, value }, writer.uint32(26).fork()).ldelim();
-    });
-    return writer;
-  },
-
-  decode(input: _m0.Reader | Uint8Array, length?: number): MatchJoin {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseMatchJoin();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
-          message.match_id = reader.string();
-          break;
-        case 2:
-          message.token = reader.string();
-          break;
-        case 3:
-          const entry3 = MatchJoin_MetadataEntry.decode(reader, reader.uint32());
-          if (entry3.value !== undefined) {
-            message.metadata[entry3.key] = entry3.value;
-          }
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
-      }
-    }
-    return message;
-  },
-
-  fromJSON(object: any): MatchJoin {
-    return {
-      match_id: isSet(object.match_id) ? String(object.match_id) : undefined,
-      token: isSet(object.token) ? String(object.token) : undefined,
-      metadata: isObject(object.metadata)
-        ? Object.entries(object.metadata).reduce<{ [key: string]: string }>((acc, [key, value]) => {
-          acc[key] = String(value);
-          return acc;
-        }, {})
-        : {},
-    };
-  },
-
-  toJSON(message: MatchJoin): unknown {
-    const obj: any = {};
-    message.match_id !== undefined && (obj.match_id = message.match_id);
-    message.token !== undefined && (obj.token = message.token);
-    obj.metadata = {};
-    if (message.metadata) {
-      Object.entries(message.metadata).forEach(([k, v]) => {
-        obj.metadata[k] = v;
-      });
-    }
-    return obj;
-  },
-
-  create<I extends Exact<DeepPartial<MatchJoin>, I>>(base?: I): MatchJoin {
-    return MatchJoin.fromPartial(base ?? {});
-  },
-
-  fromPartial<I extends Exact<DeepPartial<MatchJoin>, I>>(object: I): MatchJoin {
-    const message = createBaseMatchJoin();
-    message.match_id = object.match_id ?? undefined;
-    message.token = object.token ?? undefined;
-    message.metadata = Object.entries(object.metadata ?? {}).reduce<{ [key: string]: string }>((acc, [key, value]) => {
-      if (value !== undefined) {
-        acc[key] = String(value);
-      }
-      return acc;
-    }, {});
-    return message;
-  },
-};
-
-function createBaseMatchJoin_MetadataEntry(): MatchJoin_MetadataEntry {
-  return { key: "", value: "" };
-}
-
-export const MatchJoin_MetadataEntry = {
-  encode(message: MatchJoin_MetadataEntry, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.key !== "") {
-      writer.uint32(10).string(message.key);
-    }
-    if (message.value !== "") {
-      writer.uint32(18).string(message.value);
-    }
-    return writer;
-  },
-
-  decode(input: _m0.Reader | Uint8Array, length?: number): MatchJoin_MetadataEntry {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseMatchJoin_MetadataEntry();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
-          message.key = reader.string();
-          break;
-        case 2:
-          message.value = reader.string();
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
-      }
-    }
-    return message;
-  },
-
-  fromJSON(object: any): MatchJoin_MetadataEntry {
-    return { key: isSet(object.key) ? String(object.key) : "", value: isSet(object.value) ? String(object.value) : "" };
-  },
-
-  toJSON(message: MatchJoin_MetadataEntry): unknown {
-    const obj: any = {};
-    message.key !== undefined && (obj.key = message.key);
-    message.value !== undefined && (obj.value = message.value);
-    return obj;
-  },
-
-  create<I extends Exact<DeepPartial<MatchJoin_MetadataEntry>, I>>(base?: I): MatchJoin_MetadataEntry {
-    return MatchJoin_MetadataEntry.fromPartial(base ?? {});
-  },
-
-  fromPartial<I extends Exact<DeepPartial<MatchJoin_MetadataEntry>, I>>(object: I): MatchJoin_MetadataEntry {
-    const message = createBaseMatchJoin_MetadataEntry();
-    message.key = object.key ?? "";
-    message.value = object.value ?? "";
-    return message;
-  },
-};
-
-function createBaseMatchLeave(): MatchLeave {
-  return { match_id: "" };
-}
-
-export const MatchLeave = {
-  encode(message: MatchLeave, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.match_id !== "") {
-      writer.uint32(10).string(message.match_id);
-    }
-    return writer;
-  },
-
-  decode(input: _m0.Reader | Uint8Array, length?: number): MatchLeave {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseMatchLeave();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
-          message.match_id = reader.string();
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
-      }
-    }
-    return message;
-  },
-
-  fromJSON(object: any): MatchLeave {
-    return { match_id: isSet(object.match_id) ? String(object.match_id) : "" };
-  },
-
-  toJSON(message: MatchLeave): unknown {
-    const obj: any = {};
-    message.match_id !== undefined && (obj.match_id = message.match_id);
-    return obj;
-  },
-
-  create<I extends Exact<DeepPartial<MatchLeave>, I>>(base?: I): MatchLeave {
-    return MatchLeave.fromPartial(base ?? {});
-  },
-
-  fromPartial<I extends Exact<DeepPartial<MatchLeave>, I>>(object: I): MatchLeave {
-    const message = createBaseMatchLeave();
-    message.match_id = object.match_id ?? "";
-    return message;
-  },
-};
-
-function createBaseMatchPresenceEvent(): MatchPresenceEvent {
-  return { match_id: "", joins: [], leaves: [] };
-}
-
-export const MatchPresenceEvent = {
-  encode(message: MatchPresenceEvent, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.match_id !== "") {
-      writer.uint32(10).string(message.match_id);
-    }
-    for (const v of message.joins) {
-      UserPresence.encode(v!, writer.uint32(18).fork()).ldelim();
-    }
-    for (const v of message.leaves) {
-      UserPresence.encode(v!, writer.uint32(26).fork()).ldelim();
-    }
-    return writer;
-  },
-
-  decode(input: _m0.Reader | Uint8Array, length?: number): MatchPresenceEvent {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseMatchPresenceEvent();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
-          message.match_id = reader.string();
-          break;
-        case 2:
-          message.joins.push(UserPresence.decode(reader, reader.uint32()));
-          break;
-        case 3:
-          message.leaves.push(UserPresence.decode(reader, reader.uint32()));
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
-      }
-    }
-    return message;
-  },
-
-  fromJSON(object: any): MatchPresenceEvent {
-    return {
-      match_id: isSet(object.match_id) ? String(object.match_id) : "",
-      joins: Array.isArray(object?.joins) ? object.joins.map((e: any) => UserPresence.fromJSON(e)) : [],
-      leaves: Array.isArray(object?.leaves) ? object.leaves.map((e: any) => UserPresence.fromJSON(e)) : [],
-    };
-  },
-
-  toJSON(message: MatchPresenceEvent): unknown {
-    const obj: any = {};
-    message.match_id !== undefined && (obj.match_id = message.match_id);
-    if (message.joins) {
-      obj.joins = message.joins.map((e) => e ? UserPresence.toJSON(e) : undefined);
-    } else {
-      obj.joins = [];
-    }
-    if (message.leaves) {
-      obj.leaves = message.leaves.map((e) => e ? UserPresence.toJSON(e) : undefined);
-    } else {
-      obj.leaves = [];
-    }
-    return obj;
-  },
-
-  create<I extends Exact<DeepPartial<MatchPresenceEvent>, I>>(base?: I): MatchPresenceEvent {
-    return MatchPresenceEvent.fromPartial(base ?? {});
-  },
-
-  fromPartial<I extends Exact<DeepPartial<MatchPresenceEvent>, I>>(object: I): MatchPresenceEvent {
-    const message = createBaseMatchPresenceEvent();
-    message.match_id = object.match_id ?? "";
-    message.joins = object.joins?.map((e) => UserPresence.fromPartial(e)) || [];
-    message.leaves = object.leaves?.map((e) => UserPresence.fromPartial(e)) || [];
-    return message;
-  },
-};
-
-function createBaseMatchmakerAdd(): MatchmakerAdd {
-  return {
-    min_count: 0,
-    max_count: 0,
-    query: "",
-    string_properties: {},
-    numeric_properties: {},
-    count_multiple: undefined,
-  };
-}
-
-export const MatchmakerAdd = {
-  encode(message: MatchmakerAdd, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.min_count !== 0) {
-      writer.uint32(8).int32(message.min_count);
-    }
-    if (message.max_count !== 0) {
-      writer.uint32(16).int32(message.max_count);
-    }
-    if (message.query !== "") {
-      writer.uint32(26).string(message.query);
-    }
-    Object.entries(message.string_properties).forEach(([key, value]) => {
-      MatchmakerAdd_StringPropertiesEntry.encode({ key: key as any, value }, writer.uint32(34).fork()).ldelim();
-    });
-    Object.entries(message.numeric_properties).forEach(([key, value]) => {
-      MatchmakerAdd_NumericPropertiesEntry.encode({ key: key as any, value }, writer.uint32(42).fork()).ldelim();
-    });
-    if (message.count_multiple !== undefined) {
-      Int32Value.encode({ value: message.count_multiple! }, writer.uint32(50).fork()).ldelim();
-    }
-    return writer;
-  },
-
-  decode(input: _m0.Reader | Uint8Array, length?: number): MatchmakerAdd {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseMatchmakerAdd();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
-          message.min_count = reader.int32();
-          break;
-        case 2:
-          message.max_count = reader.int32();
-          break;
-        case 3:
-          message.query = reader.string();
-          break;
-        case 4:
-          const entry4 = MatchmakerAdd_StringPropertiesEntry.decode(reader, reader.uint32());
-          if (entry4.value !== undefined) {
-            message.string_properties[entry4.key] = entry4.value;
-          }
-          break;
-        case 5:
-          const entry5 = MatchmakerAdd_NumericPropertiesEntry.decode(reader, reader.uint32());
-          if (entry5.value !== undefined) {
-            message.numeric_properties[entry5.key] = entry5.value;
-          }
-          break;
-        case 6:
-          message.count_multiple = Int32Value.decode(reader, reader.uint32()).value;
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
-      }
-    }
-    return message;
-  },
-
-  fromJSON(object: any): MatchmakerAdd {
-    return {
-      min_count: isSet(object.min_count) ? Number(object.min_count) : 0,
-      max_count: isSet(object.max_count) ? Number(object.max_count) : 0,
-      query: isSet(object.query) ? String(object.query) : "",
-      string_properties: isObject(object.string_properties)
-        ? Object.entries(object.string_properties).reduce<{ [key: string]: string }>((acc, [key, value]) => {
-          acc[key] = String(value);
-          return acc;
-        }, {})
-        : {},
-      numeric_properties: isObject(object.numeric_properties)
-        ? Object.entries(object.numeric_properties).reduce<{ [key: string]: number }>((acc, [key, value]) => {
-          acc[key] = Number(value);
-          return acc;
-        }, {})
-        : {},
-      count_multiple: isSet(object.count_multiple) ? Number(object.count_multiple) : undefined,
-    };
-  },
-
-  toJSON(message: MatchmakerAdd): unknown {
-    const obj: any = {};
-    message.min_count !== undefined && (obj.min_count = Math.round(message.min_count));
-    message.max_count !== undefined && (obj.max_count = Math.round(message.max_count));
-    message.query !== undefined && (obj.query = message.query);
-    obj.string_properties = {};
-    if (message.string_properties) {
-      Object.entries(message.string_properties).forEach(([k, v]) => {
-        obj.string_properties[k] = v;
-      });
-    }
-    obj.numeric_properties = {};
-    if (message.numeric_properties) {
-      Object.entries(message.numeric_properties).forEach(([k, v]) => {
-        obj.numeric_properties[k] = v;
-      });
-    }
-    message.count_multiple !== undefined && (obj.count_multiple = message.count_multiple);
-    return obj;
-  },
-
-  create<I extends Exact<DeepPartial<MatchmakerAdd>, I>>(base?: I): MatchmakerAdd {
-    return MatchmakerAdd.fromPartial(base ?? {});
-  },
-
-  fromPartial<I extends Exact<DeepPartial<MatchmakerAdd>, I>>(object: I): MatchmakerAdd {
-    const message = createBaseMatchmakerAdd();
-    message.min_count = object.min_count ?? 0;
-    message.max_count = object.max_count ?? 0;
-    message.query = object.query ?? "";
-    message.string_properties = Object.entries(object.string_properties ?? {}).reduce<{ [key: string]: string }>(
-      (acc, [key, value]) => {
-        if (value !== undefined) {
-          acc[key] = String(value);
-        }
-        return acc;
-      },
-      {},
-    );
-    message.numeric_properties = Object.entries(object.numeric_properties ?? {}).reduce<{ [key: string]: number }>(
-      (acc, [key, value]) => {
-        if (value !== undefined) {
-          acc[key] = Number(value);
-        }
-        return acc;
-      },
-      {},
-    );
-    message.count_multiple = object.count_multiple ?? undefined;
-    return message;
-  },
-};
-
-function createBaseMatchmakerAdd_StringPropertiesEntry(): MatchmakerAdd_StringPropertiesEntry {
-  return { key: "", value: "" };
-}
-
-export const MatchmakerAdd_StringPropertiesEntry = {
-  encode(message: MatchmakerAdd_StringPropertiesEntry, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.key !== "") {
-      writer.uint32(10).string(message.key);
-    }
-    if (message.value !== "") {
-      writer.uint32(18).string(message.value);
-    }
-    return writer;
-  },
-
-  decode(input: _m0.Reader | Uint8Array, length?: number): MatchmakerAdd_StringPropertiesEntry {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseMatchmakerAdd_StringPropertiesEntry();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
-          message.key = reader.string();
-          break;
-        case 2:
-          message.value = reader.string();
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
-      }
-    }
-    return message;
-  },
-
-  fromJSON(object: any): MatchmakerAdd_StringPropertiesEntry {
-    return { key: isSet(object.key) ? String(object.key) : "", value: isSet(object.value) ? String(object.value) : "" };
-  },
-
-  toJSON(message: MatchmakerAdd_StringPropertiesEntry): unknown {
-    const obj: any = {};
-    message.key !== undefined && (obj.key = message.key);
-    message.value !== undefined && (obj.value = message.value);
-    return obj;
-  },
-
-  create<I extends Exact<DeepPartial<MatchmakerAdd_StringPropertiesEntry>, I>>(
-    base?: I,
-  ): MatchmakerAdd_StringPropertiesEntry {
-    return MatchmakerAdd_StringPropertiesEntry.fromPartial(base ?? {});
-  },
-
-  fromPartial<I extends Exact<DeepPartial<MatchmakerAdd_StringPropertiesEntry>, I>>(
-    object: I,
-  ): MatchmakerAdd_StringPropertiesEntry {
-    const message = createBaseMatchmakerAdd_StringPropertiesEntry();
-    message.key = object.key ?? "";
-    message.value = object.value ?? "";
-    return message;
-  },
-};
-
-function createBaseMatchmakerAdd_NumericPropertiesEntry(): MatchmakerAdd_NumericPropertiesEntry {
-  return { key: "", value: 0 };
-}
-
-export const MatchmakerAdd_NumericPropertiesEntry = {
-  encode(message: MatchmakerAdd_NumericPropertiesEntry, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.key !== "") {
-      writer.uint32(10).string(message.key);
-    }
-    if (message.value !== 0) {
-      writer.uint32(17).double(message.value);
-    }
-    return writer;
-  },
-
-  decode(input: _m0.Reader | Uint8Array, length?: number): MatchmakerAdd_NumericPropertiesEntry {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseMatchmakerAdd_NumericPropertiesEntry();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
-          message.key = reader.string();
-          break;
-        case 2:
-          message.value = reader.double();
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
-      }
-    }
-    return message;
-  },
-
-  fromJSON(object: any): MatchmakerAdd_NumericPropertiesEntry {
-    return { key: isSet(object.key) ? String(object.key) : "", value: isSet(object.value) ? Number(object.value) : 0 };
-  },
-
-  toJSON(message: MatchmakerAdd_NumericPropertiesEntry): unknown {
-    const obj: any = {};
-    message.key !== undefined && (obj.key = message.key);
-    message.value !== undefined && (obj.value = message.value);
-    return obj;
-  },
-
-  create<I extends Exact<DeepPartial<MatchmakerAdd_NumericPropertiesEntry>, I>>(
-    base?: I,
-  ): MatchmakerAdd_NumericPropertiesEntry {
-    return MatchmakerAdd_NumericPropertiesEntry.fromPartial(base ?? {});
-  },
-
-  fromPartial<I extends Exact<DeepPartial<MatchmakerAdd_NumericPropertiesEntry>, I>>(
-    object: I,
-  ): MatchmakerAdd_NumericPropertiesEntry {
-    const message = createBaseMatchmakerAdd_NumericPropertiesEntry();
-    message.key = object.key ?? "";
-    message.value = object.value ?? 0;
-    return message;
-  },
-};
-
-function createBaseMatchmakerMatched(): MatchmakerMatched {
-  return { ticket: "", match_id: undefined, token: undefined, users: [], self: undefined };
-}
-
-export const MatchmakerMatched = {
-  encode(message: MatchmakerMatched, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.ticket !== "") {
-      writer.uint32(10).string(message.ticket);
-    }
-    if (message.match_id !== undefined) {
-      writer.uint32(18).string(message.match_id);
-    }
-    if (message.token !== undefined) {
-      writer.uint32(26).string(message.token);
-    }
-    for (const v of message.users) {
-      MatchmakerMatched_MatchmakerUser.encode(v!, writer.uint32(34).fork()).ldelim();
-    }
-    if (message.self !== undefined) {
-      MatchmakerMatched_MatchmakerUser.encode(message.self, writer.uint32(42).fork()).ldelim();
-    }
-    return writer;
-  },
-
-  decode(input: _m0.Reader | Uint8Array, length?: number): MatchmakerMatched {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseMatchmakerMatched();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
-          message.ticket = reader.string();
-          break;
-        case 2:
-          message.match_id = reader.string();
-          break;
-        case 3:
-          message.token = reader.string();
-          break;
-        case 4:
-          message.users.push(MatchmakerMatched_MatchmakerUser.decode(reader, reader.uint32()));
-          break;
-        case 5:
-          message.self = MatchmakerMatched_MatchmakerUser.decode(reader, reader.uint32());
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
-      }
-    }
-    return message;
-  },
-
-  fromJSON(object: any): MatchmakerMatched {
-    return {
-      ticket: isSet(object.ticket) ? String(object.ticket) : "",
-      match_id: isSet(object.match_id) ? String(object.match_id) : undefined,
-      token: isSet(object.token) ? String(object.token) : undefined,
-      users: Array.isArray(object?.users)
-        ? object.users.map((e: any) => MatchmakerMatched_MatchmakerUser.fromJSON(e))
-        : [],
-      self: isSet(object.self) ? MatchmakerMatched_MatchmakerUser.fromJSON(object.self) : undefined,
-    };
-  },
-
-  toJSON(message: MatchmakerMatched): unknown {
-    const obj: any = {};
-    message.ticket !== undefined && (obj.ticket = message.ticket);
-    message.match_id !== undefined && (obj.match_id = message.match_id);
-    message.token !== undefined && (obj.token = message.token);
-    if (message.users) {
-      obj.users = message.users.map((e) => e ? MatchmakerMatched_MatchmakerUser.toJSON(e) : undefined);
-    } else {
-      obj.users = [];
-    }
-    message.self !== undefined &&
-      (obj.self = message.self ? MatchmakerMatched_MatchmakerUser.toJSON(message.self) : undefined);
-    return obj;
-  },
-
-  create<I extends Exact<DeepPartial<MatchmakerMatched>, I>>(base?: I): MatchmakerMatched {
-    return MatchmakerMatched.fromPartial(base ?? {});
-  },
-
-  fromPartial<I extends Exact<DeepPartial<MatchmakerMatched>, I>>(object: I): MatchmakerMatched {
-    const message = createBaseMatchmakerMatched();
-    message.ticket = object.ticket ?? "";
-    message.match_id = object.match_id ?? undefined;
-    message.token = object.token ?? undefined;
-    message.users = object.users?.map((e) => MatchmakerMatched_MatchmakerUser.fromPartial(e)) || [];
-    message.self = (object.self !== undefined && object.self !== null)
-      ? MatchmakerMatched_MatchmakerUser.fromPartial(object.self)
-      : undefined;
-    return message;
-  },
-};
-
-function createBaseMatchmakerMatched_MatchmakerUser(): MatchmakerMatched_MatchmakerUser {
-  return { presence: undefined, party_id: "", string_properties: {}, numeric_properties: {} };
-}
-
-export const MatchmakerMatched_MatchmakerUser = {
-  encode(message: MatchmakerMatched_MatchmakerUser, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.presence !== undefined) {
-      UserPresence.encode(message.presence, writer.uint32(10).fork()).ldelim();
-    }
-    if (message.party_id !== "") {
-      writer.uint32(18).string(message.party_id);
-    }
-    Object.entries(message.string_properties).forEach(([key, value]) => {
-      MatchmakerMatched_MatchmakerUser_StringPropertiesEntry.encode(
-        { key: key as any, value },
-        writer.uint32(42).fork(),
-      ).ldelim();
-    });
-    Object.entries(message.numeric_properties).forEach(([key, value]) => {
-      MatchmakerMatched_MatchmakerUser_NumericPropertiesEntry.encode(
-        { key: key as any, value },
-        writer.uint32(50).fork(),
-      ).ldelim();
-    });
-    return writer;
-  },
-
-  decode(input: _m0.Reader | Uint8Array, length?: number): MatchmakerMatched_MatchmakerUser {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseMatchmakerMatched_MatchmakerUser();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
-          message.presence = UserPresence.decode(reader, reader.uint32());
-          break;
-        case 2:
-          message.party_id = reader.string();
-          break;
-        case 5:
-          const entry5 = MatchmakerMatched_MatchmakerUser_StringPropertiesEntry.decode(reader, reader.uint32());
-          if (entry5.value !== undefined) {
-            message.string_properties[entry5.key] = entry5.value;
-          }
-          break;
-        case 6:
-          const entry6 = MatchmakerMatched_MatchmakerUser_NumericPropertiesEntry.decode(reader, reader.uint32());
-          if (entry6.value !== undefined) {
-            message.numeric_properties[entry6.key] = entry6.value;
-          }
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
-      }
-    }
-    return message;
-  },
-
-  fromJSON(object: any): MatchmakerMatched_MatchmakerUser {
-    return {
-      presence: isSet(object.presence) ? UserPresence.fromJSON(object.presence) : undefined,
-      party_id: isSet(object.party_id) ? String(object.party_id) : "",
-      string_properties: isObject(object.string_properties)
-        ? Object.entries(object.string_properties).reduce<{ [key: string]: string }>((acc, [key, value]) => {
-          acc[key] = String(value);
-          return acc;
-        }, {})
-        : {},
-      numeric_properties: isObject(object.numeric_properties)
-        ? Object.entries(object.numeric_properties).reduce<{ [key: string]: number }>((acc, [key, value]) => {
-          acc[key] = Number(value);
-          return acc;
-        }, {})
-        : {},
-    };
-  },
-
-  toJSON(message: MatchmakerMatched_MatchmakerUser): unknown {
-    const obj: any = {};
-    message.presence !== undefined &&
-      (obj.presence = message.presence ? UserPresence.toJSON(message.presence) : undefined);
-    message.party_id !== undefined && (obj.party_id = message.party_id);
-    obj.string_properties = {};
-    if (message.string_properties) {
-      Object.entries(message.string_properties).forEach(([k, v]) => {
-        obj.string_properties[k] = v;
-      });
-    }
-    obj.numeric_properties = {};
-    if (message.numeric_properties) {
-      Object.entries(message.numeric_properties).forEach(([k, v]) => {
-        obj.numeric_properties[k] = v;
-      });
-    }
-    return obj;
-  },
-
-  create<I extends Exact<DeepPartial<MatchmakerMatched_MatchmakerUser>, I>>(
-    base?: I,
-  ): MatchmakerMatched_MatchmakerUser {
-    return MatchmakerMatched_MatchmakerUser.fromPartial(base ?? {});
-  },
-
-  fromPartial<I extends Exact<DeepPartial<MatchmakerMatched_MatchmakerUser>, I>>(
-    object: I,
-  ): MatchmakerMatched_MatchmakerUser {
-    const message = createBaseMatchmakerMatched_MatchmakerUser();
-    message.presence = (object.presence !== undefined && object.presence !== null)
-      ? UserPresence.fromPartial(object.presence)
-      : undefined;
-    message.party_id = object.party_id ?? "";
-    message.string_properties = Object.entries(object.string_properties ?? {}).reduce<{ [key: string]: string }>(
-      (acc, [key, value]) => {
-        if (value !== undefined) {
-          acc[key] = String(value);
-        }
-        return acc;
-      },
-      {},
-    );
-    message.numeric_properties = Object.entries(object.numeric_properties ?? {}).reduce<{ [key: string]: number }>(
-      (acc, [key, value]) => {
-        if (value !== undefined) {
-          acc[key] = Number(value);
-        }
-        return acc;
-      },
-      {},
-    );
-    return message;
-  },
-};
-
-function createBaseMatchmakerMatched_MatchmakerUser_StringPropertiesEntry(): MatchmakerMatched_MatchmakerUser_StringPropertiesEntry {
-  return { key: "", value: "" };
-}
-
-export const MatchmakerMatched_MatchmakerUser_StringPropertiesEntry = {
-  encode(
-    message: MatchmakerMatched_MatchmakerUser_StringPropertiesEntry,
-    writer: _m0.Writer = _m0.Writer.create(),
-  ): _m0.Writer {
-    if (message.key !== "") {
-      writer.uint32(10).string(message.key);
-    }
-    if (message.value !== "") {
-      writer.uint32(18).string(message.value);
-    }
-    return writer;
-  },
-
-  decode(input: _m0.Reader | Uint8Array, length?: number): MatchmakerMatched_MatchmakerUser_StringPropertiesEntry {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseMatchmakerMatched_MatchmakerUser_StringPropertiesEntry();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
-          message.key = reader.string();
-          break;
-        case 2:
-          message.value = reader.string();
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
-      }
-    }
-    return message;
-  },
-
-  fromJSON(object: any): MatchmakerMatched_MatchmakerUser_StringPropertiesEntry {
-    return { key: isSet(object.key) ? String(object.key) : "", value: isSet(object.value) ? String(object.value) : "" };
-  },
-
-  toJSON(message: MatchmakerMatched_MatchmakerUser_StringPropertiesEntry): unknown {
-    const obj: any = {};
-    message.key !== undefined && (obj.key = message.key);
-    message.value !== undefined && (obj.value = message.value);
-    return obj;
-  },
-
-  create<I extends Exact<DeepPartial<MatchmakerMatched_MatchmakerUser_StringPropertiesEntry>, I>>(
-    base?: I,
-  ): MatchmakerMatched_MatchmakerUser_StringPropertiesEntry {
-    return MatchmakerMatched_MatchmakerUser_StringPropertiesEntry.fromPartial(base ?? {});
-  },
-
-  fromPartial<I extends Exact<DeepPartial<MatchmakerMatched_MatchmakerUser_StringPropertiesEntry>, I>>(
-    object: I,
-  ): MatchmakerMatched_MatchmakerUser_StringPropertiesEntry {
-    const message = createBaseMatchmakerMatched_MatchmakerUser_StringPropertiesEntry();
-    message.key = object.key ?? "";
-    message.value = object.value ?? "";
-    return message;
-  },
-};
-
-function createBaseMatchmakerMatched_MatchmakerUser_NumericPropertiesEntry(): MatchmakerMatched_MatchmakerUser_NumericPropertiesEntry {
-  return { key: "", value: 0 };
-}
-
-export const MatchmakerMatched_MatchmakerUser_NumericPropertiesEntry = {
-  encode(
-    message: MatchmakerMatched_MatchmakerUser_NumericPropertiesEntry,
-    writer: _m0.Writer = _m0.Writer.create(),
-  ): _m0.Writer {
-    if (message.key !== "") {
-      writer.uint32(10).string(message.key);
-    }
-    if (message.value !== 0) {
-      writer.uint32(17).double(message.value);
-    }
-    return writer;
-  },
-
-  decode(input: _m0.Reader | Uint8Array, length?: number): MatchmakerMatched_MatchmakerUser_NumericPropertiesEntry {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseMatchmakerMatched_MatchmakerUser_NumericPropertiesEntry();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
-          message.key = reader.string();
-          break;
-        case 2:
-          message.value = reader.double();
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
-      }
-    }
-    return message;
-  },
-
-  fromJSON(object: any): MatchmakerMatched_MatchmakerUser_NumericPropertiesEntry {
-    return { key: isSet(object.key) ? String(object.key) : "", value: isSet(object.value) ? Number(object.value) : 0 };
-  },
-
-  toJSON(message: MatchmakerMatched_MatchmakerUser_NumericPropertiesEntry): unknown {
-    const obj: any = {};
-    message.key !== undefined && (obj.key = message.key);
-    message.value !== undefined && (obj.value = message.value);
-    return obj;
-  },
-
-  create<I extends Exact<DeepPartial<MatchmakerMatched_MatchmakerUser_NumericPropertiesEntry>, I>>(
-    base?: I,
-  ): MatchmakerMatched_MatchmakerUser_NumericPropertiesEntry {
-    return MatchmakerMatched_MatchmakerUser_NumericPropertiesEntry.fromPartial(base ?? {});
-  },
-
-  fromPartial<I extends Exact<DeepPartial<MatchmakerMatched_MatchmakerUser_NumericPropertiesEntry>, I>>(
-    object: I,
-  ): MatchmakerMatched_MatchmakerUser_NumericPropertiesEntry {
-    const message = createBaseMatchmakerMatched_MatchmakerUser_NumericPropertiesEntry();
-    message.key = object.key ?? "";
-    message.value = object.value ?? 0;
-    return message;
-  },
-};
-
-function createBaseMatchmakerRemove(): MatchmakerRemove {
-  return { ticket: "" };
-}
-
-export const MatchmakerRemove = {
-  encode(message: MatchmakerRemove, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.ticket !== "") {
-      writer.uint32(10).string(message.ticket);
-    }
-    return writer;
-  },
-
-  decode(input: _m0.Reader | Uint8Array, length?: number): MatchmakerRemove {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseMatchmakerRemove();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
-          message.ticket = reader.string();
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
-      }
-    }
-    return message;
-  },
-
-  fromJSON(object: any): MatchmakerRemove {
-    return { ticket: isSet(object.ticket) ? String(object.ticket) : "" };
-  },
-
-  toJSON(message: MatchmakerRemove): unknown {
-    const obj: any = {};
-    message.ticket !== undefined && (obj.ticket = message.ticket);
-    return obj;
-  },
-
-  create<I extends Exact<DeepPartial<MatchmakerRemove>, I>>(base?: I): MatchmakerRemove {
-    return MatchmakerRemove.fromPartial(base ?? {});
-  },
-
-  fromPartial<I extends Exact<DeepPartial<MatchmakerRemove>, I>>(object: I): MatchmakerRemove {
-    const message = createBaseMatchmakerRemove();
-    message.ticket = object.ticket ?? "";
-    return message;
-  },
-};
-
-function createBaseMatchmakerTicket(): MatchmakerTicket {
-  return { ticket: "" };
-}
-
-export const MatchmakerTicket = {
-  encode(message: MatchmakerTicket, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.ticket !== "") {
-      writer.uint32(10).string(message.ticket);
-    }
-    return writer;
-  },
-
-  decode(input: _m0.Reader | Uint8Array, length?: number): MatchmakerTicket {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseMatchmakerTicket();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
-          message.ticket = reader.string();
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
-      }
-    }
-    return message;
-  },
-
-  fromJSON(object: any): MatchmakerTicket {
-    return { ticket: isSet(object.ticket) ? String(object.ticket) : "" };
-  },
-
-  toJSON(message: MatchmakerTicket): unknown {
-    const obj: any = {};
-    message.ticket !== undefined && (obj.ticket = message.ticket);
-    return obj;
-  },
-
-  create<I extends Exact<DeepPartial<MatchmakerTicket>, I>>(base?: I): MatchmakerTicket {
-    return MatchmakerTicket.fromPartial(base ?? {});
-  },
-
-  fromPartial<I extends Exact<DeepPartial<MatchmakerTicket>, I>>(object: I): MatchmakerTicket {
-    const message = createBaseMatchmakerTicket();
-    message.ticket = object.ticket ?? "";
     return message;
   },
 };
@@ -5795,7 +4582,7 @@ export const StatusPresenceEvent = {
 };
 
 function createBaseLastSeenMessageEvent(): LastSeenMessageEvent {
-  return { channel_id: "", message_id: "" };
+  return { channel_id: "", channel_label: "", message_id: "", mode: 0 };
 }
 
 export const LastSeenMessageEvent = {
@@ -5803,8 +4590,14 @@ export const LastSeenMessageEvent = {
     if (message.channel_id !== "") {
       writer.uint32(10).string(message.channel_id);
     }
+    if (message.channel_label !== "") {
+      writer.uint32(18).string(message.channel_label);
+    }
     if (message.message_id !== "") {
-      writer.uint32(18).string(message.message_id);
+      writer.uint32(26).string(message.message_id);
+    }
+    if (message.mode !== 0) {
+      writer.uint32(32).int32(message.mode);
     }
     return writer;
   },
@@ -5820,7 +4613,13 @@ export const LastSeenMessageEvent = {
           message.channel_id = reader.string();
           break;
         case 2:
+          message.channel_label = reader.string();
+          break;
+        case 3:
           message.message_id = reader.string();
+          break;
+        case 4:
+          message.mode = reader.int32();
           break;
         default:
           reader.skipType(tag & 7);
@@ -5833,14 +4632,18 @@ export const LastSeenMessageEvent = {
   fromJSON(object: any): LastSeenMessageEvent {
     return {
       channel_id: isSet(object.channel_id) ? String(object.channel_id) : "",
+      channel_label: isSet(object.channel_label) ? String(object.channel_label) : "",
       message_id: isSet(object.message_id) ? String(object.message_id) : "",
+      mode: isSet(object.mode) ? Number(object.mode) : 0,
     };
   },
 
   toJSON(message: LastSeenMessageEvent): unknown {
     const obj: any = {};
     message.channel_id !== undefined && (obj.channel_id = message.channel_id);
+    message.channel_label !== undefined && (obj.channel_label = message.channel_label);
     message.message_id !== undefined && (obj.message_id = message.message_id);
+    message.mode !== undefined && (obj.mode = Math.round(message.mode));
     return obj;
   },
 
@@ -5851,13 +4654,15 @@ export const LastSeenMessageEvent = {
   fromPartial<I extends Exact<DeepPartial<LastSeenMessageEvent>, I>>(object: I): LastSeenMessageEvent {
     const message = createBaseLastSeenMessageEvent();
     message.channel_id = object.channel_id ?? "";
+    message.channel_label = object.channel_label ?? "";
     message.message_id = object.message_id ?? "";
+    message.mode = object.mode ?? 0;
     return message;
   },
 };
 
 function createBaseMessageTypingEvent(): MessageTypingEvent {
-  return { channel_id: "", sender_id: "" };
+  return { channel_id: "", channel_label: "", sender_id: "", mode: 0 };
 }
 
 export const MessageTypingEvent = {
@@ -5865,8 +4670,14 @@ export const MessageTypingEvent = {
     if (message.channel_id !== "") {
       writer.uint32(10).string(message.channel_id);
     }
+    if (message.channel_label !== "") {
+      writer.uint32(18).string(message.channel_label);
+    }
     if (message.sender_id !== "") {
-      writer.uint32(18).string(message.sender_id);
+      writer.uint32(26).string(message.sender_id);
+    }
+    if (message.mode !== 0) {
+      writer.uint32(32).int32(message.mode);
     }
     return writer;
   },
@@ -5882,7 +4693,13 @@ export const MessageTypingEvent = {
           message.channel_id = reader.string();
           break;
         case 2:
+          message.channel_label = reader.string();
+          break;
+        case 3:
           message.sender_id = reader.string();
+          break;
+        case 4:
+          message.mode = reader.int32();
           break;
         default:
           reader.skipType(tag & 7);
@@ -5895,14 +4712,18 @@ export const MessageTypingEvent = {
   fromJSON(object: any): MessageTypingEvent {
     return {
       channel_id: isSet(object.channel_id) ? String(object.channel_id) : "",
+      channel_label: isSet(object.channel_label) ? String(object.channel_label) : "",
       sender_id: isSet(object.sender_id) ? String(object.sender_id) : "",
+      mode: isSet(object.mode) ? Number(object.mode) : 0,
     };
   },
 
   toJSON(message: MessageTypingEvent): unknown {
     const obj: any = {};
     message.channel_id !== undefined && (obj.channel_id = message.channel_id);
+    message.channel_label !== undefined && (obj.channel_label = message.channel_label);
     message.sender_id !== undefined && (obj.sender_id = message.sender_id);
+    message.mode !== undefined && (obj.mode = Math.round(message.mode));
     return obj;
   },
 
@@ -5913,13 +4734,15 @@ export const MessageTypingEvent = {
   fromPartial<I extends Exact<DeepPartial<MessageTypingEvent>, I>>(object: I): MessageTypingEvent {
     const message = createBaseMessageTypingEvent();
     message.channel_id = object.channel_id ?? "";
+    message.channel_label = object.channel_label ?? "";
     message.sender_id = object.sender_id ?? "";
+    message.mode = object.mode ?? 0;
     return message;
   },
 };
 
 function createBaseMessageMentionEvent(): MessageMentionEvent {
-  return { channel_id: "", message_id: "", user_id: "", username: "", sender_id: "" };
+  return { channel_id: "", channel_label: "", message_id: "", user_id: "", username: "", sender_id: "", mode: 0 };
 }
 
 export const MessageMentionEvent = {
@@ -5927,17 +4750,23 @@ export const MessageMentionEvent = {
     if (message.channel_id !== "") {
       writer.uint32(10).string(message.channel_id);
     }
+    if (message.channel_label !== "") {
+      writer.uint32(18).string(message.channel_label);
+    }
     if (message.message_id !== "") {
-      writer.uint32(18).string(message.message_id);
+      writer.uint32(26).string(message.message_id);
     }
     if (message.user_id !== "") {
-      writer.uint32(26).string(message.user_id);
+      writer.uint32(34).string(message.user_id);
     }
     if (message.username !== "") {
-      writer.uint32(34).string(message.username);
+      writer.uint32(42).string(message.username);
     }
     if (message.sender_id !== "") {
-      writer.uint32(42).string(message.sender_id);
+      writer.uint32(50).string(message.sender_id);
+    }
+    if (message.mode !== 0) {
+      writer.uint32(56).int32(message.mode);
     }
     return writer;
   },
@@ -5953,16 +4782,22 @@ export const MessageMentionEvent = {
           message.channel_id = reader.string();
           break;
         case 2:
-          message.message_id = reader.string();
+          message.channel_label = reader.string();
           break;
         case 3:
-          message.user_id = reader.string();
+          message.message_id = reader.string();
           break;
         case 4:
-          message.username = reader.string();
+          message.user_id = reader.string();
           break;
         case 5:
+          message.username = reader.string();
+          break;
+        case 6:
           message.sender_id = reader.string();
+          break;
+        case 7:
+          message.mode = reader.int32();
           break;
         default:
           reader.skipType(tag & 7);
@@ -5975,20 +4810,24 @@ export const MessageMentionEvent = {
   fromJSON(object: any): MessageMentionEvent {
     return {
       channel_id: isSet(object.channel_id) ? String(object.channel_id) : "",
+      channel_label: isSet(object.channel_label) ? String(object.channel_label) : "",
       message_id: isSet(object.message_id) ? String(object.message_id) : "",
       user_id: isSet(object.user_id) ? String(object.user_id) : "",
       username: isSet(object.username) ? String(object.username) : "",
       sender_id: isSet(object.sender_id) ? String(object.sender_id) : "",
+      mode: isSet(object.mode) ? Number(object.mode) : 0,
     };
   },
 
   toJSON(message: MessageMentionEvent): unknown {
     const obj: any = {};
     message.channel_id !== undefined && (obj.channel_id = message.channel_id);
+    message.channel_label !== undefined && (obj.channel_label = message.channel_label);
     message.message_id !== undefined && (obj.message_id = message.message_id);
     message.user_id !== undefined && (obj.user_id = message.user_id);
     message.username !== undefined && (obj.username = message.username);
     message.sender_id !== undefined && (obj.sender_id = message.sender_id);
+    message.mode !== undefined && (obj.mode = Math.round(message.mode));
     return obj;
   },
 
@@ -5999,10 +4838,12 @@ export const MessageMentionEvent = {
   fromPartial<I extends Exact<DeepPartial<MessageMentionEvent>, I>>(object: I): MessageMentionEvent {
     const message = createBaseMessageMentionEvent();
     message.channel_id = object.channel_id ?? "";
+    message.channel_label = object.channel_label ?? "";
     message.message_id = object.message_id ?? "";
     message.user_id = object.user_id ?? "";
     message.username = object.username ?? "";
     message.sender_id = object.sender_id ?? "";
+    message.mode = object.mode ?? 0;
     return message;
   },
 };
@@ -6011,6 +4852,7 @@ function createBaseMessageReactionEvent(): MessageReactionEvent {
   return {
     id: "",
     channel_id: "",
+    channel_label: "",
     message_id: "",
     sender_id: "",
     sender_name: "",
@@ -6019,6 +4861,7 @@ function createBaseMessageReactionEvent(): MessageReactionEvent {
     action: false,
     message_sender_id: "",
     count: 0,
+    mode: 0,
   };
 }
 
@@ -6030,29 +4873,35 @@ export const MessageReactionEvent = {
     if (message.channel_id !== "") {
       writer.uint32(18).string(message.channel_id);
     }
+    if (message.channel_label !== "") {
+      writer.uint32(26).string(message.channel_label);
+    }
     if (message.message_id !== "") {
-      writer.uint32(26).string(message.message_id);
+      writer.uint32(34).string(message.message_id);
     }
     if (message.sender_id !== "") {
-      writer.uint32(34).string(message.sender_id);
+      writer.uint32(42).string(message.sender_id);
     }
     if (message.sender_name !== "") {
-      writer.uint32(42).string(message.sender_name);
+      writer.uint32(50).string(message.sender_name);
     }
     if (message.sender_avatar !== "") {
-      writer.uint32(50).string(message.sender_avatar);
+      writer.uint32(58).string(message.sender_avatar);
     }
     if (message.emoji !== "") {
-      writer.uint32(58).string(message.emoji);
+      writer.uint32(66).string(message.emoji);
     }
     if (message.action === true) {
-      writer.uint32(64).bool(message.action);
+      writer.uint32(72).bool(message.action);
     }
     if (message.message_sender_id !== "") {
-      writer.uint32(74).string(message.message_sender_id);
+      writer.uint32(82).string(message.message_sender_id);
     }
     if (message.count !== 0) {
-      writer.uint32(80).int32(message.count);
+      writer.uint32(88).int32(message.count);
+    }
+    if (message.mode !== 0) {
+      writer.uint32(96).int32(message.mode);
     }
     return writer;
   },
@@ -6071,28 +4920,34 @@ export const MessageReactionEvent = {
           message.channel_id = reader.string();
           break;
         case 3:
-          message.message_id = reader.string();
+          message.channel_label = reader.string();
           break;
         case 4:
-          message.sender_id = reader.string();
+          message.message_id = reader.string();
           break;
         case 5:
-          message.sender_name = reader.string();
+          message.sender_id = reader.string();
           break;
         case 6:
-          message.sender_avatar = reader.string();
+          message.sender_name = reader.string();
           break;
         case 7:
-          message.emoji = reader.string();
+          message.sender_avatar = reader.string();
           break;
         case 8:
-          message.action = reader.bool();
+          message.emoji = reader.string();
           break;
         case 9:
-          message.message_sender_id = reader.string();
+          message.action = reader.bool();
           break;
         case 10:
+          message.message_sender_id = reader.string();
+          break;
+        case 11:
           message.count = reader.int32();
+          break;
+        case 12:
+          message.mode = reader.int32();
           break;
         default:
           reader.skipType(tag & 7);
@@ -6106,6 +4961,7 @@ export const MessageReactionEvent = {
     return {
       id: isSet(object.id) ? String(object.id) : "",
       channel_id: isSet(object.channel_id) ? String(object.channel_id) : "",
+      channel_label: isSet(object.channel_label) ? String(object.channel_label) : "",
       message_id: isSet(object.message_id) ? String(object.message_id) : "",
       sender_id: isSet(object.sender_id) ? String(object.sender_id) : "",
       sender_name: isSet(object.sender_name) ? String(object.sender_name) : "",
@@ -6114,6 +4970,7 @@ export const MessageReactionEvent = {
       action: isSet(object.action) ? Boolean(object.action) : false,
       message_sender_id: isSet(object.message_sender_id) ? String(object.message_sender_id) : "",
       count: isSet(object.count) ? Number(object.count) : 0,
+      mode: isSet(object.mode) ? Number(object.mode) : 0,
     };
   },
 
@@ -6121,6 +4978,7 @@ export const MessageReactionEvent = {
     const obj: any = {};
     message.id !== undefined && (obj.id = message.id);
     message.channel_id !== undefined && (obj.channel_id = message.channel_id);
+    message.channel_label !== undefined && (obj.channel_label = message.channel_label);
     message.message_id !== undefined && (obj.message_id = message.message_id);
     message.sender_id !== undefined && (obj.sender_id = message.sender_id);
     message.sender_name !== undefined && (obj.sender_name = message.sender_name);
@@ -6129,6 +4987,7 @@ export const MessageReactionEvent = {
     message.action !== undefined && (obj.action = message.action);
     message.message_sender_id !== undefined && (obj.message_sender_id = message.message_sender_id);
     message.count !== undefined && (obj.count = Math.round(message.count));
+    message.mode !== undefined && (obj.mode = Math.round(message.mode));
     return obj;
   },
 
@@ -6140,6 +4999,7 @@ export const MessageReactionEvent = {
     const message = createBaseMessageReactionEvent();
     message.id = object.id ?? "";
     message.channel_id = object.channel_id ?? "";
+    message.channel_label = object.channel_label ?? "";
     message.message_id = object.message_id ?? "";
     message.sender_id = object.sender_id ?? "";
     message.sender_name = object.sender_name ?? "";
@@ -6148,6 +5008,7 @@ export const MessageReactionEvent = {
     message.action = object.action ?? false;
     message.message_sender_id = object.message_sender_id ?? "";
     message.count = object.count ?? 0;
+    message.mode = object.mode ?? 0;
     return message;
   },
 };
@@ -6155,6 +5016,7 @@ export const MessageReactionEvent = {
 function createBaseMessageAttachmentEvent(): MessageAttachmentEvent {
   return {
     channel_id: "",
+    channel_label: "",
     message_id: "",
     filename: "",
     size: 0,
@@ -6163,6 +5025,7 @@ function createBaseMessageAttachmentEvent(): MessageAttachmentEvent {
     width: 0,
     height: 0,
     sender_id: "",
+    mode: 0,
   };
 }
 
@@ -6171,29 +5034,35 @@ export const MessageAttachmentEvent = {
     if (message.channel_id !== "") {
       writer.uint32(10).string(message.channel_id);
     }
+    if (message.channel_label !== "") {
+      writer.uint32(18).string(message.channel_label);
+    }
     if (message.message_id !== "") {
-      writer.uint32(18).string(message.message_id);
+      writer.uint32(26).string(message.message_id);
     }
     if (message.filename !== "") {
-      writer.uint32(26).string(message.filename);
+      writer.uint32(34).string(message.filename);
     }
     if (message.size !== 0) {
-      writer.uint32(32).int64(message.size);
+      writer.uint32(40).int64(message.size);
     }
     if (message.url !== "") {
-      writer.uint32(42).string(message.url);
+      writer.uint32(50).string(message.url);
     }
     if (message.filetype !== "") {
-      writer.uint32(50).string(message.filetype);
+      writer.uint32(58).string(message.filetype);
     }
     if (message.width !== 0) {
-      writer.uint32(56).int32(message.width);
+      writer.uint32(64).int32(message.width);
     }
     if (message.height !== 0) {
-      writer.uint32(64).int32(message.height);
+      writer.uint32(72).int32(message.height);
     }
     if (message.sender_id !== "") {
-      writer.uint32(74).string(message.sender_id);
+      writer.uint32(82).string(message.sender_id);
+    }
+    if (message.mode !== 0) {
+      writer.uint32(88).int32(message.mode);
     }
     return writer;
   },
@@ -6209,28 +5078,34 @@ export const MessageAttachmentEvent = {
           message.channel_id = reader.string();
           break;
         case 2:
-          message.message_id = reader.string();
+          message.channel_label = reader.string();
           break;
         case 3:
-          message.filename = reader.string();
+          message.message_id = reader.string();
           break;
         case 4:
-          message.size = longToNumber(reader.int64() as Long);
+          message.filename = reader.string();
           break;
         case 5:
-          message.url = reader.string();
+          message.size = longToNumber(reader.int64() as Long);
           break;
         case 6:
-          message.filetype = reader.string();
+          message.url = reader.string();
           break;
         case 7:
-          message.width = reader.int32();
+          message.filetype = reader.string();
           break;
         case 8:
-          message.height = reader.int32();
+          message.width = reader.int32();
           break;
         case 9:
+          message.height = reader.int32();
+          break;
+        case 10:
           message.sender_id = reader.string();
+          break;
+        case 11:
+          message.mode = reader.int32();
           break;
         default:
           reader.skipType(tag & 7);
@@ -6243,6 +5118,7 @@ export const MessageAttachmentEvent = {
   fromJSON(object: any): MessageAttachmentEvent {
     return {
       channel_id: isSet(object.channel_id) ? String(object.channel_id) : "",
+      channel_label: isSet(object.channel_label) ? String(object.channel_label) : "",
       message_id: isSet(object.message_id) ? String(object.message_id) : "",
       filename: isSet(object.filename) ? String(object.filename) : "",
       size: isSet(object.size) ? Number(object.size) : 0,
@@ -6251,12 +5127,14 @@ export const MessageAttachmentEvent = {
       width: isSet(object.width) ? Number(object.width) : 0,
       height: isSet(object.height) ? Number(object.height) : 0,
       sender_id: isSet(object.sender_id) ? String(object.sender_id) : "",
+      mode: isSet(object.mode) ? Number(object.mode) : 0,
     };
   },
 
   toJSON(message: MessageAttachmentEvent): unknown {
     const obj: any = {};
     message.channel_id !== undefined && (obj.channel_id = message.channel_id);
+    message.channel_label !== undefined && (obj.channel_label = message.channel_label);
     message.message_id !== undefined && (obj.message_id = message.message_id);
     message.filename !== undefined && (obj.filename = message.filename);
     message.size !== undefined && (obj.size = Math.round(message.size));
@@ -6265,6 +5143,7 @@ export const MessageAttachmentEvent = {
     message.width !== undefined && (obj.width = Math.round(message.width));
     message.height !== undefined && (obj.height = Math.round(message.height));
     message.sender_id !== undefined && (obj.sender_id = message.sender_id);
+    message.mode !== undefined && (obj.mode = Math.round(message.mode));
     return obj;
   },
 
@@ -6275,6 +5154,7 @@ export const MessageAttachmentEvent = {
   fromPartial<I extends Exact<DeepPartial<MessageAttachmentEvent>, I>>(object: I): MessageAttachmentEvent {
     const message = createBaseMessageAttachmentEvent();
     message.channel_id = object.channel_id ?? "";
+    message.channel_label = object.channel_label ?? "";
     message.message_id = object.message_id ?? "";
     message.filename = object.filename ?? "";
     message.size = object.size ?? 0;
@@ -6283,12 +5163,13 @@ export const MessageAttachmentEvent = {
     message.width = object.width ?? 0;
     message.height = object.height ?? 0;
     message.sender_id = object.sender_id ?? "";
+    message.mode = object.mode ?? 0;
     return message;
   },
 };
 
 function createBaseMessageDeletedEvent(): MessageDeletedEvent {
-  return { channel_id: "", message_id: "", deletor: "" };
+  return { channel_id: "", channel_label: "", message_id: "", deletor: "", mode: 0 };
 }
 
 export const MessageDeletedEvent = {
@@ -6296,11 +5177,17 @@ export const MessageDeletedEvent = {
     if (message.channel_id !== "") {
       writer.uint32(10).string(message.channel_id);
     }
+    if (message.channel_label !== "") {
+      writer.uint32(18).string(message.channel_label);
+    }
     if (message.message_id !== "") {
-      writer.uint32(18).string(message.message_id);
+      writer.uint32(26).string(message.message_id);
     }
     if (message.deletor !== "") {
-      writer.uint32(26).string(message.deletor);
+      writer.uint32(34).string(message.deletor);
+    }
+    if (message.mode !== 0) {
+      writer.uint32(40).int32(message.mode);
     }
     return writer;
   },
@@ -6316,10 +5203,16 @@ export const MessageDeletedEvent = {
           message.channel_id = reader.string();
           break;
         case 2:
-          message.message_id = reader.string();
+          message.channel_label = reader.string();
           break;
         case 3:
+          message.message_id = reader.string();
+          break;
+        case 4:
           message.deletor = reader.string();
+          break;
+        case 5:
+          message.mode = reader.int32();
           break;
         default:
           reader.skipType(tag & 7);
@@ -6332,16 +5225,20 @@ export const MessageDeletedEvent = {
   fromJSON(object: any): MessageDeletedEvent {
     return {
       channel_id: isSet(object.channel_id) ? String(object.channel_id) : "",
+      channel_label: isSet(object.channel_label) ? String(object.channel_label) : "",
       message_id: isSet(object.message_id) ? String(object.message_id) : "",
       deletor: isSet(object.deletor) ? String(object.deletor) : "",
+      mode: isSet(object.mode) ? Number(object.mode) : 0,
     };
   },
 
   toJSON(message: MessageDeletedEvent): unknown {
     const obj: any = {};
     message.channel_id !== undefined && (obj.channel_id = message.channel_id);
+    message.channel_label !== undefined && (obj.channel_label = message.channel_label);
     message.message_id !== undefined && (obj.message_id = message.message_id);
     message.deletor !== undefined && (obj.deletor = message.deletor);
+    message.mode !== undefined && (obj.mode = Math.round(message.mode));
     return obj;
   },
 
@@ -6352,8 +5249,10 @@ export const MessageDeletedEvent = {
   fromPartial<I extends Exact<DeepPartial<MessageDeletedEvent>, I>>(object: I): MessageDeletedEvent {
     const message = createBaseMessageDeletedEvent();
     message.channel_id = object.channel_id ?? "";
+    message.channel_label = object.channel_label ?? "";
     message.message_id = object.message_id ?? "";
     message.deletor = object.deletor ?? "";
+    message.mode = object.mode ?? 0;
     return message;
   },
 };

@@ -358,7 +358,7 @@ export interface ChannelMessage {
     /** The UNIX time (for gRPC clients) or ISO string (for REST clients) when the message was last updated. */
     update_time: Date | undefined;
     /** The name of the chat room, or an empty string if this message was not sent through a chat room. */
-    channel_name: string;
+    channel_label: string;
     /** The ID of the first DM user, or an empty string if this message was not sent through a DM chat. */
     user_id_one: string;
     /** The ID of the second DM user, or an empty string if this message was not sent through a DM chat. */
@@ -1154,7 +1154,7 @@ export interface InviteUserRes {
     /** clan name */
     clan_name: string;
     /** channel name */
-    channel_name: string;
+    channel_label: string;
     /** check user exist */
     user_joined: boolean;
 }
@@ -2975,7 +2975,7 @@ export declare const ChannelMessage: {
         content?: string | undefined;
         create_time?: Date | undefined;
         update_time?: Date | undefined;
-        channel_name?: string | undefined;
+        channel_label?: string | undefined;
         user_id_one?: string | undefined;
         user_id_two?: string | undefined;
         reactions?: string | undefined;
@@ -2994,7 +2994,7 @@ export declare const ChannelMessage: {
         content?: string | undefined;
         create_time?: Date | undefined;
         update_time?: Date | undefined;
-        channel_name?: string | undefined;
+        channel_label?: string | undefined;
         user_id_one?: string | undefined;
         user_id_two?: string | undefined;
         reactions?: string | undefined;
@@ -3014,7 +3014,7 @@ export declare const ChannelMessage: {
         content?: string | undefined;
         create_time?: Date | undefined;
         update_time?: Date | undefined;
-        channel_name?: string | undefined;
+        channel_label?: string | undefined;
         user_id_one?: string | undefined;
         user_id_two?: string | undefined;
         reactions?: string | undefined;
@@ -3033,7 +3033,7 @@ export declare const ChannelMessage: {
         content?: string | undefined;
         create_time?: Date | undefined;
         update_time?: Date | undefined;
-        channel_name?: string | undefined;
+        channel_label?: string | undefined;
         user_id_one?: string | undefined;
         user_id_two?: string | undefined;
         reactions?: string | undefined;
@@ -3216,7 +3216,7 @@ export declare const ChannelMessageList: {
             content?: string | undefined;
             create_time?: Date | undefined;
             update_time?: Date | undefined;
-            channel_name?: string | undefined;
+            channel_label?: string | undefined;
             user_id_one?: string | undefined;
             user_id_two?: string | undefined;
             reactions?: string | undefined;
@@ -3238,7 +3238,7 @@ export declare const ChannelMessageList: {
             content?: string | undefined;
             create_time?: Date | undefined;
             update_time?: Date | undefined;
-            channel_name?: string | undefined;
+            channel_label?: string | undefined;
             user_id_one?: string | undefined;
             user_id_two?: string | undefined;
             reactions?: string | undefined;
@@ -3257,7 +3257,7 @@ export declare const ChannelMessageList: {
             content?: string | undefined;
             create_time?: Date | undefined;
             update_time?: Date | undefined;
-            channel_name?: string | undefined;
+            channel_label?: string | undefined;
             user_id_one?: string | undefined;
             user_id_two?: string | undefined;
             reactions?: string | undefined;
@@ -3276,7 +3276,7 @@ export declare const ChannelMessageList: {
             content?: string | undefined;
             create_time?: Date | undefined;
             update_time?: Date | undefined;
-            channel_name?: string | undefined;
+            channel_label?: string | undefined;
             user_id_one?: string | undefined;
             user_id_two?: string | undefined;
             reactions?: string | undefined;
@@ -3295,7 +3295,7 @@ export declare const ChannelMessageList: {
             content?: string | undefined;
             create_time?: Date | undefined;
             update_time?: Date | undefined;
-            channel_name?: string | undefined;
+            channel_label?: string | undefined;
             user_id_one?: string | undefined;
             user_id_two?: string | undefined;
             reactions?: string | undefined;
@@ -3318,7 +3318,7 @@ export declare const ChannelMessageList: {
             content?: string | undefined;
             create_time?: Date | undefined;
             update_time?: Date | undefined;
-            channel_name?: string | undefined;
+            channel_label?: string | undefined;
             user_id_one?: string | undefined;
             user_id_two?: string | undefined;
             reactions?: string | undefined;
@@ -3340,7 +3340,7 @@ export declare const ChannelMessageList: {
             content?: string | undefined;
             create_time?: Date | undefined;
             update_time?: Date | undefined;
-            channel_name?: string | undefined;
+            channel_label?: string | undefined;
             user_id_one?: string | undefined;
             user_id_two?: string | undefined;
             reactions?: string | undefined;
@@ -3359,7 +3359,7 @@ export declare const ChannelMessageList: {
             content?: string | undefined;
             create_time?: Date | undefined;
             update_time?: Date | undefined;
-            channel_name?: string | undefined;
+            channel_label?: string | undefined;
             user_id_one?: string | undefined;
             user_id_two?: string | undefined;
             reactions?: string | undefined;
@@ -3378,7 +3378,7 @@ export declare const ChannelMessageList: {
             content?: string | undefined;
             create_time?: Date | undefined;
             update_time?: Date | undefined;
-            channel_name?: string | undefined;
+            channel_label?: string | undefined;
             user_id_one?: string | undefined;
             user_id_two?: string | undefined;
             reactions?: string | undefined;
@@ -3397,7 +3397,7 @@ export declare const ChannelMessageList: {
             content?: string | undefined;
             create_time?: Date | undefined;
             update_time?: Date | undefined;
-            channel_name?: string | undefined;
+            channel_label?: string | undefined;
             user_id_one?: string | undefined;
             user_id_two?: string | undefined;
             reactions?: string | undefined;
@@ -7916,26 +7916,26 @@ export declare const InviteUserRes: {
         clan_id?: string | undefined;
         channel_id?: string | undefined;
         clan_name?: string | undefined;
-        channel_name?: string | undefined;
+        channel_label?: string | undefined;
         user_joined?: boolean | undefined;
     } & {
         clan_id?: string | undefined;
         channel_id?: string | undefined;
         clan_name?: string | undefined;
-        channel_name?: string | undefined;
+        channel_label?: string | undefined;
         user_joined?: boolean | undefined;
     } & { [K in Exclude<keyof I, keyof InviteUserRes>]: never; }>(base?: I | undefined): InviteUserRes;
     fromPartial<I_1 extends {
         clan_id?: string | undefined;
         channel_id?: string | undefined;
         clan_name?: string | undefined;
-        channel_name?: string | undefined;
+        channel_label?: string | undefined;
         user_joined?: boolean | undefined;
     } & {
         clan_id?: string | undefined;
         channel_id?: string | undefined;
         clan_name?: string | undefined;
-        channel_name?: string | undefined;
+        channel_label?: string | undefined;
         user_joined?: boolean | undefined;
     } & { [K_1 in Exclude<keyof I_1, keyof InviteUserRes>]: never; }>(object: I_1): InviteUserRes;
 };

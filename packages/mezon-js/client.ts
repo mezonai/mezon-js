@@ -148,7 +148,7 @@ export interface ChannelMessage {
   //The channel this message belongs to.
   channel_id: string;
   //The name of the chat room, or an empty string if this message was not sent through a chat room.
-  channel_name: string;
+  channel_label: string;
   //The clan this message belong to.
   clan_id?: string;
   //The code representing a message type or category.
@@ -933,7 +933,7 @@ export class Client {
           username: m.username,
           avatar: m.avatar,
           content: m.content ? JSON.parse(m.content) : undefined,
-          channel_name: m.channel_name,
+          channel_label: m.channel_label,
           user_id_one: m.user_id_one,
           user_id_two: m.user_id_two,
           attachments: m.attachments ? JSON.parse(m.attachments) : [],

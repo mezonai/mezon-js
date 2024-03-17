@@ -32,7 +32,7 @@ export interface Presence {
 export interface Channel {
     /** The server-assigned channel id. */
     id: string;
-    chanel_name: string;
+    chanel_label: string;
     /** The presences visible on the chat channel. */
     presences: Presence[];
     /** The presence of the current user, i.e. yourself. */
@@ -60,12 +60,16 @@ interface ChannelLeave {
     channel_leave: {
         /** The id of the channel to leave. */
         channel_id: string;
+        mode: number;
+        channel_label: string;
     };
 }
 /** Last seen message by user */
 export interface LastSeenMessageEvent {
     /** The channel this message belongs to. */
     channel_id: string;
+    mode: number;
+    channel_label: string;
     /** The unique ID of this message. */
     message_id: string;
 }
@@ -74,6 +78,8 @@ export interface MessageReactionEvent {
     id: string;
     /** The channel this message belongs to. */
     channel_id: string;
+    mode: number;
+    channel_label: string;
     /** The message that user react */
     message_id: string;
     /** Message sender, usually a user ID. */
@@ -88,6 +94,8 @@ export interface MessageReactionEvent {
 export interface MessageMentionEvent {
     /** The channel this message belongs to. */
     channel_id: string;
+    mode: number;
+    channel_label: string;
     /** The message that user react */
     message_id: string;
     /** Message sender, usually a user ID. */
@@ -99,6 +107,8 @@ export interface MessageMentionEvent {
 export interface MessageAttachmentEvent {
     /** The channel this message belongs to. */
     channel_id: string;
+    mode: number;
+    channel_label: string;
     /** The message that user react */
     message_id: string;
     /** Message sender, usually a user ID. */
@@ -114,6 +124,8 @@ export interface MessageAttachmentEvent {
 export interface MessageDeletedEvent {
     /** The channel this message belongs to. */
     channel_id: string;
+    mode: number;
+    channel_label: string;
     /** The message that user react */
     message_id: string;
     /** Message sender, usually a user ID. */
@@ -123,6 +135,8 @@ export interface MessageDeletedEvent {
 export interface MessageRefEvent {
     /** The channel this message belongs to. */
     channel_id: string;
+    mode: number;
+    channel_label: string;
     /** The message that user react */
     message_id: string;
     /** Message reference ID. */
@@ -134,6 +148,8 @@ export interface MessageRefEvent {
 export interface MessageTypingEvent {
     /** The channel this message belongs to. */
     channel_id: string;
+    mode: number;
+    channel_label: string;
     /** Message sender, usually a user ID. */
     sender_id: string;
 }
@@ -141,7 +157,8 @@ export interface MessageTypingEvent {
 export interface ChannelMessageEvent {
     avatar?: string;
     channel_id: string;
-    channel_name: string;
+    mode: number;
+    channel_label: string;
     clan_id?: string;
     code: number;
     content: string;
@@ -163,6 +180,7 @@ export interface ChannelMessageEvent {
 export interface ChannelMessageAck {
     /** The server-assigned channel ID. */
     channel_id: string;
+    mode: number;
     /** A unique ID for the chat message. */
     message_id: string;
     /** A user-defined code for the chat message. */
@@ -183,6 +201,7 @@ interface ChannelMessageSend {
         clan_id: string;
         /** The server-assigned channel ID. */
         channel_id: string;
+        mode: number;
         channel_label: string;
         /** The content payload. */
         content: any;
@@ -206,6 +225,8 @@ interface ChannelMessageRemove {
     channel_message_remove: {
         /** The server-assigned channel ID. */
         channel_id: string;
+        mode: number;
+        channel_label: string;
         /** A unique ID for the chat message to be removed. */
         message_id: string;
     };
@@ -214,6 +235,8 @@ interface ChannelMessageRemove {
 export interface ChannelPresenceEvent {
     /** The unique identifier of the chat channel. */
     channel_id: string;
+    channel_label: string;
+    mode: number;
     /** Presences of the users who joined the channel. */
     joins: Presence[];
     /** Presences of users who left the channel. */
@@ -462,11 +485,11 @@ export interface Socket {
     /** Subscribe to one or more users for their status updates. */
     followUsers(user_ids: string[]): Promise<Status>;
     /** Join a chat channel on the server. */
-    joinChat(target_id: string, target: string, type: number, persistence: boolean, hidden: boolean): Promise<Channel>;
+    joinChat(channel_id: string, channel_label: string, mode: number, type: number, persistence: boolean, hidden: boolean): Promise<Channel>;
     /** Join a party. */
     joinParty(party_id: string): Promise<void>;
     /** Leave a chat channel on the server. */
-    leaveChat(channel_id: string): Promise<void>;
+    leaveChat(channel_id: string, channel_label: string, mode: number): Promise<void>;
     /** Leave a multiplayer match on the server. */
     leaveMatch(matchId: string): Promise<void>;
     /** Leave a party. */
@@ -476,7 +499,7 @@ export interface Socket {
     /** Promote a new party leader. */
     promotePartyMember(party_id: string, party_member: Presence): Promise<PartyLeader>;
     /** Remove a chat message from a chat channel on the server. */
-    removeChatMessage(channel_id: string, message_id: string): Promise<ChannelMessageAck>;
+    removeChatMessage(channel_id: string, channel_label: string, mode: number, message_id: string): Promise<ChannelMessageAck>;
     /** Kick a party member, or decline a request to join. */
     removePartyMember(party_id: string, presence: Presence): Promise<void>;
     /** Execute an RPC function to the server. */
@@ -486,19 +509,19 @@ export interface Socket {
     /** Unfollow one or more users from their status updates. */
     unfollowUsers(user_ids: string[]): Promise<void>;
     /** Update a chat message on a chat channel in the server. */
-    updateChatMessage(channel_id: string, message_id: string, content: any): Promise<ChannelMessageAck>;
+    updateChatMessage(channel_id: string, channel_label: string, mode: number, message_id: string, content: any): Promise<ChannelMessageAck>;
     /** Update the status for the current user online. */
     updateStatus(status?: string): Promise<void>;
     /** Send a chat message to a chat channel on the server. */
-    writeChatMessage(clan_id: string, channel_id: string, channel_label: string, content?: any, mentions?: Array<ApiMessageMention>, attachments?: Array<ApiMessageAttachment>, references?: Array<ApiMessageRef>): Promise<ChannelMessageAck>;
+    writeChatMessage(clan_id: string, channel_id: string, channel_label: string, mode: number, content?: any, mentions?: Array<ApiMessageMention>, attachments?: Array<ApiMessageAttachment>, references?: Array<ApiMessageRef>): Promise<ChannelMessageAck>;
     /** Send message typing */
-    writeMessageTyping(channel_id: string): Promise<MessageTypingEvent>;
+    writeMessageTyping(channel_id: string, channel_label: string, mode: number): Promise<MessageTypingEvent>;
     /** Send message reaction */
-    writeMessageReaction(id: string, channel_id: string, message_id: string, emoji: string, message_sender_id: string, action_delete: boolean): Promise<MessageReactionEvent>;
+    writeMessageReaction(id: string, channel_id: string, channel_label: string, mode: number, message_id: string, emoji: string, message_sender_id: string, action_delete: boolean): Promise<MessageReactionEvent>;
     /** Send message mention */
-    writeMessageDeleted(channel_id: string, message_id: string, deletor: string): Promise<MessageDeletedEvent>;
+    writeMessageDeleted(channel_id: string, channel_label: string, mode: number, message_id: string, deletor: string): Promise<MessageDeletedEvent>;
     /** Send last seen message */
-    writeLastSeenMessage(channel_id: string, message_id: string): Promise<LastSeenMessageEvent>;
+    writeLastSeenMessage(channel_id: string, channel_label: string, mode: number, message_id: string): Promise<LastSeenMessageEvent>;
     /** Handle disconnect events received from the socket. */
     ondisconnect: (evt: Event) => void;
     /** Handle error events received from the socket. */
@@ -594,25 +617,25 @@ export declare class DefaultSocket implements Socket {
     closeParty(party_id: string): Promise<void>;
     createParty(open: boolean, max_size: number): Promise<Party>;
     followUsers(userIds: string[]): Promise<Status>;
-    joinChat(target_id: string, target: string, type: number, persistence: boolean, hidden: boolean): Promise<Channel>;
+    joinChat(channel_id: string, channel_label: string, mode: number, type: number, persistence: boolean, hidden: boolean): Promise<Channel>;
     joinParty(party_id: string): Promise<void>;
-    leaveChat(channel_id: string): Promise<void>;
+    leaveChat(channel_id: string, channel_label: string, mode: number): Promise<void>;
     leaveMatch(matchId: string): Promise<void>;
     leaveParty(party_id: string): Promise<void>;
     listPartyJoinRequests(party_id: string): Promise<PartyJoinRequest>;
     promotePartyMember(party_id: string, party_member: Presence): Promise<PartyLeader>;
-    removeChatMessage(channel_id: string, message_id: string): Promise<ChannelMessageAck>;
+    removeChatMessage(channel_id: string, channel_label: string, mode: number, message_id: string): Promise<ChannelMessageAck>;
     removePartyMember(party_id: string, member: Presence): Promise<void>;
     rpc(id?: string, payload?: string, http_key?: string): Promise<ApiRpc>;
     sendPartyData(party_id: string, op_code: number, data: string | Uint8Array): Promise<void>;
     unfollowUsers(user_ids: string[]): Promise<void>;
     updateChatMessage(channel_id: string, message_id: string, content: any): Promise<ChannelMessageAck>;
     updateStatus(status?: string): Promise<void>;
-    writeChatMessage(clan_id: string, channel_id: string, channel_label: string, content: any, mentions?: Array<ApiMessageMention>, attachments?: Array<ApiMessageAttachment>, references?: Array<ApiMessageRef>): Promise<ChannelMessageAck>;
-    writeMessageReaction(id: string, channel_id: string, message_id: string, emoji: string, message_sender_id: string, action_delete: boolean): Promise<MessageReactionEvent>;
-    writeMessageDeleted(channel_id: string, message_id: string): Promise<MessageDeletedEvent>;
-    writeMessageTyping(channel_id: string): Promise<MessageTypingEvent>;
-    writeLastSeenMessage(channel_id: string, message_id: string): Promise<LastSeenMessageEvent>;
+    writeChatMessage(clan_id: string, channel_id: string, channel_label: string, mode: number, content: any, mentions?: Array<ApiMessageMention>, attachments?: Array<ApiMessageAttachment>, references?: Array<ApiMessageRef>): Promise<ChannelMessageAck>;
+    writeMessageReaction(id: string, channel_id: string, channel_label: string, mode: number, message_id: string, emoji: string, message_sender_id: string, action_delete: boolean): Promise<MessageReactionEvent>;
+    writeMessageDeleted(channel_id: string, channel_label: string, mode: number, message_id: string): Promise<MessageDeletedEvent>;
+    writeMessageTyping(channel_id: string, channel_label: string, mode: number): Promise<MessageTypingEvent>;
+    writeLastSeenMessage(channel_id: string, channel_label: string, mode: number, message_id: string): Promise<LastSeenMessageEvent>;
     private pingPong;
 }
 export {};

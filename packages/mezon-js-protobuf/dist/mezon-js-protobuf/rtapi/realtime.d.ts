@@ -93,7 +93,7 @@ export interface Channel {
     /** A reference to the current user's presence in the channel. */
     self: UserPresence | undefined;
     /** The name of the chat room, or an empty string if this message was not sent through a chat room. */
-    chanel_name: string;
+    chanel_label: string;
     /** The ID of the first DM user, or an empty string if this message was not sent through a DM chat. */
     user_id_one: string;
     /** The ID of the second DM user, or an empty string if this message was not sent through a DM chat. */
@@ -102,15 +102,17 @@ export interface Channel {
 /** Join operation for a realtime chat channel. */
 export interface ChannelJoin {
     /** The id of channel or group */
-    target_id: string;
+    channel_id: string;
     /** The user ID to DM with, group ID to chat with, or channel id to join. */
-    target: string;
+    channel_label: string;
     /** The type of the chat channel. */
     type: number;
     /** Whether messages sent on this channel should be persistent. */
     persistence: boolean | undefined;
     /** Whether the user should appear in the channel's presence list and events. */
     hidden: boolean | undefined;
+    /** mode */
+    mode: number;
 }
 /** The type of chat channel. */
 export declare enum ChannelJoin_Type {
@@ -130,6 +132,10 @@ export declare function channelJoin_TypeToJSON(object: ChannelJoin_Type): string
 export interface ChannelLeave {
     /** The ID of the channel to leave. */
     channel_id: string;
+    /** The channe name */
+    channel_label: string;
+    /** mode */
+    mode: number;
 }
 /** A receipt reply from a channel message send operation. */
 export interface ChannelMessageAck {
@@ -148,7 +154,7 @@ export interface ChannelMessageAck {
     /** True if the message was persisted to the channel's history, false otherwise. */
     persistent: boolean | undefined;
     /** The name of the chat room, or an empty string if this message was not sent through a chat room. */
-    channel_name: string;
+    channel_label: string;
     /** The ID of the first DM user, or an empty string if this message was not sent through a DM chat. */
     user_id_one: string;
     /** The ID of the second DM user, or an empty string if this message was not sent through a DM chat. */
@@ -207,22 +213,32 @@ export interface ChannelMessageSend {
     attachments: MessageAttachment[];
     /** Message reference */
     references: MessageRef[];
+    /** Mode */
+    mode: number;
 }
 /** Update a message previously sent to a realtime channel. */
 export interface ChannelMessageUpdate {
     /** The channel the message was sent to. */
     channel_id: string;
+    /** channel label */
+    channel_label: string;
     /** The ID assigned to the message to update. */
     message_id: string;
     /** New message content. */
     content: string;
+    /** The mode */
+    mode: number;
 }
 /** Remove a message previously sent to a realtime channel. */
 export interface ChannelMessageRemove {
     /** The channel the message was sent to. */
     channel_id: string;
+    /** The channel label */
+    channel_label: string;
     /** The ID assigned to the message to update. */
     message_id: string;
+    /** The mode */
+    mode: number;
 }
 /** A set of joins and leaves on a particular channel. */
 export interface ChannelPresenceEvent {
@@ -233,11 +249,13 @@ export interface ChannelPresenceEvent {
     /** Presences leaving the channel as part of this event, if any. */
     leaves: UserPresence[];
     /** The name of the chat room, or an empty string if this message was not sent through a chat room. */
-    channel_name: string;
+    channel_label: string;
     /** The ID of the first DM user, or an empty string if this message was not sent through a DM chat. */
     user_id_one: string;
     /** The ID of the second DM user, or an empty string if this message was not sent through a DM chat. */
     user_id_two: string;
+    /** The mode */
+    mode: number;
 }
 /** A logical error which may occur on the server. */
 export interface Error {
@@ -295,133 +313,6 @@ export interface Match {
 export interface MatchCreate {
     /** Optional name to use when creating the match. */
     name: string;
-}
-/** Realtime match data received from the server. */
-export interface MatchData {
-    /** The match unique ID. */
-    match_id: string;
-    /** A reference to the user presence that sent this data, if any. */
-    presence: UserPresence | undefined;
-    /** Op code value. */
-    op_code: number;
-    /** Data payload, if any. */
-    data: Uint8Array;
-    /** True if this data was delivered reliably, false otherwise. */
-    reliable: boolean;
-}
-/** Send realtime match data to the server. */
-export interface MatchDataSend {
-    /** The match unique ID. */
-    match_id: string;
-    /** Op code value. */
-    op_code: number;
-    /** Data payload, if any. */
-    data: Uint8Array;
-    /** List of presences in the match to deliver to, if filtering is required. Otherwise deliver to everyone in the match. */
-    presences: UserPresence[];
-    /** True if the data should be sent reliably, false otherwise. */
-    reliable: boolean;
-}
-/** Join an existing realtime match. */
-export interface MatchJoin {
-    /** The match unique ID. */
-    match_id?: string | undefined;
-    /** A matchmaking result token. */
-    token?: string | undefined;
-    /** An optional set of key-value metadata pairs to be passed to the match handler, if any. */
-    metadata: {
-        [key: string]: string;
-    };
-}
-export interface MatchJoin_MetadataEntry {
-    key: string;
-    value: string;
-}
-/** Leave a realtime match. */
-export interface MatchLeave {
-    /** The match unique ID. */
-    match_id: string;
-}
-/** A set of joins and leaves on a particular realtime match. */
-export interface MatchPresenceEvent {
-    /** The match unique ID. */
-    match_id: string;
-    /** User presences that have just joined the match. */
-    joins: UserPresence[];
-    /** User presences that have just left the match. */
-    leaves: UserPresence[];
-}
-/** Start a new matchmaking process. */
-export interface MatchmakerAdd {
-    /** Minimum total user count to match together. */
-    min_count: number;
-    /** Maximum total user count to match together. */
-    max_count: number;
-    /** Filter query used to identify suitable users. */
-    query: string;
-    /** String properties. */
-    string_properties: {
-        [key: string]: string;
-    };
-    /** Numeric properties. */
-    numeric_properties: {
-        [key: string]: number;
-    };
-    /** Optional multiple of the count that must be satisfied. */
-    count_multiple: number | undefined;
-}
-export interface MatchmakerAdd_StringPropertiesEntry {
-    key: string;
-    value: string;
-}
-export interface MatchmakerAdd_NumericPropertiesEntry {
-    key: string;
-    value: number;
-}
-/** A successful matchmaking result. */
-export interface MatchmakerMatched {
-    /** The matchmaking ticket that has completed. */
-    ticket: string;
-    /** Match ID. */
-    match_id?: string | undefined;
-    /** Match join token. */
-    token?: string | undefined;
-    /** The users that have been matched together, and information about their matchmaking data. */
-    users: MatchmakerMatched_MatchmakerUser[];
-    /** A reference to the current user and their properties. */
-    self: MatchmakerMatched_MatchmakerUser | undefined;
-}
-export interface MatchmakerMatched_MatchmakerUser {
-    /** User info. */
-    presence: UserPresence | undefined;
-    /** Party identifier, if this user was matched as a party member. */
-    party_id: string;
-    /** String properties. */
-    string_properties: {
-        [key: string]: string;
-    };
-    /** Numeric properties. */
-    numeric_properties: {
-        [key: string]: number;
-    };
-}
-export interface MatchmakerMatched_MatchmakerUser_StringPropertiesEntry {
-    key: string;
-    value: string;
-}
-export interface MatchmakerMatched_MatchmakerUser_NumericPropertiesEntry {
-    key: string;
-    value: number;
-}
-/** Cancel an existing ongoing matchmaking process. */
-export interface MatchmakerRemove {
-    /** The ticket to cancel. */
-    ticket: string;
-}
-/** A ticket representing a new matchmaking process. */
-export interface MatchmakerTicket {
-    /** The ticket that can be used to cancel matchmaking. */
-    ticket: string;
 }
 /** A collection of zero or more notifications. */
 export interface Notifications {
@@ -606,20 +497,30 @@ export interface StatusPresenceEvent {
 export interface LastSeenMessageEvent {
     /** The unique ID of this channel. */
     channel_id: string;
+    /** The channel label */
+    channel_label: string;
     /** The unique ID of this message. */
     message_id: string;
+    /** mode */
+    mode: number;
 }
 /** Message typing event data */
 export interface MessageTypingEvent {
     /** The channel this message belongs to. */
     channel_id: string;
+    /** The channel label */
+    channel_label: string;
     /** Message sender, usually a user ID. */
     sender_id: string;
+    /** mode */
+    mode: number;
 }
 /** Mention to message */
 export interface MessageMentionEvent {
     /** The channel this message belongs to. */
     channel_id: string;
+    /** The channel label */
+    channel_label: string;
     /** React to message */
     message_id: string;
     /** mention user id */
@@ -628,6 +529,8 @@ export interface MessageMentionEvent {
     username: string;
     /** sender id */
     sender_id: string;
+    /** mode */
+    mode: number;
 }
 /** Message reacton event data */
 export interface MessageReactionEvent {
@@ -635,6 +538,8 @@ export interface MessageReactionEvent {
     id: string;
     /** The channel this message belongs to. */
     channel_id: string;
+    /** The channel label */
+    channel_label: string;
     /** React to message */
     message_id: string;
     /** Message sender, usually a user ID. */
@@ -651,11 +556,15 @@ export interface MessageReactionEvent {
     message_sender_id: string;
     /** count */
     count: number;
+    /** mode */
+    mode: number;
 }
 /** Message attachment */
 export interface MessageAttachmentEvent {
     /** The channel this message belongs to. */
     channel_id: string;
+    /** The channel label */
+    channel_label: string;
     /** React to message */
     message_id: string;
     /** Attachment file name */
@@ -672,15 +581,21 @@ export interface MessageAttachmentEvent {
     height: number;
     /** sender id */
     sender_id: string;
+    /** mode */
+    mode: number;
 }
 /** Mention to message */
 export interface MessageDeletedEvent {
     /** The channel this message belongs to. */
     channel_id: string;
+    /** The channel name */
+    channel_label: string;
     /** React to message */
     message_id: string;
     /** sender id */
     deletor: string;
+    /** mode */
+    mode: number;
 }
 /** Stop receiving status updates for some set of users. */
 export interface StatusUnfollow {
@@ -759,19 +674,22 @@ export declare const Envelope: {
                 persistence?: boolean | undefined;
                 status?: string | undefined;
             } | undefined;
-            chanel_name?: string | undefined;
+            chanel_label?: string | undefined;
             user_id_one?: string | undefined;
             user_id_two?: string | undefined;
         } | undefined;
         channel_join?: {
-            target_id?: string | undefined;
-            target?: string | undefined;
+            channel_id?: string | undefined;
+            channel_label?: string | undefined;
             type?: number | undefined;
             persistence?: boolean | undefined;
             hidden?: boolean | undefined;
+            mode?: number | undefined;
         } | undefined;
         channel_leave?: {
             channel_id?: string | undefined;
+            channel_label?: string | undefined;
+            mode?: number | undefined;
         } | undefined;
         channel_message?: {
             clan_id?: string | undefined;
@@ -784,7 +702,7 @@ export declare const Envelope: {
             content?: string | undefined;
             create_time?: Date | undefined;
             update_time?: Date | undefined;
-            channel_name?: string | undefined;
+            channel_label?: string | undefined;
             user_id_one?: string | undefined;
             user_id_two?: string | undefined;
             reactions?: string | undefined;
@@ -801,7 +719,7 @@ export declare const Envelope: {
             create_time?: Date | undefined;
             update_time?: Date | undefined;
             persistent?: boolean | undefined;
-            channel_name?: string | undefined;
+            channel_label?: string | undefined;
             user_id_one?: string | undefined;
             user_id_two?: string | undefined;
         } | undefined;
@@ -830,15 +748,20 @@ export declare const Envelope: {
                 has_attachment?: boolean | undefined;
                 ref_type?: number | undefined;
             }[] | undefined;
+            mode?: number | undefined;
         } | undefined;
         channel_message_update?: {
             channel_id?: string | undefined;
+            channel_label?: string | undefined;
             message_id?: string | undefined;
             content?: string | undefined;
+            mode?: number | undefined;
         } | undefined;
         channel_message_remove?: {
             channel_id?: string | undefined;
+            channel_label?: string | undefined;
             message_id?: string | undefined;
+            mode?: number | undefined;
         } | undefined;
         channel_presence_event?: {
             channel_id?: string | undefined;
@@ -856,9 +779,10 @@ export declare const Envelope: {
                 persistence?: boolean | undefined;
                 status?: string | undefined;
             }[] | undefined;
-            channel_name?: string | undefined;
+            channel_label?: string | undefined;
             user_id_one?: string | undefined;
             user_id_two?: string | undefined;
+            mode?: number | undefined;
         } | undefined;
         error?: {
             code?: number | undefined;
@@ -1087,15 +1011,20 @@ export declare const Envelope: {
         } | undefined;
         message_typing_event?: {
             channel_id?: string | undefined;
+            channel_label?: string | undefined;
             sender_id?: string | undefined;
+            mode?: number | undefined;
         } | undefined;
         last_seen_message_event?: {
             channel_id?: string | undefined;
+            channel_label?: string | undefined;
             message_id?: string | undefined;
+            mode?: number | undefined;
         } | undefined;
         message_reaction_event?: {
             id?: string | undefined;
             channel_id?: string | undefined;
+            channel_label?: string | undefined;
             message_id?: string | undefined;
             sender_id?: string | undefined;
             sender_name?: string | undefined;
@@ -1104,11 +1033,14 @@ export declare const Envelope: {
             action?: boolean | undefined;
             message_sender_id?: string | undefined;
             count?: number | undefined;
+            mode?: number | undefined;
         } | undefined;
         message_deleted_event?: {
             channel_id?: string | undefined;
+            channel_label?: string | undefined;
             message_id?: string | undefined;
             deletor?: string | undefined;
+            mode?: number | undefined;
         } | undefined;
     } & {
         cid?: string | undefined;
@@ -1128,7 +1060,7 @@ export declare const Envelope: {
                 persistence?: boolean | undefined;
                 status?: string | undefined;
             } | undefined;
-            chanel_name?: string | undefined;
+            chanel_label?: string | undefined;
             user_id_one?: string | undefined;
             user_id_two?: string | undefined;
         } & {
@@ -1171,28 +1103,34 @@ export declare const Envelope: {
                 persistence?: boolean | undefined;
                 status?: string | undefined;
             } & { [K_2 in Exclude<keyof I["channel"]["self"], keyof UserPresence>]: never; }) | undefined;
-            chanel_name?: string | undefined;
+            chanel_label?: string | undefined;
             user_id_one?: string | undefined;
             user_id_two?: string | undefined;
         } & { [K_3 in Exclude<keyof I["channel"], keyof Channel>]: never; }) | undefined;
         channel_join?: ({
-            target_id?: string | undefined;
-            target?: string | undefined;
+            channel_id?: string | undefined;
+            channel_label?: string | undefined;
             type?: number | undefined;
             persistence?: boolean | undefined;
             hidden?: boolean | undefined;
+            mode?: number | undefined;
         } & {
-            target_id?: string | undefined;
-            target?: string | undefined;
+            channel_id?: string | undefined;
+            channel_label?: string | undefined;
             type?: number | undefined;
             persistence?: boolean | undefined;
             hidden?: boolean | undefined;
+            mode?: number | undefined;
         } & { [K_4 in Exclude<keyof I["channel_join"], keyof ChannelJoin>]: never; }) | undefined;
         channel_leave?: ({
             channel_id?: string | undefined;
+            channel_label?: string | undefined;
+            mode?: number | undefined;
         } & {
             channel_id?: string | undefined;
-        } & { [K_5 in Exclude<keyof I["channel_leave"], "channel_id">]: never; }) | undefined;
+            channel_label?: string | undefined;
+            mode?: number | undefined;
+        } & { [K_5 in Exclude<keyof I["channel_leave"], keyof ChannelLeave>]: never; }) | undefined;
         channel_message?: ({
             clan_id?: string | undefined;
             channel_id?: string | undefined;
@@ -1204,7 +1142,7 @@ export declare const Envelope: {
             content?: string | undefined;
             create_time?: Date | undefined;
             update_time?: Date | undefined;
-            channel_name?: string | undefined;
+            channel_label?: string | undefined;
             user_id_one?: string | undefined;
             user_id_two?: string | undefined;
             reactions?: string | undefined;
@@ -1223,7 +1161,7 @@ export declare const Envelope: {
             content?: string | undefined;
             create_time?: Date | undefined;
             update_time?: Date | undefined;
-            channel_name?: string | undefined;
+            channel_label?: string | undefined;
             user_id_one?: string | undefined;
             user_id_two?: string | undefined;
             reactions?: string | undefined;
@@ -1240,7 +1178,7 @@ export declare const Envelope: {
             create_time?: Date | undefined;
             update_time?: Date | undefined;
             persistent?: boolean | undefined;
-            channel_name?: string | undefined;
+            channel_label?: string | undefined;
             user_id_one?: string | undefined;
             user_id_two?: string | undefined;
         } & {
@@ -1251,7 +1189,7 @@ export declare const Envelope: {
             create_time?: Date | undefined;
             update_time?: Date | undefined;
             persistent?: boolean | undefined;
-            channel_name?: string | undefined;
+            channel_label?: string | undefined;
             user_id_one?: string | undefined;
             user_id_two?: string | undefined;
         } & { [K_7 in Exclude<keyof I["channel_message_ack"], keyof ChannelMessageAck>]: never; }) | undefined;
@@ -1280,6 +1218,7 @@ export declare const Envelope: {
                 has_attachment?: boolean | undefined;
                 ref_type?: number | undefined;
             }[] | undefined;
+            mode?: number | undefined;
         } & {
             clan_id?: string | undefined;
             channel_id?: string | undefined;
@@ -1356,22 +1295,31 @@ export declare const Envelope: {
                 has_attachment?: boolean | undefined;
                 ref_type?: number | undefined;
             }[]>]: never; }) | undefined;
+            mode?: number | undefined;
         } & { [K_14 in Exclude<keyof I["channel_message_send"], keyof ChannelMessageSend>]: never; }) | undefined;
         channel_message_update?: ({
             channel_id?: string | undefined;
+            channel_label?: string | undefined;
             message_id?: string | undefined;
             content?: string | undefined;
+            mode?: number | undefined;
         } & {
             channel_id?: string | undefined;
+            channel_label?: string | undefined;
             message_id?: string | undefined;
             content?: string | undefined;
+            mode?: number | undefined;
         } & { [K_15 in Exclude<keyof I["channel_message_update"], keyof ChannelMessageUpdate>]: never; }) | undefined;
         channel_message_remove?: ({
             channel_id?: string | undefined;
+            channel_label?: string | undefined;
             message_id?: string | undefined;
+            mode?: number | undefined;
         } & {
             channel_id?: string | undefined;
+            channel_label?: string | undefined;
             message_id?: string | undefined;
+            mode?: number | undefined;
         } & { [K_16 in Exclude<keyof I["channel_message_remove"], keyof ChannelMessageRemove>]: never; }) | undefined;
         channel_presence_event?: ({
             channel_id?: string | undefined;
@@ -1389,9 +1337,10 @@ export declare const Envelope: {
                 persistence?: boolean | undefined;
                 status?: string | undefined;
             }[] | undefined;
-            channel_name?: string | undefined;
+            channel_label?: string | undefined;
             user_id_one?: string | undefined;
             user_id_two?: string | undefined;
+            mode?: number | undefined;
         } & {
             channel_id?: string | undefined;
             joins?: ({
@@ -1444,9 +1393,10 @@ export declare const Envelope: {
                 persistence?: boolean | undefined;
                 status?: string | undefined;
             }[]>]: never; }) | undefined;
-            channel_name?: string | undefined;
+            channel_label?: string | undefined;
             user_id_one?: string | undefined;
             user_id_two?: string | undefined;
+            mode?: number | undefined;
         } & { [K_21 in Exclude<keyof I["channel_presence_event"], keyof ChannelPresenceEvent>]: never; }) | undefined;
         error?: ({
             code?: number | undefined;
@@ -2120,21 +2070,30 @@ export declare const Envelope: {
         } & { [K_81 in Exclude<keyof I["party_presence_event"], keyof PartyPresenceEvent>]: never; }) | undefined;
         message_typing_event?: ({
             channel_id?: string | undefined;
+            channel_label?: string | undefined;
             sender_id?: string | undefined;
+            mode?: number | undefined;
         } & {
             channel_id?: string | undefined;
+            channel_label?: string | undefined;
             sender_id?: string | undefined;
+            mode?: number | undefined;
         } & { [K_82 in Exclude<keyof I["message_typing_event"], keyof MessageTypingEvent>]: never; }) | undefined;
         last_seen_message_event?: ({
             channel_id?: string | undefined;
+            channel_label?: string | undefined;
             message_id?: string | undefined;
+            mode?: number | undefined;
         } & {
             channel_id?: string | undefined;
+            channel_label?: string | undefined;
             message_id?: string | undefined;
+            mode?: number | undefined;
         } & { [K_83 in Exclude<keyof I["last_seen_message_event"], keyof LastSeenMessageEvent>]: never; }) | undefined;
         message_reaction_event?: ({
             id?: string | undefined;
             channel_id?: string | undefined;
+            channel_label?: string | undefined;
             message_id?: string | undefined;
             sender_id?: string | undefined;
             sender_name?: string | undefined;
@@ -2143,9 +2102,11 @@ export declare const Envelope: {
             action?: boolean | undefined;
             message_sender_id?: string | undefined;
             count?: number | undefined;
+            mode?: number | undefined;
         } & {
             id?: string | undefined;
             channel_id?: string | undefined;
+            channel_label?: string | undefined;
             message_id?: string | undefined;
             sender_id?: string | undefined;
             sender_name?: string | undefined;
@@ -2154,15 +2115,20 @@ export declare const Envelope: {
             action?: boolean | undefined;
             message_sender_id?: string | undefined;
             count?: number | undefined;
+            mode?: number | undefined;
         } & { [K_84 in Exclude<keyof I["message_reaction_event"], keyof MessageReactionEvent>]: never; }) | undefined;
         message_deleted_event?: ({
             channel_id?: string | undefined;
+            channel_label?: string | undefined;
             message_id?: string | undefined;
             deletor?: string | undefined;
+            mode?: number | undefined;
         } & {
             channel_id?: string | undefined;
+            channel_label?: string | undefined;
             message_id?: string | undefined;
             deletor?: string | undefined;
+            mode?: number | undefined;
         } & { [K_85 in Exclude<keyof I["message_deleted_event"], keyof MessageDeletedEvent>]: never; }) | undefined;
     } & { [K_86 in Exclude<keyof I, keyof Envelope>]: never; }>(base?: I | undefined): Envelope;
     fromPartial<I_1 extends {
@@ -2183,19 +2149,22 @@ export declare const Envelope: {
                 persistence?: boolean | undefined;
                 status?: string | undefined;
             } | undefined;
-            chanel_name?: string | undefined;
+            chanel_label?: string | undefined;
             user_id_one?: string | undefined;
             user_id_two?: string | undefined;
         } | undefined;
         channel_join?: {
-            target_id?: string | undefined;
-            target?: string | undefined;
+            channel_id?: string | undefined;
+            channel_label?: string | undefined;
             type?: number | undefined;
             persistence?: boolean | undefined;
             hidden?: boolean | undefined;
+            mode?: number | undefined;
         } | undefined;
         channel_leave?: {
             channel_id?: string | undefined;
+            channel_label?: string | undefined;
+            mode?: number | undefined;
         } | undefined;
         channel_message?: {
             clan_id?: string | undefined;
@@ -2208,7 +2177,7 @@ export declare const Envelope: {
             content?: string | undefined;
             create_time?: Date | undefined;
             update_time?: Date | undefined;
-            channel_name?: string | undefined;
+            channel_label?: string | undefined;
             user_id_one?: string | undefined;
             user_id_two?: string | undefined;
             reactions?: string | undefined;
@@ -2225,7 +2194,7 @@ export declare const Envelope: {
             create_time?: Date | undefined;
             update_time?: Date | undefined;
             persistent?: boolean | undefined;
-            channel_name?: string | undefined;
+            channel_label?: string | undefined;
             user_id_one?: string | undefined;
             user_id_two?: string | undefined;
         } | undefined;
@@ -2254,15 +2223,20 @@ export declare const Envelope: {
                 has_attachment?: boolean | undefined;
                 ref_type?: number | undefined;
             }[] | undefined;
+            mode?: number | undefined;
         } | undefined;
         channel_message_update?: {
             channel_id?: string | undefined;
+            channel_label?: string | undefined;
             message_id?: string | undefined;
             content?: string | undefined;
+            mode?: number | undefined;
         } | undefined;
         channel_message_remove?: {
             channel_id?: string | undefined;
+            channel_label?: string | undefined;
             message_id?: string | undefined;
+            mode?: number | undefined;
         } | undefined;
         channel_presence_event?: {
             channel_id?: string | undefined;
@@ -2280,9 +2254,10 @@ export declare const Envelope: {
                 persistence?: boolean | undefined;
                 status?: string | undefined;
             }[] | undefined;
-            channel_name?: string | undefined;
+            channel_label?: string | undefined;
             user_id_one?: string | undefined;
             user_id_two?: string | undefined;
+            mode?: number | undefined;
         } | undefined;
         error?: {
             code?: number | undefined;
@@ -2511,15 +2486,20 @@ export declare const Envelope: {
         } | undefined;
         message_typing_event?: {
             channel_id?: string | undefined;
+            channel_label?: string | undefined;
             sender_id?: string | undefined;
+            mode?: number | undefined;
         } | undefined;
         last_seen_message_event?: {
             channel_id?: string | undefined;
+            channel_label?: string | undefined;
             message_id?: string | undefined;
+            mode?: number | undefined;
         } | undefined;
         message_reaction_event?: {
             id?: string | undefined;
             channel_id?: string | undefined;
+            channel_label?: string | undefined;
             message_id?: string | undefined;
             sender_id?: string | undefined;
             sender_name?: string | undefined;
@@ -2528,11 +2508,14 @@ export declare const Envelope: {
             action?: boolean | undefined;
             message_sender_id?: string | undefined;
             count?: number | undefined;
+            mode?: number | undefined;
         } | undefined;
         message_deleted_event?: {
             channel_id?: string | undefined;
+            channel_label?: string | undefined;
             message_id?: string | undefined;
             deletor?: string | undefined;
+            mode?: number | undefined;
         } | undefined;
     } & {
         cid?: string | undefined;
@@ -2552,7 +2535,7 @@ export declare const Envelope: {
                 persistence?: boolean | undefined;
                 status?: string | undefined;
             } | undefined;
-            chanel_name?: string | undefined;
+            chanel_label?: string | undefined;
             user_id_one?: string | undefined;
             user_id_two?: string | undefined;
         } & {
@@ -2595,28 +2578,34 @@ export declare const Envelope: {
                 persistence?: boolean | undefined;
                 status?: string | undefined;
             } & { [K_89 in Exclude<keyof I_1["channel"]["self"], keyof UserPresence>]: never; }) | undefined;
-            chanel_name?: string | undefined;
+            chanel_label?: string | undefined;
             user_id_one?: string | undefined;
             user_id_two?: string | undefined;
         } & { [K_90 in Exclude<keyof I_1["channel"], keyof Channel>]: never; }) | undefined;
         channel_join?: ({
-            target_id?: string | undefined;
-            target?: string | undefined;
+            channel_id?: string | undefined;
+            channel_label?: string | undefined;
             type?: number | undefined;
             persistence?: boolean | undefined;
             hidden?: boolean | undefined;
+            mode?: number | undefined;
         } & {
-            target_id?: string | undefined;
-            target?: string | undefined;
+            channel_id?: string | undefined;
+            channel_label?: string | undefined;
             type?: number | undefined;
             persistence?: boolean | undefined;
             hidden?: boolean | undefined;
+            mode?: number | undefined;
         } & { [K_91 in Exclude<keyof I_1["channel_join"], keyof ChannelJoin>]: never; }) | undefined;
         channel_leave?: ({
             channel_id?: string | undefined;
+            channel_label?: string | undefined;
+            mode?: number | undefined;
         } & {
             channel_id?: string | undefined;
-        } & { [K_92 in Exclude<keyof I_1["channel_leave"], "channel_id">]: never; }) | undefined;
+            channel_label?: string | undefined;
+            mode?: number | undefined;
+        } & { [K_92 in Exclude<keyof I_1["channel_leave"], keyof ChannelLeave>]: never; }) | undefined;
         channel_message?: ({
             clan_id?: string | undefined;
             channel_id?: string | undefined;
@@ -2628,7 +2617,7 @@ export declare const Envelope: {
             content?: string | undefined;
             create_time?: Date | undefined;
             update_time?: Date | undefined;
-            channel_name?: string | undefined;
+            channel_label?: string | undefined;
             user_id_one?: string | undefined;
             user_id_two?: string | undefined;
             reactions?: string | undefined;
@@ -2647,7 +2636,7 @@ export declare const Envelope: {
             content?: string | undefined;
             create_time?: Date | undefined;
             update_time?: Date | undefined;
-            channel_name?: string | undefined;
+            channel_label?: string | undefined;
             user_id_one?: string | undefined;
             user_id_two?: string | undefined;
             reactions?: string | undefined;
@@ -2664,7 +2653,7 @@ export declare const Envelope: {
             create_time?: Date | undefined;
             update_time?: Date | undefined;
             persistent?: boolean | undefined;
-            channel_name?: string | undefined;
+            channel_label?: string | undefined;
             user_id_one?: string | undefined;
             user_id_two?: string | undefined;
         } & {
@@ -2675,7 +2664,7 @@ export declare const Envelope: {
             create_time?: Date | undefined;
             update_time?: Date | undefined;
             persistent?: boolean | undefined;
-            channel_name?: string | undefined;
+            channel_label?: string | undefined;
             user_id_one?: string | undefined;
             user_id_two?: string | undefined;
         } & { [K_94 in Exclude<keyof I_1["channel_message_ack"], keyof ChannelMessageAck>]: never; }) | undefined;
@@ -2704,6 +2693,7 @@ export declare const Envelope: {
                 has_attachment?: boolean | undefined;
                 ref_type?: number | undefined;
             }[] | undefined;
+            mode?: number | undefined;
         } & {
             clan_id?: string | undefined;
             channel_id?: string | undefined;
@@ -2780,22 +2770,31 @@ export declare const Envelope: {
                 has_attachment?: boolean | undefined;
                 ref_type?: number | undefined;
             }[]>]: never; }) | undefined;
+            mode?: number | undefined;
         } & { [K_101 in Exclude<keyof I_1["channel_message_send"], keyof ChannelMessageSend>]: never; }) | undefined;
         channel_message_update?: ({
             channel_id?: string | undefined;
+            channel_label?: string | undefined;
             message_id?: string | undefined;
             content?: string | undefined;
+            mode?: number | undefined;
         } & {
             channel_id?: string | undefined;
+            channel_label?: string | undefined;
             message_id?: string | undefined;
             content?: string | undefined;
+            mode?: number | undefined;
         } & { [K_102 in Exclude<keyof I_1["channel_message_update"], keyof ChannelMessageUpdate>]: never; }) | undefined;
         channel_message_remove?: ({
             channel_id?: string | undefined;
+            channel_label?: string | undefined;
             message_id?: string | undefined;
+            mode?: number | undefined;
         } & {
             channel_id?: string | undefined;
+            channel_label?: string | undefined;
             message_id?: string | undefined;
+            mode?: number | undefined;
         } & { [K_103 in Exclude<keyof I_1["channel_message_remove"], keyof ChannelMessageRemove>]: never; }) | undefined;
         channel_presence_event?: ({
             channel_id?: string | undefined;
@@ -2813,9 +2812,10 @@ export declare const Envelope: {
                 persistence?: boolean | undefined;
                 status?: string | undefined;
             }[] | undefined;
-            channel_name?: string | undefined;
+            channel_label?: string | undefined;
             user_id_one?: string | undefined;
             user_id_two?: string | undefined;
+            mode?: number | undefined;
         } & {
             channel_id?: string | undefined;
             joins?: ({
@@ -2868,9 +2868,10 @@ export declare const Envelope: {
                 persistence?: boolean | undefined;
                 status?: string | undefined;
             }[]>]: never; }) | undefined;
-            channel_name?: string | undefined;
+            channel_label?: string | undefined;
             user_id_one?: string | undefined;
             user_id_two?: string | undefined;
+            mode?: number | undefined;
         } & { [K_108 in Exclude<keyof I_1["channel_presence_event"], keyof ChannelPresenceEvent>]: never; }) | undefined;
         error?: ({
             code?: number | undefined;
@@ -3544,21 +3545,30 @@ export declare const Envelope: {
         } & { [K_168 in Exclude<keyof I_1["party_presence_event"], keyof PartyPresenceEvent>]: never; }) | undefined;
         message_typing_event?: ({
             channel_id?: string | undefined;
+            channel_label?: string | undefined;
             sender_id?: string | undefined;
+            mode?: number | undefined;
         } & {
             channel_id?: string | undefined;
+            channel_label?: string | undefined;
             sender_id?: string | undefined;
+            mode?: number | undefined;
         } & { [K_169 in Exclude<keyof I_1["message_typing_event"], keyof MessageTypingEvent>]: never; }) | undefined;
         last_seen_message_event?: ({
             channel_id?: string | undefined;
+            channel_label?: string | undefined;
             message_id?: string | undefined;
+            mode?: number | undefined;
         } & {
             channel_id?: string | undefined;
+            channel_label?: string | undefined;
             message_id?: string | undefined;
+            mode?: number | undefined;
         } & { [K_170 in Exclude<keyof I_1["last_seen_message_event"], keyof LastSeenMessageEvent>]: never; }) | undefined;
         message_reaction_event?: ({
             id?: string | undefined;
             channel_id?: string | undefined;
+            channel_label?: string | undefined;
             message_id?: string | undefined;
             sender_id?: string | undefined;
             sender_name?: string | undefined;
@@ -3567,9 +3577,11 @@ export declare const Envelope: {
             action?: boolean | undefined;
             message_sender_id?: string | undefined;
             count?: number | undefined;
+            mode?: number | undefined;
         } & {
             id?: string | undefined;
             channel_id?: string | undefined;
+            channel_label?: string | undefined;
             message_id?: string | undefined;
             sender_id?: string | undefined;
             sender_name?: string | undefined;
@@ -3578,15 +3590,20 @@ export declare const Envelope: {
             action?: boolean | undefined;
             message_sender_id?: string | undefined;
             count?: number | undefined;
+            mode?: number | undefined;
         } & { [K_171 in Exclude<keyof I_1["message_reaction_event"], keyof MessageReactionEvent>]: never; }) | undefined;
         message_deleted_event?: ({
             channel_id?: string | undefined;
+            channel_label?: string | undefined;
             message_id?: string | undefined;
             deletor?: string | undefined;
+            mode?: number | undefined;
         } & {
             channel_id?: string | undefined;
+            channel_label?: string | undefined;
             message_id?: string | undefined;
             deletor?: string | undefined;
+            mode?: number | undefined;
         } & { [K_172 in Exclude<keyof I_1["message_deleted_event"], keyof MessageDeletedEvent>]: never; }) | undefined;
     } & { [K_173 in Exclude<keyof I_1, keyof Envelope>]: never; }>(object: I_1): Envelope;
 };
@@ -3611,7 +3628,7 @@ export declare const Channel: {
             persistence?: boolean | undefined;
             status?: string | undefined;
         } | undefined;
-        chanel_name?: string | undefined;
+        chanel_label?: string | undefined;
         user_id_one?: string | undefined;
         user_id_two?: string | undefined;
     } & {
@@ -3654,7 +3671,7 @@ export declare const Channel: {
             persistence?: boolean | undefined;
             status?: string | undefined;
         } & { [K_2 in Exclude<keyof I["self"], keyof UserPresence>]: never; }) | undefined;
-        chanel_name?: string | undefined;
+        chanel_label?: string | undefined;
         user_id_one?: string | undefined;
         user_id_two?: string | undefined;
     } & { [K_3 in Exclude<keyof I, keyof Channel>]: never; }>(base?: I | undefined): Channel;
@@ -3674,7 +3691,7 @@ export declare const Channel: {
             persistence?: boolean | undefined;
             status?: string | undefined;
         } | undefined;
-        chanel_name?: string | undefined;
+        chanel_label?: string | undefined;
         user_id_one?: string | undefined;
         user_id_two?: string | undefined;
     } & {
@@ -3717,7 +3734,7 @@ export declare const Channel: {
             persistence?: boolean | undefined;
             status?: string | undefined;
         } & { [K_6 in Exclude<keyof I_1["self"], keyof UserPresence>]: never; }) | undefined;
-        chanel_name?: string | undefined;
+        chanel_label?: string | undefined;
         user_id_one?: string | undefined;
         user_id_two?: string | undefined;
     } & { [K_7 in Exclude<keyof I_1, keyof Channel>]: never; }>(object: I_1): Channel;
@@ -3728,30 +3745,34 @@ export declare const ChannelJoin: {
     fromJSON(object: any): ChannelJoin;
     toJSON(message: ChannelJoin): unknown;
     create<I extends {
-        target_id?: string | undefined;
-        target?: string | undefined;
+        channel_id?: string | undefined;
+        channel_label?: string | undefined;
         type?: number | undefined;
         persistence?: boolean | undefined;
         hidden?: boolean | undefined;
+        mode?: number | undefined;
     } & {
-        target_id?: string | undefined;
-        target?: string | undefined;
+        channel_id?: string | undefined;
+        channel_label?: string | undefined;
         type?: number | undefined;
         persistence?: boolean | undefined;
         hidden?: boolean | undefined;
+        mode?: number | undefined;
     } & { [K in Exclude<keyof I, keyof ChannelJoin>]: never; }>(base?: I | undefined): ChannelJoin;
     fromPartial<I_1 extends {
-        target_id?: string | undefined;
-        target?: string | undefined;
+        channel_id?: string | undefined;
+        channel_label?: string | undefined;
         type?: number | undefined;
         persistence?: boolean | undefined;
         hidden?: boolean | undefined;
+        mode?: number | undefined;
     } & {
-        target_id?: string | undefined;
-        target?: string | undefined;
+        channel_id?: string | undefined;
+        channel_label?: string | undefined;
         type?: number | undefined;
         persistence?: boolean | undefined;
         hidden?: boolean | undefined;
+        mode?: number | undefined;
     } & { [K_1 in Exclude<keyof I_1, keyof ChannelJoin>]: never; }>(object: I_1): ChannelJoin;
 };
 export declare const ChannelLeave: {
@@ -3761,14 +3782,22 @@ export declare const ChannelLeave: {
     toJSON(message: ChannelLeave): unknown;
     create<I extends {
         channel_id?: string | undefined;
+        channel_label?: string | undefined;
+        mode?: number | undefined;
     } & {
         channel_id?: string | undefined;
-    } & { [K in Exclude<keyof I, "channel_id">]: never; }>(base?: I | undefined): ChannelLeave;
+        channel_label?: string | undefined;
+        mode?: number | undefined;
+    } & { [K in Exclude<keyof I, keyof ChannelLeave>]: never; }>(base?: I | undefined): ChannelLeave;
     fromPartial<I_1 extends {
         channel_id?: string | undefined;
+        channel_label?: string | undefined;
+        mode?: number | undefined;
     } & {
         channel_id?: string | undefined;
-    } & { [K_1 in Exclude<keyof I_1, "channel_id">]: never; }>(object: I_1): ChannelLeave;
+        channel_label?: string | undefined;
+        mode?: number | undefined;
+    } & { [K_1 in Exclude<keyof I_1, keyof ChannelLeave>]: never; }>(object: I_1): ChannelLeave;
 };
 export declare const ChannelMessageAck: {
     encode(message: ChannelMessageAck, writer?: _m0.Writer): _m0.Writer;
@@ -3783,7 +3812,7 @@ export declare const ChannelMessageAck: {
         create_time?: Date | undefined;
         update_time?: Date | undefined;
         persistent?: boolean | undefined;
-        channel_name?: string | undefined;
+        channel_label?: string | undefined;
         user_id_one?: string | undefined;
         user_id_two?: string | undefined;
     } & {
@@ -3794,7 +3823,7 @@ export declare const ChannelMessageAck: {
         create_time?: Date | undefined;
         update_time?: Date | undefined;
         persistent?: boolean | undefined;
-        channel_name?: string | undefined;
+        channel_label?: string | undefined;
         user_id_one?: string | undefined;
         user_id_two?: string | undefined;
     } & { [K in Exclude<keyof I, keyof ChannelMessageAck>]: never; }>(base?: I | undefined): ChannelMessageAck;
@@ -3806,7 +3835,7 @@ export declare const ChannelMessageAck: {
         create_time?: Date | undefined;
         update_time?: Date | undefined;
         persistent?: boolean | undefined;
-        channel_name?: string | undefined;
+        channel_label?: string | undefined;
         user_id_one?: string | undefined;
         user_id_two?: string | undefined;
     } & {
@@ -3817,7 +3846,7 @@ export declare const ChannelMessageAck: {
         create_time?: Date | undefined;
         update_time?: Date | undefined;
         persistent?: boolean | undefined;
-        channel_name?: string | undefined;
+        channel_label?: string | undefined;
         user_id_one?: string | undefined;
         user_id_two?: string | undefined;
     } & { [K_1 in Exclude<keyof I_1, keyof ChannelMessageAck>]: never; }>(object: I_1): ChannelMessageAck;
@@ -3944,6 +3973,7 @@ export declare const ChannelMessageSend: {
             has_attachment?: boolean | undefined;
             ref_type?: number | undefined;
         }[] | undefined;
+        mode?: number | undefined;
     } & {
         clan_id?: string | undefined;
         channel_id?: string | undefined;
@@ -4020,6 +4050,7 @@ export declare const ChannelMessageSend: {
             has_attachment?: boolean | undefined;
             ref_type?: number | undefined;
         }[]>]: never; }) | undefined;
+        mode?: number | undefined;
     } & { [K_6 in Exclude<keyof I, keyof ChannelMessageSend>]: never; }>(base?: I | undefined): ChannelMessageSend;
     fromPartial<I_1 extends {
         clan_id?: string | undefined;
@@ -4046,6 +4077,7 @@ export declare const ChannelMessageSend: {
             has_attachment?: boolean | undefined;
             ref_type?: number | undefined;
         }[] | undefined;
+        mode?: number | undefined;
     } & {
         clan_id?: string | undefined;
         channel_id?: string | undefined;
@@ -4122,6 +4154,7 @@ export declare const ChannelMessageSend: {
             has_attachment?: boolean | undefined;
             ref_type?: number | undefined;
         }[]>]: never; }) | undefined;
+        mode?: number | undefined;
     } & { [K_13 in Exclude<keyof I_1, keyof ChannelMessageSend>]: never; }>(object: I_1): ChannelMessageSend;
 };
 export declare const ChannelMessageUpdate: {
@@ -4131,21 +4164,29 @@ export declare const ChannelMessageUpdate: {
     toJSON(message: ChannelMessageUpdate): unknown;
     create<I extends {
         channel_id?: string | undefined;
+        channel_label?: string | undefined;
         message_id?: string | undefined;
         content?: string | undefined;
+        mode?: number | undefined;
     } & {
         channel_id?: string | undefined;
+        channel_label?: string | undefined;
         message_id?: string | undefined;
         content?: string | undefined;
+        mode?: number | undefined;
     } & { [K in Exclude<keyof I, keyof ChannelMessageUpdate>]: never; }>(base?: I | undefined): ChannelMessageUpdate;
     fromPartial<I_1 extends {
         channel_id?: string | undefined;
+        channel_label?: string | undefined;
         message_id?: string | undefined;
         content?: string | undefined;
+        mode?: number | undefined;
     } & {
         channel_id?: string | undefined;
+        channel_label?: string | undefined;
         message_id?: string | undefined;
         content?: string | undefined;
+        mode?: number | undefined;
     } & { [K_1 in Exclude<keyof I_1, keyof ChannelMessageUpdate>]: never; }>(object: I_1): ChannelMessageUpdate;
 };
 export declare const ChannelMessageRemove: {
@@ -4155,17 +4196,25 @@ export declare const ChannelMessageRemove: {
     toJSON(message: ChannelMessageRemove): unknown;
     create<I extends {
         channel_id?: string | undefined;
+        channel_label?: string | undefined;
         message_id?: string | undefined;
+        mode?: number | undefined;
     } & {
         channel_id?: string | undefined;
+        channel_label?: string | undefined;
         message_id?: string | undefined;
+        mode?: number | undefined;
     } & { [K in Exclude<keyof I, keyof ChannelMessageRemove>]: never; }>(base?: I | undefined): ChannelMessageRemove;
     fromPartial<I_1 extends {
         channel_id?: string | undefined;
+        channel_label?: string | undefined;
         message_id?: string | undefined;
+        mode?: number | undefined;
     } & {
         channel_id?: string | undefined;
+        channel_label?: string | undefined;
         message_id?: string | undefined;
+        mode?: number | undefined;
     } & { [K_1 in Exclude<keyof I_1, keyof ChannelMessageRemove>]: never; }>(object: I_1): ChannelMessageRemove;
 };
 export declare const ChannelPresenceEvent: {
@@ -4189,9 +4238,10 @@ export declare const ChannelPresenceEvent: {
             persistence?: boolean | undefined;
             status?: string | undefined;
         }[] | undefined;
-        channel_name?: string | undefined;
+        channel_label?: string | undefined;
         user_id_one?: string | undefined;
         user_id_two?: string | undefined;
+        mode?: number | undefined;
     } & {
         channel_id?: string | undefined;
         joins?: ({
@@ -4244,9 +4294,10 @@ export declare const ChannelPresenceEvent: {
             persistence?: boolean | undefined;
             status?: string | undefined;
         }[]>]: never; }) | undefined;
-        channel_name?: string | undefined;
+        channel_label?: string | undefined;
         user_id_one?: string | undefined;
         user_id_two?: string | undefined;
+        mode?: number | undefined;
     } & { [K_4 in Exclude<keyof I, keyof ChannelPresenceEvent>]: never; }>(base?: I | undefined): ChannelPresenceEvent;
     fromPartial<I_1 extends {
         channel_id?: string | undefined;
@@ -4264,9 +4315,10 @@ export declare const ChannelPresenceEvent: {
             persistence?: boolean | undefined;
             status?: string | undefined;
         }[] | undefined;
-        channel_name?: string | undefined;
+        channel_label?: string | undefined;
         user_id_one?: string | undefined;
         user_id_two?: string | undefined;
+        mode?: number | undefined;
     } & {
         channel_id?: string | undefined;
         joins?: ({
@@ -4319,9 +4371,10 @@ export declare const ChannelPresenceEvent: {
             persistence?: boolean | undefined;
             status?: string | undefined;
         }[]>]: never; }) | undefined;
-        channel_name?: string | undefined;
+        channel_label?: string | undefined;
         user_id_one?: string | undefined;
         user_id_two?: string | undefined;
+        mode?: number | undefined;
     } & { [K_9 in Exclude<keyof I_1, keyof ChannelPresenceEvent>]: never; }>(object: I_1): ChannelPresenceEvent;
 };
 export declare const Error: {
@@ -4527,954 +4580,6 @@ export declare const MatchCreate: {
     } & {
         name?: string | undefined;
     } & { [K_1 in Exclude<keyof I_1, "name">]: never; }>(object: I_1): MatchCreate;
-};
-export declare const MatchData: {
-    encode(message: MatchData, writer?: _m0.Writer): _m0.Writer;
-    decode(input: _m0.Reader | Uint8Array, length?: number): MatchData;
-    fromJSON(object: any): MatchData;
-    toJSON(message: MatchData): unknown;
-    create<I extends {
-        match_id?: string | undefined;
-        presence?: {
-            user_id?: string | undefined;
-            session_id?: string | undefined;
-            username?: string | undefined;
-            persistence?: boolean | undefined;
-            status?: string | undefined;
-        } | undefined;
-        op_code?: number | undefined;
-        data?: Uint8Array | undefined;
-        reliable?: boolean | undefined;
-    } & {
-        match_id?: string | undefined;
-        presence?: ({
-            user_id?: string | undefined;
-            session_id?: string | undefined;
-            username?: string | undefined;
-            persistence?: boolean | undefined;
-            status?: string | undefined;
-        } & {
-            user_id?: string | undefined;
-            session_id?: string | undefined;
-            username?: string | undefined;
-            persistence?: boolean | undefined;
-            status?: string | undefined;
-        } & { [K in Exclude<keyof I["presence"], keyof UserPresence>]: never; }) | undefined;
-        op_code?: number | undefined;
-        data?: Uint8Array | undefined;
-        reliable?: boolean | undefined;
-    } & { [K_1 in Exclude<keyof I, keyof MatchData>]: never; }>(base?: I | undefined): MatchData;
-    fromPartial<I_1 extends {
-        match_id?: string | undefined;
-        presence?: {
-            user_id?: string | undefined;
-            session_id?: string | undefined;
-            username?: string | undefined;
-            persistence?: boolean | undefined;
-            status?: string | undefined;
-        } | undefined;
-        op_code?: number | undefined;
-        data?: Uint8Array | undefined;
-        reliable?: boolean | undefined;
-    } & {
-        match_id?: string | undefined;
-        presence?: ({
-            user_id?: string | undefined;
-            session_id?: string | undefined;
-            username?: string | undefined;
-            persistence?: boolean | undefined;
-            status?: string | undefined;
-        } & {
-            user_id?: string | undefined;
-            session_id?: string | undefined;
-            username?: string | undefined;
-            persistence?: boolean | undefined;
-            status?: string | undefined;
-        } & { [K_2 in Exclude<keyof I_1["presence"], keyof UserPresence>]: never; }) | undefined;
-        op_code?: number | undefined;
-        data?: Uint8Array | undefined;
-        reliable?: boolean | undefined;
-    } & { [K_3 in Exclude<keyof I_1, keyof MatchData>]: never; }>(object: I_1): MatchData;
-};
-export declare const MatchDataSend: {
-    encode(message: MatchDataSend, writer?: _m0.Writer): _m0.Writer;
-    decode(input: _m0.Reader | Uint8Array, length?: number): MatchDataSend;
-    fromJSON(object: any): MatchDataSend;
-    toJSON(message: MatchDataSend): unknown;
-    create<I extends {
-        match_id?: string | undefined;
-        op_code?: number | undefined;
-        data?: Uint8Array | undefined;
-        presences?: {
-            user_id?: string | undefined;
-            session_id?: string | undefined;
-            username?: string | undefined;
-            persistence?: boolean | undefined;
-            status?: string | undefined;
-        }[] | undefined;
-        reliable?: boolean | undefined;
-    } & {
-        match_id?: string | undefined;
-        op_code?: number | undefined;
-        data?: Uint8Array | undefined;
-        presences?: ({
-            user_id?: string | undefined;
-            session_id?: string | undefined;
-            username?: string | undefined;
-            persistence?: boolean | undefined;
-            status?: string | undefined;
-        }[] & ({
-            user_id?: string | undefined;
-            session_id?: string | undefined;
-            username?: string | undefined;
-            persistence?: boolean | undefined;
-            status?: string | undefined;
-        } & {
-            user_id?: string | undefined;
-            session_id?: string | undefined;
-            username?: string | undefined;
-            persistence?: boolean | undefined;
-            status?: string | undefined;
-        } & { [K in Exclude<keyof I["presences"][number], keyof UserPresence>]: never; })[] & { [K_1 in Exclude<keyof I["presences"], keyof {
-            user_id?: string | undefined;
-            session_id?: string | undefined;
-            username?: string | undefined;
-            persistence?: boolean | undefined;
-            status?: string | undefined;
-        }[]>]: never; }) | undefined;
-        reliable?: boolean | undefined;
-    } & { [K_2 in Exclude<keyof I, keyof MatchDataSend>]: never; }>(base?: I | undefined): MatchDataSend;
-    fromPartial<I_1 extends {
-        match_id?: string | undefined;
-        op_code?: number | undefined;
-        data?: Uint8Array | undefined;
-        presences?: {
-            user_id?: string | undefined;
-            session_id?: string | undefined;
-            username?: string | undefined;
-            persistence?: boolean | undefined;
-            status?: string | undefined;
-        }[] | undefined;
-        reliable?: boolean | undefined;
-    } & {
-        match_id?: string | undefined;
-        op_code?: number | undefined;
-        data?: Uint8Array | undefined;
-        presences?: ({
-            user_id?: string | undefined;
-            session_id?: string | undefined;
-            username?: string | undefined;
-            persistence?: boolean | undefined;
-            status?: string | undefined;
-        }[] & ({
-            user_id?: string | undefined;
-            session_id?: string | undefined;
-            username?: string | undefined;
-            persistence?: boolean | undefined;
-            status?: string | undefined;
-        } & {
-            user_id?: string | undefined;
-            session_id?: string | undefined;
-            username?: string | undefined;
-            persistence?: boolean | undefined;
-            status?: string | undefined;
-        } & { [K_3 in Exclude<keyof I_1["presences"][number], keyof UserPresence>]: never; })[] & { [K_4 in Exclude<keyof I_1["presences"], keyof {
-            user_id?: string | undefined;
-            session_id?: string | undefined;
-            username?: string | undefined;
-            persistence?: boolean | undefined;
-            status?: string | undefined;
-        }[]>]: never; }) | undefined;
-        reliable?: boolean | undefined;
-    } & { [K_5 in Exclude<keyof I_1, keyof MatchDataSend>]: never; }>(object: I_1): MatchDataSend;
-};
-export declare const MatchJoin: {
-    encode(message: MatchJoin, writer?: _m0.Writer): _m0.Writer;
-    decode(input: _m0.Reader | Uint8Array, length?: number): MatchJoin;
-    fromJSON(object: any): MatchJoin;
-    toJSON(message: MatchJoin): unknown;
-    create<I extends {
-        match_id?: string | undefined;
-        token?: string | undefined;
-        metadata?: {
-            [x: string]: string | undefined;
-        } | undefined;
-    } & {
-        match_id?: string | undefined;
-        token?: string | undefined;
-        metadata?: ({
-            [x: string]: string | undefined;
-        } & {
-            [x: string]: string | undefined;
-        } & { [K in Exclude<keyof I["metadata"], string | number>]: never; }) | undefined;
-    } & { [K_1 in Exclude<keyof I, keyof MatchJoin>]: never; }>(base?: I | undefined): MatchJoin;
-    fromPartial<I_1 extends {
-        match_id?: string | undefined;
-        token?: string | undefined;
-        metadata?: {
-            [x: string]: string | undefined;
-        } | undefined;
-    } & {
-        match_id?: string | undefined;
-        token?: string | undefined;
-        metadata?: ({
-            [x: string]: string | undefined;
-        } & {
-            [x: string]: string | undefined;
-        } & { [K_2 in Exclude<keyof I_1["metadata"], string | number>]: never; }) | undefined;
-    } & { [K_3 in Exclude<keyof I_1, keyof MatchJoin>]: never; }>(object: I_1): MatchJoin;
-};
-export declare const MatchJoin_MetadataEntry: {
-    encode(message: MatchJoin_MetadataEntry, writer?: _m0.Writer): _m0.Writer;
-    decode(input: _m0.Reader | Uint8Array, length?: number): MatchJoin_MetadataEntry;
-    fromJSON(object: any): MatchJoin_MetadataEntry;
-    toJSON(message: MatchJoin_MetadataEntry): unknown;
-    create<I extends {
-        key?: string | undefined;
-        value?: string | undefined;
-    } & {
-        key?: string | undefined;
-        value?: string | undefined;
-    } & { [K in Exclude<keyof I, keyof MatchJoin_MetadataEntry>]: never; }>(base?: I | undefined): MatchJoin_MetadataEntry;
-    fromPartial<I_1 extends {
-        key?: string | undefined;
-        value?: string | undefined;
-    } & {
-        key?: string | undefined;
-        value?: string | undefined;
-    } & { [K_1 in Exclude<keyof I_1, keyof MatchJoin_MetadataEntry>]: never; }>(object: I_1): MatchJoin_MetadataEntry;
-};
-export declare const MatchLeave: {
-    encode(message: MatchLeave, writer?: _m0.Writer): _m0.Writer;
-    decode(input: _m0.Reader | Uint8Array, length?: number): MatchLeave;
-    fromJSON(object: any): MatchLeave;
-    toJSON(message: MatchLeave): unknown;
-    create<I extends {
-        match_id?: string | undefined;
-    } & {
-        match_id?: string | undefined;
-    } & { [K in Exclude<keyof I, "match_id">]: never; }>(base?: I | undefined): MatchLeave;
-    fromPartial<I_1 extends {
-        match_id?: string | undefined;
-    } & {
-        match_id?: string | undefined;
-    } & { [K_1 in Exclude<keyof I_1, "match_id">]: never; }>(object: I_1): MatchLeave;
-};
-export declare const MatchPresenceEvent: {
-    encode(message: MatchPresenceEvent, writer?: _m0.Writer): _m0.Writer;
-    decode(input: _m0.Reader | Uint8Array, length?: number): MatchPresenceEvent;
-    fromJSON(object: any): MatchPresenceEvent;
-    toJSON(message: MatchPresenceEvent): unknown;
-    create<I extends {
-        match_id?: string | undefined;
-        joins?: {
-            user_id?: string | undefined;
-            session_id?: string | undefined;
-            username?: string | undefined;
-            persistence?: boolean | undefined;
-            status?: string | undefined;
-        }[] | undefined;
-        leaves?: {
-            user_id?: string | undefined;
-            session_id?: string | undefined;
-            username?: string | undefined;
-            persistence?: boolean | undefined;
-            status?: string | undefined;
-        }[] | undefined;
-    } & {
-        match_id?: string | undefined;
-        joins?: ({
-            user_id?: string | undefined;
-            session_id?: string | undefined;
-            username?: string | undefined;
-            persistence?: boolean | undefined;
-            status?: string | undefined;
-        }[] & ({
-            user_id?: string | undefined;
-            session_id?: string | undefined;
-            username?: string | undefined;
-            persistence?: boolean | undefined;
-            status?: string | undefined;
-        } & {
-            user_id?: string | undefined;
-            session_id?: string | undefined;
-            username?: string | undefined;
-            persistence?: boolean | undefined;
-            status?: string | undefined;
-        } & { [K in Exclude<keyof I["joins"][number], keyof UserPresence>]: never; })[] & { [K_1 in Exclude<keyof I["joins"], keyof {
-            user_id?: string | undefined;
-            session_id?: string | undefined;
-            username?: string | undefined;
-            persistence?: boolean | undefined;
-            status?: string | undefined;
-        }[]>]: never; }) | undefined;
-        leaves?: ({
-            user_id?: string | undefined;
-            session_id?: string | undefined;
-            username?: string | undefined;
-            persistence?: boolean | undefined;
-            status?: string | undefined;
-        }[] & ({
-            user_id?: string | undefined;
-            session_id?: string | undefined;
-            username?: string | undefined;
-            persistence?: boolean | undefined;
-            status?: string | undefined;
-        } & {
-            user_id?: string | undefined;
-            session_id?: string | undefined;
-            username?: string | undefined;
-            persistence?: boolean | undefined;
-            status?: string | undefined;
-        } & { [K_2 in Exclude<keyof I["leaves"][number], keyof UserPresence>]: never; })[] & { [K_3 in Exclude<keyof I["leaves"], keyof {
-            user_id?: string | undefined;
-            session_id?: string | undefined;
-            username?: string | undefined;
-            persistence?: boolean | undefined;
-            status?: string | undefined;
-        }[]>]: never; }) | undefined;
-    } & { [K_4 in Exclude<keyof I, keyof MatchPresenceEvent>]: never; }>(base?: I | undefined): MatchPresenceEvent;
-    fromPartial<I_1 extends {
-        match_id?: string | undefined;
-        joins?: {
-            user_id?: string | undefined;
-            session_id?: string | undefined;
-            username?: string | undefined;
-            persistence?: boolean | undefined;
-            status?: string | undefined;
-        }[] | undefined;
-        leaves?: {
-            user_id?: string | undefined;
-            session_id?: string | undefined;
-            username?: string | undefined;
-            persistence?: boolean | undefined;
-            status?: string | undefined;
-        }[] | undefined;
-    } & {
-        match_id?: string | undefined;
-        joins?: ({
-            user_id?: string | undefined;
-            session_id?: string | undefined;
-            username?: string | undefined;
-            persistence?: boolean | undefined;
-            status?: string | undefined;
-        }[] & ({
-            user_id?: string | undefined;
-            session_id?: string | undefined;
-            username?: string | undefined;
-            persistence?: boolean | undefined;
-            status?: string | undefined;
-        } & {
-            user_id?: string | undefined;
-            session_id?: string | undefined;
-            username?: string | undefined;
-            persistence?: boolean | undefined;
-            status?: string | undefined;
-        } & { [K_5 in Exclude<keyof I_1["joins"][number], keyof UserPresence>]: never; })[] & { [K_6 in Exclude<keyof I_1["joins"], keyof {
-            user_id?: string | undefined;
-            session_id?: string | undefined;
-            username?: string | undefined;
-            persistence?: boolean | undefined;
-            status?: string | undefined;
-        }[]>]: never; }) | undefined;
-        leaves?: ({
-            user_id?: string | undefined;
-            session_id?: string | undefined;
-            username?: string | undefined;
-            persistence?: boolean | undefined;
-            status?: string | undefined;
-        }[] & ({
-            user_id?: string | undefined;
-            session_id?: string | undefined;
-            username?: string | undefined;
-            persistence?: boolean | undefined;
-            status?: string | undefined;
-        } & {
-            user_id?: string | undefined;
-            session_id?: string | undefined;
-            username?: string | undefined;
-            persistence?: boolean | undefined;
-            status?: string | undefined;
-        } & { [K_7 in Exclude<keyof I_1["leaves"][number], keyof UserPresence>]: never; })[] & { [K_8 in Exclude<keyof I_1["leaves"], keyof {
-            user_id?: string | undefined;
-            session_id?: string | undefined;
-            username?: string | undefined;
-            persistence?: boolean | undefined;
-            status?: string | undefined;
-        }[]>]: never; }) | undefined;
-    } & { [K_9 in Exclude<keyof I_1, keyof MatchPresenceEvent>]: never; }>(object: I_1): MatchPresenceEvent;
-};
-export declare const MatchmakerAdd: {
-    encode(message: MatchmakerAdd, writer?: _m0.Writer): _m0.Writer;
-    decode(input: _m0.Reader | Uint8Array, length?: number): MatchmakerAdd;
-    fromJSON(object: any): MatchmakerAdd;
-    toJSON(message: MatchmakerAdd): unknown;
-    create<I extends {
-        min_count?: number | undefined;
-        max_count?: number | undefined;
-        query?: string | undefined;
-        string_properties?: {
-            [x: string]: string | undefined;
-        } | undefined;
-        numeric_properties?: {
-            [x: string]: number | undefined;
-        } | undefined;
-        count_multiple?: number | undefined;
-    } & {
-        min_count?: number | undefined;
-        max_count?: number | undefined;
-        query?: string | undefined;
-        string_properties?: ({
-            [x: string]: string | undefined;
-        } & {
-            [x: string]: string | undefined;
-        } & { [K in Exclude<keyof I["string_properties"], string | number>]: never; }) | undefined;
-        numeric_properties?: ({
-            [x: string]: number | undefined;
-        } & {
-            [x: string]: number | undefined;
-        } & { [K_1 in Exclude<keyof I["numeric_properties"], string | number>]: never; }) | undefined;
-        count_multiple?: number | undefined;
-    } & { [K_2 in Exclude<keyof I, keyof MatchmakerAdd>]: never; }>(base?: I | undefined): MatchmakerAdd;
-    fromPartial<I_1 extends {
-        min_count?: number | undefined;
-        max_count?: number | undefined;
-        query?: string | undefined;
-        string_properties?: {
-            [x: string]: string | undefined;
-        } | undefined;
-        numeric_properties?: {
-            [x: string]: number | undefined;
-        } | undefined;
-        count_multiple?: number | undefined;
-    } & {
-        min_count?: number | undefined;
-        max_count?: number | undefined;
-        query?: string | undefined;
-        string_properties?: ({
-            [x: string]: string | undefined;
-        } & {
-            [x: string]: string | undefined;
-        } & { [K_3 in Exclude<keyof I_1["string_properties"], string | number>]: never; }) | undefined;
-        numeric_properties?: ({
-            [x: string]: number | undefined;
-        } & {
-            [x: string]: number | undefined;
-        } & { [K_4 in Exclude<keyof I_1["numeric_properties"], string | number>]: never; }) | undefined;
-        count_multiple?: number | undefined;
-    } & { [K_5 in Exclude<keyof I_1, keyof MatchmakerAdd>]: never; }>(object: I_1): MatchmakerAdd;
-};
-export declare const MatchmakerAdd_StringPropertiesEntry: {
-    encode(message: MatchmakerAdd_StringPropertiesEntry, writer?: _m0.Writer): _m0.Writer;
-    decode(input: _m0.Reader | Uint8Array, length?: number): MatchmakerAdd_StringPropertiesEntry;
-    fromJSON(object: any): MatchmakerAdd_StringPropertiesEntry;
-    toJSON(message: MatchmakerAdd_StringPropertiesEntry): unknown;
-    create<I extends {
-        key?: string | undefined;
-        value?: string | undefined;
-    } & {
-        key?: string | undefined;
-        value?: string | undefined;
-    } & { [K in Exclude<keyof I, keyof MatchmakerAdd_StringPropertiesEntry>]: never; }>(base?: I | undefined): MatchmakerAdd_StringPropertiesEntry;
-    fromPartial<I_1 extends {
-        key?: string | undefined;
-        value?: string | undefined;
-    } & {
-        key?: string | undefined;
-        value?: string | undefined;
-    } & { [K_1 in Exclude<keyof I_1, keyof MatchmakerAdd_StringPropertiesEntry>]: never; }>(object: I_1): MatchmakerAdd_StringPropertiesEntry;
-};
-export declare const MatchmakerAdd_NumericPropertiesEntry: {
-    encode(message: MatchmakerAdd_NumericPropertiesEntry, writer?: _m0.Writer): _m0.Writer;
-    decode(input: _m0.Reader | Uint8Array, length?: number): MatchmakerAdd_NumericPropertiesEntry;
-    fromJSON(object: any): MatchmakerAdd_NumericPropertiesEntry;
-    toJSON(message: MatchmakerAdd_NumericPropertiesEntry): unknown;
-    create<I extends {
-        key?: string | undefined;
-        value?: number | undefined;
-    } & {
-        key?: string | undefined;
-        value?: number | undefined;
-    } & { [K in Exclude<keyof I, keyof MatchmakerAdd_NumericPropertiesEntry>]: never; }>(base?: I | undefined): MatchmakerAdd_NumericPropertiesEntry;
-    fromPartial<I_1 extends {
-        key?: string | undefined;
-        value?: number | undefined;
-    } & {
-        key?: string | undefined;
-        value?: number | undefined;
-    } & { [K_1 in Exclude<keyof I_1, keyof MatchmakerAdd_NumericPropertiesEntry>]: never; }>(object: I_1): MatchmakerAdd_NumericPropertiesEntry;
-};
-export declare const MatchmakerMatched: {
-    encode(message: MatchmakerMatched, writer?: _m0.Writer): _m0.Writer;
-    decode(input: _m0.Reader | Uint8Array, length?: number): MatchmakerMatched;
-    fromJSON(object: any): MatchmakerMatched;
-    toJSON(message: MatchmakerMatched): unknown;
-    create<I extends {
-        ticket?: string | undefined;
-        match_id?: string | undefined;
-        token?: string | undefined;
-        users?: {
-            presence?: {
-                user_id?: string | undefined;
-                session_id?: string | undefined;
-                username?: string | undefined;
-                persistence?: boolean | undefined;
-                status?: string | undefined;
-            } | undefined;
-            party_id?: string | undefined;
-            string_properties?: {
-                [x: string]: string | undefined;
-            } | undefined;
-            numeric_properties?: {
-                [x: string]: number | undefined;
-            } | undefined;
-        }[] | undefined;
-        self?: {
-            presence?: {
-                user_id?: string | undefined;
-                session_id?: string | undefined;
-                username?: string | undefined;
-                persistence?: boolean | undefined;
-                status?: string | undefined;
-            } | undefined;
-            party_id?: string | undefined;
-            string_properties?: {
-                [x: string]: string | undefined;
-            } | undefined;
-            numeric_properties?: {
-                [x: string]: number | undefined;
-            } | undefined;
-        } | undefined;
-    } & {
-        ticket?: string | undefined;
-        match_id?: string | undefined;
-        token?: string | undefined;
-        users?: ({
-            presence?: {
-                user_id?: string | undefined;
-                session_id?: string | undefined;
-                username?: string | undefined;
-                persistence?: boolean | undefined;
-                status?: string | undefined;
-            } | undefined;
-            party_id?: string | undefined;
-            string_properties?: {
-                [x: string]: string | undefined;
-            } | undefined;
-            numeric_properties?: {
-                [x: string]: number | undefined;
-            } | undefined;
-        }[] & ({
-            presence?: {
-                user_id?: string | undefined;
-                session_id?: string | undefined;
-                username?: string | undefined;
-                persistence?: boolean | undefined;
-                status?: string | undefined;
-            } | undefined;
-            party_id?: string | undefined;
-            string_properties?: {
-                [x: string]: string | undefined;
-            } | undefined;
-            numeric_properties?: {
-                [x: string]: number | undefined;
-            } | undefined;
-        } & {
-            presence?: ({
-                user_id?: string | undefined;
-                session_id?: string | undefined;
-                username?: string | undefined;
-                persistence?: boolean | undefined;
-                status?: string | undefined;
-            } & {
-                user_id?: string | undefined;
-                session_id?: string | undefined;
-                username?: string | undefined;
-                persistence?: boolean | undefined;
-                status?: string | undefined;
-            } & { [K in Exclude<keyof I["users"][number]["presence"], keyof UserPresence>]: never; }) | undefined;
-            party_id?: string | undefined;
-            string_properties?: ({
-                [x: string]: string | undefined;
-            } & {
-                [x: string]: string | undefined;
-            } & { [K_1 in Exclude<keyof I["users"][number]["string_properties"], string | number>]: never; }) | undefined;
-            numeric_properties?: ({
-                [x: string]: number | undefined;
-            } & {
-                [x: string]: number | undefined;
-            } & { [K_2 in Exclude<keyof I["users"][number]["numeric_properties"], string | number>]: never; }) | undefined;
-        } & { [K_3 in Exclude<keyof I["users"][number], keyof MatchmakerMatched_MatchmakerUser>]: never; })[] & { [K_4 in Exclude<keyof I["users"], keyof {
-            presence?: {
-                user_id?: string | undefined;
-                session_id?: string | undefined;
-                username?: string | undefined;
-                persistence?: boolean | undefined;
-                status?: string | undefined;
-            } | undefined;
-            party_id?: string | undefined;
-            string_properties?: {
-                [x: string]: string | undefined;
-            } | undefined;
-            numeric_properties?: {
-                [x: string]: number | undefined;
-            } | undefined;
-        }[]>]: never; }) | undefined;
-        self?: ({
-            presence?: {
-                user_id?: string | undefined;
-                session_id?: string | undefined;
-                username?: string | undefined;
-                persistence?: boolean | undefined;
-                status?: string | undefined;
-            } | undefined;
-            party_id?: string | undefined;
-            string_properties?: {
-                [x: string]: string | undefined;
-            } | undefined;
-            numeric_properties?: {
-                [x: string]: number | undefined;
-            } | undefined;
-        } & {
-            presence?: ({
-                user_id?: string | undefined;
-                session_id?: string | undefined;
-                username?: string | undefined;
-                persistence?: boolean | undefined;
-                status?: string | undefined;
-            } & {
-                user_id?: string | undefined;
-                session_id?: string | undefined;
-                username?: string | undefined;
-                persistence?: boolean | undefined;
-                status?: string | undefined;
-            } & { [K_5 in Exclude<keyof I["self"]["presence"], keyof UserPresence>]: never; }) | undefined;
-            party_id?: string | undefined;
-            string_properties?: ({
-                [x: string]: string | undefined;
-            } & {
-                [x: string]: string | undefined;
-            } & { [K_6 in Exclude<keyof I["self"]["string_properties"], string | number>]: never; }) | undefined;
-            numeric_properties?: ({
-                [x: string]: number | undefined;
-            } & {
-                [x: string]: number | undefined;
-            } & { [K_7 in Exclude<keyof I["self"]["numeric_properties"], string | number>]: never; }) | undefined;
-        } & { [K_8 in Exclude<keyof I["self"], keyof MatchmakerMatched_MatchmakerUser>]: never; }) | undefined;
-    } & { [K_9 in Exclude<keyof I, keyof MatchmakerMatched>]: never; }>(base?: I | undefined): MatchmakerMatched;
-    fromPartial<I_1 extends {
-        ticket?: string | undefined;
-        match_id?: string | undefined;
-        token?: string | undefined;
-        users?: {
-            presence?: {
-                user_id?: string | undefined;
-                session_id?: string | undefined;
-                username?: string | undefined;
-                persistence?: boolean | undefined;
-                status?: string | undefined;
-            } | undefined;
-            party_id?: string | undefined;
-            string_properties?: {
-                [x: string]: string | undefined;
-            } | undefined;
-            numeric_properties?: {
-                [x: string]: number | undefined;
-            } | undefined;
-        }[] | undefined;
-        self?: {
-            presence?: {
-                user_id?: string | undefined;
-                session_id?: string | undefined;
-                username?: string | undefined;
-                persistence?: boolean | undefined;
-                status?: string | undefined;
-            } | undefined;
-            party_id?: string | undefined;
-            string_properties?: {
-                [x: string]: string | undefined;
-            } | undefined;
-            numeric_properties?: {
-                [x: string]: number | undefined;
-            } | undefined;
-        } | undefined;
-    } & {
-        ticket?: string | undefined;
-        match_id?: string | undefined;
-        token?: string | undefined;
-        users?: ({
-            presence?: {
-                user_id?: string | undefined;
-                session_id?: string | undefined;
-                username?: string | undefined;
-                persistence?: boolean | undefined;
-                status?: string | undefined;
-            } | undefined;
-            party_id?: string | undefined;
-            string_properties?: {
-                [x: string]: string | undefined;
-            } | undefined;
-            numeric_properties?: {
-                [x: string]: number | undefined;
-            } | undefined;
-        }[] & ({
-            presence?: {
-                user_id?: string | undefined;
-                session_id?: string | undefined;
-                username?: string | undefined;
-                persistence?: boolean | undefined;
-                status?: string | undefined;
-            } | undefined;
-            party_id?: string | undefined;
-            string_properties?: {
-                [x: string]: string | undefined;
-            } | undefined;
-            numeric_properties?: {
-                [x: string]: number | undefined;
-            } | undefined;
-        } & {
-            presence?: ({
-                user_id?: string | undefined;
-                session_id?: string | undefined;
-                username?: string | undefined;
-                persistence?: boolean | undefined;
-                status?: string | undefined;
-            } & {
-                user_id?: string | undefined;
-                session_id?: string | undefined;
-                username?: string | undefined;
-                persistence?: boolean | undefined;
-                status?: string | undefined;
-            } & { [K_10 in Exclude<keyof I_1["users"][number]["presence"], keyof UserPresence>]: never; }) | undefined;
-            party_id?: string | undefined;
-            string_properties?: ({
-                [x: string]: string | undefined;
-            } & {
-                [x: string]: string | undefined;
-            } & { [K_11 in Exclude<keyof I_1["users"][number]["string_properties"], string | number>]: never; }) | undefined;
-            numeric_properties?: ({
-                [x: string]: number | undefined;
-            } & {
-                [x: string]: number | undefined;
-            } & { [K_12 in Exclude<keyof I_1["users"][number]["numeric_properties"], string | number>]: never; }) | undefined;
-        } & { [K_13 in Exclude<keyof I_1["users"][number], keyof MatchmakerMatched_MatchmakerUser>]: never; })[] & { [K_14 in Exclude<keyof I_1["users"], keyof {
-            presence?: {
-                user_id?: string | undefined;
-                session_id?: string | undefined;
-                username?: string | undefined;
-                persistence?: boolean | undefined;
-                status?: string | undefined;
-            } | undefined;
-            party_id?: string | undefined;
-            string_properties?: {
-                [x: string]: string | undefined;
-            } | undefined;
-            numeric_properties?: {
-                [x: string]: number | undefined;
-            } | undefined;
-        }[]>]: never; }) | undefined;
-        self?: ({
-            presence?: {
-                user_id?: string | undefined;
-                session_id?: string | undefined;
-                username?: string | undefined;
-                persistence?: boolean | undefined;
-                status?: string | undefined;
-            } | undefined;
-            party_id?: string | undefined;
-            string_properties?: {
-                [x: string]: string | undefined;
-            } | undefined;
-            numeric_properties?: {
-                [x: string]: number | undefined;
-            } | undefined;
-        } & {
-            presence?: ({
-                user_id?: string | undefined;
-                session_id?: string | undefined;
-                username?: string | undefined;
-                persistence?: boolean | undefined;
-                status?: string | undefined;
-            } & {
-                user_id?: string | undefined;
-                session_id?: string | undefined;
-                username?: string | undefined;
-                persistence?: boolean | undefined;
-                status?: string | undefined;
-            } & { [K_15 in Exclude<keyof I_1["self"]["presence"], keyof UserPresence>]: never; }) | undefined;
-            party_id?: string | undefined;
-            string_properties?: ({
-                [x: string]: string | undefined;
-            } & {
-                [x: string]: string | undefined;
-            } & { [K_16 in Exclude<keyof I_1["self"]["string_properties"], string | number>]: never; }) | undefined;
-            numeric_properties?: ({
-                [x: string]: number | undefined;
-            } & {
-                [x: string]: number | undefined;
-            } & { [K_17 in Exclude<keyof I_1["self"]["numeric_properties"], string | number>]: never; }) | undefined;
-        } & { [K_18 in Exclude<keyof I_1["self"], keyof MatchmakerMatched_MatchmakerUser>]: never; }) | undefined;
-    } & { [K_19 in Exclude<keyof I_1, keyof MatchmakerMatched>]: never; }>(object: I_1): MatchmakerMatched;
-};
-export declare const MatchmakerMatched_MatchmakerUser: {
-    encode(message: MatchmakerMatched_MatchmakerUser, writer?: _m0.Writer): _m0.Writer;
-    decode(input: _m0.Reader | Uint8Array, length?: number): MatchmakerMatched_MatchmakerUser;
-    fromJSON(object: any): MatchmakerMatched_MatchmakerUser;
-    toJSON(message: MatchmakerMatched_MatchmakerUser): unknown;
-    create<I extends {
-        presence?: {
-            user_id?: string | undefined;
-            session_id?: string | undefined;
-            username?: string | undefined;
-            persistence?: boolean | undefined;
-            status?: string | undefined;
-        } | undefined;
-        party_id?: string | undefined;
-        string_properties?: {
-            [x: string]: string | undefined;
-        } | undefined;
-        numeric_properties?: {
-            [x: string]: number | undefined;
-        } | undefined;
-    } & {
-        presence?: ({
-            user_id?: string | undefined;
-            session_id?: string | undefined;
-            username?: string | undefined;
-            persistence?: boolean | undefined;
-            status?: string | undefined;
-        } & {
-            user_id?: string | undefined;
-            session_id?: string | undefined;
-            username?: string | undefined;
-            persistence?: boolean | undefined;
-            status?: string | undefined;
-        } & { [K in Exclude<keyof I["presence"], keyof UserPresence>]: never; }) | undefined;
-        party_id?: string | undefined;
-        string_properties?: ({
-            [x: string]: string | undefined;
-        } & {
-            [x: string]: string | undefined;
-        } & { [K_1 in Exclude<keyof I["string_properties"], string | number>]: never; }) | undefined;
-        numeric_properties?: ({
-            [x: string]: number | undefined;
-        } & {
-            [x: string]: number | undefined;
-        } & { [K_2 in Exclude<keyof I["numeric_properties"], string | number>]: never; }) | undefined;
-    } & { [K_3 in Exclude<keyof I, keyof MatchmakerMatched_MatchmakerUser>]: never; }>(base?: I | undefined): MatchmakerMatched_MatchmakerUser;
-    fromPartial<I_1 extends {
-        presence?: {
-            user_id?: string | undefined;
-            session_id?: string | undefined;
-            username?: string | undefined;
-            persistence?: boolean | undefined;
-            status?: string | undefined;
-        } | undefined;
-        party_id?: string | undefined;
-        string_properties?: {
-            [x: string]: string | undefined;
-        } | undefined;
-        numeric_properties?: {
-            [x: string]: number | undefined;
-        } | undefined;
-    } & {
-        presence?: ({
-            user_id?: string | undefined;
-            session_id?: string | undefined;
-            username?: string | undefined;
-            persistence?: boolean | undefined;
-            status?: string | undefined;
-        } & {
-            user_id?: string | undefined;
-            session_id?: string | undefined;
-            username?: string | undefined;
-            persistence?: boolean | undefined;
-            status?: string | undefined;
-        } & { [K_4 in Exclude<keyof I_1["presence"], keyof UserPresence>]: never; }) | undefined;
-        party_id?: string | undefined;
-        string_properties?: ({
-            [x: string]: string | undefined;
-        } & {
-            [x: string]: string | undefined;
-        } & { [K_5 in Exclude<keyof I_1["string_properties"], string | number>]: never; }) | undefined;
-        numeric_properties?: ({
-            [x: string]: number | undefined;
-        } & {
-            [x: string]: number | undefined;
-        } & { [K_6 in Exclude<keyof I_1["numeric_properties"], string | number>]: never; }) | undefined;
-    } & { [K_7 in Exclude<keyof I_1, keyof MatchmakerMatched_MatchmakerUser>]: never; }>(object: I_1): MatchmakerMatched_MatchmakerUser;
-};
-export declare const MatchmakerMatched_MatchmakerUser_StringPropertiesEntry: {
-    encode(message: MatchmakerMatched_MatchmakerUser_StringPropertiesEntry, writer?: _m0.Writer): _m0.Writer;
-    decode(input: _m0.Reader | Uint8Array, length?: number): MatchmakerMatched_MatchmakerUser_StringPropertiesEntry;
-    fromJSON(object: any): MatchmakerMatched_MatchmakerUser_StringPropertiesEntry;
-    toJSON(message: MatchmakerMatched_MatchmakerUser_StringPropertiesEntry): unknown;
-    create<I extends {
-        key?: string | undefined;
-        value?: string | undefined;
-    } & {
-        key?: string | undefined;
-        value?: string | undefined;
-    } & { [K in Exclude<keyof I, keyof MatchmakerMatched_MatchmakerUser_StringPropertiesEntry>]: never; }>(base?: I | undefined): MatchmakerMatched_MatchmakerUser_StringPropertiesEntry;
-    fromPartial<I_1 extends {
-        key?: string | undefined;
-        value?: string | undefined;
-    } & {
-        key?: string | undefined;
-        value?: string | undefined;
-    } & { [K_1 in Exclude<keyof I_1, keyof MatchmakerMatched_MatchmakerUser_StringPropertiesEntry>]: never; }>(object: I_1): MatchmakerMatched_MatchmakerUser_StringPropertiesEntry;
-};
-export declare const MatchmakerMatched_MatchmakerUser_NumericPropertiesEntry: {
-    encode(message: MatchmakerMatched_MatchmakerUser_NumericPropertiesEntry, writer?: _m0.Writer): _m0.Writer;
-    decode(input: _m0.Reader | Uint8Array, length?: number): MatchmakerMatched_MatchmakerUser_NumericPropertiesEntry;
-    fromJSON(object: any): MatchmakerMatched_MatchmakerUser_NumericPropertiesEntry;
-    toJSON(message: MatchmakerMatched_MatchmakerUser_NumericPropertiesEntry): unknown;
-    create<I extends {
-        key?: string | undefined;
-        value?: number | undefined;
-    } & {
-        key?: string | undefined;
-        value?: number | undefined;
-    } & { [K in Exclude<keyof I, keyof MatchmakerMatched_MatchmakerUser_NumericPropertiesEntry>]: never; }>(base?: I | undefined): MatchmakerMatched_MatchmakerUser_NumericPropertiesEntry;
-    fromPartial<I_1 extends {
-        key?: string | undefined;
-        value?: number | undefined;
-    } & {
-        key?: string | undefined;
-        value?: number | undefined;
-    } & { [K_1 in Exclude<keyof I_1, keyof MatchmakerMatched_MatchmakerUser_NumericPropertiesEntry>]: never; }>(object: I_1): MatchmakerMatched_MatchmakerUser_NumericPropertiesEntry;
-};
-export declare const MatchmakerRemove: {
-    encode(message: MatchmakerRemove, writer?: _m0.Writer): _m0.Writer;
-    decode(input: _m0.Reader | Uint8Array, length?: number): MatchmakerRemove;
-    fromJSON(object: any): MatchmakerRemove;
-    toJSON(message: MatchmakerRemove): unknown;
-    create<I extends {
-        ticket?: string | undefined;
-    } & {
-        ticket?: string | undefined;
-    } & { [K in Exclude<keyof I, "ticket">]: never; }>(base?: I | undefined): MatchmakerRemove;
-    fromPartial<I_1 extends {
-        ticket?: string | undefined;
-    } & {
-        ticket?: string | undefined;
-    } & { [K_1 in Exclude<keyof I_1, "ticket">]: never; }>(object: I_1): MatchmakerRemove;
-};
-export declare const MatchmakerTicket: {
-    encode(message: MatchmakerTicket, writer?: _m0.Writer): _m0.Writer;
-    decode(input: _m0.Reader | Uint8Array, length?: number): MatchmakerTicket;
-    fromJSON(object: any): MatchmakerTicket;
-    toJSON(message: MatchmakerTicket): unknown;
-    create<I extends {
-        ticket?: string | undefined;
-    } & {
-        ticket?: string | undefined;
-    } & { [K in Exclude<keyof I, "ticket">]: never; }>(base?: I | undefined): MatchmakerTicket;
-    fromPartial<I_1 extends {
-        ticket?: string | undefined;
-    } & {
-        ticket?: string | undefined;
-    } & { [K_1 in Exclude<keyof I_1, "ticket">]: never; }>(object: I_1): MatchmakerTicket;
 };
 export declare const Notifications: {
     encode(message: Notifications, writer?: _m0.Writer): _m0.Writer;
@@ -6763,17 +5868,25 @@ export declare const LastSeenMessageEvent: {
     toJSON(message: LastSeenMessageEvent): unknown;
     create<I extends {
         channel_id?: string | undefined;
+        channel_label?: string | undefined;
         message_id?: string | undefined;
+        mode?: number | undefined;
     } & {
         channel_id?: string | undefined;
+        channel_label?: string | undefined;
         message_id?: string | undefined;
+        mode?: number | undefined;
     } & { [K in Exclude<keyof I, keyof LastSeenMessageEvent>]: never; }>(base?: I | undefined): LastSeenMessageEvent;
     fromPartial<I_1 extends {
         channel_id?: string | undefined;
+        channel_label?: string | undefined;
         message_id?: string | undefined;
+        mode?: number | undefined;
     } & {
         channel_id?: string | undefined;
+        channel_label?: string | undefined;
         message_id?: string | undefined;
+        mode?: number | undefined;
     } & { [K_1 in Exclude<keyof I_1, keyof LastSeenMessageEvent>]: never; }>(object: I_1): LastSeenMessageEvent;
 };
 export declare const MessageTypingEvent: {
@@ -6783,17 +5896,25 @@ export declare const MessageTypingEvent: {
     toJSON(message: MessageTypingEvent): unknown;
     create<I extends {
         channel_id?: string | undefined;
+        channel_label?: string | undefined;
         sender_id?: string | undefined;
+        mode?: number | undefined;
     } & {
         channel_id?: string | undefined;
+        channel_label?: string | undefined;
         sender_id?: string | undefined;
+        mode?: number | undefined;
     } & { [K in Exclude<keyof I, keyof MessageTypingEvent>]: never; }>(base?: I | undefined): MessageTypingEvent;
     fromPartial<I_1 extends {
         channel_id?: string | undefined;
+        channel_label?: string | undefined;
         sender_id?: string | undefined;
+        mode?: number | undefined;
     } & {
         channel_id?: string | undefined;
+        channel_label?: string | undefined;
         sender_id?: string | undefined;
+        mode?: number | undefined;
     } & { [K_1 in Exclude<keyof I_1, keyof MessageTypingEvent>]: never; }>(object: I_1): MessageTypingEvent;
 };
 export declare const MessageMentionEvent: {
@@ -6803,29 +5924,37 @@ export declare const MessageMentionEvent: {
     toJSON(message: MessageMentionEvent): unknown;
     create<I extends {
         channel_id?: string | undefined;
+        channel_label?: string | undefined;
         message_id?: string | undefined;
         user_id?: string | undefined;
         username?: string | undefined;
         sender_id?: string | undefined;
+        mode?: number | undefined;
     } & {
         channel_id?: string | undefined;
+        channel_label?: string | undefined;
         message_id?: string | undefined;
         user_id?: string | undefined;
         username?: string | undefined;
         sender_id?: string | undefined;
+        mode?: number | undefined;
     } & { [K in Exclude<keyof I, keyof MessageMentionEvent>]: never; }>(base?: I | undefined): MessageMentionEvent;
     fromPartial<I_1 extends {
         channel_id?: string | undefined;
+        channel_label?: string | undefined;
         message_id?: string | undefined;
         user_id?: string | undefined;
         username?: string | undefined;
         sender_id?: string | undefined;
+        mode?: number | undefined;
     } & {
         channel_id?: string | undefined;
+        channel_label?: string | undefined;
         message_id?: string | undefined;
         user_id?: string | undefined;
         username?: string | undefined;
         sender_id?: string | undefined;
+        mode?: number | undefined;
     } & { [K_1 in Exclude<keyof I_1, keyof MessageMentionEvent>]: never; }>(object: I_1): MessageMentionEvent;
 };
 export declare const MessageReactionEvent: {
@@ -6836,6 +5965,7 @@ export declare const MessageReactionEvent: {
     create<I extends {
         id?: string | undefined;
         channel_id?: string | undefined;
+        channel_label?: string | undefined;
         message_id?: string | undefined;
         sender_id?: string | undefined;
         sender_name?: string | undefined;
@@ -6844,9 +5974,11 @@ export declare const MessageReactionEvent: {
         action?: boolean | undefined;
         message_sender_id?: string | undefined;
         count?: number | undefined;
+        mode?: number | undefined;
     } & {
         id?: string | undefined;
         channel_id?: string | undefined;
+        channel_label?: string | undefined;
         message_id?: string | undefined;
         sender_id?: string | undefined;
         sender_name?: string | undefined;
@@ -6855,10 +5987,12 @@ export declare const MessageReactionEvent: {
         action?: boolean | undefined;
         message_sender_id?: string | undefined;
         count?: number | undefined;
+        mode?: number | undefined;
     } & { [K in Exclude<keyof I, keyof MessageReactionEvent>]: never; }>(base?: I | undefined): MessageReactionEvent;
     fromPartial<I_1 extends {
         id?: string | undefined;
         channel_id?: string | undefined;
+        channel_label?: string | undefined;
         message_id?: string | undefined;
         sender_id?: string | undefined;
         sender_name?: string | undefined;
@@ -6867,9 +6001,11 @@ export declare const MessageReactionEvent: {
         action?: boolean | undefined;
         message_sender_id?: string | undefined;
         count?: number | undefined;
+        mode?: number | undefined;
     } & {
         id?: string | undefined;
         channel_id?: string | undefined;
+        channel_label?: string | undefined;
         message_id?: string | undefined;
         sender_id?: string | undefined;
         sender_name?: string | undefined;
@@ -6878,6 +6014,7 @@ export declare const MessageReactionEvent: {
         action?: boolean | undefined;
         message_sender_id?: string | undefined;
         count?: number | undefined;
+        mode?: number | undefined;
     } & { [K_1 in Exclude<keyof I_1, keyof MessageReactionEvent>]: never; }>(object: I_1): MessageReactionEvent;
 };
 export declare const MessageAttachmentEvent: {
@@ -6887,6 +6024,7 @@ export declare const MessageAttachmentEvent: {
     toJSON(message: MessageAttachmentEvent): unknown;
     create<I extends {
         channel_id?: string | undefined;
+        channel_label?: string | undefined;
         message_id?: string | undefined;
         filename?: string | undefined;
         size?: number | undefined;
@@ -6895,8 +6033,10 @@ export declare const MessageAttachmentEvent: {
         width?: number | undefined;
         height?: number | undefined;
         sender_id?: string | undefined;
+        mode?: number | undefined;
     } & {
         channel_id?: string | undefined;
+        channel_label?: string | undefined;
         message_id?: string | undefined;
         filename?: string | undefined;
         size?: number | undefined;
@@ -6905,9 +6045,11 @@ export declare const MessageAttachmentEvent: {
         width?: number | undefined;
         height?: number | undefined;
         sender_id?: string | undefined;
+        mode?: number | undefined;
     } & { [K in Exclude<keyof I, keyof MessageAttachmentEvent>]: never; }>(base?: I | undefined): MessageAttachmentEvent;
     fromPartial<I_1 extends {
         channel_id?: string | undefined;
+        channel_label?: string | undefined;
         message_id?: string | undefined;
         filename?: string | undefined;
         size?: number | undefined;
@@ -6916,8 +6058,10 @@ export declare const MessageAttachmentEvent: {
         width?: number | undefined;
         height?: number | undefined;
         sender_id?: string | undefined;
+        mode?: number | undefined;
     } & {
         channel_id?: string | undefined;
+        channel_label?: string | undefined;
         message_id?: string | undefined;
         filename?: string | undefined;
         size?: number | undefined;
@@ -6926,6 +6070,7 @@ export declare const MessageAttachmentEvent: {
         width?: number | undefined;
         height?: number | undefined;
         sender_id?: string | undefined;
+        mode?: number | undefined;
     } & { [K_1 in Exclude<keyof I_1, keyof MessageAttachmentEvent>]: never; }>(object: I_1): MessageAttachmentEvent;
 };
 export declare const MessageDeletedEvent: {
@@ -6935,21 +6080,29 @@ export declare const MessageDeletedEvent: {
     toJSON(message: MessageDeletedEvent): unknown;
     create<I extends {
         channel_id?: string | undefined;
+        channel_label?: string | undefined;
         message_id?: string | undefined;
         deletor?: string | undefined;
+        mode?: number | undefined;
     } & {
         channel_id?: string | undefined;
+        channel_label?: string | undefined;
         message_id?: string | undefined;
         deletor?: string | undefined;
+        mode?: number | undefined;
     } & { [K in Exclude<keyof I, keyof MessageDeletedEvent>]: never; }>(base?: I | undefined): MessageDeletedEvent;
     fromPartial<I_1 extends {
         channel_id?: string | undefined;
+        channel_label?: string | undefined;
         message_id?: string | undefined;
         deletor?: string | undefined;
+        mode?: number | undefined;
     } & {
         channel_id?: string | undefined;
+        channel_label?: string | undefined;
         message_id?: string | undefined;
         deletor?: string | undefined;
+        mode?: number | undefined;
     } & { [K_1 in Exclude<keyof I_1, keyof MessageDeletedEvent>]: never; }>(object: I_1): MessageDeletedEvent;
 };
 export declare const StatusUnfollow: {

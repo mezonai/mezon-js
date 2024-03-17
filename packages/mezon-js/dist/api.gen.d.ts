@@ -119,7 +119,7 @@ export interface ApiChannelMessage {
     attachments?: string;
     avatar?: string;
     channel_id: string;
-    channel_name: string;
+    channel_label: string;
     clan_id?: string;
     code: number;
     content: string;
@@ -247,7 +247,7 @@ export interface ApiFriendList {
 /** Add link invite users to. */
 export interface ApiInviteUserRes {
     channel_id?: string;
-    channel_name?: string;
+    channel_label?: string;
     clan_id?: string;
     clan_name?: string;
     user_joined?: boolean;
