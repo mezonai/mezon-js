@@ -293,10 +293,14 @@ interface ChannelMessageUpdate {
   channel_message_update: {
     /** The server-assigned channel ID. */
     channel_id: string,
+     /** The server-assigned channel label. */
+    channel_label: string,
     /** A unique ID for the chat message to be updated. */
     message_id: string,
     /** The content payload. */
-    content: any;
+    content: any,
+    /** The mode payload. */
+    mode: number;
   };
 }
 
@@ -1169,8 +1173,8 @@ export class DefaultSocket implements Socket {
     return this.send({status_unfollow: {user_ids: user_ids}});
   }
 
-  async updateChatMessage(channel_id: string, message_id : string, content: any): Promise<ChannelMessageAck> {
-    const response = await this.send({channel_message_update: {channel_id: channel_id, message_id: message_id, content: content}});
+  async updateChatMessage(channel_id: string, channel_label: string, mode: number, message_id : string, content: any): Promise<ChannelMessageAck> {
+    const response = await this.send({channel_message_update: {channel_id: channel_id,channel_label:channel_label, message_id: message_id, content: content, mode: mode}});
     return response.channel_message_ack;
   }
 
