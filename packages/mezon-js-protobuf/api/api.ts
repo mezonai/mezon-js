@@ -1724,6 +1724,10 @@ export interface ChannelDescription {
   channel_avatar: string[];
   /** The user id */
   user_id: string[];
+  /** last message id */
+  last_message_id: string;
+  /** last seen message id */
+  last_seen_message_id: string;
 }
 
 /** A list of channel description, usually a result of a list operation. */
@@ -11531,6 +11535,8 @@ function createBaseChannelDescription(): ChannelDescription {
     channel_private: 0,
     channel_avatar: [],
     user_id: [],
+    last_message_id: "",
+    last_seen_message_id: "",
   };
 }
 
@@ -11568,6 +11574,12 @@ export const ChannelDescription = {
     }
     for (const v of message.user_id) {
       writer.uint32(90).string(v!);
+    }
+    if (message.last_message_id !== "") {
+      writer.uint32(98).string(message.last_message_id);
+    }
+    if (message.last_seen_message_id !== "") {
+      writer.uint32(106).string(message.last_seen_message_id);
     }
     return writer;
   },
@@ -11612,6 +11624,12 @@ export const ChannelDescription = {
         case 11:
           message.user_id.push(reader.string());
           break;
+        case 12:
+          message.last_message_id = reader.string();
+          break;
+        case 13:
+          message.last_seen_message_id = reader.string();
+          break;
         default:
           reader.skipType(tag & 7);
           break;
@@ -11633,6 +11651,8 @@ export const ChannelDescription = {
       channel_private: isSet(object.channel_private) ? Number(object.channel_private) : 0,
       channel_avatar: Array.isArray(object?.channel_avatar) ? object.channel_avatar.map((e: any) => String(e)) : [],
       user_id: Array.isArray(object?.user_id) ? object.user_id.map((e: any) => String(e)) : [],
+      last_message_id: isSet(object.last_message_id) ? String(object.last_message_id) : "",
+      last_seen_message_id: isSet(object.last_seen_message_id) ? String(object.last_seen_message_id) : "",
     };
   },
 
@@ -11657,6 +11677,8 @@ export const ChannelDescription = {
     } else {
       obj.user_id = [];
     }
+    message.last_message_id !== undefined && (obj.last_message_id = message.last_message_id);
+    message.last_seen_message_id !== undefined && (obj.last_seen_message_id = message.last_seen_message_id);
     return obj;
   },
 
@@ -11677,6 +11699,8 @@ export const ChannelDescription = {
     message.channel_private = object.channel_private ?? 0;
     message.channel_avatar = object.channel_avatar?.map((e) => e) || [];
     message.user_id = object.user_id?.map((e) => e) || [];
+    message.last_message_id = object.last_message_id ?? "";
+    message.last_seen_message_id = object.last_seen_message_id ?? "";
     return message;
   },
 };

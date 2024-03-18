@@ -192,6 +192,10 @@ export interface ApiChannelDescription {
   clan_id?: string;
   //creator ID.
   creator_id?: string;
+  //
+  last_message_id?: string;
+  //
+  last_seen_message_id?: string;
   //The parrent channel this message belongs to.
   parrent_id?: string;
   //The channel type.

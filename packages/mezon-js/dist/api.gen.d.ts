@@ -110,6 +110,8 @@ export interface ApiChannelDescription {
     channel_private?: number;
     clan_id?: string;
     creator_id?: string;
+    last_message_id?: string;
+    last_seen_message_id?: string;
     parrent_id?: string;
     type?: number;
     user_id?: string;
