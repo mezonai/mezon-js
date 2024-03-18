@@ -214,10 +214,14 @@ interface ChannelMessageUpdate {
     channel_message_update: {
         /** The server-assigned channel ID. */
         channel_id: string;
+        /** The server-assigned channel label. */
+        channel_label: string;
         /** A unique ID for the chat message to be updated. */
         message_id: string;
         /** The content payload. */
         content: any;
+        /** The mode payload. */
+        mode: number;
     };
 }
 /** Remove a message previously sent to a realtime chat channel. */
@@ -629,7 +633,7 @@ export declare class DefaultSocket implements Socket {
     rpc(id?: string, payload?: string, http_key?: string): Promise<ApiRpc>;
     sendPartyData(party_id: string, op_code: number, data: string | Uint8Array): Promise<void>;
     unfollowUsers(user_ids: string[]): Promise<void>;
-    updateChatMessage(channel_id: string, message_id: string, content: any): Promise<ChannelMessageAck>;
+    updateChatMessage(channel_id: string, channel_label: string, mode: number, message_id: string, content: any): Promise<ChannelMessageAck>;
     updateStatus(status?: string): Promise<void>;
     writeChatMessage(clan_id: string, channel_id: string, channel_label: string, mode: number, content: any, mentions?: Array<ApiMessageMention>, attachments?: Array<ApiMessageAttachment>, references?: Array<ApiMessageRef>): Promise<ChannelMessageAck>;
     writeMessageReaction(id: string, channel_id: string, channel_label: string, mode: number, message_id: string, emoji: string, message_sender_id: string, action_delete: boolean): Promise<MessageReactionEvent>;

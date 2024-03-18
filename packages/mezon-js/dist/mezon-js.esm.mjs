@@ -3731,9 +3731,9 @@ var _DefaultSocket = class _DefaultSocket {
   unfollowUsers(user_ids) {
     return this.send({ status_unfollow: { user_ids } });
   }
-  updateChatMessage(channel_id, message_id, content) {
+  updateChatMessage(channel_id, channel_label, mode, message_id, content) {
     return __async(this, null, function* () {
-      const response = yield this.send({ channel_message_update: { channel_id, message_id, content } });
+      const response = yield this.send({ channel_message_update: { channel_id, channel_label, message_id, content, mode } });
       return response.channel_message_ack;
     });
   }
