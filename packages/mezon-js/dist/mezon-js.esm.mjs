@@ -3746,9 +3746,9 @@ var _DefaultSocket = class _DefaultSocket {
       return response.channel_message_ack;
     });
   }
-  writeMessageReaction(id, channel_id, channel_label, mode, message_id, emoji, message_sender_id, action_delete) {
+  writeMessageReaction(id, channel_id, channel_label, mode, message_id, emoji, count, message_sender_id, action_delete) {
     return __async(this, null, function* () {
-      const response = yield this.send({ message_reaction_event: { id, channel_id, channel_label, mode, message_id, emoji, message_sender_id, action: action_delete } });
+      const response = yield this.send({ message_reaction_event: { id, channel_id, channel_label, mode, message_id, emoji, count, message_sender_id, action: action_delete } });
       return response.message_reaction_event;
     });
   }
