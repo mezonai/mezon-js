@@ -17,6 +17,17 @@ import { ApiAccount, ApiAccountCustom, ApiAccountDevice, ApiAccountEmail, ApiAcc
 import { Session } from "./session";
 import { Socket } from "./socket";
 import { WebSocketAdapter } from "./web_socket_adapter";
+export declare enum ChannelType {
+    CHANNEL_TYPE_TEXT = 1,
+    CHANNEL_TYPE_GROUP = 2,
+    CHANNEL_TYPE_DM = 3,
+    CHANNEL_TYPE_VOICE = 4
+}
+export declare enum ChannelStreamMode {
+    STREAM_MODE_CHANNEL = 2,
+    STREAM_MODE_GROUP = 3,
+    STREAM_MODE_DM = 4
+}
 /** Response for an RPC function executed on the server. */
 export interface RpcResponse {
     /** The identifier of the function. */

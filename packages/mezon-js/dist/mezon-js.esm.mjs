@@ -3802,6 +3802,19 @@ var DEFAULT_PORT = "7350";
 var DEFAULT_SERVER_KEY = "defaultkey";
 var DEFAULT_TIMEOUT_MS = 7e3;
 var DEFAULT_EXPIRED_TIMESPAN_MS = 5 * 60 * 1e3;
+var ChannelType = /* @__PURE__ */ ((ChannelType2) => {
+  ChannelType2[ChannelType2["CHANNEL_TYPE_TEXT"] = 1] = "CHANNEL_TYPE_TEXT";
+  ChannelType2[ChannelType2["CHANNEL_TYPE_GROUP"] = 2] = "CHANNEL_TYPE_GROUP";
+  ChannelType2[ChannelType2["CHANNEL_TYPE_DM"] = 3] = "CHANNEL_TYPE_DM";
+  ChannelType2[ChannelType2["CHANNEL_TYPE_VOICE"] = 4] = "CHANNEL_TYPE_VOICE";
+  return ChannelType2;
+})(ChannelType || {});
+var ChannelStreamMode = /* @__PURE__ */ ((ChannelStreamMode2) => {
+  ChannelStreamMode2[ChannelStreamMode2["STREAM_MODE_CHANNEL"] = 2] = "STREAM_MODE_CHANNEL";
+  ChannelStreamMode2[ChannelStreamMode2["STREAM_MODE_GROUP"] = 3] = "STREAM_MODE_GROUP";
+  ChannelStreamMode2[ChannelStreamMode2["STREAM_MODE_DM"] = 4] = "STREAM_MODE_DM";
+  return ChannelStreamMode2;
+})(ChannelStreamMode || {});
 var Client = class {
   constructor(serverkey = DEFAULT_SERVER_KEY, host = DEFAULT_HOST, port = DEFAULT_PORT, useSSL = false, timeout = DEFAULT_TIMEOUT_MS, autoRefreshSession = true) {
     this.serverkey = serverkey;
@@ -4995,6 +5008,8 @@ var Client = class {
   }
 };
 export {
+  ChannelStreamMode,
+  ChannelType,
   Client,
   DefaultSocket,
   Session,
