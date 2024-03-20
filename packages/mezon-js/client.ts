@@ -81,6 +81,18 @@ const DEFAULT_SERVER_KEY = "defaultkey";
 const DEFAULT_TIMEOUT_MS = 7000;
 const DEFAULT_EXPIRED_TIMESPAN_MS = 5 * 60 * 1000;
 
+export enum ChannelType {
+  CHANNEL_TYPE_TEXT = 1,
+  CHANNEL_TYPE_GROUP = 2,
+  CHANNEL_TYPE_DM = 3,
+  CHANNEL_TYPE_VOICE = 4,
+}
+export enum ChannelStreamMode {  
+  STREAM_MODE_CHANNEL = 2,
+  STREAM_MODE_GROUP = 3,
+  STREAM_MODE_DM = 4,
+}
+
 /** Response for an RPC function executed on the server. */
 export interface RpcResponse {
   /** The identifier of the function. */
