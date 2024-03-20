@@ -86,6 +86,8 @@ export enum ChannelType {
   CHANNEL_TYPE_GROUP = 2,
   CHANNEL_TYPE_DM = 3,
   CHANNEL_TYPE_VOICE = 4,
+  CHANNEL_TYPE_FORUM = 5,
+  CHANNEL_TYPE_ANNOUNCEMENT = 6,
 }
 export enum ChannelStreamMode {  
   STREAM_MODE_CHANNEL = 2,

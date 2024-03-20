@@ -3807,6 +3807,8 @@ var ChannelType = /* @__PURE__ */ ((ChannelType2) => {
   ChannelType2[ChannelType2["CHANNEL_TYPE_GROUP"] = 2] = "CHANNEL_TYPE_GROUP";
   ChannelType2[ChannelType2["CHANNEL_TYPE_DM"] = 3] = "CHANNEL_TYPE_DM";
   ChannelType2[ChannelType2["CHANNEL_TYPE_VOICE"] = 4] = "CHANNEL_TYPE_VOICE";
+  ChannelType2[ChannelType2["CHANNEL_TYPE_FORUM"] = 5] = "CHANNEL_TYPE_FORUM";
+  ChannelType2[ChannelType2["CHANNEL_TYPE_ANNOUNCEMENT"] = 6] = "CHANNEL_TYPE_ANNOUNCEMENT";
   return ChannelType2;
 })(ChannelType || {});
 var ChannelStreamMode = /* @__PURE__ */ ((ChannelStreamMode2) => {
