@@ -165,7 +165,15 @@ export interface Envelope {
     | MessageReactionEvent
     | undefined;
   /** User delete message event */
-  message_deleted_event?: MessageDeletedEvent | undefined;
+  message_deleted_event?:
+    | MessageDeletedEvent
+    | undefined;
+  /** user join voice channel */
+  voice_joined_event?:
+    | VoiceJoinedEvent
+    | undefined;
+  /** user leave voice channel */
+  voice_leave_event?: VoiceLeavedEvent | undefined;
 }
 
 /** A realtime chat channel. */
@@ -495,30 +503,6 @@ export interface Error_ContextEntry {
   value: string;
 }
 
-/** A realtime match. */
-export interface Match {
-  /** The match unique ID. */
-  match_id: string;
-  /** True if it's an server-managed authoritative match, false otherwise. */
-  authoritative: boolean;
-  /** Match label, if any. */
-  label:
-    | string
-    | undefined;
-  /** The number of users currently in the match. */
-  size: number;
-  /** The users currently in the match. */
-  presences: UserPresence[];
-  /** A reference to the current user's presence in the match. */
-  self: UserPresence | undefined;
-}
-
-/** Create a new realtime match. */
-export interface MatchCreate {
-  /** Optional name to use when creating the match. */
-  name: string;
-}
-
 /** A collection of zero or more notifications. */
 export interface Notifications {
   /** Collection of notifications. */
@@ -835,6 +819,36 @@ export interface MessageDeletedEvent {
   mode: number;
 }
 
+/** Voice Joined event */
+export interface VoiceLeavedEvent {
+  /** The unique identifier of the chat channel. */
+  channel_id: string;
+  /** The channel name */
+  channel_label: string;
+  /** id voice */
+  id: string;
+  /** voice participant */
+  participant: string;
+  /** room name */
+  roomName: string;
+}
+
+/** Voice Joined event */
+export interface VoiceJoinedEvent {
+  /** The unique identifier of the chat channel. */
+  channel_id: string;
+  /** The channel name */
+  channel_label: string;
+  /** id voice */
+  id: string;
+  /** voice participant */
+  participant: string;
+  /** room name */
+  roomName: string;
+  /** last screenshot */
+  lastScreenshot: string;
+}
+
 /** Stop receiving status updates for some set of users. */
 export interface StatusUnfollow {
   /** Users to unfollow. */
@@ -943,6 +957,8 @@ function createBaseEnvelope(): Envelope {
     last_seen_message_event: undefined,
     message_reaction_event: undefined,
     message_deleted_event: undefined,
+    voice_joined_event: undefined,
+    voice_leave_event: undefined,
   };
 }
 
@@ -1067,6 +1083,12 @@ export const Envelope = {
     }
     if (message.message_deleted_event !== undefined) {
       MessageDeletedEvent.encode(message.message_deleted_event, writer.uint32(322).fork()).ldelim();
+    }
+    if (message.voice_joined_event !== undefined) {
+      VoiceJoinedEvent.encode(message.voice_joined_event, writer.uint32(330).fork()).ldelim();
+    }
+    if (message.voice_leave_event !== undefined) {
+      VoiceLeavedEvent.encode(message.voice_leave_event, writer.uint32(338).fork()).ldelim();
     }
     return writer;
   },
@@ -1198,6 +1220,12 @@ export const Envelope = {
         case 40:
           message.message_deleted_event = MessageDeletedEvent.decode(reader, reader.uint32());
           break;
+        case 41:
+          message.voice_joined_event = VoiceJoinedEvent.decode(reader, reader.uint32());
+          break;
+        case 42:
+          message.voice_leave_event = VoiceLeavedEvent.decode(reader, reader.uint32());
+          break;
         default:
           reader.skipType(tag & 7);
           break;
@@ -1275,6 +1303,12 @@ export const Envelope = {
         : undefined,
       message_deleted_event: isSet(object.message_deleted_event)
         ? MessageDeletedEvent.fromJSON(object.message_deleted_event)
+        : undefined,
+      voice_joined_event: isSet(object.voice_joined_event)
+        ? VoiceJoinedEvent.fromJSON(object.voice_joined_event)
+        : undefined,
+      voice_leave_event: isSet(object.voice_leave_event)
+        ? VoiceLeavedEvent.fromJSON(object.voice_leave_event)
         : undefined,
     };
   },
@@ -1366,6 +1400,12 @@ export const Envelope = {
       : undefined);
     message.message_deleted_event !== undefined && (obj.message_deleted_event = message.message_deleted_event
       ? MessageDeletedEvent.toJSON(message.message_deleted_event)
+      : undefined);
+    message.voice_joined_event !== undefined && (obj.voice_joined_event = message.voice_joined_event
+      ? VoiceJoinedEvent.toJSON(message.voice_joined_event)
+      : undefined);
+    message.voice_leave_event !== undefined && (obj.voice_leave_event = message.voice_leave_event
+      ? VoiceLeavedEvent.toJSON(message.voice_leave_event)
       : undefined);
     return obj;
   },
@@ -1493,6 +1533,12 @@ export const Envelope = {
       (object.message_deleted_event !== undefined && object.message_deleted_event !== null)
         ? MessageDeletedEvent.fromPartial(object.message_deleted_event)
         : undefined;
+    message.voice_joined_event = (object.voice_joined_event !== undefined && object.voice_joined_event !== null)
+      ? VoiceJoinedEvent.fromPartial(object.voice_joined_event)
+      : undefined;
+    message.voice_leave_event = (object.voice_leave_event !== undefined && object.voice_leave_event !== null)
+      ? VoiceLeavedEvent.fromPartial(object.voice_leave_event)
+      : undefined;
     return message;
   },
 };
@@ -2740,161 +2786,6 @@ export const Error_ContextEntry = {
     const message = createBaseError_ContextEntry();
     message.key = object.key ?? "";
     message.value = object.value ?? "";
-    return message;
-  },
-};
-
-function createBaseMatch(): Match {
-  return { match_id: "", authoritative: false, label: undefined, size: 0, presences: [], self: undefined };
-}
-
-export const Match = {
-  encode(message: Match, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.match_id !== "") {
-      writer.uint32(10).string(message.match_id);
-    }
-    if (message.authoritative === true) {
-      writer.uint32(16).bool(message.authoritative);
-    }
-    if (message.label !== undefined) {
-      StringValue.encode({ value: message.label! }, writer.uint32(26).fork()).ldelim();
-    }
-    if (message.size !== 0) {
-      writer.uint32(32).int32(message.size);
-    }
-    for (const v of message.presences) {
-      UserPresence.encode(v!, writer.uint32(42).fork()).ldelim();
-    }
-    if (message.self !== undefined) {
-      UserPresence.encode(message.self, writer.uint32(50).fork()).ldelim();
-    }
-    return writer;
-  },
-
-  decode(input: _m0.Reader | Uint8Array, length?: number): Match {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseMatch();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
-          message.match_id = reader.string();
-          break;
-        case 2:
-          message.authoritative = reader.bool();
-          break;
-        case 3:
-          message.label = StringValue.decode(reader, reader.uint32()).value;
-          break;
-        case 4:
-          message.size = reader.int32();
-          break;
-        case 5:
-          message.presences.push(UserPresence.decode(reader, reader.uint32()));
-          break;
-        case 6:
-          message.self = UserPresence.decode(reader, reader.uint32());
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
-      }
-    }
-    return message;
-  },
-
-  fromJSON(object: any): Match {
-    return {
-      match_id: isSet(object.match_id) ? String(object.match_id) : "",
-      authoritative: isSet(object.authoritative) ? Boolean(object.authoritative) : false,
-      label: isSet(object.label) ? String(object.label) : undefined,
-      size: isSet(object.size) ? Number(object.size) : 0,
-      presences: Array.isArray(object?.presences) ? object.presences.map((e: any) => UserPresence.fromJSON(e)) : [],
-      self: isSet(object.self) ? UserPresence.fromJSON(object.self) : undefined,
-    };
-  },
-
-  toJSON(message: Match): unknown {
-    const obj: any = {};
-    message.match_id !== undefined && (obj.match_id = message.match_id);
-    message.authoritative !== undefined && (obj.authoritative = message.authoritative);
-    message.label !== undefined && (obj.label = message.label);
-    message.size !== undefined && (obj.size = Math.round(message.size));
-    if (message.presences) {
-      obj.presences = message.presences.map((e) => e ? UserPresence.toJSON(e) : undefined);
-    } else {
-      obj.presences = [];
-    }
-    message.self !== undefined && (obj.self = message.self ? UserPresence.toJSON(message.self) : undefined);
-    return obj;
-  },
-
-  create<I extends Exact<DeepPartial<Match>, I>>(base?: I): Match {
-    return Match.fromPartial(base ?? {});
-  },
-
-  fromPartial<I extends Exact<DeepPartial<Match>, I>>(object: I): Match {
-    const message = createBaseMatch();
-    message.match_id = object.match_id ?? "";
-    message.authoritative = object.authoritative ?? false;
-    message.label = object.label ?? undefined;
-    message.size = object.size ?? 0;
-    message.presences = object.presences?.map((e) => UserPresence.fromPartial(e)) || [];
-    message.self = (object.self !== undefined && object.self !== null)
-      ? UserPresence.fromPartial(object.self)
-      : undefined;
-    return message;
-  },
-};
-
-function createBaseMatchCreate(): MatchCreate {
-  return { name: "" };
-}
-
-export const MatchCreate = {
-  encode(message: MatchCreate, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.name !== "") {
-      writer.uint32(10).string(message.name);
-    }
-    return writer;
-  },
-
-  decode(input: _m0.Reader | Uint8Array, length?: number): MatchCreate {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseMatchCreate();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
-          message.name = reader.string();
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
-      }
-    }
-    return message;
-  },
-
-  fromJSON(object: any): MatchCreate {
-    return { name: isSet(object.name) ? String(object.name) : "" };
-  },
-
-  toJSON(message: MatchCreate): unknown {
-    const obj: any = {};
-    message.name !== undefined && (obj.name = message.name);
-    return obj;
-  },
-
-  create<I extends Exact<DeepPartial<MatchCreate>, I>>(base?: I): MatchCreate {
-    return MatchCreate.fromPartial(base ?? {});
-  },
-
-  fromPartial<I extends Exact<DeepPartial<MatchCreate>, I>>(object: I): MatchCreate {
-    const message = createBaseMatchCreate();
-    message.name = object.name ?? "";
     return message;
   },
 };
@@ -5253,6 +5144,193 @@ export const MessageDeletedEvent = {
     message.message_id = object.message_id ?? "";
     message.deletor = object.deletor ?? "";
     message.mode = object.mode ?? 0;
+    return message;
+  },
+};
+
+function createBaseVoiceLeavedEvent(): VoiceLeavedEvent {
+  return { channel_id: "", channel_label: "", id: "", participant: "", roomName: "" };
+}
+
+export const VoiceLeavedEvent = {
+  encode(message: VoiceLeavedEvent, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.channel_id !== "") {
+      writer.uint32(10).string(message.channel_id);
+    }
+    if (message.channel_label !== "") {
+      writer.uint32(18).string(message.channel_label);
+    }
+    if (message.id !== "") {
+      writer.uint32(26).string(message.id);
+    }
+    if (message.participant !== "") {
+      writer.uint32(34).string(message.participant);
+    }
+    if (message.roomName !== "") {
+      writer.uint32(42).string(message.roomName);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): VoiceLeavedEvent {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseVoiceLeavedEvent();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.channel_id = reader.string();
+          break;
+        case 2:
+          message.channel_label = reader.string();
+          break;
+        case 3:
+          message.id = reader.string();
+          break;
+        case 4:
+          message.participant = reader.string();
+          break;
+        case 5:
+          message.roomName = reader.string();
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): VoiceLeavedEvent {
+    return {
+      channel_id: isSet(object.channel_id) ? String(object.channel_id) : "",
+      channel_label: isSet(object.channel_label) ? String(object.channel_label) : "",
+      id: isSet(object.id) ? String(object.id) : "",
+      participant: isSet(object.participant) ? String(object.participant) : "",
+      roomName: isSet(object.roomName) ? String(object.roomName) : "",
+    };
+  },
+
+  toJSON(message: VoiceLeavedEvent): unknown {
+    const obj: any = {};
+    message.channel_id !== undefined && (obj.channel_id = message.channel_id);
+    message.channel_label !== undefined && (obj.channel_label = message.channel_label);
+    message.id !== undefined && (obj.id = message.id);
+    message.participant !== undefined && (obj.participant = message.participant);
+    message.roomName !== undefined && (obj.roomName = message.roomName);
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<VoiceLeavedEvent>, I>>(base?: I): VoiceLeavedEvent {
+    return VoiceLeavedEvent.fromPartial(base ?? {});
+  },
+
+  fromPartial<I extends Exact<DeepPartial<VoiceLeavedEvent>, I>>(object: I): VoiceLeavedEvent {
+    const message = createBaseVoiceLeavedEvent();
+    message.channel_id = object.channel_id ?? "";
+    message.channel_label = object.channel_label ?? "";
+    message.id = object.id ?? "";
+    message.participant = object.participant ?? "";
+    message.roomName = object.roomName ?? "";
+    return message;
+  },
+};
+
+function createBaseVoiceJoinedEvent(): VoiceJoinedEvent {
+  return { channel_id: "", channel_label: "", id: "", participant: "", roomName: "", lastScreenshot: "" };
+}
+
+export const VoiceJoinedEvent = {
+  encode(message: VoiceJoinedEvent, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.channel_id !== "") {
+      writer.uint32(10).string(message.channel_id);
+    }
+    if (message.channel_label !== "") {
+      writer.uint32(18).string(message.channel_label);
+    }
+    if (message.id !== "") {
+      writer.uint32(26).string(message.id);
+    }
+    if (message.participant !== "") {
+      writer.uint32(34).string(message.participant);
+    }
+    if (message.roomName !== "") {
+      writer.uint32(42).string(message.roomName);
+    }
+    if (message.lastScreenshot !== "") {
+      writer.uint32(50).string(message.lastScreenshot);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): VoiceJoinedEvent {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseVoiceJoinedEvent();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.channel_id = reader.string();
+          break;
+        case 2:
+          message.channel_label = reader.string();
+          break;
+        case 3:
+          message.id = reader.string();
+          break;
+        case 4:
+          message.participant = reader.string();
+          break;
+        case 5:
+          message.roomName = reader.string();
+          break;
+        case 6:
+          message.lastScreenshot = reader.string();
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): VoiceJoinedEvent {
+    return {
+      channel_id: isSet(object.channel_id) ? String(object.channel_id) : "",
+      channel_label: isSet(object.channel_label) ? String(object.channel_label) : "",
+      id: isSet(object.id) ? String(object.id) : "",
+      participant: isSet(object.participant) ? String(object.participant) : "",
+      roomName: isSet(object.roomName) ? String(object.roomName) : "",
+      lastScreenshot: isSet(object.lastScreenshot) ? String(object.lastScreenshot) : "",
+    };
+  },
+
+  toJSON(message: VoiceJoinedEvent): unknown {
+    const obj: any = {};
+    message.channel_id !== undefined && (obj.channel_id = message.channel_id);
+    message.channel_label !== undefined && (obj.channel_label = message.channel_label);
+    message.id !== undefined && (obj.id = message.id);
+    message.participant !== undefined && (obj.participant = message.participant);
+    message.roomName !== undefined && (obj.roomName = message.roomName);
+    message.lastScreenshot !== undefined && (obj.lastScreenshot = message.lastScreenshot);
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<VoiceJoinedEvent>, I>>(base?: I): VoiceJoinedEvent {
+    return VoiceJoinedEvent.fromPartial(base ?? {});
+  },
+
+  fromPartial<I extends Exact<DeepPartial<VoiceJoinedEvent>, I>>(object: I): VoiceJoinedEvent {
+    const message = createBaseVoiceJoinedEvent();
+    message.channel_id = object.channel_id ?? "";
+    message.channel_label = object.channel_label ?? "";
+    message.id = object.id ?? "";
+    message.participant = object.participant ?? "";
+    message.roomName = object.roomName ?? "";
+    message.lastScreenshot = object.lastScreenshot ?? "";
     return message;
   },
 };
