@@ -822,9 +822,9 @@ export interface MessageDeletedEvent {
 /** Voice Joined event */
 export interface VoiceLeavedEvent {
   /** The unique identifier of the chat channel. */
-  channel_id: string;
+  clan_id: string;
   /** The channel name */
-  channel_label: string;
+  clan_name: string;
   /** id voice */
   id: string;
   /** voice participant */
@@ -835,10 +835,10 @@ export interface VoiceLeavedEvent {
 
 /** Voice Joined event */
 export interface VoiceJoinedEvent {
-  /** The unique identifier of the chat channel. */
-  channel_id: string;
+  /** The unique identifier of the chat clan. */
+  clan_id: string;
   /** The channel name */
-  channel_label: string;
+  clan_name: string;
   /** id voice */
   id: string;
   /** voice participant */
@@ -5149,16 +5149,16 @@ export const MessageDeletedEvent = {
 };
 
 function createBaseVoiceLeavedEvent(): VoiceLeavedEvent {
-  return { channel_id: "", channel_label: "", id: "", participant: "", roomName: "" };
+  return { clan_id: "", clan_name: "", id: "", participant: "", roomName: "" };
 }
 
 export const VoiceLeavedEvent = {
   encode(message: VoiceLeavedEvent, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.channel_id !== "") {
-      writer.uint32(10).string(message.channel_id);
+    if (message.clan_id !== "") {
+      writer.uint32(10).string(message.clan_id);
     }
-    if (message.channel_label !== "") {
-      writer.uint32(18).string(message.channel_label);
+    if (message.clan_name !== "") {
+      writer.uint32(18).string(message.clan_name);
     }
     if (message.id !== "") {
       writer.uint32(26).string(message.id);
@@ -5180,10 +5180,10 @@ export const VoiceLeavedEvent = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          message.channel_id = reader.string();
+          message.clan_id = reader.string();
           break;
         case 2:
-          message.channel_label = reader.string();
+          message.clan_name = reader.string();
           break;
         case 3:
           message.id = reader.string();
@@ -5204,8 +5204,8 @@ export const VoiceLeavedEvent = {
 
   fromJSON(object: any): VoiceLeavedEvent {
     return {
-      channel_id: isSet(object.channel_id) ? String(object.channel_id) : "",
-      channel_label: isSet(object.channel_label) ? String(object.channel_label) : "",
+      clan_id: isSet(object.clan_id) ? String(object.clan_id) : "",
+      clan_name: isSet(object.clan_name) ? String(object.clan_name) : "",
       id: isSet(object.id) ? String(object.id) : "",
       participant: isSet(object.participant) ? String(object.participant) : "",
       roomName: isSet(object.roomName) ? String(object.roomName) : "",
@@ -5214,8 +5214,8 @@ export const VoiceLeavedEvent = {
 
   toJSON(message: VoiceLeavedEvent): unknown {
     const obj: any = {};
-    message.channel_id !== undefined && (obj.channel_id = message.channel_id);
-    message.channel_label !== undefined && (obj.channel_label = message.channel_label);
+    message.clan_id !== undefined && (obj.clan_id = message.clan_id);
+    message.clan_name !== undefined && (obj.clan_name = message.clan_name);
     message.id !== undefined && (obj.id = message.id);
     message.participant !== undefined && (obj.participant = message.participant);
     message.roomName !== undefined && (obj.roomName = message.roomName);
@@ -5228,8 +5228,8 @@ export const VoiceLeavedEvent = {
 
   fromPartial<I extends Exact<DeepPartial<VoiceLeavedEvent>, I>>(object: I): VoiceLeavedEvent {
     const message = createBaseVoiceLeavedEvent();
-    message.channel_id = object.channel_id ?? "";
-    message.channel_label = object.channel_label ?? "";
+    message.clan_id = object.clan_id ?? "";
+    message.clan_name = object.clan_name ?? "";
     message.id = object.id ?? "";
     message.participant = object.participant ?? "";
     message.roomName = object.roomName ?? "";
@@ -5238,16 +5238,16 @@ export const VoiceLeavedEvent = {
 };
 
 function createBaseVoiceJoinedEvent(): VoiceJoinedEvent {
-  return { channel_id: "", channel_label: "", id: "", participant: "", roomName: "", lastScreenshot: "" };
+  return { clan_id: "", clan_name: "", id: "", participant: "", roomName: "", lastScreenshot: "" };
 }
 
 export const VoiceJoinedEvent = {
   encode(message: VoiceJoinedEvent, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.channel_id !== "") {
-      writer.uint32(10).string(message.channel_id);
+    if (message.clan_id !== "") {
+      writer.uint32(10).string(message.clan_id);
     }
-    if (message.channel_label !== "") {
-      writer.uint32(18).string(message.channel_label);
+    if (message.clan_name !== "") {
+      writer.uint32(18).string(message.clan_name);
     }
     if (message.id !== "") {
       writer.uint32(26).string(message.id);
@@ -5272,10 +5272,10 @@ export const VoiceJoinedEvent = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          message.channel_id = reader.string();
+          message.clan_id = reader.string();
           break;
         case 2:
-          message.channel_label = reader.string();
+          message.clan_name = reader.string();
           break;
         case 3:
           message.id = reader.string();
@@ -5299,8 +5299,8 @@ export const VoiceJoinedEvent = {
 
   fromJSON(object: any): VoiceJoinedEvent {
     return {
-      channel_id: isSet(object.channel_id) ? String(object.channel_id) : "",
-      channel_label: isSet(object.channel_label) ? String(object.channel_label) : "",
+      clan_id: isSet(object.clan_id) ? String(object.clan_id) : "",
+      clan_name: isSet(object.clan_name) ? String(object.clan_name) : "",
       id: isSet(object.id) ? String(object.id) : "",
       participant: isSet(object.participant) ? String(object.participant) : "",
       roomName: isSet(object.roomName) ? String(object.roomName) : "",
@@ -5310,8 +5310,8 @@ export const VoiceJoinedEvent = {
 
   toJSON(message: VoiceJoinedEvent): unknown {
     const obj: any = {};
-    message.channel_id !== undefined && (obj.channel_id = message.channel_id);
-    message.channel_label !== undefined && (obj.channel_label = message.channel_label);
+    message.clan_id !== undefined && (obj.clan_id = message.clan_id);
+    message.clan_name !== undefined && (obj.clan_name = message.clan_name);
     message.id !== undefined && (obj.id = message.id);
     message.participant !== undefined && (obj.participant = message.participant);
     message.roomName !== undefined && (obj.roomName = message.roomName);
@@ -5325,8 +5325,8 @@ export const VoiceJoinedEvent = {
 
   fromPartial<I extends Exact<DeepPartial<VoiceJoinedEvent>, I>>(object: I): VoiceJoinedEvent {
     const message = createBaseVoiceJoinedEvent();
-    message.channel_id = object.channel_id ?? "";
-    message.channel_label = object.channel_label ?? "";
+    message.clan_id = object.clan_id ?? "";
+    message.clan_name = object.clan_name ?? "";
     message.id = object.id ?? "";
     message.participant = object.participant ?? "";
     message.roomName = object.roomName ?? "";

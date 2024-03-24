@@ -584,9 +584,9 @@ export interface MessageDeletedEvent {
 /** Voice Joined event */
 export interface VoiceLeavedEvent {
     /** The unique identifier of the chat channel. */
-    channel_id: string;
+    clan_id: string;
     /** The channel name */
-    channel_label: string;
+    clan_name: string;
     /** id voice */
     id: string;
     /** voice participant */
@@ -596,10 +596,10 @@ export interface VoiceLeavedEvent {
 }
 /** Voice Joined event */
 export interface VoiceJoinedEvent {
-    /** The unique identifier of the chat channel. */
-    channel_id: string;
+    /** The unique identifier of the chat clan. */
+    clan_id: string;
     /** The channel name */
-    channel_label: string;
+    clan_name: string;
     /** id voice */
     id: string;
     /** voice participant */
@@ -1055,16 +1055,16 @@ export declare const Envelope: {
             mode?: number | undefined;
         } | undefined;
         voice_joined_event?: {
-            channel_id?: string | undefined;
-            channel_label?: string | undefined;
+            clan_id?: string | undefined;
+            clan_name?: string | undefined;
             id?: string | undefined;
             participant?: string | undefined;
             roomName?: string | undefined;
             lastScreenshot?: string | undefined;
         } | undefined;
         voice_leave_event?: {
-            channel_id?: string | undefined;
-            channel_label?: string | undefined;
+            clan_id?: string | undefined;
+            clan_name?: string | undefined;
             id?: string | undefined;
             participant?: string | undefined;
             roomName?: string | undefined;
@@ -2158,29 +2158,29 @@ export declare const Envelope: {
             mode?: number | undefined;
         } & { [K_85 in Exclude<keyof I["message_deleted_event"], keyof MessageDeletedEvent>]: never; }) | undefined;
         voice_joined_event?: ({
-            channel_id?: string | undefined;
-            channel_label?: string | undefined;
+            clan_id?: string | undefined;
+            clan_name?: string | undefined;
             id?: string | undefined;
             participant?: string | undefined;
             roomName?: string | undefined;
             lastScreenshot?: string | undefined;
         } & {
-            channel_id?: string | undefined;
-            channel_label?: string | undefined;
+            clan_id?: string | undefined;
+            clan_name?: string | undefined;
             id?: string | undefined;
             participant?: string | undefined;
             roomName?: string | undefined;
             lastScreenshot?: string | undefined;
         } & { [K_86 in Exclude<keyof I["voice_joined_event"], keyof VoiceJoinedEvent>]: never; }) | undefined;
         voice_leave_event?: ({
-            channel_id?: string | undefined;
-            channel_label?: string | undefined;
+            clan_id?: string | undefined;
+            clan_name?: string | undefined;
             id?: string | undefined;
             participant?: string | undefined;
             roomName?: string | undefined;
         } & {
-            channel_id?: string | undefined;
-            channel_label?: string | undefined;
+            clan_id?: string | undefined;
+            clan_name?: string | undefined;
             id?: string | undefined;
             participant?: string | undefined;
             roomName?: string | undefined;
@@ -2573,16 +2573,16 @@ export declare const Envelope: {
             mode?: number | undefined;
         } | undefined;
         voice_joined_event?: {
-            channel_id?: string | undefined;
-            channel_label?: string | undefined;
+            clan_id?: string | undefined;
+            clan_name?: string | undefined;
             id?: string | undefined;
             participant?: string | undefined;
             roomName?: string | undefined;
             lastScreenshot?: string | undefined;
         } | undefined;
         voice_leave_event?: {
-            channel_id?: string | undefined;
-            channel_label?: string | undefined;
+            clan_id?: string | undefined;
+            clan_name?: string | undefined;
             id?: string | undefined;
             participant?: string | undefined;
             roomName?: string | undefined;
@@ -3676,29 +3676,29 @@ export declare const Envelope: {
             mode?: number | undefined;
         } & { [K_174 in Exclude<keyof I_1["message_deleted_event"], keyof MessageDeletedEvent>]: never; }) | undefined;
         voice_joined_event?: ({
-            channel_id?: string | undefined;
-            channel_label?: string | undefined;
+            clan_id?: string | undefined;
+            clan_name?: string | undefined;
             id?: string | undefined;
             participant?: string | undefined;
             roomName?: string | undefined;
             lastScreenshot?: string | undefined;
         } & {
-            channel_id?: string | undefined;
-            channel_label?: string | undefined;
+            clan_id?: string | undefined;
+            clan_name?: string | undefined;
             id?: string | undefined;
             participant?: string | undefined;
             roomName?: string | undefined;
             lastScreenshot?: string | undefined;
         } & { [K_175 in Exclude<keyof I_1["voice_joined_event"], keyof VoiceJoinedEvent>]: never; }) | undefined;
         voice_leave_event?: ({
-            channel_id?: string | undefined;
-            channel_label?: string | undefined;
+            clan_id?: string | undefined;
+            clan_name?: string | undefined;
             id?: string | undefined;
             participant?: string | undefined;
             roomName?: string | undefined;
         } & {
-            channel_id?: string | undefined;
-            channel_label?: string | undefined;
+            clan_id?: string | undefined;
+            clan_name?: string | undefined;
             id?: string | undefined;
             participant?: string | undefined;
             roomName?: string | undefined;
@@ -6061,27 +6061,27 @@ export declare const VoiceLeavedEvent: {
     fromJSON(object: any): VoiceLeavedEvent;
     toJSON(message: VoiceLeavedEvent): unknown;
     create<I extends {
-        channel_id?: string | undefined;
-        channel_label?: string | undefined;
+        clan_id?: string | undefined;
+        clan_name?: string | undefined;
         id?: string | undefined;
         participant?: string | undefined;
         roomName?: string | undefined;
     } & {
-        channel_id?: string | undefined;
-        channel_label?: string | undefined;
+        clan_id?: string | undefined;
+        clan_name?: string | undefined;
         id?: string | undefined;
         participant?: string | undefined;
         roomName?: string | undefined;
     } & { [K in Exclude<keyof I, keyof VoiceLeavedEvent>]: never; }>(base?: I | undefined): VoiceLeavedEvent;
     fromPartial<I_1 extends {
-        channel_id?: string | undefined;
-        channel_label?: string | undefined;
+        clan_id?: string | undefined;
+        clan_name?: string | undefined;
         id?: string | undefined;
         participant?: string | undefined;
         roomName?: string | undefined;
     } & {
-        channel_id?: string | undefined;
-        channel_label?: string | undefined;
+        clan_id?: string | undefined;
+        clan_name?: string | undefined;
         id?: string | undefined;
         participant?: string | undefined;
         roomName?: string | undefined;
@@ -6093,30 +6093,30 @@ export declare const VoiceJoinedEvent: {
     fromJSON(object: any): VoiceJoinedEvent;
     toJSON(message: VoiceJoinedEvent): unknown;
     create<I extends {
-        channel_id?: string | undefined;
-        channel_label?: string | undefined;
+        clan_id?: string | undefined;
+        clan_name?: string | undefined;
         id?: string | undefined;
         participant?: string | undefined;
         roomName?: string | undefined;
         lastScreenshot?: string | undefined;
     } & {
-        channel_id?: string | undefined;
-        channel_label?: string | undefined;
+        clan_id?: string | undefined;
+        clan_name?: string | undefined;
         id?: string | undefined;
         participant?: string | undefined;
         roomName?: string | undefined;
         lastScreenshot?: string | undefined;
     } & { [K in Exclude<keyof I, keyof VoiceJoinedEvent>]: never; }>(base?: I | undefined): VoiceJoinedEvent;
     fromPartial<I_1 extends {
-        channel_id?: string | undefined;
-        channel_label?: string | undefined;
+        clan_id?: string | undefined;
+        clan_name?: string | undefined;
         id?: string | undefined;
         participant?: string | undefined;
         roomName?: string | undefined;
         lastScreenshot?: string | undefined;
     } & {
-        channel_id?: string | undefined;
-        channel_label?: string | undefined;
+        clan_id?: string | undefined;
+        clan_name?: string | undefined;
         id?: string | undefined;
         participant?: string | undefined;
         roomName?: string | undefined;
