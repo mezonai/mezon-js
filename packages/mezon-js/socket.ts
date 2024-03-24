@@ -337,6 +337,8 @@ export interface VoiceJoinedEvent {
   channel_id: string;
   // The channel name
   channel_label: string;
+  // id voice
+  id: string;
   // voice participant
   participant: string;
   // room name
@@ -673,10 +675,10 @@ export interface Socket {
   writeLastSeenMessage(channel_id: string, channel_label: string, mode: number, message_id: string) : Promise<LastSeenMessageEvent>;
 
   /** send voice joined */
-  writeVoiceJoined(channel_id: string, channel_label: string, participant: string, roomName: string, lastScreenshot: string) : Promise<VoiceJoinedEvent>;
+  writeVoiceJoined(channel_id: string, channel_label: string, id: string, participant: string, roomName: string, lastScreenshot: string) : Promise<VoiceJoinedEvent>;
 
   /** send voice leaved */
-  writeVoiceLeaved(channel_id: string, channel_label: string, participant: string, roomName: string) : Promise<VoiceJoinedEvent>;
+  writeVoiceLeaved(channel_id: string, channel_label: string, id: string, participant: string, roomName: string) : Promise<VoiceJoinedEvent>;
 
   /** Handle disconnect events received from the socket. */
   ondisconnect: (evt: Event) => void;
@@ -1248,13 +1250,13 @@ export class DefaultSocket implements Socket {
     return response.last_seen_message_event
   }
 
-  async writeVoiceJoined(channel_id: string, channel_label: string, participant: string, roomName: string, lastScreenshot: string) : Promise<VoiceJoinedEvent> {
-    const response = await this.send({voice_joined_event: {channel_id: channel_id, channel_label: channel_label, participant: participant, roomName: roomName, lastScreenshot: lastScreenshot}});
+  async writeVoiceJoined(channel_id: string, channel_label: string, id: string, participant: string, roomName: string, lastScreenshot: string) : Promise<VoiceJoinedEvent> {
+    const response = await this.send({voice_joined_event: {channel_id: channel_id, channel_label: channel_label, id: id, participant: participant, roomName: roomName, lastScreenshot: lastScreenshot}});
     return response.last_seen_message_event
   }
 
-  async writeVoiceLeaved(channel_id: string, channel_label: string, participant: string, roomName: string) : Promise<VoiceJoinedEvent> {
-    const response = await this.send({voice_leaved_event: {channel_id: channel_id, channel_label: channel_label, participant: participant, roomName: roomName}});
+  async writeVoiceLeaved(channel_id: string, channel_label: string, id: string, participant: string, roomName: string) : Promise<VoiceJoinedEvent> {
+    const response = await this.send({voice_leaved_event: {channel_id: channel_id, channel_label: channel_label, id: id, participant: participant, roomName: roomName}});
     return response.last_seen_message_event
   }
 

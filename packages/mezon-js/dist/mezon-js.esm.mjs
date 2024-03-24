@@ -3784,15 +3784,15 @@ var _DefaultSocket = class _DefaultSocket {
       return response.last_seen_message_event;
     });
   }
-  writeVoiceJoined(channel_id, channel_label, participant, roomName, lastScreenshot) {
+  writeVoiceJoined(channel_id, channel_label, id, participant, roomName, lastScreenshot) {
     return __async(this, null, function* () {
-      const response = yield this.send({ voice_joined_event: { channel_id, channel_label, participant, roomName, lastScreenshot } });
+      const response = yield this.send({ voice_joined_event: { channel_id, channel_label, id, participant, roomName, lastScreenshot } });
       return response.last_seen_message_event;
     });
   }
-  writeVoiceLeaved(channel_id, channel_label, participant, roomName) {
+  writeVoiceLeaved(channel_id, channel_label, id, participant, roomName) {
     return __async(this, null, function* () {
-      const response = yield this.send({ voice_leaved_event: { channel_id, channel_label, participant, roomName } });
+      const response = yield this.send({ voice_leaved_event: { channel_id, channel_label, id, participant, roomName } });
       return response.last_seen_message_event;
     });
   }
