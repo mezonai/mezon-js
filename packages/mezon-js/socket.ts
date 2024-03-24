@@ -328,6 +328,19 @@ export interface ChannelPresenceEvent {
   leaves: Presence[];
 }
 
+export interface VoiceJoinedEvent {
+  /** The unique identifier of the chat channel. */
+  channel_id: string;
+  // The channel name
+  channel_label: string;
+  // voice participant
+  participant: string;
+  // room name
+  roomName: string;
+  // last screenshot
+  lastScreenshot: string;  
+}
+
 /** Stream identifier */
 export interface StreamId {
   /** The type of stream (e.g. chat). */
@@ -655,6 +668,12 @@ export interface Socket {
   /** Send last seen message */
   writeLastSeenMessage(channel_id: string, channel_label: string, mode: number, message_id: string) : Promise<LastSeenMessageEvent>;
 
+  /** send voice joined */
+  writeVoiceJoined(channel_id: string, channel_label: string, participant: string, roomName: string, lastScreenshot: string) : Promise<VoiceJoinedEvent>;
+
+  /** send voice leaved */
+  writeVoiceLeaved(channel_id: string, channel_label: string, participant: string, roomName: string) : Promise<VoiceJoinedEvent>;
+
   /** Handle disconnect events received from the socket. */
   ondisconnect: (evt: Event) => void;
 
@@ -713,6 +732,12 @@ export interface Socket {
 
   /** Receive channel presence updates. */
   onchannelpresence: (channelPresence: ChannelPresenceEvent) => void;
+
+  // when someone join to voice room
+  onvoicejoined: (voiceParticipant: VoiceJoinedEvent) => void;
+  
+  // when someone join to voice room
+  onvoiceleaved: (voiceParticipant: VoiceJoinedEvent) => void;
 
   /* Set the heartbeat timeout used by the socket to detect if it has lost connectivity to the server. */
   setHeartbeatTimeoutMs(ms : number) : void;
@@ -786,6 +811,10 @@ export class DefaultSocket implements Socket {
               n.content = n.content ? JSON.parse(n.content) : undefined;
               this.onnotification(n);
           });
+        } else if (message.voice_joned_event) {
+          this.onvoicejoined(message.voice_joned_event)
+        } else if (message.voice_leaved_event) {
+          this.onvoicejoined(message.voice_leaved_event) 
         } else if (message.status_presence_event) {
           this.onstatuspresence(<StatusPresenceEvent>message.status_presence_event);
         } else if (message.stream_presence_event) {
@@ -998,6 +1027,18 @@ export class DefaultSocket implements Socket {
     }
   }
 
+  onvoicejoined(voiceParticipant: VoiceJoinedEvent) {
+    if (this.verbose && window && window.console) {
+      console.log(voiceParticipant);
+    }
+  }
+
+  onvoiceleaved(voiceParticipant: VoiceJoinedEvent) {
+    if (this.verbose && window && window.console) {
+      console.log(voiceParticipant);
+    }
+  }
+
   onstreampresence(streamPresence: StreamPresenceEvent) {
     if (this.verbose && window && window.console) {
       console.log(streamPresence);
@@ -1200,6 +1241,16 @@ export class DefaultSocket implements Socket {
 
   async writeLastSeenMessage(channel_id: string, channel_label: string, mode: number, message_id: string) : Promise<LastSeenMessageEvent> {
     const response = await this.send({last_seen_message_event: {channel_id: channel_id, channel_label: channel_label, mode: mode, message_id: message_id}});
+    return response.last_seen_message_event
+  }
+
+  async writeVoiceJoined(channel_id: string, channel_label: string, participant: string, roomName: string, lastScreenshot: string) : Promise<VoiceJoinedEvent> {
+    const response = await this.send({voice_joined_event: {channel_id: channel_id, channel_label: channel_label, participant: participant, roomName: roomName, lastScreenshot: lastScreenshot}});
+    return response.last_seen_message_event
+  }
+
+  async writeVoiceLeaved(channel_id: string, channel_label: string, participant: string, roomName: string) : Promise<VoiceJoinedEvent> {
+    const response = await this.send({voice_leaved_event: {channel_id: channel_id, channel_label: channel_label, participant: participant, roomName: roomName}});
     return response.last_seen_message_event
   }
 

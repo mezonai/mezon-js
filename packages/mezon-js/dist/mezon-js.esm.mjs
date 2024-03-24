@@ -3391,6 +3391,10 @@ var _DefaultSocket = class _DefaultSocket {
             n.content = n.content ? JSON.parse(n.content) : void 0;
             this.onnotification(n);
           });
+        } else if (message.voice_joned_event) {
+          this.onvoicejoined(message.voice_joned_event);
+        } else if (message.voice_leaved_event) {
+          this.onvoicejoined(message.voice_leaved_event);
         } else if (message.status_presence_event) {
           this.onstatuspresence(message.status_presence_event);
         } else if (message.stream_presence_event) {
@@ -3573,6 +3577,16 @@ var _DefaultSocket = class _DefaultSocket {
   onstatuspresence(statusPresence) {
     if (this.verbose && window && window.console) {
       console.log(statusPresence);
+    }
+  }
+  onvoicejoined(voiceParticipant) {
+    if (this.verbose && window && window.console) {
+      console.log(voiceParticipant);
+    }
+  }
+  onvoiceleaved(voiceParticipant) {
+    if (this.verbose && window && window.console) {
+      console.log(voiceParticipant);
     }
   }
   onstreampresence(streamPresence) {
@@ -3767,6 +3781,18 @@ var _DefaultSocket = class _DefaultSocket {
   writeLastSeenMessage(channel_id, channel_label, mode, message_id) {
     return __async(this, null, function* () {
       const response = yield this.send({ last_seen_message_event: { channel_id, channel_label, mode, message_id } });
+      return response.last_seen_message_event;
+    });
+  }
+  writeVoiceJoined(channel_id, channel_label, participant, roomName, lastScreenshot) {
+    return __async(this, null, function* () {
+      const response = yield this.send({ voice_joined_event: { channel_id, channel_label, participant, roomName, lastScreenshot } });
+      return response.last_seen_message_event;
+    });
+  }
+  writeVoiceLeaved(channel_id, channel_label, participant, roomName) {
+    return __async(this, null, function* () {
+      const response = yield this.send({ voice_leaved_event: { channel_id, channel_label, participant, roomName } });
       return response.last_seen_message_event;
     });
   }

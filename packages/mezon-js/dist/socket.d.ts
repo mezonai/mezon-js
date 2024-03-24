@@ -242,6 +242,14 @@ export interface ChannelPresenceEvent {
     /** Presences of users who left the channel. */
     leaves: Presence[];
 }
+export interface VoiceJoinedEvent {
+    /** The unique identifier of the chat channel. */
+    channel_id: string;
+    channel_label: string;
+    participant: string;
+    roomName: string;
+    lastScreenshot: string;
+}
 /** Stream identifier */
 export interface StreamId {
     /** The type of stream (e.g. chat). */
@@ -522,6 +530,10 @@ export interface Socket {
     writeMessageDeleted(channel_id: string, channel_label: string, mode: number, message_id: string, deletor: string): Promise<MessageDeletedEvent>;
     /** Send last seen message */
     writeLastSeenMessage(channel_id: string, channel_label: string, mode: number, message_id: string): Promise<LastSeenMessageEvent>;
+    /** send voice joined */
+    writeVoiceJoined(channel_id: string, channel_label: string, participant: string, roomName: string, lastScreenshot: string): Promise<VoiceJoinedEvent>;
+    /** send voice leaved */
+    writeVoiceLeaved(channel_id: string, channel_label: string, participant: string, roomName: string): Promise<VoiceJoinedEvent>;
     /** Handle disconnect events received from the socket. */
     ondisconnect: (evt: Event) => void;
     /** Handle error events received from the socket. */
@@ -563,6 +575,8 @@ export interface Socket {
     onmessagedeleted: (messageDeletedEvent: MessageDeletedEvent) => void;
     /** Receive channel presence updates. */
     onchannelpresence: (channelPresence: ChannelPresenceEvent) => void;
+    onvoicejoined: (voiceParticipant: VoiceJoinedEvent) => void;
+    onvoiceleaved: (voiceParticipant: VoiceJoinedEvent) => void;
     setHeartbeatTimeoutMs(ms: number): void;
     getHeartbeatTimeoutMs(): number;
 }
@@ -609,6 +623,8 @@ export declare class DefaultSocket implements Socket {
     onpartymatchmakerticket(partyMatched: PartyMatchmakerTicket): void;
     onpartypresence(partyPresence: PartyPresenceEvent): void;
     onstatuspresence(statusPresence: StatusPresenceEvent): void;
+    onvoicejoined(voiceParticipant: VoiceJoinedEvent): void;
+    onvoiceleaved(voiceParticipant: VoiceJoinedEvent): void;
     onstreampresence(streamPresence: StreamPresenceEvent): void;
     onstreamdata(streamData: StreamData): void;
     onheartbeattimeout(): void;
@@ -636,6 +652,8 @@ export declare class DefaultSocket implements Socket {
     writeMessageDeleted(channel_id: string, channel_label: string, mode: number, message_id: string): Promise<MessageDeletedEvent>;
     writeMessageTyping(channel_id: string, channel_label: string, mode: number): Promise<MessageTypingEvent>;
     writeLastSeenMessage(channel_id: string, channel_label: string, mode: number, message_id: string): Promise<LastSeenMessageEvent>;
+    writeVoiceJoined(channel_id: string, channel_label: string, participant: string, roomName: string, lastScreenshot: string): Promise<VoiceJoinedEvent>;
+    writeVoiceLeaved(channel_id: string, channel_label: string, participant: string, roomName: string): Promise<VoiceJoinedEvent>;
     private pingPong;
 }
 export {};
