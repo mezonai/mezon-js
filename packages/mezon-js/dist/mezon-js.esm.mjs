@@ -3784,15 +3784,15 @@ var _DefaultSocket = class _DefaultSocket {
       return response.last_seen_message_event;
     });
   }
-  writeVoiceJoined(channel_id, channel_label, id, participant, roomName, lastScreenshot) {
+  writeVoiceJoined(clanId, clanName, id, participant, roomName, lastScreenshot) {
     return __async(this, null, function* () {
-      const response = yield this.send({ voice_joined_event: { channel_id, channel_label, id, participant, roomName, lastScreenshot } });
+      const response = yield this.send({ voice_joined_event: { clan_id: clanId, clan_name: clanName, id, participant, roomName, lastScreenshot } });
       return response.last_seen_message_event;
     });
   }
-  writeVoiceLeaved(channel_id, channel_label, id, participant, roomName) {
+  writeVoiceLeaved(clanId, clanName, id, participant, roomName) {
     return __async(this, null, function* () {
-      const response = yield this.send({ voice_leaved_event: { channel_id, channel_label, id, participant, roomName } });
+      const response = yield this.send({ voice_leaved_event: { clan_id: clanId, clan_name: clanName, id, participant, roomName } });
       return response.last_seen_message_event;
     });
   }
