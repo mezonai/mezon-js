@@ -1847,12 +1847,13 @@ var MezonApi = class {
     ]);
   }
   /** List all users that are part of a channel. */
-  listChannelUsers(bearerToken, channelId, limit, state, cursor, options = {}) {
+  listChannelUsers(bearerToken, channelId, channelType, limit, state, cursor, options = {}) {
     if (channelId === null || channelId === void 0) {
       throw new Error("'channelId' is a required parameter but is null or undefined.");
     }
     const urlPath = "/v2/channeldesc/{channelId}/user".replace("{channelId}", encodeURIComponent(String(channelId)));
     const queryParams = /* @__PURE__ */ new Map();
+    queryParams.set("channelType", channelType);
     queryParams.set("limit", limit);
     queryParams.set("state", state);
     queryParams.set("cursor", cursor);
@@ -4285,12 +4286,12 @@ var Client = class {
     });
   }
   /** List a channel's users. */
-  listChannelUsers(session, channelId, state, limit, cursor) {
+  listChannelUsers(session, channelId, channelType, state, limit, cursor) {
     return __async(this, null, function* () {
       if (this.autoRefreshSession && session.refresh_token && session.isexpired((Date.now() + this.expiredTimespanMs) / 1e3)) {
         yield this.sessionRefresh(session);
       }
-      return this.apiClient.listChannelUsers(session.token, channelId, limit, state, cursor).then((response) => {
+      return this.apiClient.listChannelUsers(session.token, channelId, channelType, limit, state, cursor).then((response) => {
         var result = {
           channel_users: [],
           cursor: response.cursor,

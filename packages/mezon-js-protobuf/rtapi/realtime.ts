@@ -843,6 +843,8 @@ export interface VoiceJoinedEvent {
   id: string;
   /** voice participant */
   participant: string;
+  /** user id */
+  user_id: string;
   /** room name */
   roomName: string;
   /** last screenshot */
@@ -5238,7 +5240,7 @@ export const VoiceLeavedEvent = {
 };
 
 function createBaseVoiceJoinedEvent(): VoiceJoinedEvent {
-  return { clan_id: "", clan_name: "", id: "", participant: "", roomName: "", lastScreenshot: "" };
+  return { clan_id: "", clan_name: "", id: "", participant: "", user_id: "", roomName: "", lastScreenshot: "" };
 }
 
 export const VoiceJoinedEvent = {
@@ -5255,11 +5257,14 @@ export const VoiceJoinedEvent = {
     if (message.participant !== "") {
       writer.uint32(34).string(message.participant);
     }
+    if (message.user_id !== "") {
+      writer.uint32(42).string(message.user_id);
+    }
     if (message.roomName !== "") {
-      writer.uint32(42).string(message.roomName);
+      writer.uint32(50).string(message.roomName);
     }
     if (message.lastScreenshot !== "") {
-      writer.uint32(50).string(message.lastScreenshot);
+      writer.uint32(58).string(message.lastScreenshot);
     }
     return writer;
   },
@@ -5284,9 +5289,12 @@ export const VoiceJoinedEvent = {
           message.participant = reader.string();
           break;
         case 5:
-          message.roomName = reader.string();
+          message.user_id = reader.string();
           break;
         case 6:
+          message.roomName = reader.string();
+          break;
+        case 7:
           message.lastScreenshot = reader.string();
           break;
         default:
@@ -5303,6 +5311,7 @@ export const VoiceJoinedEvent = {
       clan_name: isSet(object.clan_name) ? String(object.clan_name) : "",
       id: isSet(object.id) ? String(object.id) : "",
       participant: isSet(object.participant) ? String(object.participant) : "",
+      user_id: isSet(object.user_id) ? String(object.user_id) : "",
       roomName: isSet(object.roomName) ? String(object.roomName) : "",
       lastScreenshot: isSet(object.lastScreenshot) ? String(object.lastScreenshot) : "",
     };
@@ -5314,6 +5323,7 @@ export const VoiceJoinedEvent = {
     message.clan_name !== undefined && (obj.clan_name = message.clan_name);
     message.id !== undefined && (obj.id = message.id);
     message.participant !== undefined && (obj.participant = message.participant);
+    message.user_id !== undefined && (obj.user_id = message.user_id);
     message.roomName !== undefined && (obj.roomName = message.roomName);
     message.lastScreenshot !== undefined && (obj.lastScreenshot = message.lastScreenshot);
     return obj;
@@ -5329,6 +5339,7 @@ export const VoiceJoinedEvent = {
     message.clan_name = object.clan_name ?? "";
     message.id = object.id ?? "";
     message.participant = object.participant ?? "";
+    message.user_id = object.user_id ?? "";
     message.roomName = object.roomName ?? "";
     message.lastScreenshot = object.lastScreenshot ?? "";
     return message;

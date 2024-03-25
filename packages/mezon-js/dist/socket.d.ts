@@ -252,6 +252,7 @@ export interface VoiceJoinedEvent {
     clanName: string;
     id: string;
     participant: string;
+    userId: string;
     roomName: string;
     lastScreenshot: string;
 }
