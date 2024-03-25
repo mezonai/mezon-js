@@ -2440,13 +2440,13 @@ export class MezonApi {
 
   /** List all users that are part of a channel. */
   listChannelUsers(bearerToken: string,
-      channelId:string,
-      clanId?:string,
-      channelType?:number,
-      limit?:number,
-      state?:number,
-      cursor?:string,
-      options: any = {}): Promise<ApiChannelUserList> {
+    clanId:string,
+    channelId:string,      
+    channelType?:number,
+    limit?:number,
+    state?:number,
+    cursor?:string,
+    options: any = {}): Promise<ApiChannelUserList> {
     
     if (channelId === null || channelId === undefined) {
       throw new Error("'channelId' is a required parameter but is null or undefined.");
