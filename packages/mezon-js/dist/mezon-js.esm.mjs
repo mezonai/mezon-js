@@ -3391,8 +3391,8 @@ var _DefaultSocket = class _DefaultSocket {
             n.content = n.content ? JSON.parse(n.content) : void 0;
             this.onnotification(n);
           });
-        } else if (message.voice_joned_event) {
-          this.onvoicejoined(message.voice_joned_event);
+        } else if (message.voice_joined_event) {
+          this.onvoicejoined(message.voice_joined_event);
         } else if (message.voice_leaved_event) {
           this.onvoicejoined(message.voice_leaved_event);
         } else if (message.status_presence_event) {
