@@ -1853,7 +1853,7 @@ var MezonApi = class {
     }
     const urlPath = "/v2/channeldesc/{channelId}/user".replace("{channelId}", encodeURIComponent(String(channelId)));
     const queryParams = /* @__PURE__ */ new Map();
-    queryParams.set("channelType", channelType);
+    queryParams.set("channel_type", channelType);
     queryParams.set("limit", limit);
     queryParams.set("state", state);
     queryParams.set("cursor", cursor);
