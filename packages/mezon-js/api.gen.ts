@@ -2441,7 +2441,8 @@ export class MezonApi {
   /** List all users that are part of a channel. */
   listChannelUsers(bearerToken: string,
       channelId:string,
-      channelType: number,
+      clanId?:string,
+      channelType?:number,
       limit?:number,
       state?:number,
       cursor?:string,
@@ -2453,6 +2454,7 @@ export class MezonApi {
     const urlPath = "/v2/channeldesc/{channelId}/user"
         .replace("{channelId}", encodeURIComponent(String(channelId)));
     const queryParams = new Map<string, any>();
+    queryParams.set("clan_id", clanId);
     queryParams.set("channel_type", channelType);
     queryParams.set("limit", limit);
     queryParams.set("state", state);
