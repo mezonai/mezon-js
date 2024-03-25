@@ -248,13 +248,14 @@ export interface ChannelPresenceEvent {
 }
 export interface VoiceJoinedEvent {
     /** The unique identifier of the chat channel. */
-    clanId: string;
-    clanName: string;
+    clan_id: string;
+    clan_name: string;
     id: string;
     participant: string;
-    userId: string;
-    roomName: string;
-    lastScreenshot: string;
+    user_id: string;
+    voice_channel_label: string;
+    voice_channel_id: string;
+    last_screenshot: string;
 }
 /** Stream identifier */
 export interface StreamId {
@@ -537,9 +538,9 @@ export interface Socket {
     /** Send last seen message */
     writeLastSeenMessage(channel_id: string, channel_label: string, mode: number, message_id: string): Promise<LastSeenMessageEvent>;
     /** send voice joined */
-    writeVoiceJoined(clan_id: string, clan_name: string, id: string, participant: string, roomName: string, lastScreenshot: string): Promise<VoiceJoinedEvent>;
+    writeVoiceJoined(id: string, clanId: string, clanName: string, voiceChannelId: string, voiceChannelLabel: string, participant: string, lastScreenshot: string): Promise<VoiceJoinedEvent>;
     /** send voice leaved */
-    writeVoiceLeaved(clan_id: string, clan_label: string, id: string, participant: string, roomName: string): Promise<VoiceJoinedEvent>;
+    writeVoiceLeaved(id: string, clan_id: string, clan_label: string, voiceChannelId: string, voiceChannelLabel: string, participant: string): Promise<VoiceJoinedEvent>;
     /** Handle disconnect events received from the socket. */
     ondisconnect: (evt: Event) => void;
     /** Handle error events received from the socket. */
@@ -658,8 +659,8 @@ export declare class DefaultSocket implements Socket {
     writeMessageDeleted(channel_id: string, channel_label: string, mode: number, message_id: string): Promise<MessageDeletedEvent>;
     writeMessageTyping(channel_id: string, channel_label: string, mode: number): Promise<MessageTypingEvent>;
     writeLastSeenMessage(channel_id: string, channel_label: string, mode: number, message_id: string): Promise<LastSeenMessageEvent>;
-    writeVoiceJoined(clanId: string, clanName: string, id: string, participant: string, roomName: string, lastScreenshot: string): Promise<VoiceJoinedEvent>;
-    writeVoiceLeaved(clanId: string, clanName: string, id: string, participant: string, roomName: string): Promise<VoiceJoinedEvent>;
+    writeVoiceJoined(id: string, clanId: string, clanName: string, voiceChannelId: string, voiceChannelLabel: string, participant: string, lastScreenshot: string): Promise<VoiceJoinedEvent>;
+    writeVoiceLeaved(id: string, clanId: string, clanName: string, voiceChannelId: string, voiceChannelLabel: string, participant: string): Promise<VoiceJoinedEvent>;
     private pingPong;
 }
 export {};

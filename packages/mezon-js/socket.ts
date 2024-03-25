@@ -334,19 +334,21 @@ export interface ChannelPresenceEvent {
 
 export interface VoiceJoinedEvent {
   /** The unique identifier of the chat channel. */
-  clanId: string;
+  clan_id: string;
   // The channel name
-  clanName: string;
+  clan_name: string;
   // id voice
   id: string;
   // voice participant
   participant: string;
   // user id
-  userId: string;
-  // room name
-  roomName: string;
+  user_id: string;
+  // voice channel label
+  voice_channel_label: string;
+  // voice channel id
+  voice_channel_id: string;
   // last screenshot
-  lastScreenshot: string;  
+  last_screenshot: string;  
 }
 
 /** Stream identifier */
@@ -677,10 +679,10 @@ export interface Socket {
   writeLastSeenMessage(channel_id: string, channel_label: string, mode: number, message_id: string) : Promise<LastSeenMessageEvent>;
 
   /** send voice joined */
-  writeVoiceJoined(clan_id: string, clan_name: string, id: string, participant: string, roomName: string, lastScreenshot: string) : Promise<VoiceJoinedEvent>;
+  writeVoiceJoined(id: string, clanId: string, clanName: string, voiceChannelId: string, voiceChannelLabel: string, participant: string, lastScreenshot: string) : Promise<VoiceJoinedEvent>;
 
   /** send voice leaved */
-  writeVoiceLeaved(clan_id: string, clan_label: string, id: string, participant: string, roomName: string) : Promise<VoiceJoinedEvent>;
+  writeVoiceLeaved(id: string, clan_id: string, clan_label: string, voiceChannelId: string, voiceChannelLabel: string, participant: string) : Promise<VoiceJoinedEvent>;
 
   /** Handle disconnect events received from the socket. */
   ondisconnect: (evt: Event) => void;
@@ -1252,14 +1254,14 @@ export class DefaultSocket implements Socket {
     return response.last_seen_message_event
   }
 
-  async writeVoiceJoined(clanId: string, clanName: string, id: string, participant: string, roomName: string, lastScreenshot: string) : Promise<VoiceJoinedEvent> {
-    const response = await this.send({voice_joined_event: {clan_id: clanId, clan_name: clanName, id: id, participant: participant, roomName: roomName, lastScreenshot: lastScreenshot}});
-    return response.last_seen_message_event
+  async writeVoiceJoined(id: string, clanId: string, clanName: string, voiceChannelId: string, voiceChannelLabel: string, participant: string, lastScreenshot: string) : Promise<VoiceJoinedEvent> {
+    const response = await this.send({voice_joined_event: {clan_id: clanId, clan_name: clanName, id: id, participant: participant, voice_channel_id: voiceChannelId, voice_channel_label: voiceChannelLabel, last_screenshot: lastScreenshot}});
+    return response.voice_joined_event
   }
 
-  async writeVoiceLeaved(clanId: string, clanName: string, id: string, participant: string, roomName: string) : Promise<VoiceJoinedEvent> {
-    const response = await this.send({voice_leaved_event: {clan_id: clanId, clan_name: clanName, id: id, participant: participant, roomName: roomName}});
-    return response.last_seen_message_event
+  async writeVoiceLeaved(id: string, clanId: string, clanName: string, voiceChannelId: string, voiceChannelLabel: string, participant: string) : Promise<VoiceJoinedEvent> {
+    const response = await this.send({voice_leaved_event: {clan_id: clanId, clan_name: clanName, id: id, participant: participant, voice_channel_id: voiceChannelId, voice_channel_label: voiceChannelLabel}});
+    return response.voice_leaved_event
   }
 
   private async pingPong() : Promise<void> {
