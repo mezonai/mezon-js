@@ -173,7 +173,7 @@ export interface Envelope {
     | VoiceJoinedEvent
     | undefined;
   /** user leave voice channel */
-  voice_leave_event?: VoiceLeavedEvent | undefined;
+  voice_leaved_event?: VoiceLeavedEvent | undefined;
 }
 
 /** A realtime chat channel. */
@@ -962,7 +962,7 @@ function createBaseEnvelope(): Envelope {
     message_reaction_event: undefined,
     message_deleted_event: undefined,
     voice_joined_event: undefined,
-    voice_leave_event: undefined,
+    voice_leaved_event: undefined,
   };
 }
 
@@ -1091,8 +1091,8 @@ export const Envelope = {
     if (message.voice_joined_event !== undefined) {
       VoiceJoinedEvent.encode(message.voice_joined_event, writer.uint32(330).fork()).ldelim();
     }
-    if (message.voice_leave_event !== undefined) {
-      VoiceLeavedEvent.encode(message.voice_leave_event, writer.uint32(338).fork()).ldelim();
+    if (message.voice_leaved_event !== undefined) {
+      VoiceLeavedEvent.encode(message.voice_leaved_event, writer.uint32(338).fork()).ldelim();
     }
     return writer;
   },
@@ -1228,7 +1228,7 @@ export const Envelope = {
           message.voice_joined_event = VoiceJoinedEvent.decode(reader, reader.uint32());
           break;
         case 42:
-          message.voice_leave_event = VoiceLeavedEvent.decode(reader, reader.uint32());
+          message.voice_leaved_event = VoiceLeavedEvent.decode(reader, reader.uint32());
           break;
         default:
           reader.skipType(tag & 7);
@@ -1311,8 +1311,8 @@ export const Envelope = {
       voice_joined_event: isSet(object.voice_joined_event)
         ? VoiceJoinedEvent.fromJSON(object.voice_joined_event)
         : undefined,
-      voice_leave_event: isSet(object.voice_leave_event)
-        ? VoiceLeavedEvent.fromJSON(object.voice_leave_event)
+      voice_leaved_event: isSet(object.voice_leaved_event)
+        ? VoiceLeavedEvent.fromJSON(object.voice_leaved_event)
         : undefined,
     };
   },
@@ -1408,8 +1408,8 @@ export const Envelope = {
     message.voice_joined_event !== undefined && (obj.voice_joined_event = message.voice_joined_event
       ? VoiceJoinedEvent.toJSON(message.voice_joined_event)
       : undefined);
-    message.voice_leave_event !== undefined && (obj.voice_leave_event = message.voice_leave_event
-      ? VoiceLeavedEvent.toJSON(message.voice_leave_event)
+    message.voice_leaved_event !== undefined && (obj.voice_leaved_event = message.voice_leaved_event
+      ? VoiceLeavedEvent.toJSON(message.voice_leaved_event)
       : undefined);
     return obj;
   },
@@ -1540,8 +1540,8 @@ export const Envelope = {
     message.voice_joined_event = (object.voice_joined_event !== undefined && object.voice_joined_event !== null)
       ? VoiceJoinedEvent.fromPartial(object.voice_joined_event)
       : undefined;
-    message.voice_leave_event = (object.voice_leave_event !== undefined && object.voice_leave_event !== null)
-      ? VoiceLeavedEvent.fromPartial(object.voice_leave_event)
+    message.voice_leaved_event = (object.voice_leaved_event !== undefined && object.voice_leaved_event !== null)
+      ? VoiceLeavedEvent.fromPartial(object.voice_leaved_event)
       : undefined;
     return message;
   },

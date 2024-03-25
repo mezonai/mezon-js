@@ -86,7 +86,7 @@ export interface Envelope {
     /** user join voice channel */
     voice_joined_event?: VoiceJoinedEvent | undefined;
     /** user leave voice channel */
-    voice_leave_event?: VoiceLeavedEvent | undefined;
+    voice_leaved_event?: VoiceLeavedEvent | undefined;
 }
 /** A realtime chat channel. */
 export interface Channel {
@@ -1068,7 +1068,7 @@ export declare const Envelope: {
             voice_channel_id?: string | undefined;
             last_screenshot?: string | undefined;
         } | undefined;
-        voice_leave_event?: {
+        voice_leaved_event?: {
             clan_id?: string | undefined;
             clan_name?: string | undefined;
             id?: string | undefined;
@@ -2182,7 +2182,7 @@ export declare const Envelope: {
             voice_channel_id?: string | undefined;
             last_screenshot?: string | undefined;
         } & { [K_86 in Exclude<keyof I["voice_joined_event"], keyof VoiceJoinedEvent>]: never; }) | undefined;
-        voice_leave_event?: ({
+        voice_leaved_event?: ({
             clan_id?: string | undefined;
             clan_name?: string | undefined;
             id?: string | undefined;
@@ -2194,7 +2194,7 @@ export declare const Envelope: {
             id?: string | undefined;
             participant?: string | undefined;
             roomName?: string | undefined;
-        } & { [K_87 in Exclude<keyof I["voice_leave_event"], keyof VoiceLeavedEvent>]: never; }) | undefined;
+        } & { [K_87 in Exclude<keyof I["voice_leaved_event"], keyof VoiceLeavedEvent>]: never; }) | undefined;
     } & { [K_88 in Exclude<keyof I, keyof Envelope>]: never; }>(base?: I | undefined): Envelope;
     fromPartial<I_1 extends {
         cid?: string | undefined;
@@ -2592,7 +2592,7 @@ export declare const Envelope: {
             voice_channel_id?: string | undefined;
             last_screenshot?: string | undefined;
         } | undefined;
-        voice_leave_event?: {
+        voice_leaved_event?: {
             clan_id?: string | undefined;
             clan_name?: string | undefined;
             id?: string | undefined;
@@ -3706,7 +3706,7 @@ export declare const Envelope: {
             voice_channel_id?: string | undefined;
             last_screenshot?: string | undefined;
         } & { [K_175 in Exclude<keyof I_1["voice_joined_event"], keyof VoiceJoinedEvent>]: never; }) | undefined;
-        voice_leave_event?: ({
+        voice_leaved_event?: ({
             clan_id?: string | undefined;
             clan_name?: string | undefined;
             id?: string | undefined;
@@ -3718,7 +3718,7 @@ export declare const Envelope: {
             id?: string | undefined;
             participant?: string | undefined;
             roomName?: string | undefined;
-        } & { [K_176 in Exclude<keyof I_1["voice_leave_event"], keyof VoiceLeavedEvent>]: never; }) | undefined;
+        } & { [K_176 in Exclude<keyof I_1["voice_leaved_event"], keyof VoiceLeavedEvent>]: never; }) | undefined;
     } & { [K_177 in Exclude<keyof I_1, keyof Envelope>]: never; }>(object: I_1): Envelope;
 };
 export declare const Channel: {
