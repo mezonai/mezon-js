@@ -730,6 +730,8 @@ export interface ListGroupUsersRequest {
 }
 /** List all users that are part of a channel. */
 export interface ListChannelUsersRequest {
+    /** The clan id */
+    clan_id: string;
     /** The channel ID to list from. */
     channel_id: string;
     /** The channel type */
@@ -5863,12 +5865,14 @@ export declare const ListChannelUsersRequest: {
     fromJSON(object: any): ListChannelUsersRequest;
     toJSON(message: ListChannelUsersRequest): unknown;
     create<I extends {
+        clan_id?: string | undefined;
         channel_id?: string | undefined;
         channel_type?: number | undefined;
         limit?: number | undefined;
         state?: number | undefined;
         cursor?: string | undefined;
     } & {
+        clan_id?: string | undefined;
         channel_id?: string | undefined;
         channel_type?: number | undefined;
         limit?: number | undefined;
@@ -5876,12 +5880,14 @@ export declare const ListChannelUsersRequest: {
         cursor?: string | undefined;
     } & { [K in Exclude<keyof I, keyof ListChannelUsersRequest>]: never; }>(base?: I | undefined): ListChannelUsersRequest;
     fromPartial<I_1 extends {
+        clan_id?: string | undefined;
         channel_id?: string | undefined;
         channel_type?: number | undefined;
         limit?: number | undefined;
         state?: number | undefined;
         cursor?: string | undefined;
     } & {
+        clan_id?: string | undefined;
         channel_id?: string | undefined;
         channel_type?: number | undefined;
         limit?: number | undefined;
