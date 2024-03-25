@@ -604,7 +604,7 @@ export declare class MezonApi {
     /** Kick a set of users from a channel. */
     removeChannelUsers(bearerToken: string, channelId: string, userIds?: Array<string>, options?: any): Promise<any>;
     /** List all users that are part of a channel. */
-    listChannelUsers(bearerToken: string, channelId: string, limit?: number, state?: number, cursor?: string, options?: any): Promise<ApiChannelUserList>;
+    listChannelUsers(bearerToken: string, channelId: string, channelType: number, limit?: number, state?: number, cursor?: string, options?: any): Promise<ApiChannelUserList>;
     /** List clans */
     listClanDescs(bearerToken: string, limit?: number, state?: number, cursor?: string, options?: any): Promise<ApiClanDescList>;
     /** Create a clan */

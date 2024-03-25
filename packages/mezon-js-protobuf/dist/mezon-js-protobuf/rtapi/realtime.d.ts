@@ -604,6 +604,8 @@ export interface VoiceJoinedEvent {
     id: string;
     /** voice participant */
     participant: string;
+    /** user id */
+    user_id: string;
     /** room name */
     roomName: string;
     /** last screenshot */
@@ -1059,6 +1061,7 @@ export declare const Envelope: {
             clan_name?: string | undefined;
             id?: string | undefined;
             participant?: string | undefined;
+            user_id?: string | undefined;
             roomName?: string | undefined;
             lastScreenshot?: string | undefined;
         } | undefined;
@@ -2162,6 +2165,7 @@ export declare const Envelope: {
             clan_name?: string | undefined;
             id?: string | undefined;
             participant?: string | undefined;
+            user_id?: string | undefined;
             roomName?: string | undefined;
             lastScreenshot?: string | undefined;
         } & {
@@ -2169,6 +2173,7 @@ export declare const Envelope: {
             clan_name?: string | undefined;
             id?: string | undefined;
             participant?: string | undefined;
+            user_id?: string | undefined;
             roomName?: string | undefined;
             lastScreenshot?: string | undefined;
         } & { [K_86 in Exclude<keyof I["voice_joined_event"], keyof VoiceJoinedEvent>]: never; }) | undefined;
@@ -2577,6 +2582,7 @@ export declare const Envelope: {
             clan_name?: string | undefined;
             id?: string | undefined;
             participant?: string | undefined;
+            user_id?: string | undefined;
             roomName?: string | undefined;
             lastScreenshot?: string | undefined;
         } | undefined;
@@ -3680,6 +3686,7 @@ export declare const Envelope: {
             clan_name?: string | undefined;
             id?: string | undefined;
             participant?: string | undefined;
+            user_id?: string | undefined;
             roomName?: string | undefined;
             lastScreenshot?: string | undefined;
         } & {
@@ -3687,6 +3694,7 @@ export declare const Envelope: {
             clan_name?: string | undefined;
             id?: string | undefined;
             participant?: string | undefined;
+            user_id?: string | undefined;
             roomName?: string | undefined;
             lastScreenshot?: string | undefined;
         } & { [K_175 in Exclude<keyof I_1["voice_joined_event"], keyof VoiceJoinedEvent>]: never; }) | undefined;
@@ -6097,6 +6105,7 @@ export declare const VoiceJoinedEvent: {
         clan_name?: string | undefined;
         id?: string | undefined;
         participant?: string | undefined;
+        user_id?: string | undefined;
         roomName?: string | undefined;
         lastScreenshot?: string | undefined;
     } & {
@@ -6104,6 +6113,7 @@ export declare const VoiceJoinedEvent: {
         clan_name?: string | undefined;
         id?: string | undefined;
         participant?: string | undefined;
+        user_id?: string | undefined;
         roomName?: string | undefined;
         lastScreenshot?: string | undefined;
     } & { [K in Exclude<keyof I, keyof VoiceJoinedEvent>]: never; }>(base?: I | undefined): VoiceJoinedEvent;
@@ -6112,6 +6122,7 @@ export declare const VoiceJoinedEvent: {
         clan_name?: string | undefined;
         id?: string | undefined;
         participant?: string | undefined;
+        user_id?: string | undefined;
         roomName?: string | undefined;
         lastScreenshot?: string | undefined;
     } & {
@@ -6119,6 +6130,7 @@ export declare const VoiceJoinedEvent: {
         clan_name?: string | undefined;
         id?: string | undefined;
         participant?: string | undefined;
+        user_id?: string | undefined;
         roomName?: string | undefined;
         lastScreenshot?: string | undefined;
     } & { [K_1 in Exclude<keyof I_1, keyof VoiceJoinedEvent>]: never; }>(object: I_1): VoiceJoinedEvent;

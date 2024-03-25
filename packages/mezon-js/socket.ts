@@ -337,6 +337,8 @@ export interface VoiceJoinedEvent {
   id: string;
   // voice participant
   participant: string;
+  // user id
+  userId: string;
   // room name
   roomName: string;
   // last screenshot

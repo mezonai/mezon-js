@@ -6167,7 +6167,7 @@ var VoiceLeavedEvent = {
   }
 };
 function createBaseVoiceJoinedEvent() {
-  return { clan_id: "", clan_name: "", id: "", participant: "", roomName: "", lastScreenshot: "" };
+  return { clan_id: "", clan_name: "", id: "", participant: "", user_id: "", roomName: "", lastScreenshot: "" };
 }
 var VoiceJoinedEvent = {
   encode(message, writer = import_minimal4.default.Writer.create()) {
@@ -6183,11 +6183,14 @@ var VoiceJoinedEvent = {
     if (message.participant !== "") {
       writer.uint32(34).string(message.participant);
     }
+    if (message.user_id !== "") {
+      writer.uint32(42).string(message.user_id);
+    }
     if (message.roomName !== "") {
-      writer.uint32(42).string(message.roomName);
+      writer.uint32(50).string(message.roomName);
     }
     if (message.lastScreenshot !== "") {
-      writer.uint32(50).string(message.lastScreenshot);
+      writer.uint32(58).string(message.lastScreenshot);
     }
     return writer;
   },
@@ -6211,9 +6214,12 @@ var VoiceJoinedEvent = {
           message.participant = reader.string();
           break;
         case 5:
-          message.roomName = reader.string();
+          message.user_id = reader.string();
           break;
         case 6:
+          message.roomName = reader.string();
+          break;
+        case 7:
           message.lastScreenshot = reader.string();
           break;
         default:
@@ -6229,6 +6235,7 @@ var VoiceJoinedEvent = {
       clan_name: isSet4(object.clan_name) ? String(object.clan_name) : "",
       id: isSet4(object.id) ? String(object.id) : "",
       participant: isSet4(object.participant) ? String(object.participant) : "",
+      user_id: isSet4(object.user_id) ? String(object.user_id) : "",
       roomName: isSet4(object.roomName) ? String(object.roomName) : "",
       lastScreenshot: isSet4(object.lastScreenshot) ? String(object.lastScreenshot) : ""
     };
@@ -6239,6 +6246,7 @@ var VoiceJoinedEvent = {
     message.clan_name !== void 0 && (obj.clan_name = message.clan_name);
     message.id !== void 0 && (obj.id = message.id);
     message.participant !== void 0 && (obj.participant = message.participant);
+    message.user_id !== void 0 && (obj.user_id = message.user_id);
     message.roomName !== void 0 && (obj.roomName = message.roomName);
     message.lastScreenshot !== void 0 && (obj.lastScreenshot = message.lastScreenshot);
     return obj;
@@ -6247,14 +6255,15 @@ var VoiceJoinedEvent = {
     return VoiceJoinedEvent.fromPartial(base != null ? base : {});
   },
   fromPartial(object) {
-    var _a, _b, _c, _d, _e, _f;
+    var _a, _b, _c, _d, _e, _f, _g;
     const message = createBaseVoiceJoinedEvent();
     message.clan_id = (_a = object.clan_id) != null ? _a : "";
     message.clan_name = (_b = object.clan_name) != null ? _b : "";
     message.id = (_c = object.id) != null ? _c : "";
     message.participant = (_d = object.participant) != null ? _d : "";
-    message.roomName = (_e = object.roomName) != null ? _e : "";
-    message.lastScreenshot = (_f = object.lastScreenshot) != null ? _f : "";
+    message.user_id = (_e = object.user_id) != null ? _e : "";
+    message.roomName = (_f = object.roomName) != null ? _f : "";
+    message.lastScreenshot = (_g = object.lastScreenshot) != null ? _g : "";
     return message;
   }
 };
