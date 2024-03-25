@@ -845,10 +845,12 @@ export interface VoiceJoinedEvent {
   participant: string;
   /** user id */
   user_id: string;
-  /** room name */
-  roomName: string;
+  /** voice channel label */
+  voice_channel_label: string;
+  /** voice channel id */
+  voice_channel_id: string;
   /** last screenshot */
-  lastScreenshot: string;
+  last_screenshot: string;
 }
 
 /** Stop receiving status updates for some set of users. */
@@ -5240,7 +5242,16 @@ export const VoiceLeavedEvent = {
 };
 
 function createBaseVoiceJoinedEvent(): VoiceJoinedEvent {
-  return { clan_id: "", clan_name: "", id: "", participant: "", user_id: "", roomName: "", lastScreenshot: "" };
+  return {
+    clan_id: "",
+    clan_name: "",
+    id: "",
+    participant: "",
+    user_id: "",
+    voice_channel_label: "",
+    voice_channel_id: "",
+    last_screenshot: "",
+  };
 }
 
 export const VoiceJoinedEvent = {
@@ -5260,11 +5271,14 @@ export const VoiceJoinedEvent = {
     if (message.user_id !== "") {
       writer.uint32(42).string(message.user_id);
     }
-    if (message.roomName !== "") {
-      writer.uint32(50).string(message.roomName);
+    if (message.voice_channel_label !== "") {
+      writer.uint32(50).string(message.voice_channel_label);
     }
-    if (message.lastScreenshot !== "") {
-      writer.uint32(58).string(message.lastScreenshot);
+    if (message.voice_channel_id !== "") {
+      writer.uint32(58).string(message.voice_channel_id);
+    }
+    if (message.last_screenshot !== "") {
+      writer.uint32(66).string(message.last_screenshot);
     }
     return writer;
   },
@@ -5292,10 +5306,13 @@ export const VoiceJoinedEvent = {
           message.user_id = reader.string();
           break;
         case 6:
-          message.roomName = reader.string();
+          message.voice_channel_label = reader.string();
           break;
         case 7:
-          message.lastScreenshot = reader.string();
+          message.voice_channel_id = reader.string();
+          break;
+        case 8:
+          message.last_screenshot = reader.string();
           break;
         default:
           reader.skipType(tag & 7);
@@ -5312,8 +5329,9 @@ export const VoiceJoinedEvent = {
       id: isSet(object.id) ? String(object.id) : "",
       participant: isSet(object.participant) ? String(object.participant) : "",
       user_id: isSet(object.user_id) ? String(object.user_id) : "",
-      roomName: isSet(object.roomName) ? String(object.roomName) : "",
-      lastScreenshot: isSet(object.lastScreenshot) ? String(object.lastScreenshot) : "",
+      voice_channel_label: isSet(object.voice_channel_label) ? String(object.voice_channel_label) : "",
+      voice_channel_id: isSet(object.voice_channel_id) ? String(object.voice_channel_id) : "",
+      last_screenshot: isSet(object.last_screenshot) ? String(object.last_screenshot) : "",
     };
   },
 
@@ -5324,8 +5342,9 @@ export const VoiceJoinedEvent = {
     message.id !== undefined && (obj.id = message.id);
     message.participant !== undefined && (obj.participant = message.participant);
     message.user_id !== undefined && (obj.user_id = message.user_id);
-    message.roomName !== undefined && (obj.roomName = message.roomName);
-    message.lastScreenshot !== undefined && (obj.lastScreenshot = message.lastScreenshot);
+    message.voice_channel_label !== undefined && (obj.voice_channel_label = message.voice_channel_label);
+    message.voice_channel_id !== undefined && (obj.voice_channel_id = message.voice_channel_id);
+    message.last_screenshot !== undefined && (obj.last_screenshot = message.last_screenshot);
     return obj;
   },
 
@@ -5340,8 +5359,9 @@ export const VoiceJoinedEvent = {
     message.id = object.id ?? "";
     message.participant = object.participant ?? "";
     message.user_id = object.user_id ?? "";
-    message.roomName = object.roomName ?? "";
-    message.lastScreenshot = object.lastScreenshot ?? "";
+    message.voice_channel_label = object.voice_channel_label ?? "";
+    message.voice_channel_id = object.voice_channel_id ?? "";
+    message.last_screenshot = object.last_screenshot ?? "";
     return message;
   },
 };

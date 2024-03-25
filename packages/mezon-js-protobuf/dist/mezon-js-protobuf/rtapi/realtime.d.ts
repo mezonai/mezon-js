@@ -606,10 +606,12 @@ export interface VoiceJoinedEvent {
     participant: string;
     /** user id */
     user_id: string;
-    /** room name */
-    roomName: string;
+    /** voice channel label */
+    voice_channel_label: string;
+    /** voice channel id */
+    voice_channel_id: string;
     /** last screenshot */
-    lastScreenshot: string;
+    last_screenshot: string;
 }
 /** Stop receiving status updates for some set of users. */
 export interface StatusUnfollow {
@@ -1062,8 +1064,9 @@ export declare const Envelope: {
             id?: string | undefined;
             participant?: string | undefined;
             user_id?: string | undefined;
-            roomName?: string | undefined;
-            lastScreenshot?: string | undefined;
+            voice_channel_label?: string | undefined;
+            voice_channel_id?: string | undefined;
+            last_screenshot?: string | undefined;
         } | undefined;
         voice_leave_event?: {
             clan_id?: string | undefined;
@@ -2166,16 +2169,18 @@ export declare const Envelope: {
             id?: string | undefined;
             participant?: string | undefined;
             user_id?: string | undefined;
-            roomName?: string | undefined;
-            lastScreenshot?: string | undefined;
+            voice_channel_label?: string | undefined;
+            voice_channel_id?: string | undefined;
+            last_screenshot?: string | undefined;
         } & {
             clan_id?: string | undefined;
             clan_name?: string | undefined;
             id?: string | undefined;
             participant?: string | undefined;
             user_id?: string | undefined;
-            roomName?: string | undefined;
-            lastScreenshot?: string | undefined;
+            voice_channel_label?: string | undefined;
+            voice_channel_id?: string | undefined;
+            last_screenshot?: string | undefined;
         } & { [K_86 in Exclude<keyof I["voice_joined_event"], keyof VoiceJoinedEvent>]: never; }) | undefined;
         voice_leave_event?: ({
             clan_id?: string | undefined;
@@ -2583,8 +2588,9 @@ export declare const Envelope: {
             id?: string | undefined;
             participant?: string | undefined;
             user_id?: string | undefined;
-            roomName?: string | undefined;
-            lastScreenshot?: string | undefined;
+            voice_channel_label?: string | undefined;
+            voice_channel_id?: string | undefined;
+            last_screenshot?: string | undefined;
         } | undefined;
         voice_leave_event?: {
             clan_id?: string | undefined;
@@ -3687,16 +3693,18 @@ export declare const Envelope: {
             id?: string | undefined;
             participant?: string | undefined;
             user_id?: string | undefined;
-            roomName?: string | undefined;
-            lastScreenshot?: string | undefined;
+            voice_channel_label?: string | undefined;
+            voice_channel_id?: string | undefined;
+            last_screenshot?: string | undefined;
         } & {
             clan_id?: string | undefined;
             clan_name?: string | undefined;
             id?: string | undefined;
             participant?: string | undefined;
             user_id?: string | undefined;
-            roomName?: string | undefined;
-            lastScreenshot?: string | undefined;
+            voice_channel_label?: string | undefined;
+            voice_channel_id?: string | undefined;
+            last_screenshot?: string | undefined;
         } & { [K_175 in Exclude<keyof I_1["voice_joined_event"], keyof VoiceJoinedEvent>]: never; }) | undefined;
         voice_leave_event?: ({
             clan_id?: string | undefined;
@@ -6106,16 +6114,18 @@ export declare const VoiceJoinedEvent: {
         id?: string | undefined;
         participant?: string | undefined;
         user_id?: string | undefined;
-        roomName?: string | undefined;
-        lastScreenshot?: string | undefined;
+        voice_channel_label?: string | undefined;
+        voice_channel_id?: string | undefined;
+        last_screenshot?: string | undefined;
     } & {
         clan_id?: string | undefined;
         clan_name?: string | undefined;
         id?: string | undefined;
         participant?: string | undefined;
         user_id?: string | undefined;
-        roomName?: string | undefined;
-        lastScreenshot?: string | undefined;
+        voice_channel_label?: string | undefined;
+        voice_channel_id?: string | undefined;
+        last_screenshot?: string | undefined;
     } & { [K in Exclude<keyof I, keyof VoiceJoinedEvent>]: never; }>(base?: I | undefined): VoiceJoinedEvent;
     fromPartial<I_1 extends {
         clan_id?: string | undefined;
@@ -6123,16 +6133,18 @@ export declare const VoiceJoinedEvent: {
         id?: string | undefined;
         participant?: string | undefined;
         user_id?: string | undefined;
-        roomName?: string | undefined;
-        lastScreenshot?: string | undefined;
+        voice_channel_label?: string | undefined;
+        voice_channel_id?: string | undefined;
+        last_screenshot?: string | undefined;
     } & {
         clan_id?: string | undefined;
         clan_name?: string | undefined;
         id?: string | undefined;
         participant?: string | undefined;
         user_id?: string | undefined;
-        roomName?: string | undefined;
-        lastScreenshot?: string | undefined;
+        voice_channel_label?: string | undefined;
+        voice_channel_id?: string | undefined;
+        last_screenshot?: string | undefined;
     } & { [K_1 in Exclude<keyof I_1, keyof VoiceJoinedEvent>]: never; }>(object: I_1): VoiceJoinedEvent;
 };
 export declare const StatusUnfollow: {

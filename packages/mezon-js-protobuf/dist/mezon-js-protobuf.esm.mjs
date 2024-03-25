@@ -6167,7 +6167,16 @@ var VoiceLeavedEvent = {
   }
 };
 function createBaseVoiceJoinedEvent() {
-  return { clan_id: "", clan_name: "", id: "", participant: "", user_id: "", roomName: "", lastScreenshot: "" };
+  return {
+    clan_id: "",
+    clan_name: "",
+    id: "",
+    participant: "",
+    user_id: "",
+    voice_channel_label: "",
+    voice_channel_id: "",
+    last_screenshot: ""
+  };
 }
 var VoiceJoinedEvent = {
   encode(message, writer = import_minimal4.default.Writer.create()) {
@@ -6186,11 +6195,14 @@ var VoiceJoinedEvent = {
     if (message.user_id !== "") {
       writer.uint32(42).string(message.user_id);
     }
-    if (message.roomName !== "") {
-      writer.uint32(50).string(message.roomName);
+    if (message.voice_channel_label !== "") {
+      writer.uint32(50).string(message.voice_channel_label);
     }
-    if (message.lastScreenshot !== "") {
-      writer.uint32(58).string(message.lastScreenshot);
+    if (message.voice_channel_id !== "") {
+      writer.uint32(58).string(message.voice_channel_id);
+    }
+    if (message.last_screenshot !== "") {
+      writer.uint32(66).string(message.last_screenshot);
     }
     return writer;
   },
@@ -6217,10 +6229,13 @@ var VoiceJoinedEvent = {
           message.user_id = reader.string();
           break;
         case 6:
-          message.roomName = reader.string();
+          message.voice_channel_label = reader.string();
           break;
         case 7:
-          message.lastScreenshot = reader.string();
+          message.voice_channel_id = reader.string();
+          break;
+        case 8:
+          message.last_screenshot = reader.string();
           break;
         default:
           reader.skipType(tag & 7);
@@ -6236,8 +6251,9 @@ var VoiceJoinedEvent = {
       id: isSet4(object.id) ? String(object.id) : "",
       participant: isSet4(object.participant) ? String(object.participant) : "",
       user_id: isSet4(object.user_id) ? String(object.user_id) : "",
-      roomName: isSet4(object.roomName) ? String(object.roomName) : "",
-      lastScreenshot: isSet4(object.lastScreenshot) ? String(object.lastScreenshot) : ""
+      voice_channel_label: isSet4(object.voice_channel_label) ? String(object.voice_channel_label) : "",
+      voice_channel_id: isSet4(object.voice_channel_id) ? String(object.voice_channel_id) : "",
+      last_screenshot: isSet4(object.last_screenshot) ? String(object.last_screenshot) : ""
     };
   },
   toJSON(message) {
@@ -6247,23 +6263,25 @@ var VoiceJoinedEvent = {
     message.id !== void 0 && (obj.id = message.id);
     message.participant !== void 0 && (obj.participant = message.participant);
     message.user_id !== void 0 && (obj.user_id = message.user_id);
-    message.roomName !== void 0 && (obj.roomName = message.roomName);
-    message.lastScreenshot !== void 0 && (obj.lastScreenshot = message.lastScreenshot);
+    message.voice_channel_label !== void 0 && (obj.voice_channel_label = message.voice_channel_label);
+    message.voice_channel_id !== void 0 && (obj.voice_channel_id = message.voice_channel_id);
+    message.last_screenshot !== void 0 && (obj.last_screenshot = message.last_screenshot);
     return obj;
   },
   create(base) {
     return VoiceJoinedEvent.fromPartial(base != null ? base : {});
   },
   fromPartial(object) {
-    var _a, _b, _c, _d, _e, _f, _g;
+    var _a, _b, _c, _d, _e, _f, _g, _h;
     const message = createBaseVoiceJoinedEvent();
     message.clan_id = (_a = object.clan_id) != null ? _a : "";
     message.clan_name = (_b = object.clan_name) != null ? _b : "";
     message.id = (_c = object.id) != null ? _c : "";
     message.participant = (_d = object.participant) != null ? _d : "";
     message.user_id = (_e = object.user_id) != null ? _e : "";
-    message.roomName = (_f = object.roomName) != null ? _f : "";
-    message.lastScreenshot = (_g = object.lastScreenshot) != null ? _g : "";
+    message.voice_channel_label = (_f = object.voice_channel_label) != null ? _f : "";
+    message.voice_channel_id = (_g = object.voice_channel_id) != null ? _g : "";
+    message.last_screenshot = (_h = object.last_screenshot) != null ? _h : "";
     return message;
   }
 };
