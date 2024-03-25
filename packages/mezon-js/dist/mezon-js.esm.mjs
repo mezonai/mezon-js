@@ -1847,7 +1847,7 @@ var MezonApi = class {
     ]);
   }
   /** List all users that are part of a channel. */
-  listChannelUsers(bearerToken, channelId, clanId, channelType, limit, state, cursor, options = {}) {
+  listChannelUsers(bearerToken, clanId, channelId, channelType, limit, state, cursor, options = {}) {
     if (channelId === null || channelId === void 0) {
       throw new Error("'channelId' is a required parameter but is null or undefined.");
     }
