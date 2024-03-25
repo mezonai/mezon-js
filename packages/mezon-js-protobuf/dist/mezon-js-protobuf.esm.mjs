@@ -2984,7 +2984,7 @@ function createBaseEnvelope() {
     message_reaction_event: void 0,
     message_deleted_event: void 0,
     voice_joined_event: void 0,
-    voice_leave_event: void 0
+    voice_leaved_event: void 0
   };
 }
 var Envelope = {
@@ -3112,8 +3112,8 @@ var Envelope = {
     if (message.voice_joined_event !== void 0) {
       VoiceJoinedEvent.encode(message.voice_joined_event, writer.uint32(330).fork()).ldelim();
     }
-    if (message.voice_leave_event !== void 0) {
-      VoiceLeavedEvent.encode(message.voice_leave_event, writer.uint32(338).fork()).ldelim();
+    if (message.voice_leaved_event !== void 0) {
+      VoiceLeavedEvent.encode(message.voice_leaved_event, writer.uint32(338).fork()).ldelim();
     }
     return writer;
   },
@@ -3248,7 +3248,7 @@ var Envelope = {
           message.voice_joined_event = VoiceJoinedEvent.decode(reader, reader.uint32());
           break;
         case 42:
-          message.voice_leave_event = VoiceLeavedEvent.decode(reader, reader.uint32());
+          message.voice_leaved_event = VoiceLeavedEvent.decode(reader, reader.uint32());
           break;
         default:
           reader.skipType(tag & 7);
@@ -3300,7 +3300,7 @@ var Envelope = {
       message_reaction_event: isSet4(object.message_reaction_event) ? MessageReactionEvent.fromJSON(object.message_reaction_event) : void 0,
       message_deleted_event: isSet4(object.message_deleted_event) ? MessageDeletedEvent.fromJSON(object.message_deleted_event) : void 0,
       voice_joined_event: isSet4(object.voice_joined_event) ? VoiceJoinedEvent.fromJSON(object.voice_joined_event) : void 0,
-      voice_leave_event: isSet4(object.voice_leave_event) ? VoiceLeavedEvent.fromJSON(object.voice_leave_event) : void 0
+      voice_leaved_event: isSet4(object.voice_leaved_event) ? VoiceLeavedEvent.fromJSON(object.voice_leaved_event) : void 0
     };
   },
   toJSON(message) {
@@ -3346,7 +3346,7 @@ var Envelope = {
     message.message_reaction_event !== void 0 && (obj.message_reaction_event = message.message_reaction_event ? MessageReactionEvent.toJSON(message.message_reaction_event) : void 0);
     message.message_deleted_event !== void 0 && (obj.message_deleted_event = message.message_deleted_event ? MessageDeletedEvent.toJSON(message.message_deleted_event) : void 0);
     message.voice_joined_event !== void 0 && (obj.voice_joined_event = message.voice_joined_event ? VoiceJoinedEvent.toJSON(message.voice_joined_event) : void 0);
-    message.voice_leave_event !== void 0 && (obj.voice_leave_event = message.voice_leave_event ? VoiceLeavedEvent.toJSON(message.voice_leave_event) : void 0);
+    message.voice_leaved_event !== void 0 && (obj.voice_leaved_event = message.voice_leaved_event ? VoiceLeavedEvent.toJSON(message.voice_leaved_event) : void 0);
     return obj;
   },
   create(base) {
@@ -3396,7 +3396,7 @@ var Envelope = {
     message.message_reaction_event = object.message_reaction_event !== void 0 && object.message_reaction_event !== null ? MessageReactionEvent.fromPartial(object.message_reaction_event) : void 0;
     message.message_deleted_event = object.message_deleted_event !== void 0 && object.message_deleted_event !== null ? MessageDeletedEvent.fromPartial(object.message_deleted_event) : void 0;
     message.voice_joined_event = object.voice_joined_event !== void 0 && object.voice_joined_event !== null ? VoiceJoinedEvent.fromPartial(object.voice_joined_event) : void 0;
-    message.voice_leave_event = object.voice_leave_event !== void 0 && object.voice_leave_event !== null ? VoiceLeavedEvent.fromPartial(object.voice_leave_event) : void 0;
+    message.voice_leaved_event = object.voice_leaved_event !== void 0 && object.voice_leaved_event !== null ? VoiceLeavedEvent.fromPartial(object.voice_leaved_event) : void 0;
     return message;
   }
 };
