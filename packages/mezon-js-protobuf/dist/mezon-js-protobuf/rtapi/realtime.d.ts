@@ -118,20 +118,6 @@ export interface ChannelJoin {
     /** mode */
     mode: number;
 }
-/** The type of chat channel. */
-export declare enum ChannelJoin_Type {
-    /** TYPE_UNSPECIFIED - Default case. Assumed as CHANNEL type. */
-    TYPE_UNSPECIFIED = 0,
-    /** CHANNEL - A room which anyone can join to chat. */
-    CHANNEL = 1,
-    /** DIRECT_MESSAGE - A private channel for 1-on-1 chat. */
-    DIRECT_MESSAGE = 2,
-    /** GROUP - A channel for group chat. */
-    GROUP = 3,
-    UNRECOGNIZED = -1
-}
-export declare function channelJoin_TypeFromJSON(object: any): ChannelJoin_Type;
-export declare function channelJoin_TypeToJSON(object: ChannelJoin_Type): string;
 /** Leave a realtime channel. */
 export interface ChannelLeave {
     /** The ID of the channel to leave. */

@@ -214,56 +214,6 @@ export interface ChannelJoin {
   mode: number;
 }
 
-/** The type of chat channel. */
-export enum ChannelJoin_Type {
-  /** TYPE_UNSPECIFIED - Default case. Assumed as CHANNEL type. */
-  TYPE_UNSPECIFIED = 0,
-  /** CHANNEL - A room which anyone can join to chat. */
-  CHANNEL = 1,
-  /** DIRECT_MESSAGE - A private channel for 1-on-1 chat. */
-  DIRECT_MESSAGE = 2,
-  /** GROUP - A channel for group chat. */
-  GROUP = 3,
-  UNRECOGNIZED = -1,
-}
-
-export function channelJoin_TypeFromJSON(object: any): ChannelJoin_Type {
-  switch (object) {
-    case 0:
-    case "TYPE_UNSPECIFIED":
-      return ChannelJoin_Type.TYPE_UNSPECIFIED;
-    case 1:
-    case "CHANNEL":
-      return ChannelJoin_Type.CHANNEL;
-    case 2:
-    case "DIRECT_MESSAGE":
-      return ChannelJoin_Type.DIRECT_MESSAGE;
-    case 3:
-    case "GROUP":
-      return ChannelJoin_Type.GROUP;
-    case -1:
-    case "UNRECOGNIZED":
-    default:
-      return ChannelJoin_Type.UNRECOGNIZED;
-  }
-}
-
-export function channelJoin_TypeToJSON(object: ChannelJoin_Type): string {
-  switch (object) {
-    case ChannelJoin_Type.TYPE_UNSPECIFIED:
-      return "TYPE_UNSPECIFIED";
-    case ChannelJoin_Type.CHANNEL:
-      return "CHANNEL";
-    case ChannelJoin_Type.DIRECT_MESSAGE:
-      return "DIRECT_MESSAGE";
-    case ChannelJoin_Type.GROUP:
-      return "GROUP";
-    case ChannelJoin_Type.UNRECOGNIZED:
-    default:
-      return "UNRECOGNIZED";
-  }
-}
-
 /** Leave a realtime channel. */
 export interface ChannelLeave {
   /** The ID of the channel to leave. */
