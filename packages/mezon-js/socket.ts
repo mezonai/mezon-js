@@ -672,7 +672,7 @@ export interface Socket {
   writeMessageDeleted(channel_id: string, channel_label: string, mode: number, message_id: string, deletor: string) : Promise<MessageDeletedEvent>;
 
   /** Send last seen message */
-  writeLastSeenMessage(channel_id: string, channel_label: string, mode: number, message_id: string) : Promise<LastSeenMessageEvent>;
+  writeLastSeenMessage(channel_id: string, channel_label: string, mode: number, message_id: string, timestamp: string) : Promise<LastSeenMessageEvent>;
 
   /** send voice joined */
   writeVoiceJoined(id: string, clanId: string, clanName: string, voiceChannelId: string, voiceChannelLabel: string, participant: string, lastScreenshot: string) : Promise<VoiceJoinedEvent>;
@@ -1245,8 +1245,8 @@ export class DefaultSocket implements Socket {
     return response.message_typing_event
   }
 
-  async writeLastSeenMessage(channel_id: string, channel_label: string, mode: number, message_id: string) : Promise<LastSeenMessageEvent> {
-    const response = await this.send({last_seen_message_event: {channel_id: channel_id, channel_label: channel_label, mode: mode, message_id: message_id}});
+  async writeLastSeenMessage(channel_id: string, channel_label: string, mode: number, message_id: string, timestamp: string) : Promise<LastSeenMessageEvent> {
+    const response = await this.send({last_seen_message_event: {channel_id: channel_id, channel_label: channel_label, mode: mode, message_id: message_id, timestamp: timestamp}});
     return response.last_seen_message_event
   }
 

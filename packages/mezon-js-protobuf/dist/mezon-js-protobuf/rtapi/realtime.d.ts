@@ -471,8 +471,10 @@ export interface LastSeenMessageEvent {
     channel_label: string;
     /** The unique ID of this message. */
     message_id: string;
-    /** mode */
+    /** The stream mode */
     mode: number;
+    /** The timestamp */
+    timestamp: string;
 }
 /** Message typing event data */
 export interface MessageTypingEvent {
@@ -1022,6 +1024,7 @@ export declare const Envelope: {
             channel_label?: string | undefined;
             message_id?: string | undefined;
             mode?: number | undefined;
+            timestamp?: string | undefined;
         } | undefined;
         message_reaction_event?: {
             id?: string | undefined;
@@ -2103,11 +2106,13 @@ export declare const Envelope: {
             channel_label?: string | undefined;
             message_id?: string | undefined;
             mode?: number | undefined;
+            timestamp?: string | undefined;
         } & {
             channel_id?: string | undefined;
             channel_label?: string | undefined;
             message_id?: string | undefined;
             mode?: number | undefined;
+            timestamp?: string | undefined;
         } & { [K_83 in Exclude<keyof I["last_seen_message_event"], keyof LastSeenMessageEvent>]: never; }) | undefined;
         message_reaction_event?: ({
             id?: string | undefined;
@@ -2546,6 +2551,7 @@ export declare const Envelope: {
             channel_label?: string | undefined;
             message_id?: string | undefined;
             mode?: number | undefined;
+            timestamp?: string | undefined;
         } | undefined;
         message_reaction_event?: {
             id?: string | undefined;
@@ -3627,11 +3633,13 @@ export declare const Envelope: {
             channel_label?: string | undefined;
             message_id?: string | undefined;
             mode?: number | undefined;
+            timestamp?: string | undefined;
         } & {
             channel_id?: string | undefined;
             channel_label?: string | undefined;
             message_id?: string | undefined;
             mode?: number | undefined;
+            timestamp?: string | undefined;
         } & { [K_172 in Exclude<keyof I_1["last_seen_message_event"], keyof LastSeenMessageEvent>]: never; }) | undefined;
         message_reaction_event?: ({
             id?: string | undefined;
@@ -5823,22 +5831,26 @@ export declare const LastSeenMessageEvent: {
         channel_label?: string | undefined;
         message_id?: string | undefined;
         mode?: number | undefined;
+        timestamp?: string | undefined;
     } & {
         channel_id?: string | undefined;
         channel_label?: string | undefined;
         message_id?: string | undefined;
         mode?: number | undefined;
+        timestamp?: string | undefined;
     } & { [K in Exclude<keyof I, keyof LastSeenMessageEvent>]: never; }>(base?: I | undefined): LastSeenMessageEvent;
     fromPartial<I_1 extends {
         channel_id?: string | undefined;
         channel_label?: string | undefined;
         message_id?: string | undefined;
         mode?: number | undefined;
+        timestamp?: string | undefined;
     } & {
         channel_id?: string | undefined;
         channel_label?: string | undefined;
         message_id?: string | undefined;
         mode?: number | undefined;
+        timestamp?: string | undefined;
     } & { [K_1 in Exclude<keyof I_1, keyof LastSeenMessageEvent>]: never; }>(object: I_1): LastSeenMessageEvent;
 };
 export declare const MessageTypingEvent: {

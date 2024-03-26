@@ -5694,7 +5694,7 @@ var StatusPresenceEvent = {
   }
 };
 function createBaseLastSeenMessageEvent() {
-  return { channel_id: "", channel_label: "", message_id: "", mode: 0 };
+  return { channel_id: "", channel_label: "", message_id: "", mode: 0, timestamp: "" };
 }
 var LastSeenMessageEvent = {
   encode(message, writer = import_minimal4.default.Writer.create()) {
@@ -5709,6 +5709,9 @@ var LastSeenMessageEvent = {
     }
     if (message.mode !== 0) {
       writer.uint32(32).int32(message.mode);
+    }
+    if (message.timestamp !== "") {
+      writer.uint32(42).string(message.timestamp);
     }
     return writer;
   },
@@ -5731,6 +5734,9 @@ var LastSeenMessageEvent = {
         case 4:
           message.mode = reader.int32();
           break;
+        case 5:
+          message.timestamp = reader.string();
+          break;
         default:
           reader.skipType(tag & 7);
           break;
@@ -5743,7 +5749,8 @@ var LastSeenMessageEvent = {
       channel_id: isSet4(object.channel_id) ? String(object.channel_id) : "",
       channel_label: isSet4(object.channel_label) ? String(object.channel_label) : "",
       message_id: isSet4(object.message_id) ? String(object.message_id) : "",
-      mode: isSet4(object.mode) ? Number(object.mode) : 0
+      mode: isSet4(object.mode) ? Number(object.mode) : 0,
+      timestamp: isSet4(object.timestamp) ? String(object.timestamp) : ""
     };
   },
   toJSON(message) {
@@ -5752,18 +5759,20 @@ var LastSeenMessageEvent = {
     message.channel_label !== void 0 && (obj.channel_label = message.channel_label);
     message.message_id !== void 0 && (obj.message_id = message.message_id);
     message.mode !== void 0 && (obj.mode = Math.round(message.mode));
+    message.timestamp !== void 0 && (obj.timestamp = message.timestamp);
     return obj;
   },
   create(base) {
     return LastSeenMessageEvent.fromPartial(base != null ? base : {});
   },
   fromPartial(object) {
-    var _a, _b, _c, _d;
+    var _a, _b, _c, _d, _e;
     const message = createBaseLastSeenMessageEvent();
     message.channel_id = (_a = object.channel_id) != null ? _a : "";
     message.channel_label = (_b = object.channel_label) != null ? _b : "";
     message.message_id = (_c = object.message_id) != null ? _c : "";
     message.mode = (_d = object.mode) != null ? _d : 0;
+    message.timestamp = (_e = object.timestamp) != null ? _e : "";
     return message;
   }
 };

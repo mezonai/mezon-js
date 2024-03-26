@@ -532,7 +532,7 @@ export interface Socket {
     /** Send message mention */
     writeMessageDeleted(channel_id: string, channel_label: string, mode: number, message_id: string, deletor: string): Promise<MessageDeletedEvent>;
     /** Send last seen message */
-    writeLastSeenMessage(channel_id: string, channel_label: string, mode: number, message_id: string): Promise<LastSeenMessageEvent>;
+    writeLastSeenMessage(channel_id: string, channel_label: string, mode: number, message_id: string, timestamp: string): Promise<LastSeenMessageEvent>;
     /** send voice joined */
     writeVoiceJoined(id: string, clanId: string, clanName: string, voiceChannelId: string, voiceChannelLabel: string, participant: string, lastScreenshot: string): Promise<VoiceJoinedEvent>;
     /** send voice leaved */
@@ -654,7 +654,7 @@ export declare class DefaultSocket implements Socket {
     writeMessageReaction(id: string, channel_id: string, channel_label: string, mode: number, message_id: string, emoji: string, count: number, message_sender_id: string, action_delete: boolean): Promise<MessageReactionEvent>;
     writeMessageDeleted(channel_id: string, channel_label: string, mode: number, message_id: string): Promise<MessageDeletedEvent>;
     writeMessageTyping(channel_id: string, channel_label: string, mode: number): Promise<MessageTypingEvent>;
-    writeLastSeenMessage(channel_id: string, channel_label: string, mode: number, message_id: string): Promise<LastSeenMessageEvent>;
+    writeLastSeenMessage(channel_id: string, channel_label: string, mode: number, message_id: string, timestamp: string): Promise<LastSeenMessageEvent>;
     writeVoiceJoined(id: string, clanId: string, clanName: string, voiceChannelId: string, voiceChannelLabel: string, participant: string, lastScreenshot: string): Promise<VoiceJoinedEvent>;
     writeVoiceLeaved(id: string, clanId: string, clanName: string, voiceChannelId: string, voiceChannelLabel: string, participant: string): Promise<VoiceJoinedEvent>;
     private pingPong;
