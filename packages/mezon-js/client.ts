@@ -69,6 +69,7 @@ import {
   ApiMessageMention,
   ApiMessageAttachment,
   ApiMessageRef,
+  ApiChannelMessageHeader,
 } from "./api.gen";
 
 import { Session } from "./session";
@@ -195,7 +196,7 @@ export interface ChannelMessage {
   //The ID of the second DM user, or an empty string if this message was not sent through a DM chat.
   user_id_two?: string;
   //The username of the message sender, if any.
-  username: string;
+  username?: string;
 }
 
 /** A list of channel messages, usually a result of a list operation. */
@@ -203,7 +204,7 @@ export interface ChannelMessageList {
   /** Cacheable cursor to list newer messages. Durable and designed to be stored, unlike next/prev cursors. */
   cacheable_cursor?: string;
   /**last seen message from user on channel */
-  last_seen_message_id?: string;
+  last_seen_message?: ApiChannelMessageHeader;
   /** A list of messages. */
   messages?: Array<ChannelMessage>;
   /** The cursor to send when retireving the next page, if any. */
@@ -929,7 +930,7 @@ export class Client {
     return this.apiClient.listChannelMessages(session.token, channelId, messageId, direction, limit).then((response: ApiChannelMessageList) => {
       var result: ChannelMessageList = {
         messages: [],
-        last_seen_message_id: response.last_seen_message_id
+        last_seen_message: response.last_seen_message
       };
 
       if (response.messages == null) {

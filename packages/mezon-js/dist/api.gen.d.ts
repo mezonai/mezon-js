@@ -110,8 +110,8 @@ export interface ApiChannelDescription {
     channel_private?: number;
     clan_id?: string;
     creator_id?: string;
-    last_message_id?: string;
-    last_seen_message_id?: string;
+    last_seen_message?: ApiChannelMessageHeader;
+    last_sent_message?: ApiChannelMessageHeader;
     parrent_id?: string;
     type?: number;
     user_id?: string;
@@ -135,11 +135,16 @@ export interface ApiChannelMessage {
     update_time?: string;
     user_id_one?: string;
     user_id_two?: string;
-    username: string;
+    username?: string;
+}
+/**  */
+export interface ApiChannelMessageHeader {
+    id?: string;
+    timestamp?: string;
 }
 /** A list of channel messages, usually a result of a list operation. */
 export interface ApiChannelMessageList {
-    last_seen_message_id?: string;
+    last_seen_message?: ApiChannelMessageHeader;
     messages?: Array<ApiChannelMessage>;
 }
 /** A list of users belonging to a channel, along with their role. */

@@ -624,7 +624,7 @@ export interface ChannelMessageList {
   /** A list of messages. */
   messages: ChannelMessage[];
   /** last seen message id by user */
-  last_seen_message_id: string;
+  last_seen_message: ChannelMessageHeader | undefined;
 }
 
 /** Create a group with the current user as owner. */
@@ -1702,6 +1702,13 @@ export interface ListCategoryDescsRequest {
   cursor: string;
 }
 
+export interface ChannelMessageHeader {
+  /** the message id */
+  id: string;
+  /** the time stamp */
+  timestamp: string;
+}
+
 /** Channel description record */
 export interface ChannelDescription {
   /** The clan of this channel */
@@ -1729,9 +1736,11 @@ export interface ChannelDescription {
   /** The user id */
   user_id: string[];
   /** last message id */
-  last_message_id: string;
+  last_sent_message:
+    | ChannelMessageHeader
+    | undefined;
   /** last seen message id */
-  last_seen_message_id: string;
+  last_seen_message: ChannelMessageHeader | undefined;
 }
 
 /** A list of channel description, usually a result of a list operation. */
@@ -5402,7 +5411,7 @@ export const MessageDeleted = {
 };
 
 function createBaseChannelMessageList(): ChannelMessageList {
-  return { messages: [], last_seen_message_id: "" };
+  return { messages: [], last_seen_message: undefined };
 }
 
 export const ChannelMessageList = {
@@ -5410,8 +5419,8 @@ export const ChannelMessageList = {
     for (const v of message.messages) {
       ChannelMessage.encode(v!, writer.uint32(10).fork()).ldelim();
     }
-    if (message.last_seen_message_id !== "") {
-      writer.uint32(18).string(message.last_seen_message_id);
+    if (message.last_seen_message !== undefined) {
+      ChannelMessageHeader.encode(message.last_seen_message, writer.uint32(18).fork()).ldelim();
     }
     return writer;
   },
@@ -5427,7 +5436,7 @@ export const ChannelMessageList = {
           message.messages.push(ChannelMessage.decode(reader, reader.uint32()));
           break;
         case 2:
-          message.last_seen_message_id = reader.string();
+          message.last_seen_message = ChannelMessageHeader.decode(reader, reader.uint32());
           break;
         default:
           reader.skipType(tag & 7);
@@ -5440,7 +5449,9 @@ export const ChannelMessageList = {
   fromJSON(object: any): ChannelMessageList {
     return {
       messages: Array.isArray(object?.messages) ? object.messages.map((e: any) => ChannelMessage.fromJSON(e)) : [],
-      last_seen_message_id: isSet(object.last_seen_message_id) ? String(object.last_seen_message_id) : "",
+      last_seen_message: isSet(object.last_seen_message)
+        ? ChannelMessageHeader.fromJSON(object.last_seen_message)
+        : undefined,
     };
   },
 
@@ -5451,7 +5462,9 @@ export const ChannelMessageList = {
     } else {
       obj.messages = [];
     }
-    message.last_seen_message_id !== undefined && (obj.last_seen_message_id = message.last_seen_message_id);
+    message.last_seen_message !== undefined && (obj.last_seen_message = message.last_seen_message
+      ? ChannelMessageHeader.toJSON(message.last_seen_message)
+      : undefined);
     return obj;
   },
 
@@ -5462,7 +5475,9 @@ export const ChannelMessageList = {
   fromPartial<I extends Exact<DeepPartial<ChannelMessageList>, I>>(object: I): ChannelMessageList {
     const message = createBaseChannelMessageList();
     message.messages = object.messages?.map((e) => ChannelMessage.fromPartial(e)) || [];
-    message.last_seen_message_id = object.last_seen_message_id ?? "";
+    message.last_seen_message = (object.last_seen_message !== undefined && object.last_seen_message !== null)
+      ? ChannelMessageHeader.fromPartial(object.last_seen_message)
+      : undefined;
     return message;
   },
 };
@@ -11544,6 +11559,68 @@ export const ListCategoryDescsRequest = {
   },
 };
 
+function createBaseChannelMessageHeader(): ChannelMessageHeader {
+  return { id: "", timestamp: "" };
+}
+
+export const ChannelMessageHeader = {
+  encode(message: ChannelMessageHeader, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.id !== "") {
+      writer.uint32(10).string(message.id);
+    }
+    if (message.timestamp !== "") {
+      writer.uint32(18).string(message.timestamp);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): ChannelMessageHeader {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseChannelMessageHeader();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.id = reader.string();
+          break;
+        case 2:
+          message.timestamp = reader.string();
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): ChannelMessageHeader {
+    return {
+      id: isSet(object.id) ? String(object.id) : "",
+      timestamp: isSet(object.timestamp) ? String(object.timestamp) : "",
+    };
+  },
+
+  toJSON(message: ChannelMessageHeader): unknown {
+    const obj: any = {};
+    message.id !== undefined && (obj.id = message.id);
+    message.timestamp !== undefined && (obj.timestamp = message.timestamp);
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<ChannelMessageHeader>, I>>(base?: I): ChannelMessageHeader {
+    return ChannelMessageHeader.fromPartial(base ?? {});
+  },
+
+  fromPartial<I extends Exact<DeepPartial<ChannelMessageHeader>, I>>(object: I): ChannelMessageHeader {
+    const message = createBaseChannelMessageHeader();
+    message.id = object.id ?? "";
+    message.timestamp = object.timestamp ?? "";
+    return message;
+  },
+};
+
 function createBaseChannelDescription(): ChannelDescription {
   return {
     clan_id: "",
@@ -11557,8 +11634,8 @@ function createBaseChannelDescription(): ChannelDescription {
     channel_private: 0,
     channel_avatar: [],
     user_id: [],
-    last_message_id: "",
-    last_seen_message_id: "",
+    last_sent_message: undefined,
+    last_seen_message: undefined,
   };
 }
 
@@ -11597,11 +11674,11 @@ export const ChannelDescription = {
     for (const v of message.user_id) {
       writer.uint32(90).string(v!);
     }
-    if (message.last_message_id !== "") {
-      writer.uint32(98).string(message.last_message_id);
+    if (message.last_sent_message !== undefined) {
+      ChannelMessageHeader.encode(message.last_sent_message, writer.uint32(98).fork()).ldelim();
     }
-    if (message.last_seen_message_id !== "") {
-      writer.uint32(106).string(message.last_seen_message_id);
+    if (message.last_seen_message !== undefined) {
+      ChannelMessageHeader.encode(message.last_seen_message, writer.uint32(106).fork()).ldelim();
     }
     return writer;
   },
@@ -11647,10 +11724,10 @@ export const ChannelDescription = {
           message.user_id.push(reader.string());
           break;
         case 12:
-          message.last_message_id = reader.string();
+          message.last_sent_message = ChannelMessageHeader.decode(reader, reader.uint32());
           break;
         case 13:
-          message.last_seen_message_id = reader.string();
+          message.last_seen_message = ChannelMessageHeader.decode(reader, reader.uint32());
           break;
         default:
           reader.skipType(tag & 7);
@@ -11673,8 +11750,12 @@ export const ChannelDescription = {
       channel_private: isSet(object.channel_private) ? Number(object.channel_private) : 0,
       channel_avatar: Array.isArray(object?.channel_avatar) ? object.channel_avatar.map((e: any) => String(e)) : [],
       user_id: Array.isArray(object?.user_id) ? object.user_id.map((e: any) => String(e)) : [],
-      last_message_id: isSet(object.last_message_id) ? String(object.last_message_id) : "",
-      last_seen_message_id: isSet(object.last_seen_message_id) ? String(object.last_seen_message_id) : "",
+      last_sent_message: isSet(object.last_sent_message)
+        ? ChannelMessageHeader.fromJSON(object.last_sent_message)
+        : undefined,
+      last_seen_message: isSet(object.last_seen_message)
+        ? ChannelMessageHeader.fromJSON(object.last_seen_message)
+        : undefined,
     };
   },
 
@@ -11699,8 +11780,12 @@ export const ChannelDescription = {
     } else {
       obj.user_id = [];
     }
-    message.last_message_id !== undefined && (obj.last_message_id = message.last_message_id);
-    message.last_seen_message_id !== undefined && (obj.last_seen_message_id = message.last_seen_message_id);
+    message.last_sent_message !== undefined && (obj.last_sent_message = message.last_sent_message
+      ? ChannelMessageHeader.toJSON(message.last_sent_message)
+      : undefined);
+    message.last_seen_message !== undefined && (obj.last_seen_message = message.last_seen_message
+      ? ChannelMessageHeader.toJSON(message.last_seen_message)
+      : undefined);
     return obj;
   },
 
@@ -11721,8 +11806,12 @@ export const ChannelDescription = {
     message.channel_private = object.channel_private ?? 0;
     message.channel_avatar = object.channel_avatar?.map((e) => e) || [];
     message.user_id = object.user_id?.map((e) => e) || [];
-    message.last_message_id = object.last_message_id ?? "";
-    message.last_seen_message_id = object.last_seen_message_id ?? "";
+    message.last_sent_message = (object.last_sent_message !== undefined && object.last_sent_message !== null)
+      ? ChannelMessageHeader.fromPartial(object.last_sent_message)
+      : undefined;
+    message.last_seen_message = (object.last_seen_message !== undefined && object.last_seen_message !== null)
+      ? ChannelMessageHeader.fromPartial(object.last_seen_message)
+      : undefined;
     return message;
   },
 };

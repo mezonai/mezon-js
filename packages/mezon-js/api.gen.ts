@@ -193,9 +193,9 @@ export interface ApiChannelDescription {
   //creator ID.
   creator_id?: string;
   //
-  last_message_id?: string;
+  last_seen_message?: ApiChannelMessageHeader;
   //
-  last_seen_message_id?: string;
+  last_sent_message?: ApiChannelMessageHeader;
   //The parrent channel this message belongs to.
   parrent_id?: string;
   //The channel type.
@@ -241,13 +241,21 @@ export interface ApiChannelMessage {
   //The ID of the second DM user, or an empty string if this message was not sent through a DM chat.
   user_id_two?: string;
   //The username of the message sender, if any.
-  username: string;
+  username?: string;
+}
+
+/**  */
+export interface ApiChannelMessageHeader {
+  //
+  id?: string;
+  //
+  timestamp?: string;
 }
 
 /** A list of channel messages, usually a result of a list operation. */
 export interface ApiChannelMessageList {
     //
-  last_seen_message_id?: string;
+  last_seen_message?: ApiChannelMessageHeader;
   //A list of messages.
   messages?: Array<ApiChannelMessage>;
   }

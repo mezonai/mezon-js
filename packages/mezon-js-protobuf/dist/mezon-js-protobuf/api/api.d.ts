@@ -442,7 +442,7 @@ export interface ChannelMessageList {
     /** A list of messages. */
     messages: ChannelMessage[];
     /** last seen message id by user */
-    last_seen_message_id: string;
+    last_seen_message: ChannelMessageHeader | undefined;
 }
 /** Create a group with the current user as owner. */
 export interface CreateGroupRequest {
@@ -1241,6 +1241,12 @@ export interface ListCategoryDescsRequest {
     /** Cursor to start from */
     cursor: string;
 }
+export interface ChannelMessageHeader {
+    /** the message id */
+    id: string;
+    /** the time stamp */
+    timestamp: string;
+}
 /** Channel description record */
 export interface ChannelDescription {
     /** The clan of this channel */
@@ -1266,9 +1272,9 @@ export interface ChannelDescription {
     /** The user id */
     user_id: string[];
     /** last message id */
-    last_message_id: string;
+    last_sent_message: ChannelMessageHeader | undefined;
     /** last seen message id */
-    last_seen_message_id: string;
+    last_seen_message: ChannelMessageHeader | undefined;
 }
 /** A list of channel description, usually a result of a list operation. */
 export interface ChannelDescList {
@@ -3233,7 +3239,10 @@ export declare const ChannelMessageList: {
             references?: string | undefined;
             referenced_message?: string | undefined;
         }[] | undefined;
-        last_seen_message_id?: string | undefined;
+        last_seen_message?: {
+            id?: string | undefined;
+            timestamp?: string | undefined;
+        } | undefined;
     } & {
         messages?: ({
             clan_id?: string | undefined;
@@ -3312,8 +3321,14 @@ export declare const ChannelMessageList: {
             references?: string | undefined;
             referenced_message?: string | undefined;
         }[]>]: never; }) | undefined;
-        last_seen_message_id?: string | undefined;
-    } & { [K_2 in Exclude<keyof I, keyof ChannelMessageList>]: never; }>(base?: I | undefined): ChannelMessageList;
+        last_seen_message?: ({
+            id?: string | undefined;
+            timestamp?: string | undefined;
+        } & {
+            id?: string | undefined;
+            timestamp?: string | undefined;
+        } & { [K_2 in Exclude<keyof I["last_seen_message"], keyof ChannelMessageHeader>]: never; }) | undefined;
+    } & { [K_3 in Exclude<keyof I, keyof ChannelMessageList>]: never; }>(base?: I | undefined): ChannelMessageList;
     fromPartial<I_1 extends {
         messages?: {
             clan_id?: string | undefined;
@@ -3335,7 +3350,10 @@ export declare const ChannelMessageList: {
             references?: string | undefined;
             referenced_message?: string | undefined;
         }[] | undefined;
-        last_seen_message_id?: string | undefined;
+        last_seen_message?: {
+            id?: string | undefined;
+            timestamp?: string | undefined;
+        } | undefined;
     } & {
         messages?: ({
             clan_id?: string | undefined;
@@ -3394,7 +3412,7 @@ export declare const ChannelMessageList: {
             attachments?: string | undefined;
             references?: string | undefined;
             referenced_message?: string | undefined;
-        } & { [K_3 in Exclude<keyof I_1["messages"][number], keyof ChannelMessage>]: never; })[] & { [K_4 in Exclude<keyof I_1["messages"], keyof {
+        } & { [K_4 in Exclude<keyof I_1["messages"][number], keyof ChannelMessage>]: never; })[] & { [K_5 in Exclude<keyof I_1["messages"], keyof {
             clan_id?: string | undefined;
             channel_id?: string | undefined;
             message_id?: string | undefined;
@@ -3414,8 +3432,14 @@ export declare const ChannelMessageList: {
             references?: string | undefined;
             referenced_message?: string | undefined;
         }[]>]: never; }) | undefined;
-        last_seen_message_id?: string | undefined;
-    } & { [K_5 in Exclude<keyof I_1, keyof ChannelMessageList>]: never; }>(object: I_1): ChannelMessageList;
+        last_seen_message?: ({
+            id?: string | undefined;
+            timestamp?: string | undefined;
+        } & {
+            id?: string | undefined;
+            timestamp?: string | undefined;
+        } & { [K_6 in Exclude<keyof I_1["last_seen_message"], keyof ChannelMessageHeader>]: never; }) | undefined;
+    } & { [K_7 in Exclude<keyof I_1, keyof ChannelMessageList>]: never; }>(object: I_1): ChannelMessageList;
 };
 export declare const CreateGroupRequest: {
     encode(message: CreateGroupRequest, writer?: _m0.Writer): _m0.Writer;
@@ -8237,6 +8261,26 @@ export declare const ListCategoryDescsRequest: {
         cursor?: string | undefined;
     } & { [K_1 in Exclude<keyof I_1, keyof ListCategoryDescsRequest>]: never; }>(object: I_1): ListCategoryDescsRequest;
 };
+export declare const ChannelMessageHeader: {
+    encode(message: ChannelMessageHeader, writer?: _m0.Writer): _m0.Writer;
+    decode(input: _m0.Reader | Uint8Array, length?: number): ChannelMessageHeader;
+    fromJSON(object: any): ChannelMessageHeader;
+    toJSON(message: ChannelMessageHeader): unknown;
+    create<I extends {
+        id?: string | undefined;
+        timestamp?: string | undefined;
+    } & {
+        id?: string | undefined;
+        timestamp?: string | undefined;
+    } & { [K in Exclude<keyof I, keyof ChannelMessageHeader>]: never; }>(base?: I | undefined): ChannelMessageHeader;
+    fromPartial<I_1 extends {
+        id?: string | undefined;
+        timestamp?: string | undefined;
+    } & {
+        id?: string | undefined;
+        timestamp?: string | undefined;
+    } & { [K_1 in Exclude<keyof I_1, keyof ChannelMessageHeader>]: never; }>(object: I_1): ChannelMessageHeader;
+};
 export declare const ChannelDescription: {
     encode(message: ChannelDescription, writer?: _m0.Writer): _m0.Writer;
     decode(input: _m0.Reader | Uint8Array, length?: number): ChannelDescription;
@@ -8254,8 +8298,14 @@ export declare const ChannelDescription: {
         channel_private?: number | undefined;
         channel_avatar?: string[] | undefined;
         user_id?: string[] | undefined;
-        last_message_id?: string | undefined;
-        last_seen_message_id?: string | undefined;
+        last_sent_message?: {
+            id?: string | undefined;
+            timestamp?: string | undefined;
+        } | undefined;
+        last_seen_message?: {
+            id?: string | undefined;
+            timestamp?: string | undefined;
+        } | undefined;
     } & {
         clan_id?: string | undefined;
         parrent_id?: string | undefined;
@@ -8268,9 +8318,21 @@ export declare const ChannelDescription: {
         channel_private?: number | undefined;
         channel_avatar?: (string[] & string[] & { [K in Exclude<keyof I["channel_avatar"], keyof string[]>]: never; }) | undefined;
         user_id?: (string[] & string[] & { [K_1 in Exclude<keyof I["user_id"], keyof string[]>]: never; }) | undefined;
-        last_message_id?: string | undefined;
-        last_seen_message_id?: string | undefined;
-    } & { [K_2 in Exclude<keyof I, keyof ChannelDescription>]: never; }>(base?: I | undefined): ChannelDescription;
+        last_sent_message?: ({
+            id?: string | undefined;
+            timestamp?: string | undefined;
+        } & {
+            id?: string | undefined;
+            timestamp?: string | undefined;
+        } & { [K_2 in Exclude<keyof I["last_sent_message"], keyof ChannelMessageHeader>]: never; }) | undefined;
+        last_seen_message?: ({
+            id?: string | undefined;
+            timestamp?: string | undefined;
+        } & {
+            id?: string | undefined;
+            timestamp?: string | undefined;
+        } & { [K_3 in Exclude<keyof I["last_seen_message"], keyof ChannelMessageHeader>]: never; }) | undefined;
+    } & { [K_4 in Exclude<keyof I, keyof ChannelDescription>]: never; }>(base?: I | undefined): ChannelDescription;
     fromPartial<I_1 extends {
         clan_id?: string | undefined;
         parrent_id?: string | undefined;
@@ -8283,8 +8345,14 @@ export declare const ChannelDescription: {
         channel_private?: number | undefined;
         channel_avatar?: string[] | undefined;
         user_id?: string[] | undefined;
-        last_message_id?: string | undefined;
-        last_seen_message_id?: string | undefined;
+        last_sent_message?: {
+            id?: string | undefined;
+            timestamp?: string | undefined;
+        } | undefined;
+        last_seen_message?: {
+            id?: string | undefined;
+            timestamp?: string | undefined;
+        } | undefined;
     } & {
         clan_id?: string | undefined;
         parrent_id?: string | undefined;
@@ -8295,11 +8363,23 @@ export declare const ChannelDescription: {
         creator_id?: string | undefined;
         channel_label?: string | undefined;
         channel_private?: number | undefined;
-        channel_avatar?: (string[] & string[] & { [K_3 in Exclude<keyof I_1["channel_avatar"], keyof string[]>]: never; }) | undefined;
-        user_id?: (string[] & string[] & { [K_4 in Exclude<keyof I_1["user_id"], keyof string[]>]: never; }) | undefined;
-        last_message_id?: string | undefined;
-        last_seen_message_id?: string | undefined;
-    } & { [K_5 in Exclude<keyof I_1, keyof ChannelDescription>]: never; }>(object: I_1): ChannelDescription;
+        channel_avatar?: (string[] & string[] & { [K_5 in Exclude<keyof I_1["channel_avatar"], keyof string[]>]: never; }) | undefined;
+        user_id?: (string[] & string[] & { [K_6 in Exclude<keyof I_1["user_id"], keyof string[]>]: never; }) | undefined;
+        last_sent_message?: ({
+            id?: string | undefined;
+            timestamp?: string | undefined;
+        } & {
+            id?: string | undefined;
+            timestamp?: string | undefined;
+        } & { [K_7 in Exclude<keyof I_1["last_sent_message"], keyof ChannelMessageHeader>]: never; }) | undefined;
+        last_seen_message?: ({
+            id?: string | undefined;
+            timestamp?: string | undefined;
+        } & {
+            id?: string | undefined;
+            timestamp?: string | undefined;
+        } & { [K_8 in Exclude<keyof I_1["last_seen_message"], keyof ChannelMessageHeader>]: never; }) | undefined;
+    } & { [K_9 in Exclude<keyof I_1, keyof ChannelDescription>]: never; }>(object: I_1): ChannelDescription;
 };
 export declare const ChannelDescList: {
     encode(message: ChannelDescList, writer?: _m0.Writer): _m0.Writer;
@@ -8319,8 +8399,14 @@ export declare const ChannelDescList: {
             channel_private?: number | undefined;
             channel_avatar?: string[] | undefined;
             user_id?: string[] | undefined;
-            last_message_id?: string | undefined;
-            last_seen_message_id?: string | undefined;
+            last_sent_message?: {
+                id?: string | undefined;
+                timestamp?: string | undefined;
+            } | undefined;
+            last_seen_message?: {
+                id?: string | undefined;
+                timestamp?: string | undefined;
+            } | undefined;
         }[] | undefined;
         next_cursor?: string | undefined;
         prev_cursor?: string | undefined;
@@ -8338,8 +8424,14 @@ export declare const ChannelDescList: {
             channel_private?: number | undefined;
             channel_avatar?: string[] | undefined;
             user_id?: string[] | undefined;
-            last_message_id?: string | undefined;
-            last_seen_message_id?: string | undefined;
+            last_sent_message?: {
+                id?: string | undefined;
+                timestamp?: string | undefined;
+            } | undefined;
+            last_seen_message?: {
+                id?: string | undefined;
+                timestamp?: string | undefined;
+            } | undefined;
         }[] & ({
             clan_id?: string | undefined;
             parrent_id?: string | undefined;
@@ -8352,8 +8444,14 @@ export declare const ChannelDescList: {
             channel_private?: number | undefined;
             channel_avatar?: string[] | undefined;
             user_id?: string[] | undefined;
-            last_message_id?: string | undefined;
-            last_seen_message_id?: string | undefined;
+            last_sent_message?: {
+                id?: string | undefined;
+                timestamp?: string | undefined;
+            } | undefined;
+            last_seen_message?: {
+                id?: string | undefined;
+                timestamp?: string | undefined;
+            } | undefined;
         } & {
             clan_id?: string | undefined;
             parrent_id?: string | undefined;
@@ -8366,9 +8464,21 @@ export declare const ChannelDescList: {
             channel_private?: number | undefined;
             channel_avatar?: (string[] & string[] & { [K in Exclude<keyof I["channeldesc"][number]["channel_avatar"], keyof string[]>]: never; }) | undefined;
             user_id?: (string[] & string[] & { [K_1 in Exclude<keyof I["channeldesc"][number]["user_id"], keyof string[]>]: never; }) | undefined;
-            last_message_id?: string | undefined;
-            last_seen_message_id?: string | undefined;
-        } & { [K_2 in Exclude<keyof I["channeldesc"][number], keyof ChannelDescription>]: never; })[] & { [K_3 in Exclude<keyof I["channeldesc"], keyof {
+            last_sent_message?: ({
+                id?: string | undefined;
+                timestamp?: string | undefined;
+            } & {
+                id?: string | undefined;
+                timestamp?: string | undefined;
+            } & { [K_2 in Exclude<keyof I["channeldesc"][number]["last_sent_message"], keyof ChannelMessageHeader>]: never; }) | undefined;
+            last_seen_message?: ({
+                id?: string | undefined;
+                timestamp?: string | undefined;
+            } & {
+                id?: string | undefined;
+                timestamp?: string | undefined;
+            } & { [K_3 in Exclude<keyof I["channeldesc"][number]["last_seen_message"], keyof ChannelMessageHeader>]: never; }) | undefined;
+        } & { [K_4 in Exclude<keyof I["channeldesc"][number], keyof ChannelDescription>]: never; })[] & { [K_5 in Exclude<keyof I["channeldesc"], keyof {
             clan_id?: string | undefined;
             parrent_id?: string | undefined;
             channel_id?: string | undefined;
@@ -8380,13 +8490,19 @@ export declare const ChannelDescList: {
             channel_private?: number | undefined;
             channel_avatar?: string[] | undefined;
             user_id?: string[] | undefined;
-            last_message_id?: string | undefined;
-            last_seen_message_id?: string | undefined;
+            last_sent_message?: {
+                id?: string | undefined;
+                timestamp?: string | undefined;
+            } | undefined;
+            last_seen_message?: {
+                id?: string | undefined;
+                timestamp?: string | undefined;
+            } | undefined;
         }[]>]: never; }) | undefined;
         next_cursor?: string | undefined;
         prev_cursor?: string | undefined;
         cacheable_cursor?: string | undefined;
-    } & { [K_4 in Exclude<keyof I, keyof ChannelDescList>]: never; }>(base?: I | undefined): ChannelDescList;
+    } & { [K_6 in Exclude<keyof I, keyof ChannelDescList>]: never; }>(base?: I | undefined): ChannelDescList;
     fromPartial<I_1 extends {
         channeldesc?: {
             clan_id?: string | undefined;
@@ -8400,8 +8516,14 @@ export declare const ChannelDescList: {
             channel_private?: number | undefined;
             channel_avatar?: string[] | undefined;
             user_id?: string[] | undefined;
-            last_message_id?: string | undefined;
-            last_seen_message_id?: string | undefined;
+            last_sent_message?: {
+                id?: string | undefined;
+                timestamp?: string | undefined;
+            } | undefined;
+            last_seen_message?: {
+                id?: string | undefined;
+                timestamp?: string | undefined;
+            } | undefined;
         }[] | undefined;
         next_cursor?: string | undefined;
         prev_cursor?: string | undefined;
@@ -8419,8 +8541,14 @@ export declare const ChannelDescList: {
             channel_private?: number | undefined;
             channel_avatar?: string[] | undefined;
             user_id?: string[] | undefined;
-            last_message_id?: string | undefined;
-            last_seen_message_id?: string | undefined;
+            last_sent_message?: {
+                id?: string | undefined;
+                timestamp?: string | undefined;
+            } | undefined;
+            last_seen_message?: {
+                id?: string | undefined;
+                timestamp?: string | undefined;
+            } | undefined;
         }[] & ({
             clan_id?: string | undefined;
             parrent_id?: string | undefined;
@@ -8433,8 +8561,14 @@ export declare const ChannelDescList: {
             channel_private?: number | undefined;
             channel_avatar?: string[] | undefined;
             user_id?: string[] | undefined;
-            last_message_id?: string | undefined;
-            last_seen_message_id?: string | undefined;
+            last_sent_message?: {
+                id?: string | undefined;
+                timestamp?: string | undefined;
+            } | undefined;
+            last_seen_message?: {
+                id?: string | undefined;
+                timestamp?: string | undefined;
+            } | undefined;
         } & {
             clan_id?: string | undefined;
             parrent_id?: string | undefined;
@@ -8445,11 +8579,23 @@ export declare const ChannelDescList: {
             creator_id?: string | undefined;
             channel_label?: string | undefined;
             channel_private?: number | undefined;
-            channel_avatar?: (string[] & string[] & { [K_5 in Exclude<keyof I_1["channeldesc"][number]["channel_avatar"], keyof string[]>]: never; }) | undefined;
-            user_id?: (string[] & string[] & { [K_6 in Exclude<keyof I_1["channeldesc"][number]["user_id"], keyof string[]>]: never; }) | undefined;
-            last_message_id?: string | undefined;
-            last_seen_message_id?: string | undefined;
-        } & { [K_7 in Exclude<keyof I_1["channeldesc"][number], keyof ChannelDescription>]: never; })[] & { [K_8 in Exclude<keyof I_1["channeldesc"], keyof {
+            channel_avatar?: (string[] & string[] & { [K_7 in Exclude<keyof I_1["channeldesc"][number]["channel_avatar"], keyof string[]>]: never; }) | undefined;
+            user_id?: (string[] & string[] & { [K_8 in Exclude<keyof I_1["channeldesc"][number]["user_id"], keyof string[]>]: never; }) | undefined;
+            last_sent_message?: ({
+                id?: string | undefined;
+                timestamp?: string | undefined;
+            } & {
+                id?: string | undefined;
+                timestamp?: string | undefined;
+            } & { [K_9 in Exclude<keyof I_1["channeldesc"][number]["last_sent_message"], keyof ChannelMessageHeader>]: never; }) | undefined;
+            last_seen_message?: ({
+                id?: string | undefined;
+                timestamp?: string | undefined;
+            } & {
+                id?: string | undefined;
+                timestamp?: string | undefined;
+            } & { [K_10 in Exclude<keyof I_1["channeldesc"][number]["last_seen_message"], keyof ChannelMessageHeader>]: never; }) | undefined;
+        } & { [K_11 in Exclude<keyof I_1["channeldesc"][number], keyof ChannelDescription>]: never; })[] & { [K_12 in Exclude<keyof I_1["channeldesc"], keyof {
             clan_id?: string | undefined;
             parrent_id?: string | undefined;
             channel_id?: string | undefined;
@@ -8461,13 +8607,19 @@ export declare const ChannelDescList: {
             channel_private?: number | undefined;
             channel_avatar?: string[] | undefined;
             user_id?: string[] | undefined;
-            last_message_id?: string | undefined;
-            last_seen_message_id?: string | undefined;
+            last_sent_message?: {
+                id?: string | undefined;
+                timestamp?: string | undefined;
+            } | undefined;
+            last_seen_message?: {
+                id?: string | undefined;
+                timestamp?: string | undefined;
+            } | undefined;
         }[]>]: never; }) | undefined;
         next_cursor?: string | undefined;
         prev_cursor?: string | undefined;
         cacheable_cursor?: string | undefined;
-    } & { [K_9 in Exclude<keyof I_1, keyof ChannelDescList>]: never; }>(object: I_1): ChannelDescList;
+    } & { [K_13 in Exclude<keyof I_1, keyof ChannelDescList>]: never; }>(object: I_1): ChannelDescList;
 };
 export declare const ListChannelDescsRequest: {
     encode(message: ListChannelDescsRequest, writer?: _m0.Writer): _m0.Writer;

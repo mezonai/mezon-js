@@ -3780,9 +3780,9 @@ var _DefaultSocket = class _DefaultSocket {
       return response.message_typing_event;
     });
   }
-  writeLastSeenMessage(channel_id, channel_label, mode, message_id) {
+  writeLastSeenMessage(channel_id, channel_label, mode, message_id, timestamp) {
     return __async(this, null, function* () {
-      const response = yield this.send({ last_seen_message_event: { channel_id, channel_label, mode, message_id } });
+      const response = yield this.send({ last_seen_message_event: { channel_id, channel_label, mode, message_id, timestamp } });
       return response.last_seen_message_event;
     });
   }
@@ -4257,7 +4257,7 @@ var Client = class {
       return this.apiClient.listChannelMessages(session.token, channelId, messageId, direction, limit).then((response) => {
         var result = {
           messages: [],
-          last_seen_message_id: response.last_seen_message_id
+          last_seen_message: response.last_seen_message
         };
         if (response.messages == null) {
           return Promise.resolve(result);

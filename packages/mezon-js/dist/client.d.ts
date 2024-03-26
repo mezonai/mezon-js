@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { ApiAccount, ApiAccountCustom, ApiAccountDevice, ApiAccountEmail, ApiAccountFacebook, ApiAccountFacebookInstantGame, ApiAccountGoogle, ApiAccountGameCenter, ApiAccountSteam, ApiChannelDescList, ApiChannelDescription, ApiCreateChannelDescRequest, ApiClanDescList, ApiCreateClanDescRequest, ApiClanDesc, ApiCategoryDesc, ApiCategoryDescList, ApiRoleList, ApiPermissionList, ApiRoleUserList, ApiRole, ApiCreateRoleRequest, ApiCreateCategoryDescRequest, ApiUpdateCategoryDescRequest, ApiDeleteStorageObjectsRequest, ApiEvent, ApiReadStorageObjectsRequest, ApiStorageObjectAcks, ApiUpdateAccountRequest, ApiAccountApple, ApiLinkSteamRequest, ApiClanDescProfile, ApiClanProfile, ApiChannelUserList, ApiClanUserList, ApiLinkInviteUserRequest, ApiLinkInviteUser, ApiInviteUserRes, ApiUploadAttachmentRequest, ApiUploadAttachment, ApiMessageReaction, ApiMessageMention, ApiMessageAttachment, ApiMessageRef } from "./api.gen";
+import { ApiAccount, ApiAccountCustom, ApiAccountDevice, ApiAccountEmail, ApiAccountFacebook, ApiAccountFacebookInstantGame, ApiAccountGoogle, ApiAccountGameCenter, ApiAccountSteam, ApiChannelDescList, ApiChannelDescription, ApiCreateChannelDescRequest, ApiClanDescList, ApiCreateClanDescRequest, ApiClanDesc, ApiCategoryDesc, ApiCategoryDescList, ApiRoleList, ApiPermissionList, ApiRoleUserList, ApiRole, ApiCreateRoleRequest, ApiCreateCategoryDescRequest, ApiUpdateCategoryDescRequest, ApiDeleteStorageObjectsRequest, ApiEvent, ApiReadStorageObjectsRequest, ApiStorageObjectAcks, ApiUpdateAccountRequest, ApiAccountApple, ApiLinkSteamRequest, ApiClanDescProfile, ApiClanProfile, ApiChannelUserList, ApiClanUserList, ApiLinkInviteUserRequest, ApiLinkInviteUser, ApiInviteUserRes, ApiUploadAttachmentRequest, ApiUploadAttachment, ApiMessageReaction, ApiMessageMention, ApiMessageAttachment, ApiMessageRef, ApiChannelMessageHeader } from "./api.gen";
 import { Session } from "./session";
 import { Socket } from "./socket";
 import { WebSocketAdapter } from "./web_socket_adapter";
@@ -105,14 +105,14 @@ export interface ChannelMessage {
     update_time?: string;
     user_id_one?: string;
     user_id_two?: string;
-    username: string;
+    username?: string;
 }
 /** A list of channel messages, usually a result of a list operation. */
 export interface ChannelMessageList {
     /** Cacheable cursor to list newer messages. Durable and designed to be stored, unlike next/prev cursors. */
     cacheable_cursor?: string;
     /**last seen message from user on channel */
-    last_seen_message_id?: string;
+    last_seen_message?: ApiChannelMessageHeader;
     /** A list of messages. */
     messages?: Array<ChannelMessage>;
     /** The cursor to send when retireving the next page, if any. */
