@@ -968,7 +968,7 @@ export class Client {
         await this.sessionRefresh(session);
     }
 
-    return this.apiClient.listChannelVoiceUsers(session.token, clanId, channelId, channelType, limit, state, cursor).then((response: ApiChannelUserList) => {
+    return this.apiClient.listChannelUsers(session.token, clanId, channelId, channelType, limit, state, cursor).then((response: ApiChannelUserList) => {
       var result: ApiChannelUserList = {
         channel_users: [],
         cursor: response.cursor,
@@ -979,8 +979,9 @@ export class Client {
         return Promise.resolve(result);
       }
 
-      response.channel_users!.forEach(gu => {
+      response.channel_users!.forEach(gu => {        
         result.channel_users!.push({
+          id: gu.id,
           user: {
             avatar_url: gu.user!.avatar_url,
             create_time: gu.user!.create_time,
