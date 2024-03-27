@@ -1879,6 +1879,37 @@ var MezonApi = class {
       )
     ]);
   }
+  /** List all users that are part of a channel. */
+  listChannelVoiceUsers(bearerToken, clanId, channelId, channelType, limit, state, cursor, options = {}) {
+    const urlPath = "/v2/channelvoice";
+    const queryParams = /* @__PURE__ */ new Map();
+    queryParams.set("clan_id", clanId);
+    queryParams.set("channel_id", channelId);
+    queryParams.set("channel_type", channelType);
+    queryParams.set("limit", limit);
+    queryParams.set("state", state);
+    queryParams.set("cursor", cursor);
+    let bodyJson = "";
+    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
+    const fetchOptions = buildFetchOptions("GET", options, bodyJson);
+    if (bearerToken) {
+      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+    }
+    return Promise.race([
+      fetch(fullUrl, fetchOptions).then((response) => {
+        if (response.status == 204) {
+          return response;
+        } else if (response.status >= 200 && response.status < 300) {
+          return response.json();
+        } else {
+          throw response;
+        }
+      }),
+      new Promise(
+        (_, reject) => setTimeout(reject, this.timeoutMs, "Request timed out.")
+      )
+    ]);
+  }
   /** List clans */
   listClanDescs(bearerToken, limit, state, cursor, options = {}) {
     const urlPath = "/v2/clandesc";
@@ -4280,6 +4311,48 @@ var Client = class {
             mentions: m.mentions ? JSON.parse(m.mentions) : [],
             reactions: m.reactions ? JSON.parse(m.reactions) : [],
             references: m.references ? JSON.parse(m.references) : []
+          });
+        });
+        return Promise.resolve(result);
+      });
+    });
+  }
+  /** List a channel's users. */
+  listChannelVoiceUsers(session, clanId, channelId, channelType, state, limit, cursor) {
+    return __async(this, null, function* () {
+      if (this.autoRefreshSession && session.refresh_token && session.isexpired((Date.now() + this.expiredTimespanMs) / 1e3)) {
+        yield this.sessionRefresh(session);
+      }
+      return this.apiClient.listChannelVoiceUsers(session.token, clanId, channelId, channelType, limit, state, cursor).then((response) => {
+        var result = {
+          channel_users: [],
+          cursor: response.cursor,
+          channel_id: response.channel_id
+        };
+        if (response.channel_users == null) {
+          return Promise.resolve(result);
+        }
+        response.channel_users.forEach((gu) => {
+          result.channel_users.push({
+            user: {
+              avatar_url: gu.user.avatar_url,
+              create_time: gu.user.create_time,
+              display_name: gu.user.display_name,
+              edge_count: gu.user.edge_count ? Number(gu.user.edge_count) : 0,
+              facebook_id: gu.user.facebook_id,
+              gamecenter_id: gu.user.gamecenter_id,
+              google_id: gu.user.google_id,
+              id: gu.user.id,
+              lang_tag: gu.user.lang_tag,
+              location: gu.user.location,
+              online: gu.user.online,
+              steam_id: gu.user.steam_id,
+              timezone: gu.user.timezone,
+              update_time: gu.user.update_time,
+              username: gu.user.username,
+              metadata: gu.user.metadata ? JSON.parse(gu.user.metadata) : void 0
+            },
+            role_id: gu.role_id
           });
         });
         return Promise.resolve(result);
