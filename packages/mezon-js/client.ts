@@ -968,7 +968,7 @@ export class Client {
         await this.sessionRefresh(session);
     }
 
-    return this.apiClient.listChannelUsers(session.token, clanId, channelId, channelType, limit, state, cursor).then((response: ApiChannelUserList) => {
+    return this.apiClient.listChannelVoiceUsers(session.token, clanId, channelId, channelType, limit, state, cursor).then((response: ApiChannelUserList) => {
       var result: ApiChannelUserList = {
         channel_users: [],
         cursor: response.cursor,
