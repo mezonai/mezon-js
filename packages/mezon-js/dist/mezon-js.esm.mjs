@@ -4323,7 +4323,7 @@ var Client = class {
       if (this.autoRefreshSession && session.refresh_token && session.isexpired((Date.now() + this.expiredTimespanMs) / 1e3)) {
         yield this.sessionRefresh(session);
       }
-      return this.apiClient.listChannelUsers(session.token, clanId, channelId, channelType, limit, state, cursor).then((response) => {
+      return this.apiClient.listChannelVoiceUsers(session.token, clanId, channelId, channelType, limit, state, cursor).then((response) => {
         var result = {
           channel_users: [],
           cursor: response.cursor,
