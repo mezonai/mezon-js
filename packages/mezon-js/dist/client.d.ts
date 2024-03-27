@@ -420,6 +420,8 @@ export declare class Client {
     /** List a channel's message history. */
     listChannelMessages(session: Session, channelId: string, messageId?: string, direction?: number, limit?: number): Promise<ChannelMessageList>;
     /** List a channel's users. */
+    listChannelVoiceUsers(session: Session, clanId: string, channelId: string, channelType: number, state?: number, limit?: number, cursor?: string): Promise<ApiChannelUserList>;
+    /** List a channel's users. */
     listChannelUsers(session: Session, clanId: string, channelId: string, channelType: number, state?: number, limit?: number, cursor?: string): Promise<ApiChannelUserList>;
     /** List a channel's users. */
     listClanUsers(session: Session, clanId: string): Promise<ApiClanUserList>;
