@@ -3823,9 +3823,9 @@ var _DefaultSocket = class _DefaultSocket {
       return response.voice_joined_event;
     });
   }
-  writeVoiceLeaved(id, clanId, clanName, voiceChannelId, voiceChannelLabel, participant) {
+  writeVoiceLeaved(id, voiceChannelId, lastParticipant) {
     return __async(this, null, function* () {
-      const response = yield this.send({ voice_leaved_event: { clan_id: clanId, clan_name: clanName, id, participant, voice_channel_id: voiceChannelId, voice_channel_label: voiceChannelLabel } });
+      const response = yield this.send({ voice_leaved_event: { id, voice_channel_id: voiceChannelId, last_participant: lastParticipant } });
       return response.voice_leaved_event;
     });
   }

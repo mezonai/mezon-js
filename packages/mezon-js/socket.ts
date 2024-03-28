@@ -328,6 +328,15 @@ export interface ChannelPresenceEvent {
   leaves: Presence[];
 }
 
+export interface VoiceLeavedEvent {
+  // event id
+  id: string;
+  // voice channel name
+  voice_channel_id: string;
+  // last participant
+  last_participant: boolean;
+}
+
 export interface VoiceJoinedEvent {
   /** The unique identifier of the chat channel. */
   clan_id: string;
@@ -678,7 +687,7 @@ export interface Socket {
   writeVoiceJoined(id: string, clanId: string, clanName: string, voiceChannelId: string, voiceChannelLabel: string, participant: string, lastScreenshot: string) : Promise<VoiceJoinedEvent>;
 
   /** send voice leaved */
-  writeVoiceLeaved(id: string, clan_id: string, clan_label: string, voiceChannelId: string, voiceChannelLabel: string, participant: string) : Promise<VoiceJoinedEvent>;
+  writeVoiceLeaved(id: string, voiceChannelId: string, lastParticipant: boolean) : Promise<VoiceLeavedEvent>;
 
   /** Handle disconnect events received from the socket. */
   ondisconnect: (evt: Event) => void;
@@ -743,7 +752,7 @@ export interface Socket {
   onvoicejoined: (voiceParticipant: VoiceJoinedEvent) => void;
   
   // when someone join to voice room
-  onvoiceleaved: (voiceParticipant: VoiceJoinedEvent) => void;
+  onvoiceleaved: (voiceParticipant: VoiceLeavedEvent) => void;
 
   /* Set the heartbeat timeout used by the socket to detect if it has lost connectivity to the server. */
   setHeartbeatTimeoutMs(ms : number) : void;
@@ -1039,7 +1048,7 @@ export class DefaultSocket implements Socket {
     }
   }
 
-  onvoiceleaved(voiceParticipant: VoiceJoinedEvent) {
+  onvoiceleaved(voiceParticipant: VoiceLeavedEvent) {
     if (this.verbose && window && window.console) {
       console.log(voiceParticipant);
     }
@@ -1255,8 +1264,8 @@ export class DefaultSocket implements Socket {
     return response.voice_joined_event
   }
 
-  async writeVoiceLeaved(id: string, clanId: string, clanName: string, voiceChannelId: string, voiceChannelLabel: string, participant: string) : Promise<VoiceJoinedEvent> {
-    const response = await this.send({voice_leaved_event: {clan_id: clanId, clan_name: clanName, id: id, participant: participant, voice_channel_id: voiceChannelId, voice_channel_label: voiceChannelLabel}});
+  async writeVoiceLeaved(id: string, voiceChannelId: string, lastParticipant: boolean) : Promise<VoiceLeavedEvent> {
+    const response = await this.send({voice_leaved_event: {id: id, voice_channel_id: voiceChannelId, last_participant: lastParticipant}});
     return response.voice_leaved_event
   }
 
