@@ -6093,24 +6093,18 @@ var MessageDeletedEvent = {
   }
 };
 function createBaseVoiceLeavedEvent() {
-  return { clan_id: "", clan_name: "", id: "", participant: "", roomName: "" };
+  return { id: "", voice_channel_id: "", last_participant: false };
 }
 var VoiceLeavedEvent = {
   encode(message, writer = import_minimal4.default.Writer.create()) {
-    if (message.clan_id !== "") {
-      writer.uint32(10).string(message.clan_id);
-    }
-    if (message.clan_name !== "") {
-      writer.uint32(18).string(message.clan_name);
-    }
     if (message.id !== "") {
-      writer.uint32(26).string(message.id);
+      writer.uint32(10).string(message.id);
     }
-    if (message.participant !== "") {
-      writer.uint32(34).string(message.participant);
+    if (message.voice_channel_id !== "") {
+      writer.uint32(18).string(message.voice_channel_id);
     }
-    if (message.roomName !== "") {
-      writer.uint32(42).string(message.roomName);
+    if (message.last_participant === true) {
+      writer.uint32(24).bool(message.last_participant);
     }
     return writer;
   },
@@ -6122,19 +6116,13 @@ var VoiceLeavedEvent = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          message.clan_id = reader.string();
-          break;
-        case 2:
-          message.clan_name = reader.string();
-          break;
-        case 3:
           message.id = reader.string();
           break;
-        case 4:
-          message.participant = reader.string();
+        case 2:
+          message.voice_channel_id = reader.string();
           break;
-        case 5:
-          message.roomName = reader.string();
+        case 3:
+          message.last_participant = reader.bool();
           break;
         default:
           reader.skipType(tag & 7);
@@ -6145,33 +6133,27 @@ var VoiceLeavedEvent = {
   },
   fromJSON(object) {
     return {
-      clan_id: isSet4(object.clan_id) ? String(object.clan_id) : "",
-      clan_name: isSet4(object.clan_name) ? String(object.clan_name) : "",
       id: isSet4(object.id) ? String(object.id) : "",
-      participant: isSet4(object.participant) ? String(object.participant) : "",
-      roomName: isSet4(object.roomName) ? String(object.roomName) : ""
+      voice_channel_id: isSet4(object.voice_channel_id) ? String(object.voice_channel_id) : "",
+      last_participant: isSet4(object.last_participant) ? Boolean(object.last_participant) : false
     };
   },
   toJSON(message) {
     const obj = {};
-    message.clan_id !== void 0 && (obj.clan_id = message.clan_id);
-    message.clan_name !== void 0 && (obj.clan_name = message.clan_name);
     message.id !== void 0 && (obj.id = message.id);
-    message.participant !== void 0 && (obj.participant = message.participant);
-    message.roomName !== void 0 && (obj.roomName = message.roomName);
+    message.voice_channel_id !== void 0 && (obj.voice_channel_id = message.voice_channel_id);
+    message.last_participant !== void 0 && (obj.last_participant = message.last_participant);
     return obj;
   },
   create(base) {
     return VoiceLeavedEvent.fromPartial(base != null ? base : {});
   },
   fromPartial(object) {
-    var _a, _b, _c, _d, _e;
+    var _a, _b, _c;
     const message = createBaseVoiceLeavedEvent();
-    message.clan_id = (_a = object.clan_id) != null ? _a : "";
-    message.clan_name = (_b = object.clan_name) != null ? _b : "";
-    message.id = (_c = object.id) != null ? _c : "";
-    message.participant = (_d = object.participant) != null ? _d : "";
-    message.roomName = (_e = object.roomName) != null ? _e : "";
+    message.id = (_a = object.id) != null ? _a : "";
+    message.voice_channel_id = (_b = object.voice_channel_id) != null ? _b : "";
+    message.last_participant = (_c = object.last_participant) != null ? _c : false;
     return message;
   }
 };

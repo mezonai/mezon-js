@@ -773,16 +773,12 @@ export interface MessageDeletedEvent {
 
 /** Voice Joined event */
 export interface VoiceLeavedEvent {
-  /** The unique identifier of the chat channel. */
-  clan_id: string;
-  /** The channel name */
-  clan_name: string;
   /** id voice */
   id: string;
-  /** voice participant */
-  participant: string;
-  /** room name */
-  roomName: string;
+  /** voice channel name */
+  voice_channel_id: string;
+  /** last participant */
+  last_participant: boolean;
 }
 
 /** Voice Joined event */
@@ -5114,25 +5110,19 @@ export const MessageDeletedEvent = {
 };
 
 function createBaseVoiceLeavedEvent(): VoiceLeavedEvent {
-  return { clan_id: "", clan_name: "", id: "", participant: "", roomName: "" };
+  return { id: "", voice_channel_id: "", last_participant: false };
 }
 
 export const VoiceLeavedEvent = {
   encode(message: VoiceLeavedEvent, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.clan_id !== "") {
-      writer.uint32(10).string(message.clan_id);
-    }
-    if (message.clan_name !== "") {
-      writer.uint32(18).string(message.clan_name);
-    }
     if (message.id !== "") {
-      writer.uint32(26).string(message.id);
+      writer.uint32(10).string(message.id);
     }
-    if (message.participant !== "") {
-      writer.uint32(34).string(message.participant);
+    if (message.voice_channel_id !== "") {
+      writer.uint32(18).string(message.voice_channel_id);
     }
-    if (message.roomName !== "") {
-      writer.uint32(42).string(message.roomName);
+    if (message.last_participant === true) {
+      writer.uint32(24).bool(message.last_participant);
     }
     return writer;
   },
@@ -5145,19 +5135,13 @@ export const VoiceLeavedEvent = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          message.clan_id = reader.string();
-          break;
-        case 2:
-          message.clan_name = reader.string();
-          break;
-        case 3:
           message.id = reader.string();
           break;
-        case 4:
-          message.participant = reader.string();
+        case 2:
+          message.voice_channel_id = reader.string();
           break;
-        case 5:
-          message.roomName = reader.string();
+        case 3:
+          message.last_participant = reader.bool();
           break;
         default:
           reader.skipType(tag & 7);
@@ -5169,21 +5153,17 @@ export const VoiceLeavedEvent = {
 
   fromJSON(object: any): VoiceLeavedEvent {
     return {
-      clan_id: isSet(object.clan_id) ? String(object.clan_id) : "",
-      clan_name: isSet(object.clan_name) ? String(object.clan_name) : "",
       id: isSet(object.id) ? String(object.id) : "",
-      participant: isSet(object.participant) ? String(object.participant) : "",
-      roomName: isSet(object.roomName) ? String(object.roomName) : "",
+      voice_channel_id: isSet(object.voice_channel_id) ? String(object.voice_channel_id) : "",
+      last_participant: isSet(object.last_participant) ? Boolean(object.last_participant) : false,
     };
   },
 
   toJSON(message: VoiceLeavedEvent): unknown {
     const obj: any = {};
-    message.clan_id !== undefined && (obj.clan_id = message.clan_id);
-    message.clan_name !== undefined && (obj.clan_name = message.clan_name);
     message.id !== undefined && (obj.id = message.id);
-    message.participant !== undefined && (obj.participant = message.participant);
-    message.roomName !== undefined && (obj.roomName = message.roomName);
+    message.voice_channel_id !== undefined && (obj.voice_channel_id = message.voice_channel_id);
+    message.last_participant !== undefined && (obj.last_participant = message.last_participant);
     return obj;
   },
 
@@ -5193,11 +5173,9 @@ export const VoiceLeavedEvent = {
 
   fromPartial<I extends Exact<DeepPartial<VoiceLeavedEvent>, I>>(object: I): VoiceLeavedEvent {
     const message = createBaseVoiceLeavedEvent();
-    message.clan_id = object.clan_id ?? "";
-    message.clan_name = object.clan_name ?? "";
     message.id = object.id ?? "";
-    message.participant = object.participant ?? "";
-    message.roomName = object.roomName ?? "";
+    message.voice_channel_id = object.voice_channel_id ?? "";
+    message.last_participant = object.last_participant ?? false;
     return message;
   },
 };
