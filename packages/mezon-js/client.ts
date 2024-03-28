@@ -70,6 +70,7 @@ import {
   ApiMessageAttachment,
   ApiMessageRef,
   ApiChannelMessageHeader,
+  ApiVoiceChannelUserList,
 } from "./api.gen";
 
 import { Session } from "./session";
@@ -962,45 +963,26 @@ export class Client {
   }
 
   /** List a channel's users. */
-  async listChannelVoiceUsers(session: Session, clanId: string, channelId: string, channelType: number, state?: number, limit?: number, cursor?: string): Promise<ApiChannelUserList> {
+  async listChannelVoiceUsers(session: Session, clanId: string, channelId: string, channelType: number, state?: number, limit?: number, cursor?: string): Promise<ApiVoiceChannelUserList> {
     if (this.autoRefreshSession && session.refresh_token &&
         session.isexpired((Date.now() + this.expiredTimespanMs)/1000)) {
         await this.sessionRefresh(session);
     }
 
-    return this.apiClient.listChannelVoiceUsers(session.token, clanId, channelId, channelType, limit, state, cursor).then((response: ApiChannelUserList) => {
-      var result: ApiChannelUserList = {
-        channel_users: [],
-        cursor: response.cursor,
-        channel_id: response.channel_id
+    return this.apiClient.listChannelVoiceUsers(session.token, clanId, channelId, channelType, limit, state, cursor).then((response: ApiVoiceChannelUserList) => {
+      var result: ApiVoiceChannelUserList = {
+        voice_channel_users: []
       };
 
-      if (response.channel_users == null) {
+      if (response.voice_channel_users == null) {
         return Promise.resolve(result);
       }
 
-      response.channel_users!.forEach(gu => {        
-        result.channel_users!.push({
-          id: gu.id,
-          user: {
-            avatar_url: gu.user!.avatar_url,
-            create_time: gu.user!.create_time,
-            display_name: gu.user!.display_name,
-            edge_count: gu.user!.edge_count ? Number(gu.user!.edge_count): 0,
-            facebook_id: gu.user!.facebook_id,
-            gamecenter_id: gu.user!.gamecenter_id,
-            google_id: gu.user!.google_id,
-            id: gu.user!.id,
-            lang_tag: gu.user!.lang_tag,
-            location: gu.user!.location,
-            online: gu.user!.online,
-            steam_id: gu.user!.steam_id,
-            timezone: gu.user!.timezone,
-            update_time: gu.user!.update_time,
-            username: gu.user!.username,
-            metadata: gu.user!.metadata ? JSON.parse(gu.user!.metadata!) : undefined
-          },
-          role_id: gu!.role_id 
+      response.voice_channel_users!.forEach(gu => {        
+        result.voice_channel_users!.push({
+          jid: gu.jid,
+          channel_id: gu.channel_id,
+          user_id: gu.user_id
         })
       });
       return Promise.resolve(result);
