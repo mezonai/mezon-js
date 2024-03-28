@@ -633,6 +633,20 @@ export interface ChannelUserList_ChannelUser {
     /** Id */
     id: string;
 }
+/** A list of users belonging to a channel, along with their role. */
+export interface VoiceChannelUser {
+    /** User for a channel. */
+    user_id: string;
+    /** Cursor for the next page of results, if any. */
+    jid: string;
+    /** channel id */
+    channel_id: string;
+}
+/** A list of users belonging to a channel, along with their role. */
+export interface VoiceChannelUserList {
+    /** list of voice channel user */
+    voice_channel_users: VoiceChannelUser[];
+}
 /** A list of users belonging to a clan, along with their role. */
 export interface ClanUserList {
     /** User-role pairs for a clan. */
@@ -5136,6 +5150,86 @@ export declare const ChannelUserList_ChannelUser: {
         role_id?: string | undefined;
         id?: string | undefined;
     } & { [K_3 in Exclude<keyof I_1, keyof ChannelUserList_ChannelUser>]: never; }>(object: I_1): ChannelUserList_ChannelUser;
+};
+export declare const VoiceChannelUser: {
+    encode(message: VoiceChannelUser, writer?: _m0.Writer): _m0.Writer;
+    decode(input: _m0.Reader | Uint8Array, length?: number): VoiceChannelUser;
+    fromJSON(object: any): VoiceChannelUser;
+    toJSON(message: VoiceChannelUser): unknown;
+    create<I extends {
+        user_id?: string | undefined;
+        jid?: string | undefined;
+        channel_id?: string | undefined;
+    } & {
+        user_id?: string | undefined;
+        jid?: string | undefined;
+        channel_id?: string | undefined;
+    } & { [K in Exclude<keyof I, keyof VoiceChannelUser>]: never; }>(base?: I | undefined): VoiceChannelUser;
+    fromPartial<I_1 extends {
+        user_id?: string | undefined;
+        jid?: string | undefined;
+        channel_id?: string | undefined;
+    } & {
+        user_id?: string | undefined;
+        jid?: string | undefined;
+        channel_id?: string | undefined;
+    } & { [K_1 in Exclude<keyof I_1, keyof VoiceChannelUser>]: never; }>(object: I_1): VoiceChannelUser;
+};
+export declare const VoiceChannelUserList: {
+    encode(message: VoiceChannelUserList, writer?: _m0.Writer): _m0.Writer;
+    decode(input: _m0.Reader | Uint8Array, length?: number): VoiceChannelUserList;
+    fromJSON(object: any): VoiceChannelUserList;
+    toJSON(message: VoiceChannelUserList): unknown;
+    create<I extends {
+        voice_channel_users?: {
+            user_id?: string | undefined;
+            jid?: string | undefined;
+            channel_id?: string | undefined;
+        }[] | undefined;
+    } & {
+        voice_channel_users?: ({
+            user_id?: string | undefined;
+            jid?: string | undefined;
+            channel_id?: string | undefined;
+        }[] & ({
+            user_id?: string | undefined;
+            jid?: string | undefined;
+            channel_id?: string | undefined;
+        } & {
+            user_id?: string | undefined;
+            jid?: string | undefined;
+            channel_id?: string | undefined;
+        } & { [K in Exclude<keyof I["voice_channel_users"][number], keyof VoiceChannelUser>]: never; })[] & { [K_1 in Exclude<keyof I["voice_channel_users"], keyof {
+            user_id?: string | undefined;
+            jid?: string | undefined;
+            channel_id?: string | undefined;
+        }[]>]: never; }) | undefined;
+    } & { [K_2 in Exclude<keyof I, "voice_channel_users">]: never; }>(base?: I | undefined): VoiceChannelUserList;
+    fromPartial<I_1 extends {
+        voice_channel_users?: {
+            user_id?: string | undefined;
+            jid?: string | undefined;
+            channel_id?: string | undefined;
+        }[] | undefined;
+    } & {
+        voice_channel_users?: ({
+            user_id?: string | undefined;
+            jid?: string | undefined;
+            channel_id?: string | undefined;
+        }[] & ({
+            user_id?: string | undefined;
+            jid?: string | undefined;
+            channel_id?: string | undefined;
+        } & {
+            user_id?: string | undefined;
+            jid?: string | undefined;
+            channel_id?: string | undefined;
+        } & { [K_3 in Exclude<keyof I_1["voice_channel_users"][number], keyof VoiceChannelUser>]: never; })[] & { [K_4 in Exclude<keyof I_1["voice_channel_users"], keyof {
+            user_id?: string | undefined;
+            jid?: string | undefined;
+            channel_id?: string | undefined;
+        }[]>]: never; }) | undefined;
+    } & { [K_5 in Exclude<keyof I_1, "voice_channel_users">]: never; }>(object: I_1): VoiceChannelUserList;
 };
 export declare const ClanUserList: {
     encode(message: ClanUserList, writer?: _m0.Writer): _m0.Writer;

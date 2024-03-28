@@ -497,6 +497,16 @@ export interface ApiUser {
 export interface ApiUsers {
     users?: Array<ApiUser>;
 }
+/** A list of users belonging to a channel, along with their role. */
+export interface ApiVoiceChannelUser {
+    channel_id?: string;
+    jid?: string;
+    user_id?: string;
+}
+/** A list of users belonging to a channel, along with their role. */
+export interface ApiVoiceChannelUserList {
+    voice_channel_users?: Array<ApiVoiceChannelUser>;
+}
 /** The object to store. */
 export interface ApiWriteStorageObject {
     collection?: string;
@@ -611,7 +621,7 @@ export declare class MezonApi {
     /** List all users that are part of a channel. */
     listChannelUsers(bearerToken: string, clanId: string, channelId: string, channelType?: number, limit?: number, state?: number, cursor?: string, options?: any): Promise<ApiChannelUserList>;
     /** List all users that are part of a channel. */
-    listChannelVoiceUsers(bearerToken: string, clanId?: string, channelId?: string, channelType?: number, limit?: number, state?: number, cursor?: string, options?: any): Promise<ApiChannelUserList>;
+    listChannelVoiceUsers(bearerToken: string, clanId?: string, channelId?: string, channelType?: number, limit?: number, state?: number, cursor?: string, options?: any): Promise<ApiVoiceChannelUserList>;
     /** List clans */
     listClanDescs(bearerToken: string, limit?: number, state?: number, cursor?: string, options?: any): Promise<ApiClanDescList>;
     /** Create a clan */

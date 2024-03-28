@@ -862,6 +862,23 @@ export interface ApiUsers {
   users?: Array<ApiUser>;
 }
 
+/** A list of users belonging to a channel, along with their role. */
+export interface ApiVoiceChannelUser {
+  //
+  channel_id?: string;
+  //Cursor for the next page of results, if any.
+  jid?: string;
+  //User for a channel.
+  user_id?: string;
+}
+
+
+/** A list of users belonging to a channel, along with their role. */
+export interface ApiVoiceChannelUserList {
+  //
+  voice_channel_users?: Array<ApiVoiceChannelUser>;
+}
+
 /** The object to store. */
 export interface ApiWriteStorageObject {
   //The collection to store the object.
@@ -2500,7 +2517,7 @@ export class MezonApi {
       limit?:number,
       state?:number,
       cursor?:string,
-      options: any = {}): Promise<ApiChannelUserList> {
+      options: any = {}): Promise<ApiVoiceChannelUserList> {
     
     const urlPath = "/v2/channelvoice";
     const queryParams = new Map<string, any>();

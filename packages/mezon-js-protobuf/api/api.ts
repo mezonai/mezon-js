@@ -918,6 +918,22 @@ export interface ChannelUserList_ChannelUser {
   id: string;
 }
 
+/** A list of users belonging to a channel, along with their role. */
+export interface VoiceChannelUser {
+  /** User for a channel. */
+  user_id: string;
+  /** Cursor for the next page of results, if any. */
+  jid: string;
+  /** channel id */
+  channel_id: string;
+}
+
+/** A list of users belonging to a channel, along with their role. */
+export interface VoiceChannelUserList {
+  /** list of voice channel user */
+  voice_channel_users: VoiceChannelUser[];
+}
+
 /** A list of users belonging to a clan, along with their role. */
 export interface ClanUserList {
   /** User-role pairs for a clan. */
@@ -6833,6 +6849,136 @@ export const ChannelUserList_ChannelUser = {
     message.user = (object.user !== undefined && object.user !== null) ? User.fromPartial(object.user) : undefined;
     message.role_id = object.role_id ?? "";
     message.id = object.id ?? "";
+    return message;
+  },
+};
+
+function createBaseVoiceChannelUser(): VoiceChannelUser {
+  return { user_id: "", jid: "", channel_id: "" };
+}
+
+export const VoiceChannelUser = {
+  encode(message: VoiceChannelUser, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.user_id !== "") {
+      writer.uint32(10).string(message.user_id);
+    }
+    if (message.jid !== "") {
+      writer.uint32(18).string(message.jid);
+    }
+    if (message.channel_id !== "") {
+      writer.uint32(26).string(message.channel_id);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): VoiceChannelUser {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseVoiceChannelUser();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.user_id = reader.string();
+          break;
+        case 2:
+          message.jid = reader.string();
+          break;
+        case 3:
+          message.channel_id = reader.string();
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): VoiceChannelUser {
+    return {
+      user_id: isSet(object.user_id) ? String(object.user_id) : "",
+      jid: isSet(object.jid) ? String(object.jid) : "",
+      channel_id: isSet(object.channel_id) ? String(object.channel_id) : "",
+    };
+  },
+
+  toJSON(message: VoiceChannelUser): unknown {
+    const obj: any = {};
+    message.user_id !== undefined && (obj.user_id = message.user_id);
+    message.jid !== undefined && (obj.jid = message.jid);
+    message.channel_id !== undefined && (obj.channel_id = message.channel_id);
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<VoiceChannelUser>, I>>(base?: I): VoiceChannelUser {
+    return VoiceChannelUser.fromPartial(base ?? {});
+  },
+
+  fromPartial<I extends Exact<DeepPartial<VoiceChannelUser>, I>>(object: I): VoiceChannelUser {
+    const message = createBaseVoiceChannelUser();
+    message.user_id = object.user_id ?? "";
+    message.jid = object.jid ?? "";
+    message.channel_id = object.channel_id ?? "";
+    return message;
+  },
+};
+
+function createBaseVoiceChannelUserList(): VoiceChannelUserList {
+  return { voice_channel_users: [] };
+}
+
+export const VoiceChannelUserList = {
+  encode(message: VoiceChannelUserList, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    for (const v of message.voice_channel_users) {
+      VoiceChannelUser.encode(v!, writer.uint32(10).fork()).ldelim();
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): VoiceChannelUserList {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseVoiceChannelUserList();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.voice_channel_users.push(VoiceChannelUser.decode(reader, reader.uint32()));
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): VoiceChannelUserList {
+    return {
+      voice_channel_users: Array.isArray(object?.voice_channel_users)
+        ? object.voice_channel_users.map((e: any) => VoiceChannelUser.fromJSON(e))
+        : [],
+    };
+  },
+
+  toJSON(message: VoiceChannelUserList): unknown {
+    const obj: any = {};
+    if (message.voice_channel_users) {
+      obj.voice_channel_users = message.voice_channel_users.map((e) => e ? VoiceChannelUser.toJSON(e) : undefined);
+    } else {
+      obj.voice_channel_users = [];
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<VoiceChannelUserList>, I>>(base?: I): VoiceChannelUserList {
+    return VoiceChannelUserList.fromPartial(base ?? {});
+  },
+
+  fromPartial<I extends Exact<DeepPartial<VoiceChannelUserList>, I>>(object: I): VoiceChannelUserList {
+    const message = createBaseVoiceChannelUserList();
+    message.voice_channel_users = object.voice_channel_users?.map((e) => VoiceChannelUser.fromPartial(e)) || [];
     return message;
   },
 };
