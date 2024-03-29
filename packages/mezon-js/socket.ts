@@ -116,6 +116,8 @@ export interface MessageReactionEvent {
   emoji: string;
   // count of emoji
   count: number;
+  // action
+  action: boolean;
 }
 
 /** User is react to message */
