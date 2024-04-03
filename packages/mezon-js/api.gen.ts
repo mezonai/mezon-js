@@ -250,6 +250,10 @@ export interface ApiChannelMessageHeader {
   id?: string;
   //
   timestamp?: string;
+  // sender id
+  sender_id: string;
+  // content
+  content: string;
 }
 
 /** A list of channel messages, usually a result of a list operation. */

@@ -141,6 +141,8 @@ export interface ApiChannelMessage {
 export interface ApiChannelMessageHeader {
     id?: string;
     timestamp?: string;
+    sender_id: string;
+    content: string;
 }
 /** A list of channel messages, usually a result of a list operation. */
 export interface ApiChannelMessageList {
