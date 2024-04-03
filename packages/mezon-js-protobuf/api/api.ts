@@ -1723,6 +1723,10 @@ export interface ChannelMessageHeader {
   id: string;
   /** the time stamp */
   timestamp: string;
+  /** the sender id */
+  sender_id: string;
+  /** the content */
+  content: string;
 }
 
 /** Channel description record */
@@ -11706,7 +11710,7 @@ export const ListCategoryDescsRequest = {
 };
 
 function createBaseChannelMessageHeader(): ChannelMessageHeader {
-  return { id: "", timestamp: "" };
+  return { id: "", timestamp: "", sender_id: "", content: "" };
 }
 
 export const ChannelMessageHeader = {
@@ -11716,6 +11720,12 @@ export const ChannelMessageHeader = {
     }
     if (message.timestamp !== "") {
       writer.uint32(18).string(message.timestamp);
+    }
+    if (message.sender_id !== "") {
+      writer.uint32(26).string(message.sender_id);
+    }
+    if (message.content !== "") {
+      writer.uint32(34).string(message.content);
     }
     return writer;
   },
@@ -11733,6 +11743,12 @@ export const ChannelMessageHeader = {
         case 2:
           message.timestamp = reader.string();
           break;
+        case 3:
+          message.sender_id = reader.string();
+          break;
+        case 4:
+          message.content = reader.string();
+          break;
         default:
           reader.skipType(tag & 7);
           break;
@@ -11745,6 +11761,8 @@ export const ChannelMessageHeader = {
     return {
       id: isSet(object.id) ? String(object.id) : "",
       timestamp: isSet(object.timestamp) ? String(object.timestamp) : "",
+      sender_id: isSet(object.sender_id) ? String(object.sender_id) : "",
+      content: isSet(object.content) ? String(object.content) : "",
     };
   },
 
@@ -11752,6 +11770,8 @@ export const ChannelMessageHeader = {
     const obj: any = {};
     message.id !== undefined && (obj.id = message.id);
     message.timestamp !== undefined && (obj.timestamp = message.timestamp);
+    message.sender_id !== undefined && (obj.sender_id = message.sender_id);
+    message.content !== undefined && (obj.content = message.content);
     return obj;
   },
 
@@ -11763,6 +11783,8 @@ export const ChannelMessageHeader = {
     const message = createBaseChannelMessageHeader();
     message.id = object.id ?? "";
     message.timestamp = object.timestamp ?? "";
+    message.sender_id = object.sender_id ?? "";
+    message.content = object.content ?? "";
     return message;
   },
 };
