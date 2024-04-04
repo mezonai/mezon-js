@@ -4376,7 +4376,9 @@ var Client = class {
               username: gu.user.username,
               metadata: gu.user.metadata ? JSON.parse(gu.user.metadata) : void 0
             },
-            role_id: gu.role_id
+            role_id: gu.role_id,
+            thread_id: gu.thread_id,
+            id: gu.id
           });
         });
         return Promise.resolve(result);
