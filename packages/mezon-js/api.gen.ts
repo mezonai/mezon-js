@@ -10,6 +10,8 @@ export interface ChannelUserListChannelUser {
   id?: string;
   //Their relationship to the role.
   role_id?: string;
+  //
+  thread_id?: string;
   //User.
   user?: ApiUser;
 }

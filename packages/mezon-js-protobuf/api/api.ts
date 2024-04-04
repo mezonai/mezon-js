@@ -916,6 +916,8 @@ export interface ChannelUserList_ChannelUser {
   role_id: string;
   /** Id */
   id: string;
+  /** thread id */
+  thread_id: string;
 }
 
 /** A list of users belonging to a channel, along with their role. */
@@ -6787,7 +6789,7 @@ export const ChannelUserList = {
 };
 
 function createBaseChannelUserList_ChannelUser(): ChannelUserList_ChannelUser {
-  return { user: undefined, role_id: "", id: "" };
+  return { user: undefined, role_id: "", id: "", thread_id: "" };
 }
 
 export const ChannelUserList_ChannelUser = {
@@ -6800,6 +6802,9 @@ export const ChannelUserList_ChannelUser = {
     }
     if (message.id !== "") {
       writer.uint32(26).string(message.id);
+    }
+    if (message.thread_id !== "") {
+      writer.uint32(34).string(message.thread_id);
     }
     return writer;
   },
@@ -6820,6 +6825,9 @@ export const ChannelUserList_ChannelUser = {
         case 3:
           message.id = reader.string();
           break;
+        case 4:
+          message.thread_id = reader.string();
+          break;
         default:
           reader.skipType(tag & 7);
           break;
@@ -6833,6 +6841,7 @@ export const ChannelUserList_ChannelUser = {
       user: isSet(object.user) ? User.fromJSON(object.user) : undefined,
       role_id: isSet(object.role_id) ? String(object.role_id) : "",
       id: isSet(object.id) ? String(object.id) : "",
+      thread_id: isSet(object.thread_id) ? String(object.thread_id) : "",
     };
   },
 
@@ -6841,6 +6850,7 @@ export const ChannelUserList_ChannelUser = {
     message.user !== undefined && (obj.user = message.user ? User.toJSON(message.user) : undefined);
     message.role_id !== undefined && (obj.role_id = message.role_id);
     message.id !== undefined && (obj.id = message.id);
+    message.thread_id !== undefined && (obj.thread_id = message.thread_id);
     return obj;
   },
 
@@ -6853,6 +6863,7 @@ export const ChannelUserList_ChannelUser = {
     message.user = (object.user !== undefined && object.user !== null) ? User.fromPartial(object.user) : undefined;
     message.role_id = object.role_id ?? "";
     message.id = object.id ?? "";
+    message.thread_id = object.thread_id ?? "";
     return message;
   },
 };
