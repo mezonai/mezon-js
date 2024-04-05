@@ -573,6 +573,8 @@ export interface MessageDeletedEvent {
 export interface VoiceLeavedEvent {
     /** id voice */
     id: string;
+    /** The unique identifier of the chat clan. */
+    clan_id: string;
     /** voice channel name */
     voice_channel_id: string;
     /** last participant */
@@ -1055,6 +1057,7 @@ export declare const Envelope: {
         } | undefined;
         voice_leaved_event?: {
             id?: string | undefined;
+            clan_id?: string | undefined;
             voice_channel_id?: string | undefined;
             last_participant?: boolean | undefined;
         } | undefined;
@@ -2169,10 +2172,12 @@ export declare const Envelope: {
         } & { [K_86 in Exclude<keyof I["voice_joined_event"], keyof VoiceJoinedEvent>]: never; }) | undefined;
         voice_leaved_event?: ({
             id?: string | undefined;
+            clan_id?: string | undefined;
             voice_channel_id?: string | undefined;
             last_participant?: boolean | undefined;
         } & {
             id?: string | undefined;
+            clan_id?: string | undefined;
             voice_channel_id?: string | undefined;
             last_participant?: boolean | undefined;
         } & { [K_87 in Exclude<keyof I["voice_leaved_event"], keyof VoiceLeavedEvent>]: never; }) | undefined;
@@ -2576,6 +2581,7 @@ export declare const Envelope: {
         } | undefined;
         voice_leaved_event?: {
             id?: string | undefined;
+            clan_id?: string | undefined;
             voice_channel_id?: string | undefined;
             last_participant?: boolean | undefined;
         } | undefined;
@@ -3690,10 +3696,12 @@ export declare const Envelope: {
         } & { [K_175 in Exclude<keyof I_1["voice_joined_event"], keyof VoiceJoinedEvent>]: never; }) | undefined;
         voice_leaved_event?: ({
             id?: string | undefined;
+            clan_id?: string | undefined;
             voice_channel_id?: string | undefined;
             last_participant?: boolean | undefined;
         } & {
             id?: string | undefined;
+            clan_id?: string | undefined;
             voice_channel_id?: string | undefined;
             last_participant?: boolean | undefined;
         } & { [K_176 in Exclude<keyof I_1["voice_leaved_event"], keyof VoiceLeavedEvent>]: never; }) | undefined;
@@ -6060,19 +6068,23 @@ export declare const VoiceLeavedEvent: {
     toJSON(message: VoiceLeavedEvent): unknown;
     create<I extends {
         id?: string | undefined;
+        clan_id?: string | undefined;
         voice_channel_id?: string | undefined;
         last_participant?: boolean | undefined;
     } & {
         id?: string | undefined;
+        clan_id?: string | undefined;
         voice_channel_id?: string | undefined;
         last_participant?: boolean | undefined;
     } & { [K in Exclude<keyof I, keyof VoiceLeavedEvent>]: never; }>(base?: I | undefined): VoiceLeavedEvent;
     fromPartial<I_1 extends {
         id?: string | undefined;
+        clan_id?: string | undefined;
         voice_channel_id?: string | undefined;
         last_participant?: boolean | undefined;
     } & {
         id?: string | undefined;
+        clan_id?: string | undefined;
         voice_channel_id?: string | undefined;
         last_participant?: boolean | undefined;
     } & { [K_1 in Exclude<keyof I_1, keyof VoiceLeavedEvent>]: never; }>(object: I_1): VoiceLeavedEvent;
