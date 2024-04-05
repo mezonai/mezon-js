@@ -775,6 +775,8 @@ export interface MessageDeletedEvent {
 export interface VoiceLeavedEvent {
   /** id voice */
   id: string;
+  /** The unique identifier of the chat clan. */
+  clan_id: string;
   /** voice channel name */
   voice_channel_id: string;
   /** last participant */
@@ -5110,7 +5112,7 @@ export const MessageDeletedEvent = {
 };
 
 function createBaseVoiceLeavedEvent(): VoiceLeavedEvent {
-  return { id: "", voice_channel_id: "", last_participant: false };
+  return { id: "", clan_id: "", voice_channel_id: "", last_participant: false };
 }
 
 export const VoiceLeavedEvent = {
@@ -5118,11 +5120,14 @@ export const VoiceLeavedEvent = {
     if (message.id !== "") {
       writer.uint32(10).string(message.id);
     }
+    if (message.clan_id !== "") {
+      writer.uint32(18).string(message.clan_id);
+    }
     if (message.voice_channel_id !== "") {
-      writer.uint32(18).string(message.voice_channel_id);
+      writer.uint32(26).string(message.voice_channel_id);
     }
     if (message.last_participant === true) {
-      writer.uint32(24).bool(message.last_participant);
+      writer.uint32(32).bool(message.last_participant);
     }
     return writer;
   },
@@ -5138,9 +5143,12 @@ export const VoiceLeavedEvent = {
           message.id = reader.string();
           break;
         case 2:
-          message.voice_channel_id = reader.string();
+          message.clan_id = reader.string();
           break;
         case 3:
+          message.voice_channel_id = reader.string();
+          break;
+        case 4:
           message.last_participant = reader.bool();
           break;
         default:
@@ -5154,6 +5162,7 @@ export const VoiceLeavedEvent = {
   fromJSON(object: any): VoiceLeavedEvent {
     return {
       id: isSet(object.id) ? String(object.id) : "",
+      clan_id: isSet(object.clan_id) ? String(object.clan_id) : "",
       voice_channel_id: isSet(object.voice_channel_id) ? String(object.voice_channel_id) : "",
       last_participant: isSet(object.last_participant) ? Boolean(object.last_participant) : false,
     };
@@ -5162,6 +5171,7 @@ export const VoiceLeavedEvent = {
   toJSON(message: VoiceLeavedEvent): unknown {
     const obj: any = {};
     message.id !== undefined && (obj.id = message.id);
+    message.clan_id !== undefined && (obj.clan_id = message.clan_id);
     message.voice_channel_id !== undefined && (obj.voice_channel_id = message.voice_channel_id);
     message.last_participant !== undefined && (obj.last_participant = message.last_participant);
     return obj;
@@ -5174,6 +5184,7 @@ export const VoiceLeavedEvent = {
   fromPartial<I extends Exact<DeepPartial<VoiceLeavedEvent>, I>>(object: I): VoiceLeavedEvent {
     const message = createBaseVoiceLeavedEvent();
     message.id = object.id ?? "";
+    message.clan_id = object.clan_id ?? "";
     message.voice_channel_id = object.voice_channel_id ?? "";
     message.last_participant = object.last_participant ?? false;
     return message;

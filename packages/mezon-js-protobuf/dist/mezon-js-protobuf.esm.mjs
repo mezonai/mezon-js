@@ -6093,18 +6093,21 @@ var MessageDeletedEvent = {
   }
 };
 function createBaseVoiceLeavedEvent() {
-  return { id: "", voice_channel_id: "", last_participant: false };
+  return { id: "", clan_id: "", voice_channel_id: "", last_participant: false };
 }
 var VoiceLeavedEvent = {
   encode(message, writer = import_minimal4.default.Writer.create()) {
     if (message.id !== "") {
       writer.uint32(10).string(message.id);
     }
+    if (message.clan_id !== "") {
+      writer.uint32(18).string(message.clan_id);
+    }
     if (message.voice_channel_id !== "") {
-      writer.uint32(18).string(message.voice_channel_id);
+      writer.uint32(26).string(message.voice_channel_id);
     }
     if (message.last_participant === true) {
-      writer.uint32(24).bool(message.last_participant);
+      writer.uint32(32).bool(message.last_participant);
     }
     return writer;
   },
@@ -6119,9 +6122,12 @@ var VoiceLeavedEvent = {
           message.id = reader.string();
           break;
         case 2:
-          message.voice_channel_id = reader.string();
+          message.clan_id = reader.string();
           break;
         case 3:
+          message.voice_channel_id = reader.string();
+          break;
+        case 4:
           message.last_participant = reader.bool();
           break;
         default:
@@ -6134,6 +6140,7 @@ var VoiceLeavedEvent = {
   fromJSON(object) {
     return {
       id: isSet4(object.id) ? String(object.id) : "",
+      clan_id: isSet4(object.clan_id) ? String(object.clan_id) : "",
       voice_channel_id: isSet4(object.voice_channel_id) ? String(object.voice_channel_id) : "",
       last_participant: isSet4(object.last_participant) ? Boolean(object.last_participant) : false
     };
@@ -6141,6 +6148,7 @@ var VoiceLeavedEvent = {
   toJSON(message) {
     const obj = {};
     message.id !== void 0 && (obj.id = message.id);
+    message.clan_id !== void 0 && (obj.clan_id = message.clan_id);
     message.voice_channel_id !== void 0 && (obj.voice_channel_id = message.voice_channel_id);
     message.last_participant !== void 0 && (obj.last_participant = message.last_participant);
     return obj;
@@ -6149,11 +6157,12 @@ var VoiceLeavedEvent = {
     return VoiceLeavedEvent.fromPartial(base != null ? base : {});
   },
   fromPartial(object) {
-    var _a, _b, _c;
+    var _a, _b, _c, _d;
     const message = createBaseVoiceLeavedEvent();
     message.id = (_a = object.id) != null ? _a : "";
-    message.voice_channel_id = (_b = object.voice_channel_id) != null ? _b : "";
-    message.last_participant = (_c = object.last_participant) != null ? _c : false;
+    message.clan_id = (_b = object.clan_id) != null ? _b : "";
+    message.voice_channel_id = (_c = object.voice_channel_id) != null ? _c : "";
+    message.last_participant = (_d = object.last_participant) != null ? _d : false;
     return message;
   }
 };
