@@ -151,7 +151,7 @@ export interface ApiAddRoleChannelDescRequest {
   //
   channel_id?: string;
   //
-  role_id?: string;
+  role_ids?: Array<string>;
 }
 
 /**  */
@@ -3473,7 +3473,7 @@ export class MezonApi {
 }
 
   /**  */
-  addRoleChannelDesc(bearerToken: string,
+  addRolesChannelDesc(bearerToken: string,
       body:ApiAddRoleChannelDescRequest,
       options: any = {}): Promise<any> {
     

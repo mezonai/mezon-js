@@ -2616,7 +2616,7 @@ var MezonApi = class {
     ]);
   }
   /**  */
-  addRoleChannelDesc(bearerToken, body, options = {}) {
+  addRolesChannelDesc(bearerToken, body, options = {}) {
     if (body === null || body === void 0) {
       throw new Error("'body' is a required parameter but is null or undefined.");
     }
@@ -4170,12 +4170,12 @@ var Client = class {
     });
   }
   /** add role for channel. */
-  addRoleChannelDesc(session, request) {
+  addRolesChannelDesc(session, request) {
     return __async(this, null, function* () {
       if (this.autoRefreshSession && session.refresh_token && session.isexpired((Date.now() + this.expiredTimespanMs) / 1e3)) {
         yield this.sessionRefresh(session);
       }
-      return this.apiClient.addRoleChannelDesc(session.token, request).then((response) => {
+      return this.apiClient.addRolesChannelDesc(session.token, request).then((response) => {
         return response !== void 0;
       });
     });

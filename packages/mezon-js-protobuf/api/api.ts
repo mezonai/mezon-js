@@ -1798,7 +1798,7 @@ export interface ListChannelDescsRequest {
 /** Add a role for channel. */
 export interface AddRoleChannelDescRequest {
   /** This is the role that needs to be added to the channel */
-  role_id: string;
+  role_ids: string[];
   /** This is a channel that needs more roles */
   channel_id: string;
 }
@@ -12180,13 +12180,13 @@ export const ListChannelDescsRequest = {
 };
 
 function createBaseAddRoleChannelDescRequest(): AddRoleChannelDescRequest {
-  return { role_id: "", channel_id: "" };
+  return { role_ids: [], channel_id: "" };
 }
 
 export const AddRoleChannelDescRequest = {
   encode(message: AddRoleChannelDescRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.role_id !== "") {
-      writer.uint32(10).string(message.role_id);
+    for (const v of message.role_ids) {
+      writer.uint32(10).string(v!);
     }
     if (message.channel_id !== "") {
       writer.uint32(18).string(message.channel_id);
@@ -12202,7 +12202,7 @@ export const AddRoleChannelDescRequest = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          message.role_id = reader.string();
+          message.role_ids.push(reader.string());
           break;
         case 2:
           message.channel_id = reader.string();
@@ -12217,14 +12217,18 @@ export const AddRoleChannelDescRequest = {
 
   fromJSON(object: any): AddRoleChannelDescRequest {
     return {
-      role_id: isSet(object.role_id) ? String(object.role_id) : "",
+      role_ids: Array.isArray(object?.role_ids) ? object.role_ids.map((e: any) => String(e)) : [],
       channel_id: isSet(object.channel_id) ? String(object.channel_id) : "",
     };
   },
 
   toJSON(message: AddRoleChannelDescRequest): unknown {
     const obj: any = {};
-    message.role_id !== undefined && (obj.role_id = message.role_id);
+    if (message.role_ids) {
+      obj.role_ids = message.role_ids.map((e) => e);
+    } else {
+      obj.role_ids = [];
+    }
     message.channel_id !== undefined && (obj.channel_id = message.channel_id);
     return obj;
   },
@@ -12235,7 +12239,7 @@ export const AddRoleChannelDescRequest = {
 
   fromPartial<I extends Exact<DeepPartial<AddRoleChannelDescRequest>, I>>(object: I): AddRoleChannelDescRequest {
     const message = createBaseAddRoleChannelDescRequest();
-    message.role_id = object.role_id ?? "";
+    message.role_ids = object.role_ids?.map((e) => e) || [];
     message.channel_id = object.channel_id ?? "";
     return message;
   },
