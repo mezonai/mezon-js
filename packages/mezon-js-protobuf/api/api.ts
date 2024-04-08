@@ -1795,6 +1795,14 @@ export interface ListChannelDescsRequest {
   channel_type: number;
 }
 
+/** Add a role for channel. */
+export interface AddRoleChannelDescRequest {
+  /** This is the role that needs to be added to the channel */
+  role_id: string;
+  /** This is a channel that needs more roles */
+  channel_id: string;
+}
+
 /** Create a channel within clan. */
 export interface CreateChannelDescRequest {
   /** The clan of this channel */
@@ -1873,6 +1881,7 @@ export interface Role {
   allow_mention: number;
   role_user_list: RoleUserList | undefined;
   permission_list: PermissionList | undefined;
+  role_channel_active: number;
 }
 
 /** Permission record */
@@ -12170,6 +12179,68 @@ export const ListChannelDescsRequest = {
   },
 };
 
+function createBaseAddRoleChannelDescRequest(): AddRoleChannelDescRequest {
+  return { role_id: "", channel_id: "" };
+}
+
+export const AddRoleChannelDescRequest = {
+  encode(message: AddRoleChannelDescRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.role_id !== "") {
+      writer.uint32(10).string(message.role_id);
+    }
+    if (message.channel_id !== "") {
+      writer.uint32(18).string(message.channel_id);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): AddRoleChannelDescRequest {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseAddRoleChannelDescRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.role_id = reader.string();
+          break;
+        case 2:
+          message.channel_id = reader.string();
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): AddRoleChannelDescRequest {
+    return {
+      role_id: isSet(object.role_id) ? String(object.role_id) : "",
+      channel_id: isSet(object.channel_id) ? String(object.channel_id) : "",
+    };
+  },
+
+  toJSON(message: AddRoleChannelDescRequest): unknown {
+    const obj: any = {};
+    message.role_id !== undefined && (obj.role_id = message.role_id);
+    message.channel_id !== undefined && (obj.channel_id = message.channel_id);
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<AddRoleChannelDescRequest>, I>>(base?: I): AddRoleChannelDescRequest {
+    return AddRoleChannelDescRequest.fromPartial(base ?? {});
+  },
+
+  fromPartial<I extends Exact<DeepPartial<AddRoleChannelDescRequest>, I>>(object: I): AddRoleChannelDescRequest {
+    const message = createBaseAddRoleChannelDescRequest();
+    message.role_id = object.role_id ?? "";
+    message.channel_id = object.channel_id ?? "";
+    return message;
+  },
+};
+
 function createBaseCreateChannelDescRequest(): CreateChannelDescRequest {
   return {
     clan_id: "",
@@ -12619,6 +12690,7 @@ function createBaseRole(): Role {
     allow_mention: 0,
     role_user_list: undefined,
     permission_list: undefined,
+    role_channel_active: 0,
   };
 }
 
@@ -12662,6 +12734,9 @@ export const Role = {
     }
     if (message.permission_list !== undefined) {
       PermissionList.encode(message.permission_list, writer.uint32(106).fork()).ldelim();
+    }
+    if (message.role_channel_active !== 0) {
+      writer.uint32(112).int32(message.role_channel_active);
     }
     return writer;
   },
@@ -12712,6 +12787,9 @@ export const Role = {
         case 13:
           message.permission_list = PermissionList.decode(reader, reader.uint32());
           break;
+        case 14:
+          message.role_channel_active = reader.int32();
+          break;
         default:
           reader.skipType(tag & 7);
           break;
@@ -12735,6 +12813,7 @@ export const Role = {
       allow_mention: isSet(object.allow_mention) ? Number(object.allow_mention) : 0,
       role_user_list: isSet(object.role_user_list) ? RoleUserList.fromJSON(object.role_user_list) : undefined,
       permission_list: isSet(object.permission_list) ? PermissionList.fromJSON(object.permission_list) : undefined,
+      role_channel_active: isSet(object.role_channel_active) ? Number(object.role_channel_active) : 0,
     };
   },
 
@@ -12755,6 +12834,7 @@ export const Role = {
       (obj.role_user_list = message.role_user_list ? RoleUserList.toJSON(message.role_user_list) : undefined);
     message.permission_list !== undefined &&
       (obj.permission_list = message.permission_list ? PermissionList.toJSON(message.permission_list) : undefined);
+    message.role_channel_active !== undefined && (obj.role_channel_active = Math.round(message.role_channel_active));
     return obj;
   },
 
@@ -12781,6 +12861,7 @@ export const Role = {
     message.permission_list = (object.permission_list !== undefined && object.permission_list !== null)
       ? PermissionList.fromPartial(object.permission_list)
       : undefined;
+    message.role_channel_active = object.role_channel_active ?? 0;
     return message;
   },
 };
