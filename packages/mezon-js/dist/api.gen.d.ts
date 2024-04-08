@@ -380,6 +380,7 @@ export interface ApiRole {
     role_user_list?: ApiRoleUserList;
     slug?: string;
     title?: string;
+    role_channel_active?: string;
 }
 /** A list of role description, usually a result of a list operation. */
 export interface ApiRoleList {
