@@ -83,6 +83,11 @@ export interface ApiAccountSteam {
     token?: string;
     vars?: Record<string, string>;
 }
+/** Add a role for channel. */
+export interface ApiAddRoleChannelDescRequest {
+    channel_id?: string;
+    role_id?: string;
+}
 /**  */
 export interface ApiCategoryDesc {
     category_id?: string;
@@ -675,6 +680,10 @@ export declare class MezonApi {
     listNotifications(bearerToken: string, limit?: number, cacheableCursor?: string, options?: any): Promise<ApiNotificationList>;
     /**  */
     GetPermissionOfUserInTheClan(bearerToken: string, clanId: string, options?: any): Promise<ApiPermissionList>;
+    /**  */
+    addRoleChannelDesc(bearerToken: string, body: ApiAddRoleChannelDescRequest, options?: any): Promise<any>;
+    /** Update a role when Delete a role by ID. */
+    deleteRoleChannelDesc(bearerToken: string, roleId: string, body: {}, options?: any): Promise<any>;
     /** List user roles */
     listRoles(bearerToken: string, limit?: number, state?: number, cursor?: string, clanId?: string, options?: any): Promise<ApiRoleList>;
     /** Create a new role for clan. */

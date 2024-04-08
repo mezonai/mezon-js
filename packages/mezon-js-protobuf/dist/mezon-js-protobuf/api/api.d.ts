@@ -1320,6 +1320,13 @@ export interface ListChannelDescsRequest {
     /** channel type */
     channel_type: number;
 }
+/** Add a role for channel. */
+export interface AddRoleChannelDescRequest {
+    /** This is the role that needs to be added to the channel */
+    role_id: string;
+    /** This is a channel that needs more roles */
+    channel_id: string;
+}
 /** Create a channel within clan. */
 export interface CreateChannelDescRequest {
     /** The clan of this channel */
@@ -1388,6 +1395,7 @@ export interface Role {
     allow_mention: number;
     role_user_list: RoleUserList | undefined;
     permission_list: PermissionList | undefined;
+    role_channel_active: number;
 }
 /** Permission record */
 export interface Permission {
@@ -8859,6 +8867,26 @@ export declare const ListChannelDescsRequest: {
         channel_type?: number | undefined;
     } & { [K_1 in Exclude<keyof I_1, keyof ListChannelDescsRequest>]: never; }>(object: I_1): ListChannelDescsRequest;
 };
+export declare const AddRoleChannelDescRequest: {
+    encode(message: AddRoleChannelDescRequest, writer?: _m0.Writer): _m0.Writer;
+    decode(input: _m0.Reader | Uint8Array, length?: number): AddRoleChannelDescRequest;
+    fromJSON(object: any): AddRoleChannelDescRequest;
+    toJSON(message: AddRoleChannelDescRequest): unknown;
+    create<I extends {
+        role_id?: string | undefined;
+        channel_id?: string | undefined;
+    } & {
+        role_id?: string | undefined;
+        channel_id?: string | undefined;
+    } & { [K in Exclude<keyof I, keyof AddRoleChannelDescRequest>]: never; }>(base?: I | undefined): AddRoleChannelDescRequest;
+    fromPartial<I_1 extends {
+        role_id?: string | undefined;
+        channel_id?: string | undefined;
+    } & {
+        role_id?: string | undefined;
+        channel_id?: string | undefined;
+    } & { [K_1 in Exclude<keyof I_1, keyof AddRoleChannelDescRequest>]: never; }>(object: I_1): AddRoleChannelDescRequest;
+};
 export declare const CreateChannelDescRequest: {
     encode(message: CreateChannelDescRequest, writer?: _m0.Writer): _m0.Writer;
     decode(input: _m0.Reader | Uint8Array, length?: number): CreateChannelDescRequest;
@@ -9037,6 +9065,7 @@ export declare const Role: {
                 active?: number | undefined;
             }[] | undefined;
         } | undefined;
+        role_channel_active?: number | undefined;
     } & {
         id?: string | undefined;
         title?: string | undefined;
@@ -9131,6 +9160,7 @@ export declare const Role: {
                 active?: number | undefined;
             }[]>]: never; }) | undefined;
         } & { [K_5 in Exclude<keyof I["permission_list"], "permissions">]: never; }) | undefined;
+        role_channel_active?: number | undefined;
     } & { [K_6 in Exclude<keyof I, keyof Role>]: never; }>(base?: I | undefined): Role;
     fromPartial<I_1 extends {
         id?: string | undefined;
@@ -9165,6 +9195,7 @@ export declare const Role: {
                 active?: number | undefined;
             }[] | undefined;
         } | undefined;
+        role_channel_active?: number | undefined;
     } & {
         id?: string | undefined;
         title?: string | undefined;
@@ -9259,6 +9290,7 @@ export declare const Role: {
                 active?: number | undefined;
             }[]>]: never; }) | undefined;
         } & { [K_12 in Exclude<keyof I_1["permission_list"], "permissions">]: never; }) | undefined;
+        role_channel_active?: number | undefined;
     } & { [K_13 in Exclude<keyof I_1, keyof Role>]: never; }>(object: I_1): Role;
 };
 export declare const Permission: {
@@ -9332,6 +9364,7 @@ export declare const RoleList: {
                     active?: number | undefined;
                 }[] | undefined;
             } | undefined;
+            role_channel_active?: number | undefined;
         }[] | undefined;
         next_cursor?: string | undefined;
         prev_cursor?: string | undefined;
@@ -9370,6 +9403,7 @@ export declare const RoleList: {
                     active?: number | undefined;
                 }[] | undefined;
             } | undefined;
+            role_channel_active?: number | undefined;
         }[] & ({
             id?: string | undefined;
             title?: string | undefined;
@@ -9403,6 +9437,7 @@ export declare const RoleList: {
                     active?: number | undefined;
                 }[] | undefined;
             } | undefined;
+            role_channel_active?: number | undefined;
         } & {
             id?: string | undefined;
             title?: string | undefined;
@@ -9497,6 +9532,7 @@ export declare const RoleList: {
                     active?: number | undefined;
                 }[]>]: never; }) | undefined;
             } & { [K_5 in Exclude<keyof I["roles"][number]["permission_list"], "permissions">]: never; }) | undefined;
+            role_channel_active?: number | undefined;
         } & { [K_6 in Exclude<keyof I["roles"][number], keyof Role>]: never; })[] & { [K_7 in Exclude<keyof I["roles"], keyof {
             id?: string | undefined;
             title?: string | undefined;
@@ -9530,6 +9566,7 @@ export declare const RoleList: {
                     active?: number | undefined;
                 }[] | undefined;
             } | undefined;
+            role_channel_active?: number | undefined;
         }[]>]: never; }) | undefined;
         next_cursor?: string | undefined;
         prev_cursor?: string | undefined;
@@ -9569,6 +9606,7 @@ export declare const RoleList: {
                     active?: number | undefined;
                 }[] | undefined;
             } | undefined;
+            role_channel_active?: number | undefined;
         }[] | undefined;
         next_cursor?: string | undefined;
         prev_cursor?: string | undefined;
@@ -9607,6 +9645,7 @@ export declare const RoleList: {
                     active?: number | undefined;
                 }[] | undefined;
             } | undefined;
+            role_channel_active?: number | undefined;
         }[] & ({
             id?: string | undefined;
             title?: string | undefined;
@@ -9640,6 +9679,7 @@ export declare const RoleList: {
                     active?: number | undefined;
                 }[] | undefined;
             } | undefined;
+            role_channel_active?: number | undefined;
         } & {
             id?: string | undefined;
             title?: string | undefined;
@@ -9734,6 +9774,7 @@ export declare const RoleList: {
                     active?: number | undefined;
                 }[]>]: never; }) | undefined;
             } & { [K_14 in Exclude<keyof I_1["roles"][number]["permission_list"], "permissions">]: never; }) | undefined;
+            role_channel_active?: number | undefined;
         } & { [K_15 in Exclude<keyof I_1["roles"][number], keyof Role>]: never; })[] & { [K_16 in Exclude<keyof I_1["roles"], keyof {
             id?: string | undefined;
             title?: string | undefined;
@@ -9767,6 +9808,7 @@ export declare const RoleList: {
                     active?: number | undefined;
                 }[] | undefined;
             } | undefined;
+            role_channel_active?: number | undefined;
         }[]>]: never; }) | undefined;
         next_cursor?: string | undefined;
         prev_cursor?: string | undefined;

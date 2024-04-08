@@ -38,6 +38,7 @@ import {
   ApiRoleUserList,
   ApiRole,
   ApiCreateRoleRequest,
+  ApiAddRoleChannelDescRequest,
   ApiCreateCategoryDescRequest,
   ApiUpdateCategoryDescRequest,
   ApiDeleteStorageObjectsRequest,
@@ -730,6 +731,30 @@ export class Client {
 
     return this.apiClient.createRole(session.token, request).then((response: ApiRole) => {
       return Promise.resolve(response);
+    });
+  }
+
+  /** add role for channel. */
+  async addRoleChannelDesc(session: Session, request: ApiAddRoleChannelDescRequest): Promise<boolean> {
+    if (this.autoRefreshSession && session.refresh_token &&
+        session.isexpired((Date.now() + this.expiredTimespanMs)/1000)) {
+        await this.sessionRefresh(session);
+    }
+
+    return this.apiClient.addRoleChannelDesc(session.token, request).then((response: ApiRole) => {
+      return response !== undefined;
+    });
+  }
+
+   /** Update action role when delete role */
+   async deleteRoleChannelDesc(session: Session, roleId:string, request:{}): Promise<boolean> {
+    if (this.autoRefreshSession && session.refresh_token &&
+        session.isexpired((Date.now() + this.expiredTimespanMs)/1000)) {
+        await this.sessionRefresh(session);
+    }
+
+    return this.apiClient.deleteRoleChannelDesc(session.token, roleId, request).then((response: any) => {
+      return response !== undefined;
     });
   }
 
