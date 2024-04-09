@@ -390,7 +390,7 @@ export declare class Client {
     /** Create a new role for clan. */
     createRole(session: Session, request: ApiCreateRoleRequest): Promise<ApiRole>;
     /** add role for channel. */
-    addRoleChannelDesc(session: Session, request: ApiAddRoleChannelDescRequest): Promise<boolean>;
+    addRolesChannelDesc(session: Session, request: ApiAddRoleChannelDescRequest): Promise<boolean>;
     /** Update action role when delete role */
     deleteRoleChannelDesc(session: Session, roleId: string, request: {}): Promise<boolean>;
     /** A socket created with the client's configuration. */

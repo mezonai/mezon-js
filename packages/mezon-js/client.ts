@@ -735,13 +735,13 @@ export class Client {
   }
 
   /** add role for channel. */
-  async addRoleChannelDesc(session: Session, request: ApiAddRoleChannelDescRequest): Promise<boolean> {
+  async addRolesChannelDesc(session: Session, request: ApiAddRoleChannelDescRequest): Promise<boolean> {
     if (this.autoRefreshSession && session.refresh_token &&
         session.isexpired((Date.now() + this.expiredTimespanMs)/1000)) {
         await this.sessionRefresh(session);
     }
 
-    return this.apiClient.addRoleChannelDesc(session.token, request).then((response: ApiRole) => {
+    return this.apiClient.addRolesChannelDesc(session.token, request).then((response: ApiRole) => {
       return response !== undefined;
     });
   }

@@ -1323,7 +1323,7 @@ export interface ListChannelDescsRequest {
 /** Add a role for channel. */
 export interface AddRoleChannelDescRequest {
     /** This is the role that needs to be added to the channel */
-    role_id: string;
+    role_ids: string[];
     /** This is a channel that needs more roles */
     channel_id: string;
 }
@@ -8873,19 +8873,19 @@ export declare const AddRoleChannelDescRequest: {
     fromJSON(object: any): AddRoleChannelDescRequest;
     toJSON(message: AddRoleChannelDescRequest): unknown;
     create<I extends {
-        role_id?: string | undefined;
+        role_ids?: string[] | undefined;
         channel_id?: string | undefined;
     } & {
-        role_id?: string | undefined;
+        role_ids?: (string[] & string[] & { [K in Exclude<keyof I["role_ids"], keyof string[]>]: never; }) | undefined;
         channel_id?: string | undefined;
-    } & { [K in Exclude<keyof I, keyof AddRoleChannelDescRequest>]: never; }>(base?: I | undefined): AddRoleChannelDescRequest;
+    } & { [K_1 in Exclude<keyof I, keyof AddRoleChannelDescRequest>]: never; }>(base?: I | undefined): AddRoleChannelDescRequest;
     fromPartial<I_1 extends {
-        role_id?: string | undefined;
+        role_ids?: string[] | undefined;
         channel_id?: string | undefined;
     } & {
-        role_id?: string | undefined;
+        role_ids?: (string[] & string[] & { [K_2 in Exclude<keyof I_1["role_ids"], keyof string[]>]: never; }) | undefined;
         channel_id?: string | undefined;
-    } & { [K_1 in Exclude<keyof I_1, keyof AddRoleChannelDescRequest>]: never; }>(object: I_1): AddRoleChannelDescRequest;
+    } & { [K_3 in Exclude<keyof I_1, keyof AddRoleChannelDescRequest>]: never; }>(object: I_1): AddRoleChannelDescRequest;
 };
 export declare const CreateChannelDescRequest: {
     encode(message: CreateChannelDescRequest, writer?: _m0.Writer): _m0.Writer;
