@@ -1994,6 +1994,8 @@ export interface CreateRoleRequest {
 export interface DeleteRoleRequest {
   /** The id of a role. */
   role_id: string;
+  /** The id of a channel */
+  channel_id: string;
 }
 
 /** Update fields in a given role. */
@@ -13674,13 +13676,16 @@ export const CreateRoleRequest = {
 };
 
 function createBaseDeleteRoleRequest(): DeleteRoleRequest {
-  return { role_id: "" };
+  return { role_id: "", channel_id: "" };
 }
 
 export const DeleteRoleRequest = {
   encode(message: DeleteRoleRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.role_id !== "") {
       writer.uint32(10).string(message.role_id);
+    }
+    if (message.channel_id !== "") {
+      writer.uint32(18).string(message.channel_id);
     }
     return writer;
   },
@@ -13695,6 +13700,9 @@ export const DeleteRoleRequest = {
         case 1:
           message.role_id = reader.string();
           break;
+        case 2:
+          message.channel_id = reader.string();
+          break;
         default:
           reader.skipType(tag & 7);
           break;
@@ -13704,12 +13712,16 @@ export const DeleteRoleRequest = {
   },
 
   fromJSON(object: any): DeleteRoleRequest {
-    return { role_id: isSet(object.role_id) ? String(object.role_id) : "" };
+    return {
+      role_id: isSet(object.role_id) ? String(object.role_id) : "",
+      channel_id: isSet(object.channel_id) ? String(object.channel_id) : "",
+    };
   },
 
   toJSON(message: DeleteRoleRequest): unknown {
     const obj: any = {};
     message.role_id !== undefined && (obj.role_id = message.role_id);
+    message.channel_id !== undefined && (obj.channel_id = message.channel_id);
     return obj;
   },
 
@@ -13720,6 +13732,7 @@ export const DeleteRoleRequest = {
   fromPartial<I extends Exact<DeepPartial<DeleteRoleRequest>, I>>(object: I): DeleteRoleRequest {
     const message = createBaseDeleteRoleRequest();
     message.role_id = object.role_id ?? "";
+    message.channel_id = object.channel_id ?? "";
     return message;
   },
 };

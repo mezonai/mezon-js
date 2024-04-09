@@ -406,6 +406,14 @@ export interface ApiCreateRoleRequest {
   title?: string;
 }
 
+/** Delete a role the user has access to. */
+export interface ApiDeleteRoleRequest {
+  //
+  channel_id?: string;
+  //The id of a role.
+  role_id?: string;
+}
+
 /** Storage objects to delete. */
 export interface ApiDeleteStorageObjectId {
   //The collection which stores the object.
@@ -3510,18 +3518,13 @@ export class MezonApi {
 
   /** Update a role when Delete a role by ID. */
   deleteRoleChannelDesc(bearerToken: string,
-      roleId:string,
-      body:{},
+      body:ApiDeleteRoleRequest,
       options: any = {}): Promise<any> {
     
-    if (roleId === null || roleId === undefined) {
-      throw new Error("'roleId' is a required parameter but is null or undefined.");
-    }
     if (body === null || body === undefined) {
       throw new Error("'body' is a required parameter but is null or undefined.");
     }
-    const urlPath = "/v2/rolechannel/delete/{roleId}"
-        .replace("{roleId}", encodeURIComponent(String(roleId)));
+    const urlPath = "/v2/rolechannel/delete";
     const queryParams = new Map<string, any>();
 
     let bodyJson : string = "";

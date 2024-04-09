@@ -1491,6 +1491,8 @@ export interface CreateRoleRequest {
 export interface DeleteRoleRequest {
     /** The id of a role. */
     role_id: string;
+    /** The id of a channel */
+    channel_id: string;
 }
 /** Update fields in a given role. */
 export interface UpdateRoleRequest {
@@ -10170,14 +10172,18 @@ export declare const DeleteRoleRequest: {
     toJSON(message: DeleteRoleRequest): unknown;
     create<I extends {
         role_id?: string | undefined;
+        channel_id?: string | undefined;
     } & {
         role_id?: string | undefined;
-    } & { [K in Exclude<keyof I, "role_id">]: never; }>(base?: I | undefined): DeleteRoleRequest;
+        channel_id?: string | undefined;
+    } & { [K in Exclude<keyof I, keyof DeleteRoleRequest>]: never; }>(base?: I | undefined): DeleteRoleRequest;
     fromPartial<I_1 extends {
         role_id?: string | undefined;
+        channel_id?: string | undefined;
     } & {
         role_id?: string | undefined;
-    } & { [K_1 in Exclude<keyof I_1, "role_id">]: never; }>(object: I_1): DeleteRoleRequest;
+        channel_id?: string | undefined;
+    } & { [K_1 in Exclude<keyof I_1, keyof DeleteRoleRequest>]: never; }>(object: I_1): DeleteRoleRequest;
 };
 export declare const UpdateRoleRequest: {
     encode(message: UpdateRoleRequest, writer?: _m0.Writer): _m0.Writer;

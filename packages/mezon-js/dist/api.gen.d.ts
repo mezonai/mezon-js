@@ -231,6 +231,11 @@ export interface ApiCreateRoleRequest {
     role_icon?: string;
     title?: string;
 }
+/** Delete a role the user has access to. */
+export interface ApiDeleteRoleRequest {
+    channel_id?: string;
+    role_id?: string;
+}
 /** Storage objects to delete. */
 export interface ApiDeleteStorageObjectId {
     collection?: string;
@@ -684,7 +689,7 @@ export declare class MezonApi {
     /**  */
     addRolesChannelDesc(bearerToken: string, body: ApiAddRoleChannelDescRequest, options?: any): Promise<any>;
     /** Update a role when Delete a role by ID. */
-    deleteRoleChannelDesc(bearerToken: string, roleId: string, body: {}, options?: any): Promise<any>;
+    deleteRoleChannelDesc(bearerToken: string, body: ApiDeleteRoleRequest, options?: any): Promise<any>;
     /** List user roles */
     listRoles(bearerToken: string, limit?: number, state?: number, cursor?: string, clanId?: string, options?: any): Promise<ApiRoleList>;
     /** Create a new role for clan. */

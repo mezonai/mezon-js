@@ -28,6 +28,7 @@ import {
   ApiChannelDescList,
   ApiChannelDescription,
   ApiCreateChannelDescRequest,
+  ApiDeleteRoleRequest,
   ApiClanDescList,
   ApiCreateClanDescRequest,
   ApiClanDesc,
@@ -747,13 +748,13 @@ export class Client {
   }
 
    /** Update action role when delete role */
-   async deleteRoleChannelDesc(session: Session, roleId:string, request:{}): Promise<boolean> {
+   async deleteRoleChannelDesc(session: Session, request:ApiDeleteRoleRequest): Promise<boolean> {
     if (this.autoRefreshSession && session.refresh_token &&
         session.isexpired((Date.now() + this.expiredTimespanMs)/1000)) {
         await this.sessionRefresh(session);
     }
 
-    return this.apiClient.deleteRoleChannelDesc(session.token, roleId, request).then((response: any) => {
+    return this.apiClient.deleteRoleChannelDesc(session.token, request).then((response: any) => {
       return response !== undefined;
     });
   }
