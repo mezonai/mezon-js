@@ -2645,14 +2645,11 @@ var MezonApi = class {
     ]);
   }
   /** Update a role when Delete a role by ID. */
-  deleteRoleChannelDesc(bearerToken, roleId, body, options = {}) {
-    if (roleId === null || roleId === void 0) {
-      throw new Error("'roleId' is a required parameter but is null or undefined.");
-    }
+  deleteRoleChannelDesc(bearerToken, body, options = {}) {
     if (body === null || body === void 0) {
       throw new Error("'body' is a required parameter but is null or undefined.");
     }
-    const urlPath = "/v2/rolechannel/delete/{roleId}".replace("{roleId}", encodeURIComponent(String(roleId)));
+    const urlPath = "/v2/rolechannel/delete";
     const queryParams = /* @__PURE__ */ new Map();
     let bodyJson = "";
     bodyJson = JSON.stringify(body || {});
@@ -4181,12 +4178,12 @@ var Client = class {
     });
   }
   /** Update action role when delete role */
-  deleteRoleChannelDesc(session, roleId, request) {
+  deleteRoleChannelDesc(session, request) {
     return __async(this, null, function* () {
       if (this.autoRefreshSession && session.refresh_token && session.isexpired((Date.now() + this.expiredTimespanMs) / 1e3)) {
         yield this.sessionRefresh(session);
       }
-      return this.apiClient.deleteRoleChannelDesc(session.token, roleId, request).then((response) => {
+      return this.apiClient.deleteRoleChannelDesc(session.token, request).then((response) => {
         return response !== void 0;
       });
     });

@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { ApiAccount, ApiAccountCustom, ApiAccountDevice, ApiAccountEmail, ApiAccountFacebook, ApiAccountFacebookInstantGame, ApiAccountGoogle, ApiAccountGameCenter, ApiAccountSteam, ApiChannelDescList, ApiChannelDescription, ApiCreateChannelDescRequest, ApiClanDescList, ApiCreateClanDescRequest, ApiClanDesc, ApiCategoryDesc, ApiCategoryDescList, ApiRoleList, ApiPermissionList, ApiRoleUserList, ApiRole, ApiCreateRoleRequest, ApiAddRoleChannelDescRequest, ApiCreateCategoryDescRequest, ApiUpdateCategoryDescRequest, ApiDeleteStorageObjectsRequest, ApiEvent, ApiReadStorageObjectsRequest, ApiStorageObjectAcks, ApiUpdateAccountRequest, ApiAccountApple, ApiLinkSteamRequest, ApiClanDescProfile, ApiClanProfile, ApiChannelUserList, ApiClanUserList, ApiLinkInviteUserRequest, ApiLinkInviteUser, ApiInviteUserRes, ApiUploadAttachmentRequest, ApiUploadAttachment, ApiMessageReaction, ApiMessageMention, ApiMessageAttachment, ApiMessageRef, ApiChannelMessageHeader, ApiVoiceChannelUserList } from "./api.gen";
+import { ApiAccount, ApiAccountCustom, ApiAccountDevice, ApiAccountEmail, ApiAccountFacebook, ApiAccountFacebookInstantGame, ApiAccountGoogle, ApiAccountGameCenter, ApiAccountSteam, ApiChannelDescList, ApiChannelDescription, ApiCreateChannelDescRequest, ApiDeleteRoleRequest, ApiClanDescList, ApiCreateClanDescRequest, ApiClanDesc, ApiCategoryDesc, ApiCategoryDescList, ApiRoleList, ApiPermissionList, ApiRoleUserList, ApiRole, ApiCreateRoleRequest, ApiAddRoleChannelDescRequest, ApiCreateCategoryDescRequest, ApiUpdateCategoryDescRequest, ApiDeleteStorageObjectsRequest, ApiEvent, ApiReadStorageObjectsRequest, ApiStorageObjectAcks, ApiUpdateAccountRequest, ApiAccountApple, ApiLinkSteamRequest, ApiClanDescProfile, ApiClanProfile, ApiChannelUserList, ApiClanUserList, ApiLinkInviteUserRequest, ApiLinkInviteUser, ApiInviteUserRes, ApiUploadAttachmentRequest, ApiUploadAttachment, ApiMessageReaction, ApiMessageMention, ApiMessageAttachment, ApiMessageRef, ApiChannelMessageHeader, ApiVoiceChannelUserList } from "./api.gen";
 import { Session } from "./session";
 import { Socket } from "./socket";
 import { WebSocketAdapter } from "./web_socket_adapter";
@@ -392,7 +392,7 @@ export declare class Client {
     /** add role for channel. */
     addRolesChannelDesc(session: Session, request: ApiAddRoleChannelDescRequest): Promise<boolean>;
     /** Update action role when delete role */
-    deleteRoleChannelDesc(session: Session, roleId: string, request: {}): Promise<boolean>;
+    deleteRoleChannelDesc(session: Session, request: ApiDeleteRoleRequest): Promise<boolean>;
     /** A socket created with the client's configuration. */
     createSocket(useSSL?: boolean, verbose?: boolean, adapter?: WebSocketAdapter, sendTimeoutMs?: number): Socket;
     /** Delete one or more users by ID or username. */
