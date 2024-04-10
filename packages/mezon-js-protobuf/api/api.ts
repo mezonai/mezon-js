@@ -1882,6 +1882,7 @@ export interface Role {
   role_user_list: RoleUserList | undefined;
   permission_list: PermissionList | undefined;
   role_channel_active: number;
+  channel_id: string;
 }
 
 /** Permission record */
@@ -12697,6 +12698,7 @@ function createBaseRole(): Role {
     role_user_list: undefined,
     permission_list: undefined,
     role_channel_active: 0,
+    channel_id: "",
   };
 }
 
@@ -12743,6 +12745,9 @@ export const Role = {
     }
     if (message.role_channel_active !== 0) {
       writer.uint32(112).int32(message.role_channel_active);
+    }
+    if (message.channel_id !== "") {
+      writer.uint32(122).string(message.channel_id);
     }
     return writer;
   },
@@ -12796,6 +12801,9 @@ export const Role = {
         case 14:
           message.role_channel_active = reader.int32();
           break;
+        case 15:
+          message.channel_id = reader.string();
+          break;
         default:
           reader.skipType(tag & 7);
           break;
@@ -12820,6 +12828,7 @@ export const Role = {
       role_user_list: isSet(object.role_user_list) ? RoleUserList.fromJSON(object.role_user_list) : undefined,
       permission_list: isSet(object.permission_list) ? PermissionList.fromJSON(object.permission_list) : undefined,
       role_channel_active: isSet(object.role_channel_active) ? Number(object.role_channel_active) : 0,
+      channel_id: isSet(object.channel_id) ? String(object.channel_id) : "",
     };
   },
 
@@ -12841,6 +12850,7 @@ export const Role = {
     message.permission_list !== undefined &&
       (obj.permission_list = message.permission_list ? PermissionList.toJSON(message.permission_list) : undefined);
     message.role_channel_active !== undefined && (obj.role_channel_active = Math.round(message.role_channel_active));
+    message.channel_id !== undefined && (obj.channel_id = message.channel_id);
     return obj;
   },
 
@@ -12868,6 +12878,7 @@ export const Role = {
       ? PermissionList.fromPartial(object.permission_list)
       : undefined;
     message.role_channel_active = object.role_channel_active ?? 0;
+    message.channel_id = object.channel_id ?? "";
     return message;
   },
 };

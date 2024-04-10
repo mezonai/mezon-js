@@ -1396,6 +1396,7 @@ export interface Role {
     role_user_list: RoleUserList | undefined;
     permission_list: PermissionList | undefined;
     role_channel_active: number;
+    channel_id: string;
 }
 /** Permission record */
 export interface Permission {
@@ -9068,6 +9069,7 @@ export declare const Role: {
             }[] | undefined;
         } | undefined;
         role_channel_active?: number | undefined;
+        channel_id?: string | undefined;
     } & {
         id?: string | undefined;
         title?: string | undefined;
@@ -9163,6 +9165,7 @@ export declare const Role: {
             }[]>]: never; }) | undefined;
         } & { [K_5 in Exclude<keyof I["permission_list"], "permissions">]: never; }) | undefined;
         role_channel_active?: number | undefined;
+        channel_id?: string | undefined;
     } & { [K_6 in Exclude<keyof I, keyof Role>]: never; }>(base?: I | undefined): Role;
     fromPartial<I_1 extends {
         id?: string | undefined;
@@ -9198,6 +9201,7 @@ export declare const Role: {
             }[] | undefined;
         } | undefined;
         role_channel_active?: number | undefined;
+        channel_id?: string | undefined;
     } & {
         id?: string | undefined;
         title?: string | undefined;
@@ -9293,6 +9297,7 @@ export declare const Role: {
             }[]>]: never; }) | undefined;
         } & { [K_12 in Exclude<keyof I_1["permission_list"], "permissions">]: never; }) | undefined;
         role_channel_active?: number | undefined;
+        channel_id?: string | undefined;
     } & { [K_13 in Exclude<keyof I_1, keyof Role>]: never; }>(object: I_1): Role;
 };
 export declare const Permission: {
@@ -9367,6 +9372,7 @@ export declare const RoleList: {
                 }[] | undefined;
             } | undefined;
             role_channel_active?: number | undefined;
+            channel_id?: string | undefined;
         }[] | undefined;
         next_cursor?: string | undefined;
         prev_cursor?: string | undefined;
@@ -9406,6 +9412,7 @@ export declare const RoleList: {
                 }[] | undefined;
             } | undefined;
             role_channel_active?: number | undefined;
+            channel_id?: string | undefined;
         }[] & ({
             id?: string | undefined;
             title?: string | undefined;
@@ -9440,6 +9447,7 @@ export declare const RoleList: {
                 }[] | undefined;
             } | undefined;
             role_channel_active?: number | undefined;
+            channel_id?: string | undefined;
         } & {
             id?: string | undefined;
             title?: string | undefined;
@@ -9535,6 +9543,7 @@ export declare const RoleList: {
                 }[]>]: never; }) | undefined;
             } & { [K_5 in Exclude<keyof I["roles"][number]["permission_list"], "permissions">]: never; }) | undefined;
             role_channel_active?: number | undefined;
+            channel_id?: string | undefined;
         } & { [K_6 in Exclude<keyof I["roles"][number], keyof Role>]: never; })[] & { [K_7 in Exclude<keyof I["roles"], keyof {
             id?: string | undefined;
             title?: string | undefined;
@@ -9569,6 +9578,7 @@ export declare const RoleList: {
                 }[] | undefined;
             } | undefined;
             role_channel_active?: number | undefined;
+            channel_id?: string | undefined;
         }[]>]: never; }) | undefined;
         next_cursor?: string | undefined;
         prev_cursor?: string | undefined;
@@ -9609,6 +9619,7 @@ export declare const RoleList: {
                 }[] | undefined;
             } | undefined;
             role_channel_active?: number | undefined;
+            channel_id?: string | undefined;
         }[] | undefined;
         next_cursor?: string | undefined;
         prev_cursor?: string | undefined;
@@ -9648,6 +9659,7 @@ export declare const RoleList: {
                 }[] | undefined;
             } | undefined;
             role_channel_active?: number | undefined;
+            channel_id?: string | undefined;
         }[] & ({
             id?: string | undefined;
             title?: string | undefined;
@@ -9682,6 +9694,7 @@ export declare const RoleList: {
                 }[] | undefined;
             } | undefined;
             role_channel_active?: number | undefined;
+            channel_id?: string | undefined;
         } & {
             id?: string | undefined;
             title?: string | undefined;
@@ -9777,6 +9790,7 @@ export declare const RoleList: {
                 }[]>]: never; }) | undefined;
             } & { [K_14 in Exclude<keyof I_1["roles"][number]["permission_list"], "permissions">]: never; }) | undefined;
             role_channel_active?: number | undefined;
+            channel_id?: string | undefined;
         } & { [K_15 in Exclude<keyof I_1["roles"][number], keyof Role>]: never; })[] & { [K_16 in Exclude<keyof I_1["roles"], keyof {
             id?: string | undefined;
             title?: string | undefined;
@@ -9811,6 +9825,7 @@ export declare const RoleList: {
                 }[] | undefined;
             } | undefined;
             role_channel_active?: number | undefined;
+            channel_id?: string | undefined;
         }[]>]: never; }) | undefined;
         next_cursor?: string | undefined;
         prev_cursor?: string | undefined;
