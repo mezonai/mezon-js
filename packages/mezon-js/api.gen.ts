@@ -672,6 +672,8 @@ export interface ApiRole {
   title?: string;
   //
   role_channel_active?: string;
+  //
+  channel_id?: string;
 }
 
 /** A list of role description, usually a result of a list operation. */
