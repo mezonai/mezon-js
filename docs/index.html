@@ -19,16 +19,16 @@
 <blockquote>
 <p>JavaScript client for Mezon server written in TypeScript. For browser and React Native projects.</p>
 </blockquote>
-<p><a href="https://github.com/heroiclabs/mezon">Mezon</a> is an open-source server designed to power modern games and apps. Features include user accounts, chat, social, matchmaker, realtime multiplayer, and much <a href="https://heroiclabs.com">more</a>.</p>
+<p><a href="https://github.com/heroiclabs/mezon">Mezon</a> is an open-source server designed to power modern games and apps. Features include user accounts, chat, social, matchmaker, realtime multiplayer, and much <a href="https://mezon.vn">more</a>.</p>
 <p>This client implements the full API and socket options with the server. It&#39;s written in TypeScript with minimal dependencies to be compatible with all modern browsers and React Native.</p>
-<p>Full documentation is online - <a href="https://heroiclabs.com/docs/javascript-client-guide">https://heroiclabs.com/docs/javascript-client-guide</a></p>
+<p>Full documentation is online - <a href="https://mezon.vn/docs/javascript-client-guide">https://mezon.vn/docs/javascript-client-guide</a></p>
 
 <a href="#getting-started" id="getting-started" style="color: inherit; text-decoration: none;">
   <h2>Getting Started</h2>
 </a>
 <p>You&#39;ll need to setup the server and database before you can connect with the client. The simplest way is to use Docker but have a look at the <a href="https://github.com/heroiclabs/mezon#getting-started">server documentation</a> for other options.</p>
 <ol>
-<li><p>Install and run the servers. Follow these <a href="https://heroiclabs.com/docs/install-docker-quickstart">instructions</a>.</p>
+<li><p>Install and run the servers. Follow these <a href="https://mezon.vn/docs/install-docker-quickstart">instructions</a>.</p>
 </li>
 <li><p>Import the client into your project. It&#39;s <a href="https://www.npmjs.com/package/@mezon/mezon-js">available on NPM</a> and can be also be added to a project with Bower or other package managers.</p>
 <pre><code class="language-shell"><span class="hl-0">npm </span><span class="hl-1">install</span><span class="hl-0"> </span><span class="hl-1">@mezon/mezon-js</span>
@@ -52,7 +52,7 @@
 <a href="#authenticate" id="authenticate" style="color: inherit; text-decoration: none;">
   <h3>Authenticate</h3>
 </a>
-<p>There&#39;s a variety of ways to <a href="https://heroiclabs.com/docs/authentication">authenticate</a> with the server. Authentication can create a user if they don&#39;t already exist with those credentials. It&#39;s also easy to authenticate with a social profile from Google Play Games, Facebook, Game Center, etc.</p>
+<p>There&#39;s a variety of ways to <a href="https://mezon.vn/docs/authentication">authenticate</a> with the server. Authentication can create a user if they don&#39;t already exist with those credentials. It&#39;s also easy to authenticate with a social profile from Google Play Games, Facebook, Game Center, etc.</p>
 <pre><code class="language-js"><span class="hl-4">var</span><span class="hl-0"> </span><span class="hl-3">email</span><span class="hl-0"> = </span><span class="hl-1">&quot;super@heroes.com&quot;</span><span class="hl-0">;</span><br/><span class="hl-4">var</span><span class="hl-0"> </span><span class="hl-3">password</span><span class="hl-0"> = </span><span class="hl-1">&quot;batsignal&quot;</span><span class="hl-0">;</span><br/><span class="hl-4">const</span><span class="hl-0"> </span><span class="hl-7">session</span><span class="hl-0"> = </span><span class="hl-2">await</span><span class="hl-0"> </span><span class="hl-3">client</span><span class="hl-0">.</span><span class="hl-6">authenticateEmail</span><span class="hl-0">(</span><span class="hl-3">email</span><span class="hl-0">, </span><span class="hl-3">password</span><span class="hl-0">);</span><br/><span class="hl-3">console</span><span class="hl-0">.</span><span class="hl-6">info</span><span class="hl-0">(</span><span class="hl-3">session</span><span class="hl-0">);</span>
 </code></pre>
 
@@ -90,7 +90,7 @@
 <a href="#contribute" id="contribute" style="color: inherit; text-decoration: none;">
   <h2>Contribute</h2>
 </a>
-<p>The development roadmap is managed as GitHub issues and pull requests are welcome. If you&#39;re interested in enhancing the code please open an issue to discuss the changes or drop in and discuss it in the <a href="https://forum.heroiclabs.com">community forum</a>.</p>
+<p>The development roadmap is managed as GitHub issues and pull requests are welcome. If you&#39;re interested in enhancing the code please open an issue to discuss the changes or drop in and discuss it in the <a href="https://forum.mezon.vn">community forum</a>.</p>
 
 <a href="#source-builds" id="source-builds" style="color: inherit; text-decoration: none;">
   <h3>Source Builds</h3>
@@ -105,7 +105,7 @@
 <a href="#run-tests" id="run-tests" style="color: inherit; text-decoration: none;">
   <h3>Run Tests</h3>
 </a>
-<p>To run tests you will need to run the server and database. Most tests are written as integration tests which execute against the server. A quick approach we use with our test workflow is to use the Docker compose file described in the <a href="https://heroiclabs.com/docs/install-docker-quickstart">documentation</a>.</p>
+<p>To run tests you will need to run the server and database. Most tests are written as integration tests which execute against the server. A quick approach we use with our test workflow is to use the Docker compose file described in the <a href="https://mezon.vn/docs/install-docker-quickstart">documentation</a>.</p>
 <p>Tests are run against each workspace bundle; if you have made source code changes, you should <code>npm run build --workspace=&lt;workspace&gt;</code> prior to running tests.</p>
 <pre><code class="language-shell"><span class="hl-0">docker-compose </span><span class="hl-1">-f</span><span class="hl-0"> </span><span class="hl-1">./docker-compose.yml</span><span class="hl-0"> </span><span class="hl-1">up</span><br/><span class="hl-0">npm </span><span class="hl-1">run</span><span class="hl-0"> </span><span class="hl-1">test</span><span class="hl-0"> </span><span class="hl-1">--workspace=@mezon/mezon-js-test</span>
 </code></pre>
@@ -136,7 +136,7 @@
 <a href="#license" id="license" style="color: inherit; text-decoration: none;">
   <h3>License</h3>
 </a>
-<p>This project is licensed under the <a href="https://github.com/heroiclabs/mezon-js/blob/master/LICENSE">Apache-2 License</a>.</p>
+<p>This project is licensed under the <a href="https://github.com/nccasia/mezon-js/blob/master/LICENSE">Apache-2 License</a>.</p>
 </div></div>
 <div class="col-4 col-menu menu-sticky-wrap menu-highlight">
 <div class="tsd-navigation settings">

@@ -3,7 +3,7 @@ Mezon JavaScript Protobuf adapter
 
 > Websocket adapter adding protocol buffer support to the [mezon-js](https://www.npmjs.com/package/@mezon/mezon-js) client.
 
-[Mezon](https://github.com/heroiclabs/mezon) is an open-source server designed to power modern games and apps. Features include user accounts, chat, social, matchmaker, realtime multiplayer, and much [more](https://heroiclabs.com).
+[Mezon](https://github.com/heroiclabs/mezon) is an open-source server designed to power modern games and apps. Features include user accounts, chat, social, matchmaker, realtime multiplayer, and much [more](https://mezon.vn).
 
 
 ## Getting Started
@@ -40,4 +40,4 @@ Mezon JavaScript Protobuf adapter
 
 ### License
 
-This project is licensed under the [Apache-2 License](https://github.com/heroiclabs/mezon-js/blob/master/LICENSE).
+This project is licensed under the [Apache-2 License](https://github.com/nccasia/mezon-js/blob/master/LICENSE).

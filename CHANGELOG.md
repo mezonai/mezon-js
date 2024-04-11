@@ -52,7 +52,7 @@ The connect, send, and heartbeat timeouts are set to sensible default values.
 ### [2.5.1]
 
 ### Added
-- Added [Satori](https://heroiclabs.com/docs/satori) client package (`satori-js`)
+- Added [Satori](https://mezon.vn/docs/satori) client package (`satori-js`)
 
 ### Changed
 - Remove Yarn in favour of NPM and updates dependencies to support Node 18 LTS

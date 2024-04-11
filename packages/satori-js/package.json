@@ -23,13 +23,13 @@
         "satori",
         "live ops"
     ],
-    "repository": "https://github.com/heroiclabs/mezon-js",
-    "homepage": "https://heroiclabs.com",
-    "bugs": "https://github.com/heroiclabs/mezon-js/issues",
-    "author": "Chris Molozian <chris@heroiclabs.com>",
+    "repository": "https://github.com/nccasia/mezon-js",
+    "homepage": "https://mezon.vn",
+    "bugs": "https://github.com/nccasia/mezon-js/issues",
+    "author": "Chris Molozian <chris@mezon.vn>",
     "contributors": [
-        "Andrei Mihu <andrei@heroiclabs.com>",
-        "Mo Firouz <mo@heroiclabs.com>"
+        "Andrei Mihu <andrei@mezon.vn>",
+        "Mo Firouz <mo@mezon.vn>"
     ],
     "license": "Apache-2.0",
     "devDependencies": {

@@ -1,6 +1,6 @@
 {
-    "name": "@mezon/mezon-js-protobuf",
-    "version": "1.4.0",
+    "name": "mezon-js-protobuf",
+    "version": "1.4.1",
     "description": "Websocket adapter adding protocol buffer support to the Mezon Javascript client.",
     "main": "dist/mezon-js-protobuf.cjs.js",
     "module": "dist/mezon-js-protobuf.esm.mjs",
@@ -27,15 +27,9 @@
         "realtime",
         "realtime chat"
     ],
-    "repository": "https://github.com/heroiclabs/mezon-js",
-    "homepage": "https://heroiclabs.com",
-    "bugs": "https://github.com/heroiclabs/mezon-js/issues",
-    "author": "Chris Molozian <chris@heroiclabs.com>",
-    "contributors": [
-        "Andrei Mihu <andrei@heroiclabs.com>",
-        "Mo Firouz <mo@heroiclabs.com>",
-        "Milton Candelero <miltoncandelero@gmail.com>"
-    ],
+    "repository": "https://github.com/nccasia/mezon-js",
+    "homepage": "https://mezon.vn",
+    "bugs": "https://github.com/nccasia/mezon-js/issues",
     "license": "Apache-2.0",
     "dependencies": {
         "@scarf/scarf": "^1.1.1"
