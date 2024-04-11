@@ -3,17 +3,17 @@ Mezon JavaScript client
 
 > JavaScript client for Mezon server written in TypeScript. For browser and React Native projects.
 
-[Mezon](https://github.com/heroiclabs/mezon) is an open-source server designed to power modern games and apps. Features include user accounts, chat, social, matchmaker, realtime multiplayer, and much [more](https://heroiclabs.com).
+[Mezon](https://github.com/heroiclabs/mezon) is an open-source server designed to power modern games and apps. Features include user accounts, chat, social, matchmaker, realtime multiplayer, and much [more](https://mezon.vn).
 
 This client implements the full API and socket options with the server. It's written in TypeScript with minimal dependencies to be compatible with all modern browsers and React Native.
 
-Full documentation is online - https://heroiclabs.com/docs/javascript-client-guide
+Full documentation is online - https://mezon.vn/docs/javascript-client-guide
 
 ## Getting Started
 
 You'll need to setup the server and database before you can connect with the client. The simplest way is to use Docker but have a look at the [server documentation](https://github.com/heroiclabs/mezon#getting-started) for other options.
 
-1. Install and run the servers. Follow these [instructions](https://heroiclabs.com/docs/install-docker-quickstart).
+1. Install and run the servers. Follow these [instructions](https://mezon.vn/docs/install-docker-quickstart).
 
 2. Import the client into your project. It's [available on NPM](https://www.npmjs.com/package/@mezon/mezon-js) and can be also be added to a project with Bower or other package managers.
 
@@ -44,7 +44,7 @@ The client object has many methods to execute various features in the server or 
 
 ### Authenticate
 
-There's a variety of ways to [authenticate](https://heroiclabs.com/docs/authentication) with the server. Authentication can create a user if they don't already exist with those credentials. It's also easy to authenticate with a social profile from Google Play Games, Facebook, Game Center, etc.
+There's a variety of ways to [authenticate](https://mezon.vn/docs/authentication) with the server. Authentication can create a user if they don't already exist with those credentials. It's also easy to authenticate with a social profile from Google Play Games, Facebook, Game Center, etc.
 
 ```js
 var email = "super@heroes.com";
@@ -171,7 +171,7 @@ try {
 
 ## Contribute
 
-The development roadmap is managed as GitHub issues and pull requests are welcome. If you're interested in enhancing the code please open an issue to discuss the changes or drop in and discuss it in the [community forum](https://forum.heroiclabs.com).
+The development roadmap is managed as GitHub issues and pull requests are welcome. If you're interested in enhancing the code please open an issue to discuss the changes or drop in and discuss it in the [community forum](https://forum.mezon.vn).
 
 ### Source Builds
 
@@ -189,7 +189,7 @@ npm run build --workspace=@mezon/mezon-js
 
 ### Run Tests
 
-To run tests you will need to run the server and database. Most tests are written as integration tests which execute against the server. A quick approach we use with our test workflow is to use the Docker compose file described in the [documentation](https://heroiclabs.com/docs/install-docker-quickstart).
+To run tests you will need to run the server and database. Most tests are written as integration tests which execute against the server. A quick approach we use with our test workflow is to use the Docker compose file described in the [documentation](https://mezon.vn/docs/install-docker-quickstart).
 
 Tests are run against each workspace bundle; if you have made source code changes, you should `npm run build --workspace=<workspace>` prior to running tests.
 
@@ -241,4 +241,4 @@ npm install && npm run docs
 
 ### License
 
-This project is licensed under the [Apache-2 License](https://github.com/heroiclabs/mezon-js/blob/master/LICENSE).
+This project is licensed under the [Apache-2 License](https://github.com/nccasia/mezon-js/blob/master/LICENSE).

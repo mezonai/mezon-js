@@ -1567,11 +1567,11 @@ export class Client {
     }
 
     if (session.created && session.expires_at! - session.created_at < 70) {
-        console.warn("Session lifetime too short, please set '--session.token_expiry_sec' option. See the documentation for more info: https://heroiclabs.com/docs/mezon/getting-started/configuration/#session");
+        console.warn("Session lifetime too short, please set '--session.token_expiry_sec' option. See the documentation for more info: https://mezon.vn/docs/mezon/getting-started/configuration/#session");
     }
 
     if (session.created && session.refresh_expires_at! - session.created_at < 3700) {
-        console.warn("Session refresh lifetime too short, please set '--session.refresh_token_expiry_sec' option. See the documentation for more info: https://heroiclabs.com/docs/mezon/getting-started/configuration/#session");
+        console.warn("Session refresh lifetime too short, please set '--session.refresh_token_expiry_sec' option. See the documentation for more info: https://mezon.vn/docs/mezon/getting-started/configuration/#session");
     }
 
     const apiSession = await this.apiClient.sessionRefresh(this.serverkey, "", {token: session.refresh_token, vars: vars});

@@ -5,7 +5,7 @@ Satori JavaScript Client
 
 This client implements the full API for interacting with Satori server. It's written in TypeScript with minimal dependencies to be compatible with all modern browsers and React Native.
 
-Full documentation is online - https://heroiclabs.com/docs/javascript-client-guide
+Full documentation is online - https://mezon.vn/docs/javascript-client-guide
 
 ## Getting Started
 
@@ -98,7 +98,7 @@ console.info("Flags:", flags);
 
 ## Contribute
 
-The development roadmap is managed as GitHub issues and pull requests are welcome. If you're interested in enhancing the code please open an issue to discuss the changes or drop in and discuss it in the [community forum](https://forum.heroiclabs.com).
+The development roadmap is managed as GitHub issues and pull requests are welcome. If you're interested in enhancing the code please open an issue to discuss the changes or drop in and discuss it in the [community forum](https://forum.mezon.vn).
 
 ### Source Builds
 
@@ -142,4 +142,4 @@ npm install && npm run docs
 
 ### License
 
-This project is licensed under the [Apache-2 License](https://github.com/heroiclabs/mezon-js/blob/master/LICENSE).
+This project is licensed under the [Apache-2 License](https://github.com/nccasia/mezon-js/blob/master/LICENSE).
