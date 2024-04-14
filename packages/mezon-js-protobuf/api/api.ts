@@ -913,7 +913,7 @@ export interface ChannelUserList_ChannelUser {
     | User
     | undefined;
   /** Their relationship to the role. */
-  role_id: string;
+  role_id: string[];
   /** Id */
   id: string;
   /** thread id */
@@ -6801,7 +6801,7 @@ export const ChannelUserList = {
 };
 
 function createBaseChannelUserList_ChannelUser(): ChannelUserList_ChannelUser {
-  return { user: undefined, role_id: "", id: "", thread_id: "" };
+  return { user: undefined, role_id: [], id: "", thread_id: "" };
 }
 
 export const ChannelUserList_ChannelUser = {
@@ -6809,8 +6809,8 @@ export const ChannelUserList_ChannelUser = {
     if (message.user !== undefined) {
       User.encode(message.user, writer.uint32(10).fork()).ldelim();
     }
-    if (message.role_id !== "") {
-      writer.uint32(18).string(message.role_id);
+    for (const v of message.role_id) {
+      writer.uint32(18).string(v!);
     }
     if (message.id !== "") {
       writer.uint32(26).string(message.id);
@@ -6832,7 +6832,7 @@ export const ChannelUserList_ChannelUser = {
           message.user = User.decode(reader, reader.uint32());
           break;
         case 2:
-          message.role_id = reader.string();
+          message.role_id.push(reader.string());
           break;
         case 3:
           message.id = reader.string();
@@ -6851,7 +6851,7 @@ export const ChannelUserList_ChannelUser = {
   fromJSON(object: any): ChannelUserList_ChannelUser {
     return {
       user: isSet(object.user) ? User.fromJSON(object.user) : undefined,
-      role_id: isSet(object.role_id) ? String(object.role_id) : "",
+      role_id: Array.isArray(object?.role_id) ? object.role_id.map((e: any) => String(e)) : [],
       id: isSet(object.id) ? String(object.id) : "",
       thread_id: isSet(object.thread_id) ? String(object.thread_id) : "",
     };
@@ -6860,7 +6860,11 @@ export const ChannelUserList_ChannelUser = {
   toJSON(message: ChannelUserList_ChannelUser): unknown {
     const obj: any = {};
     message.user !== undefined && (obj.user = message.user ? User.toJSON(message.user) : undefined);
-    message.role_id !== undefined && (obj.role_id = message.role_id);
+    if (message.role_id) {
+      obj.role_id = message.role_id.map((e) => e);
+    } else {
+      obj.role_id = [];
+    }
     message.id !== undefined && (obj.id = message.id);
     message.thread_id !== undefined && (obj.thread_id = message.thread_id);
     return obj;
@@ -6873,7 +6877,7 @@ export const ChannelUserList_ChannelUser = {
   fromPartial<I extends Exact<DeepPartial<ChannelUserList_ChannelUser>, I>>(object: I): ChannelUserList_ChannelUser {
     const message = createBaseChannelUserList_ChannelUser();
     message.user = (object.user !== undefined && object.user !== null) ? User.fromPartial(object.user) : undefined;
-    message.role_id = object.role_id ?? "";
+    message.role_id = object.role_id?.map((e) => e) || [];
     message.id = object.id ?? "";
     message.thread_id = object.thread_id ?? "";
     return message;

@@ -9,7 +9,7 @@ export interface ChannelUserListChannelUser {
   //
   id?: string;
   //Their relationship to the role.
-  role_id?: string;
+  role_id?: Array<string>;
   //
   thread_id?: string;
   //User.

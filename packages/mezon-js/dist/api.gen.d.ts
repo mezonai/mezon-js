@@ -1,7 +1,7 @@
 /** A single user-role pair. */
 export interface ChannelUserListChannelUser {
     id?: string;
-    role_id?: string;
+    role_id?: Array<string>;
     thread_id?: string;
     user?: ApiUser;
 }
