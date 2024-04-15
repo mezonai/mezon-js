@@ -3486,6 +3486,10 @@ var _DefaultSocket = class _DefaultSocket {
           this.onvoicejoined(message.voice_joined_event);
         } else if (message.voice_leaved_event) {
           this.onvoiceleaved(message.voice_leaved_event);
+        } else if (message.channel_created_event) {
+          this.onchannelcreated(message.channel_created_event);
+        } else if (message.channel_deleted_event) {
+          this.onchanneldeleted(message.channel_deleted_event);
         } else if (message.status_presence_event) {
           this.onstatuspresence(message.status_presence_event);
         } else if (message.stream_presence_event) {
@@ -3678,6 +3682,16 @@ var _DefaultSocket = class _DefaultSocket {
   onvoiceleaved(voiceParticipant) {
     if (this.verbose && window && window.console) {
       console.log(voiceParticipant);
+    }
+  }
+  onchannelcreated(channelCreated) {
+    if (this.verbose && window && window.console) {
+      console.log(channelCreated);
+    }
+  }
+  onchanneldeleted(channelDeleted) {
+    if (this.verbose && window && window.console) {
+      console.log(channelDeleted);
     }
   }
   onstreampresence(streamPresence) {
