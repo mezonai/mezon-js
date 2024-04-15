@@ -364,6 +364,32 @@ export interface VoiceJoinedEvent {
   last_screenshot: string;  
 }
 
+
+export interface ChannelCreatedEvent {
+  // clan id
+  clan_id: string;
+  // category
+  category_id: string;
+  // creator
+  creator_id: string;
+  // channel id
+  channel_id: string;
+  // channel label
+  channel_label: string;
+}
+
+export interface ChannelDeletedEvent {
+  // clan id
+  clan_id: string;
+  // category
+  category_id: string;
+  // channel id
+  channel_id: string;
+  // deletor
+  deletor: string;
+}
+
+
 /** Stream identifier */
 export interface StreamId {
   /** The type of stream (e.g. chat). */
@@ -762,6 +788,12 @@ export interface Socket {
   // when someone join to voice room
   onvoiceleaved: (voiceParticipant: VoiceLeavedEvent) => void;
 
+  // when channel is created
+  onchannelcreated: (channelCreated: ChannelCreatedEvent) => void;
+
+  // when channel is created
+  onchanneldeleted: (channelDeleted: ChannelDeletedEvent) => void;
+
   /* Set the heartbeat timeout used by the socket to detect if it has lost connectivity to the server. */
   setHeartbeatTimeoutMs(ms : number) : void;
 
@@ -838,6 +870,10 @@ export class DefaultSocket implements Socket {
           this.onvoicejoined(message.voice_joined_event)
         } else if (message.voice_leaved_event) {
           this.onvoiceleaved(message.voice_leaved_event) 
+        } else if (message.channel_created_event) {
+          this.onchannelcreated(message.channel_created_event) 
+        } else if (message.channel_deleted_event) {
+          this.onchanneldeleted(message.channel_deleted_event) 
         } else if (message.status_presence_event) {
           this.onstatuspresence(<StatusPresenceEvent>message.status_presence_event);
         } else if (message.stream_presence_event) {
@@ -1059,6 +1095,18 @@ export class DefaultSocket implements Socket {
   onvoiceleaved(voiceParticipant: VoiceLeavedEvent) {
     if (this.verbose && window && window.console) {
       console.log(voiceParticipant);
+    }
+  }
+
+  onchannelcreated(channelCreated: ChannelCreatedEvent) {
+    if (this.verbose && window && window.console) {
+      console.log(channelCreated);
+    }
+  }
+
+  onchanneldeleted(channelDeleted: ChannelDeletedEvent) {
+    if (this.verbose && window && window.console) {
+      console.log(channelDeleted);
     }
   }
 

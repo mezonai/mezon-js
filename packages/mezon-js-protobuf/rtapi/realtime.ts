@@ -173,7 +173,15 @@ export interface Envelope {
     | VoiceJoinedEvent
     | undefined;
   /** user leave voice channel */
-  voice_leaved_event?: VoiceLeavedEvent | undefined;
+  voice_leaved_event?:
+    | VoiceLeavedEvent
+    | undefined;
+  /** channel created event */
+  channel_created_event?:
+    | ChannelCreatedEvent
+    | undefined;
+  /** channel deleted event */
+  channel_deleted_event?: ChannelDeletedEvent | undefined;
 }
 
 /** A realtime chat channel. */
@@ -803,6 +811,30 @@ export interface VoiceJoinedEvent {
   last_screenshot: string;
 }
 
+export interface ChannelCreatedEvent {
+  /** clan id */
+  clan_id: string;
+  /** category */
+  category_id: string;
+  /** creator */
+  creator_id: string;
+  /** channel id */
+  channel_id: string;
+  /** channel label */
+  channel_label: string;
+}
+
+export interface ChannelDeletedEvent {
+  /** clan id */
+  clan_id: string;
+  /** category */
+  category_id: string;
+  /** channel id */
+  channel_id: string;
+  /** deletor */
+  deletor: string;
+}
+
 /** Stop receiving status updates for some set of users. */
 export interface StatusUnfollow {
   /** Users to unfollow. */
@@ -913,6 +945,8 @@ function createBaseEnvelope(): Envelope {
     message_deleted_event: undefined,
     voice_joined_event: undefined,
     voice_leaved_event: undefined,
+    channel_created_event: undefined,
+    channel_deleted_event: undefined,
   };
 }
 
@@ -1043,6 +1077,12 @@ export const Envelope = {
     }
     if (message.voice_leaved_event !== undefined) {
       VoiceLeavedEvent.encode(message.voice_leaved_event, writer.uint32(338).fork()).ldelim();
+    }
+    if (message.channel_created_event !== undefined) {
+      ChannelCreatedEvent.encode(message.channel_created_event, writer.uint32(346).fork()).ldelim();
+    }
+    if (message.channel_deleted_event !== undefined) {
+      ChannelDeletedEvent.encode(message.channel_deleted_event, writer.uint32(354).fork()).ldelim();
     }
     return writer;
   },
@@ -1180,6 +1220,12 @@ export const Envelope = {
         case 42:
           message.voice_leaved_event = VoiceLeavedEvent.decode(reader, reader.uint32());
           break;
+        case 43:
+          message.channel_created_event = ChannelCreatedEvent.decode(reader, reader.uint32());
+          break;
+        case 44:
+          message.channel_deleted_event = ChannelDeletedEvent.decode(reader, reader.uint32());
+          break;
         default:
           reader.skipType(tag & 7);
           break;
@@ -1263,6 +1309,12 @@ export const Envelope = {
         : undefined,
       voice_leaved_event: isSet(object.voice_leaved_event)
         ? VoiceLeavedEvent.fromJSON(object.voice_leaved_event)
+        : undefined,
+      channel_created_event: isSet(object.channel_created_event)
+        ? ChannelCreatedEvent.fromJSON(object.channel_created_event)
+        : undefined,
+      channel_deleted_event: isSet(object.channel_deleted_event)
+        ? ChannelDeletedEvent.fromJSON(object.channel_deleted_event)
         : undefined,
     };
   },
@@ -1360,6 +1412,12 @@ export const Envelope = {
       : undefined);
     message.voice_leaved_event !== undefined && (obj.voice_leaved_event = message.voice_leaved_event
       ? VoiceLeavedEvent.toJSON(message.voice_leaved_event)
+      : undefined);
+    message.channel_created_event !== undefined && (obj.channel_created_event = message.channel_created_event
+      ? ChannelCreatedEvent.toJSON(message.channel_created_event)
+      : undefined);
+    message.channel_deleted_event !== undefined && (obj.channel_deleted_event = message.channel_deleted_event
+      ? ChannelDeletedEvent.toJSON(message.channel_deleted_event)
       : undefined);
     return obj;
   },
@@ -1493,6 +1551,14 @@ export const Envelope = {
     message.voice_leaved_event = (object.voice_leaved_event !== undefined && object.voice_leaved_event !== null)
       ? VoiceLeavedEvent.fromPartial(object.voice_leaved_event)
       : undefined;
+    message.channel_created_event =
+      (object.channel_created_event !== undefined && object.channel_created_event !== null)
+        ? ChannelCreatedEvent.fromPartial(object.channel_created_event)
+        : undefined;
+    message.channel_deleted_event =
+      (object.channel_deleted_event !== undefined && object.channel_deleted_event !== null)
+        ? ChannelDeletedEvent.fromPartial(object.channel_deleted_event)
+        : undefined;
     return message;
   },
 };
@@ -5312,6 +5378,175 @@ export const VoiceJoinedEvent = {
     message.voice_channel_label = object.voice_channel_label ?? "";
     message.voice_channel_id = object.voice_channel_id ?? "";
     message.last_screenshot = object.last_screenshot ?? "";
+    return message;
+  },
+};
+
+function createBaseChannelCreatedEvent(): ChannelCreatedEvent {
+  return { clan_id: "", category_id: "", creator_id: "", channel_id: "", channel_label: "" };
+}
+
+export const ChannelCreatedEvent = {
+  encode(message: ChannelCreatedEvent, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.clan_id !== "") {
+      writer.uint32(10).string(message.clan_id);
+    }
+    if (message.category_id !== "") {
+      writer.uint32(18).string(message.category_id);
+    }
+    if (message.creator_id !== "") {
+      writer.uint32(26).string(message.creator_id);
+    }
+    if (message.channel_id !== "") {
+      writer.uint32(34).string(message.channel_id);
+    }
+    if (message.channel_label !== "") {
+      writer.uint32(42).string(message.channel_label);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): ChannelCreatedEvent {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseChannelCreatedEvent();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.clan_id = reader.string();
+          break;
+        case 2:
+          message.category_id = reader.string();
+          break;
+        case 3:
+          message.creator_id = reader.string();
+          break;
+        case 4:
+          message.channel_id = reader.string();
+          break;
+        case 5:
+          message.channel_label = reader.string();
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): ChannelCreatedEvent {
+    return {
+      clan_id: isSet(object.clan_id) ? String(object.clan_id) : "",
+      category_id: isSet(object.category_id) ? String(object.category_id) : "",
+      creator_id: isSet(object.creator_id) ? String(object.creator_id) : "",
+      channel_id: isSet(object.channel_id) ? String(object.channel_id) : "",
+      channel_label: isSet(object.channel_label) ? String(object.channel_label) : "",
+    };
+  },
+
+  toJSON(message: ChannelCreatedEvent): unknown {
+    const obj: any = {};
+    message.clan_id !== undefined && (obj.clan_id = message.clan_id);
+    message.category_id !== undefined && (obj.category_id = message.category_id);
+    message.creator_id !== undefined && (obj.creator_id = message.creator_id);
+    message.channel_id !== undefined && (obj.channel_id = message.channel_id);
+    message.channel_label !== undefined && (obj.channel_label = message.channel_label);
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<ChannelCreatedEvent>, I>>(base?: I): ChannelCreatedEvent {
+    return ChannelCreatedEvent.fromPartial(base ?? {});
+  },
+
+  fromPartial<I extends Exact<DeepPartial<ChannelCreatedEvent>, I>>(object: I): ChannelCreatedEvent {
+    const message = createBaseChannelCreatedEvent();
+    message.clan_id = object.clan_id ?? "";
+    message.category_id = object.category_id ?? "";
+    message.creator_id = object.creator_id ?? "";
+    message.channel_id = object.channel_id ?? "";
+    message.channel_label = object.channel_label ?? "";
+    return message;
+  },
+};
+
+function createBaseChannelDeletedEvent(): ChannelDeletedEvent {
+  return { clan_id: "", category_id: "", channel_id: "", deletor: "" };
+}
+
+export const ChannelDeletedEvent = {
+  encode(message: ChannelDeletedEvent, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.clan_id !== "") {
+      writer.uint32(10).string(message.clan_id);
+    }
+    if (message.category_id !== "") {
+      writer.uint32(18).string(message.category_id);
+    }
+    if (message.channel_id !== "") {
+      writer.uint32(26).string(message.channel_id);
+    }
+    if (message.deletor !== "") {
+      writer.uint32(34).string(message.deletor);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): ChannelDeletedEvent {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseChannelDeletedEvent();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.clan_id = reader.string();
+          break;
+        case 2:
+          message.category_id = reader.string();
+          break;
+        case 3:
+          message.channel_id = reader.string();
+          break;
+        case 4:
+          message.deletor = reader.string();
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): ChannelDeletedEvent {
+    return {
+      clan_id: isSet(object.clan_id) ? String(object.clan_id) : "",
+      category_id: isSet(object.category_id) ? String(object.category_id) : "",
+      channel_id: isSet(object.channel_id) ? String(object.channel_id) : "",
+      deletor: isSet(object.deletor) ? String(object.deletor) : "",
+    };
+  },
+
+  toJSON(message: ChannelDeletedEvent): unknown {
+    const obj: any = {};
+    message.clan_id !== undefined && (obj.clan_id = message.clan_id);
+    message.category_id !== undefined && (obj.category_id = message.category_id);
+    message.channel_id !== undefined && (obj.channel_id = message.channel_id);
+    message.deletor !== undefined && (obj.deletor = message.deletor);
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<ChannelDeletedEvent>, I>>(base?: I): ChannelDeletedEvent {
+    return ChannelDeletedEvent.fromPartial(base ?? {});
+  },
+
+  fromPartial<I extends Exact<DeepPartial<ChannelDeletedEvent>, I>>(object: I): ChannelDeletedEvent {
+    const message = createBaseChannelDeletedEvent();
+    message.clan_id = object.clan_id ?? "";
+    message.category_id = object.category_id ?? "";
+    message.channel_id = object.channel_id ?? "";
+    message.deletor = object.deletor ?? "";
     return message;
   },
 };

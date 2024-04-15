@@ -264,6 +264,19 @@ export interface VoiceJoinedEvent {
     voice_channel_id: string;
     last_screenshot: string;
 }
+export interface ChannelCreatedEvent {
+    clan_id: string;
+    category_id: string;
+    creator_id: string;
+    channel_id: string;
+    channel_label: string;
+}
+export interface ChannelDeletedEvent {
+    clan_id: string;
+    category_id: string;
+    channel_id: string;
+    deletor: string;
+}
 /** Stream identifier */
 export interface StreamId {
     /** The type of stream (e.g. chat). */
@@ -591,6 +604,8 @@ export interface Socket {
     onchannelpresence: (channelPresence: ChannelPresenceEvent) => void;
     onvoicejoined: (voiceParticipant: VoiceJoinedEvent) => void;
     onvoiceleaved: (voiceParticipant: VoiceLeavedEvent) => void;
+    onchannelcreated: (channelCreated: ChannelCreatedEvent) => void;
+    onchanneldeleted: (channelDeleted: ChannelDeletedEvent) => void;
     setHeartbeatTimeoutMs(ms: number): void;
     getHeartbeatTimeoutMs(): number;
 }
@@ -639,6 +654,8 @@ export declare class DefaultSocket implements Socket {
     onstatuspresence(statusPresence: StatusPresenceEvent): void;
     onvoicejoined(voiceParticipant: VoiceJoinedEvent): void;
     onvoiceleaved(voiceParticipant: VoiceLeavedEvent): void;
+    onchannelcreated(channelCreated: ChannelCreatedEvent): void;
+    onchanneldeleted(channelDeleted: ChannelDeletedEvent): void;
     onstreampresence(streamPresence: StreamPresenceEvent): void;
     onstreamdata(streamData: StreamData): void;
     onheartbeattimeout(): void;
