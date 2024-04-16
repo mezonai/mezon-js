@@ -6306,7 +6306,7 @@ var VoiceJoinedEvent = {
   }
 };
 function createBaseChannelCreatedEvent() {
-  return { clan_id: "", category_id: "", creator_id: "", channel_id: "", channel_label: "" };
+  return { clan_id: "", category_id: "", creator_id: "", parrent_id: "", channel_id: "", channel_label: "" };
 }
 var ChannelCreatedEvent = {
   encode(message, writer = import_minimal4.default.Writer.create()) {
@@ -6319,11 +6319,14 @@ var ChannelCreatedEvent = {
     if (message.creator_id !== "") {
       writer.uint32(26).string(message.creator_id);
     }
+    if (message.parrent_id !== "") {
+      writer.uint32(34).string(message.parrent_id);
+    }
     if (message.channel_id !== "") {
-      writer.uint32(34).string(message.channel_id);
+      writer.uint32(42).string(message.channel_id);
     }
     if (message.channel_label !== "") {
-      writer.uint32(42).string(message.channel_label);
+      writer.uint32(50).string(message.channel_label);
     }
     return writer;
   },
@@ -6344,9 +6347,12 @@ var ChannelCreatedEvent = {
           message.creator_id = reader.string();
           break;
         case 4:
-          message.channel_id = reader.string();
+          message.parrent_id = reader.string();
           break;
         case 5:
+          message.channel_id = reader.string();
+          break;
+        case 6:
           message.channel_label = reader.string();
           break;
         default:
@@ -6361,6 +6367,7 @@ var ChannelCreatedEvent = {
       clan_id: isSet4(object.clan_id) ? String(object.clan_id) : "",
       category_id: isSet4(object.category_id) ? String(object.category_id) : "",
       creator_id: isSet4(object.creator_id) ? String(object.creator_id) : "",
+      parrent_id: isSet4(object.parrent_id) ? String(object.parrent_id) : "",
       channel_id: isSet4(object.channel_id) ? String(object.channel_id) : "",
       channel_label: isSet4(object.channel_label) ? String(object.channel_label) : ""
     };
@@ -6370,6 +6377,7 @@ var ChannelCreatedEvent = {
     message.clan_id !== void 0 && (obj.clan_id = message.clan_id);
     message.category_id !== void 0 && (obj.category_id = message.category_id);
     message.creator_id !== void 0 && (obj.creator_id = message.creator_id);
+    message.parrent_id !== void 0 && (obj.parrent_id = message.parrent_id);
     message.channel_id !== void 0 && (obj.channel_id = message.channel_id);
     message.channel_label !== void 0 && (obj.channel_label = message.channel_label);
     return obj;
@@ -6378,18 +6386,19 @@ var ChannelCreatedEvent = {
     return ChannelCreatedEvent.fromPartial(base != null ? base : {});
   },
   fromPartial(object) {
-    var _a, _b, _c, _d, _e;
+    var _a, _b, _c, _d, _e, _f;
     const message = createBaseChannelCreatedEvent();
     message.clan_id = (_a = object.clan_id) != null ? _a : "";
     message.category_id = (_b = object.category_id) != null ? _b : "";
     message.creator_id = (_c = object.creator_id) != null ? _c : "";
-    message.channel_id = (_d = object.channel_id) != null ? _d : "";
-    message.channel_label = (_e = object.channel_label) != null ? _e : "";
+    message.parrent_id = (_d = object.parrent_id) != null ? _d : "";
+    message.channel_id = (_e = object.channel_id) != null ? _e : "";
+    message.channel_label = (_f = object.channel_label) != null ? _f : "";
     return message;
   }
 };
 function createBaseChannelDeletedEvent() {
-  return { clan_id: "", category_id: "", channel_id: "", deletor: "" };
+  return { clan_id: "", category_id: "", parrent_id: "", channel_id: "", deletor: "" };
 }
 var ChannelDeletedEvent = {
   encode(message, writer = import_minimal4.default.Writer.create()) {
@@ -6399,11 +6408,14 @@ var ChannelDeletedEvent = {
     if (message.category_id !== "") {
       writer.uint32(18).string(message.category_id);
     }
+    if (message.parrent_id !== "") {
+      writer.uint32(26).string(message.parrent_id);
+    }
     if (message.channel_id !== "") {
-      writer.uint32(26).string(message.channel_id);
+      writer.uint32(34).string(message.channel_id);
     }
     if (message.deletor !== "") {
-      writer.uint32(34).string(message.deletor);
+      writer.uint32(42).string(message.deletor);
     }
     return writer;
   },
@@ -6421,9 +6433,12 @@ var ChannelDeletedEvent = {
           message.category_id = reader.string();
           break;
         case 3:
-          message.channel_id = reader.string();
+          message.parrent_id = reader.string();
           break;
         case 4:
+          message.channel_id = reader.string();
+          break;
+        case 5:
           message.deletor = reader.string();
           break;
         default:
@@ -6437,6 +6452,7 @@ var ChannelDeletedEvent = {
     return {
       clan_id: isSet4(object.clan_id) ? String(object.clan_id) : "",
       category_id: isSet4(object.category_id) ? String(object.category_id) : "",
+      parrent_id: isSet4(object.parrent_id) ? String(object.parrent_id) : "",
       channel_id: isSet4(object.channel_id) ? String(object.channel_id) : "",
       deletor: isSet4(object.deletor) ? String(object.deletor) : ""
     };
@@ -6445,6 +6461,7 @@ var ChannelDeletedEvent = {
     const obj = {};
     message.clan_id !== void 0 && (obj.clan_id = message.clan_id);
     message.category_id !== void 0 && (obj.category_id = message.category_id);
+    message.parrent_id !== void 0 && (obj.parrent_id = message.parrent_id);
     message.channel_id !== void 0 && (obj.channel_id = message.channel_id);
     message.deletor !== void 0 && (obj.deletor = message.deletor);
     return obj;
@@ -6453,12 +6470,13 @@ var ChannelDeletedEvent = {
     return ChannelDeletedEvent.fromPartial(base != null ? base : {});
   },
   fromPartial(object) {
-    var _a, _b, _c, _d;
+    var _a, _b, _c, _d, _e;
     const message = createBaseChannelDeletedEvent();
     message.clan_id = (_a = object.clan_id) != null ? _a : "";
     message.category_id = (_b = object.category_id) != null ? _b : "";
-    message.channel_id = (_c = object.channel_id) != null ? _c : "";
-    message.deletor = (_d = object.deletor) != null ? _d : "";
+    message.parrent_id = (_c = object.parrent_id) != null ? _c : "";
+    message.channel_id = (_d = object.channel_id) != null ? _d : "";
+    message.deletor = (_e = object.deletor) != null ? _e : "";
     return message;
   }
 };

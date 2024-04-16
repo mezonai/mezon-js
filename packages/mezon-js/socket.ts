@@ -372,6 +372,8 @@ export interface ChannelCreatedEvent {
   category_id: string;
   // creator
   creator_id: string;
+  // parrent_id
+  parrent_id: string;
   // channel id
   channel_id: string;
   // channel label

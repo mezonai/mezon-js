@@ -818,6 +818,8 @@ export interface ChannelCreatedEvent {
   category_id: string;
   /** creator */
   creator_id: string;
+  /** parrent id */
+  parrent_id: string;
   /** channel id */
   channel_id: string;
   /** channel label */
@@ -829,6 +831,8 @@ export interface ChannelDeletedEvent {
   clan_id: string;
   /** category */
   category_id: string;
+  /** parrent id */
+  parrent_id: string;
   /** channel id */
   channel_id: string;
   /** deletor */
@@ -5383,7 +5387,7 @@ export const VoiceJoinedEvent = {
 };
 
 function createBaseChannelCreatedEvent(): ChannelCreatedEvent {
-  return { clan_id: "", category_id: "", creator_id: "", channel_id: "", channel_label: "" };
+  return { clan_id: "", category_id: "", creator_id: "", parrent_id: "", channel_id: "", channel_label: "" };
 }
 
 export const ChannelCreatedEvent = {
@@ -5397,11 +5401,14 @@ export const ChannelCreatedEvent = {
     if (message.creator_id !== "") {
       writer.uint32(26).string(message.creator_id);
     }
+    if (message.parrent_id !== "") {
+      writer.uint32(34).string(message.parrent_id);
+    }
     if (message.channel_id !== "") {
-      writer.uint32(34).string(message.channel_id);
+      writer.uint32(42).string(message.channel_id);
     }
     if (message.channel_label !== "") {
-      writer.uint32(42).string(message.channel_label);
+      writer.uint32(50).string(message.channel_label);
     }
     return writer;
   },
@@ -5423,9 +5430,12 @@ export const ChannelCreatedEvent = {
           message.creator_id = reader.string();
           break;
         case 4:
-          message.channel_id = reader.string();
+          message.parrent_id = reader.string();
           break;
         case 5:
+          message.channel_id = reader.string();
+          break;
+        case 6:
           message.channel_label = reader.string();
           break;
         default:
@@ -5441,6 +5451,7 @@ export const ChannelCreatedEvent = {
       clan_id: isSet(object.clan_id) ? String(object.clan_id) : "",
       category_id: isSet(object.category_id) ? String(object.category_id) : "",
       creator_id: isSet(object.creator_id) ? String(object.creator_id) : "",
+      parrent_id: isSet(object.parrent_id) ? String(object.parrent_id) : "",
       channel_id: isSet(object.channel_id) ? String(object.channel_id) : "",
       channel_label: isSet(object.channel_label) ? String(object.channel_label) : "",
     };
@@ -5451,6 +5462,7 @@ export const ChannelCreatedEvent = {
     message.clan_id !== undefined && (obj.clan_id = message.clan_id);
     message.category_id !== undefined && (obj.category_id = message.category_id);
     message.creator_id !== undefined && (obj.creator_id = message.creator_id);
+    message.parrent_id !== undefined && (obj.parrent_id = message.parrent_id);
     message.channel_id !== undefined && (obj.channel_id = message.channel_id);
     message.channel_label !== undefined && (obj.channel_label = message.channel_label);
     return obj;
@@ -5465,6 +5477,7 @@ export const ChannelCreatedEvent = {
     message.clan_id = object.clan_id ?? "";
     message.category_id = object.category_id ?? "";
     message.creator_id = object.creator_id ?? "";
+    message.parrent_id = object.parrent_id ?? "";
     message.channel_id = object.channel_id ?? "";
     message.channel_label = object.channel_label ?? "";
     return message;
@@ -5472,7 +5485,7 @@ export const ChannelCreatedEvent = {
 };
 
 function createBaseChannelDeletedEvent(): ChannelDeletedEvent {
-  return { clan_id: "", category_id: "", channel_id: "", deletor: "" };
+  return { clan_id: "", category_id: "", parrent_id: "", channel_id: "", deletor: "" };
 }
 
 export const ChannelDeletedEvent = {
@@ -5483,11 +5496,14 @@ export const ChannelDeletedEvent = {
     if (message.category_id !== "") {
       writer.uint32(18).string(message.category_id);
     }
+    if (message.parrent_id !== "") {
+      writer.uint32(26).string(message.parrent_id);
+    }
     if (message.channel_id !== "") {
-      writer.uint32(26).string(message.channel_id);
+      writer.uint32(34).string(message.channel_id);
     }
     if (message.deletor !== "") {
-      writer.uint32(34).string(message.deletor);
+      writer.uint32(42).string(message.deletor);
     }
     return writer;
   },
@@ -5506,9 +5522,12 @@ export const ChannelDeletedEvent = {
           message.category_id = reader.string();
           break;
         case 3:
-          message.channel_id = reader.string();
+          message.parrent_id = reader.string();
           break;
         case 4:
+          message.channel_id = reader.string();
+          break;
+        case 5:
           message.deletor = reader.string();
           break;
         default:
@@ -5523,6 +5542,7 @@ export const ChannelDeletedEvent = {
     return {
       clan_id: isSet(object.clan_id) ? String(object.clan_id) : "",
       category_id: isSet(object.category_id) ? String(object.category_id) : "",
+      parrent_id: isSet(object.parrent_id) ? String(object.parrent_id) : "",
       channel_id: isSet(object.channel_id) ? String(object.channel_id) : "",
       deletor: isSet(object.deletor) ? String(object.deletor) : "",
     };
@@ -5532,6 +5552,7 @@ export const ChannelDeletedEvent = {
     const obj: any = {};
     message.clan_id !== undefined && (obj.clan_id = message.clan_id);
     message.category_id !== undefined && (obj.category_id = message.category_id);
+    message.parrent_id !== undefined && (obj.parrent_id = message.parrent_id);
     message.channel_id !== undefined && (obj.channel_id = message.channel_id);
     message.deletor !== undefined && (obj.deletor = message.deletor);
     return obj;
@@ -5545,6 +5566,7 @@ export const ChannelDeletedEvent = {
     const message = createBaseChannelDeletedEvent();
     message.clan_id = object.clan_id ?? "";
     message.category_id = object.category_id ?? "";
+    message.parrent_id = object.parrent_id ?? "";
     message.channel_id = object.channel_id ?? "";
     message.deletor = object.deletor ?? "";
     return message;

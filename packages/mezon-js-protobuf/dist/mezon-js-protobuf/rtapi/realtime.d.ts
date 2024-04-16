@@ -610,6 +610,8 @@ export interface ChannelCreatedEvent {
     category_id: string;
     /** creator */
     creator_id: string;
+    /** parrent id */
+    parrent_id: string;
     /** channel id */
     channel_id: string;
     /** channel label */
@@ -620,6 +622,8 @@ export interface ChannelDeletedEvent {
     clan_id: string;
     /** category */
     category_id: string;
+    /** parrent id */
+    parrent_id: string;
     /** channel id */
     channel_id: string;
     /** deletor */
@@ -1091,12 +1095,14 @@ export declare const Envelope: {
             clan_id?: string | undefined;
             category_id?: string | undefined;
             creator_id?: string | undefined;
+            parrent_id?: string | undefined;
             channel_id?: string | undefined;
             channel_label?: string | undefined;
         } | undefined;
         channel_deleted_event?: {
             clan_id?: string | undefined;
             category_id?: string | undefined;
+            parrent_id?: string | undefined;
             channel_id?: string | undefined;
             deletor?: string | undefined;
         } | undefined;
@@ -2224,23 +2230,27 @@ export declare const Envelope: {
             clan_id?: string | undefined;
             category_id?: string | undefined;
             creator_id?: string | undefined;
+            parrent_id?: string | undefined;
             channel_id?: string | undefined;
             channel_label?: string | undefined;
         } & {
             clan_id?: string | undefined;
             category_id?: string | undefined;
             creator_id?: string | undefined;
+            parrent_id?: string | undefined;
             channel_id?: string | undefined;
             channel_label?: string | undefined;
         } & { [K_88 in Exclude<keyof I["channel_created_event"], keyof ChannelCreatedEvent>]: never; }) | undefined;
         channel_deleted_event?: ({
             clan_id?: string | undefined;
             category_id?: string | undefined;
+            parrent_id?: string | undefined;
             channel_id?: string | undefined;
             deletor?: string | undefined;
         } & {
             clan_id?: string | undefined;
             category_id?: string | undefined;
+            parrent_id?: string | undefined;
             channel_id?: string | undefined;
             deletor?: string | undefined;
         } & { [K_89 in Exclude<keyof I["channel_deleted_event"], keyof ChannelDeletedEvent>]: never; }) | undefined;
@@ -2652,12 +2662,14 @@ export declare const Envelope: {
             clan_id?: string | undefined;
             category_id?: string | undefined;
             creator_id?: string | undefined;
+            parrent_id?: string | undefined;
             channel_id?: string | undefined;
             channel_label?: string | undefined;
         } | undefined;
         channel_deleted_event?: {
             clan_id?: string | undefined;
             category_id?: string | undefined;
+            parrent_id?: string | undefined;
             channel_id?: string | undefined;
             deletor?: string | undefined;
         } | undefined;
@@ -3785,23 +3797,27 @@ export declare const Envelope: {
             clan_id?: string | undefined;
             category_id?: string | undefined;
             creator_id?: string | undefined;
+            parrent_id?: string | undefined;
             channel_id?: string | undefined;
             channel_label?: string | undefined;
         } & {
             clan_id?: string | undefined;
             category_id?: string | undefined;
             creator_id?: string | undefined;
+            parrent_id?: string | undefined;
             channel_id?: string | undefined;
             channel_label?: string | undefined;
         } & { [K_179 in Exclude<keyof I_1["channel_created_event"], keyof ChannelCreatedEvent>]: never; }) | undefined;
         channel_deleted_event?: ({
             clan_id?: string | undefined;
             category_id?: string | undefined;
+            parrent_id?: string | undefined;
             channel_id?: string | undefined;
             deletor?: string | undefined;
         } & {
             clan_id?: string | undefined;
             category_id?: string | undefined;
+            parrent_id?: string | undefined;
             channel_id?: string | undefined;
             deletor?: string | undefined;
         } & { [K_180 in Exclude<keyof I_1["channel_deleted_event"], keyof ChannelDeletedEvent>]: never; }) | undefined;
@@ -6242,12 +6258,14 @@ export declare const ChannelCreatedEvent: {
         clan_id?: string | undefined;
         category_id?: string | undefined;
         creator_id?: string | undefined;
+        parrent_id?: string | undefined;
         channel_id?: string | undefined;
         channel_label?: string | undefined;
     } & {
         clan_id?: string | undefined;
         category_id?: string | undefined;
         creator_id?: string | undefined;
+        parrent_id?: string | undefined;
         channel_id?: string | undefined;
         channel_label?: string | undefined;
     } & { [K in Exclude<keyof I, keyof ChannelCreatedEvent>]: never; }>(base?: I | undefined): ChannelCreatedEvent;
@@ -6255,12 +6273,14 @@ export declare const ChannelCreatedEvent: {
         clan_id?: string | undefined;
         category_id?: string | undefined;
         creator_id?: string | undefined;
+        parrent_id?: string | undefined;
         channel_id?: string | undefined;
         channel_label?: string | undefined;
     } & {
         clan_id?: string | undefined;
         category_id?: string | undefined;
         creator_id?: string | undefined;
+        parrent_id?: string | undefined;
         channel_id?: string | undefined;
         channel_label?: string | undefined;
     } & { [K_1 in Exclude<keyof I_1, keyof ChannelCreatedEvent>]: never; }>(object: I_1): ChannelCreatedEvent;
@@ -6273,22 +6293,26 @@ export declare const ChannelDeletedEvent: {
     create<I extends {
         clan_id?: string | undefined;
         category_id?: string | undefined;
+        parrent_id?: string | undefined;
         channel_id?: string | undefined;
         deletor?: string | undefined;
     } & {
         clan_id?: string | undefined;
         category_id?: string | undefined;
+        parrent_id?: string | undefined;
         channel_id?: string | undefined;
         deletor?: string | undefined;
     } & { [K in Exclude<keyof I, keyof ChannelDeletedEvent>]: never; }>(base?: I | undefined): ChannelDeletedEvent;
     fromPartial<I_1 extends {
         clan_id?: string | undefined;
         category_id?: string | undefined;
+        parrent_id?: string | undefined;
         channel_id?: string | undefined;
         deletor?: string | undefined;
     } & {
         clan_id?: string | undefined;
         category_id?: string | undefined;
+        parrent_id?: string | undefined;
         channel_id?: string | undefined;
         deletor?: string | undefined;
     } & { [K_1 in Exclude<keyof I_1, keyof ChannelDeletedEvent>]: never; }>(object: I_1): ChannelDeletedEvent;

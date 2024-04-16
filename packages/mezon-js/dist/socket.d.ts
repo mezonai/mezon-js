@@ -268,6 +268,7 @@ export interface ChannelCreatedEvent {
     clan_id: string;
     category_id: string;
     creator_id: string;
+    parrent_id: string;
     channel_id: string;
     channel_label: string;
 }
