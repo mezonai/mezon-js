@@ -378,6 +378,8 @@ export interface ChannelCreatedEvent {
   channel_id: string;
   // channel label
   channel_label: string;
+  // channel type
+  channel_type: number;
 }
 
 export interface ChannelDeletedEvent {
