@@ -6306,7 +6306,15 @@ var VoiceJoinedEvent = {
   }
 };
 function createBaseChannelCreatedEvent() {
-  return { clan_id: "", category_id: "", creator_id: "", parrent_id: "", channel_id: "", channel_label: "" };
+  return {
+    clan_id: "",
+    category_id: "",
+    creator_id: "",
+    parrent_id: "",
+    channel_id: "",
+    channel_label: "",
+    channel_type: void 0
+  };
 }
 var ChannelCreatedEvent = {
   encode(message, writer = import_minimal4.default.Writer.create()) {
@@ -6327,6 +6335,9 @@ var ChannelCreatedEvent = {
     }
     if (message.channel_label !== "") {
       writer.uint32(50).string(message.channel_label);
+    }
+    if (message.channel_type !== void 0) {
+      Int32Value.encode({ value: message.channel_type }, writer.uint32(58).fork()).ldelim();
     }
     return writer;
   },
@@ -6355,6 +6366,9 @@ var ChannelCreatedEvent = {
         case 6:
           message.channel_label = reader.string();
           break;
+        case 7:
+          message.channel_type = Int32Value.decode(reader, reader.uint32()).value;
+          break;
         default:
           reader.skipType(tag & 7);
           break;
@@ -6369,7 +6383,8 @@ var ChannelCreatedEvent = {
       creator_id: isSet4(object.creator_id) ? String(object.creator_id) : "",
       parrent_id: isSet4(object.parrent_id) ? String(object.parrent_id) : "",
       channel_id: isSet4(object.channel_id) ? String(object.channel_id) : "",
-      channel_label: isSet4(object.channel_label) ? String(object.channel_label) : ""
+      channel_label: isSet4(object.channel_label) ? String(object.channel_label) : "",
+      channel_type: isSet4(object.channel_type) ? Number(object.channel_type) : void 0
     };
   },
   toJSON(message) {
@@ -6380,13 +6395,14 @@ var ChannelCreatedEvent = {
     message.parrent_id !== void 0 && (obj.parrent_id = message.parrent_id);
     message.channel_id !== void 0 && (obj.channel_id = message.channel_id);
     message.channel_label !== void 0 && (obj.channel_label = message.channel_label);
+    message.channel_type !== void 0 && (obj.channel_type = message.channel_type);
     return obj;
   },
   create(base) {
     return ChannelCreatedEvent.fromPartial(base != null ? base : {});
   },
   fromPartial(object) {
-    var _a, _b, _c, _d, _e, _f;
+    var _a, _b, _c, _d, _e, _f, _g;
     const message = createBaseChannelCreatedEvent();
     message.clan_id = (_a = object.clan_id) != null ? _a : "";
     message.category_id = (_b = object.category_id) != null ? _b : "";
@@ -6394,6 +6410,7 @@ var ChannelCreatedEvent = {
     message.parrent_id = (_d = object.parrent_id) != null ? _d : "";
     message.channel_id = (_e = object.channel_id) != null ? _e : "";
     message.channel_label = (_f = object.channel_label) != null ? _f : "";
+    message.channel_type = (_g = object.channel_type) != null ? _g : void 0;
     return message;
   }
 };

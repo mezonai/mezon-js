@@ -271,6 +271,7 @@ export interface ChannelCreatedEvent {
     parrent_id: string;
     channel_id: string;
     channel_label: string;
+    channel_type: number;
 }
 export interface ChannelDeletedEvent {
     clan_id: string;
