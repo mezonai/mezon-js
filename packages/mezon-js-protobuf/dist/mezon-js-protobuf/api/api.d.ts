@@ -629,7 +629,7 @@ export interface ChannelUserList_ChannelUser {
     /** User. */
     user: User | undefined;
     /** Their relationship to the role. */
-    role_id: string[];
+    role_id: string;
     /** Id */
     id: string;
     /** thread id */
@@ -4794,7 +4794,7 @@ export declare const ChannelUserList: {
                 update_time?: Date | undefined;
                 apple_id?: string | undefined;
             } | undefined;
-            role_id?: string[] | undefined;
+            role_id?: string | undefined;
             id?: string | undefined;
             thread_id?: string | undefined;
         }[] | undefined;
@@ -4821,7 +4821,7 @@ export declare const ChannelUserList: {
                 update_time?: Date | undefined;
                 apple_id?: string | undefined;
             } | undefined;
-            role_id?: string[] | undefined;
+            role_id?: string | undefined;
             id?: string | undefined;
             thread_id?: string | undefined;
         }[] & ({
@@ -4844,7 +4844,7 @@ export declare const ChannelUserList: {
                 update_time?: Date | undefined;
                 apple_id?: string | undefined;
             } | undefined;
-            role_id?: string[] | undefined;
+            role_id?: string | undefined;
             id?: string | undefined;
             thread_id?: string | undefined;
         } & {
@@ -4885,10 +4885,10 @@ export declare const ChannelUserList: {
                 update_time?: Date | undefined;
                 apple_id?: string | undefined;
             } & { [K in Exclude<keyof I["channel_users"][number]["user"], keyof User>]: never; }) | undefined;
-            role_id?: (string[] & string[] & { [K_1 in Exclude<keyof I["channel_users"][number]["role_id"], keyof string[]>]: never; }) | undefined;
+            role_id?: string | undefined;
             id?: string | undefined;
             thread_id?: string | undefined;
-        } & { [K_2 in Exclude<keyof I["channel_users"][number], keyof ChannelUserList_ChannelUser>]: never; })[] & { [K_3 in Exclude<keyof I["channel_users"], keyof {
+        } & { [K_1 in Exclude<keyof I["channel_users"][number], keyof ChannelUserList_ChannelUser>]: never; })[] & { [K_2 in Exclude<keyof I["channel_users"], keyof {
             user?: {
                 id?: string | undefined;
                 username?: string | undefined;
@@ -4908,13 +4908,13 @@ export declare const ChannelUserList: {
                 update_time?: Date | undefined;
                 apple_id?: string | undefined;
             } | undefined;
-            role_id?: string[] | undefined;
+            role_id?: string | undefined;
             id?: string | undefined;
             thread_id?: string | undefined;
         }[]>]: never; }) | undefined;
         cursor?: string | undefined;
         channel_id?: string | undefined;
-    } & { [K_4 in Exclude<keyof I, keyof ChannelUserList>]: never; }>(base?: I | undefined): ChannelUserList;
+    } & { [K_3 in Exclude<keyof I, keyof ChannelUserList>]: never; }>(base?: I | undefined): ChannelUserList;
     fromPartial<I_1 extends {
         channel_users?: {
             user?: {
@@ -4936,7 +4936,7 @@ export declare const ChannelUserList: {
                 update_time?: Date | undefined;
                 apple_id?: string | undefined;
             } | undefined;
-            role_id?: string[] | undefined;
+            role_id?: string | undefined;
             id?: string | undefined;
             thread_id?: string | undefined;
         }[] | undefined;
@@ -4963,7 +4963,7 @@ export declare const ChannelUserList: {
                 update_time?: Date | undefined;
                 apple_id?: string | undefined;
             } | undefined;
-            role_id?: string[] | undefined;
+            role_id?: string | undefined;
             id?: string | undefined;
             thread_id?: string | undefined;
         }[] & ({
@@ -4986,7 +4986,7 @@ export declare const ChannelUserList: {
                 update_time?: Date | undefined;
                 apple_id?: string | undefined;
             } | undefined;
-            role_id?: string[] | undefined;
+            role_id?: string | undefined;
             id?: string | undefined;
             thread_id?: string | undefined;
         } & {
@@ -5026,11 +5026,11 @@ export declare const ChannelUserList: {
                 create_time?: Date | undefined;
                 update_time?: Date | undefined;
                 apple_id?: string | undefined;
-            } & { [K_5 in Exclude<keyof I_1["channel_users"][number]["user"], keyof User>]: never; }) | undefined;
-            role_id?: (string[] & string[] & { [K_6 in Exclude<keyof I_1["channel_users"][number]["role_id"], keyof string[]>]: never; }) | undefined;
+            } & { [K_4 in Exclude<keyof I_1["channel_users"][number]["user"], keyof User>]: never; }) | undefined;
+            role_id?: string | undefined;
             id?: string | undefined;
             thread_id?: string | undefined;
-        } & { [K_7 in Exclude<keyof I_1["channel_users"][number], keyof ChannelUserList_ChannelUser>]: never; })[] & { [K_8 in Exclude<keyof I_1["channel_users"], keyof {
+        } & { [K_5 in Exclude<keyof I_1["channel_users"][number], keyof ChannelUserList_ChannelUser>]: never; })[] & { [K_6 in Exclude<keyof I_1["channel_users"], keyof {
             user?: {
                 id?: string | undefined;
                 username?: string | undefined;
@@ -5050,13 +5050,13 @@ export declare const ChannelUserList: {
                 update_time?: Date | undefined;
                 apple_id?: string | undefined;
             } | undefined;
-            role_id?: string[] | undefined;
+            role_id?: string | undefined;
             id?: string | undefined;
             thread_id?: string | undefined;
         }[]>]: never; }) | undefined;
         cursor?: string | undefined;
         channel_id?: string | undefined;
-    } & { [K_9 in Exclude<keyof I_1, keyof ChannelUserList>]: never; }>(object: I_1): ChannelUserList;
+    } & { [K_7 in Exclude<keyof I_1, keyof ChannelUserList>]: never; }>(object: I_1): ChannelUserList;
 };
 export declare const ChannelUserList_ChannelUser: {
     encode(message: ChannelUserList_ChannelUser, writer?: _m0.Writer): _m0.Writer;
@@ -5083,7 +5083,7 @@ export declare const ChannelUserList_ChannelUser: {
             update_time?: Date | undefined;
             apple_id?: string | undefined;
         } | undefined;
-        role_id?: string[] | undefined;
+        role_id?: string | undefined;
         id?: string | undefined;
         thread_id?: string | undefined;
     } & {
@@ -5124,10 +5124,10 @@ export declare const ChannelUserList_ChannelUser: {
             update_time?: Date | undefined;
             apple_id?: string | undefined;
         } & { [K in Exclude<keyof I["user"], keyof User>]: never; }) | undefined;
-        role_id?: (string[] & string[] & { [K_1 in Exclude<keyof I["role_id"], keyof string[]>]: never; }) | undefined;
+        role_id?: string | undefined;
         id?: string | undefined;
         thread_id?: string | undefined;
-    } & { [K_2 in Exclude<keyof I, keyof ChannelUserList_ChannelUser>]: never; }>(base?: I | undefined): ChannelUserList_ChannelUser;
+    } & { [K_1 in Exclude<keyof I, keyof ChannelUserList_ChannelUser>]: never; }>(base?: I | undefined): ChannelUserList_ChannelUser;
     fromPartial<I_1 extends {
         user?: {
             id?: string | undefined;
@@ -5148,7 +5148,7 @@ export declare const ChannelUserList_ChannelUser: {
             update_time?: Date | undefined;
             apple_id?: string | undefined;
         } | undefined;
-        role_id?: string[] | undefined;
+        role_id?: string | undefined;
         id?: string | undefined;
         thread_id?: string | undefined;
     } & {
@@ -5188,11 +5188,11 @@ export declare const ChannelUserList_ChannelUser: {
             create_time?: Date | undefined;
             update_time?: Date | undefined;
             apple_id?: string | undefined;
-        } & { [K_3 in Exclude<keyof I_1["user"], keyof User>]: never; }) | undefined;
-        role_id?: (string[] & string[] & { [K_4 in Exclude<keyof I_1["role_id"], keyof string[]>]: never; }) | undefined;
+        } & { [K_2 in Exclude<keyof I_1["user"], keyof User>]: never; }) | undefined;
+        role_id?: string | undefined;
         id?: string | undefined;
         thread_id?: string | undefined;
-    } & { [K_5 in Exclude<keyof I_1, keyof ChannelUserList_ChannelUser>]: never; }>(object: I_1): ChannelUserList_ChannelUser;
+    } & { [K_3 in Exclude<keyof I_1, keyof ChannelUserList_ChannelUser>]: never; }>(object: I_1): ChannelUserList_ChannelUser;
 };
 export declare const VoiceChannelUser: {
     encode(message: VoiceChannelUser, writer?: _m0.Writer): _m0.Writer;
