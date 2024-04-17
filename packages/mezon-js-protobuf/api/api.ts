@@ -1882,7 +1882,7 @@ export interface Role {
   role_user_list: RoleUserList | undefined;
   permission_list: PermissionList | undefined;
   role_channel_active: number;
-  channel_id: string;
+  channel_ids: string[];
 }
 
 /** Permission record */
@@ -12702,7 +12702,7 @@ function createBaseRole(): Role {
     role_user_list: undefined,
     permission_list: undefined,
     role_channel_active: 0,
-    channel_id: "",
+    channel_ids: [],
   };
 }
 
@@ -12750,8 +12750,8 @@ export const Role = {
     if (message.role_channel_active !== 0) {
       writer.uint32(112).int32(message.role_channel_active);
     }
-    if (message.channel_id !== "") {
-      writer.uint32(122).string(message.channel_id);
+    for (const v of message.channel_ids) {
+      writer.uint32(122).string(v!);
     }
     return writer;
   },
@@ -12806,7 +12806,7 @@ export const Role = {
           message.role_channel_active = reader.int32();
           break;
         case 15:
-          message.channel_id = reader.string();
+          message.channel_ids.push(reader.string());
           break;
         default:
           reader.skipType(tag & 7);
@@ -12832,7 +12832,7 @@ export const Role = {
       role_user_list: isSet(object.role_user_list) ? RoleUserList.fromJSON(object.role_user_list) : undefined,
       permission_list: isSet(object.permission_list) ? PermissionList.fromJSON(object.permission_list) : undefined,
       role_channel_active: isSet(object.role_channel_active) ? Number(object.role_channel_active) : 0,
-      channel_id: isSet(object.channel_id) ? String(object.channel_id) : "",
+      channel_ids: Array.isArray(object?.channel_ids) ? object.channel_ids.map((e: any) => String(e)) : [],
     };
   },
 
@@ -12854,7 +12854,11 @@ export const Role = {
     message.permission_list !== undefined &&
       (obj.permission_list = message.permission_list ? PermissionList.toJSON(message.permission_list) : undefined);
     message.role_channel_active !== undefined && (obj.role_channel_active = Math.round(message.role_channel_active));
-    message.channel_id !== undefined && (obj.channel_id = message.channel_id);
+    if (message.channel_ids) {
+      obj.channel_ids = message.channel_ids.map((e) => e);
+    } else {
+      obj.channel_ids = [];
+    }
     return obj;
   },
 
@@ -12882,7 +12886,7 @@ export const Role = {
       ? PermissionList.fromPartial(object.permission_list)
       : undefined;
     message.role_channel_active = object.role_channel_active ?? 0;
-    message.channel_id = object.channel_id ?? "";
+    message.channel_ids = object.channel_ids?.map((e) => e) || [];
     return message;
   },
 };
