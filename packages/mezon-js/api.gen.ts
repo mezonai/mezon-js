@@ -673,7 +673,7 @@ export interface ApiRole {
   //
   role_channel_active?: string;
   //
-  channel_id?: string;
+  channel_ids?: Array<string>;
 }
 
 /** A list of role description, usually a result of a list operation. */
