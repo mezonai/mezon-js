@@ -73,6 +73,7 @@ import {
   ApiMessageRef,
   ApiChannelMessageHeader,
   ApiVoiceChannelUserList,
+  ApiChannelAttachmentList,
 } from "./api.gen";
 
 import { Session } from "./session";
@@ -1056,6 +1057,36 @@ export class Client {
           role_id: gu!.role_id,
           thread_id: gu.thread_id,
           id: gu.id,
+        })
+      });
+      return Promise.resolve(result);
+    });
+  }
+
+  /** List a channel's attachment. */
+  async listChannelAttachments(session: Session, clanId: string, channelId: string, fileType: string, state?: number, limit?: number, cursor?: string): Promise<ApiChannelAttachmentList> {
+    if (this.autoRefreshSession && session.refresh_token &&
+        session.isexpired((Date.now() + this.expiredTimespanMs)/1000)) {
+        await this.sessionRefresh(session);
+    }
+
+    return this.apiClient.listChannelAttachment(session.token, clanId, channelId, fileType, limit, state, cursor).then((response: ApiChannelAttachmentList) => {
+      var result: ApiChannelAttachmentList = {
+        attachments: [],
+      };
+
+      if (response.attachments == null) {
+        return Promise.resolve(result);
+      }
+
+      response.attachments!.forEach(at => {
+        result.attachments!.push({
+          filename: at.filename,
+          filesize: at.filetype,
+          filetype: at.filetype,
+          id: at.id,
+          uploader: at.uploader,
+          url: at.uploader
         })
       });
       return Promise.resolve(result);
