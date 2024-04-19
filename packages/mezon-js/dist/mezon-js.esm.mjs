@@ -1641,6 +1641,158 @@ var MezonApi = class {
       )
     ]);
   }
+  /** Add users to a channel. */
+  addChannelUsers(bearerToken, channelId, userIds, options = {}) {
+    if (channelId === null || channelId === void 0) {
+      throw new Error("'channelId' is a required parameter but is null or undefined.");
+    }
+    const urlPath = "/v2/channel/{channelId}/add".replace("{channelId}", encodeURIComponent(String(channelId)));
+    const queryParams = /* @__PURE__ */ new Map();
+    queryParams.set("user_ids", userIds);
+    let bodyJson = "";
+    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
+    const fetchOptions = buildFetchOptions("POST", options, bodyJson);
+    if (bearerToken) {
+      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+    }
+    return Promise.race([
+      fetch(fullUrl, fetchOptions).then((response) => {
+        if (response.status == 204) {
+          return response;
+        } else if (response.status >= 200 && response.status < 300) {
+          return response.json();
+        } else {
+          throw response;
+        }
+      }),
+      new Promise(
+        (_, reject) => setTimeout(reject, this.timeoutMs, "Request timed out.")
+      )
+    ]);
+  }
+  /** List all attachment that are part of a channel. */
+  listChannelAttachment(bearerToken, channelId, clanId, fileType, limit, state, cursor, options = {}) {
+    if (channelId === null || channelId === void 0) {
+      throw new Error("'channelId' is a required parameter but is null or undefined.");
+    }
+    const urlPath = "/v2/channel/{channelId}/attachment".replace("{channelId}", encodeURIComponent(String(channelId)));
+    const queryParams = /* @__PURE__ */ new Map();
+    queryParams.set("clan_id", clanId);
+    queryParams.set("file_type", fileType);
+    queryParams.set("limit", limit);
+    queryParams.set("state", state);
+    queryParams.set("cursor", cursor);
+    let bodyJson = "";
+    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
+    const fetchOptions = buildFetchOptions("GET", options, bodyJson);
+    if (bearerToken) {
+      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+    }
+    return Promise.race([
+      fetch(fullUrl, fetchOptions).then((response) => {
+        if (response.status == 204) {
+          return response;
+        } else if (response.status >= 200 && response.status < 300) {
+          return response.json();
+        } else {
+          throw response;
+        }
+      }),
+      new Promise(
+        (_, reject) => setTimeout(reject, this.timeoutMs, "Request timed out.")
+      )
+    ]);
+  }
+  /** Leave a channel the user is a member of. */
+  leaveChannel(bearerToken, channelId, options = {}) {
+    if (channelId === null || channelId === void 0) {
+      throw new Error("'channelId' is a required parameter but is null or undefined.");
+    }
+    const urlPath = "/v2/channel/{channelId}/leave".replace("{channelId}", encodeURIComponent(String(channelId)));
+    const queryParams = /* @__PURE__ */ new Map();
+    let bodyJson = "";
+    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
+    const fetchOptions = buildFetchOptions("POST", options, bodyJson);
+    if (bearerToken) {
+      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+    }
+    return Promise.race([
+      fetch(fullUrl, fetchOptions).then((response) => {
+        if (response.status == 204) {
+          return response;
+        } else if (response.status >= 200 && response.status < 300) {
+          return response.json();
+        } else {
+          throw response;
+        }
+      }),
+      new Promise(
+        (_, reject) => setTimeout(reject, this.timeoutMs, "Request timed out.")
+      )
+    ]);
+  }
+  /** Kick a set of users from a channel. */
+  removeChannelUsers(bearerToken, channelId, userIds, options = {}) {
+    if (channelId === null || channelId === void 0) {
+      throw new Error("'channelId' is a required parameter but is null or undefined.");
+    }
+    const urlPath = "/v2/channel/{channelId}/remove".replace("{channelId}", encodeURIComponent(String(channelId)));
+    const queryParams = /* @__PURE__ */ new Map();
+    queryParams.set("user_ids", userIds);
+    let bodyJson = "";
+    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
+    const fetchOptions = buildFetchOptions("POST", options, bodyJson);
+    if (bearerToken) {
+      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+    }
+    return Promise.race([
+      fetch(fullUrl, fetchOptions).then((response) => {
+        if (response.status == 204) {
+          return response;
+        } else if (response.status >= 200 && response.status < 300) {
+          return response.json();
+        } else {
+          throw response;
+        }
+      }),
+      new Promise(
+        (_, reject) => setTimeout(reject, this.timeoutMs, "Request timed out.")
+      )
+    ]);
+  }
+  /** List all users that are part of a channel. */
+  listChannelUsers(bearerToken, clanId, channelId, channelType, limit, state, cursor, options = {}) {
+    if (channelId === null || channelId === void 0) {
+      throw new Error("'channelId' is a required parameter but is null or undefined.");
+    }
+    const urlPath = "/v2/channel/{channelId}/user".replace("{channelId}", encodeURIComponent(String(channelId)));
+    const queryParams = /* @__PURE__ */ new Map();
+    queryParams.set("clan_id", clanId);
+    queryParams.set("channel_type", channelType);
+    queryParams.set("limit", limit);
+    queryParams.set("state", state);
+    queryParams.set("cursor", cursor);
+    let bodyJson = "";
+    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
+    const fetchOptions = buildFetchOptions("GET", options, bodyJson);
+    if (bearerToken) {
+      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+    }
+    return Promise.race([
+      fetch(fullUrl, fetchOptions).then((response) => {
+        if (response.status == 204) {
+          return response;
+        } else if (response.status >= 200 && response.status < 300) {
+          return response.json();
+        } else {
+          throw response;
+        }
+      }),
+      new Promise(
+        (_, reject) => setTimeout(reject, this.timeoutMs, "Request timed out.")
+      )
+    ]);
+  }
   /** List user channels */
   listChannelDescs(bearerToken, limit, state, cursor, clanId, channelType, options = {}) {
     const urlPath = "/v2/channeldesc";
@@ -1742,125 +1894,6 @@ var MezonApi = class {
     bodyJson = JSON.stringify(body || {});
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("PUT", options, bodyJson);
-    if (bearerToken) {
-      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-    }
-    return Promise.race([
-      fetch(fullUrl, fetchOptions).then((response) => {
-        if (response.status == 204) {
-          return response;
-        } else if (response.status >= 200 && response.status < 300) {
-          return response.json();
-        } else {
-          throw response;
-        }
-      }),
-      new Promise(
-        (_, reject) => setTimeout(reject, this.timeoutMs, "Request timed out.")
-      )
-    ]);
-  }
-  /** Add users to a channel. */
-  addChannelUsers(bearerToken, channelId, userIds, options = {}) {
-    if (channelId === null || channelId === void 0) {
-      throw new Error("'channelId' is a required parameter but is null or undefined.");
-    }
-    const urlPath = "/v2/channeldesc/{channelId}/add".replace("{channelId}", encodeURIComponent(String(channelId)));
-    const queryParams = /* @__PURE__ */ new Map();
-    queryParams.set("user_ids", userIds);
-    let bodyJson = "";
-    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
-    const fetchOptions = buildFetchOptions("POST", options, bodyJson);
-    if (bearerToken) {
-      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-    }
-    return Promise.race([
-      fetch(fullUrl, fetchOptions).then((response) => {
-        if (response.status == 204) {
-          return response;
-        } else if (response.status >= 200 && response.status < 300) {
-          return response.json();
-        } else {
-          throw response;
-        }
-      }),
-      new Promise(
-        (_, reject) => setTimeout(reject, this.timeoutMs, "Request timed out.")
-      )
-    ]);
-  }
-  /** Leave a channel the user is a member of. */
-  leaveChannel(bearerToken, channelId, options = {}) {
-    if (channelId === null || channelId === void 0) {
-      throw new Error("'channelId' is a required parameter but is null or undefined.");
-    }
-    const urlPath = "/v2/channeldesc/{channelId}/leave".replace("{channelId}", encodeURIComponent(String(channelId)));
-    const queryParams = /* @__PURE__ */ new Map();
-    let bodyJson = "";
-    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
-    const fetchOptions = buildFetchOptions("POST", options, bodyJson);
-    if (bearerToken) {
-      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-    }
-    return Promise.race([
-      fetch(fullUrl, fetchOptions).then((response) => {
-        if (response.status == 204) {
-          return response;
-        } else if (response.status >= 200 && response.status < 300) {
-          return response.json();
-        } else {
-          throw response;
-        }
-      }),
-      new Promise(
-        (_, reject) => setTimeout(reject, this.timeoutMs, "Request timed out.")
-      )
-    ]);
-  }
-  /** Kick a set of users from a channel. */
-  removeChannelUsers(bearerToken, channelId, userIds, options = {}) {
-    if (channelId === null || channelId === void 0) {
-      throw new Error("'channelId' is a required parameter but is null or undefined.");
-    }
-    const urlPath = "/v2/channeldesc/{channelId}/remove".replace("{channelId}", encodeURIComponent(String(channelId)));
-    const queryParams = /* @__PURE__ */ new Map();
-    queryParams.set("user_ids", userIds);
-    let bodyJson = "";
-    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
-    const fetchOptions = buildFetchOptions("POST", options, bodyJson);
-    if (bearerToken) {
-      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-    }
-    return Promise.race([
-      fetch(fullUrl, fetchOptions).then((response) => {
-        if (response.status == 204) {
-          return response;
-        } else if (response.status >= 200 && response.status < 300) {
-          return response.json();
-        } else {
-          throw response;
-        }
-      }),
-      new Promise(
-        (_, reject) => setTimeout(reject, this.timeoutMs, "Request timed out.")
-      )
-    ]);
-  }
-  /** List all users that are part of a channel. */
-  listChannelUsers(bearerToken, clanId, channelId, channelType, limit, state, cursor, options = {}) {
-    if (channelId === null || channelId === void 0) {
-      throw new Error("'channelId' is a required parameter but is null or undefined.");
-    }
-    const urlPath = "/v2/channeldesc/{channelId}/user".replace("{channelId}", encodeURIComponent(String(channelId)));
-    const queryParams = /* @__PURE__ */ new Map();
-    queryParams.set("clan_id", clanId);
-    queryParams.set("channel_type", channelType);
-    queryParams.set("limit", limit);
-    queryParams.set("state", state);
-    queryParams.set("cursor", cursor);
-    let bodyJson = "";
-    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
-    const fetchOptions = buildFetchOptions("GET", options, bodyJson);
     if (bearerToken) {
       fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
     }
@@ -4473,6 +4506,33 @@ var Client = class {
             role_id: gu.role_id,
             thread_id: gu.thread_id,
             id: gu.id
+          });
+        });
+        return Promise.resolve(result);
+      });
+    });
+  }
+  /** List a channel's attachment. */
+  listChannelAttachments(session, clanId, channelId, fileType, state, limit, cursor) {
+    return __async(this, null, function* () {
+      if (this.autoRefreshSession && session.refresh_token && session.isexpired((Date.now() + this.expiredTimespanMs) / 1e3)) {
+        yield this.sessionRefresh(session);
+      }
+      return this.apiClient.listChannelAttachment(session.token, clanId, channelId, fileType, limit, state, cursor).then((response) => {
+        var result = {
+          attachments: []
+        };
+        if (response.attachments == null) {
+          return Promise.resolve(result);
+        }
+        response.attachments.forEach((at) => {
+          result.attachments.push({
+            filename: at.filename,
+            filesize: at.filetype,
+            filetype: at.filetype,
+            id: at.id,
+            uploader: at.uploader,
+            url: at.uploader
           });
         });
         return Promise.resolve(result);

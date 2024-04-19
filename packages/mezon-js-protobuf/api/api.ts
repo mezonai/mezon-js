@@ -936,6 +936,28 @@ export interface VoiceChannelUserList {
   voice_channel_users: VoiceChannelUser[];
 }
 
+/** channel attachment */
+export interface ChannelAttachment {
+  /** url attachment */
+  id: string;
+  /** file name */
+  filename: string;
+  /** filetype */
+  filetype: string;
+  /** size */
+  filesize: string;
+  /** url */
+  url: string;
+  /** uploader */
+  uploader: string;
+}
+
+/** channel attachment list */
+export interface ChannelAttachmentList {
+  /** list attachment */
+  attachments: ChannelAttachment[];
+}
+
 /** A list of users belonging to a clan, along with their role. */
 export interface ClanUserList {
   /** User-role pairs for a clan. */
@@ -1074,6 +1096,26 @@ export interface ListChannelUsersRequest {
   channel_id: string;
   /** The channel type */
   channel_type: number;
+  /** Max number of records to return. Between 1 and 100. */
+  limit:
+    | number
+    | undefined;
+  /** The group user state to list. */
+  state:
+    | number
+    | undefined;
+  /** An optional next page cursor. */
+  cursor: string;
+}
+
+/** List all attachments that are part of a channel. */
+export interface ListChannelAttachmentRequest {
+  /** The clan id */
+  clan_id: string;
+  /** The channel ID to list from. */
+  channel_id: string;
+  /** The channel type */
+  file_type: string;
   /** Max number of records to return. Between 1 and 100. */
   limit:
     | number
@@ -7014,6 +7056,163 @@ export const VoiceChannelUserList = {
   },
 };
 
+function createBaseChannelAttachment(): ChannelAttachment {
+  return { id: "", filename: "", filetype: "", filesize: "", url: "", uploader: "" };
+}
+
+export const ChannelAttachment = {
+  encode(message: ChannelAttachment, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.id !== "") {
+      writer.uint32(10).string(message.id);
+    }
+    if (message.filename !== "") {
+      writer.uint32(18).string(message.filename);
+    }
+    if (message.filetype !== "") {
+      writer.uint32(26).string(message.filetype);
+    }
+    if (message.filesize !== "") {
+      writer.uint32(34).string(message.filesize);
+    }
+    if (message.url !== "") {
+      writer.uint32(42).string(message.url);
+    }
+    if (message.uploader !== "") {
+      writer.uint32(50).string(message.uploader);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): ChannelAttachment {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseChannelAttachment();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.id = reader.string();
+          break;
+        case 2:
+          message.filename = reader.string();
+          break;
+        case 3:
+          message.filetype = reader.string();
+          break;
+        case 4:
+          message.filesize = reader.string();
+          break;
+        case 5:
+          message.url = reader.string();
+          break;
+        case 6:
+          message.uploader = reader.string();
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): ChannelAttachment {
+    return {
+      id: isSet(object.id) ? String(object.id) : "",
+      filename: isSet(object.filename) ? String(object.filename) : "",
+      filetype: isSet(object.filetype) ? String(object.filetype) : "",
+      filesize: isSet(object.filesize) ? String(object.filesize) : "",
+      url: isSet(object.url) ? String(object.url) : "",
+      uploader: isSet(object.uploader) ? String(object.uploader) : "",
+    };
+  },
+
+  toJSON(message: ChannelAttachment): unknown {
+    const obj: any = {};
+    message.id !== undefined && (obj.id = message.id);
+    message.filename !== undefined && (obj.filename = message.filename);
+    message.filetype !== undefined && (obj.filetype = message.filetype);
+    message.filesize !== undefined && (obj.filesize = message.filesize);
+    message.url !== undefined && (obj.url = message.url);
+    message.uploader !== undefined && (obj.uploader = message.uploader);
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<ChannelAttachment>, I>>(base?: I): ChannelAttachment {
+    return ChannelAttachment.fromPartial(base ?? {});
+  },
+
+  fromPartial<I extends Exact<DeepPartial<ChannelAttachment>, I>>(object: I): ChannelAttachment {
+    const message = createBaseChannelAttachment();
+    message.id = object.id ?? "";
+    message.filename = object.filename ?? "";
+    message.filetype = object.filetype ?? "";
+    message.filesize = object.filesize ?? "";
+    message.url = object.url ?? "";
+    message.uploader = object.uploader ?? "";
+    return message;
+  },
+};
+
+function createBaseChannelAttachmentList(): ChannelAttachmentList {
+  return { attachments: [] };
+}
+
+export const ChannelAttachmentList = {
+  encode(message: ChannelAttachmentList, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    for (const v of message.attachments) {
+      ChannelAttachment.encode(v!, writer.uint32(10).fork()).ldelim();
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): ChannelAttachmentList {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseChannelAttachmentList();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.attachments.push(ChannelAttachment.decode(reader, reader.uint32()));
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): ChannelAttachmentList {
+    return {
+      attachments: Array.isArray(object?.attachments)
+        ? object.attachments.map((e: any) => ChannelAttachment.fromJSON(e))
+        : [],
+    };
+  },
+
+  toJSON(message: ChannelAttachmentList): unknown {
+    const obj: any = {};
+    if (message.attachments) {
+      obj.attachments = message.attachments.map((e) => e ? ChannelAttachment.toJSON(e) : undefined);
+    } else {
+      obj.attachments = [];
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<ChannelAttachmentList>, I>>(base?: I): ChannelAttachmentList {
+    return ChannelAttachmentList.fromPartial(base ?? {});
+  },
+
+  fromPartial<I extends Exact<DeepPartial<ChannelAttachmentList>, I>>(object: I): ChannelAttachmentList {
+    const message = createBaseChannelAttachmentList();
+    message.attachments = object.attachments?.map((e) => ChannelAttachment.fromPartial(e)) || [];
+    return message;
+  },
+};
+
 function createBaseClanUserList(): ClanUserList {
   return { clan_users: [], cursor: "", clan_id: "" };
 }
@@ -7882,6 +8081,104 @@ export const ListChannelUsersRequest = {
     message.clan_id = object.clan_id ?? "";
     message.channel_id = object.channel_id ?? "";
     message.channel_type = object.channel_type ?? 0;
+    message.limit = object.limit ?? undefined;
+    message.state = object.state ?? undefined;
+    message.cursor = object.cursor ?? "";
+    return message;
+  },
+};
+
+function createBaseListChannelAttachmentRequest(): ListChannelAttachmentRequest {
+  return { clan_id: "", channel_id: "", file_type: "", limit: undefined, state: undefined, cursor: "" };
+}
+
+export const ListChannelAttachmentRequest = {
+  encode(message: ListChannelAttachmentRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.clan_id !== "") {
+      writer.uint32(10).string(message.clan_id);
+    }
+    if (message.channel_id !== "") {
+      writer.uint32(18).string(message.channel_id);
+    }
+    if (message.file_type !== "") {
+      writer.uint32(26).string(message.file_type);
+    }
+    if (message.limit !== undefined) {
+      Int32Value.encode({ value: message.limit! }, writer.uint32(34).fork()).ldelim();
+    }
+    if (message.state !== undefined) {
+      Int32Value.encode({ value: message.state! }, writer.uint32(42).fork()).ldelim();
+    }
+    if (message.cursor !== "") {
+      writer.uint32(50).string(message.cursor);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): ListChannelAttachmentRequest {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseListChannelAttachmentRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.clan_id = reader.string();
+          break;
+        case 2:
+          message.channel_id = reader.string();
+          break;
+        case 3:
+          message.file_type = reader.string();
+          break;
+        case 4:
+          message.limit = Int32Value.decode(reader, reader.uint32()).value;
+          break;
+        case 5:
+          message.state = Int32Value.decode(reader, reader.uint32()).value;
+          break;
+        case 6:
+          message.cursor = reader.string();
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): ListChannelAttachmentRequest {
+    return {
+      clan_id: isSet(object.clan_id) ? String(object.clan_id) : "",
+      channel_id: isSet(object.channel_id) ? String(object.channel_id) : "",
+      file_type: isSet(object.file_type) ? String(object.file_type) : "",
+      limit: isSet(object.limit) ? Number(object.limit) : undefined,
+      state: isSet(object.state) ? Number(object.state) : undefined,
+      cursor: isSet(object.cursor) ? String(object.cursor) : "",
+    };
+  },
+
+  toJSON(message: ListChannelAttachmentRequest): unknown {
+    const obj: any = {};
+    message.clan_id !== undefined && (obj.clan_id = message.clan_id);
+    message.channel_id !== undefined && (obj.channel_id = message.channel_id);
+    message.file_type !== undefined && (obj.file_type = message.file_type);
+    message.limit !== undefined && (obj.limit = message.limit);
+    message.state !== undefined && (obj.state = message.state);
+    message.cursor !== undefined && (obj.cursor = message.cursor);
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<ListChannelAttachmentRequest>, I>>(base?: I): ListChannelAttachmentRequest {
+    return ListChannelAttachmentRequest.fromPartial(base ?? {});
+  },
+
+  fromPartial<I extends Exact<DeepPartial<ListChannelAttachmentRequest>, I>>(object: I): ListChannelAttachmentRequest {
+    const message = createBaseListChannelAttachmentRequest();
+    message.clan_id = object.clan_id ?? "";
+    message.channel_id = object.channel_id ?? "";
+    message.file_type = object.file_type ?? "";
     message.limit = object.limit ?? undefined;
     message.state = object.state ?? undefined;
     message.cursor = object.cursor ?? "";

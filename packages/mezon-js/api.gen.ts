@@ -172,6 +172,28 @@ export interface ApiCategoryDescList {
   categorydesc?: Array<ApiCategoryDesc>;
 }
 
+/**  */
+export interface ApiChannelAttachment {
+  //
+  filename?: string;
+  //
+  filesize?: string;
+  //
+  filetype?: string;
+  //
+  id?: string;
+  //
+  uploader?: string;
+  //
+  url?: string;
+}
+
+/**  */
+export interface ApiChannelAttachmentList {
+  //
+  attachments?: Array<ApiChannelAttachment>;
+}
+
 /** A list of channel description, usually a result of a list operation. */
 export interface ApiChannelDescList {
   //Cacheable cursor to list newer channel description. Durable and designed to be stored, unlike next/prev cursors.
@@ -2222,161 +2244,6 @@ export class MezonApi {
     ]);
 }
 
-  /** List user channels */
-  listChannelDescs(bearerToken: string,
-      limit?:number,
-      state?:number,
-      cursor?:string,
-      clanId?:string,
-      channelType?:number,
-      options: any = {}): Promise<ApiChannelDescList> {
-    
-    const urlPath = "/v2/channeldesc";
-    const queryParams = new Map<string, any>();
-    queryParams.set("limit", limit);
-    queryParams.set("state", state);
-    queryParams.set("cursor", cursor);
-    queryParams.set("clan_id", clanId);
-    queryParams.set("channel_type", channelType);
-
-    let bodyJson : string = "";
-
-    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
-    const fetchOptions = buildFetchOptions("GET", options, bodyJson);
-    if (bearerToken) {
-        fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-    }
-
-    return Promise.race([
-      fetch(fullUrl, fetchOptions).then((response) => {
-        if (response.status == 204) {
-          return response;
-        } else if (response.status >= 200 && response.status < 300) {
-          return response.json();
-        } else {
-          throw response;
-        }
-      }),
-      new Promise((_, reject) =>
-        setTimeout(reject, this.timeoutMs, "Request timed out.")
-      ),
-    ]);
-}
-
-  /** Create a new channel with the current user as the owner. */
-  createChannelDesc(bearerToken: string,
-      body:ApiCreateChannelDescRequest,
-      options: any = {}): Promise<ApiChannelDescription> {
-    
-    if (body === null || body === undefined) {
-      throw new Error("'body' is a required parameter but is null or undefined.");
-    }
-    const urlPath = "/v2/channeldesc";
-    const queryParams = new Map<string, any>();
-
-    let bodyJson : string = "";
-    bodyJson = JSON.stringify(body || {});
-
-    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
-    const fetchOptions = buildFetchOptions("POST", options, bodyJson);
-    if (bearerToken) {
-        fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-    }
-
-    return Promise.race([
-      fetch(fullUrl, fetchOptions).then((response) => {
-        if (response.status == 204) {
-          return response;
-        } else if (response.status >= 200 && response.status < 300) {
-          return response.json();
-        } else {
-          throw response;
-        }
-      }),
-      new Promise((_, reject) =>
-        setTimeout(reject, this.timeoutMs, "Request timed out.")
-      ),
-    ]);
-}
-
-
-  /** Delete a channel by ID. */
-  deleteChannelDesc(bearerToken: string,
-      channelId:string,
-      options: any = {}): Promise<any> {
-    
-    if (channelId === null || channelId === undefined) {
-      throw new Error("'channelId' is a required parameter but is null or undefined.");
-    }
-    const urlPath = "/v2/channeldesc/{channelId}"
-        .replace("{channelId}", encodeURIComponent(String(channelId)));
-    const queryParams = new Map<string, any>();
-
-    let bodyJson : string = "";
-
-    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
-    const fetchOptions = buildFetchOptions("DELETE", options, bodyJson);
-    if (bearerToken) {
-        fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-    }
-
-    return Promise.race([
-      fetch(fullUrl, fetchOptions).then((response) => {
-        if (response.status == 204) {
-          return response;
-        } else if (response.status >= 200 && response.status < 300) {
-          return response.json();
-        } else {
-          throw response;
-        }
-      }),
-      new Promise((_, reject) =>
-        setTimeout(reject, this.timeoutMs, "Request timed out.")
-      ),
-    ]);
-}
-
-  /** Update fields in a given channel. */
-  updateChannelDesc(bearerToken: string,
-      channelId:string,
-      body:{},
-      options: any = {}): Promise<any> {
-    
-    if (channelId === null || channelId === undefined) {
-      throw new Error("'channelId' is a required parameter but is null or undefined.");
-    }
-    if (body === null || body === undefined) {
-      throw new Error("'body' is a required parameter but is null or undefined.");
-    }
-    const urlPath = "/v2/channeldesc/{channelId}"
-        .replace("{channelId}", encodeURIComponent(String(channelId)));
-    const queryParams = new Map<string, any>();
-
-    let bodyJson : string = "";
-    bodyJson = JSON.stringify(body || {});
-
-    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
-    const fetchOptions = buildFetchOptions("PUT", options, bodyJson);
-    if (bearerToken) {
-        fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-    }
-
-    return Promise.race([
-      fetch(fullUrl, fetchOptions).then((response) => {
-        if (response.status == 204) {
-          return response;
-        } else if (response.status >= 200 && response.status < 300) {
-          return response.json();
-        } else {
-          throw response;
-        }
-      }),
-      new Promise((_, reject) =>
-        setTimeout(reject, this.timeoutMs, "Request timed out.")
-      ),
-    ]);
-}
-
   /** Add users to a channel. */
   addChannelUsers(bearerToken: string,
       channelId:string,
@@ -2386,7 +2253,7 @@ export class MezonApi {
     if (channelId === null || channelId === undefined) {
       throw new Error("'channelId' is a required parameter but is null or undefined.");
     }
-    const urlPath = "/v2/channeldesc/{channelId}/add"
+    const urlPath = "/v2/channel/{channelId}/add"
         .replace("{channelId}", encodeURIComponent(String(channelId)));
     const queryParams = new Map<string, any>();
     queryParams.set("user_ids", userIds);
@@ -2415,6 +2282,52 @@ export class MezonApi {
     ]);
 }
 
+  /** List all attachment that are part of a channel. */
+  listChannelAttachment(bearerToken: string,
+    channelId:string,
+    clanId?:string,
+    fileType?:string,
+    limit?:number,
+    state?:number,
+    cursor?:string,
+    options: any = {}): Promise<ApiChannelAttachmentList> {
+  
+  if (channelId === null || channelId === undefined) {
+    throw new Error("'channelId' is a required parameter but is null or undefined.");
+  }
+  const urlPath = "/v2/channel/{channelId}/attachment"
+      .replace("{channelId}", encodeURIComponent(String(channelId)));
+  const queryParams = new Map<string, any>();
+  queryParams.set("clan_id", clanId);
+  queryParams.set("file_type", fileType);
+  queryParams.set("limit", limit);
+  queryParams.set("state", state);
+  queryParams.set("cursor", cursor);
+
+  let bodyJson : string = "";
+
+  const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
+  const fetchOptions = buildFetchOptions("GET", options, bodyJson);
+  if (bearerToken) {
+      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+  }
+
+  return Promise.race([
+    fetch(fullUrl, fetchOptions).then((response) => {
+      if (response.status == 204) {
+        return response;
+      } else if (response.status >= 200 && response.status < 300) {
+        return response.json();
+      } else {
+        throw response;
+      }
+    }),
+    new Promise((_, reject) =>
+      setTimeout(reject, this.timeoutMs, "Request timed out.")
+    ),
+  ]);
+}
+
   /** Leave a channel the user is a member of. */
   leaveChannel(bearerToken: string,
       channelId:string,
@@ -2423,7 +2336,7 @@ export class MezonApi {
     if (channelId === null || channelId === undefined) {
       throw new Error("'channelId' is a required parameter but is null or undefined.");
     }
-    const urlPath = "/v2/channeldesc/{channelId}/leave"
+    const urlPath = "/v2/channel/{channelId}/leave"
         .replace("{channelId}", encodeURIComponent(String(channelId)));
     const queryParams = new Map<string, any>();
 
@@ -2460,7 +2373,7 @@ export class MezonApi {
     if (channelId === null || channelId === undefined) {
       throw new Error("'channelId' is a required parameter but is null or undefined.");
     }
-    const urlPath = "/v2/channeldesc/{channelId}/remove"
+    const urlPath = "/v2/channel/{channelId}/remove"
         .replace("{channelId}", encodeURIComponent(String(channelId)));
     const queryParams = new Map<string, any>();
     queryParams.set("user_ids", userIds);
@@ -2502,7 +2415,7 @@ export class MezonApi {
     if (channelId === null || channelId === undefined) {
       throw new Error("'channelId' is a required parameter but is null or undefined.");
     }
-    const urlPath = "/v2/channeldesc/{channelId}/user"
+    const urlPath = "/v2/channel/{channelId}/user"
         .replace("{channelId}", encodeURIComponent(String(channelId)));
     const queryParams = new Map<string, any>();
     queryParams.set("clan_id", clanId);
@@ -2533,6 +2446,161 @@ export class MezonApi {
         setTimeout(reject, this.timeoutMs, "Request timed out.")
       ),
     ]);
+}
+
+/** List user channels */
+listChannelDescs(bearerToken: string,
+  limit?:number,
+  state?:number,
+  cursor?:string,
+  clanId?:string,
+  channelType?:number,
+  options: any = {}): Promise<ApiChannelDescList> {
+
+const urlPath = "/v2/channeldesc";
+const queryParams = new Map<string, any>();
+queryParams.set("limit", limit);
+queryParams.set("state", state);
+queryParams.set("cursor", cursor);
+queryParams.set("clan_id", clanId);
+queryParams.set("channel_type", channelType);
+
+let bodyJson : string = "";
+
+const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
+const fetchOptions = buildFetchOptions("GET", options, bodyJson);
+if (bearerToken) {
+    fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+}
+
+return Promise.race([
+  fetch(fullUrl, fetchOptions).then((response) => {
+    if (response.status == 204) {
+      return response;
+    } else if (response.status >= 200 && response.status < 300) {
+      return response.json();
+    } else {
+      throw response;
+    }
+  }),
+  new Promise((_, reject) =>
+    setTimeout(reject, this.timeoutMs, "Request timed out.")
+  ),
+]);
+}
+
+/** Create a new channel with the current user as the owner. */
+createChannelDesc(bearerToken: string,
+  body:ApiCreateChannelDescRequest,
+  options: any = {}): Promise<ApiChannelDescription> {
+
+if (body === null || body === undefined) {
+  throw new Error("'body' is a required parameter but is null or undefined.");
+}
+const urlPath = "/v2/channeldesc";
+const queryParams = new Map<string, any>();
+
+let bodyJson : string = "";
+bodyJson = JSON.stringify(body || {});
+
+const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
+const fetchOptions = buildFetchOptions("POST", options, bodyJson);
+if (bearerToken) {
+    fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+}
+
+return Promise.race([
+  fetch(fullUrl, fetchOptions).then((response) => {
+    if (response.status == 204) {
+      return response;
+    } else if (response.status >= 200 && response.status < 300) {
+      return response.json();
+    } else {
+      throw response;
+    }
+  }),
+  new Promise((_, reject) =>
+    setTimeout(reject, this.timeoutMs, "Request timed out.")
+  ),
+]);
+}
+
+
+/** Delete a channel by ID. */
+deleteChannelDesc(bearerToken: string,
+  channelId:string,
+  options: any = {}): Promise<any> {
+
+if (channelId === null || channelId === undefined) {
+  throw new Error("'channelId' is a required parameter but is null or undefined.");
+}
+const urlPath = "/v2/channeldesc/{channelId}"
+    .replace("{channelId}", encodeURIComponent(String(channelId)));
+const queryParams = new Map<string, any>();
+
+let bodyJson : string = "";
+
+const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
+const fetchOptions = buildFetchOptions("DELETE", options, bodyJson);
+if (bearerToken) {
+    fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+}
+
+return Promise.race([
+  fetch(fullUrl, fetchOptions).then((response) => {
+    if (response.status == 204) {
+      return response;
+    } else if (response.status >= 200 && response.status < 300) {
+      return response.json();
+    } else {
+      throw response;
+    }
+  }),
+  new Promise((_, reject) =>
+    setTimeout(reject, this.timeoutMs, "Request timed out.")
+  ),
+]);
+}
+
+/** Update fields in a given channel. */
+updateChannelDesc(bearerToken: string,
+  channelId:string,
+  body:{},
+  options: any = {}): Promise<any> {
+
+if (channelId === null || channelId === undefined) {
+  throw new Error("'channelId' is a required parameter but is null or undefined.");
+}
+if (body === null || body === undefined) {
+  throw new Error("'body' is a required parameter but is null or undefined.");
+}
+const urlPath = "/v2/channeldesc/{channelId}"
+    .replace("{channelId}", encodeURIComponent(String(channelId)));
+const queryParams = new Map<string, any>();
+
+let bodyJson : string = "";
+bodyJson = JSON.stringify(body || {});
+
+const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
+const fetchOptions = buildFetchOptions("PUT", options, bodyJson);
+if (bearerToken) {
+    fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+}
+
+return Promise.race([
+  fetch(fullUrl, fetchOptions).then((response) => {
+    if (response.status == 204) {
+      return response;
+    } else if (response.status >= 200 && response.status < 300) {
+      return response.json();
+    } else {
+      throw response;
+    }
+  }),
+  new Promise((_, reject) =>
+    setTimeout(reject, this.timeoutMs, "Request timed out.")
+  ),
+]);
 }
 
   /** List all users that are part of a channel. */
@@ -4225,7 +4293,7 @@ export class MezonApi {
   /** Create a new group with the current user as the owner. */
   uploadAttachmentFile(bearerToken: string,
       body:ApiUploadAttachmentRequest,
-      options: any = {}): Promise<any> {
+      options: any = {}): Promise<ApiUploadAttachment> {
     
     if (body === null || body === undefined) {
       throw new Error("'body' is a required parameter but is null or undefined.");

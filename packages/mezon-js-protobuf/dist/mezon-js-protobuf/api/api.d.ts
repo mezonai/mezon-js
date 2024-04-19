@@ -649,6 +649,26 @@ export interface VoiceChannelUserList {
     /** list of voice channel user */
     voice_channel_users: VoiceChannelUser[];
 }
+/** channel attachment */
+export interface ChannelAttachment {
+    /** url attachment */
+    id: string;
+    /** file name */
+    filename: string;
+    /** filetype */
+    filetype: string;
+    /** size */
+    filesize: string;
+    /** url */
+    url: string;
+    /** uploader */
+    uploader: string;
+}
+/** channel attachment list */
+export interface ChannelAttachmentList {
+    /** list attachment */
+    attachments: ChannelAttachment[];
+}
 /** A list of users belonging to a clan, along with their role. */
 export interface ClanUserList {
     /** User-role pairs for a clan. */
@@ -752,6 +772,21 @@ export interface ListChannelUsersRequest {
     channel_id: string;
     /** The channel type */
     channel_type: number;
+    /** Max number of records to return. Between 1 and 100. */
+    limit: number | undefined;
+    /** The group user state to list. */
+    state: number | undefined;
+    /** An optional next page cursor. */
+    cursor: string;
+}
+/** List all attachments that are part of a channel. */
+export interface ListChannelAttachmentRequest {
+    /** The clan id */
+    clan_id: string;
+    /** The channel ID to list from. */
+    channel_id: string;
+    /** The channel type */
+    file_type: string;
     /** Max number of records to return. Between 1 and 100. */
     limit: number | undefined;
     /** The group user state to list. */
@@ -5274,6 +5309,128 @@ export declare const VoiceChannelUserList: {
         }[]>]: never; }) | undefined;
     } & { [K_5 in Exclude<keyof I_1, "voice_channel_users">]: never; }>(object: I_1): VoiceChannelUserList;
 };
+export declare const ChannelAttachment: {
+    encode(message: ChannelAttachment, writer?: _m0.Writer): _m0.Writer;
+    decode(input: _m0.Reader | Uint8Array, length?: number): ChannelAttachment;
+    fromJSON(object: any): ChannelAttachment;
+    toJSON(message: ChannelAttachment): unknown;
+    create<I extends {
+        id?: string | undefined;
+        filename?: string | undefined;
+        filetype?: string | undefined;
+        filesize?: string | undefined;
+        url?: string | undefined;
+        uploader?: string | undefined;
+    } & {
+        id?: string | undefined;
+        filename?: string | undefined;
+        filetype?: string | undefined;
+        filesize?: string | undefined;
+        url?: string | undefined;
+        uploader?: string | undefined;
+    } & { [K in Exclude<keyof I, keyof ChannelAttachment>]: never; }>(base?: I | undefined): ChannelAttachment;
+    fromPartial<I_1 extends {
+        id?: string | undefined;
+        filename?: string | undefined;
+        filetype?: string | undefined;
+        filesize?: string | undefined;
+        url?: string | undefined;
+        uploader?: string | undefined;
+    } & {
+        id?: string | undefined;
+        filename?: string | undefined;
+        filetype?: string | undefined;
+        filesize?: string | undefined;
+        url?: string | undefined;
+        uploader?: string | undefined;
+    } & { [K_1 in Exclude<keyof I_1, keyof ChannelAttachment>]: never; }>(object: I_1): ChannelAttachment;
+};
+export declare const ChannelAttachmentList: {
+    encode(message: ChannelAttachmentList, writer?: _m0.Writer): _m0.Writer;
+    decode(input: _m0.Reader | Uint8Array, length?: number): ChannelAttachmentList;
+    fromJSON(object: any): ChannelAttachmentList;
+    toJSON(message: ChannelAttachmentList): unknown;
+    create<I extends {
+        attachments?: {
+            id?: string | undefined;
+            filename?: string | undefined;
+            filetype?: string | undefined;
+            filesize?: string | undefined;
+            url?: string | undefined;
+            uploader?: string | undefined;
+        }[] | undefined;
+    } & {
+        attachments?: ({
+            id?: string | undefined;
+            filename?: string | undefined;
+            filetype?: string | undefined;
+            filesize?: string | undefined;
+            url?: string | undefined;
+            uploader?: string | undefined;
+        }[] & ({
+            id?: string | undefined;
+            filename?: string | undefined;
+            filetype?: string | undefined;
+            filesize?: string | undefined;
+            url?: string | undefined;
+            uploader?: string | undefined;
+        } & {
+            id?: string | undefined;
+            filename?: string | undefined;
+            filetype?: string | undefined;
+            filesize?: string | undefined;
+            url?: string | undefined;
+            uploader?: string | undefined;
+        } & { [K in Exclude<keyof I["attachments"][number], keyof ChannelAttachment>]: never; })[] & { [K_1 in Exclude<keyof I["attachments"], keyof {
+            id?: string | undefined;
+            filename?: string | undefined;
+            filetype?: string | undefined;
+            filesize?: string | undefined;
+            url?: string | undefined;
+            uploader?: string | undefined;
+        }[]>]: never; }) | undefined;
+    } & { [K_2 in Exclude<keyof I, "attachments">]: never; }>(base?: I | undefined): ChannelAttachmentList;
+    fromPartial<I_1 extends {
+        attachments?: {
+            id?: string | undefined;
+            filename?: string | undefined;
+            filetype?: string | undefined;
+            filesize?: string | undefined;
+            url?: string | undefined;
+            uploader?: string | undefined;
+        }[] | undefined;
+    } & {
+        attachments?: ({
+            id?: string | undefined;
+            filename?: string | undefined;
+            filetype?: string | undefined;
+            filesize?: string | undefined;
+            url?: string | undefined;
+            uploader?: string | undefined;
+        }[] & ({
+            id?: string | undefined;
+            filename?: string | undefined;
+            filetype?: string | undefined;
+            filesize?: string | undefined;
+            url?: string | undefined;
+            uploader?: string | undefined;
+        } & {
+            id?: string | undefined;
+            filename?: string | undefined;
+            filetype?: string | undefined;
+            filesize?: string | undefined;
+            url?: string | undefined;
+            uploader?: string | undefined;
+        } & { [K_3 in Exclude<keyof I_1["attachments"][number], keyof ChannelAttachment>]: never; })[] & { [K_4 in Exclude<keyof I_1["attachments"], keyof {
+            id?: string | undefined;
+            filename?: string | undefined;
+            filetype?: string | undefined;
+            filesize?: string | undefined;
+            url?: string | undefined;
+            uploader?: string | undefined;
+        }[]>]: never; }) | undefined;
+    } & { [K_5 in Exclude<keyof I_1, "attachments">]: never; }>(object: I_1): ChannelAttachmentList;
+};
 export declare const ClanUserList: {
     encode(message: ClanUserList, writer?: _m0.Writer): _m0.Writer;
     decode(input: _m0.Reader | Uint8Array, length?: number): ClanUserList;
@@ -6055,6 +6212,42 @@ export declare const ListChannelUsersRequest: {
         state?: number | undefined;
         cursor?: string | undefined;
     } & { [K_1 in Exclude<keyof I_1, keyof ListChannelUsersRequest>]: never; }>(object: I_1): ListChannelUsersRequest;
+};
+export declare const ListChannelAttachmentRequest: {
+    encode(message: ListChannelAttachmentRequest, writer?: _m0.Writer): _m0.Writer;
+    decode(input: _m0.Reader | Uint8Array, length?: number): ListChannelAttachmentRequest;
+    fromJSON(object: any): ListChannelAttachmentRequest;
+    toJSON(message: ListChannelAttachmentRequest): unknown;
+    create<I extends {
+        clan_id?: string | undefined;
+        channel_id?: string | undefined;
+        file_type?: string | undefined;
+        limit?: number | undefined;
+        state?: number | undefined;
+        cursor?: string | undefined;
+    } & {
+        clan_id?: string | undefined;
+        channel_id?: string | undefined;
+        file_type?: string | undefined;
+        limit?: number | undefined;
+        state?: number | undefined;
+        cursor?: string | undefined;
+    } & { [K in Exclude<keyof I, keyof ListChannelAttachmentRequest>]: never; }>(base?: I | undefined): ListChannelAttachmentRequest;
+    fromPartial<I_1 extends {
+        clan_id?: string | undefined;
+        channel_id?: string | undefined;
+        file_type?: string | undefined;
+        limit?: number | undefined;
+        state?: number | undefined;
+        cursor?: string | undefined;
+    } & {
+        clan_id?: string | undefined;
+        channel_id?: string | undefined;
+        file_type?: string | undefined;
+        limit?: number | undefined;
+        state?: number | undefined;
+        cursor?: string | undefined;
+    } & { [K_1 in Exclude<keyof I_1, keyof ListChannelAttachmentRequest>]: never; }>(object: I_1): ListChannelAttachmentRequest;
 };
 export declare const ListClanUsersRequest: {
     encode(message: ListClanUsersRequest, writer?: _m0.Writer): _m0.Writer;

@@ -99,6 +99,19 @@ export interface ApiCategoryDesc {
 export interface ApiCategoryDescList {
     categorydesc?: Array<ApiCategoryDesc>;
 }
+/**  */
+export interface ApiChannelAttachment {
+    filename?: string;
+    filesize?: string;
+    filetype?: string;
+    id?: string;
+    uploader?: string;
+    url?: string;
+}
+/**  */
+export interface ApiChannelAttachmentList {
+    attachments?: Array<ApiChannelAttachment>;
+}
 /** A list of channel description, usually a result of a list operation. */
 export interface ApiChannelDescList {
     cacheable_cursor?: string;
@@ -619,6 +632,16 @@ export declare class MezonApi {
     listCategoryDescs(bearerToken: string, clanId: string, creatorId?: string, categoryName?: string, categoryId?: string, options?: any): Promise<ApiCategoryDescList>;
     /** List a channel's message history. */
     listChannelMessages(bearerToken: string, channelId: string, messageId?: string, direction?: number, limit?: number, options?: any): Promise<ApiChannelMessageList>;
+    /** Add users to a channel. */
+    addChannelUsers(bearerToken: string, channelId: string, userIds?: Array<string>, options?: any): Promise<any>;
+    /** List all attachment that are part of a channel. */
+    listChannelAttachment(bearerToken: string, channelId: string, clanId?: string, fileType?: string, limit?: number, state?: number, cursor?: string, options?: any): Promise<ApiChannelAttachmentList>;
+    /** Leave a channel the user is a member of. */
+    leaveChannel(bearerToken: string, channelId: string, options?: any): Promise<any>;
+    /** Kick a set of users from a channel. */
+    removeChannelUsers(bearerToken: string, channelId: string, userIds?: Array<string>, options?: any): Promise<any>;
+    /** List all users that are part of a channel. */
+    listChannelUsers(bearerToken: string, clanId: string, channelId: string, channelType?: number, limit?: number, state?: number, cursor?: string, options?: any): Promise<ApiChannelUserList>;
     /** List user channels */
     listChannelDescs(bearerToken: string, limit?: number, state?: number, cursor?: string, clanId?: string, channelType?: number, options?: any): Promise<ApiChannelDescList>;
     /** Create a new channel with the current user as the owner. */
@@ -627,14 +650,6 @@ export declare class MezonApi {
     deleteChannelDesc(bearerToken: string, channelId: string, options?: any): Promise<any>;
     /** Update fields in a given channel. */
     updateChannelDesc(bearerToken: string, channelId: string, body: {}, options?: any): Promise<any>;
-    /** Add users to a channel. */
-    addChannelUsers(bearerToken: string, channelId: string, userIds?: Array<string>, options?: any): Promise<any>;
-    /** Leave a channel the user is a member of. */
-    leaveChannel(bearerToken: string, channelId: string, options?: any): Promise<any>;
-    /** Kick a set of users from a channel. */
-    removeChannelUsers(bearerToken: string, channelId: string, userIds?: Array<string>, options?: any): Promise<any>;
-    /** List all users that are part of a channel. */
-    listChannelUsers(bearerToken: string, clanId: string, channelId: string, channelType?: number, limit?: number, state?: number, cursor?: string, options?: any): Promise<ApiChannelUserList>;
     /** List all users that are part of a channel. */
     listChannelVoiceUsers(bearerToken: string, clanId?: string, channelId?: string, channelType?: number, limit?: number, state?: number, cursor?: string, options?: any): Promise<ApiVoiceChannelUserList>;
     /** List clans */
@@ -726,7 +741,7 @@ export declare class MezonApi {
     /**  */
     updateUserProfileByClan(bearerToken: string, clanId: string, body: {}, options?: any): Promise<any>;
     /** Create a new group with the current user as the owner. */
-    uploadAttachmentFile(bearerToken: string, body: ApiUploadAttachmentRequest, options?: any): Promise<any>;
+    uploadAttachmentFile(bearerToken: string, body: ApiUploadAttachmentRequest, options?: any): Promise<ApiUploadAttachment>;
     /** Fetch zero or more users by ID and/or username. */
     getUsers(bearerToken: string, ids?: Array<string>, usernames?: Array<string>, facebookIds?: Array<string>, options?: any): Promise<ApiUsers>;
     /**  */
