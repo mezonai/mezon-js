@@ -213,7 +213,7 @@ export interface ApiChannelDescription {
   //
   category_name?: string;
   //
-  channel_avatar?: string;
+  channel_avatar?: Array<string>;
   //The channel this message belongs to.
   channel_id?: string;
   //
@@ -233,7 +233,7 @@ export interface ApiChannelDescription {
   //The channel type.
   type?: number;
   //
-  user_id?: string;
+  user_id?: Array<string>;
 }
 
 /** A message sent on a channel. */
@@ -671,6 +671,8 @@ export interface ApiRole {
   //
   allow_mention?: number;
   //
+  channel_ids?: Array<string>;
+  //
   clan_id?: string;
   //
   color?: string;
@@ -685,6 +687,8 @@ export interface ApiRole {
   //
   permission_list?: ApiPermissionList;
   //
+  role_channel_active?: number;
+  //
   role_icon?: string;
   //
   role_user_list?: ApiRoleUserList;
@@ -692,10 +696,6 @@ export interface ApiRole {
   slug?: string;
   //
   title?: string;
-  //
-  role_channel_active?: string;
-  //
-  channel_ids?: Array<string>;
 }
 
 /** A list of role description, usually a result of a list operation. */
@@ -3419,7 +3419,7 @@ return Promise.race([
   getListPermission(bearerToken: string,
       options: any = {}): Promise<ApiPermissionList> {
     
-    const urlPath = "/v2/listpermission";
+    const urlPath = "/v2/permissions";
     const queryParams = new Map<string, any>();
 
     let bodyJson : string = "";

@@ -123,7 +123,7 @@ export interface ApiChannelDescList {
 export interface ApiChannelDescription {
     category_id?: string;
     category_name?: string;
-    channel_avatar?: string;
+    channel_avatar?: Array<string>;
     channel_id?: string;
     channel_label?: string;
     channel_private?: number;
@@ -133,7 +133,7 @@ export interface ApiChannelDescription {
     last_sent_message?: ApiChannelMessageHeader;
     parrent_id?: string;
     type?: number;
-    user_id?: string;
+    user_id?: Array<string>;
 }
 /** A message sent on a channel. */
 export interface ApiChannelMessage {
@@ -387,6 +387,7 @@ export interface ApiReadStorageObjectsRequest {
 export interface ApiRole {
     active?: number;
     allow_mention?: number;
+    channel_ids?: Array<string>;
     clan_id?: string;
     color?: string;
     creator_id?: string;
@@ -394,12 +395,11 @@ export interface ApiRole {
     display_online?: number;
     id?: string;
     permission_list?: ApiPermissionList;
+    role_channel_active?: number;
     role_icon?: string;
     role_user_list?: ApiRoleUserList;
     slug?: string;
     title?: string;
-    role_channel_active?: string;
-    channel_ids?: Array<string>;
 }
 /** A list of role description, usually a result of a list operation. */
 export interface ApiRoleList {
