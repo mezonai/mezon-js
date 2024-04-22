@@ -2544,7 +2544,7 @@ var MezonApi = class {
   }
   /**  */
   getListPermission(bearerToken, options = {}) {
-    const urlPath = "/v2/listpermission";
+    const urlPath = "/v2/permissions";
     const queryParams = /* @__PURE__ */ new Map();
     let bodyJson = "";
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
