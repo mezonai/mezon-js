@@ -3530,30 +3530,36 @@ var _DefaultSocket = class _DefaultSocket {
         } else if (message.stream_data) {
           this.onstreamdata(message.stream_data);
         } else if (message.channel_message) {
+          var content, reactions, mentions, attachments, references;
           try {
-            var e = {
-              avatar: message.channel_message.avatar,
-              channel_id: message.channel_message.channel_id,
-              mode: message.channel_message.mode,
-              channel_label: message.channel_message.channel_label,
-              clan_id: message.channel_message.clan_id,
-              code: message.channel_message.code,
-              content: JSON.parse(message.channel_message.content),
-              create_time: message.channel_message.create_time,
-              id: message.channel_message.message_id,
-              sender_id: message.channel_message.sender_id,
-              update_time: message.channel_message.update_time,
-              user_id_one: message.channel_message.user_id_one,
-              user_id_two: message.channel_message.user_id_two,
-              username: message.channel_message.username,
-              reactions: JSON.parse(message.channel_message.reactions),
-              mentions: JSON.parse(message.channel_message.mentions),
-              attachments: JSON.parse(message.channel_message.attachments),
-              references: JSON.parse(message.channel_message.references)
-            };
-            this.onchannelmessage(e);
+            content = JSON.parse(message.channel_message.content);
+            reactions = JSON.parse(message.channel_message.reactions);
+            mentions = JSON.parse(message.channel_message.mentions);
+            attachments = JSON.parse(message.channel_message.attachments);
+            references = JSON.parse(message.channel_message.references);
           } catch (e2) {
           }
+          var e = {
+            avatar: message.channel_message.avatar,
+            channel_id: message.channel_message.channel_id,
+            mode: message.channel_message.mode,
+            channel_label: message.channel_message.channel_label,
+            clan_id: message.channel_message.clan_id,
+            code: message.channel_message.code,
+            create_time: message.channel_message.create_time,
+            id: message.channel_message.message_id,
+            sender_id: message.channel_message.sender_id,
+            update_time: message.channel_message.update_time,
+            user_id_one: message.channel_message.user_id_one,
+            user_id_two: message.channel_message.user_id_two,
+            username: message.channel_message.username,
+            content,
+            reactions,
+            mentions,
+            attachments,
+            references
+          };
+          this.onchannelmessage(e);
         } else if (message.message_typing_event) {
           this.onmessagetyping(message.message_typing_event);
         } else if (message.message_reaction_event) {
