@@ -2982,7 +2982,6 @@ function createBaseEnvelope() {
     message_typing_event: void 0,
     last_seen_message_event: void 0,
     message_reaction_event: void 0,
-    message_deleted_event: void 0,
     voice_joined_event: void 0,
     voice_leaved_event: void 0,
     channel_created_event: void 0,
@@ -3108,20 +3107,17 @@ var Envelope = {
     if (message.message_reaction_event !== void 0) {
       MessageReactionEvent.encode(message.message_reaction_event, writer.uint32(314).fork()).ldelim();
     }
-    if (message.message_deleted_event !== void 0) {
-      MessageDeletedEvent.encode(message.message_deleted_event, writer.uint32(322).fork()).ldelim();
-    }
     if (message.voice_joined_event !== void 0) {
-      VoiceJoinedEvent.encode(message.voice_joined_event, writer.uint32(330).fork()).ldelim();
+      VoiceJoinedEvent.encode(message.voice_joined_event, writer.uint32(322).fork()).ldelim();
     }
     if (message.voice_leaved_event !== void 0) {
-      VoiceLeavedEvent.encode(message.voice_leaved_event, writer.uint32(338).fork()).ldelim();
+      VoiceLeavedEvent.encode(message.voice_leaved_event, writer.uint32(330).fork()).ldelim();
     }
     if (message.channel_created_event !== void 0) {
-      ChannelCreatedEvent.encode(message.channel_created_event, writer.uint32(346).fork()).ldelim();
+      ChannelCreatedEvent.encode(message.channel_created_event, writer.uint32(338).fork()).ldelim();
     }
     if (message.channel_deleted_event !== void 0) {
-      ChannelDeletedEvent.encode(message.channel_deleted_event, writer.uint32(354).fork()).ldelim();
+      ChannelDeletedEvent.encode(message.channel_deleted_event, writer.uint32(346).fork()).ldelim();
     }
     return writer;
   },
@@ -3250,18 +3246,15 @@ var Envelope = {
           message.message_reaction_event = MessageReactionEvent.decode(reader, reader.uint32());
           break;
         case 40:
-          message.message_deleted_event = MessageDeletedEvent.decode(reader, reader.uint32());
-          break;
-        case 41:
           message.voice_joined_event = VoiceJoinedEvent.decode(reader, reader.uint32());
           break;
-        case 42:
+        case 41:
           message.voice_leaved_event = VoiceLeavedEvent.decode(reader, reader.uint32());
           break;
-        case 43:
+        case 42:
           message.channel_created_event = ChannelCreatedEvent.decode(reader, reader.uint32());
           break;
-        case 44:
+        case 43:
           message.channel_deleted_event = ChannelDeletedEvent.decode(reader, reader.uint32());
           break;
         default:
@@ -3312,7 +3305,6 @@ var Envelope = {
       message_typing_event: isSet4(object.message_typing_event) ? MessageTypingEvent.fromJSON(object.message_typing_event) : void 0,
       last_seen_message_event: isSet4(object.last_seen_message_event) ? LastSeenMessageEvent.fromJSON(object.last_seen_message_event) : void 0,
       message_reaction_event: isSet4(object.message_reaction_event) ? MessageReactionEvent.fromJSON(object.message_reaction_event) : void 0,
-      message_deleted_event: isSet4(object.message_deleted_event) ? MessageDeletedEvent.fromJSON(object.message_deleted_event) : void 0,
       voice_joined_event: isSet4(object.voice_joined_event) ? VoiceJoinedEvent.fromJSON(object.voice_joined_event) : void 0,
       voice_leaved_event: isSet4(object.voice_leaved_event) ? VoiceLeavedEvent.fromJSON(object.voice_leaved_event) : void 0,
       channel_created_event: isSet4(object.channel_created_event) ? ChannelCreatedEvent.fromJSON(object.channel_created_event) : void 0,
@@ -3360,7 +3352,6 @@ var Envelope = {
     message.message_typing_event !== void 0 && (obj.message_typing_event = message.message_typing_event ? MessageTypingEvent.toJSON(message.message_typing_event) : void 0);
     message.last_seen_message_event !== void 0 && (obj.last_seen_message_event = message.last_seen_message_event ? LastSeenMessageEvent.toJSON(message.last_seen_message_event) : void 0);
     message.message_reaction_event !== void 0 && (obj.message_reaction_event = message.message_reaction_event ? MessageReactionEvent.toJSON(message.message_reaction_event) : void 0);
-    message.message_deleted_event !== void 0 && (obj.message_deleted_event = message.message_deleted_event ? MessageDeletedEvent.toJSON(message.message_deleted_event) : void 0);
     message.voice_joined_event !== void 0 && (obj.voice_joined_event = message.voice_joined_event ? VoiceJoinedEvent.toJSON(message.voice_joined_event) : void 0);
     message.voice_leaved_event !== void 0 && (obj.voice_leaved_event = message.voice_leaved_event ? VoiceLeavedEvent.toJSON(message.voice_leaved_event) : void 0);
     message.channel_created_event !== void 0 && (obj.channel_created_event = message.channel_created_event ? ChannelCreatedEvent.toJSON(message.channel_created_event) : void 0);
@@ -3412,7 +3403,6 @@ var Envelope = {
     message.message_typing_event = object.message_typing_event !== void 0 && object.message_typing_event !== null ? MessageTypingEvent.fromPartial(object.message_typing_event) : void 0;
     message.last_seen_message_event = object.last_seen_message_event !== void 0 && object.last_seen_message_event !== null ? LastSeenMessageEvent.fromPartial(object.last_seen_message_event) : void 0;
     message.message_reaction_event = object.message_reaction_event !== void 0 && object.message_reaction_event !== null ? MessageReactionEvent.fromPartial(object.message_reaction_event) : void 0;
-    message.message_deleted_event = object.message_deleted_event !== void 0 && object.message_deleted_event !== null ? MessageDeletedEvent.fromPartial(object.message_deleted_event) : void 0;
     message.voice_joined_event = object.voice_joined_event !== void 0 && object.voice_joined_event !== null ? VoiceJoinedEvent.fromPartial(object.voice_joined_event) : void 0;
     message.voice_leaved_event = object.voice_leaved_event !== void 0 && object.voice_leaved_event !== null ? VoiceLeavedEvent.fromPartial(object.voice_leaved_event) : void 0;
     message.channel_created_event = object.channel_created_event !== void 0 && object.channel_created_event !== null ? ChannelCreatedEvent.fromPartial(object.channel_created_event) : void 0;
@@ -6026,89 +6016,6 @@ var MessageReactionEvent = {
     message.message_sender_id = (_j = object.message_sender_id) != null ? _j : "";
     message.count = (_k = object.count) != null ? _k : 0;
     message.mode = (_l = object.mode) != null ? _l : 0;
-    return message;
-  }
-};
-function createBaseMessageDeletedEvent() {
-  return { channel_id: "", channel_label: "", message_id: "", deletor: "", mode: 0 };
-}
-var MessageDeletedEvent = {
-  encode(message, writer = import_minimal4.default.Writer.create()) {
-    if (message.channel_id !== "") {
-      writer.uint32(10).string(message.channel_id);
-    }
-    if (message.channel_label !== "") {
-      writer.uint32(18).string(message.channel_label);
-    }
-    if (message.message_id !== "") {
-      writer.uint32(26).string(message.message_id);
-    }
-    if (message.deletor !== "") {
-      writer.uint32(34).string(message.deletor);
-    }
-    if (message.mode !== 0) {
-      writer.uint32(40).int32(message.mode);
-    }
-    return writer;
-  },
-  decode(input, length) {
-    const reader = input instanceof import_minimal4.default.Reader ? input : new import_minimal4.default.Reader(input);
-    let end = length === void 0 ? reader.len : reader.pos + length;
-    const message = createBaseMessageDeletedEvent();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
-          message.channel_id = reader.string();
-          break;
-        case 2:
-          message.channel_label = reader.string();
-          break;
-        case 3:
-          message.message_id = reader.string();
-          break;
-        case 4:
-          message.deletor = reader.string();
-          break;
-        case 5:
-          message.mode = reader.int32();
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
-      }
-    }
-    return message;
-  },
-  fromJSON(object) {
-    return {
-      channel_id: isSet4(object.channel_id) ? String(object.channel_id) : "",
-      channel_label: isSet4(object.channel_label) ? String(object.channel_label) : "",
-      message_id: isSet4(object.message_id) ? String(object.message_id) : "",
-      deletor: isSet4(object.deletor) ? String(object.deletor) : "",
-      mode: isSet4(object.mode) ? Number(object.mode) : 0
-    };
-  },
-  toJSON(message) {
-    const obj = {};
-    message.channel_id !== void 0 && (obj.channel_id = message.channel_id);
-    message.channel_label !== void 0 && (obj.channel_label = message.channel_label);
-    message.message_id !== void 0 && (obj.message_id = message.message_id);
-    message.deletor !== void 0 && (obj.deletor = message.deletor);
-    message.mode !== void 0 && (obj.mode = Math.round(message.mode));
-    return obj;
-  },
-  create(base) {
-    return MessageDeletedEvent.fromPartial(base != null ? base : {});
-  },
-  fromPartial(object) {
-    var _a, _b, _c, _d, _e;
-    const message = createBaseMessageDeletedEvent();
-    message.channel_id = (_a = object.channel_id) != null ? _a : "";
-    message.channel_label = (_b = object.channel_label) != null ? _b : "";
-    message.message_id = (_c = object.message_id) != null ? _c : "";
-    message.deletor = (_d = object.deletor) != null ? _d : "";
-    message.mode = (_e = object.mode) != null ? _e : 0;
     return message;
   }
 };
