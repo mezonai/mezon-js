@@ -165,21 +165,6 @@ export interface MessageAttachmentEvent {
 }
 
 /** User is delete to message */
-export interface MessageDeletedEvent {
-  /** The channel this message belongs to. */
-  channel_id:string;
-  // The mode
-  mode: number;
-  // The channel label
-  channel_label: string;
-  /** The message that user react */
-  message_id: string;
-  /** Message sender, usually a user ID. */
-  deletor: string;  
-}
-
-
-/** User is delete to message */
 export interface MessageRefEvent {
   /** The channel this message belongs to. */
   channel_id:string;
@@ -715,9 +700,6 @@ export interface Socket {
   /** Send message reaction */
   writeMessageReaction(id: string, channel_id: string, channel_label: string, mode: number, message_id: string, emoji: string, count: number, message_sender_id: string, action_delete: boolean) : Promise<MessageReactionEvent>;
 
-  /** Send message mention */
-  writeMessageDeleted(channel_id: string, channel_label: string, mode: number, message_id: string, deletor: string) : Promise<MessageDeletedEvent>;
-
   /** Send last seen message */
   writeLastSeenMessage(channel_id: string, channel_label: string, mode: number, message_id: string, timestamp: string) : Promise<LastSeenMessageEvent>;
 
@@ -779,9 +761,6 @@ export interface Socket {
 
   /** Receive reaction event */
   onmessagereaction: (messageReactionEvent: MessageReactionEvent) => void;
-
-  /** Receive deleted message */
-  onmessagedeleted: (messageDeletedEvent: MessageDeletedEvent) => void;
 
   /** Receive channel presence updates. */
   onchannelpresence: (channelPresence: ChannelPresenceEvent) => void;
@@ -920,8 +899,6 @@ export class DefaultSocket implements Socket {
           this.onmessagetyping(<MessageTypingEvent>message.message_typing_event);
         } else if (message.message_reaction_event) {
           this.onmessagereaction(<MessageReactionEvent>message.message_reaction_event);
-        } else if (message.message_deleted_event) {
-          this.onmessagedeleted(<MessageDeletedEvent>message.message_deleted_event);
         } else if (message.channel_presence_event) {
           this.onchannelpresence(<ChannelPresenceEvent>message.channel_presence_event);
         } else if (message.party_data) {
@@ -1020,12 +997,6 @@ export class DefaultSocket implements Socket {
   onmessagereaction(messagereaction: MessageReactionEvent) {
     if (this.verbose && window && window.console) {
       console.log(messagereaction);
-    }
-  }
-
-  onmessagedeleted(messagedeleted: MessageDeletedEvent) {
-    if (this.verbose && window && window.console) {
-      console.log(messagedeleted);
     }
   }
 
@@ -1308,11 +1279,6 @@ export class DefaultSocket implements Socket {
   async writeMessageReaction(id: string, channel_id: string, channel_label: string, mode: number, message_id: string, emoji: string, count: number, message_sender_id: string, action_delete: boolean) : Promise<MessageReactionEvent> {
     const response = await this.send({message_reaction_event: {id: id, channel_id: channel_id, channel_label: channel_label, mode: mode, message_id: message_id, emoji: emoji, count: count, message_sender_id: message_sender_id, action: action_delete}});
     return response.message_reaction_event
-  }
-
-  async writeMessageDeleted(channel_id: string, channel_label: string, mode: number, message_id: string) : Promise<MessageDeletedEvent> {
-    const response = await this.send({message_deleted_event: {channel_id: channel_id, channel_label: channel_label, mode: mode, message_id: message_id}});
-    return response.message_deleted_event
   }
 
   async writeMessageTyping(channel_id: string, channel_label: string, mode: number) : Promise<MessageTypingEvent> {

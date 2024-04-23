@@ -122,17 +122,6 @@ export interface MessageAttachmentEvent {
     height?: number;
 }
 /** User is delete to message */
-export interface MessageDeletedEvent {
-    /** The channel this message belongs to. */
-    channel_id: string;
-    mode: number;
-    channel_label: string;
-    /** The message that user react */
-    message_id: string;
-    /** Message sender, usually a user ID. */
-    deletor: string;
-}
-/** User is delete to message */
 export interface MessageRefEvent {
     /** The channel this message belongs to. */
     channel_id: string;
@@ -555,8 +544,6 @@ export interface Socket {
     writeMessageTyping(channel_id: string, channel_label: string, mode: number): Promise<MessageTypingEvent>;
     /** Send message reaction */
     writeMessageReaction(id: string, channel_id: string, channel_label: string, mode: number, message_id: string, emoji: string, count: number, message_sender_id: string, action_delete: boolean): Promise<MessageReactionEvent>;
-    /** Send message mention */
-    writeMessageDeleted(channel_id: string, channel_label: string, mode: number, message_id: string, deletor: string): Promise<MessageDeletedEvent>;
     /** Send last seen message */
     writeLastSeenMessage(channel_id: string, channel_label: string, mode: number, message_id: string, timestamp: string): Promise<LastSeenMessageEvent>;
     /** send voice joined */
@@ -600,8 +587,6 @@ export interface Socket {
     onmessagetyping: (messageTypingEvent: MessageTypingEvent) => void;
     /** Receive reaction event */
     onmessagereaction: (messageReactionEvent: MessageReactionEvent) => void;
-    /** Receive deleted message */
-    onmessagedeleted: (messageDeletedEvent: MessageDeletedEvent) => void;
     /** Receive channel presence updates. */
     onchannelpresence: (channelPresence: ChannelPresenceEvent) => void;
     onvoicejoined: (voiceParticipant: VoiceJoinedEvent) => void;
@@ -642,7 +627,6 @@ export declare class DefaultSocket implements Socket {
     onerror(evt: Event): void;
     onmessagetyping(messagetyping: MessageTypingEvent): void;
     onmessagereaction(messagereaction: MessageReactionEvent): void;
-    onmessagedeleted(messagedeleted: MessageDeletedEvent): void;
     onchannelmessage(channelMessage: ChannelMessageEvent): void;
     onchannelpresence(channelPresence: ChannelPresenceEvent): void;
     onnotification(notification: Notification): void;
@@ -682,7 +666,6 @@ export declare class DefaultSocket implements Socket {
     updateStatus(status?: string): Promise<void>;
     writeChatMessage(clan_id: string, channel_id: string, channel_label: string, mode: number, content: any, mentions?: Array<ApiMessageMention>, attachments?: Array<ApiMessageAttachment>, references?: Array<ApiMessageRef>): Promise<ChannelMessageAck>;
     writeMessageReaction(id: string, channel_id: string, channel_label: string, mode: number, message_id: string, emoji: string, count: number, message_sender_id: string, action_delete: boolean): Promise<MessageReactionEvent>;
-    writeMessageDeleted(channel_id: string, channel_label: string, mode: number, message_id: string): Promise<MessageDeletedEvent>;
     writeMessageTyping(channel_id: string, channel_label: string, mode: number): Promise<MessageTypingEvent>;
     writeLastSeenMessage(channel_id: string, channel_label: string, mode: number, message_id: string, timestamp: string): Promise<LastSeenMessageEvent>;
     writeVoiceJoined(id: string, clanId: string, clanName: string, voiceChannelId: string, voiceChannelLabel: string, participant: string, lastScreenshot: string): Promise<VoiceJoinedEvent>;
