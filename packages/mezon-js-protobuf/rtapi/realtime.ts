@@ -164,10 +164,6 @@ export interface Envelope {
   message_reaction_event?:
     | MessageReactionEvent
     | undefined;
-  /** User delete message event */
-  message_deleted_event?:
-    | MessageDeletedEvent
-    | undefined;
   /** user join voice channel */
   voice_joined_event?:
     | VoiceJoinedEvent
@@ -765,20 +761,6 @@ export interface MessageAttachmentEvent {
   mode: number;
 }
 
-/** Mention to message */
-export interface MessageDeletedEvent {
-  /** The channel this message belongs to. */
-  channel_id: string;
-  /** The channel name */
-  channel_label: string;
-  /** React to message */
-  message_id: string;
-  /** sender id */
-  deletor: string;
-  /** mode */
-  mode: number;
-}
-
 /** Voice Joined event */
 export interface VoiceLeavedEvent {
   /** id voice */
@@ -948,7 +930,6 @@ function createBaseEnvelope(): Envelope {
     message_typing_event: undefined,
     last_seen_message_event: undefined,
     message_reaction_event: undefined,
-    message_deleted_event: undefined,
     voice_joined_event: undefined,
     voice_leaved_event: undefined,
     channel_created_event: undefined,
@@ -1075,20 +1056,17 @@ export const Envelope = {
     if (message.message_reaction_event !== undefined) {
       MessageReactionEvent.encode(message.message_reaction_event, writer.uint32(314).fork()).ldelim();
     }
-    if (message.message_deleted_event !== undefined) {
-      MessageDeletedEvent.encode(message.message_deleted_event, writer.uint32(322).fork()).ldelim();
-    }
     if (message.voice_joined_event !== undefined) {
-      VoiceJoinedEvent.encode(message.voice_joined_event, writer.uint32(330).fork()).ldelim();
+      VoiceJoinedEvent.encode(message.voice_joined_event, writer.uint32(322).fork()).ldelim();
     }
     if (message.voice_leaved_event !== undefined) {
-      VoiceLeavedEvent.encode(message.voice_leaved_event, writer.uint32(338).fork()).ldelim();
+      VoiceLeavedEvent.encode(message.voice_leaved_event, writer.uint32(330).fork()).ldelim();
     }
     if (message.channel_created_event !== undefined) {
-      ChannelCreatedEvent.encode(message.channel_created_event, writer.uint32(346).fork()).ldelim();
+      ChannelCreatedEvent.encode(message.channel_created_event, writer.uint32(338).fork()).ldelim();
     }
     if (message.channel_deleted_event !== undefined) {
-      ChannelDeletedEvent.encode(message.channel_deleted_event, writer.uint32(354).fork()).ldelim();
+      ChannelDeletedEvent.encode(message.channel_deleted_event, writer.uint32(346).fork()).ldelim();
     }
     return writer;
   },
@@ -1218,18 +1196,15 @@ export const Envelope = {
           message.message_reaction_event = MessageReactionEvent.decode(reader, reader.uint32());
           break;
         case 40:
-          message.message_deleted_event = MessageDeletedEvent.decode(reader, reader.uint32());
-          break;
-        case 41:
           message.voice_joined_event = VoiceJoinedEvent.decode(reader, reader.uint32());
           break;
-        case 42:
+        case 41:
           message.voice_leaved_event = VoiceLeavedEvent.decode(reader, reader.uint32());
           break;
-        case 43:
+        case 42:
           message.channel_created_event = ChannelCreatedEvent.decode(reader, reader.uint32());
           break;
-        case 44:
+        case 43:
           message.channel_deleted_event = ChannelDeletedEvent.decode(reader, reader.uint32());
           break;
         default:
@@ -1306,9 +1281,6 @@ export const Envelope = {
         : undefined,
       message_reaction_event: isSet(object.message_reaction_event)
         ? MessageReactionEvent.fromJSON(object.message_reaction_event)
-        : undefined,
-      message_deleted_event: isSet(object.message_deleted_event)
-        ? MessageDeletedEvent.fromJSON(object.message_deleted_event)
         : undefined,
       voice_joined_event: isSet(object.voice_joined_event)
         ? VoiceJoinedEvent.fromJSON(object.voice_joined_event)
@@ -1409,9 +1381,6 @@ export const Envelope = {
       : undefined);
     message.message_reaction_event !== undefined && (obj.message_reaction_event = message.message_reaction_event
       ? MessageReactionEvent.toJSON(message.message_reaction_event)
-      : undefined);
-    message.message_deleted_event !== undefined && (obj.message_deleted_event = message.message_deleted_event
-      ? MessageDeletedEvent.toJSON(message.message_deleted_event)
       : undefined);
     message.voice_joined_event !== undefined && (obj.voice_joined_event = message.voice_joined_event
       ? VoiceJoinedEvent.toJSON(message.voice_joined_event)
@@ -1546,10 +1515,6 @@ export const Envelope = {
     message.message_reaction_event =
       (object.message_reaction_event !== undefined && object.message_reaction_event !== null)
         ? MessageReactionEvent.fromPartial(object.message_reaction_event)
-        : undefined;
-    message.message_deleted_event =
-      (object.message_deleted_event !== undefined && object.message_deleted_event !== null)
-        ? MessageDeletedEvent.fromPartial(object.message_deleted_event)
         : undefined;
     message.voice_joined_event = (object.voice_joined_event !== undefined && object.voice_joined_event !== null)
       ? VoiceJoinedEvent.fromPartial(object.voice_joined_event)
@@ -5089,95 +5054,6 @@ export const MessageAttachmentEvent = {
     message.width = object.width ?? 0;
     message.height = object.height ?? 0;
     message.sender_id = object.sender_id ?? "";
-    message.mode = object.mode ?? 0;
-    return message;
-  },
-};
-
-function createBaseMessageDeletedEvent(): MessageDeletedEvent {
-  return { channel_id: "", channel_label: "", message_id: "", deletor: "", mode: 0 };
-}
-
-export const MessageDeletedEvent = {
-  encode(message: MessageDeletedEvent, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.channel_id !== "") {
-      writer.uint32(10).string(message.channel_id);
-    }
-    if (message.channel_label !== "") {
-      writer.uint32(18).string(message.channel_label);
-    }
-    if (message.message_id !== "") {
-      writer.uint32(26).string(message.message_id);
-    }
-    if (message.deletor !== "") {
-      writer.uint32(34).string(message.deletor);
-    }
-    if (message.mode !== 0) {
-      writer.uint32(40).int32(message.mode);
-    }
-    return writer;
-  },
-
-  decode(input: _m0.Reader | Uint8Array, length?: number): MessageDeletedEvent {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseMessageDeletedEvent();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
-          message.channel_id = reader.string();
-          break;
-        case 2:
-          message.channel_label = reader.string();
-          break;
-        case 3:
-          message.message_id = reader.string();
-          break;
-        case 4:
-          message.deletor = reader.string();
-          break;
-        case 5:
-          message.mode = reader.int32();
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
-      }
-    }
-    return message;
-  },
-
-  fromJSON(object: any): MessageDeletedEvent {
-    return {
-      channel_id: isSet(object.channel_id) ? String(object.channel_id) : "",
-      channel_label: isSet(object.channel_label) ? String(object.channel_label) : "",
-      message_id: isSet(object.message_id) ? String(object.message_id) : "",
-      deletor: isSet(object.deletor) ? String(object.deletor) : "",
-      mode: isSet(object.mode) ? Number(object.mode) : 0,
-    };
-  },
-
-  toJSON(message: MessageDeletedEvent): unknown {
-    const obj: any = {};
-    message.channel_id !== undefined && (obj.channel_id = message.channel_id);
-    message.channel_label !== undefined && (obj.channel_label = message.channel_label);
-    message.message_id !== undefined && (obj.message_id = message.message_id);
-    message.deletor !== undefined && (obj.deletor = message.deletor);
-    message.mode !== undefined && (obj.mode = Math.round(message.mode));
-    return obj;
-  },
-
-  create<I extends Exact<DeepPartial<MessageDeletedEvent>, I>>(base?: I): MessageDeletedEvent {
-    return MessageDeletedEvent.fromPartial(base ?? {});
-  },
-
-  fromPartial<I extends Exact<DeepPartial<MessageDeletedEvent>, I>>(object: I): MessageDeletedEvent {
-    const message = createBaseMessageDeletedEvent();
-    message.channel_id = object.channel_id ?? "";
-    message.channel_label = object.channel_label ?? "";
-    message.message_id = object.message_id ?? "";
-    message.deletor = object.deletor ?? "";
     message.mode = object.mode ?? 0;
     return message;
   },

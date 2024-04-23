@@ -3564,8 +3564,6 @@ var _DefaultSocket = class _DefaultSocket {
           this.onmessagetyping(message.message_typing_event);
         } else if (message.message_reaction_event) {
           this.onmessagereaction(message.message_reaction_event);
-        } else if (message.message_deleted_event) {
-          this.onmessagedeleted(message.message_deleted_event);
         } else if (message.channel_presence_event) {
           this.onchannelpresence(message.channel_presence_event);
         } else if (message.party_data) {
@@ -3651,11 +3649,6 @@ var _DefaultSocket = class _DefaultSocket {
   onmessagereaction(messagereaction) {
     if (this.verbose && window && window.console) {
       console.log(messagereaction);
-    }
-  }
-  onmessagedeleted(messagedeleted) {
-    if (this.verbose && window && window.console) {
-      console.log(messagedeleted);
     }
   }
   onchannelmessage(channelMessage) {
@@ -3908,12 +3901,6 @@ var _DefaultSocket = class _DefaultSocket {
     return __async(this, null, function* () {
       const response = yield this.send({ message_reaction_event: { id, channel_id, channel_label, mode, message_id, emoji, count, message_sender_id, action: action_delete } });
       return response.message_reaction_event;
-    });
-  }
-  writeMessageDeleted(channel_id, channel_label, mode, message_id) {
-    return __async(this, null, function* () {
-      const response = yield this.send({ message_deleted_event: { channel_id, channel_label, mode, message_id } });
-      return response.message_deleted_event;
     });
   }
   writeMessageTyping(channel_id, channel_label, mode) {
