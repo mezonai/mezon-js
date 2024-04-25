@@ -2733,7 +2733,18 @@ var ChannelMessage = {
   }
 };
 function createBaseNotification() {
-  return { id: "", subject: "", content: "", code: 0, sender_id: "", create_time: void 0, persistent: false };
+  return {
+    id: "",
+    subject: "",
+    content: "",
+    code: 0,
+    sender_id: "",
+    create_time: void 0,
+    persistent: false,
+    clan_id: "",
+    channel_id: "",
+    channel_mode: ""
+  };
 }
 var Notification = {
   encode(message, writer = import_minimal3.default.Writer.create()) {
@@ -2757,6 +2768,15 @@ var Notification = {
     }
     if (message.persistent === true) {
       writer.uint32(56).bool(message.persistent);
+    }
+    if (message.clan_id !== "") {
+      writer.uint32(66).string(message.clan_id);
+    }
+    if (message.channel_id !== "") {
+      writer.uint32(74).string(message.channel_id);
+    }
+    if (message.channel_mode !== "") {
+      writer.uint32(82).string(message.channel_mode);
     }
     return writer;
   },
@@ -2788,6 +2808,15 @@ var Notification = {
         case 7:
           message.persistent = reader.bool();
           break;
+        case 8:
+          message.clan_id = reader.string();
+          break;
+        case 9:
+          message.channel_id = reader.string();
+          break;
+        case 10:
+          message.channel_mode = reader.string();
+          break;
         default:
           reader.skipType(tag & 7);
           break;
@@ -2803,7 +2832,10 @@ var Notification = {
       code: isSet3(object.code) ? Number(object.code) : 0,
       sender_id: isSet3(object.sender_id) ? String(object.sender_id) : "",
       create_time: isSet3(object.create_time) ? fromJsonTimestamp(object.create_time) : void 0,
-      persistent: isSet3(object.persistent) ? Boolean(object.persistent) : false
+      persistent: isSet3(object.persistent) ? Boolean(object.persistent) : false,
+      clan_id: isSet3(object.clan_id) ? String(object.clan_id) : "",
+      channel_id: isSet3(object.channel_id) ? String(object.channel_id) : "",
+      channel_mode: isSet3(object.channel_mode) ? String(object.channel_mode) : ""
     };
   },
   toJSON(message) {
@@ -2815,13 +2847,16 @@ var Notification = {
     message.sender_id !== void 0 && (obj.sender_id = message.sender_id);
     message.create_time !== void 0 && (obj.create_time = message.create_time.toISOString());
     message.persistent !== void 0 && (obj.persistent = message.persistent);
+    message.clan_id !== void 0 && (obj.clan_id = message.clan_id);
+    message.channel_id !== void 0 && (obj.channel_id = message.channel_id);
+    message.channel_mode !== void 0 && (obj.channel_mode = message.channel_mode);
     return obj;
   },
   create(base) {
     return Notification.fromPartial(base != null ? base : {});
   },
   fromPartial(object) {
-    var _a, _b, _c, _d, _e, _f, _g;
+    var _a, _b, _c, _d, _e, _f, _g, _h, _i, _j;
     const message = createBaseNotification();
     message.id = (_a = object.id) != null ? _a : "";
     message.subject = (_b = object.subject) != null ? _b : "";
@@ -2830,6 +2865,9 @@ var Notification = {
     message.sender_id = (_e = object.sender_id) != null ? _e : "";
     message.create_time = (_f = object.create_time) != null ? _f : void 0;
     message.persistent = (_g = object.persistent) != null ? _g : false;
+    message.clan_id = (_h = object.clan_id) != null ? _h : "";
+    message.channel_id = (_i = object.channel_id) != null ? _i : "";
+    message.channel_mode = (_j = object.channel_mode) != null ? _j : "";
     return message;
   }
 };
@@ -4051,7 +4089,8 @@ function createBaseChannelMessageSend() {
     mentions: [],
     attachments: [],
     references: [],
-    mode: 0
+    mode: 0,
+    anonymous_message: false
   };
 }
 var ChannelMessageSend = {
@@ -4079,6 +4118,9 @@ var ChannelMessageSend = {
     }
     if (message.mode !== 0) {
       writer.uint32(64).int32(message.mode);
+    }
+    if (message.anonymous_message === true) {
+      writer.uint32(72).bool(message.anonymous_message);
     }
     return writer;
   },
@@ -4113,6 +4155,9 @@ var ChannelMessageSend = {
         case 8:
           message.mode = reader.int32();
           break;
+        case 9:
+          message.anonymous_message = reader.bool();
+          break;
         default:
           reader.skipType(tag & 7);
           break;
@@ -4129,7 +4174,8 @@ var ChannelMessageSend = {
       mentions: Array.isArray(object == null ? void 0 : object.mentions) ? object.mentions.map((e) => MessageMention.fromJSON(e)) : [],
       attachments: Array.isArray(object == null ? void 0 : object.attachments) ? object.attachments.map((e) => MessageAttachment.fromJSON(e)) : [],
       references: Array.isArray(object == null ? void 0 : object.references) ? object.references.map((e) => MessageRef.fromJSON(e)) : [],
-      mode: isSet4(object.mode) ? Number(object.mode) : 0
+      mode: isSet4(object.mode) ? Number(object.mode) : 0,
+      anonymous_message: isSet4(object.anonymous_message) ? Boolean(object.anonymous_message) : false
     };
   },
   toJSON(message) {
@@ -4154,13 +4200,14 @@ var ChannelMessageSend = {
       obj.references = [];
     }
     message.mode !== void 0 && (obj.mode = Math.round(message.mode));
+    message.anonymous_message !== void 0 && (obj.anonymous_message = message.anonymous_message);
     return obj;
   },
   create(base) {
     return ChannelMessageSend.fromPartial(base != null ? base : {});
   },
   fromPartial(object) {
-    var _a, _b, _c, _d, _e, _f, _g, _h;
+    var _a, _b, _c, _d, _e, _f, _g, _h, _i;
     const message = createBaseChannelMessageSend();
     message.clan_id = (_a = object.clan_id) != null ? _a : "";
     message.channel_id = (_b = object.channel_id) != null ? _b : "";
@@ -4170,6 +4217,7 @@ var ChannelMessageSend = {
     message.attachments = ((_f = object.attachments) == null ? void 0 : _f.map((e) => MessageAttachment.fromPartial(e))) || [];
     message.references = ((_g = object.references) == null ? void 0 : _g.map((e) => MessageRef.fromPartial(e))) || [];
     message.mode = (_h = object.mode) != null ? _h : 0;
+    message.anonymous_message = (_i = object.anonymous_message) != null ? _i : false;
     return message;
   }
 };
