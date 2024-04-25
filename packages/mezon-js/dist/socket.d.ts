@@ -197,6 +197,7 @@ interface ChannelMessageSend {
         content: any;
         mentions?: Array<MessageMentionEvent>;
         attachments?: Array<MessageAttachmentEvent>;
+        anonymous_message?: boolean;
     };
 }
 /** Update a message previously sent to a realtime chat channel. */
@@ -539,7 +540,7 @@ export interface Socket {
     /** Update the status for the current user online. */
     updateStatus(status?: string): Promise<void>;
     /** Send a chat message to a chat channel on the server. */
-    writeChatMessage(clan_id: string, channel_id: string, channel_label: string, mode: number, content?: any, mentions?: Array<ApiMessageMention>, attachments?: Array<ApiMessageAttachment>, references?: Array<ApiMessageRef>): Promise<ChannelMessageAck>;
+    writeChatMessage(clan_id: string, channel_id: string, channel_label: string, mode: number, content?: any, mentions?: Array<ApiMessageMention>, attachments?: Array<ApiMessageAttachment>, references?: Array<ApiMessageRef>, anonymous_message?: boolean): Promise<ChannelMessageAck>;
     /** Send message typing */
     writeMessageTyping(channel_id: string, channel_label: string, mode: number): Promise<MessageTypingEvent>;
     /** Send message reaction */
@@ -664,7 +665,7 @@ export declare class DefaultSocket implements Socket {
     unfollowUsers(user_ids: string[]): Promise<void>;
     updateChatMessage(channel_id: string, channel_label: string, mode: number, message_id: string, content: any): Promise<ChannelMessageAck>;
     updateStatus(status?: string): Promise<void>;
-    writeChatMessage(clan_id: string, channel_id: string, channel_label: string, mode: number, content: any, mentions?: Array<ApiMessageMention>, attachments?: Array<ApiMessageAttachment>, references?: Array<ApiMessageRef>): Promise<ChannelMessageAck>;
+    writeChatMessage(clan_id: string, channel_id: string, channel_label: string, mode: number, content: any, mentions?: Array<ApiMessageMention>, attachments?: Array<ApiMessageAttachment>, references?: Array<ApiMessageRef>, anonymous_message?: boolean): Promise<ChannelMessageAck>;
     writeMessageReaction(id: string, channel_id: string, channel_label: string, mode: number, message_id: string, emoji: string, count: number, message_sender_id: string, action_delete: boolean): Promise<MessageReactionEvent>;
     writeMessageTyping(channel_id: string, channel_label: string, mode: number): Promise<MessageTypingEvent>;
     writeLastSeenMessage(channel_id: string, channel_label: string, mode: number, message_id: string, timestamp: string): Promise<LastSeenMessageEvent>;

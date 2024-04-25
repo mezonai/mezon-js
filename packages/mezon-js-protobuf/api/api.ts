@@ -1192,6 +1192,12 @@ export interface Notification {
     | undefined;
   /** True if this notification was persisted to the database. */
   persistent: boolean;
+  /** ID of clan */
+  clan_id: string;
+  /** ID of channel */
+  channel_id: string;
+  /** mode of */
+  channel_mode: string;
 }
 
 /** A collection of zero or more notifications. */
@@ -8460,7 +8466,18 @@ export const ListUserGroupsRequest = {
 };
 
 function createBaseNotification(): Notification {
-  return { id: "", subject: "", content: "", code: 0, sender_id: "", create_time: undefined, persistent: false };
+  return {
+    id: "",
+    subject: "",
+    content: "",
+    code: 0,
+    sender_id: "",
+    create_time: undefined,
+    persistent: false,
+    clan_id: "",
+    channel_id: "",
+    channel_mode: "",
+  };
 }
 
 export const Notification = {
@@ -8485,6 +8502,15 @@ export const Notification = {
     }
     if (message.persistent === true) {
       writer.uint32(56).bool(message.persistent);
+    }
+    if (message.clan_id !== "") {
+      writer.uint32(66).string(message.clan_id);
+    }
+    if (message.channel_id !== "") {
+      writer.uint32(74).string(message.channel_id);
+    }
+    if (message.channel_mode !== "") {
+      writer.uint32(82).string(message.channel_mode);
     }
     return writer;
   },
@@ -8517,6 +8543,15 @@ export const Notification = {
         case 7:
           message.persistent = reader.bool();
           break;
+        case 8:
+          message.clan_id = reader.string();
+          break;
+        case 9:
+          message.channel_id = reader.string();
+          break;
+        case 10:
+          message.channel_mode = reader.string();
+          break;
         default:
           reader.skipType(tag & 7);
           break;
@@ -8534,6 +8569,9 @@ export const Notification = {
       sender_id: isSet(object.sender_id) ? String(object.sender_id) : "",
       create_time: isSet(object.create_time) ? fromJsonTimestamp(object.create_time) : undefined,
       persistent: isSet(object.persistent) ? Boolean(object.persistent) : false,
+      clan_id: isSet(object.clan_id) ? String(object.clan_id) : "",
+      channel_id: isSet(object.channel_id) ? String(object.channel_id) : "",
+      channel_mode: isSet(object.channel_mode) ? String(object.channel_mode) : "",
     };
   },
 
@@ -8546,6 +8584,9 @@ export const Notification = {
     message.sender_id !== undefined && (obj.sender_id = message.sender_id);
     message.create_time !== undefined && (obj.create_time = message.create_time.toISOString());
     message.persistent !== undefined && (obj.persistent = message.persistent);
+    message.clan_id !== undefined && (obj.clan_id = message.clan_id);
+    message.channel_id !== undefined && (obj.channel_id = message.channel_id);
+    message.channel_mode !== undefined && (obj.channel_mode = message.channel_mode);
     return obj;
   },
 
@@ -8562,6 +8603,9 @@ export const Notification = {
     message.sender_id = object.sender_id ?? "";
     message.create_time = object.create_time ?? undefined;
     message.persistent = object.persistent ?? false;
+    message.clan_id = object.clan_id ?? "";
+    message.channel_id = object.channel_id ?? "";
+    message.channel_mode = object.channel_mode ?? "";
     return message;
   },
 };

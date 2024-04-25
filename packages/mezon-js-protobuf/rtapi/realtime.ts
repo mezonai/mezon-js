@@ -318,6 +318,8 @@ export interface ChannelMessageSend {
   references: MessageRef[];
   /** Mode */
   mode: number;
+  /** anonymous message */
+  anonymous_message: boolean;
 }
 
 /** Update a message previously sent to a realtime channel. */
@@ -2220,6 +2222,7 @@ function createBaseChannelMessageSend(): ChannelMessageSend {
     attachments: [],
     references: [],
     mode: 0,
+    anonymous_message: false,
   };
 }
 
@@ -2248,6 +2251,9 @@ export const ChannelMessageSend = {
     }
     if (message.mode !== 0) {
       writer.uint32(64).int32(message.mode);
+    }
+    if (message.anonymous_message === true) {
+      writer.uint32(72).bool(message.anonymous_message);
     }
     return writer;
   },
@@ -2283,6 +2289,9 @@ export const ChannelMessageSend = {
         case 8:
           message.mode = reader.int32();
           break;
+        case 9:
+          message.anonymous_message = reader.bool();
+          break;
         default:
           reader.skipType(tag & 7);
           break;
@@ -2303,6 +2312,7 @@ export const ChannelMessageSend = {
         : [],
       references: Array.isArray(object?.references) ? object.references.map((e: any) => MessageRef.fromJSON(e)) : [],
       mode: isSet(object.mode) ? Number(object.mode) : 0,
+      anonymous_message: isSet(object.anonymous_message) ? Boolean(object.anonymous_message) : false,
     };
   },
 
@@ -2328,6 +2338,7 @@ export const ChannelMessageSend = {
       obj.references = [];
     }
     message.mode !== undefined && (obj.mode = Math.round(message.mode));
+    message.anonymous_message !== undefined && (obj.anonymous_message = message.anonymous_message);
     return obj;
   },
 
@@ -2345,6 +2356,7 @@ export const ChannelMessageSend = {
     message.attachments = object.attachments?.map((e) => MessageAttachment.fromPartial(e)) || [];
     message.references = object.references?.map((e) => MessageRef.fromPartial(e)) || [];
     message.mode = object.mode ?? 0;
+    message.anonymous_message = object.anonymous_message ?? false;
     return message;
   },
 };
