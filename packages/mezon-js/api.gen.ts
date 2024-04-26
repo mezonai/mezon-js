@@ -814,6 +814,8 @@ export interface ApiStorageObjects {
 
 /** Update a user's account details. */
 export interface ApiUpdateAccountRequest {
+  //
+  about_me?: string;
   //A URL for an avatar image.
   avatar_url?: string;
   //The display name of the user.
@@ -868,6 +870,8 @@ export interface ApiUploadAttachmentRequest {
 
 /** A user in the server. */
 export interface ApiUser {
+  //
+  about_me?: string;
   //The Apple Sign In ID in the user's account.
   apple_id?: string;
   //A URL for an avatar image.
