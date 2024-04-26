@@ -4477,6 +4477,7 @@ var Client = class {
           return Promise.resolve(result);
         }
         response.channel_users.forEach((gu) => {
+          var _a;
           result.channel_users.push({
             user: {
               avatar_url: gu.user.avatar_url,
@@ -4494,6 +4495,7 @@ var Client = class {
               timezone: gu.user.timezone,
               update_time: gu.user.update_time,
               username: gu.user.username,
+              about_me: (_a = gu.user) == null ? void 0 : _a.about_me,
               metadata: gu.user.metadata ? JSON.parse(gu.user.metadata) : void 0
             },
             role_id: gu.role_id,
