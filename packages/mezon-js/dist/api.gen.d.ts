@@ -471,6 +471,7 @@ export interface ApiStorageObjects {
 }
 /** Update a user's account details. */
 export interface ApiUpdateAccountRequest {
+    about_me?: string;
     avatar_url?: string;
     display_name?: string;
     lang_tag?: string;
@@ -503,6 +504,7 @@ export interface ApiUploadAttachmentRequest {
 }
 /** A user in the server. */
 export interface ApiUser {
+    about_me?: string;
     apple_id?: string;
     avatar_url?: string;
     create_time?: string;

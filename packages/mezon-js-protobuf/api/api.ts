@@ -1345,7 +1345,11 @@ export interface UpdateAccountRequest {
     | string
     | undefined;
   /** The timezone set by the user. */
-  timezone: string | undefined;
+  timezone:
+    | string
+    | undefined;
+  /** update about me */
+  about_me: string;
 }
 
 /** Update fields in a given group. */
@@ -1418,6 +1422,8 @@ export interface User {
     | undefined;
   /** The Apple Sign In ID in the user's account. */
   apple_id: string;
+  /**  */
+  about_me: string;
 }
 
 /** A list of groups belonging to a user, along with the user's role in each group. */
@@ -9499,6 +9505,7 @@ function createBaseUpdateAccountRequest(): UpdateAccountRequest {
     lang_tag: undefined,
     location: undefined,
     timezone: undefined,
+    about_me: "",
   };
 }
 
@@ -9521,6 +9528,9 @@ export const UpdateAccountRequest = {
     }
     if (message.timezone !== undefined) {
       StringValue.encode({ value: message.timezone! }, writer.uint32(50).fork()).ldelim();
+    }
+    if (message.about_me !== "") {
+      writer.uint32(58).string(message.about_me);
     }
     return writer;
   },
@@ -9550,6 +9560,9 @@ export const UpdateAccountRequest = {
         case 6:
           message.timezone = StringValue.decode(reader, reader.uint32()).value;
           break;
+        case 7:
+          message.about_me = reader.string();
+          break;
         default:
           reader.skipType(tag & 7);
           break;
@@ -9566,6 +9579,7 @@ export const UpdateAccountRequest = {
       lang_tag: isSet(object.lang_tag) ? String(object.lang_tag) : undefined,
       location: isSet(object.location) ? String(object.location) : undefined,
       timezone: isSet(object.timezone) ? String(object.timezone) : undefined,
+      about_me: isSet(object.about_me) ? String(object.about_me) : "",
     };
   },
 
@@ -9577,6 +9591,7 @@ export const UpdateAccountRequest = {
     message.lang_tag !== undefined && (obj.lang_tag = message.lang_tag);
     message.location !== undefined && (obj.location = message.location);
     message.timezone !== undefined && (obj.timezone = message.timezone);
+    message.about_me !== undefined && (obj.about_me = message.about_me);
     return obj;
   },
 
@@ -9592,6 +9607,7 @@ export const UpdateAccountRequest = {
     message.lang_tag = object.lang_tag ?? undefined;
     message.location = object.location ?? undefined;
     message.timezone = object.timezone ?? undefined;
+    message.about_me = object.about_me ?? "";
     return message;
   },
 };
@@ -9782,6 +9798,7 @@ function createBaseUser(): User {
     create_time: undefined,
     update_time: undefined,
     apple_id: "",
+    about_me: "",
   };
 }
 
@@ -9837,6 +9854,9 @@ export const User = {
     }
     if (message.apple_id !== "") {
       writer.uint32(138).string(message.apple_id);
+    }
+    if (message.about_me !== "") {
+      writer.uint32(146).string(message.about_me);
     }
     return writer;
   },
@@ -9899,6 +9919,9 @@ export const User = {
         case 17:
           message.apple_id = reader.string();
           break;
+        case 18:
+          message.about_me = reader.string();
+          break;
         default:
           reader.skipType(tag & 7);
           break;
@@ -9926,6 +9949,7 @@ export const User = {
       create_time: isSet(object.create_time) ? fromJsonTimestamp(object.create_time) : undefined,
       update_time: isSet(object.update_time) ? fromJsonTimestamp(object.update_time) : undefined,
       apple_id: isSet(object.apple_id) ? String(object.apple_id) : "",
+      about_me: isSet(object.about_me) ? String(object.about_me) : "",
     };
   },
 
@@ -9948,6 +9972,7 @@ export const User = {
     message.create_time !== undefined && (obj.create_time = message.create_time.toISOString());
     message.update_time !== undefined && (obj.update_time = message.update_time.toISOString());
     message.apple_id !== undefined && (obj.apple_id = message.apple_id);
+    message.about_me !== undefined && (obj.about_me = message.about_me);
     return obj;
   },
 
@@ -9974,6 +9999,7 @@ export const User = {
     message.create_time = object.create_time ?? undefined;
     message.update_time = object.update_time ?? undefined;
     message.apple_id = object.apple_id ?? "";
+    message.about_me = object.about_me ?? "";
     return message;
   },
 };
