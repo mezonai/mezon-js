@@ -1052,6 +1052,7 @@ export class Client {
             timezone: gu.user!.timezone,
             update_time: gu.user!.update_time,
             username: gu.user!.username,
+            about_me: gu.user?.about_me,
             metadata: gu.user!.metadata ? JSON.parse(gu.user!.metadata!) : undefined
           },
           role_id: gu!.role_id,
