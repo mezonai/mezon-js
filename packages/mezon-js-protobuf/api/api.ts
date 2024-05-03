@@ -1677,6 +1677,8 @@ export interface InviteUserRes {
   channel_label: string;
   /** check user exist */
   user_joined: boolean;
+  /** expiry_time */
+  expiry_time: Date | undefined;
 }
 
 /** Add link invite users to. */
@@ -11313,7 +11315,7 @@ export const InviteUserRequest = {
 };
 
 function createBaseInviteUserRes(): InviteUserRes {
-  return { clan_id: "", channel_id: "", clan_name: "", channel_label: "", user_joined: false };
+  return { clan_id: "", channel_id: "", clan_name: "", channel_label: "", user_joined: false, expiry_time: undefined };
 }
 
 export const InviteUserRes = {
@@ -11332,6 +11334,9 @@ export const InviteUserRes = {
     }
     if (message.user_joined === true) {
       writer.uint32(40).bool(message.user_joined);
+    }
+    if (message.expiry_time !== undefined) {
+      Timestamp.encode(toTimestamp(message.expiry_time), writer.uint32(50).fork()).ldelim();
     }
     return writer;
   },
@@ -11358,6 +11363,9 @@ export const InviteUserRes = {
         case 5:
           message.user_joined = reader.bool();
           break;
+        case 6:
+          message.expiry_time = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
+          break;
         default:
           reader.skipType(tag & 7);
           break;
@@ -11373,6 +11381,7 @@ export const InviteUserRes = {
       clan_name: isSet(object.clan_name) ? String(object.clan_name) : "",
       channel_label: isSet(object.channel_label) ? String(object.channel_label) : "",
       user_joined: isSet(object.user_joined) ? Boolean(object.user_joined) : false,
+      expiry_time: isSet(object.expiry_time) ? fromJsonTimestamp(object.expiry_time) : undefined,
     };
   },
 
@@ -11383,6 +11392,7 @@ export const InviteUserRes = {
     message.clan_name !== undefined && (obj.clan_name = message.clan_name);
     message.channel_label !== undefined && (obj.channel_label = message.channel_label);
     message.user_joined !== undefined && (obj.user_joined = message.user_joined);
+    message.expiry_time !== undefined && (obj.expiry_time = message.expiry_time.toISOString());
     return obj;
   },
 
@@ -11397,6 +11407,7 @@ export const InviteUserRes = {
     message.clan_name = object.clan_name ?? "";
     message.channel_label = object.channel_label ?? "";
     message.user_joined = object.user_joined ?? false;
+    message.expiry_time = object.expiry_time ?? undefined;
     return message;
   },
 };

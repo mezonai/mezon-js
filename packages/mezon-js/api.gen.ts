@@ -494,6 +494,8 @@ export interface ApiInviteUserRes {
   clan_name?: string;
   //
   user_joined?: boolean;
+  //
+  expiry_time?: string;
 }
 
 /** Add link invite users to. */
