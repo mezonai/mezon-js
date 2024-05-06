@@ -1941,6 +1941,23 @@ export interface Role {
   channel_ids: string[];
 }
 
+/** Event clan */
+export interface EventClan {
+  id: string;
+  title: string;
+  logo: string;
+  description: string;
+  active: number;
+  start_event: number;
+  creator_id: string;
+  clan_id: string;
+  channel_id: string;
+  address: string;
+  start_time: Date | undefined;
+  end_time: Date | undefined;
+  user_ids: string[];
+}
+
 /** Permission record */
 export interface Permission {
   /** Permission id */
@@ -1961,6 +1978,11 @@ export interface RoleList {
   prev_cursor: string;
   /** Cacheable cursor to list newer role description. Durable and designed to be stored, unlike next/prev cursors. */
   cacheable_cursor: string;
+}
+
+export interface EventList {
+  /** A list of event. */
+  events: EventClan[];
 }
 
 /** A list of permission description, usually a result of a list operation. */
@@ -2016,6 +2038,21 @@ export interface RoleUserList_RoleUser {
   online: boolean;
 }
 
+export interface EventUserList {
+  user_event: EventUserList_EventUser[];
+}
+
+export interface EventUserList_EventUser {
+  /** The id of the user's account. */
+  id: string;
+  /** The username of the user's account. */
+  username: string;
+  /** The display name of the user. */
+  display_name: string;
+  /** A URL for an avatar image. */
+  avatar_url: string;
+}
+
 /** List (and optionally filter) roles. */
 export interface ListRolesRequest {
   /** Max number of records to return. Between 1 and 100. */
@@ -2029,6 +2066,11 @@ export interface ListRolesRequest {
   /** Cursor to start from */
   cursor: string;
   /** The clan of this role */
+  clan_id: string;
+}
+
+export interface ListEventsRequest {
+  /** The clan of this event */
   clan_id: string;
 }
 
@@ -2047,12 +2089,41 @@ export interface CreateRoleRequest {
   active_permission_ids: string[];
 }
 
+/** Create a event within clan. */
+export interface CreateEventRequest {
+  title: string;
+  logo: string;
+  description: string;
+  clan_id: string;
+  channel_id: string;
+  address: string;
+  start_time: Date | undefined;
+  end_time: Date | undefined;
+}
+
+/** update a event within clan. */
+export interface UpdateEventRequest {
+  title: string;
+  logo: string;
+  description: string;
+  event_id: string;
+  channel_id: string;
+  address: string;
+  start_time: Date | undefined;
+  end_time: Date | undefined;
+}
+
 /** Delete a role the user has access to. */
 export interface DeleteRoleRequest {
   /** The id of a role. */
   role_id: string;
   /** The id of a channel */
   channel_id: string;
+}
+
+export interface DeleteEventRequest {
+  /** The id of a event. */
+  event_id: string;
 }
 
 /** Update fields in a given role. */
@@ -13269,6 +13340,185 @@ export const Role = {
   },
 };
 
+function createBaseEventClan(): EventClan {
+  return {
+    id: "",
+    title: "",
+    logo: "",
+    description: "",
+    active: 0,
+    start_event: 0,
+    creator_id: "",
+    clan_id: "",
+    channel_id: "",
+    address: "",
+    start_time: undefined,
+    end_time: undefined,
+    user_ids: [],
+  };
+}
+
+export const EventClan = {
+  encode(message: EventClan, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.id !== "") {
+      writer.uint32(10).string(message.id);
+    }
+    if (message.title !== "") {
+      writer.uint32(18).string(message.title);
+    }
+    if (message.logo !== "") {
+      writer.uint32(26).string(message.logo);
+    }
+    if (message.description !== "") {
+      writer.uint32(34).string(message.description);
+    }
+    if (message.active !== 0) {
+      writer.uint32(40).int32(message.active);
+    }
+    if (message.start_event !== 0) {
+      writer.uint32(48).int32(message.start_event);
+    }
+    if (message.creator_id !== "") {
+      writer.uint32(58).string(message.creator_id);
+    }
+    if (message.clan_id !== "") {
+      writer.uint32(66).string(message.clan_id);
+    }
+    if (message.channel_id !== "") {
+      writer.uint32(74).string(message.channel_id);
+    }
+    if (message.address !== "") {
+      writer.uint32(82).string(message.address);
+    }
+    if (message.start_time !== undefined) {
+      Timestamp.encode(toTimestamp(message.start_time), writer.uint32(90).fork()).ldelim();
+    }
+    if (message.end_time !== undefined) {
+      Timestamp.encode(toTimestamp(message.end_time), writer.uint32(98).fork()).ldelim();
+    }
+    for (const v of message.user_ids) {
+      writer.uint32(106).string(v!);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): EventClan {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseEventClan();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.id = reader.string();
+          break;
+        case 2:
+          message.title = reader.string();
+          break;
+        case 3:
+          message.logo = reader.string();
+          break;
+        case 4:
+          message.description = reader.string();
+          break;
+        case 5:
+          message.active = reader.int32();
+          break;
+        case 6:
+          message.start_event = reader.int32();
+          break;
+        case 7:
+          message.creator_id = reader.string();
+          break;
+        case 8:
+          message.clan_id = reader.string();
+          break;
+        case 9:
+          message.channel_id = reader.string();
+          break;
+        case 10:
+          message.address = reader.string();
+          break;
+        case 11:
+          message.start_time = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
+          break;
+        case 12:
+          message.end_time = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
+          break;
+        case 13:
+          message.user_ids.push(reader.string());
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): EventClan {
+    return {
+      id: isSet(object.id) ? String(object.id) : "",
+      title: isSet(object.title) ? String(object.title) : "",
+      logo: isSet(object.logo) ? String(object.logo) : "",
+      description: isSet(object.description) ? String(object.description) : "",
+      active: isSet(object.active) ? Number(object.active) : 0,
+      start_event: isSet(object.start_event) ? Number(object.start_event) : 0,
+      creator_id: isSet(object.creator_id) ? String(object.creator_id) : "",
+      clan_id: isSet(object.clan_id) ? String(object.clan_id) : "",
+      channel_id: isSet(object.channel_id) ? String(object.channel_id) : "",
+      address: isSet(object.address) ? String(object.address) : "",
+      start_time: isSet(object.start_time) ? fromJsonTimestamp(object.start_time) : undefined,
+      end_time: isSet(object.end_time) ? fromJsonTimestamp(object.end_time) : undefined,
+      user_ids: Array.isArray(object?.user_ids) ? object.user_ids.map((e: any) => String(e)) : [],
+    };
+  },
+
+  toJSON(message: EventClan): unknown {
+    const obj: any = {};
+    message.id !== undefined && (obj.id = message.id);
+    message.title !== undefined && (obj.title = message.title);
+    message.logo !== undefined && (obj.logo = message.logo);
+    message.description !== undefined && (obj.description = message.description);
+    message.active !== undefined && (obj.active = Math.round(message.active));
+    message.start_event !== undefined && (obj.start_event = Math.round(message.start_event));
+    message.creator_id !== undefined && (obj.creator_id = message.creator_id);
+    message.clan_id !== undefined && (obj.clan_id = message.clan_id);
+    message.channel_id !== undefined && (obj.channel_id = message.channel_id);
+    message.address !== undefined && (obj.address = message.address);
+    message.start_time !== undefined && (obj.start_time = message.start_time.toISOString());
+    message.end_time !== undefined && (obj.end_time = message.end_time.toISOString());
+    if (message.user_ids) {
+      obj.user_ids = message.user_ids.map((e) => e);
+    } else {
+      obj.user_ids = [];
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<EventClan>, I>>(base?: I): EventClan {
+    return EventClan.fromPartial(base ?? {});
+  },
+
+  fromPartial<I extends Exact<DeepPartial<EventClan>, I>>(object: I): EventClan {
+    const message = createBaseEventClan();
+    message.id = object.id ?? "";
+    message.title = object.title ?? "";
+    message.logo = object.logo ?? "";
+    message.description = object.description ?? "";
+    message.active = object.active ?? 0;
+    message.start_event = object.start_event ?? 0;
+    message.creator_id = object.creator_id ?? "";
+    message.clan_id = object.clan_id ?? "";
+    message.channel_id = object.channel_id ?? "";
+    message.address = object.address ?? "";
+    message.start_time = object.start_time ?? undefined;
+    message.end_time = object.end_time ?? undefined;
+    message.user_ids = object.user_ids?.map((e) => e) || [];
+    return message;
+  },
+};
+
 function createBasePermission(): Permission {
   return { id: "", title: "", slug: "", description: "", active: 0 };
 }
@@ -13438,6 +13688,61 @@ export const RoleList = {
     message.next_cursor = object.next_cursor ?? "";
     message.prev_cursor = object.prev_cursor ?? "";
     message.cacheable_cursor = object.cacheable_cursor ?? "";
+    return message;
+  },
+};
+
+function createBaseEventList(): EventList {
+  return { events: [] };
+}
+
+export const EventList = {
+  encode(message: EventList, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    for (const v of message.events) {
+      EventClan.encode(v!, writer.uint32(10).fork()).ldelim();
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): EventList {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseEventList();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.events.push(EventClan.decode(reader, reader.uint32()));
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): EventList {
+    return { events: Array.isArray(object?.events) ? object.events.map((e: any) => EventClan.fromJSON(e)) : [] };
+  },
+
+  toJSON(message: EventList): unknown {
+    const obj: any = {};
+    if (message.events) {
+      obj.events = message.events.map((e) => e ? EventClan.toJSON(e) : undefined);
+    } else {
+      obj.events = [];
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<EventList>, I>>(base?: I): EventList {
+    return EventList.fromPartial(base ?? {});
+  },
+
+  fromPartial<I extends Exact<DeepPartial<EventList>, I>>(object: I): EventList {
+    const message = createBaseEventList();
+    message.events = object.events?.map((e) => EventClan.fromPartial(e)) || [];
     return message;
   },
 };
@@ -13847,6 +14152,145 @@ export const RoleUserList_RoleUser = {
   },
 };
 
+function createBaseEventUserList(): EventUserList {
+  return { user_event: [] };
+}
+
+export const EventUserList = {
+  encode(message: EventUserList, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    for (const v of message.user_event) {
+      EventUserList_EventUser.encode(v!, writer.uint32(10).fork()).ldelim();
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): EventUserList {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseEventUserList();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.user_event.push(EventUserList_EventUser.decode(reader, reader.uint32()));
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): EventUserList {
+    return {
+      user_event: Array.isArray(object?.user_event)
+        ? object.user_event.map((e: any) => EventUserList_EventUser.fromJSON(e))
+        : [],
+    };
+  },
+
+  toJSON(message: EventUserList): unknown {
+    const obj: any = {};
+    if (message.user_event) {
+      obj.user_event = message.user_event.map((e) => e ? EventUserList_EventUser.toJSON(e) : undefined);
+    } else {
+      obj.user_event = [];
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<EventUserList>, I>>(base?: I): EventUserList {
+    return EventUserList.fromPartial(base ?? {});
+  },
+
+  fromPartial<I extends Exact<DeepPartial<EventUserList>, I>>(object: I): EventUserList {
+    const message = createBaseEventUserList();
+    message.user_event = object.user_event?.map((e) => EventUserList_EventUser.fromPartial(e)) || [];
+    return message;
+  },
+};
+
+function createBaseEventUserList_EventUser(): EventUserList_EventUser {
+  return { id: "", username: "", display_name: "", avatar_url: "" };
+}
+
+export const EventUserList_EventUser = {
+  encode(message: EventUserList_EventUser, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.id !== "") {
+      writer.uint32(10).string(message.id);
+    }
+    if (message.username !== "") {
+      writer.uint32(18).string(message.username);
+    }
+    if (message.display_name !== "") {
+      writer.uint32(26).string(message.display_name);
+    }
+    if (message.avatar_url !== "") {
+      writer.uint32(34).string(message.avatar_url);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): EventUserList_EventUser {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseEventUserList_EventUser();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.id = reader.string();
+          break;
+        case 2:
+          message.username = reader.string();
+          break;
+        case 3:
+          message.display_name = reader.string();
+          break;
+        case 4:
+          message.avatar_url = reader.string();
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): EventUserList_EventUser {
+    return {
+      id: isSet(object.id) ? String(object.id) : "",
+      username: isSet(object.username) ? String(object.username) : "",
+      display_name: isSet(object.display_name) ? String(object.display_name) : "",
+      avatar_url: isSet(object.avatar_url) ? String(object.avatar_url) : "",
+    };
+  },
+
+  toJSON(message: EventUserList_EventUser): unknown {
+    const obj: any = {};
+    message.id !== undefined && (obj.id = message.id);
+    message.username !== undefined && (obj.username = message.username);
+    message.display_name !== undefined && (obj.display_name = message.display_name);
+    message.avatar_url !== undefined && (obj.avatar_url = message.avatar_url);
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<EventUserList_EventUser>, I>>(base?: I): EventUserList_EventUser {
+    return EventUserList_EventUser.fromPartial(base ?? {});
+  },
+
+  fromPartial<I extends Exact<DeepPartial<EventUserList_EventUser>, I>>(object: I): EventUserList_EventUser {
+    const message = createBaseEventUserList_EventUser();
+    message.id = object.id ?? "";
+    message.username = object.username ?? "";
+    message.display_name = object.display_name ?? "";
+    message.avatar_url = object.avatar_url ?? "";
+    return message;
+  },
+};
+
 function createBaseListRolesRequest(): ListRolesRequest {
   return { limit: undefined, state: undefined, cursor: "", clan_id: "" };
 }
@@ -13922,6 +14366,57 @@ export const ListRolesRequest = {
     message.limit = object.limit ?? undefined;
     message.state = object.state ?? undefined;
     message.cursor = object.cursor ?? "";
+    message.clan_id = object.clan_id ?? "";
+    return message;
+  },
+};
+
+function createBaseListEventsRequest(): ListEventsRequest {
+  return { clan_id: "" };
+}
+
+export const ListEventsRequest = {
+  encode(message: ListEventsRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.clan_id !== "") {
+      writer.uint32(10).string(message.clan_id);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): ListEventsRequest {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseListEventsRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.clan_id = reader.string();
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): ListEventsRequest {
+    return { clan_id: isSet(object.clan_id) ? String(object.clan_id) : "" };
+  },
+
+  toJSON(message: ListEventsRequest): unknown {
+    const obj: any = {};
+    message.clan_id !== undefined && (obj.clan_id = message.clan_id);
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<ListEventsRequest>, I>>(base?: I): ListEventsRequest {
+    return ListEventsRequest.fromPartial(base ?? {});
+  },
+
+  fromPartial<I extends Exact<DeepPartial<ListEventsRequest>, I>>(object: I): ListEventsRequest {
+    const message = createBaseListEventsRequest();
     message.clan_id = object.clan_id ?? "";
     return message;
   },
@@ -14072,6 +14567,256 @@ export const CreateRoleRequest = {
   },
 };
 
+function createBaseCreateEventRequest(): CreateEventRequest {
+  return {
+    title: "",
+    logo: "",
+    description: "",
+    clan_id: "",
+    channel_id: "",
+    address: "",
+    start_time: undefined,
+    end_time: undefined,
+  };
+}
+
+export const CreateEventRequest = {
+  encode(message: CreateEventRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.title !== "") {
+      writer.uint32(10).string(message.title);
+    }
+    if (message.logo !== "") {
+      writer.uint32(18).string(message.logo);
+    }
+    if (message.description !== "") {
+      writer.uint32(26).string(message.description);
+    }
+    if (message.clan_id !== "") {
+      writer.uint32(34).string(message.clan_id);
+    }
+    if (message.channel_id !== "") {
+      writer.uint32(42).string(message.channel_id);
+    }
+    if (message.address !== "") {
+      writer.uint32(50).string(message.address);
+    }
+    if (message.start_time !== undefined) {
+      Timestamp.encode(toTimestamp(message.start_time), writer.uint32(58).fork()).ldelim();
+    }
+    if (message.end_time !== undefined) {
+      Timestamp.encode(toTimestamp(message.end_time), writer.uint32(66).fork()).ldelim();
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): CreateEventRequest {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseCreateEventRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.title = reader.string();
+          break;
+        case 2:
+          message.logo = reader.string();
+          break;
+        case 3:
+          message.description = reader.string();
+          break;
+        case 4:
+          message.clan_id = reader.string();
+          break;
+        case 5:
+          message.channel_id = reader.string();
+          break;
+        case 6:
+          message.address = reader.string();
+          break;
+        case 7:
+          message.start_time = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
+          break;
+        case 8:
+          message.end_time = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): CreateEventRequest {
+    return {
+      title: isSet(object.title) ? String(object.title) : "",
+      logo: isSet(object.logo) ? String(object.logo) : "",
+      description: isSet(object.description) ? String(object.description) : "",
+      clan_id: isSet(object.clan_id) ? String(object.clan_id) : "",
+      channel_id: isSet(object.channel_id) ? String(object.channel_id) : "",
+      address: isSet(object.address) ? String(object.address) : "",
+      start_time: isSet(object.start_time) ? fromJsonTimestamp(object.start_time) : undefined,
+      end_time: isSet(object.end_time) ? fromJsonTimestamp(object.end_time) : undefined,
+    };
+  },
+
+  toJSON(message: CreateEventRequest): unknown {
+    const obj: any = {};
+    message.title !== undefined && (obj.title = message.title);
+    message.logo !== undefined && (obj.logo = message.logo);
+    message.description !== undefined && (obj.description = message.description);
+    message.clan_id !== undefined && (obj.clan_id = message.clan_id);
+    message.channel_id !== undefined && (obj.channel_id = message.channel_id);
+    message.address !== undefined && (obj.address = message.address);
+    message.start_time !== undefined && (obj.start_time = message.start_time.toISOString());
+    message.end_time !== undefined && (obj.end_time = message.end_time.toISOString());
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<CreateEventRequest>, I>>(base?: I): CreateEventRequest {
+    return CreateEventRequest.fromPartial(base ?? {});
+  },
+
+  fromPartial<I extends Exact<DeepPartial<CreateEventRequest>, I>>(object: I): CreateEventRequest {
+    const message = createBaseCreateEventRequest();
+    message.title = object.title ?? "";
+    message.logo = object.logo ?? "";
+    message.description = object.description ?? "";
+    message.clan_id = object.clan_id ?? "";
+    message.channel_id = object.channel_id ?? "";
+    message.address = object.address ?? "";
+    message.start_time = object.start_time ?? undefined;
+    message.end_time = object.end_time ?? undefined;
+    return message;
+  },
+};
+
+function createBaseUpdateEventRequest(): UpdateEventRequest {
+  return {
+    title: "",
+    logo: "",
+    description: "",
+    event_id: "",
+    channel_id: "",
+    address: "",
+    start_time: undefined,
+    end_time: undefined,
+  };
+}
+
+export const UpdateEventRequest = {
+  encode(message: UpdateEventRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.title !== "") {
+      writer.uint32(10).string(message.title);
+    }
+    if (message.logo !== "") {
+      writer.uint32(18).string(message.logo);
+    }
+    if (message.description !== "") {
+      writer.uint32(26).string(message.description);
+    }
+    if (message.event_id !== "") {
+      writer.uint32(34).string(message.event_id);
+    }
+    if (message.channel_id !== "") {
+      writer.uint32(42).string(message.channel_id);
+    }
+    if (message.address !== "") {
+      writer.uint32(50).string(message.address);
+    }
+    if (message.start_time !== undefined) {
+      Timestamp.encode(toTimestamp(message.start_time), writer.uint32(58).fork()).ldelim();
+    }
+    if (message.end_time !== undefined) {
+      Timestamp.encode(toTimestamp(message.end_time), writer.uint32(66).fork()).ldelim();
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): UpdateEventRequest {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseUpdateEventRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.title = reader.string();
+          break;
+        case 2:
+          message.logo = reader.string();
+          break;
+        case 3:
+          message.description = reader.string();
+          break;
+        case 4:
+          message.event_id = reader.string();
+          break;
+        case 5:
+          message.channel_id = reader.string();
+          break;
+        case 6:
+          message.address = reader.string();
+          break;
+        case 7:
+          message.start_time = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
+          break;
+        case 8:
+          message.end_time = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): UpdateEventRequest {
+    return {
+      title: isSet(object.title) ? String(object.title) : "",
+      logo: isSet(object.logo) ? String(object.logo) : "",
+      description: isSet(object.description) ? String(object.description) : "",
+      event_id: isSet(object.event_id) ? String(object.event_id) : "",
+      channel_id: isSet(object.channel_id) ? String(object.channel_id) : "",
+      address: isSet(object.address) ? String(object.address) : "",
+      start_time: isSet(object.start_time) ? fromJsonTimestamp(object.start_time) : undefined,
+      end_time: isSet(object.end_time) ? fromJsonTimestamp(object.end_time) : undefined,
+    };
+  },
+
+  toJSON(message: UpdateEventRequest): unknown {
+    const obj: any = {};
+    message.title !== undefined && (obj.title = message.title);
+    message.logo !== undefined && (obj.logo = message.logo);
+    message.description !== undefined && (obj.description = message.description);
+    message.event_id !== undefined && (obj.event_id = message.event_id);
+    message.channel_id !== undefined && (obj.channel_id = message.channel_id);
+    message.address !== undefined && (obj.address = message.address);
+    message.start_time !== undefined && (obj.start_time = message.start_time.toISOString());
+    message.end_time !== undefined && (obj.end_time = message.end_time.toISOString());
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<UpdateEventRequest>, I>>(base?: I): UpdateEventRequest {
+    return UpdateEventRequest.fromPartial(base ?? {});
+  },
+
+  fromPartial<I extends Exact<DeepPartial<UpdateEventRequest>, I>>(object: I): UpdateEventRequest {
+    const message = createBaseUpdateEventRequest();
+    message.title = object.title ?? "";
+    message.logo = object.logo ?? "";
+    message.description = object.description ?? "";
+    message.event_id = object.event_id ?? "";
+    message.channel_id = object.channel_id ?? "";
+    message.address = object.address ?? "";
+    message.start_time = object.start_time ?? undefined;
+    message.end_time = object.end_time ?? undefined;
+    return message;
+  },
+};
+
 function createBaseDeleteRoleRequest(): DeleteRoleRequest {
   return { role_id: "", channel_id: "" };
 }
@@ -14130,6 +14875,57 @@ export const DeleteRoleRequest = {
     const message = createBaseDeleteRoleRequest();
     message.role_id = object.role_id ?? "";
     message.channel_id = object.channel_id ?? "";
+    return message;
+  },
+};
+
+function createBaseDeleteEventRequest(): DeleteEventRequest {
+  return { event_id: "" };
+}
+
+export const DeleteEventRequest = {
+  encode(message: DeleteEventRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.event_id !== "") {
+      writer.uint32(10).string(message.event_id);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): DeleteEventRequest {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseDeleteEventRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.event_id = reader.string();
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): DeleteEventRequest {
+    return { event_id: isSet(object.event_id) ? String(object.event_id) : "" };
+  },
+
+  toJSON(message: DeleteEventRequest): unknown {
+    const obj: any = {};
+    message.event_id !== undefined && (obj.event_id = message.event_id);
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<DeleteEventRequest>, I>>(base?: I): DeleteEventRequest {
+    return DeleteEventRequest.fromPartial(base ?? {});
+  },
+
+  fromPartial<I extends Exact<DeepPartial<DeleteEventRequest>, I>>(object: I): DeleteEventRequest {
+    const message = createBaseDeleteEventRequest();
+    message.event_id = object.event_id ?? "";
     return message;
   },
 };

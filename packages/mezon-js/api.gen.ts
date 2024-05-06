@@ -406,6 +406,46 @@ export interface ApiCreateClanDescRequest {
   logo?: string;
 }
 
+/** Create a event within clan. */
+export interface ApiCreateEventRequest {
+  //
+  address?: string;
+  //
+  channel_id?: string;
+  //
+  clan_id?: string;
+  //
+  description?: string;
+  //
+  end_time?: string;
+  //
+  logo?: string;
+  //
+  start_time?: string;
+  //
+  title?: string;
+}
+
+/** Create a event within clan. */
+export interface ApiUpdateEventRequest {
+  //
+  address?: string;
+  //
+  channel_id?: string;
+  //
+  event_id?: string;
+  //
+  description?: string;
+  //
+  end_time?: string;
+  //
+  logo?: string;
+  //
+  start_time?: string;
+  //
+  title?: string;
+}
+
 /** Create a role within clan. */
 export interface ApiCreateRoleRequest {
   //The permissions to add.
@@ -426,6 +466,12 @@ export interface ApiCreateRoleRequest {
   role_icon?: string;
   //
   title?: string;
+}
+
+/**  */
+export interface ApiDeleteEventRequest {
+  //The id of a event.
+  event_id?: string;
 }
 
 /** Delete a role the user has access to. */
@@ -462,6 +508,42 @@ export interface ApiEvent {
   properties?: Record<string, string>;
   //The time when the event was triggered.
   timestamp?: string;
+}
+
+/**  */
+export interface ApiEventClan {
+  //
+  active?: number;
+  //
+  address?: string;
+  //
+  channel_id?: string;
+  //
+  clan_id?: string;
+  //
+  creator_id?: string;
+  //
+  description?: string;
+  //
+  end_time?: string;
+  //
+  id?: string;
+  //
+  logo?: string;
+  //
+  start_event?: number;
+  //
+  start_time?: string;
+  //
+  title?: string;
+  //
+  user_ids?: Array<string>;
+}
+
+/**  */
+export interface ApiEventList {
+  //A list of event.
+  events?: Array<ApiEventClan>;
 }
 
 /** A friend of a user. */
@@ -3023,6 +3105,39 @@ return Promise.race([
     ]);
 }
 
+  /** List user events */
+  listEvents(bearerToken: string,
+      clanId?:string,
+      options: any = {}): Promise<ApiEventList> {
+    
+    const urlPath = "/v2/event";
+    const queryParams = new Map<string, any>();
+    queryParams.set("clan_id", clanId);
+
+    let bodyJson : string = "";
+
+    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
+    const fetchOptions = buildFetchOptions("GET", options, bodyJson);
+    if (bearerToken) {
+        fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+    }
+
+    return Promise.race([
+      fetch(fullUrl, fetchOptions).then((response) => {
+        if (response.status == 204) {
+          return response;
+        } else if (response.status >= 200 && response.status < 300) {
+          return response.json();
+        } else {
+          throw response;
+        }
+      }),
+      new Promise((_, reject) =>
+        setTimeout(reject, this.timeoutMs, "Request timed out.")
+      ),
+    ]);
+}
+
   /** Submit an event for processing in the server's registered runtime custom events handler. */
   event(bearerToken: string,
       body:ApiEvent,
@@ -3039,6 +3154,155 @@ return Promise.race([
 
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("POST", options, bodyJson);
+    if (bearerToken) {
+        fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+    }
+
+    return Promise.race([
+      fetch(fullUrl, fetchOptions).then((response) => {
+        if (response.status == 204) {
+          return response;
+        } else if (response.status >= 200 && response.status < 300) {
+          return response.json();
+        } else {
+          throw response;
+        }
+      }),
+      new Promise((_, reject) =>
+        setTimeout(reject, this.timeoutMs, "Request timed out.")
+      ),
+    ]);
+}
+
+  /** Create a new event for clan. */
+  createEvent(bearerToken: string,
+      body:ApiCreateEventRequest,
+      options: any = {}): Promise<ApiEventClan> {
+    
+    if (body === null || body === undefined) {
+      throw new Error("'body' is a required parameter but is null or undefined.");
+    }
+    const urlPath = "/v2/event/create";
+    const queryParams = new Map<string, any>();
+
+    let bodyJson : string = "";
+    bodyJson = JSON.stringify(body || {});
+
+    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
+    const fetchOptions = buildFetchOptions("POST", options, bodyJson);
+    if (bearerToken) {
+        fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+    }
+
+    return Promise.race([
+      fetch(fullUrl, fetchOptions).then((response) => {
+        if (response.status == 204) {
+          return response;
+        } else if (response.status >= 200 && response.status < 300) {
+          return response.json();
+        } else {
+          throw response;
+        }
+      }),
+      new Promise((_, reject) =>
+        setTimeout(reject, this.timeoutMs, "Request timed out.")
+      ),
+    ]);
+}
+
+  /** Update fields in a given event. */
+  updateEventUser(bearerToken: string,
+      body:ApiDeleteEventRequest,
+      options: any = {}): Promise<any> {
+    
+    if (body === null || body === undefined) {
+      throw new Error("'body' is a required parameter but is null or undefined.");
+    }
+    const urlPath = "/v2/event/user";
+    const queryParams = new Map<string, any>();
+
+    let bodyJson : string = "";
+    bodyJson = JSON.stringify(body || {});
+
+    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
+    const fetchOptions = buildFetchOptions("PUT", options, bodyJson);
+    if (bearerToken) {
+        fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+    }
+
+    return Promise.race([
+      fetch(fullUrl, fetchOptions).then((response) => {
+        if (response.status == 204) {
+          return response;
+        } else if (response.status >= 200 && response.status < 300) {
+          return response.json();
+        } else {
+          throw response;
+        }
+      }),
+      new Promise((_, reject) =>
+        setTimeout(reject, this.timeoutMs, "Request timed out.")
+      ),
+    ]);
+}
+
+  /** Delete a event by ID. */
+  deleteEvent(bearerToken: string,
+      eventId:string,
+      options: any = {}): Promise<any> {
+    
+    if (eventId === null || eventId === undefined) {
+      throw new Error("'eventId' is a required parameter but is null or undefined.");
+    }
+    const urlPath = "/v2/event/{eventId}"
+        .replace("{eventId}", encodeURIComponent(String(eventId)));
+    const queryParams = new Map<string, any>();
+
+    let bodyJson : string = "";
+
+    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
+    const fetchOptions = buildFetchOptions("DELETE", options, bodyJson);
+    if (bearerToken) {
+        fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+    }
+
+    return Promise.race([
+      fetch(fullUrl, fetchOptions).then((response) => {
+        if (response.status == 204) {
+          return response;
+        } else if (response.status >= 200 && response.status < 300) {
+          return response.json();
+        } else {
+          throw response;
+        }
+      }),
+      new Promise((_, reject) =>
+        setTimeout(reject, this.timeoutMs, "Request timed out.")
+      ),
+    ]);
+}
+
+  /** Update fields in a given event. */
+  updateEvent(bearerToken: string,
+      eventId:string,
+      body:{},
+      options: any = {}): Promise<any> {
+    
+    if (eventId === null || eventId === undefined) {
+      throw new Error("'eventId' is a required parameter but is null or undefined.");
+    }
+    if (body === null || body === undefined) {
+      throw new Error("'body' is a required parameter but is null or undefined.");
+    }
+    const urlPath = "/v2/event/{eventId}"
+        .replace("{eventId}", encodeURIComponent(String(eventId)));
+    const queryParams = new Map<string, any>();
+
+    let bodyJson : string = "";
+    bodyJson = JSON.stringify(body || {});
+
+    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
+    const fetchOptions = buildFetchOptions("PUT", options, bodyJson);
     if (bearerToken) {
         fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
     }
