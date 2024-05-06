@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { ApiAccount, ApiAccountCustom, ApiAccountDevice, ApiAccountEmail, ApiAccountFacebook, ApiAccountFacebookInstantGame, ApiAccountGoogle, ApiAccountGameCenter, ApiAccountSteam, ApiChannelDescList, ApiChannelDescription, ApiCreateChannelDescRequest, ApiDeleteRoleRequest, ApiClanDescList, ApiCreateClanDescRequest, ApiClanDesc, ApiCategoryDesc, ApiCategoryDescList, ApiRoleList, ApiPermissionList, ApiRoleUserList, ApiRole, ApiCreateRoleRequest, ApiAddRoleChannelDescRequest, ApiCreateCategoryDescRequest, ApiUpdateCategoryDescRequest, ApiDeleteStorageObjectsRequest, ApiEvent, ApiReadStorageObjectsRequest, ApiStorageObjectAcks, ApiUpdateAccountRequest, ApiAccountApple, ApiLinkSteamRequest, ApiClanDescProfile, ApiClanProfile, ApiChannelUserList, ApiClanUserList, ApiLinkInviteUserRequest, ApiLinkInviteUser, ApiInviteUserRes, ApiUploadAttachmentRequest, ApiUploadAttachment, ApiMessageReaction, ApiMessageMention, ApiMessageAttachment, ApiMessageRef, ApiChannelMessageHeader, ApiVoiceChannelUserList, ApiChannelAttachmentList } from "./api.gen";
+import { ApiAccount, ApiAccountCustom, ApiAccountDevice, ApiAccountEmail, ApiAccountFacebook, ApiAccountFacebookInstantGame, ApiAccountGoogle, ApiAccountGameCenter, ApiAccountSteam, ApiChannelDescList, ApiChannelDescription, ApiCreateChannelDescRequest, ApiDeleteRoleRequest, ApiClanDescList, ApiCreateClanDescRequest, ApiClanDesc, ApiCategoryDesc, ApiCategoryDescList, ApiRoleList, ApiPermissionList, ApiRoleUserList, ApiRole, ApiCreateRoleRequest, ApiAddRoleChannelDescRequest, ApiCreateCategoryDescRequest, ApiUpdateCategoryDescRequest, ApiDeleteStorageObjectsRequest, ApiEvent, ApiReadStorageObjectsRequest, ApiStorageObjectAcks, ApiUpdateAccountRequest, ApiAccountApple, ApiLinkSteamRequest, ApiClanDescProfile, ApiClanProfile, ApiChannelUserList, ApiClanUserList, ApiLinkInviteUserRequest, ApiUpdateEventRequest, ApiLinkInviteUser, ApiInviteUserRes, ApiUploadAttachmentRequest, ApiUploadAttachment, ApiMessageReaction, ApiMessageMention, ApiMessageAttachment, ApiMessageRef, ApiChannelMessageHeader, ApiVoiceChannelUserList, ApiChannelAttachmentList, ApiCreateEventRequest, ApiEventManagement, ApiEventList, ApiDeleteEventRequest } from "./api.gen";
 import { Session } from "./session";
 import { Socket } from "./socket";
 import { WebSocketAdapter } from "./web_socket_adapter";
@@ -389,6 +389,8 @@ export declare class Client {
     createCategoryDesc(session: Session, request: ApiCreateCategoryDescRequest): Promise<ApiCategoryDesc>;
     /** Create a new role for clan. */
     createRole(session: Session, request: ApiCreateRoleRequest): Promise<ApiRole>;
+    /** Create a new event for clan. */
+    createEvent(session: Session, request: ApiCreateEventRequest): Promise<ApiEventManagement>;
     /** add role for channel. */
     addRolesChannelDesc(session: Session, request: ApiAddRoleChannelDescRequest): Promise<boolean>;
     /** Update action role when delete role */
@@ -409,6 +411,10 @@ export declare class Client {
     deleteStorageObjects(session: Session, request: ApiDeleteStorageObjectsRequest): Promise<boolean>;
     /** Delete a role by ID. */
     deleteRole(session: Session, roleId: string): Promise<boolean>;
+    /** Delete a event by ID. */
+    deleteEvent(session: Session, roleId: string): Promise<boolean>;
+    /** update user a event by ID. */
+    updateEventUser(session: Session, request: ApiDeleteEventRequest): Promise<boolean>;
     /** Submit an event for processing in the server's registered runtime custom events handler. */
     emitEvent(session: Session, request: ApiEvent): Promise<boolean>;
     /** Fetch the current user's account. */
@@ -439,6 +445,8 @@ export declare class Client {
     listCategoryDescs(session: Session, clanId: string, creatorId?: string, categoryName?: string): Promise<ApiCategoryDescList>;
     /** List user roles */
     listRoles(session: Session, limit?: number, state?: number, cursor?: string, clanId?: string): Promise<ApiRoleList>;
+    /** List event */
+    listEvents(session: Session, clanId?: string): Promise<ApiEventList>;
     /** List permission */
     getListPermission(session: Session): Promise<ApiPermissionList>;
     /** Update action role when delete role */
@@ -516,6 +524,8 @@ export declare class Client {
     updateUserProfileByClan(session: Session, clanId: string, request: ApiUpdateClanProfileRequest): Promise<boolean>;
     /** Update fields in a given role. */
     updateRole(session: Session, roleId: string, request: ApiUpdateRoleRequest): Promise<boolean>;
+    /** Update fields in a given event. */
+    updateEvent(session: Session, roleId: string, request: ApiUpdateEventRequest): Promise<boolean>;
     /** Update fields in a given clan profile. */
     createLinkInviteUser(session: Session, request: ApiLinkInviteUserRequest): Promise<ApiLinkInviteUser>;
     /** Get link invite user */

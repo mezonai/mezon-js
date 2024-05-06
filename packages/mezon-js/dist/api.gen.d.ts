@@ -232,6 +232,28 @@ export interface ApiCreateClanDescRequest {
     creator_id?: string;
     logo?: string;
 }
+/** Create a event within clan. */
+export interface ApiCreateEventRequest {
+    address?: string;
+    channel_id?: string;
+    clan_id?: string;
+    description?: string;
+    end_time?: string;
+    logo?: string;
+    start_time?: string;
+    title?: string;
+}
+/** Create a event within clan. */
+export interface ApiUpdateEventRequest {
+    address?: string;
+    channel_id?: string;
+    event_id?: string;
+    description?: string;
+    end_time?: string;
+    logo?: string;
+    start_time?: string;
+    title?: string;
+}
 /** Create a role within clan. */
 export interface ApiCreateRoleRequest {
     active_permission_ids?: Array<string>;
@@ -243,6 +265,10 @@ export interface ApiCreateRoleRequest {
     display_online?: number;
     role_icon?: string;
     title?: string;
+}
+/**  */
+export interface ApiDeleteEventRequest {
+    event_id?: string;
 }
 /** Delete a role the user has access to. */
 export interface ApiDeleteRoleRequest {
@@ -265,6 +291,26 @@ export interface ApiEvent {
     name?: string;
     properties?: Record<string, string>;
     timestamp?: string;
+}
+/**  */
+export interface ApiEventList {
+    events?: Array<ApiEventManagement>;
+}
+/**  */
+export interface ApiEventManagement {
+    active?: number;
+    address?: string;
+    channel_id?: string;
+    clan_id?: string;
+    creator_id?: string;
+    description?: string;
+    end_time?: string;
+    id?: string;
+    logo?: string;
+    start_event?: number;
+    start_time?: string;
+    title?: string;
+    user_ids?: Array<string>;
 }
 /** A friend of a user. */
 export interface ApiFriend {
@@ -677,6 +723,16 @@ export declare class MezonApi {
     registFCMDeviceToken(bearerToken: string, token?: string, options?: any): Promise<any>;
     /** Submit an event for processing in the server's registered runtime custom events handler. */
     event(bearerToken: string, body: ApiEvent, options?: any): Promise<any>;
+    /** List user events */
+    listEvents(bearerToken: string, clanId?: string, options?: any): Promise<ApiEventList>;
+    /** Create a new event for clan. */
+    createEvent(bearerToken: string, body: ApiCreateEventRequest, options?: any): Promise<ApiEventManagement>;
+    /** Update fields in a given event. */
+    updateEventUser(bearerToken: string, body: ApiDeleteEventRequest, options?: any): Promise<any>;
+    /** Delete a event by ID. */
+    deleteEvent(bearerToken: string, eventId: string, options?: any): Promise<any>;
+    /** Update fields in a given event. */
+    updateEvent(bearerToken: string, eventId: string, body: {}, options?: any): Promise<any>;
     /** Delete one or more users by ID or username. */
     deleteFriends(bearerToken: string, ids?: Array<string>, usernames?: Array<string>, options?: any): Promise<any>;
     /** List all friends for the current user. */

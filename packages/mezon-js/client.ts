@@ -63,6 +63,7 @@ import {
   ApiChannelUserList,
   ApiClanUserList,
   ApiLinkInviteUserRequest,
+  ApiUpdateEventRequest,
   ApiLinkInviteUser,
   ApiInviteUserRes,
   ApiUploadAttachmentRequest,
@@ -74,6 +75,10 @@ import {
   ApiChannelMessageHeader,
   ApiVoiceChannelUserList,
   ApiChannelAttachmentList,
+  ApiCreateEventRequest,
+  ApiEventManagement,
+  ApiEventList,
+  ApiDeleteEventRequest,
 } from "./api.gen";
 
 import { Session } from "./session";
@@ -736,6 +741,18 @@ export class Client {
     });
   }
 
+  /** Create a new event for clan. */
+  async createEvent(session: Session, request: ApiCreateEventRequest): Promise<ApiEventManagement> {
+    if (this.autoRefreshSession && session.refresh_token &&
+        session.isexpired((Date.now() + this.expiredTimespanMs)/1000)) {
+        await this.sessionRefresh(session);
+    }
+
+    return this.apiClient.createEvent(session.token, request).then((response: ApiEventManagement) => {
+      return Promise.resolve(response);
+    });
+  }
+
   /** add role for channel. */
   async addRolesChannelDesc(session: Session, request: ApiAddRoleChannelDescRequest): Promise<boolean> {
     if (this.autoRefreshSession && session.refresh_token &&
@@ -845,6 +862,30 @@ export class Client {
     }
 
     return this.apiClient.deleteRole(session.token, roleId).then((response: any) => {
+      return response !== undefined;
+    });
+  }
+
+  /** Delete a event by ID. */
+  async deleteEvent(session: Session, roleId: string): Promise<boolean> {
+    if (this.autoRefreshSession && session.refresh_token &&
+        session.isexpired((Date.now() + this.expiredTimespanMs)/1000)) {
+        await this.sessionRefresh(session);
+    }
+
+    return this.apiClient.deleteEvent(session.token, roleId).then((response: any) => {
+      return response !== undefined;
+    });
+  }
+
+  /** update user a event by ID. */
+  async updateEventUser(session: Session, request: ApiDeleteEventRequest): Promise<boolean> {
+    if (this.autoRefreshSession && session.refresh_token &&
+        session.isexpired((Date.now() + this.expiredTimespanMs)/1000)) {
+        await this.sessionRefresh(session);
+    }
+
+    return this.apiClient.updateEventUser(session.token, request).then((response: any) => {
       return response !== undefined;
     });
   }
@@ -1213,6 +1254,18 @@ export class Client {
     }
 
     return this.apiClient.listRoles(session.token, limit, state, cursor, clanId).then((response: ApiRoleList) => {
+      return Promise.resolve(response);
+    });
+  }
+
+   /** List event */
+   async listEvents(session: Session, clanId?:string): Promise<ApiEventList> {
+    if (this.autoRefreshSession && session.refresh_token &&
+        session.isexpired((Date.now() + this.expiredTimespanMs)/1000)) {
+        await this.sessionRefresh(session);
+    }
+
+    return this.apiClient.listEvents(session.token, clanId).then((response: ApiEventList) => {
       return Promise.resolve(response);
     });
   }
@@ -1798,6 +1851,18 @@ export class Client {
     }
 
     return this.apiClient.updateRole(session.token, roleId, request).then((response: any) => {
+      return response !== undefined;
+    });
+  }
+
+  /** Update fields in a given event. */
+  async updateEvent(session: Session, roleId: string, request: ApiUpdateEventRequest): Promise<boolean> {
+    if (this.autoRefreshSession && session.refresh_token &&
+        session.isexpired((Date.now() + this.expiredTimespanMs)/1000)) {
+        await this.sessionRefresh(session);
+    }
+
+    return this.apiClient.updateEvent(session.token, roleId, request).then((response: any) => {
       return response !== undefined;
     });
   }
