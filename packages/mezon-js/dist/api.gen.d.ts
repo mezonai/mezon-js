@@ -293,7 +293,11 @@ export interface ApiEvent {
     timestamp?: string;
 }
 /**  */
-export interface ApiEventClan {
+export interface ApiEventList {
+    events?: Array<ApiEventManagement>;
+}
+/**  */
+export interface ApiEventManagement {
     active?: number;
     address?: string;
     channel_id?: string;
@@ -307,10 +311,6 @@ export interface ApiEventClan {
     start_time?: string;
     title?: string;
     user_ids?: Array<string>;
-}
-/**  */
-export interface ApiEventList {
-    events?: Array<ApiEventClan>;
 }
 /** A friend of a user. */
 export interface ApiFriend {
@@ -721,12 +721,12 @@ export declare class MezonApi {
     deleteCategoryDesc(bearerToken: string, creatorId: string, options?: any): Promise<any>;
     /** Immediately join an open group, or request to join a closed one. */
     registFCMDeviceToken(bearerToken: string, token?: string, options?: any): Promise<any>;
-    /** List user events */
-    listEvents(bearerToken: string, clanId?: string, options?: any): Promise<ApiEventList>;
     /** Submit an event for processing in the server's registered runtime custom events handler. */
     event(bearerToken: string, body: ApiEvent, options?: any): Promise<any>;
+    /** List user events */
+    listEvents(bearerToken: string, clanId?: string, options?: any): Promise<ApiEventList>;
     /** Create a new event for clan. */
-    createEvent(bearerToken: string, body: ApiCreateEventRequest, options?: any): Promise<ApiEventClan>;
+    createEvent(bearerToken: string, body: ApiCreateEventRequest, options?: any): Promise<ApiEventManagement>;
     /** Update fields in a given event. */
     updateEventUser(bearerToken: string, body: ApiDeleteEventRequest, options?: any): Promise<any>;
     /** Delete a event by ID. */

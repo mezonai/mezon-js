@@ -1942,7 +1942,7 @@ export interface Role {
 }
 
 /** Event clan */
-export interface EventClan {
+export interface EventManagement {
   id: string;
   title: string;
   logo: string;
@@ -1982,7 +1982,7 @@ export interface RoleList {
 
 export interface EventList {
   /** A list of event. */
-  events: EventClan[];
+  events: EventManagement[];
 }
 
 /** A list of permission description, usually a result of a list operation. */
@@ -13340,7 +13340,7 @@ export const Role = {
   },
 };
 
-function createBaseEventClan(): EventClan {
+function createBaseEventManagement(): EventManagement {
   return {
     id: "",
     title: "",
@@ -13358,8 +13358,8 @@ function createBaseEventClan(): EventClan {
   };
 }
 
-export const EventClan = {
-  encode(message: EventClan, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+export const EventManagement = {
+  encode(message: EventManagement, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.id !== "") {
       writer.uint32(10).string(message.id);
     }
@@ -13402,10 +13402,10 @@ export const EventClan = {
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): EventClan {
+  decode(input: _m0.Reader | Uint8Array, length?: number): EventManagement {
     const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseEventClan();
+    const message = createBaseEventManagement();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -13456,7 +13456,7 @@ export const EventClan = {
     return message;
   },
 
-  fromJSON(object: any): EventClan {
+  fromJSON(object: any): EventManagement {
     return {
       id: isSet(object.id) ? String(object.id) : "",
       title: isSet(object.title) ? String(object.title) : "",
@@ -13474,7 +13474,7 @@ export const EventClan = {
     };
   },
 
-  toJSON(message: EventClan): unknown {
+  toJSON(message: EventManagement): unknown {
     const obj: any = {};
     message.id !== undefined && (obj.id = message.id);
     message.title !== undefined && (obj.title = message.title);
@@ -13496,12 +13496,12 @@ export const EventClan = {
     return obj;
   },
 
-  create<I extends Exact<DeepPartial<EventClan>, I>>(base?: I): EventClan {
-    return EventClan.fromPartial(base ?? {});
+  create<I extends Exact<DeepPartial<EventManagement>, I>>(base?: I): EventManagement {
+    return EventManagement.fromPartial(base ?? {});
   },
 
-  fromPartial<I extends Exact<DeepPartial<EventClan>, I>>(object: I): EventClan {
-    const message = createBaseEventClan();
+  fromPartial<I extends Exact<DeepPartial<EventManagement>, I>>(object: I): EventManagement {
+    const message = createBaseEventManagement();
     message.id = object.id ?? "";
     message.title = object.title ?? "";
     message.logo = object.logo ?? "";
@@ -13699,7 +13699,7 @@ function createBaseEventList(): EventList {
 export const EventList = {
   encode(message: EventList, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     for (const v of message.events) {
-      EventClan.encode(v!, writer.uint32(10).fork()).ldelim();
+      EventManagement.encode(v!, writer.uint32(10).fork()).ldelim();
     }
     return writer;
   },
@@ -13712,7 +13712,7 @@ export const EventList = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          message.events.push(EventClan.decode(reader, reader.uint32()));
+          message.events.push(EventManagement.decode(reader, reader.uint32()));
           break;
         default:
           reader.skipType(tag & 7);
@@ -13723,13 +13723,13 @@ export const EventList = {
   },
 
   fromJSON(object: any): EventList {
-    return { events: Array.isArray(object?.events) ? object.events.map((e: any) => EventClan.fromJSON(e)) : [] };
+    return { events: Array.isArray(object?.events) ? object.events.map((e: any) => EventManagement.fromJSON(e)) : [] };
   },
 
   toJSON(message: EventList): unknown {
     const obj: any = {};
     if (message.events) {
-      obj.events = message.events.map((e) => e ? EventClan.toJSON(e) : undefined);
+      obj.events = message.events.map((e) => e ? EventManagement.toJSON(e) : undefined);
     } else {
       obj.events = [];
     }
@@ -13742,7 +13742,7 @@ export const EventList = {
 
   fromPartial<I extends Exact<DeepPartial<EventList>, I>>(object: I): EventList {
     const message = createBaseEventList();
-    message.events = object.events?.map((e) => EventClan.fromPartial(e)) || [];
+    message.events = object.events?.map((e) => EventManagement.fromPartial(e)) || [];
     return message;
   },
 };

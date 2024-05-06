@@ -2231,32 +2231,6 @@ var MezonApi = class {
       )
     ]);
   }
-  /** List user events */
-  listEvents(bearerToken, clanId, options = {}) {
-    const urlPath = "/v2/event";
-    const queryParams = /* @__PURE__ */ new Map();
-    queryParams.set("clan_id", clanId);
-    let bodyJson = "";
-    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
-    const fetchOptions = buildFetchOptions("GET", options, bodyJson);
-    if (bearerToken) {
-      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-    }
-    return Promise.race([
-      fetch(fullUrl, fetchOptions).then((response) => {
-        if (response.status == 204) {
-          return response;
-        } else if (response.status >= 200 && response.status < 300) {
-          return response.json();
-        } else {
-          throw response;
-        }
-      }),
-      new Promise(
-        (_, reject) => setTimeout(reject, this.timeoutMs, "Request timed out.")
-      )
-    ]);
-  }
   /** Submit an event for processing in the server's registered runtime custom events handler. */
   event(bearerToken, body, options = {}) {
     if (body === null || body === void 0) {
@@ -2286,12 +2260,38 @@ var MezonApi = class {
       )
     ]);
   }
+  /** List user events */
+  listEvents(bearerToken, clanId, options = {}) {
+    const urlPath = "/v2/eventmanagement";
+    const queryParams = /* @__PURE__ */ new Map();
+    queryParams.set("clan_id", clanId);
+    let bodyJson = "";
+    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
+    const fetchOptions = buildFetchOptions("GET", options, bodyJson);
+    if (bearerToken) {
+      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+    }
+    return Promise.race([
+      fetch(fullUrl, fetchOptions).then((response) => {
+        if (response.status == 204) {
+          return response;
+        } else if (response.status >= 200 && response.status < 300) {
+          return response.json();
+        } else {
+          throw response;
+        }
+      }),
+      new Promise(
+        (_, reject) => setTimeout(reject, this.timeoutMs, "Request timed out.")
+      )
+    ]);
+  }
   /** Create a new event for clan. */
   createEvent(bearerToken, body, options = {}) {
     if (body === null || body === void 0) {
       throw new Error("'body' is a required parameter but is null or undefined.");
     }
-    const urlPath = "/v2/event/create";
+    const urlPath = "/v2/eventmanagement/create";
     const queryParams = /* @__PURE__ */ new Map();
     let bodyJson = "";
     bodyJson = JSON.stringify(body || {});
@@ -2320,7 +2320,7 @@ var MezonApi = class {
     if (body === null || body === void 0) {
       throw new Error("'body' is a required parameter but is null or undefined.");
     }
-    const urlPath = "/v2/event/user";
+    const urlPath = "/v2/eventmanagement/user";
     const queryParams = /* @__PURE__ */ new Map();
     let bodyJson = "";
     bodyJson = JSON.stringify(body || {});
@@ -2349,7 +2349,7 @@ var MezonApi = class {
     if (eventId === null || eventId === void 0) {
       throw new Error("'eventId' is a required parameter but is null or undefined.");
     }
-    const urlPath = "/v2/event/{eventId}".replace("{eventId}", encodeURIComponent(String(eventId)));
+    const urlPath = "/v2/eventmanagement/{eventId}".replace("{eventId}", encodeURIComponent(String(eventId)));
     const queryParams = /* @__PURE__ */ new Map();
     let bodyJson = "";
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
@@ -2380,7 +2380,7 @@ var MezonApi = class {
     if (body === null || body === void 0) {
       throw new Error("'body' is a required parameter but is null or undefined.");
     }
-    const urlPath = "/v2/event/{eventId}".replace("{eventId}", encodeURIComponent(String(eventId)));
+    const urlPath = "/v2/eventmanagement/{eventId}".replace("{eventId}", encodeURIComponent(String(eventId)));
     const queryParams = /* @__PURE__ */ new Map();
     let bodyJson = "";
     bodyJson = JSON.stringify(body || {});

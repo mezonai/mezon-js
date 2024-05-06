@@ -76,7 +76,7 @@ import {
   ApiVoiceChannelUserList,
   ApiChannelAttachmentList,
   ApiCreateEventRequest,
-  ApiEventClan,
+  ApiEventManagement,
   ApiEventList,
   ApiDeleteEventRequest,
 } from "./api.gen";
@@ -742,13 +742,13 @@ export class Client {
   }
 
   /** Create a new event for clan. */
-  async createEvent(session: Session, request: ApiCreateEventRequest): Promise<ApiEventClan> {
+  async createEvent(session: Session, request: ApiCreateEventRequest): Promise<ApiEventManagement> {
     if (this.autoRefreshSession && session.refresh_token &&
         session.isexpired((Date.now() + this.expiredTimespanMs)/1000)) {
         await this.sessionRefresh(session);
     }
 
-    return this.apiClient.createEvent(session.token, request).then((response: ApiEventClan) => {
+    return this.apiClient.createEvent(session.token, request).then((response: ApiEventManagement) => {
       return Promise.resolve(response);
     });
   }

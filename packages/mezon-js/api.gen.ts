@@ -511,7 +511,13 @@ export interface ApiEvent {
 }
 
 /**  */
-export interface ApiEventClan {
+export interface ApiEventList {
+  //A list of event.
+  events?: Array<ApiEventManagement>;
+}
+
+/**  */
+export interface ApiEventManagement {
   //
   active?: number;
   //
@@ -538,12 +544,6 @@ export interface ApiEventClan {
   title?: string;
   //
   user_ids?: Array<string>;
-}
-
-/**  */
-export interface ApiEventList {
-  //A list of event.
-  events?: Array<ApiEventClan>;
 }
 
 /** A friend of a user. */
@@ -3105,39 +3105,6 @@ return Promise.race([
     ]);
 }
 
-  /** List user events */
-  listEvents(bearerToken: string,
-      clanId?:string,
-      options: any = {}): Promise<ApiEventList> {
-    
-    const urlPath = "/v2/event";
-    const queryParams = new Map<string, any>();
-    queryParams.set("clan_id", clanId);
-
-    let bodyJson : string = "";
-
-    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
-    const fetchOptions = buildFetchOptions("GET", options, bodyJson);
-    if (bearerToken) {
-        fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-    }
-
-    return Promise.race([
-      fetch(fullUrl, fetchOptions).then((response) => {
-        if (response.status == 204) {
-          return response;
-        } else if (response.status >= 200 && response.status < 300) {
-          return response.json();
-        } else {
-          throw response;
-        }
-      }),
-      new Promise((_, reject) =>
-        setTimeout(reject, this.timeoutMs, "Request timed out.")
-      ),
-    ]);
-}
-
   /** Submit an event for processing in the server's registered runtime custom events handler. */
   event(bearerToken: string,
       body:ApiEvent,
@@ -3174,15 +3141,48 @@ return Promise.race([
     ]);
 }
 
+  /** List user events */
+  listEvents(bearerToken: string,
+      clanId?:string,
+      options: any = {}): Promise<ApiEventList> {
+    
+    const urlPath = "/v2/eventmanagement";
+    const queryParams = new Map<string, any>();
+    queryParams.set("clan_id", clanId);
+
+    let bodyJson : string = "";
+
+    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
+    const fetchOptions = buildFetchOptions("GET", options, bodyJson);
+    if (bearerToken) {
+        fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+    }
+
+    return Promise.race([
+      fetch(fullUrl, fetchOptions).then((response) => {
+        if (response.status == 204) {
+          return response;
+        } else if (response.status >= 200 && response.status < 300) {
+          return response.json();
+        } else {
+          throw response;
+        }
+      }),
+      new Promise((_, reject) =>
+        setTimeout(reject, this.timeoutMs, "Request timed out.")
+      ),
+    ]);
+}
+
   /** Create a new event for clan. */
   createEvent(bearerToken: string,
       body:ApiCreateEventRequest,
-      options: any = {}): Promise<ApiEventClan> {
+      options: any = {}): Promise<ApiEventManagement> {
     
     if (body === null || body === undefined) {
       throw new Error("'body' is a required parameter but is null or undefined.");
     }
-    const urlPath = "/v2/event/create";
+    const urlPath = "/v2/eventmanagement/create";
     const queryParams = new Map<string, any>();
 
     let bodyJson : string = "";
@@ -3218,7 +3218,7 @@ return Promise.race([
     if (body === null || body === undefined) {
       throw new Error("'body' is a required parameter but is null or undefined.");
     }
-    const urlPath = "/v2/event/user";
+    const urlPath = "/v2/eventmanagement/user";
     const queryParams = new Map<string, any>();
 
     let bodyJson : string = "";
@@ -3254,7 +3254,7 @@ return Promise.race([
     if (eventId === null || eventId === undefined) {
       throw new Error("'eventId' is a required parameter but is null or undefined.");
     }
-    const urlPath = "/v2/event/{eventId}"
+    const urlPath = "/v2/eventmanagement/{eventId}"
         .replace("{eventId}", encodeURIComponent(String(eventId)));
     const queryParams = new Map<string, any>();
 
@@ -3294,7 +3294,7 @@ return Promise.race([
     if (body === null || body === undefined) {
       throw new Error("'body' is a required parameter but is null or undefined.");
     }
-    const urlPath = "/v2/event/{eventId}"
+    const urlPath = "/v2/eventmanagement/{eventId}"
         .replace("{eventId}", encodeURIComponent(String(eventId)));
     const queryParams = new Map<string, any>();
 
