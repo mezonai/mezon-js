@@ -771,8 +771,8 @@ export interface VoiceLeavedEvent {
   clan_id: string;
   /** voice channel name */
   voice_channel_id: string;
-  /** last participant */
-  last_participant: boolean;
+  /** voice user_id */
+  voice_user_id: string;
 }
 
 /** Voice Joined event */
@@ -5072,7 +5072,7 @@ export const MessageAttachmentEvent = {
 };
 
 function createBaseVoiceLeavedEvent(): VoiceLeavedEvent {
-  return { id: "", clan_id: "", voice_channel_id: "", last_participant: false };
+  return { id: "", clan_id: "", voice_channel_id: "", voice_user_id: "" };
 }
 
 export const VoiceLeavedEvent = {
@@ -5086,8 +5086,8 @@ export const VoiceLeavedEvent = {
     if (message.voice_channel_id !== "") {
       writer.uint32(26).string(message.voice_channel_id);
     }
-    if (message.last_participant === true) {
-      writer.uint32(32).bool(message.last_participant);
+    if (message.voice_user_id !== "") {
+      writer.uint32(34).string(message.voice_user_id);
     }
     return writer;
   },
@@ -5109,7 +5109,7 @@ export const VoiceLeavedEvent = {
           message.voice_channel_id = reader.string();
           break;
         case 4:
-          message.last_participant = reader.bool();
+          message.voice_user_id = reader.string();
           break;
         default:
           reader.skipType(tag & 7);
@@ -5124,7 +5124,7 @@ export const VoiceLeavedEvent = {
       id: isSet(object.id) ? String(object.id) : "",
       clan_id: isSet(object.clan_id) ? String(object.clan_id) : "",
       voice_channel_id: isSet(object.voice_channel_id) ? String(object.voice_channel_id) : "",
-      last_participant: isSet(object.last_participant) ? Boolean(object.last_participant) : false,
+      voice_user_id: isSet(object.voice_user_id) ? String(object.voice_user_id) : "",
     };
   },
 
@@ -5133,7 +5133,7 @@ export const VoiceLeavedEvent = {
     message.id !== undefined && (obj.id = message.id);
     message.clan_id !== undefined && (obj.clan_id = message.clan_id);
     message.voice_channel_id !== undefined && (obj.voice_channel_id = message.voice_channel_id);
-    message.last_participant !== undefined && (obj.last_participant = message.last_participant);
+    message.voice_user_id !== undefined && (obj.voice_user_id = message.voice_user_id);
     return obj;
   },
 
@@ -5146,7 +5146,7 @@ export const VoiceLeavedEvent = {
     message.id = object.id ?? "";
     message.clan_id = object.clan_id ?? "";
     message.voice_channel_id = object.voice_channel_id ?? "";
-    message.last_participant = object.last_participant ?? false;
+    message.voice_user_id = object.voice_user_id ?? "";
     return message;
   },
 };

@@ -328,8 +328,8 @@ export interface VoiceLeavedEvent {
   clan_id: string;
   // voice channel name
   voice_channel_id: string;
-  // last participant
-  last_participant: boolean;
+  // voice user id
+  voice_user_id: string;
 }
 
 export interface VoiceJoinedEvent {
@@ -709,7 +709,7 @@ export interface Socket {
   writeVoiceJoined(id: string, clanId: string, clanName: string, voiceChannelId: string, voiceChannelLabel: string, participant: string, lastScreenshot: string) : Promise<VoiceJoinedEvent>;
 
   /** send voice leaved */
-  writeVoiceLeaved(id: string, clanId: string, voiceChannelId: string, lastParticipant: boolean) : Promise<VoiceLeavedEvent>;
+  writeVoiceLeaved(id: string, clanId: string, voiceChannelId: string, voiceUserId: string) : Promise<VoiceLeavedEvent>;
 
   /** Handle disconnect events received from the socket. */
   ondisconnect: (evt: Event) => void;
@@ -1298,8 +1298,8 @@ export class DefaultSocket implements Socket {
     return response.voice_joined_event
   }
 
-  async writeVoiceLeaved(id: string, clanId: string, voiceChannelId: string, lastParticipant: boolean) : Promise<VoiceLeavedEvent> {
-    const response = await this.send({voice_leaved_event: {id: id, clan_id: clanId, voice_channel_id: voiceChannelId, last_participant: lastParticipant}});
+  async writeVoiceLeaved(id: string, clanId: string, voiceChannelId: string, voiceUserId: string) : Promise<VoiceLeavedEvent> {
+    const response = await this.send({voice_leaved_event: {id: id, clan_id: clanId, voice_channel_id: voiceChannelId, voice_user_id: voiceUserId}});
     return response.voice_leaved_event
   }
 

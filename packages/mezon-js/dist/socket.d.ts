@@ -241,7 +241,7 @@ export interface VoiceLeavedEvent {
     id: string;
     clan_id: string;
     voice_channel_id: string;
-    last_participant: boolean;
+    voice_user_id: string;
 }
 export interface VoiceJoinedEvent {
     /** The unique identifier of the chat channel. */
@@ -550,7 +550,7 @@ export interface Socket {
     /** send voice joined */
     writeVoiceJoined(id: string, clanId: string, clanName: string, voiceChannelId: string, voiceChannelLabel: string, participant: string, lastScreenshot: string): Promise<VoiceJoinedEvent>;
     /** send voice leaved */
-    writeVoiceLeaved(id: string, clanId: string, voiceChannelId: string, lastParticipant: boolean): Promise<VoiceLeavedEvent>;
+    writeVoiceLeaved(id: string, clanId: string, voiceChannelId: string, voiceUserId: string): Promise<VoiceLeavedEvent>;
     /** Handle disconnect events received from the socket. */
     ondisconnect: (evt: Event) => void;
     /** Handle error events received from the socket. */
@@ -670,7 +670,7 @@ export declare class DefaultSocket implements Socket {
     writeMessageTyping(channel_id: string, channel_label: string, mode: number): Promise<MessageTypingEvent>;
     writeLastSeenMessage(channel_id: string, channel_label: string, mode: number, message_id: string, timestamp: string): Promise<LastSeenMessageEvent>;
     writeVoiceJoined(id: string, clanId: string, clanName: string, voiceChannelId: string, voiceChannelLabel: string, participant: string, lastScreenshot: string): Promise<VoiceJoinedEvent>;
-    writeVoiceLeaved(id: string, clanId: string, voiceChannelId: string, lastParticipant: boolean): Promise<VoiceLeavedEvent>;
+    writeVoiceLeaved(id: string, clanId: string, voiceChannelId: string, voiceUserId: string): Promise<VoiceLeavedEvent>;
     private pingPong;
 }
 export {};
