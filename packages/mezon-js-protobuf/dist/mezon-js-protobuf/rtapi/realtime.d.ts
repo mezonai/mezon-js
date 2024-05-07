@@ -568,8 +568,8 @@ export interface VoiceLeavedEvent {
     clan_id: string;
     /** voice channel name */
     voice_channel_id: string;
-    /** last participant */
-    last_participant: boolean;
+    /** voice user_id */
+    voice_user_id: string;
 }
 /** Voice Joined event */
 export interface VoiceJoinedEvent {
@@ -1075,7 +1075,7 @@ export declare const Envelope: {
             id?: string | undefined;
             clan_id?: string | undefined;
             voice_channel_id?: string | undefined;
-            last_participant?: boolean | undefined;
+            voice_user_id?: string | undefined;
         } | undefined;
         channel_created_event?: {
             clan_id?: string | undefined;
@@ -2210,12 +2210,12 @@ export declare const Envelope: {
             id?: string | undefined;
             clan_id?: string | undefined;
             voice_channel_id?: string | undefined;
-            last_participant?: boolean | undefined;
+            voice_user_id?: string | undefined;
         } & {
             id?: string | undefined;
             clan_id?: string | undefined;
             voice_channel_id?: string | undefined;
-            last_participant?: boolean | undefined;
+            voice_user_id?: string | undefined;
         } & { [K_86 in Exclude<keyof I["voice_leaved_event"], keyof VoiceLeavedEvent>]: never; }) | undefined;
         channel_created_event?: ({
             clan_id?: string | undefined;
@@ -2646,7 +2646,7 @@ export declare const Envelope: {
             id?: string | undefined;
             clan_id?: string | undefined;
             voice_channel_id?: string | undefined;
-            last_participant?: boolean | undefined;
+            voice_user_id?: string | undefined;
         } | undefined;
         channel_created_event?: {
             clan_id?: string | undefined;
@@ -3781,12 +3781,12 @@ export declare const Envelope: {
             id?: string | undefined;
             clan_id?: string | undefined;
             voice_channel_id?: string | undefined;
-            last_participant?: boolean | undefined;
+            voice_user_id?: string | undefined;
         } & {
             id?: string | undefined;
             clan_id?: string | undefined;
             voice_channel_id?: string | undefined;
-            last_participant?: boolean | undefined;
+            voice_user_id?: string | undefined;
         } & { [K_176 in Exclude<keyof I_1["voice_leaved_event"], keyof VoiceLeavedEvent>]: never; }) | undefined;
         channel_created_event?: ({
             clan_id?: string | undefined;
@@ -6185,23 +6185,23 @@ export declare const VoiceLeavedEvent: {
         id?: string | undefined;
         clan_id?: string | undefined;
         voice_channel_id?: string | undefined;
-        last_participant?: boolean | undefined;
+        voice_user_id?: string | undefined;
     } & {
         id?: string | undefined;
         clan_id?: string | undefined;
         voice_channel_id?: string | undefined;
-        last_participant?: boolean | undefined;
+        voice_user_id?: string | undefined;
     } & { [K in Exclude<keyof I, keyof VoiceLeavedEvent>]: never; }>(base?: I | undefined): VoiceLeavedEvent;
     fromPartial<I_1 extends {
         id?: string | undefined;
         clan_id?: string | undefined;
         voice_channel_id?: string | undefined;
-        last_participant?: boolean | undefined;
+        voice_user_id?: string | undefined;
     } & {
         id?: string | undefined;
         clan_id?: string | undefined;
         voice_channel_id?: string | undefined;
-        last_participant?: boolean | undefined;
+        voice_user_id?: string | undefined;
     } & { [K_1 in Exclude<keyof I_1, keyof VoiceLeavedEvent>]: never; }>(object: I_1): VoiceLeavedEvent;
 };
 export declare const VoiceJoinedEvent: {

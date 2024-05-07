@@ -6068,7 +6068,7 @@ var MessageReactionEvent = {
   }
 };
 function createBaseVoiceLeavedEvent() {
-  return { id: "", clan_id: "", voice_channel_id: "", last_participant: false };
+  return { id: "", clan_id: "", voice_channel_id: "", voice_user_id: "" };
 }
 var VoiceLeavedEvent = {
   encode(message, writer = import_minimal4.default.Writer.create()) {
@@ -6081,8 +6081,8 @@ var VoiceLeavedEvent = {
     if (message.voice_channel_id !== "") {
       writer.uint32(26).string(message.voice_channel_id);
     }
-    if (message.last_participant === true) {
-      writer.uint32(32).bool(message.last_participant);
+    if (message.voice_user_id !== "") {
+      writer.uint32(34).string(message.voice_user_id);
     }
     return writer;
   },
@@ -6103,7 +6103,7 @@ var VoiceLeavedEvent = {
           message.voice_channel_id = reader.string();
           break;
         case 4:
-          message.last_participant = reader.bool();
+          message.voice_user_id = reader.string();
           break;
         default:
           reader.skipType(tag & 7);
@@ -6117,7 +6117,7 @@ var VoiceLeavedEvent = {
       id: isSet4(object.id) ? String(object.id) : "",
       clan_id: isSet4(object.clan_id) ? String(object.clan_id) : "",
       voice_channel_id: isSet4(object.voice_channel_id) ? String(object.voice_channel_id) : "",
-      last_participant: isSet4(object.last_participant) ? Boolean(object.last_participant) : false
+      voice_user_id: isSet4(object.voice_user_id) ? String(object.voice_user_id) : ""
     };
   },
   toJSON(message) {
@@ -6125,7 +6125,7 @@ var VoiceLeavedEvent = {
     message.id !== void 0 && (obj.id = message.id);
     message.clan_id !== void 0 && (obj.clan_id = message.clan_id);
     message.voice_channel_id !== void 0 && (obj.voice_channel_id = message.voice_channel_id);
-    message.last_participant !== void 0 && (obj.last_participant = message.last_participant);
+    message.voice_user_id !== void 0 && (obj.voice_user_id = message.voice_user_id);
     return obj;
   },
   create(base) {
@@ -6137,7 +6137,7 @@ var VoiceLeavedEvent = {
     message.id = (_a = object.id) != null ? _a : "";
     message.clan_id = (_b = object.clan_id) != null ? _b : "";
     message.voice_channel_id = (_c = object.voice_channel_id) != null ? _c : "";
-    message.last_participant = (_d = object.last_participant) != null ? _d : false;
+    message.voice_user_id = (_d = object.voice_user_id) != null ? _d : "";
     return message;
   }
 };
