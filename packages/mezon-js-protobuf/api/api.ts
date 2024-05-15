@@ -1004,6 +1004,8 @@ export interface RegistFcmDeviceTokenRequest {
   token: string;
   /**  */
   device_id: string;
+  /**  */
+  platform: string;
 }
 
 /** Link Facebook to the current user's account. */
@@ -7569,7 +7571,7 @@ export const ImportSteamFriendsRequest = {
 };
 
 function createBaseRegistFcmDeviceTokenRequest(): RegistFcmDeviceTokenRequest {
-  return { token: "", device_id: "" };
+  return { token: "", device_id: "", platform: "" };
 }
 
 export const RegistFcmDeviceTokenRequest = {
@@ -7579,6 +7581,9 @@ export const RegistFcmDeviceTokenRequest = {
     }
     if (message.device_id !== "") {
       writer.uint32(18).string(message.device_id);
+    }
+    if (message.platform !== "") {
+      writer.uint32(26).string(message.platform);
     }
     return writer;
   },
@@ -7596,6 +7601,9 @@ export const RegistFcmDeviceTokenRequest = {
         case 2:
           message.device_id = reader.string();
           break;
+        case 3:
+          message.platform = reader.string();
+          break;
         default:
           reader.skipType(tag & 7);
           break;
@@ -7608,6 +7616,7 @@ export const RegistFcmDeviceTokenRequest = {
     return {
       token: isSet(object.token) ? String(object.token) : "",
       device_id: isSet(object.device_id) ? String(object.device_id) : "",
+      platform: isSet(object.platform) ? String(object.platform) : "",
     };
   },
 
@@ -7615,6 +7624,7 @@ export const RegistFcmDeviceTokenRequest = {
     const obj: any = {};
     message.token !== undefined && (obj.token = message.token);
     message.device_id !== undefined && (obj.device_id = message.device_id);
+    message.platform !== undefined && (obj.platform = message.platform);
     return obj;
   },
 
@@ -7626,6 +7636,7 @@ export const RegistFcmDeviceTokenRequest = {
     const message = createBaseRegistFcmDeviceTokenRequest();
     message.token = object.token ?? "";
     message.device_id = object.device_id ?? "";
+    message.platform = object.platform ?? "";
     return message;
   },
 };

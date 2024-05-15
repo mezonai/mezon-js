@@ -720,7 +720,7 @@ export declare class MezonApi {
     /**  */
     deleteCategoryDesc(bearerToken: string, creatorId: string, options?: any): Promise<any>;
     /** Immediately join an open group, or request to join a closed one. */
-    registFCMDeviceToken(bearerToken: string, token?: string, deviceId?: string, options?: any): Promise<any>;
+    registFCMDeviceToken(bearerToken: string, token?: string, deviceId?: string, platform?: string, options?: any): Promise<any>;
     /** Submit an event for processing in the server's registered runtime custom events handler. */
     event(bearerToken: string, body: ApiEvent, options?: any): Promise<any>;
     /** List user events */
@@ -753,12 +753,12 @@ export declare class MezonApi {
     getLinkInvite(bearerToken: string, inviteId: string, options?: any): Promise<ApiInviteUserRes>;
     /** Add users to a channel. */
     inviteUser(bearerToken: string, inviteId: string, options?: any): Promise<ApiInviteUserRes>;
-    /**  */
-    getListPermission(bearerToken: string, options?: any): Promise<ApiPermissionList>;
     /** Delete one or more notifications for the current user. */
     deleteNotifications(bearerToken: string, ids?: Array<string>, options?: any): Promise<any>;
     /** Fetch list of notifications. */
     listNotifications(bearerToken: string, limit?: number, cacheableCursor?: string, options?: any): Promise<ApiNotificationList>;
+    /** Get permission list */
+    getListPermission(bearerToken: string, options?: any): Promise<ApiPermissionList>;
     /**  */
     GetPermissionOfUserInTheClan(bearerToken: string, clanId: string, options?: any): Promise<ApiPermissionList>;
     /**  */

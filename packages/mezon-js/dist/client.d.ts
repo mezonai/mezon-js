@@ -455,7 +455,7 @@ export declare class Client {
     listRolePermissions(session: Session, roleId: string): Promise<ApiPermissionList>;
     /** List user roles */
     listRoleUsers(session: Session, roleId: string, limit?: number, cursor?: string): Promise<ApiRoleUserList>;
-    registFCMDeviceToken(session: Session, tokenId: string, deviceId: string): Promise<boolean>;
+    registFCMDeviceToken(session: Session, tokenId: string, deviceId: string, platform: string): Promise<boolean>;
     /** Get a clan desc profile */
     getClanDescProfile(session: Session, clanId: string): Promise<ApiClanDescProfile>;
     getUserProfileOnClan(session: Session, clanId: string): Promise<ApiClanProfile>;
