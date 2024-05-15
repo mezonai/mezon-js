@@ -1002,6 +1002,8 @@ export interface ImportSteamFriendsRequest {
 export interface RegistFcmDeviceTokenRequest {
   /** The token */
   token: string;
+  /**  */
+  device_id: string;
 }
 
 /** Link Facebook to the current user's account. */
@@ -7567,13 +7569,16 @@ export const ImportSteamFriendsRequest = {
 };
 
 function createBaseRegistFcmDeviceTokenRequest(): RegistFcmDeviceTokenRequest {
-  return { token: "" };
+  return { token: "", device_id: "" };
 }
 
 export const RegistFcmDeviceTokenRequest = {
   encode(message: RegistFcmDeviceTokenRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.token !== "") {
       writer.uint32(10).string(message.token);
+    }
+    if (message.device_id !== "") {
+      writer.uint32(18).string(message.device_id);
     }
     return writer;
   },
@@ -7588,6 +7593,9 @@ export const RegistFcmDeviceTokenRequest = {
         case 1:
           message.token = reader.string();
           break;
+        case 2:
+          message.device_id = reader.string();
+          break;
         default:
           reader.skipType(tag & 7);
           break;
@@ -7597,12 +7605,16 @@ export const RegistFcmDeviceTokenRequest = {
   },
 
   fromJSON(object: any): RegistFcmDeviceTokenRequest {
-    return { token: isSet(object.token) ? String(object.token) : "" };
+    return {
+      token: isSet(object.token) ? String(object.token) : "",
+      device_id: isSet(object.device_id) ? String(object.device_id) : "",
+    };
   },
 
   toJSON(message: RegistFcmDeviceTokenRequest): unknown {
     const obj: any = {};
     message.token !== undefined && (obj.token = message.token);
+    message.device_id !== undefined && (obj.device_id = message.device_id);
     return obj;
   },
 
@@ -7613,6 +7625,7 @@ export const RegistFcmDeviceTokenRequest = {
   fromPartial<I extends Exact<DeepPartial<RegistFcmDeviceTokenRequest>, I>>(object: I): RegistFcmDeviceTokenRequest {
     const message = createBaseRegistFcmDeviceTokenRequest();
     message.token = object.token ?? "";
+    message.device_id = object.device_id ?? "";
     return message;
   },
 };

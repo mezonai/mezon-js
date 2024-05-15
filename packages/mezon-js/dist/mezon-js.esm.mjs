@@ -2206,10 +2206,11 @@ var MezonApi = class {
     ]);
   }
   /** Immediately join an open group, or request to join a closed one. */
-  registFCMDeviceToken(bearerToken, token, options = {}) {
+  registFCMDeviceToken(bearerToken, token, deviceId, options = {}) {
     const urlPath = "/v2/devicetoken";
     const queryParams = /* @__PURE__ */ new Map();
     queryParams.set("token", token);
+    queryParams.set("device_id", deviceId);
     let bodyJson = "";
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("POST", options, bodyJson);
@@ -4876,12 +4877,12 @@ var Client = class {
       });
     });
   }
-  registFCMDeviceToken(session, tokenId) {
+  registFCMDeviceToken(session, tokenId, deviceId) {
     return __async(this, null, function* () {
       if (this.autoRefreshSession && session.refresh_token && session.isexpired((Date.now() + this.expiredTimespanMs) / 1e3)) {
         yield this.sessionRefresh(session);
       }
-      return this.apiClient.registFCMDeviceToken(session.token, tokenId).then((response) => {
+      return this.apiClient.registFCMDeviceToken(session.token, tokenId, deviceId).then((response) => {
         return response !== void 0;
       });
     });

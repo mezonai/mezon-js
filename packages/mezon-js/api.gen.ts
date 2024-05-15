@@ -3075,11 +3075,13 @@ return Promise.race([
   /** Immediately join an open group, or request to join a closed one. */
   registFCMDeviceToken(bearerToken: string,
       token?:string,
+      deviceId?:string,
       options: any = {}): Promise<any> {
     
     const urlPath = "/v2/devicetoken";
     const queryParams = new Map<string, any>();
     queryParams.set("token", token);
+    queryParams.set("device_id", deviceId);
 
     let bodyJson : string = "";
 

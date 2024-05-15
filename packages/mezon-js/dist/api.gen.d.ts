@@ -720,7 +720,7 @@ export declare class MezonApi {
     /**  */
     deleteCategoryDesc(bearerToken: string, creatorId: string, options?: any): Promise<any>;
     /** Immediately join an open group, or request to join a closed one. */
-    registFCMDeviceToken(bearerToken: string, token?: string, options?: any): Promise<any>;
+    registFCMDeviceToken(bearerToken: string, token?: string, deviceId?: string, options?: any): Promise<any>;
     /** Submit an event for processing in the server's registered runtime custom events handler. */
     event(bearerToken: string, body: ApiEvent, options?: any): Promise<any>;
     /** List user events */
