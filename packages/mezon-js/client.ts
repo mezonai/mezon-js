@@ -1318,13 +1318,13 @@ export class Client {
     });
   }
 
-  async registFCMDeviceToken(session: Session, tokenId:string): Promise<boolean> {
+  async registFCMDeviceToken(session: Session, tokenId:string, deviceId:string, platform:string): Promise<boolean> {
     if (this.autoRefreshSession && session.refresh_token &&
         session.isexpired((Date.now() + this.expiredTimespanMs)/1000)) {
         await this.sessionRefresh(session);
     }
 
-    return this.apiClient.registFCMDeviceToken(session.token, tokenId).then((response: any) => {
+    return this.apiClient.registFCMDeviceToken(session.token, tokenId, deviceId, platform).then((response: any) => {
       return response !== undefined;
     });
   }

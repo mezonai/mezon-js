@@ -2206,10 +2206,12 @@ var MezonApi = class {
     ]);
   }
   /** Immediately join an open group, or request to join a closed one. */
-  registFCMDeviceToken(bearerToken, token, options = {}) {
+  registFCMDeviceToken(bearerToken, token, deviceId, platform, options = {}) {
     const urlPath = "/v2/devicetoken";
     const queryParams = /* @__PURE__ */ new Map();
     queryParams.set("token", token);
+    queryParams.set("device_id", deviceId);
+    queryParams.set("platform", platform);
     let bodyJson = "";
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("POST", options, bodyJson);
@@ -2686,31 +2688,6 @@ var MezonApi = class {
       )
     ]);
   }
-  /**  */
-  getListPermission(bearerToken, options = {}) {
-    const urlPath = "/v2/permissions";
-    const queryParams = /* @__PURE__ */ new Map();
-    let bodyJson = "";
-    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
-    const fetchOptions = buildFetchOptions("GET", options, bodyJson);
-    if (bearerToken) {
-      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-    }
-    return Promise.race([
-      fetch(fullUrl, fetchOptions).then((response) => {
-        if (response.status == 204) {
-          return response;
-        } else if (response.status >= 200 && response.status < 300) {
-          return response.json();
-        } else {
-          throw response;
-        }
-      }),
-      new Promise(
-        (_, reject) => setTimeout(reject, this.timeoutMs, "Request timed out.")
-      )
-    ]);
-  }
   /** Delete one or more notifications for the current user. */
   deleteNotifications(bearerToken, ids, options = {}) {
     const urlPath = "/v2/notification";
@@ -2743,6 +2720,31 @@ var MezonApi = class {
     const queryParams = /* @__PURE__ */ new Map();
     queryParams.set("limit", limit);
     queryParams.set("cacheable_cursor", cacheableCursor);
+    let bodyJson = "";
+    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
+    const fetchOptions = buildFetchOptions("GET", options, bodyJson);
+    if (bearerToken) {
+      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+    }
+    return Promise.race([
+      fetch(fullUrl, fetchOptions).then((response) => {
+        if (response.status == 204) {
+          return response;
+        } else if (response.status >= 200 && response.status < 300) {
+          return response.json();
+        } else {
+          throw response;
+        }
+      }),
+      new Promise(
+        (_, reject) => setTimeout(reject, this.timeoutMs, "Request timed out.")
+      )
+    ]);
+  }
+  /** Get permission list */
+  getListPermission(bearerToken, options = {}) {
+    const urlPath = "/v2/permissions";
+    const queryParams = /* @__PURE__ */ new Map();
     let bodyJson = "";
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("GET", options, bodyJson);
@@ -4876,12 +4878,12 @@ var Client = class {
       });
     });
   }
-  registFCMDeviceToken(session, tokenId) {
+  registFCMDeviceToken(session, tokenId, deviceId, platform) {
     return __async(this, null, function* () {
       if (this.autoRefreshSession && session.refresh_token && session.isexpired((Date.now() + this.expiredTimespanMs) / 1e3)) {
         yield this.sessionRefresh(session);
       }
-      return this.apiClient.registFCMDeviceToken(session.token, tokenId).then((response) => {
+      return this.apiClient.registFCMDeviceToken(session.token, tokenId, deviceId, platform).then((response) => {
         return response !== void 0;
       });
     });

@@ -703,6 +703,10 @@ export interface ImportSteamFriendsRequest {
 export interface RegistFcmDeviceTokenRequest {
     /** The token */
     token: string;
+    /**  */
+    device_id: string;
+    /**  */
+    platform: string;
 }
 /** Link Facebook to the current user's account. */
 export interface LinkFacebookRequest {
@@ -6097,14 +6101,22 @@ export declare const RegistFcmDeviceTokenRequest: {
     toJSON(message: RegistFcmDeviceTokenRequest): unknown;
     create<I extends {
         token?: string | undefined;
+        device_id?: string | undefined;
+        platform?: string | undefined;
     } & {
         token?: string | undefined;
-    } & { [K in Exclude<keyof I, "token">]: never; }>(base?: I | undefined): RegistFcmDeviceTokenRequest;
+        device_id?: string | undefined;
+        platform?: string | undefined;
+    } & { [K in Exclude<keyof I, keyof RegistFcmDeviceTokenRequest>]: never; }>(base?: I | undefined): RegistFcmDeviceTokenRequest;
     fromPartial<I_1 extends {
         token?: string | undefined;
+        device_id?: string | undefined;
+        platform?: string | undefined;
     } & {
         token?: string | undefined;
-    } & { [K_1 in Exclude<keyof I_1, "token">]: never; }>(object: I_1): RegistFcmDeviceTokenRequest;
+        device_id?: string | undefined;
+        platform?: string | undefined;
+    } & { [K_1 in Exclude<keyof I_1, keyof RegistFcmDeviceTokenRequest>]: never; }>(object: I_1): RegistFcmDeviceTokenRequest;
 };
 export declare const LinkFacebookRequest: {
     encode(message: LinkFacebookRequest, writer?: _m0.Writer): _m0.Writer;

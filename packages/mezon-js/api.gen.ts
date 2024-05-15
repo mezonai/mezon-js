@@ -3075,11 +3075,15 @@ return Promise.race([
   /** Immediately join an open group, or request to join a closed one. */
   registFCMDeviceToken(bearerToken: string,
       token?:string,
+      deviceId?:string,
+      platform?:string,
       options: any = {}): Promise<any> {
     
     const urlPath = "/v2/devicetoken";
     const queryParams = new Map<string, any>();
     queryParams.set("token", token);
+    queryParams.set("device_id", deviceId);
+    queryParams.set("platform", platform);
 
     let bodyJson : string = "";
 
@@ -3685,37 +3689,6 @@ return Promise.race([
     ]);
 }
 
-  /**  */
-  getListPermission(bearerToken: string,
-      options: any = {}): Promise<ApiPermissionList> {
-    
-    const urlPath = "/v2/permissions";
-    const queryParams = new Map<string, any>();
-
-    let bodyJson : string = "";
-
-    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
-    const fetchOptions = buildFetchOptions("GET", options, bodyJson);
-    if (bearerToken) {
-        fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-    }
-
-    return Promise.race([
-      fetch(fullUrl, fetchOptions).then((response) => {
-        if (response.status == 204) {
-          return response;
-        } else if (response.status >= 200 && response.status < 300) {
-          return response.json();
-        } else {
-          throw response;
-        }
-      }),
-      new Promise((_, reject) =>
-        setTimeout(reject, this.timeoutMs, "Request timed out.")
-      ),
-    ]);
-}
-
   /** Delete one or more notifications for the current user. */
   deleteNotifications(bearerToken: string,
       ids?:Array<string>,
@@ -3759,6 +3732,37 @@ return Promise.race([
     const queryParams = new Map<string, any>();
     queryParams.set("limit", limit);
     queryParams.set("cacheable_cursor", cacheableCursor);
+
+    let bodyJson : string = "";
+
+    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
+    const fetchOptions = buildFetchOptions("GET", options, bodyJson);
+    if (bearerToken) {
+        fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+    }
+
+    return Promise.race([
+      fetch(fullUrl, fetchOptions).then((response) => {
+        if (response.status == 204) {
+          return response;
+        } else if (response.status >= 200 && response.status < 300) {
+          return response.json();
+        } else {
+          throw response;
+        }
+      }),
+      new Promise((_, reject) =>
+        setTimeout(reject, this.timeoutMs, "Request timed out.")
+      ),
+    ]);
+}
+
+  /** Get permission list */
+  getListPermission(bearerToken: string,
+      options: any = {}): Promise<ApiPermissionList> {
+    
+    const urlPath = "/v2/permissions";
+    const queryParams = new Map<string, any>();
 
     let bodyJson : string = "";
 
