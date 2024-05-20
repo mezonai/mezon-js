@@ -2029,17 +2029,17 @@ var MezonApi = class {
     ]);
   }
   /** Update fields in a given clan. */
-  updateClanDesc(bearerToken, clanId, creatorId, clanName, logo, banner, options = {}) {
+  updateClanDesc(bearerToken, clanId, body, options = {}) {
     if (clanId === null || clanId === void 0) {
       throw new Error("'clanId' is a required parameter but is null or undefined.");
     }
+    if (body === null || body === void 0) {
+      throw new Error("'body' is a required parameter but is null or undefined.");
+    }
     const urlPath = "/v2/clandesc/{clanId}".replace("{clanId}", encodeURIComponent(String(clanId)));
     const queryParams = /* @__PURE__ */ new Map();
-    queryParams.set("creator_id", creatorId);
-    queryParams.set("clan_name", clanName);
-    queryParams.set("logo", logo);
-    queryParams.set("banner", banner);
     let bodyJson = "";
+    bodyJson = JSON.stringify(body || {});
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("PUT", options, bodyJson);
     if (bearerToken) {
@@ -5320,7 +5320,7 @@ var Client = class {
       if (this.autoRefreshSession && session.refresh_token && session.isexpired((Date.now() + this.expiredTimespanMs) / 1e3)) {
         yield this.sessionRefresh(session);
       }
-      return this.apiClient.updateClanDesc(session.token, clanId, request == null ? void 0 : request.creator_id, request == null ? void 0 : request.clan_name, request == null ? void 0 : request.logo, request == null ? void 0 : request.banner).then((response) => {
+      return this.apiClient.updateClanDesc(session.token, clanId, request).then((response) => {
         return response !== void 0;
       });
     });

@@ -2846,24 +2846,21 @@ return Promise.race([
   /** Update fields in a given clan. */
   updateClanDesc(bearerToken: string,
       clanId:string,
-      creatorId?:string,
-      clanName?:string,
-      logo?:string,
-      banner?:string,
+      body: {},
       options: any = {}): Promise<any> {
     
     if (clanId === null || clanId === undefined) {
       throw new Error("'clanId' is a required parameter but is null or undefined.");
     }
+    if (body === null || body === undefined) {
+      throw new Error("'body' is a required parameter but is null or undefined.");
+    }
         const urlPath = "/v2/clandesc/{clanId}"
         .replace("{clanId}", encodeURIComponent(String(clanId)));
     const queryParams = new Map<string, any>();
-    queryParams.set("creator_id", creatorId);
-    queryParams.set("clan_name", clanName);
-    queryParams.set("logo", logo);
-    queryParams.set("banner", banner);
 
     let bodyJson : string = "";
+    bodyJson = JSON.stringify(body || {});
     
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("PUT", options, bodyJson);
