@@ -708,7 +708,7 @@ export declare class MezonApi {
     /** Delete a clan desc by ID. */
     deleteClanDesc(bearerToken: string, clanDescId: string, options?: any): Promise<any>;
     /** Update fields in a given clan. */
-    updateClanDesc(bearerToken: string, clanId: string, creatorId?: string, clanName?: string, logo?: string, banner?: string, options?: any): Promise<any>;
+    updateClanDesc(bearerToken: string, clanId: string, body: {}, options?: any): Promise<any>;
     /** List all users that are part of a clan. */
     listClanUsers(bearerToken: string, clanId: string, options?: any): Promise<ApiClanUserList>;
     /** Get a clan desc profile */

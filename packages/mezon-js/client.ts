@@ -1803,7 +1803,7 @@ export class Client {
         await this.sessionRefresh(session);
     }
 
-    return this.apiClient.updateClanDesc(session.token, clanId, request?.creator_id, request?.clan_name, request?.logo, request?.banner).then((response: any) => {
+    return this.apiClient.updateClanDesc(session.token, clanId, request).then((response: any) => {
       return response !== undefined;
     });
   }
