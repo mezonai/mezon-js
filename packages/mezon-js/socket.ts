@@ -352,6 +352,23 @@ export interface VoiceJoinedEvent {
 }
 
 
+export interface ChannelUpdatedEvent {
+  // clan id
+  clan_id: string;
+  // category
+  category_id: string;
+  // creator
+  creator_id: string;
+  // parrent_id
+  parrent_id: string;
+  // channel id
+  channel_id: string;
+  // channel label
+  channel_label: string;
+  // channel type
+  channel_type: number;
+}
+
 export interface ChannelCreatedEvent {
   // clan id
   clan_id: string;
@@ -779,6 +796,9 @@ export interface Socket {
   // when channel is created
   onchanneldeleted: (channelDeleted: ChannelDeletedEvent) => void;
 
+  // when channel is created
+  onchannelupdated: (channelUpdated: ChannelUpdatedEvent) => void;
+
   /* Set the heartbeat timeout used by the socket to detect if it has lost connectivity to the server. */
   setHeartbeatTimeoutMs(ms : number) : void;
 
@@ -859,6 +879,8 @@ export class DefaultSocket implements Socket {
           this.onchannelcreated(message.channel_created_event) 
         } else if (message.channel_deleted_event) {
           this.onchanneldeleted(message.channel_deleted_event) 
+        } else if (message.channel_updated_event) {
+          this.onchannelupdated(message.channel_updated_event) 
         } else if (message.status_presence_event) {
           this.onstatuspresence(<StatusPresenceEvent>message.status_presence_event);
         } else if (message.stream_presence_event) {
@@ -1090,6 +1112,12 @@ export class DefaultSocket implements Socket {
   onchanneldeleted(channelDeleted: ChannelDeletedEvent) {
     if (this.verbose && window && window.console) {
       console.log(channelDeleted);
+    }
+  }
+
+  onchannelupdated(channelUpdated: ChannelUpdatedEvent) {
+    if (this.verbose && window && window.console) {
+      console.log(channelUpdated);
     }
   }
 
