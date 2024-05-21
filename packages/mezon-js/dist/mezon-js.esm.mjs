@@ -3669,6 +3669,8 @@ var _DefaultSocket = class _DefaultSocket {
           this.onchannelcreated(message.channel_created_event);
         } else if (message.channel_deleted_event) {
           this.onchanneldeleted(message.channel_deleted_event);
+        } else if (message.channel_updated_event) {
+          this.onchannelupdated(message.channel_updated_event);
         } else if (message.status_presence_event) {
           this.onstatuspresence(message.status_presence_event);
         } else if (message.stream_presence_event) {
@@ -3870,6 +3872,11 @@ var _DefaultSocket = class _DefaultSocket {
   onchanneldeleted(channelDeleted) {
     if (this.verbose && window && window.console) {
       console.log(channelDeleted);
+    }
+  }
+  onchannelupdated(channelUpdated) {
+    if (this.verbose && window && window.console) {
+      console.log(channelUpdated);
     }
   }
   onstreampresence(streamPresence) {
