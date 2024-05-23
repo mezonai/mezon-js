@@ -1481,6 +1481,20 @@ export interface NotificationSetting {
     /** Notification title */
     notification_setting_type: string;
 }
+/** Notification setting record */
+export interface NotificationChannelCategoySetting {
+    /** Notification id */
+    id: string;
+    /**  */
+    channel_category_label: string;
+    /** Notification title */
+    notification_setting_type: string;
+    /**  */
+    channel_category_title: string;
+}
+export interface NotificationChannelCategoySettingsList {
+    noti_channel_categoy_setting: NotificationChannelCategoySetting[];
+}
 /** Notification channel */
 export interface NotificationUserChannel {
     /** Notification id */
@@ -1489,8 +1503,6 @@ export interface NotificationUserChannel {
     notification_setting_type: string;
     /**  */
     time_mute: Date | undefined;
-    /**  */
-    notification_defaut_id: string;
 }
 /**  */
 export interface DefaultNotificationClan {
@@ -1517,7 +1529,6 @@ export interface SetNotificationRequest {
     channel_id: string;
     notification_type: string;
     time_mute: Date | undefined;
-    notification_default_id: string;
 }
 /** set default notification */
 export interface SetDefaultNotificationRequest {
@@ -9889,6 +9900,100 @@ export declare const NotificationSetting: {
         notification_setting_type?: string | undefined;
     } & { [K_1 in Exclude<keyof I_1, keyof NotificationSetting>]: never; }>(object: I_1): NotificationSetting;
 };
+export declare const NotificationChannelCategoySetting: {
+    encode(message: NotificationChannelCategoySetting, writer?: _m0.Writer): _m0.Writer;
+    decode(input: _m0.Reader | Uint8Array, length?: number): NotificationChannelCategoySetting;
+    fromJSON(object: any): NotificationChannelCategoySetting;
+    toJSON(message: NotificationChannelCategoySetting): unknown;
+    create<I extends {
+        id?: string | undefined;
+        channel_category_label?: string | undefined;
+        notification_setting_type?: string | undefined;
+        channel_category_title?: string | undefined;
+    } & {
+        id?: string | undefined;
+        channel_category_label?: string | undefined;
+        notification_setting_type?: string | undefined;
+        channel_category_title?: string | undefined;
+    } & { [K in Exclude<keyof I, keyof NotificationChannelCategoySetting>]: never; }>(base?: I | undefined): NotificationChannelCategoySetting;
+    fromPartial<I_1 extends {
+        id?: string | undefined;
+        channel_category_label?: string | undefined;
+        notification_setting_type?: string | undefined;
+        channel_category_title?: string | undefined;
+    } & {
+        id?: string | undefined;
+        channel_category_label?: string | undefined;
+        notification_setting_type?: string | undefined;
+        channel_category_title?: string | undefined;
+    } & { [K_1 in Exclude<keyof I_1, keyof NotificationChannelCategoySetting>]: never; }>(object: I_1): NotificationChannelCategoySetting;
+};
+export declare const NotificationChannelCategoySettingsList: {
+    encode(message: NotificationChannelCategoySettingsList, writer?: _m0.Writer): _m0.Writer;
+    decode(input: _m0.Reader | Uint8Array, length?: number): NotificationChannelCategoySettingsList;
+    fromJSON(object: any): NotificationChannelCategoySettingsList;
+    toJSON(message: NotificationChannelCategoySettingsList): unknown;
+    create<I extends {
+        noti_channel_categoy_setting?: {
+            id?: string | undefined;
+            channel_category_label?: string | undefined;
+            notification_setting_type?: string | undefined;
+            channel_category_title?: string | undefined;
+        }[] | undefined;
+    } & {
+        noti_channel_categoy_setting?: ({
+            id?: string | undefined;
+            channel_category_label?: string | undefined;
+            notification_setting_type?: string | undefined;
+            channel_category_title?: string | undefined;
+        }[] & ({
+            id?: string | undefined;
+            channel_category_label?: string | undefined;
+            notification_setting_type?: string | undefined;
+            channel_category_title?: string | undefined;
+        } & {
+            id?: string | undefined;
+            channel_category_label?: string | undefined;
+            notification_setting_type?: string | undefined;
+            channel_category_title?: string | undefined;
+        } & { [K in Exclude<keyof I["noti_channel_categoy_setting"][number], keyof NotificationChannelCategoySetting>]: never; })[] & { [K_1 in Exclude<keyof I["noti_channel_categoy_setting"], keyof {
+            id?: string | undefined;
+            channel_category_label?: string | undefined;
+            notification_setting_type?: string | undefined;
+            channel_category_title?: string | undefined;
+        }[]>]: never; }) | undefined;
+    } & { [K_2 in Exclude<keyof I, "noti_channel_categoy_setting">]: never; }>(base?: I | undefined): NotificationChannelCategoySettingsList;
+    fromPartial<I_1 extends {
+        noti_channel_categoy_setting?: {
+            id?: string | undefined;
+            channel_category_label?: string | undefined;
+            notification_setting_type?: string | undefined;
+            channel_category_title?: string | undefined;
+        }[] | undefined;
+    } & {
+        noti_channel_categoy_setting?: ({
+            id?: string | undefined;
+            channel_category_label?: string | undefined;
+            notification_setting_type?: string | undefined;
+            channel_category_title?: string | undefined;
+        }[] & ({
+            id?: string | undefined;
+            channel_category_label?: string | undefined;
+            notification_setting_type?: string | undefined;
+            channel_category_title?: string | undefined;
+        } & {
+            id?: string | undefined;
+            channel_category_label?: string | undefined;
+            notification_setting_type?: string | undefined;
+            channel_category_title?: string | undefined;
+        } & { [K_3 in Exclude<keyof I_1["noti_channel_categoy_setting"][number], keyof NotificationChannelCategoySetting>]: never; })[] & { [K_4 in Exclude<keyof I_1["noti_channel_categoy_setting"], keyof {
+            id?: string | undefined;
+            channel_category_label?: string | undefined;
+            notification_setting_type?: string | undefined;
+            channel_category_title?: string | undefined;
+        }[]>]: never; }) | undefined;
+    } & { [K_5 in Exclude<keyof I_1, "noti_channel_categoy_setting">]: never; }>(object: I_1): NotificationChannelCategoySettingsList;
+};
 export declare const NotificationUserChannel: {
     encode(message: NotificationUserChannel, writer?: _m0.Writer): _m0.Writer;
     decode(input: _m0.Reader | Uint8Array, length?: number): NotificationUserChannel;
@@ -9898,23 +10003,19 @@ export declare const NotificationUserChannel: {
         id?: string | undefined;
         notification_setting_type?: string | undefined;
         time_mute?: Date | undefined;
-        notification_defaut_id?: string | undefined;
     } & {
         id?: string | undefined;
         notification_setting_type?: string | undefined;
         time_mute?: Date | undefined;
-        notification_defaut_id?: string | undefined;
     } & { [K in Exclude<keyof I, keyof NotificationUserChannel>]: never; }>(base?: I | undefined): NotificationUserChannel;
     fromPartial<I_1 extends {
         id?: string | undefined;
         notification_setting_type?: string | undefined;
         time_mute?: Date | undefined;
-        notification_defaut_id?: string | undefined;
     } & {
         id?: string | undefined;
         notification_setting_type?: string | undefined;
         time_mute?: Date | undefined;
-        notification_defaut_id?: string | undefined;
     } & { [K_1 in Exclude<keyof I_1, keyof NotificationUserChannel>]: never; }>(object: I_1): NotificationUserChannel;
 };
 export declare const DefaultNotificationClan: {
@@ -10020,23 +10121,19 @@ export declare const SetNotificationRequest: {
         channel_id?: string | undefined;
         notification_type?: string | undefined;
         time_mute?: Date | undefined;
-        notification_default_id?: string | undefined;
     } & {
         channel_id?: string | undefined;
         notification_type?: string | undefined;
         time_mute?: Date | undefined;
-        notification_default_id?: string | undefined;
     } & { [K in Exclude<keyof I, keyof SetNotificationRequest>]: never; }>(base?: I | undefined): SetNotificationRequest;
     fromPartial<I_1 extends {
         channel_id?: string | undefined;
         notification_type?: string | undefined;
         time_mute?: Date | undefined;
-        notification_default_id?: string | undefined;
     } & {
         channel_id?: string | undefined;
         notification_type?: string | undefined;
         time_mute?: Date | undefined;
-        notification_default_id?: string | undefined;
     } & { [K_1 in Exclude<keyof I_1, keyof SetNotificationRequest>]: never; }>(object: I_1): SetNotificationRequest;
 };
 export declare const SetDefaultNotificationRequest: {
