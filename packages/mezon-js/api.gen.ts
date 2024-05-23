@@ -704,12 +704,48 @@ export interface ApiNotification {
   subject?: string;
 }
 
+/**  */
+export interface ApiNotificationChannelCategoySetting {
+  //
+  channel_category_label?: string;
+  //
+  channel_category_title?: string;
+  //
+  id?: string;
+  //
+  notification_setting_type?: string;
+}
+
+/**  */
+export interface ApiNotificationChannelCategoySettingsList {
+  //
+  noti_channel_categoy_setting?: Array<ApiNotificationChannelCategoySetting>;
+}
+
 /** A collection of zero or more notifications. */
 export interface ApiNotificationList {
   //Use this cursor to paginate notifications. Cache this to catch up to new notifications.
   cacheable_cursor?: string;
   //Collection of notifications.
   notifications?: Array<ApiNotification>;
+}
+
+/**  */
+export interface ApiNotificationSetting {
+  //
+  id?: string;
+  //
+  notification_setting_type?: string;
+}
+
+/**  */
+export interface ApiNotificationUserChannel {
+  //
+  id?: string;
+  //
+  notification_setting_type?: string;
+  //
+  time_mute?: string;
 }
 
 /**  */
@@ -836,6 +872,26 @@ export interface ApiSessionRefreshRequest {
   token?: string;
   //Extra information that will be bundled in the session token.
   vars?: Record<string, string>;
+}
+
+/**  */
+export interface ApiSetDefaultNotificationRequest {
+  //
+  category_id?: string;
+  //
+  clan_id?: string;
+  //
+  notification_type?: string;
+}
+
+/**  */
+export interface ApiSetNotificationRequest {
+  //
+  channel_id?: string;
+  //
+  notification_type?: string;
+  //
+  time_mute?: string;
 }
 
 /** An object within the storage engine. */
@@ -3729,6 +3785,312 @@ return Promise.race([
     const queryParams = new Map<string, any>();
     queryParams.set("limit", limit);
     queryParams.set("cacheable_cursor", cacheableCursor);
+
+    let bodyJson : string = "";
+
+    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
+    const fetchOptions = buildFetchOptions("GET", options, bodyJson);
+    if (bearerToken) {
+        fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+    }
+
+    return Promise.race([
+      fetch(fullUrl, fetchOptions).then((response) => {
+        if (response.status == 204) {
+          return response;
+        } else if (response.status >= 200 && response.status < 300) {
+          return response.json();
+        } else {
+          throw response;
+        }
+      }),
+      new Promise((_, reject) =>
+        setTimeout(reject, this.timeoutMs, "Request timed out.")
+      ),
+    ]);
+}
+
+  /** notification selected */
+  getNotificationChannelSetting(bearerToken: string,
+      channelId?:string,
+      options: any = {}): Promise<ApiNotificationUserChannel> {
+    
+    const urlPath = "/v2/notificationchannel/get";
+    const queryParams = new Map<string, any>();
+    queryParams.set("channel_id", channelId);
+
+    let bodyJson : string = "";
+
+    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
+    const fetchOptions = buildFetchOptions("GET", options, bodyJson);
+    if (bearerToken) {
+        fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+    }
+
+    return Promise.race([
+      fetch(fullUrl, fetchOptions).then((response) => {
+        if (response.status == 204) {
+          return response;
+        } else if (response.status >= 200 && response.status < 300) {
+          return response.json();
+        } else {
+          throw response;
+        }
+      }),
+      new Promise((_, reject) =>
+        setTimeout(reject, this.timeoutMs, "Request timed out.")
+      ),
+    ]);
+}
+
+  /** set notification user channel. */
+  setNotificationChannelSetting(bearerToken: string,
+      body:ApiSetNotificationRequest,
+      options: any = {}): Promise<any> {
+    
+    if (body === null || body === undefined) {
+      throw new Error("'body' is a required parameter but is null or undefined.");
+    }
+    const urlPath = "/v2/notificationchannel/set";
+    const queryParams = new Map<string, any>();
+
+    let bodyJson : string = "";
+    bodyJson = JSON.stringify(body || {});
+
+    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
+    const fetchOptions = buildFetchOptions("POST", options, bodyJson);
+    if (bearerToken) {
+        fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+    }
+
+    return Promise.race([
+      fetch(fullUrl, fetchOptions).then((response) => {
+        if (response.status == 204) {
+          return response;
+        } else if (response.status >= 200 && response.status < 300) {
+          return response.json();
+        } else {
+          throw response;
+        }
+      }),
+      new Promise((_, reject) =>
+        setTimeout(reject, this.timeoutMs, "Request timed out.")
+      ),
+    ]);
+}
+
+  /** set notification user channel. */
+  setNotificationClanSetting(bearerToken: string,
+      body:ApiSetDefaultNotificationRequest,
+      options: any = {}): Promise<any> {
+    
+    if (body === null || body === undefined) {
+      throw new Error("'body' is a required parameter but is null or undefined.");
+    }
+    const urlPath = "/v2/notificationclan/set";
+    const queryParams = new Map<string, any>();
+
+    let bodyJson : string = "";
+    bodyJson = JSON.stringify(body || {});
+
+    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
+    const fetchOptions = buildFetchOptions("POST", options, bodyJson);
+    if (bearerToken) {
+        fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+    }
+
+    return Promise.race([
+      fetch(fullUrl, fetchOptions).then((response) => {
+        if (response.status == 204) {
+          return response;
+        } else if (response.status >= 200 && response.status < 300) {
+          return response.json();
+        } else {
+          throw response;
+        }
+      }),
+      new Promise((_, reject) =>
+        setTimeout(reject, this.timeoutMs, "Request timed out.")
+      ),
+    ]);
+}
+
+  /** set notification user channel. */
+  setNotificationCategorySetting(bearerToken: string,
+      body:ApiSetDefaultNotificationRequest,
+      options: any = {}): Promise<any> {
+    
+    if (body === null || body === undefined) {
+      throw new Error("'body' is a required parameter but is null or undefined.");
+    }
+    const urlPath = "/v2/notificationucategory/set";
+    const queryParams = new Map<string, any>();
+
+    let bodyJson : string = "";
+    bodyJson = JSON.stringify(body || {});
+
+    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
+    const fetchOptions = buildFetchOptions("POST", options, bodyJson);
+    if (bearerToken) {
+        fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+    }
+
+    return Promise.race([
+      fetch(fullUrl, fetchOptions).then((response) => {
+        if (response.status == 204) {
+          return response;
+        } else if (response.status >= 200 && response.status < 300) {
+          return response.json();
+        } else {
+          throw response;
+        }
+      }),
+      new Promise((_, reject) =>
+        setTimeout(reject, this.timeoutMs, "Request timed out.")
+      ),
+    ]);
+}
+
+  /**  */
+  deleteNotificationCategorySetting(bearerToken: string,
+      categoryId?:string,
+      options: any = {}): Promise<any> {
+    
+    const urlPath = "/v2/notificationusercategory/delete";
+    const queryParams = new Map<string, any>();
+    queryParams.set("category_id", categoryId);
+
+    let bodyJson : string = "";
+
+    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
+    const fetchOptions = buildFetchOptions("DELETE", options, bodyJson);
+    if (bearerToken) {
+        fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+    }
+
+    return Promise.race([
+      fetch(fullUrl, fetchOptions).then((response) => {
+        if (response.status == 204) {
+          return response;
+        } else if (response.status >= 200 && response.status < 300) {
+          return response.json();
+        } else {
+          throw response;
+        }
+      }),
+      new Promise((_, reject) =>
+        setTimeout(reject, this.timeoutMs, "Request timed out.")
+      ),
+    ]);
+}
+
+  /** notification selected */
+  getNotificationCategorySetting(bearerToken: string,
+      categoryId?:string,
+      options: any = {}): Promise<ApiNotificationSetting> {
+    
+    const urlPath = "/v2/notificationusercategory/get";
+    const queryParams = new Map<string, any>();
+    queryParams.set("category_id", categoryId);
+
+    let bodyJson : string = "";
+
+    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
+    const fetchOptions = buildFetchOptions("GET", options, bodyJson);
+    if (bearerToken) {
+        fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+    }
+
+    return Promise.race([
+      fetch(fullUrl, fetchOptions).then((response) => {
+        if (response.status == 204) {
+          return response;
+        } else if (response.status >= 200 && response.status < 300) {
+          return response.json();
+        } else {
+          throw response;
+        }
+      }),
+      new Promise((_, reject) =>
+        setTimeout(reject, this.timeoutMs, "Request timed out.")
+      ),
+    ]);
+}
+
+  /**  */
+  deleteNotificationChannel(bearerToken: string,
+      channelId?:string,
+      options: any = {}): Promise<any> {
+    
+    const urlPath = "/v2/notificationuserchannel/delete";
+    const queryParams = new Map<string, any>();
+    queryParams.set("channel_id", channelId);
+
+    let bodyJson : string = "";
+
+    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
+    const fetchOptions = buildFetchOptions("DELETE", options, bodyJson);
+    if (bearerToken) {
+        fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+    }
+
+    return Promise.race([
+      fetch(fullUrl, fetchOptions).then((response) => {
+        if (response.status == 204) {
+          return response;
+        } else if (response.status >= 200 && response.status < 300) {
+          return response.json();
+        } else {
+          throw response;
+        }
+      }),
+      new Promise((_, reject) =>
+        setTimeout(reject, this.timeoutMs, "Request timed out.")
+      ),
+    ]);
+}
+
+  /** notification selected */
+  getNotificationClanSetting(bearerToken: string,
+      clanId?:string,
+      options: any = {}): Promise<ApiNotificationSetting> {
+    
+    const urlPath = "/v2/notificationuserclan/get";
+    const queryParams = new Map<string, any>();
+    queryParams.set("clan_id", clanId);
+
+    let bodyJson : string = "";
+
+    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
+    const fetchOptions = buildFetchOptions("GET", options, bodyJson);
+    if (bearerToken) {
+        fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+    }
+
+    return Promise.race([
+      fetch(fullUrl, fetchOptions).then((response) => {
+        if (response.status == 204) {
+          return response;
+        } else if (response.status >= 200 && response.status < 300) {
+          return response.json();
+        } else {
+          throw response;
+        }
+      }),
+      new Promise((_, reject) =>
+        setTimeout(reject, this.timeoutMs, "Request timed out.")
+      ),
+    ]);
+}
+
+  /** notification category, channel selected */
+  getChannelCategoryNotiSettingsList(bearerToken: string,
+      clanId?:string,
+      options: any = {}): Promise<ApiNotificationChannelCategoySettingsList> {
+    
+    const urlPath = "/v2/notifichannelcategory/get";
+    const queryParams = new Map<string, any>();
+    queryParams.set("clan_id", clanId);
 
     let bodyJson : string = "";
 
