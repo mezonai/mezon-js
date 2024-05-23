@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { ApiAccount, ApiAccountCustom, ApiAccountDevice, ApiAccountEmail, ApiAccountFacebook, ApiAccountFacebookInstantGame, ApiAccountGoogle, ApiAccountGameCenter, ApiAccountSteam, ApiChannelDescList, ApiChannelDescription, ApiCreateChannelDescRequest, ApiDeleteRoleRequest, ApiClanDescList, ApiCreateClanDescRequest, ApiClanDesc, ApiCategoryDesc, ApiCategoryDescList, ApiRoleList, ApiPermissionList, ApiRoleUserList, ApiRole, ApiCreateRoleRequest, ApiAddRoleChannelDescRequest, ApiCreateCategoryDescRequest, ApiUpdateCategoryDescRequest, ApiDeleteStorageObjectsRequest, ApiEvent, ApiReadStorageObjectsRequest, ApiStorageObjectAcks, ApiUpdateAccountRequest, ApiAccountApple, ApiLinkSteamRequest, ApiClanDescProfile, ApiClanProfile, ApiChannelUserList, ApiClanUserList, ApiLinkInviteUserRequest, ApiUpdateEventRequest, ApiLinkInviteUser, ApiInviteUserRes, ApiUploadAttachmentRequest, ApiUploadAttachment, ApiMessageReaction, ApiMessageMention, ApiMessageAttachment, ApiMessageRef, ApiChannelMessageHeader, ApiVoiceChannelUserList, ApiChannelAttachmentList, ApiCreateEventRequest, ApiEventManagement, ApiEventList, ApiDeleteEventRequest } from "./api.gen";
+import { ApiAccount, ApiAccountCustom, ApiAccountDevice, ApiAccountEmail, ApiAccountFacebook, ApiAccountFacebookInstantGame, ApiAccountGoogle, ApiAccountGameCenter, ApiAccountSteam, ApiChannelDescList, ApiChannelDescription, ApiCreateChannelDescRequest, ApiDeleteRoleRequest, ApiClanDescList, ApiCreateClanDescRequest, ApiClanDesc, ApiCategoryDesc, ApiCategoryDescList, ApiRoleList, ApiPermissionList, ApiRoleUserList, ApiRole, ApiCreateRoleRequest, ApiAddRoleChannelDescRequest, ApiCreateCategoryDescRequest, ApiUpdateCategoryDescRequest, ApiDeleteStorageObjectsRequest, ApiEvent, ApiReadStorageObjectsRequest, ApiStorageObjectAcks, ApiSetDefaultNotificationRequest, ApiNotificationSetting, ApiSetNotificationRequest, ApiNotificationUserChannel, ApiUpdateAccountRequest, ApiAccountApple, ApiLinkSteamRequest, ApiClanDescProfile, ApiClanProfile, ApiChannelUserList, ApiClanUserList, ApiLinkInviteUserRequest, ApiUpdateEventRequest, ApiLinkInviteUser, ApiInviteUserRes, ApiUploadAttachmentRequest, ApiUploadAttachment, ApiMessageReaction, ApiMessageMention, ApiMessageAttachment, ApiMessageRef, ApiChannelMessageHeader, ApiVoiceChannelUserList, ApiChannelAttachmentList, ApiCreateEventRequest, ApiEventManagement, ApiEventList, ApiDeleteEventRequest, ApiNotificationChannelCategoySettingsList } from "./api.gen";
 import { Session } from "./session";
 import { Socket } from "./socket";
 import { WebSocketAdapter } from "./web_socket_adapter";
@@ -29,6 +29,11 @@ export declare enum ChannelStreamMode {
     STREAM_MODE_CHANNEL = 2,
     STREAM_MODE_GROUP = 3,
     STREAM_MODE_DM = 4
+}
+export declare enum NotificationType {
+    ALL_MESSAGE = "ALL",
+    MENTION_MESSAGE = "MENTION",
+    NOTHING_MESSAGE = "NOTHING"
 }
 /** Response for an RPC function executed on the server. */
 export interface RpcResponse {
@@ -536,4 +541,19 @@ export declare class Client {
     inviteUser(session: Session, inviteId: string): Promise<ApiInviteUserRes>;
     /** Write storage objects. */
     writeStorageObjects(session: Session, objects: Array<WriteStorageObject>): Promise<ApiStorageObjectAcks>;
+    /** Set default notification clan*/
+    setNotificationClan(session: Session, request: ApiSetDefaultNotificationRequest): Promise<boolean>;
+    /** get default notification clan */
+    getNotificationClanSetting(session: Session, clanId: string): Promise<ApiNotificationSetting>;
+    /** Set notification channel*/
+    setNotificationChannel(session: Session, request: ApiSetNotificationRequest): Promise<boolean>;
+    /** get default notification clan */
+    getNotificationChannel(session: Session, channelId: string): Promise<ApiNotificationUserChannel>;
+    /** Set default notification category*/
+    setNotificationCategory(session: Session, request: ApiSetDefaultNotificationRequest): Promise<boolean>;
+    /** get default notification category */
+    getNotificationCategory(session: Session, category_id: string): Promise<ApiNotificationSetting>;
+    deleteNotificationCategory(session: Session, category_id: string): Promise<boolean>;
+    getChannelCategoryNotiSettingsList(session: Session, clan_id: string): Promise<ApiNotificationChannelCategoySettingsList>;
+    deleteNotificationChannel(session: Session, channel_id: string): Promise<boolean>;
 }

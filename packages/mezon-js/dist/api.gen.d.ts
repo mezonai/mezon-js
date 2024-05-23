@@ -403,10 +403,32 @@ export interface ApiNotification {
     sender_id?: string;
     subject?: string;
 }
+/**  */
+export interface ApiNotificationChannelCategoySetting {
+    channel_category_label?: string;
+    channel_category_title?: string;
+    id?: string;
+    notification_setting_type?: string;
+}
+/**  */
+export interface ApiNotificationChannelCategoySettingsList {
+    noti_channel_categoy_setting?: Array<ApiNotificationChannelCategoySetting>;
+}
 /** A collection of zero or more notifications. */
 export interface ApiNotificationList {
     cacheable_cursor?: string;
     notifications?: Array<ApiNotification>;
+}
+/**  */
+export interface ApiNotificationSetting {
+    id?: string;
+    notification_setting_type?: string;
+}
+/**  */
+export interface ApiNotificationUserChannel {
+    id?: string;
+    notification_setting_type?: string;
+    time_mute?: string;
 }
 /**  */
 export interface ApiPermission {
@@ -481,6 +503,18 @@ export interface ApiSessionLogoutRequest {
 export interface ApiSessionRefreshRequest {
     token?: string;
     vars?: Record<string, string>;
+}
+/**  */
+export interface ApiSetDefaultNotificationRequest {
+    category_id?: string;
+    clan_id?: string;
+    notification_type?: string;
+}
+/**  */
+export interface ApiSetNotificationRequest {
+    channel_id?: string;
+    notification_type?: string;
+    time_mute?: string;
 }
 /** An object within the storage engine. */
 export interface ApiStorageObject {
@@ -757,6 +791,24 @@ export declare class MezonApi {
     deleteNotifications(bearerToken: string, ids?: Array<string>, options?: any): Promise<any>;
     /** Fetch list of notifications. */
     listNotifications(bearerToken: string, limit?: number, cacheableCursor?: string, options?: any): Promise<ApiNotificationList>;
+    /** notification selected */
+    getNotificationChannelSetting(bearerToken: string, channelId?: string, options?: any): Promise<ApiNotificationUserChannel>;
+    /** set notification user channel. */
+    setNotificationChannelSetting(bearerToken: string, body: ApiSetNotificationRequest, options?: any): Promise<any>;
+    /** set notification user channel. */
+    setNotificationClanSetting(bearerToken: string, body: ApiSetDefaultNotificationRequest, options?: any): Promise<any>;
+    /** set notification user channel. */
+    setNotificationCategorySetting(bearerToken: string, body: ApiSetDefaultNotificationRequest, options?: any): Promise<any>;
+    /**  */
+    deleteNotificationCategorySetting(bearerToken: string, categoryId?: string, options?: any): Promise<any>;
+    /** notification selected */
+    getNotificationCategorySetting(bearerToken: string, categoryId?: string, options?: any): Promise<ApiNotificationSetting>;
+    /**  */
+    deleteNotificationChannel(bearerToken: string, channelId?: string, options?: any): Promise<any>;
+    /** notification selected */
+    getNotificationClanSetting(bearerToken: string, clanId?: string, options?: any): Promise<ApiNotificationSetting>;
+    /** notification category, channel selected */
+    getChannelCategoryNotiSettingsList(bearerToken: string, clanId?: string, options?: any): Promise<ApiNotificationChannelCategoySettingsList>;
     /** Get permission list */
     getListPermission(bearerToken: string, options?: any): Promise<ApiPermissionList>;
     /**  */

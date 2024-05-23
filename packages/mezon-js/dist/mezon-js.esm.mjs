@@ -2741,6 +2741,249 @@ var MezonApi = class {
       )
     ]);
   }
+  /** notification selected */
+  getNotificationChannelSetting(bearerToken, channelId, options = {}) {
+    const urlPath = "/v2/notificationchannel/get";
+    const queryParams = /* @__PURE__ */ new Map();
+    queryParams.set("channel_id", channelId);
+    let bodyJson = "";
+    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
+    const fetchOptions = buildFetchOptions("GET", options, bodyJson);
+    if (bearerToken) {
+      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+    }
+    return Promise.race([
+      fetch(fullUrl, fetchOptions).then((response) => {
+        if (response.status == 204) {
+          return response;
+        } else if (response.status >= 200 && response.status < 300) {
+          return response.json();
+        } else {
+          throw response;
+        }
+      }),
+      new Promise(
+        (_, reject) => setTimeout(reject, this.timeoutMs, "Request timed out.")
+      )
+    ]);
+  }
+  /** set notification user channel. */
+  setNotificationChannelSetting(bearerToken, body, options = {}) {
+    if (body === null || body === void 0) {
+      throw new Error("'body' is a required parameter but is null or undefined.");
+    }
+    const urlPath = "/v2/notificationchannel/set";
+    const queryParams = /* @__PURE__ */ new Map();
+    let bodyJson = "";
+    bodyJson = JSON.stringify(body || {});
+    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
+    const fetchOptions = buildFetchOptions("POST", options, bodyJson);
+    if (bearerToken) {
+      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+    }
+    return Promise.race([
+      fetch(fullUrl, fetchOptions).then((response) => {
+        if (response.status == 204) {
+          return response;
+        } else if (response.status >= 200 && response.status < 300) {
+          return response.json();
+        } else {
+          throw response;
+        }
+      }),
+      new Promise(
+        (_, reject) => setTimeout(reject, this.timeoutMs, "Request timed out.")
+      )
+    ]);
+  }
+  /** set notification user channel. */
+  setNotificationClanSetting(bearerToken, body, options = {}) {
+    if (body === null || body === void 0) {
+      throw new Error("'body' is a required parameter but is null or undefined.");
+    }
+    const urlPath = "/v2/notificationclan/set";
+    const queryParams = /* @__PURE__ */ new Map();
+    let bodyJson = "";
+    bodyJson = JSON.stringify(body || {});
+    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
+    const fetchOptions = buildFetchOptions("POST", options, bodyJson);
+    if (bearerToken) {
+      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+    }
+    return Promise.race([
+      fetch(fullUrl, fetchOptions).then((response) => {
+        if (response.status == 204) {
+          return response;
+        } else if (response.status >= 200 && response.status < 300) {
+          return response.json();
+        } else {
+          throw response;
+        }
+      }),
+      new Promise(
+        (_, reject) => setTimeout(reject, this.timeoutMs, "Request timed out.")
+      )
+    ]);
+  }
+  /** set notification user channel. */
+  setNotificationCategorySetting(bearerToken, body, options = {}) {
+    if (body === null || body === void 0) {
+      throw new Error("'body' is a required parameter but is null or undefined.");
+    }
+    const urlPath = "/v2/notificationucategory/set";
+    const queryParams = /* @__PURE__ */ new Map();
+    let bodyJson = "";
+    bodyJson = JSON.stringify(body || {});
+    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
+    const fetchOptions = buildFetchOptions("POST", options, bodyJson);
+    if (bearerToken) {
+      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+    }
+    return Promise.race([
+      fetch(fullUrl, fetchOptions).then((response) => {
+        if (response.status == 204) {
+          return response;
+        } else if (response.status >= 200 && response.status < 300) {
+          return response.json();
+        } else {
+          throw response;
+        }
+      }),
+      new Promise(
+        (_, reject) => setTimeout(reject, this.timeoutMs, "Request timed out.")
+      )
+    ]);
+  }
+  /**  */
+  deleteNotificationCategorySetting(bearerToken, categoryId, options = {}) {
+    const urlPath = "/v2/notificationusercategory/delete";
+    const queryParams = /* @__PURE__ */ new Map();
+    queryParams.set("category_id", categoryId);
+    let bodyJson = "";
+    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
+    const fetchOptions = buildFetchOptions("DELETE", options, bodyJson);
+    if (bearerToken) {
+      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+    }
+    return Promise.race([
+      fetch(fullUrl, fetchOptions).then((response) => {
+        if (response.status == 204) {
+          return response;
+        } else if (response.status >= 200 && response.status < 300) {
+          return response.json();
+        } else {
+          throw response;
+        }
+      }),
+      new Promise(
+        (_, reject) => setTimeout(reject, this.timeoutMs, "Request timed out.")
+      )
+    ]);
+  }
+  /** notification selected */
+  getNotificationCategorySetting(bearerToken, categoryId, options = {}) {
+    const urlPath = "/v2/notificationusercategory/get";
+    const queryParams = /* @__PURE__ */ new Map();
+    queryParams.set("category_id", categoryId);
+    let bodyJson = "";
+    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
+    const fetchOptions = buildFetchOptions("GET", options, bodyJson);
+    if (bearerToken) {
+      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+    }
+    return Promise.race([
+      fetch(fullUrl, fetchOptions).then((response) => {
+        if (response.status == 204) {
+          return response;
+        } else if (response.status >= 200 && response.status < 300) {
+          return response.json();
+        } else {
+          throw response;
+        }
+      }),
+      new Promise(
+        (_, reject) => setTimeout(reject, this.timeoutMs, "Request timed out.")
+      )
+    ]);
+  }
+  /**  */
+  deleteNotificationChannel(bearerToken, channelId, options = {}) {
+    const urlPath = "/v2/notificationuserchannel/delete";
+    const queryParams = /* @__PURE__ */ new Map();
+    queryParams.set("channel_id", channelId);
+    let bodyJson = "";
+    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
+    const fetchOptions = buildFetchOptions("DELETE", options, bodyJson);
+    if (bearerToken) {
+      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+    }
+    return Promise.race([
+      fetch(fullUrl, fetchOptions).then((response) => {
+        if (response.status == 204) {
+          return response;
+        } else if (response.status >= 200 && response.status < 300) {
+          return response.json();
+        } else {
+          throw response;
+        }
+      }),
+      new Promise(
+        (_, reject) => setTimeout(reject, this.timeoutMs, "Request timed out.")
+      )
+    ]);
+  }
+  /** notification selected */
+  getNotificationClanSetting(bearerToken, clanId, options = {}) {
+    const urlPath = "/v2/notificationuserclan/get";
+    const queryParams = /* @__PURE__ */ new Map();
+    queryParams.set("clan_id", clanId);
+    let bodyJson = "";
+    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
+    const fetchOptions = buildFetchOptions("GET", options, bodyJson);
+    if (bearerToken) {
+      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+    }
+    return Promise.race([
+      fetch(fullUrl, fetchOptions).then((response) => {
+        if (response.status == 204) {
+          return response;
+        } else if (response.status >= 200 && response.status < 300) {
+          return response.json();
+        } else {
+          throw response;
+        }
+      }),
+      new Promise(
+        (_, reject) => setTimeout(reject, this.timeoutMs, "Request timed out.")
+      )
+    ]);
+  }
+  /** notification category, channel selected */
+  getChannelCategoryNotiSettingsList(bearerToken, clanId, options = {}) {
+    const urlPath = "/v2/notifichannelcategory/get";
+    const queryParams = /* @__PURE__ */ new Map();
+    queryParams.set("clan_id", clanId);
+    let bodyJson = "";
+    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
+    const fetchOptions = buildFetchOptions("GET", options, bodyJson);
+    if (bearerToken) {
+      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+    }
+    return Promise.race([
+      fetch(fullUrl, fetchOptions).then((response) => {
+        if (response.status == 204) {
+          return response;
+        } else if (response.status >= 200 && response.status < 300) {
+          return response.json();
+        } else {
+          throw response;
+        }
+      }),
+      new Promise(
+        (_, reject) => setTimeout(reject, this.timeoutMs, "Request timed out.")
+      )
+    ]);
+  }
   /** Get permission list */
   getListPermission(bearerToken, options = {}) {
     const urlPath = "/v2/permissions";
@@ -4127,6 +4370,12 @@ var ChannelStreamMode = /* @__PURE__ */ ((ChannelStreamMode2) => {
   ChannelStreamMode2[ChannelStreamMode2["STREAM_MODE_DM"] = 4] = "STREAM_MODE_DM";
   return ChannelStreamMode2;
 })(ChannelStreamMode || {});
+var NotificationType = /* @__PURE__ */ ((NotificationType2) => {
+  NotificationType2["ALL_MESSAGE"] = "ALL";
+  NotificationType2["MENTION_MESSAGE"] = "MENTION";
+  NotificationType2["NOTHING_MESSAGE"] = "NOTHING";
+  return NotificationType2;
+})(NotificationType || {});
 var Client = class {
   constructor(serverkey = DEFAULT_SERVER_KEY, host = DEFAULT_HOST, port = DEFAULT_PORT, useSSL = false, timeout = DEFAULT_TIMEOUT_MS, autoRefreshSession = true) {
     this.serverkey = serverkey;
@@ -5450,12 +5699,109 @@ var Client = class {
       return this.apiClient.writeStorageObjects(session.token, request);
     });
   }
+  /** Set default notification clan*/
+  setNotificationClan(session, request) {
+    return __async(this, null, function* () {
+      if (this.autoRefreshSession && session.refresh_token && session.isexpired((Date.now() + this.expiredTimespanMs) / 1e3)) {
+        yield this.sessionRefresh(session);
+      }
+      return this.apiClient.setNotificationClanSetting(session.token, request).then((response) => {
+        return response !== void 0;
+      });
+    });
+  }
+  /** get default notification clan */
+  getNotificationClanSetting(session, clanId) {
+    return __async(this, null, function* () {
+      if (this.autoRefreshSession && session.refresh_token && session.isexpired((Date.now() + this.expiredTimespanMs) / 1e3)) {
+        yield this.sessionRefresh(session);
+      }
+      return this.apiClient.getNotificationClanSetting(session.token, clanId, {}).then((response) => {
+        return Promise.resolve(response);
+      });
+    });
+  }
+  /** Set notification channel*/
+  setNotificationChannel(session, request) {
+    return __async(this, null, function* () {
+      if (this.autoRefreshSession && session.refresh_token && session.isexpired((Date.now() + this.expiredTimespanMs) / 1e3)) {
+        yield this.sessionRefresh(session);
+      }
+      return this.apiClient.setNotificationChannelSetting(session.token, request).then((response) => {
+        return response !== void 0;
+      });
+    });
+  }
+  /** get default notification clan */
+  getNotificationChannel(session, channelId) {
+    return __async(this, null, function* () {
+      if (this.autoRefreshSession && session.refresh_token && session.isexpired((Date.now() + this.expiredTimespanMs) / 1e3)) {
+        yield this.sessionRefresh(session);
+      }
+      return this.apiClient.getNotificationChannelSetting(session.token, channelId, {}).then((response) => {
+        return Promise.resolve(response);
+      });
+    });
+  }
+  /** Set default notification category*/
+  setNotificationCategory(session, request) {
+    return __async(this, null, function* () {
+      if (this.autoRefreshSession && session.refresh_token && session.isexpired((Date.now() + this.expiredTimespanMs) / 1e3)) {
+        yield this.sessionRefresh(session);
+      }
+      return this.apiClient.setNotificationCategorySetting(session.token, request).then((response) => {
+        return response !== void 0;
+      });
+    });
+  }
+  /** get default notification category */
+  getNotificationCategory(session, category_id) {
+    return __async(this, null, function* () {
+      if (this.autoRefreshSession && session.refresh_token && session.isexpired((Date.now() + this.expiredTimespanMs) / 1e3)) {
+        yield this.sessionRefresh(session);
+      }
+      return this.apiClient.getNotificationCategorySetting(session.token, category_id, {}).then((response) => {
+        return Promise.resolve(response);
+      });
+    });
+  }
+  deleteNotificationCategory(session, category_id) {
+    return __async(this, null, function* () {
+      if (this.autoRefreshSession && session.refresh_token && session.isexpired((Date.now() + this.expiredTimespanMs) / 1e3)) {
+        yield this.sessionRefresh(session);
+      }
+      return this.apiClient.deleteNotificationCategorySetting(session.token, category_id).then((response) => {
+        return response !== void 0;
+      });
+    });
+  }
+  getChannelCategoryNotiSettingsList(session, clan_id) {
+    return __async(this, null, function* () {
+      if (this.autoRefreshSession && session.refresh_token && session.isexpired((Date.now() + this.expiredTimespanMs) / 1e3)) {
+        yield this.sessionRefresh(session);
+      }
+      return this.apiClient.getChannelCategoryNotiSettingsList(session.token, clan_id).then((response) => {
+        return Promise.resolve(response);
+      });
+    });
+  }
+  deleteNotificationChannel(session, channel_id) {
+    return __async(this, null, function* () {
+      if (this.autoRefreshSession && session.refresh_token && session.isexpired((Date.now() + this.expiredTimespanMs) / 1e3)) {
+        yield this.sessionRefresh(session);
+      }
+      return this.apiClient.deleteNotificationChannel(session.token, channel_id).then((response) => {
+        return response !== void 0;
+      });
+    });
+  }
 };
 export {
   ChannelStreamMode,
   ChannelType,
   Client,
   DefaultSocket,
+  NotificationType,
   Session,
   WebSocketAdapterText
 };

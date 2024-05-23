@@ -49,6 +49,10 @@ import {
   ApiReadStorageObjectsRequest,
   ApiRpc,
   ApiStorageObjectAcks,
+  ApiSetDefaultNotificationRequest,
+  ApiNotificationSetting,
+  ApiSetNotificationRequest,
+  ApiNotificationUserChannel,
   ApiStorageObjectList,
   ApiStorageObjects,
   ApiUpdateAccountRequest,
@@ -79,6 +83,7 @@ import {
   ApiEventManagement,
   ApiEventList,
   ApiDeleteEventRequest,
+  ApiNotificationChannelCategoySettingsList,
 } from "./api.gen";
 
 import { Session } from "./session";
@@ -103,6 +108,12 @@ export enum ChannelStreamMode {
   STREAM_MODE_CHANNEL = 2,
   STREAM_MODE_GROUP = 3,
   STREAM_MODE_DM = 4,
+}
+
+export enum NotificationType {
+  ALL_MESSAGE = "ALL",
+  MENTION_MESSAGE = "MENTION",
+  NOTHING_MESSAGE = "NOTHING",
 }
 
 /** Response for an RPC function executed on the server. */
@@ -1940,6 +1951,110 @@ export class Client {
 
     return this.apiClient.writeStorageObjects(session.token, request);
   }
+
+/** Set default notification clan*/
+async setNotificationClan(session: Session, request: ApiSetDefaultNotificationRequest): Promise<boolean> {
+  if (this.autoRefreshSession && session.refresh_token &&
+      session.isexpired((Date.now() + this.expiredTimespanMs)/1000)) {
+      await this.sessionRefresh(session);
+  }
+
+  return this.apiClient.setNotificationClanSetting(session.token, request).then((response: any) => {
+    return response !== undefined;
+  });
+}
+
+/** get default notification clan */
+async getNotificationClanSetting(session: Session, clanId: string): Promise<ApiNotificationSetting> {
+  if (this.autoRefreshSession && session.refresh_token &&
+      session.isexpired((Date.now() + this.expiredTimespanMs)/1000)) {
+      await this.sessionRefresh(session);
+  }
+
+  return this.apiClient.getNotificationClanSetting(session.token, clanId, {}).then((response: ApiNotificationSetting) => {
+    return Promise.resolve(response);
+  });
+}
+
+ /** Set notification channel*/
+async setNotificationChannel(session: Session, request: ApiSetNotificationRequest): Promise<boolean> {
+  if (this.autoRefreshSession && session.refresh_token &&
+      session.isexpired((Date.now() + this.expiredTimespanMs)/1000)) {
+      await this.sessionRefresh(session);
+  }
+
+  return this.apiClient.setNotificationChannelSetting(session.token, request).then((response: any) => {
+    return response !== undefined;
+  });
+}
+
+/** get default notification clan */
+async getNotificationChannel(session: Session, channelId: string): Promise<ApiNotificationUserChannel> {
+  if (this.autoRefreshSession && session.refresh_token &&
+      session.isexpired((Date.now() + this.expiredTimespanMs)/1000)) {
+      await this.sessionRefresh(session);
+  }
+
+  return this.apiClient.getNotificationChannelSetting(session.token, channelId, {}).then((response: ApiNotificationUserChannel) => {
+    return Promise.resolve(response);
+  });
+}
+
+ /** Set default notification category*/
+ async setNotificationCategory(session: Session, request: ApiSetDefaultNotificationRequest): Promise<boolean> {
+  if (this.autoRefreshSession && session.refresh_token &&
+      session.isexpired((Date.now() + this.expiredTimespanMs)/1000)) {
+      await this.sessionRefresh(session);
+  }
+
+  return this.apiClient.setNotificationCategorySetting(session.token, request).then((response: any) => {
+    return response !== undefined;
+  });
+}
+
+/** get default notification category */
+async getNotificationCategory(session: Session, category_id: string): Promise<ApiNotificationSetting> {
+  if (this.autoRefreshSession && session.refresh_token &&
+      session.isexpired((Date.now() + this.expiredTimespanMs)/1000)) {
+      await this.sessionRefresh(session);
+  }
+
+  return this.apiClient.getNotificationCategorySetting(session.token, category_id, {}).then((response: ApiNotificationSetting) => {
+    return Promise.resolve(response);
+  });
+}
+
+async deleteNotificationCategory(session: Session, category_id: string): Promise<boolean> {
+  if (this.autoRefreshSession && session.refresh_token &&
+      session.isexpired((Date.now() + this.expiredTimespanMs)/1000)) {
+      await this.sessionRefresh(session);
+  }
+
+  return this.apiClient.deleteNotificationCategorySetting(session.token, category_id).then((response: any) => {
+    return response !== undefined;
+  });
+}
+
+async getChannelCategoryNotiSettingsList(session: Session, clan_id: string): Promise<ApiNotificationChannelCategoySettingsList> {
+  if (this.autoRefreshSession && session.refresh_token &&
+      session.isexpired((Date.now() + this.expiredTimespanMs)/1000)) {
+      await this.sessionRefresh(session);
+  }
+
+  return this.apiClient.getChannelCategoryNotiSettingsList(session.token, clan_id).then((response: ApiNotificationChannelCategoySettingsList) => {
+    return Promise.resolve(response);
+  });
+}
+
+async deleteNotificationChannel(session: Session, channel_id: string): Promise<boolean> {
+  if (this.autoRefreshSession && session.refresh_token &&
+      session.isexpired((Date.now() + this.expiredTimespanMs)/1000)) {
+      await this.sessionRefresh(session);
+  }
+
+  return this.apiClient.deleteNotificationChannel(session.token, channel_id).then((response: any) => {
+    return response !== undefined;
+  });
+}
+
 };
-
-
