@@ -1,6 +1,10 @@
 {
   "name": "mezon-js",
+<<<<<<< HEAD
   "version": "2.7.21",
+=======
+  "version": "2.7.22",
+>>>>>>> ca0fc7184859b2c2a2e0db6941403b99ee064ffe
   "scripts": {
     "build": "npx tsc && npx rollup -c --bundleConfigAsCjs && node build.mjs"
   },

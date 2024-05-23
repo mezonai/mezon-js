@@ -1980,6 +1980,7 @@ export interface NotificationSetting {
   notification_setting_type: string;
 }
 
+<<<<<<< HEAD
 /** Notification setting record */
 export interface NotificationChannelCategoySetting {
   /** Notification id */
@@ -1996,6 +1997,8 @@ export interface NotificationChannelCategoySettingsList {
   noti_channel_categoy_setting: NotificationChannelCategoySetting[];
 }
 
+=======
+>>>>>>> ca0fc7184859b2c2a2e0db6941403b99ee064ffe
 /** Notification channel */
 export interface NotificationUserChannel {
   /** Notification id */
@@ -2003,7 +2006,15 @@ export interface NotificationUserChannel {
   /**  */
   notification_setting_type: string;
   /**  */
+<<<<<<< HEAD
   time_mute: Date | undefined;
+=======
+  time_mute:
+    | Date
+    | undefined;
+  /**  */
+  notification_defaut_id: string;
+>>>>>>> ca0fc7184859b2c2a2e0db6941403b99ee064ffe
 }
 
 /**  */
@@ -2035,6 +2046,10 @@ export interface SetNotificationRequest {
   channel_id: string;
   notification_type: string;
   time_mute: Date | undefined;
+<<<<<<< HEAD
+=======
+  notification_default_id: string;
+>>>>>>> ca0fc7184859b2c2a2e0db6941403b99ee064ffe
 }
 
 /** set default notification */
@@ -13769,6 +13784,7 @@ export const NotificationSetting = {
   },
 };
 
+<<<<<<< HEAD
 function createBaseNotificationChannelCategoySetting(): NotificationChannelCategoySetting {
   return { id: "", channel_category_label: "", notification_setting_type: "", channel_category_title: "" };
 }
@@ -13924,6 +13940,10 @@ export const NotificationChannelCategoySettingsList = {
 
 function createBaseNotificationUserChannel(): NotificationUserChannel {
   return { id: "", notification_setting_type: "", time_mute: undefined };
+=======
+function createBaseNotificationUserChannel(): NotificationUserChannel {
+  return { id: "", notification_setting_type: "", time_mute: undefined, notification_defaut_id: "" };
+>>>>>>> ca0fc7184859b2c2a2e0db6941403b99ee064ffe
 }
 
 export const NotificationUserChannel = {
@@ -13937,6 +13957,12 @@ export const NotificationUserChannel = {
     if (message.time_mute !== undefined) {
       Timestamp.encode(toTimestamp(message.time_mute), writer.uint32(26).fork()).ldelim();
     }
+<<<<<<< HEAD
+=======
+    if (message.notification_defaut_id !== "") {
+      writer.uint32(34).string(message.notification_defaut_id);
+    }
+>>>>>>> ca0fc7184859b2c2a2e0db6941403b99ee064ffe
     return writer;
   },
 
@@ -13956,6 +13982,12 @@ export const NotificationUserChannel = {
         case 3:
           message.time_mute = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
           break;
+<<<<<<< HEAD
+=======
+        case 4:
+          message.notification_defaut_id = reader.string();
+          break;
+>>>>>>> ca0fc7184859b2c2a2e0db6941403b99ee064ffe
         default:
           reader.skipType(tag & 7);
           break;
@@ -13971,6 +14003,10 @@ export const NotificationUserChannel = {
         ? String(object.notification_setting_type)
         : "",
       time_mute: isSet(object.time_mute) ? fromJsonTimestamp(object.time_mute) : undefined,
+<<<<<<< HEAD
+=======
+      notification_defaut_id: isSet(object.notification_defaut_id) ? String(object.notification_defaut_id) : "",
+>>>>>>> ca0fc7184859b2c2a2e0db6941403b99ee064ffe
     };
   },
 
@@ -13980,6 +14016,10 @@ export const NotificationUserChannel = {
     message.notification_setting_type !== undefined &&
       (obj.notification_setting_type = message.notification_setting_type);
     message.time_mute !== undefined && (obj.time_mute = message.time_mute.toISOString());
+<<<<<<< HEAD
+=======
+    message.notification_defaut_id !== undefined && (obj.notification_defaut_id = message.notification_defaut_id);
+>>>>>>> ca0fc7184859b2c2a2e0db6941403b99ee064ffe
     return obj;
   },
 
@@ -13992,6 +14032,10 @@ export const NotificationUserChannel = {
     message.id = object.id ?? "";
     message.notification_setting_type = object.notification_setting_type ?? "";
     message.time_mute = object.time_mute ?? undefined;
+<<<<<<< HEAD
+=======
+    message.notification_defaut_id = object.notification_defaut_id ?? "";
+>>>>>>> ca0fc7184859b2c2a2e0db6941403b99ee064ffe
     return message;
   },
 };
@@ -14209,7 +14253,11 @@ export const NotificationSettingList = {
 };
 
 function createBaseSetNotificationRequest(): SetNotificationRequest {
+<<<<<<< HEAD
   return { channel_id: "", notification_type: "", time_mute: undefined };
+=======
+  return { channel_id: "", notification_type: "", time_mute: undefined, notification_default_id: "" };
+>>>>>>> ca0fc7184859b2c2a2e0db6941403b99ee064ffe
 }
 
 export const SetNotificationRequest = {
@@ -14223,6 +14271,12 @@ export const SetNotificationRequest = {
     if (message.time_mute !== undefined) {
       Timestamp.encode(toTimestamp(message.time_mute), writer.uint32(26).fork()).ldelim();
     }
+<<<<<<< HEAD
+=======
+    if (message.notification_default_id !== "") {
+      writer.uint32(34).string(message.notification_default_id);
+    }
+>>>>>>> ca0fc7184859b2c2a2e0db6941403b99ee064ffe
     return writer;
   },
 
@@ -14242,6 +14296,12 @@ export const SetNotificationRequest = {
         case 3:
           message.time_mute = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
           break;
+<<<<<<< HEAD
+=======
+        case 4:
+          message.notification_default_id = reader.string();
+          break;
+>>>>>>> ca0fc7184859b2c2a2e0db6941403b99ee064ffe
         default:
           reader.skipType(tag & 7);
           break;
@@ -14255,6 +14315,10 @@ export const SetNotificationRequest = {
       channel_id: isSet(object.channel_id) ? String(object.channel_id) : "",
       notification_type: isSet(object.notification_type) ? String(object.notification_type) : "",
       time_mute: isSet(object.time_mute) ? fromJsonTimestamp(object.time_mute) : undefined,
+<<<<<<< HEAD
+=======
+      notification_default_id: isSet(object.notification_default_id) ? String(object.notification_default_id) : "",
+>>>>>>> ca0fc7184859b2c2a2e0db6941403b99ee064ffe
     };
   },
 
@@ -14263,6 +14327,10 @@ export const SetNotificationRequest = {
     message.channel_id !== undefined && (obj.channel_id = message.channel_id);
     message.notification_type !== undefined && (obj.notification_type = message.notification_type);
     message.time_mute !== undefined && (obj.time_mute = message.time_mute.toISOString());
+<<<<<<< HEAD
+=======
+    message.notification_default_id !== undefined && (obj.notification_default_id = message.notification_default_id);
+>>>>>>> ca0fc7184859b2c2a2e0db6941403b99ee064ffe
     return obj;
   },
 
@@ -14275,6 +14343,10 @@ export const SetNotificationRequest = {
     message.channel_id = object.channel_id ?? "";
     message.notification_type = object.notification_type ?? "";
     message.time_mute = object.time_mute ?? undefined;
+<<<<<<< HEAD
+=======
+    message.notification_default_id = object.notification_default_id ?? "";
+>>>>>>> ca0fc7184859b2c2a2e0db6941403b99ee064ffe
     return message;
   },
 };

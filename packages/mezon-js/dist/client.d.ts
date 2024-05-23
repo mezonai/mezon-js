@@ -272,7 +272,7 @@ export interface ApiUpdateChannelDescRequest {
     /** The ID of the channel to update. */
     channel_id: string;
     /** The channel lable */
-    channel_lable: string | undefined;
+    channel_label: string | undefined;
     /** The category of channel */
     category_id: string | undefined;
 }
