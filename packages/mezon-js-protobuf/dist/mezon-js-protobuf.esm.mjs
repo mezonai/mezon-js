@@ -2743,7 +2743,7 @@ function createBaseNotification() {
     persistent: false,
     clan_id: "",
     channel_id: "",
-    channel_mode: ""
+    channel_type: ""
   };
 }
 var Notification = {
@@ -2775,8 +2775,8 @@ var Notification = {
     if (message.channel_id !== "") {
       writer.uint32(74).string(message.channel_id);
     }
-    if (message.channel_mode !== "") {
-      writer.uint32(82).string(message.channel_mode);
+    if (message.channel_type !== "") {
+      writer.uint32(82).string(message.channel_type);
     }
     return writer;
   },
@@ -2815,7 +2815,7 @@ var Notification = {
           message.channel_id = reader.string();
           break;
         case 10:
-          message.channel_mode = reader.string();
+          message.channel_type = reader.string();
           break;
         default:
           reader.skipType(tag & 7);
@@ -2835,7 +2835,7 @@ var Notification = {
       persistent: isSet3(object.persistent) ? Boolean(object.persistent) : false,
       clan_id: isSet3(object.clan_id) ? String(object.clan_id) : "",
       channel_id: isSet3(object.channel_id) ? String(object.channel_id) : "",
-      channel_mode: isSet3(object.channel_mode) ? String(object.channel_mode) : ""
+      channel_type: isSet3(object.channel_type) ? String(object.channel_type) : ""
     };
   },
   toJSON(message) {
@@ -2849,7 +2849,7 @@ var Notification = {
     message.persistent !== void 0 && (obj.persistent = message.persistent);
     message.clan_id !== void 0 && (obj.clan_id = message.clan_id);
     message.channel_id !== void 0 && (obj.channel_id = message.channel_id);
-    message.channel_mode !== void 0 && (obj.channel_mode = message.channel_mode);
+    message.channel_type !== void 0 && (obj.channel_type = message.channel_type);
     return obj;
   },
   create(base) {
@@ -2867,7 +2867,7 @@ var Notification = {
     message.persistent = (_g = object.persistent) != null ? _g : false;
     message.clan_id = (_h = object.clan_id) != null ? _h : "";
     message.channel_id = (_i = object.channel_id) != null ? _i : "";
-    message.channel_mode = (_j = object.channel_mode) != null ? _j : "";
+    message.channel_type = (_j = object.channel_type) != null ? _j : "";
     return message;
   }
 };

@@ -1201,7 +1201,7 @@ export interface Notification {
   /** ID of channel */
   channel_id: string;
   /** mode of */
-  channel_mode: string;
+  channel_type: string;
 }
 
 /** A collection of zero or more notifications. */
@@ -8651,7 +8651,7 @@ function createBaseNotification(): Notification {
     persistent: false,
     clan_id: "",
     channel_id: "",
-    channel_mode: "",
+    channel_type: "",
   };
 }
 
@@ -8684,8 +8684,8 @@ export const Notification = {
     if (message.channel_id !== "") {
       writer.uint32(74).string(message.channel_id);
     }
-    if (message.channel_mode !== "") {
-      writer.uint32(82).string(message.channel_mode);
+    if (message.channel_type !== "") {
+      writer.uint32(82).string(message.channel_type);
     }
     return writer;
   },
@@ -8725,7 +8725,7 @@ export const Notification = {
           message.channel_id = reader.string();
           break;
         case 10:
-          message.channel_mode = reader.string();
+          message.channel_type = reader.string();
           break;
         default:
           reader.skipType(tag & 7);
@@ -8746,7 +8746,7 @@ export const Notification = {
       persistent: isSet(object.persistent) ? Boolean(object.persistent) : false,
       clan_id: isSet(object.clan_id) ? String(object.clan_id) : "",
       channel_id: isSet(object.channel_id) ? String(object.channel_id) : "",
-      channel_mode: isSet(object.channel_mode) ? String(object.channel_mode) : "",
+      channel_type: isSet(object.channel_type) ? String(object.channel_type) : "",
     };
   },
 
@@ -8761,7 +8761,7 @@ export const Notification = {
     message.persistent !== undefined && (obj.persistent = message.persistent);
     message.clan_id !== undefined && (obj.clan_id = message.clan_id);
     message.channel_id !== undefined && (obj.channel_id = message.channel_id);
-    message.channel_mode !== undefined && (obj.channel_mode = message.channel_mode);
+    message.channel_type !== undefined && (obj.channel_type = message.channel_type);
     return obj;
   },
 
@@ -8780,7 +8780,7 @@ export const Notification = {
     message.persistent = object.persistent ?? false;
     message.clan_id = object.clan_id ?? "";
     message.channel_id = object.channel_id ?? "";
-    message.channel_mode = object.channel_mode ?? "";
+    message.channel_type = object.channel_type ?? "";
     return message;
   },
 };
