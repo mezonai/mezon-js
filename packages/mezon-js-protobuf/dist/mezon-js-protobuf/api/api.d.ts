@@ -853,7 +853,7 @@ export interface Notification {
     /** ID of channel */
     channel_id: string;
     /** mode of */
-    channel_mode: string;
+    channel_type: string;
 }
 /** A collection of zero or more notifications. */
 export interface NotificationList {
@@ -6583,7 +6583,7 @@ export declare const Notification: {
         persistent?: boolean | undefined;
         clan_id?: string | undefined;
         channel_id?: string | undefined;
-        channel_mode?: string | undefined;
+        channel_type?: string | undefined;
     } & {
         id?: string | undefined;
         subject?: string | undefined;
@@ -6594,7 +6594,7 @@ export declare const Notification: {
         persistent?: boolean | undefined;
         clan_id?: string | undefined;
         channel_id?: string | undefined;
-        channel_mode?: string | undefined;
+        channel_type?: string | undefined;
     } & { [K in Exclude<keyof I, keyof Notification>]: never; }>(base?: I | undefined): Notification;
     fromPartial<I_1 extends {
         id?: string | undefined;
@@ -6606,7 +6606,7 @@ export declare const Notification: {
         persistent?: boolean | undefined;
         clan_id?: string | undefined;
         channel_id?: string | undefined;
-        channel_mode?: string | undefined;
+        channel_type?: string | undefined;
     } & {
         id?: string | undefined;
         subject?: string | undefined;
@@ -6617,7 +6617,7 @@ export declare const Notification: {
         persistent?: boolean | undefined;
         clan_id?: string | undefined;
         channel_id?: string | undefined;
-        channel_mode?: string | undefined;
+        channel_type?: string | undefined;
     } & { [K_1 in Exclude<keyof I_1, keyof Notification>]: never; }>(object: I_1): Notification;
 };
 export declare const NotificationList: {
@@ -6636,7 +6636,7 @@ export declare const NotificationList: {
             persistent?: boolean | undefined;
             clan_id?: string | undefined;
             channel_id?: string | undefined;
-            channel_mode?: string | undefined;
+            channel_type?: string | undefined;
         }[] | undefined;
         cacheable_cursor?: string | undefined;
     } & {
@@ -6650,7 +6650,7 @@ export declare const NotificationList: {
             persistent?: boolean | undefined;
             clan_id?: string | undefined;
             channel_id?: string | undefined;
-            channel_mode?: string | undefined;
+            channel_type?: string | undefined;
         }[] & ({
             id?: string | undefined;
             subject?: string | undefined;
@@ -6661,7 +6661,7 @@ export declare const NotificationList: {
             persistent?: boolean | undefined;
             clan_id?: string | undefined;
             channel_id?: string | undefined;
-            channel_mode?: string | undefined;
+            channel_type?: string | undefined;
         } & {
             id?: string | undefined;
             subject?: string | undefined;
@@ -6672,7 +6672,7 @@ export declare const NotificationList: {
             persistent?: boolean | undefined;
             clan_id?: string | undefined;
             channel_id?: string | undefined;
-            channel_mode?: string | undefined;
+            channel_type?: string | undefined;
         } & { [K in Exclude<keyof I["notifications"][number], keyof Notification>]: never; })[] & { [K_1 in Exclude<keyof I["notifications"], keyof {
             id?: string | undefined;
             subject?: string | undefined;
@@ -6683,7 +6683,7 @@ export declare const NotificationList: {
             persistent?: boolean | undefined;
             clan_id?: string | undefined;
             channel_id?: string | undefined;
-            channel_mode?: string | undefined;
+            channel_type?: string | undefined;
         }[]>]: never; }) | undefined;
         cacheable_cursor?: string | undefined;
     } & { [K_2 in Exclude<keyof I, keyof NotificationList>]: never; }>(base?: I | undefined): NotificationList;
@@ -6698,7 +6698,7 @@ export declare const NotificationList: {
             persistent?: boolean | undefined;
             clan_id?: string | undefined;
             channel_id?: string | undefined;
-            channel_mode?: string | undefined;
+            channel_type?: string | undefined;
         }[] | undefined;
         cacheable_cursor?: string | undefined;
     } & {
@@ -6712,7 +6712,7 @@ export declare const NotificationList: {
             persistent?: boolean | undefined;
             clan_id?: string | undefined;
             channel_id?: string | undefined;
-            channel_mode?: string | undefined;
+            channel_type?: string | undefined;
         }[] & ({
             id?: string | undefined;
             subject?: string | undefined;
@@ -6723,7 +6723,7 @@ export declare const NotificationList: {
             persistent?: boolean | undefined;
             clan_id?: string | undefined;
             channel_id?: string | undefined;
-            channel_mode?: string | undefined;
+            channel_type?: string | undefined;
         } & {
             id?: string | undefined;
             subject?: string | undefined;
@@ -6734,7 +6734,7 @@ export declare const NotificationList: {
             persistent?: boolean | undefined;
             clan_id?: string | undefined;
             channel_id?: string | undefined;
-            channel_mode?: string | undefined;
+            channel_type?: string | undefined;
         } & { [K_3 in Exclude<keyof I_1["notifications"][number], keyof Notification>]: never; })[] & { [K_4 in Exclude<keyof I_1["notifications"], keyof {
             id?: string | undefined;
             subject?: string | undefined;
@@ -6745,7 +6745,7 @@ export declare const NotificationList: {
             persistent?: boolean | undefined;
             clan_id?: string | undefined;
             channel_id?: string | undefined;
-            channel_mode?: string | undefined;
+            channel_type?: string | undefined;
         }[]>]: never; }) | undefined;
         cacheable_cursor?: string | undefined;
     } & { [K_5 in Exclude<keyof I_1, keyof NotificationList>]: never; }>(object: I_1): NotificationList;

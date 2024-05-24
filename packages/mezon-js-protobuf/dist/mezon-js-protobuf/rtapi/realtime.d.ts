@@ -842,7 +842,7 @@ export declare const Envelope: {
                 persistent?: boolean | undefined;
                 clan_id?: string | undefined;
                 channel_id?: string | undefined;
-                channel_mode?: string | undefined;
+                channel_type?: string | undefined;
             }[] | undefined;
         } | undefined;
         rpc?: {
@@ -1504,7 +1504,7 @@ export declare const Envelope: {
                 persistent?: boolean | undefined;
                 clan_id?: string | undefined;
                 channel_id?: string | undefined;
-                channel_mode?: string | undefined;
+                channel_type?: string | undefined;
             }[] | undefined;
         } & {
             notifications?: ({
@@ -1517,7 +1517,7 @@ export declare const Envelope: {
                 persistent?: boolean | undefined;
                 clan_id?: string | undefined;
                 channel_id?: string | undefined;
-                channel_mode?: string | undefined;
+                channel_type?: string | undefined;
             }[] & ({
                 id?: string | undefined;
                 subject?: string | undefined;
@@ -1528,7 +1528,7 @@ export declare const Envelope: {
                 persistent?: boolean | undefined;
                 clan_id?: string | undefined;
                 channel_id?: string | undefined;
-                channel_mode?: string | undefined;
+                channel_type?: string | undefined;
             } & {
                 id?: string | undefined;
                 subject?: string | undefined;
@@ -1539,7 +1539,7 @@ export declare const Envelope: {
                 persistent?: boolean | undefined;
                 clan_id?: string | undefined;
                 channel_id?: string | undefined;
-                channel_mode?: string | undefined;
+                channel_type?: string | undefined;
             } & { [K_24 in Exclude<keyof I["notifications"]["notifications"][number], keyof Notification>]: never; })[] & { [K_25 in Exclude<keyof I["notifications"]["notifications"], keyof {
                 id?: string | undefined;
                 subject?: string | undefined;
@@ -1550,7 +1550,7 @@ export declare const Envelope: {
                 persistent?: boolean | undefined;
                 clan_id?: string | undefined;
                 channel_id?: string | undefined;
-                channel_mode?: string | undefined;
+                channel_type?: string | undefined;
             }[]>]: never; }) | undefined;
         } & { [K_26 in Exclude<keyof I["notifications"], "notifications">]: never; }) | undefined;
         rpc?: ({
@@ -2439,7 +2439,7 @@ export declare const Envelope: {
                 persistent?: boolean | undefined;
                 clan_id?: string | undefined;
                 channel_id?: string | undefined;
-                channel_mode?: string | undefined;
+                channel_type?: string | undefined;
             }[] | undefined;
         } | undefined;
         rpc?: {
@@ -3101,7 +3101,7 @@ export declare const Envelope: {
                 persistent?: boolean | undefined;
                 clan_id?: string | undefined;
                 channel_id?: string | undefined;
-                channel_mode?: string | undefined;
+                channel_type?: string | undefined;
             }[] | undefined;
         } & {
             notifications?: ({
@@ -3114,7 +3114,7 @@ export declare const Envelope: {
                 persistent?: boolean | undefined;
                 clan_id?: string | undefined;
                 channel_id?: string | undefined;
-                channel_mode?: string | undefined;
+                channel_type?: string | undefined;
             }[] & ({
                 id?: string | undefined;
                 subject?: string | undefined;
@@ -3125,7 +3125,7 @@ export declare const Envelope: {
                 persistent?: boolean | undefined;
                 clan_id?: string | undefined;
                 channel_id?: string | undefined;
-                channel_mode?: string | undefined;
+                channel_type?: string | undefined;
             } & {
                 id?: string | undefined;
                 subject?: string | undefined;
@@ -3136,7 +3136,7 @@ export declare const Envelope: {
                 persistent?: boolean | undefined;
                 clan_id?: string | undefined;
                 channel_id?: string | undefined;
-                channel_mode?: string | undefined;
+                channel_type?: string | undefined;
             } & { [K_115 in Exclude<keyof I_1["notifications"]["notifications"][number], keyof Notification>]: never; })[] & { [K_116 in Exclude<keyof I_1["notifications"]["notifications"], keyof {
                 id?: string | undefined;
                 subject?: string | undefined;
@@ -3147,7 +3147,7 @@ export declare const Envelope: {
                 persistent?: boolean | undefined;
                 clan_id?: string | undefined;
                 channel_id?: string | undefined;
-                channel_mode?: string | undefined;
+                channel_type?: string | undefined;
             }[]>]: never; }) | undefined;
         } & { [K_117 in Exclude<keyof I_1["notifications"], "notifications">]: never; }) | undefined;
         rpc?: ({
@@ -4736,7 +4736,7 @@ export declare const Notifications: {
             persistent?: boolean | undefined;
             clan_id?: string | undefined;
             channel_id?: string | undefined;
-            channel_mode?: string | undefined;
+            channel_type?: string | undefined;
         }[] | undefined;
     } & {
         notifications?: ({
@@ -4749,7 +4749,7 @@ export declare const Notifications: {
             persistent?: boolean | undefined;
             clan_id?: string | undefined;
             channel_id?: string | undefined;
-            channel_mode?: string | undefined;
+            channel_type?: string | undefined;
         }[] & ({
             id?: string | undefined;
             subject?: string | undefined;
@@ -4760,7 +4760,7 @@ export declare const Notifications: {
             persistent?: boolean | undefined;
             clan_id?: string | undefined;
             channel_id?: string | undefined;
-            channel_mode?: string | undefined;
+            channel_type?: string | undefined;
         } & {
             id?: string | undefined;
             subject?: string | undefined;
@@ -4771,7 +4771,7 @@ export declare const Notifications: {
             persistent?: boolean | undefined;
             clan_id?: string | undefined;
             channel_id?: string | undefined;
-            channel_mode?: string | undefined;
+            channel_type?: string | undefined;
         } & { [K in Exclude<keyof I["notifications"][number], keyof Notification>]: never; })[] & { [K_1 in Exclude<keyof I["notifications"], keyof {
             id?: string | undefined;
             subject?: string | undefined;
@@ -4782,7 +4782,7 @@ export declare const Notifications: {
             persistent?: boolean | undefined;
             clan_id?: string | undefined;
             channel_id?: string | undefined;
-            channel_mode?: string | undefined;
+            channel_type?: string | undefined;
         }[]>]: never; }) | undefined;
     } & { [K_2 in Exclude<keyof I, "notifications">]: never; }>(base?: I | undefined): Notifications;
     fromPartial<I_1 extends {
@@ -4796,7 +4796,7 @@ export declare const Notifications: {
             persistent?: boolean | undefined;
             clan_id?: string | undefined;
             channel_id?: string | undefined;
-            channel_mode?: string | undefined;
+            channel_type?: string | undefined;
         }[] | undefined;
     } & {
         notifications?: ({
@@ -4809,7 +4809,7 @@ export declare const Notifications: {
             persistent?: boolean | undefined;
             clan_id?: string | undefined;
             channel_id?: string | undefined;
-            channel_mode?: string | undefined;
+            channel_type?: string | undefined;
         }[] & ({
             id?: string | undefined;
             subject?: string | undefined;
@@ -4820,7 +4820,7 @@ export declare const Notifications: {
             persistent?: boolean | undefined;
             clan_id?: string | undefined;
             channel_id?: string | undefined;
-            channel_mode?: string | undefined;
+            channel_type?: string | undefined;
         } & {
             id?: string | undefined;
             subject?: string | undefined;
@@ -4831,7 +4831,7 @@ export declare const Notifications: {
             persistent?: boolean | undefined;
             clan_id?: string | undefined;
             channel_id?: string | undefined;
-            channel_mode?: string | undefined;
+            channel_type?: string | undefined;
         } & { [K_3 in Exclude<keyof I_1["notifications"][number], keyof Notification>]: never; })[] & { [K_4 in Exclude<keyof I_1["notifications"], keyof {
             id?: string | undefined;
             subject?: string | undefined;
@@ -4842,7 +4842,7 @@ export declare const Notifications: {
             persistent?: boolean | undefined;
             clan_id?: string | undefined;
             channel_id?: string | undefined;
-            channel_mode?: string | undefined;
+            channel_type?: string | undefined;
         }[]>]: never; }) | undefined;
     } & { [K_5 in Exclude<keyof I_1, "notifications">]: never; }>(object: I_1): Notifications;
 };
