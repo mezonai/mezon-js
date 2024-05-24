@@ -4370,6 +4370,12 @@ var ChannelStreamMode = /* @__PURE__ */ ((ChannelStreamMode2) => {
   ChannelStreamMode2[ChannelStreamMode2["STREAM_MODE_DM"] = 4] = "STREAM_MODE_DM";
   return ChannelStreamMode2;
 })(ChannelStreamMode || {});
+var NotificationType = /* @__PURE__ */ ((NotificationType2) => {
+  NotificationType2["ALL_MESSAGE"] = "ALL";
+  NotificationType2["NOTHING_MESSAGE"] = "NOTHING";
+  NotificationType2["MENTION_MESSAGE"] = "MENTION";
+  return NotificationType2;
+})(NotificationType || {});
 var Client = class {
   constructor(serverkey = DEFAULT_SERVER_KEY, host = DEFAULT_HOST, port = DEFAULT_PORT, useSSL = false, timeout = DEFAULT_TIMEOUT_MS, autoRefreshSession = true) {
     this.serverkey = serverkey;
@@ -5795,6 +5801,7 @@ export {
   ChannelType,
   Client,
   DefaultSocket,
+  NotificationType,
   Session,
   WebSocketAdapterText
 };
