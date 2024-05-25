@@ -1822,7 +1822,13 @@ export interface ChannelDescription {
     | ChannelMessageHeader
     | undefined;
   /** last seen message id */
-  last_seen_message: ChannelMessageHeader | undefined;
+  last_seen_message:
+    | ChannelMessageHeader
+    | undefined;
+  /** meeting uri */
+  meeting_uri: string;
+  /** meeting code */
+  meeting_code: string;
 }
 
 /** A list of channel description, usually a result of a list operation. */
@@ -12376,6 +12382,8 @@ function createBaseChannelDescription(): ChannelDescription {
     user_id: [],
     last_sent_message: undefined,
     last_seen_message: undefined,
+    meeting_uri: "",
+    meeting_code: "",
   };
 }
 
@@ -12419,6 +12427,12 @@ export const ChannelDescription = {
     }
     if (message.last_seen_message !== undefined) {
       ChannelMessageHeader.encode(message.last_seen_message, writer.uint32(106).fork()).ldelim();
+    }
+    if (message.meeting_uri !== "") {
+      writer.uint32(114).string(message.meeting_uri);
+    }
+    if (message.meeting_code !== "") {
+      writer.uint32(122).string(message.meeting_code);
     }
     return writer;
   },
@@ -12469,6 +12483,12 @@ export const ChannelDescription = {
         case 13:
           message.last_seen_message = ChannelMessageHeader.decode(reader, reader.uint32());
           break;
+        case 14:
+          message.meeting_uri = reader.string();
+          break;
+        case 15:
+          message.meeting_code = reader.string();
+          break;
         default:
           reader.skipType(tag & 7);
           break;
@@ -12496,6 +12516,8 @@ export const ChannelDescription = {
       last_seen_message: isSet(object.last_seen_message)
         ? ChannelMessageHeader.fromJSON(object.last_seen_message)
         : undefined,
+      meeting_uri: isSet(object.meeting_uri) ? String(object.meeting_uri) : "",
+      meeting_code: isSet(object.meeting_code) ? String(object.meeting_code) : "",
     };
   },
 
@@ -12526,6 +12548,8 @@ export const ChannelDescription = {
     message.last_seen_message !== undefined && (obj.last_seen_message = message.last_seen_message
       ? ChannelMessageHeader.toJSON(message.last_seen_message)
       : undefined);
+    message.meeting_uri !== undefined && (obj.meeting_uri = message.meeting_uri);
+    message.meeting_code !== undefined && (obj.meeting_code = message.meeting_code);
     return obj;
   },
 
@@ -12552,6 +12576,8 @@ export const ChannelDescription = {
     message.last_seen_message = (object.last_seen_message !== undefined && object.last_seen_message !== null)
       ? ChannelMessageHeader.fromPartial(object.last_seen_message)
       : undefined;
+    message.meeting_uri = object.meeting_uri ?? "";
+    message.meeting_code = object.meeting_code ?? "";
     return message;
   },
 };
