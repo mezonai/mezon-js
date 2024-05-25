@@ -228,6 +228,10 @@ export interface ApiChannelDescription {
   last_seen_message?: ApiChannelMessageHeader;
   //
   last_sent_message?: ApiChannelMessageHeader;
+  //
+  meeting_code?: string;
+  //
+  meeting_uri?: string;
   //The parrent channel this message belongs to.
   parrent_id?: string;
   //The channel type.

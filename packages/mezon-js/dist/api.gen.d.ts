@@ -131,6 +131,8 @@ export interface ApiChannelDescription {
     creator_id?: string;
     last_seen_message?: ApiChannelMessageHeader;
     last_sent_message?: ApiChannelMessageHeader;
+    meeting_code?: string;
+    meeting_uri?: string;
     parrent_id?: string;
     type?: number;
     user_id?: Array<string>;
