@@ -84,6 +84,7 @@ import {
   ApiSetDefaultNotificationRequest,
   ApiNotificationUserChannel,
   ApiSetNotificationRequest,
+  ApiNotifiReactMessage,
 } from "./api.gen";
 
 import { Session } from "./session";
@@ -2050,6 +2051,41 @@ async deleteNotificationChannel(session: Session, channel_id: string): Promise<b
   }
 
   return this.apiClient.deleteNotificationChannel(session.token, channel_id).then((response: any) => {
+    return response !== undefined;
+  });
+}
+
+ /** */
+ async setNotificationReactMessage(session: Session, channel_id: string): Promise<boolean> {
+  if (this.autoRefreshSession && session.refresh_token &&
+      session.isexpired((Date.now() + this.expiredTimespanMs)/1000)) {
+      await this.sessionRefresh(session);
+  }
+
+  return this.apiClient.setNotificationReactMessage(session.token, {channel_id}).then((response: any) => {
+    return response !== undefined;
+  });
+}
+
+/** */
+async getNotificationReactMessage(session: Session, channelId: string): Promise<ApiNotifiReactMessage> {
+  if (this.autoRefreshSession && session.refresh_token &&
+      session.isexpired((Date.now() + this.expiredTimespanMs)/1000)) {
+      await this.sessionRefresh(session);
+  }
+
+  return this.apiClient.getNotificationReactMessage(session.token, channelId).then((response: ApiNotifiReactMessage) => {
+    return Promise.resolve(response);
+  });
+}
+//** */
+async deleteNotiReactMessage(session: Session, channel_id: string): Promise<boolean> {
+  if (this.autoRefreshSession && session.refresh_token &&
+      session.isexpired((Date.now() + this.expiredTimespanMs)/1000)) {
+      await this.sessionRefresh(session);
+  }
+
+  return this.apiClient.deleteNotiReactMessage(session.token, channel_id).then((response: any) => {
     return response !== undefined;
   });
 }

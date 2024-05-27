@@ -1346,10 +1346,6 @@ export interface ChannelDescription {
     last_sent_message: ChannelMessageHeader | undefined;
     /** last seen message id */
     last_seen_message: ChannelMessageHeader | undefined;
-    /** meeting uri */
-    meeting_uri: string;
-    /** meeting code */
-    meeting_code: string;
 }
 /** A list of channel description, usually a result of a list operation. */
 export interface ChannelDescList {
@@ -1507,6 +1503,15 @@ export interface NotificationUserChannel {
     notification_setting_type: string;
     /**  */
     time_mute: Date | undefined;
+}
+/** Notification channel */
+export interface NotifiReactMessage {
+    /** Notification id */
+    id: string;
+    /**  */
+    user_id: string;
+    /**  */
+    channel_id: string;
 }
 /**  */
 export interface DefaultNotificationClan {
@@ -8943,8 +8948,6 @@ export declare const ChannelDescription: {
             sender_id?: string | undefined;
             content?: string | undefined;
         } | undefined;
-        meeting_uri?: string | undefined;
-        meeting_code?: string | undefined;
     } & {
         clan_id?: string | undefined;
         parrent_id?: string | undefined;
@@ -8979,8 +8982,6 @@ export declare const ChannelDescription: {
             sender_id?: string | undefined;
             content?: string | undefined;
         } & { [K_3 in Exclude<keyof I["last_seen_message"], keyof ChannelMessageHeader>]: never; }) | undefined;
-        meeting_uri?: string | undefined;
-        meeting_code?: string | undefined;
     } & { [K_4 in Exclude<keyof I, keyof ChannelDescription>]: never; }>(base?: I | undefined): ChannelDescription;
     fromPartial<I_1 extends {
         clan_id?: string | undefined;
@@ -9006,8 +9007,6 @@ export declare const ChannelDescription: {
             sender_id?: string | undefined;
             content?: string | undefined;
         } | undefined;
-        meeting_uri?: string | undefined;
-        meeting_code?: string | undefined;
     } & {
         clan_id?: string | undefined;
         parrent_id?: string | undefined;
@@ -9042,8 +9041,6 @@ export declare const ChannelDescription: {
             sender_id?: string | undefined;
             content?: string | undefined;
         } & { [K_8 in Exclude<keyof I_1["last_seen_message"], keyof ChannelMessageHeader>]: never; }) | undefined;
-        meeting_uri?: string | undefined;
-        meeting_code?: string | undefined;
     } & { [K_9 in Exclude<keyof I_1, keyof ChannelDescription>]: never; }>(object: I_1): ChannelDescription;
 };
 export declare const ChannelDescList: {
@@ -9076,8 +9073,6 @@ export declare const ChannelDescList: {
                 sender_id?: string | undefined;
                 content?: string | undefined;
             } | undefined;
-            meeting_uri?: string | undefined;
-            meeting_code?: string | undefined;
         }[] | undefined;
         next_cursor?: string | undefined;
         prev_cursor?: string | undefined;
@@ -9107,8 +9102,6 @@ export declare const ChannelDescList: {
                 sender_id?: string | undefined;
                 content?: string | undefined;
             } | undefined;
-            meeting_uri?: string | undefined;
-            meeting_code?: string | undefined;
         }[] & ({
             clan_id?: string | undefined;
             parrent_id?: string | undefined;
@@ -9133,8 +9126,6 @@ export declare const ChannelDescList: {
                 sender_id?: string | undefined;
                 content?: string | undefined;
             } | undefined;
-            meeting_uri?: string | undefined;
-            meeting_code?: string | undefined;
         } & {
             clan_id?: string | undefined;
             parrent_id?: string | undefined;
@@ -9169,8 +9160,6 @@ export declare const ChannelDescList: {
                 sender_id?: string | undefined;
                 content?: string | undefined;
             } & { [K_3 in Exclude<keyof I["channeldesc"][number]["last_seen_message"], keyof ChannelMessageHeader>]: never; }) | undefined;
-            meeting_uri?: string | undefined;
-            meeting_code?: string | undefined;
         } & { [K_4 in Exclude<keyof I["channeldesc"][number], keyof ChannelDescription>]: never; })[] & { [K_5 in Exclude<keyof I["channeldesc"], keyof {
             clan_id?: string | undefined;
             parrent_id?: string | undefined;
@@ -9195,8 +9184,6 @@ export declare const ChannelDescList: {
                 sender_id?: string | undefined;
                 content?: string | undefined;
             } | undefined;
-            meeting_uri?: string | undefined;
-            meeting_code?: string | undefined;
         }[]>]: never; }) | undefined;
         next_cursor?: string | undefined;
         prev_cursor?: string | undefined;
@@ -9227,8 +9214,6 @@ export declare const ChannelDescList: {
                 sender_id?: string | undefined;
                 content?: string | undefined;
             } | undefined;
-            meeting_uri?: string | undefined;
-            meeting_code?: string | undefined;
         }[] | undefined;
         next_cursor?: string | undefined;
         prev_cursor?: string | undefined;
@@ -9258,8 +9243,6 @@ export declare const ChannelDescList: {
                 sender_id?: string | undefined;
                 content?: string | undefined;
             } | undefined;
-            meeting_uri?: string | undefined;
-            meeting_code?: string | undefined;
         }[] & ({
             clan_id?: string | undefined;
             parrent_id?: string | undefined;
@@ -9284,8 +9267,6 @@ export declare const ChannelDescList: {
                 sender_id?: string | undefined;
                 content?: string | undefined;
             } | undefined;
-            meeting_uri?: string | undefined;
-            meeting_code?: string | undefined;
         } & {
             clan_id?: string | undefined;
             parrent_id?: string | undefined;
@@ -9320,8 +9301,6 @@ export declare const ChannelDescList: {
                 sender_id?: string | undefined;
                 content?: string | undefined;
             } & { [K_10 in Exclude<keyof I_1["channeldesc"][number]["last_seen_message"], keyof ChannelMessageHeader>]: never; }) | undefined;
-            meeting_uri?: string | undefined;
-            meeting_code?: string | undefined;
         } & { [K_11 in Exclude<keyof I_1["channeldesc"][number], keyof ChannelDescription>]: never; })[] & { [K_12 in Exclude<keyof I_1["channeldesc"], keyof {
             clan_id?: string | undefined;
             parrent_id?: string | undefined;
@@ -9346,8 +9325,6 @@ export declare const ChannelDescList: {
                 sender_id?: string | undefined;
                 content?: string | undefined;
             } | undefined;
-            meeting_uri?: string | undefined;
-            meeting_code?: string | undefined;
         }[]>]: never; }) | undefined;
         next_cursor?: string | undefined;
         prev_cursor?: string | undefined;
@@ -10049,6 +10026,30 @@ export declare const NotificationUserChannel: {
         notification_setting_type?: string | undefined;
         time_mute?: Date | undefined;
     } & { [K_1 in Exclude<keyof I_1, keyof NotificationUserChannel>]: never; }>(object: I_1): NotificationUserChannel;
+};
+export declare const NotifiReactMessage: {
+    encode(message: NotifiReactMessage, writer?: _m0.Writer): _m0.Writer;
+    decode(input: _m0.Reader | Uint8Array, length?: number): NotifiReactMessage;
+    fromJSON(object: any): NotifiReactMessage;
+    toJSON(message: NotifiReactMessage): unknown;
+    create<I extends {
+        id?: string | undefined;
+        user_id?: string | undefined;
+        channel_id?: string | undefined;
+    } & {
+        id?: string | undefined;
+        user_id?: string | undefined;
+        channel_id?: string | undefined;
+    } & { [K in Exclude<keyof I, keyof NotifiReactMessage>]: never; }>(base?: I | undefined): NotifiReactMessage;
+    fromPartial<I_1 extends {
+        id?: string | undefined;
+        user_id?: string | undefined;
+        channel_id?: string | undefined;
+    } & {
+        id?: string | undefined;
+        user_id?: string | undefined;
+        channel_id?: string | undefined;
+    } & { [K_1 in Exclude<keyof I_1, keyof NotifiReactMessage>]: never; }>(object: I_1): NotifiReactMessage;
 };
 export declare const DefaultNotificationClan: {
     encode(message: DefaultNotificationClan, writer?: _m0.Writer): _m0.Writer;
