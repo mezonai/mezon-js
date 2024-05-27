@@ -355,6 +355,11 @@ export interface ApiLinkSteamRequest {
     account?: ApiAccountSteam;
     sync?: boolean;
 }
+export interface ApiNotifiReactMessage {
+    channel_id?: string;
+    id?: string;
+    user_id?: string;
+}
 /**  */
 export interface ApiMessageAttachment {
     filename?: string;
@@ -404,6 +409,10 @@ export interface ApiNotification {
     persistent?: boolean;
     sender_id?: string;
     subject?: string;
+}
+/**  */
+export interface ApiNotificationChannel {
+    channel_id?: string;
 }
 /**  */
 export interface ApiNotificationChannelCategoySetting {
@@ -811,6 +820,12 @@ export declare class MezonApi {
     getNotificationClanSetting(bearerToken: string, clanId?: string, options?: any): Promise<ApiNotificationSetting>;
     /** notification category, channel selected */
     getChannelCategoryNotiSettingsList(bearerToken: string, clanId?: string, options?: any): Promise<ApiNotificationChannelCategoySettingsList>;
+    /**  */
+    deleteNotiReactMessage(bearerToken: string, channelId?: string, options?: any): Promise<any>;
+    /**  */
+    getNotificationReactMessage(bearerToken: string, channelId?: string, options?: any): Promise<ApiNotifiReactMessage>;
+    /**  */
+    setNotificationReactMessage(bearerToken: string, body: ApiNotificationChannel, options?: any): Promise<any>;
     /** Get permission list */
     getListPermission(bearerToken: string, options?: any): Promise<ApiPermissionList>;
     /**  */

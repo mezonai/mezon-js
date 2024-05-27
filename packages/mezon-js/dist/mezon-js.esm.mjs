@@ -2984,6 +2984,87 @@ var MezonApi = class {
       )
     ]);
   }
+  /**  */
+  deleteNotiReactMessage(bearerToken, channelId, options = {}) {
+    const urlPath = "/v2/notifireactmessage/delete";
+    const queryParams = /* @__PURE__ */ new Map();
+    queryParams.set("channel_id", channelId);
+    let bodyJson = "";
+    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
+    const fetchOptions = buildFetchOptions("DELETE", options, bodyJson);
+    if (bearerToken) {
+      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+    }
+    return Promise.race([
+      fetch(fullUrl, fetchOptions).then((response) => {
+        if (response.status == 204) {
+          return response;
+        } else if (response.status >= 200 && response.status < 300) {
+          return response.json();
+        } else {
+          throw response;
+        }
+      }),
+      new Promise(
+        (_, reject) => setTimeout(reject, this.timeoutMs, "Request timed out.")
+      )
+    ]);
+  }
+  /**  */
+  getNotificationReactMessage(bearerToken, channelId, options = {}) {
+    const urlPath = "/v2/notifireactmessage/get";
+    const queryParams = /* @__PURE__ */ new Map();
+    queryParams.set("channel_id", channelId);
+    let bodyJson = "";
+    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
+    const fetchOptions = buildFetchOptions("GET", options, bodyJson);
+    if (bearerToken) {
+      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+    }
+    return Promise.race([
+      fetch(fullUrl, fetchOptions).then((response) => {
+        if (response.status == 204) {
+          return response;
+        } else if (response.status >= 200 && response.status < 300) {
+          return response.json();
+        } else {
+          throw response;
+        }
+      }),
+      new Promise(
+        (_, reject) => setTimeout(reject, this.timeoutMs, "Request timed out.")
+      )
+    ]);
+  }
+  /**  */
+  setNotificationReactMessage(bearerToken, body, options = {}) {
+    if (body === null || body === void 0) {
+      throw new Error("'body' is a required parameter but is null or undefined.");
+    }
+    const urlPath = "/v2/notifireactmessage/set";
+    const queryParams = /* @__PURE__ */ new Map();
+    let bodyJson = "";
+    bodyJson = JSON.stringify(body || {});
+    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
+    const fetchOptions = buildFetchOptions("POST", options, bodyJson);
+    if (bearerToken) {
+      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+    }
+    return Promise.race([
+      fetch(fullUrl, fetchOptions).then((response) => {
+        if (response.status == 204) {
+          return response;
+        } else if (response.status >= 200 && response.status < 300) {
+          return response.json();
+        } else {
+          throw response;
+        }
+      }),
+      new Promise(
+        (_, reject) => setTimeout(reject, this.timeoutMs, "Request timed out.")
+      )
+    ]);
+  }
   /** Get permission list */
   getListPermission(bearerToken, options = {}) {
     const urlPath = "/v2/permissions";
@@ -5791,6 +5872,39 @@ var Client = class {
         yield this.sessionRefresh(session);
       }
       return this.apiClient.deleteNotificationChannel(session.token, channel_id).then((response) => {
+        return response !== void 0;
+      });
+    });
+  }
+  /** */
+  setNotificationReactMessage(session, channel_id) {
+    return __async(this, null, function* () {
+      if (this.autoRefreshSession && session.refresh_token && session.isexpired((Date.now() + this.expiredTimespanMs) / 1e3)) {
+        yield this.sessionRefresh(session);
+      }
+      return this.apiClient.setNotificationReactMessage(session.token, { channel_id }).then((response) => {
+        return response !== void 0;
+      });
+    });
+  }
+  /** */
+  getNotificationReactMessage(session, channelId) {
+    return __async(this, null, function* () {
+      if (this.autoRefreshSession && session.refresh_token && session.isexpired((Date.now() + this.expiredTimespanMs) / 1e3)) {
+        yield this.sessionRefresh(session);
+      }
+      return this.apiClient.getNotificationReactMessage(session.token, channelId).then((response) => {
+        return Promise.resolve(response);
+      });
+    });
+  }
+  //** */
+  deleteNotiReactMessage(session, channel_id) {
+    return __async(this, null, function* () {
+      if (this.autoRefreshSession && session.refresh_token && session.isexpired((Date.now() + this.expiredTimespanMs) / 1e3)) {
+        yield this.sessionRefresh(session);
+      }
+      return this.apiClient.deleteNotiReactMessage(session.token, channel_id).then((response) => {
         return response !== void 0;
       });
     });
