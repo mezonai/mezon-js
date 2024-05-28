@@ -134,6 +134,7 @@ export interface ApiChannelDescription {
     meeting_code?: string;
     meeting_uri?: string;
     parrent_id?: string;
+    status?: number;
     type?: number;
     user_id?: Array<string>;
 }
