@@ -234,6 +234,8 @@ export interface ApiChannelDescription {
   meeting_uri?: string;
   //The parrent channel this message belongs to.
   parrent_id?: string;
+  //
+  status?: number;
   //The channel type.
   type?: number;
   //
