@@ -438,6 +438,7 @@ export interface ApiNotificationSetting {
 }
 /**  */
 export interface ApiNotificationUserChannel {
+    active?: number;
     id?: string;
     notification_setting_type?: string;
     time_mute?: string;
@@ -520,6 +521,12 @@ export interface ApiSessionRefreshRequest {
 export interface ApiSetDefaultNotificationRequest {
     category_id?: string;
     clan_id?: string;
+    notification_type?: string;
+}
+/**  */
+export interface ApiSetMuteNotificationRequest {
+    active?: number;
+    channel_id?: string;
     notification_type?: string;
 }
 /**  */
@@ -799,6 +806,8 @@ export declare class MezonApi {
     getLinkInvite(bearerToken: string, inviteId: string, options?: any): Promise<ApiInviteUserRes>;
     /** Add users to a channel. */
     inviteUser(bearerToken: string, inviteId: string, options?: any): Promise<ApiInviteUserRes>;
+    /** set mute notification user channel. */
+    setMuteNotificationChannel(bearerToken: string, body: ApiSetMuteNotificationRequest, options?: any): Promise<any>;
     /** Delete one or more notifications for the current user. */
     deleteNotifications(bearerToken: string, ids?: Array<string>, options?: any): Promise<any>;
     /** Fetch list of notifications. */

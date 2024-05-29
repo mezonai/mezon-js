@@ -2688,6 +2688,35 @@ var MezonApi = class {
       )
     ]);
   }
+  /** set mute notification user channel. */
+  setMuteNotificationChannel(bearerToken, body, options = {}) {
+    if (body === null || body === void 0) {
+      throw new Error("'body' is a required parameter but is null or undefined.");
+    }
+    const urlPath = "/v2/mutenotificationchannel/set";
+    const queryParams = /* @__PURE__ */ new Map();
+    let bodyJson = "";
+    bodyJson = JSON.stringify(body || {});
+    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
+    const fetchOptions = buildFetchOptions("POST", options, bodyJson);
+    if (bearerToken) {
+      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+    }
+    return Promise.race([
+      fetch(fullUrl, fetchOptions).then((response) => {
+        if (response.status == 204) {
+          return response;
+        } else if (response.status >= 200 && response.status < 300) {
+          return response.json();
+        } else {
+          throw response;
+        }
+      }),
+      new Promise(
+        (_, reject) => setTimeout(reject, this.timeoutMs, "Request timed out.")
+      )
+    ]);
+  }
   /** Delete one or more notifications for the current user. */
   deleteNotifications(bearerToken, ids, options = {}) {
     const urlPath = "/v2/notification";
@@ -5809,6 +5838,17 @@ var Client = class {
         yield this.sessionRefresh(session);
       }
       return this.apiClient.setNotificationChannelSetting(session.token, request).then((response) => {
+        return response !== void 0;
+      });
+    });
+  }
+  /** Set notification channel*/
+  setMuteNotificationChannel(session, request) {
+    return __async(this, null, function* () {
+      if (this.autoRefreshSession && session.refresh_token && session.isexpired((Date.now() + this.expiredTimespanMs) / 1e3)) {
+        yield this.sessionRefresh(session);
+      }
+      return this.apiClient.setMuteNotificationChannel(session.token, request).then((response) => {
         return response !== void 0;
       });
     });

@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { ApiAccount, ApiAccountCustom, ApiAccountDevice, ApiAccountEmail, ApiAccountFacebook, ApiAccountFacebookInstantGame, ApiAccountGoogle, ApiAccountGameCenter, ApiAccountSteam, ApiChannelDescList, ApiChannelDescription, ApiCreateChannelDescRequest, ApiDeleteRoleRequest, ApiClanDescList, ApiCreateClanDescRequest, ApiClanDesc, ApiCategoryDesc, ApiCategoryDescList, ApiRoleList, ApiPermissionList, ApiRoleUserList, ApiRole, ApiCreateRoleRequest, ApiAddRoleChannelDescRequest, ApiCreateCategoryDescRequest, ApiUpdateCategoryDescRequest, ApiDeleteStorageObjectsRequest, ApiEvent, ApiReadStorageObjectsRequest, ApiStorageObjectAcks, ApiUpdateAccountRequest, ApiAccountApple, ApiLinkSteamRequest, ApiClanDescProfile, ApiClanProfile, ApiChannelUserList, ApiClanUserList, ApiLinkInviteUserRequest, ApiUpdateEventRequest, ApiLinkInviteUser, ApiInviteUserRes, ApiUploadAttachmentRequest, ApiUploadAttachment, ApiMessageReaction, ApiMessageMention, ApiMessageAttachment, ApiMessageRef, ApiChannelMessageHeader, ApiVoiceChannelUserList, ApiChannelAttachmentList, ApiCreateEventRequest, ApiEventManagement, ApiEventList, ApiDeleteEventRequest, ApiNotificationChannelCategoySettingsList, ApiNotificationSetting, ApiSetDefaultNotificationRequest, ApiNotificationUserChannel, ApiSetNotificationRequest, ApiNotifiReactMessage } from "./api.gen";
+import { ApiAccount, ApiAccountCustom, ApiAccountDevice, ApiAccountEmail, ApiAccountFacebook, ApiAccountFacebookInstantGame, ApiAccountGoogle, ApiAccountGameCenter, ApiAccountSteam, ApiChannelDescList, ApiChannelDescription, ApiCreateChannelDescRequest, ApiDeleteRoleRequest, ApiClanDescList, ApiCreateClanDescRequest, ApiClanDesc, ApiCategoryDesc, ApiCategoryDescList, ApiRoleList, ApiPermissionList, ApiRoleUserList, ApiRole, ApiCreateRoleRequest, ApiAddRoleChannelDescRequest, ApiCreateCategoryDescRequest, ApiUpdateCategoryDescRequest, ApiDeleteStorageObjectsRequest, ApiEvent, ApiReadStorageObjectsRequest, ApiStorageObjectAcks, ApiUpdateAccountRequest, ApiAccountApple, ApiLinkSteamRequest, ApiClanDescProfile, ApiClanProfile, ApiChannelUserList, ApiClanUserList, ApiLinkInviteUserRequest, ApiUpdateEventRequest, ApiLinkInviteUser, ApiInviteUserRes, ApiUploadAttachmentRequest, ApiUploadAttachment, ApiMessageReaction, ApiMessageMention, ApiMessageAttachment, ApiMessageRef, ApiChannelMessageHeader, ApiVoiceChannelUserList, ApiChannelAttachmentList, ApiCreateEventRequest, ApiEventManagement, ApiEventList, ApiDeleteEventRequest, ApiNotificationChannelCategoySettingsList, ApiNotificationSetting, ApiSetDefaultNotificationRequest, ApiNotificationUserChannel, ApiSetNotificationRequest, ApiNotifiReactMessage, ApiSetMuteNotificationRequest } from "./api.gen";
 import { Session } from "./session";
 import { Socket } from "./socket";
 import { WebSocketAdapter } from "./web_socket_adapter";
@@ -547,6 +547,8 @@ export declare class Client {
     getNotificationClanSetting(session: Session, clanId: string): Promise<ApiNotificationSetting>;
     /** Set notification channel*/
     setNotificationChannel(session: Session, request: ApiSetNotificationRequest): Promise<boolean>;
+    /** Set notification channel*/
+    setMuteNotificationChannel(session: Session, request: ApiSetMuteNotificationRequest): Promise<boolean>;
     /** get default notification clan */
     getNotificationChannel(session: Session, channelId: string): Promise<ApiNotificationUserChannel>;
     /** Set default notification category*/
