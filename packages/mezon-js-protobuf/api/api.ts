@@ -2009,7 +2009,21 @@ export interface NotificationUserChannel {
   /**  */
   notification_setting_type: string;
   /**  */
-  time_mute: Date | undefined;
+  time_mute:
+    | Date
+    | undefined;
+  /**  */
+  active: number;
+}
+
+/** Notification channel */
+export interface NotifiReactMessage {
+  /** Notification id */
+  id: string;
+  /**  */
+  user_id: string;
+  /**  */
+  channel_id: string;
 }
 
 /**  */
@@ -2041,6 +2055,13 @@ export interface SetNotificationRequest {
   channel_id: string;
   notification_type: string;
   time_mute: Date | undefined;
+}
+
+/** set notification */
+export interface SetMuteNotificationRequest {
+  channel_id: string;
+  notification_type: string;
+  active: number;
 }
 
 /** set default notification */
@@ -13949,7 +13970,7 @@ export const NotificationChannelCategoySettingsList = {
 };
 
 function createBaseNotificationUserChannel(): NotificationUserChannel {
-  return { id: "", notification_setting_type: "", time_mute: undefined };
+  return { id: "", notification_setting_type: "", time_mute: undefined, active: 0 };
 }
 
 export const NotificationUserChannel = {
@@ -13962,6 +13983,9 @@ export const NotificationUserChannel = {
     }
     if (message.time_mute !== undefined) {
       Timestamp.encode(toTimestamp(message.time_mute), writer.uint32(26).fork()).ldelim();
+    }
+    if (message.active !== 0) {
+      writer.uint32(32).int32(message.active);
     }
     return writer;
   },
@@ -13982,6 +14006,9 @@ export const NotificationUserChannel = {
         case 3:
           message.time_mute = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
           break;
+        case 4:
+          message.active = reader.int32();
+          break;
         default:
           reader.skipType(tag & 7);
           break;
@@ -13997,6 +14024,7 @@ export const NotificationUserChannel = {
         ? String(object.notification_setting_type)
         : "",
       time_mute: isSet(object.time_mute) ? fromJsonTimestamp(object.time_mute) : undefined,
+      active: isSet(object.active) ? Number(object.active) : 0,
     };
   },
 
@@ -14006,6 +14034,7 @@ export const NotificationUserChannel = {
     message.notification_setting_type !== undefined &&
       (obj.notification_setting_type = message.notification_setting_type);
     message.time_mute !== undefined && (obj.time_mute = message.time_mute.toISOString());
+    message.active !== undefined && (obj.active = Math.round(message.active));
     return obj;
   },
 
@@ -14018,6 +14047,78 @@ export const NotificationUserChannel = {
     message.id = object.id ?? "";
     message.notification_setting_type = object.notification_setting_type ?? "";
     message.time_mute = object.time_mute ?? undefined;
+    message.active = object.active ?? 0;
+    return message;
+  },
+};
+
+function createBaseNotifiReactMessage(): NotifiReactMessage {
+  return { id: "", user_id: "", channel_id: "" };
+}
+
+export const NotifiReactMessage = {
+  encode(message: NotifiReactMessage, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.id !== "") {
+      writer.uint32(10).string(message.id);
+    }
+    if (message.user_id !== "") {
+      writer.uint32(18).string(message.user_id);
+    }
+    if (message.channel_id !== "") {
+      writer.uint32(26).string(message.channel_id);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): NotifiReactMessage {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseNotifiReactMessage();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.id = reader.string();
+          break;
+        case 2:
+          message.user_id = reader.string();
+          break;
+        case 3:
+          message.channel_id = reader.string();
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): NotifiReactMessage {
+    return {
+      id: isSet(object.id) ? String(object.id) : "",
+      user_id: isSet(object.user_id) ? String(object.user_id) : "",
+      channel_id: isSet(object.channel_id) ? String(object.channel_id) : "",
+    };
+  },
+
+  toJSON(message: NotifiReactMessage): unknown {
+    const obj: any = {};
+    message.id !== undefined && (obj.id = message.id);
+    message.user_id !== undefined && (obj.user_id = message.user_id);
+    message.channel_id !== undefined && (obj.channel_id = message.channel_id);
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<NotifiReactMessage>, I>>(base?: I): NotifiReactMessage {
+    return NotifiReactMessage.fromPartial(base ?? {});
+  },
+
+  fromPartial<I extends Exact<DeepPartial<NotifiReactMessage>, I>>(object: I): NotifiReactMessage {
+    const message = createBaseNotifiReactMessage();
+    message.id = object.id ?? "";
+    message.user_id = object.user_id ?? "";
+    message.channel_id = object.channel_id ?? "";
     return message;
   },
 };
@@ -14301,6 +14402,77 @@ export const SetNotificationRequest = {
     message.channel_id = object.channel_id ?? "";
     message.notification_type = object.notification_type ?? "";
     message.time_mute = object.time_mute ?? undefined;
+    return message;
+  },
+};
+
+function createBaseSetMuteNotificationRequest(): SetMuteNotificationRequest {
+  return { channel_id: "", notification_type: "", active: 0 };
+}
+
+export const SetMuteNotificationRequest = {
+  encode(message: SetMuteNotificationRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.channel_id !== "") {
+      writer.uint32(10).string(message.channel_id);
+    }
+    if (message.notification_type !== "") {
+      writer.uint32(18).string(message.notification_type);
+    }
+    if (message.active !== 0) {
+      writer.uint32(24).int32(message.active);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): SetMuteNotificationRequest {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseSetMuteNotificationRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.channel_id = reader.string();
+          break;
+        case 2:
+          message.notification_type = reader.string();
+          break;
+        case 3:
+          message.active = reader.int32();
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): SetMuteNotificationRequest {
+    return {
+      channel_id: isSet(object.channel_id) ? String(object.channel_id) : "",
+      notification_type: isSet(object.notification_type) ? String(object.notification_type) : "",
+      active: isSet(object.active) ? Number(object.active) : 0,
+    };
+  },
+
+  toJSON(message: SetMuteNotificationRequest): unknown {
+    const obj: any = {};
+    message.channel_id !== undefined && (obj.channel_id = message.channel_id);
+    message.notification_type !== undefined && (obj.notification_type = message.notification_type);
+    message.active !== undefined && (obj.active = Math.round(message.active));
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<SetMuteNotificationRequest>, I>>(base?: I): SetMuteNotificationRequest {
+    return SetMuteNotificationRequest.fromPartial(base ?? {});
+  },
+
+  fromPartial<I extends Exact<DeepPartial<SetMuteNotificationRequest>, I>>(object: I): SetMuteNotificationRequest {
+    const message = createBaseSetMuteNotificationRequest();
+    message.channel_id = object.channel_id ?? "";
+    message.notification_type = object.notification_type ?? "";
+    message.active = object.active ?? 0;
     return message;
   },
 };

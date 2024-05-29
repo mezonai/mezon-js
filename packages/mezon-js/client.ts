@@ -85,6 +85,7 @@ import {
   ApiNotificationUserChannel,
   ApiSetNotificationRequest,
   ApiNotifiReactMessage,
+  ApiSetMuteNotificationRequest,
 } from "./api.gen";
 
 import { Session } from "./session";
@@ -1982,6 +1983,18 @@ async setNotificationChannel(session: Session, request: ApiSetNotificationReques
   }
 
   return this.apiClient.setNotificationChannelSetting(session.token, request).then((response: any) => {
+    return response !== undefined;
+  });
+}
+
+/** Set notification channel*/
+async setMuteNotificationChannel(session: Session, request: ApiSetMuteNotificationRequest): Promise<boolean> {
+  if (this.autoRefreshSession && session.refresh_token &&
+      session.isexpired((Date.now() + this.expiredTimespanMs)/1000)) {
+      await this.sessionRefresh(session);
+  }
+
+  return this.apiClient.setMuteNotificationChannel(session.token, request).then((response: any) => {
     return response !== undefined;
   });
 }
