@@ -776,7 +776,7 @@ export declare class MezonApi {
     /**  */
     listCategoryDescs(bearerToken: string, clanId: string, creatorId?: string, categoryName?: string, categoryId?: string, options?: any): Promise<ApiCategoryDescList>;
     /** List a channel's message history. */
-    listChannelMessages(bearerToken: string, channelId: string, messageId?: string, limit?: number, direction?: number, options?: any): Promise<ApiChannelMessageList>;
+    listChannelMessages(bearerToken: string, channelId: string, messageId?: string, direction?: number, limit?: number, options?: any): Promise<ApiChannelMessageList>;
     /** Add users to a channel. */
     addChannelUsers(bearerToken: string, channelId: string, userIds?: Array<string>, options?: any): Promise<any>;
     /** List all attachment that are part of a channel. */
@@ -786,7 +786,7 @@ export declare class MezonApi {
     /** Kick a set of users from a channel. */
     removeChannelUsers(bearerToken: string, channelId: string, userIds?: Array<string>, options?: any): Promise<any>;
     /** List all users that are part of a channel. */
-    listChannelUsers(bearerToken: string, channelId: string, clanId?: string, channelType?: number, limit?: number, state?: number, cursor?: string, options?: any): Promise<ApiChannelUserList>;
+    listChannelUsers(bearerToken: string, clanId: string, channelId: string, channelType?: number, limit?: number, state?: number, cursor?: string, options?: any): Promise<ApiChannelUserList>;
     /** List user channels */
     listChannelDescs(bearerToken: string, limit?: number, state?: number, cursor?: string, clanId?: string, channelType?: number, options?: any): Promise<ApiChannelDescList>;
     /** Create a new channel with the current user as the owner. */

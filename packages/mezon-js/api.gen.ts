@@ -2458,8 +2458,8 @@ export class MezonApi {
   listChannelMessages(bearerToken: string,
       channelId:string,
       messageId?:string,
-      limit?:number,
       direction?:number,
+      limit?:number,
       options: any = {}): Promise<ApiChannelMessageList> {
     
     if (channelId === null || channelId === undefined) {
@@ -2656,8 +2656,8 @@ export class MezonApi {
 
   /** List all users that are part of a channel. */
   listChannelUsers(bearerToken: string,
-      channelId:string,
-      clanId?:string,
+      clanId: string, 
+      channelId: string,
       channelType?:number,
       limit?:number,
       state?:number,

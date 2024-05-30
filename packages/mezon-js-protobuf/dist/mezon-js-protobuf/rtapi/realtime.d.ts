@@ -637,6 +637,8 @@ export interface ChannelUpdatedEvent {
     channel_label: string;
     /** channel type */
     channel_type: number | undefined;
+    /** status */
+    status: number;
 }
 /** Stop receiving status updates for some set of users. */
 export interface StatusUnfollow {
@@ -1122,6 +1124,7 @@ export declare const Envelope: {
             channel_id?: string | undefined;
             channel_label?: string | undefined;
             channel_type?: number | undefined;
+            status?: number | undefined;
         } | undefined;
     } & {
         cid?: string | undefined;
@@ -2287,6 +2290,7 @@ export declare const Envelope: {
             channel_id?: string | undefined;
             channel_label?: string | undefined;
             channel_type?: number | undefined;
+            status?: number | undefined;
         } & {
             clan_id?: string | undefined;
             category_id?: string | undefined;
@@ -2295,6 +2299,7 @@ export declare const Envelope: {
             channel_id?: string | undefined;
             channel_label?: string | undefined;
             channel_type?: number | undefined;
+            status?: number | undefined;
         } & { [K_89 in Exclude<keyof I["channel_updated_event"], keyof ChannelUpdatedEvent>]: never; }) | undefined;
     } & { [K_90 in Exclude<keyof I, keyof Envelope>]: never; }>(base?: I | undefined): Envelope;
     fromPartial<I_1 extends {
@@ -2722,6 +2727,7 @@ export declare const Envelope: {
             channel_id?: string | undefined;
             channel_label?: string | undefined;
             channel_type?: number | undefined;
+            status?: number | undefined;
         } | undefined;
     } & {
         cid?: string | undefined;
@@ -3887,6 +3893,7 @@ export declare const Envelope: {
             channel_id?: string | undefined;
             channel_label?: string | undefined;
             channel_type?: number | undefined;
+            status?: number | undefined;
         } & {
             clan_id?: string | undefined;
             category_id?: string | undefined;
@@ -3895,6 +3902,7 @@ export declare const Envelope: {
             channel_id?: string | undefined;
             channel_label?: string | undefined;
             channel_type?: number | undefined;
+            status?: number | undefined;
         } & { [K_180 in Exclude<keyof I_1["channel_updated_event"], keyof ChannelUpdatedEvent>]: never; }) | undefined;
     } & { [K_181 in Exclude<keyof I_1, keyof Envelope>]: never; }>(object: I_1): Envelope;
 };
@@ -6415,6 +6423,7 @@ export declare const ChannelUpdatedEvent: {
         channel_id?: string | undefined;
         channel_label?: string | undefined;
         channel_type?: number | undefined;
+        status?: number | undefined;
     } & {
         clan_id?: string | undefined;
         category_id?: string | undefined;
@@ -6423,6 +6432,7 @@ export declare const ChannelUpdatedEvent: {
         channel_id?: string | undefined;
         channel_label?: string | undefined;
         channel_type?: number | undefined;
+        status?: number | undefined;
     } & { [K in Exclude<keyof I, keyof ChannelUpdatedEvent>]: never; }>(base?: I | undefined): ChannelUpdatedEvent;
     fromPartial<I_1 extends {
         clan_id?: string | undefined;
@@ -6432,6 +6442,7 @@ export declare const ChannelUpdatedEvent: {
         channel_id?: string | undefined;
         channel_label?: string | undefined;
         channel_type?: number | undefined;
+        status?: number | undefined;
     } & {
         clan_id?: string | undefined;
         category_id?: string | undefined;
@@ -6440,6 +6451,7 @@ export declare const ChannelUpdatedEvent: {
         channel_id?: string | undefined;
         channel_label?: string | undefined;
         channel_type?: number | undefined;
+        status?: number | undefined;
     } & { [K_1 in Exclude<keyof I_1, keyof ChannelUpdatedEvent>]: never; }>(object: I_1): ChannelUpdatedEvent;
 };
 export declare const StatusUnfollow: {

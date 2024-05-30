@@ -847,7 +847,11 @@ export interface ChannelUpdatedEvent {
   /** channel label */
   channel_label: string;
   /** channel type */
-  channel_type: number | undefined;
+  channel_type:
+    | number
+    | undefined;
+  /** status */
+  status: number;
 }
 
 /** Stop receiving status updates for some set of users. */
@@ -5541,6 +5545,7 @@ function createBaseChannelUpdatedEvent(): ChannelUpdatedEvent {
     channel_id: "",
     channel_label: "",
     channel_type: undefined,
+    status: 0,
   };
 }
 
@@ -5566,6 +5571,9 @@ export const ChannelUpdatedEvent = {
     }
     if (message.channel_type !== undefined) {
       Int32Value.encode({ value: message.channel_type! }, writer.uint32(58).fork()).ldelim();
+    }
+    if (message.status !== 0) {
+      writer.uint32(64).int32(message.status);
     }
     return writer;
   },
@@ -5598,6 +5606,9 @@ export const ChannelUpdatedEvent = {
         case 7:
           message.channel_type = Int32Value.decode(reader, reader.uint32()).value;
           break;
+        case 8:
+          message.status = reader.int32();
+          break;
         default:
           reader.skipType(tag & 7);
           break;
@@ -5615,6 +5626,7 @@ export const ChannelUpdatedEvent = {
       channel_id: isSet(object.channel_id) ? String(object.channel_id) : "",
       channel_label: isSet(object.channel_label) ? String(object.channel_label) : "",
       channel_type: isSet(object.channel_type) ? Number(object.channel_type) : undefined,
+      status: isSet(object.status) ? Number(object.status) : 0,
     };
   },
 
@@ -5627,6 +5639,7 @@ export const ChannelUpdatedEvent = {
     message.channel_id !== undefined && (obj.channel_id = message.channel_id);
     message.channel_label !== undefined && (obj.channel_label = message.channel_label);
     message.channel_type !== undefined && (obj.channel_type = message.channel_type);
+    message.status !== undefined && (obj.status = Math.round(message.status));
     return obj;
   },
 
@@ -5643,6 +5656,7 @@ export const ChannelUpdatedEvent = {
     message.channel_id = object.channel_id ?? "";
     message.channel_label = object.channel_label ?? "";
     message.channel_type = object.channel_type ?? undefined;
+    message.status = object.status ?? 0;
     return message;
   },
 };
