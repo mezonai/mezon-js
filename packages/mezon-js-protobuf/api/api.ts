@@ -2286,6 +2286,78 @@ export interface UploadAttachment {
   url: string;
 }
 
+export interface SearchMessageRequest {
+  filters: FilterParam[];
+  /** Offset value */
+  from:
+    | number
+    | undefined;
+  /** Page size */
+  size:
+    | number
+    | undefined;
+  /** Sort information */
+  sorts: SortParam[];
+}
+
+export interface SortParam {
+  /** Field name to sort by */
+  field_name: string;
+  /** Sort order */
+  order: string;
+}
+
+export interface FilterParam {
+  /** Field name to filter by */
+  field_name: string;
+  /** Filter value */
+  field_value: string;
+}
+
+export interface SearchMessageDocument {
+  /** The message ID. */
+  message_id: string;
+  /** The channel ID. */
+  channel_id: number;
+  /** The clan ID. */
+  clan_id: number;
+  /** The user ID of sender. */
+  sender_id: number;
+  /** Message content */
+  content: string;
+  /** Mention users */
+  mention: string;
+  /** Reactions */
+  reaction: string;
+  /** Attachment */
+  attachment: string;
+  /** Reference users */
+  reference: string;
+  /** Message create time */
+  create_time: string;
+  /** Message update time */
+  update_time: string;
+  /** Channel name */
+  channel_label: string;
+  /** Channel type */
+  channel_type: number;
+  /** Clan name */
+  clan_name: string;
+  /** Sender's username */
+  username: string;
+  /** Sender's display name */
+  display_name: string;
+  /** Sender's avatar URL */
+  avatar_url: string;
+}
+
+export interface SearchMessageResponse {
+  /** List of paged messages. */
+  messages: SearchMessageDocument[];
+  /** The total number of messages. */
+  total: number;
+}
+
 function createBaseAccount(): Account {
   return {
     user: undefined,
@@ -16276,6 +16348,501 @@ export const UploadAttachment = {
     const message = createBaseUploadAttachment();
     message.filename = object.filename ?? "";
     message.url = object.url ?? "";
+    return message;
+  },
+};
+
+function createBaseSearchMessageRequest(): SearchMessageRequest {
+  return { filters: [], from: undefined, size: undefined, sorts: [] };
+}
+
+export const SearchMessageRequest = {
+  encode(message: SearchMessageRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    for (const v of message.filters) {
+      FilterParam.encode(v!, writer.uint32(10).fork()).ldelim();
+    }
+    if (message.from !== undefined) {
+      Int32Value.encode({ value: message.from! }, writer.uint32(26).fork()).ldelim();
+    }
+    if (message.size !== undefined) {
+      Int32Value.encode({ value: message.size! }, writer.uint32(34).fork()).ldelim();
+    }
+    for (const v of message.sorts) {
+      SortParam.encode(v!, writer.uint32(42).fork()).ldelim();
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): SearchMessageRequest {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseSearchMessageRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.filters.push(FilterParam.decode(reader, reader.uint32()));
+          break;
+        case 3:
+          message.from = Int32Value.decode(reader, reader.uint32()).value;
+          break;
+        case 4:
+          message.size = Int32Value.decode(reader, reader.uint32()).value;
+          break;
+        case 5:
+          message.sorts.push(SortParam.decode(reader, reader.uint32()));
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): SearchMessageRequest {
+    return {
+      filters: Array.isArray(object?.filters) ? object.filters.map((e: any) => FilterParam.fromJSON(e)) : [],
+      from: isSet(object.from) ? Number(object.from) : undefined,
+      size: isSet(object.size) ? Number(object.size) : undefined,
+      sorts: Array.isArray(object?.sorts) ? object.sorts.map((e: any) => SortParam.fromJSON(e)) : [],
+    };
+  },
+
+  toJSON(message: SearchMessageRequest): unknown {
+    const obj: any = {};
+    if (message.filters) {
+      obj.filters = message.filters.map((e) => e ? FilterParam.toJSON(e) : undefined);
+    } else {
+      obj.filters = [];
+    }
+    message.from !== undefined && (obj.from = message.from);
+    message.size !== undefined && (obj.size = message.size);
+    if (message.sorts) {
+      obj.sorts = message.sorts.map((e) => e ? SortParam.toJSON(e) : undefined);
+    } else {
+      obj.sorts = [];
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<SearchMessageRequest>, I>>(base?: I): SearchMessageRequest {
+    return SearchMessageRequest.fromPartial(base ?? {});
+  },
+
+  fromPartial<I extends Exact<DeepPartial<SearchMessageRequest>, I>>(object: I): SearchMessageRequest {
+    const message = createBaseSearchMessageRequest();
+    message.filters = object.filters?.map((e) => FilterParam.fromPartial(e)) || [];
+    message.from = object.from ?? undefined;
+    message.size = object.size ?? undefined;
+    message.sorts = object.sorts?.map((e) => SortParam.fromPartial(e)) || [];
+    return message;
+  },
+};
+
+function createBaseSortParam(): SortParam {
+  return { field_name: "", order: "" };
+}
+
+export const SortParam = {
+  encode(message: SortParam, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.field_name !== "") {
+      writer.uint32(10).string(message.field_name);
+    }
+    if (message.order !== "") {
+      writer.uint32(18).string(message.order);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): SortParam {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseSortParam();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.field_name = reader.string();
+          break;
+        case 2:
+          message.order = reader.string();
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): SortParam {
+    return {
+      field_name: isSet(object.field_name) ? String(object.field_name) : "",
+      order: isSet(object.order) ? String(object.order) : "",
+    };
+  },
+
+  toJSON(message: SortParam): unknown {
+    const obj: any = {};
+    message.field_name !== undefined && (obj.field_name = message.field_name);
+    message.order !== undefined && (obj.order = message.order);
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<SortParam>, I>>(base?: I): SortParam {
+    return SortParam.fromPartial(base ?? {});
+  },
+
+  fromPartial<I extends Exact<DeepPartial<SortParam>, I>>(object: I): SortParam {
+    const message = createBaseSortParam();
+    message.field_name = object.field_name ?? "";
+    message.order = object.order ?? "";
+    return message;
+  },
+};
+
+function createBaseFilterParam(): FilterParam {
+  return { field_name: "", field_value: "" };
+}
+
+export const FilterParam = {
+  encode(message: FilterParam, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.field_name !== "") {
+      writer.uint32(10).string(message.field_name);
+    }
+    if (message.field_value !== "") {
+      writer.uint32(18).string(message.field_value);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): FilterParam {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseFilterParam();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.field_name = reader.string();
+          break;
+        case 2:
+          message.field_value = reader.string();
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): FilterParam {
+    return {
+      field_name: isSet(object.field_name) ? String(object.field_name) : "",
+      field_value: isSet(object.field_value) ? String(object.field_value) : "",
+    };
+  },
+
+  toJSON(message: FilterParam): unknown {
+    const obj: any = {};
+    message.field_name !== undefined && (obj.field_name = message.field_name);
+    message.field_value !== undefined && (obj.field_value = message.field_value);
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<FilterParam>, I>>(base?: I): FilterParam {
+    return FilterParam.fromPartial(base ?? {});
+  },
+
+  fromPartial<I extends Exact<DeepPartial<FilterParam>, I>>(object: I): FilterParam {
+    const message = createBaseFilterParam();
+    message.field_name = object.field_name ?? "";
+    message.field_value = object.field_value ?? "";
+    return message;
+  },
+};
+
+function createBaseSearchMessageDocument(): SearchMessageDocument {
+  return {
+    message_id: "",
+    channel_id: 0,
+    clan_id: 0,
+    sender_id: 0,
+    content: "",
+    mention: "",
+    reaction: "",
+    attachment: "",
+    reference: "",
+    create_time: "",
+    update_time: "",
+    channel_label: "",
+    channel_type: 0,
+    clan_name: "",
+    username: "",
+    display_name: "",
+    avatar_url: "",
+  };
+}
+
+export const SearchMessageDocument = {
+  encode(message: SearchMessageDocument, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.message_id !== "") {
+      writer.uint32(10).string(message.message_id);
+    }
+    if (message.channel_id !== 0) {
+      writer.uint32(16).int64(message.channel_id);
+    }
+    if (message.clan_id !== 0) {
+      writer.uint32(24).int64(message.clan_id);
+    }
+    if (message.sender_id !== 0) {
+      writer.uint32(32).int64(message.sender_id);
+    }
+    if (message.content !== "") {
+      writer.uint32(42).string(message.content);
+    }
+    if (message.mention !== "") {
+      writer.uint32(50).string(message.mention);
+    }
+    if (message.reaction !== "") {
+      writer.uint32(58).string(message.reaction);
+    }
+    if (message.attachment !== "") {
+      writer.uint32(66).string(message.attachment);
+    }
+    if (message.reference !== "") {
+      writer.uint32(74).string(message.reference);
+    }
+    if (message.create_time !== "") {
+      writer.uint32(82).string(message.create_time);
+    }
+    if (message.update_time !== "") {
+      writer.uint32(90).string(message.update_time);
+    }
+    if (message.channel_label !== "") {
+      writer.uint32(98).string(message.channel_label);
+    }
+    if (message.channel_type !== 0) {
+      writer.uint32(104).int32(message.channel_type);
+    }
+    if (message.clan_name !== "") {
+      writer.uint32(114).string(message.clan_name);
+    }
+    if (message.username !== "") {
+      writer.uint32(122).string(message.username);
+    }
+    if (message.display_name !== "") {
+      writer.uint32(130).string(message.display_name);
+    }
+    if (message.avatar_url !== "") {
+      writer.uint32(138).string(message.avatar_url);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): SearchMessageDocument {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseSearchMessageDocument();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.message_id = reader.string();
+          break;
+        case 2:
+          message.channel_id = longToNumber(reader.int64() as Long);
+          break;
+        case 3:
+          message.clan_id = longToNumber(reader.int64() as Long);
+          break;
+        case 4:
+          message.sender_id = longToNumber(reader.int64() as Long);
+          break;
+        case 5:
+          message.content = reader.string();
+          break;
+        case 6:
+          message.mention = reader.string();
+          break;
+        case 7:
+          message.reaction = reader.string();
+          break;
+        case 8:
+          message.attachment = reader.string();
+          break;
+        case 9:
+          message.reference = reader.string();
+          break;
+        case 10:
+          message.create_time = reader.string();
+          break;
+        case 11:
+          message.update_time = reader.string();
+          break;
+        case 12:
+          message.channel_label = reader.string();
+          break;
+        case 13:
+          message.channel_type = reader.int32();
+          break;
+        case 14:
+          message.clan_name = reader.string();
+          break;
+        case 15:
+          message.username = reader.string();
+          break;
+        case 16:
+          message.display_name = reader.string();
+          break;
+        case 17:
+          message.avatar_url = reader.string();
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): SearchMessageDocument {
+    return {
+      message_id: isSet(object.message_id) ? String(object.message_id) : "",
+      channel_id: isSet(object.channel_id) ? Number(object.channel_id) : 0,
+      clan_id: isSet(object.clan_id) ? Number(object.clan_id) : 0,
+      sender_id: isSet(object.sender_id) ? Number(object.sender_id) : 0,
+      content: isSet(object.content) ? String(object.content) : "",
+      mention: isSet(object.mention) ? String(object.mention) : "",
+      reaction: isSet(object.reaction) ? String(object.reaction) : "",
+      attachment: isSet(object.attachment) ? String(object.attachment) : "",
+      reference: isSet(object.reference) ? String(object.reference) : "",
+      create_time: isSet(object.create_time) ? String(object.create_time) : "",
+      update_time: isSet(object.update_time) ? String(object.update_time) : "",
+      channel_label: isSet(object.channel_label) ? String(object.channel_label) : "",
+      channel_type: isSet(object.channel_type) ? Number(object.channel_type) : 0,
+      clan_name: isSet(object.clan_name) ? String(object.clan_name) : "",
+      username: isSet(object.username) ? String(object.username) : "",
+      display_name: isSet(object.display_name) ? String(object.display_name) : "",
+      avatar_url: isSet(object.avatar_url) ? String(object.avatar_url) : "",
+    };
+  },
+
+  toJSON(message: SearchMessageDocument): unknown {
+    const obj: any = {};
+    message.message_id !== undefined && (obj.message_id = message.message_id);
+    message.channel_id !== undefined && (obj.channel_id = Math.round(message.channel_id));
+    message.clan_id !== undefined && (obj.clan_id = Math.round(message.clan_id));
+    message.sender_id !== undefined && (obj.sender_id = Math.round(message.sender_id));
+    message.content !== undefined && (obj.content = message.content);
+    message.mention !== undefined && (obj.mention = message.mention);
+    message.reaction !== undefined && (obj.reaction = message.reaction);
+    message.attachment !== undefined && (obj.attachment = message.attachment);
+    message.reference !== undefined && (obj.reference = message.reference);
+    message.create_time !== undefined && (obj.create_time = message.create_time);
+    message.update_time !== undefined && (obj.update_time = message.update_time);
+    message.channel_label !== undefined && (obj.channel_label = message.channel_label);
+    message.channel_type !== undefined && (obj.channel_type = Math.round(message.channel_type));
+    message.clan_name !== undefined && (obj.clan_name = message.clan_name);
+    message.username !== undefined && (obj.username = message.username);
+    message.display_name !== undefined && (obj.display_name = message.display_name);
+    message.avatar_url !== undefined && (obj.avatar_url = message.avatar_url);
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<SearchMessageDocument>, I>>(base?: I): SearchMessageDocument {
+    return SearchMessageDocument.fromPartial(base ?? {});
+  },
+
+  fromPartial<I extends Exact<DeepPartial<SearchMessageDocument>, I>>(object: I): SearchMessageDocument {
+    const message = createBaseSearchMessageDocument();
+    message.message_id = object.message_id ?? "";
+    message.channel_id = object.channel_id ?? 0;
+    message.clan_id = object.clan_id ?? 0;
+    message.sender_id = object.sender_id ?? 0;
+    message.content = object.content ?? "";
+    message.mention = object.mention ?? "";
+    message.reaction = object.reaction ?? "";
+    message.attachment = object.attachment ?? "";
+    message.reference = object.reference ?? "";
+    message.create_time = object.create_time ?? "";
+    message.update_time = object.update_time ?? "";
+    message.channel_label = object.channel_label ?? "";
+    message.channel_type = object.channel_type ?? 0;
+    message.clan_name = object.clan_name ?? "";
+    message.username = object.username ?? "";
+    message.display_name = object.display_name ?? "";
+    message.avatar_url = object.avatar_url ?? "";
+    return message;
+  },
+};
+
+function createBaseSearchMessageResponse(): SearchMessageResponse {
+  return { messages: [], total: 0 };
+}
+
+export const SearchMessageResponse = {
+  encode(message: SearchMessageResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    for (const v of message.messages) {
+      SearchMessageDocument.encode(v!, writer.uint32(10).fork()).ldelim();
+    }
+    if (message.total !== 0) {
+      writer.uint32(16).int32(message.total);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): SearchMessageResponse {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseSearchMessageResponse();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.messages.push(SearchMessageDocument.decode(reader, reader.uint32()));
+          break;
+        case 2:
+          message.total = reader.int32();
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): SearchMessageResponse {
+    return {
+      messages: Array.isArray(object?.messages)
+        ? object.messages.map((e: any) => SearchMessageDocument.fromJSON(e))
+        : [],
+      total: isSet(object.total) ? Number(object.total) : 0,
+    };
+  },
+
+  toJSON(message: SearchMessageResponse): unknown {
+    const obj: any = {};
+    if (message.messages) {
+      obj.messages = message.messages.map((e) => e ? SearchMessageDocument.toJSON(e) : undefined);
+    } else {
+      obj.messages = [];
+    }
+    message.total !== undefined && (obj.total = Math.round(message.total));
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<SearchMessageResponse>, I>>(base?: I): SearchMessageResponse {
+    return SearchMessageResponse.fromPartial(base ?? {});
+  },
+
+  fromPartial<I extends Exact<DeepPartial<SearchMessageResponse>, I>>(object: I): SearchMessageResponse {
+    const message = createBaseSearchMessageResponse();
+    message.messages = object.messages?.map((e) => SearchMessageDocument.fromPartial(e)) || [];
+    message.total = object.total ?? 0;
     return message;
   },
 };
