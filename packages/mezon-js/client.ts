@@ -86,6 +86,8 @@ import {
   ApiSetNotificationRequest,
   ApiNotifiReactMessage,
   ApiSetMuteNotificationRequest,
+  ApiSearchMessageRequest,
+  ApiSearchMessageResponse,
 } from "./api.gen";
 
 import { Session } from "./session";
@@ -2101,6 +2103,18 @@ async deleteNotiReactMessage(session: Session, channel_id: string): Promise<bool
 
   return this.apiClient.deleteNotiReactMessage(session.token, channel_id).then((response: any) => {
     return response !== undefined;
+  });
+}
+
+/** query message in elasticsearch */
+async searchMessage(session: Session, request: ApiSearchMessageRequest): Promise<ApiSearchMessageResponse> {
+  if (this.autoRefreshSession && session.refresh_token &&
+      session.isexpired((Date.now() + this.expiredTimespanMs)/1000)) {
+      await this.sessionRefresh(session);
+  }
+
+  return this.apiClient.searchMessage(session.token, request).then((response: ApiSearchMessageResponse) => {
+    return Promise.resolve(response);
   });
 }
 };
