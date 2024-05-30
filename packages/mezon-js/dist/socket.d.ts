@@ -262,6 +262,7 @@ export interface ChannelUpdatedEvent {
     channel_id: string;
     channel_label: string;
     channel_type: number;
+    status: number;
 }
 export interface ChannelCreatedEvent {
     clan_id: string;
@@ -271,6 +272,7 @@ export interface ChannelCreatedEvent {
     channel_id: string;
     channel_label: string;
     channel_type: number;
+    status: number;
 }
 export interface ChannelDeletedEvent {
     clan_id: string;
