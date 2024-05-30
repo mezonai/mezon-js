@@ -315,6 +315,11 @@ export interface ApiEventManagement {
     title?: string;
     user_ids?: Array<string>;
 }
+/**  */
+export interface ApiFilterParam {
+    field_name?: string;
+    field_value?: string;
+}
 /** A friend of a user. */
 export interface ApiFriend {
     state?: number;
@@ -501,6 +506,38 @@ export interface ApiRpc {
     id?: string;
     payload?: string;
 }
+/**  */
+export interface ApiSearchMessageDocument {
+    attachment?: string;
+    avatar_url?: string;
+    channel_id?: string;
+    channel_label?: string;
+    channel_type?: number;
+    clan_id?: string;
+    clan_name?: string;
+    content?: string;
+    create_time?: string;
+    display_name?: string;
+    mention?: string;
+    message_id?: string;
+    reaction?: string;
+    reference?: string;
+    sender_id?: string;
+    update_time?: string;
+    username?: string;
+}
+/**  */
+export interface ApiSearchMessageRequest {
+    filters?: Array<ApiFilterParam>;
+    from?: number;
+    size?: number;
+    sorts?: Array<ApiSortParam>;
+}
+/**  */
+export interface ApiSearchMessageResponse {
+    messages?: Array<ApiSearchMessageDocument>;
+    total?: number;
+}
 /** A user's session used to authenticate messages. */
 export interface ApiSession {
     created?: boolean;
@@ -534,6 +571,11 @@ export interface ApiSetNotificationRequest {
     channel_id?: string;
     notification_type?: string;
     time_mute?: string;
+}
+/**  */
+export interface ApiSortParam {
+    field_name?: string;
+    order?: string;
 }
 /** An object within the storage engine. */
 export interface ApiStorageObject {
@@ -734,7 +776,7 @@ export declare class MezonApi {
     /**  */
     listCategoryDescs(bearerToken: string, clanId: string, creatorId?: string, categoryName?: string, categoryId?: string, options?: any): Promise<ApiCategoryDescList>;
     /** List a channel's message history. */
-    listChannelMessages(bearerToken: string, channelId: string, messageId?: string, direction?: number, limit?: number, options?: any): Promise<ApiChannelMessageList>;
+    listChannelMessages(bearerToken: string, channelId: string, messageId?: string, limit?: number, direction?: number, options?: any): Promise<ApiChannelMessageList>;
     /** Add users to a channel. */
     addChannelUsers(bearerToken: string, channelId: string, userIds?: Array<string>, options?: any): Promise<any>;
     /** List all attachment that are part of a channel. */
@@ -744,7 +786,7 @@ export declare class MezonApi {
     /** Kick a set of users from a channel. */
     removeChannelUsers(bearerToken: string, channelId: string, userIds?: Array<string>, options?: any): Promise<any>;
     /** List all users that are part of a channel. */
-    listChannelUsers(bearerToken: string, clanId: string, channelId: string, channelType?: number, limit?: number, state?: number, cursor?: string, options?: any): Promise<ApiChannelUserList>;
+    listChannelUsers(bearerToken: string, channelId: string, clanId?: string, channelType?: number, limit?: number, state?: number, cursor?: string, options?: any): Promise<ApiChannelUserList>;
     /** List user channels */
     listChannelDescs(bearerToken: string, limit?: number, state?: number, cursor?: string, clanId?: string, channelType?: number, options?: any): Promise<ApiChannelDescList>;
     /** Create a new channel with the current user as the owner. */
@@ -773,8 +815,10 @@ export declare class MezonApi {
     createCategoryDesc(bearerToken: string, body: ApiCreateCategoryDescRequest, options?: any): Promise<ApiCategoryDesc>;
     /**  */
     deleteCategoryDesc(bearerToken: string, creatorId: string, options?: any): Promise<any>;
-    /** Immediately join an open group, or request to join a closed one. */
+    /** regist fcm device token */
     registFCMDeviceToken(bearerToken: string, token?: string, deviceId?: string, platform?: string, options?: any): Promise<any>;
+    /** Search message from elasticsearch service. */
+    searchMessage(bearerToken: string, body: ApiSearchMessageRequest, options?: any): Promise<ApiSearchMessageResponse>;
     /** Submit an event for processing in the server's registered runtime custom events handler. */
     event(bearerToken: string, body: ApiEvent, options?: any): Promise<any>;
     /** List user events */
@@ -852,7 +896,7 @@ export declare class MezonApi {
     /** Update a role when Delete a role by ID. */
     updateRoleDelete(bearerToken: string, roleId: string, body: {}, options?: any): Promise<any>;
     /** Delete a role by ID. */
-    deleteRole(bearerToken: string, roleId: string, options?: any): Promise<any>;
+    deleteRole(bearerToken: string, roleId: string, channelId?: string, options?: any): Promise<any>;
     /** Update fields in a given role. */
     updateRole(bearerToken: string, roleId: string, body: {}, options?: any): Promise<any>;
     /** List role permissions */
@@ -879,7 +923,7 @@ export declare class MezonApi {
     updateCategory(bearerToken: string, body: ApiUpdateCategoryDescRequest, options?: any): Promise<any>;
     /**  */
     updateUserProfileByClan(bearerToken: string, clanId: string, body: {}, options?: any): Promise<any>;
-    /** Create a new group with the current user as the owner. */
+    /** Upload attachment */
     uploadAttachmentFile(bearerToken: string, body: ApiUploadAttachmentRequest, options?: any): Promise<ApiUploadAttachment>;
     /** Fetch zero or more users by ID and/or username. */
     getUsers(bearerToken: string, ids?: Array<string>, usernames?: Array<string>, facebookIds?: Array<string>, options?: any): Promise<ApiUsers>;
