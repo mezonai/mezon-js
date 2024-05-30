@@ -643,6 +643,8 @@ export interface VoiceChannelUser {
     jid: string;
     /** channel id */
     channel_id: string;
+    /** participant */
+    participant: string;
 }
 /** A list of users belonging to a channel, along with their role. */
 export interface VoiceChannelUserList {
@@ -1507,6 +1509,17 @@ export interface NotificationUserChannel {
     notification_setting_type: string;
     /**  */
     time_mute: Date | undefined;
+    /**  */
+    active: number;
+}
+/** Notification channel */
+export interface NotifiReactMessage {
+    /** Notification id */
+    id: string;
+    /**  */
+    user_id: string;
+    /**  */
+    channel_id: string;
 }
 /**  */
 export interface DefaultNotificationClan {
@@ -1533,6 +1546,12 @@ export interface SetNotificationRequest {
     channel_id: string;
     notification_type: string;
     time_mute: Date | undefined;
+}
+/** set notification */
+export interface SetMuteNotificationRequest {
+    channel_id: string;
+    notification_type: string;
+    active: number;
 }
 /** set default notification */
 export interface SetDefaultNotificationRequest {
@@ -5443,19 +5462,23 @@ export declare const VoiceChannelUser: {
         user_id?: string | undefined;
         jid?: string | undefined;
         channel_id?: string | undefined;
+        participant?: string | undefined;
     } & {
         user_id?: string | undefined;
         jid?: string | undefined;
         channel_id?: string | undefined;
+        participant?: string | undefined;
     } & { [K in Exclude<keyof I, keyof VoiceChannelUser>]: never; }>(base?: I | undefined): VoiceChannelUser;
     fromPartial<I_1 extends {
         user_id?: string | undefined;
         jid?: string | undefined;
         channel_id?: string | undefined;
+        participant?: string | undefined;
     } & {
         user_id?: string | undefined;
         jid?: string | undefined;
         channel_id?: string | undefined;
+        participant?: string | undefined;
     } & { [K_1 in Exclude<keyof I_1, keyof VoiceChannelUser>]: never; }>(object: I_1): VoiceChannelUser;
 };
 export declare const VoiceChannelUserList: {
@@ -5468,24 +5491,29 @@ export declare const VoiceChannelUserList: {
             user_id?: string | undefined;
             jid?: string | undefined;
             channel_id?: string | undefined;
+            participant?: string | undefined;
         }[] | undefined;
     } & {
         voice_channel_users?: ({
             user_id?: string | undefined;
             jid?: string | undefined;
             channel_id?: string | undefined;
+            participant?: string | undefined;
         }[] & ({
             user_id?: string | undefined;
             jid?: string | undefined;
             channel_id?: string | undefined;
+            participant?: string | undefined;
         } & {
             user_id?: string | undefined;
             jid?: string | undefined;
             channel_id?: string | undefined;
+            participant?: string | undefined;
         } & { [K in Exclude<keyof I["voice_channel_users"][number], keyof VoiceChannelUser>]: never; })[] & { [K_1 in Exclude<keyof I["voice_channel_users"], keyof {
             user_id?: string | undefined;
             jid?: string | undefined;
             channel_id?: string | undefined;
+            participant?: string | undefined;
         }[]>]: never; }) | undefined;
     } & { [K_2 in Exclude<keyof I, "voice_channel_users">]: never; }>(base?: I | undefined): VoiceChannelUserList;
     fromPartial<I_1 extends {
@@ -5493,24 +5521,29 @@ export declare const VoiceChannelUserList: {
             user_id?: string | undefined;
             jid?: string | undefined;
             channel_id?: string | undefined;
+            participant?: string | undefined;
         }[] | undefined;
     } & {
         voice_channel_users?: ({
             user_id?: string | undefined;
             jid?: string | undefined;
             channel_id?: string | undefined;
+            participant?: string | undefined;
         }[] & ({
             user_id?: string | undefined;
             jid?: string | undefined;
             channel_id?: string | undefined;
+            participant?: string | undefined;
         } & {
             user_id?: string | undefined;
             jid?: string | undefined;
             channel_id?: string | undefined;
+            participant?: string | undefined;
         } & { [K_3 in Exclude<keyof I_1["voice_channel_users"][number], keyof VoiceChannelUser>]: never; })[] & { [K_4 in Exclude<keyof I_1["voice_channel_users"], keyof {
             user_id?: string | undefined;
             jid?: string | undefined;
             channel_id?: string | undefined;
+            participant?: string | undefined;
         }[]>]: never; }) | undefined;
     } & { [K_5 in Exclude<keyof I_1, "voice_channel_users">]: never; }>(object: I_1): VoiceChannelUserList;
 };
@@ -10035,20 +10068,48 @@ export declare const NotificationUserChannel: {
         id?: string | undefined;
         notification_setting_type?: string | undefined;
         time_mute?: Date | undefined;
+        active?: number | undefined;
     } & {
         id?: string | undefined;
         notification_setting_type?: string | undefined;
         time_mute?: Date | undefined;
+        active?: number | undefined;
     } & { [K in Exclude<keyof I, keyof NotificationUserChannel>]: never; }>(base?: I | undefined): NotificationUserChannel;
     fromPartial<I_1 extends {
         id?: string | undefined;
         notification_setting_type?: string | undefined;
         time_mute?: Date | undefined;
+        active?: number | undefined;
     } & {
         id?: string | undefined;
         notification_setting_type?: string | undefined;
         time_mute?: Date | undefined;
+        active?: number | undefined;
     } & { [K_1 in Exclude<keyof I_1, keyof NotificationUserChannel>]: never; }>(object: I_1): NotificationUserChannel;
+};
+export declare const NotifiReactMessage: {
+    encode(message: NotifiReactMessage, writer?: _m0.Writer): _m0.Writer;
+    decode(input: _m0.Reader | Uint8Array, length?: number): NotifiReactMessage;
+    fromJSON(object: any): NotifiReactMessage;
+    toJSON(message: NotifiReactMessage): unknown;
+    create<I extends {
+        id?: string | undefined;
+        user_id?: string | undefined;
+        channel_id?: string | undefined;
+    } & {
+        id?: string | undefined;
+        user_id?: string | undefined;
+        channel_id?: string | undefined;
+    } & { [K in Exclude<keyof I, keyof NotifiReactMessage>]: never; }>(base?: I | undefined): NotifiReactMessage;
+    fromPartial<I_1 extends {
+        id?: string | undefined;
+        user_id?: string | undefined;
+        channel_id?: string | undefined;
+    } & {
+        id?: string | undefined;
+        user_id?: string | undefined;
+        channel_id?: string | undefined;
+    } & { [K_1 in Exclude<keyof I_1, keyof NotifiReactMessage>]: never; }>(object: I_1): NotifiReactMessage;
 };
 export declare const DefaultNotificationClan: {
     encode(message: DefaultNotificationClan, writer?: _m0.Writer): _m0.Writer;
@@ -10167,6 +10228,30 @@ export declare const SetNotificationRequest: {
         notification_type?: string | undefined;
         time_mute?: Date | undefined;
     } & { [K_1 in Exclude<keyof I_1, keyof SetNotificationRequest>]: never; }>(object: I_1): SetNotificationRequest;
+};
+export declare const SetMuteNotificationRequest: {
+    encode(message: SetMuteNotificationRequest, writer?: _m0.Writer): _m0.Writer;
+    decode(input: _m0.Reader | Uint8Array, length?: number): SetMuteNotificationRequest;
+    fromJSON(object: any): SetMuteNotificationRequest;
+    toJSON(message: SetMuteNotificationRequest): unknown;
+    create<I extends {
+        channel_id?: string | undefined;
+        notification_type?: string | undefined;
+        active?: number | undefined;
+    } & {
+        channel_id?: string | undefined;
+        notification_type?: string | undefined;
+        active?: number | undefined;
+    } & { [K in Exclude<keyof I, keyof SetMuteNotificationRequest>]: never; }>(base?: I | undefined): SetMuteNotificationRequest;
+    fromPartial<I_1 extends {
+        channel_id?: string | undefined;
+        notification_type?: string | undefined;
+        active?: number | undefined;
+    } & {
+        channel_id?: string | undefined;
+        notification_type?: string | undefined;
+        active?: number | undefined;
+    } & { [K_1 in Exclude<keyof I_1, keyof SetMuteNotificationRequest>]: never; }>(object: I_1): SetMuteNotificationRequest;
 };
 export declare const SetDefaultNotificationRequest: {
     encode(message: SetDefaultNotificationRequest, writer?: _m0.Writer): _m0.Writer;
