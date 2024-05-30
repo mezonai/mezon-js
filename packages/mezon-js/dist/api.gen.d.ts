@@ -631,6 +631,7 @@ export interface ApiUsers {
 export interface ApiVoiceChannelUser {
     channel_id?: string;
     jid?: string;
+    participant?: string;
     user_id?: string;
 }
 /** A list of users belonging to a channel, along with their role. */

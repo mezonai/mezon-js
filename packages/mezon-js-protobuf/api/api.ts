@@ -928,6 +928,8 @@ export interface VoiceChannelUser {
   jid: string;
   /** channel id */
   channel_id: string;
+  /** participant */
+  participant: string;
 }
 
 /** A list of users belonging to a channel, along with their role. */
@@ -7115,7 +7117,7 @@ export const ChannelUserList_ChannelUser = {
 };
 
 function createBaseVoiceChannelUser(): VoiceChannelUser {
-  return { user_id: "", jid: "", channel_id: "" };
+  return { user_id: "", jid: "", channel_id: "", participant: "" };
 }
 
 export const VoiceChannelUser = {
@@ -7128,6 +7130,9 @@ export const VoiceChannelUser = {
     }
     if (message.channel_id !== "") {
       writer.uint32(26).string(message.channel_id);
+    }
+    if (message.participant !== "") {
+      writer.uint32(34).string(message.participant);
     }
     return writer;
   },
@@ -7148,6 +7153,9 @@ export const VoiceChannelUser = {
         case 3:
           message.channel_id = reader.string();
           break;
+        case 4:
+          message.participant = reader.string();
+          break;
         default:
           reader.skipType(tag & 7);
           break;
@@ -7161,6 +7169,7 @@ export const VoiceChannelUser = {
       user_id: isSet(object.user_id) ? String(object.user_id) : "",
       jid: isSet(object.jid) ? String(object.jid) : "",
       channel_id: isSet(object.channel_id) ? String(object.channel_id) : "",
+      participant: isSet(object.participant) ? String(object.participant) : "",
     };
   },
 
@@ -7169,6 +7178,7 @@ export const VoiceChannelUser = {
     message.user_id !== undefined && (obj.user_id = message.user_id);
     message.jid !== undefined && (obj.jid = message.jid);
     message.channel_id !== undefined && (obj.channel_id = message.channel_id);
+    message.participant !== undefined && (obj.participant = message.participant);
     return obj;
   },
 
@@ -7181,6 +7191,7 @@ export const VoiceChannelUser = {
     message.user_id = object.user_id ?? "";
     message.jid = object.jid ?? "";
     message.channel_id = object.channel_id ?? "";
+    message.participant = object.participant ?? "";
     return message;
   },
 };

@@ -1093,6 +1093,8 @@ export interface ApiVoiceChannelUser {
   channel_id?: string;
   //Cursor for the next page of results, if any.
   jid?: string;
+  //
+  participant?: string;
   //User for a channel.
   user_id?: string;
 }

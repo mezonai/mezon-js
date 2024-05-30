@@ -367,6 +367,8 @@ export interface ChannelUpdatedEvent {
   channel_label: string;
   // channel type
   channel_type: number;
+  // status
+  status: number;
 }
 
 export interface ChannelCreatedEvent {
@@ -384,6 +386,8 @@ export interface ChannelCreatedEvent {
   channel_label: string;
   // channel type
   channel_type: number;
+  // status
+  status: number;
 }
 
 export interface ChannelDeletedEvent {
