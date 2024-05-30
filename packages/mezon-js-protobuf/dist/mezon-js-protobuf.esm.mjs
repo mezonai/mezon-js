@@ -6480,7 +6480,8 @@ function createBaseChannelUpdatedEvent() {
     parrent_id: "",
     channel_id: "",
     channel_label: "",
-    channel_type: void 0
+    channel_type: void 0,
+    status: 0
   };
 }
 var ChannelUpdatedEvent = {
@@ -6505,6 +6506,9 @@ var ChannelUpdatedEvent = {
     }
     if (message.channel_type !== void 0) {
       Int32Value.encode({ value: message.channel_type }, writer.uint32(58).fork()).ldelim();
+    }
+    if (message.status !== 0) {
+      writer.uint32(64).int32(message.status);
     }
     return writer;
   },
@@ -6536,6 +6540,9 @@ var ChannelUpdatedEvent = {
         case 7:
           message.channel_type = Int32Value.decode(reader, reader.uint32()).value;
           break;
+        case 8:
+          message.status = reader.int32();
+          break;
         default:
           reader.skipType(tag & 7);
           break;
@@ -6551,7 +6558,8 @@ var ChannelUpdatedEvent = {
       parrent_id: isSet4(object.parrent_id) ? String(object.parrent_id) : "",
       channel_id: isSet4(object.channel_id) ? String(object.channel_id) : "",
       channel_label: isSet4(object.channel_label) ? String(object.channel_label) : "",
-      channel_type: isSet4(object.channel_type) ? Number(object.channel_type) : void 0
+      channel_type: isSet4(object.channel_type) ? Number(object.channel_type) : void 0,
+      status: isSet4(object.status) ? Number(object.status) : 0
     };
   },
   toJSON(message) {
@@ -6563,13 +6571,14 @@ var ChannelUpdatedEvent = {
     message.channel_id !== void 0 && (obj.channel_id = message.channel_id);
     message.channel_label !== void 0 && (obj.channel_label = message.channel_label);
     message.channel_type !== void 0 && (obj.channel_type = message.channel_type);
+    message.status !== void 0 && (obj.status = Math.round(message.status));
     return obj;
   },
   create(base) {
     return ChannelUpdatedEvent.fromPartial(base != null ? base : {});
   },
   fromPartial(object) {
-    var _a, _b, _c, _d, _e, _f, _g;
+    var _a, _b, _c, _d, _e, _f, _g, _h;
     const message = createBaseChannelUpdatedEvent();
     message.clan_id = (_a = object.clan_id) != null ? _a : "";
     message.category_id = (_b = object.category_id) != null ? _b : "";
@@ -6578,6 +6587,7 @@ var ChannelUpdatedEvent = {
     message.channel_id = (_e = object.channel_id) != null ? _e : "";
     message.channel_label = (_f = object.channel_label) != null ? _f : "";
     message.channel_type = (_g = object.channel_type) != null ? _g : void 0;
+    message.status = (_h = object.status) != null ? _h : 0;
     return message;
   }
 };
