@@ -2205,7 +2205,7 @@ var MezonApi = class {
       )
     ]);
   }
-  /** Immediately join an open group, or request to join a closed one. */
+  /** regist fcm device token */
   registFCMDeviceToken(bearerToken, token, deviceId, platform, options = {}) {
     const urlPath = "/v2/devicetoken";
     const queryParams = /* @__PURE__ */ new Map();
@@ -2213,6 +2213,35 @@ var MezonApi = class {
     queryParams.set("device_id", deviceId);
     queryParams.set("platform", platform);
     let bodyJson = "";
+    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
+    const fetchOptions = buildFetchOptions("POST", options, bodyJson);
+    if (bearerToken) {
+      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+    }
+    return Promise.race([
+      fetch(fullUrl, fetchOptions).then((response) => {
+        if (response.status == 204) {
+          return response;
+        } else if (response.status >= 200 && response.status < 300) {
+          return response.json();
+        } else {
+          throw response;
+        }
+      }),
+      new Promise(
+        (_, reject) => setTimeout(reject, this.timeoutMs, "Request timed out.")
+      )
+    ]);
+  }
+  /** Search message from elasticsearch service. */
+  searchMessage(bearerToken, body, options = {}) {
+    if (body === null || body === void 0) {
+      throw new Error("'body' is a required parameter but is null or undefined.");
+    }
+    const urlPath = "/v2/es/search";
+    const queryParams = /* @__PURE__ */ new Map();
+    let bodyJson = "";
+    bodyJson = JSON.stringify(body || {});
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("POST", options, bodyJson);
     if (bearerToken) {
@@ -3296,12 +3325,13 @@ var MezonApi = class {
     ]);
   }
   /** Delete a role by ID. */
-  deleteRole(bearerToken, roleId, options = {}) {
+  deleteRole(bearerToken, roleId, channelId, options = {}) {
     if (roleId === null || roleId === void 0) {
       throw new Error("'roleId' is a required parameter but is null or undefined.");
     }
     const urlPath = "/v2/roles/{roleId}".replace("{roleId}", encodeURIComponent(String(roleId)));
     const queryParams = /* @__PURE__ */ new Map();
+    queryParams.set("channel_id", channelId);
     let bodyJson = "";
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("DELETE", options, bodyJson);
@@ -3723,7 +3753,7 @@ var MezonApi = class {
       )
     ]);
   }
-  /** Create a new group with the current user as the owner. */
+  /** Upload attachment */
   uploadAttachmentFile(bearerToken, body, options = {}) {
     if (body === null || body === void 0) {
       throw new Error("'body' is a required parameter but is null or undefined.");
@@ -5947,6 +5977,17 @@ var Client = class {
       }
       return this.apiClient.deleteNotiReactMessage(session.token, channel_id).then((response) => {
         return response !== void 0;
+      });
+    });
+  }
+  /** query message in elasticsearch */
+  searchMessage(session, request) {
+    return __async(this, null, function* () {
+      if (this.autoRefreshSession && session.refresh_token && session.isexpired((Date.now() + this.expiredTimespanMs) / 1e3)) {
+        yield this.sessionRefresh(session);
+      }
+      return this.apiClient.searchMessage(session.token, request).then((response) => {
+        return Promise.resolve(response);
       });
     });
   }

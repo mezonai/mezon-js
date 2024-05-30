@@ -1739,6 +1739,69 @@ export interface UploadAttachment {
     /** The url */
     url: string;
 }
+export interface SearchMessageRequest {
+    filters: FilterParam[];
+    /** Offset value */
+    from: number | undefined;
+    /** Page size */
+    size: number | undefined;
+    /** Sort information */
+    sorts: SortParam[];
+}
+export interface SortParam {
+    /** Field name to sort by */
+    field_name: string;
+    /** Sort order */
+    order: string;
+}
+export interface FilterParam {
+    /** Field name to filter by */
+    field_name: string;
+    /** Filter value */
+    field_value: string;
+}
+export interface SearchMessageDocument {
+    /** The message ID. */
+    message_id: string;
+    /** The channel ID. */
+    channel_id: number;
+    /** The clan ID. */
+    clan_id: number;
+    /** The user ID of sender. */
+    sender_id: number;
+    /** Message content */
+    content: string;
+    /** Mention users */
+    mention: string;
+    /** Reactions */
+    reaction: string;
+    /** Attachment */
+    attachment: string;
+    /** Reference users */
+    reference: string;
+    /** Message create time */
+    create_time: string;
+    /** Message update time */
+    update_time: string;
+    /** Channel name */
+    channel_label: string;
+    /** Channel type */
+    channel_type: number;
+    /** Clan name */
+    clan_name: string;
+    /** Sender's username */
+    username: string;
+    /** Sender's display name */
+    display_name: string;
+    /** Sender's avatar URL */
+    avatar_url: string;
+}
+export interface SearchMessageResponse {
+    /** List of paged messages. */
+    messages: SearchMessageDocument[];
+    /** The total number of messages. */
+    total: number;
+}
 export declare const Account: {
     encode(message: Account, writer?: _m0.Writer): _m0.Writer;
     decode(input: _m0.Reader | Uint8Array, length?: number): Account;
@@ -11646,6 +11709,414 @@ export declare const UploadAttachment: {
         filename?: string | undefined;
         url?: string | undefined;
     } & { [K_1 in Exclude<keyof I_1, keyof UploadAttachment>]: never; }>(object: I_1): UploadAttachment;
+};
+export declare const SearchMessageRequest: {
+    encode(message: SearchMessageRequest, writer?: _m0.Writer): _m0.Writer;
+    decode(input: _m0.Reader | Uint8Array, length?: number): SearchMessageRequest;
+    fromJSON(object: any): SearchMessageRequest;
+    toJSON(message: SearchMessageRequest): unknown;
+    create<I extends {
+        filters?: {
+            field_name?: string | undefined;
+            field_value?: string | undefined;
+        }[] | undefined;
+        from?: number | undefined;
+        size?: number | undefined;
+        sorts?: {
+            field_name?: string | undefined;
+            order?: string | undefined;
+        }[] | undefined;
+    } & {
+        filters?: ({
+            field_name?: string | undefined;
+            field_value?: string | undefined;
+        }[] & ({
+            field_name?: string | undefined;
+            field_value?: string | undefined;
+        } & {
+            field_name?: string | undefined;
+            field_value?: string | undefined;
+        } & { [K in Exclude<keyof I["filters"][number], keyof FilterParam>]: never; })[] & { [K_1 in Exclude<keyof I["filters"], keyof {
+            field_name?: string | undefined;
+            field_value?: string | undefined;
+        }[]>]: never; }) | undefined;
+        from?: number | undefined;
+        size?: number | undefined;
+        sorts?: ({
+            field_name?: string | undefined;
+            order?: string | undefined;
+        }[] & ({
+            field_name?: string | undefined;
+            order?: string | undefined;
+        } & {
+            field_name?: string | undefined;
+            order?: string | undefined;
+        } & { [K_2 in Exclude<keyof I["sorts"][number], keyof SortParam>]: never; })[] & { [K_3 in Exclude<keyof I["sorts"], keyof {
+            field_name?: string | undefined;
+            order?: string | undefined;
+        }[]>]: never; }) | undefined;
+    } & { [K_4 in Exclude<keyof I, keyof SearchMessageRequest>]: never; }>(base?: I | undefined): SearchMessageRequest;
+    fromPartial<I_1 extends {
+        filters?: {
+            field_name?: string | undefined;
+            field_value?: string | undefined;
+        }[] | undefined;
+        from?: number | undefined;
+        size?: number | undefined;
+        sorts?: {
+            field_name?: string | undefined;
+            order?: string | undefined;
+        }[] | undefined;
+    } & {
+        filters?: ({
+            field_name?: string | undefined;
+            field_value?: string | undefined;
+        }[] & ({
+            field_name?: string | undefined;
+            field_value?: string | undefined;
+        } & {
+            field_name?: string | undefined;
+            field_value?: string | undefined;
+        } & { [K_5 in Exclude<keyof I_1["filters"][number], keyof FilterParam>]: never; })[] & { [K_6 in Exclude<keyof I_1["filters"], keyof {
+            field_name?: string | undefined;
+            field_value?: string | undefined;
+        }[]>]: never; }) | undefined;
+        from?: number | undefined;
+        size?: number | undefined;
+        sorts?: ({
+            field_name?: string | undefined;
+            order?: string | undefined;
+        }[] & ({
+            field_name?: string | undefined;
+            order?: string | undefined;
+        } & {
+            field_name?: string | undefined;
+            order?: string | undefined;
+        } & { [K_7 in Exclude<keyof I_1["sorts"][number], keyof SortParam>]: never; })[] & { [K_8 in Exclude<keyof I_1["sorts"], keyof {
+            field_name?: string | undefined;
+            order?: string | undefined;
+        }[]>]: never; }) | undefined;
+    } & { [K_9 in Exclude<keyof I_1, keyof SearchMessageRequest>]: never; }>(object: I_1): SearchMessageRequest;
+};
+export declare const SortParam: {
+    encode(message: SortParam, writer?: _m0.Writer): _m0.Writer;
+    decode(input: _m0.Reader | Uint8Array, length?: number): SortParam;
+    fromJSON(object: any): SortParam;
+    toJSON(message: SortParam): unknown;
+    create<I extends {
+        field_name?: string | undefined;
+        order?: string | undefined;
+    } & {
+        field_name?: string | undefined;
+        order?: string | undefined;
+    } & { [K in Exclude<keyof I, keyof SortParam>]: never; }>(base?: I | undefined): SortParam;
+    fromPartial<I_1 extends {
+        field_name?: string | undefined;
+        order?: string | undefined;
+    } & {
+        field_name?: string | undefined;
+        order?: string | undefined;
+    } & { [K_1 in Exclude<keyof I_1, keyof SortParam>]: never; }>(object: I_1): SortParam;
+};
+export declare const FilterParam: {
+    encode(message: FilterParam, writer?: _m0.Writer): _m0.Writer;
+    decode(input: _m0.Reader | Uint8Array, length?: number): FilterParam;
+    fromJSON(object: any): FilterParam;
+    toJSON(message: FilterParam): unknown;
+    create<I extends {
+        field_name?: string | undefined;
+        field_value?: string | undefined;
+    } & {
+        field_name?: string | undefined;
+        field_value?: string | undefined;
+    } & { [K in Exclude<keyof I, keyof FilterParam>]: never; }>(base?: I | undefined): FilterParam;
+    fromPartial<I_1 extends {
+        field_name?: string | undefined;
+        field_value?: string | undefined;
+    } & {
+        field_name?: string | undefined;
+        field_value?: string | undefined;
+    } & { [K_1 in Exclude<keyof I_1, keyof FilterParam>]: never; }>(object: I_1): FilterParam;
+};
+export declare const SearchMessageDocument: {
+    encode(message: SearchMessageDocument, writer?: _m0.Writer): _m0.Writer;
+    decode(input: _m0.Reader | Uint8Array, length?: number): SearchMessageDocument;
+    fromJSON(object: any): SearchMessageDocument;
+    toJSON(message: SearchMessageDocument): unknown;
+    create<I extends {
+        message_id?: string | undefined;
+        channel_id?: number | undefined;
+        clan_id?: number | undefined;
+        sender_id?: number | undefined;
+        content?: string | undefined;
+        mention?: string | undefined;
+        reaction?: string | undefined;
+        attachment?: string | undefined;
+        reference?: string | undefined;
+        create_time?: string | undefined;
+        update_time?: string | undefined;
+        channel_label?: string | undefined;
+        channel_type?: number | undefined;
+        clan_name?: string | undefined;
+        username?: string | undefined;
+        display_name?: string | undefined;
+        avatar_url?: string | undefined;
+    } & {
+        message_id?: string | undefined;
+        channel_id?: number | undefined;
+        clan_id?: number | undefined;
+        sender_id?: number | undefined;
+        content?: string | undefined;
+        mention?: string | undefined;
+        reaction?: string | undefined;
+        attachment?: string | undefined;
+        reference?: string | undefined;
+        create_time?: string | undefined;
+        update_time?: string | undefined;
+        channel_label?: string | undefined;
+        channel_type?: number | undefined;
+        clan_name?: string | undefined;
+        username?: string | undefined;
+        display_name?: string | undefined;
+        avatar_url?: string | undefined;
+    } & { [K in Exclude<keyof I, keyof SearchMessageDocument>]: never; }>(base?: I | undefined): SearchMessageDocument;
+    fromPartial<I_1 extends {
+        message_id?: string | undefined;
+        channel_id?: number | undefined;
+        clan_id?: number | undefined;
+        sender_id?: number | undefined;
+        content?: string | undefined;
+        mention?: string | undefined;
+        reaction?: string | undefined;
+        attachment?: string | undefined;
+        reference?: string | undefined;
+        create_time?: string | undefined;
+        update_time?: string | undefined;
+        channel_label?: string | undefined;
+        channel_type?: number | undefined;
+        clan_name?: string | undefined;
+        username?: string | undefined;
+        display_name?: string | undefined;
+        avatar_url?: string | undefined;
+    } & {
+        message_id?: string | undefined;
+        channel_id?: number | undefined;
+        clan_id?: number | undefined;
+        sender_id?: number | undefined;
+        content?: string | undefined;
+        mention?: string | undefined;
+        reaction?: string | undefined;
+        attachment?: string | undefined;
+        reference?: string | undefined;
+        create_time?: string | undefined;
+        update_time?: string | undefined;
+        channel_label?: string | undefined;
+        channel_type?: number | undefined;
+        clan_name?: string | undefined;
+        username?: string | undefined;
+        display_name?: string | undefined;
+        avatar_url?: string | undefined;
+    } & { [K_1 in Exclude<keyof I_1, keyof SearchMessageDocument>]: never; }>(object: I_1): SearchMessageDocument;
+};
+export declare const SearchMessageResponse: {
+    encode(message: SearchMessageResponse, writer?: _m0.Writer): _m0.Writer;
+    decode(input: _m0.Reader | Uint8Array, length?: number): SearchMessageResponse;
+    fromJSON(object: any): SearchMessageResponse;
+    toJSON(message: SearchMessageResponse): unknown;
+    create<I extends {
+        messages?: {
+            message_id?: string | undefined;
+            channel_id?: number | undefined;
+            clan_id?: number | undefined;
+            sender_id?: number | undefined;
+            content?: string | undefined;
+            mention?: string | undefined;
+            reaction?: string | undefined;
+            attachment?: string | undefined;
+            reference?: string | undefined;
+            create_time?: string | undefined;
+            update_time?: string | undefined;
+            channel_label?: string | undefined;
+            channel_type?: number | undefined;
+            clan_name?: string | undefined;
+            username?: string | undefined;
+            display_name?: string | undefined;
+            avatar_url?: string | undefined;
+        }[] | undefined;
+        total?: number | undefined;
+    } & {
+        messages?: ({
+            message_id?: string | undefined;
+            channel_id?: number | undefined;
+            clan_id?: number | undefined;
+            sender_id?: number | undefined;
+            content?: string | undefined;
+            mention?: string | undefined;
+            reaction?: string | undefined;
+            attachment?: string | undefined;
+            reference?: string | undefined;
+            create_time?: string | undefined;
+            update_time?: string | undefined;
+            channel_label?: string | undefined;
+            channel_type?: number | undefined;
+            clan_name?: string | undefined;
+            username?: string | undefined;
+            display_name?: string | undefined;
+            avatar_url?: string | undefined;
+        }[] & ({
+            message_id?: string | undefined;
+            channel_id?: number | undefined;
+            clan_id?: number | undefined;
+            sender_id?: number | undefined;
+            content?: string | undefined;
+            mention?: string | undefined;
+            reaction?: string | undefined;
+            attachment?: string | undefined;
+            reference?: string | undefined;
+            create_time?: string | undefined;
+            update_time?: string | undefined;
+            channel_label?: string | undefined;
+            channel_type?: number | undefined;
+            clan_name?: string | undefined;
+            username?: string | undefined;
+            display_name?: string | undefined;
+            avatar_url?: string | undefined;
+        } & {
+            message_id?: string | undefined;
+            channel_id?: number | undefined;
+            clan_id?: number | undefined;
+            sender_id?: number | undefined;
+            content?: string | undefined;
+            mention?: string | undefined;
+            reaction?: string | undefined;
+            attachment?: string | undefined;
+            reference?: string | undefined;
+            create_time?: string | undefined;
+            update_time?: string | undefined;
+            channel_label?: string | undefined;
+            channel_type?: number | undefined;
+            clan_name?: string | undefined;
+            username?: string | undefined;
+            display_name?: string | undefined;
+            avatar_url?: string | undefined;
+        } & { [K in Exclude<keyof I["messages"][number], keyof SearchMessageDocument>]: never; })[] & { [K_1 in Exclude<keyof I["messages"], keyof {
+            message_id?: string | undefined;
+            channel_id?: number | undefined;
+            clan_id?: number | undefined;
+            sender_id?: number | undefined;
+            content?: string | undefined;
+            mention?: string | undefined;
+            reaction?: string | undefined;
+            attachment?: string | undefined;
+            reference?: string | undefined;
+            create_time?: string | undefined;
+            update_time?: string | undefined;
+            channel_label?: string | undefined;
+            channel_type?: number | undefined;
+            clan_name?: string | undefined;
+            username?: string | undefined;
+            display_name?: string | undefined;
+            avatar_url?: string | undefined;
+        }[]>]: never; }) | undefined;
+        total?: number | undefined;
+    } & { [K_2 in Exclude<keyof I, keyof SearchMessageResponse>]: never; }>(base?: I | undefined): SearchMessageResponse;
+    fromPartial<I_1 extends {
+        messages?: {
+            message_id?: string | undefined;
+            channel_id?: number | undefined;
+            clan_id?: number | undefined;
+            sender_id?: number | undefined;
+            content?: string | undefined;
+            mention?: string | undefined;
+            reaction?: string | undefined;
+            attachment?: string | undefined;
+            reference?: string | undefined;
+            create_time?: string | undefined;
+            update_time?: string | undefined;
+            channel_label?: string | undefined;
+            channel_type?: number | undefined;
+            clan_name?: string | undefined;
+            username?: string | undefined;
+            display_name?: string | undefined;
+            avatar_url?: string | undefined;
+        }[] | undefined;
+        total?: number | undefined;
+    } & {
+        messages?: ({
+            message_id?: string | undefined;
+            channel_id?: number | undefined;
+            clan_id?: number | undefined;
+            sender_id?: number | undefined;
+            content?: string | undefined;
+            mention?: string | undefined;
+            reaction?: string | undefined;
+            attachment?: string | undefined;
+            reference?: string | undefined;
+            create_time?: string | undefined;
+            update_time?: string | undefined;
+            channel_label?: string | undefined;
+            channel_type?: number | undefined;
+            clan_name?: string | undefined;
+            username?: string | undefined;
+            display_name?: string | undefined;
+            avatar_url?: string | undefined;
+        }[] & ({
+            message_id?: string | undefined;
+            channel_id?: number | undefined;
+            clan_id?: number | undefined;
+            sender_id?: number | undefined;
+            content?: string | undefined;
+            mention?: string | undefined;
+            reaction?: string | undefined;
+            attachment?: string | undefined;
+            reference?: string | undefined;
+            create_time?: string | undefined;
+            update_time?: string | undefined;
+            channel_label?: string | undefined;
+            channel_type?: number | undefined;
+            clan_name?: string | undefined;
+            username?: string | undefined;
+            display_name?: string | undefined;
+            avatar_url?: string | undefined;
+        } & {
+            message_id?: string | undefined;
+            channel_id?: number | undefined;
+            clan_id?: number | undefined;
+            sender_id?: number | undefined;
+            content?: string | undefined;
+            mention?: string | undefined;
+            reaction?: string | undefined;
+            attachment?: string | undefined;
+            reference?: string | undefined;
+            create_time?: string | undefined;
+            update_time?: string | undefined;
+            channel_label?: string | undefined;
+            channel_type?: number | undefined;
+            clan_name?: string | undefined;
+            username?: string | undefined;
+            display_name?: string | undefined;
+            avatar_url?: string | undefined;
+        } & { [K_3 in Exclude<keyof I_1["messages"][number], keyof SearchMessageDocument>]: never; })[] & { [K_4 in Exclude<keyof I_1["messages"], keyof {
+            message_id?: string | undefined;
+            channel_id?: number | undefined;
+            clan_id?: number | undefined;
+            sender_id?: number | undefined;
+            content?: string | undefined;
+            mention?: string | undefined;
+            reaction?: string | undefined;
+            attachment?: string | undefined;
+            reference?: string | undefined;
+            create_time?: string | undefined;
+            update_time?: string | undefined;
+            channel_label?: string | undefined;
+            channel_type?: number | undefined;
+            clan_name?: string | undefined;
+            username?: string | undefined;
+            display_name?: string | undefined;
+            avatar_url?: string | undefined;
+        }[]>]: never; }) | undefined;
+        total?: number | undefined;
+    } & { [K_5 in Exclude<keyof I_1, keyof SearchMessageResponse>]: never; }>(object: I_1): SearchMessageResponse;
 };
 type Builtin = Date | Function | Uint8Array | string | number | boolean | undefined;
 export type DeepPartial<T> = T extends Builtin ? T : T extends Array<infer U> ? Array<DeepPartial<U>> : T extends ReadonlyArray<infer U> ? ReadonlyArray<DeepPartial<U>> : T extends {} ? {
