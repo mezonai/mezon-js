@@ -324,6 +324,8 @@ export interface ChannelMessageSend {
   mode: number;
   /** anonymous message */
   anonymous_message: boolean;
+  /** mention everyone */
+  mention_everyone: boolean;
 }
 
 /** Update a message previously sent to a realtime channel. */
@@ -2269,6 +2271,7 @@ function createBaseChannelMessageSend(): ChannelMessageSend {
     references: [],
     mode: 0,
     anonymous_message: false,
+    mention_everyone: false,
   };
 }
 
@@ -2300,6 +2303,9 @@ export const ChannelMessageSend = {
     }
     if (message.anonymous_message === true) {
       writer.uint32(72).bool(message.anonymous_message);
+    }
+    if (message.mention_everyone === true) {
+      writer.uint32(80).bool(message.mention_everyone);
     }
     return writer;
   },
@@ -2338,6 +2344,9 @@ export const ChannelMessageSend = {
         case 9:
           message.anonymous_message = reader.bool();
           break;
+        case 10:
+          message.mention_everyone = reader.bool();
+          break;
         default:
           reader.skipType(tag & 7);
           break;
@@ -2359,6 +2368,7 @@ export const ChannelMessageSend = {
       references: Array.isArray(object?.references) ? object.references.map((e: any) => MessageRef.fromJSON(e)) : [],
       mode: isSet(object.mode) ? Number(object.mode) : 0,
       anonymous_message: isSet(object.anonymous_message) ? Boolean(object.anonymous_message) : false,
+      mention_everyone: isSet(object.mention_everyone) ? Boolean(object.mention_everyone) : false,
     };
   },
 
@@ -2385,6 +2395,7 @@ export const ChannelMessageSend = {
     }
     message.mode !== undefined && (obj.mode = Math.round(message.mode));
     message.anonymous_message !== undefined && (obj.anonymous_message = message.anonymous_message);
+    message.mention_everyone !== undefined && (obj.mention_everyone = message.mention_everyone);
     return obj;
   },
 
@@ -2403,6 +2414,7 @@ export const ChannelMessageSend = {
     message.references = object.references?.map((e) => MessageRef.fromPartial(e)) || [];
     message.mode = object.mode ?? 0;
     message.anonymous_message = object.anonymous_message ?? false;
+    message.mention_everyone = object.mention_everyone ?? false;
     return message;
   },
 };

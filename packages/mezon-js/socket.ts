@@ -274,6 +274,8 @@ interface ChannelMessageSend {
     attachments?: Array<MessageAttachmentEvent>;
     //
     anonymous_message?: boolean;
+    //
+    mention_everyone?: boolean;
   };
 }
 
@@ -715,7 +717,7 @@ export interface Socket {
   updateStatus(status? : string) : Promise<void>;
 
   /** Send a chat message to a chat channel on the server. */
-  writeChatMessage(clan_id: string, channel_id: string, channel_label: string, mode: number, content?: any, mentions?: Array<ApiMessageMention>, attachments?: Array<ApiMessageAttachment>, references?: Array<ApiMessageRef>, anonymous_message?: boolean) : Promise<ChannelMessageAck>;
+  writeChatMessage(clan_id: string, channel_id: string, channel_label: string, mode: number, content?: any, mentions?: Array<ApiMessageMention>, attachments?: Array<ApiMessageAttachment>, references?: Array<ApiMessageRef>, anonymous_message?: boolean, mention_everyone?:boolean) : Promise<ChannelMessageAck>;
 
   /** Send message typing */
   writeMessageTyping(channel_id: string, channel_label: string, mode: number) : Promise<MessageTypingEvent>;  
@@ -1305,8 +1307,8 @@ export class DefaultSocket implements Socket {
     return this.send({status_update: {status: status}});
   }
 
-  async writeChatMessage(clan_id: string, channel_id: string, channel_label: string, mode: number, content: any, mentions?: Array<ApiMessageMention>, attachments?: Array<ApiMessageAttachment>, references?: Array<ApiMessageRef>, anonymous_message?: boolean ): Promise<ChannelMessageAck> {
-    const response = await this.send({channel_message_send: {clan_id: clan_id, channel_id: channel_id, channel_label:channel_label, mode:mode, content: content, mentions: mentions, attachments: attachments, references: references, anonymous_message: anonymous_message}});
+  async writeChatMessage(clan_id: string, channel_id: string, channel_label: string, mode: number, content: any, mentions?: Array<ApiMessageMention>, attachments?: Array<ApiMessageAttachment>, references?: Array<ApiMessageRef>, anonymous_message?: boolean, mention_everyone?:Boolean ): Promise<ChannelMessageAck> {
+    const response = await this.send({channel_message_send: {clan_id: clan_id, channel_id: channel_id, channel_label:channel_label, mode:mode, content: content, mentions: mentions, attachments: attachments, references: references, anonymous_message: anonymous_message, mention_everyone:mention_everyone}});
     return response.channel_message_ack;
   }
 
