@@ -4427,9 +4427,9 @@ var _DefaultSocket = class _DefaultSocket {
   updateStatus(status) {
     return this.send({ status_update: { status } });
   }
-  writeChatMessage(clan_id, channel_id, channel_label, mode, content, mentions, attachments, references, anonymous_message) {
+  writeChatMessage(clan_id, channel_id, channel_label, mode, content, mentions, attachments, references, anonymous_message, mention_everyone) {
     return __async(this, null, function* () {
-      const response = yield this.send({ channel_message_send: { clan_id, channel_id, channel_label, mode, content, mentions, attachments, references, anonymous_message } });
+      const response = yield this.send({ channel_message_send: { clan_id, channel_id, channel_label, mode, content, mentions, attachments, references, anonymous_message, mention_everyone } });
       return response.channel_message_ack;
     });
   }
@@ -5103,7 +5103,7 @@ var Client = class {
             filetype: at.filetype,
             id: at.id,
             uploader: at.uploader,
-            url: at.uploader
+            url: at.url
           });
         });
         return Promise.resolve(result);
