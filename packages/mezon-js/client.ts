@@ -1142,7 +1142,7 @@ export class Client {
           filetype: at.filetype,
           id: at.id,
           uploader: at.uploader,
-          url: at.uploader
+          url: at.url
         })
       });
       return Promise.resolve(result);
