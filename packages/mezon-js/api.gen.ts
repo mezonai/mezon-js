@@ -799,6 +799,38 @@ export interface ApiPermissionList {
   permissions?: Array<ApiPermission>;
 }
 
+/**  */
+export interface ApiPinMessage {
+  //
+  avatar?: string;
+  //
+  channel_id?: string;
+  //
+  content?: string;
+  //
+  id?: string;
+  //
+  message_id?: string;
+  //
+  sender_id?: string;
+  //
+  username?: string;
+}
+
+/**  */
+export interface ApiPinMessageRequest {
+  //
+  channel_id?: string;
+  //
+  message_id?: string;
+}
+
+/**  */
+export interface ApiPinMessagesList {
+  //
+  pin_messages_list?: Array<ApiPinMessage>;
+}
+
 /** Storage objects to get. */
 export interface ApiReadStorageObjectId {
   //The collection which stores the object.
@@ -4444,6 +4476,108 @@ export class MezonApi {
 
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("GET", options, bodyJson);
+    if (bearerToken) {
+        fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+    }
+
+    return Promise.race([
+      fetch(fullUrl, fetchOptions).then((response) => {
+        if (response.status == 204) {
+          return response;
+        } else if (response.status >= 200 && response.status < 300) {
+          return response.json();
+        } else {
+          throw response;
+        }
+      }),
+      new Promise((_, reject) =>
+        setTimeout(reject, this.timeoutMs, "Request timed out.")
+      ),
+    ]);
+}
+
+  /**  */
+  deletePinMessage(bearerToken: string,
+      messageId?:string,
+      options: any = {}): Promise<any> {
+    
+    const urlPath = "/v2/pinmessage/delete";
+    const queryParams = new Map<string, any>();
+    queryParams.set("message_id", messageId);
+
+    let bodyJson : string = "";
+
+    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
+    const fetchOptions = buildFetchOptions("DELETE", options, bodyJson);
+    if (bearerToken) {
+        fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+    }
+
+    return Promise.race([
+      fetch(fullUrl, fetchOptions).then((response) => {
+        if (response.status == 204) {
+          return response;
+        } else if (response.status >= 200 && response.status < 300) {
+          return response.json();
+        } else {
+          throw response;
+        }
+      }),
+      new Promise((_, reject) =>
+        setTimeout(reject, this.timeoutMs, "Request timed out.")
+      ),
+    ]);
+}
+
+  /**  */
+  getPinMessagesList(bearerToken: string,
+      channelId?:string,
+      options: any = {}): Promise<ApiPinMessagesList> {
+    
+    const urlPath = "/v2/pinmessage/get";
+    const queryParams = new Map<string, any>();
+    queryParams.set("channel_id", channelId);
+
+    let bodyJson : string = "";
+
+    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
+    const fetchOptions = buildFetchOptions("GET", options, bodyJson);
+    if (bearerToken) {
+        fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+    }
+
+    return Promise.race([
+      fetch(fullUrl, fetchOptions).then((response) => {
+        if (response.status == 204) {
+          return response;
+        } else if (response.status >= 200 && response.status < 300) {
+          return response.json();
+        } else {
+          throw response;
+        }
+      }),
+      new Promise((_, reject) =>
+        setTimeout(reject, this.timeoutMs, "Request timed out.")
+      ),
+    ]);
+}
+
+  /** set notification user channel. */
+  createPinMessage(bearerToken: string,
+      body:ApiPinMessageRequest,
+      options: any = {}): Promise<any> {
+    
+    if (body === null || body === undefined) {
+      throw new Error("'body' is a required parameter but is null or undefined.");
+    }
+    const urlPath = "/v2/pinmessage/set";
+    const queryParams = new Map<string, any>();
+
+    let bodyJson : string = "";
+    bodyJson = JSON.stringify(body || {});
+
+    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
+    const fetchOptions = buildFetchOptions("POST", options, bodyJson);
     if (bearerToken) {
         fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
     }
