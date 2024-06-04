@@ -88,6 +88,8 @@ import {
   ApiSetMuteNotificationRequest,
   ApiSearchMessageRequest,
   ApiSearchMessageResponse,
+  ApiPinMessageRequest,
+  ApiPinMessagesList,
 } from "./api.gen";
 
 import { Session } from "./session";
@@ -1138,7 +1140,7 @@ export class Client {
       response.attachments!.forEach(at => {
         result.attachments!.push({
           filename: at.filename,
-          filesize: at.filetype,
+          filesize: at.filesize,
           filetype: at.filetype,
           id: at.id,
           uploader: at.uploader,
@@ -2117,6 +2119,42 @@ async searchMessage(session: Session, request: ApiSearchMessageRequest): Promise
     return Promise.resolve(response);
   });
 }
+
+/** */
+async createPinMessage(session: Session, request: ApiPinMessageRequest): Promise<boolean> {
+ if (this.autoRefreshSession && session.refresh_token &&
+     session.isexpired((Date.now() + this.expiredTimespanMs)/1000)) {
+     await this.sessionRefresh(session);
+ }
+
+ return this.apiClient.createPinMessage(session.token, request).then((response: any) => {
+   return response !== undefined;
+ });
+}
+
+async getPinMessagesList(session: Session, channelId: string): Promise<ApiPinMessagesList> {
+  if (this.autoRefreshSession && session.refresh_token &&
+      session.isexpired((Date.now() + this.expiredTimespanMs)/1000)) {
+      await this.sessionRefresh(session);
+  }
+
+  return this.apiClient.getPinMessagesList(session.token, channelId).then((response: ApiPinMessagesList) => {
+    return Promise.resolve(response);
+  });
+}
+
+//** */
+async deletePinMessage(session: Session, message_id: string): Promise<boolean> {
+  if (this.autoRefreshSession && session.refresh_token &&
+      session.isexpired((Date.now() + this.expiredTimespanMs)/1000)) {
+      await this.sessionRefresh(session);
+  }
+
+  return this.apiClient.deletePinMessage(session.token, message_id).then((response: any) => {
+    return response !== undefined;
+  });
+}
+
 };
 
 

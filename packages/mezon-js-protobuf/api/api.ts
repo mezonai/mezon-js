@@ -2004,6 +2004,34 @@ export interface NotificationChannelCategoySettingsList {
   noti_channel_categoy_setting: NotificationChannelCategoySetting[];
 }
 
+/**  */
+export interface DeletePinMessage {
+  /**  */
+  message_id: string;
+}
+
+/**  */
+export interface PinMessage {
+  /**  */
+  id: string;
+  /**  */
+  message_id: string;
+  /**  */
+  channel_id: string;
+  /**  */
+  sender_id: string;
+  /**  */
+  content: string;
+  /**  */
+  username: string;
+  /**  */
+  avatar: string;
+}
+
+export interface PinMessagesList {
+  pin_messages_list: PinMessage[];
+}
+
 /** Notification channel */
 export interface NotificationUserChannel {
   /** Notification id */
@@ -2057,6 +2085,12 @@ export interface SetNotificationRequest {
   channel_id: string;
   notification_type: string;
   time_mute: Date | undefined;
+}
+
+/**  */
+export interface PinMessageRequest {
+  message_id: string;
+  channel_id: string;
 }
 
 /** set notification */
@@ -14052,6 +14086,223 @@ export const NotificationChannelCategoySettingsList = {
   },
 };
 
+function createBaseDeletePinMessage(): DeletePinMessage {
+  return { message_id: "" };
+}
+
+export const DeletePinMessage = {
+  encode(message: DeletePinMessage, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.message_id !== "") {
+      writer.uint32(10).string(message.message_id);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): DeletePinMessage {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseDeletePinMessage();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.message_id = reader.string();
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): DeletePinMessage {
+    return { message_id: isSet(object.message_id) ? String(object.message_id) : "" };
+  },
+
+  toJSON(message: DeletePinMessage): unknown {
+    const obj: any = {};
+    message.message_id !== undefined && (obj.message_id = message.message_id);
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<DeletePinMessage>, I>>(base?: I): DeletePinMessage {
+    return DeletePinMessage.fromPartial(base ?? {});
+  },
+
+  fromPartial<I extends Exact<DeepPartial<DeletePinMessage>, I>>(object: I): DeletePinMessage {
+    const message = createBaseDeletePinMessage();
+    message.message_id = object.message_id ?? "";
+    return message;
+  },
+};
+
+function createBasePinMessage(): PinMessage {
+  return { id: "", message_id: "", channel_id: "", sender_id: "", content: "", username: "", avatar: "" };
+}
+
+export const PinMessage = {
+  encode(message: PinMessage, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.id !== "") {
+      writer.uint32(10).string(message.id);
+    }
+    if (message.message_id !== "") {
+      writer.uint32(18).string(message.message_id);
+    }
+    if (message.channel_id !== "") {
+      writer.uint32(26).string(message.channel_id);
+    }
+    if (message.sender_id !== "") {
+      writer.uint32(34).string(message.sender_id);
+    }
+    if (message.content !== "") {
+      writer.uint32(42).string(message.content);
+    }
+    if (message.username !== "") {
+      writer.uint32(50).string(message.username);
+    }
+    if (message.avatar !== "") {
+      writer.uint32(58).string(message.avatar);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): PinMessage {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBasePinMessage();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.id = reader.string();
+          break;
+        case 2:
+          message.message_id = reader.string();
+          break;
+        case 3:
+          message.channel_id = reader.string();
+          break;
+        case 4:
+          message.sender_id = reader.string();
+          break;
+        case 5:
+          message.content = reader.string();
+          break;
+        case 6:
+          message.username = reader.string();
+          break;
+        case 7:
+          message.avatar = reader.string();
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): PinMessage {
+    return {
+      id: isSet(object.id) ? String(object.id) : "",
+      message_id: isSet(object.message_id) ? String(object.message_id) : "",
+      channel_id: isSet(object.channel_id) ? String(object.channel_id) : "",
+      sender_id: isSet(object.sender_id) ? String(object.sender_id) : "",
+      content: isSet(object.content) ? String(object.content) : "",
+      username: isSet(object.username) ? String(object.username) : "",
+      avatar: isSet(object.avatar) ? String(object.avatar) : "",
+    };
+  },
+
+  toJSON(message: PinMessage): unknown {
+    const obj: any = {};
+    message.id !== undefined && (obj.id = message.id);
+    message.message_id !== undefined && (obj.message_id = message.message_id);
+    message.channel_id !== undefined && (obj.channel_id = message.channel_id);
+    message.sender_id !== undefined && (obj.sender_id = message.sender_id);
+    message.content !== undefined && (obj.content = message.content);
+    message.username !== undefined && (obj.username = message.username);
+    message.avatar !== undefined && (obj.avatar = message.avatar);
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<PinMessage>, I>>(base?: I): PinMessage {
+    return PinMessage.fromPartial(base ?? {});
+  },
+
+  fromPartial<I extends Exact<DeepPartial<PinMessage>, I>>(object: I): PinMessage {
+    const message = createBasePinMessage();
+    message.id = object.id ?? "";
+    message.message_id = object.message_id ?? "";
+    message.channel_id = object.channel_id ?? "";
+    message.sender_id = object.sender_id ?? "";
+    message.content = object.content ?? "";
+    message.username = object.username ?? "";
+    message.avatar = object.avatar ?? "";
+    return message;
+  },
+};
+
+function createBasePinMessagesList(): PinMessagesList {
+  return { pin_messages_list: [] };
+}
+
+export const PinMessagesList = {
+  encode(message: PinMessagesList, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    for (const v of message.pin_messages_list) {
+      PinMessage.encode(v!, writer.uint32(10).fork()).ldelim();
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): PinMessagesList {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBasePinMessagesList();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.pin_messages_list.push(PinMessage.decode(reader, reader.uint32()));
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): PinMessagesList {
+    return {
+      pin_messages_list: Array.isArray(object?.pin_messages_list)
+        ? object.pin_messages_list.map((e: any) => PinMessage.fromJSON(e))
+        : [],
+    };
+  },
+
+  toJSON(message: PinMessagesList): unknown {
+    const obj: any = {};
+    if (message.pin_messages_list) {
+      obj.pin_messages_list = message.pin_messages_list.map((e) => e ? PinMessage.toJSON(e) : undefined);
+    } else {
+      obj.pin_messages_list = [];
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<PinMessagesList>, I>>(base?: I): PinMessagesList {
+    return PinMessagesList.fromPartial(base ?? {});
+  },
+
+  fromPartial<I extends Exact<DeepPartial<PinMessagesList>, I>>(object: I): PinMessagesList {
+    const message = createBasePinMessagesList();
+    message.pin_messages_list = object.pin_messages_list?.map((e) => PinMessage.fromPartial(e)) || [];
+    return message;
+  },
+};
+
 function createBaseNotificationUserChannel(): NotificationUserChannel {
   return { id: "", notification_setting_type: "", time_mute: undefined, active: 0 };
 }
@@ -14485,6 +14736,68 @@ export const SetNotificationRequest = {
     message.channel_id = object.channel_id ?? "";
     message.notification_type = object.notification_type ?? "";
     message.time_mute = object.time_mute ?? undefined;
+    return message;
+  },
+};
+
+function createBasePinMessageRequest(): PinMessageRequest {
+  return { message_id: "", channel_id: "" };
+}
+
+export const PinMessageRequest = {
+  encode(message: PinMessageRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.message_id !== "") {
+      writer.uint32(10).string(message.message_id);
+    }
+    if (message.channel_id !== "") {
+      writer.uint32(18).string(message.channel_id);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): PinMessageRequest {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBasePinMessageRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.message_id = reader.string();
+          break;
+        case 2:
+          message.channel_id = reader.string();
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): PinMessageRequest {
+    return {
+      message_id: isSet(object.message_id) ? String(object.message_id) : "",
+      channel_id: isSet(object.channel_id) ? String(object.channel_id) : "",
+    };
+  },
+
+  toJSON(message: PinMessageRequest): unknown {
+    const obj: any = {};
+    message.message_id !== undefined && (obj.message_id = message.message_id);
+    message.channel_id !== undefined && (obj.channel_id = message.channel_id);
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<PinMessageRequest>, I>>(base?: I): PinMessageRequest {
+    return PinMessageRequest.fromPartial(base ?? {});
+  },
+
+  fromPartial<I extends Exact<DeepPartial<PinMessageRequest>, I>>(object: I): PinMessageRequest {
+    const message = createBasePinMessageRequest();
+    message.message_id = object.message_id ?? "";
+    message.channel_id = object.channel_id ?? "";
     return message;
   },
 };
