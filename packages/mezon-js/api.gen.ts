@@ -174,6 +174,8 @@ export interface ApiCategoryDescList {
 
 /**  */
 export interface ApiChannelAttachment {
+  //The UNIX time (for gRPC clients) or ISO string (for REST clients) when the group was created.
+  create_time?: string;
   //
   filename?: string;
   //

@@ -101,6 +101,7 @@ export interface ApiCategoryDescList {
 }
 /**  */
 export interface ApiChannelAttachment {
+    create_time?: string;
     filename?: string;
     filesize?: string;
     filetype?: string;
@@ -459,6 +460,25 @@ export interface ApiPermission {
 /** A list of permission description, usually a result of a list operation. */
 export interface ApiPermissionList {
     permissions?: Array<ApiPermission>;
+}
+/**  */
+export interface ApiPinMessage {
+    avatar?: string;
+    channel_id?: string;
+    content?: string;
+    id?: string;
+    message_id?: string;
+    sender_id?: string;
+    username?: string;
+}
+/**  */
+export interface ApiPinMessageRequest {
+    channel_id?: string;
+    message_id?: string;
+}
+/**  */
+export interface ApiPinMessagesList {
+    pin_messages_list?: Array<ApiPinMessage>;
 }
 /** Storage objects to get. */
 export interface ApiReadStorageObjectId {
@@ -885,6 +905,12 @@ export declare class MezonApi {
     getListPermission(bearerToken: string, options?: any): Promise<ApiPermissionList>;
     /**  */
     GetPermissionOfUserInTheClan(bearerToken: string, clanId: string, options?: any): Promise<ApiPermissionList>;
+    /**  */
+    deletePinMessage(bearerToken: string, messageId?: string, options?: any): Promise<any>;
+    /**  */
+    getPinMessagesList(bearerToken: string, channelId?: string, options?: any): Promise<ApiPinMessagesList>;
+    /** set notification user channel. */
+    createPinMessage(bearerToken: string, body: ApiPinMessageRequest, options?: any): Promise<any>;
     /**  */
     addRolesChannelDesc(bearerToken: string, body: ApiAddRoleChannelDescRequest, options?: any): Promise<any>;
     /** Update a role when Delete a role by ID. */

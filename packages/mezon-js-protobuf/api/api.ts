@@ -952,6 +952,8 @@ export interface ChannelAttachment {
   url: string;
   /** uploader */
   uploader: string;
+  /** The UNIX time (for gRPC clients) or ISO string (for REST clients) when the group was created. */
+  create_time: Date | undefined;
 }
 
 /** channel attachment list */
@@ -7362,7 +7364,7 @@ export const VoiceChannelUserList = {
 };
 
 function createBaseChannelAttachment(): ChannelAttachment {
-  return { id: "", filename: "", filetype: "", filesize: "", url: "", uploader: "" };
+  return { id: "", filename: "", filetype: "", filesize: "", url: "", uploader: "", create_time: undefined };
 }
 
 export const ChannelAttachment = {
@@ -7384,6 +7386,9 @@ export const ChannelAttachment = {
     }
     if (message.uploader !== "") {
       writer.uint32(50).string(message.uploader);
+    }
+    if (message.create_time !== undefined) {
+      Timestamp.encode(toTimestamp(message.create_time), writer.uint32(58).fork()).ldelim();
     }
     return writer;
   },
@@ -7413,6 +7418,9 @@ export const ChannelAttachment = {
         case 6:
           message.uploader = reader.string();
           break;
+        case 7:
+          message.create_time = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
+          break;
         default:
           reader.skipType(tag & 7);
           break;
@@ -7429,6 +7437,7 @@ export const ChannelAttachment = {
       filesize: isSet(object.filesize) ? String(object.filesize) : "",
       url: isSet(object.url) ? String(object.url) : "",
       uploader: isSet(object.uploader) ? String(object.uploader) : "",
+      create_time: isSet(object.create_time) ? fromJsonTimestamp(object.create_time) : undefined,
     };
   },
 
@@ -7440,6 +7449,7 @@ export const ChannelAttachment = {
     message.filesize !== undefined && (obj.filesize = message.filesize);
     message.url !== undefined && (obj.url = message.url);
     message.uploader !== undefined && (obj.uploader = message.uploader);
+    message.create_time !== undefined && (obj.create_time = message.create_time.toISOString());
     return obj;
   },
 
@@ -7455,6 +7465,7 @@ export const ChannelAttachment = {
     message.filesize = object.filesize ?? "";
     message.url = object.url ?? "";
     message.uploader = object.uploader ?? "";
+    message.create_time = object.create_time ?? undefined;
     return message;
   },
 };

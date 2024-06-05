@@ -3177,6 +3177,87 @@ var MezonApi = class {
     ]);
   }
   /**  */
+  deletePinMessage(bearerToken, messageId, options = {}) {
+    const urlPath = "/v2/pinmessage/delete";
+    const queryParams = /* @__PURE__ */ new Map();
+    queryParams.set("message_id", messageId);
+    let bodyJson = "";
+    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
+    const fetchOptions = buildFetchOptions("DELETE", options, bodyJson);
+    if (bearerToken) {
+      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+    }
+    return Promise.race([
+      fetch(fullUrl, fetchOptions).then((response) => {
+        if (response.status == 204) {
+          return response;
+        } else if (response.status >= 200 && response.status < 300) {
+          return response.json();
+        } else {
+          throw response;
+        }
+      }),
+      new Promise(
+        (_, reject) => setTimeout(reject, this.timeoutMs, "Request timed out.")
+      )
+    ]);
+  }
+  /**  */
+  getPinMessagesList(bearerToken, channelId, options = {}) {
+    const urlPath = "/v2/pinmessage/get";
+    const queryParams = /* @__PURE__ */ new Map();
+    queryParams.set("channel_id", channelId);
+    let bodyJson = "";
+    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
+    const fetchOptions = buildFetchOptions("GET", options, bodyJson);
+    if (bearerToken) {
+      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+    }
+    return Promise.race([
+      fetch(fullUrl, fetchOptions).then((response) => {
+        if (response.status == 204) {
+          return response;
+        } else if (response.status >= 200 && response.status < 300) {
+          return response.json();
+        } else {
+          throw response;
+        }
+      }),
+      new Promise(
+        (_, reject) => setTimeout(reject, this.timeoutMs, "Request timed out.")
+      )
+    ]);
+  }
+  /** set notification user channel. */
+  createPinMessage(bearerToken, body, options = {}) {
+    if (body === null || body === void 0) {
+      throw new Error("'body' is a required parameter but is null or undefined.");
+    }
+    const urlPath = "/v2/pinmessage/set";
+    const queryParams = /* @__PURE__ */ new Map();
+    let bodyJson = "";
+    bodyJson = JSON.stringify(body || {});
+    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
+    const fetchOptions = buildFetchOptions("POST", options, bodyJson);
+    if (bearerToken) {
+      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+    }
+    return Promise.race([
+      fetch(fullUrl, fetchOptions).then((response) => {
+        if (response.status == 204) {
+          return response;
+        } else if (response.status >= 200 && response.status < 300) {
+          return response.json();
+        } else {
+          throw response;
+        }
+      }),
+      new Promise(
+        (_, reject) => setTimeout(reject, this.timeoutMs, "Request timed out.")
+      )
+    ]);
+  }
+  /**  */
   addRolesChannelDesc(bearerToken, body, options = {}) {
     if (body === null || body === void 0) {
       throw new Error("'body' is a required parameter but is null or undefined.");
@@ -5099,7 +5180,7 @@ var Client = class {
         response.attachments.forEach((at) => {
           result.attachments.push({
             filename: at.filename,
-            filesize: at.filetype,
+            filesize: at.filesize,
             filetype: at.filetype,
             id: at.id,
             uploader: at.uploader,
@@ -5988,6 +6069,38 @@ var Client = class {
       }
       return this.apiClient.searchMessage(session.token, request).then((response) => {
         return Promise.resolve(response);
+      });
+    });
+  }
+  /** */
+  createPinMessage(session, request) {
+    return __async(this, null, function* () {
+      if (this.autoRefreshSession && session.refresh_token && session.isexpired((Date.now() + this.expiredTimespanMs) / 1e3)) {
+        yield this.sessionRefresh(session);
+      }
+      return this.apiClient.createPinMessage(session.token, request).then((response) => {
+        return response !== void 0;
+      });
+    });
+  }
+  getPinMessagesList(session, channelId) {
+    return __async(this, null, function* () {
+      if (this.autoRefreshSession && session.refresh_token && session.isexpired((Date.now() + this.expiredTimespanMs) / 1e3)) {
+        yield this.sessionRefresh(session);
+      }
+      return this.apiClient.getPinMessagesList(session.token, channelId).then((response) => {
+        return Promise.resolve(response);
+      });
+    });
+  }
+  //** */
+  deletePinMessage(session, message_id) {
+    return __async(this, null, function* () {
+      if (this.autoRefreshSession && session.refresh_token && session.isexpired((Date.now() + this.expiredTimespanMs) / 1e3)) {
+        yield this.sessionRefresh(session);
+      }
+      return this.apiClient.deletePinMessage(session.token, message_id).then((response) => {
+        return response !== void 0;
       });
     });
   }

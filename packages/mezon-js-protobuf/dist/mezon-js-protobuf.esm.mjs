@@ -4100,7 +4100,8 @@ function createBaseChannelMessageSend() {
     attachments: [],
     references: [],
     mode: 0,
-    anonymous_message: false
+    anonymous_message: false,
+    mention_everyone: false
   };
 }
 var ChannelMessageSend = {
@@ -4131,6 +4132,9 @@ var ChannelMessageSend = {
     }
     if (message.anonymous_message === true) {
       writer.uint32(72).bool(message.anonymous_message);
+    }
+    if (message.mention_everyone === true) {
+      writer.uint32(80).bool(message.mention_everyone);
     }
     return writer;
   },
@@ -4168,6 +4172,9 @@ var ChannelMessageSend = {
         case 9:
           message.anonymous_message = reader.bool();
           break;
+        case 10:
+          message.mention_everyone = reader.bool();
+          break;
         default:
           reader.skipType(tag & 7);
           break;
@@ -4185,7 +4192,8 @@ var ChannelMessageSend = {
       attachments: Array.isArray(object == null ? void 0 : object.attachments) ? object.attachments.map((e) => MessageAttachment.fromJSON(e)) : [],
       references: Array.isArray(object == null ? void 0 : object.references) ? object.references.map((e) => MessageRef.fromJSON(e)) : [],
       mode: isSet4(object.mode) ? Number(object.mode) : 0,
-      anonymous_message: isSet4(object.anonymous_message) ? Boolean(object.anonymous_message) : false
+      anonymous_message: isSet4(object.anonymous_message) ? Boolean(object.anonymous_message) : false,
+      mention_everyone: isSet4(object.mention_everyone) ? Boolean(object.mention_everyone) : false
     };
   },
   toJSON(message) {
@@ -4211,13 +4219,14 @@ var ChannelMessageSend = {
     }
     message.mode !== void 0 && (obj.mode = Math.round(message.mode));
     message.anonymous_message !== void 0 && (obj.anonymous_message = message.anonymous_message);
+    message.mention_everyone !== void 0 && (obj.mention_everyone = message.mention_everyone);
     return obj;
   },
   create(base) {
     return ChannelMessageSend.fromPartial(base != null ? base : {});
   },
   fromPartial(object) {
-    var _a, _b, _c, _d, _e, _f, _g, _h, _i;
+    var _a, _b, _c, _d, _e, _f, _g, _h, _i, _j;
     const message = createBaseChannelMessageSend();
     message.clan_id = (_a = object.clan_id) != null ? _a : "";
     message.channel_id = (_b = object.channel_id) != null ? _b : "";
@@ -4228,6 +4237,7 @@ var ChannelMessageSend = {
     message.references = ((_g = object.references) == null ? void 0 : _g.map((e) => MessageRef.fromPartial(e))) || [];
     message.mode = (_h = object.mode) != null ? _h : 0;
     message.anonymous_message = (_i = object.anonymous_message) != null ? _i : false;
+    message.mention_everyone = (_j = object.mention_everyone) != null ? _j : false;
     return message;
   }
 };
