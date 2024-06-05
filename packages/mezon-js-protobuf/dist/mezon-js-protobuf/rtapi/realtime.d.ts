@@ -211,6 +211,8 @@ export interface ChannelMessageSend {
     mode: number;
     /** anonymous message */
     anonymous_message: boolean;
+    /** mention everyone */
+    mention_everyone: boolean;
 }
 /** Update a message previously sent to a realtime channel. */
 export interface ChannelMessageUpdate {
@@ -793,6 +795,7 @@ export declare const Envelope: {
             }[] | undefined;
             mode?: number | undefined;
             anonymous_message?: boolean | undefined;
+            mention_everyone?: boolean | undefined;
         } | undefined;
         channel_message_update?: {
             channel_id?: string | undefined;
@@ -1304,6 +1307,7 @@ export declare const Envelope: {
             }[] | undefined;
             mode?: number | undefined;
             anonymous_message?: boolean | undefined;
+            mention_everyone?: boolean | undefined;
         } & {
             clan_id?: string | undefined;
             channel_id?: string | undefined;
@@ -1382,6 +1386,7 @@ export declare const Envelope: {
             }[]>]: never; }) | undefined;
             mode?: number | undefined;
             anonymous_message?: boolean | undefined;
+            mention_everyone?: boolean | undefined;
         } & { [K_14 in Exclude<keyof I["channel_message_send"], keyof ChannelMessageSend>]: never; }) | undefined;
         channel_message_update?: ({
             channel_id?: string | undefined;
@@ -2396,6 +2401,7 @@ export declare const Envelope: {
             }[] | undefined;
             mode?: number | undefined;
             anonymous_message?: boolean | undefined;
+            mention_everyone?: boolean | undefined;
         } | undefined;
         channel_message_update?: {
             channel_id?: string | undefined;
@@ -2907,6 +2913,7 @@ export declare const Envelope: {
             }[] | undefined;
             mode?: number | undefined;
             anonymous_message?: boolean | undefined;
+            mention_everyone?: boolean | undefined;
         } & {
             clan_id?: string | undefined;
             channel_id?: string | undefined;
@@ -2985,6 +2992,7 @@ export declare const Envelope: {
             }[]>]: never; }) | undefined;
             mode?: number | undefined;
             anonymous_message?: boolean | undefined;
+            mention_everyone?: boolean | undefined;
         } & { [K_105 in Exclude<keyof I_1["channel_message_send"], keyof ChannelMessageSend>]: never; }) | undefined;
         channel_message_update?: ({
             channel_id?: string | undefined;
@@ -4274,6 +4282,7 @@ export declare const ChannelMessageSend: {
         }[] | undefined;
         mode?: number | undefined;
         anonymous_message?: boolean | undefined;
+        mention_everyone?: boolean | undefined;
     } & {
         clan_id?: string | undefined;
         channel_id?: string | undefined;
@@ -4352,6 +4361,7 @@ export declare const ChannelMessageSend: {
         }[]>]: never; }) | undefined;
         mode?: number | undefined;
         anonymous_message?: boolean | undefined;
+        mention_everyone?: boolean | undefined;
     } & { [K_6 in Exclude<keyof I, keyof ChannelMessageSend>]: never; }>(base?: I | undefined): ChannelMessageSend;
     fromPartial<I_1 extends {
         clan_id?: string | undefined;
@@ -4380,6 +4390,7 @@ export declare const ChannelMessageSend: {
         }[] | undefined;
         mode?: number | undefined;
         anonymous_message?: boolean | undefined;
+        mention_everyone?: boolean | undefined;
     } & {
         clan_id?: string | undefined;
         channel_id?: string | undefined;
@@ -4458,6 +4469,7 @@ export declare const ChannelMessageSend: {
         }[]>]: never; }) | undefined;
         mode?: number | undefined;
         anonymous_message?: boolean | undefined;
+        mention_everyone?: boolean | undefined;
     } & { [K_13 in Exclude<keyof I_1, keyof ChannelMessageSend>]: never; }>(object: I_1): ChannelMessageSend;
 };
 export declare const ChannelMessageUpdate: {

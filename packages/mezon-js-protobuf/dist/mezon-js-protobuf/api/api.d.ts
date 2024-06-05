@@ -665,6 +665,8 @@ export interface ChannelAttachment {
     url: string;
     /** uploader */
     uploader: string;
+    /** The UNIX time (for gRPC clients) or ISO string (for REST clients) when the group was created. */
+    create_time: Date | undefined;
 }
 /** channel attachment list */
 export interface ChannelAttachmentList {
@@ -1501,6 +1503,31 @@ export interface NotificationChannelCategoySetting {
 export interface NotificationChannelCategoySettingsList {
     noti_channel_categoy_setting: NotificationChannelCategoySetting[];
 }
+/**  */
+export interface DeletePinMessage {
+    /**  */
+    message_id: string;
+}
+/**  */
+export interface PinMessage {
+    /**  */
+    id: string;
+    /**  */
+    message_id: string;
+    /**  */
+    channel_id: string;
+    /**  */
+    sender_id: string;
+    /**  */
+    content: string;
+    /**  */
+    username: string;
+    /**  */
+    avatar: string;
+}
+export interface PinMessagesList {
+    pin_messages_list: PinMessage[];
+}
 /** Notification channel */
 export interface NotificationUserChannel {
     /** Notification id */
@@ -1546,6 +1573,11 @@ export interface SetNotificationRequest {
     channel_id: string;
     notification_type: string;
     time_mute: Date | undefined;
+}
+/**  */
+export interface PinMessageRequest {
+    message_id: string;
+    channel_id: string;
 }
 /** set notification */
 export interface SetMuteNotificationRequest {
@@ -5622,6 +5654,7 @@ export declare const ChannelAttachment: {
         filesize?: string | undefined;
         url?: string | undefined;
         uploader?: string | undefined;
+        create_time?: Date | undefined;
     } & {
         id?: string | undefined;
         filename?: string | undefined;
@@ -5629,6 +5662,7 @@ export declare const ChannelAttachment: {
         filesize?: string | undefined;
         url?: string | undefined;
         uploader?: string | undefined;
+        create_time?: Date | undefined;
     } & { [K in Exclude<keyof I, keyof ChannelAttachment>]: never; }>(base?: I | undefined): ChannelAttachment;
     fromPartial<I_1 extends {
         id?: string | undefined;
@@ -5637,6 +5671,7 @@ export declare const ChannelAttachment: {
         filesize?: string | undefined;
         url?: string | undefined;
         uploader?: string | undefined;
+        create_time?: Date | undefined;
     } & {
         id?: string | undefined;
         filename?: string | undefined;
@@ -5644,6 +5679,7 @@ export declare const ChannelAttachment: {
         filesize?: string | undefined;
         url?: string | undefined;
         uploader?: string | undefined;
+        create_time?: Date | undefined;
     } & { [K_1 in Exclude<keyof I_1, keyof ChannelAttachment>]: never; }>(object: I_1): ChannelAttachment;
 };
 export declare const ChannelAttachmentList: {
@@ -5659,6 +5695,7 @@ export declare const ChannelAttachmentList: {
             filesize?: string | undefined;
             url?: string | undefined;
             uploader?: string | undefined;
+            create_time?: Date | undefined;
         }[] | undefined;
     } & {
         attachments?: ({
@@ -5668,6 +5705,7 @@ export declare const ChannelAttachmentList: {
             filesize?: string | undefined;
             url?: string | undefined;
             uploader?: string | undefined;
+            create_time?: Date | undefined;
         }[] & ({
             id?: string | undefined;
             filename?: string | undefined;
@@ -5675,6 +5713,7 @@ export declare const ChannelAttachmentList: {
             filesize?: string | undefined;
             url?: string | undefined;
             uploader?: string | undefined;
+            create_time?: Date | undefined;
         } & {
             id?: string | undefined;
             filename?: string | undefined;
@@ -5682,6 +5721,7 @@ export declare const ChannelAttachmentList: {
             filesize?: string | undefined;
             url?: string | undefined;
             uploader?: string | undefined;
+            create_time?: Date | undefined;
         } & { [K in Exclude<keyof I["attachments"][number], keyof ChannelAttachment>]: never; })[] & { [K_1 in Exclude<keyof I["attachments"], keyof {
             id?: string | undefined;
             filename?: string | undefined;
@@ -5689,6 +5729,7 @@ export declare const ChannelAttachmentList: {
             filesize?: string | undefined;
             url?: string | undefined;
             uploader?: string | undefined;
+            create_time?: Date | undefined;
         }[]>]: never; }) | undefined;
     } & { [K_2 in Exclude<keyof I, "attachments">]: never; }>(base?: I | undefined): ChannelAttachmentList;
     fromPartial<I_1 extends {
@@ -5699,6 +5740,7 @@ export declare const ChannelAttachmentList: {
             filesize?: string | undefined;
             url?: string | undefined;
             uploader?: string | undefined;
+            create_time?: Date | undefined;
         }[] | undefined;
     } & {
         attachments?: ({
@@ -5708,6 +5750,7 @@ export declare const ChannelAttachmentList: {
             filesize?: string | undefined;
             url?: string | undefined;
             uploader?: string | undefined;
+            create_time?: Date | undefined;
         }[] & ({
             id?: string | undefined;
             filename?: string | undefined;
@@ -5715,6 +5758,7 @@ export declare const ChannelAttachmentList: {
             filesize?: string | undefined;
             url?: string | undefined;
             uploader?: string | undefined;
+            create_time?: Date | undefined;
         } & {
             id?: string | undefined;
             filename?: string | undefined;
@@ -5722,6 +5766,7 @@ export declare const ChannelAttachmentList: {
             filesize?: string | undefined;
             url?: string | undefined;
             uploader?: string | undefined;
+            create_time?: Date | undefined;
         } & { [K_3 in Exclude<keyof I_1["attachments"][number], keyof ChannelAttachment>]: never; })[] & { [K_4 in Exclude<keyof I_1["attachments"], keyof {
             id?: string | undefined;
             filename?: string | undefined;
@@ -5729,6 +5774,7 @@ export declare const ChannelAttachmentList: {
             filesize?: string | undefined;
             url?: string | undefined;
             uploader?: string | undefined;
+            create_time?: Date | undefined;
         }[]>]: never; }) | undefined;
     } & { [K_5 in Exclude<keyof I_1, "attachments">]: never; }>(object: I_1): ChannelAttachmentList;
 };
@@ -10122,6 +10168,158 @@ export declare const NotificationChannelCategoySettingsList: {
         }[]>]: never; }) | undefined;
     } & { [K_5 in Exclude<keyof I_1, "noti_channel_categoy_setting">]: never; }>(object: I_1): NotificationChannelCategoySettingsList;
 };
+export declare const DeletePinMessage: {
+    encode(message: DeletePinMessage, writer?: _m0.Writer): _m0.Writer;
+    decode(input: _m0.Reader | Uint8Array, length?: number): DeletePinMessage;
+    fromJSON(object: any): DeletePinMessage;
+    toJSON(message: DeletePinMessage): unknown;
+    create<I extends {
+        message_id?: string | undefined;
+    } & {
+        message_id?: string | undefined;
+    } & { [K in Exclude<keyof I, "message_id">]: never; }>(base?: I | undefined): DeletePinMessage;
+    fromPartial<I_1 extends {
+        message_id?: string | undefined;
+    } & {
+        message_id?: string | undefined;
+    } & { [K_1 in Exclude<keyof I_1, "message_id">]: never; }>(object: I_1): DeletePinMessage;
+};
+export declare const PinMessage: {
+    encode(message: PinMessage, writer?: _m0.Writer): _m0.Writer;
+    decode(input: _m0.Reader | Uint8Array, length?: number): PinMessage;
+    fromJSON(object: any): PinMessage;
+    toJSON(message: PinMessage): unknown;
+    create<I extends {
+        id?: string | undefined;
+        message_id?: string | undefined;
+        channel_id?: string | undefined;
+        sender_id?: string | undefined;
+        content?: string | undefined;
+        username?: string | undefined;
+        avatar?: string | undefined;
+    } & {
+        id?: string | undefined;
+        message_id?: string | undefined;
+        channel_id?: string | undefined;
+        sender_id?: string | undefined;
+        content?: string | undefined;
+        username?: string | undefined;
+        avatar?: string | undefined;
+    } & { [K in Exclude<keyof I, keyof PinMessage>]: never; }>(base?: I | undefined): PinMessage;
+    fromPartial<I_1 extends {
+        id?: string | undefined;
+        message_id?: string | undefined;
+        channel_id?: string | undefined;
+        sender_id?: string | undefined;
+        content?: string | undefined;
+        username?: string | undefined;
+        avatar?: string | undefined;
+    } & {
+        id?: string | undefined;
+        message_id?: string | undefined;
+        channel_id?: string | undefined;
+        sender_id?: string | undefined;
+        content?: string | undefined;
+        username?: string | undefined;
+        avatar?: string | undefined;
+    } & { [K_1 in Exclude<keyof I_1, keyof PinMessage>]: never; }>(object: I_1): PinMessage;
+};
+export declare const PinMessagesList: {
+    encode(message: PinMessagesList, writer?: _m0.Writer): _m0.Writer;
+    decode(input: _m0.Reader | Uint8Array, length?: number): PinMessagesList;
+    fromJSON(object: any): PinMessagesList;
+    toJSON(message: PinMessagesList): unknown;
+    create<I extends {
+        pin_messages_list?: {
+            id?: string | undefined;
+            message_id?: string | undefined;
+            channel_id?: string | undefined;
+            sender_id?: string | undefined;
+            content?: string | undefined;
+            username?: string | undefined;
+            avatar?: string | undefined;
+        }[] | undefined;
+    } & {
+        pin_messages_list?: ({
+            id?: string | undefined;
+            message_id?: string | undefined;
+            channel_id?: string | undefined;
+            sender_id?: string | undefined;
+            content?: string | undefined;
+            username?: string | undefined;
+            avatar?: string | undefined;
+        }[] & ({
+            id?: string | undefined;
+            message_id?: string | undefined;
+            channel_id?: string | undefined;
+            sender_id?: string | undefined;
+            content?: string | undefined;
+            username?: string | undefined;
+            avatar?: string | undefined;
+        } & {
+            id?: string | undefined;
+            message_id?: string | undefined;
+            channel_id?: string | undefined;
+            sender_id?: string | undefined;
+            content?: string | undefined;
+            username?: string | undefined;
+            avatar?: string | undefined;
+        } & { [K in Exclude<keyof I["pin_messages_list"][number], keyof PinMessage>]: never; })[] & { [K_1 in Exclude<keyof I["pin_messages_list"], keyof {
+            id?: string | undefined;
+            message_id?: string | undefined;
+            channel_id?: string | undefined;
+            sender_id?: string | undefined;
+            content?: string | undefined;
+            username?: string | undefined;
+            avatar?: string | undefined;
+        }[]>]: never; }) | undefined;
+    } & { [K_2 in Exclude<keyof I, "pin_messages_list">]: never; }>(base?: I | undefined): PinMessagesList;
+    fromPartial<I_1 extends {
+        pin_messages_list?: {
+            id?: string | undefined;
+            message_id?: string | undefined;
+            channel_id?: string | undefined;
+            sender_id?: string | undefined;
+            content?: string | undefined;
+            username?: string | undefined;
+            avatar?: string | undefined;
+        }[] | undefined;
+    } & {
+        pin_messages_list?: ({
+            id?: string | undefined;
+            message_id?: string | undefined;
+            channel_id?: string | undefined;
+            sender_id?: string | undefined;
+            content?: string | undefined;
+            username?: string | undefined;
+            avatar?: string | undefined;
+        }[] & ({
+            id?: string | undefined;
+            message_id?: string | undefined;
+            channel_id?: string | undefined;
+            sender_id?: string | undefined;
+            content?: string | undefined;
+            username?: string | undefined;
+            avatar?: string | undefined;
+        } & {
+            id?: string | undefined;
+            message_id?: string | undefined;
+            channel_id?: string | undefined;
+            sender_id?: string | undefined;
+            content?: string | undefined;
+            username?: string | undefined;
+            avatar?: string | undefined;
+        } & { [K_3 in Exclude<keyof I_1["pin_messages_list"][number], keyof PinMessage>]: never; })[] & { [K_4 in Exclude<keyof I_1["pin_messages_list"], keyof {
+            id?: string | undefined;
+            message_id?: string | undefined;
+            channel_id?: string | undefined;
+            sender_id?: string | undefined;
+            content?: string | undefined;
+            username?: string | undefined;
+            avatar?: string | undefined;
+        }[]>]: never; }) | undefined;
+    } & { [K_5 in Exclude<keyof I_1, "pin_messages_list">]: never; }>(object: I_1): PinMessagesList;
+};
 export declare const NotificationUserChannel: {
     encode(message: NotificationUserChannel, writer?: _m0.Writer): _m0.Writer;
     decode(input: _m0.Reader | Uint8Array, length?: number): NotificationUserChannel;
@@ -10291,6 +10489,26 @@ export declare const SetNotificationRequest: {
         notification_type?: string | undefined;
         time_mute?: Date | undefined;
     } & { [K_1 in Exclude<keyof I_1, keyof SetNotificationRequest>]: never; }>(object: I_1): SetNotificationRequest;
+};
+export declare const PinMessageRequest: {
+    encode(message: PinMessageRequest, writer?: _m0.Writer): _m0.Writer;
+    decode(input: _m0.Reader | Uint8Array, length?: number): PinMessageRequest;
+    fromJSON(object: any): PinMessageRequest;
+    toJSON(message: PinMessageRequest): unknown;
+    create<I extends {
+        message_id?: string | undefined;
+        channel_id?: string | undefined;
+    } & {
+        message_id?: string | undefined;
+        channel_id?: string | undefined;
+    } & { [K in Exclude<keyof I, keyof PinMessageRequest>]: never; }>(base?: I | undefined): PinMessageRequest;
+    fromPartial<I_1 extends {
+        message_id?: string | undefined;
+        channel_id?: string | undefined;
+    } & {
+        message_id?: string | undefined;
+        channel_id?: string | undefined;
+    } & { [K_1 in Exclude<keyof I_1, keyof PinMessageRequest>]: never; }>(object: I_1): PinMessageRequest;
 };
 export declare const SetMuteNotificationRequest: {
     encode(message: SetMuteNotificationRequest, writer?: _m0.Writer): _m0.Writer;
