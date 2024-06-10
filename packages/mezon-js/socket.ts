@@ -978,11 +978,8 @@ export class DefaultSocket implements Socket {
       }
       this.adapter.onError = (evt: Event) => {
         reject(evt);
-        // TODO: do not close the adapter
-        this.onerror(evt);
-        //this.adapter.close();
+        this.adapter.close();
       }
-
 
       setTimeout(() => {
         // if promise has resolved by now, the reject() is a no-op
