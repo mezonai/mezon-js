@@ -4222,7 +4222,7 @@ var _DefaultSocket = class _DefaultSocket {
       };
       this.adapter.onError = (evt) => {
         reject(evt);
-        this.adapter.close();
+        this.onerror(evt);
       };
       setTimeout(() => {
         reject("The socket timed out when trying to connect.");
