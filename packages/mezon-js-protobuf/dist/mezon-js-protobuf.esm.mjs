@@ -2743,7 +2743,8 @@ function createBaseNotification() {
     persistent: false,
     clan_id: "",
     channel_id: "",
-    channel_type: ""
+    channel_type: "",
+    avatar_url: ""
   };
 }
 var Notification = {
@@ -2777,6 +2778,9 @@ var Notification = {
     }
     if (message.channel_type !== "") {
       writer.uint32(82).string(message.channel_type);
+    }
+    if (message.avatar_url !== "") {
+      writer.uint32(90).string(message.avatar_url);
     }
     return writer;
   },
@@ -2817,6 +2821,9 @@ var Notification = {
         case 10:
           message.channel_type = reader.string();
           break;
+        case 11:
+          message.avatar_url = reader.string();
+          break;
         default:
           reader.skipType(tag & 7);
           break;
@@ -2835,7 +2842,8 @@ var Notification = {
       persistent: isSet3(object.persistent) ? Boolean(object.persistent) : false,
       clan_id: isSet3(object.clan_id) ? String(object.clan_id) : "",
       channel_id: isSet3(object.channel_id) ? String(object.channel_id) : "",
-      channel_type: isSet3(object.channel_type) ? String(object.channel_type) : ""
+      channel_type: isSet3(object.channel_type) ? String(object.channel_type) : "",
+      avatar_url: isSet3(object.avatar_url) ? String(object.avatar_url) : ""
     };
   },
   toJSON(message) {
@@ -2850,13 +2858,14 @@ var Notification = {
     message.clan_id !== void 0 && (obj.clan_id = message.clan_id);
     message.channel_id !== void 0 && (obj.channel_id = message.channel_id);
     message.channel_type !== void 0 && (obj.channel_type = message.channel_type);
+    message.avatar_url !== void 0 && (obj.avatar_url = message.avatar_url);
     return obj;
   },
   create(base) {
     return Notification.fromPartial(base != null ? base : {});
   },
   fromPartial(object) {
-    var _a, _b, _c, _d, _e, _f, _g, _h, _i, _j;
+    var _a, _b, _c, _d, _e, _f, _g, _h, _i, _j, _k;
     const message = createBaseNotification();
     message.id = (_a = object.id) != null ? _a : "";
     message.subject = (_b = object.subject) != null ? _b : "";
@@ -2868,6 +2877,7 @@ var Notification = {
     message.clan_id = (_h = object.clan_id) != null ? _h : "";
     message.channel_id = (_i = object.channel_id) != null ? _i : "";
     message.channel_type = (_j = object.channel_type) != null ? _j : "";
+    message.avatar_url = (_k = object.avatar_url) != null ? _k : "";
     return message;
   }
 };
@@ -3022,6 +3032,8 @@ function createBaseEnvelope() {
     message_reaction_event: void 0,
     voice_joined_event: void 0,
     voice_leaved_event: void 0,
+    voice_started_event: void 0,
+    voice_ended_event: void 0,
     channel_created_event: void 0,
     channel_deleted_event: void 0,
     channel_updated_event: void 0
@@ -3152,14 +3164,20 @@ var Envelope = {
     if (message.voice_leaved_event !== void 0) {
       VoiceLeavedEvent.encode(message.voice_leaved_event, writer.uint32(330).fork()).ldelim();
     }
+    if (message.voice_started_event !== void 0) {
+      VoiceStartedEvent.encode(message.voice_started_event, writer.uint32(338).fork()).ldelim();
+    }
+    if (message.voice_ended_event !== void 0) {
+      VoiceEndedEvent.encode(message.voice_ended_event, writer.uint32(346).fork()).ldelim();
+    }
     if (message.channel_created_event !== void 0) {
-      ChannelCreatedEvent.encode(message.channel_created_event, writer.uint32(338).fork()).ldelim();
+      ChannelCreatedEvent.encode(message.channel_created_event, writer.uint32(354).fork()).ldelim();
     }
     if (message.channel_deleted_event !== void 0) {
-      ChannelDeletedEvent.encode(message.channel_deleted_event, writer.uint32(346).fork()).ldelim();
+      ChannelDeletedEvent.encode(message.channel_deleted_event, writer.uint32(362).fork()).ldelim();
     }
     if (message.channel_updated_event !== void 0) {
-      ChannelUpdatedEvent.encode(message.channel_updated_event, writer.uint32(354).fork()).ldelim();
+      ChannelUpdatedEvent.encode(message.channel_updated_event, writer.uint32(370).fork()).ldelim();
     }
     return writer;
   },
@@ -3294,12 +3312,18 @@ var Envelope = {
           message.voice_leaved_event = VoiceLeavedEvent.decode(reader, reader.uint32());
           break;
         case 42:
-          message.channel_created_event = ChannelCreatedEvent.decode(reader, reader.uint32());
+          message.voice_started_event = VoiceStartedEvent.decode(reader, reader.uint32());
           break;
         case 43:
-          message.channel_deleted_event = ChannelDeletedEvent.decode(reader, reader.uint32());
+          message.voice_ended_event = VoiceEndedEvent.decode(reader, reader.uint32());
           break;
         case 44:
+          message.channel_created_event = ChannelCreatedEvent.decode(reader, reader.uint32());
+          break;
+        case 45:
+          message.channel_deleted_event = ChannelDeletedEvent.decode(reader, reader.uint32());
+          break;
+        case 46:
           message.channel_updated_event = ChannelUpdatedEvent.decode(reader, reader.uint32());
           break;
         default:
@@ -3352,6 +3376,8 @@ var Envelope = {
       message_reaction_event: isSet4(object.message_reaction_event) ? MessageReactionEvent.fromJSON(object.message_reaction_event) : void 0,
       voice_joined_event: isSet4(object.voice_joined_event) ? VoiceJoinedEvent.fromJSON(object.voice_joined_event) : void 0,
       voice_leaved_event: isSet4(object.voice_leaved_event) ? VoiceLeavedEvent.fromJSON(object.voice_leaved_event) : void 0,
+      voice_started_event: isSet4(object.voice_started_event) ? VoiceStartedEvent.fromJSON(object.voice_started_event) : void 0,
+      voice_ended_event: isSet4(object.voice_ended_event) ? VoiceEndedEvent.fromJSON(object.voice_ended_event) : void 0,
       channel_created_event: isSet4(object.channel_created_event) ? ChannelCreatedEvent.fromJSON(object.channel_created_event) : void 0,
       channel_deleted_event: isSet4(object.channel_deleted_event) ? ChannelDeletedEvent.fromJSON(object.channel_deleted_event) : void 0,
       channel_updated_event: isSet4(object.channel_updated_event) ? ChannelUpdatedEvent.fromJSON(object.channel_updated_event) : void 0
@@ -3400,6 +3426,8 @@ var Envelope = {
     message.message_reaction_event !== void 0 && (obj.message_reaction_event = message.message_reaction_event ? MessageReactionEvent.toJSON(message.message_reaction_event) : void 0);
     message.voice_joined_event !== void 0 && (obj.voice_joined_event = message.voice_joined_event ? VoiceJoinedEvent.toJSON(message.voice_joined_event) : void 0);
     message.voice_leaved_event !== void 0 && (obj.voice_leaved_event = message.voice_leaved_event ? VoiceLeavedEvent.toJSON(message.voice_leaved_event) : void 0);
+    message.voice_started_event !== void 0 && (obj.voice_started_event = message.voice_started_event ? VoiceStartedEvent.toJSON(message.voice_started_event) : void 0);
+    message.voice_ended_event !== void 0 && (obj.voice_ended_event = message.voice_ended_event ? VoiceEndedEvent.toJSON(message.voice_ended_event) : void 0);
     message.channel_created_event !== void 0 && (obj.channel_created_event = message.channel_created_event ? ChannelCreatedEvent.toJSON(message.channel_created_event) : void 0);
     message.channel_deleted_event !== void 0 && (obj.channel_deleted_event = message.channel_deleted_event ? ChannelDeletedEvent.toJSON(message.channel_deleted_event) : void 0);
     message.channel_updated_event !== void 0 && (obj.channel_updated_event = message.channel_updated_event ? ChannelUpdatedEvent.toJSON(message.channel_updated_event) : void 0);
@@ -3452,6 +3480,8 @@ var Envelope = {
     message.message_reaction_event = object.message_reaction_event !== void 0 && object.message_reaction_event !== null ? MessageReactionEvent.fromPartial(object.message_reaction_event) : void 0;
     message.voice_joined_event = object.voice_joined_event !== void 0 && object.voice_joined_event !== null ? VoiceJoinedEvent.fromPartial(object.voice_joined_event) : void 0;
     message.voice_leaved_event = object.voice_leaved_event !== void 0 && object.voice_leaved_event !== null ? VoiceLeavedEvent.fromPartial(object.voice_leaved_event) : void 0;
+    message.voice_started_event = object.voice_started_event !== void 0 && object.voice_started_event !== null ? VoiceStartedEvent.fromPartial(object.voice_started_event) : void 0;
+    message.voice_ended_event = object.voice_ended_event !== void 0 && object.voice_ended_event !== null ? VoiceEndedEvent.fromPartial(object.voice_ended_event) : void 0;
     message.channel_created_event = object.channel_created_event !== void 0 && object.channel_created_event !== null ? ChannelCreatedEvent.fromPartial(object.channel_created_event) : void 0;
     message.channel_deleted_event = object.channel_deleted_event !== void 0 && object.channel_deleted_event !== null ? ChannelDeletedEvent.fromPartial(object.channel_deleted_event) : void 0;
     message.channel_updated_event = object.channel_updated_event !== void 0 && object.channel_updated_event !== null ? ChannelUpdatedEvent.fromPartial(object.channel_updated_event) : void 0;
@@ -6277,6 +6307,136 @@ var VoiceJoinedEvent = {
     message.voice_channel_label = (_f = object.voice_channel_label) != null ? _f : "";
     message.voice_channel_id = (_g = object.voice_channel_id) != null ? _g : "";
     message.last_screenshot = (_h = object.last_screenshot) != null ? _h : "";
+    return message;
+  }
+};
+function createBaseVoiceStartedEvent() {
+  return { id: "", clan_id: "", voice_channel_id: "" };
+}
+var VoiceStartedEvent = {
+  encode(message, writer = import_minimal4.default.Writer.create()) {
+    if (message.id !== "") {
+      writer.uint32(10).string(message.id);
+    }
+    if (message.clan_id !== "") {
+      writer.uint32(18).string(message.clan_id);
+    }
+    if (message.voice_channel_id !== "") {
+      writer.uint32(26).string(message.voice_channel_id);
+    }
+    return writer;
+  },
+  decode(input, length) {
+    const reader = input instanceof import_minimal4.default.Reader ? input : new import_minimal4.default.Reader(input);
+    let end = length === void 0 ? reader.len : reader.pos + length;
+    const message = createBaseVoiceStartedEvent();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.id = reader.string();
+          break;
+        case 2:
+          message.clan_id = reader.string();
+          break;
+        case 3:
+          message.voice_channel_id = reader.string();
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+  fromJSON(object) {
+    return {
+      id: isSet4(object.id) ? String(object.id) : "",
+      clan_id: isSet4(object.clan_id) ? String(object.clan_id) : "",
+      voice_channel_id: isSet4(object.voice_channel_id) ? String(object.voice_channel_id) : ""
+    };
+  },
+  toJSON(message) {
+    const obj = {};
+    message.id !== void 0 && (obj.id = message.id);
+    message.clan_id !== void 0 && (obj.clan_id = message.clan_id);
+    message.voice_channel_id !== void 0 && (obj.voice_channel_id = message.voice_channel_id);
+    return obj;
+  },
+  create(base) {
+    return VoiceStartedEvent.fromPartial(base != null ? base : {});
+  },
+  fromPartial(object) {
+    var _a, _b, _c;
+    const message = createBaseVoiceStartedEvent();
+    message.id = (_a = object.id) != null ? _a : "";
+    message.clan_id = (_b = object.clan_id) != null ? _b : "";
+    message.voice_channel_id = (_c = object.voice_channel_id) != null ? _c : "";
+    return message;
+  }
+};
+function createBaseVoiceEndedEvent() {
+  return { id: "", clan_id: "", voice_channel_id: "" };
+}
+var VoiceEndedEvent = {
+  encode(message, writer = import_minimal4.default.Writer.create()) {
+    if (message.id !== "") {
+      writer.uint32(10).string(message.id);
+    }
+    if (message.clan_id !== "") {
+      writer.uint32(18).string(message.clan_id);
+    }
+    if (message.voice_channel_id !== "") {
+      writer.uint32(26).string(message.voice_channel_id);
+    }
+    return writer;
+  },
+  decode(input, length) {
+    const reader = input instanceof import_minimal4.default.Reader ? input : new import_minimal4.default.Reader(input);
+    let end = length === void 0 ? reader.len : reader.pos + length;
+    const message = createBaseVoiceEndedEvent();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.id = reader.string();
+          break;
+        case 2:
+          message.clan_id = reader.string();
+          break;
+        case 3:
+          message.voice_channel_id = reader.string();
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+  fromJSON(object) {
+    return {
+      id: isSet4(object.id) ? String(object.id) : "",
+      clan_id: isSet4(object.clan_id) ? String(object.clan_id) : "",
+      voice_channel_id: isSet4(object.voice_channel_id) ? String(object.voice_channel_id) : ""
+    };
+  },
+  toJSON(message) {
+    const obj = {};
+    message.id !== void 0 && (obj.id = message.id);
+    message.clan_id !== void 0 && (obj.clan_id = message.clan_id);
+    message.voice_channel_id !== void 0 && (obj.voice_channel_id = message.voice_channel_id);
+    return obj;
+  },
+  create(base) {
+    return VoiceEndedEvent.fromPartial(base != null ? base : {});
+  },
+  fromPartial(object) {
+    var _a, _b, _c;
+    const message = createBaseVoiceEndedEvent();
+    message.id = (_a = object.id) != null ? _a : "";
+    message.clan_id = (_b = object.clan_id) != null ? _b : "";
+    message.voice_channel_id = (_c = object.voice_channel_id) != null ? _c : "";
     return message;
   }
 };

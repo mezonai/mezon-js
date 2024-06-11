@@ -325,6 +325,24 @@ export interface ChannelPresenceEvent {
   leaves: Presence[];
 }
 
+export interface VoiceEndedEvent {
+  // id voice
+  id: string;
+  // The unique identifier of the chat clan.
+  clan_id: string;
+  // voice channel name
+  voice_channel_id: string;
+}
+
+export interface VoiceStartedEvent {
+  // id voice
+  id: string;
+  // The unique identifier of the chat clan.
+  clan_id: string;
+  // voice channel name
+  voice_channel_id: string;
+}
+
 export interface VoiceLeavedEvent {
   // event id
   id: string;
@@ -792,6 +810,12 @@ export interface Socket {
   /** Receive channel presence updates. */
   onchannelpresence: (channelPresence: ChannelPresenceEvent) => void;
 
+  // when someone start the voice room
+  onvoicestarted: (voice: VoiceStartedEvent) => void;
+  
+  // when someone end the voice room
+  onvoiceended: (voice: VoiceEndedEvent) => void;
+
   // when someone join to voice room
   onvoicejoined: (voiceParticipant: VoiceJoinedEvent) => void;
   
@@ -879,6 +903,10 @@ export class DefaultSocket implements Socket {
               n.content = n.content ? JSON.parse(n.content) : undefined;
               this.onnotification(n);
           });
+        } else if (message.voice_started_event) {
+          this.onvoicestarted(message.voice_started_event)
+        } else if (message.voice_ended_event) {
+          this.onvoiceended(message.voice_ended_event)
         } else if (message.voice_joined_event) {
           this.onvoicejoined(message.voice_joined_event)
         } else if (message.voice_leaved_event) {
@@ -1095,6 +1123,18 @@ export class DefaultSocket implements Socket {
   onstatuspresence(statusPresence: StatusPresenceEvent) {
     if (this.verbose && window && window.console) {
       console.log(statusPresence);
+    }
+  }
+
+  onvoiceended(voice: VoiceEndedEvent) {
+    if (this.verbose && window && window.console) {
+      console.log(voice);
+    }
+  }
+
+  onvoicestarted(voice: VoiceStartedEvent) {
+    if (this.verbose && window && window.console) {
+      console.log(voice);
     }
   }
 

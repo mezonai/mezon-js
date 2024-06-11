@@ -4125,6 +4125,10 @@ var _DefaultSocket = class _DefaultSocket {
             n.content = n.content ? JSON.parse(n.content) : void 0;
             this.onnotification(n);
           });
+        } else if (message.voice_started_event) {
+          this.onvoicestarted(message.voice_started_event);
+        } else if (message.voice_ended_event) {
+          this.onvoiceended(message.voice_ended_event);
         } else if (message.voice_joined_event) {
           this.onvoicejoined(message.voice_joined_event);
         } else if (message.voice_leaved_event) {
@@ -4222,7 +4226,7 @@ var _DefaultSocket = class _DefaultSocket {
       };
       this.adapter.onError = (evt) => {
         reject(evt);
-        this.onerror(evt);
+        this.adapter.close();
       };
       setTimeout(() => {
         reject("The socket timed out when trying to connect.");
@@ -4316,6 +4320,16 @@ var _DefaultSocket = class _DefaultSocket {
   onstatuspresence(statusPresence) {
     if (this.verbose && window && window.console) {
       console.log(statusPresence);
+    }
+  }
+  onvoiceended(voice) {
+    if (this.verbose && window && window.console) {
+      console.log(voice);
+    }
+  }
+  onvoicestarted(voice) {
+    if (this.verbose && window && window.console) {
+      console.log(voice);
     }
   }
   onvoicejoined(voiceParticipant) {
