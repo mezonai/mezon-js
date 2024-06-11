@@ -1206,6 +1206,8 @@ export interface Notification {
   channel_id: string;
   /** mode of */
   channel_type: string;
+  /**  */
+  avatar_url: string;
 }
 
 /** A collection of zero or more notifications. */
@@ -8807,6 +8809,7 @@ function createBaseNotification(): Notification {
     clan_id: "",
     channel_id: "",
     channel_type: "",
+    avatar_url: "",
   };
 }
 
@@ -8841,6 +8844,9 @@ export const Notification = {
     }
     if (message.channel_type !== "") {
       writer.uint32(82).string(message.channel_type);
+    }
+    if (message.avatar_url !== "") {
+      writer.uint32(90).string(message.avatar_url);
     }
     return writer;
   },
@@ -8882,6 +8888,9 @@ export const Notification = {
         case 10:
           message.channel_type = reader.string();
           break;
+        case 11:
+          message.avatar_url = reader.string();
+          break;
         default:
           reader.skipType(tag & 7);
           break;
@@ -8902,6 +8911,7 @@ export const Notification = {
       clan_id: isSet(object.clan_id) ? String(object.clan_id) : "",
       channel_id: isSet(object.channel_id) ? String(object.channel_id) : "",
       channel_type: isSet(object.channel_type) ? String(object.channel_type) : "",
+      avatar_url: isSet(object.avatar_url) ? String(object.avatar_url) : "",
     };
   },
 
@@ -8917,6 +8927,7 @@ export const Notification = {
     message.clan_id !== undefined && (obj.clan_id = message.clan_id);
     message.channel_id !== undefined && (obj.channel_id = message.channel_id);
     message.channel_type !== undefined && (obj.channel_type = message.channel_type);
+    message.avatar_url !== undefined && (obj.avatar_url = message.avatar_url);
     return obj;
   },
 
@@ -8936,6 +8947,7 @@ export const Notification = {
     message.clan_id = object.clan_id ?? "";
     message.channel_id = object.channel_id ?? "";
     message.channel_type = object.channel_type ?? "";
+    message.avatar_url = object.avatar_url ?? "";
     return message;
   },
 };

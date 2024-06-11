@@ -238,6 +238,16 @@ export interface ChannelPresenceEvent {
     /** Presences of users who left the channel. */
     leaves: Presence[];
 }
+export interface VoiceEndedEvent {
+    id: string;
+    clan_id: string;
+    voice_channel_id: string;
+}
+export interface VoiceStartedEvent {
+    id: string;
+    clan_id: string;
+    voice_channel_id: string;
+}
 export interface VoiceLeavedEvent {
     id: string;
     clan_id: string;
@@ -602,6 +612,8 @@ export interface Socket {
     onmessagereaction: (messageReactionEvent: MessageReactionEvent) => void;
     /** Receive channel presence updates. */
     onchannelpresence: (channelPresence: ChannelPresenceEvent) => void;
+    onvoicestarted: (voice: VoiceStartedEvent) => void;
+    onvoiceended: (voice: VoiceEndedEvent) => void;
     onvoicejoined: (voiceParticipant: VoiceJoinedEvent) => void;
     onvoiceleaved: (voiceParticipant: VoiceLeavedEvent) => void;
     onchannelcreated: (channelCreated: ChannelCreatedEvent) => void;
@@ -652,6 +664,8 @@ export declare class DefaultSocket implements Socket {
     onpartymatchmakerticket(partyMatched: PartyMatchmakerTicket): void;
     onpartypresence(partyPresence: PartyPresenceEvent): void;
     onstatuspresence(statusPresence: StatusPresenceEvent): void;
+    onvoiceended(voice: VoiceEndedEvent): void;
+    onvoicestarted(voice: VoiceStartedEvent): void;
     onvoicejoined(voiceParticipant: VoiceJoinedEvent): void;
     onvoiceleaved(voiceParticipant: VoiceLeavedEvent): void;
     onchannelcreated(channelCreated: ChannelCreatedEvent): void;
