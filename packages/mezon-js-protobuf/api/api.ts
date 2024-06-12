@@ -1972,6 +1972,7 @@ export interface EventManagement {
   start_time: Date | undefined;
   end_time: Date | undefined;
   user_ids: string[];
+  create_time: Date | undefined;
 }
 
 /** Permission record */
@@ -13638,6 +13639,7 @@ function createBaseEventManagement(): EventManagement {
     start_time: undefined,
     end_time: undefined,
     user_ids: [],
+    create_time: undefined,
   };
 }
 
@@ -13681,6 +13683,9 @@ export const EventManagement = {
     }
     for (const v of message.user_ids) {
       writer.uint32(106).string(v!);
+    }
+    if (message.create_time !== undefined) {
+      Timestamp.encode(toTimestamp(message.create_time), writer.uint32(114).fork()).ldelim();
     }
     return writer;
   },
@@ -13731,6 +13736,9 @@ export const EventManagement = {
         case 13:
           message.user_ids.push(reader.string());
           break;
+        case 14:
+          message.create_time = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
+          break;
         default:
           reader.skipType(tag & 7);
           break;
@@ -13754,6 +13762,7 @@ export const EventManagement = {
       start_time: isSet(object.start_time) ? fromJsonTimestamp(object.start_time) : undefined,
       end_time: isSet(object.end_time) ? fromJsonTimestamp(object.end_time) : undefined,
       user_ids: Array.isArray(object?.user_ids) ? object.user_ids.map((e: any) => String(e)) : [],
+      create_time: isSet(object.create_time) ? fromJsonTimestamp(object.create_time) : undefined,
     };
   },
 
@@ -13776,6 +13785,7 @@ export const EventManagement = {
     } else {
       obj.user_ids = [];
     }
+    message.create_time !== undefined && (obj.create_time = message.create_time.toISOString());
     return obj;
   },
 
@@ -13798,6 +13808,7 @@ export const EventManagement = {
     message.start_time = object.start_time ?? undefined;
     message.end_time = object.end_time ?? undefined;
     message.user_ids = object.user_ids?.map((e) => e) || [];
+    message.create_time = object.create_time ?? undefined;
     return message;
   },
 };
