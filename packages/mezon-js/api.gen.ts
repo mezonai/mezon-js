@@ -552,6 +552,8 @@ export interface ApiEventManagement {
   title?: string;
   //
   user_ids?: Array<string>;
+  //
+  create_time?: string; 
 }
 
 /**  */
