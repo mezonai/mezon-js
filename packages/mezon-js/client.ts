@@ -992,6 +992,18 @@ export class Client {
     });
   }
 
+  /** Kick a set of users from a clan. */
+  async removeClanUsers(session: Session, clanId: string, ids?: Array<string>): Promise<boolean> {
+    if (this.autoRefreshSession && session.refresh_token &&
+        session.isexpired((Date.now() + this.expiredTimespanMs)/1000)) {
+        await this.sessionRefresh(session);
+    }
+
+    return this.apiClient.removeClanUsers(session.token, clanId, ids).then((response: any) => {
+      return Promise.resolve(response != undefined);
+    });
+  }
+
   /** Kick users from a channel, or decline their join requests. */
   async removeChannelUsers(session: Session, channelId: string, ids?: Array<string>): Promise<boolean> {
     if (this.autoRefreshSession && session.refresh_token &&

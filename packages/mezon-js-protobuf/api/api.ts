@@ -1931,6 +1931,14 @@ export interface RemoveChannelUsersRequest {
   user_ids: string[];
 }
 
+/** Kick a set of users from a clan. */
+export interface RemoveClanUsersRequest {
+  /** The clan ID to kick from. */
+  clan_id: string;
+  /** The users to kick. */
+  user_ids: string[];
+}
+
 /** Leave a channel. */
 export interface LeaveChannelRequest {
   /** The channel ID to leave. */
@@ -13363,6 +13371,72 @@ export const RemoveChannelUsersRequest = {
   fromPartial<I extends Exact<DeepPartial<RemoveChannelUsersRequest>, I>>(object: I): RemoveChannelUsersRequest {
     const message = createBaseRemoveChannelUsersRequest();
     message.channel_id = object.channel_id ?? "";
+    message.user_ids = object.user_ids?.map((e) => e) || [];
+    return message;
+  },
+};
+
+function createBaseRemoveClanUsersRequest(): RemoveClanUsersRequest {
+  return { clan_id: "", user_ids: [] };
+}
+
+export const RemoveClanUsersRequest = {
+  encode(message: RemoveClanUsersRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.clan_id !== "") {
+      writer.uint32(10).string(message.clan_id);
+    }
+    for (const v of message.user_ids) {
+      writer.uint32(18).string(v!);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): RemoveClanUsersRequest {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseRemoveClanUsersRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.clan_id = reader.string();
+          break;
+        case 2:
+          message.user_ids.push(reader.string());
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): RemoveClanUsersRequest {
+    return {
+      clan_id: isSet(object.clan_id) ? String(object.clan_id) : "",
+      user_ids: Array.isArray(object?.user_ids) ? object.user_ids.map((e: any) => String(e)) : [],
+    };
+  },
+
+  toJSON(message: RemoveClanUsersRequest): unknown {
+    const obj: any = {};
+    message.clan_id !== undefined && (obj.clan_id = message.clan_id);
+    if (message.user_ids) {
+      obj.user_ids = message.user_ids.map((e) => e);
+    } else {
+      obj.user_ids = [];
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<RemoveClanUsersRequest>, I>>(base?: I): RemoveClanUsersRequest {
+    return RemoveClanUsersRequest.fromPartial(base ?? {});
+  },
+
+  fromPartial<I extends Exact<DeepPartial<RemoveClanUsersRequest>, I>>(object: I): RemoveClanUsersRequest {
+    const message = createBaseRemoveClanUsersRequest();
+    message.clan_id = object.clan_id ?? "";
     message.user_ids = object.user_ids?.map((e) => e) || [];
     return message;
   },

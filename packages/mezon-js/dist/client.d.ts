@@ -430,6 +430,8 @@ export declare class Client {
     importSteamFriends(session: Session, request: ApiAccountSteam, reset: boolean): Promise<boolean>;
     /** Fetch zero or more users by ID and/or username. */
     getUsers(session: Session, ids?: Array<string>, usernames?: Array<string>, facebookIds?: Array<string>): Promise<Users>;
+    /** Kick a set of users from a clan. */
+    removeClanUsers(session: Session, clanId: string, ids?: Array<string>): Promise<boolean>;
     /** Kick users from a channel, or decline their join requests. */
     removeChannelUsers(session: Session, channelId: string, ids?: Array<string>): Promise<boolean>;
     /** List a channel's message history. */

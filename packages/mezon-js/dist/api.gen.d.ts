@@ -315,6 +315,7 @@ export interface ApiEventManagement {
     start_time?: string;
     title?: string;
     user_ids?: Array<string>;
+    create_time?: string;
 }
 /**  */
 export interface ApiFilterParam {
@@ -825,6 +826,8 @@ export declare class MezonApi {
     deleteClanDesc(bearerToken: string, clanDescId: string, options?: any): Promise<any>;
     /** Update fields in a given clan. */
     updateClanDesc(bearerToken: string, clanId: string, body: {}, options?: any): Promise<any>;
+    /** Kick a set of users from a clan. */
+    removeClanUsers(bearerToken: string, clanId: string, userIds?: Array<string>, options?: any): Promise<any>;
     /** List all users that are part of a clan. */
     listClanUsers(bearerToken: string, clanId: string, options?: any): Promise<ApiClanUserList>;
     /** Get a clan desc profile */
