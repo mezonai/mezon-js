@@ -2060,6 +2060,35 @@ var MezonApi = class {
       )
     ]);
   }
+  /** Kick a set of users from a clan. */
+  removeClanUsers(bearerToken, clanId, userIds, options = {}) {
+    if (clanId === null || clanId === void 0) {
+      throw new Error("'clanId' is a required parameter but is null or undefined.");
+    }
+    const urlPath = "/v2/clandesc/{clanId}/kick".replace("{clanId}", encodeURIComponent(String(clanId)));
+    const queryParams = /* @__PURE__ */ new Map();
+    queryParams.set("user_ids", userIds);
+    let bodyJson = "";
+    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
+    const fetchOptions = buildFetchOptions("POST", options, bodyJson);
+    if (bearerToken) {
+      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+    }
+    return Promise.race([
+      fetch(fullUrl, fetchOptions).then((response) => {
+        if (response.status == 204) {
+          return response;
+        } else if (response.status >= 200 && response.status < 300) {
+          return response.json();
+        } else {
+          throw response;
+        }
+      }),
+      new Promise(
+        (_, reject) => setTimeout(reject, this.timeoutMs, "Request timed out.")
+      )
+    ]);
+  }
   /** List all users that are part of a clan. */
   listClanUsers(bearerToken, clanId, options = {}) {
     if (clanId === null || clanId === void 0) {
@@ -4522,9 +4551,9 @@ var _DefaultSocket = class _DefaultSocket {
   updateStatus(status) {
     return this.send({ status_update: { status } });
   }
-  writeChatMessage(clan_id, channel_id, channel_label, mode, content, mentions, attachments, references, anonymous_message, mention_everyone) {
+  writeChatMessage(clan_id, channel_id, channel_label, mode, content, mentions, attachments, references, anonymous_message, mention_everyone, notifi_content) {
     return __async(this, null, function* () {
-      const response = yield this.send({ channel_message_send: { clan_id, channel_id, channel_label, mode, content, mentions, attachments, references, anonymous_message, mention_everyone } });
+      const response = yield this.send({ channel_message_send: { clan_id, channel_id, channel_label, mode, content, mentions, attachments, references, anonymous_message, mention_everyone, notifi_content } });
       return response.channel_message_ack;
     });
   }
@@ -5055,6 +5084,17 @@ var Client = class {
           });
         });
         return Promise.resolve(result);
+      });
+    });
+  }
+  /** Kick a set of users from a clan. */
+  removeClanUsers(session, clanId, ids) {
+    return __async(this, null, function* () {
+      if (this.autoRefreshSession && session.refresh_token && session.isexpired((Date.now() + this.expiredTimespanMs) / 1e3)) {
+        yield this.sessionRefresh(session);
+      }
+      return this.apiClient.removeClanUsers(session.token, clanId, ids).then((response) => {
+        return Promise.resolve(response != void 0);
       });
     });
   }

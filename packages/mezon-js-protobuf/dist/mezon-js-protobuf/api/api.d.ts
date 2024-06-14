@@ -1435,6 +1435,13 @@ export interface RemoveChannelUsersRequest {
     /** The users to kick. */
     user_ids: string[];
 }
+/** Kick a set of users from a clan. */
+export interface RemoveClanUsersRequest {
+    /** The clan ID to kick from. */
+    clan_id: string;
+    /** The users to kick. */
+    user_ids: string[];
+}
 /** Leave a channel. */
 export interface LeaveChannelRequest {
     /** The channel ID to leave. */
@@ -1474,6 +1481,7 @@ export interface EventManagement {
     start_time: Date | undefined;
     end_time: Date | undefined;
     user_ids: string[];
+    create_time: Date | undefined;
 }
 /** Permission record */
 export interface Permission {
@@ -9688,6 +9696,26 @@ export declare const RemoveChannelUsersRequest: {
         user_ids?: (string[] & string[] & { [K_2 in Exclude<keyof I_1["user_ids"], keyof string[]>]: never; }) | undefined;
     } & { [K_3 in Exclude<keyof I_1, keyof RemoveChannelUsersRequest>]: never; }>(object: I_1): RemoveChannelUsersRequest;
 };
+export declare const RemoveClanUsersRequest: {
+    encode(message: RemoveClanUsersRequest, writer?: _m0.Writer): _m0.Writer;
+    decode(input: _m0.Reader | Uint8Array, length?: number): RemoveClanUsersRequest;
+    fromJSON(object: any): RemoveClanUsersRequest;
+    toJSON(message: RemoveClanUsersRequest): unknown;
+    create<I extends {
+        clan_id?: string | undefined;
+        user_ids?: string[] | undefined;
+    } & {
+        clan_id?: string | undefined;
+        user_ids?: (string[] & string[] & { [K in Exclude<keyof I["user_ids"], keyof string[]>]: never; }) | undefined;
+    } & { [K_1 in Exclude<keyof I, keyof RemoveClanUsersRequest>]: never; }>(base?: I | undefined): RemoveClanUsersRequest;
+    fromPartial<I_1 extends {
+        clan_id?: string | undefined;
+        user_ids?: string[] | undefined;
+    } & {
+        clan_id?: string | undefined;
+        user_ids?: (string[] & string[] & { [K_2 in Exclude<keyof I_1["user_ids"], keyof string[]>]: never; }) | undefined;
+    } & { [K_3 in Exclude<keyof I_1, keyof RemoveClanUsersRequest>]: never; }>(object: I_1): RemoveClanUsersRequest;
+};
 export declare const LeaveChannelRequest: {
     encode(message: LeaveChannelRequest, writer?: _m0.Writer): _m0.Writer;
     decode(input: _m0.Reader | Uint8Array, length?: number): LeaveChannelRequest;
@@ -9993,6 +10021,7 @@ export declare const EventManagement: {
         start_time?: Date | undefined;
         end_time?: Date | undefined;
         user_ids?: string[] | undefined;
+        create_time?: Date | undefined;
     } & {
         id?: string | undefined;
         title?: string | undefined;
@@ -10007,6 +10036,7 @@ export declare const EventManagement: {
         start_time?: Date | undefined;
         end_time?: Date | undefined;
         user_ids?: (string[] & string[] & { [K in Exclude<keyof I["user_ids"], keyof string[]>]: never; }) | undefined;
+        create_time?: Date | undefined;
     } & { [K_1 in Exclude<keyof I, keyof EventManagement>]: never; }>(base?: I | undefined): EventManagement;
     fromPartial<I_1 extends {
         id?: string | undefined;
@@ -10022,6 +10052,7 @@ export declare const EventManagement: {
         start_time?: Date | undefined;
         end_time?: Date | undefined;
         user_ids?: string[] | undefined;
+        create_time?: Date | undefined;
     } & {
         id?: string | undefined;
         title?: string | undefined;
@@ -10036,6 +10067,7 @@ export declare const EventManagement: {
         start_time?: Date | undefined;
         end_time?: Date | undefined;
         user_ids?: (string[] & string[] & { [K_2 in Exclude<keyof I_1["user_ids"], keyof string[]>]: never; }) | undefined;
+        create_time?: Date | undefined;
     } & { [K_3 in Exclude<keyof I_1, keyof EventManagement>]: never; }>(object: I_1): EventManagement;
 };
 export declare const Permission: {
@@ -11094,6 +11126,7 @@ export declare const EventList: {
             start_time?: Date | undefined;
             end_time?: Date | undefined;
             user_ids?: string[] | undefined;
+            create_time?: Date | undefined;
         }[] | undefined;
     } & {
         events?: ({
@@ -11110,6 +11143,7 @@ export declare const EventList: {
             start_time?: Date | undefined;
             end_time?: Date | undefined;
             user_ids?: string[] | undefined;
+            create_time?: Date | undefined;
         }[] & ({
             id?: string | undefined;
             title?: string | undefined;
@@ -11124,6 +11158,7 @@ export declare const EventList: {
             start_time?: Date | undefined;
             end_time?: Date | undefined;
             user_ids?: string[] | undefined;
+            create_time?: Date | undefined;
         } & {
             id?: string | undefined;
             title?: string | undefined;
@@ -11138,6 +11173,7 @@ export declare const EventList: {
             start_time?: Date | undefined;
             end_time?: Date | undefined;
             user_ids?: (string[] & string[] & { [K in Exclude<keyof I["events"][number]["user_ids"], keyof string[]>]: never; }) | undefined;
+            create_time?: Date | undefined;
         } & { [K_1 in Exclude<keyof I["events"][number], keyof EventManagement>]: never; })[] & { [K_2 in Exclude<keyof I["events"], keyof {
             id?: string | undefined;
             title?: string | undefined;
@@ -11152,6 +11188,7 @@ export declare const EventList: {
             start_time?: Date | undefined;
             end_time?: Date | undefined;
             user_ids?: string[] | undefined;
+            create_time?: Date | undefined;
         }[]>]: never; }) | undefined;
     } & { [K_3 in Exclude<keyof I, "events">]: never; }>(base?: I | undefined): EventList;
     fromPartial<I_1 extends {
@@ -11169,6 +11206,7 @@ export declare const EventList: {
             start_time?: Date | undefined;
             end_time?: Date | undefined;
             user_ids?: string[] | undefined;
+            create_time?: Date | undefined;
         }[] | undefined;
     } & {
         events?: ({
@@ -11185,6 +11223,7 @@ export declare const EventList: {
             start_time?: Date | undefined;
             end_time?: Date | undefined;
             user_ids?: string[] | undefined;
+            create_time?: Date | undefined;
         }[] & ({
             id?: string | undefined;
             title?: string | undefined;
@@ -11199,6 +11238,7 @@ export declare const EventList: {
             start_time?: Date | undefined;
             end_time?: Date | undefined;
             user_ids?: string[] | undefined;
+            create_time?: Date | undefined;
         } & {
             id?: string | undefined;
             title?: string | undefined;
@@ -11213,6 +11253,7 @@ export declare const EventList: {
             start_time?: Date | undefined;
             end_time?: Date | undefined;
             user_ids?: (string[] & string[] & { [K_4 in Exclude<keyof I_1["events"][number]["user_ids"], keyof string[]>]: never; }) | undefined;
+            create_time?: Date | undefined;
         } & { [K_5 in Exclude<keyof I_1["events"][number], keyof EventManagement>]: never; })[] & { [K_6 in Exclude<keyof I_1["events"], keyof {
             id?: string | undefined;
             title?: string | undefined;
@@ -11227,6 +11268,7 @@ export declare const EventList: {
             start_time?: Date | undefined;
             end_time?: Date | undefined;
             user_ids?: string[] | undefined;
+            create_time?: Date | undefined;
         }[]>]: never; }) | undefined;
     } & { [K_7 in Exclude<keyof I_1, "events">]: never; }>(object: I_1): EventList;
 };
