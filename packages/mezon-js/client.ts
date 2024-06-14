@@ -1144,7 +1144,8 @@ export class Client {
           filetype: at.filetype,
           id: at.id,
           uploader: at.uploader,
-          url: at.url
+          url: at.url,
+          create_time: at.create_time
         })
       });
       return Promise.resolve(result);
