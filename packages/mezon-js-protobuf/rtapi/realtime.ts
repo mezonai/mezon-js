@@ -901,9 +901,9 @@ export interface Stream {
   /** Mode identifies the type of stream. */
   mode: number;
   /** Subject is the primary identifier, if any. */
-  subject: string;
+  channel_id: string;
   /** Subcontext is a secondary identifier, if any. */
-  subcontext: string;
+  clan_id: string;
   /** The label is an arbitrary identifying string, if the stream has one. */
   label: string;
 }
@@ -5983,7 +5983,7 @@ export const StatusUpdate = {
 };
 
 function createBaseStream(): Stream {
-  return { mode: 0, subject: "", subcontext: "", label: "" };
+  return { mode: 0, channel_id: "", clan_id: "", label: "" };
 }
 
 export const Stream = {
@@ -5991,11 +5991,11 @@ export const Stream = {
     if (message.mode !== 0) {
       writer.uint32(8).int32(message.mode);
     }
-    if (message.subject !== "") {
-      writer.uint32(18).string(message.subject);
+    if (message.channel_id !== "") {
+      writer.uint32(18).string(message.channel_id);
     }
-    if (message.subcontext !== "") {
-      writer.uint32(26).string(message.subcontext);
+    if (message.clan_id !== "") {
+      writer.uint32(26).string(message.clan_id);
     }
     if (message.label !== "") {
       writer.uint32(34).string(message.label);
@@ -6014,10 +6014,10 @@ export const Stream = {
           message.mode = reader.int32();
           break;
         case 2:
-          message.subject = reader.string();
+          message.channel_id = reader.string();
           break;
         case 3:
-          message.subcontext = reader.string();
+          message.clan_id = reader.string();
           break;
         case 4:
           message.label = reader.string();
@@ -6033,8 +6033,8 @@ export const Stream = {
   fromJSON(object: any): Stream {
     return {
       mode: isSet(object.mode) ? Number(object.mode) : 0,
-      subject: isSet(object.subject) ? String(object.subject) : "",
-      subcontext: isSet(object.subcontext) ? String(object.subcontext) : "",
+      channel_id: isSet(object.channel_id) ? String(object.channel_id) : "",
+      clan_id: isSet(object.clan_id) ? String(object.clan_id) : "",
       label: isSet(object.label) ? String(object.label) : "",
     };
   },
@@ -6042,8 +6042,8 @@ export const Stream = {
   toJSON(message: Stream): unknown {
     const obj: any = {};
     message.mode !== undefined && (obj.mode = Math.round(message.mode));
-    message.subject !== undefined && (obj.subject = message.subject);
-    message.subcontext !== undefined && (obj.subcontext = message.subcontext);
+    message.channel_id !== undefined && (obj.channel_id = message.channel_id);
+    message.clan_id !== undefined && (obj.clan_id = message.clan_id);
     message.label !== undefined && (obj.label = message.label);
     return obj;
   },
@@ -6055,8 +6055,8 @@ export const Stream = {
   fromPartial<I extends Exact<DeepPartial<Stream>, I>>(object: I): Stream {
     const message = createBaseStream();
     message.mode = object.mode ?? 0;
-    message.subject = object.subject ?? "";
-    message.subcontext = object.subcontext ?? "";
+    message.channel_id = object.channel_id ?? "";
+    message.clan_id = object.clan_id ?? "";
     message.label = object.label ?? "";
     return message;
   },

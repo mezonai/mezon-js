@@ -1356,6 +1356,8 @@ export interface ChannelDescription {
     status: number;
     /** meeting code */
     meeting_code: string;
+    /** count message unread */
+    count_mess_unread: number;
 }
 /** A list of channel description, usually a result of a list operation. */
 export interface ChannelDescList {
@@ -1843,6 +1845,22 @@ export interface SearchMessageResponse {
     messages: SearchMessageDocument[];
     /** The total number of messages. */
     total: number;
+}
+export interface CreateWebhookRequest {
+    /** Hook name */
+    hook_name: string;
+    /** Channel ID */
+    channel_id: string;
+    /** Clan ID */
+    clan_id: string;
+}
+export interface WebhookResponse {
+    /** Hook name */
+    hook_name: string;
+    /** Channel ID */
+    channel_id: string;
+    /** hook url */
+    hook_url: string;
 }
 export declare const Account: {
     encode(message: Account, writer?: _m0.Writer): _m0.Writer;
@@ -9111,6 +9129,7 @@ export declare const ChannelDescription: {
         } | undefined;
         status?: number | undefined;
         meeting_code?: string | undefined;
+        count_mess_unread?: number | undefined;
     } & {
         clan_id?: string | undefined;
         parrent_id?: string | undefined;
@@ -9147,6 +9166,7 @@ export declare const ChannelDescription: {
         } & { [K_3 in Exclude<keyof I["last_seen_message"], keyof ChannelMessageHeader>]: never; }) | undefined;
         status?: number | undefined;
         meeting_code?: string | undefined;
+        count_mess_unread?: number | undefined;
     } & { [K_4 in Exclude<keyof I, keyof ChannelDescription>]: never; }>(base?: I | undefined): ChannelDescription;
     fromPartial<I_1 extends {
         clan_id?: string | undefined;
@@ -9174,6 +9194,7 @@ export declare const ChannelDescription: {
         } | undefined;
         status?: number | undefined;
         meeting_code?: string | undefined;
+        count_mess_unread?: number | undefined;
     } & {
         clan_id?: string | undefined;
         parrent_id?: string | undefined;
@@ -9210,6 +9231,7 @@ export declare const ChannelDescription: {
         } & { [K_8 in Exclude<keyof I_1["last_seen_message"], keyof ChannelMessageHeader>]: never; }) | undefined;
         status?: number | undefined;
         meeting_code?: string | undefined;
+        count_mess_unread?: number | undefined;
     } & { [K_9 in Exclude<keyof I_1, keyof ChannelDescription>]: never; }>(object: I_1): ChannelDescription;
 };
 export declare const ChannelDescList: {
@@ -9244,6 +9266,7 @@ export declare const ChannelDescList: {
             } | undefined;
             status?: number | undefined;
             meeting_code?: string | undefined;
+            count_mess_unread?: number | undefined;
         }[] | undefined;
         next_cursor?: string | undefined;
         prev_cursor?: string | undefined;
@@ -9275,6 +9298,7 @@ export declare const ChannelDescList: {
             } | undefined;
             status?: number | undefined;
             meeting_code?: string | undefined;
+            count_mess_unread?: number | undefined;
         }[] & ({
             clan_id?: string | undefined;
             parrent_id?: string | undefined;
@@ -9301,6 +9325,7 @@ export declare const ChannelDescList: {
             } | undefined;
             status?: number | undefined;
             meeting_code?: string | undefined;
+            count_mess_unread?: number | undefined;
         } & {
             clan_id?: string | undefined;
             parrent_id?: string | undefined;
@@ -9337,6 +9362,7 @@ export declare const ChannelDescList: {
             } & { [K_3 in Exclude<keyof I["channeldesc"][number]["last_seen_message"], keyof ChannelMessageHeader>]: never; }) | undefined;
             status?: number | undefined;
             meeting_code?: string | undefined;
+            count_mess_unread?: number | undefined;
         } & { [K_4 in Exclude<keyof I["channeldesc"][number], keyof ChannelDescription>]: never; })[] & { [K_5 in Exclude<keyof I["channeldesc"], keyof {
             clan_id?: string | undefined;
             parrent_id?: string | undefined;
@@ -9363,6 +9389,7 @@ export declare const ChannelDescList: {
             } | undefined;
             status?: number | undefined;
             meeting_code?: string | undefined;
+            count_mess_unread?: number | undefined;
         }[]>]: never; }) | undefined;
         next_cursor?: string | undefined;
         prev_cursor?: string | undefined;
@@ -9395,6 +9422,7 @@ export declare const ChannelDescList: {
             } | undefined;
             status?: number | undefined;
             meeting_code?: string | undefined;
+            count_mess_unread?: number | undefined;
         }[] | undefined;
         next_cursor?: string | undefined;
         prev_cursor?: string | undefined;
@@ -9426,6 +9454,7 @@ export declare const ChannelDescList: {
             } | undefined;
             status?: number | undefined;
             meeting_code?: string | undefined;
+            count_mess_unread?: number | undefined;
         }[] & ({
             clan_id?: string | undefined;
             parrent_id?: string | undefined;
@@ -9452,6 +9481,7 @@ export declare const ChannelDescList: {
             } | undefined;
             status?: number | undefined;
             meeting_code?: string | undefined;
+            count_mess_unread?: number | undefined;
         } & {
             clan_id?: string | undefined;
             parrent_id?: string | undefined;
@@ -9488,6 +9518,7 @@ export declare const ChannelDescList: {
             } & { [K_10 in Exclude<keyof I_1["channeldesc"][number]["last_seen_message"], keyof ChannelMessageHeader>]: never; }) | undefined;
             status?: number | undefined;
             meeting_code?: string | undefined;
+            count_mess_unread?: number | undefined;
         } & { [K_11 in Exclude<keyof I_1["channeldesc"][number], keyof ChannelDescription>]: never; })[] & { [K_12 in Exclude<keyof I_1["channeldesc"], keyof {
             clan_id?: string | undefined;
             parrent_id?: string | undefined;
@@ -9514,6 +9545,7 @@ export declare const ChannelDescList: {
             } | undefined;
             status?: number | undefined;
             meeting_code?: string | undefined;
+            count_mess_unread?: number | undefined;
         }[]>]: never; }) | undefined;
         next_cursor?: string | undefined;
         prev_cursor?: string | undefined;
@@ -12393,6 +12425,54 @@ export declare const SearchMessageResponse: {
         }[]>]: never; }) | undefined;
         total?: number | undefined;
     } & { [K_5 in Exclude<keyof I_1, keyof SearchMessageResponse>]: never; }>(object: I_1): SearchMessageResponse;
+};
+export declare const CreateWebhookRequest: {
+    encode(message: CreateWebhookRequest, writer?: _m0.Writer): _m0.Writer;
+    decode(input: _m0.Reader | Uint8Array, length?: number): CreateWebhookRequest;
+    fromJSON(object: any): CreateWebhookRequest;
+    toJSON(message: CreateWebhookRequest): unknown;
+    create<I extends {
+        hook_name?: string | undefined;
+        channel_id?: string | undefined;
+        clan_id?: string | undefined;
+    } & {
+        hook_name?: string | undefined;
+        channel_id?: string | undefined;
+        clan_id?: string | undefined;
+    } & { [K in Exclude<keyof I, keyof CreateWebhookRequest>]: never; }>(base?: I | undefined): CreateWebhookRequest;
+    fromPartial<I_1 extends {
+        hook_name?: string | undefined;
+        channel_id?: string | undefined;
+        clan_id?: string | undefined;
+    } & {
+        hook_name?: string | undefined;
+        channel_id?: string | undefined;
+        clan_id?: string | undefined;
+    } & { [K_1 in Exclude<keyof I_1, keyof CreateWebhookRequest>]: never; }>(object: I_1): CreateWebhookRequest;
+};
+export declare const WebhookResponse: {
+    encode(message: WebhookResponse, writer?: _m0.Writer): _m0.Writer;
+    decode(input: _m0.Reader | Uint8Array, length?: number): WebhookResponse;
+    fromJSON(object: any): WebhookResponse;
+    toJSON(message: WebhookResponse): unknown;
+    create<I extends {
+        hook_name?: string | undefined;
+        channel_id?: string | undefined;
+        hook_url?: string | undefined;
+    } & {
+        hook_name?: string | undefined;
+        channel_id?: string | undefined;
+        hook_url?: string | undefined;
+    } & { [K in Exclude<keyof I, keyof WebhookResponse>]: never; }>(base?: I | undefined): WebhookResponse;
+    fromPartial<I_1 extends {
+        hook_name?: string | undefined;
+        channel_id?: string | undefined;
+        hook_url?: string | undefined;
+    } & {
+        hook_name?: string | undefined;
+        channel_id?: string | undefined;
+        hook_url?: string | undefined;
+    } & { [K_1 in Exclude<keyof I_1, keyof WebhookResponse>]: never; }>(object: I_1): WebhookResponse;
 };
 type Builtin = Date | Function | Uint8Array | string | number | boolean | undefined;
 export type DeepPartial<T> = T extends Builtin ? T : T extends Array<infer U> ? Array<DeepPartial<U>> : T extends ReadonlyArray<infer U> ? ReadonlyArray<DeepPartial<U>> : T extends {} ? {

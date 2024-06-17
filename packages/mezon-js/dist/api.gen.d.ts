@@ -129,6 +129,7 @@ export interface ApiChannelDescription {
     channel_label?: string;
     channel_private?: number;
     clan_id?: string;
+    count_mess_unread?: number;
     creator_id?: string;
     last_seen_message?: ApiChannelMessageHeader;
     last_sent_message?: ApiChannelMessageHeader;
@@ -269,6 +270,12 @@ export interface ApiCreateRoleRequest {
     display_online?: number;
     role_icon?: string;
     title?: string;
+}
+/**  */
+export interface ApiCreateWebhookRequest {
+    channel_id?: string;
+    clan_id?: string;
+    hook_name?: string;
 }
 /**  */
 export interface ApiDeleteEventRequest {
@@ -701,6 +708,12 @@ export interface ApiVoiceChannelUser {
 export interface ApiVoiceChannelUserList {
     voice_channel_users?: Array<ApiVoiceChannelUser>;
 }
+/**  */
+export interface ApiWebhookResponse {
+    channel_id?: string;
+    hook_name?: string;
+    hook_url?: string;
+}
 /** The object to store. */
 export interface ApiWriteStorageObject {
     collection?: string;
@@ -958,5 +971,7 @@ export declare class MezonApi {
     getUsers(bearerToken: string, ids?: Array<string>, usernames?: Array<string>, facebookIds?: Array<string>, options?: any): Promise<ApiUsers>;
     /**  */
     updateUser(bearerToken: string, body: ApiUpdateUsersRequest, options?: any): Promise<any>;
+    /** Create webhook */
+    createWebhookLink(bearerToken: string, body: ApiCreateWebhookRequest, options?: any): Promise<ApiWebhookResponse>;
     buildFullUrl(basePath: string, fragment: string, queryParams: Map<string, any>): string;
 }

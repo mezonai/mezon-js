@@ -6856,18 +6856,18 @@ var StatusUpdate = {
   }
 };
 function createBaseStream() {
-  return { mode: 0, subject: "", subcontext: "", label: "" };
+  return { mode: 0, channel_id: "", clan_id: "", label: "" };
 }
 var Stream = {
   encode(message, writer = import_minimal4.default.Writer.create()) {
     if (message.mode !== 0) {
       writer.uint32(8).int32(message.mode);
     }
-    if (message.subject !== "") {
-      writer.uint32(18).string(message.subject);
+    if (message.channel_id !== "") {
+      writer.uint32(18).string(message.channel_id);
     }
-    if (message.subcontext !== "") {
-      writer.uint32(26).string(message.subcontext);
+    if (message.clan_id !== "") {
+      writer.uint32(26).string(message.clan_id);
     }
     if (message.label !== "") {
       writer.uint32(34).string(message.label);
@@ -6885,10 +6885,10 @@ var Stream = {
           message.mode = reader.int32();
           break;
         case 2:
-          message.subject = reader.string();
+          message.channel_id = reader.string();
           break;
         case 3:
-          message.subcontext = reader.string();
+          message.clan_id = reader.string();
           break;
         case 4:
           message.label = reader.string();
@@ -6903,16 +6903,16 @@ var Stream = {
   fromJSON(object) {
     return {
       mode: isSet4(object.mode) ? Number(object.mode) : 0,
-      subject: isSet4(object.subject) ? String(object.subject) : "",
-      subcontext: isSet4(object.subcontext) ? String(object.subcontext) : "",
+      channel_id: isSet4(object.channel_id) ? String(object.channel_id) : "",
+      clan_id: isSet4(object.clan_id) ? String(object.clan_id) : "",
       label: isSet4(object.label) ? String(object.label) : ""
     };
   },
   toJSON(message) {
     const obj = {};
     message.mode !== void 0 && (obj.mode = Math.round(message.mode));
-    message.subject !== void 0 && (obj.subject = message.subject);
-    message.subcontext !== void 0 && (obj.subcontext = message.subcontext);
+    message.channel_id !== void 0 && (obj.channel_id = message.channel_id);
+    message.clan_id !== void 0 && (obj.clan_id = message.clan_id);
     message.label !== void 0 && (obj.label = message.label);
     return obj;
   },
@@ -6923,8 +6923,8 @@ var Stream = {
     var _a, _b, _c, _d;
     const message = createBaseStream();
     message.mode = (_a = object.mode) != null ? _a : 0;
-    message.subject = (_b = object.subject) != null ? _b : "";
-    message.subcontext = (_c = object.subcontext) != null ? _c : "";
+    message.channel_id = (_b = object.channel_id) != null ? _b : "";
+    message.clan_id = (_c = object.clan_id) != null ? _c : "";
     message.label = (_d = object.label) != null ? _d : "";
     return message;
   }

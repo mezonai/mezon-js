@@ -1933,6 +1933,14 @@ export interface RemoveChannelUsersRequest {
   user_ids: string[];
 }
 
+/** Kick a set of users from a clan. */
+export interface RemoveClanUsersRequest {
+  /** The clan ID to kick from. */
+  clan_id: string;
+  /** The users to kick. */
+  user_ids: string[];
+}
+
 /** Leave a channel. */
 export interface LeaveChannelRequest {
   /** The channel ID to leave. */
@@ -2397,6 +2405,24 @@ export interface SearchMessageResponse {
   messages: SearchMessageDocument[];
   /** The total number of messages. */
   total: number;
+}
+
+export interface CreateWebhookRequest {
+  /** Hook name */
+  hook_name: string;
+  /** Channel ID */
+  channel_id: string;
+  /** Clan ID */
+  clan_id: string;
+}
+
+export interface WebhookResponse {
+  /** Hook name */
+  hook_name: string;
+  /** Channel ID */
+  channel_id: string;
+  /** hook url */
+  hook_url: string;
 }
 
 function createBaseAccount(): Account {
@@ -13380,6 +13406,72 @@ export const RemoveChannelUsersRequest = {
   },
 };
 
+function createBaseRemoveClanUsersRequest(): RemoveClanUsersRequest {
+  return { clan_id: "", user_ids: [] };
+}
+
+export const RemoveClanUsersRequest = {
+  encode(message: RemoveClanUsersRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.clan_id !== "") {
+      writer.uint32(10).string(message.clan_id);
+    }
+    for (const v of message.user_ids) {
+      writer.uint32(18).string(v!);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): RemoveClanUsersRequest {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseRemoveClanUsersRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.clan_id = reader.string();
+          break;
+        case 2:
+          message.user_ids.push(reader.string());
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): RemoveClanUsersRequest {
+    return {
+      clan_id: isSet(object.clan_id) ? String(object.clan_id) : "",
+      user_ids: Array.isArray(object?.user_ids) ? object.user_ids.map((e: any) => String(e)) : [],
+    };
+  },
+
+  toJSON(message: RemoveClanUsersRequest): unknown {
+    const obj: any = {};
+    message.clan_id !== undefined && (obj.clan_id = message.clan_id);
+    if (message.user_ids) {
+      obj.user_ids = message.user_ids.map((e) => e);
+    } else {
+      obj.user_ids = [];
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<RemoveClanUsersRequest>, I>>(base?: I): RemoveClanUsersRequest {
+    return RemoveClanUsersRequest.fromPartial(base ?? {});
+  },
+
+  fromPartial<I extends Exact<DeepPartial<RemoveClanUsersRequest>, I>>(object: I): RemoveClanUsersRequest {
+    const message = createBaseRemoveClanUsersRequest();
+    message.clan_id = object.clan_id ?? "";
+    message.user_ids = object.user_ids?.map((e) => e) || [];
+    return message;
+  },
+};
+
 function createBaseLeaveChannelRequest(): LeaveChannelRequest {
   return { channel_id: "" };
 }
@@ -17202,6 +17294,148 @@ export const SearchMessageResponse = {
     const message = createBaseSearchMessageResponse();
     message.messages = object.messages?.map((e) => SearchMessageDocument.fromPartial(e)) || [];
     message.total = object.total ?? 0;
+    return message;
+  },
+};
+
+function createBaseCreateWebhookRequest(): CreateWebhookRequest {
+  return { hook_name: "", channel_id: "", clan_id: "" };
+}
+
+export const CreateWebhookRequest = {
+  encode(message: CreateWebhookRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.hook_name !== "") {
+      writer.uint32(10).string(message.hook_name);
+    }
+    if (message.channel_id !== "") {
+      writer.uint32(18).string(message.channel_id);
+    }
+    if (message.clan_id !== "") {
+      writer.uint32(26).string(message.clan_id);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): CreateWebhookRequest {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseCreateWebhookRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.hook_name = reader.string();
+          break;
+        case 2:
+          message.channel_id = reader.string();
+          break;
+        case 3:
+          message.clan_id = reader.string();
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): CreateWebhookRequest {
+    return {
+      hook_name: isSet(object.hook_name) ? String(object.hook_name) : "",
+      channel_id: isSet(object.channel_id) ? String(object.channel_id) : "",
+      clan_id: isSet(object.clan_id) ? String(object.clan_id) : "",
+    };
+  },
+
+  toJSON(message: CreateWebhookRequest): unknown {
+    const obj: any = {};
+    message.hook_name !== undefined && (obj.hook_name = message.hook_name);
+    message.channel_id !== undefined && (obj.channel_id = message.channel_id);
+    message.clan_id !== undefined && (obj.clan_id = message.clan_id);
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<CreateWebhookRequest>, I>>(base?: I): CreateWebhookRequest {
+    return CreateWebhookRequest.fromPartial(base ?? {});
+  },
+
+  fromPartial<I extends Exact<DeepPartial<CreateWebhookRequest>, I>>(object: I): CreateWebhookRequest {
+    const message = createBaseCreateWebhookRequest();
+    message.hook_name = object.hook_name ?? "";
+    message.channel_id = object.channel_id ?? "";
+    message.clan_id = object.clan_id ?? "";
+    return message;
+  },
+};
+
+function createBaseWebhookResponse(): WebhookResponse {
+  return { hook_name: "", channel_id: "", hook_url: "" };
+}
+
+export const WebhookResponse = {
+  encode(message: WebhookResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.hook_name !== "") {
+      writer.uint32(10).string(message.hook_name);
+    }
+    if (message.channel_id !== "") {
+      writer.uint32(18).string(message.channel_id);
+    }
+    if (message.hook_url !== "") {
+      writer.uint32(26).string(message.hook_url);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): WebhookResponse {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseWebhookResponse();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.hook_name = reader.string();
+          break;
+        case 2:
+          message.channel_id = reader.string();
+          break;
+        case 3:
+          message.hook_url = reader.string();
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): WebhookResponse {
+    return {
+      hook_name: isSet(object.hook_name) ? String(object.hook_name) : "",
+      channel_id: isSet(object.channel_id) ? String(object.channel_id) : "",
+      hook_url: isSet(object.hook_url) ? String(object.hook_url) : "",
+    };
+  },
+
+  toJSON(message: WebhookResponse): unknown {
+    const obj: any = {};
+    message.hook_name !== undefined && (obj.hook_name = message.hook_name);
+    message.channel_id !== undefined && (obj.channel_id = message.channel_id);
+    message.hook_url !== undefined && (obj.hook_url = message.hook_url);
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<WebhookResponse>, I>>(base?: I): WebhookResponse {
+    return WebhookResponse.fromPartial(base ?? {});
+  },
+
+  fromPartial<I extends Exact<DeepPartial<WebhookResponse>, I>>(object: I): WebhookResponse {
+    const message = createBaseWebhookResponse();
+    message.hook_name = object.hook_name ?? "";
+    message.channel_id = object.channel_id ?? "";
+    message.hook_url = object.hook_url ?? "";
     return message;
   },
 };

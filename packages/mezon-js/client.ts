@@ -90,6 +90,8 @@ import {
   ApiSearchMessageResponse,
   ApiPinMessageRequest,
   ApiPinMessagesList,
+  ApiCreateWebhookRequest,
+  ApiWebhookResponse,
 } from "./api.gen";
 
 import { Session } from "./session";
@@ -764,6 +766,18 @@ export class Client {
     }
 
     return this.apiClient.createEvent(session.token, request).then((response: ApiEventManagement) => {
+      return Promise.resolve(response);
+    });
+  }
+
+  /** Create a new event for clan. */
+  async createWebhook(session: Session, request: ApiCreateWebhookRequest): Promise<ApiWebhookResponse> {
+    if (this.autoRefreshSession && session.refresh_token &&
+        session.isexpired((Date.now() + this.expiredTimespanMs)/1000)) {
+        await this.sessionRefresh(session);
+    }
+
+    return this.apiClient.createWebhookLink(session.token, request).then((response: ApiWebhookResponse) => {
       return Promise.resolve(response);
     });
   }
