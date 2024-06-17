@@ -224,6 +224,8 @@ export interface ApiChannelDescription {
   channel_private?: number;
   //
   clan_id?: string;
+  //
+  count_mess_unread?: number;
   //creator ID.
   creator_id?: string;
   //
