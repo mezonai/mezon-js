@@ -679,9 +679,9 @@ export interface Stream {
     /** Mode identifies the type of stream. */
     mode: number;
     /** Subject is the primary identifier, if any. */
-    subject: string;
+    channel_id: string;
     /** Subcontext is a secondary identifier, if any. */
-    subcontext: string;
+    clan_id: string;
     /** The label is an arbitrary identifying string, if the stream has one. */
     label: string;
 }
@@ -918,8 +918,8 @@ export declare const Envelope: {
         stream_data?: {
             stream?: {
                 mode?: number | undefined;
-                subject?: string | undefined;
-                subcontext?: string | undefined;
+                channel_id?: string | undefined;
+                clan_id?: string | undefined;
                 label?: string | undefined;
             } | undefined;
             sender?: {
@@ -935,8 +935,8 @@ export declare const Envelope: {
         stream_presence_event?: {
             stream?: {
                 mode?: number | undefined;
-                subject?: string | undefined;
-                subcontext?: string | undefined;
+                channel_id?: string | undefined;
+                clan_id?: string | undefined;
                 label?: string | undefined;
             } | undefined;
             joins?: {
@@ -1733,8 +1733,8 @@ export declare const Envelope: {
         stream_data?: ({
             stream?: {
                 mode?: number | undefined;
-                subject?: string | undefined;
-                subcontext?: string | undefined;
+                channel_id?: string | undefined;
+                clan_id?: string | undefined;
                 label?: string | undefined;
             } | undefined;
             sender?: {
@@ -1749,13 +1749,13 @@ export declare const Envelope: {
         } & {
             stream?: ({
                 mode?: number | undefined;
-                subject?: string | undefined;
-                subcontext?: string | undefined;
+                channel_id?: string | undefined;
+                clan_id?: string | undefined;
                 label?: string | undefined;
             } & {
                 mode?: number | undefined;
-                subject?: string | undefined;
-                subcontext?: string | undefined;
+                channel_id?: string | undefined;
+                clan_id?: string | undefined;
                 label?: string | undefined;
             } & { [K_42 in Exclude<keyof I["stream_data"]["stream"], keyof Stream>]: never; }) | undefined;
             sender?: ({
@@ -1777,8 +1777,8 @@ export declare const Envelope: {
         stream_presence_event?: ({
             stream?: {
                 mode?: number | undefined;
-                subject?: string | undefined;
-                subcontext?: string | undefined;
+                channel_id?: string | undefined;
+                clan_id?: string | undefined;
                 label?: string | undefined;
             } | undefined;
             joins?: {
@@ -1798,13 +1798,13 @@ export declare const Envelope: {
         } & {
             stream?: ({
                 mode?: number | undefined;
-                subject?: string | undefined;
-                subcontext?: string | undefined;
+                channel_id?: string | undefined;
+                clan_id?: string | undefined;
                 label?: string | undefined;
             } & {
                 mode?: number | undefined;
-                subject?: string | undefined;
-                subcontext?: string | undefined;
+                channel_id?: string | undefined;
+                clan_id?: string | undefined;
                 label?: string | undefined;
             } & { [K_45 in Exclude<keyof I["stream_presence_event"]["stream"], keyof Stream>]: never; }) | undefined;
             joins?: ({
@@ -2558,8 +2558,8 @@ export declare const Envelope: {
         stream_data?: {
             stream?: {
                 mode?: number | undefined;
-                subject?: string | undefined;
-                subcontext?: string | undefined;
+                channel_id?: string | undefined;
+                clan_id?: string | undefined;
                 label?: string | undefined;
             } | undefined;
             sender?: {
@@ -2575,8 +2575,8 @@ export declare const Envelope: {
         stream_presence_event?: {
             stream?: {
                 mode?: number | undefined;
-                subject?: string | undefined;
-                subcontext?: string | undefined;
+                channel_id?: string | undefined;
+                clan_id?: string | undefined;
                 label?: string | undefined;
             } | undefined;
             joins?: {
@@ -3373,8 +3373,8 @@ export declare const Envelope: {
         stream_data?: ({
             stream?: {
                 mode?: number | undefined;
-                subject?: string | undefined;
-                subcontext?: string | undefined;
+                channel_id?: string | undefined;
+                clan_id?: string | undefined;
                 label?: string | undefined;
             } | undefined;
             sender?: {
@@ -3389,13 +3389,13 @@ export declare const Envelope: {
         } & {
             stream?: ({
                 mode?: number | undefined;
-                subject?: string | undefined;
-                subcontext?: string | undefined;
+                channel_id?: string | undefined;
+                clan_id?: string | undefined;
                 label?: string | undefined;
             } & {
                 mode?: number | undefined;
-                subject?: string | undefined;
-                subcontext?: string | undefined;
+                channel_id?: string | undefined;
+                clan_id?: string | undefined;
                 label?: string | undefined;
             } & { [K_135 in Exclude<keyof I_1["stream_data"]["stream"], keyof Stream>]: never; }) | undefined;
             sender?: ({
@@ -3417,8 +3417,8 @@ export declare const Envelope: {
         stream_presence_event?: ({
             stream?: {
                 mode?: number | undefined;
-                subject?: string | undefined;
-                subcontext?: string | undefined;
+                channel_id?: string | undefined;
+                clan_id?: string | undefined;
                 label?: string | undefined;
             } | undefined;
             joins?: {
@@ -3438,13 +3438,13 @@ export declare const Envelope: {
         } & {
             stream?: ({
                 mode?: number | undefined;
-                subject?: string | undefined;
-                subcontext?: string | undefined;
+                channel_id?: string | undefined;
+                clan_id?: string | undefined;
                 label?: string | undefined;
             } & {
                 mode?: number | undefined;
-                subject?: string | undefined;
-                subcontext?: string | undefined;
+                channel_id?: string | undefined;
+                clan_id?: string | undefined;
                 label?: string | undefined;
             } & { [K_138 in Exclude<keyof I_1["stream_presence_event"]["stream"], keyof Stream>]: never; }) | undefined;
             joins?: ({
@@ -6653,24 +6653,24 @@ export declare const Stream: {
     toJSON(message: Stream): unknown;
     create<I extends {
         mode?: number | undefined;
-        subject?: string | undefined;
-        subcontext?: string | undefined;
+        channel_id?: string | undefined;
+        clan_id?: string | undefined;
         label?: string | undefined;
     } & {
         mode?: number | undefined;
-        subject?: string | undefined;
-        subcontext?: string | undefined;
+        channel_id?: string | undefined;
+        clan_id?: string | undefined;
         label?: string | undefined;
     } & { [K in Exclude<keyof I, keyof Stream>]: never; }>(base?: I | undefined): Stream;
     fromPartial<I_1 extends {
         mode?: number | undefined;
-        subject?: string | undefined;
-        subcontext?: string | undefined;
+        channel_id?: string | undefined;
+        clan_id?: string | undefined;
         label?: string | undefined;
     } & {
         mode?: number | undefined;
-        subject?: string | undefined;
-        subcontext?: string | undefined;
+        channel_id?: string | undefined;
+        clan_id?: string | undefined;
         label?: string | undefined;
     } & { [K_1 in Exclude<keyof I_1, keyof Stream>]: never; }>(object: I_1): Stream;
 };
@@ -6682,8 +6682,8 @@ export declare const StreamData: {
     create<I extends {
         stream?: {
             mode?: number | undefined;
-            subject?: string | undefined;
-            subcontext?: string | undefined;
+            channel_id?: string | undefined;
+            clan_id?: string | undefined;
             label?: string | undefined;
         } | undefined;
         sender?: {
@@ -6698,13 +6698,13 @@ export declare const StreamData: {
     } & {
         stream?: ({
             mode?: number | undefined;
-            subject?: string | undefined;
-            subcontext?: string | undefined;
+            channel_id?: string | undefined;
+            clan_id?: string | undefined;
             label?: string | undefined;
         } & {
             mode?: number | undefined;
-            subject?: string | undefined;
-            subcontext?: string | undefined;
+            channel_id?: string | undefined;
+            clan_id?: string | undefined;
             label?: string | undefined;
         } & { [K in Exclude<keyof I["stream"], keyof Stream>]: never; }) | undefined;
         sender?: ({
@@ -6726,8 +6726,8 @@ export declare const StreamData: {
     fromPartial<I_1 extends {
         stream?: {
             mode?: number | undefined;
-            subject?: string | undefined;
-            subcontext?: string | undefined;
+            channel_id?: string | undefined;
+            clan_id?: string | undefined;
             label?: string | undefined;
         } | undefined;
         sender?: {
@@ -6742,13 +6742,13 @@ export declare const StreamData: {
     } & {
         stream?: ({
             mode?: number | undefined;
-            subject?: string | undefined;
-            subcontext?: string | undefined;
+            channel_id?: string | undefined;
+            clan_id?: string | undefined;
             label?: string | undefined;
         } & {
             mode?: number | undefined;
-            subject?: string | undefined;
-            subcontext?: string | undefined;
+            channel_id?: string | undefined;
+            clan_id?: string | undefined;
             label?: string | undefined;
         } & { [K_3 in Exclude<keyof I_1["stream"], keyof Stream>]: never; }) | undefined;
         sender?: ({
@@ -6776,8 +6776,8 @@ export declare const StreamPresenceEvent: {
     create<I extends {
         stream?: {
             mode?: number | undefined;
-            subject?: string | undefined;
-            subcontext?: string | undefined;
+            channel_id?: string | undefined;
+            clan_id?: string | undefined;
             label?: string | undefined;
         } | undefined;
         joins?: {
@@ -6797,13 +6797,13 @@ export declare const StreamPresenceEvent: {
     } & {
         stream?: ({
             mode?: number | undefined;
-            subject?: string | undefined;
-            subcontext?: string | undefined;
+            channel_id?: string | undefined;
+            clan_id?: string | undefined;
             label?: string | undefined;
         } & {
             mode?: number | undefined;
-            subject?: string | undefined;
-            subcontext?: string | undefined;
+            channel_id?: string | undefined;
+            clan_id?: string | undefined;
             label?: string | undefined;
         } & { [K in Exclude<keyof I["stream"], keyof Stream>]: never; }) | undefined;
         joins?: ({
@@ -6860,8 +6860,8 @@ export declare const StreamPresenceEvent: {
     fromPartial<I_1 extends {
         stream?: {
             mode?: number | undefined;
-            subject?: string | undefined;
-            subcontext?: string | undefined;
+            channel_id?: string | undefined;
+            clan_id?: string | undefined;
             label?: string | undefined;
         } | undefined;
         joins?: {
@@ -6881,13 +6881,13 @@ export declare const StreamPresenceEvent: {
     } & {
         stream?: ({
             mode?: number | undefined;
-            subject?: string | undefined;
-            subcontext?: string | undefined;
+            channel_id?: string | undefined;
+            clan_id?: string | undefined;
             label?: string | undefined;
         } & {
             mode?: number | undefined;
-            subject?: string | undefined;
-            subcontext?: string | undefined;
+            channel_id?: string | undefined;
+            clan_id?: string | undefined;
             label?: string | undefined;
         } & { [K_6 in Exclude<keyof I_1["stream"], keyof Stream>]: never; }) | undefined;
         joins?: ({

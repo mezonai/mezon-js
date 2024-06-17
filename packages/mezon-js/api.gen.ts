@@ -479,6 +479,16 @@ export interface ApiCreateRoleRequest {
 }
 
 /**  */
+export interface ApiCreateWebhookRequest {
+  //
+  channel_id?: string;
+  //
+  clan_id?: string;
+  //
+  hook_name?: string;
+}
+
+/**  */
 export interface ApiDeleteEventRequest {
   //The id of a event.
   event_id?: string;
@@ -1215,6 +1225,16 @@ export interface ApiVoiceChannelUser {
 export interface ApiVoiceChannelUserList {
   //
   voice_channel_users?: Array<ApiVoiceChannelUser>;
+}
+
+/**  */
+export interface ApiWebhookResponse {
+  //
+  channel_id?: string;
+  //
+  hook_name?: string;
+  //
+  hook_url?: string;
 }
 
 /** The object to store. */
@@ -5473,6 +5493,42 @@ export class MezonApi {
 
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("PUT", options, bodyJson);
+    if (bearerToken) {
+        fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+    }
+
+    return Promise.race([
+      fetch(fullUrl, fetchOptions).then((response) => {
+        if (response.status == 204) {
+          return response;
+        } else if (response.status >= 200 && response.status < 300) {
+          return response.json();
+        } else {
+          throw response;
+        }
+      }),
+      new Promise((_, reject) =>
+        setTimeout(reject, this.timeoutMs, "Request timed out.")
+      ),
+    ]);
+}
+
+  /** Create webhook */
+  createWebhookLink(bearerToken: string,
+      body:ApiCreateWebhookRequest,
+      options: any = {}): Promise<ApiWebhookResponse> {
+    
+    if (body === null || body === undefined) {
+      throw new Error("'body' is a required parameter but is null or undefined.");
+    }
+    const urlPath = "/v2/webhook/create";
+    const queryParams = new Map<string, any>();
+
+    let bodyJson : string = "";
+    bodyJson = JSON.stringify(body || {});
+
+    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
+    const fetchOptions = buildFetchOptions("POST", options, bodyJson);
     if (bearerToken) {
         fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
     }

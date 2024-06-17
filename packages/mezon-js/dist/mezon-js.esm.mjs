@@ -3949,6 +3949,35 @@ var MezonApi = class {
       )
     ]);
   }
+  /** Create webhook */
+  createWebhookLink(bearerToken, body, options = {}) {
+    if (body === null || body === void 0) {
+      throw new Error("'body' is a required parameter but is null or undefined.");
+    }
+    const urlPath = "/v2/webhook/create";
+    const queryParams = /* @__PURE__ */ new Map();
+    let bodyJson = "";
+    bodyJson = JSON.stringify(body || {});
+    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
+    const fetchOptions = buildFetchOptions("POST", options, bodyJson);
+    if (bearerToken) {
+      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+    }
+    return Promise.race([
+      fetch(fullUrl, fetchOptions).then((response) => {
+        if (response.status == 204) {
+          return response;
+        } else if (response.status >= 200 && response.status < 300) {
+          return response.json();
+        } else {
+          throw response;
+        }
+      }),
+      new Promise(
+        (_, reject) => setTimeout(reject, this.timeoutMs, "Request timed out.")
+      )
+    ]);
+  }
   buildFullUrl(basePath, fragment, queryParams) {
     let fullPath = basePath + fragment + "?";
     for (let [k, v] of queryParams) {
@@ -4883,6 +4912,17 @@ var Client = class {
       });
     });
   }
+  /** Create a new event for clan. */
+  createWebhook(session, request) {
+    return __async(this, null, function* () {
+      if (this.autoRefreshSession && session.refresh_token && session.isexpired((Date.now() + this.expiredTimespanMs) / 1e3)) {
+        yield this.sessionRefresh(session);
+      }
+      return this.apiClient.createWebhookLink(session.token, request).then((response) => {
+        return Promise.resolve(response);
+      });
+    });
+  }
   /** add role for channel. */
   addRolesChannelDesc(session, request) {
     return __async(this, null, function* () {
@@ -5238,7 +5278,8 @@ var Client = class {
             filetype: at.filetype,
             id: at.id,
             uploader: at.uploader,
-            url: at.url
+            url: at.url,
+            create_time: at.create_time
           });
         });
         return Promise.resolve(result);
