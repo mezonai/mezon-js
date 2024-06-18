@@ -211,6 +211,8 @@ export interface ApiChannelDescList {
 /**  */
 export interface ApiChannelDescription {
   //
+  active?: number;
+  //
   category_id?: string;
   //
   category_name?: string;
@@ -486,6 +488,12 @@ export interface ApiCreateWebhookRequest {
   clan_id?: string;
   //
   hook_name?: string;
+}
+
+/** Delete a channel the user has access to. */
+export interface ApiDeleteChannelDescRequest {
+  //The id of a channel.
+  channel_id?: string;
 }
 
 /**  */
@@ -3345,6 +3353,42 @@ export class MezonApi {
 
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("POST", options, bodyJson);
+    if (bearerToken) {
+        fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+    }
+
+    return Promise.race([
+      fetch(fullUrl, fetchOptions).then((response) => {
+        if (response.status == 204) {
+          return response;
+        } else if (response.status >= 200 && response.status < 300) {
+          return response.json();
+        } else {
+          throw response;
+        }
+      }),
+      new Promise((_, reject) =>
+        setTimeout(reject, this.timeoutMs, "Request timed out.")
+      ),
+    ]);
+}
+
+  /** close direct message. */
+  closeDirectMess(bearerToken: string,
+      body:ApiDeleteChannelDescRequest,
+      options: any = {}): Promise<any> {
+    
+    if (body === null || body === undefined) {
+      throw new Error("'body' is a required parameter but is null or undefined.");
+    }
+    const urlPath = "/v2/direct/close";
+    const queryParams = new Map<string, any>();
+
+    let bodyJson : string = "";
+    bodyJson = JSON.stringify(body || {});
+
+    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
+    const fetchOptions = buildFetchOptions("PUT", options, bodyJson);
     if (bearerToken) {
         fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
     }
