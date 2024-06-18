@@ -1837,6 +1837,8 @@ export interface ChannelDescription {
   meeting_code: string;
   /** count message unread */
   count_mess_unread: number;
+  /**  */
+  active: number;
 }
 
 /** A list of channel description, usually a result of a list operation. */
@@ -12575,6 +12577,7 @@ function createBaseChannelDescription(): ChannelDescription {
     status: 0,
     meeting_code: "",
     count_mess_unread: 0,
+    active: 0,
   };
 }
 
@@ -12627,6 +12630,9 @@ export const ChannelDescription = {
     }
     if (message.count_mess_unread !== 0) {
       writer.uint32(128).int32(message.count_mess_unread);
+    }
+    if (message.active !== 0) {
+      writer.uint32(136).int32(message.active);
     }
     return writer;
   },
@@ -12686,6 +12692,9 @@ export const ChannelDescription = {
         case 16:
           message.count_mess_unread = reader.int32();
           break;
+        case 17:
+          message.active = reader.int32();
+          break;
         default:
           reader.skipType(tag & 7);
           break;
@@ -12716,6 +12725,7 @@ export const ChannelDescription = {
       status: isSet(object.status) ? Number(object.status) : 0,
       meeting_code: isSet(object.meeting_code) ? String(object.meeting_code) : "",
       count_mess_unread: isSet(object.count_mess_unread) ? Number(object.count_mess_unread) : 0,
+      active: isSet(object.active) ? Number(object.active) : 0,
     };
   },
 
@@ -12749,6 +12759,7 @@ export const ChannelDescription = {
     message.status !== undefined && (obj.status = Math.round(message.status));
     message.meeting_code !== undefined && (obj.meeting_code = message.meeting_code);
     message.count_mess_unread !== undefined && (obj.count_mess_unread = Math.round(message.count_mess_unread));
+    message.active !== undefined && (obj.active = Math.round(message.active));
     return obj;
   },
 
@@ -12778,6 +12789,7 @@ export const ChannelDescription = {
     message.status = object.status ?? 0;
     message.meeting_code = object.meeting_code ?? "";
     message.count_mess_unread = object.count_mess_unread ?? 0;
+    message.active = object.active ?? 0;
     return message;
   },
 };
