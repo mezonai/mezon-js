@@ -40,7 +40,7 @@ export interface Channel {
     user_id_one: string;
     user_id_two: string;
 }
-interface ClanJoin {
+export interface ClanJoin {
     clan_join: {
         clan_id: string;
     };
