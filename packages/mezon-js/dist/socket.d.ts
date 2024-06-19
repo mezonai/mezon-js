@@ -40,6 +40,11 @@ export interface Channel {
     user_id_one: string;
     user_id_two: string;
 }
+interface ClanJoin {
+    clan_join: {
+        clan_id: string;
+    };
+}
 /** Join a realtime chat channel. */
 interface ChannelJoin {
     channel_join: {
@@ -534,6 +539,8 @@ export interface Socket {
     createParty(open: boolean, max_size: number): Promise<Party>;
     /** Subscribe to one or more users for their status updates. */
     followUsers(user_ids: string[]): Promise<Status>;
+    /** Join clan chat */
+    joinClanChat(clan_id: string): Promise<ClanJoin>;
     /** Join a chat channel on the server. */
     joinChat(channel_id: string, channel_label: string, mode: number, type: number, persistence: boolean, hidden: boolean): Promise<Channel>;
     /** Join a party. */
@@ -680,6 +687,7 @@ export declare class DefaultSocket implements Socket {
     closeParty(party_id: string): Promise<void>;
     createParty(open: boolean, max_size: number): Promise<Party>;
     followUsers(userIds: string[]): Promise<Status>;
+    joinClanChat(clan_id: string): Promise<ClanJoin>;
     joinChat(channel_id: string, channel_label: string, mode: number, type: number, persistence: boolean, hidden: boolean): Promise<Channel>;
     joinParty(party_id: string): Promise<void>;
     leaveChat(channel_id: string, channel_label: string, mode: number): Promise<void>;
