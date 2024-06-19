@@ -54,6 +54,12 @@ export interface Channel {
   user_id_two: string;
 }
 
+export interface ClanJoin {
+  clan_join: {
+    clan_id: string;
+  }
+}
+
 /** Join a realtime chat channel. */
 interface ChannelJoin {
   channel_join: {
@@ -694,6 +700,9 @@ export interface Socket {
   /** Subscribe to one or more users for their status updates. */
   followUsers(user_ids: string[]) : Promise<Status>;
 
+  /** Join clan chat */
+  joinClanChat(clan_id: string) : Promise<ClanJoin>;
+
   /** Join a chat channel on the server. */
   joinChat(channel_id: string, channel_label: string, mode: number, type: number, persistence: boolean, hidden: boolean) : Promise<Channel>;
 
@@ -1251,6 +1260,17 @@ export class DefaultSocket implements Socket {
   async followUsers(userIds : string[]): Promise<Status> {
     const response = await this.send({status_follow: {user_ids: userIds}});
     return response.status;
+  }
+
+  async joinClanChat(clan_id: string): Promise<ClanJoin> {
+    
+    const response = await this.send({
+      clan_join: {
+          clan_id: clan_id,          
+      }
+    });
+
+    return response.clan_join;
   }
 
   async joinChat(channel_id: string, channel_label: string, mode: number, type: number, persistence: boolean, hidden: boolean): Promise<Channel> {

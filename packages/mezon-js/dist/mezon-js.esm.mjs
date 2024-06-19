@@ -2262,6 +2262,35 @@ var MezonApi = class {
       )
     ]);
   }
+  /** close direct message. */
+  closeDirectMess(bearerToken, body, options = {}) {
+    if (body === null || body === void 0) {
+      throw new Error("'body' is a required parameter but is null or undefined.");
+    }
+    const urlPath = "/v2/direct/close";
+    const queryParams = /* @__PURE__ */ new Map();
+    let bodyJson = "";
+    bodyJson = JSON.stringify(body || {});
+    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
+    const fetchOptions = buildFetchOptions("PUT", options, bodyJson);
+    if (bearerToken) {
+      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+    }
+    return Promise.race([
+      fetch(fullUrl, fetchOptions).then((response) => {
+        if (response.status == 204) {
+          return response;
+        } else if (response.status >= 200 && response.status < 300) {
+          return response.json();
+        } else {
+          throw response;
+        }
+      }),
+      new Promise(
+        (_, reject) => setTimeout(reject, this.timeoutMs, "Request timed out.")
+      )
+    ]);
+  }
   /** Search message from elasticsearch service. */
   searchMessage(bearerToken, body, options = {}) {
     if (body === null || body === void 0) {
@@ -4485,6 +4514,16 @@ var _DefaultSocket = class _DefaultSocket {
       return response.status;
     });
   }
+  joinClanChat(clan_id) {
+    return __async(this, null, function* () {
+      const response = yield this.send({
+        clan_join: {
+          clan_id
+        }
+      });
+      return response.clan_join;
+    });
+  }
   joinChat(channel_id, channel_label, mode, type, persistence, hidden) {
     return __async(this, null, function* () {
       const response = yield this.send(
@@ -5489,6 +5528,17 @@ var Client = class {
         yield this.sessionRefresh(session);
       }
       return this.apiClient.linkApple(session.token, request).then((response) => {
+        return response !== void 0;
+      });
+    });
+  }
+  //
+  closeDirectMess(session, request) {
+    return __async(this, null, function* () {
+      if (this.autoRefreshSession && session.refresh_token && session.isexpired((Date.now() + this.expiredTimespanMs) / 1e3)) {
+        yield this.sessionRefresh(session);
+      }
+      return this.apiClient.closeDirectMess(session.token, request).then((response) => {
         return response !== void 0;
       });
     });

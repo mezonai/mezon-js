@@ -16,6 +16,10 @@ export interface Envelope {
   channel?:
     | Channel
     | undefined;
+  /** Join a realtime chat clan */
+  clan_join?:
+    | ClanJoin
+    | undefined;
   /** Join a realtime chat channel. */
   channel_join?:
     | ChannelJoin
@@ -208,6 +212,12 @@ export interface Channel {
   user_id_one: string;
   /** The ID of the second DM user, or an empty string if this message was not sent through a DM chat. */
   user_id_two: string;
+}
+
+/** Join operation for a realtime chat channel. */
+export interface ClanJoin {
+  /** The id of channel or group */
+  clan_id: string;
 }
 
 /** Join operation for a realtime chat channel. */
@@ -954,6 +964,7 @@ function createBaseEnvelope(): Envelope {
   return {
     cid: "",
     channel: undefined,
+    clan_join: undefined,
     channel_join: undefined,
     channel_leave: undefined,
     channel_message: undefined,
@@ -1009,137 +1020,140 @@ export const Envelope = {
     if (message.channel !== undefined) {
       Channel.encode(message.channel, writer.uint32(18).fork()).ldelim();
     }
+    if (message.clan_join !== undefined) {
+      ClanJoin.encode(message.clan_join, writer.uint32(26).fork()).ldelim();
+    }
     if (message.channel_join !== undefined) {
-      ChannelJoin.encode(message.channel_join, writer.uint32(26).fork()).ldelim();
+      ChannelJoin.encode(message.channel_join, writer.uint32(34).fork()).ldelim();
     }
     if (message.channel_leave !== undefined) {
-      ChannelLeave.encode(message.channel_leave, writer.uint32(34).fork()).ldelim();
+      ChannelLeave.encode(message.channel_leave, writer.uint32(42).fork()).ldelim();
     }
     if (message.channel_message !== undefined) {
-      ChannelMessage.encode(message.channel_message, writer.uint32(42).fork()).ldelim();
+      ChannelMessage.encode(message.channel_message, writer.uint32(50).fork()).ldelim();
     }
     if (message.channel_message_ack !== undefined) {
-      ChannelMessageAck.encode(message.channel_message_ack, writer.uint32(50).fork()).ldelim();
+      ChannelMessageAck.encode(message.channel_message_ack, writer.uint32(58).fork()).ldelim();
     }
     if (message.channel_message_send !== undefined) {
-      ChannelMessageSend.encode(message.channel_message_send, writer.uint32(58).fork()).ldelim();
+      ChannelMessageSend.encode(message.channel_message_send, writer.uint32(66).fork()).ldelim();
     }
     if (message.channel_message_update !== undefined) {
-      ChannelMessageUpdate.encode(message.channel_message_update, writer.uint32(66).fork()).ldelim();
+      ChannelMessageUpdate.encode(message.channel_message_update, writer.uint32(74).fork()).ldelim();
     }
     if (message.channel_message_remove !== undefined) {
-      ChannelMessageRemove.encode(message.channel_message_remove, writer.uint32(74).fork()).ldelim();
+      ChannelMessageRemove.encode(message.channel_message_remove, writer.uint32(82).fork()).ldelim();
     }
     if (message.channel_presence_event !== undefined) {
-      ChannelPresenceEvent.encode(message.channel_presence_event, writer.uint32(82).fork()).ldelim();
+      ChannelPresenceEvent.encode(message.channel_presence_event, writer.uint32(90).fork()).ldelim();
     }
     if (message.error !== undefined) {
-      Error.encode(message.error, writer.uint32(90).fork()).ldelim();
+      Error.encode(message.error, writer.uint32(98).fork()).ldelim();
     }
     if (message.notifications !== undefined) {
-      Notifications.encode(message.notifications, writer.uint32(98).fork()).ldelim();
+      Notifications.encode(message.notifications, writer.uint32(106).fork()).ldelim();
     }
     if (message.rpc !== undefined) {
-      Rpc.encode(message.rpc, writer.uint32(106).fork()).ldelim();
+      Rpc.encode(message.rpc, writer.uint32(114).fork()).ldelim();
     }
     if (message.status !== undefined) {
-      Status.encode(message.status, writer.uint32(114).fork()).ldelim();
+      Status.encode(message.status, writer.uint32(122).fork()).ldelim();
     }
     if (message.status_follow !== undefined) {
-      StatusFollow.encode(message.status_follow, writer.uint32(122).fork()).ldelim();
+      StatusFollow.encode(message.status_follow, writer.uint32(130).fork()).ldelim();
     }
     if (message.status_presence_event !== undefined) {
-      StatusPresenceEvent.encode(message.status_presence_event, writer.uint32(130).fork()).ldelim();
+      StatusPresenceEvent.encode(message.status_presence_event, writer.uint32(138).fork()).ldelim();
     }
     if (message.status_unfollow !== undefined) {
-      StatusUnfollow.encode(message.status_unfollow, writer.uint32(138).fork()).ldelim();
+      StatusUnfollow.encode(message.status_unfollow, writer.uint32(146).fork()).ldelim();
     }
     if (message.status_update !== undefined) {
-      StatusUpdate.encode(message.status_update, writer.uint32(146).fork()).ldelim();
+      StatusUpdate.encode(message.status_update, writer.uint32(154).fork()).ldelim();
     }
     if (message.stream_data !== undefined) {
-      StreamData.encode(message.stream_data, writer.uint32(154).fork()).ldelim();
+      StreamData.encode(message.stream_data, writer.uint32(162).fork()).ldelim();
     }
     if (message.stream_presence_event !== undefined) {
-      StreamPresenceEvent.encode(message.stream_presence_event, writer.uint32(162).fork()).ldelim();
+      StreamPresenceEvent.encode(message.stream_presence_event, writer.uint32(170).fork()).ldelim();
     }
     if (message.ping !== undefined) {
-      Ping.encode(message.ping, writer.uint32(170).fork()).ldelim();
+      Ping.encode(message.ping, writer.uint32(178).fork()).ldelim();
     }
     if (message.pong !== undefined) {
-      Pong.encode(message.pong, writer.uint32(178).fork()).ldelim();
+      Pong.encode(message.pong, writer.uint32(186).fork()).ldelim();
     }
     if (message.party !== undefined) {
-      Party.encode(message.party, writer.uint32(186).fork()).ldelim();
+      Party.encode(message.party, writer.uint32(194).fork()).ldelim();
     }
     if (message.party_create !== undefined) {
-      PartyCreate.encode(message.party_create, writer.uint32(194).fork()).ldelim();
+      PartyCreate.encode(message.party_create, writer.uint32(202).fork()).ldelim();
     }
     if (message.party_join !== undefined) {
-      PartyJoin.encode(message.party_join, writer.uint32(202).fork()).ldelim();
+      PartyJoin.encode(message.party_join, writer.uint32(210).fork()).ldelim();
     }
     if (message.party_leave !== undefined) {
-      PartyLeave.encode(message.party_leave, writer.uint32(210).fork()).ldelim();
+      PartyLeave.encode(message.party_leave, writer.uint32(218).fork()).ldelim();
     }
     if (message.party_promote !== undefined) {
-      PartyPromote.encode(message.party_promote, writer.uint32(218).fork()).ldelim();
+      PartyPromote.encode(message.party_promote, writer.uint32(226).fork()).ldelim();
     }
     if (message.party_leader !== undefined) {
-      PartyLeader.encode(message.party_leader, writer.uint32(226).fork()).ldelim();
+      PartyLeader.encode(message.party_leader, writer.uint32(234).fork()).ldelim();
     }
     if (message.party_accept !== undefined) {
-      PartyAccept.encode(message.party_accept, writer.uint32(234).fork()).ldelim();
+      PartyAccept.encode(message.party_accept, writer.uint32(242).fork()).ldelim();
     }
     if (message.party_remove !== undefined) {
-      PartyRemove.encode(message.party_remove, writer.uint32(242).fork()).ldelim();
+      PartyRemove.encode(message.party_remove, writer.uint32(250).fork()).ldelim();
     }
     if (message.party_close !== undefined) {
-      PartyClose.encode(message.party_close, writer.uint32(250).fork()).ldelim();
+      PartyClose.encode(message.party_close, writer.uint32(258).fork()).ldelim();
     }
     if (message.party_join_request_list !== undefined) {
-      PartyJoinRequestList.encode(message.party_join_request_list, writer.uint32(258).fork()).ldelim();
+      PartyJoinRequestList.encode(message.party_join_request_list, writer.uint32(266).fork()).ldelim();
     }
     if (message.party_join_request !== undefined) {
-      PartyJoinRequest.encode(message.party_join_request, writer.uint32(266).fork()).ldelim();
+      PartyJoinRequest.encode(message.party_join_request, writer.uint32(274).fork()).ldelim();
     }
     if (message.party_data !== undefined) {
-      PartyData.encode(message.party_data, writer.uint32(274).fork()).ldelim();
+      PartyData.encode(message.party_data, writer.uint32(282).fork()).ldelim();
     }
     if (message.party_data_send !== undefined) {
-      PartyDataSend.encode(message.party_data_send, writer.uint32(282).fork()).ldelim();
+      PartyDataSend.encode(message.party_data_send, writer.uint32(290).fork()).ldelim();
     }
     if (message.party_presence_event !== undefined) {
-      PartyPresenceEvent.encode(message.party_presence_event, writer.uint32(290).fork()).ldelim();
+      PartyPresenceEvent.encode(message.party_presence_event, writer.uint32(298).fork()).ldelim();
     }
     if (message.message_typing_event !== undefined) {
-      MessageTypingEvent.encode(message.message_typing_event, writer.uint32(298).fork()).ldelim();
+      MessageTypingEvent.encode(message.message_typing_event, writer.uint32(306).fork()).ldelim();
     }
     if (message.last_seen_message_event !== undefined) {
-      LastSeenMessageEvent.encode(message.last_seen_message_event, writer.uint32(306).fork()).ldelim();
+      LastSeenMessageEvent.encode(message.last_seen_message_event, writer.uint32(314).fork()).ldelim();
     }
     if (message.message_reaction_event !== undefined) {
-      MessageReactionEvent.encode(message.message_reaction_event, writer.uint32(314).fork()).ldelim();
+      MessageReactionEvent.encode(message.message_reaction_event, writer.uint32(322).fork()).ldelim();
     }
     if (message.voice_joined_event !== undefined) {
-      VoiceJoinedEvent.encode(message.voice_joined_event, writer.uint32(322).fork()).ldelim();
+      VoiceJoinedEvent.encode(message.voice_joined_event, writer.uint32(330).fork()).ldelim();
     }
     if (message.voice_leaved_event !== undefined) {
-      VoiceLeavedEvent.encode(message.voice_leaved_event, writer.uint32(330).fork()).ldelim();
+      VoiceLeavedEvent.encode(message.voice_leaved_event, writer.uint32(338).fork()).ldelim();
     }
     if (message.voice_started_event !== undefined) {
-      VoiceStartedEvent.encode(message.voice_started_event, writer.uint32(338).fork()).ldelim();
+      VoiceStartedEvent.encode(message.voice_started_event, writer.uint32(346).fork()).ldelim();
     }
     if (message.voice_ended_event !== undefined) {
-      VoiceEndedEvent.encode(message.voice_ended_event, writer.uint32(346).fork()).ldelim();
+      VoiceEndedEvent.encode(message.voice_ended_event, writer.uint32(354).fork()).ldelim();
     }
     if (message.channel_created_event !== undefined) {
-      ChannelCreatedEvent.encode(message.channel_created_event, writer.uint32(354).fork()).ldelim();
+      ChannelCreatedEvent.encode(message.channel_created_event, writer.uint32(362).fork()).ldelim();
     }
     if (message.channel_deleted_event !== undefined) {
-      ChannelDeletedEvent.encode(message.channel_deleted_event, writer.uint32(362).fork()).ldelim();
+      ChannelDeletedEvent.encode(message.channel_deleted_event, writer.uint32(370).fork()).ldelim();
     }
     if (message.channel_updated_event !== undefined) {
-      ChannelUpdatedEvent.encode(message.channel_updated_event, writer.uint32(370).fork()).ldelim();
+      ChannelUpdatedEvent.encode(message.channel_updated_event, writer.uint32(378).fork()).ldelim();
     }
     return writer;
   },
@@ -1158,135 +1172,138 @@ export const Envelope = {
           message.channel = Channel.decode(reader, reader.uint32());
           break;
         case 3:
-          message.channel_join = ChannelJoin.decode(reader, reader.uint32());
+          message.clan_join = ClanJoin.decode(reader, reader.uint32());
           break;
         case 4:
-          message.channel_leave = ChannelLeave.decode(reader, reader.uint32());
+          message.channel_join = ChannelJoin.decode(reader, reader.uint32());
           break;
         case 5:
-          message.channel_message = ChannelMessage.decode(reader, reader.uint32());
+          message.channel_leave = ChannelLeave.decode(reader, reader.uint32());
           break;
         case 6:
-          message.channel_message_ack = ChannelMessageAck.decode(reader, reader.uint32());
+          message.channel_message = ChannelMessage.decode(reader, reader.uint32());
           break;
         case 7:
-          message.channel_message_send = ChannelMessageSend.decode(reader, reader.uint32());
+          message.channel_message_ack = ChannelMessageAck.decode(reader, reader.uint32());
           break;
         case 8:
-          message.channel_message_update = ChannelMessageUpdate.decode(reader, reader.uint32());
+          message.channel_message_send = ChannelMessageSend.decode(reader, reader.uint32());
           break;
         case 9:
-          message.channel_message_remove = ChannelMessageRemove.decode(reader, reader.uint32());
+          message.channel_message_update = ChannelMessageUpdate.decode(reader, reader.uint32());
           break;
         case 10:
-          message.channel_presence_event = ChannelPresenceEvent.decode(reader, reader.uint32());
+          message.channel_message_remove = ChannelMessageRemove.decode(reader, reader.uint32());
           break;
         case 11:
-          message.error = Error.decode(reader, reader.uint32());
+          message.channel_presence_event = ChannelPresenceEvent.decode(reader, reader.uint32());
           break;
         case 12:
-          message.notifications = Notifications.decode(reader, reader.uint32());
+          message.error = Error.decode(reader, reader.uint32());
           break;
         case 13:
-          message.rpc = Rpc.decode(reader, reader.uint32());
+          message.notifications = Notifications.decode(reader, reader.uint32());
           break;
         case 14:
-          message.status = Status.decode(reader, reader.uint32());
+          message.rpc = Rpc.decode(reader, reader.uint32());
           break;
         case 15:
-          message.status_follow = StatusFollow.decode(reader, reader.uint32());
+          message.status = Status.decode(reader, reader.uint32());
           break;
         case 16:
-          message.status_presence_event = StatusPresenceEvent.decode(reader, reader.uint32());
+          message.status_follow = StatusFollow.decode(reader, reader.uint32());
           break;
         case 17:
-          message.status_unfollow = StatusUnfollow.decode(reader, reader.uint32());
+          message.status_presence_event = StatusPresenceEvent.decode(reader, reader.uint32());
           break;
         case 18:
-          message.status_update = StatusUpdate.decode(reader, reader.uint32());
+          message.status_unfollow = StatusUnfollow.decode(reader, reader.uint32());
           break;
         case 19:
-          message.stream_data = StreamData.decode(reader, reader.uint32());
+          message.status_update = StatusUpdate.decode(reader, reader.uint32());
           break;
         case 20:
-          message.stream_presence_event = StreamPresenceEvent.decode(reader, reader.uint32());
+          message.stream_data = StreamData.decode(reader, reader.uint32());
           break;
         case 21:
-          message.ping = Ping.decode(reader, reader.uint32());
+          message.stream_presence_event = StreamPresenceEvent.decode(reader, reader.uint32());
           break;
         case 22:
-          message.pong = Pong.decode(reader, reader.uint32());
+          message.ping = Ping.decode(reader, reader.uint32());
           break;
         case 23:
-          message.party = Party.decode(reader, reader.uint32());
+          message.pong = Pong.decode(reader, reader.uint32());
           break;
         case 24:
-          message.party_create = PartyCreate.decode(reader, reader.uint32());
+          message.party = Party.decode(reader, reader.uint32());
           break;
         case 25:
-          message.party_join = PartyJoin.decode(reader, reader.uint32());
+          message.party_create = PartyCreate.decode(reader, reader.uint32());
           break;
         case 26:
-          message.party_leave = PartyLeave.decode(reader, reader.uint32());
+          message.party_join = PartyJoin.decode(reader, reader.uint32());
           break;
         case 27:
-          message.party_promote = PartyPromote.decode(reader, reader.uint32());
+          message.party_leave = PartyLeave.decode(reader, reader.uint32());
           break;
         case 28:
-          message.party_leader = PartyLeader.decode(reader, reader.uint32());
+          message.party_promote = PartyPromote.decode(reader, reader.uint32());
           break;
         case 29:
-          message.party_accept = PartyAccept.decode(reader, reader.uint32());
+          message.party_leader = PartyLeader.decode(reader, reader.uint32());
           break;
         case 30:
-          message.party_remove = PartyRemove.decode(reader, reader.uint32());
+          message.party_accept = PartyAccept.decode(reader, reader.uint32());
           break;
         case 31:
-          message.party_close = PartyClose.decode(reader, reader.uint32());
+          message.party_remove = PartyRemove.decode(reader, reader.uint32());
           break;
         case 32:
-          message.party_join_request_list = PartyJoinRequestList.decode(reader, reader.uint32());
+          message.party_close = PartyClose.decode(reader, reader.uint32());
           break;
         case 33:
-          message.party_join_request = PartyJoinRequest.decode(reader, reader.uint32());
+          message.party_join_request_list = PartyJoinRequestList.decode(reader, reader.uint32());
           break;
         case 34:
-          message.party_data = PartyData.decode(reader, reader.uint32());
+          message.party_join_request = PartyJoinRequest.decode(reader, reader.uint32());
           break;
         case 35:
-          message.party_data_send = PartyDataSend.decode(reader, reader.uint32());
+          message.party_data = PartyData.decode(reader, reader.uint32());
           break;
         case 36:
-          message.party_presence_event = PartyPresenceEvent.decode(reader, reader.uint32());
+          message.party_data_send = PartyDataSend.decode(reader, reader.uint32());
           break;
         case 37:
-          message.message_typing_event = MessageTypingEvent.decode(reader, reader.uint32());
+          message.party_presence_event = PartyPresenceEvent.decode(reader, reader.uint32());
           break;
         case 38:
-          message.last_seen_message_event = LastSeenMessageEvent.decode(reader, reader.uint32());
+          message.message_typing_event = MessageTypingEvent.decode(reader, reader.uint32());
           break;
         case 39:
-          message.message_reaction_event = MessageReactionEvent.decode(reader, reader.uint32());
+          message.last_seen_message_event = LastSeenMessageEvent.decode(reader, reader.uint32());
           break;
         case 40:
-          message.voice_joined_event = VoiceJoinedEvent.decode(reader, reader.uint32());
+          message.message_reaction_event = MessageReactionEvent.decode(reader, reader.uint32());
           break;
         case 41:
-          message.voice_leaved_event = VoiceLeavedEvent.decode(reader, reader.uint32());
+          message.voice_joined_event = VoiceJoinedEvent.decode(reader, reader.uint32());
           break;
         case 42:
-          message.voice_started_event = VoiceStartedEvent.decode(reader, reader.uint32());
+          message.voice_leaved_event = VoiceLeavedEvent.decode(reader, reader.uint32());
           break;
         case 43:
-          message.voice_ended_event = VoiceEndedEvent.decode(reader, reader.uint32());
+          message.voice_started_event = VoiceStartedEvent.decode(reader, reader.uint32());
           break;
         case 44:
-          message.channel_created_event = ChannelCreatedEvent.decode(reader, reader.uint32());
+          message.voice_ended_event = VoiceEndedEvent.decode(reader, reader.uint32());
           break;
         case 45:
-          message.channel_deleted_event = ChannelDeletedEvent.decode(reader, reader.uint32());
+          message.channel_created_event = ChannelCreatedEvent.decode(reader, reader.uint32());
           break;
         case 46:
+          message.channel_deleted_event = ChannelDeletedEvent.decode(reader, reader.uint32());
+          break;
+        case 47:
           message.channel_updated_event = ChannelUpdatedEvent.decode(reader, reader.uint32());
           break;
         default:
@@ -1301,6 +1318,7 @@ export const Envelope = {
     return {
       cid: isSet(object.cid) ? String(object.cid) : "",
       channel: isSet(object.channel) ? Channel.fromJSON(object.channel) : undefined,
+      clan_join: isSet(object.clan_join) ? ClanJoin.fromJSON(object.clan_join) : undefined,
       channel_join: isSet(object.channel_join) ? ChannelJoin.fromJSON(object.channel_join) : undefined,
       channel_leave: isSet(object.channel_leave) ? ChannelLeave.fromJSON(object.channel_leave) : undefined,
       channel_message: isSet(object.channel_message) ? ChannelMessage.fromJSON(object.channel_message) : undefined,
@@ -1392,6 +1410,8 @@ export const Envelope = {
     const obj: any = {};
     message.cid !== undefined && (obj.cid = message.cid);
     message.channel !== undefined && (obj.channel = message.channel ? Channel.toJSON(message.channel) : undefined);
+    message.clan_join !== undefined &&
+      (obj.clan_join = message.clan_join ? ClanJoin.toJSON(message.clan_join) : undefined);
     message.channel_join !== undefined &&
       (obj.channel_join = message.channel_join ? ChannelJoin.toJSON(message.channel_join) : undefined);
     message.channel_leave !== undefined &&
@@ -1507,6 +1527,9 @@ export const Envelope = {
     message.cid = object.cid ?? "";
     message.channel = (object.channel !== undefined && object.channel !== null)
       ? Channel.fromPartial(object.channel)
+      : undefined;
+    message.clan_join = (object.clan_join !== undefined && object.clan_join !== null)
+      ? ClanJoin.fromPartial(object.clan_join)
       : undefined;
     message.channel_join = (object.channel_join !== undefined && object.channel_join !== null)
       ? ChannelJoin.fromPartial(object.channel_join)
@@ -1745,6 +1768,57 @@ export const Channel = {
     message.chanel_label = object.chanel_label ?? "";
     message.user_id_one = object.user_id_one ?? "";
     message.user_id_two = object.user_id_two ?? "";
+    return message;
+  },
+};
+
+function createBaseClanJoin(): ClanJoin {
+  return { clan_id: "" };
+}
+
+export const ClanJoin = {
+  encode(message: ClanJoin, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.clan_id !== "") {
+      writer.uint32(10).string(message.clan_id);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): ClanJoin {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseClanJoin();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.clan_id = reader.string();
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): ClanJoin {
+    return { clan_id: isSet(object.clan_id) ? String(object.clan_id) : "" };
+  },
+
+  toJSON(message: ClanJoin): unknown {
+    const obj: any = {};
+    message.clan_id !== undefined && (obj.clan_id = message.clan_id);
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<ClanJoin>, I>>(base?: I): ClanJoin {
+    return ClanJoin.fromPartial(base ?? {});
+  },
+
+  fromPartial<I extends Exact<DeepPartial<ClanJoin>, I>>(object: I): ClanJoin {
+    const message = createBaseClanJoin();
+    message.clan_id = object.clan_id ?? "";
     return message;
   },
 };

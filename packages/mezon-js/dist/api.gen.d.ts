@@ -122,6 +122,7 @@ export interface ApiChannelDescList {
 }
 /**  */
 export interface ApiChannelDescription {
+    active?: number;
     category_id?: string;
     category_name?: string;
     channel_avatar?: Array<string>;
@@ -276,6 +277,10 @@ export interface ApiCreateWebhookRequest {
     channel_id?: string;
     clan_id?: string;
     hook_name?: string;
+}
+/** Delete a channel the user has access to. */
+export interface ApiDeleteChannelDescRequest {
+    channel_id?: string;
 }
 /**  */
 export interface ApiDeleteEventRequest {
@@ -853,6 +858,8 @@ export declare class MezonApi {
     deleteCategoryDesc(bearerToken: string, creatorId: string, options?: any): Promise<any>;
     /** regist fcm device token */
     registFCMDeviceToken(bearerToken: string, token?: string, deviceId?: string, platform?: string, options?: any): Promise<any>;
+    /** close direct message. */
+    closeDirectMess(bearerToken: string, body: ApiDeleteChannelDescRequest, options?: any): Promise<any>;
     /** Search message from elasticsearch service. */
     searchMessage(bearerToken: string, body: ApiSearchMessageRequest, options?: any): Promise<ApiSearchMessageResponse>;
     /** Submit an event for processing in the server's registered runtime custom events handler. */

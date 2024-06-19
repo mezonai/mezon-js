@@ -1358,6 +1358,8 @@ export interface ChannelDescription {
     meeting_code: string;
     /** count message unread */
     count_mess_unread: number;
+    /**  */
+    active: number;
 }
 /** A list of channel description, usually a result of a list operation. */
 export interface ChannelDescList {
@@ -9130,6 +9132,7 @@ export declare const ChannelDescription: {
         status?: number | undefined;
         meeting_code?: string | undefined;
         count_mess_unread?: number | undefined;
+        active?: number | undefined;
     } & {
         clan_id?: string | undefined;
         parrent_id?: string | undefined;
@@ -9167,6 +9170,7 @@ export declare const ChannelDescription: {
         status?: number | undefined;
         meeting_code?: string | undefined;
         count_mess_unread?: number | undefined;
+        active?: number | undefined;
     } & { [K_4 in Exclude<keyof I, keyof ChannelDescription>]: never; }>(base?: I | undefined): ChannelDescription;
     fromPartial<I_1 extends {
         clan_id?: string | undefined;
@@ -9195,6 +9199,7 @@ export declare const ChannelDescription: {
         status?: number | undefined;
         meeting_code?: string | undefined;
         count_mess_unread?: number | undefined;
+        active?: number | undefined;
     } & {
         clan_id?: string | undefined;
         parrent_id?: string | undefined;
@@ -9232,6 +9237,7 @@ export declare const ChannelDescription: {
         status?: number | undefined;
         meeting_code?: string | undefined;
         count_mess_unread?: number | undefined;
+        active?: number | undefined;
     } & { [K_9 in Exclude<keyof I_1, keyof ChannelDescription>]: never; }>(object: I_1): ChannelDescription;
 };
 export declare const ChannelDescList: {
@@ -9267,6 +9273,7 @@ export declare const ChannelDescList: {
             status?: number | undefined;
             meeting_code?: string | undefined;
             count_mess_unread?: number | undefined;
+            active?: number | undefined;
         }[] | undefined;
         next_cursor?: string | undefined;
         prev_cursor?: string | undefined;
@@ -9299,6 +9306,7 @@ export declare const ChannelDescList: {
             status?: number | undefined;
             meeting_code?: string | undefined;
             count_mess_unread?: number | undefined;
+            active?: number | undefined;
         }[] & ({
             clan_id?: string | undefined;
             parrent_id?: string | undefined;
@@ -9326,6 +9334,7 @@ export declare const ChannelDescList: {
             status?: number | undefined;
             meeting_code?: string | undefined;
             count_mess_unread?: number | undefined;
+            active?: number | undefined;
         } & {
             clan_id?: string | undefined;
             parrent_id?: string | undefined;
@@ -9363,6 +9372,7 @@ export declare const ChannelDescList: {
             status?: number | undefined;
             meeting_code?: string | undefined;
             count_mess_unread?: number | undefined;
+            active?: number | undefined;
         } & { [K_4 in Exclude<keyof I["channeldesc"][number], keyof ChannelDescription>]: never; })[] & { [K_5 in Exclude<keyof I["channeldesc"], keyof {
             clan_id?: string | undefined;
             parrent_id?: string | undefined;
@@ -9390,6 +9400,7 @@ export declare const ChannelDescList: {
             status?: number | undefined;
             meeting_code?: string | undefined;
             count_mess_unread?: number | undefined;
+            active?: number | undefined;
         }[]>]: never; }) | undefined;
         next_cursor?: string | undefined;
         prev_cursor?: string | undefined;
@@ -9423,6 +9434,7 @@ export declare const ChannelDescList: {
             status?: number | undefined;
             meeting_code?: string | undefined;
             count_mess_unread?: number | undefined;
+            active?: number | undefined;
         }[] | undefined;
         next_cursor?: string | undefined;
         prev_cursor?: string | undefined;
@@ -9455,6 +9467,7 @@ export declare const ChannelDescList: {
             status?: number | undefined;
             meeting_code?: string | undefined;
             count_mess_unread?: number | undefined;
+            active?: number | undefined;
         }[] & ({
             clan_id?: string | undefined;
             parrent_id?: string | undefined;
@@ -9482,6 +9495,7 @@ export declare const ChannelDescList: {
             status?: number | undefined;
             meeting_code?: string | undefined;
             count_mess_unread?: number | undefined;
+            active?: number | undefined;
         } & {
             clan_id?: string | undefined;
             parrent_id?: string | undefined;
@@ -9519,6 +9533,7 @@ export declare const ChannelDescList: {
             status?: number | undefined;
             meeting_code?: string | undefined;
             count_mess_unread?: number | undefined;
+            active?: number | undefined;
         } & { [K_11 in Exclude<keyof I_1["channeldesc"][number], keyof ChannelDescription>]: never; })[] & { [K_12 in Exclude<keyof I_1["channeldesc"], keyof {
             clan_id?: string | undefined;
             parrent_id?: string | undefined;
@@ -9546,6 +9561,7 @@ export declare const ChannelDescList: {
             status?: number | undefined;
             meeting_code?: string | undefined;
             count_mess_unread?: number | undefined;
+            active?: number | undefined;
         }[]>]: never; }) | undefined;
         next_cursor?: string | undefined;
         prev_cursor?: string | undefined;
