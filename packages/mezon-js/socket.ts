@@ -64,9 +64,9 @@ export interface ClanJoin {
 interface ChannelJoin {
   channel_join: {
     /** The id of the channel to join. */
-    target_id: string;
+    channel_id: string;
     /** The name of the channel to join. */
-    target: string;
+    channel_label: string;
     /** The channel type: 1 = Channel, 2 = Direct Message, 3 = Group. */
     type: number;
     /** Whether channel messages are persisted in the database. */

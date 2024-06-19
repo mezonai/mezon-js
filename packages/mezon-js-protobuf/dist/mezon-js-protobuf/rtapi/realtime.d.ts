@@ -120,6 +120,8 @@ export interface ClanJoin {
 }
 /** Join operation for a realtime chat channel. */
 export interface ChannelJoin {
+    /** The clan id */
+    clan_id: string;
     /** The id of channel or group */
     channel_id: string;
     /** The user ID to DM with, group ID to chat with, or channel id to join. */
@@ -756,6 +758,7 @@ export declare const Envelope: {
             clan_id?: string | undefined;
         } | undefined;
         channel_join?: {
+            clan_id?: string | undefined;
             channel_id?: string | undefined;
             channel_label?: string | undefined;
             type?: number | undefined;
@@ -1243,6 +1246,7 @@ export declare const Envelope: {
             clan_id?: string | undefined;
         } & { [K_4 in Exclude<keyof I["clan_join"], "clan_id">]: never; }) | undefined;
         channel_join?: ({
+            clan_id?: string | undefined;
             channel_id?: string | undefined;
             channel_label?: string | undefined;
             type?: number | undefined;
@@ -1250,6 +1254,7 @@ export declare const Envelope: {
             hidden?: boolean | undefined;
             mode?: number | undefined;
         } & {
+            clan_id?: string | undefined;
             channel_id?: string | undefined;
             channel_label?: string | undefined;
             type?: number | undefined;
@@ -2404,6 +2409,7 @@ export declare const Envelope: {
             clan_id?: string | undefined;
         } | undefined;
         channel_join?: {
+            clan_id?: string | undefined;
             channel_id?: string | undefined;
             channel_label?: string | undefined;
             type?: number | undefined;
@@ -2891,6 +2897,7 @@ export declare const Envelope: {
             clan_id?: string | undefined;
         } & { [K_98 in Exclude<keyof I_1["clan_join"], "clan_id">]: never; }) | undefined;
         channel_join?: ({
+            clan_id?: string | undefined;
             channel_id?: string | undefined;
             channel_label?: string | undefined;
             type?: number | undefined;
@@ -2898,6 +2905,7 @@ export declare const Envelope: {
             hidden?: boolean | undefined;
             mode?: number | undefined;
         } & {
+            clan_id?: string | undefined;
             channel_id?: string | undefined;
             channel_label?: string | undefined;
             type?: number | undefined;
@@ -4181,6 +4189,7 @@ export declare const ChannelJoin: {
     fromJSON(object: any): ChannelJoin;
     toJSON(message: ChannelJoin): unknown;
     create<I extends {
+        clan_id?: string | undefined;
         channel_id?: string | undefined;
         channel_label?: string | undefined;
         type?: number | undefined;
@@ -4188,6 +4197,7 @@ export declare const ChannelJoin: {
         hidden?: boolean | undefined;
         mode?: number | undefined;
     } & {
+        clan_id?: string | undefined;
         channel_id?: string | undefined;
         channel_label?: string | undefined;
         type?: number | undefined;
@@ -4196,6 +4206,7 @@ export declare const ChannelJoin: {
         mode?: number | undefined;
     } & { [K in Exclude<keyof I, keyof ChannelJoin>]: never; }>(base?: I | undefined): ChannelJoin;
     fromPartial<I_1 extends {
+        clan_id?: string | undefined;
         channel_id?: string | undefined;
         channel_label?: string | undefined;
         type?: number | undefined;
@@ -4203,6 +4214,7 @@ export declare const ChannelJoin: {
         hidden?: boolean | undefined;
         mode?: number | undefined;
     } & {
+        clan_id?: string | undefined;
         channel_id?: string | undefined;
         channel_label?: string | undefined;
         type?: number | undefined;

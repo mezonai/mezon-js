@@ -3640,27 +3640,38 @@ var ClanJoin = {
   }
 };
 function createBaseChannelJoin() {
-  return { channel_id: "", channel_label: "", type: 0, persistence: void 0, hidden: void 0, mode: 0 };
+  return {
+    clan_id: "",
+    channel_id: "",
+    channel_label: "",
+    type: 0,
+    persistence: void 0,
+    hidden: void 0,
+    mode: 0
+  };
 }
 var ChannelJoin = {
   encode(message, writer = import_minimal4.default.Writer.create()) {
+    if (message.clan_id !== "") {
+      writer.uint32(10).string(message.clan_id);
+    }
     if (message.channel_id !== "") {
-      writer.uint32(10).string(message.channel_id);
+      writer.uint32(18).string(message.channel_id);
     }
     if (message.channel_label !== "") {
-      writer.uint32(18).string(message.channel_label);
+      writer.uint32(26).string(message.channel_label);
     }
     if (message.type !== 0) {
-      writer.uint32(24).int32(message.type);
+      writer.uint32(32).int32(message.type);
     }
     if (message.persistence !== void 0) {
-      BoolValue.encode({ value: message.persistence }, writer.uint32(34).fork()).ldelim();
+      BoolValue.encode({ value: message.persistence }, writer.uint32(42).fork()).ldelim();
     }
     if (message.hidden !== void 0) {
-      BoolValue.encode({ value: message.hidden }, writer.uint32(42).fork()).ldelim();
+      BoolValue.encode({ value: message.hidden }, writer.uint32(50).fork()).ldelim();
     }
     if (message.mode !== 0) {
-      writer.uint32(48).int32(message.mode);
+      writer.uint32(56).int32(message.mode);
     }
     return writer;
   },
@@ -3672,21 +3683,24 @@ var ChannelJoin = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          message.channel_id = reader.string();
+          message.clan_id = reader.string();
           break;
         case 2:
-          message.channel_label = reader.string();
+          message.channel_id = reader.string();
           break;
         case 3:
-          message.type = reader.int32();
+          message.channel_label = reader.string();
           break;
         case 4:
-          message.persistence = BoolValue.decode(reader, reader.uint32()).value;
+          message.type = reader.int32();
           break;
         case 5:
-          message.hidden = BoolValue.decode(reader, reader.uint32()).value;
+          message.persistence = BoolValue.decode(reader, reader.uint32()).value;
           break;
         case 6:
+          message.hidden = BoolValue.decode(reader, reader.uint32()).value;
+          break;
+        case 7:
           message.mode = reader.int32();
           break;
         default:
@@ -3698,6 +3712,7 @@ var ChannelJoin = {
   },
   fromJSON(object) {
     return {
+      clan_id: isSet4(object.clan_id) ? String(object.clan_id) : "",
       channel_id: isSet4(object.channel_id) ? String(object.channel_id) : "",
       channel_label: isSet4(object.channel_label) ? String(object.channel_label) : "",
       type: isSet4(object.type) ? Number(object.type) : 0,
@@ -3708,6 +3723,7 @@ var ChannelJoin = {
   },
   toJSON(message) {
     const obj = {};
+    message.clan_id !== void 0 && (obj.clan_id = message.clan_id);
     message.channel_id !== void 0 && (obj.channel_id = message.channel_id);
     message.channel_label !== void 0 && (obj.channel_label = message.channel_label);
     message.type !== void 0 && (obj.type = Math.round(message.type));
@@ -3720,14 +3736,15 @@ var ChannelJoin = {
     return ChannelJoin.fromPartial(base != null ? base : {});
   },
   fromPartial(object) {
-    var _a, _b, _c, _d, _e, _f;
+    var _a, _b, _c, _d, _e, _f, _g;
     const message = createBaseChannelJoin();
-    message.channel_id = (_a = object.channel_id) != null ? _a : "";
-    message.channel_label = (_b = object.channel_label) != null ? _b : "";
-    message.type = (_c = object.type) != null ? _c : 0;
-    message.persistence = (_d = object.persistence) != null ? _d : void 0;
-    message.hidden = (_e = object.hidden) != null ? _e : void 0;
-    message.mode = (_f = object.mode) != null ? _f : 0;
+    message.clan_id = (_a = object.clan_id) != null ? _a : "";
+    message.channel_id = (_b = object.channel_id) != null ? _b : "";
+    message.channel_label = (_c = object.channel_label) != null ? _c : "";
+    message.type = (_d = object.type) != null ? _d : 0;
+    message.persistence = (_e = object.persistence) != null ? _e : void 0;
+    message.hidden = (_f = object.hidden) != null ? _f : void 0;
+    message.mode = (_g = object.mode) != null ? _g : 0;
     return message;
   }
 };
