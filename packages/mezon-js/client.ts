@@ -1419,6 +1419,17 @@ export class Client {
       return response !== undefined;
     });
   }
+  //
+  async openDirectMess(session: Session, request: ApiDeleteChannelDescRequest): Promise<boolean> {
+    if (this.autoRefreshSession && session.refresh_token &&
+        session.isexpired((Date.now() + this.expiredTimespanMs)/1000)) {
+        await this.sessionRefresh(session);
+    }
+
+    return this.apiClient.openDirectMess(session.token, request).then((response: any) => {
+      return response !== undefined;
+    });
+  }
 
   /** Add a custom ID to the social profiles on the current user's account. */
   async linkCustom(session: Session, request: ApiAccountCustom): Promise<boolean> {
