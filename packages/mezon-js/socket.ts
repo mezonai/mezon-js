@@ -14,8 +14,6 @@
  * limitations under the License.
  */
 
-import { decode } from 'js-base64'
-
 import {ApiMessageAttachment, ApiMessageMention, ApiMessageReaction, ApiMessageRef, ApiNotification, ApiRpc} from "./api.gen";
 import {Session} from "./session";
 import {Notification} from "./client";
@@ -293,7 +291,7 @@ interface ChannelMessageUpdate {
     /** The server-assigned channel ID. */
     channel_id: string,
      /** The server-assigned channel label. */
-    channel_label: string,
+   
     /** A unique ID for the chat message to be updated. */
     message_id: string,
     /** The content payload. */
@@ -464,180 +462,6 @@ export interface StreamPresenceEvent {
   leaves: Presence[];
 }
 
-/** Incoming information about a party. */
-export interface Party {
-  /** The unique party identifier. */
-  party_id : string;
-  /** True, if the party is open to join. */
-  open : boolean;
-  /** The maximum number of party members. */
-  max_size : number;
-  /** The current user in this party, i.e. yourself. */
-  self : Presence;
-  /** The current party leader. */
-  leader : Presence;
-  /** All members currently in the party. */
-  presences : Presence[];
-}
-
-/** Create a party. */
-export interface PartyCreate {
-  party_create: {
-    /** True, if the party is open to join. */
-    open : boolean;
-    /** The maximum number of party members. */
-    max_size : number;
-  }
-}
-
-/** Join a party. */
-interface PartyJoin {
-  party_join: {
-    /** The unique party identifier. */
-    party_id : string;
-  }
-}
-
-/** Leave a party. */
-interface PartyLeave {
-  party_leave: {
-    /** The unique party identifier. */
-    party_id : string;
-  }
-}
-
-/** Promote a new party leader. */
-interface PartyPromote {
-  party_promote: {
-    /** The unique party identifier. */
-    party_id : string;
-    /** The user presence being promoted to leader. */
-    presence : Presence;
-  }
-}
-
-/** Announcement of a new party leader. */
-export interface PartyLeader {
-  /** The unique party identifier. */
-  party_id : string;
-  /** The presence of the new party leader. */
-  presence : Presence;
-}
-
-/** Accept a request to join. */
-interface PartyAccept {
-  party_accept: {
-    /** The unique party identifier. */
-    party_id : string;
-    /** The presence being accepted to join the party. */
-    presence : Presence;
-  }
-}
-
-/** End a party, kicking all party members and closing it. */
-interface PartyClose {
-  party_close: {
-    /** The unique party identifier. */
-    party_id : string;
-  }
-}
-
-/** Incoming party data delivered from the server. */
-export interface PartyData {
-  /** The unique party identifier. */
-  party_id: string;
-  /** A reference to the user presence that sent this data, if any. */
-  presence: Presence;
-  /** The operation code the message was sent with. */
-  op_code: number;
-  /** Data payload, if any. */
-  data: Uint8Array;
-}
-
-/** A client to server request to send data to a party. */
-interface PartyDataSend {
-  party_data_send: {
-    /** The unique party identifier. */
-    party_id : string;
-    /** The operation code the message was sent with. */
-    op_code : number;
-    /** Data payload, if any. */
-    data : string | Uint8Array;
-  }
-}
-
-/** Incoming notification for one or more new presences attempting to join the party. */
-export interface PartyJoinRequest {
-  /** The ID of the party to get a list of join requests for. */
-  party_id : string;
-  /** Presences attempting to join, or who have joined. */
-  presences : Presence[];
-}
-
-/** Request a list of pending join requests for a party. */
-export interface PartyJoinRequestList {
-  party_join_request_list: {
-    /** The ID of the party to get a list of join requests for. */
-    party_id : string;
-  }
-}
-
-/** Begin matchmaking as a party. */
-interface PartyMatchmakerAdd {
-  party_matchmaker_add: {
-    /** The ID of the party to create a matchmaker ticket for. */
-    party_id : string;
-    /** Minimum total user count to match together. */
-    min_count : number;
-    /** Maximum total user count to match together. */
-    max_count : number;
-    /** Filter query used to identify suitable users. */
-    query : string;
-    /** String properties describing the party (e.g. region). */
-    string_properties? : Record<string, string>;
-    /** Numeric properties describing the party (e.g. rank). */
-    numeric_properties? : Record<string, number>;
-  }
-}
-
-/** Cancel a party matchmaking process using a ticket. */
-interface PartyMatchmakerRemove {
-  party_matchmaker_remove: {
-    /** The ID of the party to cancel a matchmaker ticket for. */
-    party_id : string;
-    /** The ticket to remove. */
-    ticket : string;
-  }
-}
-
-/** A response from starting a new party matchmaking process. */
-export interface PartyMatchmakerTicket {
-  /** The ID of the party. */
-  party_id: string;
-  /** The matchmaker ticket created. */
-  ticket: string;
-}
-
-/** Presence update for a particular party. */
-export interface PartyPresenceEvent {
-  /** The ID of the party. */
-  party_id : string;
-  /** The user presences that have just joined the party. */
-  joins : Presence[];
-  /** The user presences that have just left the party. */
-  leaves : Presence[];
-}
-
-/** Kick a party member, or decline a request to join. */
-interface PartyRemove {
-  party_remove: {
-    /** The ID of the party to remove/reject from. */
-    party_id : string;
-    /** The presence to remove/reject. */
-    presence : Presence;
-  }
-}
-
 /** Execute an Lua function on the server. */
 interface Rpc {
   rpc: ApiRpc;
@@ -688,15 +512,6 @@ export interface Socket {
   /** Disconnect from the server. */
   disconnect(fireDisconnectEvent: boolean): void;
 
-  /** Accept a request to join. */
-  acceptPartyMember(party_id : string, presence : Presence) : Promise<void>;
-
-  /** End a party, kicking all party members and closing it. */
-  closeParty(party_id : string) : Promise<void>;
-
-  /** Create a party. */
-  createParty(open : boolean, max_size : number) : Promise<Party>;
-
   /** Subscribe to one or more users for their status updates. */
   followUsers(user_ids: string[]) : Promise<Status>;
 
@@ -704,58 +519,37 @@ export interface Socket {
   joinClanChat(clan_id: string) : Promise<ClanJoin>;
 
   /** Join a chat channel on the server. */
-  joinChat(channel_id: string, channel_label: string, mode: number, type: number, persistence: boolean, hidden: boolean) : Promise<Channel>;
-
-  /** Join a party. */
-  joinParty(party_id: string) : Promise<void>;
+  joinChat(channel_id: string, mode: number, type: number, persistence: boolean, hidden: boolean) : Promise<Channel>;
 
   /** Leave a chat channel on the server. */
-  leaveChat(channel_id: string, channel_label: string, mode: number) : Promise<void>;
-
-  /** Leave a multiplayer match on the server. */
-  leaveMatch(matchId : string) : Promise<void>;
-
-  /** Leave a party. */
-  leaveParty(party_id: string) : Promise<void>;
-
-  /** Request a list of pending join requests for a party. */
-  listPartyJoinRequests(party_id : string) : Promise<PartyJoinRequest>;
-
-  /** Promote a new party leader. */
-  promotePartyMember(party_id : string, party_member : Presence) : Promise<PartyLeader>;
+  leaveChat(channel_id: string, mode: number) : Promise<void>;
 
   /** Remove a chat message from a chat channel on the server. */
-  removeChatMessage(channel_id: string, channel_label: string, mode: number, message_id: string) : Promise<ChannelMessageAck>;
-
-  /** Kick a party member, or decline a request to join. */
-  removePartyMember(party_id : string, presence : Presence) : Promise<void>;
+  removeChatMessage(channel_id: string, mode: number, message_id: string) : Promise<ChannelMessageAck>;
 
   /** Execute an RPC function to the server. */
   rpc(id?: string, payload?: string, http_key?: string) : Promise<ApiRpc>
-
-  /** Send data to a party. */
-  sendPartyData(party_id : string, opcode : number, data : string | Uint8Array) : Promise<void>;
 
   /** Unfollow one or more users from their status updates. */
   unfollowUsers(user_ids : string[]) : Promise<void>;
 
   /** Update a chat message on a chat channel in the server. */
-  updateChatMessage(channel_id: string, channel_label: string, mode: number, message_id : string, content: any) : Promise<ChannelMessageAck>;
+  updateChatMessage(channel_id: string, mode: number, message_id : string, content: any) : Promise<ChannelMessageAck>;
 
   /** Update the status for the current user online. */
   updateStatus(status? : string) : Promise<void>;
 
   /** Send a chat message to a chat channel on the server. */
-  writeChatMessage(clan_id: string, channel_id: string, channel_label: string, mode: number, content?: any, mentions?: Array<ApiMessageMention>, attachments?: Array<ApiMessageAttachment>, references?: Array<ApiMessageRef>, anonymous_message?: boolean, mention_everyone?:boolean, notifi_content?: any) : Promise<ChannelMessageAck>;
+  writeChatMessage(clan_id: string, channel_id: string, mode: number, content?: any, mentions?: Array<ApiMessageMention>, attachments?: Array<ApiMessageAttachment>, references?: Array<ApiMessageRef>, anonymous_message?: boolean, mention_everyone?:boolean, notifi_content?: any) : Promise<ChannelMessageAck>;
 
   /** Send message typing */
-  writeMessageTyping(channel_id: string, channel_label: string, mode: number) : Promise<MessageTypingEvent>;  
+  writeMessageTyping(channel_id: string, mode: number) : Promise<MessageTypingEvent>;  
 
   /** Send message reaction */
-  writeMessageReaction(id: string, channel_id: string, channel_label: string, mode: number, message_id: string, emoji: string, count: number, message_sender_id: string, action_delete: boolean) : Promise<MessageReactionEvent>;
+  writeMessageReaction(id: string, channel_id: string, mode: number, message_id: string, emoji: string, count: number, message_sender_id: string, action_delete: boolean) : Promise<MessageReactionEvent>;
 
   /** Send last seen message */
-  writeLastSeenMessage(channel_id: string, channel_label: string, mode: number, message_id: string, timestamp: string) : Promise<LastSeenMessageEvent>;
+  writeLastSeenMessage(channel_id: string, mode: number, message_id: string, timestamp: string) : Promise<LastSeenMessageEvent>;
 
   /** send voice joined */
   writeVoiceJoined(id: string, clanId: string, clanName: string, voiceChannelId: string, voiceChannelLabel: string, participant: string, lastScreenshot: string) : Promise<VoiceJoinedEvent>;
@@ -771,24 +565,6 @@ export interface Socket {
 
   /** Receive notifications from the socket. */
   onnotification: (notification: Notification) => void;
-
-  /** Receive party events. */
-  onparty: (party : Party) => void;
-
-  /** Receive party close events. */
-  onpartyclose: (partyClose : PartyClose) => void;
-
-  /** Receive party data updates. */
-  onpartydata: (partyData: PartyData) => void;
-
-  /** Receive party join requests, if party leader. */
-  onpartyjoinrequest: (partyJoinRequest: PartyJoinRequest) => void;
-
-  /** Receive announcements of a new party leader. */
-  onpartyleader: (partyLeader : PartyLeader) => void;
-
-  /** Receive a presence update for a party. */
-  onpartypresence: (partyPresence : PartyPresenceEvent) => void;
 
   /** Receive status presence updates. */
   onstatuspresence: (statusPresence: StatusPresenceEvent) => void;
@@ -970,19 +746,6 @@ export class DefaultSocket implements Socket {
           this.onmessagereaction(<MessageReactionEvent>message.message_reaction_event);
         } else if (message.channel_presence_event) {
           this.onchannelpresence(<ChannelPresenceEvent>message.channel_presence_event);
-        } else if (message.party_data) {
-          message.party_data.op_code = parseInt(message.party_data.op_code);
-          this.onpartydata(<PartyData>message.party_data);
-        } else if (message.party_close) {
-          this.onpartyclose(<PartyClose>message.party_close);
-        } else if (message.party_join_request) {
-          this.onpartyjoinrequest(message.party_join_request);
-        } else if (message.party_leader) {
-          this.onpartyleader(<PartyLeader> message.party_leader);
-        } else if (message.party_presence_event) {
-          this.onpartypresence(<PartyPresenceEvent> message.party_presence_event);
-        } else if (message.party) {
-          this.onparty(<Party> message.party);
         } else {
           if (this.verbose && window && window.console) {
             console.log("Unrecognized message received: %o", message);
@@ -1086,49 +849,6 @@ export class DefaultSocket implements Socket {
     }
   }
 
-  onparty(party : Party) {
-    if (this.verbose && window && window.console) {
-      console.log(party);
-    }
-  }
-
-  onpartyclose(close: PartyClose) {
-    if (this.verbose && window && window.console) {
-      console.log("Party closed: " + close);
-    }
-  }
-
-  onpartyjoinrequest(partyJoinRequest : PartyJoinRequest) {
-    if (this.verbose && window && window.console) {
-      console.log(partyJoinRequest);
-    }
-  }
-
-  onpartydata(partyData: PartyData) {
-    if (this.verbose && window && window.console) {
-      console.log(partyData);
-    }
-  }
-
-  onpartyleader(partyLeader: PartyLeader) {
-    if (this.verbose && window && window.console) {
-      console.log(partyLeader);
-    }
-  }
-
-  onpartymatchmakerticket(partyMatched: PartyMatchmakerTicket) {
-    if (this.verbose && window && window.console) {
-      console.log(partyMatched);
-    }
-  }
-
-
-  onpartypresence(partyPresence: PartyPresenceEvent) {
-    if (this.verbose && window && window.console) {
-      console.log(partyPresence);
-    }
-  }
-
   onstatuspresence(statusPresence: StatusPresenceEvent) {
     if (this.verbose && window && window.console) {
       console.log(statusPresence);
@@ -1196,9 +916,7 @@ export class DefaultSocket implements Socket {
   }
 
   send(message: ChannelJoin | ChannelLeave | ChannelMessageSend | ChannelMessageUpdate |
-    ChannelMessageRemove | MessageTypingEvent | LastSeenMessageEvent | PartyAccept | PartyClose | PartyCreate | PartyDataSend | PartyJoin |
-    PartyJoinRequestList | PartyLeave | PartyMatchmakerAdd | PartyMatchmakerRemove | PartyPromote |
-    PartyRemove | Rpc | StatusFollow | StatusUnfollow | StatusUpdate | Ping, sendTimeout = DefaultSocket.DefaultSendTimeoutMs): Promise<any> {
+    ChannelMessageRemove | MessageTypingEvent | LastSeenMessageEvent | Rpc | StatusFollow | StatusUnfollow | StatusUpdate | Ping, sendTimeout = DefaultSocket.DefaultSendTimeoutMs): Promise<any> {
     const untypedMessage = message as any;
 
     return new Promise<void>((resolve, reject) => {
@@ -1206,55 +924,23 @@ export class DefaultSocket implements Socket {
         reject("Socket connection has not been established yet.");
       }
       else {
-        if (untypedMessage.party_data_send) {
-            this.adapter.send(untypedMessage);
-            resolve();
-        }
-        else {
-
-          if (untypedMessage.channel_message_send) {
-            untypedMessage.channel_message_send.content = JSON.stringify(untypedMessage.channel_message_send.content);
-          } else if (untypedMessage.channel_message_update) {
-            untypedMessage.channel_message_update.content = JSON.stringify(untypedMessage.channel_message_update.content);
-          }
-
-          const cid = this.generatecid();
-          this.cIds[cid] = {resolve, reject};
-          setTimeout(() => {
-            reject("The socket timed out while waiting for a response.")
-          }, sendTimeout);
-
-          /** Add id for promise executor. */
-          untypedMessage.cid = cid;
-          this.adapter.send(untypedMessage);
-        }
-      }
-
-      if (this.verbose && window && window.console) {
-        const loggedMessage = { ...untypedMessage };
-
-        if (loggedMessage.match_data_send && loggedMessage.match_data_send.data) {
-          loggedMessage.match_data_send.data = decode(loggedMessage.match_data_send.data);
-        } else if (loggedMessage.party_data_send && loggedMessage.party_data_send.data) {
-          loggedMessage.party_data_send.data = decode(loggedMessage.party_data_send.data);
+        if (untypedMessage.channel_message_send) {
+          untypedMessage.channel_message_send.content = JSON.stringify(untypedMessage.channel_message_send.content);
+        } else if (untypedMessage.channel_message_update) {
+          untypedMessage.channel_message_update.content = JSON.stringify(untypedMessage.channel_message_update.content);
         }
 
-        console.log("Sent message: %o", JSON.stringify(loggedMessage));
+        const cid = this.generatecid();
+        this.cIds[cid] = {resolve, reject};
+        setTimeout(() => {
+          reject("The socket timed out while waiting for a response.")
+        }, sendTimeout);
+
+        /** Add id for promise executor. */
+        untypedMessage.cid = cid;
+        this.adapter.send(untypedMessage);
       }
     });
-  }
-
-  acceptPartyMember(party_id: string, presence: Presence): Promise<void> {
-    return this.send({party_accept: {party_id: party_id, presence: presence}});
-  }
-
-  async closeParty(party_id: string): Promise<void> {
-    return await this.send({party_close: {party_id: party_id}});
-  }
-
-  async createParty(open: boolean, max_size: number): Promise<Party> {
-    const response = await this.send({party_create: {open: open, max_size: max_size}});
-    return response.party;
   }
 
   async followUsers(userIds : string[]): Promise<Status> {
@@ -1273,12 +959,11 @@ export class DefaultSocket implements Socket {
     return response.clan_join;
   }
 
-  async joinChat(channel_id: string, channel_label: string, mode: number, type: number, persistence: boolean, hidden: boolean): Promise<Channel> {
+  async joinChat(channel_id: string, mode: number, type: number, persistence: boolean, hidden: boolean): Promise<Channel> {
 
     const response = await this.send({
         channel_join: {
             channel_id: channel_id,
-            channel_label: channel_label,
             mode: mode,
             type: type,
             persistence: persistence,
@@ -1290,38 +975,15 @@ export class DefaultSocket implements Socket {
     return response.channel;
   }
 
-  async joinParty(party_id: string): Promise<void> {
-    return await this.send({party_join: {party_id: party_id}});
+  leaveChat(channel_id: string, mode: number): Promise<void> {
+    return this.send({channel_leave: {channel_id: channel_id, mode:mode}});
   }
 
-  leaveChat(channel_id: string, channel_label: string, mode: number): Promise<void> {
-    return this.send({channel_leave: {channel_id: channel_id, channel_label: channel_label, mode:mode}});
-  }
-
-  leaveMatch(matchId: string): Promise<void> {
-    return this.send({match_leave: {match_id: matchId}});
-  }
-
-  leaveParty(party_id: string): Promise<void> {
-    return this.send({party_leave: {party_id: party_id}});
-  }
-
-  async listPartyJoinRequests(party_id: string): Promise<PartyJoinRequest> {
-    const response = await this.send({party_join_request_list: {party_id: party_id}});
-    return response.party_join_request;
-  }
-
-  async promotePartyMember(party_id: string, party_member: Presence): Promise<PartyLeader> {
-    const response = await this.send({party_promote: {party_id: party_id, presence: party_member}});
-    return response.party_leader;
-  }
-
-  async removeChatMessage(channel_id: string, channel_label: string, mode: number, message_id: string): Promise<ChannelMessageAck> {
+  async removeChatMessage(channel_id: string, mode: number, message_id: string): Promise<ChannelMessageAck> {
     const response = await this.send(
       {
         channel_message_remove: {
           channel_id: channel_id,
-          channel_label: channel_label,
           mode: mode,
           message_id: message_id
         }
@@ -1359,8 +1021,8 @@ export class DefaultSocket implements Socket {
     return this.send({status_unfollow: {user_ids: user_ids}});
   }
 
-  async updateChatMessage(channel_id: string, channel_label: string, mode: number, message_id : string, content: any): Promise<ChannelMessageAck> {
-    const response = await this.send({channel_message_update: {channel_id: channel_id,channel_label:channel_label, message_id: message_id, content: content, mode: mode}});
+  async updateChatMessage(channel_id: string, mode: number, message_id : string, content: any): Promise<ChannelMessageAck> {
+    const response = await this.send({channel_message_update: {channel_id: channel_id, message_id: message_id, content: content, mode: mode}});
     return response.channel_message_ack;
   }
 
@@ -1368,23 +1030,23 @@ export class DefaultSocket implements Socket {
     return this.send({status_update: {status: status}});
   }
 
-  async writeChatMessage(clan_id: string, channel_id: string, channel_label: string, mode: number, content: any, mentions?: Array<ApiMessageMention>, attachments?: Array<ApiMessageAttachment>, references?: Array<ApiMessageRef>, anonymous_message?: boolean, mention_everyone?:Boolean, notifi_content?: any ): Promise<ChannelMessageAck> {
-    const response = await this.send({channel_message_send: {clan_id: clan_id, channel_id: channel_id, channel_label:channel_label, mode:mode, content: content, mentions: mentions, attachments: attachments, references: references, anonymous_message: anonymous_message, mention_everyone:mention_everyone, notifi_content:notifi_content}});
+  async writeChatMessage(clan_id: string, channel_id: string, mode: number, content: any, mentions?: Array<ApiMessageMention>, attachments?: Array<ApiMessageAttachment>, references?: Array<ApiMessageRef>, anonymous_message?: boolean, mention_everyone?:Boolean, notifi_content?: any ): Promise<ChannelMessageAck> {
+    const response = await this.send({channel_message_send: {clan_id: clan_id, channel_id: channel_id, mode:mode, content: content, mentions: mentions, attachments: attachments, references: references, anonymous_message: anonymous_message, mention_everyone:mention_everyone, notifi_content:notifi_content}});
     return response.channel_message_ack;
   }
 
-  async writeMessageReaction(id: string, channel_id: string, channel_label: string, mode: number, message_id: string, emoji: string, count: number, message_sender_id: string, action_delete: boolean) : Promise<MessageReactionEvent> {
-    const response = await this.send({message_reaction_event: {id: id, channel_id: channel_id, channel_label: channel_label, mode: mode, message_id: message_id, emoji: emoji, count: count, message_sender_id: message_sender_id, action: action_delete}});
+  async writeMessageReaction(id: string, channel_id: string, mode: number, message_id: string, emoji: string, count: number, message_sender_id: string, action_delete: boolean) : Promise<MessageReactionEvent> {
+    const response = await this.send({message_reaction_event: {id: id, channel_id: channel_id, mode: mode, message_id: message_id, emoji: emoji, count: count, message_sender_id: message_sender_id, action: action_delete}});
     return response.message_reaction_event
   }
 
-  async writeMessageTyping(channel_id: string, channel_label: string, mode: number) : Promise<MessageTypingEvent> {
-    const response = await this.send({message_typing_event: {channel_id: channel_id, channel_label: channel_label, mode:mode}});
+  async writeMessageTyping(channel_id: string, mode: number) : Promise<MessageTypingEvent> {
+    const response = await this.send({message_typing_event: {channel_id: channel_id, mode:mode}});
     return response.message_typing_event
   }
 
-  async writeLastSeenMessage(channel_id: string, channel_label: string, mode: number, message_id: string, timestamp: string) : Promise<LastSeenMessageEvent> {
-    const response = await this.send({last_seen_message_event: {channel_id: channel_id, channel_label: channel_label, mode: mode, message_id: message_id, timestamp: timestamp}});
+  async writeLastSeenMessage(channel_id: string, mode: number, message_id: string, timestamp: string) : Promise<LastSeenMessageEvent> {
+    const response = await this.send({last_seen_message_event: {channel_id: channel_id, mode: mode, message_id: message_id, timestamp: timestamp}});
     return response.last_seen_message_event
   }
 

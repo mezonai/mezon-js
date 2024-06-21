@@ -577,19 +577,6 @@ var re_utob = /[\uD800-\uDBFF][\uDC00-\uDFFFF]|[^\x00-\x7F]/g;
 var utob = (u) => u.replace(re_utob, cb_utob);
 var _encode = _hasBuffer ? (s) => Buffer.from(s, "utf8").toString("base64") : _TE ? (s) => _fromUint8Array(_TE.encode(s)) : (s) => _btoa(utob(s));
 var encode = (src, urlsafe = false) => urlsafe ? _mkUriSafe(_encode(src)) : _encode(src);
-var re_btou = /[\xC0-\xDF][\x80-\xBF]|[\xE0-\xEF][\x80-\xBF]{2}|[\xF0-\xF7][\x80-\xBF]{3}/g;
-var cb_btou = (cccc) => {
-  switch (cccc.length) {
-    case 4:
-      var cp = (7 & cccc.charCodeAt(0)) << 18 | (63 & cccc.charCodeAt(1)) << 12 | (63 & cccc.charCodeAt(2)) << 6 | 63 & cccc.charCodeAt(3), offset = cp - 65536;
-      return _fromCC((offset >>> 10) + 55296) + _fromCC((offset & 1023) + 56320);
-    case 3:
-      return _fromCC((15 & cccc.charCodeAt(0)) << 12 | (63 & cccc.charCodeAt(1)) << 6 | 63 & cccc.charCodeAt(2));
-    default:
-      return _fromCC((31 & cccc.charCodeAt(0)) << 6 | 63 & cccc.charCodeAt(1));
-  }
-};
-var btou = (b) => b.replace(re_btou, cb_btou);
 var atobPolyfill = (asc) => {
   asc = asc.replace(/\s+/g, "");
   if (!b64re.test(asc))
@@ -603,10 +590,6 @@ var atobPolyfill = (asc) => {
   return bin;
 };
 var _atob = _hasatob ? (asc) => atob(_tidyB64(asc)) : _hasBuffer ? (asc) => Buffer.from(asc, "base64").toString("binary") : atobPolyfill;
-var _toUint8Array = _hasBuffer ? (a) => _U8Afrom(Buffer.from(a, "base64")) : (a) => _U8Afrom(_atob(a), (c) => c.charCodeAt(0));
-var _decode = _hasBuffer ? (a) => Buffer.from(a, "base64").toString("utf8") : _TD ? (a) => _TD.decode(_toUint8Array(a)) : (a) => btou(_atob(a));
-var _unURI = (a) => _tidyB64(a.replace(/[-_]/g, (m0) => m0 == "-" ? "+" : "/"));
-var decode2 = (src) => _decode(_unURI(src));
 
 // utils.ts
 function buildFetchOptions(method, options, bodyJson) {
@@ -2216,6 +2199,35 @@ var MezonApi = class {
     let bodyJson = "";
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("DELETE", options, bodyJson);
+    if (bearerToken) {
+      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+    }
+    return Promise.race([
+      fetch(fullUrl, fetchOptions).then((response) => {
+        if (response.status == 204) {
+          return response;
+        } else if (response.status >= 200 && response.status < 300) {
+          return response.json();
+        } else {
+          throw response;
+        }
+      }),
+      new Promise(
+        (_, reject) => setTimeout(reject, this.timeoutMs, "Request timed out.")
+      )
+    ]);
+  }
+  /** open direct message. */
+  openDirectMess(bearerToken, body, options = {}) {
+    if (body === null || body === void 0) {
+      throw new Error("'body' is a required parameter but is null or undefined.");
+    }
+    const urlPath = "/v2/direct/open";
+    const queryParams = /* @__PURE__ */ new Map();
+    let bodyJson = "";
+    bodyJson = JSON.stringify(body || {});
+    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
+    const fetchOptions = buildFetchOptions("PUT", options, bodyJson);
     if (bearerToken) {
       fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
     }
@@ -4089,7 +4101,7 @@ var encode2 = function(arraybuffer) {
   }
   return base64;
 };
-var decode3 = function(base64) {
+var decode2 = function(base64) {
   var bufferLength = base64.length * 0.75, len = base64.length, i, p = 0, encoded1, encoded2, encoded3, encoded4;
   if (base64[base64.length - 1] === "=") {
     bufferLength--;
@@ -4132,7 +4144,7 @@ var WebSocketAdapterText = class {
       this._socket.onmessage = (evt) => {
         const message = JSON.parse(evt.data);
         if (message.party_data && message.party_data.data) {
-          message.party_data.data = new Uint8Array(decode3(message.party_data.data));
+          message.party_data.data = new Uint8Array(decode2(message.party_data.data));
         }
         value(message);
       };
@@ -4269,19 +4281,6 @@ var _DefaultSocket = class _DefaultSocket {
           this.onmessagereaction(message.message_reaction_event);
         } else if (message.channel_presence_event) {
           this.onchannelpresence(message.channel_presence_event);
-        } else if (message.party_data) {
-          message.party_data.op_code = parseInt(message.party_data.op_code);
-          this.onpartydata(message.party_data);
-        } else if (message.party_close) {
-          this.onpartyclose(message.party_close);
-        } else if (message.party_join_request) {
-          this.onpartyjoinrequest(message.party_join_request);
-        } else if (message.party_leader) {
-          this.onpartyleader(message.party_leader);
-        } else if (message.party_presence_event) {
-          this.onpartypresence(message.party_presence_event);
-        } else if (message.party) {
-          this.onparty(message.party);
         } else {
           if (this.verbose && window && window.console) {
             console.log("Unrecognized message received: %o", message);
@@ -4369,41 +4368,6 @@ var _DefaultSocket = class _DefaultSocket {
       console.log(notification);
     }
   }
-  onparty(party) {
-    if (this.verbose && window && window.console) {
-      console.log(party);
-    }
-  }
-  onpartyclose(close) {
-    if (this.verbose && window && window.console) {
-      console.log("Party closed: " + close);
-    }
-  }
-  onpartyjoinrequest(partyJoinRequest) {
-    if (this.verbose && window && window.console) {
-      console.log(partyJoinRequest);
-    }
-  }
-  onpartydata(partyData) {
-    if (this.verbose && window && window.console) {
-      console.log(partyData);
-    }
-  }
-  onpartyleader(partyLeader) {
-    if (this.verbose && window && window.console) {
-      console.log(partyLeader);
-    }
-  }
-  onpartymatchmakerticket(partyMatched) {
-    if (this.verbose && window && window.console) {
-      console.log(partyMatched);
-    }
-  }
-  onpartypresence(partyPresence) {
-    if (this.verbose && window && window.console) {
-      console.log(partyPresence);
-    }
-  }
   onstatuspresence(statusPresence) {
     if (this.verbose && window && window.console) {
       console.log(statusPresence);
@@ -4465,47 +4429,19 @@ var _DefaultSocket = class _DefaultSocket {
       if (!this.adapter.isOpen()) {
         reject("Socket connection has not been established yet.");
       } else {
-        if (untypedMessage.party_data_send) {
-          this.adapter.send(untypedMessage);
-          resolve();
-        } else {
-          if (untypedMessage.channel_message_send) {
-            untypedMessage.channel_message_send.content = JSON.stringify(untypedMessage.channel_message_send.content);
-          } else if (untypedMessage.channel_message_update) {
-            untypedMessage.channel_message_update.content = JSON.stringify(untypedMessage.channel_message_update.content);
-          }
-          const cid = this.generatecid();
-          this.cIds[cid] = { resolve, reject };
-          setTimeout(() => {
-            reject("The socket timed out while waiting for a response.");
-          }, sendTimeout);
-          untypedMessage.cid = cid;
-          this.adapter.send(untypedMessage);
+        if (untypedMessage.channel_message_send) {
+          untypedMessage.channel_message_send.content = JSON.stringify(untypedMessage.channel_message_send.content);
+        } else if (untypedMessage.channel_message_update) {
+          untypedMessage.channel_message_update.content = JSON.stringify(untypedMessage.channel_message_update.content);
         }
+        const cid = this.generatecid();
+        this.cIds[cid] = { resolve, reject };
+        setTimeout(() => {
+          reject("The socket timed out while waiting for a response.");
+        }, sendTimeout);
+        untypedMessage.cid = cid;
+        this.adapter.send(untypedMessage);
       }
-      if (this.verbose && window && window.console) {
-        const loggedMessage = __spreadValues({}, untypedMessage);
-        if (loggedMessage.match_data_send && loggedMessage.match_data_send.data) {
-          loggedMessage.match_data_send.data = decode2(loggedMessage.match_data_send.data);
-        } else if (loggedMessage.party_data_send && loggedMessage.party_data_send.data) {
-          loggedMessage.party_data_send.data = decode2(loggedMessage.party_data_send.data);
-        }
-        console.log("Sent message: %o", JSON.stringify(loggedMessage));
-      }
-    });
-  }
-  acceptPartyMember(party_id, presence) {
-    return this.send({ party_accept: { party_id, presence } });
-  }
-  closeParty(party_id) {
-    return __async(this, null, function* () {
-      return yield this.send({ party_close: { party_id } });
-    });
-  }
-  createParty(open, max_size) {
-    return __async(this, null, function* () {
-      const response = yield this.send({ party_create: { open, max_size } });
-      return response.party;
     });
   }
   followUsers(userIds) {
@@ -4524,13 +4460,12 @@ var _DefaultSocket = class _DefaultSocket {
       return response.clan_join;
     });
   }
-  joinChat(channel_id, channel_label, mode, type, persistence, hidden) {
+  joinChat(channel_id, mode, type, persistence, hidden) {
     return __async(this, null, function* () {
       const response = yield this.send(
         {
           channel_join: {
             channel_id,
-            channel_label,
             mode,
             type,
             persistence,
@@ -4541,39 +4476,15 @@ var _DefaultSocket = class _DefaultSocket {
       return response.channel;
     });
   }
-  joinParty(party_id) {
-    return __async(this, null, function* () {
-      return yield this.send({ party_join: { party_id } });
-    });
+  leaveChat(channel_id, mode) {
+    return this.send({ channel_leave: { channel_id, mode } });
   }
-  leaveChat(channel_id, channel_label, mode) {
-    return this.send({ channel_leave: { channel_id, channel_label, mode } });
-  }
-  leaveMatch(matchId) {
-    return this.send({ match_leave: { match_id: matchId } });
-  }
-  leaveParty(party_id) {
-    return this.send({ party_leave: { party_id } });
-  }
-  listPartyJoinRequests(party_id) {
-    return __async(this, null, function* () {
-      const response = yield this.send({ party_join_request_list: { party_id } });
-      return response.party_join_request;
-    });
-  }
-  promotePartyMember(party_id, party_member) {
-    return __async(this, null, function* () {
-      const response = yield this.send({ party_promote: { party_id, presence: party_member } });
-      return response.party_leader;
-    });
-  }
-  removeChatMessage(channel_id, channel_label, mode, message_id) {
+  removeChatMessage(channel_id, mode, message_id) {
     return __async(this, null, function* () {
       const response = yield this.send(
         {
           channel_message_remove: {
             channel_id,
-            channel_label,
             mode,
             message_id
           }
@@ -4610,36 +4521,36 @@ var _DefaultSocket = class _DefaultSocket {
   unfollowUsers(user_ids) {
     return this.send({ status_unfollow: { user_ids } });
   }
-  updateChatMessage(channel_id, channel_label, mode, message_id, content) {
+  updateChatMessage(channel_id, mode, message_id, content) {
     return __async(this, null, function* () {
-      const response = yield this.send({ channel_message_update: { channel_id, channel_label, message_id, content, mode } });
+      const response = yield this.send({ channel_message_update: { channel_id, message_id, content, mode } });
       return response.channel_message_ack;
     });
   }
   updateStatus(status) {
     return this.send({ status_update: { status } });
   }
-  writeChatMessage(clan_id, channel_id, channel_label, mode, content, mentions, attachments, references, anonymous_message, mention_everyone, notifi_content) {
+  writeChatMessage(clan_id, channel_id, mode, content, mentions, attachments, references, anonymous_message, mention_everyone, notifi_content) {
     return __async(this, null, function* () {
-      const response = yield this.send({ channel_message_send: { clan_id, channel_id, channel_label, mode, content, mentions, attachments, references, anonymous_message, mention_everyone, notifi_content } });
+      const response = yield this.send({ channel_message_send: { clan_id, channel_id, mode, content, mentions, attachments, references, anonymous_message, mention_everyone, notifi_content } });
       return response.channel_message_ack;
     });
   }
-  writeMessageReaction(id, channel_id, channel_label, mode, message_id, emoji, count, message_sender_id, action_delete) {
+  writeMessageReaction(id, channel_id, mode, message_id, emoji, count, message_sender_id, action_delete) {
     return __async(this, null, function* () {
-      const response = yield this.send({ message_reaction_event: { id, channel_id, channel_label, mode, message_id, emoji, count, message_sender_id, action: action_delete } });
+      const response = yield this.send({ message_reaction_event: { id, channel_id, mode, message_id, emoji, count, message_sender_id, action: action_delete } });
       return response.message_reaction_event;
     });
   }
-  writeMessageTyping(channel_id, channel_label, mode) {
+  writeMessageTyping(channel_id, mode) {
     return __async(this, null, function* () {
-      const response = yield this.send({ message_typing_event: { channel_id, channel_label, mode } });
+      const response = yield this.send({ message_typing_event: { channel_id, mode } });
       return response.message_typing_event;
     });
   }
-  writeLastSeenMessage(channel_id, channel_label, mode, message_id, timestamp) {
+  writeLastSeenMessage(channel_id, mode, message_id, timestamp) {
     return __async(this, null, function* () {
-      const response = yield this.send({ last_seen_message_event: { channel_id, channel_label, mode, message_id, timestamp } });
+      const response = yield this.send({ last_seen_message_event: { channel_id, mode, message_id, timestamp } });
       return response.last_seen_message_event;
     });
   }
@@ -5539,6 +5450,17 @@ var Client = class {
         yield this.sessionRefresh(session);
       }
       return this.apiClient.closeDirectMess(session.token, request).then((response) => {
+        return response !== void 0;
+      });
+    });
+  }
+  //
+  openDirectMess(session, request) {
+    return __async(this, null, function* () {
+      if (this.autoRefreshSession && session.refresh_token && session.isexpired((Date.now() + this.expiredTimespanMs) / 1e3)) {
+        yield this.sessionRefresh(session);
+      }
+      return this.apiClient.openDirectMess(session.token, request).then((response) => {
         return response !== void 0;
       });
     });

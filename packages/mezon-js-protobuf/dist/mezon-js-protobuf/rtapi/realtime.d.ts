@@ -49,34 +49,6 @@ export interface Envelope {
     ping?: Ping | undefined;
     /** Application-level heartbeat and connection check response. */
     pong?: Pong | undefined;
-    /** Incoming information about a party. */
-    party?: Party | undefined;
-    /** Create a party. */
-    party_create?: PartyCreate | undefined;
-    /** Join a party, or request to join if the party is not open. */
-    party_join?: PartyJoin | undefined;
-    /** Leave a party. */
-    party_leave?: PartyLeave | undefined;
-    /** Promote a new party leader. */
-    party_promote?: PartyPromote | undefined;
-    /** Announcement of a new party leader. */
-    party_leader?: PartyLeader | undefined;
-    /** Accept a request to join. */
-    party_accept?: PartyAccept | undefined;
-    /** Kick a party member, or decline a request to join. */
-    party_remove?: PartyRemove | undefined;
-    /** End a party, kicking all party members and closing it. */
-    party_close?: PartyClose | undefined;
-    /** Request a list of pending join requests for a party. */
-    party_join_request_list?: PartyJoinRequestList | undefined;
-    /** Incoming notification for one or more new presences attempting to join the party. */
-    party_join_request?: PartyJoinRequest | undefined;
-    /** Incoming party data delivered from the server. */
-    party_data?: PartyData | undefined;
-    /** A client to server request to send data to a party. */
-    party_data_send?: PartyDataSend | undefined;
-    /** Presence update for a particular party. */
-    party_presence_event?: PartyPresenceEvent | undefined;
     /** User typing event */
     message_typing_event?: MessageTypingEvent | undefined;
     /** Last seen message event */
@@ -124,8 +96,6 @@ export interface ChannelJoin {
     clan_id: string;
     /** The id of channel or group */
     channel_id: string;
-    /** The user ID to DM with, group ID to chat with, or channel id to join. */
-    channel_label: string;
     /** The type of the chat channel. */
     type: number;
     /** Whether messages sent on this channel should be persistent. */
@@ -139,8 +109,6 @@ export interface ChannelJoin {
 export interface ChannelLeave {
     /** The ID of the channel to leave. */
     channel_id: string;
-    /** The channe name */
-    channel_label: string;
     /** mode */
     mode: number;
 }
@@ -160,8 +128,6 @@ export interface ChannelMessageAck {
     update_time: Date | undefined;
     /** True if the message was persisted to the channel's history, false otherwise. */
     persistent: boolean | undefined;
-    /** The name of the chat room, or an empty string if this message was not sent through a chat room. */
-    channel_label: string;
     /** The ID of the first DM user, or an empty string if this message was not sent through a DM chat. */
     user_id_one: string;
     /** The ID of the second DM user, or an empty string if this message was not sent through a DM chat. */
@@ -210,8 +176,6 @@ export interface ChannelMessageSend {
     clan_id: string;
     /** The channel to sent to. */
     channel_id: string;
-    /** The channel label to sent to. */
-    channel_label: string;
     /** Message content. */
     content: string;
     /** Message mention */
@@ -231,8 +195,6 @@ export interface ChannelMessageSend {
 export interface ChannelMessageUpdate {
     /** The channel the message was sent to. */
     channel_id: string;
-    /** channel label */
-    channel_label: string;
     /** The ID assigned to the message to update. */
     message_id: string;
     /** New message content. */
@@ -244,8 +206,6 @@ export interface ChannelMessageUpdate {
 export interface ChannelMessageRemove {
     /** The channel the message was sent to. */
     channel_id: string;
-    /** The channel label */
-    channel_label: string;
     /** The ID assigned to the message to update. */
     message_id: string;
     /** The mode */
@@ -259,8 +219,6 @@ export interface ChannelPresenceEvent {
     joins: UserPresence[];
     /** Presences leaving the channel as part of this event, if any. */
     leaves: UserPresence[];
-    /** The name of the chat room, or an empty string if this message was not sent through a chat room. */
-    channel_label: string;
     /** The ID of the first DM user, or an empty string if this message was not sent through a DM chat. */
     user_id_one: string;
     /** The ID of the second DM user, or an empty string if this message was not sent through a DM chat. */
@@ -310,155 +268,6 @@ export interface Notifications {
     /** Collection of notifications. */
     notifications: Notification[];
 }
-/** Incoming information about a party. */
-export interface Party {
-    /** Unique party identifier. */
-    party_id: string;
-    /** Open flag. */
-    open: boolean;
-    /** Maximum number of party members. */
-    max_size: number;
-    /** Self. */
-    self: UserPresence | undefined;
-    /** Leader. */
-    leader: UserPresence | undefined;
-    /** All current party members. */
-    presences: UserPresence[];
-}
-/** Create a party. */
-export interface PartyCreate {
-    /** Whether or not the party will require join requests to be approved by the party leader. */
-    open: boolean;
-    /** Maximum number of party members. */
-    max_size: number;
-}
-/** Join a party, or request to join if the party is not open. */
-export interface PartyJoin {
-    /** Party ID to join. */
-    party_id: string;
-}
-/** Leave a party. */
-export interface PartyLeave {
-    /** Party ID to leave. */
-    party_id: string;
-}
-/** Promote a new party leader. */
-export interface PartyPromote {
-    /** Party ID to promote a new leader for. */
-    party_id: string;
-    /** The presence of an existing party member to promote as the new leader. */
-    presence: UserPresence | undefined;
-}
-/** Announcement of a new party leader. */
-export interface PartyLeader {
-    /** Party ID to announce the new leader for. */
-    party_id: string;
-    /** The presence of the new party leader. */
-    presence: UserPresence | undefined;
-}
-/** Accept a request to join. */
-export interface PartyAccept {
-    /** Party ID to accept a join request for. */
-    party_id: string;
-    /** The presence to accept as a party member. */
-    presence: UserPresence | undefined;
-}
-/** Kick a party member, or decline a request to join. */
-export interface PartyRemove {
-    /** Party ID to remove/reject from. */
-    party_id: string;
-    /** The presence to remove or reject. */
-    presence: UserPresence | undefined;
-}
-/** End a party, kicking all party members and closing it. */
-export interface PartyClose {
-    /** Party ID to close. */
-    party_id: string;
-}
-/** Request a list of pending join requests for a party. */
-export interface PartyJoinRequestList {
-    /** Party ID to get a list of join requests for. */
-    party_id: string;
-}
-/** Incoming notification for one or more new presences attempting to join the party. */
-export interface PartyJoinRequest {
-    /** Party ID these presences are attempting to join. */
-    party_id: string;
-    /** Presences attempting to join. */
-    presences: UserPresence[];
-}
-/** Begin matchmaking as a party. */
-export interface PartyMatchmakerAdd {
-    /** Party ID. */
-    party_id: string;
-    /** Minimum total user count to match together. */
-    min_count: number;
-    /** Maximum total user count to match together. */
-    max_count: number;
-    /** Filter query used to identify suitable users. */
-    query: string;
-    /** String properties. */
-    string_properties: {
-        [key: string]: string;
-    };
-    /** Numeric properties. */
-    numeric_properties: {
-        [key: string]: number;
-    };
-    /** Optional multiple of the count that must be satisfied. */
-    count_multiple: number | undefined;
-}
-export interface PartyMatchmakerAdd_StringPropertiesEntry {
-    key: string;
-    value: string;
-}
-export interface PartyMatchmakerAdd_NumericPropertiesEntry {
-    key: string;
-    value: number;
-}
-/** Cancel a party matchmaking process using a ticket. */
-export interface PartyMatchmakerRemove {
-    /** Party ID. */
-    party_id: string;
-    /** The ticket to cancel. */
-    ticket: string;
-}
-/** A response from starting a new party matchmaking process. */
-export interface PartyMatchmakerTicket {
-    /** Party ID. */
-    party_id: string;
-    /** The ticket that can be used to cancel matchmaking. */
-    ticket: string;
-}
-/** Incoming party data delivered from the server. */
-export interface PartyData {
-    /** The party ID. */
-    party_id: string;
-    /** A reference to the user presence that sent this data, if any. */
-    presence: UserPresence | undefined;
-    /** Op code value. */
-    op_code: number;
-    /** Data payload, if any. */
-    data: Uint8Array;
-}
-/** Send data to a party. */
-export interface PartyDataSend {
-    /** Party ID to send to. */
-    party_id: string;
-    /** Op code value. */
-    op_code: number;
-    /** Data payload, if any. */
-    data: Uint8Array;
-}
-/** Presence update for a particular party. */
-export interface PartyPresenceEvent {
-    /** The party ID. */
-    party_id: string;
-    /** User presences that have just joined the party. */
-    joins: UserPresence[];
-    /** User presences that have just left the party. */
-    leaves: UserPresence[];
-}
 /** Application-level heartbeat and connection check. */
 export interface Ping {
 }
@@ -488,8 +297,6 @@ export interface StatusPresenceEvent {
 export interface LastSeenMessageEvent {
     /** The unique ID of this channel. */
     channel_id: string;
-    /** The channel label */
-    channel_label: string;
     /** The unique ID of this message. */
     message_id: string;
     /** The stream mode */
@@ -501,8 +308,6 @@ export interface LastSeenMessageEvent {
 export interface MessageTypingEvent {
     /** The channel this message belongs to. */
     channel_id: string;
-    /** The channel label */
-    channel_label: string;
     /** Message sender, usually a user ID. */
     sender_id: string;
     /** mode */
@@ -512,8 +317,6 @@ export interface MessageTypingEvent {
 export interface MessageMentionEvent {
     /** The channel this message belongs to. */
     channel_id: string;
-    /** The channel label */
-    channel_label: string;
     /** React to message */
     message_id: string;
     /** mention user id */
@@ -531,8 +334,6 @@ export interface MessageReactionEvent {
     id: string;
     /** The channel this message belongs to. */
     channel_id: string;
-    /** The channel label */
-    channel_label: string;
     /** React to message */
     message_id: string;
     /** Message sender, usually a user ID. */
@@ -556,8 +357,6 @@ export interface MessageReactionEvent {
 export interface MessageAttachmentEvent {
     /** The channel this message belongs to. */
     channel_id: string;
-    /** The channel label */
-    channel_label: string;
     /** React to message */
     message_id: string;
     /** Attachment file name */
@@ -760,7 +559,6 @@ export declare const Envelope: {
         channel_join?: {
             clan_id?: string | undefined;
             channel_id?: string | undefined;
-            channel_label?: string | undefined;
             type?: number | undefined;
             persistence?: boolean | undefined;
             hidden?: boolean | undefined;
@@ -768,7 +566,6 @@ export declare const Envelope: {
         } | undefined;
         channel_leave?: {
             channel_id?: string | undefined;
-            channel_label?: string | undefined;
             mode?: number | undefined;
         } | undefined;
         channel_message?: {
@@ -799,14 +596,12 @@ export declare const Envelope: {
             create_time?: Date | undefined;
             update_time?: Date | undefined;
             persistent?: boolean | undefined;
-            channel_label?: string | undefined;
             user_id_one?: string | undefined;
             user_id_two?: string | undefined;
         } | undefined;
         channel_message_send?: {
             clan_id?: string | undefined;
             channel_id?: string | undefined;
-            channel_label?: string | undefined;
             content?: string | undefined;
             mentions?: {
                 user_id?: string | undefined;
@@ -834,14 +629,12 @@ export declare const Envelope: {
         } | undefined;
         channel_message_update?: {
             channel_id?: string | undefined;
-            channel_label?: string | undefined;
             message_id?: string | undefined;
             content?: string | undefined;
             mode?: number | undefined;
         } | undefined;
         channel_message_remove?: {
             channel_id?: string | undefined;
-            channel_label?: string | undefined;
             message_id?: string | undefined;
             mode?: number | undefined;
         } | undefined;
@@ -861,7 +654,6 @@ export declare const Envelope: {
                 persistence?: boolean | undefined;
                 status?: string | undefined;
             }[] | undefined;
-            channel_label?: string | undefined;
             user_id_one?: string | undefined;
             user_id_two?: string | undefined;
             mode?: number | undefined;
@@ -969,141 +761,13 @@ export declare const Envelope: {
         } | undefined;
         ping?: {} | undefined;
         pong?: {} | undefined;
-        party?: {
-            party_id?: string | undefined;
-            open?: boolean | undefined;
-            max_size?: number | undefined;
-            self?: {
-                user_id?: string | undefined;
-                session_id?: string | undefined;
-                username?: string | undefined;
-                persistence?: boolean | undefined;
-                status?: string | undefined;
-            } | undefined;
-            leader?: {
-                user_id?: string | undefined;
-                session_id?: string | undefined;
-                username?: string | undefined;
-                persistence?: boolean | undefined;
-                status?: string | undefined;
-            } | undefined;
-            presences?: {
-                user_id?: string | undefined;
-                session_id?: string | undefined;
-                username?: string | undefined;
-                persistence?: boolean | undefined;
-                status?: string | undefined;
-            }[] | undefined;
-        } | undefined;
-        party_create?: {
-            open?: boolean | undefined;
-            max_size?: number | undefined;
-        } | undefined;
-        party_join?: {
-            party_id?: string | undefined;
-        } | undefined;
-        party_leave?: {
-            party_id?: string | undefined;
-        } | undefined;
-        party_promote?: {
-            party_id?: string | undefined;
-            presence?: {
-                user_id?: string | undefined;
-                session_id?: string | undefined;
-                username?: string | undefined;
-                persistence?: boolean | undefined;
-                status?: string | undefined;
-            } | undefined;
-        } | undefined;
-        party_leader?: {
-            party_id?: string | undefined;
-            presence?: {
-                user_id?: string | undefined;
-                session_id?: string | undefined;
-                username?: string | undefined;
-                persistence?: boolean | undefined;
-                status?: string | undefined;
-            } | undefined;
-        } | undefined;
-        party_accept?: {
-            party_id?: string | undefined;
-            presence?: {
-                user_id?: string | undefined;
-                session_id?: string | undefined;
-                username?: string | undefined;
-                persistence?: boolean | undefined;
-                status?: string | undefined;
-            } | undefined;
-        } | undefined;
-        party_remove?: {
-            party_id?: string | undefined;
-            presence?: {
-                user_id?: string | undefined;
-                session_id?: string | undefined;
-                username?: string | undefined;
-                persistence?: boolean | undefined;
-                status?: string | undefined;
-            } | undefined;
-        } | undefined;
-        party_close?: {
-            party_id?: string | undefined;
-        } | undefined;
-        party_join_request_list?: {
-            party_id?: string | undefined;
-        } | undefined;
-        party_join_request?: {
-            party_id?: string | undefined;
-            presences?: {
-                user_id?: string | undefined;
-                session_id?: string | undefined;
-                username?: string | undefined;
-                persistence?: boolean | undefined;
-                status?: string | undefined;
-            }[] | undefined;
-        } | undefined;
-        party_data?: {
-            party_id?: string | undefined;
-            presence?: {
-                user_id?: string | undefined;
-                session_id?: string | undefined;
-                username?: string | undefined;
-                persistence?: boolean | undefined;
-                status?: string | undefined;
-            } | undefined;
-            op_code?: number | undefined;
-            data?: Uint8Array | undefined;
-        } | undefined;
-        party_data_send?: {
-            party_id?: string | undefined;
-            op_code?: number | undefined;
-            data?: Uint8Array | undefined;
-        } | undefined;
-        party_presence_event?: {
-            party_id?: string | undefined;
-            joins?: {
-                user_id?: string | undefined;
-                session_id?: string | undefined;
-                username?: string | undefined;
-                persistence?: boolean | undefined;
-                status?: string | undefined;
-            }[] | undefined;
-            leaves?: {
-                user_id?: string | undefined;
-                session_id?: string | undefined;
-                username?: string | undefined;
-                persistence?: boolean | undefined;
-                status?: string | undefined;
-            }[] | undefined;
-        } | undefined;
         message_typing_event?: {
             channel_id?: string | undefined;
-            channel_label?: string | undefined;
             sender_id?: string | undefined;
             mode?: number | undefined;
         } | undefined;
         last_seen_message_event?: {
             channel_id?: string | undefined;
-            channel_label?: string | undefined;
             message_id?: string | undefined;
             mode?: number | undefined;
             timestamp?: string | undefined;
@@ -1111,7 +775,6 @@ export declare const Envelope: {
         message_reaction_event?: {
             id?: string | undefined;
             channel_id?: string | undefined;
-            channel_label?: string | undefined;
             message_id?: string | undefined;
             sender_id?: string | undefined;
             sender_name?: string | undefined;
@@ -1248,7 +911,6 @@ export declare const Envelope: {
         channel_join?: ({
             clan_id?: string | undefined;
             channel_id?: string | undefined;
-            channel_label?: string | undefined;
             type?: number | undefined;
             persistence?: boolean | undefined;
             hidden?: boolean | undefined;
@@ -1256,7 +918,6 @@ export declare const Envelope: {
         } & {
             clan_id?: string | undefined;
             channel_id?: string | undefined;
-            channel_label?: string | undefined;
             type?: number | undefined;
             persistence?: boolean | undefined;
             hidden?: boolean | undefined;
@@ -1264,11 +925,9 @@ export declare const Envelope: {
         } & { [K_5 in Exclude<keyof I["channel_join"], keyof ChannelJoin>]: never; }) | undefined;
         channel_leave?: ({
             channel_id?: string | undefined;
-            channel_label?: string | undefined;
             mode?: number | undefined;
         } & {
             channel_id?: string | undefined;
-            channel_label?: string | undefined;
             mode?: number | undefined;
         } & { [K_6 in Exclude<keyof I["channel_leave"], keyof ChannelLeave>]: never; }) | undefined;
         channel_message?: ({
@@ -1318,7 +977,6 @@ export declare const Envelope: {
             create_time?: Date | undefined;
             update_time?: Date | undefined;
             persistent?: boolean | undefined;
-            channel_label?: string | undefined;
             user_id_one?: string | undefined;
             user_id_two?: string | undefined;
         } & {
@@ -1329,14 +987,12 @@ export declare const Envelope: {
             create_time?: Date | undefined;
             update_time?: Date | undefined;
             persistent?: boolean | undefined;
-            channel_label?: string | undefined;
             user_id_one?: string | undefined;
             user_id_two?: string | undefined;
         } & { [K_8 in Exclude<keyof I["channel_message_ack"], keyof ChannelMessageAck>]: never; }) | undefined;
         channel_message_send?: ({
             clan_id?: string | undefined;
             channel_id?: string | undefined;
-            channel_label?: string | undefined;
             content?: string | undefined;
             mentions?: {
                 user_id?: string | undefined;
@@ -1364,7 +1020,6 @@ export declare const Envelope: {
         } & {
             clan_id?: string | undefined;
             channel_id?: string | undefined;
-            channel_label?: string | undefined;
             content?: string | undefined;
             mentions?: ({
                 user_id?: string | undefined;
@@ -1443,25 +1098,21 @@ export declare const Envelope: {
         } & { [K_15 in Exclude<keyof I["channel_message_send"], keyof ChannelMessageSend>]: never; }) | undefined;
         channel_message_update?: ({
             channel_id?: string | undefined;
-            channel_label?: string | undefined;
             message_id?: string | undefined;
             content?: string | undefined;
             mode?: number | undefined;
         } & {
             channel_id?: string | undefined;
-            channel_label?: string | undefined;
             message_id?: string | undefined;
             content?: string | undefined;
             mode?: number | undefined;
         } & { [K_16 in Exclude<keyof I["channel_message_update"], keyof ChannelMessageUpdate>]: never; }) | undefined;
         channel_message_remove?: ({
             channel_id?: string | undefined;
-            channel_label?: string | undefined;
             message_id?: string | undefined;
             mode?: number | undefined;
         } & {
             channel_id?: string | undefined;
-            channel_label?: string | undefined;
             message_id?: string | undefined;
             mode?: number | undefined;
         } & { [K_17 in Exclude<keyof I["channel_message_remove"], keyof ChannelMessageRemove>]: never; }) | undefined;
@@ -1481,7 +1132,6 @@ export declare const Envelope: {
                 persistence?: boolean | undefined;
                 status?: string | undefined;
             }[] | undefined;
-            channel_label?: string | undefined;
             user_id_one?: string | undefined;
             user_id_two?: string | undefined;
             mode?: number | undefined;
@@ -1537,7 +1187,6 @@ export declare const Envelope: {
                 persistence?: boolean | undefined;
                 status?: string | undefined;
             }[]>]: never; }) | undefined;
-            channel_label?: string | undefined;
             user_id_one?: string | undefined;
             user_id_two?: string | undefined;
             mode?: number | undefined;
@@ -1880,386 +1529,29 @@ export declare const Envelope: {
         } & { [K_51 in Exclude<keyof I["stream_presence_event"], keyof StreamPresenceEvent>]: never; }) | undefined;
         ping?: ({} & {} & { [K_52 in Exclude<keyof I["ping"], never>]: never; }) | undefined;
         pong?: ({} & {} & { [K_53 in Exclude<keyof I["pong"], never>]: never; }) | undefined;
-        party?: ({
-            party_id?: string | undefined;
-            open?: boolean | undefined;
-            max_size?: number | undefined;
-            self?: {
-                user_id?: string | undefined;
-                session_id?: string | undefined;
-                username?: string | undefined;
-                persistence?: boolean | undefined;
-                status?: string | undefined;
-            } | undefined;
-            leader?: {
-                user_id?: string | undefined;
-                session_id?: string | undefined;
-                username?: string | undefined;
-                persistence?: boolean | undefined;
-                status?: string | undefined;
-            } | undefined;
-            presences?: {
-                user_id?: string | undefined;
-                session_id?: string | undefined;
-                username?: string | undefined;
-                persistence?: boolean | undefined;
-                status?: string | undefined;
-            }[] | undefined;
-        } & {
-            party_id?: string | undefined;
-            open?: boolean | undefined;
-            max_size?: number | undefined;
-            self?: ({
-                user_id?: string | undefined;
-                session_id?: string | undefined;
-                username?: string | undefined;
-                persistence?: boolean | undefined;
-                status?: string | undefined;
-            } & {
-                user_id?: string | undefined;
-                session_id?: string | undefined;
-                username?: string | undefined;
-                persistence?: boolean | undefined;
-                status?: string | undefined;
-            } & { [K_54 in Exclude<keyof I["party"]["self"], keyof UserPresence>]: never; }) | undefined;
-            leader?: ({
-                user_id?: string | undefined;
-                session_id?: string | undefined;
-                username?: string | undefined;
-                persistence?: boolean | undefined;
-                status?: string | undefined;
-            } & {
-                user_id?: string | undefined;
-                session_id?: string | undefined;
-                username?: string | undefined;
-                persistence?: boolean | undefined;
-                status?: string | undefined;
-            } & { [K_55 in Exclude<keyof I["party"]["leader"], keyof UserPresence>]: never; }) | undefined;
-            presences?: ({
-                user_id?: string | undefined;
-                session_id?: string | undefined;
-                username?: string | undefined;
-                persistence?: boolean | undefined;
-                status?: string | undefined;
-            }[] & ({
-                user_id?: string | undefined;
-                session_id?: string | undefined;
-                username?: string | undefined;
-                persistence?: boolean | undefined;
-                status?: string | undefined;
-            } & {
-                user_id?: string | undefined;
-                session_id?: string | undefined;
-                username?: string | undefined;
-                persistence?: boolean | undefined;
-                status?: string | undefined;
-            } & { [K_56 in Exclude<keyof I["party"]["presences"][number], keyof UserPresence>]: never; })[] & { [K_57 in Exclude<keyof I["party"]["presences"], keyof {
-                user_id?: string | undefined;
-                session_id?: string | undefined;
-                username?: string | undefined;
-                persistence?: boolean | undefined;
-                status?: string | undefined;
-            }[]>]: never; }) | undefined;
-        } & { [K_58 in Exclude<keyof I["party"], keyof Party>]: never; }) | undefined;
-        party_create?: ({
-            open?: boolean | undefined;
-            max_size?: number | undefined;
-        } & {
-            open?: boolean | undefined;
-            max_size?: number | undefined;
-        } & { [K_59 in Exclude<keyof I["party_create"], keyof PartyCreate>]: never; }) | undefined;
-        party_join?: ({
-            party_id?: string | undefined;
-        } & {
-            party_id?: string | undefined;
-        } & { [K_60 in Exclude<keyof I["party_join"], "party_id">]: never; }) | undefined;
-        party_leave?: ({
-            party_id?: string | undefined;
-        } & {
-            party_id?: string | undefined;
-        } & { [K_61 in Exclude<keyof I["party_leave"], "party_id">]: never; }) | undefined;
-        party_promote?: ({
-            party_id?: string | undefined;
-            presence?: {
-                user_id?: string | undefined;
-                session_id?: string | undefined;
-                username?: string | undefined;
-                persistence?: boolean | undefined;
-                status?: string | undefined;
-            } | undefined;
-        } & {
-            party_id?: string | undefined;
-            presence?: ({
-                user_id?: string | undefined;
-                session_id?: string | undefined;
-                username?: string | undefined;
-                persistence?: boolean | undefined;
-                status?: string | undefined;
-            } & {
-                user_id?: string | undefined;
-                session_id?: string | undefined;
-                username?: string | undefined;
-                persistence?: boolean | undefined;
-                status?: string | undefined;
-            } & { [K_62 in Exclude<keyof I["party_promote"]["presence"], keyof UserPresence>]: never; }) | undefined;
-        } & { [K_63 in Exclude<keyof I["party_promote"], keyof PartyPromote>]: never; }) | undefined;
-        party_leader?: ({
-            party_id?: string | undefined;
-            presence?: {
-                user_id?: string | undefined;
-                session_id?: string | undefined;
-                username?: string | undefined;
-                persistence?: boolean | undefined;
-                status?: string | undefined;
-            } | undefined;
-        } & {
-            party_id?: string | undefined;
-            presence?: ({
-                user_id?: string | undefined;
-                session_id?: string | undefined;
-                username?: string | undefined;
-                persistence?: boolean | undefined;
-                status?: string | undefined;
-            } & {
-                user_id?: string | undefined;
-                session_id?: string | undefined;
-                username?: string | undefined;
-                persistence?: boolean | undefined;
-                status?: string | undefined;
-            } & { [K_64 in Exclude<keyof I["party_leader"]["presence"], keyof UserPresence>]: never; }) | undefined;
-        } & { [K_65 in Exclude<keyof I["party_leader"], keyof PartyLeader>]: never; }) | undefined;
-        party_accept?: ({
-            party_id?: string | undefined;
-            presence?: {
-                user_id?: string | undefined;
-                session_id?: string | undefined;
-                username?: string | undefined;
-                persistence?: boolean | undefined;
-                status?: string | undefined;
-            } | undefined;
-        } & {
-            party_id?: string | undefined;
-            presence?: ({
-                user_id?: string | undefined;
-                session_id?: string | undefined;
-                username?: string | undefined;
-                persistence?: boolean | undefined;
-                status?: string | undefined;
-            } & {
-                user_id?: string | undefined;
-                session_id?: string | undefined;
-                username?: string | undefined;
-                persistence?: boolean | undefined;
-                status?: string | undefined;
-            } & { [K_66 in Exclude<keyof I["party_accept"]["presence"], keyof UserPresence>]: never; }) | undefined;
-        } & { [K_67 in Exclude<keyof I["party_accept"], keyof PartyAccept>]: never; }) | undefined;
-        party_remove?: ({
-            party_id?: string | undefined;
-            presence?: {
-                user_id?: string | undefined;
-                session_id?: string | undefined;
-                username?: string | undefined;
-                persistence?: boolean | undefined;
-                status?: string | undefined;
-            } | undefined;
-        } & {
-            party_id?: string | undefined;
-            presence?: ({
-                user_id?: string | undefined;
-                session_id?: string | undefined;
-                username?: string | undefined;
-                persistence?: boolean | undefined;
-                status?: string | undefined;
-            } & {
-                user_id?: string | undefined;
-                session_id?: string | undefined;
-                username?: string | undefined;
-                persistence?: boolean | undefined;
-                status?: string | undefined;
-            } & { [K_68 in Exclude<keyof I["party_remove"]["presence"], keyof UserPresence>]: never; }) | undefined;
-        } & { [K_69 in Exclude<keyof I["party_remove"], keyof PartyRemove>]: never; }) | undefined;
-        party_close?: ({
-            party_id?: string | undefined;
-        } & {
-            party_id?: string | undefined;
-        } & { [K_70 in Exclude<keyof I["party_close"], "party_id">]: never; }) | undefined;
-        party_join_request_list?: ({
-            party_id?: string | undefined;
-        } & {
-            party_id?: string | undefined;
-        } & { [K_71 in Exclude<keyof I["party_join_request_list"], "party_id">]: never; }) | undefined;
-        party_join_request?: ({
-            party_id?: string | undefined;
-            presences?: {
-                user_id?: string | undefined;
-                session_id?: string | undefined;
-                username?: string | undefined;
-                persistence?: boolean | undefined;
-                status?: string | undefined;
-            }[] | undefined;
-        } & {
-            party_id?: string | undefined;
-            presences?: ({
-                user_id?: string | undefined;
-                session_id?: string | undefined;
-                username?: string | undefined;
-                persistence?: boolean | undefined;
-                status?: string | undefined;
-            }[] & ({
-                user_id?: string | undefined;
-                session_id?: string | undefined;
-                username?: string | undefined;
-                persistence?: boolean | undefined;
-                status?: string | undefined;
-            } & {
-                user_id?: string | undefined;
-                session_id?: string | undefined;
-                username?: string | undefined;
-                persistence?: boolean | undefined;
-                status?: string | undefined;
-            } & { [K_72 in Exclude<keyof I["party_join_request"]["presences"][number], keyof UserPresence>]: never; })[] & { [K_73 in Exclude<keyof I["party_join_request"]["presences"], keyof {
-                user_id?: string | undefined;
-                session_id?: string | undefined;
-                username?: string | undefined;
-                persistence?: boolean | undefined;
-                status?: string | undefined;
-            }[]>]: never; }) | undefined;
-        } & { [K_74 in Exclude<keyof I["party_join_request"], keyof PartyJoinRequest>]: never; }) | undefined;
-        party_data?: ({
-            party_id?: string | undefined;
-            presence?: {
-                user_id?: string | undefined;
-                session_id?: string | undefined;
-                username?: string | undefined;
-                persistence?: boolean | undefined;
-                status?: string | undefined;
-            } | undefined;
-            op_code?: number | undefined;
-            data?: Uint8Array | undefined;
-        } & {
-            party_id?: string | undefined;
-            presence?: ({
-                user_id?: string | undefined;
-                session_id?: string | undefined;
-                username?: string | undefined;
-                persistence?: boolean | undefined;
-                status?: string | undefined;
-            } & {
-                user_id?: string | undefined;
-                session_id?: string | undefined;
-                username?: string | undefined;
-                persistence?: boolean | undefined;
-                status?: string | undefined;
-            } & { [K_75 in Exclude<keyof I["party_data"]["presence"], keyof UserPresence>]: never; }) | undefined;
-            op_code?: number | undefined;
-            data?: Uint8Array | undefined;
-        } & { [K_76 in Exclude<keyof I["party_data"], keyof PartyData>]: never; }) | undefined;
-        party_data_send?: ({
-            party_id?: string | undefined;
-            op_code?: number | undefined;
-            data?: Uint8Array | undefined;
-        } & {
-            party_id?: string | undefined;
-            op_code?: number | undefined;
-            data?: Uint8Array | undefined;
-        } & { [K_77 in Exclude<keyof I["party_data_send"], keyof PartyDataSend>]: never; }) | undefined;
-        party_presence_event?: ({
-            party_id?: string | undefined;
-            joins?: {
-                user_id?: string | undefined;
-                session_id?: string | undefined;
-                username?: string | undefined;
-                persistence?: boolean | undefined;
-                status?: string | undefined;
-            }[] | undefined;
-            leaves?: {
-                user_id?: string | undefined;
-                session_id?: string | undefined;
-                username?: string | undefined;
-                persistence?: boolean | undefined;
-                status?: string | undefined;
-            }[] | undefined;
-        } & {
-            party_id?: string | undefined;
-            joins?: ({
-                user_id?: string | undefined;
-                session_id?: string | undefined;
-                username?: string | undefined;
-                persistence?: boolean | undefined;
-                status?: string | undefined;
-            }[] & ({
-                user_id?: string | undefined;
-                session_id?: string | undefined;
-                username?: string | undefined;
-                persistence?: boolean | undefined;
-                status?: string | undefined;
-            } & {
-                user_id?: string | undefined;
-                session_id?: string | undefined;
-                username?: string | undefined;
-                persistence?: boolean | undefined;
-                status?: string | undefined;
-            } & { [K_78 in Exclude<keyof I["party_presence_event"]["joins"][number], keyof UserPresence>]: never; })[] & { [K_79 in Exclude<keyof I["party_presence_event"]["joins"], keyof {
-                user_id?: string | undefined;
-                session_id?: string | undefined;
-                username?: string | undefined;
-                persistence?: boolean | undefined;
-                status?: string | undefined;
-            }[]>]: never; }) | undefined;
-            leaves?: ({
-                user_id?: string | undefined;
-                session_id?: string | undefined;
-                username?: string | undefined;
-                persistence?: boolean | undefined;
-                status?: string | undefined;
-            }[] & ({
-                user_id?: string | undefined;
-                session_id?: string | undefined;
-                username?: string | undefined;
-                persistence?: boolean | undefined;
-                status?: string | undefined;
-            } & {
-                user_id?: string | undefined;
-                session_id?: string | undefined;
-                username?: string | undefined;
-                persistence?: boolean | undefined;
-                status?: string | undefined;
-            } & { [K_80 in Exclude<keyof I["party_presence_event"]["leaves"][number], keyof UserPresence>]: never; })[] & { [K_81 in Exclude<keyof I["party_presence_event"]["leaves"], keyof {
-                user_id?: string | undefined;
-                session_id?: string | undefined;
-                username?: string | undefined;
-                persistence?: boolean | undefined;
-                status?: string | undefined;
-            }[]>]: never; }) | undefined;
-        } & { [K_82 in Exclude<keyof I["party_presence_event"], keyof PartyPresenceEvent>]: never; }) | undefined;
         message_typing_event?: ({
             channel_id?: string | undefined;
-            channel_label?: string | undefined;
             sender_id?: string | undefined;
             mode?: number | undefined;
         } & {
             channel_id?: string | undefined;
-            channel_label?: string | undefined;
             sender_id?: string | undefined;
             mode?: number | undefined;
-        } & { [K_83 in Exclude<keyof I["message_typing_event"], keyof MessageTypingEvent>]: never; }) | undefined;
+        } & { [K_54 in Exclude<keyof I["message_typing_event"], keyof MessageTypingEvent>]: never; }) | undefined;
         last_seen_message_event?: ({
             channel_id?: string | undefined;
-            channel_label?: string | undefined;
             message_id?: string | undefined;
             mode?: number | undefined;
             timestamp?: string | undefined;
         } & {
             channel_id?: string | undefined;
-            channel_label?: string | undefined;
             message_id?: string | undefined;
             mode?: number | undefined;
             timestamp?: string | undefined;
-        } & { [K_84 in Exclude<keyof I["last_seen_message_event"], keyof LastSeenMessageEvent>]: never; }) | undefined;
+        } & { [K_55 in Exclude<keyof I["last_seen_message_event"], keyof LastSeenMessageEvent>]: never; }) | undefined;
         message_reaction_event?: ({
             id?: string | undefined;
             channel_id?: string | undefined;
-            channel_label?: string | undefined;
             message_id?: string | undefined;
             sender_id?: string | undefined;
             sender_name?: string | undefined;
@@ -2272,7 +1564,6 @@ export declare const Envelope: {
         } & {
             id?: string | undefined;
             channel_id?: string | undefined;
-            channel_label?: string | undefined;
             message_id?: string | undefined;
             sender_id?: string | undefined;
             sender_name?: string | undefined;
@@ -2282,7 +1573,7 @@ export declare const Envelope: {
             message_sender_id?: string | undefined;
             count?: number | undefined;
             mode?: number | undefined;
-        } & { [K_85 in Exclude<keyof I["message_reaction_event"], keyof MessageReactionEvent>]: never; }) | undefined;
+        } & { [K_56 in Exclude<keyof I["message_reaction_event"], keyof MessageReactionEvent>]: never; }) | undefined;
         voice_joined_event?: ({
             clan_id?: string | undefined;
             clan_name?: string | undefined;
@@ -2301,7 +1592,7 @@ export declare const Envelope: {
             voice_channel_label?: string | undefined;
             voice_channel_id?: string | undefined;
             last_screenshot?: string | undefined;
-        } & { [K_86 in Exclude<keyof I["voice_joined_event"], keyof VoiceJoinedEvent>]: never; }) | undefined;
+        } & { [K_57 in Exclude<keyof I["voice_joined_event"], keyof VoiceJoinedEvent>]: never; }) | undefined;
         voice_leaved_event?: ({
             id?: string | undefined;
             clan_id?: string | undefined;
@@ -2312,7 +1603,7 @@ export declare const Envelope: {
             clan_id?: string | undefined;
             voice_channel_id?: string | undefined;
             voice_user_id?: string | undefined;
-        } & { [K_87 in Exclude<keyof I["voice_leaved_event"], keyof VoiceLeavedEvent>]: never; }) | undefined;
+        } & { [K_58 in Exclude<keyof I["voice_leaved_event"], keyof VoiceLeavedEvent>]: never; }) | undefined;
         voice_started_event?: ({
             id?: string | undefined;
             clan_id?: string | undefined;
@@ -2321,7 +1612,7 @@ export declare const Envelope: {
             id?: string | undefined;
             clan_id?: string | undefined;
             voice_channel_id?: string | undefined;
-        } & { [K_88 in Exclude<keyof I["voice_started_event"], keyof VoiceStartedEvent>]: never; }) | undefined;
+        } & { [K_59 in Exclude<keyof I["voice_started_event"], keyof VoiceStartedEvent>]: never; }) | undefined;
         voice_ended_event?: ({
             id?: string | undefined;
             clan_id?: string | undefined;
@@ -2330,7 +1621,7 @@ export declare const Envelope: {
             id?: string | undefined;
             clan_id?: string | undefined;
             voice_channel_id?: string | undefined;
-        } & { [K_89 in Exclude<keyof I["voice_ended_event"], keyof VoiceEndedEvent>]: never; }) | undefined;
+        } & { [K_60 in Exclude<keyof I["voice_ended_event"], keyof VoiceEndedEvent>]: never; }) | undefined;
         channel_created_event?: ({
             clan_id?: string | undefined;
             category_id?: string | undefined;
@@ -2349,7 +1640,7 @@ export declare const Envelope: {
             channel_label?: string | undefined;
             channel_type?: number | undefined;
             status?: number | undefined;
-        } & { [K_90 in Exclude<keyof I["channel_created_event"], keyof ChannelCreatedEvent>]: never; }) | undefined;
+        } & { [K_61 in Exclude<keyof I["channel_created_event"], keyof ChannelCreatedEvent>]: never; }) | undefined;
         channel_deleted_event?: ({
             clan_id?: string | undefined;
             category_id?: string | undefined;
@@ -2362,7 +1653,7 @@ export declare const Envelope: {
             parrent_id?: string | undefined;
             channel_id?: string | undefined;
             deletor?: string | undefined;
-        } & { [K_91 in Exclude<keyof I["channel_deleted_event"], keyof ChannelDeletedEvent>]: never; }) | undefined;
+        } & { [K_62 in Exclude<keyof I["channel_deleted_event"], keyof ChannelDeletedEvent>]: never; }) | undefined;
         channel_updated_event?: ({
             clan_id?: string | undefined;
             category_id?: string | undefined;
@@ -2381,8 +1672,8 @@ export declare const Envelope: {
             channel_label?: string | undefined;
             channel_type?: number | undefined;
             status?: number | undefined;
-        } & { [K_92 in Exclude<keyof I["channel_updated_event"], keyof ChannelUpdatedEvent>]: never; }) | undefined;
-    } & { [K_93 in Exclude<keyof I, keyof Envelope>]: never; }>(base?: I | undefined): Envelope;
+        } & { [K_63 in Exclude<keyof I["channel_updated_event"], keyof ChannelUpdatedEvent>]: never; }) | undefined;
+    } & { [K_64 in Exclude<keyof I, keyof Envelope>]: never; }>(base?: I | undefined): Envelope;
     fromPartial<I_1 extends {
         cid?: string | undefined;
         channel?: {
@@ -2411,7 +1702,6 @@ export declare const Envelope: {
         channel_join?: {
             clan_id?: string | undefined;
             channel_id?: string | undefined;
-            channel_label?: string | undefined;
             type?: number | undefined;
             persistence?: boolean | undefined;
             hidden?: boolean | undefined;
@@ -2419,7 +1709,6 @@ export declare const Envelope: {
         } | undefined;
         channel_leave?: {
             channel_id?: string | undefined;
-            channel_label?: string | undefined;
             mode?: number | undefined;
         } | undefined;
         channel_message?: {
@@ -2450,14 +1739,12 @@ export declare const Envelope: {
             create_time?: Date | undefined;
             update_time?: Date | undefined;
             persistent?: boolean | undefined;
-            channel_label?: string | undefined;
             user_id_one?: string | undefined;
             user_id_two?: string | undefined;
         } | undefined;
         channel_message_send?: {
             clan_id?: string | undefined;
             channel_id?: string | undefined;
-            channel_label?: string | undefined;
             content?: string | undefined;
             mentions?: {
                 user_id?: string | undefined;
@@ -2485,14 +1772,12 @@ export declare const Envelope: {
         } | undefined;
         channel_message_update?: {
             channel_id?: string | undefined;
-            channel_label?: string | undefined;
             message_id?: string | undefined;
             content?: string | undefined;
             mode?: number | undefined;
         } | undefined;
         channel_message_remove?: {
             channel_id?: string | undefined;
-            channel_label?: string | undefined;
             message_id?: string | undefined;
             mode?: number | undefined;
         } | undefined;
@@ -2512,7 +1797,6 @@ export declare const Envelope: {
                 persistence?: boolean | undefined;
                 status?: string | undefined;
             }[] | undefined;
-            channel_label?: string | undefined;
             user_id_one?: string | undefined;
             user_id_two?: string | undefined;
             mode?: number | undefined;
@@ -2620,141 +1904,13 @@ export declare const Envelope: {
         } | undefined;
         ping?: {} | undefined;
         pong?: {} | undefined;
-        party?: {
-            party_id?: string | undefined;
-            open?: boolean | undefined;
-            max_size?: number | undefined;
-            self?: {
-                user_id?: string | undefined;
-                session_id?: string | undefined;
-                username?: string | undefined;
-                persistence?: boolean | undefined;
-                status?: string | undefined;
-            } | undefined;
-            leader?: {
-                user_id?: string | undefined;
-                session_id?: string | undefined;
-                username?: string | undefined;
-                persistence?: boolean | undefined;
-                status?: string | undefined;
-            } | undefined;
-            presences?: {
-                user_id?: string | undefined;
-                session_id?: string | undefined;
-                username?: string | undefined;
-                persistence?: boolean | undefined;
-                status?: string | undefined;
-            }[] | undefined;
-        } | undefined;
-        party_create?: {
-            open?: boolean | undefined;
-            max_size?: number | undefined;
-        } | undefined;
-        party_join?: {
-            party_id?: string | undefined;
-        } | undefined;
-        party_leave?: {
-            party_id?: string | undefined;
-        } | undefined;
-        party_promote?: {
-            party_id?: string | undefined;
-            presence?: {
-                user_id?: string | undefined;
-                session_id?: string | undefined;
-                username?: string | undefined;
-                persistence?: boolean | undefined;
-                status?: string | undefined;
-            } | undefined;
-        } | undefined;
-        party_leader?: {
-            party_id?: string | undefined;
-            presence?: {
-                user_id?: string | undefined;
-                session_id?: string | undefined;
-                username?: string | undefined;
-                persistence?: boolean | undefined;
-                status?: string | undefined;
-            } | undefined;
-        } | undefined;
-        party_accept?: {
-            party_id?: string | undefined;
-            presence?: {
-                user_id?: string | undefined;
-                session_id?: string | undefined;
-                username?: string | undefined;
-                persistence?: boolean | undefined;
-                status?: string | undefined;
-            } | undefined;
-        } | undefined;
-        party_remove?: {
-            party_id?: string | undefined;
-            presence?: {
-                user_id?: string | undefined;
-                session_id?: string | undefined;
-                username?: string | undefined;
-                persistence?: boolean | undefined;
-                status?: string | undefined;
-            } | undefined;
-        } | undefined;
-        party_close?: {
-            party_id?: string | undefined;
-        } | undefined;
-        party_join_request_list?: {
-            party_id?: string | undefined;
-        } | undefined;
-        party_join_request?: {
-            party_id?: string | undefined;
-            presences?: {
-                user_id?: string | undefined;
-                session_id?: string | undefined;
-                username?: string | undefined;
-                persistence?: boolean | undefined;
-                status?: string | undefined;
-            }[] | undefined;
-        } | undefined;
-        party_data?: {
-            party_id?: string | undefined;
-            presence?: {
-                user_id?: string | undefined;
-                session_id?: string | undefined;
-                username?: string | undefined;
-                persistence?: boolean | undefined;
-                status?: string | undefined;
-            } | undefined;
-            op_code?: number | undefined;
-            data?: Uint8Array | undefined;
-        } | undefined;
-        party_data_send?: {
-            party_id?: string | undefined;
-            op_code?: number | undefined;
-            data?: Uint8Array | undefined;
-        } | undefined;
-        party_presence_event?: {
-            party_id?: string | undefined;
-            joins?: {
-                user_id?: string | undefined;
-                session_id?: string | undefined;
-                username?: string | undefined;
-                persistence?: boolean | undefined;
-                status?: string | undefined;
-            }[] | undefined;
-            leaves?: {
-                user_id?: string | undefined;
-                session_id?: string | undefined;
-                username?: string | undefined;
-                persistence?: boolean | undefined;
-                status?: string | undefined;
-            }[] | undefined;
-        } | undefined;
         message_typing_event?: {
             channel_id?: string | undefined;
-            channel_label?: string | undefined;
             sender_id?: string | undefined;
             mode?: number | undefined;
         } | undefined;
         last_seen_message_event?: {
             channel_id?: string | undefined;
-            channel_label?: string | undefined;
             message_id?: string | undefined;
             mode?: number | undefined;
             timestamp?: string | undefined;
@@ -2762,7 +1918,6 @@ export declare const Envelope: {
         message_reaction_event?: {
             id?: string | undefined;
             channel_id?: string | undefined;
-            channel_label?: string | undefined;
             message_id?: string | undefined;
             sender_id?: string | undefined;
             sender_name?: string | undefined;
@@ -2867,7 +2022,7 @@ export declare const Envelope: {
                 username?: string | undefined;
                 persistence?: boolean | undefined;
                 status?: string | undefined;
-            } & { [K_94 in Exclude<keyof I_1["channel"]["presences"][number], keyof UserPresence>]: never; })[] & { [K_95 in Exclude<keyof I_1["channel"]["presences"], keyof {
+            } & { [K_65 in Exclude<keyof I_1["channel"]["presences"][number], keyof UserPresence>]: never; })[] & { [K_66 in Exclude<keyof I_1["channel"]["presences"], keyof {
                 user_id?: string | undefined;
                 session_id?: string | undefined;
                 username?: string | undefined;
@@ -2886,20 +2041,19 @@ export declare const Envelope: {
                 username?: string | undefined;
                 persistence?: boolean | undefined;
                 status?: string | undefined;
-            } & { [K_96 in Exclude<keyof I_1["channel"]["self"], keyof UserPresence>]: never; }) | undefined;
+            } & { [K_67 in Exclude<keyof I_1["channel"]["self"], keyof UserPresence>]: never; }) | undefined;
             chanel_label?: string | undefined;
             user_id_one?: string | undefined;
             user_id_two?: string | undefined;
-        } & { [K_97 in Exclude<keyof I_1["channel"], keyof Channel>]: never; }) | undefined;
+        } & { [K_68 in Exclude<keyof I_1["channel"], keyof Channel>]: never; }) | undefined;
         clan_join?: ({
             clan_id?: string | undefined;
         } & {
             clan_id?: string | undefined;
-        } & { [K_98 in Exclude<keyof I_1["clan_join"], "clan_id">]: never; }) | undefined;
+        } & { [K_69 in Exclude<keyof I_1["clan_join"], "clan_id">]: never; }) | undefined;
         channel_join?: ({
             clan_id?: string | undefined;
             channel_id?: string | undefined;
-            channel_label?: string | undefined;
             type?: number | undefined;
             persistence?: boolean | undefined;
             hidden?: boolean | undefined;
@@ -2907,21 +2061,18 @@ export declare const Envelope: {
         } & {
             clan_id?: string | undefined;
             channel_id?: string | undefined;
-            channel_label?: string | undefined;
             type?: number | undefined;
             persistence?: boolean | undefined;
             hidden?: boolean | undefined;
             mode?: number | undefined;
-        } & { [K_99 in Exclude<keyof I_1["channel_join"], keyof ChannelJoin>]: never; }) | undefined;
+        } & { [K_70 in Exclude<keyof I_1["channel_join"], keyof ChannelJoin>]: never; }) | undefined;
         channel_leave?: ({
             channel_id?: string | undefined;
-            channel_label?: string | undefined;
             mode?: number | undefined;
         } & {
             channel_id?: string | undefined;
-            channel_label?: string | undefined;
             mode?: number | undefined;
-        } & { [K_100 in Exclude<keyof I_1["channel_leave"], keyof ChannelLeave>]: never; }) | undefined;
+        } & { [K_71 in Exclude<keyof I_1["channel_leave"], keyof ChannelLeave>]: never; }) | undefined;
         channel_message?: ({
             clan_id?: string | undefined;
             channel_id?: string | undefined;
@@ -2960,7 +2111,7 @@ export declare const Envelope: {
             attachments?: string | undefined;
             references?: string | undefined;
             referenced_message?: string | undefined;
-        } & { [K_101 in Exclude<keyof I_1["channel_message"], keyof ChannelMessage>]: never; }) | undefined;
+        } & { [K_72 in Exclude<keyof I_1["channel_message"], keyof ChannelMessage>]: never; }) | undefined;
         channel_message_ack?: ({
             channel_id?: string | undefined;
             message_id?: string | undefined;
@@ -2969,7 +2120,6 @@ export declare const Envelope: {
             create_time?: Date | undefined;
             update_time?: Date | undefined;
             persistent?: boolean | undefined;
-            channel_label?: string | undefined;
             user_id_one?: string | undefined;
             user_id_two?: string | undefined;
         } & {
@@ -2980,14 +2130,12 @@ export declare const Envelope: {
             create_time?: Date | undefined;
             update_time?: Date | undefined;
             persistent?: boolean | undefined;
-            channel_label?: string | undefined;
             user_id_one?: string | undefined;
             user_id_two?: string | undefined;
-        } & { [K_102 in Exclude<keyof I_1["channel_message_ack"], keyof ChannelMessageAck>]: never; }) | undefined;
+        } & { [K_73 in Exclude<keyof I_1["channel_message_ack"], keyof ChannelMessageAck>]: never; }) | undefined;
         channel_message_send?: ({
             clan_id?: string | undefined;
             channel_id?: string | undefined;
-            channel_label?: string | undefined;
             content?: string | undefined;
             mentions?: {
                 user_id?: string | undefined;
@@ -3015,7 +2163,6 @@ export declare const Envelope: {
         } & {
             clan_id?: string | undefined;
             channel_id?: string | undefined;
-            channel_label?: string | undefined;
             content?: string | undefined;
             mentions?: ({
                 user_id?: string | undefined;
@@ -3026,7 +2173,7 @@ export declare const Envelope: {
             } & {
                 user_id?: string | undefined;
                 username?: string | undefined;
-            } & { [K_103 in Exclude<keyof I_1["channel_message_send"]["mentions"][number], keyof MessageMention>]: never; })[] & { [K_104 in Exclude<keyof I_1["channel_message_send"]["mentions"], keyof {
+            } & { [K_74 in Exclude<keyof I_1["channel_message_send"]["mentions"][number], keyof MessageMention>]: never; })[] & { [K_75 in Exclude<keyof I_1["channel_message_send"]["mentions"], keyof {
                 user_id?: string | undefined;
                 username?: string | undefined;
             }[]>]: never; }) | undefined;
@@ -3051,7 +2198,7 @@ export declare const Envelope: {
                 filetype?: string | undefined;
                 width?: number | undefined;
                 height?: number | undefined;
-            } & { [K_105 in Exclude<keyof I_1["channel_message_send"]["attachments"][number], keyof MessageAttachment>]: never; })[] & { [K_106 in Exclude<keyof I_1["channel_message_send"]["attachments"], keyof {
+            } & { [K_76 in Exclude<keyof I_1["channel_message_send"]["attachments"][number], keyof MessageAttachment>]: never; })[] & { [K_77 in Exclude<keyof I_1["channel_message_send"]["attachments"], keyof {
                 filename?: string | undefined;
                 size?: number | undefined;
                 url?: string | undefined;
@@ -3080,7 +2227,7 @@ export declare const Envelope: {
                 content?: string | undefined;
                 has_attachment?: boolean | undefined;
                 ref_type?: number | undefined;
-            } & { [K_107 in Exclude<keyof I_1["channel_message_send"]["references"][number], keyof MessageRef>]: never; })[] & { [K_108 in Exclude<keyof I_1["channel_message_send"]["references"], keyof {
+            } & { [K_78 in Exclude<keyof I_1["channel_message_send"]["references"][number], keyof MessageRef>]: never; })[] & { [K_79 in Exclude<keyof I_1["channel_message_send"]["references"], keyof {
                 message_id?: string | undefined;
                 message_ref_id?: string | undefined;
                 message_sender_id?: string | undefined;
@@ -3091,31 +2238,27 @@ export declare const Envelope: {
             mode?: number | undefined;
             anonymous_message?: boolean | undefined;
             mention_everyone?: boolean | undefined;
-        } & { [K_109 in Exclude<keyof I_1["channel_message_send"], keyof ChannelMessageSend>]: never; }) | undefined;
+        } & { [K_80 in Exclude<keyof I_1["channel_message_send"], keyof ChannelMessageSend>]: never; }) | undefined;
         channel_message_update?: ({
             channel_id?: string | undefined;
-            channel_label?: string | undefined;
             message_id?: string | undefined;
             content?: string | undefined;
             mode?: number | undefined;
         } & {
             channel_id?: string | undefined;
-            channel_label?: string | undefined;
             message_id?: string | undefined;
             content?: string | undefined;
             mode?: number | undefined;
-        } & { [K_110 in Exclude<keyof I_1["channel_message_update"], keyof ChannelMessageUpdate>]: never; }) | undefined;
+        } & { [K_81 in Exclude<keyof I_1["channel_message_update"], keyof ChannelMessageUpdate>]: never; }) | undefined;
         channel_message_remove?: ({
             channel_id?: string | undefined;
-            channel_label?: string | undefined;
             message_id?: string | undefined;
             mode?: number | undefined;
         } & {
             channel_id?: string | undefined;
-            channel_label?: string | undefined;
             message_id?: string | undefined;
             mode?: number | undefined;
-        } & { [K_111 in Exclude<keyof I_1["channel_message_remove"], keyof ChannelMessageRemove>]: never; }) | undefined;
+        } & { [K_82 in Exclude<keyof I_1["channel_message_remove"], keyof ChannelMessageRemove>]: never; }) | undefined;
         channel_presence_event?: ({
             channel_id?: string | undefined;
             joins?: {
@@ -3132,7 +2275,6 @@ export declare const Envelope: {
                 persistence?: boolean | undefined;
                 status?: string | undefined;
             }[] | undefined;
-            channel_label?: string | undefined;
             user_id_one?: string | undefined;
             user_id_two?: string | undefined;
             mode?: number | undefined;
@@ -3156,7 +2298,7 @@ export declare const Envelope: {
                 username?: string | undefined;
                 persistence?: boolean | undefined;
                 status?: string | undefined;
-            } & { [K_112 in Exclude<keyof I_1["channel_presence_event"]["joins"][number], keyof UserPresence>]: never; })[] & { [K_113 in Exclude<keyof I_1["channel_presence_event"]["joins"], keyof {
+            } & { [K_83 in Exclude<keyof I_1["channel_presence_event"]["joins"][number], keyof UserPresence>]: never; })[] & { [K_84 in Exclude<keyof I_1["channel_presence_event"]["joins"], keyof {
                 user_id?: string | undefined;
                 session_id?: string | undefined;
                 username?: string | undefined;
@@ -3181,18 +2323,17 @@ export declare const Envelope: {
                 username?: string | undefined;
                 persistence?: boolean | undefined;
                 status?: string | undefined;
-            } & { [K_114 in Exclude<keyof I_1["channel_presence_event"]["leaves"][number], keyof UserPresence>]: never; })[] & { [K_115 in Exclude<keyof I_1["channel_presence_event"]["leaves"], keyof {
+            } & { [K_85 in Exclude<keyof I_1["channel_presence_event"]["leaves"][number], keyof UserPresence>]: never; })[] & { [K_86 in Exclude<keyof I_1["channel_presence_event"]["leaves"], keyof {
                 user_id?: string | undefined;
                 session_id?: string | undefined;
                 username?: string | undefined;
                 persistence?: boolean | undefined;
                 status?: string | undefined;
             }[]>]: never; }) | undefined;
-            channel_label?: string | undefined;
             user_id_one?: string | undefined;
             user_id_two?: string | undefined;
             mode?: number | undefined;
-        } & { [K_116 in Exclude<keyof I_1["channel_presence_event"], keyof ChannelPresenceEvent>]: never; }) | undefined;
+        } & { [K_87 in Exclude<keyof I_1["channel_presence_event"], keyof ChannelPresenceEvent>]: never; }) | undefined;
         error?: ({
             code?: number | undefined;
             message?: string | undefined;
@@ -3206,8 +2347,8 @@ export declare const Envelope: {
                 [x: string]: string | undefined;
             } & {
                 [x: string]: string | undefined;
-            } & { [K_117 in Exclude<keyof I_1["error"]["context"], string | number>]: never; }) | undefined;
-        } & { [K_118 in Exclude<keyof I_1["error"], keyof Error>]: never; }) | undefined;
+            } & { [K_88 in Exclude<keyof I_1["error"]["context"], string | number>]: never; }) | undefined;
+        } & { [K_89 in Exclude<keyof I_1["error"], keyof Error>]: never; }) | undefined;
         notifications?: ({
             notifications?: {
                 id?: string | undefined;
@@ -3259,7 +2400,7 @@ export declare const Envelope: {
                 channel_id?: string | undefined;
                 channel_type?: string | undefined;
                 avatar_url?: string | undefined;
-            } & { [K_119 in Exclude<keyof I_1["notifications"]["notifications"][number], keyof Notification>]: never; })[] & { [K_120 in Exclude<keyof I_1["notifications"]["notifications"], keyof {
+            } & { [K_90 in Exclude<keyof I_1["notifications"]["notifications"][number], keyof Notification>]: never; })[] & { [K_91 in Exclude<keyof I_1["notifications"]["notifications"], keyof {
                 id?: string | undefined;
                 subject?: string | undefined;
                 content?: string | undefined;
@@ -3272,7 +2413,7 @@ export declare const Envelope: {
                 channel_type?: string | undefined;
                 avatar_url?: string | undefined;
             }[]>]: never; }) | undefined;
-        } & { [K_121 in Exclude<keyof I_1["notifications"], "notifications">]: never; }) | undefined;
+        } & { [K_92 in Exclude<keyof I_1["notifications"], "notifications">]: never; }) | undefined;
         rpc?: ({
             id?: string | undefined;
             payload?: string | undefined;
@@ -3281,7 +2422,7 @@ export declare const Envelope: {
             id?: string | undefined;
             payload?: string | undefined;
             http_key?: string | undefined;
-        } & { [K_122 in Exclude<keyof I_1["rpc"], keyof Rpc>]: never; }) | undefined;
+        } & { [K_93 in Exclude<keyof I_1["rpc"], keyof Rpc>]: never; }) | undefined;
         status?: ({
             presences?: {
                 user_id?: string | undefined;
@@ -3309,21 +2450,21 @@ export declare const Envelope: {
                 username?: string | undefined;
                 persistence?: boolean | undefined;
                 status?: string | undefined;
-            } & { [K_123 in Exclude<keyof I_1["status"]["presences"][number], keyof UserPresence>]: never; })[] & { [K_124 in Exclude<keyof I_1["status"]["presences"], keyof {
+            } & { [K_94 in Exclude<keyof I_1["status"]["presences"][number], keyof UserPresence>]: never; })[] & { [K_95 in Exclude<keyof I_1["status"]["presences"], keyof {
                 user_id?: string | undefined;
                 session_id?: string | undefined;
                 username?: string | undefined;
                 persistence?: boolean | undefined;
                 status?: string | undefined;
             }[]>]: never; }) | undefined;
-        } & { [K_125 in Exclude<keyof I_1["status"], "presences">]: never; }) | undefined;
+        } & { [K_96 in Exclude<keyof I_1["status"], "presences">]: never; }) | undefined;
         status_follow?: ({
             user_ids?: string[] | undefined;
             usernames?: string[] | undefined;
         } & {
-            user_ids?: (string[] & string[] & { [K_126 in Exclude<keyof I_1["status_follow"]["user_ids"], keyof string[]>]: never; }) | undefined;
-            usernames?: (string[] & string[] & { [K_127 in Exclude<keyof I_1["status_follow"]["usernames"], keyof string[]>]: never; }) | undefined;
-        } & { [K_128 in Exclude<keyof I_1["status_follow"], keyof StatusFollow>]: never; }) | undefined;
+            user_ids?: (string[] & string[] & { [K_97 in Exclude<keyof I_1["status_follow"]["user_ids"], keyof string[]>]: never; }) | undefined;
+            usernames?: (string[] & string[] & { [K_98 in Exclude<keyof I_1["status_follow"]["usernames"], keyof string[]>]: never; }) | undefined;
+        } & { [K_99 in Exclude<keyof I_1["status_follow"], keyof StatusFollow>]: never; }) | undefined;
         status_presence_event?: ({
             joins?: {
                 user_id?: string | undefined;
@@ -3358,7 +2499,7 @@ export declare const Envelope: {
                 username?: string | undefined;
                 persistence?: boolean | undefined;
                 status?: string | undefined;
-            } & { [K_129 in Exclude<keyof I_1["status_presence_event"]["joins"][number], keyof UserPresence>]: never; })[] & { [K_130 in Exclude<keyof I_1["status_presence_event"]["joins"], keyof {
+            } & { [K_100 in Exclude<keyof I_1["status_presence_event"]["joins"][number], keyof UserPresence>]: never; })[] & { [K_101 in Exclude<keyof I_1["status_presence_event"]["joins"], keyof {
                 user_id?: string | undefined;
                 session_id?: string | undefined;
                 username?: string | undefined;
@@ -3383,24 +2524,24 @@ export declare const Envelope: {
                 username?: string | undefined;
                 persistence?: boolean | undefined;
                 status?: string | undefined;
-            } & { [K_131 in Exclude<keyof I_1["status_presence_event"]["leaves"][number], keyof UserPresence>]: never; })[] & { [K_132 in Exclude<keyof I_1["status_presence_event"]["leaves"], keyof {
+            } & { [K_102 in Exclude<keyof I_1["status_presence_event"]["leaves"][number], keyof UserPresence>]: never; })[] & { [K_103 in Exclude<keyof I_1["status_presence_event"]["leaves"], keyof {
                 user_id?: string | undefined;
                 session_id?: string | undefined;
                 username?: string | undefined;
                 persistence?: boolean | undefined;
                 status?: string | undefined;
             }[]>]: never; }) | undefined;
-        } & { [K_133 in Exclude<keyof I_1["status_presence_event"], keyof StatusPresenceEvent>]: never; }) | undefined;
+        } & { [K_104 in Exclude<keyof I_1["status_presence_event"], keyof StatusPresenceEvent>]: never; }) | undefined;
         status_unfollow?: ({
             user_ids?: string[] | undefined;
         } & {
-            user_ids?: (string[] & string[] & { [K_134 in Exclude<keyof I_1["status_unfollow"]["user_ids"], keyof string[]>]: never; }) | undefined;
-        } & { [K_135 in Exclude<keyof I_1["status_unfollow"], "user_ids">]: never; }) | undefined;
+            user_ids?: (string[] & string[] & { [K_105 in Exclude<keyof I_1["status_unfollow"]["user_ids"], keyof string[]>]: never; }) | undefined;
+        } & { [K_106 in Exclude<keyof I_1["status_unfollow"], "user_ids">]: never; }) | undefined;
         status_update?: ({
             status?: string | undefined;
         } & {
             status?: string | undefined;
-        } & { [K_136 in Exclude<keyof I_1["status_update"], "status">]: never; }) | undefined;
+        } & { [K_107 in Exclude<keyof I_1["status_update"], "status">]: never; }) | undefined;
         stream_data?: ({
             stream?: {
                 mode?: number | undefined;
@@ -3428,7 +2569,7 @@ export declare const Envelope: {
                 channel_id?: string | undefined;
                 clan_id?: string | undefined;
                 label?: string | undefined;
-            } & { [K_137 in Exclude<keyof I_1["stream_data"]["stream"], keyof Stream>]: never; }) | undefined;
+            } & { [K_108 in Exclude<keyof I_1["stream_data"]["stream"], keyof Stream>]: never; }) | undefined;
             sender?: ({
                 user_id?: string | undefined;
                 session_id?: string | undefined;
@@ -3441,10 +2582,10 @@ export declare const Envelope: {
                 username?: string | undefined;
                 persistence?: boolean | undefined;
                 status?: string | undefined;
-            } & { [K_138 in Exclude<keyof I_1["stream_data"]["sender"], keyof UserPresence>]: never; }) | undefined;
+            } & { [K_109 in Exclude<keyof I_1["stream_data"]["sender"], keyof UserPresence>]: never; }) | undefined;
             data?: string | undefined;
             reliable?: boolean | undefined;
-        } & { [K_139 in Exclude<keyof I_1["stream_data"], keyof StreamData>]: never; }) | undefined;
+        } & { [K_110 in Exclude<keyof I_1["stream_data"], keyof StreamData>]: never; }) | undefined;
         stream_presence_event?: ({
             stream?: {
                 mode?: number | undefined;
@@ -3477,7 +2618,7 @@ export declare const Envelope: {
                 channel_id?: string | undefined;
                 clan_id?: string | undefined;
                 label?: string | undefined;
-            } & { [K_140 in Exclude<keyof I_1["stream_presence_event"]["stream"], keyof Stream>]: never; }) | undefined;
+            } & { [K_111 in Exclude<keyof I_1["stream_presence_event"]["stream"], keyof Stream>]: never; }) | undefined;
             joins?: ({
                 user_id?: string | undefined;
                 session_id?: string | undefined;
@@ -3496,7 +2637,7 @@ export declare const Envelope: {
                 username?: string | undefined;
                 persistence?: boolean | undefined;
                 status?: string | undefined;
-            } & { [K_141 in Exclude<keyof I_1["stream_presence_event"]["joins"][number], keyof UserPresence>]: never; })[] & { [K_142 in Exclude<keyof I_1["stream_presence_event"]["joins"], keyof {
+            } & { [K_112 in Exclude<keyof I_1["stream_presence_event"]["joins"][number], keyof UserPresence>]: never; })[] & { [K_113 in Exclude<keyof I_1["stream_presence_event"]["joins"], keyof {
                 user_id?: string | undefined;
                 session_id?: string | undefined;
                 username?: string | undefined;
@@ -3521,396 +2662,39 @@ export declare const Envelope: {
                 username?: string | undefined;
                 persistence?: boolean | undefined;
                 status?: string | undefined;
-            } & { [K_143 in Exclude<keyof I_1["stream_presence_event"]["leaves"][number], keyof UserPresence>]: never; })[] & { [K_144 in Exclude<keyof I_1["stream_presence_event"]["leaves"], keyof {
+            } & { [K_114 in Exclude<keyof I_1["stream_presence_event"]["leaves"][number], keyof UserPresence>]: never; })[] & { [K_115 in Exclude<keyof I_1["stream_presence_event"]["leaves"], keyof {
                 user_id?: string | undefined;
                 session_id?: string | undefined;
                 username?: string | undefined;
                 persistence?: boolean | undefined;
                 status?: string | undefined;
             }[]>]: never; }) | undefined;
-        } & { [K_145 in Exclude<keyof I_1["stream_presence_event"], keyof StreamPresenceEvent>]: never; }) | undefined;
-        ping?: ({} & {} & { [K_146 in Exclude<keyof I_1["ping"], never>]: never; }) | undefined;
-        pong?: ({} & {} & { [K_147 in Exclude<keyof I_1["pong"], never>]: never; }) | undefined;
-        party?: ({
-            party_id?: string | undefined;
-            open?: boolean | undefined;
-            max_size?: number | undefined;
-            self?: {
-                user_id?: string | undefined;
-                session_id?: string | undefined;
-                username?: string | undefined;
-                persistence?: boolean | undefined;
-                status?: string | undefined;
-            } | undefined;
-            leader?: {
-                user_id?: string | undefined;
-                session_id?: string | undefined;
-                username?: string | undefined;
-                persistence?: boolean | undefined;
-                status?: string | undefined;
-            } | undefined;
-            presences?: {
-                user_id?: string | undefined;
-                session_id?: string | undefined;
-                username?: string | undefined;
-                persistence?: boolean | undefined;
-                status?: string | undefined;
-            }[] | undefined;
-        } & {
-            party_id?: string | undefined;
-            open?: boolean | undefined;
-            max_size?: number | undefined;
-            self?: ({
-                user_id?: string | undefined;
-                session_id?: string | undefined;
-                username?: string | undefined;
-                persistence?: boolean | undefined;
-                status?: string | undefined;
-            } & {
-                user_id?: string | undefined;
-                session_id?: string | undefined;
-                username?: string | undefined;
-                persistence?: boolean | undefined;
-                status?: string | undefined;
-            } & { [K_148 in Exclude<keyof I_1["party"]["self"], keyof UserPresence>]: never; }) | undefined;
-            leader?: ({
-                user_id?: string | undefined;
-                session_id?: string | undefined;
-                username?: string | undefined;
-                persistence?: boolean | undefined;
-                status?: string | undefined;
-            } & {
-                user_id?: string | undefined;
-                session_id?: string | undefined;
-                username?: string | undefined;
-                persistence?: boolean | undefined;
-                status?: string | undefined;
-            } & { [K_149 in Exclude<keyof I_1["party"]["leader"], keyof UserPresence>]: never; }) | undefined;
-            presences?: ({
-                user_id?: string | undefined;
-                session_id?: string | undefined;
-                username?: string | undefined;
-                persistence?: boolean | undefined;
-                status?: string | undefined;
-            }[] & ({
-                user_id?: string | undefined;
-                session_id?: string | undefined;
-                username?: string | undefined;
-                persistence?: boolean | undefined;
-                status?: string | undefined;
-            } & {
-                user_id?: string | undefined;
-                session_id?: string | undefined;
-                username?: string | undefined;
-                persistence?: boolean | undefined;
-                status?: string | undefined;
-            } & { [K_150 in Exclude<keyof I_1["party"]["presences"][number], keyof UserPresence>]: never; })[] & { [K_151 in Exclude<keyof I_1["party"]["presences"], keyof {
-                user_id?: string | undefined;
-                session_id?: string | undefined;
-                username?: string | undefined;
-                persistence?: boolean | undefined;
-                status?: string | undefined;
-            }[]>]: never; }) | undefined;
-        } & { [K_152 in Exclude<keyof I_1["party"], keyof Party>]: never; }) | undefined;
-        party_create?: ({
-            open?: boolean | undefined;
-            max_size?: number | undefined;
-        } & {
-            open?: boolean | undefined;
-            max_size?: number | undefined;
-        } & { [K_153 in Exclude<keyof I_1["party_create"], keyof PartyCreate>]: never; }) | undefined;
-        party_join?: ({
-            party_id?: string | undefined;
-        } & {
-            party_id?: string | undefined;
-        } & { [K_154 in Exclude<keyof I_1["party_join"], "party_id">]: never; }) | undefined;
-        party_leave?: ({
-            party_id?: string | undefined;
-        } & {
-            party_id?: string | undefined;
-        } & { [K_155 in Exclude<keyof I_1["party_leave"], "party_id">]: never; }) | undefined;
-        party_promote?: ({
-            party_id?: string | undefined;
-            presence?: {
-                user_id?: string | undefined;
-                session_id?: string | undefined;
-                username?: string | undefined;
-                persistence?: boolean | undefined;
-                status?: string | undefined;
-            } | undefined;
-        } & {
-            party_id?: string | undefined;
-            presence?: ({
-                user_id?: string | undefined;
-                session_id?: string | undefined;
-                username?: string | undefined;
-                persistence?: boolean | undefined;
-                status?: string | undefined;
-            } & {
-                user_id?: string | undefined;
-                session_id?: string | undefined;
-                username?: string | undefined;
-                persistence?: boolean | undefined;
-                status?: string | undefined;
-            } & { [K_156 in Exclude<keyof I_1["party_promote"]["presence"], keyof UserPresence>]: never; }) | undefined;
-        } & { [K_157 in Exclude<keyof I_1["party_promote"], keyof PartyPromote>]: never; }) | undefined;
-        party_leader?: ({
-            party_id?: string | undefined;
-            presence?: {
-                user_id?: string | undefined;
-                session_id?: string | undefined;
-                username?: string | undefined;
-                persistence?: boolean | undefined;
-                status?: string | undefined;
-            } | undefined;
-        } & {
-            party_id?: string | undefined;
-            presence?: ({
-                user_id?: string | undefined;
-                session_id?: string | undefined;
-                username?: string | undefined;
-                persistence?: boolean | undefined;
-                status?: string | undefined;
-            } & {
-                user_id?: string | undefined;
-                session_id?: string | undefined;
-                username?: string | undefined;
-                persistence?: boolean | undefined;
-                status?: string | undefined;
-            } & { [K_158 in Exclude<keyof I_1["party_leader"]["presence"], keyof UserPresence>]: never; }) | undefined;
-        } & { [K_159 in Exclude<keyof I_1["party_leader"], keyof PartyLeader>]: never; }) | undefined;
-        party_accept?: ({
-            party_id?: string | undefined;
-            presence?: {
-                user_id?: string | undefined;
-                session_id?: string | undefined;
-                username?: string | undefined;
-                persistence?: boolean | undefined;
-                status?: string | undefined;
-            } | undefined;
-        } & {
-            party_id?: string | undefined;
-            presence?: ({
-                user_id?: string | undefined;
-                session_id?: string | undefined;
-                username?: string | undefined;
-                persistence?: boolean | undefined;
-                status?: string | undefined;
-            } & {
-                user_id?: string | undefined;
-                session_id?: string | undefined;
-                username?: string | undefined;
-                persistence?: boolean | undefined;
-                status?: string | undefined;
-            } & { [K_160 in Exclude<keyof I_1["party_accept"]["presence"], keyof UserPresence>]: never; }) | undefined;
-        } & { [K_161 in Exclude<keyof I_1["party_accept"], keyof PartyAccept>]: never; }) | undefined;
-        party_remove?: ({
-            party_id?: string | undefined;
-            presence?: {
-                user_id?: string | undefined;
-                session_id?: string | undefined;
-                username?: string | undefined;
-                persistence?: boolean | undefined;
-                status?: string | undefined;
-            } | undefined;
-        } & {
-            party_id?: string | undefined;
-            presence?: ({
-                user_id?: string | undefined;
-                session_id?: string | undefined;
-                username?: string | undefined;
-                persistence?: boolean | undefined;
-                status?: string | undefined;
-            } & {
-                user_id?: string | undefined;
-                session_id?: string | undefined;
-                username?: string | undefined;
-                persistence?: boolean | undefined;
-                status?: string | undefined;
-            } & { [K_162 in Exclude<keyof I_1["party_remove"]["presence"], keyof UserPresence>]: never; }) | undefined;
-        } & { [K_163 in Exclude<keyof I_1["party_remove"], keyof PartyRemove>]: never; }) | undefined;
-        party_close?: ({
-            party_id?: string | undefined;
-        } & {
-            party_id?: string | undefined;
-        } & { [K_164 in Exclude<keyof I_1["party_close"], "party_id">]: never; }) | undefined;
-        party_join_request_list?: ({
-            party_id?: string | undefined;
-        } & {
-            party_id?: string | undefined;
-        } & { [K_165 in Exclude<keyof I_1["party_join_request_list"], "party_id">]: never; }) | undefined;
-        party_join_request?: ({
-            party_id?: string | undefined;
-            presences?: {
-                user_id?: string | undefined;
-                session_id?: string | undefined;
-                username?: string | undefined;
-                persistence?: boolean | undefined;
-                status?: string | undefined;
-            }[] | undefined;
-        } & {
-            party_id?: string | undefined;
-            presences?: ({
-                user_id?: string | undefined;
-                session_id?: string | undefined;
-                username?: string | undefined;
-                persistence?: boolean | undefined;
-                status?: string | undefined;
-            }[] & ({
-                user_id?: string | undefined;
-                session_id?: string | undefined;
-                username?: string | undefined;
-                persistence?: boolean | undefined;
-                status?: string | undefined;
-            } & {
-                user_id?: string | undefined;
-                session_id?: string | undefined;
-                username?: string | undefined;
-                persistence?: boolean | undefined;
-                status?: string | undefined;
-            } & { [K_166 in Exclude<keyof I_1["party_join_request"]["presences"][number], keyof UserPresence>]: never; })[] & { [K_167 in Exclude<keyof I_1["party_join_request"]["presences"], keyof {
-                user_id?: string | undefined;
-                session_id?: string | undefined;
-                username?: string | undefined;
-                persistence?: boolean | undefined;
-                status?: string | undefined;
-            }[]>]: never; }) | undefined;
-        } & { [K_168 in Exclude<keyof I_1["party_join_request"], keyof PartyJoinRequest>]: never; }) | undefined;
-        party_data?: ({
-            party_id?: string | undefined;
-            presence?: {
-                user_id?: string | undefined;
-                session_id?: string | undefined;
-                username?: string | undefined;
-                persistence?: boolean | undefined;
-                status?: string | undefined;
-            } | undefined;
-            op_code?: number | undefined;
-            data?: Uint8Array | undefined;
-        } & {
-            party_id?: string | undefined;
-            presence?: ({
-                user_id?: string | undefined;
-                session_id?: string | undefined;
-                username?: string | undefined;
-                persistence?: boolean | undefined;
-                status?: string | undefined;
-            } & {
-                user_id?: string | undefined;
-                session_id?: string | undefined;
-                username?: string | undefined;
-                persistence?: boolean | undefined;
-                status?: string | undefined;
-            } & { [K_169 in Exclude<keyof I_1["party_data"]["presence"], keyof UserPresence>]: never; }) | undefined;
-            op_code?: number | undefined;
-            data?: Uint8Array | undefined;
-        } & { [K_170 in Exclude<keyof I_1["party_data"], keyof PartyData>]: never; }) | undefined;
-        party_data_send?: ({
-            party_id?: string | undefined;
-            op_code?: number | undefined;
-            data?: Uint8Array | undefined;
-        } & {
-            party_id?: string | undefined;
-            op_code?: number | undefined;
-            data?: Uint8Array | undefined;
-        } & { [K_171 in Exclude<keyof I_1["party_data_send"], keyof PartyDataSend>]: never; }) | undefined;
-        party_presence_event?: ({
-            party_id?: string | undefined;
-            joins?: {
-                user_id?: string | undefined;
-                session_id?: string | undefined;
-                username?: string | undefined;
-                persistence?: boolean | undefined;
-                status?: string | undefined;
-            }[] | undefined;
-            leaves?: {
-                user_id?: string | undefined;
-                session_id?: string | undefined;
-                username?: string | undefined;
-                persistence?: boolean | undefined;
-                status?: string | undefined;
-            }[] | undefined;
-        } & {
-            party_id?: string | undefined;
-            joins?: ({
-                user_id?: string | undefined;
-                session_id?: string | undefined;
-                username?: string | undefined;
-                persistence?: boolean | undefined;
-                status?: string | undefined;
-            }[] & ({
-                user_id?: string | undefined;
-                session_id?: string | undefined;
-                username?: string | undefined;
-                persistence?: boolean | undefined;
-                status?: string | undefined;
-            } & {
-                user_id?: string | undefined;
-                session_id?: string | undefined;
-                username?: string | undefined;
-                persistence?: boolean | undefined;
-                status?: string | undefined;
-            } & { [K_172 in Exclude<keyof I_1["party_presence_event"]["joins"][number], keyof UserPresence>]: never; })[] & { [K_173 in Exclude<keyof I_1["party_presence_event"]["joins"], keyof {
-                user_id?: string | undefined;
-                session_id?: string | undefined;
-                username?: string | undefined;
-                persistence?: boolean | undefined;
-                status?: string | undefined;
-            }[]>]: never; }) | undefined;
-            leaves?: ({
-                user_id?: string | undefined;
-                session_id?: string | undefined;
-                username?: string | undefined;
-                persistence?: boolean | undefined;
-                status?: string | undefined;
-            }[] & ({
-                user_id?: string | undefined;
-                session_id?: string | undefined;
-                username?: string | undefined;
-                persistence?: boolean | undefined;
-                status?: string | undefined;
-            } & {
-                user_id?: string | undefined;
-                session_id?: string | undefined;
-                username?: string | undefined;
-                persistence?: boolean | undefined;
-                status?: string | undefined;
-            } & { [K_174 in Exclude<keyof I_1["party_presence_event"]["leaves"][number], keyof UserPresence>]: never; })[] & { [K_175 in Exclude<keyof I_1["party_presence_event"]["leaves"], keyof {
-                user_id?: string | undefined;
-                session_id?: string | undefined;
-                username?: string | undefined;
-                persistence?: boolean | undefined;
-                status?: string | undefined;
-            }[]>]: never; }) | undefined;
-        } & { [K_176 in Exclude<keyof I_1["party_presence_event"], keyof PartyPresenceEvent>]: never; }) | undefined;
+        } & { [K_116 in Exclude<keyof I_1["stream_presence_event"], keyof StreamPresenceEvent>]: never; }) | undefined;
+        ping?: ({} & {} & { [K_117 in Exclude<keyof I_1["ping"], never>]: never; }) | undefined;
+        pong?: ({} & {} & { [K_118 in Exclude<keyof I_1["pong"], never>]: never; }) | undefined;
         message_typing_event?: ({
             channel_id?: string | undefined;
-            channel_label?: string | undefined;
             sender_id?: string | undefined;
             mode?: number | undefined;
         } & {
             channel_id?: string | undefined;
-            channel_label?: string | undefined;
             sender_id?: string | undefined;
             mode?: number | undefined;
-        } & { [K_177 in Exclude<keyof I_1["message_typing_event"], keyof MessageTypingEvent>]: never; }) | undefined;
+        } & { [K_119 in Exclude<keyof I_1["message_typing_event"], keyof MessageTypingEvent>]: never; }) | undefined;
         last_seen_message_event?: ({
             channel_id?: string | undefined;
-            channel_label?: string | undefined;
             message_id?: string | undefined;
             mode?: number | undefined;
             timestamp?: string | undefined;
         } & {
             channel_id?: string | undefined;
-            channel_label?: string | undefined;
             message_id?: string | undefined;
             mode?: number | undefined;
             timestamp?: string | undefined;
-        } & { [K_178 in Exclude<keyof I_1["last_seen_message_event"], keyof LastSeenMessageEvent>]: never; }) | undefined;
+        } & { [K_120 in Exclude<keyof I_1["last_seen_message_event"], keyof LastSeenMessageEvent>]: never; }) | undefined;
         message_reaction_event?: ({
             id?: string | undefined;
             channel_id?: string | undefined;
-            channel_label?: string | undefined;
             message_id?: string | undefined;
             sender_id?: string | undefined;
             sender_name?: string | undefined;
@@ -3923,7 +2707,6 @@ export declare const Envelope: {
         } & {
             id?: string | undefined;
             channel_id?: string | undefined;
-            channel_label?: string | undefined;
             message_id?: string | undefined;
             sender_id?: string | undefined;
             sender_name?: string | undefined;
@@ -3933,7 +2716,7 @@ export declare const Envelope: {
             message_sender_id?: string | undefined;
             count?: number | undefined;
             mode?: number | undefined;
-        } & { [K_179 in Exclude<keyof I_1["message_reaction_event"], keyof MessageReactionEvent>]: never; }) | undefined;
+        } & { [K_121 in Exclude<keyof I_1["message_reaction_event"], keyof MessageReactionEvent>]: never; }) | undefined;
         voice_joined_event?: ({
             clan_id?: string | undefined;
             clan_name?: string | undefined;
@@ -3952,7 +2735,7 @@ export declare const Envelope: {
             voice_channel_label?: string | undefined;
             voice_channel_id?: string | undefined;
             last_screenshot?: string | undefined;
-        } & { [K_180 in Exclude<keyof I_1["voice_joined_event"], keyof VoiceJoinedEvent>]: never; }) | undefined;
+        } & { [K_122 in Exclude<keyof I_1["voice_joined_event"], keyof VoiceJoinedEvent>]: never; }) | undefined;
         voice_leaved_event?: ({
             id?: string | undefined;
             clan_id?: string | undefined;
@@ -3963,7 +2746,7 @@ export declare const Envelope: {
             clan_id?: string | undefined;
             voice_channel_id?: string | undefined;
             voice_user_id?: string | undefined;
-        } & { [K_181 in Exclude<keyof I_1["voice_leaved_event"], keyof VoiceLeavedEvent>]: never; }) | undefined;
+        } & { [K_123 in Exclude<keyof I_1["voice_leaved_event"], keyof VoiceLeavedEvent>]: never; }) | undefined;
         voice_started_event?: ({
             id?: string | undefined;
             clan_id?: string | undefined;
@@ -3972,7 +2755,7 @@ export declare const Envelope: {
             id?: string | undefined;
             clan_id?: string | undefined;
             voice_channel_id?: string | undefined;
-        } & { [K_182 in Exclude<keyof I_1["voice_started_event"], keyof VoiceStartedEvent>]: never; }) | undefined;
+        } & { [K_124 in Exclude<keyof I_1["voice_started_event"], keyof VoiceStartedEvent>]: never; }) | undefined;
         voice_ended_event?: ({
             id?: string | undefined;
             clan_id?: string | undefined;
@@ -3981,7 +2764,7 @@ export declare const Envelope: {
             id?: string | undefined;
             clan_id?: string | undefined;
             voice_channel_id?: string | undefined;
-        } & { [K_183 in Exclude<keyof I_1["voice_ended_event"], keyof VoiceEndedEvent>]: never; }) | undefined;
+        } & { [K_125 in Exclude<keyof I_1["voice_ended_event"], keyof VoiceEndedEvent>]: never; }) | undefined;
         channel_created_event?: ({
             clan_id?: string | undefined;
             category_id?: string | undefined;
@@ -4000,7 +2783,7 @@ export declare const Envelope: {
             channel_label?: string | undefined;
             channel_type?: number | undefined;
             status?: number | undefined;
-        } & { [K_184 in Exclude<keyof I_1["channel_created_event"], keyof ChannelCreatedEvent>]: never; }) | undefined;
+        } & { [K_126 in Exclude<keyof I_1["channel_created_event"], keyof ChannelCreatedEvent>]: never; }) | undefined;
         channel_deleted_event?: ({
             clan_id?: string | undefined;
             category_id?: string | undefined;
@@ -4013,7 +2796,7 @@ export declare const Envelope: {
             parrent_id?: string | undefined;
             channel_id?: string | undefined;
             deletor?: string | undefined;
-        } & { [K_185 in Exclude<keyof I_1["channel_deleted_event"], keyof ChannelDeletedEvent>]: never; }) | undefined;
+        } & { [K_127 in Exclude<keyof I_1["channel_deleted_event"], keyof ChannelDeletedEvent>]: never; }) | undefined;
         channel_updated_event?: ({
             clan_id?: string | undefined;
             category_id?: string | undefined;
@@ -4032,8 +2815,8 @@ export declare const Envelope: {
             channel_label?: string | undefined;
             channel_type?: number | undefined;
             status?: number | undefined;
-        } & { [K_186 in Exclude<keyof I_1["channel_updated_event"], keyof ChannelUpdatedEvent>]: never; }) | undefined;
-    } & { [K_187 in Exclude<keyof I_1, keyof Envelope>]: never; }>(object: I_1): Envelope;
+        } & { [K_128 in Exclude<keyof I_1["channel_updated_event"], keyof ChannelUpdatedEvent>]: never; }) | undefined;
+    } & { [K_129 in Exclude<keyof I_1, keyof Envelope>]: never; }>(object: I_1): Envelope;
 };
 export declare const Channel: {
     encode(message: Channel, writer?: _m0.Writer): _m0.Writer;
@@ -4191,7 +2974,6 @@ export declare const ChannelJoin: {
     create<I extends {
         clan_id?: string | undefined;
         channel_id?: string | undefined;
-        channel_label?: string | undefined;
         type?: number | undefined;
         persistence?: boolean | undefined;
         hidden?: boolean | undefined;
@@ -4199,7 +2981,6 @@ export declare const ChannelJoin: {
     } & {
         clan_id?: string | undefined;
         channel_id?: string | undefined;
-        channel_label?: string | undefined;
         type?: number | undefined;
         persistence?: boolean | undefined;
         hidden?: boolean | undefined;
@@ -4208,7 +2989,6 @@ export declare const ChannelJoin: {
     fromPartial<I_1 extends {
         clan_id?: string | undefined;
         channel_id?: string | undefined;
-        channel_label?: string | undefined;
         type?: number | undefined;
         persistence?: boolean | undefined;
         hidden?: boolean | undefined;
@@ -4216,7 +2996,6 @@ export declare const ChannelJoin: {
     } & {
         clan_id?: string | undefined;
         channel_id?: string | undefined;
-        channel_label?: string | undefined;
         type?: number | undefined;
         persistence?: boolean | undefined;
         hidden?: boolean | undefined;
@@ -4230,20 +3009,16 @@ export declare const ChannelLeave: {
     toJSON(message: ChannelLeave): unknown;
     create<I extends {
         channel_id?: string | undefined;
-        channel_label?: string | undefined;
         mode?: number | undefined;
     } & {
         channel_id?: string | undefined;
-        channel_label?: string | undefined;
         mode?: number | undefined;
     } & { [K in Exclude<keyof I, keyof ChannelLeave>]: never; }>(base?: I | undefined): ChannelLeave;
     fromPartial<I_1 extends {
         channel_id?: string | undefined;
-        channel_label?: string | undefined;
         mode?: number | undefined;
     } & {
         channel_id?: string | undefined;
-        channel_label?: string | undefined;
         mode?: number | undefined;
     } & { [K_1 in Exclude<keyof I_1, keyof ChannelLeave>]: never; }>(object: I_1): ChannelLeave;
 };
@@ -4260,7 +3035,6 @@ export declare const ChannelMessageAck: {
         create_time?: Date | undefined;
         update_time?: Date | undefined;
         persistent?: boolean | undefined;
-        channel_label?: string | undefined;
         user_id_one?: string | undefined;
         user_id_two?: string | undefined;
     } & {
@@ -4271,7 +3045,6 @@ export declare const ChannelMessageAck: {
         create_time?: Date | undefined;
         update_time?: Date | undefined;
         persistent?: boolean | undefined;
-        channel_label?: string | undefined;
         user_id_one?: string | undefined;
         user_id_two?: string | undefined;
     } & { [K in Exclude<keyof I, keyof ChannelMessageAck>]: never; }>(base?: I | undefined): ChannelMessageAck;
@@ -4283,7 +3056,6 @@ export declare const ChannelMessageAck: {
         create_time?: Date | undefined;
         update_time?: Date | undefined;
         persistent?: boolean | undefined;
-        channel_label?: string | undefined;
         user_id_one?: string | undefined;
         user_id_two?: string | undefined;
     } & {
@@ -4294,7 +3066,6 @@ export declare const ChannelMessageAck: {
         create_time?: Date | undefined;
         update_time?: Date | undefined;
         persistent?: boolean | undefined;
-        channel_label?: string | undefined;
         user_id_one?: string | undefined;
         user_id_two?: string | undefined;
     } & { [K_1 in Exclude<keyof I_1, keyof ChannelMessageAck>]: never; }>(object: I_1): ChannelMessageAck;
@@ -4399,7 +3170,6 @@ export declare const ChannelMessageSend: {
     create<I extends {
         clan_id?: string | undefined;
         channel_id?: string | undefined;
-        channel_label?: string | undefined;
         content?: string | undefined;
         mentions?: {
             user_id?: string | undefined;
@@ -4427,7 +3197,6 @@ export declare const ChannelMessageSend: {
     } & {
         clan_id?: string | undefined;
         channel_id?: string | undefined;
-        channel_label?: string | undefined;
         content?: string | undefined;
         mentions?: ({
             user_id?: string | undefined;
@@ -4507,7 +3276,6 @@ export declare const ChannelMessageSend: {
     fromPartial<I_1 extends {
         clan_id?: string | undefined;
         channel_id?: string | undefined;
-        channel_label?: string | undefined;
         content?: string | undefined;
         mentions?: {
             user_id?: string | undefined;
@@ -4535,7 +3303,6 @@ export declare const ChannelMessageSend: {
     } & {
         clan_id?: string | undefined;
         channel_id?: string | undefined;
-        channel_label?: string | undefined;
         content?: string | undefined;
         mentions?: ({
             user_id?: string | undefined;
@@ -4620,26 +3387,22 @@ export declare const ChannelMessageUpdate: {
     toJSON(message: ChannelMessageUpdate): unknown;
     create<I extends {
         channel_id?: string | undefined;
-        channel_label?: string | undefined;
         message_id?: string | undefined;
         content?: string | undefined;
         mode?: number | undefined;
     } & {
         channel_id?: string | undefined;
-        channel_label?: string | undefined;
         message_id?: string | undefined;
         content?: string | undefined;
         mode?: number | undefined;
     } & { [K in Exclude<keyof I, keyof ChannelMessageUpdate>]: never; }>(base?: I | undefined): ChannelMessageUpdate;
     fromPartial<I_1 extends {
         channel_id?: string | undefined;
-        channel_label?: string | undefined;
         message_id?: string | undefined;
         content?: string | undefined;
         mode?: number | undefined;
     } & {
         channel_id?: string | undefined;
-        channel_label?: string | undefined;
         message_id?: string | undefined;
         content?: string | undefined;
         mode?: number | undefined;
@@ -4652,23 +3415,19 @@ export declare const ChannelMessageRemove: {
     toJSON(message: ChannelMessageRemove): unknown;
     create<I extends {
         channel_id?: string | undefined;
-        channel_label?: string | undefined;
         message_id?: string | undefined;
         mode?: number | undefined;
     } & {
         channel_id?: string | undefined;
-        channel_label?: string | undefined;
         message_id?: string | undefined;
         mode?: number | undefined;
     } & { [K in Exclude<keyof I, keyof ChannelMessageRemove>]: never; }>(base?: I | undefined): ChannelMessageRemove;
     fromPartial<I_1 extends {
         channel_id?: string | undefined;
-        channel_label?: string | undefined;
         message_id?: string | undefined;
         mode?: number | undefined;
     } & {
         channel_id?: string | undefined;
-        channel_label?: string | undefined;
         message_id?: string | undefined;
         mode?: number | undefined;
     } & { [K_1 in Exclude<keyof I_1, keyof ChannelMessageRemove>]: never; }>(object: I_1): ChannelMessageRemove;
@@ -4694,7 +3453,6 @@ export declare const ChannelPresenceEvent: {
             persistence?: boolean | undefined;
             status?: string | undefined;
         }[] | undefined;
-        channel_label?: string | undefined;
         user_id_one?: string | undefined;
         user_id_two?: string | undefined;
         mode?: number | undefined;
@@ -4750,7 +3508,6 @@ export declare const ChannelPresenceEvent: {
             persistence?: boolean | undefined;
             status?: string | undefined;
         }[]>]: never; }) | undefined;
-        channel_label?: string | undefined;
         user_id_one?: string | undefined;
         user_id_two?: string | undefined;
         mode?: number | undefined;
@@ -4771,7 +3528,6 @@ export declare const ChannelPresenceEvent: {
             persistence?: boolean | undefined;
             status?: string | undefined;
         }[] | undefined;
-        channel_label?: string | undefined;
         user_id_one?: string | undefined;
         user_id_two?: string | undefined;
         mode?: number | undefined;
@@ -4827,7 +3583,6 @@ export declare const ChannelPresenceEvent: {
             persistence?: boolean | undefined;
             status?: string | undefined;
         }[]>]: never; }) | undefined;
-        channel_label?: string | undefined;
         user_id_one?: string | undefined;
         user_id_two?: string | undefined;
         mode?: number | undefined;
@@ -5024,938 +3779,6 @@ export declare const Notifications: {
             avatar_url?: string | undefined;
         }[]>]: never; }) | undefined;
     } & { [K_5 in Exclude<keyof I_1, "notifications">]: never; }>(object: I_1): Notifications;
-};
-export declare const Party: {
-    encode(message: Party, writer?: _m0.Writer): _m0.Writer;
-    decode(input: _m0.Reader | Uint8Array, length?: number): Party;
-    fromJSON(object: any): Party;
-    toJSON(message: Party): unknown;
-    create<I extends {
-        party_id?: string | undefined;
-        open?: boolean | undefined;
-        max_size?: number | undefined;
-        self?: {
-            user_id?: string | undefined;
-            session_id?: string | undefined;
-            username?: string | undefined;
-            persistence?: boolean | undefined;
-            status?: string | undefined;
-        } | undefined;
-        leader?: {
-            user_id?: string | undefined;
-            session_id?: string | undefined;
-            username?: string | undefined;
-            persistence?: boolean | undefined;
-            status?: string | undefined;
-        } | undefined;
-        presences?: {
-            user_id?: string | undefined;
-            session_id?: string | undefined;
-            username?: string | undefined;
-            persistence?: boolean | undefined;
-            status?: string | undefined;
-        }[] | undefined;
-    } & {
-        party_id?: string | undefined;
-        open?: boolean | undefined;
-        max_size?: number | undefined;
-        self?: ({
-            user_id?: string | undefined;
-            session_id?: string | undefined;
-            username?: string | undefined;
-            persistence?: boolean | undefined;
-            status?: string | undefined;
-        } & {
-            user_id?: string | undefined;
-            session_id?: string | undefined;
-            username?: string | undefined;
-            persistence?: boolean | undefined;
-            status?: string | undefined;
-        } & { [K in Exclude<keyof I["self"], keyof UserPresence>]: never; }) | undefined;
-        leader?: ({
-            user_id?: string | undefined;
-            session_id?: string | undefined;
-            username?: string | undefined;
-            persistence?: boolean | undefined;
-            status?: string | undefined;
-        } & {
-            user_id?: string | undefined;
-            session_id?: string | undefined;
-            username?: string | undefined;
-            persistence?: boolean | undefined;
-            status?: string | undefined;
-        } & { [K_1 in Exclude<keyof I["leader"], keyof UserPresence>]: never; }) | undefined;
-        presences?: ({
-            user_id?: string | undefined;
-            session_id?: string | undefined;
-            username?: string | undefined;
-            persistence?: boolean | undefined;
-            status?: string | undefined;
-        }[] & ({
-            user_id?: string | undefined;
-            session_id?: string | undefined;
-            username?: string | undefined;
-            persistence?: boolean | undefined;
-            status?: string | undefined;
-        } & {
-            user_id?: string | undefined;
-            session_id?: string | undefined;
-            username?: string | undefined;
-            persistence?: boolean | undefined;
-            status?: string | undefined;
-        } & { [K_2 in Exclude<keyof I["presences"][number], keyof UserPresence>]: never; })[] & { [K_3 in Exclude<keyof I["presences"], keyof {
-            user_id?: string | undefined;
-            session_id?: string | undefined;
-            username?: string | undefined;
-            persistence?: boolean | undefined;
-            status?: string | undefined;
-        }[]>]: never; }) | undefined;
-    } & { [K_4 in Exclude<keyof I, keyof Party>]: never; }>(base?: I | undefined): Party;
-    fromPartial<I_1 extends {
-        party_id?: string | undefined;
-        open?: boolean | undefined;
-        max_size?: number | undefined;
-        self?: {
-            user_id?: string | undefined;
-            session_id?: string | undefined;
-            username?: string | undefined;
-            persistence?: boolean | undefined;
-            status?: string | undefined;
-        } | undefined;
-        leader?: {
-            user_id?: string | undefined;
-            session_id?: string | undefined;
-            username?: string | undefined;
-            persistence?: boolean | undefined;
-            status?: string | undefined;
-        } | undefined;
-        presences?: {
-            user_id?: string | undefined;
-            session_id?: string | undefined;
-            username?: string | undefined;
-            persistence?: boolean | undefined;
-            status?: string | undefined;
-        }[] | undefined;
-    } & {
-        party_id?: string | undefined;
-        open?: boolean | undefined;
-        max_size?: number | undefined;
-        self?: ({
-            user_id?: string | undefined;
-            session_id?: string | undefined;
-            username?: string | undefined;
-            persistence?: boolean | undefined;
-            status?: string | undefined;
-        } & {
-            user_id?: string | undefined;
-            session_id?: string | undefined;
-            username?: string | undefined;
-            persistence?: boolean | undefined;
-            status?: string | undefined;
-        } & { [K_5 in Exclude<keyof I_1["self"], keyof UserPresence>]: never; }) | undefined;
-        leader?: ({
-            user_id?: string | undefined;
-            session_id?: string | undefined;
-            username?: string | undefined;
-            persistence?: boolean | undefined;
-            status?: string | undefined;
-        } & {
-            user_id?: string | undefined;
-            session_id?: string | undefined;
-            username?: string | undefined;
-            persistence?: boolean | undefined;
-            status?: string | undefined;
-        } & { [K_6 in Exclude<keyof I_1["leader"], keyof UserPresence>]: never; }) | undefined;
-        presences?: ({
-            user_id?: string | undefined;
-            session_id?: string | undefined;
-            username?: string | undefined;
-            persistence?: boolean | undefined;
-            status?: string | undefined;
-        }[] & ({
-            user_id?: string | undefined;
-            session_id?: string | undefined;
-            username?: string | undefined;
-            persistence?: boolean | undefined;
-            status?: string | undefined;
-        } & {
-            user_id?: string | undefined;
-            session_id?: string | undefined;
-            username?: string | undefined;
-            persistence?: boolean | undefined;
-            status?: string | undefined;
-        } & { [K_7 in Exclude<keyof I_1["presences"][number], keyof UserPresence>]: never; })[] & { [K_8 in Exclude<keyof I_1["presences"], keyof {
-            user_id?: string | undefined;
-            session_id?: string | undefined;
-            username?: string | undefined;
-            persistence?: boolean | undefined;
-            status?: string | undefined;
-        }[]>]: never; }) | undefined;
-    } & { [K_9 in Exclude<keyof I_1, keyof Party>]: never; }>(object: I_1): Party;
-};
-export declare const PartyCreate: {
-    encode(message: PartyCreate, writer?: _m0.Writer): _m0.Writer;
-    decode(input: _m0.Reader | Uint8Array, length?: number): PartyCreate;
-    fromJSON(object: any): PartyCreate;
-    toJSON(message: PartyCreate): unknown;
-    create<I extends {
-        open?: boolean | undefined;
-        max_size?: number | undefined;
-    } & {
-        open?: boolean | undefined;
-        max_size?: number | undefined;
-    } & { [K in Exclude<keyof I, keyof PartyCreate>]: never; }>(base?: I | undefined): PartyCreate;
-    fromPartial<I_1 extends {
-        open?: boolean | undefined;
-        max_size?: number | undefined;
-    } & {
-        open?: boolean | undefined;
-        max_size?: number | undefined;
-    } & { [K_1 in Exclude<keyof I_1, keyof PartyCreate>]: never; }>(object: I_1): PartyCreate;
-};
-export declare const PartyJoin: {
-    encode(message: PartyJoin, writer?: _m0.Writer): _m0.Writer;
-    decode(input: _m0.Reader | Uint8Array, length?: number): PartyJoin;
-    fromJSON(object: any): PartyJoin;
-    toJSON(message: PartyJoin): unknown;
-    create<I extends {
-        party_id?: string | undefined;
-    } & {
-        party_id?: string | undefined;
-    } & { [K in Exclude<keyof I, "party_id">]: never; }>(base?: I | undefined): PartyJoin;
-    fromPartial<I_1 extends {
-        party_id?: string | undefined;
-    } & {
-        party_id?: string | undefined;
-    } & { [K_1 in Exclude<keyof I_1, "party_id">]: never; }>(object: I_1): PartyJoin;
-};
-export declare const PartyLeave: {
-    encode(message: PartyLeave, writer?: _m0.Writer): _m0.Writer;
-    decode(input: _m0.Reader | Uint8Array, length?: number): PartyLeave;
-    fromJSON(object: any): PartyLeave;
-    toJSON(message: PartyLeave): unknown;
-    create<I extends {
-        party_id?: string | undefined;
-    } & {
-        party_id?: string | undefined;
-    } & { [K in Exclude<keyof I, "party_id">]: never; }>(base?: I | undefined): PartyLeave;
-    fromPartial<I_1 extends {
-        party_id?: string | undefined;
-    } & {
-        party_id?: string | undefined;
-    } & { [K_1 in Exclude<keyof I_1, "party_id">]: never; }>(object: I_1): PartyLeave;
-};
-export declare const PartyPromote: {
-    encode(message: PartyPromote, writer?: _m0.Writer): _m0.Writer;
-    decode(input: _m0.Reader | Uint8Array, length?: number): PartyPromote;
-    fromJSON(object: any): PartyPromote;
-    toJSON(message: PartyPromote): unknown;
-    create<I extends {
-        party_id?: string | undefined;
-        presence?: {
-            user_id?: string | undefined;
-            session_id?: string | undefined;
-            username?: string | undefined;
-            persistence?: boolean | undefined;
-            status?: string | undefined;
-        } | undefined;
-    } & {
-        party_id?: string | undefined;
-        presence?: ({
-            user_id?: string | undefined;
-            session_id?: string | undefined;
-            username?: string | undefined;
-            persistence?: boolean | undefined;
-            status?: string | undefined;
-        } & {
-            user_id?: string | undefined;
-            session_id?: string | undefined;
-            username?: string | undefined;
-            persistence?: boolean | undefined;
-            status?: string | undefined;
-        } & { [K in Exclude<keyof I["presence"], keyof UserPresence>]: never; }) | undefined;
-    } & { [K_1 in Exclude<keyof I, keyof PartyPromote>]: never; }>(base?: I | undefined): PartyPromote;
-    fromPartial<I_1 extends {
-        party_id?: string | undefined;
-        presence?: {
-            user_id?: string | undefined;
-            session_id?: string | undefined;
-            username?: string | undefined;
-            persistence?: boolean | undefined;
-            status?: string | undefined;
-        } | undefined;
-    } & {
-        party_id?: string | undefined;
-        presence?: ({
-            user_id?: string | undefined;
-            session_id?: string | undefined;
-            username?: string | undefined;
-            persistence?: boolean | undefined;
-            status?: string | undefined;
-        } & {
-            user_id?: string | undefined;
-            session_id?: string | undefined;
-            username?: string | undefined;
-            persistence?: boolean | undefined;
-            status?: string | undefined;
-        } & { [K_2 in Exclude<keyof I_1["presence"], keyof UserPresence>]: never; }) | undefined;
-    } & { [K_3 in Exclude<keyof I_1, keyof PartyPromote>]: never; }>(object: I_1): PartyPromote;
-};
-export declare const PartyLeader: {
-    encode(message: PartyLeader, writer?: _m0.Writer): _m0.Writer;
-    decode(input: _m0.Reader | Uint8Array, length?: number): PartyLeader;
-    fromJSON(object: any): PartyLeader;
-    toJSON(message: PartyLeader): unknown;
-    create<I extends {
-        party_id?: string | undefined;
-        presence?: {
-            user_id?: string | undefined;
-            session_id?: string | undefined;
-            username?: string | undefined;
-            persistence?: boolean | undefined;
-            status?: string | undefined;
-        } | undefined;
-    } & {
-        party_id?: string | undefined;
-        presence?: ({
-            user_id?: string | undefined;
-            session_id?: string | undefined;
-            username?: string | undefined;
-            persistence?: boolean | undefined;
-            status?: string | undefined;
-        } & {
-            user_id?: string | undefined;
-            session_id?: string | undefined;
-            username?: string | undefined;
-            persistence?: boolean | undefined;
-            status?: string | undefined;
-        } & { [K in Exclude<keyof I["presence"], keyof UserPresence>]: never; }) | undefined;
-    } & { [K_1 in Exclude<keyof I, keyof PartyLeader>]: never; }>(base?: I | undefined): PartyLeader;
-    fromPartial<I_1 extends {
-        party_id?: string | undefined;
-        presence?: {
-            user_id?: string | undefined;
-            session_id?: string | undefined;
-            username?: string | undefined;
-            persistence?: boolean | undefined;
-            status?: string | undefined;
-        } | undefined;
-    } & {
-        party_id?: string | undefined;
-        presence?: ({
-            user_id?: string | undefined;
-            session_id?: string | undefined;
-            username?: string | undefined;
-            persistence?: boolean | undefined;
-            status?: string | undefined;
-        } & {
-            user_id?: string | undefined;
-            session_id?: string | undefined;
-            username?: string | undefined;
-            persistence?: boolean | undefined;
-            status?: string | undefined;
-        } & { [K_2 in Exclude<keyof I_1["presence"], keyof UserPresence>]: never; }) | undefined;
-    } & { [K_3 in Exclude<keyof I_1, keyof PartyLeader>]: never; }>(object: I_1): PartyLeader;
-};
-export declare const PartyAccept: {
-    encode(message: PartyAccept, writer?: _m0.Writer): _m0.Writer;
-    decode(input: _m0.Reader | Uint8Array, length?: number): PartyAccept;
-    fromJSON(object: any): PartyAccept;
-    toJSON(message: PartyAccept): unknown;
-    create<I extends {
-        party_id?: string | undefined;
-        presence?: {
-            user_id?: string | undefined;
-            session_id?: string | undefined;
-            username?: string | undefined;
-            persistence?: boolean | undefined;
-            status?: string | undefined;
-        } | undefined;
-    } & {
-        party_id?: string | undefined;
-        presence?: ({
-            user_id?: string | undefined;
-            session_id?: string | undefined;
-            username?: string | undefined;
-            persistence?: boolean | undefined;
-            status?: string | undefined;
-        } & {
-            user_id?: string | undefined;
-            session_id?: string | undefined;
-            username?: string | undefined;
-            persistence?: boolean | undefined;
-            status?: string | undefined;
-        } & { [K in Exclude<keyof I["presence"], keyof UserPresence>]: never; }) | undefined;
-    } & { [K_1 in Exclude<keyof I, keyof PartyAccept>]: never; }>(base?: I | undefined): PartyAccept;
-    fromPartial<I_1 extends {
-        party_id?: string | undefined;
-        presence?: {
-            user_id?: string | undefined;
-            session_id?: string | undefined;
-            username?: string | undefined;
-            persistence?: boolean | undefined;
-            status?: string | undefined;
-        } | undefined;
-    } & {
-        party_id?: string | undefined;
-        presence?: ({
-            user_id?: string | undefined;
-            session_id?: string | undefined;
-            username?: string | undefined;
-            persistence?: boolean | undefined;
-            status?: string | undefined;
-        } & {
-            user_id?: string | undefined;
-            session_id?: string | undefined;
-            username?: string | undefined;
-            persistence?: boolean | undefined;
-            status?: string | undefined;
-        } & { [K_2 in Exclude<keyof I_1["presence"], keyof UserPresence>]: never; }) | undefined;
-    } & { [K_3 in Exclude<keyof I_1, keyof PartyAccept>]: never; }>(object: I_1): PartyAccept;
-};
-export declare const PartyRemove: {
-    encode(message: PartyRemove, writer?: _m0.Writer): _m0.Writer;
-    decode(input: _m0.Reader | Uint8Array, length?: number): PartyRemove;
-    fromJSON(object: any): PartyRemove;
-    toJSON(message: PartyRemove): unknown;
-    create<I extends {
-        party_id?: string | undefined;
-        presence?: {
-            user_id?: string | undefined;
-            session_id?: string | undefined;
-            username?: string | undefined;
-            persistence?: boolean | undefined;
-            status?: string | undefined;
-        } | undefined;
-    } & {
-        party_id?: string | undefined;
-        presence?: ({
-            user_id?: string | undefined;
-            session_id?: string | undefined;
-            username?: string | undefined;
-            persistence?: boolean | undefined;
-            status?: string | undefined;
-        } & {
-            user_id?: string | undefined;
-            session_id?: string | undefined;
-            username?: string | undefined;
-            persistence?: boolean | undefined;
-            status?: string | undefined;
-        } & { [K in Exclude<keyof I["presence"], keyof UserPresence>]: never; }) | undefined;
-    } & { [K_1 in Exclude<keyof I, keyof PartyRemove>]: never; }>(base?: I | undefined): PartyRemove;
-    fromPartial<I_1 extends {
-        party_id?: string | undefined;
-        presence?: {
-            user_id?: string | undefined;
-            session_id?: string | undefined;
-            username?: string | undefined;
-            persistence?: boolean | undefined;
-            status?: string | undefined;
-        } | undefined;
-    } & {
-        party_id?: string | undefined;
-        presence?: ({
-            user_id?: string | undefined;
-            session_id?: string | undefined;
-            username?: string | undefined;
-            persistence?: boolean | undefined;
-            status?: string | undefined;
-        } & {
-            user_id?: string | undefined;
-            session_id?: string | undefined;
-            username?: string | undefined;
-            persistence?: boolean | undefined;
-            status?: string | undefined;
-        } & { [K_2 in Exclude<keyof I_1["presence"], keyof UserPresence>]: never; }) | undefined;
-    } & { [K_3 in Exclude<keyof I_1, keyof PartyRemove>]: never; }>(object: I_1): PartyRemove;
-};
-export declare const PartyClose: {
-    encode(message: PartyClose, writer?: _m0.Writer): _m0.Writer;
-    decode(input: _m0.Reader | Uint8Array, length?: number): PartyClose;
-    fromJSON(object: any): PartyClose;
-    toJSON(message: PartyClose): unknown;
-    create<I extends {
-        party_id?: string | undefined;
-    } & {
-        party_id?: string | undefined;
-    } & { [K in Exclude<keyof I, "party_id">]: never; }>(base?: I | undefined): PartyClose;
-    fromPartial<I_1 extends {
-        party_id?: string | undefined;
-    } & {
-        party_id?: string | undefined;
-    } & { [K_1 in Exclude<keyof I_1, "party_id">]: never; }>(object: I_1): PartyClose;
-};
-export declare const PartyJoinRequestList: {
-    encode(message: PartyJoinRequestList, writer?: _m0.Writer): _m0.Writer;
-    decode(input: _m0.Reader | Uint8Array, length?: number): PartyJoinRequestList;
-    fromJSON(object: any): PartyJoinRequestList;
-    toJSON(message: PartyJoinRequestList): unknown;
-    create<I extends {
-        party_id?: string | undefined;
-    } & {
-        party_id?: string | undefined;
-    } & { [K in Exclude<keyof I, "party_id">]: never; }>(base?: I | undefined): PartyJoinRequestList;
-    fromPartial<I_1 extends {
-        party_id?: string | undefined;
-    } & {
-        party_id?: string | undefined;
-    } & { [K_1 in Exclude<keyof I_1, "party_id">]: never; }>(object: I_1): PartyJoinRequestList;
-};
-export declare const PartyJoinRequest: {
-    encode(message: PartyJoinRequest, writer?: _m0.Writer): _m0.Writer;
-    decode(input: _m0.Reader | Uint8Array, length?: number): PartyJoinRequest;
-    fromJSON(object: any): PartyJoinRequest;
-    toJSON(message: PartyJoinRequest): unknown;
-    create<I extends {
-        party_id?: string | undefined;
-        presences?: {
-            user_id?: string | undefined;
-            session_id?: string | undefined;
-            username?: string | undefined;
-            persistence?: boolean | undefined;
-            status?: string | undefined;
-        }[] | undefined;
-    } & {
-        party_id?: string | undefined;
-        presences?: ({
-            user_id?: string | undefined;
-            session_id?: string | undefined;
-            username?: string | undefined;
-            persistence?: boolean | undefined;
-            status?: string | undefined;
-        }[] & ({
-            user_id?: string | undefined;
-            session_id?: string | undefined;
-            username?: string | undefined;
-            persistence?: boolean | undefined;
-            status?: string | undefined;
-        } & {
-            user_id?: string | undefined;
-            session_id?: string | undefined;
-            username?: string | undefined;
-            persistence?: boolean | undefined;
-            status?: string | undefined;
-        } & { [K in Exclude<keyof I["presences"][number], keyof UserPresence>]: never; })[] & { [K_1 in Exclude<keyof I["presences"], keyof {
-            user_id?: string | undefined;
-            session_id?: string | undefined;
-            username?: string | undefined;
-            persistence?: boolean | undefined;
-            status?: string | undefined;
-        }[]>]: never; }) | undefined;
-    } & { [K_2 in Exclude<keyof I, keyof PartyJoinRequest>]: never; }>(base?: I | undefined): PartyJoinRequest;
-    fromPartial<I_1 extends {
-        party_id?: string | undefined;
-        presences?: {
-            user_id?: string | undefined;
-            session_id?: string | undefined;
-            username?: string | undefined;
-            persistence?: boolean | undefined;
-            status?: string | undefined;
-        }[] | undefined;
-    } & {
-        party_id?: string | undefined;
-        presences?: ({
-            user_id?: string | undefined;
-            session_id?: string | undefined;
-            username?: string | undefined;
-            persistence?: boolean | undefined;
-            status?: string | undefined;
-        }[] & ({
-            user_id?: string | undefined;
-            session_id?: string | undefined;
-            username?: string | undefined;
-            persistence?: boolean | undefined;
-            status?: string | undefined;
-        } & {
-            user_id?: string | undefined;
-            session_id?: string | undefined;
-            username?: string | undefined;
-            persistence?: boolean | undefined;
-            status?: string | undefined;
-        } & { [K_3 in Exclude<keyof I_1["presences"][number], keyof UserPresence>]: never; })[] & { [K_4 in Exclude<keyof I_1["presences"], keyof {
-            user_id?: string | undefined;
-            session_id?: string | undefined;
-            username?: string | undefined;
-            persistence?: boolean | undefined;
-            status?: string | undefined;
-        }[]>]: never; }) | undefined;
-    } & { [K_5 in Exclude<keyof I_1, keyof PartyJoinRequest>]: never; }>(object: I_1): PartyJoinRequest;
-};
-export declare const PartyMatchmakerAdd: {
-    encode(message: PartyMatchmakerAdd, writer?: _m0.Writer): _m0.Writer;
-    decode(input: _m0.Reader | Uint8Array, length?: number): PartyMatchmakerAdd;
-    fromJSON(object: any): PartyMatchmakerAdd;
-    toJSON(message: PartyMatchmakerAdd): unknown;
-    create<I extends {
-        party_id?: string | undefined;
-        min_count?: number | undefined;
-        max_count?: number | undefined;
-        query?: string | undefined;
-        string_properties?: {
-            [x: string]: string | undefined;
-        } | undefined;
-        numeric_properties?: {
-            [x: string]: number | undefined;
-        } | undefined;
-        count_multiple?: number | undefined;
-    } & {
-        party_id?: string | undefined;
-        min_count?: number | undefined;
-        max_count?: number | undefined;
-        query?: string | undefined;
-        string_properties?: ({
-            [x: string]: string | undefined;
-        } & {
-            [x: string]: string | undefined;
-        } & { [K in Exclude<keyof I["string_properties"], string | number>]: never; }) | undefined;
-        numeric_properties?: ({
-            [x: string]: number | undefined;
-        } & {
-            [x: string]: number | undefined;
-        } & { [K_1 in Exclude<keyof I["numeric_properties"], string | number>]: never; }) | undefined;
-        count_multiple?: number | undefined;
-    } & { [K_2 in Exclude<keyof I, keyof PartyMatchmakerAdd>]: never; }>(base?: I | undefined): PartyMatchmakerAdd;
-    fromPartial<I_1 extends {
-        party_id?: string | undefined;
-        min_count?: number | undefined;
-        max_count?: number | undefined;
-        query?: string | undefined;
-        string_properties?: {
-            [x: string]: string | undefined;
-        } | undefined;
-        numeric_properties?: {
-            [x: string]: number | undefined;
-        } | undefined;
-        count_multiple?: number | undefined;
-    } & {
-        party_id?: string | undefined;
-        min_count?: number | undefined;
-        max_count?: number | undefined;
-        query?: string | undefined;
-        string_properties?: ({
-            [x: string]: string | undefined;
-        } & {
-            [x: string]: string | undefined;
-        } & { [K_3 in Exclude<keyof I_1["string_properties"], string | number>]: never; }) | undefined;
-        numeric_properties?: ({
-            [x: string]: number | undefined;
-        } & {
-            [x: string]: number | undefined;
-        } & { [K_4 in Exclude<keyof I_1["numeric_properties"], string | number>]: never; }) | undefined;
-        count_multiple?: number | undefined;
-    } & { [K_5 in Exclude<keyof I_1, keyof PartyMatchmakerAdd>]: never; }>(object: I_1): PartyMatchmakerAdd;
-};
-export declare const PartyMatchmakerAdd_StringPropertiesEntry: {
-    encode(message: PartyMatchmakerAdd_StringPropertiesEntry, writer?: _m0.Writer): _m0.Writer;
-    decode(input: _m0.Reader | Uint8Array, length?: number): PartyMatchmakerAdd_StringPropertiesEntry;
-    fromJSON(object: any): PartyMatchmakerAdd_StringPropertiesEntry;
-    toJSON(message: PartyMatchmakerAdd_StringPropertiesEntry): unknown;
-    create<I extends {
-        key?: string | undefined;
-        value?: string | undefined;
-    } & {
-        key?: string | undefined;
-        value?: string | undefined;
-    } & { [K in Exclude<keyof I, keyof PartyMatchmakerAdd_StringPropertiesEntry>]: never; }>(base?: I | undefined): PartyMatchmakerAdd_StringPropertiesEntry;
-    fromPartial<I_1 extends {
-        key?: string | undefined;
-        value?: string | undefined;
-    } & {
-        key?: string | undefined;
-        value?: string | undefined;
-    } & { [K_1 in Exclude<keyof I_1, keyof PartyMatchmakerAdd_StringPropertiesEntry>]: never; }>(object: I_1): PartyMatchmakerAdd_StringPropertiesEntry;
-};
-export declare const PartyMatchmakerAdd_NumericPropertiesEntry: {
-    encode(message: PartyMatchmakerAdd_NumericPropertiesEntry, writer?: _m0.Writer): _m0.Writer;
-    decode(input: _m0.Reader | Uint8Array, length?: number): PartyMatchmakerAdd_NumericPropertiesEntry;
-    fromJSON(object: any): PartyMatchmakerAdd_NumericPropertiesEntry;
-    toJSON(message: PartyMatchmakerAdd_NumericPropertiesEntry): unknown;
-    create<I extends {
-        key?: string | undefined;
-        value?: number | undefined;
-    } & {
-        key?: string | undefined;
-        value?: number | undefined;
-    } & { [K in Exclude<keyof I, keyof PartyMatchmakerAdd_NumericPropertiesEntry>]: never; }>(base?: I | undefined): PartyMatchmakerAdd_NumericPropertiesEntry;
-    fromPartial<I_1 extends {
-        key?: string | undefined;
-        value?: number | undefined;
-    } & {
-        key?: string | undefined;
-        value?: number | undefined;
-    } & { [K_1 in Exclude<keyof I_1, keyof PartyMatchmakerAdd_NumericPropertiesEntry>]: never; }>(object: I_1): PartyMatchmakerAdd_NumericPropertiesEntry;
-};
-export declare const PartyMatchmakerRemove: {
-    encode(message: PartyMatchmakerRemove, writer?: _m0.Writer): _m0.Writer;
-    decode(input: _m0.Reader | Uint8Array, length?: number): PartyMatchmakerRemove;
-    fromJSON(object: any): PartyMatchmakerRemove;
-    toJSON(message: PartyMatchmakerRemove): unknown;
-    create<I extends {
-        party_id?: string | undefined;
-        ticket?: string | undefined;
-    } & {
-        party_id?: string | undefined;
-        ticket?: string | undefined;
-    } & { [K in Exclude<keyof I, keyof PartyMatchmakerRemove>]: never; }>(base?: I | undefined): PartyMatchmakerRemove;
-    fromPartial<I_1 extends {
-        party_id?: string | undefined;
-        ticket?: string | undefined;
-    } & {
-        party_id?: string | undefined;
-        ticket?: string | undefined;
-    } & { [K_1 in Exclude<keyof I_1, keyof PartyMatchmakerRemove>]: never; }>(object: I_1): PartyMatchmakerRemove;
-};
-export declare const PartyMatchmakerTicket: {
-    encode(message: PartyMatchmakerTicket, writer?: _m0.Writer): _m0.Writer;
-    decode(input: _m0.Reader | Uint8Array, length?: number): PartyMatchmakerTicket;
-    fromJSON(object: any): PartyMatchmakerTicket;
-    toJSON(message: PartyMatchmakerTicket): unknown;
-    create<I extends {
-        party_id?: string | undefined;
-        ticket?: string | undefined;
-    } & {
-        party_id?: string | undefined;
-        ticket?: string | undefined;
-    } & { [K in Exclude<keyof I, keyof PartyMatchmakerTicket>]: never; }>(base?: I | undefined): PartyMatchmakerTicket;
-    fromPartial<I_1 extends {
-        party_id?: string | undefined;
-        ticket?: string | undefined;
-    } & {
-        party_id?: string | undefined;
-        ticket?: string | undefined;
-    } & { [K_1 in Exclude<keyof I_1, keyof PartyMatchmakerTicket>]: never; }>(object: I_1): PartyMatchmakerTicket;
-};
-export declare const PartyData: {
-    encode(message: PartyData, writer?: _m0.Writer): _m0.Writer;
-    decode(input: _m0.Reader | Uint8Array, length?: number): PartyData;
-    fromJSON(object: any): PartyData;
-    toJSON(message: PartyData): unknown;
-    create<I extends {
-        party_id?: string | undefined;
-        presence?: {
-            user_id?: string | undefined;
-            session_id?: string | undefined;
-            username?: string | undefined;
-            persistence?: boolean | undefined;
-            status?: string | undefined;
-        } | undefined;
-        op_code?: number | undefined;
-        data?: Uint8Array | undefined;
-    } & {
-        party_id?: string | undefined;
-        presence?: ({
-            user_id?: string | undefined;
-            session_id?: string | undefined;
-            username?: string | undefined;
-            persistence?: boolean | undefined;
-            status?: string | undefined;
-        } & {
-            user_id?: string | undefined;
-            session_id?: string | undefined;
-            username?: string | undefined;
-            persistence?: boolean | undefined;
-            status?: string | undefined;
-        } & { [K in Exclude<keyof I["presence"], keyof UserPresence>]: never; }) | undefined;
-        op_code?: number | undefined;
-        data?: Uint8Array | undefined;
-    } & { [K_1 in Exclude<keyof I, keyof PartyData>]: never; }>(base?: I | undefined): PartyData;
-    fromPartial<I_1 extends {
-        party_id?: string | undefined;
-        presence?: {
-            user_id?: string | undefined;
-            session_id?: string | undefined;
-            username?: string | undefined;
-            persistence?: boolean | undefined;
-            status?: string | undefined;
-        } | undefined;
-        op_code?: number | undefined;
-        data?: Uint8Array | undefined;
-    } & {
-        party_id?: string | undefined;
-        presence?: ({
-            user_id?: string | undefined;
-            session_id?: string | undefined;
-            username?: string | undefined;
-            persistence?: boolean | undefined;
-            status?: string | undefined;
-        } & {
-            user_id?: string | undefined;
-            session_id?: string | undefined;
-            username?: string | undefined;
-            persistence?: boolean | undefined;
-            status?: string | undefined;
-        } & { [K_2 in Exclude<keyof I_1["presence"], keyof UserPresence>]: never; }) | undefined;
-        op_code?: number | undefined;
-        data?: Uint8Array | undefined;
-    } & { [K_3 in Exclude<keyof I_1, keyof PartyData>]: never; }>(object: I_1): PartyData;
-};
-export declare const PartyDataSend: {
-    encode(message: PartyDataSend, writer?: _m0.Writer): _m0.Writer;
-    decode(input: _m0.Reader | Uint8Array, length?: number): PartyDataSend;
-    fromJSON(object: any): PartyDataSend;
-    toJSON(message: PartyDataSend): unknown;
-    create<I extends {
-        party_id?: string | undefined;
-        op_code?: number | undefined;
-        data?: Uint8Array | undefined;
-    } & {
-        party_id?: string | undefined;
-        op_code?: number | undefined;
-        data?: Uint8Array | undefined;
-    } & { [K in Exclude<keyof I, keyof PartyDataSend>]: never; }>(base?: I | undefined): PartyDataSend;
-    fromPartial<I_1 extends {
-        party_id?: string | undefined;
-        op_code?: number | undefined;
-        data?: Uint8Array | undefined;
-    } & {
-        party_id?: string | undefined;
-        op_code?: number | undefined;
-        data?: Uint8Array | undefined;
-    } & { [K_1 in Exclude<keyof I_1, keyof PartyDataSend>]: never; }>(object: I_1): PartyDataSend;
-};
-export declare const PartyPresenceEvent: {
-    encode(message: PartyPresenceEvent, writer?: _m0.Writer): _m0.Writer;
-    decode(input: _m0.Reader | Uint8Array, length?: number): PartyPresenceEvent;
-    fromJSON(object: any): PartyPresenceEvent;
-    toJSON(message: PartyPresenceEvent): unknown;
-    create<I extends {
-        party_id?: string | undefined;
-        joins?: {
-            user_id?: string | undefined;
-            session_id?: string | undefined;
-            username?: string | undefined;
-            persistence?: boolean | undefined;
-            status?: string | undefined;
-        }[] | undefined;
-        leaves?: {
-            user_id?: string | undefined;
-            session_id?: string | undefined;
-            username?: string | undefined;
-            persistence?: boolean | undefined;
-            status?: string | undefined;
-        }[] | undefined;
-    } & {
-        party_id?: string | undefined;
-        joins?: ({
-            user_id?: string | undefined;
-            session_id?: string | undefined;
-            username?: string | undefined;
-            persistence?: boolean | undefined;
-            status?: string | undefined;
-        }[] & ({
-            user_id?: string | undefined;
-            session_id?: string | undefined;
-            username?: string | undefined;
-            persistence?: boolean | undefined;
-            status?: string | undefined;
-        } & {
-            user_id?: string | undefined;
-            session_id?: string | undefined;
-            username?: string | undefined;
-            persistence?: boolean | undefined;
-            status?: string | undefined;
-        } & { [K in Exclude<keyof I["joins"][number], keyof UserPresence>]: never; })[] & { [K_1 in Exclude<keyof I["joins"], keyof {
-            user_id?: string | undefined;
-            session_id?: string | undefined;
-            username?: string | undefined;
-            persistence?: boolean | undefined;
-            status?: string | undefined;
-        }[]>]: never; }) | undefined;
-        leaves?: ({
-            user_id?: string | undefined;
-            session_id?: string | undefined;
-            username?: string | undefined;
-            persistence?: boolean | undefined;
-            status?: string | undefined;
-        }[] & ({
-            user_id?: string | undefined;
-            session_id?: string | undefined;
-            username?: string | undefined;
-            persistence?: boolean | undefined;
-            status?: string | undefined;
-        } & {
-            user_id?: string | undefined;
-            session_id?: string | undefined;
-            username?: string | undefined;
-            persistence?: boolean | undefined;
-            status?: string | undefined;
-        } & { [K_2 in Exclude<keyof I["leaves"][number], keyof UserPresence>]: never; })[] & { [K_3 in Exclude<keyof I["leaves"], keyof {
-            user_id?: string | undefined;
-            session_id?: string | undefined;
-            username?: string | undefined;
-            persistence?: boolean | undefined;
-            status?: string | undefined;
-        }[]>]: never; }) | undefined;
-    } & { [K_4 in Exclude<keyof I, keyof PartyPresenceEvent>]: never; }>(base?: I | undefined): PartyPresenceEvent;
-    fromPartial<I_1 extends {
-        party_id?: string | undefined;
-        joins?: {
-            user_id?: string | undefined;
-            session_id?: string | undefined;
-            username?: string | undefined;
-            persistence?: boolean | undefined;
-            status?: string | undefined;
-        }[] | undefined;
-        leaves?: {
-            user_id?: string | undefined;
-            session_id?: string | undefined;
-            username?: string | undefined;
-            persistence?: boolean | undefined;
-            status?: string | undefined;
-        }[] | undefined;
-    } & {
-        party_id?: string | undefined;
-        joins?: ({
-            user_id?: string | undefined;
-            session_id?: string | undefined;
-            username?: string | undefined;
-            persistence?: boolean | undefined;
-            status?: string | undefined;
-        }[] & ({
-            user_id?: string | undefined;
-            session_id?: string | undefined;
-            username?: string | undefined;
-            persistence?: boolean | undefined;
-            status?: string | undefined;
-        } & {
-            user_id?: string | undefined;
-            session_id?: string | undefined;
-            username?: string | undefined;
-            persistence?: boolean | undefined;
-            status?: string | undefined;
-        } & { [K_5 in Exclude<keyof I_1["joins"][number], keyof UserPresence>]: never; })[] & { [K_6 in Exclude<keyof I_1["joins"], keyof {
-            user_id?: string | undefined;
-            session_id?: string | undefined;
-            username?: string | undefined;
-            persistence?: boolean | undefined;
-            status?: string | undefined;
-        }[]>]: never; }) | undefined;
-        leaves?: ({
-            user_id?: string | undefined;
-            session_id?: string | undefined;
-            username?: string | undefined;
-            persistence?: boolean | undefined;
-            status?: string | undefined;
-        }[] & ({
-            user_id?: string | undefined;
-            session_id?: string | undefined;
-            username?: string | undefined;
-            persistence?: boolean | undefined;
-            status?: string | undefined;
-        } & {
-            user_id?: string | undefined;
-            session_id?: string | undefined;
-            username?: string | undefined;
-            persistence?: boolean | undefined;
-            status?: string | undefined;
-        } & { [K_7 in Exclude<keyof I_1["leaves"][number], keyof UserPresence>]: never; })[] & { [K_8 in Exclude<keyof I_1["leaves"], keyof {
-            user_id?: string | undefined;
-            session_id?: string | undefined;
-            username?: string | undefined;
-            persistence?: boolean | undefined;
-            status?: string | undefined;
-        }[]>]: never; }) | undefined;
-    } & { [K_9 in Exclude<keyof I_1, keyof PartyPresenceEvent>]: never; }>(object: I_1): PartyPresenceEvent;
 };
 export declare const Ping: {
     encode(_: Ping, writer?: _m0.Writer): _m0.Writer;
@@ -6216,26 +4039,22 @@ export declare const LastSeenMessageEvent: {
     toJSON(message: LastSeenMessageEvent): unknown;
     create<I extends {
         channel_id?: string | undefined;
-        channel_label?: string | undefined;
         message_id?: string | undefined;
         mode?: number | undefined;
         timestamp?: string | undefined;
     } & {
         channel_id?: string | undefined;
-        channel_label?: string | undefined;
         message_id?: string | undefined;
         mode?: number | undefined;
         timestamp?: string | undefined;
     } & { [K in Exclude<keyof I, keyof LastSeenMessageEvent>]: never; }>(base?: I | undefined): LastSeenMessageEvent;
     fromPartial<I_1 extends {
         channel_id?: string | undefined;
-        channel_label?: string | undefined;
         message_id?: string | undefined;
         mode?: number | undefined;
         timestamp?: string | undefined;
     } & {
         channel_id?: string | undefined;
-        channel_label?: string | undefined;
         message_id?: string | undefined;
         mode?: number | undefined;
         timestamp?: string | undefined;
@@ -6248,23 +4067,19 @@ export declare const MessageTypingEvent: {
     toJSON(message: MessageTypingEvent): unknown;
     create<I extends {
         channel_id?: string | undefined;
-        channel_label?: string | undefined;
         sender_id?: string | undefined;
         mode?: number | undefined;
     } & {
         channel_id?: string | undefined;
-        channel_label?: string | undefined;
         sender_id?: string | undefined;
         mode?: number | undefined;
     } & { [K in Exclude<keyof I, keyof MessageTypingEvent>]: never; }>(base?: I | undefined): MessageTypingEvent;
     fromPartial<I_1 extends {
         channel_id?: string | undefined;
-        channel_label?: string | undefined;
         sender_id?: string | undefined;
         mode?: number | undefined;
     } & {
         channel_id?: string | undefined;
-        channel_label?: string | undefined;
         sender_id?: string | undefined;
         mode?: number | undefined;
     } & { [K_1 in Exclude<keyof I_1, keyof MessageTypingEvent>]: never; }>(object: I_1): MessageTypingEvent;
@@ -6276,7 +4091,6 @@ export declare const MessageMentionEvent: {
     toJSON(message: MessageMentionEvent): unknown;
     create<I extends {
         channel_id?: string | undefined;
-        channel_label?: string | undefined;
         message_id?: string | undefined;
         user_id?: string | undefined;
         username?: string | undefined;
@@ -6284,7 +4098,6 @@ export declare const MessageMentionEvent: {
         mode?: number | undefined;
     } & {
         channel_id?: string | undefined;
-        channel_label?: string | undefined;
         message_id?: string | undefined;
         user_id?: string | undefined;
         username?: string | undefined;
@@ -6293,7 +4106,6 @@ export declare const MessageMentionEvent: {
     } & { [K in Exclude<keyof I, keyof MessageMentionEvent>]: never; }>(base?: I | undefined): MessageMentionEvent;
     fromPartial<I_1 extends {
         channel_id?: string | undefined;
-        channel_label?: string | undefined;
         message_id?: string | undefined;
         user_id?: string | undefined;
         username?: string | undefined;
@@ -6301,7 +4113,6 @@ export declare const MessageMentionEvent: {
         mode?: number | undefined;
     } & {
         channel_id?: string | undefined;
-        channel_label?: string | undefined;
         message_id?: string | undefined;
         user_id?: string | undefined;
         username?: string | undefined;
@@ -6317,7 +4128,6 @@ export declare const MessageReactionEvent: {
     create<I extends {
         id?: string | undefined;
         channel_id?: string | undefined;
-        channel_label?: string | undefined;
         message_id?: string | undefined;
         sender_id?: string | undefined;
         sender_name?: string | undefined;
@@ -6330,7 +4140,6 @@ export declare const MessageReactionEvent: {
     } & {
         id?: string | undefined;
         channel_id?: string | undefined;
-        channel_label?: string | undefined;
         message_id?: string | undefined;
         sender_id?: string | undefined;
         sender_name?: string | undefined;
@@ -6344,7 +4153,6 @@ export declare const MessageReactionEvent: {
     fromPartial<I_1 extends {
         id?: string | undefined;
         channel_id?: string | undefined;
-        channel_label?: string | undefined;
         message_id?: string | undefined;
         sender_id?: string | undefined;
         sender_name?: string | undefined;
@@ -6357,7 +4165,6 @@ export declare const MessageReactionEvent: {
     } & {
         id?: string | undefined;
         channel_id?: string | undefined;
-        channel_label?: string | undefined;
         message_id?: string | undefined;
         sender_id?: string | undefined;
         sender_name?: string | undefined;
@@ -6376,7 +4183,6 @@ export declare const MessageAttachmentEvent: {
     toJSON(message: MessageAttachmentEvent): unknown;
     create<I extends {
         channel_id?: string | undefined;
-        channel_label?: string | undefined;
         message_id?: string | undefined;
         filename?: string | undefined;
         size?: number | undefined;
@@ -6388,7 +4194,6 @@ export declare const MessageAttachmentEvent: {
         mode?: number | undefined;
     } & {
         channel_id?: string | undefined;
-        channel_label?: string | undefined;
         message_id?: string | undefined;
         filename?: string | undefined;
         size?: number | undefined;
@@ -6401,7 +4206,6 @@ export declare const MessageAttachmentEvent: {
     } & { [K in Exclude<keyof I, keyof MessageAttachmentEvent>]: never; }>(base?: I | undefined): MessageAttachmentEvent;
     fromPartial<I_1 extends {
         channel_id?: string | undefined;
-        channel_label?: string | undefined;
         message_id?: string | undefined;
         filename?: string | undefined;
         size?: number | undefined;
@@ -6413,7 +4217,6 @@ export declare const MessageAttachmentEvent: {
         mode?: number | undefined;
     } & {
         channel_id?: string | undefined;
-        channel_label?: string | undefined;
         message_id?: string | undefined;
         filename?: string | undefined;
         size?: number | undefined;
