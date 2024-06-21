@@ -3014,20 +3014,6 @@ function createBaseEnvelope() {
     stream_presence_event: void 0,
     ping: void 0,
     pong: void 0,
-    party: void 0,
-    party_create: void 0,
-    party_join: void 0,
-    party_leave: void 0,
-    party_promote: void 0,
-    party_leader: void 0,
-    party_accept: void 0,
-    party_remove: void 0,
-    party_close: void 0,
-    party_join_request_list: void 0,
-    party_join_request: void 0,
-    party_data: void 0,
-    party_data_send: void 0,
-    party_presence_event: void 0,
     message_typing_event: void 0,
     last_seen_message_event: void 0,
     message_reaction_event: void 0,
@@ -3111,77 +3097,35 @@ var Envelope = {
     if (message.pong !== void 0) {
       Pong.encode(message.pong, writer.uint32(186).fork()).ldelim();
     }
-    if (message.party !== void 0) {
-      Party.encode(message.party, writer.uint32(194).fork()).ldelim();
-    }
-    if (message.party_create !== void 0) {
-      PartyCreate.encode(message.party_create, writer.uint32(202).fork()).ldelim();
-    }
-    if (message.party_join !== void 0) {
-      PartyJoin.encode(message.party_join, writer.uint32(210).fork()).ldelim();
-    }
-    if (message.party_leave !== void 0) {
-      PartyLeave.encode(message.party_leave, writer.uint32(218).fork()).ldelim();
-    }
-    if (message.party_promote !== void 0) {
-      PartyPromote.encode(message.party_promote, writer.uint32(226).fork()).ldelim();
-    }
-    if (message.party_leader !== void 0) {
-      PartyLeader.encode(message.party_leader, writer.uint32(234).fork()).ldelim();
-    }
-    if (message.party_accept !== void 0) {
-      PartyAccept.encode(message.party_accept, writer.uint32(242).fork()).ldelim();
-    }
-    if (message.party_remove !== void 0) {
-      PartyRemove.encode(message.party_remove, writer.uint32(250).fork()).ldelim();
-    }
-    if (message.party_close !== void 0) {
-      PartyClose.encode(message.party_close, writer.uint32(258).fork()).ldelim();
-    }
-    if (message.party_join_request_list !== void 0) {
-      PartyJoinRequestList.encode(message.party_join_request_list, writer.uint32(266).fork()).ldelim();
-    }
-    if (message.party_join_request !== void 0) {
-      PartyJoinRequest.encode(message.party_join_request, writer.uint32(274).fork()).ldelim();
-    }
-    if (message.party_data !== void 0) {
-      PartyData.encode(message.party_data, writer.uint32(282).fork()).ldelim();
-    }
-    if (message.party_data_send !== void 0) {
-      PartyDataSend.encode(message.party_data_send, writer.uint32(290).fork()).ldelim();
-    }
-    if (message.party_presence_event !== void 0) {
-      PartyPresenceEvent.encode(message.party_presence_event, writer.uint32(298).fork()).ldelim();
-    }
     if (message.message_typing_event !== void 0) {
-      MessageTypingEvent.encode(message.message_typing_event, writer.uint32(306).fork()).ldelim();
+      MessageTypingEvent.encode(message.message_typing_event, writer.uint32(194).fork()).ldelim();
     }
     if (message.last_seen_message_event !== void 0) {
-      LastSeenMessageEvent.encode(message.last_seen_message_event, writer.uint32(314).fork()).ldelim();
+      LastSeenMessageEvent.encode(message.last_seen_message_event, writer.uint32(202).fork()).ldelim();
     }
     if (message.message_reaction_event !== void 0) {
-      MessageReactionEvent.encode(message.message_reaction_event, writer.uint32(322).fork()).ldelim();
+      MessageReactionEvent.encode(message.message_reaction_event, writer.uint32(210).fork()).ldelim();
     }
     if (message.voice_joined_event !== void 0) {
-      VoiceJoinedEvent.encode(message.voice_joined_event, writer.uint32(330).fork()).ldelim();
+      VoiceJoinedEvent.encode(message.voice_joined_event, writer.uint32(218).fork()).ldelim();
     }
     if (message.voice_leaved_event !== void 0) {
-      VoiceLeavedEvent.encode(message.voice_leaved_event, writer.uint32(338).fork()).ldelim();
+      VoiceLeavedEvent.encode(message.voice_leaved_event, writer.uint32(226).fork()).ldelim();
     }
     if (message.voice_started_event !== void 0) {
-      VoiceStartedEvent.encode(message.voice_started_event, writer.uint32(346).fork()).ldelim();
+      VoiceStartedEvent.encode(message.voice_started_event, writer.uint32(234).fork()).ldelim();
     }
     if (message.voice_ended_event !== void 0) {
-      VoiceEndedEvent.encode(message.voice_ended_event, writer.uint32(354).fork()).ldelim();
+      VoiceEndedEvent.encode(message.voice_ended_event, writer.uint32(242).fork()).ldelim();
     }
     if (message.channel_created_event !== void 0) {
-      ChannelCreatedEvent.encode(message.channel_created_event, writer.uint32(362).fork()).ldelim();
+      ChannelCreatedEvent.encode(message.channel_created_event, writer.uint32(250).fork()).ldelim();
     }
     if (message.channel_deleted_event !== void 0) {
-      ChannelDeletedEvent.encode(message.channel_deleted_event, writer.uint32(370).fork()).ldelim();
+      ChannelDeletedEvent.encode(message.channel_deleted_event, writer.uint32(258).fork()).ldelim();
     }
     if (message.channel_updated_event !== void 0) {
-      ChannelUpdatedEvent.encode(message.channel_updated_event, writer.uint32(378).fork()).ldelim();
+      ChannelUpdatedEvent.encode(message.channel_updated_event, writer.uint32(266).fork()).ldelim();
     }
     return writer;
   },
@@ -3262,75 +3206,33 @@ var Envelope = {
           message.pong = Pong.decode(reader, reader.uint32());
           break;
         case 24:
-          message.party = Party.decode(reader, reader.uint32());
-          break;
-        case 25:
-          message.party_create = PartyCreate.decode(reader, reader.uint32());
-          break;
-        case 26:
-          message.party_join = PartyJoin.decode(reader, reader.uint32());
-          break;
-        case 27:
-          message.party_leave = PartyLeave.decode(reader, reader.uint32());
-          break;
-        case 28:
-          message.party_promote = PartyPromote.decode(reader, reader.uint32());
-          break;
-        case 29:
-          message.party_leader = PartyLeader.decode(reader, reader.uint32());
-          break;
-        case 30:
-          message.party_accept = PartyAccept.decode(reader, reader.uint32());
-          break;
-        case 31:
-          message.party_remove = PartyRemove.decode(reader, reader.uint32());
-          break;
-        case 32:
-          message.party_close = PartyClose.decode(reader, reader.uint32());
-          break;
-        case 33:
-          message.party_join_request_list = PartyJoinRequestList.decode(reader, reader.uint32());
-          break;
-        case 34:
-          message.party_join_request = PartyJoinRequest.decode(reader, reader.uint32());
-          break;
-        case 35:
-          message.party_data = PartyData.decode(reader, reader.uint32());
-          break;
-        case 36:
-          message.party_data_send = PartyDataSend.decode(reader, reader.uint32());
-          break;
-        case 37:
-          message.party_presence_event = PartyPresenceEvent.decode(reader, reader.uint32());
-          break;
-        case 38:
           message.message_typing_event = MessageTypingEvent.decode(reader, reader.uint32());
           break;
-        case 39:
+        case 25:
           message.last_seen_message_event = LastSeenMessageEvent.decode(reader, reader.uint32());
           break;
-        case 40:
+        case 26:
           message.message_reaction_event = MessageReactionEvent.decode(reader, reader.uint32());
           break;
-        case 41:
+        case 27:
           message.voice_joined_event = VoiceJoinedEvent.decode(reader, reader.uint32());
           break;
-        case 42:
+        case 28:
           message.voice_leaved_event = VoiceLeavedEvent.decode(reader, reader.uint32());
           break;
-        case 43:
+        case 29:
           message.voice_started_event = VoiceStartedEvent.decode(reader, reader.uint32());
           break;
-        case 44:
+        case 30:
           message.voice_ended_event = VoiceEndedEvent.decode(reader, reader.uint32());
           break;
-        case 45:
+        case 31:
           message.channel_created_event = ChannelCreatedEvent.decode(reader, reader.uint32());
           break;
-        case 46:
+        case 32:
           message.channel_deleted_event = ChannelDeletedEvent.decode(reader, reader.uint32());
           break;
-        case 47:
+        case 33:
           message.channel_updated_event = ChannelUpdatedEvent.decode(reader, reader.uint32());
           break;
         default:
@@ -3365,20 +3267,6 @@ var Envelope = {
       stream_presence_event: isSet4(object.stream_presence_event) ? StreamPresenceEvent.fromJSON(object.stream_presence_event) : void 0,
       ping: isSet4(object.ping) ? Ping.fromJSON(object.ping) : void 0,
       pong: isSet4(object.pong) ? Pong.fromJSON(object.pong) : void 0,
-      party: isSet4(object.party) ? Party.fromJSON(object.party) : void 0,
-      party_create: isSet4(object.party_create) ? PartyCreate.fromJSON(object.party_create) : void 0,
-      party_join: isSet4(object.party_join) ? PartyJoin.fromJSON(object.party_join) : void 0,
-      party_leave: isSet4(object.party_leave) ? PartyLeave.fromJSON(object.party_leave) : void 0,
-      party_promote: isSet4(object.party_promote) ? PartyPromote.fromJSON(object.party_promote) : void 0,
-      party_leader: isSet4(object.party_leader) ? PartyLeader.fromJSON(object.party_leader) : void 0,
-      party_accept: isSet4(object.party_accept) ? PartyAccept.fromJSON(object.party_accept) : void 0,
-      party_remove: isSet4(object.party_remove) ? PartyRemove.fromJSON(object.party_remove) : void 0,
-      party_close: isSet4(object.party_close) ? PartyClose.fromJSON(object.party_close) : void 0,
-      party_join_request_list: isSet4(object.party_join_request_list) ? PartyJoinRequestList.fromJSON(object.party_join_request_list) : void 0,
-      party_join_request: isSet4(object.party_join_request) ? PartyJoinRequest.fromJSON(object.party_join_request) : void 0,
-      party_data: isSet4(object.party_data) ? PartyData.fromJSON(object.party_data) : void 0,
-      party_data_send: isSet4(object.party_data_send) ? PartyDataSend.fromJSON(object.party_data_send) : void 0,
-      party_presence_event: isSet4(object.party_presence_event) ? PartyPresenceEvent.fromJSON(object.party_presence_event) : void 0,
       message_typing_event: isSet4(object.message_typing_event) ? MessageTypingEvent.fromJSON(object.message_typing_event) : void 0,
       last_seen_message_event: isSet4(object.last_seen_message_event) ? LastSeenMessageEvent.fromJSON(object.last_seen_message_event) : void 0,
       message_reaction_event: isSet4(object.message_reaction_event) ? MessageReactionEvent.fromJSON(object.message_reaction_event) : void 0,
@@ -3416,20 +3304,6 @@ var Envelope = {
     message.stream_presence_event !== void 0 && (obj.stream_presence_event = message.stream_presence_event ? StreamPresenceEvent.toJSON(message.stream_presence_event) : void 0);
     message.ping !== void 0 && (obj.ping = message.ping ? Ping.toJSON(message.ping) : void 0);
     message.pong !== void 0 && (obj.pong = message.pong ? Pong.toJSON(message.pong) : void 0);
-    message.party !== void 0 && (obj.party = message.party ? Party.toJSON(message.party) : void 0);
-    message.party_create !== void 0 && (obj.party_create = message.party_create ? PartyCreate.toJSON(message.party_create) : void 0);
-    message.party_join !== void 0 && (obj.party_join = message.party_join ? PartyJoin.toJSON(message.party_join) : void 0);
-    message.party_leave !== void 0 && (obj.party_leave = message.party_leave ? PartyLeave.toJSON(message.party_leave) : void 0);
-    message.party_promote !== void 0 && (obj.party_promote = message.party_promote ? PartyPromote.toJSON(message.party_promote) : void 0);
-    message.party_leader !== void 0 && (obj.party_leader = message.party_leader ? PartyLeader.toJSON(message.party_leader) : void 0);
-    message.party_accept !== void 0 && (obj.party_accept = message.party_accept ? PartyAccept.toJSON(message.party_accept) : void 0);
-    message.party_remove !== void 0 && (obj.party_remove = message.party_remove ? PartyRemove.toJSON(message.party_remove) : void 0);
-    message.party_close !== void 0 && (obj.party_close = message.party_close ? PartyClose.toJSON(message.party_close) : void 0);
-    message.party_join_request_list !== void 0 && (obj.party_join_request_list = message.party_join_request_list ? PartyJoinRequestList.toJSON(message.party_join_request_list) : void 0);
-    message.party_join_request !== void 0 && (obj.party_join_request = message.party_join_request ? PartyJoinRequest.toJSON(message.party_join_request) : void 0);
-    message.party_data !== void 0 && (obj.party_data = message.party_data ? PartyData.toJSON(message.party_data) : void 0);
-    message.party_data_send !== void 0 && (obj.party_data_send = message.party_data_send ? PartyDataSend.toJSON(message.party_data_send) : void 0);
-    message.party_presence_event !== void 0 && (obj.party_presence_event = message.party_presence_event ? PartyPresenceEvent.toJSON(message.party_presence_event) : void 0);
     message.message_typing_event !== void 0 && (obj.message_typing_event = message.message_typing_event ? MessageTypingEvent.toJSON(message.message_typing_event) : void 0);
     message.last_seen_message_event !== void 0 && (obj.last_seen_message_event = message.last_seen_message_event ? LastSeenMessageEvent.toJSON(message.last_seen_message_event) : void 0);
     message.message_reaction_event !== void 0 && (obj.message_reaction_event = message.message_reaction_event ? MessageReactionEvent.toJSON(message.message_reaction_event) : void 0);
@@ -3471,20 +3345,6 @@ var Envelope = {
     message.stream_presence_event = object.stream_presence_event !== void 0 && object.stream_presence_event !== null ? StreamPresenceEvent.fromPartial(object.stream_presence_event) : void 0;
     message.ping = object.ping !== void 0 && object.ping !== null ? Ping.fromPartial(object.ping) : void 0;
     message.pong = object.pong !== void 0 && object.pong !== null ? Pong.fromPartial(object.pong) : void 0;
-    message.party = object.party !== void 0 && object.party !== null ? Party.fromPartial(object.party) : void 0;
-    message.party_create = object.party_create !== void 0 && object.party_create !== null ? PartyCreate.fromPartial(object.party_create) : void 0;
-    message.party_join = object.party_join !== void 0 && object.party_join !== null ? PartyJoin.fromPartial(object.party_join) : void 0;
-    message.party_leave = object.party_leave !== void 0 && object.party_leave !== null ? PartyLeave.fromPartial(object.party_leave) : void 0;
-    message.party_promote = object.party_promote !== void 0 && object.party_promote !== null ? PartyPromote.fromPartial(object.party_promote) : void 0;
-    message.party_leader = object.party_leader !== void 0 && object.party_leader !== null ? PartyLeader.fromPartial(object.party_leader) : void 0;
-    message.party_accept = object.party_accept !== void 0 && object.party_accept !== null ? PartyAccept.fromPartial(object.party_accept) : void 0;
-    message.party_remove = object.party_remove !== void 0 && object.party_remove !== null ? PartyRemove.fromPartial(object.party_remove) : void 0;
-    message.party_close = object.party_close !== void 0 && object.party_close !== null ? PartyClose.fromPartial(object.party_close) : void 0;
-    message.party_join_request_list = object.party_join_request_list !== void 0 && object.party_join_request_list !== null ? PartyJoinRequestList.fromPartial(object.party_join_request_list) : void 0;
-    message.party_join_request = object.party_join_request !== void 0 && object.party_join_request !== null ? PartyJoinRequest.fromPartial(object.party_join_request) : void 0;
-    message.party_data = object.party_data !== void 0 && object.party_data !== null ? PartyData.fromPartial(object.party_data) : void 0;
-    message.party_data_send = object.party_data_send !== void 0 && object.party_data_send !== null ? PartyDataSend.fromPartial(object.party_data_send) : void 0;
-    message.party_presence_event = object.party_presence_event !== void 0 && object.party_presence_event !== null ? PartyPresenceEvent.fromPartial(object.party_presence_event) : void 0;
     message.message_typing_event = object.message_typing_event !== void 0 && object.message_typing_event !== null ? MessageTypingEvent.fromPartial(object.message_typing_event) : void 0;
     message.last_seen_message_event = object.last_seen_message_event !== void 0 && object.last_seen_message_event !== null ? LastSeenMessageEvent.fromPartial(object.last_seen_message_event) : void 0;
     message.message_reaction_event = object.message_reaction_event !== void 0 && object.message_reaction_event !== null ? MessageReactionEvent.fromPartial(object.message_reaction_event) : void 0;
@@ -3640,15 +3500,7 @@ var ClanJoin = {
   }
 };
 function createBaseChannelJoin() {
-  return {
-    clan_id: "",
-    channel_id: "",
-    channel_label: "",
-    type: 0,
-    persistence: void 0,
-    hidden: void 0,
-    mode: 0
-  };
+  return { clan_id: "", channel_id: "", type: 0, persistence: void 0, hidden: void 0, mode: 0 };
 }
 var ChannelJoin = {
   encode(message, writer = import_minimal4.default.Writer.create()) {
@@ -3658,20 +3510,17 @@ var ChannelJoin = {
     if (message.channel_id !== "") {
       writer.uint32(18).string(message.channel_id);
     }
-    if (message.channel_label !== "") {
-      writer.uint32(26).string(message.channel_label);
-    }
     if (message.type !== 0) {
-      writer.uint32(32).int32(message.type);
+      writer.uint32(24).int32(message.type);
     }
     if (message.persistence !== void 0) {
-      BoolValue.encode({ value: message.persistence }, writer.uint32(42).fork()).ldelim();
+      BoolValue.encode({ value: message.persistence }, writer.uint32(34).fork()).ldelim();
     }
     if (message.hidden !== void 0) {
-      BoolValue.encode({ value: message.hidden }, writer.uint32(50).fork()).ldelim();
+      BoolValue.encode({ value: message.hidden }, writer.uint32(42).fork()).ldelim();
     }
     if (message.mode !== 0) {
-      writer.uint32(56).int32(message.mode);
+      writer.uint32(48).int32(message.mode);
     }
     return writer;
   },
@@ -3689,18 +3538,15 @@ var ChannelJoin = {
           message.channel_id = reader.string();
           break;
         case 3:
-          message.channel_label = reader.string();
-          break;
-        case 4:
           message.type = reader.int32();
           break;
-        case 5:
+        case 4:
           message.persistence = BoolValue.decode(reader, reader.uint32()).value;
           break;
-        case 6:
+        case 5:
           message.hidden = BoolValue.decode(reader, reader.uint32()).value;
           break;
-        case 7:
+        case 6:
           message.mode = reader.int32();
           break;
         default:
@@ -3714,7 +3560,6 @@ var ChannelJoin = {
     return {
       clan_id: isSet4(object.clan_id) ? String(object.clan_id) : "",
       channel_id: isSet4(object.channel_id) ? String(object.channel_id) : "",
-      channel_label: isSet4(object.channel_label) ? String(object.channel_label) : "",
       type: isSet4(object.type) ? Number(object.type) : 0,
       persistence: isSet4(object.persistence) ? Boolean(object.persistence) : void 0,
       hidden: isSet4(object.hidden) ? Boolean(object.hidden) : void 0,
@@ -3725,7 +3570,6 @@ var ChannelJoin = {
     const obj = {};
     message.clan_id !== void 0 && (obj.clan_id = message.clan_id);
     message.channel_id !== void 0 && (obj.channel_id = message.channel_id);
-    message.channel_label !== void 0 && (obj.channel_label = message.channel_label);
     message.type !== void 0 && (obj.type = Math.round(message.type));
     message.persistence !== void 0 && (obj.persistence = message.persistence);
     message.hidden !== void 0 && (obj.hidden = message.hidden);
@@ -3736,31 +3580,27 @@ var ChannelJoin = {
     return ChannelJoin.fromPartial(base != null ? base : {});
   },
   fromPartial(object) {
-    var _a, _b, _c, _d, _e, _f, _g;
+    var _a, _b, _c, _d, _e, _f;
     const message = createBaseChannelJoin();
     message.clan_id = (_a = object.clan_id) != null ? _a : "";
     message.channel_id = (_b = object.channel_id) != null ? _b : "";
-    message.channel_label = (_c = object.channel_label) != null ? _c : "";
-    message.type = (_d = object.type) != null ? _d : 0;
-    message.persistence = (_e = object.persistence) != null ? _e : void 0;
-    message.hidden = (_f = object.hidden) != null ? _f : void 0;
-    message.mode = (_g = object.mode) != null ? _g : 0;
+    message.type = (_c = object.type) != null ? _c : 0;
+    message.persistence = (_d = object.persistence) != null ? _d : void 0;
+    message.hidden = (_e = object.hidden) != null ? _e : void 0;
+    message.mode = (_f = object.mode) != null ? _f : 0;
     return message;
   }
 };
 function createBaseChannelLeave() {
-  return { channel_id: "", channel_label: "", mode: 0 };
+  return { channel_id: "", mode: 0 };
 }
 var ChannelLeave = {
   encode(message, writer = import_minimal4.default.Writer.create()) {
     if (message.channel_id !== "") {
       writer.uint32(10).string(message.channel_id);
     }
-    if (message.channel_label !== "") {
-      writer.uint32(18).string(message.channel_label);
-    }
     if (message.mode !== 0) {
-      writer.uint32(24).int32(message.mode);
+      writer.uint32(16).int32(message.mode);
     }
     return writer;
   },
@@ -3775,9 +3615,6 @@ var ChannelLeave = {
           message.channel_id = reader.string();
           break;
         case 2:
-          message.channel_label = reader.string();
-          break;
-        case 3:
           message.mode = reader.int32();
           break;
         default:
@@ -3790,14 +3627,12 @@ var ChannelLeave = {
   fromJSON(object) {
     return {
       channel_id: isSet4(object.channel_id) ? String(object.channel_id) : "",
-      channel_label: isSet4(object.channel_label) ? String(object.channel_label) : "",
       mode: isSet4(object.mode) ? Number(object.mode) : 0
     };
   },
   toJSON(message) {
     const obj = {};
     message.channel_id !== void 0 && (obj.channel_id = message.channel_id);
-    message.channel_label !== void 0 && (obj.channel_label = message.channel_label);
     message.mode !== void 0 && (obj.mode = Math.round(message.mode));
     return obj;
   },
@@ -3805,11 +3640,10 @@ var ChannelLeave = {
     return ChannelLeave.fromPartial(base != null ? base : {});
   },
   fromPartial(object) {
-    var _a, _b, _c;
+    var _a, _b;
     const message = createBaseChannelLeave();
     message.channel_id = (_a = object.channel_id) != null ? _a : "";
-    message.channel_label = (_b = object.channel_label) != null ? _b : "";
-    message.mode = (_c = object.mode) != null ? _c : 0;
+    message.mode = (_b = object.mode) != null ? _b : 0;
     return message;
   }
 };
@@ -3822,7 +3656,6 @@ function createBaseChannelMessageAck() {
     create_time: void 0,
     update_time: void 0,
     persistent: void 0,
-    channel_label: "",
     user_id_one: "",
     user_id_two: ""
   };
@@ -3850,14 +3683,11 @@ var ChannelMessageAck = {
     if (message.persistent !== void 0) {
       BoolValue.encode({ value: message.persistent }, writer.uint32(58).fork()).ldelim();
     }
-    if (message.channel_label !== "") {
-      writer.uint32(66).string(message.channel_label);
-    }
     if (message.user_id_one !== "") {
-      writer.uint32(74).string(message.user_id_one);
+      writer.uint32(66).string(message.user_id_one);
     }
     if (message.user_id_two !== "") {
-      writer.uint32(82).string(message.user_id_two);
+      writer.uint32(74).string(message.user_id_two);
     }
     return writer;
   },
@@ -3890,12 +3720,9 @@ var ChannelMessageAck = {
           message.persistent = BoolValue.decode(reader, reader.uint32()).value;
           break;
         case 8:
-          message.channel_label = reader.string();
-          break;
-        case 9:
           message.user_id_one = reader.string();
           break;
-        case 10:
+        case 9:
           message.user_id_two = reader.string();
           break;
         default:
@@ -3914,7 +3741,6 @@ var ChannelMessageAck = {
       create_time: isSet4(object.create_time) ? fromJsonTimestamp2(object.create_time) : void 0,
       update_time: isSet4(object.update_time) ? fromJsonTimestamp2(object.update_time) : void 0,
       persistent: isSet4(object.persistent) ? Boolean(object.persistent) : void 0,
-      channel_label: isSet4(object.channel_label) ? String(object.channel_label) : "",
       user_id_one: isSet4(object.user_id_one) ? String(object.user_id_one) : "",
       user_id_two: isSet4(object.user_id_two) ? String(object.user_id_two) : ""
     };
@@ -3928,7 +3754,6 @@ var ChannelMessageAck = {
     message.create_time !== void 0 && (obj.create_time = message.create_time.toISOString());
     message.update_time !== void 0 && (obj.update_time = message.update_time.toISOString());
     message.persistent !== void 0 && (obj.persistent = message.persistent);
-    message.channel_label !== void 0 && (obj.channel_label = message.channel_label);
     message.user_id_one !== void 0 && (obj.user_id_one = message.user_id_one);
     message.user_id_two !== void 0 && (obj.user_id_two = message.user_id_two);
     return obj;
@@ -3937,7 +3762,7 @@ var ChannelMessageAck = {
     return ChannelMessageAck.fromPartial(base != null ? base : {});
   },
   fromPartial(object) {
-    var _a, _b, _c, _d, _e, _f, _g, _h, _i, _j;
+    var _a, _b, _c, _d, _e, _f, _g, _h, _i;
     const message = createBaseChannelMessageAck();
     message.channel_id = (_a = object.channel_id) != null ? _a : "";
     message.message_id = (_b = object.message_id) != null ? _b : "";
@@ -3946,9 +3771,8 @@ var ChannelMessageAck = {
     message.create_time = (_e = object.create_time) != null ? _e : void 0;
     message.update_time = (_f = object.update_time) != null ? _f : void 0;
     message.persistent = (_g = object.persistent) != null ? _g : void 0;
-    message.channel_label = (_h = object.channel_label) != null ? _h : "";
-    message.user_id_one = (_i = object.user_id_one) != null ? _i : "";
-    message.user_id_two = (_j = object.user_id_two) != null ? _j : "";
+    message.user_id_one = (_h = object.user_id_one) != null ? _h : "";
+    message.user_id_two = (_i = object.user_id_two) != null ? _i : "";
     return message;
   }
 };
@@ -4196,7 +4020,6 @@ function createBaseChannelMessageSend() {
   return {
     clan_id: "",
     channel_id: "",
-    channel_label: "",
     content: "",
     mentions: [],
     attachments: [],
@@ -4214,29 +4037,26 @@ var ChannelMessageSend = {
     if (message.channel_id !== "") {
       writer.uint32(18).string(message.channel_id);
     }
-    if (message.channel_label !== "") {
-      writer.uint32(26).string(message.channel_label);
-    }
     if (message.content !== "") {
-      writer.uint32(34).string(message.content);
+      writer.uint32(26).string(message.content);
     }
     for (const v of message.mentions) {
-      MessageMention.encode(v, writer.uint32(42).fork()).ldelim();
+      MessageMention.encode(v, writer.uint32(34).fork()).ldelim();
     }
     for (const v of message.attachments) {
-      MessageAttachment.encode(v, writer.uint32(50).fork()).ldelim();
+      MessageAttachment.encode(v, writer.uint32(42).fork()).ldelim();
     }
     for (const v of message.references) {
-      MessageRef.encode(v, writer.uint32(58).fork()).ldelim();
+      MessageRef.encode(v, writer.uint32(50).fork()).ldelim();
     }
     if (message.mode !== 0) {
-      writer.uint32(64).int32(message.mode);
+      writer.uint32(56).int32(message.mode);
     }
     if (message.anonymous_message === true) {
-      writer.uint32(72).bool(message.anonymous_message);
+      writer.uint32(64).bool(message.anonymous_message);
     }
     if (message.mention_everyone === true) {
-      writer.uint32(80).bool(message.mention_everyone);
+      writer.uint32(72).bool(message.mention_everyone);
     }
     return writer;
   },
@@ -4254,27 +4074,24 @@ var ChannelMessageSend = {
           message.channel_id = reader.string();
           break;
         case 3:
-          message.channel_label = reader.string();
-          break;
-        case 4:
           message.content = reader.string();
           break;
-        case 5:
+        case 4:
           message.mentions.push(MessageMention.decode(reader, reader.uint32()));
           break;
-        case 6:
+        case 5:
           message.attachments.push(MessageAttachment.decode(reader, reader.uint32()));
           break;
-        case 7:
+        case 6:
           message.references.push(MessageRef.decode(reader, reader.uint32()));
           break;
-        case 8:
+        case 7:
           message.mode = reader.int32();
           break;
-        case 9:
+        case 8:
           message.anonymous_message = reader.bool();
           break;
-        case 10:
+        case 9:
           message.mention_everyone = reader.bool();
           break;
         default:
@@ -4288,7 +4105,6 @@ var ChannelMessageSend = {
     return {
       clan_id: isSet4(object.clan_id) ? String(object.clan_id) : "",
       channel_id: isSet4(object.channel_id) ? String(object.channel_id) : "",
-      channel_label: isSet4(object.channel_label) ? String(object.channel_label) : "",
       content: isSet4(object.content) ? String(object.content) : "",
       mentions: Array.isArray(object == null ? void 0 : object.mentions) ? object.mentions.map((e) => MessageMention.fromJSON(e)) : [],
       attachments: Array.isArray(object == null ? void 0 : object.attachments) ? object.attachments.map((e) => MessageAttachment.fromJSON(e)) : [],
@@ -4302,7 +4118,6 @@ var ChannelMessageSend = {
     const obj = {};
     message.clan_id !== void 0 && (obj.clan_id = message.clan_id);
     message.channel_id !== void 0 && (obj.channel_id = message.channel_id);
-    message.channel_label !== void 0 && (obj.channel_label = message.channel_label);
     message.content !== void 0 && (obj.content = message.content);
     if (message.mentions) {
       obj.mentions = message.mentions.map((e) => e ? MessageMention.toJSON(e) : void 0);
@@ -4328,117 +4143,33 @@ var ChannelMessageSend = {
     return ChannelMessageSend.fromPartial(base != null ? base : {});
   },
   fromPartial(object) {
-    var _a, _b, _c, _d, _e, _f, _g, _h, _i, _j;
+    var _a, _b, _c, _d, _e, _f, _g, _h, _i;
     const message = createBaseChannelMessageSend();
     message.clan_id = (_a = object.clan_id) != null ? _a : "";
     message.channel_id = (_b = object.channel_id) != null ? _b : "";
-    message.channel_label = (_c = object.channel_label) != null ? _c : "";
-    message.content = (_d = object.content) != null ? _d : "";
-    message.mentions = ((_e = object.mentions) == null ? void 0 : _e.map((e) => MessageMention.fromPartial(e))) || [];
-    message.attachments = ((_f = object.attachments) == null ? void 0 : _f.map((e) => MessageAttachment.fromPartial(e))) || [];
-    message.references = ((_g = object.references) == null ? void 0 : _g.map((e) => MessageRef.fromPartial(e))) || [];
-    message.mode = (_h = object.mode) != null ? _h : 0;
-    message.anonymous_message = (_i = object.anonymous_message) != null ? _i : false;
-    message.mention_everyone = (_j = object.mention_everyone) != null ? _j : false;
+    message.content = (_c = object.content) != null ? _c : "";
+    message.mentions = ((_d = object.mentions) == null ? void 0 : _d.map((e) => MessageMention.fromPartial(e))) || [];
+    message.attachments = ((_e = object.attachments) == null ? void 0 : _e.map((e) => MessageAttachment.fromPartial(e))) || [];
+    message.references = ((_f = object.references) == null ? void 0 : _f.map((e) => MessageRef.fromPartial(e))) || [];
+    message.mode = (_g = object.mode) != null ? _g : 0;
+    message.anonymous_message = (_h = object.anonymous_message) != null ? _h : false;
+    message.mention_everyone = (_i = object.mention_everyone) != null ? _i : false;
     return message;
   }
 };
 function createBaseChannelMessageUpdate() {
-  return { channel_id: "", channel_label: "", message_id: "", content: "", mode: 0 };
+  return { channel_id: "", message_id: "", content: "", mode: 0 };
 }
 var ChannelMessageUpdate = {
   encode(message, writer = import_minimal4.default.Writer.create()) {
     if (message.channel_id !== "") {
       writer.uint32(10).string(message.channel_id);
     }
-    if (message.channel_label !== "") {
-      writer.uint32(18).string(message.channel_label);
-    }
     if (message.message_id !== "") {
-      writer.uint32(26).string(message.message_id);
+      writer.uint32(18).string(message.message_id);
     }
     if (message.content !== "") {
-      writer.uint32(34).string(message.content);
-    }
-    if (message.mode !== 0) {
-      writer.uint32(40).int32(message.mode);
-    }
-    return writer;
-  },
-  decode(input, length) {
-    const reader = input instanceof import_minimal4.default.Reader ? input : new import_minimal4.default.Reader(input);
-    let end = length === void 0 ? reader.len : reader.pos + length;
-    const message = createBaseChannelMessageUpdate();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
-          message.channel_id = reader.string();
-          break;
-        case 2:
-          message.channel_label = reader.string();
-          break;
-        case 3:
-          message.message_id = reader.string();
-          break;
-        case 4:
-          message.content = reader.string();
-          break;
-        case 5:
-          message.mode = reader.int32();
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
-      }
-    }
-    return message;
-  },
-  fromJSON(object) {
-    return {
-      channel_id: isSet4(object.channel_id) ? String(object.channel_id) : "",
-      channel_label: isSet4(object.channel_label) ? String(object.channel_label) : "",
-      message_id: isSet4(object.message_id) ? String(object.message_id) : "",
-      content: isSet4(object.content) ? String(object.content) : "",
-      mode: isSet4(object.mode) ? Number(object.mode) : 0
-    };
-  },
-  toJSON(message) {
-    const obj = {};
-    message.channel_id !== void 0 && (obj.channel_id = message.channel_id);
-    message.channel_label !== void 0 && (obj.channel_label = message.channel_label);
-    message.message_id !== void 0 && (obj.message_id = message.message_id);
-    message.content !== void 0 && (obj.content = message.content);
-    message.mode !== void 0 && (obj.mode = Math.round(message.mode));
-    return obj;
-  },
-  create(base) {
-    return ChannelMessageUpdate.fromPartial(base != null ? base : {});
-  },
-  fromPartial(object) {
-    var _a, _b, _c, _d, _e;
-    const message = createBaseChannelMessageUpdate();
-    message.channel_id = (_a = object.channel_id) != null ? _a : "";
-    message.channel_label = (_b = object.channel_label) != null ? _b : "";
-    message.message_id = (_c = object.message_id) != null ? _c : "";
-    message.content = (_d = object.content) != null ? _d : "";
-    message.mode = (_e = object.mode) != null ? _e : 0;
-    return message;
-  }
-};
-function createBaseChannelMessageRemove() {
-  return { channel_id: "", channel_label: "", message_id: "", mode: 0 };
-}
-var ChannelMessageRemove = {
-  encode(message, writer = import_minimal4.default.Writer.create()) {
-    if (message.channel_id !== "") {
-      writer.uint32(10).string(message.channel_id);
-    }
-    if (message.channel_label !== "") {
-      writer.uint32(18).string(message.channel_label);
-    }
-    if (message.message_id !== "") {
-      writer.uint32(26).string(message.message_id);
+      writer.uint32(26).string(message.content);
     }
     if (message.mode !== 0) {
       writer.uint32(32).int32(message.mode);
@@ -4448,7 +4179,7 @@ var ChannelMessageRemove = {
   decode(input, length) {
     const reader = input instanceof import_minimal4.default.Reader ? input : new import_minimal4.default.Reader(input);
     let end = length === void 0 ? reader.len : reader.pos + length;
-    const message = createBaseChannelMessageRemove();
+    const message = createBaseChannelMessageUpdate();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -4456,10 +4187,10 @@ var ChannelMessageRemove = {
           message.channel_id = reader.string();
           break;
         case 2:
-          message.channel_label = reader.string();
+          message.message_id = reader.string();
           break;
         case 3:
-          message.message_id = reader.string();
+          message.content = reader.string();
           break;
         case 4:
           message.mode = reader.int32();
@@ -4474,7 +4205,74 @@ var ChannelMessageRemove = {
   fromJSON(object) {
     return {
       channel_id: isSet4(object.channel_id) ? String(object.channel_id) : "",
-      channel_label: isSet4(object.channel_label) ? String(object.channel_label) : "",
+      message_id: isSet4(object.message_id) ? String(object.message_id) : "",
+      content: isSet4(object.content) ? String(object.content) : "",
+      mode: isSet4(object.mode) ? Number(object.mode) : 0
+    };
+  },
+  toJSON(message) {
+    const obj = {};
+    message.channel_id !== void 0 && (obj.channel_id = message.channel_id);
+    message.message_id !== void 0 && (obj.message_id = message.message_id);
+    message.content !== void 0 && (obj.content = message.content);
+    message.mode !== void 0 && (obj.mode = Math.round(message.mode));
+    return obj;
+  },
+  create(base) {
+    return ChannelMessageUpdate.fromPartial(base != null ? base : {});
+  },
+  fromPartial(object) {
+    var _a, _b, _c, _d;
+    const message = createBaseChannelMessageUpdate();
+    message.channel_id = (_a = object.channel_id) != null ? _a : "";
+    message.message_id = (_b = object.message_id) != null ? _b : "";
+    message.content = (_c = object.content) != null ? _c : "";
+    message.mode = (_d = object.mode) != null ? _d : 0;
+    return message;
+  }
+};
+function createBaseChannelMessageRemove() {
+  return { channel_id: "", message_id: "", mode: 0 };
+}
+var ChannelMessageRemove = {
+  encode(message, writer = import_minimal4.default.Writer.create()) {
+    if (message.channel_id !== "") {
+      writer.uint32(10).string(message.channel_id);
+    }
+    if (message.message_id !== "") {
+      writer.uint32(18).string(message.message_id);
+    }
+    if (message.mode !== 0) {
+      writer.uint32(24).int32(message.mode);
+    }
+    return writer;
+  },
+  decode(input, length) {
+    const reader = input instanceof import_minimal4.default.Reader ? input : new import_minimal4.default.Reader(input);
+    let end = length === void 0 ? reader.len : reader.pos + length;
+    const message = createBaseChannelMessageRemove();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.channel_id = reader.string();
+          break;
+        case 2:
+          message.message_id = reader.string();
+          break;
+        case 3:
+          message.mode = reader.int32();
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+  fromJSON(object) {
+    return {
+      channel_id: isSet4(object.channel_id) ? String(object.channel_id) : "",
       message_id: isSet4(object.message_id) ? String(object.message_id) : "",
       mode: isSet4(object.mode) ? Number(object.mode) : 0
     };
@@ -4482,7 +4280,6 @@ var ChannelMessageRemove = {
   toJSON(message) {
     const obj = {};
     message.channel_id !== void 0 && (obj.channel_id = message.channel_id);
-    message.channel_label !== void 0 && (obj.channel_label = message.channel_label);
     message.message_id !== void 0 && (obj.message_id = message.message_id);
     message.mode !== void 0 && (obj.mode = Math.round(message.mode));
     return obj;
@@ -4491,17 +4288,16 @@ var ChannelMessageRemove = {
     return ChannelMessageRemove.fromPartial(base != null ? base : {});
   },
   fromPartial(object) {
-    var _a, _b, _c, _d;
+    var _a, _b, _c;
     const message = createBaseChannelMessageRemove();
     message.channel_id = (_a = object.channel_id) != null ? _a : "";
-    message.channel_label = (_b = object.channel_label) != null ? _b : "";
-    message.message_id = (_c = object.message_id) != null ? _c : "";
-    message.mode = (_d = object.mode) != null ? _d : 0;
+    message.message_id = (_b = object.message_id) != null ? _b : "";
+    message.mode = (_c = object.mode) != null ? _c : 0;
     return message;
   }
 };
 function createBaseChannelPresenceEvent() {
-  return { channel_id: "", joins: [], leaves: [], channel_label: "", user_id_one: "", user_id_two: "", mode: 0 };
+  return { channel_id: "", joins: [], leaves: [], user_id_one: "", user_id_two: "", mode: 0 };
 }
 var ChannelPresenceEvent = {
   encode(message, writer = import_minimal4.default.Writer.create()) {
@@ -4514,17 +4310,14 @@ var ChannelPresenceEvent = {
     for (const v of message.leaves) {
       UserPresence.encode(v, writer.uint32(26).fork()).ldelim();
     }
-    if (message.channel_label !== "") {
-      writer.uint32(34).string(message.channel_label);
-    }
     if (message.user_id_one !== "") {
-      writer.uint32(42).string(message.user_id_one);
+      writer.uint32(34).string(message.user_id_one);
     }
     if (message.user_id_two !== "") {
-      writer.uint32(50).string(message.user_id_two);
+      writer.uint32(42).string(message.user_id_two);
     }
     if (message.mode !== 0) {
-      writer.uint32(56).int32(message.mode);
+      writer.uint32(48).int32(message.mode);
     }
     return writer;
   },
@@ -4545,15 +4338,12 @@ var ChannelPresenceEvent = {
           message.leaves.push(UserPresence.decode(reader, reader.uint32()));
           break;
         case 4:
-          message.channel_label = reader.string();
-          break;
-        case 5:
           message.user_id_one = reader.string();
           break;
-        case 6:
+        case 5:
           message.user_id_two = reader.string();
           break;
-        case 7:
+        case 6:
           message.mode = reader.int32();
           break;
         default:
@@ -4568,7 +4358,6 @@ var ChannelPresenceEvent = {
       channel_id: isSet4(object.channel_id) ? String(object.channel_id) : "",
       joins: Array.isArray(object == null ? void 0 : object.joins) ? object.joins.map((e) => UserPresence.fromJSON(e)) : [],
       leaves: Array.isArray(object == null ? void 0 : object.leaves) ? object.leaves.map((e) => UserPresence.fromJSON(e)) : [],
-      channel_label: isSet4(object.channel_label) ? String(object.channel_label) : "",
       user_id_one: isSet4(object.user_id_one) ? String(object.user_id_one) : "",
       user_id_two: isSet4(object.user_id_two) ? String(object.user_id_two) : "",
       mode: isSet4(object.mode) ? Number(object.mode) : 0
@@ -4587,7 +4376,6 @@ var ChannelPresenceEvent = {
     } else {
       obj.leaves = [];
     }
-    message.channel_label !== void 0 && (obj.channel_label = message.channel_label);
     message.user_id_one !== void 0 && (obj.user_id_one = message.user_id_one);
     message.user_id_two !== void 0 && (obj.user_id_two = message.user_id_two);
     message.mode !== void 0 && (obj.mode = Math.round(message.mode));
@@ -4597,15 +4385,14 @@ var ChannelPresenceEvent = {
     return ChannelPresenceEvent.fromPartial(base != null ? base : {});
   },
   fromPartial(object) {
-    var _a, _b, _c, _d, _e, _f, _g;
+    var _a, _b, _c, _d, _e, _f;
     const message = createBaseChannelPresenceEvent();
     message.channel_id = (_a = object.channel_id) != null ? _a : "";
     message.joins = ((_b = object.joins) == null ? void 0 : _b.map((e) => UserPresence.fromPartial(e))) || [];
     message.leaves = ((_c = object.leaves) == null ? void 0 : _c.map((e) => UserPresence.fromPartial(e))) || [];
-    message.channel_label = (_d = object.channel_label) != null ? _d : "";
-    message.user_id_one = (_e = object.user_id_one) != null ? _e : "";
-    message.user_id_two = (_f = object.user_id_two) != null ? _f : "";
-    message.mode = (_g = object.mode) != null ? _g : 0;
+    message.user_id_one = (_d = object.user_id_one) != null ? _d : "";
+    message.user_id_two = (_e = object.user_id_two) != null ? _e : "";
+    message.mode = (_f = object.mode) != null ? _f : 0;
     return message;
   }
 };
@@ -4791,834 +4578,6 @@ var Notifications = {
     var _a;
     const message = createBaseNotifications();
     message.notifications = ((_a = object.notifications) == null ? void 0 : _a.map((e) => Notification.fromPartial(e))) || [];
-    return message;
-  }
-};
-function createBaseParty() {
-  return { party_id: "", open: false, max_size: 0, self: void 0, leader: void 0, presences: [] };
-}
-var Party = {
-  encode(message, writer = import_minimal4.default.Writer.create()) {
-    if (message.party_id !== "") {
-      writer.uint32(10).string(message.party_id);
-    }
-    if (message.open === true) {
-      writer.uint32(16).bool(message.open);
-    }
-    if (message.max_size !== 0) {
-      writer.uint32(24).int32(message.max_size);
-    }
-    if (message.self !== void 0) {
-      UserPresence.encode(message.self, writer.uint32(34).fork()).ldelim();
-    }
-    if (message.leader !== void 0) {
-      UserPresence.encode(message.leader, writer.uint32(42).fork()).ldelim();
-    }
-    for (const v of message.presences) {
-      UserPresence.encode(v, writer.uint32(50).fork()).ldelim();
-    }
-    return writer;
-  },
-  decode(input, length) {
-    const reader = input instanceof import_minimal4.default.Reader ? input : new import_minimal4.default.Reader(input);
-    let end = length === void 0 ? reader.len : reader.pos + length;
-    const message = createBaseParty();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
-          message.party_id = reader.string();
-          break;
-        case 2:
-          message.open = reader.bool();
-          break;
-        case 3:
-          message.max_size = reader.int32();
-          break;
-        case 4:
-          message.self = UserPresence.decode(reader, reader.uint32());
-          break;
-        case 5:
-          message.leader = UserPresence.decode(reader, reader.uint32());
-          break;
-        case 6:
-          message.presences.push(UserPresence.decode(reader, reader.uint32()));
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
-      }
-    }
-    return message;
-  },
-  fromJSON(object) {
-    return {
-      party_id: isSet4(object.party_id) ? String(object.party_id) : "",
-      open: isSet4(object.open) ? Boolean(object.open) : false,
-      max_size: isSet4(object.max_size) ? Number(object.max_size) : 0,
-      self: isSet4(object.self) ? UserPresence.fromJSON(object.self) : void 0,
-      leader: isSet4(object.leader) ? UserPresence.fromJSON(object.leader) : void 0,
-      presences: Array.isArray(object == null ? void 0 : object.presences) ? object.presences.map((e) => UserPresence.fromJSON(e)) : []
-    };
-  },
-  toJSON(message) {
-    const obj = {};
-    message.party_id !== void 0 && (obj.party_id = message.party_id);
-    message.open !== void 0 && (obj.open = message.open);
-    message.max_size !== void 0 && (obj.max_size = Math.round(message.max_size));
-    message.self !== void 0 && (obj.self = message.self ? UserPresence.toJSON(message.self) : void 0);
-    message.leader !== void 0 && (obj.leader = message.leader ? UserPresence.toJSON(message.leader) : void 0);
-    if (message.presences) {
-      obj.presences = message.presences.map((e) => e ? UserPresence.toJSON(e) : void 0);
-    } else {
-      obj.presences = [];
-    }
-    return obj;
-  },
-  create(base) {
-    return Party.fromPartial(base != null ? base : {});
-  },
-  fromPartial(object) {
-    var _a, _b, _c, _d;
-    const message = createBaseParty();
-    message.party_id = (_a = object.party_id) != null ? _a : "";
-    message.open = (_b = object.open) != null ? _b : false;
-    message.max_size = (_c = object.max_size) != null ? _c : 0;
-    message.self = object.self !== void 0 && object.self !== null ? UserPresence.fromPartial(object.self) : void 0;
-    message.leader = object.leader !== void 0 && object.leader !== null ? UserPresence.fromPartial(object.leader) : void 0;
-    message.presences = ((_d = object.presences) == null ? void 0 : _d.map((e) => UserPresence.fromPartial(e))) || [];
-    return message;
-  }
-};
-function createBasePartyCreate() {
-  return { open: false, max_size: 0 };
-}
-var PartyCreate = {
-  encode(message, writer = import_minimal4.default.Writer.create()) {
-    if (message.open === true) {
-      writer.uint32(8).bool(message.open);
-    }
-    if (message.max_size !== 0) {
-      writer.uint32(16).int32(message.max_size);
-    }
-    return writer;
-  },
-  decode(input, length) {
-    const reader = input instanceof import_minimal4.default.Reader ? input : new import_minimal4.default.Reader(input);
-    let end = length === void 0 ? reader.len : reader.pos + length;
-    const message = createBasePartyCreate();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
-          message.open = reader.bool();
-          break;
-        case 2:
-          message.max_size = reader.int32();
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
-      }
-    }
-    return message;
-  },
-  fromJSON(object) {
-    return {
-      open: isSet4(object.open) ? Boolean(object.open) : false,
-      max_size: isSet4(object.max_size) ? Number(object.max_size) : 0
-    };
-  },
-  toJSON(message) {
-    const obj = {};
-    message.open !== void 0 && (obj.open = message.open);
-    message.max_size !== void 0 && (obj.max_size = Math.round(message.max_size));
-    return obj;
-  },
-  create(base) {
-    return PartyCreate.fromPartial(base != null ? base : {});
-  },
-  fromPartial(object) {
-    var _a, _b;
-    const message = createBasePartyCreate();
-    message.open = (_a = object.open) != null ? _a : false;
-    message.max_size = (_b = object.max_size) != null ? _b : 0;
-    return message;
-  }
-};
-function createBasePartyJoin() {
-  return { party_id: "" };
-}
-var PartyJoin = {
-  encode(message, writer = import_minimal4.default.Writer.create()) {
-    if (message.party_id !== "") {
-      writer.uint32(10).string(message.party_id);
-    }
-    return writer;
-  },
-  decode(input, length) {
-    const reader = input instanceof import_minimal4.default.Reader ? input : new import_minimal4.default.Reader(input);
-    let end = length === void 0 ? reader.len : reader.pos + length;
-    const message = createBasePartyJoin();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
-          message.party_id = reader.string();
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
-      }
-    }
-    return message;
-  },
-  fromJSON(object) {
-    return { party_id: isSet4(object.party_id) ? String(object.party_id) : "" };
-  },
-  toJSON(message) {
-    const obj = {};
-    message.party_id !== void 0 && (obj.party_id = message.party_id);
-    return obj;
-  },
-  create(base) {
-    return PartyJoin.fromPartial(base != null ? base : {});
-  },
-  fromPartial(object) {
-    var _a;
-    const message = createBasePartyJoin();
-    message.party_id = (_a = object.party_id) != null ? _a : "";
-    return message;
-  }
-};
-function createBasePartyLeave() {
-  return { party_id: "" };
-}
-var PartyLeave = {
-  encode(message, writer = import_minimal4.default.Writer.create()) {
-    if (message.party_id !== "") {
-      writer.uint32(10).string(message.party_id);
-    }
-    return writer;
-  },
-  decode(input, length) {
-    const reader = input instanceof import_minimal4.default.Reader ? input : new import_minimal4.default.Reader(input);
-    let end = length === void 0 ? reader.len : reader.pos + length;
-    const message = createBasePartyLeave();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
-          message.party_id = reader.string();
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
-      }
-    }
-    return message;
-  },
-  fromJSON(object) {
-    return { party_id: isSet4(object.party_id) ? String(object.party_id) : "" };
-  },
-  toJSON(message) {
-    const obj = {};
-    message.party_id !== void 0 && (obj.party_id = message.party_id);
-    return obj;
-  },
-  create(base) {
-    return PartyLeave.fromPartial(base != null ? base : {});
-  },
-  fromPartial(object) {
-    var _a;
-    const message = createBasePartyLeave();
-    message.party_id = (_a = object.party_id) != null ? _a : "";
-    return message;
-  }
-};
-function createBasePartyPromote() {
-  return { party_id: "", presence: void 0 };
-}
-var PartyPromote = {
-  encode(message, writer = import_minimal4.default.Writer.create()) {
-    if (message.party_id !== "") {
-      writer.uint32(10).string(message.party_id);
-    }
-    if (message.presence !== void 0) {
-      UserPresence.encode(message.presence, writer.uint32(18).fork()).ldelim();
-    }
-    return writer;
-  },
-  decode(input, length) {
-    const reader = input instanceof import_minimal4.default.Reader ? input : new import_minimal4.default.Reader(input);
-    let end = length === void 0 ? reader.len : reader.pos + length;
-    const message = createBasePartyPromote();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
-          message.party_id = reader.string();
-          break;
-        case 2:
-          message.presence = UserPresence.decode(reader, reader.uint32());
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
-      }
-    }
-    return message;
-  },
-  fromJSON(object) {
-    return {
-      party_id: isSet4(object.party_id) ? String(object.party_id) : "",
-      presence: isSet4(object.presence) ? UserPresence.fromJSON(object.presence) : void 0
-    };
-  },
-  toJSON(message) {
-    const obj = {};
-    message.party_id !== void 0 && (obj.party_id = message.party_id);
-    message.presence !== void 0 && (obj.presence = message.presence ? UserPresence.toJSON(message.presence) : void 0);
-    return obj;
-  },
-  create(base) {
-    return PartyPromote.fromPartial(base != null ? base : {});
-  },
-  fromPartial(object) {
-    var _a;
-    const message = createBasePartyPromote();
-    message.party_id = (_a = object.party_id) != null ? _a : "";
-    message.presence = object.presence !== void 0 && object.presence !== null ? UserPresence.fromPartial(object.presence) : void 0;
-    return message;
-  }
-};
-function createBasePartyLeader() {
-  return { party_id: "", presence: void 0 };
-}
-var PartyLeader = {
-  encode(message, writer = import_minimal4.default.Writer.create()) {
-    if (message.party_id !== "") {
-      writer.uint32(10).string(message.party_id);
-    }
-    if (message.presence !== void 0) {
-      UserPresence.encode(message.presence, writer.uint32(18).fork()).ldelim();
-    }
-    return writer;
-  },
-  decode(input, length) {
-    const reader = input instanceof import_minimal4.default.Reader ? input : new import_minimal4.default.Reader(input);
-    let end = length === void 0 ? reader.len : reader.pos + length;
-    const message = createBasePartyLeader();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
-          message.party_id = reader.string();
-          break;
-        case 2:
-          message.presence = UserPresence.decode(reader, reader.uint32());
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
-      }
-    }
-    return message;
-  },
-  fromJSON(object) {
-    return {
-      party_id: isSet4(object.party_id) ? String(object.party_id) : "",
-      presence: isSet4(object.presence) ? UserPresence.fromJSON(object.presence) : void 0
-    };
-  },
-  toJSON(message) {
-    const obj = {};
-    message.party_id !== void 0 && (obj.party_id = message.party_id);
-    message.presence !== void 0 && (obj.presence = message.presence ? UserPresence.toJSON(message.presence) : void 0);
-    return obj;
-  },
-  create(base) {
-    return PartyLeader.fromPartial(base != null ? base : {});
-  },
-  fromPartial(object) {
-    var _a;
-    const message = createBasePartyLeader();
-    message.party_id = (_a = object.party_id) != null ? _a : "";
-    message.presence = object.presence !== void 0 && object.presence !== null ? UserPresence.fromPartial(object.presence) : void 0;
-    return message;
-  }
-};
-function createBasePartyAccept() {
-  return { party_id: "", presence: void 0 };
-}
-var PartyAccept = {
-  encode(message, writer = import_minimal4.default.Writer.create()) {
-    if (message.party_id !== "") {
-      writer.uint32(10).string(message.party_id);
-    }
-    if (message.presence !== void 0) {
-      UserPresence.encode(message.presence, writer.uint32(18).fork()).ldelim();
-    }
-    return writer;
-  },
-  decode(input, length) {
-    const reader = input instanceof import_minimal4.default.Reader ? input : new import_minimal4.default.Reader(input);
-    let end = length === void 0 ? reader.len : reader.pos + length;
-    const message = createBasePartyAccept();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
-          message.party_id = reader.string();
-          break;
-        case 2:
-          message.presence = UserPresence.decode(reader, reader.uint32());
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
-      }
-    }
-    return message;
-  },
-  fromJSON(object) {
-    return {
-      party_id: isSet4(object.party_id) ? String(object.party_id) : "",
-      presence: isSet4(object.presence) ? UserPresence.fromJSON(object.presence) : void 0
-    };
-  },
-  toJSON(message) {
-    const obj = {};
-    message.party_id !== void 0 && (obj.party_id = message.party_id);
-    message.presence !== void 0 && (obj.presence = message.presence ? UserPresence.toJSON(message.presence) : void 0);
-    return obj;
-  },
-  create(base) {
-    return PartyAccept.fromPartial(base != null ? base : {});
-  },
-  fromPartial(object) {
-    var _a;
-    const message = createBasePartyAccept();
-    message.party_id = (_a = object.party_id) != null ? _a : "";
-    message.presence = object.presence !== void 0 && object.presence !== null ? UserPresence.fromPartial(object.presence) : void 0;
-    return message;
-  }
-};
-function createBasePartyRemove() {
-  return { party_id: "", presence: void 0 };
-}
-var PartyRemove = {
-  encode(message, writer = import_minimal4.default.Writer.create()) {
-    if (message.party_id !== "") {
-      writer.uint32(10).string(message.party_id);
-    }
-    if (message.presence !== void 0) {
-      UserPresence.encode(message.presence, writer.uint32(18).fork()).ldelim();
-    }
-    return writer;
-  },
-  decode(input, length) {
-    const reader = input instanceof import_minimal4.default.Reader ? input : new import_minimal4.default.Reader(input);
-    let end = length === void 0 ? reader.len : reader.pos + length;
-    const message = createBasePartyRemove();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
-          message.party_id = reader.string();
-          break;
-        case 2:
-          message.presence = UserPresence.decode(reader, reader.uint32());
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
-      }
-    }
-    return message;
-  },
-  fromJSON(object) {
-    return {
-      party_id: isSet4(object.party_id) ? String(object.party_id) : "",
-      presence: isSet4(object.presence) ? UserPresence.fromJSON(object.presence) : void 0
-    };
-  },
-  toJSON(message) {
-    const obj = {};
-    message.party_id !== void 0 && (obj.party_id = message.party_id);
-    message.presence !== void 0 && (obj.presence = message.presence ? UserPresence.toJSON(message.presence) : void 0);
-    return obj;
-  },
-  create(base) {
-    return PartyRemove.fromPartial(base != null ? base : {});
-  },
-  fromPartial(object) {
-    var _a;
-    const message = createBasePartyRemove();
-    message.party_id = (_a = object.party_id) != null ? _a : "";
-    message.presence = object.presence !== void 0 && object.presence !== null ? UserPresence.fromPartial(object.presence) : void 0;
-    return message;
-  }
-};
-function createBasePartyClose() {
-  return { party_id: "" };
-}
-var PartyClose = {
-  encode(message, writer = import_minimal4.default.Writer.create()) {
-    if (message.party_id !== "") {
-      writer.uint32(10).string(message.party_id);
-    }
-    return writer;
-  },
-  decode(input, length) {
-    const reader = input instanceof import_minimal4.default.Reader ? input : new import_minimal4.default.Reader(input);
-    let end = length === void 0 ? reader.len : reader.pos + length;
-    const message = createBasePartyClose();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
-          message.party_id = reader.string();
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
-      }
-    }
-    return message;
-  },
-  fromJSON(object) {
-    return { party_id: isSet4(object.party_id) ? String(object.party_id) : "" };
-  },
-  toJSON(message) {
-    const obj = {};
-    message.party_id !== void 0 && (obj.party_id = message.party_id);
-    return obj;
-  },
-  create(base) {
-    return PartyClose.fromPartial(base != null ? base : {});
-  },
-  fromPartial(object) {
-    var _a;
-    const message = createBasePartyClose();
-    message.party_id = (_a = object.party_id) != null ? _a : "";
-    return message;
-  }
-};
-function createBasePartyJoinRequestList() {
-  return { party_id: "" };
-}
-var PartyJoinRequestList = {
-  encode(message, writer = import_minimal4.default.Writer.create()) {
-    if (message.party_id !== "") {
-      writer.uint32(10).string(message.party_id);
-    }
-    return writer;
-  },
-  decode(input, length) {
-    const reader = input instanceof import_minimal4.default.Reader ? input : new import_minimal4.default.Reader(input);
-    let end = length === void 0 ? reader.len : reader.pos + length;
-    const message = createBasePartyJoinRequestList();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
-          message.party_id = reader.string();
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
-      }
-    }
-    return message;
-  },
-  fromJSON(object) {
-    return { party_id: isSet4(object.party_id) ? String(object.party_id) : "" };
-  },
-  toJSON(message) {
-    const obj = {};
-    message.party_id !== void 0 && (obj.party_id = message.party_id);
-    return obj;
-  },
-  create(base) {
-    return PartyJoinRequestList.fromPartial(base != null ? base : {});
-  },
-  fromPartial(object) {
-    var _a;
-    const message = createBasePartyJoinRequestList();
-    message.party_id = (_a = object.party_id) != null ? _a : "";
-    return message;
-  }
-};
-function createBasePartyJoinRequest() {
-  return { party_id: "", presences: [] };
-}
-var PartyJoinRequest = {
-  encode(message, writer = import_minimal4.default.Writer.create()) {
-    if (message.party_id !== "") {
-      writer.uint32(10).string(message.party_id);
-    }
-    for (const v of message.presences) {
-      UserPresence.encode(v, writer.uint32(18).fork()).ldelim();
-    }
-    return writer;
-  },
-  decode(input, length) {
-    const reader = input instanceof import_minimal4.default.Reader ? input : new import_minimal4.default.Reader(input);
-    let end = length === void 0 ? reader.len : reader.pos + length;
-    const message = createBasePartyJoinRequest();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
-          message.party_id = reader.string();
-          break;
-        case 2:
-          message.presences.push(UserPresence.decode(reader, reader.uint32()));
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
-      }
-    }
-    return message;
-  },
-  fromJSON(object) {
-    return {
-      party_id: isSet4(object.party_id) ? String(object.party_id) : "",
-      presences: Array.isArray(object == null ? void 0 : object.presences) ? object.presences.map((e) => UserPresence.fromJSON(e)) : []
-    };
-  },
-  toJSON(message) {
-    const obj = {};
-    message.party_id !== void 0 && (obj.party_id = message.party_id);
-    if (message.presences) {
-      obj.presences = message.presences.map((e) => e ? UserPresence.toJSON(e) : void 0);
-    } else {
-      obj.presences = [];
-    }
-    return obj;
-  },
-  create(base) {
-    return PartyJoinRequest.fromPartial(base != null ? base : {});
-  },
-  fromPartial(object) {
-    var _a, _b;
-    const message = createBasePartyJoinRequest();
-    message.party_id = (_a = object.party_id) != null ? _a : "";
-    message.presences = ((_b = object.presences) == null ? void 0 : _b.map((e) => UserPresence.fromPartial(e))) || [];
-    return message;
-  }
-};
-function createBasePartyData() {
-  return { party_id: "", presence: void 0, op_code: 0, data: new Uint8Array() };
-}
-var PartyData = {
-  encode(message, writer = import_minimal4.default.Writer.create()) {
-    if (message.party_id !== "") {
-      writer.uint32(10).string(message.party_id);
-    }
-    if (message.presence !== void 0) {
-      UserPresence.encode(message.presence, writer.uint32(18).fork()).ldelim();
-    }
-    if (message.op_code !== 0) {
-      writer.uint32(24).int64(message.op_code);
-    }
-    if (message.data.length !== 0) {
-      writer.uint32(34).bytes(message.data);
-    }
-    return writer;
-  },
-  decode(input, length) {
-    const reader = input instanceof import_minimal4.default.Reader ? input : new import_minimal4.default.Reader(input);
-    let end = length === void 0 ? reader.len : reader.pos + length;
-    const message = createBasePartyData();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
-          message.party_id = reader.string();
-          break;
-        case 2:
-          message.presence = UserPresence.decode(reader, reader.uint32());
-          break;
-        case 3:
-          message.op_code = longToNumber2(reader.int64());
-          break;
-        case 4:
-          message.data = reader.bytes();
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
-      }
-    }
-    return message;
-  },
-  fromJSON(object) {
-    return {
-      party_id: isSet4(object.party_id) ? String(object.party_id) : "",
-      presence: isSet4(object.presence) ? UserPresence.fromJSON(object.presence) : void 0,
-      op_code: isSet4(object.op_code) ? Number(object.op_code) : 0,
-      data: isSet4(object.data) ? bytesFromBase64(object.data) : new Uint8Array()
-    };
-  },
-  toJSON(message) {
-    const obj = {};
-    message.party_id !== void 0 && (obj.party_id = message.party_id);
-    message.presence !== void 0 && (obj.presence = message.presence ? UserPresence.toJSON(message.presence) : void 0);
-    message.op_code !== void 0 && (obj.op_code = Math.round(message.op_code));
-    message.data !== void 0 && (obj.data = base64FromBytes(message.data !== void 0 ? message.data : new Uint8Array()));
-    return obj;
-  },
-  create(base) {
-    return PartyData.fromPartial(base != null ? base : {});
-  },
-  fromPartial(object) {
-    var _a, _b, _c;
-    const message = createBasePartyData();
-    message.party_id = (_a = object.party_id) != null ? _a : "";
-    message.presence = object.presence !== void 0 && object.presence !== null ? UserPresence.fromPartial(object.presence) : void 0;
-    message.op_code = (_b = object.op_code) != null ? _b : 0;
-    message.data = (_c = object.data) != null ? _c : new Uint8Array();
-    return message;
-  }
-};
-function createBasePartyDataSend() {
-  return { party_id: "", op_code: 0, data: new Uint8Array() };
-}
-var PartyDataSend = {
-  encode(message, writer = import_minimal4.default.Writer.create()) {
-    if (message.party_id !== "") {
-      writer.uint32(10).string(message.party_id);
-    }
-    if (message.op_code !== 0) {
-      writer.uint32(16).int64(message.op_code);
-    }
-    if (message.data.length !== 0) {
-      writer.uint32(26).bytes(message.data);
-    }
-    return writer;
-  },
-  decode(input, length) {
-    const reader = input instanceof import_minimal4.default.Reader ? input : new import_minimal4.default.Reader(input);
-    let end = length === void 0 ? reader.len : reader.pos + length;
-    const message = createBasePartyDataSend();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
-          message.party_id = reader.string();
-          break;
-        case 2:
-          message.op_code = longToNumber2(reader.int64());
-          break;
-        case 3:
-          message.data = reader.bytes();
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
-      }
-    }
-    return message;
-  },
-  fromJSON(object) {
-    return {
-      party_id: isSet4(object.party_id) ? String(object.party_id) : "",
-      op_code: isSet4(object.op_code) ? Number(object.op_code) : 0,
-      data: isSet4(object.data) ? bytesFromBase64(object.data) : new Uint8Array()
-    };
-  },
-  toJSON(message) {
-    const obj = {};
-    message.party_id !== void 0 && (obj.party_id = message.party_id);
-    message.op_code !== void 0 && (obj.op_code = Math.round(message.op_code));
-    message.data !== void 0 && (obj.data = base64FromBytes(message.data !== void 0 ? message.data : new Uint8Array()));
-    return obj;
-  },
-  create(base) {
-    return PartyDataSend.fromPartial(base != null ? base : {});
-  },
-  fromPartial(object) {
-    var _a, _b, _c;
-    const message = createBasePartyDataSend();
-    message.party_id = (_a = object.party_id) != null ? _a : "";
-    message.op_code = (_b = object.op_code) != null ? _b : 0;
-    message.data = (_c = object.data) != null ? _c : new Uint8Array();
-    return message;
-  }
-};
-function createBasePartyPresenceEvent() {
-  return { party_id: "", joins: [], leaves: [] };
-}
-var PartyPresenceEvent = {
-  encode(message, writer = import_minimal4.default.Writer.create()) {
-    if (message.party_id !== "") {
-      writer.uint32(10).string(message.party_id);
-    }
-    for (const v of message.joins) {
-      UserPresence.encode(v, writer.uint32(18).fork()).ldelim();
-    }
-    for (const v of message.leaves) {
-      UserPresence.encode(v, writer.uint32(26).fork()).ldelim();
-    }
-    return writer;
-  },
-  decode(input, length) {
-    const reader = input instanceof import_minimal4.default.Reader ? input : new import_minimal4.default.Reader(input);
-    let end = length === void 0 ? reader.len : reader.pos + length;
-    const message = createBasePartyPresenceEvent();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
-          message.party_id = reader.string();
-          break;
-        case 2:
-          message.joins.push(UserPresence.decode(reader, reader.uint32()));
-          break;
-        case 3:
-          message.leaves.push(UserPresence.decode(reader, reader.uint32()));
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
-      }
-    }
-    return message;
-  },
-  fromJSON(object) {
-    return {
-      party_id: isSet4(object.party_id) ? String(object.party_id) : "",
-      joins: Array.isArray(object == null ? void 0 : object.joins) ? object.joins.map((e) => UserPresence.fromJSON(e)) : [],
-      leaves: Array.isArray(object == null ? void 0 : object.leaves) ? object.leaves.map((e) => UserPresence.fromJSON(e)) : []
-    };
-  },
-  toJSON(message) {
-    const obj = {};
-    message.party_id !== void 0 && (obj.party_id = message.party_id);
-    if (message.joins) {
-      obj.joins = message.joins.map((e) => e ? UserPresence.toJSON(e) : void 0);
-    } else {
-      obj.joins = [];
-    }
-    if (message.leaves) {
-      obj.leaves = message.leaves.map((e) => e ? UserPresence.toJSON(e) : void 0);
-    } else {
-      obj.leaves = [];
-    }
-    return obj;
-  },
-  create(base) {
-    return PartyPresenceEvent.fromPartial(base != null ? base : {});
-  },
-  fromPartial(object) {
-    var _a, _b, _c;
-    const message = createBasePartyPresenceEvent();
-    message.party_id = (_a = object.party_id) != null ? _a : "";
-    message.joins = ((_b = object.joins) == null ? void 0 : _b.map((e) => UserPresence.fromPartial(e))) || [];
-    message.leaves = ((_c = object.leaves) == null ? void 0 : _c.map((e) => UserPresence.fromPartial(e))) || [];
     return message;
   }
 };
@@ -5874,24 +4833,21 @@ var StatusPresenceEvent = {
   }
 };
 function createBaseLastSeenMessageEvent() {
-  return { channel_id: "", channel_label: "", message_id: "", mode: 0, timestamp: "" };
+  return { channel_id: "", message_id: "", mode: 0, timestamp: "" };
 }
 var LastSeenMessageEvent = {
   encode(message, writer = import_minimal4.default.Writer.create()) {
     if (message.channel_id !== "") {
       writer.uint32(10).string(message.channel_id);
     }
-    if (message.channel_label !== "") {
-      writer.uint32(18).string(message.channel_label);
-    }
     if (message.message_id !== "") {
-      writer.uint32(26).string(message.message_id);
+      writer.uint32(18).string(message.message_id);
     }
     if (message.mode !== 0) {
-      writer.uint32(32).int32(message.mode);
+      writer.uint32(24).int32(message.mode);
     }
     if (message.timestamp !== "") {
-      writer.uint32(42).string(message.timestamp);
+      writer.uint32(34).string(message.timestamp);
     }
     return writer;
   },
@@ -5906,15 +4862,12 @@ var LastSeenMessageEvent = {
           message.channel_id = reader.string();
           break;
         case 2:
-          message.channel_label = reader.string();
-          break;
-        case 3:
           message.message_id = reader.string();
           break;
-        case 4:
+        case 3:
           message.mode = reader.int32();
           break;
-        case 5:
+        case 4:
           message.timestamp = reader.string();
           break;
         default:
@@ -5927,7 +4880,6 @@ var LastSeenMessageEvent = {
   fromJSON(object) {
     return {
       channel_id: isSet4(object.channel_id) ? String(object.channel_id) : "",
-      channel_label: isSet4(object.channel_label) ? String(object.channel_label) : "",
       message_id: isSet4(object.message_id) ? String(object.message_id) : "",
       mode: isSet4(object.mode) ? Number(object.mode) : 0,
       timestamp: isSet4(object.timestamp) ? String(object.timestamp) : ""
@@ -5936,7 +4888,6 @@ var LastSeenMessageEvent = {
   toJSON(message) {
     const obj = {};
     message.channel_id !== void 0 && (obj.channel_id = message.channel_id);
-    message.channel_label !== void 0 && (obj.channel_label = message.channel_label);
     message.message_id !== void 0 && (obj.message_id = message.message_id);
     message.mode !== void 0 && (obj.mode = Math.round(message.mode));
     message.timestamp !== void 0 && (obj.timestamp = message.timestamp);
@@ -5946,32 +4897,28 @@ var LastSeenMessageEvent = {
     return LastSeenMessageEvent.fromPartial(base != null ? base : {});
   },
   fromPartial(object) {
-    var _a, _b, _c, _d, _e;
+    var _a, _b, _c, _d;
     const message = createBaseLastSeenMessageEvent();
     message.channel_id = (_a = object.channel_id) != null ? _a : "";
-    message.channel_label = (_b = object.channel_label) != null ? _b : "";
-    message.message_id = (_c = object.message_id) != null ? _c : "";
-    message.mode = (_d = object.mode) != null ? _d : 0;
-    message.timestamp = (_e = object.timestamp) != null ? _e : "";
+    message.message_id = (_b = object.message_id) != null ? _b : "";
+    message.mode = (_c = object.mode) != null ? _c : 0;
+    message.timestamp = (_d = object.timestamp) != null ? _d : "";
     return message;
   }
 };
 function createBaseMessageTypingEvent() {
-  return { channel_id: "", channel_label: "", sender_id: "", mode: 0 };
+  return { channel_id: "", sender_id: "", mode: 0 };
 }
 var MessageTypingEvent = {
   encode(message, writer = import_minimal4.default.Writer.create()) {
     if (message.channel_id !== "") {
       writer.uint32(10).string(message.channel_id);
     }
-    if (message.channel_label !== "") {
-      writer.uint32(18).string(message.channel_label);
-    }
     if (message.sender_id !== "") {
-      writer.uint32(26).string(message.sender_id);
+      writer.uint32(18).string(message.sender_id);
     }
     if (message.mode !== 0) {
-      writer.uint32(32).int32(message.mode);
+      writer.uint32(24).int32(message.mode);
     }
     return writer;
   },
@@ -5986,12 +4933,9 @@ var MessageTypingEvent = {
           message.channel_id = reader.string();
           break;
         case 2:
-          message.channel_label = reader.string();
-          break;
-        case 3:
           message.sender_id = reader.string();
           break;
-        case 4:
+        case 3:
           message.mode = reader.int32();
           break;
         default:
@@ -6004,7 +4948,6 @@ var MessageTypingEvent = {
   fromJSON(object) {
     return {
       channel_id: isSet4(object.channel_id) ? String(object.channel_id) : "",
-      channel_label: isSet4(object.channel_label) ? String(object.channel_label) : "",
       sender_id: isSet4(object.sender_id) ? String(object.sender_id) : "",
       mode: isSet4(object.mode) ? Number(object.mode) : 0
     };
@@ -6012,7 +4955,6 @@ var MessageTypingEvent = {
   toJSON(message) {
     const obj = {};
     message.channel_id !== void 0 && (obj.channel_id = message.channel_id);
-    message.channel_label !== void 0 && (obj.channel_label = message.channel_label);
     message.sender_id !== void 0 && (obj.sender_id = message.sender_id);
     message.mode !== void 0 && (obj.mode = Math.round(message.mode));
     return obj;
@@ -6021,12 +4963,11 @@ var MessageTypingEvent = {
     return MessageTypingEvent.fromPartial(base != null ? base : {});
   },
   fromPartial(object) {
-    var _a, _b, _c, _d;
+    var _a, _b, _c;
     const message = createBaseMessageTypingEvent();
     message.channel_id = (_a = object.channel_id) != null ? _a : "";
-    message.channel_label = (_b = object.channel_label) != null ? _b : "";
-    message.sender_id = (_c = object.sender_id) != null ? _c : "";
-    message.mode = (_d = object.mode) != null ? _d : 0;
+    message.sender_id = (_b = object.sender_id) != null ? _b : "";
+    message.mode = (_c = object.mode) != null ? _c : 0;
     return message;
   }
 };
@@ -6034,7 +4975,6 @@ function createBaseMessageReactionEvent() {
   return {
     id: "",
     channel_id: "",
-    channel_label: "",
     message_id: "",
     sender_id: "",
     sender_name: "",
@@ -6054,35 +4994,32 @@ var MessageReactionEvent = {
     if (message.channel_id !== "") {
       writer.uint32(18).string(message.channel_id);
     }
-    if (message.channel_label !== "") {
-      writer.uint32(26).string(message.channel_label);
-    }
     if (message.message_id !== "") {
-      writer.uint32(34).string(message.message_id);
+      writer.uint32(26).string(message.message_id);
     }
     if (message.sender_id !== "") {
-      writer.uint32(42).string(message.sender_id);
+      writer.uint32(34).string(message.sender_id);
     }
     if (message.sender_name !== "") {
-      writer.uint32(50).string(message.sender_name);
+      writer.uint32(42).string(message.sender_name);
     }
     if (message.sender_avatar !== "") {
-      writer.uint32(58).string(message.sender_avatar);
+      writer.uint32(50).string(message.sender_avatar);
     }
     if (message.emoji !== "") {
-      writer.uint32(66).string(message.emoji);
+      writer.uint32(58).string(message.emoji);
     }
     if (message.action === true) {
-      writer.uint32(72).bool(message.action);
+      writer.uint32(64).bool(message.action);
     }
     if (message.message_sender_id !== "") {
-      writer.uint32(82).string(message.message_sender_id);
+      writer.uint32(74).string(message.message_sender_id);
     }
     if (message.count !== 0) {
-      writer.uint32(88).int32(message.count);
+      writer.uint32(80).int32(message.count);
     }
     if (message.mode !== 0) {
-      writer.uint32(96).int32(message.mode);
+      writer.uint32(88).int32(message.mode);
     }
     return writer;
   },
@@ -6100,33 +5037,30 @@ var MessageReactionEvent = {
           message.channel_id = reader.string();
           break;
         case 3:
-          message.channel_label = reader.string();
-          break;
-        case 4:
           message.message_id = reader.string();
           break;
-        case 5:
+        case 4:
           message.sender_id = reader.string();
           break;
-        case 6:
+        case 5:
           message.sender_name = reader.string();
           break;
-        case 7:
+        case 6:
           message.sender_avatar = reader.string();
           break;
-        case 8:
+        case 7:
           message.emoji = reader.string();
           break;
-        case 9:
+        case 8:
           message.action = reader.bool();
           break;
-        case 10:
+        case 9:
           message.message_sender_id = reader.string();
           break;
-        case 11:
+        case 10:
           message.count = reader.int32();
           break;
-        case 12:
+        case 11:
           message.mode = reader.int32();
           break;
         default:
@@ -6140,7 +5074,6 @@ var MessageReactionEvent = {
     return {
       id: isSet4(object.id) ? String(object.id) : "",
       channel_id: isSet4(object.channel_id) ? String(object.channel_id) : "",
-      channel_label: isSet4(object.channel_label) ? String(object.channel_label) : "",
       message_id: isSet4(object.message_id) ? String(object.message_id) : "",
       sender_id: isSet4(object.sender_id) ? String(object.sender_id) : "",
       sender_name: isSet4(object.sender_name) ? String(object.sender_name) : "",
@@ -6156,7 +5089,6 @@ var MessageReactionEvent = {
     const obj = {};
     message.id !== void 0 && (obj.id = message.id);
     message.channel_id !== void 0 && (obj.channel_id = message.channel_id);
-    message.channel_label !== void 0 && (obj.channel_label = message.channel_label);
     message.message_id !== void 0 && (obj.message_id = message.message_id);
     message.sender_id !== void 0 && (obj.sender_id = message.sender_id);
     message.sender_name !== void 0 && (obj.sender_name = message.sender_name);
@@ -6172,20 +5104,19 @@ var MessageReactionEvent = {
     return MessageReactionEvent.fromPartial(base != null ? base : {});
   },
   fromPartial(object) {
-    var _a, _b, _c, _d, _e, _f, _g, _h, _i, _j, _k, _l;
+    var _a, _b, _c, _d, _e, _f, _g, _h, _i, _j, _k;
     const message = createBaseMessageReactionEvent();
     message.id = (_a = object.id) != null ? _a : "";
     message.channel_id = (_b = object.channel_id) != null ? _b : "";
-    message.channel_label = (_c = object.channel_label) != null ? _c : "";
-    message.message_id = (_d = object.message_id) != null ? _d : "";
-    message.sender_id = (_e = object.sender_id) != null ? _e : "";
-    message.sender_name = (_f = object.sender_name) != null ? _f : "";
-    message.sender_avatar = (_g = object.sender_avatar) != null ? _g : "";
-    message.emoji = (_h = object.emoji) != null ? _h : "";
-    message.action = (_i = object.action) != null ? _i : false;
-    message.message_sender_id = (_j = object.message_sender_id) != null ? _j : "";
-    message.count = (_k = object.count) != null ? _k : 0;
-    message.mode = (_l = object.mode) != null ? _l : 0;
+    message.message_id = (_c = object.message_id) != null ? _c : "";
+    message.sender_id = (_d = object.sender_id) != null ? _d : "";
+    message.sender_name = (_e = object.sender_name) != null ? _e : "";
+    message.sender_avatar = (_f = object.sender_avatar) != null ? _f : "";
+    message.emoji = (_g = object.emoji) != null ? _g : "";
+    message.action = (_h = object.action) != null ? _h : false;
+    message.message_sender_id = (_i = object.message_sender_id) != null ? _i : "";
+    message.count = (_j = object.count) != null ? _j : 0;
+    message.mode = (_k = object.mode) != null ? _k : 0;
     return message;
   }
 };
@@ -7246,29 +6177,6 @@ var tsProtoGlobalThis4 = (() => {
   }
   throw "Unable to locate global object";
 })();
-function bytesFromBase64(b64) {
-  if (tsProtoGlobalThis4.Buffer) {
-    return Uint8Array.from(tsProtoGlobalThis4.Buffer.from(b64, "base64"));
-  } else {
-    const bin = tsProtoGlobalThis4.atob(b64);
-    const arr = new Uint8Array(bin.length);
-    for (let i = 0; i < bin.length; ++i) {
-      arr[i] = bin.charCodeAt(i);
-    }
-    return arr;
-  }
-}
-function base64FromBytes(arr) {
-  if (tsProtoGlobalThis4.Buffer) {
-    return tsProtoGlobalThis4.Buffer.from(arr).toString("base64");
-  } else {
-    const bin = [];
-    arr.forEach((byte) => {
-      bin.push(String.fromCharCode(byte));
-    });
-    return tsProtoGlobalThis4.btoa(bin.join(""));
-  }
-}
 function toTimestamp2(date) {
   const seconds = date.getTime() / 1e3;
   const nanos = date.getTime() % 1e3 * 1e6;

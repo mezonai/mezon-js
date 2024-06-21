@@ -100,62 +100,6 @@ export interface Envelope {
   pong?:
     | Pong
     | undefined;
-  /** Incoming information about a party. */
-  party?:
-    | Party
-    | undefined;
-  /** Create a party. */
-  party_create?:
-    | PartyCreate
-    | undefined;
-  /** Join a party, or request to join if the party is not open. */
-  party_join?:
-    | PartyJoin
-    | undefined;
-  /** Leave a party. */
-  party_leave?:
-    | PartyLeave
-    | undefined;
-  /** Promote a new party leader. */
-  party_promote?:
-    | PartyPromote
-    | undefined;
-  /** Announcement of a new party leader. */
-  party_leader?:
-    | PartyLeader
-    | undefined;
-  /** Accept a request to join. */
-  party_accept?:
-    | PartyAccept
-    | undefined;
-  /** Kick a party member, or decline a request to join. */
-  party_remove?:
-    | PartyRemove
-    | undefined;
-  /** End a party, kicking all party members and closing it. */
-  party_close?:
-    | PartyClose
-    | undefined;
-  /** Request a list of pending join requests for a party. */
-  party_join_request_list?:
-    | PartyJoinRequestList
-    | undefined;
-  /** Incoming notification for one or more new presences attempting to join the party. */
-  party_join_request?:
-    | PartyJoinRequest
-    | undefined;
-  /** Incoming party data delivered from the server. */
-  party_data?:
-    | PartyData
-    | undefined;
-  /** A client to server request to send data to a party. */
-  party_data_send?:
-    | PartyDataSend
-    | undefined;
-  /** Presence update for a particular party. */
-  party_presence_event?:
-    | PartyPresenceEvent
-    | undefined;
   /** User typing event */
   message_typing_event?:
     | MessageTypingEvent
@@ -226,8 +170,6 @@ export interface ChannelJoin {
   clan_id: string;
   /** The id of channel or group */
   channel_id: string;
-  /** The user ID to DM with, group ID to chat with, or channel id to join. */
-  channel_label: string;
   /** The type of the chat channel. */
   type: number;
   /** Whether messages sent on this channel should be persistent. */
@@ -246,8 +188,6 @@ export interface ChannelJoin {
 export interface ChannelLeave {
   /** The ID of the channel to leave. */
   channel_id: string;
-  /** The channe name */
-  channel_label: string;
   /** mode */
   mode: number;
 }
@@ -276,8 +216,6 @@ export interface ChannelMessageAck {
   persistent:
     | boolean
     | undefined;
-  /** The name of the chat room, or an empty string if this message was not sent through a chat room. */
-  channel_label: string;
   /** The ID of the first DM user, or an empty string if this message was not sent through a DM chat. */
   user_id_one: string;
   /** The ID of the second DM user, or an empty string if this message was not sent through a DM chat. */
@@ -330,8 +268,6 @@ export interface ChannelMessageSend {
   clan_id: string;
   /** The channel to sent to. */
   channel_id: string;
-  /** The channel label to sent to. */
-  channel_label: string;
   /** Message content. */
   content: string;
   /** Message mention */
@@ -352,8 +288,6 @@ export interface ChannelMessageSend {
 export interface ChannelMessageUpdate {
   /** The channel the message was sent to. */
   channel_id: string;
-  /** channel label */
-  channel_label: string;
   /** The ID assigned to the message to update. */
   message_id: string;
   /** New message content. */
@@ -366,8 +300,6 @@ export interface ChannelMessageUpdate {
 export interface ChannelMessageRemove {
   /** The channel the message was sent to. */
   channel_id: string;
-  /** The channel label */
-  channel_label: string;
   /** The ID assigned to the message to update. */
   message_id: string;
   /** The mode */
@@ -382,8 +314,6 @@ export interface ChannelPresenceEvent {
   joins: UserPresence[];
   /** Presences leaving the channel as part of this event, if any. */
   leaves: UserPresence[];
-  /** The name of the chat room, or an empty string if this message was not sent through a chat room. */
-  channel_label: string;
   /** The ID of the first DM user, or an empty string if this message was not sent through a DM chat. */
   user_id_one: string;
   /** The ID of the second DM user, or an empty string if this message was not sent through a DM chat. */
@@ -491,176 +421,6 @@ export interface Notifications {
   notifications: Notification[];
 }
 
-/** Incoming information about a party. */
-export interface Party {
-  /** Unique party identifier. */
-  party_id: string;
-  /** Open flag. */
-  open: boolean;
-  /** Maximum number of party members. */
-  max_size: number;
-  /** Self. */
-  self:
-    | UserPresence
-    | undefined;
-  /** Leader. */
-  leader:
-    | UserPresence
-    | undefined;
-  /** All current party members. */
-  presences: UserPresence[];
-}
-
-/** Create a party. */
-export interface PartyCreate {
-  /** Whether or not the party will require join requests to be approved by the party leader. */
-  open: boolean;
-  /** Maximum number of party members. */
-  max_size: number;
-}
-
-/** Join a party, or request to join if the party is not open. */
-export interface PartyJoin {
-  /** Party ID to join. */
-  party_id: string;
-}
-
-/** Leave a party. */
-export interface PartyLeave {
-  /** Party ID to leave. */
-  party_id: string;
-}
-
-/** Promote a new party leader. */
-export interface PartyPromote {
-  /** Party ID to promote a new leader for. */
-  party_id: string;
-  /** The presence of an existing party member to promote as the new leader. */
-  presence: UserPresence | undefined;
-}
-
-/** Announcement of a new party leader. */
-export interface PartyLeader {
-  /** Party ID to announce the new leader for. */
-  party_id: string;
-  /** The presence of the new party leader. */
-  presence: UserPresence | undefined;
-}
-
-/** Accept a request to join. */
-export interface PartyAccept {
-  /** Party ID to accept a join request for. */
-  party_id: string;
-  /** The presence to accept as a party member. */
-  presence: UserPresence | undefined;
-}
-
-/** Kick a party member, or decline a request to join. */
-export interface PartyRemove {
-  /** Party ID to remove/reject from. */
-  party_id: string;
-  /** The presence to remove or reject. */
-  presence: UserPresence | undefined;
-}
-
-/** End a party, kicking all party members and closing it. */
-export interface PartyClose {
-  /** Party ID to close. */
-  party_id: string;
-}
-
-/** Request a list of pending join requests for a party. */
-export interface PartyJoinRequestList {
-  /** Party ID to get a list of join requests for. */
-  party_id: string;
-}
-
-/** Incoming notification for one or more new presences attempting to join the party. */
-export interface PartyJoinRequest {
-  /** Party ID these presences are attempting to join. */
-  party_id: string;
-  /** Presences attempting to join. */
-  presences: UserPresence[];
-}
-
-/** Begin matchmaking as a party. */
-export interface PartyMatchmakerAdd {
-  /** Party ID. */
-  party_id: string;
-  /** Minimum total user count to match together. */
-  min_count: number;
-  /** Maximum total user count to match together. */
-  max_count: number;
-  /** Filter query used to identify suitable users. */
-  query: string;
-  /** String properties. */
-  string_properties: { [key: string]: string };
-  /** Numeric properties. */
-  numeric_properties: { [key: string]: number };
-  /** Optional multiple of the count that must be satisfied. */
-  count_multiple: number | undefined;
-}
-
-export interface PartyMatchmakerAdd_StringPropertiesEntry {
-  key: string;
-  value: string;
-}
-
-export interface PartyMatchmakerAdd_NumericPropertiesEntry {
-  key: string;
-  value: number;
-}
-
-/** Cancel a party matchmaking process using a ticket. */
-export interface PartyMatchmakerRemove {
-  /** Party ID. */
-  party_id: string;
-  /** The ticket to cancel. */
-  ticket: string;
-}
-
-/** A response from starting a new party matchmaking process. */
-export interface PartyMatchmakerTicket {
-  /** Party ID. */
-  party_id: string;
-  /** The ticket that can be used to cancel matchmaking. */
-  ticket: string;
-}
-
-/** Incoming party data delivered from the server. */
-export interface PartyData {
-  /** The party ID. */
-  party_id: string;
-  /** A reference to the user presence that sent this data, if any. */
-  presence:
-    | UserPresence
-    | undefined;
-  /** Op code value. */
-  op_code: number;
-  /** Data payload, if any. */
-  data: Uint8Array;
-}
-
-/** Send data to a party. */
-export interface PartyDataSend {
-  /** Party ID to send to. */
-  party_id: string;
-  /** Op code value. */
-  op_code: number;
-  /** Data payload, if any. */
-  data: Uint8Array;
-}
-
-/** Presence update for a particular party. */
-export interface PartyPresenceEvent {
-  /** The party ID. */
-  party_id: string;
-  /** User presences that have just joined the party. */
-  joins: UserPresence[];
-  /** User presences that have just left the party. */
-  leaves: UserPresence[];
-}
-
 /** Application-level heartbeat and connection check. */
 export interface Ping {
 }
@@ -695,8 +455,6 @@ export interface StatusPresenceEvent {
 export interface LastSeenMessageEvent {
   /** The unique ID of this channel. */
   channel_id: string;
-  /** The channel label */
-  channel_label: string;
   /** The unique ID of this message. */
   message_id: string;
   /** The stream mode */
@@ -709,8 +467,6 @@ export interface LastSeenMessageEvent {
 export interface MessageTypingEvent {
   /** The channel this message belongs to. */
   channel_id: string;
-  /** The channel label */
-  channel_label: string;
   /** Message sender, usually a user ID. */
   sender_id: string;
   /** mode */
@@ -721,8 +477,6 @@ export interface MessageTypingEvent {
 export interface MessageMentionEvent {
   /** The channel this message belongs to. */
   channel_id: string;
-  /** The channel label */
-  channel_label: string;
   /** React to message */
   message_id: string;
   /** mention user id */
@@ -741,8 +495,6 @@ export interface MessageReactionEvent {
   id: string;
   /** The channel this message belongs to. */
   channel_id: string;
-  /** The channel label */
-  channel_label: string;
   /** React to message */
   message_id: string;
   /** Message sender, usually a user ID. */
@@ -767,8 +519,6 @@ export interface MessageReactionEvent {
 export interface MessageAttachmentEvent {
   /** The channel this message belongs to. */
   channel_id: string;
-  /** The channel label */
-  channel_label: string;
   /** React to message */
   message_id: string;
   /** Attachment file name */
@@ -987,20 +737,6 @@ function createBaseEnvelope(): Envelope {
     stream_presence_event: undefined,
     ping: undefined,
     pong: undefined,
-    party: undefined,
-    party_create: undefined,
-    party_join: undefined,
-    party_leave: undefined,
-    party_promote: undefined,
-    party_leader: undefined,
-    party_accept: undefined,
-    party_remove: undefined,
-    party_close: undefined,
-    party_join_request_list: undefined,
-    party_join_request: undefined,
-    party_data: undefined,
-    party_data_send: undefined,
-    party_presence_event: undefined,
     message_typing_event: undefined,
     last_seen_message_event: undefined,
     message_reaction_event: undefined,
@@ -1085,77 +821,35 @@ export const Envelope = {
     if (message.pong !== undefined) {
       Pong.encode(message.pong, writer.uint32(186).fork()).ldelim();
     }
-    if (message.party !== undefined) {
-      Party.encode(message.party, writer.uint32(194).fork()).ldelim();
-    }
-    if (message.party_create !== undefined) {
-      PartyCreate.encode(message.party_create, writer.uint32(202).fork()).ldelim();
-    }
-    if (message.party_join !== undefined) {
-      PartyJoin.encode(message.party_join, writer.uint32(210).fork()).ldelim();
-    }
-    if (message.party_leave !== undefined) {
-      PartyLeave.encode(message.party_leave, writer.uint32(218).fork()).ldelim();
-    }
-    if (message.party_promote !== undefined) {
-      PartyPromote.encode(message.party_promote, writer.uint32(226).fork()).ldelim();
-    }
-    if (message.party_leader !== undefined) {
-      PartyLeader.encode(message.party_leader, writer.uint32(234).fork()).ldelim();
-    }
-    if (message.party_accept !== undefined) {
-      PartyAccept.encode(message.party_accept, writer.uint32(242).fork()).ldelim();
-    }
-    if (message.party_remove !== undefined) {
-      PartyRemove.encode(message.party_remove, writer.uint32(250).fork()).ldelim();
-    }
-    if (message.party_close !== undefined) {
-      PartyClose.encode(message.party_close, writer.uint32(258).fork()).ldelim();
-    }
-    if (message.party_join_request_list !== undefined) {
-      PartyJoinRequestList.encode(message.party_join_request_list, writer.uint32(266).fork()).ldelim();
-    }
-    if (message.party_join_request !== undefined) {
-      PartyJoinRequest.encode(message.party_join_request, writer.uint32(274).fork()).ldelim();
-    }
-    if (message.party_data !== undefined) {
-      PartyData.encode(message.party_data, writer.uint32(282).fork()).ldelim();
-    }
-    if (message.party_data_send !== undefined) {
-      PartyDataSend.encode(message.party_data_send, writer.uint32(290).fork()).ldelim();
-    }
-    if (message.party_presence_event !== undefined) {
-      PartyPresenceEvent.encode(message.party_presence_event, writer.uint32(298).fork()).ldelim();
-    }
     if (message.message_typing_event !== undefined) {
-      MessageTypingEvent.encode(message.message_typing_event, writer.uint32(306).fork()).ldelim();
+      MessageTypingEvent.encode(message.message_typing_event, writer.uint32(194).fork()).ldelim();
     }
     if (message.last_seen_message_event !== undefined) {
-      LastSeenMessageEvent.encode(message.last_seen_message_event, writer.uint32(314).fork()).ldelim();
+      LastSeenMessageEvent.encode(message.last_seen_message_event, writer.uint32(202).fork()).ldelim();
     }
     if (message.message_reaction_event !== undefined) {
-      MessageReactionEvent.encode(message.message_reaction_event, writer.uint32(322).fork()).ldelim();
+      MessageReactionEvent.encode(message.message_reaction_event, writer.uint32(210).fork()).ldelim();
     }
     if (message.voice_joined_event !== undefined) {
-      VoiceJoinedEvent.encode(message.voice_joined_event, writer.uint32(330).fork()).ldelim();
+      VoiceJoinedEvent.encode(message.voice_joined_event, writer.uint32(218).fork()).ldelim();
     }
     if (message.voice_leaved_event !== undefined) {
-      VoiceLeavedEvent.encode(message.voice_leaved_event, writer.uint32(338).fork()).ldelim();
+      VoiceLeavedEvent.encode(message.voice_leaved_event, writer.uint32(226).fork()).ldelim();
     }
     if (message.voice_started_event !== undefined) {
-      VoiceStartedEvent.encode(message.voice_started_event, writer.uint32(346).fork()).ldelim();
+      VoiceStartedEvent.encode(message.voice_started_event, writer.uint32(234).fork()).ldelim();
     }
     if (message.voice_ended_event !== undefined) {
-      VoiceEndedEvent.encode(message.voice_ended_event, writer.uint32(354).fork()).ldelim();
+      VoiceEndedEvent.encode(message.voice_ended_event, writer.uint32(242).fork()).ldelim();
     }
     if (message.channel_created_event !== undefined) {
-      ChannelCreatedEvent.encode(message.channel_created_event, writer.uint32(362).fork()).ldelim();
+      ChannelCreatedEvent.encode(message.channel_created_event, writer.uint32(250).fork()).ldelim();
     }
     if (message.channel_deleted_event !== undefined) {
-      ChannelDeletedEvent.encode(message.channel_deleted_event, writer.uint32(370).fork()).ldelim();
+      ChannelDeletedEvent.encode(message.channel_deleted_event, writer.uint32(258).fork()).ldelim();
     }
     if (message.channel_updated_event !== undefined) {
-      ChannelUpdatedEvent.encode(message.channel_updated_event, writer.uint32(378).fork()).ldelim();
+      ChannelUpdatedEvent.encode(message.channel_updated_event, writer.uint32(266).fork()).ldelim();
     }
     return writer;
   },
@@ -1237,75 +931,33 @@ export const Envelope = {
           message.pong = Pong.decode(reader, reader.uint32());
           break;
         case 24:
-          message.party = Party.decode(reader, reader.uint32());
-          break;
-        case 25:
-          message.party_create = PartyCreate.decode(reader, reader.uint32());
-          break;
-        case 26:
-          message.party_join = PartyJoin.decode(reader, reader.uint32());
-          break;
-        case 27:
-          message.party_leave = PartyLeave.decode(reader, reader.uint32());
-          break;
-        case 28:
-          message.party_promote = PartyPromote.decode(reader, reader.uint32());
-          break;
-        case 29:
-          message.party_leader = PartyLeader.decode(reader, reader.uint32());
-          break;
-        case 30:
-          message.party_accept = PartyAccept.decode(reader, reader.uint32());
-          break;
-        case 31:
-          message.party_remove = PartyRemove.decode(reader, reader.uint32());
-          break;
-        case 32:
-          message.party_close = PartyClose.decode(reader, reader.uint32());
-          break;
-        case 33:
-          message.party_join_request_list = PartyJoinRequestList.decode(reader, reader.uint32());
-          break;
-        case 34:
-          message.party_join_request = PartyJoinRequest.decode(reader, reader.uint32());
-          break;
-        case 35:
-          message.party_data = PartyData.decode(reader, reader.uint32());
-          break;
-        case 36:
-          message.party_data_send = PartyDataSend.decode(reader, reader.uint32());
-          break;
-        case 37:
-          message.party_presence_event = PartyPresenceEvent.decode(reader, reader.uint32());
-          break;
-        case 38:
           message.message_typing_event = MessageTypingEvent.decode(reader, reader.uint32());
           break;
-        case 39:
+        case 25:
           message.last_seen_message_event = LastSeenMessageEvent.decode(reader, reader.uint32());
           break;
-        case 40:
+        case 26:
           message.message_reaction_event = MessageReactionEvent.decode(reader, reader.uint32());
           break;
-        case 41:
+        case 27:
           message.voice_joined_event = VoiceJoinedEvent.decode(reader, reader.uint32());
           break;
-        case 42:
+        case 28:
           message.voice_leaved_event = VoiceLeavedEvent.decode(reader, reader.uint32());
           break;
-        case 43:
+        case 29:
           message.voice_started_event = VoiceStartedEvent.decode(reader, reader.uint32());
           break;
-        case 44:
+        case 30:
           message.voice_ended_event = VoiceEndedEvent.decode(reader, reader.uint32());
           break;
-        case 45:
+        case 31:
           message.channel_created_event = ChannelCreatedEvent.decode(reader, reader.uint32());
           break;
-        case 46:
+        case 32:
           message.channel_deleted_event = ChannelDeletedEvent.decode(reader, reader.uint32());
           break;
-        case 47:
+        case 33:
           message.channel_updated_event = ChannelUpdatedEvent.decode(reader, reader.uint32());
           break;
         default:
@@ -1355,26 +1007,6 @@ export const Envelope = {
         : undefined,
       ping: isSet(object.ping) ? Ping.fromJSON(object.ping) : undefined,
       pong: isSet(object.pong) ? Pong.fromJSON(object.pong) : undefined,
-      party: isSet(object.party) ? Party.fromJSON(object.party) : undefined,
-      party_create: isSet(object.party_create) ? PartyCreate.fromJSON(object.party_create) : undefined,
-      party_join: isSet(object.party_join) ? PartyJoin.fromJSON(object.party_join) : undefined,
-      party_leave: isSet(object.party_leave) ? PartyLeave.fromJSON(object.party_leave) : undefined,
-      party_promote: isSet(object.party_promote) ? PartyPromote.fromJSON(object.party_promote) : undefined,
-      party_leader: isSet(object.party_leader) ? PartyLeader.fromJSON(object.party_leader) : undefined,
-      party_accept: isSet(object.party_accept) ? PartyAccept.fromJSON(object.party_accept) : undefined,
-      party_remove: isSet(object.party_remove) ? PartyRemove.fromJSON(object.party_remove) : undefined,
-      party_close: isSet(object.party_close) ? PartyClose.fromJSON(object.party_close) : undefined,
-      party_join_request_list: isSet(object.party_join_request_list)
-        ? PartyJoinRequestList.fromJSON(object.party_join_request_list)
-        : undefined,
-      party_join_request: isSet(object.party_join_request)
-        ? PartyJoinRequest.fromJSON(object.party_join_request)
-        : undefined,
-      party_data: isSet(object.party_data) ? PartyData.fromJSON(object.party_data) : undefined,
-      party_data_send: isSet(object.party_data_send) ? PartyDataSend.fromJSON(object.party_data_send) : undefined,
-      party_presence_event: isSet(object.party_presence_event)
-        ? PartyPresenceEvent.fromJSON(object.party_presence_event)
-        : undefined,
       message_typing_event: isSet(object.message_typing_event)
         ? MessageTypingEvent.fromJSON(object.message_typing_event)
         : undefined,
@@ -1456,36 +1088,6 @@ export const Envelope = {
       : undefined);
     message.ping !== undefined && (obj.ping = message.ping ? Ping.toJSON(message.ping) : undefined);
     message.pong !== undefined && (obj.pong = message.pong ? Pong.toJSON(message.pong) : undefined);
-    message.party !== undefined && (obj.party = message.party ? Party.toJSON(message.party) : undefined);
-    message.party_create !== undefined &&
-      (obj.party_create = message.party_create ? PartyCreate.toJSON(message.party_create) : undefined);
-    message.party_join !== undefined &&
-      (obj.party_join = message.party_join ? PartyJoin.toJSON(message.party_join) : undefined);
-    message.party_leave !== undefined &&
-      (obj.party_leave = message.party_leave ? PartyLeave.toJSON(message.party_leave) : undefined);
-    message.party_promote !== undefined &&
-      (obj.party_promote = message.party_promote ? PartyPromote.toJSON(message.party_promote) : undefined);
-    message.party_leader !== undefined &&
-      (obj.party_leader = message.party_leader ? PartyLeader.toJSON(message.party_leader) : undefined);
-    message.party_accept !== undefined &&
-      (obj.party_accept = message.party_accept ? PartyAccept.toJSON(message.party_accept) : undefined);
-    message.party_remove !== undefined &&
-      (obj.party_remove = message.party_remove ? PartyRemove.toJSON(message.party_remove) : undefined);
-    message.party_close !== undefined &&
-      (obj.party_close = message.party_close ? PartyClose.toJSON(message.party_close) : undefined);
-    message.party_join_request_list !== undefined && (obj.party_join_request_list = message.party_join_request_list
-      ? PartyJoinRequestList.toJSON(message.party_join_request_list)
-      : undefined);
-    message.party_join_request !== undefined && (obj.party_join_request = message.party_join_request
-      ? PartyJoinRequest.toJSON(message.party_join_request)
-      : undefined);
-    message.party_data !== undefined &&
-      (obj.party_data = message.party_data ? PartyData.toJSON(message.party_data) : undefined);
-    message.party_data_send !== undefined &&
-      (obj.party_data_send = message.party_data_send ? PartyDataSend.toJSON(message.party_data_send) : undefined);
-    message.party_presence_event !== undefined && (obj.party_presence_event = message.party_presence_event
-      ? PartyPresenceEvent.toJSON(message.party_presence_event)
-      : undefined);
     message.message_typing_event !== undefined && (obj.message_typing_event = message.message_typing_event
       ? MessageTypingEvent.toJSON(message.message_typing_event)
       : undefined);
@@ -1590,47 +1192,6 @@ export const Envelope = {
         : undefined;
     message.ping = (object.ping !== undefined && object.ping !== null) ? Ping.fromPartial(object.ping) : undefined;
     message.pong = (object.pong !== undefined && object.pong !== null) ? Pong.fromPartial(object.pong) : undefined;
-    message.party = (object.party !== undefined && object.party !== null) ? Party.fromPartial(object.party) : undefined;
-    message.party_create = (object.party_create !== undefined && object.party_create !== null)
-      ? PartyCreate.fromPartial(object.party_create)
-      : undefined;
-    message.party_join = (object.party_join !== undefined && object.party_join !== null)
-      ? PartyJoin.fromPartial(object.party_join)
-      : undefined;
-    message.party_leave = (object.party_leave !== undefined && object.party_leave !== null)
-      ? PartyLeave.fromPartial(object.party_leave)
-      : undefined;
-    message.party_promote = (object.party_promote !== undefined && object.party_promote !== null)
-      ? PartyPromote.fromPartial(object.party_promote)
-      : undefined;
-    message.party_leader = (object.party_leader !== undefined && object.party_leader !== null)
-      ? PartyLeader.fromPartial(object.party_leader)
-      : undefined;
-    message.party_accept = (object.party_accept !== undefined && object.party_accept !== null)
-      ? PartyAccept.fromPartial(object.party_accept)
-      : undefined;
-    message.party_remove = (object.party_remove !== undefined && object.party_remove !== null)
-      ? PartyRemove.fromPartial(object.party_remove)
-      : undefined;
-    message.party_close = (object.party_close !== undefined && object.party_close !== null)
-      ? PartyClose.fromPartial(object.party_close)
-      : undefined;
-    message.party_join_request_list =
-      (object.party_join_request_list !== undefined && object.party_join_request_list !== null)
-        ? PartyJoinRequestList.fromPartial(object.party_join_request_list)
-        : undefined;
-    message.party_join_request = (object.party_join_request !== undefined && object.party_join_request !== null)
-      ? PartyJoinRequest.fromPartial(object.party_join_request)
-      : undefined;
-    message.party_data = (object.party_data !== undefined && object.party_data !== null)
-      ? PartyData.fromPartial(object.party_data)
-      : undefined;
-    message.party_data_send = (object.party_data_send !== undefined && object.party_data_send !== null)
-      ? PartyDataSend.fromPartial(object.party_data_send)
-      : undefined;
-    message.party_presence_event = (object.party_presence_event !== undefined && object.party_presence_event !== null)
-      ? PartyPresenceEvent.fromPartial(object.party_presence_event)
-      : undefined;
     message.message_typing_event = (object.message_typing_event !== undefined && object.message_typing_event !== null)
       ? MessageTypingEvent.fromPartial(object.message_typing_event)
       : undefined;
@@ -1826,15 +1387,7 @@ export const ClanJoin = {
 };
 
 function createBaseChannelJoin(): ChannelJoin {
-  return {
-    clan_id: "",
-    channel_id: "",
-    channel_label: "",
-    type: 0,
-    persistence: undefined,
-    hidden: undefined,
-    mode: 0,
-  };
+  return { clan_id: "", channel_id: "", type: 0, persistence: undefined, hidden: undefined, mode: 0 };
 }
 
 export const ChannelJoin = {
@@ -1845,20 +1398,17 @@ export const ChannelJoin = {
     if (message.channel_id !== "") {
       writer.uint32(18).string(message.channel_id);
     }
-    if (message.channel_label !== "") {
-      writer.uint32(26).string(message.channel_label);
-    }
     if (message.type !== 0) {
-      writer.uint32(32).int32(message.type);
+      writer.uint32(24).int32(message.type);
     }
     if (message.persistence !== undefined) {
-      BoolValue.encode({ value: message.persistence! }, writer.uint32(42).fork()).ldelim();
+      BoolValue.encode({ value: message.persistence! }, writer.uint32(34).fork()).ldelim();
     }
     if (message.hidden !== undefined) {
-      BoolValue.encode({ value: message.hidden! }, writer.uint32(50).fork()).ldelim();
+      BoolValue.encode({ value: message.hidden! }, writer.uint32(42).fork()).ldelim();
     }
     if (message.mode !== 0) {
-      writer.uint32(56).int32(message.mode);
+      writer.uint32(48).int32(message.mode);
     }
     return writer;
   },
@@ -1877,18 +1427,15 @@ export const ChannelJoin = {
           message.channel_id = reader.string();
           break;
         case 3:
-          message.channel_label = reader.string();
-          break;
-        case 4:
           message.type = reader.int32();
           break;
-        case 5:
+        case 4:
           message.persistence = BoolValue.decode(reader, reader.uint32()).value;
           break;
-        case 6:
+        case 5:
           message.hidden = BoolValue.decode(reader, reader.uint32()).value;
           break;
-        case 7:
+        case 6:
           message.mode = reader.int32();
           break;
         default:
@@ -1903,7 +1450,6 @@ export const ChannelJoin = {
     return {
       clan_id: isSet(object.clan_id) ? String(object.clan_id) : "",
       channel_id: isSet(object.channel_id) ? String(object.channel_id) : "",
-      channel_label: isSet(object.channel_label) ? String(object.channel_label) : "",
       type: isSet(object.type) ? Number(object.type) : 0,
       persistence: isSet(object.persistence) ? Boolean(object.persistence) : undefined,
       hidden: isSet(object.hidden) ? Boolean(object.hidden) : undefined,
@@ -1915,7 +1461,6 @@ export const ChannelJoin = {
     const obj: any = {};
     message.clan_id !== undefined && (obj.clan_id = message.clan_id);
     message.channel_id !== undefined && (obj.channel_id = message.channel_id);
-    message.channel_label !== undefined && (obj.channel_label = message.channel_label);
     message.type !== undefined && (obj.type = Math.round(message.type));
     message.persistence !== undefined && (obj.persistence = message.persistence);
     message.hidden !== undefined && (obj.hidden = message.hidden);
@@ -1931,7 +1476,6 @@ export const ChannelJoin = {
     const message = createBaseChannelJoin();
     message.clan_id = object.clan_id ?? "";
     message.channel_id = object.channel_id ?? "";
-    message.channel_label = object.channel_label ?? "";
     message.type = object.type ?? 0;
     message.persistence = object.persistence ?? undefined;
     message.hidden = object.hidden ?? undefined;
@@ -1941,7 +1485,7 @@ export const ChannelJoin = {
 };
 
 function createBaseChannelLeave(): ChannelLeave {
-  return { channel_id: "", channel_label: "", mode: 0 };
+  return { channel_id: "", mode: 0 };
 }
 
 export const ChannelLeave = {
@@ -1949,11 +1493,8 @@ export const ChannelLeave = {
     if (message.channel_id !== "") {
       writer.uint32(10).string(message.channel_id);
     }
-    if (message.channel_label !== "") {
-      writer.uint32(18).string(message.channel_label);
-    }
     if (message.mode !== 0) {
-      writer.uint32(24).int32(message.mode);
+      writer.uint32(16).int32(message.mode);
     }
     return writer;
   },
@@ -1969,9 +1510,6 @@ export const ChannelLeave = {
           message.channel_id = reader.string();
           break;
         case 2:
-          message.channel_label = reader.string();
-          break;
-        case 3:
           message.mode = reader.int32();
           break;
         default:
@@ -1985,7 +1523,6 @@ export const ChannelLeave = {
   fromJSON(object: any): ChannelLeave {
     return {
       channel_id: isSet(object.channel_id) ? String(object.channel_id) : "",
-      channel_label: isSet(object.channel_label) ? String(object.channel_label) : "",
       mode: isSet(object.mode) ? Number(object.mode) : 0,
     };
   },
@@ -1993,7 +1530,6 @@ export const ChannelLeave = {
   toJSON(message: ChannelLeave): unknown {
     const obj: any = {};
     message.channel_id !== undefined && (obj.channel_id = message.channel_id);
-    message.channel_label !== undefined && (obj.channel_label = message.channel_label);
     message.mode !== undefined && (obj.mode = Math.round(message.mode));
     return obj;
   },
@@ -2005,7 +1541,6 @@ export const ChannelLeave = {
   fromPartial<I extends Exact<DeepPartial<ChannelLeave>, I>>(object: I): ChannelLeave {
     const message = createBaseChannelLeave();
     message.channel_id = object.channel_id ?? "";
-    message.channel_label = object.channel_label ?? "";
     message.mode = object.mode ?? 0;
     return message;
   },
@@ -2020,7 +1555,6 @@ function createBaseChannelMessageAck(): ChannelMessageAck {
     create_time: undefined,
     update_time: undefined,
     persistent: undefined,
-    channel_label: "",
     user_id_one: "",
     user_id_two: "",
   };
@@ -2049,14 +1583,11 @@ export const ChannelMessageAck = {
     if (message.persistent !== undefined) {
       BoolValue.encode({ value: message.persistent! }, writer.uint32(58).fork()).ldelim();
     }
-    if (message.channel_label !== "") {
-      writer.uint32(66).string(message.channel_label);
-    }
     if (message.user_id_one !== "") {
-      writer.uint32(74).string(message.user_id_one);
+      writer.uint32(66).string(message.user_id_one);
     }
     if (message.user_id_two !== "") {
-      writer.uint32(82).string(message.user_id_two);
+      writer.uint32(74).string(message.user_id_two);
     }
     return writer;
   },
@@ -2090,12 +1621,9 @@ export const ChannelMessageAck = {
           message.persistent = BoolValue.decode(reader, reader.uint32()).value;
           break;
         case 8:
-          message.channel_label = reader.string();
-          break;
-        case 9:
           message.user_id_one = reader.string();
           break;
-        case 10:
+        case 9:
           message.user_id_two = reader.string();
           break;
         default:
@@ -2115,7 +1643,6 @@ export const ChannelMessageAck = {
       create_time: isSet(object.create_time) ? fromJsonTimestamp(object.create_time) : undefined,
       update_time: isSet(object.update_time) ? fromJsonTimestamp(object.update_time) : undefined,
       persistent: isSet(object.persistent) ? Boolean(object.persistent) : undefined,
-      channel_label: isSet(object.channel_label) ? String(object.channel_label) : "",
       user_id_one: isSet(object.user_id_one) ? String(object.user_id_one) : "",
       user_id_two: isSet(object.user_id_two) ? String(object.user_id_two) : "",
     };
@@ -2130,7 +1657,6 @@ export const ChannelMessageAck = {
     message.create_time !== undefined && (obj.create_time = message.create_time.toISOString());
     message.update_time !== undefined && (obj.update_time = message.update_time.toISOString());
     message.persistent !== undefined && (obj.persistent = message.persistent);
-    message.channel_label !== undefined && (obj.channel_label = message.channel_label);
     message.user_id_one !== undefined && (obj.user_id_one = message.user_id_one);
     message.user_id_two !== undefined && (obj.user_id_two = message.user_id_two);
     return obj;
@@ -2149,7 +1675,6 @@ export const ChannelMessageAck = {
     message.create_time = object.create_time ?? undefined;
     message.update_time = object.update_time ?? undefined;
     message.persistent = object.persistent ?? undefined;
-    message.channel_label = object.channel_label ?? "";
     message.user_id_one = object.user_id_one ?? "";
     message.user_id_two = object.user_id_two ?? "";
     return message;
@@ -2418,7 +1943,6 @@ function createBaseChannelMessageSend(): ChannelMessageSend {
   return {
     clan_id: "",
     channel_id: "",
-    channel_label: "",
     content: "",
     mentions: [],
     attachments: [],
@@ -2437,29 +1961,26 @@ export const ChannelMessageSend = {
     if (message.channel_id !== "") {
       writer.uint32(18).string(message.channel_id);
     }
-    if (message.channel_label !== "") {
-      writer.uint32(26).string(message.channel_label);
-    }
     if (message.content !== "") {
-      writer.uint32(34).string(message.content);
+      writer.uint32(26).string(message.content);
     }
     for (const v of message.mentions) {
-      MessageMention.encode(v!, writer.uint32(42).fork()).ldelim();
+      MessageMention.encode(v!, writer.uint32(34).fork()).ldelim();
     }
     for (const v of message.attachments) {
-      MessageAttachment.encode(v!, writer.uint32(50).fork()).ldelim();
+      MessageAttachment.encode(v!, writer.uint32(42).fork()).ldelim();
     }
     for (const v of message.references) {
-      MessageRef.encode(v!, writer.uint32(58).fork()).ldelim();
+      MessageRef.encode(v!, writer.uint32(50).fork()).ldelim();
     }
     if (message.mode !== 0) {
-      writer.uint32(64).int32(message.mode);
+      writer.uint32(56).int32(message.mode);
     }
     if (message.anonymous_message === true) {
-      writer.uint32(72).bool(message.anonymous_message);
+      writer.uint32(64).bool(message.anonymous_message);
     }
     if (message.mention_everyone === true) {
-      writer.uint32(80).bool(message.mention_everyone);
+      writer.uint32(72).bool(message.mention_everyone);
     }
     return writer;
   },
@@ -2478,27 +1999,24 @@ export const ChannelMessageSend = {
           message.channel_id = reader.string();
           break;
         case 3:
-          message.channel_label = reader.string();
-          break;
-        case 4:
           message.content = reader.string();
           break;
-        case 5:
+        case 4:
           message.mentions.push(MessageMention.decode(reader, reader.uint32()));
           break;
-        case 6:
+        case 5:
           message.attachments.push(MessageAttachment.decode(reader, reader.uint32()));
           break;
-        case 7:
+        case 6:
           message.references.push(MessageRef.decode(reader, reader.uint32()));
           break;
-        case 8:
+        case 7:
           message.mode = reader.int32();
           break;
-        case 9:
+        case 8:
           message.anonymous_message = reader.bool();
           break;
-        case 10:
+        case 9:
           message.mention_everyone = reader.bool();
           break;
         default:
@@ -2513,7 +2031,6 @@ export const ChannelMessageSend = {
     return {
       clan_id: isSet(object.clan_id) ? String(object.clan_id) : "",
       channel_id: isSet(object.channel_id) ? String(object.channel_id) : "",
-      channel_label: isSet(object.channel_label) ? String(object.channel_label) : "",
       content: isSet(object.content) ? String(object.content) : "",
       mentions: Array.isArray(object?.mentions) ? object.mentions.map((e: any) => MessageMention.fromJSON(e)) : [],
       attachments: Array.isArray(object?.attachments)
@@ -2530,7 +2047,6 @@ export const ChannelMessageSend = {
     const obj: any = {};
     message.clan_id !== undefined && (obj.clan_id = message.clan_id);
     message.channel_id !== undefined && (obj.channel_id = message.channel_id);
-    message.channel_label !== undefined && (obj.channel_label = message.channel_label);
     message.content !== undefined && (obj.content = message.content);
     if (message.mentions) {
       obj.mentions = message.mentions.map((e) => e ? MessageMention.toJSON(e) : undefined);
@@ -2561,7 +2077,6 @@ export const ChannelMessageSend = {
     const message = createBaseChannelMessageSend();
     message.clan_id = object.clan_id ?? "";
     message.channel_id = object.channel_id ?? "";
-    message.channel_label = object.channel_label ?? "";
     message.content = object.content ?? "";
     message.mentions = object.mentions?.map((e) => MessageMention.fromPartial(e)) || [];
     message.attachments = object.attachments?.map((e) => MessageAttachment.fromPartial(e)) || [];
@@ -2574,7 +2089,7 @@ export const ChannelMessageSend = {
 };
 
 function createBaseChannelMessageUpdate(): ChannelMessageUpdate {
-  return { channel_id: "", channel_label: "", message_id: "", content: "", mode: 0 };
+  return { channel_id: "", message_id: "", content: "", mode: 0 };
 }
 
 export const ChannelMessageUpdate = {
@@ -2582,17 +2097,14 @@ export const ChannelMessageUpdate = {
     if (message.channel_id !== "") {
       writer.uint32(10).string(message.channel_id);
     }
-    if (message.channel_label !== "") {
-      writer.uint32(18).string(message.channel_label);
-    }
     if (message.message_id !== "") {
-      writer.uint32(26).string(message.message_id);
+      writer.uint32(18).string(message.message_id);
     }
     if (message.content !== "") {
-      writer.uint32(34).string(message.content);
+      writer.uint32(26).string(message.content);
     }
     if (message.mode !== 0) {
-      writer.uint32(40).int32(message.mode);
+      writer.uint32(32).int32(message.mode);
     }
     return writer;
   },
@@ -2608,15 +2120,12 @@ export const ChannelMessageUpdate = {
           message.channel_id = reader.string();
           break;
         case 2:
-          message.channel_label = reader.string();
-          break;
-        case 3:
           message.message_id = reader.string();
           break;
-        case 4:
+        case 3:
           message.content = reader.string();
           break;
-        case 5:
+        case 4:
           message.mode = reader.int32();
           break;
         default:
@@ -2630,7 +2139,6 @@ export const ChannelMessageUpdate = {
   fromJSON(object: any): ChannelMessageUpdate {
     return {
       channel_id: isSet(object.channel_id) ? String(object.channel_id) : "",
-      channel_label: isSet(object.channel_label) ? String(object.channel_label) : "",
       message_id: isSet(object.message_id) ? String(object.message_id) : "",
       content: isSet(object.content) ? String(object.content) : "",
       mode: isSet(object.mode) ? Number(object.mode) : 0,
@@ -2640,7 +2148,6 @@ export const ChannelMessageUpdate = {
   toJSON(message: ChannelMessageUpdate): unknown {
     const obj: any = {};
     message.channel_id !== undefined && (obj.channel_id = message.channel_id);
-    message.channel_label !== undefined && (obj.channel_label = message.channel_label);
     message.message_id !== undefined && (obj.message_id = message.message_id);
     message.content !== undefined && (obj.content = message.content);
     message.mode !== undefined && (obj.mode = Math.round(message.mode));
@@ -2654,7 +2161,6 @@ export const ChannelMessageUpdate = {
   fromPartial<I extends Exact<DeepPartial<ChannelMessageUpdate>, I>>(object: I): ChannelMessageUpdate {
     const message = createBaseChannelMessageUpdate();
     message.channel_id = object.channel_id ?? "";
-    message.channel_label = object.channel_label ?? "";
     message.message_id = object.message_id ?? "";
     message.content = object.content ?? "";
     message.mode = object.mode ?? 0;
@@ -2663,7 +2169,7 @@ export const ChannelMessageUpdate = {
 };
 
 function createBaseChannelMessageRemove(): ChannelMessageRemove {
-  return { channel_id: "", channel_label: "", message_id: "", mode: 0 };
+  return { channel_id: "", message_id: "", mode: 0 };
 }
 
 export const ChannelMessageRemove = {
@@ -2671,14 +2177,11 @@ export const ChannelMessageRemove = {
     if (message.channel_id !== "") {
       writer.uint32(10).string(message.channel_id);
     }
-    if (message.channel_label !== "") {
-      writer.uint32(18).string(message.channel_label);
-    }
     if (message.message_id !== "") {
-      writer.uint32(26).string(message.message_id);
+      writer.uint32(18).string(message.message_id);
     }
     if (message.mode !== 0) {
-      writer.uint32(32).int32(message.mode);
+      writer.uint32(24).int32(message.mode);
     }
     return writer;
   },
@@ -2694,12 +2197,9 @@ export const ChannelMessageRemove = {
           message.channel_id = reader.string();
           break;
         case 2:
-          message.channel_label = reader.string();
-          break;
-        case 3:
           message.message_id = reader.string();
           break;
-        case 4:
+        case 3:
           message.mode = reader.int32();
           break;
         default:
@@ -2713,7 +2213,6 @@ export const ChannelMessageRemove = {
   fromJSON(object: any): ChannelMessageRemove {
     return {
       channel_id: isSet(object.channel_id) ? String(object.channel_id) : "",
-      channel_label: isSet(object.channel_label) ? String(object.channel_label) : "",
       message_id: isSet(object.message_id) ? String(object.message_id) : "",
       mode: isSet(object.mode) ? Number(object.mode) : 0,
     };
@@ -2722,7 +2221,6 @@ export const ChannelMessageRemove = {
   toJSON(message: ChannelMessageRemove): unknown {
     const obj: any = {};
     message.channel_id !== undefined && (obj.channel_id = message.channel_id);
-    message.channel_label !== undefined && (obj.channel_label = message.channel_label);
     message.message_id !== undefined && (obj.message_id = message.message_id);
     message.mode !== undefined && (obj.mode = Math.round(message.mode));
     return obj;
@@ -2735,7 +2233,6 @@ export const ChannelMessageRemove = {
   fromPartial<I extends Exact<DeepPartial<ChannelMessageRemove>, I>>(object: I): ChannelMessageRemove {
     const message = createBaseChannelMessageRemove();
     message.channel_id = object.channel_id ?? "";
-    message.channel_label = object.channel_label ?? "";
     message.message_id = object.message_id ?? "";
     message.mode = object.mode ?? 0;
     return message;
@@ -2743,7 +2240,7 @@ export const ChannelMessageRemove = {
 };
 
 function createBaseChannelPresenceEvent(): ChannelPresenceEvent {
-  return { channel_id: "", joins: [], leaves: [], channel_label: "", user_id_one: "", user_id_two: "", mode: 0 };
+  return { channel_id: "", joins: [], leaves: [], user_id_one: "", user_id_two: "", mode: 0 };
 }
 
 export const ChannelPresenceEvent = {
@@ -2757,17 +2254,14 @@ export const ChannelPresenceEvent = {
     for (const v of message.leaves) {
       UserPresence.encode(v!, writer.uint32(26).fork()).ldelim();
     }
-    if (message.channel_label !== "") {
-      writer.uint32(34).string(message.channel_label);
-    }
     if (message.user_id_one !== "") {
-      writer.uint32(42).string(message.user_id_one);
+      writer.uint32(34).string(message.user_id_one);
     }
     if (message.user_id_two !== "") {
-      writer.uint32(50).string(message.user_id_two);
+      writer.uint32(42).string(message.user_id_two);
     }
     if (message.mode !== 0) {
-      writer.uint32(56).int32(message.mode);
+      writer.uint32(48).int32(message.mode);
     }
     return writer;
   },
@@ -2789,15 +2283,12 @@ export const ChannelPresenceEvent = {
           message.leaves.push(UserPresence.decode(reader, reader.uint32()));
           break;
         case 4:
-          message.channel_label = reader.string();
-          break;
-        case 5:
           message.user_id_one = reader.string();
           break;
-        case 6:
+        case 5:
           message.user_id_two = reader.string();
           break;
-        case 7:
+        case 6:
           message.mode = reader.int32();
           break;
         default:
@@ -2813,7 +2304,6 @@ export const ChannelPresenceEvent = {
       channel_id: isSet(object.channel_id) ? String(object.channel_id) : "",
       joins: Array.isArray(object?.joins) ? object.joins.map((e: any) => UserPresence.fromJSON(e)) : [],
       leaves: Array.isArray(object?.leaves) ? object.leaves.map((e: any) => UserPresence.fromJSON(e)) : [],
-      channel_label: isSet(object.channel_label) ? String(object.channel_label) : "",
       user_id_one: isSet(object.user_id_one) ? String(object.user_id_one) : "",
       user_id_two: isSet(object.user_id_two) ? String(object.user_id_two) : "",
       mode: isSet(object.mode) ? Number(object.mode) : 0,
@@ -2833,7 +2323,6 @@ export const ChannelPresenceEvent = {
     } else {
       obj.leaves = [];
     }
-    message.channel_label !== undefined && (obj.channel_label = message.channel_label);
     message.user_id_one !== undefined && (obj.user_id_one = message.user_id_one);
     message.user_id_two !== undefined && (obj.user_id_two = message.user_id_two);
     message.mode !== undefined && (obj.mode = Math.round(message.mode));
@@ -2849,7 +2338,6 @@ export const ChannelPresenceEvent = {
     message.channel_id = object.channel_id ?? "";
     message.joins = object.joins?.map((e) => UserPresence.fromPartial(e)) || [];
     message.leaves = object.leaves?.map((e) => UserPresence.fromPartial(e)) || [];
-    message.channel_label = object.channel_label ?? "";
     message.user_id_one = object.user_id_one ?? "";
     message.user_id_two = object.user_id_two ?? "";
     message.mode = object.mode ?? 0;
@@ -3060,1346 +2548,6 @@ export const Notifications = {
   fromPartial<I extends Exact<DeepPartial<Notifications>, I>>(object: I): Notifications {
     const message = createBaseNotifications();
     message.notifications = object.notifications?.map((e) => Notification.fromPartial(e)) || [];
-    return message;
-  },
-};
-
-function createBaseParty(): Party {
-  return { party_id: "", open: false, max_size: 0, self: undefined, leader: undefined, presences: [] };
-}
-
-export const Party = {
-  encode(message: Party, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.party_id !== "") {
-      writer.uint32(10).string(message.party_id);
-    }
-    if (message.open === true) {
-      writer.uint32(16).bool(message.open);
-    }
-    if (message.max_size !== 0) {
-      writer.uint32(24).int32(message.max_size);
-    }
-    if (message.self !== undefined) {
-      UserPresence.encode(message.self, writer.uint32(34).fork()).ldelim();
-    }
-    if (message.leader !== undefined) {
-      UserPresence.encode(message.leader, writer.uint32(42).fork()).ldelim();
-    }
-    for (const v of message.presences) {
-      UserPresence.encode(v!, writer.uint32(50).fork()).ldelim();
-    }
-    return writer;
-  },
-
-  decode(input: _m0.Reader | Uint8Array, length?: number): Party {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseParty();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
-          message.party_id = reader.string();
-          break;
-        case 2:
-          message.open = reader.bool();
-          break;
-        case 3:
-          message.max_size = reader.int32();
-          break;
-        case 4:
-          message.self = UserPresence.decode(reader, reader.uint32());
-          break;
-        case 5:
-          message.leader = UserPresence.decode(reader, reader.uint32());
-          break;
-        case 6:
-          message.presences.push(UserPresence.decode(reader, reader.uint32()));
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
-      }
-    }
-    return message;
-  },
-
-  fromJSON(object: any): Party {
-    return {
-      party_id: isSet(object.party_id) ? String(object.party_id) : "",
-      open: isSet(object.open) ? Boolean(object.open) : false,
-      max_size: isSet(object.max_size) ? Number(object.max_size) : 0,
-      self: isSet(object.self) ? UserPresence.fromJSON(object.self) : undefined,
-      leader: isSet(object.leader) ? UserPresence.fromJSON(object.leader) : undefined,
-      presences: Array.isArray(object?.presences) ? object.presences.map((e: any) => UserPresence.fromJSON(e)) : [],
-    };
-  },
-
-  toJSON(message: Party): unknown {
-    const obj: any = {};
-    message.party_id !== undefined && (obj.party_id = message.party_id);
-    message.open !== undefined && (obj.open = message.open);
-    message.max_size !== undefined && (obj.max_size = Math.round(message.max_size));
-    message.self !== undefined && (obj.self = message.self ? UserPresence.toJSON(message.self) : undefined);
-    message.leader !== undefined && (obj.leader = message.leader ? UserPresence.toJSON(message.leader) : undefined);
-    if (message.presences) {
-      obj.presences = message.presences.map((e) => e ? UserPresence.toJSON(e) : undefined);
-    } else {
-      obj.presences = [];
-    }
-    return obj;
-  },
-
-  create<I extends Exact<DeepPartial<Party>, I>>(base?: I): Party {
-    return Party.fromPartial(base ?? {});
-  },
-
-  fromPartial<I extends Exact<DeepPartial<Party>, I>>(object: I): Party {
-    const message = createBaseParty();
-    message.party_id = object.party_id ?? "";
-    message.open = object.open ?? false;
-    message.max_size = object.max_size ?? 0;
-    message.self = (object.self !== undefined && object.self !== null)
-      ? UserPresence.fromPartial(object.self)
-      : undefined;
-    message.leader = (object.leader !== undefined && object.leader !== null)
-      ? UserPresence.fromPartial(object.leader)
-      : undefined;
-    message.presences = object.presences?.map((e) => UserPresence.fromPartial(e)) || [];
-    return message;
-  },
-};
-
-function createBasePartyCreate(): PartyCreate {
-  return { open: false, max_size: 0 };
-}
-
-export const PartyCreate = {
-  encode(message: PartyCreate, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.open === true) {
-      writer.uint32(8).bool(message.open);
-    }
-    if (message.max_size !== 0) {
-      writer.uint32(16).int32(message.max_size);
-    }
-    return writer;
-  },
-
-  decode(input: _m0.Reader | Uint8Array, length?: number): PartyCreate {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBasePartyCreate();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
-          message.open = reader.bool();
-          break;
-        case 2:
-          message.max_size = reader.int32();
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
-      }
-    }
-    return message;
-  },
-
-  fromJSON(object: any): PartyCreate {
-    return {
-      open: isSet(object.open) ? Boolean(object.open) : false,
-      max_size: isSet(object.max_size) ? Number(object.max_size) : 0,
-    };
-  },
-
-  toJSON(message: PartyCreate): unknown {
-    const obj: any = {};
-    message.open !== undefined && (obj.open = message.open);
-    message.max_size !== undefined && (obj.max_size = Math.round(message.max_size));
-    return obj;
-  },
-
-  create<I extends Exact<DeepPartial<PartyCreate>, I>>(base?: I): PartyCreate {
-    return PartyCreate.fromPartial(base ?? {});
-  },
-
-  fromPartial<I extends Exact<DeepPartial<PartyCreate>, I>>(object: I): PartyCreate {
-    const message = createBasePartyCreate();
-    message.open = object.open ?? false;
-    message.max_size = object.max_size ?? 0;
-    return message;
-  },
-};
-
-function createBasePartyJoin(): PartyJoin {
-  return { party_id: "" };
-}
-
-export const PartyJoin = {
-  encode(message: PartyJoin, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.party_id !== "") {
-      writer.uint32(10).string(message.party_id);
-    }
-    return writer;
-  },
-
-  decode(input: _m0.Reader | Uint8Array, length?: number): PartyJoin {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBasePartyJoin();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
-          message.party_id = reader.string();
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
-      }
-    }
-    return message;
-  },
-
-  fromJSON(object: any): PartyJoin {
-    return { party_id: isSet(object.party_id) ? String(object.party_id) : "" };
-  },
-
-  toJSON(message: PartyJoin): unknown {
-    const obj: any = {};
-    message.party_id !== undefined && (obj.party_id = message.party_id);
-    return obj;
-  },
-
-  create<I extends Exact<DeepPartial<PartyJoin>, I>>(base?: I): PartyJoin {
-    return PartyJoin.fromPartial(base ?? {});
-  },
-
-  fromPartial<I extends Exact<DeepPartial<PartyJoin>, I>>(object: I): PartyJoin {
-    const message = createBasePartyJoin();
-    message.party_id = object.party_id ?? "";
-    return message;
-  },
-};
-
-function createBasePartyLeave(): PartyLeave {
-  return { party_id: "" };
-}
-
-export const PartyLeave = {
-  encode(message: PartyLeave, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.party_id !== "") {
-      writer.uint32(10).string(message.party_id);
-    }
-    return writer;
-  },
-
-  decode(input: _m0.Reader | Uint8Array, length?: number): PartyLeave {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBasePartyLeave();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
-          message.party_id = reader.string();
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
-      }
-    }
-    return message;
-  },
-
-  fromJSON(object: any): PartyLeave {
-    return { party_id: isSet(object.party_id) ? String(object.party_id) : "" };
-  },
-
-  toJSON(message: PartyLeave): unknown {
-    const obj: any = {};
-    message.party_id !== undefined && (obj.party_id = message.party_id);
-    return obj;
-  },
-
-  create<I extends Exact<DeepPartial<PartyLeave>, I>>(base?: I): PartyLeave {
-    return PartyLeave.fromPartial(base ?? {});
-  },
-
-  fromPartial<I extends Exact<DeepPartial<PartyLeave>, I>>(object: I): PartyLeave {
-    const message = createBasePartyLeave();
-    message.party_id = object.party_id ?? "";
-    return message;
-  },
-};
-
-function createBasePartyPromote(): PartyPromote {
-  return { party_id: "", presence: undefined };
-}
-
-export const PartyPromote = {
-  encode(message: PartyPromote, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.party_id !== "") {
-      writer.uint32(10).string(message.party_id);
-    }
-    if (message.presence !== undefined) {
-      UserPresence.encode(message.presence, writer.uint32(18).fork()).ldelim();
-    }
-    return writer;
-  },
-
-  decode(input: _m0.Reader | Uint8Array, length?: number): PartyPromote {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBasePartyPromote();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
-          message.party_id = reader.string();
-          break;
-        case 2:
-          message.presence = UserPresence.decode(reader, reader.uint32());
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
-      }
-    }
-    return message;
-  },
-
-  fromJSON(object: any): PartyPromote {
-    return {
-      party_id: isSet(object.party_id) ? String(object.party_id) : "",
-      presence: isSet(object.presence) ? UserPresence.fromJSON(object.presence) : undefined,
-    };
-  },
-
-  toJSON(message: PartyPromote): unknown {
-    const obj: any = {};
-    message.party_id !== undefined && (obj.party_id = message.party_id);
-    message.presence !== undefined &&
-      (obj.presence = message.presence ? UserPresence.toJSON(message.presence) : undefined);
-    return obj;
-  },
-
-  create<I extends Exact<DeepPartial<PartyPromote>, I>>(base?: I): PartyPromote {
-    return PartyPromote.fromPartial(base ?? {});
-  },
-
-  fromPartial<I extends Exact<DeepPartial<PartyPromote>, I>>(object: I): PartyPromote {
-    const message = createBasePartyPromote();
-    message.party_id = object.party_id ?? "";
-    message.presence = (object.presence !== undefined && object.presence !== null)
-      ? UserPresence.fromPartial(object.presence)
-      : undefined;
-    return message;
-  },
-};
-
-function createBasePartyLeader(): PartyLeader {
-  return { party_id: "", presence: undefined };
-}
-
-export const PartyLeader = {
-  encode(message: PartyLeader, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.party_id !== "") {
-      writer.uint32(10).string(message.party_id);
-    }
-    if (message.presence !== undefined) {
-      UserPresence.encode(message.presence, writer.uint32(18).fork()).ldelim();
-    }
-    return writer;
-  },
-
-  decode(input: _m0.Reader | Uint8Array, length?: number): PartyLeader {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBasePartyLeader();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
-          message.party_id = reader.string();
-          break;
-        case 2:
-          message.presence = UserPresence.decode(reader, reader.uint32());
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
-      }
-    }
-    return message;
-  },
-
-  fromJSON(object: any): PartyLeader {
-    return {
-      party_id: isSet(object.party_id) ? String(object.party_id) : "",
-      presence: isSet(object.presence) ? UserPresence.fromJSON(object.presence) : undefined,
-    };
-  },
-
-  toJSON(message: PartyLeader): unknown {
-    const obj: any = {};
-    message.party_id !== undefined && (obj.party_id = message.party_id);
-    message.presence !== undefined &&
-      (obj.presence = message.presence ? UserPresence.toJSON(message.presence) : undefined);
-    return obj;
-  },
-
-  create<I extends Exact<DeepPartial<PartyLeader>, I>>(base?: I): PartyLeader {
-    return PartyLeader.fromPartial(base ?? {});
-  },
-
-  fromPartial<I extends Exact<DeepPartial<PartyLeader>, I>>(object: I): PartyLeader {
-    const message = createBasePartyLeader();
-    message.party_id = object.party_id ?? "";
-    message.presence = (object.presence !== undefined && object.presence !== null)
-      ? UserPresence.fromPartial(object.presence)
-      : undefined;
-    return message;
-  },
-};
-
-function createBasePartyAccept(): PartyAccept {
-  return { party_id: "", presence: undefined };
-}
-
-export const PartyAccept = {
-  encode(message: PartyAccept, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.party_id !== "") {
-      writer.uint32(10).string(message.party_id);
-    }
-    if (message.presence !== undefined) {
-      UserPresence.encode(message.presence, writer.uint32(18).fork()).ldelim();
-    }
-    return writer;
-  },
-
-  decode(input: _m0.Reader | Uint8Array, length?: number): PartyAccept {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBasePartyAccept();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
-          message.party_id = reader.string();
-          break;
-        case 2:
-          message.presence = UserPresence.decode(reader, reader.uint32());
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
-      }
-    }
-    return message;
-  },
-
-  fromJSON(object: any): PartyAccept {
-    return {
-      party_id: isSet(object.party_id) ? String(object.party_id) : "",
-      presence: isSet(object.presence) ? UserPresence.fromJSON(object.presence) : undefined,
-    };
-  },
-
-  toJSON(message: PartyAccept): unknown {
-    const obj: any = {};
-    message.party_id !== undefined && (obj.party_id = message.party_id);
-    message.presence !== undefined &&
-      (obj.presence = message.presence ? UserPresence.toJSON(message.presence) : undefined);
-    return obj;
-  },
-
-  create<I extends Exact<DeepPartial<PartyAccept>, I>>(base?: I): PartyAccept {
-    return PartyAccept.fromPartial(base ?? {});
-  },
-
-  fromPartial<I extends Exact<DeepPartial<PartyAccept>, I>>(object: I): PartyAccept {
-    const message = createBasePartyAccept();
-    message.party_id = object.party_id ?? "";
-    message.presence = (object.presence !== undefined && object.presence !== null)
-      ? UserPresence.fromPartial(object.presence)
-      : undefined;
-    return message;
-  },
-};
-
-function createBasePartyRemove(): PartyRemove {
-  return { party_id: "", presence: undefined };
-}
-
-export const PartyRemove = {
-  encode(message: PartyRemove, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.party_id !== "") {
-      writer.uint32(10).string(message.party_id);
-    }
-    if (message.presence !== undefined) {
-      UserPresence.encode(message.presence, writer.uint32(18).fork()).ldelim();
-    }
-    return writer;
-  },
-
-  decode(input: _m0.Reader | Uint8Array, length?: number): PartyRemove {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBasePartyRemove();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
-          message.party_id = reader.string();
-          break;
-        case 2:
-          message.presence = UserPresence.decode(reader, reader.uint32());
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
-      }
-    }
-    return message;
-  },
-
-  fromJSON(object: any): PartyRemove {
-    return {
-      party_id: isSet(object.party_id) ? String(object.party_id) : "",
-      presence: isSet(object.presence) ? UserPresence.fromJSON(object.presence) : undefined,
-    };
-  },
-
-  toJSON(message: PartyRemove): unknown {
-    const obj: any = {};
-    message.party_id !== undefined && (obj.party_id = message.party_id);
-    message.presence !== undefined &&
-      (obj.presence = message.presence ? UserPresence.toJSON(message.presence) : undefined);
-    return obj;
-  },
-
-  create<I extends Exact<DeepPartial<PartyRemove>, I>>(base?: I): PartyRemove {
-    return PartyRemove.fromPartial(base ?? {});
-  },
-
-  fromPartial<I extends Exact<DeepPartial<PartyRemove>, I>>(object: I): PartyRemove {
-    const message = createBasePartyRemove();
-    message.party_id = object.party_id ?? "";
-    message.presence = (object.presence !== undefined && object.presence !== null)
-      ? UserPresence.fromPartial(object.presence)
-      : undefined;
-    return message;
-  },
-};
-
-function createBasePartyClose(): PartyClose {
-  return { party_id: "" };
-}
-
-export const PartyClose = {
-  encode(message: PartyClose, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.party_id !== "") {
-      writer.uint32(10).string(message.party_id);
-    }
-    return writer;
-  },
-
-  decode(input: _m0.Reader | Uint8Array, length?: number): PartyClose {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBasePartyClose();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
-          message.party_id = reader.string();
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
-      }
-    }
-    return message;
-  },
-
-  fromJSON(object: any): PartyClose {
-    return { party_id: isSet(object.party_id) ? String(object.party_id) : "" };
-  },
-
-  toJSON(message: PartyClose): unknown {
-    const obj: any = {};
-    message.party_id !== undefined && (obj.party_id = message.party_id);
-    return obj;
-  },
-
-  create<I extends Exact<DeepPartial<PartyClose>, I>>(base?: I): PartyClose {
-    return PartyClose.fromPartial(base ?? {});
-  },
-
-  fromPartial<I extends Exact<DeepPartial<PartyClose>, I>>(object: I): PartyClose {
-    const message = createBasePartyClose();
-    message.party_id = object.party_id ?? "";
-    return message;
-  },
-};
-
-function createBasePartyJoinRequestList(): PartyJoinRequestList {
-  return { party_id: "" };
-}
-
-export const PartyJoinRequestList = {
-  encode(message: PartyJoinRequestList, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.party_id !== "") {
-      writer.uint32(10).string(message.party_id);
-    }
-    return writer;
-  },
-
-  decode(input: _m0.Reader | Uint8Array, length?: number): PartyJoinRequestList {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBasePartyJoinRequestList();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
-          message.party_id = reader.string();
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
-      }
-    }
-    return message;
-  },
-
-  fromJSON(object: any): PartyJoinRequestList {
-    return { party_id: isSet(object.party_id) ? String(object.party_id) : "" };
-  },
-
-  toJSON(message: PartyJoinRequestList): unknown {
-    const obj: any = {};
-    message.party_id !== undefined && (obj.party_id = message.party_id);
-    return obj;
-  },
-
-  create<I extends Exact<DeepPartial<PartyJoinRequestList>, I>>(base?: I): PartyJoinRequestList {
-    return PartyJoinRequestList.fromPartial(base ?? {});
-  },
-
-  fromPartial<I extends Exact<DeepPartial<PartyJoinRequestList>, I>>(object: I): PartyJoinRequestList {
-    const message = createBasePartyJoinRequestList();
-    message.party_id = object.party_id ?? "";
-    return message;
-  },
-};
-
-function createBasePartyJoinRequest(): PartyJoinRequest {
-  return { party_id: "", presences: [] };
-}
-
-export const PartyJoinRequest = {
-  encode(message: PartyJoinRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.party_id !== "") {
-      writer.uint32(10).string(message.party_id);
-    }
-    for (const v of message.presences) {
-      UserPresence.encode(v!, writer.uint32(18).fork()).ldelim();
-    }
-    return writer;
-  },
-
-  decode(input: _m0.Reader | Uint8Array, length?: number): PartyJoinRequest {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBasePartyJoinRequest();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
-          message.party_id = reader.string();
-          break;
-        case 2:
-          message.presences.push(UserPresence.decode(reader, reader.uint32()));
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
-      }
-    }
-    return message;
-  },
-
-  fromJSON(object: any): PartyJoinRequest {
-    return {
-      party_id: isSet(object.party_id) ? String(object.party_id) : "",
-      presences: Array.isArray(object?.presences) ? object.presences.map((e: any) => UserPresence.fromJSON(e)) : [],
-    };
-  },
-
-  toJSON(message: PartyJoinRequest): unknown {
-    const obj: any = {};
-    message.party_id !== undefined && (obj.party_id = message.party_id);
-    if (message.presences) {
-      obj.presences = message.presences.map((e) => e ? UserPresence.toJSON(e) : undefined);
-    } else {
-      obj.presences = [];
-    }
-    return obj;
-  },
-
-  create<I extends Exact<DeepPartial<PartyJoinRequest>, I>>(base?: I): PartyJoinRequest {
-    return PartyJoinRequest.fromPartial(base ?? {});
-  },
-
-  fromPartial<I extends Exact<DeepPartial<PartyJoinRequest>, I>>(object: I): PartyJoinRequest {
-    const message = createBasePartyJoinRequest();
-    message.party_id = object.party_id ?? "";
-    message.presences = object.presences?.map((e) => UserPresence.fromPartial(e)) || [];
-    return message;
-  },
-};
-
-function createBasePartyMatchmakerAdd(): PartyMatchmakerAdd {
-  return {
-    party_id: "",
-    min_count: 0,
-    max_count: 0,
-    query: "",
-    string_properties: {},
-    numeric_properties: {},
-    count_multiple: undefined,
-  };
-}
-
-export const PartyMatchmakerAdd = {
-  encode(message: PartyMatchmakerAdd, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.party_id !== "") {
-      writer.uint32(10).string(message.party_id);
-    }
-    if (message.min_count !== 0) {
-      writer.uint32(16).int32(message.min_count);
-    }
-    if (message.max_count !== 0) {
-      writer.uint32(24).int32(message.max_count);
-    }
-    if (message.query !== "") {
-      writer.uint32(34).string(message.query);
-    }
-    Object.entries(message.string_properties).forEach(([key, value]) => {
-      PartyMatchmakerAdd_StringPropertiesEntry.encode({ key: key as any, value }, writer.uint32(42).fork()).ldelim();
-    });
-    Object.entries(message.numeric_properties).forEach(([key, value]) => {
-      PartyMatchmakerAdd_NumericPropertiesEntry.encode({ key: key as any, value }, writer.uint32(50).fork()).ldelim();
-    });
-    if (message.count_multiple !== undefined) {
-      Int32Value.encode({ value: message.count_multiple! }, writer.uint32(58).fork()).ldelim();
-    }
-    return writer;
-  },
-
-  decode(input: _m0.Reader | Uint8Array, length?: number): PartyMatchmakerAdd {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBasePartyMatchmakerAdd();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
-          message.party_id = reader.string();
-          break;
-        case 2:
-          message.min_count = reader.int32();
-          break;
-        case 3:
-          message.max_count = reader.int32();
-          break;
-        case 4:
-          message.query = reader.string();
-          break;
-        case 5:
-          const entry5 = PartyMatchmakerAdd_StringPropertiesEntry.decode(reader, reader.uint32());
-          if (entry5.value !== undefined) {
-            message.string_properties[entry5.key] = entry5.value;
-          }
-          break;
-        case 6:
-          const entry6 = PartyMatchmakerAdd_NumericPropertiesEntry.decode(reader, reader.uint32());
-          if (entry6.value !== undefined) {
-            message.numeric_properties[entry6.key] = entry6.value;
-          }
-          break;
-        case 7:
-          message.count_multiple = Int32Value.decode(reader, reader.uint32()).value;
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
-      }
-    }
-    return message;
-  },
-
-  fromJSON(object: any): PartyMatchmakerAdd {
-    return {
-      party_id: isSet(object.party_id) ? String(object.party_id) : "",
-      min_count: isSet(object.min_count) ? Number(object.min_count) : 0,
-      max_count: isSet(object.max_count) ? Number(object.max_count) : 0,
-      query: isSet(object.query) ? String(object.query) : "",
-      string_properties: isObject(object.string_properties)
-        ? Object.entries(object.string_properties).reduce<{ [key: string]: string }>((acc, [key, value]) => {
-          acc[key] = String(value);
-          return acc;
-        }, {})
-        : {},
-      numeric_properties: isObject(object.numeric_properties)
-        ? Object.entries(object.numeric_properties).reduce<{ [key: string]: number }>((acc, [key, value]) => {
-          acc[key] = Number(value);
-          return acc;
-        }, {})
-        : {},
-      count_multiple: isSet(object.count_multiple) ? Number(object.count_multiple) : undefined,
-    };
-  },
-
-  toJSON(message: PartyMatchmakerAdd): unknown {
-    const obj: any = {};
-    message.party_id !== undefined && (obj.party_id = message.party_id);
-    message.min_count !== undefined && (obj.min_count = Math.round(message.min_count));
-    message.max_count !== undefined && (obj.max_count = Math.round(message.max_count));
-    message.query !== undefined && (obj.query = message.query);
-    obj.string_properties = {};
-    if (message.string_properties) {
-      Object.entries(message.string_properties).forEach(([k, v]) => {
-        obj.string_properties[k] = v;
-      });
-    }
-    obj.numeric_properties = {};
-    if (message.numeric_properties) {
-      Object.entries(message.numeric_properties).forEach(([k, v]) => {
-        obj.numeric_properties[k] = v;
-      });
-    }
-    message.count_multiple !== undefined && (obj.count_multiple = message.count_multiple);
-    return obj;
-  },
-
-  create<I extends Exact<DeepPartial<PartyMatchmakerAdd>, I>>(base?: I): PartyMatchmakerAdd {
-    return PartyMatchmakerAdd.fromPartial(base ?? {});
-  },
-
-  fromPartial<I extends Exact<DeepPartial<PartyMatchmakerAdd>, I>>(object: I): PartyMatchmakerAdd {
-    const message = createBasePartyMatchmakerAdd();
-    message.party_id = object.party_id ?? "";
-    message.min_count = object.min_count ?? 0;
-    message.max_count = object.max_count ?? 0;
-    message.query = object.query ?? "";
-    message.string_properties = Object.entries(object.string_properties ?? {}).reduce<{ [key: string]: string }>(
-      (acc, [key, value]) => {
-        if (value !== undefined) {
-          acc[key] = String(value);
-        }
-        return acc;
-      },
-      {},
-    );
-    message.numeric_properties = Object.entries(object.numeric_properties ?? {}).reduce<{ [key: string]: number }>(
-      (acc, [key, value]) => {
-        if (value !== undefined) {
-          acc[key] = Number(value);
-        }
-        return acc;
-      },
-      {},
-    );
-    message.count_multiple = object.count_multiple ?? undefined;
-    return message;
-  },
-};
-
-function createBasePartyMatchmakerAdd_StringPropertiesEntry(): PartyMatchmakerAdd_StringPropertiesEntry {
-  return { key: "", value: "" };
-}
-
-export const PartyMatchmakerAdd_StringPropertiesEntry = {
-  encode(message: PartyMatchmakerAdd_StringPropertiesEntry, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.key !== "") {
-      writer.uint32(10).string(message.key);
-    }
-    if (message.value !== "") {
-      writer.uint32(18).string(message.value);
-    }
-    return writer;
-  },
-
-  decode(input: _m0.Reader | Uint8Array, length?: number): PartyMatchmakerAdd_StringPropertiesEntry {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBasePartyMatchmakerAdd_StringPropertiesEntry();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
-          message.key = reader.string();
-          break;
-        case 2:
-          message.value = reader.string();
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
-      }
-    }
-    return message;
-  },
-
-  fromJSON(object: any): PartyMatchmakerAdd_StringPropertiesEntry {
-    return { key: isSet(object.key) ? String(object.key) : "", value: isSet(object.value) ? String(object.value) : "" };
-  },
-
-  toJSON(message: PartyMatchmakerAdd_StringPropertiesEntry): unknown {
-    const obj: any = {};
-    message.key !== undefined && (obj.key = message.key);
-    message.value !== undefined && (obj.value = message.value);
-    return obj;
-  },
-
-  create<I extends Exact<DeepPartial<PartyMatchmakerAdd_StringPropertiesEntry>, I>>(
-    base?: I,
-  ): PartyMatchmakerAdd_StringPropertiesEntry {
-    return PartyMatchmakerAdd_StringPropertiesEntry.fromPartial(base ?? {});
-  },
-
-  fromPartial<I extends Exact<DeepPartial<PartyMatchmakerAdd_StringPropertiesEntry>, I>>(
-    object: I,
-  ): PartyMatchmakerAdd_StringPropertiesEntry {
-    const message = createBasePartyMatchmakerAdd_StringPropertiesEntry();
-    message.key = object.key ?? "";
-    message.value = object.value ?? "";
-    return message;
-  },
-};
-
-function createBasePartyMatchmakerAdd_NumericPropertiesEntry(): PartyMatchmakerAdd_NumericPropertiesEntry {
-  return { key: "", value: 0 };
-}
-
-export const PartyMatchmakerAdd_NumericPropertiesEntry = {
-  encode(message: PartyMatchmakerAdd_NumericPropertiesEntry, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.key !== "") {
-      writer.uint32(10).string(message.key);
-    }
-    if (message.value !== 0) {
-      writer.uint32(17).double(message.value);
-    }
-    return writer;
-  },
-
-  decode(input: _m0.Reader | Uint8Array, length?: number): PartyMatchmakerAdd_NumericPropertiesEntry {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBasePartyMatchmakerAdd_NumericPropertiesEntry();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
-          message.key = reader.string();
-          break;
-        case 2:
-          message.value = reader.double();
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
-      }
-    }
-    return message;
-  },
-
-  fromJSON(object: any): PartyMatchmakerAdd_NumericPropertiesEntry {
-    return { key: isSet(object.key) ? String(object.key) : "", value: isSet(object.value) ? Number(object.value) : 0 };
-  },
-
-  toJSON(message: PartyMatchmakerAdd_NumericPropertiesEntry): unknown {
-    const obj: any = {};
-    message.key !== undefined && (obj.key = message.key);
-    message.value !== undefined && (obj.value = message.value);
-    return obj;
-  },
-
-  create<I extends Exact<DeepPartial<PartyMatchmakerAdd_NumericPropertiesEntry>, I>>(
-    base?: I,
-  ): PartyMatchmakerAdd_NumericPropertiesEntry {
-    return PartyMatchmakerAdd_NumericPropertiesEntry.fromPartial(base ?? {});
-  },
-
-  fromPartial<I extends Exact<DeepPartial<PartyMatchmakerAdd_NumericPropertiesEntry>, I>>(
-    object: I,
-  ): PartyMatchmakerAdd_NumericPropertiesEntry {
-    const message = createBasePartyMatchmakerAdd_NumericPropertiesEntry();
-    message.key = object.key ?? "";
-    message.value = object.value ?? 0;
-    return message;
-  },
-};
-
-function createBasePartyMatchmakerRemove(): PartyMatchmakerRemove {
-  return { party_id: "", ticket: "" };
-}
-
-export const PartyMatchmakerRemove = {
-  encode(message: PartyMatchmakerRemove, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.party_id !== "") {
-      writer.uint32(10).string(message.party_id);
-    }
-    if (message.ticket !== "") {
-      writer.uint32(18).string(message.ticket);
-    }
-    return writer;
-  },
-
-  decode(input: _m0.Reader | Uint8Array, length?: number): PartyMatchmakerRemove {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBasePartyMatchmakerRemove();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
-          message.party_id = reader.string();
-          break;
-        case 2:
-          message.ticket = reader.string();
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
-      }
-    }
-    return message;
-  },
-
-  fromJSON(object: any): PartyMatchmakerRemove {
-    return {
-      party_id: isSet(object.party_id) ? String(object.party_id) : "",
-      ticket: isSet(object.ticket) ? String(object.ticket) : "",
-    };
-  },
-
-  toJSON(message: PartyMatchmakerRemove): unknown {
-    const obj: any = {};
-    message.party_id !== undefined && (obj.party_id = message.party_id);
-    message.ticket !== undefined && (obj.ticket = message.ticket);
-    return obj;
-  },
-
-  create<I extends Exact<DeepPartial<PartyMatchmakerRemove>, I>>(base?: I): PartyMatchmakerRemove {
-    return PartyMatchmakerRemove.fromPartial(base ?? {});
-  },
-
-  fromPartial<I extends Exact<DeepPartial<PartyMatchmakerRemove>, I>>(object: I): PartyMatchmakerRemove {
-    const message = createBasePartyMatchmakerRemove();
-    message.party_id = object.party_id ?? "";
-    message.ticket = object.ticket ?? "";
-    return message;
-  },
-};
-
-function createBasePartyMatchmakerTicket(): PartyMatchmakerTicket {
-  return { party_id: "", ticket: "" };
-}
-
-export const PartyMatchmakerTicket = {
-  encode(message: PartyMatchmakerTicket, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.party_id !== "") {
-      writer.uint32(10).string(message.party_id);
-    }
-    if (message.ticket !== "") {
-      writer.uint32(18).string(message.ticket);
-    }
-    return writer;
-  },
-
-  decode(input: _m0.Reader | Uint8Array, length?: number): PartyMatchmakerTicket {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBasePartyMatchmakerTicket();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
-          message.party_id = reader.string();
-          break;
-        case 2:
-          message.ticket = reader.string();
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
-      }
-    }
-    return message;
-  },
-
-  fromJSON(object: any): PartyMatchmakerTicket {
-    return {
-      party_id: isSet(object.party_id) ? String(object.party_id) : "",
-      ticket: isSet(object.ticket) ? String(object.ticket) : "",
-    };
-  },
-
-  toJSON(message: PartyMatchmakerTicket): unknown {
-    const obj: any = {};
-    message.party_id !== undefined && (obj.party_id = message.party_id);
-    message.ticket !== undefined && (obj.ticket = message.ticket);
-    return obj;
-  },
-
-  create<I extends Exact<DeepPartial<PartyMatchmakerTicket>, I>>(base?: I): PartyMatchmakerTicket {
-    return PartyMatchmakerTicket.fromPartial(base ?? {});
-  },
-
-  fromPartial<I extends Exact<DeepPartial<PartyMatchmakerTicket>, I>>(object: I): PartyMatchmakerTicket {
-    const message = createBasePartyMatchmakerTicket();
-    message.party_id = object.party_id ?? "";
-    message.ticket = object.ticket ?? "";
-    return message;
-  },
-};
-
-function createBasePartyData(): PartyData {
-  return { party_id: "", presence: undefined, op_code: 0, data: new Uint8Array() };
-}
-
-export const PartyData = {
-  encode(message: PartyData, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.party_id !== "") {
-      writer.uint32(10).string(message.party_id);
-    }
-    if (message.presence !== undefined) {
-      UserPresence.encode(message.presence, writer.uint32(18).fork()).ldelim();
-    }
-    if (message.op_code !== 0) {
-      writer.uint32(24).int64(message.op_code);
-    }
-    if (message.data.length !== 0) {
-      writer.uint32(34).bytes(message.data);
-    }
-    return writer;
-  },
-
-  decode(input: _m0.Reader | Uint8Array, length?: number): PartyData {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBasePartyData();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
-          message.party_id = reader.string();
-          break;
-        case 2:
-          message.presence = UserPresence.decode(reader, reader.uint32());
-          break;
-        case 3:
-          message.op_code = longToNumber(reader.int64() as Long);
-          break;
-        case 4:
-          message.data = reader.bytes();
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
-      }
-    }
-    return message;
-  },
-
-  fromJSON(object: any): PartyData {
-    return {
-      party_id: isSet(object.party_id) ? String(object.party_id) : "",
-      presence: isSet(object.presence) ? UserPresence.fromJSON(object.presence) : undefined,
-      op_code: isSet(object.op_code) ? Number(object.op_code) : 0,
-      data: isSet(object.data) ? bytesFromBase64(object.data) : new Uint8Array(),
-    };
-  },
-
-  toJSON(message: PartyData): unknown {
-    const obj: any = {};
-    message.party_id !== undefined && (obj.party_id = message.party_id);
-    message.presence !== undefined &&
-      (obj.presence = message.presence ? UserPresence.toJSON(message.presence) : undefined);
-    message.op_code !== undefined && (obj.op_code = Math.round(message.op_code));
-    message.data !== undefined &&
-      (obj.data = base64FromBytes(message.data !== undefined ? message.data : new Uint8Array()));
-    return obj;
-  },
-
-  create<I extends Exact<DeepPartial<PartyData>, I>>(base?: I): PartyData {
-    return PartyData.fromPartial(base ?? {});
-  },
-
-  fromPartial<I extends Exact<DeepPartial<PartyData>, I>>(object: I): PartyData {
-    const message = createBasePartyData();
-    message.party_id = object.party_id ?? "";
-    message.presence = (object.presence !== undefined && object.presence !== null)
-      ? UserPresence.fromPartial(object.presence)
-      : undefined;
-    message.op_code = object.op_code ?? 0;
-    message.data = object.data ?? new Uint8Array();
-    return message;
-  },
-};
-
-function createBasePartyDataSend(): PartyDataSend {
-  return { party_id: "", op_code: 0, data: new Uint8Array() };
-}
-
-export const PartyDataSend = {
-  encode(message: PartyDataSend, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.party_id !== "") {
-      writer.uint32(10).string(message.party_id);
-    }
-    if (message.op_code !== 0) {
-      writer.uint32(16).int64(message.op_code);
-    }
-    if (message.data.length !== 0) {
-      writer.uint32(26).bytes(message.data);
-    }
-    return writer;
-  },
-
-  decode(input: _m0.Reader | Uint8Array, length?: number): PartyDataSend {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBasePartyDataSend();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
-          message.party_id = reader.string();
-          break;
-        case 2:
-          message.op_code = longToNumber(reader.int64() as Long);
-          break;
-        case 3:
-          message.data = reader.bytes();
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
-      }
-    }
-    return message;
-  },
-
-  fromJSON(object: any): PartyDataSend {
-    return {
-      party_id: isSet(object.party_id) ? String(object.party_id) : "",
-      op_code: isSet(object.op_code) ? Number(object.op_code) : 0,
-      data: isSet(object.data) ? bytesFromBase64(object.data) : new Uint8Array(),
-    };
-  },
-
-  toJSON(message: PartyDataSend): unknown {
-    const obj: any = {};
-    message.party_id !== undefined && (obj.party_id = message.party_id);
-    message.op_code !== undefined && (obj.op_code = Math.round(message.op_code));
-    message.data !== undefined &&
-      (obj.data = base64FromBytes(message.data !== undefined ? message.data : new Uint8Array()));
-    return obj;
-  },
-
-  create<I extends Exact<DeepPartial<PartyDataSend>, I>>(base?: I): PartyDataSend {
-    return PartyDataSend.fromPartial(base ?? {});
-  },
-
-  fromPartial<I extends Exact<DeepPartial<PartyDataSend>, I>>(object: I): PartyDataSend {
-    const message = createBasePartyDataSend();
-    message.party_id = object.party_id ?? "";
-    message.op_code = object.op_code ?? 0;
-    message.data = object.data ?? new Uint8Array();
-    return message;
-  },
-};
-
-function createBasePartyPresenceEvent(): PartyPresenceEvent {
-  return { party_id: "", joins: [], leaves: [] };
-}
-
-export const PartyPresenceEvent = {
-  encode(message: PartyPresenceEvent, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.party_id !== "") {
-      writer.uint32(10).string(message.party_id);
-    }
-    for (const v of message.joins) {
-      UserPresence.encode(v!, writer.uint32(18).fork()).ldelim();
-    }
-    for (const v of message.leaves) {
-      UserPresence.encode(v!, writer.uint32(26).fork()).ldelim();
-    }
-    return writer;
-  },
-
-  decode(input: _m0.Reader | Uint8Array, length?: number): PartyPresenceEvent {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBasePartyPresenceEvent();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
-          message.party_id = reader.string();
-          break;
-        case 2:
-          message.joins.push(UserPresence.decode(reader, reader.uint32()));
-          break;
-        case 3:
-          message.leaves.push(UserPresence.decode(reader, reader.uint32()));
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
-      }
-    }
-    return message;
-  },
-
-  fromJSON(object: any): PartyPresenceEvent {
-    return {
-      party_id: isSet(object.party_id) ? String(object.party_id) : "",
-      joins: Array.isArray(object?.joins) ? object.joins.map((e: any) => UserPresence.fromJSON(e)) : [],
-      leaves: Array.isArray(object?.leaves) ? object.leaves.map((e: any) => UserPresence.fromJSON(e)) : [],
-    };
-  },
-
-  toJSON(message: PartyPresenceEvent): unknown {
-    const obj: any = {};
-    message.party_id !== undefined && (obj.party_id = message.party_id);
-    if (message.joins) {
-      obj.joins = message.joins.map((e) => e ? UserPresence.toJSON(e) : undefined);
-    } else {
-      obj.joins = [];
-    }
-    if (message.leaves) {
-      obj.leaves = message.leaves.map((e) => e ? UserPresence.toJSON(e) : undefined);
-    } else {
-      obj.leaves = [];
-    }
-    return obj;
-  },
-
-  create<I extends Exact<DeepPartial<PartyPresenceEvent>, I>>(base?: I): PartyPresenceEvent {
-    return PartyPresenceEvent.fromPartial(base ?? {});
-  },
-
-  fromPartial<I extends Exact<DeepPartial<PartyPresenceEvent>, I>>(object: I): PartyPresenceEvent {
-    const message = createBasePartyPresenceEvent();
-    message.party_id = object.party_id ?? "";
-    message.joins = object.joins?.map((e) => UserPresence.fromPartial(e)) || [];
-    message.leaves = object.leaves?.map((e) => UserPresence.fromPartial(e)) || [];
     return message;
   },
 };
@@ -4688,7 +2836,7 @@ export const StatusPresenceEvent = {
 };
 
 function createBaseLastSeenMessageEvent(): LastSeenMessageEvent {
-  return { channel_id: "", channel_label: "", message_id: "", mode: 0, timestamp: "" };
+  return { channel_id: "", message_id: "", mode: 0, timestamp: "" };
 }
 
 export const LastSeenMessageEvent = {
@@ -4696,17 +2844,14 @@ export const LastSeenMessageEvent = {
     if (message.channel_id !== "") {
       writer.uint32(10).string(message.channel_id);
     }
-    if (message.channel_label !== "") {
-      writer.uint32(18).string(message.channel_label);
-    }
     if (message.message_id !== "") {
-      writer.uint32(26).string(message.message_id);
+      writer.uint32(18).string(message.message_id);
     }
     if (message.mode !== 0) {
-      writer.uint32(32).int32(message.mode);
+      writer.uint32(24).int32(message.mode);
     }
     if (message.timestamp !== "") {
-      writer.uint32(42).string(message.timestamp);
+      writer.uint32(34).string(message.timestamp);
     }
     return writer;
   },
@@ -4722,15 +2867,12 @@ export const LastSeenMessageEvent = {
           message.channel_id = reader.string();
           break;
         case 2:
-          message.channel_label = reader.string();
-          break;
-        case 3:
           message.message_id = reader.string();
           break;
-        case 4:
+        case 3:
           message.mode = reader.int32();
           break;
-        case 5:
+        case 4:
           message.timestamp = reader.string();
           break;
         default:
@@ -4744,7 +2886,6 @@ export const LastSeenMessageEvent = {
   fromJSON(object: any): LastSeenMessageEvent {
     return {
       channel_id: isSet(object.channel_id) ? String(object.channel_id) : "",
-      channel_label: isSet(object.channel_label) ? String(object.channel_label) : "",
       message_id: isSet(object.message_id) ? String(object.message_id) : "",
       mode: isSet(object.mode) ? Number(object.mode) : 0,
       timestamp: isSet(object.timestamp) ? String(object.timestamp) : "",
@@ -4754,7 +2895,6 @@ export const LastSeenMessageEvent = {
   toJSON(message: LastSeenMessageEvent): unknown {
     const obj: any = {};
     message.channel_id !== undefined && (obj.channel_id = message.channel_id);
-    message.channel_label !== undefined && (obj.channel_label = message.channel_label);
     message.message_id !== undefined && (obj.message_id = message.message_id);
     message.mode !== undefined && (obj.mode = Math.round(message.mode));
     message.timestamp !== undefined && (obj.timestamp = message.timestamp);
@@ -4768,7 +2908,6 @@ export const LastSeenMessageEvent = {
   fromPartial<I extends Exact<DeepPartial<LastSeenMessageEvent>, I>>(object: I): LastSeenMessageEvent {
     const message = createBaseLastSeenMessageEvent();
     message.channel_id = object.channel_id ?? "";
-    message.channel_label = object.channel_label ?? "";
     message.message_id = object.message_id ?? "";
     message.mode = object.mode ?? 0;
     message.timestamp = object.timestamp ?? "";
@@ -4777,7 +2916,7 @@ export const LastSeenMessageEvent = {
 };
 
 function createBaseMessageTypingEvent(): MessageTypingEvent {
-  return { channel_id: "", channel_label: "", sender_id: "", mode: 0 };
+  return { channel_id: "", sender_id: "", mode: 0 };
 }
 
 export const MessageTypingEvent = {
@@ -4785,14 +2924,11 @@ export const MessageTypingEvent = {
     if (message.channel_id !== "") {
       writer.uint32(10).string(message.channel_id);
     }
-    if (message.channel_label !== "") {
-      writer.uint32(18).string(message.channel_label);
-    }
     if (message.sender_id !== "") {
-      writer.uint32(26).string(message.sender_id);
+      writer.uint32(18).string(message.sender_id);
     }
     if (message.mode !== 0) {
-      writer.uint32(32).int32(message.mode);
+      writer.uint32(24).int32(message.mode);
     }
     return writer;
   },
@@ -4808,12 +2944,9 @@ export const MessageTypingEvent = {
           message.channel_id = reader.string();
           break;
         case 2:
-          message.channel_label = reader.string();
-          break;
-        case 3:
           message.sender_id = reader.string();
           break;
-        case 4:
+        case 3:
           message.mode = reader.int32();
           break;
         default:
@@ -4827,7 +2960,6 @@ export const MessageTypingEvent = {
   fromJSON(object: any): MessageTypingEvent {
     return {
       channel_id: isSet(object.channel_id) ? String(object.channel_id) : "",
-      channel_label: isSet(object.channel_label) ? String(object.channel_label) : "",
       sender_id: isSet(object.sender_id) ? String(object.sender_id) : "",
       mode: isSet(object.mode) ? Number(object.mode) : 0,
     };
@@ -4836,7 +2968,6 @@ export const MessageTypingEvent = {
   toJSON(message: MessageTypingEvent): unknown {
     const obj: any = {};
     message.channel_id !== undefined && (obj.channel_id = message.channel_id);
-    message.channel_label !== undefined && (obj.channel_label = message.channel_label);
     message.sender_id !== undefined && (obj.sender_id = message.sender_id);
     message.mode !== undefined && (obj.mode = Math.round(message.mode));
     return obj;
@@ -4849,7 +2980,6 @@ export const MessageTypingEvent = {
   fromPartial<I extends Exact<DeepPartial<MessageTypingEvent>, I>>(object: I): MessageTypingEvent {
     const message = createBaseMessageTypingEvent();
     message.channel_id = object.channel_id ?? "";
-    message.channel_label = object.channel_label ?? "";
     message.sender_id = object.sender_id ?? "";
     message.mode = object.mode ?? 0;
     return message;
@@ -4857,7 +2987,7 @@ export const MessageTypingEvent = {
 };
 
 function createBaseMessageMentionEvent(): MessageMentionEvent {
-  return { channel_id: "", channel_label: "", message_id: "", user_id: "", username: "", sender_id: "", mode: 0 };
+  return { channel_id: "", message_id: "", user_id: "", username: "", sender_id: "", mode: 0 };
 }
 
 export const MessageMentionEvent = {
@@ -4865,23 +2995,20 @@ export const MessageMentionEvent = {
     if (message.channel_id !== "") {
       writer.uint32(10).string(message.channel_id);
     }
-    if (message.channel_label !== "") {
-      writer.uint32(18).string(message.channel_label);
-    }
     if (message.message_id !== "") {
-      writer.uint32(26).string(message.message_id);
+      writer.uint32(18).string(message.message_id);
     }
     if (message.user_id !== "") {
-      writer.uint32(34).string(message.user_id);
+      writer.uint32(26).string(message.user_id);
     }
     if (message.username !== "") {
-      writer.uint32(42).string(message.username);
+      writer.uint32(34).string(message.username);
     }
     if (message.sender_id !== "") {
-      writer.uint32(50).string(message.sender_id);
+      writer.uint32(42).string(message.sender_id);
     }
     if (message.mode !== 0) {
-      writer.uint32(56).int32(message.mode);
+      writer.uint32(48).int32(message.mode);
     }
     return writer;
   },
@@ -4897,21 +3024,18 @@ export const MessageMentionEvent = {
           message.channel_id = reader.string();
           break;
         case 2:
-          message.channel_label = reader.string();
-          break;
-        case 3:
           message.message_id = reader.string();
           break;
-        case 4:
+        case 3:
           message.user_id = reader.string();
           break;
-        case 5:
+        case 4:
           message.username = reader.string();
           break;
-        case 6:
+        case 5:
           message.sender_id = reader.string();
           break;
-        case 7:
+        case 6:
           message.mode = reader.int32();
           break;
         default:
@@ -4925,7 +3049,6 @@ export const MessageMentionEvent = {
   fromJSON(object: any): MessageMentionEvent {
     return {
       channel_id: isSet(object.channel_id) ? String(object.channel_id) : "",
-      channel_label: isSet(object.channel_label) ? String(object.channel_label) : "",
       message_id: isSet(object.message_id) ? String(object.message_id) : "",
       user_id: isSet(object.user_id) ? String(object.user_id) : "",
       username: isSet(object.username) ? String(object.username) : "",
@@ -4937,7 +3060,6 @@ export const MessageMentionEvent = {
   toJSON(message: MessageMentionEvent): unknown {
     const obj: any = {};
     message.channel_id !== undefined && (obj.channel_id = message.channel_id);
-    message.channel_label !== undefined && (obj.channel_label = message.channel_label);
     message.message_id !== undefined && (obj.message_id = message.message_id);
     message.user_id !== undefined && (obj.user_id = message.user_id);
     message.username !== undefined && (obj.username = message.username);
@@ -4953,7 +3075,6 @@ export const MessageMentionEvent = {
   fromPartial<I extends Exact<DeepPartial<MessageMentionEvent>, I>>(object: I): MessageMentionEvent {
     const message = createBaseMessageMentionEvent();
     message.channel_id = object.channel_id ?? "";
-    message.channel_label = object.channel_label ?? "";
     message.message_id = object.message_id ?? "";
     message.user_id = object.user_id ?? "";
     message.username = object.username ?? "";
@@ -4967,7 +3088,6 @@ function createBaseMessageReactionEvent(): MessageReactionEvent {
   return {
     id: "",
     channel_id: "",
-    channel_label: "",
     message_id: "",
     sender_id: "",
     sender_name: "",
@@ -4988,35 +3108,32 @@ export const MessageReactionEvent = {
     if (message.channel_id !== "") {
       writer.uint32(18).string(message.channel_id);
     }
-    if (message.channel_label !== "") {
-      writer.uint32(26).string(message.channel_label);
-    }
     if (message.message_id !== "") {
-      writer.uint32(34).string(message.message_id);
+      writer.uint32(26).string(message.message_id);
     }
     if (message.sender_id !== "") {
-      writer.uint32(42).string(message.sender_id);
+      writer.uint32(34).string(message.sender_id);
     }
     if (message.sender_name !== "") {
-      writer.uint32(50).string(message.sender_name);
+      writer.uint32(42).string(message.sender_name);
     }
     if (message.sender_avatar !== "") {
-      writer.uint32(58).string(message.sender_avatar);
+      writer.uint32(50).string(message.sender_avatar);
     }
     if (message.emoji !== "") {
-      writer.uint32(66).string(message.emoji);
+      writer.uint32(58).string(message.emoji);
     }
     if (message.action === true) {
-      writer.uint32(72).bool(message.action);
+      writer.uint32(64).bool(message.action);
     }
     if (message.message_sender_id !== "") {
-      writer.uint32(82).string(message.message_sender_id);
+      writer.uint32(74).string(message.message_sender_id);
     }
     if (message.count !== 0) {
-      writer.uint32(88).int32(message.count);
+      writer.uint32(80).int32(message.count);
     }
     if (message.mode !== 0) {
-      writer.uint32(96).int32(message.mode);
+      writer.uint32(88).int32(message.mode);
     }
     return writer;
   },
@@ -5035,33 +3152,30 @@ export const MessageReactionEvent = {
           message.channel_id = reader.string();
           break;
         case 3:
-          message.channel_label = reader.string();
-          break;
-        case 4:
           message.message_id = reader.string();
           break;
-        case 5:
+        case 4:
           message.sender_id = reader.string();
           break;
-        case 6:
+        case 5:
           message.sender_name = reader.string();
           break;
-        case 7:
+        case 6:
           message.sender_avatar = reader.string();
           break;
-        case 8:
+        case 7:
           message.emoji = reader.string();
           break;
-        case 9:
+        case 8:
           message.action = reader.bool();
           break;
-        case 10:
+        case 9:
           message.message_sender_id = reader.string();
           break;
-        case 11:
+        case 10:
           message.count = reader.int32();
           break;
-        case 12:
+        case 11:
           message.mode = reader.int32();
           break;
         default:
@@ -5076,7 +3190,6 @@ export const MessageReactionEvent = {
     return {
       id: isSet(object.id) ? String(object.id) : "",
       channel_id: isSet(object.channel_id) ? String(object.channel_id) : "",
-      channel_label: isSet(object.channel_label) ? String(object.channel_label) : "",
       message_id: isSet(object.message_id) ? String(object.message_id) : "",
       sender_id: isSet(object.sender_id) ? String(object.sender_id) : "",
       sender_name: isSet(object.sender_name) ? String(object.sender_name) : "",
@@ -5093,7 +3206,6 @@ export const MessageReactionEvent = {
     const obj: any = {};
     message.id !== undefined && (obj.id = message.id);
     message.channel_id !== undefined && (obj.channel_id = message.channel_id);
-    message.channel_label !== undefined && (obj.channel_label = message.channel_label);
     message.message_id !== undefined && (obj.message_id = message.message_id);
     message.sender_id !== undefined && (obj.sender_id = message.sender_id);
     message.sender_name !== undefined && (obj.sender_name = message.sender_name);
@@ -5114,7 +3226,6 @@ export const MessageReactionEvent = {
     const message = createBaseMessageReactionEvent();
     message.id = object.id ?? "";
     message.channel_id = object.channel_id ?? "";
-    message.channel_label = object.channel_label ?? "";
     message.message_id = object.message_id ?? "";
     message.sender_id = object.sender_id ?? "";
     message.sender_name = object.sender_name ?? "";
@@ -5131,7 +3242,6 @@ export const MessageReactionEvent = {
 function createBaseMessageAttachmentEvent(): MessageAttachmentEvent {
   return {
     channel_id: "",
-    channel_label: "",
     message_id: "",
     filename: "",
     size: 0,
@@ -5149,35 +3259,32 @@ export const MessageAttachmentEvent = {
     if (message.channel_id !== "") {
       writer.uint32(10).string(message.channel_id);
     }
-    if (message.channel_label !== "") {
-      writer.uint32(18).string(message.channel_label);
-    }
     if (message.message_id !== "") {
-      writer.uint32(26).string(message.message_id);
+      writer.uint32(18).string(message.message_id);
     }
     if (message.filename !== "") {
-      writer.uint32(34).string(message.filename);
+      writer.uint32(26).string(message.filename);
     }
     if (message.size !== 0) {
-      writer.uint32(40).int64(message.size);
+      writer.uint32(32).int64(message.size);
     }
     if (message.url !== "") {
-      writer.uint32(50).string(message.url);
+      writer.uint32(42).string(message.url);
     }
     if (message.filetype !== "") {
-      writer.uint32(58).string(message.filetype);
+      writer.uint32(50).string(message.filetype);
     }
     if (message.width !== 0) {
-      writer.uint32(64).int32(message.width);
+      writer.uint32(56).int32(message.width);
     }
     if (message.height !== 0) {
-      writer.uint32(72).int32(message.height);
+      writer.uint32(64).int32(message.height);
     }
     if (message.sender_id !== "") {
-      writer.uint32(82).string(message.sender_id);
+      writer.uint32(74).string(message.sender_id);
     }
     if (message.mode !== 0) {
-      writer.uint32(88).int32(message.mode);
+      writer.uint32(80).int32(message.mode);
     }
     return writer;
   },
@@ -5193,33 +3300,30 @@ export const MessageAttachmentEvent = {
           message.channel_id = reader.string();
           break;
         case 2:
-          message.channel_label = reader.string();
-          break;
-        case 3:
           message.message_id = reader.string();
           break;
-        case 4:
+        case 3:
           message.filename = reader.string();
           break;
-        case 5:
+        case 4:
           message.size = longToNumber(reader.int64() as Long);
           break;
-        case 6:
+        case 5:
           message.url = reader.string();
           break;
-        case 7:
+        case 6:
           message.filetype = reader.string();
           break;
-        case 8:
+        case 7:
           message.width = reader.int32();
           break;
-        case 9:
+        case 8:
           message.height = reader.int32();
           break;
-        case 10:
+        case 9:
           message.sender_id = reader.string();
           break;
-        case 11:
+        case 10:
           message.mode = reader.int32();
           break;
         default:
@@ -5233,7 +3337,6 @@ export const MessageAttachmentEvent = {
   fromJSON(object: any): MessageAttachmentEvent {
     return {
       channel_id: isSet(object.channel_id) ? String(object.channel_id) : "",
-      channel_label: isSet(object.channel_label) ? String(object.channel_label) : "",
       message_id: isSet(object.message_id) ? String(object.message_id) : "",
       filename: isSet(object.filename) ? String(object.filename) : "",
       size: isSet(object.size) ? Number(object.size) : 0,
@@ -5249,7 +3352,6 @@ export const MessageAttachmentEvent = {
   toJSON(message: MessageAttachmentEvent): unknown {
     const obj: any = {};
     message.channel_id !== undefined && (obj.channel_id = message.channel_id);
-    message.channel_label !== undefined && (obj.channel_label = message.channel_label);
     message.message_id !== undefined && (obj.message_id = message.message_id);
     message.filename !== undefined && (obj.filename = message.filename);
     message.size !== undefined && (obj.size = Math.round(message.size));
@@ -5269,7 +3371,6 @@ export const MessageAttachmentEvent = {
   fromPartial<I extends Exact<DeepPartial<MessageAttachmentEvent>, I>>(object: I): MessageAttachmentEvent {
     const message = createBaseMessageAttachmentEvent();
     message.channel_id = object.channel_id ?? "";
-    message.channel_label = object.channel_label ?? "";
     message.message_id = object.message_id ?? "";
     message.filename = object.filename ?? "";
     message.size = object.size ?? 0;
@@ -6427,31 +4528,6 @@ var tsProtoGlobalThis: any = (() => {
   }
   throw "Unable to locate global object";
 })();
-
-function bytesFromBase64(b64: string): Uint8Array {
-  if (tsProtoGlobalThis.Buffer) {
-    return Uint8Array.from(tsProtoGlobalThis.Buffer.from(b64, "base64"));
-  } else {
-    const bin = tsProtoGlobalThis.atob(b64);
-    const arr = new Uint8Array(bin.length);
-    for (let i = 0; i < bin.length; ++i) {
-      arr[i] = bin.charCodeAt(i);
-    }
-    return arr;
-  }
-}
-
-function base64FromBytes(arr: Uint8Array): string {
-  if (tsProtoGlobalThis.Buffer) {
-    return tsProtoGlobalThis.Buffer.from(arr).toString("base64");
-  } else {
-    const bin: string[] = [];
-    arr.forEach((byte) => {
-      bin.push(String.fromCharCode(byte));
-    });
-    return tsProtoGlobalThis.btoa(bin.join(""));
-  }
-}
 
 type Builtin = Date | Function | Uint8Array | string | number | boolean | undefined;
 

@@ -471,6 +471,7 @@ export declare class Client {
     /** Add an Apple ID to the social profiles on the current user's account. */
     linkApple(session: Session, request: ApiAccountApple): Promise<boolean>;
     closeDirectMess(session: Session, request: ApiDeleteChannelDescRequest): Promise<boolean>;
+    openDirectMess(session: Session, request: ApiDeleteChannelDescRequest): Promise<boolean>;
     /** Add a custom ID to the social profiles on the current user's account. */
     linkCustom(session: Session, request: ApiAccountCustom): Promise<boolean>;
     /** Add a device ID to the social profiles on the current user's account. */
