@@ -93,6 +93,7 @@ import {
   ApiCreateWebhookRequest,
   ApiWebhookResponse,
   ApiDeleteChannelDescRequest,
+  ApiChangeChannelPrivateRequest,
 } from "./api.gen";
 
 import { Session } from "./session";
@@ -2051,6 +2052,18 @@ async setMuteNotificationChannel(session: Session, request: ApiSetMuteNotificati
   }
 
   return this.apiClient.setMuteNotificationChannel(session.token, request).then((response: any) => {
+    return response !== undefined;
+  });
+}
+
+/** update channel private*/
+async updateChannelPrivate(session: Session, request: ApiChangeChannelPrivateRequest): Promise<boolean> {
+  if (this.autoRefreshSession && session.refresh_token &&
+      session.isexpired((Date.now() + this.expiredTimespanMs)/1000)) {
+      await this.sessionRefresh(session);
+  }
+
+  return this.apiClient.updateChannelPrivate(session.token, request).then((response: any) => {
     return response !== undefined;
   });
 }
