@@ -1919,6 +1919,14 @@ export interface UpdateChannelDescRequest {
   category_id: string | undefined;
 }
 
+/** Update fields in a given channel. */
+export interface ChangeChannelPrivateRequest {
+  /** The ID of the channel to update. */
+  channel_id: string;
+  /** The channel private */
+  channel_private: number;
+}
+
 /** Add users to a channel. */
 export interface AddChannelUsersRequest {
   /** The channel to add users to. */
@@ -13282,6 +13290,68 @@ export const UpdateChannelDescRequest = {
     message.channel_id = object.channel_id ?? "";
     message.channel_label = object.channel_label ?? undefined;
     message.category_id = object.category_id ?? undefined;
+    return message;
+  },
+};
+
+function createBaseChangeChannelPrivateRequest(): ChangeChannelPrivateRequest {
+  return { channel_id: "", channel_private: 0 };
+}
+
+export const ChangeChannelPrivateRequest = {
+  encode(message: ChangeChannelPrivateRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.channel_id !== "") {
+      writer.uint32(10).string(message.channel_id);
+    }
+    if (message.channel_private !== 0) {
+      writer.uint32(16).int32(message.channel_private);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): ChangeChannelPrivateRequest {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseChangeChannelPrivateRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.channel_id = reader.string();
+          break;
+        case 2:
+          message.channel_private = reader.int32();
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): ChangeChannelPrivateRequest {
+    return {
+      channel_id: isSet(object.channel_id) ? String(object.channel_id) : "",
+      channel_private: isSet(object.channel_private) ? Number(object.channel_private) : 0,
+    };
+  },
+
+  toJSON(message: ChangeChannelPrivateRequest): unknown {
+    const obj: any = {};
+    message.channel_id !== undefined && (obj.channel_id = message.channel_id);
+    message.channel_private !== undefined && (obj.channel_private = Math.round(message.channel_private));
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<ChangeChannelPrivateRequest>, I>>(base?: I): ChangeChannelPrivateRequest {
+    return ChangeChannelPrivateRequest.fromPartial(base ?? {});
+  },
+
+  fromPartial<I extends Exact<DeepPartial<ChangeChannelPrivateRequest>, I>>(object: I): ChangeChannelPrivateRequest {
+    const message = createBaseChangeChannelPrivateRequest();
+    message.channel_id = object.channel_id ?? "";
+    message.channel_private = object.channel_private ?? 0;
     return message;
   },
 };
