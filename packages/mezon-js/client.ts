@@ -94,6 +94,7 @@ import {
   ApiWebhookResponse,
   ApiDeleteChannelDescRequest,
   ApiChangeChannelPrivateRequest,
+  ApiCommonToUsersList,
 } from "./api.gen";
 
 import { Session } from "./session";
@@ -1956,6 +1957,19 @@ export class Client {
     }
     
     return this.apiClient.getLinkInvite(session.token, inviteId).then((response: ApiInviteUserRes) => {
+      return Promise.resolve(response);
+      
+    });
+  }
+
+  /**  */
+  async listCommonToUsers(session: Session, userId?: string, state?: number, limit?: number, cursor?: string): Promise<ApiCommonToUsersList> {
+    if (this.autoRefreshSession && session.refresh_token &&
+        session.isexpired((Date.now() + this.expiredTimespanMs)/1000)) {
+        await this.sessionRefresh(session);
+    }
+    
+    return this.apiClient.listCommonToUsers(session.token, limit, state, cursor, userId).then((response: ApiCommonToUsersList) => {
       return Promise.resolve(response);
       
     });
