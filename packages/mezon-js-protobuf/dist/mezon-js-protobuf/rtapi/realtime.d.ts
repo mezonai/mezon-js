@@ -437,6 +437,8 @@ export interface ChannelCreatedEvent {
     channel_id: string;
     /** channel label */
     channel_label: string;
+    /** channel private */
+    channel_private: number;
     /** channel type */
     channel_type: number | undefined;
     /** status */
@@ -818,6 +820,7 @@ export declare const Envelope: {
             parrent_id?: string | undefined;
             channel_id?: string | undefined;
             channel_label?: string | undefined;
+            channel_private?: number | undefined;
             channel_type?: number | undefined;
             status?: number | undefined;
         } | undefined;
@@ -1629,6 +1632,7 @@ export declare const Envelope: {
             parrent_id?: string | undefined;
             channel_id?: string | undefined;
             channel_label?: string | undefined;
+            channel_private?: number | undefined;
             channel_type?: number | undefined;
             status?: number | undefined;
         } & {
@@ -1638,6 +1642,7 @@ export declare const Envelope: {
             parrent_id?: string | undefined;
             channel_id?: string | undefined;
             channel_label?: string | undefined;
+            channel_private?: number | undefined;
             channel_type?: number | undefined;
             status?: number | undefined;
         } & { [K_61 in Exclude<keyof I["channel_created_event"], keyof ChannelCreatedEvent>]: never; }) | undefined;
@@ -1961,6 +1966,7 @@ export declare const Envelope: {
             parrent_id?: string | undefined;
             channel_id?: string | undefined;
             channel_label?: string | undefined;
+            channel_private?: number | undefined;
             channel_type?: number | undefined;
             status?: number | undefined;
         } | undefined;
@@ -2772,6 +2778,7 @@ export declare const Envelope: {
             parrent_id?: string | undefined;
             channel_id?: string | undefined;
             channel_label?: string | undefined;
+            channel_private?: number | undefined;
             channel_type?: number | undefined;
             status?: number | undefined;
         } & {
@@ -2781,6 +2788,7 @@ export declare const Envelope: {
             parrent_id?: string | undefined;
             channel_id?: string | undefined;
             channel_label?: string | undefined;
+            channel_private?: number | undefined;
             channel_type?: number | undefined;
             status?: number | undefined;
         } & { [K_126 in Exclude<keyof I_1["channel_created_event"], keyof ChannelCreatedEvent>]: never; }) | undefined;
@@ -4360,6 +4368,7 @@ export declare const ChannelCreatedEvent: {
         parrent_id?: string | undefined;
         channel_id?: string | undefined;
         channel_label?: string | undefined;
+        channel_private?: number | undefined;
         channel_type?: number | undefined;
         status?: number | undefined;
     } & {
@@ -4369,6 +4378,7 @@ export declare const ChannelCreatedEvent: {
         parrent_id?: string | undefined;
         channel_id?: string | undefined;
         channel_label?: string | undefined;
+        channel_private?: number | undefined;
         channel_type?: number | undefined;
         status?: number | undefined;
     } & { [K in Exclude<keyof I, keyof ChannelCreatedEvent>]: never; }>(base?: I | undefined): ChannelCreatedEvent;
@@ -4379,6 +4389,7 @@ export declare const ChannelCreatedEvent: {
         parrent_id?: string | undefined;
         channel_id?: string | undefined;
         channel_label?: string | undefined;
+        channel_private?: number | undefined;
         channel_type?: number | undefined;
         status?: number | undefined;
     } & {
@@ -4388,6 +4399,7 @@ export declare const ChannelCreatedEvent: {
         parrent_id?: string | undefined;
         channel_id?: string | undefined;
         channel_label?: string | undefined;
+        channel_private?: number | undefined;
         channel_type?: number | undefined;
         status?: number | undefined;
     } & { [K_1 in Exclude<keyof I_1, keyof ChannelCreatedEvent>]: never; }>(object: I_1): ChannelCreatedEvent;

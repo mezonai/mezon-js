@@ -5451,6 +5451,7 @@ function createBaseChannelCreatedEvent() {
     parrent_id: "",
     channel_id: "",
     channel_label: "",
+    channel_private: 0,
     channel_type: void 0,
     status: 0
   };
@@ -5475,11 +5476,14 @@ var ChannelCreatedEvent = {
     if (message.channel_label !== "") {
       writer.uint32(50).string(message.channel_label);
     }
+    if (message.channel_private !== 0) {
+      writer.uint32(56).int32(message.channel_private);
+    }
     if (message.channel_type !== void 0) {
-      Int32Value.encode({ value: message.channel_type }, writer.uint32(58).fork()).ldelim();
+      Int32Value.encode({ value: message.channel_type }, writer.uint32(66).fork()).ldelim();
     }
     if (message.status !== 0) {
-      writer.uint32(64).int32(message.status);
+      writer.uint32(72).int32(message.status);
     }
     return writer;
   },
@@ -5509,9 +5513,12 @@ var ChannelCreatedEvent = {
           message.channel_label = reader.string();
           break;
         case 7:
-          message.channel_type = Int32Value.decode(reader, reader.uint32()).value;
+          message.channel_private = reader.int32();
           break;
         case 8:
+          message.channel_type = Int32Value.decode(reader, reader.uint32()).value;
+          break;
+        case 9:
           message.status = reader.int32();
           break;
         default:
@@ -5529,6 +5536,7 @@ var ChannelCreatedEvent = {
       parrent_id: isSet4(object.parrent_id) ? String(object.parrent_id) : "",
       channel_id: isSet4(object.channel_id) ? String(object.channel_id) : "",
       channel_label: isSet4(object.channel_label) ? String(object.channel_label) : "",
+      channel_private: isSet4(object.channel_private) ? Number(object.channel_private) : 0,
       channel_type: isSet4(object.channel_type) ? Number(object.channel_type) : void 0,
       status: isSet4(object.status) ? Number(object.status) : 0
     };
@@ -5541,6 +5549,7 @@ var ChannelCreatedEvent = {
     message.parrent_id !== void 0 && (obj.parrent_id = message.parrent_id);
     message.channel_id !== void 0 && (obj.channel_id = message.channel_id);
     message.channel_label !== void 0 && (obj.channel_label = message.channel_label);
+    message.channel_private !== void 0 && (obj.channel_private = Math.round(message.channel_private));
     message.channel_type !== void 0 && (obj.channel_type = message.channel_type);
     message.status !== void 0 && (obj.status = Math.round(message.status));
     return obj;
@@ -5549,7 +5558,7 @@ var ChannelCreatedEvent = {
     return ChannelCreatedEvent.fromPartial(base != null ? base : {});
   },
   fromPartial(object) {
-    var _a, _b, _c, _d, _e, _f, _g, _h;
+    var _a, _b, _c, _d, _e, _f, _g, _h, _i;
     const message = createBaseChannelCreatedEvent();
     message.clan_id = (_a = object.clan_id) != null ? _a : "";
     message.category_id = (_b = object.category_id) != null ? _b : "";
@@ -5557,8 +5566,9 @@ var ChannelCreatedEvent = {
     message.parrent_id = (_d = object.parrent_id) != null ? _d : "";
     message.channel_id = (_e = object.channel_id) != null ? _e : "";
     message.channel_label = (_f = object.channel_label) != null ? _f : "";
-    message.channel_type = (_g = object.channel_type) != null ? _g : void 0;
-    message.status = (_h = object.status) != null ? _h : 0;
+    message.channel_private = (_g = object.channel_private) != null ? _g : 0;
+    message.channel_type = (_h = object.channel_type) != null ? _h : void 0;
+    message.status = (_i = object.status) != null ? _i : 0;
     return message;
   }
 };

@@ -99,6 +99,11 @@ export interface ApiCategoryDesc {
 export interface ApiCategoryDescList {
     categorydesc?: Array<ApiCategoryDesc>;
 }
+/** Update fields in a given channel. */
+export interface ApiChangeChannelPrivateRequest {
+    channel_id?: string;
+    channel_private?: number;
+}
 /**  */
 export interface ApiChannelAttachment {
     create_time?: string;
@@ -214,6 +219,12 @@ export interface ApiClanUserList {
     clan_id?: string;
     clan_users?: Array<ClanUserListClanUser>;
     cursor?: string;
+}
+/** A collection of zero or more friends of the user. */
+export interface ApiCommonToUsersList {
+    clandesc?: Array<ApiClanDesc>;
+    cursor?: string;
+    friends?: Array<ApiFriend>;
 }
 /**  */
 export interface ApiCreateCategoryDescRequest {
@@ -689,6 +700,7 @@ export interface ApiUser {
     gamecenter_id?: string;
     google_id?: string;
     id?: string;
+    join_time?: string;
     lang_tag?: string;
     location?: string;
     metadata?: string;
@@ -852,16 +864,18 @@ export declare class MezonApi {
     getClanDescProfile(bearerToken: string, clanId: string, options?: any): Promise<ApiClanDescProfile>;
     /** Update fields in a given clan profile. */
     updateClanDescProfile(bearerToken: string, clanId: string, body: {}, options?: any): Promise<any>;
+    /** List common friends for the current user. */
+    listCommonToUsers(bearerToken: string, limit?: number, state?: number, cursor?: string, friendId?: string, options?: any): Promise<ApiCommonToUsersList>;
     /**  */
     createCategoryDesc(bearerToken: string, body: ApiCreateCategoryDescRequest, options?: any): Promise<ApiCategoryDesc>;
     /**  */
     deleteCategoryDesc(bearerToken: string, creatorId: string, options?: any): Promise<any>;
-    /** open direct message. */
-    openDirectMess(bearerToken: string, body: ApiDeleteChannelDescRequest, options?: any): Promise<any>;
     /** regist fcm device token */
     registFCMDeviceToken(bearerToken: string, token?: string, deviceId?: string, platform?: string, options?: any): Promise<any>;
     /** close direct message. */
     closeDirectMess(bearerToken: string, body: ApiDeleteChannelDescRequest, options?: any): Promise<any>;
+    /** open direct message. */
+    openDirectMess(bearerToken: string, body: ApiDeleteChannelDescRequest, options?: any): Promise<any>;
     /** Search message from elasticsearch service. */
     searchMessage(bearerToken: string, body: ApiSearchMessageRequest, options?: any): Promise<ApiSearchMessageResponse>;
     /** Submit an event for processing in the server's registered runtime custom events handler. */
@@ -972,6 +986,8 @@ export declare class MezonApi {
     listStorageObjects2(bearerToken: string, collection: string, userId: string, limit?: number, cursor?: string, options?: any): Promise<ApiStorageObjectList>;
     /** Update fields in a given category. */
     updateCategory(bearerToken: string, body: ApiUpdateCategoryDescRequest, options?: any): Promise<any>;
+    /** Update channel private. */
+    updateChannelPrivate(bearerToken: string, body: ApiChangeChannelPrivateRequest, options?: any): Promise<any>;
     /**  */
     updateUserProfileByClan(bearerToken: string, clanId: string, body: {}, options?: any): Promise<any>;
     /** Upload attachment */

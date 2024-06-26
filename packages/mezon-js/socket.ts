@@ -410,6 +410,8 @@ export interface ChannelCreatedEvent {
   channel_id: string;
   // channel label
   channel_label: string;
+  // channel private
+  channel_private: number;
   // channel type
   channel_type: number;
   // status
