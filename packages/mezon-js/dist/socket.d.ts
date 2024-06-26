@@ -287,6 +287,7 @@ export interface ChannelCreatedEvent {
     parrent_id: string;
     channel_id: string;
     channel_label: string;
+    channel_private: number;
     channel_type: number;
     status: number;
 }

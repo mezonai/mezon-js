@@ -770,16 +770,6 @@ export interface FriendList {
   cursor: string;
 }
 
-/** A collection of zero or more friends of the user. */
-export interface CommonToUsersList {
-  /** The Friend objects. */
-  friends: Friend[];
-  /** Cursor for the next page of results, if any. */
-  cursor: string;
-  /** The Clan objects. */
-  clandesc: ClanDesc[];
-}
-
 /** Fetch a batch of zero or more users from the server. */
 export interface GetUsersRequest {
   /** The account id of a user. */
@@ -1068,22 +1058,6 @@ export interface ListFriendsRequest {
     | undefined;
   /** An optional next page cursor. */
   cursor: string;
-}
-
-/** List common friends for a user. */
-export interface ListCommonFriendsRequest {
-  /** Max number of records to return. Between 1 and 100. */
-  limit:
-    | number
-    | undefined;
-  /** The friend state to list. */
-  state:
-    | number
-    | undefined;
-  /** An optional next page cursor. */
-  cursor: string;
-  /**  */
-  friend_id: string;
 }
 
 /** List groups based on given filters. */
@@ -1460,8 +1434,6 @@ export interface User {
   apple_id: string;
   /**  */
   about_me: string;
-  /**  */
-  join_time: Date | undefined;
 }
 
 /** A list of groups belonging to a user, along with the user's role in each group. */
@@ -1945,14 +1917,6 @@ export interface UpdateChannelDescRequest {
     | undefined;
   /** The category of channel */
   category_id: string | undefined;
-}
-
-/** Update fields in a given channel. */
-export interface ChangeChannelPrivateRequest {
-  /** The ID of the channel to update. */
-  channel_id: string;
-  /** The channel private */
-  channel_private: number;
 }
 
 /** Add users to a channel. */
@@ -6626,85 +6590,6 @@ export const FriendList = {
   },
 };
 
-function createBaseCommonToUsersList(): CommonToUsersList {
-  return { friends: [], cursor: "", clandesc: [] };
-}
-
-export const CommonToUsersList = {
-  encode(message: CommonToUsersList, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    for (const v of message.friends) {
-      Friend.encode(v!, writer.uint32(10).fork()).ldelim();
-    }
-    if (message.cursor !== "") {
-      writer.uint32(18).string(message.cursor);
-    }
-    for (const v of message.clandesc) {
-      ClanDesc.encode(v!, writer.uint32(26).fork()).ldelim();
-    }
-    return writer;
-  },
-
-  decode(input: _m0.Reader | Uint8Array, length?: number): CommonToUsersList {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseCommonToUsersList();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
-          message.friends.push(Friend.decode(reader, reader.uint32()));
-          break;
-        case 2:
-          message.cursor = reader.string();
-          break;
-        case 3:
-          message.clandesc.push(ClanDesc.decode(reader, reader.uint32()));
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
-      }
-    }
-    return message;
-  },
-
-  fromJSON(object: any): CommonToUsersList {
-    return {
-      friends: Array.isArray(object?.friends) ? object.friends.map((e: any) => Friend.fromJSON(e)) : [],
-      cursor: isSet(object.cursor) ? String(object.cursor) : "",
-      clandesc: Array.isArray(object?.clandesc) ? object.clandesc.map((e: any) => ClanDesc.fromJSON(e)) : [],
-    };
-  },
-
-  toJSON(message: CommonToUsersList): unknown {
-    const obj: any = {};
-    if (message.friends) {
-      obj.friends = message.friends.map((e) => e ? Friend.toJSON(e) : undefined);
-    } else {
-      obj.friends = [];
-    }
-    message.cursor !== undefined && (obj.cursor = message.cursor);
-    if (message.clandesc) {
-      obj.clandesc = message.clandesc.map((e) => e ? ClanDesc.toJSON(e) : undefined);
-    } else {
-      obj.clandesc = [];
-    }
-    return obj;
-  },
-
-  create<I extends Exact<DeepPartial<CommonToUsersList>, I>>(base?: I): CommonToUsersList {
-    return CommonToUsersList.fromPartial(base ?? {});
-  },
-
-  fromPartial<I extends Exact<DeepPartial<CommonToUsersList>, I>>(object: I): CommonToUsersList {
-    const message = createBaseCommonToUsersList();
-    message.friends = object.friends?.map((e) => Friend.fromPartial(e)) || [];
-    message.cursor = object.cursor ?? "";
-    message.clandesc = object.clandesc?.map((e) => ClanDesc.fromPartial(e)) || [];
-    return message;
-  },
-};
-
 function createBaseGetUsersRequest(): GetUsersRequest {
   return { ids: [], usernames: [], facebook_ids: [] };
 }
@@ -8292,86 +8177,6 @@ export const ListFriendsRequest = {
     message.limit = object.limit ?? undefined;
     message.state = object.state ?? undefined;
     message.cursor = object.cursor ?? "";
-    return message;
-  },
-};
-
-function createBaseListCommonFriendsRequest(): ListCommonFriendsRequest {
-  return { limit: undefined, state: undefined, cursor: "", friend_id: "" };
-}
-
-export const ListCommonFriendsRequest = {
-  encode(message: ListCommonFriendsRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.limit !== undefined) {
-      Int32Value.encode({ value: message.limit! }, writer.uint32(10).fork()).ldelim();
-    }
-    if (message.state !== undefined) {
-      Int32Value.encode({ value: message.state! }, writer.uint32(18).fork()).ldelim();
-    }
-    if (message.cursor !== "") {
-      writer.uint32(26).string(message.cursor);
-    }
-    if (message.friend_id !== "") {
-      writer.uint32(34).string(message.friend_id);
-    }
-    return writer;
-  },
-
-  decode(input: _m0.Reader | Uint8Array, length?: number): ListCommonFriendsRequest {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseListCommonFriendsRequest();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
-          message.limit = Int32Value.decode(reader, reader.uint32()).value;
-          break;
-        case 2:
-          message.state = Int32Value.decode(reader, reader.uint32()).value;
-          break;
-        case 3:
-          message.cursor = reader.string();
-          break;
-        case 4:
-          message.friend_id = reader.string();
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
-      }
-    }
-    return message;
-  },
-
-  fromJSON(object: any): ListCommonFriendsRequest {
-    return {
-      limit: isSet(object.limit) ? Number(object.limit) : undefined,
-      state: isSet(object.state) ? Number(object.state) : undefined,
-      cursor: isSet(object.cursor) ? String(object.cursor) : "",
-      friend_id: isSet(object.friend_id) ? String(object.friend_id) : "",
-    };
-  },
-
-  toJSON(message: ListCommonFriendsRequest): unknown {
-    const obj: any = {};
-    message.limit !== undefined && (obj.limit = message.limit);
-    message.state !== undefined && (obj.state = message.state);
-    message.cursor !== undefined && (obj.cursor = message.cursor);
-    message.friend_id !== undefined && (obj.friend_id = message.friend_id);
-    return obj;
-  },
-
-  create<I extends Exact<DeepPartial<ListCommonFriendsRequest>, I>>(base?: I): ListCommonFriendsRequest {
-    return ListCommonFriendsRequest.fromPartial(base ?? {});
-  },
-
-  fromPartial<I extends Exact<DeepPartial<ListCommonFriendsRequest>, I>>(object: I): ListCommonFriendsRequest {
-    const message = createBaseListCommonFriendsRequest();
-    message.limit = object.limit ?? undefined;
-    message.state = object.state ?? undefined;
-    message.cursor = object.cursor ?? "";
-    message.friend_id = object.friend_id ?? "";
     return message;
   },
 };
@@ -10361,7 +10166,6 @@ function createBaseUser(): User {
     update_time: undefined,
     apple_id: "",
     about_me: "",
-    join_time: undefined,
   };
 }
 
@@ -10420,9 +10224,6 @@ export const User = {
     }
     if (message.about_me !== "") {
       writer.uint32(146).string(message.about_me);
-    }
-    if (message.join_time !== undefined) {
-      Timestamp.encode(toTimestamp(message.join_time), writer.uint32(154).fork()).ldelim();
     }
     return writer;
   },
@@ -10488,9 +10289,6 @@ export const User = {
         case 18:
           message.about_me = reader.string();
           break;
-        case 19:
-          message.join_time = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
-          break;
         default:
           reader.skipType(tag & 7);
           break;
@@ -10519,7 +10317,6 @@ export const User = {
       update_time: isSet(object.update_time) ? fromJsonTimestamp(object.update_time) : undefined,
       apple_id: isSet(object.apple_id) ? String(object.apple_id) : "",
       about_me: isSet(object.about_me) ? String(object.about_me) : "",
-      join_time: isSet(object.join_time) ? fromJsonTimestamp(object.join_time) : undefined,
     };
   },
 
@@ -10543,7 +10340,6 @@ export const User = {
     message.update_time !== undefined && (obj.update_time = message.update_time.toISOString());
     message.apple_id !== undefined && (obj.apple_id = message.apple_id);
     message.about_me !== undefined && (obj.about_me = message.about_me);
-    message.join_time !== undefined && (obj.join_time = message.join_time.toISOString());
     return obj;
   },
 
@@ -10571,7 +10367,6 @@ export const User = {
     message.update_time = object.update_time ?? undefined;
     message.apple_id = object.apple_id ?? "";
     message.about_me = object.about_me ?? "";
-    message.join_time = object.join_time ?? undefined;
     return message;
   },
 };
@@ -13487,68 +13282,6 @@ export const UpdateChannelDescRequest = {
     message.channel_id = object.channel_id ?? "";
     message.channel_label = object.channel_label ?? undefined;
     message.category_id = object.category_id ?? undefined;
-    return message;
-  },
-};
-
-function createBaseChangeChannelPrivateRequest(): ChangeChannelPrivateRequest {
-  return { channel_id: "", channel_private: 0 };
-}
-
-export const ChangeChannelPrivateRequest = {
-  encode(message: ChangeChannelPrivateRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.channel_id !== "") {
-      writer.uint32(10).string(message.channel_id);
-    }
-    if (message.channel_private !== 0) {
-      writer.uint32(16).int32(message.channel_private);
-    }
-    return writer;
-  },
-
-  decode(input: _m0.Reader | Uint8Array, length?: number): ChangeChannelPrivateRequest {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseChangeChannelPrivateRequest();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
-          message.channel_id = reader.string();
-          break;
-        case 2:
-          message.channel_private = reader.int32();
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
-      }
-    }
-    return message;
-  },
-
-  fromJSON(object: any): ChangeChannelPrivateRequest {
-    return {
-      channel_id: isSet(object.channel_id) ? String(object.channel_id) : "",
-      channel_private: isSet(object.channel_private) ? Number(object.channel_private) : 0,
-    };
-  },
-
-  toJSON(message: ChangeChannelPrivateRequest): unknown {
-    const obj: any = {};
-    message.channel_id !== undefined && (obj.channel_id = message.channel_id);
-    message.channel_private !== undefined && (obj.channel_private = Math.round(message.channel_private));
-    return obj;
-  },
-
-  create<I extends Exact<DeepPartial<ChangeChannelPrivateRequest>, I>>(base?: I): ChangeChannelPrivateRequest {
-    return ChangeChannelPrivateRequest.fromPartial(base ?? {});
-  },
-
-  fromPartial<I extends Exact<DeepPartial<ChangeChannelPrivateRequest>, I>>(object: I): ChangeChannelPrivateRequest {
-    const message = createBaseChangeChannelPrivateRequest();
-    message.channel_id = object.channel_id ?? "";
-    message.channel_private = object.channel_private ?? 0;
     return message;
   },
 };
