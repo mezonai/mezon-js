@@ -1042,6 +1042,8 @@ export interface User {
     apple_id: string;
     /**  */
     about_me: string;
+    /**  */
+    join_time: Date | undefined;
 }
 /** A list of groups belonging to a user, along with the user's role in each group. */
 export interface UserGroupList {
@@ -1424,6 +1426,13 @@ export interface UpdateChannelDescRequest {
     channel_label: string | undefined;
     /** The category of channel */
     category_id: string | undefined;
+}
+/** Update fields in a given channel. */
+export interface ChangeChannelPrivateRequest {
+    /** The ID of the channel to update. */
+    channel_id: string;
+    /** The channel private */
+    channel_private: number;
 }
 /** Add users to a channel. */
 export interface AddChannelUsersRequest {
@@ -1889,6 +1898,7 @@ export declare const Account: {
             update_time?: Date | undefined;
             apple_id?: string | undefined;
             about_me?: string | undefined;
+            join_time?: Date | undefined;
         } | undefined;
         wallet?: string | undefined;
         email?: string | undefined;
@@ -1921,6 +1931,7 @@ export declare const Account: {
             update_time?: Date | undefined;
             apple_id?: string | undefined;
             about_me?: string | undefined;
+            join_time?: Date | undefined;
         } & {
             id?: string | undefined;
             username?: string | undefined;
@@ -1940,6 +1951,7 @@ export declare const Account: {
             update_time?: Date | undefined;
             apple_id?: string | undefined;
             about_me?: string | undefined;
+            join_time?: Date | undefined;
         } & { [K in Exclude<keyof I["user"], keyof User>]: never; }) | undefined;
         wallet?: string | undefined;
         email?: string | undefined;
@@ -1990,6 +2002,7 @@ export declare const Account: {
             update_time?: Date | undefined;
             apple_id?: string | undefined;
             about_me?: string | undefined;
+            join_time?: Date | undefined;
         } | undefined;
         wallet?: string | undefined;
         email?: string | undefined;
@@ -2022,6 +2035,7 @@ export declare const Account: {
             update_time?: Date | undefined;
             apple_id?: string | undefined;
             about_me?: string | undefined;
+            join_time?: Date | undefined;
         } & {
             id?: string | undefined;
             username?: string | undefined;
@@ -2041,6 +2055,7 @@ export declare const Account: {
             update_time?: Date | undefined;
             apple_id?: string | undefined;
             about_me?: string | undefined;
+            join_time?: Date | undefined;
         } & { [K_5 in Exclude<keyof I_1["user"], keyof User>]: never; }) | undefined;
         wallet?: string | undefined;
         email?: string | undefined;
@@ -4067,6 +4082,7 @@ export declare const Friend: {
             update_time?: Date | undefined;
             apple_id?: string | undefined;
             about_me?: string | undefined;
+            join_time?: Date | undefined;
         } | undefined;
         state?: number | undefined;
         update_time?: Date | undefined;
@@ -4090,6 +4106,7 @@ export declare const Friend: {
             update_time?: Date | undefined;
             apple_id?: string | undefined;
             about_me?: string | undefined;
+            join_time?: Date | undefined;
         } & {
             id?: string | undefined;
             username?: string | undefined;
@@ -4109,6 +4126,7 @@ export declare const Friend: {
             update_time?: Date | undefined;
             apple_id?: string | undefined;
             about_me?: string | undefined;
+            join_time?: Date | undefined;
         } & { [K in Exclude<keyof I["user"], keyof User>]: never; }) | undefined;
         state?: number | undefined;
         update_time?: Date | undefined;
@@ -4133,6 +4151,7 @@ export declare const Friend: {
             update_time?: Date | undefined;
             apple_id?: string | undefined;
             about_me?: string | undefined;
+            join_time?: Date | undefined;
         } | undefined;
         state?: number | undefined;
         update_time?: Date | undefined;
@@ -4156,6 +4175,7 @@ export declare const Friend: {
             update_time?: Date | undefined;
             apple_id?: string | undefined;
             about_me?: string | undefined;
+            join_time?: Date | undefined;
         } & {
             id?: string | undefined;
             username?: string | undefined;
@@ -4175,6 +4195,7 @@ export declare const Friend: {
             update_time?: Date | undefined;
             apple_id?: string | undefined;
             about_me?: string | undefined;
+            join_time?: Date | undefined;
         } & { [K_2 in Exclude<keyof I_1["user"], keyof User>]: never; }) | undefined;
         state?: number | undefined;
         update_time?: Date | undefined;
@@ -4206,6 +4227,7 @@ export declare const FriendList: {
                 update_time?: Date | undefined;
                 apple_id?: string | undefined;
                 about_me?: string | undefined;
+                join_time?: Date | undefined;
             } | undefined;
             state?: number | undefined;
             update_time?: Date | undefined;
@@ -4232,6 +4254,7 @@ export declare const FriendList: {
                 update_time?: Date | undefined;
                 apple_id?: string | undefined;
                 about_me?: string | undefined;
+                join_time?: Date | undefined;
             } | undefined;
             state?: number | undefined;
             update_time?: Date | undefined;
@@ -4255,6 +4278,7 @@ export declare const FriendList: {
                 update_time?: Date | undefined;
                 apple_id?: string | undefined;
                 about_me?: string | undefined;
+                join_time?: Date | undefined;
             } | undefined;
             state?: number | undefined;
             update_time?: Date | undefined;
@@ -4278,6 +4302,7 @@ export declare const FriendList: {
                 update_time?: Date | undefined;
                 apple_id?: string | undefined;
                 about_me?: string | undefined;
+                join_time?: Date | undefined;
             } & {
                 id?: string | undefined;
                 username?: string | undefined;
@@ -4297,6 +4322,7 @@ export declare const FriendList: {
                 update_time?: Date | undefined;
                 apple_id?: string | undefined;
                 about_me?: string | undefined;
+                join_time?: Date | undefined;
             } & { [K in Exclude<keyof I["friends"][number]["user"], keyof User>]: never; }) | undefined;
             state?: number | undefined;
             update_time?: Date | undefined;
@@ -4320,6 +4346,7 @@ export declare const FriendList: {
                 update_time?: Date | undefined;
                 apple_id?: string | undefined;
                 about_me?: string | undefined;
+                join_time?: Date | undefined;
             } | undefined;
             state?: number | undefined;
             update_time?: Date | undefined;
@@ -4347,6 +4374,7 @@ export declare const FriendList: {
                 update_time?: Date | undefined;
                 apple_id?: string | undefined;
                 about_me?: string | undefined;
+                join_time?: Date | undefined;
             } | undefined;
             state?: number | undefined;
             update_time?: Date | undefined;
@@ -4373,6 +4401,7 @@ export declare const FriendList: {
                 update_time?: Date | undefined;
                 apple_id?: string | undefined;
                 about_me?: string | undefined;
+                join_time?: Date | undefined;
             } | undefined;
             state?: number | undefined;
             update_time?: Date | undefined;
@@ -4396,6 +4425,7 @@ export declare const FriendList: {
                 update_time?: Date | undefined;
                 apple_id?: string | undefined;
                 about_me?: string | undefined;
+                join_time?: Date | undefined;
             } | undefined;
             state?: number | undefined;
             update_time?: Date | undefined;
@@ -4419,6 +4449,7 @@ export declare const FriendList: {
                 update_time?: Date | undefined;
                 apple_id?: string | undefined;
                 about_me?: string | undefined;
+                join_time?: Date | undefined;
             } & {
                 id?: string | undefined;
                 username?: string | undefined;
@@ -4438,6 +4469,7 @@ export declare const FriendList: {
                 update_time?: Date | undefined;
                 apple_id?: string | undefined;
                 about_me?: string | undefined;
+                join_time?: Date | undefined;
             } & { [K_4 in Exclude<keyof I_1["friends"][number]["user"], keyof User>]: never; }) | undefined;
             state?: number | undefined;
             update_time?: Date | undefined;
@@ -4461,6 +4493,7 @@ export declare const FriendList: {
                 update_time?: Date | undefined;
                 apple_id?: string | undefined;
                 about_me?: string | undefined;
+                join_time?: Date | undefined;
             } | undefined;
             state?: number | undefined;
             update_time?: Date | undefined;
@@ -4748,6 +4781,7 @@ export declare const GroupUserList: {
                 update_time?: Date | undefined;
                 apple_id?: string | undefined;
                 about_me?: string | undefined;
+                join_time?: Date | undefined;
             } | undefined;
             state?: number | undefined;
         }[] | undefined;
@@ -4773,6 +4807,7 @@ export declare const GroupUserList: {
                 update_time?: Date | undefined;
                 apple_id?: string | undefined;
                 about_me?: string | undefined;
+                join_time?: Date | undefined;
             } | undefined;
             state?: number | undefined;
         }[] & ({
@@ -4795,6 +4830,7 @@ export declare const GroupUserList: {
                 update_time?: Date | undefined;
                 apple_id?: string | undefined;
                 about_me?: string | undefined;
+                join_time?: Date | undefined;
             } | undefined;
             state?: number | undefined;
         } & {
@@ -4817,6 +4853,7 @@ export declare const GroupUserList: {
                 update_time?: Date | undefined;
                 apple_id?: string | undefined;
                 about_me?: string | undefined;
+                join_time?: Date | undefined;
             } & {
                 id?: string | undefined;
                 username?: string | undefined;
@@ -4836,6 +4873,7 @@ export declare const GroupUserList: {
                 update_time?: Date | undefined;
                 apple_id?: string | undefined;
                 about_me?: string | undefined;
+                join_time?: Date | undefined;
             } & { [K in Exclude<keyof I["group_users"][number]["user"], keyof User>]: never; }) | undefined;
             state?: number | undefined;
         } & { [K_1 in Exclude<keyof I["group_users"][number], keyof GroupUserList_GroupUser>]: never; })[] & { [K_2 in Exclude<keyof I["group_users"], keyof {
@@ -4858,6 +4896,7 @@ export declare const GroupUserList: {
                 update_time?: Date | undefined;
                 apple_id?: string | undefined;
                 about_me?: string | undefined;
+                join_time?: Date | undefined;
             } | undefined;
             state?: number | undefined;
         }[]>]: never; }) | undefined;
@@ -4884,6 +4923,7 @@ export declare const GroupUserList: {
                 update_time?: Date | undefined;
                 apple_id?: string | undefined;
                 about_me?: string | undefined;
+                join_time?: Date | undefined;
             } | undefined;
             state?: number | undefined;
         }[] | undefined;
@@ -4909,6 +4949,7 @@ export declare const GroupUserList: {
                 update_time?: Date | undefined;
                 apple_id?: string | undefined;
                 about_me?: string | undefined;
+                join_time?: Date | undefined;
             } | undefined;
             state?: number | undefined;
         }[] & ({
@@ -4931,6 +4972,7 @@ export declare const GroupUserList: {
                 update_time?: Date | undefined;
                 apple_id?: string | undefined;
                 about_me?: string | undefined;
+                join_time?: Date | undefined;
             } | undefined;
             state?: number | undefined;
         } & {
@@ -4953,6 +4995,7 @@ export declare const GroupUserList: {
                 update_time?: Date | undefined;
                 apple_id?: string | undefined;
                 about_me?: string | undefined;
+                join_time?: Date | undefined;
             } & {
                 id?: string | undefined;
                 username?: string | undefined;
@@ -4972,6 +5015,7 @@ export declare const GroupUserList: {
                 update_time?: Date | undefined;
                 apple_id?: string | undefined;
                 about_me?: string | undefined;
+                join_time?: Date | undefined;
             } & { [K_4 in Exclude<keyof I_1["group_users"][number]["user"], keyof User>]: never; }) | undefined;
             state?: number | undefined;
         } & { [K_5 in Exclude<keyof I_1["group_users"][number], keyof GroupUserList_GroupUser>]: never; })[] & { [K_6 in Exclude<keyof I_1["group_users"], keyof {
@@ -4994,6 +5038,7 @@ export declare const GroupUserList: {
                 update_time?: Date | undefined;
                 apple_id?: string | undefined;
                 about_me?: string | undefined;
+                join_time?: Date | undefined;
             } | undefined;
             state?: number | undefined;
         }[]>]: never; }) | undefined;
@@ -5025,6 +5070,7 @@ export declare const GroupUserList_GroupUser: {
             update_time?: Date | undefined;
             apple_id?: string | undefined;
             about_me?: string | undefined;
+            join_time?: Date | undefined;
         } | undefined;
         state?: number | undefined;
     } & {
@@ -5047,6 +5093,7 @@ export declare const GroupUserList_GroupUser: {
             update_time?: Date | undefined;
             apple_id?: string | undefined;
             about_me?: string | undefined;
+            join_time?: Date | undefined;
         } & {
             id?: string | undefined;
             username?: string | undefined;
@@ -5066,6 +5113,7 @@ export declare const GroupUserList_GroupUser: {
             update_time?: Date | undefined;
             apple_id?: string | undefined;
             about_me?: string | undefined;
+            join_time?: Date | undefined;
         } & { [K in Exclude<keyof I["user"], keyof User>]: never; }) | undefined;
         state?: number | undefined;
     } & { [K_1 in Exclude<keyof I, keyof GroupUserList_GroupUser>]: never; }>(base?: I | undefined): GroupUserList_GroupUser;
@@ -5089,6 +5137,7 @@ export declare const GroupUserList_GroupUser: {
             update_time?: Date | undefined;
             apple_id?: string | undefined;
             about_me?: string | undefined;
+            join_time?: Date | undefined;
         } | undefined;
         state?: number | undefined;
     } & {
@@ -5111,6 +5160,7 @@ export declare const GroupUserList_GroupUser: {
             update_time?: Date | undefined;
             apple_id?: string | undefined;
             about_me?: string | undefined;
+            join_time?: Date | undefined;
         } & {
             id?: string | undefined;
             username?: string | undefined;
@@ -5130,6 +5180,7 @@ export declare const GroupUserList_GroupUser: {
             update_time?: Date | undefined;
             apple_id?: string | undefined;
             about_me?: string | undefined;
+            join_time?: Date | undefined;
         } & { [K_2 in Exclude<keyof I_1["user"], keyof User>]: never; }) | undefined;
         state?: number | undefined;
     } & { [K_3 in Exclude<keyof I_1, keyof GroupUserList_GroupUser>]: never; }>(object: I_1): GroupUserList_GroupUser;
@@ -5160,6 +5211,7 @@ export declare const ChannelUserList: {
                 update_time?: Date | undefined;
                 apple_id?: string | undefined;
                 about_me?: string | undefined;
+                join_time?: Date | undefined;
             } | undefined;
             role_id?: string[] | undefined;
             id?: string | undefined;
@@ -5188,6 +5240,7 @@ export declare const ChannelUserList: {
                 update_time?: Date | undefined;
                 apple_id?: string | undefined;
                 about_me?: string | undefined;
+                join_time?: Date | undefined;
             } | undefined;
             role_id?: string[] | undefined;
             id?: string | undefined;
@@ -5212,6 +5265,7 @@ export declare const ChannelUserList: {
                 update_time?: Date | undefined;
                 apple_id?: string | undefined;
                 about_me?: string | undefined;
+                join_time?: Date | undefined;
             } | undefined;
             role_id?: string[] | undefined;
             id?: string | undefined;
@@ -5236,6 +5290,7 @@ export declare const ChannelUserList: {
                 update_time?: Date | undefined;
                 apple_id?: string | undefined;
                 about_me?: string | undefined;
+                join_time?: Date | undefined;
             } & {
                 id?: string | undefined;
                 username?: string | undefined;
@@ -5255,6 +5310,7 @@ export declare const ChannelUserList: {
                 update_time?: Date | undefined;
                 apple_id?: string | undefined;
                 about_me?: string | undefined;
+                join_time?: Date | undefined;
             } & { [K in Exclude<keyof I["channel_users"][number]["user"], keyof User>]: never; }) | undefined;
             role_id?: (string[] & string[] & { [K_1 in Exclude<keyof I["channel_users"][number]["role_id"], keyof string[]>]: never; }) | undefined;
             id?: string | undefined;
@@ -5279,6 +5335,7 @@ export declare const ChannelUserList: {
                 update_time?: Date | undefined;
                 apple_id?: string | undefined;
                 about_me?: string | undefined;
+                join_time?: Date | undefined;
             } | undefined;
             role_id?: string[] | undefined;
             id?: string | undefined;
@@ -5308,6 +5365,7 @@ export declare const ChannelUserList: {
                 update_time?: Date | undefined;
                 apple_id?: string | undefined;
                 about_me?: string | undefined;
+                join_time?: Date | undefined;
             } | undefined;
             role_id?: string[] | undefined;
             id?: string | undefined;
@@ -5336,6 +5394,7 @@ export declare const ChannelUserList: {
                 update_time?: Date | undefined;
                 apple_id?: string | undefined;
                 about_me?: string | undefined;
+                join_time?: Date | undefined;
             } | undefined;
             role_id?: string[] | undefined;
             id?: string | undefined;
@@ -5360,6 +5419,7 @@ export declare const ChannelUserList: {
                 update_time?: Date | undefined;
                 apple_id?: string | undefined;
                 about_me?: string | undefined;
+                join_time?: Date | undefined;
             } | undefined;
             role_id?: string[] | undefined;
             id?: string | undefined;
@@ -5384,6 +5444,7 @@ export declare const ChannelUserList: {
                 update_time?: Date | undefined;
                 apple_id?: string | undefined;
                 about_me?: string | undefined;
+                join_time?: Date | undefined;
             } & {
                 id?: string | undefined;
                 username?: string | undefined;
@@ -5403,6 +5464,7 @@ export declare const ChannelUserList: {
                 update_time?: Date | undefined;
                 apple_id?: string | undefined;
                 about_me?: string | undefined;
+                join_time?: Date | undefined;
             } & { [K_5 in Exclude<keyof I_1["channel_users"][number]["user"], keyof User>]: never; }) | undefined;
             role_id?: (string[] & string[] & { [K_6 in Exclude<keyof I_1["channel_users"][number]["role_id"], keyof string[]>]: never; }) | undefined;
             id?: string | undefined;
@@ -5427,6 +5489,7 @@ export declare const ChannelUserList: {
                 update_time?: Date | undefined;
                 apple_id?: string | undefined;
                 about_me?: string | undefined;
+                join_time?: Date | undefined;
             } | undefined;
             role_id?: string[] | undefined;
             id?: string | undefined;
@@ -5461,6 +5524,7 @@ export declare const ChannelUserList_ChannelUser: {
             update_time?: Date | undefined;
             apple_id?: string | undefined;
             about_me?: string | undefined;
+            join_time?: Date | undefined;
         } | undefined;
         role_id?: string[] | undefined;
         id?: string | undefined;
@@ -5485,6 +5549,7 @@ export declare const ChannelUserList_ChannelUser: {
             update_time?: Date | undefined;
             apple_id?: string | undefined;
             about_me?: string | undefined;
+            join_time?: Date | undefined;
         } & {
             id?: string | undefined;
             username?: string | undefined;
@@ -5504,6 +5569,7 @@ export declare const ChannelUserList_ChannelUser: {
             update_time?: Date | undefined;
             apple_id?: string | undefined;
             about_me?: string | undefined;
+            join_time?: Date | undefined;
         } & { [K in Exclude<keyof I["user"], keyof User>]: never; }) | undefined;
         role_id?: (string[] & string[] & { [K_1 in Exclude<keyof I["role_id"], keyof string[]>]: never; }) | undefined;
         id?: string | undefined;
@@ -5529,6 +5595,7 @@ export declare const ChannelUserList_ChannelUser: {
             update_time?: Date | undefined;
             apple_id?: string | undefined;
             about_me?: string | undefined;
+            join_time?: Date | undefined;
         } | undefined;
         role_id?: string[] | undefined;
         id?: string | undefined;
@@ -5553,6 +5620,7 @@ export declare const ChannelUserList_ChannelUser: {
             update_time?: Date | undefined;
             apple_id?: string | undefined;
             about_me?: string | undefined;
+            join_time?: Date | undefined;
         } & {
             id?: string | undefined;
             username?: string | undefined;
@@ -5572,6 +5640,7 @@ export declare const ChannelUserList_ChannelUser: {
             update_time?: Date | undefined;
             apple_id?: string | undefined;
             about_me?: string | undefined;
+            join_time?: Date | undefined;
         } & { [K_3 in Exclude<keyof I_1["user"], keyof User>]: never; }) | undefined;
         role_id?: (string[] & string[] & { [K_4 in Exclude<keyof I_1["role_id"], keyof string[]>]: never; }) | undefined;
         id?: string | undefined;
@@ -5834,6 +5903,7 @@ export declare const ClanUserList: {
                 update_time?: Date | undefined;
                 apple_id?: string | undefined;
                 about_me?: string | undefined;
+                join_time?: Date | undefined;
             } | undefined;
             role_id?: string | undefined;
         }[] | undefined;
@@ -5860,6 +5930,7 @@ export declare const ClanUserList: {
                 update_time?: Date | undefined;
                 apple_id?: string | undefined;
                 about_me?: string | undefined;
+                join_time?: Date | undefined;
             } | undefined;
             role_id?: string | undefined;
         }[] & ({
@@ -5882,6 +5953,7 @@ export declare const ClanUserList: {
                 update_time?: Date | undefined;
                 apple_id?: string | undefined;
                 about_me?: string | undefined;
+                join_time?: Date | undefined;
             } | undefined;
             role_id?: string | undefined;
         } & {
@@ -5904,6 +5976,7 @@ export declare const ClanUserList: {
                 update_time?: Date | undefined;
                 apple_id?: string | undefined;
                 about_me?: string | undefined;
+                join_time?: Date | undefined;
             } & {
                 id?: string | undefined;
                 username?: string | undefined;
@@ -5923,6 +5996,7 @@ export declare const ClanUserList: {
                 update_time?: Date | undefined;
                 apple_id?: string | undefined;
                 about_me?: string | undefined;
+                join_time?: Date | undefined;
             } & { [K in Exclude<keyof I["clan_users"][number]["user"], keyof User>]: never; }) | undefined;
             role_id?: string | undefined;
         } & { [K_1 in Exclude<keyof I["clan_users"][number], keyof ClanUserList_ClanUser>]: never; })[] & { [K_2 in Exclude<keyof I["clan_users"], keyof {
@@ -5945,6 +6019,7 @@ export declare const ClanUserList: {
                 update_time?: Date | undefined;
                 apple_id?: string | undefined;
                 about_me?: string | undefined;
+                join_time?: Date | undefined;
             } | undefined;
             role_id?: string | undefined;
         }[]>]: never; }) | undefined;
@@ -5972,6 +6047,7 @@ export declare const ClanUserList: {
                 update_time?: Date | undefined;
                 apple_id?: string | undefined;
                 about_me?: string | undefined;
+                join_time?: Date | undefined;
             } | undefined;
             role_id?: string | undefined;
         }[] | undefined;
@@ -5998,6 +6074,7 @@ export declare const ClanUserList: {
                 update_time?: Date | undefined;
                 apple_id?: string | undefined;
                 about_me?: string | undefined;
+                join_time?: Date | undefined;
             } | undefined;
             role_id?: string | undefined;
         }[] & ({
@@ -6020,6 +6097,7 @@ export declare const ClanUserList: {
                 update_time?: Date | undefined;
                 apple_id?: string | undefined;
                 about_me?: string | undefined;
+                join_time?: Date | undefined;
             } | undefined;
             role_id?: string | undefined;
         } & {
@@ -6042,6 +6120,7 @@ export declare const ClanUserList: {
                 update_time?: Date | undefined;
                 apple_id?: string | undefined;
                 about_me?: string | undefined;
+                join_time?: Date | undefined;
             } & {
                 id?: string | undefined;
                 username?: string | undefined;
@@ -6061,6 +6140,7 @@ export declare const ClanUserList: {
                 update_time?: Date | undefined;
                 apple_id?: string | undefined;
                 about_me?: string | undefined;
+                join_time?: Date | undefined;
             } & { [K_4 in Exclude<keyof I_1["clan_users"][number]["user"], keyof User>]: never; }) | undefined;
             role_id?: string | undefined;
         } & { [K_5 in Exclude<keyof I_1["clan_users"][number], keyof ClanUserList_ClanUser>]: never; })[] & { [K_6 in Exclude<keyof I_1["clan_users"], keyof {
@@ -6083,6 +6163,7 @@ export declare const ClanUserList: {
                 update_time?: Date | undefined;
                 apple_id?: string | undefined;
                 about_me?: string | undefined;
+                join_time?: Date | undefined;
             } | undefined;
             role_id?: string | undefined;
         }[]>]: never; }) | undefined;
@@ -6115,6 +6196,7 @@ export declare const ClanUserList_ClanUser: {
             update_time?: Date | undefined;
             apple_id?: string | undefined;
             about_me?: string | undefined;
+            join_time?: Date | undefined;
         } | undefined;
         role_id?: string | undefined;
     } & {
@@ -6137,6 +6219,7 @@ export declare const ClanUserList_ClanUser: {
             update_time?: Date | undefined;
             apple_id?: string | undefined;
             about_me?: string | undefined;
+            join_time?: Date | undefined;
         } & {
             id?: string | undefined;
             username?: string | undefined;
@@ -6156,6 +6239,7 @@ export declare const ClanUserList_ClanUser: {
             update_time?: Date | undefined;
             apple_id?: string | undefined;
             about_me?: string | undefined;
+            join_time?: Date | undefined;
         } & { [K in Exclude<keyof I["user"], keyof User>]: never; }) | undefined;
         role_id?: string | undefined;
     } & { [K_1 in Exclude<keyof I, keyof ClanUserList_ClanUser>]: never; }>(base?: I | undefined): ClanUserList_ClanUser;
@@ -6179,6 +6263,7 @@ export declare const ClanUserList_ClanUser: {
             update_time?: Date | undefined;
             apple_id?: string | undefined;
             about_me?: string | undefined;
+            join_time?: Date | undefined;
         } | undefined;
         role_id?: string | undefined;
     } & {
@@ -6201,6 +6286,7 @@ export declare const ClanUserList_ClanUser: {
             update_time?: Date | undefined;
             apple_id?: string | undefined;
             about_me?: string | undefined;
+            join_time?: Date | undefined;
         } & {
             id?: string | undefined;
             username?: string | undefined;
@@ -6220,6 +6306,7 @@ export declare const ClanUserList_ClanUser: {
             update_time?: Date | undefined;
             apple_id?: string | undefined;
             about_me?: string | undefined;
+            join_time?: Date | undefined;
         } & { [K_2 in Exclude<keyof I_1["user"], keyof User>]: never; }) | undefined;
         role_id?: string | undefined;
     } & { [K_3 in Exclude<keyof I_1, keyof ClanUserList_ClanUser>]: never; }>(object: I_1): ClanUserList_ClanUser;
@@ -7634,6 +7721,7 @@ export declare const User: {
         update_time?: Date | undefined;
         apple_id?: string | undefined;
         about_me?: string | undefined;
+        join_time?: Date | undefined;
     } & {
         id?: string | undefined;
         username?: string | undefined;
@@ -7653,6 +7741,7 @@ export declare const User: {
         update_time?: Date | undefined;
         apple_id?: string | undefined;
         about_me?: string | undefined;
+        join_time?: Date | undefined;
     } & { [K in Exclude<keyof I, keyof User>]: never; }>(base?: I | undefined): User;
     fromPartial<I_1 extends {
         id?: string | undefined;
@@ -7673,6 +7762,7 @@ export declare const User: {
         update_time?: Date | undefined;
         apple_id?: string | undefined;
         about_me?: string | undefined;
+        join_time?: Date | undefined;
     } & {
         id?: string | undefined;
         username?: string | undefined;
@@ -7692,6 +7782,7 @@ export declare const User: {
         update_time?: Date | undefined;
         apple_id?: string | undefined;
         about_me?: string | undefined;
+        join_time?: Date | undefined;
     } & { [K_1 in Exclude<keyof I_1, keyof User>]: never; }>(object: I_1): User;
 };
 export declare const UserGroupList: {
@@ -8023,6 +8114,7 @@ export declare const Users: {
             update_time?: Date | undefined;
             apple_id?: string | undefined;
             about_me?: string | undefined;
+            join_time?: Date | undefined;
         }[] | undefined;
     } & {
         users?: ({
@@ -8044,6 +8136,7 @@ export declare const Users: {
             update_time?: Date | undefined;
             apple_id?: string | undefined;
             about_me?: string | undefined;
+            join_time?: Date | undefined;
         }[] & ({
             id?: string | undefined;
             username?: string | undefined;
@@ -8063,6 +8156,7 @@ export declare const Users: {
             update_time?: Date | undefined;
             apple_id?: string | undefined;
             about_me?: string | undefined;
+            join_time?: Date | undefined;
         } & {
             id?: string | undefined;
             username?: string | undefined;
@@ -8082,6 +8176,7 @@ export declare const Users: {
             update_time?: Date | undefined;
             apple_id?: string | undefined;
             about_me?: string | undefined;
+            join_time?: Date | undefined;
         } & { [K in Exclude<keyof I["users"][number], keyof User>]: never; })[] & { [K_1 in Exclude<keyof I["users"], keyof {
             id?: string | undefined;
             username?: string | undefined;
@@ -8101,6 +8196,7 @@ export declare const Users: {
             update_time?: Date | undefined;
             apple_id?: string | undefined;
             about_me?: string | undefined;
+            join_time?: Date | undefined;
         }[]>]: never; }) | undefined;
     } & { [K_2 in Exclude<keyof I, "users">]: never; }>(base?: I | undefined): Users;
     fromPartial<I_1 extends {
@@ -8123,6 +8219,7 @@ export declare const Users: {
             update_time?: Date | undefined;
             apple_id?: string | undefined;
             about_me?: string | undefined;
+            join_time?: Date | undefined;
         }[] | undefined;
     } & {
         users?: ({
@@ -8144,6 +8241,7 @@ export declare const Users: {
             update_time?: Date | undefined;
             apple_id?: string | undefined;
             about_me?: string | undefined;
+            join_time?: Date | undefined;
         }[] & ({
             id?: string | undefined;
             username?: string | undefined;
@@ -8163,6 +8261,7 @@ export declare const Users: {
             update_time?: Date | undefined;
             apple_id?: string | undefined;
             about_me?: string | undefined;
+            join_time?: Date | undefined;
         } & {
             id?: string | undefined;
             username?: string | undefined;
@@ -8182,6 +8281,7 @@ export declare const Users: {
             update_time?: Date | undefined;
             apple_id?: string | undefined;
             about_me?: string | undefined;
+            join_time?: Date | undefined;
         } & { [K_3 in Exclude<keyof I_1["users"][number], keyof User>]: never; })[] & { [K_4 in Exclude<keyof I_1["users"], keyof {
             id?: string | undefined;
             username?: string | undefined;
@@ -8201,6 +8301,7 @@ export declare const Users: {
             update_time?: Date | undefined;
             apple_id?: string | undefined;
             about_me?: string | undefined;
+            join_time?: Date | undefined;
         }[]>]: never; }) | undefined;
     } & { [K_5 in Exclude<keyof I_1, "users">]: never; }>(object: I_1): Users;
 };
@@ -9703,6 +9804,26 @@ export declare const UpdateChannelDescRequest: {
         channel_label?: string | undefined;
         category_id?: string | undefined;
     } & { [K_1 in Exclude<keyof I_1, keyof UpdateChannelDescRequest>]: never; }>(object: I_1): UpdateChannelDescRequest;
+};
+export declare const ChangeChannelPrivateRequest: {
+    encode(message: ChangeChannelPrivateRequest, writer?: _m0.Writer): _m0.Writer;
+    decode(input: _m0.Reader | Uint8Array, length?: number): ChangeChannelPrivateRequest;
+    fromJSON(object: any): ChangeChannelPrivateRequest;
+    toJSON(message: ChangeChannelPrivateRequest): unknown;
+    create<I extends {
+        channel_id?: string | undefined;
+        channel_private?: number | undefined;
+    } & {
+        channel_id?: string | undefined;
+        channel_private?: number | undefined;
+    } & { [K in Exclude<keyof I, keyof ChangeChannelPrivateRequest>]: never; }>(base?: I | undefined): ChangeChannelPrivateRequest;
+    fromPartial<I_1 extends {
+        channel_id?: string | undefined;
+        channel_private?: number | undefined;
+    } & {
+        channel_id?: string | undefined;
+        channel_private?: number | undefined;
+    } & { [K_1 in Exclude<keyof I_1, keyof ChangeChannelPrivateRequest>]: never; }>(object: I_1): ChangeChannelPrivateRequest;
 };
 export declare const AddChannelUsersRequest: {
     encode(message: AddChannelUsersRequest, writer?: _m0.Writer): _m0.Writer;
