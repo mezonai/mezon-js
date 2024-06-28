@@ -94,6 +94,7 @@ import {
   ApiWebhookResponse,
   ApiDeleteChannelDescRequest,
   ApiChangeChannelPrivateRequest,
+  ApiClanEmojiList
 } from "./api.gen";
 
 import { Session } from "./session";
@@ -1962,13 +1963,13 @@ export class Client {
   }
   
   /** Get permission of user in the clan */
-  async GetPermissionOfUserInTheClan(session: Session, clanId:string): Promise<ApiPermissionList> {
+  async getPermissionOfUserInTheClan(session: Session, clanId:string): Promise<ApiPermissionList> {
     if (this.autoRefreshSession && session.refresh_token &&
         session.isexpired((Date.now() + this.expiredTimespanMs)/1000)) {
         await this.sessionRefresh(session);
     }
     
-    return this.apiClient.GetPermissionOfUserInTheClan(session.token, clanId).then((response: ApiPermissionList) => {
+    return this.apiClient.getPermissionOfUserInTheClan(session.token, clanId).then((response: ApiPermissionList) => {
       return Promise.resolve(response);
       
     });
@@ -2216,6 +2217,18 @@ async deletePinMessage(session: Session, message_id: string): Promise<boolean> {
 
   return this.apiClient.deletePinMessage(session.token, message_id).then((response: any) => {
     return response !== undefined;
+  });
+}
+
+/** List clan emoji. */
+async listClanEmoji(session: Session): Promise<ApiClanEmojiList> {
+  if (this.autoRefreshSession && session.refresh_token &&
+      session.isexpired((Date.now() + this.expiredTimespanMs)/1000)) {
+      await this.sessionRefresh(session);
+  }
+
+  return this.apiClient.listClanEmoji(session.token).then((response: ApiClanEmojiList) => {
+    return Promise.resolve(response);
   });
 }
 
