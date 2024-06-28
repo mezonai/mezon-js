@@ -207,6 +207,16 @@ export interface ApiClanDescProfile {
     profile_banner?: string;
     profile_theme?: string;
 }
+/**  */
+export interface ApiClanEmoji {
+    category?: string;
+    shortname?: string;
+    src?: string;
+}
+/**  */
+export interface ApiClanEmojiList {
+    emoji_list?: Array<ApiClanEmoji>;
+}
 /** Get clan profile. */
 export interface ApiClanProfile {
     avartar?: string;
@@ -219,12 +229,6 @@ export interface ApiClanUserList {
     clan_id?: string;
     clan_users?: Array<ClanUserListClanUser>;
     cursor?: string;
-}
-/** A collection of zero or more friends of the user. */
-export interface ApiCommonToUsersList {
-    clandesc?: Array<ApiClanDesc>;
-    cursor?: string;
-    friends?: Array<ApiFriend>;
 }
 /**  */
 export interface ApiCreateCategoryDescRequest {
@@ -864,8 +868,6 @@ export declare class MezonApi {
     getClanDescProfile(bearerToken: string, clanId: string, options?: any): Promise<ApiClanDescProfile>;
     /** Update fields in a given clan profile. */
     updateClanDescProfile(bearerToken: string, clanId: string, body: {}, options?: any): Promise<any>;
-    /** List common friends for the current user. */
-    listCommonToUsers(bearerToken: string, limit?: number, state?: number, cursor?: string, friendId?: string, options?: any): Promise<ApiCommonToUsersList>;
     /**  */
     createCategoryDesc(bearerToken: string, body: ApiCreateCategoryDescRequest, options?: any): Promise<ApiCategoryDesc>;
     /**  */
@@ -876,6 +878,8 @@ export declare class MezonApi {
     closeDirectMess(bearerToken: string, body: ApiDeleteChannelDescRequest, options?: any): Promise<any>;
     /** open direct message. */
     openDirectMess(bearerToken: string, body: ApiDeleteChannelDescRequest, options?: any): Promise<any>;
+    /** Get permission list */
+    listClanEmoji(bearerToken: string, options?: any): Promise<ApiClanEmojiList>;
     /** Search message from elasticsearch service. */
     searchMessage(bearerToken: string, body: ApiSearchMessageRequest, options?: any): Promise<ApiSearchMessageResponse>;
     /** Submit an event for processing in the server's registered runtime custom events handler. */
@@ -943,7 +947,7 @@ export declare class MezonApi {
     /** Get permission list */
     getListPermission(bearerToken: string, options?: any): Promise<ApiPermissionList>;
     /**  */
-    GetPermissionOfUserInTheClan(bearerToken: string, clanId: string, options?: any): Promise<ApiPermissionList>;
+    getPermissionOfUserInTheClan(bearerToken: string, clanId: string, options?: any): Promise<ApiPermissionList>;
     /**  */
     deletePinMessage(bearerToken: string, messageId?: string, options?: any): Promise<any>;
     /**  */

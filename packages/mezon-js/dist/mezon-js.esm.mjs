@@ -2160,35 +2160,6 @@ var MezonApi = class {
       )
     ]);
   }
-  /** List common friends for the current user. */
-  listCommonToUsers(bearerToken, limit, state, cursor, friendId, options = {}) {
-    const urlPath = "/v2/commonfriend";
-    const queryParams = /* @__PURE__ */ new Map();
-    queryParams.set("limit", limit);
-    queryParams.set("state", state);
-    queryParams.set("cursor", cursor);
-    queryParams.set("friend_id", friendId);
-    let bodyJson = "";
-    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
-    const fetchOptions = buildFetchOptions("GET", options, bodyJson);
-    if (bearerToken) {
-      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-    }
-    return Promise.race([
-      fetch(fullUrl, fetchOptions).then((response) => {
-        if (response.status == 204) {
-          return response;
-        } else if (response.status >= 200 && response.status < 300) {
-          return response.json();
-        } else {
-          throw response;
-        }
-      }),
-      new Promise(
-        (_, reject) => setTimeout(reject, this.timeoutMs, "Request timed out.")
-      )
-    ]);
-  }
   /**  */
   createCategoryDesc(bearerToken, body, options = {}) {
     if (body === null || body === void 0) {
@@ -2314,6 +2285,31 @@ var MezonApi = class {
     bodyJson = JSON.stringify(body || {});
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("PUT", options, bodyJson);
+    if (bearerToken) {
+      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+    }
+    return Promise.race([
+      fetch(fullUrl, fetchOptions).then((response) => {
+        if (response.status == 204) {
+          return response;
+        } else if (response.status >= 200 && response.status < 300) {
+          return response.json();
+        } else {
+          throw response;
+        }
+      }),
+      new Promise(
+        (_, reject) => setTimeout(reject, this.timeoutMs, "Request timed out.")
+      )
+    ]);
+  }
+  /** Get permission list */
+  listClanEmoji(bearerToken, options = {}) {
+    const urlPath = "/v2/emoji";
+    const queryParams = /* @__PURE__ */ new Map();
+    let bodyJson = "";
+    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
+    const fetchOptions = buildFetchOptions("GET", options, bodyJson);
     if (bearerToken) {
       fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
     }
@@ -3248,7 +3244,7 @@ var MezonApi = class {
     ]);
   }
   /**  */
-  GetPermissionOfUserInTheClan(bearerToken, clanId, options = {}) {
+  getPermissionOfUserInTheClan(bearerToken, clanId, options = {}) {
     if (clanId === null || clanId === void 0) {
       throw new Error("'clanId' is a required parameter but is null or undefined.");
     }
@@ -6004,24 +6000,13 @@ var Client = class {
       });
     });
   }
-  /**  */
-  listCommonToUsers(session, userId, state, limit, cursor) {
-    return __async(this, null, function* () {
-      if (this.autoRefreshSession && session.refresh_token && session.isexpired((Date.now() + this.expiredTimespanMs) / 1e3)) {
-        yield this.sessionRefresh(session);
-      }
-      return this.apiClient.listCommonToUsers(session.token, limit, state, cursor, userId).then((response) => {
-        return Promise.resolve(response);
-      });
-    });
-  }
   /** Get permission of user in the clan */
-  GetPermissionOfUserInTheClan(session, clanId) {
+  getPermissionOfUserInTheClan(session, clanId) {
     return __async(this, null, function* () {
       if (this.autoRefreshSession && session.refresh_token && session.isexpired((Date.now() + this.expiredTimespanMs) / 1e3)) {
         yield this.sessionRefresh(session);
       }
-      return this.apiClient.GetPermissionOfUserInTheClan(session.token, clanId).then((response) => {
+      return this.apiClient.getPermissionOfUserInTheClan(session.token, clanId).then((response) => {
         return Promise.resolve(response);
       });
     });
@@ -6248,6 +6233,17 @@ var Client = class {
       }
       return this.apiClient.deletePinMessage(session.token, message_id).then((response) => {
         return response !== void 0;
+      });
+    });
+  }
+  /** List clan emoji. */
+  listClanEmoji(session) {
+    return __async(this, null, function* () {
+      if (this.autoRefreshSession && session.refresh_token && session.isexpired((Date.now() + this.expiredTimespanMs) / 1e3)) {
+        yield this.sessionRefresh(session);
+      }
+      return this.apiClient.listClanEmoji(session.token).then((response) => {
+        return Promise.resolve(response);
       });
     });
   }

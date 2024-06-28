@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { ApiAccount, ApiAccountCustom, ApiAccountDevice, ApiAccountEmail, ApiAccountFacebook, ApiAccountFacebookInstantGame, ApiAccountGoogle, ApiAccountGameCenter, ApiAccountSteam, ApiChannelDescList, ApiChannelDescription, ApiCreateChannelDescRequest, ApiDeleteRoleRequest, ApiClanDescList, ApiCreateClanDescRequest, ApiClanDesc, ApiCategoryDesc, ApiCategoryDescList, ApiRoleList, ApiPermissionList, ApiRoleUserList, ApiRole, ApiCreateRoleRequest, ApiAddRoleChannelDescRequest, ApiCreateCategoryDescRequest, ApiUpdateCategoryDescRequest, ApiDeleteStorageObjectsRequest, ApiEvent, ApiReadStorageObjectsRequest, ApiStorageObjectAcks, ApiUpdateAccountRequest, ApiAccountApple, ApiLinkSteamRequest, ApiClanDescProfile, ApiClanProfile, ApiChannelUserList, ApiClanUserList, ApiLinkInviteUserRequest, ApiUpdateEventRequest, ApiLinkInviteUser, ApiInviteUserRes, ApiUploadAttachmentRequest, ApiUploadAttachment, ApiMessageReaction, ApiMessageMention, ApiMessageAttachment, ApiMessageRef, ApiChannelMessageHeader, ApiVoiceChannelUserList, ApiChannelAttachmentList, ApiCreateEventRequest, ApiEventManagement, ApiEventList, ApiDeleteEventRequest, ApiNotificationChannelCategoySettingsList, ApiNotificationSetting, ApiSetDefaultNotificationRequest, ApiNotificationUserChannel, ApiSetNotificationRequest, ApiNotifiReactMessage, ApiSetMuteNotificationRequest, ApiSearchMessageRequest, ApiSearchMessageResponse, ApiPinMessageRequest, ApiPinMessagesList, ApiCreateWebhookRequest, ApiWebhookResponse, ApiDeleteChannelDescRequest, ApiChangeChannelPrivateRequest, ApiCommonToUsersList } from "./api.gen";
+import { ApiAccount, ApiAccountCustom, ApiAccountDevice, ApiAccountEmail, ApiAccountFacebook, ApiAccountFacebookInstantGame, ApiAccountGoogle, ApiAccountGameCenter, ApiAccountSteam, ApiChannelDescList, ApiChannelDescription, ApiCreateChannelDescRequest, ApiDeleteRoleRequest, ApiClanDescList, ApiCreateClanDescRequest, ApiClanDesc, ApiCategoryDesc, ApiCategoryDescList, ApiRoleList, ApiPermissionList, ApiRoleUserList, ApiRole, ApiCreateRoleRequest, ApiAddRoleChannelDescRequest, ApiCreateCategoryDescRequest, ApiUpdateCategoryDescRequest, ApiDeleteStorageObjectsRequest, ApiEvent, ApiReadStorageObjectsRequest, ApiStorageObjectAcks, ApiUpdateAccountRequest, ApiAccountApple, ApiLinkSteamRequest, ApiClanDescProfile, ApiClanProfile, ApiChannelUserList, ApiClanUserList, ApiLinkInviteUserRequest, ApiUpdateEventRequest, ApiLinkInviteUser, ApiInviteUserRes, ApiUploadAttachmentRequest, ApiUploadAttachment, ApiMessageReaction, ApiMessageMention, ApiMessageAttachment, ApiMessageRef, ApiChannelMessageHeader, ApiVoiceChannelUserList, ApiChannelAttachmentList, ApiCreateEventRequest, ApiEventManagement, ApiEventList, ApiDeleteEventRequest, ApiNotificationChannelCategoySettingsList, ApiNotificationSetting, ApiSetDefaultNotificationRequest, ApiNotificationUserChannel, ApiSetNotificationRequest, ApiNotifiReactMessage, ApiSetMuteNotificationRequest, ApiSearchMessageRequest, ApiSearchMessageResponse, ApiPinMessageRequest, ApiPinMessagesList, ApiCreateWebhookRequest, ApiWebhookResponse, ApiDeleteChannelDescRequest, ApiChangeChannelPrivateRequest, ApiClanEmojiList } from "./api.gen";
 import { Session } from "./session";
 import { Socket } from "./socket";
 import { WebSocketAdapter } from "./web_socket_adapter";
@@ -541,10 +541,8 @@ export declare class Client {
     createLinkInviteUser(session: Session, request: ApiLinkInviteUserRequest): Promise<ApiLinkInviteUser>;
     /** Get link invite user */
     getLinkInvite(session: Session, inviteId: string): Promise<ApiInviteUserRes>;
-    /**  */
-    listCommonToUsers(session: Session, userId?: string, state?: number, limit?: number, cursor?: string): Promise<ApiCommonToUsersList>;
     /** Get permission of user in the clan */
-    GetPermissionOfUserInTheClan(session: Session, clanId: string): Promise<ApiPermissionList>;
+    getPermissionOfUserInTheClan(session: Session, clanId: string): Promise<ApiPermissionList>;
     /** invite user */
     inviteUser(session: Session, inviteId: string): Promise<ApiInviteUserRes>;
     /** Write storage objects. */
@@ -579,4 +577,6 @@ export declare class Client {
     createPinMessage(session: Session, request: ApiPinMessageRequest): Promise<boolean>;
     getPinMessagesList(session: Session, channelId: string): Promise<ApiPinMessagesList>;
     deletePinMessage(session: Session, message_id: string): Promise<boolean>;
+    /** List clan emoji. */
+    listClanEmoji(session: Session): Promise<ApiClanEmojiList>;
 }

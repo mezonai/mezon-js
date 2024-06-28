@@ -2437,6 +2437,19 @@ export interface WebhookResponse {
   hook_url: string;
 }
 
+export interface ClanEmoji {
+  /** src url */
+  src: string;
+  /** shortname */
+  shortname: string;
+  /** category */
+  category: string;
+}
+
+export interface ClanEmojiList {
+  emoji_list: ClanEmoji[];
+}
+
 function createBaseAccount(): Account {
   return {
     user: undefined,
@@ -17530,6 +17543,134 @@ export const WebhookResponse = {
     message.hook_name = object.hook_name ?? "";
     message.channel_id = object.channel_id ?? "";
     message.hook_url = object.hook_url ?? "";
+    return message;
+  },
+};
+
+function createBaseClanEmoji(): ClanEmoji {
+  return { src: "", shortname: "", category: "" };
+}
+
+export const ClanEmoji = {
+  encode(message: ClanEmoji, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.src !== "") {
+      writer.uint32(10).string(message.src);
+    }
+    if (message.shortname !== "") {
+      writer.uint32(18).string(message.shortname);
+    }
+    if (message.category !== "") {
+      writer.uint32(26).string(message.category);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): ClanEmoji {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseClanEmoji();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.src = reader.string();
+          break;
+        case 2:
+          message.shortname = reader.string();
+          break;
+        case 3:
+          message.category = reader.string();
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): ClanEmoji {
+    return {
+      src: isSet(object.src) ? String(object.src) : "",
+      shortname: isSet(object.shortname) ? String(object.shortname) : "",
+      category: isSet(object.category) ? String(object.category) : "",
+    };
+  },
+
+  toJSON(message: ClanEmoji): unknown {
+    const obj: any = {};
+    message.src !== undefined && (obj.src = message.src);
+    message.shortname !== undefined && (obj.shortname = message.shortname);
+    message.category !== undefined && (obj.category = message.category);
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<ClanEmoji>, I>>(base?: I): ClanEmoji {
+    return ClanEmoji.fromPartial(base ?? {});
+  },
+
+  fromPartial<I extends Exact<DeepPartial<ClanEmoji>, I>>(object: I): ClanEmoji {
+    const message = createBaseClanEmoji();
+    message.src = object.src ?? "";
+    message.shortname = object.shortname ?? "";
+    message.category = object.category ?? "";
+    return message;
+  },
+};
+
+function createBaseClanEmojiList(): ClanEmojiList {
+  return { emoji_list: [] };
+}
+
+export const ClanEmojiList = {
+  encode(message: ClanEmojiList, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    for (const v of message.emoji_list) {
+      ClanEmoji.encode(v!, writer.uint32(10).fork()).ldelim();
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): ClanEmojiList {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseClanEmojiList();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.emoji_list.push(ClanEmoji.decode(reader, reader.uint32()));
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): ClanEmojiList {
+    return {
+      emoji_list: Array.isArray(object?.emoji_list) ? object.emoji_list.map((e: any) => ClanEmoji.fromJSON(e)) : [],
+    };
+  },
+
+  toJSON(message: ClanEmojiList): unknown {
+    const obj: any = {};
+    if (message.emoji_list) {
+      obj.emoji_list = message.emoji_list.map((e) => e ? ClanEmoji.toJSON(e) : undefined);
+    } else {
+      obj.emoji_list = [];
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<ClanEmojiList>, I>>(base?: I): ClanEmojiList {
+    return ClanEmojiList.fromPartial(base ?? {});
+  },
+
+  fromPartial<I extends Exact<DeepPartial<ClanEmojiList>, I>>(object: I): ClanEmojiList {
+    const message = createBaseClanEmojiList();
+    message.emoji_list = object.emoji_list?.map((e) => ClanEmoji.fromPartial(e)) || [];
     return message;
   },
 };
