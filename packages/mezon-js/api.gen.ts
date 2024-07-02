@@ -178,6 +178,10 @@ export interface ApiChangeChannelPrivateRequest {
   channel_id?: string;
   //
   channel_private?: number;
+  //
+  role_ids?: Array<string>;
+  //The users to add.
+  user_ids?: Array<string>;
 }
 
 /**  */

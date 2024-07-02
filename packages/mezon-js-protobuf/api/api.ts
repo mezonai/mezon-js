@@ -1927,6 +1927,10 @@ export interface ChangeChannelPrivateRequest {
   channel_id: string;
   /** The channel private */
   channel_private: number;
+  /** The users to add. */
+  user_ids: string[];
+  /** This is the role that needs to be added to the channel */
+  role_ids: string[];
 }
 
 /** Add users to a channel. */
@@ -13320,7 +13324,7 @@ export const UpdateChannelDescRequest = {
 };
 
 function createBaseChangeChannelPrivateRequest(): ChangeChannelPrivateRequest {
-  return { channel_id: "", channel_private: 0 };
+  return { channel_id: "", channel_private: 0, user_ids: [], role_ids: [] };
 }
 
 export const ChangeChannelPrivateRequest = {
@@ -13330,6 +13334,12 @@ export const ChangeChannelPrivateRequest = {
     }
     if (message.channel_private !== 0) {
       writer.uint32(16).int32(message.channel_private);
+    }
+    for (const v of message.user_ids) {
+      writer.uint32(26).string(v!);
+    }
+    for (const v of message.role_ids) {
+      writer.uint32(34).string(v!);
     }
     return writer;
   },
@@ -13347,6 +13357,12 @@ export const ChangeChannelPrivateRequest = {
         case 2:
           message.channel_private = reader.int32();
           break;
+        case 3:
+          message.user_ids.push(reader.string());
+          break;
+        case 4:
+          message.role_ids.push(reader.string());
+          break;
         default:
           reader.skipType(tag & 7);
           break;
@@ -13359,6 +13375,8 @@ export const ChangeChannelPrivateRequest = {
     return {
       channel_id: isSet(object.channel_id) ? String(object.channel_id) : "",
       channel_private: isSet(object.channel_private) ? Number(object.channel_private) : 0,
+      user_ids: Array.isArray(object?.user_ids) ? object.user_ids.map((e: any) => String(e)) : [],
+      role_ids: Array.isArray(object?.role_ids) ? object.role_ids.map((e: any) => String(e)) : [],
     };
   },
 
@@ -13366,6 +13384,16 @@ export const ChangeChannelPrivateRequest = {
     const obj: any = {};
     message.channel_id !== undefined && (obj.channel_id = message.channel_id);
     message.channel_private !== undefined && (obj.channel_private = Math.round(message.channel_private));
+    if (message.user_ids) {
+      obj.user_ids = message.user_ids.map((e) => e);
+    } else {
+      obj.user_ids = [];
+    }
+    if (message.role_ids) {
+      obj.role_ids = message.role_ids.map((e) => e);
+    } else {
+      obj.role_ids = [];
+    }
     return obj;
   },
 
@@ -13377,6 +13405,8 @@ export const ChangeChannelPrivateRequest = {
     const message = createBaseChangeChannelPrivateRequest();
     message.channel_id = object.channel_id ?? "";
     message.channel_private = object.channel_private ?? 0;
+    message.user_ids = object.user_ids?.map((e) => e) || [];
+    message.role_ids = object.role_ids?.map((e) => e) || [];
     return message;
   },
 };
