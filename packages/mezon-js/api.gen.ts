@@ -1575,7 +1575,6 @@ export class MezonApi {
   authenticateEmail(basicAuthUsername: string,
     basicAuthPassword: string,
       account:ApiAccountEmail,
-      create?:boolean,
       username?:string,
       options: any = {}): Promise<ApiSession> {
     
@@ -1584,7 +1583,6 @@ export class MezonApi {
     }
     const urlPath = "/v2/account/authenticate/email";
     const queryParams = new Map<string, any>();
-    queryParams.set("create", create);
     queryParams.set("username", username);
 
     let bodyJson : string = "";

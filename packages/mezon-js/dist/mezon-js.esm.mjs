@@ -823,13 +823,12 @@ var MezonApi = class {
     ]);
   }
   /** Authenticate a user with an email+password against the server. */
-  authenticateEmail(basicAuthUsername, basicAuthPassword, account, create, username, options = {}) {
+  authenticateEmail(basicAuthUsername, basicAuthPassword, account, username, options = {}) {
     if (account === null || account === void 0) {
       throw new Error("'account' is a required parameter but is null or undefined.");
     }
     const urlPath = "/v2/account/authenticate/email";
     const queryParams = /* @__PURE__ */ new Map();
-    queryParams.set("create", create);
     queryParams.set("username", username);
     let bodyJson = "";
     bodyJson = JSON.stringify(account || {});
@@ -4742,13 +4741,13 @@ var Client = class {
     });
   }
   /** Authenticate a user with an email+password against the server. */
-  authenticateEmail(email, password, create, username, vars) {
+  authenticateEmail(email, password, username, vars) {
     const request = {
       "email": email,
       "password": password,
       "vars": vars
     };
-    return this.apiClient.authenticateEmail(this.serverkey, "", request, create, username).then((apiSession) => {
+    return this.apiClient.authenticateEmail(this.serverkey, "", request, username).then((apiSession) => {
       return new Session(apiSession.token || "", apiSession.refresh_token || "", apiSession.created || false);
     });
   }

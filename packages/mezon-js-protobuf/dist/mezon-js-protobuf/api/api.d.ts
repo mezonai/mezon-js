@@ -1433,6 +1433,10 @@ export interface ChangeChannelPrivateRequest {
     channel_id: string;
     /** The channel private */
     channel_private: number;
+    /** The users to add. */
+    user_ids: string[];
+    /** This is the role that needs to be added to the channel */
+    role_ids: string[];
 }
 /** Add users to a channel. */
 export interface AddChannelUsersRequest {
@@ -1883,6 +1887,28 @@ export interface ClanEmoji {
 }
 export interface ClanEmojiList {
     emoji_list: ClanEmoji[];
+}
+export interface RegistrationEmailRequest {
+    /** A valid RFC-5322 email address. */
+    email: string;
+    /** A password for the user account. */
+    password: string;
+    /** Set the username on the account at register. Must be unique. */
+    username: string;
+    /** Display name */
+    display_name: string;
+    /** Avatar url */
+    avatar_url: string;
+    /** DOB */
+    dob: string;
+    /** Extra information that will be bundled in the session token. */
+    vars: {
+        [key: string]: string;
+    };
+}
+export interface RegistrationEmailRequest_VarsEntry {
+    key: string;
+    value: string;
 }
 export declare const Account: {
     encode(message: Account, writer?: _m0.Writer): _m0.Writer;
@@ -9824,17 +9850,25 @@ export declare const ChangeChannelPrivateRequest: {
     create<I extends {
         channel_id?: string | undefined;
         channel_private?: number | undefined;
+        user_ids?: string[] | undefined;
+        role_ids?: string[] | undefined;
     } & {
         channel_id?: string | undefined;
         channel_private?: number | undefined;
-    } & { [K in Exclude<keyof I, keyof ChangeChannelPrivateRequest>]: never; }>(base?: I | undefined): ChangeChannelPrivateRequest;
+        user_ids?: (string[] & string[] & { [K in Exclude<keyof I["user_ids"], keyof string[]>]: never; }) | undefined;
+        role_ids?: (string[] & string[] & { [K_1 in Exclude<keyof I["role_ids"], keyof string[]>]: never; }) | undefined;
+    } & { [K_2 in Exclude<keyof I, keyof ChangeChannelPrivateRequest>]: never; }>(base?: I | undefined): ChangeChannelPrivateRequest;
     fromPartial<I_1 extends {
         channel_id?: string | undefined;
         channel_private?: number | undefined;
+        user_ids?: string[] | undefined;
+        role_ids?: string[] | undefined;
     } & {
         channel_id?: string | undefined;
         channel_private?: number | undefined;
-    } & { [K_1 in Exclude<keyof I_1, keyof ChangeChannelPrivateRequest>]: never; }>(object: I_1): ChangeChannelPrivateRequest;
+        user_ids?: (string[] & string[] & { [K_3 in Exclude<keyof I_1["user_ids"], keyof string[]>]: never; }) | undefined;
+        role_ids?: (string[] & string[] & { [K_4 in Exclude<keyof I_1["role_ids"], keyof string[]>]: never; }) | undefined;
+    } & { [K_5 in Exclude<keyof I_1, keyof ChangeChannelPrivateRequest>]: never; }>(object: I_1): ChangeChannelPrivateRequest;
 };
 export declare const AddChannelUsersRequest: {
     encode(message: AddChannelUsersRequest, writer?: _m0.Writer): _m0.Writer;
@@ -12701,6 +12735,78 @@ export declare const ClanEmojiList: {
             category?: string | undefined;
         }[]>]: never; }) | undefined;
     } & { [K_5 in Exclude<keyof I_1, "emoji_list">]: never; }>(object: I_1): ClanEmojiList;
+};
+export declare const RegistrationEmailRequest: {
+    encode(message: RegistrationEmailRequest, writer?: _m0.Writer): _m0.Writer;
+    decode(input: _m0.Reader | Uint8Array, length?: number): RegistrationEmailRequest;
+    fromJSON(object: any): RegistrationEmailRequest;
+    toJSON(message: RegistrationEmailRequest): unknown;
+    create<I extends {
+        email?: string | undefined;
+        password?: string | undefined;
+        username?: string | undefined;
+        display_name?: string | undefined;
+        avatar_url?: string | undefined;
+        dob?: string | undefined;
+        vars?: {
+            [x: string]: string | undefined;
+        } | undefined;
+    } & {
+        email?: string | undefined;
+        password?: string | undefined;
+        username?: string | undefined;
+        display_name?: string | undefined;
+        avatar_url?: string | undefined;
+        dob?: string | undefined;
+        vars?: ({
+            [x: string]: string | undefined;
+        } & {
+            [x: string]: string | undefined;
+        } & { [K in Exclude<keyof I["vars"], string | number>]: never; }) | undefined;
+    } & { [K_1 in Exclude<keyof I, keyof RegistrationEmailRequest>]: never; }>(base?: I | undefined): RegistrationEmailRequest;
+    fromPartial<I_1 extends {
+        email?: string | undefined;
+        password?: string | undefined;
+        username?: string | undefined;
+        display_name?: string | undefined;
+        avatar_url?: string | undefined;
+        dob?: string | undefined;
+        vars?: {
+            [x: string]: string | undefined;
+        } | undefined;
+    } & {
+        email?: string | undefined;
+        password?: string | undefined;
+        username?: string | undefined;
+        display_name?: string | undefined;
+        avatar_url?: string | undefined;
+        dob?: string | undefined;
+        vars?: ({
+            [x: string]: string | undefined;
+        } & {
+            [x: string]: string | undefined;
+        } & { [K_2 in Exclude<keyof I_1["vars"], string | number>]: never; }) | undefined;
+    } & { [K_3 in Exclude<keyof I_1, keyof RegistrationEmailRequest>]: never; }>(object: I_1): RegistrationEmailRequest;
+};
+export declare const RegistrationEmailRequest_VarsEntry: {
+    encode(message: RegistrationEmailRequest_VarsEntry, writer?: _m0.Writer): _m0.Writer;
+    decode(input: _m0.Reader | Uint8Array, length?: number): RegistrationEmailRequest_VarsEntry;
+    fromJSON(object: any): RegistrationEmailRequest_VarsEntry;
+    toJSON(message: RegistrationEmailRequest_VarsEntry): unknown;
+    create<I extends {
+        key?: string | undefined;
+        value?: string | undefined;
+    } & {
+        key?: string | undefined;
+        value?: string | undefined;
+    } & { [K in Exclude<keyof I, keyof RegistrationEmailRequest_VarsEntry>]: never; }>(base?: I | undefined): RegistrationEmailRequest_VarsEntry;
+    fromPartial<I_1 extends {
+        key?: string | undefined;
+        value?: string | undefined;
+    } & {
+        key?: string | undefined;
+        value?: string | undefined;
+    } & { [K_1 in Exclude<keyof I_1, keyof RegistrationEmailRequest_VarsEntry>]: never; }>(object: I_1): RegistrationEmailRequest_VarsEntry;
 };
 type Builtin = Date | Function | Uint8Array | string | number | boolean | undefined;
 export type DeepPartial<T> = T extends Builtin ? T : T extends Array<infer U> ? Array<DeepPartial<U>> : T extends ReadonlyArray<infer U> ? ReadonlyArray<DeepPartial<U>> : T extends {} ? {

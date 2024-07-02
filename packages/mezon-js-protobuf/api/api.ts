@@ -2454,6 +2454,28 @@ export interface ClanEmojiList {
   emoji_list: ClanEmoji[];
 }
 
+export interface RegistrationEmailRequest {
+  /** A valid RFC-5322 email address. */
+  email: string;
+  /** A password for the user account. */
+  password: string;
+  /** Set the username on the account at register. Must be unique. */
+  username: string;
+  /** Display name */
+  display_name: string;
+  /** Avatar url */
+  avatar_url: string;
+  /** DOB */
+  dob: string;
+  /** Extra information that will be bundled in the session token. */
+  vars: { [key: string]: string };
+}
+
+export interface RegistrationEmailRequest_VarsEntry {
+  key: string;
+  value: string;
+}
+
 function createBaseAccount(): Account {
   return {
     user: undefined,
@@ -17701,6 +17723,194 @@ export const ClanEmojiList = {
   fromPartial<I extends Exact<DeepPartial<ClanEmojiList>, I>>(object: I): ClanEmojiList {
     const message = createBaseClanEmojiList();
     message.emoji_list = object.emoji_list?.map((e) => ClanEmoji.fromPartial(e)) || [];
+    return message;
+  },
+};
+
+function createBaseRegistrationEmailRequest(): RegistrationEmailRequest {
+  return { email: "", password: "", username: "", display_name: "", avatar_url: "", dob: "", vars: {} };
+}
+
+export const RegistrationEmailRequest = {
+  encode(message: RegistrationEmailRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.email !== "") {
+      writer.uint32(10).string(message.email);
+    }
+    if (message.password !== "") {
+      writer.uint32(18).string(message.password);
+    }
+    if (message.username !== "") {
+      writer.uint32(26).string(message.username);
+    }
+    if (message.display_name !== "") {
+      writer.uint32(34).string(message.display_name);
+    }
+    if (message.avatar_url !== "") {
+      writer.uint32(42).string(message.avatar_url);
+    }
+    if (message.dob !== "") {
+      writer.uint32(50).string(message.dob);
+    }
+    Object.entries(message.vars).forEach(([key, value]) => {
+      RegistrationEmailRequest_VarsEntry.encode({ key: key as any, value }, writer.uint32(58).fork()).ldelim();
+    });
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): RegistrationEmailRequest {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseRegistrationEmailRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.email = reader.string();
+          break;
+        case 2:
+          message.password = reader.string();
+          break;
+        case 3:
+          message.username = reader.string();
+          break;
+        case 4:
+          message.display_name = reader.string();
+          break;
+        case 5:
+          message.avatar_url = reader.string();
+          break;
+        case 6:
+          message.dob = reader.string();
+          break;
+        case 7:
+          const entry7 = RegistrationEmailRequest_VarsEntry.decode(reader, reader.uint32());
+          if (entry7.value !== undefined) {
+            message.vars[entry7.key] = entry7.value;
+          }
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): RegistrationEmailRequest {
+    return {
+      email: isSet(object.email) ? String(object.email) : "",
+      password: isSet(object.password) ? String(object.password) : "",
+      username: isSet(object.username) ? String(object.username) : "",
+      display_name: isSet(object.display_name) ? String(object.display_name) : "",
+      avatar_url: isSet(object.avatar_url) ? String(object.avatar_url) : "",
+      dob: isSet(object.dob) ? String(object.dob) : "",
+      vars: isObject(object.vars)
+        ? Object.entries(object.vars).reduce<{ [key: string]: string }>((acc, [key, value]) => {
+          acc[key] = String(value);
+          return acc;
+        }, {})
+        : {},
+    };
+  },
+
+  toJSON(message: RegistrationEmailRequest): unknown {
+    const obj: any = {};
+    message.email !== undefined && (obj.email = message.email);
+    message.password !== undefined && (obj.password = message.password);
+    message.username !== undefined && (obj.username = message.username);
+    message.display_name !== undefined && (obj.display_name = message.display_name);
+    message.avatar_url !== undefined && (obj.avatar_url = message.avatar_url);
+    message.dob !== undefined && (obj.dob = message.dob);
+    obj.vars = {};
+    if (message.vars) {
+      Object.entries(message.vars).forEach(([k, v]) => {
+        obj.vars[k] = v;
+      });
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<RegistrationEmailRequest>, I>>(base?: I): RegistrationEmailRequest {
+    return RegistrationEmailRequest.fromPartial(base ?? {});
+  },
+
+  fromPartial<I extends Exact<DeepPartial<RegistrationEmailRequest>, I>>(object: I): RegistrationEmailRequest {
+    const message = createBaseRegistrationEmailRequest();
+    message.email = object.email ?? "";
+    message.password = object.password ?? "";
+    message.username = object.username ?? "";
+    message.display_name = object.display_name ?? "";
+    message.avatar_url = object.avatar_url ?? "";
+    message.dob = object.dob ?? "";
+    message.vars = Object.entries(object.vars ?? {}).reduce<{ [key: string]: string }>((acc, [key, value]) => {
+      if (value !== undefined) {
+        acc[key] = String(value);
+      }
+      return acc;
+    }, {});
+    return message;
+  },
+};
+
+function createBaseRegistrationEmailRequest_VarsEntry(): RegistrationEmailRequest_VarsEntry {
+  return { key: "", value: "" };
+}
+
+export const RegistrationEmailRequest_VarsEntry = {
+  encode(message: RegistrationEmailRequest_VarsEntry, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.key !== "") {
+      writer.uint32(10).string(message.key);
+    }
+    if (message.value !== "") {
+      writer.uint32(18).string(message.value);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): RegistrationEmailRequest_VarsEntry {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseRegistrationEmailRequest_VarsEntry();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.key = reader.string();
+          break;
+        case 2:
+          message.value = reader.string();
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): RegistrationEmailRequest_VarsEntry {
+    return { key: isSet(object.key) ? String(object.key) : "", value: isSet(object.value) ? String(object.value) : "" };
+  },
+
+  toJSON(message: RegistrationEmailRequest_VarsEntry): unknown {
+    const obj: any = {};
+    message.key !== undefined && (obj.key = message.key);
+    message.value !== undefined && (obj.value = message.value);
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<RegistrationEmailRequest_VarsEntry>, I>>(
+    base?: I,
+  ): RegistrationEmailRequest_VarsEntry {
+    return RegistrationEmailRequest_VarsEntry.fromPartial(base ?? {});
+  },
+
+  fromPartial<I extends Exact<DeepPartial<RegistrationEmailRequest_VarsEntry>, I>>(
+    object: I,
+  ): RegistrationEmailRequest_VarsEntry {
+    const message = createBaseRegistrationEmailRequest_VarsEntry();
+    message.key = object.key ?? "";
+    message.value = object.value ?? "";
     return message;
   },
 };

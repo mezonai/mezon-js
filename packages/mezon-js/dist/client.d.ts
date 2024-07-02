@@ -371,7 +371,7 @@ export declare class Client {
     /** Authenticate a user with a device id against the server. */
     authenticateDevice(id: string, create?: boolean, username?: string, vars?: Record<string, string>): Promise<Session>;
     /** Authenticate a user with an email+password against the server. */
-    authenticateEmail(email: string, password: string, create?: boolean, username?: string, vars?: Record<string, string>): Promise<Session>;
+    authenticateEmail(email: string, password: string, username?: string, vars?: Record<string, string>): Promise<Session>;
     /** Authenticate a user with a Facebook Instant Game token against the server. */
     authenticateFacebookInstantGame(signedPlayerInfo: string, create?: boolean, username?: string, vars?: Record<string, string>, options?: any): Promise<Session>;
     /** Authenticate a user with a Facebook OAuth token against the server. */
