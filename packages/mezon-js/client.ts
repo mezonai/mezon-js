@@ -573,14 +573,14 @@ export class Client {
   }
 
   /** Authenticate a user with an email+password against the server. */
-  authenticateEmail(email: string, password: string, create?: boolean, username?: string, vars?: Record<string,string>): Promise<Session> {
+  authenticateEmail(email: string, password: string, username?: string, vars?: Record<string,string>): Promise<Session> {
     const request = {
       "email": email,
       "password": password,
       "vars": vars
     };
 
-    return this.apiClient.authenticateEmail(this.serverkey, "", request, create, username).then((apiSession : ApiSession) => {
+    return this.apiClient.authenticateEmail(this.serverkey, "", request, username).then((apiSession : ApiSession) => {
       return new Session(apiSession.token || "", apiSession.refresh_token || "", apiSession.created || false);
     });
   }

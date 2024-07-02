@@ -103,6 +103,8 @@ export interface ApiCategoryDescList {
 export interface ApiChangeChannelPrivateRequest {
     channel_id?: string;
     channel_private?: number;
+    role_ids?: Array<string>;
+    user_ids?: Array<string>;
 }
 /**  */
 export interface ApiChannelAttachment {
@@ -779,7 +781,7 @@ export declare class MezonApi {
     /** Authenticate a user with a device id against the server. */
     authenticateDevice(basicAuthUsername: string, basicAuthPassword: string, account: ApiAccountDevice, create?: boolean, username?: string, options?: any): Promise<ApiSession>;
     /** Authenticate a user with an email+password against the server. */
-    authenticateEmail(basicAuthUsername: string, basicAuthPassword: string, account: ApiAccountEmail, create?: boolean, username?: string, options?: any): Promise<ApiSession>;
+    authenticateEmail(basicAuthUsername: string, basicAuthPassword: string, account: ApiAccountEmail, username?: string, options?: any): Promise<ApiSession>;
     /** Authenticate a user with a Facebook OAuth token against the server. */
     authenticateFacebook(basicAuthUsername: string, basicAuthPassword: string, account: ApiAccountFacebook, create?: boolean, username?: string, sync?: boolean, options?: any): Promise<ApiSession>;
     /** Authenticate a user with a Facebook Instant Game token against the server. */
