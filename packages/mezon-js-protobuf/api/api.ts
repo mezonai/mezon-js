@@ -1797,6 +1797,14 @@ export interface ChannelMessageHeader {
   sender_id: string;
   /** the content */
   content: string;
+  /** the attachment */
+  attachment: string;
+  /** the reference */
+  referece: string;
+  /** the mention */
+  mention: string;
+  /** the reactions */
+  reaction: string;
 }
 
 /** Channel description record */
@@ -12539,7 +12547,7 @@ export const ListCategoryDescsRequest = {
 };
 
 function createBaseChannelMessageHeader(): ChannelMessageHeader {
-  return { id: "", timestamp: "", sender_id: "", content: "" };
+  return { id: "", timestamp: "", sender_id: "", content: "", attachment: "", referece: "", mention: "", reaction: "" };
 }
 
 export const ChannelMessageHeader = {
@@ -12555,6 +12563,18 @@ export const ChannelMessageHeader = {
     }
     if (message.content !== "") {
       writer.uint32(34).string(message.content);
+    }
+    if (message.attachment !== "") {
+      writer.uint32(42).string(message.attachment);
+    }
+    if (message.referece !== "") {
+      writer.uint32(50).string(message.referece);
+    }
+    if (message.mention !== "") {
+      writer.uint32(58).string(message.mention);
+    }
+    if (message.reaction !== "") {
+      writer.uint32(66).string(message.reaction);
     }
     return writer;
   },
@@ -12578,6 +12598,18 @@ export const ChannelMessageHeader = {
         case 4:
           message.content = reader.string();
           break;
+        case 5:
+          message.attachment = reader.string();
+          break;
+        case 6:
+          message.referece = reader.string();
+          break;
+        case 7:
+          message.mention = reader.string();
+          break;
+        case 8:
+          message.reaction = reader.string();
+          break;
         default:
           reader.skipType(tag & 7);
           break;
@@ -12592,6 +12624,10 @@ export const ChannelMessageHeader = {
       timestamp: isSet(object.timestamp) ? String(object.timestamp) : "",
       sender_id: isSet(object.sender_id) ? String(object.sender_id) : "",
       content: isSet(object.content) ? String(object.content) : "",
+      attachment: isSet(object.attachment) ? String(object.attachment) : "",
+      referece: isSet(object.referece) ? String(object.referece) : "",
+      mention: isSet(object.mention) ? String(object.mention) : "",
+      reaction: isSet(object.reaction) ? String(object.reaction) : "",
     };
   },
 
@@ -12601,6 +12637,10 @@ export const ChannelMessageHeader = {
     message.timestamp !== undefined && (obj.timestamp = message.timestamp);
     message.sender_id !== undefined && (obj.sender_id = message.sender_id);
     message.content !== undefined && (obj.content = message.content);
+    message.attachment !== undefined && (obj.attachment = message.attachment);
+    message.referece !== undefined && (obj.referece = message.referece);
+    message.mention !== undefined && (obj.mention = message.mention);
+    message.reaction !== undefined && (obj.reaction = message.reaction);
     return obj;
   },
 
@@ -12614,6 +12654,10 @@ export const ChannelMessageHeader = {
     message.timestamp = object.timestamp ?? "";
     message.sender_id = object.sender_id ?? "";
     message.content = object.content ?? "";
+    message.attachment = object.attachment ?? "";
+    message.referece = object.referece ?? "";
+    message.mention = object.mention ?? "";
+    message.reaction = object.reaction ?? "";
     return message;
   },
 };
