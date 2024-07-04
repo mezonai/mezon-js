@@ -1325,6 +1325,14 @@ export interface ChannelMessageHeader {
     sender_id: string;
     /** the content */
     content: string;
+    /** the attachment */
+    attachment: string;
+    /** the reference */
+    referece: string;
+    /** the mention */
+    mention: string;
+    /** the reactions */
+    reaction: string;
 }
 /** Channel description record */
 export interface ChannelDescription {
@@ -3657,6 +3665,10 @@ export declare const ChannelMessageList: {
             timestamp?: string | undefined;
             sender_id?: string | undefined;
             content?: string | undefined;
+            attachment?: string | undefined;
+            referece?: string | undefined;
+            mention?: string | undefined;
+            reaction?: string | undefined;
         } | undefined;
     } & {
         messages?: ({
@@ -3741,11 +3753,19 @@ export declare const ChannelMessageList: {
             timestamp?: string | undefined;
             sender_id?: string | undefined;
             content?: string | undefined;
+            attachment?: string | undefined;
+            referece?: string | undefined;
+            mention?: string | undefined;
+            reaction?: string | undefined;
         } & {
             id?: string | undefined;
             timestamp?: string | undefined;
             sender_id?: string | undefined;
             content?: string | undefined;
+            attachment?: string | undefined;
+            referece?: string | undefined;
+            mention?: string | undefined;
+            reaction?: string | undefined;
         } & { [K_2 in Exclude<keyof I["last_seen_message"], keyof ChannelMessageHeader>]: never; }) | undefined;
     } & { [K_3 in Exclude<keyof I, keyof ChannelMessageList>]: never; }>(base?: I | undefined): ChannelMessageList;
     fromPartial<I_1 extends {
@@ -3774,6 +3794,10 @@ export declare const ChannelMessageList: {
             timestamp?: string | undefined;
             sender_id?: string | undefined;
             content?: string | undefined;
+            attachment?: string | undefined;
+            referece?: string | undefined;
+            mention?: string | undefined;
+            reaction?: string | undefined;
         } | undefined;
     } & {
         messages?: ({
@@ -3858,11 +3882,19 @@ export declare const ChannelMessageList: {
             timestamp?: string | undefined;
             sender_id?: string | undefined;
             content?: string | undefined;
+            attachment?: string | undefined;
+            referece?: string | undefined;
+            mention?: string | undefined;
+            reaction?: string | undefined;
         } & {
             id?: string | undefined;
             timestamp?: string | undefined;
             sender_id?: string | undefined;
             content?: string | undefined;
+            attachment?: string | undefined;
+            referece?: string | undefined;
+            mention?: string | undefined;
+            reaction?: string | undefined;
         } & { [K_6 in Exclude<keyof I_1["last_seen_message"], keyof ChannelMessageHeader>]: never; }) | undefined;
     } & { [K_7 in Exclude<keyof I_1, keyof ChannelMessageList>]: never; }>(object: I_1): ChannelMessageList;
 };
@@ -9220,22 +9252,38 @@ export declare const ChannelMessageHeader: {
         timestamp?: string | undefined;
         sender_id?: string | undefined;
         content?: string | undefined;
+        attachment?: string | undefined;
+        referece?: string | undefined;
+        mention?: string | undefined;
+        reaction?: string | undefined;
     } & {
         id?: string | undefined;
         timestamp?: string | undefined;
         sender_id?: string | undefined;
         content?: string | undefined;
+        attachment?: string | undefined;
+        referece?: string | undefined;
+        mention?: string | undefined;
+        reaction?: string | undefined;
     } & { [K in Exclude<keyof I, keyof ChannelMessageHeader>]: never; }>(base?: I | undefined): ChannelMessageHeader;
     fromPartial<I_1 extends {
         id?: string | undefined;
         timestamp?: string | undefined;
         sender_id?: string | undefined;
         content?: string | undefined;
+        attachment?: string | undefined;
+        referece?: string | undefined;
+        mention?: string | undefined;
+        reaction?: string | undefined;
     } & {
         id?: string | undefined;
         timestamp?: string | undefined;
         sender_id?: string | undefined;
         content?: string | undefined;
+        attachment?: string | undefined;
+        referece?: string | undefined;
+        mention?: string | undefined;
+        reaction?: string | undefined;
     } & { [K_1 in Exclude<keyof I_1, keyof ChannelMessageHeader>]: never; }>(object: I_1): ChannelMessageHeader;
 };
 export declare const ChannelDescription: {
@@ -9260,12 +9308,20 @@ export declare const ChannelDescription: {
             timestamp?: string | undefined;
             sender_id?: string | undefined;
             content?: string | undefined;
+            attachment?: string | undefined;
+            referece?: string | undefined;
+            mention?: string | undefined;
+            reaction?: string | undefined;
         } | undefined;
         last_seen_message?: {
             id?: string | undefined;
             timestamp?: string | undefined;
             sender_id?: string | undefined;
             content?: string | undefined;
+            attachment?: string | undefined;
+            referece?: string | undefined;
+            mention?: string | undefined;
+            reaction?: string | undefined;
         } | undefined;
         status?: number | undefined;
         meeting_code?: string | undefined;
@@ -9288,22 +9344,38 @@ export declare const ChannelDescription: {
             timestamp?: string | undefined;
             sender_id?: string | undefined;
             content?: string | undefined;
+            attachment?: string | undefined;
+            referece?: string | undefined;
+            mention?: string | undefined;
+            reaction?: string | undefined;
         } & {
             id?: string | undefined;
             timestamp?: string | undefined;
             sender_id?: string | undefined;
             content?: string | undefined;
+            attachment?: string | undefined;
+            referece?: string | undefined;
+            mention?: string | undefined;
+            reaction?: string | undefined;
         } & { [K_2 in Exclude<keyof I["last_sent_message"], keyof ChannelMessageHeader>]: never; }) | undefined;
         last_seen_message?: ({
             id?: string | undefined;
             timestamp?: string | undefined;
             sender_id?: string | undefined;
             content?: string | undefined;
+            attachment?: string | undefined;
+            referece?: string | undefined;
+            mention?: string | undefined;
+            reaction?: string | undefined;
         } & {
             id?: string | undefined;
             timestamp?: string | undefined;
             sender_id?: string | undefined;
             content?: string | undefined;
+            attachment?: string | undefined;
+            referece?: string | undefined;
+            mention?: string | undefined;
+            reaction?: string | undefined;
         } & { [K_3 in Exclude<keyof I["last_seen_message"], keyof ChannelMessageHeader>]: never; }) | undefined;
         status?: number | undefined;
         meeting_code?: string | undefined;
@@ -9327,12 +9399,20 @@ export declare const ChannelDescription: {
             timestamp?: string | undefined;
             sender_id?: string | undefined;
             content?: string | undefined;
+            attachment?: string | undefined;
+            referece?: string | undefined;
+            mention?: string | undefined;
+            reaction?: string | undefined;
         } | undefined;
         last_seen_message?: {
             id?: string | undefined;
             timestamp?: string | undefined;
             sender_id?: string | undefined;
             content?: string | undefined;
+            attachment?: string | undefined;
+            referece?: string | undefined;
+            mention?: string | undefined;
+            reaction?: string | undefined;
         } | undefined;
         status?: number | undefined;
         meeting_code?: string | undefined;
@@ -9355,22 +9435,38 @@ export declare const ChannelDescription: {
             timestamp?: string | undefined;
             sender_id?: string | undefined;
             content?: string | undefined;
+            attachment?: string | undefined;
+            referece?: string | undefined;
+            mention?: string | undefined;
+            reaction?: string | undefined;
         } & {
             id?: string | undefined;
             timestamp?: string | undefined;
             sender_id?: string | undefined;
             content?: string | undefined;
+            attachment?: string | undefined;
+            referece?: string | undefined;
+            mention?: string | undefined;
+            reaction?: string | undefined;
         } & { [K_7 in Exclude<keyof I_1["last_sent_message"], keyof ChannelMessageHeader>]: never; }) | undefined;
         last_seen_message?: ({
             id?: string | undefined;
             timestamp?: string | undefined;
             sender_id?: string | undefined;
             content?: string | undefined;
+            attachment?: string | undefined;
+            referece?: string | undefined;
+            mention?: string | undefined;
+            reaction?: string | undefined;
         } & {
             id?: string | undefined;
             timestamp?: string | undefined;
             sender_id?: string | undefined;
             content?: string | undefined;
+            attachment?: string | undefined;
+            referece?: string | undefined;
+            mention?: string | undefined;
+            reaction?: string | undefined;
         } & { [K_8 in Exclude<keyof I_1["last_seen_message"], keyof ChannelMessageHeader>]: never; }) | undefined;
         status?: number | undefined;
         meeting_code?: string | undefined;
@@ -9401,12 +9497,20 @@ export declare const ChannelDescList: {
                 timestamp?: string | undefined;
                 sender_id?: string | undefined;
                 content?: string | undefined;
+                attachment?: string | undefined;
+                referece?: string | undefined;
+                mention?: string | undefined;
+                reaction?: string | undefined;
             } | undefined;
             last_seen_message?: {
                 id?: string | undefined;
                 timestamp?: string | undefined;
                 sender_id?: string | undefined;
                 content?: string | undefined;
+                attachment?: string | undefined;
+                referece?: string | undefined;
+                mention?: string | undefined;
+                reaction?: string | undefined;
             } | undefined;
             status?: number | undefined;
             meeting_code?: string | undefined;
@@ -9434,12 +9538,20 @@ export declare const ChannelDescList: {
                 timestamp?: string | undefined;
                 sender_id?: string | undefined;
                 content?: string | undefined;
+                attachment?: string | undefined;
+                referece?: string | undefined;
+                mention?: string | undefined;
+                reaction?: string | undefined;
             } | undefined;
             last_seen_message?: {
                 id?: string | undefined;
                 timestamp?: string | undefined;
                 sender_id?: string | undefined;
                 content?: string | undefined;
+                attachment?: string | undefined;
+                referece?: string | undefined;
+                mention?: string | undefined;
+                reaction?: string | undefined;
             } | undefined;
             status?: number | undefined;
             meeting_code?: string | undefined;
@@ -9462,12 +9574,20 @@ export declare const ChannelDescList: {
                 timestamp?: string | undefined;
                 sender_id?: string | undefined;
                 content?: string | undefined;
+                attachment?: string | undefined;
+                referece?: string | undefined;
+                mention?: string | undefined;
+                reaction?: string | undefined;
             } | undefined;
             last_seen_message?: {
                 id?: string | undefined;
                 timestamp?: string | undefined;
                 sender_id?: string | undefined;
                 content?: string | undefined;
+                attachment?: string | undefined;
+                referece?: string | undefined;
+                mention?: string | undefined;
+                reaction?: string | undefined;
             } | undefined;
             status?: number | undefined;
             meeting_code?: string | undefined;
@@ -9490,22 +9610,38 @@ export declare const ChannelDescList: {
                 timestamp?: string | undefined;
                 sender_id?: string | undefined;
                 content?: string | undefined;
+                attachment?: string | undefined;
+                referece?: string | undefined;
+                mention?: string | undefined;
+                reaction?: string | undefined;
             } & {
                 id?: string | undefined;
                 timestamp?: string | undefined;
                 sender_id?: string | undefined;
                 content?: string | undefined;
+                attachment?: string | undefined;
+                referece?: string | undefined;
+                mention?: string | undefined;
+                reaction?: string | undefined;
             } & { [K_2 in Exclude<keyof I["channeldesc"][number]["last_sent_message"], keyof ChannelMessageHeader>]: never; }) | undefined;
             last_seen_message?: ({
                 id?: string | undefined;
                 timestamp?: string | undefined;
                 sender_id?: string | undefined;
                 content?: string | undefined;
+                attachment?: string | undefined;
+                referece?: string | undefined;
+                mention?: string | undefined;
+                reaction?: string | undefined;
             } & {
                 id?: string | undefined;
                 timestamp?: string | undefined;
                 sender_id?: string | undefined;
                 content?: string | undefined;
+                attachment?: string | undefined;
+                referece?: string | undefined;
+                mention?: string | undefined;
+                reaction?: string | undefined;
             } & { [K_3 in Exclude<keyof I["channeldesc"][number]["last_seen_message"], keyof ChannelMessageHeader>]: never; }) | undefined;
             status?: number | undefined;
             meeting_code?: string | undefined;
@@ -9528,12 +9664,20 @@ export declare const ChannelDescList: {
                 timestamp?: string | undefined;
                 sender_id?: string | undefined;
                 content?: string | undefined;
+                attachment?: string | undefined;
+                referece?: string | undefined;
+                mention?: string | undefined;
+                reaction?: string | undefined;
             } | undefined;
             last_seen_message?: {
                 id?: string | undefined;
                 timestamp?: string | undefined;
                 sender_id?: string | undefined;
                 content?: string | undefined;
+                attachment?: string | undefined;
+                referece?: string | undefined;
+                mention?: string | undefined;
+                reaction?: string | undefined;
             } | undefined;
             status?: number | undefined;
             meeting_code?: string | undefined;
@@ -9562,12 +9706,20 @@ export declare const ChannelDescList: {
                 timestamp?: string | undefined;
                 sender_id?: string | undefined;
                 content?: string | undefined;
+                attachment?: string | undefined;
+                referece?: string | undefined;
+                mention?: string | undefined;
+                reaction?: string | undefined;
             } | undefined;
             last_seen_message?: {
                 id?: string | undefined;
                 timestamp?: string | undefined;
                 sender_id?: string | undefined;
                 content?: string | undefined;
+                attachment?: string | undefined;
+                referece?: string | undefined;
+                mention?: string | undefined;
+                reaction?: string | undefined;
             } | undefined;
             status?: number | undefined;
             meeting_code?: string | undefined;
@@ -9595,12 +9747,20 @@ export declare const ChannelDescList: {
                 timestamp?: string | undefined;
                 sender_id?: string | undefined;
                 content?: string | undefined;
+                attachment?: string | undefined;
+                referece?: string | undefined;
+                mention?: string | undefined;
+                reaction?: string | undefined;
             } | undefined;
             last_seen_message?: {
                 id?: string | undefined;
                 timestamp?: string | undefined;
                 sender_id?: string | undefined;
                 content?: string | undefined;
+                attachment?: string | undefined;
+                referece?: string | undefined;
+                mention?: string | undefined;
+                reaction?: string | undefined;
             } | undefined;
             status?: number | undefined;
             meeting_code?: string | undefined;
@@ -9623,12 +9783,20 @@ export declare const ChannelDescList: {
                 timestamp?: string | undefined;
                 sender_id?: string | undefined;
                 content?: string | undefined;
+                attachment?: string | undefined;
+                referece?: string | undefined;
+                mention?: string | undefined;
+                reaction?: string | undefined;
             } | undefined;
             last_seen_message?: {
                 id?: string | undefined;
                 timestamp?: string | undefined;
                 sender_id?: string | undefined;
                 content?: string | undefined;
+                attachment?: string | undefined;
+                referece?: string | undefined;
+                mention?: string | undefined;
+                reaction?: string | undefined;
             } | undefined;
             status?: number | undefined;
             meeting_code?: string | undefined;
@@ -9651,22 +9819,38 @@ export declare const ChannelDescList: {
                 timestamp?: string | undefined;
                 sender_id?: string | undefined;
                 content?: string | undefined;
+                attachment?: string | undefined;
+                referece?: string | undefined;
+                mention?: string | undefined;
+                reaction?: string | undefined;
             } & {
                 id?: string | undefined;
                 timestamp?: string | undefined;
                 sender_id?: string | undefined;
                 content?: string | undefined;
+                attachment?: string | undefined;
+                referece?: string | undefined;
+                mention?: string | undefined;
+                reaction?: string | undefined;
             } & { [K_9 in Exclude<keyof I_1["channeldesc"][number]["last_sent_message"], keyof ChannelMessageHeader>]: never; }) | undefined;
             last_seen_message?: ({
                 id?: string | undefined;
                 timestamp?: string | undefined;
                 sender_id?: string | undefined;
                 content?: string | undefined;
+                attachment?: string | undefined;
+                referece?: string | undefined;
+                mention?: string | undefined;
+                reaction?: string | undefined;
             } & {
                 id?: string | undefined;
                 timestamp?: string | undefined;
                 sender_id?: string | undefined;
                 content?: string | undefined;
+                attachment?: string | undefined;
+                referece?: string | undefined;
+                mention?: string | undefined;
+                reaction?: string | undefined;
             } & { [K_10 in Exclude<keyof I_1["channeldesc"][number]["last_seen_message"], keyof ChannelMessageHeader>]: never; }) | undefined;
             status?: number | undefined;
             meeting_code?: string | undefined;
@@ -9689,12 +9873,20 @@ export declare const ChannelDescList: {
                 timestamp?: string | undefined;
                 sender_id?: string | undefined;
                 content?: string | undefined;
+                attachment?: string | undefined;
+                referece?: string | undefined;
+                mention?: string | undefined;
+                reaction?: string | undefined;
             } | undefined;
             last_seen_message?: {
                 id?: string | undefined;
                 timestamp?: string | undefined;
                 sender_id?: string | undefined;
                 content?: string | undefined;
+                attachment?: string | undefined;
+                referece?: string | undefined;
+                mention?: string | undefined;
+                reaction?: string | undefined;
             } | undefined;
             status?: number | undefined;
             meeting_code?: string | undefined;
