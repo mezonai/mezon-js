@@ -439,6 +439,12 @@ export interface ApiChannelUserList {
 }
 
 /**  */
+export interface ApiChannelVoidList {
+  //A list of channel.
+  channelvoid?: Array<ApiCommonChannelVoid>;
+}
+
+/**  */
 export interface ApiClanDesc {
   //
   banner?: string;
@@ -524,6 +530,20 @@ export interface ApiClanUserList {
   clan_users?: Array<ClanUserListClanUser>;
   //Cursor for the next page of results, if any.
   cursor?: string;
+}
+
+/**  */
+export interface ApiCommonChannelVoid {
+  //The channel id.
+  channel_id?: string;
+  //
+  channel_label?: string;
+  //
+  clan_id?: string;
+  //
+  clan_name?: string;
+  //
+  meeting_code?: string;
 }
 
 /**  */
@@ -3140,6 +3160,41 @@ export class MezonApi {
     queryParams.set("limit", limit);
     queryParams.set("state", state);
     queryParams.set("cursor", cursor);
+
+    let bodyJson : string = "";
+
+    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
+    const fetchOptions = buildFetchOptions("GET", options, bodyJson);
+    if (bearerToken) {
+        fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+    }
+
+    return Promise.race([
+      fetch(fullUrl, fetchOptions).then((response) => {
+        if (response.status == 204) {
+          return response;
+        } else if (response.status >= 200 && response.status < 300) {
+          return response.json();
+        } else {
+          throw response;
+        }
+      }),
+      new Promise((_, reject) =>
+        setTimeout(reject, this.timeoutMs, "Request timed out.")
+      ),
+    ]);
+}
+
+  /** List channel voids */
+  commonChannelVoidList(bearerToken: string,
+      userId?:Array<string>,
+      limit?:number,
+      options: any = {}): Promise<ApiChannelVoidList> {
+    
+    const urlPath = "/v2/channelvoids";
+    const queryParams = new Map<string, any>();
+    queryParams.set("user_id", userId);
+    queryParams.set("limit", limit);
 
     let bodyJson : string = "";
 

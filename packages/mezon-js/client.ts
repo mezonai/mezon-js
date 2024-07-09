@@ -95,7 +95,8 @@ import {
   ApiDeleteChannelDescRequest,
   ApiChangeChannelPrivateRequest,
   ApiClanEmojiList,
-  ApiClanEmojiCreateRequest
+  ApiClanEmojiCreateRequest,
+  ApiChannelVoidList
 } from "./api.gen";
 
 import { Session } from "./session";
@@ -2208,6 +2209,18 @@ async getPinMessagesList(session: Session, channelId: string): Promise<ApiPinMes
     return Promise.resolve(response);
   });
 }
+
+async commonChannelVoidList(session: Session, userId:Array<string>, limit?: number): Promise<ApiChannelVoidList> {
+  if (this.autoRefreshSession && session.refresh_token &&
+      session.isexpired((Date.now() + this.expiredTimespanMs)/1000)) {
+      await this.sessionRefresh(session);
+  }
+
+  return this.apiClient.commonChannelVoidList(session.token, userId, limit).then((response: ApiChannelVoidList) => {
+    return Promise.resolve(response);
+  });
+}
+
 
 //** */
 async deletePinMessage(session: Session, message_id: string): Promise<boolean> {
