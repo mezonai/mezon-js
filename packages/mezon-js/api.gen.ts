@@ -24,6 +24,106 @@ export interface ClanUserListClanUser {
   user?: ApiUser;
 }
 
+/** Update fields in a given channel. */
+export interface MezonUpdateChannelDescBody {
+  //
+  category_id?: string;
+  //
+  channel_label?: string;
+}
+
+/**  */
+export interface MezonUpdateClanDescBody {
+  //
+  banner?: string;
+  //
+  clan_name?: string;
+  //
+  creator_id?: string;
+  //
+  logo?: string;
+  //
+  status?: number;
+}
+
+/**  */
+export interface MezonUpdateClanDescProfileBody {
+  //
+  avatar_url?: string;
+  //
+  nick_name?: string;
+  //
+  profile_banner?: string;
+  //
+  profile_theme?: string;
+}
+
+/**  */
+export interface MezonUpdateClanEmojiByIdBody {
+  //
+  category?: string;
+  //
+  shortname?: string;
+  //
+  source?: string;
+}
+
+/** update a event within clan. */
+export interface MezonUpdateEventBody {
+  //
+  address?: string;
+  //
+  channel_id?: string;
+  //
+  description?: string;
+  //
+  end_time?: string;
+  //
+  logo?: string;
+  //
+  start_time?: string;
+  //
+  title?: string;
+}
+
+/** Update fields in a given role. */
+export interface MezonUpdateRoleBody {
+  //The permissions to add.
+  active_permission_ids?: Array<string>;
+  //The users to add.
+  add_user_ids?: Array<string>;
+  //
+  allow_mention?: number;
+  //
+  color?: string;
+  //
+  description?: string;
+  //
+  display_online?: number;
+  //The permissions to remove.
+  remove_permission_ids?: Array<string>;
+  //The users to remove.
+  remove_user_ids?: Array<string>;
+  //
+  role_icon?: string;
+  //
+  title?: string;
+}
+
+/** Delete a role the user has access to. */
+export interface MezonUpdateRoleDeleteBody {
+  //
+  channel_id?: string;
+}
+
+/**  */
+export interface MezonUpdateUserProfileByClanBody {
+  //
+  avatar?: string;
+  //
+  nick_name?: string;
+}
+
 /** A single user-role pair. */
 export interface RoleUserListRoleUser {
   //A URL for an avatar image.
@@ -390,6 +490,18 @@ export interface ApiClanEmoji {
   shortname?: string;
   //
   src?: string;
+}
+
+/**  */
+export interface ApiClanEmojiCreateRequest {
+  //
+  category?: string;
+  //
+  clan_id?: string;
+  //
+  shortname?: string;
+  //
+  source?: string;
 }
 
 /**  */
@@ -925,6 +1037,24 @@ export interface ApiReadStorageObjectId {
 export interface ApiReadStorageObjectsRequest {
   //Batch of storage objects.
   object_ids?: Array<ApiReadStorageObjectId>;
+}
+
+/**  */
+export interface ApiRegistrationEmailRequest {
+  //
+  avatar_url?: string;
+  //
+  display_name?: string;
+  //
+  dob?: string;
+  //A valid RFC-5322 email address.
+  email?: string;
+  //A password for the user account.
+  password?: string;
+  //Set the username on the account at register. Must be unique.
+  username?: string;
+  //Extra information that will be bundled in the session token.
+  vars?: Record<string, string>;
 }
 
 /**  */
@@ -2146,6 +2276,42 @@ export class MezonApi {
       throw new Error("'body' is a required parameter but is null or undefined.");
     }
     const urlPath = "/v2/account/link/steam";
+    const queryParams = new Map<string, any>();
+
+    let bodyJson : string = "";
+    bodyJson = JSON.stringify(body || {});
+
+    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
+    const fetchOptions = buildFetchOptions("POST", options, bodyJson);
+    if (bearerToken) {
+        fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+    }
+
+    return Promise.race([
+      fetch(fullUrl, fetchOptions).then((response) => {
+        if (response.status == 204) {
+          return response;
+        } else if (response.status >= 200 && response.status < 300) {
+          return response.json();
+        } else {
+          throw response;
+        }
+      }),
+      new Promise((_, reject) =>
+        setTimeout(reject, this.timeoutMs, "Request timed out.")
+      ),
+    ]);
+}
+
+  /** Authenticate a user with an email+password against the server. */
+  registrationEmail(bearerToken: string,
+      body:ApiRegistrationEmailRequest,
+      options: any = {}): Promise<ApiSession> {
+    
+    if (body === null || body === undefined) {
+      throw new Error("'body' is a required parameter but is null or undefined.");
+    }
+    const urlPath = "/v2/account/registry";
     const queryParams = new Map<string, any>();
 
     let bodyJson : string = "";
@@ -3536,17 +3702,135 @@ export class MezonApi {
     ]);
 }
 
-  /** Get permission list */
-  listClanEmoji(bearerToken: string,
+  /** Post clan Emoji  /v2/emoji/create */
+  createClanEmoji(bearerToken: string,
+      body:ApiClanEmojiCreateRequest,
+      options: any = {}): Promise<any> {
+    
+    if (body === null || body === undefined) {
+      throw new Error("'body' is a required parameter but is null or undefined.");
+    }
+    const urlPath = "/v2/emoji/create";
+    const queryParams = new Map<string, any>();
+
+    let bodyJson : string = "";
+    bodyJson = JSON.stringify(body || {});
+
+    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
+    const fetchOptions = buildFetchOptions("POST", options, bodyJson);
+    if (bearerToken) {
+        fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+    }
+
+    return Promise.race([
+      fetch(fullUrl, fetchOptions).then((response) => {
+        if (response.status == 204) {
+          return response;
+        } else if (response.status >= 200 && response.status < 300) {
+          return response.json();
+        } else {
+          throw response;
+        }
+      }),
+      new Promise((_, reject) =>
+        setTimeout(reject, this.timeoutMs, "Request timed out.")
+      ),
+    ]);
+}
+
+  /** Get emoji list by clan id */
+  listClanEmojiByClanId(bearerToken: string,
+      clanId:string,
       options: any = {}): Promise<ApiClanEmojiList> {
     
-    const urlPath = "/v2/emoji";
+    if (clanId === null || clanId === undefined) {
+      throw new Error("'clanId' is a required parameter but is null or undefined.");
+    }
+    const urlPath = "/v2/emoji/{clanId}"
+        .replace("{clanId}", encodeURIComponent(String(clanId)));
     const queryParams = new Map<string, any>();
 
     let bodyJson : string = "";
 
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("GET", options, bodyJson);
+    if (bearerToken) {
+        fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+    }
+
+    return Promise.race([
+      fetch(fullUrl, fetchOptions).then((response) => {
+        if (response.status == 204) {
+          return response;
+        } else if (response.status >= 200 && response.status < 300) {
+          return response.json();
+        } else {
+          throw response;
+        }
+      }),
+      new Promise((_, reject) =>
+        setTimeout(reject, this.timeoutMs, "Request timed out.")
+      ),
+    ]);
+}
+
+  /** Delete a emoji by ID. */
+  deleteByIdClanEmoji(bearerToken: string,
+      id:string,
+      options: any = {}): Promise<any> {
+    
+    if (id === null || id === undefined) {
+      throw new Error("'id' is a required parameter but is null or undefined.");
+    }
+    const urlPath = "/v2/emoji/{id}"
+        .replace("{id}", encodeURIComponent(String(id)));
+    const queryParams = new Map<string, any>();
+
+    let bodyJson : string = "";
+
+    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
+    const fetchOptions = buildFetchOptions("DELETE", options, bodyJson);
+    if (bearerToken) {
+        fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+    }
+
+    return Promise.race([
+      fetch(fullUrl, fetchOptions).then((response) => {
+        if (response.status == 204) {
+          return response;
+        } else if (response.status >= 200 && response.status < 300) {
+          return response.json();
+        } else {
+          throw response;
+        }
+      }),
+      new Promise((_, reject) =>
+        setTimeout(reject, this.timeoutMs, "Request timed out.")
+      ),
+    ]);
+}
+
+  /** Update ClanEmoj By id */
+  updateClanEmojiById(bearerToken: string,
+      id:string,
+      body: MezonUpdateClanEmojiByIdBody,
+      options: any = {}): Promise<any> {
+    
+    if (id === null || id === undefined) {
+      throw new Error("'id' is a required parameter but is null or undefined.");
+    }
+    if (body === null || body === undefined) {
+      throw new Error("'body' is a required parameter but is null or undefined.");
+    }
+    const urlPath = "/v2/emoji/{id}"
+        .replace("{id}", encodeURIComponent(String(id)));
+    const queryParams = new Map<string, any>();
+
+    let bodyJson : string = "";
+    bodyJson = JSON.stringify(body || {});
+
+    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
+    const fetchOptions = buildFetchOptions("PATCH", options, bodyJson);
     if (bearerToken) {
         fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
     }
@@ -5014,7 +5298,7 @@ export class MezonApi {
   /** Update a role when Delete a role by ID. */
   updateRoleDelete(bearerToken: string,
       roleId:string,
-      body:{},
+      body: MezonUpdateRoleDeleteBody,
       options: any = {}): Promise<any> {
     
     if (roleId === null || roleId === undefined) {

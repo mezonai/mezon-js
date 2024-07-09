@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import {Client} from "@mezon/mezon-js";
+import {Client} from "mezon-js";
 import { useEffect } from 'react';
 import logo from './logo.svg';
 import './App.css';

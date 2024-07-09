@@ -28,7 +28,7 @@ import {
 
 declare const global: {HermesInternal: null | {}};
 
-import {Client} from "@mezon/mezon-js";
+import {Client} from "mezon-js";
 
 function App() {
 

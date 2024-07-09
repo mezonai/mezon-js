@@ -11,10 +11,10 @@ Full documentation is online - https://mezon.vn/docs/javascript-client-guide
 
 You'll need access to an instance of the Satori server before you can connect with the client.
 
-1. Import the client into your project. It's [available on NPM](https://www.npmjs/package/@mezon/satori-js).
+1. Import the client into your project. It's [available on NPM](https://www.npmjs/package/satori-js).
 
   ```shell
-  npm install @mezon/satori-js
+  npm install satori-js
   ```
 
 You'll now see the code in the "node_modules" folder and package listed in your "package.json".
@@ -22,7 +22,7 @@ You'll now see the code in the "node_modules" folder and package listed in your 
 2. Use the connection credentials to build a client object.
 
   ```js
-  import {Client} from "@mezon/satori-js";
+  import {Client} from "satori-js";
 
   const useSSL = false;
   const client = new Client("apiKey", "127.0.0.1", 7450, useSSL);
@@ -109,7 +109,7 @@ The codebase is multi-package monorepo written in TypeScript and can be built wi
 To build from source, install dependencies and build the `satori-js` package:
 
 ```shell
-npm install --workspace=@mezon/satori-js && npm run build --workspace=@mezon/satori-js
+npm install --workspace=satori-js && npm run build --workspace=satori-js
 ```
 
 ### Run Tests
@@ -119,7 +119,7 @@ To run tests you will need access to an instance of the Satori server.
 Tests are run against each workspace bundle; if you have made source code changes, you should `npm run build --workspace=<workspace>` prior to running tests.
 
 ```shell
-npm run test --workspace=@mezon/satori-js-test
+npm run test --workspace=satori-js-test
 ```
 
 ### Release Process

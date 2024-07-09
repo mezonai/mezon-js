@@ -10,6 +10,64 @@ export interface ClanUserListClanUser {
     role_id?: string;
     user?: ApiUser;
 }
+/** Update fields in a given channel. */
+export interface MezonUpdateChannelDescBody {
+    category_id?: string;
+    channel_label?: string;
+}
+/**  */
+export interface MezonUpdateClanDescBody {
+    banner?: string;
+    clan_name?: string;
+    creator_id?: string;
+    logo?: string;
+    status?: number;
+}
+/**  */
+export interface MezonUpdateClanDescProfileBody {
+    avatar_url?: string;
+    nick_name?: string;
+    profile_banner?: string;
+    profile_theme?: string;
+}
+/**  */
+export interface MezonUpdateClanEmojiByIdBody {
+    category?: string;
+    shortname?: string;
+    source?: string;
+}
+/** update a event within clan. */
+export interface MezonUpdateEventBody {
+    address?: string;
+    channel_id?: string;
+    description?: string;
+    end_time?: string;
+    logo?: string;
+    start_time?: string;
+    title?: string;
+}
+/** Update fields in a given role. */
+export interface MezonUpdateRoleBody {
+    active_permission_ids?: Array<string>;
+    add_user_ids?: Array<string>;
+    allow_mention?: number;
+    color?: string;
+    description?: string;
+    display_online?: number;
+    remove_permission_ids?: Array<string>;
+    remove_user_ids?: Array<string>;
+    role_icon?: string;
+    title?: string;
+}
+/** Delete a role the user has access to. */
+export interface MezonUpdateRoleDeleteBody {
+    channel_id?: string;
+}
+/**  */
+export interface MezonUpdateUserProfileByClanBody {
+    avatar?: string;
+    nick_name?: string;
+}
 /** A single user-role pair. */
 export interface RoleUserListRoleUser {
     avatar_url?: string;
@@ -218,6 +276,13 @@ export interface ApiClanEmoji {
     category?: string;
     shortname?: string;
     src?: string;
+}
+/**  */
+export interface ApiClanEmojiCreateRequest {
+    category?: string;
+    clan_id?: string;
+    shortname?: string;
+    source?: string;
 }
 /**  */
 export interface ApiClanEmojiList {
@@ -525,6 +590,16 @@ export interface ApiReadStorageObjectsRequest {
     object_ids?: Array<ApiReadStorageObjectId>;
 }
 /**  */
+export interface ApiRegistrationEmailRequest {
+    avatar_url?: string;
+    display_name?: string;
+    dob?: string;
+    email?: string;
+    password?: string;
+    username?: string;
+    vars?: Record<string, string>;
+}
+/**  */
 export interface ApiRole {
     active?: number;
     allow_mention?: number;
@@ -814,6 +889,8 @@ export declare class MezonApi {
     linkGoogle(bearerToken: string, body: ApiAccountGoogle, options?: any): Promise<any>;
     /** Add Steam to the social profiles on the current user's account. */
     linkSteam(bearerToken: string, body: ApiLinkSteamRequest, options?: any): Promise<any>;
+    /** Authenticate a user with an email+password against the server. */
+    registrationEmail(bearerToken: string, body: ApiRegistrationEmailRequest, options?: any): Promise<ApiSession>;
     /** Refresh a user's session using a refresh token retrieved from a previous authentication request. */
     sessionRefresh(basicAuthUsername: string, basicAuthPassword: string, body: ApiSessionRefreshRequest, options?: any): Promise<ApiSession>;
     /** Remove the Apple ID from the social profiles on the current user's account. */
@@ -884,8 +961,14 @@ export declare class MezonApi {
     closeDirectMess(bearerToken: string, body: ApiDeleteChannelDescRequest, options?: any): Promise<any>;
     /** open direct message. */
     openDirectMess(bearerToken: string, body: ApiDeleteChannelDescRequest, options?: any): Promise<any>;
-    /** Get permission list */
-    listClanEmoji(bearerToken: string, options?: any): Promise<ApiClanEmojiList>;
+    /** Post clan Emoji  /v2/emoji/create */
+    createClanEmoji(bearerToken: string, body: ApiClanEmojiCreateRequest, options?: any): Promise<any>;
+    /** Get emoji list by clan id */
+    listClanEmojiByClanId(bearerToken: string, clanId: string, options?: any): Promise<ApiClanEmojiList>;
+    /** Delete a emoji by ID. */
+    deleteByIdClanEmoji(bearerToken: string, id: string, options?: any): Promise<any>;
+    /** Update ClanEmoj By id */
+    updateClanEmojiById(bearerToken: string, id: string, body: MezonUpdateClanEmojiByIdBody, options?: any): Promise<any>;
     /** Search message from elasticsearch service. */
     searchMessage(bearerToken: string, body: ApiSearchMessageRequest, options?: any): Promise<ApiSearchMessageResponse>;
     /** Submit an event for processing in the server's registered runtime custom events handler. */
@@ -969,7 +1052,7 @@ export declare class MezonApi {
     /** Create a new role for clan. */
     createRole(bearerToken: string, body: ApiCreateRoleRequest, options?: any): Promise<ApiRole>;
     /** Update a role when Delete a role by ID. */
-    updateRoleDelete(bearerToken: string, roleId: string, body: {}, options?: any): Promise<any>;
+    updateRoleDelete(bearerToken: string, roleId: string, body: MezonUpdateRoleDeleteBody, options?: any): Promise<any>;
     /** Delete a role by ID. */
     deleteRole(bearerToken: string, roleId: string, channelId?: string, options?: any): Promise<any>;
     /** Update fields in a given role. */

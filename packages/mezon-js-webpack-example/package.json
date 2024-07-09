@@ -1,11 +1,11 @@
 {
-    "name": "@mezon/mezon-js-webpack-example",
+    "name": "mezon-js-webpack-example",
     "version": "1.0.0",
     "description": "An example project that utilizes mezon-js and Webpack",
     "private": true,
     "license": "Apache-2.0",
     "dependencies": {
-        "@mezon/mezon-js": "file:../mezon-js",
+        "mezon-js": "file:../mezon-js",
         "ts-loader": "^8.0.14",
         "webpack": "^5.76.0",
         "webpack-cli": "^4.3.1"

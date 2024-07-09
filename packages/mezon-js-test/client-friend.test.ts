@@ -15,7 +15,7 @@
  */
 
 import {Page} from "puppeteer"
-import * as mezonjs from "@mezon/mezon-js/client";
+import * as mezonjs from "mezon-js/client";
 import {createFacebookInstantGameAuthToken, createPage, generateid} from "./utils";
 import {describe, expect, it} from '@jest/globals'
 
