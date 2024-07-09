@@ -1851,8 +1851,8 @@ export interface ChannelDescription {
   active: number;
 }
 
-/** common channel void */
-export interface CommonChannelVoice {
+/** direct channel void */
+export interface DirectChannelVoice {
   /** The channel id. */
   channel_id: string;
   /** The channel lable */
@@ -1865,14 +1865,14 @@ export interface CommonChannelVoice {
   meeting_code: string;
 }
 
-/** A list of CommonChannelVoice */
+/** A list of ChannelVoice */
 export interface ChannelVoiceList {
   /** A list of channel. */
-  channelvoice: CommonChannelVoice[];
+  channelvoice: DirectChannelVoice[];
 }
 
 /** List (and optionally filter) channels. */
-export interface CommonChannelVoiceRequest {
+export interface DirectChannelVoiceRequest {
   /** user Id */
   user_id: string[];
   /** Max number of records to return. Between 1 and 100. */
@@ -12947,12 +12947,12 @@ export const ChannelDescription = {
   },
 };
 
-function createBaseCommonChannelVoice(): CommonChannelVoice {
+function createBaseDirectChannelVoice(): DirectChannelVoice {
   return { channel_id: "", channel_label: "", clan_id: "", clan_name: "", meeting_code: "" };
 }
 
-export const CommonChannelVoice = {
-  encode(message: CommonChannelVoice, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+export const DirectChannelVoice = {
+  encode(message: DirectChannelVoice, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.channel_id !== "") {
       writer.uint32(10).string(message.channel_id);
     }
@@ -12971,10 +12971,10 @@ export const CommonChannelVoice = {
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): CommonChannelVoice {
+  decode(input: _m0.Reader | Uint8Array, length?: number): DirectChannelVoice {
     const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseCommonChannelVoice();
+    const message = createBaseDirectChannelVoice();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -13001,7 +13001,7 @@ export const CommonChannelVoice = {
     return message;
   },
 
-  fromJSON(object: any): CommonChannelVoice {
+  fromJSON(object: any): DirectChannelVoice {
     return {
       channel_id: isSet(object.channel_id) ? String(object.channel_id) : "",
       channel_label: isSet(object.channel_label) ? String(object.channel_label) : "",
@@ -13011,7 +13011,7 @@ export const CommonChannelVoice = {
     };
   },
 
-  toJSON(message: CommonChannelVoice): unknown {
+  toJSON(message: DirectChannelVoice): unknown {
     const obj: any = {};
     message.channel_id !== undefined && (obj.channel_id = message.channel_id);
     message.channel_label !== undefined && (obj.channel_label = message.channel_label);
@@ -13021,12 +13021,12 @@ export const CommonChannelVoice = {
     return obj;
   },
 
-  create<I extends Exact<DeepPartial<CommonChannelVoice>, I>>(base?: I): CommonChannelVoice {
-    return CommonChannelVoice.fromPartial(base ?? {});
+  create<I extends Exact<DeepPartial<DirectChannelVoice>, I>>(base?: I): DirectChannelVoice {
+    return DirectChannelVoice.fromPartial(base ?? {});
   },
 
-  fromPartial<I extends Exact<DeepPartial<CommonChannelVoice>, I>>(object: I): CommonChannelVoice {
-    const message = createBaseCommonChannelVoice();
+  fromPartial<I extends Exact<DeepPartial<DirectChannelVoice>, I>>(object: I): DirectChannelVoice {
+    const message = createBaseDirectChannelVoice();
     message.channel_id = object.channel_id ?? "";
     message.channel_label = object.channel_label ?? "";
     message.clan_id = object.clan_id ?? "";
@@ -13043,7 +13043,7 @@ function createBaseChannelVoiceList(): ChannelVoiceList {
 export const ChannelVoiceList = {
   encode(message: ChannelVoiceList, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     for (const v of message.channelvoice) {
-      CommonChannelVoice.encode(v!, writer.uint32(10).fork()).ldelim();
+      DirectChannelVoice.encode(v!, writer.uint32(10).fork()).ldelim();
     }
     return writer;
   },
@@ -13056,7 +13056,7 @@ export const ChannelVoiceList = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          message.channelvoice.push(CommonChannelVoice.decode(reader, reader.uint32()));
+          message.channelvoice.push(DirectChannelVoice.decode(reader, reader.uint32()));
           break;
         default:
           reader.skipType(tag & 7);
@@ -13069,7 +13069,7 @@ export const ChannelVoiceList = {
   fromJSON(object: any): ChannelVoiceList {
     return {
       channelvoice: Array.isArray(object?.channelvoice)
-        ? object.channelvoice.map((e: any) => CommonChannelVoice.fromJSON(e))
+        ? object.channelvoice.map((e: any) => DirectChannelVoice.fromJSON(e))
         : [],
     };
   },
@@ -13077,7 +13077,7 @@ export const ChannelVoiceList = {
   toJSON(message: ChannelVoiceList): unknown {
     const obj: any = {};
     if (message.channelvoice) {
-      obj.channelvoice = message.channelvoice.map((e) => e ? CommonChannelVoice.toJSON(e) : undefined);
+      obj.channelvoice = message.channelvoice.map((e) => e ? DirectChannelVoice.toJSON(e) : undefined);
     } else {
       obj.channelvoice = [];
     }
@@ -13090,17 +13090,17 @@ export const ChannelVoiceList = {
 
   fromPartial<I extends Exact<DeepPartial<ChannelVoiceList>, I>>(object: I): ChannelVoiceList {
     const message = createBaseChannelVoiceList();
-    message.channelvoice = object.channelvoice?.map((e) => CommonChannelVoice.fromPartial(e)) || [];
+    message.channelvoice = object.channelvoice?.map((e) => DirectChannelVoice.fromPartial(e)) || [];
     return message;
   },
 };
 
-function createBaseCommonChannelVoiceRequest(): CommonChannelVoiceRequest {
+function createBaseDirectChannelVoiceRequest(): DirectChannelVoiceRequest {
   return { user_id: [], limit: undefined };
 }
 
-export const CommonChannelVoiceRequest = {
-  encode(message: CommonChannelVoiceRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+export const DirectChannelVoiceRequest = {
+  encode(message: DirectChannelVoiceRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     for (const v of message.user_id) {
       writer.uint32(10).string(v!);
     }
@@ -13110,10 +13110,10 @@ export const CommonChannelVoiceRequest = {
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): CommonChannelVoiceRequest {
+  decode(input: _m0.Reader | Uint8Array, length?: number): DirectChannelVoiceRequest {
     const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseCommonChannelVoiceRequest();
+    const message = createBaseDirectChannelVoiceRequest();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -13131,14 +13131,14 @@ export const CommonChannelVoiceRequest = {
     return message;
   },
 
-  fromJSON(object: any): CommonChannelVoiceRequest {
+  fromJSON(object: any): DirectChannelVoiceRequest {
     return {
       user_id: Array.isArray(object?.user_id) ? object.user_id.map((e: any) => String(e)) : [],
       limit: isSet(object.limit) ? Number(object.limit) : undefined,
     };
   },
 
-  toJSON(message: CommonChannelVoiceRequest): unknown {
+  toJSON(message: DirectChannelVoiceRequest): unknown {
     const obj: any = {};
     if (message.user_id) {
       obj.user_id = message.user_id.map((e) => e);
@@ -13149,12 +13149,12 @@ export const CommonChannelVoiceRequest = {
     return obj;
   },
 
-  create<I extends Exact<DeepPartial<CommonChannelVoiceRequest>, I>>(base?: I): CommonChannelVoiceRequest {
-    return CommonChannelVoiceRequest.fromPartial(base ?? {});
+  create<I extends Exact<DeepPartial<DirectChannelVoiceRequest>, I>>(base?: I): DirectChannelVoiceRequest {
+    return DirectChannelVoiceRequest.fromPartial(base ?? {});
   },
 
-  fromPartial<I extends Exact<DeepPartial<CommonChannelVoiceRequest>, I>>(object: I): CommonChannelVoiceRequest {
-    const message = createBaseCommonChannelVoiceRequest();
+  fromPartial<I extends Exact<DeepPartial<DirectChannelVoiceRequest>, I>>(object: I): DirectChannelVoiceRequest {
+    const message = createBaseDirectChannelVoiceRequest();
     message.user_id = object.user_id?.map((e) => e) || [];
     message.limit = object.limit ?? undefined;
     return message;

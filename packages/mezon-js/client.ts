@@ -2210,13 +2210,13 @@ async getPinMessagesList(session: Session, channelId: string): Promise<ApiPinMes
   });
 }
 
-async commonChannelVoiceList(session: Session, userId:Array<string>, limit?: number): Promise<ApiChannelVoiceList> {
+async directChannelVoiceList(session: Session, userId:Array<string>, limit?: number): Promise<ApiChannelVoiceList> {
   if (this.autoRefreshSession && session.refresh_token &&
       session.isexpired((Date.now() + this.expiredTimespanMs)/1000)) {
       await this.sessionRefresh(session);
   }
 
-  return this.apiClient.commonChannelVoiceList(session.token, userId, limit).then((response: ApiChannelVoiceList) => {
+  return this.apiClient.directChannelVoiceList(session.token, userId, limit).then((response: ApiChannelVoiceList) => {
     return Promise.resolve(response);
   });
 }

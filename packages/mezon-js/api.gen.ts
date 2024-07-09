@@ -441,7 +441,7 @@ export interface ApiChannelUserList {
 /**  */
 export interface ApiChannelVoiceList {
   //A list of channel.
-  channelvoice?: Array<ApiCommonChannelVoice>;
+  channelvoice?: Array<ApiDirectChannelVoice>;
 }
 
 /**  */
@@ -530,20 +530,6 @@ export interface ApiClanUserList {
   clan_users?: Array<ClanUserListClanUser>;
   //Cursor for the next page of results, if any.
   cursor?: string;
-}
-
-/**  */
-export interface ApiCommonChannelVoice {
-  //The channel id.
-  channel_id?: string;
-  //
-  channel_label?: string;
-  //
-  clan_id?: string;
-  //
-  clan_name?: string;
-  //
-  meeting_code?: string;
 }
 
 /**  */
@@ -692,6 +678,20 @@ export interface ApiDeleteStorageObjectId {
 export interface ApiDeleteStorageObjectsRequest {
   //Batch of storage objects.
   object_ids?: Array<ApiDeleteStorageObjectId>;
+}
+
+/**  */
+export interface ApiDirectChannelVoice {
+  //The channel id.
+  channel_id?: string;
+  //
+  channel_label?: string;
+  //
+  clan_id?: string;
+  //
+  clan_name?: string;
+  //
+  meeting_code?: string;
 }
 
 /** Represents an event to be passed through the server to registered event handlers. */
@@ -3186,7 +3186,7 @@ export class MezonApi {
 }
 
   /** List channelvoices */
-  commonChannelVoiceList(bearerToken: string,
+  directChannelVoiceList(bearerToken: string,
       userId?:Array<string>,
       limit?:number,
       options: any = {}): Promise<ApiChannelVoiceList> {
