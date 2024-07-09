@@ -250,6 +250,10 @@ export interface ApiChannelUserList {
     cursor?: string;
 }
 /**  */
+export interface ApiChannelVoiceList {
+    channelvoice?: Array<ApiDirectChannelVoice>;
+}
+/**  */
 export interface ApiClanDesc {
     banner?: string;
     clan_id?: string;
@@ -386,6 +390,14 @@ export interface ApiDeleteStorageObjectId {
 /** Batch delete storage objects. */
 export interface ApiDeleteStorageObjectsRequest {
     object_ids?: Array<ApiDeleteStorageObjectId>;
+}
+/**  */
+export interface ApiDirectChannelVoice {
+    channel_id?: string;
+    channel_label?: string;
+    clan_id?: string;
+    clan_name?: string;
+    meeting_code?: string;
 }
 /** Represents an event to be passed through the server to registered event handlers. */
 export interface ApiEvent {
@@ -801,8 +813,8 @@ export interface ApiUsers {
 }
 /** A list of users belonging to a channel, along with their role. */
 export interface ApiVoiceChannelUser {
+    id?: string;
     channel_id?: string;
-    jid?: string;
     participant?: string;
     user_id?: string;
 }
@@ -935,6 +947,8 @@ export declare class MezonApi {
     updateChannelDesc(bearerToken: string, channelId: string, body: {}, options?: any): Promise<any>;
     /** List all users that are part of a channel. */
     listChannelVoiceUsers(bearerToken: string, clanId?: string, channelId?: string, channelType?: number, limit?: number, state?: number, cursor?: string, options?: any): Promise<ApiVoiceChannelUserList>;
+    /** List channelvoices */
+    directChannelVoiceList(bearerToken: string, userId?: Array<string>, limit?: number, options?: any): Promise<ApiChannelVoiceList>;
     /** List clans */
     listClanDescs(bearerToken: string, limit?: number, state?: number, cursor?: string, options?: any): Promise<ApiClanDescList>;
     /** Create a clan */
@@ -961,7 +975,9 @@ export declare class MezonApi {
     closeDirectMess(bearerToken: string, body: ApiDeleteChannelDescRequest, options?: any): Promise<any>;
     /** open direct message. */
     openDirectMess(bearerToken: string, body: ApiDeleteChannelDescRequest, options?: any): Promise<any>;
-    /** Post clan Emoji  /v2/emoji/create */
+    /** Get permission list */
+    listClanEmoji(bearerToken: string, options?: any): Promise<ApiClanEmojiList>;
+    /** Post permission Emoji  /v2/emoji/create */
     createClanEmoji(bearerToken: string, body: ApiClanEmojiCreateRequest, options?: any): Promise<any>;
     /** Get emoji list by clan id */
     listClanEmojiByClanId(bearerToken: string, clanId: string, options?: any): Promise<ApiClanEmojiList>;

@@ -22,7 +22,7 @@ var client = new Client("defaultkey", "127.0.0.1", "7350", useSSL);
 
 client.authenticateEmail("user1@ncc.asia", "Aa12345678").then(session => {
   console.log("authenticated.", session);
-  client.listMessageMentions(session, 50, true, "").then(res => {
+  client.createClanEmoji(session, {}).then(res => {
     console.log("res", res);
   });
 }).catch(e => {

@@ -1954,9 +1954,9 @@ var MezonApi = class {
       )
     ]);
   }
-  /** List channel voids */
-  commonChannelVoidList(bearerToken, userId, limit, options = {}) {
-    const urlPath = "/v2/channelvoids";
+  /** List channelvoices */
+  directChannelVoiceList(bearerToken, userId, limit, options = {}) {
+    const urlPath = "/v2/channelvoices";
     const queryParams = /* @__PURE__ */ new Map();
     queryParams.set("user_id", userId);
     queryParams.set("limit", limit);
@@ -2358,7 +2358,32 @@ var MezonApi = class {
       )
     ]);
   }
-  /** Post clan Emoji  /v2/emoji/create */
+  /** Get permission list */
+  listClanEmoji(bearerToken, options = {}) {
+    const urlPath = "/v2/emoji";
+    const queryParams = /* @__PURE__ */ new Map();
+    let bodyJson = "";
+    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
+    const fetchOptions = buildFetchOptions("GET", options, bodyJson);
+    if (bearerToken) {
+      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+    }
+    return Promise.race([
+      fetch(fullUrl, fetchOptions).then((response) => {
+        if (response.status == 204) {
+          return response;
+        } else if (response.status >= 200 && response.status < 300) {
+          return response.json();
+        } else {
+          throw response;
+        }
+      }),
+      new Promise(
+        (_, reject) => setTimeout(reject, this.timeoutMs, "Request timed out.")
+      )
+    ]);
+  }
+  /** Post permission Emoji  /v2/emoji/create */
   createClanEmoji(bearerToken, body, options = {}) {
     if (body === null || body === void 0) {
       throw new Error("'body' is a required parameter but is null or undefined.");
@@ -5353,7 +5378,7 @@ var Client = class {
         }
         response.voice_channel_users.forEach((gu) => {
           result.voice_channel_users.push({
-            jid: gu.jid,
+            id: gu.id,
             channel_id: gu.channel_id,
             user_id: gu.user_id,
             participant: gu.participant
@@ -6372,12 +6397,12 @@ var Client = class {
       });
     });
   }
-  commonChannelVoidList(session, userId, limit) {
+  directChannelVoiceList(session, userId, limit) {
     return __async(this, null, function* () {
       if (this.autoRefreshSession && session.refresh_token && session.isexpired((Date.now() + this.expiredTimespanMs) / 1e3)) {
         yield this.sessionRefresh(session);
       }
-      return this.apiClient.commonChannelVoidList(session.token, userId, limit).then((response) => {
+      return this.apiClient.directChannelVoiceList(session.token, userId, limit).then((response) => {
         return Promise.resolve(response);
       });
     });

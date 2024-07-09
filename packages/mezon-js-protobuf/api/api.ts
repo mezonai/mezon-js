@@ -922,10 +922,10 @@ export interface ChannelUserList_ChannelUser {
 
 /** A list of users belonging to a channel, along with their role. */
 export interface VoiceChannelUser {
+  /** voice user join id */
+  id: string;
   /** User for a channel. */
   user_id: string;
-  /** Cursor for the next page of results, if any. */
-  jid: string;
   /** channel id */
   channel_id: string;
   /** participant */
@@ -7365,16 +7365,16 @@ export const ChannelUserList_ChannelUser = {
 };
 
 function createBaseVoiceChannelUser(): VoiceChannelUser {
-  return { user_id: "", jid: "", channel_id: "", participant: "" };
+  return { id: "", user_id: "", channel_id: "", participant: "" };
 }
 
 export const VoiceChannelUser = {
   encode(message: VoiceChannelUser, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.user_id !== "") {
-      writer.uint32(10).string(message.user_id);
+    if (message.id !== "") {
+      writer.uint32(10).string(message.id);
     }
-    if (message.jid !== "") {
-      writer.uint32(18).string(message.jid);
+    if (message.user_id !== "") {
+      writer.uint32(18).string(message.user_id);
     }
     if (message.channel_id !== "") {
       writer.uint32(26).string(message.channel_id);
@@ -7393,10 +7393,10 @@ export const VoiceChannelUser = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          message.user_id = reader.string();
+          message.id = reader.string();
           break;
         case 2:
-          message.jid = reader.string();
+          message.user_id = reader.string();
           break;
         case 3:
           message.channel_id = reader.string();
@@ -7414,8 +7414,8 @@ export const VoiceChannelUser = {
 
   fromJSON(object: any): VoiceChannelUser {
     return {
+      id: isSet(object.id) ? String(object.id) : "",
       user_id: isSet(object.user_id) ? String(object.user_id) : "",
-      jid: isSet(object.jid) ? String(object.jid) : "",
       channel_id: isSet(object.channel_id) ? String(object.channel_id) : "",
       participant: isSet(object.participant) ? String(object.participant) : "",
     };
@@ -7423,8 +7423,8 @@ export const VoiceChannelUser = {
 
   toJSON(message: VoiceChannelUser): unknown {
     const obj: any = {};
+    message.id !== undefined && (obj.id = message.id);
     message.user_id !== undefined && (obj.user_id = message.user_id);
-    message.jid !== undefined && (obj.jid = message.jid);
     message.channel_id !== undefined && (obj.channel_id = message.channel_id);
     message.participant !== undefined && (obj.participant = message.participant);
     return obj;
@@ -7436,8 +7436,8 @@ export const VoiceChannelUser = {
 
   fromPartial<I extends Exact<DeepPartial<VoiceChannelUser>, I>>(object: I): VoiceChannelUser {
     const message = createBaseVoiceChannelUser();
+    message.id = object.id ?? "";
     message.user_id = object.user_id ?? "";
-    message.jid = object.jid ?? "";
     message.channel_id = object.channel_id ?? "";
     message.participant = object.participant ?? "";
     return message;
