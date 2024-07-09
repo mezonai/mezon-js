@@ -439,9 +439,9 @@ export interface ApiChannelUserList {
 }
 
 /**  */
-export interface ApiChannelVoidList {
+export interface ApiChannelVoiceList {
   //A list of channel.
-  channelvoid?: Array<ApiCommonChannelVoid>;
+  channelvoice?: Array<ApiCommonChannelVoice>;
 }
 
 /**  */
@@ -533,7 +533,7 @@ export interface ApiClanUserList {
 }
 
 /**  */
-export interface ApiCommonChannelVoid {
+export interface ApiCommonChannelVoice {
   //The channel id.
   channel_id?: string;
   //
@@ -3185,13 +3185,13 @@ export class MezonApi {
     ]);
 }
 
-  /** List channel voids */
-  commonChannelVoidList(bearerToken: string,
+  /** List channelvoices */
+  commonChannelVoiceList(bearerToken: string,
       userId?:Array<string>,
       limit?:number,
-      options: any = {}): Promise<ApiChannelVoidList> {
+      options: any = {}): Promise<ApiChannelVoiceList> {
     
-    const urlPath = "/v2/channelvoids";
+    const urlPath = "/v2/channelvoices";
     const queryParams = new Map<string, any>();
     queryParams.set("user_id", userId);
     queryParams.set("limit", limit);
@@ -3702,7 +3702,38 @@ export class MezonApi {
     ]);
 }
 
-  /** Post clan Emoji  /v2/emoji/create */
+  /** Get permission list */
+  listClanEmoji(bearerToken: string,
+      options: any = {}): Promise<ApiClanEmojiList> {
+    
+    const urlPath = "/v2/emoji";
+    const queryParams = new Map<string, any>();
+
+    let bodyJson : string = "";
+
+    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
+    const fetchOptions = buildFetchOptions("GET", options, bodyJson);
+    if (bearerToken) {
+        fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+    }
+
+    return Promise.race([
+      fetch(fullUrl, fetchOptions).then((response) => {
+        if (response.status == 204) {
+          return response;
+        } else if (response.status >= 200 && response.status < 300) {
+          return response.json();
+        } else {
+          throw response;
+        }
+      }),
+      new Promise((_, reject) =>
+        setTimeout(reject, this.timeoutMs, "Request timed out.")
+      ),
+    ]);
+}
+
+  /** Post permission Emoji  /v2/emoji/create */
   createClanEmoji(bearerToken: string,
       body:ApiClanEmojiCreateRequest,
       options: any = {}): Promise<any> {
