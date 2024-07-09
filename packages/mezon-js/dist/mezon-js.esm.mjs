@@ -1925,6 +1925,33 @@ var MezonApi = class {
       )
     ]);
   }
+  /** List channel voids */
+  commonChannelVoidList(bearerToken, userId, limit, options = {}) {
+    const urlPath = "/v2/channelvoids";
+    const queryParams = /* @__PURE__ */ new Map();
+    queryParams.set("user_id", userId);
+    queryParams.set("limit", limit);
+    let bodyJson = "";
+    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
+    const fetchOptions = buildFetchOptions("GET", options, bodyJson);
+    if (bearerToken) {
+      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+    }
+    return Promise.race([
+      fetch(fullUrl, fetchOptions).then((response) => {
+        if (response.status == 204) {
+          return response;
+        } else if (response.status >= 200 && response.status < 300) {
+          return response.json();
+        } else {
+          throw response;
+        }
+      }),
+      new Promise(
+        (_, reject) => setTimeout(reject, this.timeoutMs, "Request timed out.")
+      )
+    ]);
+  }
   /** List clans */
   listClanDescs(bearerToken, limit, state, cursor, options = {}) {
     const urlPath = "/v2/clandesc";
@@ -6220,6 +6247,16 @@ var Client = class {
         yield this.sessionRefresh(session);
       }
       return this.apiClient.getPinMessagesList(session.token, channelId).then((response) => {
+        return Promise.resolve(response);
+      });
+    });
+  }
+  commonChannelVoidList(session, userId, limit) {
+    return __async(this, null, function* () {
+      if (this.autoRefreshSession && session.refresh_token && session.isexpired((Date.now() + this.expiredTimespanMs) / 1e3)) {
+        yield this.sessionRefresh(session);
+      }
+      return this.apiClient.commonChannelVoidList(session.token, userId, limit).then((response) => {
         return Promise.resolve(response);
       });
     });
