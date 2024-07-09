@@ -430,6 +430,8 @@ export interface ApiCommonChannelVoid {
   clan_id?: string;
   //
   clan_name?: string;
+  //
+  meeting_code?: string;
 }
 
 /**  */
