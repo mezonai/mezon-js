@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-import * as mezonjs from "@mezon/mezon-js";
-import {MatchmakerMatched} from "@mezon/mezon-js/socket";
+import * as mezonjs from "mezon-js";
+import {MatchmakerMatched} from "mezon-js/socket";
 import {describe, expect, it} from '@jest/globals'
 import * as mezonjsprotobuf from "../mezon-js-protobuf";
 import {generateid, createPage, adapters, AdapterType, matchmakerTimeout} from "./utils"

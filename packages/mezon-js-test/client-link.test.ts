@@ -17,7 +17,7 @@
 const base64url = require("base64url");
 const crypto = require("crypto");
 import {Page} from "puppeteer"
-import * as mezonjs from "@mezon/mezon-js";
+import * as mezonjs from "mezon-js";
 import {createPage, generateid} from "./utils";
 import {describe, expect, it} from '@jest/globals'
 

@@ -1,5 +1,5 @@
 {
-    "name": "@mezon/satori-js",
+    "name": "satori-js",
     "version": "2.7.1",
     "scripts": {
         "build": "npx tsc && npx rollup -c --bundleConfigAsCjs && node build.mjs",

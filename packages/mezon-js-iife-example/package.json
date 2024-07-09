@@ -1,11 +1,11 @@
 {
-    "name": "@mezon/mezon-js-iife-example",
+    "name": "mezon-js-iife-example",
     "version": "1.0.0",
     "description": "An example project that utilizes mezon-js",
     "private": true,
     "license": "Apache-2.0",
     "dependencies": {
-        "@mezon/mezon-js": "2.7.1"
+        "mezon-js": "2.7.1"
     },
     "scripts": {
         "build": "npx esbuild --bundle index.ts --target=es6 --format=iife --outfile=dist/mezon-js-example.iife.js"

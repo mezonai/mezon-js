@@ -1,12 +1,12 @@
 {
-    "name": "@mezon/mezon-js-test",
+    "name": "mezon-js-test",
     "version": "1.0.0",
     "description": "A subproject that houses tests for Mezon JS",
     "private": true,
     "license": "Apache-2.0",
     "dependencies": {
-        "@mezon/mezon-js": "file:../mezon-js",
-        "@mezon/mezon-js-protobuf": "file:../mezon-js-protobuf",
+        "mezon-js": "file:../mezon-js",
+        "mezon-js-protobuf": "file:../mezon-js-protobuf",
         "merge": "^2.1.1",
         "base64url": "3.0.1"
     },

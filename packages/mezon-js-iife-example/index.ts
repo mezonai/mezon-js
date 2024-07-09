@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import {Client} from "@mezon/mezon-js";
+import {Client} from "mezon-js";
 
 var useSSL = false; // Enable if server is run with an SSL certificate.
 var client = new Client("defaultkey", "127.0.0.1", "7350", useSSL);

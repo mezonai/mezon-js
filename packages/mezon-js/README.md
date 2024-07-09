@@ -15,10 +15,10 @@ You'll need to setup the server and database before you can connect with the cli
 
 1. Install and run the servers. Follow these [instructions](https://mezon.vn/docs/install-docker-quickstart).
 
-2. Import the client into your project. It's [available on NPM](https://www.npmjs.com/package/@mezon/mezon-js) and can be also be added to a project with Bower or other package managers.
+2. Import the client into your project. It's [available on NPM](https://www.npmjs.com/package/mezon-js) and can be also be added to a project with Bower or other package managers.
 
     ```shell
-    npm install @mezon/mezon-js
+    npm install mezon-js
     ```
 
     You'll now see the code in the "node_modules" folder and package listed in your "package.json".
@@ -26,13 +26,13 @@ You'll need to setup the server and database before you can connect with the cli
     Optionally, if you would like to use the Protocol Buffers wire format with your sockets, you can import the adapter found in this package:
 
     ```shell
-    npm install @mezon/mezon-js-protobuf
+    npm install mezon-js-protobuf
     ```
 
 3. Use the connection credentials to build a client object.
 
     ```js
-    import {Client} from "@mezon/mezon-js";
+    import {Client} from "mezon-js";
 
     var useSSL = false; // Enable if server is run with an SSL certificate.
     var client = new Client("defaultkey", "127.0.0.1", "7350", useSSL);
@@ -124,7 +124,7 @@ const session = await socket.connect(session);
 If you are using the optional protocol buffer adapter, pass the adapter to the Socket object during construction:
 
 ```js
-import {WebSocketAdapterPb} from "@mezon/mezon-js-protobuf"
+import {WebSocketAdapterPb} from "mezon-js-protobuf"
 
 const secure = false; // Enable if server is run with an SSL certificate
 const trace = false;
@@ -184,7 +184,7 @@ To build from source, first install all workspace dependencies from the reposito
 Then to build a specific workspace, pass the `--workspace` flag to your build command, for example:
 
 ```shell
-npm run build --workspace=@mezon/mezon-js
+npm run build --workspace=mezon-js
 ```
 
 ### Run Tests
@@ -195,7 +195,7 @@ Tests are run against each workspace bundle; if you have made source code change
 
 ```shell
 docker-compose -f ./docker-compose.yml up
-npm run test --workspace=@mezon/mezon-js-test
+npm run test --workspace=mezon-js-test
 ```
 
 ### Protocol Buffer Web Socket Adapter

@@ -94,7 +94,8 @@ import {
   ApiWebhookResponse,
   ApiDeleteChannelDescRequest,
   ApiChangeChannelPrivateRequest,
-  ApiClanEmojiList
+  ApiClanEmojiList,
+  ApiClanEmojiCreateRequest
 } from "./api.gen";
 
 import { Session } from "./session";
@@ -2221,17 +2222,27 @@ async deletePinMessage(session: Session, message_id: string): Promise<boolean> {
 }
 
 /** List clan emoji. */
-async listClanEmoji(session: Session): Promise<ApiClanEmojiList> {
+async listClanEmoji(session: Session, clan_id: string): Promise<ApiClanEmojiList> {
   if (this.autoRefreshSession && session.refresh_token &&
       session.isexpired((Date.now() + this.expiredTimespanMs)/1000)) {
       await this.sessionRefresh(session);
   }
 
-  return this.apiClient.listClanEmoji(session.token).then((response: ApiClanEmojiList) => {
+  return this.apiClient.listClanEmojiByClanId(session.token, clan_id).then((response: ApiClanEmojiList) => {
     return Promise.resolve(response);
   });
 }
 
+/** create clan emoji */
+async createClanEmoji(session: Session, request: ApiClanEmojiCreateRequest) {
+  if (this.autoRefreshSession && session.refresh_token &&
+    session.isexpired((Date.now() + this.expiredTimespanMs)/1000)) {
+    await this.sessionRefresh(session);
+  }
+
+  return this.apiClient.createClanEmoji(session.token, request).then((response: any) => {
+    return response !== undefined;
+  });
+}
+
 };
-
-

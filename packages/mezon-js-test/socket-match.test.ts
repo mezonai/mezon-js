@@ -15,12 +15,12 @@
  */
 
 
-import * as mezonjs from "@mezon/mezon-js";
-import {Match, MatchData, MatchPresenceEvent, Presence} from "@mezon/mezon-js/socket"
+import * as mezonjs from "mezon-js";
+import {Match, MatchData, MatchPresenceEvent, Presence} from "mezon-js/socket"
 import * as mezonjsprotobuf from "../mezon-js-protobuf";
 import {adapters, createPage, generateid, AdapterType} from "./utils"
 import {describe, expect, it} from '@jest/globals'
-import { ApiMatch } from "@mezon/mezon-js/dist/api.gen";
+import { ApiMatch } from "mezon-js/dist/api.gen";
 
 describe('Match Tests', () => {
 

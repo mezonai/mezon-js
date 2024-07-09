@@ -1,11 +1,11 @@
 {
-    "name": "@mezon/satori-js-test",
+    "name": "satori-js-test",
     "version": "1.0.0",
     "description": "A subproject that houses tests for Satori JS",
     "private": true,
     "license": "Apache-2.0",
     "dependencies": {
-        "@mezon/satori-js": "file:../satori-js",
+        "satori-js": "file:../satori-js",
         "base64url": "3.0.1"
     },
     "scripts": {

@@ -15,7 +15,7 @@
  */
 
 
-import * as mezonjs from "@mezon/mezon-js";
+import * as mezonjs from "mezon-js";
 import * as mezonjsprotobuf from "../mezon-js-protobuf";
 import {generateid, createPage, adapters, AdapterType} from "./utils";
 import {describe, expect, it} from '@jest/globals'
