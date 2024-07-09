@@ -2258,7 +2258,7 @@ async createClanEmoji(session: Session, request: ApiClanEmojiCreateRequest) {
     return response !== undefined;
   });
 }
-//**update clan emoji */
+//**update clan emoji by id */
 async updateClanEmojiById(session :Session,id:string,request: MezonUpdateClanEmojiByIdBody){
   if (this.autoRefreshSession && session.refresh_token &&
     session.isexpired((Date.now() + this.expiredTimespanMs)/1000)) {
@@ -2268,6 +2268,7 @@ async updateClanEmojiById(session :Session,id:string,request: MezonUpdateClanEmo
     return response !== undefined;
   });
 }
+//**delete clan emoji by id */
 async deleteByIdClanEmoji(session:Session,id:string){
   if (this.autoRefreshSession && session.refresh_token &&
     session.isexpired((Date.now() + this.expiredTimespanMs)/1000)) {
