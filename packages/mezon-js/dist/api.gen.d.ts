@@ -250,6 +250,10 @@ export interface ApiChannelUserList {
     cursor?: string;
 }
 /**  */
+export interface ApiChannelVoidList {
+    channelvoid?: Array<ApiCommonChannelVoid>;
+}
+/**  */
 export interface ApiClanDesc {
     banner?: string;
     clan_id?: string;
@@ -300,6 +304,14 @@ export interface ApiClanUserList {
     clan_id?: string;
     clan_users?: Array<ClanUserListClanUser>;
     cursor?: string;
+}
+/**  */
+export interface ApiCommonChannelVoid {
+    channel_id?: string;
+    channel_label?: string;
+    clan_id?: string;
+    clan_name?: string;
+    meeting_code?: string;
 }
 /**  */
 export interface ApiCreateCategoryDescRequest {
@@ -935,6 +947,8 @@ export declare class MezonApi {
     updateChannelDesc(bearerToken: string, channelId: string, body: {}, options?: any): Promise<any>;
     /** List all users that are part of a channel. */
     listChannelVoiceUsers(bearerToken: string, clanId?: string, channelId?: string, channelType?: number, limit?: number, state?: number, cursor?: string, options?: any): Promise<ApiVoiceChannelUserList>;
+    /** List channel voids */
+    commonChannelVoidList(bearerToken: string, userId?: Array<string>, limit?: number, options?: any): Promise<ApiChannelVoidList>;
     /** List clans */
     listClanDescs(bearerToken: string, limit?: number, state?: number, cursor?: string, options?: any): Promise<ApiClanDescList>;
     /** Create a clan */

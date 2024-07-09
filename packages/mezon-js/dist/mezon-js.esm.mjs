@@ -6415,6 +6415,28 @@ var Client = class {
       });
     });
   }
+  //**update clan emoji by id */
+  updateClanEmojiById(session, id, request) {
+    return __async(this, null, function* () {
+      if (this.autoRefreshSession && session.refresh_token && session.isexpired((Date.now() + this.expiredTimespanMs) / 1e3)) {
+        yield this.sessionRefresh(session);
+      }
+      return this.apiClient.updateClanEmojiById(session.token, id, request).then((response) => {
+        return response != void 0;
+      });
+    });
+  }
+  //**delete clan emoji by id */
+  deleteByIdClanEmoji(session, id) {
+    return __async(this, null, function* () {
+      if (this.autoRefreshSession && session.refresh_token && session.isexpired((Date.now() + this.expiredTimespanMs) / 1e3)) {
+        yield this.sessionRefresh(session);
+      }
+      return this.apiClient.deleteByIdClanEmoji(session.token, id).then((response) => {
+        return response != void 0;
+      });
+    });
+  }
 };
 export {
   ChannelStreamMode,
