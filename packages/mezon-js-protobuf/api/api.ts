@@ -1851,6 +1851,32 @@ export interface ChannelDescription {
   active: number;
 }
 
+/** common channel void */
+export interface CommonChannelVoid {
+  /** The channel id. */
+  channel_id: string;
+  /** The channel lable */
+  channel_label: string;
+  /** The clan of this channel */
+  clan_id: string;
+  /** The clan name */
+  clan_name: string;
+}
+
+/** A list of CommonChannelVoid */
+export interface ChannelVoidList {
+  /** A list of channel. */
+  channelvoid: CommonChannelVoid[];
+}
+
+/** List (and optionally filter) channels. */
+export interface CommonChannelVoidRequest {
+  /** user Id */
+  user_id: string[];
+  /** Max number of records to return. Between 1 and 100. */
+  limit: number | undefined;
+}
+
 /** A list of channel description, usually a result of a list operation. */
 export interface ChannelDescList {
   /** A list of channel. */
@@ -12893,6 +12919,211 @@ export const ChannelDescription = {
     message.meeting_code = object.meeting_code ?? "";
     message.count_mess_unread = object.count_mess_unread ?? 0;
     message.active = object.active ?? 0;
+    return message;
+  },
+};
+
+function createBaseCommonChannelVoid(): CommonChannelVoid {
+  return { channel_id: "", channel_label: "", clan_id: "", clan_name: "" };
+}
+
+export const CommonChannelVoid = {
+  encode(message: CommonChannelVoid, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.channel_id !== "") {
+      writer.uint32(10).string(message.channel_id);
+    }
+    if (message.channel_label !== "") {
+      writer.uint32(18).string(message.channel_label);
+    }
+    if (message.clan_id !== "") {
+      writer.uint32(26).string(message.clan_id);
+    }
+    if (message.clan_name !== "") {
+      writer.uint32(34).string(message.clan_name);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): CommonChannelVoid {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseCommonChannelVoid();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.channel_id = reader.string();
+          break;
+        case 2:
+          message.channel_label = reader.string();
+          break;
+        case 3:
+          message.clan_id = reader.string();
+          break;
+        case 4:
+          message.clan_name = reader.string();
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): CommonChannelVoid {
+    return {
+      channel_id: isSet(object.channel_id) ? String(object.channel_id) : "",
+      channel_label: isSet(object.channel_label) ? String(object.channel_label) : "",
+      clan_id: isSet(object.clan_id) ? String(object.clan_id) : "",
+      clan_name: isSet(object.clan_name) ? String(object.clan_name) : "",
+    };
+  },
+
+  toJSON(message: CommonChannelVoid): unknown {
+    const obj: any = {};
+    message.channel_id !== undefined && (obj.channel_id = message.channel_id);
+    message.channel_label !== undefined && (obj.channel_label = message.channel_label);
+    message.clan_id !== undefined && (obj.clan_id = message.clan_id);
+    message.clan_name !== undefined && (obj.clan_name = message.clan_name);
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<CommonChannelVoid>, I>>(base?: I): CommonChannelVoid {
+    return CommonChannelVoid.fromPartial(base ?? {});
+  },
+
+  fromPartial<I extends Exact<DeepPartial<CommonChannelVoid>, I>>(object: I): CommonChannelVoid {
+    const message = createBaseCommonChannelVoid();
+    message.channel_id = object.channel_id ?? "";
+    message.channel_label = object.channel_label ?? "";
+    message.clan_id = object.clan_id ?? "";
+    message.clan_name = object.clan_name ?? "";
+    return message;
+  },
+};
+
+function createBaseChannelVoidList(): ChannelVoidList {
+  return { channelvoid: [] };
+}
+
+export const ChannelVoidList = {
+  encode(message: ChannelVoidList, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    for (const v of message.channelvoid) {
+      CommonChannelVoid.encode(v!, writer.uint32(10).fork()).ldelim();
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): ChannelVoidList {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseChannelVoidList();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.channelvoid.push(CommonChannelVoid.decode(reader, reader.uint32()));
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): ChannelVoidList {
+    return {
+      channelvoid: Array.isArray(object?.channelvoid)
+        ? object.channelvoid.map((e: any) => CommonChannelVoid.fromJSON(e))
+        : [],
+    };
+  },
+
+  toJSON(message: ChannelVoidList): unknown {
+    const obj: any = {};
+    if (message.channelvoid) {
+      obj.channelvoid = message.channelvoid.map((e) => e ? CommonChannelVoid.toJSON(e) : undefined);
+    } else {
+      obj.channelvoid = [];
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<ChannelVoidList>, I>>(base?: I): ChannelVoidList {
+    return ChannelVoidList.fromPartial(base ?? {});
+  },
+
+  fromPartial<I extends Exact<DeepPartial<ChannelVoidList>, I>>(object: I): ChannelVoidList {
+    const message = createBaseChannelVoidList();
+    message.channelvoid = object.channelvoid?.map((e) => CommonChannelVoid.fromPartial(e)) || [];
+    return message;
+  },
+};
+
+function createBaseCommonChannelVoidRequest(): CommonChannelVoidRequest {
+  return { user_id: [], limit: undefined };
+}
+
+export const CommonChannelVoidRequest = {
+  encode(message: CommonChannelVoidRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    for (const v of message.user_id) {
+      writer.uint32(10).string(v!);
+    }
+    if (message.limit !== undefined) {
+      Int32Value.encode({ value: message.limit! }, writer.uint32(18).fork()).ldelim();
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): CommonChannelVoidRequest {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseCommonChannelVoidRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.user_id.push(reader.string());
+          break;
+        case 2:
+          message.limit = Int32Value.decode(reader, reader.uint32()).value;
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): CommonChannelVoidRequest {
+    return {
+      user_id: Array.isArray(object?.user_id) ? object.user_id.map((e: any) => String(e)) : [],
+      limit: isSet(object.limit) ? Number(object.limit) : undefined,
+    };
+  },
+
+  toJSON(message: CommonChannelVoidRequest): unknown {
+    const obj: any = {};
+    if (message.user_id) {
+      obj.user_id = message.user_id.map((e) => e);
+    } else {
+      obj.user_id = [];
+    }
+    message.limit !== undefined && (obj.limit = message.limit);
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<CommonChannelVoidRequest>, I>>(base?: I): CommonChannelVoidRequest {
+    return CommonChannelVoidRequest.fromPartial(base ?? {});
+  },
+
+  fromPartial<I extends Exact<DeepPartial<CommonChannelVoidRequest>, I>>(object: I): CommonChannelVoidRequest {
+    const message = createBaseCommonChannelVoidRequest();
+    message.user_id = object.user_id?.map((e) => e) || [];
+    message.limit = object.limit ?? undefined;
     return message;
   },
 };
