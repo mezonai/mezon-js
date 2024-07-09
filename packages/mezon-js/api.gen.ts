@@ -1407,10 +1407,10 @@ export interface ApiUsers {
 
 /** A list of users belonging to a channel, along with their role. */
 export interface ApiVoiceChannelUser {
-  //
-  channel_id?: string;
   //Cursor for the next page of results, if any.
-  jid?: string;
+  id?: string;
+  //
+  channel_id?: string;  
   //
   participant?: string;
   //User for a channel.

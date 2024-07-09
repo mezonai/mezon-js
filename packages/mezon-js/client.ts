@@ -1094,7 +1094,7 @@ export class Client {
 
       response.voice_channel_users!.forEach(gu => {        
         result.voice_channel_users!.push({
-          jid: gu.jid,
+          id: gu.id,
           channel_id: gu.channel_id,
           user_id: gu.user_id,
           participant: gu.participant
