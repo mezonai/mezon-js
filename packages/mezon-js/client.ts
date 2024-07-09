@@ -2258,24 +2258,29 @@ async createClanEmoji(session: Session, request: ApiClanEmojiCreateRequest) {
     return response !== undefined;
   });
 }
+
 //**update clan emoji by id */
-async updateClanEmojiById(session :Session,id:string,request: MezonUpdateClanEmojiByIdBody){
+async updateClanEmojiById(session :Session,id:string,request: MezonUpdateClanEmojiByIdBody) {
   if (this.autoRefreshSession && session.refresh_token &&
     session.isexpired((Date.now() + this.expiredTimespanMs)/1000)) {
     await this.sessionRefresh(session);
   }
+
   return this.apiClient.updateClanEmojiById(session.token,id,request).then((response: any) => {
     return response !== undefined;
   });
 }
+
 //**delete clan emoji by id */
-async deleteByIdClanEmoji(session:Session,id:string){
+async deleteByIdClanEmoji(session:Session,id:string) {
   if (this.autoRefreshSession && session.refresh_token &&
     session.isexpired((Date.now() + this.expiredTimespanMs)/1000)) {
     await this.sessionRefresh(session);
   }
+
   return this.apiClient.deleteByIdClanEmoji(session.token,id).then((response: any) => {
     return response !== undefined;
   });
 }
+
 };
