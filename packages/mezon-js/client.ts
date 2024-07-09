@@ -96,7 +96,7 @@ import {
   ApiChangeChannelPrivateRequest,
   ApiClanEmojiList,
   ApiClanEmojiCreateRequest,
-  ApiChannelVoidList
+  ApiChannelVoiceList
 } from "./api.gen";
 
 import { Session } from "./session";
@@ -2210,13 +2210,13 @@ async getPinMessagesList(session: Session, channelId: string): Promise<ApiPinMes
   });
 }
 
-async commonChannelVoidList(session: Session, userId:Array<string>, limit?: number): Promise<ApiChannelVoidList> {
+async directChannelVoiceList(session: Session, userId:Array<string>, limit?: number): Promise<ApiChannelVoiceList> {
   if (this.autoRefreshSession && session.refresh_token &&
       session.isexpired((Date.now() + this.expiredTimespanMs)/1000)) {
       await this.sessionRefresh(session);
   }
 
-  return this.apiClient.commonChannelVoidList(session.token, userId, limit).then((response: ApiChannelVoidList) => {
+  return this.apiClient.directChannelVoiceList(session.token, userId, limit).then((response: ApiChannelVoiceList) => {
     return Promise.resolve(response);
   });
 }
