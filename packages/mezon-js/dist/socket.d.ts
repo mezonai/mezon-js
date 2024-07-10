@@ -27,6 +27,8 @@ export interface Presence {
     username: string;
     /** The node the user is connected to. */
     node: string;
+    /** The status of the user */
+    status: string;
 }
 /** A response from a channel join operation. */
 export interface Channel {
