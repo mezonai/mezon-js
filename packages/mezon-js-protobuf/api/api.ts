@@ -1847,8 +1847,10 @@ export interface ChannelDescription {
   meeting_code: string;
   /** count message unread */
   count_mess_unread: number;
-  /**  */
+  /** active channel */
   active: number;
+  /** last pin message */
+  last_pin_message: string;
 }
 
 /** direct channel void */
@@ -12731,6 +12733,7 @@ function createBaseChannelDescription(): ChannelDescription {
     meeting_code: "",
     count_mess_unread: 0,
     active: 0,
+    last_pin_message: "",
   };
 }
 
@@ -12786,6 +12789,9 @@ export const ChannelDescription = {
     }
     if (message.active !== 0) {
       writer.uint32(136).int32(message.active);
+    }
+    if (message.last_pin_message !== "") {
+      writer.uint32(146).string(message.last_pin_message);
     }
     return writer;
   },
@@ -12848,6 +12854,9 @@ export const ChannelDescription = {
         case 17:
           message.active = reader.int32();
           break;
+        case 18:
+          message.last_pin_message = reader.string();
+          break;
         default:
           reader.skipType(tag & 7);
           break;
@@ -12879,6 +12888,7 @@ export const ChannelDescription = {
       meeting_code: isSet(object.meeting_code) ? String(object.meeting_code) : "",
       count_mess_unread: isSet(object.count_mess_unread) ? Number(object.count_mess_unread) : 0,
       active: isSet(object.active) ? Number(object.active) : 0,
+      last_pin_message: isSet(object.last_pin_message) ? String(object.last_pin_message) : "",
     };
   },
 
@@ -12913,6 +12923,7 @@ export const ChannelDescription = {
     message.meeting_code !== undefined && (obj.meeting_code = message.meeting_code);
     message.count_mess_unread !== undefined && (obj.count_mess_unread = Math.round(message.count_mess_unread));
     message.active !== undefined && (obj.active = Math.round(message.active));
+    message.last_pin_message !== undefined && (obj.last_pin_message = message.last_pin_message);
     return obj;
   },
 
@@ -12943,6 +12954,7 @@ export const ChannelDescription = {
     message.meeting_code = object.meeting_code ?? "";
     message.count_mess_unread = object.count_mess_unread ?? 0;
     message.active = object.active ?? 0;
+    message.last_pin_message = object.last_pin_message ?? "";
     return message;
   },
 };
