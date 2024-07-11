@@ -3023,7 +3023,8 @@ function createBaseEnvelope() {
     voice_ended_event: void 0,
     channel_created_event: void 0,
     channel_deleted_event: void 0,
-    channel_updated_event: void 0
+    channel_updated_event: void 0,
+    last_pin_message_event: void 0
   };
 }
 var Envelope = {
@@ -3126,6 +3127,9 @@ var Envelope = {
     }
     if (message.channel_updated_event !== void 0) {
       ChannelUpdatedEvent.encode(message.channel_updated_event, writer.uint32(266).fork()).ldelim();
+    }
+    if (message.last_pin_message_event !== void 0) {
+      LastPinMessageEvent.encode(message.last_pin_message_event, writer.uint32(274).fork()).ldelim();
     }
     return writer;
   },
@@ -3235,6 +3239,9 @@ var Envelope = {
         case 33:
           message.channel_updated_event = ChannelUpdatedEvent.decode(reader, reader.uint32());
           break;
+        case 34:
+          message.last_pin_message_event = LastPinMessageEvent.decode(reader, reader.uint32());
+          break;
         default:
           reader.skipType(tag & 7);
           break;
@@ -3276,7 +3283,8 @@ var Envelope = {
       voice_ended_event: isSet4(object.voice_ended_event) ? VoiceEndedEvent.fromJSON(object.voice_ended_event) : void 0,
       channel_created_event: isSet4(object.channel_created_event) ? ChannelCreatedEvent.fromJSON(object.channel_created_event) : void 0,
       channel_deleted_event: isSet4(object.channel_deleted_event) ? ChannelDeletedEvent.fromJSON(object.channel_deleted_event) : void 0,
-      channel_updated_event: isSet4(object.channel_updated_event) ? ChannelUpdatedEvent.fromJSON(object.channel_updated_event) : void 0
+      channel_updated_event: isSet4(object.channel_updated_event) ? ChannelUpdatedEvent.fromJSON(object.channel_updated_event) : void 0,
+      last_pin_message_event: isSet4(object.last_pin_message_event) ? LastPinMessageEvent.fromJSON(object.last_pin_message_event) : void 0
     };
   },
   toJSON(message) {
@@ -3314,6 +3322,7 @@ var Envelope = {
     message.channel_created_event !== void 0 && (obj.channel_created_event = message.channel_created_event ? ChannelCreatedEvent.toJSON(message.channel_created_event) : void 0);
     message.channel_deleted_event !== void 0 && (obj.channel_deleted_event = message.channel_deleted_event ? ChannelDeletedEvent.toJSON(message.channel_deleted_event) : void 0);
     message.channel_updated_event !== void 0 && (obj.channel_updated_event = message.channel_updated_event ? ChannelUpdatedEvent.toJSON(message.channel_updated_event) : void 0);
+    message.last_pin_message_event !== void 0 && (obj.last_pin_message_event = message.last_pin_message_event ? LastPinMessageEvent.toJSON(message.last_pin_message_event) : void 0);
     return obj;
   },
   create(base) {
@@ -3355,6 +3364,7 @@ var Envelope = {
     message.channel_created_event = object.channel_created_event !== void 0 && object.channel_created_event !== null ? ChannelCreatedEvent.fromPartial(object.channel_created_event) : void 0;
     message.channel_deleted_event = object.channel_deleted_event !== void 0 && object.channel_deleted_event !== null ? ChannelDeletedEvent.fromPartial(object.channel_deleted_event) : void 0;
     message.channel_updated_event = object.channel_updated_event !== void 0 && object.channel_updated_event !== null ? ChannelUpdatedEvent.fromPartial(object.channel_updated_event) : void 0;
+    message.last_pin_message_event = object.last_pin_message_event !== void 0 && object.last_pin_message_event !== null ? LastPinMessageEvent.fromPartial(object.last_pin_message_event) : void 0;
     return message;
   }
 };
@@ -4829,6 +4839,80 @@ var StatusPresenceEvent = {
     const message = createBaseStatusPresenceEvent();
     message.joins = ((_a = object.joins) == null ? void 0 : _a.map((e) => UserPresence.fromPartial(e))) || [];
     message.leaves = ((_b = object.leaves) == null ? void 0 : _b.map((e) => UserPresence.fromPartial(e))) || [];
+    return message;
+  }
+};
+function createBaseLastPinMessageEvent() {
+  return { channel_id: "", message_id: "", mode: 0, timestamp: "" };
+}
+var LastPinMessageEvent = {
+  encode(message, writer = import_minimal4.default.Writer.create()) {
+    if (message.channel_id !== "") {
+      writer.uint32(10).string(message.channel_id);
+    }
+    if (message.message_id !== "") {
+      writer.uint32(18).string(message.message_id);
+    }
+    if (message.mode !== 0) {
+      writer.uint32(24).int32(message.mode);
+    }
+    if (message.timestamp !== "") {
+      writer.uint32(34).string(message.timestamp);
+    }
+    return writer;
+  },
+  decode(input, length) {
+    const reader = input instanceof import_minimal4.default.Reader ? input : new import_minimal4.default.Reader(input);
+    let end = length === void 0 ? reader.len : reader.pos + length;
+    const message = createBaseLastPinMessageEvent();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.channel_id = reader.string();
+          break;
+        case 2:
+          message.message_id = reader.string();
+          break;
+        case 3:
+          message.mode = reader.int32();
+          break;
+        case 4:
+          message.timestamp = reader.string();
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+  fromJSON(object) {
+    return {
+      channel_id: isSet4(object.channel_id) ? String(object.channel_id) : "",
+      message_id: isSet4(object.message_id) ? String(object.message_id) : "",
+      mode: isSet4(object.mode) ? Number(object.mode) : 0,
+      timestamp: isSet4(object.timestamp) ? String(object.timestamp) : ""
+    };
+  },
+  toJSON(message) {
+    const obj = {};
+    message.channel_id !== void 0 && (obj.channel_id = message.channel_id);
+    message.message_id !== void 0 && (obj.message_id = message.message_id);
+    message.mode !== void 0 && (obj.mode = Math.round(message.mode));
+    message.timestamp !== void 0 && (obj.timestamp = message.timestamp);
+    return obj;
+  },
+  create(base) {
+    return LastPinMessageEvent.fromPartial(base != null ? base : {});
+  },
+  fromPartial(object) {
+    var _a, _b, _c, _d;
+    const message = createBaseLastPinMessageEvent();
+    message.channel_id = (_a = object.channel_id) != null ? _a : "";
+    message.message_id = (_b = object.message_id) != null ? _b : "";
+    message.mode = (_c = object.mode) != null ? _c : 0;
+    message.timestamp = (_d = object.timestamp) != null ? _d : "";
     return message;
   }
 };
