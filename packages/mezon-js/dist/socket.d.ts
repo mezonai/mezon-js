@@ -444,6 +444,8 @@ export interface Socket {
     onmessagereaction: (messageReactionEvent: MessageReactionEvent) => void;
     /** Receive channel presence updates. */
     onchannelpresence: (channelPresence: ChannelPresenceEvent) => void;
+    /** pin message event */
+    onpinmessage: (pin: LastPinMessageEvent) => void;
     onvoicestarted: (voice: VoiceStartedEvent) => void;
     onvoiceended: (voice: VoiceEndedEvent) => void;
     onvoicejoined: (voiceParticipant: VoiceJoinedEvent) => void;
@@ -489,6 +491,7 @@ export declare class DefaultSocket implements Socket {
     onchannelpresence(channelPresence: ChannelPresenceEvent): void;
     onnotification(notification: Notification): void;
     onstatuspresence(statusPresence: StatusPresenceEvent): void;
+    onpinmessage(pin: LastPinMessageEvent): void;
     onvoiceended(voice: VoiceEndedEvent): void;
     onvoicestarted(voice: VoiceStartedEvent): void;
     onvoicejoined(voiceParticipant: VoiceJoinedEvent): void;

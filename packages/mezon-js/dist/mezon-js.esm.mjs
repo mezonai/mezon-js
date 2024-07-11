@@ -4507,6 +4507,8 @@ var _DefaultSocket = class _DefaultSocket {
           this.onmessagereaction(message.message_reaction_event);
         } else if (message.channel_presence_event) {
           this.onchannelpresence(message.channel_presence_event);
+        } else if (message.last_pin_message_event) {
+          this.onpinmessage(message.last_pin_message_event);
         } else {
           if (this.verbose && window && window.console) {
             console.log("Unrecognized message received: %o", message);
@@ -4597,6 +4599,11 @@ var _DefaultSocket = class _DefaultSocket {
   onstatuspresence(statusPresence) {
     if (this.verbose && window && window.console) {
       console.log(statusPresence);
+    }
+  }
+  onpinmessage(pin) {
+    if (this.verbose && window && window.console) {
+      console.log(pin);
     }
   }
   onvoiceended(voice) {

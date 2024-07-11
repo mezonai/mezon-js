@@ -614,6 +614,9 @@ export interface Socket {
   /** Receive channel presence updates. */
   onchannelpresence: (channelPresence: ChannelPresenceEvent) => void;
 
+  /** pin message event */
+  onpinmessage: (pin: LastPinMessageEvent) => void;
+
   // when someone start the voice room
   onvoicestarted: (voice: VoiceStartedEvent) => void;
   
@@ -765,6 +768,8 @@ export class DefaultSocket implements Socket {
           this.onmessagereaction(<MessageReactionEvent>message.message_reaction_event);
         } else if (message.channel_presence_event) {
           this.onchannelpresence(<ChannelPresenceEvent>message.channel_presence_event);
+        } else if (message.last_pin_message_event) {
+          this.onpinmessage(<LastPinMessageEvent>message.last_pin_message_event);
         } else {
           if (this.verbose && window && window.console) {
             console.log("Unrecognized message received: %o", message);
@@ -871,6 +876,12 @@ export class DefaultSocket implements Socket {
   onstatuspresence(statusPresence: StatusPresenceEvent) {
     if (this.verbose && window && window.console) {
       console.log(statusPresence);
+    }
+  }
+
+  onpinmessage(pin: LastPinMessageEvent) {
+    if (this.verbose && window && window.console) {
+      console.log(pin);
     }
   }
 
