@@ -89,6 +89,18 @@ interface ChannelLeave {
 }
 
 /** Last seen message by user */
+export interface LastPinMessageEvent {
+  /** The channel this message belongs to. */
+  channel_id:string;
+  // The mode
+  mode: number;
+  // The channel label
+  channel_label: string;
+  /** The unique ID of this message. */
+  message_id: string;
+}
+
+/** Last seen message by user */
 export interface LastSeenMessageEvent {
   /** The channel this message belongs to. */
   channel_id:string;
@@ -554,6 +566,9 @@ export interface Socket {
 
   /** Send last seen message */
   writeLastSeenMessage(channel_id: string, mode: number, message_id: string, timestamp: string) : Promise<LastSeenMessageEvent>;
+
+  /** Send last pin message */
+  writeLastPinMessage(channel_id: string, mode: number, message_id: string, timestamp: string) : Promise<LastPinMessageEvent>;
 
   /** send voice joined */
   writeVoiceJoined(id: string, clanId: string, clanName: string, voiceChannelId: string, voiceChannelLabel: string, participant: string, lastScreenshot: string) : Promise<VoiceJoinedEvent>;
@@ -1052,6 +1067,11 @@ export class DefaultSocket implements Socket {
   async writeLastSeenMessage(channel_id: string, mode: number, message_id: string, timestamp: string) : Promise<LastSeenMessageEvent> {
     const response = await this.send({last_seen_message_event: {channel_id: channel_id, mode: mode, message_id: message_id, timestamp: timestamp}});
     return response.last_seen_message_event
+  }
+
+  async writeLastPinMessage(channel_id: string, mode: number, message_id: string, timestamp: string) : Promise<LastPinMessageEvent> {
+    const response = await this.send({last_pin_message_event: {channel_id: channel_id, mode: mode, message_id: message_id, timestamp: timestamp}});
+    return response.last_pin_message_event
   }
 
   async writeVoiceJoined(id: string, clanId: string, clanName: string, voiceChannelId: string, voiceChannelLabel: string, participant: string, lastScreenshot: string) : Promise<VoiceJoinedEvent> {

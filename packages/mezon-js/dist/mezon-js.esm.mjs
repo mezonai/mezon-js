@@ -4780,6 +4780,12 @@ var _DefaultSocket = class _DefaultSocket {
       return response.last_seen_message_event;
     });
   }
+  writeLastPinMessage(channel_id, mode, message_id, timestamp) {
+    return __async(this, null, function* () {
+      const response = yield this.send({ last_pin_message_event: { channel_id, mode, message_id, timestamp } });
+      return response.last_pin_message_event;
+    });
+  }
   writeVoiceJoined(id, clanId, clanName, voiceChannelId, voiceChannelLabel, participant, lastScreenshot) {
     return __async(this, null, function* () {
       const response = yield this.send({ voice_joined_event: { clan_id: clanId, clan_name: clanName, id, participant, voice_channel_id: voiceChannelId, voice_channel_label: voiceChannelLabel, last_screenshot: lastScreenshot } });
