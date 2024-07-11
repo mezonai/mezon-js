@@ -197,6 +197,7 @@ export interface ApiChannelDescription {
     clan_id?: string;
     count_mess_unread?: number;
     creator_id?: string;
+    last_pin_message?: string;
     last_seen_message?: ApiChannelMessageHeader;
     last_sent_message?: ApiChannelMessageHeader;
     meeting_code?: string;
