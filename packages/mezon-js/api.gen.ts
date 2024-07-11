@@ -24,6 +24,10 @@ export interface ClanUserListClanUser {
   user?: ApiUser;
 }
 
+/**  */
+export interface MezonDeleteWebhookByIdBody {
+}
+
 /** Update fields in a given channel. */
 export interface MezonUpdateChannelDescBody {
   //
@@ -122,6 +126,12 @@ export interface MezonUpdateUserProfileByClanBody {
   avatar?: string;
   //
   nick_name?: string;
+}
+
+/**  */
+export interface MezonUpdateWebhookByIdBody {
+  //
+  webhook_name?: string;
 }
 
 /** A single user-role pair. */
@@ -348,8 +358,6 @@ export interface ApiChannelDescription {
   last_sent_message?: ApiChannelMessageHeader;
   //
   meeting_code?: string;
-  //
-  meeting_uri?: string;
   //The parrent channel this message belongs to.
   parrent_id?: string;
   //
@@ -367,21 +375,21 @@ export interface ApiChannelMessage {
   //
   avatar?: string;
   //The channel this message belongs to.
-  channel_id: string;
+  channel_id?: string;
   //The name of the chat room, or an empty string if this message was not sent through a chat room.
-  channel_label: string;
+  channel_label?: string;
   //The clan this message belong to.
   clan_id?: string;
   //The code representing a message type or category.
-  code: number;
+  code?: number;
   //The content payload.
-  content: string;
+  content?: string;
   //The UNIX time (for gRPC clients) or ISO string (for REST clients) when the message was created.
   create_time?: string;
   //
   mentions?: string;
   //The unique ID of this message.
-  message_id: string;
+  message_id?: string;
   //
   reactions?: string;
   //
@@ -389,7 +397,7 @@ export interface ApiChannelMessage {
   //
   references?: string;
   //Message sender, usually a user ID.
-  sender_id: string;
+  sender_id?: string;
   //The UNIX time (for gRPC clients) or ISO string (for REST clients) when the message was last updated.
   update_time?: string;
   //The ID of the first DM user, or an empty string if this message was not sent through a DM chat.
@@ -483,16 +491,6 @@ export interface ApiClanDescProfile {
 }
 
 /**  */
-export interface ApiClanEmoji {
-  //
-  category?: string;
-  //
-  shortname?: string;
-  //
-  src?: string;
-}
-
-/**  */
 export interface ApiClanEmojiCreateRequest {
   //
   category?: string;
@@ -507,7 +505,19 @@ export interface ApiClanEmojiCreateRequest {
 /**  */
 export interface ApiClanEmojiList {
   //
-  emoji_list?: Array<ApiClanEmoji>;
+  emoji_list?: Array<ApiClanEmojiResponseList>;
+}
+
+/**  */
+export interface ApiClanEmojiResponseList {
+  //
+  category?: string;
+  //
+  creator_id?: string;
+  //
+  shortname?: string;
+  //
+  src?: string;
 }
 
 /** Get clan profile. */
@@ -580,26 +590,6 @@ export interface ApiCreateEventRequest {
   channel_id?: string;
   //
   clan_id?: string;
-  //
-  description?: string;
-  //
-  end_time?: string;
-  //
-  logo?: string;
-  //
-  start_time?: string;
-  //
-  title?: string;
-}
-
-/** Create a event within clan. */
-export interface ApiUpdateEventRequest {
-  //
-  address?: string;
-  //
-  channel_id?: string;
-  //
-  event_id?: string;
   //
   description?: string;
   //
@@ -694,18 +684,6 @@ export interface ApiDirectChannelVoice {
   meeting_code?: string;
 }
 
-/** Represents an event to be passed through the server to registered event handlers. */
-export interface ApiEvent {
-  //True if the event came directly from a client call, false otherwise.
-  external?: boolean;
-  //An event name, type, category, or identifier.
-  name?: string;
-  //Arbitrary event property values.
-  properties?: Record<string, string>;
-  //The time when the event was triggered.
-  timestamp?: string;
-}
-
 /**  */
 export interface ApiEventList {
   //A list of event.
@@ -722,6 +700,8 @@ export interface ApiEventManagement {
   channel_id?: string;
   //
   clan_id?: string;
+  //
+  create_time?: string;
   //
   creator_id?: string;
   //
@@ -740,8 +720,6 @@ export interface ApiEventManagement {
   title?: string;
   //
   user_ids?: Array<string>;
-  //
-  create_time?: string; 
 }
 
 /**  */
@@ -781,9 +759,9 @@ export interface ApiInviteUserRes {
   //
   clan_name?: string;
   //
-  user_joined?: boolean;
-  //
   expiry_time?: string;
+  //
+  user_joined?: boolean;
 }
 
 /** Add link invite users to. */
@@ -822,6 +800,7 @@ export interface ApiLinkSteamRequest {
   sync?: boolean;
 }
 
+/**  */
 export interface ApiNotifiReactMessage {
   //
   channel_id?: string;
@@ -831,78 +810,16 @@ export interface ApiNotifiReactMessage {
   user_id?: string;
 }
 
-/**  */
-export interface ApiMessageAttachment {
-  //
-  filename?: string;
-  //
-  filetype?: string;
-  //
-  height?: number;
-  //
-  size?: number;
-  //
-  url?: string;
-  //
-  width?: number;
-}
-
-/**  */
-export interface ApiMessageDeleted {
-  //
-  deletor?: string;
-  //
-  message_id?: string;
-}
-
-/**  */
-export interface ApiMessageMention {
-  //The UNIX time (for gRPC clients) or ISO string (for REST clients) when the message was created.
-  create_time?: string;
-  //
-  id?: string;
-  //
-  user_id?: string;
-  //
-  username?: string;
-}
-
-/**  */
-export interface ApiMessageReaction {
-  //
-  action?: boolean;
-  //
-  emoji?: string;
-  //
-  id?: string;
-  //
-  sender_id?: string;
-  //
-  sender_name?: string;
-  //
-  sender_avatar?: string;
-  // count of emoji
-  count: number;
-}
-
-/**  */
-export interface ApiMessageRef {
-  //
-  message_id?: string;
-  //
-  message_ref_id?: string;
-  //
-  ref_type?: number;
-  //
-  message_sender_id?: string;
-  //
-  content?:string;
-  //
-  has_attachment: boolean;
-}
-
 /** A notification in the server. */
 export interface ApiNotification {
+  //
+  avatar_url?: string;
+  //
+  channel_id?: string;
+  //
+  channel_type?: string;
+  //
+  clan_id?: string;
   //Category code for this notification.
   code?: number;
   //Content of the notification in JSON.
@@ -1407,10 +1324,10 @@ export interface ApiUsers {
 
 /** A list of users belonging to a channel, along with their role. */
 export interface ApiVoiceChannelUser {
-  //Cursor for the next page of results, if any.
-  id?: string;
   //
-  channel_id?: string;  
+  channel_id?: string;
+  //
+  id?: string;
   //
   participant?: string;
   //User for a channel.
@@ -1421,6 +1338,42 @@ export interface ApiVoiceChannelUser {
 export interface ApiVoiceChannelUserList {
   //
   voice_channel_users?: Array<ApiVoiceChannelUser>;
+}
+
+/**  */
+export interface ApiWebhook {
+  //
+  active?: number;
+  //
+  channel_id?: string;
+  //
+  create_time?: string;
+  //
+  creator_id?: string;
+  //
+  id?: string;
+  //
+  update_time?: string;
+  //
+  url?: string;
+  //
+  webhook_name?: string;
+}
+
+/**  */
+export interface ApiWebhookCreateRequest {
+  //
+  channel_id?: string;
+  //
+  url?: string;
+  //
+  webhook_name?: string;
+}
+
+/**  */
+export interface ApiWebhookListResponse {
+  //
+  webhooks?: Array<ApiWebhook>;
 }
 
 /**  */
@@ -1455,12 +1408,22 @@ export interface ApiWriteStorageObjectsRequest {
   objects?: Array<ApiWriteStorageObject>;
 }
 
+/** Represents an event to be passed through the server to registered event handlers. */
+export interface MezonapiEvent {
+  //True if the event came directly from a client call, false otherwise.
+  external?: boolean;
+  //An event name, type, category, or identifier.
+  name?: string;
+  //Arbitrary event property values.
+  properties?: Record<string, string>;
+  //The time when the event was triggered.
+  timestamp?: string;
+}
+
 /**  */
 export interface ProtobufAny {
   //
-  type_url?: string;
-  // 
-  value?: string;
+  _@type?: string;
 }
 
 /**  */
@@ -1733,6 +1696,7 @@ export class MezonApi {
   authenticateEmail(basicAuthUsername: string,
     basicAuthPassword: string,
       account:ApiAccountEmail,
+      create?:boolean,
       username?:string,
       options: any = {}): Promise<ApiSession> {
     
@@ -1741,6 +1705,7 @@ export class MezonApi {
     }
     const urlPath = "/v2/account/authenticate/email";
     const queryParams = new Map<string, any>();
+    queryParams.set("create", create);
     queryParams.set("username", username);
 
     let bodyJson : string = "";
@@ -2746,8 +2711,8 @@ export class MezonApi {
   listChannelMessages(bearerToken: string,
       channelId:string,
       messageId?:string,
-      direction?:number,
       limit?:number,
+      direction?:number,
       options: any = {}): Promise<ApiChannelMessageList> {
     
     if (channelId === null || channelId === undefined) {
@@ -2944,8 +2909,8 @@ export class MezonApi {
 
   /** List all users that are part of a channel. */
   listChannelUsers(bearerToken: string,
-      clanId: string, 
-      channelId: string,
+      channelId:string,
+      clanId?:string,
       channelType?:number,
       limit?:number,
       state?:number,
@@ -3104,7 +3069,7 @@ export class MezonApi {
   /** Update fields in a given channel. */
   updateChannelDesc(bearerToken: string,
       channelId:string,
-      body:{},
+      body:MezonUpdateChannelDescBody,
       options: any = {}): Promise<any> {
     
     if (channelId === null || channelId === undefined) {
@@ -3332,7 +3297,7 @@ export class MezonApi {
   /** Update fields in a given clan. */
   updateClanDesc(bearerToken: string,
       clanId:string,
-      body: {},
+      body:MezonUpdateClanDescBody,
       options: any = {}): Promise<any> {
     
     if (clanId === null || clanId === undefined) {
@@ -3483,7 +3448,7 @@ export class MezonApi {
   /** Update fields in a given clan profile. */
   updateClanDescProfile(bearerToken: string,
       clanId:string,
-      body:{},
+      body:MezonUpdateClanDescProfileBody,
       options: any = {}): Promise<any> {
     
     if (clanId === null || clanId === undefined) {
@@ -3702,38 +3667,7 @@ export class MezonApi {
     ]);
 }
 
-  /** Get permission list */
-  listClanEmoji(bearerToken: string,
-      options: any = {}): Promise<ApiClanEmojiList> {
-    
-    const urlPath = "/v2/emoji";
-    const queryParams = new Map<string, any>();
-
-    let bodyJson : string = "";
-
-    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
-    const fetchOptions = buildFetchOptions("GET", options, bodyJson);
-    if (bearerToken) {
-        fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-    }
-
-    return Promise.race([
-      fetch(fullUrl, fetchOptions).then((response) => {
-        if (response.status == 204) {
-          return response;
-        } else if (response.status >= 200 && response.status < 300) {
-          return response.json();
-        } else {
-          throw response;
-        }
-      }),
-      new Promise((_, reject) =>
-        setTimeout(reject, this.timeoutMs, "Request timed out.")
-      ),
-    ]);
-}
-
-  /** Post permission Emoji  /v2/emoji/create */
+  /** Post clan Emoji  /v2/emoji/create */
   createClanEmoji(bearerToken: string,
       body:ApiClanEmojiCreateRequest,
       options: any = {}): Promise<any> {
@@ -3844,7 +3778,7 @@ export class MezonApi {
   /** Update ClanEmoj By id */
   updateClanEmojiById(bearerToken: string,
       id:string,
-      body: MezonUpdateClanEmojiByIdBody,
+      body:MezonUpdateClanEmojiByIdBody,
       options: any = {}): Promise<any> {
     
     if (id === null || id === undefined) {
@@ -3920,7 +3854,7 @@ export class MezonApi {
 
   /** Submit an event for processing in the server's registered runtime custom events handler. */
   event(bearerToken: string,
-      body:ApiEvent,
+      body:MezonapiEvent,
       options: any = {}): Promise<any> {
     
     if (body === null || body === undefined) {
@@ -4098,7 +4032,7 @@ export class MezonApi {
   /** Update fields in a given event. */
   updateEvent(bearerToken: string,
       eventId:string,
-      body:{},
+      body:MezonUpdateEventBody,
       options: any = {}): Promise<any> {
     
     if (eventId === null || eventId === undefined) {
@@ -5329,7 +5263,7 @@ export class MezonApi {
   /** Update a role when Delete a role by ID. */
   updateRoleDelete(bearerToken: string,
       roleId:string,
-      body: MezonUpdateRoleDeleteBody,
+      body:MezonUpdateRoleDeleteBody,
       options: any = {}): Promise<any> {
     
     if (roleId === null || roleId === undefined) {
@@ -5408,7 +5342,7 @@ export class MezonApi {
   /** Update fields in a given role. */
   updateRole(bearerToken: string,
       roleId:string,
-      body:{},
+      body:MezonUpdateRoleBody,
       options: any = {}): Promise<any> {
     
     if (roleId === null || roleId === undefined) {
@@ -5919,7 +5853,7 @@ export class MezonApi {
   /**  */
   updateUserProfileByClan(bearerToken: string,
       clanId:string,
-      body:{},
+      body:MezonUpdateUserProfileByClanBody,
       options: any = {}): Promise<any> {
     
     if (clanId === null || clanId === undefined) {
@@ -6082,6 +6016,160 @@ export class MezonApi {
 
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("POST", options, bodyJson);
+    if (bearerToken) {
+        fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+    }
+
+    return Promise.race([
+      fetch(fullUrl, fetchOptions).then((response) => {
+        if (response.status == 204) {
+          return response;
+        } else if (response.status >= 200 && response.status < 300) {
+          return response.json();
+        } else {
+          throw response;
+        }
+      }),
+      new Promise((_, reject) =>
+        setTimeout(reject, this.timeoutMs, "Request timed out.")
+      ),
+    ]);
+}
+
+  /** create webhook */
+  generateWebhook(bearerToken: string,
+      body:ApiWebhookCreateRequest,
+      options: any = {}): Promise<any> {
+    
+    if (body === null || body === undefined) {
+      throw new Error("'body' is a required parameter but is null or undefined.");
+    }
+    const urlPath = "/v2/webhooks/generate";
+    const queryParams = new Map<string, any>();
+
+    let bodyJson : string = "";
+    bodyJson = JSON.stringify(body || {});
+
+    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
+    const fetchOptions = buildFetchOptions("POST", options, bodyJson);
+    if (bearerToken) {
+        fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+    }
+
+    return Promise.race([
+      fetch(fullUrl, fetchOptions).then((response) => {
+        if (response.status == 204) {
+          return response;
+        } else if (response.status >= 200 && response.status < 300) {
+          return response.json();
+        } else {
+          throw response;
+        }
+      }),
+      new Promise((_, reject) =>
+        setTimeout(reject, this.timeoutMs, "Request timed out.")
+      ),
+    ]);
+}
+
+  /** update webhook name by id */
+  updateWebhookById(bearerToken: string,
+      id:string,
+      body:MezonUpdateWebhookByIdBody,
+      options: any = {}): Promise<any> {
+    
+    if (id === null || id === undefined) {
+      throw new Error("'id' is a required parameter but is null or undefined.");
+    }
+    if (body === null || body === undefined) {
+      throw new Error("'body' is a required parameter but is null or undefined.");
+    }
+    const urlPath = "/v2/webhooks/update/{id}"
+        .replace("{id}", encodeURIComponent(String(id)));
+    const queryParams = new Map<string, any>();
+
+    let bodyJson : string = "";
+    bodyJson = JSON.stringify(body || {});
+
+    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
+    const fetchOptions = buildFetchOptions("PATCH", options, bodyJson);
+    if (bearerToken) {
+        fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+    }
+
+    return Promise.race([
+      fetch(fullUrl, fetchOptions).then((response) => {
+        if (response.status == 204) {
+          return response;
+        } else if (response.status >= 200 && response.status < 300) {
+          return response.json();
+        } else {
+          throw response;
+        }
+      }),
+      new Promise((_, reject) =>
+        setTimeout(reject, this.timeoutMs, "Request timed out.")
+      ),
+    ]);
+}
+
+  /** list webhook belong to the channel */
+  listWebhookByChannelId(bearerToken: string,
+      channelId:string,
+      options: any = {}): Promise<ApiWebhookListResponse> {
+    
+    if (channelId === null || channelId === undefined) {
+      throw new Error("'channelId' is a required parameter but is null or undefined.");
+    }
+    const urlPath = "/v2/webhooks/{channelId}"
+        .replace("{channelId}", encodeURIComponent(String(channelId)));
+    const queryParams = new Map<string, any>();
+
+    let bodyJson : string = "";
+
+    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
+    const fetchOptions = buildFetchOptions("GET", options, bodyJson);
+    if (bearerToken) {
+        fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+    }
+
+    return Promise.race([
+      fetch(fullUrl, fetchOptions).then((response) => {
+        if (response.status == 204) {
+          return response;
+        } else if (response.status >= 200 && response.status < 300) {
+          return response.json();
+        } else {
+          throw response;
+        }
+      }),
+      new Promise((_, reject) =>
+        setTimeout(reject, this.timeoutMs, "Request timed out.")
+      ),
+    ]);
+}
+
+  /** disabled webhook */
+  deleteWebhookById(bearerToken: string,
+      id:string,
+      body:MezonDeleteWebhookByIdBody,
+      options: any = {}): Promise<any> {
+    
+    if (id === null || id === undefined) {
+      throw new Error("'id' is a required parameter but is null or undefined.");
+    }
+    if (body === null || body === undefined) {
+      throw new Error("'body' is a required parameter but is null or undefined.");
+    }
+    const urlPath = "/v2/webhooks/{id}"
+        .replace("{id}", encodeURIComponent(String(id)));
+    const queryParams = new Map<string, any>();
+
+    let bodyJson : string = "";
+    bodyJson = JSON.stringify(body || {});
+
+    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
+    const fetchOptions = buildFetchOptions("PATCH", options, bodyJson);
     if (bearerToken) {
         fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
     }
