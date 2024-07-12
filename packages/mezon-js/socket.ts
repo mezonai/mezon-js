@@ -98,6 +98,10 @@ export interface LastPinMessageEvent {
   channel_label: string;
   /** The unique ID of this message. */
   message_id: string;
+  /** user id */
+  user_id: string;
+  /** operation */
+  operation: number;
 }
 
 /** Last seen message by user */

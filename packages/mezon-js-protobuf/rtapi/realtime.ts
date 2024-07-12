@@ -463,8 +463,12 @@ export interface LastPinMessageEvent {
   message_id: string;
   /** The stream mode */
   mode: number;
+  /** The UserID */
+  user_id: string;
   /** The timestamp */
   timestamp: string;
+  /** operation */
+  operation: number;
 }
 
 /** Last seen message by user */
@@ -2871,7 +2875,7 @@ export const StatusPresenceEvent = {
 };
 
 function createBaseLastPinMessageEvent(): LastPinMessageEvent {
-  return { channel_id: "", message_id: "", mode: 0, timestamp: "" };
+  return { channel_id: "", message_id: "", mode: 0, user_id: "", timestamp: "", operation: 0 };
 }
 
 export const LastPinMessageEvent = {
@@ -2885,8 +2889,14 @@ export const LastPinMessageEvent = {
     if (message.mode !== 0) {
       writer.uint32(24).int32(message.mode);
     }
+    if (message.user_id !== "") {
+      writer.uint32(34).string(message.user_id);
+    }
     if (message.timestamp !== "") {
-      writer.uint32(34).string(message.timestamp);
+      writer.uint32(42).string(message.timestamp);
+    }
+    if (message.operation !== 0) {
+      writer.uint32(48).int32(message.operation);
     }
     return writer;
   },
@@ -2908,7 +2918,13 @@ export const LastPinMessageEvent = {
           message.mode = reader.int32();
           break;
         case 4:
+          message.user_id = reader.string();
+          break;
+        case 5:
           message.timestamp = reader.string();
+          break;
+        case 6:
+          message.operation = reader.int32();
           break;
         default:
           reader.skipType(tag & 7);
@@ -2923,7 +2939,9 @@ export const LastPinMessageEvent = {
       channel_id: isSet(object.channel_id) ? String(object.channel_id) : "",
       message_id: isSet(object.message_id) ? String(object.message_id) : "",
       mode: isSet(object.mode) ? Number(object.mode) : 0,
+      user_id: isSet(object.user_id) ? String(object.user_id) : "",
       timestamp: isSet(object.timestamp) ? String(object.timestamp) : "",
+      operation: isSet(object.operation) ? Number(object.operation) : 0,
     };
   },
 
@@ -2932,7 +2950,9 @@ export const LastPinMessageEvent = {
     message.channel_id !== undefined && (obj.channel_id = message.channel_id);
     message.message_id !== undefined && (obj.message_id = message.message_id);
     message.mode !== undefined && (obj.mode = Math.round(message.mode));
+    message.user_id !== undefined && (obj.user_id = message.user_id);
     message.timestamp !== undefined && (obj.timestamp = message.timestamp);
+    message.operation !== undefined && (obj.operation = Math.round(message.operation));
     return obj;
   },
 
@@ -2945,7 +2965,9 @@ export const LastPinMessageEvent = {
     message.channel_id = object.channel_id ?? "";
     message.message_id = object.message_id ?? "";
     message.mode = object.mode ?? 0;
+    message.user_id = object.user_id ?? "";
     message.timestamp = object.timestamp ?? "";
+    message.operation = object.operation ?? 0;
     return message;
   },
 };
