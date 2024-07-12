@@ -1912,16 +1912,8 @@ export interface WebhookResponse {
     /** hook url */
     hook_url: string;
 }
-export interface ClanEmoji {
-    /** src url */
-    src: string;
-    /** shortname */
-    shortname: string;
-    /** category */
-    category: string;
-}
 export interface ClanEmojiList {
-    emoji_list: ClanEmoji[];
+    emoji_list: ClanEmojiListResponse[];
 }
 export interface RegistrationEmailRequest {
     /** A valid RFC-5322 email address. */
@@ -1962,6 +1954,16 @@ export interface ClanEmojiUpdateRequest {
     source: string;
     shortname: string;
     category: string;
+}
+export interface ClanEmojiListResponse {
+    id: string;
+    /** src url */
+    src: string;
+    /** shortname */
+    shortname: string;
+    /** category */
+    category: string;
+    creator_id: string;
 }
 export declare const Account: {
     encode(message: Account, writer?: _m0.Writer): _m0.Writer;
@@ -13035,30 +13037,6 @@ export declare const WebhookResponse: {
         hook_url?: string | undefined;
     } & { [K_1 in Exclude<keyof I_1, keyof WebhookResponse>]: never; }>(object: I_1): WebhookResponse;
 };
-export declare const ClanEmoji: {
-    encode(message: ClanEmoji, writer?: _m0.Writer): _m0.Writer;
-    decode(input: _m0.Reader | Uint8Array, length?: number): ClanEmoji;
-    fromJSON(object: any): ClanEmoji;
-    toJSON(message: ClanEmoji): unknown;
-    create<I extends {
-        src?: string | undefined;
-        shortname?: string | undefined;
-        category?: string | undefined;
-    } & {
-        src?: string | undefined;
-        shortname?: string | undefined;
-        category?: string | undefined;
-    } & { [K in Exclude<keyof I, keyof ClanEmoji>]: never; }>(base?: I | undefined): ClanEmoji;
-    fromPartial<I_1 extends {
-        src?: string | undefined;
-        shortname?: string | undefined;
-        category?: string | undefined;
-    } & {
-        src?: string | undefined;
-        shortname?: string | undefined;
-        category?: string | undefined;
-    } & { [K_1 in Exclude<keyof I_1, keyof ClanEmoji>]: never; }>(object: I_1): ClanEmoji;
-};
 export declare const ClanEmojiList: {
     encode(message: ClanEmojiList, writer?: _m0.Writer): _m0.Writer;
     decode(input: _m0.Reader | Uint8Array, length?: number): ClanEmojiList;
@@ -13066,52 +13044,72 @@ export declare const ClanEmojiList: {
     toJSON(message: ClanEmojiList): unknown;
     create<I extends {
         emoji_list?: {
+            id?: string | undefined;
             src?: string | undefined;
             shortname?: string | undefined;
             category?: string | undefined;
+            creator_id?: string | undefined;
         }[] | undefined;
     } & {
         emoji_list?: ({
+            id?: string | undefined;
             src?: string | undefined;
             shortname?: string | undefined;
             category?: string | undefined;
+            creator_id?: string | undefined;
         }[] & ({
+            id?: string | undefined;
             src?: string | undefined;
             shortname?: string | undefined;
             category?: string | undefined;
+            creator_id?: string | undefined;
         } & {
+            id?: string | undefined;
             src?: string | undefined;
             shortname?: string | undefined;
             category?: string | undefined;
-        } & { [K in Exclude<keyof I["emoji_list"][number], keyof ClanEmoji>]: never; })[] & { [K_1 in Exclude<keyof I["emoji_list"], keyof {
+            creator_id?: string | undefined;
+        } & { [K in Exclude<keyof I["emoji_list"][number], keyof ClanEmojiListResponse>]: never; })[] & { [K_1 in Exclude<keyof I["emoji_list"], keyof {
+            id?: string | undefined;
             src?: string | undefined;
             shortname?: string | undefined;
             category?: string | undefined;
+            creator_id?: string | undefined;
         }[]>]: never; }) | undefined;
     } & { [K_2 in Exclude<keyof I, "emoji_list">]: never; }>(base?: I | undefined): ClanEmojiList;
     fromPartial<I_1 extends {
         emoji_list?: {
+            id?: string | undefined;
             src?: string | undefined;
             shortname?: string | undefined;
             category?: string | undefined;
+            creator_id?: string | undefined;
         }[] | undefined;
     } & {
         emoji_list?: ({
+            id?: string | undefined;
             src?: string | undefined;
             shortname?: string | undefined;
             category?: string | undefined;
+            creator_id?: string | undefined;
         }[] & ({
+            id?: string | undefined;
             src?: string | undefined;
             shortname?: string | undefined;
             category?: string | undefined;
+            creator_id?: string | undefined;
         } & {
+            id?: string | undefined;
             src?: string | undefined;
             shortname?: string | undefined;
             category?: string | undefined;
-        } & { [K_3 in Exclude<keyof I_1["emoji_list"][number], keyof ClanEmoji>]: never; })[] & { [K_4 in Exclude<keyof I_1["emoji_list"], keyof {
+            creator_id?: string | undefined;
+        } & { [K_3 in Exclude<keyof I_1["emoji_list"][number], keyof ClanEmojiListResponse>]: never; })[] & { [K_4 in Exclude<keyof I_1["emoji_list"], keyof {
+            id?: string | undefined;
             src?: string | undefined;
             shortname?: string | undefined;
             category?: string | undefined;
+            creator_id?: string | undefined;
         }[]>]: never; }) | undefined;
     } & { [K_5 in Exclude<keyof I_1, "emoji_list">]: never; }>(object: I_1): ClanEmojiList;
 };
@@ -13274,6 +13272,38 @@ export declare const ClanEmojiUpdateRequest: {
         shortname?: string | undefined;
         category?: string | undefined;
     } & { [K_1 in Exclude<keyof I_1, keyof ClanEmojiUpdateRequest>]: never; }>(object: I_1): ClanEmojiUpdateRequest;
+};
+export declare const ClanEmojiListResponse: {
+    encode(message: ClanEmojiListResponse, writer?: _m0.Writer): _m0.Writer;
+    decode(input: _m0.Reader | Uint8Array, length?: number): ClanEmojiListResponse;
+    fromJSON(object: any): ClanEmojiListResponse;
+    toJSON(message: ClanEmojiListResponse): unknown;
+    create<I extends {
+        id?: string | undefined;
+        src?: string | undefined;
+        shortname?: string | undefined;
+        category?: string | undefined;
+        creator_id?: string | undefined;
+    } & {
+        id?: string | undefined;
+        src?: string | undefined;
+        shortname?: string | undefined;
+        category?: string | undefined;
+        creator_id?: string | undefined;
+    } & { [K in Exclude<keyof I, keyof ClanEmojiListResponse>]: never; }>(base?: I | undefined): ClanEmojiListResponse;
+    fromPartial<I_1 extends {
+        id?: string | undefined;
+        src?: string | undefined;
+        shortname?: string | undefined;
+        category?: string | undefined;
+        creator_id?: string | undefined;
+    } & {
+        id?: string | undefined;
+        src?: string | undefined;
+        shortname?: string | undefined;
+        category?: string | undefined;
+        creator_id?: string | undefined;
+    } & { [K_1 in Exclude<keyof I_1, keyof ClanEmojiListResponse>]: never; }>(object: I_1): ClanEmojiListResponse;
 };
 type Builtin = Date | Function | Uint8Array | string | number | boolean | undefined;
 export type DeepPartial<T> = T extends Builtin ? T : T extends Array<infer U> ? Array<DeepPartial<U>> : T extends ReadonlyArray<infer U> ? ReadonlyArray<DeepPartial<U>> : T extends {} ? {

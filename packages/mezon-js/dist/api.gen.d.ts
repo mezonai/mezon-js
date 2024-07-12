@@ -277,12 +277,6 @@ export interface ApiClanDescProfile {
     profile_theme?: string;
 }
 /**  */
-export interface ApiClanEmoji {
-    category?: string;
-    shortname?: string;
-    src?: string;
-}
-/**  */
 export interface ApiClanEmojiCreateRequest {
     category?: string;
     clan_id?: string;
@@ -291,7 +285,15 @@ export interface ApiClanEmojiCreateRequest {
 }
 /**  */
 export interface ApiClanEmojiList {
-    emoji_list?: Array<ApiClanEmoji>;
+    emoji_list?: Array<ApiClanEmojiListResponse>;
+}
+/**  */
+export interface ApiClanEmojiListResponse {
+    category?: string;
+    creator_id?: string;
+    id?: string;
+    shortname?: string;
+    src?: string;
 }
 /** Get clan profile. */
 export interface ApiClanProfile {
@@ -976,9 +978,7 @@ export declare class MezonApi {
     closeDirectMess(bearerToken: string, body: ApiDeleteChannelDescRequest, options?: any): Promise<any>;
     /** open direct message. */
     openDirectMess(bearerToken: string, body: ApiDeleteChannelDescRequest, options?: any): Promise<any>;
-    /** Get permission list */
-    listClanEmoji(bearerToken: string, options?: any): Promise<ApiClanEmojiList>;
-    /** Post permission Emoji  /v2/emoji/create */
+    /** Post clan Emoji  /v2/emoji/create */
     createClanEmoji(bearerToken: string, body: ApiClanEmojiCreateRequest, options?: any): Promise<any>;
     /** Get emoji list by clan id */
     listClanEmojiByClanId(bearerToken: string, clanId: string, options?: any): Promise<ApiClanEmojiList>;
