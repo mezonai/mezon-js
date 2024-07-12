@@ -4787,9 +4787,9 @@ var _DefaultSocket = class _DefaultSocket {
       return response.last_seen_message_event;
     });
   }
-  writeLastPinMessage(channel_id, mode, message_id, timestamp) {
+  writeLastPinMessage(channel_id, mode, message_id, timestamp, operation) {
     return __async(this, null, function* () {
-      const response = yield this.send({ last_pin_message_event: { channel_id, mode, message_id, timestamp } });
+      const response = yield this.send({ last_pin_message_event: { channel_id, mode, message_id, timestamp, operation } });
       return response.last_pin_message_event;
     });
   }
