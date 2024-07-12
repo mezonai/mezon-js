@@ -4509,6 +4509,8 @@ var _DefaultSocket = class _DefaultSocket {
           this.onchannelpresence(message.channel_presence_event);
         } else if (message.last_pin_message_event) {
           this.onpinmessage(message.last_pin_message_event);
+        } else if (message.custom_status_event) {
+          this.oncustomstatus(message.custom_status_event);
         } else {
           if (this.verbose && window && window.console) {
             console.log("Unrecognized message received: %o", message);
@@ -4654,6 +4656,11 @@ var _DefaultSocket = class _DefaultSocket {
   onheartbeattimeout() {
     if (this.verbose && window && window.console) {
       console.log("Heartbeat timeout.");
+    }
+  }
+  oncustomstatus(statusEvent) {
+    if (this.verbose && window && window.console) {
+      console.log(statusEvent);
     }
   }
   send(message, sendTimeout = _DefaultSocket.DefaultSendTimeoutMs) {
@@ -4805,6 +4812,12 @@ var _DefaultSocket = class _DefaultSocket {
     return __async(this, null, function* () {
       const response = yield this.send({ voice_leaved_event: { id, clan_id: clanId, voice_channel_id: voiceChannelId, voice_user_id: voiceUserId } });
       return response.voice_leaved_event;
+    });
+  }
+  writeCustomStatus(clan_id, status) {
+    return __async(this, null, function* () {
+      const response = yield this.send({ custom_status_event: { clan_id, status } });
+      return response.last_pin_message_event;
     });
   }
   pingPong() {

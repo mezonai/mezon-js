@@ -285,6 +285,12 @@ export interface VoiceJoinedEvent {
     voice_channel_id: string;
     last_screenshot: string;
 }
+export interface CustomStatusEvent {
+    clan_id: string;
+    user_id: string;
+    username: string;
+    status: string;
+}
 export interface ChannelUpdatedEvent {
     clan_id: string;
     category_id: string;
@@ -440,6 +446,7 @@ export interface Socket {
      * In any case, be aware that `onclose` will still fire if there is a heartbeat timeout in a potentially delayed manner.
      */
     onheartbeattimeout: () => void;
+    oncustomstatus: (statusEvent: CustomStatusEvent) => void;
     /** Receive channel message. */
     onchannelmessage: (channelMessage: ChannelMessageEvent) => void;
     /** Receive typing event */
@@ -506,6 +513,7 @@ export declare class DefaultSocket implements Socket {
     onstreampresence(streamPresence: StreamPresenceEvent): void;
     onstreamdata(streamData: StreamData): void;
     onheartbeattimeout(): void;
+    oncustomstatus(statusEvent: CustomStatusEvent): void;
     send(message: ChannelJoin | ChannelLeave | ChannelMessageSend | ChannelMessageUpdate | ChannelMessageRemove | MessageTypingEvent | LastSeenMessageEvent | Rpc | StatusFollow | StatusUnfollow | StatusUpdate | Ping, sendTimeout?: number): Promise<any>;
     followUsers(userIds: string[]): Promise<Status>;
     joinClanChat(clan_id: string): Promise<ClanJoin>;
@@ -525,6 +533,7 @@ export declare class DefaultSocket implements Socket {
     writeLastPinMessage(clan_id: string, channel_id: string, mode: number, message_id: string, timestamp: string, operation: number): Promise<LastPinMessageEvent>;
     writeVoiceJoined(id: string, clanId: string, clanName: string, voiceChannelId: string, voiceChannelLabel: string, participant: string, lastScreenshot: string): Promise<VoiceJoinedEvent>;
     writeVoiceLeaved(id: string, clanId: string, voiceChannelId: string, voiceUserId: string): Promise<VoiceLeavedEvent>;
+    writeCustomStatus(clan_id: string, status: string): Promise<CustomStatusEvent>;
     private pingPong;
 }
 export {};

@@ -141,7 +141,11 @@ export interface Envelope {
     | ChannelUpdatedEvent
     | undefined;
   /** Last pin message event */
-  last_pin_message_event?: LastPinMessageEvent | undefined;
+  last_pin_message_event?:
+    | LastPinMessageEvent
+    | undefined;
+  /** Update custom status */
+  custom_status_event?: CustomStatusEvent | undefined;
 }
 
 /** A realtime chat channel. */
@@ -746,6 +750,18 @@ export interface UserPresence {
   status: string | undefined;
 }
 
+/** A custom status presence */
+export interface CustomStatusEvent {
+  /** the clan id */
+  clan_id: string;
+  /** the user id */
+  user_id: string;
+  /** username */
+  username: string;
+  /** the status */
+  status: string;
+}
+
 function createBaseEnvelope(): Envelope {
   return {
     cid: "",
@@ -782,6 +798,7 @@ function createBaseEnvelope(): Envelope {
     channel_deleted_event: undefined,
     channel_updated_event: undefined,
     last_pin_message_event: undefined,
+    custom_status_event: undefined,
   };
 }
 
@@ -888,6 +905,9 @@ export const Envelope = {
     }
     if (message.last_pin_message_event !== undefined) {
       LastPinMessageEvent.encode(message.last_pin_message_event, writer.uint32(274).fork()).ldelim();
+    }
+    if (message.custom_status_event !== undefined) {
+      CustomStatusEvent.encode(message.custom_status_event, writer.uint32(282).fork()).ldelim();
     }
     return writer;
   },
@@ -1001,6 +1021,9 @@ export const Envelope = {
         case 34:
           message.last_pin_message_event = LastPinMessageEvent.decode(reader, reader.uint32());
           break;
+        case 35:
+          message.custom_status_event = CustomStatusEvent.decode(reader, reader.uint32());
+          break;
         default:
           reader.skipType(tag & 7);
           break;
@@ -1080,6 +1103,9 @@ export const Envelope = {
         : undefined,
       last_pin_message_event: isSet(object.last_pin_message_event)
         ? LastPinMessageEvent.fromJSON(object.last_pin_message_event)
+        : undefined,
+      custom_status_event: isSet(object.custom_status_event)
+        ? CustomStatusEvent.fromJSON(object.custom_status_event)
         : undefined,
     };
   },
@@ -1165,6 +1191,9 @@ export const Envelope = {
       : undefined);
     message.last_pin_message_event !== undefined && (obj.last_pin_message_event = message.last_pin_message_event
       ? LastPinMessageEvent.toJSON(message.last_pin_message_event)
+      : undefined);
+    message.custom_status_event !== undefined && (obj.custom_status_event = message.custom_status_event
+      ? CustomStatusEvent.toJSON(message.custom_status_event)
       : undefined);
     return obj;
   },
@@ -1278,6 +1307,9 @@ export const Envelope = {
       (object.last_pin_message_event !== undefined && object.last_pin_message_event !== null)
         ? LastPinMessageEvent.fromPartial(object.last_pin_message_event)
         : undefined;
+    message.custom_status_event = (object.custom_status_event !== undefined && object.custom_status_event !== null)
+      ? CustomStatusEvent.fromPartial(object.custom_status_event)
+      : undefined;
     return message;
   },
 };
@@ -4720,6 +4752,86 @@ export const UserPresence = {
     message.username = object.username ?? "";
     message.persistence = object.persistence ?? false;
     message.status = object.status ?? undefined;
+    return message;
+  },
+};
+
+function createBaseCustomStatusEvent(): CustomStatusEvent {
+  return { clan_id: "", user_id: "", username: "", status: "" };
+}
+
+export const CustomStatusEvent = {
+  encode(message: CustomStatusEvent, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.clan_id !== "") {
+      writer.uint32(10).string(message.clan_id);
+    }
+    if (message.user_id !== "") {
+      writer.uint32(18).string(message.user_id);
+    }
+    if (message.username !== "") {
+      writer.uint32(26).string(message.username);
+    }
+    if (message.status !== "") {
+      writer.uint32(34).string(message.status);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): CustomStatusEvent {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseCustomStatusEvent();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.clan_id = reader.string();
+          break;
+        case 2:
+          message.user_id = reader.string();
+          break;
+        case 3:
+          message.username = reader.string();
+          break;
+        case 4:
+          message.status = reader.string();
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): CustomStatusEvent {
+    return {
+      clan_id: isSet(object.clan_id) ? String(object.clan_id) : "",
+      user_id: isSet(object.user_id) ? String(object.user_id) : "",
+      username: isSet(object.username) ? String(object.username) : "",
+      status: isSet(object.status) ? String(object.status) : "",
+    };
+  },
+
+  toJSON(message: CustomStatusEvent): unknown {
+    const obj: any = {};
+    message.clan_id !== undefined && (obj.clan_id = message.clan_id);
+    message.user_id !== undefined && (obj.user_id = message.user_id);
+    message.username !== undefined && (obj.username = message.username);
+    message.status !== undefined && (obj.status = message.status);
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<CustomStatusEvent>, I>>(base?: I): CustomStatusEvent {
+    return CustomStatusEvent.fromPartial(base ?? {});
+  },
+
+  fromPartial<I extends Exact<DeepPartial<CustomStatusEvent>, I>>(object: I): CustomStatusEvent {
+    const message = createBaseCustomStatusEvent();
+    message.clan_id = object.clan_id ?? "";
+    message.user_id = object.user_id ?? "";
+    message.username = object.username ?? "";
+    message.status = object.status ?? "";
     return message;
   },
 };

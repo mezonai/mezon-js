@@ -395,6 +395,16 @@ export interface VoiceJoinedEvent {
   last_screenshot: string;  
 }
 
+export interface CustomStatusEvent {
+  // the clan id
+  clan_id: string;
+  // the user id
+  user_id: string;
+  // username
+  username: string;
+  // the status
+  status: string;
+}
 
 export interface ChannelUpdatedEvent {
   // clan id
@@ -606,6 +616,8 @@ export interface Socket {
    */
   onheartbeattimeout: () => void;
 
+  oncustomstatus: (statusEvent: CustomStatusEvent) => void;
+
   /** Receive channel message. */
   onchannelmessage: (channelMessage: ChannelMessageEvent) => void;
 
@@ -774,6 +786,8 @@ export class DefaultSocket implements Socket {
           this.onchannelpresence(<ChannelPresenceEvent>message.channel_presence_event);
         } else if (message.last_pin_message_event) {
           this.onpinmessage(<LastPinMessageEvent>message.last_pin_message_event);
+        } else if (message.custom_status_event) {
+          this.oncustomstatus(<CustomStatusEvent>message.custom_status_event);
         } else {
           if (this.verbose && window && window.console) {
             console.log("Unrecognized message received: %o", message);
@@ -949,6 +963,12 @@ export class DefaultSocket implements Socket {
     }
   }
 
+  oncustomstatus(statusEvent: CustomStatusEvent) {
+    if (this.verbose && window && window.console) {
+      console.log(statusEvent);
+    }
+  }
+
   send(message: ChannelJoin | ChannelLeave | ChannelMessageSend | ChannelMessageUpdate |
     ChannelMessageRemove | MessageTypingEvent | LastSeenMessageEvent | Rpc | StatusFollow | StatusUnfollow | StatusUpdate | Ping, sendTimeout = DefaultSocket.DefaultSendTimeoutMs): Promise<any> {
     const untypedMessage = message as any;
@@ -1099,6 +1119,11 @@ export class DefaultSocket implements Socket {
   async writeVoiceLeaved(id: string, clanId: string, voiceChannelId: string, voiceUserId: string) : Promise<VoiceLeavedEvent> {
     const response = await this.send({voice_leaved_event: {id: id, clan_id: clanId, voice_channel_id: voiceChannelId, voice_user_id: voiceUserId}});
     return response.voice_leaved_event
+  }
+
+  async writeCustomStatus(clan_id: string, status: string) : Promise<CustomStatusEvent> {
+    const response = await this.send({custom_status_event: {clan_id: clan_id, status: status}});
+    return response.last_pin_message_event
   }
 
   private async pingPong() : Promise<void> {

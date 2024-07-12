@@ -3024,7 +3024,8 @@ function createBaseEnvelope() {
     channel_created_event: void 0,
     channel_deleted_event: void 0,
     channel_updated_event: void 0,
-    last_pin_message_event: void 0
+    last_pin_message_event: void 0,
+    custom_status_event: void 0
   };
 }
 var Envelope = {
@@ -3130,6 +3131,9 @@ var Envelope = {
     }
     if (message.last_pin_message_event !== void 0) {
       LastPinMessageEvent.encode(message.last_pin_message_event, writer.uint32(274).fork()).ldelim();
+    }
+    if (message.custom_status_event !== void 0) {
+      CustomStatusEvent.encode(message.custom_status_event, writer.uint32(282).fork()).ldelim();
     }
     return writer;
   },
@@ -3242,6 +3246,9 @@ var Envelope = {
         case 34:
           message.last_pin_message_event = LastPinMessageEvent.decode(reader, reader.uint32());
           break;
+        case 35:
+          message.custom_status_event = CustomStatusEvent.decode(reader, reader.uint32());
+          break;
         default:
           reader.skipType(tag & 7);
           break;
@@ -3284,7 +3291,8 @@ var Envelope = {
       channel_created_event: isSet4(object.channel_created_event) ? ChannelCreatedEvent.fromJSON(object.channel_created_event) : void 0,
       channel_deleted_event: isSet4(object.channel_deleted_event) ? ChannelDeletedEvent.fromJSON(object.channel_deleted_event) : void 0,
       channel_updated_event: isSet4(object.channel_updated_event) ? ChannelUpdatedEvent.fromJSON(object.channel_updated_event) : void 0,
-      last_pin_message_event: isSet4(object.last_pin_message_event) ? LastPinMessageEvent.fromJSON(object.last_pin_message_event) : void 0
+      last_pin_message_event: isSet4(object.last_pin_message_event) ? LastPinMessageEvent.fromJSON(object.last_pin_message_event) : void 0,
+      custom_status_event: isSet4(object.custom_status_event) ? CustomStatusEvent.fromJSON(object.custom_status_event) : void 0
     };
   },
   toJSON(message) {
@@ -3323,6 +3331,7 @@ var Envelope = {
     message.channel_deleted_event !== void 0 && (obj.channel_deleted_event = message.channel_deleted_event ? ChannelDeletedEvent.toJSON(message.channel_deleted_event) : void 0);
     message.channel_updated_event !== void 0 && (obj.channel_updated_event = message.channel_updated_event ? ChannelUpdatedEvent.toJSON(message.channel_updated_event) : void 0);
     message.last_pin_message_event !== void 0 && (obj.last_pin_message_event = message.last_pin_message_event ? LastPinMessageEvent.toJSON(message.last_pin_message_event) : void 0);
+    message.custom_status_event !== void 0 && (obj.custom_status_event = message.custom_status_event ? CustomStatusEvent.toJSON(message.custom_status_event) : void 0);
     return obj;
   },
   create(base) {
@@ -3365,6 +3374,7 @@ var Envelope = {
     message.channel_deleted_event = object.channel_deleted_event !== void 0 && object.channel_deleted_event !== null ? ChannelDeletedEvent.fromPartial(object.channel_deleted_event) : void 0;
     message.channel_updated_event = object.channel_updated_event !== void 0 && object.channel_updated_event !== null ? ChannelUpdatedEvent.fromPartial(object.channel_updated_event) : void 0;
     message.last_pin_message_event = object.last_pin_message_event !== void 0 && object.last_pin_message_event !== null ? LastPinMessageEvent.fromPartial(object.last_pin_message_event) : void 0;
+    message.custom_status_event = object.custom_status_event !== void 0 && object.custom_status_event !== null ? CustomStatusEvent.fromPartial(object.custom_status_event) : void 0;
     return message;
   }
 };
@@ -6326,6 +6336,80 @@ var UserPresence = {
     message.username = (_c = object.username) != null ? _c : "";
     message.persistence = (_d = object.persistence) != null ? _d : false;
     message.status = (_e = object.status) != null ? _e : void 0;
+    return message;
+  }
+};
+function createBaseCustomStatusEvent() {
+  return { clan_id: "", user_id: "", username: "", status: "" };
+}
+var CustomStatusEvent = {
+  encode(message, writer = import_minimal4.default.Writer.create()) {
+    if (message.clan_id !== "") {
+      writer.uint32(10).string(message.clan_id);
+    }
+    if (message.user_id !== "") {
+      writer.uint32(18).string(message.user_id);
+    }
+    if (message.username !== "") {
+      writer.uint32(26).string(message.username);
+    }
+    if (message.status !== "") {
+      writer.uint32(34).string(message.status);
+    }
+    return writer;
+  },
+  decode(input, length) {
+    const reader = input instanceof import_minimal4.default.Reader ? input : new import_minimal4.default.Reader(input);
+    let end = length === void 0 ? reader.len : reader.pos + length;
+    const message = createBaseCustomStatusEvent();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.clan_id = reader.string();
+          break;
+        case 2:
+          message.user_id = reader.string();
+          break;
+        case 3:
+          message.username = reader.string();
+          break;
+        case 4:
+          message.status = reader.string();
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+  fromJSON(object) {
+    return {
+      clan_id: isSet4(object.clan_id) ? String(object.clan_id) : "",
+      user_id: isSet4(object.user_id) ? String(object.user_id) : "",
+      username: isSet4(object.username) ? String(object.username) : "",
+      status: isSet4(object.status) ? String(object.status) : ""
+    };
+  },
+  toJSON(message) {
+    const obj = {};
+    message.clan_id !== void 0 && (obj.clan_id = message.clan_id);
+    message.user_id !== void 0 && (obj.user_id = message.user_id);
+    message.username !== void 0 && (obj.username = message.username);
+    message.status !== void 0 && (obj.status = message.status);
+    return obj;
+  },
+  create(base) {
+    return CustomStatusEvent.fromPartial(base != null ? base : {});
+  },
+  fromPartial(object) {
+    var _a, _b, _c, _d;
+    const message = createBaseCustomStatusEvent();
+    message.clan_id = (_a = object.clan_id) != null ? _a : "";
+    message.user_id = (_b = object.user_id) != null ? _b : "";
+    message.username = (_c = object.username) != null ? _c : "";
+    message.status = (_d = object.status) != null ? _d : "";
     return message;
   }
 };
