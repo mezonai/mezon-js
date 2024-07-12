@@ -539,13 +539,13 @@ export interface Socket {
   joinClanChat(clan_id: string) : Promise<ClanJoin>;
 
   /** Join a chat channel on the server. */
-  joinChat(channel_id: string, mode: number, type: number, persistence: boolean, hidden: boolean) : Promise<Channel>;
+  joinChat(clan_id: string, channel_id: string, mode: number, type: number, persistence: boolean, hidden: boolean) : Promise<Channel>;
 
   /** Leave a chat channel on the server. */
-  leaveChat(channel_id: string, mode: number) : Promise<void>;
+  leaveChat(clan_id: string, channel_id: string, mode: number) : Promise<void>;
 
   /** Remove a chat message from a chat channel on the server. */
-  removeChatMessage(channel_id: string, mode: number, message_id: string) : Promise<ChannelMessageAck>;
+  removeChatMessage(clan_id: string, channel_id: string, mode: number, message_id: string) : Promise<ChannelMessageAck>;
 
   /** Execute an RPC function to the server. */
   rpc(id?: string, payload?: string, http_key?: string) : Promise<ApiRpc>
@@ -554,7 +554,7 @@ export interface Socket {
   unfollowUsers(user_ids : string[]) : Promise<void>;
 
   /** Update a chat message on a chat channel in the server. */
-  updateChatMessage(channel_id: string, mode: number, message_id : string, content: any) : Promise<ChannelMessageAck>;
+  updateChatMessage(clan_id: string, channel_id: string, mode: number, message_id : string, content: any) : Promise<ChannelMessageAck>;
 
   /** Update the status for the current user online. */
   updateStatus(status? : string) : Promise<void>;
@@ -563,16 +563,16 @@ export interface Socket {
   writeChatMessage(clan_id: string, channel_id: string, mode: number, content?: any, mentions?: Array<ApiMessageMention>, attachments?: Array<ApiMessageAttachment>, references?: Array<ApiMessageRef>, anonymous_message?: boolean, mention_everyone?:boolean, notifi_content?: any) : Promise<ChannelMessageAck>;
 
   /** Send message typing */
-  writeMessageTyping(channel_id: string, mode: number) : Promise<MessageTypingEvent>;  
+  writeMessageTyping(clan_id: string, channel_id: string, mode: number) : Promise<MessageTypingEvent>;  
 
   /** Send message reaction */
-  writeMessageReaction(id: string, channel_id: string, mode: number, message_id: string, emoji: string, count: number, message_sender_id: string, action_delete: boolean) : Promise<MessageReactionEvent>;
+  writeMessageReaction(id: string, clan_id: string, channel_id: string, mode: number, message_id: string, emoji: string, count: number, message_sender_id: string, action_delete: boolean) : Promise<MessageReactionEvent>;
 
   /** Send last seen message */
-  writeLastSeenMessage(channel_id: string, mode: number, message_id: string, timestamp: string) : Promise<LastSeenMessageEvent>;
+  writeLastSeenMessage(clan_id: string, channel_id: string, mode: number, message_id: string, timestamp: string) : Promise<LastSeenMessageEvent>;
 
   /** Send last pin message */
-  writeLastPinMessage(channel_id: string, mode: number, message_id: string, timestamp: string, operation: number) : Promise<LastPinMessageEvent>;
+  writeLastPinMessage(clan_id: string, channel_id: string, mode: number, message_id: string, timestamp: string, operation: number) : Promise<LastPinMessageEvent>;
 
   /** send voice joined */
   writeVoiceJoined(id: string, clanId: string, clanName: string, voiceChannelId: string, voiceChannelLabel: string, participant: string, lastScreenshot: string) : Promise<VoiceJoinedEvent>;
@@ -993,10 +993,11 @@ export class DefaultSocket implements Socket {
     return response.clan_join;
   }
 
-  async joinChat(channel_id: string, mode: number, type: number, persistence: boolean, hidden: boolean): Promise<Channel> {
+  async joinChat(clan_id: string, channel_id: string, mode: number, type: number, persistence: boolean, hidden: boolean): Promise<Channel> {
 
     const response = await this.send({
         channel_join: {
+            clan_id: clan_id,
             channel_id: channel_id,
             mode: mode,
             type: type,
@@ -1009,14 +1010,15 @@ export class DefaultSocket implements Socket {
     return response.channel;
   }
 
-  leaveChat(channel_id: string, mode: number): Promise<void> {
-    return this.send({channel_leave: {channel_id: channel_id, mode:mode}});
+  leaveChat(clan_id: string, channel_id: string, mode: number): Promise<void> {
+    return this.send({channel_leave: {clan_id: clan_id, channel_id: channel_id, mode:mode}});
   }
 
-  async removeChatMessage(channel_id: string, mode: number, message_id: string): Promise<ChannelMessageAck> {
+  async removeChatMessage(clan_id: string, channel_id: string, mode: number, message_id: string): Promise<ChannelMessageAck> {
     const response = await this.send(
       {
         channel_message_remove: {
+          clan_id: clan_id,
           channel_id: channel_id,
           mode: mode,
           message_id: message_id
@@ -1055,8 +1057,8 @@ export class DefaultSocket implements Socket {
     return this.send({status_unfollow: {user_ids: user_ids}});
   }
 
-  async updateChatMessage(channel_id: string, mode: number, message_id : string, content: any): Promise<ChannelMessageAck> {
-    const response = await this.send({channel_message_update: {channel_id: channel_id, message_id: message_id, content: content, mode: mode}});
+  async updateChatMessage(clan_id: string, channel_id: string, mode: number, message_id : string, content: any): Promise<ChannelMessageAck> {
+    const response = await this.send({channel_message_update: {clan_id: clan_id, channel_id: channel_id, message_id: message_id, content: content, mode: mode}});
     return response.channel_message_ack;
   }
 
@@ -1069,23 +1071,23 @@ export class DefaultSocket implements Socket {
     return response.channel_message_ack;
   }
 
-  async writeMessageReaction(id: string, channel_id: string, mode: number, message_id: string, emoji: string, count: number, message_sender_id: string, action_delete: boolean) : Promise<MessageReactionEvent> {
-    const response = await this.send({message_reaction_event: {id: id, channel_id: channel_id, mode: mode, message_id: message_id, emoji: emoji, count: count, message_sender_id: message_sender_id, action: action_delete}});
+  async writeMessageReaction(id: string, clan_id: string, channel_id: string, mode: number, message_id: string, emoji: string, count: number, message_sender_id: string, action_delete: boolean) : Promise<MessageReactionEvent> {
+    const response = await this.send({message_reaction_event: {id: id, clan_id: clan_id, channel_id: channel_id, mode: mode, message_id: message_id, emoji: emoji, count: count, message_sender_id: message_sender_id, action: action_delete}});
     return response.message_reaction_event
   }
 
-  async writeMessageTyping(channel_id: string, mode: number) : Promise<MessageTypingEvent> {
-    const response = await this.send({message_typing_event: {channel_id: channel_id, mode:mode}});
+  async writeMessageTyping(clan_id: string, channel_id: string, mode: number) : Promise<MessageTypingEvent> {
+    const response = await this.send({message_typing_event: {clan_id: clan_id, channel_id: channel_id, mode:mode}});
     return response.message_typing_event
   }
 
-  async writeLastSeenMessage(channel_id: string, mode: number, message_id: string, timestamp: string) : Promise<LastSeenMessageEvent> {
-    const response = await this.send({last_seen_message_event: {channel_id: channel_id, mode: mode, message_id: message_id, timestamp: timestamp}});
+  async writeLastSeenMessage(clan_id: string, channel_id: string, mode: number, message_id: string, timestamp: string) : Promise<LastSeenMessageEvent> {
+    const response = await this.send({last_seen_message_event: {clan_id: clan_id, channel_id: channel_id, mode: mode, message_id: message_id, timestamp: timestamp}});
     return response.last_seen_message_event
   }
 
-  async writeLastPinMessage(channel_id: string, mode: number, message_id: string, timestamp: string, operation: number) : Promise<LastPinMessageEvent> {
-    const response = await this.send({last_pin_message_event: {channel_id: channel_id, mode: mode, message_id: message_id, timestamp: timestamp, operation: operation}});
+  async writeLastPinMessage(clan_id: string, channel_id: string, mode: number, message_id: string, timestamp: string, operation: number) : Promise<LastPinMessageEvent> {
+    const response = await this.send({last_pin_message_event: {clan_id: clan_id, channel_id: channel_id, mode: mode, message_id: message_id, timestamp: timestamp, operation: operation}});
     return response.last_pin_message_event
   }
 

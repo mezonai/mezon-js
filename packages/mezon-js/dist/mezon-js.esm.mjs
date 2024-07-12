@@ -4693,11 +4693,12 @@ var _DefaultSocket = class _DefaultSocket {
       return response.clan_join;
     });
   }
-  joinChat(channel_id, mode, type, persistence, hidden) {
+  joinChat(clan_id, channel_id, mode, type, persistence, hidden) {
     return __async(this, null, function* () {
       const response = yield this.send(
         {
           channel_join: {
+            clan_id,
             channel_id,
             mode,
             type,
@@ -4709,14 +4710,15 @@ var _DefaultSocket = class _DefaultSocket {
       return response.channel;
     });
   }
-  leaveChat(channel_id, mode) {
-    return this.send({ channel_leave: { channel_id, mode } });
+  leaveChat(clan_id, channel_id, mode) {
+    return this.send({ channel_leave: { clan_id, channel_id, mode } });
   }
-  removeChatMessage(channel_id, mode, message_id) {
+  removeChatMessage(clan_id, channel_id, mode, message_id) {
     return __async(this, null, function* () {
       const response = yield this.send(
         {
           channel_message_remove: {
+            clan_id,
             channel_id,
             mode,
             message_id
@@ -4754,9 +4756,9 @@ var _DefaultSocket = class _DefaultSocket {
   unfollowUsers(user_ids) {
     return this.send({ status_unfollow: { user_ids } });
   }
-  updateChatMessage(channel_id, mode, message_id, content) {
+  updateChatMessage(clan_id, channel_id, mode, message_id, content) {
     return __async(this, null, function* () {
-      const response = yield this.send({ channel_message_update: { channel_id, message_id, content, mode } });
+      const response = yield this.send({ channel_message_update: { clan_id, channel_id, message_id, content, mode } });
       return response.channel_message_ack;
     });
   }
@@ -4769,27 +4771,27 @@ var _DefaultSocket = class _DefaultSocket {
       return response.channel_message_ack;
     });
   }
-  writeMessageReaction(id, channel_id, mode, message_id, emoji, count, message_sender_id, action_delete) {
+  writeMessageReaction(id, clan_id, channel_id, mode, message_id, emoji, count, message_sender_id, action_delete) {
     return __async(this, null, function* () {
-      const response = yield this.send({ message_reaction_event: { id, channel_id, mode, message_id, emoji, count, message_sender_id, action: action_delete } });
+      const response = yield this.send({ message_reaction_event: { id, clan_id, channel_id, mode, message_id, emoji, count, message_sender_id, action: action_delete } });
       return response.message_reaction_event;
     });
   }
-  writeMessageTyping(channel_id, mode) {
+  writeMessageTyping(clan_id, channel_id, mode) {
     return __async(this, null, function* () {
-      const response = yield this.send({ message_typing_event: { channel_id, mode } });
+      const response = yield this.send({ message_typing_event: { clan_id, channel_id, mode } });
       return response.message_typing_event;
     });
   }
-  writeLastSeenMessage(channel_id, mode, message_id, timestamp) {
+  writeLastSeenMessage(clan_id, channel_id, mode, message_id, timestamp) {
     return __async(this, null, function* () {
-      const response = yield this.send({ last_seen_message_event: { channel_id, mode, message_id, timestamp } });
+      const response = yield this.send({ last_seen_message_event: { clan_id, channel_id, mode, message_id, timestamp } });
       return response.last_seen_message_event;
     });
   }
-  writeLastPinMessage(channel_id, mode, message_id, timestamp, operation) {
+  writeLastPinMessage(clan_id, channel_id, mode, message_id, timestamp, operation) {
     return __async(this, null, function* () {
-      const response = yield this.send({ last_pin_message_event: { channel_id, mode, message_id, timestamp, operation } });
+      const response = yield this.send({ last_pin_message_event: { clan_id, channel_id, mode, message_id, timestamp, operation } });
       return response.last_pin_message_event;
     });
   }
