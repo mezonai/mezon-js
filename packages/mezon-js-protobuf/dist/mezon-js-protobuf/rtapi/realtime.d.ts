@@ -303,8 +303,12 @@ export interface LastPinMessageEvent {
     message_id: string;
     /** The stream mode */
     mode: number;
+    /** The UserID */
+    user_id: string;
     /** The timestamp */
     timestamp: string;
+    /** operation */
+    operation: number;
 }
 /** Last seen message by user */
 export interface LastSeenMessageEvent {
@@ -858,7 +862,9 @@ export declare const Envelope: {
             channel_id?: string | undefined;
             message_id?: string | undefined;
             mode?: number | undefined;
+            user_id?: string | undefined;
             timestamp?: string | undefined;
+            operation?: number | undefined;
         } | undefined;
     } & {
         cid?: string | undefined;
@@ -1701,12 +1707,16 @@ export declare const Envelope: {
             channel_id?: string | undefined;
             message_id?: string | undefined;
             mode?: number | undefined;
+            user_id?: string | undefined;
             timestamp?: string | undefined;
+            operation?: number | undefined;
         } & {
             channel_id?: string | undefined;
             message_id?: string | undefined;
             mode?: number | undefined;
+            user_id?: string | undefined;
             timestamp?: string | undefined;
+            operation?: number | undefined;
         } & { [K_64 in Exclude<keyof I["last_pin_message_event"], keyof LastPinMessageEvent>]: never; }) | undefined;
     } & { [K_65 in Exclude<keyof I, keyof Envelope>]: never; }>(base?: I | undefined): Envelope;
     fromPartial<I_1 extends {
@@ -2021,7 +2031,9 @@ export declare const Envelope: {
             channel_id?: string | undefined;
             message_id?: string | undefined;
             mode?: number | undefined;
+            user_id?: string | undefined;
             timestamp?: string | undefined;
+            operation?: number | undefined;
         } | undefined;
     } & {
         cid?: string | undefined;
@@ -2864,12 +2876,16 @@ export declare const Envelope: {
             channel_id?: string | undefined;
             message_id?: string | undefined;
             mode?: number | undefined;
+            user_id?: string | undefined;
             timestamp?: string | undefined;
+            operation?: number | undefined;
         } & {
             channel_id?: string | undefined;
             message_id?: string | undefined;
             mode?: number | undefined;
+            user_id?: string | undefined;
             timestamp?: string | undefined;
+            operation?: number | undefined;
         } & { [K_130 in Exclude<keyof I_1["last_pin_message_event"], keyof LastPinMessageEvent>]: never; }) | undefined;
     } & { [K_131 in Exclude<keyof I_1, keyof Envelope>]: never; }>(object: I_1): Envelope;
 };
@@ -4096,23 +4112,31 @@ export declare const LastPinMessageEvent: {
         channel_id?: string | undefined;
         message_id?: string | undefined;
         mode?: number | undefined;
+        user_id?: string | undefined;
         timestamp?: string | undefined;
+        operation?: number | undefined;
     } & {
         channel_id?: string | undefined;
         message_id?: string | undefined;
         mode?: number | undefined;
+        user_id?: string | undefined;
         timestamp?: string | undefined;
+        operation?: number | undefined;
     } & { [K in Exclude<keyof I, keyof LastPinMessageEvent>]: never; }>(base?: I | undefined): LastPinMessageEvent;
     fromPartial<I_1 extends {
         channel_id?: string | undefined;
         message_id?: string | undefined;
         mode?: number | undefined;
+        user_id?: string | undefined;
         timestamp?: string | undefined;
+        operation?: number | undefined;
     } & {
         channel_id?: string | undefined;
         message_id?: string | undefined;
         mode?: number | undefined;
+        user_id?: string | undefined;
         timestamp?: string | undefined;
+        operation?: number | undefined;
     } & { [K_1 in Exclude<keyof I_1, keyof LastPinMessageEvent>]: never; }>(object: I_1): LastPinMessageEvent;
 };
 export declare const LastSeenMessageEvent: {
