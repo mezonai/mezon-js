@@ -190,6 +190,8 @@ export interface ChannelJoin {
 
 /** Leave a realtime channel. */
 export interface ChannelLeave {
+  /** The clan id */
+  clan_id: string;
   /** The ID of the channel to leave. */
   channel_id: string;
   /** mode */
@@ -290,6 +292,8 @@ export interface ChannelMessageSend {
 
 /** Update a message previously sent to a realtime channel. */
 export interface ChannelMessageUpdate {
+  /** The clan that channel belong to. */
+  clan_id: string;
   /** The channel the message was sent to. */
   channel_id: string;
   /** The ID assigned to the message to update. */
@@ -302,6 +306,8 @@ export interface ChannelMessageUpdate {
 
 /** Remove a message previously sent to a realtime channel. */
 export interface ChannelMessageRemove {
+  /** The clan that channel belong to. */
+  clan_id: string;
   /** The channel the message was sent to. */
   channel_id: string;
   /** The ID assigned to the message to update. */
@@ -457,6 +463,8 @@ export interface StatusPresenceEvent {
 
 /** Last pin message by user */
 export interface LastPinMessageEvent {
+  /** The clan id */
+  clan_id: string;
   /** The unique ID of this channel. */
   channel_id: string;
   /** The unique ID of this message. */
@@ -485,6 +493,8 @@ export interface LastSeenMessageEvent {
 
 /** Message typing event data */
 export interface MessageTypingEvent {
+  /** The clan id */
+  clan_id: string;
   /** The channel this message belongs to. */
   channel_id: string;
   /** Message sender, usually a user ID. */
@@ -513,6 +523,8 @@ export interface MessageMentionEvent {
 export interface MessageReactionEvent {
   /** reaction id */
   id: string;
+  /** the clan id */
+  clan_id: string;
   /** The channel this message belongs to. */
   channel_id: string;
   /** React to message */
@@ -1524,16 +1536,19 @@ export const ChannelJoin = {
 };
 
 function createBaseChannelLeave(): ChannelLeave {
-  return { channel_id: "", mode: 0 };
+  return { clan_id: "", channel_id: "", mode: 0 };
 }
 
 export const ChannelLeave = {
   encode(message: ChannelLeave, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.clan_id !== "") {
+      writer.uint32(10).string(message.clan_id);
+    }
     if (message.channel_id !== "") {
-      writer.uint32(10).string(message.channel_id);
+      writer.uint32(18).string(message.channel_id);
     }
     if (message.mode !== 0) {
-      writer.uint32(16).int32(message.mode);
+      writer.uint32(24).int32(message.mode);
     }
     return writer;
   },
@@ -1546,9 +1561,12 @@ export const ChannelLeave = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          message.channel_id = reader.string();
+          message.clan_id = reader.string();
           break;
         case 2:
+          message.channel_id = reader.string();
+          break;
+        case 3:
           message.mode = reader.int32();
           break;
         default:
@@ -1561,6 +1579,7 @@ export const ChannelLeave = {
 
   fromJSON(object: any): ChannelLeave {
     return {
+      clan_id: isSet(object.clan_id) ? String(object.clan_id) : "",
       channel_id: isSet(object.channel_id) ? String(object.channel_id) : "",
       mode: isSet(object.mode) ? Number(object.mode) : 0,
     };
@@ -1568,6 +1587,7 @@ export const ChannelLeave = {
 
   toJSON(message: ChannelLeave): unknown {
     const obj: any = {};
+    message.clan_id !== undefined && (obj.clan_id = message.clan_id);
     message.channel_id !== undefined && (obj.channel_id = message.channel_id);
     message.mode !== undefined && (obj.mode = Math.round(message.mode));
     return obj;
@@ -1579,6 +1599,7 @@ export const ChannelLeave = {
 
   fromPartial<I extends Exact<DeepPartial<ChannelLeave>, I>>(object: I): ChannelLeave {
     const message = createBaseChannelLeave();
+    message.clan_id = object.clan_id ?? "";
     message.channel_id = object.channel_id ?? "";
     message.mode = object.mode ?? 0;
     return message;
@@ -2128,22 +2149,25 @@ export const ChannelMessageSend = {
 };
 
 function createBaseChannelMessageUpdate(): ChannelMessageUpdate {
-  return { channel_id: "", message_id: "", content: "", mode: 0 };
+  return { clan_id: "", channel_id: "", message_id: "", content: "", mode: 0 };
 }
 
 export const ChannelMessageUpdate = {
   encode(message: ChannelMessageUpdate, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.clan_id !== "") {
+      writer.uint32(10).string(message.clan_id);
+    }
     if (message.channel_id !== "") {
-      writer.uint32(10).string(message.channel_id);
+      writer.uint32(18).string(message.channel_id);
     }
     if (message.message_id !== "") {
-      writer.uint32(18).string(message.message_id);
+      writer.uint32(26).string(message.message_id);
     }
     if (message.content !== "") {
-      writer.uint32(26).string(message.content);
+      writer.uint32(34).string(message.content);
     }
     if (message.mode !== 0) {
-      writer.uint32(32).int32(message.mode);
+      writer.uint32(40).int32(message.mode);
     }
     return writer;
   },
@@ -2156,15 +2180,18 @@ export const ChannelMessageUpdate = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          message.channel_id = reader.string();
+          message.clan_id = reader.string();
           break;
         case 2:
-          message.message_id = reader.string();
+          message.channel_id = reader.string();
           break;
         case 3:
-          message.content = reader.string();
+          message.message_id = reader.string();
           break;
         case 4:
+          message.content = reader.string();
+          break;
+        case 5:
           message.mode = reader.int32();
           break;
         default:
@@ -2177,6 +2204,7 @@ export const ChannelMessageUpdate = {
 
   fromJSON(object: any): ChannelMessageUpdate {
     return {
+      clan_id: isSet(object.clan_id) ? String(object.clan_id) : "",
       channel_id: isSet(object.channel_id) ? String(object.channel_id) : "",
       message_id: isSet(object.message_id) ? String(object.message_id) : "",
       content: isSet(object.content) ? String(object.content) : "",
@@ -2186,6 +2214,7 @@ export const ChannelMessageUpdate = {
 
   toJSON(message: ChannelMessageUpdate): unknown {
     const obj: any = {};
+    message.clan_id !== undefined && (obj.clan_id = message.clan_id);
     message.channel_id !== undefined && (obj.channel_id = message.channel_id);
     message.message_id !== undefined && (obj.message_id = message.message_id);
     message.content !== undefined && (obj.content = message.content);
@@ -2199,6 +2228,7 @@ export const ChannelMessageUpdate = {
 
   fromPartial<I extends Exact<DeepPartial<ChannelMessageUpdate>, I>>(object: I): ChannelMessageUpdate {
     const message = createBaseChannelMessageUpdate();
+    message.clan_id = object.clan_id ?? "";
     message.channel_id = object.channel_id ?? "";
     message.message_id = object.message_id ?? "";
     message.content = object.content ?? "";
@@ -2208,19 +2238,22 @@ export const ChannelMessageUpdate = {
 };
 
 function createBaseChannelMessageRemove(): ChannelMessageRemove {
-  return { channel_id: "", message_id: "", mode: 0 };
+  return { clan_id: "", channel_id: "", message_id: "", mode: 0 };
 }
 
 export const ChannelMessageRemove = {
   encode(message: ChannelMessageRemove, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.clan_id !== "") {
+      writer.uint32(10).string(message.clan_id);
+    }
     if (message.channel_id !== "") {
-      writer.uint32(10).string(message.channel_id);
+      writer.uint32(18).string(message.channel_id);
     }
     if (message.message_id !== "") {
-      writer.uint32(18).string(message.message_id);
+      writer.uint32(26).string(message.message_id);
     }
     if (message.mode !== 0) {
-      writer.uint32(24).int32(message.mode);
+      writer.uint32(32).int32(message.mode);
     }
     return writer;
   },
@@ -2233,12 +2266,15 @@ export const ChannelMessageRemove = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          message.channel_id = reader.string();
+          message.clan_id = reader.string();
           break;
         case 2:
-          message.message_id = reader.string();
+          message.channel_id = reader.string();
           break;
         case 3:
+          message.message_id = reader.string();
+          break;
+        case 4:
           message.mode = reader.int32();
           break;
         default:
@@ -2251,6 +2287,7 @@ export const ChannelMessageRemove = {
 
   fromJSON(object: any): ChannelMessageRemove {
     return {
+      clan_id: isSet(object.clan_id) ? String(object.clan_id) : "",
       channel_id: isSet(object.channel_id) ? String(object.channel_id) : "",
       message_id: isSet(object.message_id) ? String(object.message_id) : "",
       mode: isSet(object.mode) ? Number(object.mode) : 0,
@@ -2259,6 +2296,7 @@ export const ChannelMessageRemove = {
 
   toJSON(message: ChannelMessageRemove): unknown {
     const obj: any = {};
+    message.clan_id !== undefined && (obj.clan_id = message.clan_id);
     message.channel_id !== undefined && (obj.channel_id = message.channel_id);
     message.message_id !== undefined && (obj.message_id = message.message_id);
     message.mode !== undefined && (obj.mode = Math.round(message.mode));
@@ -2271,6 +2309,7 @@ export const ChannelMessageRemove = {
 
   fromPartial<I extends Exact<DeepPartial<ChannelMessageRemove>, I>>(object: I): ChannelMessageRemove {
     const message = createBaseChannelMessageRemove();
+    message.clan_id = object.clan_id ?? "";
     message.channel_id = object.channel_id ?? "";
     message.message_id = object.message_id ?? "";
     message.mode = object.mode ?? 0;
@@ -2875,28 +2914,31 @@ export const StatusPresenceEvent = {
 };
 
 function createBaseLastPinMessageEvent(): LastPinMessageEvent {
-  return { channel_id: "", message_id: "", mode: 0, user_id: "", timestamp: "", operation: 0 };
+  return { clan_id: "", channel_id: "", message_id: "", mode: 0, user_id: "", timestamp: "", operation: 0 };
 }
 
 export const LastPinMessageEvent = {
   encode(message: LastPinMessageEvent, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.clan_id !== "") {
+      writer.uint32(10).string(message.clan_id);
+    }
     if (message.channel_id !== "") {
-      writer.uint32(10).string(message.channel_id);
+      writer.uint32(18).string(message.channel_id);
     }
     if (message.message_id !== "") {
-      writer.uint32(18).string(message.message_id);
+      writer.uint32(26).string(message.message_id);
     }
     if (message.mode !== 0) {
-      writer.uint32(24).int32(message.mode);
+      writer.uint32(32).int32(message.mode);
     }
     if (message.user_id !== "") {
-      writer.uint32(34).string(message.user_id);
+      writer.uint32(42).string(message.user_id);
     }
     if (message.timestamp !== "") {
-      writer.uint32(42).string(message.timestamp);
+      writer.uint32(50).string(message.timestamp);
     }
     if (message.operation !== 0) {
-      writer.uint32(48).int32(message.operation);
+      writer.uint32(56).int32(message.operation);
     }
     return writer;
   },
@@ -2909,21 +2951,24 @@ export const LastPinMessageEvent = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          message.channel_id = reader.string();
+          message.clan_id = reader.string();
           break;
         case 2:
-          message.message_id = reader.string();
+          message.channel_id = reader.string();
           break;
         case 3:
-          message.mode = reader.int32();
+          message.message_id = reader.string();
           break;
         case 4:
-          message.user_id = reader.string();
+          message.mode = reader.int32();
           break;
         case 5:
-          message.timestamp = reader.string();
+          message.user_id = reader.string();
           break;
         case 6:
+          message.timestamp = reader.string();
+          break;
+        case 7:
           message.operation = reader.int32();
           break;
         default:
@@ -2936,6 +2981,7 @@ export const LastPinMessageEvent = {
 
   fromJSON(object: any): LastPinMessageEvent {
     return {
+      clan_id: isSet(object.clan_id) ? String(object.clan_id) : "",
       channel_id: isSet(object.channel_id) ? String(object.channel_id) : "",
       message_id: isSet(object.message_id) ? String(object.message_id) : "",
       mode: isSet(object.mode) ? Number(object.mode) : 0,
@@ -2947,6 +2993,7 @@ export const LastPinMessageEvent = {
 
   toJSON(message: LastPinMessageEvent): unknown {
     const obj: any = {};
+    message.clan_id !== undefined && (obj.clan_id = message.clan_id);
     message.channel_id !== undefined && (obj.channel_id = message.channel_id);
     message.message_id !== undefined && (obj.message_id = message.message_id);
     message.mode !== undefined && (obj.mode = Math.round(message.mode));
@@ -2962,6 +3009,7 @@ export const LastPinMessageEvent = {
 
   fromPartial<I extends Exact<DeepPartial<LastPinMessageEvent>, I>>(object: I): LastPinMessageEvent {
     const message = createBaseLastPinMessageEvent();
+    message.clan_id = object.clan_id ?? "";
     message.channel_id = object.channel_id ?? "";
     message.message_id = object.message_id ?? "";
     message.mode = object.mode ?? 0;
@@ -3053,19 +3101,22 @@ export const LastSeenMessageEvent = {
 };
 
 function createBaseMessageTypingEvent(): MessageTypingEvent {
-  return { channel_id: "", sender_id: "", mode: 0 };
+  return { clan_id: "", channel_id: "", sender_id: "", mode: 0 };
 }
 
 export const MessageTypingEvent = {
   encode(message: MessageTypingEvent, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.clan_id !== "") {
+      writer.uint32(10).string(message.clan_id);
+    }
     if (message.channel_id !== "") {
-      writer.uint32(10).string(message.channel_id);
+      writer.uint32(18).string(message.channel_id);
     }
     if (message.sender_id !== "") {
-      writer.uint32(18).string(message.sender_id);
+      writer.uint32(26).string(message.sender_id);
     }
     if (message.mode !== 0) {
-      writer.uint32(24).int32(message.mode);
+      writer.uint32(32).int32(message.mode);
     }
     return writer;
   },
@@ -3078,12 +3129,15 @@ export const MessageTypingEvent = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          message.channel_id = reader.string();
+          message.clan_id = reader.string();
           break;
         case 2:
-          message.sender_id = reader.string();
+          message.channel_id = reader.string();
           break;
         case 3:
+          message.sender_id = reader.string();
+          break;
+        case 4:
           message.mode = reader.int32();
           break;
         default:
@@ -3096,6 +3150,7 @@ export const MessageTypingEvent = {
 
   fromJSON(object: any): MessageTypingEvent {
     return {
+      clan_id: isSet(object.clan_id) ? String(object.clan_id) : "",
       channel_id: isSet(object.channel_id) ? String(object.channel_id) : "",
       sender_id: isSet(object.sender_id) ? String(object.sender_id) : "",
       mode: isSet(object.mode) ? Number(object.mode) : 0,
@@ -3104,6 +3159,7 @@ export const MessageTypingEvent = {
 
   toJSON(message: MessageTypingEvent): unknown {
     const obj: any = {};
+    message.clan_id !== undefined && (obj.clan_id = message.clan_id);
     message.channel_id !== undefined && (obj.channel_id = message.channel_id);
     message.sender_id !== undefined && (obj.sender_id = message.sender_id);
     message.mode !== undefined && (obj.mode = Math.round(message.mode));
@@ -3116,6 +3172,7 @@ export const MessageTypingEvent = {
 
   fromPartial<I extends Exact<DeepPartial<MessageTypingEvent>, I>>(object: I): MessageTypingEvent {
     const message = createBaseMessageTypingEvent();
+    message.clan_id = object.clan_id ?? "";
     message.channel_id = object.channel_id ?? "";
     message.sender_id = object.sender_id ?? "";
     message.mode = object.mode ?? 0;
@@ -3224,6 +3281,7 @@ export const MessageMentionEvent = {
 function createBaseMessageReactionEvent(): MessageReactionEvent {
   return {
     id: "",
+    clan_id: "",
     channel_id: "",
     message_id: "",
     sender_id: "",
@@ -3242,35 +3300,38 @@ export const MessageReactionEvent = {
     if (message.id !== "") {
       writer.uint32(10).string(message.id);
     }
+    if (message.clan_id !== "") {
+      writer.uint32(18).string(message.clan_id);
+    }
     if (message.channel_id !== "") {
-      writer.uint32(18).string(message.channel_id);
+      writer.uint32(26).string(message.channel_id);
     }
     if (message.message_id !== "") {
-      writer.uint32(26).string(message.message_id);
+      writer.uint32(34).string(message.message_id);
     }
     if (message.sender_id !== "") {
-      writer.uint32(34).string(message.sender_id);
+      writer.uint32(42).string(message.sender_id);
     }
     if (message.sender_name !== "") {
-      writer.uint32(42).string(message.sender_name);
+      writer.uint32(50).string(message.sender_name);
     }
     if (message.sender_avatar !== "") {
-      writer.uint32(50).string(message.sender_avatar);
+      writer.uint32(58).string(message.sender_avatar);
     }
     if (message.emoji !== "") {
-      writer.uint32(58).string(message.emoji);
+      writer.uint32(66).string(message.emoji);
     }
     if (message.action === true) {
-      writer.uint32(64).bool(message.action);
+      writer.uint32(72).bool(message.action);
     }
     if (message.message_sender_id !== "") {
-      writer.uint32(74).string(message.message_sender_id);
+      writer.uint32(82).string(message.message_sender_id);
     }
     if (message.count !== 0) {
-      writer.uint32(80).int32(message.count);
+      writer.uint32(88).int32(message.count);
     }
     if (message.mode !== 0) {
-      writer.uint32(88).int32(message.mode);
+      writer.uint32(96).int32(message.mode);
     }
     return writer;
   },
@@ -3286,33 +3347,36 @@ export const MessageReactionEvent = {
           message.id = reader.string();
           break;
         case 2:
-          message.channel_id = reader.string();
+          message.clan_id = reader.string();
           break;
         case 3:
-          message.message_id = reader.string();
+          message.channel_id = reader.string();
           break;
         case 4:
-          message.sender_id = reader.string();
+          message.message_id = reader.string();
           break;
         case 5:
-          message.sender_name = reader.string();
+          message.sender_id = reader.string();
           break;
         case 6:
-          message.sender_avatar = reader.string();
+          message.sender_name = reader.string();
           break;
         case 7:
-          message.emoji = reader.string();
+          message.sender_avatar = reader.string();
           break;
         case 8:
-          message.action = reader.bool();
+          message.emoji = reader.string();
           break;
         case 9:
-          message.message_sender_id = reader.string();
+          message.action = reader.bool();
           break;
         case 10:
-          message.count = reader.int32();
+          message.message_sender_id = reader.string();
           break;
         case 11:
+          message.count = reader.int32();
+          break;
+        case 12:
           message.mode = reader.int32();
           break;
         default:
@@ -3326,6 +3390,7 @@ export const MessageReactionEvent = {
   fromJSON(object: any): MessageReactionEvent {
     return {
       id: isSet(object.id) ? String(object.id) : "",
+      clan_id: isSet(object.clan_id) ? String(object.clan_id) : "",
       channel_id: isSet(object.channel_id) ? String(object.channel_id) : "",
       message_id: isSet(object.message_id) ? String(object.message_id) : "",
       sender_id: isSet(object.sender_id) ? String(object.sender_id) : "",
@@ -3342,6 +3407,7 @@ export const MessageReactionEvent = {
   toJSON(message: MessageReactionEvent): unknown {
     const obj: any = {};
     message.id !== undefined && (obj.id = message.id);
+    message.clan_id !== undefined && (obj.clan_id = message.clan_id);
     message.channel_id !== undefined && (obj.channel_id = message.channel_id);
     message.message_id !== undefined && (obj.message_id = message.message_id);
     message.sender_id !== undefined && (obj.sender_id = message.sender_id);
@@ -3362,6 +3428,7 @@ export const MessageReactionEvent = {
   fromPartial<I extends Exact<DeepPartial<MessageReactionEvent>, I>>(object: I): MessageReactionEvent {
     const message = createBaseMessageReactionEvent();
     message.id = object.id ?? "";
+    message.clan_id = object.clan_id ?? "";
     message.channel_id = object.channel_id ?? "";
     message.message_id = object.message_id ?? "";
     message.sender_id = object.sender_id ?? "";

@@ -109,6 +109,8 @@ export interface ChannelJoin {
 }
 /** Leave a realtime channel. */
 export interface ChannelLeave {
+    /** The clan id */
+    clan_id: string;
     /** The ID of the channel to leave. */
     channel_id: string;
     /** mode */
@@ -195,6 +197,8 @@ export interface ChannelMessageSend {
 }
 /** Update a message previously sent to a realtime channel. */
 export interface ChannelMessageUpdate {
+    /** The clan that channel belong to. */
+    clan_id: string;
     /** The channel the message was sent to. */
     channel_id: string;
     /** The ID assigned to the message to update. */
@@ -206,6 +210,8 @@ export interface ChannelMessageUpdate {
 }
 /** Remove a message previously sent to a realtime channel. */
 export interface ChannelMessageRemove {
+    /** The clan that channel belong to. */
+    clan_id: string;
     /** The channel the message was sent to. */
     channel_id: string;
     /** The ID assigned to the message to update. */
@@ -297,6 +303,8 @@ export interface StatusPresenceEvent {
 }
 /** Last pin message by user */
 export interface LastPinMessageEvent {
+    /** The clan id */
+    clan_id: string;
     /** The unique ID of this channel. */
     channel_id: string;
     /** The unique ID of this message. */
@@ -323,6 +331,8 @@ export interface LastSeenMessageEvent {
 }
 /** Message typing event data */
 export interface MessageTypingEvent {
+    /** The clan id */
+    clan_id: string;
     /** The channel this message belongs to. */
     channel_id: string;
     /** Message sender, usually a user ID. */
@@ -349,6 +359,8 @@ export interface MessageMentionEvent {
 export interface MessageReactionEvent {
     /** reaction id */
     id: string;
+    /** the clan id */
+    clan_id: string;
     /** The channel this message belongs to. */
     channel_id: string;
     /** React to message */
@@ -584,6 +596,7 @@ export declare const Envelope: {
             mode?: number | undefined;
         } | undefined;
         channel_leave?: {
+            clan_id?: string | undefined;
             channel_id?: string | undefined;
             mode?: number | undefined;
         } | undefined;
@@ -647,12 +660,14 @@ export declare const Envelope: {
             mention_everyone?: boolean | undefined;
         } | undefined;
         channel_message_update?: {
+            clan_id?: string | undefined;
             channel_id?: string | undefined;
             message_id?: string | undefined;
             content?: string | undefined;
             mode?: number | undefined;
         } | undefined;
         channel_message_remove?: {
+            clan_id?: string | undefined;
             channel_id?: string | undefined;
             message_id?: string | undefined;
             mode?: number | undefined;
@@ -781,6 +796,7 @@ export declare const Envelope: {
         ping?: {} | undefined;
         pong?: {} | undefined;
         message_typing_event?: {
+            clan_id?: string | undefined;
             channel_id?: string | undefined;
             sender_id?: string | undefined;
             mode?: number | undefined;
@@ -793,6 +809,7 @@ export declare const Envelope: {
         } | undefined;
         message_reaction_event?: {
             id?: string | undefined;
+            clan_id?: string | undefined;
             channel_id?: string | undefined;
             message_id?: string | undefined;
             sender_id?: string | undefined;
@@ -859,6 +876,7 @@ export declare const Envelope: {
             status?: number | undefined;
         } | undefined;
         last_pin_message_event?: {
+            clan_id?: string | undefined;
             channel_id?: string | undefined;
             message_id?: string | undefined;
             mode?: number | undefined;
@@ -952,9 +970,11 @@ export declare const Envelope: {
             mode?: number | undefined;
         } & { [K_5 in Exclude<keyof I["channel_join"], keyof ChannelJoin>]: never; }) | undefined;
         channel_leave?: ({
+            clan_id?: string | undefined;
             channel_id?: string | undefined;
             mode?: number | undefined;
         } & {
+            clan_id?: string | undefined;
             channel_id?: string | undefined;
             mode?: number | undefined;
         } & { [K_6 in Exclude<keyof I["channel_leave"], keyof ChannelLeave>]: never; }) | undefined;
@@ -1125,21 +1145,25 @@ export declare const Envelope: {
             mention_everyone?: boolean | undefined;
         } & { [K_15 in Exclude<keyof I["channel_message_send"], keyof ChannelMessageSend>]: never; }) | undefined;
         channel_message_update?: ({
+            clan_id?: string | undefined;
             channel_id?: string | undefined;
             message_id?: string | undefined;
             content?: string | undefined;
             mode?: number | undefined;
         } & {
+            clan_id?: string | undefined;
             channel_id?: string | undefined;
             message_id?: string | undefined;
             content?: string | undefined;
             mode?: number | undefined;
         } & { [K_16 in Exclude<keyof I["channel_message_update"], keyof ChannelMessageUpdate>]: never; }) | undefined;
         channel_message_remove?: ({
+            clan_id?: string | undefined;
             channel_id?: string | undefined;
             message_id?: string | undefined;
             mode?: number | undefined;
         } & {
+            clan_id?: string | undefined;
             channel_id?: string | undefined;
             message_id?: string | undefined;
             mode?: number | undefined;
@@ -1558,10 +1582,12 @@ export declare const Envelope: {
         ping?: ({} & {} & { [K_52 in Exclude<keyof I["ping"], never>]: never; }) | undefined;
         pong?: ({} & {} & { [K_53 in Exclude<keyof I["pong"], never>]: never; }) | undefined;
         message_typing_event?: ({
+            clan_id?: string | undefined;
             channel_id?: string | undefined;
             sender_id?: string | undefined;
             mode?: number | undefined;
         } & {
+            clan_id?: string | undefined;
             channel_id?: string | undefined;
             sender_id?: string | undefined;
             mode?: number | undefined;
@@ -1579,6 +1605,7 @@ export declare const Envelope: {
         } & { [K_55 in Exclude<keyof I["last_seen_message_event"], keyof LastSeenMessageEvent>]: never; }) | undefined;
         message_reaction_event?: ({
             id?: string | undefined;
+            clan_id?: string | undefined;
             channel_id?: string | undefined;
             message_id?: string | undefined;
             sender_id?: string | undefined;
@@ -1591,6 +1618,7 @@ export declare const Envelope: {
             mode?: number | undefined;
         } & {
             id?: string | undefined;
+            clan_id?: string | undefined;
             channel_id?: string | undefined;
             message_id?: string | undefined;
             sender_id?: string | undefined;
@@ -1704,6 +1732,7 @@ export declare const Envelope: {
             status?: number | undefined;
         } & { [K_63 in Exclude<keyof I["channel_updated_event"], keyof ChannelUpdatedEvent>]: never; }) | undefined;
         last_pin_message_event?: ({
+            clan_id?: string | undefined;
             channel_id?: string | undefined;
             message_id?: string | undefined;
             mode?: number | undefined;
@@ -1711,6 +1740,7 @@ export declare const Envelope: {
             timestamp?: string | undefined;
             operation?: number | undefined;
         } & {
+            clan_id?: string | undefined;
             channel_id?: string | undefined;
             message_id?: string | undefined;
             mode?: number | undefined;
@@ -1753,6 +1783,7 @@ export declare const Envelope: {
             mode?: number | undefined;
         } | undefined;
         channel_leave?: {
+            clan_id?: string | undefined;
             channel_id?: string | undefined;
             mode?: number | undefined;
         } | undefined;
@@ -1816,12 +1847,14 @@ export declare const Envelope: {
             mention_everyone?: boolean | undefined;
         } | undefined;
         channel_message_update?: {
+            clan_id?: string | undefined;
             channel_id?: string | undefined;
             message_id?: string | undefined;
             content?: string | undefined;
             mode?: number | undefined;
         } | undefined;
         channel_message_remove?: {
+            clan_id?: string | undefined;
             channel_id?: string | undefined;
             message_id?: string | undefined;
             mode?: number | undefined;
@@ -1950,6 +1983,7 @@ export declare const Envelope: {
         ping?: {} | undefined;
         pong?: {} | undefined;
         message_typing_event?: {
+            clan_id?: string | undefined;
             channel_id?: string | undefined;
             sender_id?: string | undefined;
             mode?: number | undefined;
@@ -1962,6 +1996,7 @@ export declare const Envelope: {
         } | undefined;
         message_reaction_event?: {
             id?: string | undefined;
+            clan_id?: string | undefined;
             channel_id?: string | undefined;
             message_id?: string | undefined;
             sender_id?: string | undefined;
@@ -2028,6 +2063,7 @@ export declare const Envelope: {
             status?: number | undefined;
         } | undefined;
         last_pin_message_event?: {
+            clan_id?: string | undefined;
             channel_id?: string | undefined;
             message_id?: string | undefined;
             mode?: number | undefined;
@@ -2121,9 +2157,11 @@ export declare const Envelope: {
             mode?: number | undefined;
         } & { [K_71 in Exclude<keyof I_1["channel_join"], keyof ChannelJoin>]: never; }) | undefined;
         channel_leave?: ({
+            clan_id?: string | undefined;
             channel_id?: string | undefined;
             mode?: number | undefined;
         } & {
+            clan_id?: string | undefined;
             channel_id?: string | undefined;
             mode?: number | undefined;
         } & { [K_72 in Exclude<keyof I_1["channel_leave"], keyof ChannelLeave>]: never; }) | undefined;
@@ -2294,21 +2332,25 @@ export declare const Envelope: {
             mention_everyone?: boolean | undefined;
         } & { [K_81 in Exclude<keyof I_1["channel_message_send"], keyof ChannelMessageSend>]: never; }) | undefined;
         channel_message_update?: ({
+            clan_id?: string | undefined;
             channel_id?: string | undefined;
             message_id?: string | undefined;
             content?: string | undefined;
             mode?: number | undefined;
         } & {
+            clan_id?: string | undefined;
             channel_id?: string | undefined;
             message_id?: string | undefined;
             content?: string | undefined;
             mode?: number | undefined;
         } & { [K_82 in Exclude<keyof I_1["channel_message_update"], keyof ChannelMessageUpdate>]: never; }) | undefined;
         channel_message_remove?: ({
+            clan_id?: string | undefined;
             channel_id?: string | undefined;
             message_id?: string | undefined;
             mode?: number | undefined;
         } & {
+            clan_id?: string | undefined;
             channel_id?: string | undefined;
             message_id?: string | undefined;
             mode?: number | undefined;
@@ -2727,10 +2769,12 @@ export declare const Envelope: {
         ping?: ({} & {} & { [K_118 in Exclude<keyof I_1["ping"], never>]: never; }) | undefined;
         pong?: ({} & {} & { [K_119 in Exclude<keyof I_1["pong"], never>]: never; }) | undefined;
         message_typing_event?: ({
+            clan_id?: string | undefined;
             channel_id?: string | undefined;
             sender_id?: string | undefined;
             mode?: number | undefined;
         } & {
+            clan_id?: string | undefined;
             channel_id?: string | undefined;
             sender_id?: string | undefined;
             mode?: number | undefined;
@@ -2748,6 +2792,7 @@ export declare const Envelope: {
         } & { [K_121 in Exclude<keyof I_1["last_seen_message_event"], keyof LastSeenMessageEvent>]: never; }) | undefined;
         message_reaction_event?: ({
             id?: string | undefined;
+            clan_id?: string | undefined;
             channel_id?: string | undefined;
             message_id?: string | undefined;
             sender_id?: string | undefined;
@@ -2760,6 +2805,7 @@ export declare const Envelope: {
             mode?: number | undefined;
         } & {
             id?: string | undefined;
+            clan_id?: string | undefined;
             channel_id?: string | undefined;
             message_id?: string | undefined;
             sender_id?: string | undefined;
@@ -2873,6 +2919,7 @@ export declare const Envelope: {
             status?: number | undefined;
         } & { [K_129 in Exclude<keyof I_1["channel_updated_event"], keyof ChannelUpdatedEvent>]: never; }) | undefined;
         last_pin_message_event?: ({
+            clan_id?: string | undefined;
             channel_id?: string | undefined;
             message_id?: string | undefined;
             mode?: number | undefined;
@@ -2880,6 +2927,7 @@ export declare const Envelope: {
             timestamp?: string | undefined;
             operation?: number | undefined;
         } & {
+            clan_id?: string | undefined;
             channel_id?: string | undefined;
             message_id?: string | undefined;
             mode?: number | undefined;
@@ -3079,16 +3127,20 @@ export declare const ChannelLeave: {
     fromJSON(object: any): ChannelLeave;
     toJSON(message: ChannelLeave): unknown;
     create<I extends {
+        clan_id?: string | undefined;
         channel_id?: string | undefined;
         mode?: number | undefined;
     } & {
+        clan_id?: string | undefined;
         channel_id?: string | undefined;
         mode?: number | undefined;
     } & { [K in Exclude<keyof I, keyof ChannelLeave>]: never; }>(base?: I | undefined): ChannelLeave;
     fromPartial<I_1 extends {
+        clan_id?: string | undefined;
         channel_id?: string | undefined;
         mode?: number | undefined;
     } & {
+        clan_id?: string | undefined;
         channel_id?: string | undefined;
         mode?: number | undefined;
     } & { [K_1 in Exclude<keyof I_1, keyof ChannelLeave>]: never; }>(object: I_1): ChannelLeave;
@@ -3457,22 +3509,26 @@ export declare const ChannelMessageUpdate: {
     fromJSON(object: any): ChannelMessageUpdate;
     toJSON(message: ChannelMessageUpdate): unknown;
     create<I extends {
+        clan_id?: string | undefined;
         channel_id?: string | undefined;
         message_id?: string | undefined;
         content?: string | undefined;
         mode?: number | undefined;
     } & {
+        clan_id?: string | undefined;
         channel_id?: string | undefined;
         message_id?: string | undefined;
         content?: string | undefined;
         mode?: number | undefined;
     } & { [K in Exclude<keyof I, keyof ChannelMessageUpdate>]: never; }>(base?: I | undefined): ChannelMessageUpdate;
     fromPartial<I_1 extends {
+        clan_id?: string | undefined;
         channel_id?: string | undefined;
         message_id?: string | undefined;
         content?: string | undefined;
         mode?: number | undefined;
     } & {
+        clan_id?: string | undefined;
         channel_id?: string | undefined;
         message_id?: string | undefined;
         content?: string | undefined;
@@ -3485,19 +3541,23 @@ export declare const ChannelMessageRemove: {
     fromJSON(object: any): ChannelMessageRemove;
     toJSON(message: ChannelMessageRemove): unknown;
     create<I extends {
+        clan_id?: string | undefined;
         channel_id?: string | undefined;
         message_id?: string | undefined;
         mode?: number | undefined;
     } & {
+        clan_id?: string | undefined;
         channel_id?: string | undefined;
         message_id?: string | undefined;
         mode?: number | undefined;
     } & { [K in Exclude<keyof I, keyof ChannelMessageRemove>]: never; }>(base?: I | undefined): ChannelMessageRemove;
     fromPartial<I_1 extends {
+        clan_id?: string | undefined;
         channel_id?: string | undefined;
         message_id?: string | undefined;
         mode?: number | undefined;
     } & {
+        clan_id?: string | undefined;
         channel_id?: string | undefined;
         message_id?: string | undefined;
         mode?: number | undefined;
@@ -4109,6 +4169,7 @@ export declare const LastPinMessageEvent: {
     fromJSON(object: any): LastPinMessageEvent;
     toJSON(message: LastPinMessageEvent): unknown;
     create<I extends {
+        clan_id?: string | undefined;
         channel_id?: string | undefined;
         message_id?: string | undefined;
         mode?: number | undefined;
@@ -4116,6 +4177,7 @@ export declare const LastPinMessageEvent: {
         timestamp?: string | undefined;
         operation?: number | undefined;
     } & {
+        clan_id?: string | undefined;
         channel_id?: string | undefined;
         message_id?: string | undefined;
         mode?: number | undefined;
@@ -4124,6 +4186,7 @@ export declare const LastPinMessageEvent: {
         operation?: number | undefined;
     } & { [K in Exclude<keyof I, keyof LastPinMessageEvent>]: never; }>(base?: I | undefined): LastPinMessageEvent;
     fromPartial<I_1 extends {
+        clan_id?: string | undefined;
         channel_id?: string | undefined;
         message_id?: string | undefined;
         mode?: number | undefined;
@@ -4131,6 +4194,7 @@ export declare const LastPinMessageEvent: {
         timestamp?: string | undefined;
         operation?: number | undefined;
     } & {
+        clan_id?: string | undefined;
         channel_id?: string | undefined;
         message_id?: string | undefined;
         mode?: number | undefined;
@@ -4173,19 +4237,23 @@ export declare const MessageTypingEvent: {
     fromJSON(object: any): MessageTypingEvent;
     toJSON(message: MessageTypingEvent): unknown;
     create<I extends {
+        clan_id?: string | undefined;
         channel_id?: string | undefined;
         sender_id?: string | undefined;
         mode?: number | undefined;
     } & {
+        clan_id?: string | undefined;
         channel_id?: string | undefined;
         sender_id?: string | undefined;
         mode?: number | undefined;
     } & { [K in Exclude<keyof I, keyof MessageTypingEvent>]: never; }>(base?: I | undefined): MessageTypingEvent;
     fromPartial<I_1 extends {
+        clan_id?: string | undefined;
         channel_id?: string | undefined;
         sender_id?: string | undefined;
         mode?: number | undefined;
     } & {
+        clan_id?: string | undefined;
         channel_id?: string | undefined;
         sender_id?: string | undefined;
         mode?: number | undefined;
@@ -4234,6 +4302,7 @@ export declare const MessageReactionEvent: {
     toJSON(message: MessageReactionEvent): unknown;
     create<I extends {
         id?: string | undefined;
+        clan_id?: string | undefined;
         channel_id?: string | undefined;
         message_id?: string | undefined;
         sender_id?: string | undefined;
@@ -4246,6 +4315,7 @@ export declare const MessageReactionEvent: {
         mode?: number | undefined;
     } & {
         id?: string | undefined;
+        clan_id?: string | undefined;
         channel_id?: string | undefined;
         message_id?: string | undefined;
         sender_id?: string | undefined;
@@ -4259,6 +4329,7 @@ export declare const MessageReactionEvent: {
     } & { [K in Exclude<keyof I, keyof MessageReactionEvent>]: never; }>(base?: I | undefined): MessageReactionEvent;
     fromPartial<I_1 extends {
         id?: string | undefined;
+        clan_id?: string | undefined;
         channel_id?: string | undefined;
         message_id?: string | undefined;
         sender_id?: string | undefined;
@@ -4271,6 +4342,7 @@ export declare const MessageReactionEvent: {
         mode?: number | undefined;
     } & {
         id?: string | undefined;
+        clan_id?: string | undefined;
         channel_id?: string | undefined;
         message_id?: string | undefined;
         sender_id?: string | undefined;

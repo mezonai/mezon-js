@@ -3602,15 +3602,18 @@ var ChannelJoin = {
   }
 };
 function createBaseChannelLeave() {
-  return { channel_id: "", mode: 0 };
+  return { clan_id: "", channel_id: "", mode: 0 };
 }
 var ChannelLeave = {
   encode(message, writer = import_minimal4.default.Writer.create()) {
+    if (message.clan_id !== "") {
+      writer.uint32(10).string(message.clan_id);
+    }
     if (message.channel_id !== "") {
-      writer.uint32(10).string(message.channel_id);
+      writer.uint32(18).string(message.channel_id);
     }
     if (message.mode !== 0) {
-      writer.uint32(16).int32(message.mode);
+      writer.uint32(24).int32(message.mode);
     }
     return writer;
   },
@@ -3622,9 +3625,12 @@ var ChannelLeave = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          message.channel_id = reader.string();
+          message.clan_id = reader.string();
           break;
         case 2:
+          message.channel_id = reader.string();
+          break;
+        case 3:
           message.mode = reader.int32();
           break;
         default:
@@ -3636,12 +3642,14 @@ var ChannelLeave = {
   },
   fromJSON(object) {
     return {
+      clan_id: isSet4(object.clan_id) ? String(object.clan_id) : "",
       channel_id: isSet4(object.channel_id) ? String(object.channel_id) : "",
       mode: isSet4(object.mode) ? Number(object.mode) : 0
     };
   },
   toJSON(message) {
     const obj = {};
+    message.clan_id !== void 0 && (obj.clan_id = message.clan_id);
     message.channel_id !== void 0 && (obj.channel_id = message.channel_id);
     message.mode !== void 0 && (obj.mode = Math.round(message.mode));
     return obj;
@@ -3650,10 +3658,11 @@ var ChannelLeave = {
     return ChannelLeave.fromPartial(base != null ? base : {});
   },
   fromPartial(object) {
-    var _a, _b;
+    var _a, _b, _c;
     const message = createBaseChannelLeave();
-    message.channel_id = (_a = object.channel_id) != null ? _a : "";
-    message.mode = (_b = object.mode) != null ? _b : 0;
+    message.clan_id = (_a = object.clan_id) != null ? _a : "";
+    message.channel_id = (_b = object.channel_id) != null ? _b : "";
+    message.mode = (_c = object.mode) != null ? _c : 0;
     return message;
   }
 };
@@ -4168,21 +4177,24 @@ var ChannelMessageSend = {
   }
 };
 function createBaseChannelMessageUpdate() {
-  return { channel_id: "", message_id: "", content: "", mode: 0 };
+  return { clan_id: "", channel_id: "", message_id: "", content: "", mode: 0 };
 }
 var ChannelMessageUpdate = {
   encode(message, writer = import_minimal4.default.Writer.create()) {
+    if (message.clan_id !== "") {
+      writer.uint32(10).string(message.clan_id);
+    }
     if (message.channel_id !== "") {
-      writer.uint32(10).string(message.channel_id);
+      writer.uint32(18).string(message.channel_id);
     }
     if (message.message_id !== "") {
-      writer.uint32(18).string(message.message_id);
+      writer.uint32(26).string(message.message_id);
     }
     if (message.content !== "") {
-      writer.uint32(26).string(message.content);
+      writer.uint32(34).string(message.content);
     }
     if (message.mode !== 0) {
-      writer.uint32(32).int32(message.mode);
+      writer.uint32(40).int32(message.mode);
     }
     return writer;
   },
@@ -4194,13 +4206,93 @@ var ChannelMessageUpdate = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          message.channel_id = reader.string();
+          message.clan_id = reader.string();
           break;
         case 2:
-          message.message_id = reader.string();
+          message.channel_id = reader.string();
           break;
         case 3:
+          message.message_id = reader.string();
+          break;
+        case 4:
           message.content = reader.string();
+          break;
+        case 5:
+          message.mode = reader.int32();
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+  fromJSON(object) {
+    return {
+      clan_id: isSet4(object.clan_id) ? String(object.clan_id) : "",
+      channel_id: isSet4(object.channel_id) ? String(object.channel_id) : "",
+      message_id: isSet4(object.message_id) ? String(object.message_id) : "",
+      content: isSet4(object.content) ? String(object.content) : "",
+      mode: isSet4(object.mode) ? Number(object.mode) : 0
+    };
+  },
+  toJSON(message) {
+    const obj = {};
+    message.clan_id !== void 0 && (obj.clan_id = message.clan_id);
+    message.channel_id !== void 0 && (obj.channel_id = message.channel_id);
+    message.message_id !== void 0 && (obj.message_id = message.message_id);
+    message.content !== void 0 && (obj.content = message.content);
+    message.mode !== void 0 && (obj.mode = Math.round(message.mode));
+    return obj;
+  },
+  create(base) {
+    return ChannelMessageUpdate.fromPartial(base != null ? base : {});
+  },
+  fromPartial(object) {
+    var _a, _b, _c, _d, _e;
+    const message = createBaseChannelMessageUpdate();
+    message.clan_id = (_a = object.clan_id) != null ? _a : "";
+    message.channel_id = (_b = object.channel_id) != null ? _b : "";
+    message.message_id = (_c = object.message_id) != null ? _c : "";
+    message.content = (_d = object.content) != null ? _d : "";
+    message.mode = (_e = object.mode) != null ? _e : 0;
+    return message;
+  }
+};
+function createBaseChannelMessageRemove() {
+  return { clan_id: "", channel_id: "", message_id: "", mode: 0 };
+}
+var ChannelMessageRemove = {
+  encode(message, writer = import_minimal4.default.Writer.create()) {
+    if (message.clan_id !== "") {
+      writer.uint32(10).string(message.clan_id);
+    }
+    if (message.channel_id !== "") {
+      writer.uint32(18).string(message.channel_id);
+    }
+    if (message.message_id !== "") {
+      writer.uint32(26).string(message.message_id);
+    }
+    if (message.mode !== 0) {
+      writer.uint32(32).int32(message.mode);
+    }
+    return writer;
+  },
+  decode(input, length) {
+    const reader = input instanceof import_minimal4.default.Reader ? input : new import_minimal4.default.Reader(input);
+    let end = length === void 0 ? reader.len : reader.pos + length;
+    const message = createBaseChannelMessageRemove();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.clan_id = reader.string();
+          break;
+        case 2:
+          message.channel_id = reader.string();
+          break;
+        case 3:
+          message.message_id = reader.string();
           break;
         case 4:
           message.mode = reader.int32();
@@ -4214,74 +4306,7 @@ var ChannelMessageUpdate = {
   },
   fromJSON(object) {
     return {
-      channel_id: isSet4(object.channel_id) ? String(object.channel_id) : "",
-      message_id: isSet4(object.message_id) ? String(object.message_id) : "",
-      content: isSet4(object.content) ? String(object.content) : "",
-      mode: isSet4(object.mode) ? Number(object.mode) : 0
-    };
-  },
-  toJSON(message) {
-    const obj = {};
-    message.channel_id !== void 0 && (obj.channel_id = message.channel_id);
-    message.message_id !== void 0 && (obj.message_id = message.message_id);
-    message.content !== void 0 && (obj.content = message.content);
-    message.mode !== void 0 && (obj.mode = Math.round(message.mode));
-    return obj;
-  },
-  create(base) {
-    return ChannelMessageUpdate.fromPartial(base != null ? base : {});
-  },
-  fromPartial(object) {
-    var _a, _b, _c, _d;
-    const message = createBaseChannelMessageUpdate();
-    message.channel_id = (_a = object.channel_id) != null ? _a : "";
-    message.message_id = (_b = object.message_id) != null ? _b : "";
-    message.content = (_c = object.content) != null ? _c : "";
-    message.mode = (_d = object.mode) != null ? _d : 0;
-    return message;
-  }
-};
-function createBaseChannelMessageRemove() {
-  return { channel_id: "", message_id: "", mode: 0 };
-}
-var ChannelMessageRemove = {
-  encode(message, writer = import_minimal4.default.Writer.create()) {
-    if (message.channel_id !== "") {
-      writer.uint32(10).string(message.channel_id);
-    }
-    if (message.message_id !== "") {
-      writer.uint32(18).string(message.message_id);
-    }
-    if (message.mode !== 0) {
-      writer.uint32(24).int32(message.mode);
-    }
-    return writer;
-  },
-  decode(input, length) {
-    const reader = input instanceof import_minimal4.default.Reader ? input : new import_minimal4.default.Reader(input);
-    let end = length === void 0 ? reader.len : reader.pos + length;
-    const message = createBaseChannelMessageRemove();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
-          message.channel_id = reader.string();
-          break;
-        case 2:
-          message.message_id = reader.string();
-          break;
-        case 3:
-          message.mode = reader.int32();
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
-      }
-    }
-    return message;
-  },
-  fromJSON(object) {
-    return {
+      clan_id: isSet4(object.clan_id) ? String(object.clan_id) : "",
       channel_id: isSet4(object.channel_id) ? String(object.channel_id) : "",
       message_id: isSet4(object.message_id) ? String(object.message_id) : "",
       mode: isSet4(object.mode) ? Number(object.mode) : 0
@@ -4289,6 +4314,7 @@ var ChannelMessageRemove = {
   },
   toJSON(message) {
     const obj = {};
+    message.clan_id !== void 0 && (obj.clan_id = message.clan_id);
     message.channel_id !== void 0 && (obj.channel_id = message.channel_id);
     message.message_id !== void 0 && (obj.message_id = message.message_id);
     message.mode !== void 0 && (obj.mode = Math.round(message.mode));
@@ -4298,11 +4324,12 @@ var ChannelMessageRemove = {
     return ChannelMessageRemove.fromPartial(base != null ? base : {});
   },
   fromPartial(object) {
-    var _a, _b, _c;
+    var _a, _b, _c, _d;
     const message = createBaseChannelMessageRemove();
-    message.channel_id = (_a = object.channel_id) != null ? _a : "";
-    message.message_id = (_b = object.message_id) != null ? _b : "";
-    message.mode = (_c = object.mode) != null ? _c : 0;
+    message.clan_id = (_a = object.clan_id) != null ? _a : "";
+    message.channel_id = (_b = object.channel_id) != null ? _b : "";
+    message.message_id = (_c = object.message_id) != null ? _c : "";
+    message.mode = (_d = object.mode) != null ? _d : 0;
     return message;
   }
 };
@@ -4843,27 +4870,30 @@ var StatusPresenceEvent = {
   }
 };
 function createBaseLastPinMessageEvent() {
-  return { channel_id: "", message_id: "", mode: 0, user_id: "", timestamp: "", operation: 0 };
+  return { clan_id: "", channel_id: "", message_id: "", mode: 0, user_id: "", timestamp: "", operation: 0 };
 }
 var LastPinMessageEvent = {
   encode(message, writer = import_minimal4.default.Writer.create()) {
+    if (message.clan_id !== "") {
+      writer.uint32(10).string(message.clan_id);
+    }
     if (message.channel_id !== "") {
-      writer.uint32(10).string(message.channel_id);
+      writer.uint32(18).string(message.channel_id);
     }
     if (message.message_id !== "") {
-      writer.uint32(18).string(message.message_id);
+      writer.uint32(26).string(message.message_id);
     }
     if (message.mode !== 0) {
-      writer.uint32(24).int32(message.mode);
+      writer.uint32(32).int32(message.mode);
     }
     if (message.user_id !== "") {
-      writer.uint32(34).string(message.user_id);
+      writer.uint32(42).string(message.user_id);
     }
     if (message.timestamp !== "") {
-      writer.uint32(42).string(message.timestamp);
+      writer.uint32(50).string(message.timestamp);
     }
     if (message.operation !== 0) {
-      writer.uint32(48).int32(message.operation);
+      writer.uint32(56).int32(message.operation);
     }
     return writer;
   },
@@ -4875,21 +4905,24 @@ var LastPinMessageEvent = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          message.channel_id = reader.string();
+          message.clan_id = reader.string();
           break;
         case 2:
-          message.message_id = reader.string();
+          message.channel_id = reader.string();
           break;
         case 3:
-          message.mode = reader.int32();
+          message.message_id = reader.string();
           break;
         case 4:
-          message.user_id = reader.string();
+          message.mode = reader.int32();
           break;
         case 5:
-          message.timestamp = reader.string();
+          message.user_id = reader.string();
           break;
         case 6:
+          message.timestamp = reader.string();
+          break;
+        case 7:
           message.operation = reader.int32();
           break;
         default:
@@ -4901,6 +4934,7 @@ var LastPinMessageEvent = {
   },
   fromJSON(object) {
     return {
+      clan_id: isSet4(object.clan_id) ? String(object.clan_id) : "",
       channel_id: isSet4(object.channel_id) ? String(object.channel_id) : "",
       message_id: isSet4(object.message_id) ? String(object.message_id) : "",
       mode: isSet4(object.mode) ? Number(object.mode) : 0,
@@ -4911,6 +4945,7 @@ var LastPinMessageEvent = {
   },
   toJSON(message) {
     const obj = {};
+    message.clan_id !== void 0 && (obj.clan_id = message.clan_id);
     message.channel_id !== void 0 && (obj.channel_id = message.channel_id);
     message.message_id !== void 0 && (obj.message_id = message.message_id);
     message.mode !== void 0 && (obj.mode = Math.round(message.mode));
@@ -4923,14 +4958,15 @@ var LastPinMessageEvent = {
     return LastPinMessageEvent.fromPartial(base != null ? base : {});
   },
   fromPartial(object) {
-    var _a, _b, _c, _d, _e, _f;
+    var _a, _b, _c, _d, _e, _f, _g;
     const message = createBaseLastPinMessageEvent();
-    message.channel_id = (_a = object.channel_id) != null ? _a : "";
-    message.message_id = (_b = object.message_id) != null ? _b : "";
-    message.mode = (_c = object.mode) != null ? _c : 0;
-    message.user_id = (_d = object.user_id) != null ? _d : "";
-    message.timestamp = (_e = object.timestamp) != null ? _e : "";
-    message.operation = (_f = object.operation) != null ? _f : 0;
+    message.clan_id = (_a = object.clan_id) != null ? _a : "";
+    message.channel_id = (_b = object.channel_id) != null ? _b : "";
+    message.message_id = (_c = object.message_id) != null ? _c : "";
+    message.mode = (_d = object.mode) != null ? _d : 0;
+    message.user_id = (_e = object.user_id) != null ? _e : "";
+    message.timestamp = (_f = object.timestamp) != null ? _f : "";
+    message.operation = (_g = object.operation) != null ? _g : 0;
     return message;
   }
 };
@@ -5009,18 +5045,21 @@ var LastSeenMessageEvent = {
   }
 };
 function createBaseMessageTypingEvent() {
-  return { channel_id: "", sender_id: "", mode: 0 };
+  return { clan_id: "", channel_id: "", sender_id: "", mode: 0 };
 }
 var MessageTypingEvent = {
   encode(message, writer = import_minimal4.default.Writer.create()) {
+    if (message.clan_id !== "") {
+      writer.uint32(10).string(message.clan_id);
+    }
     if (message.channel_id !== "") {
-      writer.uint32(10).string(message.channel_id);
+      writer.uint32(18).string(message.channel_id);
     }
     if (message.sender_id !== "") {
-      writer.uint32(18).string(message.sender_id);
+      writer.uint32(26).string(message.sender_id);
     }
     if (message.mode !== 0) {
-      writer.uint32(24).int32(message.mode);
+      writer.uint32(32).int32(message.mode);
     }
     return writer;
   },
@@ -5032,12 +5071,15 @@ var MessageTypingEvent = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          message.channel_id = reader.string();
+          message.clan_id = reader.string();
           break;
         case 2:
-          message.sender_id = reader.string();
+          message.channel_id = reader.string();
           break;
         case 3:
+          message.sender_id = reader.string();
+          break;
+        case 4:
           message.mode = reader.int32();
           break;
         default:
@@ -5049,6 +5091,7 @@ var MessageTypingEvent = {
   },
   fromJSON(object) {
     return {
+      clan_id: isSet4(object.clan_id) ? String(object.clan_id) : "",
       channel_id: isSet4(object.channel_id) ? String(object.channel_id) : "",
       sender_id: isSet4(object.sender_id) ? String(object.sender_id) : "",
       mode: isSet4(object.mode) ? Number(object.mode) : 0
@@ -5056,6 +5099,7 @@ var MessageTypingEvent = {
   },
   toJSON(message) {
     const obj = {};
+    message.clan_id !== void 0 && (obj.clan_id = message.clan_id);
     message.channel_id !== void 0 && (obj.channel_id = message.channel_id);
     message.sender_id !== void 0 && (obj.sender_id = message.sender_id);
     message.mode !== void 0 && (obj.mode = Math.round(message.mode));
@@ -5065,17 +5109,19 @@ var MessageTypingEvent = {
     return MessageTypingEvent.fromPartial(base != null ? base : {});
   },
   fromPartial(object) {
-    var _a, _b, _c;
+    var _a, _b, _c, _d;
     const message = createBaseMessageTypingEvent();
-    message.channel_id = (_a = object.channel_id) != null ? _a : "";
-    message.sender_id = (_b = object.sender_id) != null ? _b : "";
-    message.mode = (_c = object.mode) != null ? _c : 0;
+    message.clan_id = (_a = object.clan_id) != null ? _a : "";
+    message.channel_id = (_b = object.channel_id) != null ? _b : "";
+    message.sender_id = (_c = object.sender_id) != null ? _c : "";
+    message.mode = (_d = object.mode) != null ? _d : 0;
     return message;
   }
 };
 function createBaseMessageReactionEvent() {
   return {
     id: "",
+    clan_id: "",
     channel_id: "",
     message_id: "",
     sender_id: "",
@@ -5093,35 +5139,38 @@ var MessageReactionEvent = {
     if (message.id !== "") {
       writer.uint32(10).string(message.id);
     }
+    if (message.clan_id !== "") {
+      writer.uint32(18).string(message.clan_id);
+    }
     if (message.channel_id !== "") {
-      writer.uint32(18).string(message.channel_id);
+      writer.uint32(26).string(message.channel_id);
     }
     if (message.message_id !== "") {
-      writer.uint32(26).string(message.message_id);
+      writer.uint32(34).string(message.message_id);
     }
     if (message.sender_id !== "") {
-      writer.uint32(34).string(message.sender_id);
+      writer.uint32(42).string(message.sender_id);
     }
     if (message.sender_name !== "") {
-      writer.uint32(42).string(message.sender_name);
+      writer.uint32(50).string(message.sender_name);
     }
     if (message.sender_avatar !== "") {
-      writer.uint32(50).string(message.sender_avatar);
+      writer.uint32(58).string(message.sender_avatar);
     }
     if (message.emoji !== "") {
-      writer.uint32(58).string(message.emoji);
+      writer.uint32(66).string(message.emoji);
     }
     if (message.action === true) {
-      writer.uint32(64).bool(message.action);
+      writer.uint32(72).bool(message.action);
     }
     if (message.message_sender_id !== "") {
-      writer.uint32(74).string(message.message_sender_id);
+      writer.uint32(82).string(message.message_sender_id);
     }
     if (message.count !== 0) {
-      writer.uint32(80).int32(message.count);
+      writer.uint32(88).int32(message.count);
     }
     if (message.mode !== 0) {
-      writer.uint32(88).int32(message.mode);
+      writer.uint32(96).int32(message.mode);
     }
     return writer;
   },
@@ -5136,33 +5185,36 @@ var MessageReactionEvent = {
           message.id = reader.string();
           break;
         case 2:
-          message.channel_id = reader.string();
+          message.clan_id = reader.string();
           break;
         case 3:
-          message.message_id = reader.string();
+          message.channel_id = reader.string();
           break;
         case 4:
-          message.sender_id = reader.string();
+          message.message_id = reader.string();
           break;
         case 5:
-          message.sender_name = reader.string();
+          message.sender_id = reader.string();
           break;
         case 6:
-          message.sender_avatar = reader.string();
+          message.sender_name = reader.string();
           break;
         case 7:
-          message.emoji = reader.string();
+          message.sender_avatar = reader.string();
           break;
         case 8:
-          message.action = reader.bool();
+          message.emoji = reader.string();
           break;
         case 9:
-          message.message_sender_id = reader.string();
+          message.action = reader.bool();
           break;
         case 10:
-          message.count = reader.int32();
+          message.message_sender_id = reader.string();
           break;
         case 11:
+          message.count = reader.int32();
+          break;
+        case 12:
           message.mode = reader.int32();
           break;
         default:
@@ -5175,6 +5227,7 @@ var MessageReactionEvent = {
   fromJSON(object) {
     return {
       id: isSet4(object.id) ? String(object.id) : "",
+      clan_id: isSet4(object.clan_id) ? String(object.clan_id) : "",
       channel_id: isSet4(object.channel_id) ? String(object.channel_id) : "",
       message_id: isSet4(object.message_id) ? String(object.message_id) : "",
       sender_id: isSet4(object.sender_id) ? String(object.sender_id) : "",
@@ -5190,6 +5243,7 @@ var MessageReactionEvent = {
   toJSON(message) {
     const obj = {};
     message.id !== void 0 && (obj.id = message.id);
+    message.clan_id !== void 0 && (obj.clan_id = message.clan_id);
     message.channel_id !== void 0 && (obj.channel_id = message.channel_id);
     message.message_id !== void 0 && (obj.message_id = message.message_id);
     message.sender_id !== void 0 && (obj.sender_id = message.sender_id);
@@ -5206,19 +5260,20 @@ var MessageReactionEvent = {
     return MessageReactionEvent.fromPartial(base != null ? base : {});
   },
   fromPartial(object) {
-    var _a, _b, _c, _d, _e, _f, _g, _h, _i, _j, _k;
+    var _a, _b, _c, _d, _e, _f, _g, _h, _i, _j, _k, _l;
     const message = createBaseMessageReactionEvent();
     message.id = (_a = object.id) != null ? _a : "";
-    message.channel_id = (_b = object.channel_id) != null ? _b : "";
-    message.message_id = (_c = object.message_id) != null ? _c : "";
-    message.sender_id = (_d = object.sender_id) != null ? _d : "";
-    message.sender_name = (_e = object.sender_name) != null ? _e : "";
-    message.sender_avatar = (_f = object.sender_avatar) != null ? _f : "";
-    message.emoji = (_g = object.emoji) != null ? _g : "";
-    message.action = (_h = object.action) != null ? _h : false;
-    message.message_sender_id = (_i = object.message_sender_id) != null ? _i : "";
-    message.count = (_j = object.count) != null ? _j : 0;
-    message.mode = (_k = object.mode) != null ? _k : 0;
+    message.clan_id = (_b = object.clan_id) != null ? _b : "";
+    message.channel_id = (_c = object.channel_id) != null ? _c : "";
+    message.message_id = (_d = object.message_id) != null ? _d : "";
+    message.sender_id = (_e = object.sender_id) != null ? _e : "";
+    message.sender_name = (_f = object.sender_name) != null ? _f : "";
+    message.sender_avatar = (_g = object.sender_avatar) != null ? _g : "";
+    message.emoji = (_h = object.emoji) != null ? _h : "";
+    message.action = (_i = object.action) != null ? _i : false;
+    message.message_sender_id = (_j = object.message_sender_id) != null ? _j : "";
+    message.count = (_k = object.count) != null ? _k : 0;
+    message.mode = (_l = object.mode) != null ? _l : 0;
     return message;
   }
 };
