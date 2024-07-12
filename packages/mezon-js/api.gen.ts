@@ -343,6 +343,8 @@ export interface ApiChannelDescription {
   //creator ID.
   creator_id?: string;
   //
+  last_pin_message?: string;
+  //
   last_seen_message?: ApiChannelMessageHeader;
   //
   last_sent_message?: ApiChannelMessageHeader;

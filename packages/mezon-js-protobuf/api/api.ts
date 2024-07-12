@@ -1847,8 +1847,10 @@ export interface ChannelDescription {
   meeting_code: string;
   /** count message unread */
   count_mess_unread: number;
-  /**  */
+  /** active channel */
   active: number;
+  /** last pin message */
+  last_pin_message: string;
 }
 
 /** direct channel void */
@@ -2477,17 +2479,8 @@ export interface WebhookResponse {
   hook_url: string;
 }
 
-export interface ClanEmoji {
-  /** src url */
-  src: string;
-  /** shortname */
-  shortname: string;
-  /** category */
-  category: string;
-}
-
 export interface ClanEmojiList {
-  emoji_list: ClanEmoji[];
+  emoji_list: ClanEmojiListResponse[];
 }
 
 export interface RegistrationEmailRequest {
@@ -2532,6 +2525,17 @@ export interface ClanEmojiUpdateRequest {
   source: string;
   shortname: string;
   category: string;
+}
+
+export interface ClanEmojiListResponse {
+  id: string;
+  /** src url */
+  src: string;
+  /** shortname */
+  shortname: string;
+  /** category */
+  category: string;
+  creator_id: string;
 }
 
 function createBaseAccount(): Account {
@@ -12731,6 +12735,7 @@ function createBaseChannelDescription(): ChannelDescription {
     meeting_code: "",
     count_mess_unread: 0,
     active: 0,
+    last_pin_message: "",
   };
 }
 
@@ -12786,6 +12791,9 @@ export const ChannelDescription = {
     }
     if (message.active !== 0) {
       writer.uint32(136).int32(message.active);
+    }
+    if (message.last_pin_message !== "") {
+      writer.uint32(146).string(message.last_pin_message);
     }
     return writer;
   },
@@ -12848,6 +12856,9 @@ export const ChannelDescription = {
         case 17:
           message.active = reader.int32();
           break;
+        case 18:
+          message.last_pin_message = reader.string();
+          break;
         default:
           reader.skipType(tag & 7);
           break;
@@ -12879,6 +12890,7 @@ export const ChannelDescription = {
       meeting_code: isSet(object.meeting_code) ? String(object.meeting_code) : "",
       count_mess_unread: isSet(object.count_mess_unread) ? Number(object.count_mess_unread) : 0,
       active: isSet(object.active) ? Number(object.active) : 0,
+      last_pin_message: isSet(object.last_pin_message) ? String(object.last_pin_message) : "",
     };
   },
 
@@ -12913,6 +12925,7 @@ export const ChannelDescription = {
     message.meeting_code !== undefined && (obj.meeting_code = message.meeting_code);
     message.count_mess_unread !== undefined && (obj.count_mess_unread = Math.round(message.count_mess_unread));
     message.active !== undefined && (obj.active = Math.round(message.active));
+    message.last_pin_message !== undefined && (obj.last_pin_message = message.last_pin_message);
     return obj;
   },
 
@@ -12943,6 +12956,7 @@ export const ChannelDescription = {
     message.meeting_code = object.meeting_code ?? "";
     message.count_mess_unread = object.count_mess_unread ?? 0;
     message.active = object.active ?? 0;
+    message.last_pin_message = object.last_pin_message ?? "";
     return message;
   },
 };
@@ -17907,77 +17921,6 @@ export const WebhookResponse = {
   },
 };
 
-function createBaseClanEmoji(): ClanEmoji {
-  return { src: "", shortname: "", category: "" };
-}
-
-export const ClanEmoji = {
-  encode(message: ClanEmoji, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.src !== "") {
-      writer.uint32(10).string(message.src);
-    }
-    if (message.shortname !== "") {
-      writer.uint32(18).string(message.shortname);
-    }
-    if (message.category !== "") {
-      writer.uint32(26).string(message.category);
-    }
-    return writer;
-  },
-
-  decode(input: _m0.Reader | Uint8Array, length?: number): ClanEmoji {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseClanEmoji();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
-          message.src = reader.string();
-          break;
-        case 2:
-          message.shortname = reader.string();
-          break;
-        case 3:
-          message.category = reader.string();
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
-      }
-    }
-    return message;
-  },
-
-  fromJSON(object: any): ClanEmoji {
-    return {
-      src: isSet(object.src) ? String(object.src) : "",
-      shortname: isSet(object.shortname) ? String(object.shortname) : "",
-      category: isSet(object.category) ? String(object.category) : "",
-    };
-  },
-
-  toJSON(message: ClanEmoji): unknown {
-    const obj: any = {};
-    message.src !== undefined && (obj.src = message.src);
-    message.shortname !== undefined && (obj.shortname = message.shortname);
-    message.category !== undefined && (obj.category = message.category);
-    return obj;
-  },
-
-  create<I extends Exact<DeepPartial<ClanEmoji>, I>>(base?: I): ClanEmoji {
-    return ClanEmoji.fromPartial(base ?? {});
-  },
-
-  fromPartial<I extends Exact<DeepPartial<ClanEmoji>, I>>(object: I): ClanEmoji {
-    const message = createBaseClanEmoji();
-    message.src = object.src ?? "";
-    message.shortname = object.shortname ?? "";
-    message.category = object.category ?? "";
-    return message;
-  },
-};
-
 function createBaseClanEmojiList(): ClanEmojiList {
   return { emoji_list: [] };
 }
@@ -17985,7 +17928,7 @@ function createBaseClanEmojiList(): ClanEmojiList {
 export const ClanEmojiList = {
   encode(message: ClanEmojiList, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     for (const v of message.emoji_list) {
-      ClanEmoji.encode(v!, writer.uint32(10).fork()).ldelim();
+      ClanEmojiListResponse.encode(v!, writer.uint32(10).fork()).ldelim();
     }
     return writer;
   },
@@ -17998,7 +17941,7 @@ export const ClanEmojiList = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          message.emoji_list.push(ClanEmoji.decode(reader, reader.uint32()));
+          message.emoji_list.push(ClanEmojiListResponse.decode(reader, reader.uint32()));
           break;
         default:
           reader.skipType(tag & 7);
@@ -18010,14 +17953,16 @@ export const ClanEmojiList = {
 
   fromJSON(object: any): ClanEmojiList {
     return {
-      emoji_list: Array.isArray(object?.emoji_list) ? object.emoji_list.map((e: any) => ClanEmoji.fromJSON(e)) : [],
+      emoji_list: Array.isArray(object?.emoji_list)
+        ? object.emoji_list.map((e: any) => ClanEmojiListResponse.fromJSON(e))
+        : [],
     };
   },
 
   toJSON(message: ClanEmojiList): unknown {
     const obj: any = {};
     if (message.emoji_list) {
-      obj.emoji_list = message.emoji_list.map((e) => e ? ClanEmoji.toJSON(e) : undefined);
+      obj.emoji_list = message.emoji_list.map((e) => e ? ClanEmojiListResponse.toJSON(e) : undefined);
     } else {
       obj.emoji_list = [];
     }
@@ -18030,7 +17975,7 @@ export const ClanEmojiList = {
 
   fromPartial<I extends Exact<DeepPartial<ClanEmojiList>, I>>(object: I): ClanEmojiList {
     const message = createBaseClanEmojiList();
-    message.emoji_list = object.emoji_list?.map((e) => ClanEmoji.fromPartial(e)) || [];
+    message.emoji_list = object.emoji_list?.map((e) => ClanEmojiListResponse.fromPartial(e)) || [];
     return message;
   },
 };
@@ -18481,6 +18426,95 @@ export const ClanEmojiUpdateRequest = {
     message.source = object.source ?? "";
     message.shortname = object.shortname ?? "";
     message.category = object.category ?? "";
+    return message;
+  },
+};
+
+function createBaseClanEmojiListResponse(): ClanEmojiListResponse {
+  return { id: "", src: "", shortname: "", category: "", creator_id: "" };
+}
+
+export const ClanEmojiListResponse = {
+  encode(message: ClanEmojiListResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.id !== "") {
+      writer.uint32(10).string(message.id);
+    }
+    if (message.src !== "") {
+      writer.uint32(18).string(message.src);
+    }
+    if (message.shortname !== "") {
+      writer.uint32(26).string(message.shortname);
+    }
+    if (message.category !== "") {
+      writer.uint32(34).string(message.category);
+    }
+    if (message.creator_id !== "") {
+      writer.uint32(42).string(message.creator_id);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): ClanEmojiListResponse {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseClanEmojiListResponse();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.id = reader.string();
+          break;
+        case 2:
+          message.src = reader.string();
+          break;
+        case 3:
+          message.shortname = reader.string();
+          break;
+        case 4:
+          message.category = reader.string();
+          break;
+        case 5:
+          message.creator_id = reader.string();
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): ClanEmojiListResponse {
+    return {
+      id: isSet(object.id) ? String(object.id) : "",
+      src: isSet(object.src) ? String(object.src) : "",
+      shortname: isSet(object.shortname) ? String(object.shortname) : "",
+      category: isSet(object.category) ? String(object.category) : "",
+      creator_id: isSet(object.creator_id) ? String(object.creator_id) : "",
+    };
+  },
+
+  toJSON(message: ClanEmojiListResponse): unknown {
+    const obj: any = {};
+    message.id !== undefined && (obj.id = message.id);
+    message.src !== undefined && (obj.src = message.src);
+    message.shortname !== undefined && (obj.shortname = message.shortname);
+    message.category !== undefined && (obj.category = message.category);
+    message.creator_id !== undefined && (obj.creator_id = message.creator_id);
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<ClanEmojiListResponse>, I>>(base?: I): ClanEmojiListResponse {
+    return ClanEmojiListResponse.fromPartial(base ?? {});
+  },
+
+  fromPartial<I extends Exact<DeepPartial<ClanEmojiListResponse>, I>>(object: I): ClanEmojiListResponse {
+    const message = createBaseClanEmojiListResponse();
+    message.id = object.id ?? "";
+    message.src = object.src ?? "";
+    message.shortname = object.shortname ?? "";
+    message.category = object.category ?? "";
+    message.creator_id = object.creator_id ?? "";
     return message;
   },
 };

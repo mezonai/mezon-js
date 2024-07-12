@@ -4507,6 +4507,10 @@ var _DefaultSocket = class _DefaultSocket {
           this.onmessagereaction(message.message_reaction_event);
         } else if (message.channel_presence_event) {
           this.onchannelpresence(message.channel_presence_event);
+        } else if (message.last_pin_message_event) {
+          this.onpinmessage(message.last_pin_message_event);
+        } else if (message.custom_status_event) {
+          this.oncustomstatus(message.custom_status_event);
         } else {
           if (this.verbose && window && window.console) {
             console.log("Unrecognized message received: %o", message);
@@ -4599,6 +4603,11 @@ var _DefaultSocket = class _DefaultSocket {
       console.log(statusPresence);
     }
   }
+  onpinmessage(pin) {
+    if (this.verbose && window && window.console) {
+      console.log(pin);
+    }
+  }
   onvoiceended(voice) {
     if (this.verbose && window && window.console) {
       console.log(voice);
@@ -4649,6 +4658,11 @@ var _DefaultSocket = class _DefaultSocket {
       console.log("Heartbeat timeout.");
     }
   }
+  oncustomstatus(statusEvent) {
+    if (this.verbose && window && window.console) {
+      console.log(statusEvent);
+    }
+  }
   send(message, sendTimeout = _DefaultSocket.DefaultSendTimeoutMs) {
     const untypedMessage = message;
     return new Promise((resolve, reject) => {
@@ -4686,11 +4700,12 @@ var _DefaultSocket = class _DefaultSocket {
       return response.clan_join;
     });
   }
-  joinChat(channel_id, mode, type, persistence, hidden) {
+  joinChat(clan_id, channel_id, mode, type, persistence, hidden) {
     return __async(this, null, function* () {
       const response = yield this.send(
         {
           channel_join: {
+            clan_id,
             channel_id,
             mode,
             type,
@@ -4702,14 +4717,15 @@ var _DefaultSocket = class _DefaultSocket {
       return response.channel;
     });
   }
-  leaveChat(channel_id, mode) {
-    return this.send({ channel_leave: { channel_id, mode } });
+  leaveChat(clan_id, channel_id, mode) {
+    return this.send({ channel_leave: { clan_id, channel_id, mode } });
   }
-  removeChatMessage(channel_id, mode, message_id) {
+  removeChatMessage(clan_id, channel_id, mode, message_id) {
     return __async(this, null, function* () {
       const response = yield this.send(
         {
           channel_message_remove: {
+            clan_id,
             channel_id,
             mode,
             message_id
@@ -4747,9 +4763,9 @@ var _DefaultSocket = class _DefaultSocket {
   unfollowUsers(user_ids) {
     return this.send({ status_unfollow: { user_ids } });
   }
-  updateChatMessage(channel_id, mode, message_id, content) {
+  updateChatMessage(clan_id, channel_id, mode, message_id, content) {
     return __async(this, null, function* () {
-      const response = yield this.send({ channel_message_update: { channel_id, message_id, content, mode } });
+      const response = yield this.send({ channel_message_update: { clan_id, channel_id, message_id, content, mode } });
       return response.channel_message_ack;
     });
   }
@@ -4762,22 +4778,28 @@ var _DefaultSocket = class _DefaultSocket {
       return response.channel_message_ack;
     });
   }
-  writeMessageReaction(id, channel_id, mode, message_id, emoji, count, message_sender_id, action_delete) {
+  writeMessageReaction(id, clan_id, channel_id, mode, message_id, emoji, count, message_sender_id, action_delete) {
     return __async(this, null, function* () {
-      const response = yield this.send({ message_reaction_event: { id, channel_id, mode, message_id, emoji, count, message_sender_id, action: action_delete } });
+      const response = yield this.send({ message_reaction_event: { id, clan_id, channel_id, mode, message_id, emoji, count, message_sender_id, action: action_delete } });
       return response.message_reaction_event;
     });
   }
-  writeMessageTyping(channel_id, mode) {
+  writeMessageTyping(clan_id, channel_id, mode) {
     return __async(this, null, function* () {
-      const response = yield this.send({ message_typing_event: { channel_id, mode } });
+      const response = yield this.send({ message_typing_event: { clan_id, channel_id, mode } });
       return response.message_typing_event;
     });
   }
-  writeLastSeenMessage(channel_id, mode, message_id, timestamp) {
+  writeLastSeenMessage(clan_id, channel_id, mode, message_id, timestamp) {
     return __async(this, null, function* () {
-      const response = yield this.send({ last_seen_message_event: { channel_id, mode, message_id, timestamp } });
+      const response = yield this.send({ last_seen_message_event: { clan_id, channel_id, mode, message_id, timestamp } });
       return response.last_seen_message_event;
+    });
+  }
+  writeLastPinMessage(clan_id, channel_id, mode, message_id, timestamp, operation) {
+    return __async(this, null, function* () {
+      const response = yield this.send({ last_pin_message_event: { clan_id, channel_id, mode, message_id, timestamp, operation } });
+      return response.last_pin_message_event;
     });
   }
   writeVoiceJoined(id, clanId, clanName, voiceChannelId, voiceChannelLabel, participant, lastScreenshot) {
@@ -4790,6 +4812,12 @@ var _DefaultSocket = class _DefaultSocket {
     return __async(this, null, function* () {
       const response = yield this.send({ voice_leaved_event: { id, clan_id: clanId, voice_channel_id: voiceChannelId, voice_user_id: voiceUserId } });
       return response.voice_leaved_event;
+    });
+  }
+  writeCustomStatus(clan_id, status) {
+    return __async(this, null, function* () {
+      const response = yield this.send({ custom_status_event: { clan_id, status } });
+      return response.last_pin_message_event;
     });
   }
   pingPong() {
@@ -6436,6 +6464,28 @@ var Client = class {
         yield this.sessionRefresh(session);
       }
       return this.apiClient.createClanEmoji(session.token, request).then((response) => {
+        return response !== void 0;
+      });
+    });
+  }
+  //**update clan emoji by id */
+  updateClanEmojiById(session, id, request) {
+    return __async(this, null, function* () {
+      if (this.autoRefreshSession && session.refresh_token && session.isexpired((Date.now() + this.expiredTimespanMs) / 1e3)) {
+        yield this.sessionRefresh(session);
+      }
+      return this.apiClient.updateClanEmojiById(session.token, id, request).then((response) => {
+        return response !== void 0;
+      });
+    });
+  }
+  //**delete clan emoji by id */
+  deleteByIdClanEmoji(session, id) {
+    return __async(this, null, function* () {
+      if (this.autoRefreshSession && session.refresh_token && session.isexpired((Date.now() + this.expiredTimespanMs) / 1e3)) {
+        yield this.sessionRefresh(session);
+      }
+      return this.apiClient.deleteByIdClanEmoji(session.token, id).then((response) => {
         return response !== void 0;
       });
     });

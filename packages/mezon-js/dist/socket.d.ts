@@ -72,6 +72,19 @@ interface ChannelLeave {
     };
 }
 /** Last seen message by user */
+export interface LastPinMessageEvent {
+    /** The channel this message belongs to. */
+    channel_id: string;
+    mode: number;
+    channel_label: string;
+    /** The unique ID of this message. */
+    message_id: string;
+    /** user id */
+    user_id: string;
+    /** operation */
+    operation: number;
+}
+/** Last seen message by user */
 export interface LastSeenMessageEvent {
     /** The channel this message belongs to. */
     channel_id: string;
@@ -272,6 +285,12 @@ export interface VoiceJoinedEvent {
     voice_channel_id: string;
     last_screenshot: string;
 }
+export interface CustomStatusEvent {
+    clan_id: string;
+    user_id: string;
+    username: string;
+    status: string;
+}
 export interface ChannelUpdatedEvent {
     clan_id: string;
     category_id: string;
@@ -381,27 +400,29 @@ export interface Socket {
     /** Join clan chat */
     joinClanChat(clan_id: string): Promise<ClanJoin>;
     /** Join a chat channel on the server. */
-    joinChat(channel_id: string, mode: number, type: number, persistence: boolean, hidden: boolean): Promise<Channel>;
+    joinChat(clan_id: string, channel_id: string, mode: number, type: number, persistence: boolean, hidden: boolean): Promise<Channel>;
     /** Leave a chat channel on the server. */
-    leaveChat(channel_id: string, mode: number): Promise<void>;
+    leaveChat(clan_id: string, channel_id: string, mode: number): Promise<void>;
     /** Remove a chat message from a chat channel on the server. */
-    removeChatMessage(channel_id: string, mode: number, message_id: string): Promise<ChannelMessageAck>;
+    removeChatMessage(clan_id: string, channel_id: string, mode: number, message_id: string): Promise<ChannelMessageAck>;
     /** Execute an RPC function to the server. */
     rpc(id?: string, payload?: string, http_key?: string): Promise<ApiRpc>;
     /** Unfollow one or more users from their status updates. */
     unfollowUsers(user_ids: string[]): Promise<void>;
     /** Update a chat message on a chat channel in the server. */
-    updateChatMessage(channel_id: string, mode: number, message_id: string, content: any): Promise<ChannelMessageAck>;
+    updateChatMessage(clan_id: string, channel_id: string, mode: number, message_id: string, content: any): Promise<ChannelMessageAck>;
     /** Update the status for the current user online. */
     updateStatus(status?: string): Promise<void>;
     /** Send a chat message to a chat channel on the server. */
     writeChatMessage(clan_id: string, channel_id: string, mode: number, content?: any, mentions?: Array<ApiMessageMention>, attachments?: Array<ApiMessageAttachment>, references?: Array<ApiMessageRef>, anonymous_message?: boolean, mention_everyone?: boolean, notifi_content?: any): Promise<ChannelMessageAck>;
     /** Send message typing */
-    writeMessageTyping(channel_id: string, mode: number): Promise<MessageTypingEvent>;
+    writeMessageTyping(clan_id: string, channel_id: string, mode: number): Promise<MessageTypingEvent>;
     /** Send message reaction */
-    writeMessageReaction(id: string, channel_id: string, mode: number, message_id: string, emoji: string, count: number, message_sender_id: string, action_delete: boolean): Promise<MessageReactionEvent>;
+    writeMessageReaction(id: string, clan_id: string, channel_id: string, mode: number, message_id: string, emoji: string, count: number, message_sender_id: string, action_delete: boolean): Promise<MessageReactionEvent>;
     /** Send last seen message */
-    writeLastSeenMessage(channel_id: string, mode: number, message_id: string, timestamp: string): Promise<LastSeenMessageEvent>;
+    writeLastSeenMessage(clan_id: string, channel_id: string, mode: number, message_id: string, timestamp: string): Promise<LastSeenMessageEvent>;
+    /** Send last pin message */
+    writeLastPinMessage(clan_id: string, channel_id: string, mode: number, message_id: string, timestamp: string, operation: number): Promise<LastPinMessageEvent>;
     /** send voice joined */
     writeVoiceJoined(id: string, clanId: string, clanName: string, voiceChannelId: string, voiceChannelLabel: string, participant: string, lastScreenshot: string): Promise<VoiceJoinedEvent>;
     /** send voice leaved */
@@ -425,6 +446,7 @@ export interface Socket {
      * In any case, be aware that `onclose` will still fire if there is a heartbeat timeout in a potentially delayed manner.
      */
     onheartbeattimeout: () => void;
+    oncustomstatus: (statusEvent: CustomStatusEvent) => void;
     /** Receive channel message. */
     onchannelmessage: (channelMessage: ChannelMessageEvent) => void;
     /** Receive typing event */
@@ -433,6 +455,8 @@ export interface Socket {
     onmessagereaction: (messageReactionEvent: MessageReactionEvent) => void;
     /** Receive channel presence updates. */
     onchannelpresence: (channelPresence: ChannelPresenceEvent) => void;
+    /** pin message event */
+    onpinmessage: (pin: LastPinMessageEvent) => void;
     onvoicestarted: (voice: VoiceStartedEvent) => void;
     onvoiceended: (voice: VoiceEndedEvent) => void;
     onvoicejoined: (voiceParticipant: VoiceJoinedEvent) => void;
@@ -478,6 +502,7 @@ export declare class DefaultSocket implements Socket {
     onchannelpresence(channelPresence: ChannelPresenceEvent): void;
     onnotification(notification: Notification): void;
     onstatuspresence(statusPresence: StatusPresenceEvent): void;
+    onpinmessage(pin: LastPinMessageEvent): void;
     onvoiceended(voice: VoiceEndedEvent): void;
     onvoicestarted(voice: VoiceStartedEvent): void;
     onvoicejoined(voiceParticipant: VoiceJoinedEvent): void;
@@ -488,24 +513,27 @@ export declare class DefaultSocket implements Socket {
     onstreampresence(streamPresence: StreamPresenceEvent): void;
     onstreamdata(streamData: StreamData): void;
     onheartbeattimeout(): void;
+    oncustomstatus(statusEvent: CustomStatusEvent): void;
     send(message: ChannelJoin | ChannelLeave | ChannelMessageSend | ChannelMessageUpdate | ChannelMessageRemove | MessageTypingEvent | LastSeenMessageEvent | Rpc | StatusFollow | StatusUnfollow | StatusUpdate | Ping, sendTimeout?: number): Promise<any>;
     followUsers(userIds: string[]): Promise<Status>;
     joinClanChat(clan_id: string): Promise<ClanJoin>;
-    joinChat(channel_id: string, mode: number, type: number, persistence: boolean, hidden: boolean): Promise<Channel>;
-    leaveChat(channel_id: string, mode: number): Promise<void>;
-    removeChatMessage(channel_id: string, mode: number, message_id: string): Promise<ChannelMessageAck>;
+    joinChat(clan_id: string, channel_id: string, mode: number, type: number, persistence: boolean, hidden: boolean): Promise<Channel>;
+    leaveChat(clan_id: string, channel_id: string, mode: number): Promise<void>;
+    removeChatMessage(clan_id: string, channel_id: string, mode: number, message_id: string): Promise<ChannelMessageAck>;
     removePartyMember(party_id: string, member: Presence): Promise<void>;
     rpc(id?: string, payload?: string, http_key?: string): Promise<ApiRpc>;
     sendPartyData(party_id: string, op_code: number, data: string | Uint8Array): Promise<void>;
     unfollowUsers(user_ids: string[]): Promise<void>;
-    updateChatMessage(channel_id: string, mode: number, message_id: string, content: any): Promise<ChannelMessageAck>;
+    updateChatMessage(clan_id: string, channel_id: string, mode: number, message_id: string, content: any): Promise<ChannelMessageAck>;
     updateStatus(status?: string): Promise<void>;
     writeChatMessage(clan_id: string, channel_id: string, mode: number, content: any, mentions?: Array<ApiMessageMention>, attachments?: Array<ApiMessageAttachment>, references?: Array<ApiMessageRef>, anonymous_message?: boolean, mention_everyone?: Boolean, notifi_content?: any): Promise<ChannelMessageAck>;
-    writeMessageReaction(id: string, channel_id: string, mode: number, message_id: string, emoji: string, count: number, message_sender_id: string, action_delete: boolean): Promise<MessageReactionEvent>;
-    writeMessageTyping(channel_id: string, mode: number): Promise<MessageTypingEvent>;
-    writeLastSeenMessage(channel_id: string, mode: number, message_id: string, timestamp: string): Promise<LastSeenMessageEvent>;
+    writeMessageReaction(id: string, clan_id: string, channel_id: string, mode: number, message_id: string, emoji: string, count: number, message_sender_id: string, action_delete: boolean): Promise<MessageReactionEvent>;
+    writeMessageTyping(clan_id: string, channel_id: string, mode: number): Promise<MessageTypingEvent>;
+    writeLastSeenMessage(clan_id: string, channel_id: string, mode: number, message_id: string, timestamp: string): Promise<LastSeenMessageEvent>;
+    writeLastPinMessage(clan_id: string, channel_id: string, mode: number, message_id: string, timestamp: string, operation: number): Promise<LastPinMessageEvent>;
     writeVoiceJoined(id: string, clanId: string, clanName: string, voiceChannelId: string, voiceChannelLabel: string, participant: string, lastScreenshot: string): Promise<VoiceJoinedEvent>;
     writeVoiceLeaved(id: string, clanId: string, voiceChannelId: string, voiceUserId: string): Promise<VoiceLeavedEvent>;
+    writeCustomStatus(clan_id: string, status: string): Promise<CustomStatusEvent>;
     private pingPong;
 }
 export {};
