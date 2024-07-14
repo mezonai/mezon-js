@@ -145,7 +145,11 @@ export interface Envelope {
     | LastPinMessageEvent
     | undefined;
   /** Update custom status */
-  custom_status_event?: CustomStatusEvent | undefined;
+  custom_status_event?:
+    | CustomStatusEvent
+    | undefined;
+  /** User is added to channel event */
+  user_channel_added_event?: UserChannelAdded | undefined;
 }
 
 /** A realtime chat channel. */
@@ -762,6 +766,20 @@ export interface CustomStatusEvent {
   status: string;
 }
 
+/** A event when user is added to channel */
+export interface UserChannelAdded {
+  /** the channel id */
+  channel_id: string;
+  /** the user_id */
+  user_id: string;
+  /** the username */
+  username: string;
+  /** the avatar */
+  avatar: string;
+  /** the custom status */
+  status: string;
+}
+
 function createBaseEnvelope(): Envelope {
   return {
     cid: "",
@@ -799,6 +817,7 @@ function createBaseEnvelope(): Envelope {
     channel_updated_event: undefined,
     last_pin_message_event: undefined,
     custom_status_event: undefined,
+    user_channel_added_event: undefined,
   };
 }
 
@@ -908,6 +927,9 @@ export const Envelope = {
     }
     if (message.custom_status_event !== undefined) {
       CustomStatusEvent.encode(message.custom_status_event, writer.uint32(282).fork()).ldelim();
+    }
+    if (message.user_channel_added_event !== undefined) {
+      UserChannelAdded.encode(message.user_channel_added_event, writer.uint32(290).fork()).ldelim();
     }
     return writer;
   },
@@ -1024,6 +1046,9 @@ export const Envelope = {
         case 35:
           message.custom_status_event = CustomStatusEvent.decode(reader, reader.uint32());
           break;
+        case 36:
+          message.user_channel_added_event = UserChannelAdded.decode(reader, reader.uint32());
+          break;
         default:
           reader.skipType(tag & 7);
           break;
@@ -1106,6 +1131,9 @@ export const Envelope = {
         : undefined,
       custom_status_event: isSet(object.custom_status_event)
         ? CustomStatusEvent.fromJSON(object.custom_status_event)
+        : undefined,
+      user_channel_added_event: isSet(object.user_channel_added_event)
+        ? UserChannelAdded.fromJSON(object.user_channel_added_event)
         : undefined,
     };
   },
@@ -1194,6 +1222,9 @@ export const Envelope = {
       : undefined);
     message.custom_status_event !== undefined && (obj.custom_status_event = message.custom_status_event
       ? CustomStatusEvent.toJSON(message.custom_status_event)
+      : undefined);
+    message.user_channel_added_event !== undefined && (obj.user_channel_added_event = message.user_channel_added_event
+      ? UserChannelAdded.toJSON(message.user_channel_added_event)
       : undefined);
     return obj;
   },
@@ -1310,6 +1341,10 @@ export const Envelope = {
     message.custom_status_event = (object.custom_status_event !== undefined && object.custom_status_event !== null)
       ? CustomStatusEvent.fromPartial(object.custom_status_event)
       : undefined;
+    message.user_channel_added_event =
+      (object.user_channel_added_event !== undefined && object.user_channel_added_event !== null)
+        ? UserChannelAdded.fromPartial(object.user_channel_added_event)
+        : undefined;
     return message;
   },
 };
@@ -4831,6 +4866,95 @@ export const CustomStatusEvent = {
     message.clan_id = object.clan_id ?? "";
     message.user_id = object.user_id ?? "";
     message.username = object.username ?? "";
+    message.status = object.status ?? "";
+    return message;
+  },
+};
+
+function createBaseUserChannelAdded(): UserChannelAdded {
+  return { channel_id: "", user_id: "", username: "", avatar: "", status: "" };
+}
+
+export const UserChannelAdded = {
+  encode(message: UserChannelAdded, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.channel_id !== "") {
+      writer.uint32(10).string(message.channel_id);
+    }
+    if (message.user_id !== "") {
+      writer.uint32(18).string(message.user_id);
+    }
+    if (message.username !== "") {
+      writer.uint32(26).string(message.username);
+    }
+    if (message.avatar !== "") {
+      writer.uint32(34).string(message.avatar);
+    }
+    if (message.status !== "") {
+      writer.uint32(42).string(message.status);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): UserChannelAdded {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseUserChannelAdded();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.channel_id = reader.string();
+          break;
+        case 2:
+          message.user_id = reader.string();
+          break;
+        case 3:
+          message.username = reader.string();
+          break;
+        case 4:
+          message.avatar = reader.string();
+          break;
+        case 5:
+          message.status = reader.string();
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): UserChannelAdded {
+    return {
+      channel_id: isSet(object.channel_id) ? String(object.channel_id) : "",
+      user_id: isSet(object.user_id) ? String(object.user_id) : "",
+      username: isSet(object.username) ? String(object.username) : "",
+      avatar: isSet(object.avatar) ? String(object.avatar) : "",
+      status: isSet(object.status) ? String(object.status) : "",
+    };
+  },
+
+  toJSON(message: UserChannelAdded): unknown {
+    const obj: any = {};
+    message.channel_id !== undefined && (obj.channel_id = message.channel_id);
+    message.user_id !== undefined && (obj.user_id = message.user_id);
+    message.username !== undefined && (obj.username = message.username);
+    message.avatar !== undefined && (obj.avatar = message.avatar);
+    message.status !== undefined && (obj.status = message.status);
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<UserChannelAdded>, I>>(base?: I): UserChannelAdded {
+    return UserChannelAdded.fromPartial(base ?? {});
+  },
+
+  fromPartial<I extends Exact<DeepPartial<UserChannelAdded>, I>>(object: I): UserChannelAdded {
+    const message = createBaseUserChannelAdded();
+    message.channel_id = object.channel_id ?? "";
+    message.user_id = object.user_id ?? "";
+    message.username = object.username ?? "";
+    message.avatar = object.avatar ?? "";
     message.status = object.status ?? "";
     return message;
   },

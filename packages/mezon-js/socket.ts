@@ -88,6 +88,20 @@ interface ChannelLeave {
   };
 }
 
+/** UserChannelAddedEvent */
+export interface UserChannelAddedEvent {
+  // the channel id
+  channel_id: string;
+  // the user_id
+  user_id: string;
+  // the username 
+  username: string;
+  // the avatar
+  avatar: string;
+  // the custom status
+  status: string;
+}
+
 /** Last seen message by user */
 export interface LastPinMessageEvent {
   /** The channel this message belongs to. */
@@ -632,6 +646,9 @@ export interface Socket {
 
   /** pin message event */
   onpinmessage: (pin: LastPinMessageEvent) => void;
+  
+  /** Receive added user event */
+  onuserchanneladded: (user: UserChannelAddedEvent) => void;
 
   // when someone start the voice room
   onvoicestarted: (voice: VoiceStartedEvent) => void;
@@ -788,6 +805,8 @@ export class DefaultSocket implements Socket {
           this.onpinmessage(<LastPinMessageEvent>message.last_pin_message_event);
         } else if (message.custom_status_event) {
           this.oncustomstatus(<CustomStatusEvent>message.custom_status_event);
+        } else if (message.user_channel_added_event) {
+          this.onuserchanneladded(<UserChannelAddedEvent>message.user_channel_added_event);
         } else {
           if (this.verbose && window && window.console) {
             console.log("Unrecognized message received: %o", message);
@@ -882,6 +901,12 @@ export class DefaultSocket implements Socket {
   onchannelpresence(channelPresence: ChannelPresenceEvent) {
     if (this.verbose && window && window.console) {
       console.log(channelPresence);
+    }
+  }
+
+  onuserchanneladded(user: UserChannelAddedEvent) {
+    if (this.verbose && window && window.console) {
+      console.log(user);
     }
   }
 
