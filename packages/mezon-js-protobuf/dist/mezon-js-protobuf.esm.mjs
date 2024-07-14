@@ -3025,7 +3025,8 @@ function createBaseEnvelope() {
     channel_deleted_event: void 0,
     channel_updated_event: void 0,
     last_pin_message_event: void 0,
-    custom_status_event: void 0
+    custom_status_event: void 0,
+    user_channel_added_event: void 0
   };
 }
 var Envelope = {
@@ -3134,6 +3135,9 @@ var Envelope = {
     }
     if (message.custom_status_event !== void 0) {
       CustomStatusEvent.encode(message.custom_status_event, writer.uint32(282).fork()).ldelim();
+    }
+    if (message.user_channel_added_event !== void 0) {
+      UserChannelAdded.encode(message.user_channel_added_event, writer.uint32(290).fork()).ldelim();
     }
     return writer;
   },
@@ -3249,6 +3253,9 @@ var Envelope = {
         case 35:
           message.custom_status_event = CustomStatusEvent.decode(reader, reader.uint32());
           break;
+        case 36:
+          message.user_channel_added_event = UserChannelAdded.decode(reader, reader.uint32());
+          break;
         default:
           reader.skipType(tag & 7);
           break;
@@ -3292,7 +3299,8 @@ var Envelope = {
       channel_deleted_event: isSet4(object.channel_deleted_event) ? ChannelDeletedEvent.fromJSON(object.channel_deleted_event) : void 0,
       channel_updated_event: isSet4(object.channel_updated_event) ? ChannelUpdatedEvent.fromJSON(object.channel_updated_event) : void 0,
       last_pin_message_event: isSet4(object.last_pin_message_event) ? LastPinMessageEvent.fromJSON(object.last_pin_message_event) : void 0,
-      custom_status_event: isSet4(object.custom_status_event) ? CustomStatusEvent.fromJSON(object.custom_status_event) : void 0
+      custom_status_event: isSet4(object.custom_status_event) ? CustomStatusEvent.fromJSON(object.custom_status_event) : void 0,
+      user_channel_added_event: isSet4(object.user_channel_added_event) ? UserChannelAdded.fromJSON(object.user_channel_added_event) : void 0
     };
   },
   toJSON(message) {
@@ -3332,6 +3340,7 @@ var Envelope = {
     message.channel_updated_event !== void 0 && (obj.channel_updated_event = message.channel_updated_event ? ChannelUpdatedEvent.toJSON(message.channel_updated_event) : void 0);
     message.last_pin_message_event !== void 0 && (obj.last_pin_message_event = message.last_pin_message_event ? LastPinMessageEvent.toJSON(message.last_pin_message_event) : void 0);
     message.custom_status_event !== void 0 && (obj.custom_status_event = message.custom_status_event ? CustomStatusEvent.toJSON(message.custom_status_event) : void 0);
+    message.user_channel_added_event !== void 0 && (obj.user_channel_added_event = message.user_channel_added_event ? UserChannelAdded.toJSON(message.user_channel_added_event) : void 0);
     return obj;
   },
   create(base) {
@@ -3375,6 +3384,7 @@ var Envelope = {
     message.channel_updated_event = object.channel_updated_event !== void 0 && object.channel_updated_event !== null ? ChannelUpdatedEvent.fromPartial(object.channel_updated_event) : void 0;
     message.last_pin_message_event = object.last_pin_message_event !== void 0 && object.last_pin_message_event !== null ? LastPinMessageEvent.fromPartial(object.last_pin_message_event) : void 0;
     message.custom_status_event = object.custom_status_event !== void 0 && object.custom_status_event !== null ? CustomStatusEvent.fromPartial(object.custom_status_event) : void 0;
+    message.user_channel_added_event = object.user_channel_added_event !== void 0 && object.user_channel_added_event !== null ? UserChannelAdded.fromPartial(object.user_channel_added_event) : void 0;
     return message;
   }
 };
@@ -6410,6 +6420,89 @@ var CustomStatusEvent = {
     message.user_id = (_b = object.user_id) != null ? _b : "";
     message.username = (_c = object.username) != null ? _c : "";
     message.status = (_d = object.status) != null ? _d : "";
+    return message;
+  }
+};
+function createBaseUserChannelAdded() {
+  return { channel_id: "", user_id: "", username: "", avatar: "", status: "" };
+}
+var UserChannelAdded = {
+  encode(message, writer = import_minimal4.default.Writer.create()) {
+    if (message.channel_id !== "") {
+      writer.uint32(10).string(message.channel_id);
+    }
+    if (message.user_id !== "") {
+      writer.uint32(18).string(message.user_id);
+    }
+    if (message.username !== "") {
+      writer.uint32(26).string(message.username);
+    }
+    if (message.avatar !== "") {
+      writer.uint32(34).string(message.avatar);
+    }
+    if (message.status !== "") {
+      writer.uint32(42).string(message.status);
+    }
+    return writer;
+  },
+  decode(input, length) {
+    const reader = input instanceof import_minimal4.default.Reader ? input : new import_minimal4.default.Reader(input);
+    let end = length === void 0 ? reader.len : reader.pos + length;
+    const message = createBaseUserChannelAdded();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.channel_id = reader.string();
+          break;
+        case 2:
+          message.user_id = reader.string();
+          break;
+        case 3:
+          message.username = reader.string();
+          break;
+        case 4:
+          message.avatar = reader.string();
+          break;
+        case 5:
+          message.status = reader.string();
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+  fromJSON(object) {
+    return {
+      channel_id: isSet4(object.channel_id) ? String(object.channel_id) : "",
+      user_id: isSet4(object.user_id) ? String(object.user_id) : "",
+      username: isSet4(object.username) ? String(object.username) : "",
+      avatar: isSet4(object.avatar) ? String(object.avatar) : "",
+      status: isSet4(object.status) ? String(object.status) : ""
+    };
+  },
+  toJSON(message) {
+    const obj = {};
+    message.channel_id !== void 0 && (obj.channel_id = message.channel_id);
+    message.user_id !== void 0 && (obj.user_id = message.user_id);
+    message.username !== void 0 && (obj.username = message.username);
+    message.avatar !== void 0 && (obj.avatar = message.avatar);
+    message.status !== void 0 && (obj.status = message.status);
+    return obj;
+  },
+  create(base) {
+    return UserChannelAdded.fromPartial(base != null ? base : {});
+  },
+  fromPartial(object) {
+    var _a, _b, _c, _d, _e;
+    const message = createBaseUserChannelAdded();
+    message.channel_id = (_a = object.channel_id) != null ? _a : "";
+    message.user_id = (_b = object.user_id) != null ? _b : "";
+    message.username = (_c = object.username) != null ? _c : "";
+    message.avatar = (_d = object.avatar) != null ? _d : "";
+    message.status = (_e = object.status) != null ? _e : "";
     return message;
   }
 };

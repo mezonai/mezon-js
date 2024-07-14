@@ -71,6 +71,14 @@ interface ChannelLeave {
         channel_label: string;
     };
 }
+/** UserChannelAddedEvent */
+export interface UserChannelAddedEvent {
+    channel_id: string;
+    user_id: string;
+    username: string;
+    avatar: string;
+    status: string;
+}
 /** Last seen message by user */
 export interface LastPinMessageEvent {
     /** The channel this message belongs to. */
@@ -457,6 +465,8 @@ export interface Socket {
     onchannelpresence: (channelPresence: ChannelPresenceEvent) => void;
     /** pin message event */
     onpinmessage: (pin: LastPinMessageEvent) => void;
+    /** Receive added user event */
+    onuserchanneladded: (user: UserChannelAddedEvent) => void;
     onvoicestarted: (voice: VoiceStartedEvent) => void;
     onvoiceended: (voice: VoiceEndedEvent) => void;
     onvoicejoined: (voiceParticipant: VoiceJoinedEvent) => void;
@@ -500,6 +510,7 @@ export declare class DefaultSocket implements Socket {
     onmessagereaction(messagereaction: MessageReactionEvent): void;
     onchannelmessage(channelMessage: ChannelMessageEvent): void;
     onchannelpresence(channelPresence: ChannelPresenceEvent): void;
+    onuserchanneladded(user: UserChannelAddedEvent): void;
     onnotification(notification: Notification): void;
     onstatuspresence(statusPresence: StatusPresenceEvent): void;
     onpinmessage(pin: LastPinMessageEvent): void;
