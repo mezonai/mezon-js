@@ -2263,7 +2263,7 @@ async createClanEmoji(session: Session, request: ApiClanEmojiCreateRequest) {
 }
 
 //**update clan emoji by id */
-async updateClanEmojiById(session : Session, id: string, request: MezonUpdateClanEmojiByIdBody) {
+async updateClanEmojiById(session: Session, id: string, request: MezonUpdateClanEmojiByIdBody) {
   if (this.autoRefreshSession && session.refresh_token &&
     session.isexpired((Date.now() + this.expiredTimespanMs)/1000)) {
     await this.sessionRefresh(session);
@@ -2321,7 +2321,7 @@ async updateWebhookById(session: Session, id: string, request: MezonUpdateWebhoo
     return response !== undefined;
   })
 }
-  
+
 //**disabled webhook by id */
 async deleteWebhookById(session: Session, id: string) {
   if (this.autoRefreshSession && session.refresh_token &&
