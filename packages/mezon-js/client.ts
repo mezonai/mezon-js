@@ -2315,7 +2315,7 @@ async updateWebhookById(session: Session,id:string,request :MezonUpdateWebhookBy
     session.isexpired((Date.now() + this.expiredTimespanMs)/1000)) {
     await this.sessionRefresh(session);
   }
-  return this.apiClient.updateWebhookById(session.token,id,request).then((response:any)=>{
+  return this.apiClient.updateWebhookById(session.token,id,request).then((response:any)=> {
     return Promise.resolve(response);
   })
 }
