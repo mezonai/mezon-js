@@ -97,7 +97,11 @@ import {
   ApiClanEmojiList,
   ApiClanEmojiCreateRequest,
   ApiChannelVoiceList,
-  MezonUpdateClanEmojiByIdBody
+  MezonUpdateClanEmojiByIdBody,
+  ApiWebhookCreateRequest,
+  ApiWebhookListResponse,
+  MezonUpdateWebhookByIdBody,
+  MezonDeleteWebhookByIdBody
 } from "./api.gen";
 
 import { Session } from "./session";
@@ -2281,6 +2285,51 @@ async deleteByIdClanEmoji(session:Session,id:string) {
   return this.apiClient.deleteByIdClanEmoji(session.token,id).then((response: any) => {
     return response !== undefined;
   });
+}
+
+//**create webhook for chaneel */
+async generateWebhookLink(session: Session, request:ApiWebhookCreateRequest) {
+  if (this.autoRefreshSession && session.refresh_token &&
+    session.isexpired((Date.now() + this.expiredTimespanMs)/1000)) {
+    await this.sessionRefresh(session);
+  }
+  return this.apiClient.generateWebhook(session.token,request).then((response:any)=> {
+    return response !== undefined;
+  })
+}
+
+//**list webhook belong to the channel */
+async listWebhookByChannelId(session: Session,channel_id:string):Promise<ApiWebhookListResponse> {
+  if (this.autoRefreshSession && session.refresh_token &&
+    session.isexpired((Date.now() + this.expiredTimespanMs)/1000)) {
+    await this.sessionRefresh(session);
+  }
+  return this.apiClient.listWebhookByChannelId(session.token,channel_id).then((response:ApiWebhookListResponse)=> {
+    return Promise.resolve(response);
+  })
+}
+
+//**update webhook name by id */
+
+async updateWebhookById(session: Session,id:string,request :MezonUpdateWebhookByIdBody) {
+  if (this.autoRefreshSession && session.refresh_token &&
+    session.isexpired((Date.now() + this.expiredTimespanMs)/1000)) {
+    await this.sessionRefresh(session);
+  }
+  return this.apiClient.updateWebhookById(session.token,id,request).then((response:any)=>{
+    return Promise.resolve(response);
+  })
+}
+
+//**disabled webhook by id *//**ToDo */
+async deleteWebhookById(session: Session,id:string,requset:MezonDeleteWebhookByIdBody) {
+  if (this.autoRefreshSession && session.refresh_token &&
+    session.isexpired((Date.now() + this.expiredTimespanMs)/1000)) {
+    await this.sessionRefresh(session);
+  }
+  return this.apiClient.deleteWebhookById(session.token,id,requset).then((response:any)=> {
+    return Promise.resolve(response);
+  })
 }
 
 };

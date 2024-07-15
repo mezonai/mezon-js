@@ -10,6 +10,9 @@ export interface ClanUserListClanUser {
     role_id?: string;
     user?: ApiUser;
 }
+/**  */
+export interface MezonDeleteWebhookByIdBody {
+}
 /** Update fields in a given channel. */
 export interface MezonUpdateChannelDescBody {
     category_id?: string;
@@ -67,6 +70,10 @@ export interface MezonUpdateRoleDeleteBody {
 export interface MezonUpdateUserProfileByClanBody {
     avatar?: string;
     nick_name?: string;
+}
+/**  */
+export interface MezonUpdateWebhookByIdBody {
+    webhook_name?: string;
 }
 /** A single user-role pair. */
 export interface RoleUserListRoleUser {
@@ -826,6 +833,27 @@ export interface ApiVoiceChannelUserList {
     voice_channel_users?: Array<ApiVoiceChannelUser>;
 }
 /**  */
+export interface ApiWebhook {
+    active?: number;
+    channel_id?: string;
+    create_time?: string;
+    creator_id?: string;
+    id?: string;
+    update_time?: string;
+    url?: string;
+    webhook_name?: string;
+}
+/**  */
+export interface ApiWebhookCreateRequest {
+    channel_id?: string;
+    url?: string;
+    webhook_name?: string;
+}
+/**  */
+export interface ApiWebhookListResponse {
+    webhooks?: Array<ApiWebhook>;
+}
+/**  */
 export interface ApiWebhookResponse {
     channel_id?: string;
     hook_name?: string;
@@ -1099,7 +1127,7 @@ export declare class MezonApi {
     /** Update channel private. */
     updateChannelPrivate(bearerToken: string, body: ApiChangeChannelPrivateRequest, options?: any): Promise<any>;
     /**  */
-    updateUserProfileByClan(bearerToken: string, clanId: string, body: {}, options?: any): Promise<any>;
+    updateUserProfileByClan(bearerToken: string, clanId: string, body: MezonUpdateUserProfileByClanBody, options?: any): Promise<any>;
     /** Upload attachment */
     uploadAttachmentFile(bearerToken: string, body: ApiUploadAttachmentRequest, options?: any): Promise<ApiUploadAttachment>;
     /** Fetch zero or more users by ID and/or username. */
@@ -1108,5 +1136,13 @@ export declare class MezonApi {
     updateUser(bearerToken: string, body: ApiUpdateUsersRequest, options?: any): Promise<any>;
     /** Create webhook */
     createWebhookLink(bearerToken: string, body: ApiCreateWebhookRequest, options?: any): Promise<ApiWebhookResponse>;
+    /** create webhook */
+    generateWebhook(bearerToken: string, body: ApiWebhookCreateRequest, options?: any): Promise<any>;
+    /** update webhook name by id */
+    updateWebhookById(bearerToken: string, id: string, body: MezonUpdateWebhookByIdBody, options?: any): Promise<any>;
+    /** list webhook belong to the channel */
+    listWebhookByChannelId(bearerToken: string, channelId: string, options?: any): Promise<ApiWebhookListResponse>;
+    /** disabled webhook */
+    deleteWebhookById(bearerToken: string, id: string, body: MezonDeleteWebhookByIdBody, options?: any): Promise<any>;
     buildFullUrl(basePath: string, fragment: string, queryParams: Map<string, any>): string;
 }

@@ -2538,6 +2538,44 @@ export interface ClanEmojiListResponse {
   creator_id: string;
 }
 
+export interface Webhook {
+  id: string;
+  webhook_name: string;
+  channel_id: string;
+  active: number;
+  url: string;
+  creator_id: string;
+  create_time: string;
+  update_time: string;
+}
+
+export interface WebhookCreateRequest {
+  webhook_name: string;
+  channel_id: string;
+  url: string;
+}
+
+export interface WebhookListRequestById {
+  id: string;
+}
+
+export interface WebhookUpdateRequestById {
+  id: string;
+  webhook_name: string;
+}
+
+export interface WebhookDeleteRequestById {
+  id: string;
+}
+
+export interface WebhookListRequest {
+  channel_id: string;
+}
+
+export interface WebhookListResponse {
+  webhooks: Webhook[];
+}
+
 function createBaseAccount(): Account {
   return {
     user: undefined,
@@ -18515,6 +18553,472 @@ export const ClanEmojiListResponse = {
     message.shortname = object.shortname ?? "";
     message.category = object.category ?? "";
     message.creator_id = object.creator_id ?? "";
+    return message;
+  },
+};
+
+function createBaseWebhook(): Webhook {
+  return {
+    id: "",
+    webhook_name: "",
+    channel_id: "",
+    active: 0,
+    url: "",
+    creator_id: "",
+    create_time: "",
+    update_time: "",
+  };
+}
+
+export const Webhook = {
+  encode(message: Webhook, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.id !== "") {
+      writer.uint32(10).string(message.id);
+    }
+    if (message.webhook_name !== "") {
+      writer.uint32(18).string(message.webhook_name);
+    }
+    if (message.channel_id !== "") {
+      writer.uint32(26).string(message.channel_id);
+    }
+    if (message.active !== 0) {
+      writer.uint32(32).int32(message.active);
+    }
+    if (message.url !== "") {
+      writer.uint32(42).string(message.url);
+    }
+    if (message.creator_id !== "") {
+      writer.uint32(50).string(message.creator_id);
+    }
+    if (message.create_time !== "") {
+      writer.uint32(58).string(message.create_time);
+    }
+    if (message.update_time !== "") {
+      writer.uint32(66).string(message.update_time);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): Webhook {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseWebhook();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.id = reader.string();
+          break;
+        case 2:
+          message.webhook_name = reader.string();
+          break;
+        case 3:
+          message.channel_id = reader.string();
+          break;
+        case 4:
+          message.active = reader.int32();
+          break;
+        case 5:
+          message.url = reader.string();
+          break;
+        case 6:
+          message.creator_id = reader.string();
+          break;
+        case 7:
+          message.create_time = reader.string();
+          break;
+        case 8:
+          message.update_time = reader.string();
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): Webhook {
+    return {
+      id: isSet(object.id) ? String(object.id) : "",
+      webhook_name: isSet(object.webhook_name) ? String(object.webhook_name) : "",
+      channel_id: isSet(object.channel_id) ? String(object.channel_id) : "",
+      active: isSet(object.active) ? Number(object.active) : 0,
+      url: isSet(object.url) ? String(object.url) : "",
+      creator_id: isSet(object.creator_id) ? String(object.creator_id) : "",
+      create_time: isSet(object.create_time) ? String(object.create_time) : "",
+      update_time: isSet(object.update_time) ? String(object.update_time) : "",
+    };
+  },
+
+  toJSON(message: Webhook): unknown {
+    const obj: any = {};
+    message.id !== undefined && (obj.id = message.id);
+    message.webhook_name !== undefined && (obj.webhook_name = message.webhook_name);
+    message.channel_id !== undefined && (obj.channel_id = message.channel_id);
+    message.active !== undefined && (obj.active = Math.round(message.active));
+    message.url !== undefined && (obj.url = message.url);
+    message.creator_id !== undefined && (obj.creator_id = message.creator_id);
+    message.create_time !== undefined && (obj.create_time = message.create_time);
+    message.update_time !== undefined && (obj.update_time = message.update_time);
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<Webhook>, I>>(base?: I): Webhook {
+    return Webhook.fromPartial(base ?? {});
+  },
+
+  fromPartial<I extends Exact<DeepPartial<Webhook>, I>>(object: I): Webhook {
+    const message = createBaseWebhook();
+    message.id = object.id ?? "";
+    message.webhook_name = object.webhook_name ?? "";
+    message.channel_id = object.channel_id ?? "";
+    message.active = object.active ?? 0;
+    message.url = object.url ?? "";
+    message.creator_id = object.creator_id ?? "";
+    message.create_time = object.create_time ?? "";
+    message.update_time = object.update_time ?? "";
+    return message;
+  },
+};
+
+function createBaseWebhookCreateRequest(): WebhookCreateRequest {
+  return { webhook_name: "", channel_id: "", url: "" };
+}
+
+export const WebhookCreateRequest = {
+  encode(message: WebhookCreateRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.webhook_name !== "") {
+      writer.uint32(10).string(message.webhook_name);
+    }
+    if (message.channel_id !== "") {
+      writer.uint32(18).string(message.channel_id);
+    }
+    if (message.url !== "") {
+      writer.uint32(26).string(message.url);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): WebhookCreateRequest {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseWebhookCreateRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.webhook_name = reader.string();
+          break;
+        case 2:
+          message.channel_id = reader.string();
+          break;
+        case 3:
+          message.url = reader.string();
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): WebhookCreateRequest {
+    return {
+      webhook_name: isSet(object.webhook_name) ? String(object.webhook_name) : "",
+      channel_id: isSet(object.channel_id) ? String(object.channel_id) : "",
+      url: isSet(object.url) ? String(object.url) : "",
+    };
+  },
+
+  toJSON(message: WebhookCreateRequest): unknown {
+    const obj: any = {};
+    message.webhook_name !== undefined && (obj.webhook_name = message.webhook_name);
+    message.channel_id !== undefined && (obj.channel_id = message.channel_id);
+    message.url !== undefined && (obj.url = message.url);
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<WebhookCreateRequest>, I>>(base?: I): WebhookCreateRequest {
+    return WebhookCreateRequest.fromPartial(base ?? {});
+  },
+
+  fromPartial<I extends Exact<DeepPartial<WebhookCreateRequest>, I>>(object: I): WebhookCreateRequest {
+    const message = createBaseWebhookCreateRequest();
+    message.webhook_name = object.webhook_name ?? "";
+    message.channel_id = object.channel_id ?? "";
+    message.url = object.url ?? "";
+    return message;
+  },
+};
+
+function createBaseWebhookListRequestById(): WebhookListRequestById {
+  return { id: "" };
+}
+
+export const WebhookListRequestById = {
+  encode(message: WebhookListRequestById, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.id !== "") {
+      writer.uint32(10).string(message.id);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): WebhookListRequestById {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseWebhookListRequestById();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.id = reader.string();
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): WebhookListRequestById {
+    return { id: isSet(object.id) ? String(object.id) : "" };
+  },
+
+  toJSON(message: WebhookListRequestById): unknown {
+    const obj: any = {};
+    message.id !== undefined && (obj.id = message.id);
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<WebhookListRequestById>, I>>(base?: I): WebhookListRequestById {
+    return WebhookListRequestById.fromPartial(base ?? {});
+  },
+
+  fromPartial<I extends Exact<DeepPartial<WebhookListRequestById>, I>>(object: I): WebhookListRequestById {
+    const message = createBaseWebhookListRequestById();
+    message.id = object.id ?? "";
+    return message;
+  },
+};
+
+function createBaseWebhookUpdateRequestById(): WebhookUpdateRequestById {
+  return { id: "", webhook_name: "" };
+}
+
+export const WebhookUpdateRequestById = {
+  encode(message: WebhookUpdateRequestById, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.id !== "") {
+      writer.uint32(10).string(message.id);
+    }
+    if (message.webhook_name !== "") {
+      writer.uint32(18).string(message.webhook_name);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): WebhookUpdateRequestById {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseWebhookUpdateRequestById();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.id = reader.string();
+          break;
+        case 2:
+          message.webhook_name = reader.string();
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): WebhookUpdateRequestById {
+    return {
+      id: isSet(object.id) ? String(object.id) : "",
+      webhook_name: isSet(object.webhook_name) ? String(object.webhook_name) : "",
+    };
+  },
+
+  toJSON(message: WebhookUpdateRequestById): unknown {
+    const obj: any = {};
+    message.id !== undefined && (obj.id = message.id);
+    message.webhook_name !== undefined && (obj.webhook_name = message.webhook_name);
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<WebhookUpdateRequestById>, I>>(base?: I): WebhookUpdateRequestById {
+    return WebhookUpdateRequestById.fromPartial(base ?? {});
+  },
+
+  fromPartial<I extends Exact<DeepPartial<WebhookUpdateRequestById>, I>>(object: I): WebhookUpdateRequestById {
+    const message = createBaseWebhookUpdateRequestById();
+    message.id = object.id ?? "";
+    message.webhook_name = object.webhook_name ?? "";
+    return message;
+  },
+};
+
+function createBaseWebhookDeleteRequestById(): WebhookDeleteRequestById {
+  return { id: "" };
+}
+
+export const WebhookDeleteRequestById = {
+  encode(message: WebhookDeleteRequestById, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.id !== "") {
+      writer.uint32(10).string(message.id);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): WebhookDeleteRequestById {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseWebhookDeleteRequestById();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.id = reader.string();
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): WebhookDeleteRequestById {
+    return { id: isSet(object.id) ? String(object.id) : "" };
+  },
+
+  toJSON(message: WebhookDeleteRequestById): unknown {
+    const obj: any = {};
+    message.id !== undefined && (obj.id = message.id);
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<WebhookDeleteRequestById>, I>>(base?: I): WebhookDeleteRequestById {
+    return WebhookDeleteRequestById.fromPartial(base ?? {});
+  },
+
+  fromPartial<I extends Exact<DeepPartial<WebhookDeleteRequestById>, I>>(object: I): WebhookDeleteRequestById {
+    const message = createBaseWebhookDeleteRequestById();
+    message.id = object.id ?? "";
+    return message;
+  },
+};
+
+function createBaseWebhookListRequest(): WebhookListRequest {
+  return { channel_id: "" };
+}
+
+export const WebhookListRequest = {
+  encode(message: WebhookListRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.channel_id !== "") {
+      writer.uint32(10).string(message.channel_id);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): WebhookListRequest {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseWebhookListRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.channel_id = reader.string();
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): WebhookListRequest {
+    return { channel_id: isSet(object.channel_id) ? String(object.channel_id) : "" };
+  },
+
+  toJSON(message: WebhookListRequest): unknown {
+    const obj: any = {};
+    message.channel_id !== undefined && (obj.channel_id = message.channel_id);
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<WebhookListRequest>, I>>(base?: I): WebhookListRequest {
+    return WebhookListRequest.fromPartial(base ?? {});
+  },
+
+  fromPartial<I extends Exact<DeepPartial<WebhookListRequest>, I>>(object: I): WebhookListRequest {
+    const message = createBaseWebhookListRequest();
+    message.channel_id = object.channel_id ?? "";
+    return message;
+  },
+};
+
+function createBaseWebhookListResponse(): WebhookListResponse {
+  return { webhooks: [] };
+}
+
+export const WebhookListResponse = {
+  encode(message: WebhookListResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    for (const v of message.webhooks) {
+      Webhook.encode(v!, writer.uint32(10).fork()).ldelim();
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): WebhookListResponse {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseWebhookListResponse();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.webhooks.push(Webhook.decode(reader, reader.uint32()));
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): WebhookListResponse {
+    return { webhooks: Array.isArray(object?.webhooks) ? object.webhooks.map((e: any) => Webhook.fromJSON(e)) : [] };
+  },
+
+  toJSON(message: WebhookListResponse): unknown {
+    const obj: any = {};
+    if (message.webhooks) {
+      obj.webhooks = message.webhooks.map((e) => e ? Webhook.toJSON(e) : undefined);
+    } else {
+      obj.webhooks = [];
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<WebhookListResponse>, I>>(base?: I): WebhookListResponse {
+    return WebhookListResponse.fromPartial(base ?? {});
+  },
+
+  fromPartial<I extends Exact<DeepPartial<WebhookListResponse>, I>>(object: I): WebhookListResponse {
+    const message = createBaseWebhookListResponse();
+    message.webhooks = object.webhooks?.map((e) => Webhook.fromPartial(e)) || [];
     return message;
   },
 };
