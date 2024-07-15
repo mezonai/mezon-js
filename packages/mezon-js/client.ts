@@ -2263,71 +2263,74 @@ async createClanEmoji(session: Session, request: ApiClanEmojiCreateRequest) {
 }
 
 //**update clan emoji by id */
-async updateClanEmojiById(session :Session,id:string,request: MezonUpdateClanEmojiByIdBody) {
+async updateClanEmojiById(session: Session, id: string, request: MezonUpdateClanEmojiByIdBody) {
   if (this.autoRefreshSession && session.refresh_token &&
     session.isexpired((Date.now() + this.expiredTimespanMs)/1000)) {
     await this.sessionRefresh(session);
   }
 
-  return this.apiClient.updateClanEmojiById(session.token,id,request).then((response: any) => {
+  return this.apiClient.updateClanEmojiById(session.token, id, request).then((response: any) => {
     return response !== undefined;
   });
 }
 
 //**delete clan emoji by id */
-async deleteByIdClanEmoji(session:Session,id:string) {
+async deleteByIdClanEmoji(session: Session, id: string) {
   if (this.autoRefreshSession && session.refresh_token &&
     session.isexpired((Date.now() + this.expiredTimespanMs)/1000)) {
     await this.sessionRefresh(session);
   }
 
-  return this.apiClient.deleteByIdClanEmoji(session.token,id).then((response: any) => {
+  return this.apiClient.deleteByIdClanEmoji(session.token, id).then((response: any) => {
     return response !== undefined;
   });
 }
 
 //**create webhook for chaneel */
-async generateWebhookLink(session: Session, request:ApiWebhookCreateRequest) {
+async generateWebhookLink(session: Session, request: ApiWebhookCreateRequest) {
   if (this.autoRefreshSession && session.refresh_token &&
     session.isexpired((Date.now() + this.expiredTimespanMs)/1000)) {
     await this.sessionRefresh(session);
   }
-  return this.apiClient.generateWebhook(session.token,request).then((response:any)=> {
+
+  return this.apiClient.generateWebhook(session.token, request).then((response: any) => {
     return response !== undefined;
   })
 }
 
 //**list webhook belong to the channel */
-async listWebhookByChannelId(session: Session,channel_id:string):Promise<ApiWebhookListResponse> {
+async listWebhookByChannelId(session: Session, channel_id: string): Promise<ApiWebhookListResponse> {
   if (this.autoRefreshSession && session.refresh_token &&
     session.isexpired((Date.now() + this.expiredTimespanMs)/1000)) {
     await this.sessionRefresh(session);
   }
-  return this.apiClient.listWebhookByChannelId(session.token,channel_id).then((response:ApiWebhookListResponse)=> {
+
+  return this.apiClient.listWebhookByChannelId(session.token, channel_id).then((response: ApiWebhookListResponse) => {
     return Promise.resolve(response);
   })
 }
 
 //**update webhook name by id */
-
-async updateWebhookById(session: Session,id:string,request :MezonUpdateWebhookByIdBody) {
+async updateWebhookById(session: Session, id: string, request: MezonUpdateWebhookByIdBody) {
   if (this.autoRefreshSession && session.refresh_token &&
     session.isexpired((Date.now() + this.expiredTimespanMs)/1000)) {
     await this.sessionRefresh(session);
   }
-  return this.apiClient.updateWebhookById(session.token,id,request).then((response:any)=> {
-    return Promise.resolve(response);
+
+  return this.apiClient.updateWebhookById(session.token, id, request).then((response: any) => {
+    return response !== undefined;
   })
 }
 
 //**disabled webhook by id */
-async deleteWebhookById(session: Session,id:string) {
+async deleteWebhookById(session: Session, id: string) {
   if (this.autoRefreshSession && session.refresh_token &&
     session.isexpired((Date.now() + this.expiredTimespanMs)/1000)) {
     await this.sessionRefresh(session);
   }
-  return this.apiClient.deleteWebhookById(session.token,id).then((response:any)=> {
-    return Promise.resolve(response);
+
+  return this.apiClient.deleteWebhookById(session.token, id).then((response: any) => {
+    return response !== undefined;
   })
 }
 
