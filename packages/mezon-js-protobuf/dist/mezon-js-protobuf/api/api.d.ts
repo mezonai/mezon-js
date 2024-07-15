@@ -1965,6 +1965,37 @@ export interface ClanEmojiListResponse {
     category: string;
     creator_id: string;
 }
+export interface Webhook {
+    id: string;
+    webhook_name: string;
+    channel_id: string;
+    active: number;
+    url: string;
+    creator_id: string;
+    create_time: string;
+    update_time: string;
+}
+export interface WebhookCreateRequest {
+    webhook_name: string;
+    channel_id: string;
+    url: string;
+}
+export interface WebhookListRequestById {
+    id: string;
+}
+export interface WebhookUpdateRequestById {
+    id: string;
+    webhook_name: string;
+}
+export interface WebhookDeleteRequestById {
+    id: string;
+}
+export interface WebhookListRequest {
+    channel_id: string;
+}
+export interface WebhookListResponse {
+    webhooks: Webhook[];
+}
 export declare const Account: {
     encode(message: Account, writer?: _m0.Writer): _m0.Writer;
     decode(input: _m0.Reader | Uint8Array, length?: number): Account;
@@ -13304,6 +13335,248 @@ export declare const ClanEmojiListResponse: {
         category?: string | undefined;
         creator_id?: string | undefined;
     } & { [K_1 in Exclude<keyof I_1, keyof ClanEmojiListResponse>]: never; }>(object: I_1): ClanEmojiListResponse;
+};
+export declare const Webhook: {
+    encode(message: Webhook, writer?: _m0.Writer): _m0.Writer;
+    decode(input: _m0.Reader | Uint8Array, length?: number): Webhook;
+    fromJSON(object: any): Webhook;
+    toJSON(message: Webhook): unknown;
+    create<I extends {
+        id?: string | undefined;
+        webhook_name?: string | undefined;
+        channel_id?: string | undefined;
+        active?: number | undefined;
+        url?: string | undefined;
+        creator_id?: string | undefined;
+        create_time?: string | undefined;
+        update_time?: string | undefined;
+    } & {
+        id?: string | undefined;
+        webhook_name?: string | undefined;
+        channel_id?: string | undefined;
+        active?: number | undefined;
+        url?: string | undefined;
+        creator_id?: string | undefined;
+        create_time?: string | undefined;
+        update_time?: string | undefined;
+    } & { [K in Exclude<keyof I, keyof Webhook>]: never; }>(base?: I | undefined): Webhook;
+    fromPartial<I_1 extends {
+        id?: string | undefined;
+        webhook_name?: string | undefined;
+        channel_id?: string | undefined;
+        active?: number | undefined;
+        url?: string | undefined;
+        creator_id?: string | undefined;
+        create_time?: string | undefined;
+        update_time?: string | undefined;
+    } & {
+        id?: string | undefined;
+        webhook_name?: string | undefined;
+        channel_id?: string | undefined;
+        active?: number | undefined;
+        url?: string | undefined;
+        creator_id?: string | undefined;
+        create_time?: string | undefined;
+        update_time?: string | undefined;
+    } & { [K_1 in Exclude<keyof I_1, keyof Webhook>]: never; }>(object: I_1): Webhook;
+};
+export declare const WebhookCreateRequest: {
+    encode(message: WebhookCreateRequest, writer?: _m0.Writer): _m0.Writer;
+    decode(input: _m0.Reader | Uint8Array, length?: number): WebhookCreateRequest;
+    fromJSON(object: any): WebhookCreateRequest;
+    toJSON(message: WebhookCreateRequest): unknown;
+    create<I extends {
+        webhook_name?: string | undefined;
+        channel_id?: string | undefined;
+        url?: string | undefined;
+    } & {
+        webhook_name?: string | undefined;
+        channel_id?: string | undefined;
+        url?: string | undefined;
+    } & { [K in Exclude<keyof I, keyof WebhookCreateRequest>]: never; }>(base?: I | undefined): WebhookCreateRequest;
+    fromPartial<I_1 extends {
+        webhook_name?: string | undefined;
+        channel_id?: string | undefined;
+        url?: string | undefined;
+    } & {
+        webhook_name?: string | undefined;
+        channel_id?: string | undefined;
+        url?: string | undefined;
+    } & { [K_1 in Exclude<keyof I_1, keyof WebhookCreateRequest>]: never; }>(object: I_1): WebhookCreateRequest;
+};
+export declare const WebhookListRequestById: {
+    encode(message: WebhookListRequestById, writer?: _m0.Writer): _m0.Writer;
+    decode(input: _m0.Reader | Uint8Array, length?: number): WebhookListRequestById;
+    fromJSON(object: any): WebhookListRequestById;
+    toJSON(message: WebhookListRequestById): unknown;
+    create<I extends {
+        id?: string | undefined;
+    } & {
+        id?: string | undefined;
+    } & { [K in Exclude<keyof I, "id">]: never; }>(base?: I | undefined): WebhookListRequestById;
+    fromPartial<I_1 extends {
+        id?: string | undefined;
+    } & {
+        id?: string | undefined;
+    } & { [K_1 in Exclude<keyof I_1, "id">]: never; }>(object: I_1): WebhookListRequestById;
+};
+export declare const WebhookUpdateRequestById: {
+    encode(message: WebhookUpdateRequestById, writer?: _m0.Writer): _m0.Writer;
+    decode(input: _m0.Reader | Uint8Array, length?: number): WebhookUpdateRequestById;
+    fromJSON(object: any): WebhookUpdateRequestById;
+    toJSON(message: WebhookUpdateRequestById): unknown;
+    create<I extends {
+        id?: string | undefined;
+        webhook_name?: string | undefined;
+    } & {
+        id?: string | undefined;
+        webhook_name?: string | undefined;
+    } & { [K in Exclude<keyof I, keyof WebhookUpdateRequestById>]: never; }>(base?: I | undefined): WebhookUpdateRequestById;
+    fromPartial<I_1 extends {
+        id?: string | undefined;
+        webhook_name?: string | undefined;
+    } & {
+        id?: string | undefined;
+        webhook_name?: string | undefined;
+    } & { [K_1 in Exclude<keyof I_1, keyof WebhookUpdateRequestById>]: never; }>(object: I_1): WebhookUpdateRequestById;
+};
+export declare const WebhookDeleteRequestById: {
+    encode(message: WebhookDeleteRequestById, writer?: _m0.Writer): _m0.Writer;
+    decode(input: _m0.Reader | Uint8Array, length?: number): WebhookDeleteRequestById;
+    fromJSON(object: any): WebhookDeleteRequestById;
+    toJSON(message: WebhookDeleteRequestById): unknown;
+    create<I extends {
+        id?: string | undefined;
+    } & {
+        id?: string | undefined;
+    } & { [K in Exclude<keyof I, "id">]: never; }>(base?: I | undefined): WebhookDeleteRequestById;
+    fromPartial<I_1 extends {
+        id?: string | undefined;
+    } & {
+        id?: string | undefined;
+    } & { [K_1 in Exclude<keyof I_1, "id">]: never; }>(object: I_1): WebhookDeleteRequestById;
+};
+export declare const WebhookListRequest: {
+    encode(message: WebhookListRequest, writer?: _m0.Writer): _m0.Writer;
+    decode(input: _m0.Reader | Uint8Array, length?: number): WebhookListRequest;
+    fromJSON(object: any): WebhookListRequest;
+    toJSON(message: WebhookListRequest): unknown;
+    create<I extends {
+        channel_id?: string | undefined;
+    } & {
+        channel_id?: string | undefined;
+    } & { [K in Exclude<keyof I, "channel_id">]: never; }>(base?: I | undefined): WebhookListRequest;
+    fromPartial<I_1 extends {
+        channel_id?: string | undefined;
+    } & {
+        channel_id?: string | undefined;
+    } & { [K_1 in Exclude<keyof I_1, "channel_id">]: never; }>(object: I_1): WebhookListRequest;
+};
+export declare const WebhookListResponse: {
+    encode(message: WebhookListResponse, writer?: _m0.Writer): _m0.Writer;
+    decode(input: _m0.Reader | Uint8Array, length?: number): WebhookListResponse;
+    fromJSON(object: any): WebhookListResponse;
+    toJSON(message: WebhookListResponse): unknown;
+    create<I extends {
+        webhooks?: {
+            id?: string | undefined;
+            webhook_name?: string | undefined;
+            channel_id?: string | undefined;
+            active?: number | undefined;
+            url?: string | undefined;
+            creator_id?: string | undefined;
+            create_time?: string | undefined;
+            update_time?: string | undefined;
+        }[] | undefined;
+    } & {
+        webhooks?: ({
+            id?: string | undefined;
+            webhook_name?: string | undefined;
+            channel_id?: string | undefined;
+            active?: number | undefined;
+            url?: string | undefined;
+            creator_id?: string | undefined;
+            create_time?: string | undefined;
+            update_time?: string | undefined;
+        }[] & ({
+            id?: string | undefined;
+            webhook_name?: string | undefined;
+            channel_id?: string | undefined;
+            active?: number | undefined;
+            url?: string | undefined;
+            creator_id?: string | undefined;
+            create_time?: string | undefined;
+            update_time?: string | undefined;
+        } & {
+            id?: string | undefined;
+            webhook_name?: string | undefined;
+            channel_id?: string | undefined;
+            active?: number | undefined;
+            url?: string | undefined;
+            creator_id?: string | undefined;
+            create_time?: string | undefined;
+            update_time?: string | undefined;
+        } & { [K in Exclude<keyof I["webhooks"][number], keyof Webhook>]: never; })[] & { [K_1 in Exclude<keyof I["webhooks"], keyof {
+            id?: string | undefined;
+            webhook_name?: string | undefined;
+            channel_id?: string | undefined;
+            active?: number | undefined;
+            url?: string | undefined;
+            creator_id?: string | undefined;
+            create_time?: string | undefined;
+            update_time?: string | undefined;
+        }[]>]: never; }) | undefined;
+    } & { [K_2 in Exclude<keyof I, "webhooks">]: never; }>(base?: I | undefined): WebhookListResponse;
+    fromPartial<I_1 extends {
+        webhooks?: {
+            id?: string | undefined;
+            webhook_name?: string | undefined;
+            channel_id?: string | undefined;
+            active?: number | undefined;
+            url?: string | undefined;
+            creator_id?: string | undefined;
+            create_time?: string | undefined;
+            update_time?: string | undefined;
+        }[] | undefined;
+    } & {
+        webhooks?: ({
+            id?: string | undefined;
+            webhook_name?: string | undefined;
+            channel_id?: string | undefined;
+            active?: number | undefined;
+            url?: string | undefined;
+            creator_id?: string | undefined;
+            create_time?: string | undefined;
+            update_time?: string | undefined;
+        }[] & ({
+            id?: string | undefined;
+            webhook_name?: string | undefined;
+            channel_id?: string | undefined;
+            active?: number | undefined;
+            url?: string | undefined;
+            creator_id?: string | undefined;
+            create_time?: string | undefined;
+            update_time?: string | undefined;
+        } & {
+            id?: string | undefined;
+            webhook_name?: string | undefined;
+            channel_id?: string | undefined;
+            active?: number | undefined;
+            url?: string | undefined;
+            creator_id?: string | undefined;
+            create_time?: string | undefined;
+            update_time?: string | undefined;
+        } & { [K_3 in Exclude<keyof I_1["webhooks"][number], keyof Webhook>]: never; })[] & { [K_4 in Exclude<keyof I_1["webhooks"], keyof {
+            id?: string | undefined;
+            webhook_name?: string | undefined;
+            channel_id?: string | undefined;
+            active?: number | undefined;
+            url?: string | undefined;
+            creator_id?: string | undefined;
+            create_time?: string | undefined;
+            update_time?: string | undefined;
+        }[]>]: never; }) | undefined;
+    } & { [K_5 in Exclude<keyof I_1, "webhooks">]: never; }>(object: I_1): WebhookListResponse;
 };
 type Builtin = Date | Function | Uint8Array | string | number | boolean | undefined;
 export type DeepPartial<T> = T extends Builtin ? T : T extends Array<infer U> ? Array<DeepPartial<U>> : T extends ReadonlyArray<infer U> ? ReadonlyArray<DeepPartial<U>> : T extends {} ? {
