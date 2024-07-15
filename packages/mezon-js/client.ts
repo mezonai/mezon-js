@@ -2320,7 +2320,7 @@ async updateWebhookById(session: Session,id:string,request :MezonUpdateWebhookBy
   })
 }
 
-//**disabled webhook by id *//**ToDo */
+//**disabled webhook by id */
 async deleteWebhookById(session: Session,id:string) {
   if (this.autoRefreshSession && session.refresh_token &&
     session.isexpired((Date.now() + this.expiredTimespanMs)/1000)) {
