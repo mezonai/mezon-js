@@ -2311,7 +2311,6 @@ async listWebhookByChannelId(session: Session,channel_id:string):Promise<ApiWebh
 }
 
 //**update webhook name by id */
-
 async updateWebhookById(session: Session,id:string,request :MezonUpdateWebhookByIdBody) {
   if (this.autoRefreshSession && session.refresh_token &&
     session.isexpired((Date.now() + this.expiredTimespanMs)/1000)) {
@@ -2329,7 +2328,7 @@ async deleteWebhookById(session: Session,id:string) {
     session.isexpired((Date.now() + this.expiredTimespanMs)/1000)) {
     await this.sessionRefresh(session);
   }
-  
+
   return this.apiClient.deleteWebhookById(session.token,id).then((response:any)=> {
     return Promise.resolve(response);
   })
