@@ -598,6 +598,9 @@ export interface Socket {
   /** Send last pin message */
   writeLastPinMessage(clan_id: string, channel_id: string, mode: number, message_id: string, timestamp: string, operation: number) : Promise<LastPinMessageEvent>;
 
+  /** Send custom user status */
+  writeCustomStatus(clan_id: string, status: string) : Promise<CustomStatusEvent>;
+
   /** send voice joined */
   writeVoiceJoined(id: string, clanId: string, clanName: string, voiceChannelId: string, voiceChannelLabel: string, participant: string, lastScreenshot: string) : Promise<VoiceJoinedEvent>;
 
@@ -994,7 +997,7 @@ export class DefaultSocket implements Socket {
     }
   }
 
-  send(message: ChannelJoin | ChannelLeave | ChannelMessageSend | ChannelMessageUpdate |
+  send(message: ChannelJoin | ChannelLeave | ChannelMessageSend | ChannelMessageUpdate | CustomStatusEvent |
     ChannelMessageRemove | MessageTypingEvent | LastSeenMessageEvent | Rpc | StatusFollow | StatusUnfollow | StatusUpdate | Ping, sendTimeout = DefaultSocket.DefaultSendTimeoutMs): Promise<any> {
     const untypedMessage = message as any;
 
@@ -1148,7 +1151,7 @@ export class DefaultSocket implements Socket {
 
   async writeCustomStatus(clan_id: string, status: string) : Promise<CustomStatusEvent> {
     const response = await this.send({custom_status_event: {clan_id: clan_id, status: status}});
-    return response.last_pin_message_event
+    return response.custom_status_event
   }
 
   private async pingPong() : Promise<void> {

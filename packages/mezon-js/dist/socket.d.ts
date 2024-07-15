@@ -431,6 +431,8 @@ export interface Socket {
     writeLastSeenMessage(clan_id: string, channel_id: string, mode: number, message_id: string, timestamp: string): Promise<LastSeenMessageEvent>;
     /** Send last pin message */
     writeLastPinMessage(clan_id: string, channel_id: string, mode: number, message_id: string, timestamp: string, operation: number): Promise<LastPinMessageEvent>;
+    /** Send custom user status */
+    writeCustomStatus(clan_id: string, status: string): Promise<CustomStatusEvent>;
     /** send voice joined */
     writeVoiceJoined(id: string, clanId: string, clanName: string, voiceChannelId: string, voiceChannelLabel: string, participant: string, lastScreenshot: string): Promise<VoiceJoinedEvent>;
     /** send voice leaved */
@@ -525,7 +527,7 @@ export declare class DefaultSocket implements Socket {
     onstreamdata(streamData: StreamData): void;
     onheartbeattimeout(): void;
     oncustomstatus(statusEvent: CustomStatusEvent): void;
-    send(message: ChannelJoin | ChannelLeave | ChannelMessageSend | ChannelMessageUpdate | ChannelMessageRemove | MessageTypingEvent | LastSeenMessageEvent | Rpc | StatusFollow | StatusUnfollow | StatusUpdate | Ping, sendTimeout?: number): Promise<any>;
+    send(message: ChannelJoin | ChannelLeave | ChannelMessageSend | ChannelMessageUpdate | CustomStatusEvent | ChannelMessageRemove | MessageTypingEvent | LastSeenMessageEvent | Rpc | StatusFollow | StatusUnfollow | StatusUpdate | Ping, sendTimeout?: number): Promise<any>;
     followUsers(userIds: string[]): Promise<Status>;
     joinClanChat(clan_id: string): Promise<ClanJoin>;
     joinChat(clan_id: string, channel_id: string, mode: number, type: number, persistence: boolean, hidden: boolean): Promise<Channel>;
