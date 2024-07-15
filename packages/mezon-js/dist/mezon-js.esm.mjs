@@ -2358,32 +2358,7 @@ var MezonApi = class {
       )
     ]);
   }
-  /** Get permission list */
-  listClanEmoji(bearerToken, options = {}) {
-    const urlPath = "/v2/emoji";
-    const queryParams = /* @__PURE__ */ new Map();
-    let bodyJson = "";
-    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
-    const fetchOptions = buildFetchOptions("GET", options, bodyJson);
-    if (bearerToken) {
-      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-    }
-    return Promise.race([
-      fetch(fullUrl, fetchOptions).then((response) => {
-        if (response.status == 204) {
-          return response;
-        } else if (response.status >= 200 && response.status < 300) {
-          return response.json();
-        } else {
-          throw response;
-        }
-      }),
-      new Promise(
-        (_, reject) => setTimeout(reject, this.timeoutMs, "Request timed out.")
-      )
-    ]);
-  }
-  /** Post permission Emoji  /v2/emoji/create */
+  /** Post clan Emoji  /v2/emoji/create */
   createClanEmoji(bearerToken, body, options = {}) {
     if (body === null || body === void 0) {
       throw new Error("'body' is a required parameter but is null or undefined.");
