@@ -2292,6 +2292,7 @@ async generateWebhookLink(session: Session, request:ApiWebhookCreateRequest) {
     session.isexpired((Date.now() + this.expiredTimespanMs)/1000)) {
     await this.sessionRefresh(session);
   }
+
   return this.apiClient.generateWebhook(session.token,request).then((response:any)=> {
     return response !== undefined;
   })
@@ -2303,6 +2304,7 @@ async listWebhookByChannelId(session: Session,channel_id:string):Promise<ApiWebh
     session.isexpired((Date.now() + this.expiredTimespanMs)/1000)) {
     await this.sessionRefresh(session);
   }
+
   return this.apiClient.listWebhookByChannelId(session.token,channel_id).then((response:ApiWebhookListResponse)=> {
     return Promise.resolve(response);
   })
@@ -2315,6 +2317,7 @@ async updateWebhookById(session: Session,id:string,request :MezonUpdateWebhookBy
     session.isexpired((Date.now() + this.expiredTimespanMs)/1000)) {
     await this.sessionRefresh(session);
   }
+
   return this.apiClient.updateWebhookById(session.token,id,request).then((response:any)=> {
     return Promise.resolve(response);
   })
@@ -2326,6 +2329,7 @@ async deleteWebhookById(session: Session,id:string) {
     session.isexpired((Date.now() + this.expiredTimespanMs)/1000)) {
     await this.sessionRefresh(session);
   }
+  
   return this.apiClient.deleteWebhookById(session.token,id).then((response:any)=> {
     return Promise.resolve(response);
   })
