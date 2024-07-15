@@ -4799,7 +4799,7 @@ var _DefaultSocket = class _DefaultSocket {
   writeCustomStatus(clan_id, status) {
     return __async(this, null, function* () {
       const response = yield this.send({ custom_status_event: { clan_id, status } });
-      return response.last_pin_message_event;
+      return response.custom_status_event;
     });
   }
   pingPong() {
