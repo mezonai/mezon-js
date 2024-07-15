@@ -101,7 +101,6 @@ import {
   ApiWebhookCreateRequest,
   ApiWebhookListResponse,
   MezonUpdateWebhookByIdBody,
-  MezonDeleteWebhookByIdBody
 } from "./api.gen";
 
 import { Session } from "./session";
@@ -2322,12 +2321,12 @@ async updateWebhookById(session: Session,id:string,request :MezonUpdateWebhookBy
 }
 
 //**disabled webhook by id *//**ToDo */
-async deleteWebhookById(session: Session,id:string,requset:MezonDeleteWebhookByIdBody) {
+async deleteWebhookById(session: Session,id:string) {
   if (this.autoRefreshSession && session.refresh_token &&
     session.isexpired((Date.now() + this.expiredTimespanMs)/1000)) {
     await this.sessionRefresh(session);
   }
-  return this.apiClient.deleteWebhookById(session.token,id,requset).then((response:any)=> {
+  return this.apiClient.deleteWebhookById(session.token,id).then((response:any)=> {
     return Promise.resolve(response);
   })
 }

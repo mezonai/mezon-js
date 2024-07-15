@@ -25,8 +25,7 @@ export interface ClanUserListClanUser {
 }
 
 /**  */
-export interface MezonDeleteWebhookByIdBody {
-}
+
 
 /** Update fields in a given channel. */
 export interface MezonUpdateChannelDescBody {
@@ -6239,21 +6238,17 @@ export class MezonApi {
   /** disabled webhook */
   deleteWebhookById(bearerToken: string,
       id:string,
-      body:MezonDeleteWebhookByIdBody,
       options: any = {}): Promise<any> {
     
     if (id === null || id === undefined) {
       throw new Error("'id' is a required parameter but is null or undefined.");
     }
-    if (body === null || body === undefined) {
-      throw new Error("'body' is a required parameter but is null or undefined.");
-    }
+    
     const urlPath = "/v2/webhooks/{id}"
         .replace("{id}", encodeURIComponent(String(id)));
     const queryParams = new Map<string, any>();
 
     let bodyJson : string = "";
-    bodyJson = JSON.stringify(body || {});
 
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("PATCH", options, bodyJson);

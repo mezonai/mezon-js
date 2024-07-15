@@ -11,8 +11,6 @@ export interface ClanUserListClanUser {
     user?: ApiUser;
 }
 /**  */
-export interface MezonDeleteWebhookByIdBody {
-}
 /** Update fields in a given channel. */
 export interface MezonUpdateChannelDescBody {
     category_id?: string;
@@ -1143,6 +1141,6 @@ export declare class MezonApi {
     /** list webhook belong to the channel */
     listWebhookByChannelId(bearerToken: string, channelId: string, options?: any): Promise<ApiWebhookListResponse>;
     /** disabled webhook */
-    deleteWebhookById(bearerToken: string, id: string, body: MezonDeleteWebhookByIdBody, options?: any): Promise<any>;
+    deleteWebhookById(bearerToken: string, id: string, options?: any): Promise<any>;
     buildFullUrl(basePath: string, fragment: string, queryParams: Map<string, any>): string;
 }

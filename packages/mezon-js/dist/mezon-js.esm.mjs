@@ -4310,17 +4310,13 @@ var MezonApi = class {
     ]);
   }
   /** disabled webhook */
-  deleteWebhookById(bearerToken, id, body, options = {}) {
+  deleteWebhookById(bearerToken, id, options = {}) {
     if (id === null || id === void 0) {
       throw new Error("'id' is a required parameter but is null or undefined.");
-    }
-    if (body === null || body === void 0) {
-      throw new Error("'body' is a required parameter but is null or undefined.");
     }
     const urlPath = "/v2/webhooks/{id}".replace("{id}", encodeURIComponent(String(id)));
     const queryParams = /* @__PURE__ */ new Map();
     let bodyJson = "";
-    bodyJson = JSON.stringify(body || {});
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("PATCH", options, bodyJson);
     if (bearerToken) {
@@ -6627,12 +6623,12 @@ var Client = class {
     });
   }
   //**disabled webhook by id *//**ToDo */
-  deleteWebhookById(session, id, requset) {
+  deleteWebhookById(session, id) {
     return __async(this, null, function* () {
       if (this.autoRefreshSession && session.refresh_token && session.isexpired((Date.now() + this.expiredTimespanMs) / 1e3)) {
         yield this.sessionRefresh(session);
       }
-      return this.apiClient.deleteWebhookById(session.token, id, requset).then((response) => {
+      return this.apiClient.deleteWebhookById(session.token, id).then((response) => {
         return Promise.resolve(response);
       });
     });
