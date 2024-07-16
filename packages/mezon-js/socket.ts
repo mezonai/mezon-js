@@ -718,6 +718,10 @@ export class DefaultSocket implements Socket {
     return cid;
   }
 
+  isOpen(): boolean {
+    return this.adapter.isOpen();
+  }
+
   connect(session: Session, createStatus: boolean = false, connectTimeoutMs: number = DefaultSocket.DefaultConnectTimeoutMs): Promise<Session> {
     if (this.adapter.isOpen()) {
       return Promise.resolve(session);

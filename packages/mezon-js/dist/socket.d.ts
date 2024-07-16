@@ -502,6 +502,7 @@ export declare class DefaultSocket implements Socket {
     private _heartbeatTimeoutMs;
     constructor(host: string, port: string, useSSL?: boolean, verbose?: boolean, adapter?: WebSocketAdapter, sendTimeoutMs?: number);
     generatecid(): string;
+    isOpen(): boolean;
     connect(session: Session, createStatus?: boolean, connectTimeoutMs?: number): Promise<Session>;
     disconnect(fireDisconnectEvent?: boolean): void;
     setHeartbeatTimeoutMs(ms: number): void;

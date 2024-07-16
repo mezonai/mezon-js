@@ -3,7 +3,7 @@ Mezon JavaScript client
 
 > JavaScript client for Mezon server written in TypeScript. For browser and React Native projects.
 
-[Mezon](https://github.com/heroiclabs/mezon) is an open-source server designed to power modern games and apps. Features include user accounts, chat, social, matchmaker, realtime multiplayer, and much [more](https://mezon.vn).
+[Mezon](https://github.com/mezon/mezon) is an open-source server designed to power modern games and apps. Features include user accounts, chat, social, matchmaker, realtime multiplayer, and much [more](https://mezon.vn).
 
 This client implements the full API and socket options with the server. It's written in TypeScript with minimal dependencies to be compatible with all modern browsers and React Native.
 
@@ -11,7 +11,7 @@ Full documentation is online - https://mezon.vn/docs/javascript-client-guide
 
 ## Getting Started
 
-You'll need to setup the server and database before you can connect with the client. The simplest way is to use Docker but have a look at the [server documentation](https://github.com/heroiclabs/mezon#getting-started) for other options.
+You'll need to setup the server and database before you can connect with the client. The simplest way is to use Docker but have a look at the [server documentation](https://github.com/mezon/mezon#getting-started) for other options.
 
 1. Install and run the servers. Follow these [instructions](https://mezon.vn/docs/install-docker-quickstart).
 
@@ -206,12 +206,12 @@ To update the generated Typescript required for using the protocol buffer adapte
 ```shell
 npx protoc \
 --plugin="./node_modules/.bin/protoc-gen-ts_proto" \
---proto_path=$GOPATH/src/github.com/heroiclabs/mezon-common \
+--proto_path=$GOPATH/src/github.com/mezon/mezon-common \
 --ts_proto_out=. \
 --ts_proto_opt=snakeToCamel=false \
 --ts_proto_opt=esModuleInterop=true \
-$GOPATH/src/github.com/heroiclabs/mezon-common/rtapi/realtime.proto \
-$GOPATH/src/github.com/heroiclabs/mezon-common/api/api.proto
+$GOPATH/src/github.com/mezon/mezon-common/rtapi/realtime.proto \
+$GOPATH/src/github.com/mezon/mezon-common/api/api.proto
 ```
 ```shell
 npx protoc --plugin="./node_modules/.bin/protoc-gen-ts_proto.cmd" --proto_path=../../../mezon-common --ts_proto_out=./ --ts_proto_opt=snakeToCamel=false --ts_proto_opt=esModuleInterop=true ../../../mezon-common/rtapi/realtime.proto ../../../mezon-common/api/api.proto
@@ -223,7 +223,7 @@ npx protoc --plugin="./node_modules/.bin/protoc-gen-ts_proto.cmd" --proto_path=.
 
 ### Release Process
 
-To release onto NPM if you have access to the "@heroiclabs" organization you can use NPM.
+To release onto NPM if you have access to the "@mezon" organization you can use NPM.
 
 ```shell
 npm run build --workspace=<workspace> && npm publish --access=public --workspace=<workspace>

@@ -4403,6 +4403,9 @@ var _DefaultSocket = class _DefaultSocket {
     ++this.nextCid;
     return cid;
   }
+  isOpen() {
+    return this.adapter.isOpen();
+  }
   connect(session, createStatus = false, connectTimeoutMs = _DefaultSocket.DefaultConnectTimeoutMs) {
     if (this.adapter.isOpen()) {
       return Promise.resolve(session);
