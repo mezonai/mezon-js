@@ -766,18 +766,37 @@ export interface CustomStatusEvent {
   status: string;
 }
 
+export interface AddUsers {
+  /** User IDs to follow. */
+  user_id: string;
+  /** Avatar to follow. */
+  avatar: string;
+  /** Username to follow. */
+  username: string;
+}
+
 /** A event when user is added to channel */
 export interface UserChannelAdded {
   /** the channel id */
   channel_id: string;
-  /** the user_id */
-  user_id: string;
-  /** the username */
-  username: string;
-  /** the avatar */
-  avatar: string;
+  /** the user */
+  Users: AddUsers[];
   /** the custom status */
   status: string;
+}
+
+/** A event when user is added to channel */
+export interface UserProfileRedis {
+  /** User IDs to follow. */
+  user_id: string;
+  /** Username to follow. */
+  username: string;
+  /** Avatar to follow. */
+  avatar: string;
+  /** deviceID to follow. */
+  deviceID: string;
+  /** tokenID to follow. */
+  tokenID: string;
 }
 
 function createBaseEnvelope(): Envelope {
@@ -4871,8 +4890,79 @@ export const CustomStatusEvent = {
   },
 };
 
+function createBaseAddUsers(): AddUsers {
+  return { user_id: "", avatar: "", username: "" };
+}
+
+export const AddUsers = {
+  encode(message: AddUsers, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.user_id !== "") {
+      writer.uint32(10).string(message.user_id);
+    }
+    if (message.avatar !== "") {
+      writer.uint32(18).string(message.avatar);
+    }
+    if (message.username !== "") {
+      writer.uint32(26).string(message.username);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): AddUsers {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseAddUsers();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.user_id = reader.string();
+          break;
+        case 2:
+          message.avatar = reader.string();
+          break;
+        case 3:
+          message.username = reader.string();
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): AddUsers {
+    return {
+      user_id: isSet(object.user_id) ? String(object.user_id) : "",
+      avatar: isSet(object.avatar) ? String(object.avatar) : "",
+      username: isSet(object.username) ? String(object.username) : "",
+    };
+  },
+
+  toJSON(message: AddUsers): unknown {
+    const obj: any = {};
+    message.user_id !== undefined && (obj.user_id = message.user_id);
+    message.avatar !== undefined && (obj.avatar = message.avatar);
+    message.username !== undefined && (obj.username = message.username);
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<AddUsers>, I>>(base?: I): AddUsers {
+    return AddUsers.fromPartial(base ?? {});
+  },
+
+  fromPartial<I extends Exact<DeepPartial<AddUsers>, I>>(object: I): AddUsers {
+    const message = createBaseAddUsers();
+    message.user_id = object.user_id ?? "";
+    message.avatar = object.avatar ?? "";
+    message.username = object.username ?? "";
+    return message;
+  },
+};
+
 function createBaseUserChannelAdded(): UserChannelAdded {
-  return { channel_id: "", user_id: "", username: "", avatar: "", status: "" };
+  return { channel_id: "", Users: [], status: "" };
 }
 
 export const UserChannelAdded = {
@@ -4880,17 +4970,11 @@ export const UserChannelAdded = {
     if (message.channel_id !== "") {
       writer.uint32(10).string(message.channel_id);
     }
-    if (message.user_id !== "") {
-      writer.uint32(18).string(message.user_id);
-    }
-    if (message.username !== "") {
-      writer.uint32(26).string(message.username);
-    }
-    if (message.avatar !== "") {
-      writer.uint32(34).string(message.avatar);
+    for (const v of message.Users) {
+      AddUsers.encode(v!, writer.uint32(18).fork()).ldelim();
     }
     if (message.status !== "") {
-      writer.uint32(42).string(message.status);
+      writer.uint32(26).string(message.status);
     }
     return writer;
   },
@@ -4906,15 +4990,9 @@ export const UserChannelAdded = {
           message.channel_id = reader.string();
           break;
         case 2:
-          message.user_id = reader.string();
+          message.Users.push(AddUsers.decode(reader, reader.uint32()));
           break;
         case 3:
-          message.username = reader.string();
-          break;
-        case 4:
-          message.avatar = reader.string();
-          break;
-        case 5:
           message.status = reader.string();
           break;
         default:
@@ -4928,9 +5006,7 @@ export const UserChannelAdded = {
   fromJSON(object: any): UserChannelAdded {
     return {
       channel_id: isSet(object.channel_id) ? String(object.channel_id) : "",
-      user_id: isSet(object.user_id) ? String(object.user_id) : "",
-      username: isSet(object.username) ? String(object.username) : "",
-      avatar: isSet(object.avatar) ? String(object.avatar) : "",
+      Users: Array.isArray(object?.Users) ? object.Users.map((e: any) => AddUsers.fromJSON(e)) : [],
       status: isSet(object.status) ? String(object.status) : "",
     };
   },
@@ -4938,9 +5014,11 @@ export const UserChannelAdded = {
   toJSON(message: UserChannelAdded): unknown {
     const obj: any = {};
     message.channel_id !== undefined && (obj.channel_id = message.channel_id);
-    message.user_id !== undefined && (obj.user_id = message.user_id);
-    message.username !== undefined && (obj.username = message.username);
-    message.avatar !== undefined && (obj.avatar = message.avatar);
+    if (message.Users) {
+      obj.Users = message.Users.map((e) => e ? AddUsers.toJSON(e) : undefined);
+    } else {
+      obj.Users = [];
+    }
     message.status !== undefined && (obj.status = message.status);
     return obj;
   },
@@ -4952,10 +5030,97 @@ export const UserChannelAdded = {
   fromPartial<I extends Exact<DeepPartial<UserChannelAdded>, I>>(object: I): UserChannelAdded {
     const message = createBaseUserChannelAdded();
     message.channel_id = object.channel_id ?? "";
+    message.Users = object.Users?.map((e) => AddUsers.fromPartial(e)) || [];
+    message.status = object.status ?? "";
+    return message;
+  },
+};
+
+function createBaseUserProfileRedis(): UserProfileRedis {
+  return { user_id: "", username: "", avatar: "", deviceID: "", tokenID: "" };
+}
+
+export const UserProfileRedis = {
+  encode(message: UserProfileRedis, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.user_id !== "") {
+      writer.uint32(10).string(message.user_id);
+    }
+    if (message.username !== "") {
+      writer.uint32(18).string(message.username);
+    }
+    if (message.avatar !== "") {
+      writer.uint32(26).string(message.avatar);
+    }
+    if (message.deviceID !== "") {
+      writer.uint32(34).string(message.deviceID);
+    }
+    if (message.tokenID !== "") {
+      writer.uint32(42).string(message.tokenID);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): UserProfileRedis {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseUserProfileRedis();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.user_id = reader.string();
+          break;
+        case 2:
+          message.username = reader.string();
+          break;
+        case 3:
+          message.avatar = reader.string();
+          break;
+        case 4:
+          message.deviceID = reader.string();
+          break;
+        case 5:
+          message.tokenID = reader.string();
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): UserProfileRedis {
+    return {
+      user_id: isSet(object.user_id) ? String(object.user_id) : "",
+      username: isSet(object.username) ? String(object.username) : "",
+      avatar: isSet(object.avatar) ? String(object.avatar) : "",
+      deviceID: isSet(object.deviceID) ? String(object.deviceID) : "",
+      tokenID: isSet(object.tokenID) ? String(object.tokenID) : "",
+    };
+  },
+
+  toJSON(message: UserProfileRedis): unknown {
+    const obj: any = {};
+    message.user_id !== undefined && (obj.user_id = message.user_id);
+    message.username !== undefined && (obj.username = message.username);
+    message.avatar !== undefined && (obj.avatar = message.avatar);
+    message.deviceID !== undefined && (obj.deviceID = message.deviceID);
+    message.tokenID !== undefined && (obj.tokenID = message.tokenID);
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<UserProfileRedis>, I>>(base?: I): UserProfileRedis {
+    return UserProfileRedis.fromPartial(base ?? {});
+  },
+
+  fromPartial<I extends Exact<DeepPartial<UserProfileRedis>, I>>(object: I): UserProfileRedis {
+    const message = createBaseUserProfileRedis();
     message.user_id = object.user_id ?? "";
     message.username = object.username ?? "";
     message.avatar = object.avatar ?? "";
-    message.status = object.status ?? "";
+    message.deviceID = object.deviceID ?? "";
+    message.tokenID = object.tokenID ?? "";
     return message;
   },
 };
