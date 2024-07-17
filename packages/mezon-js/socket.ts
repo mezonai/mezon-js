@@ -550,6 +550,9 @@ interface StatusUpdate {
 
 /** A socket connection to Mezon server. */
 export interface Socket {
+  /** Connection is Open */
+  isOpen(): boolean;
+
   /** Connect to the server. */
   connect(session: Session, createStatus: boolean): Promise<Session>;
 
@@ -716,6 +719,10 @@ export class DefaultSocket implements Socket {
     const cid = this.nextCid.toString();
     ++this.nextCid;
     return cid;
+  }
+
+  isOpen(): boolean {
+    return this.adapter.isOpen();
   }
 
   connect(session: Session, createStatus: boolean = false, connectTimeoutMs: number = DefaultSocket.DefaultConnectTimeoutMs): Promise<Session> {

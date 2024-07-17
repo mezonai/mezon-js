@@ -586,6 +586,6 @@ export declare class Client {
     deleteByIdClanEmoji(session: Session, id: string): Promise<boolean>;
     generateWebhookLink(session: Session, request: ApiWebhookCreateRequest): Promise<boolean>;
     listWebhookByChannelId(session: Session, channel_id: string): Promise<ApiWebhookListResponse>;
-    updateWebhookById(session: Session, id: string, request: MezonUpdateWebhookByIdBody): Promise<any>;
-    deleteWebhookById(session: Session, id: string): Promise<any>;
+    updateWebhookById(session: Session, id: string, request: MezonUpdateWebhookByIdBody): Promise<boolean>;
+    deleteWebhookById(session: Session, id: string): Promise<boolean>;
 }

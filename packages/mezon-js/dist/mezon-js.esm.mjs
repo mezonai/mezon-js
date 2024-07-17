@@ -4520,6 +4520,9 @@ var _DefaultSocket = class _DefaultSocket {
     ++this.nextCid;
     return cid;
   }
+  isOpen() {
+    return this.adapter.isOpen();
+  }
   connect(session, createStatus = false, connectTimeoutMs = _DefaultSocket.DefaultConnectTimeoutMs) {
     if (this.adapter.isOpen()) {
       return Promise.resolve(session);
@@ -6618,18 +6621,18 @@ var Client = class {
         yield this.sessionRefresh(session);
       }
       return this.apiClient.updateWebhookById(session.token, id, request).then((response) => {
-        return Promise.resolve(response);
+        return response !== void 0;
       });
     });
   }
-  //**disabled webhook by id *//**ToDo */
+  //**disabled webhook by id */
   deleteWebhookById(session, id) {
     return __async(this, null, function* () {
       if (this.autoRefreshSession && session.refresh_token && session.isexpired((Date.now() + this.expiredTimespanMs) / 1e3)) {
         yield this.sessionRefresh(session);
       }
       return this.apiClient.deleteWebhookById(session.token, id).then((response) => {
-        return Promise.resolve(response);
+        return response !== void 0;
       });
     });
   }

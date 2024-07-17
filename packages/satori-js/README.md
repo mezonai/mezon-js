@@ -124,7 +124,7 @@ npm run test --workspace=satori-js-test
 
 ### Release Process
 
-To release onto NPM if you have access to the "@heroiclabs" organization you can use NPM.
+To release onto NPM if you have access to the "@mezon" organization you can use NPM.
 
 ```shell
 npm run build --workspace=<workspace> && npm publish --access=public --workspace=<workspace>

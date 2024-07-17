@@ -6423,25 +6423,84 @@ var CustomStatusEvent = {
     return message;
   }
 };
+function createBaseAddUsers() {
+  return { user_id: "", avatar: "", username: "" };
+}
+var AddUsers = {
+  encode(message, writer = import_minimal4.default.Writer.create()) {
+    if (message.user_id !== "") {
+      writer.uint32(10).string(message.user_id);
+    }
+    if (message.avatar !== "") {
+      writer.uint32(18).string(message.avatar);
+    }
+    if (message.username !== "") {
+      writer.uint32(26).string(message.username);
+    }
+    return writer;
+  },
+  decode(input, length) {
+    const reader = input instanceof import_minimal4.default.Reader ? input : new import_minimal4.default.Reader(input);
+    let end = length === void 0 ? reader.len : reader.pos + length;
+    const message = createBaseAddUsers();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.user_id = reader.string();
+          break;
+        case 2:
+          message.avatar = reader.string();
+          break;
+        case 3:
+          message.username = reader.string();
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+  fromJSON(object) {
+    return {
+      user_id: isSet4(object.user_id) ? String(object.user_id) : "",
+      avatar: isSet4(object.avatar) ? String(object.avatar) : "",
+      username: isSet4(object.username) ? String(object.username) : ""
+    };
+  },
+  toJSON(message) {
+    const obj = {};
+    message.user_id !== void 0 && (obj.user_id = message.user_id);
+    message.avatar !== void 0 && (obj.avatar = message.avatar);
+    message.username !== void 0 && (obj.username = message.username);
+    return obj;
+  },
+  create(base) {
+    return AddUsers.fromPartial(base != null ? base : {});
+  },
+  fromPartial(object) {
+    var _a, _b, _c;
+    const message = createBaseAddUsers();
+    message.user_id = (_a = object.user_id) != null ? _a : "";
+    message.avatar = (_b = object.avatar) != null ? _b : "";
+    message.username = (_c = object.username) != null ? _c : "";
+    return message;
+  }
+};
 function createBaseUserChannelAdded() {
-  return { channel_id: "", user_id: "", username: "", avatar: "", status: "" };
+  return { channel_id: "", Users: [], status: "" };
 }
 var UserChannelAdded = {
   encode(message, writer = import_minimal4.default.Writer.create()) {
     if (message.channel_id !== "") {
       writer.uint32(10).string(message.channel_id);
     }
-    if (message.user_id !== "") {
-      writer.uint32(18).string(message.user_id);
-    }
-    if (message.username !== "") {
-      writer.uint32(26).string(message.username);
-    }
-    if (message.avatar !== "") {
-      writer.uint32(34).string(message.avatar);
+    for (const v of message.Users) {
+      AddUsers.encode(v, writer.uint32(18).fork()).ldelim();
     }
     if (message.status !== "") {
-      writer.uint32(42).string(message.status);
+      writer.uint32(26).string(message.status);
     }
     return writer;
   },
@@ -6456,15 +6515,9 @@ var UserChannelAdded = {
           message.channel_id = reader.string();
           break;
         case 2:
-          message.user_id = reader.string();
+          message.Users.push(AddUsers.decode(reader, reader.uint32()));
           break;
         case 3:
-          message.username = reader.string();
-          break;
-        case 4:
-          message.avatar = reader.string();
-          break;
-        case 5:
           message.status = reader.string();
           break;
         default:
@@ -6477,18 +6530,18 @@ var UserChannelAdded = {
   fromJSON(object) {
     return {
       channel_id: isSet4(object.channel_id) ? String(object.channel_id) : "",
-      user_id: isSet4(object.user_id) ? String(object.user_id) : "",
-      username: isSet4(object.username) ? String(object.username) : "",
-      avatar: isSet4(object.avatar) ? String(object.avatar) : "",
+      Users: Array.isArray(object == null ? void 0 : object.Users) ? object.Users.map((e) => AddUsers.fromJSON(e)) : [],
       status: isSet4(object.status) ? String(object.status) : ""
     };
   },
   toJSON(message) {
     const obj = {};
     message.channel_id !== void 0 && (obj.channel_id = message.channel_id);
-    message.user_id !== void 0 && (obj.user_id = message.user_id);
-    message.username !== void 0 && (obj.username = message.username);
-    message.avatar !== void 0 && (obj.avatar = message.avatar);
+    if (message.Users) {
+      obj.Users = message.Users.map((e) => e ? AddUsers.toJSON(e) : void 0);
+    } else {
+      obj.Users = [];
+    }
     message.status !== void 0 && (obj.status = message.status);
     return obj;
   },
@@ -6496,13 +6549,11 @@ var UserChannelAdded = {
     return UserChannelAdded.fromPartial(base != null ? base : {});
   },
   fromPartial(object) {
-    var _a, _b, _c, _d, _e;
+    var _a, _b, _c;
     const message = createBaseUserChannelAdded();
     message.channel_id = (_a = object.channel_id) != null ? _a : "";
-    message.user_id = (_b = object.user_id) != null ? _b : "";
-    message.username = (_c = object.username) != null ? _c : "";
-    message.avatar = (_d = object.avatar) != null ? _d : "";
-    message.status = (_e = object.status) != null ? _e : "";
+    message.Users = ((_b = object.Users) == null ? void 0 : _b.map((e) => AddUsers.fromPartial(e))) || [];
+    message.status = (_c = object.status) != null ? _c : "";
     return message;
   }
 };

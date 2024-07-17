@@ -2552,7 +2552,6 @@ export interface Webhook {
 export interface WebhookCreateRequest {
   webhook_name: string;
   channel_id: string;
-  url: string;
 }
 
 export interface WebhookListRequestById {
@@ -2574,6 +2573,10 @@ export interface WebhookListRequest {
 
 export interface WebhookListResponse {
   webhooks: Webhook[];
+}
+
+export interface WebhookGenerateResponse {
+  url: string;
 }
 
 function createBaseAccount(): Account {
@@ -18683,7 +18686,7 @@ export const Webhook = {
 };
 
 function createBaseWebhookCreateRequest(): WebhookCreateRequest {
-  return { webhook_name: "", channel_id: "", url: "" };
+  return { webhook_name: "", channel_id: "" };
 }
 
 export const WebhookCreateRequest = {
@@ -18693,9 +18696,6 @@ export const WebhookCreateRequest = {
     }
     if (message.channel_id !== "") {
       writer.uint32(18).string(message.channel_id);
-    }
-    if (message.url !== "") {
-      writer.uint32(26).string(message.url);
     }
     return writer;
   },
@@ -18713,9 +18713,6 @@ export const WebhookCreateRequest = {
         case 2:
           message.channel_id = reader.string();
           break;
-        case 3:
-          message.url = reader.string();
-          break;
         default:
           reader.skipType(tag & 7);
           break;
@@ -18728,7 +18725,6 @@ export const WebhookCreateRequest = {
     return {
       webhook_name: isSet(object.webhook_name) ? String(object.webhook_name) : "",
       channel_id: isSet(object.channel_id) ? String(object.channel_id) : "",
-      url: isSet(object.url) ? String(object.url) : "",
     };
   },
 
@@ -18736,7 +18732,6 @@ export const WebhookCreateRequest = {
     const obj: any = {};
     message.webhook_name !== undefined && (obj.webhook_name = message.webhook_name);
     message.channel_id !== undefined && (obj.channel_id = message.channel_id);
-    message.url !== undefined && (obj.url = message.url);
     return obj;
   },
 
@@ -18748,7 +18743,6 @@ export const WebhookCreateRequest = {
     const message = createBaseWebhookCreateRequest();
     message.webhook_name = object.webhook_name ?? "";
     message.channel_id = object.channel_id ?? "";
-    message.url = object.url ?? "";
     return message;
   },
 };
@@ -19019,6 +19013,57 @@ export const WebhookListResponse = {
   fromPartial<I extends Exact<DeepPartial<WebhookListResponse>, I>>(object: I): WebhookListResponse {
     const message = createBaseWebhookListResponse();
     message.webhooks = object.webhooks?.map((e) => Webhook.fromPartial(e)) || [];
+    return message;
+  },
+};
+
+function createBaseWebhookGenerateResponse(): WebhookGenerateResponse {
+  return { url: "" };
+}
+
+export const WebhookGenerateResponse = {
+  encode(message: WebhookGenerateResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.url !== "") {
+      writer.uint32(10).string(message.url);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): WebhookGenerateResponse {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseWebhookGenerateResponse();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.url = reader.string();
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): WebhookGenerateResponse {
+    return { url: isSet(object.url) ? String(object.url) : "" };
+  },
+
+  toJSON(message: WebhookGenerateResponse): unknown {
+    const obj: any = {};
+    message.url !== undefined && (obj.url = message.url);
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<WebhookGenerateResponse>, I>>(base?: I): WebhookGenerateResponse {
+    return WebhookGenerateResponse.fromPartial(base ?? {});
+  },
+
+  fromPartial<I extends Exact<DeepPartial<WebhookGenerateResponse>, I>>(object: I): WebhookGenerateResponse {
+    const message = createBaseWebhookGenerateResponse();
+    message.url = object.url ?? "";
     return message;
   },
 };

@@ -14,17 +14,31 @@
  * limitations under the License.
  */
 
-import {Client} from "mezon-js";
+import {Client, Session} from "mezon-js";
+import {WebSocketAdapterPb} from "mezon-js-protobuf"
 
 var useSSL = false; // Enable if server is run with an SSL certificate.
 //var client = new Client("defaultkey", "dev-mezon.nccsoft.vn", "7305", useSSL);
 var client = new Client("defaultkey", "127.0.0.1", "7350", useSSL);
 
-client.authenticateEmail("user1@ncc.asia", "Aa12345678").then(session => {
+client.authenticateEmail("user1@ncc.asia", "Aa12345678").then(async session => {
   console.log("authenticated.", session);
-  client.createClanEmoji(session, {}).then(res => {
-    console.log("res", res);
-  });
+  
+  const socket = client.createSocket(false, true, new WebSocketAdapterPb());
+  const session2 = await socket.connect(session, true);
+  console.log("session", session2);
+
+  socket.disconnect(true);  
+
+  //const socket1 = client.createSocket(false, true, new WebSocketAdapterPb());
+  const refreshsession  = await client.sessionRefresh(session);
+  setTimeout(function() {
+    console.log("World");
+  }, 5000);
+  const session3 = await socket.reconnect(refreshsession, true);
+  
+  console.log("session 3", session3);
+
 }).catch(e => {
   console.log("error authenticating.");
 });
