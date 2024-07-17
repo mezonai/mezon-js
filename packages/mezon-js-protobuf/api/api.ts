@@ -1851,6 +1851,8 @@ export interface ChannelDescription {
   active: number;
   /** last pin message */
   last_pin_message: string;
+  /** the usernames */
+  usernames: string;
 }
 
 /** direct channel void */
@@ -12777,6 +12779,7 @@ function createBaseChannelDescription(): ChannelDescription {
     count_mess_unread: 0,
     active: 0,
     last_pin_message: "",
+    usernames: "",
   };
 }
 
@@ -12835,6 +12838,9 @@ export const ChannelDescription = {
     }
     if (message.last_pin_message !== "") {
       writer.uint32(146).string(message.last_pin_message);
+    }
+    if (message.usernames !== "") {
+      writer.uint32(154).string(message.usernames);
     }
     return writer;
   },
@@ -12900,6 +12906,9 @@ export const ChannelDescription = {
         case 18:
           message.last_pin_message = reader.string();
           break;
+        case 19:
+          message.usernames = reader.string();
+          break;
         default:
           reader.skipType(tag & 7);
           break;
@@ -12932,6 +12941,7 @@ export const ChannelDescription = {
       count_mess_unread: isSet(object.count_mess_unread) ? Number(object.count_mess_unread) : 0,
       active: isSet(object.active) ? Number(object.active) : 0,
       last_pin_message: isSet(object.last_pin_message) ? String(object.last_pin_message) : "",
+      usernames: isSet(object.usernames) ? String(object.usernames) : "",
     };
   },
 
@@ -12967,6 +12977,7 @@ export const ChannelDescription = {
     message.count_mess_unread !== undefined && (obj.count_mess_unread = Math.round(message.count_mess_unread));
     message.active !== undefined && (obj.active = Math.round(message.active));
     message.last_pin_message !== undefined && (obj.last_pin_message = message.last_pin_message);
+    message.usernames !== undefined && (obj.usernames = message.usernames);
     return obj;
   },
 
@@ -12998,6 +13009,7 @@ export const ChannelDescription = {
     message.count_mess_unread = object.count_mess_unread ?? 0;
     message.active = object.active ?? 0;
     message.last_pin_message = object.last_pin_message ?? "";
+    message.usernames = object.usernames ?? "";
     return message;
   },
 };
