@@ -101,6 +101,7 @@ import {
   ApiWebhookCreateRequest,
   ApiWebhookListResponse,
   MezonUpdateWebhookByIdBody,
+  ApiWebhookGenerateResponse,
 } from "./api.gen";
 
 import { Session } from "./session";
@@ -2287,14 +2288,14 @@ async deleteByIdClanEmoji(session: Session, id: string) {
 }
 
 //**create webhook for chaneel */
-async generateWebhookLink(session: Session, request: ApiWebhookCreateRequest) {
+async generateWebhookLink(session: Session, request: ApiWebhookCreateRequest): Promise<ApiWebhookGenerateResponse> {
   if (this.autoRefreshSession && session.refresh_token &&
     session.isexpired((Date.now() + this.expiredTimespanMs)/1000)) {
     await this.sessionRefresh(session);
   }
 
   return this.apiClient.generateWebhook(session.token, request).then((response: any) => {
-    return response !== undefined;
+    return Promise.resolve(response);
   })
 }
 

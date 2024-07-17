@@ -844,8 +844,11 @@ export interface ApiWebhook {
 /**  */
 export interface ApiWebhookCreateRequest {
     channel_id?: string;
-    url?: string;
     webhook_name?: string;
+}
+/**  */
+export interface ApiWebhookGenerateResponse {
+    url?: string;
 }
 /**  */
 export interface ApiWebhookListResponse {
@@ -1135,7 +1138,7 @@ export declare class MezonApi {
     /** Create webhook */
     createWebhookLink(bearerToken: string, body: ApiCreateWebhookRequest, options?: any): Promise<ApiWebhookResponse>;
     /** create webhook */
-    generateWebhook(bearerToken: string, body: ApiWebhookCreateRequest, options?: any): Promise<any>;
+    generateWebhook(bearerToken: string, body: ApiWebhookCreateRequest, options?: any): Promise<ApiWebhookGenerateResponse>;
     /** update webhook name by id */
     updateWebhookById(bearerToken: string, id: string, body: MezonUpdateWebhookByIdBody, options?: any): Promise<any>;
     /** list webhook belong to the channel */

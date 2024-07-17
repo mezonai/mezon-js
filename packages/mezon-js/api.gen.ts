@@ -1463,9 +1463,13 @@ export interface ApiWebhookCreateRequest {
   //
   channel_id?: string;
   //
-  url?: string;
-  //
   webhook_name?: string;
+}
+
+/**  */
+export interface ApiWebhookGenerateResponse {
+  //
+  url?: string;
 }
 
 /**  */
@@ -6125,7 +6129,7 @@ export class MezonApi {
   /** create webhook */
   generateWebhook(bearerToken: string,
       body:ApiWebhookCreateRequest,
-      options: any = {}): Promise<any> {
+      options: any = {}): Promise<ApiWebhookGenerateResponse> {
     
     if (body === null || body === undefined) {
       throw new Error("'body' is a required parameter but is null or undefined.");
