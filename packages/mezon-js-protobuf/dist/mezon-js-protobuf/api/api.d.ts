@@ -1997,6 +1997,8 @@ export interface WebhookListResponse {
 }
 export interface WebhookGenerateResponse {
     url: string;
+    hook_name: string;
+    channel_id: string;
 }
 export declare const Account: {
     encode(message: Account, writer?: _m0.Writer): _m0.Writer;
@@ -13583,14 +13585,22 @@ export declare const WebhookGenerateResponse: {
     toJSON(message: WebhookGenerateResponse): unknown;
     create<I extends {
         url?: string | undefined;
+        hook_name?: string | undefined;
+        channel_id?: string | undefined;
     } & {
         url?: string | undefined;
-    } & { [K in Exclude<keyof I, "url">]: never; }>(base?: I | undefined): WebhookGenerateResponse;
+        hook_name?: string | undefined;
+        channel_id?: string | undefined;
+    } & { [K in Exclude<keyof I, keyof WebhookGenerateResponse>]: never; }>(base?: I | undefined): WebhookGenerateResponse;
     fromPartial<I_1 extends {
         url?: string | undefined;
+        hook_name?: string | undefined;
+        channel_id?: string | undefined;
     } & {
         url?: string | undefined;
-    } & { [K_1 in Exclude<keyof I_1, "url">]: never; }>(object: I_1): WebhookGenerateResponse;
+        hook_name?: string | undefined;
+        channel_id?: string | undefined;
+    } & { [K_1 in Exclude<keyof I_1, keyof WebhookGenerateResponse>]: never; }>(object: I_1): WebhookGenerateResponse;
 };
 type Builtin = Date | Function | Uint8Array | string | number | boolean | undefined;
 export type DeepPartial<T> = T extends Builtin ? T : T extends Array<infer U> ? Array<DeepPartial<U>> : T extends ReadonlyArray<infer U> ? ReadonlyArray<DeepPartial<U>> : T extends {} ? {

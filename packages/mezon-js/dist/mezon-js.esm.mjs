@@ -6599,7 +6599,7 @@ var Client = class {
         yield this.sessionRefresh(session);
       }
       return this.apiClient.generateWebhook(session.token, request).then((response) => {
-        return response !== void 0;
+        return Promise.resolve(response);
       });
     });
   }
