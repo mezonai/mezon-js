@@ -550,6 +550,9 @@ interface StatusUpdate {
 
 /** A socket connection to Mezon server. */
 export interface Socket {
+  /** Connection is Open */
+  isOpen(): boolean;
+
   /** Connect to the server. */
   connect(session: Session, createStatus: boolean): Promise<Session>;
 
