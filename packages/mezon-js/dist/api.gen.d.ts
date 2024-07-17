@@ -844,8 +844,13 @@ export interface ApiWebhook {
 /**  */
 export interface ApiWebhookCreateRequest {
     channel_id?: string;
-    url?: string;
     webhook_name?: string;
+}
+/**  */
+export interface ApiWebhookGenerateResponse {
+    channel_id?: string;
+    hook_name?: string;
+    url?: string;
 }
 /**  */
 export interface ApiWebhookListResponse {

@@ -2579,6 +2579,8 @@ export interface WebhookListResponse {
 
 export interface WebhookGenerateResponse {
   url: string;
+  hook_name: string;
+  channel_id: string;
 }
 
 function createBaseAccount(): Account {
@@ -19030,13 +19032,19 @@ export const WebhookListResponse = {
 };
 
 function createBaseWebhookGenerateResponse(): WebhookGenerateResponse {
-  return { url: "" };
+  return { url: "", hook_name: "", channel_id: "" };
 }
 
 export const WebhookGenerateResponse = {
   encode(message: WebhookGenerateResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.url !== "") {
       writer.uint32(10).string(message.url);
+    }
+    if (message.hook_name !== "") {
+      writer.uint32(18).string(message.hook_name);
+    }
+    if (message.channel_id !== "") {
+      writer.uint32(26).string(message.channel_id);
     }
     return writer;
   },
@@ -19051,6 +19059,12 @@ export const WebhookGenerateResponse = {
         case 1:
           message.url = reader.string();
           break;
+        case 2:
+          message.hook_name = reader.string();
+          break;
+        case 3:
+          message.channel_id = reader.string();
+          break;
         default:
           reader.skipType(tag & 7);
           break;
@@ -19060,12 +19074,18 @@ export const WebhookGenerateResponse = {
   },
 
   fromJSON(object: any): WebhookGenerateResponse {
-    return { url: isSet(object.url) ? String(object.url) : "" };
+    return {
+      url: isSet(object.url) ? String(object.url) : "",
+      hook_name: isSet(object.hook_name) ? String(object.hook_name) : "",
+      channel_id: isSet(object.channel_id) ? String(object.channel_id) : "",
+    };
   },
 
   toJSON(message: WebhookGenerateResponse): unknown {
     const obj: any = {};
     message.url !== undefined && (obj.url = message.url);
+    message.hook_name !== undefined && (obj.hook_name = message.hook_name);
+    message.channel_id !== undefined && (obj.channel_id = message.channel_id);
     return obj;
   },
 
@@ -19076,6 +19096,8 @@ export const WebhookGenerateResponse = {
   fromPartial<I extends Exact<DeepPartial<WebhookGenerateResponse>, I>>(object: I): WebhookGenerateResponse {
     const message = createBaseWebhookGenerateResponse();
     message.url = object.url ?? "";
+    message.hook_name = object.hook_name ?? "";
+    message.channel_id = object.channel_id ?? "";
     return message;
   },
 };
