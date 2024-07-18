@@ -49,9 +49,9 @@ export interface Channel {
   /** The presence of the current user, i.e. yourself. */
   self: Presence;
   // The ID of the first DM user, or an empty string if this message was not sent through a DM chat.
-  user_id_one: string;
+  clan_logo: string;
   // The ID of the second DM user, or an empty string if this message was not sent through a DM chat.
-  user_id_two: string;
+  category_name: string;
 }
 
 export interface ClanJoin {
@@ -254,9 +254,9 @@ export interface ChannelMessageEvent {
   //The UNIX time (for gRPC clients) or ISO string (for REST clients) when the message was last updated.
   update_time: string;
   //The ID of the first DM user, or an empty string if this message was not sent through a DM chat.
-  user_id_one: string;
+  clan_logo: string;
   //The ID of the second DM user, or an empty string if this message was not sent through a DM chat.
-  user_id_two: string;
+  category_name: string;
   //The username of the message sender, if any.
   username: string;
   //
@@ -795,8 +795,8 @@ export class DefaultSocket implements Socket {
             id: message.channel_message.message_id,
             sender_id: message.channel_message.sender_id,
             update_time: message.channel_message.update_time,
-            user_id_one: message.channel_message.user_id_one,
-            user_id_two: message.channel_message.user_id_two,
+            clan_logo: message.channel_message.clan_logo,
+            category_name: message.channel_message.category_name,
             username: message.channel_message.username,
             content: content,
             reactions: reactions,

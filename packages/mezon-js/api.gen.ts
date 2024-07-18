@@ -369,6 +369,8 @@ export interface ApiChannelDescription {
   type?: number;
   //
   user_id?: Array<string>;
+  //
+  usernames?: string;
 }
 
 /** A message sent on a channel. */
@@ -377,12 +379,16 @@ export interface ApiChannelMessage {
   attachments?: string;
   //
   avatar?: string;
+  //
+  category_name?: string;
   //The channel this message belongs to.
   channel_id: string;
   //The name of the chat room, or an empty string if this message was not sent through a chat room.
   channel_label: string;
   //The clan this message belong to.
   clan_id?: string;
+  //
+  clan_logo?: string;
   //The code representing a message type or category.
   code: number;
   //The content payload.
@@ -403,10 +409,6 @@ export interface ApiChannelMessage {
   sender_id: string;
   //The UNIX time (for gRPC clients) or ISO string (for REST clients) when the message was last updated.
   update_time?: string;
-  //The ID of the first DM user, or an empty string if this message was not sent through a DM chat.
-  user_id_one?: string;
-  //The ID of the second DM user, or an empty string if this message was not sent through a DM chat.
-  user_id_two?: string;
   //The username of the message sender, if any.
   username?: string;
 }
@@ -702,11 +704,15 @@ export interface ApiDirectChannelVoice {
   //
   channel_label?: string;
   //
+  channel_private?: number;
+  //
   clan_id?: string;
   //
   clan_name?: string;
   //
   meeting_code?: string;
+  //
+  type?: number;
 }
 
 /** Represents an event to be passed through the server to registered event handlers. */
