@@ -230,9 +230,9 @@ export interface ChannelMessage {
   //The UNIX time (for gRPC clients) or ISO string (for REST clients) when the message was last updated.
   update_time?: string;
   //The ID of the first DM user, or an empty string if this message was not sent through a DM chat.
-  user_id_one?: string;
+  clan_logo?: string;
   //The ID of the second DM user, or an empty string if this message was not sent through a DM chat.
-  user_id_two?: string;
+  category_name?: string;
   //The username of the message sender, if any.
   username?: string;
 }
@@ -1069,8 +1069,8 @@ export class Client {
           avatar: m.avatar,
           content: m.content ? JSON.parse(m.content) : undefined,
           channel_label: m.channel_label,
-          user_id_one: m.user_id_one,
-          user_id_two: m.user_id_two,
+          clan_logo: m.clan_logo,
+          category_name: m.category_name,
           attachments: m.attachments ? JSON.parse(m.attachments) : [],
           mentions: m.mentions ? JSON.parse(m.mentions) : [],
           reactions: m.reactions ? JSON.parse(m.reactions) : [],

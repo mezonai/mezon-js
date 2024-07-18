@@ -164,10 +164,10 @@ export interface Channel {
     | undefined;
   /** The name of the chat room, or an empty string if this message was not sent through a chat room. */
   chanel_label: string;
-  /** The ID of the first DM user, or an empty string if this message was not sent through a DM chat. */
-  user_id_one: string;
-  /** The ID of the second DM user, or an empty string if this message was not sent through a DM chat. */
-  user_id_two: string;
+  /** The clan logo */
+  clan_logo: string;
+  /** The category name */
+  category_name: string;
 }
 
 /** Join operation for a realtime chat channel. */
@@ -230,10 +230,10 @@ export interface ChannelMessageAck {
   persistent:
     | boolean
     | undefined;
-  /** The ID of the first DM user, or an empty string if this message was not sent through a DM chat. */
-  user_id_one: string;
-  /** The ID of the second DM user, or an empty string if this message was not sent through a DM chat. */
-  user_id_two: string;
+  /** The clan logo */
+  clan_logo: string;
+  /** The category name */
+  category_name: string;
 }
 
 /** Mention to message */
@@ -332,10 +332,10 @@ export interface ChannelPresenceEvent {
   joins: UserPresence[];
   /** Presences leaving the channel as part of this event, if any. */
   leaves: UserPresence[];
-  /** The ID of the first DM user, or an empty string if this message was not sent through a DM chat. */
-  user_id_one: string;
-  /** The ID of the second DM user, or an empty string if this message was not sent through a DM chat. */
-  user_id_two: string;
+  /** The clan logo */
+  clan_logo: string;
+  /** The category name */
+  category_name: string;
   /** The mode */
   mode: number;
 }
@@ -1369,7 +1369,7 @@ export const Envelope = {
 };
 
 function createBaseChannel(): Channel {
-  return { id: "", presences: [], self: undefined, chanel_label: "", user_id_one: "", user_id_two: "" };
+  return { id: "", presences: [], self: undefined, chanel_label: "", clan_logo: "", category_name: "" };
 }
 
 export const Channel = {
@@ -1386,11 +1386,11 @@ export const Channel = {
     if (message.chanel_label !== "") {
       writer.uint32(34).string(message.chanel_label);
     }
-    if (message.user_id_one !== "") {
-      writer.uint32(42).string(message.user_id_one);
+    if (message.clan_logo !== "") {
+      writer.uint32(42).string(message.clan_logo);
     }
-    if (message.user_id_two !== "") {
-      writer.uint32(50).string(message.user_id_two);
+    if (message.category_name !== "") {
+      writer.uint32(50).string(message.category_name);
     }
     return writer;
   },
@@ -1415,10 +1415,10 @@ export const Channel = {
           message.chanel_label = reader.string();
           break;
         case 5:
-          message.user_id_one = reader.string();
+          message.clan_logo = reader.string();
           break;
         case 6:
-          message.user_id_two = reader.string();
+          message.category_name = reader.string();
           break;
         default:
           reader.skipType(tag & 7);
@@ -1434,8 +1434,8 @@ export const Channel = {
       presences: Array.isArray(object?.presences) ? object.presences.map((e: any) => UserPresence.fromJSON(e)) : [],
       self: isSet(object.self) ? UserPresence.fromJSON(object.self) : undefined,
       chanel_label: isSet(object.chanel_label) ? String(object.chanel_label) : "",
-      user_id_one: isSet(object.user_id_one) ? String(object.user_id_one) : "",
-      user_id_two: isSet(object.user_id_two) ? String(object.user_id_two) : "",
+      clan_logo: isSet(object.clan_logo) ? String(object.clan_logo) : "",
+      category_name: isSet(object.category_name) ? String(object.category_name) : "",
     };
   },
 
@@ -1449,8 +1449,8 @@ export const Channel = {
     }
     message.self !== undefined && (obj.self = message.self ? UserPresence.toJSON(message.self) : undefined);
     message.chanel_label !== undefined && (obj.chanel_label = message.chanel_label);
-    message.user_id_one !== undefined && (obj.user_id_one = message.user_id_one);
-    message.user_id_two !== undefined && (obj.user_id_two = message.user_id_two);
+    message.clan_logo !== undefined && (obj.clan_logo = message.clan_logo);
+    message.category_name !== undefined && (obj.category_name = message.category_name);
     return obj;
   },
 
@@ -1466,8 +1466,8 @@ export const Channel = {
       ? UserPresence.fromPartial(object.self)
       : undefined;
     message.chanel_label = object.chanel_label ?? "";
-    message.user_id_one = object.user_id_one ?? "";
-    message.user_id_two = object.user_id_two ?? "";
+    message.clan_logo = object.clan_logo ?? "";
+    message.category_name = object.category_name ?? "";
     return message;
   },
 };
@@ -1701,8 +1701,8 @@ function createBaseChannelMessageAck(): ChannelMessageAck {
     create_time: undefined,
     update_time: undefined,
     persistent: undefined,
-    user_id_one: "",
-    user_id_two: "",
+    clan_logo: "",
+    category_name: "",
   };
 }
 
@@ -1729,11 +1729,11 @@ export const ChannelMessageAck = {
     if (message.persistent !== undefined) {
       BoolValue.encode({ value: message.persistent! }, writer.uint32(58).fork()).ldelim();
     }
-    if (message.user_id_one !== "") {
-      writer.uint32(66).string(message.user_id_one);
+    if (message.clan_logo !== "") {
+      writer.uint32(66).string(message.clan_logo);
     }
-    if (message.user_id_two !== "") {
-      writer.uint32(74).string(message.user_id_two);
+    if (message.category_name !== "") {
+      writer.uint32(74).string(message.category_name);
     }
     return writer;
   },
@@ -1767,10 +1767,10 @@ export const ChannelMessageAck = {
           message.persistent = BoolValue.decode(reader, reader.uint32()).value;
           break;
         case 8:
-          message.user_id_one = reader.string();
+          message.clan_logo = reader.string();
           break;
         case 9:
-          message.user_id_two = reader.string();
+          message.category_name = reader.string();
           break;
         default:
           reader.skipType(tag & 7);
@@ -1789,8 +1789,8 @@ export const ChannelMessageAck = {
       create_time: isSet(object.create_time) ? fromJsonTimestamp(object.create_time) : undefined,
       update_time: isSet(object.update_time) ? fromJsonTimestamp(object.update_time) : undefined,
       persistent: isSet(object.persistent) ? Boolean(object.persistent) : undefined,
-      user_id_one: isSet(object.user_id_one) ? String(object.user_id_one) : "",
-      user_id_two: isSet(object.user_id_two) ? String(object.user_id_two) : "",
+      clan_logo: isSet(object.clan_logo) ? String(object.clan_logo) : "",
+      category_name: isSet(object.category_name) ? String(object.category_name) : "",
     };
   },
 
@@ -1803,8 +1803,8 @@ export const ChannelMessageAck = {
     message.create_time !== undefined && (obj.create_time = message.create_time.toISOString());
     message.update_time !== undefined && (obj.update_time = message.update_time.toISOString());
     message.persistent !== undefined && (obj.persistent = message.persistent);
-    message.user_id_one !== undefined && (obj.user_id_one = message.user_id_one);
-    message.user_id_two !== undefined && (obj.user_id_two = message.user_id_two);
+    message.clan_logo !== undefined && (obj.clan_logo = message.clan_logo);
+    message.category_name !== undefined && (obj.category_name = message.category_name);
     return obj;
   },
 
@@ -1821,8 +1821,8 @@ export const ChannelMessageAck = {
     message.create_time = object.create_time ?? undefined;
     message.update_time = object.update_time ?? undefined;
     message.persistent = object.persistent ?? undefined;
-    message.user_id_one = object.user_id_one ?? "";
-    message.user_id_two = object.user_id_two ?? "";
+    message.clan_logo = object.clan_logo ?? "";
+    message.category_name = object.category_name ?? "";
     return message;
   },
 };
@@ -2404,7 +2404,7 @@ export const ChannelMessageRemove = {
 };
 
 function createBaseChannelPresenceEvent(): ChannelPresenceEvent {
-  return { channel_id: "", joins: [], leaves: [], user_id_one: "", user_id_two: "", mode: 0 };
+  return { channel_id: "", joins: [], leaves: [], clan_logo: "", category_name: "", mode: 0 };
 }
 
 export const ChannelPresenceEvent = {
@@ -2418,11 +2418,11 @@ export const ChannelPresenceEvent = {
     for (const v of message.leaves) {
       UserPresence.encode(v!, writer.uint32(26).fork()).ldelim();
     }
-    if (message.user_id_one !== "") {
-      writer.uint32(34).string(message.user_id_one);
+    if (message.clan_logo !== "") {
+      writer.uint32(34).string(message.clan_logo);
     }
-    if (message.user_id_two !== "") {
-      writer.uint32(42).string(message.user_id_two);
+    if (message.category_name !== "") {
+      writer.uint32(42).string(message.category_name);
     }
     if (message.mode !== 0) {
       writer.uint32(48).int32(message.mode);
@@ -2447,10 +2447,10 @@ export const ChannelPresenceEvent = {
           message.leaves.push(UserPresence.decode(reader, reader.uint32()));
           break;
         case 4:
-          message.user_id_one = reader.string();
+          message.clan_logo = reader.string();
           break;
         case 5:
-          message.user_id_two = reader.string();
+          message.category_name = reader.string();
           break;
         case 6:
           message.mode = reader.int32();
@@ -2468,8 +2468,8 @@ export const ChannelPresenceEvent = {
       channel_id: isSet(object.channel_id) ? String(object.channel_id) : "",
       joins: Array.isArray(object?.joins) ? object.joins.map((e: any) => UserPresence.fromJSON(e)) : [],
       leaves: Array.isArray(object?.leaves) ? object.leaves.map((e: any) => UserPresence.fromJSON(e)) : [],
-      user_id_one: isSet(object.user_id_one) ? String(object.user_id_one) : "",
-      user_id_two: isSet(object.user_id_two) ? String(object.user_id_two) : "",
+      clan_logo: isSet(object.clan_logo) ? String(object.clan_logo) : "",
+      category_name: isSet(object.category_name) ? String(object.category_name) : "",
       mode: isSet(object.mode) ? Number(object.mode) : 0,
     };
   },
@@ -2487,8 +2487,8 @@ export const ChannelPresenceEvent = {
     } else {
       obj.leaves = [];
     }
-    message.user_id_one !== undefined && (obj.user_id_one = message.user_id_one);
-    message.user_id_two !== undefined && (obj.user_id_two = message.user_id_two);
+    message.clan_logo !== undefined && (obj.clan_logo = message.clan_logo);
+    message.category_name !== undefined && (obj.category_name = message.category_name);
     message.mode !== undefined && (obj.mode = Math.round(message.mode));
     return obj;
   },
@@ -2502,8 +2502,8 @@ export const ChannelPresenceEvent = {
     message.channel_id = object.channel_id ?? "";
     message.joins = object.joins?.map((e) => UserPresence.fromPartial(e)) || [];
     message.leaves = object.leaves?.map((e) => UserPresence.fromPartial(e)) || [];
-    message.user_id_one = object.user_id_one ?? "";
-    message.user_id_two = object.user_id_two ?? "";
+    message.clan_logo = object.clan_logo ?? "";
+    message.category_name = object.category_name ?? "";
     message.mode = object.mode ?? 0;
     return message;
   },
