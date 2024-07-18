@@ -536,7 +536,7 @@ export interface ChannelMessage {
   /** The name of the chat room, or an empty string if this message was not sent through a chat room. */
   channel_label: string;
   /** The ID of the first DM user, or an empty string if this message was not sent through a DM chat. */
-  clanLogo: string;
+  clan_logo: string;
   /** The ID of the second DM user, or an empty string if this message was not sent through a DM chat. */
   categoy_name: string;
   /** Emoji reaction */
@@ -5343,7 +5343,7 @@ function createBaseChannelMessage(): ChannelMessage {
     create_time: undefined,
     update_time: undefined,
     channel_label: "",
-    clanLogo: "",
+    clan_logo: "",
     categoy_name: "",
     reactions: "",
     mentions: "",
@@ -5388,8 +5388,8 @@ export const ChannelMessage = {
     if (message.channel_label !== "") {
       writer.uint32(90).string(message.channel_label);
     }
-    if (message.clanLogo !== "") {
-      writer.uint32(98).string(message.clanLogo);
+    if (message.clan_logo !== "") {
+      writer.uint32(98).string(message.clan_logo);
     }
     if (message.categoy_name !== "") {
       writer.uint32(106).string(message.categoy_name);
@@ -5453,7 +5453,7 @@ export const ChannelMessage = {
           message.channel_label = reader.string();
           break;
         case 12:
-          message.clanLogo = reader.string();
+          message.clan_logo = reader.string();
           break;
         case 13:
           message.categoy_name = reader.string();
@@ -5494,7 +5494,7 @@ export const ChannelMessage = {
       create_time: isSet(object.create_time) ? fromJsonTimestamp(object.create_time) : undefined,
       update_time: isSet(object.update_time) ? fromJsonTimestamp(object.update_time) : undefined,
       channel_label: isSet(object.channel_label) ? String(object.channel_label) : "",
-      clanLogo: isSet(object.clanLogo) ? String(object.clanLogo) : "",
+      clan_logo: isSet(object.clan_logo) ? String(object.clan_logo) : "",
       categoy_name: isSet(object.categoy_name) ? String(object.categoy_name) : "",
       reactions: isSet(object.reactions) ? String(object.reactions) : "",
       mentions: isSet(object.mentions) ? String(object.mentions) : "",
@@ -5517,7 +5517,7 @@ export const ChannelMessage = {
     message.create_time !== undefined && (obj.create_time = message.create_time.toISOString());
     message.update_time !== undefined && (obj.update_time = message.update_time.toISOString());
     message.channel_label !== undefined && (obj.channel_label = message.channel_label);
-    message.clanLogo !== undefined && (obj.clanLogo = message.clanLogo);
+    message.clan_logo !== undefined && (obj.clan_logo = message.clan_logo);
     message.categoy_name !== undefined && (obj.categoy_name = message.categoy_name);
     message.reactions !== undefined && (obj.reactions = message.reactions);
     message.mentions !== undefined && (obj.mentions = message.mentions);
@@ -5544,7 +5544,7 @@ export const ChannelMessage = {
     message.create_time = object.create_time ?? undefined;
     message.update_time = object.update_time ?? undefined;
     message.channel_label = object.channel_label ?? "";
-    message.clanLogo = object.clanLogo ?? "";
+    message.clan_logo = object.clan_logo ?? "";
     message.categoy_name = object.categoy_name ?? "";
     message.reactions = object.reactions ?? "";
     message.mentions = object.mentions ?? "";
