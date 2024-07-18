@@ -1871,6 +1871,8 @@ export interface ChannelDescription {
   last_pin_message: string;
   /** the usernames */
   usernames: string;
+  /** creator name */
+  creator_name: string;
 }
 
 /** direct channel void */
@@ -12919,6 +12921,7 @@ function createBaseChannelDescription(): ChannelDescription {
     active: 0,
     last_pin_message: "",
     usernames: "",
+    creator_name: "",
   };
 }
 
@@ -12980,6 +12983,9 @@ export const ChannelDescription = {
     }
     if (message.usernames !== "") {
       writer.uint32(154).string(message.usernames);
+    }
+    if (message.creator_name !== "") {
+      writer.uint32(162).string(message.creator_name);
     }
     return writer;
   },
@@ -13048,6 +13054,9 @@ export const ChannelDescription = {
         case 19:
           message.usernames = reader.string();
           break;
+        case 20:
+          message.creator_name = reader.string();
+          break;
         default:
           reader.skipType(tag & 7);
           break;
@@ -13081,6 +13090,7 @@ export const ChannelDescription = {
       active: isSet(object.active) ? Number(object.active) : 0,
       last_pin_message: isSet(object.last_pin_message) ? String(object.last_pin_message) : "",
       usernames: isSet(object.usernames) ? String(object.usernames) : "",
+      creator_name: isSet(object.creator_name) ? String(object.creator_name) : "",
     };
   },
 
@@ -13117,6 +13127,7 @@ export const ChannelDescription = {
     message.active !== undefined && (obj.active = Math.round(message.active));
     message.last_pin_message !== undefined && (obj.last_pin_message = message.last_pin_message);
     message.usernames !== undefined && (obj.usernames = message.usernames);
+    message.creator_name !== undefined && (obj.creator_name = message.creator_name);
     return obj;
   },
 
@@ -13149,6 +13160,7 @@ export const ChannelDescription = {
     message.active = object.active ?? 0;
     message.last_pin_message = object.last_pin_message ?? "";
     message.usernames = object.usernames ?? "";
+    message.creator_name = object.creator_name ?? "";
     return message;
   },
 };
