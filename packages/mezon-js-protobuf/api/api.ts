@@ -1885,6 +1885,10 @@ export interface DirectChannelVoice {
   clan_name: string;
   /**  */
   meeting_code: string;
+  /**  */
+  type: number;
+  /**  */
+  channel_private: number;
 }
 
 /** A list of ChannelVoice */
@@ -13150,7 +13154,15 @@ export const ChannelDescription = {
 };
 
 function createBaseDirectChannelVoice(): DirectChannelVoice {
-  return { channel_id: "", channel_label: "", clan_id: "", clan_name: "", meeting_code: "" };
+  return {
+    channel_id: "",
+    channel_label: "",
+    clan_id: "",
+    clan_name: "",
+    meeting_code: "",
+    type: 0,
+    channel_private: 0,
+  };
 }
 
 export const DirectChannelVoice = {
@@ -13169,6 +13181,12 @@ export const DirectChannelVoice = {
     }
     if (message.meeting_code !== "") {
       writer.uint32(42).string(message.meeting_code);
+    }
+    if (message.type !== 0) {
+      writer.uint32(48).int32(message.type);
+    }
+    if (message.channel_private !== 0) {
+      writer.uint32(56).int32(message.channel_private);
     }
     return writer;
   },
@@ -13195,6 +13213,12 @@ export const DirectChannelVoice = {
         case 5:
           message.meeting_code = reader.string();
           break;
+        case 6:
+          message.type = reader.int32();
+          break;
+        case 7:
+          message.channel_private = reader.int32();
+          break;
         default:
           reader.skipType(tag & 7);
           break;
@@ -13210,6 +13234,8 @@ export const DirectChannelVoice = {
       clan_id: isSet(object.clan_id) ? String(object.clan_id) : "",
       clan_name: isSet(object.clan_name) ? String(object.clan_name) : "",
       meeting_code: isSet(object.meeting_code) ? String(object.meeting_code) : "",
+      type: isSet(object.type) ? Number(object.type) : 0,
+      channel_private: isSet(object.channel_private) ? Number(object.channel_private) : 0,
     };
   },
 
@@ -13220,6 +13246,8 @@ export const DirectChannelVoice = {
     message.clan_id !== undefined && (obj.clan_id = message.clan_id);
     message.clan_name !== undefined && (obj.clan_name = message.clan_name);
     message.meeting_code !== undefined && (obj.meeting_code = message.meeting_code);
+    message.type !== undefined && (obj.type = Math.round(message.type));
+    message.channel_private !== undefined && (obj.channel_private = Math.round(message.channel_private));
     return obj;
   },
 
@@ -13234,6 +13262,8 @@ export const DirectChannelVoice = {
     message.clan_id = object.clan_id ?? "";
     message.clan_name = object.clan_name ?? "";
     message.meeting_code = object.meeting_code ?? "";
+    message.type = object.type ?? 0;
+    message.channel_private = object.channel_private ?? 0;
     return message;
   },
 };
