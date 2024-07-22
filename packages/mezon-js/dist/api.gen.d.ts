@@ -1,5 +1,6 @@
 /** A single user-role pair. */
 export interface ChannelUserListChannelUser {
+    clan_nick?: string;
     id?: string;
     role_id?: Array<string>;
     thread_id?: string;
@@ -202,6 +203,7 @@ export interface ApiChannelDescription {
     clan_id?: string;
     count_mess_unread?: number;
     creator_id?: string;
+    creator_name?: string;
     last_pin_message?: string;
     last_seen_message?: ApiChannelMessageHeader;
     last_sent_message?: ApiChannelMessageHeader;
@@ -211,14 +213,18 @@ export interface ApiChannelDescription {
     status?: number;
     type?: number;
     user_id?: Array<string>;
+    usernames?: string;
 }
 /** A message sent on a channel. */
 export interface ApiChannelMessage {
     attachments?: string;
     avatar?: string;
+    category_name?: string;
     channel_id: string;
     channel_label: string;
     clan_id?: string;
+    clan_logo?: string;
+    clan_nick?: string;
     code: number;
     content: string;
     create_time?: string;
@@ -229,8 +235,6 @@ export interface ApiChannelMessage {
     references?: string;
     sender_id: string;
     update_time?: string;
-    user_id_one?: string;
-    user_id_two?: string;
     username?: string;
 }
 /**  */
@@ -258,6 +262,10 @@ export interface ApiChannelUserList {
 /**  */
 export interface ApiChannelVoiceList {
     channelvoice?: Array<ApiDirectChannelVoice>;
+}
+/**  */
+export interface ApiCheckDuplicateClanNameResponse {
+    is_duplicate?: boolean;
 }
 /**  */
 export interface ApiClanDesc {
@@ -403,9 +411,11 @@ export interface ApiDeleteStorageObjectsRequest {
 export interface ApiDirectChannelVoice {
     channel_id?: string;
     channel_label?: string;
+    channel_private?: number;
     clan_id?: string;
     clan_name?: string;
     meeting_code?: string;
+    type?: number;
 }
 /** Represents an event to be passed through the server to registered event handlers. */
 export interface ApiEvent {
@@ -995,6 +1005,8 @@ export declare class MezonApi {
     removeClanUsers(bearerToken: string, clanId: string, userIds?: Array<string>, options?: any): Promise<any>;
     /** List all users that are part of a clan. */
     listClanUsers(bearerToken: string, clanId: string, options?: any): Promise<ApiClanUserList>;
+    /** check duplicate clan name */
+    checkDuplicateClanName(bearerToken: string, clanName: string, options?: any): Promise<ApiCheckDuplicateClanNameResponse>;
     /** Get a clan desc profile */
     getClanDescProfile(bearerToken: string, clanId: string, options?: any): Promise<ApiClanDescProfile>;
     /** Update fields in a given clan profile. */

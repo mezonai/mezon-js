@@ -236,6 +236,8 @@ export interface ChannelMessage {
   category_name?: string;
   //The username of the message sender, if any.
   username?: string;
+  // The clan nick name
+  clan_nick?: string;
 }
 
 /** A list of channel messages, usually a result of a list operation. */
@@ -1072,6 +1074,7 @@ export class Client {
           channel_label: m.channel_label,
           clan_logo: m.clan_logo,
           category_name: m.category_name,
+          clan_nick: m.clan_nick,
           attachments: m.attachments ? JSON.parse(m.attachments) : [],
           mentions: m.mentions ? JSON.parse(m.mentions) : [],
           reactions: m.reactions ? JSON.parse(m.reactions) : [],

@@ -86,10 +86,10 @@ export interface Channel {
     self: UserPresence | undefined;
     /** The name of the chat room, or an empty string if this message was not sent through a chat room. */
     chanel_label: string;
-    /** The ID of the first DM user, or an empty string if this message was not sent through a DM chat. */
-    user_id_one: string;
-    /** The ID of the second DM user, or an empty string if this message was not sent through a DM chat. */
-    user_id_two: string;
+    /** The clan logo */
+    clan_logo: string;
+    /** The category name */
+    category_name: string;
 }
 /** Join operation for a realtime chat channel. */
 export interface ClanJoin {
@@ -136,10 +136,10 @@ export interface ChannelMessageAck {
     update_time: Date | undefined;
     /** True if the message was persisted to the channel's history, false otherwise. */
     persistent: boolean | undefined;
-    /** The ID of the first DM user, or an empty string if this message was not sent through a DM chat. */
-    user_id_one: string;
-    /** The ID of the second DM user, or an empty string if this message was not sent through a DM chat. */
-    user_id_two: string;
+    /** The clan logo */
+    clan_logo: string;
+    /** The category name */
+    category_name: string;
 }
 /** Mention to message */
 export interface MessageMention {
@@ -231,10 +231,10 @@ export interface ChannelPresenceEvent {
     joins: UserPresence[];
     /** Presences leaving the channel as part of this event, if any. */
     leaves: UserPresence[];
-    /** The ID of the first DM user, or an empty string if this message was not sent through a DM chat. */
-    user_id_one: string;
-    /** The ID of the second DM user, or an empty string if this message was not sent through a DM chat. */
-    user_id_two: string;
+    /** The clan logo */
+    clan_logo: string;
+    /** The category name */
+    category_name: string;
     /** The mode */
     mode: number;
 }
@@ -626,8 +626,8 @@ export declare const Envelope: {
                 status?: string | undefined;
             } | undefined;
             chanel_label?: string | undefined;
-            user_id_one?: string | undefined;
-            user_id_two?: string | undefined;
+            clan_logo?: string | undefined;
+            category_name?: string | undefined;
         } | undefined;
         clan_join?: {
             clan_id?: string | undefined;
@@ -657,8 +657,9 @@ export declare const Envelope: {
             create_time?: Date | undefined;
             update_time?: Date | undefined;
             channel_label?: string | undefined;
-            user_id_one?: string | undefined;
-            user_id_two?: string | undefined;
+            clan_logo?: string | undefined;
+            category_name?: string | undefined;
+            clan_nick?: string | undefined;
             reactions?: string | undefined;
             mentions?: string | undefined;
             attachments?: string | undefined;
@@ -673,8 +674,8 @@ export declare const Envelope: {
             create_time?: Date | undefined;
             update_time?: Date | undefined;
             persistent?: boolean | undefined;
-            user_id_one?: string | undefined;
-            user_id_two?: string | undefined;
+            clan_logo?: string | undefined;
+            category_name?: string | undefined;
         } | undefined;
         channel_message_send?: {
             clan_id?: string | undefined;
@@ -733,8 +734,8 @@ export declare const Envelope: {
                 persistence?: boolean | undefined;
                 status?: string | undefined;
             }[] | undefined;
-            user_id_one?: string | undefined;
-            user_id_two?: string | undefined;
+            clan_logo?: string | undefined;
+            category_name?: string | undefined;
             mode?: number | undefined;
         } | undefined;
         error?: {
@@ -963,8 +964,8 @@ export declare const Envelope: {
                 status?: string | undefined;
             } | undefined;
             chanel_label?: string | undefined;
-            user_id_one?: string | undefined;
-            user_id_two?: string | undefined;
+            clan_logo?: string | undefined;
+            category_name?: string | undefined;
         } & {
             id?: string | undefined;
             presences?: ({
@@ -1006,8 +1007,8 @@ export declare const Envelope: {
                 status?: string | undefined;
             } & { [K_2 in Exclude<keyof I["channel"]["self"], keyof UserPresence>]: never; }) | undefined;
             chanel_label?: string | undefined;
-            user_id_one?: string | undefined;
-            user_id_two?: string | undefined;
+            clan_logo?: string | undefined;
+            category_name?: string | undefined;
         } & { [K_3 in Exclude<keyof I["channel"], keyof Channel>]: never; }) | undefined;
         clan_join?: ({
             clan_id?: string | undefined;
@@ -1050,8 +1051,9 @@ export declare const Envelope: {
             create_time?: Date | undefined;
             update_time?: Date | undefined;
             channel_label?: string | undefined;
-            user_id_one?: string | undefined;
-            user_id_two?: string | undefined;
+            clan_logo?: string | undefined;
+            category_name?: string | undefined;
+            clan_nick?: string | undefined;
             reactions?: string | undefined;
             mentions?: string | undefined;
             attachments?: string | undefined;
@@ -1069,8 +1071,9 @@ export declare const Envelope: {
             create_time?: Date | undefined;
             update_time?: Date | undefined;
             channel_label?: string | undefined;
-            user_id_one?: string | undefined;
-            user_id_two?: string | undefined;
+            clan_logo?: string | undefined;
+            category_name?: string | undefined;
+            clan_nick?: string | undefined;
             reactions?: string | undefined;
             mentions?: string | undefined;
             attachments?: string | undefined;
@@ -1085,8 +1088,8 @@ export declare const Envelope: {
             create_time?: Date | undefined;
             update_time?: Date | undefined;
             persistent?: boolean | undefined;
-            user_id_one?: string | undefined;
-            user_id_two?: string | undefined;
+            clan_logo?: string | undefined;
+            category_name?: string | undefined;
         } & {
             channel_id?: string | undefined;
             message_id?: string | undefined;
@@ -1095,8 +1098,8 @@ export declare const Envelope: {
             create_time?: Date | undefined;
             update_time?: Date | undefined;
             persistent?: boolean | undefined;
-            user_id_one?: string | undefined;
-            user_id_two?: string | undefined;
+            clan_logo?: string | undefined;
+            category_name?: string | undefined;
         } & { [K_8 in Exclude<keyof I["channel_message_ack"], keyof ChannelMessageAck>]: never; }) | undefined;
         channel_message_send?: ({
             clan_id?: string | undefined;
@@ -1244,8 +1247,8 @@ export declare const Envelope: {
                 persistence?: boolean | undefined;
                 status?: string | undefined;
             }[] | undefined;
-            user_id_one?: string | undefined;
-            user_id_two?: string | undefined;
+            clan_logo?: string | undefined;
+            category_name?: string | undefined;
             mode?: number | undefined;
         } & {
             channel_id?: string | undefined;
@@ -1299,8 +1302,8 @@ export declare const Envelope: {
                 persistence?: boolean | undefined;
                 status?: string | undefined;
             }[]>]: never; }) | undefined;
-            user_id_one?: string | undefined;
-            user_id_two?: string | undefined;
+            clan_logo?: string | undefined;
+            category_name?: string | undefined;
             mode?: number | undefined;
         } & { [K_22 in Exclude<keyof I["channel_presence_event"], keyof ChannelPresenceEvent>]: never; }) | undefined;
         error?: ({
@@ -1868,8 +1871,8 @@ export declare const Envelope: {
                 status?: string | undefined;
             } | undefined;
             chanel_label?: string | undefined;
-            user_id_one?: string | undefined;
-            user_id_two?: string | undefined;
+            clan_logo?: string | undefined;
+            category_name?: string | undefined;
         } | undefined;
         clan_join?: {
             clan_id?: string | undefined;
@@ -1899,8 +1902,9 @@ export declare const Envelope: {
             create_time?: Date | undefined;
             update_time?: Date | undefined;
             channel_label?: string | undefined;
-            user_id_one?: string | undefined;
-            user_id_two?: string | undefined;
+            clan_logo?: string | undefined;
+            category_name?: string | undefined;
+            clan_nick?: string | undefined;
             reactions?: string | undefined;
             mentions?: string | undefined;
             attachments?: string | undefined;
@@ -1915,8 +1919,8 @@ export declare const Envelope: {
             create_time?: Date | undefined;
             update_time?: Date | undefined;
             persistent?: boolean | undefined;
-            user_id_one?: string | undefined;
-            user_id_two?: string | undefined;
+            clan_logo?: string | undefined;
+            category_name?: string | undefined;
         } | undefined;
         channel_message_send?: {
             clan_id?: string | undefined;
@@ -1975,8 +1979,8 @@ export declare const Envelope: {
                 persistence?: boolean | undefined;
                 status?: string | undefined;
             }[] | undefined;
-            user_id_one?: string | undefined;
-            user_id_two?: string | undefined;
+            clan_logo?: string | undefined;
+            category_name?: string | undefined;
             mode?: number | undefined;
         } | undefined;
         error?: {
@@ -2205,8 +2209,8 @@ export declare const Envelope: {
                 status?: string | undefined;
             } | undefined;
             chanel_label?: string | undefined;
-            user_id_one?: string | undefined;
-            user_id_two?: string | undefined;
+            clan_logo?: string | undefined;
+            category_name?: string | undefined;
         } & {
             id?: string | undefined;
             presences?: ({
@@ -2248,8 +2252,8 @@ export declare const Envelope: {
                 status?: string | undefined;
             } & { [K_72 in Exclude<keyof I_1["channel"]["self"], keyof UserPresence>]: never; }) | undefined;
             chanel_label?: string | undefined;
-            user_id_one?: string | undefined;
-            user_id_two?: string | undefined;
+            clan_logo?: string | undefined;
+            category_name?: string | undefined;
         } & { [K_73 in Exclude<keyof I_1["channel"], keyof Channel>]: never; }) | undefined;
         clan_join?: ({
             clan_id?: string | undefined;
@@ -2292,8 +2296,9 @@ export declare const Envelope: {
             create_time?: Date | undefined;
             update_time?: Date | undefined;
             channel_label?: string | undefined;
-            user_id_one?: string | undefined;
-            user_id_two?: string | undefined;
+            clan_logo?: string | undefined;
+            category_name?: string | undefined;
+            clan_nick?: string | undefined;
             reactions?: string | undefined;
             mentions?: string | undefined;
             attachments?: string | undefined;
@@ -2311,8 +2316,9 @@ export declare const Envelope: {
             create_time?: Date | undefined;
             update_time?: Date | undefined;
             channel_label?: string | undefined;
-            user_id_one?: string | undefined;
-            user_id_two?: string | undefined;
+            clan_logo?: string | undefined;
+            category_name?: string | undefined;
+            clan_nick?: string | undefined;
             reactions?: string | undefined;
             mentions?: string | undefined;
             attachments?: string | undefined;
@@ -2327,8 +2333,8 @@ export declare const Envelope: {
             create_time?: Date | undefined;
             update_time?: Date | undefined;
             persistent?: boolean | undefined;
-            user_id_one?: string | undefined;
-            user_id_two?: string | undefined;
+            clan_logo?: string | undefined;
+            category_name?: string | undefined;
         } & {
             channel_id?: string | undefined;
             message_id?: string | undefined;
@@ -2337,8 +2343,8 @@ export declare const Envelope: {
             create_time?: Date | undefined;
             update_time?: Date | undefined;
             persistent?: boolean | undefined;
-            user_id_one?: string | undefined;
-            user_id_two?: string | undefined;
+            clan_logo?: string | undefined;
+            category_name?: string | undefined;
         } & { [K_78 in Exclude<keyof I_1["channel_message_ack"], keyof ChannelMessageAck>]: never; }) | undefined;
         channel_message_send?: ({
             clan_id?: string | undefined;
@@ -2486,8 +2492,8 @@ export declare const Envelope: {
                 persistence?: boolean | undefined;
                 status?: string | undefined;
             }[] | undefined;
-            user_id_one?: string | undefined;
-            user_id_two?: string | undefined;
+            clan_logo?: string | undefined;
+            category_name?: string | undefined;
             mode?: number | undefined;
         } & {
             channel_id?: string | undefined;
@@ -2541,8 +2547,8 @@ export declare const Envelope: {
                 persistence?: boolean | undefined;
                 status?: string | undefined;
             }[]>]: never; }) | undefined;
-            user_id_one?: string | undefined;
-            user_id_two?: string | undefined;
+            clan_logo?: string | undefined;
+            category_name?: string | undefined;
             mode?: number | undefined;
         } & { [K_92 in Exclude<keyof I_1["channel_presence_event"], keyof ChannelPresenceEvent>]: never; }) | undefined;
         error?: ({
@@ -3114,8 +3120,8 @@ export declare const Channel: {
             status?: string | undefined;
         } | undefined;
         chanel_label?: string | undefined;
-        user_id_one?: string | undefined;
-        user_id_two?: string | undefined;
+        clan_logo?: string | undefined;
+        category_name?: string | undefined;
     } & {
         id?: string | undefined;
         presences?: ({
@@ -3157,8 +3163,8 @@ export declare const Channel: {
             status?: string | undefined;
         } & { [K_2 in Exclude<keyof I["self"], keyof UserPresence>]: never; }) | undefined;
         chanel_label?: string | undefined;
-        user_id_one?: string | undefined;
-        user_id_two?: string | undefined;
+        clan_logo?: string | undefined;
+        category_name?: string | undefined;
     } & { [K_3 in Exclude<keyof I, keyof Channel>]: never; }>(base?: I | undefined): Channel;
     fromPartial<I_1 extends {
         id?: string | undefined;
@@ -3177,8 +3183,8 @@ export declare const Channel: {
             status?: string | undefined;
         } | undefined;
         chanel_label?: string | undefined;
-        user_id_one?: string | undefined;
-        user_id_two?: string | undefined;
+        clan_logo?: string | undefined;
+        category_name?: string | undefined;
     } & {
         id?: string | undefined;
         presences?: ({
@@ -3220,8 +3226,8 @@ export declare const Channel: {
             status?: string | undefined;
         } & { [K_6 in Exclude<keyof I_1["self"], keyof UserPresence>]: never; }) | undefined;
         chanel_label?: string | undefined;
-        user_id_one?: string | undefined;
-        user_id_two?: string | undefined;
+        clan_logo?: string | undefined;
+        category_name?: string | undefined;
     } & { [K_7 in Exclude<keyof I_1, keyof Channel>]: never; }>(object: I_1): Channel;
 };
 export declare const ClanJoin: {
@@ -3313,8 +3319,8 @@ export declare const ChannelMessageAck: {
         create_time?: Date | undefined;
         update_time?: Date | undefined;
         persistent?: boolean | undefined;
-        user_id_one?: string | undefined;
-        user_id_two?: string | undefined;
+        clan_logo?: string | undefined;
+        category_name?: string | undefined;
     } & {
         channel_id?: string | undefined;
         message_id?: string | undefined;
@@ -3323,8 +3329,8 @@ export declare const ChannelMessageAck: {
         create_time?: Date | undefined;
         update_time?: Date | undefined;
         persistent?: boolean | undefined;
-        user_id_one?: string | undefined;
-        user_id_two?: string | undefined;
+        clan_logo?: string | undefined;
+        category_name?: string | undefined;
     } & { [K in Exclude<keyof I, keyof ChannelMessageAck>]: never; }>(base?: I | undefined): ChannelMessageAck;
     fromPartial<I_1 extends {
         channel_id?: string | undefined;
@@ -3334,8 +3340,8 @@ export declare const ChannelMessageAck: {
         create_time?: Date | undefined;
         update_time?: Date | undefined;
         persistent?: boolean | undefined;
-        user_id_one?: string | undefined;
-        user_id_two?: string | undefined;
+        clan_logo?: string | undefined;
+        category_name?: string | undefined;
     } & {
         channel_id?: string | undefined;
         message_id?: string | undefined;
@@ -3344,8 +3350,8 @@ export declare const ChannelMessageAck: {
         create_time?: Date | undefined;
         update_time?: Date | undefined;
         persistent?: boolean | undefined;
-        user_id_one?: string | undefined;
-        user_id_two?: string | undefined;
+        clan_logo?: string | undefined;
+        category_name?: string | undefined;
     } & { [K_1 in Exclude<keyof I_1, keyof ChannelMessageAck>]: never; }>(object: I_1): ChannelMessageAck;
 };
 export declare const MessageMention: {
@@ -3739,8 +3745,8 @@ export declare const ChannelPresenceEvent: {
             persistence?: boolean | undefined;
             status?: string | undefined;
         }[] | undefined;
-        user_id_one?: string | undefined;
-        user_id_two?: string | undefined;
+        clan_logo?: string | undefined;
+        category_name?: string | undefined;
         mode?: number | undefined;
     } & {
         channel_id?: string | undefined;
@@ -3794,8 +3800,8 @@ export declare const ChannelPresenceEvent: {
             persistence?: boolean | undefined;
             status?: string | undefined;
         }[]>]: never; }) | undefined;
-        user_id_one?: string | undefined;
-        user_id_two?: string | undefined;
+        clan_logo?: string | undefined;
+        category_name?: string | undefined;
         mode?: number | undefined;
     } & { [K_4 in Exclude<keyof I, keyof ChannelPresenceEvent>]: never; }>(base?: I | undefined): ChannelPresenceEvent;
     fromPartial<I_1 extends {
@@ -3814,8 +3820,8 @@ export declare const ChannelPresenceEvent: {
             persistence?: boolean | undefined;
             status?: string | undefined;
         }[] | undefined;
-        user_id_one?: string | undefined;
-        user_id_two?: string | undefined;
+        clan_logo?: string | undefined;
+        category_name?: string | undefined;
         mode?: number | undefined;
     } & {
         channel_id?: string | undefined;
@@ -3869,8 +3875,8 @@ export declare const ChannelPresenceEvent: {
             persistence?: boolean | undefined;
             status?: string | undefined;
         }[]>]: never; }) | undefined;
-        user_id_one?: string | undefined;
-        user_id_two?: string | undefined;
+        clan_logo?: string | undefined;
+        category_name?: string | undefined;
         mode?: number | undefined;
     } & { [K_9 in Exclude<keyof I_1, keyof ChannelPresenceEvent>]: never; }>(object: I_1): ChannelPresenceEvent;
 };

@@ -539,6 +539,8 @@ export interface ChannelMessage {
   clan_logo: string;
   /** The category name */
   category_name: string;
+  /** The clan nick name */
+  clan_nick: string;
   /** Emoji reaction */
   reactions: string;
   /** Message mention */
@@ -936,6 +938,8 @@ export interface ChannelUserList_ChannelUser {
   id: string;
   /** thread id */
   thread_id: string;
+  /** clan nick name */
+  clan_nick: string;
 }
 
 /** A list of users belonging to a channel, along with their role. */
@@ -5359,6 +5363,7 @@ function createBaseChannelMessage(): ChannelMessage {
     channel_label: "",
     clan_logo: "",
     category_name: "",
+    clan_nick: "",
     reactions: "",
     mentions: "",
     attachments: "",
@@ -5408,20 +5413,23 @@ export const ChannelMessage = {
     if (message.category_name !== "") {
       writer.uint32(106).string(message.category_name);
     }
+    if (message.clan_nick !== "") {
+      writer.uint32(114).string(message.clan_nick);
+    }
     if (message.reactions !== "") {
-      writer.uint32(114).string(message.reactions);
+      writer.uint32(122).string(message.reactions);
     }
     if (message.mentions !== "") {
-      writer.uint32(122).string(message.mentions);
+      writer.uint32(130).string(message.mentions);
     }
     if (message.attachments !== "") {
-      writer.uint32(130).string(message.attachments);
+      writer.uint32(138).string(message.attachments);
     }
     if (message.references !== "") {
-      writer.uint32(138).string(message.references);
+      writer.uint32(146).string(message.references);
     }
     if (message.referenced_message !== "") {
-      writer.uint32(146).string(message.referenced_message);
+      writer.uint32(154).string(message.referenced_message);
     }
     return writer;
   },
@@ -5473,18 +5481,21 @@ export const ChannelMessage = {
           message.category_name = reader.string();
           break;
         case 14:
-          message.reactions = reader.string();
+          message.clan_nick = reader.string();
           break;
         case 15:
-          message.mentions = reader.string();
+          message.reactions = reader.string();
           break;
         case 16:
-          message.attachments = reader.string();
+          message.mentions = reader.string();
           break;
         case 17:
-          message.references = reader.string();
+          message.attachments = reader.string();
           break;
         case 18:
+          message.references = reader.string();
+          break;
+        case 19:
           message.referenced_message = reader.string();
           break;
         default:
@@ -5510,6 +5521,7 @@ export const ChannelMessage = {
       channel_label: isSet(object.channel_label) ? String(object.channel_label) : "",
       clan_logo: isSet(object.clan_logo) ? String(object.clan_logo) : "",
       category_name: isSet(object.category_name) ? String(object.category_name) : "",
+      clan_nick: isSet(object.clan_nick) ? String(object.clan_nick) : "",
       reactions: isSet(object.reactions) ? String(object.reactions) : "",
       mentions: isSet(object.mentions) ? String(object.mentions) : "",
       attachments: isSet(object.attachments) ? String(object.attachments) : "",
@@ -5533,6 +5545,7 @@ export const ChannelMessage = {
     message.channel_label !== undefined && (obj.channel_label = message.channel_label);
     message.clan_logo !== undefined && (obj.clan_logo = message.clan_logo);
     message.category_name !== undefined && (obj.category_name = message.category_name);
+    message.clan_nick !== undefined && (obj.clan_nick = message.clan_nick);
     message.reactions !== undefined && (obj.reactions = message.reactions);
     message.mentions !== undefined && (obj.mentions = message.mentions);
     message.attachments !== undefined && (obj.attachments = message.attachments);
@@ -5560,6 +5573,7 @@ export const ChannelMessage = {
     message.channel_label = object.channel_label ?? "";
     message.clan_logo = object.clan_logo ?? "";
     message.category_name = object.category_name ?? "";
+    message.clan_nick = object.clan_nick ?? "";
     message.reactions = object.reactions ?? "";
     message.mentions = object.mentions ?? "";
     message.attachments = object.attachments ?? "";
@@ -7477,7 +7491,7 @@ export const ChannelUserList = {
 };
 
 function createBaseChannelUserList_ChannelUser(): ChannelUserList_ChannelUser {
-  return { user: undefined, role_id: [], id: "", thread_id: "" };
+  return { user: undefined, role_id: [], id: "", thread_id: "", clan_nick: "" };
 }
 
 export const ChannelUserList_ChannelUser = {
@@ -7493,6 +7507,9 @@ export const ChannelUserList_ChannelUser = {
     }
     if (message.thread_id !== "") {
       writer.uint32(34).string(message.thread_id);
+    }
+    if (message.clan_nick !== "") {
+      writer.uint32(42).string(message.clan_nick);
     }
     return writer;
   },
@@ -7516,6 +7533,9 @@ export const ChannelUserList_ChannelUser = {
         case 4:
           message.thread_id = reader.string();
           break;
+        case 5:
+          message.clan_nick = reader.string();
+          break;
         default:
           reader.skipType(tag & 7);
           break;
@@ -7530,6 +7550,7 @@ export const ChannelUserList_ChannelUser = {
       role_id: Array.isArray(object?.role_id) ? object.role_id.map((e: any) => String(e)) : [],
       id: isSet(object.id) ? String(object.id) : "",
       thread_id: isSet(object.thread_id) ? String(object.thread_id) : "",
+      clan_nick: isSet(object.clan_nick) ? String(object.clan_nick) : "",
     };
   },
 
@@ -7543,6 +7564,7 @@ export const ChannelUserList_ChannelUser = {
     }
     message.id !== undefined && (obj.id = message.id);
     message.thread_id !== undefined && (obj.thread_id = message.thread_id);
+    message.clan_nick !== undefined && (obj.clan_nick = message.clan_nick);
     return obj;
   },
 
@@ -7556,6 +7578,7 @@ export const ChannelUserList_ChannelUser = {
     message.role_id = object.role_id?.map((e) => e) || [];
     message.id = object.id ?? "";
     message.thread_id = object.thread_id ?? "";
+    message.clan_nick = object.clan_nick ?? "";
     return message;
   },
 };

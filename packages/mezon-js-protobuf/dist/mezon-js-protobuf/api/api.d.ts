@@ -359,10 +359,12 @@ export interface ChannelMessage {
     update_time: Date | undefined;
     /** The name of the chat room, or an empty string if this message was not sent through a chat room. */
     channel_label: string;
-    /** The ID of the first DM user, or an empty string if this message was not sent through a DM chat. */
-    user_id_one: string;
-    /** The ID of the second DM user, or an empty string if this message was not sent through a DM chat. */
-    user_id_two: string;
+    /** The clan logo */
+    clan_logo: string;
+    /** The category name */
+    category_name: string;
+    /** The clan nick name */
+    clan_nick: string;
     /** Emoji reaction */
     reactions: string;
     /** Message mention */
@@ -384,6 +386,23 @@ export interface MessageMention {
     username: string;
     /** The UNIX time (for gRPC clients) or ISO string (for REST clients) when the message was created. */
     create_time: Date | undefined;
+}
+/** Mention to message */
+export interface NotificationInfo {
+    /** username */
+    username: string;
+    /** avatar */
+    avatar: string;
+    /** channel label */
+    channel_label: string;
+    /** channel type */
+    channel_type: string;
+    /** category name */
+    category_name: string;
+    /** clan name */
+    clan_name: string;
+    /** clan logo */
+    clan_logo: string;
 }
 /** Emoji reaction by user */
 export interface MessageReaction {
@@ -634,6 +653,8 @@ export interface ChannelUserList_ChannelUser {
     id: string;
     /** thread id */
     thread_id: string;
+    /** clan nick name */
+    clan_nick: string;
 }
 /** A list of users belonging to a channel, along with their role. */
 export interface VoiceChannelUser {
@@ -1374,6 +1395,8 @@ export interface ChannelDescription {
     last_pin_message: string;
     /** the usernames */
     usernames: string;
+    /** creator name */
+    creator_name: string;
 }
 /** direct channel void */
 export interface DirectChannelVoice {
@@ -1387,6 +1410,10 @@ export interface DirectChannelVoice {
     clan_name: string;
     /**  */
     meeting_code: string;
+    /**  */
+    type: number;
+    /**  */
+    channel_private: number;
 }
 /** A list of ChannelVoice */
 export interface ChannelVoiceList {
@@ -2001,6 +2028,12 @@ export interface WebhookGenerateResponse {
     url: string;
     hook_name: string;
     channel_id: string;
+}
+export interface CheckDuplicateClanNameRequest {
+    clan_name: string;
+}
+export interface CheckDuplicateClanNameResponse {
+    is_duplicate: boolean;
 }
 export declare const Account: {
     encode(message: Account, writer?: _m0.Writer): _m0.Writer;
@@ -3495,8 +3528,9 @@ export declare const ChannelMessage: {
         create_time?: Date | undefined;
         update_time?: Date | undefined;
         channel_label?: string | undefined;
-        user_id_one?: string | undefined;
-        user_id_two?: string | undefined;
+        clan_logo?: string | undefined;
+        category_name?: string | undefined;
+        clan_nick?: string | undefined;
         reactions?: string | undefined;
         mentions?: string | undefined;
         attachments?: string | undefined;
@@ -3514,8 +3548,9 @@ export declare const ChannelMessage: {
         create_time?: Date | undefined;
         update_time?: Date | undefined;
         channel_label?: string | undefined;
-        user_id_one?: string | undefined;
-        user_id_two?: string | undefined;
+        clan_logo?: string | undefined;
+        category_name?: string | undefined;
+        clan_nick?: string | undefined;
         reactions?: string | undefined;
         mentions?: string | undefined;
         attachments?: string | undefined;
@@ -3534,8 +3569,9 @@ export declare const ChannelMessage: {
         create_time?: Date | undefined;
         update_time?: Date | undefined;
         channel_label?: string | undefined;
-        user_id_one?: string | undefined;
-        user_id_two?: string | undefined;
+        clan_logo?: string | undefined;
+        category_name?: string | undefined;
+        clan_nick?: string | undefined;
         reactions?: string | undefined;
         mentions?: string | undefined;
         attachments?: string | undefined;
@@ -3553,8 +3589,9 @@ export declare const ChannelMessage: {
         create_time?: Date | undefined;
         update_time?: Date | undefined;
         channel_label?: string | undefined;
-        user_id_one?: string | undefined;
-        user_id_two?: string | undefined;
+        clan_logo?: string | undefined;
+        category_name?: string | undefined;
+        clan_nick?: string | undefined;
         reactions?: string | undefined;
         mentions?: string | undefined;
         attachments?: string | undefined;
@@ -3589,6 +3626,46 @@ export declare const MessageMention: {
         username?: string | undefined;
         create_time?: Date | undefined;
     } & { [K_1 in Exclude<keyof I_1, keyof MessageMention>]: never; }>(object: I_1): MessageMention;
+};
+export declare const NotificationInfo: {
+    encode(message: NotificationInfo, writer?: _m0.Writer): _m0.Writer;
+    decode(input: _m0.Reader | Uint8Array, length?: number): NotificationInfo;
+    fromJSON(object: any): NotificationInfo;
+    toJSON(message: NotificationInfo): unknown;
+    create<I extends {
+        username?: string | undefined;
+        avatar?: string | undefined;
+        channel_label?: string | undefined;
+        channel_type?: string | undefined;
+        category_name?: string | undefined;
+        clan_name?: string | undefined;
+        clan_logo?: string | undefined;
+    } & {
+        username?: string | undefined;
+        avatar?: string | undefined;
+        channel_label?: string | undefined;
+        channel_type?: string | undefined;
+        category_name?: string | undefined;
+        clan_name?: string | undefined;
+        clan_logo?: string | undefined;
+    } & { [K in Exclude<keyof I, keyof NotificationInfo>]: never; }>(base?: I | undefined): NotificationInfo;
+    fromPartial<I_1 extends {
+        username?: string | undefined;
+        avatar?: string | undefined;
+        channel_label?: string | undefined;
+        channel_type?: string | undefined;
+        category_name?: string | undefined;
+        clan_name?: string | undefined;
+        clan_logo?: string | undefined;
+    } & {
+        username?: string | undefined;
+        avatar?: string | undefined;
+        channel_label?: string | undefined;
+        channel_type?: string | undefined;
+        category_name?: string | undefined;
+        clan_name?: string | undefined;
+        clan_logo?: string | undefined;
+    } & { [K_1 in Exclude<keyof I_1, keyof NotificationInfo>]: never; }>(object: I_1): NotificationInfo;
 };
 export declare const MessageReaction: {
     encode(message: MessageReaction, writer?: _m0.Writer): _m0.Writer;
@@ -3736,8 +3813,9 @@ export declare const ChannelMessageList: {
             create_time?: Date | undefined;
             update_time?: Date | undefined;
             channel_label?: string | undefined;
-            user_id_one?: string | undefined;
-            user_id_two?: string | undefined;
+            clan_logo?: string | undefined;
+            category_name?: string | undefined;
+            clan_nick?: string | undefined;
             reactions?: string | undefined;
             mentions?: string | undefined;
             attachments?: string | undefined;
@@ -3767,8 +3845,9 @@ export declare const ChannelMessageList: {
             create_time?: Date | undefined;
             update_time?: Date | undefined;
             channel_label?: string | undefined;
-            user_id_one?: string | undefined;
-            user_id_two?: string | undefined;
+            clan_logo?: string | undefined;
+            category_name?: string | undefined;
+            clan_nick?: string | undefined;
             reactions?: string | undefined;
             mentions?: string | undefined;
             attachments?: string | undefined;
@@ -3786,8 +3865,9 @@ export declare const ChannelMessageList: {
             create_time?: Date | undefined;
             update_time?: Date | undefined;
             channel_label?: string | undefined;
-            user_id_one?: string | undefined;
-            user_id_two?: string | undefined;
+            clan_logo?: string | undefined;
+            category_name?: string | undefined;
+            clan_nick?: string | undefined;
             reactions?: string | undefined;
             mentions?: string | undefined;
             attachments?: string | undefined;
@@ -3805,8 +3885,9 @@ export declare const ChannelMessageList: {
             create_time?: Date | undefined;
             update_time?: Date | undefined;
             channel_label?: string | undefined;
-            user_id_one?: string | undefined;
-            user_id_two?: string | undefined;
+            clan_logo?: string | undefined;
+            category_name?: string | undefined;
+            clan_nick?: string | undefined;
             reactions?: string | undefined;
             mentions?: string | undefined;
             attachments?: string | undefined;
@@ -3824,8 +3905,9 @@ export declare const ChannelMessageList: {
             create_time?: Date | undefined;
             update_time?: Date | undefined;
             channel_label?: string | undefined;
-            user_id_one?: string | undefined;
-            user_id_two?: string | undefined;
+            clan_logo?: string | undefined;
+            category_name?: string | undefined;
+            clan_nick?: string | undefined;
             reactions?: string | undefined;
             mentions?: string | undefined;
             attachments?: string | undefined;
@@ -3865,8 +3947,9 @@ export declare const ChannelMessageList: {
             create_time?: Date | undefined;
             update_time?: Date | undefined;
             channel_label?: string | undefined;
-            user_id_one?: string | undefined;
-            user_id_two?: string | undefined;
+            clan_logo?: string | undefined;
+            category_name?: string | undefined;
+            clan_nick?: string | undefined;
             reactions?: string | undefined;
             mentions?: string | undefined;
             attachments?: string | undefined;
@@ -3896,8 +3979,9 @@ export declare const ChannelMessageList: {
             create_time?: Date | undefined;
             update_time?: Date | undefined;
             channel_label?: string | undefined;
-            user_id_one?: string | undefined;
-            user_id_two?: string | undefined;
+            clan_logo?: string | undefined;
+            category_name?: string | undefined;
+            clan_nick?: string | undefined;
             reactions?: string | undefined;
             mentions?: string | undefined;
             attachments?: string | undefined;
@@ -3915,8 +3999,9 @@ export declare const ChannelMessageList: {
             create_time?: Date | undefined;
             update_time?: Date | undefined;
             channel_label?: string | undefined;
-            user_id_one?: string | undefined;
-            user_id_two?: string | undefined;
+            clan_logo?: string | undefined;
+            category_name?: string | undefined;
+            clan_nick?: string | undefined;
             reactions?: string | undefined;
             mentions?: string | undefined;
             attachments?: string | undefined;
@@ -3934,8 +4019,9 @@ export declare const ChannelMessageList: {
             create_time?: Date | undefined;
             update_time?: Date | undefined;
             channel_label?: string | undefined;
-            user_id_one?: string | undefined;
-            user_id_two?: string | undefined;
+            clan_logo?: string | undefined;
+            category_name?: string | undefined;
+            clan_nick?: string | undefined;
             reactions?: string | undefined;
             mentions?: string | undefined;
             attachments?: string | undefined;
@@ -3953,8 +4039,9 @@ export declare const ChannelMessageList: {
             create_time?: Date | undefined;
             update_time?: Date | undefined;
             channel_label?: string | undefined;
-            user_id_one?: string | undefined;
-            user_id_two?: string | undefined;
+            clan_logo?: string | undefined;
+            category_name?: string | undefined;
+            clan_nick?: string | undefined;
             reactions?: string | undefined;
             mentions?: string | undefined;
             attachments?: string | undefined;
@@ -5369,6 +5456,7 @@ export declare const ChannelUserList: {
             role_id?: string[] | undefined;
             id?: string | undefined;
             thread_id?: string | undefined;
+            clan_nick?: string | undefined;
         }[] | undefined;
         cursor?: string | undefined;
         channel_id?: string | undefined;
@@ -5398,6 +5486,7 @@ export declare const ChannelUserList: {
             role_id?: string[] | undefined;
             id?: string | undefined;
             thread_id?: string | undefined;
+            clan_nick?: string | undefined;
         }[] & ({
             user?: {
                 id?: string | undefined;
@@ -5423,6 +5512,7 @@ export declare const ChannelUserList: {
             role_id?: string[] | undefined;
             id?: string | undefined;
             thread_id?: string | undefined;
+            clan_nick?: string | undefined;
         } & {
             user?: ({
                 id?: string | undefined;
@@ -5468,6 +5558,7 @@ export declare const ChannelUserList: {
             role_id?: (string[] & string[] & { [K_1 in Exclude<keyof I["channel_users"][number]["role_id"], keyof string[]>]: never; }) | undefined;
             id?: string | undefined;
             thread_id?: string | undefined;
+            clan_nick?: string | undefined;
         } & { [K_2 in Exclude<keyof I["channel_users"][number], keyof ChannelUserList_ChannelUser>]: never; })[] & { [K_3 in Exclude<keyof I["channel_users"], keyof {
             user?: {
                 id?: string | undefined;
@@ -5493,6 +5584,7 @@ export declare const ChannelUserList: {
             role_id?: string[] | undefined;
             id?: string | undefined;
             thread_id?: string | undefined;
+            clan_nick?: string | undefined;
         }[]>]: never; }) | undefined;
         cursor?: string | undefined;
         channel_id?: string | undefined;
@@ -5523,6 +5615,7 @@ export declare const ChannelUserList: {
             role_id?: string[] | undefined;
             id?: string | undefined;
             thread_id?: string | undefined;
+            clan_nick?: string | undefined;
         }[] | undefined;
         cursor?: string | undefined;
         channel_id?: string | undefined;
@@ -5552,6 +5645,7 @@ export declare const ChannelUserList: {
             role_id?: string[] | undefined;
             id?: string | undefined;
             thread_id?: string | undefined;
+            clan_nick?: string | undefined;
         }[] & ({
             user?: {
                 id?: string | undefined;
@@ -5577,6 +5671,7 @@ export declare const ChannelUserList: {
             role_id?: string[] | undefined;
             id?: string | undefined;
             thread_id?: string | undefined;
+            clan_nick?: string | undefined;
         } & {
             user?: ({
                 id?: string | undefined;
@@ -5622,6 +5717,7 @@ export declare const ChannelUserList: {
             role_id?: (string[] & string[] & { [K_6 in Exclude<keyof I_1["channel_users"][number]["role_id"], keyof string[]>]: never; }) | undefined;
             id?: string | undefined;
             thread_id?: string | undefined;
+            clan_nick?: string | undefined;
         } & { [K_7 in Exclude<keyof I_1["channel_users"][number], keyof ChannelUserList_ChannelUser>]: never; })[] & { [K_8 in Exclude<keyof I_1["channel_users"], keyof {
             user?: {
                 id?: string | undefined;
@@ -5647,6 +5743,7 @@ export declare const ChannelUserList: {
             role_id?: string[] | undefined;
             id?: string | undefined;
             thread_id?: string | undefined;
+            clan_nick?: string | undefined;
         }[]>]: never; }) | undefined;
         cursor?: string | undefined;
         channel_id?: string | undefined;
@@ -5682,6 +5779,7 @@ export declare const ChannelUserList_ChannelUser: {
         role_id?: string[] | undefined;
         id?: string | undefined;
         thread_id?: string | undefined;
+        clan_nick?: string | undefined;
     } & {
         user?: ({
             id?: string | undefined;
@@ -5727,6 +5825,7 @@ export declare const ChannelUserList_ChannelUser: {
         role_id?: (string[] & string[] & { [K_1 in Exclude<keyof I["role_id"], keyof string[]>]: never; }) | undefined;
         id?: string | undefined;
         thread_id?: string | undefined;
+        clan_nick?: string | undefined;
     } & { [K_2 in Exclude<keyof I, keyof ChannelUserList_ChannelUser>]: never; }>(base?: I | undefined): ChannelUserList_ChannelUser;
     fromPartial<I_1 extends {
         user?: {
@@ -5753,6 +5852,7 @@ export declare const ChannelUserList_ChannelUser: {
         role_id?: string[] | undefined;
         id?: string | undefined;
         thread_id?: string | undefined;
+        clan_nick?: string | undefined;
     } & {
         user?: ({
             id?: string | undefined;
@@ -5798,6 +5898,7 @@ export declare const ChannelUserList_ChannelUser: {
         role_id?: (string[] & string[] & { [K_4 in Exclude<keyof I_1["role_id"], keyof string[]>]: never; }) | undefined;
         id?: string | undefined;
         thread_id?: string | undefined;
+        clan_nick?: string | undefined;
     } & { [K_5 in Exclude<keyof I_1, keyof ChannelUserList_ChannelUser>]: never; }>(object: I_1): ChannelUserList_ChannelUser;
 };
 export declare const VoiceChannelUser: {
@@ -9413,6 +9514,7 @@ export declare const ChannelDescription: {
         active?: number | undefined;
         last_pin_message?: string | undefined;
         usernames?: string | undefined;
+        creator_name?: string | undefined;
     } & {
         clan_id?: string | undefined;
         parrent_id?: string | undefined;
@@ -9469,6 +9571,7 @@ export declare const ChannelDescription: {
         active?: number | undefined;
         last_pin_message?: string | undefined;
         usernames?: string | undefined;
+        creator_name?: string | undefined;
     } & { [K_4 in Exclude<keyof I, keyof ChannelDescription>]: never; }>(base?: I | undefined): ChannelDescription;
     fromPartial<I_1 extends {
         clan_id?: string | undefined;
@@ -9508,6 +9611,7 @@ export declare const ChannelDescription: {
         active?: number | undefined;
         last_pin_message?: string | undefined;
         usernames?: string | undefined;
+        creator_name?: string | undefined;
     } & {
         clan_id?: string | undefined;
         parrent_id?: string | undefined;
@@ -9564,6 +9668,7 @@ export declare const ChannelDescription: {
         active?: number | undefined;
         last_pin_message?: string | undefined;
         usernames?: string | undefined;
+        creator_name?: string | undefined;
     } & { [K_9 in Exclude<keyof I_1, keyof ChannelDescription>]: never; }>(object: I_1): ChannelDescription;
 };
 export declare const DirectChannelVoice: {
@@ -9577,12 +9682,16 @@ export declare const DirectChannelVoice: {
         clan_id?: string | undefined;
         clan_name?: string | undefined;
         meeting_code?: string | undefined;
+        type?: number | undefined;
+        channel_private?: number | undefined;
     } & {
         channel_id?: string | undefined;
         channel_label?: string | undefined;
         clan_id?: string | undefined;
         clan_name?: string | undefined;
         meeting_code?: string | undefined;
+        type?: number | undefined;
+        channel_private?: number | undefined;
     } & { [K in Exclude<keyof I, keyof DirectChannelVoice>]: never; }>(base?: I | undefined): DirectChannelVoice;
     fromPartial<I_1 extends {
         channel_id?: string | undefined;
@@ -9590,12 +9699,16 @@ export declare const DirectChannelVoice: {
         clan_id?: string | undefined;
         clan_name?: string | undefined;
         meeting_code?: string | undefined;
+        type?: number | undefined;
+        channel_private?: number | undefined;
     } & {
         channel_id?: string | undefined;
         channel_label?: string | undefined;
         clan_id?: string | undefined;
         clan_name?: string | undefined;
         meeting_code?: string | undefined;
+        type?: number | undefined;
+        channel_private?: number | undefined;
     } & { [K_1 in Exclude<keyof I_1, keyof DirectChannelVoice>]: never; }>(object: I_1): DirectChannelVoice;
 };
 export declare const ChannelVoiceList: {
@@ -9610,6 +9723,8 @@ export declare const ChannelVoiceList: {
             clan_id?: string | undefined;
             clan_name?: string | undefined;
             meeting_code?: string | undefined;
+            type?: number | undefined;
+            channel_private?: number | undefined;
         }[] | undefined;
     } & {
         channelvoice?: ({
@@ -9618,24 +9733,32 @@ export declare const ChannelVoiceList: {
             clan_id?: string | undefined;
             clan_name?: string | undefined;
             meeting_code?: string | undefined;
+            type?: number | undefined;
+            channel_private?: number | undefined;
         }[] & ({
             channel_id?: string | undefined;
             channel_label?: string | undefined;
             clan_id?: string | undefined;
             clan_name?: string | undefined;
             meeting_code?: string | undefined;
+            type?: number | undefined;
+            channel_private?: number | undefined;
         } & {
             channel_id?: string | undefined;
             channel_label?: string | undefined;
             clan_id?: string | undefined;
             clan_name?: string | undefined;
             meeting_code?: string | undefined;
+            type?: number | undefined;
+            channel_private?: number | undefined;
         } & { [K in Exclude<keyof I["channelvoice"][number], keyof DirectChannelVoice>]: never; })[] & { [K_1 in Exclude<keyof I["channelvoice"], keyof {
             channel_id?: string | undefined;
             channel_label?: string | undefined;
             clan_id?: string | undefined;
             clan_name?: string | undefined;
             meeting_code?: string | undefined;
+            type?: number | undefined;
+            channel_private?: number | undefined;
         }[]>]: never; }) | undefined;
     } & { [K_2 in Exclude<keyof I, "channelvoice">]: never; }>(base?: I | undefined): ChannelVoiceList;
     fromPartial<I_1 extends {
@@ -9645,6 +9768,8 @@ export declare const ChannelVoiceList: {
             clan_id?: string | undefined;
             clan_name?: string | undefined;
             meeting_code?: string | undefined;
+            type?: number | undefined;
+            channel_private?: number | undefined;
         }[] | undefined;
     } & {
         channelvoice?: ({
@@ -9653,24 +9778,32 @@ export declare const ChannelVoiceList: {
             clan_id?: string | undefined;
             clan_name?: string | undefined;
             meeting_code?: string | undefined;
+            type?: number | undefined;
+            channel_private?: number | undefined;
         }[] & ({
             channel_id?: string | undefined;
             channel_label?: string | undefined;
             clan_id?: string | undefined;
             clan_name?: string | undefined;
             meeting_code?: string | undefined;
+            type?: number | undefined;
+            channel_private?: number | undefined;
         } & {
             channel_id?: string | undefined;
             channel_label?: string | undefined;
             clan_id?: string | undefined;
             clan_name?: string | undefined;
             meeting_code?: string | undefined;
+            type?: number | undefined;
+            channel_private?: number | undefined;
         } & { [K_3 in Exclude<keyof I_1["channelvoice"][number], keyof DirectChannelVoice>]: never; })[] & { [K_4 in Exclude<keyof I_1["channelvoice"], keyof {
             channel_id?: string | undefined;
             channel_label?: string | undefined;
             clan_id?: string | undefined;
             clan_name?: string | undefined;
             meeting_code?: string | undefined;
+            type?: number | undefined;
+            channel_private?: number | undefined;
         }[]>]: never; }) | undefined;
     } & { [K_5 in Exclude<keyof I_1, "channelvoice">]: never; }>(object: I_1): ChannelVoiceList;
 };
@@ -9738,6 +9871,7 @@ export declare const ChannelDescList: {
             active?: number | undefined;
             last_pin_message?: string | undefined;
             usernames?: string | undefined;
+            creator_name?: string | undefined;
         }[] | undefined;
         next_cursor?: string | undefined;
         prev_cursor?: string | undefined;
@@ -9781,6 +9915,7 @@ export declare const ChannelDescList: {
             active?: number | undefined;
             last_pin_message?: string | undefined;
             usernames?: string | undefined;
+            creator_name?: string | undefined;
         }[] & ({
             clan_id?: string | undefined;
             parrent_id?: string | undefined;
@@ -9819,6 +9954,7 @@ export declare const ChannelDescList: {
             active?: number | undefined;
             last_pin_message?: string | undefined;
             usernames?: string | undefined;
+            creator_name?: string | undefined;
         } & {
             clan_id?: string | undefined;
             parrent_id?: string | undefined;
@@ -9875,6 +10011,7 @@ export declare const ChannelDescList: {
             active?: number | undefined;
             last_pin_message?: string | undefined;
             usernames?: string | undefined;
+            creator_name?: string | undefined;
         } & { [K_4 in Exclude<keyof I["channeldesc"][number], keyof ChannelDescription>]: never; })[] & { [K_5 in Exclude<keyof I["channeldesc"], keyof {
             clan_id?: string | undefined;
             parrent_id?: string | undefined;
@@ -9913,6 +10050,7 @@ export declare const ChannelDescList: {
             active?: number | undefined;
             last_pin_message?: string | undefined;
             usernames?: string | undefined;
+            creator_name?: string | undefined;
         }[]>]: never; }) | undefined;
         next_cursor?: string | undefined;
         prev_cursor?: string | undefined;
@@ -9957,6 +10095,7 @@ export declare const ChannelDescList: {
             active?: number | undefined;
             last_pin_message?: string | undefined;
             usernames?: string | undefined;
+            creator_name?: string | undefined;
         }[] | undefined;
         next_cursor?: string | undefined;
         prev_cursor?: string | undefined;
@@ -10000,6 +10139,7 @@ export declare const ChannelDescList: {
             active?: number | undefined;
             last_pin_message?: string | undefined;
             usernames?: string | undefined;
+            creator_name?: string | undefined;
         }[] & ({
             clan_id?: string | undefined;
             parrent_id?: string | undefined;
@@ -10038,6 +10178,7 @@ export declare const ChannelDescList: {
             active?: number | undefined;
             last_pin_message?: string | undefined;
             usernames?: string | undefined;
+            creator_name?: string | undefined;
         } & {
             clan_id?: string | undefined;
             parrent_id?: string | undefined;
@@ -10094,6 +10235,7 @@ export declare const ChannelDescList: {
             active?: number | undefined;
             last_pin_message?: string | undefined;
             usernames?: string | undefined;
+            creator_name?: string | undefined;
         } & { [K_11 in Exclude<keyof I_1["channeldesc"][number], keyof ChannelDescription>]: never; })[] & { [K_12 in Exclude<keyof I_1["channeldesc"], keyof {
             clan_id?: string | undefined;
             parrent_id?: string | undefined;
@@ -10132,6 +10274,7 @@ export declare const ChannelDescList: {
             active?: number | undefined;
             last_pin_message?: string | undefined;
             usernames?: string | undefined;
+            creator_name?: string | undefined;
         }[]>]: never; }) | undefined;
         next_cursor?: string | undefined;
         prev_cursor?: string | undefined;
@@ -13617,6 +13760,38 @@ export declare const WebhookGenerateResponse: {
         hook_name?: string | undefined;
         channel_id?: string | undefined;
     } & { [K_1 in Exclude<keyof I_1, keyof WebhookGenerateResponse>]: never; }>(object: I_1): WebhookGenerateResponse;
+};
+export declare const CheckDuplicateClanNameRequest: {
+    encode(message: CheckDuplicateClanNameRequest, writer?: _m0.Writer): _m0.Writer;
+    decode(input: _m0.Reader | Uint8Array, length?: number): CheckDuplicateClanNameRequest;
+    fromJSON(object: any): CheckDuplicateClanNameRequest;
+    toJSON(message: CheckDuplicateClanNameRequest): unknown;
+    create<I extends {
+        clan_name?: string | undefined;
+    } & {
+        clan_name?: string | undefined;
+    } & { [K in Exclude<keyof I, "clan_name">]: never; }>(base?: I | undefined): CheckDuplicateClanNameRequest;
+    fromPartial<I_1 extends {
+        clan_name?: string | undefined;
+    } & {
+        clan_name?: string | undefined;
+    } & { [K_1 in Exclude<keyof I_1, "clan_name">]: never; }>(object: I_1): CheckDuplicateClanNameRequest;
+};
+export declare const CheckDuplicateClanNameResponse: {
+    encode(message: CheckDuplicateClanNameResponse, writer?: _m0.Writer): _m0.Writer;
+    decode(input: _m0.Reader | Uint8Array, length?: number): CheckDuplicateClanNameResponse;
+    fromJSON(object: any): CheckDuplicateClanNameResponse;
+    toJSON(message: CheckDuplicateClanNameResponse): unknown;
+    create<I extends {
+        is_duplicate?: boolean | undefined;
+    } & {
+        is_duplicate?: boolean | undefined;
+    } & { [K in Exclude<keyof I, "is_duplicate">]: never; }>(base?: I | undefined): CheckDuplicateClanNameResponse;
+    fromPartial<I_1 extends {
+        is_duplicate?: boolean | undefined;
+    } & {
+        is_duplicate?: boolean | undefined;
+    } & { [K_1 in Exclude<keyof I_1, "is_duplicate">]: never; }>(object: I_1): CheckDuplicateClanNameResponse;
 };
 type Builtin = Date | Function | Uint8Array | string | number | boolean | undefined;
 export type DeepPartial<T> = T extends Builtin ? T : T extends Array<infer U> ? Array<DeepPartial<U>> : T extends ReadonlyArray<infer U> ? ReadonlyArray<DeepPartial<U>> : T extends {} ? {
