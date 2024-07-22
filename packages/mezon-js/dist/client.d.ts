@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { ApiAccount, ApiAccountCustom, ApiAccountDevice, ApiAccountEmail, ApiAccountFacebook, ApiAccountFacebookInstantGame, ApiAccountGoogle, ApiAccountGameCenter, ApiAccountSteam, ApiChannelDescList, ApiChannelDescription, ApiCreateChannelDescRequest, ApiDeleteRoleRequest, ApiClanDescList, ApiCreateClanDescRequest, ApiClanDesc, ApiCategoryDesc, ApiCategoryDescList, ApiRoleList, ApiPermissionList, ApiRoleUserList, ApiRole, ApiCreateRoleRequest, ApiAddRoleChannelDescRequest, ApiCreateCategoryDescRequest, ApiUpdateCategoryDescRequest, ApiDeleteStorageObjectsRequest, ApiEvent, ApiReadStorageObjectsRequest, ApiStorageObjectAcks, ApiUpdateAccountRequest, ApiAccountApple, ApiLinkSteamRequest, ApiClanDescProfile, ApiClanProfile, ApiChannelUserList, ApiClanUserList, ApiLinkInviteUserRequest, ApiUpdateEventRequest, ApiLinkInviteUser, ApiInviteUserRes, ApiUploadAttachmentRequest, ApiUploadAttachment, ApiMessageReaction, ApiMessageMention, ApiMessageAttachment, ApiMessageRef, ApiChannelMessageHeader, ApiVoiceChannelUserList, ApiChannelAttachmentList, ApiCreateEventRequest, ApiEventManagement, ApiEventList, ApiDeleteEventRequest, ApiNotificationChannelCategoySettingsList, ApiNotificationSetting, ApiSetDefaultNotificationRequest, ApiNotificationUserChannel, ApiSetNotificationRequest, ApiNotifiReactMessage, ApiSetMuteNotificationRequest, ApiSearchMessageRequest, ApiSearchMessageResponse, ApiPinMessageRequest, ApiPinMessagesList, ApiCreateWebhookRequest, ApiWebhookResponse, ApiDeleteChannelDescRequest, ApiChangeChannelPrivateRequest, ApiClanEmojiList, ApiClanEmojiCreateRequest, ApiChannelVoiceList, MezonUpdateClanEmojiByIdBody, ApiWebhookCreateRequest, ApiWebhookListResponse, MezonUpdateWebhookByIdBody, ApiWebhookGenerateResponse } from "./api.gen";
+import { ApiAccount, ApiAccountCustom, ApiAccountDevice, ApiAccountEmail, ApiAccountFacebook, ApiAccountFacebookInstantGame, ApiAccountGoogle, ApiAccountGameCenter, ApiAccountSteam, ApiChannelDescList, ApiChannelDescription, ApiCreateChannelDescRequest, ApiDeleteRoleRequest, ApiClanDescList, ApiCreateClanDescRequest, ApiClanDesc, ApiCategoryDesc, ApiCategoryDescList, ApiRoleList, ApiPermissionList, ApiRoleUserList, ApiRole, ApiCreateRoleRequest, ApiAddRoleChannelDescRequest, ApiCreateCategoryDescRequest, ApiUpdateCategoryDescRequest, ApiDeleteStorageObjectsRequest, ApiEvent, ApiReadStorageObjectsRequest, ApiStorageObjectAcks, ApiUpdateAccountRequest, ApiAccountApple, ApiLinkSteamRequest, ApiClanDescProfile, ApiClanProfile, ApiChannelUserList, ApiClanUserList, ApiLinkInviteUserRequest, ApiUpdateEventRequest, ApiLinkInviteUser, ApiInviteUserRes, ApiUploadAttachmentRequest, ApiUploadAttachment, ApiMessageReaction, ApiMessageMention, ApiMessageAttachment, ApiMessageRef, ApiChannelMessageHeader, ApiVoiceChannelUserList, ApiChannelAttachmentList, ApiCreateEventRequest, ApiEventManagement, ApiEventList, ApiDeleteEventRequest, ApiNotificationChannelCategoySettingsList, ApiNotificationSetting, ApiSetDefaultNotificationRequest, ApiNotificationUserChannel, ApiSetNotificationRequest, ApiNotifiReactMessage, ApiSetMuteNotificationRequest, ApiSearchMessageRequest, ApiSearchMessageResponse, ApiPinMessageRequest, ApiPinMessagesList, ApiCreateWebhookRequest, ApiWebhookResponse, ApiDeleteChannelDescRequest, ApiChangeChannelPrivateRequest, ApiClanEmojiList, ApiClanEmojiCreateRequest, ApiChannelVoiceList, MezonUpdateClanEmojiByIdBody, ApiWebhookCreateRequest, ApiWebhookListResponse, MezonUpdateWebhookByIdBody, ApiWebhookGenerateResponse, ApiCheckDuplicateClanNameResponse } from "./api.gen";
 import { Session } from "./session";
 import { Socket } from "./socket";
 import { WebSocketAdapter } from "./web_socket_adapter";
@@ -108,9 +108,10 @@ export interface ChannelMessage {
     persistent?: boolean;
     sender_id: string;
     update_time?: string;
-    user_id_one?: string;
-    user_id_two?: string;
+    clan_logo?: string;
+    category_name?: string;
     username?: string;
+    clan_nick?: string;
 }
 /** A list of channel messages, usually a result of a list operation. */
 export interface ChannelMessageList {
@@ -588,4 +589,5 @@ export declare class Client {
     listWebhookByChannelId(session: Session, channel_id: string): Promise<ApiWebhookListResponse>;
     updateWebhookById(session: Session, id: string, request: MezonUpdateWebhookByIdBody): Promise<boolean>;
     deleteWebhookById(session: Session, id: string): Promise<boolean>;
+    checkDuplicateClanName(session: Session, clan_name: string): Promise<ApiCheckDuplicateClanNameResponse>;
 }

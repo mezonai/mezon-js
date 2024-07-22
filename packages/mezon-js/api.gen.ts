@@ -7,6 +7,8 @@ import { encode } from 'js-base64';
 /** A single user-role pair. */
 export interface ChannelUserListChannelUser {
   //
+  clan_nick?: string;
+  //
   id?: string;
   //Their relationship to the role.
   role_id?: Array<string>;
@@ -391,6 +393,8 @@ export interface ApiChannelMessage {
   clan_id?: string;
   //
   clan_logo?: string;
+  //
+  clan_nick?: string;
   //The code representing a message type or category.
   code: number;
   //The content payload.

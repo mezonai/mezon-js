@@ -2155,6 +2155,34 @@ var MezonApi = class {
       )
     ]);
   }
+  /** check duplicate clan name */
+  checkDuplicateClanName(bearerToken, clanName, options = {}) {
+    if (clanName === null || clanName === void 0) {
+      throw new Error("'clanName' is a required parameter but is null or undefined.");
+    }
+    const urlPath = "/v2/clandesc/{clanName}".replace("{clanName}", encodeURIComponent(String(clanName)));
+    const queryParams = /* @__PURE__ */ new Map();
+    let bodyJson = "";
+    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
+    const fetchOptions = buildFetchOptions("GET", options, bodyJson);
+    if (bearerToken) {
+      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+    }
+    return Promise.race([
+      fetch(fullUrl, fetchOptions).then((response) => {
+        if (response.status == 204) {
+          return response;
+        } else if (response.status >= 200 && response.status < 300) {
+          return response.json();
+        } else {
+          throw response;
+        }
+      }),
+      new Promise(
+        (_, reject) => setTimeout(reject, this.timeoutMs, "Request timed out.")
+      )
+    ]);
+  }
   /** Get a clan desc profile */
   getClanDescProfile(bearerToken, clanId, options = {}) {
     if (clanId === null || clanId === void 0) {
@@ -4586,9 +4614,10 @@ var _DefaultSocket = class _DefaultSocket {
             id: message.channel_message.message_id,
             sender_id: message.channel_message.sender_id,
             update_time: message.channel_message.update_time,
-            user_id_one: message.channel_message.user_id_one,
-            user_id_two: message.channel_message.user_id_two,
+            clan_logo: message.channel_message.clan_logo,
+            category_name: message.channel_message.category_name,
             username: message.channel_message.username,
+            clan_nick: message.clan_nick,
             content,
             reactions,
             mentions,
@@ -5481,8 +5510,9 @@ var Client = class {
             avatar: m.avatar,
             content: m.content ? JSON.parse(m.content) : void 0,
             channel_label: m.channel_label,
-            user_id_one: m.user_id_one,
-            user_id_two: m.user_id_two,
+            clan_logo: m.clan_logo,
+            category_name: m.category_name,
+            clan_nick: m.clan_nick,
             attachments: m.attachments ? JSON.parse(m.attachments) : [],
             mentions: m.mentions ? JSON.parse(m.mentions) : [],
             reactions: m.reactions ? JSON.parse(m.reactions) : [],
@@ -6633,6 +6663,17 @@ var Client = class {
       }
       return this.apiClient.deleteWebhookById(session.token, id).then((response) => {
         return response !== void 0;
+      });
+    });
+  }
+  //**check duplicate clan name */
+  checkDuplicateClanName(session, clan_name) {
+    return __async(this, null, function* () {
+      if (this.autoRefreshSession && session.refresh_token && session.isexpired((Date.now() + this.expiredTimespanMs) / 1e3)) {
+        yield this.sessionRefresh(session);
+      }
+      return this.apiClient.checkDuplicateClanName(session.token, clan_name).then((response) => {
+        return Promise.resolve(response);
       });
     });
   }

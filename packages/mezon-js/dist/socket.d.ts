@@ -39,8 +39,8 @@ export interface Channel {
     presences: Presence[];
     /** The presence of the current user, i.e. yourself. */
     self: Presence;
-    user_id_one: string;
-    user_id_two: string;
+    clan_logo: string;
+    category_name: string;
 }
 export interface ClanJoin {
     clan_join: {
@@ -185,9 +185,10 @@ export interface ChannelMessageEvent {
     persistent?: boolean;
     sender_id: string;
     update_time: string;
-    user_id_one: string;
-    user_id_two: string;
+    clan_logo: string;
+    category_name: string;
     username: string;
+    clan_nick: string;
     reactions?: Array<ApiMessageReaction>;
     mentions?: Array<ApiMessageMention>;
     attachments?: Array<ApiMessageAttachment>;
