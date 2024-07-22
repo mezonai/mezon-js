@@ -2607,6 +2607,14 @@ export interface WebhookGenerateResponse {
   channel_id: string;
 }
 
+export interface CheckDuplicateClanNameRequest {
+  clan_name: string;
+}
+
+export interface CheckDuplicateClanNameResponse {
+  is_duplicate: boolean;
+}
+
 function createBaseAccount(): Account {
   return {
     user: undefined,
@@ -19273,6 +19281,112 @@ export const WebhookGenerateResponse = {
     message.url = object.url ?? "";
     message.hook_name = object.hook_name ?? "";
     message.channel_id = object.channel_id ?? "";
+    return message;
+  },
+};
+
+function createBaseCheckDuplicateClanNameRequest(): CheckDuplicateClanNameRequest {
+  return { clan_name: "" };
+}
+
+export const CheckDuplicateClanNameRequest = {
+  encode(message: CheckDuplicateClanNameRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.clan_name !== "") {
+      writer.uint32(10).string(message.clan_name);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): CheckDuplicateClanNameRequest {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseCheckDuplicateClanNameRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.clan_name = reader.string();
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): CheckDuplicateClanNameRequest {
+    return { clan_name: isSet(object.clan_name) ? String(object.clan_name) : "" };
+  },
+
+  toJSON(message: CheckDuplicateClanNameRequest): unknown {
+    const obj: any = {};
+    message.clan_name !== undefined && (obj.clan_name = message.clan_name);
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<CheckDuplicateClanNameRequest>, I>>(base?: I): CheckDuplicateClanNameRequest {
+    return CheckDuplicateClanNameRequest.fromPartial(base ?? {});
+  },
+
+  fromPartial<I extends Exact<DeepPartial<CheckDuplicateClanNameRequest>, I>>(
+    object: I,
+  ): CheckDuplicateClanNameRequest {
+    const message = createBaseCheckDuplicateClanNameRequest();
+    message.clan_name = object.clan_name ?? "";
+    return message;
+  },
+};
+
+function createBaseCheckDuplicateClanNameResponse(): CheckDuplicateClanNameResponse {
+  return { is_duplicate: false };
+}
+
+export const CheckDuplicateClanNameResponse = {
+  encode(message: CheckDuplicateClanNameResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.is_duplicate === true) {
+      writer.uint32(8).bool(message.is_duplicate);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): CheckDuplicateClanNameResponse {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseCheckDuplicateClanNameResponse();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.is_duplicate = reader.bool();
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): CheckDuplicateClanNameResponse {
+    return { is_duplicate: isSet(object.is_duplicate) ? Boolean(object.is_duplicate) : false };
+  },
+
+  toJSON(message: CheckDuplicateClanNameResponse): unknown {
+    const obj: any = {};
+    message.is_duplicate !== undefined && (obj.is_duplicate = message.is_duplicate);
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<CheckDuplicateClanNameResponse>, I>>(base?: I): CheckDuplicateClanNameResponse {
+    return CheckDuplicateClanNameResponse.fromPartial(base ?? {});
+  },
+
+  fromPartial<I extends Exact<DeepPartial<CheckDuplicateClanNameResponse>, I>>(
+    object: I,
+  ): CheckDuplicateClanNameResponse {
+    const message = createBaseCheckDuplicateClanNameResponse();
+    message.is_duplicate = object.is_duplicate ?? false;
     return message;
   },
 };

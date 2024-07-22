@@ -102,6 +102,7 @@ import {
   ApiWebhookListResponse,
   MezonUpdateWebhookByIdBody,
   ApiWebhookGenerateResponse,
+  ApiCheckDuplicateClanNameResponse,
 } from "./api.gen";
 
 import { Session } from "./session";
@@ -2332,6 +2333,18 @@ async deleteWebhookById(session: Session, id: string) {
 
   return this.apiClient.deleteWebhookById(session.token, id).then((response: any) => {
     return response !== undefined;
+  })
+}
+
+//**check duplicate clan name */
+async checkDuplicateClanName(session: Session, clan_name: string): Promise<ApiCheckDuplicateClanNameResponse>{
+  if (this.autoRefreshSession && session.refresh_token &&
+    session.isexpired((Date.now() + this.expiredTimespanMs)/1000)) {
+    await this.sessionRefresh(session);
+  }
+
+  return this.apiClient.checkDuplicateClanName(session.token, clan_name).then((response: any) => {
+    return Promise.resolve(response);
   })
 }
 

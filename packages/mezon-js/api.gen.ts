@@ -460,6 +460,12 @@ export interface ApiChannelVoiceList {
 }
 
 /**  */
+export interface ApiCheckDuplicateClanNameResponse {
+  //
+  is_duplicate?: boolean;
+}
+
+/**  */
 export interface ApiClanDesc {
   //
   banner?: string;
@@ -3485,6 +3491,42 @@ export class MezonApi {
     }
     const urlPath = "/v2/clandesc/{clanId}/user"
         .replace("{clanId}", encodeURIComponent(String(clanId)));
+    const queryParams = new Map<string, any>();
+
+    let bodyJson : string = "";
+
+    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
+    const fetchOptions = buildFetchOptions("GET", options, bodyJson);
+    if (bearerToken) {
+        fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+    }
+
+    return Promise.race([
+      fetch(fullUrl, fetchOptions).then((response) => {
+        if (response.status == 204) {
+          return response;
+        } else if (response.status >= 200 && response.status < 300) {
+          return response.json();
+        } else {
+          throw response;
+        }
+      }),
+      new Promise((_, reject) =>
+        setTimeout(reject, this.timeoutMs, "Request timed out.")
+      ),
+    ]);
+}
+
+  /** check duplicate clan name */
+  checkDuplicateClanName(bearerToken: string,
+      clanName:string,
+      options: any = {}): Promise<ApiCheckDuplicateClanNameResponse> {
+    
+    if (clanName === null || clanName === undefined) {
+      throw new Error("'clanName' is a required parameter but is null or undefined.");
+    }
+    const urlPath = "/v2/clandesc/{clanName}"
+        .replace("{clanName}", encodeURIComponent(String(clanName)));
     const queryParams = new Map<string, any>();
 
     let bodyJson : string = "";
