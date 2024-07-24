@@ -268,6 +268,14 @@ export interface MessageRef {
   message_ref_id: string;
   /** original message sender */
   message_sender_id: string;
+  /** original message sendre username */
+  message_sender_username: string;
+  /** original message sender avatar */
+  mesages_sender_avatar: string;
+  /** original sender clan nick name */
+  message_sender_clan_nick: string;
+  /** original sender display name */
+  message_sender_display_name: string;
   /** content reference */
   content: string;
   /** has attachment */
@@ -1995,7 +2003,18 @@ export const MessageAttachment = {
 };
 
 function createBaseMessageRef(): MessageRef {
-  return { message_id: "", message_ref_id: "", message_sender_id: "", content: "", has_attachment: false, ref_type: 0 };
+  return {
+    message_id: "",
+    message_ref_id: "",
+    message_sender_id: "",
+    message_sender_username: "",
+    mesages_sender_avatar: "",
+    message_sender_clan_nick: "",
+    message_sender_display_name: "",
+    content: "",
+    has_attachment: false,
+    ref_type: 0,
+  };
 }
 
 export const MessageRef = {
@@ -2009,14 +2028,26 @@ export const MessageRef = {
     if (message.message_sender_id !== "") {
       writer.uint32(26).string(message.message_sender_id);
     }
+    if (message.message_sender_username !== "") {
+      writer.uint32(34).string(message.message_sender_username);
+    }
+    if (message.mesages_sender_avatar !== "") {
+      writer.uint32(42).string(message.mesages_sender_avatar);
+    }
+    if (message.message_sender_clan_nick !== "") {
+      writer.uint32(50).string(message.message_sender_clan_nick);
+    }
+    if (message.message_sender_display_name !== "") {
+      writer.uint32(58).string(message.message_sender_display_name);
+    }
     if (message.content !== "") {
-      writer.uint32(34).string(message.content);
+      writer.uint32(66).string(message.content);
     }
     if (message.has_attachment === true) {
-      writer.uint32(40).bool(message.has_attachment);
+      writer.uint32(72).bool(message.has_attachment);
     }
     if (message.ref_type !== 0) {
-      writer.uint32(48).int32(message.ref_type);
+      writer.uint32(80).int32(message.ref_type);
     }
     return writer;
   },
@@ -2038,12 +2069,24 @@ export const MessageRef = {
           message.message_sender_id = reader.string();
           break;
         case 4:
-          message.content = reader.string();
+          message.message_sender_username = reader.string();
           break;
         case 5:
-          message.has_attachment = reader.bool();
+          message.mesages_sender_avatar = reader.string();
           break;
         case 6:
+          message.message_sender_clan_nick = reader.string();
+          break;
+        case 7:
+          message.message_sender_display_name = reader.string();
+          break;
+        case 8:
+          message.content = reader.string();
+          break;
+        case 9:
+          message.has_attachment = reader.bool();
+          break;
+        case 10:
           message.ref_type = reader.int32();
           break;
         default:
@@ -2059,6 +2102,12 @@ export const MessageRef = {
       message_id: isSet(object.message_id) ? String(object.message_id) : "",
       message_ref_id: isSet(object.message_ref_id) ? String(object.message_ref_id) : "",
       message_sender_id: isSet(object.message_sender_id) ? String(object.message_sender_id) : "",
+      message_sender_username: isSet(object.message_sender_username) ? String(object.message_sender_username) : "",
+      mesages_sender_avatar: isSet(object.mesages_sender_avatar) ? String(object.mesages_sender_avatar) : "",
+      message_sender_clan_nick: isSet(object.message_sender_clan_nick) ? String(object.message_sender_clan_nick) : "",
+      message_sender_display_name: isSet(object.message_sender_display_name)
+        ? String(object.message_sender_display_name)
+        : "",
       content: isSet(object.content) ? String(object.content) : "",
       has_attachment: isSet(object.has_attachment) ? Boolean(object.has_attachment) : false,
       ref_type: isSet(object.ref_type) ? Number(object.ref_type) : 0,
@@ -2070,6 +2119,11 @@ export const MessageRef = {
     message.message_id !== undefined && (obj.message_id = message.message_id);
     message.message_ref_id !== undefined && (obj.message_ref_id = message.message_ref_id);
     message.message_sender_id !== undefined && (obj.message_sender_id = message.message_sender_id);
+    message.message_sender_username !== undefined && (obj.message_sender_username = message.message_sender_username);
+    message.mesages_sender_avatar !== undefined && (obj.mesages_sender_avatar = message.mesages_sender_avatar);
+    message.message_sender_clan_nick !== undefined && (obj.message_sender_clan_nick = message.message_sender_clan_nick);
+    message.message_sender_display_name !== undefined &&
+      (obj.message_sender_display_name = message.message_sender_display_name);
     message.content !== undefined && (obj.content = message.content);
     message.has_attachment !== undefined && (obj.has_attachment = message.has_attachment);
     message.ref_type !== undefined && (obj.ref_type = Math.round(message.ref_type));
@@ -2085,6 +2139,10 @@ export const MessageRef = {
     message.message_id = object.message_id ?? "";
     message.message_ref_id = object.message_ref_id ?? "";
     message.message_sender_id = object.message_sender_id ?? "";
+    message.message_sender_username = object.message_sender_username ?? "";
+    message.mesages_sender_avatar = object.mesages_sender_avatar ?? "";
+    message.message_sender_clan_nick = object.message_sender_clan_nick ?? "";
+    message.message_sender_display_name = object.message_sender_display_name ?? "";
     message.content = object.content ?? "";
     message.has_attachment = object.has_attachment ?? false;
     message.ref_type = object.ref_type ?? 0;

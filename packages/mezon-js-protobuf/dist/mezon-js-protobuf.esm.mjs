@@ -3984,7 +3984,18 @@ var MessageAttachment = {
   }
 };
 function createBaseMessageRef() {
-  return { message_id: "", message_ref_id: "", message_sender_id: "", content: "", has_attachment: false, ref_type: 0 };
+  return {
+    message_id: "",
+    message_ref_id: "",
+    message_sender_id: "",
+    message_sender_username: "",
+    mesages_sender_avatar: "",
+    message_sender_clan_nick: "",
+    message_sender_display_name: "",
+    content: "",
+    has_attachment: false,
+    ref_type: 0
+  };
 }
 var MessageRef = {
   encode(message, writer = import_minimal4.default.Writer.create()) {
@@ -3997,14 +4008,26 @@ var MessageRef = {
     if (message.message_sender_id !== "") {
       writer.uint32(26).string(message.message_sender_id);
     }
+    if (message.message_sender_username !== "") {
+      writer.uint32(34).string(message.message_sender_username);
+    }
+    if (message.mesages_sender_avatar !== "") {
+      writer.uint32(42).string(message.mesages_sender_avatar);
+    }
+    if (message.message_sender_clan_nick !== "") {
+      writer.uint32(50).string(message.message_sender_clan_nick);
+    }
+    if (message.message_sender_display_name !== "") {
+      writer.uint32(58).string(message.message_sender_display_name);
+    }
     if (message.content !== "") {
-      writer.uint32(34).string(message.content);
+      writer.uint32(66).string(message.content);
     }
     if (message.has_attachment === true) {
-      writer.uint32(40).bool(message.has_attachment);
+      writer.uint32(72).bool(message.has_attachment);
     }
     if (message.ref_type !== 0) {
-      writer.uint32(48).int32(message.ref_type);
+      writer.uint32(80).int32(message.ref_type);
     }
     return writer;
   },
@@ -4025,12 +4048,24 @@ var MessageRef = {
           message.message_sender_id = reader.string();
           break;
         case 4:
-          message.content = reader.string();
+          message.message_sender_username = reader.string();
           break;
         case 5:
-          message.has_attachment = reader.bool();
+          message.mesages_sender_avatar = reader.string();
           break;
         case 6:
+          message.message_sender_clan_nick = reader.string();
+          break;
+        case 7:
+          message.message_sender_display_name = reader.string();
+          break;
+        case 8:
+          message.content = reader.string();
+          break;
+        case 9:
+          message.has_attachment = reader.bool();
+          break;
+        case 10:
           message.ref_type = reader.int32();
           break;
         default:
@@ -4045,6 +4080,10 @@ var MessageRef = {
       message_id: isSet4(object.message_id) ? String(object.message_id) : "",
       message_ref_id: isSet4(object.message_ref_id) ? String(object.message_ref_id) : "",
       message_sender_id: isSet4(object.message_sender_id) ? String(object.message_sender_id) : "",
+      message_sender_username: isSet4(object.message_sender_username) ? String(object.message_sender_username) : "",
+      mesages_sender_avatar: isSet4(object.mesages_sender_avatar) ? String(object.mesages_sender_avatar) : "",
+      message_sender_clan_nick: isSet4(object.message_sender_clan_nick) ? String(object.message_sender_clan_nick) : "",
+      message_sender_display_name: isSet4(object.message_sender_display_name) ? String(object.message_sender_display_name) : "",
       content: isSet4(object.content) ? String(object.content) : "",
       has_attachment: isSet4(object.has_attachment) ? Boolean(object.has_attachment) : false,
       ref_type: isSet4(object.ref_type) ? Number(object.ref_type) : 0
@@ -4055,6 +4094,10 @@ var MessageRef = {
     message.message_id !== void 0 && (obj.message_id = message.message_id);
     message.message_ref_id !== void 0 && (obj.message_ref_id = message.message_ref_id);
     message.message_sender_id !== void 0 && (obj.message_sender_id = message.message_sender_id);
+    message.message_sender_username !== void 0 && (obj.message_sender_username = message.message_sender_username);
+    message.mesages_sender_avatar !== void 0 && (obj.mesages_sender_avatar = message.mesages_sender_avatar);
+    message.message_sender_clan_nick !== void 0 && (obj.message_sender_clan_nick = message.message_sender_clan_nick);
+    message.message_sender_display_name !== void 0 && (obj.message_sender_display_name = message.message_sender_display_name);
     message.content !== void 0 && (obj.content = message.content);
     message.has_attachment !== void 0 && (obj.has_attachment = message.has_attachment);
     message.ref_type !== void 0 && (obj.ref_type = Math.round(message.ref_type));
@@ -4064,14 +4107,18 @@ var MessageRef = {
     return MessageRef.fromPartial(base != null ? base : {});
   },
   fromPartial(object) {
-    var _a, _b, _c, _d, _e, _f;
+    var _a, _b, _c, _d, _e, _f, _g, _h, _i, _j;
     const message = createBaseMessageRef();
     message.message_id = (_a = object.message_id) != null ? _a : "";
     message.message_ref_id = (_b = object.message_ref_id) != null ? _b : "";
     message.message_sender_id = (_c = object.message_sender_id) != null ? _c : "";
-    message.content = (_d = object.content) != null ? _d : "";
-    message.has_attachment = (_e = object.has_attachment) != null ? _e : false;
-    message.ref_type = (_f = object.ref_type) != null ? _f : 0;
+    message.message_sender_username = (_d = object.message_sender_username) != null ? _d : "";
+    message.mesages_sender_avatar = (_e = object.mesages_sender_avatar) != null ? _e : "";
+    message.message_sender_clan_nick = (_f = object.message_sender_clan_nick) != null ? _f : "";
+    message.message_sender_display_name = (_g = object.message_sender_display_name) != null ? _g : "";
+    message.content = (_h = object.content) != null ? _h : "";
+    message.has_attachment = (_i = object.has_attachment) != null ? _i : false;
+    message.ref_type = (_j = object.ref_type) != null ? _j : 0;
     return message;
   }
 };

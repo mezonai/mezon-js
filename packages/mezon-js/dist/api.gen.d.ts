@@ -534,6 +534,10 @@ export interface ApiMessageRef {
     message_ref_id?: string;
     ref_type?: number;
     message_sender_id?: string;
+    message_sender_username?: string;
+    mesages_sender_avatar?: string;
+    message_sender_clan_nick?: string;
+    message_sender_display_name?: string;
     content?: string;
     has_attachment: boolean;
 }
