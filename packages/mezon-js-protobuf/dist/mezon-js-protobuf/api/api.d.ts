@@ -364,6 +364,8 @@ export interface ChannelMessage {
     /** The category name */
     category_name: string;
     /** The clan nick name */
+    display_name: string;
+    /** The clan nick name */
     clan_nick: string;
     /** Emoji reaction */
     reactions: string;
@@ -3530,6 +3532,7 @@ export declare const ChannelMessage: {
         channel_label?: string | undefined;
         clan_logo?: string | undefined;
         category_name?: string | undefined;
+        display_name?: string | undefined;
         clan_nick?: string | undefined;
         reactions?: string | undefined;
         mentions?: string | undefined;
@@ -3550,6 +3553,7 @@ export declare const ChannelMessage: {
         channel_label?: string | undefined;
         clan_logo?: string | undefined;
         category_name?: string | undefined;
+        display_name?: string | undefined;
         clan_nick?: string | undefined;
         reactions?: string | undefined;
         mentions?: string | undefined;
@@ -3571,6 +3575,7 @@ export declare const ChannelMessage: {
         channel_label?: string | undefined;
         clan_logo?: string | undefined;
         category_name?: string | undefined;
+        display_name?: string | undefined;
         clan_nick?: string | undefined;
         reactions?: string | undefined;
         mentions?: string | undefined;
@@ -3591,6 +3596,7 @@ export declare const ChannelMessage: {
         channel_label?: string | undefined;
         clan_logo?: string | undefined;
         category_name?: string | undefined;
+        display_name?: string | undefined;
         clan_nick?: string | undefined;
         reactions?: string | undefined;
         mentions?: string | undefined;
@@ -3815,6 +3821,7 @@ export declare const ChannelMessageList: {
             channel_label?: string | undefined;
             clan_logo?: string | undefined;
             category_name?: string | undefined;
+            display_name?: string | undefined;
             clan_nick?: string | undefined;
             reactions?: string | undefined;
             mentions?: string | undefined;
@@ -3847,6 +3854,7 @@ export declare const ChannelMessageList: {
             channel_label?: string | undefined;
             clan_logo?: string | undefined;
             category_name?: string | undefined;
+            display_name?: string | undefined;
             clan_nick?: string | undefined;
             reactions?: string | undefined;
             mentions?: string | undefined;
@@ -3867,6 +3875,7 @@ export declare const ChannelMessageList: {
             channel_label?: string | undefined;
             clan_logo?: string | undefined;
             category_name?: string | undefined;
+            display_name?: string | undefined;
             clan_nick?: string | undefined;
             reactions?: string | undefined;
             mentions?: string | undefined;
@@ -3887,6 +3896,7 @@ export declare const ChannelMessageList: {
             channel_label?: string | undefined;
             clan_logo?: string | undefined;
             category_name?: string | undefined;
+            display_name?: string | undefined;
             clan_nick?: string | undefined;
             reactions?: string | undefined;
             mentions?: string | undefined;
@@ -3907,6 +3917,7 @@ export declare const ChannelMessageList: {
             channel_label?: string | undefined;
             clan_logo?: string | undefined;
             category_name?: string | undefined;
+            display_name?: string | undefined;
             clan_nick?: string | undefined;
             reactions?: string | undefined;
             mentions?: string | undefined;
@@ -3949,6 +3960,7 @@ export declare const ChannelMessageList: {
             channel_label?: string | undefined;
             clan_logo?: string | undefined;
             category_name?: string | undefined;
+            display_name?: string | undefined;
             clan_nick?: string | undefined;
             reactions?: string | undefined;
             mentions?: string | undefined;
@@ -3981,6 +3993,7 @@ export declare const ChannelMessageList: {
             channel_label?: string | undefined;
             clan_logo?: string | undefined;
             category_name?: string | undefined;
+            display_name?: string | undefined;
             clan_nick?: string | undefined;
             reactions?: string | undefined;
             mentions?: string | undefined;
@@ -4001,6 +4014,7 @@ export declare const ChannelMessageList: {
             channel_label?: string | undefined;
             clan_logo?: string | undefined;
             category_name?: string | undefined;
+            display_name?: string | undefined;
             clan_nick?: string | undefined;
             reactions?: string | undefined;
             mentions?: string | undefined;
@@ -4021,6 +4035,7 @@ export declare const ChannelMessageList: {
             channel_label?: string | undefined;
             clan_logo?: string | undefined;
             category_name?: string | undefined;
+            display_name?: string | undefined;
             clan_nick?: string | undefined;
             reactions?: string | undefined;
             mentions?: string | undefined;
@@ -4041,6 +4056,7 @@ export declare const ChannelMessageList: {
             channel_label?: string | undefined;
             clan_logo?: string | undefined;
             category_name?: string | undefined;
+            display_name?: string | undefined;
             clan_nick?: string | undefined;
             reactions?: string | undefined;
             mentions?: string | undefined;

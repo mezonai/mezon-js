@@ -793,10 +793,17 @@ export interface UserProfileRedis {
   username: string;
   /** Avatar to follow. */
   avatar: string;
+  /** Display name */
+  display_name: string;
+  /** FCM token */
+  fcm_tokens: FCMTokens[];
+}
+
+export interface FCMTokens {
   /** deviceID to follow. */
-  deviceID: string;
+  device_id: string;
   /** tokenID to follow. */
-  tokenID: string;
+  token_id: string;
 }
 
 function createBaseEnvelope(): Envelope {
@@ -5037,7 +5044,7 @@ export const UserChannelAdded = {
 };
 
 function createBaseUserProfileRedis(): UserProfileRedis {
-  return { user_id: "", username: "", avatar: "", deviceID: "", tokenID: "" };
+  return { user_id: "", username: "", avatar: "", display_name: "", fcm_tokens: [] };
 }
 
 export const UserProfileRedis = {
@@ -5051,11 +5058,11 @@ export const UserProfileRedis = {
     if (message.avatar !== "") {
       writer.uint32(26).string(message.avatar);
     }
-    if (message.deviceID !== "") {
-      writer.uint32(34).string(message.deviceID);
+    if (message.display_name !== "") {
+      writer.uint32(34).string(message.display_name);
     }
-    if (message.tokenID !== "") {
-      writer.uint32(42).string(message.tokenID);
+    for (const v of message.fcm_tokens) {
+      FCMTokens.encode(v!, writer.uint32(42).fork()).ldelim();
     }
     return writer;
   },
@@ -5077,10 +5084,10 @@ export const UserProfileRedis = {
           message.avatar = reader.string();
           break;
         case 4:
-          message.deviceID = reader.string();
+          message.display_name = reader.string();
           break;
         case 5:
-          message.tokenID = reader.string();
+          message.fcm_tokens.push(FCMTokens.decode(reader, reader.uint32()));
           break;
         default:
           reader.skipType(tag & 7);
@@ -5095,8 +5102,8 @@ export const UserProfileRedis = {
       user_id: isSet(object.user_id) ? String(object.user_id) : "",
       username: isSet(object.username) ? String(object.username) : "",
       avatar: isSet(object.avatar) ? String(object.avatar) : "",
-      deviceID: isSet(object.deviceID) ? String(object.deviceID) : "",
-      tokenID: isSet(object.tokenID) ? String(object.tokenID) : "",
+      display_name: isSet(object.display_name) ? String(object.display_name) : "",
+      fcm_tokens: Array.isArray(object?.fcm_tokens) ? object.fcm_tokens.map((e: any) => FCMTokens.fromJSON(e)) : [],
     };
   },
 
@@ -5105,8 +5112,12 @@ export const UserProfileRedis = {
     message.user_id !== undefined && (obj.user_id = message.user_id);
     message.username !== undefined && (obj.username = message.username);
     message.avatar !== undefined && (obj.avatar = message.avatar);
-    message.deviceID !== undefined && (obj.deviceID = message.deviceID);
-    message.tokenID !== undefined && (obj.tokenID = message.tokenID);
+    message.display_name !== undefined && (obj.display_name = message.display_name);
+    if (message.fcm_tokens) {
+      obj.fcm_tokens = message.fcm_tokens.map((e) => e ? FCMTokens.toJSON(e) : undefined);
+    } else {
+      obj.fcm_tokens = [];
+    }
     return obj;
   },
 
@@ -5119,8 +5130,70 @@ export const UserProfileRedis = {
     message.user_id = object.user_id ?? "";
     message.username = object.username ?? "";
     message.avatar = object.avatar ?? "";
-    message.deviceID = object.deviceID ?? "";
-    message.tokenID = object.tokenID ?? "";
+    message.display_name = object.display_name ?? "";
+    message.fcm_tokens = object.fcm_tokens?.map((e) => FCMTokens.fromPartial(e)) || [];
+    return message;
+  },
+};
+
+function createBaseFCMTokens(): FCMTokens {
+  return { device_id: "", token_id: "" };
+}
+
+export const FCMTokens = {
+  encode(message: FCMTokens, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.device_id !== "") {
+      writer.uint32(10).string(message.device_id);
+    }
+    if (message.token_id !== "") {
+      writer.uint32(18).string(message.token_id);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): FCMTokens {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseFCMTokens();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.device_id = reader.string();
+          break;
+        case 2:
+          message.token_id = reader.string();
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): FCMTokens {
+    return {
+      device_id: isSet(object.device_id) ? String(object.device_id) : "",
+      token_id: isSet(object.token_id) ? String(object.token_id) : "",
+    };
+  },
+
+  toJSON(message: FCMTokens): unknown {
+    const obj: any = {};
+    message.device_id !== undefined && (obj.device_id = message.device_id);
+    message.token_id !== undefined && (obj.token_id = message.token_id);
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<FCMTokens>, I>>(base?: I): FCMTokens {
+    return FCMTokens.fromPartial(base ?? {});
+  },
+
+  fromPartial<I extends Exact<DeepPartial<FCMTokens>, I>>(object: I): FCMTokens {
+    const message = createBaseFCMTokens();
+    message.device_id = object.device_id ?? "";
+    message.token_id = object.token_id ?? "";
     return message;
   },
 };

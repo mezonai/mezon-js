@@ -597,10 +597,16 @@ export interface UserProfileRedis {
     username: string;
     /** Avatar to follow. */
     avatar: string;
+    /** Display name */
+    display_name: string;
+    /** FCM token */
+    fcm_tokens: FCMTokens[];
+}
+export interface FCMTokens {
     /** deviceID to follow. */
-    deviceID: string;
+    device_id: string;
     /** tokenID to follow. */
-    tokenID: string;
+    token_id: string;
 }
 export declare const Envelope: {
     encode(message: Envelope, writer?: _m0.Writer): _m0.Writer;
@@ -659,6 +665,7 @@ export declare const Envelope: {
             channel_label?: string | undefined;
             clan_logo?: string | undefined;
             category_name?: string | undefined;
+            display_name?: string | undefined;
             clan_nick?: string | undefined;
             reactions?: string | undefined;
             mentions?: string | undefined;
@@ -1053,6 +1060,7 @@ export declare const Envelope: {
             channel_label?: string | undefined;
             clan_logo?: string | undefined;
             category_name?: string | undefined;
+            display_name?: string | undefined;
             clan_nick?: string | undefined;
             reactions?: string | undefined;
             mentions?: string | undefined;
@@ -1073,6 +1081,7 @@ export declare const Envelope: {
             channel_label?: string | undefined;
             clan_logo?: string | undefined;
             category_name?: string | undefined;
+            display_name?: string | undefined;
             clan_nick?: string | undefined;
             reactions?: string | undefined;
             mentions?: string | undefined;
@@ -1904,6 +1913,7 @@ export declare const Envelope: {
             channel_label?: string | undefined;
             clan_logo?: string | undefined;
             category_name?: string | undefined;
+            display_name?: string | undefined;
             clan_nick?: string | undefined;
             reactions?: string | undefined;
             mentions?: string | undefined;
@@ -2298,6 +2308,7 @@ export declare const Envelope: {
             channel_label?: string | undefined;
             clan_logo?: string | undefined;
             category_name?: string | undefined;
+            display_name?: string | undefined;
             clan_nick?: string | undefined;
             reactions?: string | undefined;
             mentions?: string | undefined;
@@ -2318,6 +2329,7 @@ export declare const Envelope: {
             channel_label?: string | undefined;
             clan_logo?: string | undefined;
             category_name?: string | undefined;
+            display_name?: string | undefined;
             clan_nick?: string | undefined;
             reactions?: string | undefined;
             mentions?: string | undefined;
@@ -5297,28 +5309,78 @@ export declare const UserProfileRedis: {
         user_id?: string | undefined;
         username?: string | undefined;
         avatar?: string | undefined;
-        deviceID?: string | undefined;
-        tokenID?: string | undefined;
+        display_name?: string | undefined;
+        fcm_tokens?: {
+            device_id?: string | undefined;
+            token_id?: string | undefined;
+        }[] | undefined;
     } & {
         user_id?: string | undefined;
         username?: string | undefined;
         avatar?: string | undefined;
-        deviceID?: string | undefined;
-        tokenID?: string | undefined;
-    } & { [K in Exclude<keyof I, keyof UserProfileRedis>]: never; }>(base?: I | undefined): UserProfileRedis;
+        display_name?: string | undefined;
+        fcm_tokens?: ({
+            device_id?: string | undefined;
+            token_id?: string | undefined;
+        }[] & ({
+            device_id?: string | undefined;
+            token_id?: string | undefined;
+        } & {
+            device_id?: string | undefined;
+            token_id?: string | undefined;
+        } & { [K in Exclude<keyof I["fcm_tokens"][number], keyof FCMTokens>]: never; })[] & { [K_1 in Exclude<keyof I["fcm_tokens"], keyof {
+            device_id?: string | undefined;
+            token_id?: string | undefined;
+        }[]>]: never; }) | undefined;
+    } & { [K_2 in Exclude<keyof I, keyof UserProfileRedis>]: never; }>(base?: I | undefined): UserProfileRedis;
     fromPartial<I_1 extends {
         user_id?: string | undefined;
         username?: string | undefined;
         avatar?: string | undefined;
-        deviceID?: string | undefined;
-        tokenID?: string | undefined;
+        display_name?: string | undefined;
+        fcm_tokens?: {
+            device_id?: string | undefined;
+            token_id?: string | undefined;
+        }[] | undefined;
     } & {
         user_id?: string | undefined;
         username?: string | undefined;
         avatar?: string | undefined;
-        deviceID?: string | undefined;
-        tokenID?: string | undefined;
-    } & { [K_1 in Exclude<keyof I_1, keyof UserProfileRedis>]: never; }>(object: I_1): UserProfileRedis;
+        display_name?: string | undefined;
+        fcm_tokens?: ({
+            device_id?: string | undefined;
+            token_id?: string | undefined;
+        }[] & ({
+            device_id?: string | undefined;
+            token_id?: string | undefined;
+        } & {
+            device_id?: string | undefined;
+            token_id?: string | undefined;
+        } & { [K_3 in Exclude<keyof I_1["fcm_tokens"][number], keyof FCMTokens>]: never; })[] & { [K_4 in Exclude<keyof I_1["fcm_tokens"], keyof {
+            device_id?: string | undefined;
+            token_id?: string | undefined;
+        }[]>]: never; }) | undefined;
+    } & { [K_5 in Exclude<keyof I_1, keyof UserProfileRedis>]: never; }>(object: I_1): UserProfileRedis;
+};
+export declare const FCMTokens: {
+    encode(message: FCMTokens, writer?: _m0.Writer): _m0.Writer;
+    decode(input: _m0.Reader | Uint8Array, length?: number): FCMTokens;
+    fromJSON(object: any): FCMTokens;
+    toJSON(message: FCMTokens): unknown;
+    create<I extends {
+        device_id?: string | undefined;
+        token_id?: string | undefined;
+    } & {
+        device_id?: string | undefined;
+        token_id?: string | undefined;
+    } & { [K in Exclude<keyof I, keyof FCMTokens>]: never; }>(base?: I | undefined): FCMTokens;
+    fromPartial<I_1 extends {
+        device_id?: string | undefined;
+        token_id?: string | undefined;
+    } & {
+        device_id?: string | undefined;
+        token_id?: string | undefined;
+    } & { [K_1 in Exclude<keyof I_1, keyof FCMTokens>]: never; }>(object: I_1): FCMTokens;
 };
 type Builtin = Date | Function | Uint8Array | string | number | boolean | undefined;
 export type DeepPartial<T> = T extends Builtin ? T : T extends Array<infer U> ? Array<DeepPartial<U>> : T extends ReadonlyArray<infer U> ? ReadonlyArray<DeepPartial<U>> : T extends {} ? {

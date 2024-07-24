@@ -402,6 +402,8 @@ export interface ApiChannelMessage {
   //The UNIX time (for gRPC clients) or ISO string (for REST clients) when the message was created.
   create_time?: string;
   //
+  display_name?: string;
+  //
   mentions?: string;
   //The unique ID of this message.
   message_id: string;

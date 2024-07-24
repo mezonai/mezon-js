@@ -228,6 +228,7 @@ export interface ApiChannelMessage {
     code: number;
     content: string;
     create_time?: string;
+    display_name?: string;
     mentions?: string;
     message_id: string;
     reactions?: string;

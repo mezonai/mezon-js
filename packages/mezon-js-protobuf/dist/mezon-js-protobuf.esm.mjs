@@ -2528,6 +2528,7 @@ function createBaseChannelMessage() {
     channel_label: "",
     clan_logo: "",
     category_name: "",
+    display_name: "",
     clan_nick: "",
     reactions: "",
     mentions: "",
@@ -2577,23 +2578,26 @@ var ChannelMessage = {
     if (message.category_name !== "") {
       writer.uint32(106).string(message.category_name);
     }
+    if (message.display_name !== "") {
+      writer.uint32(114).string(message.display_name);
+    }
     if (message.clan_nick !== "") {
-      writer.uint32(114).string(message.clan_nick);
+      writer.uint32(122).string(message.clan_nick);
     }
     if (message.reactions !== "") {
-      writer.uint32(122).string(message.reactions);
+      writer.uint32(130).string(message.reactions);
     }
     if (message.mentions !== "") {
-      writer.uint32(130).string(message.mentions);
+      writer.uint32(138).string(message.mentions);
     }
     if (message.attachments !== "") {
-      writer.uint32(138).string(message.attachments);
+      writer.uint32(146).string(message.attachments);
     }
     if (message.references !== "") {
-      writer.uint32(146).string(message.references);
+      writer.uint32(154).string(message.references);
     }
     if (message.referenced_message !== "") {
-      writer.uint32(154).string(message.referenced_message);
+      writer.uint32(162).string(message.referenced_message);
     }
     return writer;
   },
@@ -2644,21 +2648,24 @@ var ChannelMessage = {
           message.category_name = reader.string();
           break;
         case 14:
-          message.clan_nick = reader.string();
+          message.display_name = reader.string();
           break;
         case 15:
-          message.reactions = reader.string();
+          message.clan_nick = reader.string();
           break;
         case 16:
-          message.mentions = reader.string();
+          message.reactions = reader.string();
           break;
         case 17:
-          message.attachments = reader.string();
+          message.mentions = reader.string();
           break;
         case 18:
-          message.references = reader.string();
+          message.attachments = reader.string();
           break;
         case 19:
+          message.references = reader.string();
+          break;
+        case 20:
           message.referenced_message = reader.string();
           break;
         default:
@@ -2683,6 +2690,7 @@ var ChannelMessage = {
       channel_label: isSet3(object.channel_label) ? String(object.channel_label) : "",
       clan_logo: isSet3(object.clan_logo) ? String(object.clan_logo) : "",
       category_name: isSet3(object.category_name) ? String(object.category_name) : "",
+      display_name: isSet3(object.display_name) ? String(object.display_name) : "",
       clan_nick: isSet3(object.clan_nick) ? String(object.clan_nick) : "",
       reactions: isSet3(object.reactions) ? String(object.reactions) : "",
       mentions: isSet3(object.mentions) ? String(object.mentions) : "",
@@ -2706,6 +2714,7 @@ var ChannelMessage = {
     message.channel_label !== void 0 && (obj.channel_label = message.channel_label);
     message.clan_logo !== void 0 && (obj.clan_logo = message.clan_logo);
     message.category_name !== void 0 && (obj.category_name = message.category_name);
+    message.display_name !== void 0 && (obj.display_name = message.display_name);
     message.clan_nick !== void 0 && (obj.clan_nick = message.clan_nick);
     message.reactions !== void 0 && (obj.reactions = message.reactions);
     message.mentions !== void 0 && (obj.mentions = message.mentions);
@@ -2718,7 +2727,7 @@ var ChannelMessage = {
     return ChannelMessage.fromPartial(base != null ? base : {});
   },
   fromPartial(object) {
-    var _a, _b, _c, _d, _e, _f, _g, _h, _i, _j, _k, _l, _m, _n, _o, _p, _q, _r, _s;
+    var _a, _b, _c, _d, _e, _f, _g, _h, _i, _j, _k, _l, _m, _n, _o, _p, _q, _r, _s, _t;
     const message = createBaseChannelMessage();
     message.clan_id = (_a = object.clan_id) != null ? _a : "";
     message.channel_id = (_b = object.channel_id) != null ? _b : "";
@@ -2733,12 +2742,13 @@ var ChannelMessage = {
     message.channel_label = (_k = object.channel_label) != null ? _k : "";
     message.clan_logo = (_l = object.clan_logo) != null ? _l : "";
     message.category_name = (_m = object.category_name) != null ? _m : "";
-    message.clan_nick = (_n = object.clan_nick) != null ? _n : "";
-    message.reactions = (_o = object.reactions) != null ? _o : "";
-    message.mentions = (_p = object.mentions) != null ? _p : "";
-    message.attachments = (_q = object.attachments) != null ? _q : "";
-    message.references = (_r = object.references) != null ? _r : "";
-    message.referenced_message = (_s = object.referenced_message) != null ? _s : "";
+    message.display_name = (_n = object.display_name) != null ? _n : "";
+    message.clan_nick = (_o = object.clan_nick) != null ? _o : "";
+    message.reactions = (_p = object.reactions) != null ? _p : "";
+    message.mentions = (_q = object.mentions) != null ? _q : "";
+    message.attachments = (_r = object.attachments) != null ? _r : "";
+    message.references = (_s = object.references) != null ? _s : "";
+    message.referenced_message = (_t = object.referenced_message) != null ? _t : "";
     return message;
   }
 };
