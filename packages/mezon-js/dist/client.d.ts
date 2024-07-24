@@ -112,6 +112,7 @@ export interface ChannelMessage {
     category_name?: string;
     username?: string;
     clan_nick?: string;
+    display_name?: string;
 }
 /** A list of channel messages, usually a result of a list operation. */
 export interface ChannelMessageList {

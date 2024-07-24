@@ -261,6 +261,8 @@ export interface ChannelMessageEvent {
   username: string;
   // The clan nick name
   clan_nick: string;
+  // The display name
+  display_name: string;
   //
   reactions?: Array<ApiMessageReaction>;
   //
@@ -801,6 +803,7 @@ export class DefaultSocket implements Socket {
             category_name: message.channel_message.category_name,
             username: message.channel_message.username,
             clan_nick: message.clan_nick,
+            display_name: message.display_name,
             content: content,
             reactions: reactions,
             mentions: mentions,

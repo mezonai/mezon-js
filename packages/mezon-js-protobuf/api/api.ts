@@ -540,6 +540,8 @@ export interface ChannelMessage {
   /** The category name */
   category_name: string;
   /** The clan nick name */
+  display_name: string;
+  /** The clan nick name */
   clan_nick: string;
   /** Emoji reaction */
   reactions: string;
@@ -5363,6 +5365,7 @@ function createBaseChannelMessage(): ChannelMessage {
     channel_label: "",
     clan_logo: "",
     category_name: "",
+    display_name: "",
     clan_nick: "",
     reactions: "",
     mentions: "",
@@ -5413,23 +5416,26 @@ export const ChannelMessage = {
     if (message.category_name !== "") {
       writer.uint32(106).string(message.category_name);
     }
+    if (message.display_name !== "") {
+      writer.uint32(114).string(message.display_name);
+    }
     if (message.clan_nick !== "") {
-      writer.uint32(114).string(message.clan_nick);
+      writer.uint32(122).string(message.clan_nick);
     }
     if (message.reactions !== "") {
-      writer.uint32(122).string(message.reactions);
+      writer.uint32(130).string(message.reactions);
     }
     if (message.mentions !== "") {
-      writer.uint32(130).string(message.mentions);
+      writer.uint32(138).string(message.mentions);
     }
     if (message.attachments !== "") {
-      writer.uint32(138).string(message.attachments);
+      writer.uint32(146).string(message.attachments);
     }
     if (message.references !== "") {
-      writer.uint32(146).string(message.references);
+      writer.uint32(154).string(message.references);
     }
     if (message.referenced_message !== "") {
-      writer.uint32(154).string(message.referenced_message);
+      writer.uint32(162).string(message.referenced_message);
     }
     return writer;
   },
@@ -5481,21 +5487,24 @@ export const ChannelMessage = {
           message.category_name = reader.string();
           break;
         case 14:
-          message.clan_nick = reader.string();
+          message.display_name = reader.string();
           break;
         case 15:
-          message.reactions = reader.string();
+          message.clan_nick = reader.string();
           break;
         case 16:
-          message.mentions = reader.string();
+          message.reactions = reader.string();
           break;
         case 17:
-          message.attachments = reader.string();
+          message.mentions = reader.string();
           break;
         case 18:
-          message.references = reader.string();
+          message.attachments = reader.string();
           break;
         case 19:
+          message.references = reader.string();
+          break;
+        case 20:
           message.referenced_message = reader.string();
           break;
         default:
@@ -5521,6 +5530,7 @@ export const ChannelMessage = {
       channel_label: isSet(object.channel_label) ? String(object.channel_label) : "",
       clan_logo: isSet(object.clan_logo) ? String(object.clan_logo) : "",
       category_name: isSet(object.category_name) ? String(object.category_name) : "",
+      display_name: isSet(object.display_name) ? String(object.display_name) : "",
       clan_nick: isSet(object.clan_nick) ? String(object.clan_nick) : "",
       reactions: isSet(object.reactions) ? String(object.reactions) : "",
       mentions: isSet(object.mentions) ? String(object.mentions) : "",
@@ -5545,6 +5555,7 @@ export const ChannelMessage = {
     message.channel_label !== undefined && (obj.channel_label = message.channel_label);
     message.clan_logo !== undefined && (obj.clan_logo = message.clan_logo);
     message.category_name !== undefined && (obj.category_name = message.category_name);
+    message.display_name !== undefined && (obj.display_name = message.display_name);
     message.clan_nick !== undefined && (obj.clan_nick = message.clan_nick);
     message.reactions !== undefined && (obj.reactions = message.reactions);
     message.mentions !== undefined && (obj.mentions = message.mentions);
@@ -5573,6 +5584,7 @@ export const ChannelMessage = {
     message.channel_label = object.channel_label ?? "";
     message.clan_logo = object.clan_logo ?? "";
     message.category_name = object.category_name ?? "";
+    message.display_name = object.display_name ?? "";
     message.clan_nick = object.clan_nick ?? "";
     message.reactions = object.reactions ?? "";
     message.mentions = object.mentions ?? "";
