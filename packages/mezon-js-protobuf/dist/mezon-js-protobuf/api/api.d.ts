@@ -395,6 +395,10 @@ export interface NotificationInfo {
     username: string;
     /** avatar */
     avatar: string;
+    /** clan nick name */
+    clan_nick: string;
+    /** display name */
+    display_name: string;
     /** channel label */
     channel_label: string;
     /** channel type */
@@ -3641,6 +3645,8 @@ export declare const NotificationInfo: {
     create<I extends {
         username?: string | undefined;
         avatar?: string | undefined;
+        clan_nick?: string | undefined;
+        display_name?: string | undefined;
         channel_label?: string | undefined;
         channel_type?: string | undefined;
         category_name?: string | undefined;
@@ -3649,6 +3655,8 @@ export declare const NotificationInfo: {
     } & {
         username?: string | undefined;
         avatar?: string | undefined;
+        clan_nick?: string | undefined;
+        display_name?: string | undefined;
         channel_label?: string | undefined;
         channel_type?: string | undefined;
         category_name?: string | undefined;
@@ -3658,6 +3666,8 @@ export declare const NotificationInfo: {
     fromPartial<I_1 extends {
         username?: string | undefined;
         avatar?: string | undefined;
+        clan_nick?: string | undefined;
+        display_name?: string | undefined;
         channel_label?: string | undefined;
         channel_type?: string | undefined;
         category_name?: string | undefined;
@@ -3666,6 +3676,8 @@ export declare const NotificationInfo: {
     } & {
         username?: string | undefined;
         avatar?: string | undefined;
+        clan_nick?: string | undefined;
+        display_name?: string | undefined;
         channel_label?: string | undefined;
         channel_type?: string | undefined;
         category_name?: string | undefined;

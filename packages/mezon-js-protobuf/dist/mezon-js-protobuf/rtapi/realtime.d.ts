@@ -171,6 +171,14 @@ export interface MessageRef {
     message_ref_id: string;
     /** original message sender */
     message_sender_id: string;
+    /** original message sendre username */
+    message_sender_username: string;
+    /** original message sender avatar */
+    mesages_sender_avatar: string;
+    /** original sender clan nick name */
+    message_sender_clan_nick: string;
+    /** original sender display name */
+    message_sender_display_name: string;
     /** content reference */
     content: string;
     /** has attachment */
@@ -704,6 +712,10 @@ export declare const Envelope: {
                 message_id?: string | undefined;
                 message_ref_id?: string | undefined;
                 message_sender_id?: string | undefined;
+                message_sender_username?: string | undefined;
+                mesages_sender_avatar?: string | undefined;
+                message_sender_clan_nick?: string | undefined;
+                message_sender_display_name?: string | undefined;
                 content?: string | undefined;
                 has_attachment?: boolean | undefined;
                 ref_type?: number | undefined;
@@ -1130,6 +1142,10 @@ export declare const Envelope: {
                 message_id?: string | undefined;
                 message_ref_id?: string | undefined;
                 message_sender_id?: string | undefined;
+                message_sender_username?: string | undefined;
+                mesages_sender_avatar?: string | undefined;
+                message_sender_clan_nick?: string | undefined;
+                message_sender_display_name?: string | undefined;
                 content?: string | undefined;
                 has_attachment?: boolean | undefined;
                 ref_type?: number | undefined;
@@ -1187,6 +1203,10 @@ export declare const Envelope: {
                 message_id?: string | undefined;
                 message_ref_id?: string | undefined;
                 message_sender_id?: string | undefined;
+                message_sender_username?: string | undefined;
+                mesages_sender_avatar?: string | undefined;
+                message_sender_clan_nick?: string | undefined;
+                message_sender_display_name?: string | undefined;
                 content?: string | undefined;
                 has_attachment?: boolean | undefined;
                 ref_type?: number | undefined;
@@ -1194,6 +1214,10 @@ export declare const Envelope: {
                 message_id?: string | undefined;
                 message_ref_id?: string | undefined;
                 message_sender_id?: string | undefined;
+                message_sender_username?: string | undefined;
+                mesages_sender_avatar?: string | undefined;
+                message_sender_clan_nick?: string | undefined;
+                message_sender_display_name?: string | undefined;
                 content?: string | undefined;
                 has_attachment?: boolean | undefined;
                 ref_type?: number | undefined;
@@ -1201,6 +1225,10 @@ export declare const Envelope: {
                 message_id?: string | undefined;
                 message_ref_id?: string | undefined;
                 message_sender_id?: string | undefined;
+                message_sender_username?: string | undefined;
+                mesages_sender_avatar?: string | undefined;
+                message_sender_clan_nick?: string | undefined;
+                message_sender_display_name?: string | undefined;
                 content?: string | undefined;
                 has_attachment?: boolean | undefined;
                 ref_type?: number | undefined;
@@ -1208,6 +1236,10 @@ export declare const Envelope: {
                 message_id?: string | undefined;
                 message_ref_id?: string | undefined;
                 message_sender_id?: string | undefined;
+                message_sender_username?: string | undefined;
+                mesages_sender_avatar?: string | undefined;
+                message_sender_clan_nick?: string | undefined;
+                message_sender_display_name?: string | undefined;
                 content?: string | undefined;
                 has_attachment?: boolean | undefined;
                 ref_type?: number | undefined;
@@ -1952,6 +1984,10 @@ export declare const Envelope: {
                 message_id?: string | undefined;
                 message_ref_id?: string | undefined;
                 message_sender_id?: string | undefined;
+                message_sender_username?: string | undefined;
+                mesages_sender_avatar?: string | undefined;
+                message_sender_clan_nick?: string | undefined;
+                message_sender_display_name?: string | undefined;
                 content?: string | undefined;
                 has_attachment?: boolean | undefined;
                 ref_type?: number | undefined;
@@ -2378,6 +2414,10 @@ export declare const Envelope: {
                 message_id?: string | undefined;
                 message_ref_id?: string | undefined;
                 message_sender_id?: string | undefined;
+                message_sender_username?: string | undefined;
+                mesages_sender_avatar?: string | undefined;
+                message_sender_clan_nick?: string | undefined;
+                message_sender_display_name?: string | undefined;
                 content?: string | undefined;
                 has_attachment?: boolean | undefined;
                 ref_type?: number | undefined;
@@ -2435,6 +2475,10 @@ export declare const Envelope: {
                 message_id?: string | undefined;
                 message_ref_id?: string | undefined;
                 message_sender_id?: string | undefined;
+                message_sender_username?: string | undefined;
+                mesages_sender_avatar?: string | undefined;
+                message_sender_clan_nick?: string | undefined;
+                message_sender_display_name?: string | undefined;
                 content?: string | undefined;
                 has_attachment?: boolean | undefined;
                 ref_type?: number | undefined;
@@ -2442,6 +2486,10 @@ export declare const Envelope: {
                 message_id?: string | undefined;
                 message_ref_id?: string | undefined;
                 message_sender_id?: string | undefined;
+                message_sender_username?: string | undefined;
+                mesages_sender_avatar?: string | undefined;
+                message_sender_clan_nick?: string | undefined;
+                message_sender_display_name?: string | undefined;
                 content?: string | undefined;
                 has_attachment?: boolean | undefined;
                 ref_type?: number | undefined;
@@ -2449,6 +2497,10 @@ export declare const Envelope: {
                 message_id?: string | undefined;
                 message_ref_id?: string | undefined;
                 message_sender_id?: string | undefined;
+                message_sender_username?: string | undefined;
+                mesages_sender_avatar?: string | undefined;
+                message_sender_clan_nick?: string | undefined;
+                message_sender_display_name?: string | undefined;
                 content?: string | undefined;
                 has_attachment?: boolean | undefined;
                 ref_type?: number | undefined;
@@ -2456,6 +2508,10 @@ export declare const Envelope: {
                 message_id?: string | undefined;
                 message_ref_id?: string | undefined;
                 message_sender_id?: string | undefined;
+                message_sender_username?: string | undefined;
+                mesages_sender_avatar?: string | undefined;
+                message_sender_clan_nick?: string | undefined;
+                message_sender_display_name?: string | undefined;
                 content?: string | undefined;
                 has_attachment?: boolean | undefined;
                 ref_type?: number | undefined;
@@ -3431,6 +3487,10 @@ export declare const MessageRef: {
         message_id?: string | undefined;
         message_ref_id?: string | undefined;
         message_sender_id?: string | undefined;
+        message_sender_username?: string | undefined;
+        mesages_sender_avatar?: string | undefined;
+        message_sender_clan_nick?: string | undefined;
+        message_sender_display_name?: string | undefined;
         content?: string | undefined;
         has_attachment?: boolean | undefined;
         ref_type?: number | undefined;
@@ -3438,6 +3498,10 @@ export declare const MessageRef: {
         message_id?: string | undefined;
         message_ref_id?: string | undefined;
         message_sender_id?: string | undefined;
+        message_sender_username?: string | undefined;
+        mesages_sender_avatar?: string | undefined;
+        message_sender_clan_nick?: string | undefined;
+        message_sender_display_name?: string | undefined;
         content?: string | undefined;
         has_attachment?: boolean | undefined;
         ref_type?: number | undefined;
@@ -3446,6 +3510,10 @@ export declare const MessageRef: {
         message_id?: string | undefined;
         message_ref_id?: string | undefined;
         message_sender_id?: string | undefined;
+        message_sender_username?: string | undefined;
+        mesages_sender_avatar?: string | undefined;
+        message_sender_clan_nick?: string | undefined;
+        message_sender_display_name?: string | undefined;
         content?: string | undefined;
         has_attachment?: boolean | undefined;
         ref_type?: number | undefined;
@@ -3453,6 +3521,10 @@ export declare const MessageRef: {
         message_id?: string | undefined;
         message_ref_id?: string | undefined;
         message_sender_id?: string | undefined;
+        message_sender_username?: string | undefined;
+        mesages_sender_avatar?: string | undefined;
+        message_sender_clan_nick?: string | undefined;
+        message_sender_display_name?: string | undefined;
         content?: string | undefined;
         has_attachment?: boolean | undefined;
         ref_type?: number | undefined;
@@ -3483,6 +3555,10 @@ export declare const ChannelMessageSend: {
             message_id?: string | undefined;
             message_ref_id?: string | undefined;
             message_sender_id?: string | undefined;
+            message_sender_username?: string | undefined;
+            mesages_sender_avatar?: string | undefined;
+            message_sender_clan_nick?: string | undefined;
+            message_sender_display_name?: string | undefined;
             content?: string | undefined;
             has_attachment?: boolean | undefined;
             ref_type?: number | undefined;
@@ -3540,6 +3616,10 @@ export declare const ChannelMessageSend: {
             message_id?: string | undefined;
             message_ref_id?: string | undefined;
             message_sender_id?: string | undefined;
+            message_sender_username?: string | undefined;
+            mesages_sender_avatar?: string | undefined;
+            message_sender_clan_nick?: string | undefined;
+            message_sender_display_name?: string | undefined;
             content?: string | undefined;
             has_attachment?: boolean | undefined;
             ref_type?: number | undefined;
@@ -3547,6 +3627,10 @@ export declare const ChannelMessageSend: {
             message_id?: string | undefined;
             message_ref_id?: string | undefined;
             message_sender_id?: string | undefined;
+            message_sender_username?: string | undefined;
+            mesages_sender_avatar?: string | undefined;
+            message_sender_clan_nick?: string | undefined;
+            message_sender_display_name?: string | undefined;
             content?: string | undefined;
             has_attachment?: boolean | undefined;
             ref_type?: number | undefined;
@@ -3554,6 +3638,10 @@ export declare const ChannelMessageSend: {
             message_id?: string | undefined;
             message_ref_id?: string | undefined;
             message_sender_id?: string | undefined;
+            message_sender_username?: string | undefined;
+            mesages_sender_avatar?: string | undefined;
+            message_sender_clan_nick?: string | undefined;
+            message_sender_display_name?: string | undefined;
             content?: string | undefined;
             has_attachment?: boolean | undefined;
             ref_type?: number | undefined;
@@ -3561,6 +3649,10 @@ export declare const ChannelMessageSend: {
             message_id?: string | undefined;
             message_ref_id?: string | undefined;
             message_sender_id?: string | undefined;
+            message_sender_username?: string | undefined;
+            mesages_sender_avatar?: string | undefined;
+            message_sender_clan_nick?: string | undefined;
+            message_sender_display_name?: string | undefined;
             content?: string | undefined;
             has_attachment?: boolean | undefined;
             ref_type?: number | undefined;
@@ -3589,6 +3681,10 @@ export declare const ChannelMessageSend: {
             message_id?: string | undefined;
             message_ref_id?: string | undefined;
             message_sender_id?: string | undefined;
+            message_sender_username?: string | undefined;
+            mesages_sender_avatar?: string | undefined;
+            message_sender_clan_nick?: string | undefined;
+            message_sender_display_name?: string | undefined;
             content?: string | undefined;
             has_attachment?: boolean | undefined;
             ref_type?: number | undefined;
@@ -3646,6 +3742,10 @@ export declare const ChannelMessageSend: {
             message_id?: string | undefined;
             message_ref_id?: string | undefined;
             message_sender_id?: string | undefined;
+            message_sender_username?: string | undefined;
+            mesages_sender_avatar?: string | undefined;
+            message_sender_clan_nick?: string | undefined;
+            message_sender_display_name?: string | undefined;
             content?: string | undefined;
             has_attachment?: boolean | undefined;
             ref_type?: number | undefined;
@@ -3653,6 +3753,10 @@ export declare const ChannelMessageSend: {
             message_id?: string | undefined;
             message_ref_id?: string | undefined;
             message_sender_id?: string | undefined;
+            message_sender_username?: string | undefined;
+            mesages_sender_avatar?: string | undefined;
+            message_sender_clan_nick?: string | undefined;
+            message_sender_display_name?: string | undefined;
             content?: string | undefined;
             has_attachment?: boolean | undefined;
             ref_type?: number | undefined;
@@ -3660,6 +3764,10 @@ export declare const ChannelMessageSend: {
             message_id?: string | undefined;
             message_ref_id?: string | undefined;
             message_sender_id?: string | undefined;
+            message_sender_username?: string | undefined;
+            mesages_sender_avatar?: string | undefined;
+            message_sender_clan_nick?: string | undefined;
+            message_sender_display_name?: string | undefined;
             content?: string | undefined;
             has_attachment?: boolean | undefined;
             ref_type?: number | undefined;
@@ -3667,6 +3775,10 @@ export declare const ChannelMessageSend: {
             message_id?: string | undefined;
             message_ref_id?: string | undefined;
             message_sender_id?: string | undefined;
+            message_sender_username?: string | undefined;
+            mesages_sender_avatar?: string | undefined;
+            message_sender_clan_nick?: string | undefined;
+            message_sender_display_name?: string | undefined;
             content?: string | undefined;
             has_attachment?: boolean | undefined;
             ref_type?: number | undefined;

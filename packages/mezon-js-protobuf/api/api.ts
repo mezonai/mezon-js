@@ -573,6 +573,10 @@ export interface NotificationInfo {
   username: string;
   /** avatar */
   avatar: string;
+  /** clan nick name */
+  clan_nick: string;
+  /** display name */
+  display_name: string;
   /** channel label */
   channel_label: string;
   /** channel type */
@@ -5679,6 +5683,8 @@ function createBaseNotificationInfo(): NotificationInfo {
   return {
     username: "",
     avatar: "",
+    clan_nick: "",
+    display_name: "",
     channel_label: "",
     channel_type: "",
     category_name: "",
@@ -5695,20 +5701,26 @@ export const NotificationInfo = {
     if (message.avatar !== "") {
       writer.uint32(18).string(message.avatar);
     }
+    if (message.clan_nick !== "") {
+      writer.uint32(26).string(message.clan_nick);
+    }
+    if (message.display_name !== "") {
+      writer.uint32(34).string(message.display_name);
+    }
     if (message.channel_label !== "") {
-      writer.uint32(26).string(message.channel_label);
+      writer.uint32(42).string(message.channel_label);
     }
     if (message.channel_type !== "") {
-      writer.uint32(34).string(message.channel_type);
+      writer.uint32(50).string(message.channel_type);
     }
     if (message.category_name !== "") {
-      writer.uint32(42).string(message.category_name);
+      writer.uint32(58).string(message.category_name);
     }
     if (message.clan_name !== "") {
-      writer.uint32(50).string(message.clan_name);
+      writer.uint32(66).string(message.clan_name);
     }
     if (message.clan_logo !== "") {
-      writer.uint32(58).string(message.clan_logo);
+      writer.uint32(74).string(message.clan_logo);
     }
     return writer;
   },
@@ -5727,18 +5739,24 @@ export const NotificationInfo = {
           message.avatar = reader.string();
           break;
         case 3:
-          message.channel_label = reader.string();
+          message.clan_nick = reader.string();
           break;
         case 4:
-          message.channel_type = reader.string();
+          message.display_name = reader.string();
           break;
         case 5:
-          message.category_name = reader.string();
+          message.channel_label = reader.string();
           break;
         case 6:
-          message.clan_name = reader.string();
+          message.channel_type = reader.string();
           break;
         case 7:
+          message.category_name = reader.string();
+          break;
+        case 8:
+          message.clan_name = reader.string();
+          break;
+        case 9:
           message.clan_logo = reader.string();
           break;
         default:
@@ -5753,6 +5771,8 @@ export const NotificationInfo = {
     return {
       username: isSet(object.username) ? String(object.username) : "",
       avatar: isSet(object.avatar) ? String(object.avatar) : "",
+      clan_nick: isSet(object.clan_nick) ? String(object.clan_nick) : "",
+      display_name: isSet(object.display_name) ? String(object.display_name) : "",
       channel_label: isSet(object.channel_label) ? String(object.channel_label) : "",
       channel_type: isSet(object.channel_type) ? String(object.channel_type) : "",
       category_name: isSet(object.category_name) ? String(object.category_name) : "",
@@ -5765,6 +5785,8 @@ export const NotificationInfo = {
     const obj: any = {};
     message.username !== undefined && (obj.username = message.username);
     message.avatar !== undefined && (obj.avatar = message.avatar);
+    message.clan_nick !== undefined && (obj.clan_nick = message.clan_nick);
+    message.display_name !== undefined && (obj.display_name = message.display_name);
     message.channel_label !== undefined && (obj.channel_label = message.channel_label);
     message.channel_type !== undefined && (obj.channel_type = message.channel_type);
     message.category_name !== undefined && (obj.category_name = message.category_name);
@@ -5781,6 +5803,8 @@ export const NotificationInfo = {
     const message = createBaseNotificationInfo();
     message.username = object.username ?? "";
     message.avatar = object.avatar ?? "";
+    message.clan_nick = object.clan_nick ?? "";
+    message.display_name = object.display_name ?? "";
     message.channel_label = object.channel_label ?? "";
     message.channel_type = object.channel_type ?? "";
     message.category_name = object.category_name ?? "";
