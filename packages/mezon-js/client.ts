@@ -238,6 +238,8 @@ export interface ChannelMessage {
   username?: string;
   // The clan nick name
   clan_nick?: string;
+  // The clan avatar
+  clan_avatar?: string;
   //
   display_name?: string;
 }
@@ -1078,6 +1080,7 @@ export class Client {
           clan_logo: m.clan_logo,
           category_name: m.category_name,
           clan_nick: m.clan_nick,
+          clan_avatar: m.clan_avatar,
           attachments: m.attachments ? JSON.parse(m.attachments) : [],
           mentions: m.mentions ? JSON.parse(m.mentions) : [],
           reactions: m.reactions ? JSON.parse(m.reactions) : [],

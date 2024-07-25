@@ -261,6 +261,8 @@ export interface ChannelMessageEvent {
   username: string;
   // The clan nick name
   clan_nick: string;
+  // The clan avatar
+  clan_avatar: string;
   // The display name
   display_name: string;
   //
@@ -803,6 +805,7 @@ export class DefaultSocket implements Socket {
             category_name: message.channel_message.category_name,
             username: message.channel_message.username,
             clan_nick: message.channel_message.clan_nick,
+            clan_avatar: message.channel_message.clan_avatar,
             display_name: message.channel_message.display_name,
             content: content,
             reactions: reactions,

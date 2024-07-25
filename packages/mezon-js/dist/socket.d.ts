@@ -189,6 +189,7 @@ export interface ChannelMessageEvent {
     category_name: string;
     username: string;
     clan_nick: string;
+    clan_avatar: string;
     display_name: string;
     reactions?: Array<ApiMessageReaction>;
     mentions?: Array<ApiMessageMention>;
