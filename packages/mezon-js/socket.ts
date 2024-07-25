@@ -572,10 +572,10 @@ export interface Socket {
   joinClanChat(clan_id: string) : Promise<ClanJoin>;
 
   /** Join a chat channel on the server. */
-  joinChat(clan_id: string, channel_id: string, mode: number) : Promise<Channel>;
+  joinChat(clan_id: string, channel_id: string, channel_type: number) : Promise<Channel>;
 
   /** Leave a chat channel on the server. */
-  leaveChat(clan_id: string, channel_id: string, mode: number) : Promise<void>;
+  leaveChat(clan_id: string, channel_id: string, channel_type: number) : Promise<void>;
 
   /** Remove a chat message from a chat channel on the server. */
   removeChatMessage(clan_id: string, channel_id: string, mode: number, message_id: string) : Promise<ChannelMessageAck>;
@@ -1057,13 +1057,13 @@ export class DefaultSocket implements Socket {
     return response.clan_join;
   }
 
-  async joinChat(clan_id: string, channel_id: string, mode: number): Promise<Channel> {
+  async joinChat(clan_id: string, channel_id: string, channel_type: number): Promise<Channel> {
 
     const response = await this.send({
         channel_join: {
             clan_id: clan_id,
             channel_id: channel_id,
-            mode: mode,
+            channel_type: channel_type,
         }
       }
     );
@@ -1071,8 +1071,8 @@ export class DefaultSocket implements Socket {
     return response.channel;
   }
 
-  leaveChat(clan_id: string, channel_id: string, mode: number): Promise<void> {
-    return this.send({channel_leave: {clan_id: clan_id, channel_id: channel_id, mode:mode}});
+  leaveChat(clan_id: string, channel_id: string, channel_type: number): Promise<void> {
+    return this.send({channel_leave: {clan_id: clan_id, channel_id: channel_id, channel_type: channel_type}});
   }
 
   async removeChatMessage(clan_id: string, channel_id: string, mode: number, message_id: string): Promise<ChannelMessageAck> {

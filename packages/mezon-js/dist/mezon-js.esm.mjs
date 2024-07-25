@@ -4833,22 +4833,22 @@ var _DefaultSocket = class _DefaultSocket {
       return response.clan_join;
     });
   }
-  joinChat(clan_id, channel_id, mode) {
+  joinChat(clan_id, channel_id, channel_type) {
     return __async(this, null, function* () {
       const response = yield this.send(
         {
           channel_join: {
             clan_id,
             channel_id,
-            mode
+            channel_type
           }
         }
       );
       return response.channel;
     });
   }
-  leaveChat(clan_id, channel_id, mode) {
-    return this.send({ channel_leave: { clan_id, channel_id, mode } });
+  leaveChat(clan_id, channel_id, channel_type) {
+    return this.send({ channel_leave: { clan_id, channel_id, channel_type } });
   }
   removeChatMessage(clan_id, channel_id, mode, message_id) {
     return __async(this, null, function* () {
