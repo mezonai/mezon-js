@@ -75,6 +75,16 @@ export interface MezonUpdateClanEmojiByIdBody {
   source?: string;
 }
 
+/**  */
+export interface MezonUpdateClanStickerByIdBody {
+  //
+  category?: string;
+  //
+  shortname?: string;
+  //
+  source?: string;
+}
+
 /** update a event within clan. */
 export interface MezonUpdateEventBody {
   //
@@ -555,6 +565,42 @@ export interface ApiClanProfile {
   nick_name?: string;
   //
   user_id?: string;
+}
+
+/**  */
+export interface ApiClanSticker {
+  //
+  category?: string;
+  //
+  clan_id?: string;
+  //
+  create_time?: string;
+  //
+  creator_id?: string;
+  //
+  id?: string;
+  //
+  shortname?: string;
+  //
+  source?: string;
+}
+
+/**  */
+export interface ApiClanStickerAddRequest {
+  //
+  category?: string;
+  //
+  clan_id?: string;
+  //
+  shortname?: string;
+  //
+  source?: string;
+}
+
+/**  */
+export interface ApiClanStickerListByClanIdResponse {
+  //
+  stickers?: Array<ApiClanSticker>;
 }
 
 /** A list of users belonging to a clan, along with their role. */
@@ -5725,6 +5771,155 @@ export class MezonApi {
 
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("POST", options, bodyJson);
+    if (bearerToken) {
+        fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+    }
+
+    return Promise.race([
+      fetch(fullUrl, fetchOptions).then((response) => {
+        if (response.status == 204) {
+          return response;
+        } else if (response.status >= 200 && response.status < 300) {
+          return response.json();
+        } else {
+          throw response;
+        }
+      }),
+      new Promise((_, reject) =>
+        setTimeout(reject, this.timeoutMs, "Request timed out.")
+      ),
+    ]);
+}
+
+  /** Add a new sticker */
+  addClanSticker(bearerToken: string,
+      body:ApiClanStickerAddRequest,
+      options: any = {}): Promise<any> {
+    
+    if (body === null || body === undefined) {
+      throw new Error("'body' is a required parameter but is null or undefined.");
+    }
+    const urlPath = "/v2/sticker";
+    const queryParams = new Map<string, any>();
+
+    let bodyJson : string = "";
+    bodyJson = JSON.stringify(body || {});
+
+    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
+    const fetchOptions = buildFetchOptions("POST", options, bodyJson);
+    if (bearerToken) {
+        fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+    }
+
+    return Promise.race([
+      fetch(fullUrl, fetchOptions).then((response) => {
+        if (response.status == 204) {
+          return response;
+        } else if (response.status >= 200 && response.status < 300) {
+          return response.json();
+        } else {
+          throw response;
+        }
+      }),
+      new Promise((_, reject) =>
+        setTimeout(reject, this.timeoutMs, "Request timed out.")
+      ),
+    ]);
+}
+
+  /** List stickers by clan ID */
+  listClanStickersByClanId(bearerToken: string,
+      clanId:string,
+      options: any = {}): Promise<ApiClanStickerListByClanIdResponse> {
+    
+    if (clanId === null || clanId === undefined) {
+      throw new Error("'clanId' is a required parameter but is null or undefined.");
+    }
+    const urlPath = "/v2/sticker/{clanId}"
+        .replace("{clanId}", encodeURIComponent(String(clanId)));
+    const queryParams = new Map<string, any>();
+
+    let bodyJson : string = "";
+
+    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
+    const fetchOptions = buildFetchOptions("GET", options, bodyJson);
+    if (bearerToken) {
+        fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+    }
+
+    return Promise.race([
+      fetch(fullUrl, fetchOptions).then((response) => {
+        if (response.status == 204) {
+          return response;
+        } else if (response.status >= 200 && response.status < 300) {
+          return response.json();
+        } else {
+          throw response;
+        }
+      }),
+      new Promise((_, reject) =>
+        setTimeout(reject, this.timeoutMs, "Request timed out.")
+      ),
+    ]);
+}
+
+  /** Delete a sticker by ID */
+  deleteClanStickerById(bearerToken: string,
+      id:string,
+      options: any = {}): Promise<any> {
+    
+    if (id === null || id === undefined) {
+      throw new Error("'id' is a required parameter but is null or undefined.");
+    }
+    const urlPath = "/v2/sticker/{id}"
+        .replace("{id}", encodeURIComponent(String(id)));
+    const queryParams = new Map<string, any>();
+
+    let bodyJson : string = "";
+
+    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
+    const fetchOptions = buildFetchOptions("DELETE", options, bodyJson);
+    if (bearerToken) {
+        fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+    }
+
+    return Promise.race([
+      fetch(fullUrl, fetchOptions).then((response) => {
+        if (response.status == 204) {
+          return response;
+        } else if (response.status >= 200 && response.status < 300) {
+          return response.json();
+        } else {
+          throw response;
+        }
+      }),
+      new Promise((_, reject) =>
+        setTimeout(reject, this.timeoutMs, "Request timed out.")
+      ),
+    ]);
+}
+
+  /** Update a sticker by ID */
+  updateClanStickerById(bearerToken: string,
+      id:string,
+      body:MezonUpdateClanStickerByIdBody,
+      options: any = {}): Promise<any> {
+    
+    if (id === null || id === undefined) {
+      throw new Error("'id' is a required parameter but is null or undefined.");
+    }
+    if (body === null || body === undefined) {
+      throw new Error("'body' is a required parameter but is null or undefined.");
+    }
+    const urlPath = "/v2/sticker/{id}"
+        .replace("{id}", encodeURIComponent(String(id)));
+    const queryParams = new Map<string, any>();
+
+    let bodyJson : string = "";
+    bodyJson = JSON.stringify(body || {});
+
+    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
+    const fetchOptions = buildFetchOptions("PATCH", options, bodyJson);
     if (bearerToken) {
         fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
     }
