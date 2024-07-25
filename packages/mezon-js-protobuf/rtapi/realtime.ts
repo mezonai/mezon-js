@@ -182,16 +182,6 @@ export interface ChannelJoin {
   clan_id: string;
   /** The id of channel or group */
   channel_id: string;
-  /** The type of the chat channel. */
-  type: number;
-  /** Whether messages sent on this channel should be persistent. */
-  persistence:
-    | boolean
-    | undefined;
-  /** Whether the user should appear in the channel's presence list and events. */
-  hidden:
-    | boolean
-    | undefined;
   /** mode */
   mode: number;
 }
@@ -1539,7 +1529,7 @@ export const ClanJoin = {
 };
 
 function createBaseChannelJoin(): ChannelJoin {
-  return { clan_id: "", channel_id: "", type: 0, persistence: undefined, hidden: undefined, mode: 0 };
+  return { clan_id: "", channel_id: "", mode: 0 };
 }
 
 export const ChannelJoin = {
@@ -1550,17 +1540,8 @@ export const ChannelJoin = {
     if (message.channel_id !== "") {
       writer.uint32(18).string(message.channel_id);
     }
-    if (message.type !== 0) {
-      writer.uint32(24).int32(message.type);
-    }
-    if (message.persistence !== undefined) {
-      BoolValue.encode({ value: message.persistence! }, writer.uint32(34).fork()).ldelim();
-    }
-    if (message.hidden !== undefined) {
-      BoolValue.encode({ value: message.hidden! }, writer.uint32(42).fork()).ldelim();
-    }
     if (message.mode !== 0) {
-      writer.uint32(48).int32(message.mode);
+      writer.uint32(24).int32(message.mode);
     }
     return writer;
   },
@@ -1579,15 +1560,6 @@ export const ChannelJoin = {
           message.channel_id = reader.string();
           break;
         case 3:
-          message.type = reader.int32();
-          break;
-        case 4:
-          message.persistence = BoolValue.decode(reader, reader.uint32()).value;
-          break;
-        case 5:
-          message.hidden = BoolValue.decode(reader, reader.uint32()).value;
-          break;
-        case 6:
           message.mode = reader.int32();
           break;
         default:
@@ -1602,9 +1574,6 @@ export const ChannelJoin = {
     return {
       clan_id: isSet(object.clan_id) ? String(object.clan_id) : "",
       channel_id: isSet(object.channel_id) ? String(object.channel_id) : "",
-      type: isSet(object.type) ? Number(object.type) : 0,
-      persistence: isSet(object.persistence) ? Boolean(object.persistence) : undefined,
-      hidden: isSet(object.hidden) ? Boolean(object.hidden) : undefined,
       mode: isSet(object.mode) ? Number(object.mode) : 0,
     };
   },
@@ -1613,9 +1582,6 @@ export const ChannelJoin = {
     const obj: any = {};
     message.clan_id !== undefined && (obj.clan_id = message.clan_id);
     message.channel_id !== undefined && (obj.channel_id = message.channel_id);
-    message.type !== undefined && (obj.type = Math.round(message.type));
-    message.persistence !== undefined && (obj.persistence = message.persistence);
-    message.hidden !== undefined && (obj.hidden = message.hidden);
     message.mode !== undefined && (obj.mode = Math.round(message.mode));
     return obj;
   },
@@ -1628,9 +1594,6 @@ export const ChannelJoin = {
     const message = createBaseChannelJoin();
     message.clan_id = object.clan_id ?? "";
     message.channel_id = object.channel_id ?? "";
-    message.type = object.type ?? 0;
-    message.persistence = object.persistence ?? undefined;
-    message.hidden = object.hidden ?? undefined;
     message.mode = object.mode ?? 0;
     return message;
   },

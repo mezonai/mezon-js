@@ -413,7 +413,7 @@ export interface Socket {
     /** Join clan chat */
     joinClanChat(clan_id: string): Promise<ClanJoin>;
     /** Join a chat channel on the server. */
-    joinChat(clan_id: string, channel_id: string, mode: number, type: number, persistence: boolean, hidden: boolean): Promise<Channel>;
+    joinChat(clan_id: string, channel_id: string, mode: number): Promise<Channel>;
     /** Leave a chat channel on the server. */
     leaveChat(clan_id: string, channel_id: string, mode: number): Promise<void>;
     /** Remove a chat message from a chat channel on the server. */
@@ -536,7 +536,7 @@ export declare class DefaultSocket implements Socket {
     send(message: ChannelJoin | ChannelLeave | ChannelMessageSend | ChannelMessageUpdate | CustomStatusEvent | ChannelMessageRemove | MessageTypingEvent | LastSeenMessageEvent | Rpc | StatusFollow | StatusUnfollow | StatusUpdate | Ping, sendTimeout?: number): Promise<any>;
     followUsers(userIds: string[]): Promise<Status>;
     joinClanChat(clan_id: string): Promise<ClanJoin>;
-    joinChat(clan_id: string, channel_id: string, mode: number, type: number, persistence: boolean, hidden: boolean): Promise<Channel>;
+    joinChat(clan_id: string, channel_id: string, mode: number): Promise<Channel>;
     leaveChat(clan_id: string, channel_id: string, mode: number): Promise<void>;
     removeChatMessage(clan_id: string, channel_id: string, mode: number, message_id: string): Promise<ChannelMessageAck>;
     removePartyMember(party_id: string, member: Presence): Promise<void>;
