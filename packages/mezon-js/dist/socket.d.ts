@@ -413,9 +413,9 @@ export interface Socket {
     /** Join clan chat */
     joinClanChat(clan_id: string): Promise<ClanJoin>;
     /** Join a chat channel on the server. */
-    joinChat(clan_id: string, channel_id: string, mode: number): Promise<Channel>;
+    joinChat(clan_id: string, channel_id: string, channel_type: number): Promise<Channel>;
     /** Leave a chat channel on the server. */
-    leaveChat(clan_id: string, channel_id: string, mode: number): Promise<void>;
+    leaveChat(clan_id: string, channel_id: string, channel_type: number): Promise<void>;
     /** Remove a chat message from a chat channel on the server. */
     removeChatMessage(clan_id: string, channel_id: string, mode: number, message_id: string): Promise<ChannelMessageAck>;
     /** Execute an RPC function to the server. */
@@ -536,8 +536,8 @@ export declare class DefaultSocket implements Socket {
     send(message: ChannelJoin | ChannelLeave | ChannelMessageSend | ChannelMessageUpdate | CustomStatusEvent | ChannelMessageRemove | MessageTypingEvent | LastSeenMessageEvent | Rpc | StatusFollow | StatusUnfollow | StatusUpdate | Ping, sendTimeout?: number): Promise<any>;
     followUsers(userIds: string[]): Promise<Status>;
     joinClanChat(clan_id: string): Promise<ClanJoin>;
-    joinChat(clan_id: string, channel_id: string, mode: number): Promise<Channel>;
-    leaveChat(clan_id: string, channel_id: string, mode: number): Promise<void>;
+    joinChat(clan_id: string, channel_id: string, channel_type: number): Promise<Channel>;
+    leaveChat(clan_id: string, channel_id: string, channel_type: number): Promise<void>;
     removeChatMessage(clan_id: string, channel_id: string, mode: number, message_id: string): Promise<ChannelMessageAck>;
     removePartyMember(party_id: string, member: Presence): Promise<void>;
     rpc(id?: string, payload?: string, http_key?: string): Promise<ApiRpc>;
