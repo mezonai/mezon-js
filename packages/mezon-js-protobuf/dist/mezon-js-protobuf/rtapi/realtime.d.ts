@@ -102,12 +102,6 @@ export interface ChannelJoin {
     clan_id: string;
     /** The id of channel or group */
     channel_id: string;
-    /** The type of the chat channel. */
-    type: number;
-    /** Whether messages sent on this channel should be persistent. */
-    persistence: boolean | undefined;
-    /** Whether the user should appear in the channel's presence list and events. */
-    hidden: boolean | undefined;
     /** mode */
     mode: number;
 }
@@ -649,9 +643,6 @@ export declare const Envelope: {
         channel_join?: {
             clan_id?: string | undefined;
             channel_id?: string | undefined;
-            type?: number | undefined;
-            persistence?: boolean | undefined;
-            hidden?: boolean | undefined;
             mode?: number | undefined;
         } | undefined;
         channel_leave?: {
@@ -1038,16 +1029,10 @@ export declare const Envelope: {
         channel_join?: ({
             clan_id?: string | undefined;
             channel_id?: string | undefined;
-            type?: number | undefined;
-            persistence?: boolean | undefined;
-            hidden?: boolean | undefined;
             mode?: number | undefined;
         } & {
             clan_id?: string | undefined;
             channel_id?: string | undefined;
-            type?: number | undefined;
-            persistence?: boolean | undefined;
-            hidden?: boolean | undefined;
             mode?: number | undefined;
         } & { [K_5 in Exclude<keyof I["channel_join"], keyof ChannelJoin>]: never; }) | undefined;
         channel_leave?: ({
@@ -1924,9 +1909,6 @@ export declare const Envelope: {
         channel_join?: {
             clan_id?: string | undefined;
             channel_id?: string | undefined;
-            type?: number | undefined;
-            persistence?: boolean | undefined;
-            hidden?: boolean | undefined;
             mode?: number | undefined;
         } | undefined;
         channel_leave?: {
@@ -2313,16 +2295,10 @@ export declare const Envelope: {
         channel_join?: ({
             clan_id?: string | undefined;
             channel_id?: string | undefined;
-            type?: number | undefined;
-            persistence?: boolean | undefined;
-            hidden?: boolean | undefined;
             mode?: number | undefined;
         } & {
             clan_id?: string | undefined;
             channel_id?: string | undefined;
-            type?: number | undefined;
-            persistence?: boolean | undefined;
-            hidden?: boolean | undefined;
             mode?: number | undefined;
         } & { [K_75 in Exclude<keyof I_1["channel_join"], keyof ChannelJoin>]: never; }) | undefined;
         channel_leave?: ({
@@ -3328,31 +3304,19 @@ export declare const ChannelJoin: {
     create<I extends {
         clan_id?: string | undefined;
         channel_id?: string | undefined;
-        type?: number | undefined;
-        persistence?: boolean | undefined;
-        hidden?: boolean | undefined;
         mode?: number | undefined;
     } & {
         clan_id?: string | undefined;
         channel_id?: string | undefined;
-        type?: number | undefined;
-        persistence?: boolean | undefined;
-        hidden?: boolean | undefined;
         mode?: number | undefined;
     } & { [K in Exclude<keyof I, keyof ChannelJoin>]: never; }>(base?: I | undefined): ChannelJoin;
     fromPartial<I_1 extends {
         clan_id?: string | undefined;
         channel_id?: string | undefined;
-        type?: number | undefined;
-        persistence?: boolean | undefined;
-        hidden?: boolean | undefined;
         mode?: number | undefined;
     } & {
         clan_id?: string | undefined;
         channel_id?: string | undefined;
-        type?: number | undefined;
-        persistence?: boolean | undefined;
-        hidden?: boolean | undefined;
         mode?: number | undefined;
     } & { [K_1 in Exclude<keyof I_1, keyof ChannelJoin>]: never; }>(object: I_1): ChannelJoin;
 };

@@ -572,7 +572,7 @@ export interface Socket {
   joinClanChat(clan_id: string) : Promise<ClanJoin>;
 
   /** Join a chat channel on the server. */
-  joinChat(clan_id: string, channel_id: string, mode: number, type: number, persistence: boolean, hidden: boolean) : Promise<Channel>;
+  joinChat(clan_id: string, channel_id: string, mode: number) : Promise<Channel>;
 
   /** Leave a chat channel on the server. */
   leaveChat(clan_id: string, channel_id: string, mode: number) : Promise<void>;
@@ -1057,16 +1057,13 @@ export class DefaultSocket implements Socket {
     return response.clan_join;
   }
 
-  async joinChat(clan_id: string, channel_id: string, mode: number, type: number, persistence: boolean, hidden: boolean): Promise<Channel> {
+  async joinChat(clan_id: string, channel_id: string, mode: number): Promise<Channel> {
 
     const response = await this.send({
         channel_join: {
             clan_id: clan_id,
             channel_id: channel_id,
             mode: mode,
-            type: type,
-            persistence: persistence,
-            hidden: hidden
         }
       }
     );

@@ -4833,17 +4833,14 @@ var _DefaultSocket = class _DefaultSocket {
       return response.clan_join;
     });
   }
-  joinChat(clan_id, channel_id, mode, type, persistence, hidden) {
+  joinChat(clan_id, channel_id, mode) {
     return __async(this, null, function* () {
       const response = yield this.send(
         {
           channel_join: {
             clan_id,
             channel_id,
-            mode,
-            type,
-            persistence,
-            hidden
+            mode
           }
         }
       );
