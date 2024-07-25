@@ -367,6 +367,8 @@ export interface ChannelMessage {
     display_name: string;
     /** The clan nick name */
     clan_nick: string;
+    /** The clan avatar */
+    clan_avatar: string;
     /** Emoji reaction */
     reactions: string;
     /** Message mention */
@@ -397,6 +399,8 @@ export interface NotificationInfo {
     avatar: string;
     /** clan nick name */
     clan_nick: string;
+    /** clan avatar */
+    clan_avatar: string;
     /** display name */
     display_name: string;
     /** channel label */
@@ -661,6 +665,8 @@ export interface ChannelUserList_ChannelUser {
     thread_id: string;
     /** clan nick name */
     clan_nick: string;
+    /** clan avartar */
+    clan_avatar: string;
 }
 /** A list of users belonging to a channel, along with their role. */
 export interface VoiceChannelUser {
@@ -3538,6 +3544,7 @@ export declare const ChannelMessage: {
         category_name?: string | undefined;
         display_name?: string | undefined;
         clan_nick?: string | undefined;
+        clan_avatar?: string | undefined;
         reactions?: string | undefined;
         mentions?: string | undefined;
         attachments?: string | undefined;
@@ -3559,6 +3566,7 @@ export declare const ChannelMessage: {
         category_name?: string | undefined;
         display_name?: string | undefined;
         clan_nick?: string | undefined;
+        clan_avatar?: string | undefined;
         reactions?: string | undefined;
         mentions?: string | undefined;
         attachments?: string | undefined;
@@ -3581,6 +3589,7 @@ export declare const ChannelMessage: {
         category_name?: string | undefined;
         display_name?: string | undefined;
         clan_nick?: string | undefined;
+        clan_avatar?: string | undefined;
         reactions?: string | undefined;
         mentions?: string | undefined;
         attachments?: string | undefined;
@@ -3602,6 +3611,7 @@ export declare const ChannelMessage: {
         category_name?: string | undefined;
         display_name?: string | undefined;
         clan_nick?: string | undefined;
+        clan_avatar?: string | undefined;
         reactions?: string | undefined;
         mentions?: string | undefined;
         attachments?: string | undefined;
@@ -3646,6 +3656,7 @@ export declare const NotificationInfo: {
         username?: string | undefined;
         avatar?: string | undefined;
         clan_nick?: string | undefined;
+        clan_avatar?: string | undefined;
         display_name?: string | undefined;
         channel_label?: string | undefined;
         channel_type?: string | undefined;
@@ -3656,6 +3667,7 @@ export declare const NotificationInfo: {
         username?: string | undefined;
         avatar?: string | undefined;
         clan_nick?: string | undefined;
+        clan_avatar?: string | undefined;
         display_name?: string | undefined;
         channel_label?: string | undefined;
         channel_type?: string | undefined;
@@ -3667,6 +3679,7 @@ export declare const NotificationInfo: {
         username?: string | undefined;
         avatar?: string | undefined;
         clan_nick?: string | undefined;
+        clan_avatar?: string | undefined;
         display_name?: string | undefined;
         channel_label?: string | undefined;
         channel_type?: string | undefined;
@@ -3677,6 +3690,7 @@ export declare const NotificationInfo: {
         username?: string | undefined;
         avatar?: string | undefined;
         clan_nick?: string | undefined;
+        clan_avatar?: string | undefined;
         display_name?: string | undefined;
         channel_label?: string | undefined;
         channel_type?: string | undefined;
@@ -3835,6 +3849,7 @@ export declare const ChannelMessageList: {
             category_name?: string | undefined;
             display_name?: string | undefined;
             clan_nick?: string | undefined;
+            clan_avatar?: string | undefined;
             reactions?: string | undefined;
             mentions?: string | undefined;
             attachments?: string | undefined;
@@ -3868,6 +3883,7 @@ export declare const ChannelMessageList: {
             category_name?: string | undefined;
             display_name?: string | undefined;
             clan_nick?: string | undefined;
+            clan_avatar?: string | undefined;
             reactions?: string | undefined;
             mentions?: string | undefined;
             attachments?: string | undefined;
@@ -3889,6 +3905,7 @@ export declare const ChannelMessageList: {
             category_name?: string | undefined;
             display_name?: string | undefined;
             clan_nick?: string | undefined;
+            clan_avatar?: string | undefined;
             reactions?: string | undefined;
             mentions?: string | undefined;
             attachments?: string | undefined;
@@ -3910,6 +3927,7 @@ export declare const ChannelMessageList: {
             category_name?: string | undefined;
             display_name?: string | undefined;
             clan_nick?: string | undefined;
+            clan_avatar?: string | undefined;
             reactions?: string | undefined;
             mentions?: string | undefined;
             attachments?: string | undefined;
@@ -3931,6 +3949,7 @@ export declare const ChannelMessageList: {
             category_name?: string | undefined;
             display_name?: string | undefined;
             clan_nick?: string | undefined;
+            clan_avatar?: string | undefined;
             reactions?: string | undefined;
             mentions?: string | undefined;
             attachments?: string | undefined;
@@ -3974,6 +3993,7 @@ export declare const ChannelMessageList: {
             category_name?: string | undefined;
             display_name?: string | undefined;
             clan_nick?: string | undefined;
+            clan_avatar?: string | undefined;
             reactions?: string | undefined;
             mentions?: string | undefined;
             attachments?: string | undefined;
@@ -4007,6 +4027,7 @@ export declare const ChannelMessageList: {
             category_name?: string | undefined;
             display_name?: string | undefined;
             clan_nick?: string | undefined;
+            clan_avatar?: string | undefined;
             reactions?: string | undefined;
             mentions?: string | undefined;
             attachments?: string | undefined;
@@ -4028,6 +4049,7 @@ export declare const ChannelMessageList: {
             category_name?: string | undefined;
             display_name?: string | undefined;
             clan_nick?: string | undefined;
+            clan_avatar?: string | undefined;
             reactions?: string | undefined;
             mentions?: string | undefined;
             attachments?: string | undefined;
@@ -4049,6 +4071,7 @@ export declare const ChannelMessageList: {
             category_name?: string | undefined;
             display_name?: string | undefined;
             clan_nick?: string | undefined;
+            clan_avatar?: string | undefined;
             reactions?: string | undefined;
             mentions?: string | undefined;
             attachments?: string | undefined;
@@ -4070,6 +4093,7 @@ export declare const ChannelMessageList: {
             category_name?: string | undefined;
             display_name?: string | undefined;
             clan_nick?: string | undefined;
+            clan_avatar?: string | undefined;
             reactions?: string | undefined;
             mentions?: string | undefined;
             attachments?: string | undefined;
@@ -5485,6 +5509,7 @@ export declare const ChannelUserList: {
             id?: string | undefined;
             thread_id?: string | undefined;
             clan_nick?: string | undefined;
+            clan_avatar?: string | undefined;
         }[] | undefined;
         cursor?: string | undefined;
         channel_id?: string | undefined;
@@ -5515,6 +5540,7 @@ export declare const ChannelUserList: {
             id?: string | undefined;
             thread_id?: string | undefined;
             clan_nick?: string | undefined;
+            clan_avatar?: string | undefined;
         }[] & ({
             user?: {
                 id?: string | undefined;
@@ -5541,6 +5567,7 @@ export declare const ChannelUserList: {
             id?: string | undefined;
             thread_id?: string | undefined;
             clan_nick?: string | undefined;
+            clan_avatar?: string | undefined;
         } & {
             user?: ({
                 id?: string | undefined;
@@ -5587,6 +5614,7 @@ export declare const ChannelUserList: {
             id?: string | undefined;
             thread_id?: string | undefined;
             clan_nick?: string | undefined;
+            clan_avatar?: string | undefined;
         } & { [K_2 in Exclude<keyof I["channel_users"][number], keyof ChannelUserList_ChannelUser>]: never; })[] & { [K_3 in Exclude<keyof I["channel_users"], keyof {
             user?: {
                 id?: string | undefined;
@@ -5613,6 +5641,7 @@ export declare const ChannelUserList: {
             id?: string | undefined;
             thread_id?: string | undefined;
             clan_nick?: string | undefined;
+            clan_avatar?: string | undefined;
         }[]>]: never; }) | undefined;
         cursor?: string | undefined;
         channel_id?: string | undefined;
@@ -5644,6 +5673,7 @@ export declare const ChannelUserList: {
             id?: string | undefined;
             thread_id?: string | undefined;
             clan_nick?: string | undefined;
+            clan_avatar?: string | undefined;
         }[] | undefined;
         cursor?: string | undefined;
         channel_id?: string | undefined;
@@ -5674,6 +5704,7 @@ export declare const ChannelUserList: {
             id?: string | undefined;
             thread_id?: string | undefined;
             clan_nick?: string | undefined;
+            clan_avatar?: string | undefined;
         }[] & ({
             user?: {
                 id?: string | undefined;
@@ -5700,6 +5731,7 @@ export declare const ChannelUserList: {
             id?: string | undefined;
             thread_id?: string | undefined;
             clan_nick?: string | undefined;
+            clan_avatar?: string | undefined;
         } & {
             user?: ({
                 id?: string | undefined;
@@ -5746,6 +5778,7 @@ export declare const ChannelUserList: {
             id?: string | undefined;
             thread_id?: string | undefined;
             clan_nick?: string | undefined;
+            clan_avatar?: string | undefined;
         } & { [K_7 in Exclude<keyof I_1["channel_users"][number], keyof ChannelUserList_ChannelUser>]: never; })[] & { [K_8 in Exclude<keyof I_1["channel_users"], keyof {
             user?: {
                 id?: string | undefined;
@@ -5772,6 +5805,7 @@ export declare const ChannelUserList: {
             id?: string | undefined;
             thread_id?: string | undefined;
             clan_nick?: string | undefined;
+            clan_avatar?: string | undefined;
         }[]>]: never; }) | undefined;
         cursor?: string | undefined;
         channel_id?: string | undefined;
@@ -5808,6 +5842,7 @@ export declare const ChannelUserList_ChannelUser: {
         id?: string | undefined;
         thread_id?: string | undefined;
         clan_nick?: string | undefined;
+        clan_avatar?: string | undefined;
     } & {
         user?: ({
             id?: string | undefined;
@@ -5854,6 +5889,7 @@ export declare const ChannelUserList_ChannelUser: {
         id?: string | undefined;
         thread_id?: string | undefined;
         clan_nick?: string | undefined;
+        clan_avatar?: string | undefined;
     } & { [K_2 in Exclude<keyof I, keyof ChannelUserList_ChannelUser>]: never; }>(base?: I | undefined): ChannelUserList_ChannelUser;
     fromPartial<I_1 extends {
         user?: {
@@ -5881,6 +5917,7 @@ export declare const ChannelUserList_ChannelUser: {
         id?: string | undefined;
         thread_id?: string | undefined;
         clan_nick?: string | undefined;
+        clan_avatar?: string | undefined;
     } & {
         user?: ({
             id?: string | undefined;
@@ -5927,6 +5964,7 @@ export declare const ChannelUserList_ChannelUser: {
         id?: string | undefined;
         thread_id?: string | undefined;
         clan_nick?: string | undefined;
+        clan_avatar?: string | undefined;
     } & { [K_5 in Exclude<keyof I_1, keyof ChannelUserList_ChannelUser>]: never; }>(object: I_1): ChannelUserList_ChannelUser;
 };
 export declare const VoiceChannelUser: {

@@ -9,6 +9,8 @@ export interface ChannelUserListChannelUser {
   //
   clan_nick?: string;
   //
+  clan_avatar?: string;
+  //
   id?: string;
   //Their relationship to the role.
   role_id?: Array<string>;
@@ -395,6 +397,8 @@ export interface ApiChannelMessage {
   clan_logo?: string;
   //
   clan_nick?: string;
+  //
+  clan_avatar?: string;
   //The code representing a message type or category.
   code: number;
   //The content payload.

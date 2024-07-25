@@ -675,6 +675,7 @@ export declare const Envelope: {
             category_name?: string | undefined;
             display_name?: string | undefined;
             clan_nick?: string | undefined;
+            clan_avatar?: string | undefined;
             reactions?: string | undefined;
             mentions?: string | undefined;
             attachments?: string | undefined;
@@ -1074,6 +1075,7 @@ export declare const Envelope: {
             category_name?: string | undefined;
             display_name?: string | undefined;
             clan_nick?: string | undefined;
+            clan_avatar?: string | undefined;
             reactions?: string | undefined;
             mentions?: string | undefined;
             attachments?: string | undefined;
@@ -1095,6 +1097,7 @@ export declare const Envelope: {
             category_name?: string | undefined;
             display_name?: string | undefined;
             clan_nick?: string | undefined;
+            clan_avatar?: string | undefined;
             reactions?: string | undefined;
             mentions?: string | undefined;
             attachments?: string | undefined;
@@ -1947,6 +1950,7 @@ export declare const Envelope: {
             category_name?: string | undefined;
             display_name?: string | undefined;
             clan_nick?: string | undefined;
+            clan_avatar?: string | undefined;
             reactions?: string | undefined;
             mentions?: string | undefined;
             attachments?: string | undefined;
@@ -2346,6 +2350,7 @@ export declare const Envelope: {
             category_name?: string | undefined;
             display_name?: string | undefined;
             clan_nick?: string | undefined;
+            clan_avatar?: string | undefined;
             reactions?: string | undefined;
             mentions?: string | undefined;
             attachments?: string | undefined;
@@ -2367,6 +2372,7 @@ export declare const Envelope: {
             category_name?: string | undefined;
             display_name?: string | undefined;
             clan_nick?: string | undefined;
+            clan_avatar?: string | undefined;
             reactions?: string | undefined;
             mentions?: string | undefined;
             attachments?: string | undefined;

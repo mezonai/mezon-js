@@ -543,6 +543,8 @@ export interface ChannelMessage {
   display_name: string;
   /** The clan nick name */
   clan_nick: string;
+  /** The clan avatar */
+  clan_avatar: string;
   /** Emoji reaction */
   reactions: string;
   /** Message mention */
@@ -575,6 +577,8 @@ export interface NotificationInfo {
   avatar: string;
   /** clan nick name */
   clan_nick: string;
+  /** clan avatar */
+  clan_avatar: string;
   /** display name */
   display_name: string;
   /** channel label */
@@ -946,6 +950,8 @@ export interface ChannelUserList_ChannelUser {
   thread_id: string;
   /** clan nick name */
   clan_nick: string;
+  /** clan avartar */
+  clan_avatar: string;
 }
 
 /** A list of users belonging to a channel, along with their role. */
@@ -5371,6 +5377,7 @@ function createBaseChannelMessage(): ChannelMessage {
     category_name: "",
     display_name: "",
     clan_nick: "",
+    clan_avatar: "",
     reactions: "",
     mentions: "",
     attachments: "",
@@ -5426,20 +5433,23 @@ export const ChannelMessage = {
     if (message.clan_nick !== "") {
       writer.uint32(122).string(message.clan_nick);
     }
+    if (message.clan_avatar !== "") {
+      writer.uint32(130).string(message.clan_avatar);
+    }
     if (message.reactions !== "") {
-      writer.uint32(130).string(message.reactions);
+      writer.uint32(138).string(message.reactions);
     }
     if (message.mentions !== "") {
-      writer.uint32(138).string(message.mentions);
+      writer.uint32(146).string(message.mentions);
     }
     if (message.attachments !== "") {
-      writer.uint32(146).string(message.attachments);
+      writer.uint32(154).string(message.attachments);
     }
     if (message.references !== "") {
-      writer.uint32(154).string(message.references);
+      writer.uint32(162).string(message.references);
     }
     if (message.referenced_message !== "") {
-      writer.uint32(162).string(message.referenced_message);
+      writer.uint32(170).string(message.referenced_message);
     }
     return writer;
   },
@@ -5497,18 +5507,21 @@ export const ChannelMessage = {
           message.clan_nick = reader.string();
           break;
         case 16:
-          message.reactions = reader.string();
+          message.clan_avatar = reader.string();
           break;
         case 17:
-          message.mentions = reader.string();
+          message.reactions = reader.string();
           break;
         case 18:
-          message.attachments = reader.string();
+          message.mentions = reader.string();
           break;
         case 19:
-          message.references = reader.string();
+          message.attachments = reader.string();
           break;
         case 20:
+          message.references = reader.string();
+          break;
+        case 21:
           message.referenced_message = reader.string();
           break;
         default:
@@ -5536,6 +5549,7 @@ export const ChannelMessage = {
       category_name: isSet(object.category_name) ? String(object.category_name) : "",
       display_name: isSet(object.display_name) ? String(object.display_name) : "",
       clan_nick: isSet(object.clan_nick) ? String(object.clan_nick) : "",
+      clan_avatar: isSet(object.clan_avatar) ? String(object.clan_avatar) : "",
       reactions: isSet(object.reactions) ? String(object.reactions) : "",
       mentions: isSet(object.mentions) ? String(object.mentions) : "",
       attachments: isSet(object.attachments) ? String(object.attachments) : "",
@@ -5561,6 +5575,7 @@ export const ChannelMessage = {
     message.category_name !== undefined && (obj.category_name = message.category_name);
     message.display_name !== undefined && (obj.display_name = message.display_name);
     message.clan_nick !== undefined && (obj.clan_nick = message.clan_nick);
+    message.clan_avatar !== undefined && (obj.clan_avatar = message.clan_avatar);
     message.reactions !== undefined && (obj.reactions = message.reactions);
     message.mentions !== undefined && (obj.mentions = message.mentions);
     message.attachments !== undefined && (obj.attachments = message.attachments);
@@ -5590,6 +5605,7 @@ export const ChannelMessage = {
     message.category_name = object.category_name ?? "";
     message.display_name = object.display_name ?? "";
     message.clan_nick = object.clan_nick ?? "";
+    message.clan_avatar = object.clan_avatar ?? "";
     message.reactions = object.reactions ?? "";
     message.mentions = object.mentions ?? "";
     message.attachments = object.attachments ?? "";
@@ -5684,6 +5700,7 @@ function createBaseNotificationInfo(): NotificationInfo {
     username: "",
     avatar: "",
     clan_nick: "",
+    clan_avatar: "",
     display_name: "",
     channel_label: "",
     channel_type: "",
@@ -5704,23 +5721,26 @@ export const NotificationInfo = {
     if (message.clan_nick !== "") {
       writer.uint32(26).string(message.clan_nick);
     }
+    if (message.clan_avatar !== "") {
+      writer.uint32(34).string(message.clan_avatar);
+    }
     if (message.display_name !== "") {
-      writer.uint32(34).string(message.display_name);
+      writer.uint32(42).string(message.display_name);
     }
     if (message.channel_label !== "") {
-      writer.uint32(42).string(message.channel_label);
+      writer.uint32(50).string(message.channel_label);
     }
     if (message.channel_type !== "") {
-      writer.uint32(50).string(message.channel_type);
+      writer.uint32(58).string(message.channel_type);
     }
     if (message.category_name !== "") {
-      writer.uint32(58).string(message.category_name);
+      writer.uint32(66).string(message.category_name);
     }
     if (message.clan_name !== "") {
-      writer.uint32(66).string(message.clan_name);
+      writer.uint32(74).string(message.clan_name);
     }
     if (message.clan_logo !== "") {
-      writer.uint32(74).string(message.clan_logo);
+      writer.uint32(82).string(message.clan_logo);
     }
     return writer;
   },
@@ -5742,21 +5762,24 @@ export const NotificationInfo = {
           message.clan_nick = reader.string();
           break;
         case 4:
-          message.display_name = reader.string();
+          message.clan_avatar = reader.string();
           break;
         case 5:
-          message.channel_label = reader.string();
+          message.display_name = reader.string();
           break;
         case 6:
-          message.channel_type = reader.string();
+          message.channel_label = reader.string();
           break;
         case 7:
-          message.category_name = reader.string();
+          message.channel_type = reader.string();
           break;
         case 8:
-          message.clan_name = reader.string();
+          message.category_name = reader.string();
           break;
         case 9:
+          message.clan_name = reader.string();
+          break;
+        case 10:
           message.clan_logo = reader.string();
           break;
         default:
@@ -5772,6 +5795,7 @@ export const NotificationInfo = {
       username: isSet(object.username) ? String(object.username) : "",
       avatar: isSet(object.avatar) ? String(object.avatar) : "",
       clan_nick: isSet(object.clan_nick) ? String(object.clan_nick) : "",
+      clan_avatar: isSet(object.clan_avatar) ? String(object.clan_avatar) : "",
       display_name: isSet(object.display_name) ? String(object.display_name) : "",
       channel_label: isSet(object.channel_label) ? String(object.channel_label) : "",
       channel_type: isSet(object.channel_type) ? String(object.channel_type) : "",
@@ -5786,6 +5810,7 @@ export const NotificationInfo = {
     message.username !== undefined && (obj.username = message.username);
     message.avatar !== undefined && (obj.avatar = message.avatar);
     message.clan_nick !== undefined && (obj.clan_nick = message.clan_nick);
+    message.clan_avatar !== undefined && (obj.clan_avatar = message.clan_avatar);
     message.display_name !== undefined && (obj.display_name = message.display_name);
     message.channel_label !== undefined && (obj.channel_label = message.channel_label);
     message.channel_type !== undefined && (obj.channel_type = message.channel_type);
@@ -5804,6 +5829,7 @@ export const NotificationInfo = {
     message.username = object.username ?? "";
     message.avatar = object.avatar ?? "";
     message.clan_nick = object.clan_nick ?? "";
+    message.clan_avatar = object.clan_avatar ?? "";
     message.display_name = object.display_name ?? "";
     message.channel_label = object.channel_label ?? "";
     message.channel_type = object.channel_type ?? "";
@@ -7527,7 +7553,7 @@ export const ChannelUserList = {
 };
 
 function createBaseChannelUserList_ChannelUser(): ChannelUserList_ChannelUser {
-  return { user: undefined, role_id: [], id: "", thread_id: "", clan_nick: "" };
+  return { user: undefined, role_id: [], id: "", thread_id: "", clan_nick: "", clan_avatar: "" };
 }
 
 export const ChannelUserList_ChannelUser = {
@@ -7546,6 +7572,9 @@ export const ChannelUserList_ChannelUser = {
     }
     if (message.clan_nick !== "") {
       writer.uint32(42).string(message.clan_nick);
+    }
+    if (message.clan_avatar !== "") {
+      writer.uint32(50).string(message.clan_avatar);
     }
     return writer;
   },
@@ -7572,6 +7601,9 @@ export const ChannelUserList_ChannelUser = {
         case 5:
           message.clan_nick = reader.string();
           break;
+        case 6:
+          message.clan_avatar = reader.string();
+          break;
         default:
           reader.skipType(tag & 7);
           break;
@@ -7587,6 +7619,7 @@ export const ChannelUserList_ChannelUser = {
       id: isSet(object.id) ? String(object.id) : "",
       thread_id: isSet(object.thread_id) ? String(object.thread_id) : "",
       clan_nick: isSet(object.clan_nick) ? String(object.clan_nick) : "",
+      clan_avatar: isSet(object.clan_avatar) ? String(object.clan_avatar) : "",
     };
   },
 
@@ -7601,6 +7634,7 @@ export const ChannelUserList_ChannelUser = {
     message.id !== undefined && (obj.id = message.id);
     message.thread_id !== undefined && (obj.thread_id = message.thread_id);
     message.clan_nick !== undefined && (obj.clan_nick = message.clan_nick);
+    message.clan_avatar !== undefined && (obj.clan_avatar = message.clan_avatar);
     return obj;
   },
 
@@ -7615,6 +7649,7 @@ export const ChannelUserList_ChannelUser = {
     message.id = object.id ?? "";
     message.thread_id = object.thread_id ?? "";
     message.clan_nick = object.clan_nick ?? "";
+    message.clan_avatar = object.clan_avatar ?? "";
     return message;
   },
 };

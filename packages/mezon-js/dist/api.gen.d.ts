@@ -1,6 +1,7 @@
 /** A single user-role pair. */
 export interface ChannelUserListChannelUser {
     clan_nick?: string;
+    clan_avatar?: string;
     id?: string;
     role_id?: Array<string>;
     thread_id?: string;
@@ -225,6 +226,7 @@ export interface ApiChannelMessage {
     clan_id?: string;
     clan_logo?: string;
     clan_nick?: string;
+    clan_avatar?: string;
     code: number;
     content: string;
     create_time?: string;
