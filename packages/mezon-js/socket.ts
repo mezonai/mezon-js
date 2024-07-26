@@ -98,6 +98,8 @@ export interface UserChannelAddedEvent {
   status: string;
   // the clan id
   clan_id: string;
+  // the channel type
+  channel_type: number;
 }
 
 export interface AddUsers {
