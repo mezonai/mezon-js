@@ -92,14 +92,35 @@ interface ChannelLeave {
 export interface UserChannelAddedEvent {
   // the channel id
   channel_id: string;
-  // the user_id
-  user_id: string;
-  // the username 
-  username: string;
-  // the avatar
-  avatar: string;
+  // the user
+  users: AddUsers[];
   // the custom status
   status: string;
+  // the clan id
+  clan_id: string;
+}
+
+export interface AddUsers {
+  // User IDs to follow.
+  user_id: string;
+  // Avatar to follow.
+  avatar: string;
+  // Username to follow.
+  username: string;
+}
+
+export interface UserChannelRemovedEvent {
+  // the channel id
+  channel_id: string;
+  // the user_id
+  user_ids: string[];
+}
+
+export interface UserClanRemovedEvent {
+  // the clan id
+  clan_id: string;
+  // the user_id
+  user_ids: string[];
 }
 
 /** Last seen message by user */
@@ -662,6 +683,12 @@ export interface Socket {
   /** Receive added user event */
   onuserchanneladded: (user: UserChannelAddedEvent) => void;
 
+  /** Receive channel removed user event */
+  onuserchannelremoved: (user: UserChannelRemovedEvent) => void;
+
+  /** Receive clan removed user event */
+  onuserclanremoved: (user: UserClanRemovedEvent) => void;
+
   // when someone start the voice room
   onvoicestarted: (voice: VoiceStartedEvent) => void;
   
@@ -826,6 +853,10 @@ export class DefaultSocket implements Socket {
           this.oncustomstatus(<CustomStatusEvent>message.custom_status_event);
         } else if (message.user_channel_added_event) {
           this.onuserchanneladded(<UserChannelAddedEvent>message.user_channel_added_event);
+        } else if (message.user_channel_removed_event) {
+          this.onuserchannelremoved(<UserChannelRemovedEvent>message.user_channel_removed_event);
+        } else if (message.user_clan_removed_event) {
+          this.onuserclanremoved(<UserClanRemovedEvent>message.user_clan_removed_event);
         } else {
           if (this.verbose && window && window.console) {
             console.log("Unrecognized message received: %o", message);
@@ -924,6 +955,18 @@ export class DefaultSocket implements Socket {
   }
 
   onuserchanneladded(user: UserChannelAddedEvent) {
+    if (this.verbose && window && window.console) {
+      console.log(user);
+    }
+  }
+
+  onuserchannelremoved(user: UserChannelRemovedEvent) {
+    if (this.verbose && window && window.console) {
+      console.log(user);
+    }
+  }
+
+  onuserclanremoved(user: UserClanRemovedEvent) {
     if (this.verbose && window && window.console) {
       console.log(user);
     }

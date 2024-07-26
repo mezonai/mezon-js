@@ -2047,6 +2047,36 @@ export interface CheckDuplicateClanNameRequest {
 export interface CheckDuplicateClanNameResponse {
     is_duplicate: boolean;
 }
+export interface ClanSticker {
+    id: number;
+    source: string;
+    shortname: string;
+    category: string;
+    creator_id: number;
+    create_time: Date | undefined;
+    clan_id: number;
+}
+export interface ClanStickerAddRequest {
+    source: string;
+    shortname: string;
+    category: string;
+    clan_id: number;
+}
+export interface ClanStickerListByClanIdRequest {
+    clan_id: number;
+}
+export interface ClanStickerListByClanIdResponse {
+    stickers: ClanSticker[];
+}
+export interface ClanStickerUpdateByIdRequest {
+    id: number;
+    source: string;
+    shortname: string;
+    category: string;
+}
+export interface ClanStickerDeleteRequest {
+    id: number;
+}
 export declare const Account: {
     encode(message: Account, writer?: _m0.Writer): _m0.Writer;
     decode(input: _m0.Reader | Uint8Array, length?: number): Account;
@@ -13858,6 +13888,230 @@ export declare const CheckDuplicateClanNameResponse: {
     } & {
         is_duplicate?: boolean | undefined;
     } & { [K_1 in Exclude<keyof I_1, "is_duplicate">]: never; }>(object: I_1): CheckDuplicateClanNameResponse;
+};
+export declare const ClanSticker: {
+    encode(message: ClanSticker, writer?: _m0.Writer): _m0.Writer;
+    decode(input: _m0.Reader | Uint8Array, length?: number): ClanSticker;
+    fromJSON(object: any): ClanSticker;
+    toJSON(message: ClanSticker): unknown;
+    create<I extends {
+        id?: number | undefined;
+        source?: string | undefined;
+        shortname?: string | undefined;
+        category?: string | undefined;
+        creator_id?: number | undefined;
+        create_time?: Date | undefined;
+        clan_id?: number | undefined;
+    } & {
+        id?: number | undefined;
+        source?: string | undefined;
+        shortname?: string | undefined;
+        category?: string | undefined;
+        creator_id?: number | undefined;
+        create_time?: Date | undefined;
+        clan_id?: number | undefined;
+    } & { [K in Exclude<keyof I, keyof ClanSticker>]: never; }>(base?: I | undefined): ClanSticker;
+    fromPartial<I_1 extends {
+        id?: number | undefined;
+        source?: string | undefined;
+        shortname?: string | undefined;
+        category?: string | undefined;
+        creator_id?: number | undefined;
+        create_time?: Date | undefined;
+        clan_id?: number | undefined;
+    } & {
+        id?: number | undefined;
+        source?: string | undefined;
+        shortname?: string | undefined;
+        category?: string | undefined;
+        creator_id?: number | undefined;
+        create_time?: Date | undefined;
+        clan_id?: number | undefined;
+    } & { [K_1 in Exclude<keyof I_1, keyof ClanSticker>]: never; }>(object: I_1): ClanSticker;
+};
+export declare const ClanStickerAddRequest: {
+    encode(message: ClanStickerAddRequest, writer?: _m0.Writer): _m0.Writer;
+    decode(input: _m0.Reader | Uint8Array, length?: number): ClanStickerAddRequest;
+    fromJSON(object: any): ClanStickerAddRequest;
+    toJSON(message: ClanStickerAddRequest): unknown;
+    create<I extends {
+        source?: string | undefined;
+        shortname?: string | undefined;
+        category?: string | undefined;
+        clan_id?: number | undefined;
+    } & {
+        source?: string | undefined;
+        shortname?: string | undefined;
+        category?: string | undefined;
+        clan_id?: number | undefined;
+    } & { [K in Exclude<keyof I, keyof ClanStickerAddRequest>]: never; }>(base?: I | undefined): ClanStickerAddRequest;
+    fromPartial<I_1 extends {
+        source?: string | undefined;
+        shortname?: string | undefined;
+        category?: string | undefined;
+        clan_id?: number | undefined;
+    } & {
+        source?: string | undefined;
+        shortname?: string | undefined;
+        category?: string | undefined;
+        clan_id?: number | undefined;
+    } & { [K_1 in Exclude<keyof I_1, keyof ClanStickerAddRequest>]: never; }>(object: I_1): ClanStickerAddRequest;
+};
+export declare const ClanStickerListByClanIdRequest: {
+    encode(message: ClanStickerListByClanIdRequest, writer?: _m0.Writer): _m0.Writer;
+    decode(input: _m0.Reader | Uint8Array, length?: number): ClanStickerListByClanIdRequest;
+    fromJSON(object: any): ClanStickerListByClanIdRequest;
+    toJSON(message: ClanStickerListByClanIdRequest): unknown;
+    create<I extends {
+        clan_id?: number | undefined;
+    } & {
+        clan_id?: number | undefined;
+    } & { [K in Exclude<keyof I, "clan_id">]: never; }>(base?: I | undefined): ClanStickerListByClanIdRequest;
+    fromPartial<I_1 extends {
+        clan_id?: number | undefined;
+    } & {
+        clan_id?: number | undefined;
+    } & { [K_1 in Exclude<keyof I_1, "clan_id">]: never; }>(object: I_1): ClanStickerListByClanIdRequest;
+};
+export declare const ClanStickerListByClanIdResponse: {
+    encode(message: ClanStickerListByClanIdResponse, writer?: _m0.Writer): _m0.Writer;
+    decode(input: _m0.Reader | Uint8Array, length?: number): ClanStickerListByClanIdResponse;
+    fromJSON(object: any): ClanStickerListByClanIdResponse;
+    toJSON(message: ClanStickerListByClanIdResponse): unknown;
+    create<I extends {
+        stickers?: {
+            id?: number | undefined;
+            source?: string | undefined;
+            shortname?: string | undefined;
+            category?: string | undefined;
+            creator_id?: number | undefined;
+            create_time?: Date | undefined;
+            clan_id?: number | undefined;
+        }[] | undefined;
+    } & {
+        stickers?: ({
+            id?: number | undefined;
+            source?: string | undefined;
+            shortname?: string | undefined;
+            category?: string | undefined;
+            creator_id?: number | undefined;
+            create_time?: Date | undefined;
+            clan_id?: number | undefined;
+        }[] & ({
+            id?: number | undefined;
+            source?: string | undefined;
+            shortname?: string | undefined;
+            category?: string | undefined;
+            creator_id?: number | undefined;
+            create_time?: Date | undefined;
+            clan_id?: number | undefined;
+        } & {
+            id?: number | undefined;
+            source?: string | undefined;
+            shortname?: string | undefined;
+            category?: string | undefined;
+            creator_id?: number | undefined;
+            create_time?: Date | undefined;
+            clan_id?: number | undefined;
+        } & { [K in Exclude<keyof I["stickers"][number], keyof ClanSticker>]: never; })[] & { [K_1 in Exclude<keyof I["stickers"], keyof {
+            id?: number | undefined;
+            source?: string | undefined;
+            shortname?: string | undefined;
+            category?: string | undefined;
+            creator_id?: number | undefined;
+            create_time?: Date | undefined;
+            clan_id?: number | undefined;
+        }[]>]: never; }) | undefined;
+    } & { [K_2 in Exclude<keyof I, "stickers">]: never; }>(base?: I | undefined): ClanStickerListByClanIdResponse;
+    fromPartial<I_1 extends {
+        stickers?: {
+            id?: number | undefined;
+            source?: string | undefined;
+            shortname?: string | undefined;
+            category?: string | undefined;
+            creator_id?: number | undefined;
+            create_time?: Date | undefined;
+            clan_id?: number | undefined;
+        }[] | undefined;
+    } & {
+        stickers?: ({
+            id?: number | undefined;
+            source?: string | undefined;
+            shortname?: string | undefined;
+            category?: string | undefined;
+            creator_id?: number | undefined;
+            create_time?: Date | undefined;
+            clan_id?: number | undefined;
+        }[] & ({
+            id?: number | undefined;
+            source?: string | undefined;
+            shortname?: string | undefined;
+            category?: string | undefined;
+            creator_id?: number | undefined;
+            create_time?: Date | undefined;
+            clan_id?: number | undefined;
+        } & {
+            id?: number | undefined;
+            source?: string | undefined;
+            shortname?: string | undefined;
+            category?: string | undefined;
+            creator_id?: number | undefined;
+            create_time?: Date | undefined;
+            clan_id?: number | undefined;
+        } & { [K_3 in Exclude<keyof I_1["stickers"][number], keyof ClanSticker>]: never; })[] & { [K_4 in Exclude<keyof I_1["stickers"], keyof {
+            id?: number | undefined;
+            source?: string | undefined;
+            shortname?: string | undefined;
+            category?: string | undefined;
+            creator_id?: number | undefined;
+            create_time?: Date | undefined;
+            clan_id?: number | undefined;
+        }[]>]: never; }) | undefined;
+    } & { [K_5 in Exclude<keyof I_1, "stickers">]: never; }>(object: I_1): ClanStickerListByClanIdResponse;
+};
+export declare const ClanStickerUpdateByIdRequest: {
+    encode(message: ClanStickerUpdateByIdRequest, writer?: _m0.Writer): _m0.Writer;
+    decode(input: _m0.Reader | Uint8Array, length?: number): ClanStickerUpdateByIdRequest;
+    fromJSON(object: any): ClanStickerUpdateByIdRequest;
+    toJSON(message: ClanStickerUpdateByIdRequest): unknown;
+    create<I extends {
+        id?: number | undefined;
+        source?: string | undefined;
+        shortname?: string | undefined;
+        category?: string | undefined;
+    } & {
+        id?: number | undefined;
+        source?: string | undefined;
+        shortname?: string | undefined;
+        category?: string | undefined;
+    } & { [K in Exclude<keyof I, keyof ClanStickerUpdateByIdRequest>]: never; }>(base?: I | undefined): ClanStickerUpdateByIdRequest;
+    fromPartial<I_1 extends {
+        id?: number | undefined;
+        source?: string | undefined;
+        shortname?: string | undefined;
+        category?: string | undefined;
+    } & {
+        id?: number | undefined;
+        source?: string | undefined;
+        shortname?: string | undefined;
+        category?: string | undefined;
+    } & { [K_1 in Exclude<keyof I_1, keyof ClanStickerUpdateByIdRequest>]: never; }>(object: I_1): ClanStickerUpdateByIdRequest;
+};
+export declare const ClanStickerDeleteRequest: {
+    encode(message: ClanStickerDeleteRequest, writer?: _m0.Writer): _m0.Writer;
+    decode(input: _m0.Reader | Uint8Array, length?: number): ClanStickerDeleteRequest;
+    fromJSON(object: any): ClanStickerDeleteRequest;
+    toJSON(message: ClanStickerDeleteRequest): unknown;
+    create<I extends {
+        id?: number | undefined;
+    } & {
+        id?: number | undefined;
+    } & { [K in Exclude<keyof I, "id">]: never; }>(base?: I | undefined): ClanStickerDeleteRequest;
+    fromPartial<I_1 extends {
+        id?: number | undefined;
+    } & {
+        id?: number | undefined;
+    } & { [K_1 in Exclude<keyof I_1, "id">]: never; }>(object: I_1): ClanStickerDeleteRequest;
 };
 type Builtin = Date | Function | Uint8Array | string | number | boolean | undefined;
 export type DeepPartial<T> = T extends Builtin ? T : T extends Array<infer U> ? Array<DeepPartial<U>> : T extends ReadonlyArray<infer U> ? ReadonlyArray<DeepPartial<U>> : T extends {} ? {

@@ -2631,6 +2631,42 @@ export interface CheckDuplicateClanNameResponse {
   is_duplicate: boolean;
 }
 
+export interface ClanSticker {
+  id: number;
+  source: string;
+  shortname: string;
+  category: string;
+  creator_id: number;
+  create_time: Date | undefined;
+  clan_id: number;
+}
+
+export interface ClanStickerAddRequest {
+  source: string;
+  shortname: string;
+  category: string;
+  clan_id: number;
+}
+
+export interface ClanStickerListByClanIdRequest {
+  clan_id: number;
+}
+
+export interface ClanStickerListByClanIdResponse {
+  stickers: ClanSticker[];
+}
+
+export interface ClanStickerUpdateByIdRequest {
+  id: number;
+  source: string;
+  shortname: string;
+  category: string;
+}
+
+export interface ClanStickerDeleteRequest {
+  id: number;
+}
+
 function createBaseAccount(): Account {
   return {
     user: undefined,
@@ -19481,6 +19517,436 @@ export const CheckDuplicateClanNameResponse = {
   ): CheckDuplicateClanNameResponse {
     const message = createBaseCheckDuplicateClanNameResponse();
     message.is_duplicate = object.is_duplicate ?? false;
+    return message;
+  },
+};
+
+function createBaseClanSticker(): ClanSticker {
+  return { id: 0, source: "", shortname: "", category: "", creator_id: 0, create_time: undefined, clan_id: 0 };
+}
+
+export const ClanSticker = {
+  encode(message: ClanSticker, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.id !== 0) {
+      writer.uint32(8).int64(message.id);
+    }
+    if (message.source !== "") {
+      writer.uint32(18).string(message.source);
+    }
+    if (message.shortname !== "") {
+      writer.uint32(26).string(message.shortname);
+    }
+    if (message.category !== "") {
+      writer.uint32(34).string(message.category);
+    }
+    if (message.creator_id !== 0) {
+      writer.uint32(40).int64(message.creator_id);
+    }
+    if (message.create_time !== undefined) {
+      Timestamp.encode(toTimestamp(message.create_time), writer.uint32(50).fork()).ldelim();
+    }
+    if (message.clan_id !== 0) {
+      writer.uint32(56).int64(message.clan_id);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): ClanSticker {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseClanSticker();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.id = longToNumber(reader.int64() as Long);
+          break;
+        case 2:
+          message.source = reader.string();
+          break;
+        case 3:
+          message.shortname = reader.string();
+          break;
+        case 4:
+          message.category = reader.string();
+          break;
+        case 5:
+          message.creator_id = longToNumber(reader.int64() as Long);
+          break;
+        case 6:
+          message.create_time = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
+          break;
+        case 7:
+          message.clan_id = longToNumber(reader.int64() as Long);
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): ClanSticker {
+    return {
+      id: isSet(object.id) ? Number(object.id) : 0,
+      source: isSet(object.source) ? String(object.source) : "",
+      shortname: isSet(object.shortname) ? String(object.shortname) : "",
+      category: isSet(object.category) ? String(object.category) : "",
+      creator_id: isSet(object.creator_id) ? Number(object.creator_id) : 0,
+      create_time: isSet(object.create_time) ? fromJsonTimestamp(object.create_time) : undefined,
+      clan_id: isSet(object.clan_id) ? Number(object.clan_id) : 0,
+    };
+  },
+
+  toJSON(message: ClanSticker): unknown {
+    const obj: any = {};
+    message.id !== undefined && (obj.id = Math.round(message.id));
+    message.source !== undefined && (obj.source = message.source);
+    message.shortname !== undefined && (obj.shortname = message.shortname);
+    message.category !== undefined && (obj.category = message.category);
+    message.creator_id !== undefined && (obj.creator_id = Math.round(message.creator_id));
+    message.create_time !== undefined && (obj.create_time = message.create_time.toISOString());
+    message.clan_id !== undefined && (obj.clan_id = Math.round(message.clan_id));
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<ClanSticker>, I>>(base?: I): ClanSticker {
+    return ClanSticker.fromPartial(base ?? {});
+  },
+
+  fromPartial<I extends Exact<DeepPartial<ClanSticker>, I>>(object: I): ClanSticker {
+    const message = createBaseClanSticker();
+    message.id = object.id ?? 0;
+    message.source = object.source ?? "";
+    message.shortname = object.shortname ?? "";
+    message.category = object.category ?? "";
+    message.creator_id = object.creator_id ?? 0;
+    message.create_time = object.create_time ?? undefined;
+    message.clan_id = object.clan_id ?? 0;
+    return message;
+  },
+};
+
+function createBaseClanStickerAddRequest(): ClanStickerAddRequest {
+  return { source: "", shortname: "", category: "", clan_id: 0 };
+}
+
+export const ClanStickerAddRequest = {
+  encode(message: ClanStickerAddRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.source !== "") {
+      writer.uint32(10).string(message.source);
+    }
+    if (message.shortname !== "") {
+      writer.uint32(18).string(message.shortname);
+    }
+    if (message.category !== "") {
+      writer.uint32(26).string(message.category);
+    }
+    if (message.clan_id !== 0) {
+      writer.uint32(32).int64(message.clan_id);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): ClanStickerAddRequest {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseClanStickerAddRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.source = reader.string();
+          break;
+        case 2:
+          message.shortname = reader.string();
+          break;
+        case 3:
+          message.category = reader.string();
+          break;
+        case 4:
+          message.clan_id = longToNumber(reader.int64() as Long);
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): ClanStickerAddRequest {
+    return {
+      source: isSet(object.source) ? String(object.source) : "",
+      shortname: isSet(object.shortname) ? String(object.shortname) : "",
+      category: isSet(object.category) ? String(object.category) : "",
+      clan_id: isSet(object.clan_id) ? Number(object.clan_id) : 0,
+    };
+  },
+
+  toJSON(message: ClanStickerAddRequest): unknown {
+    const obj: any = {};
+    message.source !== undefined && (obj.source = message.source);
+    message.shortname !== undefined && (obj.shortname = message.shortname);
+    message.category !== undefined && (obj.category = message.category);
+    message.clan_id !== undefined && (obj.clan_id = Math.round(message.clan_id));
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<ClanStickerAddRequest>, I>>(base?: I): ClanStickerAddRequest {
+    return ClanStickerAddRequest.fromPartial(base ?? {});
+  },
+
+  fromPartial<I extends Exact<DeepPartial<ClanStickerAddRequest>, I>>(object: I): ClanStickerAddRequest {
+    const message = createBaseClanStickerAddRequest();
+    message.source = object.source ?? "";
+    message.shortname = object.shortname ?? "";
+    message.category = object.category ?? "";
+    message.clan_id = object.clan_id ?? 0;
+    return message;
+  },
+};
+
+function createBaseClanStickerListByClanIdRequest(): ClanStickerListByClanIdRequest {
+  return { clan_id: 0 };
+}
+
+export const ClanStickerListByClanIdRequest = {
+  encode(message: ClanStickerListByClanIdRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.clan_id !== 0) {
+      writer.uint32(8).int64(message.clan_id);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): ClanStickerListByClanIdRequest {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseClanStickerListByClanIdRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.clan_id = longToNumber(reader.int64() as Long);
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): ClanStickerListByClanIdRequest {
+    return { clan_id: isSet(object.clan_id) ? Number(object.clan_id) : 0 };
+  },
+
+  toJSON(message: ClanStickerListByClanIdRequest): unknown {
+    const obj: any = {};
+    message.clan_id !== undefined && (obj.clan_id = Math.round(message.clan_id));
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<ClanStickerListByClanIdRequest>, I>>(base?: I): ClanStickerListByClanIdRequest {
+    return ClanStickerListByClanIdRequest.fromPartial(base ?? {});
+  },
+
+  fromPartial<I extends Exact<DeepPartial<ClanStickerListByClanIdRequest>, I>>(
+    object: I,
+  ): ClanStickerListByClanIdRequest {
+    const message = createBaseClanStickerListByClanIdRequest();
+    message.clan_id = object.clan_id ?? 0;
+    return message;
+  },
+};
+
+function createBaseClanStickerListByClanIdResponse(): ClanStickerListByClanIdResponse {
+  return { stickers: [] };
+}
+
+export const ClanStickerListByClanIdResponse = {
+  encode(message: ClanStickerListByClanIdResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    for (const v of message.stickers) {
+      ClanSticker.encode(v!, writer.uint32(10).fork()).ldelim();
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): ClanStickerListByClanIdResponse {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseClanStickerListByClanIdResponse();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.stickers.push(ClanSticker.decode(reader, reader.uint32()));
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): ClanStickerListByClanIdResponse {
+    return {
+      stickers: Array.isArray(object?.stickers) ? object.stickers.map((e: any) => ClanSticker.fromJSON(e)) : [],
+    };
+  },
+
+  toJSON(message: ClanStickerListByClanIdResponse): unknown {
+    const obj: any = {};
+    if (message.stickers) {
+      obj.stickers = message.stickers.map((e) => e ? ClanSticker.toJSON(e) : undefined);
+    } else {
+      obj.stickers = [];
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<ClanStickerListByClanIdResponse>, I>>(base?: I): ClanStickerListByClanIdResponse {
+    return ClanStickerListByClanIdResponse.fromPartial(base ?? {});
+  },
+
+  fromPartial<I extends Exact<DeepPartial<ClanStickerListByClanIdResponse>, I>>(
+    object: I,
+  ): ClanStickerListByClanIdResponse {
+    const message = createBaseClanStickerListByClanIdResponse();
+    message.stickers = object.stickers?.map((e) => ClanSticker.fromPartial(e)) || [];
+    return message;
+  },
+};
+
+function createBaseClanStickerUpdateByIdRequest(): ClanStickerUpdateByIdRequest {
+  return { id: 0, source: "", shortname: "", category: "" };
+}
+
+export const ClanStickerUpdateByIdRequest = {
+  encode(message: ClanStickerUpdateByIdRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.id !== 0) {
+      writer.uint32(8).int64(message.id);
+    }
+    if (message.source !== "") {
+      writer.uint32(18).string(message.source);
+    }
+    if (message.shortname !== "") {
+      writer.uint32(26).string(message.shortname);
+    }
+    if (message.category !== "") {
+      writer.uint32(34).string(message.category);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): ClanStickerUpdateByIdRequest {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseClanStickerUpdateByIdRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.id = longToNumber(reader.int64() as Long);
+          break;
+        case 2:
+          message.source = reader.string();
+          break;
+        case 3:
+          message.shortname = reader.string();
+          break;
+        case 4:
+          message.category = reader.string();
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): ClanStickerUpdateByIdRequest {
+    return {
+      id: isSet(object.id) ? Number(object.id) : 0,
+      source: isSet(object.source) ? String(object.source) : "",
+      shortname: isSet(object.shortname) ? String(object.shortname) : "",
+      category: isSet(object.category) ? String(object.category) : "",
+    };
+  },
+
+  toJSON(message: ClanStickerUpdateByIdRequest): unknown {
+    const obj: any = {};
+    message.id !== undefined && (obj.id = Math.round(message.id));
+    message.source !== undefined && (obj.source = message.source);
+    message.shortname !== undefined && (obj.shortname = message.shortname);
+    message.category !== undefined && (obj.category = message.category);
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<ClanStickerUpdateByIdRequest>, I>>(base?: I): ClanStickerUpdateByIdRequest {
+    return ClanStickerUpdateByIdRequest.fromPartial(base ?? {});
+  },
+
+  fromPartial<I extends Exact<DeepPartial<ClanStickerUpdateByIdRequest>, I>>(object: I): ClanStickerUpdateByIdRequest {
+    const message = createBaseClanStickerUpdateByIdRequest();
+    message.id = object.id ?? 0;
+    message.source = object.source ?? "";
+    message.shortname = object.shortname ?? "";
+    message.category = object.category ?? "";
+    return message;
+  },
+};
+
+function createBaseClanStickerDeleteRequest(): ClanStickerDeleteRequest {
+  return { id: 0 };
+}
+
+export const ClanStickerDeleteRequest = {
+  encode(message: ClanStickerDeleteRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.id !== 0) {
+      writer.uint32(8).int64(message.id);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): ClanStickerDeleteRequest {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseClanStickerDeleteRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.id = longToNumber(reader.int64() as Long);
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): ClanStickerDeleteRequest {
+    return { id: isSet(object.id) ? Number(object.id) : 0 };
+  },
+
+  toJSON(message: ClanStickerDeleteRequest): unknown {
+    const obj: any = {};
+    message.id !== undefined && (obj.id = Math.round(message.id));
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<ClanStickerDeleteRequest>, I>>(base?: I): ClanStickerDeleteRequest {
+    return ClanStickerDeleteRequest.fromPartial(base ?? {});
+  },
+
+  fromPartial<I extends Exact<DeepPartial<ClanStickerDeleteRequest>, I>>(object: I): ClanStickerDeleteRequest {
+    const message = createBaseClanStickerDeleteRequest();
+    message.id = object.id ?? 0;
     return message;
   },
 };

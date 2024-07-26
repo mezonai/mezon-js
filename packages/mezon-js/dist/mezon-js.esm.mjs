@@ -4639,6 +4639,10 @@ var _DefaultSocket = class _DefaultSocket {
           this.oncustomstatus(message.custom_status_event);
         } else if (message.user_channel_added_event) {
           this.onuserchanneladded(message.user_channel_added_event);
+        } else if (message.user_channel_removed_event) {
+          this.onuserchannelremoved(message.user_channel_removed_event);
+        } else if (message.user_clan_removed_event) {
+          this.onuserclanremoved(message.user_clan_removed_event);
         } else {
           if (this.verbose && window && window.console) {
             console.log("Unrecognized message received: %o", message);
@@ -4722,6 +4726,16 @@ var _DefaultSocket = class _DefaultSocket {
     }
   }
   onuserchanneladded(user) {
+    if (this.verbose && window && window.console) {
+      console.log(user);
+    }
+  }
+  onuserchannelremoved(user) {
+    if (this.verbose && window && window.console) {
+      console.log(user);
+    }
+  }
+  onuserclanremoved(user) {
     if (this.verbose && window && window.console) {
       console.log(user);
     }
