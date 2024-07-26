@@ -103,6 +103,9 @@ import {
   MezonUpdateWebhookByIdBody,
   ApiWebhookGenerateResponse,
   ApiCheckDuplicateClanNameResponse,
+  ApiClanStickerAddRequest,
+  ApiClanStickerListByClanIdResponse,
+  MezonUpdateClanStickerByIdBody,
 } from "./api.gen";
 
 import { Session } from "./session";
@@ -2346,7 +2349,7 @@ async deleteWebhookById(session: Session, id: string) {
 }
 
 //**check duplicate clan name */
-async checkDuplicateClanName(session: Session, clan_name: string): Promise<ApiCheckDuplicateClanNameResponse>{
+async checkDuplicateClanName(session: Session, clan_name: string): Promise<ApiCheckDuplicateClanNameResponse> {
   if (this.autoRefreshSession && session.refresh_token &&
     session.isexpired((Date.now() + this.expiredTimespanMs)/1000)) {
     await this.sessionRefresh(session);
@@ -2354,6 +2357,54 @@ async checkDuplicateClanName(session: Session, clan_name: string): Promise<ApiCh
 
   return this.apiClient.checkDuplicateClanName(session.token, clan_name).then((response: any) => {
     return Promise.resolve(response);
+  })
+}
+
+//**Add a new sticker */
+async addClanSticker(session: Session,request: ApiClanStickerAddRequest) {
+  if (this.autoRefreshSession && session.refresh_token &&
+    session.isexpired((Date.now() + this.expiredTimespanMs)/1000)) {
+    await this.sessionRefresh(session);
+  }
+
+  return this.apiClient.addClanSticker(session.token, request).then((response: any) => {
+    return response !== undefined;
+  })
+}
+
+//**List stickers by clan ID */
+async listClanStickersByClanId(session: Session,id: string): Promise<ApiClanStickerListByClanIdResponse> {
+  if (this.autoRefreshSession && session.refresh_token &&
+    session.isexpired((Date.now() + this.expiredTimespanMs)/1000)) {
+    await this.sessionRefresh(session);
+  }
+
+  return this.apiClient.listClanStickersByClanId(session.token, id).then((response: any) => {
+    return Promise.resolve(response);
+  })
+}
+
+//**Delete a sticker by ID*/
+async deleteClanStickerById(session: Session,id: string) {
+  if (this.autoRefreshSession && session.refresh_token &&
+    session.isexpired((Date.now() + this.expiredTimespanMs)/1000)) {
+    await this.sessionRefresh(session);
+  }
+
+  return this.apiClient.deleteClanStickerById(session.token, id).then((response: any) => {
+    return response !== undefined;
+  })
+}
+
+//**Update a sticker by ID*/
+async updateClanStickerById(session: Session,id: string,request: MezonUpdateClanStickerByIdBody){
+  if (this.autoRefreshSession && session.refresh_token &&
+    session.isexpired((Date.now() + this.expiredTimespanMs)/1000)) {
+    await this.sessionRefresh(session);
+  }
+
+  return this.apiClient.updateClanStickerById(session.token, id,request).then((response: any) => {
+    return response !== undefined;
   })
 }
 

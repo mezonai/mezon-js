@@ -149,15 +149,7 @@ export interface Envelope {
     | CustomStatusEvent
     | undefined;
   /** User is added to channel event */
-  user_channel_added_event?:
-    | UserChannelAdded
-    | undefined;
-  /** User is removed to channel event */
-  user_channel_removed_event?:
-    | UserChannelRemoved
-    | undefined;
-  /** User is removed to clan event */
-  user_clan_removed_event?: UserClanRemoved | undefined;
+  user_channel_added_event?: UserChannelAdded | undefined;
 }
 
 /** A realtime chat channel. */
@@ -190,8 +182,18 @@ export interface ChannelJoin {
   clan_id: string;
   /** The id of channel or group */
   channel_id: string;
-  /** channel type */
-  channel_type: number;
+  /** The type of the chat channel. */
+  type: number;
+  /** Whether messages sent on this channel should be persistent. */
+  persistence:
+    | boolean
+    | undefined;
+  /** Whether the user should appear in the channel's presence list and events. */
+  hidden:
+    | boolean
+    | undefined;
+  /** mode */
+  mode: number;
 }
 
 /** Leave a realtime channel. */
@@ -200,8 +202,8 @@ export interface ChannelLeave {
   clan_id: string;
   /** The ID of the channel to leave. */
   channel_id: string;
-  /** channel type */
-  channel_type: number;
+  /** mode */
+  mode: number;
 }
 
 /** A receipt reply from a channel message send operation. */
@@ -786,27 +788,9 @@ export interface UserChannelAdded {
   /** the channel id */
   channel_id: string;
   /** the user */
-  users: AddUsers[];
+  Users: AddUsers[];
   /** the custom status */
   status: string;
-  /** the clan id */
-  clan_id: string;
-}
-
-/**  */
-export interface UserChannelRemoved {
-  /** the channel id */
-  channel_id: string;
-  /** the user */
-  user_ids: string[];
-}
-
-/**  */
-export interface UserClanRemoved {
-  /** the clan id */
-  clan_id: string;
-  /** the user */
-  user_ids: string[];
 }
 
 /** A event when user is added to channel */
@@ -868,8 +852,6 @@ function createBaseEnvelope(): Envelope {
     last_pin_message_event: undefined,
     custom_status_event: undefined,
     user_channel_added_event: undefined,
-    user_channel_removed_event: undefined,
-    user_clan_removed_event: undefined,
   };
 }
 
@@ -982,12 +964,6 @@ export const Envelope = {
     }
     if (message.user_channel_added_event !== undefined) {
       UserChannelAdded.encode(message.user_channel_added_event, writer.uint32(290).fork()).ldelim();
-    }
-    if (message.user_channel_removed_event !== undefined) {
-      UserChannelRemoved.encode(message.user_channel_removed_event, writer.uint32(298).fork()).ldelim();
-    }
-    if (message.user_clan_removed_event !== undefined) {
-      UserClanRemoved.encode(message.user_clan_removed_event, writer.uint32(306).fork()).ldelim();
     }
     return writer;
   },
@@ -1107,12 +1083,6 @@ export const Envelope = {
         case 36:
           message.user_channel_added_event = UserChannelAdded.decode(reader, reader.uint32());
           break;
-        case 37:
-          message.user_channel_removed_event = UserChannelRemoved.decode(reader, reader.uint32());
-          break;
-        case 38:
-          message.user_clan_removed_event = UserClanRemoved.decode(reader, reader.uint32());
-          break;
         default:
           reader.skipType(tag & 7);
           break;
@@ -1198,12 +1168,6 @@ export const Envelope = {
         : undefined,
       user_channel_added_event: isSet(object.user_channel_added_event)
         ? UserChannelAdded.fromJSON(object.user_channel_added_event)
-        : undefined,
-      user_channel_removed_event: isSet(object.user_channel_removed_event)
-        ? UserChannelRemoved.fromJSON(object.user_channel_removed_event)
-        : undefined,
-      user_clan_removed_event: isSet(object.user_clan_removed_event)
-        ? UserClanRemoved.fromJSON(object.user_clan_removed_event)
         : undefined,
     };
   },
@@ -1295,13 +1259,6 @@ export const Envelope = {
       : undefined);
     message.user_channel_added_event !== undefined && (obj.user_channel_added_event = message.user_channel_added_event
       ? UserChannelAdded.toJSON(message.user_channel_added_event)
-      : undefined);
-    message.user_channel_removed_event !== undefined &&
-      (obj.user_channel_removed_event = message.user_channel_removed_event
-        ? UserChannelRemoved.toJSON(message.user_channel_removed_event)
-        : undefined);
-    message.user_clan_removed_event !== undefined && (obj.user_clan_removed_event = message.user_clan_removed_event
-      ? UserClanRemoved.toJSON(message.user_clan_removed_event)
       : undefined);
     return obj;
   },
@@ -1421,14 +1378,6 @@ export const Envelope = {
     message.user_channel_added_event =
       (object.user_channel_added_event !== undefined && object.user_channel_added_event !== null)
         ? UserChannelAdded.fromPartial(object.user_channel_added_event)
-        : undefined;
-    message.user_channel_removed_event =
-      (object.user_channel_removed_event !== undefined && object.user_channel_removed_event !== null)
-        ? UserChannelRemoved.fromPartial(object.user_channel_removed_event)
-        : undefined;
-    message.user_clan_removed_event =
-      (object.user_clan_removed_event !== undefined && object.user_clan_removed_event !== null)
-        ? UserClanRemoved.fromPartial(object.user_clan_removed_event)
         : undefined;
     return message;
   },
@@ -1590,7 +1539,7 @@ export const ClanJoin = {
 };
 
 function createBaseChannelJoin(): ChannelJoin {
-  return { clan_id: "", channel_id: "", channel_type: 0 };
+  return { clan_id: "", channel_id: "", type: 0, persistence: undefined, hidden: undefined, mode: 0 };
 }
 
 export const ChannelJoin = {
@@ -1601,8 +1550,17 @@ export const ChannelJoin = {
     if (message.channel_id !== "") {
       writer.uint32(18).string(message.channel_id);
     }
-    if (message.channel_type !== 0) {
-      writer.uint32(24).int32(message.channel_type);
+    if (message.type !== 0) {
+      writer.uint32(24).int32(message.type);
+    }
+    if (message.persistence !== undefined) {
+      BoolValue.encode({ value: message.persistence! }, writer.uint32(34).fork()).ldelim();
+    }
+    if (message.hidden !== undefined) {
+      BoolValue.encode({ value: message.hidden! }, writer.uint32(42).fork()).ldelim();
+    }
+    if (message.mode !== 0) {
+      writer.uint32(48).int32(message.mode);
     }
     return writer;
   },
@@ -1621,7 +1579,16 @@ export const ChannelJoin = {
           message.channel_id = reader.string();
           break;
         case 3:
-          message.channel_type = reader.int32();
+          message.type = reader.int32();
+          break;
+        case 4:
+          message.persistence = BoolValue.decode(reader, reader.uint32()).value;
+          break;
+        case 5:
+          message.hidden = BoolValue.decode(reader, reader.uint32()).value;
+          break;
+        case 6:
+          message.mode = reader.int32();
           break;
         default:
           reader.skipType(tag & 7);
@@ -1635,7 +1602,10 @@ export const ChannelJoin = {
     return {
       clan_id: isSet(object.clan_id) ? String(object.clan_id) : "",
       channel_id: isSet(object.channel_id) ? String(object.channel_id) : "",
-      channel_type: isSet(object.channel_type) ? Number(object.channel_type) : 0,
+      type: isSet(object.type) ? Number(object.type) : 0,
+      persistence: isSet(object.persistence) ? Boolean(object.persistence) : undefined,
+      hidden: isSet(object.hidden) ? Boolean(object.hidden) : undefined,
+      mode: isSet(object.mode) ? Number(object.mode) : 0,
     };
   },
 
@@ -1643,7 +1613,10 @@ export const ChannelJoin = {
     const obj: any = {};
     message.clan_id !== undefined && (obj.clan_id = message.clan_id);
     message.channel_id !== undefined && (obj.channel_id = message.channel_id);
-    message.channel_type !== undefined && (obj.channel_type = Math.round(message.channel_type));
+    message.type !== undefined && (obj.type = Math.round(message.type));
+    message.persistence !== undefined && (obj.persistence = message.persistence);
+    message.hidden !== undefined && (obj.hidden = message.hidden);
+    message.mode !== undefined && (obj.mode = Math.round(message.mode));
     return obj;
   },
 
@@ -1655,13 +1628,16 @@ export const ChannelJoin = {
     const message = createBaseChannelJoin();
     message.clan_id = object.clan_id ?? "";
     message.channel_id = object.channel_id ?? "";
-    message.channel_type = object.channel_type ?? 0;
+    message.type = object.type ?? 0;
+    message.persistence = object.persistence ?? undefined;
+    message.hidden = object.hidden ?? undefined;
+    message.mode = object.mode ?? 0;
     return message;
   },
 };
 
 function createBaseChannelLeave(): ChannelLeave {
-  return { clan_id: "", channel_id: "", channel_type: 0 };
+  return { clan_id: "", channel_id: "", mode: 0 };
 }
 
 export const ChannelLeave = {
@@ -1672,8 +1648,8 @@ export const ChannelLeave = {
     if (message.channel_id !== "") {
       writer.uint32(18).string(message.channel_id);
     }
-    if (message.channel_type !== 0) {
-      writer.uint32(24).int32(message.channel_type);
+    if (message.mode !== 0) {
+      writer.uint32(24).int32(message.mode);
     }
     return writer;
   },
@@ -1692,7 +1668,7 @@ export const ChannelLeave = {
           message.channel_id = reader.string();
           break;
         case 3:
-          message.channel_type = reader.int32();
+          message.mode = reader.int32();
           break;
         default:
           reader.skipType(tag & 7);
@@ -1706,7 +1682,7 @@ export const ChannelLeave = {
     return {
       clan_id: isSet(object.clan_id) ? String(object.clan_id) : "",
       channel_id: isSet(object.channel_id) ? String(object.channel_id) : "",
-      channel_type: isSet(object.channel_type) ? Number(object.channel_type) : 0,
+      mode: isSet(object.mode) ? Number(object.mode) : 0,
     };
   },
 
@@ -1714,7 +1690,7 @@ export const ChannelLeave = {
     const obj: any = {};
     message.clan_id !== undefined && (obj.clan_id = message.clan_id);
     message.channel_id !== undefined && (obj.channel_id = message.channel_id);
-    message.channel_type !== undefined && (obj.channel_type = Math.round(message.channel_type));
+    message.mode !== undefined && (obj.mode = Math.round(message.mode));
     return obj;
   },
 
@@ -1726,7 +1702,7 @@ export const ChannelLeave = {
     const message = createBaseChannelLeave();
     message.clan_id = object.clan_id ?? "";
     message.channel_id = object.channel_id ?? "";
-    message.channel_type = object.channel_type ?? 0;
+    message.mode = object.mode ?? 0;
     return message;
   },
 };
@@ -5051,7 +5027,7 @@ export const AddUsers = {
 };
 
 function createBaseUserChannelAdded(): UserChannelAdded {
-  return { channel_id: "", users: [], status: "", clan_id: "" };
+  return { channel_id: "", Users: [], status: "" };
 }
 
 export const UserChannelAdded = {
@@ -5059,14 +5035,11 @@ export const UserChannelAdded = {
     if (message.channel_id !== "") {
       writer.uint32(10).string(message.channel_id);
     }
-    for (const v of message.users) {
+    for (const v of message.Users) {
       AddUsers.encode(v!, writer.uint32(18).fork()).ldelim();
     }
     if (message.status !== "") {
       writer.uint32(26).string(message.status);
-    }
-    if (message.clan_id !== "") {
-      writer.uint32(34).string(message.clan_id);
     }
     return writer;
   },
@@ -5082,13 +5055,10 @@ export const UserChannelAdded = {
           message.channel_id = reader.string();
           break;
         case 2:
-          message.users.push(AddUsers.decode(reader, reader.uint32()));
+          message.Users.push(AddUsers.decode(reader, reader.uint32()));
           break;
         case 3:
           message.status = reader.string();
-          break;
-        case 4:
-          message.clan_id = reader.string();
           break;
         default:
           reader.skipType(tag & 7);
@@ -5101,22 +5071,20 @@ export const UserChannelAdded = {
   fromJSON(object: any): UserChannelAdded {
     return {
       channel_id: isSet(object.channel_id) ? String(object.channel_id) : "",
-      users: Array.isArray(object?.users) ? object.users.map((e: any) => AddUsers.fromJSON(e)) : [],
+      Users: Array.isArray(object?.Users) ? object.Users.map((e: any) => AddUsers.fromJSON(e)) : [],
       status: isSet(object.status) ? String(object.status) : "",
-      clan_id: isSet(object.clan_id) ? String(object.clan_id) : "",
     };
   },
 
   toJSON(message: UserChannelAdded): unknown {
     const obj: any = {};
     message.channel_id !== undefined && (obj.channel_id = message.channel_id);
-    if (message.users) {
-      obj.users = message.users.map((e) => e ? AddUsers.toJSON(e) : undefined);
+    if (message.Users) {
+      obj.Users = message.Users.map((e) => e ? AddUsers.toJSON(e) : undefined);
     } else {
-      obj.users = [];
+      obj.Users = [];
     }
     message.status !== undefined && (obj.status = message.status);
-    message.clan_id !== undefined && (obj.clan_id = message.clan_id);
     return obj;
   },
 
@@ -5127,141 +5095,8 @@ export const UserChannelAdded = {
   fromPartial<I extends Exact<DeepPartial<UserChannelAdded>, I>>(object: I): UserChannelAdded {
     const message = createBaseUserChannelAdded();
     message.channel_id = object.channel_id ?? "";
-    message.users = object.users?.map((e) => AddUsers.fromPartial(e)) || [];
+    message.Users = object.Users?.map((e) => AddUsers.fromPartial(e)) || [];
     message.status = object.status ?? "";
-    message.clan_id = object.clan_id ?? "";
-    return message;
-  },
-};
-
-function createBaseUserChannelRemoved(): UserChannelRemoved {
-  return { channel_id: "", user_ids: [] };
-}
-
-export const UserChannelRemoved = {
-  encode(message: UserChannelRemoved, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.channel_id !== "") {
-      writer.uint32(10).string(message.channel_id);
-    }
-    for (const v of message.user_ids) {
-      writer.uint32(18).string(v!);
-    }
-    return writer;
-  },
-
-  decode(input: _m0.Reader | Uint8Array, length?: number): UserChannelRemoved {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseUserChannelRemoved();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
-          message.channel_id = reader.string();
-          break;
-        case 2:
-          message.user_ids.push(reader.string());
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
-      }
-    }
-    return message;
-  },
-
-  fromJSON(object: any): UserChannelRemoved {
-    return {
-      channel_id: isSet(object.channel_id) ? String(object.channel_id) : "",
-      user_ids: Array.isArray(object?.user_ids) ? object.user_ids.map((e: any) => String(e)) : [],
-    };
-  },
-
-  toJSON(message: UserChannelRemoved): unknown {
-    const obj: any = {};
-    message.channel_id !== undefined && (obj.channel_id = message.channel_id);
-    if (message.user_ids) {
-      obj.user_ids = message.user_ids.map((e) => e);
-    } else {
-      obj.user_ids = [];
-    }
-    return obj;
-  },
-
-  create<I extends Exact<DeepPartial<UserChannelRemoved>, I>>(base?: I): UserChannelRemoved {
-    return UserChannelRemoved.fromPartial(base ?? {});
-  },
-
-  fromPartial<I extends Exact<DeepPartial<UserChannelRemoved>, I>>(object: I): UserChannelRemoved {
-    const message = createBaseUserChannelRemoved();
-    message.channel_id = object.channel_id ?? "";
-    message.user_ids = object.user_ids?.map((e) => e) || [];
-    return message;
-  },
-};
-
-function createBaseUserClanRemoved(): UserClanRemoved {
-  return { clan_id: "", user_ids: [] };
-}
-
-export const UserClanRemoved = {
-  encode(message: UserClanRemoved, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.clan_id !== "") {
-      writer.uint32(10).string(message.clan_id);
-    }
-    for (const v of message.user_ids) {
-      writer.uint32(18).string(v!);
-    }
-    return writer;
-  },
-
-  decode(input: _m0.Reader | Uint8Array, length?: number): UserClanRemoved {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseUserClanRemoved();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
-          message.clan_id = reader.string();
-          break;
-        case 2:
-          message.user_ids.push(reader.string());
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
-      }
-    }
-    return message;
-  },
-
-  fromJSON(object: any): UserClanRemoved {
-    return {
-      clan_id: isSet(object.clan_id) ? String(object.clan_id) : "",
-      user_ids: Array.isArray(object?.user_ids) ? object.user_ids.map((e: any) => String(e)) : [],
-    };
-  },
-
-  toJSON(message: UserClanRemoved): unknown {
-    const obj: any = {};
-    message.clan_id !== undefined && (obj.clan_id = message.clan_id);
-    if (message.user_ids) {
-      obj.user_ids = message.user_ids.map((e) => e);
-    } else {
-      obj.user_ids = [];
-    }
-    return obj;
-  },
-
-  create<I extends Exact<DeepPartial<UserClanRemoved>, I>>(base?: I): UserClanRemoved {
-    return UserClanRemoved.fromPartial(base ?? {});
-  },
-
-  fromPartial<I extends Exact<DeepPartial<UserClanRemoved>, I>>(object: I): UserClanRemoved {
-    const message = createBaseUserClanRemoved();
-    message.clan_id = object.clan_id ?? "";
-    message.user_ids = object.user_ids?.map((e) => e) || [];
     return message;
   },
 };
