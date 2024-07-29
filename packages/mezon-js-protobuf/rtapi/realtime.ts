@@ -791,8 +791,6 @@ export interface UserChannelAdded {
   status: string;
   /** the clan id */
   clan_id: string;
-  /** the channel type */
-  channel_type: number;
 }
 
 /**  */
@@ -5053,7 +5051,7 @@ export const AddUsers = {
 };
 
 function createBaseUserChannelAdded(): UserChannelAdded {
-  return { channel_id: "", users: [], status: "", clan_id: "", channel_type: 0 };
+  return { channel_id: "", users: [], status: "", clan_id: "" };
 }
 
 export const UserChannelAdded = {
@@ -5069,9 +5067,6 @@ export const UserChannelAdded = {
     }
     if (message.clan_id !== "") {
       writer.uint32(34).string(message.clan_id);
-    }
-    if (message.channel_type !== 0) {
-      writer.uint32(40).int32(message.channel_type);
     }
     return writer;
   },
@@ -5095,9 +5090,6 @@ export const UserChannelAdded = {
         case 4:
           message.clan_id = reader.string();
           break;
-        case 5:
-          message.channel_type = reader.int32();
-          break;
         default:
           reader.skipType(tag & 7);
           break;
@@ -5112,7 +5104,6 @@ export const UserChannelAdded = {
       users: Array.isArray(object?.users) ? object.users.map((e: any) => AddUsers.fromJSON(e)) : [],
       status: isSet(object.status) ? String(object.status) : "",
       clan_id: isSet(object.clan_id) ? String(object.clan_id) : "",
-      channel_type: isSet(object.channel_type) ? Number(object.channel_type) : 0,
     };
   },
 
@@ -5126,7 +5117,6 @@ export const UserChannelAdded = {
     }
     message.status !== undefined && (obj.status = message.status);
     message.clan_id !== undefined && (obj.clan_id = message.clan_id);
-    message.channel_type !== undefined && (obj.channel_type = Math.round(message.channel_type));
     return obj;
   },
 
@@ -5140,7 +5130,6 @@ export const UserChannelAdded = {
     message.users = object.users?.map((e) => AddUsers.fromPartial(e)) || [];
     message.status = object.status ?? "";
     message.clan_id = object.clan_id ?? "";
-    message.channel_type = object.channel_type ?? 0;
     return message;
   },
 };
