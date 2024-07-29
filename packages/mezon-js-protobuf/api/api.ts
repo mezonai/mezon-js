@@ -2585,15 +2585,18 @@ export interface Webhook {
   webhook_name: string;
   channel_id: string;
   active: number;
+  /** URL of the webhook, which is automatically generated and different from the avatar */
   url: string;
   creator_id: string;
   create_time: string;
   update_time: string;
+  avatar: string;
 }
 
 export interface WebhookCreateRequest {
   webhook_name: string;
   channel_id: string;
+  avatar: string;
 }
 
 export interface WebhookListRequestById {
@@ -2603,6 +2606,8 @@ export interface WebhookListRequestById {
 export interface WebhookUpdateRequestById {
   id: string;
   webhook_name: string;
+  channel_id: string;
+  avatar: string;
 }
 
 export interface WebhookDeleteRequestById {
@@ -2621,6 +2626,7 @@ export interface WebhookGenerateResponse {
   url: string;
   hook_name: string;
   channel_id: string;
+  avatar: string;
 }
 
 export interface CheckDuplicateClanNameRequest {
@@ -18897,6 +18903,7 @@ function createBaseWebhook(): Webhook {
     creator_id: "",
     create_time: "",
     update_time: "",
+    avatar: "",
   };
 }
 
@@ -18925,6 +18932,9 @@ export const Webhook = {
     }
     if (message.update_time !== "") {
       writer.uint32(66).string(message.update_time);
+    }
+    if (message.avatar !== "") {
+      writer.uint32(74).string(message.avatar);
     }
     return writer;
   },
@@ -18960,6 +18970,9 @@ export const Webhook = {
         case 8:
           message.update_time = reader.string();
           break;
+        case 9:
+          message.avatar = reader.string();
+          break;
         default:
           reader.skipType(tag & 7);
           break;
@@ -18978,6 +18991,7 @@ export const Webhook = {
       creator_id: isSet(object.creator_id) ? String(object.creator_id) : "",
       create_time: isSet(object.create_time) ? String(object.create_time) : "",
       update_time: isSet(object.update_time) ? String(object.update_time) : "",
+      avatar: isSet(object.avatar) ? String(object.avatar) : "",
     };
   },
 
@@ -18991,6 +19005,7 @@ export const Webhook = {
     message.creator_id !== undefined && (obj.creator_id = message.creator_id);
     message.create_time !== undefined && (obj.create_time = message.create_time);
     message.update_time !== undefined && (obj.update_time = message.update_time);
+    message.avatar !== undefined && (obj.avatar = message.avatar);
     return obj;
   },
 
@@ -19008,12 +19023,13 @@ export const Webhook = {
     message.creator_id = object.creator_id ?? "";
     message.create_time = object.create_time ?? "";
     message.update_time = object.update_time ?? "";
+    message.avatar = object.avatar ?? "";
     return message;
   },
 };
 
 function createBaseWebhookCreateRequest(): WebhookCreateRequest {
-  return { webhook_name: "", channel_id: "" };
+  return { webhook_name: "", channel_id: "", avatar: "" };
 }
 
 export const WebhookCreateRequest = {
@@ -19023,6 +19039,9 @@ export const WebhookCreateRequest = {
     }
     if (message.channel_id !== "") {
       writer.uint32(18).string(message.channel_id);
+    }
+    if (message.avatar !== "") {
+      writer.uint32(26).string(message.avatar);
     }
     return writer;
   },
@@ -19040,6 +19059,9 @@ export const WebhookCreateRequest = {
         case 2:
           message.channel_id = reader.string();
           break;
+        case 3:
+          message.avatar = reader.string();
+          break;
         default:
           reader.skipType(tag & 7);
           break;
@@ -19052,6 +19074,7 @@ export const WebhookCreateRequest = {
     return {
       webhook_name: isSet(object.webhook_name) ? String(object.webhook_name) : "",
       channel_id: isSet(object.channel_id) ? String(object.channel_id) : "",
+      avatar: isSet(object.avatar) ? String(object.avatar) : "",
     };
   },
 
@@ -19059,6 +19082,7 @@ export const WebhookCreateRequest = {
     const obj: any = {};
     message.webhook_name !== undefined && (obj.webhook_name = message.webhook_name);
     message.channel_id !== undefined && (obj.channel_id = message.channel_id);
+    message.avatar !== undefined && (obj.avatar = message.avatar);
     return obj;
   },
 
@@ -19070,6 +19094,7 @@ export const WebhookCreateRequest = {
     const message = createBaseWebhookCreateRequest();
     message.webhook_name = object.webhook_name ?? "";
     message.channel_id = object.channel_id ?? "";
+    message.avatar = object.avatar ?? "";
     return message;
   },
 };
@@ -19126,7 +19151,7 @@ export const WebhookListRequestById = {
 };
 
 function createBaseWebhookUpdateRequestById(): WebhookUpdateRequestById {
-  return { id: "", webhook_name: "" };
+  return { id: "", webhook_name: "", channel_id: "", avatar: "" };
 }
 
 export const WebhookUpdateRequestById = {
@@ -19136,6 +19161,12 @@ export const WebhookUpdateRequestById = {
     }
     if (message.webhook_name !== "") {
       writer.uint32(18).string(message.webhook_name);
+    }
+    if (message.channel_id !== "") {
+      writer.uint32(26).string(message.channel_id);
+    }
+    if (message.avatar !== "") {
+      writer.uint32(34).string(message.avatar);
     }
     return writer;
   },
@@ -19153,6 +19184,12 @@ export const WebhookUpdateRequestById = {
         case 2:
           message.webhook_name = reader.string();
           break;
+        case 3:
+          message.channel_id = reader.string();
+          break;
+        case 4:
+          message.avatar = reader.string();
+          break;
         default:
           reader.skipType(tag & 7);
           break;
@@ -19165,6 +19202,8 @@ export const WebhookUpdateRequestById = {
     return {
       id: isSet(object.id) ? String(object.id) : "",
       webhook_name: isSet(object.webhook_name) ? String(object.webhook_name) : "",
+      channel_id: isSet(object.channel_id) ? String(object.channel_id) : "",
+      avatar: isSet(object.avatar) ? String(object.avatar) : "",
     };
   },
 
@@ -19172,6 +19211,8 @@ export const WebhookUpdateRequestById = {
     const obj: any = {};
     message.id !== undefined && (obj.id = message.id);
     message.webhook_name !== undefined && (obj.webhook_name = message.webhook_name);
+    message.channel_id !== undefined && (obj.channel_id = message.channel_id);
+    message.avatar !== undefined && (obj.avatar = message.avatar);
     return obj;
   },
 
@@ -19183,6 +19224,8 @@ export const WebhookUpdateRequestById = {
     const message = createBaseWebhookUpdateRequestById();
     message.id = object.id ?? "";
     message.webhook_name = object.webhook_name ?? "";
+    message.channel_id = object.channel_id ?? "";
+    message.avatar = object.avatar ?? "";
     return message;
   },
 };
@@ -19345,7 +19388,7 @@ export const WebhookListResponse = {
 };
 
 function createBaseWebhookGenerateResponse(): WebhookGenerateResponse {
-  return { url: "", hook_name: "", channel_id: "" };
+  return { url: "", hook_name: "", channel_id: "", avatar: "" };
 }
 
 export const WebhookGenerateResponse = {
@@ -19358,6 +19401,9 @@ export const WebhookGenerateResponse = {
     }
     if (message.channel_id !== "") {
       writer.uint32(26).string(message.channel_id);
+    }
+    if (message.avatar !== "") {
+      writer.uint32(34).string(message.avatar);
     }
     return writer;
   },
@@ -19378,6 +19424,9 @@ export const WebhookGenerateResponse = {
         case 3:
           message.channel_id = reader.string();
           break;
+        case 4:
+          message.avatar = reader.string();
+          break;
         default:
           reader.skipType(tag & 7);
           break;
@@ -19391,6 +19440,7 @@ export const WebhookGenerateResponse = {
       url: isSet(object.url) ? String(object.url) : "",
       hook_name: isSet(object.hook_name) ? String(object.hook_name) : "",
       channel_id: isSet(object.channel_id) ? String(object.channel_id) : "",
+      avatar: isSet(object.avatar) ? String(object.avatar) : "",
     };
   },
 
@@ -19399,6 +19449,7 @@ export const WebhookGenerateResponse = {
     message.url !== undefined && (obj.url = message.url);
     message.hook_name !== undefined && (obj.hook_name = message.hook_name);
     message.channel_id !== undefined && (obj.channel_id = message.channel_id);
+    message.avatar !== undefined && (obj.avatar = message.avatar);
     return obj;
   },
 
@@ -19411,6 +19462,7 @@ export const WebhookGenerateResponse = {
     message.url = object.url ?? "";
     message.hook_name = object.hook_name ?? "";
     message.channel_id = object.channel_id ?? "";
+    message.avatar = object.avatar ?? "";
     return message;
   },
 };

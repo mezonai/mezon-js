@@ -144,6 +144,10 @@ export interface MezonUpdateUserProfileByClanBody {
 /**  */
 export interface MezonUpdateWebhookByIdBody {
   //
+  avatar?: string;
+  //
+  channel_id?: string;
+  //
   webhook_name?: string;
 }
 
@@ -1521,6 +1525,8 @@ export interface ApiWebhook {
   //
   active?: number;
   //
+  avatar?: string;
+  //
   channel_id?: string;
   //
   create_time?: string;
@@ -1539,6 +1545,8 @@ export interface ApiWebhook {
 /**  */
 export interface ApiWebhookCreateRequest {
   //
+  avatar?: string;
+  //
   channel_id?: string;
   //
   webhook_name?: string;
@@ -1546,6 +1554,8 @@ export interface ApiWebhookCreateRequest {
 
 /**  */
 export interface ApiWebhookGenerateResponse {
+  //
+  avatar?: string;
   //
   channel_id?: string;
   //
