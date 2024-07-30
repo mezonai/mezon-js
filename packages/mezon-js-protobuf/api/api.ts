@@ -2673,6 +2673,11 @@ export interface ClanStickerDeleteRequest {
   id: number;
 }
 
+export interface ChangeChannelCategoryRequest {
+  channel_id: string;
+  new_category_id: string;
+}
+
 function createBaseAccount(): Account {
   return {
     user: undefined,
@@ -19999,6 +20004,68 @@ export const ClanStickerDeleteRequest = {
   fromPartial<I extends Exact<DeepPartial<ClanStickerDeleteRequest>, I>>(object: I): ClanStickerDeleteRequest {
     const message = createBaseClanStickerDeleteRequest();
     message.id = object.id ?? 0;
+    return message;
+  },
+};
+
+function createBaseChangeChannelCategoryRequest(): ChangeChannelCategoryRequest {
+  return { channel_id: "", new_category_id: "" };
+}
+
+export const ChangeChannelCategoryRequest = {
+  encode(message: ChangeChannelCategoryRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.channel_id !== "") {
+      writer.uint32(10).string(message.channel_id);
+    }
+    if (message.new_category_id !== "") {
+      writer.uint32(18).string(message.new_category_id);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): ChangeChannelCategoryRequest {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseChangeChannelCategoryRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.channel_id = reader.string();
+          break;
+        case 2:
+          message.new_category_id = reader.string();
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): ChangeChannelCategoryRequest {
+    return {
+      channel_id: isSet(object.channel_id) ? String(object.channel_id) : "",
+      new_category_id: isSet(object.new_category_id) ? String(object.new_category_id) : "",
+    };
+  },
+
+  toJSON(message: ChangeChannelCategoryRequest): unknown {
+    const obj: any = {};
+    message.channel_id !== undefined && (obj.channel_id = message.channel_id);
+    message.new_category_id !== undefined && (obj.new_category_id = message.new_category_id);
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<ChangeChannelCategoryRequest>, I>>(base?: I): ChangeChannelCategoryRequest {
+    return ChangeChannelCategoryRequest.fromPartial(base ?? {});
+  },
+
+  fromPartial<I extends Exact<DeepPartial<ChangeChannelCategoryRequest>, I>>(object: I): ChangeChannelCategoryRequest {
+    const message = createBaseChangeChannelCategoryRequest();
+    message.channel_id = object.channel_id ?? "";
+    message.new_category_id = object.new_category_id ?? "";
     return message;
   },
 };
