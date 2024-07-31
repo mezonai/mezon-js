@@ -6559,7 +6559,7 @@ var AddUsers = {
   }
 };
 function createBaseUserChannelAdded() {
-  return { channel_id: "", users: [], status: "", clan_id: "" };
+  return { channel_id: "", users: [], status: "", clan_id: "", channel_type: 0 };
 }
 var UserChannelAdded = {
   encode(message, writer = import_minimal4.default.Writer.create()) {
@@ -6574,6 +6574,9 @@ var UserChannelAdded = {
     }
     if (message.clan_id !== "") {
       writer.uint32(34).string(message.clan_id);
+    }
+    if (message.channel_type !== 0) {
+      writer.uint32(40).int32(message.channel_type);
     }
     return writer;
   },
@@ -6596,6 +6599,9 @@ var UserChannelAdded = {
         case 4:
           message.clan_id = reader.string();
           break;
+        case 5:
+          message.channel_type = reader.int32();
+          break;
         default:
           reader.skipType(tag & 7);
           break;
@@ -6608,7 +6614,8 @@ var UserChannelAdded = {
       channel_id: isSet4(object.channel_id) ? String(object.channel_id) : "",
       users: Array.isArray(object == null ? void 0 : object.users) ? object.users.map((e) => AddUsers.fromJSON(e)) : [],
       status: isSet4(object.status) ? String(object.status) : "",
-      clan_id: isSet4(object.clan_id) ? String(object.clan_id) : ""
+      clan_id: isSet4(object.clan_id) ? String(object.clan_id) : "",
+      channel_type: isSet4(object.channel_type) ? Number(object.channel_type) : 0
     };
   },
   toJSON(message) {
@@ -6621,18 +6628,20 @@ var UserChannelAdded = {
     }
     message.status !== void 0 && (obj.status = message.status);
     message.clan_id !== void 0 && (obj.clan_id = message.clan_id);
+    message.channel_type !== void 0 && (obj.channel_type = Math.round(message.channel_type));
     return obj;
   },
   create(base) {
     return UserChannelAdded.fromPartial(base != null ? base : {});
   },
   fromPartial(object) {
-    var _a, _b, _c, _d;
+    var _a, _b, _c, _d, _e;
     const message = createBaseUserChannelAdded();
     message.channel_id = (_a = object.channel_id) != null ? _a : "";
     message.users = ((_b = object.users) == null ? void 0 : _b.map((e) => AddUsers.fromPartial(e))) || [];
     message.status = (_c = object.status) != null ? _c : "";
     message.clan_id = (_d = object.clan_id) != null ? _d : "";
+    message.channel_type = (_e = object.channel_type) != null ? _e : 0;
     return message;
   }
 };

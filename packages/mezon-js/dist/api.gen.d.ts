@@ -13,6 +13,9 @@ export interface ClanUserListClanUser {
     user?: ApiUser;
 }
 /**  */
+export interface MezonChangeChannelCategoryBody {
+    channel_id?: string;
+}
 /** Update fields in a given channel. */
 export interface MezonUpdateChannelDescBody {
     category_id?: string;
@@ -35,6 +38,12 @@ export interface MezonUpdateClanDescProfileBody {
 }
 /**  */
 export interface MezonUpdateClanEmojiByIdBody {
+    category?: string;
+    shortname?: string;
+    source?: string;
+}
+/**  */
+export interface MezonUpdateClanStickerByIdBody {
     category?: string;
     shortname?: string;
     source?: string;
@@ -73,6 +82,8 @@ export interface MezonUpdateUserProfileByClanBody {
 }
 /**  */
 export interface MezonUpdateWebhookByIdBody {
+    avatar?: string;
+    channel_id?: string;
     webhook_name?: string;
 }
 /** A single user-role pair. */
@@ -317,6 +328,27 @@ export interface ApiClanProfile {
     clan_id?: string;
     nick_name?: string;
     user_id?: string;
+}
+/**  */
+export interface ApiClanSticker {
+    category?: string;
+    clan_id?: string;
+    create_time?: string;
+    creator_id?: string;
+    id?: string;
+    shortname?: string;
+    source?: string;
+}
+/**  */
+export interface ApiClanStickerAddRequest {
+    category?: string;
+    clan_id?: string;
+    shortname?: string;
+    source?: string;
+}
+/**  */
+export interface ApiClanStickerListByClanIdResponse {
+    stickers?: Array<ApiClanSticker>;
 }
 /** A list of users belonging to a clan, along with their role. */
 export interface ApiClanUserList {
@@ -850,6 +882,7 @@ export interface ApiVoiceChannelUserList {
 /**  */
 export interface ApiWebhook {
     active?: number;
+    avatar?: string;
     channel_id?: string;
     create_time?: string;
     creator_id?: string;
@@ -860,11 +893,13 @@ export interface ApiWebhook {
 }
 /**  */
 export interface ApiWebhookCreateRequest {
+    avatar?: string;
     channel_id?: string;
     webhook_name?: string;
 }
 /**  */
 export interface ApiWebhookGenerateResponse {
+    avatar?: string;
     channel_id?: string;
     hook_name?: string;
     url?: string;
@@ -1112,6 +1147,8 @@ export declare class MezonApi {
     createPinMessage(bearerToken: string, body: ApiPinMessageRequest, options?: any): Promise<any>;
     /**  */
     addRolesChannelDesc(bearerToken: string, body: ApiAddRoleChannelDescRequest, options?: any): Promise<any>;
+    /** update the category of a channel */
+    changeChannelCategory(bearerToken: string, newCategoryId: string, body: MezonChangeChannelCategoryBody, options?: any): Promise<any>;
     /** Update a role when Delete a role by ID. */
     deleteRoleChannelDesc(bearerToken: string, body: ApiDeleteRoleRequest, options?: any): Promise<any>;
     /** List user roles */
@@ -1134,6 +1171,14 @@ export declare class MezonApi {
     rpcFunc(bearerToken: string, basicAuthUsername: string, basicAuthPassword: string, id: string, payload: string, httpKey?: string, options?: any): Promise<ApiRpc>;
     /** Log out a session, invalidate a refresh token, or log out all sessions/refresh tokens for a user. */
     sessionLogout(bearerToken: string, body: ApiSessionLogoutRequest, options?: any): Promise<any>;
+    /** Add a new sticker */
+    addClanSticker(bearerToken: string, body: ApiClanStickerAddRequest, options?: any): Promise<any>;
+    /** List stickers by clan ID */
+    listClanStickersByClanId(bearerToken: string, clanId: string, options?: any): Promise<ApiClanStickerListByClanIdResponse>;
+    /** Delete a sticker by ID */
+    deleteClanStickerById(bearerToken: string, id: string, options?: any): Promise<any>;
+    /** Update a sticker by ID */
+    updateClanStickerById(bearerToken: string, id: string, body: MezonUpdateClanStickerByIdBody, options?: any): Promise<any>;
     /** Get storage objects. */
     readStorageObjects(bearerToken: string, body: ApiReadStorageObjectsRequest, options?: any): Promise<ApiStorageObjects>;
     /** Write objects into the storage engine. */

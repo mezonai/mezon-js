@@ -1164,6 +1164,8 @@ export class Client {
           },
           role_id: gu!.role_id,
           thread_id: gu.thread_id,
+          clan_avatar: gu.clan_avatar,
+          clan_nick: gu.clan_nick,
           id: gu.id,
         })
       });

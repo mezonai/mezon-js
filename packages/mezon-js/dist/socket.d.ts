@@ -74,10 +74,23 @@ interface ChannelLeave {
 /** UserChannelAddedEvent */
 export interface UserChannelAddedEvent {
     channel_id: string;
-    user_id: string;
-    username: string;
-    avatar: string;
+    users: AddUsers[];
     status: string;
+    clan_id: string;
+    channel_type: number;
+}
+export interface AddUsers {
+    user_id: string;
+    avatar: string;
+    username: string;
+}
+export interface UserChannelRemovedEvent {
+    channel_id: string;
+    user_ids: string[];
+}
+export interface UserClanRemovedEvent {
+    clan_id: string;
+    user_ids: string[];
 }
 /** Last seen message by user */
 export interface LastPinMessageEvent {
@@ -474,6 +487,10 @@ export interface Socket {
     onpinmessage: (pin: LastPinMessageEvent) => void;
     /** Receive added user event */
     onuserchanneladded: (user: UserChannelAddedEvent) => void;
+    /** Receive channel removed user event */
+    onuserchannelremoved: (user: UserChannelRemovedEvent) => void;
+    /** Receive clan removed user event */
+    onuserclanremoved: (user: UserClanRemovedEvent) => void;
     onvoicestarted: (voice: VoiceStartedEvent) => void;
     onvoiceended: (voice: VoiceEndedEvent) => void;
     onvoicejoined: (voiceParticipant: VoiceJoinedEvent) => void;
@@ -519,6 +536,8 @@ export declare class DefaultSocket implements Socket {
     onchannelmessage(channelMessage: ChannelMessageEvent): void;
     onchannelpresence(channelPresence: ChannelPresenceEvent): void;
     onuserchanneladded(user: UserChannelAddedEvent): void;
+    onuserchannelremoved(user: UserChannelRemovedEvent): void;
+    onuserclanremoved(user: UserClanRemovedEvent): void;
     onnotification(notification: Notification): void;
     onstatuspresence(statusPresence: StatusPresenceEvent): void;
     onpinmessage(pin: LastPinMessageEvent): void;
