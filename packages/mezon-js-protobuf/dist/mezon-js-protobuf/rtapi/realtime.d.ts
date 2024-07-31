@@ -596,6 +596,8 @@ export interface UserChannelAdded {
     status: string;
     /** the clan id */
     clan_id: string;
+    /** the channel type */
+    channel_type: number;
 }
 /**  */
 export interface UserChannelRemoved {
@@ -976,6 +978,7 @@ export declare const Envelope: {
             }[] | undefined;
             status?: string | undefined;
             clan_id?: string | undefined;
+            channel_type?: number | undefined;
         } | undefined;
         user_channel_removed_event?: {
             channel_id?: string | undefined;
@@ -1889,6 +1892,7 @@ export declare const Envelope: {
             }[] | undefined;
             status?: string | undefined;
             clan_id?: string | undefined;
+            channel_type?: number | undefined;
         } & {
             channel_id?: string | undefined;
             users?: ({
@@ -1910,6 +1914,7 @@ export declare const Envelope: {
             }[]>]: never; }) | undefined;
             status?: string | undefined;
             clan_id?: string | undefined;
+            channel_type?: number | undefined;
         } & { [K_68 in Exclude<keyof I["user_channel_added_event"], keyof UserChannelAdded>]: never; }) | undefined;
         user_channel_removed_event?: ({
             channel_id?: string | undefined;
@@ -2267,6 +2272,7 @@ export declare const Envelope: {
             }[] | undefined;
             status?: string | undefined;
             clan_id?: string | undefined;
+            channel_type?: number | undefined;
         } | undefined;
         user_channel_removed_event?: {
             channel_id?: string | undefined;
@@ -3180,6 +3186,7 @@ export declare const Envelope: {
             }[] | undefined;
             status?: string | undefined;
             clan_id?: string | undefined;
+            channel_type?: number | undefined;
         } & {
             channel_id?: string | undefined;
             users?: ({
@@ -3201,6 +3208,7 @@ export declare const Envelope: {
             }[]>]: never; }) | undefined;
             status?: string | undefined;
             clan_id?: string | undefined;
+            channel_type?: number | undefined;
         } & { [K_142 in Exclude<keyof I_1["user_channel_added_event"], keyof UserChannelAdded>]: never; }) | undefined;
         user_channel_removed_event?: ({
             channel_id?: string | undefined;
@@ -5402,6 +5410,7 @@ export declare const UserChannelAdded: {
         }[] | undefined;
         status?: string | undefined;
         clan_id?: string | undefined;
+        channel_type?: number | undefined;
     } & {
         channel_id?: string | undefined;
         users?: ({
@@ -5423,6 +5432,7 @@ export declare const UserChannelAdded: {
         }[]>]: never; }) | undefined;
         status?: string | undefined;
         clan_id?: string | undefined;
+        channel_type?: number | undefined;
     } & { [K_2 in Exclude<keyof I, keyof UserChannelAdded>]: never; }>(base?: I | undefined): UserChannelAdded;
     fromPartial<I_1 extends {
         channel_id?: string | undefined;
@@ -5433,6 +5443,7 @@ export declare const UserChannelAdded: {
         }[] | undefined;
         status?: string | undefined;
         clan_id?: string | undefined;
+        channel_type?: number | undefined;
     } & {
         channel_id?: string | undefined;
         users?: ({
@@ -5454,6 +5465,7 @@ export declare const UserChannelAdded: {
         }[]>]: never; }) | undefined;
         status?: string | undefined;
         clan_id?: string | undefined;
+        channel_type?: number | undefined;
     } & { [K_5 in Exclude<keyof I_1, keyof UserChannelAdded>]: never; }>(object: I_1): UserChannelAdded;
 };
 export declare const UserChannelRemoved: {

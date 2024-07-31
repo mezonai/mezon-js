@@ -3556,6 +3556,38 @@ var MezonApi = class {
       )
     ]);
   }
+  /** update the category of a channel */
+  changeChannelCategory(bearerToken, newCategoryId, body, options = {}) {
+    if (newCategoryId === null || newCategoryId === void 0) {
+      throw new Error("'newCategoryId' is a required parameter but is null or undefined.");
+    }
+    if (body === null || body === void 0) {
+      throw new Error("'body' is a required parameter but is null or undefined.");
+    }
+    const urlPath = "/v2/rolechannel/category/{newCategoryId}".replace("{newCategoryId}", encodeURIComponent(String(newCategoryId)));
+    const queryParams = /* @__PURE__ */ new Map();
+    let bodyJson = "";
+    bodyJson = JSON.stringify(body || {});
+    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
+    const fetchOptions = buildFetchOptions("PATCH", options, bodyJson);
+    if (bearerToken) {
+      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+    }
+    return Promise.race([
+      fetch(fullUrl, fetchOptions).then((response) => {
+        if (response.status == 204) {
+          return response;
+        } else if (response.status >= 200 && response.status < 300) {
+          return response.json();
+        } else {
+          throw response;
+        }
+      }),
+      new Promise(
+        (_, reject) => setTimeout(reject, this.timeoutMs, "Request timed out.")
+      )
+    ]);
+  }
   /** Update a role when Delete a role by ID. */
   deleteRoleChannelDesc(bearerToken, body, options = {}) {
     if (body === null || body === void 0) {
@@ -3874,6 +3906,123 @@ var MezonApi = class {
     bodyJson = JSON.stringify(body || {});
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("POST", options, bodyJson);
+    if (bearerToken) {
+      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+    }
+    return Promise.race([
+      fetch(fullUrl, fetchOptions).then((response) => {
+        if (response.status == 204) {
+          return response;
+        } else if (response.status >= 200 && response.status < 300) {
+          return response.json();
+        } else {
+          throw response;
+        }
+      }),
+      new Promise(
+        (_, reject) => setTimeout(reject, this.timeoutMs, "Request timed out.")
+      )
+    ]);
+  }
+  /** Add a new sticker */
+  addClanSticker(bearerToken, body, options = {}) {
+    if (body === null || body === void 0) {
+      throw new Error("'body' is a required parameter but is null or undefined.");
+    }
+    const urlPath = "/v2/sticker";
+    const queryParams = /* @__PURE__ */ new Map();
+    let bodyJson = "";
+    bodyJson = JSON.stringify(body || {});
+    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
+    const fetchOptions = buildFetchOptions("POST", options, bodyJson);
+    if (bearerToken) {
+      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+    }
+    return Promise.race([
+      fetch(fullUrl, fetchOptions).then((response) => {
+        if (response.status == 204) {
+          return response;
+        } else if (response.status >= 200 && response.status < 300) {
+          return response.json();
+        } else {
+          throw response;
+        }
+      }),
+      new Promise(
+        (_, reject) => setTimeout(reject, this.timeoutMs, "Request timed out.")
+      )
+    ]);
+  }
+  /** List stickers by clan ID */
+  listClanStickersByClanId(bearerToken, clanId, options = {}) {
+    if (clanId === null || clanId === void 0) {
+      throw new Error("'clanId' is a required parameter but is null or undefined.");
+    }
+    const urlPath = "/v2/sticker/{clanId}".replace("{clanId}", encodeURIComponent(String(clanId)));
+    const queryParams = /* @__PURE__ */ new Map();
+    let bodyJson = "";
+    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
+    const fetchOptions = buildFetchOptions("GET", options, bodyJson);
+    if (bearerToken) {
+      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+    }
+    return Promise.race([
+      fetch(fullUrl, fetchOptions).then((response) => {
+        if (response.status == 204) {
+          return response;
+        } else if (response.status >= 200 && response.status < 300) {
+          return response.json();
+        } else {
+          throw response;
+        }
+      }),
+      new Promise(
+        (_, reject) => setTimeout(reject, this.timeoutMs, "Request timed out.")
+      )
+    ]);
+  }
+  /** Delete a sticker by ID */
+  deleteClanStickerById(bearerToken, id, options = {}) {
+    if (id === null || id === void 0) {
+      throw new Error("'id' is a required parameter but is null or undefined.");
+    }
+    const urlPath = "/v2/sticker/{id}".replace("{id}", encodeURIComponent(String(id)));
+    const queryParams = /* @__PURE__ */ new Map();
+    let bodyJson = "";
+    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
+    const fetchOptions = buildFetchOptions("DELETE", options, bodyJson);
+    if (bearerToken) {
+      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+    }
+    return Promise.race([
+      fetch(fullUrl, fetchOptions).then((response) => {
+        if (response.status == 204) {
+          return response;
+        } else if (response.status >= 200 && response.status < 300) {
+          return response.json();
+        } else {
+          throw response;
+        }
+      }),
+      new Promise(
+        (_, reject) => setTimeout(reject, this.timeoutMs, "Request timed out.")
+      )
+    ]);
+  }
+  /** Update a sticker by ID */
+  updateClanStickerById(bearerToken, id, body, options = {}) {
+    if (id === null || id === void 0) {
+      throw new Error("'id' is a required parameter but is null or undefined.");
+    }
+    if (body === null || body === void 0) {
+      throw new Error("'body' is a required parameter but is null or undefined.");
+    }
+    const urlPath = "/v2/sticker/{id}".replace("{id}", encodeURIComponent(String(id)));
+    const queryParams = /* @__PURE__ */ new Map();
+    let bodyJson = "";
+    bodyJson = JSON.stringify(body || {});
+    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
+    const fetchOptions = buildFetchOptions("PATCH", options, bodyJson);
     if (bearerToken) {
       fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
     }
@@ -4639,6 +4788,10 @@ var _DefaultSocket = class _DefaultSocket {
           this.oncustomstatus(message.custom_status_event);
         } else if (message.user_channel_added_event) {
           this.onuserchanneladded(message.user_channel_added_event);
+        } else if (message.user_channel_removed_event) {
+          this.onuserchannelremoved(message.user_channel_removed_event);
+        } else if (message.user_clan_removed_event) {
+          this.onuserclanremoved(message.user_clan_removed_event);
         } else {
           if (this.verbose && window && window.console) {
             console.log("Unrecognized message received: %o", message);
@@ -4722,6 +4875,16 @@ var _DefaultSocket = class _DefaultSocket {
     }
   }
   onuserchanneladded(user) {
+    if (this.verbose && window && window.console) {
+      console.log(user);
+    }
+  }
+  onuserchannelremoved(user) {
+    if (this.verbose && window && window.console) {
+      console.log(user);
+    }
+  }
+  onuserclanremoved(user) {
     if (this.verbose && window && window.console) {
       console.log(user);
     }
@@ -5588,6 +5751,8 @@ var Client = class {
             },
             role_id: gu.role_id,
             thread_id: gu.thread_id,
+            clan_avatar: gu.clan_avatar,
+            clan_nick: gu.clan_nick,
             id: gu.id
           });
         });
@@ -6675,6 +6840,61 @@ var Client = class {
       }
       return this.apiClient.checkDuplicateClanName(session.token, clan_name).then((response) => {
         return Promise.resolve(response);
+      });
+    });
+  }
+  //**Add a new sticker */
+  addClanSticker(session, request) {
+    return __async(this, null, function* () {
+      if (this.autoRefreshSession && session.refresh_token && session.isexpired((Date.now() + this.expiredTimespanMs) / 1e3)) {
+        yield this.sessionRefresh(session);
+      }
+      return this.apiClient.addClanSticker(session.token, request).then((response) => {
+        return response !== void 0;
+      });
+    });
+  }
+  //**List stickers by clan ID */
+  listClanStickersByClanId(session, id) {
+    return __async(this, null, function* () {
+      if (this.autoRefreshSession && session.refresh_token && session.isexpired((Date.now() + this.expiredTimespanMs) / 1e3)) {
+        yield this.sessionRefresh(session);
+      }
+      return this.apiClient.listClanStickersByClanId(session.token, id).then((response) => {
+        return Promise.resolve(response);
+      });
+    });
+  }
+  //**Delete a sticker by ID*/
+  deleteClanStickerById(session, id) {
+    return __async(this, null, function* () {
+      if (this.autoRefreshSession && session.refresh_token && session.isexpired((Date.now() + this.expiredTimespanMs) / 1e3)) {
+        yield this.sessionRefresh(session);
+      }
+      return this.apiClient.deleteClanStickerById(session.token, id).then((response) => {
+        return response !== void 0;
+      });
+    });
+  }
+  //**Update a sticker by ID*/
+  updateClanStickerById(session, id, request) {
+    return __async(this, null, function* () {
+      if (this.autoRefreshSession && session.refresh_token && session.isexpired((Date.now() + this.expiredTimespanMs) / 1e3)) {
+        yield this.sessionRefresh(session);
+      }
+      return this.apiClient.updateClanStickerById(session.token, id, request).then((response) => {
+        return response !== void 0;
+      });
+    });
+  }
+  //** update the category of a channel */
+  changeChannelCategory(session, id, request) {
+    return __async(this, null, function* () {
+      if (this.autoRefreshSession && session.refresh_token && session.isexpired((Date.now() + this.expiredTimespanMs) / 1e3)) {
+        yield this.sessionRefresh(session);
+      }
+      return this.apiClient.changeChannelCategory(session.token, id, request).then((response) => {
+        return response !== void 0;
       });
     });
   }
