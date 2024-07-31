@@ -2280,35 +2280,46 @@ var Timestamp = {
     return writer;
   },
   decode(input, length) {
-    const reader = input instanceof import_minimal.default.Reader ? input : new import_minimal.default.Reader(input);
+    const reader = input instanceof import_minimal.default.Reader ? input : import_minimal.default.Reader.create(input);
     let end = length === void 0 ? reader.len : reader.pos + length;
     const message = createBaseTimestamp();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag !== 8) {
+            break;
+          }
           message.seconds = longToNumber(reader.int64());
-          break;
+          continue;
         case 2:
+          if (tag !== 16) {
+            break;
+          }
           message.nanos = reader.int32();
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
   fromJSON(object) {
     return {
-      seconds: isSet(object.seconds) ? Number(object.seconds) : 0,
-      nanos: isSet(object.nanos) ? Number(object.nanos) : 0
+      seconds: isSet(object.seconds) ? globalThis.Number(object.seconds) : 0,
+      nanos: isSet(object.nanos) ? globalThis.Number(object.nanos) : 0
     };
   },
   toJSON(message) {
     const obj = {};
-    message.seconds !== void 0 && (obj.seconds = Math.round(message.seconds));
-    message.nanos !== void 0 && (obj.nanos = Math.round(message.nanos));
+    if (message.seconds !== 0) {
+      obj.seconds = Math.round(message.seconds);
+    }
+    if (message.nanos !== 0) {
+      obj.nanos = Math.round(message.nanos);
+    }
     return obj;
   },
   create(base) {
@@ -2322,24 +2333,12 @@ var Timestamp = {
     return message;
   }
 };
-var tsProtoGlobalThis = (() => {
-  if (typeof globalThis !== "undefined") {
-    return globalThis;
-  }
-  if (typeof self !== "undefined") {
-    return self;
-  }
-  if (typeof window !== "undefined") {
-    return window;
-  }
-  if (typeof global !== "undefined") {
-    return global;
-  }
-  throw "Unable to locate global object";
-})();
 function longToNumber(long) {
-  if (long.gt(Number.MAX_SAFE_INTEGER)) {
-    throw new tsProtoGlobalThis.Error("Value is larger than Number.MAX_SAFE_INTEGER");
+  if (long.gt(globalThis.Number.MAX_SAFE_INTEGER)) {
+    throw new globalThis.Error("Value is larger than Number.MAX_SAFE_INTEGER");
+  }
+  if (long.lt(globalThis.Number.MIN_SAFE_INTEGER)) {
+    throw new globalThis.Error("Value is smaller than Number.MIN_SAFE_INTEGER");
   }
   return long.toNumber();
 }
@@ -2365,28 +2364,34 @@ var Int32Value = {
     return writer;
   },
   decode(input, length) {
-    const reader = input instanceof import_minimal2.default.Reader ? input : new import_minimal2.default.Reader(input);
+    const reader = input instanceof import_minimal2.default.Reader ? input : import_minimal2.default.Reader.create(input);
     let end = length === void 0 ? reader.len : reader.pos + length;
     const message = createBaseInt32Value();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag !== 8) {
+            break;
+          }
           message.value = reader.int32();
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
   fromJSON(object) {
-    return { value: isSet2(object.value) ? Number(object.value) : 0 };
+    return { value: isSet2(object.value) ? globalThis.Number(object.value) : 0 };
   },
   toJSON(message) {
     const obj = {};
-    message.value !== void 0 && (obj.value = Math.round(message.value));
+    if (message.value !== 0) {
+      obj.value = Math.round(message.value);
+    }
     return obj;
   },
   create(base) {
@@ -2404,34 +2409,40 @@ function createBaseBoolValue() {
 }
 var BoolValue = {
   encode(message, writer = import_minimal2.default.Writer.create()) {
-    if (message.value === true) {
+    if (message.value !== false) {
       writer.uint32(8).bool(message.value);
     }
     return writer;
   },
   decode(input, length) {
-    const reader = input instanceof import_minimal2.default.Reader ? input : new import_minimal2.default.Reader(input);
+    const reader = input instanceof import_minimal2.default.Reader ? input : import_minimal2.default.Reader.create(input);
     let end = length === void 0 ? reader.len : reader.pos + length;
     const message = createBaseBoolValue();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag !== 8) {
+            break;
+          }
           message.value = reader.bool();
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
   fromJSON(object) {
-    return { value: isSet2(object.value) ? Boolean(object.value) : false };
+    return { value: isSet2(object.value) ? globalThis.Boolean(object.value) : false };
   },
   toJSON(message) {
     const obj = {};
-    message.value !== void 0 && (obj.value = message.value);
+    if (message.value !== false) {
+      obj.value = message.value;
+    }
     return obj;
   },
   create(base) {
@@ -2455,28 +2466,34 @@ var StringValue = {
     return writer;
   },
   decode(input, length) {
-    const reader = input instanceof import_minimal2.default.Reader ? input : new import_minimal2.default.Reader(input);
+    const reader = input instanceof import_minimal2.default.Reader ? input : import_minimal2.default.Reader.create(input);
     let end = length === void 0 ? reader.len : reader.pos + length;
     const message = createBaseStringValue();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag !== 10) {
+            break;
+          }
           message.value = reader.string();
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
   fromJSON(object) {
-    return { value: isSet2(object.value) ? String(object.value) : "" };
+    return { value: isSet2(object.value) ? globalThis.String(object.value) : "" };
   },
   toJSON(message) {
     const obj = {};
-    message.value !== void 0 && (obj.value = message.value);
+    if (message.value !== "") {
+      obj.value = message.value;
+    }
     return obj;
   },
   create(base) {
@@ -2489,21 +2506,6 @@ var StringValue = {
     return message;
   }
 };
-var tsProtoGlobalThis2 = (() => {
-  if (typeof globalThis !== "undefined") {
-    return globalThis;
-  }
-  if (typeof self !== "undefined") {
-    return self;
-  }
-  if (typeof window !== "undefined") {
-    return window;
-  }
-  if (typeof global !== "undefined") {
-    return global;
-  }
-  throw "Unable to locate global object";
-})();
 if (import_minimal2.default.util.Long !== import_long2.default) {
   import_minimal2.default.util.Long = import_long2.default;
   import_minimal2.default.configure();
@@ -2606,130 +2608,236 @@ var ChannelMessage = {
     return writer;
   },
   decode(input, length) {
-    const reader = input instanceof import_minimal3.default.Reader ? input : new import_minimal3.default.Reader(input);
+    const reader = input instanceof import_minimal3.default.Reader ? input : import_minimal3.default.Reader.create(input);
     let end = length === void 0 ? reader.len : reader.pos + length;
     const message = createBaseChannelMessage();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag !== 10) {
+            break;
+          }
           message.clan_id = reader.string();
-          break;
+          continue;
         case 2:
+          if (tag !== 18) {
+            break;
+          }
           message.channel_id = reader.string();
-          break;
+          continue;
         case 3:
+          if (tag !== 26) {
+            break;
+          }
           message.message_id = reader.string();
-          break;
+          continue;
         case 4:
+          if (tag !== 34) {
+            break;
+          }
           message.code = Int32Value.decode(reader, reader.uint32()).value;
-          break;
+          continue;
         case 5:
+          if (tag !== 42) {
+            break;
+          }
           message.sender_id = reader.string();
-          break;
+          continue;
         case 6:
+          if (tag !== 50) {
+            break;
+          }
           message.username = reader.string();
-          break;
+          continue;
         case 7:
+          if (tag !== 58) {
+            break;
+          }
           message.avatar = reader.string();
-          break;
+          continue;
         case 8:
+          if (tag !== 66) {
+            break;
+          }
           message.content = reader.string();
-          break;
+          continue;
         case 9:
+          if (tag !== 74) {
+            break;
+          }
           message.create_time = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
-          break;
+          continue;
         case 10:
+          if (tag !== 82) {
+            break;
+          }
           message.update_time = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
-          break;
+          continue;
         case 11:
+          if (tag !== 90) {
+            break;
+          }
           message.channel_label = reader.string();
-          break;
+          continue;
         case 12:
+          if (tag !== 98) {
+            break;
+          }
           message.clan_logo = reader.string();
-          break;
+          continue;
         case 13:
+          if (tag !== 106) {
+            break;
+          }
           message.category_name = reader.string();
-          break;
+          continue;
         case 14:
+          if (tag !== 114) {
+            break;
+          }
           message.display_name = reader.string();
-          break;
+          continue;
         case 15:
+          if (tag !== 122) {
+            break;
+          }
           message.clan_nick = reader.string();
-          break;
+          continue;
         case 16:
+          if (tag !== 130) {
+            break;
+          }
           message.clan_avatar = reader.string();
-          break;
+          continue;
         case 17:
+          if (tag !== 138) {
+            break;
+          }
           message.reactions = reader.string();
-          break;
+          continue;
         case 18:
+          if (tag !== 146) {
+            break;
+          }
           message.mentions = reader.string();
-          break;
+          continue;
         case 19:
+          if (tag !== 154) {
+            break;
+          }
           message.attachments = reader.string();
-          break;
+          continue;
         case 20:
+          if (tag !== 162) {
+            break;
+          }
           message.references = reader.string();
-          break;
+          continue;
         case 21:
+          if (tag !== 170) {
+            break;
+          }
           message.referenced_message = reader.string();
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
   fromJSON(object) {
     return {
-      clan_id: isSet3(object.clan_id) ? String(object.clan_id) : "",
-      channel_id: isSet3(object.channel_id) ? String(object.channel_id) : "",
-      message_id: isSet3(object.message_id) ? String(object.message_id) : "",
+      clan_id: isSet3(object.clan_id) ? globalThis.String(object.clan_id) : "",
+      channel_id: isSet3(object.channel_id) ? globalThis.String(object.channel_id) : "",
+      message_id: isSet3(object.message_id) ? globalThis.String(object.message_id) : "",
       code: isSet3(object.code) ? Number(object.code) : void 0,
-      sender_id: isSet3(object.sender_id) ? String(object.sender_id) : "",
-      username: isSet3(object.username) ? String(object.username) : "",
-      avatar: isSet3(object.avatar) ? String(object.avatar) : "",
-      content: isSet3(object.content) ? String(object.content) : "",
+      sender_id: isSet3(object.sender_id) ? globalThis.String(object.sender_id) : "",
+      username: isSet3(object.username) ? globalThis.String(object.username) : "",
+      avatar: isSet3(object.avatar) ? globalThis.String(object.avatar) : "",
+      content: isSet3(object.content) ? globalThis.String(object.content) : "",
       create_time: isSet3(object.create_time) ? fromJsonTimestamp(object.create_time) : void 0,
       update_time: isSet3(object.update_time) ? fromJsonTimestamp(object.update_time) : void 0,
-      channel_label: isSet3(object.channel_label) ? String(object.channel_label) : "",
-      clan_logo: isSet3(object.clan_logo) ? String(object.clan_logo) : "",
-      category_name: isSet3(object.category_name) ? String(object.category_name) : "",
-      display_name: isSet3(object.display_name) ? String(object.display_name) : "",
-      clan_nick: isSet3(object.clan_nick) ? String(object.clan_nick) : "",
-      clan_avatar: isSet3(object.clan_avatar) ? String(object.clan_avatar) : "",
-      reactions: isSet3(object.reactions) ? String(object.reactions) : "",
-      mentions: isSet3(object.mentions) ? String(object.mentions) : "",
-      attachments: isSet3(object.attachments) ? String(object.attachments) : "",
-      references: isSet3(object.references) ? String(object.references) : "",
-      referenced_message: isSet3(object.referenced_message) ? String(object.referenced_message) : ""
+      channel_label: isSet3(object.channel_label) ? globalThis.String(object.channel_label) : "",
+      clan_logo: isSet3(object.clan_logo) ? globalThis.String(object.clan_logo) : "",
+      category_name: isSet3(object.category_name) ? globalThis.String(object.category_name) : "",
+      display_name: isSet3(object.display_name) ? globalThis.String(object.display_name) : "",
+      clan_nick: isSet3(object.clan_nick) ? globalThis.String(object.clan_nick) : "",
+      clan_avatar: isSet3(object.clan_avatar) ? globalThis.String(object.clan_avatar) : "",
+      reactions: isSet3(object.reactions) ? globalThis.String(object.reactions) : "",
+      mentions: isSet3(object.mentions) ? globalThis.String(object.mentions) : "",
+      attachments: isSet3(object.attachments) ? globalThis.String(object.attachments) : "",
+      references: isSet3(object.references) ? globalThis.String(object.references) : "",
+      referenced_message: isSet3(object.referenced_message) ? globalThis.String(object.referenced_message) : ""
     };
   },
   toJSON(message) {
     const obj = {};
-    message.clan_id !== void 0 && (obj.clan_id = message.clan_id);
-    message.channel_id !== void 0 && (obj.channel_id = message.channel_id);
-    message.message_id !== void 0 && (obj.message_id = message.message_id);
-    message.code !== void 0 && (obj.code = message.code);
-    message.sender_id !== void 0 && (obj.sender_id = message.sender_id);
-    message.username !== void 0 && (obj.username = message.username);
-    message.avatar !== void 0 && (obj.avatar = message.avatar);
-    message.content !== void 0 && (obj.content = message.content);
-    message.create_time !== void 0 && (obj.create_time = message.create_time.toISOString());
-    message.update_time !== void 0 && (obj.update_time = message.update_time.toISOString());
-    message.channel_label !== void 0 && (obj.channel_label = message.channel_label);
-    message.clan_logo !== void 0 && (obj.clan_logo = message.clan_logo);
-    message.category_name !== void 0 && (obj.category_name = message.category_name);
-    message.display_name !== void 0 && (obj.display_name = message.display_name);
-    message.clan_nick !== void 0 && (obj.clan_nick = message.clan_nick);
-    message.clan_avatar !== void 0 && (obj.clan_avatar = message.clan_avatar);
-    message.reactions !== void 0 && (obj.reactions = message.reactions);
-    message.mentions !== void 0 && (obj.mentions = message.mentions);
-    message.attachments !== void 0 && (obj.attachments = message.attachments);
-    message.references !== void 0 && (obj.references = message.references);
-    message.referenced_message !== void 0 && (obj.referenced_message = message.referenced_message);
+    if (message.clan_id !== "") {
+      obj.clan_id = message.clan_id;
+    }
+    if (message.channel_id !== "") {
+      obj.channel_id = message.channel_id;
+    }
+    if (message.message_id !== "") {
+      obj.message_id = message.message_id;
+    }
+    if (message.code !== void 0) {
+      obj.code = message.code;
+    }
+    if (message.sender_id !== "") {
+      obj.sender_id = message.sender_id;
+    }
+    if (message.username !== "") {
+      obj.username = message.username;
+    }
+    if (message.avatar !== "") {
+      obj.avatar = message.avatar;
+    }
+    if (message.content !== "") {
+      obj.content = message.content;
+    }
+    if (message.create_time !== void 0) {
+      obj.create_time = message.create_time.toISOString();
+    }
+    if (message.update_time !== void 0) {
+      obj.update_time = message.update_time.toISOString();
+    }
+    if (message.channel_label !== "") {
+      obj.channel_label = message.channel_label;
+    }
+    if (message.clan_logo !== "") {
+      obj.clan_logo = message.clan_logo;
+    }
+    if (message.category_name !== "") {
+      obj.category_name = message.category_name;
+    }
+    if (message.display_name !== "") {
+      obj.display_name = message.display_name;
+    }
+    if (message.clan_nick !== "") {
+      obj.clan_nick = message.clan_nick;
+    }
+    if (message.clan_avatar !== "") {
+      obj.clan_avatar = message.clan_avatar;
+    }
+    if (message.reactions !== "") {
+      obj.reactions = message.reactions;
+    }
+    if (message.mentions !== "") {
+      obj.mentions = message.mentions;
+    }
+    if (message.attachments !== "") {
+      obj.attachments = message.attachments;
+    }
+    if (message.references !== "") {
+      obj.references = message.references;
+    }
+    if (message.referenced_message !== "") {
+      obj.referenced_message = message.referenced_message;
+    }
     return obj;
   },
   create(base) {
@@ -2797,7 +2905,7 @@ var Notification = {
     if (message.create_time !== void 0) {
       Timestamp.encode(toTimestamp(message.create_time), writer.uint32(50).fork()).ldelim();
     }
-    if (message.persistent === true) {
+    if (message.persistent !== false) {
       writer.uint32(56).bool(message.persistent);
     }
     if (message.clan_id !== "") {
@@ -2815,80 +2923,136 @@ var Notification = {
     return writer;
   },
   decode(input, length) {
-    const reader = input instanceof import_minimal3.default.Reader ? input : new import_minimal3.default.Reader(input);
+    const reader = input instanceof import_minimal3.default.Reader ? input : import_minimal3.default.Reader.create(input);
     let end = length === void 0 ? reader.len : reader.pos + length;
     const message = createBaseNotification();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag !== 10) {
+            break;
+          }
           message.id = reader.string();
-          break;
+          continue;
         case 2:
+          if (tag !== 18) {
+            break;
+          }
           message.subject = reader.string();
-          break;
+          continue;
         case 3:
+          if (tag !== 26) {
+            break;
+          }
           message.content = reader.string();
-          break;
+          continue;
         case 4:
+          if (tag !== 32) {
+            break;
+          }
           message.code = reader.int32();
-          break;
+          continue;
         case 5:
+          if (tag !== 42) {
+            break;
+          }
           message.sender_id = reader.string();
-          break;
+          continue;
         case 6:
+          if (tag !== 50) {
+            break;
+          }
           message.create_time = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
-          break;
+          continue;
         case 7:
+          if (tag !== 56) {
+            break;
+          }
           message.persistent = reader.bool();
-          break;
+          continue;
         case 8:
+          if (tag !== 66) {
+            break;
+          }
           message.clan_id = reader.string();
-          break;
+          continue;
         case 9:
+          if (tag !== 74) {
+            break;
+          }
           message.channel_id = reader.string();
-          break;
+          continue;
         case 10:
+          if (tag !== 82) {
+            break;
+          }
           message.channel_type = reader.string();
-          break;
+          continue;
         case 11:
+          if (tag !== 90) {
+            break;
+          }
           message.avatar_url = reader.string();
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
   fromJSON(object) {
     return {
-      id: isSet3(object.id) ? String(object.id) : "",
-      subject: isSet3(object.subject) ? String(object.subject) : "",
-      content: isSet3(object.content) ? String(object.content) : "",
-      code: isSet3(object.code) ? Number(object.code) : 0,
-      sender_id: isSet3(object.sender_id) ? String(object.sender_id) : "",
+      id: isSet3(object.id) ? globalThis.String(object.id) : "",
+      subject: isSet3(object.subject) ? globalThis.String(object.subject) : "",
+      content: isSet3(object.content) ? globalThis.String(object.content) : "",
+      code: isSet3(object.code) ? globalThis.Number(object.code) : 0,
+      sender_id: isSet3(object.sender_id) ? globalThis.String(object.sender_id) : "",
       create_time: isSet3(object.create_time) ? fromJsonTimestamp(object.create_time) : void 0,
-      persistent: isSet3(object.persistent) ? Boolean(object.persistent) : false,
-      clan_id: isSet3(object.clan_id) ? String(object.clan_id) : "",
-      channel_id: isSet3(object.channel_id) ? String(object.channel_id) : "",
-      channel_type: isSet3(object.channel_type) ? String(object.channel_type) : "",
-      avatar_url: isSet3(object.avatar_url) ? String(object.avatar_url) : ""
+      persistent: isSet3(object.persistent) ? globalThis.Boolean(object.persistent) : false,
+      clan_id: isSet3(object.clan_id) ? globalThis.String(object.clan_id) : "",
+      channel_id: isSet3(object.channel_id) ? globalThis.String(object.channel_id) : "",
+      channel_type: isSet3(object.channel_type) ? globalThis.String(object.channel_type) : "",
+      avatar_url: isSet3(object.avatar_url) ? globalThis.String(object.avatar_url) : ""
     };
   },
   toJSON(message) {
     const obj = {};
-    message.id !== void 0 && (obj.id = message.id);
-    message.subject !== void 0 && (obj.subject = message.subject);
-    message.content !== void 0 && (obj.content = message.content);
-    message.code !== void 0 && (obj.code = Math.round(message.code));
-    message.sender_id !== void 0 && (obj.sender_id = message.sender_id);
-    message.create_time !== void 0 && (obj.create_time = message.create_time.toISOString());
-    message.persistent !== void 0 && (obj.persistent = message.persistent);
-    message.clan_id !== void 0 && (obj.clan_id = message.clan_id);
-    message.channel_id !== void 0 && (obj.channel_id = message.channel_id);
-    message.channel_type !== void 0 && (obj.channel_type = message.channel_type);
-    message.avatar_url !== void 0 && (obj.avatar_url = message.avatar_url);
+    if (message.id !== "") {
+      obj.id = message.id;
+    }
+    if (message.subject !== "") {
+      obj.subject = message.subject;
+    }
+    if (message.content !== "") {
+      obj.content = message.content;
+    }
+    if (message.code !== 0) {
+      obj.code = Math.round(message.code);
+    }
+    if (message.sender_id !== "") {
+      obj.sender_id = message.sender_id;
+    }
+    if (message.create_time !== void 0) {
+      obj.create_time = message.create_time.toISOString();
+    }
+    if (message.persistent !== false) {
+      obj.persistent = message.persistent;
+    }
+    if (message.clan_id !== "") {
+      obj.clan_id = message.clan_id;
+    }
+    if (message.channel_id !== "") {
+      obj.channel_id = message.channel_id;
+    }
+    if (message.channel_type !== "") {
+      obj.channel_type = message.channel_type;
+    }
+    if (message.avatar_url !== "") {
+      obj.avatar_url = message.avatar_url;
+    }
     return obj;
   },
   create(base) {
@@ -2928,40 +3092,56 @@ var Rpc = {
     return writer;
   },
   decode(input, length) {
-    const reader = input instanceof import_minimal3.default.Reader ? input : new import_minimal3.default.Reader(input);
+    const reader = input instanceof import_minimal3.default.Reader ? input : import_minimal3.default.Reader.create(input);
     let end = length === void 0 ? reader.len : reader.pos + length;
     const message = createBaseRpc();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag !== 10) {
+            break;
+          }
           message.id = reader.string();
-          break;
+          continue;
         case 2:
+          if (tag !== 18) {
+            break;
+          }
           message.payload = reader.string();
-          break;
+          continue;
         case 3:
+          if (tag !== 26) {
+            break;
+          }
           message.http_key = reader.string();
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
   fromJSON(object) {
     return {
-      id: isSet3(object.id) ? String(object.id) : "",
-      payload: isSet3(object.payload) ? String(object.payload) : "",
-      http_key: isSet3(object.http_key) ? String(object.http_key) : ""
+      id: isSet3(object.id) ? globalThis.String(object.id) : "",
+      payload: isSet3(object.payload) ? globalThis.String(object.payload) : "",
+      http_key: isSet3(object.http_key) ? globalThis.String(object.http_key) : ""
     };
   },
   toJSON(message) {
     const obj = {};
-    message.id !== void 0 && (obj.id = message.id);
-    message.payload !== void 0 && (obj.payload = message.payload);
-    message.http_key !== void 0 && (obj.http_key = message.http_key);
+    if (message.id !== "") {
+      obj.id = message.id;
+    }
+    if (message.payload !== "") {
+      obj.payload = message.payload;
+    }
+    if (message.http_key !== "") {
+      obj.http_key = message.http_key;
+    }
     return obj;
   },
   create(base) {
@@ -2976,36 +3156,21 @@ var Rpc = {
     return message;
   }
 };
-var tsProtoGlobalThis3 = (() => {
-  if (typeof globalThis !== "undefined") {
-    return globalThis;
-  }
-  if (typeof self !== "undefined") {
-    return self;
-  }
-  if (typeof window !== "undefined") {
-    return window;
-  }
-  if (typeof global !== "undefined") {
-    return global;
-  }
-  throw "Unable to locate global object";
-})();
 function toTimestamp(date) {
-  const seconds = date.getTime() / 1e3;
+  const seconds = Math.trunc(date.getTime() / 1e3);
   const nanos = date.getTime() % 1e3 * 1e6;
   return { seconds, nanos };
 }
 function fromTimestamp(t) {
-  let millis = t.seconds * 1e3;
-  millis += t.nanos / 1e6;
-  return new Date(millis);
+  let millis = (t.seconds || 0) * 1e3;
+  millis += (t.nanos || 0) / 1e6;
+  return new globalThis.Date(millis);
 }
 function fromJsonTimestamp(o) {
-  if (o instanceof Date) {
+  if (o instanceof globalThis.Date) {
     return o;
   } else if (typeof o === "string") {
-    return new Date(o);
+    return new globalThis.Date(o);
   } else {
     return fromTimestamp(Timestamp.fromJSON(o));
   }
@@ -3180,136 +3345,251 @@ var Envelope = {
     return writer;
   },
   decode(input, length) {
-    const reader = input instanceof import_minimal4.default.Reader ? input : new import_minimal4.default.Reader(input);
+    const reader = input instanceof import_minimal4.default.Reader ? input : import_minimal4.default.Reader.create(input);
     let end = length === void 0 ? reader.len : reader.pos + length;
     const message = createBaseEnvelope();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag !== 10) {
+            break;
+          }
           message.cid = reader.string();
-          break;
+          continue;
         case 2:
+          if (tag !== 18) {
+            break;
+          }
           message.channel = Channel.decode(reader, reader.uint32());
-          break;
+          continue;
         case 3:
+          if (tag !== 26) {
+            break;
+          }
           message.clan_join = ClanJoin.decode(reader, reader.uint32());
-          break;
+          continue;
         case 4:
+          if (tag !== 34) {
+            break;
+          }
           message.channel_join = ChannelJoin.decode(reader, reader.uint32());
-          break;
+          continue;
         case 5:
+          if (tag !== 42) {
+            break;
+          }
           message.channel_leave = ChannelLeave.decode(reader, reader.uint32());
-          break;
+          continue;
         case 6:
+          if (tag !== 50) {
+            break;
+          }
           message.channel_message = ChannelMessage.decode(reader, reader.uint32());
-          break;
+          continue;
         case 7:
+          if (tag !== 58) {
+            break;
+          }
           message.channel_message_ack = ChannelMessageAck.decode(reader, reader.uint32());
-          break;
+          continue;
         case 8:
+          if (tag !== 66) {
+            break;
+          }
           message.channel_message_send = ChannelMessageSend.decode(reader, reader.uint32());
-          break;
+          continue;
         case 9:
+          if (tag !== 74) {
+            break;
+          }
           message.channel_message_update = ChannelMessageUpdate.decode(reader, reader.uint32());
-          break;
+          continue;
         case 10:
+          if (tag !== 82) {
+            break;
+          }
           message.channel_message_remove = ChannelMessageRemove.decode(reader, reader.uint32());
-          break;
+          continue;
         case 11:
+          if (tag !== 90) {
+            break;
+          }
           message.channel_presence_event = ChannelPresenceEvent.decode(reader, reader.uint32());
-          break;
+          continue;
         case 12:
+          if (tag !== 98) {
+            break;
+          }
           message.error = Error2.decode(reader, reader.uint32());
-          break;
+          continue;
         case 13:
+          if (tag !== 106) {
+            break;
+          }
           message.notifications = Notifications.decode(reader, reader.uint32());
-          break;
+          continue;
         case 14:
+          if (tag !== 114) {
+            break;
+          }
           message.rpc = Rpc.decode(reader, reader.uint32());
-          break;
+          continue;
         case 15:
+          if (tag !== 122) {
+            break;
+          }
           message.status = Status.decode(reader, reader.uint32());
-          break;
+          continue;
         case 16:
+          if (tag !== 130) {
+            break;
+          }
           message.status_follow = StatusFollow.decode(reader, reader.uint32());
-          break;
+          continue;
         case 17:
+          if (tag !== 138) {
+            break;
+          }
           message.status_presence_event = StatusPresenceEvent.decode(reader, reader.uint32());
-          break;
+          continue;
         case 18:
+          if (tag !== 146) {
+            break;
+          }
           message.status_unfollow = StatusUnfollow.decode(reader, reader.uint32());
-          break;
+          continue;
         case 19:
+          if (tag !== 154) {
+            break;
+          }
           message.status_update = StatusUpdate.decode(reader, reader.uint32());
-          break;
+          continue;
         case 20:
+          if (tag !== 162) {
+            break;
+          }
           message.stream_data = StreamData.decode(reader, reader.uint32());
-          break;
+          continue;
         case 21:
+          if (tag !== 170) {
+            break;
+          }
           message.stream_presence_event = StreamPresenceEvent.decode(reader, reader.uint32());
-          break;
+          continue;
         case 22:
+          if (tag !== 178) {
+            break;
+          }
           message.ping = Ping.decode(reader, reader.uint32());
-          break;
+          continue;
         case 23:
+          if (tag !== 186) {
+            break;
+          }
           message.pong = Pong.decode(reader, reader.uint32());
-          break;
+          continue;
         case 24:
+          if (tag !== 194) {
+            break;
+          }
           message.message_typing_event = MessageTypingEvent.decode(reader, reader.uint32());
-          break;
+          continue;
         case 25:
+          if (tag !== 202) {
+            break;
+          }
           message.last_seen_message_event = LastSeenMessageEvent.decode(reader, reader.uint32());
-          break;
+          continue;
         case 26:
+          if (tag !== 210) {
+            break;
+          }
           message.message_reaction_event = MessageReactionEvent.decode(reader, reader.uint32());
-          break;
+          continue;
         case 27:
+          if (tag !== 218) {
+            break;
+          }
           message.voice_joined_event = VoiceJoinedEvent.decode(reader, reader.uint32());
-          break;
+          continue;
         case 28:
+          if (tag !== 226) {
+            break;
+          }
           message.voice_leaved_event = VoiceLeavedEvent.decode(reader, reader.uint32());
-          break;
+          continue;
         case 29:
+          if (tag !== 234) {
+            break;
+          }
           message.voice_started_event = VoiceStartedEvent.decode(reader, reader.uint32());
-          break;
+          continue;
         case 30:
+          if (tag !== 242) {
+            break;
+          }
           message.voice_ended_event = VoiceEndedEvent.decode(reader, reader.uint32());
-          break;
+          continue;
         case 31:
+          if (tag !== 250) {
+            break;
+          }
           message.channel_created_event = ChannelCreatedEvent.decode(reader, reader.uint32());
-          break;
+          continue;
         case 32:
+          if (tag !== 258) {
+            break;
+          }
           message.channel_deleted_event = ChannelDeletedEvent.decode(reader, reader.uint32());
-          break;
+          continue;
         case 33:
+          if (tag !== 266) {
+            break;
+          }
           message.channel_updated_event = ChannelUpdatedEvent.decode(reader, reader.uint32());
-          break;
+          continue;
         case 34:
+          if (tag !== 274) {
+            break;
+          }
           message.last_pin_message_event = LastPinMessageEvent.decode(reader, reader.uint32());
-          break;
+          continue;
         case 35:
+          if (tag !== 282) {
+            break;
+          }
           message.custom_status_event = CustomStatusEvent.decode(reader, reader.uint32());
-          break;
+          continue;
         case 36:
+          if (tag !== 290) {
+            break;
+          }
           message.user_channel_added_event = UserChannelAdded.decode(reader, reader.uint32());
-          break;
+          continue;
         case 37:
+          if (tag !== 298) {
+            break;
+          }
           message.user_channel_removed_event = UserChannelRemoved.decode(reader, reader.uint32());
-          break;
+          continue;
         case 38:
+          if (tag !== 306) {
+            break;
+          }
           message.user_clan_removed_event = UserClanRemoved.decode(reader, reader.uint32());
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
   fromJSON(object) {
     return {
-      cid: isSet4(object.cid) ? String(object.cid) : "",
+      cid: isSet4(object.cid) ? globalThis.String(object.cid) : "",
       channel: isSet4(object.channel) ? Channel.fromJSON(object.channel) : void 0,
       clan_join: isSet4(object.clan_join) ? ClanJoin.fromJSON(object.clan_join) : void 0,
       channel_join: isSet4(object.channel_join) ? ChannelJoin.fromJSON(object.channel_join) : void 0,
@@ -3351,44 +3631,120 @@ var Envelope = {
   },
   toJSON(message) {
     const obj = {};
-    message.cid !== void 0 && (obj.cid = message.cid);
-    message.channel !== void 0 && (obj.channel = message.channel ? Channel.toJSON(message.channel) : void 0);
-    message.clan_join !== void 0 && (obj.clan_join = message.clan_join ? ClanJoin.toJSON(message.clan_join) : void 0);
-    message.channel_join !== void 0 && (obj.channel_join = message.channel_join ? ChannelJoin.toJSON(message.channel_join) : void 0);
-    message.channel_leave !== void 0 && (obj.channel_leave = message.channel_leave ? ChannelLeave.toJSON(message.channel_leave) : void 0);
-    message.channel_message !== void 0 && (obj.channel_message = message.channel_message ? ChannelMessage.toJSON(message.channel_message) : void 0);
-    message.channel_message_ack !== void 0 && (obj.channel_message_ack = message.channel_message_ack ? ChannelMessageAck.toJSON(message.channel_message_ack) : void 0);
-    message.channel_message_send !== void 0 && (obj.channel_message_send = message.channel_message_send ? ChannelMessageSend.toJSON(message.channel_message_send) : void 0);
-    message.channel_message_update !== void 0 && (obj.channel_message_update = message.channel_message_update ? ChannelMessageUpdate.toJSON(message.channel_message_update) : void 0);
-    message.channel_message_remove !== void 0 && (obj.channel_message_remove = message.channel_message_remove ? ChannelMessageRemove.toJSON(message.channel_message_remove) : void 0);
-    message.channel_presence_event !== void 0 && (obj.channel_presence_event = message.channel_presence_event ? ChannelPresenceEvent.toJSON(message.channel_presence_event) : void 0);
-    message.error !== void 0 && (obj.error = message.error ? Error2.toJSON(message.error) : void 0);
-    message.notifications !== void 0 && (obj.notifications = message.notifications ? Notifications.toJSON(message.notifications) : void 0);
-    message.rpc !== void 0 && (obj.rpc = message.rpc ? Rpc.toJSON(message.rpc) : void 0);
-    message.status !== void 0 && (obj.status = message.status ? Status.toJSON(message.status) : void 0);
-    message.status_follow !== void 0 && (obj.status_follow = message.status_follow ? StatusFollow.toJSON(message.status_follow) : void 0);
-    message.status_presence_event !== void 0 && (obj.status_presence_event = message.status_presence_event ? StatusPresenceEvent.toJSON(message.status_presence_event) : void 0);
-    message.status_unfollow !== void 0 && (obj.status_unfollow = message.status_unfollow ? StatusUnfollow.toJSON(message.status_unfollow) : void 0);
-    message.status_update !== void 0 && (obj.status_update = message.status_update ? StatusUpdate.toJSON(message.status_update) : void 0);
-    message.stream_data !== void 0 && (obj.stream_data = message.stream_data ? StreamData.toJSON(message.stream_data) : void 0);
-    message.stream_presence_event !== void 0 && (obj.stream_presence_event = message.stream_presence_event ? StreamPresenceEvent.toJSON(message.stream_presence_event) : void 0);
-    message.ping !== void 0 && (obj.ping = message.ping ? Ping.toJSON(message.ping) : void 0);
-    message.pong !== void 0 && (obj.pong = message.pong ? Pong.toJSON(message.pong) : void 0);
-    message.message_typing_event !== void 0 && (obj.message_typing_event = message.message_typing_event ? MessageTypingEvent.toJSON(message.message_typing_event) : void 0);
-    message.last_seen_message_event !== void 0 && (obj.last_seen_message_event = message.last_seen_message_event ? LastSeenMessageEvent.toJSON(message.last_seen_message_event) : void 0);
-    message.message_reaction_event !== void 0 && (obj.message_reaction_event = message.message_reaction_event ? MessageReactionEvent.toJSON(message.message_reaction_event) : void 0);
-    message.voice_joined_event !== void 0 && (obj.voice_joined_event = message.voice_joined_event ? VoiceJoinedEvent.toJSON(message.voice_joined_event) : void 0);
-    message.voice_leaved_event !== void 0 && (obj.voice_leaved_event = message.voice_leaved_event ? VoiceLeavedEvent.toJSON(message.voice_leaved_event) : void 0);
-    message.voice_started_event !== void 0 && (obj.voice_started_event = message.voice_started_event ? VoiceStartedEvent.toJSON(message.voice_started_event) : void 0);
-    message.voice_ended_event !== void 0 && (obj.voice_ended_event = message.voice_ended_event ? VoiceEndedEvent.toJSON(message.voice_ended_event) : void 0);
-    message.channel_created_event !== void 0 && (obj.channel_created_event = message.channel_created_event ? ChannelCreatedEvent.toJSON(message.channel_created_event) : void 0);
-    message.channel_deleted_event !== void 0 && (obj.channel_deleted_event = message.channel_deleted_event ? ChannelDeletedEvent.toJSON(message.channel_deleted_event) : void 0);
-    message.channel_updated_event !== void 0 && (obj.channel_updated_event = message.channel_updated_event ? ChannelUpdatedEvent.toJSON(message.channel_updated_event) : void 0);
-    message.last_pin_message_event !== void 0 && (obj.last_pin_message_event = message.last_pin_message_event ? LastPinMessageEvent.toJSON(message.last_pin_message_event) : void 0);
-    message.custom_status_event !== void 0 && (obj.custom_status_event = message.custom_status_event ? CustomStatusEvent.toJSON(message.custom_status_event) : void 0);
-    message.user_channel_added_event !== void 0 && (obj.user_channel_added_event = message.user_channel_added_event ? UserChannelAdded.toJSON(message.user_channel_added_event) : void 0);
-    message.user_channel_removed_event !== void 0 && (obj.user_channel_removed_event = message.user_channel_removed_event ? UserChannelRemoved.toJSON(message.user_channel_removed_event) : void 0);
-    message.user_clan_removed_event !== void 0 && (obj.user_clan_removed_event = message.user_clan_removed_event ? UserClanRemoved.toJSON(message.user_clan_removed_event) : void 0);
+    if (message.cid !== "") {
+      obj.cid = message.cid;
+    }
+    if (message.channel !== void 0) {
+      obj.channel = Channel.toJSON(message.channel);
+    }
+    if (message.clan_join !== void 0) {
+      obj.clan_join = ClanJoin.toJSON(message.clan_join);
+    }
+    if (message.channel_join !== void 0) {
+      obj.channel_join = ChannelJoin.toJSON(message.channel_join);
+    }
+    if (message.channel_leave !== void 0) {
+      obj.channel_leave = ChannelLeave.toJSON(message.channel_leave);
+    }
+    if (message.channel_message !== void 0) {
+      obj.channel_message = ChannelMessage.toJSON(message.channel_message);
+    }
+    if (message.channel_message_ack !== void 0) {
+      obj.channel_message_ack = ChannelMessageAck.toJSON(message.channel_message_ack);
+    }
+    if (message.channel_message_send !== void 0) {
+      obj.channel_message_send = ChannelMessageSend.toJSON(message.channel_message_send);
+    }
+    if (message.channel_message_update !== void 0) {
+      obj.channel_message_update = ChannelMessageUpdate.toJSON(message.channel_message_update);
+    }
+    if (message.channel_message_remove !== void 0) {
+      obj.channel_message_remove = ChannelMessageRemove.toJSON(message.channel_message_remove);
+    }
+    if (message.channel_presence_event !== void 0) {
+      obj.channel_presence_event = ChannelPresenceEvent.toJSON(message.channel_presence_event);
+    }
+    if (message.error !== void 0) {
+      obj.error = Error2.toJSON(message.error);
+    }
+    if (message.notifications !== void 0) {
+      obj.notifications = Notifications.toJSON(message.notifications);
+    }
+    if (message.rpc !== void 0) {
+      obj.rpc = Rpc.toJSON(message.rpc);
+    }
+    if (message.status !== void 0) {
+      obj.status = Status.toJSON(message.status);
+    }
+    if (message.status_follow !== void 0) {
+      obj.status_follow = StatusFollow.toJSON(message.status_follow);
+    }
+    if (message.status_presence_event !== void 0) {
+      obj.status_presence_event = StatusPresenceEvent.toJSON(message.status_presence_event);
+    }
+    if (message.status_unfollow !== void 0) {
+      obj.status_unfollow = StatusUnfollow.toJSON(message.status_unfollow);
+    }
+    if (message.status_update !== void 0) {
+      obj.status_update = StatusUpdate.toJSON(message.status_update);
+    }
+    if (message.stream_data !== void 0) {
+      obj.stream_data = StreamData.toJSON(message.stream_data);
+    }
+    if (message.stream_presence_event !== void 0) {
+      obj.stream_presence_event = StreamPresenceEvent.toJSON(message.stream_presence_event);
+    }
+    if (message.ping !== void 0) {
+      obj.ping = Ping.toJSON(message.ping);
+    }
+    if (message.pong !== void 0) {
+      obj.pong = Pong.toJSON(message.pong);
+    }
+    if (message.message_typing_event !== void 0) {
+      obj.message_typing_event = MessageTypingEvent.toJSON(message.message_typing_event);
+    }
+    if (message.last_seen_message_event !== void 0) {
+      obj.last_seen_message_event = LastSeenMessageEvent.toJSON(message.last_seen_message_event);
+    }
+    if (message.message_reaction_event !== void 0) {
+      obj.message_reaction_event = MessageReactionEvent.toJSON(message.message_reaction_event);
+    }
+    if (message.voice_joined_event !== void 0) {
+      obj.voice_joined_event = VoiceJoinedEvent.toJSON(message.voice_joined_event);
+    }
+    if (message.voice_leaved_event !== void 0) {
+      obj.voice_leaved_event = VoiceLeavedEvent.toJSON(message.voice_leaved_event);
+    }
+    if (message.voice_started_event !== void 0) {
+      obj.voice_started_event = VoiceStartedEvent.toJSON(message.voice_started_event);
+    }
+    if (message.voice_ended_event !== void 0) {
+      obj.voice_ended_event = VoiceEndedEvent.toJSON(message.voice_ended_event);
+    }
+    if (message.channel_created_event !== void 0) {
+      obj.channel_created_event = ChannelCreatedEvent.toJSON(message.channel_created_event);
+    }
+    if (message.channel_deleted_event !== void 0) {
+      obj.channel_deleted_event = ChannelDeletedEvent.toJSON(message.channel_deleted_event);
+    }
+    if (message.channel_updated_event !== void 0) {
+      obj.channel_updated_event = ChannelUpdatedEvent.toJSON(message.channel_updated_event);
+    }
+    if (message.last_pin_message_event !== void 0) {
+      obj.last_pin_message_event = LastPinMessageEvent.toJSON(message.last_pin_message_event);
+    }
+    if (message.custom_status_event !== void 0) {
+      obj.custom_status_event = CustomStatusEvent.toJSON(message.custom_status_event);
+    }
+    if (message.user_channel_added_event !== void 0) {
+      obj.user_channel_added_event = UserChannelAdded.toJSON(message.user_channel_added_event);
+    }
+    if (message.user_channel_removed_event !== void 0) {
+      obj.user_channel_removed_event = UserChannelRemoved.toJSON(message.user_channel_removed_event);
+    }
+    if (message.user_clan_removed_event !== void 0) {
+      obj.user_clan_removed_event = UserClanRemoved.toJSON(message.user_clan_removed_event);
+    }
     return obj;
   },
   create(base) {
@@ -3464,59 +3820,87 @@ var Channel = {
     return writer;
   },
   decode(input, length) {
-    const reader = input instanceof import_minimal4.default.Reader ? input : new import_minimal4.default.Reader(input);
+    const reader = input instanceof import_minimal4.default.Reader ? input : import_minimal4.default.Reader.create(input);
     let end = length === void 0 ? reader.len : reader.pos + length;
     const message = createBaseChannel();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag !== 10) {
+            break;
+          }
           message.id = reader.string();
-          break;
+          continue;
         case 2:
+          if (tag !== 18) {
+            break;
+          }
           message.presences.push(UserPresence.decode(reader, reader.uint32()));
-          break;
+          continue;
         case 3:
+          if (tag !== 26) {
+            break;
+          }
           message.self = UserPresence.decode(reader, reader.uint32());
-          break;
+          continue;
         case 4:
+          if (tag !== 34) {
+            break;
+          }
           message.chanel_label = reader.string();
-          break;
+          continue;
         case 5:
+          if (tag !== 42) {
+            break;
+          }
           message.clan_logo = reader.string();
-          break;
+          continue;
         case 6:
+          if (tag !== 50) {
+            break;
+          }
           message.category_name = reader.string();
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
   fromJSON(object) {
     return {
-      id: isSet4(object.id) ? String(object.id) : "",
-      presences: Array.isArray(object == null ? void 0 : object.presences) ? object.presences.map((e) => UserPresence.fromJSON(e)) : [],
+      id: isSet4(object.id) ? globalThis.String(object.id) : "",
+      presences: globalThis.Array.isArray(object == null ? void 0 : object.presences) ? object.presences.map((e) => UserPresence.fromJSON(e)) : [],
       self: isSet4(object.self) ? UserPresence.fromJSON(object.self) : void 0,
-      chanel_label: isSet4(object.chanel_label) ? String(object.chanel_label) : "",
-      clan_logo: isSet4(object.clan_logo) ? String(object.clan_logo) : "",
-      category_name: isSet4(object.category_name) ? String(object.category_name) : ""
+      chanel_label: isSet4(object.chanel_label) ? globalThis.String(object.chanel_label) : "",
+      clan_logo: isSet4(object.clan_logo) ? globalThis.String(object.clan_logo) : "",
+      category_name: isSet4(object.category_name) ? globalThis.String(object.category_name) : ""
     };
   },
   toJSON(message) {
+    var _a;
     const obj = {};
-    message.id !== void 0 && (obj.id = message.id);
-    if (message.presences) {
-      obj.presences = message.presences.map((e) => e ? UserPresence.toJSON(e) : void 0);
-    } else {
-      obj.presences = [];
+    if (message.id !== "") {
+      obj.id = message.id;
     }
-    message.self !== void 0 && (obj.self = message.self ? UserPresence.toJSON(message.self) : void 0);
-    message.chanel_label !== void 0 && (obj.chanel_label = message.chanel_label);
-    message.clan_logo !== void 0 && (obj.clan_logo = message.clan_logo);
-    message.category_name !== void 0 && (obj.category_name = message.category_name);
+    if ((_a = message.presences) == null ? void 0 : _a.length) {
+      obj.presences = message.presences.map((e) => UserPresence.toJSON(e));
+    }
+    if (message.self !== void 0) {
+      obj.self = UserPresence.toJSON(message.self);
+    }
+    if (message.chanel_label !== "") {
+      obj.chanel_label = message.chanel_label;
+    }
+    if (message.clan_logo !== "") {
+      obj.clan_logo = message.clan_logo;
+    }
+    if (message.category_name !== "") {
+      obj.category_name = message.category_name;
+    }
     return obj;
   },
   create(base) {
@@ -3545,28 +3929,34 @@ var ClanJoin = {
     return writer;
   },
   decode(input, length) {
-    const reader = input instanceof import_minimal4.default.Reader ? input : new import_minimal4.default.Reader(input);
+    const reader = input instanceof import_minimal4.default.Reader ? input : import_minimal4.default.Reader.create(input);
     let end = length === void 0 ? reader.len : reader.pos + length;
     const message = createBaseClanJoin();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag !== 10) {
+            break;
+          }
           message.clan_id = reader.string();
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
   fromJSON(object) {
-    return { clan_id: isSet4(object.clan_id) ? String(object.clan_id) : "" };
+    return { clan_id: isSet4(object.clan_id) ? globalThis.String(object.clan_id) : "" };
   },
   toJSON(message) {
     const obj = {};
-    message.clan_id !== void 0 && (obj.clan_id = message.clan_id);
+    if (message.clan_id !== "") {
+      obj.clan_id = message.clan_id;
+    }
     return obj;
   },
   create(base) {
@@ -3596,40 +3986,56 @@ var ChannelJoin = {
     return writer;
   },
   decode(input, length) {
-    const reader = input instanceof import_minimal4.default.Reader ? input : new import_minimal4.default.Reader(input);
+    const reader = input instanceof import_minimal4.default.Reader ? input : import_minimal4.default.Reader.create(input);
     let end = length === void 0 ? reader.len : reader.pos + length;
     const message = createBaseChannelJoin();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag !== 10) {
+            break;
+          }
           message.clan_id = reader.string();
-          break;
+          continue;
         case 2:
+          if (tag !== 18) {
+            break;
+          }
           message.channel_id = reader.string();
-          break;
+          continue;
         case 3:
+          if (tag !== 24) {
+            break;
+          }
           message.channel_type = reader.int32();
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
   fromJSON(object) {
     return {
-      clan_id: isSet4(object.clan_id) ? String(object.clan_id) : "",
-      channel_id: isSet4(object.channel_id) ? String(object.channel_id) : "",
-      channel_type: isSet4(object.channel_type) ? Number(object.channel_type) : 0
+      clan_id: isSet4(object.clan_id) ? globalThis.String(object.clan_id) : "",
+      channel_id: isSet4(object.channel_id) ? globalThis.String(object.channel_id) : "",
+      channel_type: isSet4(object.channel_type) ? globalThis.Number(object.channel_type) : 0
     };
   },
   toJSON(message) {
     const obj = {};
-    message.clan_id !== void 0 && (obj.clan_id = message.clan_id);
-    message.channel_id !== void 0 && (obj.channel_id = message.channel_id);
-    message.channel_type !== void 0 && (obj.channel_type = Math.round(message.channel_type));
+    if (message.clan_id !== "") {
+      obj.clan_id = message.clan_id;
+    }
+    if (message.channel_id !== "") {
+      obj.channel_id = message.channel_id;
+    }
+    if (message.channel_type !== 0) {
+      obj.channel_type = Math.round(message.channel_type);
+    }
     return obj;
   },
   create(base) {
@@ -3661,40 +4067,56 @@ var ChannelLeave = {
     return writer;
   },
   decode(input, length) {
-    const reader = input instanceof import_minimal4.default.Reader ? input : new import_minimal4.default.Reader(input);
+    const reader = input instanceof import_minimal4.default.Reader ? input : import_minimal4.default.Reader.create(input);
     let end = length === void 0 ? reader.len : reader.pos + length;
     const message = createBaseChannelLeave();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag !== 10) {
+            break;
+          }
           message.clan_id = reader.string();
-          break;
+          continue;
         case 2:
+          if (tag !== 18) {
+            break;
+          }
           message.channel_id = reader.string();
-          break;
+          continue;
         case 3:
+          if (tag !== 24) {
+            break;
+          }
           message.channel_type = reader.int32();
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
   fromJSON(object) {
     return {
-      clan_id: isSet4(object.clan_id) ? String(object.clan_id) : "",
-      channel_id: isSet4(object.channel_id) ? String(object.channel_id) : "",
-      channel_type: isSet4(object.channel_type) ? Number(object.channel_type) : 0
+      clan_id: isSet4(object.clan_id) ? globalThis.String(object.clan_id) : "",
+      channel_id: isSet4(object.channel_id) ? globalThis.String(object.channel_id) : "",
+      channel_type: isSet4(object.channel_type) ? globalThis.Number(object.channel_type) : 0
     };
   },
   toJSON(message) {
     const obj = {};
-    message.clan_id !== void 0 && (obj.clan_id = message.clan_id);
-    message.channel_id !== void 0 && (obj.channel_id = message.channel_id);
-    message.channel_type !== void 0 && (obj.channel_type = Math.round(message.channel_type));
+    if (message.clan_id !== "") {
+      obj.clan_id = message.clan_id;
+    }
+    if (message.channel_id !== "") {
+      obj.channel_id = message.channel_id;
+    }
+    if (message.channel_type !== 0) {
+      obj.channel_type = Math.round(message.channel_type);
+    }
     return obj;
   },
   create(base) {
@@ -3754,70 +4176,116 @@ var ChannelMessageAck = {
     return writer;
   },
   decode(input, length) {
-    const reader = input instanceof import_minimal4.default.Reader ? input : new import_minimal4.default.Reader(input);
+    const reader = input instanceof import_minimal4.default.Reader ? input : import_minimal4.default.Reader.create(input);
     let end = length === void 0 ? reader.len : reader.pos + length;
     const message = createBaseChannelMessageAck();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag !== 10) {
+            break;
+          }
           message.channel_id = reader.string();
-          break;
+          continue;
         case 2:
+          if (tag !== 18) {
+            break;
+          }
           message.message_id = reader.string();
-          break;
+          continue;
         case 3:
+          if (tag !== 26) {
+            break;
+          }
           message.code = Int32Value.decode(reader, reader.uint32()).value;
-          break;
+          continue;
         case 4:
+          if (tag !== 34) {
+            break;
+          }
           message.username = reader.string();
-          break;
+          continue;
         case 5:
+          if (tag !== 42) {
+            break;
+          }
           message.create_time = fromTimestamp2(Timestamp.decode(reader, reader.uint32()));
-          break;
+          continue;
         case 6:
+          if (tag !== 50) {
+            break;
+          }
           message.update_time = fromTimestamp2(Timestamp.decode(reader, reader.uint32()));
-          break;
+          continue;
         case 7:
+          if (tag !== 58) {
+            break;
+          }
           message.persistent = BoolValue.decode(reader, reader.uint32()).value;
-          break;
+          continue;
         case 8:
+          if (tag !== 66) {
+            break;
+          }
           message.clan_logo = reader.string();
-          break;
+          continue;
         case 9:
+          if (tag !== 74) {
+            break;
+          }
           message.category_name = reader.string();
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
   fromJSON(object) {
     return {
-      channel_id: isSet4(object.channel_id) ? String(object.channel_id) : "",
-      message_id: isSet4(object.message_id) ? String(object.message_id) : "",
+      channel_id: isSet4(object.channel_id) ? globalThis.String(object.channel_id) : "",
+      message_id: isSet4(object.message_id) ? globalThis.String(object.message_id) : "",
       code: isSet4(object.code) ? Number(object.code) : void 0,
-      username: isSet4(object.username) ? String(object.username) : "",
+      username: isSet4(object.username) ? globalThis.String(object.username) : "",
       create_time: isSet4(object.create_time) ? fromJsonTimestamp2(object.create_time) : void 0,
       update_time: isSet4(object.update_time) ? fromJsonTimestamp2(object.update_time) : void 0,
       persistent: isSet4(object.persistent) ? Boolean(object.persistent) : void 0,
-      clan_logo: isSet4(object.clan_logo) ? String(object.clan_logo) : "",
-      category_name: isSet4(object.category_name) ? String(object.category_name) : ""
+      clan_logo: isSet4(object.clan_logo) ? globalThis.String(object.clan_logo) : "",
+      category_name: isSet4(object.category_name) ? globalThis.String(object.category_name) : ""
     };
   },
   toJSON(message) {
     const obj = {};
-    message.channel_id !== void 0 && (obj.channel_id = message.channel_id);
-    message.message_id !== void 0 && (obj.message_id = message.message_id);
-    message.code !== void 0 && (obj.code = message.code);
-    message.username !== void 0 && (obj.username = message.username);
-    message.create_time !== void 0 && (obj.create_time = message.create_time.toISOString());
-    message.update_time !== void 0 && (obj.update_time = message.update_time.toISOString());
-    message.persistent !== void 0 && (obj.persistent = message.persistent);
-    message.clan_logo !== void 0 && (obj.clan_logo = message.clan_logo);
-    message.category_name !== void 0 && (obj.category_name = message.category_name);
+    if (message.channel_id !== "") {
+      obj.channel_id = message.channel_id;
+    }
+    if (message.message_id !== "") {
+      obj.message_id = message.message_id;
+    }
+    if (message.code !== void 0) {
+      obj.code = message.code;
+    }
+    if (message.username !== "") {
+      obj.username = message.username;
+    }
+    if (message.create_time !== void 0) {
+      obj.create_time = message.create_time.toISOString();
+    }
+    if (message.update_time !== void 0) {
+      obj.update_time = message.update_time.toISOString();
+    }
+    if (message.persistent !== void 0) {
+      obj.persistent = message.persistent;
+    }
+    if (message.clan_logo !== "") {
+      obj.clan_logo = message.clan_logo;
+    }
+    if (message.category_name !== "") {
+      obj.category_name = message.category_name;
+    }
     return obj;
   },
   create(base) {
@@ -3852,35 +4320,46 @@ var MessageMention = {
     return writer;
   },
   decode(input, length) {
-    const reader = input instanceof import_minimal4.default.Reader ? input : new import_minimal4.default.Reader(input);
+    const reader = input instanceof import_minimal4.default.Reader ? input : import_minimal4.default.Reader.create(input);
     let end = length === void 0 ? reader.len : reader.pos + length;
     const message = createBaseMessageMention();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag !== 10) {
+            break;
+          }
           message.user_id = reader.string();
-          break;
+          continue;
         case 2:
+          if (tag !== 18) {
+            break;
+          }
           message.username = reader.string();
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
   fromJSON(object) {
     return {
-      user_id: isSet4(object.user_id) ? String(object.user_id) : "",
-      username: isSet4(object.username) ? String(object.username) : ""
+      user_id: isSet4(object.user_id) ? globalThis.String(object.user_id) : "",
+      username: isSet4(object.username) ? globalThis.String(object.username) : ""
     };
   },
   toJSON(message) {
     const obj = {};
-    message.user_id !== void 0 && (obj.user_id = message.user_id);
-    message.username !== void 0 && (obj.username = message.username);
+    if (message.user_id !== "") {
+      obj.user_id = message.user_id;
+    }
+    if (message.username !== "") {
+      obj.username = message.username;
+    }
     return obj;
   },
   create(base) {
@@ -3920,55 +4399,86 @@ var MessageAttachment = {
     return writer;
   },
   decode(input, length) {
-    const reader = input instanceof import_minimal4.default.Reader ? input : new import_minimal4.default.Reader(input);
+    const reader = input instanceof import_minimal4.default.Reader ? input : import_minimal4.default.Reader.create(input);
     let end = length === void 0 ? reader.len : reader.pos + length;
     const message = createBaseMessageAttachment();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag !== 10) {
+            break;
+          }
           message.filename = reader.string();
-          break;
+          continue;
         case 2:
+          if (tag !== 16) {
+            break;
+          }
           message.size = longToNumber2(reader.int64());
-          break;
+          continue;
         case 3:
+          if (tag !== 26) {
+            break;
+          }
           message.url = reader.string();
-          break;
+          continue;
         case 4:
+          if (tag !== 34) {
+            break;
+          }
           message.filetype = reader.string();
-          break;
+          continue;
         case 5:
+          if (tag !== 40) {
+            break;
+          }
           message.width = reader.int32();
-          break;
+          continue;
         case 6:
+          if (tag !== 48) {
+            break;
+          }
           message.height = reader.int32();
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
   fromJSON(object) {
     return {
-      filename: isSet4(object.filename) ? String(object.filename) : "",
-      size: isSet4(object.size) ? Number(object.size) : 0,
-      url: isSet4(object.url) ? String(object.url) : "",
-      filetype: isSet4(object.filetype) ? String(object.filetype) : "",
-      width: isSet4(object.width) ? Number(object.width) : 0,
-      height: isSet4(object.height) ? Number(object.height) : 0
+      filename: isSet4(object.filename) ? globalThis.String(object.filename) : "",
+      size: isSet4(object.size) ? globalThis.Number(object.size) : 0,
+      url: isSet4(object.url) ? globalThis.String(object.url) : "",
+      filetype: isSet4(object.filetype) ? globalThis.String(object.filetype) : "",
+      width: isSet4(object.width) ? globalThis.Number(object.width) : 0,
+      height: isSet4(object.height) ? globalThis.Number(object.height) : 0
     };
   },
   toJSON(message) {
     const obj = {};
-    message.filename !== void 0 && (obj.filename = message.filename);
-    message.size !== void 0 && (obj.size = Math.round(message.size));
-    message.url !== void 0 && (obj.url = message.url);
-    message.filetype !== void 0 && (obj.filetype = message.filetype);
-    message.width !== void 0 && (obj.width = Math.round(message.width));
-    message.height !== void 0 && (obj.height = Math.round(message.height));
+    if (message.filename !== "") {
+      obj.filename = message.filename;
+    }
+    if (message.size !== 0) {
+      obj.size = Math.round(message.size);
+    }
+    if (message.url !== "") {
+      obj.url = message.url;
+    }
+    if (message.filetype !== "") {
+      obj.filetype = message.filetype;
+    }
+    if (message.width !== 0) {
+      obj.width = Math.round(message.width);
+    }
+    if (message.height !== 0) {
+      obj.height = Math.round(message.height);
+    }
     return obj;
   },
   create(base) {
@@ -4026,7 +4536,7 @@ var MessageRef = {
     if (message.content !== "") {
       writer.uint32(66).string(message.content);
     }
-    if (message.has_attachment === true) {
+    if (message.has_attachment !== false) {
       writer.uint32(72).bool(message.has_attachment);
     }
     if (message.ref_type !== 0) {
@@ -4035,75 +4545,126 @@ var MessageRef = {
     return writer;
   },
   decode(input, length) {
-    const reader = input instanceof import_minimal4.default.Reader ? input : new import_minimal4.default.Reader(input);
+    const reader = input instanceof import_minimal4.default.Reader ? input : import_minimal4.default.Reader.create(input);
     let end = length === void 0 ? reader.len : reader.pos + length;
     const message = createBaseMessageRef();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag !== 10) {
+            break;
+          }
           message.message_id = reader.string();
-          break;
+          continue;
         case 2:
+          if (tag !== 18) {
+            break;
+          }
           message.message_ref_id = reader.string();
-          break;
+          continue;
         case 3:
+          if (tag !== 26) {
+            break;
+          }
           message.message_sender_id = reader.string();
-          break;
+          continue;
         case 4:
+          if (tag !== 34) {
+            break;
+          }
           message.message_sender_username = reader.string();
-          break;
+          continue;
         case 5:
+          if (tag !== 42) {
+            break;
+          }
           message.mesages_sender_avatar = reader.string();
-          break;
+          continue;
         case 6:
+          if (tag !== 50) {
+            break;
+          }
           message.message_sender_clan_nick = reader.string();
-          break;
+          continue;
         case 7:
+          if (tag !== 58) {
+            break;
+          }
           message.message_sender_display_name = reader.string();
-          break;
+          continue;
         case 8:
+          if (tag !== 66) {
+            break;
+          }
           message.content = reader.string();
-          break;
+          continue;
         case 9:
+          if (tag !== 72) {
+            break;
+          }
           message.has_attachment = reader.bool();
-          break;
+          continue;
         case 10:
+          if (tag !== 80) {
+            break;
+          }
           message.ref_type = reader.int32();
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
   fromJSON(object) {
     return {
-      message_id: isSet4(object.message_id) ? String(object.message_id) : "",
-      message_ref_id: isSet4(object.message_ref_id) ? String(object.message_ref_id) : "",
-      message_sender_id: isSet4(object.message_sender_id) ? String(object.message_sender_id) : "",
-      message_sender_username: isSet4(object.message_sender_username) ? String(object.message_sender_username) : "",
-      mesages_sender_avatar: isSet4(object.mesages_sender_avatar) ? String(object.mesages_sender_avatar) : "",
-      message_sender_clan_nick: isSet4(object.message_sender_clan_nick) ? String(object.message_sender_clan_nick) : "",
-      message_sender_display_name: isSet4(object.message_sender_display_name) ? String(object.message_sender_display_name) : "",
-      content: isSet4(object.content) ? String(object.content) : "",
-      has_attachment: isSet4(object.has_attachment) ? Boolean(object.has_attachment) : false,
-      ref_type: isSet4(object.ref_type) ? Number(object.ref_type) : 0
+      message_id: isSet4(object.message_id) ? globalThis.String(object.message_id) : "",
+      message_ref_id: isSet4(object.message_ref_id) ? globalThis.String(object.message_ref_id) : "",
+      message_sender_id: isSet4(object.message_sender_id) ? globalThis.String(object.message_sender_id) : "",
+      message_sender_username: isSet4(object.message_sender_username) ? globalThis.String(object.message_sender_username) : "",
+      mesages_sender_avatar: isSet4(object.mesages_sender_avatar) ? globalThis.String(object.mesages_sender_avatar) : "",
+      message_sender_clan_nick: isSet4(object.message_sender_clan_nick) ? globalThis.String(object.message_sender_clan_nick) : "",
+      message_sender_display_name: isSet4(object.message_sender_display_name) ? globalThis.String(object.message_sender_display_name) : "",
+      content: isSet4(object.content) ? globalThis.String(object.content) : "",
+      has_attachment: isSet4(object.has_attachment) ? globalThis.Boolean(object.has_attachment) : false,
+      ref_type: isSet4(object.ref_type) ? globalThis.Number(object.ref_type) : 0
     };
   },
   toJSON(message) {
     const obj = {};
-    message.message_id !== void 0 && (obj.message_id = message.message_id);
-    message.message_ref_id !== void 0 && (obj.message_ref_id = message.message_ref_id);
-    message.message_sender_id !== void 0 && (obj.message_sender_id = message.message_sender_id);
-    message.message_sender_username !== void 0 && (obj.message_sender_username = message.message_sender_username);
-    message.mesages_sender_avatar !== void 0 && (obj.mesages_sender_avatar = message.mesages_sender_avatar);
-    message.message_sender_clan_nick !== void 0 && (obj.message_sender_clan_nick = message.message_sender_clan_nick);
-    message.message_sender_display_name !== void 0 && (obj.message_sender_display_name = message.message_sender_display_name);
-    message.content !== void 0 && (obj.content = message.content);
-    message.has_attachment !== void 0 && (obj.has_attachment = message.has_attachment);
-    message.ref_type !== void 0 && (obj.ref_type = Math.round(message.ref_type));
+    if (message.message_id !== "") {
+      obj.message_id = message.message_id;
+    }
+    if (message.message_ref_id !== "") {
+      obj.message_ref_id = message.message_ref_id;
+    }
+    if (message.message_sender_id !== "") {
+      obj.message_sender_id = message.message_sender_id;
+    }
+    if (message.message_sender_username !== "") {
+      obj.message_sender_username = message.message_sender_username;
+    }
+    if (message.mesages_sender_avatar !== "") {
+      obj.mesages_sender_avatar = message.mesages_sender_avatar;
+    }
+    if (message.message_sender_clan_nick !== "") {
+      obj.message_sender_clan_nick = message.message_sender_clan_nick;
+    }
+    if (message.message_sender_display_name !== "") {
+      obj.message_sender_display_name = message.message_sender_display_name;
+    }
+    if (message.content !== "") {
+      obj.content = message.content;
+    }
+    if (message.has_attachment !== false) {
+      obj.has_attachment = message.has_attachment;
+    }
+    if (message.ref_type !== 0) {
+      obj.ref_type = Math.round(message.ref_type);
+    }
     return obj;
   },
   create(base) {
@@ -4161,91 +4722,126 @@ var ChannelMessageSend = {
     if (message.mode !== 0) {
       writer.uint32(56).int32(message.mode);
     }
-    if (message.anonymous_message === true) {
+    if (message.anonymous_message !== false) {
       writer.uint32(64).bool(message.anonymous_message);
     }
-    if (message.mention_everyone === true) {
+    if (message.mention_everyone !== false) {
       writer.uint32(72).bool(message.mention_everyone);
     }
     return writer;
   },
   decode(input, length) {
-    const reader = input instanceof import_minimal4.default.Reader ? input : new import_minimal4.default.Reader(input);
+    const reader = input instanceof import_minimal4.default.Reader ? input : import_minimal4.default.Reader.create(input);
     let end = length === void 0 ? reader.len : reader.pos + length;
     const message = createBaseChannelMessageSend();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag !== 10) {
+            break;
+          }
           message.clan_id = reader.string();
-          break;
+          continue;
         case 2:
+          if (tag !== 18) {
+            break;
+          }
           message.channel_id = reader.string();
-          break;
+          continue;
         case 3:
+          if (tag !== 26) {
+            break;
+          }
           message.content = reader.string();
-          break;
+          continue;
         case 4:
+          if (tag !== 34) {
+            break;
+          }
           message.mentions.push(MessageMention.decode(reader, reader.uint32()));
-          break;
+          continue;
         case 5:
+          if (tag !== 42) {
+            break;
+          }
           message.attachments.push(MessageAttachment.decode(reader, reader.uint32()));
-          break;
+          continue;
         case 6:
+          if (tag !== 50) {
+            break;
+          }
           message.references.push(MessageRef.decode(reader, reader.uint32()));
-          break;
+          continue;
         case 7:
+          if (tag !== 56) {
+            break;
+          }
           message.mode = reader.int32();
-          break;
+          continue;
         case 8:
+          if (tag !== 64) {
+            break;
+          }
           message.anonymous_message = reader.bool();
-          break;
+          continue;
         case 9:
+          if (tag !== 72) {
+            break;
+          }
           message.mention_everyone = reader.bool();
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
   fromJSON(object) {
     return {
-      clan_id: isSet4(object.clan_id) ? String(object.clan_id) : "",
-      channel_id: isSet4(object.channel_id) ? String(object.channel_id) : "",
-      content: isSet4(object.content) ? String(object.content) : "",
-      mentions: Array.isArray(object == null ? void 0 : object.mentions) ? object.mentions.map((e) => MessageMention.fromJSON(e)) : [],
-      attachments: Array.isArray(object == null ? void 0 : object.attachments) ? object.attachments.map((e) => MessageAttachment.fromJSON(e)) : [],
-      references: Array.isArray(object == null ? void 0 : object.references) ? object.references.map((e) => MessageRef.fromJSON(e)) : [],
-      mode: isSet4(object.mode) ? Number(object.mode) : 0,
-      anonymous_message: isSet4(object.anonymous_message) ? Boolean(object.anonymous_message) : false,
-      mention_everyone: isSet4(object.mention_everyone) ? Boolean(object.mention_everyone) : false
+      clan_id: isSet4(object.clan_id) ? globalThis.String(object.clan_id) : "",
+      channel_id: isSet4(object.channel_id) ? globalThis.String(object.channel_id) : "",
+      content: isSet4(object.content) ? globalThis.String(object.content) : "",
+      mentions: globalThis.Array.isArray(object == null ? void 0 : object.mentions) ? object.mentions.map((e) => MessageMention.fromJSON(e)) : [],
+      attachments: globalThis.Array.isArray(object == null ? void 0 : object.attachments) ? object.attachments.map((e) => MessageAttachment.fromJSON(e)) : [],
+      references: globalThis.Array.isArray(object == null ? void 0 : object.references) ? object.references.map((e) => MessageRef.fromJSON(e)) : [],
+      mode: isSet4(object.mode) ? globalThis.Number(object.mode) : 0,
+      anonymous_message: isSet4(object.anonymous_message) ? globalThis.Boolean(object.anonymous_message) : false,
+      mention_everyone: isSet4(object.mention_everyone) ? globalThis.Boolean(object.mention_everyone) : false
     };
   },
   toJSON(message) {
+    var _a, _b, _c;
     const obj = {};
-    message.clan_id !== void 0 && (obj.clan_id = message.clan_id);
-    message.channel_id !== void 0 && (obj.channel_id = message.channel_id);
-    message.content !== void 0 && (obj.content = message.content);
-    if (message.mentions) {
-      obj.mentions = message.mentions.map((e) => e ? MessageMention.toJSON(e) : void 0);
-    } else {
-      obj.mentions = [];
+    if (message.clan_id !== "") {
+      obj.clan_id = message.clan_id;
     }
-    if (message.attachments) {
-      obj.attachments = message.attachments.map((e) => e ? MessageAttachment.toJSON(e) : void 0);
-    } else {
-      obj.attachments = [];
+    if (message.channel_id !== "") {
+      obj.channel_id = message.channel_id;
     }
-    if (message.references) {
-      obj.references = message.references.map((e) => e ? MessageRef.toJSON(e) : void 0);
-    } else {
-      obj.references = [];
+    if (message.content !== "") {
+      obj.content = message.content;
     }
-    message.mode !== void 0 && (obj.mode = Math.round(message.mode));
-    message.anonymous_message !== void 0 && (obj.anonymous_message = message.anonymous_message);
-    message.mention_everyone !== void 0 && (obj.mention_everyone = message.mention_everyone);
+    if ((_a = message.mentions) == null ? void 0 : _a.length) {
+      obj.mentions = message.mentions.map((e) => MessageMention.toJSON(e));
+    }
+    if ((_b = message.attachments) == null ? void 0 : _b.length) {
+      obj.attachments = message.attachments.map((e) => MessageAttachment.toJSON(e));
+    }
+    if ((_c = message.references) == null ? void 0 : _c.length) {
+      obj.references = message.references.map((e) => MessageRef.toJSON(e));
+    }
+    if (message.mode !== 0) {
+      obj.mode = Math.round(message.mode);
+    }
+    if (message.anonymous_message !== false) {
+      obj.anonymous_message = message.anonymous_message;
+    }
+    if (message.mention_everyone !== false) {
+      obj.mention_everyone = message.mention_everyone;
+    }
     return obj;
   },
   create(base) {
@@ -4289,50 +4885,76 @@ var ChannelMessageUpdate = {
     return writer;
   },
   decode(input, length) {
-    const reader = input instanceof import_minimal4.default.Reader ? input : new import_minimal4.default.Reader(input);
+    const reader = input instanceof import_minimal4.default.Reader ? input : import_minimal4.default.Reader.create(input);
     let end = length === void 0 ? reader.len : reader.pos + length;
     const message = createBaseChannelMessageUpdate();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag !== 10) {
+            break;
+          }
           message.clan_id = reader.string();
-          break;
+          continue;
         case 2:
+          if (tag !== 18) {
+            break;
+          }
           message.channel_id = reader.string();
-          break;
+          continue;
         case 3:
+          if (tag !== 26) {
+            break;
+          }
           message.message_id = reader.string();
-          break;
+          continue;
         case 4:
+          if (tag !== 34) {
+            break;
+          }
           message.content = reader.string();
-          break;
+          continue;
         case 5:
+          if (tag !== 40) {
+            break;
+          }
           message.mode = reader.int32();
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
   fromJSON(object) {
     return {
-      clan_id: isSet4(object.clan_id) ? String(object.clan_id) : "",
-      channel_id: isSet4(object.channel_id) ? String(object.channel_id) : "",
-      message_id: isSet4(object.message_id) ? String(object.message_id) : "",
-      content: isSet4(object.content) ? String(object.content) : "",
-      mode: isSet4(object.mode) ? Number(object.mode) : 0
+      clan_id: isSet4(object.clan_id) ? globalThis.String(object.clan_id) : "",
+      channel_id: isSet4(object.channel_id) ? globalThis.String(object.channel_id) : "",
+      message_id: isSet4(object.message_id) ? globalThis.String(object.message_id) : "",
+      content: isSet4(object.content) ? globalThis.String(object.content) : "",
+      mode: isSet4(object.mode) ? globalThis.Number(object.mode) : 0
     };
   },
   toJSON(message) {
     const obj = {};
-    message.clan_id !== void 0 && (obj.clan_id = message.clan_id);
-    message.channel_id !== void 0 && (obj.channel_id = message.channel_id);
-    message.message_id !== void 0 && (obj.message_id = message.message_id);
-    message.content !== void 0 && (obj.content = message.content);
-    message.mode !== void 0 && (obj.mode = Math.round(message.mode));
+    if (message.clan_id !== "") {
+      obj.clan_id = message.clan_id;
+    }
+    if (message.channel_id !== "") {
+      obj.channel_id = message.channel_id;
+    }
+    if (message.message_id !== "") {
+      obj.message_id = message.message_id;
+    }
+    if (message.content !== "") {
+      obj.content = message.content;
+    }
+    if (message.mode !== 0) {
+      obj.mode = Math.round(message.mode);
+    }
     return obj;
   },
   create(base) {
@@ -4369,45 +4991,66 @@ var ChannelMessageRemove = {
     return writer;
   },
   decode(input, length) {
-    const reader = input instanceof import_minimal4.default.Reader ? input : new import_minimal4.default.Reader(input);
+    const reader = input instanceof import_minimal4.default.Reader ? input : import_minimal4.default.Reader.create(input);
     let end = length === void 0 ? reader.len : reader.pos + length;
     const message = createBaseChannelMessageRemove();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag !== 10) {
+            break;
+          }
           message.clan_id = reader.string();
-          break;
+          continue;
         case 2:
+          if (tag !== 18) {
+            break;
+          }
           message.channel_id = reader.string();
-          break;
+          continue;
         case 3:
+          if (tag !== 26) {
+            break;
+          }
           message.message_id = reader.string();
-          break;
+          continue;
         case 4:
+          if (tag !== 32) {
+            break;
+          }
           message.mode = reader.int32();
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
   fromJSON(object) {
     return {
-      clan_id: isSet4(object.clan_id) ? String(object.clan_id) : "",
-      channel_id: isSet4(object.channel_id) ? String(object.channel_id) : "",
-      message_id: isSet4(object.message_id) ? String(object.message_id) : "",
-      mode: isSet4(object.mode) ? Number(object.mode) : 0
+      clan_id: isSet4(object.clan_id) ? globalThis.String(object.clan_id) : "",
+      channel_id: isSet4(object.channel_id) ? globalThis.String(object.channel_id) : "",
+      message_id: isSet4(object.message_id) ? globalThis.String(object.message_id) : "",
+      mode: isSet4(object.mode) ? globalThis.Number(object.mode) : 0
     };
   },
   toJSON(message) {
     const obj = {};
-    message.clan_id !== void 0 && (obj.clan_id = message.clan_id);
-    message.channel_id !== void 0 && (obj.channel_id = message.channel_id);
-    message.message_id !== void 0 && (obj.message_id = message.message_id);
-    message.mode !== void 0 && (obj.mode = Math.round(message.mode));
+    if (message.clan_id !== "") {
+      obj.clan_id = message.clan_id;
+    }
+    if (message.channel_id !== "") {
+      obj.channel_id = message.channel_id;
+    }
+    if (message.message_id !== "") {
+      obj.message_id = message.message_id;
+    }
+    if (message.mode !== 0) {
+      obj.mode = Math.round(message.mode);
+    }
     return obj;
   },
   create(base) {
@@ -4449,63 +5092,87 @@ var ChannelPresenceEvent = {
     return writer;
   },
   decode(input, length) {
-    const reader = input instanceof import_minimal4.default.Reader ? input : new import_minimal4.default.Reader(input);
+    const reader = input instanceof import_minimal4.default.Reader ? input : import_minimal4.default.Reader.create(input);
     let end = length === void 0 ? reader.len : reader.pos + length;
     const message = createBaseChannelPresenceEvent();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag !== 10) {
+            break;
+          }
           message.channel_id = reader.string();
-          break;
+          continue;
         case 2:
+          if (tag !== 18) {
+            break;
+          }
           message.joins.push(UserPresence.decode(reader, reader.uint32()));
-          break;
+          continue;
         case 3:
+          if (tag !== 26) {
+            break;
+          }
           message.leaves.push(UserPresence.decode(reader, reader.uint32()));
-          break;
+          continue;
         case 4:
+          if (tag !== 34) {
+            break;
+          }
           message.clan_logo = reader.string();
-          break;
+          continue;
         case 5:
+          if (tag !== 42) {
+            break;
+          }
           message.category_name = reader.string();
-          break;
+          continue;
         case 6:
+          if (tag !== 48) {
+            break;
+          }
           message.mode = reader.int32();
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
   fromJSON(object) {
     return {
-      channel_id: isSet4(object.channel_id) ? String(object.channel_id) : "",
-      joins: Array.isArray(object == null ? void 0 : object.joins) ? object.joins.map((e) => UserPresence.fromJSON(e)) : [],
-      leaves: Array.isArray(object == null ? void 0 : object.leaves) ? object.leaves.map((e) => UserPresence.fromJSON(e)) : [],
-      clan_logo: isSet4(object.clan_logo) ? String(object.clan_logo) : "",
-      category_name: isSet4(object.category_name) ? String(object.category_name) : "",
-      mode: isSet4(object.mode) ? Number(object.mode) : 0
+      channel_id: isSet4(object.channel_id) ? globalThis.String(object.channel_id) : "",
+      joins: globalThis.Array.isArray(object == null ? void 0 : object.joins) ? object.joins.map((e) => UserPresence.fromJSON(e)) : [],
+      leaves: globalThis.Array.isArray(object == null ? void 0 : object.leaves) ? object.leaves.map((e) => UserPresence.fromJSON(e)) : [],
+      clan_logo: isSet4(object.clan_logo) ? globalThis.String(object.clan_logo) : "",
+      category_name: isSet4(object.category_name) ? globalThis.String(object.category_name) : "",
+      mode: isSet4(object.mode) ? globalThis.Number(object.mode) : 0
     };
   },
   toJSON(message) {
+    var _a, _b;
     const obj = {};
-    message.channel_id !== void 0 && (obj.channel_id = message.channel_id);
-    if (message.joins) {
-      obj.joins = message.joins.map((e) => e ? UserPresence.toJSON(e) : void 0);
-    } else {
-      obj.joins = [];
+    if (message.channel_id !== "") {
+      obj.channel_id = message.channel_id;
     }
-    if (message.leaves) {
-      obj.leaves = message.leaves.map((e) => e ? UserPresence.toJSON(e) : void 0);
-    } else {
-      obj.leaves = [];
+    if ((_a = message.joins) == null ? void 0 : _a.length) {
+      obj.joins = message.joins.map((e) => UserPresence.toJSON(e));
     }
-    message.clan_logo !== void 0 && (obj.clan_logo = message.clan_logo);
-    message.category_name !== void 0 && (obj.category_name = message.category_name);
-    message.mode !== void 0 && (obj.mode = Math.round(message.mode));
+    if ((_b = message.leaves) == null ? void 0 : _b.length) {
+      obj.leaves = message.leaves.map((e) => UserPresence.toJSON(e));
+    }
+    if (message.clan_logo !== "") {
+      obj.clan_logo = message.clan_logo;
+    }
+    if (message.category_name !== "") {
+      obj.category_name = message.category_name;
+    }
+    if (message.mode !== 0) {
+      obj.mode = Math.round(message.mode);
+    }
     return obj;
   },
   create(base) {
@@ -4540,35 +5207,45 @@ var Error2 = {
     return writer;
   },
   decode(input, length) {
-    const reader = input instanceof import_minimal4.default.Reader ? input : new import_minimal4.default.Reader(input);
+    const reader = input instanceof import_minimal4.default.Reader ? input : import_minimal4.default.Reader.create(input);
     let end = length === void 0 ? reader.len : reader.pos + length;
     const message = createBaseError();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag !== 8) {
+            break;
+          }
           message.code = reader.int32();
-          break;
+          continue;
         case 2:
+          if (tag !== 18) {
+            break;
+          }
           message.message = reader.string();
-          break;
+          continue;
         case 3:
+          if (tag !== 26) {
+            break;
+          }
           const entry3 = Error_ContextEntry.decode(reader, reader.uint32());
           if (entry3.value !== void 0) {
             message.context[entry3.key] = entry3.value;
           }
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
   fromJSON(object) {
     return {
-      code: isSet4(object.code) ? Number(object.code) : 0,
-      message: isSet4(object.message) ? String(object.message) : "",
+      code: isSet4(object.code) ? globalThis.Number(object.code) : 0,
+      message: isSet4(object.message) ? globalThis.String(object.message) : "",
       context: isObject(object.context) ? Object.entries(object.context).reduce((acc, [key, value]) => {
         acc[key] = String(value);
         return acc;
@@ -4577,13 +5254,20 @@ var Error2 = {
   },
   toJSON(message) {
     const obj = {};
-    message.code !== void 0 && (obj.code = Math.round(message.code));
-    message.message !== void 0 && (obj.message = message.message);
-    obj.context = {};
+    if (message.code !== 0) {
+      obj.code = Math.round(message.code);
+    }
+    if (message.message !== "") {
+      obj.message = message.message;
+    }
     if (message.context) {
-      Object.entries(message.context).forEach(([k, v]) => {
-        obj.context[k] = v;
-      });
+      const entries = Object.entries(message.context);
+      if (entries.length > 0) {
+        obj.context = {};
+        entries.forEach(([k, v]) => {
+          obj.context[k] = v;
+        });
+      }
     }
     return obj;
   },
@@ -4597,7 +5281,7 @@ var Error2 = {
     message.message = (_b = object.message) != null ? _b : "";
     message.context = Object.entries((_c = object.context) != null ? _c : {}).reduce((acc, [key, value]) => {
       if (value !== void 0) {
-        acc[key] = String(value);
+        acc[key] = globalThis.String(value);
       }
       return acc;
     }, {});
@@ -4618,32 +5302,46 @@ var Error_ContextEntry = {
     return writer;
   },
   decode(input, length) {
-    const reader = input instanceof import_minimal4.default.Reader ? input : new import_minimal4.default.Reader(input);
+    const reader = input instanceof import_minimal4.default.Reader ? input : import_minimal4.default.Reader.create(input);
     let end = length === void 0 ? reader.len : reader.pos + length;
     const message = createBaseError_ContextEntry();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag !== 10) {
+            break;
+          }
           message.key = reader.string();
-          break;
+          continue;
         case 2:
+          if (tag !== 18) {
+            break;
+          }
           message.value = reader.string();
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
   fromJSON(object) {
-    return { key: isSet4(object.key) ? String(object.key) : "", value: isSet4(object.value) ? String(object.value) : "" };
+    return {
+      key: isSet4(object.key) ? globalThis.String(object.key) : "",
+      value: isSet4(object.value) ? globalThis.String(object.value) : ""
+    };
   },
   toJSON(message) {
     const obj = {};
-    message.key !== void 0 && (obj.key = message.key);
-    message.value !== void 0 && (obj.value = message.value);
+    if (message.key !== "") {
+      obj.key = message.key;
+    }
+    if (message.value !== "") {
+      obj.value = message.value;
+    }
     return obj;
   },
   create(base) {
@@ -4668,33 +5366,36 @@ var Notifications = {
     return writer;
   },
   decode(input, length) {
-    const reader = input instanceof import_minimal4.default.Reader ? input : new import_minimal4.default.Reader(input);
+    const reader = input instanceof import_minimal4.default.Reader ? input : import_minimal4.default.Reader.create(input);
     let end = length === void 0 ? reader.len : reader.pos + length;
     const message = createBaseNotifications();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag !== 10) {
+            break;
+          }
           message.notifications.push(Notification.decode(reader, reader.uint32()));
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
   fromJSON(object) {
     return {
-      notifications: Array.isArray(object == null ? void 0 : object.notifications) ? object.notifications.map((e) => Notification.fromJSON(e)) : []
+      notifications: globalThis.Array.isArray(object == null ? void 0 : object.notifications) ? object.notifications.map((e) => Notification.fromJSON(e)) : []
     };
   },
   toJSON(message) {
+    var _a;
     const obj = {};
-    if (message.notifications) {
-      obj.notifications = message.notifications.map((e) => e ? Notification.toJSON(e) : void 0);
-    } else {
-      obj.notifications = [];
+    if ((_a = message.notifications) == null ? void 0 : _a.length) {
+      obj.notifications = message.notifications.map((e) => Notification.toJSON(e));
     }
     return obj;
   },
@@ -4716,16 +5417,17 @@ var Ping = {
     return writer;
   },
   decode(input, length) {
-    const reader = input instanceof import_minimal4.default.Reader ? input : new import_minimal4.default.Reader(input);
+    const reader = input instanceof import_minimal4.default.Reader ? input : import_minimal4.default.Reader.create(input);
     let end = length === void 0 ? reader.len : reader.pos + length;
     const message = createBasePing();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
-        default:
-          reader.skipType(tag & 7);
-          break;
       }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
@@ -4752,16 +5454,17 @@ var Pong = {
     return writer;
   },
   decode(input, length) {
-    const reader = input instanceof import_minimal4.default.Reader ? input : new import_minimal4.default.Reader(input);
+    const reader = input instanceof import_minimal4.default.Reader ? input : import_minimal4.default.Reader.create(input);
     let end = length === void 0 ? reader.len : reader.pos + length;
     const message = createBasePong();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
-        default:
-          reader.skipType(tag & 7);
-          break;
       }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
@@ -4791,33 +5494,36 @@ var Status = {
     return writer;
   },
   decode(input, length) {
-    const reader = input instanceof import_minimal4.default.Reader ? input : new import_minimal4.default.Reader(input);
+    const reader = input instanceof import_minimal4.default.Reader ? input : import_minimal4.default.Reader.create(input);
     let end = length === void 0 ? reader.len : reader.pos + length;
     const message = createBaseStatus();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag !== 10) {
+            break;
+          }
           message.presences.push(UserPresence.decode(reader, reader.uint32()));
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
   fromJSON(object) {
     return {
-      presences: Array.isArray(object == null ? void 0 : object.presences) ? object.presences.map((e) => UserPresence.fromJSON(e)) : []
+      presences: globalThis.Array.isArray(object == null ? void 0 : object.presences) ? object.presences.map((e) => UserPresence.fromJSON(e)) : []
     };
   },
   toJSON(message) {
+    var _a;
     const obj = {};
-    if (message.presences) {
-      obj.presences = message.presences.map((e) => e ? UserPresence.toJSON(e) : void 0);
-    } else {
-      obj.presences = [];
+    if ((_a = message.presences) == null ? void 0 : _a.length) {
+      obj.presences = message.presences.map((e) => UserPresence.toJSON(e));
     }
     return obj;
   },
@@ -4845,42 +5551,46 @@ var StatusFollow = {
     return writer;
   },
   decode(input, length) {
-    const reader = input instanceof import_minimal4.default.Reader ? input : new import_minimal4.default.Reader(input);
+    const reader = input instanceof import_minimal4.default.Reader ? input : import_minimal4.default.Reader.create(input);
     let end = length === void 0 ? reader.len : reader.pos + length;
     const message = createBaseStatusFollow();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag !== 10) {
+            break;
+          }
           message.user_ids.push(reader.string());
-          break;
+          continue;
         case 2:
+          if (tag !== 18) {
+            break;
+          }
           message.usernames.push(reader.string());
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
   fromJSON(object) {
     return {
-      user_ids: Array.isArray(object == null ? void 0 : object.user_ids) ? object.user_ids.map((e) => String(e)) : [],
-      usernames: Array.isArray(object == null ? void 0 : object.usernames) ? object.usernames.map((e) => String(e)) : []
+      user_ids: globalThis.Array.isArray(object == null ? void 0 : object.user_ids) ? object.user_ids.map((e) => globalThis.String(e)) : [],
+      usernames: globalThis.Array.isArray(object == null ? void 0 : object.usernames) ? object.usernames.map((e) => globalThis.String(e)) : []
     };
   },
   toJSON(message) {
+    var _a, _b;
     const obj = {};
-    if (message.user_ids) {
-      obj.user_ids = message.user_ids.map((e) => e);
-    } else {
-      obj.user_ids = [];
+    if ((_a = message.user_ids) == null ? void 0 : _a.length) {
+      obj.user_ids = message.user_ids;
     }
-    if (message.usernames) {
-      obj.usernames = message.usernames.map((e) => e);
-    } else {
-      obj.usernames = [];
+    if ((_b = message.usernames) == null ? void 0 : _b.length) {
+      obj.usernames = message.usernames;
     }
     return obj;
   },
@@ -4909,42 +5619,46 @@ var StatusPresenceEvent = {
     return writer;
   },
   decode(input, length) {
-    const reader = input instanceof import_minimal4.default.Reader ? input : new import_minimal4.default.Reader(input);
+    const reader = input instanceof import_minimal4.default.Reader ? input : import_minimal4.default.Reader.create(input);
     let end = length === void 0 ? reader.len : reader.pos + length;
     const message = createBaseStatusPresenceEvent();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 2:
+          if (tag !== 18) {
+            break;
+          }
           message.joins.push(UserPresence.decode(reader, reader.uint32()));
-          break;
+          continue;
         case 3:
+          if (tag !== 26) {
+            break;
+          }
           message.leaves.push(UserPresence.decode(reader, reader.uint32()));
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
   fromJSON(object) {
     return {
-      joins: Array.isArray(object == null ? void 0 : object.joins) ? object.joins.map((e) => UserPresence.fromJSON(e)) : [],
-      leaves: Array.isArray(object == null ? void 0 : object.leaves) ? object.leaves.map((e) => UserPresence.fromJSON(e)) : []
+      joins: globalThis.Array.isArray(object == null ? void 0 : object.joins) ? object.joins.map((e) => UserPresence.fromJSON(e)) : [],
+      leaves: globalThis.Array.isArray(object == null ? void 0 : object.leaves) ? object.leaves.map((e) => UserPresence.fromJSON(e)) : []
     };
   },
   toJSON(message) {
+    var _a, _b;
     const obj = {};
-    if (message.joins) {
-      obj.joins = message.joins.map((e) => e ? UserPresence.toJSON(e) : void 0);
-    } else {
-      obj.joins = [];
+    if ((_a = message.joins) == null ? void 0 : _a.length) {
+      obj.joins = message.joins.map((e) => UserPresence.toJSON(e));
     }
-    if (message.leaves) {
-      obj.leaves = message.leaves.map((e) => e ? UserPresence.toJSON(e) : void 0);
-    } else {
-      obj.leaves = [];
+    if ((_b = message.leaves) == null ? void 0 : _b.length) {
+      obj.leaves = message.leaves.map((e) => UserPresence.toJSON(e));
     }
     return obj;
   },
@@ -4988,60 +5702,96 @@ var LastPinMessageEvent = {
     return writer;
   },
   decode(input, length) {
-    const reader = input instanceof import_minimal4.default.Reader ? input : new import_minimal4.default.Reader(input);
+    const reader = input instanceof import_minimal4.default.Reader ? input : import_minimal4.default.Reader.create(input);
     let end = length === void 0 ? reader.len : reader.pos + length;
     const message = createBaseLastPinMessageEvent();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag !== 10) {
+            break;
+          }
           message.clan_id = reader.string();
-          break;
+          continue;
         case 2:
+          if (tag !== 18) {
+            break;
+          }
           message.channel_id = reader.string();
-          break;
+          continue;
         case 3:
+          if (tag !== 26) {
+            break;
+          }
           message.message_id = reader.string();
-          break;
+          continue;
         case 4:
+          if (tag !== 32) {
+            break;
+          }
           message.mode = reader.int32();
-          break;
+          continue;
         case 5:
+          if (tag !== 42) {
+            break;
+          }
           message.user_id = reader.string();
-          break;
+          continue;
         case 6:
+          if (tag !== 50) {
+            break;
+          }
           message.timestamp = reader.string();
-          break;
+          continue;
         case 7:
+          if (tag !== 56) {
+            break;
+          }
           message.operation = reader.int32();
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
   fromJSON(object) {
     return {
-      clan_id: isSet4(object.clan_id) ? String(object.clan_id) : "",
-      channel_id: isSet4(object.channel_id) ? String(object.channel_id) : "",
-      message_id: isSet4(object.message_id) ? String(object.message_id) : "",
-      mode: isSet4(object.mode) ? Number(object.mode) : 0,
-      user_id: isSet4(object.user_id) ? String(object.user_id) : "",
-      timestamp: isSet4(object.timestamp) ? String(object.timestamp) : "",
-      operation: isSet4(object.operation) ? Number(object.operation) : 0
+      clan_id: isSet4(object.clan_id) ? globalThis.String(object.clan_id) : "",
+      channel_id: isSet4(object.channel_id) ? globalThis.String(object.channel_id) : "",
+      message_id: isSet4(object.message_id) ? globalThis.String(object.message_id) : "",
+      mode: isSet4(object.mode) ? globalThis.Number(object.mode) : 0,
+      user_id: isSet4(object.user_id) ? globalThis.String(object.user_id) : "",
+      timestamp: isSet4(object.timestamp) ? globalThis.String(object.timestamp) : "",
+      operation: isSet4(object.operation) ? globalThis.Number(object.operation) : 0
     };
   },
   toJSON(message) {
     const obj = {};
-    message.clan_id !== void 0 && (obj.clan_id = message.clan_id);
-    message.channel_id !== void 0 && (obj.channel_id = message.channel_id);
-    message.message_id !== void 0 && (obj.message_id = message.message_id);
-    message.mode !== void 0 && (obj.mode = Math.round(message.mode));
-    message.user_id !== void 0 && (obj.user_id = message.user_id);
-    message.timestamp !== void 0 && (obj.timestamp = message.timestamp);
-    message.operation !== void 0 && (obj.operation = Math.round(message.operation));
+    if (message.clan_id !== "") {
+      obj.clan_id = message.clan_id;
+    }
+    if (message.channel_id !== "") {
+      obj.channel_id = message.channel_id;
+    }
+    if (message.message_id !== "") {
+      obj.message_id = message.message_id;
+    }
+    if (message.mode !== 0) {
+      obj.mode = Math.round(message.mode);
+    }
+    if (message.user_id !== "") {
+      obj.user_id = message.user_id;
+    }
+    if (message.timestamp !== "") {
+      obj.timestamp = message.timestamp;
+    }
+    if (message.operation !== 0) {
+      obj.operation = Math.round(message.operation);
+    }
     return obj;
   },
   create(base) {
@@ -5080,45 +5830,66 @@ var LastSeenMessageEvent = {
     return writer;
   },
   decode(input, length) {
-    const reader = input instanceof import_minimal4.default.Reader ? input : new import_minimal4.default.Reader(input);
+    const reader = input instanceof import_minimal4.default.Reader ? input : import_minimal4.default.Reader.create(input);
     let end = length === void 0 ? reader.len : reader.pos + length;
     const message = createBaseLastSeenMessageEvent();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag !== 10) {
+            break;
+          }
           message.channel_id = reader.string();
-          break;
+          continue;
         case 2:
+          if (tag !== 18) {
+            break;
+          }
           message.message_id = reader.string();
-          break;
+          continue;
         case 3:
+          if (tag !== 24) {
+            break;
+          }
           message.mode = reader.int32();
-          break;
+          continue;
         case 4:
+          if (tag !== 34) {
+            break;
+          }
           message.timestamp = reader.string();
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
   fromJSON(object) {
     return {
-      channel_id: isSet4(object.channel_id) ? String(object.channel_id) : "",
-      message_id: isSet4(object.message_id) ? String(object.message_id) : "",
-      mode: isSet4(object.mode) ? Number(object.mode) : 0,
-      timestamp: isSet4(object.timestamp) ? String(object.timestamp) : ""
+      channel_id: isSet4(object.channel_id) ? globalThis.String(object.channel_id) : "",
+      message_id: isSet4(object.message_id) ? globalThis.String(object.message_id) : "",
+      mode: isSet4(object.mode) ? globalThis.Number(object.mode) : 0,
+      timestamp: isSet4(object.timestamp) ? globalThis.String(object.timestamp) : ""
     };
   },
   toJSON(message) {
     const obj = {};
-    message.channel_id !== void 0 && (obj.channel_id = message.channel_id);
-    message.message_id !== void 0 && (obj.message_id = message.message_id);
-    message.mode !== void 0 && (obj.mode = Math.round(message.mode));
-    message.timestamp !== void 0 && (obj.timestamp = message.timestamp);
+    if (message.channel_id !== "") {
+      obj.channel_id = message.channel_id;
+    }
+    if (message.message_id !== "") {
+      obj.message_id = message.message_id;
+    }
+    if (message.mode !== 0) {
+      obj.mode = Math.round(message.mode);
+    }
+    if (message.timestamp !== "") {
+      obj.timestamp = message.timestamp;
+    }
     return obj;
   },
   create(base) {
@@ -5154,45 +5925,66 @@ var MessageTypingEvent = {
     return writer;
   },
   decode(input, length) {
-    const reader = input instanceof import_minimal4.default.Reader ? input : new import_minimal4.default.Reader(input);
+    const reader = input instanceof import_minimal4.default.Reader ? input : import_minimal4.default.Reader.create(input);
     let end = length === void 0 ? reader.len : reader.pos + length;
     const message = createBaseMessageTypingEvent();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag !== 10) {
+            break;
+          }
           message.clan_id = reader.string();
-          break;
+          continue;
         case 2:
+          if (tag !== 18) {
+            break;
+          }
           message.channel_id = reader.string();
-          break;
+          continue;
         case 3:
+          if (tag !== 26) {
+            break;
+          }
           message.sender_id = reader.string();
-          break;
+          continue;
         case 4:
+          if (tag !== 32) {
+            break;
+          }
           message.mode = reader.int32();
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
   fromJSON(object) {
     return {
-      clan_id: isSet4(object.clan_id) ? String(object.clan_id) : "",
-      channel_id: isSet4(object.channel_id) ? String(object.channel_id) : "",
-      sender_id: isSet4(object.sender_id) ? String(object.sender_id) : "",
-      mode: isSet4(object.mode) ? Number(object.mode) : 0
+      clan_id: isSet4(object.clan_id) ? globalThis.String(object.clan_id) : "",
+      channel_id: isSet4(object.channel_id) ? globalThis.String(object.channel_id) : "",
+      sender_id: isSet4(object.sender_id) ? globalThis.String(object.sender_id) : "",
+      mode: isSet4(object.mode) ? globalThis.Number(object.mode) : 0
     };
   },
   toJSON(message) {
     const obj = {};
-    message.clan_id !== void 0 && (obj.clan_id = message.clan_id);
-    message.channel_id !== void 0 && (obj.channel_id = message.channel_id);
-    message.sender_id !== void 0 && (obj.sender_id = message.sender_id);
-    message.mode !== void 0 && (obj.mode = Math.round(message.mode));
+    if (message.clan_id !== "") {
+      obj.clan_id = message.clan_id;
+    }
+    if (message.channel_id !== "") {
+      obj.channel_id = message.channel_id;
+    }
+    if (message.sender_id !== "") {
+      obj.sender_id = message.sender_id;
+    }
+    if (message.mode !== 0) {
+      obj.mode = Math.round(message.mode);
+    }
     return obj;
   },
   create(base) {
@@ -5250,7 +6042,7 @@ var MessageReactionEvent = {
     if (message.emoji !== "") {
       writer.uint32(66).string(message.emoji);
     }
-    if (message.action === true) {
+    if (message.action !== false) {
       writer.uint32(72).bool(message.action);
     }
     if (message.message_sender_id !== "") {
@@ -5265,85 +6057,146 @@ var MessageReactionEvent = {
     return writer;
   },
   decode(input, length) {
-    const reader = input instanceof import_minimal4.default.Reader ? input : new import_minimal4.default.Reader(input);
+    const reader = input instanceof import_minimal4.default.Reader ? input : import_minimal4.default.Reader.create(input);
     let end = length === void 0 ? reader.len : reader.pos + length;
     const message = createBaseMessageReactionEvent();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag !== 10) {
+            break;
+          }
           message.id = reader.string();
-          break;
+          continue;
         case 2:
+          if (tag !== 18) {
+            break;
+          }
           message.clan_id = reader.string();
-          break;
+          continue;
         case 3:
+          if (tag !== 26) {
+            break;
+          }
           message.channel_id = reader.string();
-          break;
+          continue;
         case 4:
+          if (tag !== 34) {
+            break;
+          }
           message.message_id = reader.string();
-          break;
+          continue;
         case 5:
+          if (tag !== 42) {
+            break;
+          }
           message.sender_id = reader.string();
-          break;
+          continue;
         case 6:
+          if (tag !== 50) {
+            break;
+          }
           message.sender_name = reader.string();
-          break;
+          continue;
         case 7:
+          if (tag !== 58) {
+            break;
+          }
           message.sender_avatar = reader.string();
-          break;
+          continue;
         case 8:
+          if (tag !== 66) {
+            break;
+          }
           message.emoji = reader.string();
-          break;
+          continue;
         case 9:
+          if (tag !== 72) {
+            break;
+          }
           message.action = reader.bool();
-          break;
+          continue;
         case 10:
+          if (tag !== 82) {
+            break;
+          }
           message.message_sender_id = reader.string();
-          break;
+          continue;
         case 11:
+          if (tag !== 88) {
+            break;
+          }
           message.count = reader.int32();
-          break;
+          continue;
         case 12:
+          if (tag !== 96) {
+            break;
+          }
           message.mode = reader.int32();
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
   fromJSON(object) {
     return {
-      id: isSet4(object.id) ? String(object.id) : "",
-      clan_id: isSet4(object.clan_id) ? String(object.clan_id) : "",
-      channel_id: isSet4(object.channel_id) ? String(object.channel_id) : "",
-      message_id: isSet4(object.message_id) ? String(object.message_id) : "",
-      sender_id: isSet4(object.sender_id) ? String(object.sender_id) : "",
-      sender_name: isSet4(object.sender_name) ? String(object.sender_name) : "",
-      sender_avatar: isSet4(object.sender_avatar) ? String(object.sender_avatar) : "",
-      emoji: isSet4(object.emoji) ? String(object.emoji) : "",
-      action: isSet4(object.action) ? Boolean(object.action) : false,
-      message_sender_id: isSet4(object.message_sender_id) ? String(object.message_sender_id) : "",
-      count: isSet4(object.count) ? Number(object.count) : 0,
-      mode: isSet4(object.mode) ? Number(object.mode) : 0
+      id: isSet4(object.id) ? globalThis.String(object.id) : "",
+      clan_id: isSet4(object.clan_id) ? globalThis.String(object.clan_id) : "",
+      channel_id: isSet4(object.channel_id) ? globalThis.String(object.channel_id) : "",
+      message_id: isSet4(object.message_id) ? globalThis.String(object.message_id) : "",
+      sender_id: isSet4(object.sender_id) ? globalThis.String(object.sender_id) : "",
+      sender_name: isSet4(object.sender_name) ? globalThis.String(object.sender_name) : "",
+      sender_avatar: isSet4(object.sender_avatar) ? globalThis.String(object.sender_avatar) : "",
+      emoji: isSet4(object.emoji) ? globalThis.String(object.emoji) : "",
+      action: isSet4(object.action) ? globalThis.Boolean(object.action) : false,
+      message_sender_id: isSet4(object.message_sender_id) ? globalThis.String(object.message_sender_id) : "",
+      count: isSet4(object.count) ? globalThis.Number(object.count) : 0,
+      mode: isSet4(object.mode) ? globalThis.Number(object.mode) : 0
     };
   },
   toJSON(message) {
     const obj = {};
-    message.id !== void 0 && (obj.id = message.id);
-    message.clan_id !== void 0 && (obj.clan_id = message.clan_id);
-    message.channel_id !== void 0 && (obj.channel_id = message.channel_id);
-    message.message_id !== void 0 && (obj.message_id = message.message_id);
-    message.sender_id !== void 0 && (obj.sender_id = message.sender_id);
-    message.sender_name !== void 0 && (obj.sender_name = message.sender_name);
-    message.sender_avatar !== void 0 && (obj.sender_avatar = message.sender_avatar);
-    message.emoji !== void 0 && (obj.emoji = message.emoji);
-    message.action !== void 0 && (obj.action = message.action);
-    message.message_sender_id !== void 0 && (obj.message_sender_id = message.message_sender_id);
-    message.count !== void 0 && (obj.count = Math.round(message.count));
-    message.mode !== void 0 && (obj.mode = Math.round(message.mode));
+    if (message.id !== "") {
+      obj.id = message.id;
+    }
+    if (message.clan_id !== "") {
+      obj.clan_id = message.clan_id;
+    }
+    if (message.channel_id !== "") {
+      obj.channel_id = message.channel_id;
+    }
+    if (message.message_id !== "") {
+      obj.message_id = message.message_id;
+    }
+    if (message.sender_id !== "") {
+      obj.sender_id = message.sender_id;
+    }
+    if (message.sender_name !== "") {
+      obj.sender_name = message.sender_name;
+    }
+    if (message.sender_avatar !== "") {
+      obj.sender_avatar = message.sender_avatar;
+    }
+    if (message.emoji !== "") {
+      obj.emoji = message.emoji;
+    }
+    if (message.action !== false) {
+      obj.action = message.action;
+    }
+    if (message.message_sender_id !== "") {
+      obj.message_sender_id = message.message_sender_id;
+    }
+    if (message.count !== 0) {
+      obj.count = Math.round(message.count);
+    }
+    if (message.mode !== 0) {
+      obj.mode = Math.round(message.mode);
+    }
     return obj;
   },
   create(base) {
@@ -5387,45 +6240,66 @@ var VoiceLeavedEvent = {
     return writer;
   },
   decode(input, length) {
-    const reader = input instanceof import_minimal4.default.Reader ? input : new import_minimal4.default.Reader(input);
+    const reader = input instanceof import_minimal4.default.Reader ? input : import_minimal4.default.Reader.create(input);
     let end = length === void 0 ? reader.len : reader.pos + length;
     const message = createBaseVoiceLeavedEvent();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag !== 10) {
+            break;
+          }
           message.id = reader.string();
-          break;
+          continue;
         case 2:
+          if (tag !== 18) {
+            break;
+          }
           message.clan_id = reader.string();
-          break;
+          continue;
         case 3:
+          if (tag !== 26) {
+            break;
+          }
           message.voice_channel_id = reader.string();
-          break;
+          continue;
         case 4:
+          if (tag !== 34) {
+            break;
+          }
           message.voice_user_id = reader.string();
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
   fromJSON(object) {
     return {
-      id: isSet4(object.id) ? String(object.id) : "",
-      clan_id: isSet4(object.clan_id) ? String(object.clan_id) : "",
-      voice_channel_id: isSet4(object.voice_channel_id) ? String(object.voice_channel_id) : "",
-      voice_user_id: isSet4(object.voice_user_id) ? String(object.voice_user_id) : ""
+      id: isSet4(object.id) ? globalThis.String(object.id) : "",
+      clan_id: isSet4(object.clan_id) ? globalThis.String(object.clan_id) : "",
+      voice_channel_id: isSet4(object.voice_channel_id) ? globalThis.String(object.voice_channel_id) : "",
+      voice_user_id: isSet4(object.voice_user_id) ? globalThis.String(object.voice_user_id) : ""
     };
   },
   toJSON(message) {
     const obj = {};
-    message.id !== void 0 && (obj.id = message.id);
-    message.clan_id !== void 0 && (obj.clan_id = message.clan_id);
-    message.voice_channel_id !== void 0 && (obj.voice_channel_id = message.voice_channel_id);
-    message.voice_user_id !== void 0 && (obj.voice_user_id = message.voice_user_id);
+    if (message.id !== "") {
+      obj.id = message.id;
+    }
+    if (message.clan_id !== "") {
+      obj.clan_id = message.clan_id;
+    }
+    if (message.voice_channel_id !== "") {
+      obj.voice_channel_id = message.voice_channel_id;
+    }
+    if (message.voice_user_id !== "") {
+      obj.voice_user_id = message.voice_user_id;
+    }
     return obj;
   },
   create(base) {
@@ -5482,65 +6356,106 @@ var VoiceJoinedEvent = {
     return writer;
   },
   decode(input, length) {
-    const reader = input instanceof import_minimal4.default.Reader ? input : new import_minimal4.default.Reader(input);
+    const reader = input instanceof import_minimal4.default.Reader ? input : import_minimal4.default.Reader.create(input);
     let end = length === void 0 ? reader.len : reader.pos + length;
     const message = createBaseVoiceJoinedEvent();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag !== 10) {
+            break;
+          }
           message.clan_id = reader.string();
-          break;
+          continue;
         case 2:
+          if (tag !== 18) {
+            break;
+          }
           message.clan_name = reader.string();
-          break;
+          continue;
         case 3:
+          if (tag !== 26) {
+            break;
+          }
           message.id = reader.string();
-          break;
+          continue;
         case 4:
+          if (tag !== 34) {
+            break;
+          }
           message.participant = reader.string();
-          break;
+          continue;
         case 5:
+          if (tag !== 42) {
+            break;
+          }
           message.user_id = reader.string();
-          break;
+          continue;
         case 6:
+          if (tag !== 50) {
+            break;
+          }
           message.voice_channel_label = reader.string();
-          break;
+          continue;
         case 7:
+          if (tag !== 58) {
+            break;
+          }
           message.voice_channel_id = reader.string();
-          break;
+          continue;
         case 8:
+          if (tag !== 66) {
+            break;
+          }
           message.last_screenshot = reader.string();
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
   fromJSON(object) {
     return {
-      clan_id: isSet4(object.clan_id) ? String(object.clan_id) : "",
-      clan_name: isSet4(object.clan_name) ? String(object.clan_name) : "",
-      id: isSet4(object.id) ? String(object.id) : "",
-      participant: isSet4(object.participant) ? String(object.participant) : "",
-      user_id: isSet4(object.user_id) ? String(object.user_id) : "",
-      voice_channel_label: isSet4(object.voice_channel_label) ? String(object.voice_channel_label) : "",
-      voice_channel_id: isSet4(object.voice_channel_id) ? String(object.voice_channel_id) : "",
-      last_screenshot: isSet4(object.last_screenshot) ? String(object.last_screenshot) : ""
+      clan_id: isSet4(object.clan_id) ? globalThis.String(object.clan_id) : "",
+      clan_name: isSet4(object.clan_name) ? globalThis.String(object.clan_name) : "",
+      id: isSet4(object.id) ? globalThis.String(object.id) : "",
+      participant: isSet4(object.participant) ? globalThis.String(object.participant) : "",
+      user_id: isSet4(object.user_id) ? globalThis.String(object.user_id) : "",
+      voice_channel_label: isSet4(object.voice_channel_label) ? globalThis.String(object.voice_channel_label) : "",
+      voice_channel_id: isSet4(object.voice_channel_id) ? globalThis.String(object.voice_channel_id) : "",
+      last_screenshot: isSet4(object.last_screenshot) ? globalThis.String(object.last_screenshot) : ""
     };
   },
   toJSON(message) {
     const obj = {};
-    message.clan_id !== void 0 && (obj.clan_id = message.clan_id);
-    message.clan_name !== void 0 && (obj.clan_name = message.clan_name);
-    message.id !== void 0 && (obj.id = message.id);
-    message.participant !== void 0 && (obj.participant = message.participant);
-    message.user_id !== void 0 && (obj.user_id = message.user_id);
-    message.voice_channel_label !== void 0 && (obj.voice_channel_label = message.voice_channel_label);
-    message.voice_channel_id !== void 0 && (obj.voice_channel_id = message.voice_channel_id);
-    message.last_screenshot !== void 0 && (obj.last_screenshot = message.last_screenshot);
+    if (message.clan_id !== "") {
+      obj.clan_id = message.clan_id;
+    }
+    if (message.clan_name !== "") {
+      obj.clan_name = message.clan_name;
+    }
+    if (message.id !== "") {
+      obj.id = message.id;
+    }
+    if (message.participant !== "") {
+      obj.participant = message.participant;
+    }
+    if (message.user_id !== "") {
+      obj.user_id = message.user_id;
+    }
+    if (message.voice_channel_label !== "") {
+      obj.voice_channel_label = message.voice_channel_label;
+    }
+    if (message.voice_channel_id !== "") {
+      obj.voice_channel_id = message.voice_channel_id;
+    }
+    if (message.last_screenshot !== "") {
+      obj.last_screenshot = message.last_screenshot;
+    }
     return obj;
   },
   create(base) {
@@ -5577,40 +6492,56 @@ var VoiceStartedEvent = {
     return writer;
   },
   decode(input, length) {
-    const reader = input instanceof import_minimal4.default.Reader ? input : new import_minimal4.default.Reader(input);
+    const reader = input instanceof import_minimal4.default.Reader ? input : import_minimal4.default.Reader.create(input);
     let end = length === void 0 ? reader.len : reader.pos + length;
     const message = createBaseVoiceStartedEvent();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag !== 10) {
+            break;
+          }
           message.id = reader.string();
-          break;
+          continue;
         case 2:
+          if (tag !== 18) {
+            break;
+          }
           message.clan_id = reader.string();
-          break;
+          continue;
         case 3:
+          if (tag !== 26) {
+            break;
+          }
           message.voice_channel_id = reader.string();
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
   fromJSON(object) {
     return {
-      id: isSet4(object.id) ? String(object.id) : "",
-      clan_id: isSet4(object.clan_id) ? String(object.clan_id) : "",
-      voice_channel_id: isSet4(object.voice_channel_id) ? String(object.voice_channel_id) : ""
+      id: isSet4(object.id) ? globalThis.String(object.id) : "",
+      clan_id: isSet4(object.clan_id) ? globalThis.String(object.clan_id) : "",
+      voice_channel_id: isSet4(object.voice_channel_id) ? globalThis.String(object.voice_channel_id) : ""
     };
   },
   toJSON(message) {
     const obj = {};
-    message.id !== void 0 && (obj.id = message.id);
-    message.clan_id !== void 0 && (obj.clan_id = message.clan_id);
-    message.voice_channel_id !== void 0 && (obj.voice_channel_id = message.voice_channel_id);
+    if (message.id !== "") {
+      obj.id = message.id;
+    }
+    if (message.clan_id !== "") {
+      obj.clan_id = message.clan_id;
+    }
+    if (message.voice_channel_id !== "") {
+      obj.voice_channel_id = message.voice_channel_id;
+    }
     return obj;
   },
   create(base) {
@@ -5642,40 +6573,56 @@ var VoiceEndedEvent = {
     return writer;
   },
   decode(input, length) {
-    const reader = input instanceof import_minimal4.default.Reader ? input : new import_minimal4.default.Reader(input);
+    const reader = input instanceof import_minimal4.default.Reader ? input : import_minimal4.default.Reader.create(input);
     let end = length === void 0 ? reader.len : reader.pos + length;
     const message = createBaseVoiceEndedEvent();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag !== 10) {
+            break;
+          }
           message.id = reader.string();
-          break;
+          continue;
         case 2:
+          if (tag !== 18) {
+            break;
+          }
           message.clan_id = reader.string();
-          break;
+          continue;
         case 3:
+          if (tag !== 26) {
+            break;
+          }
           message.voice_channel_id = reader.string();
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
   fromJSON(object) {
     return {
-      id: isSet4(object.id) ? String(object.id) : "",
-      clan_id: isSet4(object.clan_id) ? String(object.clan_id) : "",
-      voice_channel_id: isSet4(object.voice_channel_id) ? String(object.voice_channel_id) : ""
+      id: isSet4(object.id) ? globalThis.String(object.id) : "",
+      clan_id: isSet4(object.clan_id) ? globalThis.String(object.clan_id) : "",
+      voice_channel_id: isSet4(object.voice_channel_id) ? globalThis.String(object.voice_channel_id) : ""
     };
   },
   toJSON(message) {
     const obj = {};
-    message.id !== void 0 && (obj.id = message.id);
-    message.clan_id !== void 0 && (obj.clan_id = message.clan_id);
-    message.voice_channel_id !== void 0 && (obj.voice_channel_id = message.voice_channel_id);
+    if (message.id !== "") {
+      obj.id = message.id;
+    }
+    if (message.clan_id !== "") {
+      obj.clan_id = message.clan_id;
+    }
+    if (message.voice_channel_id !== "") {
+      obj.voice_channel_id = message.voice_channel_id;
+    }
     return obj;
   },
   create(base) {
@@ -5735,70 +6682,116 @@ var ChannelCreatedEvent = {
     return writer;
   },
   decode(input, length) {
-    const reader = input instanceof import_minimal4.default.Reader ? input : new import_minimal4.default.Reader(input);
+    const reader = input instanceof import_minimal4.default.Reader ? input : import_minimal4.default.Reader.create(input);
     let end = length === void 0 ? reader.len : reader.pos + length;
     const message = createBaseChannelCreatedEvent();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag !== 10) {
+            break;
+          }
           message.clan_id = reader.string();
-          break;
+          continue;
         case 2:
+          if (tag !== 18) {
+            break;
+          }
           message.category_id = reader.string();
-          break;
+          continue;
         case 3:
+          if (tag !== 26) {
+            break;
+          }
           message.creator_id = reader.string();
-          break;
+          continue;
         case 4:
+          if (tag !== 34) {
+            break;
+          }
           message.parrent_id = reader.string();
-          break;
+          continue;
         case 5:
+          if (tag !== 42) {
+            break;
+          }
           message.channel_id = reader.string();
-          break;
+          continue;
         case 6:
+          if (tag !== 50) {
+            break;
+          }
           message.channel_label = reader.string();
-          break;
+          continue;
         case 7:
+          if (tag !== 56) {
+            break;
+          }
           message.channel_private = reader.int32();
-          break;
+          continue;
         case 8:
+          if (tag !== 66) {
+            break;
+          }
           message.channel_type = Int32Value.decode(reader, reader.uint32()).value;
-          break;
+          continue;
         case 9:
+          if (tag !== 72) {
+            break;
+          }
           message.status = reader.int32();
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
   fromJSON(object) {
     return {
-      clan_id: isSet4(object.clan_id) ? String(object.clan_id) : "",
-      category_id: isSet4(object.category_id) ? String(object.category_id) : "",
-      creator_id: isSet4(object.creator_id) ? String(object.creator_id) : "",
-      parrent_id: isSet4(object.parrent_id) ? String(object.parrent_id) : "",
-      channel_id: isSet4(object.channel_id) ? String(object.channel_id) : "",
-      channel_label: isSet4(object.channel_label) ? String(object.channel_label) : "",
-      channel_private: isSet4(object.channel_private) ? Number(object.channel_private) : 0,
+      clan_id: isSet4(object.clan_id) ? globalThis.String(object.clan_id) : "",
+      category_id: isSet4(object.category_id) ? globalThis.String(object.category_id) : "",
+      creator_id: isSet4(object.creator_id) ? globalThis.String(object.creator_id) : "",
+      parrent_id: isSet4(object.parrent_id) ? globalThis.String(object.parrent_id) : "",
+      channel_id: isSet4(object.channel_id) ? globalThis.String(object.channel_id) : "",
+      channel_label: isSet4(object.channel_label) ? globalThis.String(object.channel_label) : "",
+      channel_private: isSet4(object.channel_private) ? globalThis.Number(object.channel_private) : 0,
       channel_type: isSet4(object.channel_type) ? Number(object.channel_type) : void 0,
-      status: isSet4(object.status) ? Number(object.status) : 0
+      status: isSet4(object.status) ? globalThis.Number(object.status) : 0
     };
   },
   toJSON(message) {
     const obj = {};
-    message.clan_id !== void 0 && (obj.clan_id = message.clan_id);
-    message.category_id !== void 0 && (obj.category_id = message.category_id);
-    message.creator_id !== void 0 && (obj.creator_id = message.creator_id);
-    message.parrent_id !== void 0 && (obj.parrent_id = message.parrent_id);
-    message.channel_id !== void 0 && (obj.channel_id = message.channel_id);
-    message.channel_label !== void 0 && (obj.channel_label = message.channel_label);
-    message.channel_private !== void 0 && (obj.channel_private = Math.round(message.channel_private));
-    message.channel_type !== void 0 && (obj.channel_type = message.channel_type);
-    message.status !== void 0 && (obj.status = Math.round(message.status));
+    if (message.clan_id !== "") {
+      obj.clan_id = message.clan_id;
+    }
+    if (message.category_id !== "") {
+      obj.category_id = message.category_id;
+    }
+    if (message.creator_id !== "") {
+      obj.creator_id = message.creator_id;
+    }
+    if (message.parrent_id !== "") {
+      obj.parrent_id = message.parrent_id;
+    }
+    if (message.channel_id !== "") {
+      obj.channel_id = message.channel_id;
+    }
+    if (message.channel_label !== "") {
+      obj.channel_label = message.channel_label;
+    }
+    if (message.channel_private !== 0) {
+      obj.channel_private = Math.round(message.channel_private);
+    }
+    if (message.channel_type !== void 0) {
+      obj.channel_type = message.channel_type;
+    }
+    if (message.status !== 0) {
+      obj.status = Math.round(message.status);
+    }
     return obj;
   },
   create(base) {
@@ -5842,50 +6835,76 @@ var ChannelDeletedEvent = {
     return writer;
   },
   decode(input, length) {
-    const reader = input instanceof import_minimal4.default.Reader ? input : new import_minimal4.default.Reader(input);
+    const reader = input instanceof import_minimal4.default.Reader ? input : import_minimal4.default.Reader.create(input);
     let end = length === void 0 ? reader.len : reader.pos + length;
     const message = createBaseChannelDeletedEvent();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag !== 10) {
+            break;
+          }
           message.clan_id = reader.string();
-          break;
+          continue;
         case 2:
+          if (tag !== 18) {
+            break;
+          }
           message.category_id = reader.string();
-          break;
+          continue;
         case 3:
+          if (tag !== 26) {
+            break;
+          }
           message.parrent_id = reader.string();
-          break;
+          continue;
         case 4:
+          if (tag !== 34) {
+            break;
+          }
           message.channel_id = reader.string();
-          break;
+          continue;
         case 5:
+          if (tag !== 42) {
+            break;
+          }
           message.deletor = reader.string();
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
   fromJSON(object) {
     return {
-      clan_id: isSet4(object.clan_id) ? String(object.clan_id) : "",
-      category_id: isSet4(object.category_id) ? String(object.category_id) : "",
-      parrent_id: isSet4(object.parrent_id) ? String(object.parrent_id) : "",
-      channel_id: isSet4(object.channel_id) ? String(object.channel_id) : "",
-      deletor: isSet4(object.deletor) ? String(object.deletor) : ""
+      clan_id: isSet4(object.clan_id) ? globalThis.String(object.clan_id) : "",
+      category_id: isSet4(object.category_id) ? globalThis.String(object.category_id) : "",
+      parrent_id: isSet4(object.parrent_id) ? globalThis.String(object.parrent_id) : "",
+      channel_id: isSet4(object.channel_id) ? globalThis.String(object.channel_id) : "",
+      deletor: isSet4(object.deletor) ? globalThis.String(object.deletor) : ""
     };
   },
   toJSON(message) {
     const obj = {};
-    message.clan_id !== void 0 && (obj.clan_id = message.clan_id);
-    message.category_id !== void 0 && (obj.category_id = message.category_id);
-    message.parrent_id !== void 0 && (obj.parrent_id = message.parrent_id);
-    message.channel_id !== void 0 && (obj.channel_id = message.channel_id);
-    message.deletor !== void 0 && (obj.deletor = message.deletor);
+    if (message.clan_id !== "") {
+      obj.clan_id = message.clan_id;
+    }
+    if (message.category_id !== "") {
+      obj.category_id = message.category_id;
+    }
+    if (message.parrent_id !== "") {
+      obj.parrent_id = message.parrent_id;
+    }
+    if (message.channel_id !== "") {
+      obj.channel_id = message.channel_id;
+    }
+    if (message.deletor !== "") {
+      obj.deletor = message.deletor;
+    }
     return obj;
   },
   create(base) {
@@ -5943,65 +6962,106 @@ var ChannelUpdatedEvent = {
     return writer;
   },
   decode(input, length) {
-    const reader = input instanceof import_minimal4.default.Reader ? input : new import_minimal4.default.Reader(input);
+    const reader = input instanceof import_minimal4.default.Reader ? input : import_minimal4.default.Reader.create(input);
     let end = length === void 0 ? reader.len : reader.pos + length;
     const message = createBaseChannelUpdatedEvent();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag !== 10) {
+            break;
+          }
           message.clan_id = reader.string();
-          break;
+          continue;
         case 2:
+          if (tag !== 18) {
+            break;
+          }
           message.category_id = reader.string();
-          break;
+          continue;
         case 3:
+          if (tag !== 26) {
+            break;
+          }
           message.creator_id = reader.string();
-          break;
+          continue;
         case 4:
+          if (tag !== 34) {
+            break;
+          }
           message.parrent_id = reader.string();
-          break;
+          continue;
         case 5:
+          if (tag !== 42) {
+            break;
+          }
           message.channel_id = reader.string();
-          break;
+          continue;
         case 6:
+          if (tag !== 50) {
+            break;
+          }
           message.channel_label = reader.string();
-          break;
+          continue;
         case 7:
+          if (tag !== 58) {
+            break;
+          }
           message.channel_type = Int32Value.decode(reader, reader.uint32()).value;
-          break;
+          continue;
         case 8:
+          if (tag !== 64) {
+            break;
+          }
           message.status = reader.int32();
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
   fromJSON(object) {
     return {
-      clan_id: isSet4(object.clan_id) ? String(object.clan_id) : "",
-      category_id: isSet4(object.category_id) ? String(object.category_id) : "",
-      creator_id: isSet4(object.creator_id) ? String(object.creator_id) : "",
-      parrent_id: isSet4(object.parrent_id) ? String(object.parrent_id) : "",
-      channel_id: isSet4(object.channel_id) ? String(object.channel_id) : "",
-      channel_label: isSet4(object.channel_label) ? String(object.channel_label) : "",
+      clan_id: isSet4(object.clan_id) ? globalThis.String(object.clan_id) : "",
+      category_id: isSet4(object.category_id) ? globalThis.String(object.category_id) : "",
+      creator_id: isSet4(object.creator_id) ? globalThis.String(object.creator_id) : "",
+      parrent_id: isSet4(object.parrent_id) ? globalThis.String(object.parrent_id) : "",
+      channel_id: isSet4(object.channel_id) ? globalThis.String(object.channel_id) : "",
+      channel_label: isSet4(object.channel_label) ? globalThis.String(object.channel_label) : "",
       channel_type: isSet4(object.channel_type) ? Number(object.channel_type) : void 0,
-      status: isSet4(object.status) ? Number(object.status) : 0
+      status: isSet4(object.status) ? globalThis.Number(object.status) : 0
     };
   },
   toJSON(message) {
     const obj = {};
-    message.clan_id !== void 0 && (obj.clan_id = message.clan_id);
-    message.category_id !== void 0 && (obj.category_id = message.category_id);
-    message.creator_id !== void 0 && (obj.creator_id = message.creator_id);
-    message.parrent_id !== void 0 && (obj.parrent_id = message.parrent_id);
-    message.channel_id !== void 0 && (obj.channel_id = message.channel_id);
-    message.channel_label !== void 0 && (obj.channel_label = message.channel_label);
-    message.channel_type !== void 0 && (obj.channel_type = message.channel_type);
-    message.status !== void 0 && (obj.status = Math.round(message.status));
+    if (message.clan_id !== "") {
+      obj.clan_id = message.clan_id;
+    }
+    if (message.category_id !== "") {
+      obj.category_id = message.category_id;
+    }
+    if (message.creator_id !== "") {
+      obj.creator_id = message.creator_id;
+    }
+    if (message.parrent_id !== "") {
+      obj.parrent_id = message.parrent_id;
+    }
+    if (message.channel_id !== "") {
+      obj.channel_id = message.channel_id;
+    }
+    if (message.channel_label !== "") {
+      obj.channel_label = message.channel_label;
+    }
+    if (message.channel_type !== void 0) {
+      obj.channel_type = message.channel_type;
+    }
+    if (message.status !== 0) {
+      obj.status = Math.round(message.status);
+    }
     return obj;
   },
   create(base) {
@@ -6032,31 +7092,36 @@ var StatusUnfollow = {
     return writer;
   },
   decode(input, length) {
-    const reader = input instanceof import_minimal4.default.Reader ? input : new import_minimal4.default.Reader(input);
+    const reader = input instanceof import_minimal4.default.Reader ? input : import_minimal4.default.Reader.create(input);
     let end = length === void 0 ? reader.len : reader.pos + length;
     const message = createBaseStatusUnfollow();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag !== 10) {
+            break;
+          }
           message.user_ids.push(reader.string());
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
   fromJSON(object) {
-    return { user_ids: Array.isArray(object == null ? void 0 : object.user_ids) ? object.user_ids.map((e) => String(e)) : [] };
+    return {
+      user_ids: globalThis.Array.isArray(object == null ? void 0 : object.user_ids) ? object.user_ids.map((e) => globalThis.String(e)) : []
+    };
   },
   toJSON(message) {
+    var _a;
     const obj = {};
-    if (message.user_ids) {
-      obj.user_ids = message.user_ids.map((e) => e);
-    } else {
-      obj.user_ids = [];
+    if ((_a = message.user_ids) == null ? void 0 : _a.length) {
+      obj.user_ids = message.user_ids;
     }
     return obj;
   },
@@ -6081,19 +7146,23 @@ var StatusUpdate = {
     return writer;
   },
   decode(input, length) {
-    const reader = input instanceof import_minimal4.default.Reader ? input : new import_minimal4.default.Reader(input);
+    const reader = input instanceof import_minimal4.default.Reader ? input : import_minimal4.default.Reader.create(input);
     let end = length === void 0 ? reader.len : reader.pos + length;
     const message = createBaseStatusUpdate();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag !== 10) {
+            break;
+          }
           message.status = StringValue.decode(reader, reader.uint32()).value;
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
@@ -6102,7 +7171,9 @@ var StatusUpdate = {
   },
   toJSON(message) {
     const obj = {};
-    message.status !== void 0 && (obj.status = message.status);
+    if (message.status !== void 0) {
+      obj.status = message.status;
+    }
     return obj;
   },
   create(base) {
@@ -6135,45 +7206,66 @@ var Stream = {
     return writer;
   },
   decode(input, length) {
-    const reader = input instanceof import_minimal4.default.Reader ? input : new import_minimal4.default.Reader(input);
+    const reader = input instanceof import_minimal4.default.Reader ? input : import_minimal4.default.Reader.create(input);
     let end = length === void 0 ? reader.len : reader.pos + length;
     const message = createBaseStream();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag !== 8) {
+            break;
+          }
           message.mode = reader.int32();
-          break;
+          continue;
         case 2:
+          if (tag !== 18) {
+            break;
+          }
           message.channel_id = reader.string();
-          break;
+          continue;
         case 3:
+          if (tag !== 26) {
+            break;
+          }
           message.clan_id = reader.string();
-          break;
+          continue;
         case 4:
+          if (tag !== 34) {
+            break;
+          }
           message.label = reader.string();
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
   fromJSON(object) {
     return {
-      mode: isSet4(object.mode) ? Number(object.mode) : 0,
-      channel_id: isSet4(object.channel_id) ? String(object.channel_id) : "",
-      clan_id: isSet4(object.clan_id) ? String(object.clan_id) : "",
-      label: isSet4(object.label) ? String(object.label) : ""
+      mode: isSet4(object.mode) ? globalThis.Number(object.mode) : 0,
+      channel_id: isSet4(object.channel_id) ? globalThis.String(object.channel_id) : "",
+      clan_id: isSet4(object.clan_id) ? globalThis.String(object.clan_id) : "",
+      label: isSet4(object.label) ? globalThis.String(object.label) : ""
     };
   },
   toJSON(message) {
     const obj = {};
-    message.mode !== void 0 && (obj.mode = Math.round(message.mode));
-    message.channel_id !== void 0 && (obj.channel_id = message.channel_id);
-    message.clan_id !== void 0 && (obj.clan_id = message.clan_id);
-    message.label !== void 0 && (obj.label = message.label);
+    if (message.mode !== 0) {
+      obj.mode = Math.round(message.mode);
+    }
+    if (message.channel_id !== "") {
+      obj.channel_id = message.channel_id;
+    }
+    if (message.clan_id !== "") {
+      obj.clan_id = message.clan_id;
+    }
+    if (message.label !== "") {
+      obj.label = message.label;
+    }
     return obj;
   },
   create(base) {
@@ -6203,34 +7295,47 @@ var StreamData = {
     if (message.data !== "") {
       writer.uint32(26).string(message.data);
     }
-    if (message.reliable === true) {
+    if (message.reliable !== false) {
       writer.uint32(32).bool(message.reliable);
     }
     return writer;
   },
   decode(input, length) {
-    const reader = input instanceof import_minimal4.default.Reader ? input : new import_minimal4.default.Reader(input);
+    const reader = input instanceof import_minimal4.default.Reader ? input : import_minimal4.default.Reader.create(input);
     let end = length === void 0 ? reader.len : reader.pos + length;
     const message = createBaseStreamData();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag !== 10) {
+            break;
+          }
           message.stream = Stream.decode(reader, reader.uint32());
-          break;
+          continue;
         case 2:
+          if (tag !== 18) {
+            break;
+          }
           message.sender = UserPresence.decode(reader, reader.uint32());
-          break;
+          continue;
         case 3:
+          if (tag !== 26) {
+            break;
+          }
           message.data = reader.string();
-          break;
+          continue;
         case 4:
+          if (tag !== 32) {
+            break;
+          }
           message.reliable = reader.bool();
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
@@ -6238,16 +7343,24 @@ var StreamData = {
     return {
       stream: isSet4(object.stream) ? Stream.fromJSON(object.stream) : void 0,
       sender: isSet4(object.sender) ? UserPresence.fromJSON(object.sender) : void 0,
-      data: isSet4(object.data) ? String(object.data) : "",
-      reliable: isSet4(object.reliable) ? Boolean(object.reliable) : false
+      data: isSet4(object.data) ? globalThis.String(object.data) : "",
+      reliable: isSet4(object.reliable) ? globalThis.Boolean(object.reliable) : false
     };
   },
   toJSON(message) {
     const obj = {};
-    message.stream !== void 0 && (obj.stream = message.stream ? Stream.toJSON(message.stream) : void 0);
-    message.sender !== void 0 && (obj.sender = message.sender ? UserPresence.toJSON(message.sender) : void 0);
-    message.data !== void 0 && (obj.data = message.data);
-    message.reliable !== void 0 && (obj.reliable = message.reliable);
+    if (message.stream !== void 0) {
+      obj.stream = Stream.toJSON(message.stream);
+    }
+    if (message.sender !== void 0) {
+      obj.sender = UserPresence.toJSON(message.sender);
+    }
+    if (message.data !== "") {
+      obj.data = message.data;
+    }
+    if (message.reliable !== false) {
+      obj.reliable = message.reliable;
+    }
     return obj;
   },
   create(base) {
@@ -6280,47 +7393,56 @@ var StreamPresenceEvent = {
     return writer;
   },
   decode(input, length) {
-    const reader = input instanceof import_minimal4.default.Reader ? input : new import_minimal4.default.Reader(input);
+    const reader = input instanceof import_minimal4.default.Reader ? input : import_minimal4.default.Reader.create(input);
     let end = length === void 0 ? reader.len : reader.pos + length;
     const message = createBaseStreamPresenceEvent();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag !== 10) {
+            break;
+          }
           message.stream = Stream.decode(reader, reader.uint32());
-          break;
+          continue;
         case 2:
+          if (tag !== 18) {
+            break;
+          }
           message.joins.push(UserPresence.decode(reader, reader.uint32()));
-          break;
+          continue;
         case 3:
+          if (tag !== 26) {
+            break;
+          }
           message.leaves.push(UserPresence.decode(reader, reader.uint32()));
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
   fromJSON(object) {
     return {
       stream: isSet4(object.stream) ? Stream.fromJSON(object.stream) : void 0,
-      joins: Array.isArray(object == null ? void 0 : object.joins) ? object.joins.map((e) => UserPresence.fromJSON(e)) : [],
-      leaves: Array.isArray(object == null ? void 0 : object.leaves) ? object.leaves.map((e) => UserPresence.fromJSON(e)) : []
+      joins: globalThis.Array.isArray(object == null ? void 0 : object.joins) ? object.joins.map((e) => UserPresence.fromJSON(e)) : [],
+      leaves: globalThis.Array.isArray(object == null ? void 0 : object.leaves) ? object.leaves.map((e) => UserPresence.fromJSON(e)) : []
     };
   },
   toJSON(message) {
+    var _a, _b;
     const obj = {};
-    message.stream !== void 0 && (obj.stream = message.stream ? Stream.toJSON(message.stream) : void 0);
-    if (message.joins) {
-      obj.joins = message.joins.map((e) => e ? UserPresence.toJSON(e) : void 0);
-    } else {
-      obj.joins = [];
+    if (message.stream !== void 0) {
+      obj.stream = Stream.toJSON(message.stream);
     }
-    if (message.leaves) {
-      obj.leaves = message.leaves.map((e) => e ? UserPresence.toJSON(e) : void 0);
-    } else {
-      obj.leaves = [];
+    if ((_a = message.joins) == null ? void 0 : _a.length) {
+      obj.joins = message.joins.map((e) => UserPresence.toJSON(e));
+    }
+    if ((_b = message.leaves) == null ? void 0 : _b.length) {
+      obj.leaves = message.leaves.map((e) => UserPresence.toJSON(e));
     }
     return obj;
   },
@@ -6350,7 +7472,7 @@ var UserPresence = {
     if (message.username !== "") {
       writer.uint32(26).string(message.username);
     }
-    if (message.persistence === true) {
+    if (message.persistence !== false) {
       writer.uint32(32).bool(message.persistence);
     }
     if (message.status !== void 0) {
@@ -6359,50 +7481,76 @@ var UserPresence = {
     return writer;
   },
   decode(input, length) {
-    const reader = input instanceof import_minimal4.default.Reader ? input : new import_minimal4.default.Reader(input);
+    const reader = input instanceof import_minimal4.default.Reader ? input : import_minimal4.default.Reader.create(input);
     let end = length === void 0 ? reader.len : reader.pos + length;
     const message = createBaseUserPresence();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag !== 10) {
+            break;
+          }
           message.user_id = reader.string();
-          break;
+          continue;
         case 2:
+          if (tag !== 18) {
+            break;
+          }
           message.session_id = reader.string();
-          break;
+          continue;
         case 3:
+          if (tag !== 26) {
+            break;
+          }
           message.username = reader.string();
-          break;
+          continue;
         case 4:
+          if (tag !== 32) {
+            break;
+          }
           message.persistence = reader.bool();
-          break;
+          continue;
         case 5:
+          if (tag !== 42) {
+            break;
+          }
           message.status = StringValue.decode(reader, reader.uint32()).value;
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
   fromJSON(object) {
     return {
-      user_id: isSet4(object.user_id) ? String(object.user_id) : "",
-      session_id: isSet4(object.session_id) ? String(object.session_id) : "",
-      username: isSet4(object.username) ? String(object.username) : "",
-      persistence: isSet4(object.persistence) ? Boolean(object.persistence) : false,
+      user_id: isSet4(object.user_id) ? globalThis.String(object.user_id) : "",
+      session_id: isSet4(object.session_id) ? globalThis.String(object.session_id) : "",
+      username: isSet4(object.username) ? globalThis.String(object.username) : "",
+      persistence: isSet4(object.persistence) ? globalThis.Boolean(object.persistence) : false,
       status: isSet4(object.status) ? String(object.status) : void 0
     };
   },
   toJSON(message) {
     const obj = {};
-    message.user_id !== void 0 && (obj.user_id = message.user_id);
-    message.session_id !== void 0 && (obj.session_id = message.session_id);
-    message.username !== void 0 && (obj.username = message.username);
-    message.persistence !== void 0 && (obj.persistence = message.persistence);
-    message.status !== void 0 && (obj.status = message.status);
+    if (message.user_id !== "") {
+      obj.user_id = message.user_id;
+    }
+    if (message.session_id !== "") {
+      obj.session_id = message.session_id;
+    }
+    if (message.username !== "") {
+      obj.username = message.username;
+    }
+    if (message.persistence !== false) {
+      obj.persistence = message.persistence;
+    }
+    if (message.status !== void 0) {
+      obj.status = message.status;
+    }
     return obj;
   },
   create(base) {
@@ -6439,45 +7587,66 @@ var CustomStatusEvent = {
     return writer;
   },
   decode(input, length) {
-    const reader = input instanceof import_minimal4.default.Reader ? input : new import_minimal4.default.Reader(input);
+    const reader = input instanceof import_minimal4.default.Reader ? input : import_minimal4.default.Reader.create(input);
     let end = length === void 0 ? reader.len : reader.pos + length;
     const message = createBaseCustomStatusEvent();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag !== 10) {
+            break;
+          }
           message.clan_id = reader.string();
-          break;
+          continue;
         case 2:
+          if (tag !== 18) {
+            break;
+          }
           message.user_id = reader.string();
-          break;
+          continue;
         case 3:
+          if (tag !== 26) {
+            break;
+          }
           message.username = reader.string();
-          break;
+          continue;
         case 4:
+          if (tag !== 34) {
+            break;
+          }
           message.status = reader.string();
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
   fromJSON(object) {
     return {
-      clan_id: isSet4(object.clan_id) ? String(object.clan_id) : "",
-      user_id: isSet4(object.user_id) ? String(object.user_id) : "",
-      username: isSet4(object.username) ? String(object.username) : "",
-      status: isSet4(object.status) ? String(object.status) : ""
+      clan_id: isSet4(object.clan_id) ? globalThis.String(object.clan_id) : "",
+      user_id: isSet4(object.user_id) ? globalThis.String(object.user_id) : "",
+      username: isSet4(object.username) ? globalThis.String(object.username) : "",
+      status: isSet4(object.status) ? globalThis.String(object.status) : ""
     };
   },
   toJSON(message) {
     const obj = {};
-    message.clan_id !== void 0 && (obj.clan_id = message.clan_id);
-    message.user_id !== void 0 && (obj.user_id = message.user_id);
-    message.username !== void 0 && (obj.username = message.username);
-    message.status !== void 0 && (obj.status = message.status);
+    if (message.clan_id !== "") {
+      obj.clan_id = message.clan_id;
+    }
+    if (message.user_id !== "") {
+      obj.user_id = message.user_id;
+    }
+    if (message.username !== "") {
+      obj.username = message.username;
+    }
+    if (message.status !== "") {
+      obj.status = message.status;
+    }
     return obj;
   },
   create(base) {
@@ -6510,40 +7679,56 @@ var AddUsers = {
     return writer;
   },
   decode(input, length) {
-    const reader = input instanceof import_minimal4.default.Reader ? input : new import_minimal4.default.Reader(input);
+    const reader = input instanceof import_minimal4.default.Reader ? input : import_minimal4.default.Reader.create(input);
     let end = length === void 0 ? reader.len : reader.pos + length;
     const message = createBaseAddUsers();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag !== 10) {
+            break;
+          }
           message.user_id = reader.string();
-          break;
+          continue;
         case 2:
+          if (tag !== 18) {
+            break;
+          }
           message.avatar = reader.string();
-          break;
+          continue;
         case 3:
+          if (tag !== 26) {
+            break;
+          }
           message.username = reader.string();
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
   fromJSON(object) {
     return {
-      user_id: isSet4(object.user_id) ? String(object.user_id) : "",
-      avatar: isSet4(object.avatar) ? String(object.avatar) : "",
-      username: isSet4(object.username) ? String(object.username) : ""
+      user_id: isSet4(object.user_id) ? globalThis.String(object.user_id) : "",
+      avatar: isSet4(object.avatar) ? globalThis.String(object.avatar) : "",
+      username: isSet4(object.username) ? globalThis.String(object.username) : ""
     };
   },
   toJSON(message) {
     const obj = {};
-    message.user_id !== void 0 && (obj.user_id = message.user_id);
-    message.avatar !== void 0 && (obj.avatar = message.avatar);
-    message.username !== void 0 && (obj.username = message.username);
+    if (message.user_id !== "") {
+      obj.user_id = message.user_id;
+    }
+    if (message.avatar !== "") {
+      obj.avatar = message.avatar;
+    }
+    if (message.username !== "") {
+      obj.username = message.username;
+    }
     return obj;
   },
   create(base) {
@@ -6581,54 +7766,77 @@ var UserChannelAdded = {
     return writer;
   },
   decode(input, length) {
-    const reader = input instanceof import_minimal4.default.Reader ? input : new import_minimal4.default.Reader(input);
+    const reader = input instanceof import_minimal4.default.Reader ? input : import_minimal4.default.Reader.create(input);
     let end = length === void 0 ? reader.len : reader.pos + length;
     const message = createBaseUserChannelAdded();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag !== 10) {
+            break;
+          }
           message.channel_id = reader.string();
-          break;
+          continue;
         case 2:
+          if (tag !== 18) {
+            break;
+          }
           message.users.push(AddUsers.decode(reader, reader.uint32()));
-          break;
+          continue;
         case 3:
+          if (tag !== 26) {
+            break;
+          }
           message.status = reader.string();
-          break;
+          continue;
         case 4:
+          if (tag !== 34) {
+            break;
+          }
           message.clan_id = reader.string();
-          break;
+          continue;
         case 5:
+          if (tag !== 40) {
+            break;
+          }
           message.channel_type = reader.int32();
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
   fromJSON(object) {
     return {
-      channel_id: isSet4(object.channel_id) ? String(object.channel_id) : "",
-      users: Array.isArray(object == null ? void 0 : object.users) ? object.users.map((e) => AddUsers.fromJSON(e)) : [],
-      status: isSet4(object.status) ? String(object.status) : "",
-      clan_id: isSet4(object.clan_id) ? String(object.clan_id) : "",
-      channel_type: isSet4(object.channel_type) ? Number(object.channel_type) : 0
+      channel_id: isSet4(object.channel_id) ? globalThis.String(object.channel_id) : "",
+      users: globalThis.Array.isArray(object == null ? void 0 : object.users) ? object.users.map((e) => AddUsers.fromJSON(e)) : [],
+      status: isSet4(object.status) ? globalThis.String(object.status) : "",
+      clan_id: isSet4(object.clan_id) ? globalThis.String(object.clan_id) : "",
+      channel_type: isSet4(object.channel_type) ? globalThis.Number(object.channel_type) : 0
     };
   },
   toJSON(message) {
+    var _a;
     const obj = {};
-    message.channel_id !== void 0 && (obj.channel_id = message.channel_id);
-    if (message.users) {
-      obj.users = message.users.map((e) => e ? AddUsers.toJSON(e) : void 0);
-    } else {
-      obj.users = [];
+    if (message.channel_id !== "") {
+      obj.channel_id = message.channel_id;
     }
-    message.status !== void 0 && (obj.status = message.status);
-    message.clan_id !== void 0 && (obj.clan_id = message.clan_id);
-    message.channel_type !== void 0 && (obj.channel_type = Math.round(message.channel_type));
+    if ((_a = message.users) == null ? void 0 : _a.length) {
+      obj.users = message.users.map((e) => AddUsers.toJSON(e));
+    }
+    if (message.status !== "") {
+      obj.status = message.status;
+    }
+    if (message.clan_id !== "") {
+      obj.clan_id = message.clan_id;
+    }
+    if (message.channel_type !== 0) {
+      obj.channel_type = Math.round(message.channel_type);
+    }
     return obj;
   },
   create(base) {
@@ -6659,38 +7867,46 @@ var UserChannelRemoved = {
     return writer;
   },
   decode(input, length) {
-    const reader = input instanceof import_minimal4.default.Reader ? input : new import_minimal4.default.Reader(input);
+    const reader = input instanceof import_minimal4.default.Reader ? input : import_minimal4.default.Reader.create(input);
     let end = length === void 0 ? reader.len : reader.pos + length;
     const message = createBaseUserChannelRemoved();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag !== 10) {
+            break;
+          }
           message.channel_id = reader.string();
-          break;
+          continue;
         case 2:
+          if (tag !== 18) {
+            break;
+          }
           message.user_ids.push(reader.string());
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
   fromJSON(object) {
     return {
-      channel_id: isSet4(object.channel_id) ? String(object.channel_id) : "",
-      user_ids: Array.isArray(object == null ? void 0 : object.user_ids) ? object.user_ids.map((e) => String(e)) : []
+      channel_id: isSet4(object.channel_id) ? globalThis.String(object.channel_id) : "",
+      user_ids: globalThis.Array.isArray(object == null ? void 0 : object.user_ids) ? object.user_ids.map((e) => globalThis.String(e)) : []
     };
   },
   toJSON(message) {
+    var _a;
     const obj = {};
-    message.channel_id !== void 0 && (obj.channel_id = message.channel_id);
-    if (message.user_ids) {
-      obj.user_ids = message.user_ids.map((e) => e);
-    } else {
-      obj.user_ids = [];
+    if (message.channel_id !== "") {
+      obj.channel_id = message.channel_id;
+    }
+    if ((_a = message.user_ids) == null ? void 0 : _a.length) {
+      obj.user_ids = message.user_ids;
     }
     return obj;
   },
@@ -6719,38 +7935,46 @@ var UserClanRemoved = {
     return writer;
   },
   decode(input, length) {
-    const reader = input instanceof import_minimal4.default.Reader ? input : new import_minimal4.default.Reader(input);
+    const reader = input instanceof import_minimal4.default.Reader ? input : import_minimal4.default.Reader.create(input);
     let end = length === void 0 ? reader.len : reader.pos + length;
     const message = createBaseUserClanRemoved();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag !== 10) {
+            break;
+          }
           message.clan_id = reader.string();
-          break;
+          continue;
         case 2:
+          if (tag !== 18) {
+            break;
+          }
           message.user_ids.push(reader.string());
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
   fromJSON(object) {
     return {
-      clan_id: isSet4(object.clan_id) ? String(object.clan_id) : "",
-      user_ids: Array.isArray(object == null ? void 0 : object.user_ids) ? object.user_ids.map((e) => String(e)) : []
+      clan_id: isSet4(object.clan_id) ? globalThis.String(object.clan_id) : "",
+      user_ids: globalThis.Array.isArray(object == null ? void 0 : object.user_ids) ? object.user_ids.map((e) => globalThis.String(e)) : []
     };
   },
   toJSON(message) {
+    var _a;
     const obj = {};
-    message.clan_id !== void 0 && (obj.clan_id = message.clan_id);
-    if (message.user_ids) {
-      obj.user_ids = message.user_ids.map((e) => e);
-    } else {
-      obj.user_ids = [];
+    if (message.clan_id !== "") {
+      obj.clan_id = message.clan_id;
+    }
+    if ((_a = message.user_ids) == null ? void 0 : _a.length) {
+      obj.user_ids = message.user_ids;
     }
     return obj;
   },
@@ -6765,43 +7989,31 @@ var UserClanRemoved = {
     return message;
   }
 };
-var tsProtoGlobalThis4 = (() => {
-  if (typeof globalThis !== "undefined") {
-    return globalThis;
-  }
-  if (typeof self !== "undefined") {
-    return self;
-  }
-  if (typeof window !== "undefined") {
-    return window;
-  }
-  if (typeof global !== "undefined") {
-    return global;
-  }
-  throw "Unable to locate global object";
-})();
 function toTimestamp2(date) {
-  const seconds = date.getTime() / 1e3;
+  const seconds = Math.trunc(date.getTime() / 1e3);
   const nanos = date.getTime() % 1e3 * 1e6;
   return { seconds, nanos };
 }
 function fromTimestamp2(t) {
-  let millis = t.seconds * 1e3;
-  millis += t.nanos / 1e6;
-  return new Date(millis);
+  let millis = (t.seconds || 0) * 1e3;
+  millis += (t.nanos || 0) / 1e6;
+  return new globalThis.Date(millis);
 }
 function fromJsonTimestamp2(o) {
-  if (o instanceof Date) {
+  if (o instanceof globalThis.Date) {
     return o;
   } else if (typeof o === "string") {
-    return new Date(o);
+    return new globalThis.Date(o);
   } else {
     return fromTimestamp2(Timestamp.fromJSON(o));
   }
 }
 function longToNumber2(long) {
-  if (long.gt(Number.MAX_SAFE_INTEGER)) {
-    throw new tsProtoGlobalThis4.Error("Value is larger than Number.MAX_SAFE_INTEGER");
+  if (long.gt(globalThis.Number.MAX_SAFE_INTEGER)) {
+    throw new globalThis.Error("Value is larger than Number.MAX_SAFE_INTEGER");
+  }
+  if (long.lt(globalThis.Number.MIN_SAFE_INTEGER)) {
+    throw new globalThis.Error("Value is smaller than Number.MIN_SAFE_INTEGER");
   }
   return long.toNumber();
 }

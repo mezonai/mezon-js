@@ -5161,9 +5161,9 @@ var ChannelStreamMode = /* @__PURE__ */ ((ChannelStreamMode2) => {
   return ChannelStreamMode2;
 })(ChannelStreamMode || {});
 var NotificationType = /* @__PURE__ */ ((NotificationType2) => {
-  NotificationType2["ALL_MESSAGE"] = "ALL";
-  NotificationType2["NOTHING_MESSAGE"] = "NOTHING";
-  NotificationType2["MENTION_MESSAGE"] = "MENTION";
+  NotificationType2[NotificationType2["ALL_MESSAGE"] = 1] = "ALL_MESSAGE";
+  NotificationType2[NotificationType2["MENTION_MESSAGE"] = 2] = "MENTION_MESSAGE";
+  NotificationType2[NotificationType2["NOTHING_MESSAGE"] = 3] = "NOTHING_MESSAGE";
   return NotificationType2;
 })(NotificationType || {});
 var Client = class {

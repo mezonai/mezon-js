@@ -594,7 +594,7 @@ export interface ApiNotificationChannelCategoySetting {
     channel_category_label?: string;
     channel_category_title?: string;
     id?: string;
-    notification_setting_type?: string;
+    notification_setting_type?: number;
 }
 /**  */
 export interface ApiNotificationChannelCategoySettingsList {
@@ -608,13 +608,13 @@ export interface ApiNotificationList {
 /**  */
 export interface ApiNotificationSetting {
     id?: string;
-    notification_setting_type?: string;
+    notification_setting_type?: number;
 }
 /**  */
 export interface ApiNotificationUserChannel {
     active?: number;
     id?: string;
-    notification_setting_type?: string;
+    notification_setting_type?: number;
     time_mute?: string;
 }
 /**  */
@@ -756,18 +756,18 @@ export interface ApiSessionRefreshRequest {
 export interface ApiSetDefaultNotificationRequest {
     category_id?: string;
     clan_id?: string;
-    notification_type?: string;
+    notification_type?: number;
 }
 /**  */
 export interface ApiSetMuteNotificationRequest {
     active?: number;
     channel_id?: string;
-    notification_type?: string;
+    notification_type?: number;
 }
 /**  */
 export interface ApiSetNotificationRequest {
     channel_id?: string;
-    notification_type?: string;
+    notification_type?: number;
     time_mute?: string;
 }
 /**  */

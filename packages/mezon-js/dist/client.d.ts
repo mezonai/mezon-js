@@ -31,9 +31,9 @@ export declare enum ChannelStreamMode {
     STREAM_MODE_DM = 4
 }
 export declare enum NotificationType {
-    ALL_MESSAGE = "ALL",
-    NOTHING_MESSAGE = "NOTHING",
-    MENTION_MESSAGE = "MENTION"
+    ALL_MESSAGE = 1,
+    MENTION_MESSAGE = 2,
+    NOTHING_MESSAGE = 3
 }
 /** Response for an RPC function executed on the server. */
 export interface RpcResponse {
