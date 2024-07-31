@@ -106,6 +106,7 @@ import {
   ApiClanStickerAddRequest,
   ApiClanStickerListByClanIdResponse,
   MezonUpdateClanStickerByIdBody,
+  MezonChangeChannelCategoryBody,
 } from "./api.gen";
 
 import { Session } from "./session";
@@ -2403,7 +2404,19 @@ async updateClanStickerById(session: Session,id: string,request: MezonUpdateClan
     await this.sessionRefresh(session);
   }
 
-  return this.apiClient.updateClanStickerById(session.token, id,request).then((response: any) => {
+  return this.apiClient.updateClanStickerById(session.token, id, request).then((response: any) => {
+    return response !== undefined;
+  })
+}
+
+//** update the category of a channel */
+async changeChannelCategory(session: Session,id: string,request: MezonChangeChannelCategoryBody) {
+  if (this.autoRefreshSession && session.refresh_token &&
+    session.isexpired((Date.now() + this.expiredTimespanMs)/1000)) {
+    await this.sessionRefresh(session);
+  }
+
+  return this.apiClient.changeChannelCategory(session.token, id, request).then((response: any) => {
     return response !== undefined;
   })
 }
