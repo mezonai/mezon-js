@@ -1035,7 +1035,7 @@ export interface ApiNotificationChannelCategoySetting {
   //
   id?: string;
   //
-  notification_setting_type?: string;
+  notification_setting_type?: number;
 }
 
 /**  */
@@ -1057,7 +1057,7 @@ export interface ApiNotificationSetting {
   //
   id?: string;
   //
-  notification_setting_type?: string;
+  notification_setting_type?: number;
 }
 
 /**  */
@@ -1067,7 +1067,7 @@ export interface ApiNotificationUserChannel {
   //
   id?: string;
   //
-  notification_setting_type?: string;
+  notification_setting_type?: number;
   //
   time_mute?: string;
 }
@@ -1313,7 +1313,7 @@ export interface ApiSetDefaultNotificationRequest {
   //
   clan_id?: string;
   //
-  notification_type?: string;
+  notification_type?: number;
 }
 
 /**  */
@@ -1323,7 +1323,7 @@ export interface ApiSetMuteNotificationRequest {
   //
   channel_id?: string;
   //
-  notification_type?: string;
+  notification_type?: number;
 }
 
 /**  */
@@ -1331,7 +1331,7 @@ export interface ApiSetNotificationRequest {
   //
   channel_id?: string;
   //
-  notification_type?: string;
+  notification_type?: number;
   //
   time_mute?: string;
 }
@@ -1511,7 +1511,7 @@ export interface ApiVoiceChannelUser {
   //Cursor for the next page of results, if any.
   id?: string;
   //
-  channel_id?: string;  
+  channel_id?: string;
   //
   participant?: string;
   //User for a channel.
