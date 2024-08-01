@@ -1329,7 +1329,7 @@ export interface ApiSetMuteNotificationRequest {
 /**  */
 export interface ApiSetNotificationRequest {
   //
-  channel_id?: string;
+  channel_category_id?: string;
   //
   notification_type?: number;
   //
@@ -4865,7 +4865,7 @@ export class MezonApi {
 
   /** set notification user channel. */
   setNotificationCategorySetting(bearerToken: string,
-      body:ApiSetDefaultNotificationRequest,
+      body:ApiSetNotificationRequest,
       options: any = {}): Promise<any> {
     
     if (body === null || body === undefined) {
@@ -4935,7 +4935,7 @@ export class MezonApi {
   /** notification selected */
   getNotificationCategorySetting(bearerToken: string,
       categoryId?:string,
-      options: any = {}): Promise<ApiNotificationSetting> {
+      options: any = {}): Promise<ApiNotificationUserChannel> {
     
     const urlPath = "/v2/notificationusercategory/get";
     const queryParams = new Map<string, any>();

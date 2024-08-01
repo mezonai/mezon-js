@@ -2199,8 +2199,11 @@ export interface NotificationSettingList {
 
 /** set notification */
 export interface SetNotificationRequest {
-  channel_id: string;
+  /** channelId or categoryId */
+  channel_category_id: string;
+  /** notification_type */
   notification_type: number;
+  /** time mute channel category */
   time_mute: Date | undefined;
 }
 
@@ -19013,13 +19016,13 @@ export const NotificationSettingList = {
 };
 
 function createBaseSetNotificationRequest(): SetNotificationRequest {
-  return { channel_id: "", notification_type: 0, time_mute: undefined };
+  return { channel_category_id: "", notification_type: 0, time_mute: undefined };
 }
 
 export const SetNotificationRequest = {
   encode(message: SetNotificationRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.channel_id !== "") {
-      writer.uint32(10).string(message.channel_id);
+    if (message.channel_category_id !== "") {
+      writer.uint32(10).string(message.channel_category_id);
     }
     if (message.notification_type !== 0) {
       writer.uint32(16).int32(message.notification_type);
@@ -19042,7 +19045,7 @@ export const SetNotificationRequest = {
             break;
           }
 
-          message.channel_id = reader.string();
+          message.channel_category_id = reader.string();
           continue;
         case 2:
           if (tag !== 16) {
@@ -19069,7 +19072,7 @@ export const SetNotificationRequest = {
 
   fromJSON(object: any): SetNotificationRequest {
     return {
-      channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "",
+      channel_category_id: isSet(object.channel_category_id) ? globalThis.String(object.channel_category_id) : "",
       notification_type: isSet(object.notification_type) ? globalThis.Number(object.notification_type) : 0,
       time_mute: isSet(object.time_mute) ? fromJsonTimestamp(object.time_mute) : undefined,
     };
@@ -19077,8 +19080,8 @@ export const SetNotificationRequest = {
 
   toJSON(message: SetNotificationRequest): unknown {
     const obj: any = {};
-    if (message.channel_id !== "") {
-      obj.channel_id = message.channel_id;
+    if (message.channel_category_id !== "") {
+      obj.channel_category_id = message.channel_category_id;
     }
     if (message.notification_type !== 0) {
       obj.notification_type = Math.round(message.notification_type);
@@ -19094,7 +19097,7 @@ export const SetNotificationRequest = {
   },
   fromPartial<I extends Exact<DeepPartial<SetNotificationRequest>, I>>(object: I): SetNotificationRequest {
     const message = createBaseSetNotificationRequest();
-    message.channel_id = object.channel_id ?? "";
+    message.channel_category_id = object.channel_category_id ?? "";
     message.notification_type = object.notification_type ?? 0;
     message.time_mute = object.time_mute ?? undefined;
     return message;
