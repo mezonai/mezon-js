@@ -28,16 +28,7 @@ client.authenticateEmail("user1@ncc.asia", "Aa12345678").then(async session => {
   const session2 = await socket.connect(session, true);
   console.log("session", session2);
 
-  socket.disconnect(true);  
-
-  //const socket1 = client.createSocket(false, true, new WebSocketAdapterPb());
-  const refreshsession  = await client.sessionRefresh(session);
-  setTimeout(function() {
-    console.log("World");
-  }, 5000);
-  const session3 = await socket.reconnect(refreshsession, true);
-  
-  console.log("session 3", session3);
+  client.listChannelMessages(session, 'channel id', 'msgid', 3)
 
 }).catch(e => {
   console.log("error authenticating.");
