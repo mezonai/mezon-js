@@ -500,6 +500,24 @@ export interface ChannelDeletedEvent {
   deletor: string;
 }
 
+// clan updated event
+export interface ClanUpdatedEvent {
+  // the clan id
+  clan_id: string;
+  // the clan name
+  clan_name: string;
+  // the clan logo
+  clan_logo: string;
+}
+
+export interface ClanProfileUpdatedEvent {
+  // the user id
+  user_id: string;
+  // the clan_nick
+  clan_nick: string;
+  // the avatar
+  clan_avatar: string;
+}
 
 /** Stream identifier */
 export interface StreamId {
@@ -706,11 +724,17 @@ export interface Socket {
   // when channel is created
   onchannelcreated: (channelCreated: ChannelCreatedEvent) => void;
 
-  // when channel is created
+  // when channel is deleted
   onchanneldeleted: (channelDeleted: ChannelDeletedEvent) => void;
 
-  // when channel is created
+  // when channel is updated
   onchannelupdated: (channelUpdated: ChannelUpdatedEvent) => void;
+
+  // when clan profile is updated
+  onclanprofileupdated: (clanprofile: ClanProfileUpdatedEvent) => void;
+
+  // when clan is updated
+  onclanupdated: (clan: ClanUpdatedEvent) => void;
 
   /* Set the heartbeat timeout used by the socket to detect if it has lost connectivity to the server. */
   setHeartbeatTimeoutMs(ms : number) : void;
@@ -802,6 +826,10 @@ export class DefaultSocket implements Socket {
           this.onchanneldeleted(message.channel_deleted_event) 
         } else if (message.channel_updated_event) {
           this.onchannelupdated(message.channel_updated_event) 
+        } else if (message.clan_profile_updated_event) {
+          this.onclanprofileupdated(message.clan_profile_updated_event) 
+        } else if (message.clan_updated_event) {
+          this.onclanupdated(message.clan_updated_event)
         } else if (message.status_presence_event) {
           this.onstatuspresence(<StatusPresenceEvent>message.status_presence_event);
         } else if (message.stream_presence_event) {
@@ -1031,6 +1059,18 @@ export class DefaultSocket implements Socket {
   onchannelupdated(channelUpdated: ChannelUpdatedEvent) {
     if (this.verbose && window && window.console) {
       console.log(channelUpdated);
+    }
+  }
+
+  onclanprofileupdated(clanprofile: ClanProfileUpdatedEvent) {
+    if (this.verbose && window && window.console) {
+      console.log(clanprofile);
+    }
+  }
+
+  onclanupdated(clan: ClanUpdatedEvent) {
+    if (this.verbose && window && window.console) {
+      console.log(clan);
     }
   }
 

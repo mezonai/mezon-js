@@ -157,7 +157,15 @@ export interface Envelope {
     | UserChannelRemoved
     | undefined;
   /** User is removed to clan event */
-  user_clan_removed_event?: UserClanRemoved | undefined;
+  user_clan_removed_event?:
+    | UserClanRemoved
+    | undefined;
+  /** Clan updated event */
+  clan_updated_event?:
+    | ClanUpdatedEvent
+    | undefined;
+  /** Clan profile updated event */
+  clan_profile_updated_event?: ClanProfileUpdatedEvent | undefined;
 }
 
 /** A realtime chat channel. */
@@ -240,6 +248,10 @@ export interface MessageMention {
   user_id: string;
   /** mention username */
   username: string;
+  /** role id */
+  role_id: string;
+  /** role name */
+  rolename: string;
 }
 
 /** Message attachment */
@@ -811,6 +823,26 @@ export interface UserClanRemoved {
   user_ids: string[];
 }
 
+/** clan updated event */
+export interface ClanUpdatedEvent {
+  /** the clan id */
+  clan_id: string;
+  /** the clan name */
+  clan_name: string;
+  /** the clan logo */
+  clan_logo: string;
+}
+
+/** clan profile updated event */
+export interface ClanProfileUpdatedEvent {
+  /** the user id */
+  user_id: string;
+  /** the clan_nick */
+  clan_nick: string;
+  /** the avatar */
+  clan_avatar: string;
+}
+
 /** A event when user is added to channel */
 export interface UserProfileRedis {
   /** User IDs to follow. */
@@ -872,6 +904,8 @@ function createBaseEnvelope(): Envelope {
     user_channel_added_event: undefined,
     user_channel_removed_event: undefined,
     user_clan_removed_event: undefined,
+    clan_updated_event: undefined,
+    clan_profile_updated_event: undefined,
   };
 }
 
@@ -990,6 +1024,12 @@ export const Envelope = {
     }
     if (message.user_clan_removed_event !== undefined) {
       UserClanRemoved.encode(message.user_clan_removed_event, writer.uint32(306).fork()).ldelim();
+    }
+    if (message.clan_updated_event !== undefined) {
+      ClanUpdatedEvent.encode(message.clan_updated_event, writer.uint32(314).fork()).ldelim();
+    }
+    if (message.clan_profile_updated_event !== undefined) {
+      ClanProfileUpdatedEvent.encode(message.clan_profile_updated_event, writer.uint32(322).fork()).ldelim();
     }
     return writer;
   },
@@ -1115,6 +1155,12 @@ export const Envelope = {
         case 38:
           message.user_clan_removed_event = UserClanRemoved.decode(reader, reader.uint32());
           break;
+        case 39:
+          message.clan_updated_event = ClanUpdatedEvent.decode(reader, reader.uint32());
+          break;
+        case 40:
+          message.clan_profile_updated_event = ClanProfileUpdatedEvent.decode(reader, reader.uint32());
+          break;
         default:
           reader.skipType(tag & 7);
           break;
@@ -1206,6 +1252,12 @@ export const Envelope = {
         : undefined,
       user_clan_removed_event: isSet(object.user_clan_removed_event)
         ? UserClanRemoved.fromJSON(object.user_clan_removed_event)
+        : undefined,
+      clan_updated_event: isSet(object.clan_updated_event)
+        ? ClanUpdatedEvent.fromJSON(object.clan_updated_event)
+        : undefined,
+      clan_profile_updated_event: isSet(object.clan_profile_updated_event)
+        ? ClanProfileUpdatedEvent.fromJSON(object.clan_profile_updated_event)
         : undefined,
     };
   },
@@ -1305,6 +1357,13 @@ export const Envelope = {
     message.user_clan_removed_event !== undefined && (obj.user_clan_removed_event = message.user_clan_removed_event
       ? UserClanRemoved.toJSON(message.user_clan_removed_event)
       : undefined);
+    message.clan_updated_event !== undefined && (obj.clan_updated_event = message.clan_updated_event
+      ? ClanUpdatedEvent.toJSON(message.clan_updated_event)
+      : undefined);
+    message.clan_profile_updated_event !== undefined &&
+      (obj.clan_profile_updated_event = message.clan_profile_updated_event
+        ? ClanProfileUpdatedEvent.toJSON(message.clan_profile_updated_event)
+        : undefined);
     return obj;
   },
 
@@ -1431,6 +1490,13 @@ export const Envelope = {
     message.user_clan_removed_event =
       (object.user_clan_removed_event !== undefined && object.user_clan_removed_event !== null)
         ? UserClanRemoved.fromPartial(object.user_clan_removed_event)
+        : undefined;
+    message.clan_updated_event = (object.clan_updated_event !== undefined && object.clan_updated_event !== null)
+      ? ClanUpdatedEvent.fromPartial(object.clan_updated_event)
+      : undefined;
+    message.clan_profile_updated_event =
+      (object.clan_profile_updated_event !== undefined && object.clan_profile_updated_event !== null)
+        ? ClanProfileUpdatedEvent.fromPartial(object.clan_profile_updated_event)
         : undefined;
     return message;
   },
@@ -1869,7 +1935,7 @@ export const ChannelMessageAck = {
 };
 
 function createBaseMessageMention(): MessageMention {
-  return { user_id: "", username: "" };
+  return { user_id: "", username: "", role_id: "", rolename: "" };
 }
 
 export const MessageMention = {
@@ -1879,6 +1945,12 @@ export const MessageMention = {
     }
     if (message.username !== "") {
       writer.uint32(18).string(message.username);
+    }
+    if (message.role_id !== "") {
+      writer.uint32(26).string(message.role_id);
+    }
+    if (message.rolename !== "") {
+      writer.uint32(34).string(message.rolename);
     }
     return writer;
   },
@@ -1896,6 +1968,12 @@ export const MessageMention = {
         case 2:
           message.username = reader.string();
           break;
+        case 3:
+          message.role_id = reader.string();
+          break;
+        case 4:
+          message.rolename = reader.string();
+          break;
         default:
           reader.skipType(tag & 7);
           break;
@@ -1908,6 +1986,8 @@ export const MessageMention = {
     return {
       user_id: isSet(object.user_id) ? String(object.user_id) : "",
       username: isSet(object.username) ? String(object.username) : "",
+      role_id: isSet(object.role_id) ? String(object.role_id) : "",
+      rolename: isSet(object.rolename) ? String(object.rolename) : "",
     };
   },
 
@@ -1915,6 +1995,8 @@ export const MessageMention = {
     const obj: any = {};
     message.user_id !== undefined && (obj.user_id = message.user_id);
     message.username !== undefined && (obj.username = message.username);
+    message.role_id !== undefined && (obj.role_id = message.role_id);
+    message.rolename !== undefined && (obj.rolename = message.rolename);
     return obj;
   },
 
@@ -1926,6 +2008,8 @@ export const MessageMention = {
     const message = createBaseMessageMention();
     message.user_id = object.user_id ?? "";
     message.username = object.username ?? "";
+    message.role_id = object.role_id ?? "";
+    message.rolename = object.rolename ?? "";
     return message;
   },
 };
@@ -5273,6 +5357,148 @@ export const UserClanRemoved = {
     const message = createBaseUserClanRemoved();
     message.clan_id = object.clan_id ?? "";
     message.user_ids = object.user_ids?.map((e) => e) || [];
+    return message;
+  },
+};
+
+function createBaseClanUpdatedEvent(): ClanUpdatedEvent {
+  return { clan_id: "", clan_name: "", clan_logo: "" };
+}
+
+export const ClanUpdatedEvent = {
+  encode(message: ClanUpdatedEvent, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.clan_id !== "") {
+      writer.uint32(10).string(message.clan_id);
+    }
+    if (message.clan_name !== "") {
+      writer.uint32(18).string(message.clan_name);
+    }
+    if (message.clan_logo !== "") {
+      writer.uint32(26).string(message.clan_logo);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): ClanUpdatedEvent {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseClanUpdatedEvent();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.clan_id = reader.string();
+          break;
+        case 2:
+          message.clan_name = reader.string();
+          break;
+        case 3:
+          message.clan_logo = reader.string();
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): ClanUpdatedEvent {
+    return {
+      clan_id: isSet(object.clan_id) ? String(object.clan_id) : "",
+      clan_name: isSet(object.clan_name) ? String(object.clan_name) : "",
+      clan_logo: isSet(object.clan_logo) ? String(object.clan_logo) : "",
+    };
+  },
+
+  toJSON(message: ClanUpdatedEvent): unknown {
+    const obj: any = {};
+    message.clan_id !== undefined && (obj.clan_id = message.clan_id);
+    message.clan_name !== undefined && (obj.clan_name = message.clan_name);
+    message.clan_logo !== undefined && (obj.clan_logo = message.clan_logo);
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<ClanUpdatedEvent>, I>>(base?: I): ClanUpdatedEvent {
+    return ClanUpdatedEvent.fromPartial(base ?? {});
+  },
+
+  fromPartial<I extends Exact<DeepPartial<ClanUpdatedEvent>, I>>(object: I): ClanUpdatedEvent {
+    const message = createBaseClanUpdatedEvent();
+    message.clan_id = object.clan_id ?? "";
+    message.clan_name = object.clan_name ?? "";
+    message.clan_logo = object.clan_logo ?? "";
+    return message;
+  },
+};
+
+function createBaseClanProfileUpdatedEvent(): ClanProfileUpdatedEvent {
+  return { user_id: "", clan_nick: "", clan_avatar: "" };
+}
+
+export const ClanProfileUpdatedEvent = {
+  encode(message: ClanProfileUpdatedEvent, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.user_id !== "") {
+      writer.uint32(10).string(message.user_id);
+    }
+    if (message.clan_nick !== "") {
+      writer.uint32(18).string(message.clan_nick);
+    }
+    if (message.clan_avatar !== "") {
+      writer.uint32(26).string(message.clan_avatar);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): ClanProfileUpdatedEvent {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseClanProfileUpdatedEvent();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.user_id = reader.string();
+          break;
+        case 2:
+          message.clan_nick = reader.string();
+          break;
+        case 3:
+          message.clan_avatar = reader.string();
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): ClanProfileUpdatedEvent {
+    return {
+      user_id: isSet(object.user_id) ? String(object.user_id) : "",
+      clan_nick: isSet(object.clan_nick) ? String(object.clan_nick) : "",
+      clan_avatar: isSet(object.clan_avatar) ? String(object.clan_avatar) : "",
+    };
+  },
+
+  toJSON(message: ClanProfileUpdatedEvent): unknown {
+    const obj: any = {};
+    message.user_id !== undefined && (obj.user_id = message.user_id);
+    message.clan_nick !== undefined && (obj.clan_nick = message.clan_nick);
+    message.clan_avatar !== undefined && (obj.clan_avatar = message.clan_avatar);
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<ClanProfileUpdatedEvent>, I>>(base?: I): ClanProfileUpdatedEvent {
+    return ClanProfileUpdatedEvent.fromPartial(base ?? {});
+  },
+
+  fromPartial<I extends Exact<DeepPartial<ClanProfileUpdatedEvent>, I>>(object: I): ClanProfileUpdatedEvent {
+    const message = createBaseClanProfileUpdatedEvent();
+    message.user_id = object.user_id ?? "";
+    message.clan_nick = object.clan_nick ?? "";
+    message.clan_avatar = object.clan_avatar ?? "";
     return message;
   },
 };

@@ -565,6 +565,10 @@ export interface MessageMention {
   user_id: string;
   /** mention username */
   username: string;
+  /** role id */
+  role_id: string;
+  /** role name */
+  rolename: string;
   /** The UNIX time (for gRPC clients) or ISO string (for REST clients) when the message was created. */
   create_time: Date | undefined;
 }
@@ -584,7 +588,7 @@ export interface NotificationInfo {
   /** channel label */
   channel_label: string;
   /** channel type */
-  channel_type: string;
+  channel_type: number;
   /** category name */
   category_name: string;
   /** clan name */
@@ -1241,7 +1245,7 @@ export interface Notification {
   /** ID of channel */
   channel_id: string;
   /** mode of */
-  channel_type: string;
+  channel_type: number;
   /**  */
   avatar_url: string;
 }
@@ -5668,7 +5672,7 @@ export const ChannelMessage = {
 };
 
 function createBaseMessageMention(): MessageMention {
-  return { id: "", user_id: "", username: "", create_time: undefined };
+  return { id: "", user_id: "", username: "", role_id: "", rolename: "", create_time: undefined };
 }
 
 export const MessageMention = {
@@ -5682,8 +5686,14 @@ export const MessageMention = {
     if (message.username !== "") {
       writer.uint32(26).string(message.username);
     }
+    if (message.role_id !== "") {
+      writer.uint32(34).string(message.role_id);
+    }
+    if (message.rolename !== "") {
+      writer.uint32(42).string(message.rolename);
+    }
     if (message.create_time !== undefined) {
-      Timestamp.encode(toTimestamp(message.create_time), writer.uint32(34).fork()).ldelim();
+      Timestamp.encode(toTimestamp(message.create_time), writer.uint32(50).fork()).ldelim();
     }
     return writer;
   },
@@ -5705,6 +5715,12 @@ export const MessageMention = {
           message.username = reader.string();
           break;
         case 4:
+          message.role_id = reader.string();
+          break;
+        case 5:
+          message.rolename = reader.string();
+          break;
+        case 6:
           message.create_time = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
           break;
         default:
@@ -5720,6 +5736,8 @@ export const MessageMention = {
       id: isSet(object.id) ? String(object.id) : "",
       user_id: isSet(object.user_id) ? String(object.user_id) : "",
       username: isSet(object.username) ? String(object.username) : "",
+      role_id: isSet(object.role_id) ? String(object.role_id) : "",
+      rolename: isSet(object.rolename) ? String(object.rolename) : "",
       create_time: isSet(object.create_time) ? fromJsonTimestamp(object.create_time) : undefined,
     };
   },
@@ -5729,6 +5747,8 @@ export const MessageMention = {
     message.id !== undefined && (obj.id = message.id);
     message.user_id !== undefined && (obj.user_id = message.user_id);
     message.username !== undefined && (obj.username = message.username);
+    message.role_id !== undefined && (obj.role_id = message.role_id);
+    message.rolename !== undefined && (obj.rolename = message.rolename);
     message.create_time !== undefined && (obj.create_time = message.create_time.toISOString());
     return obj;
   },
@@ -5742,6 +5762,8 @@ export const MessageMention = {
     message.id = object.id ?? "";
     message.user_id = object.user_id ?? "";
     message.username = object.username ?? "";
+    message.role_id = object.role_id ?? "";
+    message.rolename = object.rolename ?? "";
     message.create_time = object.create_time ?? undefined;
     return message;
   },
@@ -5755,7 +5777,7 @@ function createBaseNotificationInfo(): NotificationInfo {
     clan_avatar: "",
     display_name: "",
     channel_label: "",
-    channel_type: "",
+    channel_type: 0,
     category_name: "",
     clan_name: "",
     clan_logo: "",
@@ -5782,8 +5804,8 @@ export const NotificationInfo = {
     if (message.channel_label !== "") {
       writer.uint32(50).string(message.channel_label);
     }
-    if (message.channel_type !== "") {
-      writer.uint32(58).string(message.channel_type);
+    if (message.channel_type !== 0) {
+      writer.uint32(56).int32(message.channel_type);
     }
     if (message.category_name !== "") {
       writer.uint32(66).string(message.category_name);
@@ -5823,7 +5845,7 @@ export const NotificationInfo = {
           message.channel_label = reader.string();
           break;
         case 7:
-          message.channel_type = reader.string();
+          message.channel_type = reader.int32();
           break;
         case 8:
           message.category_name = reader.string();
@@ -5850,7 +5872,7 @@ export const NotificationInfo = {
       clan_avatar: isSet(object.clan_avatar) ? String(object.clan_avatar) : "",
       display_name: isSet(object.display_name) ? String(object.display_name) : "",
       channel_label: isSet(object.channel_label) ? String(object.channel_label) : "",
-      channel_type: isSet(object.channel_type) ? String(object.channel_type) : "",
+      channel_type: isSet(object.channel_type) ? Number(object.channel_type) : 0,
       category_name: isSet(object.category_name) ? String(object.category_name) : "",
       clan_name: isSet(object.clan_name) ? String(object.clan_name) : "",
       clan_logo: isSet(object.clan_logo) ? String(object.clan_logo) : "",
@@ -5865,7 +5887,7 @@ export const NotificationInfo = {
     message.clan_avatar !== undefined && (obj.clan_avatar = message.clan_avatar);
     message.display_name !== undefined && (obj.display_name = message.display_name);
     message.channel_label !== undefined && (obj.channel_label = message.channel_label);
-    message.channel_type !== undefined && (obj.channel_type = message.channel_type);
+    message.channel_type !== undefined && (obj.channel_type = Math.round(message.channel_type));
     message.category_name !== undefined && (obj.category_name = message.category_name);
     message.clan_name !== undefined && (obj.clan_name = message.clan_name);
     message.clan_logo !== undefined && (obj.clan_logo = message.clan_logo);
@@ -5884,7 +5906,7 @@ export const NotificationInfo = {
     message.clan_avatar = object.clan_avatar ?? "";
     message.display_name = object.display_name ?? "";
     message.channel_label = object.channel_label ?? "";
-    message.channel_type = object.channel_type ?? "";
+    message.channel_type = object.channel_type ?? 0;
     message.category_name = object.category_name ?? "";
     message.clan_name = object.clan_name ?? "";
     message.clan_logo = object.clan_logo ?? "";
@@ -9297,7 +9319,7 @@ function createBaseNotification(): Notification {
     persistent: false,
     clan_id: "",
     channel_id: "",
-    channel_type: "",
+    channel_type: 0,
     avatar_url: "",
   };
 }
@@ -9331,8 +9353,8 @@ export const Notification = {
     if (message.channel_id !== "") {
       writer.uint32(74).string(message.channel_id);
     }
-    if (message.channel_type !== "") {
-      writer.uint32(82).string(message.channel_type);
+    if (message.channel_type !== 0) {
+      writer.uint32(80).int32(message.channel_type);
     }
     if (message.avatar_url !== "") {
       writer.uint32(90).string(message.avatar_url);
@@ -9375,7 +9397,7 @@ export const Notification = {
           message.channel_id = reader.string();
           break;
         case 10:
-          message.channel_type = reader.string();
+          message.channel_type = reader.int32();
           break;
         case 11:
           message.avatar_url = reader.string();
@@ -9399,7 +9421,7 @@ export const Notification = {
       persistent: isSet(object.persistent) ? Boolean(object.persistent) : false,
       clan_id: isSet(object.clan_id) ? String(object.clan_id) : "",
       channel_id: isSet(object.channel_id) ? String(object.channel_id) : "",
-      channel_type: isSet(object.channel_type) ? String(object.channel_type) : "",
+      channel_type: isSet(object.channel_type) ? Number(object.channel_type) : 0,
       avatar_url: isSet(object.avatar_url) ? String(object.avatar_url) : "",
     };
   },
@@ -9415,7 +9437,7 @@ export const Notification = {
     message.persistent !== undefined && (obj.persistent = message.persistent);
     message.clan_id !== undefined && (obj.clan_id = message.clan_id);
     message.channel_id !== undefined && (obj.channel_id = message.channel_id);
-    message.channel_type !== undefined && (obj.channel_type = message.channel_type);
+    message.channel_type !== undefined && (obj.channel_type = Math.round(message.channel_type));
     message.avatar_url !== undefined && (obj.avatar_url = message.avatar_url);
     return obj;
   },
@@ -9435,7 +9457,7 @@ export const Notification = {
     message.persistent = object.persistent ?? false;
     message.clan_id = object.clan_id ?? "";
     message.channel_id = object.channel_id ?? "";
-    message.channel_type = object.channel_type ?? "";
+    message.channel_type = object.channel_type ?? 0;
     message.avatar_url = object.avatar_url ?? "";
     return message;
   },

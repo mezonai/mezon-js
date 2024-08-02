@@ -958,6 +958,10 @@ export interface ApiMessageMention {
   user_id?: string;
   //
   username?: string;
+  // role id
+  role_id?: string;
+  // role name
+  rolename?: string;
 }
 
 /**  */
