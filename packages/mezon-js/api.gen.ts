@@ -958,6 +958,10 @@ export interface ApiMessageMention {
   user_id?: string;
   //
   username?: string;
+  // role id
+  role_id?: string;
+  // role name
+  rolename?: string;
 }
 
 /**  */
@@ -1004,6 +1008,14 @@ export interface ApiMessageRef {
 
 /** A notification in the server. */
 export interface ApiNotification {
+  //
+  avatar_url?: string;
+  //
+  channel_id?: string;
+  //
+  channel_type?: string;
+  //
+  clan_id?: string;  
   //Category code for this notification.
   code?: number;
   //Content of the notification in JSON.
@@ -4726,12 +4738,14 @@ export class MezonApi {
   /** Fetch list of notifications. */
   listNotifications(bearerToken: string,
       limit?:number,
+      clanId?:string,
       cacheableCursor?:string,
       options: any = {}): Promise<ApiNotificationList> {
     
     const urlPath = "/v2/notification";
     const queryParams = new Map<string, any>();
     queryParams.set("limit", limit);
+    queryParams.set("clan_id", clanId);
     queryParams.set("cacheable_cursor", cacheableCursor);
 
     let bodyJson : string = "";
