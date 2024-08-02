@@ -4737,8 +4737,8 @@ export class MezonApi {
 
   /** Fetch list of notifications. */
   listNotifications(bearerToken: string,
+      clanId:string,
       limit?:number,
-      clanId?:string,
       cacheableCursor?:string,
       options: any = {}): Promise<ApiNotificationList> {
     

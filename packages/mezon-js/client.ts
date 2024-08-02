@@ -1598,13 +1598,13 @@ export class Client {
   }
 
   /** Fetch list of notifications. */
-  async listNotifications(session: Session, limit?: number, cacheableCursor?: string): Promise<NotificationList> {
+  async listNotifications(session: Session, clanId: string, limit?: number, cacheableCursor?: string): Promise<NotificationList> {
     if (this.autoRefreshSession && session.refresh_token &&
         session.isexpired((Date.now() + this.expiredTimespanMs)/1000)) {
         await this.sessionRefresh(session);
     }
 
-    return this.apiClient.listNotifications(session.token, limit, cacheableCursor).then((response: ApiNotificationList) => {
+    return this.apiClient.listNotifications(session.token, clanId, limit, cacheableCursor).then((response: ApiNotificationList) => {
       var result: NotificationList = {
         cacheable_cursor: response.cacheable_cursor,
         notifications: [],
