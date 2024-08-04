@@ -1017,7 +1017,11 @@ export interface ClanUserList_ClanUser {
     | User
     | undefined;
   /** Their relationship to the role. */
-  role_id: string | undefined;
+  role_id:
+    | string
+    | undefined;
+  /** from the `nick_name` field in the `clan_desc_profile` table. */
+  nick_name: string;
 }
 
 /** Import Facebook friends into the current user's account. */
@@ -8111,7 +8115,7 @@ export const ClanUserList = {
 };
 
 function createBaseClanUserList_ClanUser(): ClanUserList_ClanUser {
-  return { user: undefined, role_id: undefined };
+  return { user: undefined, role_id: undefined, nick_name: "" };
 }
 
 export const ClanUserList_ClanUser = {
@@ -8121,6 +8125,9 @@ export const ClanUserList_ClanUser = {
     }
     if (message.role_id !== undefined) {
       StringValue.encode({ value: message.role_id! }, writer.uint32(18).fork()).ldelim();
+    }
+    if (message.nick_name !== "") {
+      writer.uint32(26).string(message.nick_name);
     }
     return writer;
   },
@@ -8138,6 +8145,9 @@ export const ClanUserList_ClanUser = {
         case 2:
           message.role_id = StringValue.decode(reader, reader.uint32()).value;
           break;
+        case 3:
+          message.nick_name = reader.string();
+          break;
         default:
           reader.skipType(tag & 7);
           break;
@@ -8150,6 +8160,7 @@ export const ClanUserList_ClanUser = {
     return {
       user: isSet(object.user) ? User.fromJSON(object.user) : undefined,
       role_id: isSet(object.role_id) ? String(object.role_id) : undefined,
+      nick_name: isSet(object.nick_name) ? String(object.nick_name) : "",
     };
   },
 
@@ -8157,6 +8168,7 @@ export const ClanUserList_ClanUser = {
     const obj: any = {};
     message.user !== undefined && (obj.user = message.user ? User.toJSON(message.user) : undefined);
     message.role_id !== undefined && (obj.role_id = message.role_id);
+    message.nick_name !== undefined && (obj.nick_name = message.nick_name);
     return obj;
   },
 
@@ -8168,6 +8180,7 @@ export const ClanUserList_ClanUser = {
     const message = createBaseClanUserList_ClanUser();
     message.user = (object.user !== undefined && object.user !== null) ? User.fromPartial(object.user) : undefined;
     message.role_id = object.role_id ?? undefined;
+    message.nick_name = object.nick_name ?? "";
     return message;
   },
 };
