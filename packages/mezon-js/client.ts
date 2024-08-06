@@ -2281,13 +2281,13 @@ async updateClanEmojiById(session: Session, id: string, request: MezonUpdateClan
 }
 
 //**delete clan emoji by id */
-async deleteByIdClanEmoji(session: Session, id: string) {
+async deleteByIdClanEmoji(session: Session, id: string, clan_id: string) {
   if (this.autoRefreshSession && session.refresh_token &&
     session.isexpired((Date.now() + this.expiredTimespanMs)/1000)) {
     await this.sessionRefresh(session);
   }
 
-  return this.apiClient.deleteByIdClanEmoji(session.token, id).then((response: any) => {
+  return this.apiClient.deleteByIdClanEmoji(session.token, id, clan_id).then((response: any) => {
     return response !== undefined;
   });
 }
@@ -2305,13 +2305,13 @@ async generateWebhookLink(session: Session, request: ApiWebhookCreateRequest): P
 }
 
 //**list webhook belong to the channel */
-async listWebhookByChannelId(session: Session, channel_id: string): Promise<ApiWebhookListResponse> {
+async listWebhookByChannelId(session: Session, channel_id: string, clan_id: string): Promise<ApiWebhookListResponse> {
   if (this.autoRefreshSession && session.refresh_token &&
     session.isexpired((Date.now() + this.expiredTimespanMs)/1000)) {
     await this.sessionRefresh(session);
   }
 
-  return this.apiClient.listWebhookByChannelId(session.token, channel_id).then((response: ApiWebhookListResponse) => {
+  return this.apiClient.listWebhookByChannelId(session.token, channel_id, clan_id).then((response: ApiWebhookListResponse) => {
     return Promise.resolve(response);
   })
 }
@@ -2377,13 +2377,13 @@ async listClanStickersByClanId(session: Session,id: string): Promise<ApiClanStic
 }
 
 //**Delete a sticker by ID*/
-async deleteClanStickerById(session: Session,id: string) {
+async deleteClanStickerById(session: Session, id: string, clan_id: string) {
   if (this.autoRefreshSession && session.refresh_token &&
     session.isexpired((Date.now() + this.expiredTimespanMs)/1000)) {
     await this.sessionRefresh(session);
   }
 
-  return this.apiClient.deleteClanStickerById(session.token, id).then((response: any) => {
+  return this.apiClient.deleteClanStickerById(session.token, id, clan_id).then((response: any) => {
     return response !== undefined;
   })
 }
