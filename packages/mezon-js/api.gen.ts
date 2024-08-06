@@ -3978,6 +3978,7 @@ export class MezonApi {
   /** Delete a emoji by ID. */
   deleteByIdClanEmoji(bearerToken: string,
       id:string,
+      clanId?:string,
       options: any = {}): Promise<any> {
     
     if (id === null || id === undefined) {
@@ -3986,6 +3987,7 @@ export class MezonApi {
     const urlPath = "/v2/emoji/{id}"
         .replace("{id}", encodeURIComponent(String(id)));
     const queryParams = new Map<string, any>();
+    queryParams.set("clan_id", clanId);
 
     let bodyJson : string = "";
 
@@ -5937,6 +5939,7 @@ export class MezonApi {
   /** Delete a sticker by ID */
   deleteClanStickerById(bearerToken: string,
       id:string,
+      clanId?:string,
       options: any = {}): Promise<any> {
     
     if (id === null || id === undefined) {
@@ -5945,6 +5948,7 @@ export class MezonApi {
     const urlPath = "/v2/sticker/{id}"
         .replace("{id}", encodeURIComponent(String(id)));
     const queryParams = new Map<string, any>();
+    queryParams.set("clan_id", clanId);
 
     let bodyJson : string = "";
 
