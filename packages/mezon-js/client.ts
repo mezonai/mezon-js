@@ -2293,7 +2293,7 @@ async updateClanEmojiById(session: Session, id: string, request: MezonUpdateClan
 }
 
 //**delete clan emoji by id */
-async deleteByIdClanEmoji(session: Session, id: string,clan_id: string) {
+async deleteByIdClanEmoji(session: Session, id: string, clan_id: string) {
   if (this.autoRefreshSession && session.refresh_token &&
     session.isexpired((Date.now() + this.expiredTimespanMs)/1000)) {
     await this.sessionRefresh(session);
@@ -2389,7 +2389,7 @@ async listClanStickersByClanId(session: Session,id: string): Promise<ApiClanStic
 }
 
 //**Delete a sticker by ID*/
-async deleteClanStickerById(session: Session,id: string,clan_id: string) {
+async deleteClanStickerById(session: Session,id: string, clan_id: string) {
   if (this.autoRefreshSession && session.refresh_token &&
     session.isexpired((Date.now() + this.expiredTimespanMs)/1000)) {
     await this.sessionRefresh(session);
