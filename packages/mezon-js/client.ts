@@ -1243,7 +1243,8 @@ export class Client {
             username: gu.user!.username,
             metadata: gu.user!.metadata ? JSON.parse(gu.user!.metadata!) : undefined
           },
-          role_id: gu!.role_id 
+          role_id: gu!.role_id,
+          nick_name: gu!.nick_name 
         })
       });
       return Promise.resolve(result);
