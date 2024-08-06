@@ -725,16 +725,6 @@ export interface ApiCreateRoleRequest {
   title?: string;
 }
 
-/**  */
-export interface ApiCreateWebhookRequest {
-  //
-  channel_id?: string;
-  //
-  clan_id?: string;
-  //
-  hook_name?: string;
-}
-
 /** Delete a channel the user has access to. */
 export interface ApiDeleteChannelDescRequest {
   //The id of a channel.
@@ -1586,16 +1576,6 @@ export interface ApiWebhookGenerateResponse {
 export interface ApiWebhookListResponse {
   //
   webhooks?: Array<ApiWebhook>;
-}
-
-/**  */
-export interface ApiWebhookResponse {
-  //
-  channel_id?: string;
-  //
-  hook_name?: string;
-  //
-  hook_url?: string;
 }
 
 /** The object to store. */
@@ -3978,6 +3958,7 @@ export class MezonApi {
   /** Delete a emoji by ID. */
   deleteByIdClanEmoji(bearerToken: string,
       id:string,
+      clanId?:string,
       options: any = {}): Promise<any> {
     
     if (id === null || id === undefined) {
@@ -3986,6 +3967,7 @@ export class MezonApi {
     const urlPath = "/v2/emoji/{id}"
         .replace("{id}", encodeURIComponent(String(id)));
     const queryParams = new Map<string, any>();
+    queryParams.set("clan_id", clanId);
 
     let bodyJson : string = "";
 
@@ -5937,6 +5919,7 @@ export class MezonApi {
   /** Delete a sticker by ID */
   deleteClanStickerById(bearerToken: string,
       id:string,
+      clanId?:string,
       options: any = {}): Promise<any> {
     
     if (id === null || id === undefined) {
@@ -5945,6 +5928,7 @@ export class MezonApi {
     const urlPath = "/v2/sticker/{id}"
         .replace("{id}", encodeURIComponent(String(id)));
     const queryParams = new Map<string, any>();
+    queryParams.set("clan_id", clanId);
 
     let bodyJson : string = "";
 
@@ -6428,42 +6412,6 @@ export class MezonApi {
     ]);
 }
 
-  /** Create webhook */
-  createWebhookLink(bearerToken: string,
-      body:ApiCreateWebhookRequest,
-      options: any = {}): Promise<ApiWebhookResponse> {
-    
-    if (body === null || body === undefined) {
-      throw new Error("'body' is a required parameter but is null or undefined.");
-    }
-    const urlPath = "/v2/webhook/create";
-    const queryParams = new Map<string, any>();
-
-    let bodyJson : string = "";
-    bodyJson = JSON.stringify(body || {});
-
-    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
-    const fetchOptions = buildFetchOptions("POST", options, bodyJson);
-    if (bearerToken) {
-        fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-    }
-
-    return Promise.race([
-      fetch(fullUrl, fetchOptions).then((response) => {
-        if (response.status == 204) {
-          return response;
-        } else if (response.status >= 200 && response.status < 300) {
-          return response.json();
-        } else {
-          throw response;
-        }
-      }),
-      new Promise((_, reject) =>
-        setTimeout(reject, this.timeoutMs, "Request timed out.")
-      ),
-    ]);
-}
-
   /** create webhook */
   generateWebhook(bearerToken: string,
       body:ApiWebhookCreateRequest,
@@ -6544,6 +6492,7 @@ export class MezonApi {
   /** list webhook belong to the channel */
   listWebhookByChannelId(bearerToken: string,
       channelId:string,
+      clanId?:string,
       options: any = {}): Promise<ApiWebhookListResponse> {
     
     if (channelId === null || channelId === undefined) {
@@ -6552,6 +6501,7 @@ export class MezonApi {
     const urlPath = "/v2/webhooks/{channelId}"
         .replace("{channelId}", encodeURIComponent(String(channelId)));
     const queryParams = new Map<string, any>();
+    queryParams.set("clan_id", clanId);
 
     let bodyJson : string = "";
 
