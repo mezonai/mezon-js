@@ -540,6 +540,8 @@ export interface ApiClanEmojiCreateRequest {
   //
   clan_id?: string;
   //
+  id?: string;
+  //
   shortname?: string;
   //
   source?: string;
@@ -601,6 +603,8 @@ export interface ApiClanStickerAddRequest {
   category?: string;
   //
   clan_id?: string;
+  //
+  id?: string;
   //
   shortname?: string;
   //
