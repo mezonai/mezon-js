@@ -1030,6 +1030,8 @@ export interface ClanUserList_ClanUser {
     | undefined;
   /** from the `nick_name` field in the `clan_desc_profile` table. */
   clan_nick: string;
+  /** from the `avatar_url` field in the `clan_desc_profile` table. */
+  clan_avatar: string;
 }
 
 /** Import Facebook friends into the current user's account. */
@@ -2555,6 +2557,7 @@ export interface ClanEmojiCreateRequest {
   source: string;
   shortname: string;
   category: string;
+  id: string;
 }
 
 export interface ClanEmojiGetByClanIdRequest {
@@ -2657,6 +2660,8 @@ export interface ClanStickerAddRequest {
   shortname: string;
   category: string;
   clan_id: number;
+  /** UNIQUE include type number */
+  id: string;
 }
 
 export interface ClanStickerListByClanIdRequest {
@@ -9453,7 +9458,7 @@ export const ClanUserList = {
 };
 
 function createBaseClanUserList_ClanUser(): ClanUserList_ClanUser {
-  return { user: undefined, role_id: undefined, clan_nick: "" };
+  return { user: undefined, role_id: undefined, clan_nick: "", clan_avatar: "" };
 }
 
 export const ClanUserList_ClanUser = {
@@ -9466,6 +9471,9 @@ export const ClanUserList_ClanUser = {
     }
     if (message.clan_nick !== "") {
       writer.uint32(26).string(message.clan_nick);
+    }
+    if (message.clan_avatar !== "") {
+      writer.uint32(34).string(message.clan_avatar);
     }
     return writer;
   },
@@ -9498,6 +9506,13 @@ export const ClanUserList_ClanUser = {
 
           message.clan_nick = reader.string();
           continue;
+        case 4:
+          if (tag !== 34) {
+            break;
+          }
+
+          message.clan_avatar = reader.string();
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -9512,6 +9527,7 @@ export const ClanUserList_ClanUser = {
       user: isSet(object.user) ? User.fromJSON(object.user) : undefined,
       role_id: isSet(object.role_id) ? String(object.role_id) : undefined,
       clan_nick: isSet(object.clan_nick) ? globalThis.String(object.clan_nick) : "",
+      clan_avatar: isSet(object.clan_avatar) ? globalThis.String(object.clan_avatar) : "",
     };
   },
 
@@ -9526,6 +9542,9 @@ export const ClanUserList_ClanUser = {
     if (message.clan_nick !== "") {
       obj.clan_nick = message.clan_nick;
     }
+    if (message.clan_avatar !== "") {
+      obj.clan_avatar = message.clan_avatar;
+    }
     return obj;
   },
 
@@ -9537,6 +9556,7 @@ export const ClanUserList_ClanUser = {
     message.user = (object.user !== undefined && object.user !== null) ? User.fromPartial(object.user) : undefined;
     message.role_id = object.role_id ?? undefined;
     message.clan_nick = object.clan_nick ?? "";
+    message.clan_avatar = object.clan_avatar ?? "";
     return message;
   },
 };
@@ -22544,7 +22564,7 @@ export const RegistrationEmailRequest_VarsEntry = {
 };
 
 function createBaseClanEmojiCreateRequest(): ClanEmojiCreateRequest {
-  return { clan_id: "", source: "", shortname: "", category: "" };
+  return { clan_id: "", source: "", shortname: "", category: "", id: "" };
 }
 
 export const ClanEmojiCreateRequest = {
@@ -22560,6 +22580,9 @@ export const ClanEmojiCreateRequest = {
     }
     if (message.category !== "") {
       writer.uint32(34).string(message.category);
+    }
+    if (message.id !== "") {
+      writer.uint32(42).string(message.id);
     }
     return writer;
   },
@@ -22599,6 +22622,13 @@ export const ClanEmojiCreateRequest = {
 
           message.category = reader.string();
           continue;
+        case 5:
+          if (tag !== 42) {
+            break;
+          }
+
+          message.id = reader.string();
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -22614,6 +22644,7 @@ export const ClanEmojiCreateRequest = {
       source: isSet(object.source) ? globalThis.String(object.source) : "",
       shortname: isSet(object.shortname) ? globalThis.String(object.shortname) : "",
       category: isSet(object.category) ? globalThis.String(object.category) : "",
+      id: isSet(object.id) ? globalThis.String(object.id) : "",
     };
   },
 
@@ -22631,6 +22662,9 @@ export const ClanEmojiCreateRequest = {
     if (message.category !== "") {
       obj.category = message.category;
     }
+    if (message.id !== "") {
+      obj.id = message.id;
+    }
     return obj;
   },
 
@@ -22643,6 +22677,7 @@ export const ClanEmojiCreateRequest = {
     message.source = object.source ?? "";
     message.shortname = object.shortname ?? "";
     message.category = object.category ?? "";
+    message.id = object.id ?? "";
     return message;
   },
 };
@@ -24002,7 +24037,7 @@ export const ClanSticker = {
 };
 
 function createBaseClanStickerAddRequest(): ClanStickerAddRequest {
-  return { source: "", shortname: "", category: "", clan_id: 0 };
+  return { source: "", shortname: "", category: "", clan_id: 0, id: "" };
 }
 
 export const ClanStickerAddRequest = {
@@ -24018,6 +24053,9 @@ export const ClanStickerAddRequest = {
     }
     if (message.clan_id !== 0) {
       writer.uint32(32).int64(message.clan_id);
+    }
+    if (message.id !== "") {
+      writer.uint32(42).string(message.id);
     }
     return writer;
   },
@@ -24057,6 +24095,13 @@ export const ClanStickerAddRequest = {
 
           message.clan_id = longToNumber(reader.int64() as Long);
           continue;
+        case 5:
+          if (tag !== 42) {
+            break;
+          }
+
+          message.id = reader.string();
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -24072,6 +24117,7 @@ export const ClanStickerAddRequest = {
       shortname: isSet(object.shortname) ? globalThis.String(object.shortname) : "",
       category: isSet(object.category) ? globalThis.String(object.category) : "",
       clan_id: isSet(object.clan_id) ? globalThis.Number(object.clan_id) : 0,
+      id: isSet(object.id) ? globalThis.String(object.id) : "",
     };
   },
 
@@ -24089,6 +24135,9 @@ export const ClanStickerAddRequest = {
     if (message.clan_id !== 0) {
       obj.clan_id = Math.round(message.clan_id);
     }
+    if (message.id !== "") {
+      obj.id = message.id;
+    }
     return obj;
   },
 
@@ -24101,6 +24150,7 @@ export const ClanStickerAddRequest = {
     message.shortname = object.shortname ?? "";
     message.category = object.category ?? "";
     message.clan_id = object.clan_id ?? 0;
+    message.id = object.id ?? "";
     return message;
   },
 };
