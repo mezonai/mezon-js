@@ -473,6 +473,8 @@ export interface ApiChannelMessageHeader {
 export interface ApiChannelMessageList {
   //
   last_seen_message?: ApiChannelMessageHeader;
+  //
+  last_sent_message?: ApiChannelMessageHeader;
   //A list of messages.
   messages?: Array<ApiChannelMessage>;
 }

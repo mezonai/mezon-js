@@ -253,6 +253,8 @@ export interface ChannelMessageList {
   cacheable_cursor?: string;
   /**last seen message from user on channel */
   last_seen_message?: ApiChannelMessageHeader;
+  /**last sent message from channel */
+  last_sent_message?: ApiChannelMessageHeader;
   /** A list of messages. */
   messages?: Array<ChannelMessage>;
   /** The cursor to send when retireving the next page, if any. */
@@ -1049,7 +1051,8 @@ export class Client {
     return this.apiClient.listChannelMessages(session.token, channelId, messageId, direction, limit).then((response: ApiChannelMessageList) => {
       var result: ChannelMessageList = {
         messages: [],
-        last_seen_message: response.last_seen_message
+        last_seen_message: response.last_seen_message,
+        last_sent_message:  response.last_sent_message
       };
 
       if (response.messages == null) {
