@@ -251,6 +251,22 @@ export interface MessageTypingEvent {
   sender_id: string;
 }
 
+// user profile updated event
+export interface UserProfileUpdatedEvent{
+  // the user id
+  user_id: string;
+  // the display_name
+  display_name: string;
+  // the avatar
+  avatar: string;
+  // the about_me 
+  about_me: string;
+  // the channel_id
+  channel_id: string;
+  // the clan_id
+  clan_id: string;
+}
+
 /** An incoming message on a realtime chat channel. */
 export interface ChannelMessageEvent {
   avatar?: string;
@@ -517,6 +533,8 @@ export interface ClanProfileUpdatedEvent {
   clan_nick: string;
   // the avatar
   clan_avatar: string;
+  // the clan_id 
+  clan_id: string;
 }
 
 /** Stream identifier */
@@ -703,6 +721,9 @@ export interface Socket {
   /** Receive added user event */
   onuserchanneladded: (user: UserChannelAddedEvent) => void;
 
+  /** Receive update user event */
+  onuserprofileupdate: (user: UserProfileUpdatedEvent) => void;
+
   /** Receive channel removed user event */
   onuserchannelremoved: (user: UserChannelRemovedEvent) => void;
 
@@ -883,7 +904,9 @@ export class DefaultSocket implements Socket {
           this.oncustomstatus(<CustomStatusEvent>message.custom_status_event);
         } else if (message.user_channel_added_event) {
           this.onuserchanneladded(<UserChannelAddedEvent>message.user_channel_added_event);
-        } else if (message.user_channel_removed_event) {
+        } else if (message.user_channel_added_event) {
+          this.onuserprofileupdate(<UserProfileUpdatedEvent>message.user_profile_updated_event);
+        } else if (message.user_profile_updated_event) {
           this.onuserchannelremoved(<UserChannelRemovedEvent>message.user_channel_removed_event);
         } else if (message.user_clan_removed_event) {
           this.onuserclanremoved(<UserClanRemovedEvent>message.user_clan_removed_event);
@@ -989,7 +1012,11 @@ export class DefaultSocket implements Socket {
       console.log(user);
     }
   }
-
+  onuserprofileupdate(user: UserProfileUpdatedEvent) {
+    if (this.verbose && window && window.console) {
+      console.log(user);
+    }
+  }
   onuserchannelremoved(user: UserChannelRemovedEvent) {
     if (this.verbose && window && window.console) {
       console.log(user);
