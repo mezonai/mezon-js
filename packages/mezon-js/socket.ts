@@ -171,7 +171,9 @@ export interface MessageReactionEvent {
   sender_name?: string;
   //
   sender_avatar?: string;
-  /** Emoji list. */
+  /** Emoji id. */
+  emoji_id: string;
+  /** Emoji shortname. */
   emoji: string;
   // count of emoji
   count: number;
@@ -658,7 +660,7 @@ export interface Socket {
   writeMessageTyping(clan_id: string, channel_id: string, mode: number) : Promise<MessageTypingEvent>;  
 
   /** Send message reaction */
-  writeMessageReaction(id: string, clan_id: string, channel_id: string, mode: number, message_id: string, emoji: string, count: number, message_sender_id: string, action_delete: boolean) : Promise<MessageReactionEvent>;
+  writeMessageReaction(id: string, clan_id: string, channel_id: string, mode: number, message_id: string, emoji_id: string, emoji: string, count: number, message_sender_id: string, action_delete: boolean) : Promise<MessageReactionEvent>;
 
   /** Send last seen message */
   writeLastSeenMessage(clan_id: string, channel_id: string, mode: number, message_id: string, timestamp: string) : Promise<LastSeenMessageEvent>;
@@ -1244,8 +1246,8 @@ export class DefaultSocket implements Socket {
     return response.channel_message_ack;
   }
 
-  async writeMessageReaction(id: string, clan_id: string, channel_id: string, mode: number, message_id: string, emoji: string, count: number, message_sender_id: string, action_delete: boolean) : Promise<MessageReactionEvent> {
-    const response = await this.send({message_reaction_event: {id: id, clan_id: clan_id, channel_id: channel_id, mode: mode, message_id: message_id, emoji: emoji, count: count, message_sender_id: message_sender_id, action: action_delete}});
+  async writeMessageReaction(id: string, clan_id: string, channel_id: string, mode: number, message_id: string, emoji_id: string, emoji: string, count: number, message_sender_id: string, action_delete: boolean) : Promise<MessageReactionEvent> {
+    const response = await this.send({message_reaction_event: {id: id, clan_id: clan_id, channel_id: channel_id, mode: mode, message_id: message_id, emoji_id: emoji_id, emoji: emoji, count: count, message_sender_id: message_sender_id, action: action_delete}});
     return response.message_reaction_event
   }
 
