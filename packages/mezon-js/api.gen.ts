@@ -971,6 +971,8 @@ export interface ApiMessageReaction {
   //
   action?: boolean;
   //
+  emoji_id?: string;
+  //
   emoji?: string;
   //
   id?: string;
