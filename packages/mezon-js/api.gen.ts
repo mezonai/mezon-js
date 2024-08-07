@@ -7,9 +7,11 @@ import { encode } from 'js-base64';
 /** A single user-role pair. */
 export interface ChannelUserListChannelUser {
   //
-  clan_nick?: string;
-  //
   clan_avatar?: string;
+  //
+  clan_id?: string;
+  //
+  clan_nick?: string;
   //
   id?: string;
   //Their relationship to the role.
