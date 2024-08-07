@@ -165,7 +165,11 @@ export interface Envelope {
     | ClanUpdatedEvent
     | undefined;
   /** Clan profile updated event */
-  clan_profile_updated_event?: ClanProfileUpdatedEvent | undefined;
+  clan_profile_updated_event?:
+    | ClanProfileUpdatedEvent
+    | undefined;
+  /** Check duplicate clan name event */
+  clan_name_existed_event?: ClanNameExistedEvent | undefined;
 }
 
 /** A realtime chat channel. */
@@ -864,6 +868,10 @@ export interface FCMTokens {
   token_id: string;
 }
 
+export interface ClanNameExistedEvent {
+  clan_name: string;
+}
+
 function createBaseEnvelope(): Envelope {
   return {
     cid: "",
@@ -906,6 +914,7 @@ function createBaseEnvelope(): Envelope {
     user_clan_removed_event: undefined,
     clan_updated_event: undefined,
     clan_profile_updated_event: undefined,
+    clan_name_existed_event: undefined,
   };
 }
 
@@ -1030,6 +1039,9 @@ export const Envelope = {
     }
     if (message.clan_profile_updated_event !== undefined) {
       ClanProfileUpdatedEvent.encode(message.clan_profile_updated_event, writer.uint32(322).fork()).ldelim();
+    }
+    if (message.clan_name_existed_event !== undefined) {
+      ClanNameExistedEvent.encode(message.clan_name_existed_event, writer.uint32(330).fork()).ldelim();
     }
     return writer;
   },
@@ -1161,6 +1173,9 @@ export const Envelope = {
         case 40:
           message.clan_profile_updated_event = ClanProfileUpdatedEvent.decode(reader, reader.uint32());
           break;
+        case 41:
+          message.clan_name_existed_event = ClanNameExistedEvent.decode(reader, reader.uint32());
+          break;
         default:
           reader.skipType(tag & 7);
           break;
@@ -1258,6 +1273,9 @@ export const Envelope = {
         : undefined,
       clan_profile_updated_event: isSet(object.clan_profile_updated_event)
         ? ClanProfileUpdatedEvent.fromJSON(object.clan_profile_updated_event)
+        : undefined,
+      clan_name_existed_event: isSet(object.clan_name_existed_event)
+        ? ClanNameExistedEvent.fromJSON(object.clan_name_existed_event)
         : undefined,
     };
   },
@@ -1364,6 +1382,9 @@ export const Envelope = {
       (obj.clan_profile_updated_event = message.clan_profile_updated_event
         ? ClanProfileUpdatedEvent.toJSON(message.clan_profile_updated_event)
         : undefined);
+    message.clan_name_existed_event !== undefined && (obj.clan_name_existed_event = message.clan_name_existed_event
+      ? ClanNameExistedEvent.toJSON(message.clan_name_existed_event)
+      : undefined);
     return obj;
   },
 
@@ -1497,6 +1518,10 @@ export const Envelope = {
     message.clan_profile_updated_event =
       (object.clan_profile_updated_event !== undefined && object.clan_profile_updated_event !== null)
         ? ClanProfileUpdatedEvent.fromPartial(object.clan_profile_updated_event)
+        : undefined;
+    message.clan_name_existed_event =
+      (object.clan_name_existed_event !== undefined && object.clan_name_existed_event !== null)
+        ? ClanNameExistedEvent.fromPartial(object.clan_name_existed_event)
         : undefined;
     return message;
   },
@@ -5654,6 +5679,57 @@ export const FCMTokens = {
     const message = createBaseFCMTokens();
     message.device_id = object.device_id ?? "";
     message.token_id = object.token_id ?? "";
+    return message;
+  },
+};
+
+function createBaseClanNameExistedEvent(): ClanNameExistedEvent {
+  return { clan_name: "" };
+}
+
+export const ClanNameExistedEvent = {
+  encode(message: ClanNameExistedEvent, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.clan_name !== "") {
+      writer.uint32(10).string(message.clan_name);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): ClanNameExistedEvent {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseClanNameExistedEvent();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.clan_name = reader.string();
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): ClanNameExistedEvent {
+    return { clan_name: isSet(object.clan_name) ? String(object.clan_name) : "" };
+  },
+
+  toJSON(message: ClanNameExistedEvent): unknown {
+    const obj: any = {};
+    message.clan_name !== undefined && (obj.clan_name = message.clan_name);
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<ClanNameExistedEvent>, I>>(base?: I): ClanNameExistedEvent {
+    return ClanNameExistedEvent.fromPartial(base ?? {});
+  },
+
+  fromPartial<I extends Exact<DeepPartial<ClanNameExistedEvent>, I>>(object: I): ClanNameExistedEvent {
+    const message = createBaseClanNameExistedEvent();
+    message.clan_name = object.clan_name ?? "";
     return message;
   },
 };
