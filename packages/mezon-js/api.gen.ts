@@ -24,6 +24,8 @@ export interface ChannelUserListChannelUser {
 
 /** A single user-role pair. */
 export interface ClanUserListClanUser {
+  //from the `avatar_url` field in the `clan_desc_profile` table.
+  clan_avatar?: string;
   //from the `nick_name` field in the `clan_desc_profile` table.
   clan_nick?: string;
   //Their relationship to the role.
