@@ -570,7 +570,13 @@ export interface MessageMention {
   /** role name */
   rolename: string;
   /** The UNIX time (for gRPC clients) or ISO string (for REST clients) when the message was created. */
-  create_time: Date | undefined;
+  create_time:
+    | Date
+    | undefined;
+  /** start position from text */
+  s: number;
+  /** end position from text */
+  e: number;
 }
 
 /** Mention to message */
@@ -5674,7 +5680,7 @@ export const ChannelMessage = {
 };
 
 function createBaseMessageMention(): MessageMention {
-  return { id: "", user_id: "", username: "", role_id: "", rolename: "", create_time: undefined };
+  return { id: "", user_id: "", username: "", role_id: "", rolename: "", create_time: undefined, s: 0, e: 0 };
 }
 
 export const MessageMention = {
@@ -5696,6 +5702,12 @@ export const MessageMention = {
     }
     if (message.create_time !== undefined) {
       Timestamp.encode(toTimestamp(message.create_time), writer.uint32(50).fork()).ldelim();
+    }
+    if (message.s !== 0) {
+      writer.uint32(56).int32(message.s);
+    }
+    if (message.e !== 0) {
+      writer.uint32(64).int32(message.e);
     }
     return writer;
   },
@@ -5725,6 +5737,12 @@ export const MessageMention = {
         case 6:
           message.create_time = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
           break;
+        case 7:
+          message.s = reader.int32();
+          break;
+        case 8:
+          message.e = reader.int32();
+          break;
         default:
           reader.skipType(tag & 7);
           break;
@@ -5741,6 +5759,8 @@ export const MessageMention = {
       role_id: isSet(object.role_id) ? String(object.role_id) : "",
       rolename: isSet(object.rolename) ? String(object.rolename) : "",
       create_time: isSet(object.create_time) ? fromJsonTimestamp(object.create_time) : undefined,
+      s: isSet(object.s) ? Number(object.s) : 0,
+      e: isSet(object.e) ? Number(object.e) : 0,
     };
   },
 
@@ -5752,6 +5772,8 @@ export const MessageMention = {
     message.role_id !== undefined && (obj.role_id = message.role_id);
     message.rolename !== undefined && (obj.rolename = message.rolename);
     message.create_time !== undefined && (obj.create_time = message.create_time.toISOString());
+    message.s !== undefined && (obj.s = Math.round(message.s));
+    message.e !== undefined && (obj.e = Math.round(message.e));
     return obj;
   },
 
@@ -5767,6 +5789,8 @@ export const MessageMention = {
     message.role_id = object.role_id ?? "";
     message.rolename = object.rolename ?? "";
     message.create_time = object.create_time ?? undefined;
+    message.s = object.s ?? 0;
+    message.e = object.e ?? 0;
     return message;
   },
 };
