@@ -872,14 +872,19 @@ export class DefaultSocket implements Socket {
           this.onstreamdata(<StreamData>message.stream_data);
         } else if (message.channel_message) {
           var content, reactions, mentions, attachments, references;
-          try {                        
-            content = JSON.parse(message.channel_message.content);
-            reactions = JSON.parse(message.channel_message.reactions);
-            mentions = JSON.parse(message.channel_message.mentions);
-            attachments = JSON.parse(message.channel_message.attachments);
-            references = JSON.parse(message.channel_message.references);
+          try {
+            if (content)              
+              content = JSON.parse(message.channel_message.content);
+            if (reactions)
+              reactions = JSON.parse(message.channel_message.reactions);
+            if (mentions)
+              mentions = JSON.parse(message.channel_message.mentions);
+            if (attachments)
+              attachments = JSON.parse(message.channel_message.attachments);
+            if (references)  
+              references = JSON.parse(message.channel_message.references);
           } catch(e) {
-            //console.log("error parse data", e);
+            console.log("error parse data", e);
           }
           var e: ChannelMessageEvent = {
             avatar: message.channel_message.avatar,
