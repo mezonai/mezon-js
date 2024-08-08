@@ -197,6 +197,10 @@ export interface MessageMentionEvent {
   user_id: string;
   // mention username
   username: string;
+  // start position
+  s?: number;
+  // end position
+  e?: number;
 }
 
 /** User is react to message */
@@ -375,6 +379,8 @@ interface ChannelMessageUpdate {
     message_id: string,
     /** The content payload. */
     content: any,
+    /** mentions */
+    mentions?: Array<MessageMentionEvent>;
     /** The mode payload. */
     mode: number;
   };
@@ -650,7 +656,7 @@ export interface Socket {
   unfollowUsers(user_ids : string[]) : Promise<void>;
 
   /** Update a chat message on a chat channel in the server. */
-  updateChatMessage(clan_id: string, channel_id: string, mode: number, message_id : string, content: any) : Promise<ChannelMessageAck>;
+  updateChatMessage(clan_id: string, channel_id: string, mode: number, message_id : string, content: any, mentions?: Array<ApiMessageMention>) : Promise<ChannelMessageAck>;
 
   /** Update the status for the current user online. */
   updateStatus(status? : string) : Promise<void>;
@@ -1237,8 +1243,8 @@ export class DefaultSocket implements Socket {
     return this.send({status_unfollow: {user_ids: user_ids}});
   }
 
-  async updateChatMessage(clan_id: string, channel_id: string, mode: number, message_id : string, content: any): Promise<ChannelMessageAck> {
-    const response = await this.send({channel_message_update: {clan_id: clan_id, channel_id: channel_id, message_id: message_id, content: content, mode: mode}});
+  async updateChatMessage(clan_id: string, channel_id: string, mode: number, message_id : string, content: any, mentions?: Array<ApiMessageMention>): Promise<ChannelMessageAck> {
+    const response = await this.send({channel_message_update: {clan_id: clan_id, channel_id: channel_id, message_id: message_id, content: content, mentions: mentions, mode: mode}});
     return response.channel_message_ack;
   }
 
