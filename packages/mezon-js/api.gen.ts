@@ -964,6 +964,10 @@ export interface ApiMessageMention {
   role_id?: string;
   // role name
   rolename?: string;
+  // start position
+  s?: number;
+  // end position
+  e?: number;
 }
 
 /**  */

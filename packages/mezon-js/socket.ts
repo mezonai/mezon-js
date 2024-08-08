@@ -1247,7 +1247,7 @@ export class DefaultSocket implements Socket {
   }
 
   async writeChatMessage(clan_id: string, channel_id: string, mode: number, content: any, mentions?: Array<ApiMessageMention>, attachments?: Array<ApiMessageAttachment>, references?: Array<ApiMessageRef>, anonymous_message?: boolean, mention_everyone?:Boolean, notifi_content?: any ): Promise<ChannelMessageAck> {
-    const response = await this.send({channel_message_send: {clan_id: clan_id, channel_id: channel_id, mode:mode, content: content, mentions: mentions, attachments: attachments, references: references, anonymous_message: anonymous_message, mention_everyone:mention_everyone, notifi_content:notifi_content}});
+    const response = await this.send({channel_message_send: {clan_id: clan_id, channel_id: channel_id, mode: mode, content: content, mentions: mentions, attachments: attachments, references: references, anonymous_message: anonymous_message, mention_everyone:mention_everyone, notifi_content:notifi_content}});
     return response.channel_message_ack;
   }
 
