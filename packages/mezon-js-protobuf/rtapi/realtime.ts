@@ -569,8 +569,6 @@ export interface MessageReactionEvent {
   sender_name: string;
   /** avatar */
   sender_avatar: string;
-  /** emoji id */
-  emoji_id: string;
   /** emoji text */
   emoji: string;
   /** action (add, delete) */
@@ -3615,7 +3613,6 @@ function createBaseMessageReactionEvent(): MessageReactionEvent {
     sender_id: "",
     sender_name: "",
     sender_avatar: "",
-    emoji_id: "",
     emoji: "",
     action: false,
     message_sender_id: "",
@@ -3647,23 +3644,20 @@ export const MessageReactionEvent = {
     if (message.sender_avatar !== "") {
       writer.uint32(58).string(message.sender_avatar);
     }
-    if (message.emoji_id !== "") {
-      writer.uint32(66).string(message.emoji_id);
-    }
     if (message.emoji !== "") {
-      writer.uint32(74).string(message.emoji);
+      writer.uint32(66).string(message.emoji);
     }
     if (message.action === true) {
-      writer.uint32(80).bool(message.action);
+      writer.uint32(72).bool(message.action);
     }
     if (message.message_sender_id !== "") {
-      writer.uint32(90).string(message.message_sender_id);
+      writer.uint32(82).string(message.message_sender_id);
     }
     if (message.count !== 0) {
-      writer.uint32(96).int32(message.count);
+      writer.uint32(88).int32(message.count);
     }
     if (message.mode !== 0) {
-      writer.uint32(104).int32(message.mode);
+      writer.uint32(96).int32(message.mode);
     }
     return writer;
   },
@@ -3697,21 +3691,18 @@ export const MessageReactionEvent = {
           message.sender_avatar = reader.string();
           break;
         case 8:
-          message.emoji_id = reader.string();
-          break;
-        case 9:
           message.emoji = reader.string();
           break;
-        case 10:
+        case 9:
           message.action = reader.bool();
           break;
-        case 11:
+        case 10:
           message.message_sender_id = reader.string();
           break;
-        case 12:
+        case 11:
           message.count = reader.int32();
           break;
-        case 13:
+        case 12:
           message.mode = reader.int32();
           break;
         default:
@@ -3731,7 +3722,6 @@ export const MessageReactionEvent = {
       sender_id: isSet(object.sender_id) ? String(object.sender_id) : "",
       sender_name: isSet(object.sender_name) ? String(object.sender_name) : "",
       sender_avatar: isSet(object.sender_avatar) ? String(object.sender_avatar) : "",
-      emoji_id: isSet(object.emoji_id) ? String(object.emoji_id) : "",
       emoji: isSet(object.emoji) ? String(object.emoji) : "",
       action: isSet(object.action) ? Boolean(object.action) : false,
       message_sender_id: isSet(object.message_sender_id) ? String(object.message_sender_id) : "",
@@ -3749,7 +3739,6 @@ export const MessageReactionEvent = {
     message.sender_id !== undefined && (obj.sender_id = message.sender_id);
     message.sender_name !== undefined && (obj.sender_name = message.sender_name);
     message.sender_avatar !== undefined && (obj.sender_avatar = message.sender_avatar);
-    message.emoji_id !== undefined && (obj.emoji_id = message.emoji_id);
     message.emoji !== undefined && (obj.emoji = message.emoji);
     message.action !== undefined && (obj.action = message.action);
     message.message_sender_id !== undefined && (obj.message_sender_id = message.message_sender_id);
@@ -3771,7 +3760,6 @@ export const MessageReactionEvent = {
     message.sender_id = object.sender_id ?? "";
     message.sender_name = object.sender_name ?? "";
     message.sender_avatar = object.sender_avatar ?? "";
-    message.emoji_id = object.emoji_id ?? "";
     message.emoji = object.emoji ?? "";
     message.action = object.action ?? false;
     message.message_sender_id = object.message_sender_id ?? "";

@@ -1234,7 +1234,8 @@ export class Client {
             metadata: gu.user!.metadata ? JSON.parse(gu.user!.metadata!) : undefined
           },
           role_id: gu!.role_id,
-          clan_nick: gu!.clan_nick 
+          clan_nick: gu!.clan_nick,
+          clan_avatar: gu!.clan_avatar 
         })
       });
       return Promise.resolve(result);

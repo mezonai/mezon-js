@@ -614,7 +614,9 @@ interface StatusUpdate {
   /** Status string to set, if not present the user will appear offline. */
   status_update: {status?: string;};
 }
-
+export interface ClanNameExistedEvent {
+  clan_name: string;
+}
 /** A socket connection to Mezon server. */
 export interface Socket {
   /** Connection is Open */
@@ -764,6 +766,9 @@ export interface Socket {
 
   /* Get the heartbeat timeout used by the socket to detect if it has lost connectivity to the server. */
   getHeartbeatTimeoutMs() :  number;
+
+  checkDuplicateClanName(clan_name: string): Promise<ClanNameExistedEvent> 
+
 }
 
 /** Reports an error received from a socket message. */
@@ -1279,6 +1284,11 @@ export class DefaultSocket implements Socket {
   async writeCustomStatus(clan_id: string, status: string) : Promise<CustomStatusEvent> {
     const response = await this.send({custom_status_event: {clan_id: clan_id, status: status}});
     return response.custom_status_event
+  }
+  
+  async checkDuplicateClanName(clan_name: string): Promise<ClanNameExistedEvent> {
+    const response = await this.send({clan_name_existed_event: {clan_name: clan_name}});
+    return response.clan_name_existed_event
   }
 
   private async pingPong() : Promise<void> {
