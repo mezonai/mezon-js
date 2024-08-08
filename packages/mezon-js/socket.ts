@@ -1288,7 +1288,7 @@ export class DefaultSocket implements Socket {
   
   async checkDuplicateClanName(clan_name: string): Promise<ClanNameExistedEvent> {
     const response = await this.send({clan_name_existed_event: {clan_name: clan_name}});
-   return response.clan_name_existed_event
+    return response.clan_name_existed_event
   }
 
   private async pingPong() : Promise<void> {
