@@ -553,6 +553,10 @@ export interface MessageMentionEvent {
   sender_id: string;
   /** mode */
   mode: number;
+  /** start position from text */
+  s: number;
+  /** end position from text */
+  e: number;
 }
 
 /** Message reacton event data */
@@ -3524,7 +3528,7 @@ export const MessageTypingEvent = {
 };
 
 function createBaseMessageMentionEvent(): MessageMentionEvent {
-  return { channel_id: "", message_id: "", user_id: "", username: "", sender_id: "", mode: 0 };
+  return { channel_id: "", message_id: "", user_id: "", username: "", sender_id: "", mode: 0, s: 0, e: 0 };
 }
 
 export const MessageMentionEvent = {
@@ -3546,6 +3550,12 @@ export const MessageMentionEvent = {
     }
     if (message.mode !== 0) {
       writer.uint32(48).int32(message.mode);
+    }
+    if (message.s !== 0) {
+      writer.uint32(56).int32(message.s);
+    }
+    if (message.e !== 0) {
+      writer.uint32(64).int32(message.e);
     }
     return writer;
   },
@@ -3575,6 +3585,12 @@ export const MessageMentionEvent = {
         case 6:
           message.mode = reader.int32();
           break;
+        case 7:
+          message.s = reader.int32();
+          break;
+        case 8:
+          message.e = reader.int32();
+          break;
         default:
           reader.skipType(tag & 7);
           break;
@@ -3591,6 +3607,8 @@ export const MessageMentionEvent = {
       username: isSet(object.username) ? String(object.username) : "",
       sender_id: isSet(object.sender_id) ? String(object.sender_id) : "",
       mode: isSet(object.mode) ? Number(object.mode) : 0,
+      s: isSet(object.s) ? Number(object.s) : 0,
+      e: isSet(object.e) ? Number(object.e) : 0,
     };
   },
 
@@ -3602,6 +3620,8 @@ export const MessageMentionEvent = {
     message.username !== undefined && (obj.username = message.username);
     message.sender_id !== undefined && (obj.sender_id = message.sender_id);
     message.mode !== undefined && (obj.mode = Math.round(message.mode));
+    message.s !== undefined && (obj.s = Math.round(message.s));
+    message.e !== undefined && (obj.e = Math.round(message.e));
     return obj;
   },
 
@@ -3617,6 +3637,8 @@ export const MessageMentionEvent = {
     message.username = object.username ?? "";
     message.sender_id = object.sender_id ?? "";
     message.mode = object.mode ?? 0;
+    message.s = object.s ?? 0;
+    message.e = object.e ?? 0;
     return message;
   },
 };
