@@ -260,6 +260,10 @@ export interface MessageMention {
   role_id: string;
   /** role name */
   rolename: string;
+  /** start position from text */
+  s: number;
+  /** end position from text */
+  e: number;
 }
 
 /** Message attachment */
@@ -2008,7 +2012,7 @@ export const ChannelMessageAck = {
 };
 
 function createBaseMessageMention(): MessageMention {
-  return { user_id: "", username: "", role_id: "", rolename: "" };
+  return { user_id: "", username: "", role_id: "", rolename: "", s: 0, e: 0 };
 }
 
 export const MessageMention = {
@@ -2024,6 +2028,12 @@ export const MessageMention = {
     }
     if (message.rolename !== "") {
       writer.uint32(34).string(message.rolename);
+    }
+    if (message.s !== 0) {
+      writer.uint32(40).int32(message.s);
+    }
+    if (message.e !== 0) {
+      writer.uint32(48).int32(message.e);
     }
     return writer;
   },
@@ -2047,6 +2057,12 @@ export const MessageMention = {
         case 4:
           message.rolename = reader.string();
           break;
+        case 5:
+          message.s = reader.int32();
+          break;
+        case 6:
+          message.e = reader.int32();
+          break;
         default:
           reader.skipType(tag & 7);
           break;
@@ -2061,6 +2077,8 @@ export const MessageMention = {
       username: isSet(object.username) ? String(object.username) : "",
       role_id: isSet(object.role_id) ? String(object.role_id) : "",
       rolename: isSet(object.rolename) ? String(object.rolename) : "",
+      s: isSet(object.s) ? Number(object.s) : 0,
+      e: isSet(object.e) ? Number(object.e) : 0,
     };
   },
 
@@ -2070,6 +2088,8 @@ export const MessageMention = {
     message.username !== undefined && (obj.username = message.username);
     message.role_id !== undefined && (obj.role_id = message.role_id);
     message.rolename !== undefined && (obj.rolename = message.rolename);
+    message.s !== undefined && (obj.s = Math.round(message.s));
+    message.e !== undefined && (obj.e = Math.round(message.e));
     return obj;
   },
 
@@ -2083,6 +2103,8 @@ export const MessageMention = {
     message.username = object.username ?? "";
     message.role_id = object.role_id ?? "";
     message.rolename = object.rolename ?? "";
+    message.s = object.s ?? 0;
+    message.e = object.e ?? 0;
     return message;
   },
 };
