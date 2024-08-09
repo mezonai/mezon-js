@@ -200,6 +200,8 @@ export interface StorageObjects {
 
 /** A message sent on a channel. */
 export interface ChannelMessage {
+  //The unique ID of this message.
+  id: string;
   //
   avatar?: string;
   //The channel this message belongs to.
@@ -224,9 +226,6 @@ export interface ChannelMessage {
   references?: Array<ApiMessageRef>;
   //
   referenced_message?: ChannelMessage;
-
-  //The unique ID of this message.
-  id: string;
   //True if the message was persisted to the channel's history, false otherwise.
   persistent?: boolean;
   //Message sender, usually a user ID.
@@ -245,6 +244,10 @@ export interface ChannelMessage {
   clan_avatar?: string;
   //
   display_name?: string;
+  //
+  create_time_ms?: number;
+  //
+  update_time_ms?: number;
 }
 
 /** A list of channel messages, usually a result of a list operation. */
@@ -1080,7 +1083,9 @@ export class Client {
           mentions: m.mentions ? JSON.parse(m.mentions) : [],
           reactions: m.reactions ? JSON.parse(m.reactions) : [],
           references: m.references ? JSON.parse(m.references) : [],
-          clan_id: m.clan_id
+          clan_id: m.clan_id,
+          create_time_ms: m.create_time_ms,
+          update_time_ms: m.update_time_ms,
         })
       });
       return Promise.resolve(result);

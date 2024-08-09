@@ -379,6 +379,8 @@ export interface ApiChannelDescription {
   clan_id?: string;
   //
   count_mess_unread?: number;
+  //
+  create_time_ms?: number;
   //creator ID.
   creator_id?: string;
   //
@@ -399,6 +401,8 @@ export interface ApiChannelDescription {
   status?: number;
   //The channel type.
   type?: number;
+  //
+  update_time_ms?: number;
   //
   user_id?: Array<string>;
   //
@@ -432,6 +436,8 @@ export interface ApiChannelMessage {
   //The UNIX time (for gRPC clients) or ISO string (for REST clients) when the message was created.
   create_time?: string;
   //
+  create_time_ms?: number;
+  //
   display_name?: string;
   //
   mentions?: string;
@@ -447,6 +453,8 @@ export interface ApiChannelMessage {
   sender_id: string;
   //The UNIX time (for gRPC clients) or ISO string (for REST clients) when the message was last updated.
   update_time?: string;
+  //
+  update_time_ms?: number;
   //The username of the message sender, if any.
   username?: string;
 }
