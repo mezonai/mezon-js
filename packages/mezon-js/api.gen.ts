@@ -1121,12 +1121,6 @@ export interface ApiPinMessage {
   //
   channel_id?: string;
   //
-  clan_avatar?: string;
-  //
-  clan_id?: string;
-  //
-  clan_nick?: string;
-  //
   content?: string;
   //
   id?: string;

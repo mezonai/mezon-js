@@ -2179,12 +2179,6 @@ export interface PinMessage {
   username: string;
   /**  */
   avatar: string;
-  /**  */
-  clan_nick: string;
-  /**  */
-  clan_avatar: string;
-  /**  */
-  clan_id: string;
 }
 
 export interface PinMessagesList {
@@ -18651,18 +18645,7 @@ export const DeletePinMessage = {
 };
 
 function createBasePinMessage(): PinMessage {
-  return {
-    id: "",
-    message_id: "",
-    channel_id: "",
-    sender_id: "",
-    content: "",
-    username: "",
-    avatar: "",
-    clan_nick: "",
-    clan_avatar: "",
-    clan_id: "",
-  };
+  return { id: "", message_id: "", channel_id: "", sender_id: "", content: "", username: "", avatar: "" };
 }
 
 export const PinMessage = {
@@ -18687,15 +18670,6 @@ export const PinMessage = {
     }
     if (message.avatar !== "") {
       writer.uint32(58).string(message.avatar);
-    }
-    if (message.clan_nick !== "") {
-      writer.uint32(66).string(message.clan_nick);
-    }
-    if (message.clan_avatar !== "") {
-      writer.uint32(74).string(message.clan_avatar);
-    }
-    if (message.clan_id !== "") {
-      writer.uint32(82).string(message.clan_id);
     }
     return writer;
   },
@@ -18756,27 +18730,6 @@ export const PinMessage = {
 
           message.avatar = reader.string();
           continue;
-        case 8:
-          if (tag !== 66) {
-            break;
-          }
-
-          message.clan_nick = reader.string();
-          continue;
-        case 9:
-          if (tag !== 74) {
-            break;
-          }
-
-          message.clan_avatar = reader.string();
-          continue;
-        case 10:
-          if (tag !== 82) {
-            break;
-          }
-
-          message.clan_id = reader.string();
-          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -18795,9 +18748,6 @@ export const PinMessage = {
       content: isSet(object.content) ? globalThis.String(object.content) : "",
       username: isSet(object.username) ? globalThis.String(object.username) : "",
       avatar: isSet(object.avatar) ? globalThis.String(object.avatar) : "",
-      clan_nick: isSet(object.clan_nick) ? globalThis.String(object.clan_nick) : "",
-      clan_avatar: isSet(object.clan_avatar) ? globalThis.String(object.clan_avatar) : "",
-      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
     };
   },
 
@@ -18824,15 +18774,6 @@ export const PinMessage = {
     if (message.avatar !== "") {
       obj.avatar = message.avatar;
     }
-    if (message.clan_nick !== "") {
-      obj.clan_nick = message.clan_nick;
-    }
-    if (message.clan_avatar !== "") {
-      obj.clan_avatar = message.clan_avatar;
-    }
-    if (message.clan_id !== "") {
-      obj.clan_id = message.clan_id;
-    }
     return obj;
   },
 
@@ -18848,9 +18789,6 @@ export const PinMessage = {
     message.content = object.content ?? "";
     message.username = object.username ?? "";
     message.avatar = object.avatar ?? "";
-    message.clan_nick = object.clan_nick ?? "";
-    message.clan_avatar = object.clan_avatar ?? "";
-    message.clan_id = object.clan_id ?? "";
     return message;
   },
 };
