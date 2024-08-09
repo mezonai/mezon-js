@@ -1080,6 +1080,7 @@ export class Client {
           mentions: m.mentions ? JSON.parse(m.mentions) : [],
           reactions: m.reactions ? JSON.parse(m.reactions) : [],
           references: m.references ? JSON.parse(m.references) : [],
+          clan_id: m.clan_id
         })
       });
       return Promise.resolve(result);
@@ -1158,6 +1159,7 @@ export class Client {
           clan_avatar: gu.clan_avatar,
           clan_nick: gu.clan_nick,
           id: gu.id,
+          clan_id: gu.clan_id
         })
       });
       return Promise.resolve(result);
