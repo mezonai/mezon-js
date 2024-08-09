@@ -1,0 +1,49 @@
+{
+    "name": "mezon-sdk",
+    "version": "2.7.1",
+    "scripts": {
+        "build": "npx tsc && npx rollup -c --bundleConfigAsCjs && node build.mjs",
+        "docs": "typedoc index.ts --gaID UA-89839802-1 --out ../../docs"
+    },
+    "description": "JavaScript client for Mezon server written in TypeScript.",
+    "main": "dist/satori-js.cjs.js",
+    "module": "dist/satori-js.esm.mjs",
+    "types": "dist/index.d.ts",
+    "exports": {
+        "./package.json": "./package.json",
+        ".": {
+            "import": "./dist/satori-js.esm.mjs",
+            "require": "./dist/satori-js.cjs.js"
+        }
+    },
+    "keywords": [
+        "app server",
+        "client library",
+        "game server",
+        "satori",
+        "live ops"
+    ],
+    "repository": "https://github.com/mezon/mezon",
+    "homepage": "https://mezon.ai",
+    "bugs": "https://github.com/mezon/mezon/issues",
+    "author": "Chris Molozian <chris@mezon.ai>",
+    "contributors": [
+        "Andrei Mihu <andrei@mezon.ai>",
+        "Mo Firouz <mo@mezon.ai>"
+    ],
+    "license": "Apache-2.0",
+    "devDependencies": {
+        "@rollup/plugin-node-resolve": "^15.0.1",
+        "@rollup/plugin-typescript": "^11.0.0",
+        "rollup": "^3.10.0",
+        "tslib": "^2.4.1",
+        "typescript": "^5.5.4"
+    },
+    "dependencies": {
+        "@scarf/scarf": "^1.1.1",
+        "base64-arraybuffer": "^1.0.2",
+        "esbuild": "^0.23.0",
+        "js-base64": "^3.7.4",
+        "whatwg-fetch": "^3.6.2"
+    }
+}
