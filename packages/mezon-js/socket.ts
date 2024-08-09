@@ -875,27 +875,27 @@ export class DefaultSocket implements Socket {
           try {           
             content = JSON.parse(message.channel_message.content);
           } catch(e) {
-            console.log("content is invalid", e)
+            //console.log("content is invalid", e)
           }    
           try {
             reactions = JSON.parse(message.channel_message.reactions);
           } catch(e) {
-            console.log("reactions is invalid", e)
+            //console.log("reactions is invalid", e)
           }    
           try {
             mentions = JSON.parse(message.channel_message.mentions);
           } catch(e) {
-            console.log("mentions is invalid", e)
+            //console.log("mentions is invalid", e)
           }  
           try {
             attachments = JSON.parse(message.channel_message.attachments);
           } catch(e) {
-            console.log("attachments is invalid", e)
+            //console.log("attachments is invalid", e)
           }
           try {
             references = JSON.parse(message.channel_message.references);
           } catch(e) {
-            console.log("references is invalid", e);
+            //console.log("references is invalid", e);
           }
           var e: ChannelMessageEvent = {
             avatar: message.channel_message.avatar,
