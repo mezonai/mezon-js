@@ -1066,27 +1066,27 @@ export class Client {
         try {                        
           content = JSON.parse(m.content);
         } catch(e) {
-          console.log("error parse content", e);
+          //console.log("error parse content", e);
         }
         try {
           reactions = JSON.parse(m.reactions || '[]');
         } catch(e) {
-          console.log("error parse reactions", e);
+          //console.log("error parse reactions", e);
         }
         try {
           mentions = JSON.parse(m.mentions || '[]');
         } catch(e) {
-          console.log("error parse mentions", e);
+          //console.log("error parse mentions", e);
         }
         try {
           attachments = JSON.parse(m.attachments || '[]');
         } catch(e) {
-          console.log("error parse attachments", e);
+          //console.log("error parse attachments", e);
         }
         try {  
           references = JSON.parse(m.references || '[]');
         } catch(e) {
-          console.log("error parse references", e);
+          //console.log("error parse references", e);
         }
         result.messages!.push({
           channel_id: m.channel_id,
