@@ -5528,10 +5528,10 @@ export const ChannelMessage = {
       writer.uint32(170).string(message.referenced_message);
     }
     if (message.create_time_ms !== 0) {
-      writer.uint32(176).int64(message.create_time_ms);
+      writer.uint32(176).uint32(message.create_time_ms);
     }
     if (message.update_time_ms !== 0) {
-      writer.uint32(184).int64(message.update_time_ms);
+      writer.uint32(184).uint32(message.update_time_ms);
     }
     return writer;
   },
@@ -5607,10 +5607,10 @@ export const ChannelMessage = {
           message.referenced_message = reader.string();
           break;
         case 22:
-          message.create_time_ms = longToNumber(reader.int64() as Long);
+          message.create_time_ms = reader.uint32();
           break;
         case 23:
-          message.update_time_ms = longToNumber(reader.int64() as Long);
+          message.update_time_ms = reader.uint32();
           break;
         default:
           reader.skipType(tag & 7);
@@ -13300,10 +13300,10 @@ export const ChannelDescription = {
       writer.uint32(162).string(message.creator_name);
     }
     if (message.create_time_ms !== 0) {
-      writer.uint32(168).int64(message.create_time_ms);
+      writer.uint32(168).uint32(message.create_time_ms);
     }
     if (message.update_time_ms !== 0) {
-      writer.uint32(176).int64(message.update_time_ms);
+      writer.uint32(176).uint32(message.update_time_ms);
     }
     return writer;
   },
@@ -13376,10 +13376,10 @@ export const ChannelDescription = {
           message.creator_name = reader.string();
           break;
         case 21:
-          message.create_time_ms = longToNumber(reader.int64() as Long);
+          message.create_time_ms = reader.uint32();
           break;
         case 22:
-          message.update_time_ms = longToNumber(reader.int64() as Long);
+          message.update_time_ms = reader.uint32();
           break;
         default:
           reader.skipType(tag & 7);

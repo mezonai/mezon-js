@@ -1061,8 +1061,33 @@ export class Client {
       if (response.messages == null) {
         return Promise.resolve(result);
       }
-
-      response.messages!.forEach(m => {        
+      response.messages!.forEach(m => {
+        var content, reactions, mentions, attachments, references;
+        try {                        
+          content = JSON.parse(m.content);
+        } catch(e) {
+          console.log("error parse content", e);
+        }
+        try {
+          reactions = JSON.parse(m.reactions || '[]');
+        } catch(e) {
+          console.log("error parse reactions", e);
+        }
+        try {
+          mentions = JSON.parse(m.mentions || '[]');
+        } catch(e) {
+          console.log("error parse mentions", e);
+        }
+        try {
+          attachments = JSON.parse(m.attachments || '[]');
+        } catch(e) {
+          console.log("error parse attachments", e);
+        }
+        try {  
+          references = JSON.parse(m.references || '[]');
+        } catch(e) {
+          console.log("error parse references", e);
+        }
         result.messages!.push({
           channel_id: m.channel_id,
           code: m.code ? Number(m.code) : 0,
@@ -1073,16 +1098,16 @@ export class Client {
           username: m.username,
           display_name: m.display_name,
           avatar: m.avatar,
-          content: m.content ? JSON.parse(m.content) : undefined,
+          content: content,
           channel_label: m.channel_label,
           clan_logo: m.clan_logo,
           category_name: m.category_name,
           clan_nick: m.clan_nick,
           clan_avatar: m.clan_avatar,
-          attachments: m.attachments ? JSON.parse(m.attachments) : [],
-          mentions: m.mentions ? JSON.parse(m.mentions) : [],
-          reactions: m.reactions ? JSON.parse(m.reactions) : [],
-          references: m.references ? JSON.parse(m.references) : [],
+          attachments: attachments,
+          mentions: mentions,
+          reactions: reactions,
+          references: references,
           clan_id: m.clan_id,
           create_time_ms: m.create_time_ms,
           update_time_ms: m.update_time_ms,
