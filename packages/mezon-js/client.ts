@@ -94,7 +94,6 @@ import {
   ApiChangeChannelPrivateRequest,
   ApiClanEmojiList,
   ApiClanEmojiCreateRequest,
-  ApiChannelVoiceList,
   MezonUpdateClanEmojiByIdBody,
   ApiWebhookCreateRequest,
   ApiWebhookListResponse,
@@ -105,6 +104,7 @@ import {
   ApiClanStickerListByClanIdResponse,
   MezonUpdateClanStickerByIdBody,
   MezonChangeChannelCategoryBody,
+  ApiHashtagDmVoiceList,
 } from "./api.gen";
 
 import { Session } from "./session";
@@ -2245,7 +2245,7 @@ async createPinMessage(session: Session, request: ApiPinMessageRequest): Promise
  });
 }
 
-async getPinMessagesList(session: Session, channelId: string): Promise<ApiPinMessagesList> {
+async pinMessagesList(session: Session, channelId: string): Promise<ApiPinMessagesList> {
   if (this.autoRefreshSession && session.refresh_token &&
       session.isexpired((Date.now() + this.expiredTimespanMs)/1000)) {
       await this.sessionRefresh(session);
@@ -2256,13 +2256,13 @@ async getPinMessagesList(session: Session, channelId: string): Promise<ApiPinMes
   });
 }
 
-async directChannelVoiceList(session: Session, userId:Array<string>, limit?: number): Promise<ApiChannelVoiceList> {
+async hashtagDmVoiceList(session: Session, userId:Array<string>, limit?: number): Promise<ApiHashtagDmVoiceList> {
   if (this.autoRefreshSession && session.refresh_token &&
       session.isexpired((Date.now() + this.expiredTimespanMs)/1000)) {
       await this.sessionRefresh(session);
   }
 
-  return this.apiClient.directChannelVoiceList(session.token, userId, limit).then((response: ApiChannelVoiceList) => {
+  return this.apiClient.hashtagDMVoiceList(session.token, userId, limit).then((response: ApiHashtagDmVoiceList) => {
     return Promise.resolve(response);
   });
 }

@@ -1928,7 +1928,7 @@ export interface ChannelDescription {
 }
 
 /** direct channel void */
-export interface DirectChannelVoice {
+export interface HashtagDmVoice {
   /** The channel id. */
   channel_id: string;
   /** The channel lable */
@@ -1946,13 +1946,13 @@ export interface DirectChannelVoice {
 }
 
 /** A list of ChannelVoice */
-export interface ChannelVoiceList {
+export interface HashtagDmVoiceList {
   /** A list of channel. */
-  channelvoice: DirectChannelVoice[];
+  hashtage_voice: HashtagDmVoice[];
 }
 
 /** List (and optionally filter) channels. */
-export interface DirectChannelVoiceRequest {
+export interface HashtagDMVoiceListRequest {
   /** user Id */
   user_id: string[];
   /** Max number of records to return. Between 1 and 100. */
@@ -13495,7 +13495,7 @@ export const ChannelDescription = {
   },
 };
 
-function createBaseDirectChannelVoice(): DirectChannelVoice {
+function createBaseHashtagDmVoice(): HashtagDmVoice {
   return {
     channel_id: "",
     channel_label: "",
@@ -13507,8 +13507,8 @@ function createBaseDirectChannelVoice(): DirectChannelVoice {
   };
 }
 
-export const DirectChannelVoice = {
-  encode(message: DirectChannelVoice, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+export const HashtagDmVoice = {
+  encode(message: HashtagDmVoice, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.channel_id !== "") {
       writer.uint32(10).string(message.channel_id);
     }
@@ -13533,10 +13533,10 @@ export const DirectChannelVoice = {
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): DirectChannelVoice {
+  decode(input: _m0.Reader | Uint8Array, length?: number): HashtagDmVoice {
     const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseDirectChannelVoice();
+    const message = createBaseHashtagDmVoice();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -13569,7 +13569,7 @@ export const DirectChannelVoice = {
     return message;
   },
 
-  fromJSON(object: any): DirectChannelVoice {
+  fromJSON(object: any): HashtagDmVoice {
     return {
       channel_id: isSet(object.channel_id) ? String(object.channel_id) : "",
       channel_label: isSet(object.channel_label) ? String(object.channel_label) : "",
@@ -13581,7 +13581,7 @@ export const DirectChannelVoice = {
     };
   },
 
-  toJSON(message: DirectChannelVoice): unknown {
+  toJSON(message: HashtagDmVoice): unknown {
     const obj: any = {};
     message.channel_id !== undefined && (obj.channel_id = message.channel_id);
     message.channel_label !== undefined && (obj.channel_label = message.channel_label);
@@ -13593,12 +13593,12 @@ export const DirectChannelVoice = {
     return obj;
   },
 
-  create<I extends Exact<DeepPartial<DirectChannelVoice>, I>>(base?: I): DirectChannelVoice {
-    return DirectChannelVoice.fromPartial(base ?? {});
+  create<I extends Exact<DeepPartial<HashtagDmVoice>, I>>(base?: I): HashtagDmVoice {
+    return HashtagDmVoice.fromPartial(base ?? {});
   },
 
-  fromPartial<I extends Exact<DeepPartial<DirectChannelVoice>, I>>(object: I): DirectChannelVoice {
-    const message = createBaseDirectChannelVoice();
+  fromPartial<I extends Exact<DeepPartial<HashtagDmVoice>, I>>(object: I): HashtagDmVoice {
+    const message = createBaseHashtagDmVoice();
     message.channel_id = object.channel_id ?? "";
     message.channel_label = object.channel_label ?? "";
     message.clan_id = object.clan_id ?? "";
@@ -13610,27 +13610,27 @@ export const DirectChannelVoice = {
   },
 };
 
-function createBaseChannelVoiceList(): ChannelVoiceList {
-  return { channelvoice: [] };
+function createBaseHashtagDmVoiceList(): HashtagDmVoiceList {
+  return { hashtage_voice: [] };
 }
 
-export const ChannelVoiceList = {
-  encode(message: ChannelVoiceList, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    for (const v of message.channelvoice) {
-      DirectChannelVoice.encode(v!, writer.uint32(10).fork()).ldelim();
+export const HashtagDmVoiceList = {
+  encode(message: HashtagDmVoiceList, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    for (const v of message.hashtage_voice) {
+      HashtagDmVoice.encode(v!, writer.uint32(10).fork()).ldelim();
     }
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): ChannelVoiceList {
+  decode(input: _m0.Reader | Uint8Array, length?: number): HashtagDmVoiceList {
     const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseChannelVoiceList();
+    const message = createBaseHashtagDmVoiceList();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          message.channelvoice.push(DirectChannelVoice.decode(reader, reader.uint32()));
+          message.hashtage_voice.push(HashtagDmVoice.decode(reader, reader.uint32()));
           break;
         default:
           reader.skipType(tag & 7);
@@ -13640,41 +13640,41 @@ export const ChannelVoiceList = {
     return message;
   },
 
-  fromJSON(object: any): ChannelVoiceList {
+  fromJSON(object: any): HashtagDmVoiceList {
     return {
-      channelvoice: Array.isArray(object?.channelvoice)
-        ? object.channelvoice.map((e: any) => DirectChannelVoice.fromJSON(e))
+      hashtage_voice: Array.isArray(object?.hashtage_voice)
+        ? object.hashtage_voice.map((e: any) => HashtagDmVoice.fromJSON(e))
         : [],
     };
   },
 
-  toJSON(message: ChannelVoiceList): unknown {
+  toJSON(message: HashtagDmVoiceList): unknown {
     const obj: any = {};
-    if (message.channelvoice) {
-      obj.channelvoice = message.channelvoice.map((e) => e ? DirectChannelVoice.toJSON(e) : undefined);
+    if (message.hashtage_voice) {
+      obj.hashtage_voice = message.hashtage_voice.map((e) => e ? HashtagDmVoice.toJSON(e) : undefined);
     } else {
-      obj.channelvoice = [];
+      obj.hashtage_voice = [];
     }
     return obj;
   },
 
-  create<I extends Exact<DeepPartial<ChannelVoiceList>, I>>(base?: I): ChannelVoiceList {
-    return ChannelVoiceList.fromPartial(base ?? {});
+  create<I extends Exact<DeepPartial<HashtagDmVoiceList>, I>>(base?: I): HashtagDmVoiceList {
+    return HashtagDmVoiceList.fromPartial(base ?? {});
   },
 
-  fromPartial<I extends Exact<DeepPartial<ChannelVoiceList>, I>>(object: I): ChannelVoiceList {
-    const message = createBaseChannelVoiceList();
-    message.channelvoice = object.channelvoice?.map((e) => DirectChannelVoice.fromPartial(e)) || [];
+  fromPartial<I extends Exact<DeepPartial<HashtagDmVoiceList>, I>>(object: I): HashtagDmVoiceList {
+    const message = createBaseHashtagDmVoiceList();
+    message.hashtage_voice = object.hashtage_voice?.map((e) => HashtagDmVoice.fromPartial(e)) || [];
     return message;
   },
 };
 
-function createBaseDirectChannelVoiceRequest(): DirectChannelVoiceRequest {
+function createBaseHashtagDMVoiceListRequest(): HashtagDMVoiceListRequest {
   return { user_id: [], limit: undefined };
 }
 
-export const DirectChannelVoiceRequest = {
-  encode(message: DirectChannelVoiceRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+export const HashtagDMVoiceListRequest = {
+  encode(message: HashtagDMVoiceListRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     for (const v of message.user_id) {
       writer.uint32(10).string(v!);
     }
@@ -13684,10 +13684,10 @@ export const DirectChannelVoiceRequest = {
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): DirectChannelVoiceRequest {
+  decode(input: _m0.Reader | Uint8Array, length?: number): HashtagDMVoiceListRequest {
     const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseDirectChannelVoiceRequest();
+    const message = createBaseHashtagDMVoiceListRequest();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -13705,14 +13705,14 @@ export const DirectChannelVoiceRequest = {
     return message;
   },
 
-  fromJSON(object: any): DirectChannelVoiceRequest {
+  fromJSON(object: any): HashtagDMVoiceListRequest {
     return {
       user_id: Array.isArray(object?.user_id) ? object.user_id.map((e: any) => String(e)) : [],
       limit: isSet(object.limit) ? Number(object.limit) : undefined,
     };
   },
 
-  toJSON(message: DirectChannelVoiceRequest): unknown {
+  toJSON(message: HashtagDMVoiceListRequest): unknown {
     const obj: any = {};
     if (message.user_id) {
       obj.user_id = message.user_id.map((e) => e);
@@ -13723,12 +13723,12 @@ export const DirectChannelVoiceRequest = {
     return obj;
   },
 
-  create<I extends Exact<DeepPartial<DirectChannelVoiceRequest>, I>>(base?: I): DirectChannelVoiceRequest {
-    return DirectChannelVoiceRequest.fromPartial(base ?? {});
+  create<I extends Exact<DeepPartial<HashtagDMVoiceListRequest>, I>>(base?: I): HashtagDMVoiceListRequest {
+    return HashtagDMVoiceListRequest.fromPartial(base ?? {});
   },
 
-  fromPartial<I extends Exact<DeepPartial<DirectChannelVoiceRequest>, I>>(object: I): DirectChannelVoiceRequest {
-    const message = createBaseDirectChannelVoiceRequest();
+  fromPartial<I extends Exact<DeepPartial<HashtagDMVoiceListRequest>, I>>(object: I): HashtagDMVoiceListRequest {
+    const message = createBaseHashtagDMVoiceListRequest();
     message.user_id = object.user_id?.map((e) => e) || [];
     message.limit = object.limit ?? undefined;
     return message;
