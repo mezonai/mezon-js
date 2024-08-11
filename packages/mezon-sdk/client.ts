@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { MezonApi, ApiSession, ApiAuthenticateRequest, ApiEventRequest, ApiAuthenticateLogoutRequest, ApiAuthenticateRefreshRequest, ApiIdentifyRequest, ApiUpdatePropertiesRequest, ApiEvent, ApiUpdateMessageRequest } from "./api";
+import { MezonApi, ApiSession, ApiAuthenticateRequest, ApiAuthenticateLogoutRequest, ApiAuthenticateRefreshRequest, ApiUpdatePropertiesRequest, ApiUpdateMessageRequest } from "./api";
 
 import { Session } from "./session";
 
@@ -85,167 +85,6 @@ export class Client {
     });
   }
 
-  /** Publish an event for this session. */
-  async event(session: Session, event: ApiEvent) {
-    if (this.autoRefreshSession && session.refresh_token &&
-      session.isexpired((Date.now() + this.expiredTimespanMs)/1000)) {
-      await this.sessionRefresh(session);
-    }
-
-    const request : ApiEventRequest = {
-      events: [event]
-    };
-
-    return this.apiClient.mezonEvent(session.token, request).then((response) => {
-      return Promise.resolve(response !== undefined);
-    });
-  }
-
-  /** Publish multiple events for this session */
-  async events(session: Session, events: Array<ApiEvent>) {
-    if (this.autoRefreshSession && session.refresh_token &&
-      session.isexpired((Date.now() + this.expiredTimespanMs)/1000)) {
-      await this.sessionRefresh(session);
-    }
-
-    const request : ApiEventRequest = {
-      events
-    };
-
-    return this.apiClient.mezonEvent(session.token, request).then((response) => {
-      return Promise.resolve(response !== undefined);
-    });
-  }
-
-  /** Get or list all available experiments for this identity. */
-  async getExperiments(session: Session, names?: Array<string>) {
-    if (this.autoRefreshSession && session.refresh_token &&
-      session.isexpired((Date.now() + this.expiredTimespanMs)/1000)) {
-      await this.sessionRefresh(session);
-    }
-
-    return this.apiClient.mezonGetExperiments(session.token, names);
-  }
-
-  /** Get a single flag for this identity. Throws an error when the flag does not exist. */
-  async getFlag(session: Session, name: string) {
-    if (this.autoRefreshSession && session.refresh_token &&
-      session.isexpired((Date.now() + this.expiredTimespanMs)/1000)) {
-      await this.sessionRefresh(session);
-    }
-
-    return this.apiClient.mezonGetFlags(session.token, "", "", [name]).then((flagList) => {
-      let flag = null;
-
-      flagList.flags?.forEach((f) => {
-        if (f.name === name) {
-          flag = f;
-        }
-      });
-
-      if (flag === null) {
-        return Promise.reject("Flag does not exist.");
-      }
-
-      return Promise.resolve(flag);
-    });
-  }
-
-
-  /** Get a single flag for this identity. */
-  async getFlagWithFallback(session: Session, name: string, fallbackValue?: string) {
-    return this.getFlag(session, name)
-      .then((flag) => {
-        return flag;
-      })
-      .catch(() => {
-        const flag = {
-          name,
-          value: fallbackValue
-        };
-
-        return Promise.resolve(flag)
-      });
-  }
-
-  /** Get a single flag with its configured default value. Throws an error when the flag does not exist. */
-  async getFlagDefault(name: string) {
-    return this.apiClient.mezonGetFlags("", this.apiKey, "", [name]).then((flagList) => {
-      let flag = null;
-
-      flagList.flags?.forEach((f) => {
-        if (f.name === name) {
-          flag = f;
-        }
-      });
-
-      if (flag === null) {
-        return Promise.reject("Flag does not exist.");
-      }
-
-      return Promise.resolve(flag);
-    });
-  }
-
-  /** Get a single flag with its configured default value.  */
-  async getFlagDefaultWithFallback(name: string, fallbackValue?: string) {
-    return this.getFlagDefault(name)
-      .then((flag) => {
-        return flag;
-      })
-      .catch(() => {
-        const flag = {
-          name,
-          value: fallbackValue
-        };
-
-        return Promise.resolve(flag)
-      });
-  }
-
-  /** List all available flags for this identity. */
-  async getFlags(session: Session, names?: Array<string>) {
-    if (this.autoRefreshSession && session.refresh_token &&
-      session.isexpired((Date.now() + this.expiredTimespanMs)/1000)) {
-      await this.sessionRefresh(session);
-    }
-
-    return this.apiClient.mezonGetFlags(session.token, "", "", names);
-  }
-
-  /** List all available default flags. */
-  async getFlagsDefault(names?: Array<string>) {
-    return this.apiClient.mezonGetFlags("", this.apiKey, "", names);
-  }
-
-  /** Enrich/replace the current session with new identifier. */
-  async identify(session: Session, id: string, defaultProperties?: Record<string, string>, customProperties?: Record<string, string>) {
-    if (this.autoRefreshSession && session.refresh_token &&
-      session.isexpired((Date.now() + this.expiredTimespanMs)/1000)) {
-      await this.sessionRefresh(session);
-    }
-
-    const request : ApiIdentifyRequest = {
-      id: id,
-      default: defaultProperties,
-      custom: customProperties
-    };
-
-    return this.apiClient.mezonIdentify(session.token, request).then((apiSession: ApiSession) => {
-      return Promise.resolve(new Session(apiSession.token || "", apiSession.refresh_token || ""));
-    });
-  }
-
-  /** List available live events. */
-  async getLiveEvents(session: Session, names?: Array<string>) {
-    if (this.autoRefreshSession && session.refresh_token &&
-      session.isexpired((Date.now() + this.expiredTimespanMs)/1000)) {
-      await this.sessionRefresh(session);
-    }
-
-    return this.apiClient.mezonGetLiveEvents(session.token, names);
-  }
-
   /** List properties associated with this identity. */
   async listProperties(session: Session) {
     if (this.autoRefreshSession && session.refresh_token &&
@@ -273,29 +112,6 @@ export class Client {
       return Promise.resolve(response !== undefined);
     });
   }
-
-    /** Delete the caller's identity and associated data. */
-    async deleteIdentity(session: Session) {
-      if (this.autoRefreshSession && session.refresh_token &&
-        session.isexpired((Date.now() + this.expiredTimespanMs)/1000)) {
-        await this.sessionRefresh(session);
-      }
-
-      return this.apiClient.mezonDeleteIdentity(session.token).then((response) => {
-        return Promise.resolve(response !== undefined);
-      });
-    }
-
-    async getMessageList(session : Session) {
-        if (this.autoRefreshSession && session.refresh_token &&
-            session.isexpired((Date.now() + this.expiredTimespanMs)/1000)) {
-            await this.sessionRefresh(session);
-        }
-
-        return this.apiClient.mezonGetMessageList(session.token).then((response) => {
-            return Promise.resolve(response !== undefined);
-        });
-    }
 
     async deleteMessage(session : Session, id : string) {
         if (this.autoRefreshSession && session.refresh_token &&

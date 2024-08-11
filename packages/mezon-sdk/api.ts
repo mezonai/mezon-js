@@ -28,120 +28,6 @@ export interface ApiAuthenticateRequest {
   id?: string;
 }
 
-/** A single event. Usually, but not necessarily, part of a batch. */
-export interface ApiEvent {
-  //Optional event ID assigned by the client, used to de-duplicate in retransmission scenarios. If not supplied the server will assign a randomly generated unique event identifier.
-  id?: string;
-  //Event metadata, if any.
-  metadata?: Record<string, string>;
-  //Event name.
-  name?: string;
-  //The time when the event was triggered on the producer side.
-  timestamp?: string;
-  //Optional value.
-  value?: string;
-}
-
-/**  */
-export interface ApiEventRequest {
-  //Some number of events produced by a client.
-  events?: Array<ApiEvent>;
-}
-
-/** An experiment that this user is partaking. */
-export interface ApiExperiment {
-  //
-  name?: string;
-  //Value associated with this Experiment.
-  value?: string;
-}
-
-/** All experiments that this identity is involved with. */
-export interface ApiExperimentList {
-  //All experiments for this identity.
-  experiments?: Array<ApiExperiment>;
-}
-
-/** Feature flag available to the identity. */
-export interface ApiFlag {
-  //Whether the value for this flag has conditionally changed from the default state.
-  condition_changed?: boolean;
-  //
-  name?: string;
-  //Value associated with this flag.
-  value?: string;
-}
-
-/**  */
-export interface ApiFlagList {
-  //
-  flags?: Array<ApiFlag>;
-}
-
-/** A response containing all the messages for an identity. */
-export interface ApiGetMessageListResponse {
-  //Cacheable cursor to list newer messages. Durable and designed to be stored, unlike next/prev cursors.
-  cacheable_cursor?: string;
-  //The list of messages.
-  messages?: Array<ApiMessage>;
-  //The cursor to send when retrieving the next page, if any.
-  next_cursor?: string;
-  //The cursor to send when retrieving the previous page, if any.
-  prev_cursor?: string;
-}
-
-/** Enrich/replace the current session with a new ID. */
-export interface ApiIdentifyRequest {
-  //Optional custom properties to update with this call. If not set, properties are left as they are on the server.
-  custom?: Record<string, string>;
-  //Optional default properties to update with this call. If not set, properties are left as they are on the server.
-  default?: Record<string, string>;
-  //Identity ID to enrich the current session and return a new session. Old session will no longer be usable.
-  id?: string;
-}
-
-/** A single live event. */
-export interface ApiLiveEvent {
-  //End time of current event run.
-  active_end_time_sec?: string;
-  //Start time of current event run.
-  active_start_time_sec?: string;
-  //Description.
-  description?: string;
-  //The live event identifier.
-  id?: string;
-  //Name.
-  name?: string;
-  //Event value.
-  value?: string;
-}
-
-/** List of Live events. */
-export interface ApiLiveEventList {
-  //Live events.
-  live_events?: Array<ApiLiveEvent>;
-}
-
-/** A scheduled message. */
-export interface ApiMessage {
-  //The time the message was consumed by the identity.
-  consume_time?: string;
-  //The time the message was created.
-  create_time?: string;
-  //A key-value pairs of metadata.
-  metadata?: Record<string, string>;
-  //The time the message was read by the client.
-  read_time?: string;
-  //The identifier of the schedule.
-  schedule_id?: string;
-  //The send time for the message.
-  send_time?: string;
-  //The message's text.
-  text?: string;
-  //The time the message was updated.
-  update_time?: string;
-}
-
 /** Properties associated with an identity. */
 export interface ApiProperties {
   //Event computed properties.
@@ -267,15 +153,14 @@ export class MezonApi {
 }
 
   /** Authenticate against the server. */
-  mezonAuthenticate(basicAuthUsername: string,
-    basicAuthPassword: string,
+  mezonInit(token: string,
       body:ApiAuthenticateRequest,
       options: any = {}): Promise<ApiSession> {
     
     if (body === null || body === undefined) {
       throw new Error("'body' is a required parameter but is null or undefined.");
     }
-    const urlPath = "/v1/authenticate";
+    const urlPath = "/v2/authenticate";
     const queryParams = new Map<string, any>();
 
     let bodyJson : string = "";
@@ -283,8 +168,8 @@ export class MezonApi {
 
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("POST", options, bodyJson);
-		if (basicAuthUsername) {
-			fetchOptions.headers["Authorization"] = "Basic " + encode(basicAuthUsername + ":" + basicAuthPassword);
+		if (token) {
+			fetchOptions.headers["Authorization"] = "Basic " + encode(token + ":" + basicAuthPassword);
 		}
 
     return Promise.race([
@@ -311,7 +196,7 @@ export class MezonApi {
     if (body === null || body === undefined) {
       throw new Error("'body' is a required parameter but is null or undefined.");
     }
-    const urlPath = "/v1/authenticate/logout";
+    const urlPath = "/v2/authenticate/logout";
     const queryParams = new Map<string, any>();
 
     let bodyJson : string = "";
@@ -348,7 +233,7 @@ export class MezonApi {
     if (body === null || body === undefined) {
       throw new Error("'body' is a required parameter but is null or undefined.");
     }
-    const urlPath = "/v1/authenticate/refresh";
+    const urlPath = "/v2/authenticate/refresh";
     const queryParams = new Map<string, any>();
 
     let bodyJson : string = "";
@@ -359,249 +244,6 @@ export class MezonApi {
 		if (basicAuthUsername) {
 			fetchOptions.headers["Authorization"] = "Basic " + encode(basicAuthUsername + ":" + basicAuthPassword);
 		}
-
-    return Promise.race([
-      fetch(fullUrl, fetchOptions).then((response) => {
-        if (response.status == 204) {
-          return response;
-        } else if (response.status >= 200 && response.status < 300) {
-          return response.json();
-        } else {
-          throw response;
-        }
-      }),
-      new Promise((_, reject) =>
-        setTimeout(reject, this.timeoutMs, "Request timed out.")
-      ),
-    ]);
-}
-
-  /** Publish an event for this session. */
-  mezonEvent(bearerToken: string,
-      body:ApiEventRequest,
-      options: any = {}): Promise<any> {
-    
-    if (body === null || body === undefined) {
-      throw new Error("'body' is a required parameter but is null or undefined.");
-    }
-    const urlPath = "/v1/event";
-    const queryParams = new Map<string, any>();
-
-    let bodyJson : string = "";
-    bodyJson = JSON.stringify(body || {});
-
-    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
-    const fetchOptions = buildFetchOptions("POST", options, bodyJson);
-    if (bearerToken) {
-        fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-    }
-
-    return Promise.race([
-      fetch(fullUrl, fetchOptions).then((response) => {
-        if (response.status == 204) {
-          return response;
-        } else if (response.status >= 200 && response.status < 300) {
-          return response.json();
-        } else {
-          throw response;
-        }
-      }),
-      new Promise((_, reject) =>
-        setTimeout(reject, this.timeoutMs, "Request timed out.")
-      ),
-    ]);
-}
-
-  /** Get or list all available experiments for this identity. */
-  mezonGetExperiments(bearerToken: string,
-      names?:Array<string>,
-      options: any = {}): Promise<ApiExperimentList> {
-    
-    const urlPath = "/v1/experiment";
-    const queryParams = new Map<string, any>();
-    queryParams.set("names", names);
-
-    let bodyJson : string = "";
-
-    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
-    const fetchOptions = buildFetchOptions("GET", options, bodyJson);
-    if (bearerToken) {
-        fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-    }
-
-    return Promise.race([
-      fetch(fullUrl, fetchOptions).then((response) => {
-        if (response.status == 204) {
-          return response;
-        } else if (response.status >= 200 && response.status < 300) {
-          return response.json();
-        } else {
-          throw response;
-        }
-      }),
-      new Promise((_, reject) =>
-        setTimeout(reject, this.timeoutMs, "Request timed out.")
-      ),
-    ]);
-}
-
-  /** List all available flags for this identity. */
-  mezonGetFlags(bearerToken: string,basicAuthUsername: string,
-		basicAuthPassword: string,
-      names?:Array<string>,
-      options: any = {}): Promise<ApiFlagList> {
-    
-    const urlPath = "/v1/flag";
-    const queryParams = new Map<string, any>();
-    queryParams.set("names", names);
-
-    let bodyJson : string = "";
-
-    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
-    const fetchOptions = buildFetchOptions("GET", options, bodyJson);
-		if (bearerToken) {
-				fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-		}
-		if (basicAuthUsername) {
-			fetchOptions.headers["Authorization"] = "Basic " + encode(basicAuthUsername + ":" + basicAuthPassword);
-		}
-
-    return Promise.race([
-      fetch(fullUrl, fetchOptions).then((response) => {
-        if (response.status == 204) {
-          return response;
-        } else if (response.status >= 200 && response.status < 300) {
-          return response.json();
-        } else {
-          throw response;
-        }
-      }),
-      new Promise((_, reject) =>
-        setTimeout(reject, this.timeoutMs, "Request timed out.")
-      ),
-    ]);
-}
-
-  /** Enrich/replace the current session with new identifier. */
-  mezonIdentify(bearerToken: string,
-      body:ApiIdentifyRequest,
-      options: any = {}): Promise<ApiSession> {
-    
-    if (body === null || body === undefined) {
-      throw new Error("'body' is a required parameter but is null or undefined.");
-    }
-    const urlPath = "/v1/identify";
-    const queryParams = new Map<string, any>();
-
-    let bodyJson : string = "";
-    bodyJson = JSON.stringify(body || {});
-
-    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
-    const fetchOptions = buildFetchOptions("PUT", options, bodyJson);
-    if (bearerToken) {
-        fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-    }
-
-    return Promise.race([
-      fetch(fullUrl, fetchOptions).then((response) => {
-        if (response.status == 204) {
-          return response;
-        } else if (response.status >= 200 && response.status < 300) {
-          return response.json();
-        } else {
-          throw response;
-        }
-      }),
-      new Promise((_, reject) =>
-        setTimeout(reject, this.timeoutMs, "Request timed out.")
-      ),
-    ]);
-}
-
-  /** Delete the caller's identity and associated data. */
-  mezonDeleteIdentity(bearerToken: string,
-      options: any = {}): Promise<any> {
-    
-    const urlPath = "/v1/identity";
-    const queryParams = new Map<string, any>();
-
-    let bodyJson : string = "";
-
-    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
-    const fetchOptions = buildFetchOptions("DELETE", options, bodyJson);
-    if (bearerToken) {
-        fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-    }
-
-    return Promise.race([
-      fetch(fullUrl, fetchOptions).then((response) => {
-        if (response.status == 204) {
-          return response;
-        } else if (response.status >= 200 && response.status < 300) {
-          return response.json();
-        } else {
-          throw response;
-        }
-      }),
-      new Promise((_, reject) =>
-        setTimeout(reject, this.timeoutMs, "Request timed out.")
-      ),
-    ]);
-}
-
-  /** List available live events. */
-  mezonGetLiveEvents(bearerToken: string,
-      names?:Array<string>,
-      options: any = {}): Promise<ApiLiveEventList> {
-    
-    const urlPath = "/v1/live-event";
-    const queryParams = new Map<string, any>();
-    queryParams.set("names", names);
-
-    let bodyJson : string = "";
-
-    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
-    const fetchOptions = buildFetchOptions("GET", options, bodyJson);
-    if (bearerToken) {
-        fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-    }
-
-    return Promise.race([
-      fetch(fullUrl, fetchOptions).then((response) => {
-        if (response.status == 204) {
-          return response;
-        } else if (response.status >= 200 && response.status < 300) {
-          return response.json();
-        } else {
-          throw response;
-        }
-      }),
-      new Promise((_, reject) =>
-        setTimeout(reject, this.timeoutMs, "Request timed out.")
-      ),
-    ]);
-}
-
-  /** Get the list of messages for the identity. */
-  mezonGetMessageList(bearerToken: string,
-      limit?:number,
-      forward?:boolean,
-      cursor?:string,
-      options: any = {}): Promise<ApiGetMessageListResponse> {
-    
-    const urlPath = "/v1/message";
-    const queryParams = new Map<string, any>();
-    queryParams.set("limit", limit);
-    queryParams.set("forward", forward);
-    queryParams.set("cursor", cursor);
-
-    let bodyJson : string = "";
-
-    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
-    const fetchOptions = buildFetchOptions("GET", options, bodyJson);
-    if (bearerToken) {
-        fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-    }
 
     return Promise.race([
       fetch(fullUrl, fetchOptions).then((response) => {
@@ -627,7 +269,7 @@ export class MezonApi {
     if (id === null || id === undefined) {
       throw new Error("'id' is a required parameter but is null or undefined.");
     }
-    const urlPath = "/v1/message/{id}"
+    const urlPath = "/v2/message/{id}"
         .replace("{id}", encodeURIComponent(String(id)));
     const queryParams = new Map<string, any>();
 
@@ -667,7 +309,7 @@ export class MezonApi {
     if (body === null || body === undefined) {
       throw new Error("'body' is a required parameter but is null or undefined.");
     }
-    const urlPath = "/v1/message/{id}"
+    const urlPath = "/v2/message/{id}"
         .replace("{id}", encodeURIComponent(String(id)));
     const queryParams = new Map<string, any>();
 
@@ -700,7 +342,7 @@ export class MezonApi {
   mezonListProperties(bearerToken: string,
       options: any = {}): Promise<ApiProperties> {
     
-    const urlPath = "/v1/properties";
+    const urlPath = "/v2/properties";
     const queryParams = new Map<string, any>();
 
     let bodyJson : string = "";
@@ -735,7 +377,7 @@ export class MezonApi {
     if (body === null || body === undefined) {
       throw new Error("'body' is a required parameter but is null or undefined.");
     }
-    const urlPath = "/v1/properties";
+    const urlPath = "/v2/properties";
     const queryParams = new Map<string, any>();
 
     let bodyJson : string = "";

@@ -35,9 +35,9 @@ The client object has many method to execute various features in the server.
 To authenticate with the Mezon server you must provide an identifier for the user.
 
 ```js
-const userId = "<UniqueUserId>";
+const token = "<UniqueToken>";
 
-client.authenticate(userId)
+client.init(token)
   .then(session => {
     _session = session;
     console.info("Authenticated:", session);
