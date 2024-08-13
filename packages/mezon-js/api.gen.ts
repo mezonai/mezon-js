@@ -557,26 +557,6 @@ export interface ApiClanEmojiCreateRequest {
   source?: string;
 }
 
-/**  */
-export interface ApiClanEmojiList {
-  //
-  emoji_list?: Array<ApiClanEmojiListResponse>;
-}
-
-/**  */
-export interface ApiClanEmojiListResponse {
-  //
-  category?: string;
-  //
-  creator_id?: string;
-  //
-  id?: string;
-  //
-  shortname?: string;
-  //
-  src?: string;
-}
-
 /** Get clan profile. */
 export interface ApiClanProfile {
   //
@@ -587,24 +567,6 @@ export interface ApiClanProfile {
   nick_name?: string;
   //
   user_id?: string;
-}
-
-/**  */
-export interface ApiClanSticker {
-  //
-  category?: string;
-  //
-  clan_id?: string;
-  //
-  create_time?: string;
-  //
-  creator_id?: string;
-  //
-  id?: string;
-  //
-  shortname?: string;
-  //
-  source?: string;
 }
 
 /**  */
@@ -619,12 +581,6 @@ export interface ApiClanStickerAddRequest {
   shortname?: string;
   //
   source?: string;
-}
-
-/**  */
-export interface ApiClanStickerListByClanIdResponse {
-  //
-  stickers?: Array<ApiClanSticker>;
 }
 
 /** A list of users belonging to a clan, along with their role. */

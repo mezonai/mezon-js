@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import {ApiClanEmojiList, ApiClanStickerListByClanIdResponse, ApiMessageAttachment, ApiMessageMention, ApiMessageReaction, ApiMessageRef, ApiNotification, ApiRpc} from "./api.gen";
+import {ApiMessageAttachment, ApiMessageMention, ApiMessageReaction, ApiMessageRef, ApiNotification, ApiRpc} from "./api.gen";
 import {Session} from "./session";
 import {Notification} from "./client";
 import {WebSocketAdapter, WebSocketAdapterText} from "./web_socket_adapter"
@@ -623,6 +623,56 @@ interface StatusUpdate {
 export interface ClanNameExistedEvent {
   clan_name: string;
 }
+
+
+/**  */
+export interface StrickerListedEvent {
+  // clan id
+  clan_id: string;
+  // sticker data
+  stickers?: Array<ClanSticker>;
+}
+
+/**  */
+export interface ClanSticker {
+  //
+  category?: string;
+  //
+  clan_id?: string;
+  //
+  create_time?: string;
+  //
+  creator_id?: string;
+  //
+  id?: string;
+  //
+  shortname?: string;
+  //
+  source?: string;
+}
+
+/**  */
+export interface EmojiListedEvent {
+  // clan id
+  clan_id: string;
+  // emoji data
+  emoji_list?: Array<ClanEmoji>;
+}
+
+/**  */
+export interface ClanEmoji {
+  //
+  category?: string;
+  //
+  creator_id?: string;
+  //
+  id?: string;
+  //
+  shortname?: string;
+  //
+  src?: string;
+}
+
 /** A socket connection to Mezon server. */
 export interface Socket {
   /** Connection is Open */
@@ -775,9 +825,9 @@ export interface Socket {
 
   checkDuplicateClanName(clan_name: string): Promise<ClanNameExistedEvent>;
 
-  listClanEmojiByClanId(clan_id: string): Promise<ApiClanEmojiList>;
+  listClanEmojiByClanId(clan_id: string): Promise<EmojiListedEvent>;
 
-  listClanStickersByClanId(clan_id: string): Promise<ApiClanStickerListByClanIdResponse>;
+  listClanStickersByClanId(clan_id: string): Promise<StrickerListedEvent>;
 }
 
 /** Reports an error received from a socket message. */
@@ -1316,14 +1366,14 @@ export class DefaultSocket implements Socket {
     return response.clan_name_existed_event
   }
 
-  async listClanEmojiByClanId(clan_id: string): Promise<ApiClanEmojiList>{
-    const response = await this.send({emojis_by_clan_id_request_event: {clan_id: clan_id}});
-    return response.clan_emoji_list_event
+  async listClanEmojiByClanId(clan_id: string): Promise<EmojiListedEvent>{
+    const response = await this.send({emojis_listed_event: {clan_id: clan_id}});
+    return response.emojis_listed_event
   }
 
-  async listClanStickersByClanId(clan_id: string): Promise<ApiClanStickerListByClanIdResponse>{
-    const response = await this.send({clan_sticker_list_request_event: {clan_id: clan_id}});
-    return response.clan_sticker_list_response_event
+  async listClanStickersByClanId(clan_id: string): Promise<StrickerListedEvent>{
+    const response = await this.send({sticker_listed_event: {clan_id: clan_id}});
+    return response.sticker_listed_event
   }
 
   private async pingPong() : Promise<void> {
