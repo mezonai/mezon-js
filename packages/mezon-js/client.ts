@@ -103,6 +103,8 @@ import {
   MezonUpdateClanStickerByIdBody,
   MezonChangeChannelCategoryBody,
   ApiHashtagDmVoiceList,
+  ApiPermissionRoleChannelList,
+  ApiUpdateRoleChannelRequest,
 } from "./api.gen";
 
 import { Session } from "./session";
@@ -2421,5 +2423,29 @@ async changeChannelCategory(session: Session, id: string, request: MezonChangeCh
     return response !== undefined;
   })
 }
+
+/** */
+async getListPermissionRoleChannel(session: Session, roleId: string, channelId: string): Promise<ApiPermissionRoleChannelList> {
+  if (this.autoRefreshSession && session.refresh_token &&
+      session.isexpired((Date.now() + this.expiredTimespanMs)/1000)) {
+      await this.sessionRefresh(session);
+  }
+
+  return this.apiClient.getListPermissionRoleChannel(session.token, roleId, channelId).then((response: ApiPermissionRoleChannelList) => {
+    return Promise.resolve(response);
+  });
+}
+
+/** */
+async setRoleChannelPermission(session: Session, request: ApiUpdateRoleChannelRequest): Promise<boolean> {
+  if (this.autoRefreshSession && session.refresh_token &&
+      session.isexpired((Date.now() + this.expiredTimespanMs)/1000)) {
+      await this.sessionRefresh(session);
+  }
+ 
+  return this.apiClient.setRoleChannelPermission(session.token, request).then((response: any) => {
+    return response !== undefined;
+  });
+ }
 
 };
