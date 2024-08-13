@@ -2681,7 +2681,7 @@ export interface ClanStickerAddRequest {
 }
 
 export interface ClanStickerListByClanIdRequest {
-  clan_id: number;
+  clan_id: string;
 }
 
 export interface ClanStickerListByClanIdResponse {
@@ -19836,13 +19836,13 @@ export const ClanStickerAddRequest = {
 };
 
 function createBaseClanStickerListByClanIdRequest(): ClanStickerListByClanIdRequest {
-  return { clan_id: 0 };
+  return { clan_id: "" };
 }
 
 export const ClanStickerListByClanIdRequest = {
   encode(message: ClanStickerListByClanIdRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.clan_id !== 0) {
-      writer.uint32(8).int64(message.clan_id);
+    if (message.clan_id !== "") {
+      writer.uint32(10).string(message.clan_id);
     }
     return writer;
   },
@@ -19855,7 +19855,7 @@ export const ClanStickerListByClanIdRequest = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          message.clan_id = longToNumber(reader.int64() as Long);
+          message.clan_id = reader.string();
           break;
         default:
           reader.skipType(tag & 7);
@@ -19866,12 +19866,12 @@ export const ClanStickerListByClanIdRequest = {
   },
 
   fromJSON(object: any): ClanStickerListByClanIdRequest {
-    return { clan_id: isSet(object.clan_id) ? Number(object.clan_id) : 0 };
+    return { clan_id: isSet(object.clan_id) ? String(object.clan_id) : "" };
   },
 
   toJSON(message: ClanStickerListByClanIdRequest): unknown {
     const obj: any = {};
-    message.clan_id !== undefined && (obj.clan_id = Math.round(message.clan_id));
+    message.clan_id !== undefined && (obj.clan_id = message.clan_id);
     return obj;
   },
 
@@ -19883,7 +19883,7 @@ export const ClanStickerListByClanIdRequest = {
     object: I,
   ): ClanStickerListByClanIdRequest {
     const message = createBaseClanStickerListByClanIdRequest();
-    message.clan_id = object.clan_id ?? 0;
+    message.clan_id = object.clan_id ?? "";
     return message;
   },
 };
