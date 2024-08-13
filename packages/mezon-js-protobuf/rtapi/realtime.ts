@@ -1,7 +1,15 @@
 /* eslint-disable */
 import Long from "long";
 import _m0 from "protobufjs/minimal";
-import { ChannelMessage, Notification, Rpc } from "../api/api";
+import {
+  ChannelMessage,
+  ClanEmojiGetByClanIdRequest,
+  ClanEmojiList,
+  ClanStickerListByClanIdRequest,
+  ClanStickerListByClanIdResponse,
+  Notification,
+  Rpc,
+} from "../api/api";
 import { Timestamp } from "../google/protobuf/timestamp";
 import { BoolValue, Int32Value, StringValue } from "../google/protobuf/wrappers";
 
@@ -173,7 +181,23 @@ export interface Envelope {
     | ClanNameExistedEvent
     | undefined;
   /** User profile update event */
-  user_profile_updated_event?: UserProfileUpdatedEvent | undefined;
+  user_profile_updated_event?:
+    | UserProfileUpdatedEvent
+    | undefined;
+  /** ClanEmojiGetByClanIdRequest represents a request to retrieve all emojis associated with a specific clan. */
+  emojis_by_clan_id_request_event?:
+    | ClanEmojiGetByClanIdRequest
+    | undefined;
+  /** ClanEmojiList contains a list of emojis that are associated with a specific clan. */
+  clan_emoji_list_event?:
+    | ClanEmojiList
+    | undefined;
+  /** ClanStickerListByClanIdRequest represents a request to retrieve all emojis associated with a specific clan. */
+  clan_sticker_list_request_event?:
+    | ClanStickerListByClanIdRequest
+    | undefined;
+  /** ClanStckerList contains a list of emojis that are associated with a specific clan. */
+  clan_sticker_list_response_event?: ClanStickerListByClanIdResponse | undefined;
 }
 
 /** A realtime chat channel. */
@@ -950,6 +974,10 @@ function createBaseEnvelope(): Envelope {
     clan_profile_updated_event: undefined,
     clan_name_existed_event: undefined,
     user_profile_updated_event: undefined,
+    emojis_by_clan_id_request_event: undefined,
+    clan_emoji_list_event: undefined,
+    clan_sticker_list_request_event: undefined,
+    clan_sticker_list_response_event: undefined,
   };
 }
 
@@ -1080,6 +1108,20 @@ export const Envelope = {
     }
     if (message.user_profile_updated_event !== undefined) {
       UserProfileUpdatedEvent.encode(message.user_profile_updated_event, writer.uint32(338).fork()).ldelim();
+    }
+    if (message.emojis_by_clan_id_request_event !== undefined) {
+      ClanEmojiGetByClanIdRequest.encode(message.emojis_by_clan_id_request_event, writer.uint32(354).fork()).ldelim();
+    }
+    if (message.clan_emoji_list_event !== undefined) {
+      ClanEmojiList.encode(message.clan_emoji_list_event, writer.uint32(362).fork()).ldelim();
+    }
+    if (message.clan_sticker_list_request_event !== undefined) {
+      ClanStickerListByClanIdRequest.encode(message.clan_sticker_list_request_event, writer.uint32(370).fork())
+        .ldelim();
+    }
+    if (message.clan_sticker_list_response_event !== undefined) {
+      ClanStickerListByClanIdResponse.encode(message.clan_sticker_list_response_event, writer.uint32(378).fork())
+        .ldelim();
     }
     return writer;
   },
@@ -1217,6 +1259,18 @@ export const Envelope = {
         case 42:
           message.user_profile_updated_event = UserProfileUpdatedEvent.decode(reader, reader.uint32());
           break;
+        case 44:
+          message.emojis_by_clan_id_request_event = ClanEmojiGetByClanIdRequest.decode(reader, reader.uint32());
+          break;
+        case 45:
+          message.clan_emoji_list_event = ClanEmojiList.decode(reader, reader.uint32());
+          break;
+        case 46:
+          message.clan_sticker_list_request_event = ClanStickerListByClanIdRequest.decode(reader, reader.uint32());
+          break;
+        case 47:
+          message.clan_sticker_list_response_event = ClanStickerListByClanIdResponse.decode(reader, reader.uint32());
+          break;
         default:
           reader.skipType(tag & 7);
           break;
@@ -1320,6 +1374,18 @@ export const Envelope = {
         : undefined,
       user_profile_updated_event: isSet(object.user_profile_updated_event)
         ? UserProfileUpdatedEvent.fromJSON(object.user_profile_updated_event)
+        : undefined,
+      emojis_by_clan_id_request_event: isSet(object.emojis_by_clan_id_request_event)
+        ? ClanEmojiGetByClanIdRequest.fromJSON(object.emojis_by_clan_id_request_event)
+        : undefined,
+      clan_emoji_list_event: isSet(object.clan_emoji_list_event)
+        ? ClanEmojiList.fromJSON(object.clan_emoji_list_event)
+        : undefined,
+      clan_sticker_list_request_event: isSet(object.clan_sticker_list_request_event)
+        ? ClanStickerListByClanIdRequest.fromJSON(object.clan_sticker_list_request_event)
+        : undefined,
+      clan_sticker_list_response_event: isSet(object.clan_sticker_list_response_event)
+        ? ClanStickerListByClanIdResponse.fromJSON(object.clan_sticker_list_response_event)
         : undefined,
     };
   },
@@ -1432,6 +1498,21 @@ export const Envelope = {
     message.user_profile_updated_event !== undefined &&
       (obj.user_profile_updated_event = message.user_profile_updated_event
         ? UserProfileUpdatedEvent.toJSON(message.user_profile_updated_event)
+        : undefined);
+    message.emojis_by_clan_id_request_event !== undefined &&
+      (obj.emojis_by_clan_id_request_event = message.emojis_by_clan_id_request_event
+        ? ClanEmojiGetByClanIdRequest.toJSON(message.emojis_by_clan_id_request_event)
+        : undefined);
+    message.clan_emoji_list_event !== undefined && (obj.clan_emoji_list_event = message.clan_emoji_list_event
+      ? ClanEmojiList.toJSON(message.clan_emoji_list_event)
+      : undefined);
+    message.clan_sticker_list_request_event !== undefined &&
+      (obj.clan_sticker_list_request_event = message.clan_sticker_list_request_event
+        ? ClanStickerListByClanIdRequest.toJSON(message.clan_sticker_list_request_event)
+        : undefined);
+    message.clan_sticker_list_response_event !== undefined &&
+      (obj.clan_sticker_list_response_event = message.clan_sticker_list_response_event
+        ? ClanStickerListByClanIdResponse.toJSON(message.clan_sticker_list_response_event)
         : undefined);
     return obj;
   },
@@ -1574,6 +1655,22 @@ export const Envelope = {
     message.user_profile_updated_event =
       (object.user_profile_updated_event !== undefined && object.user_profile_updated_event !== null)
         ? UserProfileUpdatedEvent.fromPartial(object.user_profile_updated_event)
+        : undefined;
+    message.emojis_by_clan_id_request_event =
+      (object.emojis_by_clan_id_request_event !== undefined && object.emojis_by_clan_id_request_event !== null)
+        ? ClanEmojiGetByClanIdRequest.fromPartial(object.emojis_by_clan_id_request_event)
+        : undefined;
+    message.clan_emoji_list_event =
+      (object.clan_emoji_list_event !== undefined && object.clan_emoji_list_event !== null)
+        ? ClanEmojiList.fromPartial(object.clan_emoji_list_event)
+        : undefined;
+    message.clan_sticker_list_request_event =
+      (object.clan_sticker_list_request_event !== undefined && object.clan_sticker_list_request_event !== null)
+        ? ClanStickerListByClanIdRequest.fromPartial(object.clan_sticker_list_request_event)
+        : undefined;
+    message.clan_sticker_list_response_event =
+      (object.clan_sticker_list_response_event !== undefined && object.clan_sticker_list_response_event !== null)
+        ? ClanStickerListByClanIdResponse.fromPartial(object.clan_sticker_list_response_event)
         : undefined;
     return message;
   },

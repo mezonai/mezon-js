@@ -92,7 +92,6 @@ import {
   ApiPinMessagesList,
   ApiDeleteChannelDescRequest,
   ApiChangeChannelPrivateRequest,
-  ApiClanEmojiList,
   ApiClanEmojiCreateRequest,
   MezonUpdateClanEmojiByIdBody,
   ApiWebhookCreateRequest,
@@ -101,7 +100,6 @@ import {
   ApiWebhookGenerateResponse,
   ApiCheckDuplicateClanNameResponse,
   ApiClanStickerAddRequest,
-  ApiClanStickerListByClanIdResponse,
   MezonUpdateClanStickerByIdBody,
   MezonChangeChannelCategoryBody,
   ApiHashtagDmVoiceList,
@@ -2280,18 +2278,6 @@ async deletePinMessage(session: Session, message_id: string): Promise<boolean> {
   });
 }
 
-/** List clan emoji. */
-async listClanEmoji(session: Session, clan_id: string): Promise<ApiClanEmojiList> {
-  if (this.autoRefreshSession && session.refresh_token &&
-      session.isexpired((Date.now() + this.expiredTimespanMs)/1000)) {
-      await this.sessionRefresh(session);
-  }
-
-  return this.apiClient.listClanEmojiByClanId(session.token, clan_id).then((response: ApiClanEmojiList) => {
-    return Promise.resolve(response);
-  });
-}
-
 /** create clan emoji */
 async createClanEmoji(session: Session, request: ApiClanEmojiCreateRequest) {
   if (this.autoRefreshSession && session.refresh_token &&
@@ -2397,18 +2383,6 @@ async addClanSticker(session: Session, request: ApiClanStickerAddRequest) {
 
   return this.apiClient.addClanSticker(session.token, request).then((response: any) => {
     return response !== undefined;
-  })
-}
-
-//**List stickers by clan ID */
-async listClanStickersByClanId(session: Session, id: string): Promise<ApiClanStickerListByClanIdResponse> {
-  if (this.autoRefreshSession && session.refresh_token &&
-    session.isexpired((Date.now() + this.expiredTimespanMs)/1000)) {
-    await this.sessionRefresh(session);
-  }
-
-  return this.apiClient.listClanStickersByClanId(session.token, id).then((response: any) => {
-    return Promise.resolve(response);
   })
 }
 
