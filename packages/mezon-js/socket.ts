@@ -1366,12 +1366,12 @@ export class DefaultSocket implements Socket {
     return response.clan_name_existed_event
   }
 
-  async listClanEmojiByClanId(clan_id: string): Promise<EmojiListedEvent>{
+  async listClanEmojiByClanId(clan_id: string): Promise<EmojiListedEvent> {
     const response = await this.send({emojis_listed_event: {clan_id: clan_id}});
     return response.emojis_listed_event
   }
 
-  async listClanStickersByClanId(clan_id: string): Promise<StrickerListedEvent>{
+  async listClanStickersByClanId(clan_id: string): Promise<StrickerListedEvent> {
     const response = await this.send({sticker_listed_event: {clan_id: clan_id}});
     return response.sticker_listed_event
   }
