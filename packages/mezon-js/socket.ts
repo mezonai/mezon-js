@@ -622,6 +622,7 @@ interface StatusUpdate {
 }
 export interface ClanNameExistedEvent {
   clan_name: string;
+  is_duplicate: boolean;
 }
 
 
