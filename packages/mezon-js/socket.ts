@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import {ApiClanEmojiList, ApiClanStickerListByClanIdResponse, ApiMessageAttachment, ApiMessageMention, ApiMessageReaction, ApiMessageRef, ApiNotification, ApiRpc} from "./api.gen";
+import {ApiMessageAttachment, ApiMessageMention, ApiMessageReaction, ApiMessageRef, ApiNotification, ApiRpc} from "./api.gen";
 import {Session} from "./session";
 import {Notification} from "./client";
 import {WebSocketAdapter, WebSocketAdapterText} from "./web_socket_adapter"
@@ -623,6 +623,56 @@ interface StatusUpdate {
 export interface ClanNameExistedEvent {
   clan_name: string;
 }
+
+
+/**  */
+export interface StrickerListedEvent {
+  // clan id
+  clan_id: string;
+  // sticker data
+  stickers?: Array<ClanSticker>;
+}
+
+/**  */
+export interface ClanSticker {
+  //
+  category?: string;
+  //
+  clan_id?: string;
+  //
+  create_time?: string;
+  //
+  creator_id?: string;
+  //
+  id?: string;
+  //
+  shortname?: string;
+  //
+  source?: string;
+}
+
+/**  */
+export interface EmojiListedEvent {
+  // clan id
+  clan_id: string;
+  // emoji data
+  emoji_list?: Array<ClanEmoji>;
+}
+
+/**  */
+export interface ClanEmoji {
+  //
+  category?: string;
+  //
+  creator_id?: string;
+  //
+  id?: string;
+  //
+  shortname?: string;
+  //
+  src?: string;
+}
+
 /** A socket connection to Mezon server. */
 export interface Socket {
   /** Connection is Open */
@@ -775,9 +825,9 @@ export interface Socket {
 
   checkDuplicateClanName(clan_name: string): Promise<ClanNameExistedEvent>;
 
-  listClanEmojiByClanId(clan_id: string): Promise<ApiClanEmojiList>;
+  listClanEmojiByClanId(clan_id: string): Promise<EmojiListedEvent>;
 
-  listClanStickersByClanId(clan_id: string): Promise<ApiClanStickerListByClanIdResponse>;
+  listClanStickersByClanId(clan_id: string): Promise<StrickerListedEvent>;
 }
 
 /** Reports an error received from a socket message. */
@@ -1241,7 +1291,7 @@ export class DefaultSocket implements Socket {
     }});
   }
 
-  async rpc(id?: string, payload?: string, http_key?: string) : Promise<ApiRpc> {
+  async rpc(id?: string, payload?: string, http_key?: string): Promise<ApiRpc> {
     const response = await this.send(
       {
         rpc: {
@@ -1276,37 +1326,37 @@ export class DefaultSocket implements Socket {
     return response.channel_message_ack;
   }
 
-  async writeMessageReaction(id: string, clan_id: string, channel_id: string, mode: number, message_id: string, emoji_id: string, emoji: string, count: number, message_sender_id: string, action_delete: boolean) : Promise<MessageReactionEvent> {
+  async writeMessageReaction(id: string, clan_id: string, channel_id: string, mode: number, message_id: string, emoji_id: string, emoji: string, count: number, message_sender_id: string, action_delete: boolean): Promise<MessageReactionEvent> {
     const response = await this.send({message_reaction_event: {id: id, clan_id: clan_id, channel_id: channel_id, mode: mode, message_id: message_id, emoji_id: emoji_id, emoji: emoji, count: count, message_sender_id: message_sender_id, action: action_delete}});
     return response.message_reaction_event
   }
 
-  async writeMessageTyping(clan_id: string, channel_id: string, mode: number) : Promise<MessageTypingEvent> {
+  async writeMessageTyping(clan_id: string, channel_id: string, mode: number): Promise<MessageTypingEvent> {
     const response = await this.send({message_typing_event: {clan_id: clan_id, channel_id: channel_id, mode:mode}});
     return response.message_typing_event
   }
 
-  async writeLastSeenMessage(clan_id: string, channel_id: string, mode: number, message_id: string, timestamp: string) : Promise<LastSeenMessageEvent> {
+  async writeLastSeenMessage(clan_id: string, channel_id: string, mode: number, message_id: string, timestamp: string): Promise<LastSeenMessageEvent> {
     const response = await this.send({last_seen_message_event: {clan_id: clan_id, channel_id: channel_id, mode: mode, message_id: message_id, timestamp: timestamp}});
     return response.last_seen_message_event
   }
 
-  async writeLastPinMessage(clan_id: string, channel_id: string, mode: number, message_id: string, timestamp: string, operation: number) : Promise<LastPinMessageEvent> {
+  async writeLastPinMessage(clan_id: string, channel_id: string, mode: number, message_id: string, timestamp: string, operation: number): Promise<LastPinMessageEvent> {
     const response = await this.send({last_pin_message_event: {clan_id: clan_id, channel_id: channel_id, mode: mode, message_id: message_id, timestamp: timestamp, operation: operation}});
     return response.last_pin_message_event
   }
 
-  async writeVoiceJoined(id: string, clanId: string, clanName: string, voiceChannelId: string, voiceChannelLabel: string, participant: string, lastScreenshot: string) : Promise<VoiceJoinedEvent> {
+  async writeVoiceJoined(id: string, clanId: string, clanName: string, voiceChannelId: string, voiceChannelLabel: string, participant: string, lastScreenshot: string): Promise<VoiceJoinedEvent> {
     const response = await this.send({voice_joined_event: {clan_id: clanId, clan_name: clanName, id: id, participant: participant, voice_channel_id: voiceChannelId, voice_channel_label: voiceChannelLabel, last_screenshot: lastScreenshot}});
     return response.voice_joined_event
   }
 
-  async writeVoiceLeaved(id: string, clanId: string, voiceChannelId: string, voiceUserId: string) : Promise<VoiceLeavedEvent> {
+  async writeVoiceLeaved(id: string, clanId: string, voiceChannelId: string, voiceUserId: string): Promise<VoiceLeavedEvent> {
     const response = await this.send({voice_leaved_event: {id: id, clan_id: clanId, voice_channel_id: voiceChannelId, voice_user_id: voiceUserId}});
     return response.voice_leaved_event
   }
 
-  async writeCustomStatus(clan_id: string, status: string) : Promise<CustomStatusEvent> {
+  async writeCustomStatus(clan_id: string, status: string): Promise<CustomStatusEvent> {
     const response = await this.send({custom_status_event: {clan_id: clan_id, status: status}});
     return response.custom_status_event
   }
@@ -1316,17 +1366,17 @@ export class DefaultSocket implements Socket {
     return response.clan_name_existed_event
   }
 
-  async listClanEmojiByClanId(clan_id: string): Promise<ApiClanEmojiList>{
-    const response = await this.send({emojis_by_clan_id_request_event: {clan_id: clan_id}});
-    return response.clan_emoji_list_event
+  async listClanEmojiByClanId(clan_id: string): Promise<EmojiListedEvent> {
+    const response = await this.send({emojis_listed_event: {clan_id: clan_id}});
+    return response.emojis_listed_event
   }
 
-  async listClanStickersByClanId(clan_id: string): Promise<ApiClanStickerListByClanIdResponse>{
-    const response = await this.send({clan_sticker_list_request_event: {clan_id: clan_id}});
-    return response.clan_sticker_list_response_event
+  async listClanStickersByClanId(clan_id: string): Promise<StrickerListedEvent> {
+    const response = await this.send({sticker_listed_event: {clan_id: clan_id}});
+    return response.sticker_listed_event
   }
 
-  private async pingPong() : Promise<void> {
+  private async pingPong(): Promise<void> {
     if (!this.adapter.isOpen()) {
         return;
     }

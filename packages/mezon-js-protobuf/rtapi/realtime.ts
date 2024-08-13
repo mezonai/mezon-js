@@ -1,15 +1,7 @@
 /* eslint-disable */
 import Long from "long";
 import _m0 from "protobufjs/minimal";
-import {
-  ChannelMessage,
-  ClanEmojiGetByClanIdRequest,
-  ClanEmojiList,
-  ClanStickerListByClanIdRequest,
-  ClanStickerListByClanIdResponse,
-  Notification,
-  Rpc,
-} from "../api/api";
+import { ChannelMessage, Notification, Rpc } from "../api/api";
 import { Timestamp } from "../google/protobuf/timestamp";
 import { BoolValue, Int32Value, StringValue } from "../google/protobuf/wrappers";
 
@@ -184,20 +176,44 @@ export interface Envelope {
   user_profile_updated_event?:
     | UserProfileUpdatedEvent
     | undefined;
-  /** ClanEmojiGetByClanIdRequest represents a request to retrieve all emojis associated with a specific clan. */
-  emojis_by_clan_id_request_event?:
-    | ClanEmojiGetByClanIdRequest
+  /** Request to retrieve all emojis associated with a specific clan. */
+  emojis_listed_event?:
+    | EmojiListedEvent
     | undefined;
   /** ClanEmojiList contains a list of emojis that are associated with a specific clan. */
-  clan_emoji_list_event?:
-    | ClanEmojiList
-    | undefined;
-  /** ClanStickerListByClanIdRequest represents a request to retrieve all emojis associated with a specific clan. */
-  clan_sticker_list_request_event?:
-    | ClanStickerListByClanIdRequest
-    | undefined;
-  /** ClanStckerList contains a list of emojis that are associated with a specific clan. */
-  clan_sticker_list_response_event?: ClanStickerListByClanIdResponse | undefined;
+  sticker_listed_event?: StrickerListedEvent | undefined;
+}
+
+export interface StrickerListedEvent {
+  clan_id: string;
+  stickers: ClanSticker[];
+}
+
+export interface ClanSticker {
+  id: number;
+  source: string;
+  shortname: string;
+  category: string;
+  creator_id: number;
+  create_time: Date | undefined;
+  clan_id: number;
+}
+
+export interface ClanEmoji {
+  id: string;
+  /** src url */
+  src: string;
+  /** shortname */
+  shortname: string;
+  /** category */
+  category: string;
+  /** creator id */
+  creator_id: string;
+}
+
+export interface EmojiListedEvent {
+  clan_id: string;
+  emoji_list: ClanEmoji[];
 }
 
 /** A realtime chat channel. */
@@ -974,10 +990,8 @@ function createBaseEnvelope(): Envelope {
     clan_profile_updated_event: undefined,
     clan_name_existed_event: undefined,
     user_profile_updated_event: undefined,
-    emojis_by_clan_id_request_event: undefined,
-    clan_emoji_list_event: undefined,
-    clan_sticker_list_request_event: undefined,
-    clan_sticker_list_response_event: undefined,
+    emojis_listed_event: undefined,
+    sticker_listed_event: undefined,
   };
 }
 
@@ -1109,19 +1123,11 @@ export const Envelope = {
     if (message.user_profile_updated_event !== undefined) {
       UserProfileUpdatedEvent.encode(message.user_profile_updated_event, writer.uint32(338).fork()).ldelim();
     }
-    if (message.emojis_by_clan_id_request_event !== undefined) {
-      ClanEmojiGetByClanIdRequest.encode(message.emojis_by_clan_id_request_event, writer.uint32(354).fork()).ldelim();
+    if (message.emojis_listed_event !== undefined) {
+      EmojiListedEvent.encode(message.emojis_listed_event, writer.uint32(346).fork()).ldelim();
     }
-    if (message.clan_emoji_list_event !== undefined) {
-      ClanEmojiList.encode(message.clan_emoji_list_event, writer.uint32(362).fork()).ldelim();
-    }
-    if (message.clan_sticker_list_request_event !== undefined) {
-      ClanStickerListByClanIdRequest.encode(message.clan_sticker_list_request_event, writer.uint32(370).fork())
-        .ldelim();
-    }
-    if (message.clan_sticker_list_response_event !== undefined) {
-      ClanStickerListByClanIdResponse.encode(message.clan_sticker_list_response_event, writer.uint32(378).fork())
-        .ldelim();
+    if (message.sticker_listed_event !== undefined) {
+      StrickerListedEvent.encode(message.sticker_listed_event, writer.uint32(354).fork()).ldelim();
     }
     return writer;
   },
@@ -1259,17 +1265,11 @@ export const Envelope = {
         case 42:
           message.user_profile_updated_event = UserProfileUpdatedEvent.decode(reader, reader.uint32());
           break;
+        case 43:
+          message.emojis_listed_event = EmojiListedEvent.decode(reader, reader.uint32());
+          break;
         case 44:
-          message.emojis_by_clan_id_request_event = ClanEmojiGetByClanIdRequest.decode(reader, reader.uint32());
-          break;
-        case 45:
-          message.clan_emoji_list_event = ClanEmojiList.decode(reader, reader.uint32());
-          break;
-        case 46:
-          message.clan_sticker_list_request_event = ClanStickerListByClanIdRequest.decode(reader, reader.uint32());
-          break;
-        case 47:
-          message.clan_sticker_list_response_event = ClanStickerListByClanIdResponse.decode(reader, reader.uint32());
+          message.sticker_listed_event = StrickerListedEvent.decode(reader, reader.uint32());
           break;
         default:
           reader.skipType(tag & 7);
@@ -1375,17 +1375,11 @@ export const Envelope = {
       user_profile_updated_event: isSet(object.user_profile_updated_event)
         ? UserProfileUpdatedEvent.fromJSON(object.user_profile_updated_event)
         : undefined,
-      emojis_by_clan_id_request_event: isSet(object.emojis_by_clan_id_request_event)
-        ? ClanEmojiGetByClanIdRequest.fromJSON(object.emojis_by_clan_id_request_event)
+      emojis_listed_event: isSet(object.emojis_listed_event)
+        ? EmojiListedEvent.fromJSON(object.emojis_listed_event)
         : undefined,
-      clan_emoji_list_event: isSet(object.clan_emoji_list_event)
-        ? ClanEmojiList.fromJSON(object.clan_emoji_list_event)
-        : undefined,
-      clan_sticker_list_request_event: isSet(object.clan_sticker_list_request_event)
-        ? ClanStickerListByClanIdRequest.fromJSON(object.clan_sticker_list_request_event)
-        : undefined,
-      clan_sticker_list_response_event: isSet(object.clan_sticker_list_response_event)
-        ? ClanStickerListByClanIdResponse.fromJSON(object.clan_sticker_list_response_event)
+      sticker_listed_event: isSet(object.sticker_listed_event)
+        ? StrickerListedEvent.fromJSON(object.sticker_listed_event)
         : undefined,
     };
   },
@@ -1499,21 +1493,12 @@ export const Envelope = {
       (obj.user_profile_updated_event = message.user_profile_updated_event
         ? UserProfileUpdatedEvent.toJSON(message.user_profile_updated_event)
         : undefined);
-    message.emojis_by_clan_id_request_event !== undefined &&
-      (obj.emojis_by_clan_id_request_event = message.emojis_by_clan_id_request_event
-        ? ClanEmojiGetByClanIdRequest.toJSON(message.emojis_by_clan_id_request_event)
-        : undefined);
-    message.clan_emoji_list_event !== undefined && (obj.clan_emoji_list_event = message.clan_emoji_list_event
-      ? ClanEmojiList.toJSON(message.clan_emoji_list_event)
+    message.emojis_listed_event !== undefined && (obj.emojis_listed_event = message.emojis_listed_event
+      ? EmojiListedEvent.toJSON(message.emojis_listed_event)
       : undefined);
-    message.clan_sticker_list_request_event !== undefined &&
-      (obj.clan_sticker_list_request_event = message.clan_sticker_list_request_event
-        ? ClanStickerListByClanIdRequest.toJSON(message.clan_sticker_list_request_event)
-        : undefined);
-    message.clan_sticker_list_response_event !== undefined &&
-      (obj.clan_sticker_list_response_event = message.clan_sticker_list_response_event
-        ? ClanStickerListByClanIdResponse.toJSON(message.clan_sticker_list_response_event)
-        : undefined);
+    message.sticker_listed_event !== undefined && (obj.sticker_listed_event = message.sticker_listed_event
+      ? StrickerListedEvent.toJSON(message.sticker_listed_event)
+      : undefined);
     return obj;
   },
 
@@ -1656,22 +1641,340 @@ export const Envelope = {
       (object.user_profile_updated_event !== undefined && object.user_profile_updated_event !== null)
         ? UserProfileUpdatedEvent.fromPartial(object.user_profile_updated_event)
         : undefined;
-    message.emojis_by_clan_id_request_event =
-      (object.emojis_by_clan_id_request_event !== undefined && object.emojis_by_clan_id_request_event !== null)
-        ? ClanEmojiGetByClanIdRequest.fromPartial(object.emojis_by_clan_id_request_event)
-        : undefined;
-    message.clan_emoji_list_event =
-      (object.clan_emoji_list_event !== undefined && object.clan_emoji_list_event !== null)
-        ? ClanEmojiList.fromPartial(object.clan_emoji_list_event)
-        : undefined;
-    message.clan_sticker_list_request_event =
-      (object.clan_sticker_list_request_event !== undefined && object.clan_sticker_list_request_event !== null)
-        ? ClanStickerListByClanIdRequest.fromPartial(object.clan_sticker_list_request_event)
-        : undefined;
-    message.clan_sticker_list_response_event =
-      (object.clan_sticker_list_response_event !== undefined && object.clan_sticker_list_response_event !== null)
-        ? ClanStickerListByClanIdResponse.fromPartial(object.clan_sticker_list_response_event)
-        : undefined;
+    message.emojis_listed_event = (object.emojis_listed_event !== undefined && object.emojis_listed_event !== null)
+      ? EmojiListedEvent.fromPartial(object.emojis_listed_event)
+      : undefined;
+    message.sticker_listed_event = (object.sticker_listed_event !== undefined && object.sticker_listed_event !== null)
+      ? StrickerListedEvent.fromPartial(object.sticker_listed_event)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseStrickerListedEvent(): StrickerListedEvent {
+  return { clan_id: "", stickers: [] };
+}
+
+export const StrickerListedEvent = {
+  encode(message: StrickerListedEvent, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.clan_id !== "") {
+      writer.uint32(10).string(message.clan_id);
+    }
+    for (const v of message.stickers) {
+      ClanSticker.encode(v!, writer.uint32(18).fork()).ldelim();
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): StrickerListedEvent {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseStrickerListedEvent();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.clan_id = reader.string();
+          break;
+        case 2:
+          message.stickers.push(ClanSticker.decode(reader, reader.uint32()));
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): StrickerListedEvent {
+    return {
+      clan_id: isSet(object.clan_id) ? String(object.clan_id) : "",
+      stickers: Array.isArray(object?.stickers) ? object.stickers.map((e: any) => ClanSticker.fromJSON(e)) : [],
+    };
+  },
+
+  toJSON(message: StrickerListedEvent): unknown {
+    const obj: any = {};
+    message.clan_id !== undefined && (obj.clan_id = message.clan_id);
+    if (message.stickers) {
+      obj.stickers = message.stickers.map((e) => e ? ClanSticker.toJSON(e) : undefined);
+    } else {
+      obj.stickers = [];
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<StrickerListedEvent>, I>>(base?: I): StrickerListedEvent {
+    return StrickerListedEvent.fromPartial(base ?? {});
+  },
+
+  fromPartial<I extends Exact<DeepPartial<StrickerListedEvent>, I>>(object: I): StrickerListedEvent {
+    const message = createBaseStrickerListedEvent();
+    message.clan_id = object.clan_id ?? "";
+    message.stickers = object.stickers?.map((e) => ClanSticker.fromPartial(e)) || [];
+    return message;
+  },
+};
+
+function createBaseClanSticker(): ClanSticker {
+  return { id: 0, source: "", shortname: "", category: "", creator_id: 0, create_time: undefined, clan_id: 0 };
+}
+
+export const ClanSticker = {
+  encode(message: ClanSticker, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.id !== 0) {
+      writer.uint32(8).int64(message.id);
+    }
+    if (message.source !== "") {
+      writer.uint32(18).string(message.source);
+    }
+    if (message.shortname !== "") {
+      writer.uint32(26).string(message.shortname);
+    }
+    if (message.category !== "") {
+      writer.uint32(34).string(message.category);
+    }
+    if (message.creator_id !== 0) {
+      writer.uint32(40).int64(message.creator_id);
+    }
+    if (message.create_time !== undefined) {
+      Timestamp.encode(toTimestamp(message.create_time), writer.uint32(50).fork()).ldelim();
+    }
+    if (message.clan_id !== 0) {
+      writer.uint32(56).int64(message.clan_id);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): ClanSticker {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseClanSticker();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.id = longToNumber(reader.int64() as Long);
+          break;
+        case 2:
+          message.source = reader.string();
+          break;
+        case 3:
+          message.shortname = reader.string();
+          break;
+        case 4:
+          message.category = reader.string();
+          break;
+        case 5:
+          message.creator_id = longToNumber(reader.int64() as Long);
+          break;
+        case 6:
+          message.create_time = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
+          break;
+        case 7:
+          message.clan_id = longToNumber(reader.int64() as Long);
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): ClanSticker {
+    return {
+      id: isSet(object.id) ? Number(object.id) : 0,
+      source: isSet(object.source) ? String(object.source) : "",
+      shortname: isSet(object.shortname) ? String(object.shortname) : "",
+      category: isSet(object.category) ? String(object.category) : "",
+      creator_id: isSet(object.creator_id) ? Number(object.creator_id) : 0,
+      create_time: isSet(object.create_time) ? fromJsonTimestamp(object.create_time) : undefined,
+      clan_id: isSet(object.clan_id) ? Number(object.clan_id) : 0,
+    };
+  },
+
+  toJSON(message: ClanSticker): unknown {
+    const obj: any = {};
+    message.id !== undefined && (obj.id = Math.round(message.id));
+    message.source !== undefined && (obj.source = message.source);
+    message.shortname !== undefined && (obj.shortname = message.shortname);
+    message.category !== undefined && (obj.category = message.category);
+    message.creator_id !== undefined && (obj.creator_id = Math.round(message.creator_id));
+    message.create_time !== undefined && (obj.create_time = message.create_time.toISOString());
+    message.clan_id !== undefined && (obj.clan_id = Math.round(message.clan_id));
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<ClanSticker>, I>>(base?: I): ClanSticker {
+    return ClanSticker.fromPartial(base ?? {});
+  },
+
+  fromPartial<I extends Exact<DeepPartial<ClanSticker>, I>>(object: I): ClanSticker {
+    const message = createBaseClanSticker();
+    message.id = object.id ?? 0;
+    message.source = object.source ?? "";
+    message.shortname = object.shortname ?? "";
+    message.category = object.category ?? "";
+    message.creator_id = object.creator_id ?? 0;
+    message.create_time = object.create_time ?? undefined;
+    message.clan_id = object.clan_id ?? 0;
+    return message;
+  },
+};
+
+function createBaseClanEmoji(): ClanEmoji {
+  return { id: "", src: "", shortname: "", category: "", creator_id: "" };
+}
+
+export const ClanEmoji = {
+  encode(message: ClanEmoji, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.id !== "") {
+      writer.uint32(10).string(message.id);
+    }
+    if (message.src !== "") {
+      writer.uint32(18).string(message.src);
+    }
+    if (message.shortname !== "") {
+      writer.uint32(26).string(message.shortname);
+    }
+    if (message.category !== "") {
+      writer.uint32(34).string(message.category);
+    }
+    if (message.creator_id !== "") {
+      writer.uint32(42).string(message.creator_id);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): ClanEmoji {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseClanEmoji();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.id = reader.string();
+          break;
+        case 2:
+          message.src = reader.string();
+          break;
+        case 3:
+          message.shortname = reader.string();
+          break;
+        case 4:
+          message.category = reader.string();
+          break;
+        case 5:
+          message.creator_id = reader.string();
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): ClanEmoji {
+    return {
+      id: isSet(object.id) ? String(object.id) : "",
+      src: isSet(object.src) ? String(object.src) : "",
+      shortname: isSet(object.shortname) ? String(object.shortname) : "",
+      category: isSet(object.category) ? String(object.category) : "",
+      creator_id: isSet(object.creator_id) ? String(object.creator_id) : "",
+    };
+  },
+
+  toJSON(message: ClanEmoji): unknown {
+    const obj: any = {};
+    message.id !== undefined && (obj.id = message.id);
+    message.src !== undefined && (obj.src = message.src);
+    message.shortname !== undefined && (obj.shortname = message.shortname);
+    message.category !== undefined && (obj.category = message.category);
+    message.creator_id !== undefined && (obj.creator_id = message.creator_id);
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<ClanEmoji>, I>>(base?: I): ClanEmoji {
+    return ClanEmoji.fromPartial(base ?? {});
+  },
+
+  fromPartial<I extends Exact<DeepPartial<ClanEmoji>, I>>(object: I): ClanEmoji {
+    const message = createBaseClanEmoji();
+    message.id = object.id ?? "";
+    message.src = object.src ?? "";
+    message.shortname = object.shortname ?? "";
+    message.category = object.category ?? "";
+    message.creator_id = object.creator_id ?? "";
+    return message;
+  },
+};
+
+function createBaseEmojiListedEvent(): EmojiListedEvent {
+  return { clan_id: "", emoji_list: [] };
+}
+
+export const EmojiListedEvent = {
+  encode(message: EmojiListedEvent, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.clan_id !== "") {
+      writer.uint32(10).string(message.clan_id);
+    }
+    for (const v of message.emoji_list) {
+      ClanEmoji.encode(v!, writer.uint32(18).fork()).ldelim();
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): EmojiListedEvent {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseEmojiListedEvent();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.clan_id = reader.string();
+          break;
+        case 2:
+          message.emoji_list.push(ClanEmoji.decode(reader, reader.uint32()));
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): EmojiListedEvent {
+    return {
+      clan_id: isSet(object.clan_id) ? String(object.clan_id) : "",
+      emoji_list: Array.isArray(object?.emoji_list) ? object.emoji_list.map((e: any) => ClanEmoji.fromJSON(e)) : [],
+    };
+  },
+
+  toJSON(message: EmojiListedEvent): unknown {
+    const obj: any = {};
+    message.clan_id !== undefined && (obj.clan_id = message.clan_id);
+    if (message.emoji_list) {
+      obj.emoji_list = message.emoji_list.map((e) => e ? ClanEmoji.toJSON(e) : undefined);
+    } else {
+      obj.emoji_list = [];
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<EmojiListedEvent>, I>>(base?: I): EmojiListedEvent {
+    return EmojiListedEvent.fromPartial(base ?? {});
+  },
+
+  fromPartial<I extends Exact<DeepPartial<EmojiListedEvent>, I>>(object: I): EmojiListedEvent {
+    const message = createBaseEmojiListedEvent();
+    message.clan_id = object.clan_id ?? "";
+    message.emoji_list = object.emoji_list?.map((e) => ClanEmoji.fromPartial(e)) || [];
     return message;
   },
 };
