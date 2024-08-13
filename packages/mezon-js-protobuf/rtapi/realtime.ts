@@ -190,13 +190,13 @@ export interface StrickerListedEvent {
 }
 
 export interface ClanSticker {
-  id: number;
+  id: string;
   source: string;
   shortname: string;
   category: string;
-  creator_id: number;
+  creator_id: string;
   create_time: Date | undefined;
-  clan_id: number;
+  clan_id: string;
 }
 
 export interface ClanEmoji {
@@ -1718,13 +1718,13 @@ export const StrickerListedEvent = {
 };
 
 function createBaseClanSticker(): ClanSticker {
-  return { id: 0, source: "", shortname: "", category: "", creator_id: 0, create_time: undefined, clan_id: 0 };
+  return { id: "", source: "", shortname: "", category: "", creator_id: "", create_time: undefined, clan_id: "" };
 }
 
 export const ClanSticker = {
   encode(message: ClanSticker, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.id !== 0) {
-      writer.uint32(8).int64(message.id);
+    if (message.id !== "") {
+      writer.uint32(10).string(message.id);
     }
     if (message.source !== "") {
       writer.uint32(18).string(message.source);
@@ -1735,14 +1735,14 @@ export const ClanSticker = {
     if (message.category !== "") {
       writer.uint32(34).string(message.category);
     }
-    if (message.creator_id !== 0) {
-      writer.uint32(40).int64(message.creator_id);
+    if (message.creator_id !== "") {
+      writer.uint32(42).string(message.creator_id);
     }
     if (message.create_time !== undefined) {
       Timestamp.encode(toTimestamp(message.create_time), writer.uint32(50).fork()).ldelim();
     }
-    if (message.clan_id !== 0) {
-      writer.uint32(56).int64(message.clan_id);
+    if (message.clan_id !== "") {
+      writer.uint32(58).string(message.clan_id);
     }
     return writer;
   },
@@ -1755,7 +1755,7 @@ export const ClanSticker = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          message.id = longToNumber(reader.int64() as Long);
+          message.id = reader.string();
           break;
         case 2:
           message.source = reader.string();
@@ -1767,13 +1767,13 @@ export const ClanSticker = {
           message.category = reader.string();
           break;
         case 5:
-          message.creator_id = longToNumber(reader.int64() as Long);
+          message.creator_id = reader.string();
           break;
         case 6:
           message.create_time = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
           break;
         case 7:
-          message.clan_id = longToNumber(reader.int64() as Long);
+          message.clan_id = reader.string();
           break;
         default:
           reader.skipType(tag & 7);
@@ -1785,25 +1785,25 @@ export const ClanSticker = {
 
   fromJSON(object: any): ClanSticker {
     return {
-      id: isSet(object.id) ? Number(object.id) : 0,
+      id: isSet(object.id) ? String(object.id) : "",
       source: isSet(object.source) ? String(object.source) : "",
       shortname: isSet(object.shortname) ? String(object.shortname) : "",
       category: isSet(object.category) ? String(object.category) : "",
-      creator_id: isSet(object.creator_id) ? Number(object.creator_id) : 0,
+      creator_id: isSet(object.creator_id) ? String(object.creator_id) : "",
       create_time: isSet(object.create_time) ? fromJsonTimestamp(object.create_time) : undefined,
-      clan_id: isSet(object.clan_id) ? Number(object.clan_id) : 0,
+      clan_id: isSet(object.clan_id) ? String(object.clan_id) : "",
     };
   },
 
   toJSON(message: ClanSticker): unknown {
     const obj: any = {};
-    message.id !== undefined && (obj.id = Math.round(message.id));
+    message.id !== undefined && (obj.id = message.id);
     message.source !== undefined && (obj.source = message.source);
     message.shortname !== undefined && (obj.shortname = message.shortname);
     message.category !== undefined && (obj.category = message.category);
-    message.creator_id !== undefined && (obj.creator_id = Math.round(message.creator_id));
+    message.creator_id !== undefined && (obj.creator_id = message.creator_id);
     message.create_time !== undefined && (obj.create_time = message.create_time.toISOString());
-    message.clan_id !== undefined && (obj.clan_id = Math.round(message.clan_id));
+    message.clan_id !== undefined && (obj.clan_id = message.clan_id);
     return obj;
   },
 
@@ -1813,13 +1813,13 @@ export const ClanSticker = {
 
   fromPartial<I extends Exact<DeepPartial<ClanSticker>, I>>(object: I): ClanSticker {
     const message = createBaseClanSticker();
-    message.id = object.id ?? 0;
+    message.id = object.id ?? "";
     message.source = object.source ?? "";
     message.shortname = object.shortname ?? "";
     message.category = object.category ?? "";
-    message.creator_id = object.creator_id ?? 0;
+    message.creator_id = object.creator_id ?? "";
     message.create_time = object.create_time ?? undefined;
-    message.clan_id = object.clan_id ?? 0;
+    message.clan_id = object.clan_id ?? "";
     return message;
   },
 };
