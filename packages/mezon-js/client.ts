@@ -92,7 +92,6 @@ import {
   ApiPinMessagesList,
   ApiDeleteChannelDescRequest,
   ApiChangeChannelPrivateRequest,
-  ApiClanEmojiList,
   ApiClanEmojiCreateRequest,
   MezonUpdateClanEmojiByIdBody,
   ApiWebhookCreateRequest,
@@ -101,10 +100,11 @@ import {
   ApiWebhookGenerateResponse,
   ApiCheckDuplicateClanNameResponse,
   ApiClanStickerAddRequest,
-  ApiClanStickerListByClanIdResponse,
   MezonUpdateClanStickerByIdBody,
   MezonChangeChannelCategoryBody,
   ApiHashtagDmVoiceList,
+  ApiPermissionRoleChannelList,
+  ApiUpdateRoleChannelRequest,
 } from "./api.gen";
 
 import { Session } from "./session";
@@ -2280,18 +2280,6 @@ async deletePinMessage(session: Session, message_id: string): Promise<boolean> {
   });
 }
 
-/** List clan emoji. */
-async listClanEmoji(session: Session, clan_id: string): Promise<ApiClanEmojiList> {
-  if (this.autoRefreshSession && session.refresh_token &&
-      session.isexpired((Date.now() + this.expiredTimespanMs)/1000)) {
-      await this.sessionRefresh(session);
-  }
-
-  return this.apiClient.listClanEmojiByClanId(session.token, clan_id).then((response: ApiClanEmojiList) => {
-    return Promise.resolve(response);
-  });
-}
-
 /** create clan emoji */
 async createClanEmoji(session: Session, request: ApiClanEmojiCreateRequest) {
   if (this.autoRefreshSession && session.refresh_token &&
@@ -2400,18 +2388,6 @@ async addClanSticker(session: Session, request: ApiClanStickerAddRequest) {
   })
 }
 
-//**List stickers by clan ID */
-async listClanStickersByClanId(session: Session, id: string): Promise<ApiClanStickerListByClanIdResponse> {
-  if (this.autoRefreshSession && session.refresh_token &&
-    session.isexpired((Date.now() + this.expiredTimespanMs)/1000)) {
-    await this.sessionRefresh(session);
-  }
-
-  return this.apiClient.listClanStickersByClanId(session.token, id).then((response: any) => {
-    return Promise.resolve(response);
-  })
-}
-
 //**Delete a sticker by ID*/
 async deleteClanStickerById(session: Session, id: string, clan_id: string) {
   if (this.autoRefreshSession && session.refresh_token &&
@@ -2447,5 +2423,29 @@ async changeChannelCategory(session: Session, id: string, request: MezonChangeCh
     return response !== undefined;
   })
 }
+
+/** */
+async getListPermissionRoleChannel(session: Session, roleId: string, channelId: string): Promise<ApiPermissionRoleChannelList> {
+  if (this.autoRefreshSession && session.refresh_token &&
+      session.isexpired((Date.now() + this.expiredTimespanMs)/1000)) {
+      await this.sessionRefresh(session);
+  }
+
+  return this.apiClient.getListPermissionRoleChannel(session.token, roleId, channelId).then((response: ApiPermissionRoleChannelList) => {
+    return Promise.resolve(response);
+  });
+}
+
+/** */
+async setRoleChannelPermission(session: Session, request: ApiUpdateRoleChannelRequest): Promise<boolean> {
+  if (this.autoRefreshSession && session.refresh_token &&
+      session.isexpired((Date.now() + this.expiredTimespanMs)/1000)) {
+      await this.sessionRefresh(session);
+  }
+ 
+  return this.apiClient.setRoleChannelPermission(session.token, request).then((response: any) => {
+    return response !== undefined;
+  });
+ }
 
 };

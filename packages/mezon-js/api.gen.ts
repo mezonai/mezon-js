@@ -1111,6 +1111,8 @@ export interface ApiPermission {
   //
   id?: string;
   //
+  scope?: number;
+  //
   slug?: string;
   //
   title?: string;
@@ -1120,6 +1122,28 @@ export interface ApiPermission {
 export interface ApiPermissionList {
   //A list of permission.
   permissions?: Array<ApiPermission>;
+}
+
+/**  */
+export interface ApiPermissionRoleChannel {
+  //
+  active?: boolean;
+  //
+  permission_id?: string;
+}
+
+/** A list of permission role channel. */
+export interface ApiPermissionRoleChannelList {
+  //A list of permission.
+  permission_role_channel?: Array<ApiPermissionRoleChannel>;
+}
+
+/**  */
+export interface ApiPermissionUpdate {
+  //
+  permission_id?: string;
+  //
+  type?: number;
 }
 
 /**  */
@@ -1456,6 +1480,16 @@ export interface ApiUpdateCategoryDescRequest {
   category_id?: string;
   //
   category_name?: string;
+}
+
+/**  */
+export interface ApiUpdateRoleChannelRequest {
+  //
+  channel_id?: string;
+  //The permissions to add.
+  permission_update?: Array<ApiPermissionUpdate>;
+  //The ID of the role to update.
+  role_id?: string;
 }
 
 /** Fetch a batch of zero or more users from the server. */
@@ -3910,42 +3944,6 @@ export class MezonApi {
     ]);
 }
 
-  /** Get emoji list by clan id */
-  listClanEmojiByClanId(bearerToken: string,
-      clanId:string,
-      options: any = {}): Promise<ApiClanEmojiList> {
-    
-    if (clanId === null || clanId === undefined) {
-      throw new Error("'clanId' is a required parameter but is null or undefined.");
-    }
-    const urlPath = "/v2/emoji/{clanId}"
-        .replace("{clanId}", encodeURIComponent(String(clanId)));
-    const queryParams = new Map<string, any>();
-
-    let bodyJson : string = "";
-
-    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
-    const fetchOptions = buildFetchOptions("GET", options, bodyJson);
-    if (bearerToken) {
-        fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-    }
-
-    return Promise.race([
-      fetch(fullUrl, fetchOptions).then((response) => {
-        if (response.status == 204) {
-          return response;
-        } else if (response.status >= 200 && response.status < 300) {
-          return response.json();
-        } else {
-          throw response;
-        }
-      }),
-      new Promise((_, reject) =>
-        setTimeout(reject, this.timeoutMs, "Request timed out.")
-      ),
-    ]);
-}
-
   /** Delete a emoji by ID. */
   deleteByIdClanEmoji(bearerToken: string,
       id:string,
@@ -5190,6 +5188,77 @@ export class MezonApi {
     ]);
 }
 
+  /** List permission role channel */
+  getListPermissionRoleChannel(bearerToken: string,
+      roleId?:string,
+      channelId?:string,
+      options: any = {}): Promise<ApiPermissionRoleChannelList> {
+    
+    const urlPath = "/v2/permissionrolechannel/get";
+    const queryParams = new Map<string, any>();
+    queryParams.set("role_id", roleId);
+    queryParams.set("channel_id", channelId);
+
+    let bodyJson : string = "";
+
+    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
+    const fetchOptions = buildFetchOptions("GET", options, bodyJson);
+    if (bearerToken) {
+        fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+    }
+
+    return Promise.race([
+      fetch(fullUrl, fetchOptions).then((response) => {
+        if (response.status == 204) {
+          return response;
+        } else if (response.status >= 200 && response.status < 300) {
+          return response.json();
+        } else {
+          throw response;
+        }
+      }),
+      new Promise((_, reject) =>
+        setTimeout(reject, this.timeoutMs, "Request timed out.")
+      ),
+    ]);
+}
+
+  /** set permission role channel. */
+  setRoleChannelPermission(bearerToken: string,
+      body:ApiUpdateRoleChannelRequest,
+      options: any = {}): Promise<any> {
+    
+    if (body === null || body === undefined) {
+      throw new Error("'body' is a required parameter but is null or undefined.");
+    }
+    const urlPath = "/v2/permissionrolechannel/set";
+    const queryParams = new Map<string, any>();
+
+    let bodyJson : string = "";
+    bodyJson = JSON.stringify(body || {});
+
+    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
+    const fetchOptions = buildFetchOptions("POST", options, bodyJson);
+    if (bearerToken) {
+        fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+    }
+
+    return Promise.race([
+      fetch(fullUrl, fetchOptions).then((response) => {
+        if (response.status == 204) {
+          return response;
+        } else if (response.status >= 200 && response.status < 300) {
+          return response.json();
+        } else {
+          throw response;
+        }
+      }),
+      new Promise((_, reject) =>
+        setTimeout(reject, this.timeoutMs, "Request timed out.")
+      ),
+    ]);
+}
+
   /** Get permission list */
   getListPermission(bearerToken: string,
       options: any = {}): Promise<ApiPermissionList> {
@@ -5886,42 +5955,6 @@ export class MezonApi {
 
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("POST", options, bodyJson);
-    if (bearerToken) {
-        fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-    }
-
-    return Promise.race([
-      fetch(fullUrl, fetchOptions).then((response) => {
-        if (response.status == 204) {
-          return response;
-        } else if (response.status >= 200 && response.status < 300) {
-          return response.json();
-        } else {
-          throw response;
-        }
-      }),
-      new Promise((_, reject) =>
-        setTimeout(reject, this.timeoutMs, "Request timed out.")
-      ),
-    ]);
-}
-
-  /** List stickers by clan ID */
-  listClanStickersByClanId(bearerToken: string,
-      clanId:string,
-      options: any = {}): Promise<ApiClanStickerListByClanIdResponse> {
-    
-    if (clanId === null || clanId === undefined) {
-      throw new Error("'clanId' is a required parameter but is null or undefined.");
-    }
-    const urlPath = "/v2/sticker/{clanId}"
-        .replace("{clanId}", encodeURIComponent(String(clanId)));
-    const queryParams = new Map<string, any>();
-
-    let bodyJson : string = "";
-
-    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
-    const fetchOptions = buildFetchOptions("GET", options, bodyJson);
     if (bearerToken) {
         fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
     }

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import {ApiMessageAttachment, ApiMessageMention, ApiMessageReaction, ApiMessageRef, ApiNotification, ApiRpc} from "./api.gen";
+import {ApiClanEmojiList, ApiClanStickerListByClanIdResponse, ApiMessageAttachment, ApiMessageMention, ApiMessageReaction, ApiMessageRef, ApiNotification, ApiRpc} from "./api.gen";
 import {Session} from "./session";
 import {Notification} from "./client";
 import {WebSocketAdapter, WebSocketAdapterText} from "./web_socket_adapter"
@@ -773,8 +773,11 @@ export interface Socket {
   /* Get the heartbeat timeout used by the socket to detect if it has lost connectivity to the server. */
   getHeartbeatTimeoutMs() :  number;
 
-  checkDuplicateClanName(clan_name: string): Promise<ClanNameExistedEvent> 
+  checkDuplicateClanName(clan_name: string): Promise<ClanNameExistedEvent>;
 
+  listClanEmojiByClanId(clan_id: string): Promise<ApiClanEmojiList>;
+
+  listClanStickersByClanId(clan_id: string): Promise<ApiClanStickerListByClanIdResponse>;
 }
 
 /** Reports an error received from a socket message. */
@@ -1311,6 +1314,16 @@ export class DefaultSocket implements Socket {
   async checkDuplicateClanName(clan_name: string): Promise<ClanNameExistedEvent> {
     const response = await this.send({clan_name_existed_event: {clan_name: clan_name}});
     return response.clan_name_existed_event
+  }
+
+  async listClanEmojiByClanId(clan_id: string): Promise<ApiClanEmojiList>{
+    const response = await this.send({emojis_by_clan_id_request_event: {clan_id: clan_id}});
+    return response.clan_emoji_list_event
+  }
+
+  async listClanStickersByClanId(clan_id: string): Promise<ApiClanStickerListByClanIdResponse>{
+    const response = await this.send({clan_sticker_list_request_event: {clan_id: clan_id}});
+    return response.clan_sticker_list_response_event
   }
 
   private async pingPong() : Promise<void> {
