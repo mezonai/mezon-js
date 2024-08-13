@@ -773,11 +773,11 @@ export interface Socket {
   /* Get the heartbeat timeout used by the socket to detect if it has lost connectivity to the server. */
   getHeartbeatTimeoutMs() :  number;
 
-  checkDuplicateClanName(clan_name: string): Promise<ClanNameExistedEvent> 
+  checkDuplicateClanName(clan_name: string): Promise<ClanNameExistedEvent>;
 
-  listClanEmojiByClanId(clan_id: string): Promise<ApiClanEmojiList>
+  listClanEmojiByClanId(clan_id: string): Promise<ApiClanEmojiList>;
 
-  listClanStickersByClanId(clan_id: string): Promise<ApiClanStickerListByClanIdResponse>
+  listClanStickersByClanId(clan_id: string): Promise<ApiClanStickerListByClanIdResponse>;
 }
 
 /** Reports an error received from a socket message. */
