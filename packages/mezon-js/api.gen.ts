@@ -807,30 +807,6 @@ export interface ApiFriendList {
   friends?: Array<ApiFriend>;
 }
 
-/**  */
-export interface ApiHashtagDmVoice {
-  //The channel id.
-  channel_id?: string;
-  //
-  channel_label?: string;
-  //
-  channel_private?: number;
-  //
-  clan_id?: string;
-  //
-  clan_name?: string;
-  //
-  meeting_code?: string;
-  //
-  type?: number;
-}
-
-/**  */
-export interface ApiHashtagDmVoiceList {
-  //A list of channel.
-  hashtage_voice?: Array<ApiHashtagDmVoice>;
-}
-
 /** Add link invite users to. */
 export interface ApiInviteUserRes {
   //id channel to add link to.
@@ -4463,41 +4439,6 @@ export class MezonApi {
     const urlPath = "/v2/getclanprofile/{clanId}"
         .replace("{clanId}", encodeURIComponent(String(clanId)));
     const queryParams = new Map<string, any>();
-
-    let bodyJson : string = "";
-
-    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
-    const fetchOptions = buildFetchOptions("GET", options, bodyJson);
-    if (bearerToken) {
-        fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-    }
-
-    return Promise.race([
-      fetch(fullUrl, fetchOptions).then((response) => {
-        if (response.status == 204) {
-          return response;
-        } else if (response.status >= 200 && response.status < 300) {
-          return response.json();
-        } else {
-          throw response;
-        }
-      }),
-      new Promise((_, reject) =>
-        setTimeout(reject, this.timeoutMs, "Request timed out.")
-      ),
-    ]);
-}
-
-  /** List channelvoices */
-  hashtagDMVoiceList(bearerToken: string,
-      userId?:Array<string>,
-      limit?:number,
-      options: any = {}): Promise<ApiHashtagDmVoiceList> {
-    
-    const urlPath = "/v2/hashtagdmvoice";
-    const queryParams = new Map<string, any>();
-    queryParams.set("user_id", userId);
-    queryParams.set("limit", limit);
 
     let bodyJson : string = "";
 

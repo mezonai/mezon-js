@@ -96,7 +96,6 @@ import {
   ApiClanStickerAddRequest,
   MezonUpdateClanStickerByIdBody,
   MezonChangeChannelCategoryBody,
-  ApiHashtagDmVoiceList,
   ApiPermissionRoleChannelList,
   ApiUpdateRoleChannelRequest,
 } from "./api.gen";
@@ -2151,18 +2150,6 @@ async pinMessagesList(session: Session, channelId: string): Promise<ApiPinMessag
     return Promise.resolve(response);
   });
 }
-
-async hashtagDmVoiceList(session: Session, userId:Array<string>, limit?: number): Promise<ApiHashtagDmVoiceList> {
-  if (this.autoRefreshSession && session.refresh_token &&
-      session.isexpired((Date.now() + this.expiredTimespanMs)/1000)) {
-      await this.sessionRefresh(session);
-  }
-
-  return this.apiClient.hashtagDMVoiceList(session.token, userId, limit).then((response: ApiHashtagDmVoiceList) => {
-    return Promise.resolve(response);
-  });
-}
-
 
 //** */
 async deletePinMessage(session: Session, message_id: string): Promise<boolean> {
