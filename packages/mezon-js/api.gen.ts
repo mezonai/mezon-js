@@ -3901,7 +3901,7 @@ export class MezonApi {
 }
 
   /** Delete a emoji by ID. */
-  deleteByIdClanEmoji(bearerToken: string,
+  deleteClanEmojiById(bearerToken: string,
       id:string,
       clanId?:string,
       options: any = {}): Promise<any> {
@@ -3914,7 +3914,8 @@ export class MezonApi {
     const queryParams = new Map<string, any>();
     queryParams.set("clan_id", clanId);
 
-    let bodyJson : string = "";
+    const body = {clan_id: clanId}
+    let bodyJson = JSON.stringify(body || {});
 
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("DELETE", options, bodyJson);
@@ -5990,201 +5991,6 @@ export class MezonApi {
 
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("PATCH", options, bodyJson);
-    if (bearerToken) {
-        fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-    }
-
-    return Promise.race([
-      fetch(fullUrl, fetchOptions).then((response) => {
-        if (response.status == 204) {
-          return response;
-        } else if (response.status >= 200 && response.status < 300) {
-          return response.json();
-        } else {
-          throw response;
-        }
-      }),
-      new Promise((_, reject) =>
-        setTimeout(reject, this.timeoutMs, "Request timed out.")
-      ),
-    ]);
-}
-
-  /** Get storage objects. */
-  readStorageObjects(bearerToken: string,
-      body:ApiReadStorageObjectsRequest,
-      options: any = {}): Promise<ApiStorageObjects> {
-    
-    if (body === null || body === undefined) {
-      throw new Error("'body' is a required parameter but is null or undefined.");
-    }
-    const urlPath = "/v2/storage";
-    const queryParams = new Map<string, any>();
-
-    let bodyJson : string = "";
-    bodyJson = JSON.stringify(body || {});
-
-    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
-    const fetchOptions = buildFetchOptions("POST", options, bodyJson);
-    if (bearerToken) {
-        fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-    }
-
-    return Promise.race([
-      fetch(fullUrl, fetchOptions).then((response) => {
-        if (response.status == 204) {
-          return response;
-        } else if (response.status >= 200 && response.status < 300) {
-          return response.json();
-        } else {
-          throw response;
-        }
-      }),
-      new Promise((_, reject) =>
-        setTimeout(reject, this.timeoutMs, "Request timed out.")
-      ),
-    ]);
-}
-
-  /** Write objects into the storage engine. */
-  writeStorageObjects(bearerToken: string,
-      body:ApiWriteStorageObjectsRequest,
-      options: any = {}): Promise<ApiStorageObjectAcks> {
-    
-    if (body === null || body === undefined) {
-      throw new Error("'body' is a required parameter but is null or undefined.");
-    }
-    const urlPath = "/v2/storage";
-    const queryParams = new Map<string, any>();
-
-    let bodyJson : string = "";
-    bodyJson = JSON.stringify(body || {});
-
-    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
-    const fetchOptions = buildFetchOptions("PUT", options, bodyJson);
-    if (bearerToken) {
-        fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-    }
-
-    return Promise.race([
-      fetch(fullUrl, fetchOptions).then((response) => {
-        if (response.status == 204) {
-          return response;
-        } else if (response.status >= 200 && response.status < 300) {
-          return response.json();
-        } else {
-          throw response;
-        }
-      }),
-      new Promise((_, reject) =>
-        setTimeout(reject, this.timeoutMs, "Request timed out.")
-      ),
-    ]);
-}
-
-  /** Delete one or more objects by ID or username. */
-  deleteStorageObjects(bearerToken: string,
-      body:ApiDeleteStorageObjectsRequest,
-      options: any = {}): Promise<any> {
-    
-    if (body === null || body === undefined) {
-      throw new Error("'body' is a required parameter but is null or undefined.");
-    }
-    const urlPath = "/v2/storage/delete";
-    const queryParams = new Map<string, any>();
-
-    let bodyJson : string = "";
-    bodyJson = JSON.stringify(body || {});
-
-    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
-    const fetchOptions = buildFetchOptions("PUT", options, bodyJson);
-    if (bearerToken) {
-        fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-    }
-
-    return Promise.race([
-      fetch(fullUrl, fetchOptions).then((response) => {
-        if (response.status == 204) {
-          return response;
-        } else if (response.status >= 200 && response.status < 300) {
-          return response.json();
-        } else {
-          throw response;
-        }
-      }),
-      new Promise((_, reject) =>
-        setTimeout(reject, this.timeoutMs, "Request timed out.")
-      ),
-    ]);
-}
-
-  /** List publicly readable storage objects in a given collection. */
-  listStorageObjects(bearerToken: string,
-      collection:string,
-      userId?:string,
-      limit?:number,
-      cursor?:string,
-      options: any = {}): Promise<ApiStorageObjectList> {
-    
-    if (collection === null || collection === undefined) {
-      throw new Error("'collection' is a required parameter but is null or undefined.");
-    }
-    const urlPath = "/v2/storage/{collection}"
-        .replace("{collection}", encodeURIComponent(String(collection)));
-    const queryParams = new Map<string, any>();
-    queryParams.set("user_id", userId);
-    queryParams.set("limit", limit);
-    queryParams.set("cursor", cursor);
-
-    let bodyJson : string = "";
-
-    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
-    const fetchOptions = buildFetchOptions("GET", options, bodyJson);
-    if (bearerToken) {
-        fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-    }
-
-    return Promise.race([
-      fetch(fullUrl, fetchOptions).then((response) => {
-        if (response.status == 204) {
-          return response;
-        } else if (response.status >= 200 && response.status < 300) {
-          return response.json();
-        } else {
-          throw response;
-        }
-      }),
-      new Promise((_, reject) =>
-        setTimeout(reject, this.timeoutMs, "Request timed out.")
-      ),
-    ]);
-}
-
-  /** List publicly readable storage objects in a given collection. */
-  listStorageObjects2(bearerToken: string,
-      collection:string,
-      userId:string,
-      limit?:number,
-      cursor?:string,
-      options: any = {}): Promise<ApiStorageObjectList> {
-    
-    if (collection === null || collection === undefined) {
-      throw new Error("'collection' is a required parameter but is null or undefined.");
-    }
-    if (userId === null || userId === undefined) {
-      throw new Error("'userId' is a required parameter but is null or undefined.");
-    }
-    const urlPath = "/v2/storage/{collection}/{userId}"
-        .replace("{collection}", encodeURIComponent(String(collection)))
-        .replace("{userId}", encodeURIComponent(String(userId)));
-    const queryParams = new Map<string, any>();
-    queryParams.set("limit", limit);
-    queryParams.set("cursor", cursor);
-
-    let bodyJson : string = "";
-
-    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
-    const fetchOptions = buildFetchOptions("GET", options, bodyJson);
     if (bearerToken) {
         fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
     }
