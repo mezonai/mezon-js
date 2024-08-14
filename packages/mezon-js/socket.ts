@@ -675,6 +675,58 @@ export interface ClanEmoji {
   src?: string;
 }
 
+/**  */
+export interface ChannelDescListEvent {
+  // 
+  channeldesc?: Array<ChannelDescription>;
+}
+
+/**  */
+export interface ChannelDescription {
+  // The clan of this channel
+  clan_id?: string;
+  // The channel this message belongs to.
+  channel_id?: string;
+  // The channel type.
+  type?: number;
+  // The channel lable
+  channel_label?: string;
+  // The channel private
+  channel_private?: number;
+  // meeting code
+  meeting_code?: string;
+  //
+  clan_name?: string;
+}
+
+// A list of Channel
+export interface HashtagDmListEvent {
+  // user Id
+  user_id?: Array<string>;
+  // Max number of records to return. Between 1 and 100.
+  limit?: number;
+  // A list of channel.
+  hashtag_dm?: Array<HashtagDm>;
+}
+
+// hashtagDM
+export interface HashtagDm {
+  // The channel id.
+  channel_id?: string;
+  // The channel lable
+  channel_label?: string;
+  // The clan of this channel
+  clan_id?: string;
+  // The clan name
+  clan_name?: string;
+  //
+  meeting_code?: string;
+  //
+  type?: number;
+  //
+  channel_private?: number;
+}
+
 /** A socket connection to Mezon server. */
 export interface Socket {
   /** Connection is Open */
@@ -830,6 +882,10 @@ export interface Socket {
   listClanEmojiByClanId(clan_id: string): Promise<EmojiListedEvent>;
 
   listClanStickersByClanId(clan_id: string): Promise<StrickerListedEvent>;
+
+  ListChannelByUserId(): Promise<ChannelDescListEvent>;
+  
+  hashtagDMList(user_id: Array<string>, limit: number): Promise<HashtagDmListEvent>;
 }
 
 /** Reports an error received from a socket message. */
@@ -1371,6 +1427,16 @@ export class DefaultSocket implements Socket {
   async listClanEmojiByClanId(clan_id: string): Promise<EmojiListedEvent> {
     const response = await this.send({emojis_listed_event: {clan_id: clan_id}});
     return response.emojis_listed_event
+  }
+
+  async ListChannelByUserId(): Promise<ChannelDescListEvent> {
+    const response = await this.send({channel_desc_list_event: {}});
+    return response.channel_desc_list_event
+  }
+
+  async hashtagDMList(user_id: Array<string>, limit: number): Promise<HashtagDmListEvent> {
+    const response = await this.send({hashtag_dm_list_event: {user_id: user_id, limit: limit }});
+    return response.hashtag_dm_list_event
   }
 
   async listClanStickersByClanId(clan_id: string): Promise<StrickerListedEvent> {
