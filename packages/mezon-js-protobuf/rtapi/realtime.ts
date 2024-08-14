@@ -380,6 +380,8 @@ export interface ChannelMessageUpdate {
   content: string;
   /** The mentions */
   mentions: MessageMention[];
+  /** Message attachment */
+  attachments: MessageAttachment[];
   /** The mode */
   mode: number;
 }
@@ -2905,7 +2907,7 @@ export const ChannelMessageSend = {
 };
 
 function createBaseChannelMessageUpdate(): ChannelMessageUpdate {
-  return { clan_id: "", channel_id: "", message_id: "", content: "", mentions: [], mode: 0 };
+  return { clan_id: "", channel_id: "", message_id: "", content: "", mentions: [], attachments: [], mode: 0 };
 }
 
 export const ChannelMessageUpdate = {
@@ -2925,8 +2927,11 @@ export const ChannelMessageUpdate = {
     for (const v of message.mentions) {
       MessageMention.encode(v!, writer.uint32(42).fork()).ldelim();
     }
+    for (const v of message.attachments) {
+      MessageAttachment.encode(v!, writer.uint32(50).fork()).ldelim();
+    }
     if (message.mode !== 0) {
-      writer.uint32(48).int32(message.mode);
+      writer.uint32(56).int32(message.mode);
     }
     return writer;
   },
@@ -2954,6 +2959,9 @@ export const ChannelMessageUpdate = {
           message.mentions.push(MessageMention.decode(reader, reader.uint32()));
           break;
         case 6:
+          message.attachments.push(MessageAttachment.decode(reader, reader.uint32()));
+          break;
+        case 7:
           message.mode = reader.int32();
           break;
         default:
@@ -2971,6 +2979,9 @@ export const ChannelMessageUpdate = {
       message_id: isSet(object.message_id) ? String(object.message_id) : "",
       content: isSet(object.content) ? String(object.content) : "",
       mentions: Array.isArray(object?.mentions) ? object.mentions.map((e: any) => MessageMention.fromJSON(e)) : [],
+      attachments: Array.isArray(object?.attachments)
+        ? object.attachments.map((e: any) => MessageAttachment.fromJSON(e))
+        : [],
       mode: isSet(object.mode) ? Number(object.mode) : 0,
     };
   },
@@ -2985,6 +2996,11 @@ export const ChannelMessageUpdate = {
       obj.mentions = message.mentions.map((e) => e ? MessageMention.toJSON(e) : undefined);
     } else {
       obj.mentions = [];
+    }
+    if (message.attachments) {
+      obj.attachments = message.attachments.map((e) => e ? MessageAttachment.toJSON(e) : undefined);
+    } else {
+      obj.attachments = [];
     }
     message.mode !== undefined && (obj.mode = Math.round(message.mode));
     return obj;
@@ -3001,6 +3017,7 @@ export const ChannelMessageUpdate = {
     message.message_id = object.message_id ?? "";
     message.content = object.content ?? "";
     message.mentions = object.mentions?.map((e) => MessageMention.fromPartial(e)) || [];
+    message.attachments = object.attachments?.map((e) => MessageAttachment.fromPartial(e)) || [];
     message.mode = object.mode ?? 0;
     return message;
   },

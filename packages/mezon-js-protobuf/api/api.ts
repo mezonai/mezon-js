@@ -2616,7 +2616,7 @@ export interface ClanEmojiGetByClanIdRequest {
 
 export interface ClanEmojiDeleteRequest {
   id: string;
-  clanId: string;
+  clan_id: string;
 }
 
 export interface ClanEmojiUpdateRequest {
@@ -2706,7 +2706,7 @@ export interface ClanStickerUpdateByIdRequest {
 
 export interface ClanStickerDeleteRequest {
   id: number;
-  clanId: string;
+  clan_id: string;
 }
 
 export interface ChangeChannelCategoryRequest {
@@ -19009,7 +19009,7 @@ export const ClanEmojiGetByClanIdRequest = {
 };
 
 function createBaseClanEmojiDeleteRequest(): ClanEmojiDeleteRequest {
-  return { id: "", clanId: "" };
+  return { id: "", clan_id: "" };
 }
 
 export const ClanEmojiDeleteRequest = {
@@ -19017,8 +19017,8 @@ export const ClanEmojiDeleteRequest = {
     if (message.id !== "") {
       writer.uint32(10).string(message.id);
     }
-    if (message.clanId !== "") {
-      writer.uint32(18).string(message.clanId);
+    if (message.clan_id !== "") {
+      writer.uint32(18).string(message.clan_id);
     }
     return writer;
   },
@@ -19034,7 +19034,7 @@ export const ClanEmojiDeleteRequest = {
           message.id = reader.string();
           break;
         case 2:
-          message.clanId = reader.string();
+          message.clan_id = reader.string();
           break;
         default:
           reader.skipType(tag & 7);
@@ -19045,13 +19045,16 @@ export const ClanEmojiDeleteRequest = {
   },
 
   fromJSON(object: any): ClanEmojiDeleteRequest {
-    return { id: isSet(object.id) ? String(object.id) : "", clanId: isSet(object.clanId) ? String(object.clanId) : "" };
+    return {
+      id: isSet(object.id) ? String(object.id) : "",
+      clan_id: isSet(object.clan_id) ? String(object.clan_id) : "",
+    };
   },
 
   toJSON(message: ClanEmojiDeleteRequest): unknown {
     const obj: any = {};
     message.id !== undefined && (obj.id = message.id);
-    message.clanId !== undefined && (obj.clanId = message.clanId);
+    message.clan_id !== undefined && (obj.clan_id = message.clan_id);
     return obj;
   },
 
@@ -19062,7 +19065,7 @@ export const ClanEmojiDeleteRequest = {
   fromPartial<I extends Exact<DeepPartial<ClanEmojiDeleteRequest>, I>>(object: I): ClanEmojiDeleteRequest {
     const message = createBaseClanEmojiDeleteRequest();
     message.id = object.id ?? "";
-    message.clanId = object.clanId ?? "";
+    message.clan_id = object.clan_id ?? "";
     return message;
   },
 };
@@ -20061,7 +20064,7 @@ export const ClanStickerUpdateByIdRequest = {
 };
 
 function createBaseClanStickerDeleteRequest(): ClanStickerDeleteRequest {
-  return { id: 0, clanId: "" };
+  return { id: 0, clan_id: "" };
 }
 
 export const ClanStickerDeleteRequest = {
@@ -20069,8 +20072,8 @@ export const ClanStickerDeleteRequest = {
     if (message.id !== 0) {
       writer.uint32(8).int64(message.id);
     }
-    if (message.clanId !== "") {
-      writer.uint32(18).string(message.clanId);
+    if (message.clan_id !== "") {
+      writer.uint32(18).string(message.clan_id);
     }
     return writer;
   },
@@ -20086,7 +20089,7 @@ export const ClanStickerDeleteRequest = {
           message.id = longToNumber(reader.int64() as Long);
           break;
         case 2:
-          message.clanId = reader.string();
+          message.clan_id = reader.string();
           break;
         default:
           reader.skipType(tag & 7);
@@ -20097,13 +20100,16 @@ export const ClanStickerDeleteRequest = {
   },
 
   fromJSON(object: any): ClanStickerDeleteRequest {
-    return { id: isSet(object.id) ? Number(object.id) : 0, clanId: isSet(object.clanId) ? String(object.clanId) : "" };
+    return {
+      id: isSet(object.id) ? Number(object.id) : 0,
+      clan_id: isSet(object.clan_id) ? String(object.clan_id) : "",
+    };
   },
 
   toJSON(message: ClanStickerDeleteRequest): unknown {
     const obj: any = {};
     message.id !== undefined && (obj.id = Math.round(message.id));
-    message.clanId !== undefined && (obj.clanId = message.clanId);
+    message.clan_id !== undefined && (obj.clan_id = message.clan_id);
     return obj;
   },
 
@@ -20114,7 +20120,7 @@ export const ClanStickerDeleteRequest = {
   fromPartial<I extends Exact<DeepPartial<ClanStickerDeleteRequest>, I>>(object: I): ClanStickerDeleteRequest {
     const message = createBaseClanStickerDeleteRequest();
     message.id = object.id ?? 0;
-    message.clanId = object.clanId ?? "";
+    message.clan_id = object.clan_id ?? "";
     return message;
   },
 };

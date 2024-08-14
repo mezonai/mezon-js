@@ -42,18 +42,12 @@ import {
   ApiAddRoleChannelDescRequest,
   ApiCreateCategoryDescRequest,
   ApiUpdateCategoryDescRequest,
-  ApiDeleteStorageObjectsRequest,
   ApiEvent,
   ApiFriendList,
   ApiNotificationList,
-  ApiReadStorageObjectsRequest,
   ApiRpc,
-  ApiStorageObjectAcks,
-  ApiStorageObjectList,
-  ApiStorageObjects,
   ApiUpdateAccountRequest,
   ApiUsers,
-  ApiWriteStorageObjectsRequest,
   MezonApi,
   ApiSession,
   ApiAccountApple,
@@ -885,18 +879,6 @@ export class Client {
     });
   }
 
-  /** Delete one or more storage objects */
-  async deleteStorageObjects(session: Session, request: ApiDeleteStorageObjectsRequest): Promise<boolean> {
-    if (this.autoRefreshSession && session.refresh_token &&
-        session.isexpired((Date.now() + this.expiredTimespanMs)/1000)) {
-        await this.sessionRefresh(session);
-    }
-
-    return this.apiClient.deleteStorageObjects(session.token, request).then((response: any) => {
-      return Promise.resolve(response != undefined);
-    });
-  }
-
   /** Delete a role by ID. */
   async deleteRole(session: Session, roleId: string): Promise<boolean> {
     if (this.autoRefreshSession && session.refresh_token &&
@@ -1654,71 +1636,6 @@ export class Client {
     });
   }
 
-  /** List storage objects. */
-  async listStorageObjects(session: Session, collection: string, userId?: string, limit?: number, cursor?: string): Promise<StorageObjectList> {
-    if (this.autoRefreshSession && session.refresh_token &&
-        session.isexpired((Date.now() + this.expiredTimespanMs)/1000)) {
-        await this.sessionRefresh(session);
-    }
-
-    return this.apiClient.listStorageObjects(session.token, collection, userId, limit, cursor).then((response: ApiStorageObjectList) => {
-      var result: StorageObjectList = {
-        objects: [],
-        cursor: response.cursor
-      };
-
-      if (response.objects == null) {
-        return Promise.resolve(result);
-      }
-
-      response.objects!.forEach(o => {
-        result.objects.push({
-          collection: o.collection,
-          key: o.key,
-          permission_read: o.permission_read ? Number(o.permission_read) : 0,
-          permission_write: o.permission_write ? Number(o.permission_write) : 0,
-          value: o.value ? JSON.parse(o.value) : undefined,
-          version: o.version,
-          user_id: o.user_id,
-          create_time: o.create_time,
-          update_time: o.update_time
-        })
-      });
-      return Promise.resolve(result);
-    });
-  }
-
-  /** Fetch storage objects. */
-  async readStorageObjects(session: Session, request: ApiReadStorageObjectsRequest): Promise<StorageObjects> {
-    if (this.autoRefreshSession && session.refresh_token &&
-        session.isexpired((Date.now() + this.expiredTimespanMs)/1000)) {
-        await this.sessionRefresh(session);
-    }
-
-    return this.apiClient.readStorageObjects(session.token, request).then((response: ApiStorageObjects) => {
-      var result: StorageObjects = {objects: []};
-
-      if (response.objects == null) {
-        return Promise.resolve(result);
-      }
-
-      response.objects!.forEach(o => {
-        result.objects.push({
-          collection: o.collection,
-          key: o.key,
-          permission_read: o.permission_read ? Number(o.permission_read) : 0,
-          permission_write: o.permission_write ? Number(o.permission_write) : 0,
-          value: o.value ? JSON.parse(o.value) : undefined,
-          version: o.version,
-          user_id: o.user_id,
-          create_time: o.create_time,
-          update_time: o.update_time
-        })
-      });
-      return Promise.resolve(result);
-    });
-  }
-
   /** Execute an RPC function on the server. */
   async rpc(session: Session, basicAuthUsername: string,
 		basicAuthPassword: string, id: string, input: object): Promise<RpcResponse> {
@@ -2036,29 +1953,8 @@ export class Client {
     });
   }
 
-  /** Write storage objects. */
-  async writeStorageObjects(session: Session, objects: Array<WriteStorageObject>): Promise<ApiStorageObjectAcks> {
-    if (this.autoRefreshSession && session.refresh_token &&
-        session.isexpired((Date.now() + this.expiredTimespanMs)/1000)) {
-        await this.sessionRefresh(session);
-    }
-
-    var request: ApiWriteStorageObjectsRequest = {objects: []};
-    objects.forEach(o => {
-      request.objects!.push({
-        collection: o.collection,
-        key: o.key,
-        permission_read: o.permission_read,
-        permission_write: o.permission_write,
-        value: JSON.stringify(o.value),
-        version: o.version
-      })
-    })
-
-    return this.apiClient.writeStorageObjects(session.token, request);
-  }
   /** Set default notification clan*/
-async setNotificationClan(session: Session, request: ApiSetDefaultNotificationRequest): Promise<boolean> {
+  async setNotificationClan(session: Session, request: ApiSetDefaultNotificationRequest): Promise<boolean> {
   if (this.autoRefreshSession && session.refresh_token &&
       session.isexpired((Date.now() + this.expiredTimespanMs)/1000)) {
       await this.sessionRefresh(session);
@@ -2311,7 +2207,7 @@ async deleteByIdClanEmoji(session: Session, id: string, clan_id: string) {
     await this.sessionRefresh(session);
   }
 
-  return this.apiClient.deleteByIdClanEmoji(session.token, id, clan_id).then((response: any) => {
+  return this.apiClient.deleteClanEmojiById(session.token, id, clan_id).then((response: any) => {
     return response !== undefined;
   });
 }
