@@ -23,9 +23,9 @@ export default {
     input: './index.ts',
     output:  {
         format: 'umd',
-        name: 'satorijs',
+        name: 'mezon-sdk',
         dir: "dist",
-        entryFileNames: "satori-js.umd.js" // workaround for TS requirement that dir is specified in config
+        entryFileNames: "mezon-sdk.umd.js" // workaround for TS requirement that dir is specified in config
     },
     plugins: [
         typescript({

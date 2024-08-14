@@ -14,7 +14,8 @@
  * limitations under the License.
  */
 
-import { MezonApi, ApiSession, ApiAuthenticateRequest, ApiAuthenticateLogoutRequest, ApiAuthenticateRefreshRequest, ApiUpdatePropertiesRequest, ApiUpdateMessageRequest } from "./api";
+import { ApiSession } from "packages/mezon-js/dist/api.gen";
+import { MezonApi, ApiAuthenticateLogoutRequest, ApiAuthenticateRefreshRequest, ApiUpdateMessageRequest } from "./api";
 
 import { Session } from "./session";
 
@@ -47,15 +48,8 @@ export class Client {
   }
 
   /** Authenticate a user with an ID against the server. */
-  async authenticate(id: string, customProperties?: Record<string, string>, defaultProperties?: Record<string, string>) {
-
-    const request : ApiAuthenticateRequest = {
-      "id": id,
-      custom: customProperties,
-      default: defaultProperties
-    };
-
-    return this.apiClient.mezonAuthenticate(this.apiKey, "", request).then((apiSession : ApiSession) => {
+  async authenticate(token: string) {
+    return this.apiClient.mezonAuthenticate(token).then((apiSession : ApiSession) => {
       return Promise.resolve(new Session(apiSession.token || "", apiSession.refresh_token || ""));
     });
   }
@@ -85,59 +79,31 @@ export class Client {
     });
   }
 
-  /** List properties associated with this identity. */
-  async listProperties(session: Session) {
+  async deleteMessage(session : Session, id : string) {
     if (this.autoRefreshSession && session.refresh_token &&
       session.isexpired((Date.now() + this.expiredTimespanMs)/1000)) {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient.mezonListProperties(session.token);
-  }
-
-  /** Update identity properties. */
-  async updateProperties(session: Session, defaultProperties?: Record<string, string>, customProperties?: Record<string, string>, recompute?: boolean) {
-    if (this.autoRefreshSession && session.refresh_token &&
-      session.isexpired((Date.now() + this.expiredTimespanMs)/1000)) {
-      await this.sessionRefresh(session);
-    }
-
-    const request : ApiUpdatePropertiesRequest = {
-      default: defaultProperties,
-      custom: customProperties,
-      recompute: recompute,
-    };
-
-    return this.apiClient.mezonUpdateProperties(session.token, request).then((response) => {
+    return this.apiClient.mezonDeleteMessage(session.token, id).then((response) => {
       return Promise.resolve(response !== undefined);
     });
   }
 
-    async deleteMessage(session : Session, id : string) {
-        if (this.autoRefreshSession && session.refresh_token &&
-            session.isexpired((Date.now() + this.expiredTimespanMs)/1000)) {
-            await this.sessionRefresh(session);
-        }
-
-        return this.apiClient.mezonDeleteMessage(session.token, id).then((response) => {
-            return Promise.resolve(response !== undefined);
-        });
+  async updateMessage(session : Session, id : string, consume_time? : string, read_time? : string) {
+    if (this.autoRefreshSession && session.refresh_token &&
+      session.isexpired((Date.now() + this.expiredTimespanMs)/1000)) {
+      await this.sessionRefresh(session);
     }
 
-    async updateMessage(session : Session, id : string, consume_time? : string, read_time? : string) {
-        if (this.autoRefreshSession && session.refresh_token &&
-            session.isexpired((Date.now() + this.expiredTimespanMs)/1000)) {
-            await this.sessionRefresh(session);
-        }
+    const request : ApiUpdateMessageRequest = {
+      id: id,
+      consume_time: consume_time,
+      read_time: read_time
+    };
 
-        const request : ApiUpdateMessageRequest = {
-            id: id,
-            consume_time: consume_time,
-            read_time: read_time
-        };
-
-        return this.apiClient.mezonUpdateMessage(session.token, id, request).then((response) => {
-            return Promise.resolve(response !== undefined);
-        });
-    }
+    return this.apiClient.mezonUpdateMessage(session.token, id, request).then((response) => {
+      return Promise.resolve(response !== undefined);
+    });
+  }
 };

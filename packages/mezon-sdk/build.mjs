@@ -27,19 +27,19 @@ const config = {
 await esbuild.build({
   ...config,
   format: 'cjs',
-  outfile: 'dist/satori-js.cjs.js'
+  outfile: 'dist/mezon-sdk.cjs.js'
 });
 
 // Build ESM
 await esbuild.build({
   ...config,
   format: 'esm',
-  outfile: 'dist/satori-js.esm.mjs'
+  outfile: 'dist/mezon-sdk.esm.mjs'
 });
 
 // Build IIFE
 await esbuild.build({
   ...config,
   format: 'iife',
-  outfile: 'dist/satori-js.iife.js'
+  outfile: 'dist/mezon-sdk.iife.js'
 });

@@ -104,7 +104,7 @@ Ensure you are using Node v18>.
 
 The codebase is multi-package monorepo written in TypeScript and can be built with [esbuild](https://github.com/evanw/esbuild). All dependencies are managed with Yarn.
 
-To build from source, install dependencies and build the `satori-js` package:
+To build from source, install dependencies and build the `mezon-sdk` package:
 
 ```shell
 npm install --workspace=mezon-sdk && npm run build --workspace=mezon-sdk
