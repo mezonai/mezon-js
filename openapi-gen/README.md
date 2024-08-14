@@ -11,10 +11,10 @@ openapi-gen
 go run main.go "$GOPATH/src/github.com/nccasia/mezon-server/apigrpc/apigrpc.swagger.json" "Mezon" > ../packages/mezon-js/api.gen.ts
 ```
 
-### Satori
+### Mezon
 
 ```shell
-go run main.go "$GOPATH/src/github.com/heroiclabs/satori/api/satori.swagger.json" "Satori" > ../packages/mezon-sdk/api.gen.ts
+go run main.go "$GOPATH/src/github.com/heroiclabs/satori/api/satori.swagger.json" "Mezon" > ../packages/mezon-sdk/api.gen.ts
 ```
 
 ### Rationale

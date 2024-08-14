@@ -7,10 +7,10 @@ The format is based on [keep a changelog](http://keepachangelog.com/) and this p
 
 ### [2.7.0]
 ### Added
-- Satori: Added ability to schedule, update and delete outgoing messages for Live Events.
-- Satori: Added ability to add custom and default properties for a user at the point of authentication.
-- Satori: Add 'recompute' param to Satori's update-properties.
-- Satori: Added ability to delete identity.
+- Mezon: Added ability to schedule, update and delete outgoing messages for Live Events.
+- Mezon: Added ability to add custom and default properties for a user at the point of authentication.
+- Mezon: Add 'recompute' param to Mezon's update-properties.
+- Mezon: Added ability to delete identity.
 - Mezon: Added ability to create match by name.
 
 ### Changed
@@ -20,7 +20,7 @@ The format is based on [keep a changelog](http://keepachangelog.com/) and this p
 ### Fixed
 - Mezon: Fixed typings distribution location for protobuf-js.
 - Mezon: Fixed how newer bundlers (such as those used by ViteJs) discover Mezon's type definitions.
-- Satori: Return live event ID when getting all live events.
+- Mezon: Return live event ID when getting all live events.
 
 ### [2.6.1]
 
@@ -47,12 +47,12 @@ The connect, send, and heartbeat timeouts are set to sensible default values.
 ### [2.5.3]
 
 ### Fixed
-- Mezon and Satori ESM module files now correctly end in the `.mjs` extension.
+- Mezon and Mezon ESM module files now correctly end in the `.mjs` extension.
 
 ### [2.5.1]
 
 ### Added
-- Added [Satori](https://mezon.vn/docs/satori) client package (`satori-js`)
+- Added [Mezon](https://mezon.vn/docs/satori) client package (`satori-js`)
 
 ### Changed
 - Remove Yarn in favour of NPM and updates dependencies to support Node 18 LTS
