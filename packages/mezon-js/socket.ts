@@ -693,20 +693,10 @@ export interface ChannelDescription {
   channel_label?: string;
   // The channel private
   channel_private?: number;
-  // The channel avatar
-  channel_avatar?: Array<string>;
-  // The user id
-  user_id?: Array<string>;
-  // status
-  status?: number;
   // meeting code
   meeting_code?: string;
-  // the usernames
-  usernames?: string;
   //
   clan_name?: string;
-  //
-  timestamp_last_sent_message?: string
 }
 
 // A list of Channel
