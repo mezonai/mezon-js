@@ -2,7 +2,7 @@
   "extends": "./tsconfig.base.json",
   "include": [
     "packages/mezon-js/**/*",
-    "packages/satori-js/**/*"
+    "packages/mezon-sdk/**/*"
   ],
   "exclude": [
     "node_modules"

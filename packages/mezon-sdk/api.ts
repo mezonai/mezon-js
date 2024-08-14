@@ -107,25 +107,17 @@ export class MezonApi {
   }
 
   /** Authenticate against the server. */
-  mezonAuthenticate(basicAuthUsername: string,
-    basicAuthPassword: string,
-      body:ApiAuthenticateRequest,
+  mezonAuthenticate(token: string,
       options: any = {}): Promise<ApiSession> {
     
-    if (body === null || body === undefined) {
-      throw new Error("'body' is a required parameter but is null or undefined.");
-    }
-    const urlPath = "/v1/authenticate";
+    const urlPath = "/v2/apps/authenticate/token";
     const queryParams = new Map<string, any>();
+    queryParams.set("token", token);
 
     let bodyJson : string = "";
-    bodyJson = JSON.stringify(body || {});
 
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("POST", options, bodyJson);
-		if (basicAuthUsername) {
-			fetchOptions.headers["Authorization"] = "Basic " + encode(basicAuthUsername + ":" + basicAuthPassword);
-		}
 
     return Promise.race([
       fetch(fullUrl, fetchOptions).then((response) => {
@@ -151,7 +143,7 @@ export class MezonApi {
     if (body === null || body === undefined) {
       throw new Error("'body' is a required parameter but is null or undefined.");
     }
-    const urlPath = "/v1/authenticate/logout";
+    const urlPath = "/v2/apps/authenticate/logout";
     const queryParams = new Map<string, any>();
 
     let bodyJson : string = "";
@@ -188,7 +180,7 @@ export class MezonApi {
     if (body === null || body === undefined) {
       throw new Error("'body' is a required parameter but is null or undefined.");
     }
-    const urlPath = "/v1/authenticate/refresh";
+    const urlPath = "/v2/apps/authenticate/refresh";
     const queryParams = new Map<string, any>();
 
     let bodyJson : string = "";
@@ -224,7 +216,7 @@ export class MezonApi {
     if (id === null || id === undefined) {
       throw new Error("'id' is a required parameter but is null or undefined.");
     }
-    const urlPath = "/v1/message/{id}"
+    const urlPath = "/v2/apps/message/{id}"
         .replace("{id}", encodeURIComponent(String(id)));
     const queryParams = new Map<string, any>();
 
@@ -264,7 +256,7 @@ export class MezonApi {
     if (body === null || body === undefined) {
       throw new Error("'body' is a required parameter but is null or undefined.");
     }
-    const urlPath = "/v1/message/{id}"
+    const urlPath = "/v2/apps/message/{id}"
         .replace("{id}", encodeURIComponent(String(id)));
     const queryParams = new Map<string, any>();
 

@@ -14,7 +14,7 @@ go run main.go "$GOPATH/src/github.com/nccasia/mezon-server/apigrpc/apigrpc.swag
 ### Satori
 
 ```shell
-go run main.go "$GOPATH/src/github.com/heroiclabs/satori/api/satori.swagger.json" "Satori" > ../packages/satori-js/api.gen.ts
+go run main.go "$GOPATH/src/github.com/heroiclabs/satori/api/satori.swagger.json" "Satori" > ../packages/mezon-sdk/api.gen.ts
 ```
 
 ### Rationale

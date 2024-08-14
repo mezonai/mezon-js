@@ -15,7 +15,7 @@
  */
 
 import { ApiSession } from "packages/mezon-js/dist/api.gen";
-import { MezonApi, ApiAuthenticateRequest, ApiAuthenticateLogoutRequest, ApiAuthenticateRefreshRequest, ApiUpdateMessageRequest } from "./api";
+import { MezonApi, ApiAuthenticateLogoutRequest, ApiAuthenticateRefreshRequest, ApiUpdateMessageRequest } from "./api";
 
 import { Session } from "./session";
 
@@ -48,15 +48,8 @@ export class Client {
   }
 
   /** Authenticate a user with an ID against the server. */
-  async authenticate(id: string, customProperties?: Record<string, string>, defaultProperties?: Record<string, string>) {
-
-    const request : ApiAuthenticateRequest = {
-      "id": id,
-      custom: customProperties,
-      default: defaultProperties
-    };
-
-    return this.apiClient.mezonAuthenticate(this.apiKey, "", request).then((apiSession : ApiSession) => {
+  async authenticate(token: string) {
+    return this.apiClient.mezonAuthenticate(token).then((apiSession : ApiSession) => {
       return Promise.resolve(new Session(apiSession.token || "", apiSession.refresh_token || ""));
     });
   }
