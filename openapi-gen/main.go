@@ -89,7 +89,7 @@ export interface {{$classname | title}} {
 
 export class {{ .Namespace }}Api {
 
-  constructor(readonly{{- if eq .Namespace "Mezon" }} serverKey{{- end }}{{- if eq .Namespace "Satori" }} apiKey{{- end }}: string, readonly basePath: string, readonly timeoutMs: number) {}
+  constructor(readonly{{- if eq .Namespace "Mezon" }} serverKey{{- end }}{{- if eq .Namespace "Mezon" }} apiKey{{- end }}: string, readonly basePath: string, readonly timeoutMs: number) {}
 
 {{- range $url, $path := .Paths}}
   {{- range $method, $operation := $path}}
