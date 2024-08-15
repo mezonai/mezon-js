@@ -697,6 +697,8 @@ export interface ChannelDescription {
   meeting_code?: string;
   //
   clan_name?: string;
+  //
+  parrent_id?: string;
 }
 
 // A list of Channel
@@ -725,6 +727,8 @@ export interface HashtagDm {
   type?: number;
   //
   channel_private?: number;
+  //
+  parrent_id?: string;
 }
 
 /** A socket connection to Mezon server. */
