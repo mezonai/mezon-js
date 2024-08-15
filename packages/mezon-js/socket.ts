@@ -731,6 +731,52 @@ export interface HashtagDm {
   parrent_id?: string;
 }
 
+export interface NotificationChannelSettingEvent {
+  //
+  active?: number;
+  //
+  id?: string;
+  //
+  notification_setting_type?: number;
+  //
+  time_mute?: string;
+  // The channel id.
+  channel_id?: string;
+}
+
+export interface NotificationCategorySettingEvent {
+  //
+  active?: number;
+  //
+  id?: string;
+  //
+  notification_setting_type?: number;
+  //
+  time_mute?: string;
+  //
+  category_id?: string;
+}
+
+export interface NotificationClanSettingEvent {
+  //
+  id?: string;
+  //
+  notification_setting_type?: number;
+  // The clan of this channel
+  clan_id?: string;
+}
+
+export interface NotifiReactMessageEvent {
+  //
+  channel_id?: string;
+  //
+  id?: string;
+  //
+  user_id?: string;
+  //
+  channel_id_req?: string;
+}
+
 /** A socket connection to Mezon server. */
 export interface Socket {
   /** Connection is Open */
@@ -890,6 +936,15 @@ export interface Socket {
   ListChannelByUserId(): Promise<ChannelDescListEvent>;
   
   hashtagDMList(user_id: Array<string>, limit: number): Promise<HashtagDmListEvent>;
+
+  getNotificationChannelSetting(channel_id: string): Promise<NotificationChannelSettingEvent>;
+
+  getNotificationCategorySetting(category_id: string): Promise<NotificationCategorySettingEvent>;
+
+  getNotificationClanSetting(clan_id: string): Promise<NotificationClanSettingEvent>;
+
+  getNotificationReactMessage(channel_id_req: string): Promise<NotifiReactMessageEvent>;
+
 }
 
 /** Reports an error received from a socket message. */
@@ -1446,6 +1501,26 @@ export class DefaultSocket implements Socket {
   async listClanStickersByClanId(clan_id: string): Promise<StrickerListedEvent> {
     const response = await this.send({sticker_listed_event: {clan_id: clan_id}});
     return response.sticker_listed_event
+  }
+
+  async  getNotificationChannelSetting(channel_id: string): Promise<NotificationChannelSettingEvent> {
+    const response = await this.send({notification_channel_setting_event: {channel_id: channel_id}})
+    return response.notification_channel_setting_event
+  }
+
+  async getNotificationCategorySetting(category_id: string): Promise<NotificationCategorySettingEvent> {
+    const response = await this.send({notification_category_setting_event: {category_id: category_id}})
+    return response.notification_category_setting_event
+  }
+
+  async getNotificationClanSetting(clan_id: string): Promise<NotificationClanSettingEvent> {
+    const response = await this.send({notification_clan_setting_event: {clan_id: clan_id}})
+    return response.notification_clan_setting_event
+  }
+
+  async getNotificationReactMessage(channel_id_req: string): Promise<NotifiReactMessageEvent> {
+    const response = await this.send({notifi_react_message_event: {channel_id_req: channel_id_req}})
+    return response.notifi_react_message_event
   }
 
   private async pingPong(): Promise<void> {
