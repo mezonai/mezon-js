@@ -42,6 +42,72 @@ export interface MezonChangeChannelCategoryBody {
   channel_id?: string;
 }
 
+/** Update app information. */
+export interface MezonUpdateAppBody {
+  //Avatar URL.
+  applogo?: string;
+  //Username.
+  appname?: string;
+  //Metadata.
+  metadata?: string;
+  //Token.
+  token?: string;
+}
+
+/**  */
+export interface ApiAddAppRequest {
+  //The appname.
+  appname?: string;
+  //Creator of the app.
+  creator_id?: string;
+  //
+  role?: ApiAppRole;
+  //The password.
+  token?: string;
+}
+
+
+/** App information. */
+export interface ApiApp {
+  //
+  applogo?: string;
+  //
+  appname?: string;
+  //
+  creator_id?: string;
+  //The UNIX time when the app was disabled.
+  disable_time?: string;
+  //
+  online?: boolean;
+}
+
+/** A list of apps. */
+export interface ApiAppList {
+  //A list of apps.
+  apps?: Array<ApiApp>;
+  //Next cursor.
+  next_cursor?: string;
+  //Approximate total number of apps.
+  total_count?: number;
+}
+
+/**
+* - USER_ROLE_ADMIN: All access
+ - USER_ROLE_DEVELOPER: Best for developers, also enables APIs and API explorer
+ - USER_ROLE_MAINTAINER: Best for users who regularly update player information.
+ - USER_ROLE_READONLY: Read-only role for those only need to view data
+*/
+export enum ApiAppRole
+{
+  /*  */
+  USER_ROLE_UNKNOWN = 0,
+  /* */
+  USER_ROLE_ADMIN = 1, // All access
+  USER_ROLE_DEVELOPER = 2, // Best for developers, also enables APIs and API explorer
+  USER_ROLE_MAINTAINER = 3, // Best for users who regularly update player information.
+  USER_ROLE_READONLY = 4, // Read-only role for those only need to view data
+}
+
 
 /** Update fields in a given channel. */
 export interface MezonUpdateChannelDescBody {
@@ -1570,28 +1636,6 @@ export interface ApiWebhookListResponse {
   webhooks?: Array<ApiWebhook>;
 }
 
-/** The object to store. */
-export interface ApiWriteStorageObject {
-  //The collection to store the object.
-  collection?: string;
-  //The key for the object within the collection.
-  key?: string;
-  //The read access permissions for the object.
-  permission_read?: number;
-  //The write access permissions for the object.
-  permission_write?: number;
-  //The value of the object.
-  value?: string;
-  //The version hash of the object to check. Possible values are: ["", "*", "#hash#"].  if-match and if-none-match
-  version?: string;
-}
-
-/** Write objects to the storage engine. */
-export interface ApiWriteStorageObjectsRequest {
-  //The objects to store on the server.
-  objects?: Array<ApiWriteStorageObject>;
-}
-
 /**  */
 export interface ProtobufAny {
   //
@@ -2814,6 +2858,266 @@ export class MezonApi {
 
     let bodyJson : string = "";
     bodyJson = JSON.stringify(body || {});
+
+    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
+    const fetchOptions = buildFetchOptions("POST", options, bodyJson);
+    if (bearerToken) {
+        fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+    }
+
+    return Promise.race([
+      fetch(fullUrl, fetchOptions).then((response) => {
+        if (response.status == 204) {
+          return response;
+        } else if (response.status >= 200 && response.status < 300) {
+          return response.json();
+        } else {
+          throw response;
+        }
+      }),
+      new Promise((_, reject) =>
+        setTimeout(reject, this.timeoutMs, "Request timed out.")
+      ),
+    ]);
+}
+
+  /** Add a new apps. */
+  addApp(bearerToken: string,
+      body:ApiAddAppRequest,
+      options: any = {}): Promise<any> {
+    
+    if (body === null || body === undefined) {
+      throw new Error("'body' is a required parameter but is null or undefined.");
+    }
+    const urlPath = "/v2/apps/add";
+    const queryParams = new Map<string, any>();
+
+    let bodyJson : string = "";
+    bodyJson = JSON.stringify(body || {});
+
+    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
+    const fetchOptions = buildFetchOptions("POST", options, bodyJson);
+    if (bearerToken) {
+        fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+    }
+
+    return Promise.race([
+      fetch(fullUrl, fetchOptions).then((response) => {
+        if (response.status == 204) {
+          return response;
+        } else if (response.status >= 200 && response.status < 300) {
+          return response.json();
+        } else {
+          throw response;
+        }
+      }),
+      new Promise((_, reject) =>
+        setTimeout(reject, this.timeoutMs, "Request timed out.")
+      ),
+    ]);
+}
+
+  /** List (and optionally filter) accounts. */
+  listApps(bearerToken: string,
+      filter?:string,
+      tombstones?:boolean,
+      cursor?:string,
+      options: any = {}): Promise<ApiAppList> {
+    
+    const urlPath = "/v2/apps/app";
+    const queryParams = new Map<string, any>();
+    queryParams.set("filter", filter);
+    queryParams.set("tombstones", tombstones);
+    queryParams.set("cursor", cursor);
+
+    let bodyJson : string = "";
+
+    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
+    const fetchOptions = buildFetchOptions("GET", options, bodyJson);
+    if (bearerToken) {
+        fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+    }
+
+    return Promise.race([
+      fetch(fullUrl, fetchOptions).then((response) => {
+        if (response.status == 204) {
+          return response;
+        } else if (response.status >= 200 && response.status < 300) {
+          return response.json();
+        } else {
+          throw response;
+        }
+      }),
+      new Promise((_, reject) =>
+        setTimeout(reject, this.timeoutMs, "Request timed out.")
+      ),
+    ]);
+}
+
+  /** Delete all information stored for an app. */
+  deleteApp(bearerToken: string,
+      id:string,
+      recordDeletion?:boolean,
+      options: any = {}): Promise<any> {
+    
+    if (id === null || id === undefined) {
+      throw new Error("'id' is a required parameter but is null or undefined.");
+    }
+    const urlPath = "/v2/apps/app/{id}"
+        .replace("{id}", encodeURIComponent(String(id)));
+    const queryParams = new Map<string, any>();
+    queryParams.set("record_deletion", recordDeletion);
+
+    let bodyJson : string = "";
+
+    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
+    const fetchOptions = buildFetchOptions("DELETE", options, bodyJson);
+    if (bearerToken) {
+        fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+    }
+
+    return Promise.race([
+      fetch(fullUrl, fetchOptions).then((response) => {
+        if (response.status == 204) {
+          return response;
+        } else if (response.status >= 200 && response.status < 300) {
+          return response.json();
+        } else {
+          throw response;
+        }
+      }),
+      new Promise((_, reject) =>
+        setTimeout(reject, this.timeoutMs, "Request timed out.")
+      ),
+    ]);
+}
+
+  /** Get detailed app information. */
+  getApp(bearerToken: string,
+      id:string,
+      options: any = {}): Promise<ApiApp> {
+    
+    if (id === null || id === undefined) {
+      throw new Error("'id' is a required parameter but is null or undefined.");
+    }
+    const urlPath = "/v2/apps/app/{id}"
+        .replace("{id}", encodeURIComponent(String(id)));
+    const queryParams = new Map<string, any>();
+
+    let bodyJson : string = "";
+
+    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
+    const fetchOptions = buildFetchOptions("GET", options, bodyJson);
+    if (bearerToken) {
+        fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+    }
+
+    return Promise.race([
+      fetch(fullUrl, fetchOptions).then((response) => {
+        if (response.status == 204) {
+          return response;
+        } else if (response.status >= 200 && response.status < 300) {
+          return response.json();
+        } else {
+          throw response;
+        }
+      }),
+      new Promise((_, reject) =>
+        setTimeout(reject, this.timeoutMs, "Request timed out.")
+      ),
+    ]);
+}
+
+  /** Update one or more fields on a app. */
+  updateApp(bearerToken: string,
+      id:string,
+      body:MezonUpdateAppBody,
+      options: any = {}): Promise<any> {
+    
+    if (id === null || id === undefined) {
+      throw new Error("'id' is a required parameter but is null or undefined.");
+    }
+    if (body === null || body === undefined) {
+      throw new Error("'body' is a required parameter but is null or undefined.");
+    }
+    const urlPath = "/v2/apps/app/{id}"
+        .replace("{id}", encodeURIComponent(String(id)));
+    const queryParams = new Map<string, any>();
+
+    let bodyJson : string = "";
+    bodyJson = JSON.stringify(body || {});
+
+    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
+    const fetchOptions = buildFetchOptions("POST", options, bodyJson);
+    if (bearerToken) {
+        fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+    }
+
+    return Promise.race([
+      fetch(fullUrl, fetchOptions).then((response) => {
+        if (response.status == 204) {
+          return response;
+        } else if (response.status >= 200 && response.status < 300) {
+          return response.json();
+        } else {
+          throw response;
+        }
+      }),
+      new Promise((_, reject) =>
+        setTimeout(reject, this.timeoutMs, "Request timed out.")
+      ),
+    ]);
+}
+
+  /** Ban a app. */
+  banApp(bearerToken: string,
+      id:string,
+      options: any = {}): Promise<any> {
+    
+    if (id === null || id === undefined) {
+      throw new Error("'id' is a required parameter but is null or undefined.");
+    }
+    const urlPath = "/v2/apps/app/{id}/ban"
+        .replace("{id}", encodeURIComponent(String(id)));
+    const queryParams = new Map<string, any>();
+
+    let bodyJson : string = "";
+
+    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
+    const fetchOptions = buildFetchOptions("POST", options, bodyJson);
+    if (bearerToken) {
+        fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+    }
+
+    return Promise.race([
+      fetch(fullUrl, fetchOptions).then((response) => {
+        if (response.status == 204) {
+          return response;
+        } else if (response.status >= 200 && response.status < 300) {
+          return response.json();
+        } else {
+          throw response;
+        }
+      }),
+      new Promise((_, reject) =>
+        setTimeout(reject, this.timeoutMs, "Request timed out.")
+      ),
+    ]);
+}
+
+  /** Unban an app. */
+  unbanApp(bearerToken: string,
+      id:string,
+      options: any = {}): Promise<any> {
+    
+    if (id === null || id === undefined) {
+      throw new Error("'id' is a required parameter but is null or undefined.");
+    }
+    const urlPath = "/v2/apps/app/{id}/unban"
+        .replace("{id}", encodeURIComponent(String(id)));
+    const queryParams = new Map<string, any>();
+
+    let bodyJson : string = "";
 
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("POST", options, bodyJson);
