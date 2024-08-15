@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-import { ApiSession } from "packages/mezon-js/dist/api.gen";
+import { ApiSession, ApiUser } from "packages/mezon-js/dist/api.gen";
 import { MezonApi, ApiAuthenticateLogoutRequest, ApiAuthenticateRefreshRequest, ApiUpdateMessageRequest } from "./api";
-
+import { Socket, MessageReactionEvent, VoiceJoinedEvent, ChannelMessageEvent } from "mezon-js"
 import { Session } from "./session";
 
 const DEFAULT_HOST = "127.0.0.1";
@@ -50,6 +50,28 @@ export class Client {
   /** Authenticate a user with an ID against the server. */
   async authenticate(token: string) {
     return this.apiClient.mezonAuthenticate(token).then((apiSession : ApiSession) => {
+      const socket = await createSocket();
+      const session = await socket.connect(apiSession, true);
+      socket.onvoicejoined = onvoicejoined;
+      socket.onvoiceleaved = onvoiceleaved;
+      socket.onchannelmessage = onchannelmessage;
+      socket.onchannelpresence = onchannelpresence;
+      socket.ondisconnect = ondisconnect;
+      socket.onerror = onerror;
+      socket.onmessagetyping = onmessagetyping;
+      socket.onmessagereaction = onmessagereaction;
+      socket.onnotification = onnotification;
+      socket.onpinmessage = onpinmessage;
+      socket.onuserchannelremoved = onuserchannelremoved;
+      socket.onuserclanremoved = onuserclanremoved;
+      socket.onuserchanneladded = onuserchanneladded;
+      socket.onclanprofileupdated = onclanprofileupdated;
+      socket.oncustomstatus = oncustomstatus;
+      socket.onstatuspresence = onstatuspresence;
+      socket.onchannelcreated = onchannelcreated;
+      socket.onchanneldeleted = onchanneldeleted;
+      socket.onchannelupdated = onchannelupdated;
+      socket.onheartbeattimeout = onHeartbeatTimeout;
       return Promise.resolve(new Session(apiSession.token || "", apiSession.refresh_token || ""));
     });
   }
@@ -106,4 +128,12 @@ export class Client {
       return Promise.resolve(response !== undefined);
     });
   }
+
+  /** Receive clan evnet. */
+  onMessage: (channelMessage: ChannelMessageEvent) => void;
+  onClanMemberUpdate: (oldMember: ApiUser, newMember: ApiUser) => void;
+  onMessageDelete: (channelMessage: ChannelMessageEvent) => void;
+  onMessageReactionAdd: (messageReactionEvent: MessageReactionEvent) => void;
+  onVoiceStateUpdate: (voiceState: VoiceJoinedEvent) => void;
+  onMessageReactionRemove: (messageReactionEvent: MessageReactionEvent) => void;
 };
