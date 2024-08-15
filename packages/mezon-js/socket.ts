@@ -731,6 +731,19 @@ export interface HashtagDm {
   parrent_id?: string;
 }
 
+export interface ApiGetNotificationEvent {
+  //
+  active?: number;
+  //
+  id?: string;
+  //
+  notification_setting_type?: number;
+  //
+  time_mute?: string;
+  // The channel id.
+  channel_id?: string;
+}
+
 /** A socket connection to Mezon server. */
 export interface Socket {
   /** Connection is Open */
@@ -890,6 +903,8 @@ export interface Socket {
   ListChannelByUserId(): Promise<ChannelDescListEvent>;
   
   hashtagDMList(user_id: Array<string>, limit: number): Promise<HashtagDmListEvent>;
+
+  getNotificationChannelSetting(channel_id: string): Promise<ApiGetNotificationEvent>;
 }
 
 /** Reports an error received from a socket message. */
@@ -1446,6 +1461,11 @@ export class DefaultSocket implements Socket {
   async listClanStickersByClanId(clan_id: string): Promise<StrickerListedEvent> {
     const response = await this.send({sticker_listed_event: {clan_id: clan_id}});
     return response.sticker_listed_event
+  }
+
+  async  getNotificationChannelSetting(channel_id: string): Promise<ApiGetNotificationEvent> {
+    const response = await this.send({notification_channel_event: {channel_id: channel_id}})
+    return response.notification_channel_event
   }
 
   private async pingPong(): Promise<void> {
