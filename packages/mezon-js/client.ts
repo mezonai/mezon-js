@@ -98,6 +98,8 @@ import {
   MezonChangeChannelCategoryBody,
   ApiPermissionRoleChannelList,
   ApiUpdateRoleChannelRequest,
+  ApiAddAppRequest,
+  ApiAppList,
 } from "./api.gen";
 
 import { Session } from "./session";
@@ -2310,8 +2312,8 @@ async changeChannelCategory(session: Session, id: string, request: MezonChangeCh
 /** */
 async getListPermissionRoleChannel(session: Session, roleId: string, channelId: string): Promise<ApiPermissionRoleChannelList> {
   if (this.autoRefreshSession && session.refresh_token &&
-      session.isexpired((Date.now() + this.expiredTimespanMs)/1000)) {
-      await this.sessionRefresh(session);
+    session.isexpired((Date.now() + this.expiredTimespanMs)/1000)) {
+    await this.sessionRefresh(session);
   }
 
   return this.apiClient.getListPermissionRoleChannel(session.token, roleId, channelId).then((response: ApiPermissionRoleChannelList) => {
@@ -2322,13 +2324,35 @@ async getListPermissionRoleChannel(session: Session, roleId: string, channelId: 
 /** */
 async setRoleChannelPermission(session: Session, request: ApiUpdateRoleChannelRequest): Promise<boolean> {
   if (this.autoRefreshSession && session.refresh_token &&
-      session.isexpired((Date.now() + this.expiredTimespanMs)/1000)) {
-      await this.sessionRefresh(session);
+    session.isexpired((Date.now() + this.expiredTimespanMs)/1000)) {
+    await this.sessionRefresh(session);
   }
  
   return this.apiClient.setRoleChannelPermission(session.token, request).then((response: any) => {
     return response !== undefined;
   });
  }
+
+async addApp(session: Session, request: ApiAddAppRequest): Promise<boolean> {
+  if (this.autoRefreshSession && session.refresh_token &&
+    session.isexpired((Date.now() + this.expiredTimespanMs)/1000)) {
+    await this.sessionRefresh(session);
+  }
+
+  return this.apiClient.addApp(session.token, request).then((response: any) => {
+    return response !== undefined;
+  });
+}
+
+async ListApp(session: Session): Promise<ApiAppList> {
+  if (this.autoRefreshSession && session.refresh_token &&
+    session.isexpired((Date.now() + this.expiredTimespanMs)/1000)) {
+    await this.sessionRefresh(session);
+  }
+
+  return this.apiClient.listApps(session.token).then((response: ApiAppList) => {
+    return Promise.resolve(response);
+  });
+}
 
 };
