@@ -1089,18 +1089,6 @@ export interface ApiNotificationSetting {
 }
 
 /**  */
-export interface ApiNotificationUserChannel {
-  //
-  active?: number;
-  //
-  id?: string;
-  //
-  notification_setting_type?: number;
-  //
-  time_mute?: string;
-}
-
-/**  */
 export interface ApiPermission {
   //
   active?: number;
