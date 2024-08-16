@@ -1030,7 +1030,10 @@ export interface FCMTokens {
 }
 
 export interface ClanNameExistedEvent {
+  /** clan name */
   clan_name: string;
+  /** is exist */
+  exist: boolean;
 }
 
 export interface NotificationChannelSettingEvent {
@@ -6968,13 +6971,16 @@ export const FCMTokens = {
 };
 
 function createBaseClanNameExistedEvent(): ClanNameExistedEvent {
-  return { clan_name: "" };
+  return { clan_name: "", exist: false };
 }
 
 export const ClanNameExistedEvent = {
   encode(message: ClanNameExistedEvent, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.clan_name !== "") {
       writer.uint32(10).string(message.clan_name);
+    }
+    if (message.exist === true) {
+      writer.uint32(16).bool(message.exist);
     }
     return writer;
   },
@@ -6989,6 +6995,9 @@ export const ClanNameExistedEvent = {
         case 1:
           message.clan_name = reader.string();
           break;
+        case 2:
+          message.exist = reader.bool();
+          break;
         default:
           reader.skipType(tag & 7);
           break;
@@ -6998,12 +7007,16 @@ export const ClanNameExistedEvent = {
   },
 
   fromJSON(object: any): ClanNameExistedEvent {
-    return { clan_name: isSet(object.clan_name) ? String(object.clan_name) : "" };
+    return {
+      clan_name: isSet(object.clan_name) ? String(object.clan_name) : "",
+      exist: isSet(object.exist) ? Boolean(object.exist) : false,
+    };
   },
 
   toJSON(message: ClanNameExistedEvent): unknown {
     const obj: any = {};
     message.clan_name !== undefined && (obj.clan_name = message.clan_name);
+    message.exist !== undefined && (obj.exist = message.exist);
     return obj;
   },
 
@@ -7014,6 +7027,7 @@ export const ClanNameExistedEvent = {
   fromPartial<I extends Exact<DeepPartial<ClanNameExistedEvent>, I>>(object: I): ClanNameExistedEvent {
     const message = createBaseClanNameExistedEvent();
     message.clan_name = object.clan_name ?? "";
+    message.exist = object.exist ?? false;
     return message;
   },
 };
