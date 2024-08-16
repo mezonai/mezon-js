@@ -732,6 +732,13 @@ export interface HashtagDm {
 }
 
 export interface NotificationChannelSettingEvent {
+  // The channel id.
+  channel_id?: string;
+  //
+  notification_user_channel?: NotificationUserChannel;
+}
+
+export interface NotificationUserChannel {
   //
   active?: number;
   //
@@ -740,35 +747,37 @@ export interface NotificationChannelSettingEvent {
   notification_setting_type?: number;
   //
   time_mute?: string;
-  // The channel id.
-  channel_id?: string;
 }
 
 export interface NotificationCategorySettingEvent {
   //
-  active?: number;
-  //
-  id?: string;
-  //
-  notification_setting_type?: number;
-  //
-  time_mute?: string;
-  //
   category_id?: string;
+  //
+  notification_user_channel?: NotificationUserChannel;
 }
 
 export interface NotificationClanSettingEvent {
+  // The clan of this channel
+  clan_id?: string;
+  //
+  notification_setting?: NotificationSetting;
+}
+
+export interface NotificationSetting {
   //
   id?: string;
   //
   notification_setting_type?: number;
-  // The clan of this channel
-  clan_id?: string;
 }
 
 export interface NotifiReactMessageEvent {
   //
   channel_id?: string;
+  //
+  notifi_react_message?:  NotifiReactMessage;
+}
+
+export interface NotifiReactMessage {
   //
   id?: string;
   //
