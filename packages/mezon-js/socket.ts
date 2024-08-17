@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-import {ApiChannelMessage, ApiMessageAttachment, ApiMessageMention, ApiMessageReaction, ApiMessageRef, ApiNotification, ApiRpc} from "./api.gen";
+import { ApiMessageAttachment, ApiMessageMention, ApiMessageReaction, ApiMessageRef, ApiNotification, ApiRpc} from "./api.gen";
 import {Session} from "./session";
-import {Notification} from "./client";
+import {ChannelMessage, Notification} from "./client";
 import {WebSocketAdapter, WebSocketAdapterText} from "./web_socket_adapter"
 
 /** Stores function references for resolve/reject with a DOM Promise. */
@@ -737,7 +737,7 @@ export interface Socket {
   oncustomstatus: (statusEvent: CustomStatusEvent) => void;
 
   /** Receive channel message. */
-  onchannelmessage: (channelMessage: ApiChannelMessage) => void;
+  onchannelmessage: (channelMessage: ChannelMessage) => void;
 
   /** Receive typing event */
   onmessagetyping: (messageTypingEvent: MessageTypingEvent) => void;
@@ -936,7 +936,8 @@ export class DefaultSocket implements Socket {
           } catch(e) {
             //console.log("references is invalid", e);
           }
-          var e: ApiChannelMessage = {
+          var e: ChannelMessage = {
+            id: message.id,
             avatar: message.channel_message.avatar,
             channel_id: message.channel_message.channel_id,
             mode: message.channel_message.mode,
@@ -1063,7 +1064,7 @@ export class DefaultSocket implements Socket {
     }
   }
 
-  onchannelmessage(channelMessage: ApiChannelMessage) {
+  onchannelmessage(channelMessage: ChannelMessage) {
     if (this.verbose && window && window.console) {
       console.log(channelMessage);
     }

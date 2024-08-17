@@ -477,6 +477,8 @@ export interface ApiChannelDescription {
 
 /** A message sent on a channel. */
 export interface ApiChannelMessage {
+  // id
+  id: string;
   //
   attachments?: string;
   //
@@ -951,15 +953,15 @@ export interface ApiMessageAttachment {
   //
   width?: number;
   /** The channel this message belongs to. */
-  channel_id:string;
+  channel_id?:string;
   // The mode
-  mode: number;
+  mode?: number;
   // The channel label
-  channel_label: string;
+  channel_label?: string;
   /** The message that user react */
-  message_id: string;
+  message_id?: string;
   /** Message sender, usually a user ID. */
-  sender_id: string;
+  sender_id?: string;
 }
 
 /**  */
@@ -989,15 +991,15 @@ export interface ApiMessageMention {
   // end position
   e?: number;
   /** The channel this message belongs to. */
-  channel_id:string;
+  channel_id?:string;
 // The mode
-  mode: number;
+  mode?: number;
   // The channel label
-  channel_label: string;
+  channel_label?: string;
   /** The message that user react */
-  message_id: string;
+  message_id?: string;
   /** Message sender, usually a user ID. */
-  sender_id: string;
+  sender_id?: string;
 }
 
 /**  */

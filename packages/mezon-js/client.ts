@@ -243,6 +243,10 @@ export interface ChannelMessage {
   create_time_ms?: number;
   //
   update_time_ms?: number;
+  //
+  mode?: number;
+  //
+  message_id?: string;
 }
 
 /** A list of channel messages, usually a result of a list operation. */
@@ -1038,7 +1042,7 @@ export class Client {
       var result: ChannelMessageList = {
         messages: [],
         last_seen_message: response.last_seen_message,
-        last_sent_message:  response.last_sent_message
+        last_sent_message: response.last_sent_message
       };
 
       if (response.messages == null) {
