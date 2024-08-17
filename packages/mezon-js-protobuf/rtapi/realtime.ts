@@ -1,7 +1,14 @@
 /* eslint-disable */
-import Long from "long";
 import _m0 from "protobufjs/minimal";
-import { ChannelMessage, Notification, Rpc } from "../api/api";
+import {
+  ChannelMessage,
+  MessageAttachment,
+  MessageMention,
+  MessageReaction,
+  MessageRef,
+  Notification,
+  Rpc,
+} from "../api/api";
 import { Timestamp } from "../google/protobuf/timestamp";
 import { BoolValue, Int32Value, StringValue } from "../google/protobuf/wrappers";
 
@@ -110,7 +117,7 @@ export interface Envelope {
     | undefined;
   /** User send reactoin event */
   message_reaction_event?:
-    | MessageReactionEvent
+    | MessageReaction
     | undefined;
   /** user join voice channel */
   voice_joined_event?:
@@ -204,7 +211,7 @@ export interface Envelope {
   notification_clan_setting_event?:
     | NotificationClanSettingEvent
     | undefined;
-  /**  */
+  /** notifiReactMessage Event */
   notifi_react_message_event?: NotifiReactMessageEvent | undefined;
 }
 
@@ -371,62 +378,6 @@ export interface ChannelMessageAck {
   clan_logo: string;
   /** The category name */
   category_name: string;
-}
-
-/** Mention to message */
-export interface MessageMention {
-  /** mention user id */
-  user_id: string;
-  /** mention username */
-  username: string;
-  /** role id */
-  role_id: string;
-  /** role name */
-  rolename: string;
-  /** start position from text */
-  s: number;
-  /** end position from text */
-  e: number;
-}
-
-/** Message attachment */
-export interface MessageAttachment {
-  /** Attachment file name */
-  filename: string;
-  /** Attachment file size */
-  size: number;
-  /** Attachment url */
-  url: string;
-  /** Attachment file type */
-  filetype: string;
-  /** Attachment width */
-  width: number;
-  /** Attachment width */
-  height: number;
-}
-
-/** Message reference */
-export interface MessageRef {
-  /** A message source */
-  message_id: string;
-  /** A message reference to */
-  message_ref_id: string;
-  /** original message sender */
-  message_sender_id: string;
-  /** original message sendre username */
-  message_sender_username: string;
-  /** original message sender avatar */
-  mesages_sender_avatar: string;
-  /** original sender clan nick name */
-  message_sender_clan_nick: string;
-  /** original sender display name */
-  message_sender_display_name: string;
-  /** content reference */
-  content: string;
-  /** has attachment */
-  has_attachment: boolean;
-  /** Reference type. 0: reply */
-  ref_type: number;
 }
 
 /** Send a message to a realtime channel. */
@@ -665,80 +616,6 @@ export interface MessageTypingEvent {
   /** The channel this message belongs to. */
   channel_id: string;
   /** Message sender, usually a user ID. */
-  sender_id: string;
-  /** mode */
-  mode: number;
-}
-
-/** Mention to message */
-export interface MessageMentionEvent {
-  /** The channel this message belongs to. */
-  channel_id: string;
-  /** React to message */
-  message_id: string;
-  /** mention user id */
-  user_id: string;
-  /** mention username */
-  username: string;
-  /** sender id */
-  sender_id: string;
-  /** mode */
-  mode: number;
-  /** start position from text */
-  s: number;
-  /** end position from text */
-  e: number;
-}
-
-/** Message reacton event data */
-export interface MessageReactionEvent {
-  /** reaction id */
-  id: string;
-  /** the clan id */
-  clan_id: string;
-  /** The channel this message belongs to. */
-  channel_id: string;
-  /** React to message */
-  message_id: string;
-  /** Message sender, usually a user ID. */
-  sender_id: string;
-  /** Sender name */
-  sender_name: string;
-  /** avatar */
-  sender_avatar: string;
-  /** emoji id */
-  emoji_id: string;
-  /** emoji text */
-  emoji: string;
-  /** action (add, delete) */
-  action: boolean;
-  /** sender original message */
-  message_sender_id: string;
-  /** count */
-  count: number;
-  /** mode */
-  mode: number;
-}
-
-/** Message attachment */
-export interface MessageAttachmentEvent {
-  /** The channel this message belongs to. */
-  channel_id: string;
-  /** React to message */
-  message_id: string;
-  /** Attachment file name */
-  filename: string;
-  /** Attachment file size */
-  size: number;
-  /** Attachment url */
-  url: string;
-  /** Attachment file type */
-  filetype: string;
-  /** Attachment width */
-  width: number;
-  /** Attachment width */
-  height: number;
-  /** sender id */
   sender_id: string;
   /** mode */
   mode: number;
@@ -1077,7 +954,9 @@ export interface NotificationSetting {
 
 /** Notification channel */
 export interface NotifiReactMessageEvent {
+  /** channel id */
   channel_id: string;
+  /** notification message */
   notifi_react_message: NotifiReactMessage | undefined;
 }
 
@@ -1224,7 +1103,7 @@ export const Envelope = {
       LastSeenMessageEvent.encode(message.last_seen_message_event, writer.uint32(202).fork()).ldelim();
     }
     if (message.message_reaction_event !== undefined) {
-      MessageReactionEvent.encode(message.message_reaction_event, writer.uint32(210).fork()).ldelim();
+      MessageReaction.encode(message.message_reaction_event, writer.uint32(210).fork()).ldelim();
     }
     if (message.voice_joined_event !== undefined) {
       VoiceJoinedEvent.encode(message.voice_joined_event, writer.uint32(218).fork()).ldelim();
@@ -1386,7 +1265,7 @@ export const Envelope = {
           message.last_seen_message_event = LastSeenMessageEvent.decode(reader, reader.uint32());
           break;
         case 26:
-          message.message_reaction_event = MessageReactionEvent.decode(reader, reader.uint32());
+          message.message_reaction_event = MessageReaction.decode(reader, reader.uint32());
           break;
         case 27:
           message.voice_joined_event = VoiceJoinedEvent.decode(reader, reader.uint32());
@@ -1517,7 +1396,7 @@ export const Envelope = {
         ? LastSeenMessageEvent.fromJSON(object.last_seen_message_event)
         : undefined,
       message_reaction_event: isSet(object.message_reaction_event)
-        ? MessageReactionEvent.fromJSON(object.message_reaction_event)
+        ? MessageReaction.fromJSON(object.message_reaction_event)
         : undefined,
       voice_joined_event: isSet(object.voice_joined_event)
         ? VoiceJoinedEvent.fromJSON(object.voice_joined_event)
@@ -1649,7 +1528,7 @@ export const Envelope = {
       ? LastSeenMessageEvent.toJSON(message.last_seen_message_event)
       : undefined);
     message.message_reaction_event !== undefined && (obj.message_reaction_event = message.message_reaction_event
-      ? MessageReactionEvent.toJSON(message.message_reaction_event)
+      ? MessageReaction.toJSON(message.message_reaction_event)
       : undefined);
     message.voice_joined_event !== undefined && (obj.voice_joined_event = message.voice_joined_event
       ? VoiceJoinedEvent.toJSON(message.voice_joined_event)
@@ -1813,7 +1692,7 @@ export const Envelope = {
         : undefined;
     message.message_reaction_event =
       (object.message_reaction_event !== undefined && object.message_reaction_event !== null)
-        ? MessageReactionEvent.fromPartial(object.message_reaction_event)
+        ? MessageReaction.fromPartial(object.message_reaction_event)
         : undefined;
     message.voice_joined_event = (object.voice_joined_event !== undefined && object.voice_joined_event !== null)
       ? VoiceJoinedEvent.fromPartial(object.voice_joined_event)
@@ -3055,350 +2934,6 @@ export const ChannelMessageAck = {
   },
 };
 
-function createBaseMessageMention(): MessageMention {
-  return { user_id: "", username: "", role_id: "", rolename: "", s: 0, e: 0 };
-}
-
-export const MessageMention = {
-  encode(message: MessageMention, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.user_id !== "") {
-      writer.uint32(10).string(message.user_id);
-    }
-    if (message.username !== "") {
-      writer.uint32(18).string(message.username);
-    }
-    if (message.role_id !== "") {
-      writer.uint32(26).string(message.role_id);
-    }
-    if (message.rolename !== "") {
-      writer.uint32(34).string(message.rolename);
-    }
-    if (message.s !== 0) {
-      writer.uint32(40).int32(message.s);
-    }
-    if (message.e !== 0) {
-      writer.uint32(48).int32(message.e);
-    }
-    return writer;
-  },
-
-  decode(input: _m0.Reader | Uint8Array, length?: number): MessageMention {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseMessageMention();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
-          message.user_id = reader.string();
-          break;
-        case 2:
-          message.username = reader.string();
-          break;
-        case 3:
-          message.role_id = reader.string();
-          break;
-        case 4:
-          message.rolename = reader.string();
-          break;
-        case 5:
-          message.s = reader.int32();
-          break;
-        case 6:
-          message.e = reader.int32();
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
-      }
-    }
-    return message;
-  },
-
-  fromJSON(object: any): MessageMention {
-    return {
-      user_id: isSet(object.user_id) ? String(object.user_id) : "",
-      username: isSet(object.username) ? String(object.username) : "",
-      role_id: isSet(object.role_id) ? String(object.role_id) : "",
-      rolename: isSet(object.rolename) ? String(object.rolename) : "",
-      s: isSet(object.s) ? Number(object.s) : 0,
-      e: isSet(object.e) ? Number(object.e) : 0,
-    };
-  },
-
-  toJSON(message: MessageMention): unknown {
-    const obj: any = {};
-    message.user_id !== undefined && (obj.user_id = message.user_id);
-    message.username !== undefined && (obj.username = message.username);
-    message.role_id !== undefined && (obj.role_id = message.role_id);
-    message.rolename !== undefined && (obj.rolename = message.rolename);
-    message.s !== undefined && (obj.s = Math.round(message.s));
-    message.e !== undefined && (obj.e = Math.round(message.e));
-    return obj;
-  },
-
-  create<I extends Exact<DeepPartial<MessageMention>, I>>(base?: I): MessageMention {
-    return MessageMention.fromPartial(base ?? {});
-  },
-
-  fromPartial<I extends Exact<DeepPartial<MessageMention>, I>>(object: I): MessageMention {
-    const message = createBaseMessageMention();
-    message.user_id = object.user_id ?? "";
-    message.username = object.username ?? "";
-    message.role_id = object.role_id ?? "";
-    message.rolename = object.rolename ?? "";
-    message.s = object.s ?? 0;
-    message.e = object.e ?? 0;
-    return message;
-  },
-};
-
-function createBaseMessageAttachment(): MessageAttachment {
-  return { filename: "", size: 0, url: "", filetype: "", width: 0, height: 0 };
-}
-
-export const MessageAttachment = {
-  encode(message: MessageAttachment, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.filename !== "") {
-      writer.uint32(10).string(message.filename);
-    }
-    if (message.size !== 0) {
-      writer.uint32(16).int64(message.size);
-    }
-    if (message.url !== "") {
-      writer.uint32(26).string(message.url);
-    }
-    if (message.filetype !== "") {
-      writer.uint32(34).string(message.filetype);
-    }
-    if (message.width !== 0) {
-      writer.uint32(40).int32(message.width);
-    }
-    if (message.height !== 0) {
-      writer.uint32(48).int32(message.height);
-    }
-    return writer;
-  },
-
-  decode(input: _m0.Reader | Uint8Array, length?: number): MessageAttachment {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseMessageAttachment();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
-          message.filename = reader.string();
-          break;
-        case 2:
-          message.size = longToNumber(reader.int64() as Long);
-          break;
-        case 3:
-          message.url = reader.string();
-          break;
-        case 4:
-          message.filetype = reader.string();
-          break;
-        case 5:
-          message.width = reader.int32();
-          break;
-        case 6:
-          message.height = reader.int32();
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
-      }
-    }
-    return message;
-  },
-
-  fromJSON(object: any): MessageAttachment {
-    return {
-      filename: isSet(object.filename) ? String(object.filename) : "",
-      size: isSet(object.size) ? Number(object.size) : 0,
-      url: isSet(object.url) ? String(object.url) : "",
-      filetype: isSet(object.filetype) ? String(object.filetype) : "",
-      width: isSet(object.width) ? Number(object.width) : 0,
-      height: isSet(object.height) ? Number(object.height) : 0,
-    };
-  },
-
-  toJSON(message: MessageAttachment): unknown {
-    const obj: any = {};
-    message.filename !== undefined && (obj.filename = message.filename);
-    message.size !== undefined && (obj.size = Math.round(message.size));
-    message.url !== undefined && (obj.url = message.url);
-    message.filetype !== undefined && (obj.filetype = message.filetype);
-    message.width !== undefined && (obj.width = Math.round(message.width));
-    message.height !== undefined && (obj.height = Math.round(message.height));
-    return obj;
-  },
-
-  create<I extends Exact<DeepPartial<MessageAttachment>, I>>(base?: I): MessageAttachment {
-    return MessageAttachment.fromPartial(base ?? {});
-  },
-
-  fromPartial<I extends Exact<DeepPartial<MessageAttachment>, I>>(object: I): MessageAttachment {
-    const message = createBaseMessageAttachment();
-    message.filename = object.filename ?? "";
-    message.size = object.size ?? 0;
-    message.url = object.url ?? "";
-    message.filetype = object.filetype ?? "";
-    message.width = object.width ?? 0;
-    message.height = object.height ?? 0;
-    return message;
-  },
-};
-
-function createBaseMessageRef(): MessageRef {
-  return {
-    message_id: "",
-    message_ref_id: "",
-    message_sender_id: "",
-    message_sender_username: "",
-    mesages_sender_avatar: "",
-    message_sender_clan_nick: "",
-    message_sender_display_name: "",
-    content: "",
-    has_attachment: false,
-    ref_type: 0,
-  };
-}
-
-export const MessageRef = {
-  encode(message: MessageRef, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.message_id !== "") {
-      writer.uint32(10).string(message.message_id);
-    }
-    if (message.message_ref_id !== "") {
-      writer.uint32(18).string(message.message_ref_id);
-    }
-    if (message.message_sender_id !== "") {
-      writer.uint32(26).string(message.message_sender_id);
-    }
-    if (message.message_sender_username !== "") {
-      writer.uint32(34).string(message.message_sender_username);
-    }
-    if (message.mesages_sender_avatar !== "") {
-      writer.uint32(42).string(message.mesages_sender_avatar);
-    }
-    if (message.message_sender_clan_nick !== "") {
-      writer.uint32(50).string(message.message_sender_clan_nick);
-    }
-    if (message.message_sender_display_name !== "") {
-      writer.uint32(58).string(message.message_sender_display_name);
-    }
-    if (message.content !== "") {
-      writer.uint32(66).string(message.content);
-    }
-    if (message.has_attachment === true) {
-      writer.uint32(72).bool(message.has_attachment);
-    }
-    if (message.ref_type !== 0) {
-      writer.uint32(80).int32(message.ref_type);
-    }
-    return writer;
-  },
-
-  decode(input: _m0.Reader | Uint8Array, length?: number): MessageRef {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseMessageRef();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
-          message.message_id = reader.string();
-          break;
-        case 2:
-          message.message_ref_id = reader.string();
-          break;
-        case 3:
-          message.message_sender_id = reader.string();
-          break;
-        case 4:
-          message.message_sender_username = reader.string();
-          break;
-        case 5:
-          message.mesages_sender_avatar = reader.string();
-          break;
-        case 6:
-          message.message_sender_clan_nick = reader.string();
-          break;
-        case 7:
-          message.message_sender_display_name = reader.string();
-          break;
-        case 8:
-          message.content = reader.string();
-          break;
-        case 9:
-          message.has_attachment = reader.bool();
-          break;
-        case 10:
-          message.ref_type = reader.int32();
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
-      }
-    }
-    return message;
-  },
-
-  fromJSON(object: any): MessageRef {
-    return {
-      message_id: isSet(object.message_id) ? String(object.message_id) : "",
-      message_ref_id: isSet(object.message_ref_id) ? String(object.message_ref_id) : "",
-      message_sender_id: isSet(object.message_sender_id) ? String(object.message_sender_id) : "",
-      message_sender_username: isSet(object.message_sender_username) ? String(object.message_sender_username) : "",
-      mesages_sender_avatar: isSet(object.mesages_sender_avatar) ? String(object.mesages_sender_avatar) : "",
-      message_sender_clan_nick: isSet(object.message_sender_clan_nick) ? String(object.message_sender_clan_nick) : "",
-      message_sender_display_name: isSet(object.message_sender_display_name)
-        ? String(object.message_sender_display_name)
-        : "",
-      content: isSet(object.content) ? String(object.content) : "",
-      has_attachment: isSet(object.has_attachment) ? Boolean(object.has_attachment) : false,
-      ref_type: isSet(object.ref_type) ? Number(object.ref_type) : 0,
-    };
-  },
-
-  toJSON(message: MessageRef): unknown {
-    const obj: any = {};
-    message.message_id !== undefined && (obj.message_id = message.message_id);
-    message.message_ref_id !== undefined && (obj.message_ref_id = message.message_ref_id);
-    message.message_sender_id !== undefined && (obj.message_sender_id = message.message_sender_id);
-    message.message_sender_username !== undefined && (obj.message_sender_username = message.message_sender_username);
-    message.mesages_sender_avatar !== undefined && (obj.mesages_sender_avatar = message.mesages_sender_avatar);
-    message.message_sender_clan_nick !== undefined && (obj.message_sender_clan_nick = message.message_sender_clan_nick);
-    message.message_sender_display_name !== undefined &&
-      (obj.message_sender_display_name = message.message_sender_display_name);
-    message.content !== undefined && (obj.content = message.content);
-    message.has_attachment !== undefined && (obj.has_attachment = message.has_attachment);
-    message.ref_type !== undefined && (obj.ref_type = Math.round(message.ref_type));
-    return obj;
-  },
-
-  create<I extends Exact<DeepPartial<MessageRef>, I>>(base?: I): MessageRef {
-    return MessageRef.fromPartial(base ?? {});
-  },
-
-  fromPartial<I extends Exact<DeepPartial<MessageRef>, I>>(object: I): MessageRef {
-    const message = createBaseMessageRef();
-    message.message_id = object.message_id ?? "";
-    message.message_ref_id = object.message_ref_id ?? "";
-    message.message_sender_id = object.message_sender_id ?? "";
-    message.message_sender_username = object.message_sender_username ?? "";
-    message.mesages_sender_avatar = object.mesages_sender_avatar ?? "";
-    message.message_sender_clan_nick = object.message_sender_clan_nick ?? "";
-    message.message_sender_display_name = object.message_sender_display_name ?? "";
-    message.content = object.content ?? "";
-    message.has_attachment = object.has_attachment ?? false;
-    message.ref_type = object.ref_type ?? 0;
-    return message;
-  },
-};
-
 function createBaseChannelMessageSend(): ChannelMessageSend {
   return {
     clan_id: "",
@@ -4612,442 +4147,6 @@ export const MessageTypingEvent = {
     const message = createBaseMessageTypingEvent();
     message.clan_id = object.clan_id ?? "";
     message.channel_id = object.channel_id ?? "";
-    message.sender_id = object.sender_id ?? "";
-    message.mode = object.mode ?? 0;
-    return message;
-  },
-};
-
-function createBaseMessageMentionEvent(): MessageMentionEvent {
-  return { channel_id: "", message_id: "", user_id: "", username: "", sender_id: "", mode: 0, s: 0, e: 0 };
-}
-
-export const MessageMentionEvent = {
-  encode(message: MessageMentionEvent, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.channel_id !== "") {
-      writer.uint32(10).string(message.channel_id);
-    }
-    if (message.message_id !== "") {
-      writer.uint32(18).string(message.message_id);
-    }
-    if (message.user_id !== "") {
-      writer.uint32(26).string(message.user_id);
-    }
-    if (message.username !== "") {
-      writer.uint32(34).string(message.username);
-    }
-    if (message.sender_id !== "") {
-      writer.uint32(42).string(message.sender_id);
-    }
-    if (message.mode !== 0) {
-      writer.uint32(48).int32(message.mode);
-    }
-    if (message.s !== 0) {
-      writer.uint32(56).int32(message.s);
-    }
-    if (message.e !== 0) {
-      writer.uint32(64).int32(message.e);
-    }
-    return writer;
-  },
-
-  decode(input: _m0.Reader | Uint8Array, length?: number): MessageMentionEvent {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseMessageMentionEvent();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
-          message.channel_id = reader.string();
-          break;
-        case 2:
-          message.message_id = reader.string();
-          break;
-        case 3:
-          message.user_id = reader.string();
-          break;
-        case 4:
-          message.username = reader.string();
-          break;
-        case 5:
-          message.sender_id = reader.string();
-          break;
-        case 6:
-          message.mode = reader.int32();
-          break;
-        case 7:
-          message.s = reader.int32();
-          break;
-        case 8:
-          message.e = reader.int32();
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
-      }
-    }
-    return message;
-  },
-
-  fromJSON(object: any): MessageMentionEvent {
-    return {
-      channel_id: isSet(object.channel_id) ? String(object.channel_id) : "",
-      message_id: isSet(object.message_id) ? String(object.message_id) : "",
-      user_id: isSet(object.user_id) ? String(object.user_id) : "",
-      username: isSet(object.username) ? String(object.username) : "",
-      sender_id: isSet(object.sender_id) ? String(object.sender_id) : "",
-      mode: isSet(object.mode) ? Number(object.mode) : 0,
-      s: isSet(object.s) ? Number(object.s) : 0,
-      e: isSet(object.e) ? Number(object.e) : 0,
-    };
-  },
-
-  toJSON(message: MessageMentionEvent): unknown {
-    const obj: any = {};
-    message.channel_id !== undefined && (obj.channel_id = message.channel_id);
-    message.message_id !== undefined && (obj.message_id = message.message_id);
-    message.user_id !== undefined && (obj.user_id = message.user_id);
-    message.username !== undefined && (obj.username = message.username);
-    message.sender_id !== undefined && (obj.sender_id = message.sender_id);
-    message.mode !== undefined && (obj.mode = Math.round(message.mode));
-    message.s !== undefined && (obj.s = Math.round(message.s));
-    message.e !== undefined && (obj.e = Math.round(message.e));
-    return obj;
-  },
-
-  create<I extends Exact<DeepPartial<MessageMentionEvent>, I>>(base?: I): MessageMentionEvent {
-    return MessageMentionEvent.fromPartial(base ?? {});
-  },
-
-  fromPartial<I extends Exact<DeepPartial<MessageMentionEvent>, I>>(object: I): MessageMentionEvent {
-    const message = createBaseMessageMentionEvent();
-    message.channel_id = object.channel_id ?? "";
-    message.message_id = object.message_id ?? "";
-    message.user_id = object.user_id ?? "";
-    message.username = object.username ?? "";
-    message.sender_id = object.sender_id ?? "";
-    message.mode = object.mode ?? 0;
-    message.s = object.s ?? 0;
-    message.e = object.e ?? 0;
-    return message;
-  },
-};
-
-function createBaseMessageReactionEvent(): MessageReactionEvent {
-  return {
-    id: "",
-    clan_id: "",
-    channel_id: "",
-    message_id: "",
-    sender_id: "",
-    sender_name: "",
-    sender_avatar: "",
-    emoji_id: "",
-    emoji: "",
-    action: false,
-    message_sender_id: "",
-    count: 0,
-    mode: 0,
-  };
-}
-
-export const MessageReactionEvent = {
-  encode(message: MessageReactionEvent, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.id !== "") {
-      writer.uint32(10).string(message.id);
-    }
-    if (message.clan_id !== "") {
-      writer.uint32(18).string(message.clan_id);
-    }
-    if (message.channel_id !== "") {
-      writer.uint32(26).string(message.channel_id);
-    }
-    if (message.message_id !== "") {
-      writer.uint32(34).string(message.message_id);
-    }
-    if (message.sender_id !== "") {
-      writer.uint32(42).string(message.sender_id);
-    }
-    if (message.sender_name !== "") {
-      writer.uint32(50).string(message.sender_name);
-    }
-    if (message.sender_avatar !== "") {
-      writer.uint32(58).string(message.sender_avatar);
-    }
-    if (message.emoji_id !== "") {
-      writer.uint32(66).string(message.emoji_id);
-    }
-    if (message.emoji !== "") {
-      writer.uint32(74).string(message.emoji);
-    }
-    if (message.action === true) {
-      writer.uint32(80).bool(message.action);
-    }
-    if (message.message_sender_id !== "") {
-      writer.uint32(90).string(message.message_sender_id);
-    }
-    if (message.count !== 0) {
-      writer.uint32(96).int32(message.count);
-    }
-    if (message.mode !== 0) {
-      writer.uint32(104).int32(message.mode);
-    }
-    return writer;
-  },
-
-  decode(input: _m0.Reader | Uint8Array, length?: number): MessageReactionEvent {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseMessageReactionEvent();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
-          message.id = reader.string();
-          break;
-        case 2:
-          message.clan_id = reader.string();
-          break;
-        case 3:
-          message.channel_id = reader.string();
-          break;
-        case 4:
-          message.message_id = reader.string();
-          break;
-        case 5:
-          message.sender_id = reader.string();
-          break;
-        case 6:
-          message.sender_name = reader.string();
-          break;
-        case 7:
-          message.sender_avatar = reader.string();
-          break;
-        case 8:
-          message.emoji_id = reader.string();
-          break;
-        case 9:
-          message.emoji = reader.string();
-          break;
-        case 10:
-          message.action = reader.bool();
-          break;
-        case 11:
-          message.message_sender_id = reader.string();
-          break;
-        case 12:
-          message.count = reader.int32();
-          break;
-        case 13:
-          message.mode = reader.int32();
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
-      }
-    }
-    return message;
-  },
-
-  fromJSON(object: any): MessageReactionEvent {
-    return {
-      id: isSet(object.id) ? String(object.id) : "",
-      clan_id: isSet(object.clan_id) ? String(object.clan_id) : "",
-      channel_id: isSet(object.channel_id) ? String(object.channel_id) : "",
-      message_id: isSet(object.message_id) ? String(object.message_id) : "",
-      sender_id: isSet(object.sender_id) ? String(object.sender_id) : "",
-      sender_name: isSet(object.sender_name) ? String(object.sender_name) : "",
-      sender_avatar: isSet(object.sender_avatar) ? String(object.sender_avatar) : "",
-      emoji_id: isSet(object.emoji_id) ? String(object.emoji_id) : "",
-      emoji: isSet(object.emoji) ? String(object.emoji) : "",
-      action: isSet(object.action) ? Boolean(object.action) : false,
-      message_sender_id: isSet(object.message_sender_id) ? String(object.message_sender_id) : "",
-      count: isSet(object.count) ? Number(object.count) : 0,
-      mode: isSet(object.mode) ? Number(object.mode) : 0,
-    };
-  },
-
-  toJSON(message: MessageReactionEvent): unknown {
-    const obj: any = {};
-    message.id !== undefined && (obj.id = message.id);
-    message.clan_id !== undefined && (obj.clan_id = message.clan_id);
-    message.channel_id !== undefined && (obj.channel_id = message.channel_id);
-    message.message_id !== undefined && (obj.message_id = message.message_id);
-    message.sender_id !== undefined && (obj.sender_id = message.sender_id);
-    message.sender_name !== undefined && (obj.sender_name = message.sender_name);
-    message.sender_avatar !== undefined && (obj.sender_avatar = message.sender_avatar);
-    message.emoji_id !== undefined && (obj.emoji_id = message.emoji_id);
-    message.emoji !== undefined && (obj.emoji = message.emoji);
-    message.action !== undefined && (obj.action = message.action);
-    message.message_sender_id !== undefined && (obj.message_sender_id = message.message_sender_id);
-    message.count !== undefined && (obj.count = Math.round(message.count));
-    message.mode !== undefined && (obj.mode = Math.round(message.mode));
-    return obj;
-  },
-
-  create<I extends Exact<DeepPartial<MessageReactionEvent>, I>>(base?: I): MessageReactionEvent {
-    return MessageReactionEvent.fromPartial(base ?? {});
-  },
-
-  fromPartial<I extends Exact<DeepPartial<MessageReactionEvent>, I>>(object: I): MessageReactionEvent {
-    const message = createBaseMessageReactionEvent();
-    message.id = object.id ?? "";
-    message.clan_id = object.clan_id ?? "";
-    message.channel_id = object.channel_id ?? "";
-    message.message_id = object.message_id ?? "";
-    message.sender_id = object.sender_id ?? "";
-    message.sender_name = object.sender_name ?? "";
-    message.sender_avatar = object.sender_avatar ?? "";
-    message.emoji_id = object.emoji_id ?? "";
-    message.emoji = object.emoji ?? "";
-    message.action = object.action ?? false;
-    message.message_sender_id = object.message_sender_id ?? "";
-    message.count = object.count ?? 0;
-    message.mode = object.mode ?? 0;
-    return message;
-  },
-};
-
-function createBaseMessageAttachmentEvent(): MessageAttachmentEvent {
-  return {
-    channel_id: "",
-    message_id: "",
-    filename: "",
-    size: 0,
-    url: "",
-    filetype: "",
-    width: 0,
-    height: 0,
-    sender_id: "",
-    mode: 0,
-  };
-}
-
-export const MessageAttachmentEvent = {
-  encode(message: MessageAttachmentEvent, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.channel_id !== "") {
-      writer.uint32(10).string(message.channel_id);
-    }
-    if (message.message_id !== "") {
-      writer.uint32(18).string(message.message_id);
-    }
-    if (message.filename !== "") {
-      writer.uint32(26).string(message.filename);
-    }
-    if (message.size !== 0) {
-      writer.uint32(32).int64(message.size);
-    }
-    if (message.url !== "") {
-      writer.uint32(42).string(message.url);
-    }
-    if (message.filetype !== "") {
-      writer.uint32(50).string(message.filetype);
-    }
-    if (message.width !== 0) {
-      writer.uint32(56).int32(message.width);
-    }
-    if (message.height !== 0) {
-      writer.uint32(64).int32(message.height);
-    }
-    if (message.sender_id !== "") {
-      writer.uint32(74).string(message.sender_id);
-    }
-    if (message.mode !== 0) {
-      writer.uint32(80).int32(message.mode);
-    }
-    return writer;
-  },
-
-  decode(input: _m0.Reader | Uint8Array, length?: number): MessageAttachmentEvent {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseMessageAttachmentEvent();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
-          message.channel_id = reader.string();
-          break;
-        case 2:
-          message.message_id = reader.string();
-          break;
-        case 3:
-          message.filename = reader.string();
-          break;
-        case 4:
-          message.size = longToNumber(reader.int64() as Long);
-          break;
-        case 5:
-          message.url = reader.string();
-          break;
-        case 6:
-          message.filetype = reader.string();
-          break;
-        case 7:
-          message.width = reader.int32();
-          break;
-        case 8:
-          message.height = reader.int32();
-          break;
-        case 9:
-          message.sender_id = reader.string();
-          break;
-        case 10:
-          message.mode = reader.int32();
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
-      }
-    }
-    return message;
-  },
-
-  fromJSON(object: any): MessageAttachmentEvent {
-    return {
-      channel_id: isSet(object.channel_id) ? String(object.channel_id) : "",
-      message_id: isSet(object.message_id) ? String(object.message_id) : "",
-      filename: isSet(object.filename) ? String(object.filename) : "",
-      size: isSet(object.size) ? Number(object.size) : 0,
-      url: isSet(object.url) ? String(object.url) : "",
-      filetype: isSet(object.filetype) ? String(object.filetype) : "",
-      width: isSet(object.width) ? Number(object.width) : 0,
-      height: isSet(object.height) ? Number(object.height) : 0,
-      sender_id: isSet(object.sender_id) ? String(object.sender_id) : "",
-      mode: isSet(object.mode) ? Number(object.mode) : 0,
-    };
-  },
-
-  toJSON(message: MessageAttachmentEvent): unknown {
-    const obj: any = {};
-    message.channel_id !== undefined && (obj.channel_id = message.channel_id);
-    message.message_id !== undefined && (obj.message_id = message.message_id);
-    message.filename !== undefined && (obj.filename = message.filename);
-    message.size !== undefined && (obj.size = Math.round(message.size));
-    message.url !== undefined && (obj.url = message.url);
-    message.filetype !== undefined && (obj.filetype = message.filetype);
-    message.width !== undefined && (obj.width = Math.round(message.width));
-    message.height !== undefined && (obj.height = Math.round(message.height));
-    message.sender_id !== undefined && (obj.sender_id = message.sender_id);
-    message.mode !== undefined && (obj.mode = Math.round(message.mode));
-    return obj;
-  },
-
-  create<I extends Exact<DeepPartial<MessageAttachmentEvent>, I>>(base?: I): MessageAttachmentEvent {
-    return MessageAttachmentEvent.fromPartial(base ?? {});
-  },
-
-  fromPartial<I extends Exact<DeepPartial<MessageAttachmentEvent>, I>>(object: I): MessageAttachmentEvent {
-    const message = createBaseMessageAttachmentEvent();
-    message.channel_id = object.channel_id ?? "";
-    message.message_id = object.message_id ?? "";
-    message.filename = object.filename ?? "";
-    message.size = object.size ?? 0;
-    message.url = object.url ?? "";
-    message.filetype = object.filetype ?? "";
-    message.width = object.width ?? 0;
-    message.height = object.height ?? 0;
     message.sender_id = object.sender_id ?? "";
     message.mode = object.mode ?? 0;
     return message;
@@ -7529,25 +6628,6 @@ export const NotifiReactMessage = {
   },
 };
 
-declare var self: any | undefined;
-declare var window: any | undefined;
-declare var global: any | undefined;
-var tsProtoGlobalThis: any = (() => {
-  if (typeof globalThis !== "undefined") {
-    return globalThis;
-  }
-  if (typeof self !== "undefined") {
-    return self;
-  }
-  if (typeof window !== "undefined") {
-    return window;
-  }
-  if (typeof global !== "undefined") {
-    return global;
-  }
-  throw "Unable to locate global object";
-})();
-
 type Builtin = Date | Function | Uint8Array | string | number | boolean | undefined;
 
 export type DeepPartial<T> = T extends Builtin ? T
@@ -7579,18 +6659,6 @@ function fromJsonTimestamp(o: any): Date {
   } else {
     return fromTimestamp(Timestamp.fromJSON(o));
   }
-}
-
-function longToNumber(long: Long): number {
-  if (long.gt(Number.MAX_SAFE_INTEGER)) {
-    throw new tsProtoGlobalThis.Error("Value is larger than Number.MAX_SAFE_INTEGER");
-  }
-  return long.toNumber();
-}
-
-if (_m0.util.Long !== Long) {
-  _m0.util.Long = Long as any;
-  _m0.configure();
 }
 
 function isObject(value: any): boolean {

@@ -559,6 +559,8 @@ export interface ChannelMessage {
   create_time_ms: number;
   /** update time in ms */
   update_time_ms: number;
+  /** channel mode */
+  mode: number;
 }
 
 /** Mention to message */
@@ -625,6 +627,16 @@ export interface MessageReaction {
   action: boolean;
   /** count of emoji */
   count: number;
+  /** channel id */
+  channel_id: string;
+  /** message id */
+  message_id: string;
+  /** clan id */
+  clan_id: string;
+  /** mode */
+  mode: number;
+  /** message sender id */
+  message_sender_id: string;
 }
 
 /** Message attachment */
@@ -655,6 +667,16 @@ export interface MessageRef {
   has_attachment: boolean;
   /** Reference type. 0: reply */
   ref_type: number;
+  /** original message sender */
+  message_sender_id: string;
+  /** original message sendre username */
+  message_sender_username: string;
+  /** original message sender avatar */
+  mesages_sender_avatar: string;
+  /** original sender clan nick name */
+  message_sender_clan_nick: string;
+  /** original sender display name */
+  message_sender_display_name: string;
 }
 
 /** Message reference */
@@ -5364,6 +5386,7 @@ function createBaseChannelMessage(): ChannelMessage {
     referenced_message: "",
     create_time_ms: 0,
     update_time_ms: 0,
+    mode: 0,
   };
 }
 
@@ -5437,6 +5460,9 @@ export const ChannelMessage = {
     }
     if (message.update_time_ms !== 0) {
       writer.uint32(184).uint32(message.update_time_ms);
+    }
+    if (message.mode !== 0) {
+      writer.uint32(192).int32(message.mode);
     }
     return writer;
   },
@@ -5517,6 +5543,9 @@ export const ChannelMessage = {
         case 23:
           message.update_time_ms = reader.uint32();
           break;
+        case 24:
+          message.mode = reader.int32();
+          break;
         default:
           reader.skipType(tag & 7);
           break;
@@ -5550,6 +5579,7 @@ export const ChannelMessage = {
       referenced_message: isSet(object.referenced_message) ? String(object.referenced_message) : "",
       create_time_ms: isSet(object.create_time_ms) ? Number(object.create_time_ms) : 0,
       update_time_ms: isSet(object.update_time_ms) ? Number(object.update_time_ms) : 0,
+      mode: isSet(object.mode) ? Number(object.mode) : 0,
     };
   },
 
@@ -5578,6 +5608,7 @@ export const ChannelMessage = {
     message.referenced_message !== undefined && (obj.referenced_message = message.referenced_message);
     message.create_time_ms !== undefined && (obj.create_time_ms = Math.round(message.create_time_ms));
     message.update_time_ms !== undefined && (obj.update_time_ms = Math.round(message.update_time_ms));
+    message.mode !== undefined && (obj.mode = Math.round(message.mode));
     return obj;
   },
 
@@ -5610,6 +5641,7 @@ export const ChannelMessage = {
     message.referenced_message = object.referenced_message ?? "";
     message.create_time_ms = object.create_time_ms ?? 0;
     message.update_time_ms = object.update_time_ms ?? 0;
+    message.mode = object.mode ?? 0;
     return message;
   },
 };
@@ -5885,6 +5917,11 @@ function createBaseMessageReaction(): MessageReaction {
     sender_avatar: "",
     action: false,
     count: 0,
+    channel_id: "",
+    message_id: "",
+    clan_id: "",
+    mode: 0,
+    message_sender_id: "",
   };
 }
 
@@ -5913,6 +5950,21 @@ export const MessageReaction = {
     }
     if (message.count !== 0) {
       writer.uint32(64).int32(message.count);
+    }
+    if (message.channel_id !== "") {
+      writer.uint32(74).string(message.channel_id);
+    }
+    if (message.message_id !== "") {
+      writer.uint32(82).string(message.message_id);
+    }
+    if (message.clan_id !== "") {
+      writer.uint32(90).string(message.clan_id);
+    }
+    if (message.mode !== 0) {
+      writer.uint32(96).int32(message.mode);
+    }
+    if (message.message_sender_id !== "") {
+      writer.uint32(106).string(message.message_sender_id);
     }
     return writer;
   },
@@ -5948,6 +6000,21 @@ export const MessageReaction = {
         case 8:
           message.count = reader.int32();
           break;
+        case 9:
+          message.channel_id = reader.string();
+          break;
+        case 10:
+          message.message_id = reader.string();
+          break;
+        case 11:
+          message.clan_id = reader.string();
+          break;
+        case 12:
+          message.mode = reader.int32();
+          break;
+        case 13:
+          message.message_sender_id = reader.string();
+          break;
         default:
           reader.skipType(tag & 7);
           break;
@@ -5966,6 +6033,11 @@ export const MessageReaction = {
       sender_avatar: isSet(object.sender_avatar) ? String(object.sender_avatar) : "",
       action: isSet(object.action) ? Boolean(object.action) : false,
       count: isSet(object.count) ? Number(object.count) : 0,
+      channel_id: isSet(object.channel_id) ? String(object.channel_id) : "",
+      message_id: isSet(object.message_id) ? String(object.message_id) : "",
+      clan_id: isSet(object.clan_id) ? String(object.clan_id) : "",
+      mode: isSet(object.mode) ? Number(object.mode) : 0,
+      message_sender_id: isSet(object.message_sender_id) ? String(object.message_sender_id) : "",
     };
   },
 
@@ -5979,6 +6051,11 @@ export const MessageReaction = {
     message.sender_avatar !== undefined && (obj.sender_avatar = message.sender_avatar);
     message.action !== undefined && (obj.action = message.action);
     message.count !== undefined && (obj.count = Math.round(message.count));
+    message.channel_id !== undefined && (obj.channel_id = message.channel_id);
+    message.message_id !== undefined && (obj.message_id = message.message_id);
+    message.clan_id !== undefined && (obj.clan_id = message.clan_id);
+    message.mode !== undefined && (obj.mode = Math.round(message.mode));
+    message.message_sender_id !== undefined && (obj.message_sender_id = message.message_sender_id);
     return obj;
   },
 
@@ -5996,6 +6073,11 @@ export const MessageReaction = {
     message.sender_avatar = object.sender_avatar ?? "";
     message.action = object.action ?? false;
     message.count = object.count ?? 0;
+    message.channel_id = object.channel_id ?? "";
+    message.message_id = object.message_id ?? "";
+    message.clan_id = object.clan_id ?? "";
+    message.mode = object.mode ?? 0;
+    message.message_sender_id = object.message_sender_id ?? "";
     return message;
   },
 };
@@ -6099,7 +6181,18 @@ export const MessageAttachment = {
 };
 
 function createBaseMessageRef(): MessageRef {
-  return { message_id: "", message_ref_id: "", content: "", has_attachment: false, ref_type: 0 };
+  return {
+    message_id: "",
+    message_ref_id: "",
+    content: "",
+    has_attachment: false,
+    ref_type: 0,
+    message_sender_id: "",
+    message_sender_username: "",
+    mesages_sender_avatar: "",
+    message_sender_clan_nick: "",
+    message_sender_display_name: "",
+  };
 }
 
 export const MessageRef = {
@@ -6118,6 +6211,21 @@ export const MessageRef = {
     }
     if (message.ref_type !== 0) {
       writer.uint32(40).int32(message.ref_type);
+    }
+    if (message.message_sender_id !== "") {
+      writer.uint32(50).string(message.message_sender_id);
+    }
+    if (message.message_sender_username !== "") {
+      writer.uint32(58).string(message.message_sender_username);
+    }
+    if (message.mesages_sender_avatar !== "") {
+      writer.uint32(66).string(message.mesages_sender_avatar);
+    }
+    if (message.message_sender_clan_nick !== "") {
+      writer.uint32(74).string(message.message_sender_clan_nick);
+    }
+    if (message.message_sender_display_name !== "") {
+      writer.uint32(82).string(message.message_sender_display_name);
     }
     return writer;
   },
@@ -6144,6 +6252,21 @@ export const MessageRef = {
         case 5:
           message.ref_type = reader.int32();
           break;
+        case 6:
+          message.message_sender_id = reader.string();
+          break;
+        case 7:
+          message.message_sender_username = reader.string();
+          break;
+        case 8:
+          message.mesages_sender_avatar = reader.string();
+          break;
+        case 9:
+          message.message_sender_clan_nick = reader.string();
+          break;
+        case 10:
+          message.message_sender_display_name = reader.string();
+          break;
         default:
           reader.skipType(tag & 7);
           break;
@@ -6159,6 +6282,13 @@ export const MessageRef = {
       content: isSet(object.content) ? String(object.content) : "",
       has_attachment: isSet(object.has_attachment) ? Boolean(object.has_attachment) : false,
       ref_type: isSet(object.ref_type) ? Number(object.ref_type) : 0,
+      message_sender_id: isSet(object.message_sender_id) ? String(object.message_sender_id) : "",
+      message_sender_username: isSet(object.message_sender_username) ? String(object.message_sender_username) : "",
+      mesages_sender_avatar: isSet(object.mesages_sender_avatar) ? String(object.mesages_sender_avatar) : "",
+      message_sender_clan_nick: isSet(object.message_sender_clan_nick) ? String(object.message_sender_clan_nick) : "",
+      message_sender_display_name: isSet(object.message_sender_display_name)
+        ? String(object.message_sender_display_name)
+        : "",
     };
   },
 
@@ -6169,6 +6299,12 @@ export const MessageRef = {
     message.content !== undefined && (obj.content = message.content);
     message.has_attachment !== undefined && (obj.has_attachment = message.has_attachment);
     message.ref_type !== undefined && (obj.ref_type = Math.round(message.ref_type));
+    message.message_sender_id !== undefined && (obj.message_sender_id = message.message_sender_id);
+    message.message_sender_username !== undefined && (obj.message_sender_username = message.message_sender_username);
+    message.mesages_sender_avatar !== undefined && (obj.mesages_sender_avatar = message.mesages_sender_avatar);
+    message.message_sender_clan_nick !== undefined && (obj.message_sender_clan_nick = message.message_sender_clan_nick);
+    message.message_sender_display_name !== undefined &&
+      (obj.message_sender_display_name = message.message_sender_display_name);
     return obj;
   },
 
@@ -6183,6 +6319,11 @@ export const MessageRef = {
     message.content = object.content ?? "";
     message.has_attachment = object.has_attachment ?? false;
     message.ref_type = object.ref_type ?? 0;
+    message.message_sender_id = object.message_sender_id ?? "";
+    message.message_sender_username = object.message_sender_username ?? "";
+    message.mesages_sender_avatar = object.mesages_sender_avatar ?? "";
+    message.message_sender_clan_nick = object.message_sender_clan_nick ?? "";
+    message.message_sender_display_name = object.message_sender_display_name ?? "";
     return message;
   },
 };
