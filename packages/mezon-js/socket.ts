@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import {ApiMessageAttachment, ApiMessageMention, ApiMessageReaction, ApiMessageRef, ApiNotification, ApiRpc} from "./api.gen";
+import {ApiChannelMessage, ApiMessageAttachment, ApiMessageMention, ApiMessageReaction, ApiMessageRef, ApiNotification, ApiRpc} from "./api.gen";
 import {Session} from "./session";
 import {Notification} from "./client";
 import {WebSocketAdapter, WebSocketAdapterText} from "./web_socket_adapter"
@@ -153,98 +153,6 @@ export interface LastSeenMessageEvent {
   message_id: string;
 }
 
-/** User is react to message */
-export interface MessageReactionEvent {
-  // id of reaction message
-  id: string;
-  /** The channel this message belongs to. */
-  channel_id:string;
-  // The mode
-  mode: number;
-  // The channel label
-  channel_label: string;
-  /** The message that user react */
-  message_id: string;
-  /** Message sender, usually a user ID. */
-  sender_id: string;
-  //
-  sender_name?: string;
-  //
-  sender_avatar?: string;
-  /** Emoji id. */
-  emoji_id: string;
-  /** Emoji shortname. */
-  emoji: string;
-  // count of emoji
-  count: number;
-  // action
-  action: boolean;
-}
-
-/** User is react to message */
-export interface MessageMentionEvent {
-  /** The channel this message belongs to. */
-  channel_id:string;
-// The mode
-  mode: number;
-  // The channel label
-  channel_label: string;
-  /** The message that user react */
-  message_id: string;
-  /** Message sender, usually a user ID. */
-  sender_id: string;  
-  // mention user id
-  user_id: string;
-  // mention username
-  username: string;
-  // start position
-  s?: number;
-  // end position
-  e?: number;
-}
-
-/** User is react to message */
-export interface MessageAttachmentEvent {
-  /** The channel this message belongs to. */
-  channel_id:string;
-  // The mode
-  mode: number;
-  // The channel label
-  channel_label: string;
-  /** The message that user react */
-  message_id: string;
-  /** Message sender, usually a user ID. */
-  sender_id: string; 
-  // Attachment file name
-  filename: string;
-  // Attachment file size
-  size: number;
-  // Attachment url
-  url: string;
-  // Attachment file type
-  filetype: string;
-  // Attachment width
-  width?: number;
-  // Attachment width
-  height?: number;
-}
-
-/** User is delete to message */
-export interface MessageRefEvent {
-  /** The channel this message belongs to. */
-  channel_id:string;
-  // The mode
-  mode: number;
-  // The channel label
-  channel_label: string;
-  /** The message that user react */
-  message_id: string;
-  /** Message reference ID. */
-  message_ref_id: string;
-  /** reference type */
-  ref_type: number;
-}
-
 /** User is typing */
 export interface MessageTypingEvent {
   /** The channel this message belongs to. */
@@ -271,55 +179,6 @@ export interface UserProfileUpdatedEvent{
   channel_id: string;
   // the clan_id
   clan_id: string;
-}
-
-/** An incoming message on a realtime chat channel. */
-export interface ChannelMessageEvent {
-  avatar?: string;
-  //The channel this message belongs to.
-  channel_id:string;
-  // The mode
-  mode: number;
-  //The name of the chat room, or an empty string if this message was not sent through a chat room.
-  channel_label: string;
-  //The clan this message belong to.
-  clan_id?: string;
-  //The code representing a message type or category.
-  code: number;
-  //The content payload.
-  content: string;
-  //The UNIX time (for gRPC clients) or ISO string (for REST clients) when the message was created.
-  create_time: string;
-  //The unique ID of this message.
-  id: string;
-  //True if the message was persisted to the channel's history, false otherwise.
-  persistent?: boolean;
-  //Message sender, usually a user ID.
-  sender_id: string;
-  //The UNIX time (for gRPC clients) or ISO string (for REST clients) when the message was last updated.
-  update_time: string;
-  //The ID of the first DM user, or an empty string if this message was not sent through a DM chat.
-  clan_logo: string;
-  //The ID of the second DM user, or an empty string if this message was not sent through a DM chat.
-  category_name: string;
-  //The username of the message sender, if any.
-  username: string;
-  // The clan nick name
-  clan_nick: string;
-  // The clan avatar
-  clan_avatar: string;
-  // The display name
-  display_name: string;
-  //
-  reactions?: Array<ApiMessageReaction>;
-  //
-  mentions?: Array<ApiMessageMention>;
-  //
-  attachments?: Array<ApiMessageAttachment>;
-  //
-  references?: Array<ApiMessageRef>;
-  //
-  referenced_message?: ChannelMessageEvent;
 }
 
 /** An acknowledgement received in response to sending a message on a chat channel. */
@@ -356,9 +215,9 @@ interface ChannelMessageSend {
     /** The content payload. */
     content: any;
     //
-    mentions?: Array<MessageMentionEvent>;
+    mentions?: Array<ApiMessageMention>;
     //
-    attachments?: Array<MessageAttachmentEvent>;
+    attachments?: Array<ApiMessageAttachment>;
     //
     anonymous_message?: boolean;
     //
@@ -380,9 +239,9 @@ interface ChannelMessageUpdate {
     /** The content payload. */
     content: any,
     /** mentions */
-    mentions?: Array<MessageMentionEvent>;
+    mentions?: Array<ApiMessageMention>;
     /** attachments */
-    attachments?: Array<MessageAttachmentEvent>;
+    attachments?: Array<ApiMessageAttachment>;
     /** The mode payload. */
     mode: number;
   };
@@ -832,7 +691,7 @@ export interface Socket {
   writeMessageTyping(clan_id: string, channel_id: string, mode: number) : Promise<MessageTypingEvent>;  
 
   /** Send message reaction */
-  writeMessageReaction(id: string, clan_id: string, channel_id: string, mode: number, message_id: string, emoji_id: string, emoji: string, count: number, message_sender_id: string, action_delete: boolean) : Promise<MessageReactionEvent>;
+  writeMessageReaction(id: string, clan_id: string, channel_id: string, mode: number, message_id: string, emoji_id: string, emoji: string, count: number, message_sender_id: string, action_delete: boolean) : Promise<ApiMessageReaction>;
 
   /** Send last seen message */
   writeLastSeenMessage(clan_id: string, channel_id: string, mode: number, message_id: string, timestamp: string) : Promise<LastSeenMessageEvent>;
@@ -878,13 +737,13 @@ export interface Socket {
   oncustomstatus: (statusEvent: CustomStatusEvent) => void;
 
   /** Receive channel message. */
-  onchannelmessage: (channelMessage: ChannelMessageEvent) => void;
+  onchannelmessage: (channelMessage: ApiChannelMessage) => void;
 
   /** Receive typing event */
   onmessagetyping: (messageTypingEvent: MessageTypingEvent) => void;
 
   /** Receive reaction event */
-  onmessagereaction: (messageReactionEvent: MessageReactionEvent) => void;
+  onmessagereaction: (messageReactionEvent: ApiMessageReaction) => void;
 
   /** Receive channel presence updates. */
   onchannelpresence: (channelPresence: ChannelPresenceEvent) => void;
@@ -1077,7 +936,7 @@ export class DefaultSocket implements Socket {
           } catch(e) {
             //console.log("references is invalid", e);
           }
-          var e: ChannelMessageEvent = {
+          var e: ApiChannelMessage = {
             avatar: message.channel_message.avatar,
             channel_id: message.channel_message.channel_id,
             mode: message.channel_message.mode,
@@ -1085,7 +944,7 @@ export class DefaultSocket implements Socket {
             clan_id: message.channel_message.clan_id,
             code: message.channel_message.code,              
             create_time: message.channel_message.create_time,
-            id: message.channel_message.message_id,
+            message_id: message.channel_message.message_id,
             sender_id: message.channel_message.sender_id,
             update_time: message.channel_message.update_time,
             clan_logo: message.channel_message.clan_logo,
@@ -1104,7 +963,7 @@ export class DefaultSocket implements Socket {
         } else if (message.message_typing_event) {
           this.onmessagetyping(<MessageTypingEvent>message.message_typing_event);
         } else if (message.message_reaction_event) {
-          this.onmessagereaction(<MessageReactionEvent>message.message_reaction_event);
+          this.onmessagereaction(<ApiMessageReaction>message.message_reaction_event);
         } else if (message.channel_presence_event) {
           this.onchannelpresence(<ChannelPresenceEvent>message.channel_presence_event);
         } else if (message.last_pin_message_event) {
@@ -1198,13 +1057,13 @@ export class DefaultSocket implements Socket {
     }
   }
 
-  onmessagereaction(messagereaction: MessageReactionEvent) {
+  onmessagereaction(messagereaction: ApiMessageReaction) {
     if (this.verbose && window && window.console) {
       console.log(messagereaction);
     }
   }
 
-  onchannelmessage(channelMessage: ChannelMessageEvent) {
+  onchannelmessage(channelMessage: ApiChannelMessage) {
     if (this.verbose && window && window.console) {
       console.log(channelMessage);
     }
@@ -1453,7 +1312,7 @@ export class DefaultSocket implements Socket {
     return response.channel_message_ack;
   }
 
-  async writeMessageReaction(id: string, clan_id: string, channel_id: string, mode: number, message_id: string, emoji_id: string, emoji: string, count: number, message_sender_id: string, action_delete: boolean): Promise<MessageReactionEvent> {
+  async writeMessageReaction(id: string, clan_id: string, channel_id: string, mode: number, message_id: string, emoji_id: string, emoji: string, count: number, message_sender_id: string, action_delete: boolean): Promise<ApiMessageReaction> {
     const response = await this.send({message_reaction_event: {id: id, clan_id: clan_id, channel_id: channel_id, mode: mode, message_id: message_id, emoji_id: emoji_id, emoji: emoji, count: count, message_sender_id: message_sender_id, action: action_delete}});
     return response.message_reaction_event
   }
@@ -1528,8 +1387,8 @@ export class DefaultSocket implements Socket {
     return response.notification_clan_setting_event
   }
 
-  async getNotificationReactMessage(channel_id_req: string): Promise<NotifiReactMessageEvent> {
-    const response = await this.send({notifi_react_message_event: {channel_id_req: channel_id_req}})
+  async getNotificationReactMessage(channel_id: string): Promise<NotifiReactMessageEvent> {
+    const response = await this.send({notifi_react_message_event: {channel_id: channel_id}})
     return response.notifi_react_message_event
   }
 

@@ -28,8 +28,6 @@ client.authenticateEmail("user1@ncc.asia", "Aa12345678").then(async session => {
   const session2 = await socket.connect(session, true);
   console.log("session", session2);
 
-  client.listChannelMessages(session, 'channel id', 'msgid', 3)
-
 }).catch(e => {
   console.log("error authenticating.");
 });

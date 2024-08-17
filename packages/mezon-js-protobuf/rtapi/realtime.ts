@@ -1077,7 +1077,9 @@ export interface NotificationSetting {
 
 /** Notification channel */
 export interface NotifiReactMessageEvent {
+  /** channel id */
   channel_id: string;
+  /** notification message */
   notifi_react_message: NotifiReactMessage | undefined;
 }
 

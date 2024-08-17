@@ -523,6 +523,8 @@ export interface ApiChannelMessage {
   update_time_ms?: number;
   //The username of the message sender, if any.
   username?: string;
+  // channel mode
+  mode?: number;
 }
 
 /**  */
@@ -948,6 +950,16 @@ export interface ApiMessageAttachment {
   url?: string;
   //
   width?: number;
+  /** The channel this message belongs to. */
+  channel_id:string;
+  // The mode
+  mode: number;
+  // The channel label
+  channel_label: string;
+  /** The message that user react */
+  message_id: string;
+  /** Message sender, usually a user ID. */
+  sender_id: string;
 }
 
 /**  */
@@ -976,6 +988,16 @@ export interface ApiMessageMention {
   s?: number;
   // end position
   e?: number;
+  /** The channel this message belongs to. */
+  channel_id:string;
+// The mode
+  mode: number;
+  // The channel label
+  channel_label: string;
+  /** The message that user react */
+  message_id: string;
+  /** Message sender, usually a user ID. */
+  sender_id: string;
 }
 
 /**  */
@@ -996,6 +1018,14 @@ export interface ApiMessageReaction {
   sender_avatar?: string;
   // count of emoji
   count: number;
+  /** The channel this message belongs to. */
+  channel_id:string;
+  // The mode
+  mode: number;
+  // The channel label
+  channel_label: string;
+  /** The message that user react */
+  message_id: string;
 }
 
 /**  */
@@ -1020,6 +1050,12 @@ export interface ApiMessageRef {
   content?:string;
   //
   has_attachment: boolean;
+  /** The channel this message belongs to. */
+  channel_id:string;
+  // The mode
+  mode: number;
+  // The channel label
+  channel_label: string;
 }
 
 /** A notification in the server. */
