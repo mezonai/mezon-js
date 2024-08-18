@@ -26,48 +26,6 @@ const DEFAULT_API_KEY = "defaultkey";
 const DEFAULT_TIMEOUT_MS = 7000;
 const DEFAULT_EXPIRED_TIMESPAN_MS = 5 * 60 * 1000;
 
-/** A user in the server. */
-export interface ApiUser {
-  //
-  about_me?: string;
-  //The Apple Sign In ID in the user's account.
-  apple_id?: string;
-  //A URL for an avatar image.
-  avatar_url?: string;
-  //The UNIX time (for gRPC clients) or ISO string (for REST clients) when the user was created.
-  create_time?: string;
-  //The display name of the user.
-  display_name?: string;
-  //Number of related edges to this user.
-  edge_count?: number;
-  //The Facebook id in the user's account.
-  facebook_id?: string;
-  //The Apple Game Center in of the user's account.
-  gamecenter_id?: string;
-  //The Google id in the user's account.
-  google_id?: string;
-  //The id of the user's account.
-  id?: string;
-  //
-  join_time?: string;
-  //The language expected to be a tag which follows the BCP-47 spec.
-  lang_tag?: string;
-  //The location set by the user.
-  location?: string;
-  //Additional information stored as a JSON object.
-  metadata?: string;
-  //Indicates whether the user is currently online.
-  online?: boolean;
-  //The Steam id in the user's account.
-  steam_id?: string;
-  //The timezone set by the user.
-  timezone?: string;
-  //The UNIX time (for gRPC clients) or ISO string (for REST clients) when the user was last updated.
-  update_time?: string;
-  //The username of the user's account.
-  username?: string;
-}
-
 /** A client for Mezon server. */
 export class Client {
 
@@ -177,10 +135,16 @@ export class Client {
 
   onmessagereaction(messagereaction: ApiMessageReaction) {
     console.log(messagereaction);
+    if (messagereaction.action) {
+      this.onMessageReactionRemove(messagereaction);
+    } else {
+      this.onMessageReactionAdd(messagereaction);
+    }
+    
   }
 
   onchannelmessage(channelMessage: ChannelMessage) {
-    console.log(channelMessage);
+    this.onMessage(channelMessage);
   }
 
   ondisconnect(e: Event) {
@@ -196,7 +160,7 @@ export class Client {
   }
 
   onuserclanremoved(user: UserClanRemovedEvent) {
-    console.log(user);
+    this.onClanMemberUpdate(user.user_ids, true);
   }
 
   onchannelcreated(channelCreated: ChannelCreatedEvent) {
@@ -217,7 +181,7 @@ export class Client {
 
   /** Receive clan evnet. */
   onMessage!: (channelMessage: ChannelMessage) => void;
-  onClanMemberUpdate!: (oldMember: ApiUser, newMember: ApiUser) => void;
+  onClanMemberUpdate!: (member_id: Array<string>, leave: boolean) => void;
   onMessageDelete!: (channelMessage: ChannelMessage) => void;
   onMessageReactionAdd!: (messageReactionEvent: ApiMessageReaction) => void;
   onVoiceStateUpdate!: (voiceState: VoiceJoinedEvent) => void;
