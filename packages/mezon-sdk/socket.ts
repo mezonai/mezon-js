@@ -1186,11 +1186,13 @@ export class DefaultSocket implements Socket {
       console.log(user);
     }
   }
+
   onuserprofileupdate(user: UserProfileUpdatedEvent) {
     if (this.verbose && window && window.console) {
       console.log(user);
     }
   }
+  
   onuserchannelremoved(user: UserChannelRemovedEvent) {
     if (this.verbose && window && window.console) {
       console.log(user);
