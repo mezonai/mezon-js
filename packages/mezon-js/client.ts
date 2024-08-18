@@ -138,58 +138,6 @@ export interface RpcResponse {
   payload?: object;
 }
 
-/** The object to store. */
-export interface WriteStorageObject {
-  /** The collection to store the object. */
-  collection?: string;
-  /** The key for the object within the collection. */
-  key?: string;
-  /** The read access permissions for the object. */
-  permission_read?: number;
-  /** The write access permissions for the object. */
-  permission_write?: number;
-  /** The value of the object. */
-  value?: object;
-  /** The version hash of the object to check. Possible values are: ["", "*", "#hash#"]. */
-  version?: string;
-}
-
-/** An object within the storage engine. */
-export interface StorageObject {
-  /** The collection which stores the object. */
-  collection?: string;
-  /** The UNIX time when the object was created. */
-  create_time?: string;
-  /** The key of the object within the collection. */
-  key?: string;
-  /** The read access permissions for the object. */
-  permission_read?: number;
-  /** The write access permissions for the object. */
-  permission_write?: number;
-  /** The UNIX time when the object was last updated. */
-  update_time?: string;
-  /** The user owner of the object. */
-  user_id?: string;
-  /** The value of the object. */
-  value?: object;
-  /** The version hash of the object. */
-  version?: string;
-}
-
-/** List of storage objects. */
-export interface StorageObjectList {
-  /** The cursor associated with the query a page of results. */
-  cursor?: string;
-  /** The list of storage objects. */
-  objects: Array<StorageObject>;
-}
-
-/** Batch of storage objects. */
-export interface StorageObjects {
-  /** The batch of storage objects. */
-  objects: Array<StorageObject>;
-}
-
 /** A message sent on a channel. */
 export interface ChannelMessage {
   //The unique ID of this message.

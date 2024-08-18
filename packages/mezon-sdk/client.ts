@@ -16,8 +16,10 @@
 
 import { ApiSession, ApiUser } from "packages/mezon-js/dist/api.gen";
 import { MezonApi, ApiAuthenticateLogoutRequest, ApiAuthenticateRefreshRequest, ApiUpdateMessageRequest } from "./api";
-import { Socket, MessageReactionEvent, VoiceJoinedEvent, ChannelMessageEvent } from "mezon-js"
 import { Session } from "./session";
+import { WebSocketAdapterPb } from "packages/mezon-js-protobuf/dist/mezon-js-protobuf";
+import { ApiMessageReaction, ChannelMessage, DefaultSocket, Socket, VoiceJoinedEvent } from "./socket";
+import { WebSocketAdapter } from "./web_socket_adapter";
 
 const DEFAULT_HOST = "127.0.0.1";
 const DEFAULT_PORT = "7450";
@@ -50,28 +52,25 @@ export class Client {
   /** Authenticate a user with an ID against the server. */
   async authenticate(token: string) {
     return this.apiClient.mezonAuthenticate(token).then((apiSession : ApiSession) => {
-      const socket = await createSocket();
-      const session = await socket.connect(apiSession, true);
-      socket.onvoicejoined = onvoicejoined;
-      socket.onvoiceleaved = onvoiceleaved;
-      socket.onchannelmessage = onchannelmessage;
-      socket.onchannelpresence = onchannelpresence;
-      socket.ondisconnect = ondisconnect;
-      socket.onerror = onerror;
-      socket.onmessagetyping = onmessagetyping;
-      socket.onmessagereaction = onmessagereaction;
-      socket.onnotification = onnotification;
-      socket.onpinmessage = onpinmessage;
-      socket.onuserchannelremoved = onuserchannelremoved;
-      socket.onuserclanremoved = onuserclanremoved;
-      socket.onuserchanneladded = onuserchanneladded;
-      socket.onclanprofileupdated = onclanprofileupdated;
-      socket.oncustomstatus = oncustomstatus;
-      socket.onstatuspresence = onstatuspresence;
-      socket.onchannelcreated = onchannelcreated;
-      socket.onchanneldeleted = onchanneldeleted;
-      socket.onchannelupdated = onchannelupdated;
-      socket.onheartbeattimeout = onHeartbeatTimeout;
+      const sockSession = new Session(apiSession.token || "", apiSession.refresh_token || "");
+      const socket = this.createSocket(true, false, new WebSocketAdapterPb());
+      socket.connect(sockSession, true).then((session) => {
+        socket.onchannelmessage = onchannelmessage;
+        socket.onchannelpresence = onchannelpresence;
+        socket.ondisconnect = ondisconnect;
+        socket.onerror = onerror;
+        socket.onmessagereaction = onmessagereaction;
+        socket.onuserchannelremoved = onuserchannelremoved;
+        socket.onuserclanremoved = onuserclanremoved;
+        socket.onuserchanneladded = onuserchanneladded;
+        socket.onclanprofileupdated = onclanprofileupdated;
+        socket.oncustomstatus = oncustomstatus;        
+        socket.onchannelcreated = onchannelcreated;
+        socket.onchanneldeleted = onchanneldeleted;
+        socket.onchannelupdated = onchannelupdated;
+        socket.onheartbeattimeout = onHeartbeatTimeout;
+      });
+      
       return Promise.resolve(new Session(apiSession.token || "", apiSession.refresh_token || ""));
     });
   }
@@ -129,11 +128,19 @@ export class Client {
     });
   }
 
+  /** A socket created with the client's configuration. */
+  createSocket(useSSL = false, verbose: boolean = false, adapter : WebSocketAdapter = new WebSocketAdapterPb(), sendTimeoutMs : number = DefaultSocket.DefaultSendTimeoutMs): Socket {
+    return new DefaultSocket(this.host, this.port, useSSL, verbose, adapter, sendTimeoutMs);
+  }
+
   /** Receive clan evnet. */
-  onMessage: (channelMessage: ChannelMessageEvent) => void;
+  onMessage: (channelMessage: ChannelMessage) => void;
   onClanMemberUpdate: (oldMember: ApiUser, newMember: ApiUser) => void;
-  onMessageDelete: (channelMessage: ChannelMessageEvent) => void;
-  onMessageReactionAdd: (messageReactionEvent: MessageReactionEvent) => void;
+  onMessageDelete: (channelMessage: ChannelMessage) => void;
+  onMessageReactionAdd: (messageReactionEvent: ApiMessageReaction) => void;
   onVoiceStateUpdate: (voiceState: VoiceJoinedEvent) => void;
-  onMessageReactionRemove: (messageReactionEvent: MessageReactionEvent) => void;
+  onMessageReactionRemove: (messageReactionEvent: ApiMessageReaction) => void;
+
+
+
 };
