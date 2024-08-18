@@ -41,7 +41,6 @@
         "esbuild": "^0.23.0",
         "js-base64": "^3.7.4",
         "whatwg-fetch": "^3.6.2",
-        "mezon-js": "2.8.23",
-        "mezon-js-protobuf": "1.5.4"
+        "mezon-js-protobuf": "1.5.14"
     }
 }
