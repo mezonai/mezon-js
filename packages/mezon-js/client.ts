@@ -97,6 +97,7 @@ import {
   ApiUpdateRoleChannelRequest,
   ApiAddAppRequest,
   ApiAppList,
+  ApiApp,
 } from "./api.gen";
 
 import { Session } from "./session";
@@ -2246,7 +2247,18 @@ async addApp(session: Session, request: ApiAddAppRequest): Promise<boolean> {
   });
 }
 
-async ListApp(session: Session): Promise<ApiAppList> {
+async getApp(session: Session, id: string): Promise<ApiApp> {
+  if (this.autoRefreshSession && session.refresh_token &&
+    session.isexpired((Date.now() + this.expiredTimespanMs)/1000)) {
+    await this.sessionRefresh(session);
+  }
+
+  return this.apiClient.getApp(session.token, id).then((response: ApiApp) => {
+    return Promise.resolve(response);
+  });
+}
+
+async listApp(session: Session): Promise<ApiAppList> {
   if (this.autoRefreshSession && session.refresh_token &&
     session.isexpired((Date.now() + this.expiredTimespanMs)/1000)) {
     await this.sessionRefresh(session);
