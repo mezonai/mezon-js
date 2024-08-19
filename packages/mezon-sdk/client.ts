@@ -50,10 +50,22 @@ export class Client {
 
   /** Authenticate a user with an ID against the server. */
   async authenticate(token: string) {
-    return this.apiClient.mezonAuthenticate(token).then((apiSession : ApiSession) => {
+    return this.apiClient.mezonAuthenticate(token, "", {
+      account: {
+        token: token,
+        vars: {
+          'key': 'app' 
+        }
+      }
+    }).then((apiSession : ApiSession) => {
       const sockSession = new Session(apiSession.token || "", apiSession.refresh_token || "");
       const socket = this.createSocket(true, false, new WebSocketAdapterPb());
       socket.connect(sockSession, true).then((session) => {
+        console.log(session);
+        if (!session) {
+          console.log("error authenticate");
+          return;
+        }
         socket.onchannelmessage = this.onchannelmessage;
         socket.ondisconnect = this.ondisconnect;
         socket.onerror = this.onerror;
