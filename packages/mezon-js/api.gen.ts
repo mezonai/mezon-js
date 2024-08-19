@@ -359,6 +359,34 @@ export interface ApiAddRoleChannelDescRequest {
   role_ids?: Array<string>;
 }
 
+/** App information. */
+export interface ApiApp {
+  //
+  applogo?: string;
+  //
+  appname?: string;
+  //
+  creator_id?: string;
+  //The UNIX time when the app was disabled.
+  disable_time?: string;
+  //
+  is_shadow?: boolean;
+  //
+  role?: number;
+  //
+  token?: string;
+}
+
+/** A list of apps. */
+export interface ApiAppList {
+  //A list of apps.
+  apps?: Array<ApiApp>;
+  //Next cursor.
+  next_cursor?: string;
+  //Approximate total number of apps.
+  total_count?: number;
+}
+
 /**  */
 export interface ApiCategoryDesc {
   //
