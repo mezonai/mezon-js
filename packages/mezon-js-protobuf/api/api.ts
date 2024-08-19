@@ -2447,6 +2447,7 @@ export interface ClanEmojiUpdateRequest {
   source: string;
   shortname: string;
   category: string;
+  clan_id: string;
 }
 
 export interface Webhook {
@@ -2623,6 +2624,13 @@ export interface UpdateAppRequest {
 export interface AppId {
   /** The unique identifier of the app. */
   id: string;
+}
+
+/** The identifier for an app. */
+export interface AppClan {
+  /** The unique identifier of the app. */
+  app_id: string;
+  clan_id: string;
 }
 
 /** Authenticate against the server with a device ID. */
@@ -17679,7 +17687,7 @@ export const ClanEmojiDeleteRequest = {
 };
 
 function createBaseClanEmojiUpdateRequest(): ClanEmojiUpdateRequest {
-  return { id: "", source: "", shortname: "", category: "" };
+  return { id: "", source: "", shortname: "", category: "", clan_id: "" };
 }
 
 export const ClanEmojiUpdateRequest = {
@@ -17695,6 +17703,9 @@ export const ClanEmojiUpdateRequest = {
     }
     if (message.category !== "") {
       writer.uint32(34).string(message.category);
+    }
+    if (message.clan_id !== "") {
+      writer.uint32(42).string(message.clan_id);
     }
     return writer;
   },
@@ -17718,6 +17729,9 @@ export const ClanEmojiUpdateRequest = {
         case 4:
           message.category = reader.string();
           break;
+        case 5:
+          message.clan_id = reader.string();
+          break;
         default:
           reader.skipType(tag & 7);
           break;
@@ -17732,6 +17746,7 @@ export const ClanEmojiUpdateRequest = {
       source: isSet(object.source) ? String(object.source) : "",
       shortname: isSet(object.shortname) ? String(object.shortname) : "",
       category: isSet(object.category) ? String(object.category) : "",
+      clan_id: isSet(object.clan_id) ? String(object.clan_id) : "",
     };
   },
 
@@ -17741,6 +17756,7 @@ export const ClanEmojiUpdateRequest = {
     message.source !== undefined && (obj.source = message.source);
     message.shortname !== undefined && (obj.shortname = message.shortname);
     message.category !== undefined && (obj.category = message.category);
+    message.clan_id !== undefined && (obj.clan_id = message.clan_id);
     return obj;
   },
 
@@ -17754,6 +17770,7 @@ export const ClanEmojiUpdateRequest = {
     message.source = object.source ?? "";
     message.shortname = object.shortname ?? "";
     message.category = object.category ?? "";
+    message.clan_id = object.clan_id ?? "";
     return message;
   },
 };
@@ -19344,6 +19361,68 @@ export const AppId = {
   fromPartial<I extends Exact<DeepPartial<AppId>, I>>(object: I): AppId {
     const message = createBaseAppId();
     message.id = object.id ?? "";
+    return message;
+  },
+};
+
+function createBaseAppClan(): AppClan {
+  return { app_id: "", clan_id: "" };
+}
+
+export const AppClan = {
+  encode(message: AppClan, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.app_id !== "") {
+      writer.uint32(10).string(message.app_id);
+    }
+    if (message.clan_id !== "") {
+      writer.uint32(18).string(message.clan_id);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): AppClan {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseAppClan();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.app_id = reader.string();
+          break;
+        case 2:
+          message.clan_id = reader.string();
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): AppClan {
+    return {
+      app_id: isSet(object.app_id) ? String(object.app_id) : "",
+      clan_id: isSet(object.clan_id) ? String(object.clan_id) : "",
+    };
+  },
+
+  toJSON(message: AppClan): unknown {
+    const obj: any = {};
+    message.app_id !== undefined && (obj.app_id = message.app_id);
+    message.clan_id !== undefined && (obj.clan_id = message.clan_id);
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<AppClan>, I>>(base?: I): AppClan {
+    return AppClan.fromPartial(base ?? {});
+  },
+
+  fromPartial<I extends Exact<DeepPartial<AppClan>, I>>(object: I): AppClan {
+    const message = createBaseAppClan();
+    message.app_id = object.app_id ?? "";
+    message.clan_id = object.clan_id ?? "";
     return message;
   },
 };

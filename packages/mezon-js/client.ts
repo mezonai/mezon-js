@@ -2261,4 +2261,15 @@ async listApp(session: Session): Promise<ApiAppList> {
   });
 }
 
+async addAppToClan(session: Session, clanId: string, appId: string) {
+  if (this.autoRefreshSession && session.refresh_token &&
+    session.isexpired((Date.now() + this.expiredTimespanMs)/1000)) {
+    await this.sessionRefresh(session);
+  }
+
+  return this.apiClient.addAppToClan(session.token, clanId, appId).then((response: ApiAppList) => {
+    return response !== undefined;
+  });
+}
+
 };
