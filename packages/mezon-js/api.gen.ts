@@ -2991,6 +2991,47 @@ export class MezonApi {
     ]);
 }
 
+  /** Add an app to clan. */
+  addAppToClan(bearerToken: string,
+    appId:string,
+    clanId:string,
+    options: any = {}): Promise<any> {
+  
+  if (appId === null || appId === undefined) {
+    throw new Error("'appId' is a required parameter but is null or undefined.");
+  }
+  if (clanId === null || clanId === undefined) {
+    throw new Error("'clanId' is a required parameter but is null or undefined.");
+  }
+  const urlPath = "/v2/apps/app/{appId}/clan/{clanId}"
+      .replace("{appId}", encodeURIComponent(String(appId)))
+      .replace("{clanId}", encodeURIComponent(String(clanId)));
+  const queryParams = new Map<string, any>();
+
+  let bodyJson : string = "";
+
+  const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
+  const fetchOptions = buildFetchOptions("POST", options, bodyJson);
+  if (bearerToken) {
+      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+  }
+
+  return Promise.race([
+    fetch(fullUrl, fetchOptions).then((response) => {
+      if (response.status == 204) {
+        return response;
+      } else if (response.status >= 200 && response.status < 300) {
+        return response.json();
+      } else {
+        throw response;
+      }
+    }),
+    new Promise((_, reject) =>
+      setTimeout(reject, this.timeoutMs, "Request timed out.")
+    ),
+  ]);
+}
+
   /** Delete all information stored for an app. */
   deleteApp(bearerToken: string,
       id:string,
