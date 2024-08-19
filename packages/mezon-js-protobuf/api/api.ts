@@ -567,6 +567,8 @@ export interface ChannelMessage {
   update_time_ms: number;
   /** channel mode */
   mode: number;
+  /** hide editted */
+  hide_editted: boolean;
 }
 
 /** Mention to message */
@@ -2282,7 +2284,7 @@ export interface UpdateRoleRequest {
   remove_user_ids: string[];
   /** The permissions to remove. */
   remove_permission_ids: string[];
-  /**  */
+  /** the clan id */
   clan_id: string;
 }
 
@@ -2451,6 +2453,7 @@ export interface ClanEmojiUpdateRequest {
   source: string;
   shortname: string;
   category: string;
+  clan_id: string;
 }
 
 export interface Webhook {
@@ -2543,6 +2546,8 @@ export interface ChangeChannelCategoryRequest {
 
 /** App information. */
 export interface App {
+  /** app id */
+  id: string;
   /** appname */
   appname: string;
   /** creator_id */
@@ -2550,9 +2555,15 @@ export interface App {
   /** logo */
   applogo: string;
   /** status online */
-  online: boolean;
+  is_shadow: boolean;
   /** The UNIX time when the app was disabled. */
-  disable_time: Date | undefined;
+  disable_time:
+    | Date
+    | undefined;
+  /** string token */
+  token: string;
+  /** role */
+  role: number;
 }
 
 /** Delete a app. */
@@ -2619,6 +2630,44 @@ export interface UpdateAppRequest {
 export interface AppId {
   /** The unique identifier of the app. */
   id: string;
+}
+
+/** Authenticate against the server with a device ID. */
+export interface AuthenticateRequest {
+  /** The App account details. */
+  account: AccountApp | undefined;
+}
+
+/** Send a app token to the server. Used with authenticate/link/unlink. */
+export interface AccountApp {
+  /** The app id */
+  appid: string;
+  /** the app name */
+  appname: string;
+  /** The account token when create apps to access their profile API. */
+  token: string;
+  /** Extra information that will be bundled in the session token. */
+  vars: { [key: string]: string };
+}
+
+export interface AccountApp_VarsEntry {
+  key: string;
+  value: string;
+}
+
+/** Delete channel messages by timestamp or/and ids. */
+export interface DeleteChannelMessagesRequest {
+  /** Timestamp before which messages will be deleted. */
+  before:
+    | Date
+    | undefined;
+  /** IDs of the messages to delete. */
+  ids: string[];
+}
+
+export interface DeleteChannelMessagesResponse {
+  /** Total number of messages deleted. */
+  total: number;
 }
 
 function createBaseAccount(): Account {
@@ -5968,6 +6017,7 @@ function createBaseChannelMessage(): ChannelMessage {
     create_time_ms: 0,
     update_time_ms: 0,
     mode: 0,
+    hide_editted: false,
   };
 }
 
@@ -6044,6 +6094,9 @@ export const ChannelMessage = {
     }
     if (message.mode !== 0) {
       writer.uint32(192).int32(message.mode);
+    }
+    if (message.hide_editted !== false) {
+      writer.uint32(200).bool(message.hide_editted);
     }
     return writer;
   },
@@ -6223,6 +6276,13 @@ export const ChannelMessage = {
 
           message.mode = reader.int32();
           continue;
+        case 25:
+          if (tag !== 200) {
+            break;
+          }
+
+          message.hide_editted = reader.bool();
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -6258,6 +6318,7 @@ export const ChannelMessage = {
       create_time_ms: isSet(object.create_time_ms) ? globalThis.Number(object.create_time_ms) : 0,
       update_time_ms: isSet(object.update_time_ms) ? globalThis.Number(object.update_time_ms) : 0,
       mode: isSet(object.mode) ? globalThis.Number(object.mode) : 0,
+      hide_editted: isSet(object.hide_editted) ? globalThis.Boolean(object.hide_editted) : false,
     };
   },
 
@@ -6335,6 +6396,9 @@ export const ChannelMessage = {
     if (message.mode !== 0) {
       obj.mode = Math.round(message.mode);
     }
+    if (message.hide_editted !== false) {
+      obj.hide_editted = message.hide_editted;
+    }
     return obj;
   },
 
@@ -6367,6 +6431,7 @@ export const ChannelMessage = {
     message.create_time_ms = object.create_time_ms ?? 0;
     message.update_time_ms = object.update_time_ms ?? 0;
     message.mode = object.mode ?? 0;
+    message.hide_editted = object.hide_editted ?? false;
     return message;
   },
 };
@@ -21637,7 +21702,7 @@ export const ClanEmojiDeleteRequest = {
 };
 
 function createBaseClanEmojiUpdateRequest(): ClanEmojiUpdateRequest {
-  return { id: "", source: "", shortname: "", category: "" };
+  return { id: "", source: "", shortname: "", category: "", clan_id: "" };
 }
 
 export const ClanEmojiUpdateRequest = {
@@ -21653,6 +21718,9 @@ export const ClanEmojiUpdateRequest = {
     }
     if (message.category !== "") {
       writer.uint32(34).string(message.category);
+    }
+    if (message.clan_id !== "") {
+      writer.uint32(42).string(message.clan_id);
     }
     return writer;
   },
@@ -21692,6 +21760,13 @@ export const ClanEmojiUpdateRequest = {
 
           message.category = reader.string();
           continue;
+        case 5:
+          if (tag !== 42) {
+            break;
+          }
+
+          message.clan_id = reader.string();
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -21707,6 +21782,7 @@ export const ClanEmojiUpdateRequest = {
       source: isSet(object.source) ? globalThis.String(object.source) : "",
       shortname: isSet(object.shortname) ? globalThis.String(object.shortname) : "",
       category: isSet(object.category) ? globalThis.String(object.category) : "",
+      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
     };
   },
 
@@ -21724,6 +21800,9 @@ export const ClanEmojiUpdateRequest = {
     if (message.category !== "") {
       obj.category = message.category;
     }
+    if (message.clan_id !== "") {
+      obj.clan_id = message.clan_id;
+    }
     return obj;
   },
 
@@ -21736,6 +21815,7 @@ export const ClanEmojiUpdateRequest = {
     message.source = object.source ?? "";
     message.shortname = object.shortname ?? "";
     message.category = object.category ?? "";
+    message.clan_id = object.clan_id ?? "";
     return message;
   },
 };
@@ -23022,25 +23102,43 @@ export const ChangeChannelCategoryRequest = {
 };
 
 function createBaseApp(): App {
-  return { appname: "", creator_id: "", applogo: "", online: false, disable_time: undefined };
+  return {
+    id: "",
+    appname: "",
+    creator_id: "",
+    applogo: "",
+    is_shadow: false,
+    disable_time: undefined,
+    token: "",
+    role: 0,
+  };
 }
 
 export const App = {
   encode(message: App, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.id !== "") {
+      writer.uint32(10).string(message.id);
+    }
     if (message.appname !== "") {
-      writer.uint32(10).string(message.appname);
+      writer.uint32(18).string(message.appname);
     }
     if (message.creator_id !== "") {
-      writer.uint32(18).string(message.creator_id);
+      writer.uint32(26).string(message.creator_id);
     }
     if (message.applogo !== "") {
-      writer.uint32(26).string(message.applogo);
+      writer.uint32(34).string(message.applogo);
     }
-    if (message.online !== false) {
-      writer.uint32(32).bool(message.online);
+    if (message.is_shadow !== false) {
+      writer.uint32(40).bool(message.is_shadow);
     }
     if (message.disable_time !== undefined) {
-      Timestamp.encode(toTimestamp(message.disable_time), writer.uint32(42).fork()).ldelim();
+      Timestamp.encode(toTimestamp(message.disable_time), writer.uint32(50).fork()).ldelim();
+    }
+    if (message.token !== "") {
+      writer.uint32(58).string(message.token);
+    }
+    if (message.role !== 0) {
+      writer.uint32(64).int32(message.role);
     }
     return writer;
   },
@@ -23057,35 +23155,56 @@ export const App = {
             break;
           }
 
-          message.appname = reader.string();
+          message.id = reader.string();
           continue;
         case 2:
           if (tag !== 18) {
             break;
           }
 
-          message.creator_id = reader.string();
+          message.appname = reader.string();
           continue;
         case 3:
           if (tag !== 26) {
             break;
           }
 
-          message.applogo = reader.string();
+          message.creator_id = reader.string();
           continue;
         case 4:
-          if (tag !== 32) {
+          if (tag !== 34) {
             break;
           }
 
-          message.online = reader.bool();
+          message.applogo = reader.string();
           continue;
         case 5:
-          if (tag !== 42) {
+          if (tag !== 40) {
+            break;
+          }
+
+          message.is_shadow = reader.bool();
+          continue;
+        case 6:
+          if (tag !== 50) {
             break;
           }
 
           message.disable_time = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
+          continue;
+        case 7:
+          if (tag !== 58) {
+            break;
+          }
+
+          message.token = reader.string();
+          continue;
+        case 8:
+          if (tag !== 64) {
+            break;
+          }
+
+          message.role = reader.int32();
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -23098,16 +23217,22 @@ export const App = {
 
   fromJSON(object: any): App {
     return {
+      id: isSet(object.id) ? globalThis.String(object.id) : "",
       appname: isSet(object.appname) ? globalThis.String(object.appname) : "",
       creator_id: isSet(object.creator_id) ? globalThis.String(object.creator_id) : "",
       applogo: isSet(object.applogo) ? globalThis.String(object.applogo) : "",
-      online: isSet(object.online) ? globalThis.Boolean(object.online) : false,
+      is_shadow: isSet(object.is_shadow) ? globalThis.Boolean(object.is_shadow) : false,
       disable_time: isSet(object.disable_time) ? fromJsonTimestamp(object.disable_time) : undefined,
+      token: isSet(object.token) ? globalThis.String(object.token) : "",
+      role: isSet(object.role) ? globalThis.Number(object.role) : 0,
     };
   },
 
   toJSON(message: App): unknown {
     const obj: any = {};
+    if (message.id !== "") {
+      obj.id = message.id;
+    }
     if (message.appname !== "") {
       obj.appname = message.appname;
     }
@@ -23117,11 +23242,17 @@ export const App = {
     if (message.applogo !== "") {
       obj.applogo = message.applogo;
     }
-    if (message.online !== false) {
-      obj.online = message.online;
+    if (message.is_shadow !== false) {
+      obj.is_shadow = message.is_shadow;
     }
     if (message.disable_time !== undefined) {
       obj.disable_time = message.disable_time.toISOString();
+    }
+    if (message.token !== "") {
+      obj.token = message.token;
+    }
+    if (message.role !== 0) {
+      obj.role = Math.round(message.role);
     }
     return obj;
   },
@@ -23131,11 +23262,14 @@ export const App = {
   },
   fromPartial<I extends Exact<DeepPartial<App>, I>>(object: I): App {
     const message = createBaseApp();
+    message.id = object.id ?? "";
     message.appname = object.appname ?? "";
     message.creator_id = object.creator_id ?? "";
     message.applogo = object.applogo ?? "";
-    message.online = object.online ?? false;
+    message.is_shadow = object.is_shadow ?? false;
     message.disable_time = object.disable_time ?? undefined;
+    message.token = object.token ?? "";
+    message.role = object.role ?? 0;
     return message;
   },
 };
@@ -23668,6 +23802,395 @@ export const AppId = {
   fromPartial<I extends Exact<DeepPartial<AppId>, I>>(object: I): AppId {
     const message = createBaseAppId();
     message.id = object.id ?? "";
+    return message;
+  },
+};
+
+function createBaseAuthenticateRequest(): AuthenticateRequest {
+  return { account: undefined };
+}
+
+export const AuthenticateRequest = {
+  encode(message: AuthenticateRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.account !== undefined) {
+      AccountApp.encode(message.account, writer.uint32(10).fork()).ldelim();
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): AuthenticateRequest {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseAuthenticateRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.account = AccountApp.decode(reader, reader.uint32());
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): AuthenticateRequest {
+    return { account: isSet(object.account) ? AccountApp.fromJSON(object.account) : undefined };
+  },
+
+  toJSON(message: AuthenticateRequest): unknown {
+    const obj: any = {};
+    if (message.account !== undefined) {
+      obj.account = AccountApp.toJSON(message.account);
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<AuthenticateRequest>, I>>(base?: I): AuthenticateRequest {
+    return AuthenticateRequest.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<AuthenticateRequest>, I>>(object: I): AuthenticateRequest {
+    const message = createBaseAuthenticateRequest();
+    message.account = (object.account !== undefined && object.account !== null)
+      ? AccountApp.fromPartial(object.account)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseAccountApp(): AccountApp {
+  return { appid: "", appname: "", token: "", vars: {} };
+}
+
+export const AccountApp = {
+  encode(message: AccountApp, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.appid !== "") {
+      writer.uint32(10).string(message.appid);
+    }
+    if (message.appname !== "") {
+      writer.uint32(18).string(message.appname);
+    }
+    if (message.token !== "") {
+      writer.uint32(26).string(message.token);
+    }
+    Object.entries(message.vars).forEach(([key, value]) => {
+      AccountApp_VarsEntry.encode({ key: key as any, value }, writer.uint32(34).fork()).ldelim();
+    });
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): AccountApp {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseAccountApp();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.appid = reader.string();
+          continue;
+        case 2:
+          if (tag !== 18) {
+            break;
+          }
+
+          message.appname = reader.string();
+          continue;
+        case 3:
+          if (tag !== 26) {
+            break;
+          }
+
+          message.token = reader.string();
+          continue;
+        case 4:
+          if (tag !== 34) {
+            break;
+          }
+
+          const entry4 = AccountApp_VarsEntry.decode(reader, reader.uint32());
+          if (entry4.value !== undefined) {
+            message.vars[entry4.key] = entry4.value;
+          }
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): AccountApp {
+    return {
+      appid: isSet(object.appid) ? globalThis.String(object.appid) : "",
+      appname: isSet(object.appname) ? globalThis.String(object.appname) : "",
+      token: isSet(object.token) ? globalThis.String(object.token) : "",
+      vars: isObject(object.vars)
+        ? Object.entries(object.vars).reduce<{ [key: string]: string }>((acc, [key, value]) => {
+          acc[key] = String(value);
+          return acc;
+        }, {})
+        : {},
+    };
+  },
+
+  toJSON(message: AccountApp): unknown {
+    const obj: any = {};
+    if (message.appid !== "") {
+      obj.appid = message.appid;
+    }
+    if (message.appname !== "") {
+      obj.appname = message.appname;
+    }
+    if (message.token !== "") {
+      obj.token = message.token;
+    }
+    if (message.vars) {
+      const entries = Object.entries(message.vars);
+      if (entries.length > 0) {
+        obj.vars = {};
+        entries.forEach(([k, v]) => {
+          obj.vars[k] = v;
+        });
+      }
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<AccountApp>, I>>(base?: I): AccountApp {
+    return AccountApp.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<AccountApp>, I>>(object: I): AccountApp {
+    const message = createBaseAccountApp();
+    message.appid = object.appid ?? "";
+    message.appname = object.appname ?? "";
+    message.token = object.token ?? "";
+    message.vars = Object.entries(object.vars ?? {}).reduce<{ [key: string]: string }>((acc, [key, value]) => {
+      if (value !== undefined) {
+        acc[key] = globalThis.String(value);
+      }
+      return acc;
+    }, {});
+    return message;
+  },
+};
+
+function createBaseAccountApp_VarsEntry(): AccountApp_VarsEntry {
+  return { key: "", value: "" };
+}
+
+export const AccountApp_VarsEntry = {
+  encode(message: AccountApp_VarsEntry, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.key !== "") {
+      writer.uint32(10).string(message.key);
+    }
+    if (message.value !== "") {
+      writer.uint32(18).string(message.value);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): AccountApp_VarsEntry {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseAccountApp_VarsEntry();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.key = reader.string();
+          continue;
+        case 2:
+          if (tag !== 18) {
+            break;
+          }
+
+          message.value = reader.string();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): AccountApp_VarsEntry {
+    return {
+      key: isSet(object.key) ? globalThis.String(object.key) : "",
+      value: isSet(object.value) ? globalThis.String(object.value) : "",
+    };
+  },
+
+  toJSON(message: AccountApp_VarsEntry): unknown {
+    const obj: any = {};
+    if (message.key !== "") {
+      obj.key = message.key;
+    }
+    if (message.value !== "") {
+      obj.value = message.value;
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<AccountApp_VarsEntry>, I>>(base?: I): AccountApp_VarsEntry {
+    return AccountApp_VarsEntry.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<AccountApp_VarsEntry>, I>>(object: I): AccountApp_VarsEntry {
+    const message = createBaseAccountApp_VarsEntry();
+    message.key = object.key ?? "";
+    message.value = object.value ?? "";
+    return message;
+  },
+};
+
+function createBaseDeleteChannelMessagesRequest(): DeleteChannelMessagesRequest {
+  return { before: undefined, ids: [] };
+}
+
+export const DeleteChannelMessagesRequest = {
+  encode(message: DeleteChannelMessagesRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.before !== undefined) {
+      Timestamp.encode(toTimestamp(message.before), writer.uint32(10).fork()).ldelim();
+    }
+    for (const v of message.ids) {
+      writer.uint32(18).string(v!);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): DeleteChannelMessagesRequest {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseDeleteChannelMessagesRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.before = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
+          continue;
+        case 2:
+          if (tag !== 18) {
+            break;
+          }
+
+          message.ids.push(reader.string());
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): DeleteChannelMessagesRequest {
+    return {
+      before: isSet(object.before) ? fromJsonTimestamp(object.before) : undefined,
+      ids: globalThis.Array.isArray(object?.ids) ? object.ids.map((e: any) => globalThis.String(e)) : [],
+    };
+  },
+
+  toJSON(message: DeleteChannelMessagesRequest): unknown {
+    const obj: any = {};
+    if (message.before !== undefined) {
+      obj.before = message.before.toISOString();
+    }
+    if (message.ids?.length) {
+      obj.ids = message.ids;
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<DeleteChannelMessagesRequest>, I>>(base?: I): DeleteChannelMessagesRequest {
+    return DeleteChannelMessagesRequest.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<DeleteChannelMessagesRequest>, I>>(object: I): DeleteChannelMessagesRequest {
+    const message = createBaseDeleteChannelMessagesRequest();
+    message.before = object.before ?? undefined;
+    message.ids = object.ids?.map((e) => e) || [];
+    return message;
+  },
+};
+
+function createBaseDeleteChannelMessagesResponse(): DeleteChannelMessagesResponse {
+  return { total: 0 };
+}
+
+export const DeleteChannelMessagesResponse = {
+  encode(message: DeleteChannelMessagesResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.total !== 0) {
+      writer.uint32(8).int64(message.total);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): DeleteChannelMessagesResponse {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseDeleteChannelMessagesResponse();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 8) {
+            break;
+          }
+
+          message.total = longToNumber(reader.int64() as Long);
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): DeleteChannelMessagesResponse {
+    return { total: isSet(object.total) ? globalThis.Number(object.total) : 0 };
+  },
+
+  toJSON(message: DeleteChannelMessagesResponse): unknown {
+    const obj: any = {};
+    if (message.total !== 0) {
+      obj.total = Math.round(message.total);
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<DeleteChannelMessagesResponse>, I>>(base?: I): DeleteChannelMessagesResponse {
+    return DeleteChannelMessagesResponse.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<DeleteChannelMessagesResponse>, I>>(
+    object: I,
+  ): DeleteChannelMessagesResponse {
+    const message = createBaseDeleteChannelMessagesResponse();
+    message.total = object.total ?? 0;
     return message;
   },
 };

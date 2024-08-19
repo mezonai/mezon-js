@@ -448,6 +448,8 @@ export interface ChannelMessageUpdate {
   attachments: MessageAttachment[];
   /** The mode */
   mode: number;
+  /** hide editted */
+  hide_editted: boolean;
 }
 
 /** Remove a message previously sent to a realtime channel. */
@@ -3919,7 +3921,16 @@ export const ChannelMessageSend = {
 };
 
 function createBaseChannelMessageUpdate(): ChannelMessageUpdate {
-  return { clan_id: "", channel_id: "", message_id: "", content: "", mentions: [], attachments: [], mode: 0 };
+  return {
+    clan_id: "",
+    channel_id: "",
+    message_id: "",
+    content: "",
+    mentions: [],
+    attachments: [],
+    mode: 0,
+    hide_editted: false,
+  };
 }
 
 export const ChannelMessageUpdate = {
@@ -3944,6 +3955,9 @@ export const ChannelMessageUpdate = {
     }
     if (message.mode !== 0) {
       writer.uint32(56).int32(message.mode);
+    }
+    if (message.hide_editted !== false) {
+      writer.uint32(64).bool(message.hide_editted);
     }
     return writer;
   },
@@ -4004,6 +4018,13 @@ export const ChannelMessageUpdate = {
 
           message.mode = reader.int32();
           continue;
+        case 8:
+          if (tag !== 64) {
+            break;
+          }
+
+          message.hide_editted = reader.bool();
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -4026,6 +4047,7 @@ export const ChannelMessageUpdate = {
         ? object.attachments.map((e: any) => MessageAttachment.fromJSON(e))
         : [],
       mode: isSet(object.mode) ? globalThis.Number(object.mode) : 0,
+      hide_editted: isSet(object.hide_editted) ? globalThis.Boolean(object.hide_editted) : false,
     };
   },
 
@@ -4052,6 +4074,9 @@ export const ChannelMessageUpdate = {
     if (message.mode !== 0) {
       obj.mode = Math.round(message.mode);
     }
+    if (message.hide_editted !== false) {
+      obj.hide_editted = message.hide_editted;
+    }
     return obj;
   },
 
@@ -4067,6 +4092,7 @@ export const ChannelMessageUpdate = {
     message.mentions = object.mentions?.map((e) => MessageMention.fromPartial(e)) || [];
     message.attachments = object.attachments?.map((e) => MessageAttachment.fromPartial(e)) || [];
     message.mode = object.mode ?? 0;
+    message.hide_editted = object.hide_editted ?? false;
     return message;
   },
 };

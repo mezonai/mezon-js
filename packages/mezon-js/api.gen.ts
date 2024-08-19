@@ -148,6 +148,8 @@ export interface MezonUpdateClanEmojiByIdBody {
   //
   category?: string;
   //
+  clan_id?: string;
+  //
   shortname?: string;
   //
   source?: string;
@@ -4295,7 +4297,7 @@ export class MezonApi {
     bodyJson = JSON.stringify(body || {});
 
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
-    const fetchOptions = buildFetchOptions("PATCH", options, bodyJson);
+    const fetchOptions = buildFetchOptions("PUT", options, bodyJson);
     if (bearerToken) {
         fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
     }
