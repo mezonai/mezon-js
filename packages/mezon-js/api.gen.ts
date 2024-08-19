@@ -190,6 +190,8 @@ export interface MezonUpdateRoleBody {
   //
   allow_mention?: number;
   //
+  clan_id?: string;
+  //
   color?: string;
   //
   description?: string;
@@ -208,7 +210,7 @@ export interface MezonUpdateRoleBody {
 /** Delete a role the user has access to. */
 export interface MezonUpdateRoleDeleteBody {
   //
-  channel_id?: string;
+  clan_id?: string;
 }
 
 /**  */
@@ -809,6 +811,8 @@ export interface ApiDeleteEventRequest {
 export interface ApiDeleteRoleRequest {
   //
   channel_id?: string;
+  //
+  clan_id?: string;
   //The id of a role.
   role_id?: string;
 }
@@ -1186,20 +1190,6 @@ export interface ApiPermission {
 export interface ApiPermissionList {
   //A list of permission.
   permissions?: Array<ApiPermission>;
-}
-
-/**  */
-export interface ApiPermissionRoleChannel {
-  //
-  active?: boolean;
-  //
-  permission_id?: string;
-}
-
-/** A list of permission role channel. */
-export interface ApiPermissionRoleChannelList {
-  //A list of permission.
-  permission_role_channel?: Array<ApiPermissionRoleChannel>;
 }
 
 /**  */
@@ -5323,41 +5313,6 @@ export class MezonApi {
     ]);
 }
 
-  /** List permission role channel */
-  getListPermissionRoleChannel(bearerToken: string,
-      roleId?:string,
-      channelId?:string,
-      options: any = {}): Promise<ApiPermissionRoleChannelList> {
-    
-    const urlPath = "/v2/permissionrolechannel/get";
-    const queryParams = new Map<string, any>();
-    queryParams.set("role_id", roleId);
-    queryParams.set("channel_id", channelId);
-
-    let bodyJson : string = "";
-
-    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
-    const fetchOptions = buildFetchOptions("GET", options, bodyJson);
-    if (bearerToken) {
-        fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-    }
-
-    return Promise.race([
-      fetch(fullUrl, fetchOptions).then((response) => {
-        if (response.status == 204) {
-          return response;
-        } else if (response.status >= 200 && response.status < 300) {
-          return response.json();
-        } else {
-          throw response;
-        }
-      }),
-      new Promise((_, reject) =>
-        setTimeout(reject, this.timeoutMs, "Request timed out.")
-      ),
-    ]);
-}
-
   /** set permission role channel. */
   setRoleChannelPermission(bearerToken: string,
       body:ApiUpdateRoleChannelRequest,
@@ -5833,7 +5788,7 @@ export class MezonApi {
   /** Update fields in a given role. */
   updateRole(bearerToken: string,
       roleId:string,
-      body:{},
+      body:MezonUpdateRoleBody,
       options: any = {}): Promise<any> {
     
     if (roleId === null || roleId === undefined) {
