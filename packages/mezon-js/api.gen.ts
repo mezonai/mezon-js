@@ -123,6 +123,8 @@ export interface MezonUpdateClanEmojiByIdBody {
   //
   category?: string;
   //
+  clan_id?: string;
+  //
   shortname?: string;
   //
   source?: string;
