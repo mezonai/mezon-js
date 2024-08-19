@@ -193,6 +193,8 @@ export interface ChannelMessage {
   mode?: number;
   //
   message_id?: string;
+  //
+  hideEditted?: boolean;
 }
 
 /** A list of channel messages, usually a result of a list operation. */

@@ -66,31 +66,6 @@ export interface ApiAddAppRequest {
   token?: string;
 }
 
-
-/** App information. */
-export interface ApiApp {
-  //
-  applogo?: string;
-  //
-  appname?: string;
-  //
-  creator_id?: string;
-  //The UNIX time when the app was disabled.
-  disable_time?: string;
-  //
-  online?: boolean;
-}
-
-/** A list of apps. */
-export interface ApiAppList {
-  //A list of apps.
-  apps?: Array<ApiApp>;
-  //Next cursor.
-  next_cursor?: string;
-  //Approximate total number of apps.
-  total_count?: number;
-}
-
 /**
 * - USER_ROLE_ADMIN: All access
  - USER_ROLE_DEVELOPER: Best for developers, also enables APIs and API explorer
@@ -365,6 +340,8 @@ export interface ApiAddRoleChannelDescRequest {
 
 /** App information. */
 export interface ApiApp {
+  // app id
+  id: string;
   //
   applogo?: string;
   //
@@ -559,6 +536,8 @@ export interface ApiChannelMessage {
   username?: string;
   // channel mode
   mode?: number;
+  // hide editted
+  hideEditted?: boolean;
 }
 
 /**  */
