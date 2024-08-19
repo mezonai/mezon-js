@@ -93,11 +93,11 @@ import {
   ApiClanStickerAddRequest,
   MezonUpdateClanStickerByIdBody,
   MezonChangeChannelCategoryBody,
-  ApiPermissionRoleChannelList,
   ApiUpdateRoleChannelRequest,
   ApiAddAppRequest,
   ApiAppList,
   ApiApp,
+  MezonUpdateRoleDeleteBody,
 } from "./api.gen";
 
 import { Session } from "./session";
@@ -453,6 +453,8 @@ export interface ApiUpdateRoleRequest {
   remove_user_ids: string[];
   /** The permissions to remove. */
   remove_permission_ids: string[];
+  //
+  clan_id: string
 }
 
 /** A client for Mezon server. */
@@ -1310,7 +1312,7 @@ export class Client {
   }
 
   /** Update action role when delete role */
-  async updateRoleDelete(session: Session, roleId:string, request:{}): Promise<boolean> {
+  async updateRoleDelete(session: Session, roleId:string, request:MezonUpdateRoleDeleteBody): Promise<boolean> {
     if (this.autoRefreshSession && session.refresh_token &&
         session.isexpired((Date.now() + this.expiredTimespanMs)/1000)) {
         await this.sessionRefresh(session);
@@ -2210,18 +2212,6 @@ async changeChannelCategory(session: Session, id: string, request: MezonChangeCh
   return this.apiClient.changeChannelCategory(session.token, id, request).then((response: any) => {
     return response !== undefined;
   })
-}
-
-/** */
-async getListPermissionRoleChannel(session: Session, roleId: string, channelId: string): Promise<ApiPermissionRoleChannelList> {
-  if (this.autoRefreshSession && session.refresh_token &&
-    session.isexpired((Date.now() + this.expiredTimespanMs)/1000)) {
-    await this.sessionRefresh(session);
-  }
-
-  return this.apiClient.getListPermissionRoleChannel(session.token, roleId, channelId).then((response: ApiPermissionRoleChannelList) => {
-    return Promise.resolve(response);
-  });
 }
 
 /** */

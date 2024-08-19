@@ -385,6 +385,24 @@ export interface ChannelDeletedEvent {
   deletor: string;
 }
 
+// A list of permission role channel.
+export interface PermissionRoleChannelListEvent {
+  //
+  role_id?: string;
+  //
+  channel_id?: string; 
+  // A list of permission.
+  permission_role_channel?: Array<PermissionRoleChannel>;
+}
+
+// Permission role channel
+export interface PermissionRoleChannel {
+  // Permission id 
+  permission_id?: string;
+  // active
+  active?: boolean;
+}
+
 // clan updated event
 export interface ClanUpdatedEvent {
   // the clan id
@@ -814,6 +832,7 @@ export interface Socket {
 
   getNotificationReactMessage(channel_id_req: string): Promise<NotifiReactMessageEvent>;
 
+  GetPermissionByRoleIdChannelId(role_id: string, channel_id: string): Promise<PermissionRoleChannelListEvent>;
 }
 
 /** Reports an error received from a socket message. */
@@ -1368,6 +1387,11 @@ export class DefaultSocket implements Socket {
   async hashtagDMList(user_id: Array<string>, limit: number): Promise<HashtagDmListEvent> {
     const response = await this.send({hashtag_dm_list_event: {user_id: user_id, limit: limit }});
     return response.hashtag_dm_list_event
+  }
+
+  async GetPermissionByRoleIdChannelId(role_id: string, channel_id: string): Promise<PermissionRoleChannelListEvent> {
+    const response = await this.send({permission_role_channel_list_event: {role_id: role_id, channel_id: channel_id }});
+    return response.permission_role_channel_list_event
   }
 
   async listClanStickersByClanId(clan_id: string): Promise<StrickerListedEvent> {
