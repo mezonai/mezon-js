@@ -1322,7 +1322,7 @@ export class DefaultSocket implements Socket {
   }
 
   async updateChatMessage(clan_id: string, channel_id: string, mode: number, message_id : string, content: any, mentions?: Array<ApiMessageMention>, attachments?: Array<ApiMessageAttachment>, hideEditted?: boolean): Promise<ChannelMessageAck> {
-    const response = await this.send({channel_message_update: {clan_id: clan_id, channel_id: channel_id, message_id: message_id, content: content, mentions: mentions, attachments: attachments, mode: mode, hideEditted: hideEditted}});
+    const response = await this.send({channel_message_update: {clan_id: clan_id, channel_id: channel_id, message_id: message_id, content: content, mentions: mentions, attachments: attachments, mode: mode, hide_editted: hideEditted}});
     return response.channel_message_ack;
   }
 
