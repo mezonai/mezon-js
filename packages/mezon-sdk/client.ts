@@ -57,27 +57,27 @@ export class Client {
           'key': 'app' 
         }
       }
-    }).then((apiSession : ApiSession) => {
+    }).then(async (apiSession : ApiSession) => {
       const sockSession = new Session(apiSession.token || "", apiSession.refresh_token || "");
-      const socket = this.createSocket(true, false, new WebSocketAdapterPb());
-      socket.connect(sockSession, true).then((session) => {
-        console.log(session);
-        if (!session) {
-          console.log("error authenticate");
-          return;
-        }
-        socket.onchannelmessage = this.onchannelmessage;
-        socket.ondisconnect = this.ondisconnect;
-        socket.onerror = this.onerror;
-        socket.onmessagereaction = this.onmessagereaction;
-        socket.onuserchannelremoved = this.onuserchannelremoved;
-        socket.onuserclanremoved = this.onuserclanremoved;
-        socket.onuserchanneladded = this.onuserchanneladded;        
-        socket.onchannelcreated = this.onchannelcreated;
-        socket.onchanneldeleted = this.onchanneldeleted;
-        socket.onchannelupdated = this.onchannelupdated;
-        socket.onheartbeattimeout = this.onheartbeattimeout;
-      });
+      const socket = this.createSocket(false, true, new WebSocketAdapterPb());
+      const session = await socket.connect(sockSession, false);
+
+      if (!session) {
+        console.log("error authenticate");
+        return;
+      }
+
+      socket.onchannelmessage = this.onchannelmessage;
+      socket.ondisconnect = this.ondisconnect;
+      socket.onerror = this.onerror;
+      socket.onmessagereaction = this.onmessagereaction;
+      socket.onuserchannelremoved = this.onuserchannelremoved;
+      socket.onuserclanremoved = this.onuserclanremoved;
+      socket.onuserchanneladded = this.onuserchanneladded;        
+      socket.onchannelcreated = this.onchannelcreated;
+      socket.onchanneldeleted = this.onchanneldeleted;
+      socket.onchannelupdated = this.onchannelupdated;
+      socket.onheartbeattimeout = this.onheartbeattimeout;
       
       return Promise.resolve(new Session(apiSession.token || "", apiSession.refresh_token || ""));
     });
@@ -152,7 +152,6 @@ export class Client {
     } else {
       this.onMessageReactionAdd(messagereaction);
     }
-    
   }
 
   onchannelmessage(channelMessage: ChannelMessage) {
