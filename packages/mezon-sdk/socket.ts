@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+import { ApiMessageAttachment, ApiMessageMention, ApiMessageReaction, ApiMessageRef, ChannelMessage } from "./client";
 import {Session} from "./session";
 import { WebSocketAdapter, WebSocketAdapterText } from "./web_socket_adapter";
 
@@ -84,186 +85,6 @@ interface ChannelLeave {
     // The channel label
     channel_label: string;
   };
-}
-
-
-/** A message sent on a channel. */
-export interface ChannelMessage {
-  //The unique ID of this message.
-  id: string;
-  //
-  avatar?: string;
-  //The channel this message belongs to.
-  channel_id: string;
-  //The name of the chat room, or an empty string if this message was not sent through a chat room.
-  channel_label: string;
-  //The clan this message belong to.
-  clan_id?: string;
-  //The code representing a message type or category.
-  code: number;
-  //The content payload.
-  content: string;
-  //The UNIX time (for gRPC clients) or ISO string (for REST clients) when the message was created.
-  create_time: string;
-  //
-  reactions?: Array<ApiMessageReaction>;
-  //
-  mentions?: Array<ApiMessageMention>;
-  //
-  attachments?: Array<ApiMessageAttachment>;
-  //
-  references?: Array<ApiMessageRef>;
-  //
-  referenced_message?: ChannelMessage;
-  //True if the message was persisted to the channel's history, false otherwise.
-  persistent?: boolean;
-  //Message sender, usually a user ID.
-  sender_id: string;
-  //The UNIX time (for gRPC clients) or ISO string (for REST clients) when the message was last updated.
-  update_time?: string;
-  //The ID of the first DM user, or an empty string if this message was not sent through a DM chat.
-  clan_logo?: string;
-  //The ID of the second DM user, or an empty string if this message was not sent through a DM chat.
-  category_name?: string;
-  //The username of the message sender, if any.
-  username?: string;
-  // The clan nick name
-  clan_nick?: string;
-  // The clan avatar
-  clan_avatar?: string;
-  //
-  display_name?: string;
-  //
-  create_time_ms?: number;
-  //
-  update_time_ms?: number;
-  //
-  mode?: number;
-  //
-  message_id?: string;
-}
-
-
-/**  */
-export interface ApiMessageAttachment {
-  //
-  filename?: string;
-  //
-  filetype?: string;
-  //
-  height?: number;
-  //
-  size?: number;
-  //
-  url?: string;
-  //
-  width?: number;
-  /** The channel this message belongs to. */
-  channel_id?:string;
-  // The mode
-  mode?: number;
-  // The channel label
-  channel_label?: string;
-  /** The message that user react */
-  message_id?: string;
-  /** Message sender, usually a user ID. */
-  sender_id?: string;
-}
-
-/**  */
-export interface ApiMessageDeleted {
-  //
-  deletor?: string;
-  //
-  message_id?: string;
-}
-
-/**  */
-export interface ApiMessageMention {
-  //The UNIX time (for gRPC clients) or ISO string (for REST clients) when the message was created.
-  create_time?: string;
-  //
-  id?: string;
-  //
-  user_id?: string;
-  //
-  username?: string;
-  // role id
-  role_id?: string;
-  // role name
-  rolename?: string;
-  // start position
-  s?: number;
-  // end position
-  e?: number;
-  /** The channel this message belongs to. */
-  channel_id?:string;
-// The mode
-  mode?: number;
-  // The channel label
-  channel_label?: string;
-  /** The message that user react */
-  message_id?: string;
-  /** Message sender, usually a user ID. */
-  sender_id?: string;
-}
-
-/**  */
-export interface ApiMessageReaction {
-  //
-  action?: boolean;
-  //
-  emoji_id: string;
-  //
-  emoji: string;
-  //
-  id?: string;
-  //
-  sender_id?: string;
-  //
-  sender_name?: string;
-  //
-  sender_avatar?: string;
-  // count of emoji
-  count: number;
-  /** The channel this message belongs to. */
-  channel_id:string;
-  // The mode
-  mode: number;
-  // The channel label
-  channel_label: string;
-  /** The message that user react */
-  message_id: string;
-}
-
-/**  */
-export interface ApiMessageRef {
-  //
-  message_id?: string;
-  //
-  message_ref_id?: string;
-  //
-  ref_type?: number;
-  //
-  message_sender_id?: string;
-  // original message sendre username
-  message_sender_username?: string;
-  // original message sender avatar
-  mesages_sender_avatar?: string;
-  // original sender clan nick name
-  message_sender_clan_nick?: string;
-  // original sender display name
-  message_sender_display_name?:string;
-  //
-  content?:string;
-  //
-  has_attachment: boolean;
-  /** The channel this message belongs to. */
-  channel_id:string;
-  // The mode
-  mode: number;
-  // The channel label
-  channel_label: string;
 }
 
 /** UserChannelAddedEvent */
@@ -845,6 +666,9 @@ export interface Socket {
   /** Disconnect from the server. */
   disconnect(fireDisconnectEvent: boolean): void;
 
+  /** Join clan chat */
+  joinClanChat(clan_id: string) : Promise<ClanJoin>;
+
   /** Join a chat channel on the server. */
   joinChat(clan_id: string, channel_id: string, channel_type: number) : Promise<Channel>;
 
@@ -1327,11 +1151,6 @@ export class DefaultSocket implements Socket {
         this.adapter.send(untypedMessage);
       }
     });
-  }
-
-  async followUsers(userIds : string[]): Promise<Status> {
-    const response = await this.send({status_follow: {user_ids: userIds}});
-    return response.status;
   }
 
   async joinClanChat(clan_id: string): Promise<ClanJoin> {

@@ -14,13 +14,16 @@
  * limitations under the License.
  */
 
-import {Client} from "mezon-sdk";
+import {Client, ChannelMessage } from "mezon-sdk";
 
 var client = new Client("594c67737675324859665a5867716d54");
 
 client.authenticate().then(async (e: string) => {
   console.log("authenticated.", e);
-
 }).catch(e => {
   console.log("error authenticating.");
 });
+
+client.onMessage = (msg: ChannelMessage) => {
+  console.log("channel message", msg);
+}
