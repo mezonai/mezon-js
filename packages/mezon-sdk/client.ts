@@ -21,7 +21,7 @@ import { WebSocketAdapter } from "./web_socket_adapter";
 import { WebSocketAdapterPb } from 'mezon-js-protobuf';
 
 const DEFAULT_HOST = "127.0.0.1";
-const DEFAULT_PORT = "7450";
+const DEFAULT_PORT = "7350";
 const DEFAULT_API_KEY = "defaultkey";
 const DEFAULT_TIMEOUT_MS = 7000;
 const DEFAULT_EXPIRED_TIMESPAN_MS = 5 * 60 * 1000;
@@ -49,37 +49,34 @@ export class Client {
   }
 
   /** Authenticate a user with an ID against the server. */
-  async authenticate(token: string) {
-    return this.apiClient.mezonAuthenticate(token, "", {
+  async authenticate() {
+    return this.apiClient.mezonAuthenticate(this.apiKey, "", {
       account: {
-        token: token,
-        vars: {
-          'key': 'app' 
-        }
+        token: this.apiKey,
       }
-    }).then((apiSession : ApiSession) => {
+    }).then(async (apiSession : ApiSession) => {
       const sockSession = new Session(apiSession.token || "", apiSession.refresh_token || "");
-      const socket = this.createSocket(true, false, new WebSocketAdapterPb());
-      socket.connect(sockSession, true).then((session) => {
-        console.log(session);
-        if (!session) {
-          console.log("error authenticate");
-          return;
-        }
-        socket.onchannelmessage = this.onchannelmessage;
-        socket.ondisconnect = this.ondisconnect;
-        socket.onerror = this.onerror;
-        socket.onmessagereaction = this.onmessagereaction;
-        socket.onuserchannelremoved = this.onuserchannelremoved;
-        socket.onuserclanremoved = this.onuserclanremoved;
-        socket.onuserchanneladded = this.onuserchanneladded;        
-        socket.onchannelcreated = this.onchannelcreated;
-        socket.onchanneldeleted = this.onchanneldeleted;
-        socket.onchannelupdated = this.onchannelupdated;
-        socket.onheartbeattimeout = this.onheartbeattimeout;
-      });
+      const socket = this.createSocket(false, true, new WebSocketAdapterPb());
+      const session = await socket.connect(sockSession, false);
+
+      if (!session) {
+        console.log("error authenticate");
+        return;
+      }
+
+      socket.onchannelmessage = this.onchannelmessage;
+      socket.ondisconnect = this.ondisconnect;
+      socket.onerror = this.onerror;
+      socket.onmessagereaction = this.onmessagereaction;
+      socket.onuserchannelremoved = this.onuserchannelremoved;
+      socket.onuserclanremoved = this.onuserclanremoved;
+      socket.onuserchanneladded = this.onuserchanneladded;        
+      socket.onchannelcreated = this.onchannelcreated;
+      socket.onchanneldeleted = this.onchanneldeleted;
+      socket.onchannelupdated = this.onchannelupdated;
+      socket.onheartbeattimeout = this.onheartbeattimeout;
       
-      return Promise.resolve(new Session(apiSession.token || "", apiSession.refresh_token || ""));
+      return Promise.resolve("connect successful");
     });
   }
 
@@ -152,7 +149,6 @@ export class Client {
     } else {
       this.onMessageReactionAdd(messagereaction);
     }
-    
   }
 
   onchannelmessage(channelMessage: ChannelMessage) {

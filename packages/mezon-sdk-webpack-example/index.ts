@@ -14,14 +14,12 @@
  * limitations under the License.
  */
 
-import {Client, Session} from "mezon-sdk";
+import {Client} from "mezon-sdk";
 
-var useSSL = false; // Enable if server is run with an SSL certificate.
-//var client = new Client("defaultkey", "dev-mezon.nccsoft.vn", "7305", useSSL);
-var client = new Client("defaultkey", "127.0.0.1", "7350", useSSL);
+var client = new Client("594c67737675324859665a5867716d54");
 
-client.authenticate("594c67737675324859665a5867716d54").then(async (session : Session) => {
-  console.log("authenticated.", session);
+client.authenticate().then(async (e: string) => {
+  console.log("authenticated.", e);
 
 }).catch(e => {
   console.log("error authenticating.");
