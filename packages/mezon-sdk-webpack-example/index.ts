@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-import {Client, ChannelMessage } from "mezon-sdk";
+import { ChannelMessage, DefaultClient } from "mezon-sdk";
 
-var client = new Client("594c67737675324859665a5867716d54");
+var client = new DefaultClient("594c67737675324859665a5867716d54");
 
 client.authenticate().then(async (e: string) => {
   console.log("authenticated.", e);
