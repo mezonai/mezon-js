@@ -16,6 +16,7 @@
 
 import { decode, encode } from "base64-arraybuffer";
 import { btoa } from "js-base64"
+import WebSocket, { CloseEvent, MessageEvent } from 'ws';
 
 /**
  * An interface used by Mezon's web socket to determine the payload protocol.
@@ -30,7 +31,7 @@ export interface WebSocketAdapter {
     /**
      * Dispatched when the web socket receives an error.
      */
-    onError : SocketErrorHandler | null;
+    onError : ((event: WebSocket.ErrorEvent) => void) | null;
 
     /**
      * Dispatched when the web socket receives a normal message.
@@ -40,7 +41,7 @@ export interface WebSocketAdapter {
     /**
      * Dispatched when the web socket opens.
      */
-    onOpen : SocketOpenHandler | null;
+    onOpen : ((event: WebSocket.Event) => void) | null;
 
     isOpen(): boolean;
     close() : void;
@@ -91,11 +92,11 @@ export class WebSocketAdapterText implements WebSocketAdapter {
         this._socket!.onclose = value;
     }
 
-    get onError(): SocketErrorHandler | null {
+    get onError(): ((event: WebSocket.ErrorEvent) => void) | null {
         return this._socket!.onerror;
     }
 
-    set onError(value: SocketErrorHandler | null) {
+    set onError(value: ((event: WebSocket.ErrorEvent) => void) | null) {
         this._socket!.onerror = value;
     }
 
@@ -106,7 +107,7 @@ export class WebSocketAdapterText implements WebSocketAdapter {
     set onMessage(value: SocketMessageHandler | null) {
         if (value) {
             this._socket!.onmessage = (evt: MessageEvent) => {
-                const message: any = JSON.parse(evt.data);
+                const message: any = JSON.parse(evt.data as string);
                 
                 if (message.party_data && message.party_data.data) {
                     message.party_data.data = new Uint8Array(decode(message.party_data.data));
@@ -120,11 +121,11 @@ export class WebSocketAdapterText implements WebSocketAdapter {
         }
     }
 
-    get onOpen(): SocketOpenHandler | null {
+    get onOpen(): ((event: WebSocket.Event) => void) | null {
         return this._socket!.onopen;
     }
 
-    set onOpen(value: SocketOpenHandler | null) {
+    set onOpen(value: ((event: WebSocket.Event) => void) | null) {
         this._socket!.onopen = value;
     }
 

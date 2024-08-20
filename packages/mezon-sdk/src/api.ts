@@ -4,7 +4,6 @@
 import { buildFetchOptions } from './utils';
 import { encode } from 'js-base64';
 
-
 /**  */
 export interface ApiClanDescList {
   //A list of channel.
@@ -174,7 +173,7 @@ export class MezonApi {
         if (response.status == 204) {
           return response;
         } else if (response.status >= 200 && response.status < 300) {
-          return response.json();
+          return response.json() as Promise<any>;
         } else {
           throw response;
         }
@@ -247,7 +246,7 @@ export class MezonApi {
         if (response.status == 204) {
           return response;
         } else if (response.status >= 200 && response.status < 300) {
-          return response.json();
+          return response.json() as Promise<any>;
         } else {
           throw response;
         }
@@ -361,7 +360,7 @@ export class MezonApi {
         if (response.status == 204) {
           return response;
         } else if (response.status >= 200 && response.status < 300) {
-          return response.json();
+          return response.json() as Promise<any>;
         } else {
           throw response;
         }

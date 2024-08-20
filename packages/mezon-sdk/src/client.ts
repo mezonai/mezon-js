@@ -14,11 +14,12 @@
  * limitations under the License.
  */
 
+import { CloseEvent, ErrorEvent } from "ws";
 import { MezonApi, ApiAuthenticateLogoutRequest, ApiAuthenticateRefreshRequest, ApiUpdateMessageRequest, ApiSession } from "./api";
 import { Session } from "./session";
 import { ChannelCreatedEvent, ChannelDeletedEvent, ChannelUpdatedEvent, DefaultSocket, Socket, UserChannelAddedEvent, UserChannelRemovedEvent, UserClanRemovedEvent, VoiceJoinedEvent } from "./socket";
 import { WebSocketAdapter } from "./web_socket_adapter";
-import { WebSocketAdapterPb } from 'mezon-js-protobuf';
+import { WebSocketAdapterPb } from './web_socket_adapter_pb';
 
 const DEFAULT_HOST = "dev-mezon.nccsoft.vn";
 const DEFAULT_PORT = "7305";
@@ -241,7 +242,6 @@ export interface ChannelMessage {
   message_id?: string;
 }
 
-
 /** A user in the server. */
 export interface ApiUser {
   //
@@ -415,7 +415,7 @@ export class MezonClient  implements Client {
     return new DefaultSocket(this.host, this.port, useSSL, verbose, adapter, sendTimeoutMs);
   }
 
-  onerror(evt: Event) {
+  onerror(evt: ErrorEvent) {
     console.log(evt);
   }
 
@@ -428,7 +428,7 @@ export class MezonClient  implements Client {
     }
   }
 
-  ondisconnect(e: Event) {
+  ondisconnect(e: CloseEvent) {
     console.log(e);
   }
 
