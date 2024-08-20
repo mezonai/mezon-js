@@ -218,7 +218,7 @@ export interface Client {
 }
 
 /** A client for Mezon server. */
-export class DefaultClient  implements Client {
+export class MezonClient  implements Client {
 
   /** The expired timespan used to check session lifetime. */
   public expiredTimespanMs = DEFAULT_EXPIRED_TIMESPAN_MS;
