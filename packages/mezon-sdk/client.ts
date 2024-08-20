@@ -20,8 +20,8 @@ import { ChannelCreatedEvent, ChannelDeletedEvent, ChannelUpdatedEvent, DefaultS
 import { WebSocketAdapter } from "./web_socket_adapter";
 import { WebSocketAdapterPb } from 'mezon-js-protobuf';
 
-const DEFAULT_HOST = "127.0.0.1";
-const DEFAULT_PORT = "7350";
+const DEFAULT_HOST = "dev-mezon.nccsoft.vn";
+const DEFAULT_PORT = "7305";
 const DEFAULT_API_KEY = "defaultkey";
 const DEFAULT_TIMEOUT_MS = 7000;
 const DEFAULT_EXPIRED_TIMESPAN_MS = 5 * 60 * 1000;
@@ -205,8 +205,20 @@ export interface ChannelMessage {
   message_id?: string;
 }
 
+export interface Client {
+  authenticate: () => Promise<string | undefined>;
+
+  /** Receive clan evnet. */
+  onMessage: (channelMessage: ChannelMessage) => void;
+  onClanMemberUpdate: (member_id: Array<string>, leave: boolean) => void;
+  onMessageDelete: (channelMessage: ChannelMessage) => void;
+  onMessageReactionAdd: (messageReactionEvent: ApiMessageReaction) => void;
+  onVoiceStateUpdate: (voiceState: VoiceJoinedEvent) => void;
+  onMessageReactionRemove: (messageReactionEvent: ApiMessageReaction) => void;
+}
+
 /** A client for Mezon server. */
-export class Client {
+export class DefaultClient  implements Client {
 
   /** The expired timespan used to check session lifetime. */
   public expiredTimespanMs = DEFAULT_EXPIRED_TIMESPAN_MS;
@@ -218,7 +230,7 @@ export class Client {
       readonly apiKey = DEFAULT_API_KEY,
       readonly host = DEFAULT_HOST,
       readonly port = DEFAULT_PORT,
-      readonly useSSL = false,
+      readonly useSSL = true,
       readonly timeout = DEFAULT_TIMEOUT_MS,
       readonly autoRefreshSession = true) {
     const scheme = (useSSL) ? "https://" : "http://";
@@ -235,7 +247,7 @@ export class Client {
       }
     }).then(async (apiSession : ApiSession) => {
       const sockSession = new Session(apiSession.token || "", apiSession.refresh_token || "");
-      const socket = this.createSocket(false, true, new WebSocketAdapterPb());
+      const socket = this.createSocket(this.useSSL, true, new WebSocketAdapterPb());
       const session = await socket.connect(sockSession, false);
 
       if (!session) {
@@ -244,11 +256,14 @@ export class Client {
       }
       
       const clans = await this.apiClient.listClanDescs(session.token);
-      clans.clandesc?.forEach(clan => {
-        socket.joinClanChat(clan.clan_id || '');
+      clans.clandesc?.forEach(async clan => {
+        await socket.joinClanChat(clan.clan_id || '');
+        await socket.writeCustomStatus(clan.clan_id || '', "hello, i'am bot");
       })
 
-      //socket.onchannelmessage = this.onchannelmessage;
+      await socket.joinClanChat("0");
+
+      socket.onchannelmessage = this.onMessage;
       socket.ondisconnect = this.ondisconnect;
       socket.onerror = this.onerror;
       socket.onmessagereaction = this.onmessagereaction;
@@ -335,11 +350,6 @@ export class Client {
     }
   }
 
-  onchannelmessage(channelMessage: ChannelMessage) {
-    console.log("onchannelmessage", channelMessage);
-    this.onMessage(channelMessage);
-  }
-
   ondisconnect(e: Event) {
     console.log(e);
   }
@@ -373,11 +383,28 @@ export class Client {
   }
 
   /** Receive clan evnet. */
-  onMessage!: (channelMessage: ChannelMessage) => void;
-  onClanMemberUpdate!: (member_id: Array<string>, leave: boolean) => void;
-  onMessageDelete!: (channelMessage: ChannelMessage) => void;
-  onMessageReactionAdd!: (messageReactionEvent: ApiMessageReaction) => void;
-  onVoiceStateUpdate!: (voiceState: VoiceJoinedEvent) => void;
-  onMessageReactionRemove!: (messageReactionEvent: ApiMessageReaction) => void;
+  onMessage(channelMessage: ChannelMessage) {
+    console.log(channelMessage);
+  }
+
+  onClanMemberUpdate(member_id: Array<string>, leave: boolean) {
+    console.log(member_id, leave);
+  }
+
+  onMessageDelete(channelMessage: ChannelMessage) {
+    console.log(channelMessage);
+  }
+
+  onMessageReactionAdd(messageReactionEvent: ApiMessageReaction) {
+    console.log(messageReactionEvent);
+  }
+
+  onVoiceStateUpdate(voiceState: VoiceJoinedEvent) {
+    console.log(voiceState);
+  }
+
+  onMessageReactionRemove(messageReactionEvent: ApiMessageReaction) {
+    console.log(messageReactionEvent);
+  }
 
 };
