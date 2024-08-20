@@ -66,31 +66,6 @@ export interface ApiAddAppRequest {
   token?: string;
 }
 
-
-/** App information. */
-export interface ApiApp {
-  //
-  applogo?: string;
-  //
-  appname?: string;
-  //
-  creator_id?: string;
-  //The UNIX time when the app was disabled.
-  disable_time?: string;
-  //
-  online?: boolean;
-}
-
-/** A list of apps. */
-export interface ApiAppList {
-  //A list of apps.
-  apps?: Array<ApiApp>;
-  //Next cursor.
-  next_cursor?: string;
-  //Approximate total number of apps.
-  total_count?: number;
-}
-
 /**
 * - USER_ROLE_ADMIN: All access
  - USER_ROLE_DEVELOPER: Best for developers, also enables APIs and API explorer
@@ -147,6 +122,8 @@ export interface MezonUpdateClanDescProfileBody {
 export interface MezonUpdateClanEmojiByIdBody {
   //
   category?: string;
+  //
+  clan_id?: string;
   //
   shortname?: string;
   //
@@ -363,6 +340,8 @@ export interface ApiAddRoleChannelDescRequest {
 
 /** App information. */
 export interface ApiApp {
+  // app id
+  id: string;
   //
   applogo?: string;
   //
@@ -557,6 +536,8 @@ export interface ApiChannelMessage {
   username?: string;
   // channel mode
   mode?: number;
+  // hide editted
+  hideEditted?: boolean;
 }
 
 /**  */
@@ -3008,6 +2989,47 @@ export class MezonApi {
         setTimeout(reject, this.timeoutMs, "Request timed out.")
       ),
     ]);
+}
+
+  /** Add an app to clan. */
+  addAppToClan(bearerToken: string,
+    appId:string,
+    clanId:string,
+    options: any = {}): Promise<any> {
+  
+  if (appId === null || appId === undefined) {
+    throw new Error("'appId' is a required parameter but is null or undefined.");
+  }
+  if (clanId === null || clanId === undefined) {
+    throw new Error("'clanId' is a required parameter but is null or undefined.");
+  }
+  const urlPath = "/v2/apps/app/{appId}/clan/{clanId}"
+      .replace("{appId}", encodeURIComponent(String(appId)))
+      .replace("{clanId}", encodeURIComponent(String(clanId)));
+  const queryParams = new Map<string, any>();
+
+  let bodyJson : string = "";
+
+  const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
+  const fetchOptions = buildFetchOptions("POST", options, bodyJson);
+  if (bearerToken) {
+      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+  }
+
+  return Promise.race([
+    fetch(fullUrl, fetchOptions).then((response) => {
+      if (response.status == 204) {
+        return response;
+      } else if (response.status >= 200 && response.status < 300) {
+        return response.json();
+      } else {
+        throw response;
+      }
+    }),
+    new Promise((_, reject) =>
+      setTimeout(reject, this.timeoutMs, "Request timed out.")
+    ),
+  ]);
 }
 
   /** Delete all information stored for an app. */

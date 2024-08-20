@@ -1,6 +1,6 @@
 {
     "name": "mezon-sdk",
-    "version": "2.7.1",
+    "version": "2.7.4",
     "scripts": {
         "build": "npx tsc && npx rollup -c --bundleConfigAsCjs && node build.mjs",
         "docs": "typedoc index.ts --gaID UA-89839802-1 --out ../../docs"
@@ -41,6 +41,6 @@
         "esbuild": "^0.23.0",
         "js-base64": "^3.7.4",
         "whatwg-fetch": "^3.6.2",
-        "mezon-js-protobuf": "1.5.14"
+        "mezon-js-protobuf": "1.5.16"
     }
 }

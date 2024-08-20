@@ -5,6 +5,28 @@ import { buildFetchOptions } from './utils';
 import { encode } from 'js-base64';
 
 
+/**  */
+export interface ApiClanDescList {
+  //A list of channel.
+  clandesc?: Array<ApiClanDesc>;
+}
+
+/**  */
+export interface ApiClanDesc {
+  //
+  banner?: string;
+  //
+  clan_id?: string;
+  //
+  clan_name?: string;
+  //
+  creator_id?: string;
+  //
+  logo?: string;
+  //
+  status?: number;
+}
+
 /** A user's session used to authenticate messages. */
 export interface ApiSession {
   //True if the corresponding account was just created, false otherwise.
@@ -29,15 +51,25 @@ export interface ApiAuthenticateRefreshRequest {
   refresh_token?: string;
 }
 
-/**  */
+/** Authenticate against the server with a device ID. */
 export interface ApiAuthenticateRequest {
-  //Optional custom properties to update with this call. If not set, properties are left as they are on the server.
-  custom?: Record<string, string>;
-  //Optional default properties to update with this call. If not set, properties are left as they are on the server.
-  default?: Record<string, string>;
-  //Identity ID. Must be between eight and 128 characters (inclusive). Must be an alphanumeric string with only underscores and hyphens allowed.
-  id?: string;
+  //The App account details.
+  account?: ApiAccountApp;
 }
+
+
+/** Send a app token to the server. Used with authenticate/link/unlink. */
+export interface ApiAccountApp {
+  //
+  appid?: string;
+  //
+  appname?: string;
+  //The account token when create apps to access their profile API.
+  token?: string;
+  //Extra information that will be bundled in the session token.
+  vars?: Record<string, string>;
+}
+
 
 /** The request to update the status of a message. */
 export interface ApiUpdateMessageRequest {
@@ -116,18 +148,26 @@ export class MezonApi {
     ]);
   }
 
-  /** Authenticate against the server. */
-  mezonAuthenticate(token: string,
+  /** Authenticate a app with a token against the server. */
+  mezonAuthenticate(basicAuthUsername: string,
+    basicAuthPassword: string,
+      body:ApiAuthenticateRequest,
       options: any = {}): Promise<ApiSession> {
     
+    if (body === null || body === undefined) {
+      throw new Error("'body' is a required parameter but is null or undefined.");
+    }
     const urlPath = "/v2/apps/authenticate/token";
     const queryParams = new Map<string, any>();
-    queryParams.set("token", token);
 
     let bodyJson : string = "";
+    bodyJson = JSON.stringify(body || {});
 
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("POST", options, bodyJson);
+		if (basicAuthUsername) {
+			fetchOptions.headers["Authorization"] = "Basic " + encode(basicAuthUsername + ":" + basicAuthPassword);
+		}
 
     return Promise.race([
       fetch(fullUrl, fetchOptions).then((response) => {
@@ -275,6 +315,43 @@ export class MezonApi {
 
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("PUT", options, bodyJson);
+    if (bearerToken) {
+        fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+    }
+
+    return Promise.race([
+      fetch(fullUrl, fetchOptions).then((response) => {
+        if (response.status == 204) {
+          return response;
+        } else if (response.status >= 200 && response.status < 300) {
+          return response.json();
+        } else {
+          throw response;
+        }
+      }),
+      new Promise((_, reject) =>
+        setTimeout(reject, this.timeoutMs, "Request timed out.")
+      ),
+    ]);
+  }
+
+  /** List clans */
+  listClanDescs(bearerToken: string,
+    limit?:number,
+    state?:number,
+    cursor?:string,
+    options: any = {}): Promise<ApiClanDescList> {
+  
+    const urlPath = "/v2/clandesc";
+    const queryParams = new Map<string, any>();
+    queryParams.set("limit", limit);
+    queryParams.set("state", state);
+    queryParams.set("cursor", cursor);
+
+    let bodyJson : string = "";
+
+    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
+    const fetchOptions = buildFetchOptions("GET", options, bodyJson);
     if (bearerToken) {
         fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
     }

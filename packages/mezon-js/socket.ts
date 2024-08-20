@@ -714,7 +714,7 @@ export interface Socket {
   unfollowUsers(user_ids : string[]) : Promise<void>;
 
   /** Update a chat message on a chat channel in the server. */
-  updateChatMessage(clan_id: string, channel_id: string, mode: number, message_id : string, content: any, mentions?: Array<ApiMessageMention>, attachments?: Array<ApiMessageAttachment>) : Promise<ChannelMessageAck>;
+  updateChatMessage(clan_id: string, channel_id: string, mode: number, message_id : string, content: any, mentions?: Array<ApiMessageMention>, attachments?: Array<ApiMessageAttachment>, hideEditted?: boolean) : Promise<ChannelMessageAck>;
 
   /** Update the status for the current user online. */
   updateStatus(status? : string) : Promise<void>;
@@ -996,6 +996,7 @@ export class DefaultSocket implements Socket {
             mentions: mentions,
             attachments: attachments,
             references: references,
+            hideEditted: message.channel_message.hide_editted,
           };
           this.onchannelmessage(e);                  
         } else if (message.message_typing_event) {
@@ -1338,8 +1339,8 @@ export class DefaultSocket implements Socket {
     return this.send({status_unfollow: {user_ids: user_ids}});
   }
 
-  async updateChatMessage(clan_id: string, channel_id: string, mode: number, message_id : string, content: any, mentions?: Array<ApiMessageMention>, attachments?: Array<ApiMessageAttachment>): Promise<ChannelMessageAck> {
-    const response = await this.send({channel_message_update: {clan_id: clan_id, channel_id: channel_id, message_id: message_id, content: content, mentions: mentions, attachments: attachments, mode: mode}});
+  async updateChatMessage(clan_id: string, channel_id: string, mode: number, message_id : string, content: any, mentions?: Array<ApiMessageMention>, attachments?: Array<ApiMessageAttachment>, hideEditted?: boolean): Promise<ChannelMessageAck> {
+    const response = await this.send({channel_message_update: {clan_id: clan_id, channel_id: channel_id, message_id: message_id, content: content, mentions: mentions, attachments: attachments, mode: mode, hide_editted: hideEditted}});
     return response.channel_message_ack;
   }
 

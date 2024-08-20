@@ -16,18 +16,288 @@
 
 import { MezonApi, ApiAuthenticateLogoutRequest, ApiAuthenticateRefreshRequest, ApiUpdateMessageRequest, ApiSession } from "./api";
 import { Session } from "./session";
-import { ApiMessageReaction, ChannelCreatedEvent, ChannelDeletedEvent, ChannelMessage, ChannelUpdatedEvent, DefaultSocket, Socket, UserChannelAddedEvent, UserChannelRemovedEvent, UserClanRemovedEvent, VoiceJoinedEvent } from "./socket";
+import { ChannelCreatedEvent, ChannelDeletedEvent, ChannelUpdatedEvent, DefaultSocket, Socket, UserChannelAddedEvent, UserChannelRemovedEvent, UserClanRemovedEvent, VoiceJoinedEvent } from "./socket";
 import { WebSocketAdapter } from "./web_socket_adapter";
 import { WebSocketAdapterPb } from 'mezon-js-protobuf';
 
-const DEFAULT_HOST = "127.0.0.1";
-const DEFAULT_PORT = "7450";
+const DEFAULT_HOST = "dev-mezon.nccsoft.vn";
+const DEFAULT_PORT = "7305";
 const DEFAULT_API_KEY = "defaultkey";
 const DEFAULT_TIMEOUT_MS = 7000;
 const DEFAULT_EXPIRED_TIMESPAN_MS = 5 * 60 * 1000;
 
+
+/**  */
+export interface ClanDesc {
+  //
+  banner?: string;
+  //
+  clan_id?: string;
+  //
+  clan_name?: string;
+  //
+  creator_id?: string;
+  //
+  logo?: string;
+  //
+  status?: number;
+}
+
+/**  */
+export interface ChannelDescription {
+  // The clan of this channel
+  clan_id?: string;
+  // The channel this message belongs to.
+  channel_id?: string;
+  // The channel type.
+  type?: number;
+  // The channel lable
+  channel_label?: string;
+  // The channel private
+  channel_private?: number;
+  // meeting code
+  meeting_code?: string;
+  //
+  clan_name?: string;
+  //
+  parrent_id?: string;
+}
+
+/**  */
+export interface ApiMessageAttachment {
+  //
+  filename?: string;
+  //
+  filetype?: string;
+  //
+  height?: number;
+  //
+  size?: number;
+  //
+  url?: string;
+  //
+  width?: number;
+  /** The channel this message belongs to. */
+  channel_id?:string;
+  // The mode
+  mode?: number;
+  // The channel label
+  channel_label?: string;
+  /** The message that user react */
+  message_id?: string;
+  /** Message sender, usually a user ID. */
+  sender_id?: string;
+}
+
+/**  */
+export interface ApiMessageDeleted {
+  //
+  deletor?: string;
+  //
+  message_id?: string;
+}
+
+/**  */
+export interface ApiMessageMention {
+  //The UNIX time (for gRPC clients) or ISO string (for REST clients) when the message was created.
+  create_time?: string;
+  //
+  id?: string;
+  //
+  user_id?: string;
+  //
+  username?: string;
+  // role id
+  role_id?: string;
+  // role name
+  rolename?: string;
+  // start position
+  s?: number;
+  // end position
+  e?: number;
+  /** The channel this message belongs to. */
+  channel_id?:string;
+  // The mode
+  mode?: number;
+  // The channel label
+  channel_label?: string;
+  /** The message that user react */
+  message_id?: string;
+  /** Message sender, usually a user ID. */
+  sender_id?: string;
+}
+
+/**  */
+export interface ApiMessageReaction {
+  //
+  action?: boolean;
+  //
+  emoji_id: string;
+  //
+  emoji: string;
+  //
+  id?: string;
+  //
+  sender_id?: string;
+  //
+  sender_name?: string;
+  //
+  sender_avatar?: string;
+  // count of emoji
+  count: number;
+  /** The channel this message belongs to. */
+  channel_id:string;
+  // The mode
+  mode: number;
+  // The channel label
+  channel_label: string;
+  /** The message that user react */
+  message_id: string;
+}
+
+/**  */
+export interface ApiMessageRef {
+  //
+  message_id?: string;
+  //
+  message_ref_id?: string;
+  //
+  ref_type?: number;
+  //
+  message_sender_id?: string;
+  // original message sendre username
+  message_sender_username?: string;
+  // original message sender avatar
+  mesages_sender_avatar?: string;
+  // original sender clan nick name
+  message_sender_clan_nick?: string;
+  // original sender display name
+  message_sender_display_name?:string;
+  //
+  content?:string;
+  //
+  has_attachment: boolean;
+  /** The channel this message belongs to. */
+  channel_id:string;
+  // The mode
+  mode: number;
+  // The channel label
+  channel_label: string;
+}
+
+/** A message sent on a channel. */
+export interface ChannelMessage {
+  //The unique ID of this message.
+  id: string;
+  //
+  avatar?: string;
+  //The channel this message belongs to.
+  channel_id: string;
+  //The name of the chat room, or an empty string if this message was not sent through a chat room.
+  channel_label: string;
+  //The clan this message belong to.
+  clan_id?: string;
+  //The code representing a message type or category.
+  code: number;
+  //The content payload.
+  content: string;
+  //The UNIX time (for gRPC clients) or ISO string (for REST clients) when the message was created.
+  create_time: string;
+  //
+  reactions?: Array<ApiMessageReaction>;
+  //
+  mentions?: Array<ApiMessageMention>;
+  //
+  attachments?: Array<ApiMessageAttachment>;
+  //
+  references?: Array<ApiMessageRef>;
+  //
+  referenced_message?: ChannelMessage;
+  //True if the message was persisted to the channel's history, false otherwise.
+  persistent?: boolean;
+  //Message sender, usually a user ID.
+  sender_id: string;
+  //The UNIX time (for gRPC clients) or ISO string (for REST clients) when the message was last updated.
+  update_time?: string;
+  //The ID of the first DM user, or an empty string if this message was not sent through a DM chat.
+  clan_logo?: string;
+  //The ID of the second DM user, or an empty string if this message was not sent through a DM chat.
+  category_name?: string;
+  //The username of the message sender, if any.
+  username?: string;
+  // The clan nick name
+  clan_nick?: string;
+  // The clan avatar
+  clan_avatar?: string;
+  //
+  display_name?: string;
+  //
+  create_time_ms?: number;
+  //
+  update_time_ms?: number;
+  //
+  mode?: number;
+  //
+  message_id?: string;
+}
+
+
+/** A user in the server. */
+export interface ApiUser {
+  //
+  about_me?: string;
+  //The Apple Sign In ID in the user's account.
+  apple_id?: string;
+  //A URL for an avatar image.
+  avatar_url?: string;
+  //The UNIX time (for gRPC clients) or ISO string (for REST clients) when the user was created.
+  create_time?: string;
+  //The display name of the user.
+  display_name?: string;
+  //Number of related edges to this user.
+  edge_count?: number;
+  //The Facebook id in the user's account.
+  facebook_id?: string;
+  //The Apple Game Center in of the user's account.
+  gamecenter_id?: string;
+  //The Google id in the user's account.
+  google_id?: string;
+  //The id of the user's account.
+  id?: string;
+  //
+  join_time?: string;
+  //The language expected to be a tag which follows the BCP-47 spec.
+  lang_tag?: string;
+  //The location set by the user.
+  location?: string;
+  //Additional information stored as a JSON object.
+  metadata?: string;
+  //Indicates whether the user is currently online.
+  online?: boolean;
+  //The Steam id in the user's account.
+  steam_id?: string;
+  //The timezone set by the user.
+  timezone?: string;
+  //The UNIX time (for gRPC clients) or ISO string (for REST clients) when the user was last updated.
+  update_time?: string;
+  //The username of the user's account.
+  username?: string;
+}
+
+export interface Client {
+  authenticate: () => Promise<string>;
+
+  /** Receive clan evnet. */
+  onMessage: (channelMessage: ChannelMessage) => void;
+  onClanMemberUpdate: (member_id: Array<string>, leave: boolean) => void;
+  onMessageDelete: (channelMessage: ChannelMessage) => void;
+  onMessageReactionAdd: (messageReactionEvent: ApiMessageReaction) => void;
+  onVoiceStateUpdate: (voiceState: VoiceJoinedEvent) => void;
+  onMessageReactionRemove: (messageReactionEvent: ApiMessageReaction) => void;
+}
+
 /** A client for Mezon server. */
-export class Client {
+export class MezonClient  implements Client {
 
   /** The expired timespan used to check session lifetime. */
   public expiredTimespanMs = DEFAULT_EXPIRED_TIMESPAN_MS;
@@ -39,7 +309,7 @@ export class Client {
       readonly apiKey = DEFAULT_API_KEY,
       readonly host = DEFAULT_HOST,
       readonly port = DEFAULT_PORT,
-      readonly useSSL = false,
+      readonly useSSL = true,
       readonly timeout = DEFAULT_TIMEOUT_MS,
       readonly autoRefreshSession = true) {
     const scheme = (useSSL) ? "https://" : "http://";
@@ -49,25 +319,41 @@ export class Client {
   }
 
   /** Authenticate a user with an ID against the server. */
-  async authenticate(token: string) {
-    return this.apiClient.mezonAuthenticate(token).then((apiSession : ApiSession) => {
+  async authenticate() {
+    return this.apiClient.mezonAuthenticate(this.apiKey, "", {
+      account: {
+        token: this.apiKey,
+      }
+    }).then(async (apiSession : ApiSession) => {
       const sockSession = new Session(apiSession.token || "", apiSession.refresh_token || "");
-      const socket = this.createSocket(true, false, new WebSocketAdapterPb());
-      socket.connect(sockSession, true).then((session) => {
-        socket.onchannelmessage = this.onchannelmessage;
-        socket.ondisconnect = this.ondisconnect;
-        socket.onerror = this.onerror;
-        socket.onmessagereaction = this.onmessagereaction;
-        socket.onuserchannelremoved = this.onuserchannelremoved;
-        socket.onuserclanremoved = this.onuserclanremoved;
-        socket.onuserchanneladded = this.onuserchanneladded;        
-        socket.onchannelcreated = this.onchannelcreated;
-        socket.onchanneldeleted = this.onchanneldeleted;
-        socket.onchannelupdated = this.onchannelupdated;
-        socket.onheartbeattimeout = this.onheartbeattimeout;
-      });
+      const socket = this.createSocket(this.useSSL, true, new WebSocketAdapterPb());
+      const session = await socket.connect(sockSession, false);
+
+      if (!session) {
+        return Promise.resolve("error authenticate");
+      }
       
-      return Promise.resolve(new Session(apiSession.token || "", apiSession.refresh_token || ""));
+      const clans = await this.apiClient.listClanDescs(session.token);
+      clans.clandesc?.forEach(async clan => {
+        await socket.joinClanChat(clan.clan_id || '');
+      })
+
+      // join direct message
+      await socket.joinClanChat("0");
+
+      socket.onchannelmessage = this.onMessage;
+      socket.ondisconnect = this.ondisconnect;
+      socket.onerror = this.onerror;
+      socket.onmessagereaction = this.onmessagereaction;
+      socket.onuserchannelremoved = this.onuserchannelremoved;
+      socket.onuserclanremoved = this.onuserclanremoved;
+      socket.onuserchanneladded = this.onuserchanneladded;        
+      socket.onchannelcreated = this.onchannelcreated;
+      socket.onchanneldeleted = this.onchanneldeleted;
+      socket.onchannelupdated = this.onchannelupdated;
+      socket.onheartbeattimeout = this.onheartbeattimeout;
+      
+      return Promise.resolve("connect successful");
     });
   }
 
@@ -140,11 +426,6 @@ export class Client {
     } else {
       this.onMessageReactionAdd(messagereaction);
     }
-    
-  }
-
-  onchannelmessage(channelMessage: ChannelMessage) {
-    this.onMessage(channelMessage);
   }
 
   ondisconnect(e: Event) {
@@ -180,11 +461,28 @@ export class Client {
   }
 
   /** Receive clan evnet. */
-  onMessage!: (channelMessage: ChannelMessage) => void;
-  onClanMemberUpdate!: (member_id: Array<string>, leave: boolean) => void;
-  onMessageDelete!: (channelMessage: ChannelMessage) => void;
-  onMessageReactionAdd!: (messageReactionEvent: ApiMessageReaction) => void;
-  onVoiceStateUpdate!: (voiceState: VoiceJoinedEvent) => void;
-  onMessageReactionRemove!: (messageReactionEvent: ApiMessageReaction) => void;
+  onMessage(channelMessage: ChannelMessage) {
+    console.log(channelMessage);
+  }
+
+  onClanMemberUpdate(member_id: Array<string>, leave: boolean) {
+    console.log(member_id, leave);
+  }
+
+  onMessageDelete(channelMessage: ChannelMessage) {
+    console.log(channelMessage);
+  }
+
+  onMessageReactionAdd(messageReactionEvent: ApiMessageReaction) {
+    console.log(messageReactionEvent);
+  }
+
+  onVoiceStateUpdate(voiceState: VoiceJoinedEvent) {
+    console.log(voiceState);
+  }
+
+  onMessageReactionRemove(messageReactionEvent: ApiMessageReaction) {
+    console.log(messageReactionEvent);
+  }
 
 };
