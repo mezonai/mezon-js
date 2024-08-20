@@ -664,6 +664,23 @@ export interface NotifiReactMessage {
   channel_id_req?: string;
 }
 
+export interface NotificationChannelCategorySetting {
+  // Notification id 
+  id: string;
+  //
+  channel_category_label :string;
+  // Notification title
+  notification_setting_type :number;
+  //
+  channel_category_title : string;
+}
+
+export interface NotificationChannelCategorySettingEvent {
+  clan_id? : string;
+  notification_channel_category_settings_list?: NotificationChannelCategorySetting[]
+}
+
+
 /** A socket connection to Mezon server. */
 export interface Socket {
   /** Connection is Open */
@@ -833,6 +850,7 @@ export interface Socket {
   getNotificationReactMessage(channel_id_req: string): Promise<NotifiReactMessageEvent>;
 
   GetPermissionByRoleIdChannelId(role_id: string, channel_id: string): Promise<PermissionRoleChannelListEvent>;
+  getNotificationChannelCategorySetting(clan_id : string): Promise<NotificationChannelCategorySettingEvent>;
 }
 
 /** Reports an error received from a socket message. */
@@ -1418,6 +1436,12 @@ export class DefaultSocket implements Socket {
     const response = await this.send({notifi_react_message_event: {channel_id: channel_id}})
     return response.notifi_react_message_event
   }
+
+  async getNotificationChannelCategorySetting(clan_id: string): Promise<NotificationChannelCategorySettingEvent> {
+    const response = await this.send({notification_channel_category_setting_event: {clan_id : clan_id}})
+    return response.notification_channel_category_setting_event
+  }
+
 
   private async pingPong(): Promise<void> {
     if (!this.adapter.isOpen()) {
