@@ -490,11 +490,11 @@ interface StatusUpdate {
   /** Status string to set, if not present the user will appear offline. */
   status_update: {status?: string;};
 }
+
 export interface ClanNameExistedEvent {
   clan_name: string;
   exist: boolean;
 }
-
 
 /**  */
 export interface StrickerListedEvent {
