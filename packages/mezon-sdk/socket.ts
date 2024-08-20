@@ -1154,7 +1154,7 @@ export class DefaultSocket implements Socket {
   }
 
   async joinClanChat(clan_id: string): Promise<ClanJoin> {
-    
+
     const response = await this.send({
       clan_join: {
           clan_id: clan_id,          

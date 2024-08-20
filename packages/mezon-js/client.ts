@@ -2250,7 +2250,7 @@ async getApp(session: Session, id: string): Promise<ApiApp> {
   });
 }
 
-async listApp(session: Session): Promise<ApiAppList> {
+async listApps(session: Session): Promise<ApiAppList> {
   if (this.autoRefreshSession && session.refresh_token &&
     session.isexpired((Date.now() + this.expiredTimespanMs)/1000)) {
     await this.sessionRefresh(session);
@@ -2261,13 +2261,13 @@ async listApp(session: Session): Promise<ApiAppList> {
   });
 }
 
-async addAppToClan(session: Session, clanId: string, appId: string) {
+async addAppToClan(session: Session, appId: string, clanId: string) {
   if (this.autoRefreshSession && session.refresh_token &&
     session.isexpired((Date.now() + this.expiredTimespanMs)/1000)) {
     await this.sessionRefresh(session);
   }
 
-  return this.apiClient.addAppToClan(session.token, clanId, appId).then((response: ApiAppList) => {
+  return this.apiClient.addAppToClan(session.token, appId, clanId).then((response: ApiAppList) => {
     return response !== undefined;
   });
 }

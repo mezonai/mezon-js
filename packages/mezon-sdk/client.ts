@@ -238,17 +238,17 @@ export class Client {
       const socket = this.createSocket(false, true, new WebSocketAdapterPb());
       const session = await socket.connect(sockSession, false);
 
+      if (!session) {
+        console.log("error authenticate");
+        return;
+      }
+      
       const clans = await this.apiClient.listClanDescs(session.token);
       clans.clandesc?.forEach(clan => {
         socket.joinClanChat(clan.clan_id || '');
       })
 
-      if (!session) {
-        console.log("error authenticate");
-        return;
-      }
-
-      socket.onchannelmessage = this.onchannelmessage;
+      //socket.onchannelmessage = this.onchannelmessage;
       socket.ondisconnect = this.ondisconnect;
       socket.onerror = this.onerror;
       socket.onmessagereaction = this.onmessagereaction;
@@ -336,6 +336,7 @@ export class Client {
   }
 
   onchannelmessage(channelMessage: ChannelMessage) {
+    console.log("onchannelmessage", channelMessage);
     this.onMessage(channelMessage);
   }
 

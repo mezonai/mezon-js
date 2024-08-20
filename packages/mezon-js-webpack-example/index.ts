@@ -28,6 +28,8 @@ client.authenticateEmail("user1@ncc.asia", "Aa12345678").then(async session => {
   const session2 = await socket.connect(session, true);
   console.log("session", session2);
 
+  await client.addAppToClan(session, "1825427178448228352", "1775732550744936448");
+
 }).catch(e => {
   console.log("error authenticating.");
 });
