@@ -1,23 +1,17 @@
 {
   "name": "mezon-sdk",
-  "version": "2.7.4",
+  "version": "2.7.10",
   "description": "Mezon typescript SDK.",
-  "main": "index.js",
+  "main": "dist/cjs/index.js",
+  "module": "dist/esm/index.js",
   "scripts": {
-    "build": "rimraf ./build && tsc",
-    "start:dev": "npx nodemon",
-    "start": "npm run build && node build/index.js",
-    "lint": "eslint . --ext .ts",
-    "prettier-format": "run-script-os",
-    "prettier-format:win32": "prettier --config .prettierrc \"./src/**/*.ts\" --write",
-    "prettier-format:darwin:linux": "prettier --config .prettierrc 'src/**/*.ts' --write",
-    "prettier-format:default": "prettier --config .prettierrc 'src/**/*.ts' --write",
-    "prettier-watch": "run-script-os",
-    "prettier-watch:win32": "onchange \"src/**/*.ts\" -- prettier --write {{changed}}",
-    "prettier-watch:darwin:linux": "onchange 'src/**/*.ts' -- prettier --write {{changed}}",
-    "prettier-watch:default": "onchange 'src/**/*.ts' -- prettier --write {{changed}}",
-    "test": "jest",
-    "test:dev": "jest --watchAll"
+    "build": "npm-run-all -p build:*",
+    "build:cjs": "tsc -p tsconfig.json",
+    "build:esm": "tsc -p tsconfig.esm.json",
+    "format": "prettier 'src/**/*.ts' '*.js' --write",
+    "lint": "eslint src --ext .ts",
+    "lint:fix": "npm run lint -- --fix",
+    "test": "echo 'Error: no test specified' && exit 1"
   },
   "husky": {
     "hooks": {
@@ -38,8 +32,6 @@
     "eslint-plugin-prettier": "^4.2.1",
     "husky": "^8.0.1",
     "jest": "^28.1.3",
-    "mezon-js-protobuf": "1.5.18",
-    "node-fetch": "^3.3.2",
     "nodemon": "^2.0.19",
     "onchange": "^7.1.0",
     "prettier": "^2.7.1",
@@ -52,6 +44,7 @@
   "dependencies": {
     "@types/ws": "^8.5.12",
     "jest-cucumber": "^3.0.1",
+    "npm-run-all": "^4.1.5",
     "ws": "^8.18.0"
   }
 }
