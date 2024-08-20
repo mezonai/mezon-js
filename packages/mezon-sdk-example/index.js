@@ -14,7 +14,11 @@
  * limitations under the License.
  */
 
-const { MezonClient } = require("mezon-sdk");
+const { MezonClient, ClanDesc } = require("mezon-sdk");
+
+console.log(MezonClient, ClanDesc);
+
+ClanDesc.prototype.Hello = function() {}
 
 var client = new MezonClient("594c67737675324859665a5867716d54");
 
