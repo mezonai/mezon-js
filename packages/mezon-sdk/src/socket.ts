@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+import WebSocket, { CloseEvent, ErrorEvent } from "ws";
 import { ApiMessageAttachment, ApiMessageMention, ApiMessageReaction, ApiMessageRef, ChannelMessage } from "./client";
 import {Session} from "./session";
 import { WebSocketAdapter, WebSocketAdapterText } from "./web_socket_adapter";
@@ -697,10 +698,10 @@ export interface Socket {
   writeCustomStatus(clan_id: string, status: string) : Promise<CustomStatusEvent>;
 
   /** Handle disconnect events received from the socket. */
-  ondisconnect: (evt: Event) => void;
+  ondisconnect: (evt: CloseEvent) => void;
 
   /** Handle error events received from the socket. */
-  onerror: (evt: Event) => void;
+  onerror: (evt: ErrorEvent) => void;
 
 
   /**
@@ -799,16 +800,16 @@ export class DefaultSocket implements Socket {
     const scheme = (this.useSSL) ? "wss://" : "ws://";
     this.adapter.connect(scheme, this.host, this.port, createStatus, session.token);
 
-    this.adapter.onClose = (evt: Event) => {
+    this.adapter.onClose = (evt: CloseEvent) => {
       this.ondisconnect(evt);
     }
 
-    this.adapter.onError = (evt: Event) => {
+    this.adapter.onError = (evt: ErrorEvent) => {
       this.onerror(evt);
     }
 
     this.adapter.onMessage = (message: any) => {
-      if (this.verbose && window && window.console) {
+      if (this.verbose) {
         console.log("Response: %o", JSON.stringify(message));
       }
 
@@ -909,14 +910,14 @@ export class DefaultSocket implements Socket {
         } else if (message.user_clan_removed_event) {
           this.onuserclanremoved(<UserClanRemovedEvent>message.user_clan_removed_event);
         } else {
-          if (this.verbose && window && window.console) {
+          if (this.verbose) {
             console.log("Unrecognized message received: %o", message);
           }
         }
       } else {
         const executor = this.cIds[message.cid];
         if (!executor) {
-          if (this.verbose && window && window.console) {
+          if (this.verbose) {
             console.error("No promise executor for message: %o", message);
           }
           return;
@@ -932,15 +933,15 @@ export class DefaultSocket implements Socket {
     }
 
     return new Promise((resolve, reject) => {
-      this.adapter.onOpen = (evt: Event) => {
-        if (this.verbose && window && window.console) {
+      this.adapter.onOpen = (evt: WebSocket.Event) => {
+        if (this.verbose) {
           console.log(evt);
         }
 
         this.pingPong();
         resolve(session);
       }
-      this.adapter.onError = (evt: Event) => {
+      this.adapter.onError = (evt: WebSocket.Event) => {
         reject(evt);
         this.adapter.close();
       }
@@ -957,7 +958,7 @@ export class DefaultSocket implements Socket {
       this.adapter.close();
     }
     if (fireDisconnectEvent) {
-      this.ondisconnect(<Event>{});
+      this.ondisconnect(<CloseEvent>{});
     }
   }
 
@@ -969,158 +970,152 @@ export class DefaultSocket implements Socket {
     return this._heartbeatTimeoutMs;
   }
 
-  ondisconnect(evt: Event) {
-    if (this.verbose && window && window.console) {
+  ondisconnect(evt: CloseEvent) {
+    if (this.verbose) {
       console.log(evt);
     }
   }
 
-  onerror(evt: Event) {
-    if (this.verbose && window && window.console) {
+  onerror(evt: ErrorEvent) {
+    if (this.verbose) {
       console.log(evt);
     }
   }
 
   onmessagetyping(messagetyping: MessageTypingEvent) {
-    if (this.verbose && window && window.console) {
+    if (this.verbose) {
       console.log(messagetyping);
     }
   }
 
   onmessagereaction(messagereaction: ApiMessageReaction) {
-    if (this.verbose && window && window.console) {
+    if (this.verbose) {
       console.log(messagereaction);
     }
   }
 
   onchannelmessage(channelMessage: ChannelMessage) {
-    if (this.verbose && window && window.console) {
+    if (this.verbose) {
       console.log(channelMessage);
     }
   }
 
   onchannelpresence(channelPresence: ChannelPresenceEvent) {
-    if (this.verbose && window && window.console) {
+    if (this.verbose) {
       console.log(channelPresence);
     }
   }
 
   onuserchanneladded(user: UserChannelAddedEvent) {
-    if (this.verbose && window && window.console) {
+    if (this.verbose) {
       console.log(user);
     }
   }
 
   onuserprofileupdate(user: UserProfileUpdatedEvent) {
-    if (this.verbose && window && window.console) {
+    if (this.verbose) {
       console.log(user);
     }
   }
   
   onuserchannelremoved(user: UserChannelRemovedEvent) {
-    if (this.verbose && window && window.console) {
+    if (this.verbose) {
       console.log(user);
     }
   }
 
   onuserclanremoved(user: UserClanRemovedEvent) {
-    if (this.verbose && window && window.console) {
+    if (this.verbose) {
       console.log(user);
     }
   }
 
-  onnotification(notification: Notification) {
-    if (this.verbose && window && window.console) {
-      console.log(notification);
-    }
-  }
-
   onstatuspresence(statusPresence: StatusPresenceEvent) {
-    if (this.verbose && window && window.console) {
+    if (this.verbose) {
       console.log(statusPresence);
     }
   }
 
   onpinmessage(pin: LastPinMessageEvent) {
-    if (this.verbose && window && window.console) {
+    if (this.verbose) {
       console.log(pin);
     }
   }
 
   onvoiceended(voice: VoiceEndedEvent) {
-    if (this.verbose && window && window.console) {
+    if (this.verbose) {
       console.log(voice);
     }
   }
 
   onvoicestarted(voice: VoiceStartedEvent) {
-    if (this.verbose && window && window.console) {
+    if (this.verbose) {
       console.log(voice);
     }
   }
 
   onvoicejoined(voiceParticipant: VoiceJoinedEvent) {
-    if (this.verbose && window && window.console) {
+    if (this.verbose) {
       console.log(voiceParticipant);
     }
   }
 
   onvoiceleaved(voiceParticipant: VoiceLeavedEvent) {
-    if (this.verbose && window && window.console) {
+    if (this.verbose) {
       console.log(voiceParticipant);
     }
   }
 
   onchannelcreated(channelCreated: ChannelCreatedEvent) {
-    if (this.verbose && window && window.console) {
+    if (this.verbose) {
       console.log(channelCreated);
     }
   }
 
   onchanneldeleted(channelDeleted: ChannelDeletedEvent) {
-    if (this.verbose && window && window.console) {
+    if (this.verbose) {
       console.log(channelDeleted);
     }
   }
 
   onchannelupdated(channelUpdated: ChannelUpdatedEvent) {
-    if (this.verbose && window && window.console) {
+    if (this.verbose) {
       console.log(channelUpdated);
     }
   }
 
   onclanprofileupdated(clanprofile: ClanProfileUpdatedEvent) {
-    if (this.verbose && window && window.console) {
+    if (this.verbose) {
       console.log(clanprofile);
     }
   }
 
   onclanupdated(clan: ClanUpdatedEvent) {
-    if (this.verbose && window && window.console) {
+    if (this.verbose) {
       console.log(clan);
     }
   }
 
   onstreampresence(streamPresence: StreamPresenceEvent) {
-    if (this.verbose && window && window.console) {
+    if (this.verbose) {
       console.log(streamPresence);
     }
   }
 
   onstreamdata(streamData: StreamData) {
-    if (this.verbose && window && window.console) {
+    if (this.verbose) {
       console.log(streamData);
     }
   }
 
   onheartbeattimeout() {
-    if (this.verbose && window && window.console) {
+    if (this.verbose) {
       console.log("Heartbeat timeout.");
     }
   }
 
   oncustomstatus(statusEvent: CustomStatusEvent) {
-    if (this.verbose && window && window.console) {
+    if (this.verbose) {
       console.log(statusEvent);
     }
   }
@@ -1328,7 +1323,7 @@ export class DefaultSocket implements Socket {
         await this.send({ping: {}}, this._heartbeatTimeoutMs);
     } catch {
         if (this.adapter.isOpen()) {
-            if (window && window.console) {
+            if (this.verbose) {
                 console.error("Server unreachable from heartbeat.");
             }
             this.onheartbeattimeout();

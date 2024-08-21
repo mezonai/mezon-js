@@ -14,13 +14,14 @@
  * limitations under the License.
  */
 
+import { CloseEvent, ErrorEvent } from "ws";
 import { MezonApi, ApiAuthenticateLogoutRequest, ApiAuthenticateRefreshRequest, ApiUpdateMessageRequest, ApiSession } from "./api";
 import { Session } from "./session";
 import { ChannelCreatedEvent, ChannelDeletedEvent, ChannelUpdatedEvent, DefaultSocket, Socket, UserChannelAddedEvent, UserChannelRemovedEvent, UserClanRemovedEvent, VoiceJoinedEvent } from "./socket";
 import { WebSocketAdapter } from "./web_socket_adapter";
-import { WebSocketAdapterPb } from 'mezon-js-protobuf';
+import { WebSocketAdapterPb } from './web_socket_adapter_pb';
 
-const DEFAULT_HOST = "dev-mezon.nccsoft.vn";
+const DEFAULT_HOST = "mezon.vn";
 const DEFAULT_PORT = "7305";
 const DEFAULT_API_KEY = "defaultkey";
 const DEFAULT_TIMEOUT_MS = 7000;
@@ -28,7 +29,7 @@ const DEFAULT_EXPIRED_TIMESPAN_MS = 5 * 60 * 1000;
 
 
 /**  */
-export interface ClanDesc {
+export class ClanDesc {
   //
   banner?: string;
   //
@@ -44,7 +45,7 @@ export interface ClanDesc {
 }
 
 /**  */
-export interface ChannelDescription {
+export class ChannelDescription {
   // The clan of this channel
   clan_id?: string;
   // The channel this message belongs to.
@@ -64,7 +65,7 @@ export interface ChannelDescription {
 }
 
 /**  */
-export interface ApiMessageAttachment {
+export class ApiMessageAttachment {
   //
   filename?: string;
   //
@@ -90,7 +91,7 @@ export interface ApiMessageAttachment {
 }
 
 /**  */
-export interface ApiMessageDeleted {
+export class ApiMessageDeleted {
   //
   deletor?: string;
   //
@@ -98,7 +99,7 @@ export interface ApiMessageDeleted {
 }
 
 /**  */
-export interface ApiMessageMention {
+export class ApiMessageMention {
   //The UNIX time (for gRPC clients) or ISO string (for REST clients) when the message was created.
   create_time?: string;
   //
@@ -128,13 +129,13 @@ export interface ApiMessageMention {
 }
 
 /**  */
-export interface ApiMessageReaction {
+export class ApiMessageReaction {
   //
   action?: boolean;
   //
-  emoji_id: string;
+  emoji_id?: string;
   //
-  emoji: string;
+  emoji?: string;
   //
   id?: string;
   //
@@ -144,19 +145,19 @@ export interface ApiMessageReaction {
   //
   sender_avatar?: string;
   // count of emoji
-  count: number;
+  count?: number;
   /** The channel this message belongs to. */
-  channel_id:string;
+  channel_id?:string;
   // The mode
-  mode: number;
+  mode?: number;
   // The channel label
-  channel_label: string;
+  channel_label?: string;
   /** The message that user react */
-  message_id: string;
+  message_id?: string;
 }
 
 /**  */
-export interface ApiMessageRef {
+export class ApiMessageRef {
   //
   message_id?: string;
   //
@@ -176,33 +177,33 @@ export interface ApiMessageRef {
   //
   content?:string;
   //
-  has_attachment: boolean;
+  has_attachment?: boolean;
   /** The channel this message belongs to. */
-  channel_id:string;
+  channel_id?: string;
   // The mode
-  mode: number;
+  mode?: number;
   // The channel label
-  channel_label: string;
+  channel_label?: string;
 }
 
 /** A message sent on a channel. */
-export interface ChannelMessage {
+export class ChannelMessage {
   //The unique ID of this message.
-  id: string;
+  id?: string;
   //
   avatar?: string;
   //The channel this message belongs to.
-  channel_id: string;
+  channel_id?: string;
   //The name of the chat room, or an empty string if this message was not sent through a chat room.
-  channel_label: string;
+  channel_label?: string;
   //The clan this message belong to.
   clan_id?: string;
   //The code representing a message type or category.
-  code: number;
+  code?: number;
   //The content payload.
-  content: string;
+  content?: string;
   //The UNIX time (for gRPC clients) or ISO string (for REST clients) when the message was created.
-  create_time: string;
+  create_time?: string;
   //
   reactions?: Array<ApiMessageReaction>;
   //
@@ -216,7 +217,7 @@ export interface ChannelMessage {
   //True if the message was persisted to the channel's history, false otherwise.
   persistent?: boolean;
   //Message sender, usually a user ID.
-  sender_id: string;
+  sender_id?: string;
   //The UNIX time (for gRPC clients) or ISO string (for REST clients) when the message was last updated.
   update_time?: string;
   //The ID of the first DM user, or an empty string if this message was not sent through a DM chat.
@@ -241,9 +242,8 @@ export interface ChannelMessage {
   message_id?: string;
 }
 
-
 /** A user in the server. */
-export interface ApiUser {
+export class ApiUser {
   //
   about_me?: string;
   //The Apple Sign In ID in the user's account.
@@ -297,7 +297,7 @@ export interface Client {
 }
 
 /** A client for Mezon server. */
-export class MezonClient  implements Client {
+export class MezonClient implements Client {
 
   /** The expired timespan used to check session lifetime. */
   public expiredTimespanMs = DEFAULT_EXPIRED_TIMESPAN_MS;
@@ -415,7 +415,7 @@ export class MezonClient  implements Client {
     return new DefaultSocket(this.host, this.port, useSSL, verbose, adapter, sendTimeoutMs);
   }
 
-  onerror(evt: Event) {
+  onerror(evt: ErrorEvent) {
     console.log(evt);
   }
 
@@ -428,7 +428,7 @@ export class MezonClient  implements Client {
     }
   }
 
-  ondisconnect(e: Event) {
+  ondisconnect(e: CloseEvent) {
     console.log(e);
   }
 

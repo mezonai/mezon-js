@@ -1,5 +1,5 @@
 /**
- * Copyright 2020 The Nakama Authors
+ * Copyright 2021 The Mezon Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,7 +14,20 @@
  * limitations under the License.
  */
 
-import "whatwg-fetch";
+const { MezonClient, ClanDesc } = require("mezon-sdk");
 
-export * from "./client";
-export * from "./session";
+console.log(MezonClient, ClanDesc);
+
+ClanDesc.prototype.Hello = function() {}
+
+var client = new MezonClient("594c67737675324859665a5867716d54");
+
+client.authenticate().then(async (e) => {
+  console.log("authenticated.", e);
+}).catch(e => {
+  console.log("error authenticating.", e);
+});
+
+client.onMessage = (msg) => {
+  console.log("channel message", msg);
+}

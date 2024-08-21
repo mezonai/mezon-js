@@ -1,0 +1,17 @@
+{
+  "name": "mezon-sdk-example",
+  "version": "1.0.0",
+  "description": "mezon sdk example",
+  "main": "dist/index.js",
+  "dependencies": {
+    "mezon-sdk": "file:../mezon-sdk",
+    "node-fetch": "^3.3.2"
+  },
+  "scripts": {
+    "start": "node index.js",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "lint": "eslint . --fix"
+  },
+  "author": "",
+  "license": "ISC"
+}

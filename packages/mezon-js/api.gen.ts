@@ -1392,7 +1392,7 @@ export interface ApiSetMuteNotificationRequest {
   //
   active?: number;
   //
-  channel_id?: string;
+  id?: string;
   //
   notification_type?: number;
 }
