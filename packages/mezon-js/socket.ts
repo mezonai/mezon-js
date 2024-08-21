@@ -1016,7 +1016,7 @@ export class DefaultSocket implements Socket {
           this.onuserprofileupdate(<UserProfileUpdatedEvent>message.user_profile_updated_event);
         } else if (message.user_profile_updated_event) {
           this.onuserchannelremoved(<UserChannelRemovedEvent>message.user_channel_removed_event);
-        } else if (message.user_clan_removed_event) {
+        } else if (message.user_channel_removed_event) {
           this.onuserclanremoved(<UserClanRemovedEvent>message.user_clan_removed_event);
         } else {
           if (this.verbose && window && window.console) {
