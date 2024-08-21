@@ -73,7 +73,6 @@ import {
   ApiEventManagement,
   ApiEventList,
   ApiDeleteEventRequest,
-  ApiNotificationChannelCategoySettingsList,
   ApiSetDefaultNotificationRequest,
   ApiSetNotificationRequest,
   ApiSetMuteNotificationRequest,
@@ -1988,17 +1987,6 @@ async deleteNotificationCategory(session: Session, category_id: string): Promise
 
   return this.apiClient.deleteNotificationCategorySetting(session.token, category_id).then((response: any) => {
     return response !== undefined;
-  });
-}
-
-async getChannelCategoryNotiSettingsList(session: Session, clan_id: string): Promise<ApiNotificationChannelCategoySettingsList> {
-  if (this.autoRefreshSession && session.refresh_token &&
-      session.isexpired((Date.now() + this.expiredTimespanMs)/1000)) {
-      await this.sessionRefresh(session);
-  }
-
-  return this.apiClient.getChannelCategoryNotiSettingsList(session.token, clan_id).then((response: ApiNotificationChannelCategoySettingsList) => {
-    return Promise.resolve(response);
   });
 }
 

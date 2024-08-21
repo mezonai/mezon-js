@@ -1,6 +1,6 @@
 {
     "name": "mezon-js-protobuf",
-    "version": "1.5.20",
+    "version": "1.5.21",
     "description": "Websocket adapter adding protocol buffer support to the Mezon Javascript client.",
     "main": "dist/mezon-js-protobuf.cjs.js",
     "module": "dist/mezon-js-protobuf.esm.mjs",
@@ -32,6 +32,7 @@
     "bugs": "https://github.com/nccasia/mezon-js/issues",
     "license": "Apache-2.0",
     "dependencies": {
-        "@scarf/scarf": "^1.1.1"
+        "@scarf/scarf": "^1.1.1",
+        "mezon-js-protobuf": "file:"
     }
 }
