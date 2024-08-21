@@ -850,6 +850,7 @@ export interface Socket {
   getNotificationReactMessage(channel_id_req: string): Promise<NotifiReactMessageEvent>;
 
   GetPermissionByRoleIdChannelId(role_id: string, channel_id: string): Promise<PermissionRoleChannelListEvent>;
+  
   getNotificationChannelCategorySetting(clan_id : string): Promise<NotificationChannelCategorySettingEvent>;
 }
 
