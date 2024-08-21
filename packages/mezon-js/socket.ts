@@ -88,6 +88,13 @@ interface ChannelLeave {
   };
 }
 
+export interface AddClanUserEvent {
+  //the clan id
+  clan_id: string;
+  // the user id
+  user_id: string;
+}
+
 /** UserChannelAddedEvent */
 export interface UserChannelAddedEvent {
   // the channel id
@@ -789,6 +796,9 @@ export interface Socket {
   /** Receive added user event */
   onuserchanneladded: (user: UserChannelAddedEvent) => void;
 
+  /** Receive added user clan event */
+  onuserclanadded: (user: AddClanUserEvent) => void;
+
   /** Receive update user event */
   onuserprofileupdate: (user: UserProfileUpdatedEvent) => void;
 
@@ -1012,11 +1022,13 @@ export class DefaultSocket implements Socket {
           this.oncustomstatus(<CustomStatusEvent>message.custom_status_event);
         } else if (message.user_channel_added_event) {
           this.onuserchanneladded(<UserChannelAddedEvent>message.user_channel_added_event);
-        } else if (message.user_channel_added_event) {
-          this.onuserprofileupdate(<UserProfileUpdatedEvent>message.user_profile_updated_event);
+        } else if (message.add_clan_user_event) {
+          this.onuserclanadded(<AddClanUserEvent>message.add_clan_user_event);
         } else if (message.user_profile_updated_event) {
-          this.onuserchannelremoved(<UserChannelRemovedEvent>message.user_channel_removed_event);
+          this.onuserprofileupdate(<UserProfileUpdatedEvent>message.user_profile_updated_event);
         } else if (message.user_channel_removed_event) {
+          this.onuserchannelremoved(<UserChannelRemovedEvent>message.user_channel_removed_event);
+        } else if (message.user_clan_removed_event) {
           this.onuserclanremoved(<UserClanRemovedEvent>message.user_clan_removed_event);
         } else {
           if (this.verbose && window && window.console) {
@@ -1116,6 +1128,12 @@ export class DefaultSocket implements Socket {
   }
 
   onuserchanneladded(user: UserChannelAddedEvent) {
+    if (this.verbose && window && window.console) {
+      console.log(user);
+    }
+  }
+
+  onuserclanadded(user: AddClanUserEvent) {
     if (this.verbose && window && window.console) {
       console.log(user);
     }
