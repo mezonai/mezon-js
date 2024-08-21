@@ -15,9 +15,9 @@
  */
 
 import { CloseEvent, ErrorEvent } from "ws";
-import { MezonApi, ApiAuthenticateLogoutRequest, ApiAuthenticateRefreshRequest, ApiUpdateMessageRequest, ApiSession } from "./api";
+import { MezonApi, ApiAuthenticateLogoutRequest, ApiAuthenticateRefreshRequest, ApiSession } from "./api";
 import { Session } from "./session";
-import { ChannelCreatedEvent, ChannelDeletedEvent, ChannelUpdatedEvent, DefaultSocket, Socket, UserChannelAddedEvent, UserChannelRemovedEvent, UserClanRemovedEvent, VoiceJoinedEvent } from "./socket";
+import { ChannelCreatedEvent, ChannelDeletedEvent, ChannelUpdatedEvent, DefaultSocket, Socket, UserChannelAddedEvent, UserChannelRemovedEvent, UserClanRemovedEvent } from "./socket";
 import { WebSocketAdapter } from "./web_socket_adapter";
 import { WebSocketAdapterPb } from './web_socket_adapter_pb';
 
@@ -29,7 +29,7 @@ const DEFAULT_EXPIRED_TIMESPAN_MS = 5 * 60 * 1000;
 
 
 /**  */
-export class ClanDesc {
+export interface ClanDesc {
   //
   banner?: string;
   //
@@ -45,7 +45,7 @@ export class ClanDesc {
 }
 
 /**  */
-export class ChannelDescription {
+export interface ChannelDescription {
   // The clan of this channel
   clan_id?: string;
   // The channel this message belongs to.
@@ -65,7 +65,7 @@ export class ChannelDescription {
 }
 
 /**  */
-export class ApiMessageAttachment {
+export interface ApiMessageAttachment {
   //
   filename?: string;
   //
@@ -91,7 +91,7 @@ export class ApiMessageAttachment {
 }
 
 /**  */
-export class ApiMessageDeleted {
+export interface ApiMessageDeleted {
   //
   deletor?: string;
   //
@@ -99,7 +99,7 @@ export class ApiMessageDeleted {
 }
 
 /**  */
-export class ApiMessageMention {
+export interface ApiMessageMention {
   //The UNIX time (for gRPC clients) or ISO string (for REST clients) when the message was created.
   create_time?: string;
   //
@@ -129,7 +129,7 @@ export class ApiMessageMention {
 }
 
 /**  */
-export class ApiMessageReaction {
+export interface ApiMessageReaction {
   //
   action?: boolean;
   //
@@ -157,7 +157,7 @@ export class ApiMessageReaction {
 }
 
 /**  */
-export class ApiMessageRef {
+export interface ApiMessageRef {
   //
   message_id?: string;
   //
@@ -187,7 +187,7 @@ export class ApiMessageRef {
 }
 
 /** A message sent on a channel. */
-export class ChannelMessage {
+export interface ChannelMessage {
   //The unique ID of this message.
   id?: string;
   //
@@ -243,7 +243,7 @@ export class ChannelMessage {
 }
 
 /** A user in the server. */
-export class ApiUser {
+export interface ApiUser {
   //
   about_me?: string;
   //The Apple Sign In ID in the user's account.
@@ -286,14 +286,18 @@ export class ApiUser {
 
 export interface Client {
   authenticate: () => Promise<string>;
+  sendMessage: (clan_id: string, channel_id: string, mode: number, msg: string, mentions?: Array<ApiMessageMention>, attachments?: Array<ApiMessageAttachment>, ref?: Array<ApiMessageRef>) => Promise<boolean>;
 
   /** Receive clan evnet. */
-  onMessage: (channelMessage: ChannelMessage) => void;
-  onClanMemberUpdate: (member_id: Array<string>, leave: boolean) => void;
-  onMessageDelete: (channelMessage: ChannelMessage) => void;
-  onMessageReactionAdd: (messageReactionEvent: ApiMessageReaction) => void;
-  onVoiceStateUpdate: (voiceState: VoiceJoinedEvent) => void;
-  onMessageReactionRemove: (messageReactionEvent: ApiMessageReaction) => void;
+  onchannelmessage: (message: ChannelMessage) => void;
+  onmessagereaction: (messagereaction: ApiMessageReaction) => void;
+  ondisconnect: (e: CloseEvent) => void;
+  onuserchanneladded: (user: UserChannelAddedEvent) => void;
+  onuserchannelremoved: (user: UserChannelRemovedEvent) => void;
+  onuserclanremoved: (user: UserClanRemovedEvent) => void;
+  onchannelcreated: (channelCreated: ChannelCreatedEvent) => void;
+  onchanneldeleted: (channelDeleted: ChannelDeletedEvent) => void;
+  onchannelupdated: (channelUpdated: ChannelUpdatedEvent) => void;
 }
 
 /** A client for Mezon server. */
@@ -304,6 +308,9 @@ export class MezonClient implements Client {
 
   /** The low level API client for Nakama server. */
   private readonly apiClient: MezonApi;
+
+  /** the socket */
+  private readonly socket: Socket;
 
   constructor(
       readonly apiKey = DEFAULT_API_KEY,
@@ -316,6 +323,12 @@ export class MezonClient implements Client {
     const basePath = `${scheme}${host}:${port}`;
 
     this.apiClient = new MezonApi(apiKey, basePath, timeout);
+    this.socket = this.createSocket(this.useSSL, false, new WebSocketAdapterPb());
+  }
+
+  async sendMessage(clan_id: string, channel_id: string, mode: number, msg: string, mentions?: Array<ApiMessageMention>, attachments?: Array<ApiMessageAttachment>, ref?: Array<ApiMessageRef>) {
+    const msgACK = await this.socket.writeChatMessage(clan_id, channel_id, mode, msg, mentions, attachments, ref);
+    return Promise.resolve(msgACK.channel_id === channel_id);
   }
 
   /** Authenticate a user with an ID against the server. */
@@ -326,8 +339,7 @@ export class MezonClient implements Client {
       }
     }).then(async (apiSession : ApiSession) => {
       const sockSession = new Session(apiSession.token || "", apiSession.refresh_token || "");
-      const socket = this.createSocket(this.useSSL, true, new WebSocketAdapterPb());
-      const session = await socket.connect(sockSession, false);
+      const session = await this.socket.connect(sockSession, false);
 
       if (!session) {
         return Promise.resolve("error authenticate");
@@ -335,23 +347,23 @@ export class MezonClient implements Client {
       
       const clans = await this.apiClient.listClanDescs(session.token);
       clans.clandesc?.forEach(async clan => {
-        await socket.joinClanChat(clan.clan_id || '');
+        await this.socket.joinClanChat(clan.clan_id || '');
       })
 
       // join direct message
-      await socket.joinClanChat("0");
+      await this.socket.joinClanChat("0");
 
-      socket.onchannelmessage = this.onMessage;
-      socket.ondisconnect = this.ondisconnect;
-      socket.onerror = this.onerror;
-      socket.onmessagereaction = this.onmessagereaction;
-      socket.onuserchannelremoved = this.onuserchannelremoved;
-      socket.onuserclanremoved = this.onuserclanremoved;
-      socket.onuserchanneladded = this.onuserchanneladded;        
-      socket.onchannelcreated = this.onchannelcreated;
-      socket.onchanneldeleted = this.onchanneldeleted;
-      socket.onchannelupdated = this.onchannelupdated;
-      socket.onheartbeattimeout = this.onheartbeattimeout;
+      this.socket.onchannelmessage = this.onchannelmessage;
+      this.socket.ondisconnect = this.ondisconnect;
+      this.socket.onerror = this.onerror;
+      this.socket.onmessagereaction = this.onmessagereaction;
+      this.socket.onuserchannelremoved = this.onuserchannelremoved;
+      this.socket.onuserclanremoved = this.onuserclanremoved;
+      this.socket.onuserchanneladded = this.onuserchanneladded;        
+      this.socket.onchannelcreated = this.onchannelcreated;
+      this.socket.onchanneldeleted = this.onchanneldeleted;
+      this.socket.onchannelupdated = this.onchannelupdated;
+      this.socket.onheartbeattimeout = this.onheartbeattimeout;
       
       return Promise.resolve("connect successful");
     });
@@ -382,34 +394,6 @@ export class MezonClient implements Client {
     });
   }
 
-  async deleteMessage(session : Session, id : string) {
-    if (this.autoRefreshSession && session.refresh_token &&
-      session.isexpired((Date.now() + this.expiredTimespanMs)/1000)) {
-      await this.sessionRefresh(session);
-    }
-
-    return this.apiClient.mezonDeleteMessage(session.token, id).then((response) => {
-      return Promise.resolve(response !== undefined);
-    });
-  }
-
-  async updateMessage(session : Session, id : string, consume_time? : string, read_time? : string) {
-    if (this.autoRefreshSession && session.refresh_token &&
-      session.isexpired((Date.now() + this.expiredTimespanMs)/1000)) {
-      await this.sessionRefresh(session);
-    }
-
-    const request : ApiUpdateMessageRequest = {
-      id: id,
-      consume_time: consume_time,
-      read_time: read_time
-    };
-
-    return this.apiClient.mezonUpdateMessage(session.token, id, request).then((response) => {
-      return Promise.resolve(response !== undefined);
-    });
-  }
-
   /** A socket created with the client's configuration. */
   createSocket(useSSL = false, verbose: boolean = false, adapter : WebSocketAdapter = new WebSocketAdapterPb(), sendTimeoutMs : number = DefaultSocket.DefaultSendTimeoutMs): Socket {
     return new DefaultSocket(this.host, this.port, useSSL, verbose, adapter, sendTimeoutMs);
@@ -419,13 +403,12 @@ export class MezonClient implements Client {
     console.log(evt);
   }
 
+  onchannelmessage(message: ChannelMessage) {
+    console.log(message);
+  }
+
   onmessagereaction(messagereaction: ApiMessageReaction) {
     console.log(messagereaction);
-    if (messagereaction.action) {
-      this.onMessageReactionRemove(messagereaction);
-    } else {
-      this.onMessageReactionAdd(messagereaction);
-    }
   }
 
   ondisconnect(e: CloseEvent) {
@@ -441,7 +424,7 @@ export class MezonClient implements Client {
   }
 
   onuserclanremoved(user: UserClanRemovedEvent) {
-    this.onClanMemberUpdate(user.user_ids, true);
+    console.log(user);
   }
 
   onchannelcreated(channelCreated: ChannelCreatedEvent) {
@@ -458,31 +441,6 @@ export class MezonClient implements Client {
 
   onheartbeattimeout() {
     console.log("Heartbeat timeout.");
-  }
-
-  /** Receive clan evnet. */
-  onMessage(channelMessage: ChannelMessage) {
-    console.log(channelMessage);
-  }
-
-  onClanMemberUpdate(member_id: Array<string>, leave: boolean) {
-    console.log(member_id, leave);
-  }
-
-  onMessageDelete(channelMessage: ChannelMessage) {
-    console.log(channelMessage);
-  }
-
-  onMessageReactionAdd(messageReactionEvent: ApiMessageReaction) {
-    console.log(messageReactionEvent);
-  }
-
-  onVoiceStateUpdate(voiceState: VoiceJoinedEvent) {
-    console.log(voiceState);
-  }
-
-  onMessageReactionRemove(messageReactionEvent: ApiMessageReaction) {
-    console.log(messageReactionEvent);
   }
 
 };
