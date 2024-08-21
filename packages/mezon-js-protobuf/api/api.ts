@@ -2232,6 +2232,7 @@ export interface UpdateEventRequest {
   address: string;
   start_time: Date | undefined;
   end_time: Date | undefined;
+  clan_id: string;
 }
 
 /** Delete a role the user has access to. */
@@ -2247,6 +2248,8 @@ export interface DeleteRoleRequest {
 export interface DeleteEventRequest {
   /** The id of a event. */
   event_id: string;
+  /** clan id */
+  clan_id: string;
 }
 
 /** Update fields in a given role. */
@@ -19369,6 +19372,7 @@ function createBaseUpdateEventRequest(): UpdateEventRequest {
     address: "",
     start_time: undefined,
     end_time: undefined,
+    clan_id: "",
   };
 }
 
@@ -19397,6 +19401,9 @@ export const UpdateEventRequest = {
     }
     if (message.end_time !== undefined) {
       Timestamp.encode(toTimestamp(message.end_time), writer.uint32(66).fork()).ldelim();
+    }
+    if (message.clan_id !== "") {
+      writer.uint32(74).string(message.clan_id);
     }
     return writer;
   },
@@ -19464,6 +19471,13 @@ export const UpdateEventRequest = {
 
           message.end_time = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
           continue;
+        case 9:
+          if (tag !== 74) {
+            break;
+          }
+
+          message.clan_id = reader.string();
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -19483,6 +19497,7 @@ export const UpdateEventRequest = {
       address: isSet(object.address) ? globalThis.String(object.address) : "",
       start_time: isSet(object.start_time) ? fromJsonTimestamp(object.start_time) : undefined,
       end_time: isSet(object.end_time) ? fromJsonTimestamp(object.end_time) : undefined,
+      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
     };
   },
 
@@ -19512,6 +19527,9 @@ export const UpdateEventRequest = {
     if (message.end_time !== undefined) {
       obj.end_time = message.end_time.toISOString();
     }
+    if (message.clan_id !== "") {
+      obj.clan_id = message.clan_id;
+    }
     return obj;
   },
 
@@ -19528,6 +19546,7 @@ export const UpdateEventRequest = {
     message.address = object.address ?? "";
     message.start_time = object.start_time ?? undefined;
     message.end_time = object.end_time ?? undefined;
+    message.clan_id = object.clan_id ?? "";
     return message;
   },
 };
@@ -19622,13 +19641,16 @@ export const DeleteRoleRequest = {
 };
 
 function createBaseDeleteEventRequest(): DeleteEventRequest {
-  return { event_id: "" };
+  return { event_id: "", clan_id: "" };
 }
 
 export const DeleteEventRequest = {
   encode(message: DeleteEventRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.event_id !== "") {
       writer.uint32(10).string(message.event_id);
+    }
+    if (message.clan_id !== "") {
+      writer.uint32(18).string(message.clan_id);
     }
     return writer;
   },
@@ -19647,6 +19669,13 @@ export const DeleteEventRequest = {
 
           message.event_id = reader.string();
           continue;
+        case 2:
+          if (tag !== 18) {
+            break;
+          }
+
+          message.clan_id = reader.string();
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -19657,13 +19686,19 @@ export const DeleteEventRequest = {
   },
 
   fromJSON(object: any): DeleteEventRequest {
-    return { event_id: isSet(object.event_id) ? globalThis.String(object.event_id) : "" };
+    return {
+      event_id: isSet(object.event_id) ? globalThis.String(object.event_id) : "",
+      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
+    };
   },
 
   toJSON(message: DeleteEventRequest): unknown {
     const obj: any = {};
     if (message.event_id !== "") {
       obj.event_id = message.event_id;
+    }
+    if (message.clan_id !== "") {
+      obj.clan_id = message.clan_id;
     }
     return obj;
   },
@@ -19674,6 +19709,7 @@ export const DeleteEventRequest = {
   fromPartial<I extends Exact<DeepPartial<DeleteEventRequest>, I>>(object: I): DeleteEventRequest {
     const message = createBaseDeleteEventRequest();
     message.event_id = object.event_id ?? "";
+    message.clan_id = object.clan_id ?? "";
     return message;
   },
 };

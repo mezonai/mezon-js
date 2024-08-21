@@ -151,6 +151,8 @@ export interface MezonUpdateEventBody {
   //
   channel_id?: string;
   //
+  clan_id?: string;
+  //
   description?: string;
   //
   end_time?: string;
@@ -768,6 +770,8 @@ export interface ApiUpdateEventRequest {
   start_time?: string;
   //
   title?: string;
+  //
+  clan_id?: string;
 }
 
 /** Create a role within clan. */
@@ -800,6 +804,8 @@ export interface ApiDeleteChannelDescRequest {
 
 /**  */
 export interface ApiDeleteEventRequest {
+  //
+  clan_id?: string;
   //The id of a event.
   event_id?: string;
 }
@@ -4516,6 +4522,7 @@ export class MezonApi {
   /** Delete a event by ID. */
   deleteEvent(bearerToken: string,
       eventId:string,
+      clanId?:string,
       options: any = {}): Promise<any> {
     
     if (eventId === null || eventId === undefined) {
@@ -4524,6 +4531,7 @@ export class MezonApi {
     const urlPath = "/v2/eventmanagement/{eventId}"
         .replace("{eventId}", encodeURIComponent(String(eventId)));
     const queryParams = new Map<string, any>();
+    queryParams.set("clan_id", clanId);
 
     let bodyJson : string = "";
 
@@ -4552,7 +4560,7 @@ export class MezonApi {
   /** Update fields in a given event. */
   updateEvent(bearerToken: string,
       eventId:string,
-      body:{},
+      body:MezonUpdateEventBody,
       options: any = {}): Promise<any> {
     
     if (eventId === null || eventId === undefined) {
