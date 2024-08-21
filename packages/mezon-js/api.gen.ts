@@ -147,6 +147,8 @@ export interface MezonUpdateEventBody {
   //
   channel_id?: string;
   //
+  clan_id?: string;
+  //
   description?: string;
   //
   end_time?: string;
@@ -752,6 +754,8 @@ export interface ApiUpdateEventRequest {
   start_time?: string;
   //
   title?: string;
+  //
+  clan_id?: string;
 }
 
 /** Create a role within clan. */
@@ -784,6 +788,8 @@ export interface ApiDeleteChannelDescRequest {
 
 /**  */
 export interface ApiDeleteEventRequest {
+  //
+  clan_id?: string;
   //The id of a event.
   event_id?: string;
 }
@@ -1103,24 +1109,6 @@ export interface ApiNotification {
 export interface ApiNotificationChannel {
   //
   channel_id?: string;
-}
-
-/**  */
-export interface ApiNotificationChannelCategoySetting {
-  //
-  channel_category_label?: string;
-  //
-  channel_category_title?: string;
-  //
-  id?: string;
-  //
-  notification_setting_type?: number;
-}
-
-/**  */
-export interface ApiNotificationChannelCategoySettingsList {
-  //
-  noti_channel_categoy_setting?: Array<ApiNotificationChannelCategoySetting>;
 }
 
 /** A collection of zero or more notifications. */
@@ -4518,6 +4506,7 @@ export class MezonApi {
   /** Delete a event by ID. */
   deleteEvent(bearerToken: string,
       eventId:string,
+      clanId?:string,
       options: any = {}): Promise<any> {
     
     if (eventId === null || eventId === undefined) {
@@ -4526,6 +4515,7 @@ export class MezonApi {
     const urlPath = "/v2/eventmanagement/{eventId}"
         .replace("{eventId}", encodeURIComponent(String(eventId)));
     const queryParams = new Map<string, any>();
+    queryParams.set("clan_id", clanId);
 
     let bodyJson : string = "";
 
@@ -4554,7 +4544,7 @@ export class MezonApi {
   /** Update fields in a given event. */
   updateEvent(bearerToken: string,
       eventId:string,
-      body:{},
+      body:MezonUpdateEventBody,
       options: any = {}): Promise<any> {
     
     if (eventId === null || eventId === undefined) {
@@ -5270,38 +5260,6 @@ export class MezonApi {
     ]);
 }
 
-  /** notification category, channel selected */
-  getChannelCategoryNotiSettingsList(bearerToken: string,
-    clanId?:string,
-    options: any = {}): Promise<ApiNotificationChannelCategoySettingsList> {
-
-  const urlPath = "/v2/notifichannelcategory/get";
-  const queryParams = new Map<string, any>();
-  queryParams.set("clan_id", clanId);
-
-  let bodyJson : string = "";
-
-  const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
-  const fetchOptions = buildFetchOptions("GET", options, bodyJson);
-  if (bearerToken) {
-      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-  }
-
-  return Promise.race([
-    fetch(fullUrl, fetchOptions).then((response) => {
-      if (response.status == 204) {
-        return response;
-      } else if (response.status >= 200 && response.status < 300) {
-        return response.json();
-      } else {
-        throw response;
-      }
-    }),
-    new Promise((_, reject) =>
-      setTimeout(reject, this.timeoutMs, "Request timed out.")
-    ),
-  ]);
-}
   /**  */
   deleteNotiReactMessage(bearerToken: string,
       channelId?:string,

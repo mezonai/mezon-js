@@ -1,6 +1,6 @@
 {
   "name": "mezon-js",
-  "version": "2.8.44",
+  "version": "2.8.46",
   "scripts": {
     "build": "npx tsc && npx rollup -c --bundleConfigAsCjs && node build.mjs"
   },
@@ -38,6 +38,7 @@
     "base64-arraybuffer": "^1.0.2",
     "esbuild": "^0.19.11",
     "js-base64": "^3.7.4",
+    "mezon-js": "file:",
     "whatwg-fetch": "^3.6.2"
   },
   "devDependencies": {
