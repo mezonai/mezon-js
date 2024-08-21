@@ -42,10 +42,6 @@ export interface MezonChangeChannelCategoryBody {
   channel_id?: string;
 }
 
-/**  */
-export interface MezonDeleteWebhookByIdBody {
-}
-
 /** Update app information. */
 export interface MezonUpdateAppBody {
   //Avatar URL.
@@ -248,18 +244,6 @@ export interface ApiAccount {
   verify_time?: string;
   //The user's wallet data.
   wallet?: string;
-}
-
-/** Send a app token to the server. Used with authenticate/link/unlink. */
-export interface ApiAccountApp {
-  //
-  appid?: string;
-  //
-  appname?: string;
-  //The account token when create apps to access their profile API.
-  token?: string;
-  //Extra information that will be bundled in the session token.
-  vars?: Record<string, string>;
 }
 
 /** Send a Apple Sign In token to the server. Used with authenticate/link/unlink. */
