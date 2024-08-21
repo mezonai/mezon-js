@@ -1982,22 +1982,6 @@ export interface NotificationSetting {
   notification_setting_type: number;
 }
 
-/** Notification setting record */
-export interface NotificationChannelCategoySetting {
-  /** Notification id */
-  id: string;
-  /**  */
-  channel_category_label: string;
-  /** Notification title */
-  notification_setting_type: number;
-  /**  */
-  channel_category_title: string;
-}
-
-export interface NotificationChannelCategoySettingsList {
-  noti_channel_categoy_setting: NotificationChannelCategoySetting[];
-}
-
 /**  */
 export interface DeletePinMessage {
   /**  */
@@ -2248,6 +2232,7 @@ export interface UpdateEventRequest {
   address: string;
   start_time: Date | undefined;
   end_time: Date | undefined;
+  clan_id: string;
 }
 
 /** Delete a role the user has access to. */
@@ -2263,6 +2248,8 @@ export interface DeleteRoleRequest {
 export interface DeleteEventRequest {
   /** The id of a event. */
   event_id: string;
+  /** clan id */
+  clan_id: string;
 }
 
 /** Update fields in a given role. */
@@ -16992,188 +16979,6 @@ export const NotificationSetting = {
   },
 };
 
-function createBaseNotificationChannelCategoySetting(): NotificationChannelCategoySetting {
-  return { id: "", channel_category_label: "", notification_setting_type: 0, channel_category_title: "" };
-}
-
-export const NotificationChannelCategoySetting = {
-  encode(message: NotificationChannelCategoySetting, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.id !== "") {
-      writer.uint32(10).string(message.id);
-    }
-    if (message.channel_category_label !== "") {
-      writer.uint32(18).string(message.channel_category_label);
-    }
-    if (message.notification_setting_type !== 0) {
-      writer.uint32(24).int32(message.notification_setting_type);
-    }
-    if (message.channel_category_title !== "") {
-      writer.uint32(34).string(message.channel_category_title);
-    }
-    return writer;
-  },
-
-  decode(input: _m0.Reader | Uint8Array, length?: number): NotificationChannelCategoySetting {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseNotificationChannelCategoySetting();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
-          if (tag !== 10) {
-            break;
-          }
-
-          message.id = reader.string();
-          continue;
-        case 2:
-          if (tag !== 18) {
-            break;
-          }
-
-          message.channel_category_label = reader.string();
-          continue;
-        case 3:
-          if (tag !== 24) {
-            break;
-          }
-
-          message.notification_setting_type = reader.int32();
-          continue;
-        case 4:
-          if (tag !== 34) {
-            break;
-          }
-
-          message.channel_category_title = reader.string();
-          continue;
-      }
-      if ((tag & 7) === 4 || tag === 0) {
-        break;
-      }
-      reader.skipType(tag & 7);
-    }
-    return message;
-  },
-
-  fromJSON(object: any): NotificationChannelCategoySetting {
-    return {
-      id: isSet(object.id) ? globalThis.String(object.id) : "",
-      channel_category_label: isSet(object.channel_category_label)
-        ? globalThis.String(object.channel_category_label)
-        : "",
-      notification_setting_type: isSet(object.notification_setting_type)
-        ? globalThis.Number(object.notification_setting_type)
-        : 0,
-      channel_category_title: isSet(object.channel_category_title)
-        ? globalThis.String(object.channel_category_title)
-        : "",
-    };
-  },
-
-  toJSON(message: NotificationChannelCategoySetting): unknown {
-    const obj: any = {};
-    if (message.id !== "") {
-      obj.id = message.id;
-    }
-    if (message.channel_category_label !== "") {
-      obj.channel_category_label = message.channel_category_label;
-    }
-    if (message.notification_setting_type !== 0) {
-      obj.notification_setting_type = Math.round(message.notification_setting_type);
-    }
-    if (message.channel_category_title !== "") {
-      obj.channel_category_title = message.channel_category_title;
-    }
-    return obj;
-  },
-
-  create<I extends Exact<DeepPartial<NotificationChannelCategoySetting>, I>>(
-    base?: I,
-  ): NotificationChannelCategoySetting {
-    return NotificationChannelCategoySetting.fromPartial(base ?? ({} as any));
-  },
-  fromPartial<I extends Exact<DeepPartial<NotificationChannelCategoySetting>, I>>(
-    object: I,
-  ): NotificationChannelCategoySetting {
-    const message = createBaseNotificationChannelCategoySetting();
-    message.id = object.id ?? "";
-    message.channel_category_label = object.channel_category_label ?? "";
-    message.notification_setting_type = object.notification_setting_type ?? 0;
-    message.channel_category_title = object.channel_category_title ?? "";
-    return message;
-  },
-};
-
-function createBaseNotificationChannelCategoySettingsList(): NotificationChannelCategoySettingsList {
-  return { noti_channel_categoy_setting: [] };
-}
-
-export const NotificationChannelCategoySettingsList = {
-  encode(message: NotificationChannelCategoySettingsList, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    for (const v of message.noti_channel_categoy_setting) {
-      NotificationChannelCategoySetting.encode(v!, writer.uint32(10).fork()).ldelim();
-    }
-    return writer;
-  },
-
-  decode(input: _m0.Reader | Uint8Array, length?: number): NotificationChannelCategoySettingsList {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseNotificationChannelCategoySettingsList();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
-          if (tag !== 10) {
-            break;
-          }
-
-          message.noti_channel_categoy_setting.push(NotificationChannelCategoySetting.decode(reader, reader.uint32()));
-          continue;
-      }
-      if ((tag & 7) === 4 || tag === 0) {
-        break;
-      }
-      reader.skipType(tag & 7);
-    }
-    return message;
-  },
-
-  fromJSON(object: any): NotificationChannelCategoySettingsList {
-    return {
-      noti_channel_categoy_setting: globalThis.Array.isArray(object?.noti_channel_categoy_setting)
-        ? object.noti_channel_categoy_setting.map((e: any) => NotificationChannelCategoySetting.fromJSON(e))
-        : [],
-    };
-  },
-
-  toJSON(message: NotificationChannelCategoySettingsList): unknown {
-    const obj: any = {};
-    if (message.noti_channel_categoy_setting?.length) {
-      obj.noti_channel_categoy_setting = message.noti_channel_categoy_setting.map((e) =>
-        NotificationChannelCategoySetting.toJSON(e)
-      );
-    }
-    return obj;
-  },
-
-  create<I extends Exact<DeepPartial<NotificationChannelCategoySettingsList>, I>>(
-    base?: I,
-  ): NotificationChannelCategoySettingsList {
-    return NotificationChannelCategoySettingsList.fromPartial(base ?? ({} as any));
-  },
-  fromPartial<I extends Exact<DeepPartial<NotificationChannelCategoySettingsList>, I>>(
-    object: I,
-  ): NotificationChannelCategoySettingsList {
-    const message = createBaseNotificationChannelCategoySettingsList();
-    message.noti_channel_categoy_setting =
-      object.noti_channel_categoy_setting?.map((e) => NotificationChannelCategoySetting.fromPartial(e)) || [];
-    return message;
-  },
-};
-
 function createBaseDeletePinMessage(): DeletePinMessage {
   return { message_id: "" };
 }
@@ -19567,6 +19372,7 @@ function createBaseUpdateEventRequest(): UpdateEventRequest {
     address: "",
     start_time: undefined,
     end_time: undefined,
+    clan_id: "",
   };
 }
 
@@ -19595,6 +19401,9 @@ export const UpdateEventRequest = {
     }
     if (message.end_time !== undefined) {
       Timestamp.encode(toTimestamp(message.end_time), writer.uint32(66).fork()).ldelim();
+    }
+    if (message.clan_id !== "") {
+      writer.uint32(74).string(message.clan_id);
     }
     return writer;
   },
@@ -19662,6 +19471,13 @@ export const UpdateEventRequest = {
 
           message.end_time = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
           continue;
+        case 9:
+          if (tag !== 74) {
+            break;
+          }
+
+          message.clan_id = reader.string();
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -19681,6 +19497,7 @@ export const UpdateEventRequest = {
       address: isSet(object.address) ? globalThis.String(object.address) : "",
       start_time: isSet(object.start_time) ? fromJsonTimestamp(object.start_time) : undefined,
       end_time: isSet(object.end_time) ? fromJsonTimestamp(object.end_time) : undefined,
+      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
     };
   },
 
@@ -19710,6 +19527,9 @@ export const UpdateEventRequest = {
     if (message.end_time !== undefined) {
       obj.end_time = message.end_time.toISOString();
     }
+    if (message.clan_id !== "") {
+      obj.clan_id = message.clan_id;
+    }
     return obj;
   },
 
@@ -19726,6 +19546,7 @@ export const UpdateEventRequest = {
     message.address = object.address ?? "";
     message.start_time = object.start_time ?? undefined;
     message.end_time = object.end_time ?? undefined;
+    message.clan_id = object.clan_id ?? "";
     return message;
   },
 };
@@ -19820,13 +19641,16 @@ export const DeleteRoleRequest = {
 };
 
 function createBaseDeleteEventRequest(): DeleteEventRequest {
-  return { event_id: "" };
+  return { event_id: "", clan_id: "" };
 }
 
 export const DeleteEventRequest = {
   encode(message: DeleteEventRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.event_id !== "") {
       writer.uint32(10).string(message.event_id);
+    }
+    if (message.clan_id !== "") {
+      writer.uint32(18).string(message.clan_id);
     }
     return writer;
   },
@@ -19845,6 +19669,13 @@ export const DeleteEventRequest = {
 
           message.event_id = reader.string();
           continue;
+        case 2:
+          if (tag !== 18) {
+            break;
+          }
+
+          message.clan_id = reader.string();
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -19855,13 +19686,19 @@ export const DeleteEventRequest = {
   },
 
   fromJSON(object: any): DeleteEventRequest {
-    return { event_id: isSet(object.event_id) ? globalThis.String(object.event_id) : "" };
+    return {
+      event_id: isSet(object.event_id) ? globalThis.String(object.event_id) : "",
+      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
+    };
   },
 
   toJSON(message: DeleteEventRequest): unknown {
     const obj: any = {};
     if (message.event_id !== "") {
       obj.event_id = message.event_id;
+    }
+    if (message.clan_id !== "") {
+      obj.clan_id = message.clan_id;
     }
     return obj;
   },
@@ -19872,6 +19709,7 @@ export const DeleteEventRequest = {
   fromPartial<I extends Exact<DeepPartial<DeleteEventRequest>, I>>(object: I): DeleteEventRequest {
     const message = createBaseDeleteEventRequest();
     message.event_id = object.event_id ?? "";
+    message.clan_id = object.clan_id ?? "";
     return message;
   },
 };
