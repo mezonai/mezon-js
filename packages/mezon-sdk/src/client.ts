@@ -15,9 +15,9 @@
  */
 
 import { CloseEvent, ErrorEvent } from "ws";
-import { MezonApi, ApiAuthenticateLogoutRequest, ApiAuthenticateRefreshRequest, ApiUpdateMessageRequest, ApiSession } from "./api";
+import { MezonApi, ApiAuthenticateLogoutRequest, ApiAuthenticateRefreshRequest, ApiSession } from "./api";
 import { Session } from "./session";
-import { ChannelCreatedEvent, ChannelDeletedEvent, ChannelUpdatedEvent, DefaultSocket, Socket, UserChannelAddedEvent, UserChannelRemovedEvent, UserClanRemovedEvent, VoiceJoinedEvent } from "./socket";
+import { ChannelCreatedEvent, ChannelDeletedEvent, ChannelUpdatedEvent, DefaultSocket, Socket, UserChannelAddedEvent, UserChannelRemovedEvent, UserClanRemovedEvent } from "./socket";
 import { WebSocketAdapter } from "./web_socket_adapter";
 import { WebSocketAdapterPb } from './web_socket_adapter_pb';
 
@@ -289,12 +289,15 @@ export interface Client {
   sendMessage: (clan_id: string, channel_id: string, mode: number, msg: string, mentions?: Array<ApiMessageMention>, attachments?: Array<ApiMessageAttachment>, ref?: Array<ApiMessageRef>) => Promise<boolean>;
 
   /** Receive clan evnet. */
-  onMessage: (channelMessage: ChannelMessage) => void;
-  onClanMemberUpdate: (member_id: Array<string>, leave: boolean) => void;
-  onMessageDelete: (channelMessage: ChannelMessage) => void;
-  onMessageReactionAdd: (messageReactionEvent: ApiMessageReaction) => void;
-  onVoiceStateUpdate: (voiceState: VoiceJoinedEvent) => void;
-  onMessageReactionRemove: (messageReactionEvent: ApiMessageReaction) => void;
+  onchannelmessage: (message: ChannelMessage) => void;
+  onmessagereaction: (messagereaction: ApiMessageReaction) => void;
+  ondisconnect: (e: CloseEvent) => void;
+  onuserchanneladded: (user: UserChannelAddedEvent) => void;
+  onuserchannelremoved: (user: UserChannelRemovedEvent) => void;
+  onuserclanremoved: (user: UserClanRemovedEvent) => void;
+  onchannelcreated: (channelCreated: ChannelCreatedEvent) => void;
+  onchanneldeleted: (channelDeleted: ChannelDeletedEvent) => void;
+  onchannelupdated: (channelUpdated: ChannelUpdatedEvent) => void;
 }
 
 /** A client for Mezon server. */
@@ -350,7 +353,7 @@ export class MezonClient implements Client {
       // join direct message
       await this.socket.joinClanChat("0");
 
-      this.socket.onchannelmessage = this.onMessage;
+      this.socket.onchannelmessage = this.onchannelmessage;
       this.socket.ondisconnect = this.ondisconnect;
       this.socket.onerror = this.onerror;
       this.socket.onmessagereaction = this.onmessagereaction;
@@ -391,34 +394,6 @@ export class MezonClient implements Client {
     });
   }
 
-  async deleteMessage(session : Session, id : string) {
-    if (this.autoRefreshSession && session.refresh_token &&
-      session.isexpired((Date.now() + this.expiredTimespanMs)/1000)) {
-      await this.sessionRefresh(session);
-    }
-
-    return this.apiClient.mezonDeleteMessage(session.token, id).then((response) => {
-      return Promise.resolve(response !== undefined);
-    });
-  }
-
-  async updateMessage(session : Session, id : string, consume_time? : string, read_time? : string) {
-    if (this.autoRefreshSession && session.refresh_token &&
-      session.isexpired((Date.now() + this.expiredTimespanMs)/1000)) {
-      await this.sessionRefresh(session);
-    }
-
-    const request : ApiUpdateMessageRequest = {
-      id: id,
-      consume_time: consume_time,
-      read_time: read_time
-    };
-
-    return this.apiClient.mezonUpdateMessage(session.token, id, request).then((response) => {
-      return Promise.resolve(response !== undefined);
-    });
-  }
-
   /** A socket created with the client's configuration. */
   createSocket(useSSL = false, verbose: boolean = false, adapter : WebSocketAdapter = new WebSocketAdapterPb(), sendTimeoutMs : number = DefaultSocket.DefaultSendTimeoutMs): Socket {
     return new DefaultSocket(this.host, this.port, useSSL, verbose, adapter, sendTimeoutMs);
@@ -428,13 +403,12 @@ export class MezonClient implements Client {
     console.log(evt);
   }
 
+  onchannelmessage(message: ChannelMessage) {
+    console.log(message);
+  }
+
   onmessagereaction(messagereaction: ApiMessageReaction) {
     console.log(messagereaction);
-    if (messagereaction.action) {
-      this.onMessageReactionRemove(messagereaction);
-    } else {
-      this.onMessageReactionAdd(messagereaction);
-    }
   }
 
   ondisconnect(e: CloseEvent) {
@@ -450,7 +424,7 @@ export class MezonClient implements Client {
   }
 
   onuserclanremoved(user: UserClanRemovedEvent) {
-    this.onClanMemberUpdate(user.user_ids, true);
+    console.log(user);
   }
 
   onchannelcreated(channelCreated: ChannelCreatedEvent) {
@@ -467,31 +441,6 @@ export class MezonClient implements Client {
 
   onheartbeattimeout() {
     console.log("Heartbeat timeout.");
-  }
-
-  /** Receive clan evnet. */
-  onMessage(channelMessage: ChannelMessage) {
-    console.log(channelMessage);
-  }
-
-  onClanMemberUpdate(member_id: Array<string>, leave: boolean) {
-    console.log(member_id, leave);
-  }
-
-  onMessageDelete(channelMessage: ChannelMessage) {
-    console.log(channelMessage);
-  }
-
-  onMessageReactionAdd(messageReactionEvent: ApiMessageReaction) {
-    console.log(messageReactionEvent);
-  }
-
-  onVoiceStateUpdate(voiceState: VoiceJoinedEvent) {
-    console.log(voiceState);
-  }
-
-  onMessageReactionRemove(messageReactionEvent: ApiMessageReaction) {
-    console.log(messageReactionEvent);
   }
 
 };
