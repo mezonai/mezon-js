@@ -29,7 +29,7 @@ const DEFAULT_EXPIRED_TIMESPAN_MS = 5 * 60 * 1000;
 
 
 /**  */
-export class ClanDesc {
+export interface ClanDesc {
   //
   banner?: string;
   //
@@ -45,7 +45,7 @@ export class ClanDesc {
 }
 
 /**  */
-export class ChannelDescription {
+export interface ChannelDescription {
   // The clan of this channel
   clan_id?: string;
   // The channel this message belongs to.
@@ -65,7 +65,7 @@ export class ChannelDescription {
 }
 
 /**  */
-export class ApiMessageAttachment {
+export interface ApiMessageAttachment {
   //
   filename?: string;
   //
@@ -91,7 +91,7 @@ export class ApiMessageAttachment {
 }
 
 /**  */
-export class ApiMessageDeleted {
+export interface ApiMessageDeleted {
   //
   deletor?: string;
   //
@@ -99,7 +99,7 @@ export class ApiMessageDeleted {
 }
 
 /**  */
-export class ApiMessageMention {
+export interface ApiMessageMention {
   //The UNIX time (for gRPC clients) or ISO string (for REST clients) when the message was created.
   create_time?: string;
   //
@@ -129,7 +129,7 @@ export class ApiMessageMention {
 }
 
 /**  */
-export class ApiMessageReaction {
+export interface ApiMessageReaction {
   //
   action?: boolean;
   //
@@ -157,7 +157,7 @@ export class ApiMessageReaction {
 }
 
 /**  */
-export class ApiMessageRef {
+export interface ApiMessageRef {
   //
   message_id?: string;
   //
@@ -187,7 +187,7 @@ export class ApiMessageRef {
 }
 
 /** A message sent on a channel. */
-export class ChannelMessage {
+export interface ChannelMessage {
   //The unique ID of this message.
   id?: string;
   //
@@ -243,7 +243,7 @@ export class ChannelMessage {
 }
 
 /** A user in the server. */
-export class ApiUser {
+export interface ApiUser {
   //
   about_me?: string;
   //The Apple Sign In ID in the user's account.
@@ -286,6 +286,7 @@ export class ApiUser {
 
 export interface Client {
   authenticate: () => Promise<string>;
+  sendMessage: (clan_id: string, channel_id: string, mode: number, msg: string, mentions?: Array<ApiMessageMention>, attachments?: Array<ApiMessageAttachment>, ref?: Array<ApiMessageRef>) => Promise<boolean>;
 
   /** Receive clan evnet. */
   onMessage: (channelMessage: ChannelMessage) => void;
@@ -305,6 +306,9 @@ export class MezonClient implements Client {
   /** The low level API client for Nakama server. */
   private readonly apiClient: MezonApi;
 
+  /** the socket */
+  private readonly socket: Socket;
+
   constructor(
       readonly apiKey = DEFAULT_API_KEY,
       readonly host = DEFAULT_HOST,
@@ -316,6 +320,12 @@ export class MezonClient implements Client {
     const basePath = `${scheme}${host}:${port}`;
 
     this.apiClient = new MezonApi(apiKey, basePath, timeout);
+    this.socket = this.createSocket(this.useSSL, false, new WebSocketAdapterPb());
+  }
+
+  async sendMessage(clan_id: string, channel_id: string, mode: number, msg: string, mentions?: Array<ApiMessageMention>, attachments?: Array<ApiMessageAttachment>, ref?: Array<ApiMessageRef>) {
+    const msgACK = await this.socket.writeChatMessage(clan_id, channel_id, mode, msg, mentions, attachments, ref);
+    return Promise.resolve(msgACK.channel_id === channel_id);
   }
 
   /** Authenticate a user with an ID against the server. */
@@ -326,8 +336,7 @@ export class MezonClient implements Client {
       }
     }).then(async (apiSession : ApiSession) => {
       const sockSession = new Session(apiSession.token || "", apiSession.refresh_token || "");
-      const socket = this.createSocket(this.useSSL, true, new WebSocketAdapterPb());
-      const session = await socket.connect(sockSession, false);
+      const session = await this.socket.connect(sockSession, false);
 
       if (!session) {
         return Promise.resolve("error authenticate");
@@ -335,23 +344,23 @@ export class MezonClient implements Client {
       
       const clans = await this.apiClient.listClanDescs(session.token);
       clans.clandesc?.forEach(async clan => {
-        await socket.joinClanChat(clan.clan_id || '');
+        await this.socket.joinClanChat(clan.clan_id || '');
       })
 
       // join direct message
-      await socket.joinClanChat("0");
+      await this.socket.joinClanChat("0");
 
-      socket.onchannelmessage = this.onMessage;
-      socket.ondisconnect = this.ondisconnect;
-      socket.onerror = this.onerror;
-      socket.onmessagereaction = this.onmessagereaction;
-      socket.onuserchannelremoved = this.onuserchannelremoved;
-      socket.onuserclanremoved = this.onuserclanremoved;
-      socket.onuserchanneladded = this.onuserchanneladded;        
-      socket.onchannelcreated = this.onchannelcreated;
-      socket.onchanneldeleted = this.onchanneldeleted;
-      socket.onchannelupdated = this.onchannelupdated;
-      socket.onheartbeattimeout = this.onheartbeattimeout;
+      this.socket.onchannelmessage = this.onMessage;
+      this.socket.ondisconnect = this.ondisconnect;
+      this.socket.onerror = this.onerror;
+      this.socket.onmessagereaction = this.onmessagereaction;
+      this.socket.onuserchannelremoved = this.onuserchannelremoved;
+      this.socket.onuserclanremoved = this.onuserclanremoved;
+      this.socket.onuserchanneladded = this.onuserchanneladded;        
+      this.socket.onchannelcreated = this.onchannelcreated;
+      this.socket.onchanneldeleted = this.onchanneldeleted;
+      this.socket.onchannelupdated = this.onchannelupdated;
+      this.socket.onheartbeattimeout = this.onheartbeattimeout;
       
       return Promise.resolve("connect successful");
     });

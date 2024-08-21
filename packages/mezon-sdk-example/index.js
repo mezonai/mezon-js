@@ -14,13 +14,9 @@
  * limitations under the License.
  */
 
-const { MezonClient, ClanDesc } = require("mezon-sdk");
+const { MezonClient } = require("mezon-sdk");
 
-console.log(MezonClient, ClanDesc);
-
-ClanDesc.prototype.Hello = function() {}
-
-var client = new MezonClient("594c67737675324859665a5867716d54");
+var client = new MezonClient("736f556c6f764f685162756e53387651");
 
 client.authenticate().then(async (e) => {
   console.log("authenticated.", e);
@@ -29,5 +25,22 @@ client.authenticate().then(async (e) => {
 });
 
 client.onMessage = (msg) => {
-  console.log("channel message", msg);
+  const text = msg.content.t;
+  if (text && text.toLowerCase().startsWith("*daily")) {
+    const message = {"t":"✅ Daily saved."}
+    const ref = {
+      message_id: '',
+      message_ref_id: msg.message_id,
+      ref_type: 0,
+      message_sender_id: msg.sender_id,
+      message_sender_username: msg.username,
+      mesages_sender_avatar: msg.avatar,
+      message_sender_clan_nick: msg.clan_nick,
+      message_sender_display_name: msg.display_name,
+      content: JSON.stringify(msg.content),
+      has_attachment: false
+    }
+    
+    client.sendMessage(msg.clan_id, msg.channel_id, msg.mode, message, undefined, undefined, Array(ref))
+  }
 }

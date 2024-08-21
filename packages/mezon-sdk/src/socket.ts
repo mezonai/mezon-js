@@ -841,7 +841,7 @@ export class DefaultSocket implements Socket {
           this.onstreamdata(<StreamData>message.stream_data);
         } else if (message.channel_message) {
           var content, reactions, mentions, attachments, references;
-          try {           
+          try {
             content = JSON.parse(message.channel_message.content);
           } catch(e) {
             //console.log("content is invalid", e)
