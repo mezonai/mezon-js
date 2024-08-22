@@ -882,6 +882,8 @@ export interface UserChannelRemoved {
   channel_id: string;
   /** the user */
   user_ids: string[];
+  /** the channel type */
+  channel_type: number;
 }
 
 /**  */
@@ -7175,7 +7177,7 @@ export const UserChannelAdded = {
 };
 
 function createBaseUserChannelRemoved(): UserChannelRemoved {
-  return { channel_id: "", user_ids: [] };
+  return { channel_id: "", user_ids: [], channel_type: 0 };
 }
 
 export const UserChannelRemoved = {
@@ -7185,6 +7187,9 @@ export const UserChannelRemoved = {
     }
     for (const v of message.user_ids) {
       writer.uint32(18).string(v!);
+    }
+    if (message.channel_type !== 0) {
+      writer.uint32(24).int32(message.channel_type);
     }
     return writer;
   },
@@ -7210,6 +7215,13 @@ export const UserChannelRemoved = {
 
           message.user_ids.push(reader.string());
           continue;
+        case 3:
+          if (tag !== 24) {
+            break;
+          }
+
+          message.channel_type = reader.int32();
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -7223,6 +7235,7 @@ export const UserChannelRemoved = {
     return {
       channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "",
       user_ids: globalThis.Array.isArray(object?.user_ids) ? object.user_ids.map((e: any) => globalThis.String(e)) : [],
+      channel_type: isSet(object.channel_type) ? globalThis.Number(object.channel_type) : 0,
     };
   },
 
@@ -7234,6 +7247,9 @@ export const UserChannelRemoved = {
     if (message.user_ids?.length) {
       obj.user_ids = message.user_ids;
     }
+    if (message.channel_type !== 0) {
+      obj.channel_type = Math.round(message.channel_type);
+    }
     return obj;
   },
 
@@ -7244,6 +7260,7 @@ export const UserChannelRemoved = {
     const message = createBaseUserChannelRemoved();
     message.channel_id = object.channel_id ?? "";
     message.user_ids = object.user_ids?.map((e) => e) || [];
+    message.channel_type = object.channel_type ?? 0;
     return message;
   },
 };
