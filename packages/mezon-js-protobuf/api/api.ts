@@ -2611,7 +2611,11 @@ export interface UpdateAppRequest {
     | string
     | undefined;
   /** Token. */
-  token: string | undefined;
+  token:
+    | string
+    | undefined;
+  /** about the app. */
+  about: string;
 }
 
 /** The identifier for an app. */
@@ -23477,7 +23481,7 @@ export const ListAppsRequest = {
 };
 
 function createBaseUpdateAppRequest(): UpdateAppRequest {
-  return { id: "", appname: undefined, metadata: undefined, applogo: undefined, token: undefined };
+  return { id: "", appname: undefined, metadata: undefined, applogo: undefined, token: undefined, about: "" };
 }
 
 export const UpdateAppRequest = {
@@ -23496,6 +23500,9 @@ export const UpdateAppRequest = {
     }
     if (message.token !== undefined) {
       StringValue.encode({ value: message.token! }, writer.uint32(42).fork()).ldelim();
+    }
+    if (message.about !== "") {
+      writer.uint32(50).string(message.about);
     }
     return writer;
   },
@@ -23542,6 +23549,13 @@ export const UpdateAppRequest = {
 
           message.token = StringValue.decode(reader, reader.uint32()).value;
           continue;
+        case 6:
+          if (tag !== 50) {
+            break;
+          }
+
+          message.about = reader.string();
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -23558,6 +23572,7 @@ export const UpdateAppRequest = {
       metadata: isSet(object.metadata) ? String(object.metadata) : undefined,
       applogo: isSet(object.applogo) ? String(object.applogo) : undefined,
       token: isSet(object.token) ? String(object.token) : undefined,
+      about: isSet(object.about) ? globalThis.String(object.about) : "",
     };
   },
 
@@ -23578,6 +23593,9 @@ export const UpdateAppRequest = {
     if (message.token !== undefined) {
       obj.token = message.token;
     }
+    if (message.about !== "") {
+      obj.about = message.about;
+    }
     return obj;
   },
 
@@ -23591,6 +23609,7 @@ export const UpdateAppRequest = {
     message.metadata = object.metadata ?? undefined;
     message.applogo = object.applogo ?? undefined;
     message.token = object.token ?? undefined;
+    message.about = object.about ?? "";
     return message;
   },
 };

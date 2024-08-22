@@ -44,6 +44,8 @@ export interface MezonChangeChannelCategoryBody {
 
 /** Update app information. */
 export interface MezonUpdateAppBody {
+  //about the app.
+  about?: string;
   //Avatar URL.
   applogo?: string;
   //Username.
@@ -3114,7 +3116,7 @@ export class MezonApi {
     bodyJson = JSON.stringify(body || {});
 
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
-    const fetchOptions = buildFetchOptions("POST", options, bodyJson);
+    const fetchOptions = buildFetchOptions("PUT", options, bodyJson);
     if (bearerToken) {
         fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
     }
