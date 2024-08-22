@@ -24,6 +24,6 @@ client.authenticate().then(async (e: string) => {
   console.log("error authenticating.");
 });
 
-client.onMessage = (msg: ChannelMessage) => {
+client.onchannelmessage = (msg: ChannelMessage) => {
   console.log("channel message", msg);
 }
