@@ -2494,6 +2494,13 @@ export interface WebhookGenerateResponse {
   avatar: string;
 }
 
+export interface WebhookHandlerRequest {
+  clan_id: string;
+  channel_id: string;
+  token: string;
+  body: string;
+}
+
 export interface CheckDuplicateClanNameRequest {
   clan_name: string;
 }
@@ -2611,7 +2618,11 @@ export interface UpdateAppRequest {
     | string
     | undefined;
   /** Token. */
-  token: string | undefined;
+  token:
+    | string
+    | undefined;
+  /** about the app. */
+  about: string;
 }
 
 /** The identifier for an app. */
@@ -22399,6 +22410,110 @@ export const WebhookGenerateResponse = {
   },
 };
 
+function createBaseWebhookHandlerRequest(): WebhookHandlerRequest {
+  return { clan_id: "", channel_id: "", token: "", body: "" };
+}
+
+export const WebhookHandlerRequest = {
+  encode(message: WebhookHandlerRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.clan_id !== "") {
+      writer.uint32(10).string(message.clan_id);
+    }
+    if (message.channel_id !== "") {
+      writer.uint32(18).string(message.channel_id);
+    }
+    if (message.token !== "") {
+      writer.uint32(26).string(message.token);
+    }
+    if (message.body !== "") {
+      writer.uint32(34).string(message.body);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): WebhookHandlerRequest {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseWebhookHandlerRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.clan_id = reader.string();
+          continue;
+        case 2:
+          if (tag !== 18) {
+            break;
+          }
+
+          message.channel_id = reader.string();
+          continue;
+        case 3:
+          if (tag !== 26) {
+            break;
+          }
+
+          message.token = reader.string();
+          continue;
+        case 4:
+          if (tag !== 34) {
+            break;
+          }
+
+          message.body = reader.string();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): WebhookHandlerRequest {
+    return {
+      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
+      channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "",
+      token: isSet(object.token) ? globalThis.String(object.token) : "",
+      body: isSet(object.body) ? globalThis.String(object.body) : "",
+    };
+  },
+
+  toJSON(message: WebhookHandlerRequest): unknown {
+    const obj: any = {};
+    if (message.clan_id !== "") {
+      obj.clan_id = message.clan_id;
+    }
+    if (message.channel_id !== "") {
+      obj.channel_id = message.channel_id;
+    }
+    if (message.token !== "") {
+      obj.token = message.token;
+    }
+    if (message.body !== "") {
+      obj.body = message.body;
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<WebhookHandlerRequest>, I>>(base?: I): WebhookHandlerRequest {
+    return WebhookHandlerRequest.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<WebhookHandlerRequest>, I>>(object: I): WebhookHandlerRequest {
+    const message = createBaseWebhookHandlerRequest();
+    message.clan_id = object.clan_id ?? "";
+    message.channel_id = object.channel_id ?? "";
+    message.token = object.token ?? "";
+    message.body = object.body ?? "";
+    return message;
+  },
+};
+
 function createBaseCheckDuplicateClanNameRequest(): CheckDuplicateClanNameRequest {
   return { clan_name: "" };
 }
@@ -23477,7 +23592,7 @@ export const ListAppsRequest = {
 };
 
 function createBaseUpdateAppRequest(): UpdateAppRequest {
-  return { id: "", appname: undefined, metadata: undefined, applogo: undefined, token: undefined };
+  return { id: "", appname: undefined, metadata: undefined, applogo: undefined, token: undefined, about: "" };
 }
 
 export const UpdateAppRequest = {
@@ -23496,6 +23611,9 @@ export const UpdateAppRequest = {
     }
     if (message.token !== undefined) {
       StringValue.encode({ value: message.token! }, writer.uint32(42).fork()).ldelim();
+    }
+    if (message.about !== "") {
+      writer.uint32(50).string(message.about);
     }
     return writer;
   },
@@ -23542,6 +23660,13 @@ export const UpdateAppRequest = {
 
           message.token = StringValue.decode(reader, reader.uint32()).value;
           continue;
+        case 6:
+          if (tag !== 50) {
+            break;
+          }
+
+          message.about = reader.string();
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -23558,6 +23683,7 @@ export const UpdateAppRequest = {
       metadata: isSet(object.metadata) ? String(object.metadata) : undefined,
       applogo: isSet(object.applogo) ? String(object.applogo) : undefined,
       token: isSet(object.token) ? String(object.token) : undefined,
+      about: isSet(object.about) ? globalThis.String(object.about) : "",
     };
   },
 
@@ -23578,6 +23704,9 @@ export const UpdateAppRequest = {
     if (message.token !== undefined) {
       obj.token = message.token;
     }
+    if (message.about !== "") {
+      obj.about = message.about;
+    }
     return obj;
   },
 
@@ -23591,6 +23720,7 @@ export const UpdateAppRequest = {
     message.metadata = object.metadata ?? undefined;
     message.applogo = object.applogo ?? undefined;
     message.token = object.token ?? undefined;
+    message.about = object.about ?? "";
     return message;
   },
 };

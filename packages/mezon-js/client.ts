@@ -97,6 +97,7 @@ import {
   ApiAppList,
   ApiApp,
   MezonUpdateRoleDeleteBody,
+  MezonUpdateAppBody,
 } from "./api.gen";
 
 import { Session } from "./session";
@@ -1851,6 +1852,18 @@ export class Client {
     }
 
     return this.apiClient.updateEvent(session.token, roleId, request).then((response: any) => {
+      return response !== undefined;
+    });
+  }
+
+  /** Update fields in a given event. */
+  async updateApp(session: Session, roleId: string, request: MezonUpdateAppBody): Promise<boolean> {
+    if (this.autoRefreshSession && session.refresh_token &&
+        session.isexpired((Date.now() + this.expiredTimespanMs)/1000)) {
+        await this.sessionRefresh(session);
+    }
+
+    return this.apiClient.updateApp(session.token, roleId, request).then((response: any) => {
       return response !== undefined;
     });
   }
