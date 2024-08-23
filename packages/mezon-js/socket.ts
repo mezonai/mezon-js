@@ -91,8 +91,8 @@ interface ChannelLeave {
 export interface AddClanUserEvent {
   //the clan id
   clan_id: string;
-  // the user id
-  user_id: string;
+  // the user
+  user: AddUsers;
 }
 
 /** UserChannelAddedEvent */
