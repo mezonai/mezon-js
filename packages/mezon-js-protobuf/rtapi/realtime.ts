@@ -236,8 +236,8 @@ export interface Envelope {
 export interface AddClanUserEvent {
   /** the clan id */
   clan_id: string;
-  /** the user id */
-  user_id: string;
+  /** the user */
+  user: AddUsers | undefined;
 }
 
 /** A list of permission role channel. */
@@ -2146,7 +2146,7 @@ export const Envelope = {
 };
 
 function createBaseAddClanUserEvent(): AddClanUserEvent {
-  return { clan_id: "", user_id: "" };
+  return { clan_id: "", user: undefined };
 }
 
 export const AddClanUserEvent = {
@@ -2154,8 +2154,8 @@ export const AddClanUserEvent = {
     if (message.clan_id !== "") {
       writer.uint32(10).string(message.clan_id);
     }
-    if (message.user_id !== "") {
-      writer.uint32(18).string(message.user_id);
+    if (message.user !== undefined) {
+      AddUsers.encode(message.user, writer.uint32(18).fork()).ldelim();
     }
     return writer;
   },
@@ -2179,7 +2179,7 @@ export const AddClanUserEvent = {
             break;
           }
 
-          message.user_id = reader.string();
+          message.user = AddUsers.decode(reader, reader.uint32());
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -2193,7 +2193,7 @@ export const AddClanUserEvent = {
   fromJSON(object: any): AddClanUserEvent {
     return {
       clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
-      user_id: isSet(object.user_id) ? globalThis.String(object.user_id) : "",
+      user: isSet(object.user) ? AddUsers.fromJSON(object.user) : undefined,
     };
   },
 
@@ -2202,8 +2202,8 @@ export const AddClanUserEvent = {
     if (message.clan_id !== "") {
       obj.clan_id = message.clan_id;
     }
-    if (message.user_id !== "") {
-      obj.user_id = message.user_id;
+    if (message.user !== undefined) {
+      obj.user = AddUsers.toJSON(message.user);
     }
     return obj;
   },
@@ -2214,7 +2214,7 @@ export const AddClanUserEvent = {
   fromPartial<I extends Exact<DeepPartial<AddClanUserEvent>, I>>(object: I): AddClanUserEvent {
     const message = createBaseAddClanUserEvent();
     message.clan_id = object.clan_id ?? "";
-    message.user_id = object.user_id ?? "";
+    message.user = (object.user !== undefined && object.user !== null) ? AddUsers.fromPartial(object.user) : undefined;
     return message;
   },
 };

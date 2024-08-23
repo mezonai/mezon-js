@@ -2494,6 +2494,13 @@ export interface WebhookGenerateResponse {
   avatar: string;
 }
 
+export interface WebhookHandlerRequest {
+  clan_id: string;
+  channel_id: string;
+  token: string;
+  body: string;
+}
+
 export interface CheckDuplicateClanNameRequest {
   clan_name: string;
 }
@@ -22399,6 +22406,110 @@ export const WebhookGenerateResponse = {
     message.hook_name = object.hook_name ?? "";
     message.channel_id = object.channel_id ?? "";
     message.avatar = object.avatar ?? "";
+    return message;
+  },
+};
+
+function createBaseWebhookHandlerRequest(): WebhookHandlerRequest {
+  return { clan_id: "", channel_id: "", token: "", body: "" };
+}
+
+export const WebhookHandlerRequest = {
+  encode(message: WebhookHandlerRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.clan_id !== "") {
+      writer.uint32(10).string(message.clan_id);
+    }
+    if (message.channel_id !== "") {
+      writer.uint32(18).string(message.channel_id);
+    }
+    if (message.token !== "") {
+      writer.uint32(26).string(message.token);
+    }
+    if (message.body !== "") {
+      writer.uint32(34).string(message.body);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): WebhookHandlerRequest {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseWebhookHandlerRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.clan_id = reader.string();
+          continue;
+        case 2:
+          if (tag !== 18) {
+            break;
+          }
+
+          message.channel_id = reader.string();
+          continue;
+        case 3:
+          if (tag !== 26) {
+            break;
+          }
+
+          message.token = reader.string();
+          continue;
+        case 4:
+          if (tag !== 34) {
+            break;
+          }
+
+          message.body = reader.string();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): WebhookHandlerRequest {
+    return {
+      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
+      channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "",
+      token: isSet(object.token) ? globalThis.String(object.token) : "",
+      body: isSet(object.body) ? globalThis.String(object.body) : "",
+    };
+  },
+
+  toJSON(message: WebhookHandlerRequest): unknown {
+    const obj: any = {};
+    if (message.clan_id !== "") {
+      obj.clan_id = message.clan_id;
+    }
+    if (message.channel_id !== "") {
+      obj.channel_id = message.channel_id;
+    }
+    if (message.token !== "") {
+      obj.token = message.token;
+    }
+    if (message.body !== "") {
+      obj.body = message.body;
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<WebhookHandlerRequest>, I>>(base?: I): WebhookHandlerRequest {
+    return WebhookHandlerRequest.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<WebhookHandlerRequest>, I>>(object: I): WebhookHandlerRequest {
+    const message = createBaseWebhookHandlerRequest();
+    message.clan_id = object.clan_id ?? "";
+    message.channel_id = object.channel_id ?? "";
+    message.token = object.token ?? "";
+    message.body = object.body ?? "";
     return message;
   },
 };
