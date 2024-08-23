@@ -24,6 +24,7 @@ import { WebSocketAdapterPb } from './web_socket_adapter_pb';
 const DEFAULT_HOST = "mezon.vn";
 const DEFAULT_PORT = "7305";
 const DEFAULT_API_KEY = "defaultkey";
+const DEFAULT_SSL = true;
 const DEFAULT_TIMEOUT_MS = 7000;
 const DEFAULT_EXPIRED_TIMESPAN_MS = 5 * 60 * 1000;
 
@@ -316,7 +317,7 @@ export class MezonClient implements Client {
       readonly apiKey = DEFAULT_API_KEY,
       readonly host = DEFAULT_HOST,
       readonly port = DEFAULT_PORT,
-      readonly useSSL = true,
+      readonly useSSL = DEFAULT_SSL,
       readonly timeout = DEFAULT_TIMEOUT_MS,
       readonly autoRefreshSession = true) {
     const scheme = (useSSL) ? "https://" : "http://";
@@ -339,7 +340,7 @@ export class MezonClient implements Client {
       }
     }).then(async (apiSession : ApiSession) => {
       const sockSession = new Session(apiSession.token || "", apiSession.refresh_token || "");
-      const session = await this.socket.connect(sockSession, false);
+      const session = await this.socket.connect(sockSession, true);
 
       if (!session) {
         return Promise.resolve("error authenticate");
@@ -412,7 +413,7 @@ export class MezonClient implements Client {
   }
 
   ondisconnect(e: CloseEvent) {
-    console.log(e);
+    console.log("closeevent", e.reason, e.code, e.type);
   }
 
   onuserchanneladded(user: UserChannelAddedEvent) {
