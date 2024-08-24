@@ -292,7 +292,6 @@ export interface Client {
   /** Receive clan evnet. */
   onchannelmessage: (message: ChannelMessage) => void;
   onmessagereaction: (messagereaction: ApiMessageReaction) => void;
-  ondisconnect: (e: CloseEvent) => void;
   onuserchanneladded: (user: UserChannelAddedEvent) => void;
   onuserchannelremoved: (user: UserChannelRemovedEvent) => void;
   onuserclanremoved: (user: UserClanRemovedEvent) => void;
@@ -311,7 +310,10 @@ export class MezonClient implements Client {
   private readonly apiClient: MezonApi;
 
   /** the socket */
-  private readonly socket: Socket;
+  private socket: Socket;
+
+  /** the session */
+  private session: Session | undefined;
 
   constructor(
       readonly apiKey = DEFAULT_API_KEY,
@@ -340,13 +342,13 @@ export class MezonClient implements Client {
       }
     }).then(async (apiSession : ApiSession) => {
       const sockSession = new Session(apiSession.token || "", apiSession.refresh_token || "");
-      const session = await this.socket.connect(sockSession, true);
+      this.session = await this.socket.connect(sockSession, true);
 
-      if (!session) {
+      if (!this.session) {
         return Promise.resolve("error authenticate");
       }
       
-      const clans = await this.apiClient.listClanDescs(session.token);
+      const clans = await this.apiClient.listClanDescs(this.session.token);
       clans.clandesc?.forEach(async clan => {
         await this.socket.joinClanChat(clan.clan_id || '');
       })
@@ -355,8 +357,8 @@ export class MezonClient implements Client {
       await this.socket.joinClanChat("0");
 
       this.socket.onchannelmessage = this.onchannelmessage;
-      this.socket.ondisconnect = this.ondisconnect;
-      this.socket.onerror = this.onerror;
+      this.socket.ondisconnect = this.ondisconnect.bind(this);
+      this.socket.onerror = this.onerror.bind(this);
       this.socket.onmessagereaction = this.onmessagereaction;
       this.socket.onuserchannelremoved = this.onuserchannelremoved;
       this.socket.onuserclanremoved = this.onuserclanremoved;
@@ -364,7 +366,7 @@ export class MezonClient implements Client {
       this.socket.onchannelcreated = this.onchannelcreated;
       this.socket.onchanneldeleted = this.onchanneldeleted;
       this.socket.onchannelupdated = this.onchannelupdated;
-      this.socket.onheartbeattimeout = this.onheartbeattimeout;
+      this.socket.onheartbeattimeout = this.onheartbeattimeout.bind(this);
       
       return Promise.resolve("connect successful");
     });
@@ -413,7 +415,37 @@ export class MezonClient implements Client {
   }
 
   ondisconnect(e: CloseEvent) {
-    console.log("closeevent", e.reason, e.code, e.type);
+    console.log("disconnected", e, "reconnecting...");
+    const interval = setInterval(async () => {
+      this.socket = this.createSocket(this.useSSL, false, new WebSocketAdapterPb());
+      this.session = await this.socket.connect(this.session as Session, true);
+
+      if (!this.session) {
+        console.log("session is null");
+        return;
+      }
+      
+      const clans = await this.apiClient.listClanDescs(this.session.token);
+      clans.clandesc?.forEach(async clan => {
+        await this.socket.joinClanChat(clan.clan_id || '');
+      })
+
+      // join direct message
+      await this.socket.joinClanChat("0");
+
+      this.socket.onchannelmessage = this.onchannelmessage;
+      this.socket.ondisconnect = this.ondisconnect;
+      this.socket.onerror = this.onerror;
+      this.socket.onmessagereaction = this.onmessagereaction;
+      this.socket.onuserchannelremoved = this.onuserchannelremoved;
+      this.socket.onuserclanremoved = this.onuserclanremoved;
+      this.socket.onuserchanneladded = this.onuserchanneladded;        
+      this.socket.onchannelcreated = this.onchannelcreated;
+      this.socket.onchanneldeleted = this.onchanneldeleted;
+      this.socket.onchannelupdated = this.onchannelupdated;
+      this.socket.onheartbeattimeout = this.onheartbeattimeout;
+      clearInterval(interval);
+    }, 5000);
   }
 
   onuserchanneladded(user: UserChannelAddedEvent) {
