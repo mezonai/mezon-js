@@ -186,9 +186,9 @@ export interface ChannelMessage {
   //
   display_name?: string;
   //
-  create_time_ms?: number;
+  create_time_seconds?: number;
   //
-  update_time_ms?: number;
+  update_time_seconds?: number;
   //
   mode?: number;
   //
@@ -617,7 +617,7 @@ export class Client {
     publicKeyUrl: string,
     salt: string,
     signature: string,
-    timestamp: string,
+    timestamp: number,
     username?: string,
     create?: boolean,
     vars?: Record<string, string>,
@@ -1046,8 +1046,8 @@ export class Client {
           reactions: reactions,
           references: references,
           clan_id: m.clan_id,
-          create_time_ms: m.create_time_ms,
-          update_time_ms: m.update_time_ms,
+          create_time_seconds: m.create_time_seconds,
+          update_time_seconds: m.update_time_seconds,
         })
       });
       return Promise.resolve(result);
