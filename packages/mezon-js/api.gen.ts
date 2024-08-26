@@ -313,7 +313,7 @@ export interface ApiAccountGameCenter {
   //The verification signature data generated.
   signature?: string;
   //Time since UNIX epoch when the signature was created.
-  timestamp_seconds?: string;
+  timestamp_seconds?: number;
   //Extra information that will be bundled in the session token.
   vars?: Record<string, string>;
 }
@@ -459,7 +459,7 @@ export interface ApiChannelDescription {
   //
   count_mess_unread?: number;
   //
-  create_time_ms?: number;
+  create_time_seconds?: number;
   //creator ID.
   creator_id?: string;
   //
@@ -481,7 +481,7 @@ export interface ApiChannelDescription {
   //The channel type.
   type?: number;
   //
-  update_time_ms?: number;
+  update_time_seconds?: number;
   //
   user_id?: Array<string>;
   //
@@ -517,7 +517,7 @@ export interface ApiChannelMessage {
   //The UNIX time (for gRPC clients) or ISO string (for REST clients) when the message was created.
   create_time?: string;
   //
-  create_time_ms?: number;
+  create_time_seconds?: number;
   //
   display_name?: string;
   //
@@ -535,7 +535,7 @@ export interface ApiChannelMessage {
   //The UNIX time (for gRPC clients) or ISO string (for REST clients) when the message was last updated.
   update_time?: string;
   //
-  update_time_ms?: number;
+  update_time_seconds?: number;
   //The username of the message sender, if any.
   username?: string;
   // channel mode
@@ -561,7 +561,7 @@ export interface ApiChannelMessageHeader {
   //
   sender_id?: string;
   //
-  timestamp?: string;
+  timestamp_seconds?: number;
 }
 
 /** A list of channel messages, usually a result of a list operation. */
