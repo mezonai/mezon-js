@@ -697,6 +697,16 @@ export interface NotificationChannelCategorySettingEvent {
   notification_channel_category_settings_list?: NotificationChannelCategorySetting[]
 }
 
+export interface EventManagement {
+  title: string;
+  logo: string;
+  description: string;
+  clan_id: string;
+  channel_id: string;
+  address: string;
+  start_time: string;
+  end_time: string;
+}
 
 /** A socket connection to Mezon server. */
 export interface Socket {
@@ -844,7 +854,8 @@ export interface Socket {
 
   // when clan is updated
   onclanupdated: (clan: ClanUpdatedEvent) => void;
-
+  //
+  onEventCreate: (event_management: EventManagement) => void
   /* Set the heartbeat timeout used by the socket to detect if it has lost connectivity to the server. */
   setHeartbeatTimeoutMs(ms : number) : void;
 
@@ -969,6 +980,8 @@ export class DefaultSocket implements Socket {
           this.onstreampresence(<StreamPresenceEvent>message.stream_presence_event);
         } else if (message.stream_data) {
           this.onstreamdata(<StreamData>message.stream_data);
+        }  else if(message.event_management){
+          this.onEventCreate(message.event_management)
         } else if (message.channel_message) {
           var content, reactions, mentions, attachments, references;
           try {           
@@ -1264,7 +1277,11 @@ export class DefaultSocket implements Socket {
       console.log(statusEvent);
     }
   }
-
+  onEventCreate(event_management: EventManagement) {
+    if (this.verbose && window && window.console) {
+      console.log(event_management);
+    }
+  }
   send(message: ChannelJoin | ChannelLeave | ChannelMessageSend | ChannelMessageUpdate | CustomStatusEvent |
     ChannelMessageRemove | MessageTypingEvent | LastSeenMessageEvent | Rpc | StatusFollow | StatusUnfollow | StatusUpdate | Ping, sendTimeout = DefaultSocket.DefaultSendTimeoutMs): Promise<any> {
     const untypedMessage = message as any;
