@@ -689,6 +689,17 @@ export interface NotificationChannelCategorySettingEvent {
   notification_channel_category_settings_list?: NotificationChannelCategorySetting[]
 }
 
+export interface EventManagement {
+  title: string;
+  logo: string;
+  description: string;
+  clan_id: string;
+  channel_id: string;
+  address: string;
+  start_time: string;
+  end_time: string;
+}
+
 
 /** A socket connection to Mezon server. */
 export interface Socket {
@@ -823,7 +834,7 @@ export interface Socket {
   onvoiceleaved: (voiceParticipant: VoiceLeavedEvent) => void;
 
   // when channel is created
-  onchannelcreated: (channelCreated: ChannelCreatedEvent) => void;
+  onchannelcreated: (channelCreated: ChannelCreatedEvent) => void;//todo
 
   // when channel is deleted
   onchanneldeleted: (channelDeleted: ChannelDeletedEvent) => void;
@@ -864,6 +875,8 @@ export interface Socket {
   GetPermissionByRoleIdChannelId(role_id: string, channel_id: string): Promise<PermissionRoleChannelListEvent>;
   
   getNotificationChannelCategorySetting(clan_id : string): Promise<NotificationChannelCategorySettingEvent>;
+
+  onEventCreate: (event_management: EventManagement) => void
 }
 
 /** Reports an error received from a socket message. */
@@ -957,7 +970,9 @@ export class DefaultSocket implements Socket {
           this.onstatuspresence(<StatusPresenceEvent>message.status_presence_event);
         } else if (message.stream_presence_event) {
           this.onstreampresence(<StreamPresenceEvent>message.stream_presence_event);
-        } else if (message.stream_data) {
+        } else if(message.event_management){
+          this.onEventCreate(message.event_management)
+        }else if (message.stream_data) {
           this.onstreamdata(<StreamData>message.stream_data);
         } else if (message.channel_message) {
           var content, reactions, mentions, attachments, references;
@@ -1464,6 +1479,11 @@ export class DefaultSocket implements Socket {
     return response.notification_channel_category_setting_event
   }
 
+  onEventCreate(event_management: EventManagement) {
+    if (this.verbose && window && window.console) {
+      console.log(event_management);
+    }
+  }
 
   private async pingPong(): Promise<void> {
     if (!this.adapter.isOpen()) {
