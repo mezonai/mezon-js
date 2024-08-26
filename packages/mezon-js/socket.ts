@@ -689,9 +689,6 @@ export interface NotificationChannelCategorySettingEvent {
   notification_channel_category_settings_list?: NotificationChannelCategorySetting[]
 }
 
-export interface SendStreamEvent {
-  message? :string;
-}
 
 /** A socket connection to Mezon server. */
 export interface Socket {
@@ -1466,11 +1463,7 @@ export class DefaultSocket implements Socket {
     const response = await this.send({notification_channel_category_setting_event: {clan_id : clan_id}})
     return response.notification_channel_category_setting_event
   }
-  //todo
-  async TestSendSocket(): Promise<SendStreamEvent> {
-    const response = await this.send({send_stream_event:{}})
-    return response.send_stream_event
-  }
+
 
   private async pingPong(): Promise<void> {
     if (!this.adapter.isOpen()) {
