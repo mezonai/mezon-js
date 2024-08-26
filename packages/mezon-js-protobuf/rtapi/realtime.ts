@@ -8,12 +8,14 @@
 import _m0 from "protobufjs/minimal";
 import {
   ChannelMessage,
+  ChannelMessageHeader,
   MessageAttachment,
   MessageMention,
   MessageReaction,
   MessageRef,
   Notification,
   Rpc,
+  User,
 } from "../api/api";
 import { Timestamp } from "../google/protobuf/timestamp";
 import { BoolValue, Int32Value, StringValue } from "../google/protobuf/wrappers";
@@ -230,7 +232,15 @@ export interface Envelope {
     | NotificationChannelCategorySettingEvent
     | undefined;
   /** user join clan */
-  add_clan_user_event?: AddClanUserEvent | undefined;
+  add_clan_user_event?:
+    | AddClanUserEvent
+    | undefined;
+  /** list user */
+  list_user?: ListUser | undefined;
+}
+
+export interface ListUser {
+  user: User[];
 }
 
 export interface AddClanUserEvent {
@@ -315,6 +325,8 @@ export interface ChannelDescription {
   clan_name: string;
   /**  */
   parrent_id: string;
+  /**  */
+  last_sent_message: ChannelMessageHeader | undefined;
 }
 
 export interface StrickerListedEvent {
@@ -1089,6 +1101,7 @@ function createBaseEnvelope(): Envelope {
     permission_role_channel_list_event: undefined,
     notification_channel_category_setting_event: undefined,
     add_clan_user_event: undefined,
+    list_user: undefined,
   };
 }
 
@@ -1258,6 +1271,9 @@ export const Envelope = {
     }
     if (message.add_clan_user_event !== undefined) {
       AddClanUserEvent.encode(message.add_clan_user_event, writer.uint32(426).fork()).ldelim();
+    }
+    if (message.list_user !== undefined) {
+      ListUser.encode(message.list_user, writer.uint32(434).fork()).ldelim();
     }
     return writer;
   },
@@ -1646,6 +1662,13 @@ export const Envelope = {
 
           message.add_clan_user_event = AddClanUserEvent.decode(reader, reader.uint32());
           continue;
+        case 54:
+          if (tag !== 434) {
+            break;
+          }
+
+          message.list_user = ListUser.decode(reader, reader.uint32());
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -1784,6 +1807,7 @@ export const Envelope = {
       add_clan_user_event: isSet(object.add_clan_user_event)
         ? AddClanUserEvent.fromJSON(object.add_clan_user_event)
         : undefined,
+      list_user: isSet(object.list_user) ? ListUser.fromJSON(object.list_user) : undefined,
     };
   },
 
@@ -1957,6 +1981,9 @@ export const Envelope = {
     }
     if (message.add_clan_user_event !== undefined) {
       obj.add_clan_user_event = AddClanUserEvent.toJSON(message.add_clan_user_event);
+    }
+    if (message.list_user !== undefined) {
+      obj.list_user = ListUser.toJSON(message.list_user);
     }
     return obj;
   },
@@ -2141,6 +2168,66 @@ export const Envelope = {
     message.add_clan_user_event = (object.add_clan_user_event !== undefined && object.add_clan_user_event !== null)
       ? AddClanUserEvent.fromPartial(object.add_clan_user_event)
       : undefined;
+    message.list_user = (object.list_user !== undefined && object.list_user !== null)
+      ? ListUser.fromPartial(object.list_user)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseListUser(): ListUser {
+  return { user: [] };
+}
+
+export const ListUser = {
+  encode(message: ListUser, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    for (const v of message.user) {
+      User.encode(v!, writer.uint32(10).fork()).ldelim();
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): ListUser {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseListUser();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.user.push(User.decode(reader, reader.uint32()));
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): ListUser {
+    return { user: globalThis.Array.isArray(object?.user) ? object.user.map((e: any) => User.fromJSON(e)) : [] };
+  },
+
+  toJSON(message: ListUser): unknown {
+    const obj: any = {};
+    if (message.user?.length) {
+      obj.user = message.user.map((e) => User.toJSON(e));
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<ListUser>, I>>(base?: I): ListUser {
+    return ListUser.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<ListUser>, I>>(object: I): ListUser {
+    const message = createBaseListUser();
+    message.user = object.user?.map((e) => User.fromPartial(e)) || [];
     return message;
   },
 };
@@ -2722,6 +2809,7 @@ function createBaseChannelDescription(): ChannelDescription {
     meeting_code: "",
     clan_name: "",
     parrent_id: "",
+    last_sent_message: undefined,
   };
 }
 
@@ -2750,6 +2838,9 @@ export const ChannelDescription = {
     }
     if (message.parrent_id !== "") {
       writer.uint32(66).string(message.parrent_id);
+    }
+    if (message.last_sent_message !== undefined) {
+      ChannelMessageHeader.encode(message.last_sent_message, writer.uint32(98).fork()).ldelim();
     }
     return writer;
   },
@@ -2817,6 +2908,13 @@ export const ChannelDescription = {
 
           message.parrent_id = reader.string();
           continue;
+        case 12:
+          if (tag !== 98) {
+            break;
+          }
+
+          message.last_sent_message = ChannelMessageHeader.decode(reader, reader.uint32());
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -2836,6 +2934,9 @@ export const ChannelDescription = {
       meeting_code: isSet(object.meeting_code) ? globalThis.String(object.meeting_code) : "",
       clan_name: isSet(object.clan_name) ? globalThis.String(object.clan_name) : "",
       parrent_id: isSet(object.parrent_id) ? globalThis.String(object.parrent_id) : "",
+      last_sent_message: isSet(object.last_sent_message)
+        ? ChannelMessageHeader.fromJSON(object.last_sent_message)
+        : undefined,
     };
   },
 
@@ -2865,6 +2966,9 @@ export const ChannelDescription = {
     if (message.parrent_id !== "") {
       obj.parrent_id = message.parrent_id;
     }
+    if (message.last_sent_message !== undefined) {
+      obj.last_sent_message = ChannelMessageHeader.toJSON(message.last_sent_message);
+    }
     return obj;
   },
 
@@ -2881,6 +2985,9 @@ export const ChannelDescription = {
     message.meeting_code = object.meeting_code ?? "";
     message.clan_name = object.clan_name ?? "";
     message.parrent_id = object.parrent_id ?? "";
+    message.last_sent_message = (object.last_sent_message !== undefined && object.last_sent_message !== null)
+      ? ChannelMessageHeader.fromPartial(object.last_sent_message)
+      : undefined;
     return message;
   },
 };

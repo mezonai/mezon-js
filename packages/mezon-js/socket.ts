@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { ApiMessageAttachment, ApiMessageMention, ApiMessageReaction, ApiMessageRef, ApiNotification, ApiRpc} from "./api.gen";
+import { ApiChannelMessageHeader, ApiMessageAttachment, ApiMessageMention, ApiMessageReaction, ApiMessageRef, ApiNotification, ApiRpc, ApiUser} from "./api.gen";
 import {Session} from "./session";
 import {ChannelMessage, Notification} from "./client";
 import {WebSocketAdapter, WebSocketAdapterText} from "./web_socket_adapter"
@@ -569,6 +569,12 @@ export interface ChannelDescListEvent {
 }
 
 /**  */
+export interface ListUser {
+  // 
+  user?: Array<ApiUser>;
+}
+
+/**  */
 export interface ChannelDescription {
   // The clan of this channel
   clan_id?: string;
@@ -586,6 +592,8 @@ export interface ChannelDescription {
   clan_name?: string;
   //
   parrent_id?: string;
+  //
+  last_sent_message?: ApiChannelMessageHeader;
 }
 
 // A list of Channel
@@ -850,6 +858,8 @@ export interface Socket {
   listClanStickersByClanId(clan_id: string): Promise<StrickerListedEvent>;
 
   ListChannelByUserId(): Promise<ChannelDescListEvent>;
+
+  ListUsersByUserId(): Promise<ListUser>;
   
   hashtagDMList(user_id: Array<string>, limit: number): Promise<HashtagDmListEvent>;
 
@@ -1422,6 +1432,11 @@ export class DefaultSocket implements Socket {
   async ListChannelByUserId(): Promise<ChannelDescListEvent> {
     const response = await this.send({channel_desc_list_event: {}});
     return response.channel_desc_list_event
+  }
+
+  async ListUsersByUserId(): Promise<ListUser> {
+    const response = await this.send({list_user: {}});
+    return response.list_user
   }
 
   async hashtagDMList(user_id: Array<string>, limit: number): Promise<HashtagDmListEvent> {
