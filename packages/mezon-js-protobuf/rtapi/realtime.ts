@@ -649,7 +649,7 @@ export interface LastPinMessageEvent {
   /** The UserID */
   user_id: string;
   /** The timestamp */
-  timestamp: string;
+  timestamp_seconds: number;
   /** operation */
   operation: number;
 }
@@ -663,7 +663,7 @@ export interface LastSeenMessageEvent {
   /** The stream mode */
   mode: number;
   /** The timestamp */
-  timestamp: string;
+  timestamp_seconds: number;
 }
 
 /** Message typing event data */
@@ -5141,7 +5141,7 @@ export const StatusPresenceEvent = {
 };
 
 function createBaseLastPinMessageEvent(): LastPinMessageEvent {
-  return { clan_id: "", channel_id: "", message_id: "", mode: 0, user_id: "", timestamp: "", operation: 0 };
+  return { clan_id: "", channel_id: "", message_id: "", mode: 0, user_id: "", timestamp_seconds: 0, operation: 0 };
 }
 
 export const LastPinMessageEvent = {
@@ -5161,8 +5161,8 @@ export const LastPinMessageEvent = {
     if (message.user_id !== "") {
       writer.uint32(42).string(message.user_id);
     }
-    if (message.timestamp !== "") {
-      writer.uint32(50).string(message.timestamp);
+    if (message.timestamp_seconds !== 0) {
+      writer.uint32(48).uint32(message.timestamp_seconds);
     }
     if (message.operation !== 0) {
       writer.uint32(56).int32(message.operation);
@@ -5213,11 +5213,11 @@ export const LastPinMessageEvent = {
           message.user_id = reader.string();
           continue;
         case 6:
-          if (tag !== 50) {
+          if (tag !== 48) {
             break;
           }
 
-          message.timestamp = reader.string();
+          message.timestamp_seconds = reader.uint32();
           continue;
         case 7:
           if (tag !== 56) {
@@ -5242,7 +5242,7 @@ export const LastPinMessageEvent = {
       message_id: isSet(object.message_id) ? globalThis.String(object.message_id) : "",
       mode: isSet(object.mode) ? globalThis.Number(object.mode) : 0,
       user_id: isSet(object.user_id) ? globalThis.String(object.user_id) : "",
-      timestamp: isSet(object.timestamp) ? globalThis.String(object.timestamp) : "",
+      timestamp_seconds: isSet(object.timestamp_seconds) ? globalThis.Number(object.timestamp_seconds) : 0,
       operation: isSet(object.operation) ? globalThis.Number(object.operation) : 0,
     };
   },
@@ -5264,8 +5264,8 @@ export const LastPinMessageEvent = {
     if (message.user_id !== "") {
       obj.user_id = message.user_id;
     }
-    if (message.timestamp !== "") {
-      obj.timestamp = message.timestamp;
+    if (message.timestamp_seconds !== 0) {
+      obj.timestamp_seconds = Math.round(message.timestamp_seconds);
     }
     if (message.operation !== 0) {
       obj.operation = Math.round(message.operation);
@@ -5283,14 +5283,14 @@ export const LastPinMessageEvent = {
     message.message_id = object.message_id ?? "";
     message.mode = object.mode ?? 0;
     message.user_id = object.user_id ?? "";
-    message.timestamp = object.timestamp ?? "";
+    message.timestamp_seconds = object.timestamp_seconds ?? 0;
     message.operation = object.operation ?? 0;
     return message;
   },
 };
 
 function createBaseLastSeenMessageEvent(): LastSeenMessageEvent {
-  return { channel_id: "", message_id: "", mode: 0, timestamp: "" };
+  return { channel_id: "", message_id: "", mode: 0, timestamp_seconds: 0 };
 }
 
 export const LastSeenMessageEvent = {
@@ -5304,8 +5304,8 @@ export const LastSeenMessageEvent = {
     if (message.mode !== 0) {
       writer.uint32(24).int32(message.mode);
     }
-    if (message.timestamp !== "") {
-      writer.uint32(34).string(message.timestamp);
+    if (message.timestamp_seconds !== 0) {
+      writer.uint32(32).uint32(message.timestamp_seconds);
     }
     return writer;
   },
@@ -5339,11 +5339,11 @@ export const LastSeenMessageEvent = {
           message.mode = reader.int32();
           continue;
         case 4:
-          if (tag !== 34) {
+          if (tag !== 32) {
             break;
           }
 
-          message.timestamp = reader.string();
+          message.timestamp_seconds = reader.uint32();
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -5359,7 +5359,7 @@ export const LastSeenMessageEvent = {
       channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "",
       message_id: isSet(object.message_id) ? globalThis.String(object.message_id) : "",
       mode: isSet(object.mode) ? globalThis.Number(object.mode) : 0,
-      timestamp: isSet(object.timestamp) ? globalThis.String(object.timestamp) : "",
+      timestamp_seconds: isSet(object.timestamp_seconds) ? globalThis.Number(object.timestamp_seconds) : 0,
     };
   },
 
@@ -5374,8 +5374,8 @@ export const LastSeenMessageEvent = {
     if (message.mode !== 0) {
       obj.mode = Math.round(message.mode);
     }
-    if (message.timestamp !== "") {
-      obj.timestamp = message.timestamp;
+    if (message.timestamp_seconds !== 0) {
+      obj.timestamp_seconds = Math.round(message.timestamp_seconds);
     }
     return obj;
   },
@@ -5388,7 +5388,7 @@ export const LastSeenMessageEvent = {
     message.channel_id = object.channel_id ?? "";
     message.message_id = object.message_id ?? "";
     message.mode = object.mode ?? 0;
-    message.timestamp = object.timestamp ?? "";
+    message.timestamp_seconds = object.timestamp_seconds ?? 0;
     return message;
   },
 };
