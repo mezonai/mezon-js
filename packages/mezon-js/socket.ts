@@ -855,7 +855,7 @@ export interface Socket {
   // when clan is updated
   onclanupdated: (clan: ClanUpdatedEvent) => void;
   //ClanEventCreated
-  onEventCreated: (event_management: EventManagement) => void
+  onEventCreated: (clan_event_created: EventManagement) => void
   /* Set the heartbeat timeout used by the socket to detect if it has lost connectivity to the server. */
   setHeartbeatTimeoutMs(ms : number) : void;
 
@@ -1053,8 +1053,8 @@ export class DefaultSocket implements Socket {
           this.onuserchannelremoved(<UserChannelRemovedEvent>message.user_channel_removed_event);
         } else if (message.user_clan_removed_event) {
           this.onuserclanremoved(<UserClanRemovedEvent>message.user_clan_removed_event);
-        } else if(message.event_management){
-          this.onEventCreated(message.event_management)
+        } else if(message.clan_event_created){
+          this.onEventCreated(message.clan_event_created)
         }else {
           if (this.verbose && window && window.console) {
             console.log("Unrecognized message received: %o", message);
@@ -1278,9 +1278,9 @@ export class DefaultSocket implements Socket {
     }
   }
 
-  onEventCreated(event_management: EventManagement) {
+  onEventCreated(clan_event_created: EventManagement) {
     if (this.verbose && window && window.console) {
-      console.log(event_management);
+      console.log(clan_event_created);
     }
   }
 
