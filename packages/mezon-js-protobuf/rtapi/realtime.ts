@@ -234,7 +234,7 @@ export interface Envelope {
     | ListUser
     | undefined;
   /**  */
-  event_management?: EventManagement | undefined;
+  clan_event_created?: ClanEventCreated | undefined;
 }
 
 export interface ListUser {
@@ -1044,7 +1044,7 @@ export interface NotificationChannelCategorySettingEvent {
   notification_channel_category_settings_list: NotificationChannelCategorySetting[];
 }
 
-export interface EventManagement {
+export interface ClanEventCreated {
   title: string;
   logo: string;
   description: string;
@@ -1111,7 +1111,7 @@ function createBaseEnvelope(): Envelope {
     notification_channel_category_setting_event: undefined,
     add_clan_user_event: undefined,
     list_user: undefined,
-    event_management: undefined,
+    clan_event_created: undefined,
   };
 }
 
@@ -1285,8 +1285,8 @@ export const Envelope = {
     if (message.list_user !== undefined) {
       ListUser.encode(message.list_user, writer.uint32(434).fork()).ldelim();
     }
-    if (message.event_management !== undefined) {
-      EventManagement.encode(message.event_management, writer.uint32(442).fork()).ldelim();
+    if (message.clan_event_created !== undefined) {
+      ClanEventCreated.encode(message.clan_event_created, writer.uint32(442).fork()).ldelim();
     }
     return writer;
   },
@@ -1467,7 +1467,7 @@ export const Envelope = {
           message.list_user = ListUser.decode(reader, reader.uint32());
           break;
         case 55:
-          message.event_management = EventManagement.decode(reader, reader.uint32());
+          message.clan_event_created = ClanEventCreated.decode(reader, reader.uint32());
           break;
         default:
           reader.skipType(tag & 7);
@@ -1607,7 +1607,9 @@ export const Envelope = {
         ? AddClanUserEvent.fromJSON(object.add_clan_user_event)
         : undefined,
       list_user: isSet(object.list_user) ? ListUser.fromJSON(object.list_user) : undefined,
-      event_management: isSet(object.event_management) ? EventManagement.fromJSON(object.event_management) : undefined,
+      clan_event_created: isSet(object.clan_event_created)
+        ? ClanEventCreated.fromJSON(object.clan_event_created)
+        : undefined,
     };
   },
 
@@ -1761,8 +1763,9 @@ export const Envelope = {
       : undefined);
     message.list_user !== undefined &&
       (obj.list_user = message.list_user ? ListUser.toJSON(message.list_user) : undefined);
-    message.event_management !== undefined &&
-      (obj.event_management = message.event_management ? EventManagement.toJSON(message.event_management) : undefined);
+    message.clan_event_created !== undefined && (obj.clan_event_created = message.clan_event_created
+      ? ClanEventCreated.toJSON(message.clan_event_created)
+      : undefined);
     return obj;
   },
 
@@ -1950,8 +1953,8 @@ export const Envelope = {
     message.list_user = (object.list_user !== undefined && object.list_user !== null)
       ? ListUser.fromPartial(object.list_user)
       : undefined;
-    message.event_management = (object.event_management !== undefined && object.event_management !== null)
-      ? EventManagement.fromPartial(object.event_management)
+    message.clan_event_created = (object.clan_event_created !== undefined && object.clan_event_created !== null)
+      ? ClanEventCreated.fromPartial(object.clan_event_created)
       : undefined;
     return message;
   },
@@ -7269,7 +7272,7 @@ export const NotificationChannelCategorySettingEvent = {
   },
 };
 
-function createBaseEventManagement(): EventManagement {
+function createBaseClanEventCreated(): ClanEventCreated {
   return {
     title: "",
     logo: "",
@@ -7282,8 +7285,8 @@ function createBaseEventManagement(): EventManagement {
   };
 }
 
-export const EventManagement = {
-  encode(message: EventManagement, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+export const ClanEventCreated = {
+  encode(message: ClanEventCreated, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.title !== "") {
       writer.uint32(10).string(message.title);
     }
@@ -7311,10 +7314,10 @@ export const EventManagement = {
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): EventManagement {
+  decode(input: _m0.Reader | Uint8Array, length?: number): ClanEventCreated {
     const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseEventManagement();
+    const message = createBaseClanEventCreated();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -7350,7 +7353,7 @@ export const EventManagement = {
     return message;
   },
 
-  fromJSON(object: any): EventManagement {
+  fromJSON(object: any): ClanEventCreated {
     return {
       title: isSet(object.title) ? String(object.title) : "",
       logo: isSet(object.logo) ? String(object.logo) : "",
@@ -7363,7 +7366,7 @@ export const EventManagement = {
     };
   },
 
-  toJSON(message: EventManagement): unknown {
+  toJSON(message: ClanEventCreated): unknown {
     const obj: any = {};
     message.title !== undefined && (obj.title = message.title);
     message.logo !== undefined && (obj.logo = message.logo);
@@ -7376,12 +7379,12 @@ export const EventManagement = {
     return obj;
   },
 
-  create<I extends Exact<DeepPartial<EventManagement>, I>>(base?: I): EventManagement {
-    return EventManagement.fromPartial(base ?? {});
+  create<I extends Exact<DeepPartial<ClanEventCreated>, I>>(base?: I): ClanEventCreated {
+    return ClanEventCreated.fromPartial(base ?? {});
   },
 
-  fromPartial<I extends Exact<DeepPartial<EventManagement>, I>>(object: I): EventManagement {
-    const message = createBaseEventManagement();
+  fromPartial<I extends Exact<DeepPartial<ClanEventCreated>, I>>(object: I): ClanEventCreated {
+    const message = createBaseClanEventCreated();
     message.title = object.title ?? "";
     message.logo = object.logo ?? "";
     message.description = object.description ?? "";
