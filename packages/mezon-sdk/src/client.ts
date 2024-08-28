@@ -440,7 +440,7 @@ export class MezonClient implements Client {
   /**Create connect to event socket */
   connectSocket() {
     for (const method in SOCKETMETHOD) {
-      const key = `on${SOCKETMETHOD[method as keyof typeof SOCKETMETHOD]}`;
+      const key =  this.generateKey(SOCKETMETHOD[method as keyof typeof SOCKETMETHOD]);
       this.socket[key] = (...args: any[]) => {
         const handleFunctions = this[key];
         if (Array.isArray(handleFunctions)) {
