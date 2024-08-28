@@ -297,8 +297,8 @@ export interface Client {
     sendTimeoutMs: number
   ) => Socket;
 
-  on: (method: string, func: Function) => void;
-  remove: (method: string, func: Function) => void;
+  on: (event: string, func: Function) => void;
+  remove: (event: string, func: Function) => void;
 
 }
 
@@ -331,7 +331,7 @@ export class MezonClient implements Client {
 
     this.apiClient = new MezonApi(apiKey, basePath, timeout);
 
-    //init method to connect socket
+    /**init event to connect socket*/
     for (const event in Events) {
       const key = this.generateKey(
         Events[event as keyof typeof Events]
