@@ -6499,6 +6499,51 @@ export class MezonApi {
     ]);
 }
 
+  /** list webhook belong to the channel */
+  handlerWebhook(bearerToken: string,
+      channelId:string,
+      token:string,
+      clanId?:string,
+      body?:string,
+      options: any = {}): Promise<any> {
+    
+    if (channelId === null || channelId === undefined) {
+      throw new Error("'channelId' is a required parameter but is null or undefined.");
+    }
+    if (token === null || token === undefined) {
+      throw new Error("'token' is a required parameter but is null or undefined.");
+    }
+    const urlPath = "/v2/webhooks/{channelId}/{token}"
+        .replace("{channelId}", encodeURIComponent(String(channelId)))
+        .replace("{token}", encodeURIComponent(String(token)));
+    const queryParams = new Map<string, any>();
+    queryParams.set("clan_id", clanId);
+    queryParams.set("body", body);
+
+    let bodyJson : string = "";
+
+    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
+    const fetchOptions = buildFetchOptions("GET", options, bodyJson);
+    if (bearerToken) {
+        fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+    }
+
+    return Promise.race([
+      fetch(fullUrl, fetchOptions).then((response) => {
+        if (response.status == 204) {
+          return response;
+        } else if (response.status >= 200 && response.status < 300) {
+          return response.json();
+        } else {
+          throw response;
+        }
+      }),
+      new Promise((_, reject) =>
+        setTimeout(reject, this.timeoutMs, "Request timed out.")
+      ),
+    ]);
+}
+
   /** disabled webhook */
   deleteWebhookById(bearerToken: string,
       id:string,

@@ -689,6 +689,12 @@ export interface NotificationChannelCategorySettingEvent {
   notification_channel_category_settings_list?: NotificationChannelCategorySetting[]
 }
 
+export interface EventStatusNotificationEvent {
+  clan_id:string,
+  event_id:string;
+  event_status:string;
+  message:string;
+}
 
 /** A socket connection to Mezon server. */
 export interface Socket {
@@ -837,6 +843,8 @@ export interface Socket {
   // when clan is updated
   onclanupdated: (clan: ClanUpdatedEvent) => void;
 
+  oneventstatusnotification:(eventStatusNotification : EventStatusNotificationEvent) => void;
+
   /* Set the heartbeat timeout used by the socket to detect if it has lost connectivity to the server. */
   setHeartbeatTimeoutMs(ms : number) : void;
 
@@ -924,12 +932,17 @@ export class DefaultSocket implements Socket {
     }
 
     this.adapter.onMessage = (message: any) => {
+      console.log("Test message")
+      console.log(message);
+      
       if (this.verbose && window && window.console) {
         console.log("Response: %o", JSON.stringify(message));
       }
 
       /** Inbound message from server. */
       if (!message.cid) {
+        console.log("message ",message);
+        
         if (message.notifications) {
           message.notifications.notifications.forEach((n: ApiNotification) => {
               n.content = n.content ? JSON.parse(n.content) : undefined;
@@ -1030,6 +1043,8 @@ export class DefaultSocket implements Socket {
           this.onuserprofileupdate(<UserProfileUpdatedEvent>message.user_profile_updated_event);
         } else if (message.user_channel_removed_event) {
           this.onuserchannelremoved(<UserChannelRemovedEvent>message.user_channel_removed_event);
+        } else if (message.event_status_notification_event) {
+          this.oneventstatusnotification(<EventStatusNotificationEvent>message.event_status_notification_event)
         } else if (message.user_clan_removed_event) {
           this.onuserclanremoved(<UserClanRemovedEvent>message.user_clan_removed_event);
         } else {
@@ -1252,6 +1267,12 @@ export class DefaultSocket implements Socket {
   oncustomstatus(statusEvent: CustomStatusEvent) {
     if (this.verbose && window && window.console) {
       console.log(statusEvent);
+    }
+  }
+
+  oneventstatusnotification (eventStatusNotification: EventStatusNotificationEvent) {
+    if (this.verbose && window && window.console) {
+      console.log(eventStatusNotification);
     }
   }
 
