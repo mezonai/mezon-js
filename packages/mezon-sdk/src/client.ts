@@ -20,7 +20,7 @@ import { Session } from "./session";
 import { DefaultSocket, Socket } from "./socket";
 import { WebSocketAdapter } from "./web_socket_adapter";
 import { WebSocketAdapterPb } from './web_socket_adapter_pb';
-import { Events } from "./constants/method";
+import { Events } from "./constants/events";
 
 const DEFAULT_HOST = "mezon.vn";
 const DEFAULT_PORT = "7305";
@@ -29,7 +29,7 @@ const DEFAULT_SSL = true;
 const DEFAULT_TIMEOUT_MS = 7000;
 const DEFAULT_EXPIRED_TIMESPAN_MS = 5 * 60 * 1000;
 
-export { Events } from "./constants/method";
+export { Events } from "./constants/events";
 /**  */
 export interface ClanDesc {
   //
@@ -326,25 +326,27 @@ export class MezonClient implements Client {
       readonly useSSL = DEFAULT_SSL,
       readonly timeout = DEFAULT_TIMEOUT_MS,
       readonly autoRefreshSession = true) {
-    const scheme = (useSSL) ? "https://" : "http://";
-    const basePath = `${scheme}${host}:${port}`;
+        const scheme = useSSL ? "https://" : "http://";
+        const basePath = `${scheme}${host}:${port}`;
 
-    this.apiClient = new MezonApi(apiKey, basePath, timeout);
+        this.apiClient = new MezonApi(apiKey, basePath, timeout);
 
-    /**init event to connect socket*/
-    for (const event in Events) {
-      const key = this.generateKey(
-        Events[event as keyof typeof Events]
-      );
-      if (!(key in this)) {
-        this[key] = [];
-      }else{
-        this[key] = [this[key]];
+        /**init event to connect socket*/
+        for (const event in Events) {
+          const key = this.generateKey(Events[event as keyof typeof Events]);
+          if (!(key in this)) {
+            this[key] = [];
+          } else {
+            this[key] = [this[key]];
+          }
+        }
+
+        this.socket = this.createSocket(
+          this.useSSL,
+          false,
+          new WebSocketAdapterPb()
+        );
       }
-    }
-
-    this.socket = this.createSocket(this.useSSL, false, new WebSocketAdapterPb());
-  }
 
   async sendMessage(clan_id: string, channel_id: string, mode: number, msg: string, mentions?: Array<ApiMessageMention>, attachments?: Array<ApiMessageAttachment>, ref?: Array<ApiMessageRef>) {
     const msgACK = await this.socket.writeChatMessage(clan_id, channel_id, mode, msg, mentions, attachments, ref);
@@ -408,51 +410,51 @@ export class MezonClient implements Client {
   createSocket(useSSL = false, verbose: boolean = false, adapter : WebSocketAdapter = new WebSocketAdapterPb(), sendTimeoutMs : number = DefaultSocket.DefaultSendTimeoutMs): Socket {
     return new DefaultSocket(this.host, this.port, useSSL, verbose, adapter, sendTimeoutMs);
   }
+  
+  /**Add handle function to event socket */
+  on(method: string, func: Function) {
+  	const key = this.generateKey(method);
+  	if (!(key in this)) {
+  		throw new Error("Mezon SDK not support this method");
+  	}
 
-   /**Add handle function to event socket */
-   on(method: string, func: Function) {
-    const key = this.generateKey(method);
-    if (!(key in this)) {
-      throw new Error("Mezon SDK not support this method");
-    }
+  	if (typeof func != "function") {
+  		throw new Error("Please add function to event");
+  	}
 
-    if (typeof func != "function"){
-      throw new Error("Please add function to event");
-    }
-
-    const handleFunctions: Function[] = this[key];
-    if (Array.isArray(handleFunctions)) {
-      handleFunctions.push(func);
-    } 
+  	const handleFunctions: Function[] = this[key];
+  	if (Array.isArray(handleFunctions)) {
+  		handleFunctions.push(func);
+  	}
   }
 
   /**remove handle function to event socket */
   remove(method: string, func: Function) {
-    const key = this.generateKey(method);
-    if (!(key in this)) {
-      throw new Error("Mezon SDK not support this method");
-    }
-    const handleFunctions: Function[] = this[key];
-    if (Array.isArray(handleFunctions)) {
-      this[key] = handleFunctions.filter((f) => f != func);
-    } 
+  	const key = this.generateKey(method);
+  	if (!(key in this)) {
+  		throw new Error("Mezon SDK not support this method");
+  	}
+  	const handleFunctions: Function[] = this[key];
+  	if (Array.isArray(handleFunctions)) {
+  		this[key] = handleFunctions.filter((f) => f != func);
+  	}
   }
 
   /**Create connect to event socket */
   connectSocket() {
-    for (const event in Events) {
-      const key =  this.generateKey(Events[event as keyof typeof Events]);
-      this.socket[key] = (...args: any[]) => {
-        const handleFunctions = this[key];
-        if (Array.isArray(handleFunctions)) {
-          handleFunctions.forEach((func) => {
-            if (typeof func == "function") {
-              func.apply(this, args);
-            }
-          });
-        };
-      }
-    }
+  	for (const event in Events) {
+  		const key = this.generateKey(Events[event as keyof typeof Events]);
+  		this.socket[key] = (...args: any[]) => {
+  			const handleFunctions = this[key];
+  			if (Array.isArray(handleFunctions)) {
+  				handleFunctions.forEach((func) => {
+  					if (typeof func == "function") {
+  						func.apply(this, args);
+  					}
+  				});
+  			};
+  		}
+  	}
   }
 
   /**generate key of event from name */
