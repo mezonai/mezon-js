@@ -137,6 +137,8 @@ export interface MezonUpdateClanStickerByIdBody {
   //
   category?: string;
   //
+  clan_id?: string;
+  //
   shortname?: string;
   //
   source?: string;
@@ -645,7 +647,7 @@ export interface ApiClanEmojiCreateRequest {
 /** Get clan profile. */
 export interface ApiClanProfile {
   //
-  avartar?: string;
+  avatar?: string;
   //
   clan_id?: string;
   //
