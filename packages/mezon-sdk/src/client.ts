@@ -14,12 +14,13 @@
  * limitations under the License.
  */
 
-import { CloseEvent, ErrorEvent } from "ws";
+import { CloseEvent} from "ws";
 import { MezonApi, ApiAuthenticateLogoutRequest, ApiAuthenticateRefreshRequest, ApiSession } from "./api";
 import { Session } from "./session";
-import { ChannelCreatedEvent, ChannelDeletedEvent, ChannelUpdatedEvent, DefaultSocket, Socket, UserChannelAddedEvent, UserChannelRemovedEvent, UserClanRemovedEvent } from "./socket";
+import { DefaultSocket, Socket } from "./socket";
 import { WebSocketAdapter } from "./web_socket_adapter";
 import { WebSocketAdapterPb } from './web_socket_adapter_pb';
+import { SOCKETMETHOD } from "./constants/method";
 
 const DEFAULT_HOST = "mezon.vn";
 const DEFAULT_PORT = "7305";
@@ -289,15 +290,16 @@ export interface Client {
   authenticate: () => Promise<string>;
   sendMessage: (clan_id: string, channel_id: string, mode: number, msg: string, mentions?: Array<ApiMessageMention>, attachments?: Array<ApiMessageAttachment>, ref?: Array<ApiMessageRef>) => Promise<boolean>;
 
-  /** Receive clan evnet. */
-  onchannelmessage: (message: ChannelMessage) => void;
-  onmessagereaction: (messagereaction: ApiMessageReaction) => void;
-  onuserchanneladded: (user: UserChannelAddedEvent) => void;
-  onuserchannelremoved: (user: UserChannelRemovedEvent) => void;
-  onuserclanremoved: (user: UserClanRemovedEvent) => void;
-  onchannelcreated: (channelCreated: ChannelCreatedEvent) => void;
-  onchanneldeleted: (channelDeleted: ChannelDeletedEvent) => void;
-  onchannelupdated: (channelUpdated: ChannelUpdatedEvent) => void;
+  createSocket: (
+    useSSL: boolean,
+    verbose: boolean,
+    adapter: WebSocketAdapter,
+    sendTimeoutMs: number
+  ) => Socket;
+
+  on: (method: string, func: Function) => void;
+  remove: (method: string, func: Function) => void;
+
 }
 
 /** A client for Mezon server. */
@@ -315,6 +317,8 @@ export class MezonClient implements Client {
   /** the session */
   private session: Session | undefined;
 
+  [key: string]: any;
+
   constructor(
       readonly apiKey = DEFAULT_API_KEY,
       readonly host = DEFAULT_HOST,
@@ -326,6 +330,17 @@ export class MezonClient implements Client {
     const basePath = `${scheme}${host}:${port}`;
 
     this.apiClient = new MezonApi(apiKey, basePath, timeout);
+
+    //init method to connect socket
+    for (const method in SOCKETMETHOD) {
+      const key = this.generateKey(
+        SOCKETMETHOD[method as keyof typeof SOCKETMETHOD]
+      );
+      if (!(key in this)) {
+        this[key] = [];
+      }
+    }
+
     this.socket = this.createSocket(this.useSSL, false, new WebSocketAdapterPb());
   }
 
@@ -356,17 +371,7 @@ export class MezonClient implements Client {
       // join direct message
       await this.socket.joinClanChat("0");
 
-      this.socket.onchannelmessage = this.onchannelmessage;
-      this.socket.ondisconnect = this.ondisconnect.bind(this);
-      this.socket.onerror = this.onerror.bind(this);
-      this.socket.onmessagereaction = this.onmessagereaction;
-      this.socket.onuserchannelremoved = this.onuserchannelremoved;
-      this.socket.onuserclanremoved = this.onuserclanremoved;
-      this.socket.onuserchanneladded = this.onuserchanneladded;        
-      this.socket.onchannelcreated = this.onchannelcreated;
-      this.socket.onchanneldeleted = this.onchanneldeleted;
-      this.socket.onchannelupdated = this.onchannelupdated;
-      this.socket.onheartbeattimeout = this.onheartbeattimeout.bind(this);
+      this.connectSocket();
       
       return Promise.resolve("connect successful");
     });
@@ -402,16 +407,58 @@ export class MezonClient implements Client {
     return new DefaultSocket(this.host, this.port, useSSL, verbose, adapter, sendTimeoutMs);
   }
 
-  onerror(evt: ErrorEvent) {
-    console.log(evt);
+   /**Add handle function to event socket */
+   on(method: string, func: Function) {
+    const key = this.generateKey(method);
+    if (!(key in this)) {
+      throw new Error("Mezon SDK not support this method");
+    }
+    const handleFunctions: Function[] | Function = this[key];
+    if (Array.isArray(handleFunctions)) {
+      handleFunctions.push(func);
+    } else if (typeof func == "function") {
+      this[key] = [handleFunctions, func];
+    }
   }
 
-  onchannelmessage(message: ChannelMessage) {
-    console.log(message);
+  /**remove handle function to event socket */
+  remove(method: string, func: Function) {
+    const key = this.generateKey(method);
+    if (!(key in this)) {
+      throw new Error("Mezon SDK not support this method");
+    }
+    const handleFunctions: Function[] | Function = this[key];
+    if (Array.isArray(handleFunctions)) {
+      this[key] = handleFunctions.filter((f) => f != func);
+    } else if (typeof func == "function") {
+      if (handleFunctions == func) {
+        this[key] = [];
+      }
+    }
   }
 
-  onmessagereaction(messagereaction: ApiMessageReaction) {
-    console.log(messagereaction);
+  /**Create connect to event socket */
+  connectSocket() {
+    for (const method in SOCKETMETHOD) {
+      const key = `on${SOCKETMETHOD[method as keyof typeof SOCKETMETHOD]}`;
+      this.socket[key] = (...args: any[]) => {
+        const handleFunctions = this[key];
+        if (Array.isArray(handleFunctions)) {
+          handleFunctions.forEach((func) => {
+            if (typeof func == "function") {
+              func.apply(this, args);
+            }
+          });
+        } else if (typeof handleFunctions == "function") {
+          handleFunctions.apply(this, args);
+        }
+      };
+    }
+  }
+
+  /**generate key of event from name */
+  generateKey(method: string) {
+    return `on${method}`;
   }
 
   ondisconnect(e: CloseEvent) {
@@ -433,47 +480,9 @@ export class MezonClient implements Client {
       // join direct message
       await this.socket.joinClanChat("0");
 
-      this.socket.onchannelmessage = this.onchannelmessage;
-      this.socket.ondisconnect = this.ondisconnect;
-      this.socket.onerror = this.onerror;
-      this.socket.onmessagereaction = this.onmessagereaction;
-      this.socket.onuserchannelremoved = this.onuserchannelremoved;
-      this.socket.onuserclanremoved = this.onuserclanremoved;
-      this.socket.onuserchanneladded = this.onuserchanneladded;        
-      this.socket.onchannelcreated = this.onchannelcreated;
-      this.socket.onchanneldeleted = this.onchanneldeleted;
-      this.socket.onchannelupdated = this.onchannelupdated;
-      this.socket.onheartbeattimeout = this.onheartbeattimeout;
+      this.connectSocket();
+
       clearInterval(interval);
     }, 5000);
   }
-
-  onuserchanneladded(user: UserChannelAddedEvent) {
-      console.log(user);
-  }
-
-  onuserchannelremoved(user: UserChannelRemovedEvent) {
-    console.log(user);
-  }
-
-  onuserclanremoved(user: UserClanRemovedEvent) {
-    console.log(user);
-  }
-
-  onchannelcreated(channelCreated: ChannelCreatedEvent) {
-    console.log(channelCreated);
-  }
-
-  onchanneldeleted(channelDeleted: ChannelDeletedEvent) {
-    console.log(channelDeleted);
-  }
-
-  onchannelupdated(channelUpdated: ChannelUpdatedEvent) {
-    console.log(channelUpdated);
-  }
-
-  onheartbeattimeout() {
-    console.log("Heartbeat timeout.");
-  }
-
 };
