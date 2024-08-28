@@ -3,6 +3,7 @@ import _m0 from "protobufjs/minimal";
 import {
   ChannelMessage,
   ChannelMessageHeader,
+  CreateEventRequest,
   MessageAttachment,
   MessageMention,
   MessageReaction,
@@ -234,7 +235,7 @@ export interface Envelope {
     | ListUser
     | undefined;
   /**  */
-  clan_event_created?: ClanEventCreated | undefined;
+  clan_event_created?: CreateEventRequest | undefined;
 }
 
 export interface ListUser {
@@ -1044,17 +1045,6 @@ export interface NotificationChannelCategorySettingEvent {
   notification_channel_category_settings_list: NotificationChannelCategorySetting[];
 }
 
-export interface ClanEventCreated {
-  title: string;
-  logo: string;
-  description: string;
-  clan_id: string;
-  channel_id: string;
-  address: string;
-  start_time: Date | undefined;
-  end_time: Date | undefined;
-}
-
 function createBaseEnvelope(): Envelope {
   return {
     cid: "",
@@ -1286,7 +1276,7 @@ export const Envelope = {
       ListUser.encode(message.list_user, writer.uint32(434).fork()).ldelim();
     }
     if (message.clan_event_created !== undefined) {
-      ClanEventCreated.encode(message.clan_event_created, writer.uint32(442).fork()).ldelim();
+      CreateEventRequest.encode(message.clan_event_created, writer.uint32(442).fork()).ldelim();
     }
     return writer;
   },
@@ -1467,7 +1457,7 @@ export const Envelope = {
           message.list_user = ListUser.decode(reader, reader.uint32());
           break;
         case 55:
-          message.clan_event_created = ClanEventCreated.decode(reader, reader.uint32());
+          message.clan_event_created = CreateEventRequest.decode(reader, reader.uint32());
           break;
         default:
           reader.skipType(tag & 7);
@@ -1608,7 +1598,7 @@ export const Envelope = {
         : undefined,
       list_user: isSet(object.list_user) ? ListUser.fromJSON(object.list_user) : undefined,
       clan_event_created: isSet(object.clan_event_created)
-        ? ClanEventCreated.fromJSON(object.clan_event_created)
+        ? CreateEventRequest.fromJSON(object.clan_event_created)
         : undefined,
     };
   },
@@ -1764,7 +1754,7 @@ export const Envelope = {
     message.list_user !== undefined &&
       (obj.list_user = message.list_user ? ListUser.toJSON(message.list_user) : undefined);
     message.clan_event_created !== undefined && (obj.clan_event_created = message.clan_event_created
-      ? ClanEventCreated.toJSON(message.clan_event_created)
+      ? CreateEventRequest.toJSON(message.clan_event_created)
       : undefined);
     return obj;
   },
@@ -1954,7 +1944,7 @@ export const Envelope = {
       ? ListUser.fromPartial(object.list_user)
       : undefined;
     message.clan_event_created = (object.clan_event_created !== undefined && object.clan_event_created !== null)
-      ? ClanEventCreated.fromPartial(object.clan_event_created)
+      ? CreateEventRequest.fromPartial(object.clan_event_created)
       : undefined;
     return message;
   },
@@ -7268,131 +7258,6 @@ export const NotificationChannelCategorySettingEvent = {
       object.notification_channel_category_settings_list?.map((e) =>
         NotificationChannelCategorySetting.fromPartial(e)
       ) || [];
-    return message;
-  },
-};
-
-function createBaseClanEventCreated(): ClanEventCreated {
-  return {
-    title: "",
-    logo: "",
-    description: "",
-    clan_id: "",
-    channel_id: "",
-    address: "",
-    start_time: undefined,
-    end_time: undefined,
-  };
-}
-
-export const ClanEventCreated = {
-  encode(message: ClanEventCreated, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.title !== "") {
-      writer.uint32(10).string(message.title);
-    }
-    if (message.logo !== "") {
-      writer.uint32(18).string(message.logo);
-    }
-    if (message.description !== "") {
-      writer.uint32(26).string(message.description);
-    }
-    if (message.clan_id !== "") {
-      writer.uint32(34).string(message.clan_id);
-    }
-    if (message.channel_id !== "") {
-      writer.uint32(42).string(message.channel_id);
-    }
-    if (message.address !== "") {
-      writer.uint32(50).string(message.address);
-    }
-    if (message.start_time !== undefined) {
-      Timestamp.encode(toTimestamp(message.start_time), writer.uint32(58).fork()).ldelim();
-    }
-    if (message.end_time !== undefined) {
-      Timestamp.encode(toTimestamp(message.end_time), writer.uint32(66).fork()).ldelim();
-    }
-    return writer;
-  },
-
-  decode(input: _m0.Reader | Uint8Array, length?: number): ClanEventCreated {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseClanEventCreated();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
-          message.title = reader.string();
-          break;
-        case 2:
-          message.logo = reader.string();
-          break;
-        case 3:
-          message.description = reader.string();
-          break;
-        case 4:
-          message.clan_id = reader.string();
-          break;
-        case 5:
-          message.channel_id = reader.string();
-          break;
-        case 6:
-          message.address = reader.string();
-          break;
-        case 7:
-          message.start_time = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
-          break;
-        case 8:
-          message.end_time = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
-      }
-    }
-    return message;
-  },
-
-  fromJSON(object: any): ClanEventCreated {
-    return {
-      title: isSet(object.title) ? String(object.title) : "",
-      logo: isSet(object.logo) ? String(object.logo) : "",
-      description: isSet(object.description) ? String(object.description) : "",
-      clan_id: isSet(object.clan_id) ? String(object.clan_id) : "",
-      channel_id: isSet(object.channel_id) ? String(object.channel_id) : "",
-      address: isSet(object.address) ? String(object.address) : "",
-      start_time: isSet(object.start_time) ? fromJsonTimestamp(object.start_time) : undefined,
-      end_time: isSet(object.end_time) ? fromJsonTimestamp(object.end_time) : undefined,
-    };
-  },
-
-  toJSON(message: ClanEventCreated): unknown {
-    const obj: any = {};
-    message.title !== undefined && (obj.title = message.title);
-    message.logo !== undefined && (obj.logo = message.logo);
-    message.description !== undefined && (obj.description = message.description);
-    message.clan_id !== undefined && (obj.clan_id = message.clan_id);
-    message.channel_id !== undefined && (obj.channel_id = message.channel_id);
-    message.address !== undefined && (obj.address = message.address);
-    message.start_time !== undefined && (obj.start_time = message.start_time.toISOString());
-    message.end_time !== undefined && (obj.end_time = message.end_time.toISOString());
-    return obj;
-  },
-
-  create<I extends Exact<DeepPartial<ClanEventCreated>, I>>(base?: I): ClanEventCreated {
-    return ClanEventCreated.fromPartial(base ?? {});
-  },
-
-  fromPartial<I extends Exact<DeepPartial<ClanEventCreated>, I>>(object: I): ClanEventCreated {
-    const message = createBaseClanEventCreated();
-    message.title = object.title ?? "";
-    message.logo = object.logo ?? "";
-    message.description = object.description ?? "";
-    message.clan_id = object.clan_id ?? "";
-    message.channel_id = object.channel_id ?? "";
-    message.address = object.address ?? "";
-    message.start_time = object.start_time ?? undefined;
-    message.end_time = object.end_time ?? undefined;
     return message;
   },
 };

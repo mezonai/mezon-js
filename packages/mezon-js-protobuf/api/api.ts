@@ -1,6 +1,7 @@
 /* eslint-disable */
 import Long from "long";
 import _m0 from "protobufjs/minimal";
+import { Struct } from "../google/protobuf/struct";
 import { Timestamp } from "../google/protobuf/timestamp";
 import { BoolValue, Int32Value, StringValue } from "../google/protobuf/wrappers";
 
@@ -2489,10 +2490,9 @@ export interface WebhookGenerateResponse {
 }
 
 export interface WebhookHandlerRequest {
-  clan_id: string;
+  body: { [key: string]: any } | undefined;
   channel_id: string;
   token: string;
-  body: string;
 }
 
 export interface CheckDuplicateClanNameRequest {
@@ -18239,22 +18239,19 @@ export const WebhookGenerateResponse = {
 };
 
 function createBaseWebhookHandlerRequest(): WebhookHandlerRequest {
-  return { clan_id: "", channel_id: "", token: "", body: "" };
+  return { body: undefined, channel_id: "", token: "" };
 }
 
 export const WebhookHandlerRequest = {
   encode(message: WebhookHandlerRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.clan_id !== "") {
-      writer.uint32(10).string(message.clan_id);
+    if (message.body !== undefined) {
+      Struct.encode(Struct.wrap(message.body), writer.uint32(10).fork()).ldelim();
     }
     if (message.channel_id !== "") {
       writer.uint32(18).string(message.channel_id);
     }
     if (message.token !== "") {
       writer.uint32(26).string(message.token);
-    }
-    if (message.body !== "") {
-      writer.uint32(34).string(message.body);
     }
     return writer;
   },
@@ -18267,16 +18264,13 @@ export const WebhookHandlerRequest = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          message.clan_id = reader.string();
+          message.body = Struct.unwrap(Struct.decode(reader, reader.uint32()));
           break;
         case 2:
           message.channel_id = reader.string();
           break;
         case 3:
           message.token = reader.string();
-          break;
-        case 4:
-          message.body = reader.string();
           break;
         default:
           reader.skipType(tag & 7);
@@ -18288,19 +18282,17 @@ export const WebhookHandlerRequest = {
 
   fromJSON(object: any): WebhookHandlerRequest {
     return {
-      clan_id: isSet(object.clan_id) ? String(object.clan_id) : "",
+      body: isObject(object.body) ? object.body : undefined,
       channel_id: isSet(object.channel_id) ? String(object.channel_id) : "",
       token: isSet(object.token) ? String(object.token) : "",
-      body: isSet(object.body) ? String(object.body) : "",
     };
   },
 
   toJSON(message: WebhookHandlerRequest): unknown {
     const obj: any = {};
-    message.clan_id !== undefined && (obj.clan_id = message.clan_id);
+    message.body !== undefined && (obj.body = message.body);
     message.channel_id !== undefined && (obj.channel_id = message.channel_id);
     message.token !== undefined && (obj.token = message.token);
-    message.body !== undefined && (obj.body = message.body);
     return obj;
   },
 
@@ -18310,10 +18302,9 @@ export const WebhookHandlerRequest = {
 
   fromPartial<I extends Exact<DeepPartial<WebhookHandlerRequest>, I>>(object: I): WebhookHandlerRequest {
     const message = createBaseWebhookHandlerRequest();
-    message.clan_id = object.clan_id ?? "";
+    message.body = object.body ?? undefined;
     message.channel_id = object.channel_id ?? "";
     message.token = object.token ?? "";
-    message.body = object.body ?? "";
     return message;
   },
 };
