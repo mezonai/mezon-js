@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { ApiMessageAttachment, ApiMessageMention, ApiMessageReaction, ApiMessageRef, ApiNotification, ApiRpc} from "./api.gen";
+import { ApiChannelMessageHeader, ApiMessageAttachment, ApiMessageMention, ApiMessageReaction, ApiMessageRef, ApiNotification, ApiRpc, ApiUser} from "./api.gen";
 import {Session} from "./session";
 import {ChannelMessage, Notification} from "./client";
 import {WebSocketAdapter, WebSocketAdapterText} from "./web_socket_adapter"
@@ -569,6 +569,12 @@ export interface ChannelDescListEvent {
 }
 
 /**  */
+export interface ListUser {
+  // 
+  user?: Array<ApiUser>;
+}
+
+/**  */
 export interface ChannelDescription {
   // The clan of this channel
   clan_id?: string;
@@ -586,6 +592,8 @@ export interface ChannelDescription {
   clan_name?: string;
   //
   parrent_id?: string;
+  //
+  last_sent_message?: ApiChannelMessageHeader;
 }
 
 // A list of Channel
@@ -744,10 +752,10 @@ export interface Socket {
   writeMessageReaction(id: string, clan_id: string, channel_id: string, mode: number, message_id: string, emoji_id: string, emoji: string, count: number, message_sender_id: string, action_delete: boolean) : Promise<ApiMessageReaction>;
 
   /** Send last seen message */
-  writeLastSeenMessage(clan_id: string, channel_id: string, mode: number, message_id: string, timestamp: string) : Promise<LastSeenMessageEvent>;
+  writeLastSeenMessage(clan_id: string, channel_id: string, mode: number, message_id: string, timestamp_seconds: number) : Promise<LastSeenMessageEvent>;
 
   /** Send last pin message */
-  writeLastPinMessage(clan_id: string, channel_id: string, mode: number, message_id: string, timestamp: string, operation: number) : Promise<LastPinMessageEvent>;
+  writeLastPinMessage(clan_id: string, channel_id: string, mode: number, message_id: string, timestamp_seconds: number, operation: number) : Promise<LastPinMessageEvent>;
 
   /** Send custom user status */
   writeCustomStatus(clan_id: string, status: string) : Promise<CustomStatusEvent>;
@@ -858,6 +866,8 @@ export interface Socket {
   listClanStickersByClanId(clan_id: string): Promise<StrickerListedEvent>;
 
   ListChannelByUserId(): Promise<ChannelDescListEvent>;
+
+  ListUsersByUserId(): Promise<ListUser>;
   
   hashtagDMList(user_id: Array<string>, limit: number): Promise<HashtagDmListEvent>;
 
@@ -932,17 +942,12 @@ export class DefaultSocket implements Socket {
     }
 
     this.adapter.onMessage = (message: any) => {
-      console.log("Test message")
-      console.log(message);
-      
       if (this.verbose && window && window.console) {
         console.log("Response: %o", JSON.stringify(message));
       }
 
       /** Inbound message from server. */
       if (!message.cid) {
-        console.log("message ",message);
-        
         if (message.notifications) {
           message.notifications.notifications.forEach((n: ApiNotification) => {
               n.content = n.content ? JSON.parse(n.content) : undefined;
@@ -1405,13 +1410,13 @@ export class DefaultSocket implements Socket {
     return response.message_typing_event
   }
 
-  async writeLastSeenMessage(clan_id: string, channel_id: string, mode: number, message_id: string, timestamp: string): Promise<LastSeenMessageEvent> {
-    const response = await this.send({last_seen_message_event: {clan_id: clan_id, channel_id: channel_id, mode: mode, message_id: message_id, timestamp: timestamp}});
+  async writeLastSeenMessage(clan_id: string, channel_id: string, mode: number, message_id: string, timestamp_seconds: number): Promise<LastSeenMessageEvent> {
+    const response = await this.send({last_seen_message_event: {clan_id: clan_id, channel_id: channel_id, mode: mode, message_id: message_id, timestamp_seconds: timestamp_seconds}});
     return response.last_seen_message_event
   }
 
-  async writeLastPinMessage(clan_id: string, channel_id: string, mode: number, message_id: string, timestamp: string, operation: number): Promise<LastPinMessageEvent> {
-    const response = await this.send({last_pin_message_event: {clan_id: clan_id, channel_id: channel_id, mode: mode, message_id: message_id, timestamp: timestamp, operation: operation}});
+  async writeLastPinMessage(clan_id: string, channel_id: string, mode: number, message_id: string, timestamp_seconds: number, operation: number): Promise<LastPinMessageEvent> {
+    const response = await this.send({last_pin_message_event: {clan_id: clan_id, channel_id: channel_id, mode: mode, message_id: message_id, timestamp_seconds: timestamp_seconds, operation: operation}});
     return response.last_pin_message_event
   }
 
@@ -1443,6 +1448,11 @@ export class DefaultSocket implements Socket {
   async ListChannelByUserId(): Promise<ChannelDescListEvent> {
     const response = await this.send({channel_desc_list_event: {}});
     return response.channel_desc_list_event
+  }
+
+  async ListUsersByUserId(): Promise<ListUser> {
+    const response = await this.send({list_user: {}});
+    return response.list_user
   }
 
   async hashtagDMList(user_id: Array<string>, limit: number): Promise<HashtagDmListEvent> {
