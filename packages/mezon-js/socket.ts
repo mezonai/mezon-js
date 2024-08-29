@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { ApiChannelMessageHeader, ApiMessageAttachment, ApiMessageMention, ApiMessageReaction, ApiMessageRef, ApiNotification, ApiRpc, ApiUser} from "./api.gen";
+import { ApiChannelMessageHeader, ApiCreateEventRequest, ApiMessageAttachment, ApiMessageMention, ApiMessageReaction, ApiMessageRef, ApiNotification, ApiRpc, ApiUser} from "./api.gen";
 import {Session} from "./session";
 import {ChannelMessage, Notification} from "./client";
 import {WebSocketAdapter, WebSocketAdapterText} from "./web_socket_adapter"
@@ -874,6 +874,8 @@ export interface Socket {
   GetPermissionByRoleIdChannelId(role_id: string, channel_id: string): Promise<PermissionRoleChannelListEvent>;
   
   getNotificationChannelCategorySetting(clan_id : string): Promise<NotificationChannelCategorySettingEvent>;
+
+  oneventcreated: (clan_event_created: ApiCreateEventRequest) => void
 }
 
 /** Reports an error received from a socket message. */
@@ -1042,7 +1044,9 @@ export class DefaultSocket implements Socket {
           this.onuserchannelremoved(<UserChannelRemovedEvent>message.user_channel_removed_event);
         } else if (message.user_clan_removed_event) {
           this.onuserclanremoved(<UserClanRemovedEvent>message.user_clan_removed_event);
-        } else {
+        } else if(message.clan_event_created){
+            this.oneventcreated(message.clan_event_created);
+        }else {
           if (this.verbose && window && window.console) {
             console.log("Unrecognized message received: %o", message);
           }
@@ -1265,6 +1269,12 @@ export class DefaultSocket implements Socket {
     }
   }
 
+  oneventcreated(clan_event_created: ApiCreateEventRequest) {
+    if (this.verbose && window && window.console) {
+      console.log(clan_event_created);
+    }
+  }
+  
   send(message: ChannelJoin | ChannelLeave | ChannelMessageSend | ChannelMessageUpdate | CustomStatusEvent |
     ChannelMessageRemove | MessageTypingEvent | LastSeenMessageEvent | Rpc | StatusFollow | StatusUnfollow | StatusUpdate | Ping, sendTimeout = DefaultSocket.DefaultSendTimeoutMs): Promise<any> {
     const untypedMessage = message as any;
