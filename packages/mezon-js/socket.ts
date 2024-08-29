@@ -697,6 +697,13 @@ export interface NotificationChannelCategorySettingEvent {
   notification_channel_category_settings_list?: NotificationChannelCategorySetting[]
 }
 
+export interface EventStatusNotificationEvent {
+  clan_id:string,
+  event_id:string;
+  event_status:string;
+  message:string;
+}
+
 
 /** A socket connection to Mezon server. */
 export interface Socket {
@@ -848,6 +855,8 @@ export interface Socket {
   /* Set the heartbeat timeout used by the socket to detect if it has lost connectivity to the server. */
   setHeartbeatTimeoutMs(ms : number) : void;
 
+  oneventstatusnotification:(eventStatusNotification : EventStatusNotificationEvent) => void;
+
   /* Get the heartbeat timeout used by the socket to detect if it has lost connectivity to the server. */
   getHeartbeatTimeoutMs() :  number;
 
@@ -969,6 +978,8 @@ export class DefaultSocket implements Socket {
           this.onstreampresence(<StreamPresenceEvent>message.stream_presence_event);
         } else if (message.stream_data) {
           this.onstreamdata(<StreamData>message.stream_data);
+        } else if (message.event_status_notification_event) {
+          this.oneventstatusnotification(<EventStatusNotificationEvent>message.event_status_notification_event)
         } else if (message.channel_message) {
           var content, reactions, mentions, attachments, references;
           try {           
@@ -1262,6 +1273,12 @@ export class DefaultSocket implements Socket {
   oncustomstatus(statusEvent: CustomStatusEvent) {
     if (this.verbose && window && window.console) {
       console.log(statusEvent);
+    }
+  }
+
+  oneventstatusnotification (eventStatusNotification: EventStatusNotificationEvent) {
+    if (this.verbose && window && window.console) {
+      console.log(eventStatusNotification);
     }
   }
 
