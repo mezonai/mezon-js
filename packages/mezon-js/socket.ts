@@ -360,6 +360,8 @@ export interface ChannelUpdatedEvent {
   channel_type: number;
   // status
   status: number;
+  // meeting code
+  meeting_code: string;
 }
 
 export interface ChannelCreatedEvent {
