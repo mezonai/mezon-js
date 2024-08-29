@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { CloseEvent} from "ws";
+import { CloseEvent, ErrorEvent} from "ws";
 import { MezonApi, ApiAuthenticateLogoutRequest, ApiAuthenticateRefreshRequest, ApiSession } from "./api";
 import { Session } from "./session";
 import { DefaultSocket, Socket } from "./socket";
@@ -188,6 +188,10 @@ export interface ApiMessageRef {
   channel_label?: string;
 }
 
+export interface ChannelMessageContent{
+  t : string,
+}
+
 /** A message sent on a channel. */
 export interface ChannelMessage {
   //The unique ID of this message.
@@ -203,7 +207,7 @@ export interface ChannelMessage {
   //The code representing a message type or category.
   code?: number;
   //The content payload.
-  content?: string;
+  content?: ChannelMessageContent;
   //The UNIX time (for gRPC clients) or ISO string (for REST clients) when the message was created.
   create_time?: string;
   //
@@ -289,17 +293,8 @@ export interface ApiUser {
 export interface Client {
   authenticate: () => Promise<string>;
   sendMessage: (clan_id: string, channel_id: string, mode: number, msg: string, mentions?: Array<ApiMessageMention>, attachments?: Array<ApiMessageAttachment>, ref?: Array<ApiMessageRef>) => Promise<boolean>;
-
-  createSocket: (
-    useSSL: boolean,
-    verbose: boolean,
-    adapter: WebSocketAdapter,
-    sendTimeoutMs: number
-  ) => Socket;
-
   on: (event: string, func: Function) => void;
   remove: (event: string, func: Function) => void;
-
 }
 
 /** A client for Mezon server. */
@@ -336,9 +331,7 @@ export class MezonClient implements Client {
           const key = this.generateKey(Events[event as keyof typeof Events]);
           if (!(key in this)) {
             this[key] = [];
-          } else {
-            this[key] = [this[key]];
-          }
+          } 
         }
 
         this.socket = this.createSocket(
@@ -346,6 +339,10 @@ export class MezonClient implements Client {
           false,
           new WebSocketAdapterPb()
         );
+        
+        ["ondisconnect", "onerror", "onheartbeattimeout"].forEach((event) => {
+          this.socket[event] = this[event].bind(this);
+        });
       }
 
   async sendMessage(clan_id: string, channel_id: string, mode: number, msg: string, mentions?: Array<ApiMessageMention>, attachments?: Array<ApiMessageAttachment>, ref?: Array<ApiMessageRef>) {
@@ -412,10 +409,10 @@ export class MezonClient implements Client {
   }
   
   /**Add handle function to event socket */
-  on(method: string, func: Function) {
-  	const key = this.generateKey(method);
+  on(event: string, func: Function, context : any = null) {
+  	const key = this.generateKey(event);
   	if (!(key in this)) {
-  		throw new Error("Mezon SDK not support this method");
+  		throw new Error("Mezon SDK not support this event");
   	}
 
   	if (typeof func != "function") {
@@ -424,15 +421,15 @@ export class MezonClient implements Client {
 
   	const handleFunctions: Function[] = this[key];
   	if (Array.isArray(handleFunctions)) {
-  		handleFunctions.push(func);
+  		handleFunctions.push(context ? func.bind(context) : func);
   	}
   }
 
   /**remove handle function to event socket */
-  remove(method: string, func: Function) {
-  	const key = this.generateKey(method);
+  remove(event: string, func: Function) {
+  	const key = this.generateKey(event);
   	if (!(key in this)) {
-  		throw new Error("Mezon SDK not support this method");
+  		throw new Error("Mezon SDK not support this event");
   	}
   	const handleFunctions: Function[] = this[key];
   	if (Array.isArray(handleFunctions)) {
@@ -449,7 +446,12 @@ export class MezonClient implements Client {
   			if (Array.isArray(handleFunctions)) {
   				handleFunctions.forEach((func) => {
   					if (typeof func == "function") {
-  						func.apply(this, args);
+  						Promise.resolve(func(...args)).catch(err => {
+                if (func.toString().includes(' this.')){
+                  console.log(`Please using arrow function for function ${func.name} or add event with context with sync like .on('event', callback, this) pass 'this variable' in to get context`);
+                }
+                console.log(err);
+              });
   					}
   				});
   			};
@@ -460,6 +462,15 @@ export class MezonClient implements Client {
   /**generate key of event from name */
   generateKey(event: string) {
     return `on${event}`;
+  }
+
+  
+  onerror(evt: ErrorEvent) {
+    console.log(evt);
+  }
+
+  onheartbeattimeout() {
+    console.log("Heartbeat timeout.");
   }
 
   ondisconnect(e: CloseEvent) {
