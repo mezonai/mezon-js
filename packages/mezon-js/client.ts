@@ -960,6 +960,17 @@ export class Client {
       });
   }
 
+  async deleteApp(session: Session, appId: string): Promise<boolean> {
+    if (this.autoRefreshSession && session.refresh_token &&
+        session.isexpired((Date.now() + this.expiredTimespanMs)/1000)) {
+        await this.sessionRefresh(session);
+    }
+
+    return this.apiClient.deleteApp(session.token, appId).then((response: any) => {
+      return response !== undefined;
+    });
+  }
+
   /** A socket created with the client's configuration. */
   createSocket(
     useSSL = false,
