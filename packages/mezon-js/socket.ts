@@ -569,7 +569,7 @@ export interface ChannelDescListEvent {
 }
 
 /**  */
-export interface ListUser {
+export interface AllUserClans {
   // 
   user?: Array<ApiUser>;
 }
@@ -867,7 +867,7 @@ export interface Socket {
 
   ListChannelByUserId(): Promise<ChannelDescListEvent>;
 
-  ListUsersByUserId(): Promise<ListUser>;
+  ListUserClansByUserId(): Promise<AllUserClans>;
   
   hashtagDMList(user_id: Array<string>, limit: number): Promise<HashtagDmListEvent>;
 
@@ -1450,9 +1450,9 @@ export class DefaultSocket implements Socket {
     return response.channel_desc_list_event
   }
 
-  async ListUsersByUserId(): Promise<ListUser> {
-    const response = await this.send({list_user: {}});
-    return response.list_user
+  async ListUserClansByUserId(): Promise<AllUserClans> {
+    const response = await this.send({all_user_clans: {}});
+    return response.all_user_clans
   }
 
   async hashtagDMList(user_id: Array<string>, limit: number): Promise<HashtagDmListEvent> {
