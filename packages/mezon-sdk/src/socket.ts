@@ -658,6 +658,7 @@ export interface NotifiReactMessage {
 
 /** A socket connection to Mezon server. */
 export interface Socket {
+  [key: string] : any;
   /** Connection is Open */
   isOpen(): boolean;
 
