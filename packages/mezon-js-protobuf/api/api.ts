@@ -979,7 +979,7 @@ export interface ChannelUserList_ChannelUser {
   thread_id: string;
   /** clan nick name */
   clan_nick: string;
-  /** clan avartar */
+  /** clan avatar */
   clan_avatar: string;
   /** clan Id */
   clan_id: string;
@@ -1665,8 +1665,8 @@ export interface ClanProfile {
   user_id: string;
   /** name user */
   nick_name: string;
-  /** id avartar */
-  avartar: string;
+  /** id avatar */
+  avatar: string;
   /** id clan */
   clan_id: string;
 }
@@ -2517,14 +2517,15 @@ export interface ClanStickerListByClanIdRequest {
 }
 
 export interface ClanStickerUpdateByIdRequest {
-  id: number;
+  id: string;
   source: string;
   shortname: string;
   category: string;
+  clan_id: string;
 }
 
 export interface ClanStickerDeleteRequest {
-  id: number;
+  id: string;
   clan_id: string;
 }
 
@@ -11640,7 +11641,7 @@ export const LinkInviteUser = {
 };
 
 function createBaseClanProfile(): ClanProfile {
-  return { user_id: "", nick_name: "", avartar: "", clan_id: "" };
+  return { user_id: "", nick_name: "", avatar: "", clan_id: "" };
 }
 
 export const ClanProfile = {
@@ -11651,8 +11652,8 @@ export const ClanProfile = {
     if (message.nick_name !== "") {
       writer.uint32(18).string(message.nick_name);
     }
-    if (message.avartar !== "") {
-      writer.uint32(26).string(message.avartar);
+    if (message.avatar !== "") {
+      writer.uint32(26).string(message.avatar);
     }
     if (message.clan_id !== "") {
       writer.uint32(34).string(message.clan_id);
@@ -11674,7 +11675,7 @@ export const ClanProfile = {
           message.nick_name = reader.string();
           break;
         case 3:
-          message.avartar = reader.string();
+          message.avatar = reader.string();
           break;
         case 4:
           message.clan_id = reader.string();
@@ -11691,7 +11692,7 @@ export const ClanProfile = {
     return {
       user_id: isSet(object.user_id) ? String(object.user_id) : "",
       nick_name: isSet(object.nick_name) ? String(object.nick_name) : "",
-      avartar: isSet(object.avartar) ? String(object.avartar) : "",
+      avatar: isSet(object.avatar) ? String(object.avatar) : "",
       clan_id: isSet(object.clan_id) ? String(object.clan_id) : "",
     };
   },
@@ -11700,7 +11701,7 @@ export const ClanProfile = {
     const obj: any = {};
     message.user_id !== undefined && (obj.user_id = message.user_id);
     message.nick_name !== undefined && (obj.nick_name = message.nick_name);
-    message.avartar !== undefined && (obj.avartar = message.avartar);
+    message.avatar !== undefined && (obj.avatar = message.avatar);
     message.clan_id !== undefined && (obj.clan_id = message.clan_id);
     return obj;
   },
@@ -11713,7 +11714,7 @@ export const ClanProfile = {
     const message = createBaseClanProfile();
     message.user_id = object.user_id ?? "";
     message.nick_name = object.nick_name ?? "";
-    message.avartar = object.avartar ?? "";
+    message.avatar = object.avatar ?? "";
     message.clan_id = object.clan_id ?? "";
     return message;
   },
@@ -18593,13 +18594,13 @@ export const ClanStickerListByClanIdRequest = {
 };
 
 function createBaseClanStickerUpdateByIdRequest(): ClanStickerUpdateByIdRequest {
-  return { id: 0, source: "", shortname: "", category: "" };
+  return { id: "", source: "", shortname: "", category: "", clan_id: "" };
 }
 
 export const ClanStickerUpdateByIdRequest = {
   encode(message: ClanStickerUpdateByIdRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.id !== 0) {
-      writer.uint32(8).int64(message.id);
+    if (message.id !== "") {
+      writer.uint32(10).string(message.id);
     }
     if (message.source !== "") {
       writer.uint32(18).string(message.source);
@@ -18609,6 +18610,9 @@ export const ClanStickerUpdateByIdRequest = {
     }
     if (message.category !== "") {
       writer.uint32(34).string(message.category);
+    }
+    if (message.clan_id !== "") {
+      writer.uint32(42).string(message.clan_id);
     }
     return writer;
   },
@@ -18621,7 +18625,7 @@ export const ClanStickerUpdateByIdRequest = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          message.id = longToNumber(reader.int64() as Long);
+          message.id = reader.string();
           break;
         case 2:
           message.source = reader.string();
@@ -18631,6 +18635,9 @@ export const ClanStickerUpdateByIdRequest = {
           break;
         case 4:
           message.category = reader.string();
+          break;
+        case 5:
+          message.clan_id = reader.string();
           break;
         default:
           reader.skipType(tag & 7);
@@ -18642,19 +18649,21 @@ export const ClanStickerUpdateByIdRequest = {
 
   fromJSON(object: any): ClanStickerUpdateByIdRequest {
     return {
-      id: isSet(object.id) ? Number(object.id) : 0,
+      id: isSet(object.id) ? String(object.id) : "",
       source: isSet(object.source) ? String(object.source) : "",
       shortname: isSet(object.shortname) ? String(object.shortname) : "",
       category: isSet(object.category) ? String(object.category) : "",
+      clan_id: isSet(object.clan_id) ? String(object.clan_id) : "",
     };
   },
 
   toJSON(message: ClanStickerUpdateByIdRequest): unknown {
     const obj: any = {};
-    message.id !== undefined && (obj.id = Math.round(message.id));
+    message.id !== undefined && (obj.id = message.id);
     message.source !== undefined && (obj.source = message.source);
     message.shortname !== undefined && (obj.shortname = message.shortname);
     message.category !== undefined && (obj.category = message.category);
+    message.clan_id !== undefined && (obj.clan_id = message.clan_id);
     return obj;
   },
 
@@ -18664,22 +18673,23 @@ export const ClanStickerUpdateByIdRequest = {
 
   fromPartial<I extends Exact<DeepPartial<ClanStickerUpdateByIdRequest>, I>>(object: I): ClanStickerUpdateByIdRequest {
     const message = createBaseClanStickerUpdateByIdRequest();
-    message.id = object.id ?? 0;
+    message.id = object.id ?? "";
     message.source = object.source ?? "";
     message.shortname = object.shortname ?? "";
     message.category = object.category ?? "";
+    message.clan_id = object.clan_id ?? "";
     return message;
   },
 };
 
 function createBaseClanStickerDeleteRequest(): ClanStickerDeleteRequest {
-  return { id: 0, clan_id: "" };
+  return { id: "", clan_id: "" };
 }
 
 export const ClanStickerDeleteRequest = {
   encode(message: ClanStickerDeleteRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.id !== 0) {
-      writer.uint32(8).int64(message.id);
+    if (message.id !== "") {
+      writer.uint32(10).string(message.id);
     }
     if (message.clan_id !== "") {
       writer.uint32(18).string(message.clan_id);
@@ -18695,7 +18705,7 @@ export const ClanStickerDeleteRequest = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          message.id = longToNumber(reader.int64() as Long);
+          message.id = reader.string();
           break;
         case 2:
           message.clan_id = reader.string();
@@ -18710,14 +18720,14 @@ export const ClanStickerDeleteRequest = {
 
   fromJSON(object: any): ClanStickerDeleteRequest {
     return {
-      id: isSet(object.id) ? Number(object.id) : 0,
+      id: isSet(object.id) ? String(object.id) : "",
       clan_id: isSet(object.clan_id) ? String(object.clan_id) : "",
     };
   },
 
   toJSON(message: ClanStickerDeleteRequest): unknown {
     const obj: any = {};
-    message.id !== undefined && (obj.id = Math.round(message.id));
+    message.id !== undefined && (obj.id = message.id);
     message.clan_id !== undefined && (obj.clan_id = message.clan_id);
     return obj;
   },
@@ -18728,7 +18738,7 @@ export const ClanStickerDeleteRequest = {
 
   fromPartial<I extends Exact<DeepPartial<ClanStickerDeleteRequest>, I>>(object: I): ClanStickerDeleteRequest {
     const message = createBaseClanStickerDeleteRequest();
-    message.id = object.id ?? 0;
+    message.id = object.id ?? "";
     message.clan_id = object.clan_id ?? "";
     return message;
   },

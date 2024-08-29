@@ -231,14 +231,14 @@ export interface Envelope {
     | AddClanUserEvent
     | undefined;
   /** list user */
-  list_user?:
-    | ListUser
+  all_user_clans?:
+    | AllUserClans
     | undefined;
   /**  */
   clan_event_created?: CreateEventRequest | undefined;
 }
 
-export interface ListUser {
+export interface AllUserClans {
   user: User[];
 }
 
@@ -1100,7 +1100,7 @@ function createBaseEnvelope(): Envelope {
     permission_role_channel_list_event: undefined,
     notification_channel_category_setting_event: undefined,
     add_clan_user_event: undefined,
-    list_user: undefined,
+    all_user_clans: undefined,
     clan_event_created: undefined,
   };
 }
@@ -1272,8 +1272,8 @@ export const Envelope = {
     if (message.add_clan_user_event !== undefined) {
       AddClanUserEvent.encode(message.add_clan_user_event, writer.uint32(426).fork()).ldelim();
     }
-    if (message.list_user !== undefined) {
-      ListUser.encode(message.list_user, writer.uint32(434).fork()).ldelim();
+    if (message.all_user_clans !== undefined) {
+      AllUserClans.encode(message.all_user_clans, writer.uint32(434).fork()).ldelim();
     }
     if (message.clan_event_created !== undefined) {
       CreateEventRequest.encode(message.clan_event_created, writer.uint32(442).fork()).ldelim();
@@ -1454,7 +1454,7 @@ export const Envelope = {
           message.add_clan_user_event = AddClanUserEvent.decode(reader, reader.uint32());
           break;
         case 54:
-          message.list_user = ListUser.decode(reader, reader.uint32());
+          message.all_user_clans = AllUserClans.decode(reader, reader.uint32());
           break;
         case 55:
           message.clan_event_created = CreateEventRequest.decode(reader, reader.uint32());
@@ -1596,7 +1596,7 @@ export const Envelope = {
       add_clan_user_event: isSet(object.add_clan_user_event)
         ? AddClanUserEvent.fromJSON(object.add_clan_user_event)
         : undefined,
-      list_user: isSet(object.list_user) ? ListUser.fromJSON(object.list_user) : undefined,
+      all_user_clans: isSet(object.all_user_clans) ? AllUserClans.fromJSON(object.all_user_clans) : undefined,
       clan_event_created: isSet(object.clan_event_created)
         ? CreateEventRequest.fromJSON(object.clan_event_created)
         : undefined,
@@ -1751,8 +1751,8 @@ export const Envelope = {
     message.add_clan_user_event !== undefined && (obj.add_clan_user_event = message.add_clan_user_event
       ? AddClanUserEvent.toJSON(message.add_clan_user_event)
       : undefined);
-    message.list_user !== undefined &&
-      (obj.list_user = message.list_user ? ListUser.toJSON(message.list_user) : undefined);
+    message.all_user_clans !== undefined &&
+      (obj.all_user_clans = message.all_user_clans ? AllUserClans.toJSON(message.all_user_clans) : undefined);
     message.clan_event_created !== undefined && (obj.clan_event_created = message.clan_event_created
       ? CreateEventRequest.toJSON(message.clan_event_created)
       : undefined);
@@ -1940,8 +1940,8 @@ export const Envelope = {
     message.add_clan_user_event = (object.add_clan_user_event !== undefined && object.add_clan_user_event !== null)
       ? AddClanUserEvent.fromPartial(object.add_clan_user_event)
       : undefined;
-    message.list_user = (object.list_user !== undefined && object.list_user !== null)
-      ? ListUser.fromPartial(object.list_user)
+    message.all_user_clans = (object.all_user_clans !== undefined && object.all_user_clans !== null)
+      ? AllUserClans.fromPartial(object.all_user_clans)
       : undefined;
     message.clan_event_created = (object.clan_event_created !== undefined && object.clan_event_created !== null)
       ? CreateEventRequest.fromPartial(object.clan_event_created)
@@ -1950,22 +1950,22 @@ export const Envelope = {
   },
 };
 
-function createBaseListUser(): ListUser {
+function createBaseAllUserClans(): AllUserClans {
   return { user: [] };
 }
 
-export const ListUser = {
-  encode(message: ListUser, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+export const AllUserClans = {
+  encode(message: AllUserClans, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     for (const v of message.user) {
       User.encode(v!, writer.uint32(10).fork()).ldelim();
     }
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): ListUser {
+  decode(input: _m0.Reader | Uint8Array, length?: number): AllUserClans {
     const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseListUser();
+    const message = createBaseAllUserClans();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -1980,11 +1980,11 @@ export const ListUser = {
     return message;
   },
 
-  fromJSON(object: any): ListUser {
+  fromJSON(object: any): AllUserClans {
     return { user: Array.isArray(object?.user) ? object.user.map((e: any) => User.fromJSON(e)) : [] };
   },
 
-  toJSON(message: ListUser): unknown {
+  toJSON(message: AllUserClans): unknown {
     const obj: any = {};
     if (message.user) {
       obj.user = message.user.map((e) => e ? User.toJSON(e) : undefined);
@@ -1994,12 +1994,12 @@ export const ListUser = {
     return obj;
   },
 
-  create<I extends Exact<DeepPartial<ListUser>, I>>(base?: I): ListUser {
-    return ListUser.fromPartial(base ?? {});
+  create<I extends Exact<DeepPartial<AllUserClans>, I>>(base?: I): AllUserClans {
+    return AllUserClans.fromPartial(base ?? {});
   },
 
-  fromPartial<I extends Exact<DeepPartial<ListUser>, I>>(object: I): ListUser {
-    const message = createBaseListUser();
+  fromPartial<I extends Exact<DeepPartial<AllUserClans>, I>>(object: I): AllUserClans {
+    const message = createBaseAllUserClans();
     message.user = object.user?.map((e) => User.fromPartial(e)) || [];
     return message;
   },
