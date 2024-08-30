@@ -1,8 +1,6 @@
 //Events socket will handle from MezonClient
 export enum Events {
   ChannelMessage = "channelmessage",
-  Disconnect = "disconnect",
-  Error = "error",
   MessageReaction = "messagereaction",
   UserChannelRemoved = "userchannelremoved",
   UserClanRemoved = "userclanremoved",
@@ -10,5 +8,4 @@ export enum Events {
   ChannelCreated = "channelcreated",
   ChannelDeleted = "channeldeleted",
   ChannelUpdated = "channelupdated",
-  HeartBeatTimeout = "heartbeattimeout",
 }

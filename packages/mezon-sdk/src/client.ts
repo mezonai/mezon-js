@@ -292,7 +292,7 @@ export interface ApiUser {
 
 export interface Client {
   authenticate: () => Promise<string>;
-  sendMessage: (clan_id: string, channel_id: string, mode: number, msg: string, mentions?: Array<ApiMessageMention>, attachments?: Array<ApiMessageAttachment>, ref?: Array<ApiMessageRef>) => Promise<boolean>;
+  sendMessage: (clan_id: string, channel_id: string, mode: number, msg: ChannelMessageContent, mentions?: Array<ApiMessageMention>, attachments?: Array<ApiMessageAttachment>, ref?: Array<ApiMessageRef>) => Promise<boolean>;
   on: (event: string, func: Function) => void;
   remove: (event: string, func: Function) => void;
 }
@@ -339,13 +339,9 @@ export class MezonClient implements Client {
           false,
           new WebSocketAdapterPb()
         );
-        
-        ["ondisconnect", "onerror", "onheartbeattimeout"].forEach((event) => {
-          this.socket[event] = this[event].bind(this);
-        });
       }
 
-  async sendMessage(clan_id: string, channel_id: string, mode: number, msg: string, mentions?: Array<ApiMessageMention>, attachments?: Array<ApiMessageAttachment>, ref?: Array<ApiMessageRef>) {
+  async sendMessage(clan_id: string, channel_id: string, mode: number, msg: ChannelMessageContent, mentions?: Array<ApiMessageMention>, attachments?: Array<ApiMessageAttachment>, ref?: Array<ApiMessageRef>) {
     const msgACK = await this.socket.writeChatMessage(clan_id, channel_id, mode, msg, mentions, attachments, ref);
     return Promise.resolve(msgACK.channel_id === channel_id);
   }
@@ -363,16 +359,8 @@ export class MezonClient implements Client {
       if (!this.session) {
         return Promise.resolve("error authenticate");
       }
-      
-      const clans = await this.apiClient.listClanDescs(this.session.token);
-      clans.clandesc?.forEach(async clan => {
-        await this.socket.joinClanChat(clan.clan_id || '');
-      })
 
-      // join direct message
-      await this.socket.joinClanChat("0");
-
-      this.connectSocket();
+      await this.connectSocket();
       
       return Promise.resolve("connect successful");
     });
@@ -438,7 +426,17 @@ export class MezonClient implements Client {
   }
 
   /**Create connect to event socket */
-  connectSocket() {
+  async connectSocket() {
+    const clans = await this.apiClient.listClanDescs(this.session!.token);
+    clans.clandesc?.forEach(async clan => {
+      await this.socket.joinClanChat(clan.clan_id || '');
+    })
+
+    // join direct message
+    await this.socket.joinClanChat("0");
+    ["ondisconnect", "onerror", "onheartbeattimeout"].forEach((event) => {
+      this.socket[event] = this[event].bind(this);
+    });
   	for (const event in Events) {
   		const key = this.generateKey(Events[event as keyof typeof Events]);
   		this.socket[key] = (...args: any[]) => {
@@ -476,25 +474,22 @@ export class MezonClient implements Client {
   ondisconnect(e: CloseEvent) {
     console.log("disconnected", e, "reconnecting...");
     const interval = setInterval(async () => {
-      this.socket = this.createSocket(this.useSSL, false, new WebSocketAdapterPb());
-      this.session = await this.socket.connect(this.session as Session, true);
-
-      if (!this.session) {
-        console.log("session is null");
-        return;
+      try{
+        this.socket = this.createSocket(this.useSSL, false, new WebSocketAdapterPb());
+        this.session = await this.socket.connect(this.session as Session, true);
+  
+        if (!this.session) {
+          console.log("session is null");
+          return;
+        }
+  
+        await this.connectSocket();
+  
+        clearInterval(interval);
+      }catch (e){
+        console.log(e);
       }
-      
-      const clans = await this.apiClient.listClanDescs(this.session.token);
-      clans.clandesc?.forEach(async clan => {
-        await this.socket.joinClanChat(clan.clan_id || '');
-      })
 
-      // join direct message
-      await this.socket.joinClanChat("0");
-
-      this.connectSocket();
-
-      clearInterval(interval);
     }, 5000);
   }
 };
