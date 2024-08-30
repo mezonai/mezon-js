@@ -562,6 +562,8 @@ export interface ChannelMessage {
   update_time_seconds: number;
   /** channel mode */
   mode: number;
+  /** is public */
+  is_public: boolean;
   /** hide editted */
   hide_editted: boolean;
 }
@@ -5455,6 +5457,7 @@ function createBaseChannelMessage(): ChannelMessage {
     create_time_seconds: 0,
     update_time_seconds: 0,
     mode: 0,
+    is_public: false,
     hide_editted: false,
   };
 }
@@ -5533,8 +5536,11 @@ export const ChannelMessage = {
     if (message.mode !== 0) {
       writer.uint32(192).int32(message.mode);
     }
+    if (message.is_public === true) {
+      writer.uint32(200).bool(message.is_public);
+    }
     if (message.hide_editted === true) {
-      writer.uint32(200).bool(message.hide_editted);
+      writer.uint32(208).bool(message.hide_editted);
     }
     return writer;
   },
@@ -5619,6 +5625,9 @@ export const ChannelMessage = {
           message.mode = reader.int32();
           break;
         case 25:
+          message.is_public = reader.bool();
+          break;
+        case 26:
           message.hide_editted = reader.bool();
           break;
         default:
@@ -5655,6 +5664,7 @@ export const ChannelMessage = {
       create_time_seconds: isSet(object.create_time_seconds) ? Number(object.create_time_seconds) : 0,
       update_time_seconds: isSet(object.update_time_seconds) ? Number(object.update_time_seconds) : 0,
       mode: isSet(object.mode) ? Number(object.mode) : 0,
+      is_public: isSet(object.is_public) ? Boolean(object.is_public) : false,
       hide_editted: isSet(object.hide_editted) ? Boolean(object.hide_editted) : false,
     };
   },
@@ -5685,6 +5695,7 @@ export const ChannelMessage = {
     message.create_time_seconds !== undefined && (obj.create_time_seconds = Math.round(message.create_time_seconds));
     message.update_time_seconds !== undefined && (obj.update_time_seconds = Math.round(message.update_time_seconds));
     message.mode !== undefined && (obj.mode = Math.round(message.mode));
+    message.is_public !== undefined && (obj.is_public = message.is_public);
     message.hide_editted !== undefined && (obj.hide_editted = message.hide_editted);
     return obj;
   },
@@ -5719,6 +5730,7 @@ export const ChannelMessage = {
     message.create_time_seconds = object.create_time_seconds ?? 0;
     message.update_time_seconds = object.update_time_seconds ?? 0;
     message.mode = object.mode ?? 0;
+    message.is_public = object.is_public ?? false;
     message.hide_editted = object.hide_editted ?? false;
     return message;
   },

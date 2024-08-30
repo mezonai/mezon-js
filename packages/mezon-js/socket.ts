@@ -1063,6 +1063,7 @@ export class DefaultSocket implements Socket {
             attachments: attachments,
             references: references,
             hideEditted: message.channel_message.hide_editted,
+            isPublic: message.channel_message.is_public
           };
           this.onchannelmessage(e);                  
         } else if (message.message_typing_event) {
