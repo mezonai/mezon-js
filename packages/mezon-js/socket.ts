@@ -768,7 +768,7 @@ export interface Socket {
   unfollowUsers(user_ids : string[]) : Promise<void>;
 
   /** Update a chat message on a chat channel in the server. */
-  updateChatMessage(clan_id: string, channel_id: string, mode: number, is_public: boolean, message_id : string, content: any, mentions?: Array<ApiMessageMention>, attachments?: Array<ApiMessageAttachment>, hideEditted?: boolean) : Promise<ChannelMessageAck>;
+  updateChatMessage(clan_id: string, channel_id: string, mode: number, is_public: boolean, message_id: string, content: any, mentions?: Array<ApiMessageMention>, attachments?: Array<ApiMessageAttachment>, hideEditted?: boolean) : Promise<ChannelMessageAck>;
 
   /** Update the status for the current user online. */
   updateStatus(status? : string) : Promise<void>;
@@ -1040,7 +1040,7 @@ export class DefaultSocket implements Socket {
             //console.log("references is invalid", e);
           }
           var e: ChannelMessage = {
-            id: message.id,
+            id: message.id || message.channel_message.message_id,
             avatar: message.channel_message.avatar,
             channel_id: message.channel_message.channel_id,
             mode: message.channel_message.mode,
