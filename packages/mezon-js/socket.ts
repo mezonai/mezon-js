@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { ApiChannelMessageHeader, ApiCreateEventRequest, ApiMessageAttachment, ApiMessageMention, ApiMessageReaction, ApiMessageRef, ApiNotification, ApiRpc, ApiUser} from "./api.gen";
+import { ApiChannelMessageHeader, ApiCreateEventRequest, ApiMessageAttachment, ApiMessageMention, ApiMessageReaction, ApiMessageRef, ApiNotification, ApiPermissionList, ApiRoleList, ApiRpc, ApiUser} from "./api.gen";
 import {Session} from "./session";
 import {ChannelMessage, Notification} from "./client";
 import {WebSocketAdapter, WebSocketAdapterText} from "./web_socket_adapter"
@@ -550,6 +550,27 @@ export interface EmojiListedEvent {
   emoji_list?: Array<ClanEmoji>;
 }
 
+export interface RoleListEvent {
+  Limit: number;
+    // The role state to list.
+  State: number;
+    // Cursor to start from
+  Cursor: string;
+    // The clan of this role
+  ClanId: string;
+  //
+  roles: ApiRoleList;
+}
+
+export interface UserPermissionInChannelListEvent {
+  //
+  clan_id: string;
+  //
+  channel_id: string; 
+  // A list of permission.
+  permissions: ApiPermissionList;
+}
+
 /**  */
 export interface ClanEmoji {
   //
@@ -856,6 +877,10 @@ export interface Socket {
   checkDuplicateClanName(clan_name: string): Promise<ClanNameExistedEvent>;
 
   listClanEmojiByClanId(clan_id: string): Promise<EmojiListedEvent>;
+
+  listUserPermissionInChannel(clan_id: string, channel_id: string): Promise<UserPermissionInChannelListEvent>;
+
+  listRoles(ClanId: string, Limit: number, State: number, Cursor: string): Promise<RoleListEvent>;
 
   listClanStickersByClanId(clan_id: string): Promise<StrickerListedEvent>;
 
@@ -1439,6 +1464,16 @@ export class DefaultSocket implements Socket {
   async listClanEmojiByClanId(clan_id: string): Promise<EmojiListedEvent> {
     const response = await this.send({emojis_listed_event: {clan_id: clan_id}});
     return response.emojis_listed_event
+  }
+
+  async listUserPermissionInChannel(clan_id: string, channel_id: string): Promise<UserPermissionInChannelListEvent> {
+    const response = await this.send({user_permission_in_channel_list_event : {clan_id: clan_id, channel_id: channel_id }});
+    return response.user_permission_in_channel_list_event 
+  }
+
+  async listRoles(ClanId: string, Limit: number, State: number, Cursor: string): Promise<RoleListEvent> {
+    const response = await this.send({role_list_event: {ClanId: ClanId, Limit: Limit, State: State, Cursor: Cursor}});
+    return response.role_list_event 
   }
 
   async ListChannelByUserId(): Promise<ChannelDescListEvent> {

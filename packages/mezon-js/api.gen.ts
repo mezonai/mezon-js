@@ -346,8 +346,8 @@ export interface ApiAddRoleChannelDescRequest {
 
 /** App information. */
 export interface ApiApp {
-  // app id
-  id: string;
+  //
+  about?: string;
   //
   applogo?: string;
   //
@@ -356,6 +356,8 @@ export interface ApiApp {
   creator_id?: string;
   //The UNIX time when the app was disabled.
   disable_time?: string;
+  //
+  id?: string;
   //
   is_shadow?: boolean;
   //
@@ -1152,6 +1154,8 @@ export interface ApiPermission {
   //
   id?: string;
   //
+  level?: number;
+  //
   scope?: number;
   //
   slug?: string;
@@ -1161,6 +1165,8 @@ export interface ApiPermission {
 
 /** A list of permission description, usually a result of a list operation. */
 export interface ApiPermissionList {
+  //
+  max_level_permission?: number;
   //A list of permission.
   permissions?: Array<ApiPermission>;
 }
@@ -1259,6 +1265,8 @@ export interface ApiRole {
   display_online?: number;
   //
   id?: string;
+  //
+  max_level_permission?: number;
   //
   permission_list?: ApiPermissionList;
   //
@@ -5631,45 +5639,6 @@ export class MezonApi {
 
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("PUT", options, bodyJson);
-    if (bearerToken) {
-        fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-    }
-
-    return Promise.race([
-      fetch(fullUrl, fetchOptions).then((response) => {
-        if (response.status == 204) {
-          return response;
-        } else if (response.status >= 200 && response.status < 300) {
-          return response.json();
-        } else {
-          throw response;
-        }
-      }),
-      new Promise((_, reject) =>
-        setTimeout(reject, this.timeoutMs, "Request timed out.")
-      ),
-    ]);
-}
-
-  /** List user roles */
-  listRoles(bearerToken: string,
-      limit?:number,
-      state?:number,
-      cursor?:string,
-      clanId?:string,
-      options: any = {}): Promise<ApiRoleList> {
-    
-    const urlPath = "/v2/roles";
-    const queryParams = new Map<string, any>();
-    queryParams.set("limit", limit);
-    queryParams.set("state", state);
-    queryParams.set("cursor", cursor);
-    queryParams.set("clan_id", clanId);
-
-    let bodyJson : string = "";
-
-    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
-    const fetchOptions = buildFetchOptions("GET", options, bodyJson);
     if (bearerToken) {
         fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
     }
