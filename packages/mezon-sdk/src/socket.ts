@@ -872,6 +872,7 @@ export class DefaultSocket implements Socket {
             avatar: message.channel_message.avatar,
             channel_id: message.channel_message.channel_id,
             mode: message.channel_message.mode,
+            is_public: message.channel_message.is_public,
             channel_label: message.channel_message.channel_label,
             clan_id: message.channel_message.clan_id,
             code: message.channel_message.code,              

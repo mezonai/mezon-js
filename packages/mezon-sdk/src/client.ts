@@ -246,6 +246,8 @@ export interface ChannelMessage {
   mode?: number;
   //
   message_id?: string;
+  //
+  is_public?: boolean;
 }
 
 /** A user in the server. */
