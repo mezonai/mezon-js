@@ -564,6 +564,8 @@ export interface ChannelMessage {
   mode: number;
   /** hide editted */
   hide_editted: boolean;
+  /** is public */
+  is_public: boolean;
 }
 
 /** Mention to message */
@@ -5456,6 +5458,7 @@ function createBaseChannelMessage(): ChannelMessage {
     update_time_seconds: 0,
     mode: 0,
     hide_editted: false,
+    is_public: false,
   };
 }
 
@@ -5535,6 +5538,9 @@ export const ChannelMessage = {
     }
     if (message.hide_editted === true) {
       writer.uint32(200).bool(message.hide_editted);
+    }
+    if (message.is_public === true) {
+      writer.uint32(208).bool(message.is_public);
     }
     return writer;
   },
@@ -5621,6 +5627,9 @@ export const ChannelMessage = {
         case 25:
           message.hide_editted = reader.bool();
           break;
+        case 26:
+          message.is_public = reader.bool();
+          break;
         default:
           reader.skipType(tag & 7);
           break;
@@ -5656,6 +5665,7 @@ export const ChannelMessage = {
       update_time_seconds: isSet(object.update_time_seconds) ? Number(object.update_time_seconds) : 0,
       mode: isSet(object.mode) ? Number(object.mode) : 0,
       hide_editted: isSet(object.hide_editted) ? Boolean(object.hide_editted) : false,
+      is_public: isSet(object.is_public) ? Boolean(object.is_public) : false,
     };
   },
 
@@ -5686,6 +5696,7 @@ export const ChannelMessage = {
     message.update_time_seconds !== undefined && (obj.update_time_seconds = Math.round(message.update_time_seconds));
     message.mode !== undefined && (obj.mode = Math.round(message.mode));
     message.hide_editted !== undefined && (obj.hide_editted = message.hide_editted);
+    message.is_public !== undefined && (obj.is_public = message.is_public);
     return obj;
   },
 
@@ -5720,6 +5731,7 @@ export const ChannelMessage = {
     message.update_time_seconds = object.update_time_seconds ?? 0;
     message.mode = object.mode ?? 0;
     message.hide_editted = object.hide_editted ?? false;
+    message.is_public = object.is_public ?? false;
     return message;
   },
 };
