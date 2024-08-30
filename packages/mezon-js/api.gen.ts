@@ -1049,6 +1049,8 @@ export interface ApiMessageReaction {
   channel_id:string;
   // The mode
   mode: number;
+  // Is public
+  is_public: boolean;
   // The channel label
   channel_label: string;
   /** The message that user react */
