@@ -246,6 +246,8 @@ export interface ChannelMessage {
   mode?: number;
   //
   message_id?: string;
+  //
+  is_public?: boolean;
 }
 
 /** A user in the server. */
@@ -292,7 +294,7 @@ export interface ApiUser {
 
 export interface Client {
   authenticate: () => Promise<string>;
-  sendMessage: (clan_id: string, channel_id: string, mode: number, msg: ChannelMessageContent, mentions?: Array<ApiMessageMention>, attachments?: Array<ApiMessageAttachment>, ref?: Array<ApiMessageRef>) => Promise<boolean>;
+  sendMessage: (clan_id: string, channel_id: string, mode: number, is_public: boolean, msg: ChannelMessageContent, mentions?: Array<ApiMessageMention>, attachments?: Array<ApiMessageAttachment>, ref?: Array<ApiMessageRef>) => Promise<boolean>;
   on: (event: string, func: Function) => void;
   remove: (event: string, func: Function) => void;
 }
@@ -341,8 +343,8 @@ export class MezonClient implements Client {
         );
       }
 
-  async sendMessage(clan_id: string, channel_id: string, mode: number, msg: ChannelMessageContent, mentions?: Array<ApiMessageMention>, attachments?: Array<ApiMessageAttachment>, ref?: Array<ApiMessageRef>) {
-    const msgACK = await this.socket.writeChatMessage(clan_id, channel_id, mode, msg, mentions, attachments, ref);
+  async sendMessage(clan_id: string, channel_id: string, mode: number, is_public: boolean, msg: ChannelMessageContent, mentions?: Array<ApiMessageMention>, attachments?: Array<ApiMessageAttachment>, ref?: Array<ApiMessageRef>) {
+    const msgACK = await this.socket.writeChatMessage(clan_id, channel_id, mode, is_public, msg, mentions, attachments, ref);
     return Promise.resolve(msgACK.channel_id === channel_id);
   }
 
