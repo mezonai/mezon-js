@@ -34,7 +34,6 @@ import {
   ApiClanDesc,
   ApiCategoryDesc,
   ApiCategoryDescList,
-  ApiRoleList,
   ApiPermissionList,
   ApiRoleUserList,
   ApiRole,
@@ -1285,18 +1284,6 @@ export class Client {
       
       result.categorydesc = response.categorydesc;
       return Promise.resolve(result);
-    });
-  }
-
-  /** List user roles */
-  async listRoles(session: Session, limit?:number, state?:number, cursor?:string, clanId?:string): Promise<ApiRoleList> {
-    if (this.autoRefreshSession && session.refresh_token &&
-        session.isexpired((Date.now() + this.expiredTimespanMs)/1000)) {
-        await this.sessionRefresh(session);
-    }
-
-    return this.apiClient.listRoles(session.token, limit, state, cursor, clanId).then((response: ApiRoleList) => {
-      return Promise.resolve(response);
     });
   }
 
