@@ -835,6 +835,8 @@ export interface ChannelUpdatedEvent {
   status: number;
   /** meeting code */
   meeting_code: string;
+  /** error */
+  is_error: boolean;
 }
 
 /** Stop receiving status updates for some set of users. */
@@ -5542,6 +5544,7 @@ function createBaseChannelUpdatedEvent(): ChannelUpdatedEvent {
     channel_type: undefined,
     status: 0,
     meeting_code: "",
+    is_error: false,
   };
 }
 
@@ -5573,6 +5576,9 @@ export const ChannelUpdatedEvent = {
     }
     if (message.meeting_code !== "") {
       writer.uint32(74).string(message.meeting_code);
+    }
+    if (message.is_error === true) {
+      writer.uint32(80).bool(message.is_error);
     }
     return writer;
   },
@@ -5611,6 +5617,9 @@ export const ChannelUpdatedEvent = {
         case 9:
           message.meeting_code = reader.string();
           break;
+        case 10:
+          message.is_error = reader.bool();
+          break;
         default:
           reader.skipType(tag & 7);
           break;
@@ -5630,6 +5639,7 @@ export const ChannelUpdatedEvent = {
       channel_type: isSet(object.channel_type) ? Number(object.channel_type) : undefined,
       status: isSet(object.status) ? Number(object.status) : 0,
       meeting_code: isSet(object.meeting_code) ? String(object.meeting_code) : "",
+      is_error: isSet(object.is_error) ? Boolean(object.is_error) : false,
     };
   },
 
@@ -5644,6 +5654,7 @@ export const ChannelUpdatedEvent = {
     message.channel_type !== undefined && (obj.channel_type = message.channel_type);
     message.status !== undefined && (obj.status = Math.round(message.status));
     message.meeting_code !== undefined && (obj.meeting_code = message.meeting_code);
+    message.is_error !== undefined && (obj.is_error = message.is_error);
     return obj;
   },
 
@@ -5662,6 +5673,7 @@ export const ChannelUpdatedEvent = {
     message.channel_type = object.channel_type ?? undefined;
     message.status = object.status ?? 0;
     message.meeting_code = object.meeting_code ?? "";
+    message.is_error = object.is_error ?? false;
     return message;
   },
 };

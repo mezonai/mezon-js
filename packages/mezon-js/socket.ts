@@ -376,6 +376,8 @@ export interface ChannelUpdatedEvent {
   status: number;
   // meeting code
   meeting_code: string;
+  // is error
+  is_error: boolean;
 }
 
 export interface ChannelCreatedEvent {
