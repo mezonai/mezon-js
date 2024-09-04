@@ -95,7 +95,6 @@ import {
   ApiAddAppRequest,
   ApiAppList,
   ApiApp,
-  MezonUpdateRoleDeleteBody,
   MezonUpdateAppBody,
 } from "./api.gen";
 
@@ -847,13 +846,13 @@ export class Client {
   }
 
   /** Delete a role by ID. */
-  async deleteRole(session: Session, roleId: string): Promise<boolean> {
+  async deleteRole(session: Session, roleId: string, clanId: string): Promise<boolean> {
     if (this.autoRefreshSession && session.refresh_token &&
         session.isexpired((Date.now() + this.expiredTimespanMs)/1000)) {
         await this.sessionRefresh(session);
     }
 
-    return this.apiClient.deleteRole(session.token, roleId).then((response: any) => {
+    return this.apiClient.deleteRole(session.token, roleId, "", clanId).then((response: any) => {
       return response !== undefined;
     });
   }
@@ -1310,18 +1309,6 @@ export class Client {
 
     return this.apiClient.getListPermission(session.token).then((response: ApiPermissionList) => {
       return Promise.resolve(response);
-    });
-  }
-
-  /** Update action role when delete role */
-  async updateRoleDelete(session: Session, roleId:string, request:MezonUpdateRoleDeleteBody): Promise<boolean> {
-    if (this.autoRefreshSession && session.refresh_token &&
-        session.isexpired((Date.now() + this.expiredTimespanMs)/1000)) {
-        await this.sessionRefresh(session);
-    }
-
-    return this.apiClient.updateRoleDelete(session.token, roleId, request).then((response: any) => {
-      return response !== undefined;
     });
   }
 
