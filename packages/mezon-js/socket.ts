@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { ApiChannelMessageHeader, ApiCreateEventRequest, ApiMessageAttachment, ApiMessageMention, ApiMessageReaction, ApiMessageRef, ApiNotification, ApiRpc, ApiUser} from "./api.gen";
+import { ApiChannelMessageHeader, ApiCreateEventRequest, ApiMessageAttachment, ApiMessageMention, ApiMessageReaction, ApiMessageRef, ApiNotification, ApiPermissionList, ApiRoleList, ApiRpc, ApiUser} from "./api.gen";
 import {Session} from "./session";
 import {ChannelMessage, Notification} from "./client";
 import {WebSocketAdapter, WebSocketAdapterText} from "./web_socket_adapter"
@@ -85,6 +85,8 @@ interface ChannelLeave {
     mode: number;
     // The channel label
     channel_label: string;
+    // Is public
+    is_public: boolean;
   };
 }
 
@@ -107,6 +109,8 @@ export interface UserChannelAddedEvent {
   clan_id: string;
   // the channel type
   channel_type: number;
+  // is public
+  is_public: boolean;
 }
 
 export interface AddUsers {
@@ -148,6 +152,8 @@ export interface LastPinMessageEvent {
   user_id: string;
   /** operation */
   operation: number;
+  // Is public
+  is_public: boolean;
 }
 
 /** Last seen message by user */
@@ -172,6 +178,8 @@ export interface MessageTypingEvent {
   channel_label: string;
   /** Message sender, usually a user ID. */
   sender_id: string;
+  // Is public
+  is_public: boolean;
 }
 
 // user profile updated event
@@ -233,6 +241,8 @@ interface ChannelMessageSend {
     mention_everyone?: boolean;
     //
     avatar: string;
+    // Is public
+    is_public: boolean;
   };
 }
 
@@ -253,6 +263,8 @@ interface ChannelMessageUpdate {
     attachments?: Array<ApiMessageAttachment>;
     /** The mode payload. */
     mode: number;
+    // Is public
+    is_public: boolean;
   };
 }
 
@@ -267,6 +279,8 @@ interface ChannelMessageRemove {
     channel_label: string;
     /** A unique ID for the chat message to be removed. */
     message_id: string;
+    // Is public
+    is_public: boolean;
   };
 }
 
@@ -362,6 +376,8 @@ export interface ChannelUpdatedEvent {
   status: number;
   // meeting code
   meeting_code: string;
+  // is error
+  is_error: boolean;
 }
 
 export interface ChannelCreatedEvent {
@@ -550,6 +566,27 @@ export interface EmojiListedEvent {
   emoji_list?: Array<ClanEmoji>;
 }
 
+export interface RoleListEvent {
+  Limit: number;
+    // The role state to list.
+  State: number;
+    // Cursor to start from
+  Cursor: string;
+    // The clan of this role
+  ClanId: string;
+  //
+  roles: ApiRoleList;
+}
+
+export interface UserPermissionInChannelListEvent {
+  //
+  clan_id: string;
+  //
+  channel_id: string; 
+  // A list of permission.
+  permissions: ApiPermissionList;
+}
+
 /**  */
 export interface ClanEmoji {
   //
@@ -718,13 +755,13 @@ export interface Socket {
   joinClanChat(clan_id: string) : Promise<ClanJoin>;
 
   /** Join a chat channel on the server. */
-  joinChat(clan_id: string, channel_id: string, channel_type: number) : Promise<Channel>;
+  joinChat(clan_id: string, channel_id: string, channel_type: number, is_public: boolean) : Promise<Channel>;
 
   /** Leave a chat channel on the server. */
-  leaveChat(clan_id: string, channel_id: string, channel_type: number) : Promise<void>;
+  leaveChat(clan_id: string, channel_id: string, channel_type: number, is_public: boolean) : Promise<void>;
 
   /** Remove a chat message from a chat channel on the server. */
-  removeChatMessage(clan_id: string, channel_id: string, mode: number, message_id: string) : Promise<ChannelMessageAck>;
+  removeChatMessage(clan_id: string, channel_id: string, mode: number, is_public: boolean, message_id: string) : Promise<ChannelMessageAck>;
 
   /** Execute an RPC function to the server. */
   rpc(id?: string, payload?: string, http_key?: string) : Promise<ApiRpc>
@@ -733,25 +770,25 @@ export interface Socket {
   unfollowUsers(user_ids : string[]) : Promise<void>;
 
   /** Update a chat message on a chat channel in the server. */
-  updateChatMessage(clan_id: string, channel_id: string, mode: number, message_id : string, content: any, mentions?: Array<ApiMessageMention>, attachments?: Array<ApiMessageAttachment>, hideEditted?: boolean) : Promise<ChannelMessageAck>;
+  updateChatMessage(clan_id: string, channel_id: string, mode: number, is_public: boolean, message_id: string, content: any, mentions?: Array<ApiMessageMention>, attachments?: Array<ApiMessageAttachment>, hideEditted?: boolean) : Promise<ChannelMessageAck>;
 
   /** Update the status for the current user online. */
   updateStatus(status? : string) : Promise<void>;
 
   /** Send a chat message to a chat channel on the server. */
-  writeChatMessage(clan_id: string, channel_id: string, mode: number, content?: any, mentions?: Array<ApiMessageMention>, attachments?: Array<ApiMessageAttachment>, references?: Array<ApiMessageRef>, anonymous_message?: boolean, mention_everyone?:boolean, avatar?: string) : Promise<ChannelMessageAck>;
+  writeChatMessage(clan_id: string, channel_id: string, mode: number, is_public: boolean, content?: any, mentions?: Array<ApiMessageMention>, attachments?: Array<ApiMessageAttachment>, references?: Array<ApiMessageRef>, anonymous_message?: boolean, mention_everyone?:boolean, avatar?: string) : Promise<ChannelMessageAck>;
 
   /** Send message typing */
-  writeMessageTyping(clan_id: string, channel_id: string, mode: number) : Promise<MessageTypingEvent>;  
+  writeMessageTyping(clan_id: string, channel_id: string, mode: number, is_public: boolean) : Promise<MessageTypingEvent>;  
 
   /** Send message reaction */
-  writeMessageReaction(id: string, clan_id: string, channel_id: string, mode: number, message_id: string, emoji_id: string, emoji: string, count: number, message_sender_id: string, action_delete: boolean) : Promise<ApiMessageReaction>;
+  writeMessageReaction(id: string, clan_id: string, channel_id: string, mode: number, is_public: boolean, message_id: string, emoji_id: string, emoji: string, count: number, message_sender_id: string, action_delete: boolean) : Promise<ApiMessageReaction>;
 
   /** Send last seen message */
   writeLastSeenMessage(clan_id: string, channel_id: string, mode: number, message_id: string, timestamp_seconds: number) : Promise<LastSeenMessageEvent>;
 
   /** Send last pin message */
-  writeLastPinMessage(clan_id: string, channel_id: string, mode: number, message_id: string, timestamp_seconds: number, operation: number) : Promise<LastPinMessageEvent>;
+  writeLastPinMessage(clan_id: string, channel_id: string, mode: number, is_public: boolean, message_id: string, timestamp_seconds: number, operation: number) : Promise<LastPinMessageEvent>;
 
   /** Send custom user status */
   writeCustomStatus(clan_id: string, status: string) : Promise<CustomStatusEvent>;
@@ -856,6 +893,10 @@ export interface Socket {
   checkDuplicateClanName(clan_name: string): Promise<ClanNameExistedEvent>;
 
   listClanEmojiByClanId(clan_id: string): Promise<EmojiListedEvent>;
+
+  listUserPermissionInChannel(clan_id: string, channel_id: string): Promise<UserPermissionInChannelListEvent>;
+
+  listRoles(ClanId: string, Limit: number, State: number, Cursor: string): Promise<RoleListEvent>;
 
   listClanStickersByClanId(clan_id: string): Promise<StrickerListedEvent>;
 
@@ -1001,7 +1042,7 @@ export class DefaultSocket implements Socket {
             //console.log("references is invalid", e);
           }
           var e: ChannelMessage = {
-            id: message.id,
+            id: message.id || message.channel_message.message_id,
             avatar: message.channel_message.avatar,
             channel_id: message.channel_message.channel_id,
             mode: message.channel_message.mode,
@@ -1024,6 +1065,7 @@ export class DefaultSocket implements Socket {
             attachments: attachments,
             references: references,
             hideEditted: message.channel_message.hide_editted,
+            isPublic: message.channel_message.is_public
           };
           this.onchannelmessage(e);                  
         } else if (message.message_typing_event) {
@@ -1321,13 +1363,14 @@ export class DefaultSocket implements Socket {
     return response.clan_join;
   }
 
-  async joinChat(clan_id: string, channel_id: string, channel_type: number): Promise<Channel> {
+  async joinChat(clan_id: string, channel_id: string, channel_type: number, is_public: boolean): Promise<Channel> {
 
     const response = await this.send({
         channel_join: {
             clan_id: clan_id,
             channel_id: channel_id,
             channel_type: channel_type,
+            is_public: is_public
         }
       }
     );
@@ -1335,18 +1378,19 @@ export class DefaultSocket implements Socket {
     return response.channel;
   }
 
-  leaveChat(clan_id: string, channel_id: string, channel_type: number): Promise<void> {
-    return this.send({channel_leave: {clan_id: clan_id, channel_id: channel_id, channel_type: channel_type}});
+  leaveChat(clan_id: string, channel_id: string, channel_type: number, is_public: boolean): Promise<void> {
+    return this.send({channel_leave: {clan_id: clan_id, channel_id: channel_id, channel_type: channel_type, is_public: is_public}});
   }
 
-  async removeChatMessage(clan_id: string, channel_id: string, mode: number, message_id: string): Promise<ChannelMessageAck> {
+  async removeChatMessage(clan_id: string, channel_id: string, mode: number, is_public: boolean, message_id: string): Promise<ChannelMessageAck> {
     const response = await this.send(
       {
         channel_message_remove: {
           clan_id: clan_id,
           channel_id: channel_id,
           mode: mode,
-          message_id: message_id
+          message_id: message_id,
+          is_public: is_public
         }
       }
     );
@@ -1382,8 +1426,8 @@ export class DefaultSocket implements Socket {
     return this.send({status_unfollow: {user_ids: user_ids}});
   }
 
-  async updateChatMessage(clan_id: string, channel_id: string, mode: number, message_id : string, content: any, mentions?: Array<ApiMessageMention>, attachments?: Array<ApiMessageAttachment>, hideEditted?: boolean): Promise<ChannelMessageAck> {
-    const response = await this.send({channel_message_update: {clan_id: clan_id, channel_id: channel_id, message_id: message_id, content: content, mentions: mentions, attachments: attachments, mode: mode, hide_editted: hideEditted}});
+  async updateChatMessage(clan_id: string, channel_id: string, mode: number, is_public: boolean, message_id : string, content: any, mentions?: Array<ApiMessageMention>, attachments?: Array<ApiMessageAttachment>, hideEditted?: boolean): Promise<ChannelMessageAck> {
+    const response = await this.send({channel_message_update: {clan_id: clan_id, channel_id: channel_id, message_id: message_id, content: content, mentions: mentions, attachments: attachments, mode: mode, is_public: is_public, hide_editted: hideEditted}});
     return response.channel_message_ack;
   }
 
@@ -1391,13 +1435,13 @@ export class DefaultSocket implements Socket {
     return this.send({status_update: {status: status}});
   }
 
-  async writeChatMessage(clan_id: string, channel_id: string, mode: number, content: any, mentions?: Array<ApiMessageMention>, attachments?: Array<ApiMessageAttachment>, references?: Array<ApiMessageRef>, anonymous_message?: boolean, mention_everyone?:Boolean, avatar?: string ): Promise<ChannelMessageAck> {
-    const response = await this.send({channel_message_send: {clan_id: clan_id, channel_id: channel_id, mode: mode, content: content, mentions: mentions, attachments: attachments, references: references, anonymous_message: anonymous_message, mention_everyone: mention_everyone, avatar: avatar}});
+  async writeChatMessage(clan_id: string, channel_id: string, mode: number, is_public: boolean, content: any, mentions?: Array<ApiMessageMention>, attachments?: Array<ApiMessageAttachment>, references?: Array<ApiMessageRef>, anonymous_message?: boolean, mention_everyone?:Boolean, avatar?: string ): Promise<ChannelMessageAck> {
+    const response = await this.send({channel_message_send: {clan_id: clan_id, channel_id: channel_id, mode: mode, is_public: is_public, content: content, mentions: mentions, attachments: attachments, references: references, anonymous_message: anonymous_message, mention_everyone: mention_everyone, avatar: avatar}});
     return response.channel_message_ack;
   }
 
-  async writeMessageReaction(id: string, clan_id: string, channel_id: string, mode: number, message_id: string, emoji_id: string, emoji: string, count: number, message_sender_id: string, action_delete: boolean): Promise<ApiMessageReaction> {
-    const response = await this.send({message_reaction_event: {id: id, clan_id: clan_id, channel_id: channel_id, mode: mode, message_id: message_id, emoji_id: emoji_id, emoji: emoji, count: count, message_sender_id: message_sender_id, action: action_delete}});
+  async writeMessageReaction(id: string, clan_id: string, channel_id: string, mode: number, is_public: boolean, message_id: string, emoji_id: string, emoji: string, count: number, message_sender_id: string, action_delete: boolean): Promise<ApiMessageReaction> {
+    const response = await this.send({message_reaction_event: {id: id, clan_id: clan_id, channel_id: channel_id, mode: mode, is_public: is_public, message_id: message_id, emoji_id: emoji_id, emoji: emoji, count: count, message_sender_id: message_sender_id, action: action_delete}});
     return response.message_reaction_event
   }
 
@@ -1411,8 +1455,8 @@ export class DefaultSocket implements Socket {
     return response.last_seen_message_event
   }
 
-  async writeLastPinMessage(clan_id: string, channel_id: string, mode: number, message_id: string, timestamp_seconds: number, operation: number): Promise<LastPinMessageEvent> {
-    const response = await this.send({last_pin_message_event: {clan_id: clan_id, channel_id: channel_id, mode: mode, message_id: message_id, timestamp_seconds: timestamp_seconds, operation: operation}});
+  async writeLastPinMessage(clan_id: string, channel_id: string, mode: number, is_public: boolean, message_id: string, timestamp_seconds: number, operation: number): Promise<LastPinMessageEvent> {
+    const response = await this.send({last_pin_message_event: {clan_id: clan_id, channel_id: channel_id, mode: mode, is_public: is_public, message_id: message_id, timestamp_seconds: timestamp_seconds, operation: operation}});
     return response.last_pin_message_event
   }
 
@@ -1439,6 +1483,16 @@ export class DefaultSocket implements Socket {
   async listClanEmojiByClanId(clan_id: string): Promise<EmojiListedEvent> {
     const response = await this.send({emojis_listed_event: {clan_id: clan_id}});
     return response.emojis_listed_event
+  }
+
+  async listUserPermissionInChannel(clan_id: string, channel_id: string): Promise<UserPermissionInChannelListEvent> {
+    const response = await this.send({user_permission_in_channel_list_event : {clan_id: clan_id, channel_id: channel_id }});
+    return response.user_permission_in_channel_list_event 
+  }
+
+  async listRoles(ClanId: string, Limit: number, State: number, Cursor: string): Promise<RoleListEvent> {
+    const response = await this.send({role_list_event: {ClanId: ClanId, Limit: Limit, State: State, Cursor: Cursor}});
+    return response.role_list_event 
   }
 
   async ListChannelByUserId(): Promise<ChannelDescListEvent> {

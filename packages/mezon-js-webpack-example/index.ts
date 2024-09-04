@@ -19,16 +19,18 @@ import {WebSocketAdapterPb} from "mezon-js-protobuf"
 
 var useSSL = false; // Enable if server is run with an SSL certificate.
 //var client = new Client("defaultkey", "dev-mezon.nccsoft.vn", "7305", useSSL);
-var client = new Client("defaultkey", "127.0.0.1", "7350", useSSL);
+var client = new Client("defaultkey", "172.16.11.90", "7350", useSSL);
 
-client.authenticateEmail("user1@ncc.asia", "Aa12345678").then(async session => {
+client.authenticateEmail("acc-test-100@gmail.com", "Ncc12345678").then(async session => {
   console.log("authenticated.", session);
   
   const socket = client.createSocket(false, true, new WebSocketAdapterPb());
   const session2 = await socket.connect(session, true);
   console.log("session", session2);
 
-  await client.addAppToClan(session, "1825427178448228352", "1775732550744936448");
+  await socket.joinClanChat("1775732550744936448");
+
+  await socket.writeChatMessage("1775732550744936448", "1801426185494728704", 2, {t: "hello"});
 
 }).catch(e => {
   console.log("error authenticating.");

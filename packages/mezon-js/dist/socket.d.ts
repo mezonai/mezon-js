@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { ApiChannelMessageHeader, ApiMessageAttachment, ApiMessageMention, ApiMessageReaction, ApiMessageRef, ApiRpc, ApiUser } from "./api.gen";
+import { ApiChannelMessageHeader, ApiCreateEventRequest, ApiMessageAttachment, ApiMessageMention, ApiMessageReaction, ApiMessageRef, ApiPermissionList, ApiRoleList, ApiRpc, ApiUser } from "./api.gen";
 import { Session } from "./session";
 import { ChannelMessage, Notification } from "./client";
 import { WebSocketAdapter } from "./web_socket_adapter";
@@ -69,6 +69,7 @@ interface ChannelLeave {
         channel_id: string;
         mode: number;
         channel_label: string;
+        is_public: boolean;
     };
 }
 export interface AddClanUserEvent {
@@ -82,6 +83,7 @@ export interface UserChannelAddedEvent {
     status: string;
     clan_id: string;
     channel_type: number;
+    is_public: boolean;
 }
 export interface AddUsers {
     user_id: string;
@@ -109,6 +111,7 @@ export interface LastPinMessageEvent {
     user_id: string;
     /** operation */
     operation: number;
+    is_public: boolean;
 }
 /** Last seen message by user */
 export interface LastSeenMessageEvent {
@@ -127,6 +130,7 @@ export interface MessageTypingEvent {
     channel_label: string;
     /** Message sender, usually a user ID. */
     sender_id: string;
+    is_public: boolean;
 }
 export interface UserProfileUpdatedEvent {
     user_id: string;
@@ -170,6 +174,7 @@ interface ChannelMessageSend {
         anonymous_message?: boolean;
         mention_everyone?: boolean;
         avatar: string;
+        is_public: boolean;
     };
 }
 /** Update a message previously sent to a realtime chat channel. */
@@ -188,6 +193,7 @@ interface ChannelMessageUpdate {
         attachments?: Array<ApiMessageAttachment>;
         /** The mode payload. */
         mode: number;
+        is_public: boolean;
     };
 }
 /** Remove a message previously sent to a realtime chat channel. */
@@ -199,6 +205,7 @@ interface ChannelMessageRemove {
         channel_label: string;
         /** A unique ID for the chat message to be removed. */
         message_id: string;
+        is_public: boolean;
     };
 }
 /** Presence update for a particular realtime chat channel. */
@@ -254,6 +261,8 @@ export interface ChannelUpdatedEvent {
     channel_label: string;
     channel_type: number;
     status: number;
+    meeting_code: string;
+    is_error: boolean;
 }
 export interface ChannelCreatedEvent {
     clan_id: string;
@@ -387,6 +396,18 @@ export interface EmojiListedEvent {
     clan_id: string;
     emoji_list?: Array<ClanEmoji>;
 }
+export interface RoleListEvent {
+    Limit: number;
+    State: number;
+    Cursor: string;
+    ClanId: string;
+    roles: ApiRoleList;
+}
+export interface UserPermissionInChannelListEvent {
+    clan_id: string;
+    channel_id: string;
+    permissions: ApiPermissionList;
+}
 /**  */
 export interface ClanEmoji {
     category?: string;
@@ -400,7 +421,7 @@ export interface ChannelDescListEvent {
     channeldesc?: Array<ChannelDescription>;
 }
 /**  */
-export interface ListUser {
+export interface AllUserClans {
     user?: Array<ApiUser>;
 }
 /**  */
@@ -484,29 +505,29 @@ export interface Socket {
     /** Join clan chat */
     joinClanChat(clan_id: string): Promise<ClanJoin>;
     /** Join a chat channel on the server. */
-    joinChat(clan_id: string, channel_id: string, channel_type: number): Promise<Channel>;
+    joinChat(clan_id: string, channel_id: string, channel_type: number, is_public: boolean): Promise<Channel>;
     /** Leave a chat channel on the server. */
-    leaveChat(clan_id: string, channel_id: string, channel_type: number): Promise<void>;
+    leaveChat(clan_id: string, channel_id: string, channel_type: number, is_public: boolean): Promise<void>;
     /** Remove a chat message from a chat channel on the server. */
-    removeChatMessage(clan_id: string, channel_id: string, mode: number, message_id: string): Promise<ChannelMessageAck>;
+    removeChatMessage(clan_id: string, channel_id: string, mode: number, is_public: boolean, message_id: string): Promise<ChannelMessageAck>;
     /** Execute an RPC function to the server. */
     rpc(id?: string, payload?: string, http_key?: string): Promise<ApiRpc>;
     /** Unfollow one or more users from their status updates. */
     unfollowUsers(user_ids: string[]): Promise<void>;
     /** Update a chat message on a chat channel in the server. */
-    updateChatMessage(clan_id: string, channel_id: string, mode: number, message_id: string, content: any, mentions?: Array<ApiMessageMention>, attachments?: Array<ApiMessageAttachment>, hideEditted?: boolean): Promise<ChannelMessageAck>;
+    updateChatMessage(clan_id: string, channel_id: string, mode: number, is_public: boolean, message_id: string, content: any, mentions?: Array<ApiMessageMention>, attachments?: Array<ApiMessageAttachment>, hideEditted?: boolean): Promise<ChannelMessageAck>;
     /** Update the status for the current user online. */
     updateStatus(status?: string): Promise<void>;
     /** Send a chat message to a chat channel on the server. */
-    writeChatMessage(clan_id: string, channel_id: string, mode: number, content?: any, mentions?: Array<ApiMessageMention>, attachments?: Array<ApiMessageAttachment>, references?: Array<ApiMessageRef>, anonymous_message?: boolean, mention_everyone?: boolean, avatar?: string): Promise<ChannelMessageAck>;
+    writeChatMessage(clan_id: string, channel_id: string, mode: number, is_public: boolean, content?: any, mentions?: Array<ApiMessageMention>, attachments?: Array<ApiMessageAttachment>, references?: Array<ApiMessageRef>, anonymous_message?: boolean, mention_everyone?: boolean, avatar?: string): Promise<ChannelMessageAck>;
     /** Send message typing */
-    writeMessageTyping(clan_id: string, channel_id: string, mode: number): Promise<MessageTypingEvent>;
+    writeMessageTyping(clan_id: string, channel_id: string, mode: number, is_public: boolean): Promise<MessageTypingEvent>;
     /** Send message reaction */
-    writeMessageReaction(id: string, clan_id: string, channel_id: string, mode: number, message_id: string, emoji_id: string, emoji: string, count: number, message_sender_id: string, action_delete: boolean): Promise<ApiMessageReaction>;
+    writeMessageReaction(id: string, clan_id: string, channel_id: string, mode: number, is_public: boolean, message_id: string, emoji_id: string, emoji: string, count: number, message_sender_id: string, action_delete: boolean): Promise<ApiMessageReaction>;
     /** Send last seen message */
     writeLastSeenMessage(clan_id: string, channel_id: string, mode: number, message_id: string, timestamp_seconds: number): Promise<LastSeenMessageEvent>;
     /** Send last pin message */
-    writeLastPinMessage(clan_id: string, channel_id: string, mode: number, message_id: string, timestamp_seconds: number, operation: number): Promise<LastPinMessageEvent>;
+    writeLastPinMessage(clan_id: string, channel_id: string, mode: number, is_public: boolean, message_id: string, timestamp_seconds: number, operation: number): Promise<LastPinMessageEvent>;
     /** Send custom user status */
     writeCustomStatus(clan_id: string, status: string): Promise<CustomStatusEvent>;
     /** send voice joined */
@@ -566,9 +587,11 @@ export interface Socket {
     getHeartbeatTimeoutMs(): number;
     checkDuplicateClanName(clan_name: string): Promise<ClanNameExistedEvent>;
     listClanEmojiByClanId(clan_id: string): Promise<EmojiListedEvent>;
+    listUserPermissionInChannel(clan_id: string, channel_id: string): Promise<UserPermissionInChannelListEvent>;
+    listRoles(ClanId: string, Limit: number, State: number, Cursor: string): Promise<RoleListEvent>;
     listClanStickersByClanId(clan_id: string): Promise<StrickerListedEvent>;
     ListChannelByUserId(): Promise<ChannelDescListEvent>;
-    ListUsersByUserId(): Promise<ListUser>;
+    ListUserClansByUserId(): Promise<AllUserClans>;
     hashtagDMList(user_id: Array<string>, limit: number): Promise<HashtagDmListEvent>;
     getNotificationChannelSetting(channel_id: string): Promise<NotificationChannelSettingEvent>;
     getNotificationCategorySetting(category_id: string): Promise<NotificationCategorySettingEvent>;
@@ -576,6 +599,7 @@ export interface Socket {
     getNotificationReactMessage(channel_id_req: string): Promise<NotifiReactMessageEvent>;
     GetPermissionByRoleIdChannelId(role_id: string, channel_id: string): Promise<PermissionRoleChannelListEvent>;
     getNotificationChannelCategorySetting(clan_id: string): Promise<NotificationChannelCategorySettingEvent>;
+    oneventcreated: (clan_event_created: ApiCreateEventRequest) => void;
 }
 /** Reports an error received from a socket message. */
 export interface SocketError {
@@ -632,30 +656,33 @@ export declare class DefaultSocket implements Socket {
     onstreamdata(streamData: StreamData): void;
     onheartbeattimeout(): void;
     oncustomstatus(statusEvent: CustomStatusEvent): void;
+    oneventcreated(clan_event_created: ApiCreateEventRequest): void;
     send(message: ChannelJoin | ChannelLeave | ChannelMessageSend | ChannelMessageUpdate | CustomStatusEvent | ChannelMessageRemove | MessageTypingEvent | LastSeenMessageEvent | Rpc | StatusFollow | StatusUnfollow | StatusUpdate | Ping, sendTimeout?: number): Promise<any>;
     followUsers(userIds: string[]): Promise<Status>;
     joinClanChat(clan_id: string): Promise<ClanJoin>;
-    joinChat(clan_id: string, channel_id: string, channel_type: number): Promise<Channel>;
-    leaveChat(clan_id: string, channel_id: string, channel_type: number): Promise<void>;
-    removeChatMessage(clan_id: string, channel_id: string, mode: number, message_id: string): Promise<ChannelMessageAck>;
+    joinChat(clan_id: string, channel_id: string, channel_type: number, is_public: boolean): Promise<Channel>;
+    leaveChat(clan_id: string, channel_id: string, channel_type: number, is_public: boolean): Promise<void>;
+    removeChatMessage(clan_id: string, channel_id: string, mode: number, is_public: boolean, message_id: string): Promise<ChannelMessageAck>;
     removePartyMember(party_id: string, member: Presence): Promise<void>;
     rpc(id?: string, payload?: string, http_key?: string): Promise<ApiRpc>;
     sendPartyData(party_id: string, op_code: number, data: string | Uint8Array): Promise<void>;
     unfollowUsers(user_ids: string[]): Promise<void>;
-    updateChatMessage(clan_id: string, channel_id: string, mode: number, message_id: string, content: any, mentions?: Array<ApiMessageMention>, attachments?: Array<ApiMessageAttachment>, hideEditted?: boolean): Promise<ChannelMessageAck>;
+    updateChatMessage(clan_id: string, channel_id: string, mode: number, is_public: boolean, message_id: string, content: any, mentions?: Array<ApiMessageMention>, attachments?: Array<ApiMessageAttachment>, hideEditted?: boolean): Promise<ChannelMessageAck>;
     updateStatus(status?: string): Promise<void>;
-    writeChatMessage(clan_id: string, channel_id: string, mode: number, content: any, mentions?: Array<ApiMessageMention>, attachments?: Array<ApiMessageAttachment>, references?: Array<ApiMessageRef>, anonymous_message?: boolean, mention_everyone?: Boolean, avatar?: string): Promise<ChannelMessageAck>;
-    writeMessageReaction(id: string, clan_id: string, channel_id: string, mode: number, message_id: string, emoji_id: string, emoji: string, count: number, message_sender_id: string, action_delete: boolean): Promise<ApiMessageReaction>;
+    writeChatMessage(clan_id: string, channel_id: string, mode: number, is_public: boolean, content: any, mentions?: Array<ApiMessageMention>, attachments?: Array<ApiMessageAttachment>, references?: Array<ApiMessageRef>, anonymous_message?: boolean, mention_everyone?: Boolean, avatar?: string): Promise<ChannelMessageAck>;
+    writeMessageReaction(id: string, clan_id: string, channel_id: string, mode: number, is_public: boolean, message_id: string, emoji_id: string, emoji: string, count: number, message_sender_id: string, action_delete: boolean): Promise<ApiMessageReaction>;
     writeMessageTyping(clan_id: string, channel_id: string, mode: number): Promise<MessageTypingEvent>;
     writeLastSeenMessage(clan_id: string, channel_id: string, mode: number, message_id: string, timestamp_seconds: number): Promise<LastSeenMessageEvent>;
-    writeLastPinMessage(clan_id: string, channel_id: string, mode: number, message_id: string, timestamp_seconds: number, operation: number): Promise<LastPinMessageEvent>;
+    writeLastPinMessage(clan_id: string, channel_id: string, mode: number, is_public: boolean, message_id: string, timestamp_seconds: number, operation: number): Promise<LastPinMessageEvent>;
     writeVoiceJoined(id: string, clanId: string, clanName: string, voiceChannelId: string, voiceChannelLabel: string, participant: string, lastScreenshot: string): Promise<VoiceJoinedEvent>;
     writeVoiceLeaved(id: string, clanId: string, voiceChannelId: string, voiceUserId: string): Promise<VoiceLeavedEvent>;
     writeCustomStatus(clan_id: string, status: string): Promise<CustomStatusEvent>;
     checkDuplicateClanName(clan_name: string): Promise<ClanNameExistedEvent>;
     listClanEmojiByClanId(clan_id: string): Promise<EmojiListedEvent>;
+    listUserPermissionInChannel(clan_id: string, channel_id: string): Promise<UserPermissionInChannelListEvent>;
+    listRoles(ClanId: string, Limit: number, State: number, Cursor: string): Promise<RoleListEvent>;
     ListChannelByUserId(): Promise<ChannelDescListEvent>;
-    ListUsersByUserId(): Promise<ListUser>;
+    ListUserClansByUserId(): Promise<AllUserClans>;
     hashtagDMList(user_id: Array<string>, limit: number): Promise<HashtagDmListEvent>;
     GetPermissionByRoleIdChannelId(role_id: string, channel_id: string): Promise<PermissionRoleChannelListEvent>;
     listClanStickersByClanId(clan_id: string): Promise<StrickerListedEvent>;

@@ -34,7 +34,6 @@ import {
   ApiClanDesc,
   ApiCategoryDesc,
   ApiCategoryDescList,
-  ApiRoleList,
   ApiPermissionList,
   ApiRoleUserList,
   ApiRole,
@@ -199,6 +198,8 @@ export interface ChannelMessage {
   message_id?: string;
   //
   hideEditted?: boolean;
+  //
+  isPublic?: boolean;
 }
 
 /** A list of channel messages, usually a result of a list operation. */
@@ -961,14 +962,19 @@ export class Client {
   }
 
   async deleteApp(session: Session, appId: string): Promise<boolean> {
-    if (this.autoRefreshSession && session.refresh_token &&
-        session.isexpired((Date.now() + this.expiredTimespanMs)/1000)) {
-        await this.sessionRefresh(session);
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired((Date.now() + this.expiredTimespanMs) / 1000)
+    ) {
+      await this.sessionRefresh(session);
     }
 
-    return this.apiClient.deleteApp(session.token, appId).then((response: any) => {
-      return response !== undefined;
-    });
+    return this.apiClient
+      .deleteApp(session.token, appId)
+      .then((response: any) => {
+        return response !== undefined;
+      });
   }
 
   /** A socket created with the client's configuration. */
@@ -1731,29 +1737,6 @@ export class Client {
 
         result.categorydesc = response.categorydesc;
         return Promise.resolve(result);
-      });
-  }
-
-  /** List user roles */
-  async listRoles(
-    session: Session,
-    limit?: number,
-    state?: number,
-    cursor?: string,
-    clanId?: string
-  ): Promise<ApiRoleList> {
-    if (
-      this.autoRefreshSession &&
-      session.refresh_token &&
-      session.isexpired((Date.now() + this.expiredTimespanMs) / 1000)
-    ) {
-      await this.sessionRefresh(session);
-    }
-
-    return this.apiClient
-      .listRoles(session.token, limit, state, cursor, clanId)
-      .then((response: ApiRoleList) => {
-        return Promise.resolve(response);
       });
   }
 

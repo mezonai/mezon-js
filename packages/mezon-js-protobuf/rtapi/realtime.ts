@@ -9,6 +9,8 @@ import {
   MessageReaction,
   MessageRef,
   Notification,
+  PermissionList,
+  RoleList,
   Rpc,
   User,
 } from "../api/api";
@@ -239,7 +241,15 @@ export interface Envelope {
     | CreateEventRequest
     | undefined;
   /** notification time for event */
-  event_status_notification_event?: EventStatusNotificationEvent | undefined;
+  event_status_notification_event?:
+    | EventStatusNotificationEvent
+    | undefined;
+  /**  */
+  user_permission_in_channel_list_event?:
+    | UserPermissionInChannelListEvent
+    | undefined;
+  /**  */
+  role_list_event?: RoleListEvent | undefined;
 }
 
 export interface AllUserClans {
@@ -261,6 +271,29 @@ export interface PermissionRoleChannelListEvent {
   channel_id: string;
   /** A list of permission. */
   permission_role_channel: PermissionRoleChannel[];
+}
+
+/** A list of permission user in channel. */
+export interface UserPermissionInChannelListEvent {
+  /**  */
+  clan_id: string;
+  /**  */
+  channel_id: string;
+  /** A list of permission. */
+  permissions: PermissionList | undefined;
+}
+
+/** A list role channel. */
+export interface RoleListEvent {
+  Limit: number;
+  /** The role state to list. */
+  State: number;
+  /** Cursor to start from */
+  Cursor: string;
+  /** The clan of this role */
+  ClanId: string;
+  /**  */
+  roles: RoleList | undefined;
 }
 
 /** Permission role channel */
@@ -406,6 +439,8 @@ export interface ChannelLeave {
   channel_id: string;
   /** channel type */
   channel_type: number;
+  /** is public channel */
+  is_public: boolean;
 }
 
 /** A receipt reply from a channel message send operation. */
@@ -460,6 +495,8 @@ export interface ChannelMessageSend {
   mention_everyone: boolean;
   /** clan avatar */
   avatar: string;
+  /** is public */
+  is_public: boolean;
 }
 
 /** Update a message previously sent to a realtime channel. */
@@ -478,6 +515,8 @@ export interface ChannelMessageUpdate {
   attachments: MessageAttachment[];
   /** The mode */
   mode: number;
+  /** is public */
+  is_public: boolean;
   /** hide editted */
   hide_editted: boolean;
 }
@@ -492,6 +531,8 @@ export interface ChannelMessageRemove {
   message_id: string;
   /** The mode */
   mode: number;
+  /** is public */
+  is_public: boolean;
 }
 
 /** A set of joins and leaves on a particular channel. */
@@ -655,6 +696,8 @@ export interface LastPinMessageEvent {
   timestamp_seconds: number;
   /** operation */
   operation: number;
+  /** is public */
+  is_public: boolean;
 }
 
 /** Last seen message by user */
@@ -679,6 +722,8 @@ export interface MessageTypingEvent {
   sender_id: string;
   /** mode */
   mode: number;
+  /** is public */
+  is_public: boolean;
 }
 
 /** Voice Joined event */
@@ -790,6 +835,8 @@ export interface ChannelUpdatedEvent {
   status: number;
   /** meeting code */
   meeting_code: string;
+  /** error */
+  is_error: boolean;
 }
 
 /** Stop receiving status updates for some set of users. */
@@ -891,6 +938,8 @@ export interface UserChannelAdded {
   clan_id: string;
   /** the channel type */
   channel_type: number;
+  /** is public */
+  is_public: boolean;
 }
 
 /**  */
@@ -1116,6 +1165,8 @@ function createBaseEnvelope(): Envelope {
     all_user_clans: undefined,
     clan_event_created: undefined,
     event_status_notification_event: undefined,
+    user_permission_in_channel_list_event: undefined,
+    role_list_event: undefined,
   };
 }
 
@@ -1294,6 +1345,13 @@ export const Envelope = {
     }
     if (message.event_status_notification_event !== undefined) {
       EventStatusNotificationEvent.encode(message.event_status_notification_event, writer.uint32(450).fork()).ldelim();
+    }
+    if (message.user_permission_in_channel_list_event !== undefined) {
+      UserPermissionInChannelListEvent.encode(message.user_permission_in_channel_list_event, writer.uint32(458).fork())
+        .ldelim();
+    }
+    if (message.role_list_event !== undefined) {
+      RoleListEvent.encode(message.role_list_event, writer.uint32(466).fork()).ldelim();
     }
     return writer;
   },
@@ -1479,6 +1537,15 @@ export const Envelope = {
         case 56:
           message.event_status_notification_event = EventStatusNotificationEvent.decode(reader, reader.uint32());
           break;
+        case 57:
+          message.user_permission_in_channel_list_event = UserPermissionInChannelListEvent.decode(
+            reader,
+            reader.uint32(),
+          );
+          break;
+        case 58:
+          message.role_list_event = RoleListEvent.decode(reader, reader.uint32());
+          break;
         default:
           reader.skipType(tag & 7);
           break;
@@ -1623,6 +1690,10 @@ export const Envelope = {
       event_status_notification_event: isSet(object.event_status_notification_event)
         ? EventStatusNotificationEvent.fromJSON(object.event_status_notification_event)
         : undefined,
+      user_permission_in_channel_list_event: isSet(object.user_permission_in_channel_list_event)
+        ? UserPermissionInChannelListEvent.fromJSON(object.user_permission_in_channel_list_event)
+        : undefined,
+      role_list_event: isSet(object.role_list_event) ? RoleListEvent.fromJSON(object.role_list_event) : undefined,
     };
   },
 
@@ -1783,6 +1854,12 @@ export const Envelope = {
       (obj.event_status_notification_event = message.event_status_notification_event
         ? EventStatusNotificationEvent.toJSON(message.event_status_notification_event)
         : undefined);
+    message.user_permission_in_channel_list_event !== undefined &&
+      (obj.user_permission_in_channel_list_event = message.user_permission_in_channel_list_event
+        ? UserPermissionInChannelListEvent.toJSON(message.user_permission_in_channel_list_event)
+        : undefined);
+    message.role_list_event !== undefined &&
+      (obj.role_list_event = message.role_list_event ? RoleListEvent.toJSON(message.role_list_event) : undefined);
     return obj;
   },
 
@@ -1977,6 +2054,14 @@ export const Envelope = {
       (object.event_status_notification_event !== undefined && object.event_status_notification_event !== null)
         ? EventStatusNotificationEvent.fromPartial(object.event_status_notification_event)
         : undefined;
+    message.user_permission_in_channel_list_event =
+      (object.user_permission_in_channel_list_event !== undefined &&
+          object.user_permission_in_channel_list_event !== null)
+        ? UserPermissionInChannelListEvent.fromPartial(object.user_permission_in_channel_list_event)
+        : undefined;
+    message.role_list_event = (object.role_list_event !== undefined && object.role_list_event !== null)
+      ? RoleListEvent.fromPartial(object.role_list_event)
+      : undefined;
     return message;
   },
 };
@@ -2176,6 +2261,175 @@ export const PermissionRoleChannelListEvent = {
     message.channel_id = object.channel_id ?? "";
     message.permission_role_channel =
       object.permission_role_channel?.map((e) => PermissionRoleChannel.fromPartial(e)) || [];
+    return message;
+  },
+};
+
+function createBaseUserPermissionInChannelListEvent(): UserPermissionInChannelListEvent {
+  return { clan_id: "", channel_id: "", permissions: undefined };
+}
+
+export const UserPermissionInChannelListEvent = {
+  encode(message: UserPermissionInChannelListEvent, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.clan_id !== "") {
+      writer.uint32(10).string(message.clan_id);
+    }
+    if (message.channel_id !== "") {
+      writer.uint32(18).string(message.channel_id);
+    }
+    if (message.permissions !== undefined) {
+      PermissionList.encode(message.permissions, writer.uint32(26).fork()).ldelim();
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): UserPermissionInChannelListEvent {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseUserPermissionInChannelListEvent();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.clan_id = reader.string();
+          break;
+        case 2:
+          message.channel_id = reader.string();
+          break;
+        case 3:
+          message.permissions = PermissionList.decode(reader, reader.uint32());
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): UserPermissionInChannelListEvent {
+    return {
+      clan_id: isSet(object.clan_id) ? String(object.clan_id) : "",
+      channel_id: isSet(object.channel_id) ? String(object.channel_id) : "",
+      permissions: isSet(object.permissions) ? PermissionList.fromJSON(object.permissions) : undefined,
+    };
+  },
+
+  toJSON(message: UserPermissionInChannelListEvent): unknown {
+    const obj: any = {};
+    message.clan_id !== undefined && (obj.clan_id = message.clan_id);
+    message.channel_id !== undefined && (obj.channel_id = message.channel_id);
+    message.permissions !== undefined &&
+      (obj.permissions = message.permissions ? PermissionList.toJSON(message.permissions) : undefined);
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<UserPermissionInChannelListEvent>, I>>(
+    base?: I,
+  ): UserPermissionInChannelListEvent {
+    return UserPermissionInChannelListEvent.fromPartial(base ?? {});
+  },
+
+  fromPartial<I extends Exact<DeepPartial<UserPermissionInChannelListEvent>, I>>(
+    object: I,
+  ): UserPermissionInChannelListEvent {
+    const message = createBaseUserPermissionInChannelListEvent();
+    message.clan_id = object.clan_id ?? "";
+    message.channel_id = object.channel_id ?? "";
+    message.permissions = (object.permissions !== undefined && object.permissions !== null)
+      ? PermissionList.fromPartial(object.permissions)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseRoleListEvent(): RoleListEvent {
+  return { Limit: 0, State: 0, Cursor: "", ClanId: "", roles: undefined };
+}
+
+export const RoleListEvent = {
+  encode(message: RoleListEvent, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.Limit !== 0) {
+      writer.uint32(8).int32(message.Limit);
+    }
+    if (message.State !== 0) {
+      writer.uint32(16).int32(message.State);
+    }
+    if (message.Cursor !== "") {
+      writer.uint32(26).string(message.Cursor);
+    }
+    if (message.ClanId !== "") {
+      writer.uint32(34).string(message.ClanId);
+    }
+    if (message.roles !== undefined) {
+      RoleList.encode(message.roles, writer.uint32(42).fork()).ldelim();
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): RoleListEvent {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseRoleListEvent();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.Limit = reader.int32();
+          break;
+        case 2:
+          message.State = reader.int32();
+          break;
+        case 3:
+          message.Cursor = reader.string();
+          break;
+        case 4:
+          message.ClanId = reader.string();
+          break;
+        case 5:
+          message.roles = RoleList.decode(reader, reader.uint32());
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): RoleListEvent {
+    return {
+      Limit: isSet(object.Limit) ? Number(object.Limit) : 0,
+      State: isSet(object.State) ? Number(object.State) : 0,
+      Cursor: isSet(object.Cursor) ? String(object.Cursor) : "",
+      ClanId: isSet(object.ClanId) ? String(object.ClanId) : "",
+      roles: isSet(object.roles) ? RoleList.fromJSON(object.roles) : undefined,
+    };
+  },
+
+  toJSON(message: RoleListEvent): unknown {
+    const obj: any = {};
+    message.Limit !== undefined && (obj.Limit = Math.round(message.Limit));
+    message.State !== undefined && (obj.State = Math.round(message.State));
+    message.Cursor !== undefined && (obj.Cursor = message.Cursor);
+    message.ClanId !== undefined && (obj.ClanId = message.ClanId);
+    message.roles !== undefined && (obj.roles = message.roles ? RoleList.toJSON(message.roles) : undefined);
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<RoleListEvent>, I>>(base?: I): RoleListEvent {
+    return RoleListEvent.fromPartial(base ?? {});
+  },
+
+  fromPartial<I extends Exact<DeepPartial<RoleListEvent>, I>>(object: I): RoleListEvent {
+    const message = createBaseRoleListEvent();
+    message.Limit = object.Limit ?? 0;
+    message.State = object.State ?? 0;
+    message.Cursor = object.Cursor ?? "";
+    message.ClanId = object.ClanId ?? "";
+    message.roles = (object.roles !== undefined && object.roles !== null)
+      ? RoleList.fromPartial(object.roles)
+      : undefined;
     return message;
   },
 };
@@ -3201,7 +3455,7 @@ export const ChannelJoin = {
 };
 
 function createBaseChannelLeave(): ChannelLeave {
-  return { clan_id: "", channel_id: "", channel_type: 0 };
+  return { clan_id: "", channel_id: "", channel_type: 0, is_public: false };
 }
 
 export const ChannelLeave = {
@@ -3214,6 +3468,9 @@ export const ChannelLeave = {
     }
     if (message.channel_type !== 0) {
       writer.uint32(24).int32(message.channel_type);
+    }
+    if (message.is_public === true) {
+      writer.uint32(32).bool(message.is_public);
     }
     return writer;
   },
@@ -3234,6 +3491,9 @@ export const ChannelLeave = {
         case 3:
           message.channel_type = reader.int32();
           break;
+        case 4:
+          message.is_public = reader.bool();
+          break;
         default:
           reader.skipType(tag & 7);
           break;
@@ -3247,6 +3507,7 @@ export const ChannelLeave = {
       clan_id: isSet(object.clan_id) ? String(object.clan_id) : "",
       channel_id: isSet(object.channel_id) ? String(object.channel_id) : "",
       channel_type: isSet(object.channel_type) ? Number(object.channel_type) : 0,
+      is_public: isSet(object.is_public) ? Boolean(object.is_public) : false,
     };
   },
 
@@ -3255,6 +3516,7 @@ export const ChannelLeave = {
     message.clan_id !== undefined && (obj.clan_id = message.clan_id);
     message.channel_id !== undefined && (obj.channel_id = message.channel_id);
     message.channel_type !== undefined && (obj.channel_type = Math.round(message.channel_type));
+    message.is_public !== undefined && (obj.is_public = message.is_public);
     return obj;
   },
 
@@ -3267,6 +3529,7 @@ export const ChannelLeave = {
     message.clan_id = object.clan_id ?? "";
     message.channel_id = object.channel_id ?? "";
     message.channel_type = object.channel_type ?? 0;
+    message.is_public = object.is_public ?? false;
     return message;
   },
 };
@@ -3418,6 +3681,7 @@ function createBaseChannelMessageSend(): ChannelMessageSend {
     anonymous_message: false,
     mention_everyone: false,
     avatar: "",
+    is_public: false,
   };
 }
 
@@ -3452,6 +3716,9 @@ export const ChannelMessageSend = {
     }
     if (message.avatar !== "") {
       writer.uint32(82).string(message.avatar);
+    }
+    if (message.is_public === true) {
+      writer.uint32(88).bool(message.is_public);
     }
     return writer;
   },
@@ -3493,6 +3760,9 @@ export const ChannelMessageSend = {
         case 10:
           message.avatar = reader.string();
           break;
+        case 11:
+          message.is_public = reader.bool();
+          break;
         default:
           reader.skipType(tag & 7);
           break;
@@ -3515,6 +3785,7 @@ export const ChannelMessageSend = {
       anonymous_message: isSet(object.anonymous_message) ? Boolean(object.anonymous_message) : false,
       mention_everyone: isSet(object.mention_everyone) ? Boolean(object.mention_everyone) : false,
       avatar: isSet(object.avatar) ? String(object.avatar) : "",
+      is_public: isSet(object.is_public) ? Boolean(object.is_public) : false,
     };
   },
 
@@ -3542,6 +3813,7 @@ export const ChannelMessageSend = {
     message.anonymous_message !== undefined && (obj.anonymous_message = message.anonymous_message);
     message.mention_everyone !== undefined && (obj.mention_everyone = message.mention_everyone);
     message.avatar !== undefined && (obj.avatar = message.avatar);
+    message.is_public !== undefined && (obj.is_public = message.is_public);
     return obj;
   },
 
@@ -3561,6 +3833,7 @@ export const ChannelMessageSend = {
     message.anonymous_message = object.anonymous_message ?? false;
     message.mention_everyone = object.mention_everyone ?? false;
     message.avatar = object.avatar ?? "";
+    message.is_public = object.is_public ?? false;
     return message;
   },
 };
@@ -3574,6 +3847,7 @@ function createBaseChannelMessageUpdate(): ChannelMessageUpdate {
     mentions: [],
     attachments: [],
     mode: 0,
+    is_public: false,
     hide_editted: false,
   };
 }
@@ -3601,8 +3875,11 @@ export const ChannelMessageUpdate = {
     if (message.mode !== 0) {
       writer.uint32(56).int32(message.mode);
     }
+    if (message.is_public === true) {
+      writer.uint32(64).bool(message.is_public);
+    }
     if (message.hide_editted === true) {
-      writer.uint32(64).bool(message.hide_editted);
+      writer.uint32(72).bool(message.hide_editted);
     }
     return writer;
   },
@@ -3636,6 +3913,9 @@ export const ChannelMessageUpdate = {
           message.mode = reader.int32();
           break;
         case 8:
+          message.is_public = reader.bool();
+          break;
+        case 9:
           message.hide_editted = reader.bool();
           break;
         default:
@@ -3657,6 +3937,7 @@ export const ChannelMessageUpdate = {
         ? object.attachments.map((e: any) => MessageAttachment.fromJSON(e))
         : [],
       mode: isSet(object.mode) ? Number(object.mode) : 0,
+      is_public: isSet(object.is_public) ? Boolean(object.is_public) : false,
       hide_editted: isSet(object.hide_editted) ? Boolean(object.hide_editted) : false,
     };
   },
@@ -3678,6 +3959,7 @@ export const ChannelMessageUpdate = {
       obj.attachments = [];
     }
     message.mode !== undefined && (obj.mode = Math.round(message.mode));
+    message.is_public !== undefined && (obj.is_public = message.is_public);
     message.hide_editted !== undefined && (obj.hide_editted = message.hide_editted);
     return obj;
   },
@@ -3695,13 +3977,14 @@ export const ChannelMessageUpdate = {
     message.mentions = object.mentions?.map((e) => MessageMention.fromPartial(e)) || [];
     message.attachments = object.attachments?.map((e) => MessageAttachment.fromPartial(e)) || [];
     message.mode = object.mode ?? 0;
+    message.is_public = object.is_public ?? false;
     message.hide_editted = object.hide_editted ?? false;
     return message;
   },
 };
 
 function createBaseChannelMessageRemove(): ChannelMessageRemove {
-  return { clan_id: "", channel_id: "", message_id: "", mode: 0 };
+  return { clan_id: "", channel_id: "", message_id: "", mode: 0, is_public: false };
 }
 
 export const ChannelMessageRemove = {
@@ -3717,6 +4000,9 @@ export const ChannelMessageRemove = {
     }
     if (message.mode !== 0) {
       writer.uint32(32).int32(message.mode);
+    }
+    if (message.is_public === true) {
+      writer.uint32(40).bool(message.is_public);
     }
     return writer;
   },
@@ -3740,6 +4026,9 @@ export const ChannelMessageRemove = {
         case 4:
           message.mode = reader.int32();
           break;
+        case 5:
+          message.is_public = reader.bool();
+          break;
         default:
           reader.skipType(tag & 7);
           break;
@@ -3754,6 +4043,7 @@ export const ChannelMessageRemove = {
       channel_id: isSet(object.channel_id) ? String(object.channel_id) : "",
       message_id: isSet(object.message_id) ? String(object.message_id) : "",
       mode: isSet(object.mode) ? Number(object.mode) : 0,
+      is_public: isSet(object.is_public) ? Boolean(object.is_public) : false,
     };
   },
 
@@ -3763,6 +4053,7 @@ export const ChannelMessageRemove = {
     message.channel_id !== undefined && (obj.channel_id = message.channel_id);
     message.message_id !== undefined && (obj.message_id = message.message_id);
     message.mode !== undefined && (obj.mode = Math.round(message.mode));
+    message.is_public !== undefined && (obj.is_public = message.is_public);
     return obj;
   },
 
@@ -3776,6 +4067,7 @@ export const ChannelMessageRemove = {
     message.channel_id = object.channel_id ?? "";
     message.message_id = object.message_id ?? "";
     message.mode = object.mode ?? 0;
+    message.is_public = object.is_public ?? false;
     return message;
   },
 };
@@ -4377,7 +4669,16 @@ export const StatusPresenceEvent = {
 };
 
 function createBaseLastPinMessageEvent(): LastPinMessageEvent {
-  return { clan_id: "", channel_id: "", message_id: "", mode: 0, user_id: "", timestamp_seconds: 0, operation: 0 };
+  return {
+    clan_id: "",
+    channel_id: "",
+    message_id: "",
+    mode: 0,
+    user_id: "",
+    timestamp_seconds: 0,
+    operation: 0,
+    is_public: false,
+  };
 }
 
 export const LastPinMessageEvent = {
@@ -4402,6 +4703,9 @@ export const LastPinMessageEvent = {
     }
     if (message.operation !== 0) {
       writer.uint32(56).int32(message.operation);
+    }
+    if (message.is_public === true) {
+      writer.uint32(64).bool(message.is_public);
     }
     return writer;
   },
@@ -4434,6 +4738,9 @@ export const LastPinMessageEvent = {
         case 7:
           message.operation = reader.int32();
           break;
+        case 8:
+          message.is_public = reader.bool();
+          break;
         default:
           reader.skipType(tag & 7);
           break;
@@ -4451,6 +4758,7 @@ export const LastPinMessageEvent = {
       user_id: isSet(object.user_id) ? String(object.user_id) : "",
       timestamp_seconds: isSet(object.timestamp_seconds) ? Number(object.timestamp_seconds) : 0,
       operation: isSet(object.operation) ? Number(object.operation) : 0,
+      is_public: isSet(object.is_public) ? Boolean(object.is_public) : false,
     };
   },
 
@@ -4463,6 +4771,7 @@ export const LastPinMessageEvent = {
     message.user_id !== undefined && (obj.user_id = message.user_id);
     message.timestamp_seconds !== undefined && (obj.timestamp_seconds = Math.round(message.timestamp_seconds));
     message.operation !== undefined && (obj.operation = Math.round(message.operation));
+    message.is_public !== undefined && (obj.is_public = message.is_public);
     return obj;
   },
 
@@ -4479,6 +4788,7 @@ export const LastPinMessageEvent = {
     message.user_id = object.user_id ?? "";
     message.timestamp_seconds = object.timestamp_seconds ?? 0;
     message.operation = object.operation ?? 0;
+    message.is_public = object.is_public ?? false;
     return message;
   },
 };
@@ -4564,7 +4874,7 @@ export const LastSeenMessageEvent = {
 };
 
 function createBaseMessageTypingEvent(): MessageTypingEvent {
-  return { clan_id: "", channel_id: "", sender_id: "", mode: 0 };
+  return { clan_id: "", channel_id: "", sender_id: "", mode: 0, is_public: false };
 }
 
 export const MessageTypingEvent = {
@@ -4580,6 +4890,9 @@ export const MessageTypingEvent = {
     }
     if (message.mode !== 0) {
       writer.uint32(32).int32(message.mode);
+    }
+    if (message.is_public === true) {
+      writer.uint32(40).bool(message.is_public);
     }
     return writer;
   },
@@ -4603,6 +4916,9 @@ export const MessageTypingEvent = {
         case 4:
           message.mode = reader.int32();
           break;
+        case 5:
+          message.is_public = reader.bool();
+          break;
         default:
           reader.skipType(tag & 7);
           break;
@@ -4617,6 +4933,7 @@ export const MessageTypingEvent = {
       channel_id: isSet(object.channel_id) ? String(object.channel_id) : "",
       sender_id: isSet(object.sender_id) ? String(object.sender_id) : "",
       mode: isSet(object.mode) ? Number(object.mode) : 0,
+      is_public: isSet(object.is_public) ? Boolean(object.is_public) : false,
     };
   },
 
@@ -4626,6 +4943,7 @@ export const MessageTypingEvent = {
     message.channel_id !== undefined && (obj.channel_id = message.channel_id);
     message.sender_id !== undefined && (obj.sender_id = message.sender_id);
     message.mode !== undefined && (obj.mode = Math.round(message.mode));
+    message.is_public !== undefined && (obj.is_public = message.is_public);
     return obj;
   },
 
@@ -4639,6 +4957,7 @@ export const MessageTypingEvent = {
     message.channel_id = object.channel_id ?? "";
     message.sender_id = object.sender_id ?? "";
     message.mode = object.mode ?? 0;
+    message.is_public = object.is_public ?? false;
     return message;
   },
 };
@@ -5225,6 +5544,7 @@ function createBaseChannelUpdatedEvent(): ChannelUpdatedEvent {
     channel_type: undefined,
     status: 0,
     meeting_code: "",
+    is_error: false,
   };
 }
 
@@ -5256,6 +5576,9 @@ export const ChannelUpdatedEvent = {
     }
     if (message.meeting_code !== "") {
       writer.uint32(74).string(message.meeting_code);
+    }
+    if (message.is_error === true) {
+      writer.uint32(80).bool(message.is_error);
     }
     return writer;
   },
@@ -5294,6 +5617,9 @@ export const ChannelUpdatedEvent = {
         case 9:
           message.meeting_code = reader.string();
           break;
+        case 10:
+          message.is_error = reader.bool();
+          break;
         default:
           reader.skipType(tag & 7);
           break;
@@ -5313,6 +5639,7 @@ export const ChannelUpdatedEvent = {
       channel_type: isSet(object.channel_type) ? Number(object.channel_type) : undefined,
       status: isSet(object.status) ? Number(object.status) : 0,
       meeting_code: isSet(object.meeting_code) ? String(object.meeting_code) : "",
+      is_error: isSet(object.is_error) ? Boolean(object.is_error) : false,
     };
   },
 
@@ -5327,6 +5654,7 @@ export const ChannelUpdatedEvent = {
     message.channel_type !== undefined && (obj.channel_type = message.channel_type);
     message.status !== undefined && (obj.status = Math.round(message.status));
     message.meeting_code !== undefined && (obj.meeting_code = message.meeting_code);
+    message.is_error !== undefined && (obj.is_error = message.is_error);
     return obj;
   },
 
@@ -5345,6 +5673,7 @@ export const ChannelUpdatedEvent = {
     message.channel_type = object.channel_type ?? undefined;
     message.status = object.status ?? 0;
     message.meeting_code = object.meeting_code ?? "";
+    message.is_error = object.is_error ?? false;
     return message;
   },
 };
@@ -5941,7 +6270,7 @@ export const AddUsers = {
 };
 
 function createBaseUserChannelAdded(): UserChannelAdded {
-  return { channel_id: "", users: [], status: "", clan_id: "", channel_type: 0 };
+  return { channel_id: "", users: [], status: "", clan_id: "", channel_type: 0, is_public: false };
 }
 
 export const UserChannelAdded = {
@@ -5960,6 +6289,9 @@ export const UserChannelAdded = {
     }
     if (message.channel_type !== 0) {
       writer.uint32(40).int32(message.channel_type);
+    }
+    if (message.is_public === true) {
+      writer.uint32(48).bool(message.is_public);
     }
     return writer;
   },
@@ -5986,6 +6318,9 @@ export const UserChannelAdded = {
         case 5:
           message.channel_type = reader.int32();
           break;
+        case 6:
+          message.is_public = reader.bool();
+          break;
         default:
           reader.skipType(tag & 7);
           break;
@@ -6001,6 +6336,7 @@ export const UserChannelAdded = {
       status: isSet(object.status) ? String(object.status) : "",
       clan_id: isSet(object.clan_id) ? String(object.clan_id) : "",
       channel_type: isSet(object.channel_type) ? Number(object.channel_type) : 0,
+      is_public: isSet(object.is_public) ? Boolean(object.is_public) : false,
     };
   },
 
@@ -6015,6 +6351,7 @@ export const UserChannelAdded = {
     message.status !== undefined && (obj.status = message.status);
     message.clan_id !== undefined && (obj.clan_id = message.clan_id);
     message.channel_type !== undefined && (obj.channel_type = Math.round(message.channel_type));
+    message.is_public !== undefined && (obj.is_public = message.is_public);
     return obj;
   },
 
@@ -6029,6 +6366,7 @@ export const UserChannelAdded = {
     message.status = object.status ?? "";
     message.clan_id = object.clan_id ?? "";
     message.channel_type = object.channel_type ?? 0;
+    message.is_public = object.is_public ?? false;
     return message;
   },
 };

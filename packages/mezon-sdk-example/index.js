@@ -24,38 +24,9 @@ client.authenticate().then(async (e) => {
   console.log("error authenticating.", e);
 });
 
-client.onmessagereaction = async (msg) => {
-  console.log('onmessagereaction', msg);
-}
-
-client.onchannelcreated = async (user, add) => {
-  console.log('onchannelcreated', user, add);
-}
-
-client.onuserclanremoved = async (user) => {
-  console.log("onuserclanremoved", user);
-}
-
-client.onuserchanneladded = async (user) => {
-  console.log("onuserchanneladded", user);
-}
-
-client.onchannelcreated = async (channel) => {
-  console.log("onchannelcreated", channel);
-}
-
-client.onchanneldeleted = async (channel) => {
-  console.log("onchanneldeleted", channel);
-}
-
-client.onchannelupdated = async (channel) => {
-  console.log("onchannelupdated", channel)
-}
-
-client.onuserchannelremoved = async (msg) => {
-  console.log('onuserchannelremoved', msg);
-}
-
-client.onchannelmessage = async (msg) => {
+client.on('channelmessage', async (msg) => {
   console.log("onchannelmessage", msg)
-}
+  if (msg.content.t === '*daily') {
+    await client.sendMessage(msg.clan_id, msg.channel_id, msg.mode, msg.is_public, {"t": "please add your daily text"});
+  }
+});

@@ -3760,35 +3760,6 @@ var MezonApi = class {
       )
     ]);
   }
-  /** List user roles */
-  listRoles(bearerToken, limit, state, cursor, clanId, options = {}) {
-    const urlPath = "/v2/roles";
-    const queryParams = /* @__PURE__ */ new Map();
-    queryParams.set("limit", limit);
-    queryParams.set("state", state);
-    queryParams.set("cursor", cursor);
-    queryParams.set("clan_id", clanId);
-    let bodyJson = "";
-    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
-    const fetchOptions = buildFetchOptions("GET", options, bodyJson);
-    if (bearerToken) {
-      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-    }
-    return Promise.race([
-      fetch(fullUrl, fetchOptions).then((response) => {
-        if (response.status == 204) {
-          return response;
-        } else if (response.status >= 200 && response.status < 300) {
-          return response.json();
-        } else {
-          throw response;
-        }
-      }),
-      new Promise(
-        (_, reject) => setTimeout(reject, this.timeoutMs, "Request timed out.")
-      )
-    ]);
-  }
   /** Create a new role for clan. */
   createRole(bearerToken, body, options = {}) {
     if (body === null || body === void 0) {
@@ -4848,7 +4819,7 @@ var _DefaultSocket = class _DefaultSocket {
           } catch (e2) {
           }
           var e = {
-            id: message.id,
+            id: message.id || message.channel_message.message_id,
             avatar: message.channel_message.avatar,
             channel_id: message.channel_message.channel_id,
             mode: message.channel_message.mode,
@@ -4870,7 +4841,8 @@ var _DefaultSocket = class _DefaultSocket {
             mentions,
             attachments,
             references,
-            hideEditted: message.channel_message.hide_editted
+            hideEditted: message.channel_message.hide_editted,
+            isPublic: message.channel_message.is_public
           };
           this.onchannelmessage(e);
         } else if (message.message_typing_event) {
@@ -4893,6 +4865,8 @@ var _DefaultSocket = class _DefaultSocket {
           this.onuserchannelremoved(message.user_channel_removed_event);
         } else if (message.user_clan_removed_event) {
           this.onuserclanremoved(message.user_clan_removed_event);
+        } else if (message.clan_event_created) {
+          this.oneventcreated(message.clan_event_created);
         } else {
           if (this.verbose && window && window.console) {
             console.log("Unrecognized message received: %o", message);
@@ -5080,6 +5054,11 @@ var _DefaultSocket = class _DefaultSocket {
       console.log(statusEvent);
     }
   }
+  oneventcreated(clan_event_created) {
+    if (this.verbose && window && window.console) {
+      console.log(clan_event_created);
+    }
+  }
   send(message, sendTimeout = _DefaultSocket.DefaultSendTimeoutMs) {
     const untypedMessage = message;
     return new Promise((resolve, reject) => {
@@ -5117,24 +5096,25 @@ var _DefaultSocket = class _DefaultSocket {
       return response.clan_join;
     });
   }
-  joinChat(clan_id, channel_id, channel_type) {
+  joinChat(clan_id, channel_id, channel_type, is_public) {
     return __async(this, null, function* () {
       const response = yield this.send(
         {
           channel_join: {
             clan_id,
             channel_id,
-            channel_type
+            channel_type,
+            is_public
           }
         }
       );
       return response.channel;
     });
   }
-  leaveChat(clan_id, channel_id, channel_type) {
-    return this.send({ channel_leave: { clan_id, channel_id, channel_type } });
+  leaveChat(clan_id, channel_id, channel_type, is_public) {
+    return this.send({ channel_leave: { clan_id, channel_id, channel_type, is_public } });
   }
-  removeChatMessage(clan_id, channel_id, mode, message_id) {
+  removeChatMessage(clan_id, channel_id, mode, is_public, message_id) {
     return __async(this, null, function* () {
       const response = yield this.send(
         {
@@ -5142,7 +5122,8 @@ var _DefaultSocket = class _DefaultSocket {
             clan_id,
             channel_id,
             mode,
-            message_id
+            message_id,
+            is_public
           }
         }
       );
@@ -5177,24 +5158,24 @@ var _DefaultSocket = class _DefaultSocket {
   unfollowUsers(user_ids) {
     return this.send({ status_unfollow: { user_ids } });
   }
-  updateChatMessage(clan_id, channel_id, mode, message_id, content, mentions, attachments, hideEditted) {
+  updateChatMessage(clan_id, channel_id, mode, is_public, message_id, content, mentions, attachments, hideEditted) {
     return __async(this, null, function* () {
-      const response = yield this.send({ channel_message_update: { clan_id, channel_id, message_id, content, mentions, attachments, mode, hide_editted: hideEditted } });
+      const response = yield this.send({ channel_message_update: { clan_id, channel_id, message_id, content, mentions, attachments, mode, is_public, hide_editted: hideEditted } });
       return response.channel_message_ack;
     });
   }
   updateStatus(status) {
     return this.send({ status_update: { status } });
   }
-  writeChatMessage(clan_id, channel_id, mode, content, mentions, attachments, references, anonymous_message, mention_everyone, avatar) {
+  writeChatMessage(clan_id, channel_id, mode, is_public, content, mentions, attachments, references, anonymous_message, mention_everyone, avatar) {
     return __async(this, null, function* () {
-      const response = yield this.send({ channel_message_send: { clan_id, channel_id, mode, content, mentions, attachments, references, anonymous_message, mention_everyone, avatar } });
+      const response = yield this.send({ channel_message_send: { clan_id, channel_id, mode, is_public, content, mentions, attachments, references, anonymous_message, mention_everyone, avatar } });
       return response.channel_message_ack;
     });
   }
-  writeMessageReaction(id, clan_id, channel_id, mode, message_id, emoji_id, emoji, count, message_sender_id, action_delete) {
+  writeMessageReaction(id, clan_id, channel_id, mode, is_public, message_id, emoji_id, emoji, count, message_sender_id, action_delete) {
     return __async(this, null, function* () {
-      const response = yield this.send({ message_reaction_event: { id, clan_id, channel_id, mode, message_id, emoji_id, emoji, count, message_sender_id, action: action_delete } });
+      const response = yield this.send({ message_reaction_event: { id, clan_id, channel_id, mode, is_public, message_id, emoji_id, emoji, count, message_sender_id, action: action_delete } });
       return response.message_reaction_event;
     });
   }
@@ -5210,9 +5191,9 @@ var _DefaultSocket = class _DefaultSocket {
       return response.last_seen_message_event;
     });
   }
-  writeLastPinMessage(clan_id, channel_id, mode, message_id, timestamp_seconds, operation) {
+  writeLastPinMessage(clan_id, channel_id, mode, is_public, message_id, timestamp_seconds, operation) {
     return __async(this, null, function* () {
-      const response = yield this.send({ last_pin_message_event: { clan_id, channel_id, mode, message_id, timestamp_seconds, operation } });
+      const response = yield this.send({ last_pin_message_event: { clan_id, channel_id, mode, is_public, message_id, timestamp_seconds, operation } });
       return response.last_pin_message_event;
     });
   }
@@ -5246,16 +5227,28 @@ var _DefaultSocket = class _DefaultSocket {
       return response.emojis_listed_event;
     });
   }
+  listUserPermissionInChannel(clan_id, channel_id) {
+    return __async(this, null, function* () {
+      const response = yield this.send({ user_permission_in_channel_list_event: { clan_id, channel_id } });
+      return response.user_permission_in_channel_list_event;
+    });
+  }
+  listRoles(ClanId, Limit, State, Cursor) {
+    return __async(this, null, function* () {
+      const response = yield this.send({ role_list_event: { ClanId, Limit, State, Cursor } });
+      return response.role_list_event;
+    });
+  }
   ListChannelByUserId() {
     return __async(this, null, function* () {
       const response = yield this.send({ channel_desc_list_event: {} });
       return response.channel_desc_list_event;
     });
   }
-  ListUsersByUserId() {
+  ListUserClansByUserId() {
     return __async(this, null, function* () {
-      const response = yield this.send({ list_user: {} });
-      return response.list_user;
+      const response = yield this.send({ all_user_clans: {} });
+      return response.all_user_clans;
     });
   }
   hashtagDMList(user_id, limit) {
@@ -5664,6 +5657,16 @@ var Client = class {
         yield this.sessionRefresh(session);
       }
       return this.apiClient.deleteRoleChannelDesc(session.token, request).then((response) => {
+        return response !== void 0;
+      });
+    });
+  }
+  deleteApp(session, appId) {
+    return __async(this, null, function* () {
+      if (this.autoRefreshSession && session.refresh_token && session.isexpired((Date.now() + this.expiredTimespanMs) / 1e3)) {
+        yield this.sessionRefresh(session);
+      }
+      return this.apiClient.deleteApp(session.token, appId).then((response) => {
         return response !== void 0;
       });
     });
@@ -6171,17 +6174,6 @@ var Client = class {
         }
         result.categorydesc = response.categorydesc;
         return Promise.resolve(result);
-      });
-    });
-  }
-  /** List user roles */
-  listRoles(session, limit, state, cursor, clanId) {
-    return __async(this, null, function* () {
-      if (this.autoRefreshSession && session.refresh_token && session.isexpired((Date.now() + this.expiredTimespanMs) / 1e3)) {
-        yield this.sessionRefresh(session);
-      }
-      return this.apiClient.listRoles(session.token, limit, state, cursor, clanId).then((response) => {
-        return Promise.resolve(response);
       });
     });
   }

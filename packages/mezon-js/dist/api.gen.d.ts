@@ -78,6 +78,7 @@ export interface MezonUpdateClanEmojiByIdBody {
 /**  */
 export interface MezonUpdateClanStickerByIdBody {
     category?: string;
+    clan_id?: string;
     shortname?: string;
     source?: string;
 }
@@ -205,11 +206,12 @@ export interface ApiAddRoleChannelDescRequest {
 }
 /** App information. */
 export interface ApiApp {
-    id: string;
+    about?: string;
     applogo?: string;
     appname?: string;
     creator_id?: string;
     disable_time?: string;
+    id?: string;
     is_shadow?: boolean;
     role?: number;
     token?: string;
@@ -373,7 +375,7 @@ export interface ApiClanEmojiCreateRequest {
 }
 /** Get clan profile. */
 export interface ApiClanProfile {
-    avartar?: string;
+    avatar?: string;
     clan_id?: string;
     nick_name?: string;
     user_id?: string;
@@ -608,6 +610,7 @@ export interface ApiMessageReaction {
     /** The channel this message belongs to. */
     channel_id: string;
     mode: number;
+    is_public: boolean;
     channel_label: string;
     /** The message that user react */
     message_id: string;
@@ -669,12 +672,14 @@ export interface ApiPermission {
     active?: number;
     description?: string;
     id?: string;
+    level?: number;
     scope?: number;
     slug?: string;
     title?: string;
 }
 /** A list of permission description, usually a result of a list operation. */
 export interface ApiPermissionList {
+    max_level_permission?: number;
     permissions?: Array<ApiPermission>;
 }
 /**  */
@@ -732,6 +737,7 @@ export interface ApiRole {
     description?: string;
     display_online?: number;
     id?: string;
+    max_level_permission?: number;
     permission_list?: ApiPermissionList;
     role_channel_active?: number;
     role_icon?: string;
@@ -1178,8 +1184,6 @@ export declare class MezonApi {
     changeChannelCategory(bearerToken: string, newCategoryId: string, body: MezonChangeChannelCategoryBody, options?: any): Promise<any>;
     /** Update a role when Delete a role by ID. */
     deleteRoleChannelDesc(bearerToken: string, body: ApiDeleteRoleRequest, options?: any): Promise<any>;
-    /** List user roles */
-    listRoles(bearerToken: string, limit?: number, state?: number, cursor?: string, clanId?: string, options?: any): Promise<ApiRoleList>;
     /** Create a new role for clan. */
     createRole(bearerToken: string, body: ApiCreateRoleRequest, options?: any): Promise<ApiRole>;
     /** Update a role when Delete a role by ID. */

@@ -564,6 +564,8 @@ export interface ChannelMessage {
   mode: number;
   /** hide editted */
   hide_editted: boolean;
+  /** is public */
+  is_public: boolean;
 }
 
 /** Mention to message */
@@ -640,6 +642,8 @@ export interface MessageReaction {
   mode: number;
   /** message sender id */
   message_sender_id: string;
+  /** is public */
+  is_public: boolean;
 }
 
 /** Message attachment */
@@ -1938,6 +1942,7 @@ export interface Role {
   permission_list: PermissionList | undefined;
   role_channel_active: number;
   channel_ids: string[];
+  max_level_permission: number;
 }
 
 /** Event clan */
@@ -1967,6 +1972,7 @@ export interface Permission {
   description: string;
   active: number;
   scope: number;
+  level: number;
 }
 
 /** Notification setting record */
@@ -2105,6 +2111,8 @@ export interface EventList {
 export interface PermissionList {
   /** A list of permission. */
   permissions: Permission[];
+  /** level permission max */
+  max_level_permission: number;
 }
 
 /** List (and optionally filter) permissions. */
@@ -2127,6 +2135,8 @@ export interface ListRoleUsersRequest {
 export interface ListPermissionOfUsersRequest {
   /** clan_id. */
   clan_id: string;
+  /** channel_id */
+  channel_id: string;
 }
 
 export interface RoleUserList {
@@ -2167,22 +2177,6 @@ export interface EventUserList_EventUser {
   display_name: string;
   /** A URL for an avatar image. */
   avatar_url: string;
-}
-
-/** List (and optionally filter) roles. */
-export interface ListRolesRequest {
-  /** Max number of records to return. Between 1 and 100. */
-  limit:
-    | number
-    | undefined;
-  /** The role state to list. */
-  state:
-    | number
-    | undefined;
-  /** Cursor to start from */
-  cursor: string;
-  /** The clan of this role */
-  clan_id: string;
 }
 
 export interface ListEventsRequest {
@@ -2554,6 +2548,8 @@ export interface App {
   token: string;
   /** role */
   role: number;
+  /** about */
+  about: string;
 }
 
 /** Delete a app. */
@@ -5462,6 +5458,7 @@ function createBaseChannelMessage(): ChannelMessage {
     update_time_seconds: 0,
     mode: 0,
     hide_editted: false,
+    is_public: false,
   };
 }
 
@@ -5541,6 +5538,9 @@ export const ChannelMessage = {
     }
     if (message.hide_editted === true) {
       writer.uint32(200).bool(message.hide_editted);
+    }
+    if (message.is_public === true) {
+      writer.uint32(208).bool(message.is_public);
     }
     return writer;
   },
@@ -5627,6 +5627,9 @@ export const ChannelMessage = {
         case 25:
           message.hide_editted = reader.bool();
           break;
+        case 26:
+          message.is_public = reader.bool();
+          break;
         default:
           reader.skipType(tag & 7);
           break;
@@ -5662,6 +5665,7 @@ export const ChannelMessage = {
       update_time_seconds: isSet(object.update_time_seconds) ? Number(object.update_time_seconds) : 0,
       mode: isSet(object.mode) ? Number(object.mode) : 0,
       hide_editted: isSet(object.hide_editted) ? Boolean(object.hide_editted) : false,
+      is_public: isSet(object.is_public) ? Boolean(object.is_public) : false,
     };
   },
 
@@ -5692,6 +5696,7 @@ export const ChannelMessage = {
     message.update_time_seconds !== undefined && (obj.update_time_seconds = Math.round(message.update_time_seconds));
     message.mode !== undefined && (obj.mode = Math.round(message.mode));
     message.hide_editted !== undefined && (obj.hide_editted = message.hide_editted);
+    message.is_public !== undefined && (obj.is_public = message.is_public);
     return obj;
   },
 
@@ -5726,6 +5731,7 @@ export const ChannelMessage = {
     message.update_time_seconds = object.update_time_seconds ?? 0;
     message.mode = object.mode ?? 0;
     message.hide_editted = object.hide_editted ?? false;
+    message.is_public = object.is_public ?? false;
     return message;
   },
 };
@@ -6006,6 +6012,7 @@ function createBaseMessageReaction(): MessageReaction {
     clan_id: "",
     mode: 0,
     message_sender_id: "",
+    is_public: false,
   };
 }
 
@@ -6049,6 +6056,9 @@ export const MessageReaction = {
     }
     if (message.message_sender_id !== "") {
       writer.uint32(106).string(message.message_sender_id);
+    }
+    if (message.is_public === true) {
+      writer.uint32(112).bool(message.is_public);
     }
     return writer;
   },
@@ -6099,6 +6109,9 @@ export const MessageReaction = {
         case 13:
           message.message_sender_id = reader.string();
           break;
+        case 14:
+          message.is_public = reader.bool();
+          break;
         default:
           reader.skipType(tag & 7);
           break;
@@ -6122,6 +6135,7 @@ export const MessageReaction = {
       clan_id: isSet(object.clan_id) ? String(object.clan_id) : "",
       mode: isSet(object.mode) ? Number(object.mode) : 0,
       message_sender_id: isSet(object.message_sender_id) ? String(object.message_sender_id) : "",
+      is_public: isSet(object.is_public) ? Boolean(object.is_public) : false,
     };
   },
 
@@ -6140,6 +6154,7 @@ export const MessageReaction = {
     message.clan_id !== undefined && (obj.clan_id = message.clan_id);
     message.mode !== undefined && (obj.mode = Math.round(message.mode));
     message.message_sender_id !== undefined && (obj.message_sender_id = message.message_sender_id);
+    message.is_public !== undefined && (obj.is_public = message.is_public);
     return obj;
   },
 
@@ -6162,6 +6177,7 @@ export const MessageReaction = {
     message.clan_id = object.clan_id ?? "";
     message.mode = object.mode ?? 0;
     message.message_sender_id = object.message_sender_id ?? "";
+    message.is_public = object.is_public ?? false;
     return message;
   },
 };
@@ -13421,6 +13437,7 @@ function createBaseRole(): Role {
     permission_list: undefined,
     role_channel_active: 0,
     channel_ids: [],
+    max_level_permission: 0,
   };
 }
 
@@ -13470,6 +13487,9 @@ export const Role = {
     }
     for (const v of message.channel_ids) {
       writer.uint32(122).string(v!);
+    }
+    if (message.max_level_permission !== 0) {
+      writer.uint32(128).int32(message.max_level_permission);
     }
     return writer;
   },
@@ -13526,6 +13546,9 @@ export const Role = {
         case 15:
           message.channel_ids.push(reader.string());
           break;
+        case 16:
+          message.max_level_permission = reader.int32();
+          break;
         default:
           reader.skipType(tag & 7);
           break;
@@ -13551,6 +13574,7 @@ export const Role = {
       permission_list: isSet(object.permission_list) ? PermissionList.fromJSON(object.permission_list) : undefined,
       role_channel_active: isSet(object.role_channel_active) ? Number(object.role_channel_active) : 0,
       channel_ids: Array.isArray(object?.channel_ids) ? object.channel_ids.map((e: any) => String(e)) : [],
+      max_level_permission: isSet(object.max_level_permission) ? Number(object.max_level_permission) : 0,
     };
   },
 
@@ -13577,6 +13601,7 @@ export const Role = {
     } else {
       obj.channel_ids = [];
     }
+    message.max_level_permission !== undefined && (obj.max_level_permission = Math.round(message.max_level_permission));
     return obj;
   },
 
@@ -13605,6 +13630,7 @@ export const Role = {
       : undefined;
     message.role_channel_active = object.role_channel_active ?? 0;
     message.channel_ids = object.channel_ids?.map((e) => e) || [];
+    message.max_level_permission = object.max_level_permission ?? 0;
     return message;
   },
 };
@@ -13799,7 +13825,7 @@ export const EventManagement = {
 };
 
 function createBasePermission(): Permission {
-  return { id: "", title: "", slug: "", description: "", active: 0, scope: 0 };
+  return { id: "", title: "", slug: "", description: "", active: 0, scope: 0, level: 0 };
 }
 
 export const Permission = {
@@ -13821,6 +13847,9 @@ export const Permission = {
     }
     if (message.scope !== 0) {
       writer.uint32(48).int32(message.scope);
+    }
+    if (message.level !== 0) {
+      writer.uint32(56).int32(message.level);
     }
     return writer;
   },
@@ -13850,6 +13879,9 @@ export const Permission = {
         case 6:
           message.scope = reader.int32();
           break;
+        case 7:
+          message.level = reader.int32();
+          break;
         default:
           reader.skipType(tag & 7);
           break;
@@ -13866,6 +13898,7 @@ export const Permission = {
       description: isSet(object.description) ? String(object.description) : "",
       active: isSet(object.active) ? Number(object.active) : 0,
       scope: isSet(object.scope) ? Number(object.scope) : 0,
+      level: isSet(object.level) ? Number(object.level) : 0,
     };
   },
 
@@ -13877,6 +13910,7 @@ export const Permission = {
     message.description !== undefined && (obj.description = message.description);
     message.active !== undefined && (obj.active = Math.round(message.active));
     message.scope !== undefined && (obj.scope = Math.round(message.scope));
+    message.level !== undefined && (obj.level = Math.round(message.level));
     return obj;
   },
 
@@ -13892,6 +13926,7 @@ export const Permission = {
     message.description = object.description ?? "";
     message.active = object.active ?? 0;
     message.scope = object.scope ?? 0;
+    message.level = object.level ?? 0;
     return message;
   },
 };
@@ -14957,13 +14992,16 @@ export const EventList = {
 };
 
 function createBasePermissionList(): PermissionList {
-  return { permissions: [] };
+  return { permissions: [], max_level_permission: 0 };
 }
 
 export const PermissionList = {
   encode(message: PermissionList, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     for (const v of message.permissions) {
       Permission.encode(v!, writer.uint32(10).fork()).ldelim();
+    }
+    if (message.max_level_permission !== 0) {
+      writer.uint32(16).int32(message.max_level_permission);
     }
     return writer;
   },
@@ -14978,6 +15016,9 @@ export const PermissionList = {
         case 1:
           message.permissions.push(Permission.decode(reader, reader.uint32()));
           break;
+        case 2:
+          message.max_level_permission = reader.int32();
+          break;
         default:
           reader.skipType(tag & 7);
           break;
@@ -14989,6 +15030,7 @@ export const PermissionList = {
   fromJSON(object: any): PermissionList {
     return {
       permissions: Array.isArray(object?.permissions) ? object.permissions.map((e: any) => Permission.fromJSON(e)) : [],
+      max_level_permission: isSet(object.max_level_permission) ? Number(object.max_level_permission) : 0,
     };
   },
 
@@ -14999,6 +15041,7 @@ export const PermissionList = {
     } else {
       obj.permissions = [];
     }
+    message.max_level_permission !== undefined && (obj.max_level_permission = Math.round(message.max_level_permission));
     return obj;
   },
 
@@ -15009,6 +15052,7 @@ export const PermissionList = {
   fromPartial<I extends Exact<DeepPartial<PermissionList>, I>>(object: I): PermissionList {
     const message = createBasePermissionList();
     message.permissions = object.permissions?.map((e) => Permission.fromPartial(e)) || [];
+    message.max_level_permission = object.max_level_permission ?? 0;
     return message;
   },
 };
@@ -15136,13 +15180,16 @@ export const ListRoleUsersRequest = {
 };
 
 function createBaseListPermissionOfUsersRequest(): ListPermissionOfUsersRequest {
-  return { clan_id: "" };
+  return { clan_id: "", channel_id: "" };
 }
 
 export const ListPermissionOfUsersRequest = {
   encode(message: ListPermissionOfUsersRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.clan_id !== "") {
       writer.uint32(10).string(message.clan_id);
+    }
+    if (message.channel_id !== "") {
+      writer.uint32(18).string(message.channel_id);
     }
     return writer;
   },
@@ -15157,6 +15204,9 @@ export const ListPermissionOfUsersRequest = {
         case 1:
           message.clan_id = reader.string();
           break;
+        case 2:
+          message.channel_id = reader.string();
+          break;
         default:
           reader.skipType(tag & 7);
           break;
@@ -15166,12 +15216,16 @@ export const ListPermissionOfUsersRequest = {
   },
 
   fromJSON(object: any): ListPermissionOfUsersRequest {
-    return { clan_id: isSet(object.clan_id) ? String(object.clan_id) : "" };
+    return {
+      clan_id: isSet(object.clan_id) ? String(object.clan_id) : "",
+      channel_id: isSet(object.channel_id) ? String(object.channel_id) : "",
+    };
   },
 
   toJSON(message: ListPermissionOfUsersRequest): unknown {
     const obj: any = {};
     message.clan_id !== undefined && (obj.clan_id = message.clan_id);
+    message.channel_id !== undefined && (obj.channel_id = message.channel_id);
     return obj;
   },
 
@@ -15182,6 +15236,7 @@ export const ListPermissionOfUsersRequest = {
   fromPartial<I extends Exact<DeepPartial<ListPermissionOfUsersRequest>, I>>(object: I): ListPermissionOfUsersRequest {
     const message = createBaseListPermissionOfUsersRequest();
     message.clan_id = object.clan_id ?? "";
+    message.channel_id = object.channel_id ?? "";
     return message;
   },
 };
@@ -15496,86 +15551,6 @@ export const EventUserList_EventUser = {
     message.username = object.username ?? "";
     message.display_name = object.display_name ?? "";
     message.avatar_url = object.avatar_url ?? "";
-    return message;
-  },
-};
-
-function createBaseListRolesRequest(): ListRolesRequest {
-  return { limit: undefined, state: undefined, cursor: "", clan_id: "" };
-}
-
-export const ListRolesRequest = {
-  encode(message: ListRolesRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.limit !== undefined) {
-      Int32Value.encode({ value: message.limit! }, writer.uint32(10).fork()).ldelim();
-    }
-    if (message.state !== undefined) {
-      Int32Value.encode({ value: message.state! }, writer.uint32(18).fork()).ldelim();
-    }
-    if (message.cursor !== "") {
-      writer.uint32(26).string(message.cursor);
-    }
-    if (message.clan_id !== "") {
-      writer.uint32(34).string(message.clan_id);
-    }
-    return writer;
-  },
-
-  decode(input: _m0.Reader | Uint8Array, length?: number): ListRolesRequest {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseListRolesRequest();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
-          message.limit = Int32Value.decode(reader, reader.uint32()).value;
-          break;
-        case 2:
-          message.state = Int32Value.decode(reader, reader.uint32()).value;
-          break;
-        case 3:
-          message.cursor = reader.string();
-          break;
-        case 4:
-          message.clan_id = reader.string();
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
-      }
-    }
-    return message;
-  },
-
-  fromJSON(object: any): ListRolesRequest {
-    return {
-      limit: isSet(object.limit) ? Number(object.limit) : undefined,
-      state: isSet(object.state) ? Number(object.state) : undefined,
-      cursor: isSet(object.cursor) ? String(object.cursor) : "",
-      clan_id: isSet(object.clan_id) ? String(object.clan_id) : "",
-    };
-  },
-
-  toJSON(message: ListRolesRequest): unknown {
-    const obj: any = {};
-    message.limit !== undefined && (obj.limit = message.limit);
-    message.state !== undefined && (obj.state = message.state);
-    message.cursor !== undefined && (obj.cursor = message.cursor);
-    message.clan_id !== undefined && (obj.clan_id = message.clan_id);
-    return obj;
-  },
-
-  create<I extends Exact<DeepPartial<ListRolesRequest>, I>>(base?: I): ListRolesRequest {
-    return ListRolesRequest.fromPartial(base ?? {});
-  },
-
-  fromPartial<I extends Exact<DeepPartial<ListRolesRequest>, I>>(object: I): ListRolesRequest {
-    const message = createBaseListRolesRequest();
-    message.limit = object.limit ?? undefined;
-    message.state = object.state ?? undefined;
-    message.cursor = object.cursor ?? "";
-    message.clan_id = object.clan_id ?? "";
     return message;
   },
 };
@@ -18816,6 +18791,7 @@ function createBaseApp(): App {
     disable_time: undefined,
     token: "",
     role: 0,
+    about: "",
   };
 }
 
@@ -18844,6 +18820,9 @@ export const App = {
     }
     if (message.role !== 0) {
       writer.uint32(64).int32(message.role);
+    }
+    if (message.about !== "") {
+      writer.uint32(74).string(message.about);
     }
     return writer;
   },
@@ -18879,6 +18858,9 @@ export const App = {
         case 8:
           message.role = reader.int32();
           break;
+        case 9:
+          message.about = reader.string();
+          break;
         default:
           reader.skipType(tag & 7);
           break;
@@ -18897,6 +18879,7 @@ export const App = {
       disable_time: isSet(object.disable_time) ? fromJsonTimestamp(object.disable_time) : undefined,
       token: isSet(object.token) ? String(object.token) : "",
       role: isSet(object.role) ? Number(object.role) : 0,
+      about: isSet(object.about) ? String(object.about) : "",
     };
   },
 
@@ -18910,6 +18893,7 @@ export const App = {
     message.disable_time !== undefined && (obj.disable_time = message.disable_time.toISOString());
     message.token !== undefined && (obj.token = message.token);
     message.role !== undefined && (obj.role = Math.round(message.role));
+    message.about !== undefined && (obj.about = message.about);
     return obj;
   },
 
@@ -18927,6 +18911,7 @@ export const App = {
     message.disable_time = object.disable_time ?? undefined;
     message.token = object.token ?? "";
     message.role = object.role ?? 0;
+    message.about = object.about ?? "";
     return message;
   },
 };
