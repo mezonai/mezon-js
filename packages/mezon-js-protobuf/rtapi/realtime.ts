@@ -246,10 +246,6 @@ export interface Envelope {
   clan_event_created?:
     | CreateEventRequest
     | undefined;
-  /** notification time for event */
-  event_status_notification_event?:
-    | EventStatusNotificationEvent
-    | undefined;
   /**  */
   user_permission_in_channel_list_event?:
     | UserPermissionInChannelListEvent
@@ -1106,13 +1102,6 @@ export interface NotificationChannelCategorySettingEvent {
   notification_channel_category_settings_list: NotificationChannelCategorySetting[];
 }
 
-export interface EventStatusNotificationEvent {
-  clan_id: string;
-  event_id: string;
-  event_status: string;
-  message: string;
-}
-
 function createBaseEnvelope(): Envelope {
   return {
     cid: "",
@@ -1170,7 +1159,6 @@ function createBaseEnvelope(): Envelope {
     add_clan_user_event: undefined,
     all_user_clans: undefined,
     clan_event_created: undefined,
-    event_status_notification_event: undefined,
     user_permission_in_channel_list_event: undefined,
     role_list_event: undefined,
   };
@@ -1348,9 +1336,6 @@ export const Envelope = {
     }
     if (message.clan_event_created !== undefined) {
       CreateEventRequest.encode(message.clan_event_created, writer.uint32(442).fork()).ldelim();
-    }
-    if (message.event_status_notification_event !== undefined) {
-      EventStatusNotificationEvent.encode(message.event_status_notification_event, writer.uint32(450).fork()).ldelim();
     }
     if (message.user_permission_in_channel_list_event !== undefined) {
       UserPermissionInChannelListEvent.encode(message.user_permission_in_channel_list_event, writer.uint32(458).fork())
@@ -1761,21 +1746,27 @@ export const Envelope = {
           message.clan_event_created = CreateEventRequest.decode(reader, reader.uint32());
           break;
         case 56:
-          message.event_status_notification_event = EventStatusNotificationEvent.decode(reader, reader.uint32());
-          break;
-        case 57:
+          if (tag !== 450) {
+            break;
+          }
+
           message.user_permission_in_channel_list_event = UserPermissionInChannelListEvent.decode(
             reader,
             reader.uint32(),
           );
-          break;
-        case 58:
+          continue;
+        case 57:
+          if (tag !== 458) {
+            break;
+          }
+
           message.role_list_event = RoleListEvent.decode(reader, reader.uint32());
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
@@ -1913,9 +1904,6 @@ export const Envelope = {
       clan_event_created: isSet(object.clan_event_created)
         ? CreateEventRequest.fromJSON(object.clan_event_created)
         : undefined,
-      event_status_notification_event: isSet(object.event_status_notification_event)
-        ? EventStatusNotificationEvent.fromJSON(object.event_status_notification_event)
-        : undefined,
       user_permission_in_channel_list_event: isSet(object.user_permission_in_channel_list_event)
         ? UserPermissionInChannelListEvent.fromJSON(object.user_permission_in_channel_list_event)
         : undefined,
@@ -1925,167 +1913,189 @@ export const Envelope = {
 
   toJSON(message: Envelope): unknown {
     const obj: any = {};
-    message.cid !== undefined && (obj.cid = message.cid);
-    message.channel !== undefined && (obj.channel = message.channel ? Channel.toJSON(message.channel) : undefined);
-    message.clan_join !== undefined &&
-      (obj.clan_join = message.clan_join ? ClanJoin.toJSON(message.clan_join) : undefined);
-    message.channel_join !== undefined &&
-      (obj.channel_join = message.channel_join ? ChannelJoin.toJSON(message.channel_join) : undefined);
-    message.channel_leave !== undefined &&
-      (obj.channel_leave = message.channel_leave ? ChannelLeave.toJSON(message.channel_leave) : undefined);
-    message.channel_message !== undefined &&
-      (obj.channel_message = message.channel_message ? ChannelMessage.toJSON(message.channel_message) : undefined);
-    message.channel_message_ack !== undefined && (obj.channel_message_ack = message.channel_message_ack
-      ? ChannelMessageAck.toJSON(message.channel_message_ack)
-      : undefined);
-    message.channel_message_send !== undefined && (obj.channel_message_send = message.channel_message_send
-      ? ChannelMessageSend.toJSON(message.channel_message_send)
-      : undefined);
-    message.channel_message_update !== undefined && (obj.channel_message_update = message.channel_message_update
-      ? ChannelMessageUpdate.toJSON(message.channel_message_update)
-      : undefined);
-    message.channel_message_remove !== undefined && (obj.channel_message_remove = message.channel_message_remove
-      ? ChannelMessageRemove.toJSON(message.channel_message_remove)
-      : undefined);
-    message.channel_presence_event !== undefined && (obj.channel_presence_event = message.channel_presence_event
-      ? ChannelPresenceEvent.toJSON(message.channel_presence_event)
-      : undefined);
-    message.error !== undefined && (obj.error = message.error ? Error.toJSON(message.error) : undefined);
-    message.notifications !== undefined &&
-      (obj.notifications = message.notifications ? Notifications.toJSON(message.notifications) : undefined);
-    message.rpc !== undefined && (obj.rpc = message.rpc ? Rpc.toJSON(message.rpc) : undefined);
-    message.status !== undefined && (obj.status = message.status ? Status.toJSON(message.status) : undefined);
-    message.status_follow !== undefined &&
-      (obj.status_follow = message.status_follow ? StatusFollow.toJSON(message.status_follow) : undefined);
-    message.status_presence_event !== undefined && (obj.status_presence_event = message.status_presence_event
-      ? StatusPresenceEvent.toJSON(message.status_presence_event)
-      : undefined);
-    message.status_unfollow !== undefined &&
-      (obj.status_unfollow = message.status_unfollow ? StatusUnfollow.toJSON(message.status_unfollow) : undefined);
-    message.status_update !== undefined &&
-      (obj.status_update = message.status_update ? StatusUpdate.toJSON(message.status_update) : undefined);
-    message.stream_data !== undefined &&
-      (obj.stream_data = message.stream_data ? StreamData.toJSON(message.stream_data) : undefined);
-    message.stream_presence_event !== undefined && (obj.stream_presence_event = message.stream_presence_event
-      ? StreamPresenceEvent.toJSON(message.stream_presence_event)
-      : undefined);
-    message.ping !== undefined && (obj.ping = message.ping ? Ping.toJSON(message.ping) : undefined);
-    message.pong !== undefined && (obj.pong = message.pong ? Pong.toJSON(message.pong) : undefined);
-    message.message_typing_event !== undefined && (obj.message_typing_event = message.message_typing_event
-      ? MessageTypingEvent.toJSON(message.message_typing_event)
-      : undefined);
-    message.last_seen_message_event !== undefined && (obj.last_seen_message_event = message.last_seen_message_event
-      ? LastSeenMessageEvent.toJSON(message.last_seen_message_event)
-      : undefined);
-    message.message_reaction_event !== undefined && (obj.message_reaction_event = message.message_reaction_event
-      ? MessageReaction.toJSON(message.message_reaction_event)
-      : undefined);
-    message.voice_joined_event !== undefined && (obj.voice_joined_event = message.voice_joined_event
-      ? VoiceJoinedEvent.toJSON(message.voice_joined_event)
-      : undefined);
-    message.voice_leaved_event !== undefined && (obj.voice_leaved_event = message.voice_leaved_event
-      ? VoiceLeavedEvent.toJSON(message.voice_leaved_event)
-      : undefined);
-    message.voice_started_event !== undefined && (obj.voice_started_event = message.voice_started_event
-      ? VoiceStartedEvent.toJSON(message.voice_started_event)
-      : undefined);
-    message.voice_ended_event !== undefined &&
-      (obj.voice_ended_event = message.voice_ended_event
-        ? VoiceEndedEvent.toJSON(message.voice_ended_event)
-        : undefined);
-    message.channel_created_event !== undefined && (obj.channel_created_event = message.channel_created_event
-      ? ChannelCreatedEvent.toJSON(message.channel_created_event)
-      : undefined);
-    message.channel_deleted_event !== undefined && (obj.channel_deleted_event = message.channel_deleted_event
-      ? ChannelDeletedEvent.toJSON(message.channel_deleted_event)
-      : undefined);
-    message.channel_updated_event !== undefined && (obj.channel_updated_event = message.channel_updated_event
-      ? ChannelUpdatedEvent.toJSON(message.channel_updated_event)
-      : undefined);
-    message.last_pin_message_event !== undefined && (obj.last_pin_message_event = message.last_pin_message_event
-      ? LastPinMessageEvent.toJSON(message.last_pin_message_event)
-      : undefined);
-    message.custom_status_event !== undefined && (obj.custom_status_event = message.custom_status_event
-      ? CustomStatusEvent.toJSON(message.custom_status_event)
-      : undefined);
-    message.user_channel_added_event !== undefined && (obj.user_channel_added_event = message.user_channel_added_event
-      ? UserChannelAdded.toJSON(message.user_channel_added_event)
-      : undefined);
-    message.user_channel_removed_event !== undefined &&
-      (obj.user_channel_removed_event = message.user_channel_removed_event
-        ? UserChannelRemoved.toJSON(message.user_channel_removed_event)
-        : undefined);
-    message.user_clan_removed_event !== undefined && (obj.user_clan_removed_event = message.user_clan_removed_event
-      ? UserClanRemoved.toJSON(message.user_clan_removed_event)
-      : undefined);
-    message.clan_updated_event !== undefined && (obj.clan_updated_event = message.clan_updated_event
-      ? ClanUpdatedEvent.toJSON(message.clan_updated_event)
-      : undefined);
-    message.clan_profile_updated_event !== undefined &&
-      (obj.clan_profile_updated_event = message.clan_profile_updated_event
-        ? ClanProfileUpdatedEvent.toJSON(message.clan_profile_updated_event)
-        : undefined);
-    message.clan_name_existed_event !== undefined && (obj.clan_name_existed_event = message.clan_name_existed_event
-      ? ClanNameExistedEvent.toJSON(message.clan_name_existed_event)
-      : undefined);
-    message.user_profile_updated_event !== undefined &&
-      (obj.user_profile_updated_event = message.user_profile_updated_event
-        ? UserProfileUpdatedEvent.toJSON(message.user_profile_updated_event)
-        : undefined);
-    message.emojis_listed_event !== undefined && (obj.emojis_listed_event = message.emojis_listed_event
-      ? EmojiListedEvent.toJSON(message.emojis_listed_event)
-      : undefined);
-    message.sticker_listed_event !== undefined && (obj.sticker_listed_event = message.sticker_listed_event
-      ? StrickerListedEvent.toJSON(message.sticker_listed_event)
-      : undefined);
-    message.channel_desc_list_event !== undefined && (obj.channel_desc_list_event = message.channel_desc_list_event
-      ? ChannelDescListEvent.toJSON(message.channel_desc_list_event)
-      : undefined);
-    message.hashtag_dm_list_event !== undefined && (obj.hashtag_dm_list_event = message.hashtag_dm_list_event
-      ? HashtagDmListEvent.toJSON(message.hashtag_dm_list_event)
-      : undefined);
-    message.notification_channel_setting_event !== undefined &&
-      (obj.notification_channel_setting_event = message.notification_channel_setting_event
-        ? NotificationChannelSettingEvent.toJSON(message.notification_channel_setting_event)
-        : undefined);
-    message.notification_category_setting_event !== undefined &&
-      (obj.notification_category_setting_event = message.notification_category_setting_event
-        ? NotificationCategorySettingEvent.toJSON(message.notification_category_setting_event)
-        : undefined);
-    message.notification_clan_setting_event !== undefined &&
-      (obj.notification_clan_setting_event = message.notification_clan_setting_event
-        ? NotificationClanSettingEvent.toJSON(message.notification_clan_setting_event)
-        : undefined);
-    message.notifi_react_message_event !== undefined &&
-      (obj.notifi_react_message_event = message.notifi_react_message_event
-        ? NotifiReactMessageEvent.toJSON(message.notifi_react_message_event)
-        : undefined);
-    message.permission_role_channel_list_event !== undefined &&
-      (obj.permission_role_channel_list_event = message.permission_role_channel_list_event
-        ? PermissionRoleChannelListEvent.toJSON(message.permission_role_channel_list_event)
-        : undefined);
-    message.notification_channel_category_setting_event !== undefined &&
-      (obj.notification_channel_category_setting_event = message.notification_channel_category_setting_event
-        ? NotificationChannelCategorySettingEvent.toJSON(message.notification_channel_category_setting_event)
-        : undefined);
-    message.add_clan_user_event !== undefined && (obj.add_clan_user_event = message.add_clan_user_event
-      ? AddClanUserEvent.toJSON(message.add_clan_user_event)
-      : undefined);
-    message.all_user_clans !== undefined &&
-      (obj.all_user_clans = message.all_user_clans ? AllUserClans.toJSON(message.all_user_clans) : undefined);
-    message.clan_event_created !== undefined && (obj.clan_event_created = message.clan_event_created
-      ? CreateEventRequest.toJSON(message.clan_event_created)
-      : undefined);
-    message.event_status_notification_event !== undefined &&
-      (obj.event_status_notification_event = message.event_status_notification_event
-        ? EventStatusNotificationEvent.toJSON(message.event_status_notification_event)
-        : undefined);
-    message.user_permission_in_channel_list_event !== undefined &&
-      (obj.user_permission_in_channel_list_event = message.user_permission_in_channel_list_event
-        ? UserPermissionInChannelListEvent.toJSON(message.user_permission_in_channel_list_event)
-        : undefined);
-    message.role_list_event !== undefined &&
-      (obj.role_list_event = message.role_list_event ? RoleListEvent.toJSON(message.role_list_event) : undefined);
+    if (message.cid !== "") {
+      obj.cid = message.cid;
+    }
+    if (message.channel !== undefined) {
+      obj.channel = Channel.toJSON(message.channel);
+    }
+    if (message.clan_join !== undefined) {
+      obj.clan_join = ClanJoin.toJSON(message.clan_join);
+    }
+    if (message.channel_join !== undefined) {
+      obj.channel_join = ChannelJoin.toJSON(message.channel_join);
+    }
+    if (message.channel_leave !== undefined) {
+      obj.channel_leave = ChannelLeave.toJSON(message.channel_leave);
+    }
+    if (message.channel_message !== undefined) {
+      obj.channel_message = ChannelMessage.toJSON(message.channel_message);
+    }
+    if (message.channel_message_ack !== undefined) {
+      obj.channel_message_ack = ChannelMessageAck.toJSON(message.channel_message_ack);
+    }
+    if (message.channel_message_send !== undefined) {
+      obj.channel_message_send = ChannelMessageSend.toJSON(message.channel_message_send);
+    }
+    if (message.channel_message_update !== undefined) {
+      obj.channel_message_update = ChannelMessageUpdate.toJSON(message.channel_message_update);
+    }
+    if (message.channel_message_remove !== undefined) {
+      obj.channel_message_remove = ChannelMessageRemove.toJSON(message.channel_message_remove);
+    }
+    if (message.channel_presence_event !== undefined) {
+      obj.channel_presence_event = ChannelPresenceEvent.toJSON(message.channel_presence_event);
+    }
+    if (message.error !== undefined) {
+      obj.error = Error.toJSON(message.error);
+    }
+    if (message.notifications !== undefined) {
+      obj.notifications = Notifications.toJSON(message.notifications);
+    }
+    if (message.rpc !== undefined) {
+      obj.rpc = Rpc.toJSON(message.rpc);
+    }
+    if (message.status !== undefined) {
+      obj.status = Status.toJSON(message.status);
+    }
+    if (message.status_follow !== undefined) {
+      obj.status_follow = StatusFollow.toJSON(message.status_follow);
+    }
+    if (message.status_presence_event !== undefined) {
+      obj.status_presence_event = StatusPresenceEvent.toJSON(message.status_presence_event);
+    }
+    if (message.status_unfollow !== undefined) {
+      obj.status_unfollow = StatusUnfollow.toJSON(message.status_unfollow);
+    }
+    if (message.status_update !== undefined) {
+      obj.status_update = StatusUpdate.toJSON(message.status_update);
+    }
+    if (message.stream_data !== undefined) {
+      obj.stream_data = StreamData.toJSON(message.stream_data);
+    }
+    if (message.stream_presence_event !== undefined) {
+      obj.stream_presence_event = StreamPresenceEvent.toJSON(message.stream_presence_event);
+    }
+    if (message.ping !== undefined) {
+      obj.ping = Ping.toJSON(message.ping);
+    }
+    if (message.pong !== undefined) {
+      obj.pong = Pong.toJSON(message.pong);
+    }
+    if (message.message_typing_event !== undefined) {
+      obj.message_typing_event = MessageTypingEvent.toJSON(message.message_typing_event);
+    }
+    if (message.last_seen_message_event !== undefined) {
+      obj.last_seen_message_event = LastSeenMessageEvent.toJSON(message.last_seen_message_event);
+    }
+    if (message.message_reaction_event !== undefined) {
+      obj.message_reaction_event = MessageReaction.toJSON(message.message_reaction_event);
+    }
+    if (message.voice_joined_event !== undefined) {
+      obj.voice_joined_event = VoiceJoinedEvent.toJSON(message.voice_joined_event);
+    }
+    if (message.voice_leaved_event !== undefined) {
+      obj.voice_leaved_event = VoiceLeavedEvent.toJSON(message.voice_leaved_event);
+    }
+    if (message.voice_started_event !== undefined) {
+      obj.voice_started_event = VoiceStartedEvent.toJSON(message.voice_started_event);
+    }
+    if (message.voice_ended_event !== undefined) {
+      obj.voice_ended_event = VoiceEndedEvent.toJSON(message.voice_ended_event);
+    }
+    if (message.channel_created_event !== undefined) {
+      obj.channel_created_event = ChannelCreatedEvent.toJSON(message.channel_created_event);
+    }
+    if (message.channel_deleted_event !== undefined) {
+      obj.channel_deleted_event = ChannelDeletedEvent.toJSON(message.channel_deleted_event);
+    }
+    if (message.channel_updated_event !== undefined) {
+      obj.channel_updated_event = ChannelUpdatedEvent.toJSON(message.channel_updated_event);
+    }
+    if (message.last_pin_message_event !== undefined) {
+      obj.last_pin_message_event = LastPinMessageEvent.toJSON(message.last_pin_message_event);
+    }
+    if (message.custom_status_event !== undefined) {
+      obj.custom_status_event = CustomStatusEvent.toJSON(message.custom_status_event);
+    }
+    if (message.user_channel_added_event !== undefined) {
+      obj.user_channel_added_event = UserChannelAdded.toJSON(message.user_channel_added_event);
+    }
+    if (message.user_channel_removed_event !== undefined) {
+      obj.user_channel_removed_event = UserChannelRemoved.toJSON(message.user_channel_removed_event);
+    }
+    if (message.user_clan_removed_event !== undefined) {
+      obj.user_clan_removed_event = UserClanRemoved.toJSON(message.user_clan_removed_event);
+    }
+    if (message.clan_updated_event !== undefined) {
+      obj.clan_updated_event = ClanUpdatedEvent.toJSON(message.clan_updated_event);
+    }
+    if (message.clan_profile_updated_event !== undefined) {
+      obj.clan_profile_updated_event = ClanProfileUpdatedEvent.toJSON(message.clan_profile_updated_event);
+    }
+    if (message.clan_name_existed_event !== undefined) {
+      obj.clan_name_existed_event = ClanNameExistedEvent.toJSON(message.clan_name_existed_event);
+    }
+    if (message.user_profile_updated_event !== undefined) {
+      obj.user_profile_updated_event = UserProfileUpdatedEvent.toJSON(message.user_profile_updated_event);
+    }
+    if (message.emojis_listed_event !== undefined) {
+      obj.emojis_listed_event = EmojiListedEvent.toJSON(message.emojis_listed_event);
+    }
+    if (message.sticker_listed_event !== undefined) {
+      obj.sticker_listed_event = StrickerListedEvent.toJSON(message.sticker_listed_event);
+    }
+    if (message.channel_desc_list_event !== undefined) {
+      obj.channel_desc_list_event = ChannelDescListEvent.toJSON(message.channel_desc_list_event);
+    }
+    if (message.hashtag_dm_list_event !== undefined) {
+      obj.hashtag_dm_list_event = HashtagDmListEvent.toJSON(message.hashtag_dm_list_event);
+    }
+    if (message.notification_channel_setting_event !== undefined) {
+      obj.notification_channel_setting_event = NotificationChannelSettingEvent.toJSON(
+        message.notification_channel_setting_event,
+      );
+    }
+    if (message.notification_category_setting_event !== undefined) {
+      obj.notification_category_setting_event = NotificationCategorySettingEvent.toJSON(
+        message.notification_category_setting_event,
+      );
+    }
+    if (message.notification_clan_setting_event !== undefined) {
+      obj.notification_clan_setting_event = NotificationClanSettingEvent.toJSON(
+        message.notification_clan_setting_event,
+      );
+    }
+    if (message.notifi_react_message_event !== undefined) {
+      obj.notifi_react_message_event = NotifiReactMessageEvent.toJSON(message.notifi_react_message_event);
+    }
+    if (message.permission_role_channel_list_event !== undefined) {
+      obj.permission_role_channel_list_event = PermissionRoleChannelListEvent.toJSON(
+        message.permission_role_channel_list_event,
+      );
+    }
+    if (message.notification_channel_category_setting_event !== undefined) {
+      obj.notification_channel_category_setting_event = NotificationChannelCategorySettingEvent.toJSON(
+        message.notification_channel_category_setting_event,
+      );
+    }
+    if (message.add_clan_user_event !== undefined) {
+      obj.add_clan_user_event = AddClanUserEvent.toJSON(message.add_clan_user_event);
+    }
+    if (message.all_user_clans !== undefined) {
+      obj.all_user_clans = AllUserClans.toJSON(message.all_user_clans);
+    }
+    if (message.clan_event_created !== undefined) {
+      obj.clan_event_created = CreateEventRequest.toJSON(message.clan_event_created);
+    }
+    if (message.user_permission_in_channel_list_event !== undefined) {
+      obj.user_permission_in_channel_list_event = UserPermissionInChannelListEvent.toJSON(
+        message.user_permission_in_channel_list_event,
+      );
+    }
+    if (message.role_list_event !== undefined) {
+      obj.role_list_event = RoleListEvent.toJSON(message.role_list_event);
+    }
     return obj;
   },
 
@@ -2275,10 +2285,6 @@ export const Envelope = {
     message.clan_event_created = (object.clan_event_created !== undefined && object.clan_event_created !== null)
       ? CreateEventRequest.fromPartial(object.clan_event_created)
       : undefined;
-    message.event_status_notification_event =
-      (object.event_status_notification_event !== undefined && object.event_status_notification_event !== null)
-        ? EventStatusNotificationEvent.fromPartial(object.event_status_notification_event)
-        : undefined;
     message.user_permission_in_channel_list_event =
       (object.user_permission_in_channel_list_event !== undefined &&
           object.user_permission_in_channel_list_event !== null)
@@ -9133,86 +9139,6 @@ export const NotificationChannelCategorySettingEvent = {
       object.notification_channel_category_settings_list?.map((e) =>
         NotificationChannelCategorySetting.fromPartial(e)
       ) || [];
-    return message;
-  },
-};
-
-function createBaseEventStatusNotificationEvent(): EventStatusNotificationEvent {
-  return { clan_id: "", event_id: "", event_status: "", message: "" };
-}
-
-export const EventStatusNotificationEvent = {
-  encode(message: EventStatusNotificationEvent, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.clan_id !== "") {
-      writer.uint32(10).string(message.clan_id);
-    }
-    if (message.event_id !== "") {
-      writer.uint32(18).string(message.event_id);
-    }
-    if (message.event_status !== "") {
-      writer.uint32(26).string(message.event_status);
-    }
-    if (message.message !== "") {
-      writer.uint32(34).string(message.message);
-    }
-    return writer;
-  },
-
-  decode(input: _m0.Reader | Uint8Array, length?: number): EventStatusNotificationEvent {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseEventStatusNotificationEvent();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
-          message.clan_id = reader.string();
-          break;
-        case 2:
-          message.event_id = reader.string();
-          break;
-        case 3:
-          message.event_status = reader.string();
-          break;
-        case 4:
-          message.message = reader.string();
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
-      }
-    }
-    return message;
-  },
-
-  fromJSON(object: any): EventStatusNotificationEvent {
-    return {
-      clan_id: isSet(object.clan_id) ? String(object.clan_id) : "",
-      event_id: isSet(object.event_id) ? String(object.event_id) : "",
-      event_status: isSet(object.event_status) ? String(object.event_status) : "",
-      message: isSet(object.message) ? String(object.message) : "",
-    };
-  },
-
-  toJSON(message: EventStatusNotificationEvent): unknown {
-    const obj: any = {};
-    message.clan_id !== undefined && (obj.clan_id = message.clan_id);
-    message.event_id !== undefined && (obj.event_id = message.event_id);
-    message.event_status !== undefined && (obj.event_status = message.event_status);
-    message.message !== undefined && (obj.message = message.message);
-    return obj;
-  },
-
-  create<I extends Exact<DeepPartial<EventStatusNotificationEvent>, I>>(base?: I): EventStatusNotificationEvent {
-    return EventStatusNotificationEvent.fromPartial(base ?? {});
-  },
-
-  fromPartial<I extends Exact<DeepPartial<EventStatusNotificationEvent>, I>>(object: I): EventStatusNotificationEvent {
-    const message = createBaseEventStatusNotificationEvent();
-    message.clan_id = object.clan_id ?? "";
-    message.event_id = object.event_id ?? "";
-    message.event_status = object.event_status ?? "";
-    message.message = object.message ?? "";
     return message;
   },
 };
