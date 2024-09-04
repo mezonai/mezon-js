@@ -570,6 +570,8 @@ export interface ChannelMessage {
   mode: number;
   /** hide editted */
   hide_editted: boolean;
+  /** is public */
+  is_public: boolean;
 }
 
 /** Mention to message */
@@ -646,6 +648,8 @@ export interface MessageReaction {
   mode: number;
   /** message sender id */
   message_sender_id: string;
+  /** is public */
+  is_public: boolean;
 }
 
 /** Message attachment */
@@ -1944,6 +1948,7 @@ export interface Role {
   permission_list: PermissionList | undefined;
   role_channel_active: number;
   channel_ids: string[];
+  max_level_permission: number;
 }
 
 /** Event clan */
@@ -1973,6 +1978,7 @@ export interface Permission {
   description: string;
   active: number;
   scope: number;
+  level: number;
 }
 
 /** Notification setting record */
@@ -2111,6 +2117,8 @@ export interface EventList {
 export interface PermissionList {
   /** A list of permission. */
   permissions: Permission[];
+  /** level permission max */
+  max_level_permission: number;
 }
 
 /** List (and optionally filter) permissions. */
@@ -2133,6 +2141,8 @@ export interface ListRoleUsersRequest {
 export interface ListPermissionOfUsersRequest {
   /** clan_id. */
   clan_id: string;
+  /** channel_id */
+  channel_id: string;
 }
 
 export interface RoleUserList {
@@ -2173,22 +2183,6 @@ export interface EventUserList_EventUser {
   display_name: string;
   /** A URL for an avatar image. */
   avatar_url: string;
-}
-
-/** List (and optionally filter) roles. */
-export interface ListRolesRequest {
-  /** Max number of records to return. Between 1 and 100. */
-  limit:
-    | number
-    | undefined;
-  /** The role state to list. */
-  state:
-    | number
-    | undefined;
-  /** Cursor to start from */
-  cursor: string;
-  /** The clan of this role */
-  clan_id: string;
 }
 
 export interface ListEventsRequest {
@@ -2562,6 +2556,8 @@ export interface App {
   token: string;
   /** role */
   role: number;
+  /** about */
+  about: string;
 }
 
 /** Delete a app. */
@@ -6062,6 +6058,7 @@ function createBaseChannelMessage(): ChannelMessage {
     update_time_seconds: 0,
     mode: 0,
     hide_editted: false,
+    is_public: false,
   };
 }
 
@@ -6141,6 +6138,9 @@ export const ChannelMessage = {
     }
     if (message.hide_editted !== false) {
       writer.uint32(200).bool(message.hide_editted);
+    }
+    if (message.is_public === true) {
+      writer.uint32(208).bool(message.is_public);
     }
     return writer;
   },
@@ -6326,12 +6326,14 @@ export const ChannelMessage = {
           }
 
           message.hide_editted = reader.bool();
-          continue;
+          break;
+        case 26:
+          message.is_public = reader.bool();
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
       }
-      if ((tag & 7) === 4 || tag === 0) {
-        break;
-      }
-      reader.skipType(tag & 7);
     }
     return message;
   },
@@ -6348,101 +6350,53 @@ export const ChannelMessage = {
       content: isSet(object.content) ? globalThis.String(object.content) : "",
       create_time: isSet(object.create_time) ? fromJsonTimestamp(object.create_time) : undefined,
       update_time: isSet(object.update_time) ? fromJsonTimestamp(object.update_time) : undefined,
-      channel_label: isSet(object.channel_label) ? globalThis.String(object.channel_label) : "",
-      clan_logo: isSet(object.clan_logo) ? globalThis.String(object.clan_logo) : "",
-      category_name: isSet(object.category_name) ? globalThis.String(object.category_name) : "",
-      display_name: isSet(object.display_name) ? globalThis.String(object.display_name) : "",
-      clan_nick: isSet(object.clan_nick) ? globalThis.String(object.clan_nick) : "",
-      clan_avatar: isSet(object.clan_avatar) ? globalThis.String(object.clan_avatar) : "",
-      reactions: isSet(object.reactions) ? globalThis.String(object.reactions) : "",
-      mentions: isSet(object.mentions) ? globalThis.String(object.mentions) : "",
-      attachments: isSet(object.attachments) ? globalThis.String(object.attachments) : "",
-      references: isSet(object.references) ? globalThis.String(object.references) : "",
-      referenced_message: isSet(object.referenced_message) ? globalThis.String(object.referenced_message) : "",
-      create_time_seconds: isSet(object.create_time_seconds) ? globalThis.Number(object.create_time_seconds) : 0,
-      update_time_seconds: isSet(object.update_time_seconds) ? globalThis.Number(object.update_time_seconds) : 0,
-      mode: isSet(object.mode) ? globalThis.Number(object.mode) : 0,
-      hide_editted: isSet(object.hide_editted) ? globalThis.Boolean(object.hide_editted) : false,
+      channel_label: isSet(object.channel_label) ? String(object.channel_label) : "",
+      clan_logo: isSet(object.clan_logo) ? String(object.clan_logo) : "",
+      category_name: isSet(object.category_name) ? String(object.category_name) : "",
+      display_name: isSet(object.display_name) ? String(object.display_name) : "",
+      clan_nick: isSet(object.clan_nick) ? String(object.clan_nick) : "",
+      clan_avatar: isSet(object.clan_avatar) ? String(object.clan_avatar) : "",
+      reactions: isSet(object.reactions) ? String(object.reactions) : "",
+      mentions: isSet(object.mentions) ? String(object.mentions) : "",
+      attachments: isSet(object.attachments) ? String(object.attachments) : "",
+      references: isSet(object.references) ? String(object.references) : "",
+      referenced_message: isSet(object.referenced_message) ? String(object.referenced_message) : "",
+      create_time_seconds: isSet(object.create_time_seconds) ? Number(object.create_time_seconds) : 0,
+      update_time_seconds: isSet(object.update_time_seconds) ? Number(object.update_time_seconds) : 0,
+      mode: isSet(object.mode) ? Number(object.mode) : 0,
+      hide_editted: isSet(object.hide_editted) ? Boolean(object.hide_editted) : false,
+      is_public: isSet(object.is_public) ? Boolean(object.is_public) : false,
     };
   },
 
   toJSON(message: ChannelMessage): unknown {
     const obj: any = {};
-    if (message.clan_id !== "") {
-      obj.clan_id = message.clan_id;
-    }
-    if (message.channel_id !== "") {
-      obj.channel_id = message.channel_id;
-    }
-    if (message.message_id !== "") {
-      obj.message_id = message.message_id;
-    }
-    if (message.code !== undefined) {
-      obj.code = message.code;
-    }
-    if (message.sender_id !== "") {
-      obj.sender_id = message.sender_id;
-    }
-    if (message.username !== "") {
-      obj.username = message.username;
-    }
-    if (message.avatar !== "") {
-      obj.avatar = message.avatar;
-    }
-    if (message.content !== "") {
-      obj.content = message.content;
-    }
-    if (message.create_time !== undefined) {
-      obj.create_time = message.create_time.toISOString();
-    }
-    if (message.update_time !== undefined) {
-      obj.update_time = message.update_time.toISOString();
-    }
-    if (message.channel_label !== "") {
-      obj.channel_label = message.channel_label;
-    }
-    if (message.clan_logo !== "") {
-      obj.clan_logo = message.clan_logo;
-    }
-    if (message.category_name !== "") {
-      obj.category_name = message.category_name;
-    }
-    if (message.display_name !== "") {
-      obj.display_name = message.display_name;
-    }
-    if (message.clan_nick !== "") {
-      obj.clan_nick = message.clan_nick;
-    }
-    if (message.clan_avatar !== "") {
-      obj.clan_avatar = message.clan_avatar;
-    }
-    if (message.reactions !== "") {
-      obj.reactions = message.reactions;
-    }
-    if (message.mentions !== "") {
-      obj.mentions = message.mentions;
-    }
-    if (message.attachments !== "") {
-      obj.attachments = message.attachments;
-    }
-    if (message.references !== "") {
-      obj.references = message.references;
-    }
-    if (message.referenced_message !== "") {
-      obj.referenced_message = message.referenced_message;
-    }
-    if (message.create_time_seconds !== 0) {
-      obj.create_time_seconds = Math.round(message.create_time_seconds);
-    }
-    if (message.update_time_seconds !== 0) {
-      obj.update_time_seconds = Math.round(message.update_time_seconds);
-    }
-    if (message.mode !== 0) {
-      obj.mode = Math.round(message.mode);
-    }
-    if (message.hide_editted !== false) {
-      obj.hide_editted = message.hide_editted;
-    }
+    message.clan_id !== undefined && (obj.clan_id = message.clan_id);
+    message.channel_id !== undefined && (obj.channel_id = message.channel_id);
+    message.message_id !== undefined && (obj.message_id = message.message_id);
+    message.code !== undefined && (obj.code = message.code);
+    message.sender_id !== undefined && (obj.sender_id = message.sender_id);
+    message.username !== undefined && (obj.username = message.username);
+    message.avatar !== undefined && (obj.avatar = message.avatar);
+    message.content !== undefined && (obj.content = message.content);
+    message.create_time !== undefined && (obj.create_time = message.create_time.toISOString());
+    message.update_time !== undefined && (obj.update_time = message.update_time.toISOString());
+    message.channel_label !== undefined && (obj.channel_label = message.channel_label);
+    message.clan_logo !== undefined && (obj.clan_logo = message.clan_logo);
+    message.category_name !== undefined && (obj.category_name = message.category_name);
+    message.display_name !== undefined && (obj.display_name = message.display_name);
+    message.clan_nick !== undefined && (obj.clan_nick = message.clan_nick);
+    message.clan_avatar !== undefined && (obj.clan_avatar = message.clan_avatar);
+    message.reactions !== undefined && (obj.reactions = message.reactions);
+    message.mentions !== undefined && (obj.mentions = message.mentions);
+    message.attachments !== undefined && (obj.attachments = message.attachments);
+    message.references !== undefined && (obj.references = message.references);
+    message.referenced_message !== undefined && (obj.referenced_message = message.referenced_message);
+    message.create_time_seconds !== undefined && (obj.create_time_seconds = Math.round(message.create_time_seconds));
+    message.update_time_seconds !== undefined && (obj.update_time_seconds = Math.round(message.update_time_seconds));
+    message.mode !== undefined && (obj.mode = Math.round(message.mode));
+    message.hide_editted !== undefined && (obj.hide_editted = message.hide_editted);
+    message.is_public !== undefined && (obj.is_public = message.is_public);
     return obj;
   },
 
@@ -6476,6 +6430,7 @@ export const ChannelMessage = {
     message.update_time_seconds = object.update_time_seconds ?? 0;
     message.mode = object.mode ?? 0;
     message.hide_editted = object.hide_editted ?? false;
+    message.is_public = object.is_public ?? false;
     return message;
   },
 };
@@ -6864,6 +6819,7 @@ function createBaseMessageReaction(): MessageReaction {
     clan_id: "",
     mode: 0,
     message_sender_id: "",
+    is_public: false,
   };
 }
 
@@ -6907,6 +6863,9 @@ export const MessageReaction = {
     }
     if (message.message_sender_id !== "") {
       writer.uint32(106).string(message.message_sender_id);
+    }
+    if (message.is_public === true) {
+      writer.uint32(112).bool(message.is_public);
     }
     return writer;
   },
@@ -7008,75 +6967,53 @@ export const MessageReaction = {
           }
 
           message.message_sender_id = reader.string();
-          continue;
+          break;
+        case 14:
+          message.is_public = reader.bool();
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
       }
-      if ((tag & 7) === 4 || tag === 0) {
-        break;
-      }
-      reader.skipType(tag & 7);
     }
     return message;
   },
 
   fromJSON(object: any): MessageReaction {
     return {
-      id: isSet(object.id) ? globalThis.String(object.id) : "",
-      emoji_id: isSet(object.emoji_id) ? globalThis.String(object.emoji_id) : "",
-      emoji: isSet(object.emoji) ? globalThis.String(object.emoji) : "",
-      sender_id: isSet(object.sender_id) ? globalThis.String(object.sender_id) : "",
-      sender_name: isSet(object.sender_name) ? globalThis.String(object.sender_name) : "",
-      sender_avatar: isSet(object.sender_avatar) ? globalThis.String(object.sender_avatar) : "",
-      action: isSet(object.action) ? globalThis.Boolean(object.action) : false,
-      count: isSet(object.count) ? globalThis.Number(object.count) : 0,
-      channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "",
-      message_id: isSet(object.message_id) ? globalThis.String(object.message_id) : "",
-      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
-      mode: isSet(object.mode) ? globalThis.Number(object.mode) : 0,
-      message_sender_id: isSet(object.message_sender_id) ? globalThis.String(object.message_sender_id) : "",
+      id: isSet(object.id) ? String(object.id) : "",
+      emoji_id: isSet(object.emoji_id) ? String(object.emoji_id) : "",
+      emoji: isSet(object.emoji) ? String(object.emoji) : "",
+      sender_id: isSet(object.sender_id) ? String(object.sender_id) : "",
+      sender_name: isSet(object.sender_name) ? String(object.sender_name) : "",
+      sender_avatar: isSet(object.sender_avatar) ? String(object.sender_avatar) : "",
+      action: isSet(object.action) ? Boolean(object.action) : false,
+      count: isSet(object.count) ? Number(object.count) : 0,
+      channel_id: isSet(object.channel_id) ? String(object.channel_id) : "",
+      message_id: isSet(object.message_id) ? String(object.message_id) : "",
+      clan_id: isSet(object.clan_id) ? String(object.clan_id) : "",
+      mode: isSet(object.mode) ? Number(object.mode) : 0,
+      message_sender_id: isSet(object.message_sender_id) ? String(object.message_sender_id) : "",
+      is_public: isSet(object.is_public) ? Boolean(object.is_public) : false,
     };
   },
 
   toJSON(message: MessageReaction): unknown {
     const obj: any = {};
-    if (message.id !== "") {
-      obj.id = message.id;
-    }
-    if (message.emoji_id !== "") {
-      obj.emoji_id = message.emoji_id;
-    }
-    if (message.emoji !== "") {
-      obj.emoji = message.emoji;
-    }
-    if (message.sender_id !== "") {
-      obj.sender_id = message.sender_id;
-    }
-    if (message.sender_name !== "") {
-      obj.sender_name = message.sender_name;
-    }
-    if (message.sender_avatar !== "") {
-      obj.sender_avatar = message.sender_avatar;
-    }
-    if (message.action !== false) {
-      obj.action = message.action;
-    }
-    if (message.count !== 0) {
-      obj.count = Math.round(message.count);
-    }
-    if (message.channel_id !== "") {
-      obj.channel_id = message.channel_id;
-    }
-    if (message.message_id !== "") {
-      obj.message_id = message.message_id;
-    }
-    if (message.clan_id !== "") {
-      obj.clan_id = message.clan_id;
-    }
-    if (message.mode !== 0) {
-      obj.mode = Math.round(message.mode);
-    }
-    if (message.message_sender_id !== "") {
-      obj.message_sender_id = message.message_sender_id;
-    }
+    message.id !== undefined && (obj.id = message.id);
+    message.emoji_id !== undefined && (obj.emoji_id = message.emoji_id);
+    message.emoji !== undefined && (obj.emoji = message.emoji);
+    message.sender_id !== undefined && (obj.sender_id = message.sender_id);
+    message.sender_name !== undefined && (obj.sender_name = message.sender_name);
+    message.sender_avatar !== undefined && (obj.sender_avatar = message.sender_avatar);
+    message.action !== undefined && (obj.action = message.action);
+    message.count !== undefined && (obj.count = Math.round(message.count));
+    message.channel_id !== undefined && (obj.channel_id = message.channel_id);
+    message.message_id !== undefined && (obj.message_id = message.message_id);
+    message.clan_id !== undefined && (obj.clan_id = message.clan_id);
+    message.mode !== undefined && (obj.mode = Math.round(message.mode));
+    message.message_sender_id !== undefined && (obj.message_sender_id = message.message_sender_id);
+    message.is_public !== undefined && (obj.is_public = message.is_public);
     return obj;
   },
 
@@ -7098,6 +7035,7 @@ export const MessageReaction = {
     message.clan_id = object.clan_id ?? "";
     message.mode = object.mode ?? 0;
     message.message_sender_id = object.message_sender_id ?? "";
+    message.is_public = object.is_public ?? false;
     return message;
   },
 };
@@ -16284,6 +16222,7 @@ function createBaseRole(): Role {
     permission_list: undefined,
     role_channel_active: 0,
     channel_ids: [],
+    max_level_permission: 0,
   };
 }
 
@@ -16333,6 +16272,9 @@ export const Role = {
     }
     for (const v of message.channel_ids) {
       writer.uint32(122).string(v!);
+    }
+    if (message.max_level_permission !== 0) {
+      writer.uint32(128).int32(message.max_level_permission);
     }
     return writer;
   },
@@ -16448,12 +16390,14 @@ export const Role = {
           }
 
           message.channel_ids.push(reader.string());
-          continue;
+          break;
+        case 16:
+          message.max_level_permission = reader.int32();
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
       }
-      if ((tag & 7) === 4 || tag === 0) {
-        break;
-      }
-      reader.skipType(tag & 7);
     }
     return message;
   },
@@ -16473,60 +16417,36 @@ export const Role = {
       allow_mention: isSet(object.allow_mention) ? globalThis.Number(object.allow_mention) : 0,
       role_user_list: isSet(object.role_user_list) ? RoleUserList.fromJSON(object.role_user_list) : undefined,
       permission_list: isSet(object.permission_list) ? PermissionList.fromJSON(object.permission_list) : undefined,
-      role_channel_active: isSet(object.role_channel_active) ? globalThis.Number(object.role_channel_active) : 0,
-      channel_ids: globalThis.Array.isArray(object?.channel_ids)
-        ? object.channel_ids.map((e: any) => globalThis.String(e))
-        : [],
+      role_channel_active: isSet(object.role_channel_active) ? Number(object.role_channel_active) : 0,
+      channel_ids: Array.isArray(object?.channel_ids) ? object.channel_ids.map((e: any) => String(e)) : [],
+      max_level_permission: isSet(object.max_level_permission) ? Number(object.max_level_permission) : 0,
     };
   },
 
   toJSON(message: Role): unknown {
     const obj: any = {};
-    if (message.id !== "") {
-      obj.id = message.id;
+    message.id !== undefined && (obj.id = message.id);
+    message.title !== undefined && (obj.title = message.title);
+    message.color !== undefined && (obj.color = message.color);
+    message.role_icon !== undefined && (obj.role_icon = message.role_icon);
+    message.slug !== undefined && (obj.slug = message.slug);
+    message.description !== undefined && (obj.description = message.description);
+    message.creator_id !== undefined && (obj.creator_id = message.creator_id);
+    message.clan_id !== undefined && (obj.clan_id = message.clan_id);
+    message.active !== undefined && (obj.active = Math.round(message.active));
+    message.display_online !== undefined && (obj.display_online = Math.round(message.display_online));
+    message.allow_mention !== undefined && (obj.allow_mention = Math.round(message.allow_mention));
+    message.role_user_list !== undefined &&
+      (obj.role_user_list = message.role_user_list ? RoleUserList.toJSON(message.role_user_list) : undefined);
+    message.permission_list !== undefined &&
+      (obj.permission_list = message.permission_list ? PermissionList.toJSON(message.permission_list) : undefined);
+    message.role_channel_active !== undefined && (obj.role_channel_active = Math.round(message.role_channel_active));
+    if (message.channel_ids) {
+      obj.channel_ids = message.channel_ids.map((e) => e);
+    } else {
+      obj.channel_ids = [];
     }
-    if (message.title !== "") {
-      obj.title = message.title;
-    }
-    if (message.color !== "") {
-      obj.color = message.color;
-    }
-    if (message.role_icon !== "") {
-      obj.role_icon = message.role_icon;
-    }
-    if (message.slug !== "") {
-      obj.slug = message.slug;
-    }
-    if (message.description !== "") {
-      obj.description = message.description;
-    }
-    if (message.creator_id !== "") {
-      obj.creator_id = message.creator_id;
-    }
-    if (message.clan_id !== "") {
-      obj.clan_id = message.clan_id;
-    }
-    if (message.active !== 0) {
-      obj.active = Math.round(message.active);
-    }
-    if (message.display_online !== 0) {
-      obj.display_online = Math.round(message.display_online);
-    }
-    if (message.allow_mention !== 0) {
-      obj.allow_mention = Math.round(message.allow_mention);
-    }
-    if (message.role_user_list !== undefined) {
-      obj.role_user_list = RoleUserList.toJSON(message.role_user_list);
-    }
-    if (message.permission_list !== undefined) {
-      obj.permission_list = PermissionList.toJSON(message.permission_list);
-    }
-    if (message.role_channel_active !== 0) {
-      obj.role_channel_active = Math.round(message.role_channel_active);
-    }
-    if (message.channel_ids?.length) {
-      obj.channel_ids = message.channel_ids;
-    }
+    message.max_level_permission !== undefined && (obj.max_level_permission = Math.round(message.max_level_permission));
     return obj;
   },
 
@@ -16554,6 +16474,7 @@ export const Role = {
       : undefined;
     message.role_channel_active = object.role_channel_active ?? 0;
     message.channel_ids = object.channel_ids?.map((e) => e) || [];
+    message.max_level_permission = object.max_level_permission ?? 0;
     return message;
   },
 };
@@ -16828,7 +16749,7 @@ export const EventManagement = {
 };
 
 function createBasePermission(): Permission {
-  return { id: "", title: "", slug: "", description: "", active: 0, scope: 0 };
+  return { id: "", title: "", slug: "", description: "", active: 0, scope: 0, level: 0 };
 }
 
 export const Permission = {
@@ -16850,6 +16771,9 @@ export const Permission = {
     }
     if (message.scope !== 0) {
       writer.uint32(48).int32(message.scope);
+    }
+    if (message.level !== 0) {
+      writer.uint32(56).int32(message.level);
     }
     return writer;
   },
@@ -16902,47 +16826,39 @@ export const Permission = {
           }
 
           message.scope = reader.int32();
-          continue;
+          break;
+        case 7:
+          message.level = reader.int32();
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
       }
-      if ((tag & 7) === 4 || tag === 0) {
-        break;
-      }
-      reader.skipType(tag & 7);
     }
     return message;
   },
 
   fromJSON(object: any): Permission {
     return {
-      id: isSet(object.id) ? globalThis.String(object.id) : "",
-      title: isSet(object.title) ? globalThis.String(object.title) : "",
-      slug: isSet(object.slug) ? globalThis.String(object.slug) : "",
-      description: isSet(object.description) ? globalThis.String(object.description) : "",
-      active: isSet(object.active) ? globalThis.Number(object.active) : 0,
-      scope: isSet(object.scope) ? globalThis.Number(object.scope) : 0,
+      id: isSet(object.id) ? String(object.id) : "",
+      title: isSet(object.title) ? String(object.title) : "",
+      slug: isSet(object.slug) ? String(object.slug) : "",
+      description: isSet(object.description) ? String(object.description) : "",
+      active: isSet(object.active) ? Number(object.active) : 0,
+      scope: isSet(object.scope) ? Number(object.scope) : 0,
+      level: isSet(object.level) ? Number(object.level) : 0,
     };
   },
 
   toJSON(message: Permission): unknown {
     const obj: any = {};
-    if (message.id !== "") {
-      obj.id = message.id;
-    }
-    if (message.title !== "") {
-      obj.title = message.title;
-    }
-    if (message.slug !== "") {
-      obj.slug = message.slug;
-    }
-    if (message.description !== "") {
-      obj.description = message.description;
-    }
-    if (message.active !== 0) {
-      obj.active = Math.round(message.active);
-    }
-    if (message.scope !== 0) {
-      obj.scope = Math.round(message.scope);
-    }
+    message.id !== undefined && (obj.id = message.id);
+    message.title !== undefined && (obj.title = message.title);
+    message.slug !== undefined && (obj.slug = message.slug);
+    message.description !== undefined && (obj.description = message.description);
+    message.active !== undefined && (obj.active = Math.round(message.active));
+    message.scope !== undefined && (obj.scope = Math.round(message.scope));
+    message.level !== undefined && (obj.level = Math.round(message.level));
     return obj;
   },
 
@@ -16957,6 +16873,7 @@ export const Permission = {
     message.description = object.description ?? "";
     message.active = object.active ?? 0;
     message.scope = object.scope ?? 0;
+    message.level = object.level ?? 0;
     return message;
   },
 };
@@ -18240,13 +18157,16 @@ export const EventList = {
 };
 
 function createBasePermissionList(): PermissionList {
-  return { permissions: [] };
+  return { permissions: [], max_level_permission: 0 };
 }
 
 export const PermissionList = {
   encode(message: PermissionList, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     for (const v of message.permissions) {
       Permission.encode(v!, writer.uint32(10).fork()).ldelim();
+    }
+    if (message.max_level_permission !== 0) {
+      writer.uint32(16).int32(message.max_level_permission);
     }
     return writer;
   },
@@ -18264,29 +18184,33 @@ export const PermissionList = {
           }
 
           message.permissions.push(Permission.decode(reader, reader.uint32()));
-          continue;
+          break;
+        case 2:
+          message.max_level_permission = reader.int32();
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
       }
-      if ((tag & 7) === 4 || tag === 0) {
-        break;
-      }
-      reader.skipType(tag & 7);
     }
     return message;
   },
 
   fromJSON(object: any): PermissionList {
     return {
-      permissions: globalThis.Array.isArray(object?.permissions)
-        ? object.permissions.map((e: any) => Permission.fromJSON(e))
-        : [],
+      permissions: Array.isArray(object?.permissions) ? object.permissions.map((e: any) => Permission.fromJSON(e)) : [],
+      max_level_permission: isSet(object.max_level_permission) ? Number(object.max_level_permission) : 0,
     };
   },
 
   toJSON(message: PermissionList): unknown {
     const obj: any = {};
-    if (message.permissions?.length) {
-      obj.permissions = message.permissions.map((e) => Permission.toJSON(e));
+    if (message.permissions) {
+      obj.permissions = message.permissions.map((e) => e ? Permission.toJSON(e) : undefined);
+    } else {
+      obj.permissions = [];
     }
+    message.max_level_permission !== undefined && (obj.max_level_permission = Math.round(message.max_level_permission));
     return obj;
   },
 
@@ -18296,6 +18220,7 @@ export const PermissionList = {
   fromPartial<I extends Exact<DeepPartial<PermissionList>, I>>(object: I): PermissionList {
     const message = createBasePermissionList();
     message.permissions = object.permissions?.map((e) => Permission.fromPartial(e)) || [];
+    message.max_level_permission = object.max_level_permission ?? 0;
     return message;
   },
 };
@@ -18447,13 +18372,16 @@ export const ListRoleUsersRequest = {
 };
 
 function createBaseListPermissionOfUsersRequest(): ListPermissionOfUsersRequest {
-  return { clan_id: "" };
+  return { clan_id: "", channel_id: "" };
 }
 
 export const ListPermissionOfUsersRequest = {
   encode(message: ListPermissionOfUsersRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.clan_id !== "") {
       writer.uint32(10).string(message.clan_id);
+    }
+    if (message.channel_id !== "") {
+      writer.uint32(18).string(message.channel_id);
     }
     return writer;
   },
@@ -18471,25 +18399,29 @@ export const ListPermissionOfUsersRequest = {
           }
 
           message.clan_id = reader.string();
-          continue;
+          break;
+        case 2:
+          message.channel_id = reader.string();
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
       }
-      if ((tag & 7) === 4 || tag === 0) {
-        break;
-      }
-      reader.skipType(tag & 7);
     }
     return message;
   },
 
   fromJSON(object: any): ListPermissionOfUsersRequest {
-    return { clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "" };
+    return {
+      clan_id: isSet(object.clan_id) ? String(object.clan_id) : "",
+      channel_id: isSet(object.channel_id) ? String(object.channel_id) : "",
+    };
   },
 
   toJSON(message: ListPermissionOfUsersRequest): unknown {
     const obj: any = {};
-    if (message.clan_id !== "") {
-      obj.clan_id = message.clan_id;
-    }
+    message.clan_id !== undefined && (obj.clan_id = message.clan_id);
+    message.channel_id !== undefined && (obj.channel_id = message.channel_id);
     return obj;
   },
 
@@ -18499,6 +18431,7 @@ export const ListPermissionOfUsersRequest = {
   fromPartial<I extends Exact<DeepPartial<ListPermissionOfUsersRequest>, I>>(object: I): ListPermissionOfUsersRequest {
     const message = createBaseListPermissionOfUsersRequest();
     message.clan_id = object.clan_id ?? "";
+    message.channel_id = object.channel_id ?? "";
     return message;
   },
 };
@@ -18889,110 +18822,6 @@ export const EventUserList_EventUser = {
     message.username = object.username ?? "";
     message.display_name = object.display_name ?? "";
     message.avatar_url = object.avatar_url ?? "";
-    return message;
-  },
-};
-
-function createBaseListRolesRequest(): ListRolesRequest {
-  return { limit: undefined, state: undefined, cursor: "", clan_id: "" };
-}
-
-export const ListRolesRequest = {
-  encode(message: ListRolesRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.limit !== undefined) {
-      Int32Value.encode({ value: message.limit! }, writer.uint32(10).fork()).ldelim();
-    }
-    if (message.state !== undefined) {
-      Int32Value.encode({ value: message.state! }, writer.uint32(18).fork()).ldelim();
-    }
-    if (message.cursor !== "") {
-      writer.uint32(26).string(message.cursor);
-    }
-    if (message.clan_id !== "") {
-      writer.uint32(34).string(message.clan_id);
-    }
-    return writer;
-  },
-
-  decode(input: _m0.Reader | Uint8Array, length?: number): ListRolesRequest {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseListRolesRequest();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
-          if (tag !== 10) {
-            break;
-          }
-
-          message.limit = Int32Value.decode(reader, reader.uint32()).value;
-          continue;
-        case 2:
-          if (tag !== 18) {
-            break;
-          }
-
-          message.state = Int32Value.decode(reader, reader.uint32()).value;
-          continue;
-        case 3:
-          if (tag !== 26) {
-            break;
-          }
-
-          message.cursor = reader.string();
-          continue;
-        case 4:
-          if (tag !== 34) {
-            break;
-          }
-
-          message.clan_id = reader.string();
-          continue;
-      }
-      if ((tag & 7) === 4 || tag === 0) {
-        break;
-      }
-      reader.skipType(tag & 7);
-    }
-    return message;
-  },
-
-  fromJSON(object: any): ListRolesRequest {
-    return {
-      limit: isSet(object.limit) ? Number(object.limit) : undefined,
-      state: isSet(object.state) ? Number(object.state) : undefined,
-      cursor: isSet(object.cursor) ? globalThis.String(object.cursor) : "",
-      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
-    };
-  },
-
-  toJSON(message: ListRolesRequest): unknown {
-    const obj: any = {};
-    if (message.limit !== undefined) {
-      obj.limit = message.limit;
-    }
-    if (message.state !== undefined) {
-      obj.state = message.state;
-    }
-    if (message.cursor !== "") {
-      obj.cursor = message.cursor;
-    }
-    if (message.clan_id !== "") {
-      obj.clan_id = message.clan_id;
-    }
-    return obj;
-  },
-
-  create<I extends Exact<DeepPartial<ListRolesRequest>, I>>(base?: I): ListRolesRequest {
-    return ListRolesRequest.fromPartial(base ?? ({} as any));
-  },
-  fromPartial<I extends Exact<DeepPartial<ListRolesRequest>, I>>(object: I): ListRolesRequest {
-    const message = createBaseListRolesRequest();
-    message.limit = object.limit ?? undefined;
-    message.state = object.state ?? undefined;
-    message.cursor = object.cursor ?? "";
-    message.clan_id = object.clan_id ?? "";
     return message;
   },
 };
@@ -23151,6 +22980,7 @@ function createBaseApp(): App {
     disable_time: undefined,
     token: "",
     role: 0,
+    about: "",
   };
 }
 
@@ -23179,6 +23009,9 @@ export const App = {
     }
     if (message.role !== 0) {
       writer.uint32(64).int32(message.role);
+    }
+    if (message.about !== "") {
+      writer.uint32(74).string(message.about);
     }
     return writer;
   },
@@ -23245,12 +23078,14 @@ export const App = {
           }
 
           message.role = reader.int32();
-          continue;
+          break;
+        case 9:
+          message.about = reader.string();
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
       }
-      if ((tag & 7) === 4 || tag === 0) {
-        break;
-      }
-      reader.skipType(tag & 7);
     }
     return message;
   },
@@ -23263,37 +23098,23 @@ export const App = {
       applogo: isSet(object.applogo) ? globalThis.String(object.applogo) : "",
       is_shadow: isSet(object.is_shadow) ? globalThis.Boolean(object.is_shadow) : false,
       disable_time: isSet(object.disable_time) ? fromJsonTimestamp(object.disable_time) : undefined,
-      token: isSet(object.token) ? globalThis.String(object.token) : "",
-      role: isSet(object.role) ? globalThis.Number(object.role) : 0,
+      token: isSet(object.token) ? String(object.token) : "",
+      role: isSet(object.role) ? Number(object.role) : 0,
+      about: isSet(object.about) ? String(object.about) : "",
     };
   },
 
   toJSON(message: App): unknown {
     const obj: any = {};
-    if (message.id !== "") {
-      obj.id = message.id;
-    }
-    if (message.appname !== "") {
-      obj.appname = message.appname;
-    }
-    if (message.creator_id !== "") {
-      obj.creator_id = message.creator_id;
-    }
-    if (message.applogo !== "") {
-      obj.applogo = message.applogo;
-    }
-    if (message.is_shadow !== false) {
-      obj.is_shadow = message.is_shadow;
-    }
-    if (message.disable_time !== undefined) {
-      obj.disable_time = message.disable_time.toISOString();
-    }
-    if (message.token !== "") {
-      obj.token = message.token;
-    }
-    if (message.role !== 0) {
-      obj.role = Math.round(message.role);
-    }
+    message.id !== undefined && (obj.id = message.id);
+    message.appname !== undefined && (obj.appname = message.appname);
+    message.creator_id !== undefined && (obj.creator_id = message.creator_id);
+    message.applogo !== undefined && (obj.applogo = message.applogo);
+    message.is_shadow !== undefined && (obj.is_shadow = message.is_shadow);
+    message.disable_time !== undefined && (obj.disable_time = message.disable_time.toISOString());
+    message.token !== undefined && (obj.token = message.token);
+    message.role !== undefined && (obj.role = Math.round(message.role));
+    message.about !== undefined && (obj.about = message.about);
     return obj;
   },
 
@@ -23310,6 +23131,7 @@ export const App = {
     message.disable_time = object.disable_time ?? undefined;
     message.token = object.token ?? "";
     message.role = object.role ?? 0;
+    message.about = object.about ?? "";
     return message;
   },
 };

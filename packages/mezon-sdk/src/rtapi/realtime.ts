@@ -2,12 +2,17 @@
 import _m0 from "protobufjs/minimal";
 import {
   ChannelMessage,
+  ChannelMessageHeader,
+  CreateEventRequest,
   MessageAttachment,
   MessageMention,
   MessageReaction,
   MessageRef,
   Notification,
+  PermissionList,
+  RoleList,
   Rpc,
+  User,
 } from "../api/api";
 import { Timestamp } from "../google/protobuf/timestamp";
 import { BoolValue, Int32Value, StringValue } from "../google/protobuf/wrappers";
@@ -216,7 +221,46 @@ export interface Envelope {
     | NotifiReactMessageEvent
     | undefined;
   /**  */
-  permission_role_channel_list_event?: PermissionRoleChannelListEvent | undefined;
+  permission_role_channel_list_event?:
+    | PermissionRoleChannelListEvent
+    | undefined;
+  /**  */
+  notification_channel_category_setting_event?:
+    | NotificationChannelCategorySettingEvent
+    | undefined;
+  /** user join clan */
+  add_clan_user_event?:
+    | AddClanUserEvent
+    | undefined;
+  /** list user */
+  all_user_clans?:
+    | AllUserClans
+    | undefined;
+  /**  */
+  clan_event_created?:
+    | CreateEventRequest
+    | undefined;
+  /** notification time for event */
+  event_status_notification_event?:
+    | EventStatusNotificationEvent
+    | undefined;
+  /**  */
+  user_permission_in_channel_list_event?:
+    | UserPermissionInChannelListEvent
+    | undefined;
+  /**  */
+  role_list_event?: RoleListEvent | undefined;
+}
+
+export interface AllUserClans {
+  user: User[];
+}
+
+export interface AddClanUserEvent {
+  /** the clan id */
+  clan_id: string;
+  /** the user */
+  user: AddUsers | undefined;
 }
 
 /** A list of permission role channel. */
@@ -227,6 +271,29 @@ export interface PermissionRoleChannelListEvent {
   channel_id: string;
   /** A list of permission. */
   permission_role_channel: PermissionRoleChannel[];
+}
+
+/** A list of permission user in channel. */
+export interface UserPermissionInChannelListEvent {
+  /**  */
+  clan_id: string;
+  /**  */
+  channel_id: string;
+  /** A list of permission. */
+  permissions: PermissionList | undefined;
+}
+
+/** A list role channel. */
+export interface RoleListEvent {
+  Limit: number;
+  /** The role state to list. */
+  State: number;
+  /** Cursor to start from */
+  Cursor: string;
+  /** The clan of this role */
+  ClanId: string;
+  /**  */
+  roles: RoleList | undefined;
 }
 
 /** Permission role channel */
@@ -294,6 +361,8 @@ export interface ChannelDescription {
   clan_name: string;
   /**  */
   parrent_id: string;
+  /**  */
+  last_sent_message: ChannelMessageHeader | undefined;
 }
 
 export interface StrickerListedEvent {
@@ -370,6 +439,8 @@ export interface ChannelLeave {
   channel_id: string;
   /** channel type */
   channel_type: number;
+  /** is public channel */
+  is_public: boolean;
 }
 
 /** A receipt reply from a channel message send operation. */
@@ -424,6 +495,8 @@ export interface ChannelMessageSend {
   mention_everyone: boolean;
   /** clan avatar */
   avatar: string;
+  /** is public */
+  is_public: boolean;
 }
 
 /** Update a message previously sent to a realtime channel. */
@@ -442,6 +515,8 @@ export interface ChannelMessageUpdate {
   attachments: MessageAttachment[];
   /** The mode */
   mode: number;
+  /** is public */
+  is_public: boolean;
   /** hide editted */
   hide_editted: boolean;
 }
@@ -456,6 +531,8 @@ export interface ChannelMessageRemove {
   message_id: string;
   /** The mode */
   mode: number;
+  /** is public */
+  is_public: boolean;
 }
 
 /** A set of joins and leaves on a particular channel. */
@@ -616,9 +693,11 @@ export interface LastPinMessageEvent {
   /** The UserID */
   user_id: string;
   /** The timestamp */
-  timestamp: string;
+  timestamp_seconds: number;
   /** operation */
   operation: number;
+  /** is public */
+  is_public: boolean;
 }
 
 /** Last seen message by user */
@@ -630,7 +709,7 @@ export interface LastSeenMessageEvent {
   /** The stream mode */
   mode: number;
   /** The timestamp */
-  timestamp: string;
+  timestamp_seconds: number;
 }
 
 /** Message typing event data */
@@ -643,6 +722,8 @@ export interface MessageTypingEvent {
   sender_id: string;
   /** mode */
   mode: number;
+  /** is public */
+  is_public: boolean;
 }
 
 /** Voice Joined event */
@@ -752,6 +833,8 @@ export interface ChannelUpdatedEvent {
     | undefined;
   /** status */
   status: number;
+  /** meeting code */
+  meeting_code: string;
 }
 
 /** Stop receiving status updates for some set of users. */
@@ -853,6 +936,8 @@ export interface UserChannelAdded {
   clan_id: string;
   /** the channel type */
   channel_type: number;
+  /** is public */
+  is_public: boolean;
 }
 
 /**  */
@@ -861,6 +946,8 @@ export interface UserChannelRemoved {
   channel_id: string;
   /** the user */
   user_ids: string[];
+  /** the channel type */
+  channel_type: number;
 }
 
 /**  */
@@ -994,6 +1081,30 @@ export interface NotifiReactMessage {
   channel_id: string;
 }
 
+/** Notification setting record */
+export interface NotificationChannelCategorySetting {
+  /** Notification id */
+  id: string;
+  /**  */
+  channel_category_label: string;
+  /** Notification title */
+  notification_setting_type: number;
+  /**  */
+  channel_category_title: string;
+}
+
+export interface NotificationChannelCategorySettingEvent {
+  clan_id: string;
+  notification_channel_category_settings_list: NotificationChannelCategorySetting[];
+}
+
+export interface EventStatusNotificationEvent {
+  clan_id: string;
+  event_id: string;
+  event_status: string;
+  message: string;
+}
+
 function createBaseEnvelope(): Envelope {
   return {
     cid: "",
@@ -1047,6 +1158,13 @@ function createBaseEnvelope(): Envelope {
     notification_clan_setting_event: undefined,
     notifi_react_message_event: undefined,
     permission_role_channel_list_event: undefined,
+    notification_channel_category_setting_event: undefined,
+    add_clan_user_event: undefined,
+    all_user_clans: undefined,
+    clan_event_created: undefined,
+    event_status_notification_event: undefined,
+    user_permission_in_channel_list_event: undefined,
+    role_list_event: undefined,
   };
 }
 
@@ -1207,6 +1325,31 @@ export const Envelope = {
     if (message.permission_role_channel_list_event !== undefined) {
       PermissionRoleChannelListEvent.encode(message.permission_role_channel_list_event, writer.uint32(410).fork())
         .ldelim();
+    }
+    if (message.notification_channel_category_setting_event !== undefined) {
+      NotificationChannelCategorySettingEvent.encode(
+        message.notification_channel_category_setting_event,
+        writer.uint32(418).fork(),
+      ).ldelim();
+    }
+    if (message.add_clan_user_event !== undefined) {
+      AddClanUserEvent.encode(message.add_clan_user_event, writer.uint32(426).fork()).ldelim();
+    }
+    if (message.all_user_clans !== undefined) {
+      AllUserClans.encode(message.all_user_clans, writer.uint32(434).fork()).ldelim();
+    }
+    if (message.clan_event_created !== undefined) {
+      CreateEventRequest.encode(message.clan_event_created, writer.uint32(442).fork()).ldelim();
+    }
+    if (message.event_status_notification_event !== undefined) {
+      EventStatusNotificationEvent.encode(message.event_status_notification_event, writer.uint32(450).fork()).ldelim();
+    }
+    if (message.user_permission_in_channel_list_event !== undefined) {
+      UserPermissionInChannelListEvent.encode(message.user_permission_in_channel_list_event, writer.uint32(458).fork())
+        .ldelim();
+    }
+    if (message.role_list_event !== undefined) {
+      RoleListEvent.encode(message.role_list_event, writer.uint32(466).fork()).ldelim();
     }
     return writer;
   },
@@ -1374,6 +1517,33 @@ export const Envelope = {
         case 51:
           message.permission_role_channel_list_event = PermissionRoleChannelListEvent.decode(reader, reader.uint32());
           break;
+        case 52:
+          message.notification_channel_category_setting_event = NotificationChannelCategorySettingEvent.decode(
+            reader,
+            reader.uint32(),
+          );
+          break;
+        case 53:
+          message.add_clan_user_event = AddClanUserEvent.decode(reader, reader.uint32());
+          break;
+        case 54:
+          message.all_user_clans = AllUserClans.decode(reader, reader.uint32());
+          break;
+        case 55:
+          message.clan_event_created = CreateEventRequest.decode(reader, reader.uint32());
+          break;
+        case 56:
+          message.event_status_notification_event = EventStatusNotificationEvent.decode(reader, reader.uint32());
+          break;
+        case 57:
+          message.user_permission_in_channel_list_event = UserPermissionInChannelListEvent.decode(
+            reader,
+            reader.uint32(),
+          );
+          break;
+        case 58:
+          message.role_list_event = RoleListEvent.decode(reader, reader.uint32());
+          break;
         default:
           reader.skipType(tag & 7);
           break;
@@ -1505,6 +1675,23 @@ export const Envelope = {
       permission_role_channel_list_event: isSet(object.permission_role_channel_list_event)
         ? PermissionRoleChannelListEvent.fromJSON(object.permission_role_channel_list_event)
         : undefined,
+      notification_channel_category_setting_event: isSet(object.notification_channel_category_setting_event)
+        ? NotificationChannelCategorySettingEvent.fromJSON(object.notification_channel_category_setting_event)
+        : undefined,
+      add_clan_user_event: isSet(object.add_clan_user_event)
+        ? AddClanUserEvent.fromJSON(object.add_clan_user_event)
+        : undefined,
+      all_user_clans: isSet(object.all_user_clans) ? AllUserClans.fromJSON(object.all_user_clans) : undefined,
+      clan_event_created: isSet(object.clan_event_created)
+        ? CreateEventRequest.fromJSON(object.clan_event_created)
+        : undefined,
+      event_status_notification_event: isSet(object.event_status_notification_event)
+        ? EventStatusNotificationEvent.fromJSON(object.event_status_notification_event)
+        : undefined,
+      user_permission_in_channel_list_event: isSet(object.user_permission_in_channel_list_event)
+        ? UserPermissionInChannelListEvent.fromJSON(object.user_permission_in_channel_list_event)
+        : undefined,
+      role_list_event: isSet(object.role_list_event) ? RoleListEvent.fromJSON(object.role_list_event) : undefined,
     };
   },
 
@@ -1649,6 +1836,28 @@ export const Envelope = {
       (obj.permission_role_channel_list_event = message.permission_role_channel_list_event
         ? PermissionRoleChannelListEvent.toJSON(message.permission_role_channel_list_event)
         : undefined);
+    message.notification_channel_category_setting_event !== undefined &&
+      (obj.notification_channel_category_setting_event = message.notification_channel_category_setting_event
+        ? NotificationChannelCategorySettingEvent.toJSON(message.notification_channel_category_setting_event)
+        : undefined);
+    message.add_clan_user_event !== undefined && (obj.add_clan_user_event = message.add_clan_user_event
+      ? AddClanUserEvent.toJSON(message.add_clan_user_event)
+      : undefined);
+    message.all_user_clans !== undefined &&
+      (obj.all_user_clans = message.all_user_clans ? AllUserClans.toJSON(message.all_user_clans) : undefined);
+    message.clan_event_created !== undefined && (obj.clan_event_created = message.clan_event_created
+      ? CreateEventRequest.toJSON(message.clan_event_created)
+      : undefined);
+    message.event_status_notification_event !== undefined &&
+      (obj.event_status_notification_event = message.event_status_notification_event
+        ? EventStatusNotificationEvent.toJSON(message.event_status_notification_event)
+        : undefined);
+    message.user_permission_in_channel_list_event !== undefined &&
+      (obj.user_permission_in_channel_list_event = message.user_permission_in_channel_list_event
+        ? UserPermissionInChannelListEvent.toJSON(message.user_permission_in_channel_list_event)
+        : undefined);
+    message.role_list_event !== undefined &&
+      (obj.role_list_event = message.role_list_event ? RoleListEvent.toJSON(message.role_list_event) : undefined);
     return obj;
   },
 
@@ -1825,6 +2034,149 @@ export const Envelope = {
       (object.permission_role_channel_list_event !== undefined && object.permission_role_channel_list_event !== null)
         ? PermissionRoleChannelListEvent.fromPartial(object.permission_role_channel_list_event)
         : undefined;
+    message.notification_channel_category_setting_event =
+      (object.notification_channel_category_setting_event !== undefined &&
+          object.notification_channel_category_setting_event !== null)
+        ? NotificationChannelCategorySettingEvent.fromPartial(object.notification_channel_category_setting_event)
+        : undefined;
+    message.add_clan_user_event = (object.add_clan_user_event !== undefined && object.add_clan_user_event !== null)
+      ? AddClanUserEvent.fromPartial(object.add_clan_user_event)
+      : undefined;
+    message.all_user_clans = (object.all_user_clans !== undefined && object.all_user_clans !== null)
+      ? AllUserClans.fromPartial(object.all_user_clans)
+      : undefined;
+    message.clan_event_created = (object.clan_event_created !== undefined && object.clan_event_created !== null)
+      ? CreateEventRequest.fromPartial(object.clan_event_created)
+      : undefined;
+    message.event_status_notification_event =
+      (object.event_status_notification_event !== undefined && object.event_status_notification_event !== null)
+        ? EventStatusNotificationEvent.fromPartial(object.event_status_notification_event)
+        : undefined;
+    message.user_permission_in_channel_list_event =
+      (object.user_permission_in_channel_list_event !== undefined &&
+          object.user_permission_in_channel_list_event !== null)
+        ? UserPermissionInChannelListEvent.fromPartial(object.user_permission_in_channel_list_event)
+        : undefined;
+    message.role_list_event = (object.role_list_event !== undefined && object.role_list_event !== null)
+      ? RoleListEvent.fromPartial(object.role_list_event)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseAllUserClans(): AllUserClans {
+  return { user: [] };
+}
+
+export const AllUserClans = {
+  encode(message: AllUserClans, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    for (const v of message.user) {
+      User.encode(v!, writer.uint32(10).fork()).ldelim();
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): AllUserClans {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseAllUserClans();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.user.push(User.decode(reader, reader.uint32()));
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): AllUserClans {
+    return { user: Array.isArray(object?.user) ? object.user.map((e: any) => User.fromJSON(e)) : [] };
+  },
+
+  toJSON(message: AllUserClans): unknown {
+    const obj: any = {};
+    if (message.user) {
+      obj.user = message.user.map((e) => e ? User.toJSON(e) : undefined);
+    } else {
+      obj.user = [];
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<AllUserClans>, I>>(base?: I): AllUserClans {
+    return AllUserClans.fromPartial(base ?? {});
+  },
+
+  fromPartial<I extends Exact<DeepPartial<AllUserClans>, I>>(object: I): AllUserClans {
+    const message = createBaseAllUserClans();
+    message.user = object.user?.map((e) => User.fromPartial(e)) || [];
+    return message;
+  },
+};
+
+function createBaseAddClanUserEvent(): AddClanUserEvent {
+  return { clan_id: "", user: undefined };
+}
+
+export const AddClanUserEvent = {
+  encode(message: AddClanUserEvent, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.clan_id !== "") {
+      writer.uint32(10).string(message.clan_id);
+    }
+    if (message.user !== undefined) {
+      AddUsers.encode(message.user, writer.uint32(18).fork()).ldelim();
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): AddClanUserEvent {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseAddClanUserEvent();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.clan_id = reader.string();
+          break;
+        case 2:
+          message.user = AddUsers.decode(reader, reader.uint32());
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): AddClanUserEvent {
+    return {
+      clan_id: isSet(object.clan_id) ? String(object.clan_id) : "",
+      user: isSet(object.user) ? AddUsers.fromJSON(object.user) : undefined,
+    };
+  },
+
+  toJSON(message: AddClanUserEvent): unknown {
+    const obj: any = {};
+    message.clan_id !== undefined && (obj.clan_id = message.clan_id);
+    message.user !== undefined && (obj.user = message.user ? AddUsers.toJSON(message.user) : undefined);
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<AddClanUserEvent>, I>>(base?: I): AddClanUserEvent {
+    return AddClanUserEvent.fromPartial(base ?? {});
+  },
+
+  fromPartial<I extends Exact<DeepPartial<AddClanUserEvent>, I>>(object: I): AddClanUserEvent {
+    const message = createBaseAddClanUserEvent();
+    message.clan_id = object.clan_id ?? "";
+    message.user = (object.user !== undefined && object.user !== null) ? AddUsers.fromPartial(object.user) : undefined;
     return message;
   },
 };
@@ -1907,6 +2259,175 @@ export const PermissionRoleChannelListEvent = {
     message.channel_id = object.channel_id ?? "";
     message.permission_role_channel =
       object.permission_role_channel?.map((e) => PermissionRoleChannel.fromPartial(e)) || [];
+    return message;
+  },
+};
+
+function createBaseUserPermissionInChannelListEvent(): UserPermissionInChannelListEvent {
+  return { clan_id: "", channel_id: "", permissions: undefined };
+}
+
+export const UserPermissionInChannelListEvent = {
+  encode(message: UserPermissionInChannelListEvent, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.clan_id !== "") {
+      writer.uint32(10).string(message.clan_id);
+    }
+    if (message.channel_id !== "") {
+      writer.uint32(18).string(message.channel_id);
+    }
+    if (message.permissions !== undefined) {
+      PermissionList.encode(message.permissions, writer.uint32(26).fork()).ldelim();
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): UserPermissionInChannelListEvent {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseUserPermissionInChannelListEvent();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.clan_id = reader.string();
+          break;
+        case 2:
+          message.channel_id = reader.string();
+          break;
+        case 3:
+          message.permissions = PermissionList.decode(reader, reader.uint32());
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): UserPermissionInChannelListEvent {
+    return {
+      clan_id: isSet(object.clan_id) ? String(object.clan_id) : "",
+      channel_id: isSet(object.channel_id) ? String(object.channel_id) : "",
+      permissions: isSet(object.permissions) ? PermissionList.fromJSON(object.permissions) : undefined,
+    };
+  },
+
+  toJSON(message: UserPermissionInChannelListEvent): unknown {
+    const obj: any = {};
+    message.clan_id !== undefined && (obj.clan_id = message.clan_id);
+    message.channel_id !== undefined && (obj.channel_id = message.channel_id);
+    message.permissions !== undefined &&
+      (obj.permissions = message.permissions ? PermissionList.toJSON(message.permissions) : undefined);
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<UserPermissionInChannelListEvent>, I>>(
+    base?: I,
+  ): UserPermissionInChannelListEvent {
+    return UserPermissionInChannelListEvent.fromPartial(base ?? {});
+  },
+
+  fromPartial<I extends Exact<DeepPartial<UserPermissionInChannelListEvent>, I>>(
+    object: I,
+  ): UserPermissionInChannelListEvent {
+    const message = createBaseUserPermissionInChannelListEvent();
+    message.clan_id = object.clan_id ?? "";
+    message.channel_id = object.channel_id ?? "";
+    message.permissions = (object.permissions !== undefined && object.permissions !== null)
+      ? PermissionList.fromPartial(object.permissions)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseRoleListEvent(): RoleListEvent {
+  return { Limit: 0, State: 0, Cursor: "", ClanId: "", roles: undefined };
+}
+
+export const RoleListEvent = {
+  encode(message: RoleListEvent, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.Limit !== 0) {
+      writer.uint32(8).int32(message.Limit);
+    }
+    if (message.State !== 0) {
+      writer.uint32(16).int32(message.State);
+    }
+    if (message.Cursor !== "") {
+      writer.uint32(26).string(message.Cursor);
+    }
+    if (message.ClanId !== "") {
+      writer.uint32(34).string(message.ClanId);
+    }
+    if (message.roles !== undefined) {
+      RoleList.encode(message.roles, writer.uint32(42).fork()).ldelim();
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): RoleListEvent {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseRoleListEvent();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.Limit = reader.int32();
+          break;
+        case 2:
+          message.State = reader.int32();
+          break;
+        case 3:
+          message.Cursor = reader.string();
+          break;
+        case 4:
+          message.ClanId = reader.string();
+          break;
+        case 5:
+          message.roles = RoleList.decode(reader, reader.uint32());
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): RoleListEvent {
+    return {
+      Limit: isSet(object.Limit) ? Number(object.Limit) : 0,
+      State: isSet(object.State) ? Number(object.State) : 0,
+      Cursor: isSet(object.Cursor) ? String(object.Cursor) : "",
+      ClanId: isSet(object.ClanId) ? String(object.ClanId) : "",
+      roles: isSet(object.roles) ? RoleList.fromJSON(object.roles) : undefined,
+    };
+  },
+
+  toJSON(message: RoleListEvent): unknown {
+    const obj: any = {};
+    message.Limit !== undefined && (obj.Limit = Math.round(message.Limit));
+    message.State !== undefined && (obj.State = Math.round(message.State));
+    message.Cursor !== undefined && (obj.Cursor = message.Cursor);
+    message.ClanId !== undefined && (obj.ClanId = message.ClanId);
+    message.roles !== undefined && (obj.roles = message.roles ? RoleList.toJSON(message.roles) : undefined);
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<RoleListEvent>, I>>(base?: I): RoleListEvent {
+    return RoleListEvent.fromPartial(base ?? {});
+  },
+
+  fromPartial<I extends Exact<DeepPartial<RoleListEvent>, I>>(object: I): RoleListEvent {
+    const message = createBaseRoleListEvent();
+    message.Limit = object.Limit ?? 0;
+    message.State = object.State ?? 0;
+    message.Cursor = object.Cursor ?? "";
+    message.ClanId = object.ClanId ?? "";
+    message.roles = (object.roles !== undefined && object.roles !== null)
+      ? RoleList.fromPartial(object.roles)
+      : undefined;
     return message;
   },
 };
@@ -2246,6 +2767,7 @@ function createBaseChannelDescription(): ChannelDescription {
     meeting_code: "",
     clan_name: "",
     parrent_id: "",
+    last_sent_message: undefined,
   };
 }
 
@@ -2274,6 +2796,9 @@ export const ChannelDescription = {
     }
     if (message.parrent_id !== "") {
       writer.uint32(66).string(message.parrent_id);
+    }
+    if (message.last_sent_message !== undefined) {
+      ChannelMessageHeader.encode(message.last_sent_message, writer.uint32(98).fork()).ldelim();
     }
     return writer;
   },
@@ -2309,6 +2834,9 @@ export const ChannelDescription = {
         case 8:
           message.parrent_id = reader.string();
           break;
+        case 12:
+          message.last_sent_message = ChannelMessageHeader.decode(reader, reader.uint32());
+          break;
         default:
           reader.skipType(tag & 7);
           break;
@@ -2327,6 +2855,9 @@ export const ChannelDescription = {
       meeting_code: isSet(object.meeting_code) ? String(object.meeting_code) : "",
       clan_name: isSet(object.clan_name) ? String(object.clan_name) : "",
       parrent_id: isSet(object.parrent_id) ? String(object.parrent_id) : "",
+      last_sent_message: isSet(object.last_sent_message)
+        ? ChannelMessageHeader.fromJSON(object.last_sent_message)
+        : undefined,
     };
   },
 
@@ -2340,6 +2871,9 @@ export const ChannelDescription = {
     message.meeting_code !== undefined && (obj.meeting_code = message.meeting_code);
     message.clan_name !== undefined && (obj.clan_name = message.clan_name);
     message.parrent_id !== undefined && (obj.parrent_id = message.parrent_id);
+    message.last_sent_message !== undefined && (obj.last_sent_message = message.last_sent_message
+      ? ChannelMessageHeader.toJSON(message.last_sent_message)
+      : undefined);
     return obj;
   },
 
@@ -2357,6 +2891,9 @@ export const ChannelDescription = {
     message.meeting_code = object.meeting_code ?? "";
     message.clan_name = object.clan_name ?? "";
     message.parrent_id = object.parrent_id ?? "";
+    message.last_sent_message = (object.last_sent_message !== undefined && object.last_sent_message !== null)
+      ? ChannelMessageHeader.fromPartial(object.last_sent_message)
+      : undefined;
     return message;
   },
 };
@@ -2916,7 +3453,7 @@ export const ChannelJoin = {
 };
 
 function createBaseChannelLeave(): ChannelLeave {
-  return { clan_id: "", channel_id: "", channel_type: 0 };
+  return { clan_id: "", channel_id: "", channel_type: 0, is_public: false };
 }
 
 export const ChannelLeave = {
@@ -2929,6 +3466,9 @@ export const ChannelLeave = {
     }
     if (message.channel_type !== 0) {
       writer.uint32(24).int32(message.channel_type);
+    }
+    if (message.is_public === true) {
+      writer.uint32(32).bool(message.is_public);
     }
     return writer;
   },
@@ -2949,6 +3489,9 @@ export const ChannelLeave = {
         case 3:
           message.channel_type = reader.int32();
           break;
+        case 4:
+          message.is_public = reader.bool();
+          break;
         default:
           reader.skipType(tag & 7);
           break;
@@ -2962,6 +3505,7 @@ export const ChannelLeave = {
       clan_id: isSet(object.clan_id) ? String(object.clan_id) : "",
       channel_id: isSet(object.channel_id) ? String(object.channel_id) : "",
       channel_type: isSet(object.channel_type) ? Number(object.channel_type) : 0,
+      is_public: isSet(object.is_public) ? Boolean(object.is_public) : false,
     };
   },
 
@@ -2970,6 +3514,7 @@ export const ChannelLeave = {
     message.clan_id !== undefined && (obj.clan_id = message.clan_id);
     message.channel_id !== undefined && (obj.channel_id = message.channel_id);
     message.channel_type !== undefined && (obj.channel_type = Math.round(message.channel_type));
+    message.is_public !== undefined && (obj.is_public = message.is_public);
     return obj;
   },
 
@@ -2982,6 +3527,7 @@ export const ChannelLeave = {
     message.clan_id = object.clan_id ?? "";
     message.channel_id = object.channel_id ?? "";
     message.channel_type = object.channel_type ?? 0;
+    message.is_public = object.is_public ?? false;
     return message;
   },
 };
@@ -3133,6 +3679,7 @@ function createBaseChannelMessageSend(): ChannelMessageSend {
     anonymous_message: false,
     mention_everyone: false,
     avatar: "",
+    is_public: false,
   };
 }
 
@@ -3167,6 +3714,9 @@ export const ChannelMessageSend = {
     }
     if (message.avatar !== "") {
       writer.uint32(82).string(message.avatar);
+    }
+    if (message.is_public === true) {
+      writer.uint32(88).bool(message.is_public);
     }
     return writer;
   },
@@ -3208,6 +3758,9 @@ export const ChannelMessageSend = {
         case 10:
           message.avatar = reader.string();
           break;
+        case 11:
+          message.is_public = reader.bool();
+          break;
         default:
           reader.skipType(tag & 7);
           break;
@@ -3230,6 +3783,7 @@ export const ChannelMessageSend = {
       anonymous_message: isSet(object.anonymous_message) ? Boolean(object.anonymous_message) : false,
       mention_everyone: isSet(object.mention_everyone) ? Boolean(object.mention_everyone) : false,
       avatar: isSet(object.avatar) ? String(object.avatar) : "",
+      is_public: isSet(object.is_public) ? Boolean(object.is_public) : false,
     };
   },
 
@@ -3257,6 +3811,7 @@ export const ChannelMessageSend = {
     message.anonymous_message !== undefined && (obj.anonymous_message = message.anonymous_message);
     message.mention_everyone !== undefined && (obj.mention_everyone = message.mention_everyone);
     message.avatar !== undefined && (obj.avatar = message.avatar);
+    message.is_public !== undefined && (obj.is_public = message.is_public);
     return obj;
   },
 
@@ -3276,6 +3831,7 @@ export const ChannelMessageSend = {
     message.anonymous_message = object.anonymous_message ?? false;
     message.mention_everyone = object.mention_everyone ?? false;
     message.avatar = object.avatar ?? "";
+    message.is_public = object.is_public ?? false;
     return message;
   },
 };
@@ -3289,6 +3845,7 @@ function createBaseChannelMessageUpdate(): ChannelMessageUpdate {
     mentions: [],
     attachments: [],
     mode: 0,
+    is_public: false,
     hide_editted: false,
   };
 }
@@ -3316,8 +3873,11 @@ export const ChannelMessageUpdate = {
     if (message.mode !== 0) {
       writer.uint32(56).int32(message.mode);
     }
+    if (message.is_public === true) {
+      writer.uint32(64).bool(message.is_public);
+    }
     if (message.hide_editted === true) {
-      writer.uint32(64).bool(message.hide_editted);
+      writer.uint32(72).bool(message.hide_editted);
     }
     return writer;
   },
@@ -3351,6 +3911,9 @@ export const ChannelMessageUpdate = {
           message.mode = reader.int32();
           break;
         case 8:
+          message.is_public = reader.bool();
+          break;
+        case 9:
           message.hide_editted = reader.bool();
           break;
         default:
@@ -3372,6 +3935,7 @@ export const ChannelMessageUpdate = {
         ? object.attachments.map((e: any) => MessageAttachment.fromJSON(e))
         : [],
       mode: isSet(object.mode) ? Number(object.mode) : 0,
+      is_public: isSet(object.is_public) ? Boolean(object.is_public) : false,
       hide_editted: isSet(object.hide_editted) ? Boolean(object.hide_editted) : false,
     };
   },
@@ -3393,6 +3957,7 @@ export const ChannelMessageUpdate = {
       obj.attachments = [];
     }
     message.mode !== undefined && (obj.mode = Math.round(message.mode));
+    message.is_public !== undefined && (obj.is_public = message.is_public);
     message.hide_editted !== undefined && (obj.hide_editted = message.hide_editted);
     return obj;
   },
@@ -3410,13 +3975,14 @@ export const ChannelMessageUpdate = {
     message.mentions = object.mentions?.map((e) => MessageMention.fromPartial(e)) || [];
     message.attachments = object.attachments?.map((e) => MessageAttachment.fromPartial(e)) || [];
     message.mode = object.mode ?? 0;
+    message.is_public = object.is_public ?? false;
     message.hide_editted = object.hide_editted ?? false;
     return message;
   },
 };
 
 function createBaseChannelMessageRemove(): ChannelMessageRemove {
-  return { clan_id: "", channel_id: "", message_id: "", mode: 0 };
+  return { clan_id: "", channel_id: "", message_id: "", mode: 0, is_public: false };
 }
 
 export const ChannelMessageRemove = {
@@ -3432,6 +3998,9 @@ export const ChannelMessageRemove = {
     }
     if (message.mode !== 0) {
       writer.uint32(32).int32(message.mode);
+    }
+    if (message.is_public === true) {
+      writer.uint32(40).bool(message.is_public);
     }
     return writer;
   },
@@ -3455,6 +4024,9 @@ export const ChannelMessageRemove = {
         case 4:
           message.mode = reader.int32();
           break;
+        case 5:
+          message.is_public = reader.bool();
+          break;
         default:
           reader.skipType(tag & 7);
           break;
@@ -3469,6 +4041,7 @@ export const ChannelMessageRemove = {
       channel_id: isSet(object.channel_id) ? String(object.channel_id) : "",
       message_id: isSet(object.message_id) ? String(object.message_id) : "",
       mode: isSet(object.mode) ? Number(object.mode) : 0,
+      is_public: isSet(object.is_public) ? Boolean(object.is_public) : false,
     };
   },
 
@@ -3478,6 +4051,7 @@ export const ChannelMessageRemove = {
     message.channel_id !== undefined && (obj.channel_id = message.channel_id);
     message.message_id !== undefined && (obj.message_id = message.message_id);
     message.mode !== undefined && (obj.mode = Math.round(message.mode));
+    message.is_public !== undefined && (obj.is_public = message.is_public);
     return obj;
   },
 
@@ -3491,6 +4065,7 @@ export const ChannelMessageRemove = {
     message.channel_id = object.channel_id ?? "";
     message.message_id = object.message_id ?? "";
     message.mode = object.mode ?? 0;
+    message.is_public = object.is_public ?? false;
     return message;
   },
 };
@@ -4092,7 +4667,16 @@ export const StatusPresenceEvent = {
 };
 
 function createBaseLastPinMessageEvent(): LastPinMessageEvent {
-  return { clan_id: "", channel_id: "", message_id: "", mode: 0, user_id: "", timestamp: "", operation: 0 };
+  return {
+    clan_id: "",
+    channel_id: "",
+    message_id: "",
+    mode: 0,
+    user_id: "",
+    timestamp_seconds: 0,
+    operation: 0,
+    is_public: false,
+  };
 }
 
 export const LastPinMessageEvent = {
@@ -4112,11 +4696,14 @@ export const LastPinMessageEvent = {
     if (message.user_id !== "") {
       writer.uint32(42).string(message.user_id);
     }
-    if (message.timestamp !== "") {
-      writer.uint32(50).string(message.timestamp);
+    if (message.timestamp_seconds !== 0) {
+      writer.uint32(48).uint32(message.timestamp_seconds);
     }
     if (message.operation !== 0) {
       writer.uint32(56).int32(message.operation);
+    }
+    if (message.is_public === true) {
+      writer.uint32(64).bool(message.is_public);
     }
     return writer;
   },
@@ -4144,10 +4731,13 @@ export const LastPinMessageEvent = {
           message.user_id = reader.string();
           break;
         case 6:
-          message.timestamp = reader.string();
+          message.timestamp_seconds = reader.uint32();
           break;
         case 7:
           message.operation = reader.int32();
+          break;
+        case 8:
+          message.is_public = reader.bool();
           break;
         default:
           reader.skipType(tag & 7);
@@ -4164,8 +4754,9 @@ export const LastPinMessageEvent = {
       message_id: isSet(object.message_id) ? String(object.message_id) : "",
       mode: isSet(object.mode) ? Number(object.mode) : 0,
       user_id: isSet(object.user_id) ? String(object.user_id) : "",
-      timestamp: isSet(object.timestamp) ? String(object.timestamp) : "",
+      timestamp_seconds: isSet(object.timestamp_seconds) ? Number(object.timestamp_seconds) : 0,
       operation: isSet(object.operation) ? Number(object.operation) : 0,
+      is_public: isSet(object.is_public) ? Boolean(object.is_public) : false,
     };
   },
 
@@ -4176,8 +4767,9 @@ export const LastPinMessageEvent = {
     message.message_id !== undefined && (obj.message_id = message.message_id);
     message.mode !== undefined && (obj.mode = Math.round(message.mode));
     message.user_id !== undefined && (obj.user_id = message.user_id);
-    message.timestamp !== undefined && (obj.timestamp = message.timestamp);
+    message.timestamp_seconds !== undefined && (obj.timestamp_seconds = Math.round(message.timestamp_seconds));
     message.operation !== undefined && (obj.operation = Math.round(message.operation));
+    message.is_public !== undefined && (obj.is_public = message.is_public);
     return obj;
   },
 
@@ -4192,14 +4784,15 @@ export const LastPinMessageEvent = {
     message.message_id = object.message_id ?? "";
     message.mode = object.mode ?? 0;
     message.user_id = object.user_id ?? "";
-    message.timestamp = object.timestamp ?? "";
+    message.timestamp_seconds = object.timestamp_seconds ?? 0;
     message.operation = object.operation ?? 0;
+    message.is_public = object.is_public ?? false;
     return message;
   },
 };
 
 function createBaseLastSeenMessageEvent(): LastSeenMessageEvent {
-  return { channel_id: "", message_id: "", mode: 0, timestamp: "" };
+  return { channel_id: "", message_id: "", mode: 0, timestamp_seconds: 0 };
 }
 
 export const LastSeenMessageEvent = {
@@ -4213,8 +4806,8 @@ export const LastSeenMessageEvent = {
     if (message.mode !== 0) {
       writer.uint32(24).int32(message.mode);
     }
-    if (message.timestamp !== "") {
-      writer.uint32(34).string(message.timestamp);
+    if (message.timestamp_seconds !== 0) {
+      writer.uint32(32).uint32(message.timestamp_seconds);
     }
     return writer;
   },
@@ -4236,7 +4829,7 @@ export const LastSeenMessageEvent = {
           message.mode = reader.int32();
           break;
         case 4:
-          message.timestamp = reader.string();
+          message.timestamp_seconds = reader.uint32();
           break;
         default:
           reader.skipType(tag & 7);
@@ -4251,7 +4844,7 @@ export const LastSeenMessageEvent = {
       channel_id: isSet(object.channel_id) ? String(object.channel_id) : "",
       message_id: isSet(object.message_id) ? String(object.message_id) : "",
       mode: isSet(object.mode) ? Number(object.mode) : 0,
-      timestamp: isSet(object.timestamp) ? String(object.timestamp) : "",
+      timestamp_seconds: isSet(object.timestamp_seconds) ? Number(object.timestamp_seconds) : 0,
     };
   },
 
@@ -4260,7 +4853,7 @@ export const LastSeenMessageEvent = {
     message.channel_id !== undefined && (obj.channel_id = message.channel_id);
     message.message_id !== undefined && (obj.message_id = message.message_id);
     message.mode !== undefined && (obj.mode = Math.round(message.mode));
-    message.timestamp !== undefined && (obj.timestamp = message.timestamp);
+    message.timestamp_seconds !== undefined && (obj.timestamp_seconds = Math.round(message.timestamp_seconds));
     return obj;
   },
 
@@ -4273,13 +4866,13 @@ export const LastSeenMessageEvent = {
     message.channel_id = object.channel_id ?? "";
     message.message_id = object.message_id ?? "";
     message.mode = object.mode ?? 0;
-    message.timestamp = object.timestamp ?? "";
+    message.timestamp_seconds = object.timestamp_seconds ?? 0;
     return message;
   },
 };
 
 function createBaseMessageTypingEvent(): MessageTypingEvent {
-  return { clan_id: "", channel_id: "", sender_id: "", mode: 0 };
+  return { clan_id: "", channel_id: "", sender_id: "", mode: 0, is_public: false };
 }
 
 export const MessageTypingEvent = {
@@ -4295,6 +4888,9 @@ export const MessageTypingEvent = {
     }
     if (message.mode !== 0) {
       writer.uint32(32).int32(message.mode);
+    }
+    if (message.is_public === true) {
+      writer.uint32(40).bool(message.is_public);
     }
     return writer;
   },
@@ -4318,6 +4914,9 @@ export const MessageTypingEvent = {
         case 4:
           message.mode = reader.int32();
           break;
+        case 5:
+          message.is_public = reader.bool();
+          break;
         default:
           reader.skipType(tag & 7);
           break;
@@ -4332,6 +4931,7 @@ export const MessageTypingEvent = {
       channel_id: isSet(object.channel_id) ? String(object.channel_id) : "",
       sender_id: isSet(object.sender_id) ? String(object.sender_id) : "",
       mode: isSet(object.mode) ? Number(object.mode) : 0,
+      is_public: isSet(object.is_public) ? Boolean(object.is_public) : false,
     };
   },
 
@@ -4341,6 +4941,7 @@ export const MessageTypingEvent = {
     message.channel_id !== undefined && (obj.channel_id = message.channel_id);
     message.sender_id !== undefined && (obj.sender_id = message.sender_id);
     message.mode !== undefined && (obj.mode = Math.round(message.mode));
+    message.is_public !== undefined && (obj.is_public = message.is_public);
     return obj;
   },
 
@@ -4354,6 +4955,7 @@ export const MessageTypingEvent = {
     message.channel_id = object.channel_id ?? "";
     message.sender_id = object.sender_id ?? "";
     message.mode = object.mode ?? 0;
+    message.is_public = object.is_public ?? false;
     return message;
   },
 };
@@ -4939,6 +5541,7 @@ function createBaseChannelUpdatedEvent(): ChannelUpdatedEvent {
     channel_label: "",
     channel_type: undefined,
     status: 0,
+    meeting_code: "",
   };
 }
 
@@ -4967,6 +5570,9 @@ export const ChannelUpdatedEvent = {
     }
     if (message.status !== 0) {
       writer.uint32(64).int32(message.status);
+    }
+    if (message.meeting_code !== "") {
+      writer.uint32(74).string(message.meeting_code);
     }
     return writer;
   },
@@ -5002,6 +5608,9 @@ export const ChannelUpdatedEvent = {
         case 8:
           message.status = reader.int32();
           break;
+        case 9:
+          message.meeting_code = reader.string();
+          break;
         default:
           reader.skipType(tag & 7);
           break;
@@ -5020,6 +5629,7 @@ export const ChannelUpdatedEvent = {
       channel_label: isSet(object.channel_label) ? String(object.channel_label) : "",
       channel_type: isSet(object.channel_type) ? Number(object.channel_type) : undefined,
       status: isSet(object.status) ? Number(object.status) : 0,
+      meeting_code: isSet(object.meeting_code) ? String(object.meeting_code) : "",
     };
   },
 
@@ -5033,6 +5643,7 @@ export const ChannelUpdatedEvent = {
     message.channel_label !== undefined && (obj.channel_label = message.channel_label);
     message.channel_type !== undefined && (obj.channel_type = message.channel_type);
     message.status !== undefined && (obj.status = Math.round(message.status));
+    message.meeting_code !== undefined && (obj.meeting_code = message.meeting_code);
     return obj;
   },
 
@@ -5050,6 +5661,7 @@ export const ChannelUpdatedEvent = {
     message.channel_label = object.channel_label ?? "";
     message.channel_type = object.channel_type ?? undefined;
     message.status = object.status ?? 0;
+    message.meeting_code = object.meeting_code ?? "";
     return message;
   },
 };
@@ -5646,7 +6258,7 @@ export const AddUsers = {
 };
 
 function createBaseUserChannelAdded(): UserChannelAdded {
-  return { channel_id: "", users: [], status: "", clan_id: "", channel_type: 0 };
+  return { channel_id: "", users: [], status: "", clan_id: "", channel_type: 0, is_public: false };
 }
 
 export const UserChannelAdded = {
@@ -5665,6 +6277,9 @@ export const UserChannelAdded = {
     }
     if (message.channel_type !== 0) {
       writer.uint32(40).int32(message.channel_type);
+    }
+    if (message.is_public === true) {
+      writer.uint32(48).bool(message.is_public);
     }
     return writer;
   },
@@ -5691,6 +6306,9 @@ export const UserChannelAdded = {
         case 5:
           message.channel_type = reader.int32();
           break;
+        case 6:
+          message.is_public = reader.bool();
+          break;
         default:
           reader.skipType(tag & 7);
           break;
@@ -5706,6 +6324,7 @@ export const UserChannelAdded = {
       status: isSet(object.status) ? String(object.status) : "",
       clan_id: isSet(object.clan_id) ? String(object.clan_id) : "",
       channel_type: isSet(object.channel_type) ? Number(object.channel_type) : 0,
+      is_public: isSet(object.is_public) ? Boolean(object.is_public) : false,
     };
   },
 
@@ -5720,6 +6339,7 @@ export const UserChannelAdded = {
     message.status !== undefined && (obj.status = message.status);
     message.clan_id !== undefined && (obj.clan_id = message.clan_id);
     message.channel_type !== undefined && (obj.channel_type = Math.round(message.channel_type));
+    message.is_public !== undefined && (obj.is_public = message.is_public);
     return obj;
   },
 
@@ -5734,12 +6354,13 @@ export const UserChannelAdded = {
     message.status = object.status ?? "";
     message.clan_id = object.clan_id ?? "";
     message.channel_type = object.channel_type ?? 0;
+    message.is_public = object.is_public ?? false;
     return message;
   },
 };
 
 function createBaseUserChannelRemoved(): UserChannelRemoved {
-  return { channel_id: "", user_ids: [] };
+  return { channel_id: "", user_ids: [], channel_type: 0 };
 }
 
 export const UserChannelRemoved = {
@@ -5749,6 +6370,9 @@ export const UserChannelRemoved = {
     }
     for (const v of message.user_ids) {
       writer.uint32(18).string(v!);
+    }
+    if (message.channel_type !== 0) {
+      writer.uint32(24).int32(message.channel_type);
     }
     return writer;
   },
@@ -5766,6 +6390,9 @@ export const UserChannelRemoved = {
         case 2:
           message.user_ids.push(reader.string());
           break;
+        case 3:
+          message.channel_type = reader.int32();
+          break;
         default:
           reader.skipType(tag & 7);
           break;
@@ -5778,6 +6405,7 @@ export const UserChannelRemoved = {
     return {
       channel_id: isSet(object.channel_id) ? String(object.channel_id) : "",
       user_ids: Array.isArray(object?.user_ids) ? object.user_ids.map((e: any) => String(e)) : [],
+      channel_type: isSet(object.channel_type) ? Number(object.channel_type) : 0,
     };
   },
 
@@ -5789,6 +6417,7 @@ export const UserChannelRemoved = {
     } else {
       obj.user_ids = [];
     }
+    message.channel_type !== undefined && (obj.channel_type = Math.round(message.channel_type));
     return obj;
   },
 
@@ -5800,6 +6429,7 @@ export const UserChannelRemoved = {
     const message = createBaseUserChannelRemoved();
     message.channel_id = object.channel_id ?? "";
     message.user_ids = object.user_ids?.map((e) => e) || [];
+    message.channel_type = object.channel_type ?? 0;
     return message;
   },
 };
@@ -6829,6 +7459,252 @@ export const NotifiReactMessage = {
     message.id = object.id ?? "";
     message.user_id = object.user_id ?? "";
     message.channel_id = object.channel_id ?? "";
+    return message;
+  },
+};
+
+function createBaseNotificationChannelCategorySetting(): NotificationChannelCategorySetting {
+  return { id: "", channel_category_label: "", notification_setting_type: 0, channel_category_title: "" };
+}
+
+export const NotificationChannelCategorySetting = {
+  encode(message: NotificationChannelCategorySetting, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.id !== "") {
+      writer.uint32(10).string(message.id);
+    }
+    if (message.channel_category_label !== "") {
+      writer.uint32(18).string(message.channel_category_label);
+    }
+    if (message.notification_setting_type !== 0) {
+      writer.uint32(24).int32(message.notification_setting_type);
+    }
+    if (message.channel_category_title !== "") {
+      writer.uint32(34).string(message.channel_category_title);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): NotificationChannelCategorySetting {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseNotificationChannelCategorySetting();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.id = reader.string();
+          break;
+        case 2:
+          message.channel_category_label = reader.string();
+          break;
+        case 3:
+          message.notification_setting_type = reader.int32();
+          break;
+        case 4:
+          message.channel_category_title = reader.string();
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): NotificationChannelCategorySetting {
+    return {
+      id: isSet(object.id) ? String(object.id) : "",
+      channel_category_label: isSet(object.channel_category_label) ? String(object.channel_category_label) : "",
+      notification_setting_type: isSet(object.notification_setting_type) ? Number(object.notification_setting_type) : 0,
+      channel_category_title: isSet(object.channel_category_title) ? String(object.channel_category_title) : "",
+    };
+  },
+
+  toJSON(message: NotificationChannelCategorySetting): unknown {
+    const obj: any = {};
+    message.id !== undefined && (obj.id = message.id);
+    message.channel_category_label !== undefined && (obj.channel_category_label = message.channel_category_label);
+    message.notification_setting_type !== undefined &&
+      (obj.notification_setting_type = Math.round(message.notification_setting_type));
+    message.channel_category_title !== undefined && (obj.channel_category_title = message.channel_category_title);
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<NotificationChannelCategorySetting>, I>>(
+    base?: I,
+  ): NotificationChannelCategorySetting {
+    return NotificationChannelCategorySetting.fromPartial(base ?? {});
+  },
+
+  fromPartial<I extends Exact<DeepPartial<NotificationChannelCategorySetting>, I>>(
+    object: I,
+  ): NotificationChannelCategorySetting {
+    const message = createBaseNotificationChannelCategorySetting();
+    message.id = object.id ?? "";
+    message.channel_category_label = object.channel_category_label ?? "";
+    message.notification_setting_type = object.notification_setting_type ?? 0;
+    message.channel_category_title = object.channel_category_title ?? "";
+    return message;
+  },
+};
+
+function createBaseNotificationChannelCategorySettingEvent(): NotificationChannelCategorySettingEvent {
+  return { clan_id: "", notification_channel_category_settings_list: [] };
+}
+
+export const NotificationChannelCategorySettingEvent = {
+  encode(message: NotificationChannelCategorySettingEvent, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.clan_id !== "") {
+      writer.uint32(10).string(message.clan_id);
+    }
+    for (const v of message.notification_channel_category_settings_list) {
+      NotificationChannelCategorySetting.encode(v!, writer.uint32(18).fork()).ldelim();
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): NotificationChannelCategorySettingEvent {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseNotificationChannelCategorySettingEvent();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.clan_id = reader.string();
+          break;
+        case 2:
+          message.notification_channel_category_settings_list.push(
+            NotificationChannelCategorySetting.decode(reader, reader.uint32()),
+          );
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): NotificationChannelCategorySettingEvent {
+    return {
+      clan_id: isSet(object.clan_id) ? String(object.clan_id) : "",
+      notification_channel_category_settings_list: Array.isArray(object?.notification_channel_category_settings_list)
+        ? object.notification_channel_category_settings_list.map((e: any) =>
+          NotificationChannelCategorySetting.fromJSON(e)
+        )
+        : [],
+    };
+  },
+
+  toJSON(message: NotificationChannelCategorySettingEvent): unknown {
+    const obj: any = {};
+    message.clan_id !== undefined && (obj.clan_id = message.clan_id);
+    if (message.notification_channel_category_settings_list) {
+      obj.notification_channel_category_settings_list = message.notification_channel_category_settings_list.map((e) =>
+        e ? NotificationChannelCategorySetting.toJSON(e) : undefined
+      );
+    } else {
+      obj.notification_channel_category_settings_list = [];
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<NotificationChannelCategorySettingEvent>, I>>(
+    base?: I,
+  ): NotificationChannelCategorySettingEvent {
+    return NotificationChannelCategorySettingEvent.fromPartial(base ?? {});
+  },
+
+  fromPartial<I extends Exact<DeepPartial<NotificationChannelCategorySettingEvent>, I>>(
+    object: I,
+  ): NotificationChannelCategorySettingEvent {
+    const message = createBaseNotificationChannelCategorySettingEvent();
+    message.clan_id = object.clan_id ?? "";
+    message.notification_channel_category_settings_list =
+      object.notification_channel_category_settings_list?.map((e) =>
+        NotificationChannelCategorySetting.fromPartial(e)
+      ) || [];
+    return message;
+  },
+};
+
+function createBaseEventStatusNotificationEvent(): EventStatusNotificationEvent {
+  return { clan_id: "", event_id: "", event_status: "", message: "" };
+}
+
+export const EventStatusNotificationEvent = {
+  encode(message: EventStatusNotificationEvent, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.clan_id !== "") {
+      writer.uint32(10).string(message.clan_id);
+    }
+    if (message.event_id !== "") {
+      writer.uint32(18).string(message.event_id);
+    }
+    if (message.event_status !== "") {
+      writer.uint32(26).string(message.event_status);
+    }
+    if (message.message !== "") {
+      writer.uint32(34).string(message.message);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): EventStatusNotificationEvent {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseEventStatusNotificationEvent();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.clan_id = reader.string();
+          break;
+        case 2:
+          message.event_id = reader.string();
+          break;
+        case 3:
+          message.event_status = reader.string();
+          break;
+        case 4:
+          message.message = reader.string();
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): EventStatusNotificationEvent {
+    return {
+      clan_id: isSet(object.clan_id) ? String(object.clan_id) : "",
+      event_id: isSet(object.event_id) ? String(object.event_id) : "",
+      event_status: isSet(object.event_status) ? String(object.event_status) : "",
+      message: isSet(object.message) ? String(object.message) : "",
+    };
+  },
+
+  toJSON(message: EventStatusNotificationEvent): unknown {
+    const obj: any = {};
+    message.clan_id !== undefined && (obj.clan_id = message.clan_id);
+    message.event_id !== undefined && (obj.event_id = message.event_id);
+    message.event_status !== undefined && (obj.event_status = message.event_status);
+    message.message !== undefined && (obj.message = message.message);
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<EventStatusNotificationEvent>, I>>(base?: I): EventStatusNotificationEvent {
+    return EventStatusNotificationEvent.fromPartial(base ?? {});
+  },
+
+  fromPartial<I extends Exact<DeepPartial<EventStatusNotificationEvent>, I>>(object: I): EventStatusNotificationEvent {
+    const message = createBaseEventStatusNotificationEvent();
+    message.clan_id = object.clan_id ?? "";
+    message.event_id = object.event_id ?? "";
+    message.event_status = object.event_status ?? "";
+    message.message = object.message ?? "";
     return message;
   },
 };
