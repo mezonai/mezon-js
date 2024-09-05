@@ -1215,8 +1215,12 @@ export interface ListChannelAttachmentRequest {
   state:
     | number
     | undefined;
-  /** An optional next page cursor. */
-  cursor: string;
+  /** An optional previous id for page. */
+  before: string;
+  /** An optional next id for page. */
+  after: string;
+  /** An optional around id for page. */
+  around: string;
 }
 
 /** List all users that are part of a clan. */
@@ -10749,7 +10753,16 @@ export const ListChannelUsersRequest = {
 };
 
 function createBaseListChannelAttachmentRequest(): ListChannelAttachmentRequest {
-  return { clan_id: "", channel_id: "", file_type: "", limit: undefined, state: undefined, cursor: "" };
+  return {
+    clan_id: "",
+    channel_id: "",
+    file_type: "",
+    limit: undefined,
+    state: undefined,
+    before: "",
+    after: "",
+    around: "",
+  };
 }
 
 export const ListChannelAttachmentRequest = {
@@ -10769,8 +10782,14 @@ export const ListChannelAttachmentRequest = {
     if (message.state !== undefined) {
       Int32Value.encode({ value: message.state! }, writer.uint32(42).fork()).ldelim();
     }
-    if (message.cursor !== "") {
-      writer.uint32(50).string(message.cursor);
+    if (message.before !== "") {
+      writer.uint32(50).string(message.before);
+    }
+    if (message.after !== "") {
+      writer.uint32(58).string(message.after);
+    }
+    if (message.around !== "") {
+      writer.uint32(66).string(message.around);
     }
     return writer;
   },
@@ -10822,7 +10841,21 @@ export const ListChannelAttachmentRequest = {
             break;
           }
 
-          message.cursor = reader.string();
+          message.before = reader.string();
+          continue;
+        case 7:
+          if (tag !== 58) {
+            break;
+          }
+
+          message.after = reader.string();
+          continue;
+        case 8:
+          if (tag !== 66) {
+            break;
+          }
+
+          message.around = reader.string();
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -10840,7 +10873,9 @@ export const ListChannelAttachmentRequest = {
       file_type: isSet(object.file_type) ? globalThis.String(object.file_type) : "",
       limit: isSet(object.limit) ? Number(object.limit) : undefined,
       state: isSet(object.state) ? Number(object.state) : undefined,
-      cursor: isSet(object.cursor) ? globalThis.String(object.cursor) : "",
+      before: isSet(object.before) ? globalThis.String(object.before) : "",
+      after: isSet(object.after) ? globalThis.String(object.after) : "",
+      around: isSet(object.around) ? globalThis.String(object.around) : "",
     };
   },
 
@@ -10861,8 +10896,14 @@ export const ListChannelAttachmentRequest = {
     if (message.state !== undefined) {
       obj.state = message.state;
     }
-    if (message.cursor !== "") {
-      obj.cursor = message.cursor;
+    if (message.before !== "") {
+      obj.before = message.before;
+    }
+    if (message.after !== "") {
+      obj.after = message.after;
+    }
+    if (message.around !== "") {
+      obj.around = message.around;
     }
     return obj;
   },
@@ -10877,7 +10918,9 @@ export const ListChannelAttachmentRequest = {
     message.file_type = object.file_type ?? "";
     message.limit = object.limit ?? undefined;
     message.state = object.state ?? undefined;
-    message.cursor = object.cursor ?? "";
+    message.before = object.before ?? "";
+    message.after = object.after ?? "";
+    message.around = object.around ?? "";
     return message;
   },
 };

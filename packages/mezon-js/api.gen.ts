@@ -3350,7 +3350,9 @@ export class MezonApi {
       fileType?:string,
       limit?:number,
       state?:number,
-      cursor?:string,
+      before?:string,
+      after?:string,
+      around?:string,
       options: any = {}): Promise<ApiChannelAttachmentList> {
     
     if (channelId === null || channelId === undefined) {
@@ -3363,7 +3365,9 @@ export class MezonApi {
     queryParams.set("file_type", fileType);
     queryParams.set("limit", limit);
     queryParams.set("state", state);
-    queryParams.set("cursor", cursor);
+    queryParams.set("before", before);
+    queryParams.set("after", after);
+    queryParams.set("around", around);
 
     let bodyJson : string = "";
 
