@@ -1767,6 +1767,12 @@ export const Envelope = {
         break;
       }
       reader.skipType(tag & 7);
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },

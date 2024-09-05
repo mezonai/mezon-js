@@ -1445,8 +1445,8 @@ export class DefaultSocket implements Socket {
     return response.message_reaction_event
   }
 
-  async writeMessageTyping(clan_id: string, channel_id: string, mode: number): Promise<MessageTypingEvent> {
-    const response = await this.send({message_typing_event: {clan_id: clan_id, channel_id: channel_id, mode:mode}});
+  async writeMessageTyping(clan_id: string, channel_id: string, mode: number, is_public: boolean): Promise<MessageTypingEvent> {
+    const response = await this.send({message_typing_event: {clan_id: clan_id, channel_id: channel_id, mode:mode, is_public: is_public}});
     return response.message_typing_event
   }
 
