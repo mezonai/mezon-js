@@ -5738,12 +5738,12 @@ var Client = class {
     });
   }
   /** Delete a role by ID. */
-  deleteRole(session, roleId) {
+  deleteRole(session, roleId, clanId) {
     return __async(this, null, function* () {
       if (this.autoRefreshSession && session.refresh_token && session.isexpired((Date.now() + this.expiredTimespanMs) / 1e3)) {
         yield this.sessionRefresh(session);
       }
-      return this.apiClient.deleteRole(session.token, roleId).then((response) => {
+      return this.apiClient.deleteRole(session.token, roleId, "", clanId).then((response) => {
         return response !== void 0;
       });
     });
@@ -6196,17 +6196,6 @@ var Client = class {
       }
       return this.apiClient.getListPermission(session.token).then((response) => {
         return Promise.resolve(response);
-      });
-    });
-  }
-  /** Update action role when delete role */
-  updateRoleDelete(session, roleId, request) {
-    return __async(this, null, function* () {
-      if (this.autoRefreshSession && session.refresh_token && session.isexpired((Date.now() + this.expiredTimespanMs) / 1e3)) {
-        yield this.sessionRefresh(session);
-      }
-      return this.apiClient.updateRoleDelete(session.token, roleId, request).then((response) => {
-        return response !== void 0;
       });
     });
   }

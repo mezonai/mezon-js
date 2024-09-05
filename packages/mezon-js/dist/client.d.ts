@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { ApiAccount, ApiAccountCustom, ApiAccountDevice, ApiAccountEmail, ApiAccountFacebook, ApiAccountFacebookInstantGame, ApiAccountGoogle, ApiAccountGameCenter, ApiAccountSteam, ApiChannelDescList, ApiChannelDescription, ApiCreateChannelDescRequest, ApiDeleteRoleRequest, ApiClanDescList, ApiCreateClanDescRequest, ApiClanDesc, ApiCategoryDesc, ApiCategoryDescList, ApiPermissionList, ApiRoleUserList, ApiRole, ApiCreateRoleRequest, ApiAddRoleChannelDescRequest, ApiCreateCategoryDescRequest, ApiUpdateCategoryDescRequest, ApiEvent, ApiUpdateAccountRequest, ApiAccountApple, ApiLinkSteamRequest, ApiClanDescProfile, ApiClanProfile, ApiChannelUserList, ApiClanUserList, ApiLinkInviteUserRequest, ApiUpdateEventRequest, ApiLinkInviteUser, ApiInviteUserRes, ApiUploadAttachmentRequest, ApiUploadAttachment, ApiMessageReaction, ApiMessageMention, ApiMessageAttachment, ApiMessageRef, ApiChannelMessageHeader, ApiVoiceChannelUserList, ApiChannelAttachmentList, ApiCreateEventRequest, ApiEventManagement, ApiEventList, ApiDeleteEventRequest, ApiSetDefaultNotificationRequest, ApiSetNotificationRequest, ApiSetMuteNotificationRequest, ApiSearchMessageRequest, ApiSearchMessageResponse, ApiPinMessageRequest, ApiPinMessagesList, ApiDeleteChannelDescRequest, ApiChangeChannelPrivateRequest, ApiClanEmojiCreateRequest, MezonUpdateClanEmojiByIdBody, ApiWebhookCreateRequest, ApiWebhookListResponse, MezonUpdateWebhookByIdBody, ApiWebhookGenerateResponse, ApiCheckDuplicateClanNameResponse, ApiClanStickerAddRequest, MezonUpdateClanStickerByIdBody, MezonChangeChannelCategoryBody, ApiUpdateRoleChannelRequest, ApiAddAppRequest, ApiAppList, ApiApp, MezonUpdateRoleDeleteBody, MezonUpdateAppBody, ApiSystemMessagesList, ApiSystemMessage, ApiSystemMessageRequest, MezonUpdateSystemMessageBody } from "./api.gen";
+import { ApiAccount, ApiAccountCustom, ApiAccountDevice, ApiAccountEmail, ApiAccountFacebook, ApiAccountFacebookInstantGame, ApiAccountGoogle, ApiAccountGameCenter, ApiAccountSteam, ApiChannelDescList, ApiChannelDescription, ApiCreateChannelDescRequest, ApiDeleteRoleRequest, ApiClanDescList, ApiCreateClanDescRequest, ApiClanDesc, ApiCategoryDesc, ApiCategoryDescList, ApiPermissionList, ApiRoleUserList, ApiRole, ApiCreateRoleRequest, ApiAddRoleChannelDescRequest, ApiCreateCategoryDescRequest, ApiUpdateCategoryDescRequest, ApiEvent, ApiUpdateAccountRequest, ApiAccountApple, ApiLinkSteamRequest, ApiClanDescProfile, ApiClanProfile, ApiChannelUserList, ApiClanUserList, ApiLinkInviteUserRequest, ApiUpdateEventRequest, ApiLinkInviteUser, ApiInviteUserRes, ApiUploadAttachmentRequest, ApiUploadAttachment, ApiMessageReaction, ApiMessageMention, ApiMessageAttachment, ApiMessageRef, ApiChannelMessageHeader, ApiVoiceChannelUserList, ApiChannelAttachmentList, ApiCreateEventRequest, ApiEventManagement, ApiEventList, ApiDeleteEventRequest, ApiSetDefaultNotificationRequest, ApiSetNotificationRequest, ApiSetMuteNotificationRequest, ApiSearchMessageRequest, ApiSearchMessageResponse, ApiPinMessageRequest, ApiPinMessagesList, ApiDeleteChannelDescRequest, ApiChangeChannelPrivateRequest, ApiClanEmojiCreateRequest, MezonUpdateClanEmojiByIdBody, ApiWebhookCreateRequest, ApiWebhookListResponse, MezonUpdateWebhookByIdBody, ApiWebhookGenerateResponse, ApiCheckDuplicateClanNameResponse, ApiClanStickerAddRequest, MezonUpdateClanStickerByIdBody, MezonChangeChannelCategoryBody, ApiUpdateRoleChannelRequest, ApiAddAppRequest, ApiAppList, ApiApp, MezonUpdateAppBody, ApiSystemMessagesList, ApiSystemMessage, ApiSystemMessageRequest, MezonUpdateSystemMessageBody } from "./api.gen";
 import { Session } from "./session";
 import { Socket } from "./socket";
 import { WebSocketAdapter } from "./web_socket_adapter";
@@ -379,7 +379,7 @@ export declare class Client {
     /** Delete one or more notifications */
     deleteNotifications(session: Session, ids?: Array<string>): Promise<boolean>;
     /** Delete a role by ID. */
-    deleteRole(session: Session, roleId: string): Promise<boolean>;
+    deleteRole(session: Session, roleId: string, clanId: string): Promise<boolean>;
     /** Delete a event by ID. */
     deleteEvent(session: Session, eventId: string, clanId: string): Promise<boolean>;
     /** update user a event by ID. */
@@ -418,8 +418,6 @@ export declare class Client {
     listEvents(session: Session, clanId?: string): Promise<ApiEventList>;
     /** List permission */
     getListPermission(session: Session): Promise<ApiPermissionList>;
-    /** Update action role when delete role */
-    updateRoleDelete(session: Session, roleId: string, request: MezonUpdateRoleDeleteBody): Promise<boolean>;
     /** List user roles */
     listRolePermissions(session: Session, roleId: string): Promise<ApiPermissionList>;
     /** List user roles */
