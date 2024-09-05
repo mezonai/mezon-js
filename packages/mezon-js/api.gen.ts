@@ -196,6 +196,12 @@ export interface MezonUpdateRoleDeleteBody {
   clan_id?: string;
 }
 
+/** Request to get system message by clan and channel IDs. */
+export interface MezonUpdateSystemMessageBody {
+  //
+  channel_id?: string;
+}
+
 /**  */
 export interface MezonUpdateUserProfileByClanBody {
   //
@@ -1435,62 +1441,28 @@ export interface ApiSortParam {
   order?: string;
 }
 
-/** An object within the storage engine. */
-export interface ApiStorageObject {
-  //The collection which stores the object.
-  collection?: string;
-  //The UNIX time (for gRPC clients) or ISO string (for REST clients) when the object was created.
-  create_time?: string;
-  //The key of the object within the collection.
-  key?: string;
-  //The read access permissions for the object.
-  permission_read?: number;
-  //The write access permissions for the object.
-  permission_write?: number;
-  //The UNIX time (for gRPC clients) or ISO string (for REST clients) when the object was last updated.
-  update_time?: string;
-  //The user owner of the object.
-  user_id?: string;
-  //The value of the object.
-  value?: string;
-  //The version hash of the object.
-  version?: string;
+/** System message details. */
+export interface ApiSystemMessage {
+  //
+  channel_id?: string;
+  //
+  clan_id?: string;
+  //
+  id?: string;
 }
 
-/** A storage acknowledgement. */
-export interface ApiStorageObjectAck {
-  //The collection which stores the object.
-  collection?: string;
-  //The UNIX time (for gRPC clients) or ISO string (for REST clients) when the object was created.
-  create_time?: string;
-  //The key of the object within the collection.
-  key?: string;
-  //The UNIX time (for gRPC clients) or ISO string (for REST clients) when the object was last updated.
-  update_time?: string;
-  //The owner of the object.
-  user_id?: string;
-  //The version hash of the object.
-  version?: string;
+/** Request to get system message by clan and channel IDs. */
+export interface ApiSystemMessageRequest {
+  //
+  channel_id?: string;
+  //
+  clan_id?: string;
 }
 
-/** Batch of acknowledgements for the storage object write. */
-export interface ApiStorageObjectAcks {
-  //Batch of storage write acknowledgements.
-  acks?: Array<ApiStorageObjectAck>;
-}
-
-/** List of storage objects. */
-export interface ApiStorageObjectList {
-  //The cursor for the next page of results, if any.
-  cursor?: string;
-  //The list of storage objects.
-  objects?: Array<ApiStorageObject>;
-}
-
-/** Batch of storage objects. */
-export interface ApiStorageObjects {
-  //The batch of storage objects.
-  objects?: Array<ApiStorageObject>;
+/** List of system message. */
+export interface ApiSystemMessagesList {
+  //
+  system_messages_list?: Array<ApiSystemMessage>;
 }
 
 /** Update a user's account details. */
@@ -3350,9 +3322,7 @@ export class MezonApi {
       fileType?:string,
       limit?:number,
       state?:number,
-      before?:string,
-      after?:string,
-      around?:string,
+      cursor?:string,
       options: any = {}): Promise<ApiChannelAttachmentList> {
     
     if (channelId === null || channelId === undefined) {
@@ -3365,9 +3335,7 @@ export class MezonApi {
     queryParams.set("file_type", fileType);
     queryParams.set("limit", limit);
     queryParams.set("state", state);
-    queryParams.set("before", before);
-    queryParams.set("after", after);
-    queryParams.set("around", around);
+    queryParams.set("cursor", cursor);
 
     let bodyJson : string = "";
 
@@ -5701,11 +5669,51 @@ export class MezonApi {
     ]);
 }
 
+  /** Update a role when Delete a role by ID. */
+  updateRoleDelete(bearerToken: string,
+      roleId:string,
+      body: MezonUpdateRoleDeleteBody,
+      options: any = {}): Promise<any> {
+    
+    if (roleId === null || roleId === undefined) {
+      throw new Error("'roleId' is a required parameter but is null or undefined.");
+    }
+    if (body === null || body === undefined) {
+      throw new Error("'body' is a required parameter but is null or undefined.");
+    }
+    const urlPath = "/v2/roles/delete/{roleId}"
+        .replace("{roleId}", encodeURIComponent(String(roleId)));
+    const queryParams = new Map<string, any>();
+
+    let bodyJson : string = "";
+    bodyJson = JSON.stringify(body || {});
+
+    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
+    const fetchOptions = buildFetchOptions("PUT", options, bodyJson);
+    if (bearerToken) {
+        fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+    }
+
+    return Promise.race([
+      fetch(fullUrl, fetchOptions).then((response) => {
+        if (response.status == 204) {
+          return response;
+        } else if (response.status >= 200 && response.status < 300) {
+          return response.json();
+        } else {
+          throw response;
+        }
+      }),
+      new Promise((_, reject) =>
+        setTimeout(reject, this.timeoutMs, "Request timed out.")
+      ),
+    ]);
+}
+
   /** Delete a role by ID. */
   deleteRole(bearerToken: string,
       roleId:string,
       channelId?:string,
-      clanId?:string,
       options: any = {}): Promise<any> {
     
     if (roleId === null || roleId === undefined) {
@@ -5715,7 +5723,6 @@ export class MezonApi {
         .replace("{roleId}", encodeURIComponent(String(roleId)));
     const queryParams = new Map<string, any>();
     queryParams.set("channel_id", channelId);
-    queryParams.set("clan_id", clanId);
 
     let bodyJson : string = "";
 
@@ -6080,6 +6087,186 @@ export class MezonApi {
 
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("PATCH", options, bodyJson);
+    if (bearerToken) {
+        fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+    }
+
+    return Promise.race([
+      fetch(fullUrl, fetchOptions).then((response) => {
+        if (response.status == 204) {
+          return response;
+        } else if (response.status >= 200 && response.status < 300) {
+          return response.json();
+        } else {
+          throw response;
+        }
+      }),
+      new Promise((_, reject) =>
+        setTimeout(reject, this.timeoutMs, "Request timed out.")
+      ),
+    ]);
+}
+
+  /** Get the list of system messages. */
+  getSystemMessagesList(bearerToken: string,
+      options: any = {}): Promise<ApiSystemMessagesList> {
+    
+    const urlPath = "/v2/systemmessages";
+    const queryParams = new Map<string, any>();
+
+    let bodyJson : string = "";
+
+    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
+    const fetchOptions = buildFetchOptions("GET", options, bodyJson);
+    if (bearerToken) {
+        fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+    }
+
+    return Promise.race([
+      fetch(fullUrl, fetchOptions).then((response) => {
+        if (response.status == 204) {
+          return response;
+        } else if (response.status >= 200 && response.status < 300) {
+          return response.json();
+        } else {
+          throw response;
+        }
+      }),
+      new Promise((_, reject) =>
+        setTimeout(reject, this.timeoutMs, "Request timed out.")
+      ),
+    ]);
+}
+
+  /** Create a system messages. */
+  createSystemMessage(bearerToken: string,
+      body:ApiSystemMessageRequest,
+      options: any = {}): Promise<any> {
+    
+    if (body === null || body === undefined) {
+      throw new Error("'body' is a required parameter but is null or undefined.");
+    }
+    const urlPath = "/v2/systemmessages";
+    const queryParams = new Map<string, any>();
+
+    let bodyJson : string = "";
+    bodyJson = JSON.stringify(body || {});
+
+    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
+    const fetchOptions = buildFetchOptions("POST", options, bodyJson);
+    if (bearerToken) {
+        fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+    }
+
+    return Promise.race([
+      fetch(fullUrl, fetchOptions).then((response) => {
+        if (response.status == 204) {
+          return response;
+        } else if (response.status >= 200 && response.status < 300) {
+          return response.json();
+        } else {
+          throw response;
+        }
+      }),
+      new Promise((_, reject) =>
+        setTimeout(reject, this.timeoutMs, "Request timed out.")
+      ),
+    ]);
+}
+
+  /** Delete a specific system messages. */
+  deleteSystemMessage(bearerToken: string,
+      clanId:string,
+      options: any = {}): Promise<any> {
+    
+    if (clanId === null || clanId === undefined) {
+      throw new Error("'clanId' is a required parameter but is null or undefined.");
+    }
+    const urlPath = "/v2/systemmessages/{clanId}"
+        .replace("{clanId}", encodeURIComponent(String(clanId)));
+    const queryParams = new Map<string, any>();
+
+    let bodyJson : string = "";
+
+    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
+    const fetchOptions = buildFetchOptions("DELETE", options, bodyJson);
+    if (bearerToken) {
+        fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+    }
+
+    return Promise.race([
+      fetch(fullUrl, fetchOptions).then((response) => {
+        if (response.status == 204) {
+          return response;
+        } else if (response.status >= 200 && response.status < 300) {
+          return response.json();
+        } else {
+          throw response;
+        }
+      }),
+      new Promise((_, reject) =>
+        setTimeout(reject, this.timeoutMs, "Request timed out.")
+      ),
+    ]);
+}
+
+  /** Get details of a specific system messages. */
+  getSystemMessageByClanId(bearerToken: string,
+      clanId:string,
+      options: any = {}): Promise<ApiSystemMessage> {
+    
+    if (clanId === null || clanId === undefined) {
+      throw new Error("'clanId' is a required parameter but is null or undefined.");
+    }
+    const urlPath = "/v2/systemmessages/{clanId}"
+        .replace("{clanId}", encodeURIComponent(String(clanId)));
+    const queryParams = new Map<string, any>();
+
+    let bodyJson : string = "";
+
+    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
+    const fetchOptions = buildFetchOptions("GET", options, bodyJson);
+    if (bearerToken) {
+        fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+    }
+
+    return Promise.race([
+      fetch(fullUrl, fetchOptions).then((response) => {
+        if (response.status == 204) {
+          return response;
+        } else if (response.status >= 200 && response.status < 300) {
+          return response.json();
+        } else {
+          throw response;
+        }
+      }),
+      new Promise((_, reject) =>
+        setTimeout(reject, this.timeoutMs, "Request timed out.")
+      ),
+    ]);
+}
+
+  /** Update a system messages. */
+  updateSystemMessage(bearerToken: string,
+      clanId:string,
+      body:MezonUpdateSystemMessageBody,
+      options: any = {}): Promise<any> {
+    
+    if (clanId === null || clanId === undefined) {
+      throw new Error("'clanId' is a required parameter but is null or undefined.");
+    }
+    if (body === null || body === undefined) {
+      throw new Error("'body' is a required parameter but is null or undefined.");
+    }
+    const urlPath = "/v2/systemmessages/{clanId}"
+        .replace("{clanId}", encodeURIComponent(String(clanId)));
+    const queryParams = new Map<string, any>();
+
+    let bodyJson : string = "";
+    bodyJson = JSON.stringify(body || {});
+
+    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
+    const fetchOptions = buildFetchOptions("PUT", options, bodyJson);
     if (bearerToken) {
         fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
     }
