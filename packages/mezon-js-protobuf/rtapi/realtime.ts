@@ -245,7 +245,11 @@ export interface Envelope {
     | UserPermissionInChannelListEvent
     | undefined;
   /**  */
-  role_list_event?: RoleListEvent | undefined;
+  role_list_event?:
+    | RoleListEvent
+    | undefined;
+  /**  */
+  on_role_assign?: OnRoleAssign | undefined;
 }
 
 export interface AllUserClans {
@@ -290,6 +294,18 @@ export interface RoleListEvent {
   ClanId: string;
   /**  */
   roles: RoleList | undefined;
+}
+
+/** On role assign */
+export interface OnRoleAssign {
+  /** The clan of this role */
+  ClanId: string;
+  /** Role ID */
+  role_id: string;
+  /** UserIds Assigned */
+  user_ids_assigned: string[];
+  /** UserIds Removed */
+  user_ids_removed: string[];
 }
 
 /** Permission role channel */
@@ -1155,6 +1171,7 @@ function createBaseEnvelope(): Envelope {
     clan_event_created: undefined,
     user_permission_in_channel_list_event: undefined,
     role_list_event: undefined,
+    on_role_assign: undefined,
   };
 }
 
@@ -1337,6 +1354,9 @@ export const Envelope = {
     }
     if (message.role_list_event !== undefined) {
       RoleListEvent.encode(message.role_list_event, writer.uint32(458).fork()).ldelim();
+    }
+    if (message.on_role_assign !== undefined) {
+      OnRoleAssign.encode(message.on_role_assign, writer.uint32(466).fork()).ldelim();
     }
     return writer;
   },
@@ -1528,6 +1548,9 @@ export const Envelope = {
         case 57:
           message.role_list_event = RoleListEvent.decode(reader, reader.uint32());
           break;
+        case 58:
+          message.on_role_assign = OnRoleAssign.decode(reader, reader.uint32());
+          break;
         default:
           reader.skipType(tag & 7);
           break;
@@ -1673,6 +1696,7 @@ export const Envelope = {
         ? UserPermissionInChannelListEvent.fromJSON(object.user_permission_in_channel_list_event)
         : undefined,
       role_list_event: isSet(object.role_list_event) ? RoleListEvent.fromJSON(object.role_list_event) : undefined,
+      on_role_assign: isSet(object.on_role_assign) ? OnRoleAssign.fromJSON(object.on_role_assign) : undefined,
     };
   },
 
@@ -1835,6 +1859,8 @@ export const Envelope = {
         : undefined);
     message.role_list_event !== undefined &&
       (obj.role_list_event = message.role_list_event ? RoleListEvent.toJSON(message.role_list_event) : undefined);
+    message.on_role_assign !== undefined &&
+      (obj.on_role_assign = message.on_role_assign ? OnRoleAssign.toJSON(message.on_role_assign) : undefined);
     return obj;
   },
 
@@ -2032,6 +2058,9 @@ export const Envelope = {
         : undefined;
     message.role_list_event = (object.role_list_event !== undefined && object.role_list_event !== null)
       ? RoleListEvent.fromPartial(object.role_list_event)
+      : undefined;
+    message.on_role_assign = (object.on_role_assign !== undefined && object.on_role_assign !== null)
+      ? OnRoleAssign.fromPartial(object.on_role_assign)
       : undefined;
     return message;
   },
@@ -2401,6 +2430,98 @@ export const RoleListEvent = {
     message.roles = (object.roles !== undefined && object.roles !== null)
       ? RoleList.fromPartial(object.roles)
       : undefined;
+    return message;
+  },
+};
+
+function createBaseOnRoleAssign(): OnRoleAssign {
+  return { ClanId: "", role_id: "", user_ids_assigned: [], user_ids_removed: [] };
+}
+
+export const OnRoleAssign = {
+  encode(message: OnRoleAssign, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.ClanId !== "") {
+      writer.uint32(10).string(message.ClanId);
+    }
+    if (message.role_id !== "") {
+      writer.uint32(18).string(message.role_id);
+    }
+    for (const v of message.user_ids_assigned) {
+      writer.uint32(26).string(v!);
+    }
+    for (const v of message.user_ids_removed) {
+      writer.uint32(34).string(v!);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): OnRoleAssign {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseOnRoleAssign();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.ClanId = reader.string();
+          break;
+        case 2:
+          message.role_id = reader.string();
+          break;
+        case 3:
+          message.user_ids_assigned.push(reader.string());
+          break;
+        case 4:
+          message.user_ids_removed.push(reader.string());
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): OnRoleAssign {
+    return {
+      ClanId: isSet(object.ClanId) ? String(object.ClanId) : "",
+      role_id: isSet(object.role_id) ? String(object.role_id) : "",
+      user_ids_assigned: Array.isArray(object?.user_ids_assigned)
+        ? object.user_ids_assigned.map((e: any) => String(e))
+        : [],
+      user_ids_removed: Array.isArray(object?.user_ids_removed)
+        ? object.user_ids_removed.map((e: any) => String(e))
+        : [],
+    };
+  },
+
+  toJSON(message: OnRoleAssign): unknown {
+    const obj: any = {};
+    message.ClanId !== undefined && (obj.ClanId = message.ClanId);
+    message.role_id !== undefined && (obj.role_id = message.role_id);
+    if (message.user_ids_assigned) {
+      obj.user_ids_assigned = message.user_ids_assigned.map((e) => e);
+    } else {
+      obj.user_ids_assigned = [];
+    }
+    if (message.user_ids_removed) {
+      obj.user_ids_removed = message.user_ids_removed.map((e) => e);
+    } else {
+      obj.user_ids_removed = [];
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<OnRoleAssign>, I>>(base?: I): OnRoleAssign {
+    return OnRoleAssign.fromPartial(base ?? {});
+  },
+
+  fromPartial<I extends Exact<DeepPartial<OnRoleAssign>, I>>(object: I): OnRoleAssign {
+    const message = createBaseOnRoleAssign();
+    message.ClanId = object.ClanId ?? "";
+    message.role_id = object.role_id ?? "";
+    message.user_ids_assigned = object.user_ids_assigned?.map((e) => e) || [];
+    message.user_ids_removed = object.user_ids_removed?.map((e) => e) || [];
     return message;
   },
 };
