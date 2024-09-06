@@ -1209,8 +1209,12 @@ export interface ListChannelAttachmentRequest {
   state:
     | number
     | undefined;
-  /** An optional next page cursor. */
-  cursor: string;
+  /** An optional previous id for page. */
+  before: string;
+  /** An optional next id for page. */
+  after: string;
+  /** An optional around id for page. */
+  around: string;
 }
 
 /** List all users that are part of a clan. */
@@ -1377,6 +1381,7 @@ export interface UpdateCategoryDescRequest {
   /** The ID of the group to update. */
   category_id: string;
   category_name: string;
+  clan_id: string;
 }
 
 /** A user in the server. */
@@ -1708,7 +1713,8 @@ export interface CreateCategoryDescRequest {
 }
 
 export interface DeleteCategoryDescRequest {
-  creator_id: string;
+  category_id: string;
+  clan_id: string;
 }
 
 /** A list of clan */
@@ -2209,6 +2215,8 @@ export interface CreateEventRequest {
   address: string;
   start_time: Date | undefined;
   end_time: Date | undefined;
+  event_id: string;
+  event_status: string;
 }
 
 /** update a event within clan. */
@@ -2232,6 +2240,8 @@ export interface DeleteRoleRequest {
   channel_id: string;
   /** clan_id */
   clan_id: string;
+  /** Max of permissions' level */
+  max_permissions_level: number;
 }
 
 export interface DeleteEventRequest {
@@ -9070,7 +9080,16 @@ export const ListChannelUsersRequest = {
 };
 
 function createBaseListChannelAttachmentRequest(): ListChannelAttachmentRequest {
-  return { clan_id: "", channel_id: "", file_type: "", limit: undefined, state: undefined, cursor: "" };
+  return {
+    clan_id: "",
+    channel_id: "",
+    file_type: "",
+    limit: undefined,
+    state: undefined,
+    before: "",
+    after: "",
+    around: "",
+  };
 }
 
 export const ListChannelAttachmentRequest = {
@@ -9090,8 +9109,14 @@ export const ListChannelAttachmentRequest = {
     if (message.state !== undefined) {
       Int32Value.encode({ value: message.state! }, writer.uint32(42).fork()).ldelim();
     }
-    if (message.cursor !== "") {
-      writer.uint32(50).string(message.cursor);
+    if (message.before !== "") {
+      writer.uint32(50).string(message.before);
+    }
+    if (message.after !== "") {
+      writer.uint32(58).string(message.after);
+    }
+    if (message.around !== "") {
+      writer.uint32(66).string(message.around);
     }
     return writer;
   },
@@ -9119,7 +9144,13 @@ export const ListChannelAttachmentRequest = {
           message.state = Int32Value.decode(reader, reader.uint32()).value;
           break;
         case 6:
-          message.cursor = reader.string();
+          message.before = reader.string();
+          break;
+        case 7:
+          message.after = reader.string();
+          break;
+        case 8:
+          message.around = reader.string();
           break;
         default:
           reader.skipType(tag & 7);
@@ -9136,7 +9167,9 @@ export const ListChannelAttachmentRequest = {
       file_type: isSet(object.file_type) ? String(object.file_type) : "",
       limit: isSet(object.limit) ? Number(object.limit) : undefined,
       state: isSet(object.state) ? Number(object.state) : undefined,
-      cursor: isSet(object.cursor) ? String(object.cursor) : "",
+      before: isSet(object.before) ? String(object.before) : "",
+      after: isSet(object.after) ? String(object.after) : "",
+      around: isSet(object.around) ? String(object.around) : "",
     };
   },
 
@@ -9147,7 +9180,9 @@ export const ListChannelAttachmentRequest = {
     message.file_type !== undefined && (obj.file_type = message.file_type);
     message.limit !== undefined && (obj.limit = message.limit);
     message.state !== undefined && (obj.state = message.state);
-    message.cursor !== undefined && (obj.cursor = message.cursor);
+    message.before !== undefined && (obj.before = message.before);
+    message.after !== undefined && (obj.after = message.after);
+    message.around !== undefined && (obj.around = message.around);
     return obj;
   },
 
@@ -9162,7 +9197,9 @@ export const ListChannelAttachmentRequest = {
     message.file_type = object.file_type ?? "";
     message.limit = object.limit ?? undefined;
     message.state = object.state ?? undefined;
-    message.cursor = object.cursor ?? "";
+    message.before = object.before ?? "";
+    message.after = object.after ?? "";
+    message.around = object.around ?? "";
     return message;
   },
 };
@@ -10087,7 +10124,7 @@ export const UpdateGroupRequest = {
 };
 
 function createBaseUpdateCategoryDescRequest(): UpdateCategoryDescRequest {
-  return { category_id: "", category_name: "" };
+  return { category_id: "", category_name: "", clan_id: "" };
 }
 
 export const UpdateCategoryDescRequest = {
@@ -10097,6 +10134,9 @@ export const UpdateCategoryDescRequest = {
     }
     if (message.category_name !== "") {
       writer.uint32(18).string(message.category_name);
+    }
+    if (message.clan_id !== "") {
+      writer.uint32(26).string(message.clan_id);
     }
     return writer;
   },
@@ -10114,6 +10154,9 @@ export const UpdateCategoryDescRequest = {
         case 2:
           message.category_name = reader.string();
           break;
+        case 3:
+          message.clan_id = reader.string();
+          break;
         default:
           reader.skipType(tag & 7);
           break;
@@ -10126,6 +10169,7 @@ export const UpdateCategoryDescRequest = {
     return {
       category_id: isSet(object.category_id) ? String(object.category_id) : "",
       category_name: isSet(object.category_name) ? String(object.category_name) : "",
+      clan_id: isSet(object.clan_id) ? String(object.clan_id) : "",
     };
   },
 
@@ -10133,6 +10177,7 @@ export const UpdateCategoryDescRequest = {
     const obj: any = {};
     message.category_id !== undefined && (obj.category_id = message.category_id);
     message.category_name !== undefined && (obj.category_name = message.category_name);
+    message.clan_id !== undefined && (obj.clan_id = message.clan_id);
     return obj;
   },
 
@@ -10144,6 +10189,7 @@ export const UpdateCategoryDescRequest = {
     const message = createBaseUpdateCategoryDescRequest();
     message.category_id = object.category_id ?? "";
     message.category_name = object.category_name ?? "";
+    message.clan_id = object.clan_id ?? "";
     return message;
   },
 };
@@ -12001,13 +12047,16 @@ export const CreateCategoryDescRequest = {
 };
 
 function createBaseDeleteCategoryDescRequest(): DeleteCategoryDescRequest {
-  return { creator_id: "" };
+  return { category_id: "", clan_id: "" };
 }
 
 export const DeleteCategoryDescRequest = {
   encode(message: DeleteCategoryDescRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.creator_id !== "") {
-      writer.uint32(10).string(message.creator_id);
+    if (message.category_id !== "") {
+      writer.uint32(10).string(message.category_id);
+    }
+    if (message.clan_id !== "") {
+      writer.uint32(18).string(message.clan_id);
     }
     return writer;
   },
@@ -12020,7 +12069,10 @@ export const DeleteCategoryDescRequest = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          message.creator_id = reader.string();
+          message.category_id = reader.string();
+          break;
+        case 2:
+          message.clan_id = reader.string();
           break;
         default:
           reader.skipType(tag & 7);
@@ -12031,12 +12083,16 @@ export const DeleteCategoryDescRequest = {
   },
 
   fromJSON(object: any): DeleteCategoryDescRequest {
-    return { creator_id: isSet(object.creator_id) ? String(object.creator_id) : "" };
+    return {
+      category_id: isSet(object.category_id) ? String(object.category_id) : "",
+      clan_id: isSet(object.clan_id) ? String(object.clan_id) : "",
+    };
   },
 
   toJSON(message: DeleteCategoryDescRequest): unknown {
     const obj: any = {};
-    message.creator_id !== undefined && (obj.creator_id = message.creator_id);
+    message.category_id !== undefined && (obj.category_id = message.category_id);
+    message.clan_id !== undefined && (obj.clan_id = message.clan_id);
     return obj;
   },
 
@@ -12046,7 +12102,8 @@ export const DeleteCategoryDescRequest = {
 
   fromPartial<I extends Exact<DeepPartial<DeleteCategoryDescRequest>, I>>(object: I): DeleteCategoryDescRequest {
     const message = createBaseDeleteCategoryDescRequest();
-    message.creator_id = object.creator_id ?? "";
+    message.category_id = object.category_id ?? "";
+    message.clan_id = object.clan_id ?? "";
     return message;
   },
 };
@@ -15761,6 +15818,8 @@ function createBaseCreateEventRequest(): CreateEventRequest {
     address: "",
     start_time: undefined,
     end_time: undefined,
+    event_id: "",
+    event_status: "",
   };
 }
 
@@ -15789,6 +15848,12 @@ export const CreateEventRequest = {
     }
     if (message.end_time !== undefined) {
       Timestamp.encode(toTimestamp(message.end_time), writer.uint32(66).fork()).ldelim();
+    }
+    if (message.event_id !== "") {
+      writer.uint32(74).string(message.event_id);
+    }
+    if (message.event_status !== "") {
+      writer.uint32(82).string(message.event_status);
     }
     return writer;
   },
@@ -15824,6 +15889,12 @@ export const CreateEventRequest = {
         case 8:
           message.end_time = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
           break;
+        case 9:
+          message.event_id = reader.string();
+          break;
+        case 10:
+          message.event_status = reader.string();
+          break;
         default:
           reader.skipType(tag & 7);
           break;
@@ -15842,6 +15913,8 @@ export const CreateEventRequest = {
       address: isSet(object.address) ? String(object.address) : "",
       start_time: isSet(object.start_time) ? fromJsonTimestamp(object.start_time) : undefined,
       end_time: isSet(object.end_time) ? fromJsonTimestamp(object.end_time) : undefined,
+      event_id: isSet(object.event_id) ? String(object.event_id) : "",
+      event_status: isSet(object.event_status) ? String(object.event_status) : "",
     };
   },
 
@@ -15855,6 +15928,8 @@ export const CreateEventRequest = {
     message.address !== undefined && (obj.address = message.address);
     message.start_time !== undefined && (obj.start_time = message.start_time.toISOString());
     message.end_time !== undefined && (obj.end_time = message.end_time.toISOString());
+    message.event_id !== undefined && (obj.event_id = message.event_id);
+    message.event_status !== undefined && (obj.event_status = message.event_status);
     return obj;
   },
 
@@ -15872,6 +15947,8 @@ export const CreateEventRequest = {
     message.address = object.address ?? "";
     message.start_time = object.start_time ?? undefined;
     message.end_time = object.end_time ?? undefined;
+    message.event_id = object.event_id ?? "";
+    message.event_status = object.event_status ?? "";
     return message;
   },
 };
@@ -16012,7 +16089,7 @@ export const UpdateEventRequest = {
 };
 
 function createBaseDeleteRoleRequest(): DeleteRoleRequest {
-  return { role_id: "", channel_id: "", clan_id: "" };
+  return { role_id: "", channel_id: "", clan_id: "", max_permissions_level: 0 };
 }
 
 export const DeleteRoleRequest = {
@@ -16025,6 +16102,9 @@ export const DeleteRoleRequest = {
     }
     if (message.clan_id !== "") {
       writer.uint32(26).string(message.clan_id);
+    }
+    if (message.max_permissions_level !== 0) {
+      writer.uint32(32).int64(message.max_permissions_level);
     }
     return writer;
   },
@@ -16045,6 +16125,9 @@ export const DeleteRoleRequest = {
         case 3:
           message.clan_id = reader.string();
           break;
+        case 4:
+          message.max_permissions_level = longToNumber(reader.int64() as Long);
+          break;
         default:
           reader.skipType(tag & 7);
           break;
@@ -16058,6 +16141,7 @@ export const DeleteRoleRequest = {
       role_id: isSet(object.role_id) ? String(object.role_id) : "",
       channel_id: isSet(object.channel_id) ? String(object.channel_id) : "",
       clan_id: isSet(object.clan_id) ? String(object.clan_id) : "",
+      max_permissions_level: isSet(object.max_permissions_level) ? Number(object.max_permissions_level) : 0,
     };
   },
 
@@ -16066,6 +16150,8 @@ export const DeleteRoleRequest = {
     message.role_id !== undefined && (obj.role_id = message.role_id);
     message.channel_id !== undefined && (obj.channel_id = message.channel_id);
     message.clan_id !== undefined && (obj.clan_id = message.clan_id);
+    message.max_permissions_level !== undefined &&
+      (obj.max_permissions_level = Math.round(message.max_permissions_level));
     return obj;
   },
 
@@ -16078,6 +16164,7 @@ export const DeleteRoleRequest = {
     message.role_id = object.role_id ?? "";
     message.channel_id = object.channel_id ?? "";
     message.clan_id = object.clan_id ?? "";
+    message.max_permissions_level = object.max_permissions_level ?? 0;
     return message;
   },
 };
