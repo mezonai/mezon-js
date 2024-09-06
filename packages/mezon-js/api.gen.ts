@@ -487,7 +487,7 @@ export interface ApiChannelDescription {
   //The parrent channel this message belongs to.
   parrent_id?: string;
   //
-  status?: number;
+  is_online?: Array<boolean>;
   //The channel type.
   type?: number;
   //
@@ -496,6 +496,8 @@ export interface ApiChannelDescription {
   user_id?: Array<string>;
   //
   usernames?: string;
+  //
+  status?: number;
 }
 
 /** A message sent on a channel. */

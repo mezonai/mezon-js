@@ -358,6 +358,10 @@ export interface SessionLogoutRequest {
   token: string;
   /** Refresh token to invalidate. */
   refresh_token: string;
+  /** Device Id */
+  device_id: string;
+  /** FCM token from firebase */
+  fcm_token: string;
 }
 
 /** Authenticate against the server with Apple Sign In. */
@@ -1707,6 +1711,16 @@ export interface CategoryDesc {
   category_id: string;
 }
 
+export interface UpdateCategoryOrderRequest {
+  clan_id: string;
+  categories: CategoryOrderUpdate[];
+}
+
+export interface CategoryOrderUpdate {
+  category_id: string;
+  order: number;
+}
+
 export interface CreateCategoryDescRequest {
   category_name: string;
   clan_id: string;
@@ -1791,7 +1805,7 @@ export interface ChannelDescription {
     | ChannelMessageHeader
     | undefined;
   /** status */
-  status: number;
+  is_online: boolean[];
   /** meeting code */
   meeting_code: string;
   /** count message unread */
@@ -2240,6 +2254,8 @@ export interface DeleteRoleRequest {
   channel_id: string;
   /** clan_id */
   clan_id: string;
+  /** Max of permissions' level */
+  max_permissions_level: number;
 }
 
 export interface DeleteEventRequest {
@@ -4555,7 +4571,7 @@ export const SessionRefreshRequest_VarsEntry = {
 };
 
 function createBaseSessionLogoutRequest(): SessionLogoutRequest {
-  return { token: "", refresh_token: "" };
+  return { token: "", refresh_token: "", device_id: "", fcm_token: "" };
 }
 
 export const SessionLogoutRequest = {
@@ -4565,6 +4581,12 @@ export const SessionLogoutRequest = {
     }
     if (message.refresh_token !== "") {
       writer.uint32(18).string(message.refresh_token);
+    }
+    if (message.device_id !== "") {
+      writer.uint32(26).string(message.device_id);
+    }
+    if (message.fcm_token !== "") {
+      writer.uint32(34).string(message.fcm_token);
     }
     return writer;
   },
@@ -4582,6 +4604,12 @@ export const SessionLogoutRequest = {
         case 2:
           message.refresh_token = reader.string();
           break;
+        case 3:
+          message.device_id = reader.string();
+          break;
+        case 4:
+          message.fcm_token = reader.string();
+          break;
         default:
           reader.skipType(tag & 7);
           break;
@@ -4594,6 +4622,8 @@ export const SessionLogoutRequest = {
     return {
       token: isSet(object.token) ? String(object.token) : "",
       refresh_token: isSet(object.refresh_token) ? String(object.refresh_token) : "",
+      device_id: isSet(object.device_id) ? String(object.device_id) : "",
+      fcm_token: isSet(object.fcm_token) ? String(object.fcm_token) : "",
     };
   },
 
@@ -4601,6 +4631,8 @@ export const SessionLogoutRequest = {
     const obj: any = {};
     message.token !== undefined && (obj.token = message.token);
     message.refresh_token !== undefined && (obj.refresh_token = message.refresh_token);
+    message.device_id !== undefined && (obj.device_id = message.device_id);
+    message.fcm_token !== undefined && (obj.fcm_token = message.fcm_token);
     return obj;
   },
 
@@ -4612,6 +4644,8 @@ export const SessionLogoutRequest = {
     const message = createBaseSessionLogoutRequest();
     message.token = object.token ?? "";
     message.refresh_token = object.refresh_token ?? "";
+    message.device_id = object.device_id ?? "";
+    message.fcm_token = object.fcm_token ?? "";
     return message;
   },
 };
@@ -11982,6 +12016,136 @@ export const CategoryDesc = {
   },
 };
 
+function createBaseUpdateCategoryOrderRequest(): UpdateCategoryOrderRequest {
+  return { clan_id: "", categories: [] };
+}
+
+export const UpdateCategoryOrderRequest = {
+  encode(message: UpdateCategoryOrderRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.clan_id !== "") {
+      writer.uint32(10).string(message.clan_id);
+    }
+    for (const v of message.categories) {
+      CategoryOrderUpdate.encode(v!, writer.uint32(18).fork()).ldelim();
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): UpdateCategoryOrderRequest {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseUpdateCategoryOrderRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.clan_id = reader.string();
+          break;
+        case 2:
+          message.categories.push(CategoryOrderUpdate.decode(reader, reader.uint32()));
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): UpdateCategoryOrderRequest {
+    return {
+      clan_id: isSet(object.clan_id) ? String(object.clan_id) : "",
+      categories: Array.isArray(object?.categories)
+        ? object.categories.map((e: any) => CategoryOrderUpdate.fromJSON(e))
+        : [],
+    };
+  },
+
+  toJSON(message: UpdateCategoryOrderRequest): unknown {
+    const obj: any = {};
+    message.clan_id !== undefined && (obj.clan_id = message.clan_id);
+    if (message.categories) {
+      obj.categories = message.categories.map((e) => e ? CategoryOrderUpdate.toJSON(e) : undefined);
+    } else {
+      obj.categories = [];
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<UpdateCategoryOrderRequest>, I>>(base?: I): UpdateCategoryOrderRequest {
+    return UpdateCategoryOrderRequest.fromPartial(base ?? {});
+  },
+
+  fromPartial<I extends Exact<DeepPartial<UpdateCategoryOrderRequest>, I>>(object: I): UpdateCategoryOrderRequest {
+    const message = createBaseUpdateCategoryOrderRequest();
+    message.clan_id = object.clan_id ?? "";
+    message.categories = object.categories?.map((e) => CategoryOrderUpdate.fromPartial(e)) || [];
+    return message;
+  },
+};
+
+function createBaseCategoryOrderUpdate(): CategoryOrderUpdate {
+  return { category_id: "", order: 0 };
+}
+
+export const CategoryOrderUpdate = {
+  encode(message: CategoryOrderUpdate, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.category_id !== "") {
+      writer.uint32(10).string(message.category_id);
+    }
+    if (message.order !== 0) {
+      writer.uint32(16).int32(message.order);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): CategoryOrderUpdate {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseCategoryOrderUpdate();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.category_id = reader.string();
+          break;
+        case 2:
+          message.order = reader.int32();
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): CategoryOrderUpdate {
+    return {
+      category_id: isSet(object.category_id) ? String(object.category_id) : "",
+      order: isSet(object.order) ? Number(object.order) : 0,
+    };
+  },
+
+  toJSON(message: CategoryOrderUpdate): unknown {
+    const obj: any = {};
+    message.category_id !== undefined && (obj.category_id = message.category_id);
+    message.order !== undefined && (obj.order = Math.round(message.order));
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<CategoryOrderUpdate>, I>>(base?: I): CategoryOrderUpdate {
+    return CategoryOrderUpdate.fromPartial(base ?? {});
+  },
+
+  fromPartial<I extends Exact<DeepPartial<CategoryOrderUpdate>, I>>(object: I): CategoryOrderUpdate {
+    const message = createBaseCategoryOrderUpdate();
+    message.category_id = object.category_id ?? "";
+    message.order = object.order ?? 0;
+    return message;
+  },
+};
+
 function createBaseCreateCategoryDescRequest(): CreateCategoryDescRequest {
   return { category_name: "", clan_id: "" };
 }
@@ -12376,7 +12540,7 @@ function createBaseChannelDescription(): ChannelDescription {
     user_id: [],
     last_sent_message: undefined,
     last_seen_message: undefined,
-    status: 0,
+    is_online: [],
     meeting_code: "",
     count_mess_unread: 0,
     active: 0,
@@ -12429,9 +12593,11 @@ export const ChannelDescription = {
     if (message.last_seen_message !== undefined) {
       ChannelMessageHeader.encode(message.last_seen_message, writer.uint32(106).fork()).ldelim();
     }
-    if (message.status !== 0) {
-      writer.uint32(112).int32(message.status);
+    writer.uint32(114).fork();
+    for (const v of message.is_online) {
+      writer.bool(v);
     }
+    writer.ldelim();
     if (message.meeting_code !== "") {
       writer.uint32(122).string(message.meeting_code);
     }
@@ -12506,7 +12672,14 @@ export const ChannelDescription = {
           message.last_seen_message = ChannelMessageHeader.decode(reader, reader.uint32());
           break;
         case 14:
-          message.status = reader.int32();
+          if ((tag & 7) === 2) {
+            const end2 = reader.uint32() + reader.pos;
+            while (reader.pos < end2) {
+              message.is_online.push(reader.bool());
+            }
+          } else {
+            message.is_online.push(reader.bool());
+          }
           break;
         case 15:
           message.meeting_code = reader.string();
@@ -12559,7 +12732,7 @@ export const ChannelDescription = {
       last_seen_message: isSet(object.last_seen_message)
         ? ChannelMessageHeader.fromJSON(object.last_seen_message)
         : undefined,
-      status: isSet(object.status) ? Number(object.status) : 0,
+      is_online: Array.isArray(object?.is_online) ? object.is_online.map((e: any) => Boolean(e)) : [],
       meeting_code: isSet(object.meeting_code) ? String(object.meeting_code) : "",
       count_mess_unread: isSet(object.count_mess_unread) ? Number(object.count_mess_unread) : 0,
       active: isSet(object.active) ? Number(object.active) : 0,
@@ -12598,7 +12771,11 @@ export const ChannelDescription = {
     message.last_seen_message !== undefined && (obj.last_seen_message = message.last_seen_message
       ? ChannelMessageHeader.toJSON(message.last_seen_message)
       : undefined);
-    message.status !== undefined && (obj.status = Math.round(message.status));
+    if (message.is_online) {
+      obj.is_online = message.is_online.map((e) => e);
+    } else {
+      obj.is_online = [];
+    }
     message.meeting_code !== undefined && (obj.meeting_code = message.meeting_code);
     message.count_mess_unread !== undefined && (obj.count_mess_unread = Math.round(message.count_mess_unread));
     message.active !== undefined && (obj.active = Math.round(message.active));
@@ -12633,7 +12810,7 @@ export const ChannelDescription = {
     message.last_seen_message = (object.last_seen_message !== undefined && object.last_seen_message !== null)
       ? ChannelMessageHeader.fromPartial(object.last_seen_message)
       : undefined;
-    message.status = object.status ?? 0;
+    message.is_online = object.is_online?.map((e) => e) || [];
     message.meeting_code = object.meeting_code ?? "";
     message.count_mess_unread = object.count_mess_unread ?? 0;
     message.active = object.active ?? 0;
@@ -16087,7 +16264,7 @@ export const UpdateEventRequest = {
 };
 
 function createBaseDeleteRoleRequest(): DeleteRoleRequest {
-  return { role_id: "", channel_id: "", clan_id: "" };
+  return { role_id: "", channel_id: "", clan_id: "", max_permissions_level: 0 };
 }
 
 export const DeleteRoleRequest = {
@@ -16100,6 +16277,9 @@ export const DeleteRoleRequest = {
     }
     if (message.clan_id !== "") {
       writer.uint32(26).string(message.clan_id);
+    }
+    if (message.max_permissions_level !== 0) {
+      writer.uint32(32).int64(message.max_permissions_level);
     }
     return writer;
   },
@@ -16120,6 +16300,9 @@ export const DeleteRoleRequest = {
         case 3:
           message.clan_id = reader.string();
           break;
+        case 4:
+          message.max_permissions_level = longToNumber(reader.int64() as Long);
+          break;
         default:
           reader.skipType(tag & 7);
           break;
@@ -16133,6 +16316,7 @@ export const DeleteRoleRequest = {
       role_id: isSet(object.role_id) ? String(object.role_id) : "",
       channel_id: isSet(object.channel_id) ? String(object.channel_id) : "",
       clan_id: isSet(object.clan_id) ? String(object.clan_id) : "",
+      max_permissions_level: isSet(object.max_permissions_level) ? Number(object.max_permissions_level) : 0,
     };
   },
 
@@ -16141,6 +16325,8 @@ export const DeleteRoleRequest = {
     message.role_id !== undefined && (obj.role_id = message.role_id);
     message.channel_id !== undefined && (obj.channel_id = message.channel_id);
     message.clan_id !== undefined && (obj.clan_id = message.clan_id);
+    message.max_permissions_level !== undefined &&
+      (obj.max_permissions_level = Math.round(message.max_permissions_level));
     return obj;
   },
 
@@ -16153,6 +16339,7 @@ export const DeleteRoleRequest = {
     message.role_id = object.role_id ?? "";
     message.channel_id = object.channel_id ?? "";
     message.clan_id = object.clan_id ?? "";
+    message.max_permissions_level = object.max_permissions_level ?? 0;
     return message;
   },
 };
