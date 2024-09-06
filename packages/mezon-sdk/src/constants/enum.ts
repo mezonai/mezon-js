@@ -20,3 +20,9 @@ export enum ChannelType {
   CHANNEL_TYPE_ANNOUNCEMENT = 6,
   CHANNEL_TYPE_THREAD = 7,
 }
+
+export enum ChannelStreamMode {
+  STREAM_MODE_CHANNEL = 2,
+  STREAM_MODE_GROUP = 3,
+  STREAM_MODE_DM = 4,
+}
