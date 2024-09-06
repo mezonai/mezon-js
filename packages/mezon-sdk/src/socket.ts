@@ -15,7 +15,7 @@
  */
 
 import WebSocket, { CloseEvent, ErrorEvent } from "ws";
-import { ApiMessageAttachment, ApiMessageMention, ApiMessageReaction, ApiMessageRef, ChannelMessage } from "./client";
+import { ApiMessageAttachment, ApiMessageMention, ApiMessageReaction, ApiMessageRef, ChannelMessage } from "./interfaces";
 import {Session} from "./session";
 import { WebSocketAdapter, WebSocketAdapterText } from "./web_socket_adapter";
 
