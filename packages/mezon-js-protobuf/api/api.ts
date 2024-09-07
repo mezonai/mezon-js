@@ -648,6 +648,10 @@ export interface MessageReaction {
   message_sender_id: string;
   /** is public */
   is_public: boolean;
+  /** The parent id to sent to. */
+  parent_id: string;
+  /** is parent public */
+  is_parent_public: boolean;
 }
 
 /** Message attachment */
@@ -6055,6 +6059,8 @@ function createBaseMessageReaction(): MessageReaction {
     mode: 0,
     message_sender_id: "",
     is_public: false,
+    parent_id: "",
+    is_parent_public: false,
   };
 }
 
@@ -6101,6 +6107,12 @@ export const MessageReaction = {
     }
     if (message.is_public === true) {
       writer.uint32(112).bool(message.is_public);
+    }
+    if (message.parent_id !== "") {
+      writer.uint32(122).string(message.parent_id);
+    }
+    if (message.is_parent_public === true) {
+      writer.uint32(128).bool(message.is_parent_public);
     }
     return writer;
   },
@@ -6154,6 +6166,12 @@ export const MessageReaction = {
         case 14:
           message.is_public = reader.bool();
           break;
+        case 15:
+          message.parent_id = reader.string();
+          break;
+        case 16:
+          message.is_parent_public = reader.bool();
+          break;
         default:
           reader.skipType(tag & 7);
           break;
@@ -6178,6 +6196,8 @@ export const MessageReaction = {
       mode: isSet(object.mode) ? Number(object.mode) : 0,
       message_sender_id: isSet(object.message_sender_id) ? String(object.message_sender_id) : "",
       is_public: isSet(object.is_public) ? Boolean(object.is_public) : false,
+      parent_id: isSet(object.parent_id) ? String(object.parent_id) : "",
+      is_parent_public: isSet(object.is_parent_public) ? Boolean(object.is_parent_public) : false,
     };
   },
 
@@ -6197,6 +6217,8 @@ export const MessageReaction = {
     message.mode !== undefined && (obj.mode = Math.round(message.mode));
     message.message_sender_id !== undefined && (obj.message_sender_id = message.message_sender_id);
     message.is_public !== undefined && (obj.is_public = message.is_public);
+    message.parent_id !== undefined && (obj.parent_id = message.parent_id);
+    message.is_parent_public !== undefined && (obj.is_parent_public = message.is_parent_public);
     return obj;
   },
 
@@ -6220,6 +6242,8 @@ export const MessageReaction = {
     message.mode = object.mode ?? 0;
     message.message_sender_id = object.message_sender_id ?? "";
     message.is_public = object.is_public ?? false;
+    message.parent_id = object.parent_id ?? "";
+    message.is_parent_public = object.is_parent_public ?? false;
     return message;
   },
 };
