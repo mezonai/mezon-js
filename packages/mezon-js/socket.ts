@@ -93,6 +93,10 @@ interface ChannelLeave {
     channel_label: string;
     // Is public
     is_public: boolean;
+    // parent id
+    parent_id: string;
+    // parent public
+    is_parent_public: boolean;
   };
 }
 
@@ -164,6 +168,10 @@ export interface LastPinMessageEvent {
   operation: number;
   // Is public
   is_public: boolean;
+  // The parent id to sent to.
+  parent_id?: string;
+  // is parent public
+  is_parent_public?: string;
 }
 
 /** Last seen message by user */
@@ -786,10 +794,10 @@ export interface Socket {
   joinChat(clan_id: string, parent_id: string, channel_id: string, channel_type: number, is_public: boolean, is_parent_public: boolean) : Promise<Channel>;
 
   /** Leave a chat channel on the server. */
-  leaveChat(clan_id: string, channel_id: string, channel_type: number, is_public: boolean) : Promise<void>;
+  leaveChat(clan_id: string, parent_id: string, channel_id: string, channel_type: number, is_public: boolean, is_parent_public: boolean) : Promise<void>;
 
   /** Remove a chat message from a chat channel on the server. */
-  removeChatMessage(clan_id: string, channel_id: string, mode: number, is_public: boolean, message_id: string) : Promise<ChannelMessageAck>;
+  removeChatMessage(clan_id: string, parent_id: string, channel_id: string, mode: number, is_public: boolean, is_parent_public: boolean, message_id: string) : Promise<ChannelMessageAck>;
 
   /** Execute an RPC function to the server. */
   rpc(id?: string, payload?: string, http_key?: string) : Promise<ApiRpc>
@@ -1408,31 +1416,26 @@ export class DefaultSocket implements Socket {
     return response.channel;
   }
 
-  leaveChat(clan_id: string, channel_id: string, channel_type: number, is_public: boolean): Promise<void> {
-    return this.send({channel_leave: {clan_id: clan_id, channel_id: channel_id, channel_type: channel_type, is_public: is_public}});
+  leaveChat(clan_id: string, parent_id: string, channel_id: string, channel_type: number, is_public: boolean, is_parent_public: boolean): Promise<void> {
+    return this.send({channel_leave: {clan_id: clan_id, parent_id: parent_id, channel_id: channel_id, channel_type: channel_type, is_public: is_public, is_parent_public: is_parent_public}});
   }
 
-  async removeChatMessage(clan_id: string, channel_id: string, mode: number, is_public: boolean, message_id: string): Promise<ChannelMessageAck> {
+  async removeChatMessage(clan_id: string, parent_id: string, channel_id: string, mode: number, is_public: boolean, is_parent_public: boolean, message_id: string): Promise<ChannelMessageAck> {
     const response = await this.send(
       {
         channel_message_remove: {
           clan_id: clan_id,
+          parent_id: parent_id,
           channel_id: channel_id,
           mode: mode,
           message_id: message_id,
-          is_public: is_public
+          is_public: is_public,
+          is_parent_public: is_parent_public
         }
       }
     );
 
     return response.channel_message_ack;
-  }
-
-  async removePartyMember(party_id: string, member: Presence): Promise<void> {
-    return this.send({party_remove: {
-      party_id: party_id,
-      presence: member
-    }});
   }
 
   async rpc(id?: string, payload?: string, http_key?: string): Promise<ApiRpc> {
@@ -1446,10 +1449,6 @@ export class DefaultSocket implements Socket {
       });
 
       return response.rpc;
-  }
-
-  sendPartyData(party_id: string, op_code: number, data: string | Uint8Array): Promise<void> {
-    return this.send({party_data_send: {party_id: party_id, op_code: op_code, data: data}})
   }
 
   unfollowUsers(user_ids : string[]): Promise<void> {

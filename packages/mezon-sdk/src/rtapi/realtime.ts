@@ -441,6 +441,12 @@ export interface ChannelJoin {
   channel_id: string;
   /** channel type */
   channel_type: number;
+  /** the parent_id */
+  parent_id: string;
+  /** parent public */
+  is_parent_public: boolean;
+  /** is public */
+  is_public: boolean;
 }
 
 /** Leave a realtime channel. */
@@ -831,6 +837,8 @@ export interface ChannelCreatedEvent {
     | undefined;
   /** status */
   status: number;
+  /** is parent public */
+  is_parent_public: boolean;
 }
 
 export interface ChannelDeletedEvent {
@@ -972,6 +980,10 @@ export interface UserChannelAdded {
   channel_type: number;
   /** is public */
   is_public: boolean;
+  /** the parent_id */
+  parent_id: string;
+  /** parent public */
+  is_parent_public: boolean;
 }
 
 /**  */
@@ -3496,7 +3508,7 @@ export const ClanJoin = {
 };
 
 function createBaseChannelJoin(): ChannelJoin {
-  return { clan_id: "", channel_id: "", channel_type: 0 };
+  return { clan_id: "", channel_id: "", channel_type: 0, parent_id: "", is_parent_public: false, is_public: false };
 }
 
 export const ChannelJoin = {
@@ -3509,6 +3521,15 @@ export const ChannelJoin = {
     }
     if (message.channel_type !== 0) {
       writer.uint32(24).int32(message.channel_type);
+    }
+    if (message.parent_id !== "") {
+      writer.uint32(34).string(message.parent_id);
+    }
+    if (message.is_parent_public === true) {
+      writer.uint32(40).bool(message.is_parent_public);
+    }
+    if (message.is_public === true) {
+      writer.uint32(48).bool(message.is_public);
     }
     return writer;
   },
@@ -3529,6 +3550,15 @@ export const ChannelJoin = {
         case 3:
           message.channel_type = reader.int32();
           break;
+        case 4:
+          message.parent_id = reader.string();
+          break;
+        case 5:
+          message.is_parent_public = reader.bool();
+          break;
+        case 6:
+          message.is_public = reader.bool();
+          break;
         default:
           reader.skipType(tag & 7);
           break;
@@ -3542,6 +3572,9 @@ export const ChannelJoin = {
       clan_id: isSet(object.clan_id) ? String(object.clan_id) : "",
       channel_id: isSet(object.channel_id) ? String(object.channel_id) : "",
       channel_type: isSet(object.channel_type) ? Number(object.channel_type) : 0,
+      parent_id: isSet(object.parent_id) ? String(object.parent_id) : "",
+      is_parent_public: isSet(object.is_parent_public) ? Boolean(object.is_parent_public) : false,
+      is_public: isSet(object.is_public) ? Boolean(object.is_public) : false,
     };
   },
 
@@ -3550,6 +3583,9 @@ export const ChannelJoin = {
     message.clan_id !== undefined && (obj.clan_id = message.clan_id);
     message.channel_id !== undefined && (obj.channel_id = message.channel_id);
     message.channel_type !== undefined && (obj.channel_type = Math.round(message.channel_type));
+    message.parent_id !== undefined && (obj.parent_id = message.parent_id);
+    message.is_parent_public !== undefined && (obj.is_parent_public = message.is_parent_public);
+    message.is_public !== undefined && (obj.is_public = message.is_public);
     return obj;
   },
 
@@ -3562,6 +3598,9 @@ export const ChannelJoin = {
     message.clan_id = object.clan_id ?? "";
     message.channel_id = object.channel_id ?? "";
     message.channel_type = object.channel_type ?? 0;
+    message.parent_id = object.parent_id ?? "";
+    message.is_parent_public = object.is_parent_public ?? false;
+    message.is_public = object.is_public ?? false;
     return message;
   },
 };
@@ -5544,6 +5583,7 @@ function createBaseChannelCreatedEvent(): ChannelCreatedEvent {
     channel_private: 0,
     channel_type: undefined,
     status: 0,
+    is_parent_public: false,
   };
 }
 
@@ -5575,6 +5615,9 @@ export const ChannelCreatedEvent = {
     }
     if (message.status !== 0) {
       writer.uint32(72).int32(message.status);
+    }
+    if (message.is_parent_public === true) {
+      writer.uint32(80).bool(message.is_parent_public);
     }
     return writer;
   },
@@ -5613,6 +5656,9 @@ export const ChannelCreatedEvent = {
         case 9:
           message.status = reader.int32();
           break;
+        case 10:
+          message.is_parent_public = reader.bool();
+          break;
         default:
           reader.skipType(tag & 7);
           break;
@@ -5632,6 +5678,7 @@ export const ChannelCreatedEvent = {
       channel_private: isSet(object.channel_private) ? Number(object.channel_private) : 0,
       channel_type: isSet(object.channel_type) ? Number(object.channel_type) : undefined,
       status: isSet(object.status) ? Number(object.status) : 0,
+      is_parent_public: isSet(object.is_parent_public) ? Boolean(object.is_parent_public) : false,
     };
   },
 
@@ -5646,6 +5693,7 @@ export const ChannelCreatedEvent = {
     message.channel_private !== undefined && (obj.channel_private = Math.round(message.channel_private));
     message.channel_type !== undefined && (obj.channel_type = message.channel_type);
     message.status !== undefined && (obj.status = Math.round(message.status));
+    message.is_parent_public !== undefined && (obj.is_parent_public = message.is_parent_public);
     return obj;
   },
 
@@ -5664,6 +5712,7 @@ export const ChannelCreatedEvent = {
     message.channel_private = object.channel_private ?? 0;
     message.channel_type = object.channel_type ?? undefined;
     message.status = object.status ?? 0;
+    message.is_parent_public = object.is_parent_public ?? false;
     return message;
   },
 };
@@ -6494,7 +6543,16 @@ export const AddUsers = {
 };
 
 function createBaseUserChannelAdded(): UserChannelAdded {
-  return { channel_id: "", users: [], status: "", clan_id: "", channel_type: 0, is_public: false };
+  return {
+    channel_id: "",
+    users: [],
+    status: "",
+    clan_id: "",
+    channel_type: 0,
+    is_public: false,
+    parent_id: "",
+    is_parent_public: false,
+  };
 }
 
 export const UserChannelAdded = {
@@ -6516,6 +6574,12 @@ export const UserChannelAdded = {
     }
     if (message.is_public === true) {
       writer.uint32(48).bool(message.is_public);
+    }
+    if (message.parent_id !== "") {
+      writer.uint32(58).string(message.parent_id);
+    }
+    if (message.is_parent_public === true) {
+      writer.uint32(64).bool(message.is_parent_public);
     }
     return writer;
   },
@@ -6545,6 +6609,12 @@ export const UserChannelAdded = {
         case 6:
           message.is_public = reader.bool();
           break;
+        case 7:
+          message.parent_id = reader.string();
+          break;
+        case 8:
+          message.is_parent_public = reader.bool();
+          break;
         default:
           reader.skipType(tag & 7);
           break;
@@ -6561,6 +6631,8 @@ export const UserChannelAdded = {
       clan_id: isSet(object.clan_id) ? String(object.clan_id) : "",
       channel_type: isSet(object.channel_type) ? Number(object.channel_type) : 0,
       is_public: isSet(object.is_public) ? Boolean(object.is_public) : false,
+      parent_id: isSet(object.parent_id) ? String(object.parent_id) : "",
+      is_parent_public: isSet(object.is_parent_public) ? Boolean(object.is_parent_public) : false,
     };
   },
 
@@ -6576,6 +6648,8 @@ export const UserChannelAdded = {
     message.clan_id !== undefined && (obj.clan_id = message.clan_id);
     message.channel_type !== undefined && (obj.channel_type = Math.round(message.channel_type));
     message.is_public !== undefined && (obj.is_public = message.is_public);
+    message.parent_id !== undefined && (obj.parent_id = message.parent_id);
+    message.is_parent_public !== undefined && (obj.is_parent_public = message.is_parent_public);
     return obj;
   },
 
@@ -6591,6 +6665,8 @@ export const UserChannelAdded = {
     message.clan_id = object.clan_id ?? "";
     message.channel_type = object.channel_type ?? 0;
     message.is_public = object.is_public ?? false;
+    message.parent_id = object.parent_id ?? "";
+    message.is_parent_public = object.is_parent_public ?? false;
     return message;
   },
 };
