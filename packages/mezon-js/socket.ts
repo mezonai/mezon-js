@@ -73,6 +73,12 @@ interface ChannelJoin {
     persistence: boolean;
     /** Whether the user's channel presence is hidden when joining. */
     hidden: boolean;
+    // is public
+    is_public: boolean;
+    // parent id
+    parent_id: string;
+    // parent public
+    is_parent_public: boolean;
   };
 }
 
