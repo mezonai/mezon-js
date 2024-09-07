@@ -83,8 +83,8 @@ export class MezonClient implements Client {
         );
       }
 
-  async sendMessage(clan_id: string, channel_id: string, mode: number, is_public: boolean, msg: ChannelMessageContent, mentions?: Array<ApiMessageMention>, attachments?: Array<ApiMessageAttachment>, ref?: Array<ApiMessageRef>) {
-    const msgACK = await this.socket.writeChatMessage(clan_id, channel_id, mode, is_public, msg, mentions, attachments, ref);
+  async sendMessage(clan_id: string, parent_id: string, channel_id: string, mode: number, is_public: boolean, is_parent_public: boolean, msg: ChannelMessageContent, mentions?: Array<ApiMessageMention>, attachments?: Array<ApiMessageAttachment>, ref?: Array<ApiMessageRef>) {
+    const msgACK = await this.socket.writeChatMessage(clan_id, parent_id, channel_id, mode, is_public, is_parent_public, msg, mentions, attachments, ref);
     return Promise.resolve(msgACK.channel_id === channel_id);
   }
 
