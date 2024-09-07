@@ -111,6 +111,10 @@ export interface UserChannelAddedEvent {
   channel_type: number;
   // is public
   is_public: boolean;
+  // parent id
+  parent_id: string;
+  // parent public
+  is_parent_public: boolean;
 }
 
 export interface AddUsers {
@@ -413,6 +417,10 @@ export interface ChannelCreatedEvent {
   channel_type: number;
   // status
   status: number;
+  // parent 
+  parent_id: string;
+  // parent public
+  is_parent_public: boolean;
 }
 
 export interface ChannelDeletedEvent {
