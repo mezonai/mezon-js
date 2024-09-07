@@ -227,15 +227,8 @@ export class MezonClient implements Client {
           false,
           new WebSocketAdapterPb()
         );
-        this.session = await this.socket.connect(this.session as Session, true);
-  
-        if (!this.session) {
-          console.log("session is null");
-          return;
-        }
-  
-        await this.connectSocket();
-  
+        const result = await this.authenticate();  
+        console.log(result);
         clearInterval(interval);
       } catch (e) {
         console.log(e);
