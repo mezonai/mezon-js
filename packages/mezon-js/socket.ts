@@ -73,6 +73,12 @@ interface ChannelJoin {
     persistence: boolean;
     /** Whether the user's channel presence is hidden when joining. */
     hidden: boolean;
+    // is public
+    is_public: boolean;
+    // parent id
+    parent_id: string;
+    // parent public
+    is_parent_public: boolean;
   };
 }
 
@@ -111,6 +117,10 @@ export interface UserChannelAddedEvent {
   channel_type: number;
   // is public
   is_public: boolean;
+  // parent id
+  parent_id: string;
+  // parent public
+  is_parent_public: boolean;
 }
 
 export interface AddUsers {
@@ -413,6 +423,10 @@ export interface ChannelCreatedEvent {
   channel_type: number;
   // status
   status: number;
+  // parent 
+  parent_id: string;
+  // parent public
+  is_parent_public: boolean;
 }
 
 export interface ChannelDeletedEvent {
@@ -769,7 +783,7 @@ export interface Socket {
   joinClanChat(clan_id: string) : Promise<ClanJoin>;
 
   /** Join a chat channel on the server. */
-  joinChat(clan_id: string, channel_id: string, channel_type: number, is_public: boolean) : Promise<Channel>;
+  joinChat(clan_id: string, parent_id: string, channel_id: string, channel_type: number, is_public: boolean, is_parent_public: boolean) : Promise<Channel>;
 
   /** Leave a chat channel on the server. */
   leaveChat(clan_id: string, channel_id: string, channel_type: number, is_public: boolean) : Promise<void>;
@@ -1377,14 +1391,16 @@ export class DefaultSocket implements Socket {
     return response.clan_join;
   }
 
-  async joinChat(clan_id: string, channel_id: string, channel_type: number, is_public: boolean): Promise<Channel> {
+  async joinChat(clan_id: string, parent_id: string, channel_id: string, channel_type: number, is_public: boolean, is_parent_public: boolean): Promise<Channel> {
 
     const response = await this.send({
         channel_join: {
             clan_id: clan_id,
+            parent_id: parent_id,
             channel_id: channel_id,
             channel_type: channel_type,
-            is_public: is_public
+            is_public: is_public,
+            is_parent_public: is_parent_public
         }
       }
     );
