@@ -672,16 +672,10 @@ export interface Socket {
   joinClanChat(clan_id: string) : Promise<ClanJoin>;
 
   /** Join a chat channel on the server. */
-  joinChat(clan_id: string, channel_id: string, channel_type: number, is_public: boolean) : Promise<Channel>;
-
-  /** Leave a chat channel on the server. */
-  leaveChat(clan_id: string, channel_id: string, channel_type: number, is_public: boolean) : Promise<void>;
+  joinChat(clan_id: string, parent_id: string, channel_id: string, channel_type: number, is_public: boolean, is_parent_public: boolean) : Promise<Channel>;
 
   /** Remove a chat message from a chat channel on the server. */
   removeChatMessage(clan_id: string, channel_id: string, mode: number, is_public: boolean, message_id: string) : Promise<ChannelMessageAck>;
-
-  /** Execute an RPC function to the server. */
-  rpc(id?: string, payload?: string, http_key?: string) : Promise<ApiRpc>
 
   /** Update a chat message on a chat channel in the server. */
   updateChatMessage(clan_id: string, channel_id: string, mode: number, is_public: boolean, message_id : string, content: any, mentions?: Array<ApiMessageMention>, attachments?: Array<ApiMessageAttachment>) : Promise<ChannelMessageAck>;
@@ -1161,14 +1155,16 @@ export class DefaultSocket implements Socket {
     return response.clan_join;
   }
 
-  async joinChat(clan_id: string, channel_id: string, channel_type: number, is_public: boolean): Promise<Channel> {
+  async joinChat(clan_id: string, parent_id: string, channel_id: string, channel_type: number, is_public: boolean, is_parent_public: boolean): Promise<Channel> {
 
     const response = await this.send({
         channel_join: {
             clan_id: clan_id,
+            parent_id: parent_id,
             channel_id: channel_id,
             channel_type: channel_type,
-            is_public: is_public
+            is_public: is_public,
+            is_parent_public: is_parent_public
         }
       }
     );
