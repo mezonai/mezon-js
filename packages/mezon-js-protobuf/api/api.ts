@@ -1056,9 +1056,7 @@ export interface ClanUserList_ClanUser {
     | User
     | undefined;
   /** Their relationship to the role. */
-  role_id:
-    | string
-    | undefined;
+  role_id: string[];
   /** from the `nick_name` field in the `clan_desc_profile` table. */
   clan_nick: string;
   /** from the `avatar_url` field in the `clan_desc_profile` table. */
@@ -8291,7 +8289,7 @@ export const ClanUserList = {
 };
 
 function createBaseClanUserList_ClanUser(): ClanUserList_ClanUser {
-  return { user: undefined, role_id: undefined, clan_nick: "", clan_avatar: "", clan_id: "" };
+  return { user: undefined, role_id: [], clan_nick: "", clan_avatar: "", clan_id: "" };
 }
 
 export const ClanUserList_ClanUser = {
@@ -8299,8 +8297,8 @@ export const ClanUserList_ClanUser = {
     if (message.user !== undefined) {
       User.encode(message.user, writer.uint32(10).fork()).ldelim();
     }
-    if (message.role_id !== undefined) {
-      StringValue.encode({ value: message.role_id! }, writer.uint32(18).fork()).ldelim();
+    for (const v of message.role_id) {
+      writer.uint32(18).string(v!);
     }
     if (message.clan_nick !== "") {
       writer.uint32(26).string(message.clan_nick);
@@ -8325,7 +8323,7 @@ export const ClanUserList_ClanUser = {
           message.user = User.decode(reader, reader.uint32());
           break;
         case 2:
-          message.role_id = StringValue.decode(reader, reader.uint32()).value;
+          message.role_id.push(reader.string());
           break;
         case 3:
           message.clan_nick = reader.string();
@@ -8347,7 +8345,7 @@ export const ClanUserList_ClanUser = {
   fromJSON(object: any): ClanUserList_ClanUser {
     return {
       user: isSet(object.user) ? User.fromJSON(object.user) : undefined,
-      role_id: isSet(object.role_id) ? String(object.role_id) : undefined,
+      role_id: Array.isArray(object?.role_id) ? object.role_id.map((e: any) => String(e)) : [],
       clan_nick: isSet(object.clan_nick) ? String(object.clan_nick) : "",
       clan_avatar: isSet(object.clan_avatar) ? String(object.clan_avatar) : "",
       clan_id: isSet(object.clan_id) ? String(object.clan_id) : "",
@@ -8357,7 +8355,11 @@ export const ClanUserList_ClanUser = {
   toJSON(message: ClanUserList_ClanUser): unknown {
     const obj: any = {};
     message.user !== undefined && (obj.user = message.user ? User.toJSON(message.user) : undefined);
-    message.role_id !== undefined && (obj.role_id = message.role_id);
+    if (message.role_id) {
+      obj.role_id = message.role_id.map((e) => e);
+    } else {
+      obj.role_id = [];
+    }
     message.clan_nick !== undefined && (obj.clan_nick = message.clan_nick);
     message.clan_avatar !== undefined && (obj.clan_avatar = message.clan_avatar);
     message.clan_id !== undefined && (obj.clan_id = message.clan_id);
@@ -8371,7 +8373,7 @@ export const ClanUserList_ClanUser = {
   fromPartial<I extends Exact<DeepPartial<ClanUserList_ClanUser>, I>>(object: I): ClanUserList_ClanUser {
     const message = createBaseClanUserList_ClanUser();
     message.user = (object.user !== undefined && object.user !== null) ? User.fromPartial(object.user) : undefined;
-    message.role_id = object.role_id ?? undefined;
+    message.role_id = object.role_id?.map((e) => e) || [];
     message.clan_nick = object.clan_nick ?? "";
     message.clan_avatar = object.clan_avatar ?? "";
     message.clan_id = object.clan_id ?? "";

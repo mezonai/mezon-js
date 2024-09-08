@@ -2548,6 +2548,7 @@ export class Client {
   /** Update fields in a given category. */
   async updateCategory(
     session: Session,
+    clanId: string,
     request: ApiUpdateCategoryDescRequest
   ): Promise<boolean> {
     if (
@@ -2559,7 +2560,7 @@ export class Client {
     }
 
     return this.apiClient
-      .updateCategory(session.token, request)
+      .updateCategory(session.token, clanId, request)
       .then((response: any) => {
         return response !== undefined;
       });
