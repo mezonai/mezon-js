@@ -31,7 +31,7 @@ export interface ClanUserListClanUser {
   //from the `nick_name` field in the `clan_desc_profile` table.
   clan_nick?: string;
   //Their relationship to the role.
-  role_id?: string;
+  role_id?: Array<string>;
   //User.
   user?: ApiUser;
 }
@@ -54,6 +54,14 @@ export interface MezonUpdateAppBody {
   metadata?: string;
   //Token.
   token?: string;
+}
+
+/**  */
+export interface MezonUpdateCategoryBody {
+  //The ID of the group to update.
+  category_id?: string;
+  //
+  category_name?: string;
 }
 
 /**  */
@@ -1495,6 +1503,8 @@ export interface ApiUpdateCategoryDescRequest {
   category_id?: string;
   //
   category_name?: string;
+  // clan ID
+  ClanId: string;
 }
 
 /**  */
@@ -6295,13 +6305,18 @@ export class MezonApi {
 
   /** Update fields in a given category. */
   updateCategory(bearerToken: string,
-      body:ApiUpdateCategoryDescRequest,
+      clanId:string,
+      body:MezonUpdateCategoryBody,
       options: any = {}): Promise<any> {
     
+    if (clanId === null || clanId === undefined) {
+      throw new Error("'clanId' is a required parameter but is null or undefined.");
+    }
     if (body === null || body === undefined) {
       throw new Error("'body' is a required parameter but is null or undefined.");
     }
-    const urlPath = "/v2/updatecategory";
+    const urlPath = "/v2/updatecategory/{clanId}"
+        .replace("{clanId}", encodeURIComponent(String(clanId)));
     const queryParams = new Map<string, any>();
 
     let bodyJson : string = "";
