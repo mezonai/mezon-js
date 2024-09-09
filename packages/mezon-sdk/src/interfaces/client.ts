@@ -251,21 +251,21 @@ export interface ChannelMessageContent{
 /** A message sent on a channel. */
 export interface ChannelMessage {
   //The unique ID of this message.
-  id?: string;
+  id: string;
   //
   avatar?: string;
   //The channel this message belongs to.
-  channel_id?: string;
+  channel_id: string;
   //The name of the chat room, or an empty string if this message was not sent through a chat room.
-  channel_label?: string;
+  channel_label: string;
   //The clan this message belong to.
   clan_id?: string;
   //The code representing a message type or category.
-  code?: number;
+  code: number;
   //The content payload.
-  content?: ChannelMessageContent;
+  content: string;
   //The UNIX time (for gRPC clients) or ISO string (for REST clients) when the message was created.
-  create_time?: string;
+  create_time: string;
   //
   reactions?: Array<ApiMessageReaction>;
   //
@@ -279,7 +279,7 @@ export interface ChannelMessage {
   //True if the message was persisted to the channel's history, false otherwise.
   persistent?: boolean;
   //Message sender, usually a user ID.
-  sender_id?: string;
+  sender_id: string;
   //The UNIX time (for gRPC clients) or ISO string (for REST clients) when the message was last updated.
   update_time?: string;
   //The ID of the first DM user, or an empty string if this message was not sent through a DM chat.
@@ -295,15 +295,17 @@ export interface ChannelMessage {
   //
   display_name?: string;
   //
-  create_time_ms?: number;
+  create_time_seconds?: number;
   //
-  update_time_ms?: number;
+  update_time_seconds?: number;
   //
   mode?: number;
   //
   message_id?: string;
   //
-  is_public?: boolean;
+  hideEditted?: boolean;
+  //
+  isPublic?: boolean;
 }
 
 /** A user in the server. */
