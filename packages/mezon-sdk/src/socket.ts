@@ -706,6 +706,13 @@ export interface NotifiReactMessage {
   channel_id_req?: string;
 }
 
+export interface AddClanUserEvent {
+  //the clan id
+  clan_id: string;
+  // the user
+  user: AddUsers;
+}
+
 /** A socket connection to Mezon server. */
 export interface Socket {
   [key: string] : any;
@@ -797,6 +804,9 @@ export interface Socket {
 
   // when clan is updated
   onclanupdated: (clan: ClanUpdatedEvent) => void;
+
+  /** Receive added user clan event */
+  onuserclanadded: (user: AddClanUserEvent) => void;
 }
 
 /** Reports an error received from a socket message. */
@@ -889,7 +899,7 @@ export class DefaultSocket implements Socket {
           this.onstreamdata(<StreamData>message.stream_data);
         } else if (message.channel_message) {
           var content, reactions, mentions, attachments, references;
-          try {
+          try {           
             content = JSON.parse(message.channel_message.content);
           } catch(e) {
             //console.log("content is invalid", e)
@@ -915,11 +925,10 @@ export class DefaultSocket implements Socket {
             //console.log("references is invalid", e);
           }
           var e: ChannelMessage = {
-            id: message.id,
+            id: message.id || message.channel_message.message_id,
             avatar: message.channel_message.avatar,
             channel_id: message.channel_message.channel_id,
             mode: message.channel_message.mode,
-            is_public: message.channel_message.is_public,
             channel_label: message.channel_message.channel_label,
             clan_id: message.channel_message.clan_id,
             code: message.channel_message.code,              
@@ -938,6 +947,8 @@ export class DefaultSocket implements Socket {
             mentions: mentions,
             attachments: attachments,
             references: references,
+            hideEditted: message.channel_message.hide_editted,
+            isPublic: message.channel_message.is_public
           };
           this.onchannelmessage(e);                  
         } else if (message.message_typing_event) {
@@ -952,9 +963,11 @@ export class DefaultSocket implements Socket {
           this.oncustomstatus(<CustomStatusEvent>message.custom_status_event);
         } else if (message.user_channel_added_event) {
           this.onuserchanneladded(<UserChannelAddedEvent>message.user_channel_added_event);
-        } else if (message.user_channel_added_event) {
-          this.onuserprofileupdate(<UserProfileUpdatedEvent>message.user_profile_updated_event);
+        } else if (message.add_clan_user_event) {
+          this.onuserclanadded(<AddClanUserEvent>message.add_clan_user_event);
         } else if (message.user_profile_updated_event) {
+          this.onuserprofileupdate(<UserProfileUpdatedEvent>message.user_profile_updated_event);
+        } else if (message.user_channel_removed_event) {
           this.onuserchannelremoved(<UserChannelRemovedEvent>message.user_channel_removed_event);
         } else if (message.user_clan_removed_event) {
           this.onuserclanremoved(<UserClanRemovedEvent>message.user_clan_removed_event);
@@ -1028,6 +1041,12 @@ export class DefaultSocket implements Socket {
   onerror(evt: ErrorEvent) {
     if (this.verbose) {
       console.log(evt);
+    }
+  }
+
+  onuserclanadded(user: AddClanUserEvent) {
+    if (this.verbose) {
+      console.log(user);
     }
   }
 
