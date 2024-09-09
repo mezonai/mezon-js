@@ -954,7 +954,7 @@ export interface Socket {
   
   getNotificationChannelCategorySetting(clan_id : string): Promise<NotificationChannelCategorySettingEvent>;
 
-  oneventcreated: (clan_event_created: ApiCreateEventRequest) => void
+  oneventcreated: (clan_event_created: ApiCreateEventRequest) => void;
 }
 
 /** Reports an error received from a socket message. */
@@ -1100,8 +1100,8 @@ export class DefaultSocket implements Socket {
             mentions: mentions,
             attachments: attachments,
             references: references,
-            hideEditted: message.channel_message.hide_editted,
-            isPublic: message.channel_message.is_public
+            hide_editted: message.channel_message.hide_editted,
+            is_public: message.channel_message.is_public
           };
           this.onchannelmessage(e);                  
         } else if (message.message_typing_event) {
