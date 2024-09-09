@@ -772,6 +772,23 @@ export interface NotificationChannelCategorySettingEvent {
   notification_channel_category_settings_list?: NotificationChannelCategorySetting[]
 }
 
+export interface UserEmojiUsage {
+  user_id: string;
+  emoji_id: string;
+  clan_id: string;
+  create_time: string;
+}
+
+export interface AddUserEmojiUsageEvent {
+  emoji_id: string;
+  clan_id: string;
+}
+
+/** Response cho ListUserEmojiUsage */
+export interface GetUserEmojiUsageEvent {
+  clanId: string;
+  user_emoji_usage: UserEmojiUsage[];
+}
 
 /** A socket connection to Mezon server. */
 export interface Socket {
@@ -955,6 +972,11 @@ export interface Socket {
   getNotificationChannelCategorySetting(clan_id : string): Promise<NotificationChannelCategorySettingEvent>;
 
   oneventcreated: (clan_event_created: ApiCreateEventRequest) => void;
+
+  addUserEmojiUsage: (add_user_emoji_usage_event: AddUserEmojiUsageEvent) => void;
+
+  getUserEmojiUsage(clan_id: string): Promise<GetUserEmojiUsageEvent> 
+
 }
 
 /** Reports an error received from a socket message. */
@@ -1574,7 +1596,16 @@ export class DefaultSocket implements Socket {
     return response.notification_channel_category_setting_event
   }
 
+  async addUserEmojiUsage(add_user_emoji_usage_event: AddUserEmojiUsageEvent) {
+    const response = await this.send({add_user_emoji_usage_event: {add_user_emoji_usage_event: add_user_emoji_usage_event}})
+    return response.add_user_emoji_usage_event
+  }
 
+  async getUserEmojiUsage(clan_id: string): Promise<GetUserEmojiUsageEvent> {
+    const response = await this.send({get_user_emoji_usage_event: {clan_id: clan_id}})
+    return response.get_user_emoji_usage_event
+  }
+  
   private async pingPong(): Promise<void> {
     if (!this.adapter.isOpen()) {
         return;
