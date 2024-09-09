@@ -1496,27 +1496,7 @@ export class Client {
 
         response.channel_users!.forEach((gu) => {
           result.channel_users!.push({
-            user: {
-              avatar_url: gu.user!.avatar_url,
-              create_time: gu.user!.create_time,
-              display_name: gu.user!.display_name,
-              edge_count: gu.user!.edge_count ? Number(gu.user!.edge_count) : 0,
-              facebook_id: gu.user!.facebook_id,
-              gamecenter_id: gu.user!.gamecenter_id,
-              google_id: gu.user!.google_id,
-              id: gu.user!.id,
-              lang_tag: gu.user!.lang_tag,
-              location: gu.user!.location,
-              online: gu.user!.online,
-              steam_id: gu.user!.steam_id,
-              timezone: gu.user!.timezone,
-              update_time: gu.user!.update_time,
-              username: gu.user!.username,
-              about_me: gu.user?.about_me,
-              metadata: gu.user!.metadata
-                ? JSON.parse(gu.user!.metadata!)
-                : undefined,
-            },
+            user_id: gu.user_id,
             role_id: gu!.role_id,
             thread_id: gu.thread_id,
             clan_avatar: gu.clan_avatar,
