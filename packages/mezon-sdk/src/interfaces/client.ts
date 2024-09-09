@@ -263,7 +263,7 @@ export interface ChannelMessage {
   //The code representing a message type or category.
   code: number;
   //The content payload.
-  content: string;
+  content: ChannelMessageContent;
   //The UNIX time (for gRPC clients) or ISO string (for REST clients) when the message was created.
   create_time: string;
   //
@@ -303,9 +303,9 @@ export interface ChannelMessage {
   //
   message_id?: string;
   //
-  hideEditted?: boolean;
+  hide_editted?: boolean;
   //
-  isPublic?: boolean;
+  is_public?: boolean;
 }
 
 /** A user in the server. */
