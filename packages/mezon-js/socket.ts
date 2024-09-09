@@ -954,7 +954,7 @@ export interface Socket {
   
   getNotificationChannelCategorySetting(clan_id : string): Promise<NotificationChannelCategorySettingEvent>;
 
-  oneventcreated: (clan_event_created: ApiCreateEventRequest) => void
+  oneventcreated: (clan_event_created: ApiCreateEventRequest) => void;
 }
 
 /** Reports an error received from a socket message. */
