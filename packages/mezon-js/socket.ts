@@ -787,7 +787,7 @@ export interface AddUserEmojiUsageEvent {
 /** Response cho ListUserEmojiUsage */
 export interface GetUserEmojiUsageEvent {
   clanId: string;
-  user_emoji_usage: UserEmojiUsage[];
+  user_emoji_usage: Array<UserEmojiUsage>;
 }
 
 /** A socket connection to Mezon server. */
@@ -975,7 +975,7 @@ export interface Socket {
 
   addUserEmojiUsage: (add_user_emoji_usage_event: AddUserEmojiUsageEvent) => void;
 
-  getUserEmojiUsage(clan_id: string): Promise<GetUserEmojiUsageEvent> 
+  getUserEmojiUsage (clan_id: string): Promise<GetUserEmojiUsageEvent>;
 
 }
 
