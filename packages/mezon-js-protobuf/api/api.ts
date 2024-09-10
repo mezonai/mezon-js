@@ -1828,6 +1828,10 @@ export interface ChannelDescription {
   create_time_seconds: number;
   /** update time ms */
   update_time_seconds: number;
+  /** Additional information stored as a JSON object. */
+  metadata: string[];
+  /** about_me */
+  about_me: string[];
 }
 
 /** A list of channel description, usually a result of a list operation. */
@@ -15216,6 +15220,8 @@ function createBaseChannelDescription(): ChannelDescription {
     creator_name: "",
     create_time_seconds: 0,
     update_time_seconds: 0,
+    metadata: [],
+    about_me: [],
   };
 }
 
@@ -15288,6 +15294,12 @@ export const ChannelDescription = {
     }
     if (message.update_time_seconds !== 0) {
       writer.uint32(176).uint32(message.update_time_seconds);
+    }
+    for (const v of message.metadata) {
+      writer.uint32(186).string(v!);
+    }
+    for (const v of message.about_me) {
+      writer.uint32(194).string(v!);
     }
     return writer;
   },
@@ -15463,6 +15475,20 @@ export const ChannelDescription = {
 
           message.update_time_seconds = reader.uint32();
           continue;
+        case 23:
+          if (tag !== 186) {
+            break;
+          }
+
+          message.metadata.push(reader.string());
+          continue;
+        case 24:
+          if (tag !== 194) {
+            break;
+          }
+
+          message.about_me.push(reader.string());
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -15504,6 +15530,8 @@ export const ChannelDescription = {
       creator_name: isSet(object.creator_name) ? globalThis.String(object.creator_name) : "",
       create_time_seconds: isSet(object.create_time_seconds) ? globalThis.Number(object.create_time_seconds) : 0,
       update_time_seconds: isSet(object.update_time_seconds) ? globalThis.Number(object.update_time_seconds) : 0,
+      metadata: globalThis.Array.isArray(object?.metadata) ? object.metadata.map((e: any) => globalThis.String(e)) : [],
+      about_me: globalThis.Array.isArray(object?.about_me) ? object.about_me.map((e: any) => globalThis.String(e)) : [],
     };
   },
 
@@ -15575,6 +15603,12 @@ export const ChannelDescription = {
     if (message.update_time_seconds !== 0) {
       obj.update_time_seconds = Math.round(message.update_time_seconds);
     }
+    if (message.metadata?.length) {
+      obj.metadata = message.metadata;
+    }
+    if (message.about_me?.length) {
+      obj.about_me = message.about_me;
+    }
     return obj;
   },
 
@@ -15609,6 +15643,8 @@ export const ChannelDescription = {
     message.creator_name = object.creator_name ?? "";
     message.create_time_seconds = object.create_time_seconds ?? 0;
     message.update_time_seconds = object.update_time_seconds ?? 0;
+    message.metadata = object.metadata?.map((e) => e) || [];
+    message.about_me = object.about_me?.map((e) => e) || [];
     return message;
   },
 };

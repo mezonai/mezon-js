@@ -506,6 +506,10 @@ export interface ApiChannelDescription {
   usernames?: string;
   //
   status?: number;
+  //
+  metadata?: Array<string>;
+  //
+  about_me?: Array<string>;
 }
 
 /** A message sent on a channel. */
