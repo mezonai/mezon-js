@@ -19,7 +19,7 @@ export interface ChannelUserListChannelUser {
   //
   thread_id?: string;
   //User.
-  user?: ApiUser;
+  user_id?: string;
 }
 
 /** A single user-role pair. */
@@ -506,6 +506,10 @@ export interface ApiChannelDescription {
   usernames?: string;
   //
   status?: number;
+  //
+  metadata?: Array<string>;
+  //
+  about_me?: Array<string>;
 }
 
 /** A message sent on a channel. */
