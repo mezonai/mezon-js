@@ -15,10 +15,15 @@
  */
 
 import { CloseEvent, ErrorEvent} from "ws";
-import { ApiAuthenticateLogoutRequest, ApiAuthenticateRefreshRequest, ApiSession } from "./interfaces";
+import {
+  ApiAuthenticateLogoutRequest,
+  ApiAuthenticateRefreshRequest,
+  ApiSession,
+  Socket,
+} from "./interfaces";
 import { MezonApi } from './api';
 import { Session } from "./session";
-import { DefaultSocket, Socket } from "./socket";
+import { DefaultSocket } from "./socket";
 import { WebSocketAdapter } from "./web_socket_adapter";
 import { WebSocketAdapterPb } from './web_socket_adapter_pb';
 import { Events } from "./constants/enum";
@@ -70,7 +75,7 @@ export class MezonClient implements Client {
 
         /**init event to connect socket*/
         for (const event in Events) {
-          const key = this.generateKey(Events[event as keyof typeof Events]);
+          const key = Events[event as keyof typeof Events].toString();
           if (!(key in this)) {
             this[key] = [];
           } 
@@ -140,7 +145,7 @@ export class MezonClient implements Client {
   
   /**Add handle function to event socket */
   on(event: string, func: Function, context : any = null) {
-  	const key = this.generateKey(event);
+  	const key = event;
   	if (!(key in this)) {
   		throw new Error("Mezon SDK not support this event");
   	}
@@ -157,7 +162,7 @@ export class MezonClient implements Client {
 
   /**remove handle function to event socket */
   remove(event: string, func: Function) {
-  	const key = this.generateKey(event);
+  	const key = event;
   	if (!(key in this)) {
   		throw new Error("Mezon SDK not support this event");
   	}
@@ -180,30 +185,26 @@ export class MezonClient implements Client {
       this.socket[event] = this[event].bind(this);
     });
   	for (const event in Events) {
-  		const key = this.generateKey(Events[event as keyof typeof Events]);
-  		this.socket[key] = (...args: any[]) => {
-  			const handleFunctions = this[key];
-  			if (Array.isArray(handleFunctions)) {
-  				handleFunctions.forEach((func) => {
-  					if (typeof func == "function") {
-  						Promise.resolve(func(...args)).catch(err => {
-                if (func.toString().includes(' this.')){
-                  console.log(`Please using arrow function for function ${func.name} or add event with context with sync like .on('event', callback, this) pass 'this variable' in to get context`);
+  		const key = Events[event as keyof typeof Events].toString();
+  		this.socket.socketEvents.on(key, (...args: any[]) => {
+        const handleFunctions = this[key];
+        if (Array.isArray(handleFunctions)) {
+          handleFunctions.forEach((func) => {
+            if (typeof func == "function") {
+              Promise.resolve(func(...args)).catch((err) => {
+                if (func.toString().includes(" this.")) {
+                  console.log(
+                    `Please using arrow function for function ${func.name} or add event with context with sync like .on('event', callback, this) pass 'this variable' in to get context`
+                  );
                 }
                 console.log(err);
               });
-  					}
-  				});
-  			};
-  		}
+            }
+          });
+        }
+      });
   	}
   }
-
-  /**generate key of event from name */
-  generateKey(event: string) {
-    return `on${event}`;
-  }
-
   
   onerror(evt: ErrorEvent) {
     console.log(evt);
