@@ -35,7 +35,7 @@ export interface ApiChannelDescription {
   //
   meeting_uri?: string;
   //The parrent channel this message belongs to.
-  parrent_id?: string;
+  parent_id?: string;
   //
   status?: number;
   //The channel type.
@@ -224,8 +224,41 @@ export interface ApiMessageRef {
   channel_label?: string;
 }
 
-export interface ChannelMessageContent{
-  t : string,
+export interface ChannelMessageContent {
+  t?: string;
+  contentThread?: string;
+  hg?: HashtagOnMessage[];
+  ej?: EmojiOnMessage[];
+  lk?: LinkOnMessage[];
+  mk?: MarkdownOnMessage[];
+  vk?: LinkVoiceRoomOnMessage[];
+}
+
+export interface HashtagOnMessage extends Hashtag, StartEndIndex {}
+export interface EmojiOnMessage extends Emoji, StartEndIndex {}
+export type LinkOnMessage = StartEndIndex;
+export interface MarkdownOnMessage extends Markdown, StartEndIndex {}
+export type LinkVoiceRoomOnMessage = StartEndIndex;
+
+export interface StartEndIndex {
+  s?: number | undefined;
+  e?: number | undefined;
+}
+
+export interface Hashtag {
+  channelid: string | undefined;
+}
+export interface Emoji {
+  emojiid: string | undefined;
+}
+
+export interface Markdown {
+  type?: EMarkdownType;
+}
+
+export enum EMarkdownType {
+  TRIPLE = "t",
+  SINGLE = "s",
 }
 
 /** A message sent on a channel. */
