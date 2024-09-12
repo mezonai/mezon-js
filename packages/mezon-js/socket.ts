@@ -104,7 +104,24 @@ export interface AddClanUserEvent {
   //the clan id
   clan_id: string;
   // the user
-  user: AddUsers;
+  user: UserProfileRedis;
+}
+
+export interface UserProfileRedis {
+  /** User IDs to follow. */
+  user_id: string;
+  /** Username to follow. */
+  username: string;
+  /** Avatar to follow. */
+  avatar: string;
+  /** Display name */
+  display_name: string;
+  /** about me */
+  about_me: string;
+  /** custom status */
+  custom_status: string;
+  /** create time */
+  create_time_second: number;
 }
 
 /** UserChannelAddedEvent */
@@ -112,7 +129,7 @@ export interface UserChannelAddedEvent {
   // the channel id
   channel_id: string;
   // the user
-  users: AddUsers[];
+  users: UserProfileRedis[];
   // the custom status
   status: string;
   // the clan id
@@ -125,15 +142,6 @@ export interface UserChannelAddedEvent {
   parent_id: string;
   // parent public
   is_parent_public: boolean;
-}
-
-export interface AddUsers {
-  // User IDs to follow.
-  user_id: string;
-  // Avatar to follow.
-  avatar: string;
-  // Username to follow.
-  username: string;
 }
 
 export interface UserChannelRemovedEvent {
@@ -936,7 +944,7 @@ export interface Socket {
 
   listRoles(ClanId: string, Limit: number, State: number, Cursor: string): Promise<RoleListEvent>;
 
-  ListStickersByUserId(): Promise<StrickerListedEvent>;
+  listStickersByUserId(): Promise<StrickerListedEvent>;
 
   ListChannelByUserId(): Promise<ChannelDescListEvent>;
 
@@ -1546,7 +1554,7 @@ export class DefaultSocket implements Socket {
     return response.permission_role_channel_list_event
   }
 
-  async ListStickersByUserId(): Promise<StrickerListedEvent> {
+  async listStickersByUserId(): Promise<StrickerListedEvent> {
     const response = await this.send({sticker_listed_event: {}});
     return response.sticker_listed_event
   }
