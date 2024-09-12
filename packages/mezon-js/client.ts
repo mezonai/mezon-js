@@ -100,6 +100,7 @@ import {
   ApiSystemMessage,
   ApiSystemMessageRequest,
   MezonUpdateSystemMessageBody,
+  ApiUpdateCategoryOrderRequest,
 } from "./api.gen";
 
 import { Session } from "./session";
@@ -1054,7 +1055,8 @@ export class Client {
   /** Delete a category by ID. */
   async deleteCategoryDesc(
     session: Session,
-    creatorId: string
+    categoryId: string,
+    clanId: string,
   ): Promise<boolean> {
     if (
       this.autoRefreshSession &&
@@ -1065,7 +1067,7 @@ export class Client {
     }
 
     return this.apiClient
-      .deleteCategoryDesc(session.token, creatorId)
+      .deleteCategoryDesc(session.token, categoryId, clanId)
       .then((response: any) => {
         return response !== undefined;
       });
@@ -3406,6 +3408,39 @@ export class Client {
 
     return this.apiClient
       .deleteSystemMessage(session.token, clanId)
+      .then((response: any) => {
+        return Promise.resolve(response);
+      });
+  }
+  async updateCategoryOrder(
+    session: Session,
+    request: ApiUpdateCategoryOrderRequest
+  ): Promise<any> {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired((Date.now() + this.expiredTimespanMs) / 1000)
+    ) {
+      await this.sessionRefresh(session);
+    }
+
+    return this.apiClient
+      .updateCategoryOrder(session.token, request)
+      .then((response: any) => {
+        return Promise.resolve(response);
+      });
+  }
+  async deleteCategoryOrder(session: Session, clanId: string): Promise<any> {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired((Date.now() + this.expiredTimespanMs) / 1000)
+    ) {
+      await this.sessionRefresh(session);
+    }
+
+    return this.apiClient
+      .deleteCategoryOrder(session.token, clanId)
       .then((response: any) => {
         return Promise.resolve(response);
       });

@@ -28,6 +28,8 @@ export interface ApiClanDescList {
     refresh_token?: string;
     //Authentication credentials.
     token?: string;
+    // UserId
+    user_id: string;
   }
   
   /** Log out a session, invalidate a refresh token, or log out all sessions/refresh tokens for a user. */

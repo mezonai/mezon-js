@@ -36,6 +36,8 @@ import {
   ApiMessageAttachment,
   ApiMessageRef
 } from "./interfaces";
+import { convertChanneltypeToChannelMode } from "./utils/helper";
+import { replyMessageGenerate } from "./utils/generate_reply_message";
 const DEFAULT_HOST = "mezon.vn";
 const DEFAULT_PORT = "7305";
 const DEFAULT_API_KEY = "defaultkey";
@@ -58,6 +60,8 @@ export class MezonClient implements Client {
 
   /** the session */
   private session: Session | undefined;
+
+  private _DMchannels : {[x: string] : ApiChannelDescription} = {};
 
   [key: string]: any;
 
@@ -252,5 +256,67 @@ export class MezonClient implements Client {
   
     return this.apiClient
       .createChannelDesc(session.token, request);
+  }
+
+  async sendMessageUser(
+    userId: string,
+    msg: string,
+    messOptions: {[x: string]: any} = {},
+    attachments: Array<ApiMessageAttachment> = []
+  ) {
+      let channelDM;
+      if (!(userId in this._DMchannels)) {
+        channelDM = await this.createChannelDesc({
+          clan_id: "0",
+          channel_id: "0",
+          category_id: "0",
+          type: 3,
+          user_ids: [userId],
+          channel_private: 1,
+        });
+
+        if (channelDM) {
+          this._DMchannels[userId] = channelDM;
+          await this.socket.joinChat(
+            channelDM.clan_id!,
+            channelDM.parent_id!,
+            channelDM.channel_id!,
+            channelDM.type!,
+            false,
+            false
+          );
+        }
+      } else {
+        channelDM = this._DMchannels[userId];
+      }
+      if (!channelDM) throw Error(`can't get channel DM`);
+   
+      const message = {
+        clan_id: channelDM.clan_id!,
+        channel_id: channelDM.channel_id!,
+        is_public: false,
+        is_parent_public: false,
+        parent_id: channelDM.parent_id!,
+        mode: convertChanneltypeToChannelMode(channelDM.type!),
+        mentions: [],
+        attachments: attachments,
+        ref: [],
+      };
+      const mess = replyMessageGenerate(
+        { messageContent: msg, ...messOptions },
+        message
+      );
+      await this.sendMessage(
+        mess.clan_id,
+        mess.parent_id,
+        mess.channel_id,
+        mess.mode,
+        mess.is_public,
+        mess.is_parent_public,
+        mess.msg,
+        [],
+        mess.attachments,
+        []
+      );
   }
 };

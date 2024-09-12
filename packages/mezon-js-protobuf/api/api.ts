@@ -1331,6 +1331,8 @@ export interface Session {
   token: string;
   /** Refresh token that can be used for session token renewal. */
   refresh_token: string;
+  /** User id */
+  user_id: string;
 }
 
 /** Update a user's account details. */
@@ -1715,6 +1717,7 @@ export interface CategoryDesc {
   /** Category name */
   category_name: string;
   category_id: string;
+  category_order: number;
 }
 
 export interface UpdateCategoryOrderRequest {
@@ -2733,6 +2736,10 @@ export interface DeleteSystemMessage {
 /** Request to get system message by clan ID. */
 export interface GetSystemMessage {
   /** Clan ID */
+  clan_id: string;
+}
+
+export interface DeleteCategoryOrderRequest {
   clan_id: string;
 }
 
@@ -11792,7 +11799,7 @@ export const Rpc = {
 };
 
 function createBaseSession(): Session {
-  return { created: false, token: "", refresh_token: "" };
+  return { created: false, token: "", refresh_token: "", user_id: "" };
 }
 
 export const Session = {
@@ -11805,6 +11812,9 @@ export const Session = {
     }
     if (message.refresh_token !== "") {
       writer.uint32(26).string(message.refresh_token);
+    }
+    if (message.user_id !== "") {
+      writer.uint32(34).string(message.user_id);
     }
     return writer;
   },
@@ -11837,6 +11847,13 @@ export const Session = {
 
           message.refresh_token = reader.string();
           continue;
+        case 4:
+          if (tag !== 34) {
+            break;
+          }
+
+          message.user_id = reader.string();
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -11851,6 +11868,7 @@ export const Session = {
       created: isSet(object.created) ? globalThis.Boolean(object.created) : false,
       token: isSet(object.token) ? globalThis.String(object.token) : "",
       refresh_token: isSet(object.refresh_token) ? globalThis.String(object.refresh_token) : "",
+      user_id: isSet(object.user_id) ? globalThis.String(object.user_id) : "",
     };
   },
 
@@ -11865,6 +11883,9 @@ export const Session = {
     if (message.refresh_token !== "") {
       obj.refresh_token = message.refresh_token;
     }
+    if (message.user_id !== "") {
+      obj.user_id = message.user_id;
+    }
     return obj;
   },
 
@@ -11876,6 +11897,7 @@ export const Session = {
     message.created = object.created ?? false;
     message.token = object.token ?? "";
     message.refresh_token = object.refresh_token ?? "";
+    message.user_id = object.user_id ?? "";
     return message;
   },
 };
@@ -14472,7 +14494,7 @@ export const UpdateClanProfileRequest = {
 };
 
 function createBaseCategoryDesc(): CategoryDesc {
-  return { creator_id: "", clan_id: "", category_name: "", category_id: "" };
+  return { creator_id: "", clan_id: "", category_name: "", category_id: "", category_order: 0 };
 }
 
 export const CategoryDesc = {
@@ -14488,6 +14510,9 @@ export const CategoryDesc = {
     }
     if (message.category_id !== "") {
       writer.uint32(34).string(message.category_id);
+    }
+    if (message.category_order !== 0) {
+      writer.uint32(40).int32(message.category_order);
     }
     return writer;
   },
@@ -14527,6 +14552,13 @@ export const CategoryDesc = {
 
           message.category_id = reader.string();
           continue;
+        case 5:
+          if (tag !== 40) {
+            break;
+          }
+
+          message.category_order = reader.int32();
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -14542,6 +14574,7 @@ export const CategoryDesc = {
       clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
       category_name: isSet(object.category_name) ? globalThis.String(object.category_name) : "",
       category_id: isSet(object.category_id) ? globalThis.String(object.category_id) : "",
+      category_order: isSet(object.category_order) ? globalThis.Number(object.category_order) : 0,
     };
   },
 
@@ -14559,6 +14592,9 @@ export const CategoryDesc = {
     if (message.category_id !== "") {
       obj.category_id = message.category_id;
     }
+    if (message.category_order !== 0) {
+      obj.category_order = Math.round(message.category_order);
+    }
     return obj;
   },
 
@@ -14571,6 +14607,7 @@ export const CategoryDesc = {
     message.clan_id = object.clan_id ?? "";
     message.category_name = object.category_name ?? "";
     message.category_id = object.category_id ?? "";
+    message.category_order = object.category_order ?? 0;
     return message;
   },
 };
@@ -25030,6 +25067,63 @@ export const GetSystemMessage = {
   },
   fromPartial<I extends Exact<DeepPartial<GetSystemMessage>, I>>(object: I): GetSystemMessage {
     const message = createBaseGetSystemMessage();
+    message.clan_id = object.clan_id ?? "";
+    return message;
+  },
+};
+
+function createBaseDeleteCategoryOrderRequest(): DeleteCategoryOrderRequest {
+  return { clan_id: "" };
+}
+
+export const DeleteCategoryOrderRequest = {
+  encode(message: DeleteCategoryOrderRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.clan_id !== "") {
+      writer.uint32(10).string(message.clan_id);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): DeleteCategoryOrderRequest {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseDeleteCategoryOrderRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.clan_id = reader.string();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): DeleteCategoryOrderRequest {
+    return { clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "" };
+  },
+
+  toJSON(message: DeleteCategoryOrderRequest): unknown {
+    const obj: any = {};
+    if (message.clan_id !== "") {
+      obj.clan_id = message.clan_id;
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<DeleteCategoryOrderRequest>, I>>(base?: I): DeleteCategoryOrderRequest {
+    return DeleteCategoryOrderRequest.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<DeleteCategoryOrderRequest>, I>>(object: I): DeleteCategoryOrderRequest {
+    const message = createBaseDeleteCategoryOrderRequest();
     message.clan_id = object.clan_id ?? "";
     return message;
   },

@@ -405,6 +405,8 @@ export interface ApiCategoryDesc {
   //
   category_name?: string;
   //
+  category_order?: number;
+  //
   clan_id?: string;
   //
   creator_id?: string;
@@ -414,6 +416,14 @@ export interface ApiCategoryDesc {
 export interface ApiCategoryDescList {
   //A list of channel.
   categorydesc?: Array<ApiCategoryDesc>;
+}
+
+/**  */
+export interface ApiCategoryOrderUpdate {
+  //
+  category_id?: string;
+  //
+  order?: number;
 }
 
 /** Update fields in a given channel. */
@@ -1533,6 +1543,13 @@ export interface ApiUpdateCategoryDescRequest {
   category_name?: string;
   // clan ID
   ClanId: string;
+}
+/**  */
+export interface ApiUpdateCategoryOrderRequest {
+  //
+  categories?: Array<ApiCategoryOrderUpdate>;
+  //
+  clan_id?: string;
 }
 
 /**  */
@@ -3236,6 +3253,41 @@ export class MezonApi {
       ),
     ]);
 }
+  /**  */
+  updateCategoryOrder(bearerToken: string,
+      body:ApiUpdateCategoryOrderRequest,
+      options: any = {}): Promise<any> {
+    
+    if (body === null || body === undefined) {
+      throw new Error("'body' is a required parameter but is null or undefined.");
+    }
+    const urlPath = "/v2/category/orders";
+    const queryParams = new Map<string, any>();
+
+    let bodyJson : string = "";
+    bodyJson = JSON.stringify(body || {});
+
+    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
+    const fetchOptions = buildFetchOptions("PUT", options, bodyJson);
+    if (bearerToken) {
+        fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+    }
+
+    return Promise.race([
+      fetch(fullUrl, fetchOptions).then((response) => {
+        if (response.status == 204) {
+          return response;
+        } else if (response.status >= 200 && response.status < 300) {
+          return response.json();
+        } else {
+          throw response;
+        }
+      }),
+      new Promise((_, reject) =>
+        setTimeout(reject, this.timeoutMs, "Request timed out.")
+      ),
+    ]);
+}
 
   /**  */
   listCategoryDescs(bearerToken: string,
@@ -3243,6 +3295,7 @@ export class MezonApi {
       creatorId?:string,
       categoryName?:string,
       categoryId?:string,
+      categoryOrder?:number,
       options: any = {}): Promise<ApiCategoryDescList> {
     
     if (clanId === null || clanId === undefined) {
@@ -3254,6 +3307,7 @@ export class MezonApi {
     queryParams.set("creator_id", creatorId);
     queryParams.set("category_name", categoryName);
     queryParams.set("category_id", categoryId);
+    queryParams.set("category_order", categoryOrder);
 
     let bodyJson : string = "";
 
@@ -4097,14 +4151,55 @@ export class MezonApi {
 
   /**  */
   deleteCategoryDesc(bearerToken: string,
-      creatorId:string,
+      categoryId:string,
+      clanId:string,
       options: any = {}): Promise<any> {
     
-    if (creatorId === null || creatorId === undefined) {
-      throw new Error("'creatorId' is a required parameter but is null or undefined.");
+    if (categoryId === null || categoryId === undefined) {
+      throw new Error("'categoryId' is a required parameter but is null or undefined.");
     }
-    const urlPath = "/v2/deletecategory/{creatorId}"
-        .replace("{creatorId}", encodeURIComponent(String(creatorId)));
+    if (clanId === null || clanId === undefined) {
+      throw new Error("'clanId' is a required parameter but is null or undefined.");
+    }
+    const urlPath = "/v2/deletecategory/category_id/{categoryId}/clan_id/{clanId}"
+        .replace("{categoryId}", encodeURIComponent(String(categoryId)))
+        .replace("{clanId}", encodeURIComponent(String(clanId)));
+    const queryParams = new Map<string, any>();
+
+    let bodyJson : string = "";
+
+    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
+    const fetchOptions = buildFetchOptions("DELETE", options, bodyJson);
+    if (bearerToken) {
+        fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+    }
+
+    return Promise.race([
+      fetch(fullUrl, fetchOptions).then((response) => {
+        if (response.status == 204) {
+          return response;
+        } else if (response.status >= 200 && response.status < 300) {
+          return response.json();
+        } else {
+          throw response;
+        }
+      }),
+      new Promise((_, reject) =>
+        setTimeout(reject, this.timeoutMs, "Request timed out.")
+      ),
+    ]);
+}
+
+  /**  */
+  deleteCategoryOrder(bearerToken: string,
+      clanId:string,
+      options: any = {}): Promise<any> {
+    
+    if (clanId === null || clanId === undefined) {
+      throw new Error("'clanId' is a required parameter but is null or undefined.");
+    }
+    const urlPath = "/v2/deletecategoryorder/clan_id/{clanId}"
+        .replace("{clanId}", encodeURIComponent(String(clanId)));
     const queryParams = new Map<string, any>();
 
     let bodyJson : string = "";
