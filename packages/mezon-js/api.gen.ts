@@ -207,7 +207,15 @@ export interface MezonUpdateRoleDeleteBody {
 /** Request to get system message by clan and channel IDs. */
 export interface MezonUpdateSystemMessageBody {
   //
+  boost_message?: string;
+  //
   channel_id?: string;
+  //
+  setup_tips?: string;
+  //
+  welcome_random?: string;
+  //
+  welcome_sticker?: string;
 }
 
 /**  */
@@ -1462,19 +1470,35 @@ export interface ApiSortParam {
 /** System message details. */
 export interface ApiSystemMessage {
   //
+  boost_message?: string;
+  //
   channel_id?: string;
   //
   clan_id?: string;
   //
   id?: string;
+  //
+  setup_tips?: string;
+  //
+  welcome_random?: string;
+  //
+  welcome_sticker?: string;
 }
 
 /** Request to get system message by clan and channel IDs. */
 export interface ApiSystemMessageRequest {
   //
+  boost_message?: string;
+  //
   channel_id?: string;
   //
   clan_id?: string;
+  //
+  setup_tips?: string;
+  //
+  welcome_random?: string;
+  //
+  welcome_sticker?: string;
 }
 
 /** List of system message. */
