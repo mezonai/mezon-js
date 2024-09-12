@@ -1055,7 +1055,8 @@ export class Client {
   /** Delete a category by ID. */
   async deleteCategoryDesc(
     session: Session,
-    creatorId: string
+    categoryId: string,
+    clanId: string,
   ): Promise<boolean> {
     if (
       this.autoRefreshSession &&
@@ -1066,7 +1067,7 @@ export class Client {
     }
 
     return this.apiClient
-      .deleteCategoryDesc(session.token, creatorId)
+      .deleteCategoryDesc(session.token, categoryId, clanId)
       .then((response: any) => {
         return response !== undefined;
       });

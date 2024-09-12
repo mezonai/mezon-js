@@ -4127,14 +4127,19 @@ export class MezonApi {
 
   /**  */
   deleteCategoryDesc(bearerToken: string,
-      creatorId:string,
+      categoryId:string,
+      clanId:string,
       options: any = {}): Promise<any> {
     
-    if (creatorId === null || creatorId === undefined) {
-      throw new Error("'creatorId' is a required parameter but is null or undefined.");
+    if (categoryId === null || categoryId === undefined) {
+      throw new Error("'categoryId' is a required parameter but is null or undefined.");
     }
-    const urlPath = "/v2/deletecategory/{creatorId}"
-        .replace("{creatorId}", encodeURIComponent(String(creatorId)));
+    if (clanId === null || clanId === undefined) {
+      throw new Error("'clanId' is a required parameter but is null or undefined.");
+    }
+    const urlPath = "/v2/deletecategory/category_id/{categoryId}/clan_id/{clanId}"
+        .replace("{categoryId}", encodeURIComponent(String(categoryId)))
+        .replace("{clanId}", encodeURIComponent(String(clanId)));
     const queryParams = new Map<string, any>();
 
     let bodyJson : string = "";
