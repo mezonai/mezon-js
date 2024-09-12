@@ -985,7 +985,7 @@ export interface Socket {
 
   addUserEmojiUsage: (add_user_emoji_usage_event: AddUserEmojiUsageEvent) => void;
 
-  getUserEmojiUsage(clan_id: string): Promise<GetUserEmojiUsageEvent>
+  getUserEmojiUsage(clanId: string): Promise<GetUserEmojiUsageEvent>
 
 }
 
@@ -1611,8 +1611,8 @@ export class DefaultSocket implements Socket {
     return response.add_user_emoji_usage_event
   }
 
-  async getUserEmojiUsage(clan_id: string): Promise<GetUserEmojiUsageEvent> {
-    const response = await this.send({get_user_emoji_usage_event: {clan_id: clan_id}})
+  async getUserEmojiUsage(clanId: string): Promise<GetUserEmojiUsageEvent> {
+    const response = await this.send({get_user_emoji_usage_event: {clanId: clanId}})
     return response.get_user_emoji_usage_event
   }
 
