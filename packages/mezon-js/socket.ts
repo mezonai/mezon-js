@@ -570,8 +570,6 @@ export interface ClanNameExistedEvent {
 
 /**  */
 export interface StrickerListedEvent {
-  // clan id
-  clan_id: string;
   // sticker data
   stickers?: Array<ClanSticker>;
 }
@@ -592,6 +590,10 @@ export interface ClanSticker {
   shortname?: string;
   //
   source?: string;
+  //
+  logo?: string;
+  //
+  clan_name?: string;
 }
 
 /**  */
@@ -934,7 +936,7 @@ export interface Socket {
 
   listRoles(ClanId: string, Limit: number, State: number, Cursor: string): Promise<RoleListEvent>;
 
-  listClanStickersByClanId(clan_id: string): Promise<StrickerListedEvent>;
+  ListStickersByUserId(): Promise<StrickerListedEvent>;
 
   ListChannelByUserId(): Promise<ChannelDescListEvent>;
 
@@ -1544,8 +1546,8 @@ export class DefaultSocket implements Socket {
     return response.permission_role_channel_list_event
   }
 
-  async listClanStickersByClanId(clan_id: string): Promise<StrickerListedEvent> {
-    const response = await this.send({sticker_listed_event: {clan_id: clan_id}});
+  async ListStickersByUserId(): Promise<StrickerListedEvent> {
+    const response = await this.send({sticker_listed_event: {}});
     return response.sticker_listed_event
   }
 
