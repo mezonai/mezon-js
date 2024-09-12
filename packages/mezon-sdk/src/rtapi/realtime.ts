@@ -255,8 +255,8 @@ export interface Envelope {
     | RoleListEvent
     | undefined;
   /**  */
-  on_role_assign?:
-    | OnRoleAssign
+  role_assign_event?:
+    | RoleAssignedEvent
     | undefined;
   /**  */
   add_user_emoji_usage_event?:
@@ -274,7 +274,7 @@ export interface AddClanUserEvent {
   /** the clan id */
   clan_id: string;
   /** the user */
-  user: AddUsers | undefined;
+  user: UserProfileRedis | undefined;
 }
 
 /** A list of permission role channel. */
@@ -311,7 +311,7 @@ export interface RoleListEvent {
 }
 
 /** On role assign */
-export interface OnRoleAssign {
+export interface RoleAssignedEvent {
   /** The clan of this role */
   ClanId: string;
   /** Role ID */
@@ -392,7 +392,6 @@ export interface ChannelDescription {
 }
 
 export interface StrickerListedEvent {
-  clan_id: string;
   stickers: ClanSticker[];
 }
 
@@ -404,6 +403,8 @@ export interface ClanSticker {
   creator_id: string;
   create_time: Date | undefined;
   clan_id: string;
+  logo: string;
+  clan_name: string;
 }
 
 export interface ClanEmoji {
@@ -971,21 +972,12 @@ export interface CustomStatusEvent {
   status: string;
 }
 
-export interface AddUsers {
-  /** User IDs to follow. */
-  user_id: string;
-  /** Avatar to follow. */
-  avatar: string;
-  /** Username to follow. */
-  username: string;
-}
-
 /** A event when user is added to channel */
 export interface UserChannelAdded {
   /** the channel id */
   channel_id: string;
   /** the user */
-  users: AddUsers[];
+  users: UserProfileRedis[];
   /** the custom status */
   status: string;
   /** the clan id */
@@ -1241,7 +1233,7 @@ function createBaseEnvelope(): Envelope {
     clan_event_created: undefined,
     user_permission_in_channel_list_event: undefined,
     role_list_event: undefined,
-    on_role_assign: undefined,
+    role_assign_event: undefined,
     add_user_emoji_usage_event: undefined,
     get_user_emoji_usage_event: undefined,
   };
@@ -1427,8 +1419,8 @@ export const Envelope = {
     if (message.role_list_event !== undefined) {
       RoleListEvent.encode(message.role_list_event, writer.uint32(458).fork()).ldelim();
     }
-    if (message.on_role_assign !== undefined) {
-      OnRoleAssign.encode(message.on_role_assign, writer.uint32(466).fork()).ldelim();
+    if (message.role_assign_event !== undefined) {
+      RoleAssignedEvent.encode(message.role_assign_event, writer.uint32(466).fork()).ldelim();
     }
     if (message.add_user_emoji_usage_event !== undefined) {
       AddUserEmojiUsageEvent.encode(message.add_user_emoji_usage_event, writer.uint32(474).fork()).ldelim();
@@ -1859,7 +1851,7 @@ export const Envelope = {
             break;
           }
 
-          message.on_role_assign = OnRoleAssign.decode(reader, reader.uint32());
+          message.role_assign_event = RoleAssignedEvent.decode(reader, reader.uint32());
           continue;
         case 59:
           if (tag !== 474) {
@@ -2021,7 +2013,9 @@ export const Envelope = {
         ? UserPermissionInChannelListEvent.fromJSON(object.user_permission_in_channel_list_event)
         : undefined,
       role_list_event: isSet(object.role_list_event) ? RoleListEvent.fromJSON(object.role_list_event) : undefined,
-      on_role_assign: isSet(object.on_role_assign) ? OnRoleAssign.fromJSON(object.on_role_assign) : undefined,
+      role_assign_event: isSet(object.role_assign_event)
+        ? RoleAssignedEvent.fromJSON(object.role_assign_event)
+        : undefined,
       add_user_emoji_usage_event: isSet(object.add_user_emoji_usage_event)
         ? AddUserEmojiUsageEvent.fromJSON(object.add_user_emoji_usage_event)
         : undefined,
@@ -2216,8 +2210,8 @@ export const Envelope = {
     if (message.role_list_event !== undefined) {
       obj.role_list_event = RoleListEvent.toJSON(message.role_list_event);
     }
-    if (message.on_role_assign !== undefined) {
-      obj.on_role_assign = OnRoleAssign.toJSON(message.on_role_assign);
+    if (message.role_assign_event !== undefined) {
+      obj.role_assign_event = RoleAssignedEvent.toJSON(message.role_assign_event);
     }
     if (message.add_user_emoji_usage_event !== undefined) {
       obj.add_user_emoji_usage_event = AddUserEmojiUsageEvent.toJSON(message.add_user_emoji_usage_event);
@@ -2422,8 +2416,8 @@ export const Envelope = {
     message.role_list_event = (object.role_list_event !== undefined && object.role_list_event !== null)
       ? RoleListEvent.fromPartial(object.role_list_event)
       : undefined;
-    message.on_role_assign = (object.on_role_assign !== undefined && object.on_role_assign !== null)
-      ? OnRoleAssign.fromPartial(object.on_role_assign)
+    message.role_assign_event = (object.role_assign_event !== undefined && object.role_assign_event !== null)
+      ? RoleAssignedEvent.fromPartial(object.role_assign_event)
       : undefined;
     message.add_user_emoji_usage_event =
       (object.add_user_emoji_usage_event !== undefined && object.add_user_emoji_usage_event !== null)
@@ -2504,7 +2498,7 @@ export const AddClanUserEvent = {
       writer.uint32(10).string(message.clan_id);
     }
     if (message.user !== undefined) {
-      AddUsers.encode(message.user, writer.uint32(18).fork()).ldelim();
+      UserProfileRedis.encode(message.user, writer.uint32(18).fork()).ldelim();
     }
     return writer;
   },
@@ -2528,7 +2522,7 @@ export const AddClanUserEvent = {
             break;
           }
 
-          message.user = AddUsers.decode(reader, reader.uint32());
+          message.user = UserProfileRedis.decode(reader, reader.uint32());
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -2542,7 +2536,7 @@ export const AddClanUserEvent = {
   fromJSON(object: any): AddClanUserEvent {
     return {
       clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
-      user: isSet(object.user) ? AddUsers.fromJSON(object.user) : undefined,
+      user: isSet(object.user) ? UserProfileRedis.fromJSON(object.user) : undefined,
     };
   },
 
@@ -2552,7 +2546,7 @@ export const AddClanUserEvent = {
       obj.clan_id = message.clan_id;
     }
     if (message.user !== undefined) {
-      obj.user = AddUsers.toJSON(message.user);
+      obj.user = UserProfileRedis.toJSON(message.user);
     }
     return obj;
   },
@@ -2563,7 +2557,9 @@ export const AddClanUserEvent = {
   fromPartial<I extends Exact<DeepPartial<AddClanUserEvent>, I>>(object: I): AddClanUserEvent {
     const message = createBaseAddClanUserEvent();
     message.clan_id = object.clan_id ?? "";
-    message.user = (object.user !== undefined && object.user !== null) ? AddUsers.fromPartial(object.user) : undefined;
+    message.user = (object.user !== undefined && object.user !== null)
+      ? UserProfileRedis.fromPartial(object.user)
+      : undefined;
     return message;
   },
 };
@@ -2878,12 +2874,12 @@ export const RoleListEvent = {
   },
 };
 
-function createBaseOnRoleAssign(): OnRoleAssign {
+function createBaseRoleAssignedEvent(): RoleAssignedEvent {
   return { ClanId: "", role_id: "", user_ids_assigned: [], user_ids_removed: [] };
 }
 
-export const OnRoleAssign = {
-  encode(message: OnRoleAssign, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+export const RoleAssignedEvent = {
+  encode(message: RoleAssignedEvent, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.ClanId !== "") {
       writer.uint32(10).string(message.ClanId);
     }
@@ -2899,10 +2895,10 @@ export const OnRoleAssign = {
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): OnRoleAssign {
+  decode(input: _m0.Reader | Uint8Array, length?: number): RoleAssignedEvent {
     const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseOnRoleAssign();
+    const message = createBaseRoleAssignedEvent();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -2943,7 +2939,7 @@ export const OnRoleAssign = {
     return message;
   },
 
-  fromJSON(object: any): OnRoleAssign {
+  fromJSON(object: any): RoleAssignedEvent {
     return {
       ClanId: isSet(object.ClanId) ? globalThis.String(object.ClanId) : "",
       role_id: isSet(object.role_id) ? globalThis.String(object.role_id) : "",
@@ -2956,7 +2952,7 @@ export const OnRoleAssign = {
     };
   },
 
-  toJSON(message: OnRoleAssign): unknown {
+  toJSON(message: RoleAssignedEvent): unknown {
     const obj: any = {};
     if (message.ClanId !== "") {
       obj.ClanId = message.ClanId;
@@ -2973,11 +2969,11 @@ export const OnRoleAssign = {
     return obj;
   },
 
-  create<I extends Exact<DeepPartial<OnRoleAssign>, I>>(base?: I): OnRoleAssign {
-    return OnRoleAssign.fromPartial(base ?? ({} as any));
+  create<I extends Exact<DeepPartial<RoleAssignedEvent>, I>>(base?: I): RoleAssignedEvent {
+    return RoleAssignedEvent.fromPartial(base ?? ({} as any));
   },
-  fromPartial<I extends Exact<DeepPartial<OnRoleAssign>, I>>(object: I): OnRoleAssign {
-    const message = createBaseOnRoleAssign();
+  fromPartial<I extends Exact<DeepPartial<RoleAssignedEvent>, I>>(object: I): RoleAssignedEvent {
+    const message = createBaseRoleAssignedEvent();
     message.ClanId = object.ClanId ?? "";
     message.role_id = object.role_id ?? "";
     message.user_ids_assigned = object.user_ids_assigned?.map((e) => e) || [];
@@ -3579,16 +3575,13 @@ export const ChannelDescription = {
 };
 
 function createBaseStrickerListedEvent(): StrickerListedEvent {
-  return { clan_id: "", stickers: [] };
+  return { stickers: [] };
 }
 
 export const StrickerListedEvent = {
   encode(message: StrickerListedEvent, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.clan_id !== "") {
-      writer.uint32(10).string(message.clan_id);
-    }
     for (const v of message.stickers) {
-      ClanSticker.encode(v!, writer.uint32(18).fork()).ldelim();
+      ClanSticker.encode(v!, writer.uint32(10).fork()).ldelim();
     }
     return writer;
   },
@@ -3605,13 +3598,6 @@ export const StrickerListedEvent = {
             break;
           }
 
-          message.clan_id = reader.string();
-          continue;
-        case 2:
-          if (tag !== 18) {
-            break;
-          }
-
           message.stickers.push(ClanSticker.decode(reader, reader.uint32()));
           continue;
       }
@@ -3625,7 +3611,6 @@ export const StrickerListedEvent = {
 
   fromJSON(object: any): StrickerListedEvent {
     return {
-      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
       stickers: globalThis.Array.isArray(object?.stickers)
         ? object.stickers.map((e: any) => ClanSticker.fromJSON(e))
         : [],
@@ -3634,9 +3619,6 @@ export const StrickerListedEvent = {
 
   toJSON(message: StrickerListedEvent): unknown {
     const obj: any = {};
-    if (message.clan_id !== "") {
-      obj.clan_id = message.clan_id;
-    }
     if (message.stickers?.length) {
       obj.stickers = message.stickers.map((e) => ClanSticker.toJSON(e));
     }
@@ -3648,14 +3630,23 @@ export const StrickerListedEvent = {
   },
   fromPartial<I extends Exact<DeepPartial<StrickerListedEvent>, I>>(object: I): StrickerListedEvent {
     const message = createBaseStrickerListedEvent();
-    message.clan_id = object.clan_id ?? "";
     message.stickers = object.stickers?.map((e) => ClanSticker.fromPartial(e)) || [];
     return message;
   },
 };
 
 function createBaseClanSticker(): ClanSticker {
-  return { id: "", source: "", shortname: "", category: "", creator_id: "", create_time: undefined, clan_id: "" };
+  return {
+    id: "",
+    source: "",
+    shortname: "",
+    category: "",
+    creator_id: "",
+    create_time: undefined,
+    clan_id: "",
+    logo: "",
+    clan_name: "",
+  };
 }
 
 export const ClanSticker = {
@@ -3680,6 +3671,12 @@ export const ClanSticker = {
     }
     if (message.clan_id !== "") {
       writer.uint32(58).string(message.clan_id);
+    }
+    if (message.logo !== "") {
+      writer.uint32(66).string(message.logo);
+    }
+    if (message.clan_name !== "") {
+      writer.uint32(74).string(message.clan_name);
     }
     return writer;
   },
@@ -3740,6 +3737,20 @@ export const ClanSticker = {
 
           message.clan_id = reader.string();
           continue;
+        case 8:
+          if (tag !== 66) {
+            break;
+          }
+
+          message.logo = reader.string();
+          continue;
+        case 9:
+          if (tag !== 74) {
+            break;
+          }
+
+          message.clan_name = reader.string();
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -3758,6 +3769,8 @@ export const ClanSticker = {
       creator_id: isSet(object.creator_id) ? globalThis.String(object.creator_id) : "",
       create_time: isSet(object.create_time) ? fromJsonTimestamp(object.create_time) : undefined,
       clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
+      logo: isSet(object.logo) ? globalThis.String(object.logo) : "",
+      clan_name: isSet(object.clan_name) ? globalThis.String(object.clan_name) : "",
     };
   },
 
@@ -3784,6 +3797,12 @@ export const ClanSticker = {
     if (message.clan_id !== "") {
       obj.clan_id = message.clan_id;
     }
+    if (message.logo !== "") {
+      obj.logo = message.logo;
+    }
+    if (message.clan_name !== "") {
+      obj.clan_name = message.clan_name;
+    }
     return obj;
   },
 
@@ -3799,6 +3818,8 @@ export const ClanSticker = {
     message.creator_id = object.creator_id ?? "";
     message.create_time = object.create_time ?? undefined;
     message.clan_id = object.clan_id ?? "";
+    message.logo = object.logo ?? "";
+    message.clan_name = object.clan_name ?? "";
     return message;
   },
 };
@@ -8027,95 +8048,6 @@ export const CustomStatusEvent = {
   },
 };
 
-function createBaseAddUsers(): AddUsers {
-  return { user_id: "", avatar: "", username: "" };
-}
-
-export const AddUsers = {
-  encode(message: AddUsers, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.user_id !== "") {
-      writer.uint32(10).string(message.user_id);
-    }
-    if (message.avatar !== "") {
-      writer.uint32(18).string(message.avatar);
-    }
-    if (message.username !== "") {
-      writer.uint32(26).string(message.username);
-    }
-    return writer;
-  },
-
-  decode(input: _m0.Reader | Uint8Array, length?: number): AddUsers {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseAddUsers();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
-          if (tag !== 10) {
-            break;
-          }
-
-          message.user_id = reader.string();
-          continue;
-        case 2:
-          if (tag !== 18) {
-            break;
-          }
-
-          message.avatar = reader.string();
-          continue;
-        case 3:
-          if (tag !== 26) {
-            break;
-          }
-
-          message.username = reader.string();
-          continue;
-      }
-      if ((tag & 7) === 4 || tag === 0) {
-        break;
-      }
-      reader.skipType(tag & 7);
-    }
-    return message;
-  },
-
-  fromJSON(object: any): AddUsers {
-    return {
-      user_id: isSet(object.user_id) ? globalThis.String(object.user_id) : "",
-      avatar: isSet(object.avatar) ? globalThis.String(object.avatar) : "",
-      username: isSet(object.username) ? globalThis.String(object.username) : "",
-    };
-  },
-
-  toJSON(message: AddUsers): unknown {
-    const obj: any = {};
-    if (message.user_id !== "") {
-      obj.user_id = message.user_id;
-    }
-    if (message.avatar !== "") {
-      obj.avatar = message.avatar;
-    }
-    if (message.username !== "") {
-      obj.username = message.username;
-    }
-    return obj;
-  },
-
-  create<I extends Exact<DeepPartial<AddUsers>, I>>(base?: I): AddUsers {
-    return AddUsers.fromPartial(base ?? ({} as any));
-  },
-  fromPartial<I extends Exact<DeepPartial<AddUsers>, I>>(object: I): AddUsers {
-    const message = createBaseAddUsers();
-    message.user_id = object.user_id ?? "";
-    message.avatar = object.avatar ?? "";
-    message.username = object.username ?? "";
-    return message;
-  },
-};
-
 function createBaseUserChannelAdded(): UserChannelAdded {
   return {
     channel_id: "",
@@ -8135,7 +8067,7 @@ export const UserChannelAdded = {
       writer.uint32(10).string(message.channel_id);
     }
     for (const v of message.users) {
-      AddUsers.encode(v!, writer.uint32(18).fork()).ldelim();
+      UserProfileRedis.encode(v!, writer.uint32(18).fork()).ldelim();
     }
     if (message.status !== "") {
       writer.uint32(26).string(message.status);
@@ -8177,7 +8109,7 @@ export const UserChannelAdded = {
             break;
           }
 
-          message.users.push(AddUsers.decode(reader, reader.uint32()));
+          message.users.push(UserProfileRedis.decode(reader, reader.uint32()));
           continue;
         case 3:
           if (tag !== 26) {
@@ -8233,7 +8165,7 @@ export const UserChannelAdded = {
   fromJSON(object: any): UserChannelAdded {
     return {
       channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "",
-      users: globalThis.Array.isArray(object?.users) ? object.users.map((e: any) => AddUsers.fromJSON(e)) : [],
+      users: globalThis.Array.isArray(object?.users) ? object.users.map((e: any) => UserProfileRedis.fromJSON(e)) : [],
       status: isSet(object.status) ? globalThis.String(object.status) : "",
       clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
       channel_type: isSet(object.channel_type) ? globalThis.Number(object.channel_type) : 0,
@@ -8249,7 +8181,7 @@ export const UserChannelAdded = {
       obj.channel_id = message.channel_id;
     }
     if (message.users?.length) {
-      obj.users = message.users.map((e) => AddUsers.toJSON(e));
+      obj.users = message.users.map((e) => UserProfileRedis.toJSON(e));
     }
     if (message.status !== "") {
       obj.status = message.status;
@@ -8278,7 +8210,7 @@ export const UserChannelAdded = {
   fromPartial<I extends Exact<DeepPartial<UserChannelAdded>, I>>(object: I): UserChannelAdded {
     const message = createBaseUserChannelAdded();
     message.channel_id = object.channel_id ?? "";
-    message.users = object.users?.map((e) => AddUsers.fromPartial(e)) || [];
+    message.users = object.users?.map((e) => UserProfileRedis.fromPartial(e)) || [];
     message.status = object.status ?? "";
     message.clan_id = object.clan_id ?? "";
     message.channel_type = object.channel_type ?? 0;
