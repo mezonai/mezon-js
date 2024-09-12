@@ -1331,6 +1331,8 @@ export interface Session {
   token: string;
   /** Refresh token that can be used for session token renewal. */
   refresh_token: string;
+  /** User id */
+  user_id: string;
 }
 
 /** Update a user's account details. */
@@ -11797,7 +11799,7 @@ export const Rpc = {
 };
 
 function createBaseSession(): Session {
-  return { created: false, token: "", refresh_token: "" };
+  return { created: false, token: "", refresh_token: "", user_id: "" };
 }
 
 export const Session = {
@@ -11810,6 +11812,9 @@ export const Session = {
     }
     if (message.refresh_token !== "") {
       writer.uint32(26).string(message.refresh_token);
+    }
+    if (message.user_id !== "") {
+      writer.uint32(34).string(message.user_id);
     }
     return writer;
   },
@@ -11842,6 +11847,13 @@ export const Session = {
 
           message.refresh_token = reader.string();
           continue;
+        case 4:
+          if (tag !== 34) {
+            break;
+          }
+
+          message.user_id = reader.string();
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -11856,6 +11868,7 @@ export const Session = {
       created: isSet(object.created) ? globalThis.Boolean(object.created) : false,
       token: isSet(object.token) ? globalThis.String(object.token) : "",
       refresh_token: isSet(object.refresh_token) ? globalThis.String(object.refresh_token) : "",
+      user_id: isSet(object.user_id) ? globalThis.String(object.user_id) : "",
     };
   },
 
@@ -11870,6 +11883,9 @@ export const Session = {
     if (message.refresh_token !== "") {
       obj.refresh_token = message.refresh_token;
     }
+    if (message.user_id !== "") {
+      obj.user_id = message.user_id;
+    }
     return obj;
   },
 
@@ -11881,6 +11897,7 @@ export const Session = {
     message.created = object.created ?? false;
     message.token = object.token ?? "";
     message.refresh_token = object.refresh_token ?? "";
+    message.user_id = object.user_id ?? "";
     return message;
   },
 };
