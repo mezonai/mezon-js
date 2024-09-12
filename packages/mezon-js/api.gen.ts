@@ -836,6 +836,8 @@ export interface ApiDeleteRoleRequest {
   channel_id?: string;
   //
   clan_id?: string;
+  //
+  max_permissions_level?: string;
   //The id of a role.
   role_id?: string;
 }
@@ -6708,41 +6710,45 @@ export class MezonApi {
 
   /** list webhook belong to the channel */
   listWebhookByChannelId(bearerToken: string,
-      channelId:string,
-      clanId?:string,
-      options: any = {}): Promise<ApiWebhookListResponse> {
-    
-    if (channelId === null || channelId === undefined) {
-      throw new Error("'channelId' is a required parameter but is null or undefined.");
-    }
-    const urlPath = "/v2/webhooks/{channelId}"
-        .replace("{channelId}", encodeURIComponent(String(channelId)));
-    const queryParams = new Map<string, any>();
-    queryParams.set("clan_id", clanId);
+    channelId:string,
+    clanId:string,
+    options: any = {}): Promise<ApiWebhookListResponse> {
+  
+  if (channelId === null || channelId === undefined) {
+    throw new Error("'channelId' is a required parameter but is null or undefined.");
+  }
+  if (clanId === null || clanId === undefined) {
+    throw new Error("'clanId' is a required parameter but is null or undefined.");
+  }
+  const urlPath = "/v2/webhooks/channel/{channelId}/clan/{clanId}"
+      .replace("{channelId}", encodeURIComponent(String(channelId)))
+      .replace("{clanId}", encodeURIComponent(String(clanId)));
+  const queryParams = new Map<string, any>();
 
-    let bodyJson : string = "";
+  let bodyJson : string = "";
 
-    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
-    const fetchOptions = buildFetchOptions("GET", options, bodyJson);
-    if (bearerToken) {
-        fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-    }
+  const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
+  const fetchOptions = buildFetchOptions("GET", options, bodyJson);
+  if (bearerToken) {
+      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+  }
 
-    return Promise.race([
-      fetch(fullUrl, fetchOptions).then((response) => {
-        if (response.status == 204) {
-          return response;
-        } else if (response.status >= 200 && response.status < 300) {
-          return response.json();
-        } else {
-          throw response;
-        }
-      }),
-      new Promise((_, reject) =>
-        setTimeout(reject, this.timeoutMs, "Request timed out.")
-      ),
-    ]);
+  return Promise.race([
+    fetch(fullUrl, fetchOptions).then((response) => {
+      if (response.status == 204) {
+        return response;
+      } else if (response.status >= 200 && response.status < 300) {
+        return response.json();
+      } else {
+        throw response;
+      }
+    }),
+    new Promise((_, reject) =>
+      setTimeout(reject, this.timeoutMs, "Request timed out.")
+    ),
+  ]);
 }
+
 
   /** disabled webhook */
   deleteWebhookById(bearerToken: string,
