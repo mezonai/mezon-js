@@ -456,6 +456,13 @@ export interface ChannelDeletedEvent {
   deletor: string;
 }
 
+export interface ClanDeletedEvent {
+  // clan id
+  clan_id: string;
+  // deletor
+  deletor: string;
+}
+
 // A list of permission role channel.
 export interface PermissionRoleChannelListEvent {
   //
@@ -938,6 +945,9 @@ export interface Socket {
   // when channel is deleted
   onchanneldeleted: (channelDeleted: ChannelDeletedEvent) => void;
 
+  // when clan is deleted
+  onclandeleted: (clanDeleted: ClanDeletedEvent) => void;
+
   // when channel is updated
   onchannelupdated: (channelUpdated: ChannelUpdatedEvent) => void;
 
@@ -1070,6 +1080,8 @@ export class DefaultSocket implements Socket {
           this.onchannelcreated(message.channel_created_event) 
         } else if (message.channel_deleted_event) {
           this.onchanneldeleted(message.channel_deleted_event) 
+        } else if (message.clan_deleted_envet) {
+          this.onclandeleted(message.clan_deleted_envet) 
         } else if (message.channel_updated_event) {
           this.onchannelupdated(message.channel_updated_event) 
         } else if (message.clan_profile_updated_event) {
@@ -1336,6 +1348,12 @@ export class DefaultSocket implements Socket {
   onchanneldeleted(channelDeleted: ChannelDeletedEvent) {
     if (this.verbose && window && window.console) {
       console.log(channelDeleted);
+    }
+  }
+
+  onclandeleted(clanDeleted: ClanDeletedEvent) {
+    if (this.verbose && window && window.console) {
+      console.log(clanDeleted);
     }
   }
 
