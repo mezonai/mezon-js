@@ -224,6 +224,22 @@ export interface ApiMessageRef {
   channel_label?: string;
 }
 
+export interface ApiVoiceChannelUserList {
+  //
+  voice_channel_users?: Array<ApiVoiceChannelUser>;
+}
+
+export interface ApiVoiceChannelUser {
+  //Cursor for the next page of results, if any.
+  id?: string;
+  //
+  channel_id?: string;
+  //
+  participant?: string;
+  //User for a channel.
+  user_id?: string;
+}
+
 export interface ChannelMessageContent {
   t?: string;
   contentThread?: string;

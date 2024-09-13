@@ -18,7 +18,7 @@ export enum InternalEventsSocket {
   StreamData = "stream_data",
   ChannelMessage = "channel_message",
   MessageTypingEvent = "message_typing_event",
-  MessageReactionEvent = "message_typing_event",
+  MessageReactionEvent = "message_reaction_event",
   ChannelPresenceEvent = "channel_presence_event",
   LastPinMessageEvent = "last_pin_message_event",
   CustomStatusEvent = "custom_status_event",
