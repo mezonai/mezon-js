@@ -9,7 +9,7 @@ export abstract class BaseSocketEvent{
 
     excute(){
         this.handleFunctions.forEach((func) => {
-            this.socket.socketEvents.on(this.event, func);
+            this.socket.socketEvents.on(this.event, func.bind(this));
         });
     }
 }

@@ -41,6 +41,8 @@ export class DefaultSocket implements Socket {
   private _heartbeatTimeoutMs: number;
 
   public socketEvents : EventEmitter = new EventEmitter();
+  
+  public session: Session | undefined;
 
   constructor(
       readonly host: string,
@@ -66,6 +68,7 @@ export class DefaultSocket implements Socket {
   }
 
   connect(session: Session, createStatus: boolean = false, connectTimeoutMs: number = DefaultSocket.DefaultConnectTimeoutMs): Promise<Session> {
+    this.session = session;
     if (this.adapter.isOpen()) {
       return Promise.resolve(session);
     }

@@ -19,6 +19,7 @@ import {
   ApiAuthenticateLogoutRequest,
   ApiAuthenticateRefreshRequest,
   ApiSession,
+  ApiVoiceChannelUserList,
   Socket,
 } from "./interfaces";
 import { MezonApi } from './api';
@@ -104,7 +105,7 @@ export class MezonClient implements Client {
         token: this.apiKey,
       }
     }).then(async (apiSession : ApiSession) => {
-      const sockSession = new Session(apiSession.token || "", apiSession.refresh_token || "");
+      const sockSession = new Session(apiSession);
       this.session = await this.socket.connect(sockSession, true);
 
       if (!this.session) {
@@ -125,9 +126,10 @@ export class MezonClient implements Client {
     };
 
     return this.apiClient.mezonAuthenticateRefresh(this.apiKey, "", request).then((apiSession : ApiSession) => {
-      return Promise.resolve(new Session(apiSession.token || "", apiSession.refresh_token || ""));
+      return Promise.resolve(new Session(apiSession));
     });
   }
+  
 
   /** Log out a session, invalidate a refresh token, or log out all sessions/refresh tokens for a user. */
   async logout(session: Session) {
@@ -319,4 +321,57 @@ export class MezonClient implements Client {
         []
       );
   }
+
+    /** List a channel's users. */
+  async listChannelVoiceUsers(
+      clanId: string,
+      channelId: string,
+      channelType: number,
+      limit: number = 500,
+      state?: number,
+      cursor?: string
+    ): Promise<ApiVoiceChannelUserList> {
+      if (limit <= 0 || limit > 500) {
+        console.log("0 < limit <= 500");
+        throw Error("0 < limit <= 500");
+      }
+      const session = this.session!;
+      if (
+        this.autoRefreshSession &&
+        session.refresh_token &&
+        session.isexpired((Date.now() + this.expiredTimespanMs) / 1000)
+      ) {
+        await this.sessionRefresh(session);
+      }
+
+      return this.apiClient
+        .listChannelVoiceUsers(
+          session.token,
+          clanId,
+          channelId,
+          channelType,
+          limit,
+          state,
+          cursor
+        )
+        .then((response: ApiVoiceChannelUserList) => {
+          var result: ApiVoiceChannelUserList = {
+            voice_channel_users: [],
+          };
+
+          if (response.voice_channel_users == null) {
+            return Promise.resolve(result);
+          }
+
+          response.voice_channel_users!.forEach((gu) => {
+            result.voice_channel_users!.push({
+              id: gu.id,
+              channel_id: gu.channel_id,
+              user_id: gu.user_id,
+              participant: gu.participant,
+            });
+          });
+          return Promise.resolve(result);
+        });
+    }
 };
