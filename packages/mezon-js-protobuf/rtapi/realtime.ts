@@ -267,7 +267,19 @@ export interface Envelope {
     | GetUserEmojiUsageEvent
     | undefined;
   /** clan deleted event */
-  clan_deleted_envet?: ClanDeletedEvent | undefined;
+  clan_deleted_event?:
+    | ClanDeletedEvent
+    | undefined;
+  /** sticker created event */
+  sticker_create_event?:
+    | StickerCreateEvent
+    | undefined;
+  /** sticker updated event */
+  sticker_update_event?:
+    | StickerUpdateEvent
+    | undefined;
+  /** sticker deleted event */
+  sticker_delete_event?: StickerDeleteEvent | undefined;
 }
 
 export interface AllUserClans {
@@ -880,6 +892,37 @@ export interface ClanDeletedEvent {
   deletor: string;
 }
 
+export interface StickerCreateEvent {
+  /** clan id */
+  clan_id: string;
+  /** source */
+  source: string;
+  /** shortname */
+  shortname: string;
+  /** category */
+  category: string;
+  /** creator_id */
+  creator_id: string;
+  /** sticker id */
+  sticker_id: string;
+}
+
+export interface StickerUpdateEvent {
+  /** shortname */
+  shortname: string;
+  /** sticker id */
+  sticker_id: string;
+  /** user id update */
+  user_id: string;
+}
+
+export interface StickerDeleteEvent {
+  /** sticker id */
+  sticker_id: string;
+  /** user id delete */
+  user_id: string;
+}
+
 export interface ChannelUpdatedEvent {
   /** clan id */
   clan_id: string;
@@ -903,6 +946,8 @@ export interface ChannelUpdatedEvent {
   meeting_code: string;
   /** error */
   is_error: boolean;
+  /** channel private */
+  channel_private: boolean;
 }
 
 /** Stop receiving status updates for some set of users. */
@@ -1247,7 +1292,10 @@ function createBaseEnvelope(): Envelope {
     role_assign_event: undefined,
     add_user_emoji_usage_event: undefined,
     get_user_emoji_usage_event: undefined,
-    clan_deleted_envet: undefined,
+    clan_deleted_event: undefined,
+    sticker_create_event: undefined,
+    sticker_update_event: undefined,
+    sticker_delete_event: undefined,
   };
 }
 
@@ -1440,8 +1488,17 @@ export const Envelope = {
     if (message.get_user_emoji_usage_event !== undefined) {
       GetUserEmojiUsageEvent.encode(message.get_user_emoji_usage_event, writer.uint32(482).fork()).ldelim();
     }
-    if (message.clan_deleted_envet !== undefined) {
-      ClanDeletedEvent.encode(message.clan_deleted_envet, writer.uint32(490).fork()).ldelim();
+    if (message.clan_deleted_event !== undefined) {
+      ClanDeletedEvent.encode(message.clan_deleted_event, writer.uint32(490).fork()).ldelim();
+    }
+    if (message.sticker_create_event !== undefined) {
+      StickerCreateEvent.encode(message.sticker_create_event, writer.uint32(498).fork()).ldelim();
+    }
+    if (message.sticker_update_event !== undefined) {
+      StickerUpdateEvent.encode(message.sticker_update_event, writer.uint32(506).fork()).ldelim();
+    }
+    if (message.sticker_delete_event !== undefined) {
+      StickerDeleteEvent.encode(message.sticker_delete_event, writer.uint32(514).fork()).ldelim();
     }
     return writer;
   },
@@ -1887,7 +1944,28 @@ export const Envelope = {
             break;
           }
 
-          message.clan_deleted_envet = ClanDeletedEvent.decode(reader, reader.uint32());
+          message.clan_deleted_event = ClanDeletedEvent.decode(reader, reader.uint32());
+          continue;
+        case 62:
+          if (tag !== 498) {
+            break;
+          }
+
+          message.sticker_create_event = StickerCreateEvent.decode(reader, reader.uint32());
+          continue;
+        case 63:
+          if (tag !== 506) {
+            break;
+          }
+
+          message.sticker_update_event = StickerUpdateEvent.decode(reader, reader.uint32());
+          continue;
+        case 64:
+          if (tag !== 514) {
+            break;
+          }
+
+          message.sticker_delete_event = StickerDeleteEvent.decode(reader, reader.uint32());
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -2044,8 +2122,17 @@ export const Envelope = {
       get_user_emoji_usage_event: isSet(object.get_user_emoji_usage_event)
         ? GetUserEmojiUsageEvent.fromJSON(object.get_user_emoji_usage_event)
         : undefined,
-      clan_deleted_envet: isSet(object.clan_deleted_envet)
-        ? ClanDeletedEvent.fromJSON(object.clan_deleted_envet)
+      clan_deleted_event: isSet(object.clan_deleted_event)
+        ? ClanDeletedEvent.fromJSON(object.clan_deleted_event)
+        : undefined,
+      sticker_create_event: isSet(object.sticker_create_event)
+        ? StickerCreateEvent.fromJSON(object.sticker_create_event)
+        : undefined,
+      sticker_update_event: isSet(object.sticker_update_event)
+        ? StickerUpdateEvent.fromJSON(object.sticker_update_event)
+        : undefined,
+      sticker_delete_event: isSet(object.sticker_delete_event)
+        ? StickerDeleteEvent.fromJSON(object.sticker_delete_event)
         : undefined,
     };
   },
@@ -2244,8 +2331,17 @@ export const Envelope = {
     if (message.get_user_emoji_usage_event !== undefined) {
       obj.get_user_emoji_usage_event = GetUserEmojiUsageEvent.toJSON(message.get_user_emoji_usage_event);
     }
-    if (message.clan_deleted_envet !== undefined) {
-      obj.clan_deleted_envet = ClanDeletedEvent.toJSON(message.clan_deleted_envet);
+    if (message.clan_deleted_event !== undefined) {
+      obj.clan_deleted_event = ClanDeletedEvent.toJSON(message.clan_deleted_event);
+    }
+    if (message.sticker_create_event !== undefined) {
+      obj.sticker_create_event = StickerCreateEvent.toJSON(message.sticker_create_event);
+    }
+    if (message.sticker_update_event !== undefined) {
+      obj.sticker_update_event = StickerUpdateEvent.toJSON(message.sticker_update_event);
+    }
+    if (message.sticker_delete_event !== undefined) {
+      obj.sticker_delete_event = StickerDeleteEvent.toJSON(message.sticker_delete_event);
     }
     return obj;
   },
@@ -2455,8 +2551,17 @@ export const Envelope = {
       (object.get_user_emoji_usage_event !== undefined && object.get_user_emoji_usage_event !== null)
         ? GetUserEmojiUsageEvent.fromPartial(object.get_user_emoji_usage_event)
         : undefined;
-    message.clan_deleted_envet = (object.clan_deleted_envet !== undefined && object.clan_deleted_envet !== null)
-      ? ClanDeletedEvent.fromPartial(object.clan_deleted_envet)
+    message.clan_deleted_event = (object.clan_deleted_event !== undefined && object.clan_deleted_event !== null)
+      ? ClanDeletedEvent.fromPartial(object.clan_deleted_event)
+      : undefined;
+    message.sticker_create_event = (object.sticker_create_event !== undefined && object.sticker_create_event !== null)
+      ? StickerCreateEvent.fromPartial(object.sticker_create_event)
+      : undefined;
+    message.sticker_update_event = (object.sticker_update_event !== undefined && object.sticker_update_event !== null)
+      ? StickerUpdateEvent.fromPartial(object.sticker_update_event)
+      : undefined;
+    message.sticker_delete_event = (object.sticker_delete_event !== undefined && object.sticker_delete_event !== null)
+      ? StickerDeleteEvent.fromPartial(object.sticker_delete_event)
       : undefined;
     return message;
   },
@@ -7306,6 +7411,303 @@ export const ClanDeletedEvent = {
   },
 };
 
+function createBaseStickerCreateEvent(): StickerCreateEvent {
+  return { clan_id: "", source: "", shortname: "", category: "", creator_id: "", sticker_id: "" };
+}
+
+export const StickerCreateEvent = {
+  encode(message: StickerCreateEvent, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.clan_id !== "") {
+      writer.uint32(10).string(message.clan_id);
+    }
+    if (message.source !== "") {
+      writer.uint32(18).string(message.source);
+    }
+    if (message.shortname !== "") {
+      writer.uint32(26).string(message.shortname);
+    }
+    if (message.category !== "") {
+      writer.uint32(34).string(message.category);
+    }
+    if (message.creator_id !== "") {
+      writer.uint32(42).string(message.creator_id);
+    }
+    if (message.sticker_id !== "") {
+      writer.uint32(50).string(message.sticker_id);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): StickerCreateEvent {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseStickerCreateEvent();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.clan_id = reader.string();
+          continue;
+        case 2:
+          if (tag !== 18) {
+            break;
+          }
+
+          message.source = reader.string();
+          continue;
+        case 3:
+          if (tag !== 26) {
+            break;
+          }
+
+          message.shortname = reader.string();
+          continue;
+        case 4:
+          if (tag !== 34) {
+            break;
+          }
+
+          message.category = reader.string();
+          continue;
+        case 5:
+          if (tag !== 42) {
+            break;
+          }
+
+          message.creator_id = reader.string();
+          continue;
+        case 6:
+          if (tag !== 50) {
+            break;
+          }
+
+          message.sticker_id = reader.string();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): StickerCreateEvent {
+    return {
+      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
+      source: isSet(object.source) ? globalThis.String(object.source) : "",
+      shortname: isSet(object.shortname) ? globalThis.String(object.shortname) : "",
+      category: isSet(object.category) ? globalThis.String(object.category) : "",
+      creator_id: isSet(object.creator_id) ? globalThis.String(object.creator_id) : "",
+      sticker_id: isSet(object.sticker_id) ? globalThis.String(object.sticker_id) : "",
+    };
+  },
+
+  toJSON(message: StickerCreateEvent): unknown {
+    const obj: any = {};
+    if (message.clan_id !== "") {
+      obj.clan_id = message.clan_id;
+    }
+    if (message.source !== "") {
+      obj.source = message.source;
+    }
+    if (message.shortname !== "") {
+      obj.shortname = message.shortname;
+    }
+    if (message.category !== "") {
+      obj.category = message.category;
+    }
+    if (message.creator_id !== "") {
+      obj.creator_id = message.creator_id;
+    }
+    if (message.sticker_id !== "") {
+      obj.sticker_id = message.sticker_id;
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<StickerCreateEvent>, I>>(base?: I): StickerCreateEvent {
+    return StickerCreateEvent.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<StickerCreateEvent>, I>>(object: I): StickerCreateEvent {
+    const message = createBaseStickerCreateEvent();
+    message.clan_id = object.clan_id ?? "";
+    message.source = object.source ?? "";
+    message.shortname = object.shortname ?? "";
+    message.category = object.category ?? "";
+    message.creator_id = object.creator_id ?? "";
+    message.sticker_id = object.sticker_id ?? "";
+    return message;
+  },
+};
+
+function createBaseStickerUpdateEvent(): StickerUpdateEvent {
+  return { shortname: "", sticker_id: "", user_id: "" };
+}
+
+export const StickerUpdateEvent = {
+  encode(message: StickerUpdateEvent, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.shortname !== "") {
+      writer.uint32(10).string(message.shortname);
+    }
+    if (message.sticker_id !== "") {
+      writer.uint32(18).string(message.sticker_id);
+    }
+    if (message.user_id !== "") {
+      writer.uint32(26).string(message.user_id);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): StickerUpdateEvent {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseStickerUpdateEvent();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.shortname = reader.string();
+          continue;
+        case 2:
+          if (tag !== 18) {
+            break;
+          }
+
+          message.sticker_id = reader.string();
+          continue;
+        case 3:
+          if (tag !== 26) {
+            break;
+          }
+
+          message.user_id = reader.string();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): StickerUpdateEvent {
+    return {
+      shortname: isSet(object.shortname) ? globalThis.String(object.shortname) : "",
+      sticker_id: isSet(object.sticker_id) ? globalThis.String(object.sticker_id) : "",
+      user_id: isSet(object.user_id) ? globalThis.String(object.user_id) : "",
+    };
+  },
+
+  toJSON(message: StickerUpdateEvent): unknown {
+    const obj: any = {};
+    if (message.shortname !== "") {
+      obj.shortname = message.shortname;
+    }
+    if (message.sticker_id !== "") {
+      obj.sticker_id = message.sticker_id;
+    }
+    if (message.user_id !== "") {
+      obj.user_id = message.user_id;
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<StickerUpdateEvent>, I>>(base?: I): StickerUpdateEvent {
+    return StickerUpdateEvent.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<StickerUpdateEvent>, I>>(object: I): StickerUpdateEvent {
+    const message = createBaseStickerUpdateEvent();
+    message.shortname = object.shortname ?? "";
+    message.sticker_id = object.sticker_id ?? "";
+    message.user_id = object.user_id ?? "";
+    return message;
+  },
+};
+
+function createBaseStickerDeleteEvent(): StickerDeleteEvent {
+  return { sticker_id: "", user_id: "" };
+}
+
+export const StickerDeleteEvent = {
+  encode(message: StickerDeleteEvent, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.sticker_id !== "") {
+      writer.uint32(18).string(message.sticker_id);
+    }
+    if (message.user_id !== "") {
+      writer.uint32(26).string(message.user_id);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): StickerDeleteEvent {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseStickerDeleteEvent();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 2:
+          if (tag !== 18) {
+            break;
+          }
+
+          message.sticker_id = reader.string();
+          continue;
+        case 3:
+          if (tag !== 26) {
+            break;
+          }
+
+          message.user_id = reader.string();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): StickerDeleteEvent {
+    return {
+      sticker_id: isSet(object.sticker_id) ? globalThis.String(object.sticker_id) : "",
+      user_id: isSet(object.user_id) ? globalThis.String(object.user_id) : "",
+    };
+  },
+
+  toJSON(message: StickerDeleteEvent): unknown {
+    const obj: any = {};
+    if (message.sticker_id !== "") {
+      obj.sticker_id = message.sticker_id;
+    }
+    if (message.user_id !== "") {
+      obj.user_id = message.user_id;
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<StickerDeleteEvent>, I>>(base?: I): StickerDeleteEvent {
+    return StickerDeleteEvent.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<StickerDeleteEvent>, I>>(object: I): StickerDeleteEvent {
+    const message = createBaseStickerDeleteEvent();
+    message.sticker_id = object.sticker_id ?? "";
+    message.user_id = object.user_id ?? "";
+    return message;
+  },
+};
+
 function createBaseChannelUpdatedEvent(): ChannelUpdatedEvent {
   return {
     clan_id: "",
@@ -7318,6 +7720,7 @@ function createBaseChannelUpdatedEvent(): ChannelUpdatedEvent {
     status: 0,
     meeting_code: "",
     is_error: false,
+    channel_private: false,
   };
 }
 
@@ -7352,6 +7755,9 @@ export const ChannelUpdatedEvent = {
     }
     if (message.is_error !== false) {
       writer.uint32(80).bool(message.is_error);
+    }
+    if (message.channel_private !== false) {
+      writer.uint32(88).bool(message.channel_private);
     }
     return writer;
   },
@@ -7433,6 +7839,13 @@ export const ChannelUpdatedEvent = {
 
           message.is_error = reader.bool();
           continue;
+        case 11:
+          if (tag !== 88) {
+            break;
+          }
+
+          message.channel_private = reader.bool();
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -7454,6 +7867,7 @@ export const ChannelUpdatedEvent = {
       status: isSet(object.status) ? globalThis.Number(object.status) : 0,
       meeting_code: isSet(object.meeting_code) ? globalThis.String(object.meeting_code) : "",
       is_error: isSet(object.is_error) ? globalThis.Boolean(object.is_error) : false,
+      channel_private: isSet(object.channel_private) ? globalThis.Boolean(object.channel_private) : false,
     };
   },
 
@@ -7489,6 +7903,9 @@ export const ChannelUpdatedEvent = {
     if (message.is_error !== false) {
       obj.is_error = message.is_error;
     }
+    if (message.channel_private !== false) {
+      obj.channel_private = message.channel_private;
+    }
     return obj;
   },
 
@@ -7507,6 +7924,7 @@ export const ChannelUpdatedEvent = {
     message.status = object.status ?? 0;
     message.meeting_code = object.meeting_code ?? "";
     message.is_error = object.is_error ?? false;
+    message.channel_private = object.channel_private ?? false;
     return message;
   },
 };

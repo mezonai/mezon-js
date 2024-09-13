@@ -1873,6 +1873,8 @@ export interface AddRoleChannelDescRequest {
   role_ids: string[];
   /** This is a channel that needs more roles */
   channel_id: string;
+  /** Max permission of role */
+  max_permission: number;
 }
 
 /** Create a channel within clan. */
@@ -2230,6 +2232,8 @@ export interface CreateRoleRequest {
   add_user_ids: string[];
   /** The permissions to add. */
   active_permission_ids: string[];
+  /** Max permission of role */
+  max_permission: number;
 }
 
 /** Create a event within clan. */
@@ -2300,6 +2304,10 @@ export interface UpdateRoleRequest {
   remove_permission_ids: string[];
   /** the clan id */
   clan_id: string;
+  /** Max permission of role */
+  max_permission: number;
+  /** Max perrmissions updated */
+  max_permission_updated: number;
 }
 
 export interface UpdateRoleChannelRequest {
@@ -2309,6 +2317,10 @@ export interface UpdateRoleChannelRequest {
   permission_update: PermissionUpdate[];
   /** The channel_id */
   channel_id: string;
+  /** Max permission of role */
+  max_permission: number;
+  /** Max permission update */
+  max_permission_update: number;
 }
 
 export interface PermissionUpdate {
@@ -15912,7 +15924,7 @@ export const ListChannelDescsRequest = {
 };
 
 function createBaseAddRoleChannelDescRequest(): AddRoleChannelDescRequest {
-  return { role_ids: [], channel_id: "" };
+  return { role_ids: [], channel_id: "", max_permission: 0 };
 }
 
 export const AddRoleChannelDescRequest = {
@@ -15922,6 +15934,9 @@ export const AddRoleChannelDescRequest = {
     }
     if (message.channel_id !== "") {
       writer.uint32(18).string(message.channel_id);
+    }
+    if (message.max_permission !== 0) {
+      writer.uint32(24).int32(message.max_permission);
     }
     return writer;
   },
@@ -15947,6 +15962,13 @@ export const AddRoleChannelDescRequest = {
 
           message.channel_id = reader.string();
           continue;
+        case 3:
+          if (tag !== 24) {
+            break;
+          }
+
+          message.max_permission = reader.int32();
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -15960,6 +15982,7 @@ export const AddRoleChannelDescRequest = {
     return {
       role_ids: globalThis.Array.isArray(object?.role_ids) ? object.role_ids.map((e: any) => globalThis.String(e)) : [],
       channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "",
+      max_permission: isSet(object.max_permission) ? globalThis.Number(object.max_permission) : 0,
     };
   },
 
@@ -15971,6 +15994,9 @@ export const AddRoleChannelDescRequest = {
     if (message.channel_id !== "") {
       obj.channel_id = message.channel_id;
     }
+    if (message.max_permission !== 0) {
+      obj.max_permission = Math.round(message.max_permission);
+    }
     return obj;
   },
 
@@ -15981,6 +16007,7 @@ export const AddRoleChannelDescRequest = {
     const message = createBaseAddRoleChannelDescRequest();
     message.role_ids = object.role_ids?.map((e) => e) || [];
     message.channel_id = object.channel_id ?? "";
+    message.max_permission = object.max_permission ?? 0;
     return message;
   },
 };
@@ -19444,6 +19471,7 @@ function createBaseCreateRoleRequest(): CreateRoleRequest {
     allow_mention: 0,
     add_user_ids: [],
     active_permission_ids: [],
+    max_permission: 0,
   };
 }
 
@@ -19475,6 +19503,9 @@ export const CreateRoleRequest = {
     }
     for (const v of message.active_permission_ids) {
       writer.uint32(74).string(v!);
+    }
+    if (message.max_permission !== 0) {
+      writer.uint32(80).int32(message.max_permission);
     }
     return writer;
   },
@@ -19549,6 +19580,13 @@ export const CreateRoleRequest = {
 
           message.active_permission_ids.push(reader.string());
           continue;
+        case 10:
+          if (tag !== 80) {
+            break;
+          }
+
+          message.max_permission = reader.int32();
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -19573,6 +19611,7 @@ export const CreateRoleRequest = {
       active_permission_ids: globalThis.Array.isArray(object?.active_permission_ids)
         ? object.active_permission_ids.map((e: any) => globalThis.String(e))
         : [],
+      max_permission: isSet(object.max_permission) ? globalThis.Number(object.max_permission) : 0,
     };
   },
 
@@ -19605,6 +19644,9 @@ export const CreateRoleRequest = {
     if (message.active_permission_ids?.length) {
       obj.active_permission_ids = message.active_permission_ids;
     }
+    if (message.max_permission !== 0) {
+      obj.max_permission = Math.round(message.max_permission);
+    }
     return obj;
   },
 
@@ -19622,6 +19664,7 @@ export const CreateRoleRequest = {
     message.allow_mention = object.allow_mention ?? 0;
     message.add_user_ids = object.add_user_ids?.map((e) => e) || [];
     message.active_permission_ids = object.active_permission_ids?.map((e) => e) || [];
+    message.max_permission = object.max_permission ?? 0;
     return message;
   },
 };
@@ -20212,6 +20255,8 @@ function createBaseUpdateRoleRequest(): UpdateRoleRequest {
     remove_user_ids: [],
     remove_permission_ids: [],
     clan_id: "",
+    max_permission: 0,
+    max_permission_updated: 0,
   };
 }
 
@@ -20252,6 +20297,12 @@ export const UpdateRoleRequest = {
     }
     if (message.clan_id !== "") {
       writer.uint32(98).string(message.clan_id);
+    }
+    if (message.max_permission !== 0) {
+      writer.uint32(104).int32(message.max_permission);
+    }
+    if (message.max_permission_updated !== 0) {
+      writer.uint32(112).int32(message.max_permission_updated);
     }
     return writer;
   },
@@ -20347,6 +20398,20 @@ export const UpdateRoleRequest = {
 
           message.clan_id = reader.string();
           continue;
+        case 13:
+          if (tag !== 104) {
+            break;
+          }
+
+          message.max_permission = reader.int32();
+          continue;
+        case 14:
+          if (tag !== 112) {
+            break;
+          }
+
+          message.max_permission_updated = reader.int32();
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -20378,6 +20443,10 @@ export const UpdateRoleRequest = {
         ? object.remove_permission_ids.map((e: any) => globalThis.String(e))
         : [],
       clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
+      max_permission: isSet(object.max_permission) ? globalThis.Number(object.max_permission) : 0,
+      max_permission_updated: isSet(object.max_permission_updated)
+        ? globalThis.Number(object.max_permission_updated)
+        : 0,
     };
   },
 
@@ -20419,6 +20488,12 @@ export const UpdateRoleRequest = {
     if (message.clan_id !== "") {
       obj.clan_id = message.clan_id;
     }
+    if (message.max_permission !== 0) {
+      obj.max_permission = Math.round(message.max_permission);
+    }
+    if (message.max_permission_updated !== 0) {
+      obj.max_permission_updated = Math.round(message.max_permission_updated);
+    }
     return obj;
   },
 
@@ -20439,12 +20514,14 @@ export const UpdateRoleRequest = {
     message.remove_user_ids = object.remove_user_ids?.map((e) => e) || [];
     message.remove_permission_ids = object.remove_permission_ids?.map((e) => e) || [];
     message.clan_id = object.clan_id ?? "";
+    message.max_permission = object.max_permission ?? 0;
+    message.max_permission_updated = object.max_permission_updated ?? 0;
     return message;
   },
 };
 
 function createBaseUpdateRoleChannelRequest(): UpdateRoleChannelRequest {
-  return { role_id: "", permission_update: [], channel_id: "" };
+  return { role_id: "", permission_update: [], channel_id: "", max_permission: 0, max_permission_update: 0 };
 }
 
 export const UpdateRoleChannelRequest = {
@@ -20457,6 +20534,12 @@ export const UpdateRoleChannelRequest = {
     }
     if (message.channel_id !== "") {
       writer.uint32(26).string(message.channel_id);
+    }
+    if (message.max_permission !== 0) {
+      writer.uint32(32).int32(message.max_permission);
+    }
+    if (message.max_permission_update !== 0) {
+      writer.uint32(40).int32(message.max_permission_update);
     }
     return writer;
   },
@@ -20489,6 +20572,20 @@ export const UpdateRoleChannelRequest = {
 
           message.channel_id = reader.string();
           continue;
+        case 4:
+          if (tag !== 32) {
+            break;
+          }
+
+          message.max_permission = reader.int32();
+          continue;
+        case 5:
+          if (tag !== 40) {
+            break;
+          }
+
+          message.max_permission_update = reader.int32();
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -20505,6 +20602,8 @@ export const UpdateRoleChannelRequest = {
         ? object.permission_update.map((e: any) => PermissionUpdate.fromJSON(e))
         : [],
       channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "",
+      max_permission: isSet(object.max_permission) ? globalThis.Number(object.max_permission) : 0,
+      max_permission_update: isSet(object.max_permission_update) ? globalThis.Number(object.max_permission_update) : 0,
     };
   },
 
@@ -20519,6 +20618,12 @@ export const UpdateRoleChannelRequest = {
     if (message.channel_id !== "") {
       obj.channel_id = message.channel_id;
     }
+    if (message.max_permission !== 0) {
+      obj.max_permission = Math.round(message.max_permission);
+    }
+    if (message.max_permission_update !== 0) {
+      obj.max_permission_update = Math.round(message.max_permission_update);
+    }
     return obj;
   },
 
@@ -20530,6 +20635,8 @@ export const UpdateRoleChannelRequest = {
     message.role_id = object.role_id ?? "";
     message.permission_update = object.permission_update?.map((e) => PermissionUpdate.fromPartial(e)) || [];
     message.channel_id = object.channel_id ?? "";
+    message.max_permission = object.max_permission ?? 0;
+    message.max_permission_update = object.max_permission_update ?? 0;
     return message;
   },
 };
