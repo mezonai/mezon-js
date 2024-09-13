@@ -52,11 +52,11 @@ export class Session implements ISession {
   user_id?: string;
   vars?: object;
 
-  constructor(
-    token: string,
-    refresh_token: string) {
+  constructor(apiSession : any) {
+    const { token, refresh_token, user_id } = apiSession;
     this.token = token;
     this.refresh_token = refresh_token;
+    this.user_id = user_id;
     this.created_at = Math.floor(new Date().getTime() / 1000);
     this.update(token, refresh_token);
   }
@@ -97,11 +97,11 @@ export class Session implements ISession {
 
     this.token = token;
     this.expires_at = tokenExpiresAt;
-    this.user_id = tokenDecoded['uid'];
+    // this.user_id = tokenDecoded['uid'];
     this.vars = tokenDecoded['vrs'];
   }
 
-  static restore(token: string, refreshToken: string): Session {
-    return new Session(token, refreshToken);
+  static restore(session : any): Session {
+    return new Session(session);
   }
 }
