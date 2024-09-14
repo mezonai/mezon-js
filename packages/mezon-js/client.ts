@@ -101,6 +101,7 @@ import {
   ApiSystemMessageRequest,
   MezonUpdateSystemMessageBody,
   ApiUpdateCategoryOrderRequest,
+  ApiGiveCoffeeEvent,
 } from "./api.gen";
 
 import { Session } from "./session";
@@ -3412,6 +3413,7 @@ export class Client {
         return Promise.resolve(response);
       });
   }
+
   async updateCategoryOrder(
     session: Session,
     request: ApiUpdateCategoryOrderRequest
@@ -3430,6 +3432,7 @@ export class Client {
         return Promise.resolve(response);
       });
   }
+
   async deleteCategoryOrder(session: Session, clanId: string): Promise<any> {
     if (
       this.autoRefreshSession &&
@@ -3443,6 +3446,22 @@ export class Client {
       .deleteCategoryOrder(session.token, clanId)
       .then((response: any) => {
         return Promise.resolve(response);
+      });
+  }
+
+  async givecoffee(session: Session, request: ApiGiveCoffeeEvent) {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired((Date.now() + this.expiredTimespanMs) / 1000)
+    ) {
+      await this.sessionRefresh(session);
+    }
+
+    return this.apiClient
+      .giveMeACoffee(session.token, request)
+      .then((response: ApiAppList) => {
+        return response !== undefined;
       });
   }
 }
