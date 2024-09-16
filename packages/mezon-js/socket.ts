@@ -616,7 +616,7 @@ export interface CheckNameExistedEvent {
   clan_name: string;
   exist: boolean;
   condition_id : string;
-  type: string;
+  type: number;
 }
 
 
@@ -650,8 +650,6 @@ export interface ClanSticker {
 
 /**  */
 export interface EmojiListedEvent {
-  // clan id
-  clan_id: string;
   // emoji data
   emoji_list?: Array<ClanEmoji>;
 }
@@ -666,6 +664,18 @@ export interface RoleListEvent {
   ClanId: string;
   //
   roles: ApiRoleList;
+}
+
+export interface RoleEvent {
+  clan_id: string;
+  role_id: string;
+  creator_id: string;
+  user_ids_assigned: Array<string>;
+  permission_ids_assigned: Array<string>;
+  user_ids_removed: Array<string>;
+  permission_ids_removed: Array<string>;
+  role_title: string;
+  status: string;
 }
 
 export interface UserPermissionInChannelListEvent {
@@ -689,6 +699,12 @@ export interface ClanEmoji {
   shortname?: string;
   //
   src?: string;
+  //
+  logo?: string;
+  //
+  clan_name?: string;
+  //
+  clan_id?: string;
 }
 
 /**  */
@@ -979,6 +995,8 @@ export interface Socket {
   // when channel is created
   onchannelcreated: (channelCreated: ChannelCreatedEvent) => void;
 
+  onroleevent: (roleEvent: RoleEvent) => void;
+
   // when channel is deleted
   onchanneldeleted: (channelDeleted: ChannelDeletedEvent) => void;
 
@@ -1009,9 +1027,9 @@ export interface Socket {
   /* Get the heartbeat timeout used by the socket to detect if it has lost connectivity to the server. */
   getHeartbeatTimeoutMs() :  number;
 
-  checkDuplicateName(name: string, condition_id: string, type: string): Promise<CheckNameExistedEvent>;
+  checkDuplicateName(name: string, condition_id: string, type: number): Promise<CheckNameExistedEvent>;
 
-  listClanEmojiByClanId(clan_id: string): Promise<EmojiListedEvent>;
+  listClanEmojiByUserId(): Promise<EmojiListedEvent>;
 
   listUserPermissionInChannel(clan_id: string, channel_id: string): Promise<UserPermissionInChannelListEvent>;
 
@@ -1122,6 +1140,8 @@ export class DefaultSocket implements Socket {
           this.onvoiceleaved(message.voice_leaved_event) 
         } else if (message.channel_created_event) {
           this.onchannelcreated(message.channel_created_event) 
+        } else if (message.role_event) {
+          this.onroleevent(message.role_event) 
         } else if (message.channel_deleted_event) {
           this.onchanneldeleted(message.channel_deleted_event) 
         } else if (message.clan_deleted_event) {
@@ -1397,6 +1417,12 @@ export class DefaultSocket implements Socket {
     }
   }
 
+  onroleevent(roleEvent: RoleEvent) {
+    if (this.verbose && window && window.console) {
+      console.log(roleEvent);
+    }
+  }
+
   onchanneldeleted(channelDeleted: ChannelDeletedEvent) {
     if (this.verbose && window && window.console) {
       console.log(channelDeleted);
@@ -1631,13 +1657,13 @@ export class DefaultSocket implements Socket {
     return response.custom_status_event
   }
   
-  async checkDuplicateName(name: string, condition_id: string, type: string): Promise<CheckNameExistedEvent> {
+  async checkDuplicateName(name: string, condition_id: string, type: number): Promise<CheckNameExistedEvent> {
     const response = await this.send({check_name_existed_event: {name: name, condition_id: condition_id, type: type}});
     return response.check_name_existed_event
   }
 
-  async listClanEmojiByClanId(clan_id: string): Promise<EmojiListedEvent> {
-    const response = await this.send({emojis_listed_event: {clan_id: clan_id}});
+  async listClanEmojiByUserId(): Promise<EmojiListedEvent> {
+    const response = await this.send({emojis_listed_event: {}});
     return response.emojis_listed_event
   }
 
