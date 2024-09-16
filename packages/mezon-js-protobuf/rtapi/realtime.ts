@@ -902,6 +902,10 @@ export interface StickerCreateEvent {
   creator_id: string;
   /** sticker id */
   sticker_id: string;
+  /** logo */
+  logo: string;
+  /** clan name */
+  clan_name: string;
 }
 
 export interface StickerUpdateEvent {
@@ -7369,7 +7373,16 @@ export const ClanDeletedEvent = {
 };
 
 function createBaseStickerCreateEvent(): StickerCreateEvent {
-  return { clan_id: "", source: "", shortname: "", category: "", creator_id: "", sticker_id: "" };
+  return {
+    clan_id: "",
+    source: "",
+    shortname: "",
+    category: "",
+    creator_id: "",
+    sticker_id: "",
+    logo: "",
+    clan_name: "",
+  };
 }
 
 export const StickerCreateEvent = {
@@ -7391,6 +7404,12 @@ export const StickerCreateEvent = {
     }
     if (message.sticker_id !== "") {
       writer.uint32(50).string(message.sticker_id);
+    }
+    if (message.logo !== "") {
+      writer.uint32(58).string(message.logo);
+    }
+    if (message.clan_name !== "") {
+      writer.uint32(66).string(message.clan_name);
     }
     return writer;
   },
@@ -7444,6 +7463,20 @@ export const StickerCreateEvent = {
 
           message.sticker_id = reader.string();
           continue;
+        case 7:
+          if (tag !== 58) {
+            break;
+          }
+
+          message.logo = reader.string();
+          continue;
+        case 8:
+          if (tag !== 66) {
+            break;
+          }
+
+          message.clan_name = reader.string();
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -7461,6 +7494,8 @@ export const StickerCreateEvent = {
       category: isSet(object.category) ? globalThis.String(object.category) : "",
       creator_id: isSet(object.creator_id) ? globalThis.String(object.creator_id) : "",
       sticker_id: isSet(object.sticker_id) ? globalThis.String(object.sticker_id) : "",
+      logo: isSet(object.logo) ? globalThis.String(object.logo) : "",
+      clan_name: isSet(object.clan_name) ? globalThis.String(object.clan_name) : "",
     };
   },
 
@@ -7484,6 +7519,12 @@ export const StickerCreateEvent = {
     if (message.sticker_id !== "") {
       obj.sticker_id = message.sticker_id;
     }
+    if (message.logo !== "") {
+      obj.logo = message.logo;
+    }
+    if (message.clan_name !== "") {
+      obj.clan_name = message.clan_name;
+    }
     return obj;
   },
 
@@ -7498,6 +7539,8 @@ export const StickerCreateEvent = {
     message.category = object.category ?? "";
     message.creator_id = object.creator_id ?? "";
     message.sticker_id = object.sticker_id ?? "";
+    message.logo = object.logo ?? "";
+    message.clan_name = object.clan_name ?? "";
     return message;
   },
 };
