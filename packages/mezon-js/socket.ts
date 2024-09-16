@@ -1011,7 +1011,7 @@ export interface Socket {
 
   listRoles(ClanId: string, Limit: number, State: number, Cursor: string): Promise<RoleListEvent>;
 
-  listStickersByUserId(): Promise<StrickerListedEvent>;
+  listStickersByClanId(): Promise<StrickerListedEvent>;
 
   listChannelByUserId(): Promise<ChannelDescListEvent>;
 
@@ -1665,7 +1665,7 @@ export class DefaultSocket implements Socket {
     return response.permission_role_channel_list_event
   }
 
-  async listStickersByUserId(): Promise<StrickerListedEvent> {
+  async listStickersByClanId(): Promise<StrickerListedEvent> {
     const response = await this.send({sticker_listed_event: {}});
     return response.sticker_listed_event
   }
