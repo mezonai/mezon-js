@@ -102,6 +102,10 @@ import {
   MezonUpdateSystemMessageBody,
   ApiUpdateCategoryOrderRequest,
   ApiGiveCoffeeEvent,
+  ApiListStreamingChannelsResponse,
+  ApiStreamingChannelUserList,
+  ApiRegisterStreamingChannelRequest,
+  ApiRegisterStreamingChannelResponse,
 } from "./api.gen";
 
 import { Session } from "./session";
@@ -3462,6 +3466,90 @@ export class Client {
     return this.apiClient
       .giveMeACoffee(session.token, request)
       .then((response: ApiAppList) => {
+        return response !== undefined;
+      });
+  }
+
+  async listStreamingChannels(
+    session: Session,
+    clanId: string
+  ): Promise<ApiListStreamingChannelsResponse> {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired((Date.now() + this.expiredTimespanMs) / 1000)
+    ) {
+      await this.sessionRefresh(session);
+    }
+
+    return this.apiClient
+      .listStreamingChannels(session.token, clanId)
+      .then((response: ApiListStreamingChannelsResponse) => {
+        return Promise.resolve(response);
+      });
+  }
+
+  /** List a channel's users. */
+  async listStreamingChannelUsers(
+    session: Session,
+    clanId: string,
+    channelId: string,
+    channelType: number,
+    state?: number,
+    limit?: number,
+    cursor?: string
+  ): Promise<ApiStreamingChannelUserList> {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired((Date.now() + this.expiredTimespanMs) / 1000)
+    ) {
+      await this.sessionRefresh(session);
+    }
+
+    return this.apiClient
+      .listStreamingChannelUsers(
+        session.token,
+        clanId,
+        channelId,
+        channelType,
+        limit,
+        state,
+        cursor
+      )
+      .then((response: ApiStreamingChannelUserList) => {
+        var result: ApiStreamingChannelUserList = {
+          streaming_channel_users: [],
+        };
+
+        if (response.streaming_channel_users == null) {
+          return Promise.resolve(result);
+        }
+
+        response.streaming_channel_users!.forEach((gu) => {
+          result.streaming_channel_users!.push({
+            id: gu.id,
+            channel_id: gu.channel_id,
+            user_id: gu.user_id,
+            participant: gu.participant,
+          });
+        });
+        return Promise.resolve(result);
+      });
+  }
+
+  async registerStreamingChannel(session: Session, request: ApiRegisterStreamingChannelRequest) {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired((Date.now() + this.expiredTimespanMs) / 1000)
+    ) {
+      await this.sessionRefresh(session);
+    }
+
+    return this.apiClient
+      .registerStreamingChannel(session.token, request)
+      .then((response: ApiRegisterStreamingChannelResponse) => {
         return response !== undefined;
       });
   }

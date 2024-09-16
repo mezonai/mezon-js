@@ -877,6 +877,30 @@ export interface ApiEvent {
 }
 
 /**  */
+export interface ApiRegisterStreamingChannelRequest {
+  //
+  channel_id?: string;
+  //
+  clan_id?: string;
+}
+
+/**  */
+export interface ApiRegisterStreamingChannelResponse {
+  //
+  channel_id?: string;
+  //
+  clan_id?: string;
+  //
+  streaming_url?: string;
+}
+
+/**  */
+export interface ApiListStreamingChannelsResponse {
+  //
+  streaming_channels?: Array<ApiStreamingChannelResponse>;
+}
+
+/**  */
 export interface ApiEventList {
   //A list of event.
   events?: Array<ApiEventManagement>;
@@ -1491,6 +1515,36 @@ export interface ApiSortParam {
   field_name?: string;
   //
   order?: string;
+}
+
+/**  */
+export interface ApiStreamingChannelResponse {
+  //
+  channel_id?: string;
+  //
+  clan_id?: string;
+  //
+  is_streaming?: boolean;
+  //
+  streaming_url?: string;
+}
+
+/** A list of users belonging to a channel, along with their role. */
+export interface ApiStreamingChannelUser {
+  //
+  channel_id?: string;
+  //
+  id?: string;
+  //
+  participant?: string;
+  //user for a channel.
+  user_id?: string;
+}
+
+/** A list of users belonging to a channel, along with their role. */
+export interface ApiStreamingChannelUserList {
+  //
+  streaming_channel_users?: Array<ApiStreamingChannelUser>;
 }
 
 /** System message details. */
@@ -6278,6 +6332,118 @@ export class MezonApi {
 
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("PATCH", options, bodyJson);
+    if (bearerToken) {
+        fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+    }
+
+    return Promise.race([
+      fetch(fullUrl, fetchOptions).then((response) => {
+        if (response.status == 204) {
+          return response;
+        } else if (response.status >= 200 && response.status < 300) {
+          return response.json();
+        } else {
+          throw response;
+        }
+      }),
+      new Promise((_, reject) =>
+        setTimeout(reject, this.timeoutMs, "Request timed out.")
+      ),
+    ]);
+}
+
+  /** List streaming channels. */
+  listStreamingChannels(bearerToken: string,
+      clanId?:string,
+      options: any = {}): Promise<ApiListStreamingChannelsResponse> {
+    
+    const urlPath = "/v2/streaming-channels";
+    const queryParams = new Map<string, any>();
+    queryParams.set("clan_id", clanId);
+
+    let bodyJson : string = "";
+
+    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
+    const fetchOptions = buildFetchOptions("GET", options, bodyJson);
+    if (bearerToken) {
+        fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+    }
+
+    return Promise.race([
+      fetch(fullUrl, fetchOptions).then((response) => {
+        if (response.status == 204) {
+          return response;
+        } else if (response.status >= 200 && response.status < 300) {
+          return response.json();
+        } else {
+          throw response;
+        }
+      }),
+      new Promise((_, reject) =>
+        setTimeout(reject, this.timeoutMs, "Request timed out.")
+      ),
+    ]);
+}
+
+  /** Register streaming in channel ( for bot - get streaming key) */
+  registerStreamingChannel(bearerToken: string,
+      body:ApiRegisterStreamingChannelRequest,
+      options: any = {}): Promise<ApiRegisterStreamingChannelResponse> {
+    
+    if (body === null || body === undefined) {
+      throw new Error("'body' is a required parameter but is null or undefined.");
+    }
+    const urlPath = "/v2/streaming-channels";
+    const queryParams = new Map<string, any>();
+
+    let bodyJson : string = "";
+    bodyJson = JSON.stringify(body || {});
+
+    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
+    const fetchOptions = buildFetchOptions("POST", options, bodyJson);
+    if (bearerToken) {
+        fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+    }
+
+    return Promise.race([
+      fetch(fullUrl, fetchOptions).then((response) => {
+        if (response.status == 204) {
+          return response;
+        } else if (response.status >= 200 && response.status < 300) {
+          return response.json();
+        } else {
+          throw response;
+        }
+      }),
+      new Promise((_, reject) =>
+        setTimeout(reject, this.timeoutMs, "Request timed out.")
+      ),
+    ]);
+}
+
+  /** List all users that are part of a channel. */
+  listStreamingChannelUsers(bearerToken: string,
+      clanId?:string,
+      channelId?:string,
+      channelType?:number,
+      limit?:number,
+      state?:number,
+      cursor?:string,
+      options: any = {}): Promise<ApiStreamingChannelUserList> {
+    
+    const urlPath = "/v2/streaming-channels/users";
+    const queryParams = new Map<string, any>();
+    queryParams.set("clan_id", clanId);
+    queryParams.set("channel_id", channelId);
+    queryParams.set("channel_type", channelType);
+    queryParams.set("limit", limit);
+    queryParams.set("state", state);
+    queryParams.set("cursor", cursor);
+
+    let bodyJson : string = "";
+
+    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
+    const fetchOptions = buildFetchOptions("GET", options, bodyJson);
     if (bearerToken) {
         fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
     }
