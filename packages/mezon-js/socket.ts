@@ -456,6 +456,37 @@ export interface ChannelDeletedEvent {
   deletor: string;
 }
 
+export interface StickerCreateEvent {
+  // clan id
+  clan_id: string;
+  // source
+  source: string;
+  // shortname
+  shortname: string;
+  // category
+  category: string;
+  // creator_id
+  creator_id: string;
+  // sticker id
+  sticker_id: string;
+}
+
+export interface StickerUpdateEvent {
+  // shortname
+  shortname: string;
+  // sticker id
+  sticker_id: string;
+  // user id update
+  user_id: string;
+}
+
+export interface StickerDeleteEvent {
+  // sticker id
+  sticker_id: string;
+  // user id delete
+  user_id: string;
+}
+
 export interface ClanDeletedEvent {
   // clan id
   clan_id: string;
@@ -945,6 +976,15 @@ export interface Socket {
   // when channel is deleted
   onchanneldeleted: (channelDeleted: ChannelDeletedEvent) => void;
 
+  // when sticker is created
+  onstickercreated: (stickerCreated: StickerCreateEvent) => void;
+
+  // when sticker is updated
+  onstickerupdated: (stickerUpdated: StickerUpdateEvent) => void;
+
+  // when sticker is deleted
+  onstickerdeleted: (stickerDeleted: StickerDeleteEvent) => void;
+
   // when clan is deleted
   onclandeleted: (clanDeleted: ClanDeletedEvent) => void;
 
@@ -971,7 +1011,7 @@ export interface Socket {
 
   listRoles(ClanId: string, Limit: number, State: number, Cursor: string): Promise<RoleListEvent>;
 
-  listStickersByUserId(): Promise<StrickerListedEvent>;
+  listStickersByClanId(): Promise<StrickerListedEvent>;
 
   listChannelByUserId(): Promise<ChannelDescListEvent>;
 
@@ -1078,8 +1118,14 @@ export class DefaultSocket implements Socket {
           this.onchannelcreated(message.channel_created_event) 
         } else if (message.channel_deleted_event) {
           this.onchanneldeleted(message.channel_deleted_event) 
-        } else if (message.clan_deleted_envet) {
-          this.onclandeleted(message.clan_deleted_envet) 
+        } else if (message.clan_deleted_event) {
+          this.onclandeleted(message.clan_deleted_event) 
+        } else if (message.sticker_create_event) {
+          this.onstickercreated(message.sticker_create_event) 
+        } else if (message.sticker_update_event) {
+          this.onstickerupdated(message.sticker_update_event) 
+        } else if (message.sticker_delete_event) {
+          this.onstickerdeleted(message.sticker_delete_event) 
         } else if (message.channel_updated_event) {
           this.onchannelupdated(message.channel_updated_event) 
         } else if (message.clan_profile_updated_event) {
@@ -1357,6 +1403,25 @@ export class DefaultSocket implements Socket {
     }
   }
 
+  onstickercreated(stickerCreated: StickerCreateEvent) {
+    if (this.verbose && window && window.console) {
+      console.log(stickerCreated);
+    }
+  }
+
+  onstickerdeleted(stickerDeleted: StickerDeleteEvent) {
+    if (this.verbose && window && window.console) {
+      console.log(stickerDeleted);
+    }
+  }
+
+  onstickerupdated(stickerUpdated: StickerUpdateEvent) {
+    if (this.verbose && window && window.console) {
+      console.log(stickerUpdated);
+    }
+  }
+
+
   onchannelupdated(channelUpdated: ChannelUpdatedEvent) {
     if (this.verbose && window && window.console) {
       console.log(channelUpdated);
@@ -1600,7 +1665,7 @@ export class DefaultSocket implements Socket {
     return response.permission_role_channel_list_event
   }
 
-  async listStickersByUserId(): Promise<StrickerListedEvent> {
+  async listStickersByClanId(): Promise<StrickerListedEvent> {
     const response = await this.send({sticker_listed_event: {}});
     return response.sticker_listed_event
   }
