@@ -469,6 +469,10 @@ export interface StickerCreateEvent {
   creator_id: string;
   // sticker id
   sticker_id: string;
+  // logo
+  logo: string;
+  // clan name
+  clan_name: string
 }
 
 export interface StickerUpdateEvent {
@@ -1011,7 +1015,7 @@ export interface Socket {
 
   listRoles(ClanId: string, Limit: number, State: number, Cursor: string): Promise<RoleListEvent>;
 
-  listStickersByClanId(): Promise<StrickerListedEvent>;
+  listStickersByUserId(): Promise<StrickerListedEvent>;
 
   listChannelByUserId(): Promise<ChannelDescListEvent>;
 
@@ -1665,7 +1669,7 @@ export class DefaultSocket implements Socket {
     return response.permission_role_channel_list_event
   }
 
-  async listStickersByClanId(): Promise<StrickerListedEvent> {
+  async listStickersByUserId(): Promise<StrickerListedEvent> {
     const response = await this.send({sticker_listed_event: {}});
     return response.sticker_listed_event
   }
