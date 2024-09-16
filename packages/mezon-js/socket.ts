@@ -612,9 +612,11 @@ interface StatusUpdate {
   /** Status string to set, if not present the user will appear offline. */
   status_update: {status?: string;};
 }
-export interface ClanNameExistedEvent {
+export interface CheckNameExistedEvent {
   clan_name: string;
   exist: boolean;
+  condition_id : string;
+  type: string;
 }
 
 
@@ -1007,7 +1009,7 @@ export interface Socket {
   /* Get the heartbeat timeout used by the socket to detect if it has lost connectivity to the server. */
   getHeartbeatTimeoutMs() :  number;
 
-  checkDuplicateClanName(clan_name: string): Promise<ClanNameExistedEvent>;
+  checkDuplicateName(name: string, condition_id: string, type: string): Promise<CheckNameExistedEvent>;
 
   listClanEmojiByClanId(clan_id: string): Promise<EmojiListedEvent>;
 
@@ -1629,9 +1631,9 @@ export class DefaultSocket implements Socket {
     return response.custom_status_event
   }
   
-  async checkDuplicateClanName(clan_name: string): Promise<ClanNameExistedEvent> {
-    const response = await this.send({clan_name_existed_event: {clan_name: clan_name}});
-    return response.clan_name_existed_event
+  async checkDuplicateName(name: string, condition_id: string, type: string): Promise<CheckNameExistedEvent> {
+    const response = await this.send({check_name_existed_event: {name: name, condition_id: condition_id, type: type}});
+    return response.check_name_existed_event
   }
 
   async listClanEmojiByClanId(clan_id: string): Promise<EmojiListedEvent> {
