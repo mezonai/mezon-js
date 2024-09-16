@@ -10,6 +10,7 @@ import {
   ChannelMessage,
   ChannelMessageHeader,
   CreateEventRequest,
+  GiveCoffeeEvent,
   MessageAttachment,
   MessageMention,
   MessageReaction,
@@ -258,17 +259,13 @@ export interface Envelope {
   role_assign_event?:
     | RoleAssignedEvent
     | undefined;
-  /**  */
-  add_user_emoji_usage_event?:
-    | AddUserEmojiUsageEvent
-    | undefined;
-  /**  */
-  get_user_emoji_usage_event?:
-    | GetUserEmojiUsageEvent
-    | undefined;
   /** clan deleted event */
   clan_deleted_event?:
     | ClanDeletedEvent
+    | undefined;
+  /** Give a coffe event */
+  give_coffee_event?:
+    | GiveCoffeeEvent
     | undefined;
   /** sticker created event */
   sticker_create_event?:
@@ -1212,24 +1209,6 @@ export interface NotificationChannelCategorySettingEvent {
   notification_channel_category_settings_list: NotificationChannelCategorySetting[];
 }
 
-export interface UserEmojiUsage {
-  user_id: string;
-  emoji_id: string;
-  clan_id: string;
-  create_time: string;
-}
-
-export interface AddUserEmojiUsageEvent {
-  emoji_id: string;
-  clan_id: string;
-}
-
-/** Response cho ListUserEmojiUsage */
-export interface GetUserEmojiUsageEvent {
-  clanId: string;
-  user_emoji_usage: UserEmojiUsage[];
-}
-
 function createBaseEnvelope(): Envelope {
   return {
     cid: "",
@@ -1290,9 +1269,8 @@ function createBaseEnvelope(): Envelope {
     user_permission_in_channel_list_event: undefined,
     role_list_event: undefined,
     role_assign_event: undefined,
-    add_user_emoji_usage_event: undefined,
-    get_user_emoji_usage_event: undefined,
     clan_deleted_event: undefined,
+    give_coffee_event: undefined,
     sticker_create_event: undefined,
     sticker_update_event: undefined,
     sticker_delete_event: undefined,
@@ -1482,23 +1460,20 @@ export const Envelope = {
     if (message.role_assign_event !== undefined) {
       RoleAssignedEvent.encode(message.role_assign_event, writer.uint32(466).fork()).ldelim();
     }
-    if (message.add_user_emoji_usage_event !== undefined) {
-      AddUserEmojiUsageEvent.encode(message.add_user_emoji_usage_event, writer.uint32(474).fork()).ldelim();
-    }
-    if (message.get_user_emoji_usage_event !== undefined) {
-      GetUserEmojiUsageEvent.encode(message.get_user_emoji_usage_event, writer.uint32(482).fork()).ldelim();
-    }
     if (message.clan_deleted_event !== undefined) {
-      ClanDeletedEvent.encode(message.clan_deleted_event, writer.uint32(490).fork()).ldelim();
+      ClanDeletedEvent.encode(message.clan_deleted_event, writer.uint32(474).fork()).ldelim();
+    }
+    if (message.give_coffee_event !== undefined) {
+      GiveCoffeeEvent.encode(message.give_coffee_event, writer.uint32(482).fork()).ldelim();
     }
     if (message.sticker_create_event !== undefined) {
-      StickerCreateEvent.encode(message.sticker_create_event, writer.uint32(498).fork()).ldelim();
+      StickerCreateEvent.encode(message.sticker_create_event, writer.uint32(490).fork()).ldelim();
     }
     if (message.sticker_update_event !== undefined) {
-      StickerUpdateEvent.encode(message.sticker_update_event, writer.uint32(506).fork()).ldelim();
+      StickerUpdateEvent.encode(message.sticker_update_event, writer.uint32(498).fork()).ldelim();
     }
     if (message.sticker_delete_event !== undefined) {
-      StickerDeleteEvent.encode(message.sticker_delete_event, writer.uint32(514).fork()).ldelim();
+      StickerDeleteEvent.encode(message.sticker_delete_event, writer.uint32(506).fork()).ldelim();
     }
     return writer;
   },
@@ -1930,38 +1905,31 @@ export const Envelope = {
             break;
           }
 
-          message.add_user_emoji_usage_event = AddUserEmojiUsageEvent.decode(reader, reader.uint32());
+          message.clan_deleted_event = ClanDeletedEvent.decode(reader, reader.uint32());
           continue;
         case 60:
           if (tag !== 482) {
             break;
           }
 
-          message.get_user_emoji_usage_event = GetUserEmojiUsageEvent.decode(reader, reader.uint32());
+          message.give_coffee_event = GiveCoffeeEvent.decode(reader, reader.uint32());
           continue;
         case 61:
           if (tag !== 490) {
             break;
           }
 
-          message.clan_deleted_event = ClanDeletedEvent.decode(reader, reader.uint32());
+          message.sticker_create_event = StickerCreateEvent.decode(reader, reader.uint32());
           continue;
         case 62:
           if (tag !== 498) {
             break;
           }
 
-          message.sticker_create_event = StickerCreateEvent.decode(reader, reader.uint32());
+          message.sticker_update_event = StickerUpdateEvent.decode(reader, reader.uint32());
           continue;
         case 63:
           if (tag !== 506) {
-            break;
-          }
-
-          message.sticker_update_event = StickerUpdateEvent.decode(reader, reader.uint32());
-          continue;
-        case 64:
-          if (tag !== 514) {
             break;
           }
 
@@ -2116,14 +2084,11 @@ export const Envelope = {
       role_assign_event: isSet(object.role_assign_event)
         ? RoleAssignedEvent.fromJSON(object.role_assign_event)
         : undefined,
-      add_user_emoji_usage_event: isSet(object.add_user_emoji_usage_event)
-        ? AddUserEmojiUsageEvent.fromJSON(object.add_user_emoji_usage_event)
-        : undefined,
-      get_user_emoji_usage_event: isSet(object.get_user_emoji_usage_event)
-        ? GetUserEmojiUsageEvent.fromJSON(object.get_user_emoji_usage_event)
-        : undefined,
       clan_deleted_event: isSet(object.clan_deleted_event)
         ? ClanDeletedEvent.fromJSON(object.clan_deleted_event)
+        : undefined,
+      give_coffee_event: isSet(object.give_coffee_event)
+        ? GiveCoffeeEvent.fromJSON(object.give_coffee_event)
         : undefined,
       sticker_create_event: isSet(object.sticker_create_event)
         ? StickerCreateEvent.fromJSON(object.sticker_create_event)
@@ -2325,14 +2290,11 @@ export const Envelope = {
     if (message.role_assign_event !== undefined) {
       obj.role_assign_event = RoleAssignedEvent.toJSON(message.role_assign_event);
     }
-    if (message.add_user_emoji_usage_event !== undefined) {
-      obj.add_user_emoji_usage_event = AddUserEmojiUsageEvent.toJSON(message.add_user_emoji_usage_event);
-    }
-    if (message.get_user_emoji_usage_event !== undefined) {
-      obj.get_user_emoji_usage_event = GetUserEmojiUsageEvent.toJSON(message.get_user_emoji_usage_event);
-    }
     if (message.clan_deleted_event !== undefined) {
       obj.clan_deleted_event = ClanDeletedEvent.toJSON(message.clan_deleted_event);
+    }
+    if (message.give_coffee_event !== undefined) {
+      obj.give_coffee_event = GiveCoffeeEvent.toJSON(message.give_coffee_event);
     }
     if (message.sticker_create_event !== undefined) {
       obj.sticker_create_event = StickerCreateEvent.toJSON(message.sticker_create_event);
@@ -2543,16 +2505,11 @@ export const Envelope = {
     message.role_assign_event = (object.role_assign_event !== undefined && object.role_assign_event !== null)
       ? RoleAssignedEvent.fromPartial(object.role_assign_event)
       : undefined;
-    message.add_user_emoji_usage_event =
-      (object.add_user_emoji_usage_event !== undefined && object.add_user_emoji_usage_event !== null)
-        ? AddUserEmojiUsageEvent.fromPartial(object.add_user_emoji_usage_event)
-        : undefined;
-    message.get_user_emoji_usage_event =
-      (object.get_user_emoji_usage_event !== undefined && object.get_user_emoji_usage_event !== null)
-        ? GetUserEmojiUsageEvent.fromPartial(object.get_user_emoji_usage_event)
-        : undefined;
     message.clan_deleted_event = (object.clan_deleted_event !== undefined && object.clan_deleted_event !== null)
       ? ClanDeletedEvent.fromPartial(object.clan_deleted_event)
+      : undefined;
+    message.give_coffee_event = (object.give_coffee_event !== undefined && object.give_coffee_event !== null)
+      ? GiveCoffeeEvent.fromPartial(object.give_coffee_event)
       : undefined;
     message.sticker_create_event = (object.sticker_create_event !== undefined && object.sticker_create_event !== null)
       ? StickerCreateEvent.fromPartial(object.sticker_create_event)
@@ -10348,260 +10305,6 @@ export const NotificationChannelCategorySettingEvent = {
       object.notification_channel_category_settings_list?.map((e) =>
         NotificationChannelCategorySetting.fromPartial(e)
       ) || [];
-    return message;
-  },
-};
-
-function createBaseUserEmojiUsage(): UserEmojiUsage {
-  return { user_id: "", emoji_id: "", clan_id: "", create_time: "" };
-}
-
-export const UserEmojiUsage = {
-  encode(message: UserEmojiUsage, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.user_id !== "") {
-      writer.uint32(10).string(message.user_id);
-    }
-    if (message.emoji_id !== "") {
-      writer.uint32(18).string(message.emoji_id);
-    }
-    if (message.clan_id !== "") {
-      writer.uint32(26).string(message.clan_id);
-    }
-    if (message.create_time !== "") {
-      writer.uint32(34).string(message.create_time);
-    }
-    return writer;
-  },
-
-  decode(input: _m0.Reader | Uint8Array, length?: number): UserEmojiUsage {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseUserEmojiUsage();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
-          if (tag !== 10) {
-            break;
-          }
-
-          message.user_id = reader.string();
-          continue;
-        case 2:
-          if (tag !== 18) {
-            break;
-          }
-
-          message.emoji_id = reader.string();
-          continue;
-        case 3:
-          if (tag !== 26) {
-            break;
-          }
-
-          message.clan_id = reader.string();
-          continue;
-        case 4:
-          if (tag !== 34) {
-            break;
-          }
-
-          message.create_time = reader.string();
-          continue;
-      }
-      if ((tag & 7) === 4 || tag === 0) {
-        break;
-      }
-      reader.skipType(tag & 7);
-    }
-    return message;
-  },
-
-  fromJSON(object: any): UserEmojiUsage {
-    return {
-      user_id: isSet(object.user_id) ? globalThis.String(object.user_id) : "",
-      emoji_id: isSet(object.emoji_id) ? globalThis.String(object.emoji_id) : "",
-      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
-      create_time: isSet(object.create_time) ? globalThis.String(object.create_time) : "",
-    };
-  },
-
-  toJSON(message: UserEmojiUsage): unknown {
-    const obj: any = {};
-    if (message.user_id !== "") {
-      obj.user_id = message.user_id;
-    }
-    if (message.emoji_id !== "") {
-      obj.emoji_id = message.emoji_id;
-    }
-    if (message.clan_id !== "") {
-      obj.clan_id = message.clan_id;
-    }
-    if (message.create_time !== "") {
-      obj.create_time = message.create_time;
-    }
-    return obj;
-  },
-
-  create<I extends Exact<DeepPartial<UserEmojiUsage>, I>>(base?: I): UserEmojiUsage {
-    return UserEmojiUsage.fromPartial(base ?? ({} as any));
-  },
-  fromPartial<I extends Exact<DeepPartial<UserEmojiUsage>, I>>(object: I): UserEmojiUsage {
-    const message = createBaseUserEmojiUsage();
-    message.user_id = object.user_id ?? "";
-    message.emoji_id = object.emoji_id ?? "";
-    message.clan_id = object.clan_id ?? "";
-    message.create_time = object.create_time ?? "";
-    return message;
-  },
-};
-
-function createBaseAddUserEmojiUsageEvent(): AddUserEmojiUsageEvent {
-  return { emoji_id: "", clan_id: "" };
-}
-
-export const AddUserEmojiUsageEvent = {
-  encode(message: AddUserEmojiUsageEvent, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.emoji_id !== "") {
-      writer.uint32(10).string(message.emoji_id);
-    }
-    if (message.clan_id !== "") {
-      writer.uint32(18).string(message.clan_id);
-    }
-    return writer;
-  },
-
-  decode(input: _m0.Reader | Uint8Array, length?: number): AddUserEmojiUsageEvent {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseAddUserEmojiUsageEvent();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
-          if (tag !== 10) {
-            break;
-          }
-
-          message.emoji_id = reader.string();
-          continue;
-        case 2:
-          if (tag !== 18) {
-            break;
-          }
-
-          message.clan_id = reader.string();
-          continue;
-      }
-      if ((tag & 7) === 4 || tag === 0) {
-        break;
-      }
-      reader.skipType(tag & 7);
-    }
-    return message;
-  },
-
-  fromJSON(object: any): AddUserEmojiUsageEvent {
-    return {
-      emoji_id: isSet(object.emoji_id) ? globalThis.String(object.emoji_id) : "",
-      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
-    };
-  },
-
-  toJSON(message: AddUserEmojiUsageEvent): unknown {
-    const obj: any = {};
-    if (message.emoji_id !== "") {
-      obj.emoji_id = message.emoji_id;
-    }
-    if (message.clan_id !== "") {
-      obj.clan_id = message.clan_id;
-    }
-    return obj;
-  },
-
-  create<I extends Exact<DeepPartial<AddUserEmojiUsageEvent>, I>>(base?: I): AddUserEmojiUsageEvent {
-    return AddUserEmojiUsageEvent.fromPartial(base ?? ({} as any));
-  },
-  fromPartial<I extends Exact<DeepPartial<AddUserEmojiUsageEvent>, I>>(object: I): AddUserEmojiUsageEvent {
-    const message = createBaseAddUserEmojiUsageEvent();
-    message.emoji_id = object.emoji_id ?? "";
-    message.clan_id = object.clan_id ?? "";
-    return message;
-  },
-};
-
-function createBaseGetUserEmojiUsageEvent(): GetUserEmojiUsageEvent {
-  return { clanId: "", user_emoji_usage: [] };
-}
-
-export const GetUserEmojiUsageEvent = {
-  encode(message: GetUserEmojiUsageEvent, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.clanId !== "") {
-      writer.uint32(10).string(message.clanId);
-    }
-    for (const v of message.user_emoji_usage) {
-      UserEmojiUsage.encode(v!, writer.uint32(18).fork()).ldelim();
-    }
-    return writer;
-  },
-
-  decode(input: _m0.Reader | Uint8Array, length?: number): GetUserEmojiUsageEvent {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseGetUserEmojiUsageEvent();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
-          if (tag !== 10) {
-            break;
-          }
-
-          message.clanId = reader.string();
-          continue;
-        case 2:
-          if (tag !== 18) {
-            break;
-          }
-
-          message.user_emoji_usage.push(UserEmojiUsage.decode(reader, reader.uint32()));
-          continue;
-      }
-      if ((tag & 7) === 4 || tag === 0) {
-        break;
-      }
-      reader.skipType(tag & 7);
-    }
-    return message;
-  },
-
-  fromJSON(object: any): GetUserEmojiUsageEvent {
-    return {
-      clanId: isSet(object.clanId) ? globalThis.String(object.clanId) : "",
-      user_emoji_usage: globalThis.Array.isArray(object?.user_emoji_usage)
-        ? object.user_emoji_usage.map((e: any) => UserEmojiUsage.fromJSON(e))
-        : [],
-    };
-  },
-
-  toJSON(message: GetUserEmojiUsageEvent): unknown {
-    const obj: any = {};
-    if (message.clanId !== "") {
-      obj.clanId = message.clanId;
-    }
-    if (message.user_emoji_usage?.length) {
-      obj.user_emoji_usage = message.user_emoji_usage.map((e) => UserEmojiUsage.toJSON(e));
-    }
-    return obj;
-  },
-
-  create<I extends Exact<DeepPartial<GetUserEmojiUsageEvent>, I>>(base?: I): GetUserEmojiUsageEvent {
-    return GetUserEmojiUsageEvent.fromPartial(base ?? ({} as any));
-  },
-  fromPartial<I extends Exact<DeepPartial<GetUserEmojiUsageEvent>, I>>(object: I): GetUserEmojiUsageEvent {
-    const message = createBaseGetUserEmojiUsageEvent();
-    message.clanId = object.clanId ?? "";
-    message.user_emoji_usage = object.user_emoji_usage?.map((e) => UserEmojiUsage.fromPartial(e)) || [];
     return message;
   },
 };

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { ApiChannelMessageHeader, ApiCreateEventRequest, ApiMessageAttachment, ApiMessageMention, ApiMessageReaction, ApiMessageRef, ApiNotification, ApiPermissionList, ApiRoleList, ApiRpc, ApiUser} from "./api.gen";
+import { ApiChannelMessageHeader, ApiCreateEventRequest, ApiGiveCoffeeEvent, ApiMessageAttachment, ApiMessageMention, ApiMessageReaction, ApiMessageRef, ApiNotification, ApiPermissionList, ApiRoleList, ApiRpc, ApiUser} from "./api.gen";
 import {Session} from "./session";
 import {ChannelMessage, Notification} from "./client";
 import {WebSocketAdapter, WebSocketAdapterText} from "./web_socket_adapter"
@@ -1013,9 +1013,9 @@ export interface Socket {
 
   listStickersByUserId(): Promise<StrickerListedEvent>;
 
-  ListChannelByUserId(): Promise<ChannelDescListEvent>;
+  listChannelByUserId(): Promise<ChannelDescListEvent>;
 
-  ListUserClansByUserId(): Promise<AllUserClans>;
+  listUserClansByUserId(): Promise<AllUserClans>;
   
   hashtagDMList(user_id: Array<string>, limit: number): Promise<HashtagDmListEvent>;
 
@@ -1027,15 +1027,13 @@ export interface Socket {
 
   getNotificationReactMessage(channel_id_req: string): Promise<NotifiReactMessageEvent>;
 
-  GetPermissionByRoleIdChannelId(role_id: string, channel_id: string): Promise<PermissionRoleChannelListEvent>;
+  getPermissionByRoleIdChannelId(role_id: string, channel_id: string): Promise<PermissionRoleChannelListEvent>;
   
   getNotificationChannelCategorySetting(clan_id : string): Promise<NotificationChannelCategorySettingEvent>;
 
   oneventcreated: (clan_event_created: ApiCreateEventRequest) => void;
 
-  addUserEmojiUsage: (add_user_emoji_usage_event: AddUserEmojiUsageEvent) => void;
-
-  getUserEmojiUsage(clanId: string): Promise<GetUserEmojiUsageEvent>
+  oncoffeegiven: (give_coffee_event: ApiGiveCoffeeEvent) => void;
 
 }
 
@@ -1216,7 +1214,9 @@ export class DefaultSocket implements Socket {
           this.onuserclanremoved(<UserClanRemovedEvent>message.user_clan_removed_event);
         } else if(message.clan_event_created){
             this.oneventcreated(message.clan_event_created);
-        }else {
+        } else if(message.give_coffee_event){
+          this.oncoffeegiven(<ApiGiveCoffeeEvent>message.give_coffee_event);
+        } else {
           if (this.verbose && window && window.console) {
             console.log("Unrecognized message received: %o", message);
           }
@@ -1469,6 +1469,12 @@ export class DefaultSocket implements Socket {
       console.log(clan_event_created);
     }
   }
+
+  oncoffeegiven(give_coffee_event: ApiGiveCoffeeEvent) {
+    if (this.verbose && window && window.console) {
+      console.log(give_coffee_event);
+    }
+  }
   
   send(message: ChannelJoin | ChannelLeave | ChannelMessageSend | ChannelMessageUpdate | CustomStatusEvent |
     ChannelMessageRemove | MessageTypingEvent | LastSeenMessageEvent | Rpc | StatusFollow | StatusUnfollow | StatusUpdate | Ping, sendTimeout = DefaultSocket.DefaultSendTimeoutMs): Promise<any> {
@@ -1639,12 +1645,12 @@ export class DefaultSocket implements Socket {
     return response.role_list_event 
   }
 
-  async ListChannelByUserId(): Promise<ChannelDescListEvent> {
+  async listChannelByUserId(): Promise<ChannelDescListEvent> {
     const response = await this.send({channel_desc_list_event: {}});
     return response.channel_desc_list_event
   }
 
-  async ListUserClansByUserId(): Promise<AllUserClans> {
+  async listUserClansByUserId(): Promise<AllUserClans> {
     const response = await this.send({all_user_clans: {}});
     return response.all_user_clans
   }
@@ -1654,7 +1660,7 @@ export class DefaultSocket implements Socket {
     return response.hashtag_dm_list_event
   }
 
-  async GetPermissionByRoleIdChannelId(role_id: string, channel_id: string): Promise<PermissionRoleChannelListEvent> {
+  async getPermissionByRoleIdChannelId(role_id: string, channel_id: string): Promise<PermissionRoleChannelListEvent> {
     const response = await this.send({permission_role_channel_list_event: {role_id: role_id, channel_id: channel_id }});
     return response.permission_role_channel_list_event
   }
@@ -1687,16 +1693,6 @@ export class DefaultSocket implements Socket {
   async getNotificationChannelCategorySetting(clan_id: string): Promise<NotificationChannelCategorySettingEvent> {
     const response = await this.send({notification_channel_category_setting_event: {clan_id : clan_id}})
     return response.notification_channel_category_setting_event
-  }
-
-  async addUserEmojiUsage(add_user_emoji_usage_event: AddUserEmojiUsageEvent) {
-    const response = await this.send({add_user_emoji_usage_event: {add_user_emoji_usage_event: add_user_emoji_usage_event}})
-    return response.add_user_emoji_usage_event
-  }
-
-  async getUserEmojiUsage(clanId: string): Promise<GetUserEmojiUsageEvent> {
-    const response = await this.send({get_user_emoji_usage_event: {clanId: clanId}})
-    return response.get_user_emoji_usage_event
   }
 
   private async pingPong(): Promise<void> {
