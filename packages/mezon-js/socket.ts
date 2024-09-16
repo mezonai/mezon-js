@@ -842,6 +842,24 @@ export interface GetUserEmojiUsageEvent {
   user_emoji_usage: Array<UserEmojiUsage>;
 }
 
+export interface CreateEmojiEvent {
+  id: string;
+  clan_id: string;
+  short_name: string;
+  source: string;
+  category: string;
+}
+export interface UpdateEmojiEvent {
+  id: string;
+  clan_id: string;
+  short_name: string;
+  source: string;
+  category: string;
+}
+export interface DeleteEmojiEvent {
+  id: string;
+  clan_id: string;
+}
 /** A socket connection to Mezon server. */
 export interface Socket {
   /** Connection is Open */
@@ -1039,6 +1057,12 @@ export interface Socket {
 
   oncoffeegiven: (give_coffee_event: ApiGiveCoffeeEvent) => void;
 
+  onemojiclancreated: (emoji_clan_created: CreateEmojiEvent)=> void;
+
+  onemojiclanupdated: (emoji_clan_updated: UpdateEmojiEvent)=> void;
+
+  onemojiclandeleted: (emoji_clan_deleted: DeleteEmojiEvent)=> void;
+
 }
 
 /** Reports an error received from a socket message. */
@@ -1220,7 +1244,14 @@ export class DefaultSocket implements Socket {
             this.oneventcreated(message.clan_event_created);
         } else if(message.give_coffee_event){
           this.oncoffeegiven(<ApiGiveCoffeeEvent>message.give_coffee_event);
-        } else {
+        } else if(message.event_create_emoji){
+          this.onemojiclancreated(<CreateEmojiEvent>message.event_create_emoji)
+        } else if(message.event_update_emoji){
+          this.onemojiclanupdated(<UpdateEmojiEvent>message.event_update_emoji)
+        } else if(message.event_delete_emoji){
+          this.onemojiclandeleted(<DeleteEmojiEvent>message.event_delete_emoji)
+        } 
+        else {
           if (this.verbose && window && window.console) {
             console.log("Unrecognized message received: %o", message);
           }
@@ -1477,6 +1508,24 @@ export class DefaultSocket implements Socket {
   oncoffeegiven(give_coffee_event: ApiGiveCoffeeEvent) {
     if (this.verbose && window && window.console) {
       console.log(give_coffee_event);
+    }
+  }
+
+  onemojiclancreated(emoji: CreateEmojiEvent) {
+    if (this.verbose && window && window.console) {
+      console.log(emoji);
+    }
+  }
+
+  onemojiclanupdated(emoji: UpdateEmojiEvent) {
+    if (this.verbose && window && window.console) {
+      console.log(emoji);
+    }
+  }
+
+  onemojiclandeleted(emoji: DeleteEmojiEvent) {
+    if (this.verbose && window && window.console) {
+      console.log(emoji);
     }
   }
   
