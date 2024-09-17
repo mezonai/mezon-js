@@ -684,7 +684,7 @@ export interface EventEmoji {
 	short_name: string
 	source:    string
 	category:  string
-	action:    string
+	action:    number
 }
 
 export interface UserPermissionInChannelListEvent {
