@@ -1,3 +1,5 @@
+import { ChannelMessageAck } from "./socket";
+
 /**  */
 export interface ApiChannelDescription {
   //
@@ -381,7 +383,7 @@ export interface ApiUser {
 
 export interface Client {
   authenticate: () => Promise<string>;
-  sendMessage: (clan_id: string, parent_id: string, channel_id: string, mode: number, is_public: boolean, is_parent_public: boolean, msg: ChannelMessageContent, mentions?: Array<ApiMessageMention>, attachments?: Array<ApiMessageAttachment>, ref?: Array<ApiMessageRef>) => Promise<boolean>;
+  sendMessage: (clan_id: string, parent_id: string, channel_id: string, mode: number, is_public: boolean, is_parent_public: boolean, msg: ChannelMessageContent, mentions?: Array<ApiMessageMention>, attachments?: Array<ApiMessageAttachment>, ref?: Array<ApiMessageRef>) => Promise<ChannelMessageAck>;
   on: (event: string, func: Function) => void;
   remove: (event: string, func: (...args: any[]) => void) => void;
 }

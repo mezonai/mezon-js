@@ -10,6 +10,7 @@ import {
   ChannelMessage,
   ChannelMessageHeader,
   CreateEventRequest,
+  GiveCoffeeEvent,
   MessageAttachment,
   MessageMention,
   MessageReaction,
@@ -187,8 +188,8 @@ export interface Envelope {
     | ClanProfileUpdatedEvent
     | undefined;
   /** Check duplicate clan name event */
-  clan_name_existed_event?:
-    | ClanNameExistedEvent
+  check_name_existed_event?:
+    | CheckNameExistedEvent
     | undefined;
   /** User profile update event */
   user_profile_updated_event?:
@@ -258,16 +259,28 @@ export interface Envelope {
   role_assign_event?:
     | RoleAssignedEvent
     | undefined;
-  /**  */
-  add_user_emoji_usage_event?:
-    | AddUserEmojiUsageEvent
-    | undefined;
-  /**  */
-  get_user_emoji_usage_event?:
-    | GetUserEmojiUsageEvent
-    | undefined;
   /** clan deleted event */
-  clan_deleted_envet?: ClanDeletedEvent | undefined;
+  clan_deleted_event?:
+    | ClanDeletedEvent
+    | undefined;
+  /** Give a coffe event */
+  give_coffee_event?:
+    | GiveCoffeeEvent
+    | undefined;
+  /** sticker created event */
+  sticker_create_event?:
+    | StickerCreateEvent
+    | undefined;
+  /** sticker updated event */
+  sticker_update_event?:
+    | StickerUpdateEvent
+    | undefined;
+  /** sticker deleted event */
+  sticker_delete_event?:
+    | StickerDeleteEvent
+    | undefined;
+  /** role created event */
+  role_event?: RoleEvent | undefined;
 }
 
 export interface AllUserClans {
@@ -421,6 +434,12 @@ export interface ClanEmoji {
   category: string;
   /** creator id */
   creator_id: string;
+  /** clan_id */
+  clan_id: string;
+  /** clan logo */
+  logo: string;
+  /** clan name */
+  clan_name: string;
 }
 
 export interface EmojiListedEvent {
@@ -860,6 +879,27 @@ export interface ChannelCreatedEvent {
   is_parent_public: boolean;
 }
 
+export interface RoleEvent {
+  /** clan id */
+  clan_id: string;
+  /** category */
+  role_id: string;
+  /** creator */
+  creator_id: string;
+  /** UserIds Assigned */
+  user_ids_assigned: string[];
+  /** permissions Assigned; */
+  permission_ids_assigned: string[];
+  /** role title */
+  role_title: string;
+  /** status */
+  status: number;
+  /**  */
+  user_ids_removed: string[];
+  /**  */
+  permission_ids_removed: string[];
+}
+
 export interface ChannelDeletedEvent {
   /** clan id */
   clan_id: string;
@@ -878,6 +918,41 @@ export interface ClanDeletedEvent {
   clan_id: string;
   /** deletor */
   deletor: string;
+}
+
+export interface StickerCreateEvent {
+  /** clan id */
+  clan_id: string;
+  /** source */
+  source: string;
+  /** shortname */
+  shortname: string;
+  /** category */
+  category: string;
+  /** creator_id */
+  creator_id: string;
+  /** sticker id */
+  sticker_id: string;
+  /** logo */
+  logo: string;
+  /** clan name */
+  clan_name: string;
+}
+
+export interface StickerUpdateEvent {
+  /** shortname */
+  shortname: string;
+  /** sticker id */
+  sticker_id: string;
+  /** user id update */
+  user_id: string;
+}
+
+export interface StickerDeleteEvent {
+  /** sticker id */
+  sticker_id: string;
+  /** user id delete */
+  user_id: string;
 }
 
 export interface ChannelUpdatedEvent {
@@ -903,6 +978,8 @@ export interface ChannelUpdatedEvent {
   meeting_code: string;
   /** error */
   is_error: boolean;
+  /** channel private */
+  channel_private: boolean;
 }
 
 /** Stop receiving status updates for some set of users. */
@@ -1086,11 +1163,15 @@ export interface FCMTokens {
   token_id: string;
 }
 
-export interface ClanNameExistedEvent {
-  /** clan name */
-  clan_name: string;
+export interface CheckNameExistedEvent {
+  /** name */
+  name: string;
+  /** condition_id */
+  condition_id: string;
   /** is exist */
   exist: boolean;
+  /** type check */
+  type: number;
 }
 
 export interface NotificationChannelSettingEvent {
@@ -1167,24 +1248,6 @@ export interface NotificationChannelCategorySettingEvent {
   notification_channel_category_settings_list: NotificationChannelCategorySetting[];
 }
 
-export interface UserEmojiUsage {
-  user_id: string;
-  emoji_id: string;
-  clan_id: string;
-  create_time: string;
-}
-
-export interface AddUserEmojiUsageEvent {
-  emoji_id: string;
-  clan_id: string;
-}
-
-/** Response cho ListUserEmojiUsage */
-export interface GetUserEmojiUsageEvent {
-  clanId: string;
-  user_emoji_usage: UserEmojiUsage[];
-}
-
 function createBaseEnvelope(): Envelope {
   return {
     cid: "",
@@ -1227,7 +1290,7 @@ function createBaseEnvelope(): Envelope {
     user_clan_removed_event: undefined,
     clan_updated_event: undefined,
     clan_profile_updated_event: undefined,
-    clan_name_existed_event: undefined,
+    check_name_existed_event: undefined,
     user_profile_updated_event: undefined,
     emojis_listed_event: undefined,
     sticker_listed_event: undefined,
@@ -1245,9 +1308,12 @@ function createBaseEnvelope(): Envelope {
     user_permission_in_channel_list_event: undefined,
     role_list_event: undefined,
     role_assign_event: undefined,
-    add_user_emoji_usage_event: undefined,
-    get_user_emoji_usage_event: undefined,
-    clan_deleted_envet: undefined,
+    clan_deleted_event: undefined,
+    give_coffee_event: undefined,
+    sticker_create_event: undefined,
+    sticker_update_event: undefined,
+    sticker_delete_event: undefined,
+    role_event: undefined,
   };
 }
 
@@ -1373,8 +1439,8 @@ export const Envelope = {
     if (message.clan_profile_updated_event !== undefined) {
       ClanProfileUpdatedEvent.encode(message.clan_profile_updated_event, writer.uint32(322).fork()).ldelim();
     }
-    if (message.clan_name_existed_event !== undefined) {
-      ClanNameExistedEvent.encode(message.clan_name_existed_event, writer.uint32(330).fork()).ldelim();
+    if (message.check_name_existed_event !== undefined) {
+      CheckNameExistedEvent.encode(message.check_name_existed_event, writer.uint32(330).fork()).ldelim();
     }
     if (message.user_profile_updated_event !== undefined) {
       UserProfileUpdatedEvent.encode(message.user_profile_updated_event, writer.uint32(338).fork()).ldelim();
@@ -1434,14 +1500,23 @@ export const Envelope = {
     if (message.role_assign_event !== undefined) {
       RoleAssignedEvent.encode(message.role_assign_event, writer.uint32(466).fork()).ldelim();
     }
-    if (message.add_user_emoji_usage_event !== undefined) {
-      AddUserEmojiUsageEvent.encode(message.add_user_emoji_usage_event, writer.uint32(474).fork()).ldelim();
+    if (message.clan_deleted_event !== undefined) {
+      ClanDeletedEvent.encode(message.clan_deleted_event, writer.uint32(474).fork()).ldelim();
     }
-    if (message.get_user_emoji_usage_event !== undefined) {
-      GetUserEmojiUsageEvent.encode(message.get_user_emoji_usage_event, writer.uint32(482).fork()).ldelim();
+    if (message.give_coffee_event !== undefined) {
+      GiveCoffeeEvent.encode(message.give_coffee_event, writer.uint32(482).fork()).ldelim();
     }
-    if (message.clan_deleted_envet !== undefined) {
-      ClanDeletedEvent.encode(message.clan_deleted_envet, writer.uint32(490).fork()).ldelim();
+    if (message.sticker_create_event !== undefined) {
+      StickerCreateEvent.encode(message.sticker_create_event, writer.uint32(490).fork()).ldelim();
+    }
+    if (message.sticker_update_event !== undefined) {
+      StickerUpdateEvent.encode(message.sticker_update_event, writer.uint32(498).fork()).ldelim();
+    }
+    if (message.sticker_delete_event !== undefined) {
+      StickerDeleteEvent.encode(message.sticker_delete_event, writer.uint32(506).fork()).ldelim();
+    }
+    if (message.role_event !== undefined) {
+      RoleEvent.encode(message.role_event, writer.uint32(514).fork()).ldelim();
     }
     return writer;
   },
@@ -1738,7 +1813,7 @@ export const Envelope = {
             break;
           }
 
-          message.clan_name_existed_event = ClanNameExistedEvent.decode(reader, reader.uint32());
+          message.check_name_existed_event = CheckNameExistedEvent.decode(reader, reader.uint32());
           continue;
         case 42:
           if (tag !== 338) {
@@ -1873,21 +1948,42 @@ export const Envelope = {
             break;
           }
 
-          message.add_user_emoji_usage_event = AddUserEmojiUsageEvent.decode(reader, reader.uint32());
+          message.clan_deleted_event = ClanDeletedEvent.decode(reader, reader.uint32());
           continue;
         case 60:
           if (tag !== 482) {
             break;
           }
 
-          message.get_user_emoji_usage_event = GetUserEmojiUsageEvent.decode(reader, reader.uint32());
+          message.give_coffee_event = GiveCoffeeEvent.decode(reader, reader.uint32());
           continue;
         case 61:
           if (tag !== 490) {
             break;
           }
 
-          message.clan_deleted_envet = ClanDeletedEvent.decode(reader, reader.uint32());
+          message.sticker_create_event = StickerCreateEvent.decode(reader, reader.uint32());
+          continue;
+        case 62:
+          if (tag !== 498) {
+            break;
+          }
+
+          message.sticker_update_event = StickerUpdateEvent.decode(reader, reader.uint32());
+          continue;
+        case 63:
+          if (tag !== 506) {
+            break;
+          }
+
+          message.sticker_delete_event = StickerDeleteEvent.decode(reader, reader.uint32());
+          continue;
+        case 64:
+          if (tag !== 514) {
+            break;
+          }
+
+          message.role_event = RoleEvent.decode(reader, reader.uint32());
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -1988,8 +2084,8 @@ export const Envelope = {
       clan_profile_updated_event: isSet(object.clan_profile_updated_event)
         ? ClanProfileUpdatedEvent.fromJSON(object.clan_profile_updated_event)
         : undefined,
-      clan_name_existed_event: isSet(object.clan_name_existed_event)
-        ? ClanNameExistedEvent.fromJSON(object.clan_name_existed_event)
+      check_name_existed_event: isSet(object.check_name_existed_event)
+        ? CheckNameExistedEvent.fromJSON(object.check_name_existed_event)
         : undefined,
       user_profile_updated_event: isSet(object.user_profile_updated_event)
         ? UserProfileUpdatedEvent.fromJSON(object.user_profile_updated_event)
@@ -2038,15 +2134,22 @@ export const Envelope = {
       role_assign_event: isSet(object.role_assign_event)
         ? RoleAssignedEvent.fromJSON(object.role_assign_event)
         : undefined,
-      add_user_emoji_usage_event: isSet(object.add_user_emoji_usage_event)
-        ? AddUserEmojiUsageEvent.fromJSON(object.add_user_emoji_usage_event)
+      clan_deleted_event: isSet(object.clan_deleted_event)
+        ? ClanDeletedEvent.fromJSON(object.clan_deleted_event)
         : undefined,
-      get_user_emoji_usage_event: isSet(object.get_user_emoji_usage_event)
-        ? GetUserEmojiUsageEvent.fromJSON(object.get_user_emoji_usage_event)
+      give_coffee_event: isSet(object.give_coffee_event)
+        ? GiveCoffeeEvent.fromJSON(object.give_coffee_event)
         : undefined,
-      clan_deleted_envet: isSet(object.clan_deleted_envet)
-        ? ClanDeletedEvent.fromJSON(object.clan_deleted_envet)
+      sticker_create_event: isSet(object.sticker_create_event)
+        ? StickerCreateEvent.fromJSON(object.sticker_create_event)
         : undefined,
+      sticker_update_event: isSet(object.sticker_update_event)
+        ? StickerUpdateEvent.fromJSON(object.sticker_update_event)
+        : undefined,
+      sticker_delete_event: isSet(object.sticker_delete_event)
+        ? StickerDeleteEvent.fromJSON(object.sticker_delete_event)
+        : undefined,
+      role_event: isSet(object.role_event) ? RoleEvent.fromJSON(object.role_event) : undefined,
     };
   },
 
@@ -2172,8 +2275,8 @@ export const Envelope = {
     if (message.clan_profile_updated_event !== undefined) {
       obj.clan_profile_updated_event = ClanProfileUpdatedEvent.toJSON(message.clan_profile_updated_event);
     }
-    if (message.clan_name_existed_event !== undefined) {
-      obj.clan_name_existed_event = ClanNameExistedEvent.toJSON(message.clan_name_existed_event);
+    if (message.check_name_existed_event !== undefined) {
+      obj.check_name_existed_event = CheckNameExistedEvent.toJSON(message.check_name_existed_event);
     }
     if (message.user_profile_updated_event !== undefined) {
       obj.user_profile_updated_event = UserProfileUpdatedEvent.toJSON(message.user_profile_updated_event);
@@ -2238,14 +2341,23 @@ export const Envelope = {
     if (message.role_assign_event !== undefined) {
       obj.role_assign_event = RoleAssignedEvent.toJSON(message.role_assign_event);
     }
-    if (message.add_user_emoji_usage_event !== undefined) {
-      obj.add_user_emoji_usage_event = AddUserEmojiUsageEvent.toJSON(message.add_user_emoji_usage_event);
+    if (message.clan_deleted_event !== undefined) {
+      obj.clan_deleted_event = ClanDeletedEvent.toJSON(message.clan_deleted_event);
     }
-    if (message.get_user_emoji_usage_event !== undefined) {
-      obj.get_user_emoji_usage_event = GetUserEmojiUsageEvent.toJSON(message.get_user_emoji_usage_event);
+    if (message.give_coffee_event !== undefined) {
+      obj.give_coffee_event = GiveCoffeeEvent.toJSON(message.give_coffee_event);
     }
-    if (message.clan_deleted_envet !== undefined) {
-      obj.clan_deleted_envet = ClanDeletedEvent.toJSON(message.clan_deleted_envet);
+    if (message.sticker_create_event !== undefined) {
+      obj.sticker_create_event = StickerCreateEvent.toJSON(message.sticker_create_event);
+    }
+    if (message.sticker_update_event !== undefined) {
+      obj.sticker_update_event = StickerUpdateEvent.toJSON(message.sticker_update_event);
+    }
+    if (message.sticker_delete_event !== undefined) {
+      obj.sticker_delete_event = StickerDeleteEvent.toJSON(message.sticker_delete_event);
+    }
+    if (message.role_event !== undefined) {
+      obj.role_event = RoleEvent.toJSON(message.role_event);
     }
     return obj;
   },
@@ -2380,9 +2492,9 @@ export const Envelope = {
       (object.clan_profile_updated_event !== undefined && object.clan_profile_updated_event !== null)
         ? ClanProfileUpdatedEvent.fromPartial(object.clan_profile_updated_event)
         : undefined;
-    message.clan_name_existed_event =
-      (object.clan_name_existed_event !== undefined && object.clan_name_existed_event !== null)
-        ? ClanNameExistedEvent.fromPartial(object.clan_name_existed_event)
+    message.check_name_existed_event =
+      (object.check_name_existed_event !== undefined && object.check_name_existed_event !== null)
+        ? CheckNameExistedEvent.fromPartial(object.check_name_existed_event)
         : undefined;
     message.user_profile_updated_event =
       (object.user_profile_updated_event !== undefined && object.user_profile_updated_event !== null)
@@ -2447,16 +2559,23 @@ export const Envelope = {
     message.role_assign_event = (object.role_assign_event !== undefined && object.role_assign_event !== null)
       ? RoleAssignedEvent.fromPartial(object.role_assign_event)
       : undefined;
-    message.add_user_emoji_usage_event =
-      (object.add_user_emoji_usage_event !== undefined && object.add_user_emoji_usage_event !== null)
-        ? AddUserEmojiUsageEvent.fromPartial(object.add_user_emoji_usage_event)
-        : undefined;
-    message.get_user_emoji_usage_event =
-      (object.get_user_emoji_usage_event !== undefined && object.get_user_emoji_usage_event !== null)
-        ? GetUserEmojiUsageEvent.fromPartial(object.get_user_emoji_usage_event)
-        : undefined;
-    message.clan_deleted_envet = (object.clan_deleted_envet !== undefined && object.clan_deleted_envet !== null)
-      ? ClanDeletedEvent.fromPartial(object.clan_deleted_envet)
+    message.clan_deleted_event = (object.clan_deleted_event !== undefined && object.clan_deleted_event !== null)
+      ? ClanDeletedEvent.fromPartial(object.clan_deleted_event)
+      : undefined;
+    message.give_coffee_event = (object.give_coffee_event !== undefined && object.give_coffee_event !== null)
+      ? GiveCoffeeEvent.fromPartial(object.give_coffee_event)
+      : undefined;
+    message.sticker_create_event = (object.sticker_create_event !== undefined && object.sticker_create_event !== null)
+      ? StickerCreateEvent.fromPartial(object.sticker_create_event)
+      : undefined;
+    message.sticker_update_event = (object.sticker_update_event !== undefined && object.sticker_update_event !== null)
+      ? StickerUpdateEvent.fromPartial(object.sticker_update_event)
+      : undefined;
+    message.sticker_delete_event = (object.sticker_delete_event !== undefined && object.sticker_delete_event !== null)
+      ? StickerDeleteEvent.fromPartial(object.sticker_delete_event)
+      : undefined;
+    message.role_event = (object.role_event !== undefined && object.role_event !== null)
+      ? RoleEvent.fromPartial(object.role_event)
       : undefined;
     return message;
   },
@@ -3856,7 +3975,7 @@ export const ClanSticker = {
 };
 
 function createBaseClanEmoji(): ClanEmoji {
-  return { id: "", src: "", shortname: "", category: "", creator_id: "" };
+  return { id: "", src: "", shortname: "", category: "", creator_id: "", clan_id: "", logo: "", clan_name: "" };
 }
 
 export const ClanEmoji = {
@@ -3875,6 +3994,15 @@ export const ClanEmoji = {
     }
     if (message.creator_id !== "") {
       writer.uint32(42).string(message.creator_id);
+    }
+    if (message.clan_id !== "") {
+      writer.uint32(50).string(message.clan_id);
+    }
+    if (message.logo !== "") {
+      writer.uint32(58).string(message.logo);
+    }
+    if (message.clan_name !== "") {
+      writer.uint32(66).string(message.clan_name);
     }
     return writer;
   },
@@ -3921,6 +4049,27 @@ export const ClanEmoji = {
 
           message.creator_id = reader.string();
           continue;
+        case 6:
+          if (tag !== 50) {
+            break;
+          }
+
+          message.clan_id = reader.string();
+          continue;
+        case 7:
+          if (tag !== 58) {
+            break;
+          }
+
+          message.logo = reader.string();
+          continue;
+        case 8:
+          if (tag !== 66) {
+            break;
+          }
+
+          message.clan_name = reader.string();
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -3937,6 +4086,9 @@ export const ClanEmoji = {
       shortname: isSet(object.shortname) ? globalThis.String(object.shortname) : "",
       category: isSet(object.category) ? globalThis.String(object.category) : "",
       creator_id: isSet(object.creator_id) ? globalThis.String(object.creator_id) : "",
+      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
+      logo: isSet(object.logo) ? globalThis.String(object.logo) : "",
+      clan_name: isSet(object.clan_name) ? globalThis.String(object.clan_name) : "",
     };
   },
 
@@ -3957,6 +4109,15 @@ export const ClanEmoji = {
     if (message.creator_id !== "") {
       obj.creator_id = message.creator_id;
     }
+    if (message.clan_id !== "") {
+      obj.clan_id = message.clan_id;
+    }
+    if (message.logo !== "") {
+      obj.logo = message.logo;
+    }
+    if (message.clan_name !== "") {
+      obj.clan_name = message.clan_name;
+    }
     return obj;
   },
 
@@ -3970,6 +4131,9 @@ export const ClanEmoji = {
     message.shortname = object.shortname ?? "";
     message.category = object.category ?? "";
     message.creator_id = object.creator_id ?? "";
+    message.clan_id = object.clan_id ?? "";
+    message.logo = object.logo ?? "";
+    message.clan_name = object.clan_name ?? "";
     return message;
   },
 };
@@ -7113,6 +7277,203 @@ export const ChannelCreatedEvent = {
   },
 };
 
+function createBaseRoleEvent(): RoleEvent {
+  return {
+    clan_id: "",
+    role_id: "",
+    creator_id: "",
+    user_ids_assigned: [],
+    permission_ids_assigned: [],
+    role_title: "",
+    status: 0,
+    user_ids_removed: [],
+    permission_ids_removed: [],
+  };
+}
+
+export const RoleEvent = {
+  encode(message: RoleEvent, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.clan_id !== "") {
+      writer.uint32(10).string(message.clan_id);
+    }
+    if (message.role_id !== "") {
+      writer.uint32(18).string(message.role_id);
+    }
+    if (message.creator_id !== "") {
+      writer.uint32(26).string(message.creator_id);
+    }
+    for (const v of message.user_ids_assigned) {
+      writer.uint32(34).string(v!);
+    }
+    for (const v of message.permission_ids_assigned) {
+      writer.uint32(42).string(v!);
+    }
+    if (message.role_title !== "") {
+      writer.uint32(50).string(message.role_title);
+    }
+    if (message.status !== 0) {
+      writer.uint32(56).int32(message.status);
+    }
+    for (const v of message.user_ids_removed) {
+      writer.uint32(66).string(v!);
+    }
+    for (const v of message.permission_ids_removed) {
+      writer.uint32(74).string(v!);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): RoleEvent {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseRoleEvent();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.clan_id = reader.string();
+          continue;
+        case 2:
+          if (tag !== 18) {
+            break;
+          }
+
+          message.role_id = reader.string();
+          continue;
+        case 3:
+          if (tag !== 26) {
+            break;
+          }
+
+          message.creator_id = reader.string();
+          continue;
+        case 4:
+          if (tag !== 34) {
+            break;
+          }
+
+          message.user_ids_assigned.push(reader.string());
+          continue;
+        case 5:
+          if (tag !== 42) {
+            break;
+          }
+
+          message.permission_ids_assigned.push(reader.string());
+          continue;
+        case 6:
+          if (tag !== 50) {
+            break;
+          }
+
+          message.role_title = reader.string();
+          continue;
+        case 7:
+          if (tag !== 56) {
+            break;
+          }
+
+          message.status = reader.int32();
+          continue;
+        case 8:
+          if (tag !== 66) {
+            break;
+          }
+
+          message.user_ids_removed.push(reader.string());
+          continue;
+        case 9:
+          if (tag !== 74) {
+            break;
+          }
+
+          message.permission_ids_removed.push(reader.string());
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): RoleEvent {
+    return {
+      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
+      role_id: isSet(object.role_id) ? globalThis.String(object.role_id) : "",
+      creator_id: isSet(object.creator_id) ? globalThis.String(object.creator_id) : "",
+      user_ids_assigned: globalThis.Array.isArray(object?.user_ids_assigned)
+        ? object.user_ids_assigned.map((e: any) => globalThis.String(e))
+        : [],
+      permission_ids_assigned: globalThis.Array.isArray(object?.permission_ids_assigned)
+        ? object.permission_ids_assigned.map((e: any) => globalThis.String(e))
+        : [],
+      role_title: isSet(object.role_title) ? globalThis.String(object.role_title) : "",
+      status: isSet(object.status) ? globalThis.Number(object.status) : 0,
+      user_ids_removed: globalThis.Array.isArray(object?.user_ids_removed)
+        ? object.user_ids_removed.map((e: any) => globalThis.String(e))
+        : [],
+      permission_ids_removed: globalThis.Array.isArray(object?.permission_ids_removed)
+        ? object.permission_ids_removed.map((e: any) => globalThis.String(e))
+        : [],
+    };
+  },
+
+  toJSON(message: RoleEvent): unknown {
+    const obj: any = {};
+    if (message.clan_id !== "") {
+      obj.clan_id = message.clan_id;
+    }
+    if (message.role_id !== "") {
+      obj.role_id = message.role_id;
+    }
+    if (message.creator_id !== "") {
+      obj.creator_id = message.creator_id;
+    }
+    if (message.user_ids_assigned?.length) {
+      obj.user_ids_assigned = message.user_ids_assigned;
+    }
+    if (message.permission_ids_assigned?.length) {
+      obj.permission_ids_assigned = message.permission_ids_assigned;
+    }
+    if (message.role_title !== "") {
+      obj.role_title = message.role_title;
+    }
+    if (message.status !== 0) {
+      obj.status = Math.round(message.status);
+    }
+    if (message.user_ids_removed?.length) {
+      obj.user_ids_removed = message.user_ids_removed;
+    }
+    if (message.permission_ids_removed?.length) {
+      obj.permission_ids_removed = message.permission_ids_removed;
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<RoleEvent>, I>>(base?: I): RoleEvent {
+    return RoleEvent.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<RoleEvent>, I>>(object: I): RoleEvent {
+    const message = createBaseRoleEvent();
+    message.clan_id = object.clan_id ?? "";
+    message.role_id = object.role_id ?? "";
+    message.creator_id = object.creator_id ?? "";
+    message.user_ids_assigned = object.user_ids_assigned?.map((e) => e) || [];
+    message.permission_ids_assigned = object.permission_ids_assigned?.map((e) => e) || [];
+    message.role_title = object.role_title ?? "";
+    message.status = object.status ?? 0;
+    message.user_ids_removed = object.user_ids_removed?.map((e) => e) || [];
+    message.permission_ids_removed = object.permission_ids_removed?.map((e) => e) || [];
+    return message;
+  },
+};
+
 function createBaseChannelDeletedEvent(): ChannelDeletedEvent {
   return { clan_id: "", category_id: "", parrent_id: "", channel_id: "", deletor: "" };
 }
@@ -7306,6 +7667,342 @@ export const ClanDeletedEvent = {
   },
 };
 
+function createBaseStickerCreateEvent(): StickerCreateEvent {
+  return {
+    clan_id: "",
+    source: "",
+    shortname: "",
+    category: "",
+    creator_id: "",
+    sticker_id: "",
+    logo: "",
+    clan_name: "",
+  };
+}
+
+export const StickerCreateEvent = {
+  encode(message: StickerCreateEvent, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.clan_id !== "") {
+      writer.uint32(10).string(message.clan_id);
+    }
+    if (message.source !== "") {
+      writer.uint32(18).string(message.source);
+    }
+    if (message.shortname !== "") {
+      writer.uint32(26).string(message.shortname);
+    }
+    if (message.category !== "") {
+      writer.uint32(34).string(message.category);
+    }
+    if (message.creator_id !== "") {
+      writer.uint32(42).string(message.creator_id);
+    }
+    if (message.sticker_id !== "") {
+      writer.uint32(50).string(message.sticker_id);
+    }
+    if (message.logo !== "") {
+      writer.uint32(58).string(message.logo);
+    }
+    if (message.clan_name !== "") {
+      writer.uint32(66).string(message.clan_name);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): StickerCreateEvent {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseStickerCreateEvent();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.clan_id = reader.string();
+          continue;
+        case 2:
+          if (tag !== 18) {
+            break;
+          }
+
+          message.source = reader.string();
+          continue;
+        case 3:
+          if (tag !== 26) {
+            break;
+          }
+
+          message.shortname = reader.string();
+          continue;
+        case 4:
+          if (tag !== 34) {
+            break;
+          }
+
+          message.category = reader.string();
+          continue;
+        case 5:
+          if (tag !== 42) {
+            break;
+          }
+
+          message.creator_id = reader.string();
+          continue;
+        case 6:
+          if (tag !== 50) {
+            break;
+          }
+
+          message.sticker_id = reader.string();
+          continue;
+        case 7:
+          if (tag !== 58) {
+            break;
+          }
+
+          message.logo = reader.string();
+          continue;
+        case 8:
+          if (tag !== 66) {
+            break;
+          }
+
+          message.clan_name = reader.string();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): StickerCreateEvent {
+    return {
+      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
+      source: isSet(object.source) ? globalThis.String(object.source) : "",
+      shortname: isSet(object.shortname) ? globalThis.String(object.shortname) : "",
+      category: isSet(object.category) ? globalThis.String(object.category) : "",
+      creator_id: isSet(object.creator_id) ? globalThis.String(object.creator_id) : "",
+      sticker_id: isSet(object.sticker_id) ? globalThis.String(object.sticker_id) : "",
+      logo: isSet(object.logo) ? globalThis.String(object.logo) : "",
+      clan_name: isSet(object.clan_name) ? globalThis.String(object.clan_name) : "",
+    };
+  },
+
+  toJSON(message: StickerCreateEvent): unknown {
+    const obj: any = {};
+    if (message.clan_id !== "") {
+      obj.clan_id = message.clan_id;
+    }
+    if (message.source !== "") {
+      obj.source = message.source;
+    }
+    if (message.shortname !== "") {
+      obj.shortname = message.shortname;
+    }
+    if (message.category !== "") {
+      obj.category = message.category;
+    }
+    if (message.creator_id !== "") {
+      obj.creator_id = message.creator_id;
+    }
+    if (message.sticker_id !== "") {
+      obj.sticker_id = message.sticker_id;
+    }
+    if (message.logo !== "") {
+      obj.logo = message.logo;
+    }
+    if (message.clan_name !== "") {
+      obj.clan_name = message.clan_name;
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<StickerCreateEvent>, I>>(base?: I): StickerCreateEvent {
+    return StickerCreateEvent.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<StickerCreateEvent>, I>>(object: I): StickerCreateEvent {
+    const message = createBaseStickerCreateEvent();
+    message.clan_id = object.clan_id ?? "";
+    message.source = object.source ?? "";
+    message.shortname = object.shortname ?? "";
+    message.category = object.category ?? "";
+    message.creator_id = object.creator_id ?? "";
+    message.sticker_id = object.sticker_id ?? "";
+    message.logo = object.logo ?? "";
+    message.clan_name = object.clan_name ?? "";
+    return message;
+  },
+};
+
+function createBaseStickerUpdateEvent(): StickerUpdateEvent {
+  return { shortname: "", sticker_id: "", user_id: "" };
+}
+
+export const StickerUpdateEvent = {
+  encode(message: StickerUpdateEvent, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.shortname !== "") {
+      writer.uint32(10).string(message.shortname);
+    }
+    if (message.sticker_id !== "") {
+      writer.uint32(18).string(message.sticker_id);
+    }
+    if (message.user_id !== "") {
+      writer.uint32(26).string(message.user_id);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): StickerUpdateEvent {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseStickerUpdateEvent();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.shortname = reader.string();
+          continue;
+        case 2:
+          if (tag !== 18) {
+            break;
+          }
+
+          message.sticker_id = reader.string();
+          continue;
+        case 3:
+          if (tag !== 26) {
+            break;
+          }
+
+          message.user_id = reader.string();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): StickerUpdateEvent {
+    return {
+      shortname: isSet(object.shortname) ? globalThis.String(object.shortname) : "",
+      sticker_id: isSet(object.sticker_id) ? globalThis.String(object.sticker_id) : "",
+      user_id: isSet(object.user_id) ? globalThis.String(object.user_id) : "",
+    };
+  },
+
+  toJSON(message: StickerUpdateEvent): unknown {
+    const obj: any = {};
+    if (message.shortname !== "") {
+      obj.shortname = message.shortname;
+    }
+    if (message.sticker_id !== "") {
+      obj.sticker_id = message.sticker_id;
+    }
+    if (message.user_id !== "") {
+      obj.user_id = message.user_id;
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<StickerUpdateEvent>, I>>(base?: I): StickerUpdateEvent {
+    return StickerUpdateEvent.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<StickerUpdateEvent>, I>>(object: I): StickerUpdateEvent {
+    const message = createBaseStickerUpdateEvent();
+    message.shortname = object.shortname ?? "";
+    message.sticker_id = object.sticker_id ?? "";
+    message.user_id = object.user_id ?? "";
+    return message;
+  },
+};
+
+function createBaseStickerDeleteEvent(): StickerDeleteEvent {
+  return { sticker_id: "", user_id: "" };
+}
+
+export const StickerDeleteEvent = {
+  encode(message: StickerDeleteEvent, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.sticker_id !== "") {
+      writer.uint32(18).string(message.sticker_id);
+    }
+    if (message.user_id !== "") {
+      writer.uint32(26).string(message.user_id);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): StickerDeleteEvent {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseStickerDeleteEvent();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 2:
+          if (tag !== 18) {
+            break;
+          }
+
+          message.sticker_id = reader.string();
+          continue;
+        case 3:
+          if (tag !== 26) {
+            break;
+          }
+
+          message.user_id = reader.string();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): StickerDeleteEvent {
+    return {
+      sticker_id: isSet(object.sticker_id) ? globalThis.String(object.sticker_id) : "",
+      user_id: isSet(object.user_id) ? globalThis.String(object.user_id) : "",
+    };
+  },
+
+  toJSON(message: StickerDeleteEvent): unknown {
+    const obj: any = {};
+    if (message.sticker_id !== "") {
+      obj.sticker_id = message.sticker_id;
+    }
+    if (message.user_id !== "") {
+      obj.user_id = message.user_id;
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<StickerDeleteEvent>, I>>(base?: I): StickerDeleteEvent {
+    return StickerDeleteEvent.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<StickerDeleteEvent>, I>>(object: I): StickerDeleteEvent {
+    const message = createBaseStickerDeleteEvent();
+    message.sticker_id = object.sticker_id ?? "";
+    message.user_id = object.user_id ?? "";
+    return message;
+  },
+};
+
 function createBaseChannelUpdatedEvent(): ChannelUpdatedEvent {
   return {
     clan_id: "",
@@ -7318,6 +8015,7 @@ function createBaseChannelUpdatedEvent(): ChannelUpdatedEvent {
     status: 0,
     meeting_code: "",
     is_error: false,
+    channel_private: false,
   };
 }
 
@@ -7352,6 +8050,9 @@ export const ChannelUpdatedEvent = {
     }
     if (message.is_error !== false) {
       writer.uint32(80).bool(message.is_error);
+    }
+    if (message.channel_private !== false) {
+      writer.uint32(88).bool(message.channel_private);
     }
     return writer;
   },
@@ -7433,6 +8134,13 @@ export const ChannelUpdatedEvent = {
 
           message.is_error = reader.bool();
           continue;
+        case 11:
+          if (tag !== 88) {
+            break;
+          }
+
+          message.channel_private = reader.bool();
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -7454,6 +8162,7 @@ export const ChannelUpdatedEvent = {
       status: isSet(object.status) ? globalThis.Number(object.status) : 0,
       meeting_code: isSet(object.meeting_code) ? globalThis.String(object.meeting_code) : "",
       is_error: isSet(object.is_error) ? globalThis.Boolean(object.is_error) : false,
+      channel_private: isSet(object.channel_private) ? globalThis.Boolean(object.channel_private) : false,
     };
   },
 
@@ -7489,6 +8198,9 @@ export const ChannelUpdatedEvent = {
     if (message.is_error !== false) {
       obj.is_error = message.is_error;
     }
+    if (message.channel_private !== false) {
+      obj.channel_private = message.channel_private;
+    }
     return obj;
   },
 
@@ -7507,6 +8219,7 @@ export const ChannelUpdatedEvent = {
     message.status = object.status ?? 0;
     message.meeting_code = object.meeting_code ?? "";
     message.is_error = object.is_error ?? false;
+    message.channel_private = object.channel_private ?? false;
     return message;
   },
 };
@@ -9065,25 +9778,31 @@ export const FCMTokens = {
   },
 };
 
-function createBaseClanNameExistedEvent(): ClanNameExistedEvent {
-  return { clan_name: "", exist: false };
+function createBaseCheckNameExistedEvent(): CheckNameExistedEvent {
+  return { name: "", condition_id: "", exist: false, type: 0 };
 }
 
-export const ClanNameExistedEvent = {
-  encode(message: ClanNameExistedEvent, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.clan_name !== "") {
-      writer.uint32(10).string(message.clan_name);
+export const CheckNameExistedEvent = {
+  encode(message: CheckNameExistedEvent, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.name !== "") {
+      writer.uint32(10).string(message.name);
+    }
+    if (message.condition_id !== "") {
+      writer.uint32(18).string(message.condition_id);
     }
     if (message.exist !== false) {
-      writer.uint32(16).bool(message.exist);
+      writer.uint32(24).bool(message.exist);
+    }
+    if (message.type !== 0) {
+      writer.uint32(32).int32(message.type);
     }
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): ClanNameExistedEvent {
+  decode(input: _m0.Reader | Uint8Array, length?: number): CheckNameExistedEvent {
     const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseClanNameExistedEvent();
+    const message = createBaseCheckNameExistedEvent();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -9092,14 +9811,28 @@ export const ClanNameExistedEvent = {
             break;
           }
 
-          message.clan_name = reader.string();
+          message.name = reader.string();
           continue;
         case 2:
-          if (tag !== 16) {
+          if (tag !== 18) {
+            break;
+          }
+
+          message.condition_id = reader.string();
+          continue;
+        case 3:
+          if (tag !== 24) {
             break;
           }
 
           message.exist = reader.bool();
+          continue;
+        case 4:
+          if (tag !== 32) {
+            break;
+          }
+
+          message.type = reader.int32();
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -9110,31 +9843,41 @@ export const ClanNameExistedEvent = {
     return message;
   },
 
-  fromJSON(object: any): ClanNameExistedEvent {
+  fromJSON(object: any): CheckNameExistedEvent {
     return {
-      clan_name: isSet(object.clan_name) ? globalThis.String(object.clan_name) : "",
+      name: isSet(object.name) ? globalThis.String(object.name) : "",
+      condition_id: isSet(object.condition_id) ? globalThis.String(object.condition_id) : "",
       exist: isSet(object.exist) ? globalThis.Boolean(object.exist) : false,
+      type: isSet(object.type) ? globalThis.Number(object.type) : 0,
     };
   },
 
-  toJSON(message: ClanNameExistedEvent): unknown {
+  toJSON(message: CheckNameExistedEvent): unknown {
     const obj: any = {};
-    if (message.clan_name !== "") {
-      obj.clan_name = message.clan_name;
+    if (message.name !== "") {
+      obj.name = message.name;
+    }
+    if (message.condition_id !== "") {
+      obj.condition_id = message.condition_id;
     }
     if (message.exist !== false) {
       obj.exist = message.exist;
     }
+    if (message.type !== 0) {
+      obj.type = Math.round(message.type);
+    }
     return obj;
   },
 
-  create<I extends Exact<DeepPartial<ClanNameExistedEvent>, I>>(base?: I): ClanNameExistedEvent {
-    return ClanNameExistedEvent.fromPartial(base ?? ({} as any));
+  create<I extends Exact<DeepPartial<CheckNameExistedEvent>, I>>(base?: I): CheckNameExistedEvent {
+    return CheckNameExistedEvent.fromPartial(base ?? ({} as any));
   },
-  fromPartial<I extends Exact<DeepPartial<ClanNameExistedEvent>, I>>(object: I): ClanNameExistedEvent {
-    const message = createBaseClanNameExistedEvent();
-    message.clan_name = object.clan_name ?? "";
+  fromPartial<I extends Exact<DeepPartial<CheckNameExistedEvent>, I>>(object: I): CheckNameExistedEvent {
+    const message = createBaseCheckNameExistedEvent();
+    message.name = object.name ?? "";
+    message.condition_id = object.condition_id ?? "";
     message.exist = object.exist ?? false;
+    message.type = object.type ?? 0;
     return message;
   },
 };
@@ -9930,260 +10673,6 @@ export const NotificationChannelCategorySettingEvent = {
       object.notification_channel_category_settings_list?.map((e) =>
         NotificationChannelCategorySetting.fromPartial(e)
       ) || [];
-    return message;
-  },
-};
-
-function createBaseUserEmojiUsage(): UserEmojiUsage {
-  return { user_id: "", emoji_id: "", clan_id: "", create_time: "" };
-}
-
-export const UserEmojiUsage = {
-  encode(message: UserEmojiUsage, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.user_id !== "") {
-      writer.uint32(10).string(message.user_id);
-    }
-    if (message.emoji_id !== "") {
-      writer.uint32(18).string(message.emoji_id);
-    }
-    if (message.clan_id !== "") {
-      writer.uint32(26).string(message.clan_id);
-    }
-    if (message.create_time !== "") {
-      writer.uint32(34).string(message.create_time);
-    }
-    return writer;
-  },
-
-  decode(input: _m0.Reader | Uint8Array, length?: number): UserEmojiUsage {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseUserEmojiUsage();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
-          if (tag !== 10) {
-            break;
-          }
-
-          message.user_id = reader.string();
-          continue;
-        case 2:
-          if (tag !== 18) {
-            break;
-          }
-
-          message.emoji_id = reader.string();
-          continue;
-        case 3:
-          if (tag !== 26) {
-            break;
-          }
-
-          message.clan_id = reader.string();
-          continue;
-        case 4:
-          if (tag !== 34) {
-            break;
-          }
-
-          message.create_time = reader.string();
-          continue;
-      }
-      if ((tag & 7) === 4 || tag === 0) {
-        break;
-      }
-      reader.skipType(tag & 7);
-    }
-    return message;
-  },
-
-  fromJSON(object: any): UserEmojiUsage {
-    return {
-      user_id: isSet(object.user_id) ? globalThis.String(object.user_id) : "",
-      emoji_id: isSet(object.emoji_id) ? globalThis.String(object.emoji_id) : "",
-      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
-      create_time: isSet(object.create_time) ? globalThis.String(object.create_time) : "",
-    };
-  },
-
-  toJSON(message: UserEmojiUsage): unknown {
-    const obj: any = {};
-    if (message.user_id !== "") {
-      obj.user_id = message.user_id;
-    }
-    if (message.emoji_id !== "") {
-      obj.emoji_id = message.emoji_id;
-    }
-    if (message.clan_id !== "") {
-      obj.clan_id = message.clan_id;
-    }
-    if (message.create_time !== "") {
-      obj.create_time = message.create_time;
-    }
-    return obj;
-  },
-
-  create<I extends Exact<DeepPartial<UserEmojiUsage>, I>>(base?: I): UserEmojiUsage {
-    return UserEmojiUsage.fromPartial(base ?? ({} as any));
-  },
-  fromPartial<I extends Exact<DeepPartial<UserEmojiUsage>, I>>(object: I): UserEmojiUsage {
-    const message = createBaseUserEmojiUsage();
-    message.user_id = object.user_id ?? "";
-    message.emoji_id = object.emoji_id ?? "";
-    message.clan_id = object.clan_id ?? "";
-    message.create_time = object.create_time ?? "";
-    return message;
-  },
-};
-
-function createBaseAddUserEmojiUsageEvent(): AddUserEmojiUsageEvent {
-  return { emoji_id: "", clan_id: "" };
-}
-
-export const AddUserEmojiUsageEvent = {
-  encode(message: AddUserEmojiUsageEvent, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.emoji_id !== "") {
-      writer.uint32(10).string(message.emoji_id);
-    }
-    if (message.clan_id !== "") {
-      writer.uint32(18).string(message.clan_id);
-    }
-    return writer;
-  },
-
-  decode(input: _m0.Reader | Uint8Array, length?: number): AddUserEmojiUsageEvent {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseAddUserEmojiUsageEvent();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
-          if (tag !== 10) {
-            break;
-          }
-
-          message.emoji_id = reader.string();
-          continue;
-        case 2:
-          if (tag !== 18) {
-            break;
-          }
-
-          message.clan_id = reader.string();
-          continue;
-      }
-      if ((tag & 7) === 4 || tag === 0) {
-        break;
-      }
-      reader.skipType(tag & 7);
-    }
-    return message;
-  },
-
-  fromJSON(object: any): AddUserEmojiUsageEvent {
-    return {
-      emoji_id: isSet(object.emoji_id) ? globalThis.String(object.emoji_id) : "",
-      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
-    };
-  },
-
-  toJSON(message: AddUserEmojiUsageEvent): unknown {
-    const obj: any = {};
-    if (message.emoji_id !== "") {
-      obj.emoji_id = message.emoji_id;
-    }
-    if (message.clan_id !== "") {
-      obj.clan_id = message.clan_id;
-    }
-    return obj;
-  },
-
-  create<I extends Exact<DeepPartial<AddUserEmojiUsageEvent>, I>>(base?: I): AddUserEmojiUsageEvent {
-    return AddUserEmojiUsageEvent.fromPartial(base ?? ({} as any));
-  },
-  fromPartial<I extends Exact<DeepPartial<AddUserEmojiUsageEvent>, I>>(object: I): AddUserEmojiUsageEvent {
-    const message = createBaseAddUserEmojiUsageEvent();
-    message.emoji_id = object.emoji_id ?? "";
-    message.clan_id = object.clan_id ?? "";
-    return message;
-  },
-};
-
-function createBaseGetUserEmojiUsageEvent(): GetUserEmojiUsageEvent {
-  return { clanId: "", user_emoji_usage: [] };
-}
-
-export const GetUserEmojiUsageEvent = {
-  encode(message: GetUserEmojiUsageEvent, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.clanId !== "") {
-      writer.uint32(10).string(message.clanId);
-    }
-    for (const v of message.user_emoji_usage) {
-      UserEmojiUsage.encode(v!, writer.uint32(18).fork()).ldelim();
-    }
-    return writer;
-  },
-
-  decode(input: _m0.Reader | Uint8Array, length?: number): GetUserEmojiUsageEvent {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseGetUserEmojiUsageEvent();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
-          if (tag !== 10) {
-            break;
-          }
-
-          message.clanId = reader.string();
-          continue;
-        case 2:
-          if (tag !== 18) {
-            break;
-          }
-
-          message.user_emoji_usage.push(UserEmojiUsage.decode(reader, reader.uint32()));
-          continue;
-      }
-      if ((tag & 7) === 4 || tag === 0) {
-        break;
-      }
-      reader.skipType(tag & 7);
-    }
-    return message;
-  },
-
-  fromJSON(object: any): GetUserEmojiUsageEvent {
-    return {
-      clanId: isSet(object.clanId) ? globalThis.String(object.clanId) : "",
-      user_emoji_usage: globalThis.Array.isArray(object?.user_emoji_usage)
-        ? object.user_emoji_usage.map((e: any) => UserEmojiUsage.fromJSON(e))
-        : [],
-    };
-  },
-
-  toJSON(message: GetUserEmojiUsageEvent): unknown {
-    const obj: any = {};
-    if (message.clanId !== "") {
-      obj.clanId = message.clanId;
-    }
-    if (message.user_emoji_usage?.length) {
-      obj.user_emoji_usage = message.user_emoji_usage.map((e) => UserEmojiUsage.toJSON(e));
-    }
-    return obj;
-  },
-
-  create<I extends Exact<DeepPartial<GetUserEmojiUsageEvent>, I>>(base?: I): GetUserEmojiUsageEvent {
-    return GetUserEmojiUsageEvent.fromPartial(base ?? ({} as any));
-  },
-  fromPartial<I extends Exact<DeepPartial<GetUserEmojiUsageEvent>, I>>(object: I): GetUserEmojiUsageEvent {
-    const message = createBaseGetUserEmojiUsageEvent();
-    message.clanId = object.clanId ?? "";
-    message.user_emoji_usage = object.user_emoji_usage?.map((e) => UserEmojiUsage.fromPartial(e)) || [];
     return message;
   },
 };
