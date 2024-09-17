@@ -750,36 +750,6 @@ export interface ChannelDescription {
   last_sent_message?: ApiChannelMessageHeader;
 }
 
-// A list of Channel
-export interface HashtagDmListEvent {
-  // user Id
-  user_id?: Array<string>;
-  // Max number of records to return. Between 1 and 100.
-  limit?: number;
-  // A list of channel.
-  hashtag_dm?: Array<HashtagDm>;
-}
-
-// hashtagDM
-export interface HashtagDm {
-  // The channel id.
-  channel_id?: string;
-  // The channel lable
-  channel_label?: string;
-  // The clan of this channel
-  clan_id?: string;
-  // The clan name
-  clan_name?: string;
-  //
-  meeting_code?: string;
-  //
-  type?: number;
-  //
-  channel_private?: number;
-  //
-  parrent_id?: string;
-}
-
 export interface NotificationChannelSettingEvent {
   // The channel id.
   channel_id?: string;
@@ -1049,8 +1019,6 @@ export interface Socket {
   listChannelByUserId(): Promise<ChannelDescListEvent>;
 
   listUserClansByUserId(): Promise<AllUserClans>;
-  
-  hashtagDMList(user_id: Array<string>, limit: number): Promise<HashtagDmListEvent>;
 
   getNotificationChannelSetting(channel_id: string): Promise<NotificationChannelSettingEvent>;
 
@@ -1704,11 +1672,6 @@ export class DefaultSocket implements Socket {
   async listUserClansByUserId(): Promise<AllUserClans> {
     const response = await this.send({all_user_clans: {}});
     return response.all_user_clans
-  }
-
-  async hashtagDMList(user_id: Array<string>, limit: number): Promise<HashtagDmListEvent> {
-    const response = await this.send({hashtag_dm_list_event: {user_id: user_id, limit: limit }});
-    return response.hashtag_dm_list_event
   }
 
   async getPermissionByRoleIdChannelId(role_id: string, channel_id: string): Promise<PermissionRoleChannelListEvent> {

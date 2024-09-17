@@ -36,6 +36,26 @@ export interface ClanUserListClanUser {
   user?: ApiUser;
 }
 
+/** A single user-role pair. */
+export interface HashtagDmListHashtagDm {
+  //The channel id.
+  channel_id?: string;
+  //
+  channel_label?: string;
+  //
+  channel_private?: number;
+  //
+  clan_id?: string;
+  //
+  clan_name?: string;
+  //
+  meeting_code?: string;
+  //
+  parrent_id?: string;
+  //
+  type?: number;
+}
+
 /**  */
 export interface MezonChangeChannelCategoryBody {
   //
@@ -978,6 +998,12 @@ export interface ApiGiveCoffeeEvent {
   sender_id?: string;
   //
   token_count?: number;
+}
+
+/** A list of users belonging to a channel, along with their role. */
+export interface ApiHashtagDmList {
+  //
+  hashtag_dm?: Array<HashtagDmListHashtagDm>;
 }
 
 /** Add link invite users to. */
@@ -5067,6 +5093,41 @@ export class MezonApi {
     ]);
 }
 
+  /** List all channel hashtag DM. */
+  hashtagDMList(bearerToken: string,
+      userId?:string,
+      limit?:number,
+      options: any = {}): Promise<ApiHashtagDmList> {
+    
+    const urlPath = "/v2/hashtagDM";
+    const queryParams = new Map<string, any>();
+    queryParams.set("user_id", userId);
+    queryParams.set("limit", limit);
+
+    let bodyJson : string = "";
+
+    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
+    const fetchOptions = buildFetchOptions("GET", options, bodyJson);
+    if (bearerToken) {
+        fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+    }
+
+    return Promise.race([
+      fetch(fullUrl, fetchOptions).then((response) => {
+        if (response.status == 204) {
+          return response;
+        } else if (response.status >= 200 && response.status < 300) {
+          return response.json();
+        } else {
+          throw response;
+        }
+      }),
+      new Promise((_, reject) =>
+        setTimeout(reject, this.timeoutMs, "Request timed out.")
+      ),
+    ]);
+}
+
   /** Add users to a channel. */
   createLinkInviteUser(bearerToken: string,
       body:ApiLinkInviteUserRequest,
@@ -5959,6 +6020,7 @@ export class MezonApi {
   deleteRole(bearerToken: string,
       roleId:string,
       channelId?:string,
+      clanId?:string,
       options: any = {}): Promise<any> {
     
     if (roleId === null || roleId === undefined) {
@@ -5968,6 +6030,7 @@ export class MezonApi {
         .replace("{roleId}", encodeURIComponent(String(roleId)));
     const queryParams = new Map<string, any>();
     queryParams.set("channel_id", channelId);
+    queryParams.set("clan_id", clanId);
 
     let bodyJson : string = "";
 

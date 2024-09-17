@@ -106,6 +106,7 @@ import {
   ApiStreamingChannelUserList,
   ApiRegisterStreamingChannelRequest,
   ApiRegisterStreamingChannelResponse,
+  ApiHashtagDmList,
 } from "./api.gen";
 
 import { Session } from "./session";
@@ -3551,6 +3552,26 @@ export class Client {
       .registerStreamingChannel(session.token, request)
       .then((response: ApiRegisterStreamingChannelResponse) => {
         return response !== undefined;
+      });
+  }
+
+  async hashtagDMList(
+    session: Session,
+    userId?: string,
+    limit?: number
+  ): Promise<ApiHashtagDmList> {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired((Date.now() + this.expiredTimespanMs) / 1000)
+    ) {
+      await this.sessionRefresh(session);
+    }
+  
+    return this.apiClient
+      .hashtagDMList(session.token, userId, limit)
+      .then((response: ApiHashtagDmList) => {
+        return Promise.resolve(response);
       });
   }
 }

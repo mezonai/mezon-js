@@ -1203,6 +1203,39 @@ export interface ListChannelUsersRequest {
   cursor: string;
 }
 
+/** List all users that are part of a channel. */
+export interface ListHashtagDMRequest {
+  /** user Id */
+  user_id: string;
+  /** Max number of records to return. Between 1 and 100. */
+  limit: number | undefined;
+}
+
+/** A list of users belonging to a channel, along with their role. */
+export interface HashtagDmList {
+  hashtag_dm: HashtagDmList_HashtagDm[];
+}
+
+/** A single user-role pair. */
+export interface HashtagDmList_HashtagDm {
+  /** The channel id. */
+  channel_id: string;
+  /** The channel lable */
+  channel_label: string;
+  /** The clan of this channel */
+  clan_id: string;
+  /** The clan name */
+  clan_name: string;
+  /**  */
+  meeting_code: string;
+  /**  */
+  type: number;
+  /**  */
+  channel_private: number;
+  /**  */
+  parrent_id: string;
+}
+
 /** List all attachments that are part of a channel. */
 export interface ListChannelAttachmentRequest {
   /** The clan id */
@@ -2476,9 +2509,7 @@ export interface ClanEmojiDeleteRequest {
 
 export interface ClanEmojiUpdateRequest {
   id: string;
-  source: string;
   shortname: string;
-  category: string;
   clan_id: string;
 }
 
@@ -10956,6 +10987,314 @@ export const ListChannelUsersRequest = {
     message.limit = object.limit ?? undefined;
     message.state = object.state ?? undefined;
     message.cursor = object.cursor ?? "";
+    return message;
+  },
+};
+
+function createBaseListHashtagDMRequest(): ListHashtagDMRequest {
+  return { user_id: "", limit: undefined };
+}
+
+export const ListHashtagDMRequest = {
+  encode(message: ListHashtagDMRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.user_id !== "") {
+      writer.uint32(10).string(message.user_id);
+    }
+    if (message.limit !== undefined) {
+      Int32Value.encode({ value: message.limit! }, writer.uint32(18).fork()).ldelim();
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): ListHashtagDMRequest {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseListHashtagDMRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.user_id = reader.string();
+          continue;
+        case 2:
+          if (tag !== 18) {
+            break;
+          }
+
+          message.limit = Int32Value.decode(reader, reader.uint32()).value;
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): ListHashtagDMRequest {
+    return {
+      user_id: isSet(object.user_id) ? globalThis.String(object.user_id) : "",
+      limit: isSet(object.limit) ? Number(object.limit) : undefined,
+    };
+  },
+
+  toJSON(message: ListHashtagDMRequest): unknown {
+    const obj: any = {};
+    if (message.user_id !== "") {
+      obj.user_id = message.user_id;
+    }
+    if (message.limit !== undefined) {
+      obj.limit = message.limit;
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<ListHashtagDMRequest>, I>>(base?: I): ListHashtagDMRequest {
+    return ListHashtagDMRequest.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<ListHashtagDMRequest>, I>>(object: I): ListHashtagDMRequest {
+    const message = createBaseListHashtagDMRequest();
+    message.user_id = object.user_id ?? "";
+    message.limit = object.limit ?? undefined;
+    return message;
+  },
+};
+
+function createBaseHashtagDmList(): HashtagDmList {
+  return { hashtag_dm: [] };
+}
+
+export const HashtagDmList = {
+  encode(message: HashtagDmList, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    for (const v of message.hashtag_dm) {
+      HashtagDmList_HashtagDm.encode(v!, writer.uint32(10).fork()).ldelim();
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): HashtagDmList {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseHashtagDmList();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.hashtag_dm.push(HashtagDmList_HashtagDm.decode(reader, reader.uint32()));
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): HashtagDmList {
+    return {
+      hashtag_dm: globalThis.Array.isArray(object?.hashtag_dm)
+        ? object.hashtag_dm.map((e: any) => HashtagDmList_HashtagDm.fromJSON(e))
+        : [],
+    };
+  },
+
+  toJSON(message: HashtagDmList): unknown {
+    const obj: any = {};
+    if (message.hashtag_dm?.length) {
+      obj.hashtag_dm = message.hashtag_dm.map((e) => HashtagDmList_HashtagDm.toJSON(e));
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<HashtagDmList>, I>>(base?: I): HashtagDmList {
+    return HashtagDmList.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<HashtagDmList>, I>>(object: I): HashtagDmList {
+    const message = createBaseHashtagDmList();
+    message.hashtag_dm = object.hashtag_dm?.map((e) => HashtagDmList_HashtagDm.fromPartial(e)) || [];
+    return message;
+  },
+};
+
+function createBaseHashtagDmList_HashtagDm(): HashtagDmList_HashtagDm {
+  return {
+    channel_id: "",
+    channel_label: "",
+    clan_id: "",
+    clan_name: "",
+    meeting_code: "",
+    type: 0,
+    channel_private: 0,
+    parrent_id: "",
+  };
+}
+
+export const HashtagDmList_HashtagDm = {
+  encode(message: HashtagDmList_HashtagDm, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.channel_id !== "") {
+      writer.uint32(10).string(message.channel_id);
+    }
+    if (message.channel_label !== "") {
+      writer.uint32(18).string(message.channel_label);
+    }
+    if (message.clan_id !== "") {
+      writer.uint32(26).string(message.clan_id);
+    }
+    if (message.clan_name !== "") {
+      writer.uint32(34).string(message.clan_name);
+    }
+    if (message.meeting_code !== "") {
+      writer.uint32(42).string(message.meeting_code);
+    }
+    if (message.type !== 0) {
+      writer.uint32(48).int32(message.type);
+    }
+    if (message.channel_private !== 0) {
+      writer.uint32(56).int32(message.channel_private);
+    }
+    if (message.parrent_id !== "") {
+      writer.uint32(66).string(message.parrent_id);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): HashtagDmList_HashtagDm {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseHashtagDmList_HashtagDm();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.channel_id = reader.string();
+          continue;
+        case 2:
+          if (tag !== 18) {
+            break;
+          }
+
+          message.channel_label = reader.string();
+          continue;
+        case 3:
+          if (tag !== 26) {
+            break;
+          }
+
+          message.clan_id = reader.string();
+          continue;
+        case 4:
+          if (tag !== 34) {
+            break;
+          }
+
+          message.clan_name = reader.string();
+          continue;
+        case 5:
+          if (tag !== 42) {
+            break;
+          }
+
+          message.meeting_code = reader.string();
+          continue;
+        case 6:
+          if (tag !== 48) {
+            break;
+          }
+
+          message.type = reader.int32();
+          continue;
+        case 7:
+          if (tag !== 56) {
+            break;
+          }
+
+          message.channel_private = reader.int32();
+          continue;
+        case 8:
+          if (tag !== 66) {
+            break;
+          }
+
+          message.parrent_id = reader.string();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): HashtagDmList_HashtagDm {
+    return {
+      channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "",
+      channel_label: isSet(object.channel_label) ? globalThis.String(object.channel_label) : "",
+      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
+      clan_name: isSet(object.clan_name) ? globalThis.String(object.clan_name) : "",
+      meeting_code: isSet(object.meeting_code) ? globalThis.String(object.meeting_code) : "",
+      type: isSet(object.type) ? globalThis.Number(object.type) : 0,
+      channel_private: isSet(object.channel_private) ? globalThis.Number(object.channel_private) : 0,
+      parrent_id: isSet(object.parrent_id) ? globalThis.String(object.parrent_id) : "",
+    };
+  },
+
+  toJSON(message: HashtagDmList_HashtagDm): unknown {
+    const obj: any = {};
+    if (message.channel_id !== "") {
+      obj.channel_id = message.channel_id;
+    }
+    if (message.channel_label !== "") {
+      obj.channel_label = message.channel_label;
+    }
+    if (message.clan_id !== "") {
+      obj.clan_id = message.clan_id;
+    }
+    if (message.clan_name !== "") {
+      obj.clan_name = message.clan_name;
+    }
+    if (message.meeting_code !== "") {
+      obj.meeting_code = message.meeting_code;
+    }
+    if (message.type !== 0) {
+      obj.type = Math.round(message.type);
+    }
+    if (message.channel_private !== 0) {
+      obj.channel_private = Math.round(message.channel_private);
+    }
+    if (message.parrent_id !== "") {
+      obj.parrent_id = message.parrent_id;
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<HashtagDmList_HashtagDm>, I>>(base?: I): HashtagDmList_HashtagDm {
+    return HashtagDmList_HashtagDm.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<HashtagDmList_HashtagDm>, I>>(object: I): HashtagDmList_HashtagDm {
+    const message = createBaseHashtagDmList_HashtagDm();
+    message.channel_id = object.channel_id ?? "";
+    message.channel_label = object.channel_label ?? "";
+    message.clan_id = object.clan_id ?? "";
+    message.clan_name = object.clan_name ?? "";
+    message.meeting_code = object.meeting_code ?? "";
+    message.type = object.type ?? 0;
+    message.channel_private = object.channel_private ?? 0;
+    message.parrent_id = object.parrent_id ?? "";
     return message;
   },
 };
@@ -22246,7 +22585,7 @@ export const ClanEmojiDeleteRequest = {
 };
 
 function createBaseClanEmojiUpdateRequest(): ClanEmojiUpdateRequest {
-  return { id: "", source: "", shortname: "", category: "", clan_id: "" };
+  return { id: "", shortname: "", clan_id: "" };
 }
 
 export const ClanEmojiUpdateRequest = {
@@ -22254,17 +22593,11 @@ export const ClanEmojiUpdateRequest = {
     if (message.id !== "") {
       writer.uint32(10).string(message.id);
     }
-    if (message.source !== "") {
-      writer.uint32(18).string(message.source);
-    }
     if (message.shortname !== "") {
-      writer.uint32(26).string(message.shortname);
-    }
-    if (message.category !== "") {
-      writer.uint32(34).string(message.category);
+      writer.uint32(18).string(message.shortname);
     }
     if (message.clan_id !== "") {
-      writer.uint32(42).string(message.clan_id);
+      writer.uint32(26).string(message.clan_id);
     }
     return writer;
   },
@@ -22288,24 +22621,10 @@ export const ClanEmojiUpdateRequest = {
             break;
           }
 
-          message.source = reader.string();
+          message.shortname = reader.string();
           continue;
         case 3:
           if (tag !== 26) {
-            break;
-          }
-
-          message.shortname = reader.string();
-          continue;
-        case 4:
-          if (tag !== 34) {
-            break;
-          }
-
-          message.category = reader.string();
-          continue;
-        case 5:
-          if (tag !== 42) {
             break;
           }
 
@@ -22323,9 +22642,7 @@ export const ClanEmojiUpdateRequest = {
   fromJSON(object: any): ClanEmojiUpdateRequest {
     return {
       id: isSet(object.id) ? globalThis.String(object.id) : "",
-      source: isSet(object.source) ? globalThis.String(object.source) : "",
       shortname: isSet(object.shortname) ? globalThis.String(object.shortname) : "",
-      category: isSet(object.category) ? globalThis.String(object.category) : "",
       clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
     };
   },
@@ -22335,14 +22652,8 @@ export const ClanEmojiUpdateRequest = {
     if (message.id !== "") {
       obj.id = message.id;
     }
-    if (message.source !== "") {
-      obj.source = message.source;
-    }
     if (message.shortname !== "") {
       obj.shortname = message.shortname;
-    }
-    if (message.category !== "") {
-      obj.category = message.category;
     }
     if (message.clan_id !== "") {
       obj.clan_id = message.clan_id;
@@ -22356,9 +22667,7 @@ export const ClanEmojiUpdateRequest = {
   fromPartial<I extends Exact<DeepPartial<ClanEmojiUpdateRequest>, I>>(object: I): ClanEmojiUpdateRequest {
     const message = createBaseClanEmojiUpdateRequest();
     message.id = object.id ?? "";
-    message.source = object.source ?? "";
     message.shortname = object.shortname ?? "";
-    message.category = object.category ?? "";
     message.clan_id = object.clan_id ?? "";
     return message;
   },
