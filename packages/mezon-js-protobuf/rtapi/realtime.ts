@@ -1258,7 +1258,7 @@ export interface EventEmoji {
   short_name: string;
   source: string;
   category: string;
-  action: string;
+  action: number;
 }
 
 function createBaseEnvelope(): Envelope {
@@ -10709,7 +10709,7 @@ export const NotificationChannelCategorySettingEvent = {
 };
 
 function createBaseEventEmoji(): EventEmoji {
-  return { id: "", clan_id: "", short_name: "", source: "", category: "", action: "" };
+  return { id: "", clan_id: "", short_name: "", source: "", category: "", action: 0 };
 }
 
 export const EventEmoji = {
@@ -10729,8 +10729,8 @@ export const EventEmoji = {
     if (message.category !== "") {
       writer.uint32(42).string(message.category);
     }
-    if (message.action !== "") {
-      writer.uint32(50).string(message.action);
+    if (message.action !== 0) {
+      writer.uint32(48).int32(message.action);
     }
     return writer;
   },
@@ -10778,11 +10778,11 @@ export const EventEmoji = {
           message.category = reader.string();
           continue;
         case 6:
-          if (tag !== 50) {
+          if (tag !== 48) {
             break;
           }
 
-          message.action = reader.string();
+          message.action = reader.int32();
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -10800,7 +10800,7 @@ export const EventEmoji = {
       short_name: isSet(object.short_name) ? globalThis.String(object.short_name) : "",
       source: isSet(object.source) ? globalThis.String(object.source) : "",
       category: isSet(object.category) ? globalThis.String(object.category) : "",
-      action: isSet(object.action) ? globalThis.String(object.action) : "",
+      action: isSet(object.action) ? globalThis.Number(object.action) : 0,
     };
   },
 
@@ -10821,8 +10821,8 @@ export const EventEmoji = {
     if (message.category !== "") {
       obj.category = message.category;
     }
-    if (message.action !== "") {
-      obj.action = message.action;
+    if (message.action !== 0) {
+      obj.action = Math.round(message.action);
     }
     return obj;
   },
@@ -10837,7 +10837,7 @@ export const EventEmoji = {
     message.short_name = object.short_name ?? "";
     message.source = object.source ?? "";
     message.category = object.category ?? "";
-    message.action = object.action ?? "";
+    message.action = object.action ?? 0;
     return message;
   },
 };
