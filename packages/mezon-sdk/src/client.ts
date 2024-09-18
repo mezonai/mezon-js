@@ -385,7 +385,7 @@ export class MezonClient implements Client {
         session.refresh_token &&
         session.isexpired((Date.now() + this.expiredTimespanMs) / 1000)
       ) {
-        await this.sessionRefresh(session);
+        await this.sessionRefresh();
       }
   
       return this.apiClient
