@@ -5959,6 +5959,8 @@ export class MezonApi {
   deleteRole(bearerToken: string,
       roleId:string,
       channelId?:string,
+      clanId?:string,
+      maxPermissionsLevel?:string,
       options: any = {}): Promise<any> {
     
     if (roleId === null || roleId === undefined) {
@@ -5968,6 +5970,8 @@ export class MezonApi {
         .replace("{roleId}", encodeURIComponent(String(roleId)));
     const queryParams = new Map<string, any>();
     queryParams.set("channel_id", channelId);
+    queryParams.set("clan_id", clanId);
+    queryParams.set("max_permissions_level", maxPermissionsLevel);
 
     let bodyJson : string = "";
 
