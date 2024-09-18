@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { ApiChannelMessageHeader, ApiCreateEventRequest, ApiGiveCoffeeEvent, ApiMessageAttachment, ApiMessageMention, ApiMessageReaction, ApiMessageRef, ApiNotification, ApiPermissionList, ApiRoleList, ApiRpc, ApiUser} from "./api.gen";
+import { ApiChannelMessageHeader, ApiCreateEventRequest, ApiGiveCoffeeEvent, ApiMessageAttachment, ApiMessageMention, ApiMessageReaction, ApiMessageRef, ApiNotification, ApiPermissionList, ApiRole, ApiRoleList, ApiRpc, ApiUser} from "./api.gen";
 import {Session} from "./session";
 import {ChannelMessage, Notification} from "./client";
 import {WebSocketAdapter, WebSocketAdapterText} from "./web_socket_adapter"
@@ -667,15 +667,9 @@ export interface RoleListEvent {
 }
 
 export interface RoleEvent {
-  clan_id: string;
-  role_id: string;
-  creator_id: string;
-  user_ids_assigned: Array<string>;
-  permission_ids_assigned: Array<string>;
-  user_ids_removed: Array<string>;
-  permission_ids_removed: Array<string>;
-  role_title: string;
-  status: string;
+  role: ApiRole;
+  status: number;
+  user_id: string;
 }
 
 export interface EventEmoji {
