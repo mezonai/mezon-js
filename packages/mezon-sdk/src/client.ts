@@ -17,6 +17,8 @@
 import { CloseEvent, ErrorEvent} from "ws";
 import {
   ApiAuthenticateLogoutRequest,
+  ApiRegisterStreamingChannelRequest,
+  ApiRegisterStreamingChannelResponse,
   ApiSession,
   ApiVoiceChannelUserList,
   Socket,
@@ -373,6 +375,23 @@ export class MezonClient implements Client {
             });
           });
           return Promise.resolve(result);
+        });
+    }
+
+  async registerStreamingChannel(request: ApiRegisterStreamingChannelRequest) {
+      const session = this.session!;
+      if (
+        this.autoRefreshSession &&
+        session.refresh_token &&
+        session.isexpired((Date.now() + this.expiredTimespanMs) / 1000)
+      ) {
+        await this.sessionRefresh(session);
+      }
+  
+      return this.apiClient
+        .registerStreamingChannel(session.token, request)
+        .then((response: ApiRegisterStreamingChannelResponse) => {
+          return response !== undefined;
         });
     }
 };

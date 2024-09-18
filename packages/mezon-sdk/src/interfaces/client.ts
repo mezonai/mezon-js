@@ -381,6 +381,23 @@ export interface ApiUser {
   username?: string;
 }
 
+export interface ApiRegisterStreamingChannelRequest {
+  //
+  channel_id?: string;
+  //
+  clan_id?: string;
+}
+
+/**  */
+export interface ApiRegisterStreamingChannelResponse {
+  //
+  channel_id?: string;
+  //
+  clan_id?: string;
+  //
+  streaming_url?: string;
+}
+
 export interface Client {
   authenticate: () => Promise<string>;
   sendMessage: (clan_id: string, parent_id: string, channel_id: string, mode: number, is_public: boolean, is_parent_public: boolean, msg: ChannelMessageContent, mentions?: Array<ApiMessageMention>, attachments?: Array<ApiMessageAttachment>, ref?: Array<ApiMessageRef>) => Promise<ChannelMessageAck>;

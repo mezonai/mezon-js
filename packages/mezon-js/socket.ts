@@ -678,6 +678,15 @@ export interface RoleEvent {
   status: string;
 }
 
+export interface EventEmoji {
+  id    :    string
+	clan_id:    string
+	short_name: string
+	source:    string
+	category:  string
+	action:    number
+}
+
 export interface UserPermissionInChannelListEvent {
   //
   clan_id: string;
@@ -1059,6 +1068,8 @@ export interface Socket {
 
   oncoffeegiven: (give_coffee_event: ApiGiveCoffeeEvent) => void;
 
+  oneventemoji: (event_emoji: EventEmoji) => void;
+
 }
 
 /** Reports an error received from a socket message. */
@@ -1142,6 +1153,8 @@ export class DefaultSocket implements Socket {
           this.onchannelcreated(message.channel_created_event) 
         } else if (message.role_event) {
           this.onroleevent(message.role_event) 
+        } else if(message.event_emoji){
+          this.oneventemoji(message.event_emoji)
         } else if (message.channel_deleted_event) {
           this.onchanneldeleted(message.channel_deleted_event) 
         } else if (message.clan_deleted_event) {
@@ -1420,6 +1433,12 @@ export class DefaultSocket implements Socket {
   onroleevent(roleEvent: RoleEvent) {
     if (this.verbose && window && window.console) {
       console.log(roleEvent);
+    }
+  }
+
+  oneventemoji(eventEmoji: EventEmoji) {
+    if (this.verbose && window && window.console) {
+      console.log(eventEmoji);
     }
   }
 
