@@ -17,7 +17,6 @@
 import { CloseEvent, ErrorEvent} from "ws";
 import {
   ApiAuthenticateLogoutRequest,
-  ApiAuthenticateRefreshRequest,
   ApiRegisterStreamingChannelRequest,
   ApiRegisterStreamingChannelResponse,
   ApiSession,
@@ -121,14 +120,16 @@ export class MezonClient implements Client {
   }
 
   /** Refresh a user's session using a refresh token retrieved from a previous authentication request. */
-  async sessionRefresh(session: Session) {
+  async sessionRefresh() {
 
-    const request : ApiAuthenticateRefreshRequest = {
-      "refresh_token": session.refresh_token,
-    };
-
-    return this.apiClient.mezonAuthenticateRefresh(this.apiKey, "", request).then((apiSession : ApiSession) => {
-      return Promise.resolve(new Session(apiSession));
+    return this.apiClient.mezonAuthenticate(this.apiKey, "", {
+      account: {
+        token: this.apiKey,
+      }
+    }).then((apiSession : ApiSession) => {
+      const newSession = new Session(apiSession);
+      this.session = newSession;
+      return Promise.resolve(newSession);
     });
   }
   
@@ -255,7 +256,7 @@ export class MezonClient implements Client {
       session.refresh_token &&
       session.isexpired((Date.now() + this.expiredTimespanMs) / 1000)
     ) {
-      await this.sessionRefresh(session);
+      await this.sessionRefresh();
     }
   
     return this.apiClient
@@ -343,7 +344,7 @@ export class MezonClient implements Client {
         session.refresh_token &&
         session.isexpired((Date.now() + this.expiredTimespanMs) / 1000)
       ) {
-        await this.sessionRefresh(session);
+        await this.sessionRefresh();
       }
 
       return this.apiClient

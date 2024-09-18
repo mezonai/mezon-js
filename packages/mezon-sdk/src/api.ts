@@ -392,7 +392,7 @@ export class MezonApi {
         new Promise((_, reject) =>
           setTimeout(reject, this.timeoutMs, "Request timed out.")
         ),
-      ]).catch(e => console.log(e));
+      ]);
     }
 
   /** Register streaming in channel ( for bot - get streaming key) */
