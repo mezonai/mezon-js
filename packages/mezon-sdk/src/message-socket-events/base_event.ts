@@ -1,15 +1,17 @@
 import { Socket } from "../interfaces";
 
-export abstract class BaseSocketEvent{
-    abstract handleFunctions : ((...args: any[]) => void)[];
+export abstract class BaseSocketEvent {
+  abstract handleFunctions: ((...args: any[]) => void)[];
 
-    abstract event : string;
+  abstract event: string;
 
-    constructor(protected socket: Socket){}
+  constructor(protected socket: Socket) {}
 
-    excute(){
-        this.handleFunctions.forEach((func) => {
-            this.socket.socketEvents.on(this.event, func.bind(this));
-        });
-    }
+  excute() {
+    this.handleFunctions.forEach((func) => {
+      this.socket.socketEvents.on(this.event, (...args: any[]) =>
+        Promise.resolve(func.apply(this, args)).catch(console.log)
+      );
+    });
+  }
 }

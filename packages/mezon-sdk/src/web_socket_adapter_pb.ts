@@ -49,25 +49,31 @@ export class WebSocketAdapterPb implements WebSocketAdapter {
     }
 
     set onMessage(value: SocketMessageHandler | null) {
-
-        if (value) {
+        try {
+          if (value) {
             this._socket!.onmessage = (evt: MessageEvent) => {
+              try {
                 const buffer: ArrayBuffer = evt.data as ArrayBuffer;
                 const uintBuffer: Uint8Array = new Uint8Array(buffer);
                 const envelope = tsproto.Envelope.decode(uintBuffer);
 
                 if (envelope.channel_message) {
-                    if (envelope.channel_message.code == undefined) {
-                        //protobuf plugin does not default-initialize missing Int32Value fields
-                        envelope.channel_message.code = 0;
-                    }
+                  if (envelope.channel_message.code == undefined) {
+                    //protobuf plugin does not default-initialize missing Int32Value fields
+                    envelope.channel_message.code = 0;
+                  }
                 }
 
                 value!(envelope);
+              } catch (e) {
+                console.log(e);
+              }
             };
-        }
-        else {
+          } else {
             value = null;
+          }
+        } catch (e) {
+          console.log(e);
         }
     }
 
