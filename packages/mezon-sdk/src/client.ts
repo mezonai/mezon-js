@@ -18,7 +18,6 @@ import { CloseEvent, ErrorEvent} from "ws";
 import {
   ApiAuthenticateLogoutRequest,
   ApiRegisterStreamingChannelRequest,
-  ApiRegisterStreamingChannelResponse,
   ApiSession,
   ApiVoiceChannelUserList,
   Socket,
@@ -389,9 +388,6 @@ export class MezonClient implements Client {
       }
   
       return this.apiClient
-        .registerStreamingChannel(session.token, request)
-        .then((response: ApiRegisterStreamingChannelResponse) => {
-          return response !== undefined;
-        });
+        .registerStreamingChannel(session.token, request);
     }
 };
