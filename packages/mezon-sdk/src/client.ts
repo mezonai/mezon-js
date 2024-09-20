@@ -18,6 +18,7 @@ import { CloseEvent, ErrorEvent} from "ws";
 import {
   ApiAuthenticateLogoutRequest,
   ApiRegisterStreamingChannelRequest,
+  ApiRegisterStreamingChannelResponse,
   ApiSession,
   ApiVoiceChannelUserList,
   Socket,
@@ -262,22 +263,21 @@ export class MezonClient implements Client {
       .createChannelDesc(session.token, request);
   }
 
-  async sendMessageUser(
-    userId: string,
-    msg: string,
-    messOptions: {[x: string]: any} = {},
-    attachments: Array<ApiMessageAttachment> = []
-  ) {
-      let channelDM;
+
+  async getDMchannel(userId: string) : Promise<null | ApiChannelDescription> {
+    try{
+      if (!userId) return null;
+
+      const request : ApiCreateChannelDescRequest = {
+        clan_id: "0",
+        channel_id: "0",
+        category_id: "0",
+        type: 3,
+        user_ids: [userId],
+        channel_private: 1,
+      }
       if (!(userId in this._DMchannels)) {
-        channelDM = await this.createChannelDesc({
-          clan_id: "0",
-          channel_id: "0",
-          category_id: "0",
-          type: 3,
-          user_ids: [userId],
-          channel_private: 1,
-        });
+        const channelDM = await this.createChannelDesc(request);
 
         if (channelDM) {
           this._DMchannels[userId] = channelDM;
@@ -289,12 +289,29 @@ export class MezonClient implements Client {
             false,
             false
           );
+          return channelDM;
         }
+
+        return null;
       } else {
-        channelDM = this._DMchannels[userId];
+        return this._DMchannels[userId];
       }
+    }catch(e){
+      console.log(e);
+      return null;
+    }
+  }
+
+  async sendMessageUser(
+    userId: string,
+    msg: string,
+    messOptions: {[x: string]: any} = {},
+    attachments: Array<ApiMessageAttachment> = []
+  ) {
+      const channelDM = await this.getDMchannel(userId);
+
       if (!channelDM) throw Error(`can't get channel DM`);
-   
+      
       const message = {
         clan_id: channelDM.clan_id!,
         channel_id: channelDM.channel_id!,
@@ -310,7 +327,7 @@ export class MezonClient implements Client {
         { messageContent: msg, ...messOptions },
         message
       );
-      await this.sendMessage(
+      return this.sendMessage(
         mess.clan_id,
         mess.parent_id,
         mess.channel_id,
