@@ -18,7 +18,6 @@ import { CloseEvent, ErrorEvent} from "ws";
 import {
   ApiAuthenticateLogoutRequest,
   ApiRegisterStreamingChannelRequest,
-  ApiRegisterStreamingChannelResponse,
   ApiSession,
   ApiVoiceChannelUserList,
   Socket,
