@@ -863,6 +863,68 @@ export interface GetUserEmojiUsageEvent {
   user_emoji_usage: Array<UserEmojiUsage>;
 }
 
+/** On role assign */
+export interface RoleAssignedEvent {
+  /** The clan of this role */
+  ClanId: string;
+  /** Role ID */
+  role_id: string;
+  /** UserIds Assigned */
+  user_ids_assigned: string[];
+  /** UserIds Removed */
+  user_ids_removed: string[];
+}
+
+/** Streaming Joined event */
+export interface StreamingLeavedEvent {
+  /** id */
+  id: string;
+  /** The unique identifier of the chat clan. */
+  clan_id: string;
+  /** streaming channel name */
+  streaming_channel_id: string;
+  /** streaming user_id */
+  streaming_user_id: string;
+}
+
+/** Streaming Joined event */
+export interface StreamingJoinedEvent {
+  /** The unique identifier of the chat clan. */
+  clan_id: string;
+  /** The channel name */
+  clan_name: string;
+  /** id streaming */
+  id: string;
+  /** streaming participant */
+  participant: string;
+  /** user id */
+  user_id: string;
+  /** streaming channel label */
+  streaming_channel_label: string;
+  /** streaming channel id */
+  streaming_channel_id: string;
+}
+
+/** Streaming start event */
+export interface StreamingStartedEvent {
+  /** clan id */
+  clan_id: string;
+  /** channel id */
+  channel_id: string;
+  /** stream url */
+  streaming_url: string;
+  /** status */
+  is_streaming: boolean;
+}
+
+/** Streaming start event */
+export interface StreamingEndedEvent {
+  /** clan id */
+  clan_id: string;
+  /** channel id */
+  channel_id: string;
+}
+
 /** A socket connection to Mezon server. */
 export interface Socket {
   /** Connection is Open */
@@ -1064,6 +1126,16 @@ export interface Socket {
 
   oneventemoji: (event_emoji: EventEmoji) => void;
 
+  onroleassign: (role_assign_event: RoleAssignedEvent) => void;
+
+  onstreamingchannelstarted: (streaming_started_event: StreamingStartedEvent) => void;
+
+  onstreamingchannelended: (streaming_ended_event: StreamingEndedEvent) => void;
+
+  onstreamingchanneljoined: (streaming_joined_event: StreamingJoinedEvent) => void;
+
+  onstreamingchannelleaved: (streaming_leaved_event: StreamingLeavedEvent) => void;
+
 }
 
 /** Reports an error received from a socket message. */
@@ -1246,9 +1318,19 @@ export class DefaultSocket implements Socket {
         } else if (message.user_clan_removed_event) {
           this.onuserclanremoved(<UserClanRemovedEvent>message.user_clan_removed_event);
         } else if(message.clan_event_created){
-            this.oneventcreated(message.clan_event_created);
+          this.oneventcreated(message.clan_event_created);
         } else if(message.give_coffee_event){
           this.oncoffeegiven(<ApiGiveCoffeeEvent>message.give_coffee_event);
+        } else if(message.role_assign_event){
+          this.onroleassign(<RoleAssignedEvent>message.role_assign_event);
+        } else if(message.streaming_started_event){
+          this.onstreamingchannelstarted(<StreamingStartedEvent>message.streaming_started_event);
+        } else if(message.streaming_ended_event){
+          this.onstreamingchannelended(<StreamingEndedEvent>message.streaming_ended_event);
+        } else if(message.streaming_joined_event){
+          this.onstreamingchanneljoined(<StreamingJoinedEvent>message.streaming_joined_event);
+        } else if(message.streaming_leaved_event){
+          this.onstreamingchannelleaved(<StreamingLeavedEvent>message.streaming_leaved_event);
         } else {
           if (this.verbose && window && window.console) {
             console.log("Unrecognized message received: %o", message);
@@ -1518,6 +1600,36 @@ export class DefaultSocket implements Socket {
   oncoffeegiven(give_coffee_event: ApiGiveCoffeeEvent) {
     if (this.verbose && window && window.console) {
       console.log(give_coffee_event);
+    }
+  }
+
+  onroleassign(role_assign_event: RoleAssignedEvent) {
+    if (this.verbose && window && window.console) {
+      console.log(role_assign_event);
+    }
+  }
+
+  onstreamingchannelstarted(streaming_started_event: StreamingStartedEvent) {
+    if (this.verbose && window && window.console) {
+      console.log(streaming_started_event);
+    }
+  }
+
+  onstreamingchannelended(streaming_ended_event: StreamingEndedEvent) {
+    if (this.verbose && window && window.console) {
+      console.log(streaming_ended_event);
+    }
+  }
+
+  onstreamingchanneljoined(streaming_joined_event: StreamingJoinedEvent) {
+    if (this.verbose && window && window.console) {
+      console.log(streaming_joined_event);
+    }
+  }
+
+  onstreamingchannelleaved(streaming_leaved_event: StreamingLeavedEvent) {
+    if (this.verbose && window && window.console) {
+      console.log(streaming_leaved_event);
     }
   }
   
