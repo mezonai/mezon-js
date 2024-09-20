@@ -188,6 +188,8 @@ export interface MezonUpdateRoleBody {
   description?: string;
   //
   display_online?: number;
+  //
+  max_permission_id?: string;
   //The permissions to remove.
   remove_permission_ids?: Array<string>;
   //The users to remove.
@@ -818,6 +820,8 @@ export interface ApiCreateRoleRequest {
   description?: string;
   //
   display_online?: number;
+  //
+  max_permission_id?: string;
   //
   role_icon?: string;
   //
@@ -1626,6 +1630,8 @@ export interface ApiUpdateCategoryOrderRequest {
 export interface ApiUpdateRoleChannelRequest {
   //
   channel_id?: string;
+  //
+  max_permission_id?: string;
   //The permissions to add.
   permission_update?: Array<ApiPermissionUpdate>;
   //The ID of the role to update.
@@ -5960,7 +5966,6 @@ export class MezonApi {
       roleId:string,
       channelId?:string,
       clanId?:string,
-      maxPermissionsLevel?:string,
       options: any = {}): Promise<any> {
     
     if (roleId === null || roleId === undefined) {
@@ -5971,8 +5976,6 @@ export class MezonApi {
     const queryParams = new Map<string, any>();
     queryParams.set("channel_id", channelId);
     queryParams.set("clan_id", clanId);
-    queryParams.set("max_permissions_level", maxPermissionsLevel);
-
     let bodyJson : string = "";
 
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
