@@ -2476,9 +2476,7 @@ export interface ClanEmojiDeleteRequest {
 
 export interface ClanEmojiUpdateRequest {
   id: string;
-  source: string;
   shortname: string;
-  category: string;
   clan_id: string;
 }
 
@@ -22246,7 +22244,7 @@ export const ClanEmojiDeleteRequest = {
 };
 
 function createBaseClanEmojiUpdateRequest(): ClanEmojiUpdateRequest {
-  return { id: "", source: "", shortname: "", category: "", clan_id: "" };
+  return { id: "", shortname: "", clan_id: "" };
 }
 
 export const ClanEmojiUpdateRequest = {
@@ -22254,17 +22252,11 @@ export const ClanEmojiUpdateRequest = {
     if (message.id !== "") {
       writer.uint32(10).string(message.id);
     }
-    if (message.source !== "") {
-      writer.uint32(18).string(message.source);
-    }
     if (message.shortname !== "") {
-      writer.uint32(26).string(message.shortname);
-    }
-    if (message.category !== "") {
-      writer.uint32(34).string(message.category);
+      writer.uint32(18).string(message.shortname);
     }
     if (message.clan_id !== "") {
-      writer.uint32(42).string(message.clan_id);
+      writer.uint32(26).string(message.clan_id);
     }
     return writer;
   },
@@ -22288,24 +22280,10 @@ export const ClanEmojiUpdateRequest = {
             break;
           }
 
-          message.source = reader.string();
+          message.shortname = reader.string();
           continue;
         case 3:
           if (tag !== 26) {
-            break;
-          }
-
-          message.shortname = reader.string();
-          continue;
-        case 4:
-          if (tag !== 34) {
-            break;
-          }
-
-          message.category = reader.string();
-          continue;
-        case 5:
-          if (tag !== 42) {
             break;
           }
 
@@ -22323,9 +22301,7 @@ export const ClanEmojiUpdateRequest = {
   fromJSON(object: any): ClanEmojiUpdateRequest {
     return {
       id: isSet(object.id) ? globalThis.String(object.id) : "",
-      source: isSet(object.source) ? globalThis.String(object.source) : "",
       shortname: isSet(object.shortname) ? globalThis.String(object.shortname) : "",
-      category: isSet(object.category) ? globalThis.String(object.category) : "",
       clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
     };
   },
@@ -22335,14 +22311,8 @@ export const ClanEmojiUpdateRequest = {
     if (message.id !== "") {
       obj.id = message.id;
     }
-    if (message.source !== "") {
-      obj.source = message.source;
-    }
     if (message.shortname !== "") {
       obj.shortname = message.shortname;
-    }
-    if (message.category !== "") {
-      obj.category = message.category;
     }
     if (message.clan_id !== "") {
       obj.clan_id = message.clan_id;
@@ -22356,9 +22326,7 @@ export const ClanEmojiUpdateRequest = {
   fromPartial<I extends Exact<DeepPartial<ClanEmojiUpdateRequest>, I>>(object: I): ClanEmojiUpdateRequest {
     const message = createBaseClanEmojiUpdateRequest();
     message.id = object.id ?? "";
-    message.source = object.source ?? "";
     message.shortname = object.shortname ?? "";
-    message.category = object.category ?? "";
     message.clan_id = object.clan_id ?? "";
     return message;
   },
