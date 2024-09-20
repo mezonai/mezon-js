@@ -27,6 +27,9 @@ export enum InternalEventsSocket {
   UserProfileUpdatedEvent = "user_profile_updated_event",
   UserChannelRemovedEvent = "user_channel_removed_event",
   UserClanRemovedEvent = "user_clan_removed_event",
+  RoleEvent = "role_event",
+  GiveCoffeeEvent = "give_coffee_event",
+  RoleAssignEvent = 'role_assign_event'
 }
 
 export enum Events {
@@ -38,6 +41,9 @@ export enum Events {
   ChannelCreated = InternalEventsSocket.ChannelCreatedEvent,
   ChannelDeleted = InternalEventsSocket.ChannelDeletedEvent,
   ChannelUpdated = InternalEventsSocket.ChannelUpdatedEvent,
+  RoleEvent = InternalEventsSocket.RoleEvent,
+  GiveCoffee = InternalEventsSocket.GiveCoffeeEvent,
+  RoleAssign = InternalEventsSocket.RoleAssignEvent,
 }
 
 export enum ChannelType {
