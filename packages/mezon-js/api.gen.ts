@@ -189,7 +189,7 @@ export interface MezonUpdateRoleBody {
   //
   display_online?: number;
   //
-  max_permission_id?: string;
+  max_permission_id: string;
   //The permissions to remove.
   remove_permission_ids?: Array<string>;
   //The users to remove.
@@ -821,7 +821,7 @@ export interface ApiCreateRoleRequest {
   //
   display_online?: number;
   //
-  max_permission_id?: string;
+  max_permission_id: string;
   //
   role_icon?: string;
   //
@@ -1264,6 +1264,8 @@ export interface ApiPermissionUpdate {
   //
   permission_id?: string;
   //
+  slug?: string;
+  //
   type?: number;
 }
 
@@ -1629,9 +1631,9 @@ export interface ApiUpdateCategoryOrderRequest {
 /**  */
 export interface ApiUpdateRoleChannelRequest {
   //
-  channel_id?: string;
+  channel_id: string;
   //
-  max_permission_id?: string;
+  max_permission_id: string;
   //The permissions to add.
   permission_update?: Array<ApiPermissionUpdate>;
   //The ID of the role to update.

@@ -466,6 +466,7 @@ export interface ApiUpdateRoleRequest {
   remove_permission_ids: string[];
   //
   clan_id: string;
+  max_permission_id: string;
 }
 
 /** A client for Mezon server. */
