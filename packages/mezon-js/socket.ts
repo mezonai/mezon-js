@@ -672,6 +672,10 @@ export interface RoleEvent {
   user_id: string;
 }
 
+export interface AllUsersAddChannelEvent {
+  user_ids: Array<string>;
+}
+
 export interface EventEmoji {
   id    :    string
 	clan_id:    string
@@ -1105,6 +1109,8 @@ export interface Socket {
   listChannelByUserId(): Promise<ChannelDescListEvent>;
 
   listUserClansByUserId(): Promise<AllUserClans>;
+
+  listUsersAddChannelByChannelId(channelId: string, limit: number): Promise<AllUsersAddChannelEvent>;
   
   hashtagDMList(user_id: Array<string>, limit: number): Promise<HashtagDmListEvent>;
 
@@ -1810,6 +1816,11 @@ export class DefaultSocket implements Socket {
   async listUserClansByUserId(): Promise<AllUserClans> {
     const response = await this.send({all_user_clans: {}});
     return response.all_user_clans
+  }
+
+  async listUsersAddChannelByChannelId(channelId: string, limit: number): Promise<AllUsersAddChannelEvent> {
+    const response = await this.send({all_users_add_channel_event: {channel_id: channelId, limit: limit}});
+    return response.all_users_add_channel_event
   }
 
   async hashtagDMList(user_id: Array<string>, limit: number): Promise<HashtagDmListEvent> {
