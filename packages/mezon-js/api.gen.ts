@@ -1264,6 +1264,8 @@ export interface ApiPermissionUpdate {
   //
   permission_id?: string;
   //
+  slug?: string;
+  //
   type?: number;
 }
 
