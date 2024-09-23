@@ -109,8 +109,6 @@ export interface MezonUpdateClanDescBody {
   //
   clan_name?: string;
   //
-  creator_id?: string;
-  //
   logo?: string;
   //
   status?: number;
@@ -756,8 +754,6 @@ export interface ApiCreateClanDescRequest {
   banner?: string;
   //
   clan_name?: string;
-  //
-  creator_id?: string;
   //
   logo?: string;
 }
