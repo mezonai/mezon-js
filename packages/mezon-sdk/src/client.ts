@@ -305,7 +305,8 @@ export class MezonClient implements Client {
     userId: string,
     msg: string,
     messOptions: {[x: string]: any} = {},
-    attachments: Array<ApiMessageAttachment> = []
+    attachments: Array<ApiMessageAttachment> = [],
+    refs: Array<ApiMessageRef> = []
   ) {
       const channelDM = await this.getDMchannel(userId);
 
@@ -336,7 +337,7 @@ export class MezonClient implements Client {
         mess.msg,
         [],
         mess.attachments,
-        []
+        refs
       );
   }
 
