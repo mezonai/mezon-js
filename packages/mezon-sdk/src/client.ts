@@ -40,8 +40,8 @@ import {
 import { convertChanneltypeToChannelMode } from "./utils/helper";
 import { replyMessageGenerate } from "./utils/generate_reply_message";
 const DEFAULT_HOST = "mezon.vn";
-const DEFAULT_PORT = "7305";
-const DEFAULT_API_KEY = "defaultkey";
+const DEFAULT_PORT = "443";
+const DEFAULT_API_KEY = "";
 const DEFAULT_SSL = true;
 const DEFAULT_TIMEOUT_MS = 7000;
 const DEFAULT_EXPIRED_TIMESPAN_MS = 5 * 60 * 1000;

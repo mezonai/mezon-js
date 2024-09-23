@@ -2324,6 +2324,8 @@ export interface UpdateRoleChannelRequest {
 export interface PermissionUpdate {
   /** permission_id */
   permission_id: string;
+  /** permission slug */
+  slug: string;
   /** type set permission */
   type: number;
 }
@@ -20744,7 +20746,7 @@ export const UpdateRoleChannelRequest = {
 };
 
 function createBasePermissionUpdate(): PermissionUpdate {
-  return { permission_id: "", type: 0 };
+  return { permission_id: "", slug: "", type: 0 };
 }
 
 export const PermissionUpdate = {
@@ -20752,8 +20754,11 @@ export const PermissionUpdate = {
     if (message.permission_id !== "") {
       writer.uint32(10).string(message.permission_id);
     }
+    if (message.slug !== "") {
+      writer.uint32(18).string(message.slug);
+    }
     if (message.type !== 0) {
-      writer.uint32(16).int32(message.type);
+      writer.uint32(24).int32(message.type);
     }
     return writer;
   },
@@ -20773,7 +20778,14 @@ export const PermissionUpdate = {
           message.permission_id = reader.string();
           continue;
         case 2:
-          if (tag !== 16) {
+          if (tag !== 18) {
+            break;
+          }
+
+          message.slug = reader.string();
+          continue;
+        case 3:
+          if (tag !== 24) {
             break;
           }
 
@@ -20791,6 +20803,7 @@ export const PermissionUpdate = {
   fromJSON(object: any): PermissionUpdate {
     return {
       permission_id: isSet(object.permission_id) ? globalThis.String(object.permission_id) : "",
+      slug: isSet(object.slug) ? globalThis.String(object.slug) : "",
       type: isSet(object.type) ? globalThis.Number(object.type) : 0,
     };
   },
@@ -20799,6 +20812,9 @@ export const PermissionUpdate = {
     const obj: any = {};
     if (message.permission_id !== "") {
       obj.permission_id = message.permission_id;
+    }
+    if (message.slug !== "") {
+      obj.slug = message.slug;
     }
     if (message.type !== 0) {
       obj.type = Math.round(message.type);
@@ -20812,6 +20828,7 @@ export const PermissionUpdate = {
   fromPartial<I extends Exact<DeepPartial<PermissionUpdate>, I>>(object: I): PermissionUpdate {
     const message = createBasePermissionUpdate();
     message.permission_id = object.permission_id ?? "";
+    message.slug = object.slug ?? "";
     message.type = object.type ?? 0;
     return message;
   },
