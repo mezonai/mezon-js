@@ -301,11 +301,21 @@ export interface Envelope {
     | StreamingStartedEvent
     | undefined;
   /** streaming channel end */
-  streaming_ended_event?: StreamingEndedEvent | undefined;
+  streaming_ended_event?:
+    | StreamingEndedEvent
+    | undefined;
+  /**  */
+  all_users_add_channel_event?: AllUsersAddChannelEvent | undefined;
 }
 
 export interface AllUserClans {
   user: User[];
+}
+
+export interface AllUsersAddChannelEvent {
+  channel_id: string;
+  user_ids: string[];
+  limit: number | undefined;
 }
 
 export interface AddClanUserEvent {
@@ -1384,6 +1394,7 @@ function createBaseEnvelope(): Envelope {
     streaming_leaved_event: undefined,
     streaming_started_event: undefined,
     streaming_ended_event: undefined,
+    all_users_add_channel_event: undefined,
   };
 }
 
@@ -1602,6 +1613,9 @@ export const Envelope = {
     }
     if (message.streaming_ended_event !== undefined) {
       StreamingEndedEvent.encode(message.streaming_ended_event, writer.uint32(554).fork()).ldelim();
+    }
+    if (message.all_users_add_channel_event !== undefined) {
+      AllUsersAddChannelEvent.encode(message.all_users_add_channel_event, writer.uint32(562).fork()).ldelim();
     }
     return writer;
   },
@@ -2105,6 +2119,13 @@ export const Envelope = {
 
           message.streaming_ended_event = StreamingEndedEvent.decode(reader, reader.uint32());
           continue;
+        case 70:
+          if (tag !== 562) {
+            break;
+          }
+
+          message.all_users_add_channel_event = AllUsersAddChannelEvent.decode(reader, reader.uint32());
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -2282,6 +2303,9 @@ export const Envelope = {
         : undefined,
       streaming_ended_event: isSet(object.streaming_ended_event)
         ? StreamingEndedEvent.fromJSON(object.streaming_ended_event)
+        : undefined,
+      all_users_add_channel_event: isSet(object.all_users_add_channel_event)
+        ? AllUsersAddChannelEvent.fromJSON(object.all_users_add_channel_event)
         : undefined,
     };
   },
@@ -2506,6 +2530,9 @@ export const Envelope = {
     }
     if (message.streaming_ended_event !== undefined) {
       obj.streaming_ended_event = StreamingEndedEvent.toJSON(message.streaming_ended_event);
+    }
+    if (message.all_users_add_channel_event !== undefined) {
+      obj.all_users_add_channel_event = AllUsersAddChannelEvent.toJSON(message.all_users_add_channel_event);
     }
     return obj;
   },
@@ -2744,6 +2771,10 @@ export const Envelope = {
       (object.streaming_ended_event !== undefined && object.streaming_ended_event !== null)
         ? StreamingEndedEvent.fromPartial(object.streaming_ended_event)
         : undefined;
+    message.all_users_add_channel_event =
+      (object.all_users_add_channel_event !== undefined && object.all_users_add_channel_event !== null)
+        ? AllUsersAddChannelEvent.fromPartial(object.all_users_add_channel_event)
+        : undefined;
     return message;
   },
 };
@@ -2801,6 +2832,95 @@ export const AllUserClans = {
   fromPartial<I extends Exact<DeepPartial<AllUserClans>, I>>(object: I): AllUserClans {
     const message = createBaseAllUserClans();
     message.user = object.user?.map((e) => User.fromPartial(e)) || [];
+    return message;
+  },
+};
+
+function createBaseAllUsersAddChannelEvent(): AllUsersAddChannelEvent {
+  return { channel_id: "", user_ids: [], limit: undefined };
+}
+
+export const AllUsersAddChannelEvent = {
+  encode(message: AllUsersAddChannelEvent, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.channel_id !== "") {
+      writer.uint32(10).string(message.channel_id);
+    }
+    for (const v of message.user_ids) {
+      writer.uint32(18).string(v!);
+    }
+    if (message.limit !== undefined) {
+      Int32Value.encode({ value: message.limit! }, writer.uint32(26).fork()).ldelim();
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): AllUsersAddChannelEvent {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseAllUsersAddChannelEvent();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.channel_id = reader.string();
+          continue;
+        case 2:
+          if (tag !== 18) {
+            break;
+          }
+
+          message.user_ids.push(reader.string());
+          continue;
+        case 3:
+          if (tag !== 26) {
+            break;
+          }
+
+          message.limit = Int32Value.decode(reader, reader.uint32()).value;
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): AllUsersAddChannelEvent {
+    return {
+      channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "",
+      user_ids: globalThis.Array.isArray(object?.user_ids) ? object.user_ids.map((e: any) => globalThis.String(e)) : [],
+      limit: isSet(object.limit) ? Number(object.limit) : undefined,
+    };
+  },
+
+  toJSON(message: AllUsersAddChannelEvent): unknown {
+    const obj: any = {};
+    if (message.channel_id !== "") {
+      obj.channel_id = message.channel_id;
+    }
+    if (message.user_ids?.length) {
+      obj.user_ids = message.user_ids;
+    }
+    if (message.limit !== undefined) {
+      obj.limit = message.limit;
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<AllUsersAddChannelEvent>, I>>(base?: I): AllUsersAddChannelEvent {
+    return AllUsersAddChannelEvent.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<AllUsersAddChannelEvent>, I>>(object: I): AllUsersAddChannelEvent {
+    const message = createBaseAllUsersAddChannelEvent();
+    message.channel_id = object.channel_id ?? "";
+    message.user_ids = object.user_ids?.map((e) => e) || [];
+    message.limit = object.limit ?? undefined;
     return message;
   },
 };
