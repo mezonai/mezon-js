@@ -17,3 +17,12 @@ export function convertChanneltypeToChannelMode(channelType : string | number){
 
     return false;
 }
+
+export function isValidUserId(userId: string | number) {
+  if (typeof userId === "string" || typeof userId === "number") {
+    const strId = userId.toString();
+
+    return /^\d+$/.test(strId);
+  }
+  return false; 
+}
