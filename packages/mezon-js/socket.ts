@@ -654,6 +654,11 @@ export interface EmojiListedEvent {
   emoji_list?: Array<ClanEmoji>;
 }
 
+export interface FrequencyEmojiEvent {
+  clan_id : string;
+  emoji_list?: Array<ClanEmoji>;
+}
+
 export interface RoleListEvent {
   Limit: number;
     // The role state to list.
@@ -1099,6 +1104,8 @@ export interface Socket {
   checkDuplicateName(name: string, condition_id: string, type: number): Promise<CheckNameExistedEvent>;
 
   listClanEmojiByUserId(): Promise<EmojiListedEvent>;
+
+  listFrequencyEmojiByClanId(clan_id : string) : Promise<FrequencyEmojiEvent>;
 
   listUserPermissionInChannel(clan_id: string, channel_id: string): Promise<UserPermissionInChannelListEvent>;
 
@@ -1796,6 +1803,11 @@ export class DefaultSocket implements Socket {
   async listClanEmojiByUserId(): Promise<EmojiListedEvent> {
     const response = await this.send({emojis_listed_event: {}});
     return response.emojis_listed_event
+  }
+
+  async listFrequencyEmojiByClanId(clan_id : string): Promise<FrequencyEmojiEvent> {
+    const response = await this.send( {frequency_emoji_event: {clan_id : clan_id}})
+    return response.frequency_emoji_event
   }
 
   async listUserPermissionInChannel(clan_id: string, channel_id: string): Promise<UserPermissionInChannelListEvent> {
