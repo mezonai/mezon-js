@@ -1638,6 +1638,8 @@ export interface ApiUpdateRoleChannelRequest {
   permission_update?: Array<ApiPermissionUpdate>;
   //The ID of the role to update.
   role_id?: string;
+  //
+  user_id?: string;
 }
 
 /** Fetch a batch of zero or more users from the server. */
