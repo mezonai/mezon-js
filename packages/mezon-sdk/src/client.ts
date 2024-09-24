@@ -37,7 +37,7 @@ import {
   ApiMessageAttachment,
   ApiMessageRef
 } from "./interfaces";
-import { convertChanneltypeToChannelMode } from "./utils/helper";
+import { convertChanneltypeToChannelMode, isValidUserId } from "./utils/helper";
 import { replyMessageGenerate } from "./utils/generate_reply_message";
 const DEFAULT_HOST = "api.mezon.vn";
 const DEFAULT_PORT = "443";
@@ -265,7 +265,7 @@ export class MezonClient implements Client {
 
   async getDMchannel(userId: string) : Promise<null | ApiChannelDescription> {
     try{
-      if (!userId) return null;
+      if (!isValidUserId(userId)) return null;
 
       const request : ApiCreateChannelDescRequest = {
         clan_id: "0",
