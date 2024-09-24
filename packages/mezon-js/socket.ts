@@ -935,7 +935,7 @@ export interface Socket {
   isOpen(): boolean;
 
   /** Connect to the server. */
-  connect(session: Session, createStatus: boolean): Promise<Session>;
+  connect(session: Session, createStatus: boolean, connectTimeoutMs?: number, signal?: AbortSignal): Promise<Session>;
 
   /** Disconnect from the server. */
   disconnect(fireDisconnectEvent: boolean): void;
@@ -1185,13 +1185,13 @@ export class DefaultSocket implements Socket {
     return this.adapter.isOpen();
   }
 
-  connect(session: Session, createStatus: boolean = false, connectTimeoutMs: number = DefaultSocket.DefaultConnectTimeoutMs): Promise<Session> {
+  connect(session: Session, createStatus: boolean = false, connectTimeoutMs: number = DefaultSocket.DefaultConnectTimeoutMs, signal?: AbortSignal): Promise<Session> {
     if (this.adapter.isOpen()) {
       return Promise.resolve(session);
     }
 
     const scheme = (this.useSSL) ? "wss://" : "ws://";
-    this.adapter.connect(scheme, this.host, this.port, createStatus, session.token);
+    this.adapter.connect(scheme, this.host, this.port, createStatus, session.token, signal);
 
     this.adapter.onClose = (evt: Event) => {
       this.ondisconnect(evt);

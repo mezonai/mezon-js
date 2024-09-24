@@ -702,7 +702,7 @@ export interface Socket {
   isOpen(): boolean;
 
   /** Connect to the server. */
-  connect(session: Session, createStatus: boolean): Promise<Session>;
+  connect(session: Session, createStatus: boolean, connectTimeoutMs?: number, signal?: AbortSignal): Promise<Session>;
 
   /** Disconnect from the server. */
   disconnect(fireDisconnectEvent: boolean): void;
