@@ -90,11 +90,16 @@ export class WebSocketAdapterPb implements WebSocketAdapter {
     }
 
     close() {
-        this._socket!.close();
+        this._socket?.close();
         this._socket = undefined;
     }
 
-    connect(scheme: string, host: string, port: string, createStatus: boolean, token: string): void {
+    connect(scheme: string, host: string, port: string, createStatus: boolean, token: string, signal?: AbortSignal): void {
+        if (signal) {
+            signal.addEventListener('abort', () => {
+                this.close();
+            });
+        }
         const url = `${scheme}${host}:${port}/ws?lang=en&status=${encodeURIComponent(createStatus.toString())}&token=${encodeURIComponent(token)}&format=protobuf`;
         this._socket = new WebSocket(url);
         this._socket.binaryType = "arraybuffer";
