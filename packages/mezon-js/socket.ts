@@ -1122,7 +1122,7 @@ export interface Socket {
 
   getNotificationReactMessage(channel_id_req: string): Promise<NotifiReactMessageEvent>;
 
-  getPermissionByRoleIdChannelId(role_id: string, channel_id: string): Promise<PermissionRoleChannelListEvent>;
+  getPermissionByRoleIdChannelId(role_id: string, channel_id: string, user_id: string): Promise<PermissionRoleChannelListEvent>;
   
   getNotificationChannelCategorySetting(clan_id : string): Promise<NotificationChannelCategorySettingEvent>;
 
@@ -1828,8 +1828,8 @@ export class DefaultSocket implements Socket {
     return response.hashtag_dm_list_event
   }
 
-  async getPermissionByRoleIdChannelId(role_id: string, channel_id: string): Promise<PermissionRoleChannelListEvent> {
-    const response = await this.send({permission_role_channel_list_event: {role_id: role_id, channel_id: channel_id }});
+  async getPermissionByRoleIdChannelId(role_id: string, channel_id: string, user_id: string): Promise<PermissionRoleChannelListEvent> {
+    const response = await this.send({permission_role_channel_list_event: {role_id: role_id, channel_id: channel_id, user_id: user_id }});
     return response.permission_role_channel_list_event
   }
 
