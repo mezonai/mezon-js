@@ -1309,6 +1309,8 @@ export interface NotificationChannelCategorySetting {
   notification_setting_type: number;
   /**  */
   channel_category_title: string;
+  /**  */
+  action: number;
 }
 
 export interface NotificationChannelCategorySettingEvent {
@@ -11111,7 +11113,7 @@ export const NotifiReactMessage = {
 };
 
 function createBaseNotificationChannelCategorySetting(): NotificationChannelCategorySetting {
-  return { id: "", channel_category_label: "", notification_setting_type: 0, channel_category_title: "" };
+  return { id: "", channel_category_label: "", notification_setting_type: 0, channel_category_title: "", action: 0 };
 }
 
 export const NotificationChannelCategorySetting = {
@@ -11127,6 +11129,9 @@ export const NotificationChannelCategorySetting = {
     }
     if (message.channel_category_title !== "") {
       writer.uint32(34).string(message.channel_category_title);
+    }
+    if (message.action !== 0) {
+      writer.uint32(40).int32(message.action);
     }
     return writer;
   },
@@ -11166,6 +11171,13 @@ export const NotificationChannelCategorySetting = {
 
           message.channel_category_title = reader.string();
           continue;
+        case 5:
+          if (tag !== 40) {
+            break;
+          }
+
+          message.action = reader.int32();
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -11187,6 +11199,7 @@ export const NotificationChannelCategorySetting = {
       channel_category_title: isSet(object.channel_category_title)
         ? globalThis.String(object.channel_category_title)
         : "",
+      action: isSet(object.action) ? globalThis.Number(object.action) : 0,
     };
   },
 
@@ -11204,6 +11217,9 @@ export const NotificationChannelCategorySetting = {
     if (message.channel_category_title !== "") {
       obj.channel_category_title = message.channel_category_title;
     }
+    if (message.action !== 0) {
+      obj.action = Math.round(message.action);
+    }
     return obj;
   },
 
@@ -11220,6 +11236,7 @@ export const NotificationChannelCategorySetting = {
     message.channel_category_label = object.channel_category_label ?? "";
     message.notification_setting_type = object.notification_setting_type ?? 0;
     message.channel_category_title = object.channel_category_title ?? "";
+    message.action = object.action ?? 0;
     return message;
   },
 };
