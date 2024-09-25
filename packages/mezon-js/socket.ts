@@ -842,6 +842,8 @@ export interface NotificationChannelCategorySetting {
   notification_setting_type :number;
   //
   channel_category_title : string;
+  //
+  action: number
 }
 
 export interface NotificationChannelCategorySettingEvent {

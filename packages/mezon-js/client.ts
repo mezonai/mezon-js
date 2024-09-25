@@ -106,6 +106,7 @@ import {
   ApiStreamingChannelUserList,
   ApiRegisterStreamingChannelRequest,
   ApiRegisterStreamingChannelResponse,
+  ApiRoleList,
 } from "./api.gen";
 
 import { Session } from "./session";
@@ -2700,10 +2701,10 @@ export class Client {
   }
 
   /** Get permission of user in the clan */
-  async getPermissionOfUserInTheClan(
+  async GetRoleOfUserInTheClan(
     session: Session,
     clanId: string
-  ): Promise<ApiPermissionList> {
+  ): Promise<ApiRoleList> {
     if (
       this.autoRefreshSession &&
       session.refresh_token &&
@@ -2713,8 +2714,8 @@ export class Client {
     }
 
     return this.apiClient
-      .getPermissionOfUserInTheClan(session.token, clanId)
-      .then((response: ApiPermissionList) => {
+      .getRoleOfUserInTheClan(session.token, clanId)
+      .then((response: ApiRoleList) => {
         return Promise.resolve(response);
       });
   }
