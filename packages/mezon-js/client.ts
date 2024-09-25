@@ -107,6 +107,7 @@ import {
   ApiRegisterStreamingChannelRequest,
   ApiRegisterStreamingChannelResponse,
   ApiRoleList,
+  ApiListChannelAppsResponse,
 } from "./api.gen";
 
 import { Session } from "./session";
@@ -3555,4 +3556,44 @@ export class Client {
         return response !== undefined;
       });
   }
+
+    /** List a channel's users. */
+    async listChannelApps(
+      session: Session,
+      clanId: string,
+    ): Promise<ApiListChannelAppsResponse> {
+      if (
+        this.autoRefreshSession &&
+        session.refresh_token &&
+        session.isexpired((Date.now() + this.expiredTimespanMs) / 1000)
+      ) {
+        await this.sessionRefresh(session);
+      }
+  
+      return this.apiClient
+        .listChannelApps(
+          session.token,
+          clanId,
+        )
+        .then((response: ApiListChannelAppsResponse) => {
+          var result: ApiListChannelAppsResponse = {
+            channel_apps: [],
+          };
+  
+          if (response.channel_apps == null) {
+            return Promise.resolve(result);
+          }
+  
+          response.channel_apps!.forEach((gu) => {
+            result.channel_apps!.push({
+              id: gu.id,
+              channel_id: gu.channel_id,
+              app_id: gu.app_id,
+              clan_id: gu.clan_id,
+              url: gu.url,
+            });
+          });
+          return Promise.resolve(result);
+        });
+    }
 }

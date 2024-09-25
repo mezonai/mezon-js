@@ -428,6 +428,11 @@ export interface ApiCategoryOrderUpdate {
   order?: number;
 }
 
+export interface ApiListChannelAppsResponse {
+  //
+  channel_apps?: Array<ApiChannelAppResponse>;
+}
+
 /** Update fields in a given channel. */
 export interface ApiChangeChannelPrivateRequest {
   //The ID of the channel to update.
@@ -438,6 +443,20 @@ export interface ApiChangeChannelPrivateRequest {
   role_ids?: Array<string>;
   //The users to add.
   user_ids?: Array<string>;
+}
+
+/**  */
+export interface ApiChannelAppResponse {
+  //
+  app_id?: string;
+  //
+  channel_id?: string;
+  //
+  clan_id?: string;
+  //
+  id?: string;
+  //
+  url?: string;
 }
 
 /**  */
@@ -732,6 +751,8 @@ export interface ApiCreateCategoryDescRequest {
 
 /** Create a channel within clan. */
 export interface ApiCreateChannelDescRequest {
+  //
+  app_url?: string;
   //
   category_id?: string;
   //The channel this message belongs to.
@@ -3388,6 +3409,39 @@ export class MezonApi {
     queryParams.set("category_name", categoryName);
     queryParams.set("category_id", categoryId);
     queryParams.set("category_order", categoryOrder);
+
+    let bodyJson : string = "";
+
+    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
+    const fetchOptions = buildFetchOptions("GET", options, bodyJson);
+    if (bearerToken) {
+        fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+    }
+
+    return Promise.race([
+      fetch(fullUrl, fetchOptions).then((response) => {
+        if (response.status == 204) {
+          return response;
+        } else if (response.status >= 200 && response.status < 300) {
+          return response.json();
+        } else {
+          throw response;
+        }
+      }),
+      new Promise((_, reject) =>
+        setTimeout(reject, this.timeoutMs, "Request timed out.")
+      ),
+    ]);
+}
+
+  /** List channel apps. */
+  listChannelApps(bearerToken: string,
+      clanId?:string,
+      options: any = {}): Promise<ApiListChannelAppsResponse> {
+    
+    const urlPath = "/v2/channel-apps";
+    const queryParams = new Map<string, any>();
+    queryParams.set("clan_id", clanId);
 
     let bodyJson : string = "";
 
