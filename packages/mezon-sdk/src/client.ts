@@ -324,7 +324,7 @@ export class MezonClient implements Client {
         ref: [],
       };
       const mess = replyMessageGenerate(
-        { messageContent: msg, ...messOptions },
+        { messageContent: msg, ...messOptions, attachments, refs },
         message
       );
       return this.sendMessage(
