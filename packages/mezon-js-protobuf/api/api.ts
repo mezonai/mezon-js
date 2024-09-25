@@ -1899,6 +1899,8 @@ export interface CreateChannelDescRequest {
   channel_private: number;
   /** The users to add. */
   user_ids: string[];
+  /** app url for channel type app */
+  app_url: string | undefined;
 }
 
 /** Delete a channel the user has access to. */
@@ -2858,6 +2860,29 @@ export interface GiveCoffeeEvent {
   channel_id: string;
   /** clan id */
   clan_id: string;
+}
+
+export interface ListChannelAppsRequest {
+  /** clan id */
+  clan_id: string;
+}
+
+export interface ListChannelAppsResponse {
+  /** list of channel apps */
+  channel_apps: ChannelAppResponse[];
+}
+
+export interface ChannelAppResponse {
+  /** id */
+  id: string;
+  /** clan id */
+  clan_id: string;
+  /** channel id */
+  channel_id: string;
+  /** app id */
+  app_id: string;
+  /** app url */
+  url: string;
 }
 
 function createBaseAccount(): Account {
@@ -16159,6 +16184,7 @@ function createBaseCreateChannelDescRequest(): CreateChannelDescRequest {
     channel_label: "",
     channel_private: 0,
     user_ids: [],
+    app_url: undefined,
   };
 }
 
@@ -16187,6 +16213,9 @@ export const CreateChannelDescRequest = {
     }
     for (const v of message.user_ids) {
       writer.uint32(66).string(v!);
+    }
+    if (message.app_url !== undefined) {
+      StringValue.encode({ value: message.app_url! }, writer.uint32(74).fork()).ldelim();
     }
     return writer;
   },
@@ -16254,6 +16283,13 @@ export const CreateChannelDescRequest = {
 
           message.user_ids.push(reader.string());
           continue;
+        case 9:
+          if (tag !== 74) {
+            break;
+          }
+
+          message.app_url = StringValue.decode(reader, reader.uint32()).value;
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -16273,6 +16309,7 @@ export const CreateChannelDescRequest = {
       channel_label: isSet(object.channel_label) ? globalThis.String(object.channel_label) : "",
       channel_private: isSet(object.channel_private) ? globalThis.Number(object.channel_private) : 0,
       user_ids: globalThis.Array.isArray(object?.user_ids) ? object.user_ids.map((e: any) => globalThis.String(e)) : [],
+      app_url: isSet(object.app_url) ? String(object.app_url) : undefined,
     };
   },
 
@@ -16302,6 +16339,9 @@ export const CreateChannelDescRequest = {
     if (message.user_ids?.length) {
       obj.user_ids = message.user_ids;
     }
+    if (message.app_url !== undefined) {
+      obj.app_url = message.app_url;
+    }
     return obj;
   },
 
@@ -16318,6 +16358,7 @@ export const CreateChannelDescRequest = {
     message.channel_label = object.channel_label ?? "";
     message.channel_private = object.channel_private ?? 0;
     message.user_ids = object.user_ids?.map((e) => e) || [];
+    message.app_url = object.app_url ?? undefined;
     return message;
   },
 };
@@ -26469,6 +26510,243 @@ export const GiveCoffeeEvent = {
     message.message_ref_id = object.message_ref_id ?? "";
     message.channel_id = object.channel_id ?? "";
     message.clan_id = object.clan_id ?? "";
+    return message;
+  },
+};
+
+function createBaseListChannelAppsRequest(): ListChannelAppsRequest {
+  return { clan_id: "" };
+}
+
+export const ListChannelAppsRequest = {
+  encode(message: ListChannelAppsRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.clan_id !== "") {
+      writer.uint32(10).string(message.clan_id);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): ListChannelAppsRequest {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseListChannelAppsRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.clan_id = reader.string();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): ListChannelAppsRequest {
+    return { clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "" };
+  },
+
+  toJSON(message: ListChannelAppsRequest): unknown {
+    const obj: any = {};
+    if (message.clan_id !== "") {
+      obj.clan_id = message.clan_id;
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<ListChannelAppsRequest>, I>>(base?: I): ListChannelAppsRequest {
+    return ListChannelAppsRequest.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<ListChannelAppsRequest>, I>>(object: I): ListChannelAppsRequest {
+    const message = createBaseListChannelAppsRequest();
+    message.clan_id = object.clan_id ?? "";
+    return message;
+  },
+};
+
+function createBaseListChannelAppsResponse(): ListChannelAppsResponse {
+  return { channel_apps: [] };
+}
+
+export const ListChannelAppsResponse = {
+  encode(message: ListChannelAppsResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    for (const v of message.channel_apps) {
+      ChannelAppResponse.encode(v!, writer.uint32(10).fork()).ldelim();
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): ListChannelAppsResponse {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseListChannelAppsResponse();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.channel_apps.push(ChannelAppResponse.decode(reader, reader.uint32()));
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): ListChannelAppsResponse {
+    return {
+      channel_apps: globalThis.Array.isArray(object?.channel_apps)
+        ? object.channel_apps.map((e: any) => ChannelAppResponse.fromJSON(e))
+        : [],
+    };
+  },
+
+  toJSON(message: ListChannelAppsResponse): unknown {
+    const obj: any = {};
+    if (message.channel_apps?.length) {
+      obj.channel_apps = message.channel_apps.map((e) => ChannelAppResponse.toJSON(e));
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<ListChannelAppsResponse>, I>>(base?: I): ListChannelAppsResponse {
+    return ListChannelAppsResponse.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<ListChannelAppsResponse>, I>>(object: I): ListChannelAppsResponse {
+    const message = createBaseListChannelAppsResponse();
+    message.channel_apps = object.channel_apps?.map((e) => ChannelAppResponse.fromPartial(e)) || [];
+    return message;
+  },
+};
+
+function createBaseChannelAppResponse(): ChannelAppResponse {
+  return { id: "", clan_id: "", channel_id: "", app_id: "", url: "" };
+}
+
+export const ChannelAppResponse = {
+  encode(message: ChannelAppResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.id !== "") {
+      writer.uint32(10).string(message.id);
+    }
+    if (message.clan_id !== "") {
+      writer.uint32(18).string(message.clan_id);
+    }
+    if (message.channel_id !== "") {
+      writer.uint32(26).string(message.channel_id);
+    }
+    if (message.app_id !== "") {
+      writer.uint32(34).string(message.app_id);
+    }
+    if (message.url !== "") {
+      writer.uint32(42).string(message.url);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): ChannelAppResponse {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseChannelAppResponse();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.id = reader.string();
+          continue;
+        case 2:
+          if (tag !== 18) {
+            break;
+          }
+
+          message.clan_id = reader.string();
+          continue;
+        case 3:
+          if (tag !== 26) {
+            break;
+          }
+
+          message.channel_id = reader.string();
+          continue;
+        case 4:
+          if (tag !== 34) {
+            break;
+          }
+
+          message.app_id = reader.string();
+          continue;
+        case 5:
+          if (tag !== 42) {
+            break;
+          }
+
+          message.url = reader.string();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): ChannelAppResponse {
+    return {
+      id: isSet(object.id) ? globalThis.String(object.id) : "",
+      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
+      channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "",
+      app_id: isSet(object.app_id) ? globalThis.String(object.app_id) : "",
+      url: isSet(object.url) ? globalThis.String(object.url) : "",
+    };
+  },
+
+  toJSON(message: ChannelAppResponse): unknown {
+    const obj: any = {};
+    if (message.id !== "") {
+      obj.id = message.id;
+    }
+    if (message.clan_id !== "") {
+      obj.clan_id = message.clan_id;
+    }
+    if (message.channel_id !== "") {
+      obj.channel_id = message.channel_id;
+    }
+    if (message.app_id !== "") {
+      obj.app_id = message.app_id;
+    }
+    if (message.url !== "") {
+      obj.url = message.url;
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<ChannelAppResponse>, I>>(base?: I): ChannelAppResponse {
+    return ChannelAppResponse.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<ChannelAppResponse>, I>>(object: I): ChannelAppResponse {
+    const message = createBaseChannelAppResponse();
+    message.id = object.id ?? "";
+    message.clan_id = object.clan_id ?? "";
+    message.channel_id = object.channel_id ?? "";
+    message.app_id = object.app_id ?? "";
+    message.url = object.url ?? "";
     return message;
   },
 };
