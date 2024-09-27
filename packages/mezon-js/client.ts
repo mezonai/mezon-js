@@ -127,7 +127,7 @@ export enum ChannelType {
   CHANNEL_TYPE_VOICE = 4,
   CHANNEL_TYPE_FORUM = 5,
   CHANNEL_TYPE_STREAMING = 6,
-  CHANNEL_TYPE_THREAD = 7,
+  CHANNEL_TYPE_APP = 7,
   CHANNEL_TYPE_ANNOUNCEMENT = 8,
 }
 export enum ChannelStreamMode {
@@ -1065,7 +1065,7 @@ export class Client {
   async deleteCategoryDesc(
     session: Session,
     categoryId: string,
-    clanId: string,
+    clanId: string
   ): Promise<boolean> {
     if (
       this.autoRefreshSession &&
@@ -3541,7 +3541,10 @@ export class Client {
       });
   }
 
-  async registerStreamingChannel(session: Session, request: ApiRegisterStreamingChannelRequest) {
+  async registerStreamingChannel(
+    session: Session,
+    request: ApiRegisterStreamingChannelRequest
+  ) {
     if (
       this.autoRefreshSession &&
       session.refresh_token &&
@@ -3557,43 +3560,40 @@ export class Client {
       });
   }
 
-    /** List a channel's users. */
-    async listChannelApps(
-      session: Session,
-      clanId: string,
-    ): Promise<ApiListChannelAppsResponse> {
-      if (
-        this.autoRefreshSession &&
-        session.refresh_token &&
-        session.isexpired((Date.now() + this.expiredTimespanMs) / 1000)
-      ) {
-        await this.sessionRefresh(session);
-      }
-  
-      return this.apiClient
-        .listChannelApps(
-          session.token,
-          clanId,
-        )
-        .then((response: ApiListChannelAppsResponse) => {
-          var result: ApiListChannelAppsResponse = {
-            channel_apps: [],
-          };
-  
-          if (response.channel_apps == null) {
-            return Promise.resolve(result);
-          }
-  
-          response.channel_apps!.forEach((gu) => {
-            result.channel_apps!.push({
-              id: gu.id,
-              channel_id: gu.channel_id,
-              app_id: gu.app_id,
-              clan_id: gu.clan_id,
-              url: gu.url,
-            });
-          });
-          return Promise.resolve(result);
-        });
+  /** List a channel's users. */
+  async listChannelApps(
+    session: Session,
+    clanId: string
+  ): Promise<ApiListChannelAppsResponse> {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired((Date.now() + this.expiredTimespanMs) / 1000)
+    ) {
+      await this.sessionRefresh(session);
     }
+
+    return this.apiClient
+      .listChannelApps(session.token, clanId)
+      .then((response: ApiListChannelAppsResponse) => {
+        var result: ApiListChannelAppsResponse = {
+          channel_apps: [],
+        };
+
+        if (response.channel_apps == null) {
+          return Promise.resolve(result);
+        }
+
+        response.channel_apps!.forEach((gu) => {
+          result.channel_apps!.push({
+            id: gu.id,
+            channel_id: gu.channel_id,
+            app_id: gu.app_id,
+            clan_id: gu.clan_id,
+            url: gu.url,
+          });
+        });
+        return Promise.resolve(result);
+      });
+  }
 }

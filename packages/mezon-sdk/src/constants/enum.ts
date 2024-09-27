@@ -2,7 +2,6 @@
 
 // import { convertInternalEventToEvents } from "../utils/helper";
 
-
 export enum InternalEventsSocket {
   VoiceStartedEvent = "voice_started_event",
   VoiceEndedEvent = "voice_ended_event",
@@ -29,11 +28,11 @@ export enum InternalEventsSocket {
   UserClanRemovedEvent = "user_clan_removed_event",
   RoleEvent = "role_event",
   GiveCoffeeEvent = "give_coffee_event",
-  RoleAssignEvent = 'role_assign_event'
+  RoleAssignEvent = "role_assign_event",
 }
 
 export enum Events {
-  ChannelMessage =  InternalEventsSocket.ChannelMessage,
+  ChannelMessage = InternalEventsSocket.ChannelMessage,
   MessageReaction = InternalEventsSocket.MessageReactionEvent,
   UserChannelRemoved = InternalEventsSocket.UserChannelRemovedEvent,
   UserClanRemoved = InternalEventsSocket.UserClanRemovedEvent,
@@ -53,7 +52,7 @@ export enum ChannelType {
   CHANNEL_TYPE_VOICE = 4,
   CHANNEL_TYPE_FORUM = 5,
   CHANNEL_TYPE_STREAMING = 6,
-  CHANNEL_TYPE_THREAD = 7,
+  CHANNEL_TYPE_APP = 7,
   CHANNEL_TYPE_ANNOUNCEMENT = 8,
 }
 
