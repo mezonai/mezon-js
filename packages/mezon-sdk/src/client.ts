@@ -20,6 +20,8 @@ import {
   ApiRegisterStreamingChannelRequest,
   ApiSession,
   ApiVoiceChannelUserList,
+  MessagePayLoad,
+  MessageUserPayLoad,
   Socket,
 } from "./interfaces";
 import { MezonApi } from './api';
@@ -39,12 +41,15 @@ import {
 } from "./interfaces";
 import { convertChanneltypeToChannelMode, isValidUserId } from "./utils/helper";
 import { replyMessageGenerate } from "./utils/generate_reply_message";
+import { Stack } from "./utils/stack";
 const DEFAULT_HOST = "api.mezon.vn";
 const DEFAULT_PORT = "443";
 const DEFAULT_API_KEY = "";
 const DEFAULT_SSL = true;
 const DEFAULT_TIMEOUT_MS = 7000;
 const DEFAULT_EXPIRED_TIMESPAN_MS = 5 * 60 * 1000;
+const DEFAULT_SEND_BULK_INTERVAL = 1000;
+const DEFAULT_MESSAGE_PER_TIME = 5;
 
 
 /** A client for Mezon server. */
@@ -299,6 +304,18 @@ export class MezonClient implements Client {
       console.log(e);
       return null;
     }
+  }
+
+  sendBulkMessage(messages: MessagePayLoad[], callback: Function){
+    const stack = new Stack(DEFAULT_MESSAGE_PER_TIME, DEFAULT_SEND_BULK_INTERVAL, this, callback);
+    stack.push(messages);
+    return stack;
+  }
+
+  sendBulkMessageUser(messages: MessageUserPayLoad[], callback: Function){
+    const stack = new Stack(DEFAULT_MESSAGE_PER_TIME, DEFAULT_SEND_BULK_INTERVAL, this, callback, true);
+    stack.push(messages);
+    return stack;
   }
 
   async sendMessageUser(
