@@ -50,6 +50,28 @@ export interface ApiChannelDescription {
   usernames?: string;
 }
 
+export interface MessagePayLoad {
+  clan_id: string;
+  parent_id: string;
+  channel_id: string;
+  mode: number;
+  is_public: boolean;
+  is_parent_public: boolean;
+  msg: ChannelMessageContent;
+  mentions?: Array<ApiMessageMention>;
+  attachments?: Array<ApiMessageAttachment>;
+  ref?: Array<ApiMessageRef>;
+}
+
+
+export interface MessageUserPayLoad {
+  userId: string;
+  msg: string;
+  messOptions?: {[x: string]: any} ;
+  attachments?: Array<ApiMessageAttachment>;
+  refs?: Array<ApiMessageRef>;
+}
+
 export interface ApiCreateChannelDescRequest {
     //
     category_id?: string;
@@ -403,4 +425,5 @@ export interface Client {
   sendMessage: (clan_id: string, parent_id: string, channel_id: string, mode: number, is_public: boolean, is_parent_public: boolean, msg: ChannelMessageContent, mentions?: Array<ApiMessageMention>, attachments?: Array<ApiMessageAttachment>, ref?: Array<ApiMessageRef>) => Promise<ChannelMessageAck>;
   on: (event: string, func: Function) => void;
   remove: (event: string, func: (...args: any[]) => void) => void;
+  sendMessageUser: (userId: string, msg: string, messOptions: {[x: string]: any}, attachments: Array<ApiMessageAttachment>, refs: Array<ApiMessageRef>) => Promise<ChannelMessageAck>; 
 }
