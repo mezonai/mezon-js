@@ -3469,11 +3469,11 @@ export class MezonApi {
 
   /** List a channel's message history. */
   listChannelMessages(bearerToken: string,
+      clanId:string,  
       channelId:string,
-      clanId?:string,
       messageId?:string,
-      limit?:number,
       direction?:number,
+      limit?:number,
       options: any = {}): Promise<ApiChannelMessageList> {
     
     if (channelId === null || channelId === undefined) {
