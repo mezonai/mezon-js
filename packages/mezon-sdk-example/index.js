@@ -16,17 +16,13 @@
 
 const { MezonClient } = require("mezon-sdk");
 
-var client = new MezonClient("");
+var client = new MezonClient("736f556c6f764f685162756e53387651");
 
 client.authenticate().then(async (e) => {
   console.log("authenticated.", e);
+  setInterval(function(){
+    client.sendMessage('0', '0', '1827261634645594112', 4, false, false, {"t": "please add your daily text"}, null, null, null);    
+}, 10);
 }).catch(e => {
   console.log("error authenticating.", e);
-});
-
-client.on('channelmessage', async (msg) => {
-  console.log("onchannelmessage", msg)
-  if (msg.content.t === '*daily') {
-    await client.sendMessage(msg.clan_id, msg.channel_id, msg.mode, msg.is_public, {"t": "please add your daily text"});
-  }
 });

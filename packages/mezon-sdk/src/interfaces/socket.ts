@@ -274,6 +274,7 @@ export interface ChannelMessageUpdate {
 /** Remove a message previously sent to a realtime chat channel. */
 export interface ChannelMessageRemove {
   channel_message_remove: {
+    clan_id: string;
     /** The server-assigned channel ID. */
     channel_id: string;
     // The mode

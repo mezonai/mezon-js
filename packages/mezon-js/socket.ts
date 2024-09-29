@@ -184,8 +184,10 @@ export interface LastPinMessageEvent {
 
 /** Last seen message by user */
 export interface LastSeenMessageEvent {
+  // The clan id
+  clan_id: string;
   /** The channel this message belongs to. */
-  channel_id:string;
+  channel_id: string;
   // The mode
   mode: number;
   // The channel label
@@ -307,8 +309,10 @@ interface ChannelMessageUpdate {
 /** Remove a message previously sent to a realtime chat channel. */
 interface ChannelMessageRemove {
   channel_message_remove: {
+    /** The clan id */
+    clan_id: string;
     /** The server-assigned channel ID. */
-    channel_id:string;
+    channel_id: string;
     // The mode
     mode: number;
     // The channel label
