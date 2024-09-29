@@ -3470,9 +3470,10 @@ export class MezonApi {
   /** List a channel's message history. */
   listChannelMessages(bearerToken: string,
       channelId:string,
+      clanId?:string,
       messageId?:string,
-      direction?:number,
       limit?:number,
+      direction?:number,
       options: any = {}): Promise<ApiChannelMessageList> {
     
     if (channelId === null || channelId === undefined) {
@@ -3481,6 +3482,7 @@ export class MezonApi {
     const urlPath = "/v2/channel/{channelId}"
         .replace("{channelId}", encodeURIComponent(String(channelId)));
     const queryParams = new Map<string, any>();
+    queryParams.set("clan_id", clanId);
     queryParams.set("message_id", messageId);
     queryParams.set("limit", limit);
     queryParams.set("direction", direction);

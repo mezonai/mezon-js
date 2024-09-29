@@ -1331,6 +1331,7 @@ export class Client {
   /** List a channel's message history. */
   async listChannelMessages(
     session: Session,
+    clanId: string,
     channelId: string,
     messageId?: string,
     direction?: number,
@@ -1347,6 +1348,7 @@ export class Client {
     return this.apiClient
       .listChannelMessages(
         session.token,
+        clanId,
         channelId,
         messageId,
         direction,
