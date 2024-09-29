@@ -687,6 +687,9 @@ export interface EventEmoji {
 	source:    string
 	category:  string
 	action:    number
+  user_id: string
+  logo: string
+  clan_name: string
 }
 
 export interface UserPermissionInChannelListEvent {
