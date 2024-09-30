@@ -394,6 +394,12 @@ export interface ApiAllUsersAddChannelResponse {
   user_ids?: Array<string>;
 }
 
+/**  */
+export interface ApiAllUserClans {
+  //
+  users?: Array<ApiUser>;
+}
+
 /** App information. */
 export interface ApiApp {
   //
@@ -1577,6 +1583,20 @@ export interface ApiRoleList {
   prev_cursor?: string;
   //A list of role.
   roles?: Array<ApiRole>;
+}
+
+/**  */
+export interface ApiRoleListEventResponse {
+  //
+  clan_id?: string;
+  //
+  cursor?: string;
+  //
+  limit?: string;
+  //
+  roles?: ApiRoleList;
+  //
+  state?: string;
 }
 
 /**  */
@@ -6435,6 +6455,45 @@ export class MezonApi {
     ]);
 }
 
+  /** ListRoles */
+  listRoles(bearerToken: string,
+      clanId?:string,
+      limit?:string,
+      state?:string,
+      cursor?:string,
+      options: any = {}): Promise<ApiRoleListEventResponse> {
+    
+    const urlPath = "/v2/roles";
+    const queryParams = new Map<string, any>();
+    queryParams.set("clan_id", clanId);
+    queryParams.set("limit", limit);
+    queryParams.set("state", state);
+    queryParams.set("cursor", cursor);
+
+    let bodyJson : string = "";
+
+    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
+    const fetchOptions = buildFetchOptions("GET", options, bodyJson);
+    if (bearerToken) {
+        fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+    }
+
+    return Promise.race([
+      fetch(fullUrl, fetchOptions).then((response) => {
+        if (response.status == 204) {
+          return response;
+        } else if (response.status >= 200 && response.status < 300) {
+          return response.json();
+        } else {
+          throw response;
+        }
+      }),
+      new Promise((_, reject) =>
+        setTimeout(reject, this.timeoutMs, "Request timed out.")
+      ),
+    ]);
+}
+
   /** Create a new role for clan. */
   createRole(bearerToken: string,
       body:ApiCreateRoleRequest,
@@ -7478,6 +7537,37 @@ export class MezonApi {
 
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("PUT", options, bodyJson);
+    if (bearerToken) {
+        fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+    }
+
+    return Promise.race([
+      fetch(fullUrl, fetchOptions).then((response) => {
+        if (response.status == 204) {
+          return response;
+        } else if (response.status >= 200 && response.status < 300) {
+          return response.json();
+        } else {
+          throw response;
+        }
+      }),
+      new Promise((_, reject) =>
+        setTimeout(reject, this.timeoutMs, "Request timed out.")
+      ),
+    ]);
+}
+
+  /** ListUserClansByUserId */
+  listUserClansByUserId(bearerToken: string,
+      options: any = {}): Promise<ApiAllUserClans> {
+    
+    const urlPath = "/v2/users/clans";
+    const queryParams = new Map<string, any>();
+
+    let bodyJson : string = "";
+
+    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
+    const fetchOptions = buildFetchOptions("GET", options, bodyJson);
     if (bearerToken) {
         fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
     }

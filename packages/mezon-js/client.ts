@@ -116,6 +116,8 @@ import {
   ApiEmojiListedResponse,
   ApiStickerListedResponse,
   ApiAllUsersAddChannelResponse,
+  ApiRoleListEventResponse,
+  ApiAllUserClans,
 } from "./api.gen";
 
 import { Session } from "./session";
@@ -3706,7 +3708,7 @@ export class Client {
   async hashtagDMList(
     session: Session,
     userId: Array<string>,
-    limit:number
+    limit: number
   ): Promise<ApiHashtagDmList> {
     if (
       this.autoRefreshSession &&
@@ -3723,9 +3725,7 @@ export class Client {
       });
   }
 
-  async listChannelByUserId(
-    session: Session
-  ): Promise<ApiChannelDescList> {
+  async listChannelByUserId(session: Session): Promise<ApiChannelDescList> {
     if (
       this.autoRefreshSession &&
       session.refresh_token &&
@@ -3741,8 +3741,11 @@ export class Client {
       });
   }
 
-
-  async listUsersAddChannelByChannelId(session: Session, channel_id : string, limit : number): Promise<ApiAllUsersAddChannelResponse> {
+  async listUsersAddChannelByChannelId(
+    session: Session,
+    channel_id: string,
+    limit: number
+  ): Promise<ApiAllUsersAddChannelResponse> {
     if (
       this.autoRefreshSession &&
       session.refresh_token &&
@@ -3758,7 +3761,9 @@ export class Client {
       });
   }
 
-  async getListEmojisByUserId(session: Session): Promise<ApiEmojiListedResponse> {
+  async getListEmojisByUserId(
+    session: Session
+  ): Promise<ApiEmojiListedResponse> {
     if (
       this.autoRefreshSession &&
       session.refresh_token &&
@@ -3774,8 +3779,9 @@ export class Client {
       });
   }
 
-  
-  async getListStickersByUserId(session: Session): Promise<ApiStickerListedResponse> {
+  async getListStickersByUserId(
+    session: Session
+  ): Promise<ApiStickerListedResponse> {
     if (
       this.autoRefreshSession &&
       session.refresh_token &&
@@ -3788,6 +3794,49 @@ export class Client {
       .getListStickersByUserId(session.token)
       .then((response: any) => {
         return Promise.resolve(response);
+      });
+  }
+
+  async listUserClansByUserId(session: Session): Promise<ApiAllUserClans> {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired((Date.now() + this.expiredTimespanMs) / 1000)
+    ) {
+      await this.sessionRefresh(session);
+    }
+
+    return this.apiClient
+      .listUserClansByUserId(session.token)
+      .then((response: ApiAllUserClans) => {
+        return Promise.resolve(response);
+      });
+  }
+
+  async listRoles(
+    session: Session,
+    clanId?: string,
+    limit?: string,
+    state?: string,
+    cursor?: string
+  ): Promise<ApiRoleListEventResponse> {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired((Date.now() + this.expiredTimespanMs) / 1000)
+    ) {
+      await this.sessionRefresh(session);
+    }
+
+    return this.apiClient
+      .listRoles(session.token, clanId, limit, state, cursor)
+      .then((response: ApiRoleListEventResponse) => {
+        var result: ApiRoleListEventResponse = {
+          clan_id: clanId,
+          roles: response.roles,
+        };
+
+        return Promise.resolve(result);
       });
   }
 }
