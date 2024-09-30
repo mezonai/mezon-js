@@ -42,6 +42,10 @@ export interface MezonChangeChannelCategoryBody {
   channel_id?: string;
 }
 
+/**  */
+export interface MezonDeleteWebhookByIdBody {
+}
+
 /** Update app information. */
 export interface MezonUpdateAppBody {
   //about the app.
@@ -274,6 +278,18 @@ export interface ApiAccount {
   wallet?: string;
 }
 
+/** Send a app token to the server. Used with authenticate/link/unlink. */
+export interface ApiAccountApp {
+  //
+  appid?: string;
+  //
+  appname?: string;
+  //The account token when create apps to access their profile API.
+  token?: string;
+  //Extra information that will be bundled in the session token.
+  vars?: Record<string, string>;
+}
+
 /** Send a Apple Sign In token to the server. Used with authenticate/link/unlink. */
 export interface ApiAccountApple {
   //The ID token received from Apple to validate.
@@ -368,6 +384,16 @@ export interface ApiAddRoleChannelDescRequest {
   role_ids?: Array<string>;
 }
 
+/**  */
+export interface ApiAllUsersAddChannelResponse {
+  //
+  channel_id?: string;
+  //
+  limit?: number;
+  //
+  user_ids?: Array<string>;
+}
+
 /** App information. */
 export interface ApiApp {
   //
@@ -398,6 +424,12 @@ export interface ApiAppList {
   next_cursor?: string;
   //Approximate total number of apps.
   total_count?: number;
+}
+
+/** Authenticate against the server with a device ID. */
+export interface ApiAuthenticateRequest {
+  //The App account details.
+  account?: ApiAccountApp;
 }
 
 /**  */
@@ -694,6 +726,26 @@ export interface ApiClanDescProfile {
 }
 
 /**  */
+export interface ApiClanEmoji {
+  //
+  category?: string;
+  //
+  clan_id?: string;
+  //
+  clan_name?: string;
+  //
+  creator_id?: string;
+  //
+  id?: string;
+  //
+  logo?: string;
+  //
+  shortname?: string;
+  //
+  src?: string;
+}
+
+/**  */
 export interface ApiClanEmojiCreateRequest {
   //
   category?: string;
@@ -717,6 +769,28 @@ export interface ApiClanProfile {
   nick_name?: string;
   //
   user_id?: string;
+}
+
+/**  */
+export interface ApiClanSticker {
+  //
+  category?: string;
+  //
+  clan_id?: string;
+  //
+  clan_name?: string;
+  //
+  create_time?: string;
+  //
+  creator_id?: string;
+  //
+  id?: string;
+  //
+  logo?: string;
+  //
+  shortname?: string;
+  //
+  source?: string;
 }
 
 /**  */
@@ -925,6 +999,11 @@ export interface ApiRegisterStreamingChannelResponse {
 export interface ApiListStreamingChannelsResponse {
   //
   streaming_channels?: Array<ApiStreamingChannelResponse>;
+}
+
+export interface ApiEmojiListedResponse {
+  //
+  emoji_list?: Array<ApiClanEmoji>;
 }
 
 /**  */
@@ -1192,6 +1271,17 @@ export interface ApiMessageReaction {
   is_parent_public?: boolean;
 }
 
+export interface ApiListChannelAppsResponse {
+  //
+  channel_apps?: Array<ApiChannelAppResponse>;
+}
+
+/**  */
+export interface ApiListStreamingChannelsResponse {
+  //
+  streaming_channels?: Array<ApiStreamingChannelResponse>;
+}
+
 /**  */
 export interface ApiMessageRef {
   //
@@ -1302,6 +1392,43 @@ export interface ApiNotificationUserChannel {
   time_mute?: string;
 }
 
+/**  */
+export interface ApiOssrsHttpCallbackRequest {
+  //
+  action?: string;
+  //
+  app?: string;
+  //
+  client_id?: string;
+  //
+  ip?: string;
+  //
+  page_url?: string;
+  //
+  param?: string;
+  //
+  server_id?: string;
+  //
+  service_id?: string;
+  //
+  stream?: string;
+  //
+  stream_id?: string;
+  //
+  stream_url?: string;
+  //
+  tc_url?: string;
+  //
+  vhost?: string;
+}
+
+/**  */
+export interface ApiOssrsHttpCallbackResponse {
+  //
+  code?: number;
+  //
+  msg?: string;
+}
 /**  */
 export interface ApiPermission {
   //
@@ -1593,6 +1720,12 @@ export interface ApiSortParam {
 }
 
 /**  */
+export interface ApiStickerListedResponse {
+  //
+  stickers?: Array<ApiClanSticker>;
+}
+
+/**  */
 export interface ApiStreamingChannelResponse {
   //
   channel_id?: string;
@@ -1855,6 +1988,18 @@ export interface ApiWebhookGenerateResponse {
 export interface ApiWebhookListResponse {
   //
   webhooks?: Array<ApiWebhook>;
+}
+
+/** Represents an event to be passed through the server to registered event handlers. */
+export interface MezonapiEvent {
+  //True if the event came directly from a client call, false otherwise.
+  external?: boolean;
+  //An event name, type, category, or identifier.
+  name?: string;
+  //Arbitrary event property values.
+  properties?: Record<string, string>;
+  //The time when the event was triggered.
+  timestamp?: string;
 }
 
 /**  */
@@ -3840,6 +3985,41 @@ export class MezonApi {
     ]);
 }
 
+  /** list user add channel by channel ids */
+  listUsersAddChannelByChannelId(bearerToken: string,
+      channelId?:string,
+      limit?:number,
+      options: any = {}): Promise<ApiAllUsersAddChannelResponse> {
+    
+    const urlPath = "/v2/channeldesc/users/add";
+    const queryParams = new Map<string, any>();
+    queryParams.set("channel_id", channelId);
+    queryParams.set("limit", limit);
+
+    let bodyJson : string = "";
+
+    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
+    const fetchOptions = buildFetchOptions("GET", options, bodyJson);
+    if (bearerToken) {
+        fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+    }
+
+    return Promise.race([
+      fetch(fullUrl, fetchOptions).then((response) => {
+        if (response.status == 204) {
+          return response;
+        } else if (response.status >= 200 && response.status < 300) {
+          return response.json();
+        } else {
+          throw response;
+        }
+      }),
+      new Promise((_, reject) =>
+        setTimeout(reject, this.timeoutMs, "Request timed out.")
+      ),
+    ]);
+}
+
   /** Delete a channel by ID. */
   deleteChannelDesc(bearerToken: string,
       channelId:string,
@@ -4615,6 +4795,37 @@ export class MezonApi {
 
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("PATCH", options, bodyJson);
+    if (bearerToken) {
+        fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+    }
+
+    return Promise.race([
+      fetch(fullUrl, fetchOptions).then((response) => {
+        if (response.status == 204) {
+          return response;
+        } else if (response.status >= 200 && response.status < 300) {
+          return response.json();
+        } else {
+          throw response;
+        }
+      }),
+      new Promise((_, reject) =>
+        setTimeout(reject, this.timeoutMs, "Request timed out.")
+      ),
+    ]);
+}
+
+  /** get list emoji by user id */
+  getListEmojisByUserId(bearerToken: string,
+      options: any = {}): Promise<ApiEmojiListedResponse> {
+    
+    const urlPath = "/v2/emojis";
+    const queryParams = new Map<string, any>();
+
+    let bodyJson : string = "";
+
+    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
+    const fetchOptions = buildFetchOptions("GET", options, bodyJson);
     if (bearerToken) {
         fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
     }
@@ -5905,6 +6116,42 @@ export class MezonApi {
     ]);
 }
 
+  /** Ossrs http callback. */
+  streamingServerCallback(bearerToken: string,
+      body:ApiOssrsHttpCallbackRequest,
+      options: any = {}): Promise<ApiOssrsHttpCallbackResponse> {
+    
+    if (body === null || body === undefined) {
+      throw new Error("'body' is a required parameter but is null or undefined.");
+    }
+    const urlPath = "/v2/ossrs/callback";
+    const queryParams = new Map<string, any>();
+
+    let bodyJson : string = "";
+    bodyJson = JSON.stringify(body || {});
+
+    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
+    const fetchOptions = buildFetchOptions("POST", options, bodyJson);
+    if (bearerToken) {
+        fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+    }
+
+    return Promise.race([
+      fetch(fullUrl, fetchOptions).then((response) => {
+        if (response.status == 204) {
+          return response;
+        } else if (response.status >= 200 && response.status < 300) {
+          return response.json();
+        } else {
+          throw response;
+        }
+      }),
+      new Promise((_, reject) =>
+        setTimeout(reject, this.timeoutMs, "Request timed out.")
+      ),
+    ]);
+}
+
   /** set permission role channel. */
   setRoleChannelPermission(bearerToken: string,
       body:ApiUpdateRoleChannelRequest,
@@ -6681,6 +6928,37 @@ export class MezonApi {
 
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("PATCH", options, bodyJson);
+    if (bearerToken) {
+        fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+    }
+
+    return Promise.race([
+      fetch(fullUrl, fetchOptions).then((response) => {
+        if (response.status == 204) {
+          return response;
+        } else if (response.status >= 200 && response.status < 300) {
+          return response.json();
+        } else {
+          throw response;
+        }
+      }),
+      new Promise((_, reject) =>
+        setTimeout(reject, this.timeoutMs, "Request timed out.")
+      ),
+    ]);
+}
+
+  /** get list sticker by user id */
+  getListStickersByUserId(bearerToken: string,
+      options: any = {}): Promise<ApiStickerListedResponse> {
+    
+    const urlPath = "/v2/stickers";
+    const queryParams = new Map<string, any>();
+
+    let bodyJson : string = "";
+
+    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
+    const fetchOptions = buildFetchOptions("GET", options, bodyJson);
     if (bearerToken) {
         fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
     }
