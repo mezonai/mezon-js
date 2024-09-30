@@ -108,6 +108,9 @@ import {
   ApiRegisterStreamingChannelResponse,
   ApiRoleList,
   ApiListChannelAppsResponse,
+  ApiStickerListedResponse,
+  ApiEmojiListedResponse,
+  ApiAllUsersAddChannelResponse,
 } from "./api.gen";
 
 import { Session } from "./session";
@@ -3597,6 +3600,54 @@ export class Client {
           });
         });
         return Promise.resolve(result);
+      });
+  }
+
+  async getListStickersByUserId(session: Session): Promise<ApiStickerListedResponse> {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired((Date.now() + this.expiredTimespanMs) / 1000)
+    ) {
+      await this.sessionRefresh(session);
+    }
+
+    return this.apiClient
+      .getListStickersByUserId(session.token)
+      .then((response: any) => {
+        return Promise.resolve(response);
+      });
+  }
+
+  async getListEmojisByUserId(session: Session): Promise<ApiEmojiListedResponse> {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired((Date.now() + this.expiredTimespanMs) / 1000)
+    ) {
+      await this.sessionRefresh(session);
+    }
+
+    return this.apiClient
+      .getListEmojisByUserId(session.token)
+      .then((response: any) => {
+        return Promise.resolve(response);
+      });
+  }
+
+  async listUsersAddChannelByChannelId(session: Session, channel_id : string, limit : number): Promise<ApiAllUsersAddChannelResponse> {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired((Date.now() + this.expiredTimespanMs) / 1000)
+    ) {
+      await this.sessionRefresh(session);
+    }
+
+    return this.apiClient
+      .listUsersAddChannelByChannelId(session.token, channel_id, limit)
+      .then((response: any) => {
+        return Promise.resolve(response);
       });
   }
 }
