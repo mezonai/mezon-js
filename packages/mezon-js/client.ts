@@ -108,6 +108,8 @@ import {
   ApiRegisterStreamingChannelResponse,
   ApiRoleList,
   ApiListChannelAppsResponse,
+  ApiRoleListEventResponse,
+  ApiAllUserClans,
 } from "./api.gen";
 
 import { Session } from "./session";
@@ -3596,6 +3598,49 @@ export class Client {
             url: gu.url,
           });
         });
+        return Promise.resolve(result);
+      });
+  }
+
+  async listUserClansByUserId(session: Session): Promise<ApiAllUserClans> {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired((Date.now() + this.expiredTimespanMs) / 1000)
+    ) {
+      await this.sessionRefresh(session);
+    }
+
+    return this.apiClient
+      .listUserClansByUserId(session.token)
+      .then((response: ApiAllUserClans) => {
+        return Promise.resolve(response);
+      });
+  }
+
+  async listRoles(
+    session: Session,
+    clanId?: string,
+    limit?: string,
+    state?: string,
+    cursor?: string
+  ): Promise<ApiRoleListEventResponse> {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired((Date.now() + this.expiredTimespanMs) / 1000)
+    ) {
+      await this.sessionRefresh(session);
+    }
+
+    return this.apiClient
+      .listRoles(session.token, clanId, limit, state, cursor)
+      .then((response: ApiRoleListEventResponse) => {
+        var result: ApiRoleListEventResponse = {
+          clan_id: clanId,
+          roles: response.roles,
+        };
+
         return Promise.resolve(result);
       });
   }
