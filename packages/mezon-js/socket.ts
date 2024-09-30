@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { ApiChannelDescList, ApiChannelMessageHeader, ApiCreateEventRequest, ApiGiveCoffeeEvent, ApiHashtagDmList, ApiMessageAttachment, ApiMessageMention, ApiMessageReaction, ApiMessageRef, ApiNotification, ApiNotificationChannelCategorySettingList, ApiPermissionList, ApiRole, ApiRoleList, ApiRpc, ApiUser} from "./api.gen";
+import { ApiChannelMessageHeader, ApiCreateEventRequest, ApiGiveCoffeeEvent, ApiMessageAttachment, ApiMessageMention, ApiMessageReaction, ApiMessageRef, ApiNotification, ApiPermissionList, ApiPermissionUpdate, ApiRole, ApiRoleList, ApiRpc, ApiUser} from "./api.gen";
 import {Session} from "./session";
 import {ChannelMessage, Notification} from "./client";
 import {WebSocketAdapter, WebSocketAdapterText} from "./web_socket_adapter"
@@ -724,7 +724,7 @@ export interface ClanEmoji {
 /**  */
 export interface ChannelDescListEvent {
   // 
-  channeldesc?: ApiChannelDescList;
+  channeldesc?: Array<ChannelDescription>;
 }
 
 /**  */
@@ -762,7 +762,7 @@ export interface HashtagDmListEvent {
   // Max number of records to return. Between 1 and 100.
   limit?: number;
   // A list of channel.
-  hashtag_dm?: ApiHashtagDmList;
+  hashtag_dm?: Array<HashtagDm>;
 }
 
 // hashtagDM
@@ -855,7 +855,7 @@ export interface NotificationChannelCategorySetting {
 
 export interface NotificationChannelCategorySettingEvent {
   clan_id? : string;
-  notification_channel_category_settings_list?: ApiNotificationChannelCategorySettingList
+  notification_channel_category_settings_list?: NotificationChannelCategorySetting[]
 }
 
 export interface UserEmojiUsage {
@@ -936,6 +936,17 @@ export interface StreamingEndedEvent {
   clan_id: string;
   /** channel id */
   channel_id: string;
+}
+
+export interface SetPermissionChannelEvent {
+  /** Role ID */
+  role_id: string;
+  /** User ID */
+  user_id: string;
+  /** Channel ID */
+  channel_id: string;
+  /** List permission update */
+  permission_updates: ApiPermissionUpdate[];
 }
 
 /** A socket connection to Mezon server. */
@@ -1120,7 +1131,7 @@ export interface Socket {
   listUserClansByUserId(): Promise<AllUserClans>;
 
   listUsersAddChannelByChannelId(channelId: string, limit: number): Promise<AllUsersAddChannelEvent>;
-
+  
   hashtagDMList(user_id: Array<string>, limit: number): Promise<HashtagDmListEvent>;
 
   getNotificationChannelSetting(channel_id: string): Promise<NotificationChannelSettingEvent>;
@@ -1132,7 +1143,7 @@ export interface Socket {
   getNotificationReactMessage(channel_id_req: string): Promise<NotifiReactMessageEvent>;
 
   getPermissionByRoleIdChannelId(role_id: string, channel_id: string, user_id: string): Promise<PermissionRoleChannelListEvent>;
-
+  
   getNotificationChannelCategorySetting(clan_id : string): Promise<NotificationChannelCategorySettingEvent>;
 
   oneventcreated: (clan_event_created: ApiCreateEventRequest) => void;
@@ -1151,6 +1162,7 @@ export interface Socket {
 
   onstreamingchannelleaved: (streaming_leaved_event: StreamingLeavedEvent) => void;
 
+  onsetpermissionchannel: (set_permission_channel_event: SetPermissionChannelEvent) => void;
 }
 
 /** Reports an error received from a socket message. */
@@ -1346,7 +1358,9 @@ export class DefaultSocket implements Socket {
           this.onstreamingchanneljoined(<StreamingJoinedEvent>message.streaming_joined_event);
         } else if(message.streaming_leaved_event){
           this.onstreamingchannelleaved(<StreamingLeavedEvent>message.streaming_leaved_event);
-        } else {
+        } else if(message.set_permission_channel_event){
+          this.onsetpermissionchannel(<SetPermissionChannelEvent>message.set_permission_channel_event);
+        }else {
           if (this.verbose && window && window.console) {
             console.log("Unrecognized message received: %o", message);
           }
@@ -1648,6 +1662,12 @@ export class DefaultSocket implements Socket {
     }
   }
   
+  onsetpermissionchannel(set_permission_channel_event: SetPermissionChannelEvent){
+    if (this.verbose && window && window.console) {
+      console.log(set_permission_channel_event);
+    }
+  }
+
   send(message: ChannelJoin | ChannelLeave | ChannelMessageSend | ChannelMessageUpdate | CustomStatusEvent |
     ChannelMessageRemove | MessageTypingEvent | LastSeenMessageEvent | Rpc | StatusFollow | StatusUnfollow | StatusUpdate | Ping, sendTimeout = DefaultSocket.DefaultSendTimeoutMs): Promise<any> {
     const untypedMessage = message as any;
