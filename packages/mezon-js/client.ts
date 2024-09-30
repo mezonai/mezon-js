@@ -108,6 +108,11 @@ import {
   ApiRegisterStreamingChannelResponse,
   ApiRoleList,
   ApiListChannelAppsResponse,
+  ApiNotificationChannelCategorySettingList,
+  ApiNotificationUserChannel,
+  ApiNotificationSetting,
+  ApiNotifiReactMessage,
+  ApiHashtagDmList,
 } from "./api.gen";
 
 import { Session } from "./session";
@@ -3597,6 +3602,139 @@ export class Client {
           });
         });
         return Promise.resolve(result);
+      });
+  }
+
+  async getChannelCategoryNotiSettingsList(
+    session: Session,
+    clanId: string
+  ): Promise<ApiNotificationChannelCategorySettingList> {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired((Date.now() + this.expiredTimespanMs) / 1000)
+    ) {
+      await this.sessionRefresh(session);
+    }
+
+    return this.apiClient
+      .getChannelCategoryNotiSettingsList(session.token, clanId)
+      .then((response: ApiNotificationChannelCategorySettingList) => {
+        return Promise.resolve(response);
+      });
+  }
+
+  async getNotificationCategory(
+    session: Session,
+    categoryId: string
+  ): Promise<ApiNotificationUserChannel> {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired((Date.now() + this.expiredTimespanMs) / 1000)
+    ) {
+      await this.sessionRefresh(session);
+    }
+
+    return this.apiClient
+      .getNotificationCategory(session.token, categoryId)
+      .then((response: ApiNotificationUserChannel) => {
+        return Promise.resolve(response);
+      });
+  }
+
+  async getNotificationChannel(
+    session: Session,
+    channelId: string
+  ): Promise<ApiNotificationUserChannel> {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired((Date.now() + this.expiredTimespanMs) / 1000)
+    ) {
+      await this.sessionRefresh(session);
+    }
+
+    return this.apiClient
+      .getNotificationChannel(session.token, channelId)
+      .then((response: ApiNotificationUserChannel) => {
+        return Promise.resolve(response);
+      });
+  }
+
+  async getNotificationClan(
+    session: Session,
+    clanId: string
+  ): Promise<ApiNotificationSetting> {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired((Date.now() + this.expiredTimespanMs) / 1000)
+    ) {
+      await this.sessionRefresh(session);
+    }
+
+    return this.apiClient
+      .getNotificationClan(session.token, clanId)
+      .then((response: ApiNotificationSetting) => {
+        return Promise.resolve(response);
+      });
+  }
+
+  async getNotificationReactMessage(
+    session: Session,
+    channelId: string
+  ): Promise<ApiNotifiReactMessage> {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired((Date.now() + this.expiredTimespanMs) / 1000)
+    ) {
+      await this.sessionRefresh(session);
+    }
+
+    return this.apiClient
+      .getNotificationReactMessage(session.token, channelId)
+      .then((response: ApiNotifiReactMessage) => {
+        return Promise.resolve(response);
+      });
+  }
+
+  async hashtagDMList(
+    session: Session,
+    userId: Array<string>,
+    limit:number
+  ): Promise<ApiHashtagDmList> {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired((Date.now() + this.expiredTimespanMs) / 1000)
+    ) {
+      await this.sessionRefresh(session);
+    }
+
+    return this.apiClient
+      .hashtagDMList(session.token, userId, limit)
+      .then((response: ApiHashtagDmList) => {
+        return Promise.resolve(response);
+      });
+  }
+
+  async listChannelByUserId(
+    session: Session
+  ): Promise<ApiChannelDescList> {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired((Date.now() + this.expiredTimespanMs) / 1000)
+    ) {
+      await this.sessionRefresh(session);
+    }
+
+    return this.apiClient
+      .listChannelByUserId(session.token)
+      .then((response: ApiChannelDescList) => {
+        return Promise.resolve(response);
       });
   }
 }

@@ -1841,6 +1841,8 @@ export interface ChannelDescription {
   metadata: string[];
   /** about_me */
   about_me: string[];
+  /** clan_name */
+  clan_name: string;
 }
 
 /** A list of channel description, usually a result of a list operation. */
@@ -2095,6 +2097,12 @@ export interface NotificationChannel {
 }
 
 /**  */
+export interface NotificationClan {
+  /**  */
+  clan_id: string;
+}
+
+/**  */
 export interface NotificationSettingList {
   /** A list of notification setting. */
   notification_setting: NotificationSetting[];
@@ -2122,6 +2130,54 @@ export interface SetMuteNotificationRequest {
   id: string;
   notification_type: number;
   active: number;
+}
+
+export interface HashtagDmListRequest {
+  /** user Id */
+  user_id: string[];
+  /** Max number of records to return. Between 1 and 100. */
+  limit: number | undefined;
+}
+
+export interface HashtagDmList {
+  hashtag_dm: HashtagDm[];
+}
+
+/** hashtagDM */
+export interface HashtagDm {
+  /** The channel id. */
+  channel_id: string;
+  /** The channel lable */
+  channel_label: string;
+  /** The clan of this channel */
+  clan_id: string;
+  /** The clan name */
+  clan_name: string;
+  /**  */
+  meeting_code: string;
+  /**  */
+  type: number;
+  /**  */
+  channel_private: number;
+  /**  */
+  parrent_id: string;
+}
+
+export interface NotificationChannelCategorySettingList {
+  notification_channel_category_settings_list: NotificationChannelCategorySetting[];
+}
+
+export interface NotificationChannelCategorySetting {
+  /** Notification id */
+  id: string;
+  /**  */
+  channel_category_label: string;
+  /** Notification title */
+  notification_setting_type: number;
+  /**  */
+  channel_category_title: string;
+  /**  */
+  action: number;
 }
 
 /** set default notification */
@@ -15465,6 +15521,7 @@ function createBaseChannelDescription(): ChannelDescription {
     update_time_seconds: 0,
     metadata: [],
     about_me: [],
+    clan_name: "",
   };
 }
 
@@ -15543,6 +15600,9 @@ export const ChannelDescription = {
     }
     for (const v of message.about_me) {
       writer.uint32(194).string(v!);
+    }
+    if (message.clan_name !== "") {
+      writer.uint32(202).string(message.clan_name);
     }
     return writer;
   },
@@ -15732,6 +15792,13 @@ export const ChannelDescription = {
 
           message.about_me.push(reader.string());
           continue;
+        case 25:
+          if (tag !== 202) {
+            break;
+          }
+
+          message.clan_name = reader.string();
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -15775,6 +15842,7 @@ export const ChannelDescription = {
       update_time_seconds: isSet(object.update_time_seconds) ? globalThis.Number(object.update_time_seconds) : 0,
       metadata: globalThis.Array.isArray(object?.metadata) ? object.metadata.map((e: any) => globalThis.String(e)) : [],
       about_me: globalThis.Array.isArray(object?.about_me) ? object.about_me.map((e: any) => globalThis.String(e)) : [],
+      clan_name: isSet(object.clan_name) ? globalThis.String(object.clan_name) : "",
     };
   },
 
@@ -15852,6 +15920,9 @@ export const ChannelDescription = {
     if (message.about_me?.length) {
       obj.about_me = message.about_me;
     }
+    if (message.clan_name !== "") {
+      obj.clan_name = message.clan_name;
+    }
     return obj;
   },
 
@@ -15888,6 +15959,7 @@ export const ChannelDescription = {
     message.update_time_seconds = object.update_time_seconds ?? 0;
     message.metadata = object.metadata?.map((e) => e) || [];
     message.about_me = object.about_me?.map((e) => e) || [];
+    message.clan_name = object.clan_name ?? "";
     return message;
   },
 };
@@ -18343,6 +18415,63 @@ export const NotificationChannel = {
   },
 };
 
+function createBaseNotificationClan(): NotificationClan {
+  return { clan_id: "" };
+}
+
+export const NotificationClan = {
+  encode(message: NotificationClan, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.clan_id !== "") {
+      writer.uint32(10).string(message.clan_id);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): NotificationClan {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseNotificationClan();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.clan_id = reader.string();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): NotificationClan {
+    return { clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "" };
+  },
+
+  toJSON(message: NotificationClan): unknown {
+    const obj: any = {};
+    if (message.clan_id !== "") {
+      obj.clan_id = message.clan_id;
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<NotificationClan>, I>>(base?: I): NotificationClan {
+    return NotificationClan.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<NotificationClan>, I>>(object: I): NotificationClan {
+    const message = createBaseNotificationClan();
+    message.clan_id = object.clan_id ?? "";
+    return message;
+  },
+};
+
 function createBaseNotificationSettingList(): NotificationSettingList {
   return { notification_setting: [] };
 }
@@ -18652,6 +18781,518 @@ export const SetMuteNotificationRequest = {
     message.id = object.id ?? "";
     message.notification_type = object.notification_type ?? 0;
     message.active = object.active ?? 0;
+    return message;
+  },
+};
+
+function createBaseHashtagDmListRequest(): HashtagDmListRequest {
+  return { user_id: [], limit: undefined };
+}
+
+export const HashtagDmListRequest = {
+  encode(message: HashtagDmListRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    for (const v of message.user_id) {
+      writer.uint32(10).string(v!);
+    }
+    if (message.limit !== undefined) {
+      Int32Value.encode({ value: message.limit! }, writer.uint32(18).fork()).ldelim();
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): HashtagDmListRequest {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseHashtagDmListRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.user_id.push(reader.string());
+          continue;
+        case 2:
+          if (tag !== 18) {
+            break;
+          }
+
+          message.limit = Int32Value.decode(reader, reader.uint32()).value;
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): HashtagDmListRequest {
+    return {
+      user_id: globalThis.Array.isArray(object?.user_id) ? object.user_id.map((e: any) => globalThis.String(e)) : [],
+      limit: isSet(object.limit) ? Number(object.limit) : undefined,
+    };
+  },
+
+  toJSON(message: HashtagDmListRequest): unknown {
+    const obj: any = {};
+    if (message.user_id?.length) {
+      obj.user_id = message.user_id;
+    }
+    if (message.limit !== undefined) {
+      obj.limit = message.limit;
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<HashtagDmListRequest>, I>>(base?: I): HashtagDmListRequest {
+    return HashtagDmListRequest.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<HashtagDmListRequest>, I>>(object: I): HashtagDmListRequest {
+    const message = createBaseHashtagDmListRequest();
+    message.user_id = object.user_id?.map((e) => e) || [];
+    message.limit = object.limit ?? undefined;
+    return message;
+  },
+};
+
+function createBaseHashtagDmList(): HashtagDmList {
+  return { hashtag_dm: [] };
+}
+
+export const HashtagDmList = {
+  encode(message: HashtagDmList, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    for (const v of message.hashtag_dm) {
+      HashtagDm.encode(v!, writer.uint32(10).fork()).ldelim();
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): HashtagDmList {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseHashtagDmList();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.hashtag_dm.push(HashtagDm.decode(reader, reader.uint32()));
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): HashtagDmList {
+    return {
+      hashtag_dm: globalThis.Array.isArray(object?.hashtag_dm)
+        ? object.hashtag_dm.map((e: any) => HashtagDm.fromJSON(e))
+        : [],
+    };
+  },
+
+  toJSON(message: HashtagDmList): unknown {
+    const obj: any = {};
+    if (message.hashtag_dm?.length) {
+      obj.hashtag_dm = message.hashtag_dm.map((e) => HashtagDm.toJSON(e));
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<HashtagDmList>, I>>(base?: I): HashtagDmList {
+    return HashtagDmList.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<HashtagDmList>, I>>(object: I): HashtagDmList {
+    const message = createBaseHashtagDmList();
+    message.hashtag_dm = object.hashtag_dm?.map((e) => HashtagDm.fromPartial(e)) || [];
+    return message;
+  },
+};
+
+function createBaseHashtagDm(): HashtagDm {
+  return {
+    channel_id: "",
+    channel_label: "",
+    clan_id: "",
+    clan_name: "",
+    meeting_code: "",
+    type: 0,
+    channel_private: 0,
+    parrent_id: "",
+  };
+}
+
+export const HashtagDm = {
+  encode(message: HashtagDm, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.channel_id !== "") {
+      writer.uint32(10).string(message.channel_id);
+    }
+    if (message.channel_label !== "") {
+      writer.uint32(18).string(message.channel_label);
+    }
+    if (message.clan_id !== "") {
+      writer.uint32(26).string(message.clan_id);
+    }
+    if (message.clan_name !== "") {
+      writer.uint32(34).string(message.clan_name);
+    }
+    if (message.meeting_code !== "") {
+      writer.uint32(42).string(message.meeting_code);
+    }
+    if (message.type !== 0) {
+      writer.uint32(48).int32(message.type);
+    }
+    if (message.channel_private !== 0) {
+      writer.uint32(56).int32(message.channel_private);
+    }
+    if (message.parrent_id !== "") {
+      writer.uint32(66).string(message.parrent_id);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): HashtagDm {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseHashtagDm();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.channel_id = reader.string();
+          continue;
+        case 2:
+          if (tag !== 18) {
+            break;
+          }
+
+          message.channel_label = reader.string();
+          continue;
+        case 3:
+          if (tag !== 26) {
+            break;
+          }
+
+          message.clan_id = reader.string();
+          continue;
+        case 4:
+          if (tag !== 34) {
+            break;
+          }
+
+          message.clan_name = reader.string();
+          continue;
+        case 5:
+          if (tag !== 42) {
+            break;
+          }
+
+          message.meeting_code = reader.string();
+          continue;
+        case 6:
+          if (tag !== 48) {
+            break;
+          }
+
+          message.type = reader.int32();
+          continue;
+        case 7:
+          if (tag !== 56) {
+            break;
+          }
+
+          message.channel_private = reader.int32();
+          continue;
+        case 8:
+          if (tag !== 66) {
+            break;
+          }
+
+          message.parrent_id = reader.string();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): HashtagDm {
+    return {
+      channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "",
+      channel_label: isSet(object.channel_label) ? globalThis.String(object.channel_label) : "",
+      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
+      clan_name: isSet(object.clan_name) ? globalThis.String(object.clan_name) : "",
+      meeting_code: isSet(object.meeting_code) ? globalThis.String(object.meeting_code) : "",
+      type: isSet(object.type) ? globalThis.Number(object.type) : 0,
+      channel_private: isSet(object.channel_private) ? globalThis.Number(object.channel_private) : 0,
+      parrent_id: isSet(object.parrent_id) ? globalThis.String(object.parrent_id) : "",
+    };
+  },
+
+  toJSON(message: HashtagDm): unknown {
+    const obj: any = {};
+    if (message.channel_id !== "") {
+      obj.channel_id = message.channel_id;
+    }
+    if (message.channel_label !== "") {
+      obj.channel_label = message.channel_label;
+    }
+    if (message.clan_id !== "") {
+      obj.clan_id = message.clan_id;
+    }
+    if (message.clan_name !== "") {
+      obj.clan_name = message.clan_name;
+    }
+    if (message.meeting_code !== "") {
+      obj.meeting_code = message.meeting_code;
+    }
+    if (message.type !== 0) {
+      obj.type = Math.round(message.type);
+    }
+    if (message.channel_private !== 0) {
+      obj.channel_private = Math.round(message.channel_private);
+    }
+    if (message.parrent_id !== "") {
+      obj.parrent_id = message.parrent_id;
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<HashtagDm>, I>>(base?: I): HashtagDm {
+    return HashtagDm.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<HashtagDm>, I>>(object: I): HashtagDm {
+    const message = createBaseHashtagDm();
+    message.channel_id = object.channel_id ?? "";
+    message.channel_label = object.channel_label ?? "";
+    message.clan_id = object.clan_id ?? "";
+    message.clan_name = object.clan_name ?? "";
+    message.meeting_code = object.meeting_code ?? "";
+    message.type = object.type ?? 0;
+    message.channel_private = object.channel_private ?? 0;
+    message.parrent_id = object.parrent_id ?? "";
+    return message;
+  },
+};
+
+function createBaseNotificationChannelCategorySettingList(): NotificationChannelCategorySettingList {
+  return { notification_channel_category_settings_list: [] };
+}
+
+export const NotificationChannelCategorySettingList = {
+  encode(message: NotificationChannelCategorySettingList, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    for (const v of message.notification_channel_category_settings_list) {
+      NotificationChannelCategorySetting.encode(v!, writer.uint32(10).fork()).ldelim();
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): NotificationChannelCategorySettingList {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseNotificationChannelCategorySettingList();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.notification_channel_category_settings_list.push(
+            NotificationChannelCategorySetting.decode(reader, reader.uint32()),
+          );
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): NotificationChannelCategorySettingList {
+    return {
+      notification_channel_category_settings_list:
+        globalThis.Array.isArray(object?.notification_channel_category_settings_list)
+          ? object.notification_channel_category_settings_list.map((e: any) =>
+            NotificationChannelCategorySetting.fromJSON(e)
+          )
+          : [],
+    };
+  },
+
+  toJSON(message: NotificationChannelCategorySettingList): unknown {
+    const obj: any = {};
+    if (message.notification_channel_category_settings_list?.length) {
+      obj.notification_channel_category_settings_list = message.notification_channel_category_settings_list.map((e) =>
+        NotificationChannelCategorySetting.toJSON(e)
+      );
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<NotificationChannelCategorySettingList>, I>>(
+    base?: I,
+  ): NotificationChannelCategorySettingList {
+    return NotificationChannelCategorySettingList.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<NotificationChannelCategorySettingList>, I>>(
+    object: I,
+  ): NotificationChannelCategorySettingList {
+    const message = createBaseNotificationChannelCategorySettingList();
+    message.notification_channel_category_settings_list =
+      object.notification_channel_category_settings_list?.map((e) =>
+        NotificationChannelCategorySetting.fromPartial(e)
+      ) || [];
+    return message;
+  },
+};
+
+function createBaseNotificationChannelCategorySetting(): NotificationChannelCategorySetting {
+  return { id: "", channel_category_label: "", notification_setting_type: 0, channel_category_title: "", action: 0 };
+}
+
+export const NotificationChannelCategorySetting = {
+  encode(message: NotificationChannelCategorySetting, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.id !== "") {
+      writer.uint32(10).string(message.id);
+    }
+    if (message.channel_category_label !== "") {
+      writer.uint32(18).string(message.channel_category_label);
+    }
+    if (message.notification_setting_type !== 0) {
+      writer.uint32(24).int32(message.notification_setting_type);
+    }
+    if (message.channel_category_title !== "") {
+      writer.uint32(34).string(message.channel_category_title);
+    }
+    if (message.action !== 0) {
+      writer.uint32(40).int32(message.action);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): NotificationChannelCategorySetting {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseNotificationChannelCategorySetting();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.id = reader.string();
+          continue;
+        case 2:
+          if (tag !== 18) {
+            break;
+          }
+
+          message.channel_category_label = reader.string();
+          continue;
+        case 3:
+          if (tag !== 24) {
+            break;
+          }
+
+          message.notification_setting_type = reader.int32();
+          continue;
+        case 4:
+          if (tag !== 34) {
+            break;
+          }
+
+          message.channel_category_title = reader.string();
+          continue;
+        case 5:
+          if (tag !== 40) {
+            break;
+          }
+
+          message.action = reader.int32();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): NotificationChannelCategorySetting {
+    return {
+      id: isSet(object.id) ? globalThis.String(object.id) : "",
+      channel_category_label: isSet(object.channel_category_label)
+        ? globalThis.String(object.channel_category_label)
+        : "",
+      notification_setting_type: isSet(object.notification_setting_type)
+        ? globalThis.Number(object.notification_setting_type)
+        : 0,
+      channel_category_title: isSet(object.channel_category_title)
+        ? globalThis.String(object.channel_category_title)
+        : "",
+      action: isSet(object.action) ? globalThis.Number(object.action) : 0,
+    };
+  },
+
+  toJSON(message: NotificationChannelCategorySetting): unknown {
+    const obj: any = {};
+    if (message.id !== "") {
+      obj.id = message.id;
+    }
+    if (message.channel_category_label !== "") {
+      obj.channel_category_label = message.channel_category_label;
+    }
+    if (message.notification_setting_type !== 0) {
+      obj.notification_setting_type = Math.round(message.notification_setting_type);
+    }
+    if (message.channel_category_title !== "") {
+      obj.channel_category_title = message.channel_category_title;
+    }
+    if (message.action !== 0) {
+      obj.action = Math.round(message.action);
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<NotificationChannelCategorySetting>, I>>(
+    base?: I,
+  ): NotificationChannelCategorySetting {
+    return NotificationChannelCategorySetting.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<NotificationChannelCategorySetting>, I>>(
+    object: I,
+  ): NotificationChannelCategorySetting {
+    const message = createBaseNotificationChannelCategorySetting();
+    message.id = object.id ?? "";
+    message.channel_category_label = object.channel_category_label ?? "";
+    message.notification_setting_type = object.notification_setting_type ?? 0;
+    message.channel_category_title = object.channel_category_title ?? "";
+    message.action = object.action ?? 0;
     return message;
   },
 };
