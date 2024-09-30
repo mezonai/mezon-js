@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { ApiChannelMessageHeader, ApiCreateEventRequest, ApiGiveCoffeeEvent, ApiMessageAttachment, ApiMessageMention, ApiMessageReaction, ApiMessageRef, ApiNotification, ApiPermissionList, ApiRole, ApiRoleList, ApiRpc, ApiUser} from "./api.gen";
+import { ApiChannelDescList, ApiChannelMessageHeader, ApiCreateEventRequest, ApiGiveCoffeeEvent, ApiHashtagDmList, ApiMessageAttachment, ApiMessageMention, ApiMessageReaction, ApiMessageRef, ApiNotification, ApiNotificationChannelCategorySettingList, ApiPermissionList, ApiRole, ApiRoleList, ApiRpc, ApiUser} from "./api.gen";
 import {Session} from "./session";
 import {ChannelMessage, Notification} from "./client";
 import {WebSocketAdapter, WebSocketAdapterText} from "./web_socket_adapter"
@@ -724,7 +724,7 @@ export interface ClanEmoji {
 /**  */
 export interface ChannelDescListEvent {
   // 
-  channeldesc?: Array<ChannelDescription>;
+  channeldesc?: ApiChannelDescList;
 }
 
 /**  */
@@ -762,7 +762,7 @@ export interface HashtagDmListEvent {
   // Max number of records to return. Between 1 and 100.
   limit?: number;
   // A list of channel.
-  hashtag_dm?: Array<HashtagDm>;
+  hashtag_dm?: ApiHashtagDmList;
 }
 
 // hashtagDM
@@ -855,7 +855,7 @@ export interface NotificationChannelCategorySetting {
 
 export interface NotificationChannelCategorySettingEvent {
   clan_id? : string;
-  notification_channel_category_settings_list?: NotificationChannelCategorySetting[]
+  notification_channel_category_settings_list?: ApiNotificationChannelCategorySettingList
 }
 
 export interface UserEmojiUsage {
