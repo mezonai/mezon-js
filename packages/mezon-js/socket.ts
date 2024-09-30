@@ -722,6 +722,12 @@ export interface ClanEmoji {
 }
 
 /**  */
+export interface ChannelDescListEvent {
+  // 
+  channeldesc?: Array<ChannelDescription>;
+}
+
+/**  */
 export interface AllUserClans {
   // 
   user?: Array<ApiUser>;
@@ -749,6 +755,16 @@ export interface ChannelDescription {
   last_sent_message?: ApiChannelMessageHeader;
 }
 
+// A list of Channel
+export interface HashtagDmListEvent {
+  // user Id
+  user_id?: Array<string>;
+  // Max number of records to return. Between 1 and 100.
+  limit?: number;
+  // A list of channel.
+  hashtag_dm?: Array<HashtagDm>;
+}
+
 // hashtagDM
 export interface HashtagDm {
   // The channel id.
@@ -769,6 +785,13 @@ export interface HashtagDm {
   parrent_id?: string;
 }
 
+export interface NotificationChannelSettingEvent {
+  // The channel id.
+  channel_id?: string;
+  //
+  notification_user_channel?: NotificationUserChannel;
+}
+
 export interface NotificationUserChannel {
   //
   active?: number;
@@ -780,11 +803,32 @@ export interface NotificationUserChannel {
   time_mute?: string;
 }
 
+export interface NotificationCategorySettingEvent {
+  //
+  category_id?: string;
+  //
+  notification_user_channel?: NotificationUserChannel;
+}
+
+export interface NotificationClanSettingEvent {
+  // The clan of this channel
+  clan_id?: string;
+  //
+  notification_setting?: NotificationSetting;
+}
+
 export interface NotificationSetting {
   //
   id?: string;
   //
   notification_setting_type?: number;
+}
+
+export interface NotifiReactMessageEvent {
+  //
+  channel_id?: string;
+  //
+  notifi_react_message?:  NotifiReactMessage;
 }
 
 export interface NotifiReactMessage {
@@ -807,6 +851,11 @@ export interface NotificationChannelCategorySetting {
   channel_category_title : string;
   //
   action: number
+}
+
+export interface NotificationChannelCategorySettingEvent {
+  clan_id? : string;
+  notification_channel_category_settings_list?: NotificationChannelCategorySetting[]
 }
 
 export interface UserEmojiUsage {
@@ -1066,11 +1115,25 @@ export interface Socket {
 
   listStickersByUserId(): Promise<StrickerListedEvent>;
 
+  listChannelByUserId(): Promise<ChannelDescListEvent>;
+
   listUserClansByUserId(): Promise<AllUserClans>;
 
   listUsersAddChannelByChannelId(channelId: string, limit: number): Promise<AllUsersAddChannelEvent>;
 
+  hashtagDMList(user_id: Array<string>, limit: number): Promise<HashtagDmListEvent>;
+
+  getNotificationChannelSetting(channel_id: string): Promise<NotificationChannelSettingEvent>;
+
+  getNotificationCategorySetting(category_id: string): Promise<NotificationCategorySettingEvent>;
+
+  getNotificationClanSetting(clan_id: string): Promise<NotificationClanSettingEvent>;
+
+  getNotificationReactMessage(channel_id_req: string): Promise<NotifiReactMessageEvent>;
+
   getPermissionByRoleIdChannelId(role_id: string, channel_id: string, user_id: string): Promise<PermissionRoleChannelListEvent>;
+
+  getNotificationChannelCategorySetting(clan_id : string): Promise<NotificationChannelCategorySettingEvent>;
 
   oneventcreated: (clan_event_created: ApiCreateEventRequest) => void;
 
@@ -1754,6 +1817,11 @@ export class DefaultSocket implements Socket {
     return response.role_list_event 
   }
 
+  async listChannelByUserId(): Promise<ChannelDescListEvent> {
+    const response = await this.send({channel_desc_list_event: {}});
+    return response.channel_desc_list_event
+  }
+
   async listUserClansByUserId(): Promise<AllUserClans> {
     const response = await this.send({all_user_clans: {}});
     return response.all_user_clans
@@ -1764,6 +1832,11 @@ export class DefaultSocket implements Socket {
     return response.all_users_add_channel_event
   }
 
+  async hashtagDMList(user_id: Array<string>, limit: number): Promise<HashtagDmListEvent> {
+    const response = await this.send({hashtag_dm_list_event: {user_id: user_id, limit: limit }});
+    return response.hashtag_dm_list_event
+  }
+
   async getPermissionByRoleIdChannelId(role_id: string, channel_id: string, user_id: string): Promise<PermissionRoleChannelListEvent> {
     const response = await this.send({permission_role_channel_list_event: {role_id: role_id, channel_id: channel_id, user_id: user_id }});
     return response.permission_role_channel_list_event
@@ -1772,6 +1845,31 @@ export class DefaultSocket implements Socket {
   async listStickersByUserId(): Promise<StrickerListedEvent> {
     const response = await this.send({sticker_listed_event: {}});
     return response.sticker_listed_event
+  }
+
+  async  getNotificationChannelSetting(channel_id: string): Promise<NotificationChannelSettingEvent> {
+    const response = await this.send({notification_channel_setting_event: {channel_id: channel_id}})
+    return response.notification_channel_setting_event
+  }
+
+  async getNotificationCategorySetting(category_id: string): Promise<NotificationCategorySettingEvent> {
+    const response = await this.send({notification_category_setting_event: {category_id: category_id}})
+    return response.notification_category_setting_event
+  }
+
+  async getNotificationClanSetting(clan_id: string): Promise<NotificationClanSettingEvent> {
+    const response = await this.send({notification_clan_setting_event: {clan_id: clan_id}})
+    return response.notification_clan_setting_event
+  }
+
+  async getNotificationReactMessage(channel_id: string): Promise<NotifiReactMessageEvent> {
+    const response = await this.send({notifi_react_message_event: {channel_id: channel_id}})
+    return response.notifi_react_message_event
+  }
+
+  async getNotificationChannelCategorySetting(clan_id: string): Promise<NotificationChannelCategorySettingEvent> {
+    const response = await this.send({notification_channel_category_setting_event: {clan_id : clan_id}})
+    return response.notification_channel_category_setting_event
   }
 
   private async pingPong(): Promise<void> {
