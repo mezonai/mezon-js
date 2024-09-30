@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { ApiChannelMessageHeader, ApiCreateEventRequest, ApiGiveCoffeeEvent, ApiMessageAttachment, ApiMessageMention, ApiMessageReaction, ApiMessageRef, ApiNotification, ApiPermissionList, ApiRole, ApiRoleList, ApiRpc, ApiUser} from "./api.gen";
+import { ApiChannelDescList, ApiChannelMessageHeader, ApiCreateEventRequest, ApiGiveCoffeeEvent, ApiHashtagDmList, ApiMessageAttachment, ApiMessageMention, ApiMessageReaction, ApiMessageRef, ApiNotification, ApiNotificationChannelCategorySettingList, ApiPermissionList, ApiRole, ApiRoleList, ApiRpc, ApiUser} from "./api.gen";
 import {Session} from "./session";
 import {ChannelMessage, Notification} from "./client";
 import {WebSocketAdapter, WebSocketAdapterText} from "./web_socket_adapter"
@@ -724,7 +724,7 @@ export interface ClanEmoji {
 /**  */
 export interface ChannelDescListEvent {
   // 
-  channeldesc?: Array<ChannelDescription>;
+  channeldesc?: ApiChannelDescList;
 }
 
 /**  */
@@ -762,7 +762,7 @@ export interface HashtagDmListEvent {
   // Max number of records to return. Between 1 and 100.
   limit?: number;
   // A list of channel.
-  hashtag_dm?: Array<HashtagDm>;
+  hashtag_dm?: ApiHashtagDmList;
 }
 
 // hashtagDM
@@ -855,7 +855,7 @@ export interface NotificationChannelCategorySetting {
 
 export interface NotificationChannelCategorySettingEvent {
   clan_id? : string;
-  notification_channel_category_settings_list?: NotificationChannelCategorySetting[]
+  notification_channel_category_settings_list?: ApiNotificationChannelCategorySettingList
 }
 
 export interface UserEmojiUsage {
@@ -1120,7 +1120,7 @@ export interface Socket {
   listUserClansByUserId(): Promise<AllUserClans>;
 
   listUsersAddChannelByChannelId(channelId: string, limit: number): Promise<AllUsersAddChannelEvent>;
-  
+
   hashtagDMList(user_id: Array<string>, limit: number): Promise<HashtagDmListEvent>;
 
   getNotificationChannelSetting(channel_id: string): Promise<NotificationChannelSettingEvent>;
@@ -1132,7 +1132,7 @@ export interface Socket {
   getNotificationReactMessage(channel_id_req: string): Promise<NotifiReactMessageEvent>;
 
   getPermissionByRoleIdChannelId(role_id: string, channel_id: string, user_id: string): Promise<PermissionRoleChannelListEvent>;
-  
+
   getNotificationChannelCategorySetting(clan_id : string): Promise<NotificationChannelCategorySettingEvent>;
 
   oneventcreated: (clan_event_created: ApiCreateEventRequest) => void;

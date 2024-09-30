@@ -108,8 +108,13 @@ import {
   ApiRegisterStreamingChannelResponse,
   ApiRoleList,
   ApiListChannelAppsResponse,
-  ApiStickerListedResponse,
+  ApiNotificationChannelCategorySettingList,
+  ApiNotificationUserChannel,
+  ApiNotificationSetting,
+  ApiNotifiReactMessage,
+  ApiHashtagDmList,
   ApiEmojiListedResponse,
+  ApiStickerListedResponse,
   ApiAllUsersAddChannelResponse,
 } from "./api.gen";
 
@@ -3603,7 +3608,10 @@ export class Client {
       });
   }
 
-  async getListStickersByUserId(session: Session): Promise<ApiStickerListedResponse> {
+  async getChannelCategoryNotiSettingsList(
+    session: Session,
+    clanId: string
+  ): Promise<ApiNotificationChannelCategorySettingList> {
     if (
       this.autoRefreshSession &&
       session.refresh_token &&
@@ -3613,7 +3621,138 @@ export class Client {
     }
 
     return this.apiClient
-      .getListStickersByUserId(session.token)
+      .getChannelCategoryNotiSettingsList(session.token, clanId)
+      .then((response: ApiNotificationChannelCategorySettingList) => {
+        return Promise.resolve(response);
+      });
+  }
+
+  async getNotificationCategory(
+    session: Session,
+    categoryId: string
+  ): Promise<ApiNotificationUserChannel> {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired((Date.now() + this.expiredTimespanMs) / 1000)
+    ) {
+      await this.sessionRefresh(session);
+    }
+
+    return this.apiClient
+      .getNotificationCategory(session.token, categoryId)
+      .then((response: ApiNotificationUserChannel) => {
+        return Promise.resolve(response);
+      });
+  }
+
+  async getNotificationChannel(
+    session: Session,
+    channelId: string
+  ): Promise<ApiNotificationUserChannel> {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired((Date.now() + this.expiredTimespanMs) / 1000)
+    ) {
+      await this.sessionRefresh(session);
+    }
+
+    return this.apiClient
+      .getNotificationChannel(session.token, channelId)
+      .then((response: ApiNotificationUserChannel) => {
+        return Promise.resolve(response);
+      });
+  }
+
+  async getNotificationClan(
+    session: Session,
+    clanId: string
+  ): Promise<ApiNotificationSetting> {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired((Date.now() + this.expiredTimespanMs) / 1000)
+    ) {
+      await this.sessionRefresh(session);
+    }
+
+    return this.apiClient
+      .getNotificationClan(session.token, clanId)
+      .then((response: ApiNotificationSetting) => {
+        return Promise.resolve(response);
+      });
+  }
+
+  async getNotificationReactMessage(
+    session: Session,
+    channelId: string
+  ): Promise<ApiNotifiReactMessage> {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired((Date.now() + this.expiredTimespanMs) / 1000)
+    ) {
+      await this.sessionRefresh(session);
+    }
+
+    return this.apiClient
+      .getNotificationReactMessage(session.token, channelId)
+      .then((response: ApiNotifiReactMessage) => {
+        return Promise.resolve(response);
+      });
+  }
+
+  async hashtagDMList(
+    session: Session,
+    userId: Array<string>,
+    limit:number
+  ): Promise<ApiHashtagDmList> {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired((Date.now() + this.expiredTimespanMs) / 1000)
+    ) {
+      await this.sessionRefresh(session);
+    }
+
+    return this.apiClient
+      .hashtagDMList(session.token, userId, limit)
+      .then((response: ApiHashtagDmList) => {
+        return Promise.resolve(response);
+      });
+  }
+
+  async listChannelByUserId(
+    session: Session
+  ): Promise<ApiChannelDescList> {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired((Date.now() + this.expiredTimespanMs) / 1000)
+    ) {
+      await this.sessionRefresh(session);
+    }
+
+    return this.apiClient
+      .listChannelByUserId(session.token)
+      .then((response: ApiChannelDescList) => {
+        return Promise.resolve(response);
+      });
+  }
+
+
+  async listUsersAddChannelByChannelId(session: Session, channel_id : string, limit : number): Promise<ApiAllUsersAddChannelResponse> {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired((Date.now() + this.expiredTimespanMs) / 1000)
+    ) {
+      await this.sessionRefresh(session);
+    }
+
+    return this.apiClient
+      .listUsersAddChannelByChannelId(session.token, channel_id, limit)
       .then((response: any) => {
         return Promise.resolve(response);
       });
@@ -3635,7 +3774,8 @@ export class Client {
       });
   }
 
-  async listUsersAddChannelByChannelId(session: Session, channel_id : string, limit : number): Promise<ApiAllUsersAddChannelResponse> {
+  
+  async getListStickersByUserId(session: Session): Promise<ApiStickerListedResponse> {
     if (
       this.autoRefreshSession &&
       session.refresh_token &&
@@ -3645,7 +3785,7 @@ export class Client {
     }
 
     return this.apiClient
-      .listUsersAddChannelByChannelId(session.token, channel_id, limit)
+      .getListStickersByUserId(session.token)
       .then((response: any) => {
         return Promise.resolve(response);
       });

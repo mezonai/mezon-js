@@ -546,6 +546,8 @@ export interface ApiChannelDescription {
   //
   clan_id?: string;
   //
+  clan_name?: string;
+  //
   count_mess_unread?: number;
   //
   create_time_seconds?: number;
@@ -1084,6 +1086,32 @@ export interface ApiGiveCoffeeEvent {
   token_count?: number;
 }
 
+/**  */
+export interface ApiHashtagDm {
+  //The channel id.
+  channel_id?: string;
+  //
+  channel_label?: string;
+  //
+  channel_private?: number;
+  //
+  clan_id?: string;
+  //
+  clan_name?: string;
+  //
+  meeting_code?: string;
+  //
+  parrent_id?: string;
+  //
+  type?: number;
+}
+
+/**  */
+export interface ApiHashtagDmList {
+  //
+  hashtag_dm?: Array<ApiHashtagDm>;
+}
+
 /** Add link invite users to. */
 export interface ApiInviteUserRes {
   //id channel to add link to.
@@ -1314,6 +1342,26 @@ export interface ApiNotification {
 export interface ApiNotificationChannel {
   //
   channel_id?: string;
+}
+
+/**  */
+export interface ApiNotificationChannelCategorySetting {
+  //
+  action?: number;
+  //
+  channel_category_label?: string;
+  //
+  channel_category_title?: string;
+  //
+  id?: string;
+  //
+  notification_setting_type?: number;
+}
+
+/**  */
+export interface ApiNotificationChannelCategorySettingList {
+  //
+  notification_channel_category_settings_list?: Array<ApiNotificationChannelCategorySetting>;
 }
 
 /** A collection of zero or more notifications. */
@@ -5272,6 +5320,39 @@ export class MezonApi {
     ]);
 }
 
+  /** List GetChannelCategoryNotiSettingsList */
+  getChannelCategoryNotiSettingsList(bearerToken: string,
+      clanId?:string,
+      options: any = {}): Promise<ApiNotificationChannelCategorySettingList> {
+    
+    const urlPath = "/v2/getChannelCategoryNotiSettingsList";
+    const queryParams = new Map<string, any>();
+    queryParams.set("clan_id", clanId);
+
+    let bodyJson : string = "";
+
+    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
+    const fetchOptions = buildFetchOptions("GET", options, bodyJson);
+    if (bearerToken) {
+        fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+    }
+
+    return Promise.race([
+      fetch(fullUrl, fetchOptions).then((response) => {
+        if (response.status == 204) {
+          return response;
+        } else if (response.status >= 200 && response.status < 300) {
+          return response.json();
+        } else {
+          throw response;
+        }
+      }),
+      new Promise((_, reject) =>
+        setTimeout(reject, this.timeoutMs, "Request timed out.")
+      ),
+    ]);
+}
+
   /**  */
   getUserProfileOnClan(bearerToken: string,
       clanId:string,
@@ -5283,6 +5364,138 @@ export class MezonApi {
     const urlPath = "/v2/getclanprofile/{clanId}"
         .replace("{clanId}", encodeURIComponent(String(clanId)));
     const queryParams = new Map<string, any>();
+
+    let bodyJson : string = "";
+
+    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
+    const fetchOptions = buildFetchOptions("GET", options, bodyJson);
+    if (bearerToken) {
+        fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+    }
+
+    return Promise.race([
+      fetch(fullUrl, fetchOptions).then((response) => {
+        if (response.status == 204) {
+          return response;
+        } else if (response.status >= 200 && response.status < 300) {
+          return response.json();
+        } else {
+          throw response;
+        }
+      }),
+      new Promise((_, reject) =>
+        setTimeout(reject, this.timeoutMs, "Request timed out.")
+      ),
+    ]);
+}
+
+  /** List GetNotificationChannel */
+  getNotificationCategory(bearerToken: string,
+      categoryId?:string,
+      options: any = {}): Promise<ApiNotificationUserChannel> {
+    
+    const urlPath = "/v2/getnotificationcategory";
+    const queryParams = new Map<string, any>();
+    queryParams.set("category_id", categoryId);
+
+    let bodyJson : string = "";
+
+    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
+    const fetchOptions = buildFetchOptions("GET", options, bodyJson);
+    if (bearerToken) {
+        fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+    }
+
+    return Promise.race([
+      fetch(fullUrl, fetchOptions).then((response) => {
+        if (response.status == 204) {
+          return response;
+        } else if (response.status >= 200 && response.status < 300) {
+          return response.json();
+        } else {
+          throw response;
+        }
+      }),
+      new Promise((_, reject) =>
+        setTimeout(reject, this.timeoutMs, "Request timed out.")
+      ),
+    ]);
+}
+
+  /** List GetNotificationChannel */
+  getNotificationChannel(bearerToken: string,
+      channelId?:string,
+      options: any = {}): Promise<ApiNotificationUserChannel> {
+    
+    const urlPath = "/v2/getnotificationchannel";
+    const queryParams = new Map<string, any>();
+    queryParams.set("channel_id", channelId);
+
+    let bodyJson : string = "";
+
+    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
+    const fetchOptions = buildFetchOptions("GET", options, bodyJson);
+    if (bearerToken) {
+        fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+    }
+
+    return Promise.race([
+      fetch(fullUrl, fetchOptions).then((response) => {
+        if (response.status == 204) {
+          return response;
+        } else if (response.status >= 200 && response.status < 300) {
+          return response.json();
+        } else {
+          throw response;
+        }
+      }),
+      new Promise((_, reject) =>
+        setTimeout(reject, this.timeoutMs, "Request timed out.")
+      ),
+    ]);
+}
+
+  /** List GetNotificationClan */
+  getNotificationClan(bearerToken: string,
+      clanId?:string,
+      options: any = {}): Promise<ApiNotificationSetting> {
+    
+    const urlPath = "/v2/getnotificationclan";
+    const queryParams = new Map<string, any>();
+    queryParams.set("clan_id", clanId);
+
+    let bodyJson : string = "";
+
+    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
+    const fetchOptions = buildFetchOptions("GET", options, bodyJson);
+    if (bearerToken) {
+        fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+    }
+
+    return Promise.race([
+      fetch(fullUrl, fetchOptions).then((response) => {
+        if (response.status == 204) {
+          return response;
+        } else if (response.status >= 200 && response.status < 300) {
+          return response.json();
+        } else {
+          throw response;
+        }
+      }),
+      new Promise((_, reject) =>
+        setTimeout(reject, this.timeoutMs, "Request timed out.")
+      ),
+    ]);
+}
+
+  /** List GetNotificationReactMessage */
+  getNotificationReactMessage(bearerToken: string,
+      channelId?:string,
+      options: any = {}): Promise<ApiNotifiReactMessage> {
+    
+    const urlPath = "/v2/getnotificationreactmessage";
+    const queryParams = new Map<string, any>();
+    queryParams.set("channel_id", channelId);
 
     let bodyJson : string = "";
 
@@ -5324,6 +5537,41 @@ export class MezonApi {
 
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("POST", options, bodyJson);
+    if (bearerToken) {
+        fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+    }
+
+    return Promise.race([
+      fetch(fullUrl, fetchOptions).then((response) => {
+        if (response.status == 204) {
+          return response;
+        } else if (response.status >= 200 && response.status < 300) {
+          return response.json();
+        } else {
+          throw response;
+        }
+      }),
+      new Promise((_, reject) =>
+        setTimeout(reject, this.timeoutMs, "Request timed out.")
+      ),
+    ]);
+}
+
+  /** List HashtagDMList */
+  hashtagDMList(bearerToken: string,
+      userId?:Array<string>,
+      limit?:number,
+      options: any = {}): Promise<ApiHashtagDmList> {
+    
+    const urlPath = "/v2/hashtagdmlist";
+    const queryParams = new Map<string, any>();
+    queryParams.set("user_id", userId);
+    queryParams.set("limit", limit);
+
+    let bodyJson : string = "";
+
+    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
+    const fetchOptions = buildFetchOptions("GET", options, bodyJson);
     if (bearerToken) {
         fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
     }
@@ -5432,6 +5680,37 @@ export class MezonApi {
 
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("POST", options, bodyJson);
+    if (bearerToken) {
+        fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+    }
+
+    return Promise.race([
+      fetch(fullUrl, fetchOptions).then((response) => {
+        if (response.status == 204) {
+          return response;
+        } else if (response.status >= 200 && response.status < 300) {
+          return response.json();
+        } else {
+          throw response;
+        }
+      }),
+      new Promise((_, reject) =>
+        setTimeout(reject, this.timeoutMs, "Request timed out.")
+      ),
+    ]);
+}
+
+  /** List HashtagDMList */
+  listChannelByUserId(bearerToken: string,
+      options: any = {}): Promise<ApiChannelDescList> {
+    
+    const urlPath = "/v2/listchannelbyuserid";
+    const queryParams = new Map<string, any>();
+
+    let bodyJson : string = "";
+
+    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
+    const fetchOptions = buildFetchOptions("GET", options, bodyJson);
     if (bearerToken) {
         fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
     }
