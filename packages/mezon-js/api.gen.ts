@@ -1039,6 +1039,8 @@ export interface ApiEventManagement {
   //
   logo?: string;
   //
+  max_permission?: number;
+  //
   start_event?: number;
   //
   start_time?: string;
