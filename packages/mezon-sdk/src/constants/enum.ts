@@ -43,6 +43,7 @@ export enum Events {
   RoleEvent = InternalEventsSocket.RoleEvent,
   GiveCoffee = InternalEventsSocket.GiveCoffeeEvent,
   RoleAssign = InternalEventsSocket.RoleAssignEvent,
+  AddClanUser = InternalEventsSocket.AddClanUserEvent,
 }
 
 export enum ChannelType {

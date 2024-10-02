@@ -20,6 +20,7 @@ import {
   ApiRegisterStreamingChannelRequest,
   ApiSession,
   ApiVoiceChannelUserList,
+  ChannelDMPayload,
   MessagePayLoad,
   MessageUserPayLoad,
   Socket,
@@ -273,7 +274,7 @@ export class MezonClient implements Client {
       if (!isValidUserId(userId)) return null;
 
       const request : ApiCreateChannelDescRequest = {
-        clan_id: "0",
+        clan_id: "",
         channel_id: "0",
         category_id: "0",
         type: 3,
@@ -323,18 +324,21 @@ export class MezonClient implements Client {
     msg: string,
     messOptions: {[x: string]: any} = {},
     attachments: Array<ApiMessageAttachment> = [],
-    refs: Array<ApiMessageRef> = []
+    refs: Array<ApiMessageRef> = [],
+    channelDMUser?: ChannelDMPayload
   ) {
-      const channelDM = await this.getDMchannel(userId);
+      const channelDM = channelDMUser?.channel_id
+        ? channelDMUser
+        : await this.getDMchannel(userId);
 
       if (!channelDM) throw Error(`can't get channel DM`);
       
       const message = {
-        clan_id: channelDM.clan_id!,
+        clan_id: '',
         channel_id: channelDM.channel_id!,
         is_public: false,
         is_parent_public: false,
-        parent_id: channelDM.parent_id!,
+        parent_id: '0',
         mode: convertChanneltypeToChannelMode(channelDM.type!),
         mentions: [],
         attachments: attachments,
@@ -344,7 +348,7 @@ export class MezonClient implements Client {
         { messageContent: msg, ...messOptions, attachments, refs },
         message
       );
-      return this.sendMessage(
+      const result = await this.sendMessage(
         mess.clan_id,
         mess.parent_id,
         mess.channel_id,
@@ -356,6 +360,15 @@ export class MezonClient implements Client {
         mess.attachments,
         refs
       );
+
+      if (!channelDMUser?.channel_id) {
+        return {
+          ...result,
+          channelDM: channelDM
+        };
+      }
+      
+      return result;
   }
 
     /** List a channel's users. */

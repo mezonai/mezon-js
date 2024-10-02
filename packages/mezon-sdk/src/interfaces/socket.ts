@@ -1,5 +1,6 @@
 import { CloseEvent, ErrorEvent } from "ws";
 import {
+  ApiChannelDescription,
   ApiMessageAttachment,
   ApiMessageMention,
   ApiMessageReaction,
@@ -213,6 +214,8 @@ export interface ChannelMessageAck {
   update_time: string;
   /** True if the chat message has been stored in history. */
   persistence: boolean;
+  /** DM channel user, for once call api getDMChannel */
+  channelDM?: ApiChannelDescription
 }
 
 /** Send a message to a realtime chat channel. */
