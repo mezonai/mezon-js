@@ -118,6 +118,8 @@ import {
   ApiAllUsersAddChannelResponse,
   ApiRoleListEventResponse,
   ApiAllUserClans,
+  ApiUserPermissionInChannelListResponse,
+  ApiPermissionRoleChannelListEventResponse,
 } from "./api.gen";
 
 import { Session } from "./session";
@@ -3834,6 +3836,60 @@ export class Client {
         var result: ApiRoleListEventResponse = {
           clan_id: clanId,
           roles: response.roles,
+        };
+
+        return Promise.resolve(result);
+      });
+  }
+
+  async listUserPermissionInChannel(
+    session: Session,
+    clanId?: string,
+    channelId?: string
+  ): Promise<ApiUserPermissionInChannelListResponse> {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired((Date.now() + this.expiredTimespanMs) / 1000)
+    ) {
+      await this.sessionRefresh(session);
+    }
+
+    return this.apiClient
+      .listUserPermissionInChannel(session.token, clanId, channelId)
+      .then((response: ApiUserPermissionInChannelListResponse) => {
+        var result: ApiUserPermissionInChannelListResponse = {
+          clan_id: clanId,
+          channel_id: channelId,
+          permissions: response.permissions,
+        };
+
+        return Promise.resolve(result);
+      });
+  }
+
+  async getPermissionByRoleIdChannelId(
+    session: Session,
+    roleId?: string,
+    channelId?: string,
+    userId?: string
+  ): Promise<ApiPermissionRoleChannelListEventResponse> {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired((Date.now() + this.expiredTimespanMs) / 1000)
+    ) {
+      await this.sessionRefresh(session);
+    }
+
+    return this.apiClient
+      .getPermissionByRoleIdChannelId(session.token, roleId, channelId, userId)
+      .then((response: ApiPermissionRoleChannelListEventResponse) => {
+        var result: ApiPermissionRoleChannelListEventResponse = {
+          role_id: roleId,
+          channel_id: channelId,
+          permission_role_channel: response.permission_role_channel,
+          user_id: userId,
         };
 
         return Promise.resolve(result);
