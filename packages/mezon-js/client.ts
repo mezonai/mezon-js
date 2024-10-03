@@ -2996,7 +2996,9 @@ export class Client {
 
   async pinMessagesList(
     session: Session,
-    channelId: string
+    messageId: string,
+    channelId: string,
+    clanId: string,
   ): Promise<ApiPinMessagesList> {
     if (
       this.autoRefreshSession &&
@@ -3007,7 +3009,7 @@ export class Client {
     }
 
     return this.apiClient
-      .getPinMessagesList(session.token, channelId)
+      .getPinMessagesList(session.token, messageId, channelId, clanId)
       .then((response: ApiPinMessagesList) => {
         return Promise.resolve(response);
       });

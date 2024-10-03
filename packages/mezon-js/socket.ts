@@ -1110,6 +1110,9 @@ export interface Socket {
   // when clan is updated
   onclanupdated: (clan: ClanUpdatedEvent) => void;
 
+  // when user update last seen message
+  onlastseenupdated: (event: LastSeenMessageEvent)  => void;
+
   /* Set the heartbeat timeout used by the socket to detect if it has lost connectivity to the server. */
   setHeartbeatTimeoutMs(ms : number) : void;
 
@@ -1235,35 +1238,37 @@ export class DefaultSocket implements Socket {
               this.onnotification(n);
           });
         } else if (message.voice_started_event) {
-          this.onvoicestarted(message.voice_started_event)
+          this.onvoicestarted(message.voice_started_event);
         } else if (message.voice_ended_event) {
-          this.onvoiceended(message.voice_ended_event)
+          this.onvoiceended(message.voice_ended_event);
         } else if (message.voice_joined_event) {
-          this.onvoicejoined(message.voice_joined_event)
+          this.onvoicejoined(message.voice_joined_event);
         } else if (message.voice_leaved_event) {
-          this.onvoiceleaved(message.voice_leaved_event) 
+          this.onvoiceleaved(message.voice_leaved_event); 
         } else if (message.channel_created_event) {
-          this.onchannelcreated(message.channel_created_event) 
+          this.onchannelcreated(message.channel_created_event);
         } else if (message.role_event) {
-          this.onroleevent(message.role_event) 
-        } else if(message.event_emoji){
-          this.oneventemoji(message.event_emoji)
+          this.onroleevent(message.role_event);
+        } else if(message.event_emoji) {
+          this.oneventemoji(message.event_emoji);
         } else if (message.channel_deleted_event) {
-          this.onchanneldeleted(message.channel_deleted_event) 
+          this.onchanneldeleted(message.channel_deleted_event);
         } else if (message.clan_deleted_event) {
-          this.onclandeleted(message.clan_deleted_event) 
+          this.onclandeleted(message.clan_deleted_event); 
         } else if (message.sticker_create_event) {
-          this.onstickercreated(message.sticker_create_event) 
+          this.onstickercreated(message.sticker_create_event); 
         } else if (message.sticker_update_event) {
-          this.onstickerupdated(message.sticker_update_event) 
+          this.onstickerupdated(message.sticker_update_event);
         } else if (message.sticker_delete_event) {
-          this.onstickerdeleted(message.sticker_delete_event) 
+          this.onstickerdeleted(message.sticker_delete_event);
         } else if (message.channel_updated_event) {
-          this.onchannelupdated(message.channel_updated_event) 
+          this.onchannelupdated(message.channel_updated_event);
         } else if (message.clan_profile_updated_event) {
-          this.onclanprofileupdated(message.clan_profile_updated_event) 
+          this.onclanprofileupdated(message.clan_profile_updated_event);
         } else if (message.clan_updated_event) {
-          this.onclanupdated(message.clan_updated_event)
+          this.onclanupdated(message.clan_updated_event);
+        } else if (message.last_seen_message_event) {
+          this.onlastseenupdated(message.last_seen_message_event);
         } else if (message.status_presence_event) {
           this.onstatuspresence(<StatusPresenceEvent>message.status_presence_event);
         } else if (message.stream_presence_event) {
@@ -1593,6 +1598,12 @@ export class DefaultSocket implements Socket {
   onclanupdated(clan: ClanUpdatedEvent) {
     if (this.verbose && window && window.console) {
       console.log(clan);
+    }
+  }
+
+  onlastseenupdated(event: LastSeenMessageEvent) {
+    if (this.verbose && window && window.console) {
+      console.log(event);
     }
   }
 
