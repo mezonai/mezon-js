@@ -1496,6 +1496,8 @@ export interface ApiPinMessageRequest {
   //
   channel_id?: string;
   //
+  clan_id?: string;
+  //
   message_id?: string;
 }
 
@@ -6277,12 +6279,16 @@ export class MezonApi {
 
   /**  */
   getPinMessagesList(bearerToken: string,
+      messageId?:string,
       channelId?:string,
+      clanId?:string,
       options: any = {}): Promise<ApiPinMessagesList> {
     
     const urlPath = "/v2/pinmessage/get";
     const queryParams = new Map<string, any>();
+    queryParams.set("message_id", messageId);
     queryParams.set("channel_id", channelId);
+    queryParams.set("clan_id", clanId);
 
     let bodyJson : string = "";
 
