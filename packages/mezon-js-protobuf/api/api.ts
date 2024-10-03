@@ -1574,6 +1574,8 @@ export interface ClanDesc {
   clan_id: string;
   /** Clan status */
   status: number;
+  /** Badge count */
+  badge_count: number;
 }
 
 /** Clan information */
@@ -1694,6 +1696,8 @@ export interface ClanProfile {
   avatar: string;
   /** id clan */
   clan_id: string;
+  /** badge count */
+  badge_count: number;
 }
 
 /** information user by clan requset */
@@ -3063,16 +3067,6 @@ export interface PermissionRoleChannelListEventResponse {
   user_id: string;
   /** list of permission role channel */
   permission_role_channel: PermissionRoleChannel[];
-}
-
-/**  */
-export interface CountClanBadgeResponse {
-  badges: CountClanBadgeResponse_Badge[];
-}
-
-export interface CountClanBadgeResponse_Badge {
-  clan_id: string;
-  count: number;
 }
 
 function createBaseAccount(): Account {
@@ -13564,7 +13558,7 @@ export const ClanDescProfileRequest = {
 };
 
 function createBaseClanDesc(): ClanDesc {
-  return { creator_id: "", clan_name: "", logo: "", banner: "", clan_id: "", status: 0 };
+  return { creator_id: "", clan_name: "", logo: "", banner: "", clan_id: "", status: 0, badge_count: 0 };
 }
 
 export const ClanDesc = {
@@ -13586,6 +13580,9 @@ export const ClanDesc = {
     }
     if (message.status !== 0) {
       writer.uint32(48).int32(message.status);
+    }
+    if (message.badge_count !== 0) {
+      writer.uint32(56).int32(message.badge_count);
     }
     return writer;
   },
@@ -13639,6 +13636,13 @@ export const ClanDesc = {
 
           message.status = reader.int32();
           continue;
+        case 7:
+          if (tag !== 56) {
+            break;
+          }
+
+          message.badge_count = reader.int32();
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -13656,6 +13660,7 @@ export const ClanDesc = {
       banner: isSet(object.banner) ? globalThis.String(object.banner) : "",
       clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
       status: isSet(object.status) ? globalThis.Number(object.status) : 0,
+      badge_count: isSet(object.badge_count) ? globalThis.Number(object.badge_count) : 0,
     };
   },
 
@@ -13679,6 +13684,9 @@ export const ClanDesc = {
     if (message.status !== 0) {
       obj.status = Math.round(message.status);
     }
+    if (message.badge_count !== 0) {
+      obj.badge_count = Math.round(message.badge_count);
+    }
     return obj;
   },
 
@@ -13693,6 +13701,7 @@ export const ClanDesc = {
     message.banner = object.banner ?? "";
     message.clan_id = object.clan_id ?? "";
     message.status = object.status ?? 0;
+    message.badge_count = object.badge_count ?? 0;
     return message;
   },
 };
@@ -14622,7 +14631,7 @@ export const LinkInviteUser = {
 };
 
 function createBaseClanProfile(): ClanProfile {
-  return { user_id: "", nick_name: "", avatar: "", clan_id: "" };
+  return { user_id: "", nick_name: "", avatar: "", clan_id: "", badge_count: 0 };
 }
 
 export const ClanProfile = {
@@ -14638,6 +14647,9 @@ export const ClanProfile = {
     }
     if (message.clan_id !== "") {
       writer.uint32(34).string(message.clan_id);
+    }
+    if (message.badge_count !== 0) {
+      writer.uint32(40).int32(message.badge_count);
     }
     return writer;
   },
@@ -14677,6 +14689,13 @@ export const ClanProfile = {
 
           message.clan_id = reader.string();
           continue;
+        case 5:
+          if (tag !== 40) {
+            break;
+          }
+
+          message.badge_count = reader.int32();
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -14692,6 +14711,7 @@ export const ClanProfile = {
       nick_name: isSet(object.nick_name) ? globalThis.String(object.nick_name) : "",
       avatar: isSet(object.avatar) ? globalThis.String(object.avatar) : "",
       clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
+      badge_count: isSet(object.badge_count) ? globalThis.Number(object.badge_count) : 0,
     };
   },
 
@@ -14709,6 +14729,9 @@ export const ClanProfile = {
     if (message.clan_id !== "") {
       obj.clan_id = message.clan_id;
     }
+    if (message.badge_count !== 0) {
+      obj.badge_count = Math.round(message.badge_count);
+    }
     return obj;
   },
 
@@ -14721,6 +14744,7 @@ export const ClanProfile = {
     message.nick_name = object.nick_name ?? "";
     message.avatar = object.avatar ?? "";
     message.clan_id = object.clan_id ?? "";
+    message.badge_count = object.badge_count ?? 0;
     return message;
   },
 };
@@ -28923,141 +28947,6 @@ export const PermissionRoleChannelListEventResponse = {
     message.user_id = object.user_id ?? "";
     message.permission_role_channel =
       object.permission_role_channel?.map((e) => PermissionRoleChannel.fromPartial(e)) || [];
-    return message;
-  },
-};
-
-function createBaseCountClanBadgeResponse(): CountClanBadgeResponse {
-  return { badges: [] };
-}
-
-export const CountClanBadgeResponse = {
-  encode(message: CountClanBadgeResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    for (const v of message.badges) {
-      CountClanBadgeResponse_Badge.encode(v!, writer.uint32(10).fork()).ldelim();
-    }
-    return writer;
-  },
-
-  decode(input: _m0.Reader | Uint8Array, length?: number): CountClanBadgeResponse {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseCountClanBadgeResponse();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
-          if (tag !== 10) {
-            break;
-          }
-
-          message.badges.push(CountClanBadgeResponse_Badge.decode(reader, reader.uint32()));
-          continue;
-      }
-      if ((tag & 7) === 4 || tag === 0) {
-        break;
-      }
-      reader.skipType(tag & 7);
-    }
-    return message;
-  },
-
-  fromJSON(object: any): CountClanBadgeResponse {
-    return {
-      badges: globalThis.Array.isArray(object?.badges)
-        ? object.badges.map((e: any) => CountClanBadgeResponse_Badge.fromJSON(e))
-        : [],
-    };
-  },
-
-  toJSON(message: CountClanBadgeResponse): unknown {
-    const obj: any = {};
-    if (message.badges?.length) {
-      obj.badges = message.badges.map((e) => CountClanBadgeResponse_Badge.toJSON(e));
-    }
-    return obj;
-  },
-
-  create<I extends Exact<DeepPartial<CountClanBadgeResponse>, I>>(base?: I): CountClanBadgeResponse {
-    return CountClanBadgeResponse.fromPartial(base ?? ({} as any));
-  },
-  fromPartial<I extends Exact<DeepPartial<CountClanBadgeResponse>, I>>(object: I): CountClanBadgeResponse {
-    const message = createBaseCountClanBadgeResponse();
-    message.badges = object.badges?.map((e) => CountClanBadgeResponse_Badge.fromPartial(e)) || [];
-    return message;
-  },
-};
-
-function createBaseCountClanBadgeResponse_Badge(): CountClanBadgeResponse_Badge {
-  return { clan_id: "", count: 0 };
-}
-
-export const CountClanBadgeResponse_Badge = {
-  encode(message: CountClanBadgeResponse_Badge, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.clan_id !== "") {
-      writer.uint32(10).string(message.clan_id);
-    }
-    if (message.count !== 0) {
-      writer.uint32(16).int32(message.count);
-    }
-    return writer;
-  },
-
-  decode(input: _m0.Reader | Uint8Array, length?: number): CountClanBadgeResponse_Badge {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseCountClanBadgeResponse_Badge();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
-          if (tag !== 10) {
-            break;
-          }
-
-          message.clan_id = reader.string();
-          continue;
-        case 2:
-          if (tag !== 16) {
-            break;
-          }
-
-          message.count = reader.int32();
-          continue;
-      }
-      if ((tag & 7) === 4 || tag === 0) {
-        break;
-      }
-      reader.skipType(tag & 7);
-    }
-    return message;
-  },
-
-  fromJSON(object: any): CountClanBadgeResponse_Badge {
-    return {
-      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
-      count: isSet(object.count) ? globalThis.Number(object.count) : 0,
-    };
-  },
-
-  toJSON(message: CountClanBadgeResponse_Badge): unknown {
-    const obj: any = {};
-    if (message.clan_id !== "") {
-      obj.clan_id = message.clan_id;
-    }
-    if (message.count !== 0) {
-      obj.count = Math.round(message.count);
-    }
-    return obj;
-  },
-
-  create<I extends Exact<DeepPartial<CountClanBadgeResponse_Badge>, I>>(base?: I): CountClanBadgeResponse_Badge {
-    return CountClanBadgeResponse_Badge.fromPartial(base ?? ({} as any));
-  },
-  fromPartial<I extends Exact<DeepPartial<CountClanBadgeResponse_Badge>, I>>(object: I): CountClanBadgeResponse_Badge {
-    const message = createBaseCountClanBadgeResponse_Badge();
-    message.clan_id = object.clan_id ?? "";
-    message.count = object.count ?? 0;
     return message;
   },
 };
