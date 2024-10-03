@@ -37,6 +37,14 @@ export interface ClanUserListClanUser {
 }
 
 /**  */
+export interface CountClanBadgeResponseBadge {
+  //
+  clan_id?: string;
+  //
+  count?: number;
+}
+
+/**  */
 export interface MezonChangeChannelCategoryBody {
   //
   channel_id?: string;
@@ -818,6 +826,12 @@ export interface ApiClanUserList {
   clan_users?: Array<ClanUserListClanUser>;
   //Cursor for the next page of results, if any.
   cursor?: string;
+}
+
+/**  */
+export interface ApiCountClanBadgeResponse {
+  //
+  badges?: Array<CountClanBadgeResponseBadge>;
 }
 
 /**  */
@@ -3708,7 +3722,38 @@ export class MezonApi {
         setTimeout(reject, this.timeoutMs, "Request timed out.")
       ),
     ]);
-  }
+}
+
+/** count clan badge */
+countClanBadge(bearerToken: string,
+  options: any = {}): Promise<ApiCountClanBadgeResponse> {
+
+const urlPath = "/v2/badges";
+const queryParams = new Map<string, any>();
+
+let bodyJson : string = "";
+
+const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
+const fetchOptions = buildFetchOptions("GET", options, bodyJson);
+if (bearerToken) {
+    fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+}
+
+return Promise.race([
+  fetch(fullUrl, fetchOptions).then((response) => {
+    if (response.status == 204) {
+      return response;
+    } else if (response.status >= 200 && response.status < 300) {
+      return response.json();
+    } else {
+      throw response;
+    }
+  }),
+  new Promise((_, reject) =>
+    setTimeout(reject, this.timeoutMs, "Request timed out.")
+  ),
+]);
+}
   /**  */
   updateCategoryOrder(
     bearerToken: string,
