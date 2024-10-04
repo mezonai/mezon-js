@@ -29,7 +29,7 @@ import { Session } from "./session";
 import { DefaultSocket } from "./socket";
 import { WebSocketAdapter } from "./web_socket_adapter";
 import { WebSocketAdapterPb } from './web_socket_adapter_pb';
-import { Events } from "./constants/enum";
+import { ChannelType, Events } from "./constants/enum";
 import {
   Client,
   ApiChannelDescription,
@@ -66,8 +66,6 @@ export class MezonClient implements Client {
 
   /** the session */
   private session: Session | undefined;
-
-  private _DMchannels : {[x: string] : ApiChannelDescription} = {};
 
   [key: string]: any;
 
@@ -267,40 +265,39 @@ export class MezonClient implements Client {
       .createChannelDesc(session.token, request);
   }
 
+  async sleep(ms: number) {
+    return new Promise((resolve) => setTimeout(resolve, ms));
+  }
 
-  async getDMchannel(userId: string) : Promise<null | ApiChannelDescription> {
-    try{
+  async createDMchannel(userId: string) : Promise<null | ApiChannelDescription> {
+    try {
       if (!isValidUserId(userId)) return null;
 
-      const request : ApiCreateChannelDescRequest = {
-        clan_id: "0",
+      const request: ApiCreateChannelDescRequest = {
+        clan_id: "",
         channel_id: "0",
         category_id: "0",
         type: 3,
         user_ids: [userId],
         channel_private: 1,
-      }
-      if (!(userId in this._DMchannels)) {
-        const channelDM = await this.createChannelDesc(request);
+      };
+      const channelDM = await this.createChannelDesc(request);
+      
+      if (channelDM) {
+        await this.sleep(100);
 
-        if (channelDM) {
-          this._DMchannels[userId] = channelDM;
-          await this.socket.joinChat(
-            channelDM.clan_id!,
-            channelDM.parent_id!,
-            channelDM.channel_id!,
-            channelDM.type!,
-            false,
-            false
-          );
-          return channelDM;
-        }
-
-        return null;
-      } else {
-        return this._DMchannels[userId];
+        await this.socket.joinChat(
+          channelDM.clan_id!,
+          channelDM.parent_id!,
+          channelDM.channel_id!,
+          channelDM.type!,
+          false,
+          false
+        );
+        return channelDM;
       }
-    }catch(e){
+      return null;
+    } catch (e) {
       console.log(e);
       return null;
     }
@@ -318,24 +315,21 @@ export class MezonClient implements Client {
     return stack;
   }
 
-  async sendMessageUser(
-    userId: string,
+  async sendDMChannelMessage(
+    channelDmId: string,
     msg: string,
     messOptions: {[x: string]: any} = {},
     attachments: Array<ApiMessageAttachment> = [],
     refs: Array<ApiMessageRef> = []
   ) {
-      const channelDM = await this.getDMchannel(userId);
-
-      if (!channelDM) throw Error(`can't get channel DM`);
-      
+    try {
       const message = {
-        clan_id: channelDM.clan_id!,
-        channel_id: channelDM.channel_id!,
+        clan_id: "",
+        channel_id: channelDmId,
         is_public: false,
         is_parent_public: false,
-        parent_id: channelDM.parent_id!,
-        mode: convertChanneltypeToChannelMode(channelDM.type!),
+        parent_id: "0",
+        mode: convertChanneltypeToChannelMode(ChannelType.CHANNEL_TYPE_DM),
         mentions: [],
         attachments: attachments,
         ref: [],
@@ -356,6 +350,9 @@ export class MezonClient implements Client {
         mess.attachments,
         refs
       );
+    } catch (error) {
+      throw Error(`Can't send message channel DM`);
+    }
   }
 
     /** List a channel's users. */
