@@ -106,6 +106,8 @@ export enum ApiAppRole {
 /** Update fields in a given channel. */
 export interface MezonUpdateChannelDescBody {
   //
+  app_url?: string;
+  //
   category_id?: string;
   //
   channel_label?: string;
@@ -542,6 +544,8 @@ export interface ApiChannelDescList {
 export interface ApiChannelDescription {
   //
   active?: number;
+  //
+  app_url?: string;
   //
   category_id?: string;
   //
