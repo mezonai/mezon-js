@@ -401,6 +401,8 @@ export interface ApiUpdateChannelDescRequest {
   channel_label: string | undefined;
   /** The category of channel */
   category_id: string | undefined;
+  /** The app url of channel */
+  app_url: string | undefined;
 }
 
 /** Add users to a channel. */

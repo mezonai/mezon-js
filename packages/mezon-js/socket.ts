@@ -422,6 +422,8 @@ export interface ChannelUpdatedEvent {
   meeting_code: string;
   // is error
   is_error: boolean;
+  // app url
+  app_url: string;
 }
 
 export interface ChannelCreatedEvent {
@@ -447,6 +449,8 @@ export interface ChannelCreatedEvent {
   parent_id: string;
   // parent public
   is_parent_public: boolean;
+  // app url
+  app_url: string;
 }
 
 export interface ChannelDeletedEvent {
@@ -743,6 +747,8 @@ export interface ChannelDescription {
   type?: number;
   // The channel lable
   channel_label?: string;
+  // The app url
+  app_url?: string;
   // The channel private
   channel_private?: number;
   // meeting code
