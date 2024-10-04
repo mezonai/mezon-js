@@ -315,7 +315,7 @@ export class MezonClient implements Client {
     return stack;
   }
 
-  async sendMessageUser(
+  async sendDMChannelMessage(
     channelDmId: string,
     msg: string,
     messOptions: {[x: string]: any} = {},

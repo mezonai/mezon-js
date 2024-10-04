@@ -58,8 +58,8 @@ export class Stack {
             mess.ref
           );
         } else {
-          msgACK = await this.client.sendMessageUser(
-            mess.userId,
+          msgACK = await this.client.sendDMChannelMessage(
+            mess.channelDmId,
             mess.msg,
             mess.messOptions ? mess.messOptions : {},
             Array.isArray(mess.attachments) ? mess.attachments : [],
