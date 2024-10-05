@@ -120,6 +120,7 @@ import {
   ApiAllUserClans,
   ApiUserPermissionInChannelListResponse,
   ApiPermissionRoleChannelListEventResponse,
+  ApiMarkAsReadRequest,
 } from "./api.gen";
 
 import { Session } from "./session";
@@ -3897,6 +3898,25 @@ export class Client {
         };
 
         return Promise.resolve(result);
+      });
+  }
+
+  async markAsRead(
+    session: Session,
+    request: ApiMarkAsReadRequest
+  ): Promise<any> {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired((Date.now() + this.expiredTimespanMs) / 1000)
+    ) {
+      await this.sessionRefresh(session);
+    }
+
+    return this.apiClient
+      .markAsRead(session.token, request)
+      .then((response: any) => {
+        return Promise.resolve(response);
       });
   }
 }
