@@ -1227,6 +1227,16 @@ export interface ApiMessageDeleted {
 }
 
 /**  */
+export interface ApiMarkAsReadRequest {
+  //
+  category_id?: string;
+  //
+  channel_id?: string;
+  //
+  clan_id?: string;
+}
+
+/**  */
 export interface ApiMessageMention {
   //The UNIX time (for gRPC clients) or ISO string (for REST clients) when the message was created.
   create_time?: string;
@@ -6099,6 +6109,42 @@ export class MezonApi {
       ),
     ]);
   }
+
+  /** Mark as read */
+  markAsRead(bearerToken: string,
+      body:ApiMarkAsReadRequest,
+      options: any = {}): Promise<any> {
+    
+    if (body === null || body === undefined) {
+      throw new Error("'body' is a required parameter but is null or undefined.");
+    }
+    const urlPath = "/v2/markasread";
+    const queryParams = new Map<string, any>();
+
+    let bodyJson : string = "";
+    bodyJson = JSON.stringify(body || {});
+
+    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
+    const fetchOptions = buildFetchOptions("POST", options, bodyJson);
+    if (bearerToken) {
+        fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+    }
+
+    return Promise.race([
+      fetch(fullUrl, fetchOptions).then((response) => {
+        if (response.status == 204) {
+          return response;
+        } else if (response.status >= 200 && response.status < 300) {
+          return response.json();
+        } else {
+          throw response;
+        }
+      }),
+      new Promise((_, reject) =>
+        setTimeout(reject, this.timeoutMs, "Request timed out.")
+      ),
+    ]);
+}
 
   /** set mute notification user channel. */
   setMuteNotificationCategory(
