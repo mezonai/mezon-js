@@ -953,6 +953,13 @@ export interface SetPermissionChannelEvent {
   channel_id: string;
   /** List permission update */
   permission_updates: ApiPermissionUpdate[];
+  /**  */
+  caller: string;
+}
+
+export interface EventUserPermissionChannel{
+  user_id: string;
+  channel_id: string;
 }
 
 /** A socket connection to Mezon server. */
@@ -1172,6 +1179,8 @@ export interface Socket {
   onstreamingchannelleaved: (streaming_leaved_event: StreamingLeavedEvent) => void;
 
   onsetpermissionchannel: (set_permission_channel_event: SetPermissionChannelEvent) => void;
+
+  onuserpermissionchannel: (event_user_permission_channel: EventUserPermissionChannel) => void;
 }
 
 /** Reports an error received from a socket message. */
@@ -1371,7 +1380,9 @@ export class DefaultSocket implements Socket {
           this.onstreamingchannelleaved(<StreamingLeavedEvent>message.streaming_leaved_event);
         } else if(message.set_permission_channel_event){
           this.onsetpermissionchannel(<SetPermissionChannelEvent>message.set_permission_channel_event);
-        }else {
+        } else if(message.event_user_permission_channel){
+          this.onuserpermissionchannel(<EventUserPermissionChannel>message.event_user_permission_channel);
+        } else {
           if (this.verbose && window && window.console) {
             console.log("Unrecognized message received: %o", message);
           }
@@ -1682,6 +1693,12 @@ export class DefaultSocket implements Socket {
   onsetpermissionchannel(set_permission_channel_event: SetPermissionChannelEvent){
     if (this.verbose && window && window.console) {
       console.log(set_permission_channel_event);
+    }
+  }
+
+  onuserpermissionchannel(event_user_permission_channel: EventUserPermissionChannel){
+    if (this.verbose && window && window.console) {
+      console.log(event_user_permission_channel);
     }
   }
 
