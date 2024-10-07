@@ -1346,52 +1346,52 @@ export const Envelope = {
       UserProfileUpdatedEvent.encode(message.user_profile_updated_event, writer.uint32(338).fork()).ldelim();
     }
     if (message.add_clan_user_event !== undefined) {
-      AddClanUserEvent.encode(message.add_clan_user_event, writer.uint32(426).fork()).ldelim();
+      AddClanUserEvent.encode(message.add_clan_user_event, writer.uint32(346).fork()).ldelim();
     }
     if (message.clan_event_created !== undefined) {
-      CreateEventRequest.encode(message.clan_event_created, writer.uint32(442).fork()).ldelim();
+      CreateEventRequest.encode(message.clan_event_created, writer.uint32(354).fork()).ldelim();
     }
     if (message.role_assign_event !== undefined) {
-      RoleAssignedEvent.encode(message.role_assign_event, writer.uint32(466).fork()).ldelim();
+      RoleAssignedEvent.encode(message.role_assign_event, writer.uint32(362).fork()).ldelim();
     }
     if (message.clan_deleted_event !== undefined) {
-      ClanDeletedEvent.encode(message.clan_deleted_event, writer.uint32(474).fork()).ldelim();
+      ClanDeletedEvent.encode(message.clan_deleted_event, writer.uint32(370).fork()).ldelim();
     }
     if (message.give_coffee_event !== undefined) {
-      GiveCoffeeEvent.encode(message.give_coffee_event, writer.uint32(482).fork()).ldelim();
+      GiveCoffeeEvent.encode(message.give_coffee_event, writer.uint32(378).fork()).ldelim();
     }
     if (message.sticker_create_event !== undefined) {
-      StickerCreateEvent.encode(message.sticker_create_event, writer.uint32(490).fork()).ldelim();
+      StickerCreateEvent.encode(message.sticker_create_event, writer.uint32(386).fork()).ldelim();
     }
     if (message.sticker_update_event !== undefined) {
-      StickerUpdateEvent.encode(message.sticker_update_event, writer.uint32(498).fork()).ldelim();
+      StickerUpdateEvent.encode(message.sticker_update_event, writer.uint32(394).fork()).ldelim();
     }
     if (message.sticker_delete_event !== undefined) {
-      StickerDeleteEvent.encode(message.sticker_delete_event, writer.uint32(506).fork()).ldelim();
+      StickerDeleteEvent.encode(message.sticker_delete_event, writer.uint32(402).fork()).ldelim();
     }
     if (message.role_event !== undefined) {
-      RoleEvent.encode(message.role_event, writer.uint32(514).fork()).ldelim();
+      RoleEvent.encode(message.role_event, writer.uint32(410).fork()).ldelim();
     }
     if (message.event_emoji !== undefined) {
-      EventEmoji.encode(message.event_emoji, writer.uint32(522).fork()).ldelim();
+      EventEmoji.encode(message.event_emoji, writer.uint32(418).fork()).ldelim();
     }
     if (message.streaming_joined_event !== undefined) {
-      StreamingJoinedEvent.encode(message.streaming_joined_event, writer.uint32(530).fork()).ldelim();
+      StreamingJoinedEvent.encode(message.streaming_joined_event, writer.uint32(426).fork()).ldelim();
     }
     if (message.streaming_leaved_event !== undefined) {
-      StreamingLeavedEvent.encode(message.streaming_leaved_event, writer.uint32(538).fork()).ldelim();
+      StreamingLeavedEvent.encode(message.streaming_leaved_event, writer.uint32(434).fork()).ldelim();
     }
     if (message.streaming_started_event !== undefined) {
-      StreamingStartedEvent.encode(message.streaming_started_event, writer.uint32(546).fork()).ldelim();
+      StreamingStartedEvent.encode(message.streaming_started_event, writer.uint32(442).fork()).ldelim();
     }
     if (message.streaming_ended_event !== undefined) {
-      StreamingEndedEvent.encode(message.streaming_ended_event, writer.uint32(554).fork()).ldelim();
+      StreamingEndedEvent.encode(message.streaming_ended_event, writer.uint32(450).fork()).ldelim();
     }
     if (message.set_permission_channel_event !== undefined) {
-      EventSetPermissionChannel.encode(message.set_permission_channel_event, writer.uint32(570).fork()).ldelim();
+      EventSetPermissionChannel.encode(message.set_permission_channel_event, writer.uint32(458).fork()).ldelim();
     }
     if (message.event_user_permission_channel !== undefined) {
-      EventUserPermissionChannel.encode(message.event_user_permission_channel, writer.uint32(578).fork()).ldelim();
+      EventUserPermissionChannel.encode(message.event_user_permission_channel, writer.uint32(466).fork()).ldelim();
     }
     return writer;
   },
@@ -1697,113 +1697,113 @@ export const Envelope = {
 
           message.user_profile_updated_event = UserProfileUpdatedEvent.decode(reader, reader.uint32());
           continue;
+        case 43:
+          if (tag !== 346) {
+            break;
+          }
+
+          message.add_clan_user_event = AddClanUserEvent.decode(reader, reader.uint32());
+          continue;
+        case 44:
+          if (tag !== 354) {
+            break;
+          }
+
+          message.clan_event_created = CreateEventRequest.decode(reader, reader.uint32());
+          continue;
+        case 45:
+          if (tag !== 362) {
+            break;
+          }
+
+          message.role_assign_event = RoleAssignedEvent.decode(reader, reader.uint32());
+          continue;
+        case 46:
+          if (tag !== 370) {
+            break;
+          }
+
+          message.clan_deleted_event = ClanDeletedEvent.decode(reader, reader.uint32());
+          continue;
+        case 47:
+          if (tag !== 378) {
+            break;
+          }
+
+          message.give_coffee_event = GiveCoffeeEvent.decode(reader, reader.uint32());
+          continue;
+        case 48:
+          if (tag !== 386) {
+            break;
+          }
+
+          message.sticker_create_event = StickerCreateEvent.decode(reader, reader.uint32());
+          continue;
+        case 49:
+          if (tag !== 394) {
+            break;
+          }
+
+          message.sticker_update_event = StickerUpdateEvent.decode(reader, reader.uint32());
+          continue;
+        case 50:
+          if (tag !== 402) {
+            break;
+          }
+
+          message.sticker_delete_event = StickerDeleteEvent.decode(reader, reader.uint32());
+          continue;
+        case 51:
+          if (tag !== 410) {
+            break;
+          }
+
+          message.role_event = RoleEvent.decode(reader, reader.uint32());
+          continue;
+        case 52:
+          if (tag !== 418) {
+            break;
+          }
+
+          message.event_emoji = EventEmoji.decode(reader, reader.uint32());
+          continue;
         case 53:
           if (tag !== 426) {
             break;
           }
 
-          message.add_clan_user_event = AddClanUserEvent.decode(reader, reader.uint32());
+          message.streaming_joined_event = StreamingJoinedEvent.decode(reader, reader.uint32());
+          continue;
+        case 54:
+          if (tag !== 434) {
+            break;
+          }
+
+          message.streaming_leaved_event = StreamingLeavedEvent.decode(reader, reader.uint32());
           continue;
         case 55:
           if (tag !== 442) {
             break;
           }
 
-          message.clan_event_created = CreateEventRequest.decode(reader, reader.uint32());
-          continue;
-        case 58:
-          if (tag !== 466) {
-            break;
-          }
-
-          message.role_assign_event = RoleAssignedEvent.decode(reader, reader.uint32());
-          continue;
-        case 59:
-          if (tag !== 474) {
-            break;
-          }
-
-          message.clan_deleted_event = ClanDeletedEvent.decode(reader, reader.uint32());
-          continue;
-        case 60:
-          if (tag !== 482) {
-            break;
-          }
-
-          message.give_coffee_event = GiveCoffeeEvent.decode(reader, reader.uint32());
-          continue;
-        case 61:
-          if (tag !== 490) {
-            break;
-          }
-
-          message.sticker_create_event = StickerCreateEvent.decode(reader, reader.uint32());
-          continue;
-        case 62:
-          if (tag !== 498) {
-            break;
-          }
-
-          message.sticker_update_event = StickerUpdateEvent.decode(reader, reader.uint32());
-          continue;
-        case 63:
-          if (tag !== 506) {
-            break;
-          }
-
-          message.sticker_delete_event = StickerDeleteEvent.decode(reader, reader.uint32());
-          continue;
-        case 64:
-          if (tag !== 514) {
-            break;
-          }
-
-          message.role_event = RoleEvent.decode(reader, reader.uint32());
-          continue;
-        case 65:
-          if (tag !== 522) {
-            break;
-          }
-
-          message.event_emoji = EventEmoji.decode(reader, reader.uint32());
-          continue;
-        case 66:
-          if (tag !== 530) {
-            break;
-          }
-
-          message.streaming_joined_event = StreamingJoinedEvent.decode(reader, reader.uint32());
-          continue;
-        case 67:
-          if (tag !== 538) {
-            break;
-          }
-
-          message.streaming_leaved_event = StreamingLeavedEvent.decode(reader, reader.uint32());
-          continue;
-        case 68:
-          if (tag !== 546) {
-            break;
-          }
-
           message.streaming_started_event = StreamingStartedEvent.decode(reader, reader.uint32());
           continue;
-        case 69:
-          if (tag !== 554) {
+        case 56:
+          if (tag !== 450) {
             break;
           }
 
           message.streaming_ended_event = StreamingEndedEvent.decode(reader, reader.uint32());
           continue;
-        case 71:
-          if (tag !== 570) {
+        case 57:
+          if (tag !== 458) {
             break;
           }
 
           message.set_permission_channel_event = EventSetPermissionChannel.decode(reader, reader.uint32());
           continue;
-        case 72:
-          if (tag !== 578) {
+        case 58:
+          if (tag !== 466) {
             break;
           }
 
