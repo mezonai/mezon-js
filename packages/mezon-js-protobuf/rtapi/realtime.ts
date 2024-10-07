@@ -313,7 +313,11 @@ export interface Envelope {
     | AllUsersAddChannelEvent
     | undefined;
   /** set permission of role/user in channel */
-  set_permission_channel_event?: EventSetPermissionChannel | undefined;
+  set_permission_channel_event?:
+    | EventSetPermissionChannel
+    | undefined;
+  /**  */
+  event_user_permission_channel?: EventUserPermissionChannel | undefined;
 }
 
 export interface AllUserClans {
@@ -1345,10 +1349,16 @@ export interface EventEmoji {
 }
 
 export interface EventSetPermissionChannel {
+  caller: string;
   role_id: string;
   user_id: string;
   channel_id: string;
   permission_updates: PermissionUpdate[];
+}
+
+export interface EventUserPermissionChannel {
+  user_id: string;
+  channel_id: string;
 }
 
 function createBaseEnvelope(): Envelope {
@@ -1424,6 +1434,7 @@ function createBaseEnvelope(): Envelope {
     streaming_ended_event: undefined,
     all_users_add_channel_event: undefined,
     set_permission_channel_event: undefined,
+    event_user_permission_channel: undefined,
   };
 }
 
@@ -1648,6 +1659,9 @@ export const Envelope = {
     }
     if (message.set_permission_channel_event !== undefined) {
       EventSetPermissionChannel.encode(message.set_permission_channel_event, writer.uint32(570).fork()).ldelim();
+    }
+    if (message.event_user_permission_channel !== undefined) {
+      EventUserPermissionChannel.encode(message.event_user_permission_channel, writer.uint32(578).fork()).ldelim();
     }
     return writer;
   },
@@ -2165,6 +2179,13 @@ export const Envelope = {
 
           message.set_permission_channel_event = EventSetPermissionChannel.decode(reader, reader.uint32());
           continue;
+        case 72:
+          if (tag !== 578) {
+            break;
+          }
+
+          message.event_user_permission_channel = EventUserPermissionChannel.decode(reader, reader.uint32());
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -2348,6 +2369,9 @@ export const Envelope = {
         : undefined,
       set_permission_channel_event: isSet(object.set_permission_channel_event)
         ? EventSetPermissionChannel.fromJSON(object.set_permission_channel_event)
+        : undefined,
+      event_user_permission_channel: isSet(object.event_user_permission_channel)
+        ? EventUserPermissionChannel.fromJSON(object.event_user_permission_channel)
         : undefined,
     };
   },
@@ -2578,6 +2602,9 @@ export const Envelope = {
     }
     if (message.set_permission_channel_event !== undefined) {
       obj.set_permission_channel_event = EventSetPermissionChannel.toJSON(message.set_permission_channel_event);
+    }
+    if (message.event_user_permission_channel !== undefined) {
+      obj.event_user_permission_channel = EventUserPermissionChannel.toJSON(message.event_user_permission_channel);
     }
     return obj;
   },
@@ -2823,6 +2850,10 @@ export const Envelope = {
     message.set_permission_channel_event =
       (object.set_permission_channel_event !== undefined && object.set_permission_channel_event !== null)
         ? EventSetPermissionChannel.fromPartial(object.set_permission_channel_event)
+        : undefined;
+    message.event_user_permission_channel =
+      (object.event_user_permission_channel !== undefined && object.event_user_permission_channel !== null)
+        ? EventUserPermissionChannel.fromPartial(object.event_user_permission_channel)
         : undefined;
     return message;
   },
@@ -11613,22 +11644,25 @@ export const EventEmoji = {
 };
 
 function createBaseEventSetPermissionChannel(): EventSetPermissionChannel {
-  return { role_id: "", user_id: "", channel_id: "", permission_updates: [] };
+  return { caller: "", role_id: "", user_id: "", channel_id: "", permission_updates: [] };
 }
 
 export const EventSetPermissionChannel = {
   encode(message: EventSetPermissionChannel, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.caller !== "") {
+      writer.uint32(10).string(message.caller);
+    }
     if (message.role_id !== "") {
-      writer.uint32(10).string(message.role_id);
+      writer.uint32(18).string(message.role_id);
     }
     if (message.user_id !== "") {
-      writer.uint32(18).string(message.user_id);
+      writer.uint32(26).string(message.user_id);
     }
     if (message.channel_id !== "") {
-      writer.uint32(26).string(message.channel_id);
+      writer.uint32(34).string(message.channel_id);
     }
     for (const v of message.permission_updates) {
-      PermissionUpdate.encode(v!, writer.uint32(34).fork()).ldelim();
+      PermissionUpdate.encode(v!, writer.uint32(42).fork()).ldelim();
     }
     return writer;
   },
@@ -11645,24 +11679,31 @@ export const EventSetPermissionChannel = {
             break;
           }
 
-          message.role_id = reader.string();
+          message.caller = reader.string();
           continue;
         case 2:
           if (tag !== 18) {
             break;
           }
 
-          message.user_id = reader.string();
+          message.role_id = reader.string();
           continue;
         case 3:
           if (tag !== 26) {
             break;
           }
 
-          message.channel_id = reader.string();
+          message.user_id = reader.string();
           continue;
         case 4:
           if (tag !== 34) {
+            break;
+          }
+
+          message.channel_id = reader.string();
+          continue;
+        case 5:
+          if (tag !== 42) {
             break;
           }
 
@@ -11679,6 +11720,7 @@ export const EventSetPermissionChannel = {
 
   fromJSON(object: any): EventSetPermissionChannel {
     return {
+      caller: isSet(object.caller) ? globalThis.String(object.caller) : "",
       role_id: isSet(object.role_id) ? globalThis.String(object.role_id) : "",
       user_id: isSet(object.user_id) ? globalThis.String(object.user_id) : "",
       channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "",
@@ -11690,6 +11732,9 @@ export const EventSetPermissionChannel = {
 
   toJSON(message: EventSetPermissionChannel): unknown {
     const obj: any = {};
+    if (message.caller !== "") {
+      obj.caller = message.caller;
+    }
     if (message.role_id !== "") {
       obj.role_id = message.role_id;
     }
@@ -11710,10 +11755,85 @@ export const EventSetPermissionChannel = {
   },
   fromPartial<I extends Exact<DeepPartial<EventSetPermissionChannel>, I>>(object: I): EventSetPermissionChannel {
     const message = createBaseEventSetPermissionChannel();
+    message.caller = object.caller ?? "";
     message.role_id = object.role_id ?? "";
     message.user_id = object.user_id ?? "";
     message.channel_id = object.channel_id ?? "";
     message.permission_updates = object.permission_updates?.map((e) => PermissionUpdate.fromPartial(e)) || [];
+    return message;
+  },
+};
+
+function createBaseEventUserPermissionChannel(): EventUserPermissionChannel {
+  return { user_id: "", channel_id: "" };
+}
+
+export const EventUserPermissionChannel = {
+  encode(message: EventUserPermissionChannel, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.user_id !== "") {
+      writer.uint32(10).string(message.user_id);
+    }
+    if (message.channel_id !== "") {
+      writer.uint32(18).string(message.channel_id);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): EventUserPermissionChannel {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseEventUserPermissionChannel();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.user_id = reader.string();
+          continue;
+        case 2:
+          if (tag !== 18) {
+            break;
+          }
+
+          message.channel_id = reader.string();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): EventUserPermissionChannel {
+    return {
+      user_id: isSet(object.user_id) ? globalThis.String(object.user_id) : "",
+      channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "",
+    };
+  },
+
+  toJSON(message: EventUserPermissionChannel): unknown {
+    const obj: any = {};
+    if (message.user_id !== "") {
+      obj.user_id = message.user_id;
+    }
+    if (message.channel_id !== "") {
+      obj.channel_id = message.channel_id;
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<EventUserPermissionChannel>, I>>(base?: I): EventUserPermissionChannel {
+    return EventUserPermissionChannel.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<EventUserPermissionChannel>, I>>(object: I): EventUserPermissionChannel {
+    const message = createBaseEventUserPermissionChannel();
+    message.user_id = object.user_id ?? "";
+    message.channel_id = object.channel_id ?? "";
     return message;
   },
 };
