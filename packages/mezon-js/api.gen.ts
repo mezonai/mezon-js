@@ -686,6 +686,38 @@ export interface ApiChannelMessageList {
   messages?: Array<ApiChannelMessage>;
 }
 
+/**  */
+export interface ApiChannelSettingItem {
+  //
+  active?: number;
+  //
+  category_id?: string;
+  //
+  channel_label?: string;
+  //
+  channel_private?: number;
+  //
+  channel_type?: number;
+  //
+  creator_id?: string;
+  //
+  id?: string;
+  //
+  meeting_code?: string;
+  //
+  parent_id?: string;
+  //
+  user_ids?: Array<string>;
+}
+
+/**  */
+export interface ApiChannelSettingListResponse {
+  //
+  channel_setting_list?: Array<ApiChannelSettingItem>;
+  //
+  clan_id?: string;
+}
+
 /** A list of users belonging to a channel, along with their role. */
 export interface ApiChannelUserList {
   //
@@ -4339,6 +4371,58 @@ export class MezonApi {
       ),
     ]);
   }
+
+  /** List channel setting */
+  listChannelSetting(bearerToken: string,
+      clanId:string,
+      parentId?:string,
+      categoryId?:string,
+      privateChannel?:number,
+      active?:number,
+      status?:number,
+      type?:number,
+      limit?:number,
+      page?:number,
+      options: any = {}): Promise<ApiChannelSettingListResponse> {
+    
+    if (clanId === null || clanId === undefined) {
+      throw new Error("'clanId' is a required parameter but is null or undefined.");
+    }
+    const urlPath = "/v2/channelsetting/{clanId}"
+        .replace("{clanId}", encodeURIComponent(String(clanId)));
+    const queryParams = new Map<string, any>();
+    queryParams.set("parent_id", parentId);
+    queryParams.set("category_id", categoryId);
+    queryParams.set("private_channel", privateChannel);
+    queryParams.set("active", active);
+    queryParams.set("status", status);
+    queryParams.set("type", type);
+    queryParams.set("limit", limit);
+    queryParams.set("page", page);
+
+    let bodyJson : string = "";
+
+    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
+    const fetchOptions = buildFetchOptions("GET", options, bodyJson);
+    if (bearerToken) {
+        fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+    }
+
+    return Promise.race([
+      fetch(fullUrl, fetchOptions).then((response) => {
+        if (response.status == 204) {
+          return response;
+        } else if (response.status >= 200 && response.status < 300) {
+          return response.json();
+        } else {
+          throw response;
+        }
+      }),
+      new Promise((_, reject) =>
+        setTimeout(reject, this.timeoutMs, "Request timed out.")
+      ),
+    ]);
+}
 
   /** List all users that are part of a channel. */
   listChannelVoiceUsers(

@@ -3001,7 +3001,7 @@ export class Client {
     session: Session,
     messageId: string,
     channelId: string,
-    clanId: string,
+    clanId: string
   ): Promise<ApiPinMessagesList> {
     if (
       this.autoRefreshSession &&
@@ -3915,6 +3915,44 @@ export class Client {
 
     return this.apiClient
       .markAsRead(session.token, request)
+      .then((response: any) => {
+        return Promise.resolve(response);
+      });
+  }
+
+  async getChannelSettingInClan(
+    session: Session,
+    clanId: string,
+    parentId?: string,
+    categoryId?: string,
+    privateChannel?: number,
+    active?: number,
+    status?: number,
+    type?: number,
+    limit?: number,
+    page?: number
+  ): Promise<any> {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired((Date.now() + this.expiredTimespanMs) / 1000)
+    ) {
+      await this.sessionRefresh(session);
+    }
+
+    return this.apiClient
+      .listChannelSetting(
+        session.token,
+        clanId,
+        parentId,
+        categoryId,
+        privateChannel,
+        active,
+        status,
+        type,
+        limit,
+        page
+      )
       .then((response: any) => {
         return Promise.resolve(response);
       });
