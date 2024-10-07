@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { ApiChannelDescList, ApiChannelMessageHeader, ApiCreateEventRequest, ApiGiveCoffeeEvent, ApiHashtagDmList, ApiMessageAttachment, ApiMessageMention, ApiMessageReaction, ApiMessageRef, ApiNotification, ApiNotificationChannelCategorySettingList, ApiPermissionList, ApiPermissionUpdate, ApiRole, ApiRoleList, ApiRpc, ApiUser} from "./api.gen";
+import { ApiChannelMessageHeader, ApiCreateEventRequest, ApiGiveCoffeeEvent, ApiMessageAttachment, ApiMessageMention, ApiMessageReaction, ApiMessageRef, ApiNotification, ApiPermissionUpdate, ApiRole, ApiRpc} from "./api.gen";
 import {Session} from "./session";
 import {ChannelMessage, Notification} from "./client";
 import {WebSocketAdapter, WebSocketAdapterText} from "./web_socket_adapter"
@@ -506,24 +506,6 @@ export interface ClanDeletedEvent {
   deletor: string;
 }
 
-// A list of permission role channel.
-export interface PermissionRoleChannelListEvent {
-  //
-  role_id?: string;
-  //
-  channel_id?: string; 
-  // A list of permission.
-  permission_role_channel?: Array<PermissionRoleChannel>;
-}
-
-// Permission role channel
-export interface PermissionRoleChannel {
-  // Permission id 
-  permission_id?: string;
-  // active
-  active?: boolean;
-}
-
 // clan updated event
 export interface ClanUpdatedEvent {
   // the clan id
@@ -627,13 +609,6 @@ export interface CheckNameExistedEvent {
   type: number;
 }
 
-
-/**  */
-export interface StrickerListedEvent {
-  // sticker data
-  stickers?: Array<ClanSticker>;
-}
-
 /**  */
 export interface ClanSticker {
   //
@@ -656,32 +631,10 @@ export interface ClanSticker {
   clan_name?: string;
 }
 
-/**  */
-export interface EmojiListedEvent {
-  // emoji data
-  emoji_list?: Array<ClanEmoji>;
-}
-
-export interface RoleListEvent {
-  Limit: number;
-    // The role state to list.
-  State: number;
-    // Cursor to start from
-  Cursor: string;
-    // The clan of this role
-  ClanId: string;
-  //
-  roles: ApiRoleList;
-}
-
 export interface RoleEvent {
   role: ApiRole;
   status: number;
   user_id: string;
-}
-
-export interface AllUsersAddChannelEvent {
-  user_ids: Array<string>;
 }
 
 export interface EventEmoji {
@@ -694,15 +647,6 @@ export interface EventEmoji {
   user_id: string
   logo: string
   clan_name: string
-}
-
-export interface UserPermissionInChannelListEvent {
-  //
-  clan_id: string;
-  //
-  channel_id: string; 
-  // A list of permission.
-  permissions: ApiPermissionList;
 }
 
 /**  */
@@ -723,18 +667,6 @@ export interface ClanEmoji {
   clan_name?: string;
   //
   clan_id?: string;
-}
-
-/**  */
-export interface ChannelDescListEvent {
-  // 
-  channeldesc?: ApiChannelDescList;
-}
-
-/**  */
-export interface AllUserClans {
-  // 
-  user?: Array<ApiUser>;
 }
 
 /**  */
@@ -761,16 +693,6 @@ export interface ChannelDescription {
   last_sent_message?: ApiChannelMessageHeader;
 }
 
-// A list of Channel
-export interface HashtagDmListEvent {
-  // user Id
-  user_id?: Array<string>;
-  // Max number of records to return. Between 1 and 100.
-  limit?: number;
-  // A list of channel.
-  hashtag_dm?: ApiHashtagDmList;
-}
-
 // hashtagDM
 export interface HashtagDm {
   // The channel id.
@@ -791,59 +713,11 @@ export interface HashtagDm {
   parrent_id?: string;
 }
 
-export interface NotificationChannelSettingEvent {
-  // The channel id.
-  channel_id?: string;
-  //
-  notification_user_channel?: NotificationUserChannel;
-}
-
-export interface NotificationUserChannel {
-  //
-  active?: number;
-  //
-  id?: string;
-  //
-  notification_setting_type?: number;
-  //
-  time_mute?: string;
-}
-
-export interface NotificationCategorySettingEvent {
-  //
-  category_id?: string;
-  //
-  notification_user_channel?: NotificationUserChannel;
-}
-
-export interface NotificationClanSettingEvent {
-  // The clan of this channel
-  clan_id?: string;
-  //
-  notification_setting?: NotificationSetting;
-}
-
 export interface NotificationSetting {
   //
   id?: string;
   //
   notification_setting_type?: number;
-}
-
-export interface NotifiReactMessageEvent {
-  //
-  channel_id?: string;
-  //
-  notifi_react_message?:  NotifiReactMessage;
-}
-
-export interface NotifiReactMessage {
-  //
-  id?: string;
-  //
-  user_id?: string;
-  //
-  channel_id_req?: string;
 }
 
 export interface NotificationChannelCategorySetting {
@@ -857,11 +731,6 @@ export interface NotificationChannelCategorySetting {
   channel_category_title : string;
   //
   action: number
-}
-
-export interface NotificationChannelCategorySettingEvent {
-  clan_id? : string;
-  notification_channel_category_settings_list?: ApiNotificationChannelCategorySettingList
 }
 
 export interface UserEmojiUsage {
@@ -953,6 +822,13 @@ export interface SetPermissionChannelEvent {
   channel_id: string;
   /** List permission update */
   permission_updates: ApiPermissionUpdate[];
+  /**  */
+  caller: string;
+}
+
+export interface EventUserPermissionChannel{
+  user_id: string;
+  channel_id: string;
 }
 
 /** A socket connection to Mezon server. */
@@ -1127,34 +1003,6 @@ export interface Socket {
 
   checkDuplicateName(name: string, condition_id: string, type: number): Promise<CheckNameExistedEvent>;
 
-  listClanEmojiByUserId(): Promise<EmojiListedEvent>;
-
-  listUserPermissionInChannel(clan_id: string, channel_id: string): Promise<UserPermissionInChannelListEvent>;
-
-  listRoles(ClanId: string, Limit: number, State: number, Cursor: string): Promise<RoleListEvent>;
-
-  listStickersByUserId(): Promise<StrickerListedEvent>;
-
-  listChannelByUserId(): Promise<ChannelDescListEvent>;
-
-  listUserClansByUserId(): Promise<AllUserClans>;
-
-  listUsersAddChannelByChannelId(channelId: string, limit: number): Promise<AllUsersAddChannelEvent>;
-  
-  hashtagDMList(user_id: Array<string>, limit: number): Promise<HashtagDmListEvent>;
-
-  getNotificationChannelSetting(channel_id: string): Promise<NotificationChannelSettingEvent>;
-
-  getNotificationCategorySetting(category_id: string): Promise<NotificationCategorySettingEvent>;
-
-  getNotificationClanSetting(clan_id: string): Promise<NotificationClanSettingEvent>;
-
-  getNotificationReactMessage(channel_id_req: string): Promise<NotifiReactMessageEvent>;
-
-  getPermissionByRoleIdChannelId(role_id: string, channel_id: string, user_id: string): Promise<PermissionRoleChannelListEvent>;
-  
-  getNotificationChannelCategorySetting(clan_id : string): Promise<NotificationChannelCategorySettingEvent>;
-
   oneventcreated: (clan_event_created: ApiCreateEventRequest) => void;
 
   oncoffeegiven: (give_coffee_event: ApiGiveCoffeeEvent) => void;
@@ -1172,6 +1020,8 @@ export interface Socket {
   onstreamingchannelleaved: (streaming_leaved_event: StreamingLeavedEvent) => void;
 
   onsetpermissionchannel: (set_permission_channel_event: SetPermissionChannelEvent) => void;
+
+  onuserpermissionchannel: (event_user_permission_channel: EventUserPermissionChannel) => void;
 }
 
 /** Reports an error received from a socket message. */
@@ -1371,7 +1221,9 @@ export class DefaultSocket implements Socket {
           this.onstreamingchannelleaved(<StreamingLeavedEvent>message.streaming_leaved_event);
         } else if(message.set_permission_channel_event){
           this.onsetpermissionchannel(<SetPermissionChannelEvent>message.set_permission_channel_event);
-        }else {
+        } else if(message.event_user_permission_channel){
+          this.onuserpermissionchannel(<EventUserPermissionChannel>message.event_user_permission_channel);
+        } else {
           if (this.verbose && window && window.console) {
             console.log("Unrecognized message received: %o", message);
           }
@@ -1685,6 +1537,12 @@ export class DefaultSocket implements Socket {
     }
   }
 
+  onuserpermissionchannel(event_user_permission_channel: EventUserPermissionChannel){
+    if (this.verbose && window && window.console) {
+      console.log(event_user_permission_channel);
+    }
+  }
+
   send(message: ChannelJoin | ChannelLeave | ChannelMessageSend | ChannelMessageUpdate | CustomStatusEvent |
     ChannelMessageRemove | MessageTypingEvent | LastSeenMessageEvent | Rpc | StatusFollow | StatusUnfollow | StatusUpdate | Ping, sendTimeout = DefaultSocket.DefaultSendTimeoutMs): Promise<any> {
     const untypedMessage = message as any;
@@ -1837,76 +1695,6 @@ export class DefaultSocket implements Socket {
   async checkDuplicateName(name: string, condition_id: string, type: number): Promise<CheckNameExistedEvent> {
     const response = await this.send({check_name_existed_event: {name: name, condition_id: condition_id, type: type}});
     return response.check_name_existed_event
-  }
-
-  async listClanEmojiByUserId(): Promise<EmojiListedEvent> {
-    const response = await this.send({emojis_listed_event: {}});
-    return response.emojis_listed_event
-  }
-
-  async listUserPermissionInChannel(clan_id: string, channel_id: string): Promise<UserPermissionInChannelListEvent> {
-    const response = await this.send({user_permission_in_channel_list_event : {clan_id: clan_id, channel_id: channel_id }});
-    return response.user_permission_in_channel_list_event 
-  }
-
-  async listRoles(ClanId: string, Limit: number, State: number, Cursor: string): Promise<RoleListEvent> {
-    const response = await this.send({role_list_event: {ClanId: ClanId, Limit: Limit, State: State, Cursor: Cursor}});
-    return response.role_list_event 
-  }
-
-  async listChannelByUserId(): Promise<ChannelDescListEvent> {
-    const response = await this.send({channel_desc_list_event: {}});
-    return response.channel_desc_list_event
-  }
-
-  async listUserClansByUserId(): Promise<AllUserClans> {
-    const response = await this.send({all_user_clans: {}});
-    return response.all_user_clans
-  }
-
-  async listUsersAddChannelByChannelId(channelId: string, limit: number): Promise<AllUsersAddChannelEvent> {
-    const response = await this.send({all_users_add_channel_event: {channel_id: channelId, limit: limit}});
-    return response.all_users_add_channel_event
-  }
-
-  async hashtagDMList(user_id: Array<string>, limit: number): Promise<HashtagDmListEvent> {
-    const response = await this.send({hashtag_dm_list_event: {user_id: user_id, limit: limit }});
-    return response.hashtag_dm_list_event
-  }
-
-  async getPermissionByRoleIdChannelId(role_id: string, channel_id: string, user_id: string): Promise<PermissionRoleChannelListEvent> {
-    const response = await this.send({permission_role_channel_list_event: {role_id: role_id, channel_id: channel_id, user_id: user_id }});
-    return response.permission_role_channel_list_event
-  }
-
-  async listStickersByUserId(): Promise<StrickerListedEvent> {
-    const response = await this.send({sticker_listed_event: {}});
-    return response.sticker_listed_event
-  }
-
-  async  getNotificationChannelSetting(channel_id: string): Promise<NotificationChannelSettingEvent> {
-    const response = await this.send({notification_channel_setting_event: {channel_id: channel_id}})
-    return response.notification_channel_setting_event
-  }
-
-  async getNotificationCategorySetting(category_id: string): Promise<NotificationCategorySettingEvent> {
-    const response = await this.send({notification_category_setting_event: {category_id: category_id}})
-    return response.notification_category_setting_event
-  }
-
-  async getNotificationClanSetting(clan_id: string): Promise<NotificationClanSettingEvent> {
-    const response = await this.send({notification_clan_setting_event: {clan_id: clan_id}})
-    return response.notification_clan_setting_event
-  }
-
-  async getNotificationReactMessage(channel_id: string): Promise<NotifiReactMessageEvent> {
-    const response = await this.send({notifi_react_message_event: {channel_id: channel_id}})
-    return response.notifi_react_message_event
-  }
-
-  async getNotificationChannelCategorySetting(clan_id: string): Promise<NotificationChannelCategorySettingEvent> {
-    const response = await this.send({notification_channel_category_setting_event: {clan_id : clan_id}})
-    return response.notification_channel_category_setting_event
   }
 
   private async pingPong(): Promise<void> {
