@@ -8272,18 +8272,17 @@ export class MezonApi {
   }
 
   /** ListUserPermissionInChannel */
-  listUserPermissionInChannel(
-    bearerToken: string,
-    clanId?: string,
-    channelId?: string,
-    options: any = {}
-  ): Promise<ApiUserPermissionInChannelListResponse> {
+  listUserPermissionInChannel(bearerToken: string,
+      clanId?:string,
+      channelId?:string,
+      options: any = {}): Promise<ApiUserPermissionInChannelListResponse> {
+    
     const urlPath = "/v2/users/clans/channels";
     const queryParams = new Map<string, any>();
     queryParams.set("clan_id", clanId);
     queryParams.set("channel_id", channelId);
 
-    let bodyJson: string = "";
+    let bodyJson : string = "";
 
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("GET", options, bodyJson);

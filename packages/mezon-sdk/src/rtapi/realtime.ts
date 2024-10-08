@@ -16,11 +16,9 @@ import {
   MessageReaction,
   MessageRef,
   Notification,
-  PermissionList,
+  PermissionUpdate,
   Role,
-  RoleList,
   Rpc,
-  User,
 } from "../api/api";
 import { Timestamp } from "../google/protobuf/timestamp";
 import { BoolValue, Int32Value, StringValue } from "../google/protobuf/wrappers";
@@ -196,65 +194,13 @@ export interface Envelope {
   user_profile_updated_event?:
     | UserProfileUpdatedEvent
     | undefined;
-  /** Request to retrieve all emojis associated with a specific clan. */
-  emojis_listed_event?:
-    | EmojiListedEvent
-    | undefined;
-  /** ClanEmojiList contains a list of emojis that are associated with a specific clan. */
-  sticker_listed_event?:
-    | StrickerListedEvent
-    | undefined;
-  /** channelDescList */
-  channel_desc_list_event?:
-    | ChannelDescListEvent
-    | undefined;
-  /** list channel hastag */
-  hashtag_dm_list_event?:
-    | HashtagDmListEvent
-    | undefined;
-  /** set notification user channel. */
-  notification_channel_setting_event?:
-    | NotificationChannelSettingEvent
-    | undefined;
-  /** notification selected */
-  notification_category_setting_event?:
-    | NotificationCategorySettingEvent
-    | undefined;
-  /** notification selected */
-  notification_clan_setting_event?:
-    | NotificationClanSettingEvent
-    | undefined;
-  /** notifiReactMessage Event */
-  notifi_react_message_event?:
-    | NotifiReactMessageEvent
-    | undefined;
-  /**  */
-  permission_role_channel_list_event?:
-    | PermissionRoleChannelListEvent
-    | undefined;
-  /**  */
-  notification_channel_category_setting_event?:
-    | NotificationChannelCategorySettingEvent
-    | undefined;
   /** user join clan */
   add_clan_user_event?:
     | AddClanUserEvent
     | undefined;
-  /** list user */
-  all_user_clans?:
-    | AllUserClans
-    | undefined;
   /**  */
   clan_event_created?:
     | CreateEventRequest
-    | undefined;
-  /**  */
-  user_permission_in_channel_list_event?:
-    | UserPermissionInChannelListEvent
-    | undefined;
-  /**  */
-  role_list_event?:
-    | RoleListEvent
     | undefined;
   /**  */
   role_assign_event?:
@@ -304,18 +250,12 @@ export interface Envelope {
   streaming_ended_event?:
     | StreamingEndedEvent
     | undefined;
+  /** set permission of role/user in channel */
+  set_permission_channel_event?:
+    | EventSetPermissionChannel
+    | undefined;
   /**  */
-  all_users_add_channel_event?: AllUsersAddChannelEvent | undefined;
-}
-
-export interface AllUserClans {
-  user: User[];
-}
-
-export interface AllUsersAddChannelEvent {
-  channel_id: string;
-  user_ids: string[];
-  limit: number | undefined;
+  event_user_permission_channel?: EventUserPermissionChannel | undefined;
 }
 
 export interface AddClanUserEvent {
@@ -323,39 +263,6 @@ export interface AddClanUserEvent {
   clan_id: string;
   /** the user */
   user: UserProfileRedis | undefined;
-}
-
-/** A list of permission role channel. */
-export interface PermissionRoleChannelListEvent {
-  /**  */
-  role_id: string;
-  /**  */
-  channel_id: string;
-  /** A list of permission. */
-  permission_role_channel: PermissionRoleChannel[];
-}
-
-/** A list of permission user in channel. */
-export interface UserPermissionInChannelListEvent {
-  /**  */
-  clan_id: string;
-  /**  */
-  channel_id: string;
-  /** A list of permission. */
-  permissions: PermissionList | undefined;
-}
-
-/** A list role channel. */
-export interface RoleListEvent {
-  Limit: number;
-  /** The role state to list. */
-  State: number;
-  /** Cursor to start from */
-  Cursor: string;
-  /** The clan of this role */
-  ClanId: string;
-  /**  */
-  roles: RoleList | undefined;
 }
 
 /** On role assign */
@@ -378,18 +285,6 @@ export interface PermissionRoleChannel {
   active: boolean;
 }
 
-/** A list of Channel */
-export interface HashtagDmListEvent {
-  /** user Id */
-  user_id: string[];
-  /** Max number of records to return. Between 1 and 100. */
-  limit:
-    | number
-    | undefined;
-  /** A list of channel. */
-  hashtag_dm: HashtagDm[];
-}
-
 /** hashtagDM */
 export interface HashtagDm {
   /** The channel id. */
@@ -408,11 +303,6 @@ export interface HashtagDm {
   channel_private: number;
   /**  */
   parrent_id: string;
-}
-
-export interface ChannelDescListEvent {
-  /** A list of channel. */
-  channeldesc: ChannelDescription[];
 }
 
 /** Channel description record */
@@ -439,22 +329,6 @@ export interface ChannelDescription {
   last_sent_message: ChannelMessageHeader | undefined;
 }
 
-export interface StrickerListedEvent {
-  stickers: ClanSticker[];
-}
-
-export interface ClanSticker {
-  id: string;
-  source: string;
-  shortname: string;
-  category: string;
-  creator_id: string;
-  create_time: Date | undefined;
-  clan_id: string;
-  logo: string;
-  clan_name: string;
-}
-
 export interface ClanEmoji {
   id: string;
   /** src url */
@@ -471,11 +345,6 @@ export interface ClanEmoji {
   logo: string;
   /** clan name */
   clan_name: string;
-}
-
-export interface EmojiListedEvent {
-  clan_id: string;
-  emoji_list: ClanEmoji[];
 }
 
 /** A realtime chat channel. */
@@ -805,6 +674,8 @@ export interface LastPinMessageEvent {
 
 /** Last seen message by user */
 export interface LastSeenMessageEvent {
+  /** The clan id */
+  clan_id: string;
   /** The unique ID of this channel. */
   channel_id: string;
   /** The unique ID of this message. */
@@ -958,6 +829,8 @@ export interface ChannelCreatedEvent {
   status: number;
   /** is parent public */
   is_parent_public: boolean;
+  /** app url */
+  app_url: string;
 }
 
 export interface RoleEvent {
@@ -1046,6 +919,8 @@ export interface ChannelUpdatedEvent {
   is_error: boolean;
   /** channel private */
   channel_private: boolean;
+  /** app url */
+  app_url: string;
 }
 
 /** Stop receiving status updates for some set of users. */
@@ -1240,63 +1115,6 @@ export interface CheckNameExistedEvent {
   type: number;
 }
 
-export interface NotificationChannelSettingEvent {
-  channel_id: string;
-  notification_user_channel: NotificationUserChannel | undefined;
-}
-
-/** Notification channel */
-export interface NotificationUserChannel {
-  /** Notification id */
-  id: string;
-  /**  */
-  notification_setting_type: number;
-  /**  */
-  time_mute:
-    | Date
-    | undefined;
-  /**  */
-  active: number;
-}
-
-/** Notification channel */
-export interface NotificationCategorySettingEvent {
-  category_id: string;
-  notification_user_channel: NotificationUserChannel | undefined;
-}
-
-/** Notification setting record */
-export interface NotificationClanSettingEvent {
-  clan_id: string;
-  notification_setting: NotificationSetting | undefined;
-}
-
-/** Notification setting record */
-export interface NotificationSetting {
-  /** Notification id */
-  id: string;
-  /** Notification title */
-  notification_setting_type: number;
-}
-
-/** Notification channel */
-export interface NotifiReactMessageEvent {
-  /** channel id */
-  channel_id: string;
-  /** notification message */
-  notifi_react_message: NotifiReactMessage | undefined;
-}
-
-/** Notification channel */
-export interface NotifiReactMessage {
-  /** Notification id */
-  id: string;
-  /**  */
-  user_id: string;
-  /**  */
-  channel_id: string;
-}
-
 /** Notification setting record */
 export interface NotificationChannelCategorySetting {
   /** Notification id */
@@ -1307,11 +1125,8 @@ export interface NotificationChannelCategorySetting {
   notification_setting_type: number;
   /**  */
   channel_category_title: string;
-}
-
-export interface NotificationChannelCategorySettingEvent {
-  clan_id: string;
-  notification_channel_category_settings_list: NotificationChannelCategorySetting[];
+  /**  */
+  action: number;
 }
 
 export interface EventEmoji {
@@ -1321,6 +1136,22 @@ export interface EventEmoji {
   source: string;
   category: string;
   action: number;
+  user_id: string;
+  logo: string;
+  clan_name: string;
+}
+
+export interface EventSetPermissionChannel {
+  caller: string;
+  role_id: string;
+  user_id: string;
+  channel_id: string;
+  permission_updates: PermissionUpdate[];
+}
+
+export interface EventUserPermissionChannel {
+  user_id: string;
+  channel_id: string;
 }
 
 function createBaseEnvelope(): Envelope {
@@ -1367,21 +1198,8 @@ function createBaseEnvelope(): Envelope {
     clan_profile_updated_event: undefined,
     check_name_existed_event: undefined,
     user_profile_updated_event: undefined,
-    emojis_listed_event: undefined,
-    sticker_listed_event: undefined,
-    channel_desc_list_event: undefined,
-    hashtag_dm_list_event: undefined,
-    notification_channel_setting_event: undefined,
-    notification_category_setting_event: undefined,
-    notification_clan_setting_event: undefined,
-    notifi_react_message_event: undefined,
-    permission_role_channel_list_event: undefined,
-    notification_channel_category_setting_event: undefined,
     add_clan_user_event: undefined,
-    all_user_clans: undefined,
     clan_event_created: undefined,
-    user_permission_in_channel_list_event: undefined,
-    role_list_event: undefined,
     role_assign_event: undefined,
     clan_deleted_event: undefined,
     give_coffee_event: undefined,
@@ -1394,7 +1212,8 @@ function createBaseEnvelope(): Envelope {
     streaming_leaved_event: undefined,
     streaming_started_event: undefined,
     streaming_ended_event: undefined,
-    all_users_add_channel_event: undefined,
+    set_permission_channel_event: undefined,
+    event_user_permission_channel: undefined,
   };
 }
 
@@ -1526,96 +1345,53 @@ export const Envelope = {
     if (message.user_profile_updated_event !== undefined) {
       UserProfileUpdatedEvent.encode(message.user_profile_updated_event, writer.uint32(338).fork()).ldelim();
     }
-    if (message.emojis_listed_event !== undefined) {
-      EmojiListedEvent.encode(message.emojis_listed_event, writer.uint32(346).fork()).ldelim();
-    }
-    if (message.sticker_listed_event !== undefined) {
-      StrickerListedEvent.encode(message.sticker_listed_event, writer.uint32(354).fork()).ldelim();
-    }
-    if (message.channel_desc_list_event !== undefined) {
-      ChannelDescListEvent.encode(message.channel_desc_list_event, writer.uint32(362).fork()).ldelim();
-    }
-    if (message.hashtag_dm_list_event !== undefined) {
-      HashtagDmListEvent.encode(message.hashtag_dm_list_event, writer.uint32(370).fork()).ldelim();
-    }
-    if (message.notification_channel_setting_event !== undefined) {
-      NotificationChannelSettingEvent.encode(message.notification_channel_setting_event, writer.uint32(378).fork())
-        .ldelim();
-    }
-    if (message.notification_category_setting_event !== undefined) {
-      NotificationCategorySettingEvent.encode(message.notification_category_setting_event, writer.uint32(386).fork())
-        .ldelim();
-    }
-    if (message.notification_clan_setting_event !== undefined) {
-      NotificationClanSettingEvent.encode(message.notification_clan_setting_event, writer.uint32(394).fork()).ldelim();
-    }
-    if (message.notifi_react_message_event !== undefined) {
-      NotifiReactMessageEvent.encode(message.notifi_react_message_event, writer.uint32(402).fork()).ldelim();
-    }
-    if (message.permission_role_channel_list_event !== undefined) {
-      PermissionRoleChannelListEvent.encode(message.permission_role_channel_list_event, writer.uint32(410).fork())
-        .ldelim();
-    }
-    if (message.notification_channel_category_setting_event !== undefined) {
-      NotificationChannelCategorySettingEvent.encode(
-        message.notification_channel_category_setting_event,
-        writer.uint32(418).fork(),
-      ).ldelim();
-    }
     if (message.add_clan_user_event !== undefined) {
-      AddClanUserEvent.encode(message.add_clan_user_event, writer.uint32(426).fork()).ldelim();
-    }
-    if (message.all_user_clans !== undefined) {
-      AllUserClans.encode(message.all_user_clans, writer.uint32(434).fork()).ldelim();
+      AddClanUserEvent.encode(message.add_clan_user_event, writer.uint32(346).fork()).ldelim();
     }
     if (message.clan_event_created !== undefined) {
-      CreateEventRequest.encode(message.clan_event_created, writer.uint32(442).fork()).ldelim();
-    }
-    if (message.user_permission_in_channel_list_event !== undefined) {
-      UserPermissionInChannelListEvent.encode(message.user_permission_in_channel_list_event, writer.uint32(450).fork())
-        .ldelim();
-    }
-    if (message.role_list_event !== undefined) {
-      RoleListEvent.encode(message.role_list_event, writer.uint32(458).fork()).ldelim();
+      CreateEventRequest.encode(message.clan_event_created, writer.uint32(354).fork()).ldelim();
     }
     if (message.role_assign_event !== undefined) {
-      RoleAssignedEvent.encode(message.role_assign_event, writer.uint32(466).fork()).ldelim();
+      RoleAssignedEvent.encode(message.role_assign_event, writer.uint32(362).fork()).ldelim();
     }
     if (message.clan_deleted_event !== undefined) {
-      ClanDeletedEvent.encode(message.clan_deleted_event, writer.uint32(474).fork()).ldelim();
+      ClanDeletedEvent.encode(message.clan_deleted_event, writer.uint32(370).fork()).ldelim();
     }
     if (message.give_coffee_event !== undefined) {
-      GiveCoffeeEvent.encode(message.give_coffee_event, writer.uint32(482).fork()).ldelim();
+      GiveCoffeeEvent.encode(message.give_coffee_event, writer.uint32(378).fork()).ldelim();
     }
     if (message.sticker_create_event !== undefined) {
-      StickerCreateEvent.encode(message.sticker_create_event, writer.uint32(490).fork()).ldelim();
+      StickerCreateEvent.encode(message.sticker_create_event, writer.uint32(386).fork()).ldelim();
     }
     if (message.sticker_update_event !== undefined) {
-      StickerUpdateEvent.encode(message.sticker_update_event, writer.uint32(498).fork()).ldelim();
+      StickerUpdateEvent.encode(message.sticker_update_event, writer.uint32(394).fork()).ldelim();
     }
     if (message.sticker_delete_event !== undefined) {
-      StickerDeleteEvent.encode(message.sticker_delete_event, writer.uint32(506).fork()).ldelim();
+      StickerDeleteEvent.encode(message.sticker_delete_event, writer.uint32(402).fork()).ldelim();
     }
     if (message.role_event !== undefined) {
-      RoleEvent.encode(message.role_event, writer.uint32(514).fork()).ldelim();
+      RoleEvent.encode(message.role_event, writer.uint32(410).fork()).ldelim();
     }
     if (message.event_emoji !== undefined) {
-      EventEmoji.encode(message.event_emoji, writer.uint32(522).fork()).ldelim();
+      EventEmoji.encode(message.event_emoji, writer.uint32(418).fork()).ldelim();
     }
     if (message.streaming_joined_event !== undefined) {
-      StreamingJoinedEvent.encode(message.streaming_joined_event, writer.uint32(530).fork()).ldelim();
+      StreamingJoinedEvent.encode(message.streaming_joined_event, writer.uint32(426).fork()).ldelim();
     }
     if (message.streaming_leaved_event !== undefined) {
-      StreamingLeavedEvent.encode(message.streaming_leaved_event, writer.uint32(538).fork()).ldelim();
+      StreamingLeavedEvent.encode(message.streaming_leaved_event, writer.uint32(434).fork()).ldelim();
     }
     if (message.streaming_started_event !== undefined) {
-      StreamingStartedEvent.encode(message.streaming_started_event, writer.uint32(546).fork()).ldelim();
+      StreamingStartedEvent.encode(message.streaming_started_event, writer.uint32(442).fork()).ldelim();
     }
     if (message.streaming_ended_event !== undefined) {
-      StreamingEndedEvent.encode(message.streaming_ended_event, writer.uint32(554).fork()).ldelim();
+      StreamingEndedEvent.encode(message.streaming_ended_event, writer.uint32(450).fork()).ldelim();
     }
-    if (message.all_users_add_channel_event !== undefined) {
-      AllUsersAddChannelEvent.encode(message.all_users_add_channel_event, writer.uint32(562).fork()).ldelim();
+    if (message.set_permission_channel_event !== undefined) {
+      EventSetPermissionChannel.encode(message.set_permission_channel_event, writer.uint32(458).fork()).ldelim();
+    }
+    if (message.event_user_permission_channel !== undefined) {
+      EventUserPermissionChannel.encode(message.event_user_permission_channel, writer.uint32(466).fork()).ldelim();
     }
     return writer;
   },
@@ -1926,205 +1702,112 @@ export const Envelope = {
             break;
           }
 
-          message.emojis_listed_event = EmojiListedEvent.decode(reader, reader.uint32());
+          message.add_clan_user_event = AddClanUserEvent.decode(reader, reader.uint32());
           continue;
         case 44:
           if (tag !== 354) {
             break;
           }
 
-          message.sticker_listed_event = StrickerListedEvent.decode(reader, reader.uint32());
+          message.clan_event_created = CreateEventRequest.decode(reader, reader.uint32());
           continue;
         case 45:
           if (tag !== 362) {
             break;
           }
 
-          message.channel_desc_list_event = ChannelDescListEvent.decode(reader, reader.uint32());
+          message.role_assign_event = RoleAssignedEvent.decode(reader, reader.uint32());
           continue;
         case 46:
           if (tag !== 370) {
             break;
           }
 
-          message.hashtag_dm_list_event = HashtagDmListEvent.decode(reader, reader.uint32());
+          message.clan_deleted_event = ClanDeletedEvent.decode(reader, reader.uint32());
           continue;
         case 47:
           if (tag !== 378) {
             break;
           }
 
-          message.notification_channel_setting_event = NotificationChannelSettingEvent.decode(reader, reader.uint32());
+          message.give_coffee_event = GiveCoffeeEvent.decode(reader, reader.uint32());
           continue;
         case 48:
           if (tag !== 386) {
             break;
           }
 
-          message.notification_category_setting_event = NotificationCategorySettingEvent.decode(
-            reader,
-            reader.uint32(),
-          );
+          message.sticker_create_event = StickerCreateEvent.decode(reader, reader.uint32());
           continue;
         case 49:
           if (tag !== 394) {
             break;
           }
 
-          message.notification_clan_setting_event = NotificationClanSettingEvent.decode(reader, reader.uint32());
+          message.sticker_update_event = StickerUpdateEvent.decode(reader, reader.uint32());
           continue;
         case 50:
           if (tag !== 402) {
             break;
           }
 
-          message.notifi_react_message_event = NotifiReactMessageEvent.decode(reader, reader.uint32());
+          message.sticker_delete_event = StickerDeleteEvent.decode(reader, reader.uint32());
           continue;
         case 51:
           if (tag !== 410) {
             break;
           }
 
-          message.permission_role_channel_list_event = PermissionRoleChannelListEvent.decode(reader, reader.uint32());
+          message.role_event = RoleEvent.decode(reader, reader.uint32());
           continue;
         case 52:
           if (tag !== 418) {
             break;
           }
 
-          message.notification_channel_category_setting_event = NotificationChannelCategorySettingEvent.decode(
-            reader,
-            reader.uint32(),
-          );
+          message.event_emoji = EventEmoji.decode(reader, reader.uint32());
           continue;
         case 53:
           if (tag !== 426) {
             break;
           }
 
-          message.add_clan_user_event = AddClanUserEvent.decode(reader, reader.uint32());
+          message.streaming_joined_event = StreamingJoinedEvent.decode(reader, reader.uint32());
           continue;
         case 54:
           if (tag !== 434) {
             break;
           }
 
-          message.all_user_clans = AllUserClans.decode(reader, reader.uint32());
+          message.streaming_leaved_event = StreamingLeavedEvent.decode(reader, reader.uint32());
           continue;
         case 55:
           if (tag !== 442) {
             break;
           }
 
-          message.clan_event_created = CreateEventRequest.decode(reader, reader.uint32());
+          message.streaming_started_event = StreamingStartedEvent.decode(reader, reader.uint32());
           continue;
         case 56:
           if (tag !== 450) {
             break;
           }
 
-          message.user_permission_in_channel_list_event = UserPermissionInChannelListEvent.decode(
-            reader,
-            reader.uint32(),
-          );
+          message.streaming_ended_event = StreamingEndedEvent.decode(reader, reader.uint32());
           continue;
         case 57:
           if (tag !== 458) {
             break;
           }
 
-          message.role_list_event = RoleListEvent.decode(reader, reader.uint32());
+          message.set_permission_channel_event = EventSetPermissionChannel.decode(reader, reader.uint32());
           continue;
         case 58:
           if (tag !== 466) {
             break;
           }
 
-          message.role_assign_event = RoleAssignedEvent.decode(reader, reader.uint32());
-          continue;
-        case 59:
-          if (tag !== 474) {
-            break;
-          }
-
-          message.clan_deleted_event = ClanDeletedEvent.decode(reader, reader.uint32());
-          continue;
-        case 60:
-          if (tag !== 482) {
-            break;
-          }
-
-          message.give_coffee_event = GiveCoffeeEvent.decode(reader, reader.uint32());
-          continue;
-        case 61:
-          if (tag !== 490) {
-            break;
-          }
-
-          message.sticker_create_event = StickerCreateEvent.decode(reader, reader.uint32());
-          continue;
-        case 62:
-          if (tag !== 498) {
-            break;
-          }
-
-          message.sticker_update_event = StickerUpdateEvent.decode(reader, reader.uint32());
-          continue;
-        case 63:
-          if (tag !== 506) {
-            break;
-          }
-
-          message.sticker_delete_event = StickerDeleteEvent.decode(reader, reader.uint32());
-          continue;
-        case 64:
-          if (tag !== 514) {
-            break;
-          }
-
-          message.role_event = RoleEvent.decode(reader, reader.uint32());
-          continue;
-        case 65:
-          if (tag !== 522) {
-            break;
-          }
-
-          message.event_emoji = EventEmoji.decode(reader, reader.uint32());
-          continue;
-        case 66:
-          if (tag !== 530) {
-            break;
-          }
-
-          message.streaming_joined_event = StreamingJoinedEvent.decode(reader, reader.uint32());
-          continue;
-        case 67:
-          if (tag !== 538) {
-            break;
-          }
-
-          message.streaming_leaved_event = StreamingLeavedEvent.decode(reader, reader.uint32());
-          continue;
-        case 68:
-          if (tag !== 546) {
-            break;
-          }
-
-          message.streaming_started_event = StreamingStartedEvent.decode(reader, reader.uint32());
-          continue;
-        case 69:
-          if (tag !== 554) {
-            break;
-          }
-
-          message.streaming_ended_event = StreamingEndedEvent.decode(reader, reader.uint32());
-          continue;
-        case 70:
-          if (tag !== 562) {
-            break;
-          }
-
-          message.all_users_add_channel_event = AllUsersAddChannelEvent.decode(reader, reader.uint32());
+          message.event_user_permission_channel = EventUserPermissionChannel.decode(reader, reader.uint32());
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -2231,47 +1914,12 @@ export const Envelope = {
       user_profile_updated_event: isSet(object.user_profile_updated_event)
         ? UserProfileUpdatedEvent.fromJSON(object.user_profile_updated_event)
         : undefined,
-      emojis_listed_event: isSet(object.emojis_listed_event)
-        ? EmojiListedEvent.fromJSON(object.emojis_listed_event)
-        : undefined,
-      sticker_listed_event: isSet(object.sticker_listed_event)
-        ? StrickerListedEvent.fromJSON(object.sticker_listed_event)
-        : undefined,
-      channel_desc_list_event: isSet(object.channel_desc_list_event)
-        ? ChannelDescListEvent.fromJSON(object.channel_desc_list_event)
-        : undefined,
-      hashtag_dm_list_event: isSet(object.hashtag_dm_list_event)
-        ? HashtagDmListEvent.fromJSON(object.hashtag_dm_list_event)
-        : undefined,
-      notification_channel_setting_event: isSet(object.notification_channel_setting_event)
-        ? NotificationChannelSettingEvent.fromJSON(object.notification_channel_setting_event)
-        : undefined,
-      notification_category_setting_event: isSet(object.notification_category_setting_event)
-        ? NotificationCategorySettingEvent.fromJSON(object.notification_category_setting_event)
-        : undefined,
-      notification_clan_setting_event: isSet(object.notification_clan_setting_event)
-        ? NotificationClanSettingEvent.fromJSON(object.notification_clan_setting_event)
-        : undefined,
-      notifi_react_message_event: isSet(object.notifi_react_message_event)
-        ? NotifiReactMessageEvent.fromJSON(object.notifi_react_message_event)
-        : undefined,
-      permission_role_channel_list_event: isSet(object.permission_role_channel_list_event)
-        ? PermissionRoleChannelListEvent.fromJSON(object.permission_role_channel_list_event)
-        : undefined,
-      notification_channel_category_setting_event: isSet(object.notification_channel_category_setting_event)
-        ? NotificationChannelCategorySettingEvent.fromJSON(object.notification_channel_category_setting_event)
-        : undefined,
       add_clan_user_event: isSet(object.add_clan_user_event)
         ? AddClanUserEvent.fromJSON(object.add_clan_user_event)
         : undefined,
-      all_user_clans: isSet(object.all_user_clans) ? AllUserClans.fromJSON(object.all_user_clans) : undefined,
       clan_event_created: isSet(object.clan_event_created)
         ? CreateEventRequest.fromJSON(object.clan_event_created)
         : undefined,
-      user_permission_in_channel_list_event: isSet(object.user_permission_in_channel_list_event)
-        ? UserPermissionInChannelListEvent.fromJSON(object.user_permission_in_channel_list_event)
-        : undefined,
-      role_list_event: isSet(object.role_list_event) ? RoleListEvent.fromJSON(object.role_list_event) : undefined,
       role_assign_event: isSet(object.role_assign_event)
         ? RoleAssignedEvent.fromJSON(object.role_assign_event)
         : undefined,
@@ -2304,8 +1952,11 @@ export const Envelope = {
       streaming_ended_event: isSet(object.streaming_ended_event)
         ? StreamingEndedEvent.fromJSON(object.streaming_ended_event)
         : undefined,
-      all_users_add_channel_event: isSet(object.all_users_add_channel_event)
-        ? AllUsersAddChannelEvent.fromJSON(object.all_users_add_channel_event)
+      set_permission_channel_event: isSet(object.set_permission_channel_event)
+        ? EventSetPermissionChannel.fromJSON(object.set_permission_channel_event)
+        : undefined,
+      event_user_permission_channel: isSet(object.event_user_permission_channel)
+        ? EventUserPermissionChannel.fromJSON(object.event_user_permission_channel)
         : undefined,
     };
   },
@@ -2438,62 +2089,11 @@ export const Envelope = {
     if (message.user_profile_updated_event !== undefined) {
       obj.user_profile_updated_event = UserProfileUpdatedEvent.toJSON(message.user_profile_updated_event);
     }
-    if (message.emojis_listed_event !== undefined) {
-      obj.emojis_listed_event = EmojiListedEvent.toJSON(message.emojis_listed_event);
-    }
-    if (message.sticker_listed_event !== undefined) {
-      obj.sticker_listed_event = StrickerListedEvent.toJSON(message.sticker_listed_event);
-    }
-    if (message.channel_desc_list_event !== undefined) {
-      obj.channel_desc_list_event = ChannelDescListEvent.toJSON(message.channel_desc_list_event);
-    }
-    if (message.hashtag_dm_list_event !== undefined) {
-      obj.hashtag_dm_list_event = HashtagDmListEvent.toJSON(message.hashtag_dm_list_event);
-    }
-    if (message.notification_channel_setting_event !== undefined) {
-      obj.notification_channel_setting_event = NotificationChannelSettingEvent.toJSON(
-        message.notification_channel_setting_event,
-      );
-    }
-    if (message.notification_category_setting_event !== undefined) {
-      obj.notification_category_setting_event = NotificationCategorySettingEvent.toJSON(
-        message.notification_category_setting_event,
-      );
-    }
-    if (message.notification_clan_setting_event !== undefined) {
-      obj.notification_clan_setting_event = NotificationClanSettingEvent.toJSON(
-        message.notification_clan_setting_event,
-      );
-    }
-    if (message.notifi_react_message_event !== undefined) {
-      obj.notifi_react_message_event = NotifiReactMessageEvent.toJSON(message.notifi_react_message_event);
-    }
-    if (message.permission_role_channel_list_event !== undefined) {
-      obj.permission_role_channel_list_event = PermissionRoleChannelListEvent.toJSON(
-        message.permission_role_channel_list_event,
-      );
-    }
-    if (message.notification_channel_category_setting_event !== undefined) {
-      obj.notification_channel_category_setting_event = NotificationChannelCategorySettingEvent.toJSON(
-        message.notification_channel_category_setting_event,
-      );
-    }
     if (message.add_clan_user_event !== undefined) {
       obj.add_clan_user_event = AddClanUserEvent.toJSON(message.add_clan_user_event);
     }
-    if (message.all_user_clans !== undefined) {
-      obj.all_user_clans = AllUserClans.toJSON(message.all_user_clans);
-    }
     if (message.clan_event_created !== undefined) {
       obj.clan_event_created = CreateEventRequest.toJSON(message.clan_event_created);
-    }
-    if (message.user_permission_in_channel_list_event !== undefined) {
-      obj.user_permission_in_channel_list_event = UserPermissionInChannelListEvent.toJSON(
-        message.user_permission_in_channel_list_event,
-      );
-    }
-    if (message.role_list_event !== undefined) {
-      obj.role_list_event = RoleListEvent.toJSON(message.role_list_event);
     }
     if (message.role_assign_event !== undefined) {
       obj.role_assign_event = RoleAssignedEvent.toJSON(message.role_assign_event);
@@ -2531,8 +2131,11 @@ export const Envelope = {
     if (message.streaming_ended_event !== undefined) {
       obj.streaming_ended_event = StreamingEndedEvent.toJSON(message.streaming_ended_event);
     }
-    if (message.all_users_add_channel_event !== undefined) {
-      obj.all_users_add_channel_event = AllUsersAddChannelEvent.toJSON(message.all_users_add_channel_event);
+    if (message.set_permission_channel_event !== undefined) {
+      obj.set_permission_channel_event = EventSetPermissionChannel.toJSON(message.set_permission_channel_event);
+    }
+    if (message.event_user_permission_channel !== undefined) {
+      obj.event_user_permission_channel = EventUserPermissionChannel.toJSON(message.event_user_permission_channel);
     }
     return obj;
   },
@@ -2675,61 +2278,11 @@ export const Envelope = {
       (object.user_profile_updated_event !== undefined && object.user_profile_updated_event !== null)
         ? UserProfileUpdatedEvent.fromPartial(object.user_profile_updated_event)
         : undefined;
-    message.emojis_listed_event = (object.emojis_listed_event !== undefined && object.emojis_listed_event !== null)
-      ? EmojiListedEvent.fromPartial(object.emojis_listed_event)
-      : undefined;
-    message.sticker_listed_event = (object.sticker_listed_event !== undefined && object.sticker_listed_event !== null)
-      ? StrickerListedEvent.fromPartial(object.sticker_listed_event)
-      : undefined;
-    message.channel_desc_list_event =
-      (object.channel_desc_list_event !== undefined && object.channel_desc_list_event !== null)
-        ? ChannelDescListEvent.fromPartial(object.channel_desc_list_event)
-        : undefined;
-    message.hashtag_dm_list_event =
-      (object.hashtag_dm_list_event !== undefined && object.hashtag_dm_list_event !== null)
-        ? HashtagDmListEvent.fromPartial(object.hashtag_dm_list_event)
-        : undefined;
-    message.notification_channel_setting_event =
-      (object.notification_channel_setting_event !== undefined && object.notification_channel_setting_event !== null)
-        ? NotificationChannelSettingEvent.fromPartial(object.notification_channel_setting_event)
-        : undefined;
-    message.notification_category_setting_event =
-      (object.notification_category_setting_event !== undefined && object.notification_category_setting_event !== null)
-        ? NotificationCategorySettingEvent.fromPartial(object.notification_category_setting_event)
-        : undefined;
-    message.notification_clan_setting_event =
-      (object.notification_clan_setting_event !== undefined && object.notification_clan_setting_event !== null)
-        ? NotificationClanSettingEvent.fromPartial(object.notification_clan_setting_event)
-        : undefined;
-    message.notifi_react_message_event =
-      (object.notifi_react_message_event !== undefined && object.notifi_react_message_event !== null)
-        ? NotifiReactMessageEvent.fromPartial(object.notifi_react_message_event)
-        : undefined;
-    message.permission_role_channel_list_event =
-      (object.permission_role_channel_list_event !== undefined && object.permission_role_channel_list_event !== null)
-        ? PermissionRoleChannelListEvent.fromPartial(object.permission_role_channel_list_event)
-        : undefined;
-    message.notification_channel_category_setting_event =
-      (object.notification_channel_category_setting_event !== undefined &&
-          object.notification_channel_category_setting_event !== null)
-        ? NotificationChannelCategorySettingEvent.fromPartial(object.notification_channel_category_setting_event)
-        : undefined;
     message.add_clan_user_event = (object.add_clan_user_event !== undefined && object.add_clan_user_event !== null)
       ? AddClanUserEvent.fromPartial(object.add_clan_user_event)
       : undefined;
-    message.all_user_clans = (object.all_user_clans !== undefined && object.all_user_clans !== null)
-      ? AllUserClans.fromPartial(object.all_user_clans)
-      : undefined;
     message.clan_event_created = (object.clan_event_created !== undefined && object.clan_event_created !== null)
       ? CreateEventRequest.fromPartial(object.clan_event_created)
-      : undefined;
-    message.user_permission_in_channel_list_event =
-      (object.user_permission_in_channel_list_event !== undefined &&
-          object.user_permission_in_channel_list_event !== null)
-        ? UserPermissionInChannelListEvent.fromPartial(object.user_permission_in_channel_list_event)
-        : undefined;
-    message.role_list_event = (object.role_list_event !== undefined && object.role_list_event !== null)
-      ? RoleListEvent.fromPartial(object.role_list_event)
       : undefined;
     message.role_assign_event = (object.role_assign_event !== undefined && object.role_assign_event !== null)
       ? RoleAssignedEvent.fromPartial(object.role_assign_event)
@@ -2771,156 +2324,14 @@ export const Envelope = {
       (object.streaming_ended_event !== undefined && object.streaming_ended_event !== null)
         ? StreamingEndedEvent.fromPartial(object.streaming_ended_event)
         : undefined;
-    message.all_users_add_channel_event =
-      (object.all_users_add_channel_event !== undefined && object.all_users_add_channel_event !== null)
-        ? AllUsersAddChannelEvent.fromPartial(object.all_users_add_channel_event)
+    message.set_permission_channel_event =
+      (object.set_permission_channel_event !== undefined && object.set_permission_channel_event !== null)
+        ? EventSetPermissionChannel.fromPartial(object.set_permission_channel_event)
         : undefined;
-    return message;
-  },
-};
-
-function createBaseAllUserClans(): AllUserClans {
-  return { user: [] };
-}
-
-export const AllUserClans = {
-  encode(message: AllUserClans, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    for (const v of message.user) {
-      User.encode(v!, writer.uint32(10).fork()).ldelim();
-    }
-    return writer;
-  },
-
-  decode(input: _m0.Reader | Uint8Array, length?: number): AllUserClans {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseAllUserClans();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
-          if (tag !== 10) {
-            break;
-          }
-
-          message.user.push(User.decode(reader, reader.uint32()));
-          continue;
-      }
-      if ((tag & 7) === 4 || tag === 0) {
-        break;
-      }
-      reader.skipType(tag & 7);
-    }
-    return message;
-  },
-
-  fromJSON(object: any): AllUserClans {
-    return { user: globalThis.Array.isArray(object?.user) ? object.user.map((e: any) => User.fromJSON(e)) : [] };
-  },
-
-  toJSON(message: AllUserClans): unknown {
-    const obj: any = {};
-    if (message.user?.length) {
-      obj.user = message.user.map((e) => User.toJSON(e));
-    }
-    return obj;
-  },
-
-  create<I extends Exact<DeepPartial<AllUserClans>, I>>(base?: I): AllUserClans {
-    return AllUserClans.fromPartial(base ?? ({} as any));
-  },
-  fromPartial<I extends Exact<DeepPartial<AllUserClans>, I>>(object: I): AllUserClans {
-    const message = createBaseAllUserClans();
-    message.user = object.user?.map((e) => User.fromPartial(e)) || [];
-    return message;
-  },
-};
-
-function createBaseAllUsersAddChannelEvent(): AllUsersAddChannelEvent {
-  return { channel_id: "", user_ids: [], limit: undefined };
-}
-
-export const AllUsersAddChannelEvent = {
-  encode(message: AllUsersAddChannelEvent, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.channel_id !== "") {
-      writer.uint32(10).string(message.channel_id);
-    }
-    for (const v of message.user_ids) {
-      writer.uint32(18).string(v!);
-    }
-    if (message.limit !== undefined) {
-      Int32Value.encode({ value: message.limit! }, writer.uint32(26).fork()).ldelim();
-    }
-    return writer;
-  },
-
-  decode(input: _m0.Reader | Uint8Array, length?: number): AllUsersAddChannelEvent {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseAllUsersAddChannelEvent();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
-          if (tag !== 10) {
-            break;
-          }
-
-          message.channel_id = reader.string();
-          continue;
-        case 2:
-          if (tag !== 18) {
-            break;
-          }
-
-          message.user_ids.push(reader.string());
-          continue;
-        case 3:
-          if (tag !== 26) {
-            break;
-          }
-
-          message.limit = Int32Value.decode(reader, reader.uint32()).value;
-          continue;
-      }
-      if ((tag & 7) === 4 || tag === 0) {
-        break;
-      }
-      reader.skipType(tag & 7);
-    }
-    return message;
-  },
-
-  fromJSON(object: any): AllUsersAddChannelEvent {
-    return {
-      channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "",
-      user_ids: globalThis.Array.isArray(object?.user_ids) ? object.user_ids.map((e: any) => globalThis.String(e)) : [],
-      limit: isSet(object.limit) ? Number(object.limit) : undefined,
-    };
-  },
-
-  toJSON(message: AllUsersAddChannelEvent): unknown {
-    const obj: any = {};
-    if (message.channel_id !== "") {
-      obj.channel_id = message.channel_id;
-    }
-    if (message.user_ids?.length) {
-      obj.user_ids = message.user_ids;
-    }
-    if (message.limit !== undefined) {
-      obj.limit = message.limit;
-    }
-    return obj;
-  },
-
-  create<I extends Exact<DeepPartial<AllUsersAddChannelEvent>, I>>(base?: I): AllUsersAddChannelEvent {
-    return AllUsersAddChannelEvent.fromPartial(base ?? ({} as any));
-  },
-  fromPartial<I extends Exact<DeepPartial<AllUsersAddChannelEvent>, I>>(object: I): AllUsersAddChannelEvent {
-    const message = createBaseAllUsersAddChannelEvent();
-    message.channel_id = object.channel_id ?? "";
-    message.user_ids = object.user_ids?.map((e) => e) || [];
-    message.limit = object.limit ?? undefined;
+    message.event_user_permission_channel =
+      (object.event_user_permission_channel !== undefined && object.event_user_permission_channel !== null)
+        ? EventUserPermissionChannel.fromPartial(object.event_user_permission_channel)
+        : undefined;
     return message;
   },
 };
@@ -2996,316 +2407,6 @@ export const AddClanUserEvent = {
     message.clan_id = object.clan_id ?? "";
     message.user = (object.user !== undefined && object.user !== null)
       ? UserProfileRedis.fromPartial(object.user)
-      : undefined;
-    return message;
-  },
-};
-
-function createBasePermissionRoleChannelListEvent(): PermissionRoleChannelListEvent {
-  return { role_id: "", channel_id: "", permission_role_channel: [] };
-}
-
-export const PermissionRoleChannelListEvent = {
-  encode(message: PermissionRoleChannelListEvent, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.role_id !== "") {
-      writer.uint32(10).string(message.role_id);
-    }
-    if (message.channel_id !== "") {
-      writer.uint32(18).string(message.channel_id);
-    }
-    for (const v of message.permission_role_channel) {
-      PermissionRoleChannel.encode(v!, writer.uint32(26).fork()).ldelim();
-    }
-    return writer;
-  },
-
-  decode(input: _m0.Reader | Uint8Array, length?: number): PermissionRoleChannelListEvent {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBasePermissionRoleChannelListEvent();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
-          if (tag !== 10) {
-            break;
-          }
-
-          message.role_id = reader.string();
-          continue;
-        case 2:
-          if (tag !== 18) {
-            break;
-          }
-
-          message.channel_id = reader.string();
-          continue;
-        case 3:
-          if (tag !== 26) {
-            break;
-          }
-
-          message.permission_role_channel.push(PermissionRoleChannel.decode(reader, reader.uint32()));
-          continue;
-      }
-      if ((tag & 7) === 4 || tag === 0) {
-        break;
-      }
-      reader.skipType(tag & 7);
-    }
-    return message;
-  },
-
-  fromJSON(object: any): PermissionRoleChannelListEvent {
-    return {
-      role_id: isSet(object.role_id) ? globalThis.String(object.role_id) : "",
-      channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "",
-      permission_role_channel: globalThis.Array.isArray(object?.permission_role_channel)
-        ? object.permission_role_channel.map((e: any) => PermissionRoleChannel.fromJSON(e))
-        : [],
-    };
-  },
-
-  toJSON(message: PermissionRoleChannelListEvent): unknown {
-    const obj: any = {};
-    if (message.role_id !== "") {
-      obj.role_id = message.role_id;
-    }
-    if (message.channel_id !== "") {
-      obj.channel_id = message.channel_id;
-    }
-    if (message.permission_role_channel?.length) {
-      obj.permission_role_channel = message.permission_role_channel.map((e) => PermissionRoleChannel.toJSON(e));
-    }
-    return obj;
-  },
-
-  create<I extends Exact<DeepPartial<PermissionRoleChannelListEvent>, I>>(base?: I): PermissionRoleChannelListEvent {
-    return PermissionRoleChannelListEvent.fromPartial(base ?? ({} as any));
-  },
-  fromPartial<I extends Exact<DeepPartial<PermissionRoleChannelListEvent>, I>>(
-    object: I,
-  ): PermissionRoleChannelListEvent {
-    const message = createBasePermissionRoleChannelListEvent();
-    message.role_id = object.role_id ?? "";
-    message.channel_id = object.channel_id ?? "";
-    message.permission_role_channel =
-      object.permission_role_channel?.map((e) => PermissionRoleChannel.fromPartial(e)) || [];
-    return message;
-  },
-};
-
-function createBaseUserPermissionInChannelListEvent(): UserPermissionInChannelListEvent {
-  return { clan_id: "", channel_id: "", permissions: undefined };
-}
-
-export const UserPermissionInChannelListEvent = {
-  encode(message: UserPermissionInChannelListEvent, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.clan_id !== "") {
-      writer.uint32(10).string(message.clan_id);
-    }
-    if (message.channel_id !== "") {
-      writer.uint32(18).string(message.channel_id);
-    }
-    if (message.permissions !== undefined) {
-      PermissionList.encode(message.permissions, writer.uint32(26).fork()).ldelim();
-    }
-    return writer;
-  },
-
-  decode(input: _m0.Reader | Uint8Array, length?: number): UserPermissionInChannelListEvent {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseUserPermissionInChannelListEvent();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
-          if (tag !== 10) {
-            break;
-          }
-
-          message.clan_id = reader.string();
-          continue;
-        case 2:
-          if (tag !== 18) {
-            break;
-          }
-
-          message.channel_id = reader.string();
-          continue;
-        case 3:
-          if (tag !== 26) {
-            break;
-          }
-
-          message.permissions = PermissionList.decode(reader, reader.uint32());
-          continue;
-      }
-      if ((tag & 7) === 4 || tag === 0) {
-        break;
-      }
-      reader.skipType(tag & 7);
-    }
-    return message;
-  },
-
-  fromJSON(object: any): UserPermissionInChannelListEvent {
-    return {
-      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
-      channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "",
-      permissions: isSet(object.permissions) ? PermissionList.fromJSON(object.permissions) : undefined,
-    };
-  },
-
-  toJSON(message: UserPermissionInChannelListEvent): unknown {
-    const obj: any = {};
-    if (message.clan_id !== "") {
-      obj.clan_id = message.clan_id;
-    }
-    if (message.channel_id !== "") {
-      obj.channel_id = message.channel_id;
-    }
-    if (message.permissions !== undefined) {
-      obj.permissions = PermissionList.toJSON(message.permissions);
-    }
-    return obj;
-  },
-
-  create<I extends Exact<DeepPartial<UserPermissionInChannelListEvent>, I>>(
-    base?: I,
-  ): UserPermissionInChannelListEvent {
-    return UserPermissionInChannelListEvent.fromPartial(base ?? ({} as any));
-  },
-  fromPartial<I extends Exact<DeepPartial<UserPermissionInChannelListEvent>, I>>(
-    object: I,
-  ): UserPermissionInChannelListEvent {
-    const message = createBaseUserPermissionInChannelListEvent();
-    message.clan_id = object.clan_id ?? "";
-    message.channel_id = object.channel_id ?? "";
-    message.permissions = (object.permissions !== undefined && object.permissions !== null)
-      ? PermissionList.fromPartial(object.permissions)
-      : undefined;
-    return message;
-  },
-};
-
-function createBaseRoleListEvent(): RoleListEvent {
-  return { Limit: 0, State: 0, Cursor: "", ClanId: "", roles: undefined };
-}
-
-export const RoleListEvent = {
-  encode(message: RoleListEvent, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.Limit !== 0) {
-      writer.uint32(8).int32(message.Limit);
-    }
-    if (message.State !== 0) {
-      writer.uint32(16).int32(message.State);
-    }
-    if (message.Cursor !== "") {
-      writer.uint32(26).string(message.Cursor);
-    }
-    if (message.ClanId !== "") {
-      writer.uint32(34).string(message.ClanId);
-    }
-    if (message.roles !== undefined) {
-      RoleList.encode(message.roles, writer.uint32(42).fork()).ldelim();
-    }
-    return writer;
-  },
-
-  decode(input: _m0.Reader | Uint8Array, length?: number): RoleListEvent {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseRoleListEvent();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
-          if (tag !== 8) {
-            break;
-          }
-
-          message.Limit = reader.int32();
-          continue;
-        case 2:
-          if (tag !== 16) {
-            break;
-          }
-
-          message.State = reader.int32();
-          continue;
-        case 3:
-          if (tag !== 26) {
-            break;
-          }
-
-          message.Cursor = reader.string();
-          continue;
-        case 4:
-          if (tag !== 34) {
-            break;
-          }
-
-          message.ClanId = reader.string();
-          continue;
-        case 5:
-          if (tag !== 42) {
-            break;
-          }
-
-          message.roles = RoleList.decode(reader, reader.uint32());
-          continue;
-      }
-      if ((tag & 7) === 4 || tag === 0) {
-        break;
-      }
-      reader.skipType(tag & 7);
-    }
-    return message;
-  },
-
-  fromJSON(object: any): RoleListEvent {
-    return {
-      Limit: isSet(object.Limit) ? globalThis.Number(object.Limit) : 0,
-      State: isSet(object.State) ? globalThis.Number(object.State) : 0,
-      Cursor: isSet(object.Cursor) ? globalThis.String(object.Cursor) : "",
-      ClanId: isSet(object.ClanId) ? globalThis.String(object.ClanId) : "",
-      roles: isSet(object.roles) ? RoleList.fromJSON(object.roles) : undefined,
-    };
-  },
-
-  toJSON(message: RoleListEvent): unknown {
-    const obj: any = {};
-    if (message.Limit !== 0) {
-      obj.Limit = Math.round(message.Limit);
-    }
-    if (message.State !== 0) {
-      obj.State = Math.round(message.State);
-    }
-    if (message.Cursor !== "") {
-      obj.Cursor = message.Cursor;
-    }
-    if (message.ClanId !== "") {
-      obj.ClanId = message.ClanId;
-    }
-    if (message.roles !== undefined) {
-      obj.roles = RoleList.toJSON(message.roles);
-    }
-    return obj;
-  },
-
-  create<I extends Exact<DeepPartial<RoleListEvent>, I>>(base?: I): RoleListEvent {
-    return RoleListEvent.fromPartial(base ?? ({} as any));
-  },
-  fromPartial<I extends Exact<DeepPartial<RoleListEvent>, I>>(object: I): RoleListEvent {
-    const message = createBaseRoleListEvent();
-    message.Limit = object.Limit ?? 0;
-    message.State = object.State ?? 0;
-    message.Cursor = object.Cursor ?? "";
-    message.ClanId = object.ClanId ?? "";
-    message.roles = (object.roles !== undefined && object.roles !== null)
-      ? RoleList.fromPartial(object.roles)
       : undefined;
     return message;
   },
@@ -3493,97 +2594,6 @@ export const PermissionRoleChannel = {
   },
 };
 
-function createBaseHashtagDmListEvent(): HashtagDmListEvent {
-  return { user_id: [], limit: undefined, hashtag_dm: [] };
-}
-
-export const HashtagDmListEvent = {
-  encode(message: HashtagDmListEvent, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    for (const v of message.user_id) {
-      writer.uint32(10).string(v!);
-    }
-    if (message.limit !== undefined) {
-      Int32Value.encode({ value: message.limit! }, writer.uint32(18).fork()).ldelim();
-    }
-    for (const v of message.hashtag_dm) {
-      HashtagDm.encode(v!, writer.uint32(26).fork()).ldelim();
-    }
-    return writer;
-  },
-
-  decode(input: _m0.Reader | Uint8Array, length?: number): HashtagDmListEvent {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseHashtagDmListEvent();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
-          if (tag !== 10) {
-            break;
-          }
-
-          message.user_id.push(reader.string());
-          continue;
-        case 2:
-          if (tag !== 18) {
-            break;
-          }
-
-          message.limit = Int32Value.decode(reader, reader.uint32()).value;
-          continue;
-        case 3:
-          if (tag !== 26) {
-            break;
-          }
-
-          message.hashtag_dm.push(HashtagDm.decode(reader, reader.uint32()));
-          continue;
-      }
-      if ((tag & 7) === 4 || tag === 0) {
-        break;
-      }
-      reader.skipType(tag & 7);
-    }
-    return message;
-  },
-
-  fromJSON(object: any): HashtagDmListEvent {
-    return {
-      user_id: globalThis.Array.isArray(object?.user_id) ? object.user_id.map((e: any) => globalThis.String(e)) : [],
-      limit: isSet(object.limit) ? Number(object.limit) : undefined,
-      hashtag_dm: globalThis.Array.isArray(object?.hashtag_dm)
-        ? object.hashtag_dm.map((e: any) => HashtagDm.fromJSON(e))
-        : [],
-    };
-  },
-
-  toJSON(message: HashtagDmListEvent): unknown {
-    const obj: any = {};
-    if (message.user_id?.length) {
-      obj.user_id = message.user_id;
-    }
-    if (message.limit !== undefined) {
-      obj.limit = message.limit;
-    }
-    if (message.hashtag_dm?.length) {
-      obj.hashtag_dm = message.hashtag_dm.map((e) => HashtagDm.toJSON(e));
-    }
-    return obj;
-  },
-
-  create<I extends Exact<DeepPartial<HashtagDmListEvent>, I>>(base?: I): HashtagDmListEvent {
-    return HashtagDmListEvent.fromPartial(base ?? ({} as any));
-  },
-  fromPartial<I extends Exact<DeepPartial<HashtagDmListEvent>, I>>(object: I): HashtagDmListEvent {
-    const message = createBaseHashtagDmListEvent();
-    message.user_id = object.user_id?.map((e) => e) || [];
-    message.limit = object.limit ?? undefined;
-    message.hashtag_dm = object.hashtag_dm?.map((e) => HashtagDm.fromPartial(e)) || [];
-    return message;
-  },
-};
-
 function createBaseHashtagDm(): HashtagDm {
   return {
     channel_id: "",
@@ -3753,67 +2763,6 @@ export const HashtagDm = {
     message.type = object.type ?? 0;
     message.channel_private = object.channel_private ?? 0;
     message.parrent_id = object.parrent_id ?? "";
-    return message;
-  },
-};
-
-function createBaseChannelDescListEvent(): ChannelDescListEvent {
-  return { channeldesc: [] };
-}
-
-export const ChannelDescListEvent = {
-  encode(message: ChannelDescListEvent, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    for (const v of message.channeldesc) {
-      ChannelDescription.encode(v!, writer.uint32(10).fork()).ldelim();
-    }
-    return writer;
-  },
-
-  decode(input: _m0.Reader | Uint8Array, length?: number): ChannelDescListEvent {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseChannelDescListEvent();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
-          if (tag !== 10) {
-            break;
-          }
-
-          message.channeldesc.push(ChannelDescription.decode(reader, reader.uint32()));
-          continue;
-      }
-      if ((tag & 7) === 4 || tag === 0) {
-        break;
-      }
-      reader.skipType(tag & 7);
-    }
-    return message;
-  },
-
-  fromJSON(object: any): ChannelDescListEvent {
-    return {
-      channeldesc: globalThis.Array.isArray(object?.channeldesc)
-        ? object.channeldesc.map((e: any) => ChannelDescription.fromJSON(e))
-        : [],
-    };
-  },
-
-  toJSON(message: ChannelDescListEvent): unknown {
-    const obj: any = {};
-    if (message.channeldesc?.length) {
-      obj.channeldesc = message.channeldesc.map((e) => ChannelDescription.toJSON(e));
-    }
-    return obj;
-  },
-
-  create<I extends Exact<DeepPartial<ChannelDescListEvent>, I>>(base?: I): ChannelDescListEvent {
-    return ChannelDescListEvent.fromPartial(base ?? ({} as any));
-  },
-  fromPartial<I extends Exact<DeepPartial<ChannelDescListEvent>, I>>(object: I): ChannelDescListEvent {
-    const message = createBaseChannelDescListEvent();
-    message.channeldesc = object.channeldesc?.map((e) => ChannelDescription.fromPartial(e)) || [];
     return message;
   },
 };
@@ -4011,256 +2960,6 @@ export const ChannelDescription = {
   },
 };
 
-function createBaseStrickerListedEvent(): StrickerListedEvent {
-  return { stickers: [] };
-}
-
-export const StrickerListedEvent = {
-  encode(message: StrickerListedEvent, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    for (const v of message.stickers) {
-      ClanSticker.encode(v!, writer.uint32(10).fork()).ldelim();
-    }
-    return writer;
-  },
-
-  decode(input: _m0.Reader | Uint8Array, length?: number): StrickerListedEvent {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseStrickerListedEvent();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
-          if (tag !== 10) {
-            break;
-          }
-
-          message.stickers.push(ClanSticker.decode(reader, reader.uint32()));
-          continue;
-      }
-      if ((tag & 7) === 4 || tag === 0) {
-        break;
-      }
-      reader.skipType(tag & 7);
-    }
-    return message;
-  },
-
-  fromJSON(object: any): StrickerListedEvent {
-    return {
-      stickers: globalThis.Array.isArray(object?.stickers)
-        ? object.stickers.map((e: any) => ClanSticker.fromJSON(e))
-        : [],
-    };
-  },
-
-  toJSON(message: StrickerListedEvent): unknown {
-    const obj: any = {};
-    if (message.stickers?.length) {
-      obj.stickers = message.stickers.map((e) => ClanSticker.toJSON(e));
-    }
-    return obj;
-  },
-
-  create<I extends Exact<DeepPartial<StrickerListedEvent>, I>>(base?: I): StrickerListedEvent {
-    return StrickerListedEvent.fromPartial(base ?? ({} as any));
-  },
-  fromPartial<I extends Exact<DeepPartial<StrickerListedEvent>, I>>(object: I): StrickerListedEvent {
-    const message = createBaseStrickerListedEvent();
-    message.stickers = object.stickers?.map((e) => ClanSticker.fromPartial(e)) || [];
-    return message;
-  },
-};
-
-function createBaseClanSticker(): ClanSticker {
-  return {
-    id: "",
-    source: "",
-    shortname: "",
-    category: "",
-    creator_id: "",
-    create_time: undefined,
-    clan_id: "",
-    logo: "",
-    clan_name: "",
-  };
-}
-
-export const ClanSticker = {
-  encode(message: ClanSticker, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.id !== "") {
-      writer.uint32(10).string(message.id);
-    }
-    if (message.source !== "") {
-      writer.uint32(18).string(message.source);
-    }
-    if (message.shortname !== "") {
-      writer.uint32(26).string(message.shortname);
-    }
-    if (message.category !== "") {
-      writer.uint32(34).string(message.category);
-    }
-    if (message.creator_id !== "") {
-      writer.uint32(42).string(message.creator_id);
-    }
-    if (message.create_time !== undefined) {
-      Timestamp.encode(toTimestamp(message.create_time), writer.uint32(50).fork()).ldelim();
-    }
-    if (message.clan_id !== "") {
-      writer.uint32(58).string(message.clan_id);
-    }
-    if (message.logo !== "") {
-      writer.uint32(66).string(message.logo);
-    }
-    if (message.clan_name !== "") {
-      writer.uint32(74).string(message.clan_name);
-    }
-    return writer;
-  },
-
-  decode(input: _m0.Reader | Uint8Array, length?: number): ClanSticker {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseClanSticker();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
-          if (tag !== 10) {
-            break;
-          }
-
-          message.id = reader.string();
-          continue;
-        case 2:
-          if (tag !== 18) {
-            break;
-          }
-
-          message.source = reader.string();
-          continue;
-        case 3:
-          if (tag !== 26) {
-            break;
-          }
-
-          message.shortname = reader.string();
-          continue;
-        case 4:
-          if (tag !== 34) {
-            break;
-          }
-
-          message.category = reader.string();
-          continue;
-        case 5:
-          if (tag !== 42) {
-            break;
-          }
-
-          message.creator_id = reader.string();
-          continue;
-        case 6:
-          if (tag !== 50) {
-            break;
-          }
-
-          message.create_time = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
-          continue;
-        case 7:
-          if (tag !== 58) {
-            break;
-          }
-
-          message.clan_id = reader.string();
-          continue;
-        case 8:
-          if (tag !== 66) {
-            break;
-          }
-
-          message.logo = reader.string();
-          continue;
-        case 9:
-          if (tag !== 74) {
-            break;
-          }
-
-          message.clan_name = reader.string();
-          continue;
-      }
-      if ((tag & 7) === 4 || tag === 0) {
-        break;
-      }
-      reader.skipType(tag & 7);
-    }
-    return message;
-  },
-
-  fromJSON(object: any): ClanSticker {
-    return {
-      id: isSet(object.id) ? globalThis.String(object.id) : "",
-      source: isSet(object.source) ? globalThis.String(object.source) : "",
-      shortname: isSet(object.shortname) ? globalThis.String(object.shortname) : "",
-      category: isSet(object.category) ? globalThis.String(object.category) : "",
-      creator_id: isSet(object.creator_id) ? globalThis.String(object.creator_id) : "",
-      create_time: isSet(object.create_time) ? fromJsonTimestamp(object.create_time) : undefined,
-      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
-      logo: isSet(object.logo) ? globalThis.String(object.logo) : "",
-      clan_name: isSet(object.clan_name) ? globalThis.String(object.clan_name) : "",
-    };
-  },
-
-  toJSON(message: ClanSticker): unknown {
-    const obj: any = {};
-    if (message.id !== "") {
-      obj.id = message.id;
-    }
-    if (message.source !== "") {
-      obj.source = message.source;
-    }
-    if (message.shortname !== "") {
-      obj.shortname = message.shortname;
-    }
-    if (message.category !== "") {
-      obj.category = message.category;
-    }
-    if (message.creator_id !== "") {
-      obj.creator_id = message.creator_id;
-    }
-    if (message.create_time !== undefined) {
-      obj.create_time = message.create_time.toISOString();
-    }
-    if (message.clan_id !== "") {
-      obj.clan_id = message.clan_id;
-    }
-    if (message.logo !== "") {
-      obj.logo = message.logo;
-    }
-    if (message.clan_name !== "") {
-      obj.clan_name = message.clan_name;
-    }
-    return obj;
-  },
-
-  create<I extends Exact<DeepPartial<ClanSticker>, I>>(base?: I): ClanSticker {
-    return ClanSticker.fromPartial(base ?? ({} as any));
-  },
-  fromPartial<I extends Exact<DeepPartial<ClanSticker>, I>>(object: I): ClanSticker {
-    const message = createBaseClanSticker();
-    message.id = object.id ?? "";
-    message.source = object.source ?? "";
-    message.shortname = object.shortname ?? "";
-    message.category = object.category ?? "";
-    message.creator_id = object.creator_id ?? "";
-    message.create_time = object.create_time ?? undefined;
-    message.clan_id = object.clan_id ?? "";
-    message.logo = object.logo ?? "";
-    message.clan_name = object.clan_name ?? "";
-    return message;
-  },
-};
-
 function createBaseClanEmoji(): ClanEmoji {
   return { id: "", src: "", shortname: "", category: "", creator_id: "", clan_id: "", logo: "", clan_name: "" };
 }
@@ -4421,82 +3120,6 @@ export const ClanEmoji = {
     message.clan_id = object.clan_id ?? "";
     message.logo = object.logo ?? "";
     message.clan_name = object.clan_name ?? "";
-    return message;
-  },
-};
-
-function createBaseEmojiListedEvent(): EmojiListedEvent {
-  return { clan_id: "", emoji_list: [] };
-}
-
-export const EmojiListedEvent = {
-  encode(message: EmojiListedEvent, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.clan_id !== "") {
-      writer.uint32(10).string(message.clan_id);
-    }
-    for (const v of message.emoji_list) {
-      ClanEmoji.encode(v!, writer.uint32(18).fork()).ldelim();
-    }
-    return writer;
-  },
-
-  decode(input: _m0.Reader | Uint8Array, length?: number): EmojiListedEvent {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseEmojiListedEvent();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
-          if (tag !== 10) {
-            break;
-          }
-
-          message.clan_id = reader.string();
-          continue;
-        case 2:
-          if (tag !== 18) {
-            break;
-          }
-
-          message.emoji_list.push(ClanEmoji.decode(reader, reader.uint32()));
-          continue;
-      }
-      if ((tag & 7) === 4 || tag === 0) {
-        break;
-      }
-      reader.skipType(tag & 7);
-    }
-    return message;
-  },
-
-  fromJSON(object: any): EmojiListedEvent {
-    return {
-      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
-      emoji_list: globalThis.Array.isArray(object?.emoji_list)
-        ? object.emoji_list.map((e: any) => ClanEmoji.fromJSON(e))
-        : [],
-    };
-  },
-
-  toJSON(message: EmojiListedEvent): unknown {
-    const obj: any = {};
-    if (message.clan_id !== "") {
-      obj.clan_id = message.clan_id;
-    }
-    if (message.emoji_list?.length) {
-      obj.emoji_list = message.emoji_list.map((e) => ClanEmoji.toJSON(e));
-    }
-    return obj;
-  },
-
-  create<I extends Exact<DeepPartial<EmojiListedEvent>, I>>(base?: I): EmojiListedEvent {
-    return EmojiListedEvent.fromPartial(base ?? ({} as any));
-  },
-  fromPartial<I extends Exact<DeepPartial<EmojiListedEvent>, I>>(object: I): EmojiListedEvent {
-    const message = createBaseEmojiListedEvent();
-    message.clan_id = object.clan_id ?? "";
-    message.emoji_list = object.emoji_list?.map((e) => ClanEmoji.fromPartial(e)) || [];
     return message;
   },
 };
@@ -6644,22 +5267,25 @@ export const LastPinMessageEvent = {
 };
 
 function createBaseLastSeenMessageEvent(): LastSeenMessageEvent {
-  return { channel_id: "", message_id: "", mode: 0, timestamp_seconds: 0 };
+  return { clan_id: "", channel_id: "", message_id: "", mode: 0, timestamp_seconds: 0 };
 }
 
 export const LastSeenMessageEvent = {
   encode(message: LastSeenMessageEvent, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.clan_id !== "") {
+      writer.uint32(10).string(message.clan_id);
+    }
     if (message.channel_id !== "") {
-      writer.uint32(10).string(message.channel_id);
+      writer.uint32(18).string(message.channel_id);
     }
     if (message.message_id !== "") {
-      writer.uint32(18).string(message.message_id);
+      writer.uint32(26).string(message.message_id);
     }
     if (message.mode !== 0) {
-      writer.uint32(24).int32(message.mode);
+      writer.uint32(32).int32(message.mode);
     }
     if (message.timestamp_seconds !== 0) {
-      writer.uint32(32).uint32(message.timestamp_seconds);
+      writer.uint32(40).uint32(message.timestamp_seconds);
     }
     return writer;
   },
@@ -6676,24 +5302,31 @@ export const LastSeenMessageEvent = {
             break;
           }
 
-          message.channel_id = reader.string();
+          message.clan_id = reader.string();
           continue;
         case 2:
           if (tag !== 18) {
             break;
           }
 
-          message.message_id = reader.string();
+          message.channel_id = reader.string();
           continue;
         case 3:
-          if (tag !== 24) {
+          if (tag !== 26) {
+            break;
+          }
+
+          message.message_id = reader.string();
+          continue;
+        case 4:
+          if (tag !== 32) {
             break;
           }
 
           message.mode = reader.int32();
           continue;
-        case 4:
-          if (tag !== 32) {
+        case 5:
+          if (tag !== 40) {
             break;
           }
 
@@ -6710,6 +5343,7 @@ export const LastSeenMessageEvent = {
 
   fromJSON(object: any): LastSeenMessageEvent {
     return {
+      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
       channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "",
       message_id: isSet(object.message_id) ? globalThis.String(object.message_id) : "",
       mode: isSet(object.mode) ? globalThis.Number(object.mode) : 0,
@@ -6719,6 +5353,9 @@ export const LastSeenMessageEvent = {
 
   toJSON(message: LastSeenMessageEvent): unknown {
     const obj: any = {};
+    if (message.clan_id !== "") {
+      obj.clan_id = message.clan_id;
+    }
     if (message.channel_id !== "") {
       obj.channel_id = message.channel_id;
     }
@@ -6739,6 +5376,7 @@ export const LastSeenMessageEvent = {
   },
   fromPartial<I extends Exact<DeepPartial<LastSeenMessageEvent>, I>>(object: I): LastSeenMessageEvent {
     const message = createBaseLastSeenMessageEvent();
+    message.clan_id = object.clan_id ?? "";
     message.channel_id = object.channel_id ?? "";
     message.message_id = object.message_id ?? "";
     message.mode = object.mode ?? 0;
@@ -7812,6 +6450,7 @@ function createBaseChannelCreatedEvent(): ChannelCreatedEvent {
     channel_type: undefined,
     status: 0,
     is_parent_public: false,
+    app_url: "",
   };
 }
 
@@ -7846,6 +6485,9 @@ export const ChannelCreatedEvent = {
     }
     if (message.is_parent_public !== false) {
       writer.uint32(80).bool(message.is_parent_public);
+    }
+    if (message.app_url !== "") {
+      writer.uint32(90).string(message.app_url);
     }
     return writer;
   },
@@ -7927,6 +6569,13 @@ export const ChannelCreatedEvent = {
 
           message.is_parent_public = reader.bool();
           continue;
+        case 11:
+          if (tag !== 90) {
+            break;
+          }
+
+          message.app_url = reader.string();
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -7948,6 +6597,7 @@ export const ChannelCreatedEvent = {
       channel_type: isSet(object.channel_type) ? Number(object.channel_type) : undefined,
       status: isSet(object.status) ? globalThis.Number(object.status) : 0,
       is_parent_public: isSet(object.is_parent_public) ? globalThis.Boolean(object.is_parent_public) : false,
+      app_url: isSet(object.app_url) ? globalThis.String(object.app_url) : "",
     };
   },
 
@@ -7983,6 +6633,9 @@ export const ChannelCreatedEvent = {
     if (message.is_parent_public !== false) {
       obj.is_parent_public = message.is_parent_public;
     }
+    if (message.app_url !== "") {
+      obj.app_url = message.app_url;
+    }
     return obj;
   },
 
@@ -8001,6 +6654,7 @@ export const ChannelCreatedEvent = {
     message.channel_type = object.channel_type ?? undefined;
     message.status = object.status ?? 0;
     message.is_parent_public = object.is_parent_public ?? false;
+    message.app_url = object.app_url ?? "";
     return message;
   },
 };
@@ -8636,6 +7290,7 @@ function createBaseChannelUpdatedEvent(): ChannelUpdatedEvent {
     meeting_code: "",
     is_error: false,
     channel_private: false,
+    app_url: "",
   };
 }
 
@@ -8673,6 +7328,9 @@ export const ChannelUpdatedEvent = {
     }
     if (message.channel_private !== false) {
       writer.uint32(88).bool(message.channel_private);
+    }
+    if (message.app_url !== "") {
+      writer.uint32(98).string(message.app_url);
     }
     return writer;
   },
@@ -8761,6 +7419,13 @@ export const ChannelUpdatedEvent = {
 
           message.channel_private = reader.bool();
           continue;
+        case 12:
+          if (tag !== 98) {
+            break;
+          }
+
+          message.app_url = reader.string();
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -8783,6 +7448,7 @@ export const ChannelUpdatedEvent = {
       meeting_code: isSet(object.meeting_code) ? globalThis.String(object.meeting_code) : "",
       is_error: isSet(object.is_error) ? globalThis.Boolean(object.is_error) : false,
       channel_private: isSet(object.channel_private) ? globalThis.Boolean(object.channel_private) : false,
+      app_url: isSet(object.app_url) ? globalThis.String(object.app_url) : "",
     };
   },
 
@@ -8821,6 +7487,9 @@ export const ChannelUpdatedEvent = {
     if (message.channel_private !== false) {
       obj.channel_private = message.channel_private;
     }
+    if (message.app_url !== "") {
+      obj.app_url = message.app_url;
+    }
     return obj;
   },
 
@@ -8840,6 +7509,7 @@ export const ChannelUpdatedEvent = {
     message.meeting_code = object.meeting_code ?? "";
     message.is_error = object.is_error ?? false;
     message.channel_private = object.channel_private ?? false;
+    message.app_url = object.app_url ?? "";
     return message;
   },
 };
@@ -10502,599 +9172,8 @@ export const CheckNameExistedEvent = {
   },
 };
 
-function createBaseNotificationChannelSettingEvent(): NotificationChannelSettingEvent {
-  return { channel_id: "", notification_user_channel: undefined };
-}
-
-export const NotificationChannelSettingEvent = {
-  encode(message: NotificationChannelSettingEvent, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.channel_id !== "") {
-      writer.uint32(10).string(message.channel_id);
-    }
-    if (message.notification_user_channel !== undefined) {
-      NotificationUserChannel.encode(message.notification_user_channel, writer.uint32(18).fork()).ldelim();
-    }
-    return writer;
-  },
-
-  decode(input: _m0.Reader | Uint8Array, length?: number): NotificationChannelSettingEvent {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseNotificationChannelSettingEvent();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
-          if (tag !== 10) {
-            break;
-          }
-
-          message.channel_id = reader.string();
-          continue;
-        case 2:
-          if (tag !== 18) {
-            break;
-          }
-
-          message.notification_user_channel = NotificationUserChannel.decode(reader, reader.uint32());
-          continue;
-      }
-      if ((tag & 7) === 4 || tag === 0) {
-        break;
-      }
-      reader.skipType(tag & 7);
-    }
-    return message;
-  },
-
-  fromJSON(object: any): NotificationChannelSettingEvent {
-    return {
-      channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "",
-      notification_user_channel: isSet(object.notification_user_channel)
-        ? NotificationUserChannel.fromJSON(object.notification_user_channel)
-        : undefined,
-    };
-  },
-
-  toJSON(message: NotificationChannelSettingEvent): unknown {
-    const obj: any = {};
-    if (message.channel_id !== "") {
-      obj.channel_id = message.channel_id;
-    }
-    if (message.notification_user_channel !== undefined) {
-      obj.notification_user_channel = NotificationUserChannel.toJSON(message.notification_user_channel);
-    }
-    return obj;
-  },
-
-  create<I extends Exact<DeepPartial<NotificationChannelSettingEvent>, I>>(base?: I): NotificationChannelSettingEvent {
-    return NotificationChannelSettingEvent.fromPartial(base ?? ({} as any));
-  },
-  fromPartial<I extends Exact<DeepPartial<NotificationChannelSettingEvent>, I>>(
-    object: I,
-  ): NotificationChannelSettingEvent {
-    const message = createBaseNotificationChannelSettingEvent();
-    message.channel_id = object.channel_id ?? "";
-    message.notification_user_channel =
-      (object.notification_user_channel !== undefined && object.notification_user_channel !== null)
-        ? NotificationUserChannel.fromPartial(object.notification_user_channel)
-        : undefined;
-    return message;
-  },
-};
-
-function createBaseNotificationUserChannel(): NotificationUserChannel {
-  return { id: "", notification_setting_type: 0, time_mute: undefined, active: 0 };
-}
-
-export const NotificationUserChannel = {
-  encode(message: NotificationUserChannel, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.id !== "") {
-      writer.uint32(10).string(message.id);
-    }
-    if (message.notification_setting_type !== 0) {
-      writer.uint32(16).int32(message.notification_setting_type);
-    }
-    if (message.time_mute !== undefined) {
-      Timestamp.encode(toTimestamp(message.time_mute), writer.uint32(26).fork()).ldelim();
-    }
-    if (message.active !== 0) {
-      writer.uint32(32).int32(message.active);
-    }
-    return writer;
-  },
-
-  decode(input: _m0.Reader | Uint8Array, length?: number): NotificationUserChannel {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseNotificationUserChannel();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
-          if (tag !== 10) {
-            break;
-          }
-
-          message.id = reader.string();
-          continue;
-        case 2:
-          if (tag !== 16) {
-            break;
-          }
-
-          message.notification_setting_type = reader.int32();
-          continue;
-        case 3:
-          if (tag !== 26) {
-            break;
-          }
-
-          message.time_mute = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
-          continue;
-        case 4:
-          if (tag !== 32) {
-            break;
-          }
-
-          message.active = reader.int32();
-          continue;
-      }
-      if ((tag & 7) === 4 || tag === 0) {
-        break;
-      }
-      reader.skipType(tag & 7);
-    }
-    return message;
-  },
-
-  fromJSON(object: any): NotificationUserChannel {
-    return {
-      id: isSet(object.id) ? globalThis.String(object.id) : "",
-      notification_setting_type: isSet(object.notification_setting_type)
-        ? globalThis.Number(object.notification_setting_type)
-        : 0,
-      time_mute: isSet(object.time_mute) ? fromJsonTimestamp(object.time_mute) : undefined,
-      active: isSet(object.active) ? globalThis.Number(object.active) : 0,
-    };
-  },
-
-  toJSON(message: NotificationUserChannel): unknown {
-    const obj: any = {};
-    if (message.id !== "") {
-      obj.id = message.id;
-    }
-    if (message.notification_setting_type !== 0) {
-      obj.notification_setting_type = Math.round(message.notification_setting_type);
-    }
-    if (message.time_mute !== undefined) {
-      obj.time_mute = message.time_mute.toISOString();
-    }
-    if (message.active !== 0) {
-      obj.active = Math.round(message.active);
-    }
-    return obj;
-  },
-
-  create<I extends Exact<DeepPartial<NotificationUserChannel>, I>>(base?: I): NotificationUserChannel {
-    return NotificationUserChannel.fromPartial(base ?? ({} as any));
-  },
-  fromPartial<I extends Exact<DeepPartial<NotificationUserChannel>, I>>(object: I): NotificationUserChannel {
-    const message = createBaseNotificationUserChannel();
-    message.id = object.id ?? "";
-    message.notification_setting_type = object.notification_setting_type ?? 0;
-    message.time_mute = object.time_mute ?? undefined;
-    message.active = object.active ?? 0;
-    return message;
-  },
-};
-
-function createBaseNotificationCategorySettingEvent(): NotificationCategorySettingEvent {
-  return { category_id: "", notification_user_channel: undefined };
-}
-
-export const NotificationCategorySettingEvent = {
-  encode(message: NotificationCategorySettingEvent, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.category_id !== "") {
-      writer.uint32(10).string(message.category_id);
-    }
-    if (message.notification_user_channel !== undefined) {
-      NotificationUserChannel.encode(message.notification_user_channel, writer.uint32(18).fork()).ldelim();
-    }
-    return writer;
-  },
-
-  decode(input: _m0.Reader | Uint8Array, length?: number): NotificationCategorySettingEvent {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseNotificationCategorySettingEvent();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
-          if (tag !== 10) {
-            break;
-          }
-
-          message.category_id = reader.string();
-          continue;
-        case 2:
-          if (tag !== 18) {
-            break;
-          }
-
-          message.notification_user_channel = NotificationUserChannel.decode(reader, reader.uint32());
-          continue;
-      }
-      if ((tag & 7) === 4 || tag === 0) {
-        break;
-      }
-      reader.skipType(tag & 7);
-    }
-    return message;
-  },
-
-  fromJSON(object: any): NotificationCategorySettingEvent {
-    return {
-      category_id: isSet(object.category_id) ? globalThis.String(object.category_id) : "",
-      notification_user_channel: isSet(object.notification_user_channel)
-        ? NotificationUserChannel.fromJSON(object.notification_user_channel)
-        : undefined,
-    };
-  },
-
-  toJSON(message: NotificationCategorySettingEvent): unknown {
-    const obj: any = {};
-    if (message.category_id !== "") {
-      obj.category_id = message.category_id;
-    }
-    if (message.notification_user_channel !== undefined) {
-      obj.notification_user_channel = NotificationUserChannel.toJSON(message.notification_user_channel);
-    }
-    return obj;
-  },
-
-  create<I extends Exact<DeepPartial<NotificationCategorySettingEvent>, I>>(
-    base?: I,
-  ): NotificationCategorySettingEvent {
-    return NotificationCategorySettingEvent.fromPartial(base ?? ({} as any));
-  },
-  fromPartial<I extends Exact<DeepPartial<NotificationCategorySettingEvent>, I>>(
-    object: I,
-  ): NotificationCategorySettingEvent {
-    const message = createBaseNotificationCategorySettingEvent();
-    message.category_id = object.category_id ?? "";
-    message.notification_user_channel =
-      (object.notification_user_channel !== undefined && object.notification_user_channel !== null)
-        ? NotificationUserChannel.fromPartial(object.notification_user_channel)
-        : undefined;
-    return message;
-  },
-};
-
-function createBaseNotificationClanSettingEvent(): NotificationClanSettingEvent {
-  return { clan_id: "", notification_setting: undefined };
-}
-
-export const NotificationClanSettingEvent = {
-  encode(message: NotificationClanSettingEvent, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.clan_id !== "") {
-      writer.uint32(10).string(message.clan_id);
-    }
-    if (message.notification_setting !== undefined) {
-      NotificationSetting.encode(message.notification_setting, writer.uint32(18).fork()).ldelim();
-    }
-    return writer;
-  },
-
-  decode(input: _m0.Reader | Uint8Array, length?: number): NotificationClanSettingEvent {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseNotificationClanSettingEvent();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
-          if (tag !== 10) {
-            break;
-          }
-
-          message.clan_id = reader.string();
-          continue;
-        case 2:
-          if (tag !== 18) {
-            break;
-          }
-
-          message.notification_setting = NotificationSetting.decode(reader, reader.uint32());
-          continue;
-      }
-      if ((tag & 7) === 4 || tag === 0) {
-        break;
-      }
-      reader.skipType(tag & 7);
-    }
-    return message;
-  },
-
-  fromJSON(object: any): NotificationClanSettingEvent {
-    return {
-      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
-      notification_setting: isSet(object.notification_setting)
-        ? NotificationSetting.fromJSON(object.notification_setting)
-        : undefined,
-    };
-  },
-
-  toJSON(message: NotificationClanSettingEvent): unknown {
-    const obj: any = {};
-    if (message.clan_id !== "") {
-      obj.clan_id = message.clan_id;
-    }
-    if (message.notification_setting !== undefined) {
-      obj.notification_setting = NotificationSetting.toJSON(message.notification_setting);
-    }
-    return obj;
-  },
-
-  create<I extends Exact<DeepPartial<NotificationClanSettingEvent>, I>>(base?: I): NotificationClanSettingEvent {
-    return NotificationClanSettingEvent.fromPartial(base ?? ({} as any));
-  },
-  fromPartial<I extends Exact<DeepPartial<NotificationClanSettingEvent>, I>>(object: I): NotificationClanSettingEvent {
-    const message = createBaseNotificationClanSettingEvent();
-    message.clan_id = object.clan_id ?? "";
-    message.notification_setting = (object.notification_setting !== undefined && object.notification_setting !== null)
-      ? NotificationSetting.fromPartial(object.notification_setting)
-      : undefined;
-    return message;
-  },
-};
-
-function createBaseNotificationSetting(): NotificationSetting {
-  return { id: "", notification_setting_type: 0 };
-}
-
-export const NotificationSetting = {
-  encode(message: NotificationSetting, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.id !== "") {
-      writer.uint32(10).string(message.id);
-    }
-    if (message.notification_setting_type !== 0) {
-      writer.uint32(16).int32(message.notification_setting_type);
-    }
-    return writer;
-  },
-
-  decode(input: _m0.Reader | Uint8Array, length?: number): NotificationSetting {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseNotificationSetting();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
-          if (tag !== 10) {
-            break;
-          }
-
-          message.id = reader.string();
-          continue;
-        case 2:
-          if (tag !== 16) {
-            break;
-          }
-
-          message.notification_setting_type = reader.int32();
-          continue;
-      }
-      if ((tag & 7) === 4 || tag === 0) {
-        break;
-      }
-      reader.skipType(tag & 7);
-    }
-    return message;
-  },
-
-  fromJSON(object: any): NotificationSetting {
-    return {
-      id: isSet(object.id) ? globalThis.String(object.id) : "",
-      notification_setting_type: isSet(object.notification_setting_type)
-        ? globalThis.Number(object.notification_setting_type)
-        : 0,
-    };
-  },
-
-  toJSON(message: NotificationSetting): unknown {
-    const obj: any = {};
-    if (message.id !== "") {
-      obj.id = message.id;
-    }
-    if (message.notification_setting_type !== 0) {
-      obj.notification_setting_type = Math.round(message.notification_setting_type);
-    }
-    return obj;
-  },
-
-  create<I extends Exact<DeepPartial<NotificationSetting>, I>>(base?: I): NotificationSetting {
-    return NotificationSetting.fromPartial(base ?? ({} as any));
-  },
-  fromPartial<I extends Exact<DeepPartial<NotificationSetting>, I>>(object: I): NotificationSetting {
-    const message = createBaseNotificationSetting();
-    message.id = object.id ?? "";
-    message.notification_setting_type = object.notification_setting_type ?? 0;
-    return message;
-  },
-};
-
-function createBaseNotifiReactMessageEvent(): NotifiReactMessageEvent {
-  return { channel_id: "", notifi_react_message: undefined };
-}
-
-export const NotifiReactMessageEvent = {
-  encode(message: NotifiReactMessageEvent, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.channel_id !== "") {
-      writer.uint32(10).string(message.channel_id);
-    }
-    if (message.notifi_react_message !== undefined) {
-      NotifiReactMessage.encode(message.notifi_react_message, writer.uint32(18).fork()).ldelim();
-    }
-    return writer;
-  },
-
-  decode(input: _m0.Reader | Uint8Array, length?: number): NotifiReactMessageEvent {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseNotifiReactMessageEvent();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
-          if (tag !== 10) {
-            break;
-          }
-
-          message.channel_id = reader.string();
-          continue;
-        case 2:
-          if (tag !== 18) {
-            break;
-          }
-
-          message.notifi_react_message = NotifiReactMessage.decode(reader, reader.uint32());
-          continue;
-      }
-      if ((tag & 7) === 4 || tag === 0) {
-        break;
-      }
-      reader.skipType(tag & 7);
-    }
-    return message;
-  },
-
-  fromJSON(object: any): NotifiReactMessageEvent {
-    return {
-      channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "",
-      notifi_react_message: isSet(object.notifi_react_message)
-        ? NotifiReactMessage.fromJSON(object.notifi_react_message)
-        : undefined,
-    };
-  },
-
-  toJSON(message: NotifiReactMessageEvent): unknown {
-    const obj: any = {};
-    if (message.channel_id !== "") {
-      obj.channel_id = message.channel_id;
-    }
-    if (message.notifi_react_message !== undefined) {
-      obj.notifi_react_message = NotifiReactMessage.toJSON(message.notifi_react_message);
-    }
-    return obj;
-  },
-
-  create<I extends Exact<DeepPartial<NotifiReactMessageEvent>, I>>(base?: I): NotifiReactMessageEvent {
-    return NotifiReactMessageEvent.fromPartial(base ?? ({} as any));
-  },
-  fromPartial<I extends Exact<DeepPartial<NotifiReactMessageEvent>, I>>(object: I): NotifiReactMessageEvent {
-    const message = createBaseNotifiReactMessageEvent();
-    message.channel_id = object.channel_id ?? "";
-    message.notifi_react_message = (object.notifi_react_message !== undefined && object.notifi_react_message !== null)
-      ? NotifiReactMessage.fromPartial(object.notifi_react_message)
-      : undefined;
-    return message;
-  },
-};
-
-function createBaseNotifiReactMessage(): NotifiReactMessage {
-  return { id: "", user_id: "", channel_id: "" };
-}
-
-export const NotifiReactMessage = {
-  encode(message: NotifiReactMessage, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.id !== "") {
-      writer.uint32(10).string(message.id);
-    }
-    if (message.user_id !== "") {
-      writer.uint32(18).string(message.user_id);
-    }
-    if (message.channel_id !== "") {
-      writer.uint32(26).string(message.channel_id);
-    }
-    return writer;
-  },
-
-  decode(input: _m0.Reader | Uint8Array, length?: number): NotifiReactMessage {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseNotifiReactMessage();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
-          if (tag !== 10) {
-            break;
-          }
-
-          message.id = reader.string();
-          continue;
-        case 2:
-          if (tag !== 18) {
-            break;
-          }
-
-          message.user_id = reader.string();
-          continue;
-        case 3:
-          if (tag !== 26) {
-            break;
-          }
-
-          message.channel_id = reader.string();
-          continue;
-      }
-      if ((tag & 7) === 4 || tag === 0) {
-        break;
-      }
-      reader.skipType(tag & 7);
-    }
-    return message;
-  },
-
-  fromJSON(object: any): NotifiReactMessage {
-    return {
-      id: isSet(object.id) ? globalThis.String(object.id) : "",
-      user_id: isSet(object.user_id) ? globalThis.String(object.user_id) : "",
-      channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "",
-    };
-  },
-
-  toJSON(message: NotifiReactMessage): unknown {
-    const obj: any = {};
-    if (message.id !== "") {
-      obj.id = message.id;
-    }
-    if (message.user_id !== "") {
-      obj.user_id = message.user_id;
-    }
-    if (message.channel_id !== "") {
-      obj.channel_id = message.channel_id;
-    }
-    return obj;
-  },
-
-  create<I extends Exact<DeepPartial<NotifiReactMessage>, I>>(base?: I): NotifiReactMessage {
-    return NotifiReactMessage.fromPartial(base ?? ({} as any));
-  },
-  fromPartial<I extends Exact<DeepPartial<NotifiReactMessage>, I>>(object: I): NotifiReactMessage {
-    const message = createBaseNotifiReactMessage();
-    message.id = object.id ?? "";
-    message.user_id = object.user_id ?? "";
-    message.channel_id = object.channel_id ?? "";
-    return message;
-  },
-};
-
 function createBaseNotificationChannelCategorySetting(): NotificationChannelCategorySetting {
-  return { id: "", channel_category_label: "", notification_setting_type: 0, channel_category_title: "" };
+  return { id: "", channel_category_label: "", notification_setting_type: 0, channel_category_title: "", action: 0 };
 }
 
 export const NotificationChannelCategorySetting = {
@@ -11110,6 +9189,9 @@ export const NotificationChannelCategorySetting = {
     }
     if (message.channel_category_title !== "") {
       writer.uint32(34).string(message.channel_category_title);
+    }
+    if (message.action !== 0) {
+      writer.uint32(40).int32(message.action);
     }
     return writer;
   },
@@ -11149,6 +9231,13 @@ export const NotificationChannelCategorySetting = {
 
           message.channel_category_title = reader.string();
           continue;
+        case 5:
+          if (tag !== 40) {
+            break;
+          }
+
+          message.action = reader.int32();
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -11170,6 +9259,7 @@ export const NotificationChannelCategorySetting = {
       channel_category_title: isSet(object.channel_category_title)
         ? globalThis.String(object.channel_category_title)
         : "",
+      action: isSet(object.action) ? globalThis.Number(object.action) : 0,
     };
   },
 
@@ -11187,6 +9277,9 @@ export const NotificationChannelCategorySetting = {
     if (message.channel_category_title !== "") {
       obj.channel_category_title = message.channel_category_title;
     }
+    if (message.action !== 0) {
+      obj.action = Math.round(message.action);
+    }
     return obj;
   },
 
@@ -11203,102 +9296,23 @@ export const NotificationChannelCategorySetting = {
     message.channel_category_label = object.channel_category_label ?? "";
     message.notification_setting_type = object.notification_setting_type ?? 0;
     message.channel_category_title = object.channel_category_title ?? "";
-    return message;
-  },
-};
-
-function createBaseNotificationChannelCategorySettingEvent(): NotificationChannelCategorySettingEvent {
-  return { clan_id: "", notification_channel_category_settings_list: [] };
-}
-
-export const NotificationChannelCategorySettingEvent = {
-  encode(message: NotificationChannelCategorySettingEvent, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.clan_id !== "") {
-      writer.uint32(10).string(message.clan_id);
-    }
-    for (const v of message.notification_channel_category_settings_list) {
-      NotificationChannelCategorySetting.encode(v!, writer.uint32(18).fork()).ldelim();
-    }
-    return writer;
-  },
-
-  decode(input: _m0.Reader | Uint8Array, length?: number): NotificationChannelCategorySettingEvent {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseNotificationChannelCategorySettingEvent();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
-          if (tag !== 10) {
-            break;
-          }
-
-          message.clan_id = reader.string();
-          continue;
-        case 2:
-          if (tag !== 18) {
-            break;
-          }
-
-          message.notification_channel_category_settings_list.push(
-            NotificationChannelCategorySetting.decode(reader, reader.uint32()),
-          );
-          continue;
-      }
-      if ((tag & 7) === 4 || tag === 0) {
-        break;
-      }
-      reader.skipType(tag & 7);
-    }
-    return message;
-  },
-
-  fromJSON(object: any): NotificationChannelCategorySettingEvent {
-    return {
-      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
-      notification_channel_category_settings_list:
-        globalThis.Array.isArray(object?.notification_channel_category_settings_list)
-          ? object.notification_channel_category_settings_list.map((e: any) =>
-            NotificationChannelCategorySetting.fromJSON(e)
-          )
-          : [],
-    };
-  },
-
-  toJSON(message: NotificationChannelCategorySettingEvent): unknown {
-    const obj: any = {};
-    if (message.clan_id !== "") {
-      obj.clan_id = message.clan_id;
-    }
-    if (message.notification_channel_category_settings_list?.length) {
-      obj.notification_channel_category_settings_list = message.notification_channel_category_settings_list.map((e) =>
-        NotificationChannelCategorySetting.toJSON(e)
-      );
-    }
-    return obj;
-  },
-
-  create<I extends Exact<DeepPartial<NotificationChannelCategorySettingEvent>, I>>(
-    base?: I,
-  ): NotificationChannelCategorySettingEvent {
-    return NotificationChannelCategorySettingEvent.fromPartial(base ?? ({} as any));
-  },
-  fromPartial<I extends Exact<DeepPartial<NotificationChannelCategorySettingEvent>, I>>(
-    object: I,
-  ): NotificationChannelCategorySettingEvent {
-    const message = createBaseNotificationChannelCategorySettingEvent();
-    message.clan_id = object.clan_id ?? "";
-    message.notification_channel_category_settings_list =
-      object.notification_channel_category_settings_list?.map((e) =>
-        NotificationChannelCategorySetting.fromPartial(e)
-      ) || [];
+    message.action = object.action ?? 0;
     return message;
   },
 };
 
 function createBaseEventEmoji(): EventEmoji {
-  return { id: "", clan_id: "", short_name: "", source: "", category: "", action: 0 };
+  return {
+    id: "",
+    clan_id: "",
+    short_name: "",
+    source: "",
+    category: "",
+    action: 0,
+    user_id: "",
+    logo: "",
+    clan_name: "",
+  };
 }
 
 export const EventEmoji = {
@@ -11320,6 +9334,15 @@ export const EventEmoji = {
     }
     if (message.action !== 0) {
       writer.uint32(48).int32(message.action);
+    }
+    if (message.user_id !== "") {
+      writer.uint32(58).string(message.user_id);
+    }
+    if (message.logo !== "") {
+      writer.uint32(66).string(message.logo);
+    }
+    if (message.clan_name !== "") {
+      writer.uint32(74).string(message.clan_name);
     }
     return writer;
   },
@@ -11373,6 +9396,27 @@ export const EventEmoji = {
 
           message.action = reader.int32();
           continue;
+        case 7:
+          if (tag !== 58) {
+            break;
+          }
+
+          message.user_id = reader.string();
+          continue;
+        case 8:
+          if (tag !== 66) {
+            break;
+          }
+
+          message.logo = reader.string();
+          continue;
+        case 9:
+          if (tag !== 74) {
+            break;
+          }
+
+          message.clan_name = reader.string();
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -11390,6 +9434,9 @@ export const EventEmoji = {
       source: isSet(object.source) ? globalThis.String(object.source) : "",
       category: isSet(object.category) ? globalThis.String(object.category) : "",
       action: isSet(object.action) ? globalThis.Number(object.action) : 0,
+      user_id: isSet(object.user_id) ? globalThis.String(object.user_id) : "",
+      logo: isSet(object.logo) ? globalThis.String(object.logo) : "",
+      clan_name: isSet(object.clan_name) ? globalThis.String(object.clan_name) : "",
     };
   },
 
@@ -11413,6 +9460,15 @@ export const EventEmoji = {
     if (message.action !== 0) {
       obj.action = Math.round(message.action);
     }
+    if (message.user_id !== "") {
+      obj.user_id = message.user_id;
+    }
+    if (message.logo !== "") {
+      obj.logo = message.logo;
+    }
+    if (message.clan_name !== "") {
+      obj.clan_name = message.clan_name;
+    }
     return obj;
   },
 
@@ -11427,6 +9483,204 @@ export const EventEmoji = {
     message.source = object.source ?? "";
     message.category = object.category ?? "";
     message.action = object.action ?? 0;
+    message.user_id = object.user_id ?? "";
+    message.logo = object.logo ?? "";
+    message.clan_name = object.clan_name ?? "";
+    return message;
+  },
+};
+
+function createBaseEventSetPermissionChannel(): EventSetPermissionChannel {
+  return { caller: "", role_id: "", user_id: "", channel_id: "", permission_updates: [] };
+}
+
+export const EventSetPermissionChannel = {
+  encode(message: EventSetPermissionChannel, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.caller !== "") {
+      writer.uint32(10).string(message.caller);
+    }
+    if (message.role_id !== "") {
+      writer.uint32(18).string(message.role_id);
+    }
+    if (message.user_id !== "") {
+      writer.uint32(26).string(message.user_id);
+    }
+    if (message.channel_id !== "") {
+      writer.uint32(34).string(message.channel_id);
+    }
+    for (const v of message.permission_updates) {
+      PermissionUpdate.encode(v!, writer.uint32(42).fork()).ldelim();
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): EventSetPermissionChannel {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseEventSetPermissionChannel();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.caller = reader.string();
+          continue;
+        case 2:
+          if (tag !== 18) {
+            break;
+          }
+
+          message.role_id = reader.string();
+          continue;
+        case 3:
+          if (tag !== 26) {
+            break;
+          }
+
+          message.user_id = reader.string();
+          continue;
+        case 4:
+          if (tag !== 34) {
+            break;
+          }
+
+          message.channel_id = reader.string();
+          continue;
+        case 5:
+          if (tag !== 42) {
+            break;
+          }
+
+          message.permission_updates.push(PermissionUpdate.decode(reader, reader.uint32()));
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): EventSetPermissionChannel {
+    return {
+      caller: isSet(object.caller) ? globalThis.String(object.caller) : "",
+      role_id: isSet(object.role_id) ? globalThis.String(object.role_id) : "",
+      user_id: isSet(object.user_id) ? globalThis.String(object.user_id) : "",
+      channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "",
+      permission_updates: globalThis.Array.isArray(object?.permission_updates)
+        ? object.permission_updates.map((e: any) => PermissionUpdate.fromJSON(e))
+        : [],
+    };
+  },
+
+  toJSON(message: EventSetPermissionChannel): unknown {
+    const obj: any = {};
+    if (message.caller !== "") {
+      obj.caller = message.caller;
+    }
+    if (message.role_id !== "") {
+      obj.role_id = message.role_id;
+    }
+    if (message.user_id !== "") {
+      obj.user_id = message.user_id;
+    }
+    if (message.channel_id !== "") {
+      obj.channel_id = message.channel_id;
+    }
+    if (message.permission_updates?.length) {
+      obj.permission_updates = message.permission_updates.map((e) => PermissionUpdate.toJSON(e));
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<EventSetPermissionChannel>, I>>(base?: I): EventSetPermissionChannel {
+    return EventSetPermissionChannel.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<EventSetPermissionChannel>, I>>(object: I): EventSetPermissionChannel {
+    const message = createBaseEventSetPermissionChannel();
+    message.caller = object.caller ?? "";
+    message.role_id = object.role_id ?? "";
+    message.user_id = object.user_id ?? "";
+    message.channel_id = object.channel_id ?? "";
+    message.permission_updates = object.permission_updates?.map((e) => PermissionUpdate.fromPartial(e)) || [];
+    return message;
+  },
+};
+
+function createBaseEventUserPermissionChannel(): EventUserPermissionChannel {
+  return { user_id: "", channel_id: "" };
+}
+
+export const EventUserPermissionChannel = {
+  encode(message: EventUserPermissionChannel, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.user_id !== "") {
+      writer.uint32(10).string(message.user_id);
+    }
+    if (message.channel_id !== "") {
+      writer.uint32(18).string(message.channel_id);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): EventUserPermissionChannel {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseEventUserPermissionChannel();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.user_id = reader.string();
+          continue;
+        case 2:
+          if (tag !== 18) {
+            break;
+          }
+
+          message.channel_id = reader.string();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): EventUserPermissionChannel {
+    return {
+      user_id: isSet(object.user_id) ? globalThis.String(object.user_id) : "",
+      channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "",
+    };
+  },
+
+  toJSON(message: EventUserPermissionChannel): unknown {
+    const obj: any = {};
+    if (message.user_id !== "") {
+      obj.user_id = message.user_id;
+    }
+    if (message.channel_id !== "") {
+      obj.channel_id = message.channel_id;
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<EventUserPermissionChannel>, I>>(base?: I): EventUserPermissionChannel {
+    return EventUserPermissionChannel.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<EventUserPermissionChannel>, I>>(object: I): EventUserPermissionChannel {
+    const message = createBaseEventUserPermissionChannel();
+    message.user_id = object.user_id ?? "";
+    message.channel_id = object.channel_id ?? "";
     return message;
   },
 };
