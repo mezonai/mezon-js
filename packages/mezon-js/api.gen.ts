@@ -571,6 +571,8 @@ export interface ApiChannelDescription {
   //
   creator_name?: string;
   //
+  is_all_mess?: boolean;
+  //
   last_pin_message?: string;
   //
   last_seen_message?: ApiChannelMessageHeader;
