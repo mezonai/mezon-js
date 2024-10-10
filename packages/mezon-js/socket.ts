@@ -1182,7 +1182,9 @@ export class DefaultSocket implements Socket {
             attachments: attachments,
             references: references,
             hide_editted: message.channel_message.hide_editted,
-            is_public: message.channel_message.is_public
+            is_public: message.channel_message.is_public,            
+            create_time_seconds: message.channel_message.create_time_seconds,
+            update_time_seconds: message.channel_message.update_time_seconds,
           };
           this.onchannelmessage(e);                  
         } else if (message.message_typing_event) {
