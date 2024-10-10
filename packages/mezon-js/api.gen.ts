@@ -655,7 +655,7 @@ export interface ApiChannelMessage {
   // channel mode
   mode?: number;
   // hide editted
-  hideEditted?: boolean;
+  hide_editted?: boolean;
 }
 
 /**  */

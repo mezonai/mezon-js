@@ -1429,6 +1429,7 @@ export class Client {
             clan_id: m.clan_id,
             create_time_seconds: m.create_time_seconds,
             update_time_seconds: m.update_time_seconds,
+            hide_editted: m.hide_editted,
           });
         });
         return Promise.resolve(result);
