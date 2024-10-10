@@ -1846,7 +1846,7 @@ export interface ChannelDescription {
   /** app url */
   app_url: string;
   /** channel all message */
-  isAllMess: boolean;
+  is_mute: boolean;
 }
 
 /** A list of channel description, usually a result of a list operation. */
@@ -3110,19 +3110,19 @@ export interface ChannelSettingItem {
   /** channel id */
   id: string;
   /** creator id */
-  creatorId: string;
+  creator_id: string;
   /** parentId */
-  parentId: string;
+  parent_id: string;
   /** label of channel */
-  channelLabel: string;
+  channel_label: string;
   /** category id */
-  categoryId: string;
+  category_id: string;
   /** meeting code */
-  meetingCode: string;
+  meeting_code: string;
   /** channel private */
-  channelPrivate: number;
+  channel_private: number;
   /** channel type */
-  channelType: number;
+  channel_type: number;
   /** is active */
   active: number;
   /** list user in channel */
@@ -15724,7 +15724,7 @@ function createBaseChannelDescription(): ChannelDescription {
     about_me: [],
     clan_name: "",
     app_url: "",
-    isAllMess: false,
+    is_mute: false,
   };
 }
 
@@ -15810,8 +15810,8 @@ export const ChannelDescription = {
     if (message.app_url !== "") {
       writer.uint32(210).string(message.app_url);
     }
-    if (message.isAllMess !== false) {
-      writer.uint32(216).bool(message.isAllMess);
+    if (message.is_mute !== false) {
+      writer.uint32(216).bool(message.is_mute);
     }
     return writer;
   },
@@ -16020,7 +16020,7 @@ export const ChannelDescription = {
             break;
           }
 
-          message.isAllMess = reader.bool();
+          message.is_mute = reader.bool();
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -16067,7 +16067,7 @@ export const ChannelDescription = {
       about_me: globalThis.Array.isArray(object?.about_me) ? object.about_me.map((e: any) => globalThis.String(e)) : [],
       clan_name: isSet(object.clan_name) ? globalThis.String(object.clan_name) : "",
       app_url: isSet(object.app_url) ? globalThis.String(object.app_url) : "",
-      isAllMess: isSet(object.isAllMess) ? globalThis.Boolean(object.isAllMess) : false,
+      is_mute: isSet(object.is_mute) ? globalThis.Boolean(object.is_mute) : false,
     };
   },
 
@@ -16151,8 +16151,8 @@ export const ChannelDescription = {
     if (message.app_url !== "") {
       obj.app_url = message.app_url;
     }
-    if (message.isAllMess !== false) {
-      obj.isAllMess = message.isAllMess;
+    if (message.is_mute !== false) {
+      obj.is_mute = message.is_mute;
     }
     return obj;
   },
@@ -16192,7 +16192,7 @@ export const ChannelDescription = {
     message.about_me = object.about_me?.map((e) => e) || [];
     message.clan_name = object.clan_name ?? "";
     message.app_url = object.app_url ?? "";
-    message.isAllMess = object.isAllMess ?? false;
+    message.is_mute = object.is_mute ?? false;
     return message;
   },
 };
@@ -29251,13 +29251,13 @@ export const ChannelSettingListRequest = {
 function createBaseChannelSettingItem(): ChannelSettingItem {
   return {
     id: "",
-    creatorId: "",
-    parentId: "",
-    channelLabel: "",
-    categoryId: "",
-    meetingCode: "",
-    channelPrivate: 0,
-    channelType: 0,
+    creator_id: "",
+    parent_id: "",
+    channel_label: "",
+    category_id: "",
+    meeting_code: "",
+    channel_private: 0,
+    channel_type: 0,
     active: 0,
     user_ids: [],
   };
@@ -29268,26 +29268,26 @@ export const ChannelSettingItem = {
     if (message.id !== "") {
       writer.uint32(10).string(message.id);
     }
-    if (message.creatorId !== "") {
-      writer.uint32(18).string(message.creatorId);
+    if (message.creator_id !== "") {
+      writer.uint32(18).string(message.creator_id);
     }
-    if (message.parentId !== "") {
-      writer.uint32(26).string(message.parentId);
+    if (message.parent_id !== "") {
+      writer.uint32(26).string(message.parent_id);
     }
-    if (message.channelLabel !== "") {
-      writer.uint32(34).string(message.channelLabel);
+    if (message.channel_label !== "") {
+      writer.uint32(34).string(message.channel_label);
     }
-    if (message.categoryId !== "") {
-      writer.uint32(42).string(message.categoryId);
+    if (message.category_id !== "") {
+      writer.uint32(42).string(message.category_id);
     }
-    if (message.meetingCode !== "") {
-      writer.uint32(50).string(message.meetingCode);
+    if (message.meeting_code !== "") {
+      writer.uint32(50).string(message.meeting_code);
     }
-    if (message.channelPrivate !== 0) {
-      writer.uint32(56).int32(message.channelPrivate);
+    if (message.channel_private !== 0) {
+      writer.uint32(56).int32(message.channel_private);
     }
-    if (message.channelType !== 0) {
-      writer.uint32(64).int32(message.channelType);
+    if (message.channel_type !== 0) {
+      writer.uint32(64).int32(message.channel_type);
     }
     if (message.active !== 0) {
       writer.uint32(72).int32(message.active);
@@ -29317,49 +29317,49 @@ export const ChannelSettingItem = {
             break;
           }
 
-          message.creatorId = reader.string();
+          message.creator_id = reader.string();
           continue;
         case 3:
           if (tag !== 26) {
             break;
           }
 
-          message.parentId = reader.string();
+          message.parent_id = reader.string();
           continue;
         case 4:
           if (tag !== 34) {
             break;
           }
 
-          message.channelLabel = reader.string();
+          message.channel_label = reader.string();
           continue;
         case 5:
           if (tag !== 42) {
             break;
           }
 
-          message.categoryId = reader.string();
+          message.category_id = reader.string();
           continue;
         case 6:
           if (tag !== 50) {
             break;
           }
 
-          message.meetingCode = reader.string();
+          message.meeting_code = reader.string();
           continue;
         case 7:
           if (tag !== 56) {
             break;
           }
 
-          message.channelPrivate = reader.int32();
+          message.channel_private = reader.int32();
           continue;
         case 8:
           if (tag !== 64) {
             break;
           }
 
-          message.channelType = reader.int32();
+          message.channel_type = reader.int32();
           continue;
         case 9:
           if (tag !== 72) {
@@ -29387,13 +29387,13 @@ export const ChannelSettingItem = {
   fromJSON(object: any): ChannelSettingItem {
     return {
       id: isSet(object.id) ? globalThis.String(object.id) : "",
-      creatorId: isSet(object.creatorId) ? globalThis.String(object.creatorId) : "",
-      parentId: isSet(object.parentId) ? globalThis.String(object.parentId) : "",
-      channelLabel: isSet(object.channelLabel) ? globalThis.String(object.channelLabel) : "",
-      categoryId: isSet(object.categoryId) ? globalThis.String(object.categoryId) : "",
-      meetingCode: isSet(object.meetingCode) ? globalThis.String(object.meetingCode) : "",
-      channelPrivate: isSet(object.channelPrivate) ? globalThis.Number(object.channelPrivate) : 0,
-      channelType: isSet(object.channelType) ? globalThis.Number(object.channelType) : 0,
+      creator_id: isSet(object.creator_id) ? globalThis.String(object.creator_id) : "",
+      parent_id: isSet(object.parent_id) ? globalThis.String(object.parent_id) : "",
+      channel_label: isSet(object.channel_label) ? globalThis.String(object.channel_label) : "",
+      category_id: isSet(object.category_id) ? globalThis.String(object.category_id) : "",
+      meeting_code: isSet(object.meeting_code) ? globalThis.String(object.meeting_code) : "",
+      channel_private: isSet(object.channel_private) ? globalThis.Number(object.channel_private) : 0,
+      channel_type: isSet(object.channel_type) ? globalThis.Number(object.channel_type) : 0,
       active: isSet(object.active) ? globalThis.Number(object.active) : 0,
       user_ids: globalThis.Array.isArray(object?.user_ids) ? object.user_ids.map((e: any) => globalThis.String(e)) : [],
     };
@@ -29404,26 +29404,26 @@ export const ChannelSettingItem = {
     if (message.id !== "") {
       obj.id = message.id;
     }
-    if (message.creatorId !== "") {
-      obj.creatorId = message.creatorId;
+    if (message.creator_id !== "") {
+      obj.creator_id = message.creator_id;
     }
-    if (message.parentId !== "") {
-      obj.parentId = message.parentId;
+    if (message.parent_id !== "") {
+      obj.parent_id = message.parent_id;
     }
-    if (message.channelLabel !== "") {
-      obj.channelLabel = message.channelLabel;
+    if (message.channel_label !== "") {
+      obj.channel_label = message.channel_label;
     }
-    if (message.categoryId !== "") {
-      obj.categoryId = message.categoryId;
+    if (message.category_id !== "") {
+      obj.category_id = message.category_id;
     }
-    if (message.meetingCode !== "") {
-      obj.meetingCode = message.meetingCode;
+    if (message.meeting_code !== "") {
+      obj.meeting_code = message.meeting_code;
     }
-    if (message.channelPrivate !== 0) {
-      obj.channelPrivate = Math.round(message.channelPrivate);
+    if (message.channel_private !== 0) {
+      obj.channel_private = Math.round(message.channel_private);
     }
-    if (message.channelType !== 0) {
-      obj.channelType = Math.round(message.channelType);
+    if (message.channel_type !== 0) {
+      obj.channel_type = Math.round(message.channel_type);
     }
     if (message.active !== 0) {
       obj.active = Math.round(message.active);
@@ -29440,13 +29440,13 @@ export const ChannelSettingItem = {
   fromPartial<I extends Exact<DeepPartial<ChannelSettingItem>, I>>(object: I): ChannelSettingItem {
     const message = createBaseChannelSettingItem();
     message.id = object.id ?? "";
-    message.creatorId = object.creatorId ?? "";
-    message.parentId = object.parentId ?? "";
-    message.channelLabel = object.channelLabel ?? "";
-    message.categoryId = object.categoryId ?? "";
-    message.meetingCode = object.meetingCode ?? "";
-    message.channelPrivate = object.channelPrivate ?? 0;
-    message.channelType = object.channelType ?? 0;
+    message.creator_id = object.creator_id ?? "";
+    message.parent_id = object.parent_id ?? "";
+    message.channel_label = object.channel_label ?? "";
+    message.category_id = object.category_id ?? "";
+    message.meeting_code = object.meeting_code ?? "";
+    message.channel_private = object.channel_private ?? 0;
+    message.channel_type = object.channel_type ?? 0;
     message.active = object.active ?? 0;
     message.user_ids = object.user_ids?.map((e) => e) || [];
     return message;
