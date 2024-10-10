@@ -101,6 +101,24 @@ export class MezonClient implements Client {
     return msgACK;
   }
 
+  async reactionMessage(
+    id: string,
+    clan_id: string,
+    parent_id: string,
+    channel_id: string,
+    mode: number,
+    is_public: boolean,
+    is_parent_public: boolean,
+    message_id: string,
+    emoji_id: string,
+    emoji: string,
+    count: number,
+    message_sender_id: string,
+    action_delete: boolean) {
+    const msgReaction = await this.socket.writeMessageReaction(id, clan_id, parent_id, channel_id, mode, is_public, is_parent_public, message_id, emoji_id, emoji, count, message_sender_id, action_delete);
+    return msgReaction;
+  }
+
   /** Authenticate a user with an ID against the server. */
   async authenticate() {
     return this.apiClient.mezonAuthenticate(this.apiKey, "", {
