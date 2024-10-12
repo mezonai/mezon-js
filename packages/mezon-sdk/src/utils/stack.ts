@@ -47,11 +47,9 @@ export class Stack {
         if (!this.isToUser) {
           msgACK = await this.client.sendMessage(
             mess.clan_id,
-            mess.parent_id,
             mess.channel_id,
             mess.mode,
             mess.is_public,
-            mess.is_parent_public,
             mess.msg,
             mess.mentions,
             mess.attachments,

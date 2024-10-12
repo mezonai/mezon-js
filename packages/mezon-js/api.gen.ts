@@ -1330,8 +1330,6 @@ export interface ApiMessageReaction {
   channel_label: string;
   /** The message that user react */
   message_id: string;
-  // The parent id to sent to.
-  parent_id?: string;
 }
 
 export interface ApiListChannelAppsResponse {

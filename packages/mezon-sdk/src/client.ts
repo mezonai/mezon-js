@@ -96,26 +96,24 @@ export class MezonClient implements Client {
         );
       }
 
-  async sendMessage(clan_id: string, parent_id: string, channel_id: string, mode: number, is_public: boolean, is_parent_public: boolean, msg: ChannelMessageContent, mentions?: Array<ApiMessageMention>, attachments?: Array<ApiMessageAttachment>, ref?: Array<ApiMessageRef>) {
-    const msgACK = await this.socket.writeChatMessage(clan_id, parent_id, channel_id, mode, is_public, is_parent_public, msg, mentions, attachments, ref);
+  async sendMessage(clan_id: string, channel_id: string, mode: number, is_public: boolean, msg: ChannelMessageContent, mentions?: Array<ApiMessageMention>, attachments?: Array<ApiMessageAttachment>, ref?: Array<ApiMessageRef>) {
+    const msgACK = await this.socket.writeChatMessage(clan_id, channel_id, mode, is_public, msg, mentions, attachments, ref);
     return msgACK;
   }
 
   async reactionMessage(
     id: string,
     clan_id: string,
-    parent_id: string,
     channel_id: string,
     mode: number,
     is_public: boolean,
-    is_parent_public: boolean,
     message_id: string,
     emoji_id: string,
     emoji: string,
     count: number,
     message_sender_id: string,
     action_delete: boolean) {
-    const msgReaction = await this.socket.writeMessageReaction(id, clan_id, parent_id, channel_id, mode, is_public, is_parent_public, message_id, emoji_id, emoji, count, message_sender_id, action_delete);
+    const msgReaction = await this.socket.writeMessageReaction(id, clan_id, channel_id, mode, is_public, message_id, emoji_id, emoji, count, message_sender_id, action_delete);
     return msgReaction;
   }
 
@@ -306,10 +304,8 @@ export class MezonClient implements Client {
 
         await this.socket.joinChat(
           channelDM.clan_id!,
-          channelDM.parent_id!,
           channelDM.channel_id!,
           channelDM.type!,
-          false,
           false
         );
         return channelDM;
@@ -345,8 +341,6 @@ export class MezonClient implements Client {
         clan_id: "",
         channel_id: channelDmId,
         is_public: false,
-        is_parent_public: false,
-        parent_id: "0",
         mode: convertChanneltypeToChannelMode(ChannelType.CHANNEL_TYPE_DM),
         mentions: [],
         attachments: attachments,
@@ -358,11 +352,9 @@ export class MezonClient implements Client {
       );
       return this.sendMessage(
         mess.clan_id,
-        mess.parent_id,
         mess.channel_id,
         mess.mode,
         mess.is_public,
-        mess.is_parent_public,
         mess.msg,
         [],
         mess.attachments,
