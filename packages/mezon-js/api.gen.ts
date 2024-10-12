@@ -1330,8 +1330,6 @@ export interface ApiMessageReaction {
   message_id: string;
   // The parent id to sent to.
   parent_id?: string;
-  // is parent public
-  is_parent_public?: boolean;
 }
 
 export interface ApiListChannelAppsResponse {
