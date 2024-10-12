@@ -77,8 +77,6 @@ interface ChannelJoin {
     is_public: boolean;
     // parent id
     parent_id: string;
-    // parent public
-    is_parent_public: boolean;
   };
 }
 
@@ -95,8 +93,6 @@ interface ChannelLeave {
     is_public: boolean;
     // parent id
     parent_id: string;
-    // parent public
-    is_parent_public: boolean;
   };
 }
 
@@ -140,8 +136,6 @@ export interface UserChannelAddedEvent {
   is_public: boolean;
   // parent id
   parent_id: string;
-  // parent public
-  is_parent_public: boolean;
 }
 
 export interface UserChannelRemovedEvent {
@@ -178,8 +172,6 @@ export interface LastPinMessageEvent {
   is_public: boolean;
   // The parent id to sent to.
   parent_id?: string;
-  // is parent public
-  is_parent_public?: string;
 }
 
 /** Last seen message by user */
@@ -210,8 +202,6 @@ export interface MessageTypingEvent {
   is_public: boolean;
   // The parent id to sent to.
   parent_id?: string;
-  // is parent public
-  is_parent_public?: string; 
 }
 
 // user profile updated event
@@ -277,8 +267,6 @@ interface ChannelMessageSend {
     is_public: boolean;
     // The parent id to sent to.
     parent_id?: string;
-    // is parent public
-    is_parent_public?: boolean;
   };
 }
 
@@ -301,8 +289,6 @@ interface ChannelMessageUpdate {
     is_public: boolean;
     // The parent id to sent to.
     parent_id?: string;
-    // is parent public
-    is_parent_public?: boolean;
   };
 }
 
@@ -323,8 +309,6 @@ interface ChannelMessageRemove {
     is_public: boolean;
     // The parent id to sent to.
     parent_id?: string;
-    // is parent public
-    is_parent_public?: boolean;
   };
 }
 
@@ -447,8 +431,6 @@ export interface ChannelCreatedEvent {
   status: number;
   // parent 
   parent_id: string;
-  // parent public
-  is_parent_public: boolean;
   // app url
   app_url: string;
 }
@@ -849,13 +831,13 @@ export interface Socket {
   joinClanChat(clan_id: string) : Promise<ClanJoin>;
 
   /** Join a chat channel on the server. */
-  joinChat(clan_id: string, parent_id: string, channel_id: string, channel_type: number, is_public: boolean, is_parent_public: boolean) : Promise<Channel>;
+  joinChat(clan_id: string, parent_id: string, channel_id: string, channel_type: number, is_public: boolean) : Promise<Channel>;
 
   /** Leave a chat channel on the server. */
-  leaveChat(clan_id: string, parent_id: string, channel_id: string, channel_type: number, is_public: boolean, is_parent_public: boolean) : Promise<void>;
+  leaveChat(clan_id: string, parent_id: string, channel_id: string, channel_type: number, is_public: boolean) : Promise<void>;
 
   /** Remove a chat message from a chat channel on the server. */
-  removeChatMessage(clan_id: string, parent_id: string, channel_id: string, mode: number, is_public: boolean, is_parent_public: boolean, message_id: string) : Promise<ChannelMessageAck>;
+  removeChatMessage(clan_id: string, parent_id: string, channel_id: string, mode: number, is_public: boolean, message_id: string) : Promise<ChannelMessageAck>;
 
   /** Execute an RPC function to the server. */
   rpc(id?: string, payload?: string, http_key?: string) : Promise<ApiRpc>
@@ -864,25 +846,25 @@ export interface Socket {
   unfollowUsers(user_ids : string[]) : Promise<void>;
 
   /** Update a chat message on a chat channel in the server. */
-  updateChatMessage(clan_id: string, parent_id: string, channel_id: string, mode: number, is_public: boolean, is_parent_public: boolean, message_id: string, content: any, mentions?: Array<ApiMessageMention>, attachments?: Array<ApiMessageAttachment>, hideEditted?: boolean) : Promise<ChannelMessageAck>;
+  updateChatMessage(clan_id: string, parent_id: string, channel_id: string, mode: number, is_public: boolean, message_id: string, content: any, mentions?: Array<ApiMessageMention>, attachments?: Array<ApiMessageAttachment>, hideEditted?: boolean) : Promise<ChannelMessageAck>;
 
   /** Update the status for the current user online. */
   updateStatus(status?: string) : Promise<void>;
 
   /** Send a chat message to a chat channel on the server. */
-  writeChatMessage(clan_id: string, parent_id: string, channel_id: string, mode: number, is_public: boolean, is_parent_public: boolean, content?: any, mentions?: Array<ApiMessageMention>, attachments?: Array<ApiMessageAttachment>, references?: Array<ApiMessageRef>, anonymous_message?: boolean, mention_everyone?:boolean, avatar?: string) : Promise<ChannelMessageAck>;
+  writeChatMessage(clan_id: string, parent_id: string, channel_id: string, mode: number, is_public: boolean, content?: any, mentions?: Array<ApiMessageMention>, attachments?: Array<ApiMessageAttachment>, references?: Array<ApiMessageRef>, anonymous_message?: boolean, mention_everyone?:boolean, avatar?: string) : Promise<ChannelMessageAck>;
 
   /** Send message typing */
-  writeMessageTyping(clan_id: string, parent_id: string, channel_id: string, mode: number, is_public: boolean, is_parent_public: boolean) : Promise<MessageTypingEvent>;  
+  writeMessageTyping(clan_id: string, parent_id: string, channel_id: string, mode: number, is_public: boolean) : Promise<MessageTypingEvent>;  
 
   /** Send message reaction */
-  writeMessageReaction(id: string, clan_id: string, parent_id: string, channel_id: string, mode: number, is_public: boolean, is_parent_public: boolean, message_id: string, emoji_id: string, emoji: string, count: number, message_sender_id: string, action_delete: boolean) : Promise<ApiMessageReaction>;
+  writeMessageReaction(id: string, clan_id: string, parent_id: string, channel_id: string, mode: number, is_public: boolean, message_id: string, emoji_id: string, emoji: string, count: number, message_sender_id: string, action_delete: boolean) : Promise<ApiMessageReaction>;
 
   /** Send last seen message */
   writeLastSeenMessage(clan_id: string, channel_id: string, mode: number, message_id: string, timestamp_seconds: number) : Promise<LastSeenMessageEvent>;
 
   /** Send last pin message */
-  writeLastPinMessage(clan_id: string, parent_id: string, channel_id: string, mode: number, is_public: boolean, is_parent_public: boolean, message_id: string, timestamp_seconds: number, operation: number) : Promise<LastPinMessageEvent>;
+  writeLastPinMessage(clan_id: string, parent_id: string, channel_id: string, mode: number, is_public: boolean, message_id: string, timestamp_seconds: number, operation: number) : Promise<LastPinMessageEvent>;
 
   /** Send custom user status */
   writeCustomStatus(clan_id: string, status: string) : Promise<CustomStatusEvent>;
@@ -1589,7 +1571,7 @@ export class DefaultSocket implements Socket {
     return response.clan_join;
   }
 
-  async joinChat(clan_id: string, parent_id: string, channel_id: string, channel_type: number, is_public: boolean, is_parent_public: boolean): Promise<Channel> {
+  async joinChat(clan_id: string, parent_id: string, channel_id: string, channel_type: number, is_public: boolean): Promise<Channel> {
 
     const response = await this.send({
         channel_join: {
@@ -1597,8 +1579,7 @@ export class DefaultSocket implements Socket {
             parent_id: parent_id,
             channel_id: channel_id,
             channel_type: channel_type,
-            is_public: is_public,
-            is_parent_public: is_parent_public
+            is_public: is_public
         }
       }
     );
@@ -1606,11 +1587,11 @@ export class DefaultSocket implements Socket {
     return response.channel;
   }
 
-  leaveChat(clan_id: string, parent_id: string, channel_id: string, channel_type: number, is_public: boolean, is_parent_public: boolean): Promise<void> {
-    return this.send({channel_leave: {clan_id: clan_id, parent_id: parent_id, channel_id: channel_id, channel_type: channel_type, is_public: is_public, is_parent_public: is_parent_public}});
+  leaveChat(clan_id: string, parent_id: string, channel_id: string, channel_type: number, is_public: boolean): Promise<void> {
+    return this.send({channel_leave: {clan_id: clan_id, parent_id: parent_id, channel_id: channel_id, channel_type: channel_type, is_public: is_public}});
   }
 
-  async removeChatMessage(clan_id: string, parent_id: string, channel_id: string, mode: number, is_public: boolean, is_parent_public: boolean, message_id: string): Promise<ChannelMessageAck> {
+  async removeChatMessage(clan_id: string, parent_id: string, channel_id: string, mode: number, is_public: boolean, message_id: string): Promise<ChannelMessageAck> {
     const response = await this.send(
       {
         channel_message_remove: {
@@ -1620,7 +1601,6 @@ export class DefaultSocket implements Socket {
           mode: mode,
           message_id: message_id,
           is_public: is_public,
-          is_parent_public: is_parent_public
         }
       }
     );
@@ -1645,8 +1625,8 @@ export class DefaultSocket implements Socket {
     return this.send({status_unfollow: {user_ids: user_ids}});
   }
 
-  async updateChatMessage(clan_id: string, parent_id: string, channel_id: string, mode: number, is_public: boolean, is_parent_public: boolean, message_id: string, content: any, mentions?: Array<ApiMessageMention>, attachments?: Array<ApiMessageAttachment>, hideEditted?: boolean): Promise<ChannelMessageAck> {
-    const response = await this.send({channel_message_update: {clan_id: clan_id, parent_id: parent_id, channel_id: channel_id, message_id: message_id, content: content, mentions: mentions, attachments: attachments, mode: mode, is_public: is_public, is_parent_public: is_parent_public, hide_editted: hideEditted}});
+  async updateChatMessage(clan_id: string, parent_id: string, channel_id: string, mode: number, is_public: boolean, message_id: string, content: any, mentions?: Array<ApiMessageMention>, attachments?: Array<ApiMessageAttachment>, hideEditted?: boolean): Promise<ChannelMessageAck> {
+    const response = await this.send({channel_message_update: {clan_id: clan_id, parent_id: parent_id, channel_id: channel_id, message_id: message_id, content: content, mentions: mentions, attachments: attachments, mode: mode, is_public: is_public, hide_editted: hideEditted}});
     return response.channel_message_ack;
   }
 
@@ -1654,18 +1634,18 @@ export class DefaultSocket implements Socket {
     return this.send({status_update: {status: status}});
   }
 
-  async writeChatMessage(clan_id: string, parent_id: string, channel_id: string, mode: number, is_public: boolean, is_parent_public: boolean, content: any, mentions?: Array<ApiMessageMention>, attachments?: Array<ApiMessageAttachment>, references?: Array<ApiMessageRef>, anonymous_message?: boolean, mention_everyone?:Boolean, avatar?: string ): Promise<ChannelMessageAck> {
-    const response = await this.send({channel_message_send: {clan_id: clan_id, parent_id: parent_id, channel_id: channel_id, mode: mode, is_public: is_public, is_parent_public: is_parent_public, content: content, mentions: mentions, attachments: attachments, references: references, anonymous_message: anonymous_message, mention_everyone: mention_everyone, avatar: avatar}});
+  async writeChatMessage(clan_id: string, parent_id: string, channel_id: string, mode: number, is_public: boolean, content: any, mentions?: Array<ApiMessageMention>, attachments?: Array<ApiMessageAttachment>, references?: Array<ApiMessageRef>, anonymous_message?: boolean, mention_everyone?:Boolean, avatar?: string ): Promise<ChannelMessageAck> {
+    const response = await this.send({channel_message_send: {clan_id: clan_id, parent_id: parent_id, channel_id: channel_id, mode: mode, is_public: is_public, content: content, mentions: mentions, attachments: attachments, references: references, anonymous_message: anonymous_message, mention_everyone: mention_everyone, avatar: avatar}});
     return response.channel_message_ack;
   }
 
-  async writeMessageReaction(id: string, clan_id: string, parent_id: string, channel_id: string, mode: number, is_public: boolean, is_parent_public: boolean, message_id: string, emoji_id: string, emoji: string, count: number, message_sender_id: string, action_delete: boolean): Promise<ApiMessageReaction> {
-    const response = await this.send({message_reaction_event: {id: id, clan_id: clan_id, parent_id: parent_id, channel_id: channel_id, mode: mode, is_public: is_public, is_parent_public: is_parent_public, message_id: message_id, emoji_id: emoji_id, emoji: emoji, count: count, message_sender_id: message_sender_id, action: action_delete}});
+  async writeMessageReaction(id: string, clan_id: string, parent_id: string, channel_id: string, mode: number, is_public: boolean, message_id: string, emoji_id: string, emoji: string, count: number, message_sender_id: string, action_delete: boolean): Promise<ApiMessageReaction> {
+    const response = await this.send({message_reaction_event: {id: id, clan_id: clan_id, parent_id: parent_id, channel_id: channel_id, mode: mode, is_public: is_public, message_id: message_id, emoji_id: emoji_id, emoji: emoji, count: count, message_sender_id: message_sender_id, action: action_delete}});
     return response.message_reaction_event
   }
 
-  async writeMessageTyping(clan_id: string, parent_id: string, channel_id: string, mode: number, is_public: boolean, is_parent_public: boolean): Promise<MessageTypingEvent> {
-    const response = await this.send({message_typing_event: {clan_id: clan_id, parent_id: parent_id, channel_id: channel_id, mode:mode, is_public: is_public, is_parent_public: is_parent_public}});
+  async writeMessageTyping(clan_id: string, parent_id: string, channel_id: string, mode: number, is_public: boolean): Promise<MessageTypingEvent> {
+    const response = await this.send({message_typing_event: {clan_id: clan_id, parent_id: parent_id, channel_id: channel_id, mode:mode, is_public: is_public}});
     return response.message_typing_event
   }
 
@@ -1674,8 +1654,8 @@ export class DefaultSocket implements Socket {
     return response.last_seen_message_event
   }
 
-  async writeLastPinMessage(clan_id: string, parent_id: string, channel_id: string, mode: number, is_public: boolean, is_parent_public: boolean, message_id: string, timestamp_seconds: number, operation: number): Promise<LastPinMessageEvent> {
-    const response = await this.send({last_pin_message_event: {clan_id: clan_id, parent_id: parent_id, channel_id: channel_id, mode: mode, is_public: is_public, is_parent_public: is_parent_public, message_id: message_id, timestamp_seconds: timestamp_seconds, operation: operation}});
+  async writeLastPinMessage(clan_id: string, parent_id: string, channel_id: string, mode: number, is_public: boolean, message_id: string, timestamp_seconds: number, operation: number): Promise<LastPinMessageEvent> {
+    const response = await this.send({last_pin_message_event: {clan_id: clan_id, parent_id: parent_id, channel_id: channel_id, mode: mode, is_public: is_public, message_id: message_id, timestamp_seconds: timestamp_seconds, operation: operation}});
     return response.last_pin_message_event
   }
 
