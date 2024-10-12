@@ -707,6 +707,8 @@ export interface ApiChannelSettingItem {
   //
   meeting_code?: string;
   //
+  message_count?: string;
+  //
   parent_id?: string;
   //
   user_ids?: Array<string>;
