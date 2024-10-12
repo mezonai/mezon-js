@@ -59,10 +59,7 @@ export interface ChannelJoin {
     hidden: boolean;
     // is public
     is_public: boolean;
-    // parent id
-    parent_id: string;
-    // parent public
-    is_parent_public: boolean;
+    
   };
 }
 
@@ -77,10 +74,6 @@ export interface ChannelLeave {
     channel_label: string;
     // Is public
     is_public: boolean;
-    // parent id
-    parent_id: string;
-    // parent public
-    is_parent_public: boolean;
   };
 }
 
@@ -100,8 +93,6 @@ export interface UserChannelAddedEvent {
   is_public: boolean;
   // parent id
   parent_id: string;
-  // parent public
-  is_parent_public: boolean;
 }
 
 export interface AddUsers {
@@ -143,10 +134,6 @@ export interface LastPinMessageEvent {
   operation: number;
   // Is public
   is_public: boolean;
-  // The parent id to sent to.
-  parent_id?: string;
-  // is parent public
-  is_parent_public?: string;
 }
 
 /** Last seen message by user */
@@ -173,10 +160,6 @@ export interface MessageTypingEvent {
   sender_id: string;
   // Is public
   is_public: boolean;
-  // The parent id to sent to.
-  parent_id?: string;
-  // is parent public
-  is_parent_public?: string;
 }
 
 // user profile updated event
@@ -240,10 +223,6 @@ export interface ChannelMessageSend {
     avatar: string;
     // Is public
     is_public: boolean;
-    // The parent id to sent to.
-    parent_id?: string;
-    // is parent public
-    is_parent_public?: boolean;
   };
 }
 
@@ -264,10 +243,6 @@ export interface ChannelMessageUpdate {
     mode: number;
     // Is public
     is_public: boolean;
-    // The parent id to sent to.
-    parent_id?: string;
-    // is parent public
-    is_parent_public?: boolean;
   };
 }
 
@@ -285,10 +260,6 @@ export interface ChannelMessageRemove {
     message_id: string;
     // Is public
     is_public: boolean;
-    // The parent id to sent to.
-    parent_id?: string;
-    // is parent public
-    is_parent_public?: boolean;
   };
 }
 
@@ -403,8 +374,6 @@ export interface ChannelCreatedEvent {
   channel_type: number;
   // status
   status: number;
-  // parent public
-  is_parent_public: boolean;
 }
 
 export interface ChannelDeletedEvent {
@@ -714,42 +683,34 @@ export interface Socket {
   /** Join a chat channel on the server. */
   joinChat(
     clan_id: string,
-    parent_id: string,
     channel_id: string,
     channel_type: number,
     is_public: boolean,
-    is_parent_public: boolean
   ): Promise<Channel>;
 
   /** Leave a chat channel on the server. */
   leaveChat(
     clan_id: string,
-    parent_id: string,
     channel_id: string,
     channel_type: number,
     is_public: boolean,
-    is_parent_public: boolean
   ): Promise<void>;
 
   /** Remove a chat message from a chat channel on the server. */
   removeChatMessage(
     clan_id: string,
-    parent_id: string,
     channel_id: string,
     mode: number,
-    is_public: boolean,
-    is_parent_public: boolean,
+    is_public: boolean,    
     message_id: string
   ): Promise<ChannelMessageAck>;
 
   /** Update a chat message on a chat channel in the server. */
   updateChatMessage(
     clan_id: string,
-    parent_id: string,
     channel_id: string,
     mode: number,
     is_public: boolean,
-    is_parent_public: boolean,
     message_id: string,
     content: any,
     mentions?: Array<ApiMessageMention>,
@@ -763,11 +724,9 @@ export interface Socket {
   /** Send a chat message to a chat channel on the server. */
   writeChatMessage(
     clan_id: string,
-    parent_id: string,
     channel_id: string,
     mode: number,
     is_public: boolean,
-    is_parent_public: boolean,
     content?: any,
     mentions?: Array<ApiMessageMention>,
     attachments?: Array<ApiMessageAttachment>,
@@ -780,22 +739,18 @@ export interface Socket {
   /** Send message typing */
   writeMessageTyping(
     clan_id: string,
-    parent_id: string,
     channel_id: string,
     mode: number,
     is_public: boolean,
-    is_parent_public: boolean
   ): Promise<MessageTypingEvent>;
 
   /** Send message reaction */
   writeMessageReaction(
     id: string,
     clan_id: string,
-    parent_id: string,
     channel_id: string,
     mode: number,
     is_public: boolean,
-    is_parent_public: boolean,
     message_id: string,
     emoji_id: string,
     emoji: string,

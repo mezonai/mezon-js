@@ -379,10 +379,6 @@ export interface ChannelJoin {
   channel_id: string;
   /** channel type */
   channel_type: number;
-  /** the parent_id */
-  parent_id: string;
-  /** parent public */
-  is_parent_public: boolean;
   /** is public */
   is_public: boolean;
 }
@@ -453,10 +449,6 @@ export interface ChannelMessageSend {
   avatar: string;
   /** is public */
   is_public: boolean;
-  /** The parent id to sent to. */
-  parent_id: string;
-  /** is parent public */
-  is_parent_public: boolean;
 }
 
 /** Update a message previously sent to a realtime channel. */
@@ -479,10 +471,6 @@ export interface ChannelMessageUpdate {
   is_public: boolean;
   /** hide editted */
   hide_editted: boolean;
-  /** The parent id to sent to. */
-  parent_id: string;
-  /** is parent public */
-  is_parent_public: boolean;
 }
 
 /** Remove a message previously sent to a realtime channel. */
@@ -497,10 +485,6 @@ export interface ChannelMessageRemove {
   mode: number;
   /** is public */
   is_public: boolean;
-  /** The parent id to sent to. */
-  parent_id: string;
-  /** is parent public */
-  is_parent_public: boolean;
 }
 
 /** A set of joins and leaves on a particular channel. */
@@ -666,10 +650,6 @@ export interface LastPinMessageEvent {
   operation: number;
   /** is public */
   is_public: boolean;
-  /** The parent id to sent to. */
-  parent_id: string;
-  /** is parent public */
-  is_parent_public: boolean;
 }
 
 /** Last seen message by user */
@@ -698,10 +678,6 @@ export interface MessageTypingEvent {
   mode: number;
   /** is public */
   is_public: boolean;
-  /** The parent id to sent to. */
-  parent_id: string;
-  /** is parent public */
-  is_parent_public: boolean;
 }
 
 /** Voice Joined event */
@@ -827,8 +803,6 @@ export interface ChannelCreatedEvent {
     | undefined;
   /** status */
   status: number;
-  /** is parent public */
-  is_parent_public: boolean;
   /** app url */
   app_url: string;
 }
@@ -1017,8 +991,6 @@ export interface UserChannelAdded {
   is_public: boolean;
   /** the parent_id */
   parent_id: string;
-  /** parent public */
-  is_parent_public: boolean;
 }
 
 /**  */
@@ -3320,7 +3292,7 @@ export const ClanJoin = {
 };
 
 function createBaseChannelJoin(): ChannelJoin {
-  return { clan_id: "", channel_id: "", channel_type: 0, parent_id: "", is_parent_public: false, is_public: false };
+  return { clan_id: "", channel_id: "", channel_type: 0, is_public: false };
 }
 
 export const ChannelJoin = {
@@ -3334,14 +3306,8 @@ export const ChannelJoin = {
     if (message.channel_type !== 0) {
       writer.uint32(24).int32(message.channel_type);
     }
-    if (message.parent_id !== "") {
-      writer.uint32(34).string(message.parent_id);
-    }
-    if (message.is_parent_public !== false) {
-      writer.uint32(40).bool(message.is_parent_public);
-    }
     if (message.is_public !== false) {
-      writer.uint32(48).bool(message.is_public);
+      writer.uint32(32).bool(message.is_public);
     }
     return writer;
   },
@@ -3375,21 +3341,7 @@ export const ChannelJoin = {
           message.channel_type = reader.int32();
           continue;
         case 4:
-          if (tag !== 34) {
-            break;
-          }
-
-          message.parent_id = reader.string();
-          continue;
-        case 5:
-          if (tag !== 40) {
-            break;
-          }
-
-          message.is_parent_public = reader.bool();
-          continue;
-        case 6:
-          if (tag !== 48) {
+          if (tag !== 32) {
             break;
           }
 
@@ -3409,8 +3361,6 @@ export const ChannelJoin = {
       clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
       channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "",
       channel_type: isSet(object.channel_type) ? globalThis.Number(object.channel_type) : 0,
-      parent_id: isSet(object.parent_id) ? globalThis.String(object.parent_id) : "",
-      is_parent_public: isSet(object.is_parent_public) ? globalThis.Boolean(object.is_parent_public) : false,
       is_public: isSet(object.is_public) ? globalThis.Boolean(object.is_public) : false,
     };
   },
@@ -3426,12 +3376,6 @@ export const ChannelJoin = {
     if (message.channel_type !== 0) {
       obj.channel_type = Math.round(message.channel_type);
     }
-    if (message.parent_id !== "") {
-      obj.parent_id = message.parent_id;
-    }
-    if (message.is_parent_public !== false) {
-      obj.is_parent_public = message.is_parent_public;
-    }
     if (message.is_public !== false) {
       obj.is_public = message.is_public;
     }
@@ -3446,8 +3390,6 @@ export const ChannelJoin = {
     message.clan_id = object.clan_id ?? "";
     message.channel_id = object.channel_id ?? "";
     message.channel_type = object.channel_type ?? 0;
-    message.parent_id = object.parent_id ?? "";
-    message.is_parent_public = object.is_parent_public ?? false;
     message.is_public = object.is_public ?? false;
     return message;
   },
@@ -3759,8 +3701,6 @@ function createBaseChannelMessageSend(): ChannelMessageSend {
     mention_everyone: false,
     avatar: "",
     is_public: false,
-    parent_id: "",
-    is_parent_public: false,
   };
 }
 
@@ -3798,12 +3738,6 @@ export const ChannelMessageSend = {
     }
     if (message.is_public !== false) {
       writer.uint32(88).bool(message.is_public);
-    }
-    if (message.parent_id !== "") {
-      writer.uint32(98).string(message.parent_id);
-    }
-    if (message.is_parent_public !== false) {
-      writer.uint32(104).bool(message.is_parent_public);
     }
     return writer;
   },
@@ -3892,20 +3826,6 @@ export const ChannelMessageSend = {
 
           message.is_public = reader.bool();
           continue;
-        case 12:
-          if (tag !== 98) {
-            break;
-          }
-
-          message.parent_id = reader.string();
-          continue;
-        case 13:
-          if (tag !== 104) {
-            break;
-          }
-
-          message.is_parent_public = reader.bool();
-          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -3934,8 +3854,6 @@ export const ChannelMessageSend = {
       mention_everyone: isSet(object.mention_everyone) ? globalThis.Boolean(object.mention_everyone) : false,
       avatar: isSet(object.avatar) ? globalThis.String(object.avatar) : "",
       is_public: isSet(object.is_public) ? globalThis.Boolean(object.is_public) : false,
-      parent_id: isSet(object.parent_id) ? globalThis.String(object.parent_id) : "",
-      is_parent_public: isSet(object.is_parent_public) ? globalThis.Boolean(object.is_parent_public) : false,
     };
   },
 
@@ -3974,12 +3892,6 @@ export const ChannelMessageSend = {
     if (message.is_public !== false) {
       obj.is_public = message.is_public;
     }
-    if (message.parent_id !== "") {
-      obj.parent_id = message.parent_id;
-    }
-    if (message.is_parent_public !== false) {
-      obj.is_parent_public = message.is_parent_public;
-    }
     return obj;
   },
 
@@ -3999,8 +3911,6 @@ export const ChannelMessageSend = {
     message.mention_everyone = object.mention_everyone ?? false;
     message.avatar = object.avatar ?? "";
     message.is_public = object.is_public ?? false;
-    message.parent_id = object.parent_id ?? "";
-    message.is_parent_public = object.is_parent_public ?? false;
     return message;
   },
 };
@@ -4016,8 +3926,6 @@ function createBaseChannelMessageUpdate(): ChannelMessageUpdate {
     mode: 0,
     is_public: false,
     hide_editted: false,
-    parent_id: "",
-    is_parent_public: false,
   };
 }
 
@@ -4049,12 +3957,6 @@ export const ChannelMessageUpdate = {
     }
     if (message.hide_editted !== false) {
       writer.uint32(72).bool(message.hide_editted);
-    }
-    if (message.parent_id !== "") {
-      writer.uint32(82).string(message.parent_id);
-    }
-    if (message.is_parent_public !== false) {
-      writer.uint32(88).bool(message.is_parent_public);
     }
     return writer;
   },
@@ -4129,20 +4031,6 @@ export const ChannelMessageUpdate = {
 
           message.hide_editted = reader.bool();
           continue;
-        case 10:
-          if (tag !== 82) {
-            break;
-          }
-
-          message.parent_id = reader.string();
-          continue;
-        case 11:
-          if (tag !== 88) {
-            break;
-          }
-
-          message.is_parent_public = reader.bool();
-          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -4167,8 +4055,6 @@ export const ChannelMessageUpdate = {
       mode: isSet(object.mode) ? globalThis.Number(object.mode) : 0,
       is_public: isSet(object.is_public) ? globalThis.Boolean(object.is_public) : false,
       hide_editted: isSet(object.hide_editted) ? globalThis.Boolean(object.hide_editted) : false,
-      parent_id: isSet(object.parent_id) ? globalThis.String(object.parent_id) : "",
-      is_parent_public: isSet(object.is_parent_public) ? globalThis.Boolean(object.is_parent_public) : false,
     };
   },
 
@@ -4201,12 +4087,6 @@ export const ChannelMessageUpdate = {
     if (message.hide_editted !== false) {
       obj.hide_editted = message.hide_editted;
     }
-    if (message.parent_id !== "") {
-      obj.parent_id = message.parent_id;
-    }
-    if (message.is_parent_public !== false) {
-      obj.is_parent_public = message.is_parent_public;
-    }
     return obj;
   },
 
@@ -4224,22 +4104,12 @@ export const ChannelMessageUpdate = {
     message.mode = object.mode ?? 0;
     message.is_public = object.is_public ?? false;
     message.hide_editted = object.hide_editted ?? false;
-    message.parent_id = object.parent_id ?? "";
-    message.is_parent_public = object.is_parent_public ?? false;
     return message;
   },
 };
 
 function createBaseChannelMessageRemove(): ChannelMessageRemove {
-  return {
-    clan_id: "",
-    channel_id: "",
-    message_id: "",
-    mode: 0,
-    is_public: false,
-    parent_id: "",
-    is_parent_public: false,
-  };
+  return { clan_id: "", channel_id: "", message_id: "", mode: 0, is_public: false };
 }
 
 export const ChannelMessageRemove = {
@@ -4258,12 +4128,6 @@ export const ChannelMessageRemove = {
     }
     if (message.is_public !== false) {
       writer.uint32(40).bool(message.is_public);
-    }
-    if (message.parent_id !== "") {
-      writer.uint32(50).string(message.parent_id);
-    }
-    if (message.is_parent_public !== false) {
-      writer.uint32(56).bool(message.is_parent_public);
     }
     return writer;
   },
@@ -4310,20 +4174,6 @@ export const ChannelMessageRemove = {
 
           message.is_public = reader.bool();
           continue;
-        case 6:
-          if (tag !== 50) {
-            break;
-          }
-
-          message.parent_id = reader.string();
-          continue;
-        case 7:
-          if (tag !== 56) {
-            break;
-          }
-
-          message.is_parent_public = reader.bool();
-          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -4340,8 +4190,6 @@ export const ChannelMessageRemove = {
       message_id: isSet(object.message_id) ? globalThis.String(object.message_id) : "",
       mode: isSet(object.mode) ? globalThis.Number(object.mode) : 0,
       is_public: isSet(object.is_public) ? globalThis.Boolean(object.is_public) : false,
-      parent_id: isSet(object.parent_id) ? globalThis.String(object.parent_id) : "",
-      is_parent_public: isSet(object.is_parent_public) ? globalThis.Boolean(object.is_parent_public) : false,
     };
   },
 
@@ -4362,12 +4210,6 @@ export const ChannelMessageRemove = {
     if (message.is_public !== false) {
       obj.is_public = message.is_public;
     }
-    if (message.parent_id !== "") {
-      obj.parent_id = message.parent_id;
-    }
-    if (message.is_parent_public !== false) {
-      obj.is_parent_public = message.is_parent_public;
-    }
     return obj;
   },
 
@@ -4381,8 +4223,6 @@ export const ChannelMessageRemove = {
     message.message_id = object.message_id ?? "";
     message.mode = object.mode ?? 0;
     message.is_public = object.is_public ?? false;
-    message.parent_id = object.parent_id ?? "";
-    message.is_parent_public = object.is_parent_public ?? false;
     return message;
   },
 };
@@ -5071,8 +4911,6 @@ function createBaseLastPinMessageEvent(): LastPinMessageEvent {
     timestamp_seconds: 0,
     operation: 0,
     is_public: false,
-    parent_id: "",
-    is_parent_public: false,
   };
 }
 
@@ -5101,12 +4939,6 @@ export const LastPinMessageEvent = {
     }
     if (message.is_public !== false) {
       writer.uint32(64).bool(message.is_public);
-    }
-    if (message.parent_id !== "") {
-      writer.uint32(74).string(message.parent_id);
-    }
-    if (message.is_parent_public !== false) {
-      writer.uint32(80).bool(message.is_parent_public);
     }
     return writer;
   },
@@ -5174,20 +5006,6 @@ export const LastPinMessageEvent = {
 
           message.is_public = reader.bool();
           continue;
-        case 9:
-          if (tag !== 74) {
-            break;
-          }
-
-          message.parent_id = reader.string();
-          continue;
-        case 10:
-          if (tag !== 80) {
-            break;
-          }
-
-          message.is_parent_public = reader.bool();
-          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -5207,8 +5025,6 @@ export const LastPinMessageEvent = {
       timestamp_seconds: isSet(object.timestamp_seconds) ? globalThis.Number(object.timestamp_seconds) : 0,
       operation: isSet(object.operation) ? globalThis.Number(object.operation) : 0,
       is_public: isSet(object.is_public) ? globalThis.Boolean(object.is_public) : false,
-      parent_id: isSet(object.parent_id) ? globalThis.String(object.parent_id) : "",
-      is_parent_public: isSet(object.is_parent_public) ? globalThis.Boolean(object.is_parent_public) : false,
     };
   },
 
@@ -5238,12 +5054,6 @@ export const LastPinMessageEvent = {
     if (message.is_public !== false) {
       obj.is_public = message.is_public;
     }
-    if (message.parent_id !== "") {
-      obj.parent_id = message.parent_id;
-    }
-    if (message.is_parent_public !== false) {
-      obj.is_parent_public = message.is_parent_public;
-    }
     return obj;
   },
 
@@ -5260,8 +5070,6 @@ export const LastPinMessageEvent = {
     message.timestamp_seconds = object.timestamp_seconds ?? 0;
     message.operation = object.operation ?? 0;
     message.is_public = object.is_public ?? false;
-    message.parent_id = object.parent_id ?? "";
-    message.is_parent_public = object.is_parent_public ?? false;
     return message;
   },
 };
@@ -5386,15 +5194,7 @@ export const LastSeenMessageEvent = {
 };
 
 function createBaseMessageTypingEvent(): MessageTypingEvent {
-  return {
-    clan_id: "",
-    channel_id: "",
-    sender_id: "",
-    mode: 0,
-    is_public: false,
-    parent_id: "",
-    is_parent_public: false,
-  };
+  return { clan_id: "", channel_id: "", sender_id: "", mode: 0, is_public: false };
 }
 
 export const MessageTypingEvent = {
@@ -5413,12 +5213,6 @@ export const MessageTypingEvent = {
     }
     if (message.is_public !== false) {
       writer.uint32(40).bool(message.is_public);
-    }
-    if (message.parent_id !== "") {
-      writer.uint32(50).string(message.parent_id);
-    }
-    if (message.is_parent_public !== false) {
-      writer.uint32(56).bool(message.is_parent_public);
     }
     return writer;
   },
@@ -5465,20 +5259,6 @@ export const MessageTypingEvent = {
 
           message.is_public = reader.bool();
           continue;
-        case 6:
-          if (tag !== 50) {
-            break;
-          }
-
-          message.parent_id = reader.string();
-          continue;
-        case 7:
-          if (tag !== 56) {
-            break;
-          }
-
-          message.is_parent_public = reader.bool();
-          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -5495,8 +5275,6 @@ export const MessageTypingEvent = {
       sender_id: isSet(object.sender_id) ? globalThis.String(object.sender_id) : "",
       mode: isSet(object.mode) ? globalThis.Number(object.mode) : 0,
       is_public: isSet(object.is_public) ? globalThis.Boolean(object.is_public) : false,
-      parent_id: isSet(object.parent_id) ? globalThis.String(object.parent_id) : "",
-      is_parent_public: isSet(object.is_parent_public) ? globalThis.Boolean(object.is_parent_public) : false,
     };
   },
 
@@ -5517,12 +5295,6 @@ export const MessageTypingEvent = {
     if (message.is_public !== false) {
       obj.is_public = message.is_public;
     }
-    if (message.parent_id !== "") {
-      obj.parent_id = message.parent_id;
-    }
-    if (message.is_parent_public !== false) {
-      obj.is_parent_public = message.is_parent_public;
-    }
     return obj;
   },
 
@@ -5536,8 +5308,6 @@ export const MessageTypingEvent = {
     message.sender_id = object.sender_id ?? "";
     message.mode = object.mode ?? 0;
     message.is_public = object.is_public ?? false;
-    message.parent_id = object.parent_id ?? "";
-    message.is_parent_public = object.is_parent_public ?? false;
     return message;
   },
 };
@@ -6449,7 +6219,6 @@ function createBaseChannelCreatedEvent(): ChannelCreatedEvent {
     channel_private: 0,
     channel_type: undefined,
     status: 0,
-    is_parent_public: false,
     app_url: "",
   };
 }
@@ -6483,11 +6252,8 @@ export const ChannelCreatedEvent = {
     if (message.status !== 0) {
       writer.uint32(72).int32(message.status);
     }
-    if (message.is_parent_public !== false) {
-      writer.uint32(80).bool(message.is_parent_public);
-    }
     if (message.app_url !== "") {
-      writer.uint32(90).string(message.app_url);
+      writer.uint32(82).string(message.app_url);
     }
     return writer;
   },
@@ -6563,14 +6329,7 @@ export const ChannelCreatedEvent = {
           message.status = reader.int32();
           continue;
         case 10:
-          if (tag !== 80) {
-            break;
-          }
-
-          message.is_parent_public = reader.bool();
-          continue;
-        case 11:
-          if (tag !== 90) {
+          if (tag !== 82) {
             break;
           }
 
@@ -6596,7 +6355,6 @@ export const ChannelCreatedEvent = {
       channel_private: isSet(object.channel_private) ? globalThis.Number(object.channel_private) : 0,
       channel_type: isSet(object.channel_type) ? Number(object.channel_type) : undefined,
       status: isSet(object.status) ? globalThis.Number(object.status) : 0,
-      is_parent_public: isSet(object.is_parent_public) ? globalThis.Boolean(object.is_parent_public) : false,
       app_url: isSet(object.app_url) ? globalThis.String(object.app_url) : "",
     };
   },
@@ -6630,9 +6388,6 @@ export const ChannelCreatedEvent = {
     if (message.status !== 0) {
       obj.status = Math.round(message.status);
     }
-    if (message.is_parent_public !== false) {
-      obj.is_parent_public = message.is_parent_public;
-    }
     if (message.app_url !== "") {
       obj.app_url = message.app_url;
     }
@@ -6653,7 +6408,6 @@ export const ChannelCreatedEvent = {
     message.channel_private = object.channel_private ?? 0;
     message.channel_type = object.channel_type ?? undefined;
     message.status = object.status ?? 0;
-    message.is_parent_public = object.is_parent_public ?? false;
     message.app_url = object.app_url ?? "";
     return message;
   },
@@ -8157,16 +7911,7 @@ export const CustomStatusEvent = {
 };
 
 function createBaseUserChannelAdded(): UserChannelAdded {
-  return {
-    channel_id: "",
-    users: [],
-    status: "",
-    clan_id: "",
-    channel_type: 0,
-    is_public: false,
-    parent_id: "",
-    is_parent_public: false,
-  };
+  return { channel_id: "", users: [], status: "", clan_id: "", channel_type: 0, is_public: false, parent_id: "" };
 }
 
 export const UserChannelAdded = {
@@ -8191,9 +7936,6 @@ export const UserChannelAdded = {
     }
     if (message.parent_id !== "") {
       writer.uint32(58).string(message.parent_id);
-    }
-    if (message.is_parent_public !== false) {
-      writer.uint32(64).bool(message.is_parent_public);
     }
     return writer;
   },
@@ -8254,13 +7996,6 @@ export const UserChannelAdded = {
 
           message.parent_id = reader.string();
           continue;
-        case 8:
-          if (tag !== 64) {
-            break;
-          }
-
-          message.is_parent_public = reader.bool();
-          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -8279,7 +8014,6 @@ export const UserChannelAdded = {
       channel_type: isSet(object.channel_type) ? globalThis.Number(object.channel_type) : 0,
       is_public: isSet(object.is_public) ? globalThis.Boolean(object.is_public) : false,
       parent_id: isSet(object.parent_id) ? globalThis.String(object.parent_id) : "",
-      is_parent_public: isSet(object.is_parent_public) ? globalThis.Boolean(object.is_parent_public) : false,
     };
   },
 
@@ -8306,9 +8040,6 @@ export const UserChannelAdded = {
     if (message.parent_id !== "") {
       obj.parent_id = message.parent_id;
     }
-    if (message.is_parent_public !== false) {
-      obj.is_parent_public = message.is_parent_public;
-    }
     return obj;
   },
 
@@ -8324,7 +8055,6 @@ export const UserChannelAdded = {
     message.channel_type = object.channel_type ?? 0;
     message.is_public = object.is_public ?? false;
     message.parent_id = object.parent_id ?? "";
-    message.is_parent_public = object.is_parent_public ?? false;
     return message;
   },
 };

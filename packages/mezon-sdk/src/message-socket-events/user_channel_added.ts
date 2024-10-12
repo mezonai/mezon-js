@@ -12,11 +12,9 @@ export class UserChannelAdded extends BaseSocketEvent {
     if (input.users.some(user => user.user_id == this.socket.session.user_id)){
       await this.socket.joinChat(
         input.clan_id,
-        input.parent_id,
         input.channel_id,
         input.channel_type,
         input.is_public,
-        input.is_parent_public
       );
     }
   }

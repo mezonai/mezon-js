@@ -52,11 +52,9 @@ export interface ApiChannelDescription {
 
 export interface MessagePayLoad {
   clan_id: string;
-  parent_id: string;
   channel_id: string;
   mode: number;
   is_public: boolean;
-  is_parent_public: boolean;
   msg: ChannelMessageContent;
   mentions?: Array<ApiMessageMention>;
   attachments?: Array<ApiMessageAttachment>;
@@ -422,7 +420,7 @@ export interface ApiRegisterStreamingChannelResponse {
 
 export interface Client {
   authenticate: () => Promise<string>;
-  sendMessage: (clan_id: string, parent_id: string, channel_id: string, mode: number, is_public: boolean, is_parent_public: boolean, msg: ChannelMessageContent, mentions?: Array<ApiMessageMention>, attachments?: Array<ApiMessageAttachment>, ref?: Array<ApiMessageRef>) => Promise<ChannelMessageAck>;
+  sendMessage: (clan_id: string, channel_id: string, mode: number, is_public: boolean, msg: ChannelMessageContent, mentions?: Array<ApiMessageMention>, attachments?: Array<ApiMessageAttachment>, ref?: Array<ApiMessageRef>) => Promise<ChannelMessageAck>;
   on: (event: string, func: Function) => void;
   remove: (event: string, func: (...args: any[]) => void) => void;
   sendDMChannelMessage: (userId: string, msg: string, messOptions: {[x: string]: any}, attachments: Array<ApiMessageAttachment>, refs: Array<ApiMessageRef>) => Promise<ChannelMessageAck>; 
