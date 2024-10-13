@@ -1857,6 +1857,21 @@ export interface ChannelDescList {
   cacheable_cursor: string;
 }
 
+export interface ListThreadRequest {
+  /** Max number of records to return. Between 1 and 100. */
+  limit:
+    | number
+    | undefined;
+  /** The channel state to list. */
+  state:
+    | number
+    | undefined;
+  /** The clan of this channel */
+  clan_id: string;
+  /** channel id */
+  channel_id: string;
+}
+
 /** List (and optionally filter) channels. */
 export interface ListChannelDescsRequest {
   /** Max number of records to return. Between 1 and 100. */
@@ -16263,6 +16278,110 @@ export const ChannelDescList = {
     message.next_cursor = object.next_cursor ?? "";
     message.prev_cursor = object.prev_cursor ?? "";
     message.cacheable_cursor = object.cacheable_cursor ?? "";
+    return message;
+  },
+};
+
+function createBaseListThreadRequest(): ListThreadRequest {
+  return { limit: undefined, state: undefined, clan_id: "", channel_id: "" };
+}
+
+export const ListThreadRequest = {
+  encode(message: ListThreadRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.limit !== undefined) {
+      Int32Value.encode({ value: message.limit! }, writer.uint32(10).fork()).ldelim();
+    }
+    if (message.state !== undefined) {
+      Int32Value.encode({ value: message.state! }, writer.uint32(18).fork()).ldelim();
+    }
+    if (message.clan_id !== "") {
+      writer.uint32(26).string(message.clan_id);
+    }
+    if (message.channel_id !== "") {
+      writer.uint32(34).string(message.channel_id);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): ListThreadRequest {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseListThreadRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.limit = Int32Value.decode(reader, reader.uint32()).value;
+          continue;
+        case 2:
+          if (tag !== 18) {
+            break;
+          }
+
+          message.state = Int32Value.decode(reader, reader.uint32()).value;
+          continue;
+        case 3:
+          if (tag !== 26) {
+            break;
+          }
+
+          message.clan_id = reader.string();
+          continue;
+        case 4:
+          if (tag !== 34) {
+            break;
+          }
+
+          message.channel_id = reader.string();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): ListThreadRequest {
+    return {
+      limit: isSet(object.limit) ? Number(object.limit) : undefined,
+      state: isSet(object.state) ? Number(object.state) : undefined,
+      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
+      channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "",
+    };
+  },
+
+  toJSON(message: ListThreadRequest): unknown {
+    const obj: any = {};
+    if (message.limit !== undefined) {
+      obj.limit = message.limit;
+    }
+    if (message.state !== undefined) {
+      obj.state = message.state;
+    }
+    if (message.clan_id !== "") {
+      obj.clan_id = message.clan_id;
+    }
+    if (message.channel_id !== "") {
+      obj.channel_id = message.channel_id;
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<ListThreadRequest>, I>>(base?: I): ListThreadRequest {
+    return ListThreadRequest.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<ListThreadRequest>, I>>(object: I): ListThreadRequest {
+    const message = createBaseListThreadRequest();
+    message.limit = object.limit ?? undefined;
+    message.state = object.state ?? undefined;
+    message.clan_id = object.clan_id ?? "";
+    message.channel_id = object.channel_id ?? "";
     return message;
   },
 };
