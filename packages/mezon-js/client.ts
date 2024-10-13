@@ -3921,6 +3921,44 @@ export class Client {
       });
   }
 
+  /** List Threads. */
+  async listThreadDescs(
+    session: Session,
+    channelId:string,
+    limit?:number,
+    state?:number,
+    clanId?:string,
+  ): Promise<ApiChannelDescList> {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired((Date.now() + this.expiredTimespanMs) / 1000)
+    ) {
+      await this.sessionRefresh(session);
+    }
+
+    return this.apiClient
+      .listThreadDescs(
+        session.token,
+        channelId,
+        limit,
+        state,
+        clanId
+      )
+      .then((response: ApiChannelDescList) => {
+        var result: ApiChannelDescList = {
+          channeldesc: [],
+        };
+
+        if (response.channeldesc == null) {
+          return Promise.resolve(result);
+        }
+
+        result.channeldesc = response.channeldesc;
+        return Promise.resolve(result);
+      });
+  } 
+
   async getChannelSettingInClan(
     session: Session,
     clanId: string,
