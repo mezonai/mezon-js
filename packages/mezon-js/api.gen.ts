@@ -7994,6 +7994,7 @@ export class MezonApi {
       limit?:number,
       state?:number,
       clanId?:string,
+      threadId?:string,
       options: any = {}): Promise<ApiChannelDescList> {
     
     if (channelId === null || channelId === undefined) {
@@ -8005,6 +8006,7 @@ export class MezonApi {
     queryParams.set("limit", limit);
     queryParams.set("state", state);
     queryParams.set("clan_id", clanId);
+    queryParams.set("thread_id", threadId);
 
     let bodyJson : string = "";
 

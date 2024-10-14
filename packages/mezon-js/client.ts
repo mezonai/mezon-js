@@ -3928,6 +3928,7 @@ export class Client {
     limit?:number,
     state?:number,
     clanId?:string,
+    threadId?: string,
   ): Promise<ApiChannelDescList> {
     if (
       this.autoRefreshSession &&
@@ -3943,7 +3944,8 @@ export class Client {
         channelId,
         limit,
         state,
-        clanId
+        clanId,
+        threadId
       )
       .then((response: ApiChannelDescList) => {
         var result: ApiChannelDescList = {
