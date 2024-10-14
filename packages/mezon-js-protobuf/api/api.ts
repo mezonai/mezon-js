@@ -1870,6 +1870,8 @@ export interface ListThreadRequest {
   clan_id: string;
   /** channel id */
   channel_id: string;
+  /** thread id */
+  thread_id: string;
 }
 
 /** List (and optionally filter) channels. */
@@ -16283,7 +16285,7 @@ export const ChannelDescList = {
 };
 
 function createBaseListThreadRequest(): ListThreadRequest {
-  return { limit: undefined, state: undefined, clan_id: "", channel_id: "" };
+  return { limit: undefined, state: undefined, clan_id: "", channel_id: "", thread_id: "" };
 }
 
 export const ListThreadRequest = {
@@ -16299,6 +16301,9 @@ export const ListThreadRequest = {
     }
     if (message.channel_id !== "") {
       writer.uint32(34).string(message.channel_id);
+    }
+    if (message.thread_id !== "") {
+      writer.uint32(42).string(message.thread_id);
     }
     return writer;
   },
@@ -16338,6 +16343,13 @@ export const ListThreadRequest = {
 
           message.channel_id = reader.string();
           continue;
+        case 5:
+          if (tag !== 42) {
+            break;
+          }
+
+          message.thread_id = reader.string();
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -16353,6 +16365,7 @@ export const ListThreadRequest = {
       state: isSet(object.state) ? Number(object.state) : undefined,
       clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
       channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "",
+      thread_id: isSet(object.thread_id) ? globalThis.String(object.thread_id) : "",
     };
   },
 
@@ -16370,6 +16383,9 @@ export const ListThreadRequest = {
     if (message.channel_id !== "") {
       obj.channel_id = message.channel_id;
     }
+    if (message.thread_id !== "") {
+      obj.thread_id = message.thread_id;
+    }
     return obj;
   },
 
@@ -16382,6 +16398,7 @@ export const ListThreadRequest = {
     message.state = object.state ?? undefined;
     message.clan_id = object.clan_id ?? "";
     message.channel_id = object.channel_id ?? "";
+    message.thread_id = object.thread_id ?? "";
     return message;
   },
 };
