@@ -528,6 +528,79 @@ export interface ApiChannelAttachmentList {
   attachments?: Array<ApiChannelAttachment>;
 }
 
+/**  */
+export interface ApiChannelCanvasDetailResponse {
+  //
+  content?: string;
+  //
+  creator_id?: string;
+  //
+  editor_id?: string;
+  //
+  id?: string;
+  //
+  title?: string;
+}
+
+/**  */
+export interface ApiChannelCanvasItem {
+  //
+  id?: string;
+  //
+  title?: string;
+}
+
+/**  */
+export interface ApiChannelCanvasListResponse {
+  //
+  channel_canvases?: Array<ApiChannelCanvasItem>;
+  //
+  channel_id?: string;
+  //
+  clan_id?: string;
+}
+
+/**  */
+export interface ApiEditChannelCanvasRequest {
+  //
+  channel_id?: string;
+  //
+  clan_id?: string;
+  //
+  content?: string;
+  //
+  id?: string;
+  //
+  title?: string;
+}
+
+/**  */
+export interface ApiEditChannelCanvasRequest {
+  //
+  channel_id?: string;
+  //
+  clan_id?: string;
+  //
+  content?: string;
+  //
+  id?: string;
+  //
+  title?: string;
+}
+
+/**  */
+export interface ApiEditChannelCanvasResponse {
+  //
+  id?: string;
+}
+
+
+/**  */
+export interface ApiEditChannelCanvasResponse {
+  //
+  id?: string;
+}
+
 /** A list of channel description, usually a result of a list operation. */
 export interface ApiChannelDescList {
   //Cacheable cursor to list newer channel description. Durable and designed to be stored, unlike next/prev cursors.
@@ -8540,5 +8613,122 @@ export class MezonApi {
     }
 
     return fullPath;
+  }
+
+    /** Channel canvas editor */
+    editChannelCanvases(bearerToken: string,
+      body:ApiEditChannelCanvasRequest,
+      options: any = {}): Promise<ApiEditChannelCanvasResponse> {
+    
+    if (body === null || body === undefined) {
+      throw new Error("'body' is a required parameter but is null or undefined.");
+    }
+    const urlPath = "/v2/canvases/editor";
+    const queryParams = new Map<string, any>();
+
+    let bodyJson : string = "";
+    bodyJson = JSON.stringify(body || {});
+
+    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
+    const fetchOptions = buildFetchOptions("POST", options, bodyJson);
+    if (bearerToken) {
+        fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+    }
+
+    return Promise.race([
+      fetch(fullUrl, fetchOptions).then((response) => {
+        if (response.status == 204) {
+          return response;
+        } else if (response.status >= 200 && response.status < 300) {
+          return response.json();
+        } else {
+          throw response;
+        }
+      }),
+      new Promise((_, reject) =>
+        setTimeout(reject, this.timeoutMs, "Request timed out.")
+      ),
+    ]);
+}
+
+  /**  */
+  getChannelCanvasDetail(bearerToken: string,
+      id:string,
+      clanId?:string,
+      channelId?:string,
+      options: any = {}): Promise<ApiChannelCanvasDetailResponse> {
+    
+    if (id === null || id === undefined) {
+      throw new Error("'id' is a required parameter but is null or undefined.");
+    }
+    const urlPath = "/v2/canvases/{id}"
+        .replace("{id}", encodeURIComponent(String(id)));
+    const queryParams = new Map<string, any>();
+    queryParams.set("clan_id", clanId);
+    queryParams.set("channel_id", channelId);
+
+    let bodyJson : string = "";
+
+    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
+    const fetchOptions = buildFetchOptions("GET", options, bodyJson);
+    if (bearerToken) {
+        fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+    }
+
+    return Promise.race([
+      fetch(fullUrl, fetchOptions).then((response) => {
+        if (response.status == 204) {
+          return response;
+        } else if (response.status >= 200 && response.status < 300) {
+          return response.json();
+        } else {
+          throw response;
+        }
+      }),
+      new Promise((_, reject) =>
+        setTimeout(reject, this.timeoutMs, "Request timed out.")
+      ),
+    ]);
+}
+  /**  */
+  getChannelCanvasList(bearerToken: string,
+      channelId:string,
+      clanId?:string,
+      limit?:number,
+      page?:number,
+      options: any = {}): Promise<ApiChannelCanvasListResponse> {
+    
+    if (channelId === null || channelId === undefined) {
+      throw new Error("'channelId' is a required parameter but is null or undefined.");
+    }
+    const urlPath = "/v2/channel-canvases/{channelId}"
+        .replace("{channelId}", encodeURIComponent(String(channelId)));
+    const queryParams = new Map<string, any>();
+    queryParams.set("clan_id", clanId);
+    queryParams.set("limit", limit);
+    queryParams.set("page", page);
+
+    let bodyJson : string = "";
+
+    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
+    const fetchOptions = buildFetchOptions("GET", options, bodyJson);
+    if (bearerToken) {
+        fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+    }
+
+    return Promise.race([
+      fetch(fullUrl, fetchOptions).then((response) => {
+        if (response.status == 204) {
+          return response;
+        } else if (response.status >= 200 && response.status < 300) {
+          return response.json();
+        } else {
+          throw response;
+        }
+      }),
+      new Promise((_, reject) =>
+        setTimeout(reject, this.timeoutMs, "Request timed out.")
+      ),
+    ]);
   }
 }

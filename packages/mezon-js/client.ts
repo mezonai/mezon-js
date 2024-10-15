@@ -121,6 +121,8 @@ import {
   ApiUserPermissionInChannelListResponse,
   ApiPermissionRoleChannelListEventResponse,
   ApiMarkAsReadRequest,
+  ApiChannelCanvasListResponse,
+  ApiEditChannelCanvasRequest,
 } from "./api.gen";
 
 import { Session } from "./session";
@@ -3994,6 +3996,90 @@ export class Client {
         limit,
         page
       )
+      .then((response: any) => {
+        return Promise.resolve(response);
+      });
+  }
+
+  async getChannelCanvasList(
+    session: Session,
+    channelId:string,
+    clanId?:string,
+    limit?:number,
+    page?:number,
+  ): Promise<any> {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired((Date.now() + this.expiredTimespanMs) / 1000)
+    ) {
+      await this.sessionRefresh(session);
+    }
+
+    return this.apiClient
+      .getChannelCanvasList(
+        session.token,
+        channelId,
+        clanId,
+        limit,
+        page
+      )
+      .then((response: ApiChannelCanvasListResponse) => {
+        var result: ApiChannelCanvasListResponse = {
+          channel_canvases: [],
+        };
+
+        if (response.channel_canvases == null) {
+          return Promise.resolve(result);
+        }
+
+        result.clan_id = response.clan_id;
+        result.channel_id = response.channel_id;
+        result.channel_canvases = response.channel_canvases;
+        return Promise.resolve(result);
+      });
+  }
+
+  async getChannelCanvasDetail(
+    session: Session,
+    id:string,
+    clanId?:string,
+    channelId?:string,
+  ): Promise<any> {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired((Date.now() + this.expiredTimespanMs) / 1000)
+    ) {
+      await this.sessionRefresh(session);
+    }
+
+    return this.apiClient
+      .getChannelCanvasDetail(
+        session.token,
+        id,
+        clanId,
+        channelId,
+      )
+      .then((response: any) => {
+        return Promise.resolve(response);
+      });
+  }
+
+  async editChannelCanvases(
+    session: Session,
+    request: ApiEditChannelCanvasRequest
+  ): Promise<any> {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired((Date.now() + this.expiredTimespanMs) / 1000)
+    ) {
+      await this.sessionRefresh(session);
+    }
+
+    return this.apiClient
+      .editChannelCanvases(session.token, request)
       .then((response: any) => {
         return Promise.resolve(response);
       });

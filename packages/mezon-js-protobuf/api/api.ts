@@ -3158,6 +3158,77 @@ export interface MarkAsReadRequest {
   clan_id: string;
 }
 
+export interface EditChannelCanvasRequest {
+  /** id */
+  id:
+    | string
+    | undefined;
+  /** channel id */
+  channel_id: string;
+  /** clan id */
+  clan_id: string;
+  /** title */
+  title: string;
+  /** content */
+  content: string;
+}
+
+export interface EditChannelCanvasResponse {
+  /** id */
+  id: string;
+}
+
+export interface ChannelCanvasListRequest {
+  /** clan id */
+  clan_id: string;
+  /** channel id */
+  channel_id: string;
+  /** limit */
+  limit:
+    | number
+    | undefined;
+  /** page */
+  page: number | undefined;
+}
+
+export interface ChannelCanvasItem {
+  /** id */
+  id: string;
+  /** title */
+  title: string;
+}
+
+export interface ChannelCanvasListResponse {
+  /** clan id */
+  clan_id: string;
+  /** channel id */
+  channel_id: string;
+  /** channel doc item */
+  channel_canvases: ChannelCanvasItem[];
+}
+
+export interface ChannelCanvasDetailRequest {
+  /** id */
+  id: string;
+  /** clan id */
+  clan_id: string;
+  /** channel id */
+  channel_id: string;
+}
+
+export interface ChannelCanvasDetailResponse {
+  /** id */
+  id: string;
+  /** title */
+  title: string;
+  /** content */
+  content: string;
+  /** creator */
+  creator_id: string;
+  /** editor */
+  editor_id: string;
+}
+
 function createBaseAccount(): Account {
   return {
     user: undefined,
@@ -29714,6 +29785,659 @@ export const MarkAsReadRequest = {
     message.channel_id = object.channel_id ?? "";
     message.category_id = object.category_id ?? "";
     message.clan_id = object.clan_id ?? "";
+    return message;
+  },
+};
+
+function createBaseEditChannelCanvasRequest(): EditChannelCanvasRequest {
+  return { id: undefined, channel_id: "", clan_id: "", title: "", content: "" };
+}
+
+export const EditChannelCanvasRequest = {
+  encode(message: EditChannelCanvasRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.id !== undefined) {
+      StringValue.encode({ value: message.id! }, writer.uint32(10).fork()).ldelim();
+    }
+    if (message.channel_id !== "") {
+      writer.uint32(18).string(message.channel_id);
+    }
+    if (message.clan_id !== "") {
+      writer.uint32(26).string(message.clan_id);
+    }
+    if (message.title !== "") {
+      writer.uint32(34).string(message.title);
+    }
+    if (message.content !== "") {
+      writer.uint32(42).string(message.content);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): EditChannelCanvasRequest {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseEditChannelCanvasRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.id = StringValue.decode(reader, reader.uint32()).value;
+          continue;
+        case 2:
+          if (tag !== 18) {
+            break;
+          }
+
+          message.channel_id = reader.string();
+          continue;
+        case 3:
+          if (tag !== 26) {
+            break;
+          }
+
+          message.clan_id = reader.string();
+          continue;
+        case 4:
+          if (tag !== 34) {
+            break;
+          }
+
+          message.title = reader.string();
+          continue;
+        case 5:
+          if (tag !== 42) {
+            break;
+          }
+
+          message.content = reader.string();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): EditChannelCanvasRequest {
+    return {
+      id: isSet(object.id) ? String(object.id) : undefined,
+      channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "",
+      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
+      title: isSet(object.title) ? globalThis.String(object.title) : "",
+      content: isSet(object.content) ? globalThis.String(object.content) : "",
+    };
+  },
+
+  toJSON(message: EditChannelCanvasRequest): unknown {
+    const obj: any = {};
+    if (message.id !== undefined) {
+      obj.id = message.id;
+    }
+    if (message.channel_id !== "") {
+      obj.channel_id = message.channel_id;
+    }
+    if (message.clan_id !== "") {
+      obj.clan_id = message.clan_id;
+    }
+    if (message.title !== "") {
+      obj.title = message.title;
+    }
+    if (message.content !== "") {
+      obj.content = message.content;
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<EditChannelCanvasRequest>, I>>(base?: I): EditChannelCanvasRequest {
+    return EditChannelCanvasRequest.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<EditChannelCanvasRequest>, I>>(object: I): EditChannelCanvasRequest {
+    const message = createBaseEditChannelCanvasRequest();
+    message.id = object.id ?? undefined;
+    message.channel_id = object.channel_id ?? "";
+    message.clan_id = object.clan_id ?? "";
+    message.title = object.title ?? "";
+    message.content = object.content ?? "";
+    return message;
+  },
+};
+
+function createBaseEditChannelCanvasResponse(): EditChannelCanvasResponse {
+  return { id: "" };
+}
+
+export const EditChannelCanvasResponse = {
+  encode(message: EditChannelCanvasResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.id !== "") {
+      writer.uint32(10).string(message.id);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): EditChannelCanvasResponse {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseEditChannelCanvasResponse();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.id = reader.string();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): EditChannelCanvasResponse {
+    return { id: isSet(object.id) ? globalThis.String(object.id) : "" };
+  },
+
+  toJSON(message: EditChannelCanvasResponse): unknown {
+    const obj: any = {};
+    if (message.id !== "") {
+      obj.id = message.id;
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<EditChannelCanvasResponse>, I>>(base?: I): EditChannelCanvasResponse {
+    return EditChannelCanvasResponse.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<EditChannelCanvasResponse>, I>>(object: I): EditChannelCanvasResponse {
+    const message = createBaseEditChannelCanvasResponse();
+    message.id = object.id ?? "";
+    return message;
+  },
+};
+
+function createBaseChannelCanvasListRequest(): ChannelCanvasListRequest {
+  return { clan_id: "", channel_id: "", limit: undefined, page: undefined };
+}
+
+export const ChannelCanvasListRequest = {
+  encode(message: ChannelCanvasListRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.clan_id !== "") {
+      writer.uint32(10).string(message.clan_id);
+    }
+    if (message.channel_id !== "") {
+      writer.uint32(18).string(message.channel_id);
+    }
+    if (message.limit !== undefined) {
+      Int32Value.encode({ value: message.limit! }, writer.uint32(26).fork()).ldelim();
+    }
+    if (message.page !== undefined) {
+      Int32Value.encode({ value: message.page! }, writer.uint32(34).fork()).ldelim();
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): ChannelCanvasListRequest {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseChannelCanvasListRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.clan_id = reader.string();
+          continue;
+        case 2:
+          if (tag !== 18) {
+            break;
+          }
+
+          message.channel_id = reader.string();
+          continue;
+        case 3:
+          if (tag !== 26) {
+            break;
+          }
+
+          message.limit = Int32Value.decode(reader, reader.uint32()).value;
+          continue;
+        case 4:
+          if (tag !== 34) {
+            break;
+          }
+
+          message.page = Int32Value.decode(reader, reader.uint32()).value;
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): ChannelCanvasListRequest {
+    return {
+      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
+      channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "",
+      limit: isSet(object.limit) ? Number(object.limit) : undefined,
+      page: isSet(object.page) ? Number(object.page) : undefined,
+    };
+  },
+
+  toJSON(message: ChannelCanvasListRequest): unknown {
+    const obj: any = {};
+    if (message.clan_id !== "") {
+      obj.clan_id = message.clan_id;
+    }
+    if (message.channel_id !== "") {
+      obj.channel_id = message.channel_id;
+    }
+    if (message.limit !== undefined) {
+      obj.limit = message.limit;
+    }
+    if (message.page !== undefined) {
+      obj.page = message.page;
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<ChannelCanvasListRequest>, I>>(base?: I): ChannelCanvasListRequest {
+    return ChannelCanvasListRequest.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<ChannelCanvasListRequest>, I>>(object: I): ChannelCanvasListRequest {
+    const message = createBaseChannelCanvasListRequest();
+    message.clan_id = object.clan_id ?? "";
+    message.channel_id = object.channel_id ?? "";
+    message.limit = object.limit ?? undefined;
+    message.page = object.page ?? undefined;
+    return message;
+  },
+};
+
+function createBaseChannelCanvasItem(): ChannelCanvasItem {
+  return { id: "", title: "" };
+}
+
+export const ChannelCanvasItem = {
+  encode(message: ChannelCanvasItem, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.id !== "") {
+      writer.uint32(10).string(message.id);
+    }
+    if (message.title !== "") {
+      writer.uint32(34).string(message.title);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): ChannelCanvasItem {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseChannelCanvasItem();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.id = reader.string();
+          continue;
+        case 4:
+          if (tag !== 34) {
+            break;
+          }
+
+          message.title = reader.string();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): ChannelCanvasItem {
+    return {
+      id: isSet(object.id) ? globalThis.String(object.id) : "",
+      title: isSet(object.title) ? globalThis.String(object.title) : "",
+    };
+  },
+
+  toJSON(message: ChannelCanvasItem): unknown {
+    const obj: any = {};
+    if (message.id !== "") {
+      obj.id = message.id;
+    }
+    if (message.title !== "") {
+      obj.title = message.title;
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<ChannelCanvasItem>, I>>(base?: I): ChannelCanvasItem {
+    return ChannelCanvasItem.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<ChannelCanvasItem>, I>>(object: I): ChannelCanvasItem {
+    const message = createBaseChannelCanvasItem();
+    message.id = object.id ?? "";
+    message.title = object.title ?? "";
+    return message;
+  },
+};
+
+function createBaseChannelCanvasListResponse(): ChannelCanvasListResponse {
+  return { clan_id: "", channel_id: "", channel_canvases: [] };
+}
+
+export const ChannelCanvasListResponse = {
+  encode(message: ChannelCanvasListResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.clan_id !== "") {
+      writer.uint32(10).string(message.clan_id);
+    }
+    if (message.channel_id !== "") {
+      writer.uint32(18).string(message.channel_id);
+    }
+    for (const v of message.channel_canvases) {
+      ChannelCanvasItem.encode(v!, writer.uint32(26).fork()).ldelim();
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): ChannelCanvasListResponse {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseChannelCanvasListResponse();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.clan_id = reader.string();
+          continue;
+        case 2:
+          if (tag !== 18) {
+            break;
+          }
+
+          message.channel_id = reader.string();
+          continue;
+        case 3:
+          if (tag !== 26) {
+            break;
+          }
+
+          message.channel_canvases.push(ChannelCanvasItem.decode(reader, reader.uint32()));
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): ChannelCanvasListResponse {
+    return {
+      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
+      channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "",
+      channel_canvases: globalThis.Array.isArray(object?.channel_canvases)
+        ? object.channel_canvases.map((e: any) => ChannelCanvasItem.fromJSON(e))
+        : [],
+    };
+  },
+
+  toJSON(message: ChannelCanvasListResponse): unknown {
+    const obj: any = {};
+    if (message.clan_id !== "") {
+      obj.clan_id = message.clan_id;
+    }
+    if (message.channel_id !== "") {
+      obj.channel_id = message.channel_id;
+    }
+    if (message.channel_canvases?.length) {
+      obj.channel_canvases = message.channel_canvases.map((e) => ChannelCanvasItem.toJSON(e));
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<ChannelCanvasListResponse>, I>>(base?: I): ChannelCanvasListResponse {
+    return ChannelCanvasListResponse.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<ChannelCanvasListResponse>, I>>(object: I): ChannelCanvasListResponse {
+    const message = createBaseChannelCanvasListResponse();
+    message.clan_id = object.clan_id ?? "";
+    message.channel_id = object.channel_id ?? "";
+    message.channel_canvases = object.channel_canvases?.map((e) => ChannelCanvasItem.fromPartial(e)) || [];
+    return message;
+  },
+};
+
+function createBaseChannelCanvasDetailRequest(): ChannelCanvasDetailRequest {
+  return { id: "", clan_id: "", channel_id: "" };
+}
+
+export const ChannelCanvasDetailRequest = {
+  encode(message: ChannelCanvasDetailRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.id !== "") {
+      writer.uint32(10).string(message.id);
+    }
+    if (message.clan_id !== "") {
+      writer.uint32(18).string(message.clan_id);
+    }
+    if (message.channel_id !== "") {
+      writer.uint32(26).string(message.channel_id);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): ChannelCanvasDetailRequest {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseChannelCanvasDetailRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.id = reader.string();
+          continue;
+        case 2:
+          if (tag !== 18) {
+            break;
+          }
+
+          message.clan_id = reader.string();
+          continue;
+        case 3:
+          if (tag !== 26) {
+            break;
+          }
+
+          message.channel_id = reader.string();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): ChannelCanvasDetailRequest {
+    return {
+      id: isSet(object.id) ? globalThis.String(object.id) : "",
+      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
+      channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "",
+    };
+  },
+
+  toJSON(message: ChannelCanvasDetailRequest): unknown {
+    const obj: any = {};
+    if (message.id !== "") {
+      obj.id = message.id;
+    }
+    if (message.clan_id !== "") {
+      obj.clan_id = message.clan_id;
+    }
+    if (message.channel_id !== "") {
+      obj.channel_id = message.channel_id;
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<ChannelCanvasDetailRequest>, I>>(base?: I): ChannelCanvasDetailRequest {
+    return ChannelCanvasDetailRequest.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<ChannelCanvasDetailRequest>, I>>(object: I): ChannelCanvasDetailRequest {
+    const message = createBaseChannelCanvasDetailRequest();
+    message.id = object.id ?? "";
+    message.clan_id = object.clan_id ?? "";
+    message.channel_id = object.channel_id ?? "";
+    return message;
+  },
+};
+
+function createBaseChannelCanvasDetailResponse(): ChannelCanvasDetailResponse {
+  return { id: "", title: "", content: "", creator_id: "", editor_id: "" };
+}
+
+export const ChannelCanvasDetailResponse = {
+  encode(message: ChannelCanvasDetailResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.id !== "") {
+      writer.uint32(10).string(message.id);
+    }
+    if (message.title !== "") {
+      writer.uint32(18).string(message.title);
+    }
+    if (message.content !== "") {
+      writer.uint32(26).string(message.content);
+    }
+    if (message.creator_id !== "") {
+      writer.uint32(34).string(message.creator_id);
+    }
+    if (message.editor_id !== "") {
+      writer.uint32(42).string(message.editor_id);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): ChannelCanvasDetailResponse {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseChannelCanvasDetailResponse();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.id = reader.string();
+          continue;
+        case 2:
+          if (tag !== 18) {
+            break;
+          }
+
+          message.title = reader.string();
+          continue;
+        case 3:
+          if (tag !== 26) {
+            break;
+          }
+
+          message.content = reader.string();
+          continue;
+        case 4:
+          if (tag !== 34) {
+            break;
+          }
+
+          message.creator_id = reader.string();
+          continue;
+        case 5:
+          if (tag !== 42) {
+            break;
+          }
+
+          message.editor_id = reader.string();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): ChannelCanvasDetailResponse {
+    return {
+      id: isSet(object.id) ? globalThis.String(object.id) : "",
+      title: isSet(object.title) ? globalThis.String(object.title) : "",
+      content: isSet(object.content) ? globalThis.String(object.content) : "",
+      creator_id: isSet(object.creator_id) ? globalThis.String(object.creator_id) : "",
+      editor_id: isSet(object.editor_id) ? globalThis.String(object.editor_id) : "",
+    };
+  },
+
+  toJSON(message: ChannelCanvasDetailResponse): unknown {
+    const obj: any = {};
+    if (message.id !== "") {
+      obj.id = message.id;
+    }
+    if (message.title !== "") {
+      obj.title = message.title;
+    }
+    if (message.content !== "") {
+      obj.content = message.content;
+    }
+    if (message.creator_id !== "") {
+      obj.creator_id = message.creator_id;
+    }
+    if (message.editor_id !== "") {
+      obj.editor_id = message.editor_id;
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<ChannelCanvasDetailResponse>, I>>(base?: I): ChannelCanvasDetailResponse {
+    return ChannelCanvasDetailResponse.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<ChannelCanvasDetailResponse>, I>>(object: I): ChannelCanvasDetailResponse {
+    const message = createBaseChannelCanvasDetailResponse();
+    message.id = object.id ?? "";
+    message.title = object.title ?? "";
+    message.content = object.content ?? "";
+    message.creator_id = object.creator_id ?? "";
+    message.editor_id = object.editor_id ?? "";
     return message;
   },
 };
