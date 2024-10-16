@@ -1631,6 +1631,10 @@ export interface ApiPinMessage {
   channel_id?: string;
   //
   content?: string;
+  //The UNIX time (for gRPC clients) or ISO string (for REST clients) when the message was created.
+  create_time?: string;
+  //
+  create_time_seconds?: number;
   //
   id?: string;
   //

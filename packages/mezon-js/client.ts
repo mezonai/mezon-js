@@ -123,6 +123,7 @@ import {
   ApiMarkAsReadRequest,
   ApiChannelCanvasListResponse,
   ApiEditChannelCanvasRequest,
+  ApiChannelSettingListResponse,
 } from "./api.gen";
 
 import { Session } from "./session";
@@ -3926,11 +3927,11 @@ export class Client {
   /** List Threads. */
   async listThreadDescs(
     session: Session,
-    channelId:string,
-    limit?:number,
-    state?:number,
-    clanId?:string,
-    threadId?: string,
+    channelId: string,
+    limit?: number,
+    state?: number,
+    clanId?: string,
+    threadId?: string
   ): Promise<ApiChannelDescList> {
     if (
       this.autoRefreshSession &&
@@ -3941,14 +3942,7 @@ export class Client {
     }
 
     return this.apiClient
-      .listThreadDescs(
-        session.token,
-        channelId,
-        limit,
-        state,
-        clanId,
-        threadId
-      )
+      .listThreadDescs(session.token, channelId, limit, state, clanId, threadId)
       .then((response: ApiChannelDescList) => {
         var result: ApiChannelDescList = {
           channeldesc: [],
@@ -3961,27 +3955,24 @@ export class Client {
         result.channeldesc = response.channeldesc;
         return Promise.resolve(result);
       });
-  } 
-
-  async leaveThread(
-    session: Session,
-    channelId: string
-    ) : Promise<any> {
-    if (
-    this.autoRefreshSession &&
-    session.refresh_token &&
-    session.isexpired((Date.now() + this.expiredTimespanMs) / 1000)
-    ) {
-    await this.sessionRefresh(session);
-    }
-    
-    return this.apiClient
-    .leaveThread(session.token, channelId)
-    .then((response: any) => {
-    return Promise.resolve(response);
-    });
   }
-  
+
+  async leaveThread(session: Session, channelId: string): Promise<any> {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired((Date.now() + this.expiredTimespanMs) / 1000)
+    ) {
+      await this.sessionRefresh(session);
+    }
+
+    return this.apiClient
+      .leaveThread(session.token, channelId)
+      .then((response: any) => {
+        return Promise.resolve(response);
+      });
+  }
+
   async getChannelSettingInClan(
     session: Session,
     clanId: string,
@@ -3993,7 +3984,7 @@ export class Client {
     type?: number,
     limit?: number,
     page?: number
-  ): Promise<any> {
+  ): Promise<ApiChannelSettingListResponse> {
     if (
       this.autoRefreshSession &&
       session.refresh_token &&
@@ -4022,10 +4013,10 @@ export class Client {
 
   async getChannelCanvasList(
     session: Session,
-    channelId:string,
-    clanId?:string,
-    limit?:number,
-    page?:number,
+    channelId: string,
+    clanId?: string,
+    limit?: number,
+    page?: number
   ): Promise<any> {
     if (
       this.autoRefreshSession &&
@@ -4036,13 +4027,7 @@ export class Client {
     }
 
     return this.apiClient
-      .getChannelCanvasList(
-        session.token,
-        channelId,
-        clanId,
-        limit,
-        page
-      )
+      .getChannelCanvasList(session.token, channelId, clanId, limit, page)
       .then((response: ApiChannelCanvasListResponse) => {
         var result: ApiChannelCanvasListResponse = {
           channel_canvases: [],
@@ -4061,9 +4046,9 @@ export class Client {
 
   async getChannelCanvasDetail(
     session: Session,
-    id:string,
-    clanId?:string,
-    channelId?:string,
+    id: string,
+    clanId?: string,
+    channelId?: string
   ): Promise<any> {
     if (
       this.autoRefreshSession &&
@@ -4074,12 +4059,7 @@ export class Client {
     }
 
     return this.apiClient
-      .getChannelCanvasDetail(
-        session.token,
-        id,
-        clanId,
-        channelId,
-      )
+      .getChannelCanvasDetail(session.token, id, clanId, channelId)
       .then((response: any) => {
         return Promise.resolve(response);
       });
