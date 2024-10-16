@@ -3963,6 +3963,25 @@ export class Client {
       });
   } 
 
+  async leaveThread(
+    session: Session,
+    channelId: string
+    ) : Promise<any> {
+    if (
+    this.autoRefreshSession &&
+    session.refresh_token &&
+    session.isexpired((Date.now() + this.expiredTimespanMs) / 1000)
+    ) {
+    await this.sessionRefresh(session);
+    }
+    
+    return this.apiClient
+    .leaveThread(session.token, channelId)
+    .then((response: any) => {
+    return Promise.resolve(response);
+    });
+  }
+  
   async getChannelSettingInClan(
     session: Session,
     clanId: string,

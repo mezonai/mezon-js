@@ -4109,11 +4109,10 @@ export class MezonApi {
   }
 
   /** Leave a channel the user is a member of. */
-  leaveChannel(
-    bearerToken: string,
-    channelId: string,
-    options: any = {}
-  ): Promise<any> {
+  leaveThread(bearerToken: string,
+      channelId:string,
+      options: any = {}): Promise<any> {
+    
     if (channelId === null || channelId === undefined) {
       throw new Error(
         "'channelId' is a required parameter but is null or undefined."
