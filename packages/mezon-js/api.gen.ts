@@ -790,9 +790,13 @@ export interface ApiChannelSettingItem {
 /**  */
 export interface ApiChannelSettingListResponse {
   //
+  channel_count?: number;
+  //
   channel_setting_list?: Array<ApiChannelSettingItem>;
   //
   clan_id?: string;
+  //
+  thread_count?: number;
 }
 
 /** A list of users belonging to a channel, along with their role. */
