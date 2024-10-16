@@ -3963,7 +3963,7 @@ export class Client {
       });
   } 
 
-  async leaveChannel(
+  async leaveThread(
     session: Session,
     channelId: string
     ) : Promise<any> {
@@ -3976,7 +3976,7 @@ export class Client {
     }
     
     return this.apiClient
-    .leaveChannel(session.token, channelId)
+    .leaveThread(session.token, channelId)
     .then((response: any) => {
     return Promise.resolve(response);
     });
