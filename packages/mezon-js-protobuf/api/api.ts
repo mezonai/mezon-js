@@ -2070,6 +2070,12 @@ export interface PinMessage {
   username: string;
   /**  */
   avatar: string;
+  /** The UNIX time (for gRPC clients) or ISO string (for REST clients) when the message was created. */
+  create_time:
+    | Date
+    | undefined;
+  /** create time in ms */
+  create_time_seconds: number;
 }
 
 export interface PinMessagesList {
@@ -3147,6 +3153,10 @@ export interface ChannelSettingItem {
 export interface ChannelSettingListResponse {
   /** clan id */
   clan_id: string;
+  /** channel count */
+  channel_count: number;
+  /** thread count */
+  thread_count: number;
   /** channel setting list */
   channel_setting_list: ChannelSettingItem[];
 }
@@ -3229,6 +3239,23 @@ export interface ChannelCanvasDetailResponse {
   creator_id: string;
   /** editor */
   editor_id: string;
+}
+
+export interface AddFavoriteChannelRequest {
+  channel_id: string;
+  clan_id: string;
+}
+
+export interface RemoveFavoriteChannelRequest {
+  channel_id: string;
+}
+
+export interface ListFavoriteChannelRequest {
+  clan_id: string;
+}
+
+export interface ListFavoriteChannelResponse {
+  channel_ids: string[];
 }
 
 function createBaseAccount(): Account {
@@ -18277,7 +18304,17 @@ export const DeletePinMessage = {
 };
 
 function createBasePinMessage(): PinMessage {
-  return { id: "", message_id: "", channel_id: "", sender_id: "", content: "", username: "", avatar: "" };
+  return {
+    id: "",
+    message_id: "",
+    channel_id: "",
+    sender_id: "",
+    content: "",
+    username: "",
+    avatar: "",
+    create_time: undefined,
+    create_time_seconds: 0,
+  };
 }
 
 export const PinMessage = {
@@ -18302,6 +18339,12 @@ export const PinMessage = {
     }
     if (message.avatar !== "") {
       writer.uint32(58).string(message.avatar);
+    }
+    if (message.create_time !== undefined) {
+      Timestamp.encode(toTimestamp(message.create_time), writer.uint32(66).fork()).ldelim();
+    }
+    if (message.create_time_seconds !== 0) {
+      writer.uint32(72).uint32(message.create_time_seconds);
     }
     return writer;
   },
@@ -18362,6 +18405,20 @@ export const PinMessage = {
 
           message.avatar = reader.string();
           continue;
+        case 8:
+          if (tag !== 66) {
+            break;
+          }
+
+          message.create_time = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
+          continue;
+        case 9:
+          if (tag !== 72) {
+            break;
+          }
+
+          message.create_time_seconds = reader.uint32();
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -18380,6 +18437,8 @@ export const PinMessage = {
       content: isSet(object.content) ? globalThis.String(object.content) : "",
       username: isSet(object.username) ? globalThis.String(object.username) : "",
       avatar: isSet(object.avatar) ? globalThis.String(object.avatar) : "",
+      create_time: isSet(object.create_time) ? fromJsonTimestamp(object.create_time) : undefined,
+      create_time_seconds: isSet(object.create_time_seconds) ? globalThis.Number(object.create_time_seconds) : 0,
     };
   },
 
@@ -18406,6 +18465,12 @@ export const PinMessage = {
     if (message.avatar !== "") {
       obj.avatar = message.avatar;
     }
+    if (message.create_time !== undefined) {
+      obj.create_time = message.create_time.toISOString();
+    }
+    if (message.create_time_seconds !== 0) {
+      obj.create_time_seconds = Math.round(message.create_time_seconds);
+    }
     return obj;
   },
 
@@ -18421,6 +18486,8 @@ export const PinMessage = {
     message.content = object.content ?? "";
     message.username = object.username ?? "";
     message.avatar = object.avatar ?? "";
+    message.create_time = object.create_time ?? undefined;
+    message.create_time_seconds = object.create_time_seconds ?? 0;
     return message;
   },
 };
@@ -29643,7 +29710,7 @@ export const ChannelSettingItem = {
 };
 
 function createBaseChannelSettingListResponse(): ChannelSettingListResponse {
-  return { clan_id: "", channel_setting_list: [] };
+  return { clan_id: "", channel_count: 0, thread_count: 0, channel_setting_list: [] };
 }
 
 export const ChannelSettingListResponse = {
@@ -29651,8 +29718,14 @@ export const ChannelSettingListResponse = {
     if (message.clan_id !== "") {
       writer.uint32(10).string(message.clan_id);
     }
+    if (message.channel_count !== 0) {
+      writer.uint32(16).int32(message.channel_count);
+    }
+    if (message.thread_count !== 0) {
+      writer.uint32(24).int32(message.thread_count);
+    }
     for (const v of message.channel_setting_list) {
-      ChannelSettingItem.encode(v!, writer.uint32(18).fork()).ldelim();
+      ChannelSettingItem.encode(v!, writer.uint32(34).fork()).ldelim();
     }
     return writer;
   },
@@ -29672,7 +29745,21 @@ export const ChannelSettingListResponse = {
           message.clan_id = reader.string();
           continue;
         case 2:
-          if (tag !== 18) {
+          if (tag !== 16) {
+            break;
+          }
+
+          message.channel_count = reader.int32();
+          continue;
+        case 3:
+          if (tag !== 24) {
+            break;
+          }
+
+          message.thread_count = reader.int32();
+          continue;
+        case 4:
+          if (tag !== 34) {
             break;
           }
 
@@ -29690,6 +29777,8 @@ export const ChannelSettingListResponse = {
   fromJSON(object: any): ChannelSettingListResponse {
     return {
       clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
+      channel_count: isSet(object.channel_count) ? globalThis.Number(object.channel_count) : 0,
+      thread_count: isSet(object.thread_count) ? globalThis.Number(object.thread_count) : 0,
       channel_setting_list: globalThis.Array.isArray(object?.channel_setting_list)
         ? object.channel_setting_list.map((e: any) => ChannelSettingItem.fromJSON(e))
         : [],
@@ -29700,6 +29789,12 @@ export const ChannelSettingListResponse = {
     const obj: any = {};
     if (message.clan_id !== "") {
       obj.clan_id = message.clan_id;
+    }
+    if (message.channel_count !== 0) {
+      obj.channel_count = Math.round(message.channel_count);
+    }
+    if (message.thread_count !== 0) {
+      obj.thread_count = Math.round(message.thread_count);
     }
     if (message.channel_setting_list?.length) {
       obj.channel_setting_list = message.channel_setting_list.map((e) => ChannelSettingItem.toJSON(e));
@@ -29713,6 +29808,8 @@ export const ChannelSettingListResponse = {
   fromPartial<I extends Exact<DeepPartial<ChannelSettingListResponse>, I>>(object: I): ChannelSettingListResponse {
     const message = createBaseChannelSettingListResponse();
     message.clan_id = object.clan_id ?? "";
+    message.channel_count = object.channel_count ?? 0;
+    message.thread_count = object.thread_count ?? 0;
     message.channel_setting_list = object.channel_setting_list?.map((e) => ChannelSettingItem.fromPartial(e)) || [];
     return message;
   },
@@ -30456,6 +30553,255 @@ export const ChannelCanvasDetailResponse = {
     message.content = object.content ?? "";
     message.creator_id = object.creator_id ?? "";
     message.editor_id = object.editor_id ?? "";
+    return message;
+  },
+};
+
+function createBaseAddFavoriteChannelRequest(): AddFavoriteChannelRequest {
+  return { channel_id: "", clan_id: "" };
+}
+
+export const AddFavoriteChannelRequest = {
+  encode(message: AddFavoriteChannelRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.channel_id !== "") {
+      writer.uint32(10).string(message.channel_id);
+    }
+    if (message.clan_id !== "") {
+      writer.uint32(18).string(message.clan_id);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): AddFavoriteChannelRequest {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseAddFavoriteChannelRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.channel_id = reader.string();
+          continue;
+        case 2:
+          if (tag !== 18) {
+            break;
+          }
+
+          message.clan_id = reader.string();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): AddFavoriteChannelRequest {
+    return {
+      channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "",
+      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
+    };
+  },
+
+  toJSON(message: AddFavoriteChannelRequest): unknown {
+    const obj: any = {};
+    if (message.channel_id !== "") {
+      obj.channel_id = message.channel_id;
+    }
+    if (message.clan_id !== "") {
+      obj.clan_id = message.clan_id;
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<AddFavoriteChannelRequest>, I>>(base?: I): AddFavoriteChannelRequest {
+    return AddFavoriteChannelRequest.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<AddFavoriteChannelRequest>, I>>(object: I): AddFavoriteChannelRequest {
+    const message = createBaseAddFavoriteChannelRequest();
+    message.channel_id = object.channel_id ?? "";
+    message.clan_id = object.clan_id ?? "";
+    return message;
+  },
+};
+
+function createBaseRemoveFavoriteChannelRequest(): RemoveFavoriteChannelRequest {
+  return { channel_id: "" };
+}
+
+export const RemoveFavoriteChannelRequest = {
+  encode(message: RemoveFavoriteChannelRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.channel_id !== "") {
+      writer.uint32(10).string(message.channel_id);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): RemoveFavoriteChannelRequest {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseRemoveFavoriteChannelRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.channel_id = reader.string();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): RemoveFavoriteChannelRequest {
+    return { channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "" };
+  },
+
+  toJSON(message: RemoveFavoriteChannelRequest): unknown {
+    const obj: any = {};
+    if (message.channel_id !== "") {
+      obj.channel_id = message.channel_id;
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<RemoveFavoriteChannelRequest>, I>>(base?: I): RemoveFavoriteChannelRequest {
+    return RemoveFavoriteChannelRequest.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<RemoveFavoriteChannelRequest>, I>>(object: I): RemoveFavoriteChannelRequest {
+    const message = createBaseRemoveFavoriteChannelRequest();
+    message.channel_id = object.channel_id ?? "";
+    return message;
+  },
+};
+
+function createBaseListFavoriteChannelRequest(): ListFavoriteChannelRequest {
+  return { clan_id: "" };
+}
+
+export const ListFavoriteChannelRequest = {
+  encode(message: ListFavoriteChannelRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.clan_id !== "") {
+      writer.uint32(10).string(message.clan_id);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): ListFavoriteChannelRequest {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseListFavoriteChannelRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.clan_id = reader.string();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): ListFavoriteChannelRequest {
+    return { clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "" };
+  },
+
+  toJSON(message: ListFavoriteChannelRequest): unknown {
+    const obj: any = {};
+    if (message.clan_id !== "") {
+      obj.clan_id = message.clan_id;
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<ListFavoriteChannelRequest>, I>>(base?: I): ListFavoriteChannelRequest {
+    return ListFavoriteChannelRequest.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<ListFavoriteChannelRequest>, I>>(object: I): ListFavoriteChannelRequest {
+    const message = createBaseListFavoriteChannelRequest();
+    message.clan_id = object.clan_id ?? "";
+    return message;
+  },
+};
+
+function createBaseListFavoriteChannelResponse(): ListFavoriteChannelResponse {
+  return { channel_ids: [] };
+}
+
+export const ListFavoriteChannelResponse = {
+  encode(message: ListFavoriteChannelResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    for (const v of message.channel_ids) {
+      writer.uint32(10).string(v!);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): ListFavoriteChannelResponse {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseListFavoriteChannelResponse();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.channel_ids.push(reader.string());
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): ListFavoriteChannelResponse {
+    return {
+      channel_ids: globalThis.Array.isArray(object?.channel_ids)
+        ? object.channel_ids.map((e: any) => globalThis.String(e))
+        : [],
+    };
+  },
+
+  toJSON(message: ListFavoriteChannelResponse): unknown {
+    const obj: any = {};
+    if (message.channel_ids?.length) {
+      obj.channel_ids = message.channel_ids;
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<ListFavoriteChannelResponse>, I>>(base?: I): ListFavoriteChannelResponse {
+    return ListFavoriteChannelResponse.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<ListFavoriteChannelResponse>, I>>(object: I): ListFavoriteChannelResponse {
+    const message = createBaseListFavoriteChannelResponse();
+    message.channel_ids = object.channel_ids?.map((e) => e) || [];
     return message;
   },
 };

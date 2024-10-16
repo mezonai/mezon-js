@@ -383,6 +383,14 @@ export interface ApiAccountSteam {
   vars?: Record<string, string>;
 }
 
+/**  */
+export interface ApiAddFavoriteChannelRequest {
+  //
+  channel_id?: string;
+  //
+  clan_id?: string;
+}
+
 /** Add a role for channel. */
 export interface ApiAddRoleChannelDescRequest {
   //
@@ -1174,6 +1182,12 @@ export interface ApiEventManagement {
   user_ids?: Array<string>;
   //
   create_time?: string;
+}
+
+/**  */
+export interface ApiListFavoriteChannelResponse {
+  //
+  channel_ids?: Array<string>;
 }
 
 /**  */
@@ -3945,7 +3959,115 @@ export class MezonApi {
     const queryParams = new Map<string, any>();
     queryParams.set("clan_id", clanId);
 
-    let bodyJson: string = "";
+    let bodyJson : string = "";
+
+    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
+    const fetchOptions = buildFetchOptions("GET", options, bodyJson);
+    if (bearerToken) {
+        fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+    }
+
+    return Promise.race([
+      fetch(fullUrl, fetchOptions).then((response) => {
+        if (response.status == 204) {
+          return response;
+        } else if (response.status >= 200 && response.status < 300) {
+          return response.json();
+        } else {
+          throw response;
+        }
+      }),
+      new Promise((_, reject) =>
+        setTimeout(reject, this.timeoutMs, "Request timed out.")
+      ),
+    ]);
+}
+
+  /**  */
+  addChannelFavorite(bearerToken: string,
+      body:ApiAddFavoriteChannelRequest,
+      options: any = {}): Promise<any> {
+    
+    if (body === null || body === undefined) {
+      throw new Error("'body' is a required parameter but is null or undefined.");
+    }
+    const urlPath = "/v2/channel/favorite";
+    const queryParams = new Map<string, any>();
+
+    let bodyJson : string = "";
+    bodyJson = JSON.stringify(body || {});
+
+    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
+    const fetchOptions = buildFetchOptions("POST", options, bodyJson);
+    if (bearerToken) {
+        fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+    }
+
+    return Promise.race([
+      fetch(fullUrl, fetchOptions).then((response) => {
+        if (response.status == 204) {
+          return response;
+        } else if (response.status >= 200 && response.status < 300) {
+          return response.json();
+        } else {
+          throw response;
+        }
+      }),
+      new Promise((_, reject) =>
+        setTimeout(reject, this.timeoutMs, "Request timed out.")
+      ),
+    ]);
+}
+
+  /**  */
+  removeChannelFavorite(bearerToken: string,
+      channelId:string,
+      options: any = {}): Promise<any> {
+    
+    if (channelId === null || channelId === undefined) {
+      throw new Error("'channelId' is a required parameter but is null or undefined.");
+    }
+    const urlPath = "/v2/channel/favorite/{channelId}"
+        .replace("{channelId}", encodeURIComponent(String(channelId)));
+    const queryParams = new Map<string, any>();
+
+    let bodyJson : string = "";
+
+    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
+    const fetchOptions = buildFetchOptions("DELETE", options, bodyJson);
+    if (bearerToken) {
+        fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+    }
+
+    return Promise.race([
+      fetch(fullUrl, fetchOptions).then((response) => {
+        if (response.status == 204) {
+          return response;
+        } else if (response.status >= 200 && response.status < 300) {
+          return response.json();
+        } else {
+          throw response;
+        }
+      }),
+      new Promise((_, reject) =>
+        setTimeout(reject, this.timeoutMs, "Request timed out.")
+      ),
+    ]);
+}
+
+  /**  */
+  getListFavoriteChannel(bearerToken: string,
+      clanId:string,
+      options: any = {}): Promise<ApiListFavoriteChannelResponse> {
+    
+    if (clanId === null || clanId === undefined) {
+      throw new Error("'clanId' is a required parameter but is null or undefined.");
+    }
+    const urlPath = "/v2/channel/favorite/{clanId}"
+        .replace("{clanId}", encodeURIComponent(String(clanId)));
+    const queryParams = new Map<string, any>();
+
+    let bodyJson : string = "";
 
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("GET", options, bodyJson);
