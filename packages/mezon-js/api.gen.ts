@@ -778,6 +778,8 @@ export interface ApiChannelSettingItem {
   //
   id?: string;
   //
+  last_sent_message?: ApiChannelMessageHeader;
+  //
   meeting_code?: string;
   //
   message_count?: string;
