@@ -1663,6 +1663,35 @@ export interface ApiPinMessagesList {
   pin_messages_list?: Array<ApiPinMessage>;
 }
 
+/**  */
+export interface ApiRegistFcmDeviceTokenResponse {
+  //
+  device_id?: string;
+  //
+  platform?: string;
+  //
+  token?: string;
+}
+
+/**  */
+export interface ApiRegisterStreamingChannelRequest {
+  //
+  channel_id?: string;
+  //
+  clan_id?: string;
+}
+
+/**  */
+export interface ApiRegisterStreamingChannelResponse {
+  //
+  channel_id?: string;
+  //
+  clan_id?: string;
+  //
+  streaming_url?: string;
+}
+
+
 /** Storage objects to get. */
 export interface ApiReadStorageObjectId {
   //The collection which stores the object.
@@ -5058,20 +5087,19 @@ export class MezonApi {
   }
 
   /** regist fcm device token */
-  registFCMDeviceToken(
-    bearerToken: string,
-    token?: string,
-    deviceId?: string,
-    platform?: string,
-    options: any = {}
-  ): Promise<any> {
+  registFCMDeviceToken(bearerToken: string,
+      token?:string,
+      deviceId?:string,
+      platform?:string,
+      options: any = {}): Promise<ApiRegistFcmDeviceTokenResponse> {
+    
     const urlPath = "/v2/devicetoken";
     const queryParams = new Map<string, any>();
     queryParams.set("token", token);
     queryParams.set("device_id", deviceId);
     queryParams.set("platform", platform);
 
-    let bodyJson: string = "";
+    let bodyJson : string = "";
 
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("POST", options, bodyJson);
