@@ -2078,6 +2078,12 @@ export interface PinMessage {
   username: string;
   /**  */
   avatar: string;
+  /** The UNIX time (for gRPC clients) or ISO string (for REST clients) when the message was created. */
+  create_time:
+    | Date
+    | undefined;
+  /** create time in ms */
+  create_time_seconds: number;
 }
 
 export interface PinMessagesList {
@@ -3150,6 +3156,8 @@ export interface ChannelSettingItem {
   user_ids: string[];
   /** message count */
   message_count: number;
+  /** last sent message */
+  last_sent_message: ChannelMessageHeader | undefined;
 }
 
 export interface ChannelSettingListResponse {
@@ -3185,11 +3193,22 @@ export interface EditChannelCanvasRequest {
   title: string;
   /** content */
   content: string;
+  /** is default */
+  is_default: boolean;
 }
 
 export interface EditChannelCanvasResponse {
   /** id */
   id: string;
+}
+
+export interface DeleteChannelCanvasRequest {
+  /** clan id */
+  clan_id: string;
+  /** channel id */
+  channel_id: string;
+  /** canvas id */
+  canvas_id: string;
 }
 
 export interface ChannelCanvasListRequest {
@@ -3210,6 +3229,8 @@ export interface ChannelCanvasItem {
   id: string;
   /** title */
   title: string;
+  /** is default */
+  is_default: boolean;
 }
 
 export interface ChannelCanvasListResponse {
@@ -3241,6 +3262,8 @@ export interface ChannelCanvasDetailResponse {
   creator_id: string;
   /** editor */
   editor_id: string;
+  /** is default */
+  is_default: boolean;
 }
 
 function createBaseAccount(): Account {
@@ -18378,7 +18401,17 @@ export const DeletePinMessage = {
 };
 
 function createBasePinMessage(): PinMessage {
-  return { id: "", message_id: "", channel_id: "", sender_id: "", content: "", username: "", avatar: "" };
+  return {
+    id: "",
+    message_id: "",
+    channel_id: "",
+    sender_id: "",
+    content: "",
+    username: "",
+    avatar: "",
+    create_time: undefined,
+    create_time_seconds: 0,
+  };
 }
 
 export const PinMessage = {
@@ -18403,6 +18436,12 @@ export const PinMessage = {
     }
     if (message.avatar !== "") {
       writer.uint32(58).string(message.avatar);
+    }
+    if (message.create_time !== undefined) {
+      Timestamp.encode(toTimestamp(message.create_time), writer.uint32(66).fork()).ldelim();
+    }
+    if (message.create_time_seconds !== 0) {
+      writer.uint32(72).uint32(message.create_time_seconds);
     }
     return writer;
   },
@@ -18463,6 +18502,20 @@ export const PinMessage = {
 
           message.avatar = reader.string();
           continue;
+        case 8:
+          if (tag !== 66) {
+            break;
+          }
+
+          message.create_time = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
+          continue;
+        case 9:
+          if (tag !== 72) {
+            break;
+          }
+
+          message.create_time_seconds = reader.uint32();
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -18481,6 +18534,8 @@ export const PinMessage = {
       content: isSet(object.content) ? globalThis.String(object.content) : "",
       username: isSet(object.username) ? globalThis.String(object.username) : "",
       avatar: isSet(object.avatar) ? globalThis.String(object.avatar) : "",
+      create_time: isSet(object.create_time) ? fromJsonTimestamp(object.create_time) : undefined,
+      create_time_seconds: isSet(object.create_time_seconds) ? globalThis.Number(object.create_time_seconds) : 0,
     };
   },
 
@@ -18507,6 +18562,12 @@ export const PinMessage = {
     if (message.avatar !== "") {
       obj.avatar = message.avatar;
     }
+    if (message.create_time !== undefined) {
+      obj.create_time = message.create_time.toISOString();
+    }
+    if (message.create_time_seconds !== 0) {
+      obj.create_time_seconds = Math.round(message.create_time_seconds);
+    }
     return obj;
   },
 
@@ -18522,6 +18583,8 @@ export const PinMessage = {
     message.content = object.content ?? "";
     message.username = object.username ?? "";
     message.avatar = object.avatar ?? "";
+    message.create_time = object.create_time ?? undefined;
+    message.create_time_seconds = object.create_time_seconds ?? 0;
     return message;
   },
 };
@@ -29535,6 +29598,7 @@ function createBaseChannelSettingItem(): ChannelSettingItem {
     active: 0,
     user_ids: [],
     message_count: 0,
+    last_sent_message: undefined,
   };
 }
 
@@ -29572,6 +29636,9 @@ export const ChannelSettingItem = {
     }
     if (message.message_count !== 0) {
       writer.uint32(88).int64(message.message_count);
+    }
+    if (message.last_sent_message !== undefined) {
+      ChannelMessageHeader.encode(message.last_sent_message, writer.uint32(98).fork()).ldelim();
     }
     return writer;
   },
@@ -29660,6 +29727,13 @@ export const ChannelSettingItem = {
 
           message.message_count = longToNumber(reader.int64() as Long);
           continue;
+        case 12:
+          if (tag !== 98) {
+            break;
+          }
+
+          message.last_sent_message = ChannelMessageHeader.decode(reader, reader.uint32());
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -29682,6 +29756,9 @@ export const ChannelSettingItem = {
       active: isSet(object.active) ? globalThis.Number(object.active) : 0,
       user_ids: globalThis.Array.isArray(object?.user_ids) ? object.user_ids.map((e: any) => globalThis.String(e)) : [],
       message_count: isSet(object.message_count) ? globalThis.Number(object.message_count) : 0,
+      last_sent_message: isSet(object.last_sent_message)
+        ? ChannelMessageHeader.fromJSON(object.last_sent_message)
+        : undefined,
     };
   },
 
@@ -29720,6 +29797,9 @@ export const ChannelSettingItem = {
     if (message.message_count !== 0) {
       obj.message_count = Math.round(message.message_count);
     }
+    if (message.last_sent_message !== undefined) {
+      obj.last_sent_message = ChannelMessageHeader.toJSON(message.last_sent_message);
+    }
     return obj;
   },
 
@@ -29739,6 +29819,9 @@ export const ChannelSettingItem = {
     message.active = object.active ?? 0;
     message.user_ids = object.user_ids?.map((e) => e) || [];
     message.message_count = object.message_count ?? 0;
+    message.last_sent_message = (object.last_sent_message !== undefined && object.last_sent_message !== null)
+      ? ChannelMessageHeader.fromPartial(object.last_sent_message)
+      : undefined;
     return message;
   },
 };
@@ -29939,7 +30022,7 @@ export const MarkAsReadRequest = {
 };
 
 function createBaseEditChannelCanvasRequest(): EditChannelCanvasRequest {
-  return { id: undefined, channel_id: "", clan_id: "", title: "", content: "" };
+  return { id: undefined, channel_id: "", clan_id: "", title: "", content: "", is_default: false };
 }
 
 export const EditChannelCanvasRequest = {
@@ -29958,6 +30041,9 @@ export const EditChannelCanvasRequest = {
     }
     if (message.content !== "") {
       writer.uint32(42).string(message.content);
+    }
+    if (message.is_default !== false) {
+      writer.uint32(48).bool(message.is_default);
     }
     return writer;
   },
@@ -30004,6 +30090,13 @@ export const EditChannelCanvasRequest = {
 
           message.content = reader.string();
           continue;
+        case 6:
+          if (tag !== 48) {
+            break;
+          }
+
+          message.is_default = reader.bool();
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -30020,6 +30113,7 @@ export const EditChannelCanvasRequest = {
       clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
       title: isSet(object.title) ? globalThis.String(object.title) : "",
       content: isSet(object.content) ? globalThis.String(object.content) : "",
+      is_default: isSet(object.is_default) ? globalThis.Boolean(object.is_default) : false,
     };
   },
 
@@ -30040,6 +30134,9 @@ export const EditChannelCanvasRequest = {
     if (message.content !== "") {
       obj.content = message.content;
     }
+    if (message.is_default !== false) {
+      obj.is_default = message.is_default;
+    }
     return obj;
   },
 
@@ -30053,6 +30150,7 @@ export const EditChannelCanvasRequest = {
     message.clan_id = object.clan_id ?? "";
     message.title = object.title ?? "";
     message.content = object.content ?? "";
+    message.is_default = object.is_default ?? false;
     return message;
   },
 };
@@ -30110,6 +30208,95 @@ export const EditChannelCanvasResponse = {
   fromPartial<I extends Exact<DeepPartial<EditChannelCanvasResponse>, I>>(object: I): EditChannelCanvasResponse {
     const message = createBaseEditChannelCanvasResponse();
     message.id = object.id ?? "";
+    return message;
+  },
+};
+
+function createBaseDeleteChannelCanvasRequest(): DeleteChannelCanvasRequest {
+  return { clan_id: "", channel_id: "", canvas_id: "" };
+}
+
+export const DeleteChannelCanvasRequest = {
+  encode(message: DeleteChannelCanvasRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.clan_id !== "") {
+      writer.uint32(10).string(message.clan_id);
+    }
+    if (message.channel_id !== "") {
+      writer.uint32(18).string(message.channel_id);
+    }
+    if (message.canvas_id !== "") {
+      writer.uint32(26).string(message.canvas_id);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): DeleteChannelCanvasRequest {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseDeleteChannelCanvasRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.clan_id = reader.string();
+          continue;
+        case 2:
+          if (tag !== 18) {
+            break;
+          }
+
+          message.channel_id = reader.string();
+          continue;
+        case 3:
+          if (tag !== 26) {
+            break;
+          }
+
+          message.canvas_id = reader.string();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): DeleteChannelCanvasRequest {
+    return {
+      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
+      channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "",
+      canvas_id: isSet(object.canvas_id) ? globalThis.String(object.canvas_id) : "",
+    };
+  },
+
+  toJSON(message: DeleteChannelCanvasRequest): unknown {
+    const obj: any = {};
+    if (message.clan_id !== "") {
+      obj.clan_id = message.clan_id;
+    }
+    if (message.channel_id !== "") {
+      obj.channel_id = message.channel_id;
+    }
+    if (message.canvas_id !== "") {
+      obj.canvas_id = message.canvas_id;
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<DeleteChannelCanvasRequest>, I>>(base?: I): DeleteChannelCanvasRequest {
+    return DeleteChannelCanvasRequest.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<DeleteChannelCanvasRequest>, I>>(object: I): DeleteChannelCanvasRequest {
+    const message = createBaseDeleteChannelCanvasRequest();
+    message.clan_id = object.clan_id ?? "";
+    message.channel_id = object.channel_id ?? "";
+    message.canvas_id = object.canvas_id ?? "";
     return message;
   },
 };
@@ -30219,7 +30406,7 @@ export const ChannelCanvasListRequest = {
 };
 
 function createBaseChannelCanvasItem(): ChannelCanvasItem {
-  return { id: "", title: "" };
+  return { id: "", title: "", is_default: false };
 }
 
 export const ChannelCanvasItem = {
@@ -30228,7 +30415,10 @@ export const ChannelCanvasItem = {
       writer.uint32(10).string(message.id);
     }
     if (message.title !== "") {
-      writer.uint32(34).string(message.title);
+      writer.uint32(18).string(message.title);
+    }
+    if (message.is_default !== false) {
+      writer.uint32(24).bool(message.is_default);
     }
     return writer;
   },
@@ -30247,12 +30437,19 @@ export const ChannelCanvasItem = {
 
           message.id = reader.string();
           continue;
-        case 4:
-          if (tag !== 34) {
+        case 2:
+          if (tag !== 18) {
             break;
           }
 
           message.title = reader.string();
+          continue;
+        case 3:
+          if (tag !== 24) {
+            break;
+          }
+
+          message.is_default = reader.bool();
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -30267,6 +30464,7 @@ export const ChannelCanvasItem = {
     return {
       id: isSet(object.id) ? globalThis.String(object.id) : "",
       title: isSet(object.title) ? globalThis.String(object.title) : "",
+      is_default: isSet(object.is_default) ? globalThis.Boolean(object.is_default) : false,
     };
   },
 
@@ -30278,6 +30476,9 @@ export const ChannelCanvasItem = {
     if (message.title !== "") {
       obj.title = message.title;
     }
+    if (message.is_default !== false) {
+      obj.is_default = message.is_default;
+    }
     return obj;
   },
 
@@ -30288,6 +30489,7 @@ export const ChannelCanvasItem = {
     const message = createBaseChannelCanvasItem();
     message.id = object.id ?? "";
     message.title = object.title ?? "";
+    message.is_default = object.is_default ?? false;
     return message;
   },
 };
@@ -30473,7 +30675,7 @@ export const ChannelCanvasDetailRequest = {
 };
 
 function createBaseChannelCanvasDetailResponse(): ChannelCanvasDetailResponse {
-  return { id: "", title: "", content: "", creator_id: "", editor_id: "" };
+  return { id: "", title: "", content: "", creator_id: "", editor_id: "", is_default: false };
 }
 
 export const ChannelCanvasDetailResponse = {
@@ -30492,6 +30694,9 @@ export const ChannelCanvasDetailResponse = {
     }
     if (message.editor_id !== "") {
       writer.uint32(42).string(message.editor_id);
+    }
+    if (message.is_default !== false) {
+      writer.uint32(48).bool(message.is_default);
     }
     return writer;
   },
@@ -30538,6 +30743,13 @@ export const ChannelCanvasDetailResponse = {
 
           message.editor_id = reader.string();
           continue;
+        case 6:
+          if (tag !== 48) {
+            break;
+          }
+
+          message.is_default = reader.bool();
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -30554,6 +30766,7 @@ export const ChannelCanvasDetailResponse = {
       content: isSet(object.content) ? globalThis.String(object.content) : "",
       creator_id: isSet(object.creator_id) ? globalThis.String(object.creator_id) : "",
       editor_id: isSet(object.editor_id) ? globalThis.String(object.editor_id) : "",
+      is_default: isSet(object.is_default) ? globalThis.Boolean(object.is_default) : false,
     };
   },
 
@@ -30574,6 +30787,9 @@ export const ChannelCanvasDetailResponse = {
     if (message.editor_id !== "") {
       obj.editor_id = message.editor_id;
     }
+    if (message.is_default !== false) {
+      obj.is_default = message.is_default;
+    }
     return obj;
   },
 
@@ -30587,6 +30803,7 @@ export const ChannelCanvasDetailResponse = {
     message.content = object.content ?? "";
     message.creator_id = object.creator_id ?? "";
     message.editor_id = object.editor_id ?? "";
+    message.is_default = object.is_default ?? false;
     return message;
   },
 };
