@@ -1,6 +1,6 @@
 {
     "name": "mezon-js-protobuf",
-    "version": "1.5.96",
+    "version": "1.5.98",
     "description": "Websocket adapter adding protocol buffer support to the Mezon Javascript client.",
     "main": "dist/mezon-js-protobuf.cjs.js",
     "module": "dist/mezon-js-protobuf.esm.mjs",
@@ -26,7 +26,8 @@
         "mezon",
         "realtime",
         "realtime chat"
-    ],
+    ]
+    ,
     "repository": "https://github.com/nccasia/mezon-js",
     "homepage": "https://mezon.vn",
     "bugs": "https://github.com/nccasia/mezon-js/issues",
