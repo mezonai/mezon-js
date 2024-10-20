@@ -4083,4 +4083,26 @@ export class Client {
         return Promise.resolve(response);
       });
   }
+
+  //** */
+  async deleteChannelCanvas(
+    session: Session,
+    canvasId: string,
+    clanId?: string,
+    channelId?: string
+  ): Promise<any> {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired((Date.now() + this.expiredTimespanMs) / 1000)
+    ) {
+      await this.sessionRefresh(session);
+    }
+
+    return this.apiClient
+      .deleteChannelCanvas(session.token, canvasId, clanId, channelId)
+      .then((response: any) => {
+        return response !== undefined;
+      });
+  }
 }
