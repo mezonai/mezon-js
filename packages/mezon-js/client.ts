@@ -125,6 +125,7 @@ import {
   ApiEditChannelCanvasRequest,
   ApiChannelSettingListResponse,
   ApiAddFavoriteChannelResponse,
+  ApiRegistFcmDeviceTokenResponse,
 } from "./api.gen";
 
 import { Session } from "./session";
@@ -1838,7 +1839,7 @@ export class Client {
     tokenId: string,
     deviceId: string,
     platform: string
-  ): Promise<boolean> {
+  ): Promise<ApiRegistFcmDeviceTokenResponse> {
     if (
       this.autoRefreshSession &&
       session.refresh_token &&
@@ -1850,7 +1851,7 @@ export class Client {
     return this.apiClient
       .registFCMDeviceToken(session.token, tokenId, deviceId, platform)
       .then((response: any) => {
-        return response !== undefined;
+        return Promise.resolve(response);
       });
   }
 
