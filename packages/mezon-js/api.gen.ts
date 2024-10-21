@@ -391,6 +391,12 @@ export interface ApiAddFavoriteChannelRequest {
   clan_id?: string;
 }
 
+/**  */
+export interface ApiAddFavoriteChannelResponse {
+  //
+  channel_id?: string;
+}
+
 /** Add a role for channel. */
 export interface ApiAddRoleChannelDescRequest {
   //
@@ -3862,11 +3868,50 @@ export class MezonApi {
 }
 
   /**  */
-  updateCategoryOrder(
-    bearerToken: string,
-    body: ApiUpdateCategoryOrderRequest,
-    options: any = {}
-  ): Promise<any> {
+  deleteChannelCanvas(bearerToken: string,
+      canvasId:string,
+      clanId?:string,
+      channelId?:string,
+      options: any = {}): Promise<any> {
+    
+    if (canvasId === null || canvasId === undefined) {
+      throw new Error("'canvasId' is a required parameter but is null or undefined.");
+    }
+    const urlPath = "/v2/canvases/{canvasId}"
+        .replace("{canvasId}", encodeURIComponent(String(canvasId)));
+    const queryParams = new Map<string, any>();
+    queryParams.set("clan_id", clanId);
+    queryParams.set("channel_id", channelId);
+
+    let bodyJson : string = "";
+
+    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
+    const fetchOptions = buildFetchOptions("DELETE", options, bodyJson);
+    if (bearerToken) {
+        fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+    }
+
+    return Promise.race([
+      fetch(fullUrl, fetchOptions).then((response) => {
+        if (response.status == 204) {
+          return response;
+        } else if (response.status >= 200 && response.status < 300) {
+          return response.json();
+        } else {
+          throw response;
+        }
+      }),
+      new Promise((_, reject) =>
+        setTimeout(reject, this.timeoutMs, "Request timed out.")
+      ),
+    ]);
+}
+
+  /**  */
+  updateCategoryOrder(bearerToken: string,
+      body:ApiUpdateCategoryOrderRequest,
+      options: any = {}): Promise<any> {
+    
     if (body === null || body === undefined) {
       throw new Error(
         "'body' is a required parameter but is null or undefined."

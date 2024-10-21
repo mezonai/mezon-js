@@ -124,6 +124,7 @@ import {
   ApiChannelCanvasListResponse,
   ApiEditChannelCanvasRequest,
   ApiChannelSettingListResponse,
+  ApiAddFavoriteChannelResponse,
 } from "./api.gen";
 
 import { Session } from "./session";
@@ -4089,7 +4090,7 @@ export class Client {
     session: Session,
     channelId: string,
     clanId: string,
-  ): Promise<any> {
+  ): Promise<ApiAddFavoriteChannelResponse> {
     if (
       this.autoRefreshSession &&
       session.refresh_token &&
@@ -4103,7 +4104,7 @@ export class Client {
         channel_id: channelId,
         clan_id: clanId
       })
-      .then((response: any) => {
+      .then((response: ApiAddFavoriteChannelResponse) => {
         return response;
       });
   }
