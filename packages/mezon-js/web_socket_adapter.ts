@@ -44,7 +44,7 @@ export interface WebSocketAdapter {
 
     isOpen(): boolean;
     close(): void;
-    connect(scheme: string, host: string, port: string, createStatus: boolean, token: string, signal?: AbortSignal): void;
+    connect(scheme: string, host: string, port: string, createStatus: boolean, token: string, platform: string, signal?: AbortSignal): void;
     send(message: any): void;
 }
 
@@ -131,13 +131,13 @@ export class WebSocketAdapterText implements WebSocketAdapter {
         return this._socket?.readyState == WebSocket.OPEN;
     }
 
-    connect(scheme: string, host: string, port: string, createStatus: boolean, token: string, signal?: AbortSignal): void {
+    connect(scheme: string, host: string, port: string, createStatus: boolean, token: string, platform: string, signal?: AbortSignal): void {
         if (signal) {
             signal.addEventListener('abort', () => {
                 this.close();
             });
         }
-        const url = `${scheme}${host}:${port}/ws?lang=en&status=${encodeURIComponent(createStatus.toString())}&token=${encodeURIComponent(token)}`;
+        const url = `${scheme}${host}:${port}/ws?lang=en&status=${encodeURIComponent(createStatus.toString())}&token=${encodeURIComponent(token)}&paltform=${encodeURIComponent(platform)}`;
         this._socket = new WebSocket(url);
     }
 
