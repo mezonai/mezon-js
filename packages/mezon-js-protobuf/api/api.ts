@@ -3266,6 +3266,27 @@ export interface ChannelCanvasDetailResponse {
   is_default: boolean;
 }
 
+export interface AddFavoriteChannelRequest {
+  channel_id: string;
+  clan_id: string;
+}
+
+export interface RemoveFavoriteChannelRequest {
+  channel_id: string;
+}
+
+export interface AddFavoriteChannelResponse {
+  channel_id: string;
+}
+
+export interface ListFavoriteChannelRequest {
+  clan_id: string;
+}
+
+export interface ListFavoriteChannelResponse {
+  channel_ids: string[];
+}
+
 function createBaseAccount(): Account {
   return {
     user: undefined,
@@ -30804,6 +30825,312 @@ export const ChannelCanvasDetailResponse = {
     message.creator_id = object.creator_id ?? "";
     message.editor_id = object.editor_id ?? "";
     message.is_default = object.is_default ?? false;
+    return message;
+  },
+};
+
+function createBaseAddFavoriteChannelRequest(): AddFavoriteChannelRequest {
+  return { channel_id: "", clan_id: "" };
+}
+
+export const AddFavoriteChannelRequest = {
+  encode(message: AddFavoriteChannelRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.channel_id !== "") {
+      writer.uint32(10).string(message.channel_id);
+    }
+    if (message.clan_id !== "") {
+      writer.uint32(18).string(message.clan_id);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): AddFavoriteChannelRequest {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseAddFavoriteChannelRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.channel_id = reader.string();
+          continue;
+        case 2:
+          if (tag !== 18) {
+            break;
+          }
+
+          message.clan_id = reader.string();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): AddFavoriteChannelRequest {
+    return {
+      channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "",
+      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
+    };
+  },
+
+  toJSON(message: AddFavoriteChannelRequest): unknown {
+    const obj: any = {};
+    if (message.channel_id !== "") {
+      obj.channel_id = message.channel_id;
+    }
+    if (message.clan_id !== "") {
+      obj.clan_id = message.clan_id;
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<AddFavoriteChannelRequest>, I>>(base?: I): AddFavoriteChannelRequest {
+    return AddFavoriteChannelRequest.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<AddFavoriteChannelRequest>, I>>(object: I): AddFavoriteChannelRequest {
+    const message = createBaseAddFavoriteChannelRequest();
+    message.channel_id = object.channel_id ?? "";
+    message.clan_id = object.clan_id ?? "";
+    return message;
+  },
+};
+
+function createBaseRemoveFavoriteChannelRequest(): RemoveFavoriteChannelRequest {
+  return { channel_id: "" };
+}
+
+export const RemoveFavoriteChannelRequest = {
+  encode(message: RemoveFavoriteChannelRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.channel_id !== "") {
+      writer.uint32(10).string(message.channel_id);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): RemoveFavoriteChannelRequest {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseRemoveFavoriteChannelRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.channel_id = reader.string();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): RemoveFavoriteChannelRequest {
+    return { channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "" };
+  },
+
+  toJSON(message: RemoveFavoriteChannelRequest): unknown {
+    const obj: any = {};
+    if (message.channel_id !== "") {
+      obj.channel_id = message.channel_id;
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<RemoveFavoriteChannelRequest>, I>>(base?: I): RemoveFavoriteChannelRequest {
+    return RemoveFavoriteChannelRequest.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<RemoveFavoriteChannelRequest>, I>>(object: I): RemoveFavoriteChannelRequest {
+    const message = createBaseRemoveFavoriteChannelRequest();
+    message.channel_id = object.channel_id ?? "";
+    return message;
+  },
+};
+
+function createBaseAddFavoriteChannelResponse(): AddFavoriteChannelResponse {
+  return { channel_id: "" };
+}
+
+export const AddFavoriteChannelResponse = {
+  encode(message: AddFavoriteChannelResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.channel_id !== "") {
+      writer.uint32(10).string(message.channel_id);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): AddFavoriteChannelResponse {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseAddFavoriteChannelResponse();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.channel_id = reader.string();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): AddFavoriteChannelResponse {
+    return { channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "" };
+  },
+
+  toJSON(message: AddFavoriteChannelResponse): unknown {
+    const obj: any = {};
+    if (message.channel_id !== "") {
+      obj.channel_id = message.channel_id;
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<AddFavoriteChannelResponse>, I>>(base?: I): AddFavoriteChannelResponse {
+    return AddFavoriteChannelResponse.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<AddFavoriteChannelResponse>, I>>(object: I): AddFavoriteChannelResponse {
+    const message = createBaseAddFavoriteChannelResponse();
+    message.channel_id = object.channel_id ?? "";
+    return message;
+  },
+};
+
+function createBaseListFavoriteChannelRequest(): ListFavoriteChannelRequest {
+  return { clan_id: "" };
+}
+
+export const ListFavoriteChannelRequest = {
+  encode(message: ListFavoriteChannelRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.clan_id !== "") {
+      writer.uint32(10).string(message.clan_id);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): ListFavoriteChannelRequest {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseListFavoriteChannelRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.clan_id = reader.string();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): ListFavoriteChannelRequest {
+    return { clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "" };
+  },
+
+  toJSON(message: ListFavoriteChannelRequest): unknown {
+    const obj: any = {};
+    if (message.clan_id !== "") {
+      obj.clan_id = message.clan_id;
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<ListFavoriteChannelRequest>, I>>(base?: I): ListFavoriteChannelRequest {
+    return ListFavoriteChannelRequest.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<ListFavoriteChannelRequest>, I>>(object: I): ListFavoriteChannelRequest {
+    const message = createBaseListFavoriteChannelRequest();
+    message.clan_id = object.clan_id ?? "";
+    return message;
+  },
+};
+
+function createBaseListFavoriteChannelResponse(): ListFavoriteChannelResponse {
+  return { channel_ids: [] };
+}
+
+export const ListFavoriteChannelResponse = {
+  encode(message: ListFavoriteChannelResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    for (const v of message.channel_ids) {
+      writer.uint32(10).string(v!);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): ListFavoriteChannelResponse {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseListFavoriteChannelResponse();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.channel_ids.push(reader.string());
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): ListFavoriteChannelResponse {
+    return {
+      channel_ids: globalThis.Array.isArray(object?.channel_ids)
+        ? object.channel_ids.map((e: any) => globalThis.String(e))
+        : [],
+    };
+  },
+
+  toJSON(message: ListFavoriteChannelResponse): unknown {
+    const obj: any = {};
+    if (message.channel_ids?.length) {
+      obj.channel_ids = message.channel_ids;
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<ListFavoriteChannelResponse>, I>>(base?: I): ListFavoriteChannelResponse {
+    return ListFavoriteChannelResponse.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<ListFavoriteChannelResponse>, I>>(object: I): ListFavoriteChannelResponse {
+    const message = createBaseListFavoriteChannelResponse();
+    message.channel_ids = object.channel_ids?.map((e) => e) || [];
     return message;
   },
 };

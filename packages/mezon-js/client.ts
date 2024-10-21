@@ -124,6 +124,7 @@ import {
   ApiChannelCanvasListResponse,
   ApiEditChannelCanvasRequest,
   ApiChannelSettingListResponse,
+  ApiAddFavoriteChannelResponse,
 } from "./api.gen";
 
 import { Session } from "./session";
@@ -4103,6 +4104,68 @@ export class Client {
       .deleteChannelCanvas(session.token, canvasId, clanId, channelId)
       .then((response: any) => {
         return response !== undefined;
+      });
+  }
+
+  
+  async addFavoriteChannel(
+    session: Session,
+    channelId: string,
+    clanId: string,
+  ): Promise<ApiAddFavoriteChannelResponse> {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired((Date.now() + this.expiredTimespanMs) / 1000)
+    ) {
+      await this.sessionRefresh(session);
+    }
+
+    return this.apiClient
+      .addChannelFavorite(session.token, {
+        channel_id: channelId,
+        clan_id: clanId
+      })
+      .then((response: ApiAddFavoriteChannelResponse) => {
+        return response;
+      });
+  }
+
+  async removeFavoriteChannel(
+    session: Session,
+    channelId: string
+  ): Promise<any> {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired((Date.now() + this.expiredTimespanMs) / 1000)
+    ) {
+      await this.sessionRefresh(session);
+    }
+
+    return this.apiClient
+      .removeChannelFavorite(session.token, channelId)
+      .then((response: any) => {
+        return response;
+      });
+  }
+
+  async getListFavoriteChannel(
+    session: Session,
+    clanId: string
+  ): Promise<any> {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired((Date.now() + this.expiredTimespanMs) / 1000)
+    ) {
+      await this.sessionRefresh(session);
+    }
+
+    return this.apiClient
+      .getListFavoriteChannel(session.token, clanId)
+      .then((response: any) => {
+        return response;
       });
   }
 }
