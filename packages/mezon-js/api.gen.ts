@@ -2111,6 +2111,8 @@ export interface ApiUser {
   //The id of the user's account.
   id?: string;
   //
+  is_mobile?: boolean;
+  //
   join_time?: string;
   //The language expected to be a tag which follows the BCP-47 spec.
   lang_tag?: string;
