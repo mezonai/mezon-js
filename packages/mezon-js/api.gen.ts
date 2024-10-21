@@ -561,6 +561,10 @@ export interface ApiChannelCanvasDetailResponse {
 /**  */
 export interface ApiChannelCanvasItem {
   //
+  content?: string;
+  //
+  creator_id?: string;
+  //
   id?: string;
   //
   is_default?: boolean;
