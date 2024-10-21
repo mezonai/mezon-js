@@ -4011,6 +4011,48 @@ export class MezonApi {
 }
 
   /**  */
+  getChannelCanvasList(bearerToken: string,
+      channelId:string,
+      clanId?:string,
+      limit?:number,
+      page?:number,
+      options: any = {}): Promise<ApiChannelCanvasListResponse> {
+    
+    if (channelId === null || channelId === undefined) {
+      throw new Error("'channelId' is a required parameter but is null or undefined.");
+    }
+    const urlPath = "/v2/channel-canvases/{channelId}"
+        .replace("{channelId}", encodeURIComponent(String(channelId)));
+    const queryParams = new Map<string, any>();
+    queryParams.set("clan_id", clanId);
+    queryParams.set("limit", limit);
+    queryParams.set("page", page);
+
+    let bodyJson : string = "";
+
+    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
+    const fetchOptions = buildFetchOptions("GET", options, bodyJson);
+    if (bearerToken) {
+        fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+    }
+
+    return Promise.race([
+      fetch(fullUrl, fetchOptions).then((response) => {
+        if (response.status == 204) {
+          return response;
+        } else if (response.status >= 200 && response.status < 300) {
+          return response.json();
+        } else {
+          throw response;
+        }
+      }),
+      new Promise((_, reject) =>
+        setTimeout(reject, this.timeoutMs, "Request timed out.")
+      ),
+    ]);
+}
+
+  /**  */
   addChannelFavorite(bearerToken: string,
       body:ApiAddFavoriteChannelRequest,
       options: any = {}): Promise<any> {
@@ -8827,53 +8869,6 @@ export class MezonApi {
     const queryParams = new Map<string, any>();
     queryParams.set("clan_id", clanId);
     queryParams.set("channel_id", channelId);
-
-    let bodyJson: string = "";
-
-    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
-    const fetchOptions = buildFetchOptions("GET", options, bodyJson);
-    if (bearerToken) {
-      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-    }
-
-    return Promise.race([
-      fetch(fullUrl, fetchOptions).then((response) => {
-        if (response.status == 204) {
-          return response;
-        } else if (response.status >= 200 && response.status < 300) {
-          return response.json();
-        } else {
-          throw response;
-        }
-      }),
-      new Promise((_, reject) =>
-        setTimeout(reject, this.timeoutMs, "Request timed out.")
-      ),
-    ]);
-  }
-
-  /**  */
-  getChannelCanvasList(
-    bearerToken: string,
-    channelId: string,
-    clanId?: string,
-    limit?: number,
-    page?: number,
-    options: any = {}
-  ): Promise<ApiChannelCanvasListResponse> {
-    if (channelId === null || channelId === undefined) {
-      throw new Error(
-        "'channelId' is a required parameter but is null or undefined."
-      );
-    }
-    const urlPath = "/v2/channel_canvases/{channelId}".replace(
-      "{channelId}",
-      encodeURIComponent(String(channelId))
-    );
-    const queryParams = new Map<string, any>();
-    queryParams.set("clan_id", clanId);
-    queryParams.set("limit", limit);
-    queryParams.set("page", page);
 
     let bodyJson: string = "";
 
