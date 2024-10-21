@@ -26,7 +26,8 @@
         "mezon",
         "realtime",
         "realtime chat"
-    ],
+    ]
+    ,
     "repository": "https://github.com/nccasia/mezon-js",
     "homepage": "https://mezon.vn",
     "bugs": "https://github.com/nccasia/mezon-js/issues",
