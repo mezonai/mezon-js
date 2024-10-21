@@ -114,6 +114,8 @@ export interface UserProfileRedis {
   custom_status: string;
   /** create time */
   create_time_second: number;
+  /** online */
+  online: boolean;
 }
 
 /** UserChannelAddedEvent */
