@@ -1451,7 +1451,11 @@ export interface User {
   /**  */
   about_me: string;
   /**  */
-  join_time: Date | undefined;
+  join_time:
+    | Date
+    | undefined;
+  /** platform */
+  isMobile: boolean;
 }
 
 /** A list of groups belonging to a user, along with the user's role in each group. */
@@ -12987,6 +12991,7 @@ function createBaseUser(): User {
     apple_id: "",
     about_me: "",
     join_time: undefined,
+    isMobile: false,
   };
 }
 
@@ -13048,6 +13053,9 @@ export const User = {
     }
     if (message.join_time !== undefined) {
       Timestamp.encode(toTimestamp(message.join_time), writer.uint32(154).fork()).ldelim();
+    }
+    if (message.isMobile !== false) {
+      writer.uint32(160).bool(message.isMobile);
     }
     return writer;
   },
@@ -13192,6 +13200,13 @@ export const User = {
 
           message.join_time = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
           continue;
+        case 20:
+          if (tag !== 160) {
+            break;
+          }
+
+          message.isMobile = reader.bool();
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -13222,6 +13237,7 @@ export const User = {
       apple_id: isSet(object.apple_id) ? globalThis.String(object.apple_id) : "",
       about_me: isSet(object.about_me) ? globalThis.String(object.about_me) : "",
       join_time: isSet(object.join_time) ? fromJsonTimestamp(object.join_time) : undefined,
+      isMobile: isSet(object.isMobile) ? globalThis.Boolean(object.isMobile) : false,
     };
   },
 
@@ -13284,6 +13300,9 @@ export const User = {
     if (message.join_time !== undefined) {
       obj.join_time = message.join_time.toISOString();
     }
+    if (message.isMobile !== false) {
+      obj.isMobile = message.isMobile;
+    }
     return obj;
   },
 
@@ -13311,6 +13330,7 @@ export const User = {
     message.apple_id = object.apple_id ?? "";
     message.about_me = object.about_me ?? "";
     message.join_time = object.join_time ?? undefined;
+    message.isMobile = object.isMobile ?? false;
     return message;
   },
 };
