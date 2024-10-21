@@ -561,6 +561,10 @@ export interface ApiChannelCanvasDetailResponse {
 /**  */
 export interface ApiChannelCanvasItem {
   //
+  content?: string;
+  //
+  creator_id?: string;
+  //
   id?: string;
   //
   is_default?: boolean;
@@ -2110,6 +2114,8 @@ export interface ApiUser {
   google_id?: string;
   //The id of the user's account.
   id?: string;
+  //
+  is_mobile?: boolean;
   //
   join_time?: string;
   //The language expected to be a tag which follows the BCP-47 spec.
