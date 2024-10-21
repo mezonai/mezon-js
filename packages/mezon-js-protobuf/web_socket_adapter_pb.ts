@@ -87,13 +87,13 @@ export class WebSocketAdapterPb implements WebSocketAdapter {
         this._socket = undefined;
     }
 
-    connect(scheme: string, host: string, port: string, createStatus: boolean, token: string, signal?: AbortSignal): void {
+    connect(scheme: string, host: string, port: string, createStatus: boolean, token: string, platform: string, signal?: AbortSignal): void {
         if (signal) {
             signal.addEventListener('abort', () => {
                this.close();
             });
         }
-        const url = `${scheme}${host}:${port}/ws?lang=en&status=${encodeURIComponent(createStatus.toString())}&token=${encodeURIComponent(token)}&format=protobuf`;
+        const url = `${scheme}${host}:${port}/ws?lang=en&status=${encodeURIComponent(createStatus.toString())}&token=${encodeURIComponent(token)}&format=protobuf&platform=${encodeURIComponent(platform)}`;
         this._socket = new WebSocket(url);
         this._socket.binaryType = "arraybuffer";
     }
