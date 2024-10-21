@@ -1636,6 +1636,7 @@ export class Client {
               lang_tag: gu.user!.lang_tag,
               location: gu.user!.location,
               online: gu.user!.online,
+              is_mobile: gu.user?.is_mobile,
               steam_id: gu.user!.steam_id,
               timezone: gu.user!.timezone,
               update_time: gu.user!.update_time,
