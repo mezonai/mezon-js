@@ -39,7 +39,7 @@ import {
   ApiMessageAttachment,
   ApiMessageRef
 } from "./interfaces";
-import { convertChanneltypeToChannelMode, isValidUserId } from "./utils/helper";
+import { convertChannelModeToChannelType, convertChanneltypeToChannelMode, isValidUserId } from "./utils/helper";
 import { replyMessageGenerate } from "./utils/generate_reply_message";
 import { Stack } from "./utils/stack";
 const DEFAULT_HOST = "api.mezon.vn";
@@ -97,6 +97,12 @@ export class MezonClient implements Client {
       }
 
   async sendMessage(clan_id: string, channel_id: string, mode: number, is_public: boolean, msg: ChannelMessageContent, mentions?: Array<ApiMessageMention>, attachments?: Array<ApiMessageAttachment>, ref?: Array<ApiMessageRef>) {
+    await this.socket.joinChat(
+      clan_id,
+      channel_id,
+      convertChannelModeToChannelType(mode),
+      is_public
+    );
     const msgACK = await this.socket.writeChatMessage(clan_id, channel_id, mode, is_public, msg, mentions, attachments, ref);
     return msgACK;
   }
@@ -204,7 +210,7 @@ export class MezonClient implements Client {
     const clans = await this.apiClient.listClanDescs(this.session!.token);
     clans.clandesc?.forEach(async clan => {
       await this.socket.joinClanChat(clan.clan_id || '');
-    })
+    });
 
     // join direct message
     await this.socket.joinClanChat("0");
@@ -283,6 +289,14 @@ export class MezonClient implements Client {
 
   async sleep(ms: number) {
     return new Promise((resolve) => setTimeout(resolve, ms));
+  }
+
+  async joinChat (
+    clan_id: string,
+    channel_id: string,
+    type: number,
+    is_public: boolean, ) {
+      return await this.socket.joinChat(clan_id, channel_id, type, is_public);
   }
 
   async createDMchannel(userId: string) : Promise<null | ApiChannelDescription> {
