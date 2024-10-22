@@ -55,7 +55,6 @@ export enum ChannelType {
   CHANNEL_TYPE_STREAMING = 6,
   CHANNEL_TYPE_APP = 7,
   CHANNEL_TYPE_ANNOUNCEMENT = 8,
-  CHANNEL_TYPE_INVALID = 10
 }
 
 export enum ChannelStreamMode {
