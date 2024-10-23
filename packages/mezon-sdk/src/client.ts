@@ -140,15 +140,6 @@ export class MezonClient implements Client {
   /** Refresh a user's session using a refresh token retrieved from a previous authentication request. */
   async sessionRefresh() {
 
-    return this.apiClient.mezonAuthenticate(this.apiKey, "", {
-      account: {
-        token: this.apiKey,
-      }
-    }).then((apiSession : ApiSession) => {
-      const newSession = new Session(apiSession);
-      this.session = newSession;
-      return Promise.resolve(newSession);
-    });
   }
   
 
@@ -248,20 +239,31 @@ export class MezonClient implements Client {
   }
 
   retriesConnect() {
+    let retryInterval = 5000; // Initial wait time in milliseconds
+    const maxRetryInterval = 60000; // Maximum wait time (60 seconds)
+
     const interval = setInterval(async () => {
-      try {
-        this.socket = this.createSocket(
-          this.useSSL,
-          false,
-          new WebSocketAdapterPb()
-        );
-        const result = await this.authenticate();  
-        console.log(result);
-        clearInterval(interval);
-      } catch (e) {
-        console.log(e);
-      }
-    }, 5000);
+        try {
+            this.socket = this.createSocket(
+                this.useSSL,
+                false,
+                new WebSocketAdapterPb()
+            );
+            await this.authenticate(); 
+            clearInterval(interval); // Clear the interval on success
+            console.log("Connected successfully!");
+            retryInterval = 5000; // Reset the interval on successful connection
+        } catch (e) {
+            console.log("Connection failed:", e);
+            retryInterval = Math.min(retryInterval * 2, maxRetryInterval); // Double the interval, max at 32 seconds
+
+            // Clear the current interval and restart with the new retry interval
+            clearInterval(interval);
+            setTimeout(() => {
+                this.retriesConnect(); // Restart the connection attempt
+            }, retryInterval);
+        }
+    }, retryInterval);
   }
 
   async createChannelDesc(
