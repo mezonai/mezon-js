@@ -3299,7 +3299,7 @@ export interface UserActivity {
   start_time: Date | undefined;
   end_time: Date | undefined;
   application_id: string;
-  status: string;
+  status: number;
 }
 
 export interface ListUserActivity {
@@ -3312,7 +3312,7 @@ export interface CreateActivityRequest {
   activity_description: string;
   start_time: Date | undefined;
   application_id: string;
-  status: string;
+  status: number;
 }
 
 function createBaseAccount(): Account {
@@ -31188,7 +31188,7 @@ function createBaseUserActivity(): UserActivity {
     start_time: undefined,
     end_time: undefined,
     application_id: "",
-    status: "",
+    status: 0,
   };
 }
 
@@ -31215,8 +31215,8 @@ export const UserActivity = {
     if (message.application_id !== "") {
       writer.uint32(58).string(message.application_id);
     }
-    if (message.status !== "") {
-      writer.uint32(66).string(message.status);
+    if (message.status !== 0) {
+      writer.uint32(64).int32(message.status);
     }
     return writer;
   },
@@ -31302,7 +31302,7 @@ export const UserActivity = {
       start_time: isSet(object.start_time) ? fromJsonTimestamp(object.start_time) : undefined,
       end_time: isSet(object.end_time) ? fromJsonTimestamp(object.end_time) : undefined,
       application_id: isSet(object.application_id) ? globalThis.String(object.application_id) : "",
-      status: isSet(object.status) ? globalThis.String(object.status) : "",
+      status: isSet(object.status) ? globalThis.Number(object.status) : 0,
     };
   },
 
@@ -31329,8 +31329,8 @@ export const UserActivity = {
     if (message.application_id !== "") {
       obj.application_id = message.application_id;
     }
-    if (message.status !== "") {
-      obj.status = message.status;
+    if (message.status !== 0) {
+      obj.status = Math.round(message.status);
     }
     return obj;
   },
@@ -31347,7 +31347,7 @@ export const UserActivity = {
     message.start_time = object.start_time ?? undefined;
     message.end_time = object.end_time ?? undefined;
     message.application_id = object.application_id ?? "";
-    message.status = object.status ?? "";
+    message.status = object.status ?? 0;
     return message;
   },
 };
@@ -31420,7 +31420,7 @@ function createBaseCreateActivityRequest(): CreateActivityRequest {
     activity_description: "",
     start_time: undefined,
     application_id: "",
-    status: "",
+    status: 0,
   };
 }
 
@@ -31441,8 +31441,8 @@ export const CreateActivityRequest = {
     if (message.application_id !== "") {
       writer.uint32(42).string(message.application_id);
     }
-    if (message.status !== "") {
-      writer.uint32(50).string(message.status);
+    if (message.status !== 0) {
+      writer.uint32(48).int32(message.status);
     }
     return writer;
   },
@@ -31494,7 +31494,7 @@ export const CreateActivityRequest = {
             break;
           }
 
-          message.status = reader.string();
+          message.status = reader.int32();
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -31512,7 +31512,7 @@ export const CreateActivityRequest = {
       activity_description: isSet(object.activity_description) ? globalThis.String(object.activity_description) : "",
       start_time: isSet(object.start_time) ? fromJsonTimestamp(object.start_time) : undefined,
       application_id: isSet(object.application_id) ? globalThis.String(object.application_id) : "",
-      status: isSet(object.status) ? globalThis.String(object.status) : "",
+      status: isSet(object.status) ? globalThis.Number(object.status) : 0,
     };
   },
 
@@ -31533,8 +31533,8 @@ export const CreateActivityRequest = {
     if (message.application_id !== "") {
       obj.application_id = message.application_id;
     }
-    if (message.status !== "") {
-      obj.status = message.status;
+    if (message.status !== 0) {
+      obj.status = Math.round(message.status);
     }
     return obj;
   },
@@ -31549,7 +31549,7 @@ export const CreateActivityRequest = {
     message.activity_description = object.activity_description ?? "";
     message.start_time = object.start_time ?? undefined;
     message.application_id = object.application_id ?? "";
-    message.status = object.status ?? "";
+    message.status = object.status ?? 0;
     return message;
   },
 };

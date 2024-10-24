@@ -965,7 +965,7 @@ export interface ApiCreateActivityRequest {
   //
   start_time?: string;
   //
-  status?: string;
+  status?: number;
 }
 
 /**  */
@@ -2172,7 +2172,7 @@ export interface ApiUserActivity {
   //
   start_time?: string;
   //
-  status?: string;
+  status?: number;
   //
   user_id?: string;
 }
