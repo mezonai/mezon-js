@@ -126,6 +126,8 @@ import {
   ApiChannelSettingListResponse,
   ApiAddFavoriteChannelResponse,
   ApiRegistFcmDeviceTokenResponse,
+  ApiListUserActivity,
+  ApiCreateActivityRequest,
 } from "./api.gen";
 
 import { Session } from "./session";
@@ -4166,6 +4168,43 @@ export class Client {
 
     return this.apiClient
       .getListFavoriteChannel(session.token, clanId)
+      .then((response: any) => {
+        return response;
+      });
+  }
+  /** List activity */
+  async listActivity(
+    session: Session
+  ): Promise<ApiListUserActivity> {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired((Date.now() + this.expiredTimespanMs) / 1000)
+    ) {
+      await this.sessionRefresh(session);
+    }
+
+    return this.apiClient
+      .listActivity(session.token)
+      .then((response: any) => {
+        return response;
+      });
+  }
+
+  async createActiviy(
+    session: Session,
+    request: ApiCreateActivityRequest
+  ): Promise<any> {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired((Date.now() + this.expiredTimespanMs) / 1000)
+    ) {
+      await this.sessionRefresh(session);
+    }
+
+    return this.apiClient
+      .createActiviy(session.token, request)
       .then((response: any) => {
         return response;
       });
