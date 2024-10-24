@@ -31278,11 +31278,11 @@ export const UserActivity = {
           message.application_id = reader.string();
           continue;
         case 8:
-          if (tag !== 66) {
+          if (tag !== 64) {
             break;
           }
 
-          message.status = reader.string();
+          message.status = reader.int32();
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -31490,7 +31490,7 @@ export const CreateActivityRequest = {
           message.application_id = reader.string();
           continue;
         case 6:
-          if (tag !== 50) {
+          if (tag !== 48) {
             break;
           }
 
