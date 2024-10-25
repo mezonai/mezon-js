@@ -960,7 +960,11 @@ export interface UserPresence {
   /** Whether this presence generates persistent data/messages, if applicable for the stream type. */
   persistence: boolean;
   /** A user-set status message for this stream, if applicable. */
-  status: string | undefined;
+  status:
+    | string
+    | undefined;
+  /**  */
+  is_mobile: boolean;
 }
 
 /** A custom status presence */
@@ -7692,7 +7696,7 @@ export const StreamPresenceEvent = {
 };
 
 function createBaseUserPresence(): UserPresence {
-  return { user_id: "", session_id: "", username: "", persistence: false, status: undefined };
+  return { user_id: "", session_id: "", username: "", persistence: false, status: undefined, is_mobile: false };
 }
 
 export const UserPresence = {
@@ -7711,6 +7715,9 @@ export const UserPresence = {
     }
     if (message.status !== undefined) {
       StringValue.encode({ value: message.status! }, writer.uint32(42).fork()).ldelim();
+    }
+    if (message.is_mobile !== false) {
+      writer.uint32(48).bool(message.is_mobile);
     }
     return writer;
   },
@@ -7757,6 +7764,13 @@ export const UserPresence = {
 
           message.status = StringValue.decode(reader, reader.uint32()).value;
           continue;
+        case 6:
+          if (tag !== 48) {
+            break;
+          }
+
+          message.is_mobile = reader.bool();
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -7773,6 +7787,7 @@ export const UserPresence = {
       username: isSet(object.username) ? globalThis.String(object.username) : "",
       persistence: isSet(object.persistence) ? globalThis.Boolean(object.persistence) : false,
       status: isSet(object.status) ? String(object.status) : undefined,
+      is_mobile: isSet(object.is_mobile) ? globalThis.Boolean(object.is_mobile) : false,
     };
   },
 
@@ -7793,6 +7808,9 @@ export const UserPresence = {
     if (message.status !== undefined) {
       obj.status = message.status;
     }
+    if (message.is_mobile !== false) {
+      obj.is_mobile = message.is_mobile;
+    }
     return obj;
   },
 
@@ -7806,6 +7824,7 @@ export const UserPresence = {
     message.username = object.username ?? "";
     message.persistence = object.persistence ?? false;
     message.status = object.status ?? undefined;
+    message.is_mobile = object.is_mobile ?? false;
     return message;
   },
 };

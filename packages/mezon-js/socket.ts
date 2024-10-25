@@ -36,6 +36,8 @@ export interface Presence {
   node: string;
   /** The status of the user */
   status: string;
+  //
+  is_mobile: boolean
 }
 
 /** A response from a channel join operation. */
