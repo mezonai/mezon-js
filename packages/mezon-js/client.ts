@@ -283,6 +283,8 @@ export interface User {
   update_time?: string;
   /** The username of the user's account. */
   username?: string;
+  //
+  is_mobile?: boolean;
 }
 
 /** A collection of zero or more users. */
@@ -2161,6 +2163,7 @@ export class Client {
               timezone: f.user!.timezone,
               update_time: f.user!.update_time,
               username: f.user!.username,
+              is_mobile: f.user?.is_mobile,
               metadata: f.user!.metadata
                 ? JSON.parse(f.user!.metadata!)
                 : undefined,
