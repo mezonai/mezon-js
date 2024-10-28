@@ -128,6 +128,9 @@ import {
   ApiRegistFcmDeviceTokenResponse,
   ApiListUserActivity,
   ApiCreateActivityRequest,
+  ApiLoginIDResponse,
+  ApiLoginRequest,
+  ApiConfirmLoginRequest,
 } from "./api.gen";
 
 import { Session } from "./session";
@@ -4208,6 +4211,68 @@ export class Client {
 
     return this.apiClient
       .createActiviy(session.token, request)
+      .then((response: any) => {
+        return response;
+      });
+  }
+
+  async createQRLogin(requet: ApiLoginRequest): Promise<ApiLoginIDResponse> {
+    const apiSession = await this.apiClient.createQRLogin(
+      this.serverkey,
+      "",
+      requet
+    );
+    const response = {
+      login_id: apiSession.login_id,
+      create_time_second: apiSession.create_time_second,
+
+    }
+    return response
+  }
+
+  async checkLoginRequest(requet: ApiConfirmLoginRequest): Promise<ApiSession> {
+    const apiSession = await this.apiClient.checkLoginRequest(
+      this.serverkey,
+      "",
+      requet
+    );
+
+    return apiSession
+  }
+
+  async confirmLogin(
+    session: Session,
+    body: ApiConfirmLoginRequest
+  ): Promise<any> {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired((Date.now() + this.expiredTimespanMs) / 1000)
+    ) {
+      await this.sessionRefresh(session);
+    }
+
+    return this.apiClient
+      .confirmLogin(session.token, body)
+      .then((response: any) => {
+        return response;
+      });
+  }
+
+  async getInfoLoginRequest(
+    session: Session,
+    loginId: string
+  ): Promise<any> {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired((Date.now() + this.expiredTimespanMs) / 1000)
+    ) {
+      await this.sessionRefresh(session);
+    }
+
+    return this.apiClient
+      .getInfoLoginRequest(session.token, loginId)
       .then((response: any) => {
         return response;
       });

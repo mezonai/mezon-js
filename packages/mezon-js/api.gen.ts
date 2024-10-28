@@ -953,6 +953,12 @@ export interface ApiClanUserList {
 }
 
 /**  */
+export interface ApiConfirmLoginRequest {
+  //
+  login_id?: string;
+}
+
+/**  */
 export interface ApiCreateActivityRequest {
   //
   activity_description?: string;
@@ -1370,6 +1376,23 @@ export interface ApiListUserActivity {
   //
   activities?: Array<ApiUserActivity>;
 }
+/**  */
+export interface ApiLoginIDResponse {
+    //
+    address?: string;
+    //
+    create_time_second?: string;
+    //
+    login_id?: string;
+    //
+    platform?: string;
+    //
+    status?: number;
+    //
+    user_id?: string;
+    //
+    user_name?: string;
+}
 
 /**  */
 export interface ApiMarkAsReadRequest {
@@ -1409,6 +1432,14 @@ export interface ApiMessageMention {
   message_id?: string;
   /** Message sender, usually a user ID. */
   sender_id?: string;
+}
+
+/**  */
+export interface ApiLoginRequest {
+    //
+    address?: string;
+    //
+    platform?: string;
 }
 
 /**  */
@@ -2449,8 +2480,117 @@ export class MezonApi {
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("POST", options, bodyJson);
     if (basicAuthUsername) {
-      fetchOptions.headers["Authorization"] =
-        "Basic " + encode(basicAuthUsername + ":" + basicAuthPassword);
+			fetchOptions.headers["Authorization"] = "Basic " + encode(basicAuthUsername + ":" + basicAuthPassword);
+		}
+
+    return Promise.race([
+      fetch(fullUrl, fetchOptions).then((response) => {
+        if (response.status == 204) {
+          return response;
+        } else if (response.status >= 200 && response.status < 300) {
+          return response.json();
+        } else {
+          throw response;
+        }
+      }),
+      new Promise((_, reject) =>
+        setTimeout(reject, this.timeoutMs, "Request timed out.")
+      ),
+    ]);
+}
+
+  /**  */
+  checkLoginRequest(basicAuthUsername: string,
+    basicAuthPassword: string,
+      body:ApiConfirmLoginRequest,
+      options: any = {}): Promise<ApiSession> {
+    
+    if (body === null || body === undefined) {
+      throw new Error("'body' is a required parameter but is null or undefined.");
+    }
+    const urlPath = "/v2/account/authenticate/checklogin";
+    const queryParams = new Map<string, any>();
+
+    let bodyJson : string = "";
+    bodyJson = JSON.stringify(body || {});
+
+    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
+    const fetchOptions = buildFetchOptions("POST", options, bodyJson);
+		if (basicAuthUsername) {
+			fetchOptions.headers["Authorization"] = "Basic " + encode(basicAuthUsername + ":" + basicAuthPassword);
+		}
+
+    return Promise.race([
+      fetch(fullUrl, fetchOptions).then((response) => {
+        if (response.status == 204) {
+          return response;
+        } else if (response.status >= 200 && response.status < 300) {
+          return response.json();
+        } else {
+          throw response;
+        }
+      }),
+      new Promise((_, reject) =>
+        setTimeout(reject, this.timeoutMs, "Request timed out.")
+      ),
+    ]);
+}
+
+  /**  */
+  confirmLogin(bearerToken: string,
+      body:ApiConfirmLoginRequest,
+      options: any = {}): Promise<any> {
+    
+    if (body === null || body === undefined) {
+      throw new Error("'body' is a required parameter but is null or undefined.");
+    }
+    const urlPath = "/v2/account/authenticate/confirmlogin";
+    const queryParams = new Map<string, any>();
+
+    let bodyJson : string = "";
+    bodyJson = JSON.stringify(body || {});
+
+    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
+    const fetchOptions = buildFetchOptions("POST", options, bodyJson);
+    if (bearerToken) {
+        fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+    }
+
+    return Promise.race([
+      fetch(fullUrl, fetchOptions).then((response) => {
+        if (response.status == 204) {
+          return response;
+        } else if (response.status >= 200 && response.status < 300) {
+          return response.json();
+        } else {
+          throw response;
+        }
+      }),
+      new Promise((_, reject) =>
+        setTimeout(reject, this.timeoutMs, "Request timed out.")
+      ),
+    ]);
+}
+
+  /**  */
+  createQRLogin(basicAuthUsername: string,
+    basicAuthPassword: string,
+      body:ApiLoginRequest,
+      options: any = {}): Promise<ApiLoginIDResponse> {
+    
+    if (body === null || body === undefined) {
+      throw new Error("'body' is a required parameter but is null or undefined.");
+    }
+    const urlPath = "/v2/account/authenticate/createqrlogin";
+    const queryParams = new Map<string, any>();
+
+    let bodyJson : string = "";
+    bodyJson = JSON.stringify(body || {});
+
+    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
+    const fetchOptions = buildFetchOptions("POST", options, bodyJson);
+		if (basicAuthUsername) {
+			fetchOptions.headers["Authorization"] = "Basic " + encode(basicAuthUsername + ":" + basicAuthPassword);
     }
 
     return Promise.race([
@@ -2721,6 +2861,39 @@ export class MezonApi {
     if (basicAuthUsername) {
       fetchOptions.headers["Authorization"] =
         "Basic " + encode(basicAuthUsername + ":" + basicAuthPassword);
+		}
+
+    return Promise.race([
+      fetch(fullUrl, fetchOptions).then((response) => {
+        if (response.status == 204) {
+          return response;
+        } else if (response.status >= 200 && response.status < 300) {
+          return response.json();
+        } else {
+          throw response;
+        }
+      }),
+      new Promise((_, reject) =>
+        setTimeout(reject, this.timeoutMs, "Request timed out.")
+      ),
+    ]);
+}
+
+  /**  */
+  getInfoLoginRequest(bearerToken: string,
+      loginId?:string,
+      options: any = {}): Promise<ApiLoginIDResponse> {
+    
+    const urlPath = "/v2/account/authenticate/getinfologin";
+    const queryParams = new Map<string, any>();
+    queryParams.set("login_id", loginId);
+
+    let bodyJson : string = "";
+
+    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
+    const fetchOptions = buildFetchOptions("GET", options, bodyJson);
+    if (bearerToken) {
+        fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
     }
 
     return Promise.race([
