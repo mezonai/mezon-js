@@ -155,6 +155,8 @@ export enum ChannelStreamMode {
   STREAM_MODE_CHANNEL = 2,
   STREAM_MODE_GROUP = 3,
   STREAM_MODE_DM = 4,
+  STREAM_MODE_CLAN = 5,
+  STREAM_MODE_THREAD = 6,
 }
 
 export enum NotificationType {
