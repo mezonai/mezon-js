@@ -2998,7 +2998,7 @@ export class Client {
   async createPinMessage(
     session: Session,
     request: ApiPinMessageRequest
-  ): Promise<boolean> {
+  ): Promise<ApiChannelMessageHeader> {
     if (
       this.autoRefreshSession &&
       session.refresh_token &&
@@ -3009,8 +3009,8 @@ export class Client {
 
     return this.apiClient
       .createPinMessage(session.token, request)
-      .then((response: any) => {
-        return response !== undefined;
+      .then((response: ApiChannelMessageHeader) => {
+        return Promise.resolve(response);
       });
   }
 
@@ -4119,11 +4119,10 @@ export class Client {
       });
   }
 
-  
   async addFavoriteChannel(
     session: Session,
     channelId: string,
-    clanId: string,
+    clanId: string
   ): Promise<ApiAddFavoriteChannelResponse> {
     if (
       this.autoRefreshSession &&
@@ -4136,7 +4135,7 @@ export class Client {
     return this.apiClient
       .addChannelFavorite(session.token, {
         channel_id: channelId,
-        clan_id: clanId
+        clan_id: clanId,
       })
       .then((response: ApiAddFavoriteChannelResponse) => {
         return response;
@@ -4162,10 +4161,7 @@ export class Client {
       });
   }
 
-  async getListFavoriteChannel(
-    session: Session,
-    clanId: string
-  ): Promise<any> {
+  async getListFavoriteChannel(session: Session, clanId: string): Promise<any> {
     if (
       this.autoRefreshSession &&
       session.refresh_token &&

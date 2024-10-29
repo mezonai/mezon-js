@@ -7409,15 +7409,12 @@ export class MezonApi {
   }
 
   /** set notification user channel. */
-  createPinMessage(
-    bearerToken: string,
-    body: ApiPinMessageRequest,
-    options: any = {}
-  ): Promise<any> {
+  createPinMessage(bearerToken: string,
+      body:ApiPinMessageRequest,
+      options: any = {}): Promise<ApiChannelMessageHeader> {
+    
     if (body === null || body === undefined) {
-      throw new Error(
-        "'body' is a required parameter but is null or undefined."
-      );
+      throw new Error("'body' is a required parameter but is null or undefined.");
     }
     const urlPath = "/v2/pinmessage/set";
     const queryParams = new Map<string, any>();
