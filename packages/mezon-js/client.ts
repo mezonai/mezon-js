@@ -131,6 +131,7 @@ import {
   ApiLoginIDResponse,
   ApiLoginRequest,
   ApiConfirmLoginRequest,
+  ApiUserActivity,
 } from "./api.gen";
 
 import { Session } from "./session";
@@ -4198,7 +4199,7 @@ export class Client {
   async createActiviy(
     session: Session,
     request: ApiCreateActivityRequest
-  ): Promise<any> {
+  ): Promise<ApiUserActivity> {
     if (
       this.autoRefreshSession &&
       session.refresh_token &&
