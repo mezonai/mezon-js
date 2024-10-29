@@ -2879,39 +2879,6 @@ export class MezonApi {
     ]);
 }
 
-  /**  */
-  getInfoLoginRequest(bearerToken: string,
-      loginId?:string,
-      options: any = {}): Promise<ApiLoginIDResponse> {
-    
-    const urlPath = "/v2/account/authenticate/getinfologin";
-    const queryParams = new Map<string, any>();
-    queryParams.set("login_id", loginId);
-
-    let bodyJson : string = "";
-
-    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
-    const fetchOptions = buildFetchOptions("GET", options, bodyJson);
-    if (bearerToken) {
-        fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-    }
-
-    return Promise.race([
-      fetch(fullUrl, fetchOptions).then((response) => {
-        if (response.status == 204) {
-          return response;
-        } else if (response.status >= 200 && response.status < 300) {
-          return response.json();
-        } else {
-          throw response;
-        }
-      }),
-      new Promise((_, reject) =>
-        setTimeout(reject, this.timeoutMs, "Request timed out.")
-      ),
-    ]);
-  }
-
   /** Authenticate a user with Google against the server. */
   authenticateGoogle(
     basicAuthUsername: string,

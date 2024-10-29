@@ -4229,14 +4229,21 @@ export class Client {
     return response
   }
 
-  async checkLoginRequest(requet: ApiConfirmLoginRequest): Promise<ApiSession> {
+  async checkLoginRequest(requet: ApiConfirmLoginRequest): Promise<Session | null> {
     const apiSession = await this.apiClient.checkLoginRequest(
       this.serverkey,
       "",
       requet
     );
+    if (!apiSession?.token) {
+      return null
+    }
+    return new Session(
+      apiSession.token || "",
+      apiSession.refresh_token || "",
+      apiSession.created || false
+    );
 
-    return apiSession
   }
 
   async confirmLogin(
@@ -4253,25 +4260,6 @@ export class Client {
 
     return this.apiClient
       .confirmLogin(session.token, body)
-      .then((response: any) => {
-        return response;
-      });
-  }
-
-  async getInfoLoginRequest(
-    session: Session,
-    loginId: string
-  ): Promise<any> {
-    if (
-      this.autoRefreshSession &&
-      session.refresh_token &&
-      session.isexpired((Date.now() + this.expiredTimespanMs) / 1000)
-    ) {
-      await this.sessionRefresh(session);
-    }
-
-    return this.apiClient
-      .getInfoLoginRequest(session.token, loginId)
       .then((response: any) => {
         return response;
       });
