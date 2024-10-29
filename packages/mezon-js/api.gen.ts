@@ -3822,7 +3822,7 @@ export class MezonApi {
   /** Create user activity */
   createActiviy(bearerToken: string,
       body:ApiCreateActivityRequest,
-      options: any = {}): Promise<any> {
+      options: any = {}): Promise<ApiUserActivity> {
     
     if (body === null || body === undefined) {
       throw new Error("'body' is a required parameter but is null or undefined.");
