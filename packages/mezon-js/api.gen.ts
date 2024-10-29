@@ -1870,7 +1870,7 @@ export interface ApiRpc {
 /**  */
 export interface ApiSearchMessageDocument {
   //
-  attachment?: string;
+  attachments?: Array<ApiMessageAttachment>;
   //
   avatar_url?: string;
   //The channel ID.
