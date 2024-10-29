@@ -81,10 +81,12 @@ export interface ApiAddAppRequest {
   appname?: string;
   //Creator of the app.
   creator_id?: string;
-  //
+  //Role of this app.
   role?: ApiAppRole;
   //The password.
   token?: string;
+  //Is shadow.
+  is_shadow?: boolean;
 }
 
 /**
