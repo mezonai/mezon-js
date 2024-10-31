@@ -734,6 +734,8 @@ export interface ApiChannelMessage {
   mode?: number;
   // hide editted
   hide_editted?: boolean;
+  // type
+  type?: number;
 }
 
 /**  */

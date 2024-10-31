@@ -235,6 +235,8 @@ export interface ChannelMessage {
   hide_editted?: boolean;
   //
   is_public?: boolean;
+  //
+  type?: number;
 }
 
 /** A list of channel messages, usually a result of a list operation. */
@@ -1445,6 +1447,7 @@ export class Client {
             create_time_seconds: m.create_time_seconds,
             update_time_seconds: m.update_time_seconds,
             hide_editted: m.hide_editted,
+            type: m.type,
           });
         });
         return Promise.resolve(result);
