@@ -1855,6 +1855,8 @@ export interface ChannelDescription {
   app_url: string;
   /** channel all message */
   is_mute: boolean;
+  /** the display name */
+  display_names: string;
 }
 
 /** A list of channel description, usually a result of a list operation. */
@@ -2775,8 +2777,10 @@ export interface AddAppRequest {
   token: string;
   /** Creator of the app. */
   creator_id: string;
-  /** Role of this app; */
+  /** Role of this app. */
   role: number;
+  /** Is shadow. */
+  is_shadow: boolean;
 }
 
 /** List (and optionally filter) users. */
@@ -16001,6 +16005,7 @@ function createBaseChannelDescription(): ChannelDescription {
     clan_name: "",
     app_url: "",
     is_mute: false,
+    display_names: "",
   };
 }
 
@@ -16088,6 +16093,9 @@ export const ChannelDescription = {
     }
     if (message.is_mute !== false) {
       writer.uint32(216).bool(message.is_mute);
+    }
+    if (message.display_names !== "") {
+      writer.uint32(226).string(message.display_names);
     }
     return writer;
   },
@@ -16298,6 +16306,13 @@ export const ChannelDescription = {
 
           message.is_mute = reader.bool();
           continue;
+        case 28:
+          if (tag !== 226) {
+            break;
+          }
+
+          message.display_names = reader.string();
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -16344,6 +16359,7 @@ export const ChannelDescription = {
       clan_name: isSet(object.clan_name) ? globalThis.String(object.clan_name) : "",
       app_url: isSet(object.app_url) ? globalThis.String(object.app_url) : "",
       is_mute: isSet(object.is_mute) ? globalThis.Boolean(object.is_mute) : false,
+      display_names: isSet(object.display_names) ? globalThis.String(object.display_names) : "",
     };
   },
 
@@ -16430,6 +16446,9 @@ export const ChannelDescription = {
     if (message.is_mute !== false) {
       obj.is_mute = message.is_mute;
     }
+    if (message.display_names !== "") {
+      obj.display_names = message.display_names;
+    }
     return obj;
   },
 
@@ -16469,6 +16488,7 @@ export const ChannelDescription = {
     message.clan_name = object.clan_name ?? "";
     message.app_url = object.app_url ?? "";
     message.is_mute = object.is_mute ?? false;
+    message.display_names = object.display_names ?? "";
     return message;
   },
 };
@@ -26137,7 +26157,7 @@ export const AppList = {
 };
 
 function createBaseAddAppRequest(): AddAppRequest {
-  return { appname: "", token: "", creator_id: "", role: 0 };
+  return { appname: "", token: "", creator_id: "", role: 0, is_shadow: false };
 }
 
 export const AddAppRequest = {
@@ -26153,6 +26173,9 @@ export const AddAppRequest = {
     }
     if (message.role !== 0) {
       writer.uint32(32).int32(message.role);
+    }
+    if (message.is_shadow !== false) {
+      writer.uint32(40).bool(message.is_shadow);
     }
     return writer;
   },
@@ -26192,6 +26215,13 @@ export const AddAppRequest = {
 
           message.role = reader.int32();
           continue;
+        case 5:
+          if (tag !== 40) {
+            break;
+          }
+
+          message.is_shadow = reader.bool();
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -26207,6 +26237,7 @@ export const AddAppRequest = {
       token: isSet(object.token) ? globalThis.String(object.token) : "",
       creator_id: isSet(object.creator_id) ? globalThis.String(object.creator_id) : "",
       role: isSet(object.role) ? globalThis.Number(object.role) : 0,
+      is_shadow: isSet(object.is_shadow) ? globalThis.Boolean(object.is_shadow) : false,
     };
   },
 
@@ -26224,6 +26255,9 @@ export const AddAppRequest = {
     if (message.role !== 0) {
       obj.role = Math.round(message.role);
     }
+    if (message.is_shadow !== false) {
+      obj.is_shadow = message.is_shadow;
+    }
     return obj;
   },
 
@@ -26236,6 +26270,7 @@ export const AddAppRequest = {
     message.token = object.token ?? "";
     message.creator_id = object.creator_id ?? "";
     message.role = object.role ?? 0;
+    message.is_shadow = object.is_shadow ?? false;
     return message;
   },
 };
