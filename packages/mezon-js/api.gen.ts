@@ -4904,6 +4904,7 @@ export class MezonApi {
       type?:number,
       limit?:number,
       page?:number,
+      channelLabel?:string,
       options: any = {}): Promise<ApiChannelSettingListResponse> {
     
     if (clanId === null || clanId === undefined) {
@@ -4920,6 +4921,7 @@ export class MezonApi {
     queryParams.set("type", type);
     queryParams.set("limit", limit);
     queryParams.set("page", page);
+    queryParams.set("channel_label", channelLabel);
 
     let bodyJson : string = "";
 
