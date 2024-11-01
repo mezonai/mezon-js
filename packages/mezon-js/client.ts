@@ -3997,7 +3997,8 @@ export class Client {
     status?: number,
     type?: number,
     limit?: number,
-    page?: number
+    page?: number,
+    channel_label?: string
   ): Promise<ApiChannelSettingListResponse> {
     if (
       this.autoRefreshSession &&
@@ -4018,7 +4019,8 @@ export class Client {
         status,
         type,
         limit,
-        page
+        page,
+        channel_label
       )
       .then((response: any) => {
         return Promise.resolve(response);
