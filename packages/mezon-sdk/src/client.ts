@@ -117,6 +117,14 @@ export class MezonClient implements Client {
     return msgReaction;
   }
 
+  async joinClanChat(clan_id: string) {
+    try {
+      await this.socket.joinClanChat(clan_id);
+    } catch (error) {
+      throw (error)
+    }
+  }
+
   /** Authenticate a user with an ID against the server. */
   async authenticate() {
     return this.apiClient.mezonAuthenticate(this.apiKey, "", {
@@ -234,7 +242,7 @@ export class MezonClient implements Client {
   }
 
   ondisconnect(e: CloseEvent) {
-    console.log("disconnected", e, "reconnecting...");
+    console.log("Disconnected!", e?.reason, "Reconnecting...");
     this.retriesConnect();
   }
 
