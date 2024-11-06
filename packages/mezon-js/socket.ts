@@ -781,7 +781,7 @@ export interface StreamingEndedEvent {
   channel_id: string;
 }
 
-export interface SetPermissionChannelEvent {
+export interface PermissionSet {
   /** Role ID */
   role_id: string;
   /** User ID */
@@ -794,7 +794,7 @@ export interface SetPermissionChannelEvent {
   caller: string;
 }
 
-export interface EventUserPermissionChannel{
+export interface PermissionChangedEvent{
   user_id: string;
   channel_id: string;
 }
@@ -987,9 +987,9 @@ export interface Socket {
 
   onstreamingchannelleaved: (streaming_leaved_event: StreamingLeavedEvent) => void;
 
-  onsetpermissionchannel: (set_permission_channel_event: SetPermissionChannelEvent) => void;
+  onsetpermissionchannel: (permission_set_event: PermissionSet) => void;
 
-  onuserpermissionchannel: (event_user_permission_channel: EventUserPermissionChannel) => void;
+  onuserpermissionchannel: (permission_changed_event: PermissionChangedEvent) => void;
 }
 
 /** Reports an error received from a socket message. */
@@ -1189,10 +1189,10 @@ export class DefaultSocket implements Socket {
           this.onstreamingchanneljoined(<StreamingJoinedEvent>message.streaming_joined_event);
         } else if(message.streaming_leaved_event){
           this.onstreamingchannelleaved(<StreamingLeavedEvent>message.streaming_leaved_event);
-        } else if(message.set_permission_channel_event){
-          this.onsetpermissionchannel(<SetPermissionChannelEvent>message.set_permission_channel_event);
-        } else if(message.event_user_permission_channel){
-          this.onuserpermissionchannel(<EventUserPermissionChannel>message.event_user_permission_channel);
+        } else if(message.permission_set_event){
+          this.onsetpermissionchannel(<PermissionSet>message.permission_set_event);
+        } else if(message.permission_changed_event){
+          this.onuserpermissionchannel(<PermissionChangedEvent>message.permission_changed_event);
         } else {
           if (this.verbose && window && window.console) {
             console.log("Unrecognized message received: %o", message);
@@ -1501,15 +1501,15 @@ export class DefaultSocket implements Socket {
     }
   }
   
-  onsetpermissionchannel(set_permission_channel_event: SetPermissionChannelEvent){
+  onsetpermissionchannel(permission_set_event: PermissionSet){
     if (this.verbose && window && window.console) {
-      console.log(set_permission_channel_event);
+      console.log(permission_set_event);
     }
   }
 
-  onuserpermissionchannel(event_user_permission_channel: EventUserPermissionChannel){
+  onuserpermissionchannel(permission_changed_event: PermissionChangedEvent){
     if (this.verbose && window && window.console) {
-      console.log(event_user_permission_channel);
+      console.log(permission_changed_event);
     }
   }
 
