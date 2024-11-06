@@ -678,8 +678,6 @@ export interface ApiChannelDescription {
   metadata?: Array<string>;
   //
   about_me?: Array<string>;
-  //
-  display_names?: string;
 }
 
 /** A message sent on a channel. */
