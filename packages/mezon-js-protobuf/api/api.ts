@@ -2775,8 +2775,10 @@ export interface AddAppRequest {
   token: string;
   /** Creator of the app. */
   creator_id: string;
-  /** Role of this app; */
+  /** Role of this app. */
   role: number;
+  /** Is shadow. */
+  is_shadow: boolean;
 }
 
 /** List (and optionally filter) users. */
@@ -3134,7 +3136,11 @@ export interface ChannelSettingListRequest {
     | number
     | undefined;
   /** page */
-  page: number | undefined;
+  page:
+    | number
+    | undefined;
+  /** channel label */
+  channel_label: string;
 }
 
 export interface ChannelSettingItem {
@@ -3346,6 +3352,13 @@ export interface LoginRequest {
 export interface ConfirmLoginRequest {
   /** loginId */
   login_id: string;
+}
+
+export interface SendTokenRequest {
+  /** receiver */
+  receiver_id: string;
+  /** amount of token */
+  amount: number;
 }
 
 function createBaseAccount(): Account {
@@ -26137,7 +26150,7 @@ export const AppList = {
 };
 
 function createBaseAddAppRequest(): AddAppRequest {
-  return { appname: "", token: "", creator_id: "", role: 0 };
+  return { appname: "", token: "", creator_id: "", role: 0, is_shadow: false };
 }
 
 export const AddAppRequest = {
@@ -26153,6 +26166,9 @@ export const AddAppRequest = {
     }
     if (message.role !== 0) {
       writer.uint32(32).int32(message.role);
+    }
+    if (message.is_shadow !== false) {
+      writer.uint32(40).bool(message.is_shadow);
     }
     return writer;
   },
@@ -26192,6 +26208,13 @@ export const AddAppRequest = {
 
           message.role = reader.int32();
           continue;
+        case 5:
+          if (tag !== 40) {
+            break;
+          }
+
+          message.is_shadow = reader.bool();
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -26207,6 +26230,7 @@ export const AddAppRequest = {
       token: isSet(object.token) ? globalThis.String(object.token) : "",
       creator_id: isSet(object.creator_id) ? globalThis.String(object.creator_id) : "",
       role: isSet(object.role) ? globalThis.Number(object.role) : 0,
+      is_shadow: isSet(object.is_shadow) ? globalThis.Boolean(object.is_shadow) : false,
     };
   },
 
@@ -26224,6 +26248,9 @@ export const AddAppRequest = {
     if (message.role !== 0) {
       obj.role = Math.round(message.role);
     }
+    if (message.is_shadow !== false) {
+      obj.is_shadow = message.is_shadow;
+    }
     return obj;
   },
 
@@ -26236,6 +26263,7 @@ export const AddAppRequest = {
     message.token = object.token ?? "";
     message.creator_id = object.creator_id ?? "";
     message.role = object.role ?? 0;
+    message.is_shadow = object.is_shadow ?? false;
     return message;
   },
 };
@@ -29507,6 +29535,7 @@ function createBaseChannelSettingListRequest(): ChannelSettingListRequest {
     type: undefined,
     limit: undefined,
     page: undefined,
+    channel_label: "",
   };
 }
 
@@ -29538,6 +29567,9 @@ export const ChannelSettingListRequest = {
     }
     if (message.page !== undefined) {
       Int32Value.encode({ value: message.page! }, writer.uint32(74).fork()).ldelim();
+    }
+    if (message.channel_label !== "") {
+      writer.uint32(82).string(message.channel_label);
     }
     return writer;
   },
@@ -29612,6 +29644,13 @@ export const ChannelSettingListRequest = {
 
           message.page = Int32Value.decode(reader, reader.uint32()).value;
           continue;
+        case 10:
+          if (tag !== 82) {
+            break;
+          }
+
+          message.channel_label = reader.string();
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -29632,6 +29671,7 @@ export const ChannelSettingListRequest = {
       type: isSet(object.type) ? Number(object.type) : undefined,
       limit: isSet(object.limit) ? Number(object.limit) : undefined,
       page: isSet(object.page) ? Number(object.page) : undefined,
+      channel_label: isSet(object.channel_label) ? globalThis.String(object.channel_label) : "",
     };
   },
 
@@ -29664,6 +29704,9 @@ export const ChannelSettingListRequest = {
     if (message.page !== undefined) {
       obj.page = message.page;
     }
+    if (message.channel_label !== "") {
+      obj.channel_label = message.channel_label;
+    }
     return obj;
   },
 
@@ -29681,6 +29724,7 @@ export const ChannelSettingListRequest = {
     message.type = object.type ?? undefined;
     message.limit = object.limit ?? undefined;
     message.page = object.page ?? undefined;
+    message.channel_label = object.channel_label ?? "";
     return message;
   },
 };
@@ -31895,6 +31939,80 @@ export const ConfirmLoginRequest = {
   fromPartial<I extends Exact<DeepPartial<ConfirmLoginRequest>, I>>(object: I): ConfirmLoginRequest {
     const message = createBaseConfirmLoginRequest();
     message.login_id = object.login_id ?? "";
+    return message;
+  },
+};
+
+function createBaseSendTokenRequest(): SendTokenRequest {
+  return { receiver_id: "", amount: 0 };
+}
+
+export const SendTokenRequest = {
+  encode(message: SendTokenRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.receiver_id !== "") {
+      writer.uint32(10).string(message.receiver_id);
+    }
+    if (message.amount !== 0) {
+      writer.uint32(16).int32(message.amount);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): SendTokenRequest {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseSendTokenRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.receiver_id = reader.string();
+          continue;
+        case 2:
+          if (tag !== 16) {
+            break;
+          }
+
+          message.amount = reader.int32();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): SendTokenRequest {
+    return {
+      receiver_id: isSet(object.receiver_id) ? globalThis.String(object.receiver_id) : "",
+      amount: isSet(object.amount) ? globalThis.Number(object.amount) : 0,
+    };
+  },
+
+  toJSON(message: SendTokenRequest): unknown {
+    const obj: any = {};
+    if (message.receiver_id !== "") {
+      obj.receiver_id = message.receiver_id;
+    }
+    if (message.amount !== 0) {
+      obj.amount = Math.round(message.amount);
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<SendTokenRequest>, I>>(base?: I): SendTokenRequest {
+    return SendTokenRequest.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<SendTokenRequest>, I>>(object: I): SendTokenRequest {
+    const message = createBaseSendTokenRequest();
+    message.receiver_id = object.receiver_id ?? "";
+    message.amount = object.amount ?? 0;
     return message;
   },
 };
