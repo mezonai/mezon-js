@@ -799,6 +799,17 @@ export interface PermissionChangedEvent{
   channel_id: string;
 }
 
+export interface TokenSentEvent {
+  // sender id
+  sender_id: string;
+  // sender name
+  sender_name: string;
+  // receiver
+  receiver_id: string;
+  // amount of token
+  amount: number;
+}
+
 /** A socket connection to Mezon server. */
 export interface Socket {
   /** Connection is Open */
@@ -860,6 +871,9 @@ export interface Socket {
 
   /** send voice leaved */
   writeVoiceLeaved(id: string, clanId: string, voiceChannelId: string, voiceUserId: string) : Promise<VoiceLeavedEvent>;
+
+  /** send token */
+  sendToken(receiver_id: string, amount: number) : Promise<TokenSentEvent>;
 
   /** Handle disconnect events received from the socket. */
   ondisconnect: (evt: Event) => void;
@@ -1193,6 +1207,8 @@ export class DefaultSocket implements Socket {
           this.onsetpermissionchannel(<PermissionSet>message.permission_set_event);
         } else if(message.permission_changed_event){
           this.onuserpermissionchannel(<PermissionChangedEvent>message.permission_changed_event);
+        } else if (message.token_sent_event) {
+          this.ontokensent(<TokenSentEvent>message.token_sent_event);
         } else {
           if (this.verbose && window && window.console) {
             console.log("Unrecognized message received: %o", message);
@@ -1513,6 +1529,12 @@ export class DefaultSocket implements Socket {
     }
   }
 
+  ontokensent(tokenSentEvent: TokenSentEvent) {
+    if (this.verbose && window && window.console) {
+      console.log(tokenSentEvent);
+    }
+  }
+
   send(message: ChannelJoin | ChannelLeave | ChannelMessageSend | ChannelMessageUpdate | CustomStatusEvent |
     ChannelMessageRemove | MessageTypingEvent | LastSeenMessageEvent | Rpc | StatusFollow | StatusUnfollow | StatusUpdate | Ping, sendTimeout = DefaultSocket.DefaultSendTimeoutMs): Promise<any> {
     const untypedMessage = message as any;
@@ -1625,42 +1647,47 @@ export class DefaultSocket implements Socket {
 
   async writeMessageReaction(id: string, clan_id: string, channel_id: string, mode: number, is_public: boolean, message_id: string, emoji_id: string, emoji: string, count: number, message_sender_id: string, action_delete: boolean): Promise<ApiMessageReaction> {
     const response = await this.send({message_reaction_event: {id: id, clan_id: clan_id, channel_id: channel_id, mode: mode, is_public: is_public, message_id: message_id, emoji_id: emoji_id, emoji: emoji, count: count, message_sender_id: message_sender_id, action: action_delete}});
-    return response.message_reaction_event
+    return response.message_reaction_event;
   }
 
   async writeMessageTyping(clan_id: string, channel_id: string, mode: number, is_public: boolean): Promise<MessageTypingEvent> {
     const response = await this.send({message_typing_event: {clan_id: clan_id, channel_id: channel_id, mode:mode, is_public: is_public}});
-    return response.message_typing_event
+    return response.message_typing_event;
   }
 
   async writeLastSeenMessage(clan_id: string, channel_id: string, mode: number, message_id: string, timestamp_seconds: number): Promise<LastSeenMessageEvent> {
     const response = await this.send({last_seen_message_event: {clan_id: clan_id, channel_id: channel_id, mode: mode, message_id: message_id, timestamp_seconds: timestamp_seconds}});
-    return response.last_seen_message_event
+    return response.last_seen_message_event;
   }
 
   async writeLastPinMessage(clan_id: string, channel_id: string, mode: number, is_public: boolean, message_id: string, timestamp_seconds: number, operation: number): Promise<LastPinMessageEvent> {
     const response = await this.send({last_pin_message_event: {clan_id: clan_id, channel_id: channel_id, mode: mode, is_public: is_public, message_id: message_id, timestamp_seconds: timestamp_seconds, operation: operation}});
-    return response.last_pin_message_event
+    return response.last_pin_message_event;
   }
 
   async writeVoiceJoined(id: string, clanId: string, clanName: string, voiceChannelId: string, voiceChannelLabel: string, participant: string, lastScreenshot: string): Promise<VoiceJoinedEvent> {
     const response = await this.send({voice_joined_event: {clan_id: clanId, clan_name: clanName, id: id, participant: participant, voice_channel_id: voiceChannelId, voice_channel_label: voiceChannelLabel, last_screenshot: lastScreenshot}});
-    return response.voice_joined_event
+    return response.voice_joined_event;
   }
 
   async writeVoiceLeaved(id: string, clanId: string, voiceChannelId: string, voiceUserId: string): Promise<VoiceLeavedEvent> {
     const response = await this.send({voice_leaved_event: {id: id, clan_id: clanId, voice_channel_id: voiceChannelId, voice_user_id: voiceUserId}});
-    return response.voice_leaved_event
+    return response.voice_leaved_event;
   }
 
   async writeCustomStatus(clan_id: string, status: string): Promise<CustomStatusEvent> {
     const response = await this.send({custom_status_event: {clan_id: clan_id, status: status}});
-    return response.custom_status_event
+    return response.custom_status_event;
   }
   
   async checkDuplicateName(name: string, condition_id: string, type: number): Promise<CheckNameExistedEvent> {
     const response = await this.send({check_name_existed_event: {name: name, condition_id: condition_id, type: type}});
-    return response.check_name_existed_event
+    return response.check_name_existed_event;
+  }
+
+  async sendToken(receiver_id: string, amount: number) : Promise<TokenSentEvent> {
+    const response = await this.send({token_sent_event: {receiver_id: receiver_id, amount: amount}});
+    return response.token_sent_event;
   }
 
   private async pingPong(): Promise<void> {
