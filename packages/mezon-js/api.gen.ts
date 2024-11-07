@@ -1783,8 +1783,6 @@ export interface ApiPubKey {
 export interface ApiPushPubKeyRequest {
   //
   PK?: ApiPubKey;
-  //
-  backupGPG?: string;
 }
 
 /**  */
@@ -6671,7 +6669,7 @@ export class MezonApi {
   getKeyServer(bearerToken: string,
       options: any = {}): Promise<ApiGetKeyServerResp> {
     
-    const urlPath = "/v2/gpg/key_server";
+    const urlPath = "/v2/e2ee/key_server";
     const queryParams = new Map<string, any>();
 
     let bodyJson : string = "";
@@ -6696,7 +6694,7 @@ export class MezonApi {
         setTimeout(reject, this.timeoutMs, "Request timed out.")
       ),
     ]);
-}
+  }
 
   /** List HashtagDMList */
   hashtagDMList(

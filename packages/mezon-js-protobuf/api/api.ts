@@ -3374,7 +3374,6 @@ export interface PubKey {
 
 export interface PushPubKeyRequest {
   PK: PubKey | undefined;
-  backup_GPG: string;
 }
 
 export interface GetPubKeysRequest {
@@ -32160,16 +32159,13 @@ export const PubKey = {
 };
 
 function createBasePushPubKeyRequest(): PushPubKeyRequest {
-  return { PK: undefined, backup_GPG: "" };
+  return { PK: undefined };
 }
 
 export const PushPubKeyRequest = {
   encode(message: PushPubKeyRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.PK !== undefined) {
       PubKey.encode(message.PK, writer.uint32(10).fork()).ldelim();
-    }
-    if (message.backup_GPG !== "") {
-      writer.uint32(18).string(message.backup_GPG);
     }
     return writer;
   },
@@ -32188,13 +32184,6 @@ export const PushPubKeyRequest = {
 
           message.PK = PubKey.decode(reader, reader.uint32());
           continue;
-        case 2:
-          if (tag !== 18) {
-            break;
-          }
-
-          message.backup_GPG = reader.string();
-          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -32205,19 +32194,13 @@ export const PushPubKeyRequest = {
   },
 
   fromJSON(object: any): PushPubKeyRequest {
-    return {
-      PK: isSet(object.PK) ? PubKey.fromJSON(object.PK) : undefined,
-      backup_GPG: isSet(object.backup_GPG) ? globalThis.String(object.backup_GPG) : "",
-    };
+    return { PK: isSet(object.PK) ? PubKey.fromJSON(object.PK) : undefined };
   },
 
   toJSON(message: PushPubKeyRequest): unknown {
     const obj: any = {};
     if (message.PK !== undefined) {
       obj.PK = PubKey.toJSON(message.PK);
-    }
-    if (message.backup_GPG !== "") {
-      obj.backup_GPG = message.backup_GPG;
     }
     return obj;
   },
@@ -32228,7 +32211,6 @@ export const PushPubKeyRequest = {
   fromPartial<I extends Exact<DeepPartial<PushPubKeyRequest>, I>>(object: I): PushPubKeyRequest {
     const message = createBasePushPubKeyRequest();
     message.PK = (object.PK !== undefined && object.PK !== null) ? PubKey.fromPartial(object.PK) : undefined;
-    message.backup_GPG = object.backup_GPG ?? "";
     return message;
   },
 };
