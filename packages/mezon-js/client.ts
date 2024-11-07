@@ -135,6 +135,7 @@ import {
   ApiChanEncryptionMethod,
   ApiGetPubKeysResponse,
   ApiPubKey,
+  ApiGetKeyServerResp,
 } from "./api.gen";
 
 import { Session } from "./session";
@@ -4339,6 +4340,22 @@ export class Client {
     return this.apiClient
       .pushPubKey(session.token, { PK: PK, backupGPG: backupCGP })
       .then((response: ApiGetPubKeysResponse) => {
+        return response;
+      });
+  }
+
+  async getKeyServer(session: Session) : Promise<ApiGetKeyServerResp> {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired((Date.now() + this.expiredTimespanMs) / 1000)
+    ) {
+      await this.sessionRefresh(session);
+    }
+
+    return this.apiClient
+      .getKeyServer(session.token)
+      .then((response: ApiGetKeyServerResp) => {
         return response;
       });
   }
