@@ -4997,6 +4997,7 @@ export class MezonApi {
     limit?: number,
     state?: number,
     cursor?: string,
+    isCheckRole?: boolean,
     options: any = {}
   ): Promise<ApiClanDescList> {
     const urlPath = "/v2/clandesc";
@@ -5004,6 +5005,7 @@ export class MezonApi {
     queryParams.set("limit", limit);
     queryParams.set("state", state);
     queryParams.set("cursor", cursor);
+    queryParams.set("is_check_role", isCheckRole);
 
     let bodyJson: string = "";
 

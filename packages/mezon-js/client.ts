@@ -1712,7 +1712,8 @@ export class Client {
     session: Session,
     limit?: number,
     state?: number,
-    cursor?: string
+    cursor?: string,
+    isCheckRole?: boolean
   ): Promise<ApiClanDescList> {
     if (
       this.autoRefreshSession &&
@@ -1723,7 +1724,7 @@ export class Client {
     }
 
     return this.apiClient
-      .listClanDescs(session.token, limit, state, cursor)
+      .listClanDescs(session.token, limit, state, cursor, isCheckRole)
       .then((response: ApiClanDescList) => {
         var result: ApiClanDescList = {
           clandesc: [],
