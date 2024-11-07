@@ -6667,6 +6667,37 @@ export class MezonApi {
     ]);
   }
 
+  /** get key server */
+  getKeyServer(bearerToken: string,
+      options: any = {}): Promise<ApiGetKeyServerResp> {
+    
+    const urlPath = "/v2/gpg/key_server";
+    const queryParams = new Map<string, any>();
+
+    let bodyJson : string = "";
+
+    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
+    const fetchOptions = buildFetchOptions("GET", options, bodyJson);
+    if (bearerToken) {
+        fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+    }
+
+    return Promise.race([
+      fetch(fullUrl, fetchOptions).then((response) => {
+        if (response.status == 204) {
+          return response;
+        } else if (response.status >= 200 && response.status < 300) {
+          return response.json();
+        } else {
+          throw response;
+        }
+      }),
+      new Promise((_, reject) =>
+        setTimeout(reject, this.timeoutMs, "Request timed out.")
+      ),
+    ]);
+}
+
   /** List HashtagDMList */
   hashtagDMList(
     bearerToken: string,
