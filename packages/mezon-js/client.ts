@@ -132,6 +132,9 @@ import {
   ApiLoginRequest,
   ApiConfirmLoginRequest,
   ApiUserActivity,
+  ApiChanEncryptionMethod,
+  ApiGetPubKeysResponse,
+  ApiPubKey,
 } from "./api.gen";
 
 import { Session } from "./session";
@@ -4266,4 +4269,78 @@ export class Client {
         return response;
       });
   }
+
+  async getChanEncryptionMethod(session: Session, 
+    channelId: string
+  ) : Promise<ApiChanEncryptionMethod> {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired((Date.now() + this.expiredTimespanMs) / 1000)
+    ) {
+      await this.sessionRefresh(session);
+    }
+
+    return this.apiClient
+      .getChanEncryptionMethod(session.token, channelId)
+      .then((response: ApiChanEncryptionMethod) => {
+        return response;
+      });
+  }
+
+  async setChanEncryptionMethod(session: Session,
+    channelId: string,
+    method: string) : Promise<any> {
+      if (
+        this.autoRefreshSession &&
+        session.refresh_token &&
+        session.isexpired((Date.now() + this.expiredTimespanMs) / 1000)
+      ) {
+        await this.sessionRefresh(session);
+      }
+  
+      return this.apiClient
+        .setChanEncryptionMethod(session.token, channelId, { method: method })
+        .then((response: any) => {
+          return response;
+        });
+    }
+
+  async getPubKeys(session: Session,
+    userIds: Array<string>
+  ) : Promise<ApiGetPubKeysResponse> {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired((Date.now() + this.expiredTimespanMs) / 1000)
+    ) {
+      await this.sessionRefresh(session);
+    }
+
+    return this.apiClient
+      .getPubKeys(session.token, userIds)
+      .then((response: ApiGetPubKeysResponse) => {
+        return response;
+      });
+  }
+
+  async pushPubKey(session: Session,
+    PK: ApiPubKey,
+    backupCGP?: string
+  ) : Promise<ApiGetPubKeysResponse> {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired((Date.now() + this.expiredTimespanMs) / 1000)
+    ) {
+      await this.sessionRefresh(session);
+    }
+
+    return this.apiClient
+      .pushPubKey(session.token, { PK: PK, backupGPG: backupCGP })
+      .then((response: ApiGetPubKeysResponse) => {
+        return response;
+      });
+  }
+
 }
