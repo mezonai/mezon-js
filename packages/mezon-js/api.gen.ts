@@ -37,6 +37,14 @@ export interface ClanUserListClanUser {
 }
 
 /**  */
+export interface GetPubKeysResponseUserPubKey {
+  //
+  PK?: ApiPubKey;
+  //
+  user_id?: string;
+}
+
+/**  */
 export interface CountClanBadgeResponseBadge {
   //
   clan_id?: string;
@@ -48,6 +56,23 @@ export interface CountClanBadgeResponseBadge {
 export interface MezonChangeChannelCategoryBody {
   //
   channel_id?: string;
+}
+
+
+/**  */
+export interface MezonChangeChannelCategoryBody {
+  //
+  channel_id?: string;
+}
+
+/**  */
+export interface MezonDeleteWebhookByIdBody {
+}
+
+/**  */
+export interface MezonSetChanEncryptionMethodBody {
+  //
+  method?: string;
 }
 
 /**  */
@@ -487,6 +512,14 @@ export interface ApiCategoryOrderUpdate {
   category_id?: string;
   //
   order?: number;
+}
+
+/**  */
+export interface ApiChanEncryptionMethod {
+  //
+  channel_id?: string;
+  //
+  method?: string;
 }
 
 export interface ApiListChannelAppsResponse {
@@ -1238,6 +1271,18 @@ export interface ApiFriendList {
 }
 
 /**  */
+export interface ApiGetKeyServerResp {
+  //
+  url?: string;
+}
+
+/**  */
+export interface ApiGetPubKeysResponse {
+  //
+  pub_keys?: Array<GetPubKeysResponseUserPubKey>;
+}
+
+/**  */
 export interface ApiGiveCoffeeEvent {
   //
   channel_id?: string;
@@ -1724,6 +1769,22 @@ export interface ApiPinMessageRequest {
 export interface ApiPinMessagesList {
   //
   pin_messages_list?: Array<ApiPinMessage>;
+}
+
+/**  */
+export interface ApiPubKey {
+  //
+  encr?: string;
+  //
+  sign?: string;
+}
+
+/**  */
+export interface ApiPushPubKeyRequest {
+  //
+  PK?: ApiPubKey;
+  //
+  backupGPG?: string;
 }
 
 /**  */
@@ -4552,6 +4613,85 @@ export class MezonApi {
       ),
     ]);
   }
+
+  /** get channel encryption method */
+  getChanEncryptionMethod(bearerToken: string,
+      channelId:string,
+      method?:string,
+      options: any = {}): Promise<ApiChanEncryptionMethod> {
+    
+    if (channelId === null || channelId === undefined) {
+      throw new Error("'channelId' is a required parameter but is null or undefined.");
+    }
+    const urlPath = "/v2/channel/{channelId}/encrypt_method"
+        .replace("{channelId}", encodeURIComponent(String(channelId)));
+    const queryParams = new Map<string, any>();
+    queryParams.set("method", method);
+
+    let bodyJson : string = "";
+
+    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
+    const fetchOptions = buildFetchOptions("GET", options, bodyJson);
+    if (bearerToken) {
+        fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+    }
+
+    return Promise.race([
+      fetch(fullUrl, fetchOptions).then((response) => {
+        if (response.status == 204) {
+          return response;
+        } else if (response.status >= 200 && response.status < 300) {
+          return response.json();
+        } else {
+          throw response;
+        }
+      }),
+      new Promise((_, reject) =>
+        setTimeout(reject, this.timeoutMs, "Request timed out.")
+      ),
+    ]);
+}
+
+  /** store channel encryption method */
+  setChanEncryptionMethod(bearerToken: string,
+      channelId:string,
+      body:MezonSetChanEncryptionMethodBody,
+      options: any = {}): Promise<any> {
+    
+    if (channelId === null || channelId === undefined) {
+      throw new Error("'channelId' is a required parameter but is null or undefined.");
+    }
+    if (body === null || body === undefined) {
+      throw new Error("'body' is a required parameter but is null or undefined.");
+    }
+    const urlPath = "/v2/channel/{channelId}/encrypt_method"
+        .replace("{channelId}", encodeURIComponent(String(channelId)));
+    const queryParams = new Map<string, any>();
+
+    let bodyJson : string = "";
+    bodyJson = JSON.stringify(body || {});
+
+    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
+    const fetchOptions = buildFetchOptions("POST", options, bodyJson);
+    if (bearerToken) {
+        fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+    }
+
+    return Promise.race([
+      fetch(fullUrl, fetchOptions).then((response) => {
+        if (response.status == 204) {
+          return response;
+        } else if (response.status >= 200 && response.status < 300) {
+          return response.json();
+        } else {
+          throw response;
+        }
+      }),
+      new Promise((_, reject) =>
+        setTimeout(reject, this.timeoutMs, "Request timed out.")
+      ),
+    ]);
+}
 
   /** Leave a channel the user is a member of. */
   leaveThread(bearerToken: string,
@@ -7414,6 +7554,75 @@ export class MezonApi {
       ),
     ]);
   }
+
+  /** get pubkey */
+  getPubKeys(bearerToken: string,
+    userIds?:Array<string>,
+    options: any = {}): Promise<ApiGetPubKeysResponse> {
+  
+  const urlPath = "/v2/pubkey";
+  const queryParams = new Map<string, any>();
+  queryParams.set("user_ids", userIds);
+
+  let bodyJson : string = "";
+
+  const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
+  const fetchOptions = buildFetchOptions("GET", options, bodyJson);
+  if (bearerToken) {
+      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+  }
+
+  return Promise.race([
+    fetch(fullUrl, fetchOptions).then((response) => {
+      if (response.status == 204) {
+        return response;
+      } else if (response.status >= 200 && response.status < 300) {
+        return response.json();
+      } else {
+        throw response;
+      }
+    }),
+    new Promise((_, reject) =>
+      setTimeout(reject, this.timeoutMs, "Request timed out.")
+    ),
+  ]);
+}
+
+/** store pubkey for e2ee */
+pushPubKey(bearerToken: string,
+    body:ApiPushPubKeyRequest,
+    options: any = {}): Promise<any> {
+  
+  if (body === null || body === undefined) {
+    throw new Error("'body' is a required parameter but is null or undefined.");
+  }
+  const urlPath = "/v2/pubkey/push";
+  const queryParams = new Map<string, any>();
+
+  let bodyJson : string = "";
+  bodyJson = JSON.stringify(body || {});
+
+  const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
+  const fetchOptions = buildFetchOptions("POST", options, bodyJson);
+  if (bearerToken) {
+      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+  }
+
+  return Promise.race([
+    fetch(fullUrl, fetchOptions).then((response) => {
+      if (response.status == 204) {
+        return response;
+      } else if (response.status >= 200 && response.status < 300) {
+        return response.json();
+      } else {
+        throw response;
+      }
+    }),
+    new Promise((_, reject) =>
+      setTimeout(reject, this.timeoutMs, "Request timed out.")
+    ),
+  ]);
+}
 
   /**  */
   addRolesChannelDesc(
