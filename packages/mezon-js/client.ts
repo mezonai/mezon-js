@@ -4326,8 +4326,7 @@ export class Client {
   }
 
   async pushPubKey(session: Session,
-    PK: ApiPubKey,
-    backupCGP?: string
+    PK: ApiPubKey
   ) : Promise<ApiGetPubKeysResponse> {
     if (
       this.autoRefreshSession &&
@@ -4338,7 +4337,7 @@ export class Client {
     }
 
     return this.apiClient
-      .pushPubKey(session.token, { PK: PK, backupGPG: backupCGP })
+      .pushPubKey(session.token, { PK: PK })
       .then((response: ApiGetPubKeysResponse) => {
         return response;
       });
