@@ -480,6 +480,26 @@ export interface ApiAppList {
   total_count?: number;
 }
 
+/**  */
+export interface ApiAuditLog {
+  //
+  action_log?: string;
+  //
+  clan_id?: string;
+  //
+  details?: string;
+  //
+  entity_id?: string;
+  //
+  entity_name?: string;
+  //
+  id?: string;
+  //
+  time_log?: string;
+  //
+  user_id?: string;
+}
+
 /** Authenticate against the server with a device ID. */
 export interface ApiAuthenticateRequest {
   //The App account details.
@@ -2366,6 +2386,18 @@ export interface MezonapiEvent {
 }
 
 /**  */
+export interface MezonapiListAuditLog {
+  //
+  logs?: Array<ApiAuditLog>;
+  //
+  page?: number;
+  //
+  page_size?: number;
+  //
+  total_count?: number;
+}
+
+/**  */
 export interface ProtobufAny {
   //
   type_url?: string;
@@ -4198,6 +4230,46 @@ export class MezonApi {
     ]);
 }
 
+  /**  */
+  listAuditLog(bearerToken: string,
+    actionLog?:string,
+    userId?:string,
+    clanId?:string,
+    page?:number,
+    pageSize?:number,
+    options: any = {}): Promise<MezonapiListAuditLog> {
+  
+  const urlPath = "/v2/audit_log";
+  const queryParams = new Map<string, any>();
+  queryParams.set("action_log", actionLog);
+  queryParams.set("user_id", userId);
+  queryParams.set("clan_id", clanId);
+  queryParams.set("page", page);
+  queryParams.set("page_size", pageSize);
+
+  let bodyJson : string = "";
+
+  const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
+  const fetchOptions = buildFetchOptions("GET", options, bodyJson);
+  if (bearerToken) {
+      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+  }
+
+  return Promise.race([
+    fetch(fullUrl, fetchOptions).then((response) => {
+      if (response.status == 204) {
+        return response;
+      } else if (response.status >= 200 && response.status < 300) {
+        return response.json();
+      } else {
+        throw response;
+      }
+    }),
+    new Promise((_, reject) =>
+      setTimeout(reject, this.timeoutMs, "Request timed out.")
+    ),
+  ]);
+}
   /**  */
   updateCategoryOrder(bearerToken: string,
       body:ApiUpdateCategoryOrderRequest,
