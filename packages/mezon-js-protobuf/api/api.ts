@@ -32568,6 +32568,402 @@ export const GetKeyServerResp = {
   },
 };
 
+function createBaseAuditLog(): AuditLog {
+  return {
+    id: "",
+    user_id: "",
+    clan_id: "",
+    action_log: "",
+    entity_name: "",
+    entity_id: "",
+    details: "",
+    time_log: undefined,
+  };
+}
+
+export const AuditLog = {
+  encode(message: AuditLog, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.id !== "") {
+      writer.uint32(10).string(message.id);
+    }
+    if (message.user_id !== "") {
+      writer.uint32(18).string(message.user_id);
+    }
+    if (message.clan_id !== "") {
+      writer.uint32(26).string(message.clan_id);
+    }
+    if (message.action_log !== "") {
+      writer.uint32(34).string(message.action_log);
+    }
+    if (message.entity_name !== "") {
+      writer.uint32(42).string(message.entity_name);
+    }
+    if (message.entity_id !== "") {
+      writer.uint32(50).string(message.entity_id);
+    }
+    if (message.details !== "") {
+      writer.uint32(58).string(message.details);
+    }
+    if (message.time_log !== undefined) {
+      Timestamp.encode(toTimestamp(message.time_log), writer.uint32(66).fork()).ldelim();
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): AuditLog {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseAuditLog();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.id = reader.string();
+          continue;
+        case 2:
+          if (tag !== 18) {
+            break;
+          }
+
+          message.user_id = reader.string();
+          continue;
+        case 3:
+          if (tag !== 26) {
+            break;
+          }
+
+          message.clan_id = reader.string();
+          continue;
+        case 4:
+          if (tag !== 34) {
+            break;
+          }
+
+          message.action_log = reader.string();
+          continue;
+        case 5:
+          if (tag !== 42) {
+            break;
+          }
+
+          message.entity_name = reader.string();
+          continue;
+        case 6:
+          if (tag !== 50) {
+            break;
+          }
+
+          message.entity_id = reader.string();
+          continue;
+        case 7:
+          if (tag !== 58) {
+            break;
+          }
+
+          message.details = reader.string();
+          continue;
+        case 8:
+          if (tag !== 66) {
+            break;
+          }
+
+          message.time_log = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): AuditLog {
+    return {
+      id: isSet(object.id) ? globalThis.String(object.id) : "",
+      user_id: isSet(object.user_id) ? globalThis.String(object.user_id) : "",
+      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
+      action_log: isSet(object.action_log) ? globalThis.String(object.action_log) : "",
+      entity_name: isSet(object.entity_name) ? globalThis.String(object.entity_name) : "",
+      entity_id: isSet(object.entity_id) ? globalThis.String(object.entity_id) : "",
+      details: isSet(object.details) ? globalThis.String(object.details) : "",
+      time_log: isSet(object.time_log) ? fromJsonTimestamp(object.time_log) : undefined,
+    };
+  },
+
+  toJSON(message: AuditLog): unknown {
+    const obj: any = {};
+    if (message.id !== "") {
+      obj.id = message.id;
+    }
+    if (message.user_id !== "") {
+      obj.user_id = message.user_id;
+    }
+    if (message.clan_id !== "") {
+      obj.clan_id = message.clan_id;
+    }
+    if (message.action_log !== "") {
+      obj.action_log = message.action_log;
+    }
+    if (message.entity_name !== "") {
+      obj.entity_name = message.entity_name;
+    }
+    if (message.entity_id !== "") {
+      obj.entity_id = message.entity_id;
+    }
+    if (message.details !== "") {
+      obj.details = message.details;
+    }
+    if (message.time_log !== undefined) {
+      obj.time_log = message.time_log.toISOString();
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<AuditLog>, I>>(base?: I): AuditLog {
+    return AuditLog.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<AuditLog>, I>>(object: I): AuditLog {
+    const message = createBaseAuditLog();
+    message.id = object.id ?? "";
+    message.user_id = object.user_id ?? "";
+    message.clan_id = object.clan_id ?? "";
+    message.action_log = object.action_log ?? "";
+    message.entity_name = object.entity_name ?? "";
+    message.entity_id = object.entity_id ?? "";
+    message.details = object.details ?? "";
+    message.time_log = object.time_log ?? undefined;
+    return message;
+  },
+};
+
+function createBaseListAuditLog(): ListAuditLog {
+  return { total_count: 0, page: 0, page_size: 0, logs: [] };
+}
+
+export const ListAuditLog = {
+  encode(message: ListAuditLog, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.total_count !== 0) {
+      writer.uint32(8).int32(message.total_count);
+    }
+    if (message.page !== 0) {
+      writer.uint32(16).int32(message.page);
+    }
+    if (message.page_size !== 0) {
+      writer.uint32(24).int32(message.page_size);
+    }
+    for (const v of message.logs) {
+      AuditLog.encode(v!, writer.uint32(34).fork()).ldelim();
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): ListAuditLog {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseListAuditLog();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 8) {
+            break;
+          }
+
+          message.total_count = reader.int32();
+          continue;
+        case 2:
+          if (tag !== 16) {
+            break;
+          }
+
+          message.page = reader.int32();
+          continue;
+        case 3:
+          if (tag !== 24) {
+            break;
+          }
+
+          message.page_size = reader.int32();
+          continue;
+        case 4:
+          if (tag !== 34) {
+            break;
+          }
+
+          message.logs.push(AuditLog.decode(reader, reader.uint32()));
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): ListAuditLog {
+    return {
+      total_count: isSet(object.total_count) ? globalThis.Number(object.total_count) : 0,
+      page: isSet(object.page) ? globalThis.Number(object.page) : 0,
+      page_size: isSet(object.page_size) ? globalThis.Number(object.page_size) : 0,
+      logs: globalThis.Array.isArray(object?.logs) ? object.logs.map((e: any) => AuditLog.fromJSON(e)) : [],
+    };
+  },
+
+  toJSON(message: ListAuditLog): unknown {
+    const obj: any = {};
+    if (message.total_count !== 0) {
+      obj.total_count = Math.round(message.total_count);
+    }
+    if (message.page !== 0) {
+      obj.page = Math.round(message.page);
+    }
+    if (message.page_size !== 0) {
+      obj.page_size = Math.round(message.page_size);
+    }
+    if (message.logs?.length) {
+      obj.logs = message.logs.map((e) => AuditLog.toJSON(e));
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<ListAuditLog>, I>>(base?: I): ListAuditLog {
+    return ListAuditLog.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<ListAuditLog>, I>>(object: I): ListAuditLog {
+    const message = createBaseListAuditLog();
+    message.total_count = object.total_count ?? 0;
+    message.page = object.page ?? 0;
+    message.page_size = object.page_size ?? 0;
+    message.logs = object.logs?.map((e) => AuditLog.fromPartial(e)) || [];
+    return message;
+  },
+};
+
+function createBaseListAuditLogRequest(): ListAuditLogRequest {
+  return { action_log: "", user_id: "", clan_id: "", page: 0, page_size: 0 };
+}
+
+export const ListAuditLogRequest = {
+  encode(message: ListAuditLogRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.action_log !== "") {
+      writer.uint32(10).string(message.action_log);
+    }
+    if (message.user_id !== "") {
+      writer.uint32(18).string(message.user_id);
+    }
+    if (message.clan_id !== "") {
+      writer.uint32(26).string(message.clan_id);
+    }
+    if (message.page !== 0) {
+      writer.uint32(32).int32(message.page);
+    }
+    if (message.page_size !== 0) {
+      writer.uint32(40).int32(message.page_size);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): ListAuditLogRequest {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseListAuditLogRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.action_log = reader.string();
+          continue;
+        case 2:
+          if (tag !== 18) {
+            break;
+          }
+
+          message.user_id = reader.string();
+          continue;
+        case 3:
+          if (tag !== 26) {
+            break;
+          }
+
+          message.clan_id = reader.string();
+          continue;
+        case 4:
+          if (tag !== 32) {
+            break;
+          }
+
+          message.page = reader.int32();
+          continue;
+        case 5:
+          if (tag !== 40) {
+            break;
+          }
+
+          message.page_size = reader.int32();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): ListAuditLogRequest {
+    return {
+      action_log: isSet(object.action_log) ? globalThis.String(object.action_log) : "",
+      user_id: isSet(object.user_id) ? globalThis.String(object.user_id) : "",
+      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
+      page: isSet(object.page) ? globalThis.Number(object.page) : 0,
+      page_size: isSet(object.page_size) ? globalThis.Number(object.page_size) : 0,
+    };
+  },
+
+  toJSON(message: ListAuditLogRequest): unknown {
+    const obj: any = {};
+    if (message.action_log !== "") {
+      obj.action_log = message.action_log;
+    }
+    if (message.user_id !== "") {
+      obj.user_id = message.user_id;
+    }
+    if (message.clan_id !== "") {
+      obj.clan_id = message.clan_id;
+    }
+    if (message.page !== 0) {
+      obj.page = Math.round(message.page);
+    }
+    if (message.page_size !== 0) {
+      obj.page_size = Math.round(message.page_size);
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<ListAuditLogRequest>, I>>(base?: I): ListAuditLogRequest {
+    return ListAuditLogRequest.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<ListAuditLogRequest>, I>>(object: I): ListAuditLogRequest {
+    const message = createBaseListAuditLogRequest();
+    message.action_log = object.action_log ?? "";
+    message.user_id = object.user_id ?? "";
+    message.clan_id = object.clan_id ?? "";
+    message.page = object.page ?? 0;
+    message.page_size = object.page_size ?? 0;
+    return message;
+  },
+};
+
 function bytesFromBase64(b64: string): Uint8Array {
   if ((globalThis as any).Buffer) {
     return Uint8Array.from(globalThis.Buffer.from(b64, "base64"));

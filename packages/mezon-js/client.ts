@@ -4360,7 +4360,14 @@ export class Client {
       });
   }
 
-  async listAuditLog(session: Session) : Promise<MezonapiListAuditLog> {
+  async listAuditLog(
+    session: Session,
+    actionLog?:string,
+    userId?:string,
+    clanId?:string,
+    page?:number,
+    pageSize?:number,
+  ) : Promise<MezonapiListAuditLog> {
     if (
       this.autoRefreshSession &&
       session.refresh_token &&
@@ -4370,7 +4377,7 @@ export class Client {
     }
 
     return this.apiClient
-      .listAuditLog(session.token)
+      .listAuditLog(session.token, actionLog, userId, clanId, page, pageSize)
       .then((response: MezonapiListAuditLog) => {
         return response;
       });
