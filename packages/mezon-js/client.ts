@@ -136,6 +136,7 @@ import {
   ApiGetPubKeysResponse,
   ApiPubKey,
   ApiGetKeyServerResp,
+  MezonapiListAuditLog,
 } from "./api.gen";
 
 import { Session } from "./session";
@@ -4359,4 +4360,19 @@ export class Client {
       });
   }
 
+  async listAuditLog(session: Session) : Promise<MezonapiListAuditLog> {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired((Date.now() + this.expiredTimespanMs) / 1000)
+    ) {
+      await this.sessionRefresh(session);
+    }
+
+    return this.apiClient
+      .listAuditLog(session.token)
+      .then((response: MezonapiListAuditLog) => {
+        return response;
+      });
+  }
 }
