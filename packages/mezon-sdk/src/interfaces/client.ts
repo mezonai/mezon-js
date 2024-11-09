@@ -418,6 +418,17 @@ export interface ApiRegisterStreamingChannelResponse {
   streaming_url?: string;
 }
 
+export interface TokenSentEvent {
+  // sender id
+  sender_id: string;
+  // sender name
+  sender_name: string;
+  // receiver
+  receiver_id: string;
+  // amount of token
+  amount: number;
+}
+
 export interface Client {
   authenticate: () => Promise<string>;
   sendMessage: (clan_id: string, channel_id: string, mode: number, is_public: boolean, msg: ChannelMessageContent, mentions?: Array<ApiMessageMention>, attachments?: Array<ApiMessageAttachment>, ref?: Array<ApiMessageRef>) => Promise<ChannelMessageAck>;

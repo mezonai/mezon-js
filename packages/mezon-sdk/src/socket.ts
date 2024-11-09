@@ -15,7 +15,7 @@
  */
 
 import WebSocket, { CloseEvent, ErrorEvent } from "ws";
-import { ApiMessageAttachment, ApiMessageMention, ApiMessageReaction, ApiMessageRef, Channel, ChannelDescListEvent, ChannelJoin, ChannelLeave, ChannelMessageAck, ChannelMessageRemove, ChannelMessageSend, ChannelMessageUpdate, ClanJoin, ClanNameExistedEvent, CustomStatusEvent, EmojiListedEvent, HashtagDmListEvent, LastPinMessageEvent, LastSeenMessageEvent, MessageTypingEvent, NotificationCategorySettingEvent, NotificationChannelSettingEvent, NotificationClanSettingEvent, NotifiReactMessageEvent, Ping, Rpc, Socket, SocketError, StatusFollow, StatusUnfollow, StatusUpdate, StrickerListedEvent, VoiceJoinedEvent, VoiceLeavedEvent } from "./interfaces";
+import { ApiMessageAttachment, ApiMessageMention, ApiMessageReaction, ApiMessageRef, Channel, ChannelDescListEvent, ChannelJoin, ChannelLeave, ChannelMessageAck, ChannelMessageRemove, ChannelMessageSend, ChannelMessageUpdate, ClanJoin, ClanNameExistedEvent, CustomStatusEvent, EmojiListedEvent, HashtagDmListEvent, LastPinMessageEvent, LastSeenMessageEvent, MessageTypingEvent, NotificationCategorySettingEvent, NotificationChannelSettingEvent, NotificationClanSettingEvent, NotifiReactMessageEvent, Ping, Rpc, Socket, SocketError, StatusFollow, StatusUnfollow, StatusUpdate, StrickerListedEvent, TokenSentEvent, VoiceJoinedEvent, VoiceLeavedEvent } from "./interfaces";
 import {Session} from "./session";
 import { WebSocketAdapter, WebSocketAdapterText } from "./web_socket_adapter";
 import { InternalEventsSocket } from "./constants";
@@ -370,5 +370,10 @@ export class DefaultSocket implements Socket {
     // reuse the timeout as the interval for now.
     // we can separate them out into separate values if needed later.
     setTimeout(() => this.pingPong(), this._heartbeatTimeoutMs);
+  }
+
+  async sendToken(receiver_id: string, amount: number) : Promise<TokenSentEvent> {
+    const response = await this.send({token_sent_event: {receiver_id: receiver_id, amount: amount}});
+    return response.token_sent_event;
   }
 };

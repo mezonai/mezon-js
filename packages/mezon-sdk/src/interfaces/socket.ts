@@ -4,6 +4,7 @@ import {
   ApiMessageMention,
   ApiMessageReaction,
   ApiMessageRef,
+  TokenSentEvent,
 } from "./client";
 import { Session } from "../session";
 import { EventEmitter } from "stream";
@@ -59,7 +60,6 @@ export interface ChannelJoin {
     hidden: boolean;
     // is public
     is_public: boolean;
-    
   };
 }
 
@@ -773,6 +773,8 @@ export interface Socket {
    */
   onheartbeattimeout: () => void;
 
+  /** send token */
+  sendToken(receiver_id: string, amount: number): Promise<TokenSentEvent>;
 }
 
 /** Reports an error received from a socket message. */
