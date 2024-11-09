@@ -101,6 +101,11 @@ export class MezonClient implements Client {
     return msgACK;
   }
 
+  async sendToken(receiver_id: string, amount: number) {
+    const sendToken = await this.socket.sendToken(receiver_id, amount);
+    return sendToken;
+  }
+
   async reactionMessage(
     id: string,
     clan_id: string,
