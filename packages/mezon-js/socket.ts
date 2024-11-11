@@ -992,6 +992,8 @@ export interface Socket {
 
   checkDuplicateName(name: string, condition_id: string, type: number): Promise<CheckNameExistedEvent>;
 
+  handleMessageButtonClick: (message_button_clicked: MessageButtonClicked) => void;
+
   oneventcreated: (clan_event_created: ApiCreateEventRequest) => void;
 
   oncoffeegiven: (give_coffee_event: ApiGiveCoffeeEvent) => void;
@@ -1012,7 +1014,7 @@ export interface Socket {
 
   onpermissionchanged: (permission_changed_event: PermissionChangedEvent) => void;
 
-  handleMessageButtonClick: (message_button_clicked: MessageButtonClicked) => void;
+  ontokensent: (token: TokenSentEvent) => void;
 }
 
 /** Reports an error received from a socket message. */
