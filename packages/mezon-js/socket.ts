@@ -1012,7 +1012,11 @@ export interface Socket {
 
   onpermissionchanged: (permission_changed_event: PermissionChangedEvent) => void;
 
+<<<<<<< Updated upstream
   handleMessageButtonClick: (message_button_clicked: MessageButtonClicked) => void;
+=======
+  ontokensent: (token: TokenSentEvent) => void;
+>>>>>>> Stashed changes
 }
 
 /** Reports an error received from a socket message. */
