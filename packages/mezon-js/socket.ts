@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
-import { ApiChannelMessageHeader, ApiCreateEventRequest, ApiGiveCoffeeEvent, ApiMessageAttachment, ApiMessageMention, ApiMessageReaction, ApiMessageRef, ApiNotification, ApiPermissionUpdate, ApiRole, ApiRpc} from "./api.gen";
-import {Session} from "./session";
-import {ChannelMessage, Notification} from "./client";
-import {WebSocketAdapter, WebSocketAdapterText} from "./web_socket_adapter"
+import { ApiChannelMessageHeader, ApiCreateEventRequest, ApiGiveCoffeeEvent, ApiMessageAttachment, ApiMessageMention, ApiMessageReaction, ApiMessageRef, ApiNotification, ApiPermissionUpdate, ApiRole, ApiRpc } from "./api.gen";
+import { Session } from "./session";
+import { ChannelMessage, Notification } from "./client";
+import { WebSocketAdapter, WebSocketAdapterText } from "./web_socket_adapter";
 
 /** Stores function references for resolve/reject with a DOM Promise. */
 interface PromiseExecutor {
@@ -809,6 +809,13 @@ export interface TokenSentEvent {
   // amount of token
   amount: number;
 }
+export interface MessageButtonClicked {
+  message_id: string;
+  channel_id: string;
+  button_id : string;
+  sender_id : string;
+  user_id : string;
+}
 
 /** A socket connection to Mezon server. */
 export interface Socket {
@@ -1004,6 +1011,8 @@ export interface Socket {
   onpermissionset: (permission_set_event: PermissionSet) => void;
 
   onpermissionchanged: (permission_changed_event: PermissionChangedEvent) => void;
+
+  handleMessageButtonClick: (message_button_clicked: MessageButtonClicked) => void;
 }
 
 /** Reports an error received from a socket message. */
@@ -1209,6 +1218,8 @@ export class DefaultSocket implements Socket {
           this.onpermissionchanged(<PermissionChangedEvent>message.permission_changed_event);
         } else if (message.token_sent_event) {
           this.ontokensent(<TokenSentEvent>message.token_sent_event);
+        } else if (message.message_button_clicked){
+          this.handleMessageButtonClick(<MessageButtonClicked>message.message_button_clicked)
         } else {
           if (this.verbose && window && window.console) {
             console.log("Unrecognized message received: %o", message);
@@ -1532,6 +1543,12 @@ export class DefaultSocket implements Socket {
   ontokensent(tokenSentEvent: TokenSentEvent) {
     if (this.verbose && window && window.console) {
       console.log(tokenSentEvent);
+    }
+  }
+
+  handleMessageButtonClick(messageButtonClicked: MessageButtonClicked) {
+    if (this.verbose && window && window.console) {
+      console.log(messageButtonClicked);
     }
   }
 
