@@ -2885,7 +2885,7 @@ export class Client {
   /** Set default notification category*/
   async setNotificationCategory(
     session: Session,
-    request: ApiSetDefaultNotificationRequest
+    request: ApiSetNotificationRequest
   ): Promise<boolean> {
     if (
       this.autoRefreshSession &&

@@ -170,6 +170,15 @@ export interface LastPinMessageEvent {
   is_public: boolean;
 }
 
+export interface UnmuteEvent {
+  // channel id
+  channel_id: string;
+  // category_id
+  category_id: string;
+  // clan_id
+  clan_id: string;
+}
+
 /** Last seen message by user */
 export interface LastSeenMessageEvent {
   // The clan id
@@ -1014,6 +1023,8 @@ export interface Socket {
 
   onpermissionchanged: (permission_changed_event: PermissionChangedEvent) => void;
 
+  onunmuteevent: (unmute_event: UnmuteEvent) => void;
+
   ontokensent: (token: TokenSentEvent) => void;
 }
 
@@ -1218,6 +1229,8 @@ export class DefaultSocket implements Socket {
           this.onpermissionset(<PermissionSet>message.permission_set_event);
         } else if(message.permission_changed_event){
           this.onpermissionchanged(<PermissionChangedEvent>message.permission_changed_event);
+        } else if(message.unmute_event){
+          this.onunmuteevent(<UnmuteEvent>message.unmute_event);
         } else if (message.token_sent_event) {
           this.ontokensent(<TokenSentEvent>message.token_sent_event);
         } else if (message.message_button_clicked){
@@ -1539,6 +1552,12 @@ export class DefaultSocket implements Socket {
   onpermissionchanged(permission_changed_event: PermissionChangedEvent){
     if (this.verbose && window && window.console) {
       console.log(permission_changed_event);
+    }
+  }
+
+  onunmuteevent(unmute_event: UnmuteEvent){
+    if (this.verbose && window && window.console) {
+      console.log(unmute_event);
     }
   }
 
