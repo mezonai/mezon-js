@@ -2060,6 +2060,8 @@ export interface ApiSetNotificationRequest {
   notification_type?: number;
   //
   time_mute?: string;
+  // clan_id
+  clan_id?: string;
 }
 
 /**  */
