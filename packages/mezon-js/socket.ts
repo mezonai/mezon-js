@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { ApiChannelMessageHeader, ApiCreateEventRequest, ApiGiveCoffeeEvent, ApiMessageAttachment, ApiMessageMention, ApiMessageReaction, ApiMessageRef, ApiNotification, ApiPermissionUpdate, ApiRole, ApiRpc } from "./api.gen";
+import { ApiChannelMessageHeader, ApiCreateEventRequest, ApiGiveCoffeeEvent, ApiMessageAttachment, ApiMessageMention, ApiMessageReaction, ApiMessageRef, ApiNotification, ApiPermissionUpdate, ApiRole, ApiRpc, ApiTokenSentEvent } from "./api.gen";
 import { Session } from "./session";
 import { ChannelMessage, Notification } from "./client";
 import { WebSocketAdapter, WebSocketAdapterText } from "./web_socket_adapter";
@@ -808,16 +808,6 @@ export interface PermissionChangedEvent{
   channel_id: string;
 }
 
-export interface TokenSentEvent {
-  // sender id
-  sender_id: string;
-  // sender name
-  sender_name: string;
-  // receiver
-  receiver_id: string;
-  // amount of token
-  amount: number;
-}
 export interface MessageButtonClicked {
   message_id: string;
   channel_id: string;
@@ -887,9 +877,6 @@ export interface Socket {
 
   /** send voice leaved */
   writeVoiceLeaved(id: string, clanId: string, voiceChannelId: string, voiceUserId: string) : Promise<VoiceLeavedEvent>;
-
-  /** send token */
-  sendToken(receiver_id: string, amount: number) : Promise<TokenSentEvent>;
 
   /** Handle disconnect events received from the socket. */
   ondisconnect: (evt: Event) => void;
@@ -1025,7 +1012,7 @@ export interface Socket {
 
   onunmuteevent: (unmute_event: UnmuteEvent) => void;
 
-  ontokensent: (token: TokenSentEvent) => void;
+  ontokensent: (token: ApiTokenSentEvent) => void;
 }
 
 /** Reports an error received from a socket message. */
@@ -1232,7 +1219,7 @@ export class DefaultSocket implements Socket {
         } else if(message.unmute_event){
           this.onunmuteevent(<UnmuteEvent>message.unmute_event);
         } else if (message.token_sent_event) {
-          this.ontokensent(<TokenSentEvent>message.token_sent_event);
+          this.ontokensent(<ApiTokenSentEvent>message.token_sent_event);
         } else if (message.message_button_clicked){
           this.handleMessageButtonClick(<MessageButtonClicked>message.message_button_clicked)
         } else {
@@ -1561,7 +1548,7 @@ export class DefaultSocket implements Socket {
     }
   }
 
-  ontokensent(tokenSentEvent: TokenSentEvent) {
+  ontokensent(tokenSentEvent: ApiTokenSentEvent) {
     if (this.verbose && window && window.console) {
       console.log(tokenSentEvent);
     }
@@ -1721,11 +1708,6 @@ export class DefaultSocket implements Socket {
   async checkDuplicateName(name: string, condition_id: string, type: number): Promise<CheckNameExistedEvent> {
     const response = await this.send({check_name_existed_event: {name: name, condition_id: condition_id, type: type}});
     return response.check_name_existed_event;
-  }
-
-  async sendToken(receiver_id: string, amount: number) : Promise<TokenSentEvent> {
-    const response = await this.send({token_sent_event: {receiver_id: receiver_id, amount: amount}});
-    return response.token_sent_event;
   }
 
   private async pingPong(): Promise<void> {
