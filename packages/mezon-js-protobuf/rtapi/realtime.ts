@@ -19,6 +19,7 @@ import {
   PermissionUpdate,
   Role,
   Rpc,
+  TokenSentEvent,
 } from "../api/api";
 import { Timestamp } from "../google/protobuf/timestamp";
 import { BoolValue, Int32Value, StringValue } from "../google/protobuf/wrappers";
@@ -1141,17 +1142,6 @@ export interface PermissionSetEvent {
 export interface PermissionChangedEvent {
   user_id: string;
   channel_id: string;
-}
-
-export interface TokenSentEvent {
-  /** sender id */
-  sender_id: string;
-  /** sender name */
-  sender_name: string;
-  /** receiver */
-  receiver_id: string;
-  /** amount of token */
-  amount: number;
 }
 
 export interface MessageButtonClicked {
@@ -9558,110 +9548,6 @@ export const PermissionChangedEvent = {
     const message = createBasePermissionChangedEvent();
     message.user_id = object.user_id ?? "";
     message.channel_id = object.channel_id ?? "";
-    return message;
-  },
-};
-
-function createBaseTokenSentEvent(): TokenSentEvent {
-  return { sender_id: "", sender_name: "", receiver_id: "", amount: 0 };
-}
-
-export const TokenSentEvent = {
-  encode(message: TokenSentEvent, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.sender_id !== "") {
-      writer.uint32(10).string(message.sender_id);
-    }
-    if (message.sender_name !== "") {
-      writer.uint32(18).string(message.sender_name);
-    }
-    if (message.receiver_id !== "") {
-      writer.uint32(26).string(message.receiver_id);
-    }
-    if (message.amount !== 0) {
-      writer.uint32(32).int32(message.amount);
-    }
-    return writer;
-  },
-
-  decode(input: _m0.Reader | Uint8Array, length?: number): TokenSentEvent {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseTokenSentEvent();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
-          if (tag !== 10) {
-            break;
-          }
-
-          message.sender_id = reader.string();
-          continue;
-        case 2:
-          if (tag !== 18) {
-            break;
-          }
-
-          message.sender_name = reader.string();
-          continue;
-        case 3:
-          if (tag !== 26) {
-            break;
-          }
-
-          message.receiver_id = reader.string();
-          continue;
-        case 4:
-          if (tag !== 32) {
-            break;
-          }
-
-          message.amount = reader.int32();
-          continue;
-      }
-      if ((tag & 7) === 4 || tag === 0) {
-        break;
-      }
-      reader.skipType(tag & 7);
-    }
-    return message;
-  },
-
-  fromJSON(object: any): TokenSentEvent {
-    return {
-      sender_id: isSet(object.sender_id) ? globalThis.String(object.sender_id) : "",
-      sender_name: isSet(object.sender_name) ? globalThis.String(object.sender_name) : "",
-      receiver_id: isSet(object.receiver_id) ? globalThis.String(object.receiver_id) : "",
-      amount: isSet(object.amount) ? globalThis.Number(object.amount) : 0,
-    };
-  },
-
-  toJSON(message: TokenSentEvent): unknown {
-    const obj: any = {};
-    if (message.sender_id !== "") {
-      obj.sender_id = message.sender_id;
-    }
-    if (message.sender_name !== "") {
-      obj.sender_name = message.sender_name;
-    }
-    if (message.receiver_id !== "") {
-      obj.receiver_id = message.receiver_id;
-    }
-    if (message.amount !== 0) {
-      obj.amount = Math.round(message.amount);
-    }
-    return obj;
-  },
-
-  create<I extends Exact<DeepPartial<TokenSentEvent>, I>>(base?: I): TokenSentEvent {
-    return TokenSentEvent.fromPartial(base ?? ({} as any));
-  },
-  fromPartial<I extends Exact<DeepPartial<TokenSentEvent>, I>>(object: I): TokenSentEvent {
-    const message = createBaseTokenSentEvent();
-    message.sender_id = object.sender_id ?? "";
-    message.sender_name = object.sender_name ?? "";
-    message.receiver_id = object.receiver_id ?? "";
-    message.amount = object.amount ?? 0;
     return message;
   },
 };

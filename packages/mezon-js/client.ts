@@ -137,6 +137,7 @@ import {
   ApiPubKey,
   ApiGetKeyServerResp,
   MezonapiListAuditLog,
+  ApiTokenSentEvent,
 } from "./api.gen";
 
 import { Session } from "./session";
@@ -3513,6 +3514,22 @@ export class Client {
       .giveMeACoffee(session.token, request)
       .then((response: ApiAppList) => {
         return response !== undefined;
+      });
+  }
+
+  async updateWallets(session: Session, request: ApiTokenSentEvent) {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired((Date.now() + this.expiredTimespanMs) / 1000)
+    ) {
+      await this.sessionRefresh(session);
+    }
+
+    return this.apiClient
+      .sendToken(session.token, request)
+      .then((response: ApiTokenSentEvent) => {
+        return Promise.resolve(response);
       });
   }
 
