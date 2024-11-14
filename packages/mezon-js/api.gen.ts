@@ -2396,6 +2396,12 @@ export interface ApiWebhookListResponse {
   webhooks?: Array<ApiWebhook>;
 }
 
+/**  */
+export interface ApiWithdrawTokenRequest {
+  //
+  amount?: number;
+}
+
 /** Represents an event to be passed through the server to registered event handlers. */
 export interface MezonapiEvent {
   //True if the event came directly from a client call, false otherwise.
@@ -9451,6 +9457,42 @@ pushPubKey(bearerToken: string,
     const fetchOptions = buildFetchOptions("POST", options, bodyJson);
     if (bearerToken) {
       fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+    }
+
+    return Promise.race([
+      fetch(fullUrl, fetchOptions).then((response) => {
+        if (response.status == 204) {
+          return response;
+        } else if (response.status >= 200 && response.status < 300) {
+          return response.json();
+        } else {
+          throw response;
+        }
+      }),
+      new Promise((_, reject) =>
+        setTimeout(reject, this.timeoutMs, "Request timed out.")
+      ),
+    ]);
+  }
+
+  /** WithdrawToken */
+  withdrawToken(bearerToken: string,
+    body:ApiWithdrawTokenRequest,
+    options: any = {}): Promise<any> {
+  
+    if (body === null || body === undefined) {
+      throw new Error("'body' is a required parameter but is null or undefined.");
+    }
+    const urlPath = "/v2/withdrawtoken";
+    const queryParams = new Map<string, any>();
+
+    let bodyJson : string = "";
+    bodyJson = JSON.stringify(body || {});
+
+    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
+    const fetchOptions = buildFetchOptions("POST", options, bodyJson);
+    if (bearerToken) {
+        fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
     }
 
     return Promise.race([

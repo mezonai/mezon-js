@@ -139,6 +139,7 @@ import {
   MezonapiListAuditLog,
   ApiTokenSentEvent,
   MezonDeleteWebhookByIdBody,
+  ApiWithdrawTokenRequest,
 } from "./api.gen";
 
 import { Session } from "./session";
@@ -3529,6 +3530,22 @@ export class Client {
 
     return this.apiClient
       .sendToken(session.token, request)
+      .then((response: ApiTokenSentEvent) => {
+        return Promise.resolve(response);
+      });
+  }
+
+  async withdrawToken(session: Session, request: ApiWithdrawTokenRequest) {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired((Date.now() + this.expiredTimespanMs) / 1000)
+    ) {
+      await this.sessionRefresh(session);
+    }
+
+    return this.apiClient
+      .withdrawToken(session.token, request)
       .then((response: ApiTokenSentEvent) => {
         return Promise.resolve(response);
       });
