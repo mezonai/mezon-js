@@ -66,17 +66,18 @@ export interface MezonChangeChannelCategoryBody {
 }
 
 /**  */
-export interface MezonDeleteWebhookByIdBody {
-}
-
-/**  */
 export interface MezonSetChanEncryptionMethodBody {
   //
   method?: string;
 }
 
 /**  */
-export interface MezonDeleteWebhookByIdBody {}
+export interface MezonDeleteWebhookByIdBody {
+    //
+    channel_id?: string;
+    //
+    clan_id?: string;
+}
 
 /** Update app information. */
 export interface MezonUpdateAppBody {
@@ -272,6 +273,10 @@ export interface MezonUpdateWebhookByIdBody {
   avatar?: string;
   //
   channel_id?: string;
+  //
+  channel_id_update?: string;
+  //
+  clan_id?: string;
   //
   webhook_name?: string;
 }
@@ -2367,6 +2372,8 @@ export interface ApiWebhookCreateRequest {
   avatar?: string;
   //
   channel_id?: string;
+  //
+  clan_id?: string;
   //
   webhook_name?: string;
 }
@@ -9359,44 +9366,45 @@ pushPubKey(bearerToken: string,
   }
 
   /** disabled webhook */
-  deleteWebhookById(
-    bearerToken: string,
-    id: string,
-    options: any = {}
-  ): Promise<any> {
-    if (id === null || id === undefined) {
-      throw new Error("'id' is a required parameter but is null or undefined.");
-    }
-
-    const urlPath = "/v2/webhooks/{id}".replace(
-      "{id}",
-      encodeURIComponent(String(id))
-    );
-    const queryParams = new Map<string, any>();
-
-    let bodyJson: string = "";
-
-    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
-    const fetchOptions = buildFetchOptions("PATCH", options, bodyJson);
-    if (bearerToken) {
-      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-    }
-
-    return Promise.race([
-      fetch(fullUrl, fetchOptions).then((response) => {
-        if (response.status == 204) {
-          return response;
-        } else if (response.status >= 200 && response.status < 300) {
-          return response.json();
-        } else {
-          throw response;
-        }
-      }),
-      new Promise((_, reject) =>
-        setTimeout(reject, this.timeoutMs, "Request timed out.")
-      ),
-    ]);
+  deleteWebhookById(bearerToken: string,
+    id:string,
+    body:MezonDeleteWebhookByIdBody,
+    options: any = {}): Promise<any> {
+  
+  if (id === null || id === undefined) {
+    throw new Error("'id' is a required parameter but is null or undefined.");
   }
+  if (body === null || body === undefined) {
+    throw new Error("'body' is a required parameter but is null or undefined.");
+  }
+  const urlPath = "/v2/webhooks/{id}"
+      .replace("{id}", encodeURIComponent(String(id)));
+  const queryParams = new Map<string, any>();
+
+  let bodyJson : string = "";
+  bodyJson = JSON.stringify(body || {});
+
+  const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
+  const fetchOptions = buildFetchOptions("PATCH", options, bodyJson);
+  if (bearerToken) {
+      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+  }
+
+  return Promise.race([
+    fetch(fullUrl, fetchOptions).then((response) => {
+      if (response.status == 204) {
+        return response;
+      } else if (response.status >= 200 && response.status < 300) {
+        return response.json();
+      } else {
+        throw response;
+      }
+    }),
+    new Promise((_, reject) =>
+      setTimeout(reject, this.timeoutMs, "Request timed out.")
+    ),
+  ]);
+}
 
   buildFullUrl(
     basePath: string,

@@ -2657,6 +2657,7 @@ export interface WebhookCreateRequest {
   webhook_name: string;
   channel_id: string;
   avatar: string;
+  clan_id: string;
 }
 
 export interface WebhookListRequestById {
@@ -2664,14 +2665,24 @@ export interface WebhookListRequestById {
 }
 
 export interface WebhookUpdateRequestById {
+  /** webhook Id */
   id: string;
+  /** webhook name */
   webhook_name: string;
-  channel_id: string;
+  /** change channel_id of webhook */
+  channel_id_update: string;
+  /** webhook avatar */
   avatar: string;
+  /** channel id */
+  channel_id: string;
+  /** clan id */
+  clan_id: string;
 }
 
 export interface WebhookDeleteRequestById {
   id: string;
+  clan_id: string;
+  channel_id: string;
 }
 
 export interface WebhookListRequest {
@@ -3439,6 +3450,11 @@ export interface TokenSentEvent {
   amount: number;
   /** note */
   note: string;
+}
+
+export interface WithdrawTokenRequest {
+  /** amount of token */
+  amount: number;
 }
 
 function createBaseAccount(): Account {
@@ -24727,7 +24743,7 @@ export const Webhook = {
 };
 
 function createBaseWebhookCreateRequest(): WebhookCreateRequest {
-  return { webhook_name: "", channel_id: "", avatar: "" };
+  return { webhook_name: "", channel_id: "", avatar: "", clan_id: "" };
 }
 
 export const WebhookCreateRequest = {
@@ -24740,6 +24756,9 @@ export const WebhookCreateRequest = {
     }
     if (message.avatar !== "") {
       writer.uint32(26).string(message.avatar);
+    }
+    if (message.clan_id !== "") {
+      writer.uint32(34).string(message.clan_id);
     }
     return writer;
   },
@@ -24772,6 +24791,13 @@ export const WebhookCreateRequest = {
 
           message.avatar = reader.string();
           continue;
+        case 4:
+          if (tag !== 34) {
+            break;
+          }
+
+          message.clan_id = reader.string();
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -24786,6 +24812,7 @@ export const WebhookCreateRequest = {
       webhook_name: isSet(object.webhook_name) ? globalThis.String(object.webhook_name) : "",
       channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "",
       avatar: isSet(object.avatar) ? globalThis.String(object.avatar) : "",
+      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
     };
   },
 
@@ -24800,6 +24827,9 @@ export const WebhookCreateRequest = {
     if (message.avatar !== "") {
       obj.avatar = message.avatar;
     }
+    if (message.clan_id !== "") {
+      obj.clan_id = message.clan_id;
+    }
     return obj;
   },
 
@@ -24811,6 +24841,7 @@ export const WebhookCreateRequest = {
     message.webhook_name = object.webhook_name ?? "";
     message.channel_id = object.channel_id ?? "";
     message.avatar = object.avatar ?? "";
+    message.clan_id = object.clan_id ?? "";
     return message;
   },
 };
@@ -24873,7 +24904,7 @@ export const WebhookListRequestById = {
 };
 
 function createBaseWebhookUpdateRequestById(): WebhookUpdateRequestById {
-  return { id: "", webhook_name: "", channel_id: "", avatar: "" };
+  return { id: "", webhook_name: "", channel_id_update: "", avatar: "", channel_id: "", clan_id: "" };
 }
 
 export const WebhookUpdateRequestById = {
@@ -24884,11 +24915,17 @@ export const WebhookUpdateRequestById = {
     if (message.webhook_name !== "") {
       writer.uint32(18).string(message.webhook_name);
     }
-    if (message.channel_id !== "") {
-      writer.uint32(26).string(message.channel_id);
+    if (message.channel_id_update !== "") {
+      writer.uint32(26).string(message.channel_id_update);
     }
     if (message.avatar !== "") {
       writer.uint32(34).string(message.avatar);
+    }
+    if (message.channel_id !== "") {
+      writer.uint32(42).string(message.channel_id);
+    }
+    if (message.clan_id !== "") {
+      writer.uint32(50).string(message.clan_id);
     }
     return writer;
   },
@@ -24919,7 +24956,7 @@ export const WebhookUpdateRequestById = {
             break;
           }
 
-          message.channel_id = reader.string();
+          message.channel_id_update = reader.string();
           continue;
         case 4:
           if (tag !== 34) {
@@ -24927,6 +24964,20 @@ export const WebhookUpdateRequestById = {
           }
 
           message.avatar = reader.string();
+          continue;
+        case 5:
+          if (tag !== 42) {
+            break;
+          }
+
+          message.channel_id = reader.string();
+          continue;
+        case 6:
+          if (tag !== 50) {
+            break;
+          }
+
+          message.clan_id = reader.string();
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -24941,8 +24992,10 @@ export const WebhookUpdateRequestById = {
     return {
       id: isSet(object.id) ? globalThis.String(object.id) : "",
       webhook_name: isSet(object.webhook_name) ? globalThis.String(object.webhook_name) : "",
-      channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "",
+      channel_id_update: isSet(object.channel_id_update) ? globalThis.String(object.channel_id_update) : "",
       avatar: isSet(object.avatar) ? globalThis.String(object.avatar) : "",
+      channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "",
+      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
     };
   },
 
@@ -24954,11 +25007,17 @@ export const WebhookUpdateRequestById = {
     if (message.webhook_name !== "") {
       obj.webhook_name = message.webhook_name;
     }
-    if (message.channel_id !== "") {
-      obj.channel_id = message.channel_id;
+    if (message.channel_id_update !== "") {
+      obj.channel_id_update = message.channel_id_update;
     }
     if (message.avatar !== "") {
       obj.avatar = message.avatar;
+    }
+    if (message.channel_id !== "") {
+      obj.channel_id = message.channel_id;
+    }
+    if (message.clan_id !== "") {
+      obj.clan_id = message.clan_id;
     }
     return obj;
   },
@@ -24970,20 +25029,28 @@ export const WebhookUpdateRequestById = {
     const message = createBaseWebhookUpdateRequestById();
     message.id = object.id ?? "";
     message.webhook_name = object.webhook_name ?? "";
-    message.channel_id = object.channel_id ?? "";
+    message.channel_id_update = object.channel_id_update ?? "";
     message.avatar = object.avatar ?? "";
+    message.channel_id = object.channel_id ?? "";
+    message.clan_id = object.clan_id ?? "";
     return message;
   },
 };
 
 function createBaseWebhookDeleteRequestById(): WebhookDeleteRequestById {
-  return { id: "" };
+  return { id: "", clan_id: "", channel_id: "" };
 }
 
 export const WebhookDeleteRequestById = {
   encode(message: WebhookDeleteRequestById, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.id !== "") {
       writer.uint32(10).string(message.id);
+    }
+    if (message.clan_id !== "") {
+      writer.uint32(18).string(message.clan_id);
+    }
+    if (message.channel_id !== "") {
+      writer.uint32(26).string(message.channel_id);
     }
     return writer;
   },
@@ -25002,6 +25069,20 @@ export const WebhookDeleteRequestById = {
 
           message.id = reader.string();
           continue;
+        case 2:
+          if (tag !== 18) {
+            break;
+          }
+
+          message.clan_id = reader.string();
+          continue;
+        case 3:
+          if (tag !== 26) {
+            break;
+          }
+
+          message.channel_id = reader.string();
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -25012,13 +25093,23 @@ export const WebhookDeleteRequestById = {
   },
 
   fromJSON(object: any): WebhookDeleteRequestById {
-    return { id: isSet(object.id) ? globalThis.String(object.id) : "" };
+    return {
+      id: isSet(object.id) ? globalThis.String(object.id) : "",
+      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
+      channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "",
+    };
   },
 
   toJSON(message: WebhookDeleteRequestById): unknown {
     const obj: any = {};
     if (message.id !== "") {
       obj.id = message.id;
+    }
+    if (message.clan_id !== "") {
+      obj.clan_id = message.clan_id;
+    }
+    if (message.channel_id !== "") {
+      obj.channel_id = message.channel_id;
     }
     return obj;
   },
@@ -25029,6 +25120,8 @@ export const WebhookDeleteRequestById = {
   fromPartial<I extends Exact<DeepPartial<WebhookDeleteRequestById>, I>>(object: I): WebhookDeleteRequestById {
     const message = createBaseWebhookDeleteRequestById();
     message.id = object.id ?? "";
+    message.clan_id = object.clan_id ?? "";
+    message.channel_id = object.channel_id ?? "";
     return message;
   },
 };
@@ -33111,6 +33204,63 @@ export const TokenSentEvent = {
     message.receiver_id = object.receiver_id ?? "";
     message.amount = object.amount ?? 0;
     message.note = object.note ?? "";
+    return message;
+  },
+};
+
+function createBaseWithdrawTokenRequest(): WithdrawTokenRequest {
+  return { amount: 0 };
+}
+
+export const WithdrawTokenRequest = {
+  encode(message: WithdrawTokenRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.amount !== 0) {
+      writer.uint32(8).int32(message.amount);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): WithdrawTokenRequest {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseWithdrawTokenRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 8) {
+            break;
+          }
+
+          message.amount = reader.int32();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): WithdrawTokenRequest {
+    return { amount: isSet(object.amount) ? globalThis.Number(object.amount) : 0 };
+  },
+
+  toJSON(message: WithdrawTokenRequest): unknown {
+    const obj: any = {};
+    if (message.amount !== 0) {
+      obj.amount = Math.round(message.amount);
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<WithdrawTokenRequest>, I>>(base?: I): WithdrawTokenRequest {
+    return WithdrawTokenRequest.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<WithdrawTokenRequest>, I>>(object: I): WithdrawTokenRequest {
+    const message = createBaseWithdrawTokenRequest();
+    message.amount = object.amount ?? 0;
     return message;
   },
 };
