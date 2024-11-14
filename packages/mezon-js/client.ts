@@ -138,6 +138,7 @@ import {
   ApiGetKeyServerResp,
   MezonapiListAuditLog,
   ApiTokenSentEvent,
+  MezonDeleteWebhookByIdBody,
   ApiWithdrawTokenRequest,
 } from "./api.gen";
 
@@ -3181,7 +3182,7 @@ export class Client {
   }
 
   //**disabled webhook by id */
-  async deleteWebhookById(session: Session, id: string) {
+  async deleteWebhookById(session: Session, id: string, request: MezonDeleteWebhookByIdBody) {
     if (
       this.autoRefreshSession &&
       session.refresh_token &&
@@ -3191,7 +3192,7 @@ export class Client {
     }
 
     return this.apiClient
-      .deleteWebhookById(session.token, id)
+      .deleteWebhookById(session.token, id, request)
       .then((response: any) => {
         return response !== undefined;
       });
@@ -3518,7 +3519,7 @@ export class Client {
       });
   }
 
-  async updateWallets(session: Session, request: ApiTokenSentEvent) {
+  async sendToken(session: Session, request: ApiTokenSentEvent) {
     if (
       this.autoRefreshSession &&
       session.refresh_token &&
