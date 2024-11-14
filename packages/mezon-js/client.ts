@@ -139,6 +139,7 @@ import {
   MezonapiListAuditLog,
   ApiTokenSentEvent,
   ApiWithdrawTokenRequest,
+  ApiHashResizeImage,
 } from "./api.gen";
 
 import { Session } from "./session";
@@ -4413,6 +4414,34 @@ export class Client {
     return this.apiClient
       .listAuditLog(session.token, actionLog, userId, clanId, page, pageSize)
       .then((response: MezonapiListAuditLog) => {
+        return response;
+      });
+  }
+
+  async getHashResizeImage(
+    session: Session,
+    url?:string,
+    resize?:string,
+    width?:number,
+    height?:number,
+    enlarge?:number,
+    gravity?:string,
+    extension?:string,
+    proxyUrl?:string,
+    key?:string,
+    salt?:string
+  ) : Promise<ApiHashResizeImage> {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired((Date.now() + this.expiredTimespanMs) / 1000)
+    ) {
+      await this.sessionRefresh(session);
+    }
+
+    return this.apiClient
+      .getHashResizeImage(session.token, url, resize, width, height, enlarge, gravity, extension, proxyUrl, key, salt)
+      .then((response: ApiHashResizeImage) => {
         return response;
       });
   }

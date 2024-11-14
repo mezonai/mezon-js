@@ -1319,6 +1319,12 @@ export interface ApiGiveCoffeeEvent {
 }
 
 /**  */
+export interface ApiHashResizeImage {
+  //
+  hash_url?: string;
+}
+
+/**  */
 export interface ApiHashtagDm {
   //The channel id.
   channel_id?: string;
@@ -7746,7 +7752,56 @@ pushPubKey(bearerToken: string,
     ),
   ]);
 }
+  /**  */
+  getHashResizeImage(bearerToken: string,
+    url?:string,
+    resize?:string,
+    width?:number,
+    height?:number,
+    enlarge?:number,
+    gravity?:string,
+    extension?:string,
+    proxyUrl?:string,
+    key?:string,
+    salt?:string,
+    options: any = {}): Promise<ApiHashResizeImage> {
+  
+  const urlPath = "/v2/resize_image";
+  const queryParams = new Map<string, any>();
+  queryParams.set("url", url);
+  queryParams.set("resize", resize);
+  queryParams.set("width", width);
+  queryParams.set("height", height);
+  queryParams.set("enlarge", enlarge);
+  queryParams.set("gravity", gravity);
+  queryParams.set("extension", extension);
+  queryParams.set("proxy_url", proxyUrl);
+  queryParams.set("key", key);
+  queryParams.set("salt", salt);
 
+  let bodyJson : string = "";
+
+  const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
+  const fetchOptions = buildFetchOptions("GET", options, bodyJson);
+  if (bearerToken) {
+      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+  }
+
+  return Promise.race([
+    fetch(fullUrl, fetchOptions).then((response) => {
+      if (response.status == 204) {
+        return response;
+      } else if (response.status >= 200 && response.status < 300) {
+        return response.json();
+      } else {
+        throw response;
+      }
+    }),
+    new Promise((_, reject) =>
+      setTimeout(reject, this.timeoutMs, "Request timed out.")
+    ),
+  ]);
+}
   /**  */
   addRolesChannelDesc(
     bearerToken: string,
