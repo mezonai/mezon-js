@@ -15,44 +15,54 @@
  */
 
 import { decode, encode } from "base64-arraybuffer";
-import { btoa } from "js-base64"
+import { btoa } from "js-base64";
 
 /**
  * An interface used by Mezon's web socket to determine the payload protocol.
  */
 export interface WebSocketAdapter {
+  /**
+   * Dispatched when the web socket closes.
+   */
+  onClose: SocketCloseHandler | null;
 
-    /**
-     * Dispatched when the web socket closes.
-     */
-    onClose: SocketCloseHandler | null;
+  /**
+   * Dispatched when the web socket receives an error.
+   */
+  onError: SocketErrorHandler | null;
 
-    /**
-     * Dispatched when the web socket receives an error.
-     */
-    onError: SocketErrorHandler | null;
+  /**
+   * Dispatched when the web socket receives a normal message.
+   */
+  onMessage: SocketMessageHandler | null;
 
-    /**
-     * Dispatched when the web socket receives a normal message.
-     */
-    onMessage: SocketMessageHandler | null;
+  /**
+   * Dispatched when the web socket opens.
+   */
+  onOpen: SocketOpenHandler | null;
 
-    /**
-     * Dispatched when the web socket opens.
-     */
-    onOpen: SocketOpenHandler | null;
+  isOpen(): boolean;
+  close(): void;
+  connect(
+    scheme: string,
+    host: string,
+    port: string,
+    createStatus: boolean,
+    token: string,
+    platform: string,
+    signal?: AbortSignal
+  ): void;
+  send(message: any): void;
 
-    isOpen(): boolean;
-    close(): void;
-    connect(scheme: string, host: string, port: string, createStatus: boolean, token: string, platform: string, signal?: AbortSignal): void;
-    send(message: any): void;
+  // RTC Peer Connection
+  getRTCPeerConnection(): RTCPeerConnection;
 }
 
 /**
  * SocketCloseHandler defines a lambda that handles WebSocket close events.
  */
 export interface SocketCloseHandler {
-    (this: WebSocket, evt: CloseEvent): void;
+  (this: WebSocket, evt: CloseEvent): void;
 }
 
 /**
@@ -60,104 +70,136 @@ export interface SocketCloseHandler {
  * that indicate an error.
  */
 export interface SocketErrorHandler {
-    (this: WebSocket, evt: Event): void;
+  (this: WebSocket, evt: Event): void;
 }
 
 /**
  * SocketMessageHandler defines a lambda that handles valid WebSocket messages.
  */
 export interface SocketMessageHandler {
-    (message: any): void;
+  (message: any): void;
 }
 
 /**
  * SocketOpenHandler defines a lambda that handles WebSocket open events.
  */
 export interface SocketOpenHandler {
-    (this: WebSocket, evt: Event): void
+  (this: WebSocket, evt: Event): void;
+}
+
+export interface RTCPeerOntrackHandler {
+  (this: RTCPeerConnection, ev: RTCTrackEvent): any | null;
+}
+
+export interface RTCPeerOnicecandidateHandler {
+  (this: RTCPeerConnection, ev: RTCPeerConnectionIceEvent): any;
 }
 
 /**
  * A text-based socket adapter that accepts and transmits payloads over UTF-8.
  */
 export class WebSocketAdapterText implements WebSocketAdapter {
-    private _socket?: WebSocket;
+  private _socket?: WebSocket;
+  private _pcRef?: RTCPeerConnection;
 
-    get onClose(): SocketCloseHandler | null {
-        return this._socket!.onclose;
-    }
+  get onClose(): SocketCloseHandler | null {
+    return this._socket!.onclose;
+  }
 
-    set onClose(value: SocketCloseHandler | null) {
-        this._socket!.onclose = value;
-    }
+  set onClose(value: SocketCloseHandler | null) {
+    this._socket!.onclose = value;
+  }
 
-    get onError(): SocketErrorHandler | null {
-        return this._socket!.onerror;
-    }
+  get onError(): SocketErrorHandler | null {
+    return this._socket!.onerror;
+  }
 
-    set onError(value: SocketErrorHandler | null) {
-        this._socket!.onerror = value;
-    }
+  set onError(value: SocketErrorHandler | null) {
+    this._socket!.onerror = value;
+  }
 
-    get onMessage(): SocketMessageHandler | null {
-        return this._socket!.onmessage;
-    }
+  get onMessage(): SocketMessageHandler | null {
+    return this._socket!.onmessage;
+  }
 
-    set onMessage(value: SocketMessageHandler | null) {
-        if (value) {
-            this._socket!.onmessage = (evt: MessageEvent) => {
-                const message: any = JSON.parse(evt.data);
-                if (message.party_data && message.party_data.data) {
-                    message.party_data.data = new Uint8Array(decode(message.party_data.data));
-                }
-
-                value!(message);
-            };
-        }
-        else {
-            value = null;
-        }
-    }
-
-    get onOpen(): SocketOpenHandler | null {
-        return this._socket!.onopen;
-    }
-
-    set onOpen(value: SocketOpenHandler | null) {
-        this._socket!.onopen = value;
-    }
-
-    isOpen(): boolean {
-        return this._socket?.readyState == WebSocket.OPEN;
-    }
-
-    connect(scheme: string, host: string, port: string, createStatus: boolean, token: string, platform: string, signal?: AbortSignal): void {
-        if (signal) {
-            signal.addEventListener('abort', () => {
-                this.close();
-            });
-        }
-        const url = `${scheme}${host}:${port}/ws?lang=en&status=${encodeURIComponent(createStatus.toString())}&token=${encodeURIComponent(token)}&paltform=${encodeURIComponent(platform)}`;
-        this._socket = new WebSocket(url);
-    }
-
-    close() {
-        this._socket?.close();
-        this._socket = undefined;
-    }
-
-    send(msg: any): void {
-        if (msg.party_data_send) {
-            // according to protobuf docs, int64 is encoded to JSON as string.
-            msg.party_data_send.op_code = msg.party_data_send.op_code.toString();
-            let payload = msg.party_data_send.data;
-            if (payload && payload instanceof Uint8Array) {
-                msg.party_data_send.data = encode(payload.buffer);
-            } else if (payload) { // it's a string
-                msg.party_data_send.data = btoa(payload);
-            }
+  set onMessage(value: SocketMessageHandler | null) {
+    if (value) {
+      this._socket!.onmessage = (evt: MessageEvent) => {
+        const message: any = JSON.parse(evt.data);
+        if (message.party_data && message.party_data.data) {
+          message.party_data.data = new Uint8Array(
+            decode(message.party_data.data)
+          );
         }
 
-        this._socket!.send(JSON.stringify(msg));
+        value!(message);
+      };
+    } else {
+      value = null;
     }
+  }
+
+  get onOpen(): SocketOpenHandler | null {
+    return this._socket!.onopen;
+  }
+
+  set onOpen(value: SocketOpenHandler | null) {
+    this._socket!.onopen = value;
+  }
+
+  isOpen(): boolean {
+    return this._socket?.readyState == WebSocket.OPEN;
+  }
+
+  connect(
+    scheme: string,
+    host: string,
+    port: string,
+    createStatus: boolean,
+    token: string,
+    platform: string,
+    signal?: AbortSignal
+  ): void {
+    if (signal) {
+      signal.addEventListener("abort", () => {
+        this.close();
+      });
+    }
+    const url = `${scheme}${host}:${port}/ws?lang=en&status=${encodeURIComponent(
+      createStatus.toString()
+    )}&token=${encodeURIComponent(token)}&paltform=${encodeURIComponent(
+      platform
+    )}`;
+    this._socket = new WebSocket(url);
+    this._pcRef = new RTCPeerConnection({
+      iceServers: [{ urls: "stun:stun.l.google.com:19302" }],
+    });
+  }
+
+  close() {
+    this._pcRef?.close();
+    this._pcRef = undefined;
+    this._socket?.close();
+    this._socket = undefined;
+  }
+
+  send(msg: any): void {
+    if (msg.party_data_send) {
+      // according to protobuf docs, int64 is encoded to JSON as string.
+      msg.party_data_send.op_code = msg.party_data_send.op_code.toString();
+      let payload = msg.party_data_send.data;
+      if (payload && payload instanceof Uint8Array) {
+        msg.party_data_send.data = encode(payload.buffer);
+      } else if (payload) {
+        // it's a string
+        msg.party_data_send.data = btoa(payload);
+      }
+    }
+
+    this._socket!.send(JSON.stringify(msg));
+  }
+
+  getRTCPeerConnection(): RTCPeerConnection {
+    return this._pcRef!;
+  }
 }

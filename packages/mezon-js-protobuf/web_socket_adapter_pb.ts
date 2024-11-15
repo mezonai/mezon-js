@@ -14,108 +14,131 @@
  * limitations under the License.
  */
 
-import { WebSocketAdapter, SocketCloseHandler, SocketErrorHandler, SocketMessageHandler, SocketOpenHandler } from "../mezon-js/web_socket_adapter"
-import * as tsproto from "./rtapi/realtime"
+import {
+  WebSocketAdapter,
+  SocketCloseHandler,
+  SocketErrorHandler,
+  SocketMessageHandler,
+  SocketOpenHandler,
+} from "../mezon-js/web_socket_adapter";
+import * as tsproto from "./rtapi/realtime";
 
 /**
  * A protocol buffer socket adapter that accepts and transmits payloads using the protobuf binary wire format.
  */
 export class WebSocketAdapterPb implements WebSocketAdapter {
+  private _socket?: WebSocket;
+  private _pcRef?: RTCPeerConnection;
 
-    private _socket?: WebSocket;
+  constructor() {}
 
-    constructor() {
-    }
+  get onClose(): SocketCloseHandler | null {
+    return this._socket!.onclose;
+  }
 
-    get onClose(): SocketCloseHandler | null {
-        return this._socket!.onclose;
-    }
+  set onClose(value: SocketCloseHandler | null) {
+    this._socket!.onclose = value;
+  }
 
-    set onClose(value: SocketCloseHandler | null) {
-        this._socket!.onclose = value;
-    }
+  get onError(): SocketErrorHandler | null {
+    return this._socket!.onerror;
+  }
 
-    get onError(): SocketErrorHandler | null {
-        return this._socket!.onerror;
-    }
+  set onError(value: SocketErrorHandler | null) {
+    this._socket!.onerror = value;
+  }
 
-    set onError(value: SocketErrorHandler | null) {
-        this._socket!.onerror = value;
-    }
+  get onMessage(): SocketMessageHandler | null {
+    return this._socket!.onmessage;
+  }
 
-    get onMessage(): SocketMessageHandler | null {
-        return this._socket!.onmessage;
-    }
+  set onMessage(value: SocketMessageHandler | null) {
+    if (value) {
+      this._socket!.onmessage = (evt: MessageEvent) => {
+        const buffer: ArrayBuffer = evt.data;
+        const uintBuffer: Uint8Array = new Uint8Array(buffer);
+        const envelope = tsproto.Envelope.decode(uintBuffer);
 
-    set onMessage(value: SocketMessageHandler | null) {
-
-        if (value) {
-            this._socket!.onmessage = (evt: MessageEvent) => {
-                const buffer: ArrayBuffer = evt.data;
-                const uintBuffer: Uint8Array = new Uint8Array(buffer);
-                const envelope = tsproto.Envelope.decode(uintBuffer);
-
-                if (envelope.channel_message) {
-                    if (envelope.channel_message.code == undefined) {
-                        //protobuf plugin does not default-initialize missing Int32Value fields
-                        envelope.channel_message.code = 0;
-                    }
-                }
-
-                value!(envelope);
-            };
-        }
-        else {
-            value = null;
-        }
-    }
-
-    get onOpen(): SocketOpenHandler | null {
-        return this._socket!.onopen;
-    }
-
-    set onOpen(value: SocketOpenHandler | null) {
-        this._socket!.onopen = value;
-    }
-
-    isOpen(): boolean {
-        return this._socket?.readyState == WebSocket.OPEN;
-    }
-
-    close() {
-        this._socket?.close();
-        this._socket = undefined;
-    }
-
-    connect(scheme: string, host: string, port: string, createStatus: boolean, token: string, platform: string, signal?: AbortSignal): void {
-        if (signal) {
-            signal.addEventListener('abort', () => {
-               this.close();
-            });
-        }
-        const url = `${scheme}${host}:${port}/ws?lang=en&status=${encodeURIComponent(createStatus.toString())}&token=${encodeURIComponent(token)}&format=protobuf&platform=${encodeURIComponent(platform)}`;
-        this._socket = new WebSocket(url);
-        this._socket.binaryType = "arraybuffer";
-    }
-
-    send(msg: any): void {
-
-        if (msg.match_data_send) {
-            let payload = msg.match_data_send.data;
-            // can't send a string over protobuf
-            if (typeof payload == "string") {
-                msg.match_data_send.data = new TextEncoder().encode(payload);
-            }
-        } else if (msg.party_data_send) {
-            let payload = msg.party_data_send.data;
-            // can't send a string over protobuf
-            if (typeof payload == "string") {
-                msg.party_data_send.data = new TextEncoder().encode(payload);
-            }
+        if (envelope.channel_message) {
+          if (envelope.channel_message.code == undefined) {
+            //protobuf plugin does not default-initialize missing Int32Value fields
+            envelope.channel_message.code = 0;
+          }
         }
 
-        const envelopeWriter = tsproto.Envelope.encode(tsproto.Envelope.fromPartial(msg));
-        const encodedMsg = envelopeWriter.finish();
-        this._socket!.send(encodedMsg);
+        value!(envelope);
+      };
+    } else {
+      value = null;
     }
+  }
+
+  get onOpen(): SocketOpenHandler | null {
+    return this._socket!.onopen;
+  }
+
+  set onOpen(value: SocketOpenHandler | null) {
+    this._socket!.onopen = value;
+  }
+
+  isOpen(): boolean {
+    return this._socket?.readyState == WebSocket.OPEN;
+  }
+
+  close() {
+    this._socket?.close();
+    this._socket = undefined;
+  }
+
+  connect(
+    scheme: string,
+    host: string,
+    port: string,
+    createStatus: boolean,
+    token: string,
+    platform: string,
+    signal?: AbortSignal
+  ): void {
+    if (signal) {
+      signal.addEventListener("abort", () => {
+        this.close();
+      });
+    }
+    const url = `${scheme}${host}:${port}/ws?lang=en&status=${encodeURIComponent(
+      createStatus.toString()
+    )}&token=${encodeURIComponent(
+      token
+    )}&format=protobuf&platform=${encodeURIComponent(platform)}`;
+    this._socket = new WebSocket(url);
+    this._socket.binaryType = "arraybuffer";
+    this._pcRef = new RTCPeerConnection({
+      iceServers: [{ urls: "stun:stun.l.google.com:19302" }],
+    });
+  }
+
+  send(msg: any): void {
+    if (msg.match_data_send) {
+      let payload = msg.match_data_send.data;
+      // can't send a string over protobuf
+      if (typeof payload == "string") {
+        msg.match_data_send.data = new TextEncoder().encode(payload);
+      }
+    } else if (msg.party_data_send) {
+      let payload = msg.party_data_send.data;
+      // can't send a string over protobuf
+      if (typeof payload == "string") {
+        msg.party_data_send.data = new TextEncoder().encode(payload);
+      }
+    }
+
+    const envelopeWriter = tsproto.Envelope.encode(
+      tsproto.Envelope.fromPartial(msg)
+    );
+    const encodedMsg = envelopeWriter.finish();
+    this._socket!.send(encodedMsg);
+  }
+
+  getRTCPeerConnection(): RTCPeerConnection {
+    return this._pcRef!;
+  }
 }
