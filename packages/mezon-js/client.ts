@@ -143,6 +143,7 @@ import {
   ApiListOnboardingResponse,
   ApiCreateOnboardingRequest,
   MezonUpdateOnboardingBody,
+  ApiOnboardingItem,
 } from "./api.gen";
 
 import { Session } from "./session";
@@ -4447,7 +4448,7 @@ export class Client {
     session: Session,
     id: string,
     clanId?: string,
-  ): Promise<any> {
+  ): Promise<ApiOnboardingItem> {
     if (
       this.autoRefreshSession &&
       session.refresh_token &&
@@ -4458,7 +4459,7 @@ export class Client {
 
     return this.apiClient
       .getOnboardingDetail(session.token, id, clanId)
-      .then((response: any) => {
+      .then((response: ApiOnboardingItem) => {
         return Promise.resolve(response);
       });
   }
