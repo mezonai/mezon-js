@@ -140,6 +140,9 @@ import {
   ApiTokenSentEvent,
   MezonDeleteWebhookByIdBody,
   ApiWithdrawTokenRequest,
+  ApiListOnboardingResponse,
+  ApiCreateOnboardingRequest,
+  MezonUpdateOnboardingBody,
 } from "./api.gen";
 
 import { Session } from "./session";
@@ -4415,6 +4418,107 @@ export class Client {
       .listAuditLog(session.token, actionLog, userId, clanId, page, pageSize)
       .then((response: MezonapiListAuditLog) => {
         return response;
+      });
+  }
+
+  async listOnboarding(
+    session: Session, 
+    clanId?:string,
+    guideType?:number,
+    limit?:number,
+    page?:number,
+  ) : Promise<ApiListOnboardingResponse> {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired((Date.now() + this.expiredTimespanMs) / 1000)
+    ) {
+      await this.sessionRefresh(session);
+    }
+
+    return this.apiClient
+      .listOnboarding(session.token, clanId, guideType, limit, page)
+      .then((response: ApiListOnboardingResponse) => {
+        return response;
+      });
+  }
+
+  async getOnboardingDetail(
+    session: Session,
+    id: string,
+    clanId?: string,
+  ): Promise<any> {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired((Date.now() + this.expiredTimespanMs) / 1000)
+    ) {
+      await this.sessionRefresh(session);
+    }
+
+    return this.apiClient
+      .getOnboardingDetail(session.token, id, clanId)
+      .then((response: any) => {
+        return Promise.resolve(response);
+      });
+  }
+
+  async createOnboarding(
+    session: Session,
+    request: ApiCreateOnboardingRequest
+  ): Promise<any> {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired((Date.now() + this.expiredTimespanMs) / 1000)
+    ) {
+      await this.sessionRefresh(session);
+    }
+
+    return this.apiClient
+      .createOnboarding(session.token, request)
+      .then((response: any) => {
+        return response;
+      });
+  }
+
+  async updateOnboarding(
+    session: Session,
+    id: string,
+    request: MezonUpdateOnboardingBody
+  ) {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired((Date.now() + this.expiredTimespanMs) / 1000)
+    ) {
+      await this.sessionRefresh(session);
+    }
+
+    return this.apiClient
+      .updateOnboarding(session.token, id, request)
+      .then((response: any) => {
+        return response !== undefined;
+      });
+  }
+
+  async deleteOnboarding(
+    session: Session,
+    id:string,
+    clanId?:string,
+  ): Promise<any> {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired((Date.now() + this.expiredTimespanMs) / 1000)
+    ) {
+      await this.sessionRefresh(session);
+    }
+
+    return this.apiClient
+      .deleteOnboarding(session.token, id, clanId)
+      .then((response: any) => {
+        return response !== undefined;
       });
   }
 }

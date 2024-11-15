@@ -2444,6 +2444,63 @@ export interface RpcStatus {
   message?: string;
 }
 
+export interface ApiListOnboardingResponse {
+  //
+  list_onboarding?: Array<ApiOnboardingItem>;
+}
+
+/**  */
+export interface MezonUpdateOnboardingBody {
+  //
+  answers?: string;
+  //
+  channel_id?: string;
+  //
+  clan_id?: string;
+  //
+  content?: string;
+  //
+  task_type?: number;
+  //
+  title?: string;
+}
+
+/**  */
+export interface ApiCreateOnboardingRequest {
+  //
+  clan_id?: string;
+  //
+  content?: string;
+  //
+  guide_type?: number;
+  //
+  title?: string;
+}
+
+/**  */
+export interface ApiOnboardingItem {
+  //
+  answers?: string;
+  //
+  channel_id?: string;
+  //
+  clan_id?: string;
+  //
+  content?: string;
+  //The UNIX time (for gRPC clients) or ISO string (for REST clients) when the message was created.
+  create_time?: string;
+  //
+  guide_type?: number;
+  //
+  id?: string;
+  //
+  task_type?: number;
+  //
+  title?: string;
+  //The UNIX time (for gRPC clients) or ISO string (for REST clients) when the message was last updated.
+  update_time?: string;
+}
+
 export class MezonApi {
   constructor(
     readonly serverKey: string,
@@ -9581,6 +9638,198 @@ pushPubKey(bearerToken: string,
     const fetchOptions = buildFetchOptions("DELETE", options, bodyJson);
     if (bearerToken) {
       fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+    }
+
+    return Promise.race([
+      fetch(fullUrl, fetchOptions).then((response) => {
+        if (response.status == 204) {
+          return response;
+        } else if (response.status >= 200 && response.status < 300) {
+          return response.json();
+        } else {
+          throw response;
+        }
+      }),
+      new Promise((_, reject) =>
+        setTimeout(reject, this.timeoutMs, "Request timed out.")
+      ),
+    ]);
+  }
+
+  /** list onboarding. */
+  listOnboarding(bearerToken: string,
+    clanId?:string,
+    guideType?:number,
+    limit?:number,
+    page?:number,
+    options: any = {}): Promise<ApiListOnboardingResponse> {
+  
+  const urlPath = "/v2/onboarding";
+  const queryParams = new Map<string, any>();
+  queryParams.set("clan_id", clanId);
+  queryParams.set("guide_type", guideType);
+  queryParams.set("limit", limit);
+  queryParams.set("page", page);
+
+  let bodyJson : string = "";
+
+  const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
+  const fetchOptions = buildFetchOptions("GET", options, bodyJson);
+  if (bearerToken) {
+      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+  }
+
+  return Promise.race([
+    fetch(fullUrl, fetchOptions).then((response) => {
+      if (response.status == 204) {
+        return response;
+      } else if (response.status >= 200 && response.status < 300) {
+        return response.json();
+      } else {
+        throw response;
+      }
+    }),
+    new Promise((_, reject) =>
+      setTimeout(reject, this.timeoutMs, "Request timed out.")
+    ),
+  ]);
+  }
+
+  /** create onboarding. */
+  createOnboarding(bearerToken: string,
+      body:ApiCreateOnboardingRequest,
+      options: any = {}): Promise<any> {
+    
+    if (body === null || body === undefined) {
+      throw new Error("'body' is a required parameter but is null or undefined.");
+    }
+    const urlPath = "/v2/onboarding";
+    const queryParams = new Map<string, any>();
+
+    let bodyJson : string = "";
+    bodyJson = JSON.stringify(body || {});
+
+    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
+    const fetchOptions = buildFetchOptions("POST", options, bodyJson);
+    if (bearerToken) {
+        fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+    }
+
+    return Promise.race([
+      fetch(fullUrl, fetchOptions).then((response) => {
+        if (response.status == 204) {
+          return response;
+        } else if (response.status >= 200 && response.status < 300) {
+          return response.json();
+        } else {
+          throw response;
+        }
+      }),
+      new Promise((_, reject) =>
+        setTimeout(reject, this.timeoutMs, "Request timed out.")
+      ),
+    ]);
+  }
+
+  /** delete onboarding. */
+  deleteOnboarding(bearerToken: string,
+      id:string,
+      clanId?:string,
+      options: any = {}): Promise<any> {
+    
+    if (id === null || id === undefined) {
+      throw new Error("'id' is a required parameter but is null or undefined.");
+    }
+    const urlPath = "/v2/onboarding/{id}"
+        .replace("{id}", encodeURIComponent(String(id)));
+    const queryParams = new Map<string, any>();
+    queryParams.set("clan_id", clanId);
+
+    let bodyJson : string = "";
+
+    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
+    const fetchOptions = buildFetchOptions("DELETE", options, bodyJson);
+    if (bearerToken) {
+        fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+    }
+
+    return Promise.race([
+      fetch(fullUrl, fetchOptions).then((response) => {
+        if (response.status == 204) {
+          return response;
+        } else if (response.status >= 200 && response.status < 300) {
+          return response.json();
+        } else {
+          throw response;
+        }
+      }),
+      new Promise((_, reject) =>
+        setTimeout(reject, this.timeoutMs, "Request timed out.")
+      ),
+    ]);
+  }
+
+  /** get detailed onboarding information. */
+  getOnboardingDetail(bearerToken: string,
+      id:string,
+      clanId?:string,
+      options: any = {}): Promise<ApiOnboardingItem> {
+    
+    if (id === null || id === undefined) {
+      throw new Error("'id' is a required parameter but is null or undefined.");
+    }
+    const urlPath = "/v2/onboarding/{id}"
+        .replace("{id}", encodeURIComponent(String(id)));
+    const queryParams = new Map<string, any>();
+    queryParams.set("clan_id", clanId);
+
+    let bodyJson : string = "";
+
+    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
+    const fetchOptions = buildFetchOptions("GET", options, bodyJson);
+    if (bearerToken) {
+        fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+    }
+
+    return Promise.race([
+      fetch(fullUrl, fetchOptions).then((response) => {
+        if (response.status == 204) {
+          return response;
+        } else if (response.status >= 200 && response.status < 300) {
+          return response.json();
+        } else {
+          throw response;
+        }
+      }),
+      new Promise((_, reject) =>
+        setTimeout(reject, this.timeoutMs, "Request timed out.")
+      ),
+    ]);
+  }
+
+  /** update onboarding. */
+  updateOnboarding(bearerToken: string,
+      id:string,
+      body:MezonUpdateOnboardingBody,
+      options: any = {}): Promise<any> {
+    
+    if (id === null || id === undefined) {
+      throw new Error("'id' is a required parameter but is null or undefined.");
+    }
+    if (body === null || body === undefined) {
+      throw new Error("'body' is a required parameter but is null or undefined.");
+    }
+    const urlPath = "/v2/onboarding/{id}"
+        .replace("{id}", encodeURIComponent(String(id)));
+    const queryParams = new Map<string, any>();
+
+    let bodyJson : string = "";
+    bodyJson = JSON.stringify(body || {});
+
+    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
+    const fetchOptions = buildFetchOptions("PUT", options, bodyJson);
+    if (bearerToken) {
+        fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
     }
 
     return Promise.race([
