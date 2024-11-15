@@ -2444,15 +2444,42 @@ export interface RpcStatus {
   message?: string;
 }
 
+/**  */
 export interface ApiListOnboardingResponse {
   //
   list_onboarding?: Array<ApiOnboardingItem>;
 }
 
 /**  */
+export interface ApiAnswer {
+  //
+  answer?: string;
+  //
+  description?: string;
+  //
+  title?: string;
+}
+
+/**  */
+export interface ApiOnboardingContent {
+  //
+  answers?: Array<ApiAnswer>;
+  //
+  channel_id?: string;
+  //
+  content?: string;
+  //
+  guide_type?: number;
+  //
+  task_type?: number;
+  //
+  title?: string;
+}
+
+/**  */
 export interface MezonUpdateOnboardingBody {
   //
-  answers?: string;
+  answers?: Array<ApiAnswer>;
   //
   channel_id?: string;
   //
@@ -2470,17 +2497,13 @@ export interface ApiCreateOnboardingRequest {
   //
   clan_id?: string;
   //
-  content?: string;
-  //
-  guide_type?: number;
-  //
-  title?: string;
+  contents?: Array<ApiOnboardingContent>;
 }
 
 /**  */
 export interface ApiOnboardingItem {
   //
-  answers?: string;
+  answers?: Array<ApiAnswer>;
   //
   channel_id?: string;
   //
