@@ -181,6 +181,12 @@ export enum NotificationType {
   NOTHING_MESSAGE = 3,
 }
 
+export enum WebrtcSignalingType {
+  WEBRTC_SDP_OFFER     = 1,
+  WEBRTC_SDP_ANSWER    = 2,
+  WEBRTC_ICE_CANDIDATE = 3
+}
+
 /** Response for an RPC function executed on the server. */
 export interface RpcResponse {
   /** The identifier of the function. */
