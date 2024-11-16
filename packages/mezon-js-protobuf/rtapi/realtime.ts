@@ -269,32 +269,13 @@ export interface Envelope {
     | UnmuteEvent
     | undefined;
   /** voice call */
-  call_request?:
-    | CallRequest
-    | undefined;
-  /** voice call */
-  call_accept?:
-    | CallAccept
-    | undefined;
-  /** webrtc */
-  ice_candidate_init?: ICECandidateInit | undefined;
+  webrtc_signaling_fwd?: WebrtcSignalingFwd | undefined;
 }
 
-export interface CallRequest {
-  type: string;
-  sdp: string;
-}
-
-export interface CallAccept {
-  type: string;
-  sdp: string;
-}
-
-export interface ICECandidateInit {
-  candidate: string;
-  sdpMid: string | undefined;
-  sdpMLineIndex: number | undefined;
-  usernameFragment: string | undefined;
+export interface WebrtcSignalingFwd {
+  receiver_id: string;
+  data_type: number;
+  json_data: string;
 }
 
 export interface AddClanUserEvent {
@@ -1253,9 +1234,7 @@ function createBaseEnvelope(): Envelope {
     token_sent_event: undefined,
     message_button_clicked: undefined,
     unmute_event: undefined,
-    call_request: undefined,
-    call_accept: undefined,
-    ice_candidate_init: undefined,
+    webrtc_signaling_fwd: undefined,
   };
 }
 
@@ -1444,14 +1423,8 @@ export const Envelope = {
     if (message.unmute_event !== undefined) {
       UnmuteEvent.encode(message.unmute_event, writer.uint32(490).fork()).ldelim();
     }
-    if (message.call_request !== undefined) {
-      CallRequest.encode(message.call_request, writer.uint32(498).fork()).ldelim();
-    }
-    if (message.call_accept !== undefined) {
-      CallAccept.encode(message.call_accept, writer.uint32(506).fork()).ldelim();
-    }
-    if (message.ice_candidate_init !== undefined) {
-      ICECandidateInit.encode(message.ice_candidate_init, writer.uint32(514).fork()).ldelim();
+    if (message.webrtc_signaling_fwd !== undefined) {
+      WebrtcSignalingFwd.encode(message.webrtc_signaling_fwd, writer.uint32(498).fork()).ldelim();
     }
     return writer;
   },
@@ -1895,21 +1868,7 @@ export const Envelope = {
             break;
           }
 
-          message.call_request = CallRequest.decode(reader, reader.uint32());
-          continue;
-        case 63:
-          if (tag !== 506) {
-            break;
-          }
-
-          message.call_accept = CallAccept.decode(reader, reader.uint32());
-          continue;
-        case 64:
-          if (tag !== 514) {
-            break;
-          }
-
-          message.ice_candidate_init = ICECandidateInit.decode(reader, reader.uint32());
+          message.webrtc_signaling_fwd = WebrtcSignalingFwd.decode(reader, reader.uint32());
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -2065,10 +2024,8 @@ export const Envelope = {
         ? MessageButtonClicked.fromJSON(object.message_button_clicked)
         : undefined,
       unmute_event: isSet(object.unmute_event) ? UnmuteEvent.fromJSON(object.unmute_event) : undefined,
-      call_request: isSet(object.call_request) ? CallRequest.fromJSON(object.call_request) : undefined,
-      call_accept: isSet(object.call_accept) ? CallAccept.fromJSON(object.call_accept) : undefined,
-      ice_candidate_init: isSet(object.ice_candidate_init)
-        ? ICECandidateInit.fromJSON(object.ice_candidate_init)
+      webrtc_signaling_fwd: isSet(object.webrtc_signaling_fwd)
+        ? WebrtcSignalingFwd.fromJSON(object.webrtc_signaling_fwd)
         : undefined,
     };
   },
@@ -2258,14 +2215,8 @@ export const Envelope = {
     if (message.unmute_event !== undefined) {
       obj.unmute_event = UnmuteEvent.toJSON(message.unmute_event);
     }
-    if (message.call_request !== undefined) {
-      obj.call_request = CallRequest.toJSON(message.call_request);
-    }
-    if (message.call_accept !== undefined) {
-      obj.call_accept = CallAccept.toJSON(message.call_accept);
-    }
-    if (message.ice_candidate_init !== undefined) {
-      obj.ice_candidate_init = ICECandidateInit.toJSON(message.ice_candidate_init);
+    if (message.webrtc_signaling_fwd !== undefined) {
+      obj.webrtc_signaling_fwd = WebrtcSignalingFwd.toJSON(message.webrtc_signaling_fwd);
     }
     return obj;
   },
@@ -2471,38 +2422,35 @@ export const Envelope = {
     message.unmute_event = (object.unmute_event !== undefined && object.unmute_event !== null)
       ? UnmuteEvent.fromPartial(object.unmute_event)
       : undefined;
-    message.call_request = (object.call_request !== undefined && object.call_request !== null)
-      ? CallRequest.fromPartial(object.call_request)
-      : undefined;
-    message.call_accept = (object.call_accept !== undefined && object.call_accept !== null)
-      ? CallAccept.fromPartial(object.call_accept)
-      : undefined;
-    message.ice_candidate_init = (object.ice_candidate_init !== undefined && object.ice_candidate_init !== null)
-      ? ICECandidateInit.fromPartial(object.ice_candidate_init)
+    message.webrtc_signaling_fwd = (object.webrtc_signaling_fwd !== undefined && object.webrtc_signaling_fwd !== null)
+      ? WebrtcSignalingFwd.fromPartial(object.webrtc_signaling_fwd)
       : undefined;
     return message;
   },
 };
 
-function createBaseCallRequest(): CallRequest {
-  return { type: "", sdp: "" };
+function createBaseWebrtcSignalingFwd(): WebrtcSignalingFwd {
+  return { receiver_id: "", data_type: 0, json_data: "" };
 }
 
-export const CallRequest = {
-  encode(message: CallRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.type !== "") {
-      writer.uint32(10).string(message.type);
+export const WebrtcSignalingFwd = {
+  encode(message: WebrtcSignalingFwd, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.receiver_id !== "") {
+      writer.uint32(10).string(message.receiver_id);
     }
-    if (message.sdp !== "") {
-      writer.uint32(18).string(message.sdp);
+    if (message.data_type !== 0) {
+      writer.uint32(16).int32(message.data_type);
+    }
+    if (message.json_data !== "") {
+      writer.uint32(26).string(message.json_data);
     }
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): CallRequest {
+  decode(input: _m0.Reader | Uint8Array, length?: number): WebrtcSignalingFwd {
     const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseCallRequest();
+    const message = createBaseWebrtcSignalingFwd();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -2511,182 +2459,21 @@ export const CallRequest = {
             break;
           }
 
-          message.type = reader.string();
+          message.receiver_id = reader.string();
           continue;
         case 2:
-          if (tag !== 18) {
+          if (tag !== 16) {
             break;
           }
 
-          message.sdp = reader.string();
-          continue;
-      }
-      if ((tag & 7) === 4 || tag === 0) {
-        break;
-      }
-      reader.skipType(tag & 7);
-    }
-    return message;
-  },
-
-  fromJSON(object: any): CallRequest {
-    return {
-      type: isSet(object.type) ? globalThis.String(object.type) : "",
-      sdp: isSet(object.sdp) ? globalThis.String(object.sdp) : "",
-    };
-  },
-
-  toJSON(message: CallRequest): unknown {
-    const obj: any = {};
-    if (message.type !== "") {
-      obj.type = message.type;
-    }
-    if (message.sdp !== "") {
-      obj.sdp = message.sdp;
-    }
-    return obj;
-  },
-
-  create<I extends Exact<DeepPartial<CallRequest>, I>>(base?: I): CallRequest {
-    return CallRequest.fromPartial(base ?? ({} as any));
-  },
-  fromPartial<I extends Exact<DeepPartial<CallRequest>, I>>(object: I): CallRequest {
-    const message = createBaseCallRequest();
-    message.type = object.type ?? "";
-    message.sdp = object.sdp ?? "";
-    return message;
-  },
-};
-
-function createBaseCallAccept(): CallAccept {
-  return { type: "", sdp: "" };
-}
-
-export const CallAccept = {
-  encode(message: CallAccept, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.type !== "") {
-      writer.uint32(10).string(message.type);
-    }
-    if (message.sdp !== "") {
-      writer.uint32(18).string(message.sdp);
-    }
-    return writer;
-  },
-
-  decode(input: _m0.Reader | Uint8Array, length?: number): CallAccept {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseCallAccept();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
-          if (tag !== 10) {
-            break;
-          }
-
-          message.type = reader.string();
-          continue;
-        case 2:
-          if (tag !== 18) {
-            break;
-          }
-
-          message.sdp = reader.string();
-          continue;
-      }
-      if ((tag & 7) === 4 || tag === 0) {
-        break;
-      }
-      reader.skipType(tag & 7);
-    }
-    return message;
-  },
-
-  fromJSON(object: any): CallAccept {
-    return {
-      type: isSet(object.type) ? globalThis.String(object.type) : "",
-      sdp: isSet(object.sdp) ? globalThis.String(object.sdp) : "",
-    };
-  },
-
-  toJSON(message: CallAccept): unknown {
-    const obj: any = {};
-    if (message.type !== "") {
-      obj.type = message.type;
-    }
-    if (message.sdp !== "") {
-      obj.sdp = message.sdp;
-    }
-    return obj;
-  },
-
-  create<I extends Exact<DeepPartial<CallAccept>, I>>(base?: I): CallAccept {
-    return CallAccept.fromPartial(base ?? ({} as any));
-  },
-  fromPartial<I extends Exact<DeepPartial<CallAccept>, I>>(object: I): CallAccept {
-    const message = createBaseCallAccept();
-    message.type = object.type ?? "";
-    message.sdp = object.sdp ?? "";
-    return message;
-  },
-};
-
-function createBaseICECandidateInit(): ICECandidateInit {
-  return { candidate: "", sdpMid: undefined, sdpMLineIndex: undefined, usernameFragment: undefined };
-}
-
-export const ICECandidateInit = {
-  encode(message: ICECandidateInit, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.candidate !== "") {
-      writer.uint32(10).string(message.candidate);
-    }
-    if (message.sdpMid !== undefined) {
-      StringValue.encode({ value: message.sdpMid! }, writer.uint32(18).fork()).ldelim();
-    }
-    if (message.sdpMLineIndex !== undefined) {
-      Int32Value.encode({ value: message.sdpMLineIndex! }, writer.uint32(26).fork()).ldelim();
-    }
-    if (message.usernameFragment !== undefined) {
-      StringValue.encode({ value: message.usernameFragment! }, writer.uint32(34).fork()).ldelim();
-    }
-    return writer;
-  },
-
-  decode(input: _m0.Reader | Uint8Array, length?: number): ICECandidateInit {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseICECandidateInit();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
-          if (tag !== 10) {
-            break;
-          }
-
-          message.candidate = reader.string();
-          continue;
-        case 2:
-          if (tag !== 18) {
-            break;
-          }
-
-          message.sdpMid = StringValue.decode(reader, reader.uint32()).value;
+          message.data_type = reader.int32();
           continue;
         case 3:
           if (tag !== 26) {
             break;
           }
 
-          message.sdpMLineIndex = Int32Value.decode(reader, reader.uint32()).value;
-          continue;
-        case 4:
-          if (tag !== 34) {
-            break;
-          }
-
-          message.usernameFragment = StringValue.decode(reader, reader.uint32()).value;
+          message.json_data = reader.string();
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -2697,41 +2484,36 @@ export const ICECandidateInit = {
     return message;
   },
 
-  fromJSON(object: any): ICECandidateInit {
+  fromJSON(object: any): WebrtcSignalingFwd {
     return {
-      candidate: isSet(object.candidate) ? globalThis.String(object.candidate) : "",
-      sdpMid: isSet(object.sdpMid) ? String(object.sdpMid) : undefined,
-      sdpMLineIndex: isSet(object.sdpMLineIndex) ? Number(object.sdpMLineIndex) : undefined,
-      usernameFragment: isSet(object.usernameFragment) ? String(object.usernameFragment) : undefined,
+      receiver_id: isSet(object.receiver_id) ? globalThis.String(object.receiver_id) : "",
+      data_type: isSet(object.data_type) ? globalThis.Number(object.data_type) : 0,
+      json_data: isSet(object.json_data) ? globalThis.String(object.json_data) : "",
     };
   },
 
-  toJSON(message: ICECandidateInit): unknown {
+  toJSON(message: WebrtcSignalingFwd): unknown {
     const obj: any = {};
-    if (message.candidate !== "") {
-      obj.candidate = message.candidate;
+    if (message.receiver_id !== "") {
+      obj.receiver_id = message.receiver_id;
     }
-    if (message.sdpMid !== undefined) {
-      obj.sdpMid = message.sdpMid;
+    if (message.data_type !== 0) {
+      obj.data_type = Math.round(message.data_type);
     }
-    if (message.sdpMLineIndex !== undefined) {
-      obj.sdpMLineIndex = message.sdpMLineIndex;
-    }
-    if (message.usernameFragment !== undefined) {
-      obj.usernameFragment = message.usernameFragment;
+    if (message.json_data !== "") {
+      obj.json_data = message.json_data;
     }
     return obj;
   },
 
-  create<I extends Exact<DeepPartial<ICECandidateInit>, I>>(base?: I): ICECandidateInit {
-    return ICECandidateInit.fromPartial(base ?? ({} as any));
+  create<I extends Exact<DeepPartial<WebrtcSignalingFwd>, I>>(base?: I): WebrtcSignalingFwd {
+    return WebrtcSignalingFwd.fromPartial(base ?? ({} as any));
   },
-  fromPartial<I extends Exact<DeepPartial<ICECandidateInit>, I>>(object: I): ICECandidateInit {
-    const message = createBaseICECandidateInit();
-    message.candidate = object.candidate ?? "";
-    message.sdpMid = object.sdpMid ?? undefined;
-    message.sdpMLineIndex = object.sdpMLineIndex ?? undefined;
-    message.usernameFragment = object.usernameFragment ?? undefined;
+  fromPartial<I extends Exact<DeepPartial<WebrtcSignalingFwd>, I>>(object: I): WebrtcSignalingFwd {
+    const message = createBaseWebrtcSignalingFwd();
+    message.receiver_id = object.receiver_id ?? "";
+    message.data_type = object.data_type ?? 0;
+    message.json_data = object.json_data ?? "";
     return message;
   },
 };

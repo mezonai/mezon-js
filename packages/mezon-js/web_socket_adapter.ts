@@ -53,9 +53,6 @@ export interface WebSocketAdapter {
     signal?: AbortSignal
   ): void;
   send(message: any): void;
-
-  // RTC Peer Connection
-  getRTCPeerConnection(): RTCPeerConnection;
 }
 
 /**

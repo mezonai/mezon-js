@@ -827,21 +827,10 @@ export interface MessageButtonClicked {
   user_id: string;
 }
 
-export interface CallRequest {
-  type: string;
-  sdp: string;
-}
-
-export interface CallAccept {
-  type: string;
-  sdp: string;
-}
-
-export interface ICECandidateInit {
-  candidate: string;
-  sdpMid: string | undefined;
-  sdpMLineIndex: number | undefined;
-  usernameFragment: string | undefined;
+export interface WebrtcSignalingFwd {
+  receiverId: string;
+  dataType: number;
+  jsonData: string;
 }
 
 /** A socket connection to Mezon server. */
@@ -857,8 +846,6 @@ export interface Socket {
     connectTimeoutMs?: number,
     signal?: AbortSignal
   ): Promise<Session>;
-
-  getRTCPeerConnection(): RTCPeerConnection;
 
   /** Disconnect from the server. */
   disconnect(fireDisconnectEvent: boolean): void;
@@ -1113,15 +1100,17 @@ export interface Socket {
     type: number
   ): Promise<CheckNameExistedEvent>;
 
-  handleMessageButtonClick: (
-    message_button_clicked: MessageButtonClicked
-  ) => void;
+  handleMessageButtonClick: (message_id: string,
+    channel_id: string,
+    button_id: string,
+    sender_id: string,
+    user_id: string) => Promise<MessageButtonClicked>;
 
-  onCallRequest: (call_request: CallRequest) => void;
+  onmessagebuttonclicked: (event: MessageButtonClicked) => void;
 
-  onCallAccept: (call_accept: CallAccept) => void;
+  forwardWebrtcSignaling: (receiverId: string, dataType: number, jsonData: string) => Promise<WebrtcSignalingFwd>;
 
-  onIceCandidateInit: (ice_candidate_init: ICECandidateInit) => void;
+  onwebrtcsignalingfwd: (event: WebrtcSignalingFwd) => void;
 
   oneventcreated: (clan_event_created: ApiCreateEventRequest) => void;
 
@@ -1153,21 +1142,7 @@ export interface Socket {
 
   onunmuteevent: (unmute_event: UnmuteEvent) => void;
 
-  ontokensent: (token: ApiTokenSentEvent) => void;
-
-  sendCallRequest(req: { type: string; sdp: string }): Promise<void>;
-  sendCallAccept(req: { type: string; sdp: string }): Promise<void>;
-  sendICECandidateInit(req: {
-    candidate: string;
-    sdpMid: string | undefined;
-    sdpMLineIndex: number | undefined;
-    usernameFragment: string | undefined;
-  }): Promise<void>;
-  startCall(
-    localVideoRef: any,
-    remoteVideoRef: any,
-    grant_permissions: { video: boolean; audio: boolean }
-  ): Promise<void>;
+  ontokensent: (token: ApiTokenSentEvent) => void;  
 }
 
 /** Reports an error received from a socket message. */
@@ -1420,53 +1395,9 @@ export class DefaultSocket implements Socket {
         } else if (message.token_sent_event) {
           this.ontokensent(<ApiTokenSentEvent>message.token_sent_event);
         } else if (message.message_button_clicked) {
-          this.handleMessageButtonClick(
-            <MessageButtonClicked>message.message_button_clicked
-          );
-        } else if (message.call_request) {
-          console.log("message.call_request", message.call_request);
-          await this.adapter.getRTCPeerConnection().setRemoteDescription(
-            new RTCSessionDescription({
-              type: "offer",
-              sdp: message.call_request.sdp,
-            })
-          );
-          const answer = await this.adapter
-            .getRTCPeerConnection()
-            .createAnswer();
-          await this.adapter.getRTCPeerConnection().setLocalDescription(answer);
-          // Check if WebSocket is initialized before sending message
-          await this.sendCallAccept({
-            sdp: answer.sdp,
-            type: "answer",
-          });
-
-          this.onCallRequest(<CallRequest>message.call_request);
-        } else if (message.call_accept) {
-          console.log("message.call_accept", message.call_accept);
-          await this.adapter.getRTCPeerConnection().setRemoteDescription(
-            new RTCSessionDescription({
-              type: "answer",
-              sdp: message.call_accept.sdp,
-            })
-          );
-
-          this.onCallAccept(<CallAccept>message.call_accept);
-        } else if (message.ice_candidate_init) {
-          console.log("message.ice_candidate_init", message.ice_candidate_init);
-          const rtcIceCandidate = new RTCIceCandidate({
-            candidate: message.ice_candidate_init.candidate,
-            sdpMid: message.ice_candidate_init.sdpMid || "audio",
-            sdpMLineIndex: message.ice_candidate_init.sdpMLineIndex || 0,
-            usernameFragment:
-              message.ice_candidate_init.usernameFragment || undefined,
-          });
-
-          await this.adapter
-            .getRTCPeerConnection()
-            .addIceCandidate(rtcIceCandidate);
-
-          this.onIceCandidateInit(<ICECandidateInit>message.ice_candidate_init);
+          this.onmessagebuttonclicked( <MessageButtonClicked>message.message_button_clicked);
+        } else if (message.webrtc_signaling_fwd) {
+          this.onwebrtcsignalingfwd(<WebrtcSignalingFwd>message.webrtc_signaling_fwd);
         } else {
           if (this.verbose && window && window.console) {
             console.log("Unrecognized message received: %o", message);
@@ -1798,27 +1729,15 @@ export class DefaultSocket implements Socket {
     }
   }
 
-  handleMessageButtonClick(messageButtonClicked: MessageButtonClicked) {
+  onmessagebuttonclicked(messageButtonClicked: MessageButtonClicked) {
     if (this.verbose && window && window.console) {
       console.log(messageButtonClicked);
     }
   }
 
-  onCallRequest(callRequest: CallRequest) {
+  onwebrtcsignalingfwd(event: WebrtcSignalingFwd) {
     if (this.verbose && window && window.console) {
-      console.log(callRequest);
-    }
-  }
-
-  onCallAccept(callAccept: CallAccept) {
-    if (this.verbose && window && window.console) {
-      console.log(callAccept);
-    }
-  }
-
-  onIceCandidateInit(iceCandidateInit: ICECandidateInit) {
-    if (this.verbose && window && window.console) {
-      console.log(iceCandidateInit);
+      console.log(event);
     }
   }
 
@@ -1837,9 +1756,8 @@ export class DefaultSocket implements Socket {
       | StatusUnfollow
       | StatusUpdate
       | Ping
-      | CallRequest
-      | CallAccept
-      | ICECandidateInit,
+      | WebrtcSignalingFwd
+      | MessageButtonClicked,
     sendTimeout = DefaultSocket.DefaultSendTimeoutMs
   ): Promise<any> {
     const untypedMessage = message as any;
@@ -1869,66 +1787,6 @@ export class DefaultSocket implements Socket {
         this.adapter.send(untypedMessage);
       }
     });
-  }
-
-  getRTCPeerConnection(): RTCPeerConnection {
-    return this.adapter.getRTCPeerConnection();
-  }
-
-  async startCall(
-    localVideoRef: any,
-    remoteVideoRef: any,
-    grant_permissions: { video: boolean; audio: boolean }
-  ): Promise<void> {
-    // setup peer connection
-    this.adapter.getRTCPeerConnection().onicecandidate = (event: any) => {
-      if (event && event.candidate) {
-        this.sendICECandidateInit({ candidate: event?.candidate });
-      }
-    };
-
-    this.adapter.getRTCPeerConnection().ontrack = (event) => {
-      // Display remote stream in remote video element
-      if (remoteVideoRef) {
-        remoteVideoRef.srcObject = event.streams[0];
-      }
-    };
-    // Get user media
-    const stream = await navigator.mediaDevices.getUserMedia(grant_permissions);
-    if (localVideoRef) {
-      localVideoRef.srcObject = stream;
-    }
-    // Add tracks to PeerConnection
-    stream
-      .getTracks()
-      .forEach((track) =>
-        this.adapter.getRTCPeerConnection()?.addTrack(track, stream)
-      );
-
-    // Create offer and send it to backend via WebSocket
-    const offer = await this.adapter.getRTCPeerConnection().createOffer();
-    await this.adapter.getRTCPeerConnection().setLocalDescription(offer);
-    await this.sendCallRequest({
-      sdp: offer?.sdp,
-      type: "offer",
-    });
-  }
-
-  async sendCallRequest(req: { type: string; sdp?: string }): Promise<void> {
-    return await this.send({ call_request: req });
-  }
-
-  async sendCallAccept(req: { type: string; sdp?: string }): Promise<void> {
-    return await this.send({ call_accept: req });
-  }
-
-  async sendICECandidateInit(req: {
-    candidate: string;
-    sdpMid?: string | undefined;
-    sdpMLineIndex?: number | undefined;
-    usernameFragment?: string | undefined;
-  }): Promise<void> {
-    return await this.send({ ice_candidate_init: req });
   }
 
   async followUsers(userIds: string[]): Promise<Status> {
@@ -2231,6 +2089,25 @@ export class DefaultSocket implements Socket {
       },
     });
     return response.check_name_existed_event;
+  }
+
+  async forwardWebrtcSignaling(receiver_id: string, data_type: number, json_data: string): Promise<WebrtcSignalingFwd> {
+    const response = await this.send({
+      webrtc_signaling_fwd: { receiver_id: receiver_id, data_type: data_type, json_data: json_data },
+    });
+    return response.webrtc_signaling_fwd;
+  }
+
+  async handleMessageButtonClick (
+    message_id: string,
+    channel_id: string,
+    button_id: string,
+    sender_id: string,
+    user_id: string): Promise<MessageButtonClicked> {
+    const response = await this.send({
+      message_button_clicked: { message_id: message_id, channel_id: channel_id, button_id: button_id, sender_id: sender_id, user_id: user_id },
+    });
+    return response.webrtc_signaling_fwd;
   }
 
   private async pingPong(): Promise<void> {
