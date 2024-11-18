@@ -84,14 +84,6 @@ export interface SocketOpenHandler {
   (this: WebSocket, evt: Event): void;
 }
 
-export interface RTCPeerOntrackHandler {
-  (this: RTCPeerConnection, ev: RTCTrackEvent): any | null;
-}
-
-export interface RTCPeerOnicecandidateHandler {
-  (this: RTCPeerConnection, ev: RTCPeerConnectionIceEvent): any;
-}
-
 /**
  * A text-based socket adapter that accepts and transmits payloads over UTF-8.
  */
@@ -194,9 +186,5 @@ export class WebSocketAdapterText implements WebSocketAdapter {
     }
 
     this._socket!.send(JSON.stringify(msg));
-  }
-
-  getRTCPeerConnection(): RTCPeerConnection {
-    return this._pcRef!;
   }
 }

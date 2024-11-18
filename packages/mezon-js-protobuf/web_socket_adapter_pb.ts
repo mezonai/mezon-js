@@ -14,42 +14,36 @@
  * limitations under the License.
  */
 
-import {
-  WebSocketAdapter,
-  SocketCloseHandler,
-  SocketErrorHandler,
-  SocketMessageHandler,
-  SocketOpenHandler,
-} from "../mezon-js/web_socket_adapter";
-import * as tsproto from "./rtapi/realtime";
+import { WebSocketAdapter, SocketCloseHandler, SocketErrorHandler, SocketMessageHandler, SocketOpenHandler } from "../mezon-js/web_socket_adapter"
+import * as tsproto from "./rtapi/realtime"
 
 /**
  * A protocol buffer socket adapter that accepts and transmits payloads using the protobuf binary wire format.
  */
 export class WebSocketAdapterPb implements WebSocketAdapter {
   private _socket?: WebSocket;
-  private _pcRef?: RTCPeerConnection;
 
-  constructor() {}
+  constructor() {
+  }
 
   get onClose(): SocketCloseHandler | null {
-    return this._socket!.onclose;
+      return this._socket!.onclose;
   }
 
   set onClose(value: SocketCloseHandler | null) {
-    this._socket!.onclose = value;
+      this._socket!.onclose = value;
   }
 
   get onError(): SocketErrorHandler | null {
-    return this._socket!.onerror;
+      return this._socket!.onerror;
   }
 
   set onError(value: SocketErrorHandler | null) {
-    this._socket!.onerror = value;
+      this._socket!.onerror = value;
   }
 
   get onMessage(): SocketMessageHandler | null {
-    return this._socket!.onmessage;
+      return this._socket!.onmessage;
   }
 
   set onMessage(value: SocketMessageHandler | null) {
@@ -68,7 +62,8 @@ export class WebSocketAdapterPb implements WebSocketAdapter {
 
         value!(envelope);
       };
-    } else {
+    }
+    else {
       value = null;
     }
   }
@@ -111,9 +106,6 @@ export class WebSocketAdapterPb implements WebSocketAdapter {
     )}&format=protobuf&platform=${encodeURIComponent(platform)}`;
     this._socket = new WebSocket(url);
     this._socket.binaryType = "arraybuffer";
-    this._pcRef = new RTCPeerConnection({
-      iceServers: [{ urls: "stun:stun.l.google.com:19302" }],
-    });
   }
 
   send(msg: any): void {
@@ -136,9 +128,5 @@ export class WebSocketAdapterPb implements WebSocketAdapter {
     );
     const encodedMsg = envelopeWriter.finish();
     this._socket!.send(encodedMsg);
-  }
-
-  getRTCPeerConnection(): RTCPeerConnection {
-    return this._pcRef!;
   }
 }
