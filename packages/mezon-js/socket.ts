@@ -1149,7 +1149,7 @@ export interface Socket {
 
   ontokensent: (token: ApiTokenSentEvent) => void;  
 
-  onlistactivity: (list_activity: ListActivity) => void;
+  onactivityupdated: (list_activity: ListActivity) => void;
 }
 
 /** Reports an error received from a socket message. */
@@ -1406,7 +1406,7 @@ export class DefaultSocket implements Socket {
         } else if (message.webrtc_signaling_fwd) {
           this.onwebrtcsignalingfwd(<WebrtcSignalingFwd>message.webrtc_signaling_fwd);
         } else if (message.list_activity){
-          this.onlistactivity(<ListActivity>message.list_activity);
+          this.onactivityupdated(<ListActivity>message.list_activity);
         } else {
           if (this.verbose && window && window.console) {
             console.log("Unrecognized message received: %o", message);
@@ -1750,7 +1750,7 @@ export class DefaultSocket implements Socket {
     }
   }
 
-  onlistactivity(list_activity: ListActivity) {
+  onactivityupdated(list_activity: ListActivity) {
     if (this.verbose && window && window.console) {
       console.log(list_activity);
     }
