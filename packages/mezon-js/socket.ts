@@ -828,9 +828,9 @@ export interface MessageButtonClicked {
 }
 
 export interface WebrtcSignalingFwd {
-  receiverId: string;
-  dataType: number;
-  jsonData: string;
+  receiver_id: string;
+  data_type: number;
+  json_data: string;
 }
 
 /** A socket connection to Mezon server. */
