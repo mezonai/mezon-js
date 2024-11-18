@@ -13,9 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-import { WebSocketAdapter, SocketCloseHandler, SocketErrorHandler, SocketMessageHandler, SocketOpenHandler } from "../mezon-js/web_socket_adapter"
-import * as tsproto from "./rtapi/realtime"
+import {
+  WebSocketAdapter,
+  SocketCloseHandler,
+  SocketErrorHandler,
+  SocketMessageHandler,
+  SocketOpenHandler,
+} from "../mezon-js/web_socket_adapter";
+import * as tsproto from "./rtapi/realtime";
 
 /**
  * A protocol buffer socket adapter that accepts and transmits payloads using the protobuf binary wire format.
@@ -27,23 +32,23 @@ export class WebSocketAdapterPb implements WebSocketAdapter {
   }
 
   get onClose(): SocketCloseHandler | null {
-      return this._socket!.onclose;
+    return this._socket!.onclose;
   }
 
   set onClose(value: SocketCloseHandler | null) {
-      this._socket!.onclose = value;
+    this._socket!.onclose = value;
   }
 
   get onError(): SocketErrorHandler | null {
-      return this._socket!.onerror;
+    return this._socket!.onerror;
   }
 
   set onError(value: SocketErrorHandler | null) {
-      this._socket!.onerror = value;
+    this._socket!.onerror = value;
   }
 
   get onMessage(): SocketMessageHandler | null {
-      return this._socket!.onmessage;
+    return this._socket!.onmessage;
   }
 
   set onMessage(value: SocketMessageHandler | null) {
