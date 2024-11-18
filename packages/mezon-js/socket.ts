@@ -833,6 +833,26 @@ export interface WebrtcSignalingFwd {
   json_data: string;
 }
 
+export interface JoinPTTChannel {
+  // channel id
+  channel_id: string;
+  // type offer, answer or candidate
+  data_type: number;
+  // offer
+  json_data: string;
+}
+
+export interface TalkPTTChannel {
+  // channel id
+  channel_id: string;
+  // type offer, answer or candidate
+  data_type: number;
+  // offer
+  json_data: string;
+  // start or end
+  state: number;
+}
+
 /** A socket connection to Mezon server. */
 export interface Socket {
   /** Connection is Open */
@@ -985,6 +1005,19 @@ export interface Socket {
     voiceChannelId: string,
     voiceUserId: string
   ): Promise<VoiceLeavedEvent>;
+
+  joinPTTChannel(
+    channelId: string,
+    dataType: number,
+    jsonData: string
+  ): Promise<JoinPTTChannel>;
+
+  talkPTTChannel(
+    channelId: string,
+    dataType: number,
+    jsonData: string,
+    state: number
+  ): Promise<TalkPTTChannel>;
 
   /** Handle disconnect events received from the socket. */
   ondisconnect: (evt: Event) => void;
@@ -1757,7 +1790,9 @@ export class DefaultSocket implements Socket {
       | StatusUpdate
       | Ping
       | WebrtcSignalingFwd
-      | MessageButtonClicked,
+      | MessageButtonClicked
+      | JoinPTTChannel
+      | TalkPTTChannel,
     sendTimeout = DefaultSocket.DefaultSendTimeoutMs
   ): Promise<any> {
     const untypedMessage = message as any;
@@ -2091,7 +2126,10 @@ export class DefaultSocket implements Socket {
     return response.check_name_existed_event;
   }
 
-  async forwardWebrtcSignaling(receiver_id: string, data_type: number, json_data: string): Promise<WebrtcSignalingFwd> {
+  async forwardWebrtcSignaling(
+    receiver_id: string, 
+    data_type: number, 
+    json_data: string): Promise<WebrtcSignalingFwd> {
     const response = await this.send({
       webrtc_signaling_fwd: { receiver_id: receiver_id, data_type: data_type, json_data: json_data },
     });
@@ -2108,6 +2146,29 @@ export class DefaultSocket implements Socket {
       message_button_clicked: { message_id: message_id, channel_id: channel_id, button_id: button_id, sender_id: sender_id, user_id: user_id },
     });
     return response.webrtc_signaling_fwd;
+  }
+
+  async joinPTTChannel(
+    channelId: string,
+    dataType: number,
+    jsonData: string
+  ): Promise<JoinPTTChannel> {
+    const response = await this.send({
+      join_ptt_channel: { channel_id: channelId, data_type: dataType, json_data: jsonData },
+    });
+    return response.join_ptt_channel;
+  }
+
+  async talkPTTChannel(
+    channelId: string,
+    dataType: number,
+    jsonData: string,
+    state: number
+  ): Promise<TalkPTTChannel> {
+    const response = await this.send({
+      talk_ptt_channel: { channel_id: channelId, data_type: dataType, json_data: jsonData, state: state },
+    });
+    return response.talk_ptt_channel;
   }
 
   private async pingPong(): Promise<void> {
