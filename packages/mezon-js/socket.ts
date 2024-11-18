@@ -27,6 +27,7 @@ import {
   ApiRole,
   ApiRpc,
   ApiTokenSentEvent,
+  ApiUserActivity,
 } from "./api.gen";
 import { Session } from "./session";
 import { ChannelMessage, Notification } from "./client";
@@ -853,6 +854,10 @@ export interface TalkPTTChannel {
   state: number;
 }
 
+export interface ListActivity {
+  acts: ApiUserActivity[];
+}
+
 /** A socket connection to Mezon server. */
 export interface Socket {
   /** Connection is Open */
@@ -1176,6 +1181,8 @@ export interface Socket {
   onunmuteevent: (unmute_event: UnmuteEvent) => void;
 
   ontokensent: (token: ApiTokenSentEvent) => void;  
+
+  onactivityupdated: (list_activity: ListActivity) => void;
 }
 
 /** Reports an error received from a socket message. */
@@ -1431,6 +1438,8 @@ export class DefaultSocket implements Socket {
           this.onmessagebuttonclicked( <MessageButtonClicked>message.message_button_clicked);
         } else if (message.webrtc_signaling_fwd) {
           this.onwebrtcsignalingfwd(<WebrtcSignalingFwd>message.webrtc_signaling_fwd);
+        } else if (message.list_activity){
+          this.onactivityupdated(<ListActivity>message.list_activity);
         } else {
           if (this.verbose && window && window.console) {
             console.log("Unrecognized message received: %o", message);
@@ -1774,6 +1783,11 @@ export class DefaultSocket implements Socket {
     }
   }
 
+  onactivityupdated(list_activity: ListActivity) {
+    if (this.verbose && window && window.console) {
+      console.log(list_activity);
+    }
+  }
   send(
     message:
       | ChannelJoin
