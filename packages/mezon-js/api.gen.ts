@@ -153,6 +153,8 @@ export interface MezonUpdateClanDescBody {
   logo?: string;
   //
   status?: number;
+  // Is onboarding.
+  is_onboarding?: boolean;
 }
 
 /**  */
@@ -896,6 +898,8 @@ export interface ApiClanDesc {
   status?: number;
   //
   badge_count?: number;
+  // Is onboarding.
+  is_onboarding?: boolean;
 }
 
 /**  */
