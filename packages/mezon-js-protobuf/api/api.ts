@@ -3558,6 +3558,17 @@ export interface OnboardingRequest {
   clan_id: string;
 }
 
+export interface UserStatus {
+  user_id: string;
+  status: number;
+}
+
+export interface UserStatusUpdate {
+  status: number;
+  minutes: number;
+  until_turn_on: boolean;
+}
+
 function createBaseAccount(): Account {
   return {
     user: undefined,
@@ -34254,6 +34265,168 @@ export const OnboardingRequest = {
     const message = createBaseOnboardingRequest();
     message.id = object.id ?? "";
     message.clan_id = object.clan_id ?? "";
+    return message;
+  },
+};
+function createBaseUserStatus(): UserStatus {
+  return { user_id: "", status: 0 };
+}
+
+export const UserStatus = {
+  encode(message: UserStatus, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.user_id !== "") {
+      writer.uint32(10).string(message.user_id);
+    }
+    if (message.status !== 0) {
+      writer.uint32(16).int32(message.status);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): UserStatus {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseUserStatus();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.user_id = reader.string();
+          continue;
+        case 2:
+          if (tag !== 16) {
+            break;
+          }
+
+          message.status = reader.int32();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): UserStatus {
+    return {
+      user_id: isSet(object.user_id) ? globalThis.String(object.user_id) : "",
+      status: isSet(object.status) ? globalThis.Number(object.status) : 0,
+    };
+  },
+
+  toJSON(message: UserStatus): unknown {
+    const obj: any = {};
+    if (message.user_id !== "") {
+      obj.user_id = message.user_id;
+    }
+    if (message.status !== 0) {
+      obj.status = Math.round(message.status);
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<UserStatus>, I>>(base?: I): UserStatus {
+    return UserStatus.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<UserStatus>, I>>(object: I): UserStatus {
+    const message = createBaseUserStatus();
+    message.user_id = object.user_id ?? "";
+    message.status = object.status ?? 0;
+    return message;
+  },
+};
+
+function createBaseUserStatusUpdate(): UserStatusUpdate {
+  return { status: 0, minutes: 0, until_turn_on: false };
+}
+
+export const UserStatusUpdate = {
+  encode(message: UserStatusUpdate, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.status !== 0) {
+      writer.uint32(8).int32(message.status);
+    }
+    if (message.minutes !== 0) {
+      writer.uint32(16).int32(message.minutes);
+    }
+    if (message.until_turn_on !== false) {
+      writer.uint32(24).bool(message.until_turn_on);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): UserStatusUpdate {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseUserStatusUpdate();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 8) {
+            break;
+          }
+
+          message.status = reader.int32();
+          continue;
+        case 2:
+          if (tag !== 16) {
+            break;
+          }
+
+          message.minutes = reader.int32();
+          continue;
+        case 3:
+          if (tag !== 24) {
+            break;
+          }
+
+          message.until_turn_on = reader.bool();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): UserStatusUpdate {
+    return {
+      status: isSet(object.status) ? globalThis.Number(object.status) : 0,
+      minutes: isSet(object.minutes) ? globalThis.Number(object.minutes) : 0,
+      until_turn_on: isSet(object.until_turn_on) ? globalThis.Boolean(object.until_turn_on) : false,
+    };
+  },
+
+  toJSON(message: UserStatusUpdate): unknown {
+    const obj: any = {};
+    if (message.status !== 0) {
+      obj.status = Math.round(message.status);
+    }
+    if (message.minutes !== 0) {
+      obj.minutes = Math.round(message.minutes);
+    }
+    if (message.until_turn_on !== false) {
+      obj.until_turn_on = message.until_turn_on;
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<UserStatusUpdate>, I>>(base?: I): UserStatusUpdate {
+    return UserStatusUpdate.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<UserStatusUpdate>, I>>(object: I): UserStatusUpdate {
+    const message = createBaseUserStatusUpdate();
+    message.status = object.status ?? 0;
+    message.minutes = object.minutes ?? 0;
+    message.until_turn_on = object.until_turn_on ?? false;
     return message;
   },
 };

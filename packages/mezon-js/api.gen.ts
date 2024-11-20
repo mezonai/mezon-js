@@ -2324,6 +2324,24 @@ export interface ApiUserPermissionInChannelListResponse {
   permissions?: ApiPermissionList;
 }
 
+/**  */
+export interface ApiUserStatus {
+  //
+  status?: number;
+  //
+  user_id?: string;
+}
+
+/**  */
+export interface ApiUserStatusUpdate {
+  //
+  minutes?: number;
+  //
+  status?: number;
+  //
+  until_turn_on?: boolean;
+}
+
 /** A collection of zero or more users. */
 export interface ApiUsers {
   //The User objects.
@@ -9371,6 +9389,73 @@ pushPubKey(bearerToken: string,
     const fetchOptions = buildFetchOptions("GET", options, bodyJson);
     if (bearerToken) {
       fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+    }
+
+    return Promise.race([
+      fetch(fullUrl, fetchOptions).then((response) => {
+        if (response.status == 204) {
+          return response;
+        } else if (response.status >= 200 && response.status < 300) {
+          return response.json();
+        } else {
+          throw response;
+        }
+      }),
+      new Promise((_, reject) =>
+        setTimeout(reject, this.timeoutMs, "Request timed out.")
+      ),
+    ]);
+  }
+
+  /** Get user status */
+  getUserStatus(bearerToken: string,
+    options: any = {}): Promise<ApiUserStatus> {
+  
+    const urlPath = "/v2/userstatus";
+    const queryParams = new Map<string, any>();
+
+    let bodyJson : string = "";
+
+    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
+    const fetchOptions = buildFetchOptions("GET", options, bodyJson);
+    if (bearerToken) {
+        fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+    }
+
+    return Promise.race([
+      fetch(fullUrl, fetchOptions).then((response) => {
+        if (response.status == 204) {
+          return response;
+        } else if (response.status >= 200 && response.status < 300) {
+          return response.json();
+        } else {
+          throw response;
+        }
+      }),
+      new Promise((_, reject) =>
+        setTimeout(reject, this.timeoutMs, "Request timed out.")
+      ),
+    ]);
+  }
+
+/** Update user status */
+updateUserStatus(bearerToken: string,
+    body:ApiUserStatusUpdate,
+    options: any = {}): Promise<any> {
+  
+    if (body === null || body === undefined) {
+      throw new Error("'body' is a required parameter but is null or undefined.");
+    }
+    const urlPath = "/v2/userstatus";
+    const queryParams = new Map<string, any>();
+
+    let bodyJson : string = "";
+    bodyJson = JSON.stringify(body || {});
+
+    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
+    const fetchOptions = buildFetchOptions("PUT", options, bodyJson);
+    if (bearerToken) {
+        fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
     }
 
     return Promise.race([
