@@ -2528,6 +2528,68 @@ export interface ApiOnboardingItem {
   update_time?: string;
 }
 
+/**  */
+export interface MezonUpdateClanWebhookByIdBody {
+  //avatar.
+  avatar?: string;
+  //clan id.
+  clan_id?: string;
+  //reset token.
+  reset_token?: boolean;
+  //webhook name.
+  webhook_name?: string;
+}
+
+/**  */
+export interface ApiClanWebhook {
+  //active.
+  active?: number;
+  //
+  avatar?: string;
+  //clan id.
+  clan_id?: string;
+  //create time.
+  create_time?: string;
+  //creator id.
+  creator_id?: string;
+  //id.
+  id?: string;
+  //update time.
+  update_time?: string;
+  //URL of the webhook, which is automatically generated and different from the avatar.
+  url?: string;
+  //webhook name.
+  webhook_name?: string;
+}
+
+/**  */
+export interface ApiGenerateClanWebhookRequest {
+  //avatar.
+  avatar?: string;
+  //clan id.
+  clan_id?: string;
+  //webhook name.
+  webhook_name?: string;
+}
+
+/**  */
+export interface ApiGenerateClanWebhookResponse {
+  //avatar.
+  avatar?: string;
+  //clan id.
+  clan_id?: string;
+  //url.
+  url?: string;
+  //webhook name.
+  webhook_name?: string;
+}
+
+/**  */
+export interface ApiListClanWebhookResponse {
+  //list clan webhook.
+  list_clan_webhooks?: Array<ApiClanWebhook>;
+}
+
 export class MezonApi {
   constructor(
     readonly serverKey: string,
@@ -9847,6 +9909,157 @@ pushPubKey(bearerToken: string,
       throw new Error("'body' is a required parameter but is null or undefined.");
     }
     const urlPath = "/v2/onboarding/{id}"
+        .replace("{id}", encodeURIComponent(String(id)));
+    const queryParams = new Map<string, any>();
+
+    let bodyJson : string = "";
+    bodyJson = JSON.stringify(body || {});
+
+    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
+    const fetchOptions = buildFetchOptions("PUT", options, bodyJson);
+    if (bearerToken) {
+        fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+    }
+
+    return Promise.race([
+      fetch(fullUrl, fetchOptions).then((response) => {
+        if (response.status == 204) {
+          return response;
+        } else if (response.status >= 200 && response.status < 300) {
+          return response.json();
+        } else {
+          throw response;
+        }
+      }),
+      new Promise((_, reject) =>
+        setTimeout(reject, this.timeoutMs, "Request timed out.")
+      ),
+    ]);
+  }
+
+  /** Generate clan webhook. */
+  generateClanWebhook(bearerToken: string,
+    body:ApiGenerateClanWebhookRequest,
+    options: any = {}): Promise<ApiGenerateClanWebhookResponse> {
+    
+    if (body === null || body === undefined) {
+      throw new Error("'body' is a required parameter but is null or undefined.");
+    }
+    const urlPath = "/v2/clanwebhooks";
+    const queryParams = new Map<string, any>();
+
+    let bodyJson : string = "";
+    bodyJson = JSON.stringify(body || {});
+
+    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
+    const fetchOptions = buildFetchOptions("POST", options, bodyJson);
+    if (bearerToken) {
+        fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+    }
+
+    return Promise.race([
+      fetch(fullUrl, fetchOptions).then((response) => {
+        if (response.status == 204) {
+          return response;
+        } else if (response.status >= 200 && response.status < 300) {
+          return response.json();
+        } else {
+          throw response;
+        }
+      }),
+      new Promise((_, reject) =>
+        setTimeout(reject, this.timeoutMs, "Request timed out.")
+      ),
+    ]);
+  }
+
+  /** List clan webhook. */
+  listClanWebhook(bearerToken: string,
+      clanId:string,
+      options: any = {}): Promise<ApiListClanWebhookResponse> {
+    
+    if (clanId === null || clanId === undefined) {
+      throw new Error("'clanId' is a required parameter but is null or undefined.");
+    }
+    const urlPath = "/v2/clanwebhooks/{clanId}"
+        .replace("{clanId}", encodeURIComponent(String(clanId)));
+    const queryParams = new Map<string, any>();
+
+    let bodyJson : string = "";
+
+    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
+    const fetchOptions = buildFetchOptions("GET", options, bodyJson);
+    if (bearerToken) {
+        fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+    }
+
+    return Promise.race([
+      fetch(fullUrl, fetchOptions).then((response) => {
+        if (response.status == 204) {
+          return response;
+        } else if (response.status >= 200 && response.status < 300) {
+          return response.json();
+        } else {
+          throw response;
+        }
+      }),
+      new Promise((_, reject) =>
+        setTimeout(reject, this.timeoutMs, "Request timed out.")
+      ),
+    ]);
+  }
+
+  /** Disabled clan webhook. */
+  deleteClanWebhookById(bearerToken: string,
+      id:string,
+      clanId?:string,
+      options: any = {}): Promise<any> {
+    
+    if (id === null || id === undefined) {
+      throw new Error("'id' is a required parameter but is null or undefined.");
+    }
+    const urlPath = "/v2/clanwebhooks/{id}"
+        .replace("{id}", encodeURIComponent(String(id)));
+    const queryParams = new Map<string, any>();
+    queryParams.set("clan_id", clanId);
+
+    let bodyJson : string = "";
+
+    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
+    const fetchOptions = buildFetchOptions("DELETE", options, bodyJson);
+    if (bearerToken) {
+        fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+    }
+
+    return Promise.race([
+      fetch(fullUrl, fetchOptions).then((response) => {
+        if (response.status == 204) {
+          return response;
+        } else if (response.status >= 200 && response.status < 300) {
+          return response.json();
+        } else {
+          throw response;
+        }
+      }),
+      new Promise((_, reject) =>
+        setTimeout(reject, this.timeoutMs, "Request timed out.")
+      ),
+    ]);
+  }
+
+  /** Update clan webhook by id. */
+  updateClanWebhookById(bearerToken: string,
+      id:string,
+      body:MezonUpdateClanWebhookByIdBody,
+      options: any = {}): Promise<any> {
+    
+    if (id === null || id === undefined) {
+      throw new Error("'id' is a required parameter but is null or undefined.");
+    }
+    if (body === null || body === undefined) {
+      throw new Error("'body' is a required parameter but is null or undefined.");
+    }
+    const urlPath = "/v2/clanwebhooks/{id}"
         .replace("{id}", encodeURIComponent(String(id)));
     const queryParams = new Map<string, any>();
 

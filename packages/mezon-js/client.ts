@@ -144,6 +144,10 @@ import {
   ApiCreateOnboardingRequest,
   MezonUpdateOnboardingBody,
   ApiOnboardingItem,
+  ApiGenerateClanWebhookRequest,
+  ApiGenerateClanWebhookResponse,
+  ApiListClanWebhookResponse,
+  MezonUpdateClanWebhookByIdBody,
 } from "./api.gen";
 
 import { Session } from "./session";
@@ -4524,6 +4528,88 @@ export class Client {
 
     return this.apiClient
       .deleteOnboarding(session.token, id, clanId)
+      .then((response: any) => {
+        return response !== undefined;
+      });
+  }
+
+  //**create webhook for clan */
+  async generateClanWebhook(
+    session: Session,
+    request: ApiGenerateClanWebhookRequest
+  ): Promise<ApiGenerateClanWebhookResponse> {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired((Date.now() + this.expiredTimespanMs) / 1000)
+    ) {
+      await this.sessionRefresh(session);
+    }
+
+    return this.apiClient
+      .generateWebhook(session.token, request)
+      .then((response: any) => {
+        return Promise.resolve(response);
+      });
+  }
+  
+  //**list webhook belong to the clan */
+  async listClanWebhook(
+    session: Session,
+    clan_id: string
+  ): Promise<ApiListClanWebhookResponse> {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired((Date.now() + this.expiredTimespanMs) / 1000)
+    ) {
+      await this.sessionRefresh(session);
+    }
+
+    return this.apiClient
+      .listClanWebhook(session.token, clan_id)
+      .then((response: ApiListClanWebhookResponse) => {
+        return Promise.resolve(response);
+      });
+  }
+
+  //**disabled webhook by id */
+  async deleteClanWebhookById(
+    session: Session, 
+    id: string,
+    clan_id: string
+  ) {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired((Date.now() + this.expiredTimespanMs) / 1000)
+    ) {
+      await this.sessionRefresh(session);
+    }
+
+    return this.apiClient
+      .deleteClanWebhookById(session.token, id, clan_id)
+      .then((response: any) => {
+        return response !== undefined;
+      });
+  }
+
+  //**update webhook name by id */
+  async updateClanWebhookById(
+    session: Session,
+    id: string,
+    request: MezonUpdateClanWebhookByIdBody
+  ) {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired((Date.now() + this.expiredTimespanMs) / 1000)
+    ) {
+      await this.sessionRefresh(session);
+    }
+
+    return this.apiClient
+      .updateClanWebhookById(session.token, id, request)
       .then((response: any) => {
         return response !== undefined;
       });
