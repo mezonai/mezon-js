@@ -23,6 +23,7 @@ import {
   MessagePayLoad,
   MessageUserPayLoad,
   Socket,
+  TokenSentEvent,
 } from "./interfaces";
 import { MezonApi } from './api';
 import { Session } from "./session";
@@ -101,9 +102,9 @@ export class MezonClient implements Client {
     return msgACK;
   }
 
-  async sendToken(receiver_id: string, amount: number) {
-    const sendToken = await this.socket.sendToken(receiver_id, amount);
-    return sendToken;
+  async sendToken(sendTokenData: TokenSentEvent) {
+    const session = this.session!;
+    return this.apiClient.sendToken(session.token, sendTokenData);
   }
 
   async reactionMessage(

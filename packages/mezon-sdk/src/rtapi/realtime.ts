@@ -19,6 +19,7 @@ import {
   PermissionUpdate,
   Role,
   Rpc,
+  TokenSentEvent,
 } from "../api/api";
 import { Timestamp } from "../google/protobuf/timestamp";
 import { BoolValue, Int32Value, StringValue } from "../google/protobuf/wrappers";
@@ -260,6 +261,11 @@ export interface Envelope {
     | undefined;
   /** token is sent event */
   token_sent_event?: TokenSentEvent | undefined;
+  message_button_clicked?:
+    | MessageButtonClicked
+    | undefined;
+  /** unmute channel event */
+  unmute_event?: UnmuteEvent | undefined;
 }
 
 export interface AddClanUserEvent {
@@ -1138,15 +1144,21 @@ export interface PermissionChangedEvent {
   channel_id: string;
 }
 
-export interface TokenSentEvent {
-  /** sender id */
+export interface MessageButtonClicked {
+  message_id: string;
+  channel_id: string;
+  button_id: string;
   sender_id: string;
-  /** sender name */
-  sender_name: string;
-  /** receiver */
-  receiver_id: string;
-  /** amount of token */
-  amount: number;
+  user_id: string;
+}
+
+export interface UnmuteEvent {
+  /** channel id */
+  channel_id: string;
+  /** category id */
+  category_id: string;
+  /** clan id */
+  clan_id: string;
 }
 
 function createBaseEnvelope(): Envelope {
@@ -1210,6 +1222,8 @@ function createBaseEnvelope(): Envelope {
     permission_set_event: undefined,
     permission_changed_event: undefined,
     token_sent_event: undefined,
+    message_button_clicked: undefined,
+    unmute_event: undefined,
   };
 }
 
@@ -1391,6 +1405,12 @@ export const Envelope = {
     }
     if (message.token_sent_event !== undefined) {
       TokenSentEvent.encode(message.token_sent_event, writer.uint32(474).fork()).ldelim();
+    }
+    if (message.message_button_clicked !== undefined) {
+      MessageButtonClicked.encode(message.message_button_clicked, writer.uint32(482).fork()).ldelim();
+    }
+    if (message.unmute_event !== undefined) {
+      UnmuteEvent.encode(message.unmute_event, writer.uint32(490).fork()).ldelim();
     }
     return writer;
   },
@@ -1815,6 +1835,20 @@ export const Envelope = {
 
           message.token_sent_event = TokenSentEvent.decode(reader, reader.uint32());
           continue;
+        case 60:
+          if (tag !== 482) {
+            break;
+          }
+
+          message.message_button_clicked = MessageButtonClicked.decode(reader, reader.uint32());
+          continue;
+        case 61:
+          if (tag !== 490) {
+            break;
+          }
+
+          message.unmute_event = UnmuteEvent.decode(reader, reader.uint32());
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -1965,6 +1999,10 @@ export const Envelope = {
         ? PermissionChangedEvent.fromJSON(object.permission_changed_event)
         : undefined,
       token_sent_event: isSet(object.token_sent_event) ? TokenSentEvent.fromJSON(object.token_sent_event) : undefined,
+      message_button_clicked: isSet(object.message_button_clicked)
+        ? MessageButtonClicked.fromJSON(object.message_button_clicked)
+        : undefined,
+      unmute_event: isSet(object.unmute_event) ? UnmuteEvent.fromJSON(object.unmute_event) : undefined,
     };
   },
 
@@ -2146,6 +2184,12 @@ export const Envelope = {
     }
     if (message.token_sent_event !== undefined) {
       obj.token_sent_event = TokenSentEvent.toJSON(message.token_sent_event);
+    }
+    if (message.message_button_clicked !== undefined) {
+      obj.message_button_clicked = MessageButtonClicked.toJSON(message.message_button_clicked);
+    }
+    if (message.unmute_event !== undefined) {
+      obj.unmute_event = UnmuteEvent.toJSON(message.unmute_event);
     }
     return obj;
   },
@@ -2343,6 +2387,13 @@ export const Envelope = {
         : undefined;
     message.token_sent_event = (object.token_sent_event !== undefined && object.token_sent_event !== null)
       ? TokenSentEvent.fromPartial(object.token_sent_event)
+      : undefined;
+    message.message_button_clicked =
+      (object.message_button_clicked !== undefined && object.message_button_clicked !== null)
+        ? MessageButtonClicked.fromPartial(object.message_button_clicked)
+        : undefined;
+    message.unmute_event = (object.unmute_event !== undefined && object.unmute_event !== null)
+      ? UnmuteEvent.fromPartial(object.unmute_event)
       : undefined;
     return message;
   },
@@ -9501,31 +9552,34 @@ export const PermissionChangedEvent = {
   },
 };
 
-function createBaseTokenSentEvent(): TokenSentEvent {
-  return { sender_id: "", sender_name: "", receiver_id: "", amount: 0 };
+function createBaseMessageButtonClicked(): MessageButtonClicked {
+  return { message_id: "", channel_id: "", button_id: "", sender_id: "", user_id: "" };
 }
 
-export const TokenSentEvent = {
-  encode(message: TokenSentEvent, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+export const MessageButtonClicked = {
+  encode(message: MessageButtonClicked, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.message_id !== "") {
+      writer.uint32(10).string(message.message_id);
+    }
+    if (message.channel_id !== "") {
+      writer.uint32(18).string(message.channel_id);
+    }
+    if (message.button_id !== "") {
+      writer.uint32(26).string(message.button_id);
+    }
     if (message.sender_id !== "") {
-      writer.uint32(10).string(message.sender_id);
+      writer.uint32(34).string(message.sender_id);
     }
-    if (message.sender_name !== "") {
-      writer.uint32(18).string(message.sender_name);
-    }
-    if (message.receiver_id !== "") {
-      writer.uint32(26).string(message.receiver_id);
-    }
-    if (message.amount !== 0) {
-      writer.uint32(32).int32(message.amount);
+    if (message.user_id !== "") {
+      writer.uint32(42).string(message.user_id);
     }
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): TokenSentEvent {
+  decode(input: _m0.Reader | Uint8Array, length?: number): MessageButtonClicked {
     const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseTokenSentEvent();
+    const message = createBaseMessageButtonClicked();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -9534,28 +9588,35 @@ export const TokenSentEvent = {
             break;
           }
 
-          message.sender_id = reader.string();
+          message.message_id = reader.string();
           continue;
         case 2:
           if (tag !== 18) {
             break;
           }
 
-          message.sender_name = reader.string();
+          message.channel_id = reader.string();
           continue;
         case 3:
           if (tag !== 26) {
             break;
           }
 
-          message.receiver_id = reader.string();
+          message.button_id = reader.string();
           continue;
         case 4:
-          if (tag !== 32) {
+          if (tag !== 34) {
             break;
           }
 
-          message.amount = reader.int32();
+          message.sender_id = reader.string();
+          continue;
+        case 5:
+          if (tag !== 42) {
+            break;
+          }
+
+          message.user_id = reader.string();
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -9566,41 +9627,135 @@ export const TokenSentEvent = {
     return message;
   },
 
-  fromJSON(object: any): TokenSentEvent {
+  fromJSON(object: any): MessageButtonClicked {
     return {
+      message_id: isSet(object.message_id) ? globalThis.String(object.message_id) : "",
+      channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "",
+      button_id: isSet(object.button_id) ? globalThis.String(object.button_id) : "",
       sender_id: isSet(object.sender_id) ? globalThis.String(object.sender_id) : "",
-      sender_name: isSet(object.sender_name) ? globalThis.String(object.sender_name) : "",
-      receiver_id: isSet(object.receiver_id) ? globalThis.String(object.receiver_id) : "",
-      amount: isSet(object.amount) ? globalThis.Number(object.amount) : 0,
+      user_id: isSet(object.user_id) ? globalThis.String(object.user_id) : "",
     };
   },
 
-  toJSON(message: TokenSentEvent): unknown {
+  toJSON(message: MessageButtonClicked): unknown {
     const obj: any = {};
+    if (message.message_id !== "") {
+      obj.message_id = message.message_id;
+    }
+    if (message.channel_id !== "") {
+      obj.channel_id = message.channel_id;
+    }
+    if (message.button_id !== "") {
+      obj.button_id = message.button_id;
+    }
     if (message.sender_id !== "") {
       obj.sender_id = message.sender_id;
     }
-    if (message.sender_name !== "") {
-      obj.sender_name = message.sender_name;
-    }
-    if (message.receiver_id !== "") {
-      obj.receiver_id = message.receiver_id;
-    }
-    if (message.amount !== 0) {
-      obj.amount = Math.round(message.amount);
+    if (message.user_id !== "") {
+      obj.user_id = message.user_id;
     }
     return obj;
   },
 
-  create<I extends Exact<DeepPartial<TokenSentEvent>, I>>(base?: I): TokenSentEvent {
-    return TokenSentEvent.fromPartial(base ?? ({} as any));
+  create<I extends Exact<DeepPartial<MessageButtonClicked>, I>>(base?: I): MessageButtonClicked {
+    return MessageButtonClicked.fromPartial(base ?? ({} as any));
   },
-  fromPartial<I extends Exact<DeepPartial<TokenSentEvent>, I>>(object: I): TokenSentEvent {
-    const message = createBaseTokenSentEvent();
+  fromPartial<I extends Exact<DeepPartial<MessageButtonClicked>, I>>(object: I): MessageButtonClicked {
+    const message = createBaseMessageButtonClicked();
+    message.message_id = object.message_id ?? "";
+    message.channel_id = object.channel_id ?? "";
+    message.button_id = object.button_id ?? "";
     message.sender_id = object.sender_id ?? "";
-    message.sender_name = object.sender_name ?? "";
-    message.receiver_id = object.receiver_id ?? "";
-    message.amount = object.amount ?? 0;
+    message.user_id = object.user_id ?? "";
+    return message;
+  },
+};
+
+function createBaseUnmuteEvent(): UnmuteEvent {
+  return { channel_id: "", category_id: "", clan_id: "" };
+}
+
+export const UnmuteEvent = {
+  encode(message: UnmuteEvent, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.channel_id !== "") {
+      writer.uint32(10).string(message.channel_id);
+    }
+    if (message.category_id !== "") {
+      writer.uint32(18).string(message.category_id);
+    }
+    if (message.clan_id !== "") {
+      writer.uint32(26).string(message.clan_id);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): UnmuteEvent {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseUnmuteEvent();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.channel_id = reader.string();
+          continue;
+        case 2:
+          if (tag !== 18) {
+            break;
+          }
+
+          message.category_id = reader.string();
+          continue;
+        case 3:
+          if (tag !== 26) {
+            break;
+          }
+
+          message.clan_id = reader.string();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): UnmuteEvent {
+    return {
+      channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "",
+      category_id: isSet(object.category_id) ? globalThis.String(object.category_id) : "",
+      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
+    };
+  },
+
+  toJSON(message: UnmuteEvent): unknown {
+    const obj: any = {};
+    if (message.channel_id !== "") {
+      obj.channel_id = message.channel_id;
+    }
+    if (message.category_id !== "") {
+      obj.category_id = message.category_id;
+    }
+    if (message.clan_id !== "") {
+      obj.clan_id = message.clan_id;
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<UnmuteEvent>, I>>(base?: I): UnmuteEvent {
+    return UnmuteEvent.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<UnmuteEvent>, I>>(object: I): UnmuteEvent {
+    const message = createBaseUnmuteEvent();
+    message.channel_id = object.channel_id ?? "";
+    message.category_id = object.category_id ?? "";
+    message.clan_id = object.clan_id ?? "";
     return message;
   },
 };

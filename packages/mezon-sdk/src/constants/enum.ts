@@ -31,6 +31,9 @@ export enum InternalEventsSocket {
   RoleAssignEvent = "role_assign_event",
   TokenSend = "token_sent_event",
   ClanEventCreated = "clan_event_created",
+  MessageButtonClicked = "message_button_clicked",
+  StreamingJoinedEvent = "streaming_joined_event",
+  StreamingLeavedEvent = "streaming_leaved_event"
 }
 
 export enum Events {
@@ -47,7 +50,10 @@ export enum Events {
   RoleAssign = InternalEventsSocket.RoleAssignEvent,
   AddClanUser = InternalEventsSocket.AddClanUserEvent,
   TokenSend = InternalEventsSocket.TokenSend,
-  ClanEventCreated = InternalEventsSocket.ClanEventCreated
+  ClanEventCreated = InternalEventsSocket.ClanEventCreated,
+  MessageButtonClicked = InternalEventsSocket.MessageButtonClicked,
+  StreamingJoinedEvent = InternalEventsSocket.StreamingJoinedEvent,
+  StreamingLeavedEvent = InternalEventsSocket.StreamingLeavedEvent
 }
 
 export enum ChannelType {
