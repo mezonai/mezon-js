@@ -1253,8 +1253,14 @@ export interface ListNotificationsRequest {
     | undefined;
   /** The clan id */
   clan_id: string;
-  /** A cursor to page through notifications. May be cached by clients to get from point in time forwards. */
-  cacheable_cursor: string;
+  /** The current notification Id. */
+  notification_id: string;
+  /** The code. */
+  code:
+    | number
+    | undefined;
+  /** True if listing should be older notifications to newer, false if reverse. */
+  direction: number | undefined;
 }
 
 /** List the groups a user is part of, and their relationship to each. */
@@ -2155,7 +2161,11 @@ export interface SetNotificationRequest {
   /** notification_type */
   notification_type: number;
   /** time mute channel category */
-  time_mute: Date | undefined;
+  time_mute:
+    | Date
+    | undefined;
+  /**  */
+  clan_id: string;
 }
 
 /**  */
@@ -2647,6 +2657,7 @@ export interface WebhookCreateRequest {
   webhook_name: string;
   channel_id: string;
   avatar: string;
+  clan_id: string;
 }
 
 export interface WebhookListRequestById {
@@ -2654,14 +2665,24 @@ export interface WebhookListRequestById {
 }
 
 export interface WebhookUpdateRequestById {
+  /** webhook Id */
   id: string;
+  /** webhook name */
   webhook_name: string;
-  channel_id: string;
+  /** change channel_id of webhook */
+  channel_id_update: string;
+  /** webhook avatar */
   avatar: string;
+  /** channel id */
+  channel_id: string;
+  /** clan id */
+  clan_id: string;
 }
 
 export interface WebhookDeleteRequestById {
   id: string;
+  clan_id: string;
+  channel_id: string;
 }
 
 export interface WebhookListRequest {
@@ -3357,6 +3378,81 @@ export interface ConfirmLoginRequest {
 export interface SendTokenRequest {
   /** receiver */
   receiver_id: string;
+  /** amount of token */
+  amount: number;
+}
+
+export interface PubKey {
+  encr: Uint8Array;
+  sign: Uint8Array;
+}
+
+export interface PushPubKeyRequest {
+  PK: PubKey | undefined;
+}
+
+export interface GetPubKeysRequest {
+  user_ids: string[];
+}
+
+export interface GetPubKeysResponse {
+  pub_keys: GetPubKeysResponse_UserPubKey[];
+}
+
+export interface GetPubKeysResponse_UserPubKey {
+  user_id: string;
+  PK: PubKey | undefined;
+}
+
+export interface ChanEncryptionMethod {
+  method: string;
+  channel_id: string;
+}
+
+export interface GetKeyServerResp {
+  url: string;
+}
+
+export interface AuditLog {
+  id: string;
+  user_id: string;
+  clan_id: string;
+  action_log: string;
+  entity_name: string;
+  entity_id: string;
+  details: string;
+  time_log: Date | undefined;
+}
+
+export interface ListAuditLog {
+  total_count: number;
+  page: number;
+  page_size: number;
+  logs: AuditLog[];
+}
+
+export interface ListAuditLogRequest {
+  action_log: string;
+  user_id: string;
+  clan_id: string;
+  page: number;
+  page_size: number;
+}
+
+export interface TokenSentEvent {
+  /** sender id */
+  sender_id: string;
+  /** sender name */
+  sender_name: string;
+  /** receiver */
+  receiver_id: string;
+  /** amount of token */
+  amount: number;
+  /** note */
+  note: string;
+}
+
+export interface WithdrawTokenRequest {
   /** amount of token */
   amount: number;
 }
@@ -11823,7 +11919,7 @@ export const ListClanUsersRequest = {
 };
 
 function createBaseListNotificationsRequest(): ListNotificationsRequest {
-  return { limit: undefined, clan_id: "", cacheable_cursor: "" };
+  return { limit: undefined, clan_id: "", notification_id: "", code: undefined, direction: undefined };
 }
 
 export const ListNotificationsRequest = {
@@ -11834,8 +11930,14 @@ export const ListNotificationsRequest = {
     if (message.clan_id !== "") {
       writer.uint32(18).string(message.clan_id);
     }
-    if (message.cacheable_cursor !== "") {
-      writer.uint32(26).string(message.cacheable_cursor);
+    if (message.notification_id !== "") {
+      writer.uint32(26).string(message.notification_id);
+    }
+    if (message.code !== undefined) {
+      Int32Value.encode({ value: message.code! }, writer.uint32(34).fork()).ldelim();
+    }
+    if (message.direction !== undefined) {
+      Int32Value.encode({ value: message.direction! }, writer.uint32(42).fork()).ldelim();
     }
     return writer;
   },
@@ -11866,7 +11968,21 @@ export const ListNotificationsRequest = {
             break;
           }
 
-          message.cacheable_cursor = reader.string();
+          message.notification_id = reader.string();
+          continue;
+        case 4:
+          if (tag !== 34) {
+            break;
+          }
+
+          message.code = Int32Value.decode(reader, reader.uint32()).value;
+          continue;
+        case 5:
+          if (tag !== 42) {
+            break;
+          }
+
+          message.direction = Int32Value.decode(reader, reader.uint32()).value;
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -11881,7 +11997,9 @@ export const ListNotificationsRequest = {
     return {
       limit: isSet(object.limit) ? Number(object.limit) : undefined,
       clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
-      cacheable_cursor: isSet(object.cacheable_cursor) ? globalThis.String(object.cacheable_cursor) : "",
+      notification_id: isSet(object.notification_id) ? globalThis.String(object.notification_id) : "",
+      code: isSet(object.code) ? Number(object.code) : undefined,
+      direction: isSet(object.direction) ? Number(object.direction) : undefined,
     };
   },
 
@@ -11893,8 +12011,14 @@ export const ListNotificationsRequest = {
     if (message.clan_id !== "") {
       obj.clan_id = message.clan_id;
     }
-    if (message.cacheable_cursor !== "") {
-      obj.cacheable_cursor = message.cacheable_cursor;
+    if (message.notification_id !== "") {
+      obj.notification_id = message.notification_id;
+    }
+    if (message.code !== undefined) {
+      obj.code = message.code;
+    }
+    if (message.direction !== undefined) {
+      obj.direction = message.direction;
     }
     return obj;
   },
@@ -11906,7 +12030,9 @@ export const ListNotificationsRequest = {
     const message = createBaseListNotificationsRequest();
     message.limit = object.limit ?? undefined;
     message.clan_id = object.clan_id ?? "";
-    message.cacheable_cursor = object.cacheable_cursor ?? "";
+    message.notification_id = object.notification_id ?? "";
+    message.code = object.code ?? undefined;
+    message.direction = object.direction ?? undefined;
     return message;
   },
 };
@@ -19246,7 +19372,7 @@ export const NotificationSettingList = {
 };
 
 function createBaseSetNotificationRequest(): SetNotificationRequest {
-  return { channel_category_id: "", notification_type: 0, time_mute: undefined };
+  return { channel_category_id: "", notification_type: 0, time_mute: undefined, clan_id: "" };
 }
 
 export const SetNotificationRequest = {
@@ -19259,6 +19385,9 @@ export const SetNotificationRequest = {
     }
     if (message.time_mute !== undefined) {
       Timestamp.encode(toTimestamp(message.time_mute), writer.uint32(26).fork()).ldelim();
+    }
+    if (message.clan_id !== "") {
+      writer.uint32(34).string(message.clan_id);
     }
     return writer;
   },
@@ -19291,6 +19420,13 @@ export const SetNotificationRequest = {
 
           message.time_mute = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
           continue;
+        case 4:
+          if (tag !== 34) {
+            break;
+          }
+
+          message.clan_id = reader.string();
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -19305,6 +19441,7 @@ export const SetNotificationRequest = {
       channel_category_id: isSet(object.channel_category_id) ? globalThis.String(object.channel_category_id) : "",
       notification_type: isSet(object.notification_type) ? globalThis.Number(object.notification_type) : 0,
       time_mute: isSet(object.time_mute) ? fromJsonTimestamp(object.time_mute) : undefined,
+      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
     };
   },
 
@@ -19319,6 +19456,9 @@ export const SetNotificationRequest = {
     if (message.time_mute !== undefined) {
       obj.time_mute = message.time_mute.toISOString();
     }
+    if (message.clan_id !== "") {
+      obj.clan_id = message.clan_id;
+    }
     return obj;
   },
 
@@ -19330,6 +19470,7 @@ export const SetNotificationRequest = {
     message.channel_category_id = object.channel_category_id ?? "";
     message.notification_type = object.notification_type ?? 0;
     message.time_mute = object.time_mute ?? undefined;
+    message.clan_id = object.clan_id ?? "";
     return message;
   },
 };
@@ -24602,7 +24743,7 @@ export const Webhook = {
 };
 
 function createBaseWebhookCreateRequest(): WebhookCreateRequest {
-  return { webhook_name: "", channel_id: "", avatar: "" };
+  return { webhook_name: "", channel_id: "", avatar: "", clan_id: "" };
 }
 
 export const WebhookCreateRequest = {
@@ -24615,6 +24756,9 @@ export const WebhookCreateRequest = {
     }
     if (message.avatar !== "") {
       writer.uint32(26).string(message.avatar);
+    }
+    if (message.clan_id !== "") {
+      writer.uint32(34).string(message.clan_id);
     }
     return writer;
   },
@@ -24647,6 +24791,13 @@ export const WebhookCreateRequest = {
 
           message.avatar = reader.string();
           continue;
+        case 4:
+          if (tag !== 34) {
+            break;
+          }
+
+          message.clan_id = reader.string();
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -24661,6 +24812,7 @@ export const WebhookCreateRequest = {
       webhook_name: isSet(object.webhook_name) ? globalThis.String(object.webhook_name) : "",
       channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "",
       avatar: isSet(object.avatar) ? globalThis.String(object.avatar) : "",
+      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
     };
   },
 
@@ -24675,6 +24827,9 @@ export const WebhookCreateRequest = {
     if (message.avatar !== "") {
       obj.avatar = message.avatar;
     }
+    if (message.clan_id !== "") {
+      obj.clan_id = message.clan_id;
+    }
     return obj;
   },
 
@@ -24686,6 +24841,7 @@ export const WebhookCreateRequest = {
     message.webhook_name = object.webhook_name ?? "";
     message.channel_id = object.channel_id ?? "";
     message.avatar = object.avatar ?? "";
+    message.clan_id = object.clan_id ?? "";
     return message;
   },
 };
@@ -24748,7 +24904,7 @@ export const WebhookListRequestById = {
 };
 
 function createBaseWebhookUpdateRequestById(): WebhookUpdateRequestById {
-  return { id: "", webhook_name: "", channel_id: "", avatar: "" };
+  return { id: "", webhook_name: "", channel_id_update: "", avatar: "", channel_id: "", clan_id: "" };
 }
 
 export const WebhookUpdateRequestById = {
@@ -24759,11 +24915,17 @@ export const WebhookUpdateRequestById = {
     if (message.webhook_name !== "") {
       writer.uint32(18).string(message.webhook_name);
     }
-    if (message.channel_id !== "") {
-      writer.uint32(26).string(message.channel_id);
+    if (message.channel_id_update !== "") {
+      writer.uint32(26).string(message.channel_id_update);
     }
     if (message.avatar !== "") {
       writer.uint32(34).string(message.avatar);
+    }
+    if (message.channel_id !== "") {
+      writer.uint32(42).string(message.channel_id);
+    }
+    if (message.clan_id !== "") {
+      writer.uint32(50).string(message.clan_id);
     }
     return writer;
   },
@@ -24794,7 +24956,7 @@ export const WebhookUpdateRequestById = {
             break;
           }
 
-          message.channel_id = reader.string();
+          message.channel_id_update = reader.string();
           continue;
         case 4:
           if (tag !== 34) {
@@ -24802,6 +24964,20 @@ export const WebhookUpdateRequestById = {
           }
 
           message.avatar = reader.string();
+          continue;
+        case 5:
+          if (tag !== 42) {
+            break;
+          }
+
+          message.channel_id = reader.string();
+          continue;
+        case 6:
+          if (tag !== 50) {
+            break;
+          }
+
+          message.clan_id = reader.string();
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -24816,8 +24992,10 @@ export const WebhookUpdateRequestById = {
     return {
       id: isSet(object.id) ? globalThis.String(object.id) : "",
       webhook_name: isSet(object.webhook_name) ? globalThis.String(object.webhook_name) : "",
-      channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "",
+      channel_id_update: isSet(object.channel_id_update) ? globalThis.String(object.channel_id_update) : "",
       avatar: isSet(object.avatar) ? globalThis.String(object.avatar) : "",
+      channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "",
+      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
     };
   },
 
@@ -24829,11 +25007,17 @@ export const WebhookUpdateRequestById = {
     if (message.webhook_name !== "") {
       obj.webhook_name = message.webhook_name;
     }
-    if (message.channel_id !== "") {
-      obj.channel_id = message.channel_id;
+    if (message.channel_id_update !== "") {
+      obj.channel_id_update = message.channel_id_update;
     }
     if (message.avatar !== "") {
       obj.avatar = message.avatar;
+    }
+    if (message.channel_id !== "") {
+      obj.channel_id = message.channel_id;
+    }
+    if (message.clan_id !== "") {
+      obj.clan_id = message.clan_id;
     }
     return obj;
   },
@@ -24845,20 +25029,28 @@ export const WebhookUpdateRequestById = {
     const message = createBaseWebhookUpdateRequestById();
     message.id = object.id ?? "";
     message.webhook_name = object.webhook_name ?? "";
-    message.channel_id = object.channel_id ?? "";
+    message.channel_id_update = object.channel_id_update ?? "";
     message.avatar = object.avatar ?? "";
+    message.channel_id = object.channel_id ?? "";
+    message.clan_id = object.clan_id ?? "";
     return message;
   },
 };
 
 function createBaseWebhookDeleteRequestById(): WebhookDeleteRequestById {
-  return { id: "" };
+  return { id: "", clan_id: "", channel_id: "" };
 }
 
 export const WebhookDeleteRequestById = {
   encode(message: WebhookDeleteRequestById, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.id !== "") {
       writer.uint32(10).string(message.id);
+    }
+    if (message.clan_id !== "") {
+      writer.uint32(18).string(message.clan_id);
+    }
+    if (message.channel_id !== "") {
+      writer.uint32(26).string(message.channel_id);
     }
     return writer;
   },
@@ -24877,6 +25069,20 @@ export const WebhookDeleteRequestById = {
 
           message.id = reader.string();
           continue;
+        case 2:
+          if (tag !== 18) {
+            break;
+          }
+
+          message.clan_id = reader.string();
+          continue;
+        case 3:
+          if (tag !== 26) {
+            break;
+          }
+
+          message.channel_id = reader.string();
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -24887,13 +25093,23 @@ export const WebhookDeleteRequestById = {
   },
 
   fromJSON(object: any): WebhookDeleteRequestById {
-    return { id: isSet(object.id) ? globalThis.String(object.id) : "" };
+    return {
+      id: isSet(object.id) ? globalThis.String(object.id) : "",
+      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
+      channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "",
+    };
   },
 
   toJSON(message: WebhookDeleteRequestById): unknown {
     const obj: any = {};
     if (message.id !== "") {
       obj.id = message.id;
+    }
+    if (message.clan_id !== "") {
+      obj.clan_id = message.clan_id;
+    }
+    if (message.channel_id !== "") {
+      obj.channel_id = message.channel_id;
     }
     return obj;
   },
@@ -24904,6 +25120,8 @@ export const WebhookDeleteRequestById = {
   fromPartial<I extends Exact<DeepPartial<WebhookDeleteRequestById>, I>>(object: I): WebhookDeleteRequestById {
     const message = createBaseWebhookDeleteRequestById();
     message.id = object.id ?? "";
+    message.clan_id = object.clan_id ?? "";
+    message.channel_id = object.channel_id ?? "";
     return message;
   },
 };
@@ -32016,6 +32234,1061 @@ export const SendTokenRequest = {
     return message;
   },
 };
+
+function createBasePubKey(): PubKey {
+  return { encr: new Uint8Array(0), sign: new Uint8Array(0) };
+}
+
+export const PubKey = {
+  encode(message: PubKey, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.encr.length !== 0) {
+      writer.uint32(10).bytes(message.encr);
+    }
+    if (message.sign.length !== 0) {
+      writer.uint32(18).bytes(message.sign);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): PubKey {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBasePubKey();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.encr = reader.bytes();
+          continue;
+        case 2:
+          if (tag !== 18) {
+            break;
+          }
+
+          message.sign = reader.bytes();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): PubKey {
+    return {
+      encr: isSet(object.encr) ? bytesFromBase64(object.encr) : new Uint8Array(0),
+      sign: isSet(object.sign) ? bytesFromBase64(object.sign) : new Uint8Array(0),
+    };
+  },
+
+  toJSON(message: PubKey): unknown {
+    const obj: any = {};
+    if (message.encr.length !== 0) {
+      obj.encr = base64FromBytes(message.encr);
+    }
+    if (message.sign.length !== 0) {
+      obj.sign = base64FromBytes(message.sign);
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<PubKey>, I>>(base?: I): PubKey {
+    return PubKey.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<PubKey>, I>>(object: I): PubKey {
+    const message = createBasePubKey();
+    message.encr = object.encr ?? new Uint8Array(0);
+    message.sign = object.sign ?? new Uint8Array(0);
+    return message;
+  },
+};
+
+function createBasePushPubKeyRequest(): PushPubKeyRequest {
+  return { PK: undefined };
+}
+
+export const PushPubKeyRequest = {
+  encode(message: PushPubKeyRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.PK !== undefined) {
+      PubKey.encode(message.PK, writer.uint32(10).fork()).ldelim();
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): PushPubKeyRequest {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBasePushPubKeyRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.PK = PubKey.decode(reader, reader.uint32());
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): PushPubKeyRequest {
+    return { PK: isSet(object.PK) ? PubKey.fromJSON(object.PK) : undefined };
+  },
+
+  toJSON(message: PushPubKeyRequest): unknown {
+    const obj: any = {};
+    if (message.PK !== undefined) {
+      obj.PK = PubKey.toJSON(message.PK);
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<PushPubKeyRequest>, I>>(base?: I): PushPubKeyRequest {
+    return PushPubKeyRequest.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<PushPubKeyRequest>, I>>(object: I): PushPubKeyRequest {
+    const message = createBasePushPubKeyRequest();
+    message.PK = (object.PK !== undefined && object.PK !== null) ? PubKey.fromPartial(object.PK) : undefined;
+    return message;
+  },
+};
+
+function createBaseGetPubKeysRequest(): GetPubKeysRequest {
+  return { user_ids: [] };
+}
+
+export const GetPubKeysRequest = {
+  encode(message: GetPubKeysRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    for (const v of message.user_ids) {
+      writer.uint32(10).string(v!);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): GetPubKeysRequest {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseGetPubKeysRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.user_ids.push(reader.string());
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): GetPubKeysRequest {
+    return {
+      user_ids: globalThis.Array.isArray(object?.user_ids) ? object.user_ids.map((e: any) => globalThis.String(e)) : [],
+    };
+  },
+
+  toJSON(message: GetPubKeysRequest): unknown {
+    const obj: any = {};
+    if (message.user_ids?.length) {
+      obj.user_ids = message.user_ids;
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<GetPubKeysRequest>, I>>(base?: I): GetPubKeysRequest {
+    return GetPubKeysRequest.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<GetPubKeysRequest>, I>>(object: I): GetPubKeysRequest {
+    const message = createBaseGetPubKeysRequest();
+    message.user_ids = object.user_ids?.map((e) => e) || [];
+    return message;
+  },
+};
+
+function createBaseGetPubKeysResponse(): GetPubKeysResponse {
+  return { pub_keys: [] };
+}
+
+export const GetPubKeysResponse = {
+  encode(message: GetPubKeysResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    for (const v of message.pub_keys) {
+      GetPubKeysResponse_UserPubKey.encode(v!, writer.uint32(10).fork()).ldelim();
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): GetPubKeysResponse {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseGetPubKeysResponse();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.pub_keys.push(GetPubKeysResponse_UserPubKey.decode(reader, reader.uint32()));
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): GetPubKeysResponse {
+    return {
+      pub_keys: globalThis.Array.isArray(object?.pub_keys)
+        ? object.pub_keys.map((e: any) => GetPubKeysResponse_UserPubKey.fromJSON(e))
+        : [],
+    };
+  },
+
+  toJSON(message: GetPubKeysResponse): unknown {
+    const obj: any = {};
+    if (message.pub_keys?.length) {
+      obj.pub_keys = message.pub_keys.map((e) => GetPubKeysResponse_UserPubKey.toJSON(e));
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<GetPubKeysResponse>, I>>(base?: I): GetPubKeysResponse {
+    return GetPubKeysResponse.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<GetPubKeysResponse>, I>>(object: I): GetPubKeysResponse {
+    const message = createBaseGetPubKeysResponse();
+    message.pub_keys = object.pub_keys?.map((e) => GetPubKeysResponse_UserPubKey.fromPartial(e)) || [];
+    return message;
+  },
+};
+
+function createBaseGetPubKeysResponse_UserPubKey(): GetPubKeysResponse_UserPubKey {
+  return { user_id: "", PK: undefined };
+}
+
+export const GetPubKeysResponse_UserPubKey = {
+  encode(message: GetPubKeysResponse_UserPubKey, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.user_id !== "") {
+      writer.uint32(10).string(message.user_id);
+    }
+    if (message.PK !== undefined) {
+      PubKey.encode(message.PK, writer.uint32(18).fork()).ldelim();
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): GetPubKeysResponse_UserPubKey {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseGetPubKeysResponse_UserPubKey();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.user_id = reader.string();
+          continue;
+        case 2:
+          if (tag !== 18) {
+            break;
+          }
+
+          message.PK = PubKey.decode(reader, reader.uint32());
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): GetPubKeysResponse_UserPubKey {
+    return {
+      user_id: isSet(object.user_id) ? globalThis.String(object.user_id) : "",
+      PK: isSet(object.PK) ? PubKey.fromJSON(object.PK) : undefined,
+    };
+  },
+
+  toJSON(message: GetPubKeysResponse_UserPubKey): unknown {
+    const obj: any = {};
+    if (message.user_id !== "") {
+      obj.user_id = message.user_id;
+    }
+    if (message.PK !== undefined) {
+      obj.PK = PubKey.toJSON(message.PK);
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<GetPubKeysResponse_UserPubKey>, I>>(base?: I): GetPubKeysResponse_UserPubKey {
+    return GetPubKeysResponse_UserPubKey.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<GetPubKeysResponse_UserPubKey>, I>>(
+    object: I,
+  ): GetPubKeysResponse_UserPubKey {
+    const message = createBaseGetPubKeysResponse_UserPubKey();
+    message.user_id = object.user_id ?? "";
+    message.PK = (object.PK !== undefined && object.PK !== null) ? PubKey.fromPartial(object.PK) : undefined;
+    return message;
+  },
+};
+
+function createBaseChanEncryptionMethod(): ChanEncryptionMethod {
+  return { method: "", channel_id: "" };
+}
+
+export const ChanEncryptionMethod = {
+  encode(message: ChanEncryptionMethod, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.method !== "") {
+      writer.uint32(10).string(message.method);
+    }
+    if (message.channel_id !== "") {
+      writer.uint32(18).string(message.channel_id);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): ChanEncryptionMethod {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseChanEncryptionMethod();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.method = reader.string();
+          continue;
+        case 2:
+          if (tag !== 18) {
+            break;
+          }
+
+          message.channel_id = reader.string();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): ChanEncryptionMethod {
+    return {
+      method: isSet(object.method) ? globalThis.String(object.method) : "",
+      channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "",
+    };
+  },
+
+  toJSON(message: ChanEncryptionMethod): unknown {
+    const obj: any = {};
+    if (message.method !== "") {
+      obj.method = message.method;
+    }
+    if (message.channel_id !== "") {
+      obj.channel_id = message.channel_id;
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<ChanEncryptionMethod>, I>>(base?: I): ChanEncryptionMethod {
+    return ChanEncryptionMethod.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<ChanEncryptionMethod>, I>>(object: I): ChanEncryptionMethod {
+    const message = createBaseChanEncryptionMethod();
+    message.method = object.method ?? "";
+    message.channel_id = object.channel_id ?? "";
+    return message;
+  },
+};
+
+function createBaseGetKeyServerResp(): GetKeyServerResp {
+  return { url: "" };
+}
+
+export const GetKeyServerResp = {
+  encode(message: GetKeyServerResp, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.url !== "") {
+      writer.uint32(10).string(message.url);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): GetKeyServerResp {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseGetKeyServerResp();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.url = reader.string();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): GetKeyServerResp {
+    return { url: isSet(object.url) ? globalThis.String(object.url) : "" };
+  },
+
+  toJSON(message: GetKeyServerResp): unknown {
+    const obj: any = {};
+    if (message.url !== "") {
+      obj.url = message.url;
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<GetKeyServerResp>, I>>(base?: I): GetKeyServerResp {
+    return GetKeyServerResp.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<GetKeyServerResp>, I>>(object: I): GetKeyServerResp {
+    const message = createBaseGetKeyServerResp();
+    message.url = object.url ?? "";
+    return message;
+  },
+};
+
+function createBaseAuditLog(): AuditLog {
+  return {
+    id: "",
+    user_id: "",
+    clan_id: "",
+    action_log: "",
+    entity_name: "",
+    entity_id: "",
+    details: "",
+    time_log: undefined,
+  };
+}
+
+export const AuditLog = {
+  encode(message: AuditLog, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.id !== "") {
+      writer.uint32(10).string(message.id);
+    }
+    if (message.user_id !== "") {
+      writer.uint32(18).string(message.user_id);
+    }
+    if (message.clan_id !== "") {
+      writer.uint32(26).string(message.clan_id);
+    }
+    if (message.action_log !== "") {
+      writer.uint32(34).string(message.action_log);
+    }
+    if (message.entity_name !== "") {
+      writer.uint32(42).string(message.entity_name);
+    }
+    if (message.entity_id !== "") {
+      writer.uint32(50).string(message.entity_id);
+    }
+    if (message.details !== "") {
+      writer.uint32(58).string(message.details);
+    }
+    if (message.time_log !== undefined) {
+      Timestamp.encode(toTimestamp(message.time_log), writer.uint32(66).fork()).ldelim();
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): AuditLog {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseAuditLog();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.id = reader.string();
+          continue;
+        case 2:
+          if (tag !== 18) {
+            break;
+          }
+
+          message.user_id = reader.string();
+          continue;
+        case 3:
+          if (tag !== 26) {
+            break;
+          }
+
+          message.clan_id = reader.string();
+          continue;
+        case 4:
+          if (tag !== 34) {
+            break;
+          }
+
+          message.action_log = reader.string();
+          continue;
+        case 5:
+          if (tag !== 42) {
+            break;
+          }
+
+          message.entity_name = reader.string();
+          continue;
+        case 6:
+          if (tag !== 50) {
+            break;
+          }
+
+          message.entity_id = reader.string();
+          continue;
+        case 7:
+          if (tag !== 58) {
+            break;
+          }
+
+          message.details = reader.string();
+          continue;
+        case 8:
+          if (tag !== 66) {
+            break;
+          }
+
+          message.time_log = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): AuditLog {
+    return {
+      id: isSet(object.id) ? globalThis.String(object.id) : "",
+      user_id: isSet(object.user_id) ? globalThis.String(object.user_id) : "",
+      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
+      action_log: isSet(object.action_log) ? globalThis.String(object.action_log) : "",
+      entity_name: isSet(object.entity_name) ? globalThis.String(object.entity_name) : "",
+      entity_id: isSet(object.entity_id) ? globalThis.String(object.entity_id) : "",
+      details: isSet(object.details) ? globalThis.String(object.details) : "",
+      time_log: isSet(object.time_log) ? fromJsonTimestamp(object.time_log) : undefined,
+    };
+  },
+
+  toJSON(message: AuditLog): unknown {
+    const obj: any = {};
+    if (message.id !== "") {
+      obj.id = message.id;
+    }
+    if (message.user_id !== "") {
+      obj.user_id = message.user_id;
+    }
+    if (message.clan_id !== "") {
+      obj.clan_id = message.clan_id;
+    }
+    if (message.action_log !== "") {
+      obj.action_log = message.action_log;
+    }
+    if (message.entity_name !== "") {
+      obj.entity_name = message.entity_name;
+    }
+    if (message.entity_id !== "") {
+      obj.entity_id = message.entity_id;
+    }
+    if (message.details !== "") {
+      obj.details = message.details;
+    }
+    if (message.time_log !== undefined) {
+      obj.time_log = message.time_log.toISOString();
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<AuditLog>, I>>(base?: I): AuditLog {
+    return AuditLog.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<AuditLog>, I>>(object: I): AuditLog {
+    const message = createBaseAuditLog();
+    message.id = object.id ?? "";
+    message.user_id = object.user_id ?? "";
+    message.clan_id = object.clan_id ?? "";
+    message.action_log = object.action_log ?? "";
+    message.entity_name = object.entity_name ?? "";
+    message.entity_id = object.entity_id ?? "";
+    message.details = object.details ?? "";
+    message.time_log = object.time_log ?? undefined;
+    return message;
+  },
+};
+
+function createBaseListAuditLog(): ListAuditLog {
+  return { total_count: 0, page: 0, page_size: 0, logs: [] };
+}
+
+export const ListAuditLog = {
+  encode(message: ListAuditLog, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.total_count !== 0) {
+      writer.uint32(8).int32(message.total_count);
+    }
+    if (message.page !== 0) {
+      writer.uint32(16).int32(message.page);
+    }
+    if (message.page_size !== 0) {
+      writer.uint32(24).int32(message.page_size);
+    }
+    for (const v of message.logs) {
+      AuditLog.encode(v!, writer.uint32(34).fork()).ldelim();
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): ListAuditLog {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseListAuditLog();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 8) {
+            break;
+          }
+
+          message.total_count = reader.int32();
+          continue;
+        case 2:
+          if (tag !== 16) {
+            break;
+          }
+
+          message.page = reader.int32();
+          continue;
+        case 3:
+          if (tag !== 24) {
+            break;
+          }
+
+          message.page_size = reader.int32();
+          continue;
+        case 4:
+          if (tag !== 34) {
+            break;
+          }
+
+          message.logs.push(AuditLog.decode(reader, reader.uint32()));
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): ListAuditLog {
+    return {
+      total_count: isSet(object.total_count) ? globalThis.Number(object.total_count) : 0,
+      page: isSet(object.page) ? globalThis.Number(object.page) : 0,
+      page_size: isSet(object.page_size) ? globalThis.Number(object.page_size) : 0,
+      logs: globalThis.Array.isArray(object?.logs) ? object.logs.map((e: any) => AuditLog.fromJSON(e)) : [],
+    };
+  },
+
+  toJSON(message: ListAuditLog): unknown {
+    const obj: any = {};
+    if (message.total_count !== 0) {
+      obj.total_count = Math.round(message.total_count);
+    }
+    if (message.page !== 0) {
+      obj.page = Math.round(message.page);
+    }
+    if (message.page_size !== 0) {
+      obj.page_size = Math.round(message.page_size);
+    }
+    if (message.logs?.length) {
+      obj.logs = message.logs.map((e) => AuditLog.toJSON(e));
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<ListAuditLog>, I>>(base?: I): ListAuditLog {
+    return ListAuditLog.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<ListAuditLog>, I>>(object: I): ListAuditLog {
+    const message = createBaseListAuditLog();
+    message.total_count = object.total_count ?? 0;
+    message.page = object.page ?? 0;
+    message.page_size = object.page_size ?? 0;
+    message.logs = object.logs?.map((e) => AuditLog.fromPartial(e)) || [];
+    return message;
+  },
+};
+
+function createBaseListAuditLogRequest(): ListAuditLogRequest {
+  return { action_log: "", user_id: "", clan_id: "", page: 0, page_size: 0 };
+}
+
+export const ListAuditLogRequest = {
+  encode(message: ListAuditLogRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.action_log !== "") {
+      writer.uint32(10).string(message.action_log);
+    }
+    if (message.user_id !== "") {
+      writer.uint32(18).string(message.user_id);
+    }
+    if (message.clan_id !== "") {
+      writer.uint32(26).string(message.clan_id);
+    }
+    if (message.page !== 0) {
+      writer.uint32(32).int32(message.page);
+    }
+    if (message.page_size !== 0) {
+      writer.uint32(40).int32(message.page_size);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): ListAuditLogRequest {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseListAuditLogRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.action_log = reader.string();
+          continue;
+        case 2:
+          if (tag !== 18) {
+            break;
+          }
+
+          message.user_id = reader.string();
+          continue;
+        case 3:
+          if (tag !== 26) {
+            break;
+          }
+
+          message.clan_id = reader.string();
+          continue;
+        case 4:
+          if (tag !== 32) {
+            break;
+          }
+
+          message.page = reader.int32();
+          continue;
+        case 5:
+          if (tag !== 40) {
+            break;
+          }
+
+          message.page_size = reader.int32();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): ListAuditLogRequest {
+    return {
+      action_log: isSet(object.action_log) ? globalThis.String(object.action_log) : "",
+      user_id: isSet(object.user_id) ? globalThis.String(object.user_id) : "",
+      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
+      page: isSet(object.page) ? globalThis.Number(object.page) : 0,
+      page_size: isSet(object.page_size) ? globalThis.Number(object.page_size) : 0,
+    };
+  },
+
+  toJSON(message: ListAuditLogRequest): unknown {
+    const obj: any = {};
+    if (message.action_log !== "") {
+      obj.action_log = message.action_log;
+    }
+    if (message.user_id !== "") {
+      obj.user_id = message.user_id;
+    }
+    if (message.clan_id !== "") {
+      obj.clan_id = message.clan_id;
+    }
+    if (message.page !== 0) {
+      obj.page = Math.round(message.page);
+    }
+    if (message.page_size !== 0) {
+      obj.page_size = Math.round(message.page_size);
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<ListAuditLogRequest>, I>>(base?: I): ListAuditLogRequest {
+    return ListAuditLogRequest.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<ListAuditLogRequest>, I>>(object: I): ListAuditLogRequest {
+    const message = createBaseListAuditLogRequest();
+    message.action_log = object.action_log ?? "";
+    message.user_id = object.user_id ?? "";
+    message.clan_id = object.clan_id ?? "";
+    message.page = object.page ?? 0;
+    message.page_size = object.page_size ?? 0;
+    return message;
+  },
+};
+
+function createBaseTokenSentEvent(): TokenSentEvent {
+  return { sender_id: "", sender_name: "", receiver_id: "", amount: 0, note: "" };
+}
+
+export const TokenSentEvent = {
+  encode(message: TokenSentEvent, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.sender_id !== "") {
+      writer.uint32(10).string(message.sender_id);
+    }
+    if (message.sender_name !== "") {
+      writer.uint32(18).string(message.sender_name);
+    }
+    if (message.receiver_id !== "") {
+      writer.uint32(26).string(message.receiver_id);
+    }
+    if (message.amount !== 0) {
+      writer.uint32(32).int32(message.amount);
+    }
+    if (message.note !== "") {
+      writer.uint32(42).string(message.note);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): TokenSentEvent {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseTokenSentEvent();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.sender_id = reader.string();
+          continue;
+        case 2:
+          if (tag !== 18) {
+            break;
+          }
+
+          message.sender_name = reader.string();
+          continue;
+        case 3:
+          if (tag !== 26) {
+            break;
+          }
+
+          message.receiver_id = reader.string();
+          continue;
+        case 4:
+          if (tag !== 32) {
+            break;
+          }
+
+          message.amount = reader.int32();
+          continue;
+        case 5:
+          if (tag !== 42) {
+            break;
+          }
+
+          message.note = reader.string();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): TokenSentEvent {
+    return {
+      sender_id: isSet(object.sender_id) ? globalThis.String(object.sender_id) : "",
+      sender_name: isSet(object.sender_name) ? globalThis.String(object.sender_name) : "",
+      receiver_id: isSet(object.receiver_id) ? globalThis.String(object.receiver_id) : "",
+      amount: isSet(object.amount) ? globalThis.Number(object.amount) : 0,
+      note: isSet(object.note) ? globalThis.String(object.note) : "",
+    };
+  },
+
+  toJSON(message: TokenSentEvent): unknown {
+    const obj: any = {};
+    if (message.sender_id !== "") {
+      obj.sender_id = message.sender_id;
+    }
+    if (message.sender_name !== "") {
+      obj.sender_name = message.sender_name;
+    }
+    if (message.receiver_id !== "") {
+      obj.receiver_id = message.receiver_id;
+    }
+    if (message.amount !== 0) {
+      obj.amount = Math.round(message.amount);
+    }
+    if (message.note !== "") {
+      obj.note = message.note;
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<TokenSentEvent>, I>>(base?: I): TokenSentEvent {
+    return TokenSentEvent.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<TokenSentEvent>, I>>(object: I): TokenSentEvent {
+    const message = createBaseTokenSentEvent();
+    message.sender_id = object.sender_id ?? "";
+    message.sender_name = object.sender_name ?? "";
+    message.receiver_id = object.receiver_id ?? "";
+    message.amount = object.amount ?? 0;
+    message.note = object.note ?? "";
+    return message;
+  },
+};
+
+function createBaseWithdrawTokenRequest(): WithdrawTokenRequest {
+  return { amount: 0 };
+}
+
+export const WithdrawTokenRequest = {
+  encode(message: WithdrawTokenRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.amount !== 0) {
+      writer.uint32(8).int32(message.amount);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): WithdrawTokenRequest {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseWithdrawTokenRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 8) {
+            break;
+          }
+
+          message.amount = reader.int32();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): WithdrawTokenRequest {
+    return { amount: isSet(object.amount) ? globalThis.Number(object.amount) : 0 };
+  },
+
+  toJSON(message: WithdrawTokenRequest): unknown {
+    const obj: any = {};
+    if (message.amount !== 0) {
+      obj.amount = Math.round(message.amount);
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<WithdrawTokenRequest>, I>>(base?: I): WithdrawTokenRequest {
+    return WithdrawTokenRequest.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<WithdrawTokenRequest>, I>>(object: I): WithdrawTokenRequest {
+    const message = createBaseWithdrawTokenRequest();
+    message.amount = object.amount ?? 0;
+    return message;
+  },
+};
+
+function bytesFromBase64(b64: string): Uint8Array {
+  if ((globalThis as any).Buffer) {
+    return Uint8Array.from(globalThis.Buffer.from(b64, "base64"));
+  } else {
+    const bin = globalThis.atob(b64);
+    const arr = new Uint8Array(bin.length);
+    for (let i = 0; i < bin.length; ++i) {
+      arr[i] = bin.charCodeAt(i);
+    }
+    return arr;
+  }
+}
+
+function base64FromBytes(arr: Uint8Array): string {
+  if ((globalThis as any).Buffer) {
+    return globalThis.Buffer.from(arr).toString("base64");
+  } else {
+    const bin: string[] = [];
+    arr.forEach((byte) => {
+      bin.push(globalThis.String.fromCharCode(byte));
+    });
+    return globalThis.btoa(bin.join(""));
+  }
+}
 
 type Builtin = Date | Function | Uint8Array | string | number | boolean | undefined;
 

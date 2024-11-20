@@ -262,6 +262,66 @@ export interface ApiVoiceChannelUser {
   user_id?: string;
 }
 
+export interface IEmbedProps {
+	color?: string;
+	title?: string;
+	url?: string;
+	author?: {
+		name: string;
+		icon_url?: string;
+		url?: string;
+	};
+	description?: string;
+	thumbnail?: { url: string };
+	fields?: Array<{ name: string; value: string; inline?: boolean }>;
+	image?: { url: string };
+	timestamp?: string;
+	footer?: { text: string; icon_url?: string };
+}
+
+export enum EButtonMessageStyle {
+	PRIMARY = 1,
+	SECONDARY = 2,
+	SUCCESS = 3,
+	DANGER = 4,
+	LINK = 5
+}
+
+export enum EMessageComponentType {
+	BUTTON = 1,
+	SELECT = 2,
+	INPUT = 3
+}
+
+export interface IButtonMessage {
+	label: string;
+	disable?: boolean;
+	style?: EButtonMessageStyle;
+	url?: string;
+}
+
+export interface IMessageSelect {
+	// some select specific properties
+}
+
+export interface IMessageInput {
+	// some input specific properties
+}
+
+export interface IMessageComponent<T> {
+	type: EMessageComponentType;
+	id: string;
+	component: T;
+}
+
+export type ButtonComponent = IMessageComponent<IButtonMessage> & { type: EMessageComponentType.BUTTON };
+export type SelectComponent = IMessageComponent<IMessageSelect> & { type: EMessageComponentType.SELECT };
+export type InputComponent = IMessageComponent<IMessageInput> & { type: EMessageComponentType.INPUT };
+
+export interface IMessageActionRow {
+	components: Array<ButtonComponent | SelectComponent | InputComponent>;
+}
+
 export interface ChannelMessageContent {
   t?: string;
   contentThread?: string;
@@ -270,6 +330,37 @@ export interface ChannelMessageContent {
   lk?: LinkOnMessage[];
   mk?: MarkdownOnMessage[];
   vk?: LinkVoiceRoomOnMessage[];
+  embed?: IEmbedProps[];
+	components?: IMessageActionRow[] | any;
+}
+
+export interface StreamingLeavedEvent {
+  /** id */
+  id: string;
+  /** The unique identifier of the chat clan. */
+  clan_id: string;
+  /** streaming channel name */
+  streaming_channel_id: string;
+  /** streaming user_id */
+  streaming_user_id: string;
+}
+
+/** Streaming Joined event */
+export interface StreamingJoinedEvent {
+  /** The unique identifier of the chat clan. */
+  clan_id: string;
+  /** The channel name */
+  clan_name: string;
+  /** id streaming */
+  id: string;
+  /** streaming participant */
+  participant: string;
+  /** user id */
+  user_id: string;
+  /** streaming channel label */
+  streaming_channel_label: string;
+  /** streaming channel id */
+  streaming_channel_id: string;
 }
 
 export interface HashtagOnMessage extends Hashtag, StartEndIndex {}
@@ -427,6 +518,8 @@ export interface TokenSentEvent {
   receiver_id: string;
   // amount of token
   amount: number;
+  // note of token
+  note?: string;
 }
 
 export interface Client {

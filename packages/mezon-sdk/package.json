@@ -1,6 +1,6 @@
 {
   "name": "mezon-sdk",
-  "version": "2.7.67",
+  "version": "2.7.68",
   "description": "Mezon typescript SDK.",
   "files": ["dist/**"],
   "main": "dist/cjs/index.js",
