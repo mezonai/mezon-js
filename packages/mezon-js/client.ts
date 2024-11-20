@@ -148,6 +148,7 @@ import {
   ApiGenerateClanWebhookResponse,
   ApiListClanWebhookResponse,
   MezonUpdateClanWebhookByIdBody,
+  MezonUpdateClanDescBody,
 } from "./api.gen";
 
 import { Session } from "./session";
@@ -2577,7 +2578,7 @@ export class Client {
   async updateClanDesc(
     session: Session,
     clanId: string,
-    request: ApiUpdateClanDescRequest
+    request: MezonUpdateClanDescBody
   ): Promise<boolean> {
     if (
       this.autoRefreshSession &&
