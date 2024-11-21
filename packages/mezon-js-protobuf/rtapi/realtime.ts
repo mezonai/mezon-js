@@ -290,6 +290,7 @@ export interface WebrtcSignalingFwd {
   data_type: number;
   json_data: string;
   channel_id: string;
+  caller_id: string;
 }
 
 export interface AddClanUserEvent {
@@ -2522,7 +2523,7 @@ export const Envelope = {
 };
 
 function createBaseWebrtcSignalingFwd(): WebrtcSignalingFwd {
-  return { receiver_id: "", data_type: 0, json_data: "", channel_id: "" };
+  return { receiver_id: "", data_type: 0, json_data: "", channel_id: "", caller_id: "" };
 }
 
 export const WebrtcSignalingFwd = {
@@ -2538,6 +2539,9 @@ export const WebrtcSignalingFwd = {
     }
     if (message.channel_id !== "") {
       writer.uint32(34).string(message.channel_id);
+    }
+    if (message.caller_id !== "") {
+      writer.uint32(42).string(message.caller_id);
     }
     return writer;
   },
@@ -2577,6 +2581,13 @@ export const WebrtcSignalingFwd = {
 
           message.channel_id = reader.string();
           continue;
+        case 5:
+          if (tag !== 42) {
+            break;
+          }
+
+          message.caller_id = reader.string();
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -2592,6 +2603,7 @@ export const WebrtcSignalingFwd = {
       data_type: isSet(object.data_type) ? globalThis.Number(object.data_type) : 0,
       json_data: isSet(object.json_data) ? globalThis.String(object.json_data) : "",
       channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "",
+      caller_id: isSet(object.caller_id) ? globalThis.String(object.caller_id) : "",
     };
   },
 
@@ -2609,6 +2621,9 @@ export const WebrtcSignalingFwd = {
     if (message.channel_id !== "") {
       obj.channel_id = message.channel_id;
     }
+    if (message.caller_id !== "") {
+      obj.caller_id = message.caller_id;
+    }
     return obj;
   },
 
@@ -2621,6 +2636,7 @@ export const WebrtcSignalingFwd = {
     message.data_type = object.data_type ?? 0;
     message.json_data = object.json_data ?? "";
     message.channel_id = object.channel_id ?? "";
+    message.caller_id = object.caller_id ?? "";
     return message;
   },
 };
