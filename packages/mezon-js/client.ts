@@ -187,9 +187,10 @@ export enum NotificationType {
 }
 
 export enum WebrtcSignalingType {
-  WEBRTC_SDP_OFFER     = 1,
-  WEBRTC_SDP_ANSWER    = 2,
-  WEBRTC_ICE_CANDIDATE = 3
+  WEBRTC_SDP_OFFER = 1,
+  WEBRTC_SDP_ANSWER = 2,
+  WEBRTC_ICE_CANDIDATE = 3,
+  WEBRTC_SDP_QUIT = 4,
 }
 
 /** Response for an RPC function executed on the server. */
@@ -3197,7 +3198,11 @@ export class Client {
   }
 
   //**disabled webhook by id */
-  async deleteWebhookById(session: Session, id: string, request: MezonDeleteWebhookByIdBody) {
+  async deleteWebhookById(
+    session: Session,
+    id: string,
+    request: MezonDeleteWebhookByIdBody
+  ) {
     if (
       this.autoRefreshSession &&
       session.refresh_token &&
@@ -4235,9 +4240,7 @@ export class Client {
       });
   }
   /** List activity */
-  async listActivity(
-    session: Session
-  ): Promise<ApiListUserActivity> {
+  async listActivity(session: Session): Promise<ApiListUserActivity> {
     if (
       this.autoRefreshSession &&
       session.refresh_token &&
@@ -4246,11 +4249,9 @@ export class Client {
       await this.sessionRefresh(session);
     }
 
-    return this.apiClient
-      .listActivity(session.token)
-      .then((response: any) => {
-        return response;
-      });
+    return this.apiClient.listActivity(session.token).then((response: any) => {
+      return response;
+    });
   }
 
   async createActiviy(
@@ -4281,26 +4282,26 @@ export class Client {
     const response = {
       login_id: apiSession.login_id,
       create_time_second: apiSession.create_time_second,
-
-    }
-    return response
+    };
+    return response;
   }
 
-  async checkLoginRequest(requet: ApiConfirmLoginRequest): Promise<Session | null> {
+  async checkLoginRequest(
+    requet: ApiConfirmLoginRequest
+  ): Promise<Session | null> {
     const apiSession = await this.apiClient.checkLoginRequest(
       this.serverkey,
       "",
       requet
     );
     if (!apiSession?.token) {
-      return null
+      return null;
     }
     return new Session(
       apiSession.token || "",
       apiSession.refresh_token || "",
       apiSession.created || false
     );
-
   }
 
   async confirmLogin(
@@ -4322,9 +4323,10 @@ export class Client {
       });
   }
 
-  async getChanEncryptionMethod(session: Session, 
+  async getChanEncryptionMethod(
+    session: Session,
     channelId: string
-  ) : Promise<ApiChanEncryptionMethod> {
+  ): Promise<ApiChanEncryptionMethod> {
     if (
       this.autoRefreshSession &&
       session.refresh_token &&
@@ -4340,27 +4342,30 @@ export class Client {
       });
   }
 
-  async setChanEncryptionMethod(session: Session,
+  async setChanEncryptionMethod(
+    session: Session,
     channelId: string,
-    method: string) : Promise<any> {
-      if (
-        this.autoRefreshSession &&
-        session.refresh_token &&
-        session.isexpired((Date.now() + this.expiredTimespanMs) / 1000)
-      ) {
-        await this.sessionRefresh(session);
-      }
-  
-      return this.apiClient
-        .setChanEncryptionMethod(session.token, channelId, { method: method })
-        .then((response: any) => {
-          return response;
-        });
+    method: string
+  ): Promise<any> {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired((Date.now() + this.expiredTimespanMs) / 1000)
+    ) {
+      await this.sessionRefresh(session);
     }
 
-  async getPubKeys(session: Session,
+    return this.apiClient
+      .setChanEncryptionMethod(session.token, channelId, { method: method })
+      .then((response: any) => {
+        return response;
+      });
+  }
+
+  async getPubKeys(
+    session: Session,
     userIds: Array<string>
-  ) : Promise<ApiGetPubKeysResponse> {
+  ): Promise<ApiGetPubKeysResponse> {
     if (
       this.autoRefreshSession &&
       session.refresh_token &&
@@ -4376,9 +4381,10 @@ export class Client {
       });
   }
 
-  async pushPubKey(session: Session,
+  async pushPubKey(
+    session: Session,
     PK: ApiPubKey
-  ) : Promise<ApiGetPubKeysResponse> {
+  ): Promise<ApiGetPubKeysResponse> {
     if (
       this.autoRefreshSession &&
       session.refresh_token &&
@@ -4394,7 +4400,7 @@ export class Client {
       });
   }
 
-  async getKeyServer(session: Session) : Promise<ApiGetKeyServerResp> {
+  async getKeyServer(session: Session): Promise<ApiGetKeyServerResp> {
     if (
       this.autoRefreshSession &&
       session.refresh_token &&
@@ -4412,12 +4418,12 @@ export class Client {
 
   async listAuditLog(
     session: Session,
-    actionLog?:string,
-    userId?:string,
-    clanId?:string,
-    page?:number,
-    pageSize?:number,
-  ) : Promise<MezonapiListAuditLog> {
+    actionLog?: string,
+    userId?: string,
+    clanId?: string,
+    page?: number,
+    pageSize?: number
+  ): Promise<MezonapiListAuditLog> {
     if (
       this.autoRefreshSession &&
       session.refresh_token &&
@@ -4434,12 +4440,12 @@ export class Client {
   }
 
   async listOnboarding(
-    session: Session, 
-    clanId?:string,
-    guideType?:number,
-    limit?:number,
-    page?:number,
-  ) : Promise<ApiListOnboardingResponse> {
+    session: Session,
+    clanId?: string,
+    guideType?: number,
+    limit?: number,
+    page?: number
+  ): Promise<ApiListOnboardingResponse> {
     if (
       this.autoRefreshSession &&
       session.refresh_token &&
@@ -4458,7 +4464,7 @@ export class Client {
   async getOnboardingDetail(
     session: Session,
     id: string,
-    clanId?: string,
+    clanId?: string
   ): Promise<ApiOnboardingItem> {
     if (
       this.autoRefreshSession &&
@@ -4516,8 +4522,8 @@ export class Client {
 
   async deleteOnboarding(
     session: Session,
-    id:string,
-    clanId?:string,
+    id: string,
+    clanId?: string
   ): Promise<any> {
     if (
       this.autoRefreshSession &&
@@ -4553,7 +4559,7 @@ export class Client {
         return Promise.resolve(response);
       });
   }
-  
+
   //**list webhook belong to the clan */
   async listClanWebhook(
     session: Session,
@@ -4575,11 +4581,7 @@ export class Client {
   }
 
   //**disabled webhook by id */
-  async deleteClanWebhookById(
-    session: Session, 
-    id: string,
-    clan_id: string
-  ) {
+  async deleteClanWebhookById(session: Session, id: string, clan_id: string) {
     if (
       this.autoRefreshSession &&
       session.refresh_token &&
