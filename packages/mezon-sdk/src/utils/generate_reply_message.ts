@@ -43,7 +43,7 @@ export function replyMessageGenerate(
   };
   
   // option for bot's message
-  ["lk", "hg", "mk", "ej", "vk", "contentThread"].forEach((key) => {
+  ["lk", "hg", "mk", "ej", "vk", "contentThread", "embed", "components"].forEach((key) => {
     if (key in replayContent) {
       messageContent[key] = replayContent[key];
     }
