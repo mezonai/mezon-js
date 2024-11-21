@@ -151,6 +151,8 @@ import {
   MezonUpdateClanDescBody,
   ApiUserStatusUpdate,
   ApiUserStatus,
+  ApiListOnboardingStepResponse,
+  MezonUpdateOnboardingStepByIdBody,
 } from "./api.gen";
 
 import { Session } from "./session";
@@ -4613,6 +4615,49 @@ export class Client {
 
     return this.apiClient
       .updateClanWebhookById(session.token, id, request)
+      .then((response: any) => {
+        return response !== undefined;
+      });
+  }
+
+  //**list onboarding step */
+  async listOnboardingStep(
+    session: Session,
+    clan_id?: string,
+    limit?: number,
+    page? :number,
+  ): Promise<ApiListOnboardingStepResponse> {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired((Date.now() + this.expiredTimespanMs) / 1000)
+    ) {
+      await this.sessionRefresh(session);
+    }
+
+    return this.apiClient
+      .listOnboardingStep(session.token, clan_id, limit, page)
+      .then((response: ApiListOnboardingStepResponse) => {
+        return Promise.resolve(response);
+      });
+  }
+
+  //**update onboarding step by id */
+  async updateOnboardingStepById(
+    session: Session,
+    id: string,
+    request: MezonUpdateOnboardingStepByIdBody
+  ) {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired((Date.now() + this.expiredTimespanMs) / 1000)
+    ) {
+      await this.sessionRefresh(session);
+    }
+
+    return this.apiClient
+      .updateOnboardingStepById(session.token, id, request)
       .then((response: any) => {
         return response !== undefined;
       });
