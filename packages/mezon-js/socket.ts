@@ -1185,6 +1185,10 @@ export interface Socket {
   ontokensent: (token: ApiTokenSentEvent) => void;  
 
   onactivityupdated: (list_activity: ListActivity) => void;
+
+  onjoinpttchannel: (join_ptt_channel: JoinPTTChannel) => void;
+
+  ontalkpttchannel: (talk_ptt_channel: TalkPTTChannel) => void;
 }
 
 /** Reports an error received from a socket message. */
@@ -1262,7 +1266,6 @@ export class DefaultSocket implements Socket {
       if (this.verbose && window && window.console) {
         console.log("Response: %o", JSON.stringify(message));
       }
-
       /** Inbound message from server. */
       if (!message.cid) {
         if (message.notifications) {
@@ -1442,6 +1445,10 @@ export class DefaultSocket implements Socket {
           this.onwebrtcsignalingfwd(<WebrtcSignalingFwd>message.webrtc_signaling_fwd);
         } else if (message.list_activity){
           this.onactivityupdated(<ListActivity>message.list_activity);
+        } else if (message.join_ptt_channel){
+          this.onjoinpttchannel(<JoinPTTChannel>message.join_ptt_channel);
+        } else if (message.talk_ptt_channel){
+          this.ontalkpttchannel(<TalkPTTChannel>message.talk_ptt_channel);
         } else {
           if (this.verbose && window && window.console) {
             console.log("Unrecognized message received: %o", message);
@@ -1788,6 +1795,18 @@ export class DefaultSocket implements Socket {
   onactivityupdated(list_activity: ListActivity) {
     if (this.verbose && window && window.console) {
       console.log(list_activity);
+    }
+  }
+
+  onjoinpttchannel(join_ptt_channel: JoinPTTChannel) {
+    if (this.verbose && window && window.console) {
+      console.log(join_ptt_channel);
+    }
+  }
+
+  ontalkpttchannel(talk_ptt_channel: TalkPTTChannel) {
+    if (this.verbose && window && window.console) {
+      console.log(talk_ptt_channel);
     }
   }
   send(
