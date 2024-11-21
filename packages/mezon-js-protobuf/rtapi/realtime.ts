@@ -1192,6 +1192,8 @@ export interface JoinPTTChannel {
   data_type: number;
   /** offer */
   json_data: string;
+  /** receiver id */
+  receiver_id: string;
 }
 
 export interface TalkPTTChannel {
@@ -9987,7 +9989,7 @@ export const UnmuteEvent = {
 };
 
 function createBaseJoinPTTChannel(): JoinPTTChannel {
-  return { channel_id: "", data_type: 0, json_data: "" };
+  return { channel_id: "", data_type: 0, json_data: "", receiver_id: "" };
 }
 
 export const JoinPTTChannel = {
@@ -10000,6 +10002,9 @@ export const JoinPTTChannel = {
     }
     if (message.json_data !== "") {
       writer.uint32(26).string(message.json_data);
+    }
+    if (message.receiver_id !== "") {
+      writer.uint32(34).string(message.receiver_id);
     }
     return writer;
   },
@@ -10032,6 +10037,13 @@ export const JoinPTTChannel = {
 
           message.json_data = reader.string();
           continue;
+        case 4:
+          if (tag !== 34) {
+            break;
+          }
+
+          message.receiver_id = reader.string();
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -10046,6 +10058,7 @@ export const JoinPTTChannel = {
       channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "",
       data_type: isSet(object.data_type) ? globalThis.Number(object.data_type) : 0,
       json_data: isSet(object.json_data) ? globalThis.String(object.json_data) : "",
+      receiver_id: isSet(object.receiver_id) ? globalThis.String(object.receiver_id) : "",
     };
   },
 
@@ -10060,6 +10073,9 @@ export const JoinPTTChannel = {
     if (message.json_data !== "") {
       obj.json_data = message.json_data;
     }
+    if (message.receiver_id !== "") {
+      obj.receiver_id = message.receiver_id;
+    }
     return obj;
   },
 
@@ -10071,6 +10087,7 @@ export const JoinPTTChannel = {
     message.channel_id = object.channel_id ?? "";
     message.data_type = object.data_type ?? 0;
     message.json_data = object.json_data ?? "";
+    message.receiver_id = object.receiver_id ?? "";
     return message;
   },
 };
