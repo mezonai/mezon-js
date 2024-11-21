@@ -4550,7 +4550,7 @@ export class Client {
     }
 
     return this.apiClient
-      .generateWebhook(session.token, request)
+      .generateClanWebhook(session.token, request)
       .then((response: any) => {
         return Promise.resolve(response);
       });
