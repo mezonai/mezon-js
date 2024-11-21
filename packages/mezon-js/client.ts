@@ -4663,7 +4663,7 @@ export class Client {
       });
   }
 
-  //**update webhook name by id */
+  //**update status */
   async updateUserStatus(
     session: Session,
     request: ApiUserStatusUpdate
@@ -4683,7 +4683,7 @@ export class Client {
       });
   }
 
-  //**list webhook belong to the clan */
+  //**get user status */
   async getUserStatus(
     session: Session  
   ): Promise<ApiUserStatus> {
