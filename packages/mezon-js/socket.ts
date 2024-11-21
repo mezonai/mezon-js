@@ -833,6 +833,7 @@ export interface WebrtcSignalingFwd {
   data_type: number;
   json_data: string;
   channel_id: string;
+  caller_id: string;
 }
 
 export interface JoinPTTChannel {
@@ -1147,7 +1148,7 @@ export interface Socket {
 
   onmessagebuttonclicked: (event: MessageButtonClicked) => void;
 
-  forwardWebrtcSignaling: (receiverId: string, dataType: number, jsonData: string, channelId: string) => Promise<WebrtcSignalingFwd>;
+  forwardWebrtcSignaling: (receiverId: string, dataType: number, jsonData: string, channelId: string, caller_id: string) => Promise<WebrtcSignalingFwd>;
 
   onwebrtcsignalingfwd: (event: WebrtcSignalingFwd) => void;
 
@@ -2164,9 +2165,10 @@ export class DefaultSocket implements Socket {
     receiver_id: string, 
     data_type: number, 
     json_data: string,
-    channel_id: string): Promise<WebrtcSignalingFwd> {
+    channel_id: string, 
+    caller_id: string): Promise<WebrtcSignalingFwd> {
     const response = await this.send({
-      webrtc_signaling_fwd: { receiver_id: receiver_id, data_type: data_type, json_data: json_data, channel_id: channel_id },
+      webrtc_signaling_fwd: { receiver_id: receiver_id, data_type: data_type, json_data: json_data, channel_id: channel_id, caller_id: caller_id },
     });
     return response.webrtc_signaling_fwd;
   }
