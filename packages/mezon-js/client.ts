@@ -152,7 +152,7 @@ import {
   ApiUserStatusUpdate,
   ApiUserStatus,
   ApiListOnboardingStepResponse,
-  MezonUpdateOnboardingStepByIdBody,
+  MezonUpdateOnboardingStepByClanIdBody,
 } from "./api.gen";
 
 import { Session } from "./session";
@@ -4552,7 +4552,7 @@ export class Client {
     }
 
     return this.apiClient
-      .generateWebhook(session.token, request)
+      .generateClanWebhook(session.token, request)
       .then((response: any) => {
         return Promise.resolve(response);
       });
@@ -4643,10 +4643,10 @@ export class Client {
   }
 
   //**update onboarding step by id */
-  async updateOnboardingStepById(
+  async updateOnboardingStepByClanId(
     session: Session,
     id: string,
-    request: MezonUpdateOnboardingStepByIdBody
+    request: MezonUpdateOnboardingStepByClanIdBody
   ) {
     if (
       this.autoRefreshSession &&
@@ -4657,7 +4657,7 @@ export class Client {
     }
 
     return this.apiClient
-      .updateOnboardingStepById(session.token, id, request)
+      .updateOnboardingStepByClanId(session.token, id, request)
       .then((response: any) => {
         return response !== undefined;
       });
