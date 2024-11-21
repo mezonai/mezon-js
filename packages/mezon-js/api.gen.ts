@@ -2327,7 +2327,7 @@ export interface ApiUserPermissionInChannelListResponse {
 /**  */
 export interface ApiUserStatus {
   //
-  status?: number;
+  status?: string;
   //
   user_id?: string;
 }
@@ -2337,7 +2337,7 @@ export interface ApiUserStatusUpdate {
   //
   minutes?: number;
   //
-  status?: number;
+  status?: string;
   //
   until_turn_on?: boolean;
 }
@@ -9405,12 +9405,12 @@ pushPubKey(bearerToken: string,
         setTimeout(reject, this.timeoutMs, "Request timed out.")
       ),
     ]);
-  }
+}
 
   /** Get user status */
   getUserStatus(bearerToken: string,
-    options: any = {}): Promise<ApiUserStatus> {
-  
+      options: any = {}): Promise<ApiUserStatus> {
+    
     const urlPath = "/v2/userstatus";
     const queryParams = new Map<string, any>();
 
@@ -9436,13 +9436,13 @@ pushPubKey(bearerToken: string,
         setTimeout(reject, this.timeoutMs, "Request timed out.")
       ),
     ]);
-  }
+}
 
-/** Update user status */
-updateUserStatus(bearerToken: string,
-    body:ApiUserStatusUpdate,
-    options: any = {}): Promise<any> {
-  
+  /** Update user status */
+  updateUserStatus(bearerToken: string,
+      body:ApiUserStatusUpdate,
+      options: any = {}): Promise<any> {
+    
     if (body === null || body === undefined) {
       throw new Error("'body' is a required parameter but is null or undefined.");
     }

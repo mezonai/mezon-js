@@ -3560,11 +3560,11 @@ export interface OnboardingRequest {
 
 export interface UserStatus {
   user_id: string;
-  status: number;
+  status: string;
 }
 
 export interface UserStatusUpdate {
-  status: number;
+  status: string;
   minutes: number;
   until_turn_on: boolean;
 }
@@ -34269,7 +34269,7 @@ export const OnboardingRequest = {
   },
 };
 function createBaseUserStatus(): UserStatus {
-  return { user_id: "", status: 0 };
+  return { user_id: "", status: "" };
 }
 
 export const UserStatus = {
@@ -34277,8 +34277,8 @@ export const UserStatus = {
     if (message.user_id !== "") {
       writer.uint32(10).string(message.user_id);
     }
-    if (message.status !== 0) {
-      writer.uint32(16).int32(message.status);
+    if (message.status !== "") {
+      writer.uint32(18).string(message.status);
     }
     return writer;
   },
@@ -34298,11 +34298,11 @@ export const UserStatus = {
           message.user_id = reader.string();
           continue;
         case 2:
-          if (tag !== 16) {
+          if (tag !== 18) {
             break;
           }
 
-          message.status = reader.int32();
+          message.status = reader.string();
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -34316,7 +34316,7 @@ export const UserStatus = {
   fromJSON(object: any): UserStatus {
     return {
       user_id: isSet(object.user_id) ? globalThis.String(object.user_id) : "",
-      status: isSet(object.status) ? globalThis.Number(object.status) : 0,
+      status: isSet(object.status) ? globalThis.String(object.status) : "",
     };
   },
 
@@ -34325,8 +34325,8 @@ export const UserStatus = {
     if (message.user_id !== "") {
       obj.user_id = message.user_id;
     }
-    if (message.status !== 0) {
-      obj.status = Math.round(message.status);
+    if (message.status !== "") {
+      obj.status = message.status;
     }
     return obj;
   },
@@ -34337,19 +34337,19 @@ export const UserStatus = {
   fromPartial<I extends Exact<DeepPartial<UserStatus>, I>>(object: I): UserStatus {
     const message = createBaseUserStatus();
     message.user_id = object.user_id ?? "";
-    message.status = object.status ?? 0;
+    message.status = object.status ?? "";
     return message;
   },
 };
 
 function createBaseUserStatusUpdate(): UserStatusUpdate {
-  return { status: 0, minutes: 0, until_turn_on: false };
+  return { status: "", minutes: 0, until_turn_on: false };
 }
 
 export const UserStatusUpdate = {
   encode(message: UserStatusUpdate, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.status !== 0) {
-      writer.uint32(8).int32(message.status);
+    if (message.status !== "") {
+      writer.uint32(10).string(message.status);
     }
     if (message.minutes !== 0) {
       writer.uint32(16).int32(message.minutes);
@@ -34368,11 +34368,11 @@ export const UserStatusUpdate = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 8) {
+          if (tag !== 10) {
             break;
           }
 
-          message.status = reader.int32();
+          message.status = reader.string();
           continue;
         case 2:
           if (tag !== 16) {
@@ -34399,7 +34399,7 @@ export const UserStatusUpdate = {
 
   fromJSON(object: any): UserStatusUpdate {
     return {
-      status: isSet(object.status) ? globalThis.Number(object.status) : 0,
+      status: isSet(object.status) ? globalThis.String(object.status) : "",
       minutes: isSet(object.minutes) ? globalThis.Number(object.minutes) : 0,
       until_turn_on: isSet(object.until_turn_on) ? globalThis.Boolean(object.until_turn_on) : false,
     };
@@ -34407,8 +34407,8 @@ export const UserStatusUpdate = {
 
   toJSON(message: UserStatusUpdate): unknown {
     const obj: any = {};
-    if (message.status !== 0) {
-      obj.status = Math.round(message.status);
+    if (message.status !== "") {
+      obj.status = message.status;
     }
     if (message.minutes !== 0) {
       obj.minutes = Math.round(message.minutes);
@@ -34424,7 +34424,7 @@ export const UserStatusUpdate = {
   },
   fromPartial<I extends Exact<DeepPartial<UserStatusUpdate>, I>>(object: I): UserStatusUpdate {
     const message = createBaseUserStatusUpdate();
-    message.status = object.status ?? 0;
+    message.status = object.status ?? "";
     message.minutes = object.minutes ?? 0;
     message.until_turn_on = object.until_turn_on ?? false;
     return message;
