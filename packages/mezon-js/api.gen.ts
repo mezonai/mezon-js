@@ -2190,7 +2190,7 @@ export interface ApiUpdateAccountRequest {
   //A URL for an avatar image.
   avatar_url?: string;
   //
-  birthday?: string;
+  dob?: string;
   //The display name of the user.
   display_name?: string;
   //The language expected to be a tag which follows the BCP-47 spec.
@@ -2273,7 +2273,7 @@ export interface ApiUser {
   //A URL for an avatar image.
   avatar_url?: string;
   //
-  birthday?: string;
+  dob?: string;
   //The UNIX time (for gRPC clients) or ISO string (for REST clients) when the user was created.
   create_time?: string;
   //The display name of the user.

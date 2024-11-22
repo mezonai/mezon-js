@@ -1381,8 +1381,8 @@ export interface UpdateAccountRequest {
     | undefined;
   /** update about me */
   about_me: string;
-  /** birthday */
-  birthday: Date | undefined;
+  /** date of birth */
+  dob: Date | undefined;
 }
 
 /** Update fields in a given group. */
@@ -1465,7 +1465,7 @@ export interface User {
   /** platform */
   is_mobile: boolean;
   /**  */
-  birthday: Date | undefined;
+  dob: Date | undefined;
 }
 
 /** A list of groups belonging to a user, along with the user's role in each group. */
@@ -1983,7 +1983,7 @@ export interface UpdateChannelDescRequest {
   /**  */
   age_restricted: number;
   /**  */
-  e_2ee: number;
+  e2ee: number;
 }
 
 /** Update fields in a given channel. */
@@ -13034,7 +13034,7 @@ function createBaseUpdateAccountRequest(): UpdateAccountRequest {
     location: undefined,
     timezone: undefined,
     about_me: "",
-    birthday: undefined,
+    dob: undefined,
   };
 }
 
@@ -13061,8 +13061,8 @@ export const UpdateAccountRequest = {
     if (message.about_me !== "") {
       writer.uint32(58).string(message.about_me);
     }
-    if (message.birthday !== undefined) {
-      Timestamp.encode(toTimestamp(message.birthday), writer.uint32(66).fork()).ldelim();
+    if (message.dob !== undefined) {
+      Timestamp.encode(toTimestamp(message.dob), writer.uint32(66).fork()).ldelim();
     }
     return writer;
   },
@@ -13128,7 +13128,7 @@ export const UpdateAccountRequest = {
             break;
           }
 
-          message.birthday = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
+          message.dob = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -13148,7 +13148,7 @@ export const UpdateAccountRequest = {
       location: isSet(object.location) ? String(object.location) : undefined,
       timezone: isSet(object.timezone) ? String(object.timezone) : undefined,
       about_me: isSet(object.about_me) ? globalThis.String(object.about_me) : "",
-      birthday: isSet(object.birthday) ? fromJsonTimestamp(object.birthday) : undefined,
+      dob: isSet(object.dob) ? fromJsonTimestamp(object.dob) : undefined,
     };
   },
 
@@ -13175,8 +13175,8 @@ export const UpdateAccountRequest = {
     if (message.about_me !== "") {
       obj.about_me = message.about_me;
     }
-    if (message.birthday !== undefined) {
-      obj.birthday = message.birthday.toISOString();
+    if (message.dob !== undefined) {
+      obj.dob = message.dob.toISOString();
     }
     return obj;
   },
@@ -13193,7 +13193,7 @@ export const UpdateAccountRequest = {
     message.location = object.location ?? undefined;
     message.timezone = object.timezone ?? undefined;
     message.about_me = object.about_me ?? "";
-    message.birthday = object.birthday ?? undefined;
+    message.dob = object.dob ?? undefined;
     return message;
   },
 };
@@ -13450,7 +13450,7 @@ function createBaseUser(): User {
     about_me: "",
     join_time: undefined,
     is_mobile: false,
-    birthday: undefined,
+    dob: undefined,
   };
 }
 
@@ -13516,8 +13516,8 @@ export const User = {
     if (message.is_mobile !== false) {
       writer.uint32(160).bool(message.is_mobile);
     }
-    if (message.birthday !== undefined) {
-      Timestamp.encode(toTimestamp(message.birthday), writer.uint32(170).fork()).ldelim();
+    if (message.dob !== undefined) {
+      Timestamp.encode(toTimestamp(message.dob), writer.uint32(170).fork()).ldelim();
     }
     return writer;
   },
@@ -13674,7 +13674,7 @@ export const User = {
             break;
           }
 
-          message.birthday = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
+          message.dob = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -13707,7 +13707,7 @@ export const User = {
       about_me: isSet(object.about_me) ? globalThis.String(object.about_me) : "",
       join_time: isSet(object.join_time) ? fromJsonTimestamp(object.join_time) : undefined,
       is_mobile: isSet(object.is_mobile) ? globalThis.Boolean(object.is_mobile) : false,
-      birthday: isSet(object.birthday) ? fromJsonTimestamp(object.birthday) : undefined,
+      dob: isSet(object.dob) ? fromJsonTimestamp(object.dob) : undefined,
     };
   },
 
@@ -13773,8 +13773,8 @@ export const User = {
     if (message.is_mobile !== false) {
       obj.is_mobile = message.is_mobile;
     }
-    if (message.birthday !== undefined) {
-      obj.birthday = message.birthday.toISOString();
+    if (message.dob !== undefined) {
+      obj.dob = message.dob.toISOString();
     }
     return obj;
   },
@@ -13804,7 +13804,7 @@ export const User = {
     message.about_me = object.about_me ?? "";
     message.join_time = object.join_time ?? undefined;
     message.is_mobile = object.is_mobile ?? false;
-    message.birthday = object.birthday ?? undefined;
+    message.dob = object.dob ?? undefined;
     return message;
   },
 };
@@ -17649,7 +17649,7 @@ function createBaseUpdateChannelDescRequest(): UpdateChannelDescRequest {
     app_url: undefined,
     topic: "",
     age_restricted: 0,
-    e_2ee: 0,
+    e2ee: 0,
   };
 }
 
@@ -17673,8 +17673,8 @@ export const UpdateChannelDescRequest = {
     if (message.age_restricted !== 0) {
       writer.uint32(48).int32(message.age_restricted);
     }
-    if (message.e_2ee !== 0) {
-      writer.uint32(56).int32(message.e_2ee);
+    if (message.e2ee !== 0) {
+      writer.uint32(56).int32(message.e2ee);
     }
     return writer;
   },
@@ -17733,7 +17733,7 @@ export const UpdateChannelDescRequest = {
             break;
           }
 
-          message.e_2ee = reader.int32();
+          message.e2ee = reader.int32();
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -17752,7 +17752,7 @@ export const UpdateChannelDescRequest = {
       app_url: isSet(object.app_url) ? String(object.app_url) : undefined,
       topic: isSet(object.topic) ? globalThis.String(object.topic) : "",
       age_restricted: isSet(object.age_restricted) ? globalThis.Number(object.age_restricted) : 0,
-      e_2ee: isSet(object.e_2ee) ? globalThis.Number(object.e_2ee) : 0,
+      e2ee: isSet(object.e2ee) ? globalThis.Number(object.e2ee) : 0,
     };
   },
 
@@ -17776,8 +17776,8 @@ export const UpdateChannelDescRequest = {
     if (message.age_restricted !== 0) {
       obj.age_restricted = Math.round(message.age_restricted);
     }
-    if (message.e_2ee !== 0) {
-      obj.e_2ee = Math.round(message.e_2ee);
+    if (message.e2ee !== 0) {
+      obj.e2ee = Math.round(message.e2ee);
     }
     return obj;
   },
@@ -17793,7 +17793,7 @@ export const UpdateChannelDescRequest = {
     message.app_url = object.app_url ?? undefined;
     message.topic = object.topic ?? "";
     message.age_restricted = object.age_restricted ?? 0;
-    message.e_2ee = object.e_2ee ?? 0;
+    message.e2ee = object.e2ee ?? 0;
     return message;
   },
 };
