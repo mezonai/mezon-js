@@ -446,6 +446,12 @@ export interface ApiUpdateChannelDescRequest {
   category_id: string | undefined;
   /** The app url of channel */
   app_url: string | undefined;
+  //
+  e2ee?: number;
+  //
+  topic?: string;
+  //
+  age_restricted?: number;
 }
 
 /** Add users to a channel. */
