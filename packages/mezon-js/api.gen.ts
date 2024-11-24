@@ -134,11 +134,17 @@ export enum ApiAppRole {
 /** Update fields in a given channel. */
 export interface MezonUpdateChannelDescBody {
   //
+  age_restricted?: number;
+  //
   app_url?: string;
   //
   category_id?: string;
   //
   channel_label?: string;
+  //
+  e2ee?: number;
+  //
+  topic?: string;
 }
 
 /**  */
@@ -683,6 +689,8 @@ export interface ApiChannelDescription {
   //
   active?: number;
   //
+  age_restricted?: number;
+  //
   app_url?: string;
   //
   category_id?: string;
@@ -709,6 +717,8 @@ export interface ApiChannelDescription {
   //
   creator_name?: string;
   //
+  e2ee?: number;
+  //
   is_mute?: boolean;
   //
   last_pin_message?: string;
@@ -724,6 +734,8 @@ export interface ApiChannelDescription {
   parrent_id?: string;
   //
   is_online?: Array<boolean>;
+  //
+  topic?: string;
   //The channel type.
   type?: number;
   //
@@ -2177,6 +2189,8 @@ export interface ApiUpdateAccountRequest {
   about_me?: string;
   //A URL for an avatar image.
   avatar_url?: string;
+  //
+  dob?: string;
   //The display name of the user.
   display_name?: string;
   //The language expected to be a tag which follows the BCP-47 spec.
@@ -2258,6 +2272,8 @@ export interface ApiUser {
   apple_id?: string;
   //A URL for an avatar image.
   avatar_url?: string;
+  //
+  dob?: string;
   //The UNIX time (for gRPC clients) or ISO string (for REST clients) when the user was created.
   create_time?: string;
   //The display name of the user.
