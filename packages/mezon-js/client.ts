@@ -149,6 +149,10 @@ import {
   ApiListClanWebhookResponse,
   MezonUpdateClanWebhookByIdBody,
   MezonUpdateClanDescBody,
+  ApiUserStatusUpdate,
+  ApiUserStatus,
+  ApiListOnboardingStepResponse,
+  MezonUpdateOnboardingStepByClanIdBody,
 } from "./api.gen";
 
 import { Session } from "./session";
@@ -4554,7 +4558,7 @@ export class Client {
     }
 
     return this.apiClient
-      .generateWebhook(session.token, request)
+      .generateClanWebhook(session.token, request)
       .then((response: any) => {
         return Promise.resolve(response);
       });
@@ -4617,4 +4621,87 @@ export class Client {
         return response !== undefined;
       });
   }
+
+  //**list onboarding step */
+  async listOnboardingStep(
+    session: Session,
+    clan_id?: string,
+    limit?: number,
+    page? :number,
+  ): Promise<ApiListOnboardingStepResponse> {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired((Date.now() + this.expiredTimespanMs) / 1000)
+    ) {
+      await this.sessionRefresh(session);
+    }
+
+    return this.apiClient
+      .listOnboardingStep(session.token, clan_id, limit, page)
+      .then((response: ApiListOnboardingStepResponse) => {
+        return Promise.resolve(response);
+      });
+  }
+
+  //**update onboarding step by id */
+  async updateOnboardingStepByClanId(
+    session: Session,
+    id: string,
+    request: MezonUpdateOnboardingStepByClanIdBody
+  ) {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired((Date.now() + this.expiredTimespanMs) / 1000)
+    ) {
+      await this.sessionRefresh(session);
+    }
+
+    return this.apiClient
+      .updateOnboardingStepByClanId(session.token, id, request)
+      .then((response: any) => {
+        return response !== undefined;
+      });
+  }
+
+  //**update status */
+  async updateUserStatus(
+    session: Session,
+    request: ApiUserStatusUpdate
+  ) {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired((Date.now() + this.expiredTimespanMs) / 1000)
+    ) {
+      await this.sessionRefresh(session);
+    }
+
+    return this.apiClient
+      .updateUserStatus(session.token, request)
+      .then((response: any) => {
+        return response !== undefined;
+      });
+  }
+
+  //**get user status */
+  async getUserStatus(
+    session: Session  
+  ): Promise<ApiUserStatus> {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired((Date.now() + this.expiredTimespanMs) / 1000)
+    ) {
+      await this.sessionRefresh(session);
+    }
+
+    return this.apiClient
+      .getUserStatus(session.token)
+      .then((response: ApiUserStatus) => {
+        return Promise.resolve(response);
+      });
+  }
+  
 }

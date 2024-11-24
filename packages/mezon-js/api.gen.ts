@@ -2324,6 +2324,24 @@ export interface ApiUserPermissionInChannelListResponse {
   permissions?: ApiPermissionList;
 }
 
+/**  */
+export interface ApiUserStatus {
+  //
+  status?: string;
+  //
+  user_id?: string;
+}
+
+/**  */
+export interface ApiUserStatusUpdate {
+  //
+  minutes?: number;
+  //
+  status?: string;
+  //
+  until_turn_on?: boolean;
+}
+
 /** A collection of zero or more users. */
 export interface ApiUsers {
   //The User objects.
@@ -2588,6 +2606,30 @@ export interface ApiGenerateClanWebhookResponse {
 export interface ApiListClanWebhookResponse {
   //list clan webhook.
   list_clan_webhooks?: Array<ApiClanWebhook>;
+}
+
+/**  */
+export interface MezonUpdateOnboardingStepByClanIdBody {
+  //onboarding step.
+  onboarding_step?: number;
+}
+
+/**  */
+export interface ApiListOnboardingStepResponse {
+  //list onboarding steps.
+  list_onboarding_step?: Array<ApiOnboardingSteps>;
+}
+
+/**  */
+export interface ApiOnboardingSteps {
+  //clan id.
+  clan_id?: string;
+  //id.
+  id?: string;
+  //onboarding step.
+  onboarding_step?: number;
+  //user id.
+  user_id?: string;
 }
 
 export class MezonApi {
@@ -9387,6 +9429,73 @@ pushPubKey(bearerToken: string,
         setTimeout(reject, this.timeoutMs, "Request timed out.")
       ),
     ]);
+}
+
+  /** Get user status */
+  getUserStatus(bearerToken: string,
+      options: any = {}): Promise<ApiUserStatus> {
+    
+    const urlPath = "/v2/userstatus";
+    const queryParams = new Map<string, any>();
+
+    let bodyJson : string = "";
+
+    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
+    const fetchOptions = buildFetchOptions("GET", options, bodyJson);
+    if (bearerToken) {
+        fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+    }
+
+    return Promise.race([
+      fetch(fullUrl, fetchOptions).then((response) => {
+        if (response.status == 204) {
+          return response;
+        } else if (response.status >= 200 && response.status < 300) {
+          return response.json();
+        } else {
+          throw response;
+        }
+      }),
+      new Promise((_, reject) =>
+        setTimeout(reject, this.timeoutMs, "Request timed out.")
+      ),
+    ]);
+}
+
+  /** Update user status */
+  updateUserStatus(bearerToken: string,
+      body:ApiUserStatusUpdate,
+      options: any = {}): Promise<any> {
+    
+    if (body === null || body === undefined) {
+      throw new Error("'body' is a required parameter but is null or undefined.");
+    }
+    const urlPath = "/v2/userstatus";
+    const queryParams = new Map<string, any>();
+
+    let bodyJson : string = "";
+    bodyJson = JSON.stringify(body || {});
+
+    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
+    const fetchOptions = buildFetchOptions("PUT", options, bodyJson);
+    if (bearerToken) {
+        fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+    }
+
+    return Promise.race([
+      fetch(fullUrl, fetchOptions).then((response) => {
+        if (response.status == 204) {
+          return response;
+        } else if (response.status >= 200 && response.status < 300) {
+          return response.json();
+        } else {
+          throw response;
+        }
+      }),
+      new Promise((_, reject) =>
+        setTimeout(reject, this.timeoutMs, "Request timed out.")
+      ),
+    ]);
   }
 
   /** create webhook */
@@ -10061,6 +10170,84 @@ pushPubKey(bearerToken: string,
     }
     const urlPath = "/v2/clanwebhooks/{id}"
         .replace("{id}", encodeURIComponent(String(id)));
+    const queryParams = new Map<string, any>();
+
+    let bodyJson : string = "";
+    bodyJson = JSON.stringify(body || {});
+
+    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
+    const fetchOptions = buildFetchOptions("PUT", options, bodyJson);
+    if (bearerToken) {
+        fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+    }
+
+    return Promise.race([
+      fetch(fullUrl, fetchOptions).then((response) => {
+        if (response.status == 204) {
+          return response;
+        } else if (response.status >= 200 && response.status < 300) {
+          return response.json();
+        } else {
+          throw response;
+        }
+      }),
+      new Promise((_, reject) =>
+        setTimeout(reject, this.timeoutMs, "Request timed out.")
+      ),
+    ]);
+  }
+
+  /** List onboarding step. */
+  listOnboardingStep(bearerToken: string,
+    clanId?:string,
+    limit?:number,
+    page?:number,
+    options: any = {}): Promise<ApiListOnboardingStepResponse> {
+  
+  const urlPath = "/v2/onboardingsteps";
+  const queryParams = new Map<string, any>();
+  queryParams.set("clan_id", clanId);
+  queryParams.set("limit", limit);
+  queryParams.set("page", page);
+
+  let bodyJson : string = "";
+
+  const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
+  const fetchOptions = buildFetchOptions("GET", options, bodyJson);
+  if (bearerToken) {
+      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+  }
+
+  return Promise.race([
+    fetch(fullUrl, fetchOptions).then((response) => {
+      if (response.status == 204) {
+        return response;
+      } else if (response.status >= 200 && response.status < 300) {
+        return response.json();
+      } else {
+        throw response;
+      }
+    }),
+    new Promise((_, reject) =>
+      setTimeout(reject, this.timeoutMs, "Request timed out.")
+    ),
+  ]);
+}
+
+  /** Update onboarding step. */
+  updateOnboardingStepByClanId(bearerToken: string,
+    clanId:string,
+    body:MezonUpdateOnboardingStepByClanIdBody,
+    options: any = {}): Promise<any> {
+  
+    if (clanId === null || clanId === undefined) {
+      throw new Error("'clanId' is a required parameter but is null or undefined.");
+    }
+    if (body === null || body === undefined) {
+      throw new Error("'body' is a required parameter but is null or undefined.");
+    }
+    const urlPath = "/v2/onboardingsteps/{clanId}"
+        .replace("{clanId}", encodeURIComponent(String(clanId)));
     const queryParams = new Map<string, any>();
 
     let bodyJson : string = "";
