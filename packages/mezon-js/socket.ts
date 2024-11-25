@@ -50,8 +50,10 @@ export interface Presence {
   node: string;
   /** The status of the user */
   status: string;
-  //
+  // User Mobile
   is_mobile: boolean;
+  // Metadata
+  metadata: string;
 }
 
 /** A response from a channel join operation. */
@@ -1176,7 +1178,6 @@ export interface Socket {
     caller_id: string
   ) => Promise<WebrtcSignalingFwd>;
 
-  
   onmessagebuttonclicked: (event: MessageButtonClicked) => void;
 
   onmessagedropdownboxselected: (event: DropdownBoxSelected) => void;
@@ -2241,7 +2242,7 @@ export class DefaultSocket implements Socket {
         selectbox_id: selectbox_id,
         sender_id: sender_id,
         user_id: user_id,
-        value: value
+        value: value,
       },
     });
     return response.dropdown_box_selected;
