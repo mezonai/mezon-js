@@ -2489,19 +2489,21 @@ export interface ApiListOnboardingResponse {
 }
 
 /**  */
-export interface ApiAnswer {
+export interface OnboardingAnswer {
   //
-  answer?: string;
+  emoji?: string;
   //
   description?: string;
   //
   title?: string;
+  //
+  image_url?: string;
 }
 
 /**  */
 export interface ApiOnboardingContent {
   //
-  answers?: Array<ApiAnswer>;
+  answers?: Array<OnboardingAnswer>;
   //
   channel_id?: string;
   //
@@ -2512,12 +2514,14 @@ export interface ApiOnboardingContent {
   task_type?: number;
   //
   title?: string;
+  //
+  image_url?: string;
 }
 
 /**  */
 export interface MezonUpdateOnboardingBody {
   //
-  answers?: Array<ApiAnswer>;
+  answers?: Array<OnboardingAnswer>;
   //
   channel_id?: string;
   //
@@ -2528,6 +2532,8 @@ export interface MezonUpdateOnboardingBody {
   task_type?: number;
   //
   title?: string;
+  //
+  image_url?: string;
 }
 
 /**  */
@@ -2541,7 +2547,7 @@ export interface ApiCreateOnboardingRequest {
 /**  */
 export interface ApiOnboardingItem {
   //
-  answers?: Array<ApiAnswer>;
+  answers?: Array<OnboardingAnswer>;
   //
   channel_id?: string;
   //
@@ -2560,6 +2566,8 @@ export interface ApiOnboardingItem {
   title?: string;
   //The UNIX time (for gRPC clients) or ISO string (for REST clients) when the message was last updated.
   update_time?: string;
+  //
+  image_url?: string;
 }
 
 /**  */
