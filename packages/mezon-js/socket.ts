@@ -837,12 +837,14 @@ export interface WebrtcSignalingFwd {
 }
 
 export interface JoinPTTChannel {
-  // channel id
+  /** channel id */
   channel_id: string;
-  // type offer, answer or candidate
+  /** type offer, answer or candidate */
   data_type: number;
-  // offer
+  /** offer */
   json_data: string;
+  /** receiver id */
+  receiver_id: string;
 }
 
 export interface TalkPTTChannel {
@@ -1140,15 +1142,23 @@ export interface Socket {
     type: number
   ): Promise<CheckNameExistedEvent>;
 
-  handleMessageButtonClick: (message_id: string,
+  handleMessageButtonClick: (
+    message_id: string,
     channel_id: string,
     button_id: string,
     sender_id: string,
-    user_id: string) => Promise<MessageButtonClicked>;
+    user_id: string
+  ) => Promise<MessageButtonClicked>;
 
   onmessagebuttonclicked: (event: MessageButtonClicked) => void;
 
-  forwardWebrtcSignaling: (receiverId: string, dataType: number, jsonData: string, channelId: string, caller_id: string) => Promise<WebrtcSignalingFwd>;
+  forwardWebrtcSignaling: (
+    receiverId: string,
+    dataType: number,
+    jsonData: string,
+    channelId: string,
+    caller_id: string
+  ) => Promise<WebrtcSignalingFwd>;
 
   onwebrtcsignalingfwd: (event: WebrtcSignalingFwd) => void;
 
@@ -1182,7 +1192,7 @@ export interface Socket {
 
   onunmuteevent: (unmute_event: UnmuteEvent) => void;
 
-  ontokensent: (token: ApiTokenSentEvent) => void;  
+  ontokensent: (token: ApiTokenSentEvent) => void;
 
   onactivityupdated: (list_activity: ListActivity) => void;
 
@@ -1440,14 +1450,18 @@ export class DefaultSocket implements Socket {
         } else if (message.token_sent_event) {
           this.ontokensent(<ApiTokenSentEvent>message.token_sent_event);
         } else if (message.message_button_clicked) {
-          this.onmessagebuttonclicked( <MessageButtonClicked>message.message_button_clicked);
+          this.onmessagebuttonclicked(
+            <MessageButtonClicked>message.message_button_clicked
+          );
         } else if (message.webrtc_signaling_fwd) {
-          this.onwebrtcsignalingfwd(<WebrtcSignalingFwd>message.webrtc_signaling_fwd);
-        } else if (message.list_activity){
+          this.onwebrtcsignalingfwd(
+            <WebrtcSignalingFwd>message.webrtc_signaling_fwd
+          );
+        } else if (message.list_activity) {
           this.onactivityupdated(<ListActivity>message.list_activity);
-        } else if (message.join_ptt_channel){
+        } else if (message.join_ptt_channel) {
           this.onjoinpttchannel(<JoinPTTChannel>message.join_ptt_channel);
-        } else if (message.talk_ptt_channel){
+        } else if (message.talk_ptt_channel) {
           this.ontalkpttchannel(<TalkPTTChannel>message.talk_ptt_channel);
         } else {
           if (this.verbose && window && window.console) {
@@ -2162,25 +2176,39 @@ export class DefaultSocket implements Socket {
   }
 
   async forwardWebrtcSignaling(
-    receiver_id: string, 
-    data_type: number, 
+    receiver_id: string,
+    data_type: number,
     json_data: string,
-    channel_id: string, 
-    caller_id: string): Promise<WebrtcSignalingFwd> {
+    channel_id: string,
+    caller_id: string
+  ): Promise<WebrtcSignalingFwd> {
     const response = await this.send({
-      webrtc_signaling_fwd: { receiver_id: receiver_id, data_type: data_type, json_data: json_data, channel_id: channel_id, caller_id: caller_id },
+      webrtc_signaling_fwd: {
+        receiver_id: receiver_id,
+        data_type: data_type,
+        json_data: json_data,
+        channel_id: channel_id,
+        caller_id: caller_id,
+      },
     });
     return response.webrtc_signaling_fwd;
   }
 
-  async handleMessageButtonClick (
+  async handleMessageButtonClick(
     message_id: string,
     channel_id: string,
     button_id: string,
     sender_id: string,
-    user_id: string): Promise<MessageButtonClicked> {
+    user_id: string
+  ): Promise<MessageButtonClicked> {
     const response = await this.send({
-      message_button_clicked: { message_id: message_id, channel_id: channel_id, button_id: button_id, sender_id: sender_id, user_id: user_id },
+      message_button_clicked: {
+        message_id: message_id,
+        channel_id: channel_id,
+        button_id: button_id,
+        sender_id: sender_id,
+        user_id: user_id,
+      },
     });
     return response.webrtc_signaling_fwd;
   }
@@ -2191,7 +2219,12 @@ export class DefaultSocket implements Socket {
     jsonData: string
   ): Promise<JoinPTTChannel> {
     const response = await this.send({
-      join_ptt_channel: { channel_id: channelId, data_type: dataType, json_data: jsonData },
+      join_ptt_channel: {
+        channel_id: channelId,
+        data_type: dataType,
+        json_data: jsonData,
+        receiver_id: "",
+      },
     });
     return response.join_ptt_channel;
   }
@@ -2203,7 +2236,12 @@ export class DefaultSocket implements Socket {
     state: number
   ): Promise<TalkPTTChannel> {
     const response = await this.send({
-      talk_ptt_channel: { channel_id: channelId, data_type: dataType, json_data: jsonData, state: state },
+      talk_ptt_channel: {
+        channel_id: channelId,
+        data_type: dataType,
+        json_data: jsonData,
+        state: state,
+      },
     });
     return response.talk_ptt_channel;
   }
