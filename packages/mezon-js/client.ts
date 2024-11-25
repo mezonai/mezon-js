@@ -4653,7 +4653,7 @@ export class Client {
   //**update onboarding step by id */
   async updateOnboardingStepByClanId(
     session: Session,
-    id: string,
+    clan_id: string,
     request: MezonUpdateOnboardingStepByClanIdBody
   ) {
     if (
@@ -4665,7 +4665,7 @@ export class Client {
     }
 
     return this.apiClient
-      .updateOnboardingStepByClanId(session.token, id, request)
+      .updateOnboardingStepByClanId(session.token, clan_id, request)
       .then((response: any) => {
         return response !== undefined;
       });
