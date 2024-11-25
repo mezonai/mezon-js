@@ -822,6 +822,15 @@ export interface PermissionChangedEvent {
   channel_id: string;
 }
 
+export interface DropdownBoxSelected {
+  message_id: string;
+  channel_id: string;
+  selectbox_id: string;
+  sender_id: string;
+  user_id: string;
+  value: Array<string>;
+}
+
 export interface MessageButtonClicked {
   message_id: string;
   channel_id: string;
@@ -839,12 +848,14 @@ export interface WebrtcSignalingFwd {
 }
 
 export interface JoinPTTChannel {
-  // channel id
+  /** channel id */
   channel_id: string;
-  // type offer, answer or candidate
+  /** type offer, answer or candidate */
   data_type: number;
-  // offer
+  /** offer */
   json_data: string;
+  /** receiver id */
+  receiver_id: string;
 }
 
 export interface TalkPTTChannel {
@@ -1150,7 +1161,14 @@ export interface Socket {
     user_id: string
   ) => Promise<MessageButtonClicked>;
 
-  onmessagebuttonclicked: (event: MessageButtonClicked) => void;
+  handleDropdownBoxSelected: (
+    message_id: string,
+    channel_id: string,
+    selectbox_id: string,
+    sender_id: string,
+    user_id: string,
+    value: Array<string>
+  ) => Promise<DropdownBoxSelected>;
 
   forwardWebrtcSignaling: (
     receiverId: string,
@@ -1159,6 +1177,10 @@ export interface Socket {
     channelId: string,
     caller_id: string
   ) => Promise<WebrtcSignalingFwd>;
+
+  onmessagebuttonclicked: (event: MessageButtonClicked) => void;
+
+  onmessagedropdownboxselected: (event: DropdownBoxSelected) => void;
 
   onwebrtcsignalingfwd: (event: WebrtcSignalingFwd) => void;
 
@@ -1452,6 +1474,10 @@ export class DefaultSocket implements Socket {
         } else if (message.message_button_clicked) {
           this.onmessagebuttonclicked(
             <MessageButtonClicked>message.message_button_clicked
+          );
+        } else if (message.dropdown_box_selected) {
+          this.onmessagedropdownboxselected(
+            <DropdownBoxSelected>message.dropdown_box_selected
           );
         } else if (message.webrtc_signaling_fwd) {
           this.onwebrtcsignalingfwd(
@@ -1800,6 +1826,12 @@ export class DefaultSocket implements Socket {
     }
   }
 
+  onmessagedropdownboxselected(msg: DropdownBoxSelected) {
+    if (this.verbose && window && window.console) {
+      console.log(msg);
+    }
+  }
+
   onwebrtcsignalingfwd(event: WebrtcSignalingFwd) {
     if (this.verbose && window && window.console) {
       console.log(event);
@@ -1840,6 +1872,7 @@ export class DefaultSocket implements Socket {
       | Ping
       | WebrtcSignalingFwd
       | MessageButtonClicked
+      | DropdownBoxSelected
       | JoinPTTChannel
       | TalkPTTChannel,
     sendTimeout = DefaultSocket.DefaultSendTimeoutMs
@@ -2194,6 +2227,27 @@ export class DefaultSocket implements Socket {
     return response.webrtc_signaling_fwd;
   }
 
+  async handleDropdownBoxSelected(
+    message_id: string,
+    channel_id: string,
+    selectbox_id: string,
+    sender_id: string,
+    user_id: string,
+    value: Array<string>
+  ): Promise<DropdownBoxSelected> {
+    const response = await this.send({
+      message_button_clicked: {
+        message_id: message_id,
+        channel_id: channel_id,
+        selectbox_id: selectbox_id,
+        sender_id: sender_id,
+        user_id: user_id,
+        value: value,
+      },
+    });
+    return response.dropdown_box_selected;
+  }
+
   async handleMessageButtonClick(
     message_id: string,
     channel_id: string,
@@ -2223,6 +2277,7 @@ export class DefaultSocket implements Socket {
         channel_id: channelId,
         data_type: dataType,
         json_data: jsonData,
+        receiver_id: "",
       },
     });
     return response.join_ptt_channel;
