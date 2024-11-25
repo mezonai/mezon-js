@@ -839,6 +839,13 @@ export interface MessageButtonClicked {
   user_id: string;
 }
 
+export interface IncomingCallPush {
+  receiver_id: string;
+  json_data: string;
+  channel_id: string;
+  caller_id: string;
+}
+
 export interface WebrtcSignalingFwd {
   receiver_id: string;
   data_type: number;
@@ -1039,6 +1046,50 @@ export interface Socket {
     state: number
   ): Promise<TalkPTTChannel>;
 
+  /* Set the heartbeat timeout used by the socket to detect if it has lost connectivity to the server. */
+  setHeartbeatTimeoutMs(ms: number): void;
+
+  /* Get the heartbeat timeout used by the socket to detect if it has lost connectivity to the server. */
+  getHeartbeatTimeoutMs(): number;
+
+  checkDuplicateName(
+    name: string,
+    condition_id: string,
+    type: number
+  ): Promise<CheckNameExistedEvent>;
+
+  handleMessageButtonClick: (
+    message_id: string,
+    channel_id: string,
+    button_id: string,
+    sender_id: string,
+    user_id: string
+  ) => Promise<MessageButtonClicked>;
+
+  handleDropdownBoxSelected: (
+    message_id: string,
+    channel_id: string,
+    selectbox_id: string,
+    sender_id: string,
+    user_id: string,
+    value: Array<string>
+  ) => Promise<DropdownBoxSelected>;
+
+  forwardWebrtcSignaling: (
+    receiverId: string,
+    dataType: number,
+    jsonData: string,
+    channelId: string,
+    caller_id: string
+  ) => Promise<WebrtcSignalingFwd>;
+
+  makeCallPush: (
+    receiverId: string,
+    jsonData: string,
+    channelId: string,
+    caller_id: string
+  ) => Promise<IncomingCallPush>;
+
   /** Handle disconnect events received from the socket. */
   ondisconnect: (evt: Event) => void;
 
@@ -1140,43 +1191,6 @@ export interface Socket {
 
   // when user update last seen message
   onlastseenupdated: (event: LastSeenMessageEvent) => void;
-
-  /* Set the heartbeat timeout used by the socket to detect if it has lost connectivity to the server. */
-  setHeartbeatTimeoutMs(ms: number): void;
-
-  /* Get the heartbeat timeout used by the socket to detect if it has lost connectivity to the server. */
-  getHeartbeatTimeoutMs(): number;
-
-  checkDuplicateName(
-    name: string,
-    condition_id: string,
-    type: number
-  ): Promise<CheckNameExistedEvent>;
-
-  handleMessageButtonClick: (
-    message_id: string,
-    channel_id: string,
-    button_id: string,
-    sender_id: string,
-    user_id: string
-  ) => Promise<MessageButtonClicked>;
-
-  handleDropdownBoxSelected: (
-    message_id: string,
-    channel_id: string,
-    selectbox_id: string,
-    sender_id: string,
-    user_id: string,
-    value: Array<string>
-  ) => Promise<DropdownBoxSelected>;
-
-  forwardWebrtcSignaling: (
-    receiverId: string,
-    dataType: number,
-    jsonData: string,
-    channelId: string,
-    caller_id: string
-  ) => Promise<WebrtcSignalingFwd>;
 
   onmessagebuttonclicked: (event: MessageButtonClicked) => void;
 
@@ -1871,6 +1885,7 @@ export class DefaultSocket implements Socket {
       | StatusUpdate
       | Ping
       | WebrtcSignalingFwd
+      | IncomingCallPush
       | MessageButtonClicked
       | DropdownBoxSelected
       | JoinPTTChannel
@@ -2226,6 +2241,23 @@ export class DefaultSocket implements Socket {
     });
     return response.webrtc_signaling_fwd;
   }
+
+  async makeCallPush(
+    receiver_id: string,
+    json_data: string,
+    channel_id: string,
+    caller_id: string
+  ): Promise<IncomingCallPush> {
+    const response = await this.send({
+      incoming_call_push: {
+        receiver_id: receiver_id,
+        json_data: json_data,
+        channel_id: channel_id,
+        caller_id: caller_id,
+      },
+    });
+    return response.incoming_call_push;
+  }  
 
   async handleDropdownBoxSelected(
     message_id: string,

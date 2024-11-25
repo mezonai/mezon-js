@@ -3513,8 +3513,10 @@ export interface OnboardingItem {
   title: string;
   /** content */
   content: string;
+  /** image */
+  image_url: string;
   /** answers */
-  answers: Answer[];
+  answers: OnboardingAnswer[];
   /** The UNIX time (for gRPC clients) or ISO string (for REST clients) when the message was created. */
   create_time:
     | Date
@@ -3523,13 +3525,15 @@ export interface OnboardingItem {
   update_time: Date | undefined;
 }
 
-export interface Answer {
+export interface OnboardingAnswer {
   /** title */
   title: string;
   /** description */
   description: string;
-  /** answer */
-  answer: string;
+  /** emoji */
+  emoji: string;
+  /** image */
+  image_url: string;
 }
 
 export interface OnboardingContent {
@@ -3543,8 +3547,10 @@ export interface OnboardingContent {
   title: string;
   /** content */
   content: string;
+  /** image */
+  image_url: string;
   /** answers */
-  answers: Answer[];
+  answers: OnboardingAnswer[];
 }
 
 export interface CreateOnboardingRequest {
@@ -3569,8 +3575,10 @@ export interface UpdateOnboardingRequest {
   title: string;
   /** content */
   content: string;
+  /** image */
+  image_url: string;
   /** answers */
-  answers: Answer[];
+  answers: OnboardingAnswer[];
 }
 
 export interface OnboardingRequest {
@@ -3667,6 +3675,17 @@ export interface ClanWebhookHandlerRequest {
   token: string;
   /** username. */
   username: string;
+}
+
+export interface UserStatus {
+  user_id: string;
+  status: string;
+}
+
+export interface UserStatusUpdate {
+  status: string;
+  minutes: number;
+  until_turn_on: boolean;
 }
 
 export interface OnboardingSteps {
@@ -33857,6 +33876,7 @@ function createBaseOnboardingItem(): OnboardingItem {
     channel_id: "",
     title: "",
     content: "",
+    image_url: "",
     answers: [],
     create_time: undefined,
     update_time: undefined,
@@ -33886,14 +33906,17 @@ export const OnboardingItem = {
     if (message.content !== "") {
       writer.uint32(58).string(message.content);
     }
+    if (message.image_url !== "") {
+      writer.uint32(66).string(message.image_url);
+    }
     for (const v of message.answers) {
-      Answer.encode(v!, writer.uint32(66).fork()).ldelim();
+      OnboardingAnswer.encode(v!, writer.uint32(74).fork()).ldelim();
     }
     if (message.create_time !== undefined) {
-      Timestamp.encode(toTimestamp(message.create_time), writer.uint32(74).fork()).ldelim();
+      Timestamp.encode(toTimestamp(message.create_time), writer.uint32(82).fork()).ldelim();
     }
     if (message.update_time !== undefined) {
-      Timestamp.encode(toTimestamp(message.update_time), writer.uint32(82).fork()).ldelim();
+      Timestamp.encode(toTimestamp(message.update_time), writer.uint32(90).fork()).ldelim();
     }
     return writer;
   },
@@ -33959,17 +33982,24 @@ export const OnboardingItem = {
             break;
           }
 
-          message.answers.push(Answer.decode(reader, reader.uint32()));
+          message.image_url = reader.string();
           continue;
         case 9:
           if (tag !== 74) {
             break;
           }
 
-          message.create_time = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
+          message.answers.push(OnboardingAnswer.decode(reader, reader.uint32()));
           continue;
         case 10:
           if (tag !== 82) {
+            break;
+          }
+
+          message.create_time = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
+          continue;
+        case 11:
+          if (tag !== 90) {
             break;
           }
 
@@ -33993,7 +34023,10 @@ export const OnboardingItem = {
       channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "",
       title: isSet(object.title) ? globalThis.String(object.title) : "",
       content: isSet(object.content) ? globalThis.String(object.content) : "",
-      answers: globalThis.Array.isArray(object?.answers) ? object.answers.map((e: any) => Answer.fromJSON(e)) : [],
+      image_url: isSet(object.image_url) ? globalThis.String(object.image_url) : "",
+      answers: globalThis.Array.isArray(object?.answers)
+        ? object.answers.map((e: any) => OnboardingAnswer.fromJSON(e))
+        : [],
       create_time: isSet(object.create_time) ? fromJsonTimestamp(object.create_time) : undefined,
       update_time: isSet(object.update_time) ? fromJsonTimestamp(object.update_time) : undefined,
     };
@@ -34022,8 +34055,11 @@ export const OnboardingItem = {
     if (message.content !== "") {
       obj.content = message.content;
     }
+    if (message.image_url !== "") {
+      obj.image_url = message.image_url;
+    }
     if (message.answers?.length) {
-      obj.answers = message.answers.map((e) => Answer.toJSON(e));
+      obj.answers = message.answers.map((e) => OnboardingAnswer.toJSON(e));
     }
     if (message.create_time !== undefined) {
       obj.create_time = message.create_time.toISOString();
@@ -34046,35 +34082,39 @@ export const OnboardingItem = {
     message.channel_id = object.channel_id ?? "";
     message.title = object.title ?? "";
     message.content = object.content ?? "";
-    message.answers = object.answers?.map((e) => Answer.fromPartial(e)) || [];
+    message.image_url = object.image_url ?? "";
+    message.answers = object.answers?.map((e) => OnboardingAnswer.fromPartial(e)) || [];
     message.create_time = object.create_time ?? undefined;
     message.update_time = object.update_time ?? undefined;
     return message;
   },
 };
 
-function createBaseAnswer(): Answer {
-  return { title: "", description: "", answer: "" };
+function createBaseOnboardingAnswer(): OnboardingAnswer {
+  return { title: "", description: "", emoji: "", image_url: "" };
 }
 
-export const Answer = {
-  encode(message: Answer, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+export const OnboardingAnswer = {
+  encode(message: OnboardingAnswer, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.title !== "") {
       writer.uint32(10).string(message.title);
     }
     if (message.description !== "") {
       writer.uint32(18).string(message.description);
     }
-    if (message.answer !== "") {
-      writer.uint32(26).string(message.answer);
+    if (message.emoji !== "") {
+      writer.uint32(26).string(message.emoji);
+    }
+    if (message.image_url !== "") {
+      writer.uint32(34).string(message.image_url);
     }
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): Answer {
+  decode(input: _m0.Reader | Uint8Array, length?: number): OnboardingAnswer {
     const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseAnswer();
+    const message = createBaseOnboardingAnswer();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -34097,7 +34137,14 @@ export const Answer = {
             break;
           }
 
-          message.answer = reader.string();
+          message.emoji = reader.string();
+          continue;
+        case 4:
+          if (tag !== 34) {
+            break;
+          }
+
+          message.image_url = reader.string();
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -34108,15 +34155,16 @@ export const Answer = {
     return message;
   },
 
-  fromJSON(object: any): Answer {
+  fromJSON(object: any): OnboardingAnswer {
     return {
       title: isSet(object.title) ? globalThis.String(object.title) : "",
       description: isSet(object.description) ? globalThis.String(object.description) : "",
-      answer: isSet(object.answer) ? globalThis.String(object.answer) : "",
+      emoji: isSet(object.emoji) ? globalThis.String(object.emoji) : "",
+      image_url: isSet(object.image_url) ? globalThis.String(object.image_url) : "",
     };
   },
 
-  toJSON(message: Answer): unknown {
+  toJSON(message: OnboardingAnswer): unknown {
     const obj: any = {};
     if (message.title !== "") {
       obj.title = message.title;
@@ -34124,26 +34172,30 @@ export const Answer = {
     if (message.description !== "") {
       obj.description = message.description;
     }
-    if (message.answer !== "") {
-      obj.answer = message.answer;
+    if (message.emoji !== "") {
+      obj.emoji = message.emoji;
+    }
+    if (message.image_url !== "") {
+      obj.image_url = message.image_url;
     }
     return obj;
   },
 
-  create<I extends Exact<DeepPartial<Answer>, I>>(base?: I): Answer {
-    return Answer.fromPartial(base ?? ({} as any));
+  create<I extends Exact<DeepPartial<OnboardingAnswer>, I>>(base?: I): OnboardingAnswer {
+    return OnboardingAnswer.fromPartial(base ?? ({} as any));
   },
-  fromPartial<I extends Exact<DeepPartial<Answer>, I>>(object: I): Answer {
-    const message = createBaseAnswer();
+  fromPartial<I extends Exact<DeepPartial<OnboardingAnswer>, I>>(object: I): OnboardingAnswer {
+    const message = createBaseOnboardingAnswer();
     message.title = object.title ?? "";
     message.description = object.description ?? "";
-    message.answer = object.answer ?? "";
+    message.emoji = object.emoji ?? "";
+    message.image_url = object.image_url ?? "";
     return message;
   },
 };
 
 function createBaseOnboardingContent(): OnboardingContent {
-  return { guide_type: 0, task_type: 0, channel_id: "", title: "", content: "", answers: [] };
+  return { guide_type: 0, task_type: 0, channel_id: "", title: "", content: "", image_url: "", answers: [] };
 }
 
 export const OnboardingContent = {
@@ -34163,8 +34215,11 @@ export const OnboardingContent = {
     if (message.content !== "") {
       writer.uint32(42).string(message.content);
     }
+    if (message.image_url !== "") {
+      writer.uint32(50).string(message.image_url);
+    }
     for (const v of message.answers) {
-      Answer.encode(v!, writer.uint32(50).fork()).ldelim();
+      OnboardingAnswer.encode(v!, writer.uint32(58).fork()).ldelim();
     }
     return writer;
   },
@@ -34216,7 +34271,14 @@ export const OnboardingContent = {
             break;
           }
 
-          message.answers.push(Answer.decode(reader, reader.uint32()));
+          message.image_url = reader.string();
+          continue;
+        case 7:
+          if (tag !== 58) {
+            break;
+          }
+
+          message.answers.push(OnboardingAnswer.decode(reader, reader.uint32()));
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -34234,7 +34296,10 @@ export const OnboardingContent = {
       channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "",
       title: isSet(object.title) ? globalThis.String(object.title) : "",
       content: isSet(object.content) ? globalThis.String(object.content) : "",
-      answers: globalThis.Array.isArray(object?.answers) ? object.answers.map((e: any) => Answer.fromJSON(e)) : [],
+      image_url: isSet(object.image_url) ? globalThis.String(object.image_url) : "",
+      answers: globalThis.Array.isArray(object?.answers)
+        ? object.answers.map((e: any) => OnboardingAnswer.fromJSON(e))
+        : [],
     };
   },
 
@@ -34255,8 +34320,11 @@ export const OnboardingContent = {
     if (message.content !== "") {
       obj.content = message.content;
     }
+    if (message.image_url !== "") {
+      obj.image_url = message.image_url;
+    }
     if (message.answers?.length) {
-      obj.answers = message.answers.map((e) => Answer.toJSON(e));
+      obj.answers = message.answers.map((e) => OnboardingAnswer.toJSON(e));
     }
     return obj;
   },
@@ -34271,7 +34339,8 @@ export const OnboardingContent = {
     message.channel_id = object.channel_id ?? "";
     message.title = object.title ?? "";
     message.content = object.content ?? "";
-    message.answers = object.answers?.map((e) => Answer.fromPartial(e)) || [];
+    message.image_url = object.image_url ?? "";
+    message.answers = object.answers?.map((e) => OnboardingAnswer.fromPartial(e)) || [];
     return message;
   },
 };
@@ -34353,7 +34422,16 @@ export const CreateOnboardingRequest = {
 };
 
 function createBaseUpdateOnboardingRequest(): UpdateOnboardingRequest {
-  return { id: "", clan_id: "", task_type: undefined, channel_id: "", title: "", content: "", answers: [] };
+  return {
+    id: "",
+    clan_id: "",
+    task_type: undefined,
+    channel_id: "",
+    title: "",
+    content: "",
+    image_url: "",
+    answers: [],
+  };
 }
 
 export const UpdateOnboardingRequest = {
@@ -34376,8 +34454,11 @@ export const UpdateOnboardingRequest = {
     if (message.content !== "") {
       writer.uint32(50).string(message.content);
     }
+    if (message.image_url !== "") {
+      writer.uint32(58).string(message.image_url);
+    }
     for (const v of message.answers) {
-      Answer.encode(v!, writer.uint32(58).fork()).ldelim();
+      OnboardingAnswer.encode(v!, writer.uint32(66).fork()).ldelim();
     }
     return writer;
   },
@@ -34436,7 +34517,14 @@ export const UpdateOnboardingRequest = {
             break;
           }
 
-          message.answers.push(Answer.decode(reader, reader.uint32()));
+          message.image_url = reader.string();
+          continue;
+        case 8:
+          if (tag !== 66) {
+            break;
+          }
+
+          message.answers.push(OnboardingAnswer.decode(reader, reader.uint32()));
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -34455,7 +34543,10 @@ export const UpdateOnboardingRequest = {
       channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "",
       title: isSet(object.title) ? globalThis.String(object.title) : "",
       content: isSet(object.content) ? globalThis.String(object.content) : "",
-      answers: globalThis.Array.isArray(object?.answers) ? object.answers.map((e: any) => Answer.fromJSON(e)) : [],
+      image_url: isSet(object.image_url) ? globalThis.String(object.image_url) : "",
+      answers: globalThis.Array.isArray(object?.answers)
+        ? object.answers.map((e: any) => OnboardingAnswer.fromJSON(e))
+        : [],
     };
   },
 
@@ -34479,8 +34570,11 @@ export const UpdateOnboardingRequest = {
     if (message.content !== "") {
       obj.content = message.content;
     }
+    if (message.image_url !== "") {
+      obj.image_url = message.image_url;
+    }
     if (message.answers?.length) {
-      obj.answers = message.answers.map((e) => Answer.toJSON(e));
+      obj.answers = message.answers.map((e) => OnboardingAnswer.toJSON(e));
     }
     return obj;
   },
@@ -34496,7 +34590,8 @@ export const UpdateOnboardingRequest = {
     message.channel_id = object.channel_id ?? "";
     message.title = object.title ?? "";
     message.content = object.content ?? "";
-    message.answers = object.answers?.map((e) => Answer.fromPartial(e)) || [];
+    message.image_url = object.image_url ?? "";
+    message.answers = object.answers?.map((e) => OnboardingAnswer.fromPartial(e)) || [];
     return message;
   },
 };
@@ -35431,6 +35526,169 @@ export const ClanWebhookHandlerRequest = {
       : undefined;
     message.token = object.token ?? "";
     message.username = object.username ?? "";
+    return message;
+  },
+};
+
+function createBaseUserStatus(): UserStatus {
+  return { user_id: "", status: "" };
+}
+
+export const UserStatus = {
+  encode(message: UserStatus, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.user_id !== "") {
+      writer.uint32(10).string(message.user_id);
+    }
+    if (message.status !== "") {
+      writer.uint32(18).string(message.status);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): UserStatus {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseUserStatus();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.user_id = reader.string();
+          continue;
+        case 2:
+          if (tag !== 18) {
+            break;
+          }
+
+          message.status = reader.string();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): UserStatus {
+    return {
+      user_id: isSet(object.user_id) ? globalThis.String(object.user_id) : "",
+      status: isSet(object.status) ? globalThis.String(object.status) : "",
+    };
+  },
+
+  toJSON(message: UserStatus): unknown {
+    const obj: any = {};
+    if (message.user_id !== "") {
+      obj.user_id = message.user_id;
+    }
+    if (message.status !== "") {
+      obj.status = message.status;
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<UserStatus>, I>>(base?: I): UserStatus {
+    return UserStatus.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<UserStatus>, I>>(object: I): UserStatus {
+    const message = createBaseUserStatus();
+    message.user_id = object.user_id ?? "";
+    message.status = object.status ?? "";
+    return message;
+  },
+};
+
+function createBaseUserStatusUpdate(): UserStatusUpdate {
+  return { status: "", minutes: 0, until_turn_on: false };
+}
+
+export const UserStatusUpdate = {
+  encode(message: UserStatusUpdate, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.status !== "") {
+      writer.uint32(10).string(message.status);
+    }
+    if (message.minutes !== 0) {
+      writer.uint32(16).int32(message.minutes);
+    }
+    if (message.until_turn_on !== false) {
+      writer.uint32(24).bool(message.until_turn_on);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): UserStatusUpdate {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseUserStatusUpdate();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.status = reader.string();
+          continue;
+        case 2:
+          if (tag !== 16) {
+            break;
+          }
+
+          message.minutes = reader.int32();
+          continue;
+        case 3:
+          if (tag !== 24) {
+            break;
+          }
+
+          message.until_turn_on = reader.bool();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): UserStatusUpdate {
+    return {
+      status: isSet(object.status) ? globalThis.String(object.status) : "",
+      minutes: isSet(object.minutes) ? globalThis.Number(object.minutes) : 0,
+      until_turn_on: isSet(object.until_turn_on) ? globalThis.Boolean(object.until_turn_on) : false,
+    };
+  },
+
+  toJSON(message: UserStatusUpdate): unknown {
+    const obj: any = {};
+    if (message.status !== "") {
+      obj.status = message.status;
+    }
+    if (message.minutes !== 0) {
+      obj.minutes = Math.round(message.minutes);
+    }
+    if (message.until_turn_on !== false) {
+      obj.until_turn_on = message.until_turn_on;
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<UserStatusUpdate>, I>>(base?: I): UserStatusUpdate {
+    return UserStatusUpdate.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<UserStatusUpdate>, I>>(object: I): UserStatusUpdate {
+    const message = createBaseUserStatusUpdate();
+    message.status = object.status ?? "";
+    message.minutes = object.minutes ?? 0;
+    message.until_turn_on = object.until_turn_on ?? false;
     return message;
   },
 };
