@@ -1194,6 +1194,7 @@ export interface MessageButtonClicked {
   button_id: string;
   sender_id: string;
   user_id: string;
+  extra_data: string;
 }
 
 export interface UnmuteEvent {
@@ -10009,7 +10010,7 @@ export const PermissionChangedEvent = {
 };
 
 function createBaseMessageButtonClicked(): MessageButtonClicked {
-  return { message_id: "", channel_id: "", button_id: "", sender_id: "", user_id: "" };
+  return { message_id: "", channel_id: "", button_id: "", sender_id: "", user_id: "", extra_data: "" };
 }
 
 export const MessageButtonClicked = {
@@ -10028,6 +10029,9 @@ export const MessageButtonClicked = {
     }
     if (message.user_id !== "") {
       writer.uint32(42).string(message.user_id);
+    }
+    if (message.extra_data !== "") {
+      writer.uint32(50).string(message.extra_data);
     }
     return writer;
   },
@@ -10074,6 +10078,13 @@ export const MessageButtonClicked = {
 
           message.user_id = reader.string();
           continue;
+        case 6:
+          if (tag !== 50) {
+            break;
+          }
+
+          message.extra_data = reader.string();
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -10090,6 +10101,7 @@ export const MessageButtonClicked = {
       button_id: isSet(object.button_id) ? globalThis.String(object.button_id) : "",
       sender_id: isSet(object.sender_id) ? globalThis.String(object.sender_id) : "",
       user_id: isSet(object.user_id) ? globalThis.String(object.user_id) : "",
+      extra_data: isSet(object.extra_data) ? globalThis.String(object.extra_data) : "",
     };
   },
 
@@ -10110,6 +10122,9 @@ export const MessageButtonClicked = {
     if (message.user_id !== "") {
       obj.user_id = message.user_id;
     }
+    if (message.extra_data !== "") {
+      obj.extra_data = message.extra_data;
+    }
     return obj;
   },
 
@@ -10123,6 +10138,7 @@ export const MessageButtonClicked = {
     message.button_id = object.button_id ?? "";
     message.sender_id = object.sender_id ?? "";
     message.user_id = object.user_id ?? "";
+    message.extra_data = object.extra_data ?? "";
     return message;
   },
 };
