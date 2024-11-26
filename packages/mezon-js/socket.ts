@@ -837,6 +837,7 @@ export interface MessageButtonClicked {
   button_id: string;
   sender_id: string;
   user_id: string;
+  extra_data: string;
 }
 
 export interface IncomingCallPush {
@@ -1063,7 +1064,8 @@ export interface Socket {
     channel_id: string,
     button_id: string,
     sender_id: string,
-    user_id: string
+    user_id: string,
+    extra_data: string
   ) => Promise<MessageButtonClicked>;
 
   handleDropdownBoxSelected: (
@@ -2285,7 +2287,8 @@ export class DefaultSocket implements Socket {
     channel_id: string,
     button_id: string,
     sender_id: string,
-    user_id: string
+    user_id: string,
+    extra_data: string
   ): Promise<MessageButtonClicked> {
     const response = await this.send({
       message_button_clicked: {
@@ -2294,6 +2297,7 @@ export class DefaultSocket implements Socket {
         button_id: button_id,
         sender_id: sender_id,
         user_id: user_id,
+        extra_data: extra_data
       },
     });
     return response.webrtc_signaling_fwd;
