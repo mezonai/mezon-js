@@ -423,6 +423,10 @@ export interface ChannelUpdatedEvent {
   app_url: string;
   // e2ee
   e2ee: number;
+  //
+  topic: string;
+  //
+  age_restricted: number;
 }
 
 export interface ChannelCreatedEvent {
