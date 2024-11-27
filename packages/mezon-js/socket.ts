@@ -421,6 +421,8 @@ export interface ChannelUpdatedEvent {
   is_error: boolean;
   // app url
   app_url: string;
+  // e2ee
+  e2ee: number;
 }
 
 export interface ChannelCreatedEvent {
