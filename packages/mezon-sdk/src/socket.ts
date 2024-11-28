@@ -67,6 +67,10 @@ export class DefaultSocket implements Socket {
     return this.adapter.isOpen();
   }
 
+  close() {
+    this.adapter.close();
+  }
+
   connect(session: Session, createStatus: boolean = false, connectTimeoutMs: number = DefaultSocket.DefaultConnectTimeoutMs): Promise<Session> {
     this.session = session;
     if (this.adapter.isOpen()) {
