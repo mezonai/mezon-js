@@ -314,7 +314,7 @@ export class MezonClient implements Client {
         clan_id: "",
         channel_id: "0",
         category_id: "0",
-        type: 3,
+        type: ChannelType.CHANNEL_TYPE_DM,
         user_ids: [userId],
         channel_private: 1,
       };
