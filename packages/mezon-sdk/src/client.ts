@@ -68,6 +68,8 @@ export class MezonClient implements Client {
   /** the session */
   private session: Session | undefined;
 
+  private isHardDisconnect: boolean | undefined;
+
   [key: string]: any;
 
   constructor(
@@ -146,6 +148,7 @@ export class MezonClient implements Client {
       }
 
       await this.connectSocket();
+      this.isHardDisconnect = false;
       
       return Promise.resolve("connect successful");
     });
@@ -153,6 +156,7 @@ export class MezonClient implements Client {
 
   /** Close socket. */
   closeSocket() {
+    this.isHardDisconnect = true;
     this.socket.close();
   }
 
@@ -254,6 +258,7 @@ export class MezonClient implements Client {
 
   ondisconnect(e: CloseEvent) {
     console.log("Disconnected!", e?.reason, "Reconnecting...");
+    if (this.isHardDisconnect) return;
     this.retriesConnect();
   }
 
