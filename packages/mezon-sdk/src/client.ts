@@ -249,6 +249,7 @@ export class MezonClient implements Client {
   
   onerror(evt: ErrorEvent) {
     console.log(evt);
+    if (this.isHardDisconnect) return;
     this.retriesConnect();
   }
 
