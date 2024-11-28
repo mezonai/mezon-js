@@ -151,6 +151,11 @@ export class MezonClient implements Client {
     });
   }
 
+  /** Close socket. */
+  closeSocket() {
+    this.socket.close();
+  }
+
   /** Refresh a user's session using a refresh token retrieved from a previous authentication request. */
   async sessionRefresh() {
 
