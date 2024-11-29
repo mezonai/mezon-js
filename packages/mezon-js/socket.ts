@@ -284,6 +284,8 @@ interface ChannelMessageSend {
     avatar: string;
     // Is public
     is_public: boolean;
+    // code
+    code: number;
   };
 }
 
@@ -969,7 +971,8 @@ export interface Socket {
     references?: Array<ApiMessageRef>,
     anonymous_message?: boolean,
     mention_everyone?: boolean,
-    avatar?: string
+    avatar?: string,
+    code?: number
   ): Promise<ChannelMessageAck>;
 
   /** Send message typing */
@@ -2056,7 +2059,8 @@ export class DefaultSocket implements Socket {
     references?: Array<ApiMessageRef>,
     anonymous_message?: boolean,
     mention_everyone?: Boolean,
-    avatar?: string
+    avatar?: string,
+    code?: number,
   ): Promise<ChannelMessageAck> {
     const response = await this.send({
       channel_message_send: {
@@ -2071,6 +2075,7 @@ export class DefaultSocket implements Socket {
         anonymous_message: anonymous_message,
         mention_everyone: mention_everyone,
         avatar: avatar,
+        code: code,
       },
     });
     return response.channel_message_ack;
