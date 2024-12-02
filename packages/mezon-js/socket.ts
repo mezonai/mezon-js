@@ -2281,7 +2281,7 @@ export class DefaultSocket implements Socket {
     value: Array<string>
   ): Promise<DropdownBoxSelected> {
     const response = await this.send({
-      message_button_clicked: {
+      dropdown_box_selected: {
         message_id: message_id,
         channel_id: channel_id,
         selectbox_id: selectbox_id,
