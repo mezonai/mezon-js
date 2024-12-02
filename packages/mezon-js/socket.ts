@@ -872,6 +872,8 @@ export interface JoinPTTChannel {
   json_data: string;
   /** receiver id */
   receiver_id: string;
+  /** clan id */
+  clan_id: string;
 }
 
 export interface TalkPTTChannel {
@@ -1074,6 +1076,7 @@ export interface Socket {
   ): Promise<VoiceLeavedEvent>;
 
   joinPTTChannel(
+    clanId: string,
     channelId: string,
     dataType: number,
     jsonData: string
@@ -1551,7 +1554,7 @@ export class DefaultSocket implements Socket {
         } else if (message.ptt_joined_event) {
           this.onpttchanneljoined(<PTTJoinedEvent>message.ptt_joined_event);
         } else if (message.ptt_leaved_event) {
-          this.onpttchannelleaved(<PTTLeavedEvent>message.ptt_joined_event);
+          this.onpttchannelleaved(<PTTLeavedEvent>message.ptt_leaved_event);
         } else {
           if (this.verbose && window && window.console) {
             console.log("Unrecognized message received: %o", message);
@@ -2365,12 +2368,14 @@ export class DefaultSocket implements Socket {
   }
 
   async joinPTTChannel(
+    clanId: string,
     channelId: string,
     dataType: number,
     jsonData: string
   ): Promise<JoinPTTChannel> {
     const response = await this.send({
       join_ptt_channel: {
+        clan_id: clanId,
         channel_id: channelId,
         data_type: dataType,
         json_data: jsonData,
