@@ -1158,6 +1158,14 @@ export interface ApiCreateRoleRequest {
   title?: string;
 }
 
+/**  */
+export interface ApiCustomDisplay {
+  //
+  logo?: string;
+  //
+  splash_screen?: string;
+}
+
 /** Delete a channel the user has access to. */
 export interface ApiDeleteChannelDescRequest {
   //The id of a channel.
@@ -2399,6 +2407,28 @@ export interface ApiVoiceChannelUser {
 export interface ApiVoiceChannelUserList {
   //
   voice_channel_users?: Array<ApiVoiceChannelUser>;
+}
+
+/**  */
+export interface ApiWalletLedger {
+  //
+  create_time?: string;
+  //
+  id?: string;
+  //
+  user_id?: string;
+  //
+  value?: number;
+}
+
+/**  */
+export interface ApiWalletLedgerList {
+  //
+  next_cursor?: string;
+  //
+  prev_cursor?: string;
+  //
+  wallet_ledger?: Array<ApiWalletLedger>;
 }
 
 /**  */
@@ -5878,7 +5908,74 @@ export class MezonApi {
         setTimeout(reject, this.timeoutMs, "Request timed out.")
       ),
     ]);
-  }
+}
+
+    /**  */
+    getCustomDisplay(bearerToken: string,
+      options: any = {}): Promise<ApiCustomDisplay> {
+    
+    const urlPath = "/v2/customdisplay";
+    const queryParams = new Map<string, any>();
+
+    let bodyJson : string = "";
+
+    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
+    const fetchOptions = buildFetchOptions("GET", options, bodyJson);
+    if (bearerToken) {
+        fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+    }
+
+    return Promise.race([
+      fetch(fullUrl, fetchOptions).then((response) => {
+        if (response.status == 204) {
+          return response;
+        } else if (response.status >= 200 && response.status < 300) {
+          return response.json();
+        } else {
+          throw response;
+        }
+      }),
+      new Promise((_, reject) =>
+        setTimeout(reject, this.timeoutMs, "Request timed out.")
+      ),
+    ]);
+}
+
+  /**  */
+  updateCustomDisplay(bearerToken: string,
+      body:ApiCustomDisplay,
+      options: any = {}): Promise<any> {
+    
+    if (body === null || body === undefined) {
+      throw new Error("'body' is a required parameter but is null or undefined.");
+    }
+    const urlPath = "/v2/customdisplay";
+    const queryParams = new Map<string, any>();
+
+    let bodyJson : string = "";
+    bodyJson = JSON.stringify(body || {});
+
+    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
+    const fetchOptions = buildFetchOptions("PUT", options, bodyJson);
+    if (bearerToken) {
+        fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+    }
+
+    return Promise.race([
+      fetch(fullUrl, fetchOptions).then((response) => {
+        if (response.status == 204) {
+          return response;
+        } else if (response.status >= 200 && response.status < 300) {
+          return response.json();
+        } else {
+          throw response;
+        }
+      }),
+      new Promise((_, reject) =>
+        setTimeout(reject, this.timeoutMs, "Request timed out.")
+      ),
+    ]);
+}
 
   /**  */
   deleteCategoryDesc(
@@ -9566,6 +9663,42 @@ pushPubKey(bearerToken: string,
     const fetchOptions = buildFetchOptions("PUT", options, bodyJson);
     if (bearerToken) {
         fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+    }
+
+    return Promise.race([
+      fetch(fullUrl, fetchOptions).then((response) => {
+        if (response.status == 204) {
+          return response;
+        } else if (response.status >= 200 && response.status < 300) {
+          return response.json();
+        } else {
+          throw response;
+        }
+      }),
+      new Promise((_, reject) =>
+        setTimeout(reject, this.timeoutMs, "Request timed out.")
+      ),
+    ]);
+  }
+
+  /** Get user status */
+  listWalletLedger(
+    bearerToken: string,
+    limit?: number,
+    cursor?: string,
+    options: any = {}
+  ): Promise<ApiWalletLedgerList> {
+    const urlPath = "/v2/walletledger";
+    const queryParams = new Map<string, any>();
+    queryParams.set("limit", limit);
+    queryParams.set("cursor", cursor);
+
+    let bodyJson: string = "";
+
+    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
+    const fetchOptions = buildFetchOptions("GET", options, bodyJson);
+    if (bearerToken) {
+      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
     }
 
     return Promise.race([
