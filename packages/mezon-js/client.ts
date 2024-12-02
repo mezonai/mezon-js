@@ -154,6 +154,7 @@ import {
   ApiListOnboardingStepResponse,
   MezonUpdateOnboardingStepByClanIdBody,
   ApiPTTChannelUserList,
+  ApiCustomDisplay,
 } from "./api.gen";
 
 import { Session } from "./session";
@@ -4634,7 +4635,7 @@ export class Client {
     session: Session,
     clan_id?: string,
     limit?: number,
-    page? :number,
+    page?: number
   ): Promise<ApiListOnboardingStepResponse> {
     if (
       this.autoRefreshSession &&
@@ -4673,10 +4674,7 @@ export class Client {
   }
 
   //**update status */
-  async updateUserStatus(
-    session: Session,
-    request: ApiUserStatusUpdate
-  ) {
+  async updateUserStatus(session: Session, request: ApiUserStatusUpdate) {
     if (
       this.autoRefreshSession &&
       session.refresh_token &&
@@ -4693,9 +4691,7 @@ export class Client {
   }
 
   //**get user status */
-  async getUserStatus(
-    session: Session  
-  ): Promise<ApiUserStatus> {
+  async getUserStatus(session: Session): Promise<ApiUserStatus> {
     if (
       this.autoRefreshSession &&
       session.refresh_token &&
@@ -4759,5 +4755,38 @@ export class Client {
         return Promise.resolve(result);
       });
   }
-  
+
+  //**get custom display */
+  async getCustomDisplay(session: Session): Promise<ApiCustomDisplay> {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired((Date.now() + this.expiredTimespanMs) / 1000)
+    ) {
+      await this.sessionRefresh(session);
+    }
+
+    return this.apiClient
+      .getCustomDisplay(session.token)
+      .then((response: ApiCustomDisplay) => {
+        return Promise.resolve(response);
+      });
+  }
+
+  //**update custom display */
+  async updateCustomDisplay(session: Session, request: ApiCustomDisplay) {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired((Date.now() + this.expiredTimespanMs) / 1000)
+    ) {
+      await this.sessionRefresh(session);
+    }
+
+    return this.apiClient
+      .updateCustomDisplay(session.token, request)
+      .then((response: any) => {
+        return response !== undefined;
+      });
+  }
 }
