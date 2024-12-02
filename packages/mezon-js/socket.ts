@@ -1554,7 +1554,7 @@ export class DefaultSocket implements Socket {
         } else if (message.ptt_joined_event) {
           this.onpttchanneljoined(<PTTJoinedEvent>message.ptt_joined_event);
         } else if (message.ptt_leaved_event) {
-          this.onpttchannelleaved(<PTTLeavedEvent>message.ptt_joined_event);
+          this.onpttchannelleaved(<PTTLeavedEvent>message.ptt_leaved_event);
         } else {
           if (this.verbose && window && window.console) {
             console.log("Unrecognized message received: %o", message);
