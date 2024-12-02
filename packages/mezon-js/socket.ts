@@ -2375,7 +2375,7 @@ export class DefaultSocket implements Socket {
   ): Promise<JoinPTTChannel> {
     const response = await this.send({
       join_ptt_channel: {
-        clanId: clanId,
+        clan_id: clanId,
         channel_id: channelId,
         data_type: dataType,
         json_data: jsonData,
