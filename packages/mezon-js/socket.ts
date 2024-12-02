@@ -885,6 +885,36 @@ export interface TalkPTTChannel {
   state: number;
 }
 
+/** PTT Joined event */
+export interface PTTLeavedEvent {
+  /** id */
+  id: string;
+  /** The unique identifier of the chat clan. */
+  clan_id: string;
+  /** channel id */
+  channel_id: string;
+  /** user_id */
+  user_id: string;
+}
+
+/** PTT Joined event */
+export interface PTTJoinedEvent {
+  /** The unique identifier of the chat clan. */
+  clan_id: string;
+  /** The clan_name */
+  clan_name: string;
+  /** id */
+  id: string;
+  /** ptt participant */
+  participant: string;
+  /** user id */
+  user_id: string;
+  /** channel label */
+  channel_label: string;
+  /** channel id */
+  channel_id: string;
+}
+
 export interface ListActivity {
   acts: ApiUserActivity[];
 }
@@ -1246,6 +1276,10 @@ export interface Socket {
   onjoinpttchannel: (join_ptt_channel: JoinPTTChannel) => void;
 
   ontalkpttchannel: (talk_ptt_channel: TalkPTTChannel) => void;
+
+  onpttchanneljoined: (ptt_joined_event: PTTJoinedEvent) => void;
+
+  onpttchannelleaved: (ptt_leaved_event: PTTLeavedEvent) => void;
 }
 
 /** Reports an error received from a socket message. */
@@ -1514,6 +1548,10 @@ export class DefaultSocket implements Socket {
           this.onjoinpttchannel(<JoinPTTChannel>message.join_ptt_channel);
         } else if (message.talk_ptt_channel) {
           this.ontalkpttchannel(<TalkPTTChannel>message.talk_ptt_channel);
+        } else if (message.ptt_joined_event) {
+          this.onpttchanneljoined(<PTTJoinedEvent>message.ptt_joined_event);
+        } else if (message.ptt_leaved_event) {
+          this.onpttchannelleaved(<PTTLeavedEvent>message.ptt_joined_event);
         } else {
           if (this.verbose && window && window.console) {
             console.log("Unrecognized message received: %o", message);
@@ -1818,6 +1856,18 @@ export class DefaultSocket implements Socket {
   onstreamingchannelleaved(streaming_leaved_event: StreamingLeavedEvent) {
     if (this.verbose && window && window.console) {
       console.log(streaming_leaved_event);
+    }
+  }
+
+  onpttchanneljoined(ptt_joined_event: PTTJoinedEvent) {
+    if (this.verbose && window && window.console) {
+      console.log(ptt_joined_event);
+    }
+  }
+
+  onpttchannelleaved(ptt_leaved_event: PTTLeavedEvent) {
+    if (this.verbose && window && window.console) {
+      console.log(ptt_leaved_event);
     }
   }
 
