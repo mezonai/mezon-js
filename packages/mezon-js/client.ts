@@ -155,6 +155,7 @@ import {
   MezonUpdateOnboardingStepByClanIdBody,
   ApiPTTChannelUserList,
   ApiCustomDisplay,
+  ApiWalletLedgerList,
 } from "./api.gen";
 
 import { Session } from "./session";
@@ -4787,6 +4788,27 @@ export class Client {
       .updateCustomDisplay(session.token, request)
       .then((response: any) => {
         return response !== undefined;
+      });
+  }
+
+  //**list wallet ledger */
+  async listWalletLedger(
+    session: Session,
+    limit?: number,
+    cursor?: string
+  ): Promise<ApiWalletLedgerList> {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired((Date.now() + this.expiredTimespanMs) / 1000)
+    ) {
+      await this.sessionRefresh(session);
+    }
+
+    return this.apiClient
+      .listWalletLedger(session.token, limit, cursor)
+      .then((response: ApiWalletLedgerList) => {
+        return Promise.resolve(response);
       });
   }
 }
