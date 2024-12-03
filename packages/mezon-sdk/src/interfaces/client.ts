@@ -522,6 +522,15 @@ export interface TokenSentEvent {
   note?: string;
 }
 
+export interface DropdownBoxSelected {
+  message_id: string;
+  channel_id: string;
+  selectbox_id: string;
+  sender_id: string;
+  user_id: string;
+  values: string[];
+}
+
 export interface Client {
   authenticate: () => Promise<string>;
   sendMessage: (clan_id: string, channel_id: string, mode: number, is_public: boolean, msg: ChannelMessageContent, mentions?: Array<ApiMessageMention>, attachments?: Array<ApiMessageAttachment>, ref?: Array<ApiMessageRef>) => Promise<ChannelMessageAck>;
