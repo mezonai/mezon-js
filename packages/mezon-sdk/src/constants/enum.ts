@@ -33,7 +33,9 @@ export enum InternalEventsSocket {
   ClanEventCreated = "clan_event_created",
   MessageButtonClicked = "message_button_clicked",
   StreamingJoinedEvent = "streaming_joined_event",
-  StreamingLeavedEvent = "streaming_leaved_event"
+  StreamingLeavedEvent = "streaming_leaved_event",
+  DropdownBoxSelected = "dropdown_box_selected",
+  WebrtcSignalingFwd = "webrtc_signaling_fwd",
 }
 
 export enum Events {
@@ -53,7 +55,9 @@ export enum Events {
   ClanEventCreated = InternalEventsSocket.ClanEventCreated,
   MessageButtonClicked = InternalEventsSocket.MessageButtonClicked,
   StreamingJoinedEvent = InternalEventsSocket.StreamingJoinedEvent,
-  StreamingLeavedEvent = InternalEventsSocket.StreamingLeavedEvent
+  StreamingLeavedEvent = InternalEventsSocket.StreamingLeavedEvent,
+  DropdownBoxSelected = InternalEventsSocket.DropdownBoxSelected,
+  WebrtcSignalingFwd = InternalEventsSocket.WebrtcSignalingFwd,
 }
 
 export enum ChannelType {
