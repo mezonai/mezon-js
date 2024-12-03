@@ -4795,7 +4795,8 @@ export class Client {
   async listWalletLedger(
     session: Session,
     limit?: number,
-    cursor?: string
+    cursor?: string,
+    transactionId?: string
   ): Promise<ApiWalletLedgerList> {
     if (
       this.autoRefreshSession &&
@@ -4806,7 +4807,7 @@ export class Client {
     }
 
     return this.apiClient
-      .listWalletLedger(session.token, limit, cursor)
+      .listWalletLedger(session.token, limit, cursor, transactionId)
       .then((response: ApiWalletLedgerList) => {
         return Promise.resolve(response);
       });

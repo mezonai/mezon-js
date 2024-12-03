@@ -2416,6 +2416,8 @@ export interface ApiWalletLedger {
   //
   id?: string;
   //
+  transaction_id?: string;
+  //
   user_id?: string;
   //
   value?: number;
@@ -9682,16 +9684,17 @@ pushPubKey(bearerToken: string,
   }
 
   /** Get user status */
-  listWalletLedger(
-    bearerToken: string,
-    limit?: number,
-    cursor?: string,
-    options: any = {}
-  ): Promise<ApiWalletLedgerList> {
+  listWalletLedger(bearerToken: string,
+      limit?:number,
+      cursor?:string,
+      transactionId?:string,
+      options: any = {}): Promise<ApiWalletLedgerList> {
+    
     const urlPath = "/v2/walletledger";
     const queryParams = new Map<string, any>();
     queryParams.set("limit", limit);
     queryParams.set("cursor", cursor);
+    queryParams.set("transaction_id", transactionId);
 
     let bodyJson: string = "";
 
