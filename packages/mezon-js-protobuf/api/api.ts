@@ -3740,6 +3740,8 @@ export interface WalletLedger {
     | undefined;
   /** value */
   value: number;
+  /** transaction id */
+  transaction_id: string;
 }
 
 export interface WalletLedgerList {
@@ -3751,6 +3753,7 @@ export interface WalletLedgerList {
 export interface WalletLedgerListReq {
   limit: number | undefined;
   cursor: string;
+  transaction_id: string;
 }
 
 function createBaseAccount(): Account {
@@ -36127,7 +36130,7 @@ export const CustomDisplay = {
 };
 
 function createBaseWalletLedger(): WalletLedger {
-  return { id: "", user_id: "", create_time: undefined, value: 0 };
+  return { id: "", user_id: "", create_time: undefined, value: 0, transaction_id: "" };
 }
 
 export const WalletLedger = {
@@ -36143,6 +36146,9 @@ export const WalletLedger = {
     }
     if (message.value !== 0) {
       writer.uint32(32).int32(message.value);
+    }
+    if (message.transaction_id !== "") {
+      writer.uint32(42).string(message.transaction_id);
     }
     return writer;
   },
@@ -36182,6 +36188,13 @@ export const WalletLedger = {
 
           message.value = reader.int32();
           continue;
+        case 5:
+          if (tag !== 42) {
+            break;
+          }
+
+          message.transaction_id = reader.string();
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -36197,6 +36210,7 @@ export const WalletLedger = {
       user_id: isSet(object.user_id) ? globalThis.String(object.user_id) : "",
       create_time: isSet(object.create_time) ? fromJsonTimestamp(object.create_time) : undefined,
       value: isSet(object.value) ? globalThis.Number(object.value) : 0,
+      transaction_id: isSet(object.transaction_id) ? globalThis.String(object.transaction_id) : "",
     };
   },
 
@@ -36214,6 +36228,9 @@ export const WalletLedger = {
     if (message.value !== 0) {
       obj.value = Math.round(message.value);
     }
+    if (message.transaction_id !== "") {
+      obj.transaction_id = message.transaction_id;
+    }
     return obj;
   },
 
@@ -36226,6 +36243,7 @@ export const WalletLedger = {
     message.user_id = object.user_id ?? "";
     message.create_time = object.create_time ?? undefined;
     message.value = object.value ?? 0;
+    message.transaction_id = object.transaction_id ?? "";
     return message;
   },
 };
@@ -36322,7 +36340,7 @@ export const WalletLedgerList = {
 };
 
 function createBaseWalletLedgerListReq(): WalletLedgerListReq {
-  return { limit: undefined, cursor: "" };
+  return { limit: undefined, cursor: "", transaction_id: "" };
 }
 
 export const WalletLedgerListReq = {
@@ -36332,6 +36350,9 @@ export const WalletLedgerListReq = {
     }
     if (message.cursor !== "") {
       writer.uint32(18).string(message.cursor);
+    }
+    if (message.transaction_id !== "") {
+      writer.uint32(26).string(message.transaction_id);
     }
     return writer;
   },
@@ -36357,6 +36378,13 @@ export const WalletLedgerListReq = {
 
           message.cursor = reader.string();
           continue;
+        case 3:
+          if (tag !== 26) {
+            break;
+          }
+
+          message.transaction_id = reader.string();
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -36370,6 +36398,7 @@ export const WalletLedgerListReq = {
     return {
       limit: isSet(object.limit) ? Number(object.limit) : undefined,
       cursor: isSet(object.cursor) ? globalThis.String(object.cursor) : "",
+      transaction_id: isSet(object.transaction_id) ? globalThis.String(object.transaction_id) : "",
     };
   },
 
@@ -36381,6 +36410,9 @@ export const WalletLedgerListReq = {
     if (message.cursor !== "") {
       obj.cursor = message.cursor;
     }
+    if (message.transaction_id !== "") {
+      obj.transaction_id = message.transaction_id;
+    }
     return obj;
   },
 
@@ -36391,6 +36423,7 @@ export const WalletLedgerListReq = {
     const message = createBaseWalletLedgerListReq();
     message.limit = object.limit ?? undefined;
     message.cursor = object.cursor ?? "";
+    message.transaction_id = object.transaction_id ?? "";
     return message;
   },
 };
