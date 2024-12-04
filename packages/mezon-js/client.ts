@@ -154,7 +154,6 @@ import {
   ApiListOnboardingStepResponse,
   MezonUpdateOnboardingStepByClanIdBody,
   ApiPTTChannelUserList,
-  ApiCustomDisplay,
   ApiWalletLedgerList,
 } from "./api.gen";
 
@@ -2288,7 +2287,9 @@ export class Client {
       .then((response: ApiRpc) => {
         return Promise.resolve({
           id: response.id,
-          payload: !response.payload ? undefined : safeJSONParse(response.payload),
+          payload: !response.payload
+            ? undefined
+            : safeJSONParse(response.payload),
         });
       });
   }
@@ -2304,7 +2305,9 @@ export class Client {
       .then((response: ApiRpc) => {
         return Promise.resolve({
           id: response.id,
-          payload: !response.payload ? undefined : safeJSONParse(response.payload),
+          payload: !response.payload
+            ? undefined
+            : safeJSONParse(response.payload),
         });
       })
       .catch((err: any) => {
@@ -4755,40 +4758,6 @@ export class Client {
           });
         });
         return Promise.resolve(result);
-      });
-  }
-
-  //**get custom display */
-  async getCustomDisplay(session: Session): Promise<ApiCustomDisplay> {
-    if (
-      this.autoRefreshSession &&
-      session.refresh_token &&
-      session.isexpired((Date.now() + this.expiredTimespanMs) / 1000)
-    ) {
-      await this.sessionRefresh(session);
-    }
-
-    return this.apiClient
-      .getCustomDisplay(session.token)
-      .then((response: ApiCustomDisplay) => {
-        return Promise.resolve(response);
-      });
-  }
-
-  //**update custom display */
-  async updateCustomDisplay(session: Session, request: ApiCustomDisplay) {
-    if (
-      this.autoRefreshSession &&
-      session.refresh_token &&
-      session.isexpired((Date.now() + this.expiredTimespanMs) / 1000)
-    ) {
-      await this.sessionRefresh(session);
-    }
-
-    return this.apiClient
-      .updateCustomDisplay(session.token, request)
-      .then((response: any) => {
-        return response !== undefined;
       });
   }
 
