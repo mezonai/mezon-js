@@ -32,6 +32,7 @@ import {
 import { Session } from "./session";
 import { ChannelMessage, Notification } from "./client";
 import { WebSocketAdapter, WebSocketAdapterText } from "./web_socket_adapter";
+import { safeJSONParse } from "./utils";
 
 /** Stores function references for resolve/reject with a DOM Promise. */
 interface PromiseExecutor {
@@ -1367,7 +1368,7 @@ export class DefaultSocket implements Socket {
       if (!message.cid) {
         if (message.notifications) {
           message.notifications.notifications.forEach((n: ApiNotification) => {
-            n.content = n.content ? JSON.parse(n.content) : undefined;
+            n.content = n.content ? safeJSONParse(n.content) : undefined;
             this.onnotification(n);
           });
         } else if (message.voice_started_event) {
@@ -1415,27 +1416,27 @@ export class DefaultSocket implements Socket {
         } else if (message.channel_message) {
           var content, reactions, mentions, attachments, references;
           try {
-            content = JSON.parse(message.channel_message.content);
+            content = safeJSONParse(message.channel_message.content);
           } catch (e) {
             console.log("content is invalid", e);
           }
           try {
-            reactions = JSON.parse(message.channel_message.reactions);
+            reactions = safeJSONParse(message.channel_message.reactions);
           } catch (e) {
             console.log("reactions is invalid", e);
           }
           try {
-            mentions = JSON.parse(message.channel_message.mentions);
+            mentions = safeJSONParse(message.channel_message.mentions);
           } catch (e) {
             console.log("mentions is invalid", e);
           }
           try {
-            attachments = JSON.parse(message.channel_message.attachments);
+            attachments = safeJSONParse(message.channel_message.attachments);
           } catch (e) {
             console.log("attachments is invalid", e);
           }
           try {
-            references = JSON.parse(message.channel_message.references);
+            references = safeJSONParse(message.channel_message.references);
           } catch (e) {
             console.log("references is invalid", e);
           }

@@ -47,3 +47,14 @@ export function b64DecodeUnicode(str: string) {
         return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
     }).join(''));
 }
+
+export function safeJSONParse(jsonString: string) {
+    try {        
+      const parsedData = JSON.parse(jsonString);
+  
+      return parsedData;
+    } catch (error) {
+        console.error('Error parsing JSON:', jsonString, error);
+        return null; // Handle the error gracefully or throw an exception if necessary
+    }
+}
