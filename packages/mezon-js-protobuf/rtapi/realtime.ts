@@ -1233,6 +1233,8 @@ export interface JoinPTTChannel {
   receiver_id: string;
   /** clan id */
   clan_id: string;
+  /** is talk */
+  is_talk: boolean;
 }
 
 export interface TalkPTTChannel {
@@ -10381,7 +10383,7 @@ export const UnmuteEvent = {
 };
 
 function createBaseJoinPTTChannel(): JoinPTTChannel {
-  return { channel_id: "", data_type: 0, json_data: "", receiver_id: "", clan_id: "" };
+  return { channel_id: "", data_type: 0, json_data: "", receiver_id: "", clan_id: "", is_talk: false };
 }
 
 export const JoinPTTChannel = {
@@ -10400,6 +10402,9 @@ export const JoinPTTChannel = {
     }
     if (message.clan_id !== "") {
       writer.uint32(42).string(message.clan_id);
+    }
+    if (message.is_talk !== false) {
+      writer.uint32(48).bool(message.is_talk);
     }
     return writer;
   },
@@ -10446,6 +10451,13 @@ export const JoinPTTChannel = {
 
           message.clan_id = reader.string();
           continue;
+        case 6:
+          if (tag !== 48) {
+            break;
+          }
+
+          message.is_talk = reader.bool();
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -10462,6 +10474,7 @@ export const JoinPTTChannel = {
       json_data: isSet(object.json_data) ? globalThis.String(object.json_data) : "",
       receiver_id: isSet(object.receiver_id) ? globalThis.String(object.receiver_id) : "",
       clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
+      is_talk: isSet(object.is_talk) ? globalThis.Boolean(object.is_talk) : false,
     };
   },
 
@@ -10482,6 +10495,9 @@ export const JoinPTTChannel = {
     if (message.clan_id !== "") {
       obj.clan_id = message.clan_id;
     }
+    if (message.is_talk !== false) {
+      obj.is_talk = message.is_talk;
+    }
     return obj;
   },
 
@@ -10495,6 +10511,7 @@ export const JoinPTTChannel = {
     message.json_data = object.json_data ?? "";
     message.receiver_id = object.receiver_id ?? "";
     message.clan_id = object.clan_id ?? "";
+    message.is_talk = object.is_talk ?? false;
     return message;
   },
 };
