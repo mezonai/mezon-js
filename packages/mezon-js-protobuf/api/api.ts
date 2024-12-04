@@ -184,7 +184,13 @@ export interface Account {
     | Date
     | undefined;
   /** The UNIX time (for gRPC clients) or ISO string (for REST clients) when the user's account was disabled/banned. */
-  disable_time: Date | undefined;
+  disable_time:
+    | Date
+    | undefined;
+  /** Logo url */
+  logo: string;
+  /** Splash screen url */
+  splash_screen: string;
 }
 
 /** Obtain a new authentication token using a refresh token. */
@@ -1383,6 +1389,10 @@ export interface UpdateAccountRequest {
   about_me: string;
   /** date of birth */
   dob: Date | undefined;
+  /** logo url */
+  logo: string;
+  /** splash screen */
+  splash_screen: string;
 }
 
 /** Update fields in a given group. */
@@ -3765,6 +3775,8 @@ function createBaseAccount(): Account {
     custom_id: "",
     verify_time: undefined,
     disable_time: undefined,
+    logo: "",
+    splash_screen: "",
   };
 }
 
@@ -3790,6 +3802,12 @@ export const Account = {
     }
     if (message.disable_time !== undefined) {
       Timestamp.encode(toTimestamp(message.disable_time), writer.uint32(58).fork()).ldelim();
+    }
+    if (message.logo !== "") {
+      writer.uint32(66).string(message.logo);
+    }
+    if (message.splash_screen !== "") {
+      writer.uint32(74).string(message.splash_screen);
     }
     return writer;
   },
@@ -3850,6 +3868,20 @@ export const Account = {
 
           message.disable_time = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
           continue;
+        case 8:
+          if (tag !== 66) {
+            break;
+          }
+
+          message.logo = reader.string();
+          continue;
+        case 9:
+          if (tag !== 74) {
+            break;
+          }
+
+          message.splash_screen = reader.string();
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -3870,6 +3902,8 @@ export const Account = {
       custom_id: isSet(object.custom_id) ? globalThis.String(object.custom_id) : "",
       verify_time: isSet(object.verify_time) ? fromJsonTimestamp(object.verify_time) : undefined,
       disable_time: isSet(object.disable_time) ? fromJsonTimestamp(object.disable_time) : undefined,
+      logo: isSet(object.logo) ? globalThis.String(object.logo) : "",
+      splash_screen: isSet(object.splash_screen) ? globalThis.String(object.splash_screen) : "",
     };
   },
 
@@ -3896,6 +3930,12 @@ export const Account = {
     if (message.disable_time !== undefined) {
       obj.disable_time = message.disable_time.toISOString();
     }
+    if (message.logo !== "") {
+      obj.logo = message.logo;
+    }
+    if (message.splash_screen !== "") {
+      obj.splash_screen = message.splash_screen;
+    }
     return obj;
   },
 
@@ -3911,6 +3951,8 @@ export const Account = {
     message.custom_id = object.custom_id ?? "";
     message.verify_time = object.verify_time ?? undefined;
     message.disable_time = object.disable_time ?? undefined;
+    message.logo = object.logo ?? "";
+    message.splash_screen = object.splash_screen ?? "";
     return message;
   },
 };
@@ -13088,6 +13130,8 @@ function createBaseUpdateAccountRequest(): UpdateAccountRequest {
     timezone: undefined,
     about_me: "",
     dob: undefined,
+    logo: "",
+    splash_screen: "",
   };
 }
 
@@ -13116,6 +13160,12 @@ export const UpdateAccountRequest = {
     }
     if (message.dob !== undefined) {
       Timestamp.encode(toTimestamp(message.dob), writer.uint32(66).fork()).ldelim();
+    }
+    if (message.logo !== "") {
+      writer.uint32(74).string(message.logo);
+    }
+    if (message.splash_screen !== "") {
+      writer.uint32(82).string(message.splash_screen);
     }
     return writer;
   },
@@ -13183,6 +13233,20 @@ export const UpdateAccountRequest = {
 
           message.dob = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
           continue;
+        case 9:
+          if (tag !== 74) {
+            break;
+          }
+
+          message.logo = reader.string();
+          continue;
+        case 10:
+          if (tag !== 82) {
+            break;
+          }
+
+          message.splash_screen = reader.string();
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -13202,6 +13266,8 @@ export const UpdateAccountRequest = {
       timezone: isSet(object.timezone) ? String(object.timezone) : undefined,
       about_me: isSet(object.about_me) ? globalThis.String(object.about_me) : "",
       dob: isSet(object.dob) ? fromJsonTimestamp(object.dob) : undefined,
+      logo: isSet(object.logo) ? globalThis.String(object.logo) : "",
+      splash_screen: isSet(object.splash_screen) ? globalThis.String(object.splash_screen) : "",
     };
   },
 
@@ -13231,6 +13297,12 @@ export const UpdateAccountRequest = {
     if (message.dob !== undefined) {
       obj.dob = message.dob.toISOString();
     }
+    if (message.logo !== "") {
+      obj.logo = message.logo;
+    }
+    if (message.splash_screen !== "") {
+      obj.splash_screen = message.splash_screen;
+    }
     return obj;
   },
 
@@ -13247,6 +13319,8 @@ export const UpdateAccountRequest = {
     message.timezone = object.timezone ?? undefined;
     message.about_me = object.about_me ?? "";
     message.dob = object.dob ?? undefined;
+    message.logo = object.logo ?? "";
+    message.splash_screen = object.splash_screen ?? "";
     return message;
   },
 };

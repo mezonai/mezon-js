@@ -58,7 +58,6 @@ export interface MezonChangeChannelCategoryBody {
   channel_id?: string;
 }
 
-
 /**  */
 export interface MezonChangeChannelCategoryBody {
   //
@@ -73,10 +72,10 @@ export interface MezonSetChanEncryptionMethodBody {
 
 /**  */
 export interface MezonDeleteWebhookByIdBody {
-    //
-    channel_id?: string;
-    //
-    clan_id?: string;
+  //
+  channel_id?: string;
+  //
+  clan_id?: string;
 }
 
 /** Update app information. */
@@ -317,6 +316,10 @@ export interface ApiAccount {
   disable_time?: string;
   //The email address of the user.
   email?: string;
+  //
+  logo?: string;
+  //
+  splash_screen?: string;
   //The user object.
   user?: ApiUser;
   //The UNIX time (for gRPC clients) or ISO string (for REST clients) when the user's email was verified.
@@ -1158,14 +1161,6 @@ export interface ApiCreateRoleRequest {
   title?: string;
 }
 
-/**  */
-export interface ApiCustomDisplay {
-  //
-  logo?: string;
-  //
-  splash_screen?: string;
-}
-
 /** Delete a channel the user has access to. */
 export interface ApiDeleteChannelDescRequest {
   //The id of a channel.
@@ -1474,20 +1469,20 @@ export interface ApiListUserActivity {
 }
 /**  */
 export interface ApiLoginIDResponse {
-    //
-    address?: string;
-    //
-    create_time_second?: string;
-    //
-    login_id?: string;
-    //
-    platform?: string;
-    //
-    status?: number;
-    //
-    user_id?: string;
-    //
-    user_name?: string;
+  //
+  address?: string;
+  //
+  create_time_second?: string;
+  //
+  login_id?: string;
+  //
+  platform?: string;
+  //
+  status?: number;
+  //
+  user_id?: string;
+  //
+  user_name?: string;
 }
 
 /**  */
@@ -1532,10 +1527,10 @@ export interface ApiMessageMention {
 
 /**  */
 export interface ApiLoginRequest {
-    //
-    address?: string;
-    //
-    platform?: string;
+  //
+  address?: string;
+  //
+  platform?: string;
 }
 
 /**  */
@@ -1881,7 +1876,6 @@ export interface ApiRegisterStreamingChannelResponse {
   streaming_url?: string;
 }
 
-
 /** Storage objects to get. */
 export interface ApiReadStorageObjectId {
   //The collection which stores the object.
@@ -2224,6 +2218,10 @@ export interface ApiUpdateAccountRequest {
   lang_tag?: string;
   //The location set by the user.
   location?: string;
+  //
+  logo?: string;
+  //
+  splash_screen?: string;
   //The timezone set by the user.
   timezone?: string;
   //The username of the user's account.
@@ -2865,8 +2863,9 @@ export class MezonApi {
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("POST", options, bodyJson);
     if (basicAuthUsername) {
-			fetchOptions.headers["Authorization"] = "Basic " + encode(basicAuthUsername + ":" + basicAuthPassword);
-		}
+      fetchOptions.headers["Authorization"] =
+        "Basic " + encode(basicAuthUsername + ":" + basicAuthPassword);
+    }
 
     return Promise.race([
       fetch(fullUrl, fetchOptions).then((response) => {
@@ -2882,28 +2881,32 @@ export class MezonApi {
         setTimeout(reject, this.timeoutMs, "Request timed out.")
       ),
     ]);
-}
+  }
 
   /**  */
-  checkLoginRequest(basicAuthUsername: string,
+  checkLoginRequest(
+    basicAuthUsername: string,
     basicAuthPassword: string,
-      body:ApiConfirmLoginRequest,
-      options: any = {}): Promise<ApiSession> {
-    
+    body: ApiConfirmLoginRequest,
+    options: any = {}
+  ): Promise<ApiSession> {
     if (body === null || body === undefined) {
-      throw new Error("'body' is a required parameter but is null or undefined.");
+      throw new Error(
+        "'body' is a required parameter but is null or undefined."
+      );
     }
     const urlPath = "/v2/account/authenticate/checklogin";
     const queryParams = new Map<string, any>();
 
-    let bodyJson : string = "";
+    let bodyJson: string = "";
     bodyJson = JSON.stringify(body || {});
 
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("POST", options, bodyJson);
-		if (basicAuthUsername) {
-			fetchOptions.headers["Authorization"] = "Basic " + encode(basicAuthUsername + ":" + basicAuthPassword);
-		}
+    if (basicAuthUsername) {
+      fetchOptions.headers["Authorization"] =
+        "Basic " + encode(basicAuthUsername + ":" + basicAuthPassword);
+    }
 
     return Promise.race([
       fetch(fullUrl, fetchOptions).then((response) => {
@@ -2919,26 +2922,29 @@ export class MezonApi {
         setTimeout(reject, this.timeoutMs, "Request timed out.")
       ),
     ]);
-}
+  }
 
   /**  */
-  confirmLogin(bearerToken: string,
-      body:ApiConfirmLoginRequest,
-      options: any = {}): Promise<any> {
-    
+  confirmLogin(
+    bearerToken: string,
+    body: ApiConfirmLoginRequest,
+    options: any = {}
+  ): Promise<any> {
     if (body === null || body === undefined) {
-      throw new Error("'body' is a required parameter but is null or undefined.");
+      throw new Error(
+        "'body' is a required parameter but is null or undefined."
+      );
     }
     const urlPath = "/v2/account/authenticate/confirmlogin";
     const queryParams = new Map<string, any>();
 
-    let bodyJson : string = "";
+    let bodyJson: string = "";
     bodyJson = JSON.stringify(body || {});
 
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("POST", options, bodyJson);
     if (bearerToken) {
-        fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
     }
 
     return Promise.race([
@@ -2955,27 +2961,31 @@ export class MezonApi {
         setTimeout(reject, this.timeoutMs, "Request timed out.")
       ),
     ]);
-}
+  }
 
   /**  */
-  createQRLogin(basicAuthUsername: string,
+  createQRLogin(
+    basicAuthUsername: string,
     basicAuthPassword: string,
-      body:ApiLoginRequest,
-      options: any = {}): Promise<ApiLoginIDResponse> {
-    
+    body: ApiLoginRequest,
+    options: any = {}
+  ): Promise<ApiLoginIDResponse> {
     if (body === null || body === undefined) {
-      throw new Error("'body' is a required parameter but is null or undefined.");
+      throw new Error(
+        "'body' is a required parameter but is null or undefined."
+      );
     }
     const urlPath = "/v2/account/authenticate/createqrlogin";
     const queryParams = new Map<string, any>();
 
-    let bodyJson : string = "";
+    let bodyJson: string = "";
     bodyJson = JSON.stringify(body || {});
 
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("POST", options, bodyJson);
-		if (basicAuthUsername) {
-			fetchOptions.headers["Authorization"] = "Basic " + encode(basicAuthUsername + ":" + basicAuthPassword);
+    if (basicAuthUsername) {
+      fetchOptions.headers["Authorization"] =
+        "Basic " + encode(basicAuthUsername + ":" + basicAuthPassword);
     }
 
     return Promise.race([
@@ -3246,7 +3256,7 @@ export class MezonApi {
     if (basicAuthUsername) {
       fetchOptions.headers["Authorization"] =
         "Basic " + encode(basicAuthUsername + ":" + basicAuthPassword);
-		}
+    }
 
     return Promise.race([
       fetch(fullUrl, fetchOptions).then((response) => {
@@ -3262,7 +3272,7 @@ export class MezonApi {
         setTimeout(reject, this.timeoutMs, "Request timed out.")
       ),
     ]);
-}
+  }
 
   /** Authenticate a user with Google against the server. */
   authenticateGoogle(
@@ -4115,13 +4125,13 @@ export class MezonApi {
     const urlPath = "/v2/account/unlink/steam";
     const queryParams = new Map<string, any>();
 
-    let bodyJson : string = "";
+    let bodyJson: string = "";
     bodyJson = JSON.stringify(body || {});
 
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("POST", options, bodyJson);
     if (bearerToken) {
-        fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
     }
 
     return Promise.race([
@@ -4138,21 +4148,22 @@ export class MezonApi {
         setTimeout(reject, this.timeoutMs, "Request timed out.")
       ),
     ]);
-}
+  }
 
   /** List activity */
-  listActivity(bearerToken: string,
-      options: any = {}): Promise<ApiListUserActivity> {
-    
+  listActivity(
+    bearerToken: string,
+    options: any = {}
+  ): Promise<ApiListUserActivity> {
     const urlPath = "/v2/activity";
     const queryParams = new Map<string, any>();
 
-    let bodyJson : string = "";
+    let bodyJson: string = "";
 
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("GET", options, bodyJson);
     if (bearerToken) {
-        fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
     }
 
     return Promise.race([
@@ -4169,20 +4180,23 @@ export class MezonApi {
         setTimeout(reject, this.timeoutMs, "Request timed out.")
       ),
     ]);
-}
+  }
 
   /** Create user activity */
-  createActiviy(bearerToken: string,
-      body:ApiCreateActivityRequest,
-      options: any = {}): Promise<ApiUserActivity> {
-    
+  createActiviy(
+    bearerToken: string,
+    body: ApiCreateActivityRequest,
+    options: any = {}
+  ): Promise<ApiUserActivity> {
     if (body === null || body === undefined) {
-      throw new Error("'body' is a required parameter but is null or undefined.");
+      throw new Error(
+        "'body' is a required parameter but is null or undefined."
+      );
     }
     const urlPath = "/v2/activity";
     const queryParams = new Map<string, any>();
 
-    let bodyJson : string = "";
+    let bodyJson: string = "";
     bodyJson = JSON.stringify(body || {});
 
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
@@ -4520,53 +4534,55 @@ export class MezonApi {
         setTimeout(reject, this.timeoutMs, "Request timed out.")
       ),
     ]);
-}
-
-  /**  */
-  listAuditLog(bearerToken: string,
-    actionLog?:string,
-    userId?:string,
-    clanId?:string,
-    page?:number,
-    pageSize?:number,
-    options: any = {}): Promise<MezonapiListAuditLog> {
-  
-  const urlPath = "/v2/audit_log";
-  const queryParams = new Map<string, any>();
-  queryParams.set("action_log", actionLog);
-  queryParams.set("user_id", userId);
-  queryParams.set("clan_id", clanId);
-  queryParams.set("page", page);
-  queryParams.set("page_size", pageSize);
-
-  let bodyJson : string = "";
-
-  const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
-  const fetchOptions = buildFetchOptions("GET", options, bodyJson);
-  if (bearerToken) {
-      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
   }
 
-  return Promise.race([
-    fetch(fullUrl, fetchOptions).then((response) => {
-      if (response.status == 204) {
-        return response;
-      } else if (response.status >= 200 && response.status < 300) {
-        return response.json();
-      } else {
-        throw response;
-      }
-    }),
-    new Promise((_, reject) =>
-      setTimeout(reject, this.timeoutMs, "Request timed out.")
-    ),
-  ]);
-}
   /**  */
-  updateCategoryOrder(bearerToken: string,
-      body:ApiUpdateCategoryOrderRequest,
-      options: any = {}): Promise<any> {
-    
+  listAuditLog(
+    bearerToken: string,
+    actionLog?: string,
+    userId?: string,
+    clanId?: string,
+    page?: number,
+    pageSize?: number,
+    options: any = {}
+  ): Promise<MezonapiListAuditLog> {
+    const urlPath = "/v2/audit_log";
+    const queryParams = new Map<string, any>();
+    queryParams.set("action_log", actionLog);
+    queryParams.set("user_id", userId);
+    queryParams.set("clan_id", clanId);
+    queryParams.set("page", page);
+    queryParams.set("page_size", pageSize);
+
+    let bodyJson: string = "";
+
+    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
+    const fetchOptions = buildFetchOptions("GET", options, bodyJson);
+    if (bearerToken) {
+      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+    }
+
+    return Promise.race([
+      fetch(fullUrl, fetchOptions).then((response) => {
+        if (response.status == 204) {
+          return response;
+        } else if (response.status >= 200 && response.status < 300) {
+          return response.json();
+        } else {
+          throw response;
+        }
+      }),
+      new Promise((_, reject) =>
+        setTimeout(reject, this.timeoutMs, "Request timed out.")
+      ),
+    ]);
+  }
+  /**  */
+  updateCategoryOrder(
+    bearerToken: string,
+    body: ApiUpdateCategoryOrderRequest,
+    options: any = {}
+  ): Promise<any> {
     if (body === null || body === undefined) {
       throw new Error(
         "'body' is a required parameter but is null or undefined."
@@ -4659,12 +4675,12 @@ export class MezonApi {
     const queryParams = new Map<string, any>();
     queryParams.set("clan_id", clanId);
 
-    let bodyJson : string = "";
+    let bodyJson: string = "";
 
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("GET", options, bodyJson);
     if (bearerToken) {
-        fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
     }
 
     return Promise.race([
@@ -4681,32 +4697,37 @@ export class MezonApi {
         setTimeout(reject, this.timeoutMs, "Request timed out.")
       ),
     ]);
-}
+  }
 
   /**  */
-  getChannelCanvasList(bearerToken: string,
-      channelId:string,
-      clanId?:string,
-      limit?:number,
-      page?:number,
-      options: any = {}): Promise<ApiChannelCanvasListResponse> {
-    
+  getChannelCanvasList(
+    bearerToken: string,
+    channelId: string,
+    clanId?: string,
+    limit?: number,
+    page?: number,
+    options: any = {}
+  ): Promise<ApiChannelCanvasListResponse> {
     if (channelId === null || channelId === undefined) {
-      throw new Error("'channelId' is a required parameter but is null or undefined.");
+      throw new Error(
+        "'channelId' is a required parameter but is null or undefined."
+      );
     }
-    const urlPath = "/v2/channel-canvases/{channelId}"
-        .replace("{channelId}", encodeURIComponent(String(channelId)));
+    const urlPath = "/v2/channel-canvases/{channelId}".replace(
+      "{channelId}",
+      encodeURIComponent(String(channelId))
+    );
     const queryParams = new Map<string, any>();
     queryParams.set("clan_id", clanId);
     queryParams.set("limit", limit);
     queryParams.set("page", page);
 
-    let bodyJson : string = "";
+    let bodyJson: string = "";
 
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("GET", options, bodyJson);
     if (bearerToken) {
-        fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
     }
 
     return Promise.race([
@@ -4723,26 +4744,29 @@ export class MezonApi {
         setTimeout(reject, this.timeoutMs, "Request timed out.")
       ),
     ]);
-}
+  }
 
   /**  */
-  addChannelFavorite(bearerToken: string,
-      body:ApiAddFavoriteChannelRequest,
-      options: any = {}): Promise<any> {
-    
+  addChannelFavorite(
+    bearerToken: string,
+    body: ApiAddFavoriteChannelRequest,
+    options: any = {}
+  ): Promise<any> {
     if (body === null || body === undefined) {
-      throw new Error("'body' is a required parameter but is null or undefined.");
+      throw new Error(
+        "'body' is a required parameter but is null or undefined."
+      );
     }
     const urlPath = "/v2/channel/favorite";
     const queryParams = new Map<string, any>();
 
-    let bodyJson : string = "";
+    let bodyJson: string = "";
     bodyJson = JSON.stringify(body || {});
 
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("POST", options, bodyJson);
     if (bearerToken) {
-        fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
     }
 
     return Promise.race([
@@ -4759,26 +4783,31 @@ export class MezonApi {
         setTimeout(reject, this.timeoutMs, "Request timed out.")
       ),
     ]);
-}
+  }
 
   /**  */
-  removeChannelFavorite(bearerToken: string,
-      channelId:string,
-      options: any = {}): Promise<any> {
-    
+  removeChannelFavorite(
+    bearerToken: string,
+    channelId: string,
+    options: any = {}
+  ): Promise<any> {
     if (channelId === null || channelId === undefined) {
-      throw new Error("'channelId' is a required parameter but is null or undefined.");
+      throw new Error(
+        "'channelId' is a required parameter but is null or undefined."
+      );
     }
-    const urlPath = "/v2/channel/favorite/{channelId}"
-        .replace("{channelId}", encodeURIComponent(String(channelId)));
+    const urlPath = "/v2/channel/favorite/{channelId}".replace(
+      "{channelId}",
+      encodeURIComponent(String(channelId))
+    );
     const queryParams = new Map<string, any>();
 
-    let bodyJson : string = "";
+    let bodyJson: string = "";
 
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("DELETE", options, bodyJson);
     if (bearerToken) {
-        fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
     }
 
     return Promise.race([
@@ -4795,21 +4824,26 @@ export class MezonApi {
         setTimeout(reject, this.timeoutMs, "Request timed out.")
       ),
     ]);
-}
+  }
 
   /**  */
-  getListFavoriteChannel(bearerToken: string,
-      clanId:string,
-      options: any = {}): Promise<ApiListFavoriteChannelResponse> {
-    
+  getListFavoriteChannel(
+    bearerToken: string,
+    clanId: string,
+    options: any = {}
+  ): Promise<ApiListFavoriteChannelResponse> {
     if (clanId === null || clanId === undefined) {
-      throw new Error("'clanId' is a required parameter but is null or undefined.");
+      throw new Error(
+        "'clanId' is a required parameter but is null or undefined."
+      );
     }
-    const urlPath = "/v2/channel/favorite/{clanId}"
-        .replace("{clanId}", encodeURIComponent(String(clanId)));
+    const urlPath = "/v2/channel/favorite/{clanId}".replace(
+      "{clanId}",
+      encodeURIComponent(String(clanId))
+    );
     const queryParams = new Map<string, any>();
 
-    let bodyJson : string = "";
+    let bodyJson: string = "";
 
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("GET", options, bodyJson);
@@ -4977,25 +5011,30 @@ export class MezonApi {
   }
 
   /** get channel encryption method */
-  getChanEncryptionMethod(bearerToken: string,
-      channelId:string,
-      method?:string,
-      options: any = {}): Promise<ApiChanEncryptionMethod> {
-    
+  getChanEncryptionMethod(
+    bearerToken: string,
+    channelId: string,
+    method?: string,
+    options: any = {}
+  ): Promise<ApiChanEncryptionMethod> {
     if (channelId === null || channelId === undefined) {
-      throw new Error("'channelId' is a required parameter but is null or undefined.");
+      throw new Error(
+        "'channelId' is a required parameter but is null or undefined."
+      );
     }
-    const urlPath = "/v2/channel/{channelId}/encrypt_method"
-        .replace("{channelId}", encodeURIComponent(String(channelId)));
+    const urlPath = "/v2/channel/{channelId}/encrypt_method".replace(
+      "{channelId}",
+      encodeURIComponent(String(channelId))
+    );
     const queryParams = new Map<string, any>();
     queryParams.set("method", method);
 
-    let bodyJson : string = "";
+    let bodyJson: string = "";
 
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("GET", options, bodyJson);
     if (bearerToken) {
-        fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
     }
 
     return Promise.race([
@@ -5012,31 +5051,38 @@ export class MezonApi {
         setTimeout(reject, this.timeoutMs, "Request timed out.")
       ),
     ]);
-}
+  }
 
   /** store channel encryption method */
-  setChanEncryptionMethod(bearerToken: string,
-      channelId:string,
-      body:MezonSetChanEncryptionMethodBody,
-      options: any = {}): Promise<any> {
-    
+  setChanEncryptionMethod(
+    bearerToken: string,
+    channelId: string,
+    body: MezonSetChanEncryptionMethodBody,
+    options: any = {}
+  ): Promise<any> {
     if (channelId === null || channelId === undefined) {
-      throw new Error("'channelId' is a required parameter but is null or undefined.");
+      throw new Error(
+        "'channelId' is a required parameter but is null or undefined."
+      );
     }
     if (body === null || body === undefined) {
-      throw new Error("'body' is a required parameter but is null or undefined.");
+      throw new Error(
+        "'body' is a required parameter but is null or undefined."
+      );
     }
-    const urlPath = "/v2/channel/{channelId}/encrypt_method"
-        .replace("{channelId}", encodeURIComponent(String(channelId)));
+    const urlPath = "/v2/channel/{channelId}/encrypt_method".replace(
+      "{channelId}",
+      encodeURIComponent(String(channelId))
+    );
     const queryParams = new Map<string, any>();
 
-    let bodyJson : string = "";
+    let bodyJson: string = "";
     bodyJson = JSON.stringify(body || {});
 
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("POST", options, bodyJson);
     if (bearerToken) {
-        fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
     }
 
     return Promise.race([
@@ -5053,13 +5099,14 @@ export class MezonApi {
         setTimeout(reject, this.timeoutMs, "Request timed out.")
       ),
     ]);
-}
+  }
 
   /** Leave a channel the user is a member of. */
-  leaveThread(bearerToken: string,
-      channelId:string,
-      options: any = {}): Promise<any> {
-    
+  leaveThread(
+    bearerToken: string,
+    channelId: string,
+    options: any = {}
+  ): Promise<any> {
     if (channelId === null || channelId === undefined) {
       throw new Error(
         "'channelId' is a required parameter but is null or undefined."
@@ -5396,24 +5443,29 @@ export class MezonApi {
   }
 
   /** List channel setting */
-  listChannelSetting(bearerToken: string,
-      clanId:string,
-      parentId?:string,
-      categoryId?:string,
-      privateChannel?:number,
-      active?:number,
-      status?:number,
-      type?:number,
-      limit?:number,
-      page?:number,
-      channelLabel?:string,
-      options: any = {}): Promise<ApiChannelSettingListResponse> {
-    
+  listChannelSetting(
+    bearerToken: string,
+    clanId: string,
+    parentId?: string,
+    categoryId?: string,
+    privateChannel?: number,
+    active?: number,
+    status?: number,
+    type?: number,
+    limit?: number,
+    page?: number,
+    channelLabel?: string,
+    options: any = {}
+  ): Promise<ApiChannelSettingListResponse> {
     if (clanId === null || clanId === undefined) {
-      throw new Error("'clanId' is a required parameter but is null or undefined.");
+      throw new Error(
+        "'clanId' is a required parameter but is null or undefined."
+      );
     }
-    const urlPath = "/v2/channelsetting/{clanId}"
-        .replace("{clanId}", encodeURIComponent(String(clanId)));
+    const urlPath = "/v2/channelsetting/{clanId}".replace(
+      "{clanId}",
+      encodeURIComponent(String(clanId))
+    );
     const queryParams = new Map<string, any>();
     queryParams.set("parent_id", parentId);
     queryParams.set("category_id", categoryId);
@@ -5425,12 +5477,12 @@ export class MezonApi {
     queryParams.set("page", page);
     queryParams.set("channel_label", channelLabel);
 
-    let bodyJson : string = "";
+    let bodyJson: string = "";
 
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("GET", options, bodyJson);
     if (bearerToken) {
-        fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
     }
 
     return Promise.race([
@@ -5447,7 +5499,7 @@ export class MezonApi {
         setTimeout(reject, this.timeoutMs, "Request timed out.")
       ),
     ]);
-}
+  }
 
   /** List all users that are part of a channel. */
   listChannelVoiceUsers(
@@ -5910,74 +5962,7 @@ export class MezonApi {
         setTimeout(reject, this.timeoutMs, "Request timed out.")
       ),
     ]);
-}
-
-    /**  */
-    getCustomDisplay(bearerToken: string,
-      options: any = {}): Promise<ApiCustomDisplay> {
-    
-    const urlPath = "/v2/customdisplay";
-    const queryParams = new Map<string, any>();
-
-    let bodyJson : string = "";
-
-    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
-    const fetchOptions = buildFetchOptions("GET", options, bodyJson);
-    if (bearerToken) {
-        fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-    }
-
-    return Promise.race([
-      fetch(fullUrl, fetchOptions).then((response) => {
-        if (response.status == 204) {
-          return response;
-        } else if (response.status >= 200 && response.status < 300) {
-          return response.json();
-        } else {
-          throw response;
-        }
-      }),
-      new Promise((_, reject) =>
-        setTimeout(reject, this.timeoutMs, "Request timed out.")
-      ),
-    ]);
-}
-
-  /**  */
-  updateCustomDisplay(bearerToken: string,
-      body:ApiCustomDisplay,
-      options: any = {}): Promise<any> {
-    
-    if (body === null || body === undefined) {
-      throw new Error("'body' is a required parameter but is null or undefined.");
-    }
-    const urlPath = "/v2/customdisplay";
-    const queryParams = new Map<string, any>();
-
-    let bodyJson : string = "";
-    bodyJson = JSON.stringify(body || {});
-
-    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
-    const fetchOptions = buildFetchOptions("PUT", options, bodyJson);
-    if (bearerToken) {
-        fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-    }
-
-    return Promise.race([
-      fetch(fullUrl, fetchOptions).then((response) => {
-        if (response.status == 204) {
-          return response;
-        } else if (response.status >= 200 && response.status < 300) {
-          return response.json();
-        } else {
-          throw response;
-        }
-      }),
-      new Promise((_, reject) =>
-        setTimeout(reject, this.timeoutMs, "Request timed out.")
-      ),
-    ]);
-}
+  }
 
   /**  */
   deleteCategoryDesc(
@@ -6068,19 +6053,20 @@ export class MezonApi {
   }
 
   /** regist fcm device token */
-  registFCMDeviceToken(bearerToken: string,
-      token?:string,
-      deviceId?:string,
-      platform?:string,
-      options: any = {}): Promise<ApiRegistFcmDeviceTokenResponse> {
-    
+  registFCMDeviceToken(
+    bearerToken: string,
+    token?: string,
+    deviceId?: string,
+    platform?: string,
+    options: any = {}
+  ): Promise<ApiRegistFcmDeviceTokenResponse> {
     const urlPath = "/v2/devicetoken";
     const queryParams = new Map<string, any>();
     queryParams.set("token", token);
     queryParams.set("device_id", deviceId);
     queryParams.set("platform", platform);
 
-    let bodyJson : string = "";
+    let bodyJson: string = "";
 
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("POST", options, bodyJson);
@@ -7097,18 +7083,19 @@ export class MezonApi {
   }
 
   /** get key server */
-  getKeyServer(bearerToken: string,
-      options: any = {}): Promise<ApiGetKeyServerResp> {
-    
+  getKeyServer(
+    bearerToken: string,
+    options: any = {}
+  ): Promise<ApiGetKeyServerResp> {
     const urlPath = "/v2/e2ee/key_server";
     const queryParams = new Map<string, any>();
 
-    let bodyJson : string = "";
+    let bodyJson: string = "";
 
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("GET", options, bodyJson);
     if (bearerToken) {
-        fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
     }
 
     return Promise.race([
@@ -7317,23 +7304,26 @@ export class MezonApi {
   }
 
   /** Mark as read */
-  markAsRead(bearerToken: string,
-      body:ApiMarkAsReadRequest,
-      options: any = {}): Promise<any> {
-    
+  markAsRead(
+    bearerToken: string,
+    body: ApiMarkAsReadRequest,
+    options: any = {}
+  ): Promise<any> {
     if (body === null || body === undefined) {
-      throw new Error("'body' is a required parameter but is null or undefined.");
+      throw new Error(
+        "'body' is a required parameter but is null or undefined."
+      );
     }
     const urlPath = "/v2/markasread";
     const queryParams = new Map<string, any>();
 
-    let bodyJson : string = "";
+    let bodyJson: string = "";
     bodyJson = JSON.stringify(body || {});
 
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("POST", options, bodyJson);
     if (bearerToken) {
-        fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
     }
 
     return Promise.race([
@@ -7350,7 +7340,7 @@ export class MezonApi {
         setTimeout(reject, this.timeoutMs, "Request timed out.")
       ),
     ]);
-}
+  }
 
   /** set mute notification user channel. */
   setMuteNotificationCategory(
@@ -7943,12 +7933,13 @@ export class MezonApi {
   }
 
   /**  */
-  getPinMessagesList(bearerToken: string,
-      messageId?:string,
-      channelId?:string,
-      clanId?:string,
-      options: any = {}): Promise<ApiPinMessagesList> {
-    
+  getPinMessagesList(
+    bearerToken: string,
+    messageId?: string,
+    channelId?: string,
+    clanId?: string,
+    options: any = {}
+  ): Promise<ApiPinMessagesList> {
     const urlPath = "/v2/pinmessage/get";
     const queryParams = new Map<string, any>();
     queryParams.set("message_id", messageId);
@@ -7980,12 +7971,15 @@ export class MezonApi {
   }
 
   /** set notification user channel. */
-  createPinMessage(bearerToken: string,
-      body:ApiPinMessageRequest,
-      options: any = {}): Promise<ApiChannelMessageHeader> {
-    
+  createPinMessage(
+    bearerToken: string,
+    body: ApiPinMessageRequest,
+    options: any = {}
+  ): Promise<ApiChannelMessageHeader> {
     if (body === null || body === undefined) {
-      throw new Error("'body' is a required parameter but is null or undefined.");
+      throw new Error(
+        "'body' is a required parameter but is null or undefined."
+      );
     }
     const urlPath = "/v2/pinmessage/set";
     const queryParams = new Map<string, any>();
@@ -8016,15 +8010,16 @@ export class MezonApi {
   }
 
   /** List all users in ptt channel. */
-  listPTTChannelUsers(bearerToken: string,
-      clanId?:string,
-      channelId?:string,
-      channelType?:number,
-      limit?:number,
-      state?:number,
-      cursor?:string,
-      options: any = {}): Promise<ApiPTTChannelUserList> {
-    
+  listPTTChannelUsers(
+    bearerToken: string,
+    clanId?: string,
+    channelId?: string,
+    channelType?: number,
+    limit?: number,
+    state?: number,
+    cursor?: string,
+    options: any = {}
+  ): Promise<ApiPTTChannelUserList> {
     const urlPath = "/v2/ptt_channels/users";
     const queryParams = new Map<string, any>();
     queryParams.set("clan_id", clanId);
@@ -8034,12 +8029,12 @@ export class MezonApi {
     queryParams.set("state", state);
     queryParams.set("cursor", cursor);
 
-    let bodyJson : string = "";
+    let bodyJson: string = "";
 
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("GET", options, bodyJson);
     if (bearerToken) {
-        fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
     }
 
     return Promise.race([
@@ -8056,76 +8051,80 @@ export class MezonApi {
         setTimeout(reject, this.timeoutMs, "Request timed out.")
       ),
     ]);
-}
+  }
 
   /** get pubkey */
-  getPubKeys(bearerToken: string,
-    userIds?:Array<string>,
-    options: any = {}): Promise<ApiGetPubKeysResponse> {
-  
-  const urlPath = "/v2/pubkey";
-  const queryParams = new Map<string, any>();
-  queryParams.set("user_ids", userIds);
+  getPubKeys(
+    bearerToken: string,
+    userIds?: Array<string>,
+    options: any = {}
+  ): Promise<ApiGetPubKeysResponse> {
+    const urlPath = "/v2/pubkey";
+    const queryParams = new Map<string, any>();
+    queryParams.set("user_ids", userIds);
 
-  let bodyJson : string = "";
+    let bodyJson: string = "";
 
-  const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
-  const fetchOptions = buildFetchOptions("GET", options, bodyJson);
-  if (bearerToken) {
+    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
+    const fetchOptions = buildFetchOptions("GET", options, bodyJson);
+    if (bearerToken) {
       fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+    }
+
+    return Promise.race([
+      fetch(fullUrl, fetchOptions).then((response) => {
+        if (response.status == 204) {
+          return response;
+        } else if (response.status >= 200 && response.status < 300) {
+          return response.json();
+        } else {
+          throw response;
+        }
+      }),
+      new Promise((_, reject) =>
+        setTimeout(reject, this.timeoutMs, "Request timed out.")
+      ),
+    ]);
   }
 
-  return Promise.race([
-    fetch(fullUrl, fetchOptions).then((response) => {
-      if (response.status == 204) {
-        return response;
-      } else if (response.status >= 200 && response.status < 300) {
-        return response.json();
-      } else {
-        throw response;
-      }
-    }),
-    new Promise((_, reject) =>
-      setTimeout(reject, this.timeoutMs, "Request timed out.")
-    ),
-  ]);
-}
+  /** store pubkey for e2ee */
+  pushPubKey(
+    bearerToken: string,
+    body: ApiPushPubKeyRequest,
+    options: any = {}
+  ): Promise<any> {
+    if (body === null || body === undefined) {
+      throw new Error(
+        "'body' is a required parameter but is null or undefined."
+      );
+    }
+    const urlPath = "/v2/pubkey/push";
+    const queryParams = new Map<string, any>();
 
-/** store pubkey for e2ee */
-pushPubKey(bearerToken: string,
-    body:ApiPushPubKeyRequest,
-    options: any = {}): Promise<any> {
-  
-  if (body === null || body === undefined) {
-    throw new Error("'body' is a required parameter but is null or undefined.");
-  }
-  const urlPath = "/v2/pubkey/push";
-  const queryParams = new Map<string, any>();
+    let bodyJson: string = "";
+    bodyJson = JSON.stringify(body || {});
 
-  let bodyJson : string = "";
-  bodyJson = JSON.stringify(body || {});
-
-  const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
-  const fetchOptions = buildFetchOptions("POST", options, bodyJson);
-  if (bearerToken) {
+    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
+    const fetchOptions = buildFetchOptions("POST", options, bodyJson);
+    if (bearerToken) {
       fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-  }
+    }
 
-  return Promise.race([
-    fetch(fullUrl, fetchOptions).then((response) => {
-      if (response.status == 204) {
-        return response;
-      } else if (response.status >= 200 && response.status < 300) {
-        return response.json();
-      } else {
-        throw response;
-      }
-    }),
-    new Promise((_, reject) =>
-      setTimeout(reject, this.timeoutMs, "Request timed out.")
-    ),
-  ]);
-}
+    return Promise.race([
+      fetch(fullUrl, fetchOptions).then((response) => {
+        if (response.status == 204) {
+          return response;
+        } else if (response.status >= 200 && response.status < 300) {
+          return response.json();
+        } else {
+          throw response;
+        }
+      }),
+      new Promise((_, reject) =>
+        setTimeout(reject, this.timeoutMs, "Request timed out.")
+      ),
+    ]);
+  }
 
   /**  */
   addRolesChannelDesc(
@@ -8680,12 +8679,13 @@ pushPubKey(bearerToken: string,
 
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("POST", options, bodyJson);
-		if (bearerToken) {
-				fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-		}
-		if (basicAuthUsername) {
-			fetchOptions.headers["Authorization"] = "Basic " + encode(basicAuthUsername + ":" + basicAuthPassword);
-		}
+    if (bearerToken) {
+      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+    }
+    if (basicAuthUsername) {
+      fetchOptions.headers["Authorization"] =
+        "Basic " + encode(basicAuthUsername + ":" + basicAuthPassword);
+    }
 
     return Promise.race([
       fetch(fullUrl, fetchOptions).then((response) => {
@@ -8701,26 +8701,29 @@ pushPubKey(bearerToken: string,
         setTimeout(reject, this.timeoutMs, "Request timed out.")
       ),
     ]);
-}
+  }
 
   /** UpdateWallets */
-  sendToken(bearerToken: string,
-      body:ApiTokenSentEvent,
-      options: any = {}): Promise<any> {
-    
+  sendToken(
+    bearerToken: string,
+    body: ApiTokenSentEvent,
+    options: any = {}
+  ): Promise<any> {
     if (body === null || body === undefined) {
-      throw new Error("'body' is a required parameter but is null or undefined.");
+      throw new Error(
+        "'body' is a required parameter but is null or undefined."
+      );
     }
     const urlPath = "/v2/sendtoken";
     const queryParams = new Map<string, any>();
 
-    let bodyJson : string = "";
+    let bodyJson: string = "";
     bodyJson = JSON.stringify(body || {});
 
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("POST", options, bodyJson);
     if (bearerToken) {
-        fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
     }
 
     return Promise.race([
@@ -9255,31 +9258,36 @@ pushPubKey(bearerToken: string,
   }
 
   /** List user channels */
-  listThreadDescs(bearerToken: string,
-      channelId:string,
-      limit?:number,
-      state?:number,
-      clanId?:string,
-      threadId?:string,
-      options: any = {}): Promise<ApiChannelDescList> {
-    
+  listThreadDescs(
+    bearerToken: string,
+    channelId: string,
+    limit?: number,
+    state?: number,
+    clanId?: string,
+    threadId?: string,
+    options: any = {}
+  ): Promise<ApiChannelDescList> {
     if (channelId === null || channelId === undefined) {
-      throw new Error("'channelId' is a required parameter but is null or undefined.");
+      throw new Error(
+        "'channelId' is a required parameter but is null or undefined."
+      );
     }
-    const urlPath = "/v2/thread/{channelId}"
-        .replace("{channelId}", encodeURIComponent(String(channelId)));
+    const urlPath = "/v2/thread/{channelId}".replace(
+      "{channelId}",
+      encodeURIComponent(String(channelId))
+    );
     const queryParams = new Map<string, any>();
     queryParams.set("limit", limit);
     queryParams.set("state", state);
     queryParams.set("clan_id", clanId);
     queryParams.set("thread_id", threadId);
 
-    let bodyJson : string = "";
+    let bodyJson: string = "";
 
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("GET", options, bodyJson);
     if (bearerToken) {
-        fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
     }
 
     return Promise.race([
@@ -9296,7 +9304,7 @@ pushPubKey(bearerToken: string,
         setTimeout(reject, this.timeoutMs, "Request timed out.")
       ),
     ]);
-}
+  }
 
   /** Update fields in a given category. */
   updateCategory(
@@ -9582,17 +9590,18 @@ pushPubKey(bearerToken: string,
   }
 
   /** ListUserPermissionInChannel */
-  listUserPermissionInChannel(bearerToken: string,
-      clanId?:string,
-      channelId?:string,
-      options: any = {}): Promise<ApiUserPermissionInChannelListResponse> {
-    
+  listUserPermissionInChannel(
+    bearerToken: string,
+    clanId?: string,
+    channelId?: string,
+    options: any = {}
+  ): Promise<ApiUserPermissionInChannelListResponse> {
     const urlPath = "/v2/users/clans/channels";
     const queryParams = new Map<string, any>();
     queryParams.set("clan_id", clanId);
     queryParams.set("channel_id", channelId);
 
-    let bodyJson : string = "";
+    let bodyJson: string = "";
 
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("GET", options, bodyJson);
@@ -9614,21 +9623,22 @@ pushPubKey(bearerToken: string,
         setTimeout(reject, this.timeoutMs, "Request timed out.")
       ),
     ]);
-}
+  }
 
   /** Get user status */
-  getUserStatus(bearerToken: string,
-      options: any = {}): Promise<ApiUserStatus> {
-    
+  getUserStatus(
+    bearerToken: string,
+    options: any = {}
+  ): Promise<ApiUserStatus> {
     const urlPath = "/v2/userstatus";
     const queryParams = new Map<string, any>();
 
-    let bodyJson : string = "";
+    let bodyJson: string = "";
 
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("GET", options, bodyJson);
     if (bearerToken) {
-        fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
     }
 
     return Promise.race([
@@ -9645,26 +9655,29 @@ pushPubKey(bearerToken: string,
         setTimeout(reject, this.timeoutMs, "Request timed out.")
       ),
     ]);
-}
+  }
 
   /** Update user status */
-  updateUserStatus(bearerToken: string,
-      body:ApiUserStatusUpdate,
-      options: any = {}): Promise<any> {
-    
+  updateUserStatus(
+    bearerToken: string,
+    body: ApiUserStatusUpdate,
+    options: any = {}
+  ): Promise<any> {
     if (body === null || body === undefined) {
-      throw new Error("'body' is a required parameter but is null or undefined.");
+      throw new Error(
+        "'body' is a required parameter but is null or undefined."
+      );
     }
     const urlPath = "/v2/userstatus";
     const queryParams = new Map<string, any>();
 
-    let bodyJson : string = "";
+    let bodyJson: string = "";
     bodyJson = JSON.stringify(body || {});
 
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("PUT", options, bodyJson);
     if (bearerToken) {
-        fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
     }
 
     return Promise.race([
@@ -9684,12 +9697,13 @@ pushPubKey(bearerToken: string,
   }
 
   /** Get user status */
-  listWalletLedger(bearerToken: string,
-      limit?:number,
-      cursor?:string,
-      transactionId?:string,
-      options: any = {}): Promise<ApiWalletLedgerList> {
-    
+  listWalletLedger(
+    bearerToken: string,
+    limit?: number,
+    cursor?: string,
+    transactionId?: string,
+    options: any = {}
+  ): Promise<ApiWalletLedgerList> {
     const urlPath = "/v2/walletledger";
     const queryParams = new Map<string, any>();
     queryParams.set("limit", limit);
@@ -9849,45 +9863,50 @@ pushPubKey(bearerToken: string,
   }
 
   /** disabled webhook */
-  deleteWebhookById(bearerToken: string,
-    id:string,
-    body:MezonDeleteWebhookByIdBody,
-    options: any = {}): Promise<any> {
-  
-  if (id === null || id === undefined) {
-    throw new Error("'id' is a required parameter but is null or undefined.");
-  }
-  if (body === null || body === undefined) {
-    throw new Error("'body' is a required parameter but is null or undefined.");
-  }
-  const urlPath = "/v2/webhooks/{id}"
-      .replace("{id}", encodeURIComponent(String(id)));
-  const queryParams = new Map<string, any>();
+  deleteWebhookById(
+    bearerToken: string,
+    id: string,
+    body: MezonDeleteWebhookByIdBody,
+    options: any = {}
+  ): Promise<any> {
+    if (id === null || id === undefined) {
+      throw new Error("'id' is a required parameter but is null or undefined.");
+    }
+    if (body === null || body === undefined) {
+      throw new Error(
+        "'body' is a required parameter but is null or undefined."
+      );
+    }
+    const urlPath = "/v2/webhooks/{id}".replace(
+      "{id}",
+      encodeURIComponent(String(id))
+    );
+    const queryParams = new Map<string, any>();
 
-  let bodyJson : string = "";
-  bodyJson = JSON.stringify(body || {});
+    let bodyJson: string = "";
+    bodyJson = JSON.stringify(body || {});
 
-  const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
-  const fetchOptions = buildFetchOptions("PATCH", options, bodyJson);
-  if (bearerToken) {
+    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
+    const fetchOptions = buildFetchOptions("PATCH", options, bodyJson);
+    if (bearerToken) {
       fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-  }
+    }
 
-  return Promise.race([
-    fetch(fullUrl, fetchOptions).then((response) => {
-      if (response.status == 204) {
-        return response;
-      } else if (response.status >= 200 && response.status < 300) {
-        return response.json();
-      } else {
-        throw response;
-      }
-    }),
-    new Promise((_, reject) =>
-      setTimeout(reject, this.timeoutMs, "Request timed out.")
-    ),
-  ]);
-}
+    return Promise.race([
+      fetch(fullUrl, fetchOptions).then((response) => {
+        if (response.status == 204) {
+          return response;
+        } else if (response.status >= 200 && response.status < 300) {
+          return response.json();
+        } else {
+          throw response;
+        }
+      }),
+      new Promise((_, reject) =>
+        setTimeout(reject, this.timeoutMs, "Request timed out.")
+      ),
+    ]);
+  }
 
   buildFullUrl(
     basePath: string,
@@ -9953,23 +9972,26 @@ pushPubKey(bearerToken: string,
   }
 
   /** WithdrawToken */
-  withdrawToken(bearerToken: string,
-    body:ApiWithdrawTokenRequest,
-    options: any = {}): Promise<any> {
-  
+  withdrawToken(
+    bearerToken: string,
+    body: ApiWithdrawTokenRequest,
+    options: any = {}
+  ): Promise<any> {
     if (body === null || body === undefined) {
-      throw new Error("'body' is a required parameter but is null or undefined.");
+      throw new Error(
+        "'body' is a required parameter but is null or undefined."
+      );
     }
     const urlPath = "/v2/withdrawtoken";
     const queryParams = new Map<string, any>();
 
-    let bodyJson : string = "";
+    let bodyJson: string = "";
     bodyJson = JSON.stringify(body || {});
 
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("POST", options, bodyJson);
     if (bearerToken) {
-        fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
     }
 
     return Promise.race([
@@ -10077,62 +10099,66 @@ pushPubKey(bearerToken: string,
   }
 
   /** list onboarding. */
-  listOnboarding(bearerToken: string,
-    clanId?:string,
-    guideType?:number,
-    limit?:number,
-    page?:number,
-    options: any = {}): Promise<ApiListOnboardingResponse> {
-  
-  const urlPath = "/v2/onboarding";
-  const queryParams = new Map<string, any>();
-  queryParams.set("clan_id", clanId);
-  queryParams.set("guide_type", guideType);
-  queryParams.set("limit", limit);
-  queryParams.set("page", page);
+  listOnboarding(
+    bearerToken: string,
+    clanId?: string,
+    guideType?: number,
+    limit?: number,
+    page?: number,
+    options: any = {}
+  ): Promise<ApiListOnboardingResponse> {
+    const urlPath = "/v2/onboarding";
+    const queryParams = new Map<string, any>();
+    queryParams.set("clan_id", clanId);
+    queryParams.set("guide_type", guideType);
+    queryParams.set("limit", limit);
+    queryParams.set("page", page);
 
-  let bodyJson : string = "";
+    let bodyJson: string = "";
 
-  const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
-  const fetchOptions = buildFetchOptions("GET", options, bodyJson);
-  if (bearerToken) {
+    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
+    const fetchOptions = buildFetchOptions("GET", options, bodyJson);
+    if (bearerToken) {
       fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-  }
+    }
 
-  return Promise.race([
-    fetch(fullUrl, fetchOptions).then((response) => {
-      if (response.status == 204) {
-        return response;
-      } else if (response.status >= 200 && response.status < 300) {
-        return response.json();
-      } else {
-        throw response;
-      }
-    }),
-    new Promise((_, reject) =>
-      setTimeout(reject, this.timeoutMs, "Request timed out.")
-    ),
-  ]);
+    return Promise.race([
+      fetch(fullUrl, fetchOptions).then((response) => {
+        if (response.status == 204) {
+          return response;
+        } else if (response.status >= 200 && response.status < 300) {
+          return response.json();
+        } else {
+          throw response;
+        }
+      }),
+      new Promise((_, reject) =>
+        setTimeout(reject, this.timeoutMs, "Request timed out.")
+      ),
+    ]);
   }
 
   /** create onboarding. */
-  createOnboarding(bearerToken: string,
-      body:ApiCreateOnboardingRequest,
-      options: any = {}): Promise<any> {
-    
+  createOnboarding(
+    bearerToken: string,
+    body: ApiCreateOnboardingRequest,
+    options: any = {}
+  ): Promise<any> {
     if (body === null || body === undefined) {
-      throw new Error("'body' is a required parameter but is null or undefined.");
+      throw new Error(
+        "'body' is a required parameter but is null or undefined."
+      );
     }
     const urlPath = "/v2/onboarding";
     const queryParams = new Map<string, any>();
 
-    let bodyJson : string = "";
+    let bodyJson: string = "";
     bodyJson = JSON.stringify(body || {});
 
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("POST", options, bodyJson);
     if (bearerToken) {
-        fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
     }
 
     return Promise.race([
@@ -10152,25 +10178,28 @@ pushPubKey(bearerToken: string,
   }
 
   /** delete onboarding. */
-  deleteOnboarding(bearerToken: string,
-      id:string,
-      clanId?:string,
-      options: any = {}): Promise<any> {
-    
+  deleteOnboarding(
+    bearerToken: string,
+    id: string,
+    clanId?: string,
+    options: any = {}
+  ): Promise<any> {
     if (id === null || id === undefined) {
       throw new Error("'id' is a required parameter but is null or undefined.");
     }
-    const urlPath = "/v2/onboarding/{id}"
-        .replace("{id}", encodeURIComponent(String(id)));
+    const urlPath = "/v2/onboarding/{id}".replace(
+      "{id}",
+      encodeURIComponent(String(id))
+    );
     const queryParams = new Map<string, any>();
     queryParams.set("clan_id", clanId);
 
-    let bodyJson : string = "";
+    let bodyJson: string = "";
 
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("DELETE", options, bodyJson);
     if (bearerToken) {
-        fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
     }
 
     return Promise.race([
@@ -10190,25 +10219,28 @@ pushPubKey(bearerToken: string,
   }
 
   /** get detailed onboarding information. */
-  getOnboardingDetail(bearerToken: string,
-      id:string,
-      clanId?:string,
-      options: any = {}): Promise<ApiOnboardingItem> {
-    
+  getOnboardingDetail(
+    bearerToken: string,
+    id: string,
+    clanId?: string,
+    options: any = {}
+  ): Promise<ApiOnboardingItem> {
     if (id === null || id === undefined) {
       throw new Error("'id' is a required parameter but is null or undefined.");
     }
-    const urlPath = "/v2/onboarding/{id}"
-        .replace("{id}", encodeURIComponent(String(id)));
+    const urlPath = "/v2/onboarding/{id}".replace(
+      "{id}",
+      encodeURIComponent(String(id))
+    );
     const queryParams = new Map<string, any>();
     queryParams.set("clan_id", clanId);
 
-    let bodyJson : string = "";
+    let bodyJson: string = "";
 
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("GET", options, bodyJson);
     if (bearerToken) {
-        fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
     }
 
     return Promise.race([
@@ -10228,28 +10260,33 @@ pushPubKey(bearerToken: string,
   }
 
   /** update onboarding. */
-  updateOnboarding(bearerToken: string,
-      id:string,
-      body:MezonUpdateOnboardingBody,
-      options: any = {}): Promise<any> {
-    
+  updateOnboarding(
+    bearerToken: string,
+    id: string,
+    body: MezonUpdateOnboardingBody,
+    options: any = {}
+  ): Promise<any> {
     if (id === null || id === undefined) {
       throw new Error("'id' is a required parameter but is null or undefined.");
     }
     if (body === null || body === undefined) {
-      throw new Error("'body' is a required parameter but is null or undefined.");
+      throw new Error(
+        "'body' is a required parameter but is null or undefined."
+      );
     }
-    const urlPath = "/v2/onboarding/{id}"
-        .replace("{id}", encodeURIComponent(String(id)));
+    const urlPath = "/v2/onboarding/{id}".replace(
+      "{id}",
+      encodeURIComponent(String(id))
+    );
     const queryParams = new Map<string, any>();
 
-    let bodyJson : string = "";
+    let bodyJson: string = "";
     bodyJson = JSON.stringify(body || {});
 
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("PUT", options, bodyJson);
     if (bearerToken) {
-        fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
     }
 
     return Promise.race([
@@ -10269,23 +10306,26 @@ pushPubKey(bearerToken: string,
   }
 
   /** Generate clan webhook. */
-  generateClanWebhook(bearerToken: string,
-    body:ApiGenerateClanWebhookRequest,
-    options: any = {}): Promise<ApiGenerateClanWebhookResponse> {
-    
+  generateClanWebhook(
+    bearerToken: string,
+    body: ApiGenerateClanWebhookRequest,
+    options: any = {}
+  ): Promise<ApiGenerateClanWebhookResponse> {
     if (body === null || body === undefined) {
-      throw new Error("'body' is a required parameter but is null or undefined.");
+      throw new Error(
+        "'body' is a required parameter but is null or undefined."
+      );
     }
     const urlPath = "/v2/clanwebhooks";
     const queryParams = new Map<string, any>();
 
-    let bodyJson : string = "";
+    let bodyJson: string = "";
     bodyJson = JSON.stringify(body || {});
 
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("POST", options, bodyJson);
     if (bearerToken) {
-        fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
     }
 
     return Promise.race([
@@ -10305,23 +10345,28 @@ pushPubKey(bearerToken: string,
   }
 
   /** List clan webhook. */
-  listClanWebhook(bearerToken: string,
-      clanId:string,
-      options: any = {}): Promise<ApiListClanWebhookResponse> {
-    
+  listClanWebhook(
+    bearerToken: string,
+    clanId: string,
+    options: any = {}
+  ): Promise<ApiListClanWebhookResponse> {
     if (clanId === null || clanId === undefined) {
-      throw new Error("'clanId' is a required parameter but is null or undefined.");
+      throw new Error(
+        "'clanId' is a required parameter but is null or undefined."
+      );
     }
-    const urlPath = "/v2/clanwebhooks/{clanId}"
-        .replace("{clanId}", encodeURIComponent(String(clanId)));
+    const urlPath = "/v2/clanwebhooks/{clanId}".replace(
+      "{clanId}",
+      encodeURIComponent(String(clanId))
+    );
     const queryParams = new Map<string, any>();
 
-    let bodyJson : string = "";
+    let bodyJson: string = "";
 
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("GET", options, bodyJson);
     if (bearerToken) {
-        fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
     }
 
     return Promise.race([
@@ -10341,25 +10386,28 @@ pushPubKey(bearerToken: string,
   }
 
   /** Disabled clan webhook. */
-  deleteClanWebhookById(bearerToken: string,
-      id:string,
-      clanId?:string,
-      options: any = {}): Promise<any> {
-    
+  deleteClanWebhookById(
+    bearerToken: string,
+    id: string,
+    clanId?: string,
+    options: any = {}
+  ): Promise<any> {
     if (id === null || id === undefined) {
       throw new Error("'id' is a required parameter but is null or undefined.");
     }
-    const urlPath = "/v2/clanwebhooks/{id}"
-        .replace("{id}", encodeURIComponent(String(id)));
+    const urlPath = "/v2/clanwebhooks/{id}".replace(
+      "{id}",
+      encodeURIComponent(String(id))
+    );
     const queryParams = new Map<string, any>();
     queryParams.set("clan_id", clanId);
 
-    let bodyJson : string = "";
+    let bodyJson: string = "";
 
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("DELETE", options, bodyJson);
     if (bearerToken) {
-        fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
     }
 
     return Promise.race([
@@ -10379,28 +10427,33 @@ pushPubKey(bearerToken: string,
   }
 
   /** Update clan webhook by id. */
-  updateClanWebhookById(bearerToken: string,
-      id:string,
-      body:MezonUpdateClanWebhookByIdBody,
-      options: any = {}): Promise<any> {
-    
+  updateClanWebhookById(
+    bearerToken: string,
+    id: string,
+    body: MezonUpdateClanWebhookByIdBody,
+    options: any = {}
+  ): Promise<any> {
     if (id === null || id === undefined) {
       throw new Error("'id' is a required parameter but is null or undefined.");
     }
     if (body === null || body === undefined) {
-      throw new Error("'body' is a required parameter but is null or undefined.");
+      throw new Error(
+        "'body' is a required parameter but is null or undefined."
+      );
     }
-    const urlPath = "/v2/clanwebhooks/{id}"
-        .replace("{id}", encodeURIComponent(String(id)));
+    const urlPath = "/v2/clanwebhooks/{id}".replace(
+      "{id}",
+      encodeURIComponent(String(id))
+    );
     const queryParams = new Map<string, any>();
 
-    let bodyJson : string = "";
+    let bodyJson: string = "";
     bodyJson = JSON.stringify(body || {});
 
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("PUT", options, bodyJson);
     if (bearerToken) {
-        fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
     }
 
     return Promise.race([
@@ -10420,65 +10473,73 @@ pushPubKey(bearerToken: string,
   }
 
   /** List onboarding step. */
-  listOnboardingStep(bearerToken: string,
-    clanId?:string,
-    limit?:number,
-    page?:number,
-    options: any = {}): Promise<ApiListOnboardingStepResponse> {
-  
-  const urlPath = "/v2/onboardingsteps";
-  const queryParams = new Map<string, any>();
-  queryParams.set("clan_id", clanId);
-  queryParams.set("limit", limit);
-  queryParams.set("page", page);
+  listOnboardingStep(
+    bearerToken: string,
+    clanId?: string,
+    limit?: number,
+    page?: number,
+    options: any = {}
+  ): Promise<ApiListOnboardingStepResponse> {
+    const urlPath = "/v2/onboardingsteps";
+    const queryParams = new Map<string, any>();
+    queryParams.set("clan_id", clanId);
+    queryParams.set("limit", limit);
+    queryParams.set("page", page);
 
-  let bodyJson : string = "";
+    let bodyJson: string = "";
 
-  const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
-  const fetchOptions = buildFetchOptions("GET", options, bodyJson);
-  if (bearerToken) {
+    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
+    const fetchOptions = buildFetchOptions("GET", options, bodyJson);
+    if (bearerToken) {
       fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+    }
+
+    return Promise.race([
+      fetch(fullUrl, fetchOptions).then((response) => {
+        if (response.status == 204) {
+          return response;
+        } else if (response.status >= 200 && response.status < 300) {
+          return response.json();
+        } else {
+          throw response;
+        }
+      }),
+      new Promise((_, reject) =>
+        setTimeout(reject, this.timeoutMs, "Request timed out.")
+      ),
+    ]);
   }
 
-  return Promise.race([
-    fetch(fullUrl, fetchOptions).then((response) => {
-      if (response.status == 204) {
-        return response;
-      } else if (response.status >= 200 && response.status < 300) {
-        return response.json();
-      } else {
-        throw response;
-      }
-    }),
-    new Promise((_, reject) =>
-      setTimeout(reject, this.timeoutMs, "Request timed out.")
-    ),
-  ]);
-}
-
   /** Update onboarding step. */
-  updateOnboardingStepByClanId(bearerToken: string,
-    clanId:string,
-    body:MezonUpdateOnboardingStepByClanIdBody,
-    options: any = {}): Promise<any> {
-  
+  updateOnboardingStepByClanId(
+    bearerToken: string,
+    clanId: string,
+    body: MezonUpdateOnboardingStepByClanIdBody,
+    options: any = {}
+  ): Promise<any> {
     if (clanId === null || clanId === undefined) {
-      throw new Error("'clanId' is a required parameter but is null or undefined.");
+      throw new Error(
+        "'clanId' is a required parameter but is null or undefined."
+      );
     }
     if (body === null || body === undefined) {
-      throw new Error("'body' is a required parameter but is null or undefined.");
+      throw new Error(
+        "'body' is a required parameter but is null or undefined."
+      );
     }
-    const urlPath = "/v2/onboardingsteps/{clanId}"
-        .replace("{clanId}", encodeURIComponent(String(clanId)));
+    const urlPath = "/v2/onboardingsteps/{clanId}".replace(
+      "{clanId}",
+      encodeURIComponent(String(clanId))
+    );
     const queryParams = new Map<string, any>();
 
-    let bodyJson : string = "";
+    let bodyJson: string = "";
     bodyJson = JSON.stringify(body || {});
 
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("PUT", options, bodyJson);
     if (bearerToken) {
-        fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
     }
 
     return Promise.race([
