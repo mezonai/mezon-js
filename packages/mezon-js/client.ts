@@ -160,6 +160,7 @@ import {
 
 import { Session } from "./session";
 import { DefaultSocket, Socket } from "./socket";
+import { safeJSONParse } from "./utils";
 import { WebSocketAdapter, WebSocketAdapterText } from "./web_socket_adapter";
 
 const DEFAULT_HOST = "127.0.0.1";
@@ -1346,7 +1347,7 @@ export class Client {
             timezone: u.timezone,
             update_time: u.update_time,
             username: u.username,
-            metadata: u.metadata ? JSON.parse(u.metadata) : undefined,
+            metadata: u.metadata ? safeJSONParse(u.metadata) : undefined,
           });
         });
         return Promise.resolve(result);
@@ -1434,27 +1435,27 @@ export class Client {
         response.messages!.forEach((m) => {
           var content, reactions, mentions, attachments, references;
           try {
-            content = JSON.parse(m.content);
+            content = safeJSONParse(m.content);
           } catch (e) {
             console.log("error parse content", e);
           }
           try {
-            reactions = JSON.parse(m.reactions || "[]");
+            reactions = safeJSONParse(m.reactions || "[]");
           } catch (e) {
             console.log("error parse reactions", e);
           }
           try {
-            mentions = JSON.parse(m.mentions || "[]");
+            mentions = safeJSONParse(m.mentions || "[]");
           } catch (e) {
             console.log("error parse mentions", e);
           }
           try {
-            attachments = JSON.parse(m.attachments || "[]");
+            attachments = safeJSONParse(m.attachments || "[]");
           } catch (e) {
             console.log("error parse attachments", e);
           }
           try {
-            references = JSON.parse(m.references || "[]");
+            references = safeJSONParse(m.references || "[]");
           } catch (e) {
             console.log("error parse references", e);
           }
@@ -1689,7 +1690,7 @@ export class Client {
               update_time: gu.user!.update_time,
               username: gu.user!.username,
               metadata: gu.user!.metadata
-                ? JSON.parse(gu.user!.metadata!)
+                ? safeJSONParse(gu.user!.metadata!)
                 : undefined,
             },
             role_id: gu!.role_id,
@@ -2208,7 +2209,7 @@ export class Client {
               username: f.user!.username,
               is_mobile: f.user?.is_mobile,
               metadata: f.user!.metadata
-                ? JSON.parse(f.user!.metadata!)
+                ? safeJSONParse(f.user!.metadata!)
                 : undefined,
             },
             state: f.state,
@@ -2253,7 +2254,7 @@ export class Client {
             persistent: n.persistent,
             sender_id: n.sender_id,
             subject: n.subject,
-            content: n.content ? JSON.parse(n.content) : undefined,
+            content: n.content ? safeJSONParse(n.content) : undefined,
           });
         });
         return Promise.resolve(result);
@@ -2287,7 +2288,7 @@ export class Client {
       .then((response: ApiRpc) => {
         return Promise.resolve({
           id: response.id,
-          payload: !response.payload ? undefined : JSON.parse(response.payload),
+          payload: !response.payload ? undefined : safeJSONParse(response.payload),
         });
       });
   }
@@ -2303,7 +2304,7 @@ export class Client {
       .then((response: ApiRpc) => {
         return Promise.resolve({
           id: response.id,
-          payload: !response.payload ? undefined : JSON.parse(response.payload),
+          payload: !response.payload ? undefined : safeJSONParse(response.payload),
         });
       })
       .catch((err: any) => {

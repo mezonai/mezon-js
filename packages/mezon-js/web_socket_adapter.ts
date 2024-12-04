@@ -16,6 +16,7 @@
 
 import { decode, encode } from "base64-arraybuffer";
 import { btoa } from "js-base64";
+import { safeJSONParse } from "./utils";
 
 /**
  * An interface used by Mezon's web socket to determine the payload protocol.
@@ -114,7 +115,7 @@ export class WebSocketAdapterText implements WebSocketAdapter {
   set onMessage(value: SocketMessageHandler | null) {
     if (value) {
       this._socket!.onmessage = (evt: MessageEvent) => {
-        const message: any = JSON.parse(evt.data);
+        const message: any = safeJSONParse(evt.data);
         if (message.party_data && message.party_data.data) {
           message.party_data.data = new Uint8Array(
             decode(message.party_data.data)
