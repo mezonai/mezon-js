@@ -66,7 +66,7 @@ export function safeJSONParse(jsonString: string) {
   
       return parsedData;
     } catch (error) {
-        console.error('Error parsing JSON:', error);
+        console.error('Error parsing JSON:', jsonString, error);
         return null; // Handle the error gracefully or throw an exception if necessary
     }
 }
