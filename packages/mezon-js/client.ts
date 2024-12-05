@@ -155,6 +155,9 @@ import {
   MezonUpdateOnboardingStepByClanIdBody,
   ApiPTTChannelUserList,
   ApiWalletLedgerList,
+  ApiSdTopicList,
+  ApiSdTopicRequest,
+  ApiSdTopic,
 } from "./api.gen";
 
 import { Session } from "./session";
@@ -4780,6 +4783,47 @@ export class Client {
       .listWalletLedger(session.token, limit, cursor, transactionId)
       .then((response: ApiWalletLedgerList) => {
         return Promise.resolve(response);
+      });
+  }
+
+  //**list sd topic */
+  async listSdTopic(
+    session: Session,
+    channelId?: string,
+    limit?: number
+  ): Promise<ApiSdTopicList> {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired((Date.now() + this.expiredTimespanMs) / 1000)
+    ) {
+      await this.sessionRefresh(session);
+    }
+
+    return this.apiClient
+      .listSdTopic(session.token, channelId, limit)
+      .then((response: ApiSdTopicList) => {
+        return Promise.resolve(response);
+      });
+  }
+
+  //**post sd topic */
+  async createSdTopic(
+    session: Session,
+    request: ApiSdTopicRequest
+  ): Promise<ApiSdTopic> {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired((Date.now() + this.expiredTimespanMs) / 1000)
+    ) {
+      await this.sessionRefresh(session);
+    }
+
+    return this.apiClient
+      .createSdTopic(session.token, request)
+      .then((response: ApiSdTopic) => {
+        return response;
       });
   }
 }
