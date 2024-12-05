@@ -875,6 +875,8 @@ export interface JoinPTTChannel {
   receiver_id: string;
   /** clan id */
   clan_id: string;
+  /** is talk */
+  is_talk: boolean;
 }
 
 export interface TalkPTTChannel {
@@ -1080,7 +1082,8 @@ export interface Socket {
     clanId: string,
     channelId: string,
     dataType: number,
-    jsonData: string
+    jsonData: string,
+    isTalk: boolean,
   ): Promise<JoinPTTChannel>;
 
   talkPTTChannel(
@@ -2372,7 +2375,8 @@ export class DefaultSocket implements Socket {
     clanId: string,
     channelId: string,
     dataType: number,
-    jsonData: string
+    jsonData: string,
+    isTalk: boolean,
   ): Promise<JoinPTTChannel> {
     const response = await this.send({
       join_ptt_channel: {
@@ -2381,6 +2385,7 @@ export class DefaultSocket implements Socket {
         data_type: dataType,
         json_data: jsonData,
         receiver_id: "",
+        is_talk: isTalk,
       },
     });
     return response.join_ptt_channel;

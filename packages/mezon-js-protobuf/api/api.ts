@@ -3739,6 +3739,24 @@ export interface CustomDisplay {
   splash_screen: string;
 }
 
+/** A list of users belonging to a channel, along with their role. */
+export interface PTTChannelUser {
+  /** user join id */
+  id: string;
+  /** user for a channel. */
+  user_id: string;
+  /** channel id */
+  channel_id: string;
+  /** participant */
+  participant: string;
+}
+
+/** A list of users belonging to a channel, along with their role. */
+export interface PTTChannelUserList {
+  /** list of ptt channel user */
+  ptt_channel_users: PTTChannelUser[];
+}
+
 export interface WalletLedger {
   /** change set id */
   id: string;
@@ -3750,8 +3768,6 @@ export interface WalletLedger {
     | undefined;
   /** value */
   value: number;
-  /** transaction id */
-  transaction_id: string;
 }
 
 export interface WalletLedgerList {
@@ -3763,7 +3779,6 @@ export interface WalletLedgerList {
 export interface WalletLedgerListReq {
   limit: number | undefined;
   cursor: string;
-  transaction_id: string;
 }
 
 function createBaseAccount(): Account {
@@ -36203,8 +36218,173 @@ export const CustomDisplay = {
   },
 };
 
+function createBasePTTChannelUser(): PTTChannelUser {
+  return { id: "", user_id: "", channel_id: "", participant: "" };
+}
+
+export const PTTChannelUser = {
+  encode(message: PTTChannelUser, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.id !== "") {
+      writer.uint32(10).string(message.id);
+    }
+    if (message.user_id !== "") {
+      writer.uint32(18).string(message.user_id);
+    }
+    if (message.channel_id !== "") {
+      writer.uint32(26).string(message.channel_id);
+    }
+    if (message.participant !== "") {
+      writer.uint32(34).string(message.participant);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): PTTChannelUser {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBasePTTChannelUser();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.id = reader.string();
+          continue;
+        case 2:
+          if (tag !== 18) {
+            break;
+          }
+
+          message.user_id = reader.string();
+          continue;
+        case 3:
+          if (tag !== 26) {
+            break;
+          }
+
+          message.channel_id = reader.string();
+          continue;
+        case 4:
+          if (tag !== 34) {
+            break;
+          }
+
+          message.participant = reader.string();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): PTTChannelUser {
+    return {
+      id: isSet(object.id) ? globalThis.String(object.id) : "",
+      user_id: isSet(object.user_id) ? globalThis.String(object.user_id) : "",
+      channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "",
+      participant: isSet(object.participant) ? globalThis.String(object.participant) : "",
+    };
+  },
+
+  toJSON(message: PTTChannelUser): unknown {
+    const obj: any = {};
+    if (message.id !== "") {
+      obj.id = message.id;
+    }
+    if (message.user_id !== "") {
+      obj.user_id = message.user_id;
+    }
+    if (message.channel_id !== "") {
+      obj.channel_id = message.channel_id;
+    }
+    if (message.participant !== "") {
+      obj.participant = message.participant;
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<PTTChannelUser>, I>>(base?: I): PTTChannelUser {
+    return PTTChannelUser.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<PTTChannelUser>, I>>(object: I): PTTChannelUser {
+    const message = createBasePTTChannelUser();
+    message.id = object.id ?? "";
+    message.user_id = object.user_id ?? "";
+    message.channel_id = object.channel_id ?? "";
+    message.participant = object.participant ?? "";
+    return message;
+  },
+};
+
+function createBasePTTChannelUserList(): PTTChannelUserList {
+  return { ptt_channel_users: [] };
+}
+
+export const PTTChannelUserList = {
+  encode(message: PTTChannelUserList, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    for (const v of message.ptt_channel_users) {
+      PTTChannelUser.encode(v!, writer.uint32(10).fork()).ldelim();
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): PTTChannelUserList {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBasePTTChannelUserList();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.ptt_channel_users.push(PTTChannelUser.decode(reader, reader.uint32()));
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): PTTChannelUserList {
+    return {
+      ptt_channel_users: globalThis.Array.isArray(object?.ptt_channel_users)
+        ? object.ptt_channel_users.map((e: any) => PTTChannelUser.fromJSON(e))
+        : [],
+    };
+  },
+
+  toJSON(message: PTTChannelUserList): unknown {
+    const obj: any = {};
+    if (message.ptt_channel_users?.length) {
+      obj.ptt_channel_users = message.ptt_channel_users.map((e) => PTTChannelUser.toJSON(e));
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<PTTChannelUserList>, I>>(base?: I): PTTChannelUserList {
+    return PTTChannelUserList.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<PTTChannelUserList>, I>>(object: I): PTTChannelUserList {
+    const message = createBasePTTChannelUserList();
+    message.ptt_channel_users = object.ptt_channel_users?.map((e) => PTTChannelUser.fromPartial(e)) || [];
+    return message;
+  },
+};
+
 function createBaseWalletLedger(): WalletLedger {
-  return { id: "", user_id: "", create_time: undefined, value: 0, transaction_id: "" };
+  return { id: "", user_id: "", create_time: undefined, value: 0 };
 }
 
 export const WalletLedger = {
@@ -36220,9 +36400,6 @@ export const WalletLedger = {
     }
     if (message.value !== 0) {
       writer.uint32(32).int32(message.value);
-    }
-    if (message.transaction_id !== "") {
-      writer.uint32(42).string(message.transaction_id);
     }
     return writer;
   },
@@ -36262,13 +36439,6 @@ export const WalletLedger = {
 
           message.value = reader.int32();
           continue;
-        case 5:
-          if (tag !== 42) {
-            break;
-          }
-
-          message.transaction_id = reader.string();
-          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -36284,7 +36454,6 @@ export const WalletLedger = {
       user_id: isSet(object.user_id) ? globalThis.String(object.user_id) : "",
       create_time: isSet(object.create_time) ? fromJsonTimestamp(object.create_time) : undefined,
       value: isSet(object.value) ? globalThis.Number(object.value) : 0,
-      transaction_id: isSet(object.transaction_id) ? globalThis.String(object.transaction_id) : "",
     };
   },
 
@@ -36302,9 +36471,6 @@ export const WalletLedger = {
     if (message.value !== 0) {
       obj.value = Math.round(message.value);
     }
-    if (message.transaction_id !== "") {
-      obj.transaction_id = message.transaction_id;
-    }
     return obj;
   },
 
@@ -36317,7 +36483,6 @@ export const WalletLedger = {
     message.user_id = object.user_id ?? "";
     message.create_time = object.create_time ?? undefined;
     message.value = object.value ?? 0;
-    message.transaction_id = object.transaction_id ?? "";
     return message;
   },
 };
@@ -36414,7 +36579,7 @@ export const WalletLedgerList = {
 };
 
 function createBaseWalletLedgerListReq(): WalletLedgerListReq {
-  return { limit: undefined, cursor: "", transaction_id: "" };
+  return { limit: undefined, cursor: "" };
 }
 
 export const WalletLedgerListReq = {
@@ -36424,9 +36589,6 @@ export const WalletLedgerListReq = {
     }
     if (message.cursor !== "") {
       writer.uint32(18).string(message.cursor);
-    }
-    if (message.transaction_id !== "") {
-      writer.uint32(26).string(message.transaction_id);
     }
     return writer;
   },
@@ -36452,13 +36614,6 @@ export const WalletLedgerListReq = {
 
           message.cursor = reader.string();
           continue;
-        case 3:
-          if (tag !== 26) {
-            break;
-          }
-
-          message.transaction_id = reader.string();
-          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -36472,7 +36627,6 @@ export const WalletLedgerListReq = {
     return {
       limit: isSet(object.limit) ? Number(object.limit) : undefined,
       cursor: isSet(object.cursor) ? globalThis.String(object.cursor) : "",
-      transaction_id: isSet(object.transaction_id) ? globalThis.String(object.transaction_id) : "",
     };
   },
 
@@ -36484,9 +36638,6 @@ export const WalletLedgerListReq = {
     if (message.cursor !== "") {
       obj.cursor = message.cursor;
     }
-    if (message.transaction_id !== "") {
-      obj.transaction_id = message.transaction_id;
-    }
     return obj;
   },
 
@@ -36497,7 +36648,6 @@ export const WalletLedgerListReq = {
     const message = createBaseWalletLedgerListReq();
     message.limit = object.limit ?? undefined;
     message.cursor = object.cursor ?? "";
-    message.transaction_id = object.transaction_id ?? "";
     return message;
   },
 };
