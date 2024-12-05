@@ -1991,6 +1991,44 @@ export interface ApiRpc {
 }
 
 /**  */
+export interface ApiSdTopic {
+  //
+  channel_id?: string;
+  //
+  clan_id?: string;
+  //
+  create_time?: string;
+  //
+  creator_id?: string;
+  //
+  id?: string;
+  //
+  message_id?: string;
+  //
+  status?: number;
+  //
+  update_time?: string;
+}
+
+/**  */
+export interface ApiSdTopicList {
+  //
+  count?: number;
+  //
+  topics?: Array<ApiSdTopic>;
+}
+
+/**  */
+export interface ApiSdTopicRequest {
+  //
+  channel_id?: string;
+  //
+  clan_id?: string;
+  //
+  message_id?: string;
+}
+
+/**  */
 export interface ApiSearchMessageDocument {
   //
   attachments?: Array<ApiMessageAttachment>;
@@ -9100,6 +9138,81 @@ export class MezonApi {
       );
     }
     const urlPath = "/v2/systemmessages";
+    const queryParams = new Map<string, any>();
+
+    let bodyJson: string = "";
+    bodyJson = JSON.stringify(body || {});
+
+    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
+    const fetchOptions = buildFetchOptions("POST", options, bodyJson);
+    if (bearerToken) {
+      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+    }
+
+    return Promise.race([
+      fetch(fullUrl, fetchOptions).then((response) => {
+        if (response.status == 204) {
+          return response;
+        } else if (response.status >= 200 && response.status < 300) {
+          return response.json();
+        } else {
+          throw response;
+        }
+      }),
+      new Promise((_, reject) =>
+        setTimeout(reject, this.timeoutMs, "Request timed out.")
+      ),
+    ]);
+  }
+
+  /** List Sd Topic */
+  listSdTopic(
+    bearerToken: string,
+    channelId?: string,
+    limit?: number,
+    options: any = {}
+  ): Promise<ApiSdTopicList> {
+    const urlPath = "/v2/sdmtopic";
+    const queryParams = new Map<string, any>();
+    queryParams.set("channel_id", channelId);
+    queryParams.set("limit", limit);
+
+    let bodyJson: string = "";
+
+    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
+    const fetchOptions = buildFetchOptions("GET", options, bodyJson);
+    if (bearerToken) {
+      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+    }
+
+    return Promise.race([
+      fetch(fullUrl, fetchOptions).then((response) => {
+        if (response.status == 204) {
+          return response;
+        } else if (response.status >= 200 && response.status < 300) {
+          return response.json();
+        } else {
+          throw response;
+        }
+      }),
+      new Promise((_, reject) =>
+        setTimeout(reject, this.timeoutMs, "Request timed out.")
+      ),
+    ]);
+  }
+
+  /** Create Sd Topic */
+  createSdTopic(
+    bearerToken: string,
+    body: ApiSdTopicRequest,
+    options: any = {}
+  ): Promise<ApiSdTopic> {
+    if (body === null || body === undefined) {
+      throw new Error(
+        "'body' is a required parameter but is null or undefined."
+      );
+    }
+    const urlPath = "/v2/sdmtopic";
     const queryParams = new Map<string, any>();
 
     let bodyJson: string = "";
