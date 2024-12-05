@@ -1083,7 +1083,6 @@ export interface Socket {
     channelId: string,
     dataType: number,
     jsonData: string,
-    isTalk: boolean,
   ): Promise<JoinPTTChannel>;
 
   talkPTTChannel(
@@ -2376,7 +2375,6 @@ export class DefaultSocket implements Socket {
     channelId: string,
     dataType: number,
     jsonData: string,
-    isTalk: boolean,
   ): Promise<JoinPTTChannel> {
     const response = await this.send({
       join_ptt_channel: {
@@ -2385,7 +2383,6 @@ export class DefaultSocket implements Socket {
         data_type: dataType,
         json_data: jsonData,
         receiver_id: "",
-        is_talk: isTalk,
       },
     });
     return response.join_ptt_channel;
