@@ -924,6 +924,13 @@ export interface ListActivity {
   acts: ApiUserActivity[];
 }
 
+export interface SdTopicEvent {
+  id: string;
+  clan_id: string;
+  channel_id: string;
+  message_id: string;
+}
+
 /** A socket connection to Mezon server. */
 export interface Socket {
   /** Connection is Open */
@@ -1082,7 +1089,7 @@ export interface Socket {
     clanId: string,
     channelId: string,
     dataType: number,
-    jsonData: string,
+    jsonData: string
   ): Promise<JoinPTTChannel>;
 
   talkPTTChannel(
@@ -1286,6 +1293,8 @@ export interface Socket {
   onpttchanneljoined: (ptt_joined_event: PTTJoinedEvent) => void;
 
   onpttchannelleaved: (ptt_leaved_event: PTTLeavedEvent) => void;
+
+  onsdtopicevent: (sd_topic_event: SdTopicEvent) => void;
 }
 
 /** Reports an error received from a socket message. */
@@ -1558,6 +1567,8 @@ export class DefaultSocket implements Socket {
           this.onpttchanneljoined(<PTTJoinedEvent>message.ptt_joined_event);
         } else if (message.ptt_leaved_event) {
           this.onpttchannelleaved(<PTTLeavedEvent>message.ptt_leaved_event);
+        } else if (message.sd_topic_event) {
+          this.onsdtopicevent(<SdTopicEvent>message.sd_topic_event);
         } else {
           if (this.verbose && window && window.console) {
             console.log("Unrecognized message received: %o", message);
@@ -1936,6 +1947,11 @@ export class DefaultSocket implements Socket {
       console.log(talk_ptt_channel);
     }
   }
+  onsdtopicevent(sd_topic_event: SdTopicEvent) {
+    if (this.verbose && window && window.console) {
+      console.log(sd_topic_event);
+    }
+  }
   send(
     message:
       | ChannelJoin
@@ -2116,7 +2132,7 @@ export class DefaultSocket implements Socket {
     anonymous_message?: boolean,
     mention_everyone?: Boolean,
     avatar?: string,
-    code?: number,
+    code?: number
   ): Promise<ChannelMessageAck> {
     const response = await this.send({
       channel_message_send: {
@@ -2326,7 +2342,7 @@ export class DefaultSocket implements Socket {
       },
     });
     return response.incoming_call_push;
-  }  
+  }
 
   async handleDropdownBoxSelected(
     message_id: string,
@@ -2364,7 +2380,7 @@ export class DefaultSocket implements Socket {
         button_id: button_id,
         sender_id: sender_id,
         user_id: user_id,
-        extra_data: extra_data
+        extra_data: extra_data,
       },
     });
     return response.webrtc_signaling_fwd;
@@ -2374,7 +2390,7 @@ export class DefaultSocket implements Socket {
     clanId: string,
     channelId: string,
     dataType: number,
-    jsonData: string,
+    jsonData: string
   ): Promise<JoinPTTChannel> {
     const response = await this.send({
       join_ptt_channel: {
