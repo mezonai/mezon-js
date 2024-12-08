@@ -1240,6 +1240,8 @@ export interface JoinPTTChannel {
 }
 
 export interface TalkPTTChannel {
+  /** user id */
+  user_id: string;
   /** channel id */
   channel_id: string;
 }
@@ -10523,13 +10525,16 @@ export const JoinPTTChannel = {
 };
 
 function createBaseTalkPTTChannel(): TalkPTTChannel {
-  return { channel_id: "" };
+  return { user_id: "", channel_id: "" };
 }
 
 export const TalkPTTChannel = {
   encode(message: TalkPTTChannel, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.user_id !== "") {
+      writer.uint32(10).string(message.user_id);
+    }
     if (message.channel_id !== "") {
-      writer.uint32(10).string(message.channel_id);
+      writer.uint32(18).string(message.channel_id);
     }
     return writer;
   },
@@ -10546,6 +10551,13 @@ export const TalkPTTChannel = {
             break;
           }
 
+          message.user_id = reader.string();
+          continue;
+        case 2:
+          if (tag !== 18) {
+            break;
+          }
+
           message.channel_id = reader.string();
           continue;
       }
@@ -10558,11 +10570,17 @@ export const TalkPTTChannel = {
   },
 
   fromJSON(object: any): TalkPTTChannel {
-    return { channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "" };
+    return {
+      user_id: isSet(object.user_id) ? globalThis.String(object.user_id) : "",
+      channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "",
+    };
   },
 
   toJSON(message: TalkPTTChannel): unknown {
     const obj: any = {};
+    if (message.user_id !== "") {
+      obj.user_id = message.user_id;
+    }
     if (message.channel_id !== "") {
       obj.channel_id = message.channel_id;
     }
@@ -10574,6 +10592,7 @@ export const TalkPTTChannel = {
   },
   fromPartial<I extends Exact<DeepPartial<TalkPTTChannel>, I>>(object: I): TalkPTTChannel {
     const message = createBaseTalkPTTChannel();
+    message.user_id = object.user_id ?? "";
     message.channel_id = object.channel_id ?? "";
     return message;
   },
