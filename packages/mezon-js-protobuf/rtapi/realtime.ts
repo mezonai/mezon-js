@@ -298,7 +298,11 @@ export interface Envelope {
     | PTTJoinedEvent
     | undefined;
   /** user leave ptt */
-  ptt_leaved_event?: PTTLeavedEvent | undefined;
+  ptt_leaved_event?:
+    | PTTLeavedEvent
+    | undefined;
+  /** Sd topic event */
+  sd_topic_event?: SdTopicEvent | undefined;
 }
 
 export interface IncomingCallPush {
@@ -1283,6 +1287,13 @@ export interface PTTJoinedEvent {
   channel_id: string;
 }
 
+export interface SdTopicEvent {
+  id: string;
+  clan_id: string;
+  channel_id: string;
+  message_id: string;
+}
+
 function createBaseEnvelope(): Envelope {
   return {
     cid: "",
@@ -1354,6 +1365,7 @@ function createBaseEnvelope(): Envelope {
     incoming_call_push: undefined,
     ptt_joined_event: undefined,
     ptt_leaved_event: undefined,
+    sd_topic_event: undefined,
   };
 }
 
@@ -1565,6 +1577,9 @@ export const Envelope = {
     }
     if (message.ptt_leaved_event !== undefined) {
       PTTLeavedEvent.encode(message.ptt_leaved_event, writer.uint32(554).fork()).ldelim();
+    }
+    if (message.sd_topic_event !== undefined) {
+      SdTopicEvent.encode(message.sd_topic_event, writer.uint32(562).fork()).ldelim();
     }
     return writer;
   },
@@ -2059,6 +2074,13 @@ export const Envelope = {
 
           message.ptt_leaved_event = PTTLeavedEvent.decode(reader, reader.uint32());
           continue;
+        case 70:
+          if (tag !== 562) {
+            break;
+          }
+
+          message.sd_topic_event = SdTopicEvent.decode(reader, reader.uint32());
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -2227,6 +2249,7 @@ export const Envelope = {
         : undefined,
       ptt_joined_event: isSet(object.ptt_joined_event) ? PTTJoinedEvent.fromJSON(object.ptt_joined_event) : undefined,
       ptt_leaved_event: isSet(object.ptt_leaved_event) ? PTTLeavedEvent.fromJSON(object.ptt_leaved_event) : undefined,
+      sd_topic_event: isSet(object.sd_topic_event) ? SdTopicEvent.fromJSON(object.sd_topic_event) : undefined,
     };
   },
 
@@ -2438,6 +2461,9 @@ export const Envelope = {
     }
     if (message.ptt_leaved_event !== undefined) {
       obj.ptt_leaved_event = PTTLeavedEvent.toJSON(message.ptt_leaved_event);
+    }
+    if (message.sd_topic_event !== undefined) {
+      obj.sd_topic_event = SdTopicEvent.toJSON(message.sd_topic_event);
     }
     return obj;
   },
@@ -2667,6 +2693,9 @@ export const Envelope = {
       : undefined;
     message.ptt_leaved_event = (object.ptt_leaved_event !== undefined && object.ptt_leaved_event !== null)
       ? PTTLeavedEvent.fromPartial(object.ptt_leaved_event)
+      : undefined;
+    message.sd_topic_event = (object.sd_topic_event !== undefined && object.sd_topic_event !== null)
+      ? SdTopicEvent.fromPartial(object.sd_topic_event)
       : undefined;
     return message;
   },
@@ -10992,6 +11021,110 @@ export const PTTJoinedEvent = {
     message.user_id = object.user_id ?? "";
     message.channel_label = object.channel_label ?? "";
     message.channel_id = object.channel_id ?? "";
+    return message;
+  },
+};
+
+function createBaseSdTopicEvent(): SdTopicEvent {
+  return { id: "", clan_id: "", channel_id: "", message_id: "" };
+}
+
+export const SdTopicEvent = {
+  encode(message: SdTopicEvent, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.id !== "") {
+      writer.uint32(10).string(message.id);
+    }
+    if (message.clan_id !== "") {
+      writer.uint32(18).string(message.clan_id);
+    }
+    if (message.channel_id !== "") {
+      writer.uint32(26).string(message.channel_id);
+    }
+    if (message.message_id !== "") {
+      writer.uint32(34).string(message.message_id);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): SdTopicEvent {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseSdTopicEvent();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.id = reader.string();
+          continue;
+        case 2:
+          if (tag !== 18) {
+            break;
+          }
+
+          message.clan_id = reader.string();
+          continue;
+        case 3:
+          if (tag !== 26) {
+            break;
+          }
+
+          message.channel_id = reader.string();
+          continue;
+        case 4:
+          if (tag !== 34) {
+            break;
+          }
+
+          message.message_id = reader.string();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): SdTopicEvent {
+    return {
+      id: isSet(object.id) ? globalThis.String(object.id) : "",
+      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
+      channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "",
+      message_id: isSet(object.message_id) ? globalThis.String(object.message_id) : "",
+    };
+  },
+
+  toJSON(message: SdTopicEvent): unknown {
+    const obj: any = {};
+    if (message.id !== "") {
+      obj.id = message.id;
+    }
+    if (message.clan_id !== "") {
+      obj.clan_id = message.clan_id;
+    }
+    if (message.channel_id !== "") {
+      obj.channel_id = message.channel_id;
+    }
+    if (message.message_id !== "") {
+      obj.message_id = message.message_id;
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<SdTopicEvent>, I>>(base?: I): SdTopicEvent {
+    return SdTopicEvent.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<SdTopicEvent>, I>>(object: I): SdTopicEvent {
+    const message = createBaseSdTopicEvent();
+    message.id = object.id ?? "";
+    message.clan_id = object.clan_id ?? "";
+    message.channel_id = object.channel_id ?? "";
+    message.message_id = object.message_id ?? "";
     return message;
   },
 };

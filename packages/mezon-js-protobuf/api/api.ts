@@ -3456,6 +3456,7 @@ export interface AuditLog {
   entity_id: string;
   details: string;
   time_log: Date | undefined;
+  channel_id: string;
 }
 
 export interface ListAuditLog {
@@ -3777,6 +3778,39 @@ export interface WalletLedgerListReq {
   limit: number | undefined;
   cursor: string;
   transaction_id: string;
+}
+
+export interface SdTopic {
+  id: string;
+  creator_id: string;
+  message_id: string;
+  clan_id: string;
+  channel_id: string;
+  status: number;
+  create_time: Date | undefined;
+  update_time: Date | undefined;
+}
+
+export interface SdTopicRequest {
+  message_id: string;
+  clan_id: string;
+  channel_id: string;
+}
+
+export interface SdTopicList {
+  count: number;
+  topics: SdTopic[];
+}
+
+export interface ListSdTopicRequest {
+  channel_id: string;
+  limit: number;
+}
+
+export interface DeleteSdTopicRequest {
+  channel_id: string;
+  id: string;
+  clan_id: string;
 }
 
 function createBaseAccount(): Account {
@@ -33261,6 +33295,7 @@ function createBaseAuditLog(): AuditLog {
     entity_id: "",
     details: "",
     time_log: undefined,
+    channel_id: "",
   };
 }
 
@@ -33289,6 +33324,9 @@ export const AuditLog = {
     }
     if (message.time_log !== undefined) {
       Timestamp.encode(toTimestamp(message.time_log), writer.uint32(66).fork()).ldelim();
+    }
+    if (message.channel_id !== "") {
+      writer.uint32(74).string(message.channel_id);
     }
     return writer;
   },
@@ -33356,6 +33394,13 @@ export const AuditLog = {
 
           message.time_log = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
           continue;
+        case 9:
+          if (tag !== 74) {
+            break;
+          }
+
+          message.channel_id = reader.string();
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -33375,6 +33420,7 @@ export const AuditLog = {
       entity_id: isSet(object.entity_id) ? globalThis.String(object.entity_id) : "",
       details: isSet(object.details) ? globalThis.String(object.details) : "",
       time_log: isSet(object.time_log) ? fromJsonTimestamp(object.time_log) : undefined,
+      channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "",
     };
   },
 
@@ -33404,6 +33450,9 @@ export const AuditLog = {
     if (message.time_log !== undefined) {
       obj.time_log = message.time_log.toISOString();
     }
+    if (message.channel_id !== "") {
+      obj.channel_id = message.channel_id;
+    }
     return obj;
   },
 
@@ -33420,6 +33469,7 @@ export const AuditLog = {
     message.entity_id = object.entity_id ?? "";
     message.details = object.details ?? "";
     message.time_log = object.time_log ?? undefined;
+    message.channel_id = object.channel_id ?? "";
     return message;
   },
 };
@@ -36602,6 +36652,505 @@ export const WalletLedgerListReq = {
     message.limit = object.limit ?? undefined;
     message.cursor = object.cursor ?? "";
     message.transaction_id = object.transaction_id ?? "";
+    return message;
+  },
+};
+
+function createBaseSdTopic(): SdTopic {
+  return {
+    id: "",
+    creator_id: "",
+    message_id: "",
+    clan_id: "",
+    channel_id: "",
+    status: 0,
+    create_time: undefined,
+    update_time: undefined,
+  };
+}
+
+export const SdTopic = {
+  encode(message: SdTopic, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.id !== "") {
+      writer.uint32(10).string(message.id);
+    }
+    if (message.creator_id !== "") {
+      writer.uint32(18).string(message.creator_id);
+    }
+    if (message.message_id !== "") {
+      writer.uint32(26).string(message.message_id);
+    }
+    if (message.clan_id !== "") {
+      writer.uint32(34).string(message.clan_id);
+    }
+    if (message.channel_id !== "") {
+      writer.uint32(42).string(message.channel_id);
+    }
+    if (message.status !== 0) {
+      writer.uint32(48).int32(message.status);
+    }
+    if (message.create_time !== undefined) {
+      Timestamp.encode(toTimestamp(message.create_time), writer.uint32(58).fork()).ldelim();
+    }
+    if (message.update_time !== undefined) {
+      Timestamp.encode(toTimestamp(message.update_time), writer.uint32(66).fork()).ldelim();
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): SdTopic {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseSdTopic();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.id = reader.string();
+          continue;
+        case 2:
+          if (tag !== 18) {
+            break;
+          }
+
+          message.creator_id = reader.string();
+          continue;
+        case 3:
+          if (tag !== 26) {
+            break;
+          }
+
+          message.message_id = reader.string();
+          continue;
+        case 4:
+          if (tag !== 34) {
+            break;
+          }
+
+          message.clan_id = reader.string();
+          continue;
+        case 5:
+          if (tag !== 42) {
+            break;
+          }
+
+          message.channel_id = reader.string();
+          continue;
+        case 6:
+          if (tag !== 48) {
+            break;
+          }
+
+          message.status = reader.int32();
+          continue;
+        case 7:
+          if (tag !== 58) {
+            break;
+          }
+
+          message.create_time = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
+          continue;
+        case 8:
+          if (tag !== 66) {
+            break;
+          }
+
+          message.update_time = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): SdTopic {
+    return {
+      id: isSet(object.id) ? globalThis.String(object.id) : "",
+      creator_id: isSet(object.creator_id) ? globalThis.String(object.creator_id) : "",
+      message_id: isSet(object.message_id) ? globalThis.String(object.message_id) : "",
+      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
+      channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "",
+      status: isSet(object.status) ? globalThis.Number(object.status) : 0,
+      create_time: isSet(object.create_time) ? fromJsonTimestamp(object.create_time) : undefined,
+      update_time: isSet(object.update_time) ? fromJsonTimestamp(object.update_time) : undefined,
+    };
+  },
+
+  toJSON(message: SdTopic): unknown {
+    const obj: any = {};
+    if (message.id !== "") {
+      obj.id = message.id;
+    }
+    if (message.creator_id !== "") {
+      obj.creator_id = message.creator_id;
+    }
+    if (message.message_id !== "") {
+      obj.message_id = message.message_id;
+    }
+    if (message.clan_id !== "") {
+      obj.clan_id = message.clan_id;
+    }
+    if (message.channel_id !== "") {
+      obj.channel_id = message.channel_id;
+    }
+    if (message.status !== 0) {
+      obj.status = Math.round(message.status);
+    }
+    if (message.create_time !== undefined) {
+      obj.create_time = message.create_time.toISOString();
+    }
+    if (message.update_time !== undefined) {
+      obj.update_time = message.update_time.toISOString();
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<SdTopic>, I>>(base?: I): SdTopic {
+    return SdTopic.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<SdTopic>, I>>(object: I): SdTopic {
+    const message = createBaseSdTopic();
+    message.id = object.id ?? "";
+    message.creator_id = object.creator_id ?? "";
+    message.message_id = object.message_id ?? "";
+    message.clan_id = object.clan_id ?? "";
+    message.channel_id = object.channel_id ?? "";
+    message.status = object.status ?? 0;
+    message.create_time = object.create_time ?? undefined;
+    message.update_time = object.update_time ?? undefined;
+    return message;
+  },
+};
+
+function createBaseSdTopicRequest(): SdTopicRequest {
+  return { message_id: "", clan_id: "", channel_id: "" };
+}
+
+export const SdTopicRequest = {
+  encode(message: SdTopicRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.message_id !== "") {
+      writer.uint32(10).string(message.message_id);
+    }
+    if (message.clan_id !== "") {
+      writer.uint32(18).string(message.clan_id);
+    }
+    if (message.channel_id !== "") {
+      writer.uint32(26).string(message.channel_id);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): SdTopicRequest {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseSdTopicRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.message_id = reader.string();
+          continue;
+        case 2:
+          if (tag !== 18) {
+            break;
+          }
+
+          message.clan_id = reader.string();
+          continue;
+        case 3:
+          if (tag !== 26) {
+            break;
+          }
+
+          message.channel_id = reader.string();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): SdTopicRequest {
+    return {
+      message_id: isSet(object.message_id) ? globalThis.String(object.message_id) : "",
+      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
+      channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "",
+    };
+  },
+
+  toJSON(message: SdTopicRequest): unknown {
+    const obj: any = {};
+    if (message.message_id !== "") {
+      obj.message_id = message.message_id;
+    }
+    if (message.clan_id !== "") {
+      obj.clan_id = message.clan_id;
+    }
+    if (message.channel_id !== "") {
+      obj.channel_id = message.channel_id;
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<SdTopicRequest>, I>>(base?: I): SdTopicRequest {
+    return SdTopicRequest.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<SdTopicRequest>, I>>(object: I): SdTopicRequest {
+    const message = createBaseSdTopicRequest();
+    message.message_id = object.message_id ?? "";
+    message.clan_id = object.clan_id ?? "";
+    message.channel_id = object.channel_id ?? "";
+    return message;
+  },
+};
+
+function createBaseSdTopicList(): SdTopicList {
+  return { count: 0, topics: [] };
+}
+
+export const SdTopicList = {
+  encode(message: SdTopicList, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.count !== 0) {
+      writer.uint32(8).int32(message.count);
+    }
+    for (const v of message.topics) {
+      SdTopic.encode(v!, writer.uint32(18).fork()).ldelim();
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): SdTopicList {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseSdTopicList();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 8) {
+            break;
+          }
+
+          message.count = reader.int32();
+          continue;
+        case 2:
+          if (tag !== 18) {
+            break;
+          }
+
+          message.topics.push(SdTopic.decode(reader, reader.uint32()));
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): SdTopicList {
+    return {
+      count: isSet(object.count) ? globalThis.Number(object.count) : 0,
+      topics: globalThis.Array.isArray(object?.topics) ? object.topics.map((e: any) => SdTopic.fromJSON(e)) : [],
+    };
+  },
+
+  toJSON(message: SdTopicList): unknown {
+    const obj: any = {};
+    if (message.count !== 0) {
+      obj.count = Math.round(message.count);
+    }
+    if (message.topics?.length) {
+      obj.topics = message.topics.map((e) => SdTopic.toJSON(e));
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<SdTopicList>, I>>(base?: I): SdTopicList {
+    return SdTopicList.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<SdTopicList>, I>>(object: I): SdTopicList {
+    const message = createBaseSdTopicList();
+    message.count = object.count ?? 0;
+    message.topics = object.topics?.map((e) => SdTopic.fromPartial(e)) || [];
+    return message;
+  },
+};
+
+function createBaseListSdTopicRequest(): ListSdTopicRequest {
+  return { channel_id: "", limit: 0 };
+}
+
+export const ListSdTopicRequest = {
+  encode(message: ListSdTopicRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.channel_id !== "") {
+      writer.uint32(10).string(message.channel_id);
+    }
+    if (message.limit !== 0) {
+      writer.uint32(16).int32(message.limit);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): ListSdTopicRequest {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseListSdTopicRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.channel_id = reader.string();
+          continue;
+        case 2:
+          if (tag !== 16) {
+            break;
+          }
+
+          message.limit = reader.int32();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): ListSdTopicRequest {
+    return {
+      channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "",
+      limit: isSet(object.limit) ? globalThis.Number(object.limit) : 0,
+    };
+  },
+
+  toJSON(message: ListSdTopicRequest): unknown {
+    const obj: any = {};
+    if (message.channel_id !== "") {
+      obj.channel_id = message.channel_id;
+    }
+    if (message.limit !== 0) {
+      obj.limit = Math.round(message.limit);
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<ListSdTopicRequest>, I>>(base?: I): ListSdTopicRequest {
+    return ListSdTopicRequest.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<ListSdTopicRequest>, I>>(object: I): ListSdTopicRequest {
+    const message = createBaseListSdTopicRequest();
+    message.channel_id = object.channel_id ?? "";
+    message.limit = object.limit ?? 0;
+    return message;
+  },
+};
+
+function createBaseDeleteSdTopicRequest(): DeleteSdTopicRequest {
+  return { channel_id: "", id: "", clan_id: "" };
+}
+
+export const DeleteSdTopicRequest = {
+  encode(message: DeleteSdTopicRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.channel_id !== "") {
+      writer.uint32(10).string(message.channel_id);
+    }
+    if (message.id !== "") {
+      writer.uint32(18).string(message.id);
+    }
+    if (message.clan_id !== "") {
+      writer.uint32(26).string(message.clan_id);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): DeleteSdTopicRequest {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseDeleteSdTopicRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.channel_id = reader.string();
+          continue;
+        case 2:
+          if (tag !== 18) {
+            break;
+          }
+
+          message.id = reader.string();
+          continue;
+        case 3:
+          if (tag !== 26) {
+            break;
+          }
+
+          message.clan_id = reader.string();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): DeleteSdTopicRequest {
+    return {
+      channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "",
+      id: isSet(object.id) ? globalThis.String(object.id) : "",
+      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
+    };
+  },
+
+  toJSON(message: DeleteSdTopicRequest): unknown {
+    const obj: any = {};
+    if (message.channel_id !== "") {
+      obj.channel_id = message.channel_id;
+    }
+    if (message.id !== "") {
+      obj.id = message.id;
+    }
+    if (message.clan_id !== "") {
+      obj.clan_id = message.clan_id;
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<DeleteSdTopicRequest>, I>>(base?: I): DeleteSdTopicRequest {
+    return DeleteSdTopicRequest.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<DeleteSdTopicRequest>, I>>(object: I): DeleteSdTopicRequest {
+    const message = createBaseDeleteSdTopicRequest();
+    message.channel_id = object.channel_id ?? "";
+    message.id = object.id ?? "";
+    message.clan_id = object.clan_id ?? "";
     return message;
   },
 };
