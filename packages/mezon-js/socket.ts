@@ -2405,17 +2405,11 @@ export class DefaultSocket implements Socket {
   }
 
   async talkPTTChannel(
-    channelId: string,
-    dataType: number,
-    jsonData: string,
-    state: number
+    channelId: string
   ): Promise<TalkPTTChannel> {
     const response = await this.send({
       talk_ptt_channel: {
-        channel_id: channelId,
-        data_type: dataType,
-        json_data: jsonData,
-        state: state,
+        channel_id: channelId
       },
     });
     return response.talk_ptt_channel;
