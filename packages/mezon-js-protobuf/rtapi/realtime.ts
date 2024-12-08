@@ -1244,6 +1244,8 @@ export interface TalkPTTChannel {
   user_id: string;
   /** channel id */
   channel_id: string;
+  /** is talk */
+  isTalk: boolean;
 }
 
 export interface ListActivity {
@@ -10525,7 +10527,7 @@ export const JoinPTTChannel = {
 };
 
 function createBaseTalkPTTChannel(): TalkPTTChannel {
-  return { user_id: "", channel_id: "" };
+  return { user_id: "", channel_id: "", isTalk: false };
 }
 
 export const TalkPTTChannel = {
@@ -10535,6 +10537,9 @@ export const TalkPTTChannel = {
     }
     if (message.channel_id !== "") {
       writer.uint32(18).string(message.channel_id);
+    }
+    if (message.isTalk !== false) {
+      writer.uint32(24).bool(message.isTalk);
     }
     return writer;
   },
@@ -10560,6 +10565,13 @@ export const TalkPTTChannel = {
 
           message.channel_id = reader.string();
           continue;
+        case 3:
+          if (tag !== 24) {
+            break;
+          }
+
+          message.isTalk = reader.bool();
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -10573,6 +10585,7 @@ export const TalkPTTChannel = {
     return {
       user_id: isSet(object.user_id) ? globalThis.String(object.user_id) : "",
       channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "",
+      isTalk: isSet(object.isTalk) ? globalThis.Boolean(object.isTalk) : false,
     };
   },
 
@@ -10584,6 +10597,9 @@ export const TalkPTTChannel = {
     if (message.channel_id !== "") {
       obj.channel_id = message.channel_id;
     }
+    if (message.isTalk !== false) {
+      obj.isTalk = message.isTalk;
+    }
     return obj;
   },
 
@@ -10594,6 +10610,7 @@ export const TalkPTTChannel = {
     const message = createBaseTalkPTTChannel();
     message.user_id = object.user_id ?? "";
     message.channel_id = object.channel_id ?? "";
+    message.isTalk = object.isTalk ?? false;
     return message;
   },
 };
