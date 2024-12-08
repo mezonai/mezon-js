@@ -882,12 +882,6 @@ export interface JoinPTTChannel {
 export interface TalkPTTChannel {
   // channel id
   channel_id: string;
-  // type offer, answer or candidate
-  data_type: number;
-  // offer
-  json_data: string;
-  // start or end
-  state: number;
 }
 
 /** PTT Joined event */
