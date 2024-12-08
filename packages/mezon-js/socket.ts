@@ -1093,10 +1093,7 @@ export interface Socket {
   ): Promise<JoinPTTChannel>;
 
   talkPTTChannel(
-    channelId: string,
-    dataType: number,
-    jsonData: string,
-    state: number
+    channelId: string
   ): Promise<TalkPTTChannel>;
 
   /* Set the heartbeat timeout used by the socket to detect if it has lost connectivity to the server. */
