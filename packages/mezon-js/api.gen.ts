@@ -1724,24 +1724,6 @@ export interface ApiOssrsHttpCallbackResponse {
   msg?: string;
 }
 
-/** A list of users belonging to a channel, along with their role. */
-export interface ApiPTTChannelUser {
-  //
-  channel_id?: string;
-  //
-  id?: string;
-  //
-  participant?: string;
-  //user for a channel.
-  user_id?: string;
-}
-
-/** A list of users belonging to a channel, along with their role. */
-export interface ApiPTTChannelUserList {
-  //
-  ptt_channel_users?: Array<ApiPTTChannelUser>;
-}
-
 /**  */
 export interface ApiPermission {
   //
@@ -8029,50 +8011,6 @@ export class MezonApi {
 
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("POST", options, bodyJson);
-    if (bearerToken) {
-      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-    }
-
-    return Promise.race([
-      fetch(fullUrl, fetchOptions).then((response) => {
-        if (response.status == 204) {
-          return response;
-        } else if (response.status >= 200 && response.status < 300) {
-          return response.json();
-        } else {
-          throw response;
-        }
-      }),
-      new Promise((_, reject) =>
-        setTimeout(reject, this.timeoutMs, "Request timed out.")
-      ),
-    ]);
-  }
-
-  /** List all users in ptt channel. */
-  listPTTChannelUsers(
-    bearerToken: string,
-    clanId?: string,
-    channelId?: string,
-    channelType?: number,
-    limit?: number,
-    state?: number,
-    cursor?: string,
-    options: any = {}
-  ): Promise<ApiPTTChannelUserList> {
-    const urlPath = "/v2/ptt_channels/users";
-    const queryParams = new Map<string, any>();
-    queryParams.set("clan_id", clanId);
-    queryParams.set("channel_id", channelId);
-    queryParams.set("channel_type", channelType);
-    queryParams.set("limit", limit);
-    queryParams.set("state", state);
-    queryParams.set("cursor", cursor);
-
-    let bodyJson: string = "";
-
-    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
-    const fetchOptions = buildFetchOptions("GET", options, bodyJson);
     if (bearerToken) {
       fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
     }
