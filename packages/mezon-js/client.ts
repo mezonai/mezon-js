@@ -153,7 +153,6 @@ import {
   ApiUserStatus,
   ApiListOnboardingStepResponse,
   MezonUpdateOnboardingStepByClanIdBody,
-  ApiPTTChannelUserList,
   ApiWalletLedgerList,
   ApiSdTopicList,
   ApiSdTopicRequest,
@@ -4712,55 +4711,6 @@ export class Client {
       .getUserStatus(session.token)
       .then((response: ApiUserStatus) => {
         return Promise.resolve(response);
-      });
-  }
-
-  /** List a ptt channel's users. */
-  async listPTTChannelUsers(
-    session: Session,
-    clanId: string,
-    channelId: string,
-    channelType: number,
-    state?: number,
-    limit?: number,
-    cursor?: string
-  ): Promise<ApiPTTChannelUserList> {
-    if (
-      this.autoRefreshSession &&
-      session.refresh_token &&
-      session.isexpired((Date.now() + this.expiredTimespanMs) / 1000)
-    ) {
-      await this.sessionRefresh(session);
-    }
-
-    return this.apiClient
-      .listPTTChannelUsers(
-        session.token,
-        clanId,
-        channelId,
-        channelType,
-        limit,
-        state,
-        cursor
-      )
-      .then((response: ApiPTTChannelUserList) => {
-        var result: ApiPTTChannelUserList = {
-          ptt_channel_users: [],
-        };
-
-        if (response.ptt_channel_users == null) {
-          return Promise.resolve(result);
-        }
-
-        response.ptt_channel_users!.forEach((gu) => {
-          result.ptt_channel_users!.push({
-            id: gu.id,
-            channel_id: gu.channel_id,
-            user_id: gu.user_id,
-            participant: gu.participant,
-          });
-        });
-        return Promise.resolve(result);
       });
   }
 
