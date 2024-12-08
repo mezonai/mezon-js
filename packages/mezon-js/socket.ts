@@ -880,6 +880,8 @@ export interface JoinPTTChannel {
 }
 
 export interface TalkPTTChannel {
+  // user id
+  user_id: string;
   // channel id
   channel_id: string;
 }
@@ -1085,10 +1087,6 @@ export interface Socket {
     dataType: number,
     jsonData: string
   ): Promise<JoinPTTChannel>;
-
-  talkPTTChannel(
-    channelId: string
-  ): Promise<TalkPTTChannel>;
 
   /* Set the heartbeat timeout used by the socket to detect if it has lost connectivity to the server. */
   setHeartbeatTimeoutMs(ms: number): void;
@@ -1962,8 +1960,7 @@ export class DefaultSocket implements Socket {
       | IncomingCallPush
       | MessageButtonClicked
       | DropdownBoxSelected
-      | JoinPTTChannel
-      | TalkPTTChannel,
+      | JoinPTTChannel,
     sendTimeout = DefaultSocket.DefaultSendTimeoutMs
   ): Promise<any> {
     const untypedMessage = message as any;
