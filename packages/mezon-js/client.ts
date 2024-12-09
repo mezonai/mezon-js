@@ -269,6 +269,8 @@ export interface ChannelMessage {
   hide_editted?: boolean;
   //
   is_public?: boolean;
+  //
+  topic_id?: string;
 }
 
 /** A list of channel messages, usually a result of a list operation. */
