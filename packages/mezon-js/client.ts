@@ -197,10 +197,11 @@ export enum NotificationType {
 }
 
 export enum WebrtcSignalingType {
+  WEBRTC_SDP_INIT = 0,
   WEBRTC_SDP_OFFER = 1,
   WEBRTC_SDP_ANSWER = 2,
   WEBRTC_ICE_CANDIDATE = 3,
-  WEBRTC_SDP_QUIT = 4,
+  WEBRTC_SDP_QUIT = 4
 }
 
 /** Response for an RPC function executed on the server. */
