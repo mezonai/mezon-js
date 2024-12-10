@@ -3851,7 +3851,7 @@ export class Client {
       });
   }
 
-  async listUserPermission(
+  async listChannelUserUC(
     session: Session,
     channel_id: string,
     limit: number
@@ -3865,7 +3865,7 @@ export class Client {
     }
 
     return this.apiClient
-      .ListUserPermission(session.token, channel_id, limit)
+      .listChannelUserUC(session.token, channel_id, limit)
       .then((response: any) => {
         return Promise.resolve(response);
       });
