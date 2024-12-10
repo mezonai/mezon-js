@@ -99,16 +99,19 @@ export class MezonClient implements Client {
         );
       }
 
+  /** Send message to channel */
   async sendMessage(clan_id: string, channel_id: string, mode: number, is_public: boolean, msg: ChannelMessageContent, mentions?: Array<ApiMessageMention>, attachments?: Array<ApiMessageAttachment>, ref?: Array<ApiMessageRef>) {
     const msgACK = await this.socket.writeChatMessage(clan_id, channel_id, mode, is_public, msg, mentions, attachments, ref);
     return msgACK;
   }
 
+  /** Send token to user */
   async sendToken(sendTokenData: TokenSentEvent) {
     const session = this.session!;
     return this.apiClient.sendToken(session.token, sendTokenData);
   }
 
+  /** React message */
   async reactionMessage(
     id: string,
     clan_id: string,
@@ -125,6 +128,7 @@ export class MezonClient implements Client {
     return msgReaction;
   }
 
+  /** Join to chat in clan when invited to clan */
   async joinClanChat(clan_id: string) {
     try {
       await this.socket.joinClanChat(clan_id);
@@ -185,7 +189,7 @@ export class MezonClient implements Client {
   }
   
   /**Add handle function to event socket */
-  on(event: string, func: Function, context : any = null) {
+  on(event: Events, func: Function, context : any = null) {
   	const key = event;
   	if (!(key in this)) {
   		throw new Error("Mezon SDK not support this event");
@@ -250,7 +254,9 @@ export class MezonClient implements Client {
   onerror(evt: ErrorEvent) {
     console.log(evt);
     if (this.isHardDisconnect) return;
-    this.retriesConnect();
+    if (this.socket.isOpen()) {
+      this.retriesConnect();
+    }
   }
 
   onheartbeattimeout() {
@@ -260,7 +266,9 @@ export class MezonClient implements Client {
   ondisconnect(e: CloseEvent) {
     console.log("Disconnected!", e?.reason, "Reconnecting...");
     if (this.isHardDisconnect) return;
-    this.retriesConnect();
+    if (this.socket.isOpen()) {
+      this.retriesConnect();
+    }
   }
 
   retriesConnect() {
@@ -285,7 +293,9 @@ export class MezonClient implements Client {
             // Clear the current interval and restart with the new retry interval
             clearInterval(interval);
             setTimeout(() => {
+              if (this.socket.isOpen()) {
                 this.retriesConnect(); // Restart the connection attempt
+              }
             }, retryInterval);
         }
     }, retryInterval);
@@ -312,6 +322,7 @@ export class MezonClient implements Client {
     return new Promise((resolve) => setTimeout(resolve, ms));
   }
 
+  /** Create DM channel to send DM with user */
   async createDMchannel(userId: string) : Promise<null | ApiChannelDescription> {
     try {
       if (!isValidUserId(userId)) return null;
@@ -356,6 +367,7 @@ export class MezonClient implements Client {
     return stack;
   }
 
+  /** Send DM message to user */
   async sendDMChannelMessage(
     channelDmId: string,
     msg: string,
@@ -392,7 +404,7 @@ export class MezonClient implements Client {
     }
   }
 
-    /** List a channel's users. */
+  /** List a channel's users. */
   async listChannelVoiceUsers(
       clanId: string,
       channelId: string,
@@ -445,6 +457,7 @@ export class MezonClient implements Client {
         });
     }
 
+  /** Register stream channel */
   async registerStreamingChannel(request: ApiRegisterStreamingChannelRequest) {
       const session = this.session!;
       if (
