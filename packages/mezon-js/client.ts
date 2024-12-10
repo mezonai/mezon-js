@@ -2229,7 +2229,9 @@ export class Client {
     session: Session,
     clanId: string,
     limit?: number,
-    cacheableCursor?: string
+    notificationId?:string,
+    code?:number,
+    direction?:number,
   ): Promise<NotificationList> {
     if (
       this.autoRefreshSession &&
@@ -2240,7 +2242,7 @@ export class Client {
     }
 
     return this.apiClient
-      .listNotifications(session.token, clanId, limit, cacheableCursor)
+      .listNotifications(session.token, limit, clanId, notificationId, code, direction)
       .then((response: ApiNotificationList) => {
         var result: NotificationList = {
           cacheable_cursor: response.cacheable_cursor,
