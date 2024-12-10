@@ -3851,7 +3851,7 @@ export class Client {
       });
   }
 
-  async listUsersAddChannelByChannelId(
+  async listChannelUsersUC(
     session: Session,
     channel_id: string,
     limit: number
@@ -3865,7 +3865,7 @@ export class Client {
     }
 
     return this.apiClient
-      .listUsersAddChannelByChannelId(session.token, channel_id, limit)
+      .listChannelUsersUC(session.token, channel_id, limit)
       .then((response: any) => {
         return Promise.resolve(response);
       });
