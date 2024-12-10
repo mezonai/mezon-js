@@ -1472,6 +1472,7 @@ export class DefaultSocket implements Socket {
             is_public: message.channel_message.is_public,
             create_time_seconds: message.channel_message.create_time_seconds,
             update_time_seconds: message.channel_message.update_time_seconds,
+            topic_id: message.channel_message.topic_id,
           };
           this.onchannelmessage(e);
         } else if (message.message_typing_event) {

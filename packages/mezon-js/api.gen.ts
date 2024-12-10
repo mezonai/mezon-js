@@ -5360,7 +5360,7 @@ export class MezonApi {
   }
 
   /** list user add channel by channel ids */
-  listUsersAddChannelByChannelId(
+  ListUserPermission(
     bearerToken: string,
     channelId?: string,
     limit?: number,
