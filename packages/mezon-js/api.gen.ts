@@ -607,6 +607,8 @@ export interface ApiChannelAttachment {
   uploader?: string;
   //
   url?: string;
+  //message id.
+  message_id?: string;
 }
 
 /**  */
