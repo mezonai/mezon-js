@@ -1,3 +1,4 @@
+import { Events } from "../constants/enum";
 import { ChannelMessageAck } from "./socket";
 
 /**  */
@@ -288,9 +289,18 @@ export enum EButtonMessageStyle {
 }
 
 export enum EMessageComponentType {
-	BUTTON = 1,
-	SELECT = 2,
-	INPUT = 3
+  BUTTON = 1,
+  SELECT = 2,
+  INPUT = 3,
+  DATEPICKER = 4,
+  RADIO = 5,
+}
+
+export enum EMessageSelectType {
+	TEXT = 1,
+	USER = 2,
+	ROLE = 3,
+	CHANNEL = 4
 }
 
 export interface IButtonMessage {
@@ -534,7 +544,7 @@ export interface DropdownBoxSelected {
 export interface Client {
   authenticate: () => Promise<string>;
   sendMessage: (clan_id: string, channel_id: string, mode: number, is_public: boolean, msg: ChannelMessageContent, mentions?: Array<ApiMessageMention>, attachments?: Array<ApiMessageAttachment>, ref?: Array<ApiMessageRef>) => Promise<ChannelMessageAck>;
-  on: (event: string, func: Function) => void;
+  on: (event: Events, func: Function) => void;
   remove: (event: string, func: (...args: any[]) => void) => void;
   sendDMChannelMessage: (userId: string, msg: string, messOptions: {[x: string]: any}, attachments: Array<ApiMessageAttachment>, refs: Array<ApiMessageRef>) => Promise<ChannelMessageAck>; 
 }
