@@ -7,6 +7,7 @@
 /* eslint-disable */
 import _m0 from "protobufjs/minimal";
 import {
+  ChannelDescription as ChannelDescription1,
   ChannelMessage,
   ChannelMessageHeader,
   CreateEventRequest,
@@ -877,6 +878,10 @@ export interface RoleEvent {
   role: Role | undefined;
   status: number;
   user_id: string;
+  user_add_ids: string[];
+  user_remove_ids: string[];
+  active_permission_ids: string[];
+  remove_permission_ids: string[];
 }
 
 export interface ChannelDeletedEvent {
@@ -1056,19 +1061,15 @@ export interface CustomStatusEvent {
 /** A event when user is added to channel */
 export interface UserChannelAdded {
   /** the channel id */
-  channel_id: string;
+  channel_desc:
+    | ChannelDescription1
+    | undefined;
   /** the user */
   users: UserProfileRedis[];
   /** the custom status */
   status: string;
   /** the clan id */
   clan_id: string;
-  /** the channel type */
-  channel_type: number;
-  /** is public */
-  is_public: boolean;
-  /** the parent_id */
-  parent_id: string;
 }
 
 /**  */
@@ -1210,6 +1211,9 @@ export interface PermissionSetEvent {
 export interface PermissionChangedEvent {
   user_id: string;
   channel_id: string;
+  add_permissions: PermissionUpdate[];
+  remove_permissions: PermissionUpdate[];
+  default_permissions: PermissionUpdate[];
 }
 
 export interface MessageButtonClicked {
@@ -7070,7 +7074,15 @@ export const ChannelCreatedEvent = {
 };
 
 function createBaseRoleEvent(): RoleEvent {
-  return { role: undefined, status: 0, user_id: "" };
+  return {
+    role: undefined,
+    status: 0,
+    user_id: "",
+    user_add_ids: [],
+    user_remove_ids: [],
+    active_permission_ids: [],
+    remove_permission_ids: [],
+  };
 }
 
 export const RoleEvent = {
@@ -7083,6 +7095,18 @@ export const RoleEvent = {
     }
     if (message.user_id !== "") {
       writer.uint32(26).string(message.user_id);
+    }
+    for (const v of message.user_add_ids) {
+      writer.uint32(34).string(v!);
+    }
+    for (const v of message.user_remove_ids) {
+      writer.uint32(42).string(v!);
+    }
+    for (const v of message.active_permission_ids) {
+      writer.uint32(50).string(v!);
+    }
+    for (const v of message.remove_permission_ids) {
+      writer.uint32(58).string(v!);
     }
     return writer;
   },
@@ -7115,6 +7139,34 @@ export const RoleEvent = {
 
           message.user_id = reader.string();
           continue;
+        case 4:
+          if (tag !== 34) {
+            break;
+          }
+
+          message.user_add_ids.push(reader.string());
+          continue;
+        case 5:
+          if (tag !== 42) {
+            break;
+          }
+
+          message.user_remove_ids.push(reader.string());
+          continue;
+        case 6:
+          if (tag !== 50) {
+            break;
+          }
+
+          message.active_permission_ids.push(reader.string());
+          continue;
+        case 7:
+          if (tag !== 58) {
+            break;
+          }
+
+          message.remove_permission_ids.push(reader.string());
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -7129,6 +7181,18 @@ export const RoleEvent = {
       role: isSet(object.role) ? Role.fromJSON(object.role) : undefined,
       status: isSet(object.status) ? globalThis.Number(object.status) : 0,
       user_id: isSet(object.user_id) ? globalThis.String(object.user_id) : "",
+      user_add_ids: globalThis.Array.isArray(object?.user_add_ids)
+        ? object.user_add_ids.map((e: any) => globalThis.String(e))
+        : [],
+      user_remove_ids: globalThis.Array.isArray(object?.user_remove_ids)
+        ? object.user_remove_ids.map((e: any) => globalThis.String(e))
+        : [],
+      active_permission_ids: globalThis.Array.isArray(object?.active_permission_ids)
+        ? object.active_permission_ids.map((e: any) => globalThis.String(e))
+        : [],
+      remove_permission_ids: globalThis.Array.isArray(object?.remove_permission_ids)
+        ? object.remove_permission_ids.map((e: any) => globalThis.String(e))
+        : [],
     };
   },
 
@@ -7143,6 +7207,18 @@ export const RoleEvent = {
     if (message.user_id !== "") {
       obj.user_id = message.user_id;
     }
+    if (message.user_add_ids?.length) {
+      obj.user_add_ids = message.user_add_ids;
+    }
+    if (message.user_remove_ids?.length) {
+      obj.user_remove_ids = message.user_remove_ids;
+    }
+    if (message.active_permission_ids?.length) {
+      obj.active_permission_ids = message.active_permission_ids;
+    }
+    if (message.remove_permission_ids?.length) {
+      obj.remove_permission_ids = message.remove_permission_ids;
+    }
     return obj;
   },
 
@@ -7154,6 +7230,10 @@ export const RoleEvent = {
     message.role = (object.role !== undefined && object.role !== null) ? Role.fromPartial(object.role) : undefined;
     message.status = object.status ?? 0;
     message.user_id = object.user_id ?? "";
+    message.user_add_ids = object.user_add_ids?.map((e) => e) || [];
+    message.user_remove_ids = object.user_remove_ids?.map((e) => e) || [];
+    message.active_permission_ids = object.active_permission_ids?.map((e) => e) || [];
+    message.remove_permission_ids = object.remove_permission_ids?.map((e) => e) || [];
     return message;
   },
 };
@@ -8653,13 +8733,13 @@ export const CustomStatusEvent = {
 };
 
 function createBaseUserChannelAdded(): UserChannelAdded {
-  return { channel_id: "", users: [], status: "", clan_id: "", channel_type: 0, is_public: false, parent_id: "" };
+  return { channel_desc: undefined, users: [], status: "", clan_id: "" };
 }
 
 export const UserChannelAdded = {
   encode(message: UserChannelAdded, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.channel_id !== "") {
-      writer.uint32(10).string(message.channel_id);
+    if (message.channel_desc !== undefined) {
+      ChannelDescription1.encode(message.channel_desc, writer.uint32(10).fork()).ldelim();
     }
     for (const v of message.users) {
       UserProfileRedis.encode(v!, writer.uint32(18).fork()).ldelim();
@@ -8669,15 +8749,6 @@ export const UserChannelAdded = {
     }
     if (message.clan_id !== "") {
       writer.uint32(34).string(message.clan_id);
-    }
-    if (message.channel_type !== 0) {
-      writer.uint32(40).int32(message.channel_type);
-    }
-    if (message.is_public !== false) {
-      writer.uint32(48).bool(message.is_public);
-    }
-    if (message.parent_id !== "") {
-      writer.uint32(58).string(message.parent_id);
     }
     return writer;
   },
@@ -8694,7 +8765,7 @@ export const UserChannelAdded = {
             break;
           }
 
-          message.channel_id = reader.string();
+          message.channel_desc = ChannelDescription1.decode(reader, reader.uint32());
           continue;
         case 2:
           if (tag !== 18) {
@@ -8717,27 +8788,6 @@ export const UserChannelAdded = {
 
           message.clan_id = reader.string();
           continue;
-        case 5:
-          if (tag !== 40) {
-            break;
-          }
-
-          message.channel_type = reader.int32();
-          continue;
-        case 6:
-          if (tag !== 48) {
-            break;
-          }
-
-          message.is_public = reader.bool();
-          continue;
-        case 7:
-          if (tag !== 58) {
-            break;
-          }
-
-          message.parent_id = reader.string();
-          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -8749,20 +8799,17 @@ export const UserChannelAdded = {
 
   fromJSON(object: any): UserChannelAdded {
     return {
-      channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "",
+      channel_desc: isSet(object.channel_desc) ? ChannelDescription1.fromJSON(object.channel_desc) : undefined,
       users: globalThis.Array.isArray(object?.users) ? object.users.map((e: any) => UserProfileRedis.fromJSON(e)) : [],
       status: isSet(object.status) ? globalThis.String(object.status) : "",
       clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
-      channel_type: isSet(object.channel_type) ? globalThis.Number(object.channel_type) : 0,
-      is_public: isSet(object.is_public) ? globalThis.Boolean(object.is_public) : false,
-      parent_id: isSet(object.parent_id) ? globalThis.String(object.parent_id) : "",
     };
   },
 
   toJSON(message: UserChannelAdded): unknown {
     const obj: any = {};
-    if (message.channel_id !== "") {
-      obj.channel_id = message.channel_id;
+    if (message.channel_desc !== undefined) {
+      obj.channel_desc = ChannelDescription1.toJSON(message.channel_desc);
     }
     if (message.users?.length) {
       obj.users = message.users.map((e) => UserProfileRedis.toJSON(e));
@@ -8773,15 +8820,6 @@ export const UserChannelAdded = {
     if (message.clan_id !== "") {
       obj.clan_id = message.clan_id;
     }
-    if (message.channel_type !== 0) {
-      obj.channel_type = Math.round(message.channel_type);
-    }
-    if (message.is_public !== false) {
-      obj.is_public = message.is_public;
-    }
-    if (message.parent_id !== "") {
-      obj.parent_id = message.parent_id;
-    }
     return obj;
   },
 
@@ -8790,13 +8828,12 @@ export const UserChannelAdded = {
   },
   fromPartial<I extends Exact<DeepPartial<UserChannelAdded>, I>>(object: I): UserChannelAdded {
     const message = createBaseUserChannelAdded();
-    message.channel_id = object.channel_id ?? "";
+    message.channel_desc = (object.channel_desc !== undefined && object.channel_desc !== null)
+      ? ChannelDescription1.fromPartial(object.channel_desc)
+      : undefined;
     message.users = object.users?.map((e) => UserProfileRedis.fromPartial(e)) || [];
     message.status = object.status ?? "";
     message.clan_id = object.clan_id ?? "";
-    message.channel_type = object.channel_type ?? 0;
-    message.is_public = object.is_public ?? false;
-    message.parent_id = object.parent_id ?? "";
     return message;
   },
 };
@@ -10147,7 +10184,7 @@ export const PermissionSetEvent = {
 };
 
 function createBasePermissionChangedEvent(): PermissionChangedEvent {
-  return { user_id: "", channel_id: "" };
+  return { user_id: "", channel_id: "", add_permissions: [], remove_permissions: [], default_permissions: [] };
 }
 
 export const PermissionChangedEvent = {
@@ -10157,6 +10194,15 @@ export const PermissionChangedEvent = {
     }
     if (message.channel_id !== "") {
       writer.uint32(18).string(message.channel_id);
+    }
+    for (const v of message.add_permissions) {
+      PermissionUpdate.encode(v!, writer.uint32(26).fork()).ldelim();
+    }
+    for (const v of message.remove_permissions) {
+      PermissionUpdate.encode(v!, writer.uint32(34).fork()).ldelim();
+    }
+    for (const v of message.default_permissions) {
+      PermissionUpdate.encode(v!, writer.uint32(42).fork()).ldelim();
     }
     return writer;
   },
@@ -10182,6 +10228,27 @@ export const PermissionChangedEvent = {
 
           message.channel_id = reader.string();
           continue;
+        case 3:
+          if (tag !== 26) {
+            break;
+          }
+
+          message.add_permissions.push(PermissionUpdate.decode(reader, reader.uint32()));
+          continue;
+        case 4:
+          if (tag !== 34) {
+            break;
+          }
+
+          message.remove_permissions.push(PermissionUpdate.decode(reader, reader.uint32()));
+          continue;
+        case 5:
+          if (tag !== 42) {
+            break;
+          }
+
+          message.default_permissions.push(PermissionUpdate.decode(reader, reader.uint32()));
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -10195,6 +10262,15 @@ export const PermissionChangedEvent = {
     return {
       user_id: isSet(object.user_id) ? globalThis.String(object.user_id) : "",
       channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "",
+      add_permissions: globalThis.Array.isArray(object?.add_permissions)
+        ? object.add_permissions.map((e: any) => PermissionUpdate.fromJSON(e))
+        : [],
+      remove_permissions: globalThis.Array.isArray(object?.remove_permissions)
+        ? object.remove_permissions.map((e: any) => PermissionUpdate.fromJSON(e))
+        : [],
+      default_permissions: globalThis.Array.isArray(object?.default_permissions)
+        ? object.default_permissions.map((e: any) => PermissionUpdate.fromJSON(e))
+        : [],
     };
   },
 
@@ -10206,6 +10282,15 @@ export const PermissionChangedEvent = {
     if (message.channel_id !== "") {
       obj.channel_id = message.channel_id;
     }
+    if (message.add_permissions?.length) {
+      obj.add_permissions = message.add_permissions.map((e) => PermissionUpdate.toJSON(e));
+    }
+    if (message.remove_permissions?.length) {
+      obj.remove_permissions = message.remove_permissions.map((e) => PermissionUpdate.toJSON(e));
+    }
+    if (message.default_permissions?.length) {
+      obj.default_permissions = message.default_permissions.map((e) => PermissionUpdate.toJSON(e));
+    }
     return obj;
   },
 
@@ -10216,6 +10301,9 @@ export const PermissionChangedEvent = {
     const message = createBasePermissionChangedEvent();
     message.user_id = object.user_id ?? "";
     message.channel_id = object.channel_id ?? "";
+    message.add_permissions = object.add_permissions?.map((e) => PermissionUpdate.fromPartial(e)) || [];
+    message.remove_permissions = object.remove_permissions?.map((e) => PermissionUpdate.fromPartial(e)) || [];
+    message.default_permissions = object.default_permissions?.map((e) => PermissionUpdate.fromPartial(e)) || [];
     return message;
   },
 };
