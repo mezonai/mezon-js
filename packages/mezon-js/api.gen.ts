@@ -206,7 +206,7 @@ export interface MezonUpdateEventBody {
   channel_id?: string;
   //
   clan_id?: string;
-//
+  //
   creator_id?: string;
   //
   description?: string;
@@ -1179,7 +1179,7 @@ export interface ApiDeleteChannelDescRequest {
 export interface ApiDeleteEventRequest {
   //
   clan_id?: string;
-//
+  //
   creator_id?: string;
   //The id of a event.
   event_id?: string;
@@ -4923,7 +4923,7 @@ export class MezonApi {
     messageId?: string,
     direction?: number,
     limit?: number,
-    topicId?:string,
+    topicId?: string,
     options: any = {}
   ): Promise<ApiChannelMessageList> {
     if (channelId === null || channelId === undefined) {
@@ -5368,22 +5368,23 @@ export class MezonApi {
   }
 
   /** list user add channel by channel ids */
-  listChannelUsersUC(bearerToken: string,
-      channelId?:string,
-      limit?:number,
-      options: any = {}): Promise<ApiAllUsersAddChannelResponse> {
-    
+  listChannelUsersUC(
+    bearerToken: string,
+    channelId?: string,
+    limit?: number,
+    options: any = {}
+  ): Promise<ApiAllUsersAddChannelResponse> {
     const urlPath = "/v2/channeldesc/users";
     const queryParams = new Map<string, any>();
     queryParams.set("channel_id", channelId);
     queryParams.set("limit", limit);
 
-    let bodyJson : string = "";
+    let bodyJson: string = "";
 
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("GET", options, bodyJson);
     if (bearerToken) {
-        fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
     }
 
     return Promise.race([
@@ -5400,7 +5401,7 @@ export class MezonApi {
         setTimeout(reject, this.timeoutMs, "Request timed out.")
       ),
     ]);
-}
+  }
 
   /** Delete a channel by ID. */
   deleteChannelDesc(
@@ -6563,12 +6564,13 @@ export class MezonApi {
   }
 
   /** Delete a event by ID. */
-  deleteEvent(bearerToken: string,
-      eventId:string,
-      clanId?:string,
-      creatorId?:string,
-      options: any = {}): Promise<any> {
-    
+  deleteEvent(
+    bearerToken: string,
+    eventId: string,
+    clanId?: string,
+    creatorId?: string,
+    options: any = {}
+  ): Promise<any> {
     if (eventId === null || eventId === undefined) {
       throw new Error(
         "'eventId' is a required parameter but is null or undefined."
@@ -6580,7 +6582,7 @@ export class MezonApi {
     );
     const queryParams = new Map<string, any>();
     queryParams.set("clan_id", clanId);
-queryParams.set("creator_id", creatorId);
+    queryParams.set("creator_id", creatorId);
 
     let bodyJson: string = "";
 
@@ -7505,45 +7507,46 @@ queryParams.set("creator_id", creatorId);
   }
 
   /** Fetch list of notifications. */
-  listNotifications(bearerToken: string,
-    limit?:number,
-    clanId?:string,
-    notificationId?:string,
-    code?:number,
-    direction?:number,
-    options: any = {}): Promise<ApiNotificationList> {
-  
-  const urlPath = "/v2/notification";
-  const queryParams = new Map<string, any>();
-  queryParams.set("limit", limit);
-  queryParams.set("clan_id", clanId);
-  queryParams.set("notification_id", notificationId);
-  queryParams.set("code", code);
-  queryParams.set("direction", direction);
+  listNotifications(
+    bearerToken: string,
+    limit?: number,
+    clanId?: string,
+    notificationId?: string,
+    code?: number,
+    direction?: number,
+    options: any = {}
+  ): Promise<ApiNotificationList> {
+    const urlPath = "/v2/notification";
+    const queryParams = new Map<string, any>();
+    queryParams.set("limit", limit);
+    queryParams.set("clan_id", clanId);
+    queryParams.set("notification_id", notificationId);
+    queryParams.set("code", code);
+    queryParams.set("direction", direction);
 
-  let bodyJson : string = "";
+    let bodyJson: string = "";
 
-  const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
-  const fetchOptions = buildFetchOptions("GET", options, bodyJson);
-  if (bearerToken) {
+    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
+    const fetchOptions = buildFetchOptions("GET", options, bodyJson);
+    if (bearerToken) {
       fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-  }
+    }
 
-  return Promise.race([
-    fetch(fullUrl, fetchOptions).then((response) => {
-      if (response.status == 204) {
-        return response;
-      } else if (response.status >= 200 && response.status < 300) {
-        return response.json();
-      } else {
-        throw response;
-      }
-    }),
-    new Promise((_, reject) =>
-      setTimeout(reject, this.timeoutMs, "Request timed out.")
-    ),
-  ]);
-}
+    return Promise.race([
+      fetch(fullUrl, fetchOptions).then((response) => {
+        if (response.status == 204) {
+          return response;
+        } else if (response.status >= 200 && response.status < 300) {
+          return response.json();
+        } else {
+          throw response;
+        }
+      }),
+      new Promise((_, reject) =>
+        setTimeout(reject, this.timeoutMs, "Request timed out.")
+      ),
+    ]);
+  }
 
   /** set notification user channel. */
   setNotificationChannelSetting(
