@@ -1408,7 +1408,8 @@ export class Client {
     channelId: string,
     messageId?: string,
     direction?: number,
-    limit?: number
+    limit?: number,
+    topicId?:string
   ): Promise<ChannelMessageList> {
     if (
       this.autoRefreshSession &&
@@ -1425,7 +1426,8 @@ export class Client {
         channelId,
         messageId,
         direction,
-        limit
+        limit,
+        topicId
       )
       .then((response: ApiChannelMessageList) => {
         var result: ChannelMessageList = {
