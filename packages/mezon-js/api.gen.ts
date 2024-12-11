@@ -206,6 +206,8 @@ export interface MezonUpdateEventBody {
   channel_id?: string;
   //
   clan_id?: string;
+//
+  creator_id?: string;
   //
   description?: string;
   //
@@ -1177,6 +1179,8 @@ export interface ApiDeleteChannelDescRequest {
 export interface ApiDeleteEventRequest {
   //
   clan_id?: string;
+//
+  creator_id?: string;
   //The id of a event.
   event_id?: string;
 }
@@ -6557,12 +6561,12 @@ export class MezonApi {
   }
 
   /** Delete a event by ID. */
-  deleteEvent(
-    bearerToken: string,
-    eventId: string,
-    clanId?: string,
-    options: any = {}
-  ): Promise<any> {
+  deleteEvent(bearerToken: string,
+      eventId:string,
+      clanId?:string,
+      creatorId?:string,
+      options: any = {}): Promise<any> {
+    
     if (eventId === null || eventId === undefined) {
       throw new Error(
         "'eventId' is a required parameter but is null or undefined."
@@ -6574,6 +6578,7 @@ export class MezonApi {
     );
     const queryParams = new Map<string, any>();
     queryParams.set("clan_id", clanId);
+queryParams.set("creator_id", creatorId);
 
     let bodyJson: string = "";
 
