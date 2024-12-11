@@ -56,7 +56,6 @@ import {
   ApiChannelUserList,
   ApiClanUserList,
   ApiLinkInviteUserRequest,
-  ApiUpdateEventRequest,
   ApiLinkInviteUser,
   ApiInviteUserRes,
   ApiUploadAttachmentRequest,
@@ -158,6 +157,7 @@ import {
   ApiSdTopicRequest,
   ApiSdTopic,
   ApiPTTChannelUserList,
+  MezonUpdateEventBody,
 } from "./api.gen";
 
 import { Session } from "./session";
@@ -201,7 +201,7 @@ export enum WebrtcSignalingType {
   WEBRTC_SDP_OFFER = 1,
   WEBRTC_SDP_ANSWER = 2,
   WEBRTC_ICE_CANDIDATE = 3,
-  WEBRTC_SDP_QUIT = 4
+  WEBRTC_SDP_QUIT = 4,
 }
 
 /** Response for an RPC function executed on the server. */
@@ -1201,7 +1201,8 @@ export class Client {
   async deleteEvent(
     session: Session,
     eventId: string,
-    clanId: string
+    clanId: string,
+    creatorId: string
   ): Promise<boolean> {
     if (
       this.autoRefreshSession &&
@@ -1212,7 +1213,7 @@ export class Client {
     }
 
     return this.apiClient
-      .deleteEvent(session.token, eventId, clanId)
+      .deleteEvent(session.token, eventId, clanId, creatorId)
       .then((response: any) => {
         return response !== undefined;
       });
@@ -1409,7 +1410,7 @@ export class Client {
     messageId?: string,
     direction?: number,
     limit?: number,
-    topicId?:string
+    topicId?: string
   ): Promise<ChannelMessageList> {
     if (
       this.autoRefreshSession &&
@@ -2231,9 +2232,9 @@ export class Client {
     session: Session,
     clanId: string,
     limit?: number,
-    notificationId?:string,
-    code?:number,
-    direction?:number,
+    notificationId?: string,
+    code?: number,
+    direction?: number
   ): Promise<NotificationList> {
     if (
       this.autoRefreshSession &&
@@ -2244,7 +2245,14 @@ export class Client {
     }
 
     return this.apiClient
-      .listNotifications(session.token, limit, clanId, notificationId, code, direction)
+      .listNotifications(
+        session.token,
+        limit,
+        clanId,
+        notificationId,
+        code,
+        direction
+      )
       .then((response: ApiNotificationList) => {
         var result: NotificationList = {
           cacheable_cursor: response.cacheable_cursor,
@@ -2710,7 +2718,7 @@ export class Client {
   async updateEvent(
     session: Session,
     roleId: string,
-    request: ApiUpdateEventRequest
+    request: MezonUpdateEventBody
   ): Promise<boolean> {
     if (
       this.autoRefreshSession &&
