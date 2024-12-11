@@ -140,17 +140,13 @@ export interface UserProfileRedis {
 /** UserChannelAddedEvent */
 export interface UserChannelAddedEvent {
   // the channel id
-  channel_id: string;
+  channel_desc: ChannelDescription;
   // the user
   users: UserProfileRedis[];
   // the custom status
   status: string;
   // the clan id
   clan_id: string;
-  // the channel type
-  channel_type: number;
-  // is public
-  is_public: boolean;
 }
 
 export interface UserChannelRemovedEvent {
@@ -637,6 +633,10 @@ export interface RoleEvent {
   role: ApiRole;
   status: number;
   user_id: string;
+  user_add_ids: Array<string>;
+  user_remove_ids: Array<string>;
+  active_permission_ids: Array<string>;
+  remove_permission_ids: Array<string>;
 }
 
 export interface EventEmoji {
@@ -831,6 +831,9 @@ export interface PermissionSet {
 export interface PermissionChangedEvent {
   user_id: string;
   channel_id: string;
+  add_permissions: ApiPermissionUpdate[];
+  remove_permissions: ApiPermissionUpdate[];
+  default_permissions: ApiPermissionUpdate[];
 }
 
 export interface DropdownBoxSelected {

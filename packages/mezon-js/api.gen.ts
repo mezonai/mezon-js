@@ -201,6 +201,8 @@ export interface MezonUpdateClanStickerByIdBody {
 /** update a event within clan. */
 export interface MezonUpdateEventBody {
   //
+  event_id?: string;
+  //
   address?: string;
   //
   channel_id?: string;
