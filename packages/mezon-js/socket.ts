@@ -323,6 +323,8 @@ interface ChannelMessageRemove {
     message_id: string;
     // Is public
     is_public: boolean;
+    /** attachments */
+    has_attachment?: boolean;
   };
 }
 
@@ -977,7 +979,8 @@ export interface Socket {
     channel_id: string,
     mode: number,
     is_public: boolean,
-    message_id: string
+    message_id: string,
+    has_attachment?: boolean
   ): Promise<ChannelMessageAck>;
 
   /** Execute an RPC function to the server. */
@@ -2059,7 +2062,8 @@ export class DefaultSocket implements Socket {
     channel_id: string,
     mode: number,
     is_public: boolean,
-    message_id: string
+    message_id: string,
+    has_attachment?: boolean
   ): Promise<ChannelMessageAck> {
     const response = await this.send({
       channel_message_remove: {
@@ -2068,6 +2072,7 @@ export class DefaultSocket implements Socket {
         mode: mode,
         message_id: message_id,
         is_public: is_public,
+        has_attachment: has_attachment
       },
     });
 
