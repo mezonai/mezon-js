@@ -1044,7 +1044,11 @@ export interface ChannelAttachment {
   /** uploader */
   uploader: string;
   /** The UNIX time (for gRPC clients) or ISO string (for REST clients) when the group was created. */
-  create_time: Date | undefined;
+  create_time:
+    | Date
+    | undefined;
+  /** message id. */
+  message_id: string;
 }
 
 /** channel attachment list */
@@ -1150,7 +1154,11 @@ export interface ListChannelMessagesRequest {
     | number
     | undefined;
   /** True if listing should be older messages to newer, false if reverse. */
-  direction: number | undefined;
+  direction:
+    | number
+    | undefined;
+  /**  */
+  topic_id: string;
 }
 
 /** List friends for a user. */
@@ -10613,7 +10621,16 @@ export const VoiceChannelUserList = {
 };
 
 function createBaseChannelAttachment(): ChannelAttachment {
-  return { id: "", filename: "", filetype: "", filesize: "", url: "", uploader: "", create_time: undefined };
+  return {
+    id: "",
+    filename: "",
+    filetype: "",
+    filesize: "",
+    url: "",
+    uploader: "",
+    create_time: undefined,
+    message_id: "",
+  };
 }
 
 export const ChannelAttachment = {
@@ -10638,6 +10655,9 @@ export const ChannelAttachment = {
     }
     if (message.create_time !== undefined) {
       Timestamp.encode(toTimestamp(message.create_time), writer.uint32(58).fork()).ldelim();
+    }
+    if (message.message_id !== "") {
+      writer.uint32(66).string(message.message_id);
     }
     return writer;
   },
@@ -10698,6 +10718,13 @@ export const ChannelAttachment = {
 
           message.create_time = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
           continue;
+        case 8:
+          if (tag !== 66) {
+            break;
+          }
+
+          message.message_id = reader.string();
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -10716,6 +10743,7 @@ export const ChannelAttachment = {
       url: isSet(object.url) ? globalThis.String(object.url) : "",
       uploader: isSet(object.uploader) ? globalThis.String(object.uploader) : "",
       create_time: isSet(object.create_time) ? fromJsonTimestamp(object.create_time) : undefined,
+      message_id: isSet(object.message_id) ? globalThis.String(object.message_id) : "",
     };
   },
 
@@ -10742,6 +10770,9 @@ export const ChannelAttachment = {
     if (message.create_time !== undefined) {
       obj.create_time = message.create_time.toISOString();
     }
+    if (message.message_id !== "") {
+      obj.message_id = message.message_id;
+    }
     return obj;
   },
 
@@ -10757,6 +10788,7 @@ export const ChannelAttachment = {
     message.url = object.url ?? "";
     message.uploader = object.uploader ?? "";
     message.create_time = object.create_time ?? undefined;
+    message.message_id = object.message_id ?? "";
     return message;
   },
 };
@@ -11515,7 +11547,7 @@ export const LinkSteamRequest = {
 };
 
 function createBaseListChannelMessagesRequest(): ListChannelMessagesRequest {
-  return { clan_id: "", channel_id: "", message_id: "", limit: undefined, direction: undefined };
+  return { clan_id: "", channel_id: "", message_id: "", limit: undefined, direction: undefined, topic_id: "" };
 }
 
 export const ListChannelMessagesRequest = {
@@ -11534,6 +11566,9 @@ export const ListChannelMessagesRequest = {
     }
     if (message.direction !== undefined) {
       Int32Value.encode({ value: message.direction! }, writer.uint32(42).fork()).ldelim();
+    }
+    if (message.topic_id !== "") {
+      writer.uint32(50).string(message.topic_id);
     }
     return writer;
   },
@@ -11580,6 +11615,13 @@ export const ListChannelMessagesRequest = {
 
           message.direction = Int32Value.decode(reader, reader.uint32()).value;
           continue;
+        case 6:
+          if (tag !== 50) {
+            break;
+          }
+
+          message.topic_id = reader.string();
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -11596,6 +11638,7 @@ export const ListChannelMessagesRequest = {
       message_id: isSet(object.message_id) ? globalThis.String(object.message_id) : "",
       limit: isSet(object.limit) ? Number(object.limit) : undefined,
       direction: isSet(object.direction) ? Number(object.direction) : undefined,
+      topic_id: isSet(object.topic_id) ? globalThis.String(object.topic_id) : "",
     };
   },
 
@@ -11616,6 +11659,9 @@ export const ListChannelMessagesRequest = {
     if (message.direction !== undefined) {
       obj.direction = message.direction;
     }
+    if (message.topic_id !== "") {
+      obj.topic_id = message.topic_id;
+    }
     return obj;
   },
 
@@ -11629,6 +11675,7 @@ export const ListChannelMessagesRequest = {
     message.message_id = object.message_id ?? "";
     message.limit = object.limit ?? undefined;
     message.direction = object.direction ?? undefined;
+    message.topic_id = object.topic_id ?? "";
     return message;
   },
 };

@@ -4919,6 +4919,7 @@ export class MezonApi {
     messageId?: string,
     direction?: number,
     limit?: number,
+    topicId?:string,
     options: any = {}
   ): Promise<ApiChannelMessageList> {
     if (channelId === null || channelId === undefined) {
@@ -4935,6 +4936,7 @@ export class MezonApi {
     queryParams.set("message_id", messageId);
     queryParams.set("limit", limit);
     queryParams.set("direction", direction);
+    queryParams.set("topic_id", topicId);
 
     let bodyJson: string = "";
 
