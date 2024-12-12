@@ -2425,7 +2425,7 @@ export class DefaultSocket implements Socket {
       talk_ptt_channel: {
         clan_id: clanId,
         channel_id: channelId,
-        isTalk: isTalk,
+        is_talk: isTalk,
       },
     });
     return response.talk_ptt_channel;
