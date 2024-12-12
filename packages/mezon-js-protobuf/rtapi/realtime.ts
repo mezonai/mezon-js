@@ -1257,7 +1257,7 @@ export interface TalkPTTChannel {
   /** channel id */
   channel_id: string;
   /** is talk */
-  isTalk: boolean;
+  is_talk: boolean;
 }
 
 export interface ListActivity {
@@ -10670,7 +10670,7 @@ export const JoinPTTChannel = {
 };
 
 function createBaseTalkPTTChannel(): TalkPTTChannel {
-  return { user_id: "", clan_id: "", channel_id: "", isTalk: false };
+  return { user_id: "", clan_id: "", channel_id: "", is_talk: false };
 }
 
 export const TalkPTTChannel = {
@@ -10684,8 +10684,8 @@ export const TalkPTTChannel = {
     if (message.channel_id !== "") {
       writer.uint32(26).string(message.channel_id);
     }
-    if (message.isTalk !== false) {
-      writer.uint32(32).bool(message.isTalk);
+    if (message.is_talk !== false) {
+      writer.uint32(32).bool(message.is_talk);
     }
     return writer;
   },
@@ -10723,7 +10723,7 @@ export const TalkPTTChannel = {
             break;
           }
 
-          message.isTalk = reader.bool();
+          message.is_talk = reader.bool();
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -10739,7 +10739,7 @@ export const TalkPTTChannel = {
       user_id: isSet(object.user_id) ? globalThis.String(object.user_id) : "",
       clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
       channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "",
-      isTalk: isSet(object.isTalk) ? globalThis.Boolean(object.isTalk) : false,
+      is_talk: isSet(object.is_talk) ? globalThis.Boolean(object.is_talk) : false,
     };
   },
 
@@ -10754,8 +10754,8 @@ export const TalkPTTChannel = {
     if (message.channel_id !== "") {
       obj.channel_id = message.channel_id;
     }
-    if (message.isTalk !== false) {
-      obj.isTalk = message.isTalk;
+    if (message.is_talk !== false) {
+      obj.is_talk = message.is_talk;
     }
     return obj;
   },
@@ -10768,7 +10768,7 @@ export const TalkPTTChannel = {
     message.user_id = object.user_id ?? "";
     message.clan_id = object.clan_id ?? "";
     message.channel_id = object.channel_id ?? "";
-    message.isTalk = object.isTalk ?? false;
+    message.is_talk = object.is_talk ?? false;
     return message;
   },
 };
