@@ -894,7 +894,7 @@ export interface TalkPTTChannel {
   // clan id
   clan_id: string;
   // is talk
-  isTalk: boolean;
+  is_talk: boolean;
 }
 
 /** PTT Joined event */
