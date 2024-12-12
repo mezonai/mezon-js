@@ -879,7 +879,7 @@ export interface JoinPTTChannel {
   /** offer */
   json_data: string;
   /** receiver id */
-  receiver_id: string;
+  user_id: string;
   /** clan id */
   clan_id: string;
   /** is talk */
@@ -2411,7 +2411,6 @@ export class DefaultSocket implements Socket {
         channel_id: channelId,
         data_type: dataType,
         json_data: jsonData,
-        receiver_id: "",
       },
     });
     return response.join_ptt_channel;
