@@ -147,6 +147,12 @@ export interface UserChannelAddedEvent {
   status: string;
   // the clan id
   clan_id: string;
+  //
+  caller: UserProfileRedis;
+  //
+  create_time_second: number;
+  //
+  active: number;
 }
 
 export interface UserChannelRemovedEvent {
