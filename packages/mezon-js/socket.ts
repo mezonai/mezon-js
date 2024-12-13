@@ -111,6 +111,9 @@ interface ChannelLeave {
   };
 }
 
+interface FollowEvent {
+}
+
 export interface AddClanUserEvent {
   //the clan id
   clan_id: string;
@@ -960,6 +963,8 @@ export interface Socket {
 
   /** Join clan chat */
   joinClanChat(clan_id: string): Promise<ClanJoin>;
+
+  follower(): Promise<FollowEvent>;
 
   /** Join a chat channel on the server. */
   joinChat(
@@ -2026,6 +2031,14 @@ export class DefaultSocket implements Socket {
     });
 
     return response.clan_join;
+  }
+
+  async follower(): Promise<FollowEvent> {
+    const response = await this.send({
+      follow_event: {},
+    });
+
+    return response.follow_event;
   }
 
   async joinChat(
