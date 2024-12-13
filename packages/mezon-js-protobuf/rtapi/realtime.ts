@@ -1079,6 +1079,14 @@ export interface UserChannelAdded {
   status: string;
   /** the clan id */
   clan_id: string;
+  /**  */
+  caller:
+    | UserProfileRedis
+    | undefined;
+  /**  */
+  create_time_second: number;
+  /**  */
+  active: number;
 }
 
 /**  */
@@ -8820,7 +8828,15 @@ export const CustomStatusEvent = {
 };
 
 function createBaseUserChannelAdded(): UserChannelAdded {
-  return { channel_desc: undefined, users: [], status: "", clan_id: "" };
+  return {
+    channel_desc: undefined,
+    users: [],
+    status: "",
+    clan_id: "",
+    caller: undefined,
+    create_time_second: 0,
+    active: 0,
+  };
 }
 
 export const UserChannelAdded = {
@@ -8836,6 +8852,15 @@ export const UserChannelAdded = {
     }
     if (message.clan_id !== "") {
       writer.uint32(34).string(message.clan_id);
+    }
+    if (message.caller !== undefined) {
+      UserProfileRedis.encode(message.caller, writer.uint32(42).fork()).ldelim();
+    }
+    if (message.create_time_second !== 0) {
+      writer.uint32(48).uint32(message.create_time_second);
+    }
+    if (message.active !== 0) {
+      writer.uint32(56).int32(message.active);
     }
     return writer;
   },
@@ -8875,6 +8900,27 @@ export const UserChannelAdded = {
 
           message.clan_id = reader.string();
           continue;
+        case 5:
+          if (tag !== 42) {
+            break;
+          }
+
+          message.caller = UserProfileRedis.decode(reader, reader.uint32());
+          continue;
+        case 6:
+          if (tag !== 48) {
+            break;
+          }
+
+          message.create_time_second = reader.uint32();
+          continue;
+        case 7:
+          if (tag !== 56) {
+            break;
+          }
+
+          message.active = reader.int32();
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -8890,6 +8936,9 @@ export const UserChannelAdded = {
       users: globalThis.Array.isArray(object?.users) ? object.users.map((e: any) => UserProfileRedis.fromJSON(e)) : [],
       status: isSet(object.status) ? globalThis.String(object.status) : "",
       clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
+      caller: isSet(object.caller) ? UserProfileRedis.fromJSON(object.caller) : undefined,
+      create_time_second: isSet(object.create_time_second) ? globalThis.Number(object.create_time_second) : 0,
+      active: isSet(object.active) ? globalThis.Number(object.active) : 0,
     };
   },
 
@@ -8907,6 +8956,15 @@ export const UserChannelAdded = {
     if (message.clan_id !== "") {
       obj.clan_id = message.clan_id;
     }
+    if (message.caller !== undefined) {
+      obj.caller = UserProfileRedis.toJSON(message.caller);
+    }
+    if (message.create_time_second !== 0) {
+      obj.create_time_second = Math.round(message.create_time_second);
+    }
+    if (message.active !== 0) {
+      obj.active = Math.round(message.active);
+    }
     return obj;
   },
 
@@ -8921,6 +8979,11 @@ export const UserChannelAdded = {
     message.users = object.users?.map((e) => UserProfileRedis.fromPartial(e)) || [];
     message.status = object.status ?? "";
     message.clan_id = object.clan_id ?? "";
+    message.caller = (object.caller !== undefined && object.caller !== null)
+      ? UserProfileRedis.fromPartial(object.caller)
+      : undefined;
+    message.create_time_second = object.create_time_second ?? 0;
+    message.active = object.active ?? 0;
     return message;
   },
 };
