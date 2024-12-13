@@ -128,6 +128,21 @@ export class MezonClient implements Client {
     return msgReaction;
   }
 
+  /** React message */
+  async updateChatMessage(
+    clan_id: string,
+    channel_id: string,
+    mode: number,
+    is_public: boolean,
+    message_id: string,
+    content: any,
+    mentions?: Array<ApiMessageMention>,
+    attachments?: Array<ApiMessageAttachment>,
+    hideEditted?: boolean) {
+    const msgReaction = await this.socket.updateChatMessage(clan_id, channel_id, mode, is_public, message_id, content, mentions, attachments, hideEditted);
+    return msgReaction;
+  }
+
   /** Join to chat in clan when invited to clan */
   async joinClanChat(clan_id: string) {
     try {
