@@ -128,7 +128,7 @@ export class MezonClient implements Client {
     return msgReaction;
   }
 
-  /** React message */
+  /** Update message */
   async updateChatMessage(
     clan_id: string,
     channel_id: string,
