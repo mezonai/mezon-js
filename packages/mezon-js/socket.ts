@@ -961,7 +961,7 @@ export interface Socket {
   /** Join clan chat */
   joinClanChat(clan_id: string): Promise<ClanJoin>;
 
-  follower(): Promise<any>;
+  follower(): Promise<void>;
 
   /** Join a chat channel on the server. */
   joinChat(
@@ -2030,7 +2030,7 @@ export class DefaultSocket implements Socket {
     return response.clan_join;
   }
 
-  async follower(): Promise<any> {
+  async follower(): Promise<void> {
     const response = await this.send({
       follow_event: {},
     });
