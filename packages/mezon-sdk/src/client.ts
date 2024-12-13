@@ -139,8 +139,8 @@ export class MezonClient implements Client {
     mentions?: Array<ApiMessageMention>,
     attachments?: Array<ApiMessageAttachment>,
     hideEditted?: boolean) {
-    const msgReaction = await this.socket.updateChatMessage(clan_id, channel_id, mode, is_public, message_id, content, mentions, attachments, hideEditted);
-    return msgReaction;
+    const msgUpdated = await this.socket.updateChatMessage(clan_id, channel_id, mode, is_public, message_id, content, mentions, attachments, hideEditted);
+    return msgUpdated;
   }
 
   /** Join to chat in clan when invited to clan */
