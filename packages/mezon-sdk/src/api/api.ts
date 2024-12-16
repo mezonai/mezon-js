@@ -2978,7 +2978,7 @@ export interface DeleteCategoryOrderRequest {
   clan_id: string;
 }
 
-export interface OssrsHttpCallbackRequest {
+export interface StreamHttpCallbackRequest {
   action: string;
   client_id: string;
   ip: string;
@@ -2994,7 +2994,7 @@ export interface OssrsHttpCallbackRequest {
   service_id: string | undefined;
 }
 
-export interface OssrsHttpCallbackResponse {
+export interface StreamHttpCallbackResponse {
   code: number | undefined;
   msg: string;
 }
@@ -28362,7 +28362,7 @@ export const DeleteCategoryOrderRequest = {
   },
 };
 
-function createBaseOssrsHttpCallbackRequest(): OssrsHttpCallbackRequest {
+function createBaseStreamHttpCallbackRequest(): StreamHttpCallbackRequest {
   return {
     action: "",
     client_id: "",
@@ -28380,8 +28380,8 @@ function createBaseOssrsHttpCallbackRequest(): OssrsHttpCallbackRequest {
   };
 }
 
-export const OssrsHttpCallbackRequest = {
-  encode(message: OssrsHttpCallbackRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+export const StreamHttpCallbackRequest = {
+  encode(message: StreamHttpCallbackRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.action !== "") {
       writer.uint32(10).string(message.action);
     }
@@ -28424,10 +28424,10 @@ export const OssrsHttpCallbackRequest = {
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): OssrsHttpCallbackRequest {
+  decode(input: _m0.Reader | Uint8Array, length?: number): StreamHttpCallbackRequest {
     const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseOssrsHttpCallbackRequest();
+    const message = createBaseStreamHttpCallbackRequest();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -28531,7 +28531,7 @@ export const OssrsHttpCallbackRequest = {
     return message;
   },
 
-  fromJSON(object: any): OssrsHttpCallbackRequest {
+  fromJSON(object: any): StreamHttpCallbackRequest {
     return {
       action: isSet(object.action) ? globalThis.String(object.action) : "",
       client_id: isSet(object.client_id) ? globalThis.String(object.client_id) : "",
@@ -28549,7 +28549,7 @@ export const OssrsHttpCallbackRequest = {
     };
   },
 
-  toJSON(message: OssrsHttpCallbackRequest): unknown {
+  toJSON(message: StreamHttpCallbackRequest): unknown {
     const obj: any = {};
     if (message.action !== "") {
       obj.action = message.action;
@@ -28593,11 +28593,11 @@ export const OssrsHttpCallbackRequest = {
     return obj;
   },
 
-  create<I extends Exact<DeepPartial<OssrsHttpCallbackRequest>, I>>(base?: I): OssrsHttpCallbackRequest {
-    return OssrsHttpCallbackRequest.fromPartial(base ?? ({} as any));
+  create<I extends Exact<DeepPartial<StreamHttpCallbackRequest>, I>>(base?: I): StreamHttpCallbackRequest {
+    return StreamHttpCallbackRequest.fromPartial(base ?? ({} as any));
   },
-  fromPartial<I extends Exact<DeepPartial<OssrsHttpCallbackRequest>, I>>(object: I): OssrsHttpCallbackRequest {
-    const message = createBaseOssrsHttpCallbackRequest();
+  fromPartial<I extends Exact<DeepPartial<StreamHttpCallbackRequest>, I>>(object: I): StreamHttpCallbackRequest {
+    const message = createBaseStreamHttpCallbackRequest();
     message.action = object.action ?? "";
     message.client_id = object.client_id ?? "";
     message.ip = object.ip ?? "";
@@ -28615,12 +28615,12 @@ export const OssrsHttpCallbackRequest = {
   },
 };
 
-function createBaseOssrsHttpCallbackResponse(): OssrsHttpCallbackResponse {
+function createBaseStreamHttpCallbackResponse(): StreamHttpCallbackResponse {
   return { code: undefined, msg: "" };
 }
 
-export const OssrsHttpCallbackResponse = {
-  encode(message: OssrsHttpCallbackResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+export const StreamHttpCallbackResponse = {
+  encode(message: StreamHttpCallbackResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.code !== undefined) {
       Int32Value.encode({ value: message.code! }, writer.uint32(10).fork()).ldelim();
     }
@@ -28630,10 +28630,10 @@ export const OssrsHttpCallbackResponse = {
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): OssrsHttpCallbackResponse {
+  decode(input: _m0.Reader | Uint8Array, length?: number): StreamHttpCallbackResponse {
     const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseOssrsHttpCallbackResponse();
+    const message = createBaseStreamHttpCallbackResponse();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -28660,14 +28660,14 @@ export const OssrsHttpCallbackResponse = {
     return message;
   },
 
-  fromJSON(object: any): OssrsHttpCallbackResponse {
+  fromJSON(object: any): StreamHttpCallbackResponse {
     return {
       code: isSet(object.code) ? Number(object.code) : undefined,
       msg: isSet(object.msg) ? globalThis.String(object.msg) : "",
     };
   },
 
-  toJSON(message: OssrsHttpCallbackResponse): unknown {
+  toJSON(message: StreamHttpCallbackResponse): unknown {
     const obj: any = {};
     if (message.code !== undefined) {
       obj.code = message.code;
@@ -28678,11 +28678,11 @@ export const OssrsHttpCallbackResponse = {
     return obj;
   },
 
-  create<I extends Exact<DeepPartial<OssrsHttpCallbackResponse>, I>>(base?: I): OssrsHttpCallbackResponse {
-    return OssrsHttpCallbackResponse.fromPartial(base ?? ({} as any));
+  create<I extends Exact<DeepPartial<StreamHttpCallbackResponse>, I>>(base?: I): StreamHttpCallbackResponse {
+    return StreamHttpCallbackResponse.fromPartial(base ?? ({} as any));
   },
-  fromPartial<I extends Exact<DeepPartial<OssrsHttpCallbackResponse>, I>>(object: I): OssrsHttpCallbackResponse {
-    const message = createBaseOssrsHttpCallbackResponse();
+  fromPartial<I extends Exact<DeepPartial<StreamHttpCallbackResponse>, I>>(object: I): StreamHttpCallbackResponse {
+    const message = createBaseStreamHttpCallbackResponse();
     message.code = object.code ?? undefined;
     message.msg = object.msg ?? "";
     return message;
