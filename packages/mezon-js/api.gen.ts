@@ -1699,7 +1699,7 @@ export interface ApiNotificationUserChannel {
 }
 
 /**  */
-export interface ApiOssrsHttpCallbackRequest {
+export interface ApiStreamHttpCallbackRequest {
   //
   action?: string;
   //
@@ -1729,7 +1729,7 @@ export interface ApiOssrsHttpCallbackRequest {
 }
 
 /**  */
-export interface ApiOssrsHttpCallbackResponse {
+export interface ApiStreamHttpCallbackResponse {
   //
   code?: number;
   //
@@ -7805,18 +7805,18 @@ export class MezonApi {
     ]);
   }
 
-  /** Ossrs http callback. */
+  /** Stream http callback. */
   streamingServerCallback(
     bearerToken: string,
-    body: ApiOssrsHttpCallbackRequest,
+    body: ApiStreamHttpCallbackRequest,
     options: any = {}
-  ): Promise<ApiOssrsHttpCallbackResponse> {
+  ): Promise<ApiStreamHttpCallbackResponse> {
     if (body === null || body === undefined) {
       throw new Error(
         "'body' is a required parameter but is null or undefined."
       );
     }
-    const urlPath = "/v2/ossrs/callback";
+    const urlPath = "/v2/stream/callback";
     const queryParams = new Map<string, any>();
 
     let bodyJson: string = "";
