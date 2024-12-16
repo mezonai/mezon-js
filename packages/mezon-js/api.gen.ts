@@ -2553,12 +2553,10 @@ export interface MezonapiEvent {
 
 /**  */
 export interface MezonapiListAuditLog {
+//
+  date_log?: string;
   //
   logs?: Array<ApiAuditLog>;
-  //
-  page?: number;
-  //
-  page_size?: number;
   //
   total_count?: number;
 }
@@ -4587,22 +4585,19 @@ export class MezonApi {
   }
 
   /**  */
-  listAuditLog(
-    bearerToken: string,
-    actionLog?: string,
-    userId?: string,
-    clanId?: string,
-    page?: number,
-    pageSize?: number,
-    options: any = {}
-  ): Promise<MezonapiListAuditLog> {
+  listAuditLog(bearerToken: string,
+      actionLog?:string,
+      userId?:string,
+      clanId?:string,
+      dateLog?:string,
+      options: any = {}): Promise<MezonapiListAuditLog> {
+    
     const urlPath = "/v2/audit_log";
     const queryParams = new Map<string, any>();
     queryParams.set("action_log", actionLog);
     queryParams.set("user_id", userId);
     queryParams.set("clan_id", clanId);
-    queryParams.set("page", page);
-    queryParams.set("page_size", pageSize);
+    queryParams.set("date_log", dateLog);
 
     let bodyJson: string = "";
 

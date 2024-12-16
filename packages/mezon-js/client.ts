@@ -4456,8 +4456,7 @@ export class Client {
     actionLog?: string,
     userId?: string,
     clanId?: string,
-    page?: number,
-    pageSize?: number
+    date_log?: string
   ): Promise<MezonapiListAuditLog> {
     if (
       this.autoRefreshSession &&
@@ -4468,7 +4467,7 @@ export class Client {
     }
 
     return this.apiClient
-      .listAuditLog(session.token, actionLog, userId, clanId, page, pageSize)
+      .listAuditLog(session.token, actionLog, userId, clanId, date_log)
       .then((response: MezonapiListAuditLog) => {
         return response;
       });
