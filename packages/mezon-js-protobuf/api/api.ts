@@ -3474,8 +3474,7 @@ export interface AuditLog {
 
 export interface ListAuditLog {
   total_count: number;
-  page: number;
-  page_size: number;
+  date_log: string;
   logs: AuditLog[];
 }
 
@@ -3483,8 +3482,7 @@ export interface ListAuditLogRequest {
   action_log: string;
   user_id: string;
   clan_id: string;
-  page: number;
-  page_size: number;
+  date_log: string;
 }
 
 export interface TokenSentEvent {
@@ -33574,7 +33572,7 @@ export const AuditLog = {
 };
 
 function createBaseListAuditLog(): ListAuditLog {
-  return { total_count: 0, page: 0, page_size: 0, logs: [] };
+  return { total_count: 0, date_log: "", logs: [] };
 }
 
 export const ListAuditLog = {
@@ -33582,14 +33580,11 @@ export const ListAuditLog = {
     if (message.total_count !== 0) {
       writer.uint32(8).int32(message.total_count);
     }
-    if (message.page !== 0) {
-      writer.uint32(16).int32(message.page);
-    }
-    if (message.page_size !== 0) {
-      writer.uint32(24).int32(message.page_size);
+    if (message.date_log !== "") {
+      writer.uint32(18).string(message.date_log);
     }
     for (const v of message.logs) {
-      AuditLog.encode(v!, writer.uint32(34).fork()).ldelim();
+      AuditLog.encode(v!, writer.uint32(26).fork()).ldelim();
     }
     return writer;
   },
@@ -33609,21 +33604,14 @@ export const ListAuditLog = {
           message.total_count = reader.int32();
           continue;
         case 2:
-          if (tag !== 16) {
+          if (tag !== 18) {
             break;
           }
 
-          message.page = reader.int32();
+          message.date_log = reader.string();
           continue;
         case 3:
-          if (tag !== 24) {
-            break;
-          }
-
-          message.page_size = reader.int32();
-          continue;
-        case 4:
-          if (tag !== 34) {
+          if (tag !== 26) {
             break;
           }
 
@@ -33641,8 +33629,7 @@ export const ListAuditLog = {
   fromJSON(object: any): ListAuditLog {
     return {
       total_count: isSet(object.total_count) ? globalThis.Number(object.total_count) : 0,
-      page: isSet(object.page) ? globalThis.Number(object.page) : 0,
-      page_size: isSet(object.page_size) ? globalThis.Number(object.page_size) : 0,
+      date_log: isSet(object.date_log) ? globalThis.String(object.date_log) : "",
       logs: globalThis.Array.isArray(object?.logs) ? object.logs.map((e: any) => AuditLog.fromJSON(e)) : [],
     };
   },
@@ -33652,11 +33639,8 @@ export const ListAuditLog = {
     if (message.total_count !== 0) {
       obj.total_count = Math.round(message.total_count);
     }
-    if (message.page !== 0) {
-      obj.page = Math.round(message.page);
-    }
-    if (message.page_size !== 0) {
-      obj.page_size = Math.round(message.page_size);
+    if (message.date_log !== "") {
+      obj.date_log = message.date_log;
     }
     if (message.logs?.length) {
       obj.logs = message.logs.map((e) => AuditLog.toJSON(e));
@@ -33670,15 +33654,14 @@ export const ListAuditLog = {
   fromPartial<I extends Exact<DeepPartial<ListAuditLog>, I>>(object: I): ListAuditLog {
     const message = createBaseListAuditLog();
     message.total_count = object.total_count ?? 0;
-    message.page = object.page ?? 0;
-    message.page_size = object.page_size ?? 0;
+    message.date_log = object.date_log ?? "";
     message.logs = object.logs?.map((e) => AuditLog.fromPartial(e)) || [];
     return message;
   },
 };
 
 function createBaseListAuditLogRequest(): ListAuditLogRequest {
-  return { action_log: "", user_id: "", clan_id: "", page: 0, page_size: 0 };
+  return { action_log: "", user_id: "", clan_id: "", date_log: "" };
 }
 
 export const ListAuditLogRequest = {
@@ -33692,11 +33675,8 @@ export const ListAuditLogRequest = {
     if (message.clan_id !== "") {
       writer.uint32(26).string(message.clan_id);
     }
-    if (message.page !== 0) {
-      writer.uint32(32).int32(message.page);
-    }
-    if (message.page_size !== 0) {
-      writer.uint32(40).int32(message.page_size);
+    if (message.date_log !== "") {
+      writer.uint32(34).string(message.date_log);
     }
     return writer;
   },
@@ -33730,18 +33710,11 @@ export const ListAuditLogRequest = {
           message.clan_id = reader.string();
           continue;
         case 4:
-          if (tag !== 32) {
+          if (tag !== 34) {
             break;
           }
 
-          message.page = reader.int32();
-          continue;
-        case 5:
-          if (tag !== 40) {
-            break;
-          }
-
-          message.page_size = reader.int32();
+          message.date_log = reader.string();
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -33757,8 +33730,7 @@ export const ListAuditLogRequest = {
       action_log: isSet(object.action_log) ? globalThis.String(object.action_log) : "",
       user_id: isSet(object.user_id) ? globalThis.String(object.user_id) : "",
       clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
-      page: isSet(object.page) ? globalThis.Number(object.page) : 0,
-      page_size: isSet(object.page_size) ? globalThis.Number(object.page_size) : 0,
+      date_log: isSet(object.date_log) ? globalThis.String(object.date_log) : "",
     };
   },
 
@@ -33773,11 +33745,8 @@ export const ListAuditLogRequest = {
     if (message.clan_id !== "") {
       obj.clan_id = message.clan_id;
     }
-    if (message.page !== 0) {
-      obj.page = Math.round(message.page);
-    }
-    if (message.page_size !== 0) {
-      obj.page_size = Math.round(message.page_size);
+    if (message.date_log !== "") {
+      obj.date_log = message.date_log;
     }
     return obj;
   },
@@ -33790,8 +33759,7 @@ export const ListAuditLogRequest = {
     message.action_log = object.action_log ?? "";
     message.user_id = object.user_id ?? "";
     message.clan_id = object.clan_id ?? "";
-    message.page = object.page ?? 0;
-    message.page_size = object.page_size ?? 0;
+    message.date_log = object.date_log ?? "";
     return message;
   },
 };
