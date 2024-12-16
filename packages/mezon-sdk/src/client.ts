@@ -269,9 +269,7 @@ export class MezonClient implements Client {
   onerror(evt: ErrorEvent) {
     console.log(evt);
     if (this.isHardDisconnect) return;
-    if (this.socket.isOpen()) {
-      this.retriesConnect();
-    }
+    this.retriesConnect();
   }
 
   onheartbeattimeout() {
@@ -308,9 +306,7 @@ export class MezonClient implements Client {
             // Clear the current interval and restart with the new retry interval
             clearInterval(interval);
             setTimeout(() => {
-              if (this.socket.isOpen()) {
-                this.retriesConnect(); // Restart the connection attempt
-              }
+              this.retriesConnect(); // Restart the connection attempt
             }, retryInterval);
         }
     }, retryInterval);
