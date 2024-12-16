@@ -506,6 +506,8 @@ export interface ApiAuditLog {
   action_log?: string;
   //
   channel_id?: string;
+//
+  channel_label?: string;
   //
   clan_id?: string;
   //

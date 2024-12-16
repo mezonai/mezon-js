@@ -3470,6 +3470,7 @@ export interface AuditLog {
   details: string;
   time_log: Date | undefined;
   channel_id: string;
+  channel_label: string;
 }
 
 export interface ListAuditLog {
@@ -33393,6 +33394,7 @@ function createBaseAuditLog(): AuditLog {
     details: "",
     time_log: undefined,
     channel_id: "",
+    channel_label: "",
   };
 }
 
@@ -33424,6 +33426,9 @@ export const AuditLog = {
     }
     if (message.channel_id !== "") {
       writer.uint32(74).string(message.channel_id);
+    }
+    if (message.channel_label !== "") {
+      writer.uint32(82).string(message.channel_label);
     }
     return writer;
   },
@@ -33498,6 +33503,13 @@ export const AuditLog = {
 
           message.channel_id = reader.string();
           continue;
+        case 10:
+          if (tag !== 82) {
+            break;
+          }
+
+          message.channel_label = reader.string();
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -33518,6 +33530,7 @@ export const AuditLog = {
       details: isSet(object.details) ? globalThis.String(object.details) : "",
       time_log: isSet(object.time_log) ? fromJsonTimestamp(object.time_log) : undefined,
       channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "",
+      channel_label: isSet(object.channel_label) ? globalThis.String(object.channel_label) : "",
     };
   },
 
@@ -33550,6 +33563,9 @@ export const AuditLog = {
     if (message.channel_id !== "") {
       obj.channel_id = message.channel_id;
     }
+    if (message.channel_label !== "") {
+      obj.channel_label = message.channel_label;
+    }
     return obj;
   },
 
@@ -33567,6 +33583,7 @@ export const AuditLog = {
     message.details = object.details ?? "";
     message.time_log = object.time_log ?? undefined;
     message.channel_id = object.channel_id ?? "";
+    message.channel_label = object.channel_label ?? "";
     return message;
   },
 };
