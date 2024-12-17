@@ -48,13 +48,14 @@ export function b64DecodeUnicode(str: string) {
     }).join(''));
 }
 
-export function safeJSONParse(jsonString: string) {
+export function safeJSONParse(jsonStr: string) {
     try {        
-      const parsedData = JSON.parse(jsonString);
-  
+      const parsedData = JSON.parse(jsonStr);
       return parsedData;
     } catch (error) {
-        console.error('Error parsing JSON:', jsonString, error);
+        if (jsonStr !== "") {
+            console.error('Error parsing JSON:', jsonStr, error);
+        }
         return null; // Handle the error gracefully or throw an exception if necessary
     }
 }
