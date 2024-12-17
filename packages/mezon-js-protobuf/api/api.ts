@@ -3801,6 +3801,7 @@ export interface SdTopic {
   status: number;
   create_time: Date | undefined;
   update_time: Date | undefined;
+  message: ChannelMessage | undefined;
 }
 
 export interface SdTopicRequest {
@@ -36754,6 +36755,7 @@ function createBaseSdTopic(): SdTopic {
     status: 0,
     create_time: undefined,
     update_time: undefined,
+    message: undefined,
   };
 }
 
@@ -36782,6 +36784,9 @@ export const SdTopic = {
     }
     if (message.update_time !== undefined) {
       Timestamp.encode(toTimestamp(message.update_time), writer.uint32(66).fork()).ldelim();
+    }
+    if (message.message !== undefined) {
+      ChannelMessage.encode(message.message, writer.uint32(74).fork()).ldelim();
     }
     return writer;
   },
@@ -36849,6 +36854,13 @@ export const SdTopic = {
 
           message.update_time = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
           continue;
+        case 9:
+          if (tag !== 74) {
+            break;
+          }
+
+          message.message = ChannelMessage.decode(reader, reader.uint32());
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -36868,6 +36880,7 @@ export const SdTopic = {
       status: isSet(object.status) ? globalThis.Number(object.status) : 0,
       create_time: isSet(object.create_time) ? fromJsonTimestamp(object.create_time) : undefined,
       update_time: isSet(object.update_time) ? fromJsonTimestamp(object.update_time) : undefined,
+      message: isSet(object.message) ? ChannelMessage.fromJSON(object.message) : undefined,
     };
   },
 
@@ -36897,6 +36910,9 @@ export const SdTopic = {
     if (message.update_time !== undefined) {
       obj.update_time = message.update_time.toISOString();
     }
+    if (message.message !== undefined) {
+      obj.message = ChannelMessage.toJSON(message.message);
+    }
     return obj;
   },
 
@@ -36913,6 +36929,9 @@ export const SdTopic = {
     message.status = object.status ?? 0;
     message.create_time = object.create_time ?? undefined;
     message.update_time = object.update_time ?? undefined;
+    message.message = (object.message !== undefined && object.message !== null)
+      ? ChannelMessage.fromPartial(object.message)
+      : undefined;
     return message;
   },
 };
