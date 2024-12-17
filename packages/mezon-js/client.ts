@@ -4840,4 +4840,24 @@ export class Client {
         return response;
       });
   }
+
+  //**list sd topic */
+  async getTopicDetail(
+    session: Session,
+    topicId?: string,
+  ): Promise<ApiSdTopic> {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired((Date.now() + this.expiredTimespanMs) / 1000)
+    ) {
+      await this.sessionRefresh(session);
+    }
+
+    return this.apiClient
+      .getTopicDetail(session.token, topicId)
+      .then((response: ApiSdTopic) => {
+        return Promise.resolve(response);
+      });
+  }
 }
