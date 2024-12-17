@@ -2022,6 +2022,8 @@ export interface ApiSdTopic {
   status?: number;
   //
   update_time?: string;
+  //
+  message?: ApiChannelMessage;
 }
 
 /**  */
