@@ -1102,19 +1102,6 @@ export interface Socket {
     voiceUserId: string
   ): Promise<VoiceLeavedEvent>;
 
-  joinPTTChannel(
-    clanId: string,
-    channelId: string,
-    dataType: number,
-    jsonData: string
-  ): Promise<JoinPTTChannel>;
-
-  talkPTTChannel(
-    clanId: string,
-    channelId: string,
-    isTalk: boolean
-  ): Promise<TalkPTTChannel>;
-
   /* Set the heartbeat timeout used by the socket to detect if it has lost connectivity to the server. */
   setHeartbeatTimeoutMs(ms: number): void;
 
@@ -1987,9 +1974,7 @@ export class DefaultSocket implements Socket {
       | WebrtcSignalingFwd
       | IncomingCallPush
       | MessageButtonClicked
-      | DropdownBoxSelected
-      | JoinPTTChannel
-      | TalkPTTChannel,
+      | DropdownBoxSelected,
     sendTimeout = DefaultSocket.DefaultSendTimeoutMs
   ): Promise<any> {
     const untypedMessage = message as any;
@@ -2413,38 +2398,6 @@ export class DefaultSocket implements Socket {
       },
     });
     return response.webrtc_signaling_fwd;
-  }
-
-  async joinPTTChannel(
-    clanId: string,
-    channelId: string,
-    dataType: number,
-    jsonData: string
-  ): Promise<JoinPTTChannel> {
-    const response = await this.send({
-      join_ptt_channel: {
-        clan_id: clanId,
-        channel_id: channelId,
-        data_type: dataType,
-        json_data: jsonData,
-      },
-    });
-    return response.join_ptt_channel;
-  }
-
-  async talkPTTChannel(
-    clanId: string,
-    channelId: string,
-    isTalk: boolean
-  ): Promise<TalkPTTChannel> {
-    const response = await this.send({
-      talk_ptt_channel: {
-        clan_id: clanId,
-        channel_id: channelId,
-        is_talk: isTalk,
-      },
-    });
-    return response.talk_ptt_channel;
   }
 
   private async pingPong(): Promise<void> {
