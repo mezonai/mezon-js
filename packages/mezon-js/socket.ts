@@ -825,6 +825,14 @@ export interface StreamingEndedEvent {
   channel_id: string;
 }
 
+export interface ChannelAppEvent {
+  user_id: string;
+  username: string;
+  clan_id: string;
+  channel_id: string;
+  action: number;
+}
+
 export interface PermissionSet {
   /** Role ID */
   role_id: string;
@@ -1151,6 +1159,12 @@ export interface Socket {
     caller_id: string
   ) => Promise<IncomingCallPush>;
 
+  writeChannelAppEvent: (
+    clan_id: string,
+    channel_id: string,
+    action: number
+  ) => Promise<ChannelAppEvent>;
+
   /** Handle disconnect events received from the socket. */
   ondisconnect: (evt: Event) => void;
 
@@ -1302,6 +1316,8 @@ export interface Socket {
   onpttchannelleaved: (ptt_leaved_event: PTTLeavedEvent) => void;
 
   onsdtopicevent: (sd_topic_event: SdTopicEvent) => void;
+
+  onchannelappevent: (event: ChannelAppEvent) => void;
 }
 
 /** Reports an error received from a socket message. */
@@ -1577,6 +1593,8 @@ export class DefaultSocket implements Socket {
           this.onpttchannelleaved(<PTTLeavedEvent>message.ptt_leaved_event);
         } else if (message.sd_topic_event) {
           this.onsdtopicevent(<SdTopicEvent>message.sd_topic_event);
+        } else if (message.channel_app_event) {
+          this.onchannelappevent(<ChannelAppEvent>message.channel_app_event);
         } else {
           if (this.verbose && window && window.console) {
             console.log("Unrecognized message received: %o", message);
@@ -1955,11 +1973,19 @@ export class DefaultSocket implements Socket {
       console.log(talk_ptt_channel);
     }
   }
+
   onsdtopicevent(sd_topic_event: SdTopicEvent) {
     if (this.verbose && window && window.console) {
       console.log(sd_topic_event);
     }
   }
+
+  onchannelappevent(event: ChannelAppEvent) {
+    if (this.verbose && window && window.console) {
+      console.log(event);
+    }
+  }
+
   send(
     message:
       | ChannelJoin
@@ -1978,7 +2004,8 @@ export class DefaultSocket implements Socket {
       | WebrtcSignalingFwd
       | IncomingCallPush
       | MessageButtonClicked
-      | DropdownBoxSelected,
+      | DropdownBoxSelected
+      | ChannelAppEvent,
     sendTimeout = DefaultSocket.DefaultSendTimeoutMs
   ): Promise<any> {
     const untypedMessage = message as any;
@@ -2406,6 +2433,21 @@ export class DefaultSocket implements Socket {
       },
     });
     return response.webrtc_signaling_fwd;
+  }
+
+  async writeChannelAppEvent(
+    clan_id: string,
+    channel_id: string,
+    action: number
+  ): Promise<ChannelAppEvent> {
+    const response = await this.send({
+      channel_app_event: {
+        clan_id: clan_id,
+        channel_id: channel_id,
+        action: action
+      },
+    });
+    return response.channel_app_event;
   }
 
   private async pingPong(): Promise<void> {
