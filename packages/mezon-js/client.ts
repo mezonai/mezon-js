@@ -1139,7 +1139,8 @@ export class Client {
   async deleteCategoryDesc(
     session: Session,
     categoryId: string,
-    clanId: string
+    clanId: string,
+    categoryLabel?: string
   ): Promise<boolean> {
     if (
       this.autoRefreshSession &&
@@ -1150,7 +1151,7 @@ export class Client {
     }
 
     return this.apiClient
-      .deleteCategoryDesc(session.token, categoryId, clanId)
+      .deleteCategoryDesc(session.token, categoryId, clanId, categoryLabel)
       .then((response: any) => {
         return response !== undefined;
       });
@@ -1180,7 +1181,8 @@ export class Client {
   async deleteRole(
     session: Session,
     roleId: string,
-    clanId: string
+    clanId: string,
+    roleLabel?: string
   ): Promise<boolean> {
     if (
       this.autoRefreshSession &&
@@ -1191,7 +1193,7 @@ export class Client {
     }
 
     return this.apiClient
-      .deleteRole(session.token, roleId, "", clanId)
+      .deleteRole(session.token, roleId, "", clanId, roleLabel)
       .then((response: any) => {
         return response !== undefined;
       });
@@ -1202,7 +1204,8 @@ export class Client {
     session: Session,
     eventId: string,
     clanId: string,
-    creatorId: string
+    creatorId: string,
+    eventLabel?: string
   ): Promise<boolean> {
     if (
       this.autoRefreshSession &&
@@ -1213,7 +1216,7 @@ export class Client {
     }
 
     return this.apiClient
-      .deleteEvent(session.token, eventId, clanId, creatorId)
+      .deleteEvent(session.token, eventId, clanId, creatorId, eventLabel)
       .then((response: any) => {
         return response !== undefined;
       });
@@ -3154,7 +3157,12 @@ export class Client {
   }
 
   //**delete clan emoji by id */
-  async deleteByIdClanEmoji(session: Session, id: string, clan_id: string) {
+  async deleteByIdClanEmoji(
+    session: Session,
+    id: string,
+    clan_id: string,
+    emojiLabel?: string
+  ) {
     if (
       this.autoRefreshSession &&
       session.refresh_token &&
@@ -3164,7 +3172,7 @@ export class Client {
     }
 
     return this.apiClient
-      .deleteClanEmojiById(session.token, id, clan_id)
+      .deleteClanEmojiById(session.token, id, clan_id, emojiLabel)
       .then((response: any) => {
         return response !== undefined;
       });
@@ -3291,7 +3299,12 @@ export class Client {
   }
 
   //**Delete a sticker by ID*/
-  async deleteClanStickerById(session: Session, id: string, clan_id: string) {
+  async deleteClanStickerById(
+    session: Session,
+    id: string,
+    clan_id: string,
+    stickerLabel?: string
+  ) {
     if (
       this.autoRefreshSession &&
       session.refresh_token &&
@@ -3301,7 +3314,7 @@ export class Client {
     }
 
     return this.apiClient
-      .deleteClanStickerById(session.token, id, clan_id)
+      .deleteClanStickerById(session.token, id, clan_id, stickerLabel)
       .then((response: any) => {
         return response !== undefined;
       });
@@ -4844,7 +4857,7 @@ export class Client {
   //**list sd topic */
   async getTopicDetail(
     session: Session,
-    topicId?: string,
+    topicId?: string
   ): Promise<ApiSdTopic> {
     if (
       this.autoRefreshSession &&
