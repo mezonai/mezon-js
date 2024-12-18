@@ -7,6 +7,7 @@
 /* eslint-disable */
 import _m0 from "protobufjs/minimal";
 import {
+  ChannelDescription as ChannelDescription1,
   ChannelMessage,
   ChannelMessageHeader,
   CreateEventRequest,
@@ -302,7 +303,14 @@ export interface Envelope {
     | PTTLeavedEvent
     | undefined;
   /** Sd topic event */
-  sd_topic_event?: SdTopicEvent | undefined;
+  sd_topic_event?:
+    | SdTopicEvent
+    | undefined;
+  /**  */
+  follow_event?: FollowEvent | undefined;
+}
+
+export interface FollowEvent {
 }
 
 export interface IncomingCallPush {
@@ -537,6 +545,8 @@ export interface ChannelMessageUpdate {
   is_public: boolean;
   /** hide editted */
   hide_editted: boolean;
+  /** topic id */
+  topic_id: string;
 }
 
 /** Remove a message previously sent to a realtime channel. */
@@ -551,6 +561,8 @@ export interface ChannelMessageRemove {
   mode: number;
   /** is public */
   is_public: boolean;
+  /** has_attachments. */
+  has_attachment: boolean;
 }
 
 /** A set of joins and leaves on a particular channel. */
@@ -877,6 +889,10 @@ export interface RoleEvent {
   role: Role | undefined;
   status: number;
   user_id: string;
+  user_add_ids: string[];
+  user_remove_ids: string[];
+  active_permission_ids: string[];
+  remove_permission_ids: string[];
 }
 
 export interface ChannelDeletedEvent {
@@ -1056,19 +1072,23 @@ export interface CustomStatusEvent {
 /** A event when user is added to channel */
 export interface UserChannelAdded {
   /** the channel id */
-  channel_id: string;
+  channel_desc:
+    | ChannelDescription1
+    | undefined;
   /** the user */
   users: UserProfileRedis[];
   /** the custom status */
   status: string;
   /** the clan id */
   clan_id: string;
-  /** the channel type */
-  channel_type: number;
-  /** is public */
-  is_public: boolean;
-  /** the parent_id */
-  parent_id: string;
+  /**  */
+  caller:
+    | UserProfileRedis
+    | undefined;
+  /**  */
+  create_time_second: number;
+  /**  */
+  active: number;
 }
 
 /**  */
@@ -1210,6 +1230,9 @@ export interface PermissionSetEvent {
 export interface PermissionChangedEvent {
   user_id: string;
   channel_id: string;
+  add_permissions: PermissionUpdate[];
+  remove_permissions: PermissionUpdate[];
+  default_permissions: PermissionUpdate[];
 }
 
 export interface MessageButtonClicked {
@@ -1237,8 +1260,8 @@ export interface JoinPTTChannel {
   data_type: number;
   /** offer */
   json_data: string;
-  /** receiver id */
-  receiver_id: string;
+  /** user id */
+  user_id: string;
   /** clan id */
   clan_id: string;
 }
@@ -1246,10 +1269,12 @@ export interface JoinPTTChannel {
 export interface TalkPTTChannel {
   /** user id */
   user_id: string;
+  /** clan id */
+  clan_id: string;
   /** channel id */
   channel_id: string;
   /** is talk */
-  isTalk: boolean;
+  is_talk: boolean;
 }
 
 export interface ListActivity {
@@ -1374,6 +1399,7 @@ function createBaseEnvelope(): Envelope {
     ptt_joined_event: undefined,
     ptt_leaved_event: undefined,
     sd_topic_event: undefined,
+    follow_event: undefined,
   };
 }
 
@@ -1588,6 +1614,9 @@ export const Envelope = {
     }
     if (message.sd_topic_event !== undefined) {
       SdTopicEvent.encode(message.sd_topic_event, writer.uint32(562).fork()).ldelim();
+    }
+    if (message.follow_event !== undefined) {
+      FollowEvent.encode(message.follow_event, writer.uint32(570).fork()).ldelim();
     }
     return writer;
   },
@@ -2089,6 +2118,13 @@ export const Envelope = {
 
           message.sd_topic_event = SdTopicEvent.decode(reader, reader.uint32());
           continue;
+        case 71:
+          if (tag !== 570) {
+            break;
+          }
+
+          message.follow_event = FollowEvent.decode(reader, reader.uint32());
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -2258,6 +2294,7 @@ export const Envelope = {
       ptt_joined_event: isSet(object.ptt_joined_event) ? PTTJoinedEvent.fromJSON(object.ptt_joined_event) : undefined,
       ptt_leaved_event: isSet(object.ptt_leaved_event) ? PTTLeavedEvent.fromJSON(object.ptt_leaved_event) : undefined,
       sd_topic_event: isSet(object.sd_topic_event) ? SdTopicEvent.fromJSON(object.sd_topic_event) : undefined,
+      follow_event: isSet(object.follow_event) ? FollowEvent.fromJSON(object.follow_event) : undefined,
     };
   },
 
@@ -2472,6 +2509,9 @@ export const Envelope = {
     }
     if (message.sd_topic_event !== undefined) {
       obj.sd_topic_event = SdTopicEvent.toJSON(message.sd_topic_event);
+    }
+    if (message.follow_event !== undefined) {
+      obj.follow_event = FollowEvent.toJSON(message.follow_event);
     }
     return obj;
   },
@@ -2705,6 +2745,52 @@ export const Envelope = {
     message.sd_topic_event = (object.sd_topic_event !== undefined && object.sd_topic_event !== null)
       ? SdTopicEvent.fromPartial(object.sd_topic_event)
       : undefined;
+    message.follow_event = (object.follow_event !== undefined && object.follow_event !== null)
+      ? FollowEvent.fromPartial(object.follow_event)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseFollowEvent(): FollowEvent {
+  return {};
+}
+
+export const FollowEvent = {
+  encode(_: FollowEvent, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): FollowEvent {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseFollowEvent();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(_: any): FollowEvent {
+    return {};
+  },
+
+  toJSON(_: FollowEvent): unknown {
+    const obj: any = {};
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<FollowEvent>, I>>(base?: I): FollowEvent {
+    return FollowEvent.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<FollowEvent>, I>>(_: I): FollowEvent {
+    const message = createBaseFollowEvent();
     return message;
   },
 };
@@ -4582,6 +4668,7 @@ function createBaseChannelMessageUpdate(): ChannelMessageUpdate {
     mode: 0,
     is_public: false,
     hide_editted: false,
+    topic_id: "",
   };
 }
 
@@ -4613,6 +4700,9 @@ export const ChannelMessageUpdate = {
     }
     if (message.hide_editted !== false) {
       writer.uint32(72).bool(message.hide_editted);
+    }
+    if (message.topic_id !== "") {
+      writer.uint32(82).string(message.topic_id);
     }
     return writer;
   },
@@ -4687,6 +4777,13 @@ export const ChannelMessageUpdate = {
 
           message.hide_editted = reader.bool();
           continue;
+        case 10:
+          if (tag !== 82) {
+            break;
+          }
+
+          message.topic_id = reader.string();
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -4711,6 +4808,7 @@ export const ChannelMessageUpdate = {
       mode: isSet(object.mode) ? globalThis.Number(object.mode) : 0,
       is_public: isSet(object.is_public) ? globalThis.Boolean(object.is_public) : false,
       hide_editted: isSet(object.hide_editted) ? globalThis.Boolean(object.hide_editted) : false,
+      topic_id: isSet(object.topic_id) ? globalThis.String(object.topic_id) : "",
     };
   },
 
@@ -4743,6 +4841,9 @@ export const ChannelMessageUpdate = {
     if (message.hide_editted !== false) {
       obj.hide_editted = message.hide_editted;
     }
+    if (message.topic_id !== "") {
+      obj.topic_id = message.topic_id;
+    }
     return obj;
   },
 
@@ -4760,12 +4861,13 @@ export const ChannelMessageUpdate = {
     message.mode = object.mode ?? 0;
     message.is_public = object.is_public ?? false;
     message.hide_editted = object.hide_editted ?? false;
+    message.topic_id = object.topic_id ?? "";
     return message;
   },
 };
 
 function createBaseChannelMessageRemove(): ChannelMessageRemove {
-  return { clan_id: "", channel_id: "", message_id: "", mode: 0, is_public: false };
+  return { clan_id: "", channel_id: "", message_id: "", mode: 0, is_public: false, has_attachment: false };
 }
 
 export const ChannelMessageRemove = {
@@ -4784,6 +4886,9 @@ export const ChannelMessageRemove = {
     }
     if (message.is_public !== false) {
       writer.uint32(40).bool(message.is_public);
+    }
+    if (message.has_attachment !== false) {
+      writer.uint32(48).bool(message.has_attachment);
     }
     return writer;
   },
@@ -4830,6 +4935,13 @@ export const ChannelMessageRemove = {
 
           message.is_public = reader.bool();
           continue;
+        case 6:
+          if (tag !== 48) {
+            break;
+          }
+
+          message.has_attachment = reader.bool();
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -4846,6 +4958,7 @@ export const ChannelMessageRemove = {
       message_id: isSet(object.message_id) ? globalThis.String(object.message_id) : "",
       mode: isSet(object.mode) ? globalThis.Number(object.mode) : 0,
       is_public: isSet(object.is_public) ? globalThis.Boolean(object.is_public) : false,
+      has_attachment: isSet(object.has_attachment) ? globalThis.Boolean(object.has_attachment) : false,
     };
   },
 
@@ -4866,6 +4979,9 @@ export const ChannelMessageRemove = {
     if (message.is_public !== false) {
       obj.is_public = message.is_public;
     }
+    if (message.has_attachment !== false) {
+      obj.has_attachment = message.has_attachment;
+    }
     return obj;
   },
 
@@ -4879,6 +4995,7 @@ export const ChannelMessageRemove = {
     message.message_id = object.message_id ?? "";
     message.mode = object.mode ?? 0;
     message.is_public = object.is_public ?? false;
+    message.has_attachment = object.has_attachment ?? false;
     return message;
   },
 };
@@ -7070,7 +7187,15 @@ export const ChannelCreatedEvent = {
 };
 
 function createBaseRoleEvent(): RoleEvent {
-  return { role: undefined, status: 0, user_id: "" };
+  return {
+    role: undefined,
+    status: 0,
+    user_id: "",
+    user_add_ids: [],
+    user_remove_ids: [],
+    active_permission_ids: [],
+    remove_permission_ids: [],
+  };
 }
 
 export const RoleEvent = {
@@ -7083,6 +7208,18 @@ export const RoleEvent = {
     }
     if (message.user_id !== "") {
       writer.uint32(26).string(message.user_id);
+    }
+    for (const v of message.user_add_ids) {
+      writer.uint32(34).string(v!);
+    }
+    for (const v of message.user_remove_ids) {
+      writer.uint32(42).string(v!);
+    }
+    for (const v of message.active_permission_ids) {
+      writer.uint32(50).string(v!);
+    }
+    for (const v of message.remove_permission_ids) {
+      writer.uint32(58).string(v!);
     }
     return writer;
   },
@@ -7115,6 +7252,34 @@ export const RoleEvent = {
 
           message.user_id = reader.string();
           continue;
+        case 4:
+          if (tag !== 34) {
+            break;
+          }
+
+          message.user_add_ids.push(reader.string());
+          continue;
+        case 5:
+          if (tag !== 42) {
+            break;
+          }
+
+          message.user_remove_ids.push(reader.string());
+          continue;
+        case 6:
+          if (tag !== 50) {
+            break;
+          }
+
+          message.active_permission_ids.push(reader.string());
+          continue;
+        case 7:
+          if (tag !== 58) {
+            break;
+          }
+
+          message.remove_permission_ids.push(reader.string());
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -7129,6 +7294,18 @@ export const RoleEvent = {
       role: isSet(object.role) ? Role.fromJSON(object.role) : undefined,
       status: isSet(object.status) ? globalThis.Number(object.status) : 0,
       user_id: isSet(object.user_id) ? globalThis.String(object.user_id) : "",
+      user_add_ids: globalThis.Array.isArray(object?.user_add_ids)
+        ? object.user_add_ids.map((e: any) => globalThis.String(e))
+        : [],
+      user_remove_ids: globalThis.Array.isArray(object?.user_remove_ids)
+        ? object.user_remove_ids.map((e: any) => globalThis.String(e))
+        : [],
+      active_permission_ids: globalThis.Array.isArray(object?.active_permission_ids)
+        ? object.active_permission_ids.map((e: any) => globalThis.String(e))
+        : [],
+      remove_permission_ids: globalThis.Array.isArray(object?.remove_permission_ids)
+        ? object.remove_permission_ids.map((e: any) => globalThis.String(e))
+        : [],
     };
   },
 
@@ -7143,6 +7320,18 @@ export const RoleEvent = {
     if (message.user_id !== "") {
       obj.user_id = message.user_id;
     }
+    if (message.user_add_ids?.length) {
+      obj.user_add_ids = message.user_add_ids;
+    }
+    if (message.user_remove_ids?.length) {
+      obj.user_remove_ids = message.user_remove_ids;
+    }
+    if (message.active_permission_ids?.length) {
+      obj.active_permission_ids = message.active_permission_ids;
+    }
+    if (message.remove_permission_ids?.length) {
+      obj.remove_permission_ids = message.remove_permission_ids;
+    }
     return obj;
   },
 
@@ -7154,6 +7343,10 @@ export const RoleEvent = {
     message.role = (object.role !== undefined && object.role !== null) ? Role.fromPartial(object.role) : undefined;
     message.status = object.status ?? 0;
     message.user_id = object.user_id ?? "";
+    message.user_add_ids = object.user_add_ids?.map((e) => e) || [];
+    message.user_remove_ids = object.user_remove_ids?.map((e) => e) || [];
+    message.active_permission_ids = object.active_permission_ids?.map((e) => e) || [];
+    message.remove_permission_ids = object.remove_permission_ids?.map((e) => e) || [];
     return message;
   },
 };
@@ -8653,13 +8846,21 @@ export const CustomStatusEvent = {
 };
 
 function createBaseUserChannelAdded(): UserChannelAdded {
-  return { channel_id: "", users: [], status: "", clan_id: "", channel_type: 0, is_public: false, parent_id: "" };
+  return {
+    channel_desc: undefined,
+    users: [],
+    status: "",
+    clan_id: "",
+    caller: undefined,
+    create_time_second: 0,
+    active: 0,
+  };
 }
 
 export const UserChannelAdded = {
   encode(message: UserChannelAdded, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.channel_id !== "") {
-      writer.uint32(10).string(message.channel_id);
+    if (message.channel_desc !== undefined) {
+      ChannelDescription1.encode(message.channel_desc, writer.uint32(10).fork()).ldelim();
     }
     for (const v of message.users) {
       UserProfileRedis.encode(v!, writer.uint32(18).fork()).ldelim();
@@ -8670,14 +8871,14 @@ export const UserChannelAdded = {
     if (message.clan_id !== "") {
       writer.uint32(34).string(message.clan_id);
     }
-    if (message.channel_type !== 0) {
-      writer.uint32(40).int32(message.channel_type);
+    if (message.caller !== undefined) {
+      UserProfileRedis.encode(message.caller, writer.uint32(42).fork()).ldelim();
     }
-    if (message.is_public !== false) {
-      writer.uint32(48).bool(message.is_public);
+    if (message.create_time_second !== 0) {
+      writer.uint32(48).uint32(message.create_time_second);
     }
-    if (message.parent_id !== "") {
-      writer.uint32(58).string(message.parent_id);
+    if (message.active !== 0) {
+      writer.uint32(56).int32(message.active);
     }
     return writer;
   },
@@ -8694,7 +8895,7 @@ export const UserChannelAdded = {
             break;
           }
 
-          message.channel_id = reader.string();
+          message.channel_desc = ChannelDescription1.decode(reader, reader.uint32());
           continue;
         case 2:
           if (tag !== 18) {
@@ -8718,25 +8919,25 @@ export const UserChannelAdded = {
           message.clan_id = reader.string();
           continue;
         case 5:
-          if (tag !== 40) {
+          if (tag !== 42) {
             break;
           }
 
-          message.channel_type = reader.int32();
+          message.caller = UserProfileRedis.decode(reader, reader.uint32());
           continue;
         case 6:
           if (tag !== 48) {
             break;
           }
 
-          message.is_public = reader.bool();
+          message.create_time_second = reader.uint32();
           continue;
         case 7:
-          if (tag !== 58) {
+          if (tag !== 56) {
             break;
           }
 
-          message.parent_id = reader.string();
+          message.active = reader.int32();
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -8749,20 +8950,20 @@ export const UserChannelAdded = {
 
   fromJSON(object: any): UserChannelAdded {
     return {
-      channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "",
+      channel_desc: isSet(object.channel_desc) ? ChannelDescription1.fromJSON(object.channel_desc) : undefined,
       users: globalThis.Array.isArray(object?.users) ? object.users.map((e: any) => UserProfileRedis.fromJSON(e)) : [],
       status: isSet(object.status) ? globalThis.String(object.status) : "",
       clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
-      channel_type: isSet(object.channel_type) ? globalThis.Number(object.channel_type) : 0,
-      is_public: isSet(object.is_public) ? globalThis.Boolean(object.is_public) : false,
-      parent_id: isSet(object.parent_id) ? globalThis.String(object.parent_id) : "",
+      caller: isSet(object.caller) ? UserProfileRedis.fromJSON(object.caller) : undefined,
+      create_time_second: isSet(object.create_time_second) ? globalThis.Number(object.create_time_second) : 0,
+      active: isSet(object.active) ? globalThis.Number(object.active) : 0,
     };
   },
 
   toJSON(message: UserChannelAdded): unknown {
     const obj: any = {};
-    if (message.channel_id !== "") {
-      obj.channel_id = message.channel_id;
+    if (message.channel_desc !== undefined) {
+      obj.channel_desc = ChannelDescription1.toJSON(message.channel_desc);
     }
     if (message.users?.length) {
       obj.users = message.users.map((e) => UserProfileRedis.toJSON(e));
@@ -8773,14 +8974,14 @@ export const UserChannelAdded = {
     if (message.clan_id !== "") {
       obj.clan_id = message.clan_id;
     }
-    if (message.channel_type !== 0) {
-      obj.channel_type = Math.round(message.channel_type);
+    if (message.caller !== undefined) {
+      obj.caller = UserProfileRedis.toJSON(message.caller);
     }
-    if (message.is_public !== false) {
-      obj.is_public = message.is_public;
+    if (message.create_time_second !== 0) {
+      obj.create_time_second = Math.round(message.create_time_second);
     }
-    if (message.parent_id !== "") {
-      obj.parent_id = message.parent_id;
+    if (message.active !== 0) {
+      obj.active = Math.round(message.active);
     }
     return obj;
   },
@@ -8790,13 +8991,17 @@ export const UserChannelAdded = {
   },
   fromPartial<I extends Exact<DeepPartial<UserChannelAdded>, I>>(object: I): UserChannelAdded {
     const message = createBaseUserChannelAdded();
-    message.channel_id = object.channel_id ?? "";
+    message.channel_desc = (object.channel_desc !== undefined && object.channel_desc !== null)
+      ? ChannelDescription1.fromPartial(object.channel_desc)
+      : undefined;
     message.users = object.users?.map((e) => UserProfileRedis.fromPartial(e)) || [];
     message.status = object.status ?? "";
     message.clan_id = object.clan_id ?? "";
-    message.channel_type = object.channel_type ?? 0;
-    message.is_public = object.is_public ?? false;
-    message.parent_id = object.parent_id ?? "";
+    message.caller = (object.caller !== undefined && object.caller !== null)
+      ? UserProfileRedis.fromPartial(object.caller)
+      : undefined;
+    message.create_time_second = object.create_time_second ?? 0;
+    message.active = object.active ?? 0;
     return message;
   },
 };
@@ -10147,7 +10352,7 @@ export const PermissionSetEvent = {
 };
 
 function createBasePermissionChangedEvent(): PermissionChangedEvent {
-  return { user_id: "", channel_id: "" };
+  return { user_id: "", channel_id: "", add_permissions: [], remove_permissions: [], default_permissions: [] };
 }
 
 export const PermissionChangedEvent = {
@@ -10157,6 +10362,15 @@ export const PermissionChangedEvent = {
     }
     if (message.channel_id !== "") {
       writer.uint32(18).string(message.channel_id);
+    }
+    for (const v of message.add_permissions) {
+      PermissionUpdate.encode(v!, writer.uint32(26).fork()).ldelim();
+    }
+    for (const v of message.remove_permissions) {
+      PermissionUpdate.encode(v!, writer.uint32(34).fork()).ldelim();
+    }
+    for (const v of message.default_permissions) {
+      PermissionUpdate.encode(v!, writer.uint32(42).fork()).ldelim();
     }
     return writer;
   },
@@ -10182,6 +10396,27 @@ export const PermissionChangedEvent = {
 
           message.channel_id = reader.string();
           continue;
+        case 3:
+          if (tag !== 26) {
+            break;
+          }
+
+          message.add_permissions.push(PermissionUpdate.decode(reader, reader.uint32()));
+          continue;
+        case 4:
+          if (tag !== 34) {
+            break;
+          }
+
+          message.remove_permissions.push(PermissionUpdate.decode(reader, reader.uint32()));
+          continue;
+        case 5:
+          if (tag !== 42) {
+            break;
+          }
+
+          message.default_permissions.push(PermissionUpdate.decode(reader, reader.uint32()));
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -10195,6 +10430,15 @@ export const PermissionChangedEvent = {
     return {
       user_id: isSet(object.user_id) ? globalThis.String(object.user_id) : "",
       channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "",
+      add_permissions: globalThis.Array.isArray(object?.add_permissions)
+        ? object.add_permissions.map((e: any) => PermissionUpdate.fromJSON(e))
+        : [],
+      remove_permissions: globalThis.Array.isArray(object?.remove_permissions)
+        ? object.remove_permissions.map((e: any) => PermissionUpdate.fromJSON(e))
+        : [],
+      default_permissions: globalThis.Array.isArray(object?.default_permissions)
+        ? object.default_permissions.map((e: any) => PermissionUpdate.fromJSON(e))
+        : [],
     };
   },
 
@@ -10206,6 +10450,15 @@ export const PermissionChangedEvent = {
     if (message.channel_id !== "") {
       obj.channel_id = message.channel_id;
     }
+    if (message.add_permissions?.length) {
+      obj.add_permissions = message.add_permissions.map((e) => PermissionUpdate.toJSON(e));
+    }
+    if (message.remove_permissions?.length) {
+      obj.remove_permissions = message.remove_permissions.map((e) => PermissionUpdate.toJSON(e));
+    }
+    if (message.default_permissions?.length) {
+      obj.default_permissions = message.default_permissions.map((e) => PermissionUpdate.toJSON(e));
+    }
     return obj;
   },
 
@@ -10216,6 +10469,9 @@ export const PermissionChangedEvent = {
     const message = createBasePermissionChangedEvent();
     message.user_id = object.user_id ?? "";
     message.channel_id = object.channel_id ?? "";
+    message.add_permissions = object.add_permissions?.map((e) => PermissionUpdate.fromPartial(e)) || [];
+    message.remove_permissions = object.remove_permissions?.map((e) => PermissionUpdate.fromPartial(e)) || [];
+    message.default_permissions = object.default_permissions?.map((e) => PermissionUpdate.fromPartial(e)) || [];
     return message;
   },
 };
@@ -10444,7 +10700,7 @@ export const UnmuteEvent = {
 };
 
 function createBaseJoinPTTChannel(): JoinPTTChannel {
-  return { channel_id: "", data_type: 0, json_data: "", receiver_id: "", clan_id: "" };
+  return { channel_id: "", data_type: 0, json_data: "", user_id: "", clan_id: "" };
 }
 
 export const JoinPTTChannel = {
@@ -10458,8 +10714,8 @@ export const JoinPTTChannel = {
     if (message.json_data !== "") {
       writer.uint32(26).string(message.json_data);
     }
-    if (message.receiver_id !== "") {
-      writer.uint32(34).string(message.receiver_id);
+    if (message.user_id !== "") {
+      writer.uint32(34).string(message.user_id);
     }
     if (message.clan_id !== "") {
       writer.uint32(42).string(message.clan_id);
@@ -10500,7 +10756,7 @@ export const JoinPTTChannel = {
             break;
           }
 
-          message.receiver_id = reader.string();
+          message.user_id = reader.string();
           continue;
         case 5:
           if (tag !== 42) {
@@ -10523,7 +10779,7 @@ export const JoinPTTChannel = {
       channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "",
       data_type: isSet(object.data_type) ? globalThis.Number(object.data_type) : 0,
       json_data: isSet(object.json_data) ? globalThis.String(object.json_data) : "",
-      receiver_id: isSet(object.receiver_id) ? globalThis.String(object.receiver_id) : "",
+      user_id: isSet(object.user_id) ? globalThis.String(object.user_id) : "",
       clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
     };
   },
@@ -10539,8 +10795,8 @@ export const JoinPTTChannel = {
     if (message.json_data !== "") {
       obj.json_data = message.json_data;
     }
-    if (message.receiver_id !== "") {
-      obj.receiver_id = message.receiver_id;
+    if (message.user_id !== "") {
+      obj.user_id = message.user_id;
     }
     if (message.clan_id !== "") {
       obj.clan_id = message.clan_id;
@@ -10556,14 +10812,14 @@ export const JoinPTTChannel = {
     message.channel_id = object.channel_id ?? "";
     message.data_type = object.data_type ?? 0;
     message.json_data = object.json_data ?? "";
-    message.receiver_id = object.receiver_id ?? "";
+    message.user_id = object.user_id ?? "";
     message.clan_id = object.clan_id ?? "";
     return message;
   },
 };
 
 function createBaseTalkPTTChannel(): TalkPTTChannel {
-  return { user_id: "", channel_id: "", isTalk: false };
+  return { user_id: "", clan_id: "", channel_id: "", is_talk: false };
 }
 
 export const TalkPTTChannel = {
@@ -10571,11 +10827,14 @@ export const TalkPTTChannel = {
     if (message.user_id !== "") {
       writer.uint32(10).string(message.user_id);
     }
-    if (message.channel_id !== "") {
-      writer.uint32(18).string(message.channel_id);
+    if (message.clan_id !== "") {
+      writer.uint32(18).string(message.clan_id);
     }
-    if (message.isTalk !== false) {
-      writer.uint32(24).bool(message.isTalk);
+    if (message.channel_id !== "") {
+      writer.uint32(26).string(message.channel_id);
+    }
+    if (message.is_talk !== false) {
+      writer.uint32(32).bool(message.is_talk);
     }
     return writer;
   },
@@ -10599,14 +10858,21 @@ export const TalkPTTChannel = {
             break;
           }
 
-          message.channel_id = reader.string();
+          message.clan_id = reader.string();
           continue;
         case 3:
-          if (tag !== 24) {
+          if (tag !== 26) {
             break;
           }
 
-          message.isTalk = reader.bool();
+          message.channel_id = reader.string();
+          continue;
+        case 4:
+          if (tag !== 32) {
+            break;
+          }
+
+          message.is_talk = reader.bool();
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -10620,8 +10886,9 @@ export const TalkPTTChannel = {
   fromJSON(object: any): TalkPTTChannel {
     return {
       user_id: isSet(object.user_id) ? globalThis.String(object.user_id) : "",
+      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
       channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "",
-      isTalk: isSet(object.isTalk) ? globalThis.Boolean(object.isTalk) : false,
+      is_talk: isSet(object.is_talk) ? globalThis.Boolean(object.is_talk) : false,
     };
   },
 
@@ -10630,11 +10897,14 @@ export const TalkPTTChannel = {
     if (message.user_id !== "") {
       obj.user_id = message.user_id;
     }
+    if (message.clan_id !== "") {
+      obj.clan_id = message.clan_id;
+    }
     if (message.channel_id !== "") {
       obj.channel_id = message.channel_id;
     }
-    if (message.isTalk !== false) {
-      obj.isTalk = message.isTalk;
+    if (message.is_talk !== false) {
+      obj.is_talk = message.is_talk;
     }
     return obj;
   },
@@ -10645,8 +10915,9 @@ export const TalkPTTChannel = {
   fromPartial<I extends Exact<DeepPartial<TalkPTTChannel>, I>>(object: I): TalkPTTChannel {
     const message = createBaseTalkPTTChannel();
     message.user_id = object.user_id ?? "";
+    message.clan_id = object.clan_id ?? "";
     message.channel_id = object.channel_id ?? "";
-    message.isTalk = object.isTalk ?? false;
+    message.is_talk = object.is_talk ?? false;
     return message;
   },
 };

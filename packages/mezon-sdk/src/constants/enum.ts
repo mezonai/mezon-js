@@ -39,24 +39,61 @@ export enum InternalEventsSocket {
 }
 
 export enum Events {
+  /** Listen to messages user sends on the  channel, thread */
   ChannelMessage = InternalEventsSocket.ChannelMessage,
+
+  /** Listen to user react to messages on the channel, thread */
   MessageReaction = InternalEventsSocket.MessageReactionEvent,
+
+  /** Listen to user react to messages on the channel, thread */
   UserChannelRemoved = InternalEventsSocket.UserChannelRemovedEvent,
+
+  /** Listen to user leaved/removed in the channel */
   UserClanRemoved = InternalEventsSocket.UserClanRemovedEvent,
+
+  /** Listen to user added in the channel */
   UserChannelAdded = InternalEventsSocket.UserChannelAddedEvent,
+
+  /** Listen to channel created */
   ChannelCreated = InternalEventsSocket.ChannelCreatedEvent,
+
+  /** Listen to channel deleted */
   ChannelDeleted = InternalEventsSocket.ChannelDeletedEvent,
+
+  /** Listen to channel updated */
   ChannelUpdated = InternalEventsSocket.ChannelUpdatedEvent,
+
+  /** Listen to clan create new role */
   RoleEvent = InternalEventsSocket.RoleEvent,
+
+  /** Listen to users give coffee to each other */
   GiveCoffee = InternalEventsSocket.GiveCoffeeEvent,
+
+  /** Listen to assigning a role to user */
   RoleAssign = InternalEventsSocket.RoleAssignEvent,
+
+  /** Listen to user added in CLAN */
   AddClanUser = InternalEventsSocket.AddClanUserEvent,
+
+  /** Listen to user send token to each other */
   TokenSend = InternalEventsSocket.TokenSend,
+
+  /** Listen to clan create a new event */
   ClanEventCreated = InternalEventsSocket.ClanEventCreated,
+
+  /** Listen to user lick a button on embed message */
   MessageButtonClicked = InternalEventsSocket.MessageButtonClicked,
+
+  /** Listen to user joined a stream room */
   StreamingJoinedEvent = InternalEventsSocket.StreamingJoinedEvent,
+
+  /** Listen to user leaved a stream room */
   StreamingLeavedEvent = InternalEventsSocket.StreamingLeavedEvent,
+
+  /** Listen to user selected a input dropdown*/
   DropdownBoxSelected = InternalEventsSocket.DropdownBoxSelected,
+
+  /** Listen to user accepted call 1-1 */
   WebrtcSignalingFwd = InternalEventsSocket.WebrtcSignalingFwd,
 }
 

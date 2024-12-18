@@ -1,5 +1,6 @@
 import { CloseEvent, ErrorEvent } from "ws";
 import {
+  ApiChannelMessageHeader,
   ApiMessageAttachment,
   ApiMessageMention,
   ApiMessageReaction,
@@ -80,20 +81,40 @@ export interface ChannelLeave {
 /** UserChannelAddedEvent */
 export interface UserChannelAddedEvent {
   // the channel id
-  channel_id: string;
+  channel_desc: ChannelDescription;
   // the user
-  users: AddUsers[];
+  users: UserProfileRedis[];
   // the custom status
   status: string;
   // the clan id
   clan_id: string;
-  // the channel type
-  channel_type: number;
-  // is public
-  is_public: boolean;
-  // parent id
-  parent_id: string;
+  //
+  caller: UserProfileRedis;
+  //
+  create_time_second: number;
+  //
+  active: number;
 }
+
+export interface UserProfileRedis {
+  /** User IDs to follow. */
+  user_id: string;
+  /** Username to follow. */
+  username: string;
+  /** Avatar to follow. */
+  avatar: string;
+  /** Display name */
+  display_name: string;
+  /** about me */
+  about_me: string;
+  /** custom status */
+  custom_status: string;
+  /** create time */
+  create_time_second: number;
+  /** online */
+  online: boolean;
+}
+
 
 export interface AddUsers {
   // User IDs to follow.
@@ -374,6 +395,8 @@ export interface ChannelCreatedEvent {
   channel_type: number;
   // status
   status: number;
+  // meeting code
+  meeting_code?: string;
 }
 
 export interface ChannelDeletedEvent {
@@ -561,6 +584,12 @@ export interface ChannelDescription {
   type?: number;
   // The channel lable
   channel_label?: string;
+  /** The category of channel */
+  category_id: string;
+  /** The category name */
+  category_name: string;
+  // The app url
+  app_url?: string;
   // The channel private
   channel_private?: number;
   // meeting code
@@ -569,6 +598,8 @@ export interface ChannelDescription {
   clan_name?: string;
   //
   parrent_id?: string;
+  //
+  last_sent_message?: ApiChannelMessageHeader;
 }
 
 // A list of Channel
