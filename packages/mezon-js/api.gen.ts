@@ -838,6 +838,8 @@ export interface ApiChannelMessageHeader {
   //
   referece?: string;
   //
+  repliers?: Array<string>;
+  //
   sender_id?: string;
   //
   timestamp_seconds?: number;
@@ -2022,6 +2024,8 @@ export interface ApiSdTopic {
   creator_id?: string;
   //
   id?: string;
+  //
+  last_sent_message?: ApiChannelMessageHeader;
   //
   message_id?: string;
   //
