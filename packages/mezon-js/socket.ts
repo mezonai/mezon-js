@@ -311,6 +311,8 @@ interface ChannelMessageUpdate {
     mode: number;
     // Is public
     is_public: boolean;
+    //
+    topic_id?: string;
   };
 }
 
@@ -1011,7 +1013,8 @@ export interface Socket {
     content: any,
     mentions?: Array<ApiMessageMention>,
     attachments?: Array<ApiMessageAttachment>,
-    hideEditted?: boolean
+    hideEditted?: boolean,
+    topic_id?: string
   ): Promise<ChannelMessageAck>;
 
   /** Update the status for the current user online. */
@@ -1054,7 +1057,8 @@ export interface Socket {
     emoji: string,
     count: number,
     message_sender_id: string,
-    action_delete: boolean
+    action_delete: boolean,
+    topic_id?: string
   ): Promise<ApiMessageReaction>;
 
   /** Send last seen message */
@@ -2110,7 +2114,8 @@ export class DefaultSocket implements Socket {
     content: any,
     mentions?: Array<ApiMessageMention>,
     attachments?: Array<ApiMessageAttachment>,
-    hideEditted?: boolean
+    hideEditted?: boolean,
+    topic_id?: string
   ): Promise<ChannelMessageAck> {
     const response = await this.send({
       channel_message_update: {
@@ -2123,6 +2128,7 @@ export class DefaultSocket implements Socket {
         mode: mode,
         is_public: is_public,
         hide_editted: hideEditted,
+        topic_id: topic_id,
       },
     });
     return response.channel_message_ack;
@@ -2178,7 +2184,8 @@ export class DefaultSocket implements Socket {
     emoji: string,
     count: number,
     message_sender_id: string,
-    action_delete: boolean
+    action_delete: boolean,
+    topic_id?: string
   ): Promise<ApiMessageReaction> {
     const response = await this.send({
       message_reaction_event: {
@@ -2193,6 +2200,7 @@ export class DefaultSocket implements Socket {
         count: count,
         message_sender_id: message_sender_id,
         action: action_delete,
+        topic_id: topic_id,
       },
     });
     return response.message_reaction_event;

@@ -1575,6 +1575,8 @@ export interface ApiMessageReaction {
   channel_label: string;
   /** The message that user react */
   message_id: string;
+  //
+  topic_id?: string;
 }
 
 export interface ApiListChannelAppsResponse {
