@@ -668,6 +668,8 @@ export interface MessageReaction {
   message_sender_id: string;
   /** is public */
   is_public: boolean;
+  /** topic id */
+  topic_id: string;
 }
 
 /** Message attachment */
@@ -1044,7 +1046,11 @@ export interface ChannelAttachment {
   /** uploader */
   uploader: string;
   /** The UNIX time (for gRPC clients) or ISO string (for REST clients) when the group was created. */
-  create_time: Date | undefined;
+  create_time:
+    | Date
+    | undefined;
+  /** message id. */
+  message_id: string;
 }
 
 /** channel attachment list */
@@ -1150,7 +1156,11 @@ export interface ListChannelMessagesRequest {
     | number
     | undefined;
   /** True if listing should be older messages to newer, false if reverse. */
-  direction: number | undefined;
+  direction:
+    | number
+    | undefined;
+  /**  */
+  topic_id: string;
 }
 
 /** List friends for a user. */
@@ -2410,6 +2420,7 @@ export interface UpdateEventRequest {
   start_time: Date | undefined;
   end_time: Date | undefined;
   clan_id: string;
+  creator_id: string;
 }
 
 /** Delete a role the user has access to. */
@@ -2427,6 +2438,8 @@ export interface DeleteEventRequest {
   event_id: string;
   /** clan id */
   clan_id: string;
+  /** creator id */
+  creator_id: string;
 }
 
 /** Update fields in a given role. */
@@ -3459,12 +3472,12 @@ export interface AuditLog {
   details: string;
   time_log: Date | undefined;
   channel_id: string;
+  channel_label: string;
 }
 
 export interface ListAuditLog {
   total_count: number;
-  page: number;
-  page_size: number;
+  date_log: string;
   logs: AuditLog[];
 }
 
@@ -3472,8 +3485,7 @@ export interface ListAuditLogRequest {
   action_log: string;
   user_id: string;
   clan_id: string;
-  page: number;
-  page_size: number;
+  date_log: string;
 }
 
 export interface TokenSentEvent {
@@ -3791,6 +3803,7 @@ export interface SdTopic {
   status: number;
   create_time: Date | undefined;
   update_time: Date | undefined;
+  message: ChannelMessage | undefined;
 }
 
 export interface SdTopicRequest {
@@ -3807,6 +3820,10 @@ export interface SdTopicList {
 export interface ListSdTopicRequest {
   channel_id: string;
   limit: number;
+}
+
+export interface SdTopicDetailRequest {
+  topic_id: string;
 }
 
 export interface DeleteSdTopicRequest {
@@ -8121,6 +8138,7 @@ function createBaseMessageReaction(): MessageReaction {
     mode: 0,
     message_sender_id: "",
     is_public: false,
+    topic_id: "",
   };
 }
 
@@ -8167,6 +8185,9 @@ export const MessageReaction = {
     }
     if (message.is_public !== false) {
       writer.uint32(112).bool(message.is_public);
+    }
+    if (message.topic_id !== "") {
+      writer.uint32(122).string(message.topic_id);
     }
     return writer;
   },
@@ -8276,6 +8297,13 @@ export const MessageReaction = {
 
           message.is_public = reader.bool();
           continue;
+        case 15:
+          if (tag !== 122) {
+            break;
+          }
+
+          message.topic_id = reader.string();
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -8301,6 +8329,7 @@ export const MessageReaction = {
       mode: isSet(object.mode) ? globalThis.Number(object.mode) : 0,
       message_sender_id: isSet(object.message_sender_id) ? globalThis.String(object.message_sender_id) : "",
       is_public: isSet(object.is_public) ? globalThis.Boolean(object.is_public) : false,
+      topic_id: isSet(object.topic_id) ? globalThis.String(object.topic_id) : "",
     };
   },
 
@@ -8348,6 +8377,9 @@ export const MessageReaction = {
     if (message.is_public !== false) {
       obj.is_public = message.is_public;
     }
+    if (message.topic_id !== "") {
+      obj.topic_id = message.topic_id;
+    }
     return obj;
   },
 
@@ -8370,6 +8402,7 @@ export const MessageReaction = {
     message.mode = object.mode ?? 0;
     message.message_sender_id = object.message_sender_id ?? "";
     message.is_public = object.is_public ?? false;
+    message.topic_id = object.topic_id ?? "";
     return message;
   },
 };
@@ -10613,7 +10646,16 @@ export const VoiceChannelUserList = {
 };
 
 function createBaseChannelAttachment(): ChannelAttachment {
-  return { id: "", filename: "", filetype: "", filesize: "", url: "", uploader: "", create_time: undefined };
+  return {
+    id: "",
+    filename: "",
+    filetype: "",
+    filesize: "",
+    url: "",
+    uploader: "",
+    create_time: undefined,
+    message_id: "",
+  };
 }
 
 export const ChannelAttachment = {
@@ -10638,6 +10680,9 @@ export const ChannelAttachment = {
     }
     if (message.create_time !== undefined) {
       Timestamp.encode(toTimestamp(message.create_time), writer.uint32(58).fork()).ldelim();
+    }
+    if (message.message_id !== "") {
+      writer.uint32(66).string(message.message_id);
     }
     return writer;
   },
@@ -10698,6 +10743,13 @@ export const ChannelAttachment = {
 
           message.create_time = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
           continue;
+        case 8:
+          if (tag !== 66) {
+            break;
+          }
+
+          message.message_id = reader.string();
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -10716,6 +10768,7 @@ export const ChannelAttachment = {
       url: isSet(object.url) ? globalThis.String(object.url) : "",
       uploader: isSet(object.uploader) ? globalThis.String(object.uploader) : "",
       create_time: isSet(object.create_time) ? fromJsonTimestamp(object.create_time) : undefined,
+      message_id: isSet(object.message_id) ? globalThis.String(object.message_id) : "",
     };
   },
 
@@ -10742,6 +10795,9 @@ export const ChannelAttachment = {
     if (message.create_time !== undefined) {
       obj.create_time = message.create_time.toISOString();
     }
+    if (message.message_id !== "") {
+      obj.message_id = message.message_id;
+    }
     return obj;
   },
 
@@ -10757,6 +10813,7 @@ export const ChannelAttachment = {
     message.url = object.url ?? "";
     message.uploader = object.uploader ?? "";
     message.create_time = object.create_time ?? undefined;
+    message.message_id = object.message_id ?? "";
     return message;
   },
 };
@@ -11515,7 +11572,7 @@ export const LinkSteamRequest = {
 };
 
 function createBaseListChannelMessagesRequest(): ListChannelMessagesRequest {
-  return { clan_id: "", channel_id: "", message_id: "", limit: undefined, direction: undefined };
+  return { clan_id: "", channel_id: "", message_id: "", limit: undefined, direction: undefined, topic_id: "" };
 }
 
 export const ListChannelMessagesRequest = {
@@ -11534,6 +11591,9 @@ export const ListChannelMessagesRequest = {
     }
     if (message.direction !== undefined) {
       Int32Value.encode({ value: message.direction! }, writer.uint32(42).fork()).ldelim();
+    }
+    if (message.topic_id !== "") {
+      writer.uint32(50).string(message.topic_id);
     }
     return writer;
   },
@@ -11580,6 +11640,13 @@ export const ListChannelMessagesRequest = {
 
           message.direction = Int32Value.decode(reader, reader.uint32()).value;
           continue;
+        case 6:
+          if (tag !== 50) {
+            break;
+          }
+
+          message.topic_id = reader.string();
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -11596,6 +11663,7 @@ export const ListChannelMessagesRequest = {
       message_id: isSet(object.message_id) ? globalThis.String(object.message_id) : "",
       limit: isSet(object.limit) ? Number(object.limit) : undefined,
       direction: isSet(object.direction) ? Number(object.direction) : undefined,
+      topic_id: isSet(object.topic_id) ? globalThis.String(object.topic_id) : "",
     };
   },
 
@@ -11616,6 +11684,9 @@ export const ListChannelMessagesRequest = {
     if (message.direction !== undefined) {
       obj.direction = message.direction;
     }
+    if (message.topic_id !== "") {
+      obj.topic_id = message.topic_id;
+    }
     return obj;
   },
 
@@ -11629,6 +11700,7 @@ export const ListChannelMessagesRequest = {
     message.message_id = object.message_id ?? "";
     message.limit = object.limit ?? undefined;
     message.direction = object.direction ?? undefined;
+    message.topic_id = object.topic_id ?? "";
     return message;
   },
 };
@@ -22199,6 +22271,7 @@ function createBaseUpdateEventRequest(): UpdateEventRequest {
     start_time: undefined,
     end_time: undefined,
     clan_id: "",
+    creator_id: "",
   };
 }
 
@@ -22230,6 +22303,9 @@ export const UpdateEventRequest = {
     }
     if (message.clan_id !== "") {
       writer.uint32(74).string(message.clan_id);
+    }
+    if (message.creator_id !== "") {
+      writer.uint32(82).string(message.creator_id);
     }
     return writer;
   },
@@ -22304,6 +22380,13 @@ export const UpdateEventRequest = {
 
           message.clan_id = reader.string();
           continue;
+        case 10:
+          if (tag !== 82) {
+            break;
+          }
+
+          message.creator_id = reader.string();
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -22324,6 +22407,7 @@ export const UpdateEventRequest = {
       start_time: isSet(object.start_time) ? fromJsonTimestamp(object.start_time) : undefined,
       end_time: isSet(object.end_time) ? fromJsonTimestamp(object.end_time) : undefined,
       clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
+      creator_id: isSet(object.creator_id) ? globalThis.String(object.creator_id) : "",
     };
   },
 
@@ -22356,6 +22440,9 @@ export const UpdateEventRequest = {
     if (message.clan_id !== "") {
       obj.clan_id = message.clan_id;
     }
+    if (message.creator_id !== "") {
+      obj.creator_id = message.creator_id;
+    }
     return obj;
   },
 
@@ -22373,6 +22460,7 @@ export const UpdateEventRequest = {
     message.start_time = object.start_time ?? undefined;
     message.end_time = object.end_time ?? undefined;
     message.clan_id = object.clan_id ?? "";
+    message.creator_id = object.creator_id ?? "";
     return message;
   },
 };
@@ -22467,7 +22555,7 @@ export const DeleteRoleRequest = {
 };
 
 function createBaseDeleteEventRequest(): DeleteEventRequest {
-  return { event_id: "", clan_id: "" };
+  return { event_id: "", clan_id: "", creator_id: "" };
 }
 
 export const DeleteEventRequest = {
@@ -22477,6 +22565,9 @@ export const DeleteEventRequest = {
     }
     if (message.clan_id !== "") {
       writer.uint32(18).string(message.clan_id);
+    }
+    if (message.creator_id !== "") {
+      writer.uint32(26).string(message.creator_id);
     }
     return writer;
   },
@@ -22502,6 +22593,13 @@ export const DeleteEventRequest = {
 
           message.clan_id = reader.string();
           continue;
+        case 3:
+          if (tag !== 26) {
+            break;
+          }
+
+          message.creator_id = reader.string();
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -22515,6 +22613,7 @@ export const DeleteEventRequest = {
     return {
       event_id: isSet(object.event_id) ? globalThis.String(object.event_id) : "",
       clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
+      creator_id: isSet(object.creator_id) ? globalThis.String(object.creator_id) : "",
     };
   },
 
@@ -22526,6 +22625,9 @@ export const DeleteEventRequest = {
     if (message.clan_id !== "") {
       obj.clan_id = message.clan_id;
     }
+    if (message.creator_id !== "") {
+      obj.creator_id = message.creator_id;
+    }
     return obj;
   },
 
@@ -22536,6 +22638,7 @@ export const DeleteEventRequest = {
     const message = createBaseDeleteEventRequest();
     message.event_id = object.event_id ?? "";
     message.clan_id = object.clan_id ?? "";
+    message.creator_id = object.creator_id ?? "";
     return message;
   },
 };
@@ -33314,6 +33417,7 @@ function createBaseAuditLog(): AuditLog {
     details: "",
     time_log: undefined,
     channel_id: "",
+    channel_label: "",
   };
 }
 
@@ -33345,6 +33449,9 @@ export const AuditLog = {
     }
     if (message.channel_id !== "") {
       writer.uint32(74).string(message.channel_id);
+    }
+    if (message.channel_label !== "") {
+      writer.uint32(82).string(message.channel_label);
     }
     return writer;
   },
@@ -33419,6 +33526,13 @@ export const AuditLog = {
 
           message.channel_id = reader.string();
           continue;
+        case 10:
+          if (tag !== 82) {
+            break;
+          }
+
+          message.channel_label = reader.string();
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -33439,6 +33553,7 @@ export const AuditLog = {
       details: isSet(object.details) ? globalThis.String(object.details) : "",
       time_log: isSet(object.time_log) ? fromJsonTimestamp(object.time_log) : undefined,
       channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "",
+      channel_label: isSet(object.channel_label) ? globalThis.String(object.channel_label) : "",
     };
   },
 
@@ -33471,6 +33586,9 @@ export const AuditLog = {
     if (message.channel_id !== "") {
       obj.channel_id = message.channel_id;
     }
+    if (message.channel_label !== "") {
+      obj.channel_label = message.channel_label;
+    }
     return obj;
   },
 
@@ -33488,12 +33606,13 @@ export const AuditLog = {
     message.details = object.details ?? "";
     message.time_log = object.time_log ?? undefined;
     message.channel_id = object.channel_id ?? "";
+    message.channel_label = object.channel_label ?? "";
     return message;
   },
 };
 
 function createBaseListAuditLog(): ListAuditLog {
-  return { total_count: 0, page: 0, page_size: 0, logs: [] };
+  return { total_count: 0, date_log: "", logs: [] };
 }
 
 export const ListAuditLog = {
@@ -33501,14 +33620,11 @@ export const ListAuditLog = {
     if (message.total_count !== 0) {
       writer.uint32(8).int32(message.total_count);
     }
-    if (message.page !== 0) {
-      writer.uint32(16).int32(message.page);
-    }
-    if (message.page_size !== 0) {
-      writer.uint32(24).int32(message.page_size);
+    if (message.date_log !== "") {
+      writer.uint32(18).string(message.date_log);
     }
     for (const v of message.logs) {
-      AuditLog.encode(v!, writer.uint32(34).fork()).ldelim();
+      AuditLog.encode(v!, writer.uint32(26).fork()).ldelim();
     }
     return writer;
   },
@@ -33528,21 +33644,14 @@ export const ListAuditLog = {
           message.total_count = reader.int32();
           continue;
         case 2:
-          if (tag !== 16) {
+          if (tag !== 18) {
             break;
           }
 
-          message.page = reader.int32();
+          message.date_log = reader.string();
           continue;
         case 3:
-          if (tag !== 24) {
-            break;
-          }
-
-          message.page_size = reader.int32();
-          continue;
-        case 4:
-          if (tag !== 34) {
+          if (tag !== 26) {
             break;
           }
 
@@ -33560,8 +33669,7 @@ export const ListAuditLog = {
   fromJSON(object: any): ListAuditLog {
     return {
       total_count: isSet(object.total_count) ? globalThis.Number(object.total_count) : 0,
-      page: isSet(object.page) ? globalThis.Number(object.page) : 0,
-      page_size: isSet(object.page_size) ? globalThis.Number(object.page_size) : 0,
+      date_log: isSet(object.date_log) ? globalThis.String(object.date_log) : "",
       logs: globalThis.Array.isArray(object?.logs) ? object.logs.map((e: any) => AuditLog.fromJSON(e)) : [],
     };
   },
@@ -33571,11 +33679,8 @@ export const ListAuditLog = {
     if (message.total_count !== 0) {
       obj.total_count = Math.round(message.total_count);
     }
-    if (message.page !== 0) {
-      obj.page = Math.round(message.page);
-    }
-    if (message.page_size !== 0) {
-      obj.page_size = Math.round(message.page_size);
+    if (message.date_log !== "") {
+      obj.date_log = message.date_log;
     }
     if (message.logs?.length) {
       obj.logs = message.logs.map((e) => AuditLog.toJSON(e));
@@ -33589,15 +33694,14 @@ export const ListAuditLog = {
   fromPartial<I extends Exact<DeepPartial<ListAuditLog>, I>>(object: I): ListAuditLog {
     const message = createBaseListAuditLog();
     message.total_count = object.total_count ?? 0;
-    message.page = object.page ?? 0;
-    message.page_size = object.page_size ?? 0;
+    message.date_log = object.date_log ?? "";
     message.logs = object.logs?.map((e) => AuditLog.fromPartial(e)) || [];
     return message;
   },
 };
 
 function createBaseListAuditLogRequest(): ListAuditLogRequest {
-  return { action_log: "", user_id: "", clan_id: "", page: 0, page_size: 0 };
+  return { action_log: "", user_id: "", clan_id: "", date_log: "" };
 }
 
 export const ListAuditLogRequest = {
@@ -33611,11 +33715,8 @@ export const ListAuditLogRequest = {
     if (message.clan_id !== "") {
       writer.uint32(26).string(message.clan_id);
     }
-    if (message.page !== 0) {
-      writer.uint32(32).int32(message.page);
-    }
-    if (message.page_size !== 0) {
-      writer.uint32(40).int32(message.page_size);
+    if (message.date_log !== "") {
+      writer.uint32(34).string(message.date_log);
     }
     return writer;
   },
@@ -33649,18 +33750,11 @@ export const ListAuditLogRequest = {
           message.clan_id = reader.string();
           continue;
         case 4:
-          if (tag !== 32) {
+          if (tag !== 34) {
             break;
           }
 
-          message.page = reader.int32();
-          continue;
-        case 5:
-          if (tag !== 40) {
-            break;
-          }
-
-          message.page_size = reader.int32();
+          message.date_log = reader.string();
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -33676,8 +33770,7 @@ export const ListAuditLogRequest = {
       action_log: isSet(object.action_log) ? globalThis.String(object.action_log) : "",
       user_id: isSet(object.user_id) ? globalThis.String(object.user_id) : "",
       clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
-      page: isSet(object.page) ? globalThis.Number(object.page) : 0,
-      page_size: isSet(object.page_size) ? globalThis.Number(object.page_size) : 0,
+      date_log: isSet(object.date_log) ? globalThis.String(object.date_log) : "",
     };
   },
 
@@ -33692,11 +33785,8 @@ export const ListAuditLogRequest = {
     if (message.clan_id !== "") {
       obj.clan_id = message.clan_id;
     }
-    if (message.page !== 0) {
-      obj.page = Math.round(message.page);
-    }
-    if (message.page_size !== 0) {
-      obj.page_size = Math.round(message.page_size);
+    if (message.date_log !== "") {
+      obj.date_log = message.date_log;
     }
     return obj;
   },
@@ -33709,8 +33799,7 @@ export const ListAuditLogRequest = {
     message.action_log = object.action_log ?? "";
     message.user_id = object.user_id ?? "";
     message.clan_id = object.clan_id ?? "";
-    message.page = object.page ?? 0;
-    message.page_size = object.page_size ?? 0;
+    message.date_log = object.date_log ?? "";
     return message;
   },
 };
@@ -36684,6 +36773,7 @@ function createBaseSdTopic(): SdTopic {
     status: 0,
     create_time: undefined,
     update_time: undefined,
+    message: undefined,
   };
 }
 
@@ -36712,6 +36802,9 @@ export const SdTopic = {
     }
     if (message.update_time !== undefined) {
       Timestamp.encode(toTimestamp(message.update_time), writer.uint32(66).fork()).ldelim();
+    }
+    if (message.message !== undefined) {
+      ChannelMessage.encode(message.message, writer.uint32(74).fork()).ldelim();
     }
     return writer;
   },
@@ -36779,6 +36872,13 @@ export const SdTopic = {
 
           message.update_time = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
           continue;
+        case 9:
+          if (tag !== 74) {
+            break;
+          }
+
+          message.message = ChannelMessage.decode(reader, reader.uint32());
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -36798,6 +36898,7 @@ export const SdTopic = {
       status: isSet(object.status) ? globalThis.Number(object.status) : 0,
       create_time: isSet(object.create_time) ? fromJsonTimestamp(object.create_time) : undefined,
       update_time: isSet(object.update_time) ? fromJsonTimestamp(object.update_time) : undefined,
+      message: isSet(object.message) ? ChannelMessage.fromJSON(object.message) : undefined,
     };
   },
 
@@ -36827,6 +36928,9 @@ export const SdTopic = {
     if (message.update_time !== undefined) {
       obj.update_time = message.update_time.toISOString();
     }
+    if (message.message !== undefined) {
+      obj.message = ChannelMessage.toJSON(message.message);
+    }
     return obj;
   },
 
@@ -36843,6 +36947,9 @@ export const SdTopic = {
     message.status = object.status ?? 0;
     message.create_time = object.create_time ?? undefined;
     message.update_time = object.update_time ?? undefined;
+    message.message = (object.message !== undefined && object.message !== null)
+      ? ChannelMessage.fromPartial(object.message)
+      : undefined;
     return message;
   },
 };
@@ -37080,6 +37187,63 @@ export const ListSdTopicRequest = {
     const message = createBaseListSdTopicRequest();
     message.channel_id = object.channel_id ?? "";
     message.limit = object.limit ?? 0;
+    return message;
+  },
+};
+
+function createBaseSdTopicDetailRequest(): SdTopicDetailRequest {
+  return { topic_id: "" };
+}
+
+export const SdTopicDetailRequest = {
+  encode(message: SdTopicDetailRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.topic_id !== "") {
+      writer.uint32(10).string(message.topic_id);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): SdTopicDetailRequest {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseSdTopicDetailRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.topic_id = reader.string();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): SdTopicDetailRequest {
+    return { topic_id: isSet(object.topic_id) ? globalThis.String(object.topic_id) : "" };
+  },
+
+  toJSON(message: SdTopicDetailRequest): unknown {
+    const obj: any = {};
+    if (message.topic_id !== "") {
+      obj.topic_id = message.topic_id;
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<SdTopicDetailRequest>, I>>(base?: I): SdTopicDetailRequest {
+    return SdTopicDetailRequest.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<SdTopicDetailRequest>, I>>(object: I): SdTopicDetailRequest {
+    const message = createBaseSdTopicDetailRequest();
+    message.topic_id = object.topic_id ?? "";
     return message;
   },
 };
