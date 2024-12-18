@@ -506,7 +506,7 @@ export interface ApiAuditLog {
   action_log?: string;
   //
   channel_id?: string;
-//
+  //
   channel_label?: string;
   //
   clan_id?: string;
@@ -1187,6 +1187,8 @@ export interface ApiDeleteEventRequest {
   creator_id?: string;
   //The id of a event.
   event_id?: string;
+  //
+  event_label?: string;
 }
 
 /** Delete a role the user has access to. */
@@ -1197,6 +1199,8 @@ export interface ApiDeleteRoleRequest {
   clan_id?: string;
   //The id of a role.
   role_id?: string;
+  //
+  role_label?: string;
 }
 
 /** Storage objects to delete. */
@@ -2312,6 +2316,8 @@ export interface ApiUpdateRoleChannelRequest {
   //The ID of the role to update.
   role_id?: string;
   //
+  role_label?: string;
+  //The ID of the role to update.
   user_id?: string;
 }
 
@@ -2559,7 +2565,7 @@ export interface MezonapiEvent {
 
 /**  */
 export interface MezonapiListAuditLog {
-//
+  //
   date_log?: string;
   //
   logs?: Array<ApiAuditLog>;
@@ -4591,13 +4597,14 @@ export class MezonApi {
   }
 
   /**  */
-  listAuditLog(bearerToken: string,
-      actionLog?:string,
-      userId?:string,
-      clanId?:string,
-      dateLog?:string,
-      options: any = {}): Promise<MezonapiListAuditLog> {
-    
+  listAuditLog(
+    bearerToken: string,
+    actionLog?: string,
+    userId?: string,
+    clanId?: string,
+    dateLog?: string,
+    options: any = {}
+  ): Promise<MezonapiListAuditLog> {
     const urlPath = "/v2/audit_log";
     const queryParams = new Map<string, any>();
     queryParams.set("action_log", actionLog);
@@ -6022,6 +6029,7 @@ export class MezonApi {
     bearerToken: string,
     categoryId: string,
     clanId: string,
+    categoryLabel?: string,
     options: any = {}
   ): Promise<any> {
     if (categoryId === null || categoryId === undefined) {
@@ -6039,6 +6047,7 @@ export class MezonApi {
         .replace("{categoryId}", encodeURIComponent(String(categoryId)))
         .replace("{clanId}", encodeURIComponent(String(clanId)));
     const queryParams = new Map<string, any>();
+    queryParams.set("category_label", categoryLabel);
 
     let bodyJson: string = "";
 
@@ -6265,6 +6274,7 @@ export class MezonApi {
     bearerToken: string,
     id: string,
     clanId?: string,
+    emojiLabel?: string,
     options: any = {}
   ): Promise<any> {
     if (id === null || id === undefined) {
@@ -6276,6 +6286,7 @@ export class MezonApi {
     );
     const queryParams = new Map<string, any>();
     queryParams.set("clan_id", clanId);
+    queryParams.set("emoji_label", emojiLabel);
 
     const body = { clan_id: clanId };
     let bodyJson = JSON.stringify(body || {});
@@ -6572,6 +6583,7 @@ export class MezonApi {
     eventId: string,
     clanId?: string,
     creatorId?: string,
+    eventLabel?: string,
     options: any = {}
   ): Promise<any> {
     if (eventId === null || eventId === undefined) {
@@ -6586,6 +6598,7 @@ export class MezonApi {
     const queryParams = new Map<string, any>();
     queryParams.set("clan_id", clanId);
     queryParams.set("creator_id", creatorId);
+    queryParams.set("event_label", eventLabel);
 
     let bodyJson: string = "";
 
@@ -8444,6 +8457,7 @@ export class MezonApi {
     roleId: string,
     channelId?: string,
     clanId?: string,
+    roleLabel?: string,
     options: any = {}
   ): Promise<any> {
     if (roleId === null || roleId === undefined) {
@@ -8458,6 +8472,8 @@ export class MezonApi {
     const queryParams = new Map<string, any>();
     queryParams.set("channel_id", channelId);
     queryParams.set("clan_id", clanId);
+    queryParams.set("role_label", roleLabel);
+
     let bodyJson: string = "";
 
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
@@ -8884,6 +8900,7 @@ export class MezonApi {
     bearerToken: string,
     id: string,
     clanId?: string,
+    stickerLabel?: string,
     options: any = {}
   ): Promise<any> {
     if (id === null || id === undefined) {
@@ -8895,6 +8912,7 @@ export class MezonApi {
     );
     const queryParams = new Map<string, any>();
     queryParams.set("clan_id", clanId);
+    queryParams.set("sticker_label", stickerLabel);
 
     let bodyJson: string = "";
 
@@ -10606,37 +10624,38 @@ export class MezonApi {
     ]);
   }
 
-    /** Sd Topic */
-    getTopicDetail(bearerToken: string,
-        topicId?:string,
-        options: any = {}): Promise<ApiSdTopic> {
-      
-      const urlPath = "/v2/sdmtopic/detail";
-      const queryParams = new Map<string, any>();
-      queryParams.set("topic_id", topicId);
-  
-      let bodyJson : string = "";
-  
-      const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
-      const fetchOptions = buildFetchOptions("GET", options, bodyJson);
-      if (bearerToken) {
-          fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-      }
-  
-      return Promise.race([
-        fetch(fullUrl, fetchOptions).then((response) => {
-          if (response.status == 204) {
-            return response;
-          } else if (response.status >= 200 && response.status < 300) {
-            return response.json();
-          } else {
-            throw response;
-          }
-        }),
-        new Promise((_, reject) =>
-          setTimeout(reject, this.timeoutMs, "Request timed out.")
-        ),
-      ]);
+  /** Sd Topic */
+  getTopicDetail(
+    bearerToken: string,
+    topicId?: string,
+    options: any = {}
+  ): Promise<ApiSdTopic> {
+    const urlPath = "/v2/sdmtopic/detail";
+    const queryParams = new Map<string, any>();
+    queryParams.set("topic_id", topicId);
+
+    let bodyJson: string = "";
+
+    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
+    const fetchOptions = buildFetchOptions("GET", options, bodyJson);
+    if (bearerToken) {
+      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+    }
+
+    return Promise.race([
+      fetch(fullUrl, fetchOptions).then((response) => {
+        if (response.status == 204) {
+          return response;
+        } else if (response.status >= 200 && response.status < 300) {
+          return response.json();
+        } else {
+          throw response;
+        }
+      }),
+      new Promise((_, reject) =>
+        setTimeout(reject, this.timeoutMs, "Request timed out.")
+      ),
+    ]);
   }
 
   /** List onboarding step. */

@@ -1790,6 +1790,7 @@ export interface CreateCategoryDescRequest {
 export interface DeleteCategoryDescRequest {
   category_id: string;
   clan_id: string;
+  category_label: string;
 }
 
 /** A list of clan */
@@ -2431,6 +2432,8 @@ export interface DeleteRoleRequest {
   channel_id: string;
   /** clan_id */
   clan_id: string;
+  /** role label */
+  role_label: string;
 }
 
 export interface DeleteEventRequest {
@@ -2440,6 +2443,8 @@ export interface DeleteEventRequest {
   clan_id: string;
   /** creator id */
   creator_id: string;
+  /** event label */
+  event_label: string;
 }
 
 /** Update fields in a given role. */
@@ -2479,6 +2484,8 @@ export interface UpdateRoleChannelRequest {
   channel_id: string;
   /** The ID of the role to update. */
   user_id: string;
+  /** Role label */
+  role_label: string;
 }
 
 export interface PermissionUpdate {
@@ -2681,6 +2688,7 @@ export interface ClanEmojiGetByClanIdRequest {
 export interface ClanEmojiDeleteRequest {
   id: string;
   clan_id: string;
+  emoji_label: string;
 }
 
 export interface ClanEmojiUpdateRequest {
@@ -2788,6 +2796,7 @@ export interface ClanStickerUpdateByIdRequest {
 export interface ClanStickerDeleteRequest {
   id: string;
   clan_id: string;
+  sticker_label: string;
 }
 
 export interface ChangeChannelCategoryRequest {
@@ -16296,7 +16305,7 @@ export const CreateCategoryDescRequest = {
 };
 
 function createBaseDeleteCategoryDescRequest(): DeleteCategoryDescRequest {
-  return { category_id: "", clan_id: "" };
+  return { category_id: "", clan_id: "", category_label: "" };
 }
 
 export const DeleteCategoryDescRequest = {
@@ -16306,6 +16315,9 @@ export const DeleteCategoryDescRequest = {
     }
     if (message.clan_id !== "") {
       writer.uint32(18).string(message.clan_id);
+    }
+    if (message.category_label !== "") {
+      writer.uint32(26).string(message.category_label);
     }
     return writer;
   },
@@ -16331,6 +16343,13 @@ export const DeleteCategoryDescRequest = {
 
           message.clan_id = reader.string();
           continue;
+        case 3:
+          if (tag !== 26) {
+            break;
+          }
+
+          message.category_label = reader.string();
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -16344,6 +16363,7 @@ export const DeleteCategoryDescRequest = {
     return {
       category_id: isSet(object.category_id) ? globalThis.String(object.category_id) : "",
       clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
+      category_label: isSet(object.category_label) ? globalThis.String(object.category_label) : "",
     };
   },
 
@@ -16355,6 +16375,9 @@ export const DeleteCategoryDescRequest = {
     if (message.clan_id !== "") {
       obj.clan_id = message.clan_id;
     }
+    if (message.category_label !== "") {
+      obj.category_label = message.category_label;
+    }
     return obj;
   },
 
@@ -16365,6 +16388,7 @@ export const DeleteCategoryDescRequest = {
     const message = createBaseDeleteCategoryDescRequest();
     message.category_id = object.category_id ?? "";
     message.clan_id = object.clan_id ?? "";
+    message.category_label = object.category_label ?? "";
     return message;
   },
 };
@@ -22466,7 +22490,7 @@ export const UpdateEventRequest = {
 };
 
 function createBaseDeleteRoleRequest(): DeleteRoleRequest {
-  return { role_id: "", channel_id: "", clan_id: "" };
+  return { role_id: "", channel_id: "", clan_id: "", role_label: "" };
 }
 
 export const DeleteRoleRequest = {
@@ -22479,6 +22503,9 @@ export const DeleteRoleRequest = {
     }
     if (message.clan_id !== "") {
       writer.uint32(26).string(message.clan_id);
+    }
+    if (message.role_label !== "") {
+      writer.uint32(34).string(message.role_label);
     }
     return writer;
   },
@@ -22511,6 +22538,13 @@ export const DeleteRoleRequest = {
 
           message.clan_id = reader.string();
           continue;
+        case 4:
+          if (tag !== 34) {
+            break;
+          }
+
+          message.role_label = reader.string();
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -22525,6 +22559,7 @@ export const DeleteRoleRequest = {
       role_id: isSet(object.role_id) ? globalThis.String(object.role_id) : "",
       channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "",
       clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
+      role_label: isSet(object.role_label) ? globalThis.String(object.role_label) : "",
     };
   },
 
@@ -22539,6 +22574,9 @@ export const DeleteRoleRequest = {
     if (message.clan_id !== "") {
       obj.clan_id = message.clan_id;
     }
+    if (message.role_label !== "") {
+      obj.role_label = message.role_label;
+    }
     return obj;
   },
 
@@ -22550,12 +22588,13 @@ export const DeleteRoleRequest = {
     message.role_id = object.role_id ?? "";
     message.channel_id = object.channel_id ?? "";
     message.clan_id = object.clan_id ?? "";
+    message.role_label = object.role_label ?? "";
     return message;
   },
 };
 
 function createBaseDeleteEventRequest(): DeleteEventRequest {
-  return { event_id: "", clan_id: "", creator_id: "" };
+  return { event_id: "", clan_id: "", creator_id: "", event_label: "" };
 }
 
 export const DeleteEventRequest = {
@@ -22568,6 +22607,9 @@ export const DeleteEventRequest = {
     }
     if (message.creator_id !== "") {
       writer.uint32(26).string(message.creator_id);
+    }
+    if (message.event_label !== "") {
+      writer.uint32(34).string(message.event_label);
     }
     return writer;
   },
@@ -22600,6 +22642,13 @@ export const DeleteEventRequest = {
 
           message.creator_id = reader.string();
           continue;
+        case 4:
+          if (tag !== 34) {
+            break;
+          }
+
+          message.event_label = reader.string();
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -22614,6 +22663,7 @@ export const DeleteEventRequest = {
       event_id: isSet(object.event_id) ? globalThis.String(object.event_id) : "",
       clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
       creator_id: isSet(object.creator_id) ? globalThis.String(object.creator_id) : "",
+      event_label: isSet(object.event_label) ? globalThis.String(object.event_label) : "",
     };
   },
 
@@ -22628,6 +22678,9 @@ export const DeleteEventRequest = {
     if (message.creator_id !== "") {
       obj.creator_id = message.creator_id;
     }
+    if (message.event_label !== "") {
+      obj.event_label = message.event_label;
+    }
     return obj;
   },
 
@@ -22639,6 +22692,7 @@ export const DeleteEventRequest = {
     message.event_id = object.event_id ?? "";
     message.clan_id = object.clan_id ?? "";
     message.creator_id = object.creator_id ?? "";
+    message.event_label = object.event_label ?? "";
     return message;
   },
 };
@@ -22905,7 +22959,7 @@ export const UpdateRoleRequest = {
 };
 
 function createBaseUpdateRoleChannelRequest(): UpdateRoleChannelRequest {
-  return { role_id: "", permission_update: [], max_permission_id: "", channel_id: "", user_id: "" };
+  return { role_id: "", permission_update: [], max_permission_id: "", channel_id: "", user_id: "", role_label: "" };
 }
 
 export const UpdateRoleChannelRequest = {
@@ -22924,6 +22978,9 @@ export const UpdateRoleChannelRequest = {
     }
     if (message.user_id !== "") {
       writer.uint32(42).string(message.user_id);
+    }
+    if (message.role_label !== "") {
+      writer.uint32(50).string(message.role_label);
     }
     return writer;
   },
@@ -22970,6 +23027,13 @@ export const UpdateRoleChannelRequest = {
 
           message.user_id = reader.string();
           continue;
+        case 6:
+          if (tag !== 50) {
+            break;
+          }
+
+          message.role_label = reader.string();
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -22988,6 +23052,7 @@ export const UpdateRoleChannelRequest = {
       max_permission_id: isSet(object.max_permission_id) ? globalThis.String(object.max_permission_id) : "",
       channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "",
       user_id: isSet(object.user_id) ? globalThis.String(object.user_id) : "",
+      role_label: isSet(object.role_label) ? globalThis.String(object.role_label) : "",
     };
   },
 
@@ -23008,6 +23073,9 @@ export const UpdateRoleChannelRequest = {
     if (message.user_id !== "") {
       obj.user_id = message.user_id;
     }
+    if (message.role_label !== "") {
+      obj.role_label = message.role_label;
+    }
     return obj;
   },
 
@@ -23021,6 +23089,7 @@ export const UpdateRoleChannelRequest = {
     message.max_permission_id = object.max_permission_id ?? "";
     message.channel_id = object.channel_id ?? "";
     message.user_id = object.user_id ?? "";
+    message.role_label = object.role_label ?? "";
     return message;
   },
 };
@@ -25104,7 +25173,7 @@ export const ClanEmojiGetByClanIdRequest = {
 };
 
 function createBaseClanEmojiDeleteRequest(): ClanEmojiDeleteRequest {
-  return { id: "", clan_id: "" };
+  return { id: "", clan_id: "", emoji_label: "" };
 }
 
 export const ClanEmojiDeleteRequest = {
@@ -25114,6 +25183,9 @@ export const ClanEmojiDeleteRequest = {
     }
     if (message.clan_id !== "") {
       writer.uint32(18).string(message.clan_id);
+    }
+    if (message.emoji_label !== "") {
+      writer.uint32(26).string(message.emoji_label);
     }
     return writer;
   },
@@ -25139,6 +25211,13 @@ export const ClanEmojiDeleteRequest = {
 
           message.clan_id = reader.string();
           continue;
+        case 3:
+          if (tag !== 26) {
+            break;
+          }
+
+          message.emoji_label = reader.string();
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -25152,6 +25231,7 @@ export const ClanEmojiDeleteRequest = {
     return {
       id: isSet(object.id) ? globalThis.String(object.id) : "",
       clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
+      emoji_label: isSet(object.emoji_label) ? globalThis.String(object.emoji_label) : "",
     };
   },
 
@@ -25163,6 +25243,9 @@ export const ClanEmojiDeleteRequest = {
     if (message.clan_id !== "") {
       obj.clan_id = message.clan_id;
     }
+    if (message.emoji_label !== "") {
+      obj.emoji_label = message.emoji_label;
+    }
     return obj;
   },
 
@@ -25173,6 +25256,7 @@ export const ClanEmojiDeleteRequest = {
     const message = createBaseClanEmojiDeleteRequest();
     message.id = object.id ?? "";
     message.clan_id = object.clan_id ?? "";
+    message.emoji_label = object.emoji_label ?? "";
     return message;
   },
 };
@@ -26581,7 +26665,7 @@ export const ClanStickerUpdateByIdRequest = {
 };
 
 function createBaseClanStickerDeleteRequest(): ClanStickerDeleteRequest {
-  return { id: "", clan_id: "" };
+  return { id: "", clan_id: "", sticker_label: "" };
 }
 
 export const ClanStickerDeleteRequest = {
@@ -26591,6 +26675,9 @@ export const ClanStickerDeleteRequest = {
     }
     if (message.clan_id !== "") {
       writer.uint32(18).string(message.clan_id);
+    }
+    if (message.sticker_label !== "") {
+      writer.uint32(26).string(message.sticker_label);
     }
     return writer;
   },
@@ -26616,6 +26703,13 @@ export const ClanStickerDeleteRequest = {
 
           message.clan_id = reader.string();
           continue;
+        case 3:
+          if (tag !== 26) {
+            break;
+          }
+
+          message.sticker_label = reader.string();
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -26629,6 +26723,7 @@ export const ClanStickerDeleteRequest = {
     return {
       id: isSet(object.id) ? globalThis.String(object.id) : "",
       clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
+      sticker_label: isSet(object.sticker_label) ? globalThis.String(object.sticker_label) : "",
     };
   },
 
@@ -26640,6 +26735,9 @@ export const ClanStickerDeleteRequest = {
     if (message.clan_id !== "") {
       obj.clan_id = message.clan_id;
     }
+    if (message.sticker_label !== "") {
+      obj.sticker_label = message.sticker_label;
+    }
     return obj;
   },
 
@@ -26650,6 +26748,7 @@ export const ClanStickerDeleteRequest = {
     const message = createBaseClanStickerDeleteRequest();
     message.id = object.id ?? "";
     message.clan_id = object.clan_id ?? "";
+    message.sticker_label = object.sticker_label ?? "";
     return message;
   },
 };
