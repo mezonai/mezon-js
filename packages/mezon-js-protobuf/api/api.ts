@@ -2093,6 +2093,7 @@ export interface EventManagement {
   user_ids: string[];
   create_time: Date | undefined;
   max_permission: number;
+  channel_id_event: string;
 }
 
 /** Permission record */
@@ -2410,6 +2411,7 @@ export interface CreateEventRequest {
   end_time: Date | undefined;
   event_id: string;
   event_status: string;
+  channel_id_event: string;
 }
 
 /** update a event within clan. */
@@ -3003,19 +3005,22 @@ export interface DeleteCategoryOrderRequest {
 }
 
 export interface StreamHttpCallbackRequest {
-  action: string;
+  /** id */
+  id: string;
+  /** client_id */
   client_id: string;
-  ip: string;
-  vhost: string;
-  app: string;
-  stream: string;
-  param: string | undefined;
-  server_id: string;
-  stream_url: string;
-  stream_id: string;
-  page_url: string | undefined;
-  tcUrl: string | undefined;
-  service_id: string | undefined;
+  /** clan_id */
+  clan_id: string;
+  /** channel_id */
+  channel_id: string;
+  /** user_id */
+  user_id: string;
+  /** display name */
+  display_name: string;
+  /** action */
+  action: number;
+  /** is_publisher */
+  is_publisher: boolean;
 }
 
 export interface StreamHttpCallbackResponse {
@@ -3055,27 +3060,6 @@ export interface RegisterStreamingChannelResponse {
   channel_id: string;
   /** streaming url */
   streaming_url: string;
-}
-
-export interface ListStreamingChannelsRequest {
-  /** clan id */
-  clan_id: string;
-}
-
-export interface ListStreamingChannelsResponse {
-  /** list of streaming channel */
-  streaming_channels: StreamingChannelResponse[];
-}
-
-export interface StreamingChannelResponse {
-  /** clan id */
-  clan_id: string;
-  /** channel id */
-  channel_id: string;
-  /** stream url */
-  streaming_url: string;
-  /** status */
-  is_streaming: boolean;
 }
 
 export interface GiveCoffeeEvent {
@@ -18812,6 +18796,7 @@ function createBaseEventManagement(): EventManagement {
     user_ids: [],
     create_time: undefined,
     max_permission: 0,
+    channel_id_event: "",
   };
 }
 
@@ -18861,6 +18846,9 @@ export const EventManagement = {
     }
     if (message.max_permission !== 0) {
       writer.uint32(120).int32(message.max_permission);
+    }
+    if (message.channel_id_event !== "") {
+      writer.uint32(130).string(message.channel_id_event);
     }
     return writer;
   },
@@ -18977,6 +18965,13 @@ export const EventManagement = {
 
           message.max_permission = reader.int32();
           continue;
+        case 16:
+          if (tag !== 130) {
+            break;
+          }
+
+          message.channel_id_event = reader.string();
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -19003,6 +18998,7 @@ export const EventManagement = {
       user_ids: globalThis.Array.isArray(object?.user_ids) ? object.user_ids.map((e: any) => globalThis.String(e)) : [],
       create_time: isSet(object.create_time) ? fromJsonTimestamp(object.create_time) : undefined,
       max_permission: isSet(object.max_permission) ? globalThis.Number(object.max_permission) : 0,
+      channel_id_event: isSet(object.channel_id_event) ? globalThis.String(object.channel_id_event) : "",
     };
   },
 
@@ -19053,6 +19049,9 @@ export const EventManagement = {
     if (message.max_permission !== 0) {
       obj.max_permission = Math.round(message.max_permission);
     }
+    if (message.channel_id_event !== "") {
+      obj.channel_id_event = message.channel_id_event;
+    }
     return obj;
   },
 
@@ -19076,6 +19075,7 @@ export const EventManagement = {
     message.user_ids = object.user_ids?.map((e) => e) || [];
     message.create_time = object.create_time ?? undefined;
     message.max_permission = object.max_permission ?? 0;
+    message.channel_id_event = object.channel_id_event ?? "";
     return message;
   },
 };
@@ -22110,6 +22110,7 @@ function createBaseCreateEventRequest(): CreateEventRequest {
     end_time: undefined,
     event_id: "",
     event_status: "",
+    channel_id_event: "",
   };
 }
 
@@ -22144,6 +22145,9 @@ export const CreateEventRequest = {
     }
     if (message.event_status !== "") {
       writer.uint32(82).string(message.event_status);
+    }
+    if (message.channel_id_event !== "") {
+      writer.uint32(90).string(message.channel_id_event);
     }
     return writer;
   },
@@ -22225,6 +22229,13 @@ export const CreateEventRequest = {
 
           message.event_status = reader.string();
           continue;
+        case 11:
+          if (tag !== 90) {
+            break;
+          }
+
+          message.channel_id_event = reader.string();
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -22246,6 +22257,7 @@ export const CreateEventRequest = {
       end_time: isSet(object.end_time) ? fromJsonTimestamp(object.end_time) : undefined,
       event_id: isSet(object.event_id) ? globalThis.String(object.event_id) : "",
       event_status: isSet(object.event_status) ? globalThis.String(object.event_status) : "",
+      channel_id_event: isSet(object.channel_id_event) ? globalThis.String(object.channel_id_event) : "",
     };
   },
 
@@ -22281,6 +22293,9 @@ export const CreateEventRequest = {
     if (message.event_status !== "") {
       obj.event_status = message.event_status;
     }
+    if (message.channel_id_event !== "") {
+      obj.channel_id_event = message.channel_id_event;
+    }
     return obj;
   },
 
@@ -22299,6 +22314,7 @@ export const CreateEventRequest = {
     message.end_time = object.end_time ?? undefined;
     message.event_id = object.event_id ?? "";
     message.event_status = object.event_status ?? "";
+    message.channel_id_event = object.channel_id_event ?? "";
     return message;
   },
 };
@@ -28585,62 +28601,42 @@ export const DeleteCategoryOrderRequest = {
 
 function createBaseStreamHttpCallbackRequest(): StreamHttpCallbackRequest {
   return {
-    action: "",
+    id: "",
     client_id: "",
-    ip: "",
-    vhost: "",
-    app: "",
-    stream: "",
-    param: undefined,
-    server_id: "",
-    stream_url: "",
-    stream_id: "",
-    page_url: undefined,
-    tcUrl: undefined,
-    service_id: undefined,
+    clan_id: "",
+    channel_id: "",
+    user_id: "",
+    display_name: "",
+    action: 0,
+    is_publisher: false,
   };
 }
 
 export const StreamHttpCallbackRequest = {
   encode(message: StreamHttpCallbackRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.action !== "") {
-      writer.uint32(10).string(message.action);
+    if (message.id !== "") {
+      writer.uint32(10).string(message.id);
     }
     if (message.client_id !== "") {
       writer.uint32(18).string(message.client_id);
     }
-    if (message.ip !== "") {
-      writer.uint32(26).string(message.ip);
+    if (message.clan_id !== "") {
+      writer.uint32(26).string(message.clan_id);
     }
-    if (message.vhost !== "") {
-      writer.uint32(34).string(message.vhost);
+    if (message.channel_id !== "") {
+      writer.uint32(34).string(message.channel_id);
     }
-    if (message.app !== "") {
-      writer.uint32(42).string(message.app);
+    if (message.user_id !== "") {
+      writer.uint32(42).string(message.user_id);
     }
-    if (message.stream !== "") {
-      writer.uint32(50).string(message.stream);
+    if (message.display_name !== "") {
+      writer.uint32(50).string(message.display_name);
     }
-    if (message.param !== undefined) {
-      StringValue.encode({ value: message.param! }, writer.uint32(58).fork()).ldelim();
+    if (message.action !== 0) {
+      writer.uint32(56).int32(message.action);
     }
-    if (message.server_id !== "") {
-      writer.uint32(66).string(message.server_id);
-    }
-    if (message.stream_url !== "") {
-      writer.uint32(74).string(message.stream_url);
-    }
-    if (message.stream_id !== "") {
-      writer.uint32(82).string(message.stream_id);
-    }
-    if (message.page_url !== undefined) {
-      StringValue.encode({ value: message.page_url! }, writer.uint32(90).fork()).ldelim();
-    }
-    if (message.tcUrl !== undefined) {
-      StringValue.encode({ value: message.tcUrl! }, writer.uint32(98).fork()).ldelim();
-    }
-    if (message.service_id !== undefined) {
-      StringValue.encode({ value: message.service_id! }, writer.uint32(106).fork()).ldelim();
+    if (message.is_publisher !== false) {
+      writer.uint32(64).bool(message.is_publisher);
     }
     return writer;
   },
@@ -28657,7 +28653,7 @@ export const StreamHttpCallbackRequest = {
             break;
           }
 
-          message.action = reader.string();
+          message.id = reader.string();
           continue;
         case 2:
           if (tag !== 18) {
@@ -28671,77 +28667,42 @@ export const StreamHttpCallbackRequest = {
             break;
           }
 
-          message.ip = reader.string();
+          message.clan_id = reader.string();
           continue;
         case 4:
           if (tag !== 34) {
             break;
           }
 
-          message.vhost = reader.string();
+          message.channel_id = reader.string();
           continue;
         case 5:
           if (tag !== 42) {
             break;
           }
 
-          message.app = reader.string();
+          message.user_id = reader.string();
           continue;
         case 6:
           if (tag !== 50) {
             break;
           }
 
-          message.stream = reader.string();
+          message.display_name = reader.string();
           continue;
         case 7:
-          if (tag !== 58) {
+          if (tag !== 56) {
             break;
           }
 
-          message.param = StringValue.decode(reader, reader.uint32()).value;
+          message.action = reader.int32();
           continue;
         case 8:
-          if (tag !== 66) {
+          if (tag !== 64) {
             break;
           }
 
-          message.server_id = reader.string();
-          continue;
-        case 9:
-          if (tag !== 74) {
-            break;
-          }
-
-          message.stream_url = reader.string();
-          continue;
-        case 10:
-          if (tag !== 82) {
-            break;
-          }
-
-          message.stream_id = reader.string();
-          continue;
-        case 11:
-          if (tag !== 90) {
-            break;
-          }
-
-          message.page_url = StringValue.decode(reader, reader.uint32()).value;
-          continue;
-        case 12:
-          if (tag !== 98) {
-            break;
-          }
-
-          message.tcUrl = StringValue.decode(reader, reader.uint32()).value;
-          continue;
-        case 13:
-          if (tag !== 106) {
-            break;
-          }
-
-          message.service_id = StringValue.decode(reader, reader.uint32()).value;
+          message.is_publisher = reader.bool();
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -28754,62 +28715,42 @@ export const StreamHttpCallbackRequest = {
 
   fromJSON(object: any): StreamHttpCallbackRequest {
     return {
-      action: isSet(object.action) ? globalThis.String(object.action) : "",
+      id: isSet(object.id) ? globalThis.String(object.id) : "",
       client_id: isSet(object.client_id) ? globalThis.String(object.client_id) : "",
-      ip: isSet(object.ip) ? globalThis.String(object.ip) : "",
-      vhost: isSet(object.vhost) ? globalThis.String(object.vhost) : "",
-      app: isSet(object.app) ? globalThis.String(object.app) : "",
-      stream: isSet(object.stream) ? globalThis.String(object.stream) : "",
-      param: isSet(object.param) ? String(object.param) : undefined,
-      server_id: isSet(object.server_id) ? globalThis.String(object.server_id) : "",
-      stream_url: isSet(object.stream_url) ? globalThis.String(object.stream_url) : "",
-      stream_id: isSet(object.stream_id) ? globalThis.String(object.stream_id) : "",
-      page_url: isSet(object.page_url) ? String(object.page_url) : undefined,
-      tcUrl: isSet(object.tcUrl) ? String(object.tcUrl) : undefined,
-      service_id: isSet(object.service_id) ? String(object.service_id) : undefined,
+      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
+      channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "",
+      user_id: isSet(object.user_id) ? globalThis.String(object.user_id) : "",
+      display_name: isSet(object.display_name) ? globalThis.String(object.display_name) : "",
+      action: isSet(object.action) ? globalThis.Number(object.action) : 0,
+      is_publisher: isSet(object.is_publisher) ? globalThis.Boolean(object.is_publisher) : false,
     };
   },
 
   toJSON(message: StreamHttpCallbackRequest): unknown {
     const obj: any = {};
-    if (message.action !== "") {
-      obj.action = message.action;
+    if (message.id !== "") {
+      obj.id = message.id;
     }
     if (message.client_id !== "") {
       obj.client_id = message.client_id;
     }
-    if (message.ip !== "") {
-      obj.ip = message.ip;
+    if (message.clan_id !== "") {
+      obj.clan_id = message.clan_id;
     }
-    if (message.vhost !== "") {
-      obj.vhost = message.vhost;
+    if (message.channel_id !== "") {
+      obj.channel_id = message.channel_id;
     }
-    if (message.app !== "") {
-      obj.app = message.app;
+    if (message.user_id !== "") {
+      obj.user_id = message.user_id;
     }
-    if (message.stream !== "") {
-      obj.stream = message.stream;
+    if (message.display_name !== "") {
+      obj.display_name = message.display_name;
     }
-    if (message.param !== undefined) {
-      obj.param = message.param;
+    if (message.action !== 0) {
+      obj.action = Math.round(message.action);
     }
-    if (message.server_id !== "") {
-      obj.server_id = message.server_id;
-    }
-    if (message.stream_url !== "") {
-      obj.stream_url = message.stream_url;
-    }
-    if (message.stream_id !== "") {
-      obj.stream_id = message.stream_id;
-    }
-    if (message.page_url !== undefined) {
-      obj.page_url = message.page_url;
-    }
-    if (message.tcUrl !== undefined) {
-      obj.tcUrl = message.tcUrl;
-    }
-    if (message.service_id !== undefined) {
-      obj.service_id = message.service_id;
+    if (message.is_publisher !== false) {
+      obj.is_publisher = message.is_publisher;
     }
     return obj;
   },
@@ -28819,19 +28760,14 @@ export const StreamHttpCallbackRequest = {
   },
   fromPartial<I extends Exact<DeepPartial<StreamHttpCallbackRequest>, I>>(object: I): StreamHttpCallbackRequest {
     const message = createBaseStreamHttpCallbackRequest();
-    message.action = object.action ?? "";
+    message.id = object.id ?? "";
     message.client_id = object.client_id ?? "";
-    message.ip = object.ip ?? "";
-    message.vhost = object.vhost ?? "";
-    message.app = object.app ?? "";
-    message.stream = object.stream ?? "";
-    message.param = object.param ?? undefined;
-    message.server_id = object.server_id ?? "";
-    message.stream_url = object.stream_url ?? "";
-    message.stream_id = object.stream_id ?? "";
-    message.page_url = object.page_url ?? undefined;
-    message.tcUrl = object.tcUrl ?? undefined;
-    message.service_id = object.service_id ?? undefined;
+    message.clan_id = object.clan_id ?? "";
+    message.channel_id = object.channel_id ?? "";
+    message.user_id = object.user_id ?? "";
+    message.display_name = object.display_name ?? "";
+    message.action = object.action ?? 0;
+    message.is_publisher = object.is_publisher ?? false;
     return message;
   },
 };
@@ -29241,230 +29177,6 @@ export const RegisterStreamingChannelResponse = {
     message.clan_id = object.clan_id ?? "";
     message.channel_id = object.channel_id ?? "";
     message.streaming_url = object.streaming_url ?? "";
-    return message;
-  },
-};
-
-function createBaseListStreamingChannelsRequest(): ListStreamingChannelsRequest {
-  return { clan_id: "" };
-}
-
-export const ListStreamingChannelsRequest = {
-  encode(message: ListStreamingChannelsRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.clan_id !== "") {
-      writer.uint32(10).string(message.clan_id);
-    }
-    return writer;
-  },
-
-  decode(input: _m0.Reader | Uint8Array, length?: number): ListStreamingChannelsRequest {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseListStreamingChannelsRequest();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
-          if (tag !== 10) {
-            break;
-          }
-
-          message.clan_id = reader.string();
-          continue;
-      }
-      if ((tag & 7) === 4 || tag === 0) {
-        break;
-      }
-      reader.skipType(tag & 7);
-    }
-    return message;
-  },
-
-  fromJSON(object: any): ListStreamingChannelsRequest {
-    return { clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "" };
-  },
-
-  toJSON(message: ListStreamingChannelsRequest): unknown {
-    const obj: any = {};
-    if (message.clan_id !== "") {
-      obj.clan_id = message.clan_id;
-    }
-    return obj;
-  },
-
-  create<I extends Exact<DeepPartial<ListStreamingChannelsRequest>, I>>(base?: I): ListStreamingChannelsRequest {
-    return ListStreamingChannelsRequest.fromPartial(base ?? ({} as any));
-  },
-  fromPartial<I extends Exact<DeepPartial<ListStreamingChannelsRequest>, I>>(object: I): ListStreamingChannelsRequest {
-    const message = createBaseListStreamingChannelsRequest();
-    message.clan_id = object.clan_id ?? "";
-    return message;
-  },
-};
-
-function createBaseListStreamingChannelsResponse(): ListStreamingChannelsResponse {
-  return { streaming_channels: [] };
-}
-
-export const ListStreamingChannelsResponse = {
-  encode(message: ListStreamingChannelsResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    for (const v of message.streaming_channels) {
-      StreamingChannelResponse.encode(v!, writer.uint32(10).fork()).ldelim();
-    }
-    return writer;
-  },
-
-  decode(input: _m0.Reader | Uint8Array, length?: number): ListStreamingChannelsResponse {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseListStreamingChannelsResponse();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
-          if (tag !== 10) {
-            break;
-          }
-
-          message.streaming_channels.push(StreamingChannelResponse.decode(reader, reader.uint32()));
-          continue;
-      }
-      if ((tag & 7) === 4 || tag === 0) {
-        break;
-      }
-      reader.skipType(tag & 7);
-    }
-    return message;
-  },
-
-  fromJSON(object: any): ListStreamingChannelsResponse {
-    return {
-      streaming_channels: globalThis.Array.isArray(object?.streaming_channels)
-        ? object.streaming_channels.map((e: any) => StreamingChannelResponse.fromJSON(e))
-        : [],
-    };
-  },
-
-  toJSON(message: ListStreamingChannelsResponse): unknown {
-    const obj: any = {};
-    if (message.streaming_channels?.length) {
-      obj.streaming_channels = message.streaming_channels.map((e) => StreamingChannelResponse.toJSON(e));
-    }
-    return obj;
-  },
-
-  create<I extends Exact<DeepPartial<ListStreamingChannelsResponse>, I>>(base?: I): ListStreamingChannelsResponse {
-    return ListStreamingChannelsResponse.fromPartial(base ?? ({} as any));
-  },
-  fromPartial<I extends Exact<DeepPartial<ListStreamingChannelsResponse>, I>>(
-    object: I,
-  ): ListStreamingChannelsResponse {
-    const message = createBaseListStreamingChannelsResponse();
-    message.streaming_channels = object.streaming_channels?.map((e) => StreamingChannelResponse.fromPartial(e)) || [];
-    return message;
-  },
-};
-
-function createBaseStreamingChannelResponse(): StreamingChannelResponse {
-  return { clan_id: "", channel_id: "", streaming_url: "", is_streaming: false };
-}
-
-export const StreamingChannelResponse = {
-  encode(message: StreamingChannelResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.clan_id !== "") {
-      writer.uint32(10).string(message.clan_id);
-    }
-    if (message.channel_id !== "") {
-      writer.uint32(18).string(message.channel_id);
-    }
-    if (message.streaming_url !== "") {
-      writer.uint32(26).string(message.streaming_url);
-    }
-    if (message.is_streaming !== false) {
-      writer.uint32(32).bool(message.is_streaming);
-    }
-    return writer;
-  },
-
-  decode(input: _m0.Reader | Uint8Array, length?: number): StreamingChannelResponse {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseStreamingChannelResponse();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
-          if (tag !== 10) {
-            break;
-          }
-
-          message.clan_id = reader.string();
-          continue;
-        case 2:
-          if (tag !== 18) {
-            break;
-          }
-
-          message.channel_id = reader.string();
-          continue;
-        case 3:
-          if (tag !== 26) {
-            break;
-          }
-
-          message.streaming_url = reader.string();
-          continue;
-        case 4:
-          if (tag !== 32) {
-            break;
-          }
-
-          message.is_streaming = reader.bool();
-          continue;
-      }
-      if ((tag & 7) === 4 || tag === 0) {
-        break;
-      }
-      reader.skipType(tag & 7);
-    }
-    return message;
-  },
-
-  fromJSON(object: any): StreamingChannelResponse {
-    return {
-      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
-      channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "",
-      streaming_url: isSet(object.streaming_url) ? globalThis.String(object.streaming_url) : "",
-      is_streaming: isSet(object.is_streaming) ? globalThis.Boolean(object.is_streaming) : false,
-    };
-  },
-
-  toJSON(message: StreamingChannelResponse): unknown {
-    const obj: any = {};
-    if (message.clan_id !== "") {
-      obj.clan_id = message.clan_id;
-    }
-    if (message.channel_id !== "") {
-      obj.channel_id = message.channel_id;
-    }
-    if (message.streaming_url !== "") {
-      obj.streaming_url = message.streaming_url;
-    }
-    if (message.is_streaming !== false) {
-      obj.is_streaming = message.is_streaming;
-    }
-    return obj;
-  },
-
-  create<I extends Exact<DeepPartial<StreamingChannelResponse>, I>>(base?: I): StreamingChannelResponse {
-    return StreamingChannelResponse.fromPartial(base ?? ({} as any));
-  },
-  fromPartial<I extends Exact<DeepPartial<StreamingChannelResponse>, I>>(object: I): StreamingChannelResponse {
-    const message = createBaseStreamingChannelResponse();
-    message.clan_id = object.clan_id ?? "";
-    message.channel_id = object.channel_id ?? "";
-    message.streaming_url = object.streaming_url ?? "";
-    message.is_streaming = object.is_streaming ?? false;
     return message;
   },
 };

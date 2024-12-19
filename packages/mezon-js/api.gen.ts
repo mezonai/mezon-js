@@ -1127,6 +1127,8 @@ export interface ApiCreateEventRequest {
   start_time?: string;
   //
   title?: string;
+  //
+  channel_id_event?: string;
 }
 
 /** Create a event within clan. */
@@ -1300,6 +1302,8 @@ export interface ApiEventManagement {
   user_ids?: Array<string>;
   //
   create_time?: string;
+  //
+  channel_id_event?: string;
 }
 
 /**  */
