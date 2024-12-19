@@ -1114,7 +1114,7 @@ export interface ApiCreateEventRequest {
   //
   address?: string;
   //
-  channel_id?: string;
+  channel_voice_id?: string;
   //
   clan_id?: string;
   //
@@ -1127,6 +1127,8 @@ export interface ApiCreateEventRequest {
   start_time?: string;
   //
   title?: string;
+  //
+  channel_id?: string;
 }
 
 /** Create a event within clan. */
@@ -1275,7 +1277,7 @@ export interface ApiEventManagement {
   //
   address?: string;
   //
-  channel_id?: string;
+  channel_voice_id?: string;
   //
   clan_id?: string;
   //
@@ -1300,6 +1302,8 @@ export interface ApiEventManagement {
   user_ids?: Array<string>;
   //
   create_time?: string;
+  //
+  channel_id?: string;
 }
 
 /**  */
