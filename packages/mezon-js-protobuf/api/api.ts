@@ -2086,14 +2086,14 @@ export interface EventManagement {
   start_event: number;
   creator_id: string;
   clan_id: string;
-  channel_id: string;
+  channel_voice_id: string;
   address: string;
   start_time: Date | undefined;
   end_time: Date | undefined;
   user_ids: string[];
   create_time: Date | undefined;
   max_permission: number;
-  channel_id_event: string;
+  channel_id: string;
 }
 
 /** Permission record */
@@ -2405,13 +2405,13 @@ export interface CreateEventRequest {
   logo: string;
   description: string;
   clan_id: string;
-  channel_id: string;
+  channel_voice_id: string;
   address: string;
   start_time: Date | undefined;
   end_time: Date | undefined;
   event_id: string;
   event_status: string;
-  channel_id_event: string;
+  channel_id: string;
 }
 
 /** update a event within clan. */
@@ -18789,14 +18789,14 @@ function createBaseEventManagement(): EventManagement {
     start_event: 0,
     creator_id: "",
     clan_id: "",
-    channel_id: "",
+    channel_voice_id: "",
     address: "",
     start_time: undefined,
     end_time: undefined,
     user_ids: [],
     create_time: undefined,
     max_permission: 0,
-    channel_id_event: "",
+    channel_id: "",
   };
 }
 
@@ -18826,8 +18826,8 @@ export const EventManagement = {
     if (message.clan_id !== "") {
       writer.uint32(66).string(message.clan_id);
     }
-    if (message.channel_id !== "") {
-      writer.uint32(74).string(message.channel_id);
+    if (message.channel_voice_id !== "") {
+      writer.uint32(74).string(message.channel_voice_id);
     }
     if (message.address !== "") {
       writer.uint32(82).string(message.address);
@@ -18847,8 +18847,8 @@ export const EventManagement = {
     if (message.max_permission !== 0) {
       writer.uint32(120).int32(message.max_permission);
     }
-    if (message.channel_id_event !== "") {
-      writer.uint32(130).string(message.channel_id_event);
+    if (message.channel_id !== "") {
+      writer.uint32(130).string(message.channel_id);
     }
     return writer;
   },
@@ -18921,7 +18921,7 @@ export const EventManagement = {
             break;
           }
 
-          message.channel_id = reader.string();
+          message.channel_voice_id = reader.string();
           continue;
         case 10:
           if (tag !== 82) {
@@ -18970,7 +18970,7 @@ export const EventManagement = {
             break;
           }
 
-          message.channel_id_event = reader.string();
+          message.channel_id = reader.string();
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -18991,14 +18991,14 @@ export const EventManagement = {
       start_event: isSet(object.start_event) ? globalThis.Number(object.start_event) : 0,
       creator_id: isSet(object.creator_id) ? globalThis.String(object.creator_id) : "",
       clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
-      channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "",
+      channel_voice_id: isSet(object.channel_voice_id) ? globalThis.String(object.channel_voice_id) : "",
       address: isSet(object.address) ? globalThis.String(object.address) : "",
       start_time: isSet(object.start_time) ? fromJsonTimestamp(object.start_time) : undefined,
       end_time: isSet(object.end_time) ? fromJsonTimestamp(object.end_time) : undefined,
       user_ids: globalThis.Array.isArray(object?.user_ids) ? object.user_ids.map((e: any) => globalThis.String(e)) : [],
       create_time: isSet(object.create_time) ? fromJsonTimestamp(object.create_time) : undefined,
       max_permission: isSet(object.max_permission) ? globalThis.Number(object.max_permission) : 0,
-      channel_id_event: isSet(object.channel_id_event) ? globalThis.String(object.channel_id_event) : "",
+      channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "",
     };
   },
 
@@ -19028,8 +19028,8 @@ export const EventManagement = {
     if (message.clan_id !== "") {
       obj.clan_id = message.clan_id;
     }
-    if (message.channel_id !== "") {
-      obj.channel_id = message.channel_id;
+    if (message.channel_voice_id !== "") {
+      obj.channel_voice_id = message.channel_voice_id;
     }
     if (message.address !== "") {
       obj.address = message.address;
@@ -19049,8 +19049,8 @@ export const EventManagement = {
     if (message.max_permission !== 0) {
       obj.max_permission = Math.round(message.max_permission);
     }
-    if (message.channel_id_event !== "") {
-      obj.channel_id_event = message.channel_id_event;
+    if (message.channel_id !== "") {
+      obj.channel_id = message.channel_id;
     }
     return obj;
   },
@@ -19068,14 +19068,14 @@ export const EventManagement = {
     message.start_event = object.start_event ?? 0;
     message.creator_id = object.creator_id ?? "";
     message.clan_id = object.clan_id ?? "";
-    message.channel_id = object.channel_id ?? "";
+    message.channel_voice_id = object.channel_voice_id ?? "";
     message.address = object.address ?? "";
     message.start_time = object.start_time ?? undefined;
     message.end_time = object.end_time ?? undefined;
     message.user_ids = object.user_ids?.map((e) => e) || [];
     message.create_time = object.create_time ?? undefined;
     message.max_permission = object.max_permission ?? 0;
-    message.channel_id_event = object.channel_id_event ?? "";
+    message.channel_id = object.channel_id ?? "";
     return message;
   },
 };
@@ -22104,13 +22104,13 @@ function createBaseCreateEventRequest(): CreateEventRequest {
     logo: "",
     description: "",
     clan_id: "",
-    channel_id: "",
+    channel_voice_id: "",
     address: "",
     start_time: undefined,
     end_time: undefined,
     event_id: "",
     event_status: "",
-    channel_id_event: "",
+    channel_id: "",
   };
 }
 
@@ -22128,8 +22128,8 @@ export const CreateEventRequest = {
     if (message.clan_id !== "") {
       writer.uint32(34).string(message.clan_id);
     }
-    if (message.channel_id !== "") {
-      writer.uint32(42).string(message.channel_id);
+    if (message.channel_voice_id !== "") {
+      writer.uint32(42).string(message.channel_voice_id);
     }
     if (message.address !== "") {
       writer.uint32(50).string(message.address);
@@ -22146,8 +22146,8 @@ export const CreateEventRequest = {
     if (message.event_status !== "") {
       writer.uint32(82).string(message.event_status);
     }
-    if (message.channel_id_event !== "") {
-      writer.uint32(90).string(message.channel_id_event);
+    if (message.channel_id !== "") {
+      writer.uint32(90).string(message.channel_id);
     }
     return writer;
   },
@@ -22192,7 +22192,7 @@ export const CreateEventRequest = {
             break;
           }
 
-          message.channel_id = reader.string();
+          message.channel_voice_id = reader.string();
           continue;
         case 6:
           if (tag !== 50) {
@@ -22234,7 +22234,7 @@ export const CreateEventRequest = {
             break;
           }
 
-          message.channel_id_event = reader.string();
+          message.channel_id = reader.string();
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -22251,13 +22251,13 @@ export const CreateEventRequest = {
       logo: isSet(object.logo) ? globalThis.String(object.logo) : "",
       description: isSet(object.description) ? globalThis.String(object.description) : "",
       clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
-      channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "",
+      channel_voice_id: isSet(object.channel_voice_id) ? globalThis.String(object.channel_voice_id) : "",
       address: isSet(object.address) ? globalThis.String(object.address) : "",
       start_time: isSet(object.start_time) ? fromJsonTimestamp(object.start_time) : undefined,
       end_time: isSet(object.end_time) ? fromJsonTimestamp(object.end_time) : undefined,
       event_id: isSet(object.event_id) ? globalThis.String(object.event_id) : "",
       event_status: isSet(object.event_status) ? globalThis.String(object.event_status) : "",
-      channel_id_event: isSet(object.channel_id_event) ? globalThis.String(object.channel_id_event) : "",
+      channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "",
     };
   },
 
@@ -22275,8 +22275,8 @@ export const CreateEventRequest = {
     if (message.clan_id !== "") {
       obj.clan_id = message.clan_id;
     }
-    if (message.channel_id !== "") {
-      obj.channel_id = message.channel_id;
+    if (message.channel_voice_id !== "") {
+      obj.channel_voice_id = message.channel_voice_id;
     }
     if (message.address !== "") {
       obj.address = message.address;
@@ -22293,8 +22293,8 @@ export const CreateEventRequest = {
     if (message.event_status !== "") {
       obj.event_status = message.event_status;
     }
-    if (message.channel_id_event !== "") {
-      obj.channel_id_event = message.channel_id_event;
+    if (message.channel_id !== "") {
+      obj.channel_id = message.channel_id;
     }
     return obj;
   },
@@ -22308,13 +22308,13 @@ export const CreateEventRequest = {
     message.logo = object.logo ?? "";
     message.description = object.description ?? "";
     message.clan_id = object.clan_id ?? "";
-    message.channel_id = object.channel_id ?? "";
+    message.channel_voice_id = object.channel_voice_id ?? "";
     message.address = object.address ?? "";
     message.start_time = object.start_time ?? undefined;
     message.end_time = object.end_time ?? undefined;
     message.event_id = object.event_id ?? "";
     message.event_status = object.event_status ?? "";
-    message.channel_id_event = object.channel_id_event ?? "";
+    message.channel_id = object.channel_id ?? "";
     return message;
   },
 };
