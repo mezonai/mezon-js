@@ -9213,15 +9213,14 @@ export class MezonApi {
   }
 
   /** List Sd Topic */
-  listSdTopic(
-    bearerToken: string,
-    channelId?: string,
+  listSdTopic(bearerToken: string,
+    clanId?: string,
     limit?: number,
     options: any = {}
   ): Promise<ApiSdTopicList> {
     const urlPath = "/v2/sdmtopic";
     const queryParams = new Map<string, any>();
-    queryParams.set("channel_id", channelId);
+    queryParams.set("clan_id", clanId);
     queryParams.set("limit", limit);
 
     let bodyJson: string = "";

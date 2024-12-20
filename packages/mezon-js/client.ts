@@ -4816,7 +4816,7 @@ export class Client {
   //**list sd topic */
   async listSdTopic(
     session: Session,
-    channelId?: string,
+    clanId?: string,
     limit?: number
   ): Promise<ApiSdTopicList> {
     if (
@@ -4828,7 +4828,7 @@ export class Client {
     }
 
     return this.apiClient
-      .listSdTopic(session.token, channelId, limit)
+      .listSdTopic(session.token, clanId, limit)
       .then((response: ApiSdTopicList) => {
         return Promise.resolve(response);
       });
