@@ -3015,8 +3015,6 @@ export interface StreamHttpCallbackRequest {
   channel_id: string;
   /** user_id */
   user_id: string;
-  /** display name */
-  display_name: string;
   /** action */
   action: number;
   /** is_publisher */
@@ -3814,7 +3812,7 @@ export interface SdTopicList {
 }
 
 export interface ListSdTopicRequest {
-  channel_id: string;
+  clan_id: string;
   limit: number;
 }
 
@@ -28600,16 +28598,7 @@ export const DeleteCategoryOrderRequest = {
 };
 
 function createBaseStreamHttpCallbackRequest(): StreamHttpCallbackRequest {
-  return {
-    id: "",
-    client_id: "",
-    clan_id: "",
-    channel_id: "",
-    user_id: "",
-    display_name: "",
-    action: 0,
-    is_publisher: false,
-  };
+  return { id: "", client_id: "", clan_id: "", channel_id: "", user_id: "", action: 0, is_publisher: false };
 }
 
 export const StreamHttpCallbackRequest = {
@@ -28629,14 +28618,11 @@ export const StreamHttpCallbackRequest = {
     if (message.user_id !== "") {
       writer.uint32(42).string(message.user_id);
     }
-    if (message.display_name !== "") {
-      writer.uint32(50).string(message.display_name);
-    }
     if (message.action !== 0) {
-      writer.uint32(56).int32(message.action);
+      writer.uint32(48).int32(message.action);
     }
     if (message.is_publisher !== false) {
-      writer.uint32(64).bool(message.is_publisher);
+      writer.uint32(56).bool(message.is_publisher);
     }
     return writer;
   },
@@ -28684,21 +28670,14 @@ export const StreamHttpCallbackRequest = {
           message.user_id = reader.string();
           continue;
         case 6:
-          if (tag !== 50) {
-            break;
-          }
-
-          message.display_name = reader.string();
-          continue;
-        case 7:
-          if (tag !== 56) {
+          if (tag !== 48) {
             break;
           }
 
           message.action = reader.int32();
           continue;
-        case 8:
-          if (tag !== 64) {
+        case 7:
+          if (tag !== 56) {
             break;
           }
 
@@ -28720,7 +28699,6 @@ export const StreamHttpCallbackRequest = {
       clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
       channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "",
       user_id: isSet(object.user_id) ? globalThis.String(object.user_id) : "",
-      display_name: isSet(object.display_name) ? globalThis.String(object.display_name) : "",
       action: isSet(object.action) ? globalThis.Number(object.action) : 0,
       is_publisher: isSet(object.is_publisher) ? globalThis.Boolean(object.is_publisher) : false,
     };
@@ -28743,9 +28721,6 @@ export const StreamHttpCallbackRequest = {
     if (message.user_id !== "") {
       obj.user_id = message.user_id;
     }
-    if (message.display_name !== "") {
-      obj.display_name = message.display_name;
-    }
     if (message.action !== 0) {
       obj.action = Math.round(message.action);
     }
@@ -28765,7 +28740,6 @@ export const StreamHttpCallbackRequest = {
     message.clan_id = object.clan_id ?? "";
     message.channel_id = object.channel_id ?? "";
     message.user_id = object.user_id ?? "";
-    message.display_name = object.display_name ?? "";
     message.action = object.action ?? 0;
     message.is_publisher = object.is_publisher ?? false;
     return message;
@@ -36968,13 +36942,13 @@ export const SdTopicList = {
 };
 
 function createBaseListSdTopicRequest(): ListSdTopicRequest {
-  return { channel_id: "", limit: 0 };
+  return { clan_id: "", limit: 0 };
 }
 
 export const ListSdTopicRequest = {
   encode(message: ListSdTopicRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.channel_id !== "") {
-      writer.uint32(10).string(message.channel_id);
+    if (message.clan_id !== "") {
+      writer.uint32(10).string(message.clan_id);
     }
     if (message.limit !== 0) {
       writer.uint32(16).int32(message.limit);
@@ -36994,7 +36968,7 @@ export const ListSdTopicRequest = {
             break;
           }
 
-          message.channel_id = reader.string();
+          message.clan_id = reader.string();
           continue;
         case 2:
           if (tag !== 16) {
@@ -37014,15 +36988,15 @@ export const ListSdTopicRequest = {
 
   fromJSON(object: any): ListSdTopicRequest {
     return {
-      channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "",
+      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
       limit: isSet(object.limit) ? globalThis.Number(object.limit) : 0,
     };
   },
 
   toJSON(message: ListSdTopicRequest): unknown {
     const obj: any = {};
-    if (message.channel_id !== "") {
-      obj.channel_id = message.channel_id;
+    if (message.clan_id !== "") {
+      obj.clan_id = message.clan_id;
     }
     if (message.limit !== 0) {
       obj.limit = Math.round(message.limit);
@@ -37035,7 +37009,7 @@ export const ListSdTopicRequest = {
   },
   fromPartial<I extends Exact<DeepPartial<ListSdTopicRequest>, I>>(object: I): ListSdTopicRequest {
     const message = createBaseListSdTopicRequest();
-    message.channel_id = object.channel_id ?? "";
+    message.clan_id = object.clan_id ?? "";
     message.limit = object.limit ?? 0;
     return message;
   },
