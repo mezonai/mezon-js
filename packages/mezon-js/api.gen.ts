@@ -1304,6 +1304,8 @@ export interface ApiEventManagement {
   create_time?: string;
   //
   channel_id?: string;
+  //
+  event_status?: number;
 }
 
 /**  */

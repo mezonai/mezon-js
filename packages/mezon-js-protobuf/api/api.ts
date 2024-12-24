@@ -2094,6 +2094,7 @@ export interface EventManagement {
   create_time: Date | undefined;
   max_permission: number;
   channel_id: string;
+  event_status: number;
 }
 
 /** Permission record */
@@ -2410,7 +2411,7 @@ export interface CreateEventRequest {
   start_time: Date | undefined;
   end_time: Date | undefined;
   event_id: string;
-  event_status: string;
+  event_status: number;
   channel_id: string;
 }
 
@@ -3019,6 +3020,8 @@ export interface StreamHttpCallbackRequest {
   action: number;
   /** is_publisher */
   is_publisher: boolean;
+  /** token */
+  token: string;
 }
 
 export interface StreamHttpCallbackResponse {
@@ -18795,6 +18798,7 @@ function createBaseEventManagement(): EventManagement {
     create_time: undefined,
     max_permission: 0,
     channel_id: "",
+    event_status: 0,
   };
 }
 
@@ -18847,6 +18851,9 @@ export const EventManagement = {
     }
     if (message.channel_id !== "") {
       writer.uint32(130).string(message.channel_id);
+    }
+    if (message.event_status !== 0) {
+      writer.uint32(136).int32(message.event_status);
     }
     return writer;
   },
@@ -18970,6 +18977,13 @@ export const EventManagement = {
 
           message.channel_id = reader.string();
           continue;
+        case 17:
+          if (tag !== 136) {
+            break;
+          }
+
+          message.event_status = reader.int32();
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -18997,6 +19011,7 @@ export const EventManagement = {
       create_time: isSet(object.create_time) ? fromJsonTimestamp(object.create_time) : undefined,
       max_permission: isSet(object.max_permission) ? globalThis.Number(object.max_permission) : 0,
       channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "",
+      event_status: isSet(object.event_status) ? globalThis.Number(object.event_status) : 0,
     };
   },
 
@@ -19050,6 +19065,9 @@ export const EventManagement = {
     if (message.channel_id !== "") {
       obj.channel_id = message.channel_id;
     }
+    if (message.event_status !== 0) {
+      obj.event_status = Math.round(message.event_status);
+    }
     return obj;
   },
 
@@ -19074,6 +19092,7 @@ export const EventManagement = {
     message.create_time = object.create_time ?? undefined;
     message.max_permission = object.max_permission ?? 0;
     message.channel_id = object.channel_id ?? "";
+    message.event_status = object.event_status ?? 0;
     return message;
   },
 };
@@ -22107,7 +22126,7 @@ function createBaseCreateEventRequest(): CreateEventRequest {
     start_time: undefined,
     end_time: undefined,
     event_id: "",
-    event_status: "",
+    event_status: 0,
     channel_id: "",
   };
 }
@@ -22141,8 +22160,8 @@ export const CreateEventRequest = {
     if (message.event_id !== "") {
       writer.uint32(74).string(message.event_id);
     }
-    if (message.event_status !== "") {
-      writer.uint32(82).string(message.event_status);
+    if (message.event_status !== 0) {
+      writer.uint32(80).int32(message.event_status);
     }
     if (message.channel_id !== "") {
       writer.uint32(90).string(message.channel_id);
@@ -22221,11 +22240,11 @@ export const CreateEventRequest = {
           message.event_id = reader.string();
           continue;
         case 10:
-          if (tag !== 82) {
+          if (tag !== 80) {
             break;
           }
 
-          message.event_status = reader.string();
+          message.event_status = reader.int32();
           continue;
         case 11:
           if (tag !== 90) {
@@ -22254,7 +22273,7 @@ export const CreateEventRequest = {
       start_time: isSet(object.start_time) ? fromJsonTimestamp(object.start_time) : undefined,
       end_time: isSet(object.end_time) ? fromJsonTimestamp(object.end_time) : undefined,
       event_id: isSet(object.event_id) ? globalThis.String(object.event_id) : "",
-      event_status: isSet(object.event_status) ? globalThis.String(object.event_status) : "",
+      event_status: isSet(object.event_status) ? globalThis.Number(object.event_status) : 0,
       channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "",
     };
   },
@@ -22288,8 +22307,8 @@ export const CreateEventRequest = {
     if (message.event_id !== "") {
       obj.event_id = message.event_id;
     }
-    if (message.event_status !== "") {
-      obj.event_status = message.event_status;
+    if (message.event_status !== 0) {
+      obj.event_status = Math.round(message.event_status);
     }
     if (message.channel_id !== "") {
       obj.channel_id = message.channel_id;
@@ -22311,7 +22330,7 @@ export const CreateEventRequest = {
     message.start_time = object.start_time ?? undefined;
     message.end_time = object.end_time ?? undefined;
     message.event_id = object.event_id ?? "";
-    message.event_status = object.event_status ?? "";
+    message.event_status = object.event_status ?? 0;
     message.channel_id = object.channel_id ?? "";
     return message;
   },
@@ -28598,7 +28617,7 @@ export const DeleteCategoryOrderRequest = {
 };
 
 function createBaseStreamHttpCallbackRequest(): StreamHttpCallbackRequest {
-  return { id: "", client_id: "", clan_id: "", channel_id: "", user_id: "", action: 0, is_publisher: false };
+  return { id: "", client_id: "", clan_id: "", channel_id: "", user_id: "", action: 0, is_publisher: false, token: "" };
 }
 
 export const StreamHttpCallbackRequest = {
@@ -28623,6 +28642,9 @@ export const StreamHttpCallbackRequest = {
     }
     if (message.is_publisher !== false) {
       writer.uint32(56).bool(message.is_publisher);
+    }
+    if (message.token !== "") {
+      writer.uint32(66).string(message.token);
     }
     return writer;
   },
@@ -28683,6 +28705,13 @@ export const StreamHttpCallbackRequest = {
 
           message.is_publisher = reader.bool();
           continue;
+        case 8:
+          if (tag !== 66) {
+            break;
+          }
+
+          message.token = reader.string();
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -28701,6 +28730,7 @@ export const StreamHttpCallbackRequest = {
       user_id: isSet(object.user_id) ? globalThis.String(object.user_id) : "",
       action: isSet(object.action) ? globalThis.Number(object.action) : 0,
       is_publisher: isSet(object.is_publisher) ? globalThis.Boolean(object.is_publisher) : false,
+      token: isSet(object.token) ? globalThis.String(object.token) : "",
     };
   },
 
@@ -28727,6 +28757,9 @@ export const StreamHttpCallbackRequest = {
     if (message.is_publisher !== false) {
       obj.is_publisher = message.is_publisher;
     }
+    if (message.token !== "") {
+      obj.token = message.token;
+    }
     return obj;
   },
 
@@ -28742,6 +28775,7 @@ export const StreamHttpCallbackRequest = {
     message.user_id = object.user_id ?? "";
     message.action = object.action ?? 0;
     message.is_publisher = object.is_publisher ?? false;
+    message.token = object.token ?? "";
     return message;
   },
 };
