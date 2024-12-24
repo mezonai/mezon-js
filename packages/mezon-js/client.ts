@@ -1205,7 +1205,8 @@ export class Client {
     eventId: string,
     clanId: string,
     creatorId: string,
-    eventLabel?: string
+    eventLabel?: string,
+    channelId?: string
   ): Promise<boolean> {
     if (
       this.autoRefreshSession &&
@@ -1216,7 +1217,7 @@ export class Client {
     }
 
     return this.apiClient
-      .deleteEvent(session.token, eventId, clanId, creatorId, eventLabel)
+      .deleteEvent(session.token, eventId, clanId, creatorId, eventLabel, channelId)
       .then((response: any) => {
         return response !== undefined;
       });
