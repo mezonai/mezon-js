@@ -2413,6 +2413,7 @@ export interface CreateEventRequest {
   event_id: string;
   event_status: number;
   channel_id: string;
+  action: number;
 }
 
 /** update a event within clan. */
@@ -2427,6 +2428,7 @@ export interface UpdateEventRequest {
   end_time: Date | undefined;
   clan_id: string;
   creator_id: string;
+  channel_voice_id: string;
 }
 
 /** Delete a role the user has access to. */
@@ -2450,6 +2452,8 @@ export interface DeleteEventRequest {
   creator_id: string;
   /** event label */
   event_label: string;
+  /** channel id */
+  channel_id: string;
 }
 
 /** Update fields in a given role. */
@@ -22128,6 +22132,7 @@ function createBaseCreateEventRequest(): CreateEventRequest {
     event_id: "",
     event_status: 0,
     channel_id: "",
+    action: 0,
   };
 }
 
@@ -22165,6 +22170,9 @@ export const CreateEventRequest = {
     }
     if (message.channel_id !== "") {
       writer.uint32(90).string(message.channel_id);
+    }
+    if (message.action !== 0) {
+      writer.uint32(96).int32(message.action);
     }
     return writer;
   },
@@ -22253,6 +22261,13 @@ export const CreateEventRequest = {
 
           message.channel_id = reader.string();
           continue;
+        case 12:
+          if (tag !== 96) {
+            break;
+          }
+
+          message.action = reader.int32();
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -22275,6 +22290,7 @@ export const CreateEventRequest = {
       event_id: isSet(object.event_id) ? globalThis.String(object.event_id) : "",
       event_status: isSet(object.event_status) ? globalThis.Number(object.event_status) : 0,
       channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "",
+      action: isSet(object.action) ? globalThis.Number(object.action) : 0,
     };
   },
 
@@ -22313,6 +22329,9 @@ export const CreateEventRequest = {
     if (message.channel_id !== "") {
       obj.channel_id = message.channel_id;
     }
+    if (message.action !== 0) {
+      obj.action = Math.round(message.action);
+    }
     return obj;
   },
 
@@ -22332,6 +22351,7 @@ export const CreateEventRequest = {
     message.event_id = object.event_id ?? "";
     message.event_status = object.event_status ?? 0;
     message.channel_id = object.channel_id ?? "";
+    message.action = object.action ?? 0;
     return message;
   },
 };
@@ -22348,6 +22368,7 @@ function createBaseUpdateEventRequest(): UpdateEventRequest {
     end_time: undefined,
     clan_id: "",
     creator_id: "",
+    channel_voice_id: "",
   };
 }
 
@@ -22382,6 +22403,9 @@ export const UpdateEventRequest = {
     }
     if (message.creator_id !== "") {
       writer.uint32(82).string(message.creator_id);
+    }
+    if (message.channel_voice_id !== "") {
+      writer.uint32(90).string(message.channel_voice_id);
     }
     return writer;
   },
@@ -22463,6 +22487,13 @@ export const UpdateEventRequest = {
 
           message.creator_id = reader.string();
           continue;
+        case 11:
+          if (tag !== 90) {
+            break;
+          }
+
+          message.channel_voice_id = reader.string();
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -22484,6 +22515,7 @@ export const UpdateEventRequest = {
       end_time: isSet(object.end_time) ? fromJsonTimestamp(object.end_time) : undefined,
       clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
       creator_id: isSet(object.creator_id) ? globalThis.String(object.creator_id) : "",
+      channel_voice_id: isSet(object.channel_voice_id) ? globalThis.String(object.channel_voice_id) : "",
     };
   },
 
@@ -22519,6 +22551,9 @@ export const UpdateEventRequest = {
     if (message.creator_id !== "") {
       obj.creator_id = message.creator_id;
     }
+    if (message.channel_voice_id !== "") {
+      obj.channel_voice_id = message.channel_voice_id;
+    }
     return obj;
   },
 
@@ -22537,6 +22572,7 @@ export const UpdateEventRequest = {
     message.end_time = object.end_time ?? undefined;
     message.clan_id = object.clan_id ?? "";
     message.creator_id = object.creator_id ?? "";
+    message.channel_voice_id = object.channel_voice_id ?? "";
     return message;
   },
 };
@@ -22646,7 +22682,7 @@ export const DeleteRoleRequest = {
 };
 
 function createBaseDeleteEventRequest(): DeleteEventRequest {
-  return { event_id: "", clan_id: "", creator_id: "", event_label: "" };
+  return { event_id: "", clan_id: "", creator_id: "", event_label: "", channel_id: "" };
 }
 
 export const DeleteEventRequest = {
@@ -22662,6 +22698,9 @@ export const DeleteEventRequest = {
     }
     if (message.event_label !== "") {
       writer.uint32(34).string(message.event_label);
+    }
+    if (message.channel_id !== "") {
+      writer.uint32(42).string(message.channel_id);
     }
     return writer;
   },
@@ -22701,6 +22740,13 @@ export const DeleteEventRequest = {
 
           message.event_label = reader.string();
           continue;
+        case 5:
+          if (tag !== 42) {
+            break;
+          }
+
+          message.channel_id = reader.string();
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -22716,6 +22762,7 @@ export const DeleteEventRequest = {
       clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
       creator_id: isSet(object.creator_id) ? globalThis.String(object.creator_id) : "",
       event_label: isSet(object.event_label) ? globalThis.String(object.event_label) : "",
+      channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "",
     };
   },
 
@@ -22733,6 +22780,9 @@ export const DeleteEventRequest = {
     if (message.event_label !== "") {
       obj.event_label = message.event_label;
     }
+    if (message.channel_id !== "") {
+      obj.channel_id = message.channel_id;
+    }
     return obj;
   },
 
@@ -22745,6 +22795,7 @@ export const DeleteEventRequest = {
     message.clan_id = object.clan_id ?? "";
     message.creator_id = object.creator_id ?? "";
     message.event_label = object.event_label ?? "";
+    message.channel_id = object.channel_id ?? "";
     return message;
   },
 };
