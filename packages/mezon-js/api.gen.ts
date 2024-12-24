@@ -262,6 +262,8 @@ export interface MezonUpdateSystemMessageBody {
   boost_message?: string;
   //
   channel_id?: string;
+//
+  hide_audit_log?: string;
   //
   setup_tips?: string;
   //
@@ -2226,6 +2228,8 @@ export interface ApiSystemMessage {
   channel_id?: string;
   //
   clan_id?: string;
+//
+  hide_audit_log?: string;
   //
   id?: string;
   //
@@ -2244,6 +2248,8 @@ export interface ApiSystemMessageRequest {
   channel_id?: string;
   //
   clan_id?: string;
+//
+  hide_audit_log?: string;
   //
   setup_tips?: string;
   //

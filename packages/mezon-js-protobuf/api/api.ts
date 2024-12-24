@@ -2965,6 +2965,8 @@ export interface SystemMessage {
   boost_message: string;
   /** Setup tips */
   setup_tips: string;
+/** Hide audit log */
+  hideAuditLog: string;
 }
 
 /** List of system message. */
@@ -2986,6 +2988,8 @@ export interface SystemMessageRequest {
   boost_message: string;
   /** Setup tips */
   setup_tips: string;
+/** Hide audit log */
+  hideAuditLog: string;
 }
 
 /** Request to delete a system message by clan ID. */
@@ -28083,6 +28087,7 @@ function createBaseSystemMessage(): SystemMessage {
     welcome_sticker: "",
     boost_message: "",
     setup_tips: "",
+hideAuditLog: "",
   };
 }
 
@@ -28108,6 +28113,9 @@ export const SystemMessage = {
     }
     if (message.setup_tips !== "") {
       writer.uint32(58).string(message.setup_tips);
+    }
+if (message.hideAuditLog !== "") {
+      writer.uint32(66).string(message.hideAuditLog);
     }
     return writer;
   },
@@ -28168,6 +28176,13 @@ export const SystemMessage = {
 
           message.setup_tips = reader.string();
           continue;
+case 8:
+          if (tag !== 66) {
+            break;
+          }
+
+          message.hideAuditLog = reader.string();
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -28186,6 +28201,7 @@ export const SystemMessage = {
       welcome_sticker: isSet(object.welcome_sticker) ? globalThis.String(object.welcome_sticker) : "",
       boost_message: isSet(object.boost_message) ? globalThis.String(object.boost_message) : "",
       setup_tips: isSet(object.setup_tips) ? globalThis.String(object.setup_tips) : "",
+hideAuditLog: isSet(object.hideAuditLog) ? globalThis.String(object.hideAuditLog) : "",
     };
   },
 
@@ -28212,6 +28228,9 @@ export const SystemMessage = {
     if (message.setup_tips !== "") {
       obj.setup_tips = message.setup_tips;
     }
+if (message.hideAuditLog !== "") {
+      obj.hideAuditLog = message.hideAuditLog;
+    }
     return obj;
   },
 
@@ -28227,6 +28246,7 @@ export const SystemMessage = {
     message.welcome_sticker = object.welcome_sticker ?? "";
     message.boost_message = object.boost_message ?? "";
     message.setup_tips = object.setup_tips ?? "";
+message.hideAuditLog = object.hideAuditLog ?? "";
     return message;
   },
 };
@@ -28293,7 +28313,15 @@ export const SystemMessagesList = {
 };
 
 function createBaseSystemMessageRequest(): SystemMessageRequest {
-  return { clan_id: "", channel_id: "", welcome_random: "", welcome_sticker: "", boost_message: "", setup_tips: "" };
+  return {
+    clan_id: "",
+    channel_id: "",
+    welcome_random: "",
+    welcome_sticker: "",
+    boost_message: "",
+    setup_tips: "",
+    hideAuditLog: "",
+};
 }
 
 export const SystemMessageRequest = {
@@ -28315,6 +28343,9 @@ export const SystemMessageRequest = {
     }
     if (message.setup_tips !== "") {
       writer.uint32(50).string(message.setup_tips);
+    }
+if (message.hideAuditLog !== "") {
+      writer.uint32(58).string(message.hideAuditLog);
     }
     return writer;
   },
@@ -28368,6 +28399,13 @@ export const SystemMessageRequest = {
 
           message.setup_tips = reader.string();
           continue;
+case 7:
+          if (tag !== 58) {
+            break;
+          }
+
+          message.hideAuditLog = reader.string();
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -28385,6 +28423,7 @@ export const SystemMessageRequest = {
       welcome_sticker: isSet(object.welcome_sticker) ? globalThis.String(object.welcome_sticker) : "",
       boost_message: isSet(object.boost_message) ? globalThis.String(object.boost_message) : "",
       setup_tips: isSet(object.setup_tips) ? globalThis.String(object.setup_tips) : "",
+hideAuditLog: isSet(object.hideAuditLog) ? globalThis.String(object.hideAuditLog) : "",
     };
   },
 
@@ -28408,6 +28447,9 @@ export const SystemMessageRequest = {
     if (message.setup_tips !== "") {
       obj.setup_tips = message.setup_tips;
     }
+if (message.hideAuditLog !== "") {
+      obj.hideAuditLog = message.hideAuditLog;
+    }
     return obj;
   },
 
@@ -28422,6 +28464,7 @@ export const SystemMessageRequest = {
     message.welcome_sticker = object.welcome_sticker ?? "";
     message.boost_message = object.boost_message ?? "";
     message.setup_tips = object.setup_tips ?? "";
+message.hideAuditLog = object.hideAuditLog ?? "";
     return message;
   },
 };
