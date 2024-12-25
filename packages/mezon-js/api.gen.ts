@@ -207,6 +207,8 @@ export interface MezonUpdateEventBody {
   //
   channel_id?: string;
   //
+  channel_voice_id?: string;
+  //
   clan_id?: string;
   //
   creator_id?: string;
@@ -1131,6 +1133,8 @@ export interface ApiCreateEventRequest {
   title?: string;
   //
   channel_id?: string;
+  //
+  action?: number;         
 }
 
 /** Create a event within clan. */
@@ -1187,6 +1191,8 @@ export interface ApiDeleteChannelDescRequest {
 
 /**  */
 export interface ApiDeleteEventRequest {
+  //
+  channel_id?: string;
   //
   clan_id?: string;
   //
@@ -1306,6 +1312,8 @@ export interface ApiEventManagement {
   create_time?: string;
   //
   channel_id?: string;
+  //
+  event_status?: number;
 }
 
 /**  */
@@ -6598,6 +6606,7 @@ export class MezonApi {
     clanId?: string,
     creatorId?: string,
     eventLabel?: string,
+    channelId?: string,
     options: any = {}
   ): Promise<any> {
     if (eventId === null || eventId === undefined) {
@@ -6613,6 +6622,7 @@ export class MezonApi {
     queryParams.set("clan_id", clanId);
     queryParams.set("creator_id", creatorId);
     queryParams.set("event_label", eventLabel);
+    queryParams.set("channel_id", channelId);
 
     let bodyJson: string = "";
 
