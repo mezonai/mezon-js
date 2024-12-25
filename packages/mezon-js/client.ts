@@ -1650,6 +1650,8 @@ export class Client {
             uploader: at.uploader,
             url: at.url,
             create_time: at.create_time,
+            width: at.width,
+            height: at.height,
           });
         });
         return Promise.resolve(result);
