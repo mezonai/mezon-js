@@ -187,6 +187,8 @@ export interface LastPinMessageEvent {
   operation: number;
   // Is public
   is_public: boolean;
+  // clan Id
+  clan_id: string;
 }
 
 export interface UnmuteEvent {
