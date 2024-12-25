@@ -2966,7 +2966,7 @@ export interface SystemMessage {
   /** Setup tips */
   setup_tips: string;
 /** Hide audit log */
-  hideAuditLog: string;
+  hide_audit_log: string;
 }
 
 /** List of system message. */
@@ -2989,7 +2989,7 @@ export interface SystemMessageRequest {
   /** Setup tips */
   setup_tips: string;
 /** Hide audit log */
-  hideAuditLog: string;
+  hide_audit_log: string;
 }
 
 /** Request to delete a system message by clan ID. */
@@ -28087,7 +28087,7 @@ function createBaseSystemMessage(): SystemMessage {
     welcome_sticker: "",
     boost_message: "",
     setup_tips: "",
-hideAuditLog: "",
+    hide_audit_log: "",
   };
 }
 
@@ -28114,8 +28114,8 @@ export const SystemMessage = {
     if (message.setup_tips !== "") {
       writer.uint32(58).string(message.setup_tips);
     }
-if (message.hideAuditLog !== "") {
-      writer.uint32(66).string(message.hideAuditLog);
+    if (message.hide_audit_log !== "") {
+      writer.uint32(66).string(message.hide_audit_log);
     }
     return writer;
   },
@@ -28181,7 +28181,7 @@ case 8:
             break;
           }
 
-          message.hideAuditLog = reader.string();
+          message.hide_audit_log = reader.string();
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -28201,7 +28201,7 @@ case 8:
       welcome_sticker: isSet(object.welcome_sticker) ? globalThis.String(object.welcome_sticker) : "",
       boost_message: isSet(object.boost_message) ? globalThis.String(object.boost_message) : "",
       setup_tips: isSet(object.setup_tips) ? globalThis.String(object.setup_tips) : "",
-hideAuditLog: isSet(object.hideAuditLog) ? globalThis.String(object.hideAuditLog) : "",
+      hide_audit_log: isSet(object.hide_audit_log) ? globalThis.String(object.hide_audit_log) : "",
     };
   },
 
@@ -28228,8 +28228,8 @@ hideAuditLog: isSet(object.hideAuditLog) ? globalThis.String(object.hideAuditLog
     if (message.setup_tips !== "") {
       obj.setup_tips = message.setup_tips;
     }
-if (message.hideAuditLog !== "") {
-      obj.hideAuditLog = message.hideAuditLog;
+    if (message.hide_audit_log !== "") {
+      obj.hide_audit_log = message.hide_audit_log;
     }
     return obj;
   },
@@ -28246,7 +28246,7 @@ if (message.hideAuditLog !== "") {
     message.welcome_sticker = object.welcome_sticker ?? "";
     message.boost_message = object.boost_message ?? "";
     message.setup_tips = object.setup_tips ?? "";
-message.hideAuditLog = object.hideAuditLog ?? "";
+    message.hide_audit_log = object.hide_audit_log ?? "";
     return message;
   },
 };
@@ -28320,7 +28320,7 @@ function createBaseSystemMessageRequest(): SystemMessageRequest {
     welcome_sticker: "",
     boost_message: "",
     setup_tips: "",
-    hideAuditLog: "",
+    hide_audit_log: "",
 };
 }
 
@@ -28344,8 +28344,8 @@ export const SystemMessageRequest = {
     if (message.setup_tips !== "") {
       writer.uint32(50).string(message.setup_tips);
     }
-if (message.hideAuditLog !== "") {
-      writer.uint32(58).string(message.hideAuditLog);
+    if (message.hide_audit_log !== "") {
+      writer.uint32(58).string(message.hide_audit_log);
     }
     return writer;
   },
@@ -28404,7 +28404,7 @@ case 7:
             break;
           }
 
-          message.hideAuditLog = reader.string();
+          message.hide_audit_log = reader.string();
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -28423,7 +28423,7 @@ case 7:
       welcome_sticker: isSet(object.welcome_sticker) ? globalThis.String(object.welcome_sticker) : "",
       boost_message: isSet(object.boost_message) ? globalThis.String(object.boost_message) : "",
       setup_tips: isSet(object.setup_tips) ? globalThis.String(object.setup_tips) : "",
-hideAuditLog: isSet(object.hideAuditLog) ? globalThis.String(object.hideAuditLog) : "",
+      hide_audit_log: isSet(object.hide_audit_log) ? globalThis.String(object.hide_audit_log) : "",
     };
   },
 
@@ -28447,8 +28447,8 @@ hideAuditLog: isSet(object.hideAuditLog) ? globalThis.String(object.hideAuditLog
     if (message.setup_tips !== "") {
       obj.setup_tips = message.setup_tips;
     }
-if (message.hideAuditLog !== "") {
-      obj.hideAuditLog = message.hideAuditLog;
+    if (message.hide_audit_log !== "") {
+      obj.hide_audit_log = message.hide_audit_log;
     }
     return obj;
   },
@@ -28464,7 +28464,7 @@ if (message.hideAuditLog !== "") {
     message.welcome_sticker = object.welcome_sticker ?? "";
     message.boost_message = object.boost_message ?? "";
     message.setup_tips = object.setup_tips ?? "";
-message.hideAuditLog = object.hideAuditLog ?? "";
+    message.hide_audit_log = object.hide_audit_log ?? "";
     return message;
   },
 };
