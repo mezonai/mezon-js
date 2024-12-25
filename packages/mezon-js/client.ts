@@ -4532,7 +4532,7 @@ export class Client {
   async createOnboarding(
     session: Session,
     request: ApiCreateOnboardingRequest
-  ): Promise<any> {
+  ): Promise<ApiListOnboardingResponse> {
     if (
       this.autoRefreshSession &&
       session.refresh_token &&
@@ -4543,7 +4543,7 @@ export class Client {
 
     return this.apiClient
       .createOnboarding(session.token, request)
-      .then((response: any) => {
+      .then((response: ApiListOnboardingResponse) => {
         return response;
       });
   }

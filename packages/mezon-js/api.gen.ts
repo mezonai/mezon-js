@@ -10313,44 +10313,45 @@ export class MezonApi {
     ]);
   }
 
-  /** create onboarding. */
-  createOnboarding(
-    bearerToken: string,
-    body: ApiCreateOnboardingRequest,
-    options: any = {}
-  ): Promise<any> {
-    if (body === null || body === undefined) {
+/** create onboarding. */
+createOnboarding(
+  bearerToken: string,
+  body: ApiCreateOnboardingRequest,
+  options: any = {}
+): Promise<ApiListOnboardingResponse> {
+  
+  if (body === null || body === undefined) {
       throw new Error(
         "'body' is a required parameter but is null or undefined."
       );
-    }
-    const urlPath = "/v2/onboarding";
-    const queryParams = new Map<string, any>();
+  }
+  const urlPath = "/v2/onboarding";
+  const queryParams = new Map<string, any>();
 
     let bodyJson: string = "";
-    bodyJson = JSON.stringify(body || {});
+  bodyJson = JSON.stringify(body || {});
 
-    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
-    const fetchOptions = buildFetchOptions("POST", options, bodyJson);
-    if (bearerToken) {
+  const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
+  const fetchOptions = buildFetchOptions("POST", options, bodyJson);
+  if (bearerToken) {
       fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-    }
-
-    return Promise.race([
-      fetch(fullUrl, fetchOptions).then((response) => {
-        if (response.status == 204) {
-          return response;
-        } else if (response.status >= 200 && response.status < 300) {
-          return response.json();
-        } else {
-          throw response;
-        }
-      }),
-      new Promise((_, reject) =>
-        setTimeout(reject, this.timeoutMs, "Request timed out.")
-      ),
-    ]);
   }
+
+  return Promise.race([
+    fetch(fullUrl, fetchOptions).then((response) => {
+      if (response.status == 204) {
+        return response;
+      } else if (response.status >= 200 && response.status < 300) {
+        return response.json();
+      } else {
+        throw response;
+      }
+    }),
+    new Promise((_, reject) =>
+      setTimeout(reject, this.timeoutMs, "Request timed out.")
+    ),
+  ]);
+}
 
   /** delete onboarding. */
   deleteOnboarding(
