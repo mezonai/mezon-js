@@ -619,10 +619,10 @@ export interface ApiChannelAttachment {
   url?: string;
   //message id.
   message_id?: string;
-  //message id.
+  //width.
   width?: number;
-  //message id.
-  hight?: number;
+  //height.
+  height?: number;
 }
 
 /**  */
