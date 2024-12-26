@@ -1138,7 +1138,11 @@ export interface ApiCreateEventRequest {
   //
   channel_id?: string;
   //
-  action?: number;         
+  action?: number;
+  //
+  event_status?: number;
+  //
+  repeat_type?: number;      
 }
 
 /** Create a event within clan. */

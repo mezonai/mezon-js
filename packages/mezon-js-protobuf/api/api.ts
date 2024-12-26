@@ -1053,6 +1053,10 @@ export interface ChannelAttachment {
     | undefined;
   /** message id. */
   message_id: string;
+  /** width */
+  width: number;
+  /** height */
+  height: number;
 }
 
 /** channel attachment list */
@@ -2418,6 +2422,7 @@ export interface CreateEventRequest {
   event_status: number;
   channel_id: string;
   action: number;
+  repeat_type: number;
 }
 
 /** update a event within clan. */
@@ -2974,7 +2979,7 @@ export interface SystemMessage {
   boost_message: string;
   /** Setup tips */
   setup_tips: string;
-/** Hide audit log */
+  /** Hide audit log */
   hide_audit_log: string;
 }
 
@@ -2997,7 +3002,7 @@ export interface SystemMessageRequest {
   boost_message: string;
   /** Setup tips */
   setup_tips: string;
-/** Hide audit log */
+  /** Hide audit log */
   hide_audit_log: string;
 }
 
@@ -10680,6 +10685,8 @@ function createBaseChannelAttachment(): ChannelAttachment {
     uploader: "",
     create_time: undefined,
     message_id: "",
+    width: 0,
+    height: 0,
   };
 }
 
@@ -10708,6 +10715,12 @@ export const ChannelAttachment = {
     }
     if (message.message_id !== "") {
       writer.uint32(66).string(message.message_id);
+    }
+    if (message.width !== 0) {
+      writer.uint32(72).int32(message.width);
+    }
+    if (message.height !== 0) {
+      writer.uint32(80).int32(message.height);
     }
     return writer;
   },
@@ -10775,6 +10788,20 @@ export const ChannelAttachment = {
 
           message.message_id = reader.string();
           continue;
+        case 9:
+          if (tag !== 72) {
+            break;
+          }
+
+          message.width = reader.int32();
+          continue;
+        case 10:
+          if (tag !== 80) {
+            break;
+          }
+
+          message.height = reader.int32();
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -10794,6 +10821,8 @@ export const ChannelAttachment = {
       uploader: isSet(object.uploader) ? globalThis.String(object.uploader) : "",
       create_time: isSet(object.create_time) ? fromJsonTimestamp(object.create_time) : undefined,
       message_id: isSet(object.message_id) ? globalThis.String(object.message_id) : "",
+      width: isSet(object.width) ? globalThis.Number(object.width) : 0,
+      height: isSet(object.height) ? globalThis.Number(object.height) : 0,
     };
   },
 
@@ -10823,6 +10852,12 @@ export const ChannelAttachment = {
     if (message.message_id !== "") {
       obj.message_id = message.message_id;
     }
+    if (message.width !== 0) {
+      obj.width = Math.round(message.width);
+    }
+    if (message.height !== 0) {
+      obj.height = Math.round(message.height);
+    }
     return obj;
   },
 
@@ -10839,6 +10874,8 @@ export const ChannelAttachment = {
     message.uploader = object.uploader ?? "";
     message.create_time = object.create_time ?? undefined;
     message.message_id = object.message_id ?? "";
+    message.width = object.width ?? 0;
+    message.height = object.height ?? 0;
     return message;
   },
 };
@@ -22173,6 +22210,7 @@ function createBaseCreateEventRequest(): CreateEventRequest {
     event_status: 0,
     channel_id: "",
     action: 0,
+    repeat_type: 0,
   };
 }
 
@@ -22213,6 +22251,9 @@ export const CreateEventRequest = {
     }
     if (message.action !== 0) {
       writer.uint32(96).int32(message.action);
+    }
+    if (message.repeat_type !== 0) {
+      writer.uint32(104).int32(message.repeat_type);
     }
     return writer;
   },
@@ -22308,6 +22349,13 @@ export const CreateEventRequest = {
 
           message.action = reader.int32();
           continue;
+        case 13:
+          if (tag !== 104) {
+            break;
+          }
+
+          message.repeat_type = reader.int32();
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -22331,6 +22379,7 @@ export const CreateEventRequest = {
       event_status: isSet(object.event_status) ? globalThis.Number(object.event_status) : 0,
       channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "",
       action: isSet(object.action) ? globalThis.Number(object.action) : 0,
+      repeat_type: isSet(object.repeat_type) ? globalThis.Number(object.repeat_type) : 0,
     };
   },
 
@@ -22372,6 +22421,9 @@ export const CreateEventRequest = {
     if (message.action !== 0) {
       obj.action = Math.round(message.action);
     }
+    if (message.repeat_type !== 0) {
+      obj.repeat_type = Math.round(message.repeat_type);
+    }
     return obj;
   },
 
@@ -22392,6 +22444,7 @@ export const CreateEventRequest = {
     message.event_status = object.event_status ?? 0;
     message.channel_id = object.channel_id ?? "";
     message.action = object.action ?? 0;
+    message.repeat_type = object.repeat_type ?? 0;
     return message;
   },
 };
@@ -28282,7 +28335,7 @@ export const SystemMessage = {
 
           message.setup_tips = reader.string();
           continue;
-case 8:
+        case 8:
           if (tag !== 66) {
             break;
           }
@@ -28427,7 +28480,7 @@ function createBaseSystemMessageRequest(): SystemMessageRequest {
     boost_message: "",
     setup_tips: "",
     hide_audit_log: "",
-};
+  };
 }
 
 export const SystemMessageRequest = {
@@ -28505,7 +28558,7 @@ export const SystemMessageRequest = {
 
           message.setup_tips = reader.string();
           continue;
-case 7:
+        case 7:
           if (tag !== 58) {
             break;
           }
