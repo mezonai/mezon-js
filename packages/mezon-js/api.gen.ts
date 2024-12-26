@@ -2306,6 +2306,8 @@ export interface ApiUpdateAccountRequest {
   location?: string;
   //
   logo?: string;
+//
+  public_key?: string;
   //
   splash_screen?: string;
   //The timezone set by the user.
