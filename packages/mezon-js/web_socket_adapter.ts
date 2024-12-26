@@ -90,7 +90,6 @@ export interface SocketOpenHandler {
  */
 export class WebSocketAdapterText implements WebSocketAdapter {
   private _socket?: WebSocket;
-  private _pcRef?: RTCPeerConnection;
 
   get onClose(): SocketCloseHandler | null {
     return this._socket!.onclose;
@@ -161,14 +160,9 @@ export class WebSocketAdapterText implements WebSocketAdapter {
       platform
     )}`;
     this._socket = new WebSocket(url);
-    this._pcRef = new RTCPeerConnection({
-      iceServers: [{ urls: "stun:stun.l.google.com:19302" }],
-    });
   }
 
   close() {
-    this._pcRef?.close();
-    this._pcRef = undefined;
     this._socket?.close();
     this._socket = undefined;
   }
