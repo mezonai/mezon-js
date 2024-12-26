@@ -222,6 +222,8 @@ export interface MezonUpdateEventBody {
   start_time?: string;
   //
   title?: string;
+  //
+  channel_id_old?: string;
 }
 
 /** Update fields in a given role. */
@@ -1143,6 +1145,8 @@ export interface ApiCreateEventRequest {
   event_status?: number;
   //
   repeat_type?: number;      
+  //
+  create_id?: number;
 }
 
 /** Create a event within clan. */
@@ -1322,6 +1326,8 @@ export interface ApiEventManagement {
   channel_id?: string;
   //
   event_status?: number;
+  //
+  repeat_type?: number;
 }
 
 /**  */

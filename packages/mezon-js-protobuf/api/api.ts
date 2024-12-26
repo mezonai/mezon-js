@@ -191,6 +191,8 @@ export interface Account {
   logo: string;
   /** Splash screen url */
   splash_screen: string;
+  /** E2ee encrypt private key */
+  encrypt_private_key: string;
 }
 
 /** Obtain a new authentication token using a refresh token. */
@@ -1411,6 +1413,8 @@ export interface UpdateAccountRequest {
   logo: string;
   /** splash screen */
   splash_screen: string;
+  /** e2ee encrypt private key */
+  encrypt_private_key: string;
 }
 
 /** Update fields in a given group. */
@@ -2436,6 +2440,7 @@ export interface UpdateEventRequest {
   clan_id: string;
   creator_id: string;
   channel_voice_id: string;
+  channel_id_old: string;
 }
 
 /** Delete a role the user has access to. */
@@ -3855,6 +3860,7 @@ function createBaseAccount(): Account {
     disable_time: undefined,
     logo: "",
     splash_screen: "",
+    encrypt_private_key: "",
   };
 }
 
@@ -3886,6 +3892,9 @@ export const Account = {
     }
     if (message.splash_screen !== "") {
       writer.uint32(74).string(message.splash_screen);
+    }
+    if (message.encrypt_private_key !== "") {
+      writer.uint32(82).string(message.encrypt_private_key);
     }
     return writer;
   },
@@ -3960,6 +3969,13 @@ export const Account = {
 
           message.splash_screen = reader.string();
           continue;
+        case 10:
+          if (tag !== 82) {
+            break;
+          }
+
+          message.encrypt_private_key = reader.string();
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -3982,6 +3998,7 @@ export const Account = {
       disable_time: isSet(object.disable_time) ? fromJsonTimestamp(object.disable_time) : undefined,
       logo: isSet(object.logo) ? globalThis.String(object.logo) : "",
       splash_screen: isSet(object.splash_screen) ? globalThis.String(object.splash_screen) : "",
+      encrypt_private_key: isSet(object.encrypt_private_key) ? globalThis.String(object.encrypt_private_key) : "",
     };
   },
 
@@ -4014,6 +4031,9 @@ export const Account = {
     if (message.splash_screen !== "") {
       obj.splash_screen = message.splash_screen;
     }
+    if (message.encrypt_private_key !== "") {
+      obj.encrypt_private_key = message.encrypt_private_key;
+    }
     return obj;
   },
 
@@ -4031,6 +4051,7 @@ export const Account = {
     message.disable_time = object.disable_time ?? undefined;
     message.logo = object.logo ?? "";
     message.splash_screen = object.splash_screen ?? "";
+    message.encrypt_private_key = object.encrypt_private_key ?? "";
     return message;
   },
 };
@@ -13313,6 +13334,7 @@ function createBaseUpdateAccountRequest(): UpdateAccountRequest {
     dob: undefined,
     logo: "",
     splash_screen: "",
+    encrypt_private_key: "",
   };
 }
 
@@ -13347,6 +13369,9 @@ export const UpdateAccountRequest = {
     }
     if (message.splash_screen !== "") {
       writer.uint32(82).string(message.splash_screen);
+    }
+    if (message.encrypt_private_key !== "") {
+      writer.uint32(90).string(message.encrypt_private_key);
     }
     return writer;
   },
@@ -13428,6 +13453,13 @@ export const UpdateAccountRequest = {
 
           message.splash_screen = reader.string();
           continue;
+        case 11:
+          if (tag !== 90) {
+            break;
+          }
+
+          message.encrypt_private_key = reader.string();
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -13449,6 +13481,7 @@ export const UpdateAccountRequest = {
       dob: isSet(object.dob) ? fromJsonTimestamp(object.dob) : undefined,
       logo: isSet(object.logo) ? globalThis.String(object.logo) : "",
       splash_screen: isSet(object.splash_screen) ? globalThis.String(object.splash_screen) : "",
+      encrypt_private_key: isSet(object.encrypt_private_key) ? globalThis.String(object.encrypt_private_key) : "",
     };
   },
 
@@ -13484,6 +13517,9 @@ export const UpdateAccountRequest = {
     if (message.splash_screen !== "") {
       obj.splash_screen = message.splash_screen;
     }
+    if (message.encrypt_private_key !== "") {
+      obj.encrypt_private_key = message.encrypt_private_key;
+    }
     return obj;
   },
 
@@ -13502,6 +13538,7 @@ export const UpdateAccountRequest = {
     message.dob = object.dob ?? undefined;
     message.logo = object.logo ?? "";
     message.splash_screen = object.splash_screen ?? "";
+    message.encrypt_private_key = object.encrypt_private_key ?? "";
     return message;
   },
 };
@@ -22460,6 +22497,7 @@ function createBaseUpdateEventRequest(): UpdateEventRequest {
     clan_id: "",
     creator_id: "",
     channel_voice_id: "",
+    channel_id_old: "",
   };
 }
 
@@ -22497,6 +22535,9 @@ export const UpdateEventRequest = {
     }
     if (message.channel_voice_id !== "") {
       writer.uint32(90).string(message.channel_voice_id);
+    }
+    if (message.channel_id_old !== "") {
+      writer.uint32(98).string(message.channel_id_old);
     }
     return writer;
   },
@@ -22585,6 +22626,13 @@ export const UpdateEventRequest = {
 
           message.channel_voice_id = reader.string();
           continue;
+        case 12:
+          if (tag !== 98) {
+            break;
+          }
+
+          message.channel_id_old = reader.string();
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -22607,6 +22655,7 @@ export const UpdateEventRequest = {
       clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
       creator_id: isSet(object.creator_id) ? globalThis.String(object.creator_id) : "",
       channel_voice_id: isSet(object.channel_voice_id) ? globalThis.String(object.channel_voice_id) : "",
+      channel_id_old: isSet(object.channel_id_old) ? globalThis.String(object.channel_id_old) : "",
     };
   },
 
@@ -22645,6 +22694,9 @@ export const UpdateEventRequest = {
     if (message.channel_voice_id !== "") {
       obj.channel_voice_id = message.channel_voice_id;
     }
+    if (message.channel_id_old !== "") {
+      obj.channel_id_old = message.channel_id_old;
+    }
     return obj;
   },
 
@@ -22664,6 +22716,7 @@ export const UpdateEventRequest = {
     message.clan_id = object.clan_id ?? "";
     message.creator_id = object.creator_id ?? "";
     message.channel_voice_id = object.channel_voice_id ?? "";
+    message.channel_id_old = object.channel_id_old ?? "";
     return message;
   },
 };
