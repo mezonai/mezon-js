@@ -264,7 +264,7 @@ export interface MezonUpdateSystemMessageBody {
   boost_message?: string;
   //
   channel_id?: string;
-//
+  //
   hide_audit_log?: string;
   //
   setup_tips?: string;
@@ -324,6 +324,8 @@ export interface ApiAccount {
   disable_time?: string;
   //The email address of the user.
   email?: string;
+  //
+  encrypt_private_key?: string;
   //
   logo?: string;
   //
@@ -1138,7 +1140,7 @@ export interface ApiCreateEventRequest {
   //
   channel_id?: string;
   //
-  action?: number;         
+  action?: number;
 }
 
 /** Create a event within clan. */
@@ -2240,7 +2242,7 @@ export interface ApiSystemMessage {
   channel_id?: string;
   //
   clan_id?: string;
-//
+  //
   hide_audit_log?: string;
   //
   id?: string;
@@ -2260,7 +2262,7 @@ export interface ApiSystemMessageRequest {
   channel_id?: string;
   //
   clan_id?: string;
-//
+  //
   hide_audit_log?: string;
   //
   setup_tips?: string;
@@ -2300,14 +2302,14 @@ export interface ApiUpdateAccountRequest {
   dob?: string;
   //The display name of the user.
   display_name?: string;
+  //
+  encrypt_private_key?: string;
   //The language expected to be a tag which follows the BCP-47 spec.
   lang_tag?: string;
   //The location set by the user.
   location?: string;
   //
   logo?: string;
-//
-  public_key?: string;
   //
   splash_screen?: string;
   //The timezone set by the user.
@@ -9235,7 +9237,8 @@ export class MezonApi {
   }
 
   /** List Sd Topic */
-  listSdTopic(bearerToken: string,
+  listSdTopic(
+    bearerToken: string,
     clanId?: string,
     limit?: number,
     options: any = {}
@@ -10319,45 +10322,44 @@ export class MezonApi {
     ]);
   }
 
-/** create onboarding. */
-createOnboarding(
-  bearerToken: string,
-  body: ApiCreateOnboardingRequest,
-  options: any = {}
-): Promise<ApiListOnboardingResponse> {
-  
-  if (body === null || body === undefined) {
+  /** create onboarding. */
+  createOnboarding(
+    bearerToken: string,
+    body: ApiCreateOnboardingRequest,
+    options: any = {}
+  ): Promise<ApiListOnboardingResponse> {
+    if (body === null || body === undefined) {
       throw new Error(
         "'body' is a required parameter but is null or undefined."
       );
-  }
-  const urlPath = "/v2/onboarding";
-  const queryParams = new Map<string, any>();
+    }
+    const urlPath = "/v2/onboarding";
+    const queryParams = new Map<string, any>();
 
     let bodyJson: string = "";
-  bodyJson = JSON.stringify(body || {});
+    bodyJson = JSON.stringify(body || {});
 
-  const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
-  const fetchOptions = buildFetchOptions("POST", options, bodyJson);
-  if (bearerToken) {
+    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
+    const fetchOptions = buildFetchOptions("POST", options, bodyJson);
+    if (bearerToken) {
       fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-  }
+    }
 
-  return Promise.race([
-    fetch(fullUrl, fetchOptions).then((response) => {
-      if (response.status == 204) {
-        return response;
-      } else if (response.status >= 200 && response.status < 300) {
-        return response.json();
-      } else {
-        throw response;
-      }
-    }),
-    new Promise((_, reject) =>
-      setTimeout(reject, this.timeoutMs, "Request timed out.")
-    ),
-  ]);
-}
+    return Promise.race([
+      fetch(fullUrl, fetchOptions).then((response) => {
+        if (response.status == 204) {
+          return response;
+        } else if (response.status >= 200 && response.status < 300) {
+          return response.json();
+        } else {
+          throw response;
+        }
+      }),
+      new Promise((_, reject) =>
+        setTimeout(reject, this.timeoutMs, "Request timed out.")
+      ),
+    ]);
+  }
 
   /** delete onboarding. */
   deleteOnboarding(

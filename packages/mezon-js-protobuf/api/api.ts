@@ -191,8 +191,8 @@ export interface Account {
   logo: string;
   /** Splash screen url */
   splash_screen: string;
-/** E2ee public key */
-  public_key: string;
+/** E2ee encrypt private key */
+  encrypt_private_key: string;
 }
 
 /** Obtain a new authentication token using a refresh token. */
@@ -1409,8 +1409,8 @@ export interface UpdateAccountRequest {
   logo: string;
   /** splash screen */
   splash_screen: string;
-/** e2ee public key */
-  public_key: string;
+/** e2ee encrypt private key */
+  encrypt_private_key: string;
 }
 
 /** Update fields in a given group. */
@@ -3852,7 +3852,7 @@ function createBaseAccount(): Account {
     disable_time: undefined,
     logo: "",
     splash_screen: "",
-    public_key: "",
+    encrypt_private_key: "",
   };
 }
 
@@ -3885,8 +3885,8 @@ export const Account = {
     if (message.splash_screen !== "") {
       writer.uint32(74).string(message.splash_screen);
     }
-    if (message.public_key !== "") {
-      writer.uint32(82).string(message.public_key);
+    if (message.encrypt_private_key !== "") {
+      writer.uint32(82).string(message.encrypt_private_key);
     }
     return writer;
   },
@@ -3966,7 +3966,7 @@ case 10:
             break;
           }
 
-          message.public_key = reader.string();
+          message.encrypt_private_key = reader.string();
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -3990,7 +3990,7 @@ case 10:
       disable_time: isSet(object.disable_time) ? fromJsonTimestamp(object.disable_time) : undefined,
       logo: isSet(object.logo) ? globalThis.String(object.logo) : "",
       splash_screen: isSet(object.splash_screen) ? globalThis.String(object.splash_screen) : "",
-      public_key: isSet(object.public_key) ? globalThis.String(object.public_key) : "",
+      encrypt_private_key: isSet(object.encrypt_private_key) ? globalThis.String(object.encrypt_private_key) : "",
     };
   },
 
@@ -4023,8 +4023,8 @@ case 10:
     if (message.splash_screen !== "") {
       obj.splash_screen = message.splash_screen;
     }
-    if (message.public_key !== "") {
-      obj.public_key = message.public_key;
+    if (message.encrypt_private_key !== "") {
+      obj.encrypt_private_key = message.encrypt_private_key;
     }
     return obj;
   },
@@ -4043,7 +4043,7 @@ case 10:
     message.disable_time = object.disable_time ?? undefined;
     message.logo = object.logo ?? "";
     message.splash_screen = object.splash_screen ?? "";
-    message.public_key = object.public_key ?? "";
+    message.encrypt_private_key = object.encrypt_private_key ?? "";
     return message;
   },
 };
@@ -13294,7 +13294,7 @@ function createBaseUpdateAccountRequest(): UpdateAccountRequest {
     dob: undefined,
     logo: "",
     splash_screen: "",
-    public_key: "",
+    encrypt_private_key: "",
   };
 }
 
@@ -13330,8 +13330,8 @@ export const UpdateAccountRequest = {
     if (message.splash_screen !== "") {
       writer.uint32(82).string(message.splash_screen);
     }
-    if (message.public_key !== "") {
-      writer.uint32(90).string(message.public_key);
+    if (message.encrypt_private_key !== "") {
+      writer.uint32(90).string(message.encrypt_private_key);
     }
     return writer;
   },
@@ -13418,7 +13418,7 @@ case 11:
             break;
           }
 
-          message.public_key = reader.string();
+          message.encrypt_private_key = reader.string();
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -13441,7 +13441,7 @@ case 11:
       dob: isSet(object.dob) ? fromJsonTimestamp(object.dob) : undefined,
       logo: isSet(object.logo) ? globalThis.String(object.logo) : "",
       splash_screen: isSet(object.splash_screen) ? globalThis.String(object.splash_screen) : "",
-      public_key: isSet(object.public_key) ? globalThis.String(object.public_key) : "",
+      encrypt_private_key: isSet(object.encrypt_private_key) ? globalThis.String(object.encrypt_private_key) : "",
     };
   },
 
@@ -13477,8 +13477,8 @@ case 11:
     if (message.splash_screen !== "") {
       obj.splash_screen = message.splash_screen;
     }
-    if (message.public_key !== "") {
-      obj.public_key = message.public_key;
+    if (message.encrypt_private_key !== "") {
+      obj.encrypt_private_key = message.encrypt_private_key;
     }
     return obj;
   },
@@ -13498,7 +13498,7 @@ case 11:
     message.dob = object.dob ?? undefined;
     message.logo = object.logo ?? "";
     message.splash_screen = object.splash_screen ?? "";
-    message.public_key = object.public_key ?? "";
+    message.encrypt_private_key = object.encrypt_private_key ?? "";
     return message;
   },
 };
