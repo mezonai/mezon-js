@@ -191,7 +191,11 @@ export interface Account {
   logo: string;
   /** Splash screen url */
   splash_screen: string;
+<<<<<<< HEAD
   /** E2ee encrypt private key */
+=======
+/** E2ee encrypt private key */
+>>>>>>> e01ae0eb2103b40b0bb6a5743db7d1faefac4766
   encrypt_private_key: string;
 }
 
@@ -1413,7 +1417,11 @@ export interface UpdateAccountRequest {
   logo: string;
   /** splash screen */
   splash_screen: string;
+<<<<<<< HEAD
   /** e2ee encrypt private key */
+=======
+/** e2ee encrypt private key */
+>>>>>>> e01ae0eb2103b40b0bb6a5743db7d1faefac4766
   encrypt_private_key: string;
 }
 
