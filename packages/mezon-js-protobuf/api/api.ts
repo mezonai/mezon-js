@@ -191,7 +191,7 @@ export interface Account {
   logo: string;
   /** Splash screen url */
   splash_screen: string;
-/** E2ee encrypt private key */
+  /** E2ee encrypt private key */
   encrypt_private_key: string;
 }
 
@@ -1053,6 +1053,10 @@ export interface ChannelAttachment {
     | undefined;
   /** message id. */
   message_id: string;
+  /** width */
+  width: number;
+  /** height */
+  height: number;
 }
 
 /** channel attachment list */
@@ -1409,7 +1413,7 @@ export interface UpdateAccountRequest {
   logo: string;
   /** splash screen */
   splash_screen: string;
-/** e2ee encrypt private key */
+  /** e2ee encrypt private key */
   encrypt_private_key: string;
 }
 
@@ -2099,6 +2103,7 @@ export interface EventManagement {
   max_permission: number;
   channel_id: string;
   event_status: number;
+  repeat_type: number;
 }
 
 /** Permission record */
@@ -2418,6 +2423,8 @@ export interface CreateEventRequest {
   event_status: number;
   channel_id: string;
   action: number;
+  repeat_type: number;
+  creator_id: string;
 }
 
 /** update a event within clan. */
@@ -2433,6 +2440,8 @@ export interface UpdateEventRequest {
   clan_id: string;
   creator_id: string;
   channel_voice_id: string;
+  channel_id_old: string;
+  repeat_type: number;
 }
 
 /** Delete a role the user has access to. */
@@ -2974,7 +2983,7 @@ export interface SystemMessage {
   boost_message: string;
   /** Setup tips */
   setup_tips: string;
-/** Hide audit log */
+  /** Hide audit log */
   hide_audit_log: string;
 }
 
@@ -2997,7 +3006,7 @@ export interface SystemMessageRequest {
   boost_message: string;
   /** Setup tips */
   setup_tips: string;
-/** Hide audit log */
+  /** Hide audit log */
   hide_audit_log: string;
 }
 
@@ -3961,7 +3970,7 @@ export const Account = {
 
           message.splash_screen = reader.string();
           continue;
-case 10:
+        case 10:
           if (tag !== 82) {
             break;
           }
@@ -10680,6 +10689,8 @@ function createBaseChannelAttachment(): ChannelAttachment {
     uploader: "",
     create_time: undefined,
     message_id: "",
+    width: 0,
+    height: 0,
   };
 }
 
@@ -10708,6 +10719,12 @@ export const ChannelAttachment = {
     }
     if (message.message_id !== "") {
       writer.uint32(66).string(message.message_id);
+    }
+    if (message.width !== 0) {
+      writer.uint32(72).int32(message.width);
+    }
+    if (message.height !== 0) {
+      writer.uint32(80).int32(message.height);
     }
     return writer;
   },
@@ -10775,6 +10792,20 @@ export const ChannelAttachment = {
 
           message.message_id = reader.string();
           continue;
+        case 9:
+          if (tag !== 72) {
+            break;
+          }
+
+          message.width = reader.int32();
+          continue;
+        case 10:
+          if (tag !== 80) {
+            break;
+          }
+
+          message.height = reader.int32();
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -10794,6 +10825,8 @@ export const ChannelAttachment = {
       uploader: isSet(object.uploader) ? globalThis.String(object.uploader) : "",
       create_time: isSet(object.create_time) ? fromJsonTimestamp(object.create_time) : undefined,
       message_id: isSet(object.message_id) ? globalThis.String(object.message_id) : "",
+      width: isSet(object.width) ? globalThis.Number(object.width) : 0,
+      height: isSet(object.height) ? globalThis.Number(object.height) : 0,
     };
   },
 
@@ -10823,6 +10856,12 @@ export const ChannelAttachment = {
     if (message.message_id !== "") {
       obj.message_id = message.message_id;
     }
+    if (message.width !== 0) {
+      obj.width = Math.round(message.width);
+    }
+    if (message.height !== 0) {
+      obj.height = Math.round(message.height);
+    }
     return obj;
   },
 
@@ -10839,6 +10878,8 @@ export const ChannelAttachment = {
     message.uploader = object.uploader ?? "";
     message.create_time = object.create_time ?? undefined;
     message.message_id = object.message_id ?? "";
+    message.width = object.width ?? 0;
+    message.height = object.height ?? 0;
     return message;
   },
 };
@@ -13413,7 +13454,7 @@ export const UpdateAccountRequest = {
 
           message.splash_screen = reader.string();
           continue;
-case 11:
+        case 11:
           if (tag !== 90) {
             break;
           }
@@ -18843,6 +18884,7 @@ function createBaseEventManagement(): EventManagement {
     max_permission: 0,
     channel_id: "",
     event_status: 0,
+    repeat_type: 0,
   };
 }
 
@@ -18898,6 +18940,9 @@ export const EventManagement = {
     }
     if (message.event_status !== 0) {
       writer.uint32(136).int32(message.event_status);
+    }
+    if (message.repeat_type !== 0) {
+      writer.uint32(144).int32(message.repeat_type);
     }
     return writer;
   },
@@ -19028,6 +19073,13 @@ export const EventManagement = {
 
           message.event_status = reader.int32();
           continue;
+        case 18:
+          if (tag !== 144) {
+            break;
+          }
+
+          message.repeat_type = reader.int32();
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -19056,6 +19108,7 @@ export const EventManagement = {
       max_permission: isSet(object.max_permission) ? globalThis.Number(object.max_permission) : 0,
       channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "",
       event_status: isSet(object.event_status) ? globalThis.Number(object.event_status) : 0,
+      repeat_type: isSet(object.repeat_type) ? globalThis.Number(object.repeat_type) : 0,
     };
   },
 
@@ -19112,6 +19165,9 @@ export const EventManagement = {
     if (message.event_status !== 0) {
       obj.event_status = Math.round(message.event_status);
     }
+    if (message.repeat_type !== 0) {
+      obj.repeat_type = Math.round(message.repeat_type);
+    }
     return obj;
   },
 
@@ -19137,6 +19193,7 @@ export const EventManagement = {
     message.max_permission = object.max_permission ?? 0;
     message.channel_id = object.channel_id ?? "";
     message.event_status = object.event_status ?? 0;
+    message.repeat_type = object.repeat_type ?? 0;
     return message;
   },
 };
@@ -22173,6 +22230,8 @@ function createBaseCreateEventRequest(): CreateEventRequest {
     event_status: 0,
     channel_id: "",
     action: 0,
+    repeat_type: 0,
+    creator_id: "",
   };
 }
 
@@ -22213,6 +22272,12 @@ export const CreateEventRequest = {
     }
     if (message.action !== 0) {
       writer.uint32(96).int32(message.action);
+    }
+    if (message.repeat_type !== 0) {
+      writer.uint32(104).int32(message.repeat_type);
+    }
+    if (message.creator_id !== "") {
+      writer.uint32(114).string(message.creator_id);
     }
     return writer;
   },
@@ -22308,6 +22373,20 @@ export const CreateEventRequest = {
 
           message.action = reader.int32();
           continue;
+        case 13:
+          if (tag !== 104) {
+            break;
+          }
+
+          message.repeat_type = reader.int32();
+          continue;
+        case 14:
+          if (tag !== 114) {
+            break;
+          }
+
+          message.creator_id = reader.string();
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -22331,6 +22410,8 @@ export const CreateEventRequest = {
       event_status: isSet(object.event_status) ? globalThis.Number(object.event_status) : 0,
       channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "",
       action: isSet(object.action) ? globalThis.Number(object.action) : 0,
+      repeat_type: isSet(object.repeat_type) ? globalThis.Number(object.repeat_type) : 0,
+      creator_id: isSet(object.creator_id) ? globalThis.String(object.creator_id) : "",
     };
   },
 
@@ -22372,6 +22453,12 @@ export const CreateEventRequest = {
     if (message.action !== 0) {
       obj.action = Math.round(message.action);
     }
+    if (message.repeat_type !== 0) {
+      obj.repeat_type = Math.round(message.repeat_type);
+    }
+    if (message.creator_id !== "") {
+      obj.creator_id = message.creator_id;
+    }
     return obj;
   },
 
@@ -22392,6 +22479,8 @@ export const CreateEventRequest = {
     message.event_status = object.event_status ?? 0;
     message.channel_id = object.channel_id ?? "";
     message.action = object.action ?? 0;
+    message.repeat_type = object.repeat_type ?? 0;
+    message.creator_id = object.creator_id ?? "";
     return message;
   },
 };
@@ -22409,6 +22498,8 @@ function createBaseUpdateEventRequest(): UpdateEventRequest {
     clan_id: "",
     creator_id: "",
     channel_voice_id: "",
+    channel_id_old: "",
+    repeat_type: 0,
   };
 }
 
@@ -22446,6 +22537,12 @@ export const UpdateEventRequest = {
     }
     if (message.channel_voice_id !== "") {
       writer.uint32(90).string(message.channel_voice_id);
+    }
+    if (message.channel_id_old !== "") {
+      writer.uint32(98).string(message.channel_id_old);
+    }
+    if (message.repeat_type !== 0) {
+      writer.uint32(104).int32(message.repeat_type);
     }
     return writer;
   },
@@ -22534,6 +22631,20 @@ export const UpdateEventRequest = {
 
           message.channel_voice_id = reader.string();
           continue;
+        case 12:
+          if (tag !== 98) {
+            break;
+          }
+
+          message.channel_id_old = reader.string();
+          continue;
+        case 13:
+          if (tag !== 104) {
+            break;
+          }
+
+          message.repeat_type = reader.int32();
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -22556,6 +22667,8 @@ export const UpdateEventRequest = {
       clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
       creator_id: isSet(object.creator_id) ? globalThis.String(object.creator_id) : "",
       channel_voice_id: isSet(object.channel_voice_id) ? globalThis.String(object.channel_voice_id) : "",
+      channel_id_old: isSet(object.channel_id_old) ? globalThis.String(object.channel_id_old) : "",
+      repeat_type: isSet(object.repeat_type) ? globalThis.Number(object.repeat_type) : 0,
     };
   },
 
@@ -22594,6 +22707,12 @@ export const UpdateEventRequest = {
     if (message.channel_voice_id !== "") {
       obj.channel_voice_id = message.channel_voice_id;
     }
+    if (message.channel_id_old !== "") {
+      obj.channel_id_old = message.channel_id_old;
+    }
+    if (message.repeat_type !== 0) {
+      obj.repeat_type = Math.round(message.repeat_type);
+    }
     return obj;
   },
 
@@ -22613,6 +22732,8 @@ export const UpdateEventRequest = {
     message.clan_id = object.clan_id ?? "";
     message.creator_id = object.creator_id ?? "";
     message.channel_voice_id = object.channel_voice_id ?? "";
+    message.channel_id_old = object.channel_id_old ?? "";
+    message.repeat_type = object.repeat_type ?? 0;
     return message;
   },
 };
@@ -28282,7 +28403,7 @@ export const SystemMessage = {
 
           message.setup_tips = reader.string();
           continue;
-case 8:
+        case 8:
           if (tag !== 66) {
             break;
           }
@@ -28427,7 +28548,7 @@ function createBaseSystemMessageRequest(): SystemMessageRequest {
     boost_message: "",
     setup_tips: "",
     hide_audit_log: "",
-};
+  };
 }
 
 export const SystemMessageRequest = {
@@ -28505,7 +28626,7 @@ export const SystemMessageRequest = {
 
           message.setup_tips = reader.string();
           continue;
-case 7:
+        case 7:
           if (tag !== 58) {
             break;
           }
