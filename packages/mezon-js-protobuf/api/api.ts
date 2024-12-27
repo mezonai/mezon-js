@@ -2441,6 +2441,7 @@ export interface UpdateEventRequest {
   creator_id: string;
   channel_voice_id: string;
   channel_id_old: string;
+  repeat_type: number;
 }
 
 /** Delete a role the user has access to. */
@@ -22498,6 +22499,7 @@ function createBaseUpdateEventRequest(): UpdateEventRequest {
     creator_id: "",
     channel_voice_id: "",
     channel_id_old: "",
+    repeat_type: 0,
   };
 }
 
@@ -22538,6 +22540,9 @@ export const UpdateEventRequest = {
     }
     if (message.channel_id_old !== "") {
       writer.uint32(98).string(message.channel_id_old);
+    }
+    if (message.repeat_type !== 0) {
+      writer.uint32(104).int32(message.repeat_type);
     }
     return writer;
   },
@@ -22633,6 +22638,13 @@ export const UpdateEventRequest = {
 
           message.channel_id_old = reader.string();
           continue;
+        case 13:
+          if (tag !== 104) {
+            break;
+          }
+
+          message.repeat_type = reader.int32();
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -22656,6 +22668,7 @@ export const UpdateEventRequest = {
       creator_id: isSet(object.creator_id) ? globalThis.String(object.creator_id) : "",
       channel_voice_id: isSet(object.channel_voice_id) ? globalThis.String(object.channel_voice_id) : "",
       channel_id_old: isSet(object.channel_id_old) ? globalThis.String(object.channel_id_old) : "",
+      repeat_type: isSet(object.repeat_type) ? globalThis.Number(object.repeat_type) : 0,
     };
   },
 
@@ -22697,6 +22710,9 @@ export const UpdateEventRequest = {
     if (message.channel_id_old !== "") {
       obj.channel_id_old = message.channel_id_old;
     }
+    if (message.repeat_type !== 0) {
+      obj.repeat_type = Math.round(message.repeat_type);
+    }
     return obj;
   },
 
@@ -22717,6 +22733,7 @@ export const UpdateEventRequest = {
     message.creator_id = object.creator_id ?? "";
     message.channel_voice_id = object.channel_voice_id ?? "";
     message.channel_id_old = object.channel_id_old ?? "";
+    message.repeat_type = object.repeat_type ?? 0;
     return message;
   },
 };
