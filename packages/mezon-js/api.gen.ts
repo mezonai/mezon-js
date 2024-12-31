@@ -2304,6 +2304,8 @@ export interface ApiTokenSentEvent {
   sender_name?: string;
   //
   extra_attribute?: string;
+  //
+  transaction_id?: string;
 }
 
 /** Update a user's account details. */
