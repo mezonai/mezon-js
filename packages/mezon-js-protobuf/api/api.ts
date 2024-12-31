@@ -3516,6 +3516,8 @@ export interface TokenSentEvent {
   amount: number;
   /** note */
   note: string;
+  /**  */
+  extra_attribute: string;
 }
 
 export interface WithdrawTokenRequest {
@@ -33894,7 +33896,7 @@ export const ListAuditLogRequest = {
 };
 
 function createBaseTokenSentEvent(): TokenSentEvent {
-  return { sender_id: "", sender_name: "", receiver_id: "", amount: 0, note: "" };
+  return { sender_id: "", sender_name: "", receiver_id: "", amount: 0, note: "", extra_attribute: "" };
 }
 
 export const TokenSentEvent = {
@@ -33913,6 +33915,9 @@ export const TokenSentEvent = {
     }
     if (message.note !== "") {
       writer.uint32(42).string(message.note);
+    }
+    if (message.extra_attribute !== "") {
+      writer.uint32(50).string(message.extra_attribute);
     }
     return writer;
   },
@@ -33959,6 +33964,13 @@ export const TokenSentEvent = {
 
           message.note = reader.string();
           continue;
+        case 6:
+          if (tag !== 50) {
+            break;
+          }
+
+          message.extra_attribute = reader.string();
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -33975,6 +33987,7 @@ export const TokenSentEvent = {
       receiver_id: isSet(object.receiver_id) ? globalThis.String(object.receiver_id) : "",
       amount: isSet(object.amount) ? globalThis.Number(object.amount) : 0,
       note: isSet(object.note) ? globalThis.String(object.note) : "",
+      extra_attribute: isSet(object.extra_attribute) ? globalThis.String(object.extra_attribute) : "",
     };
   },
 
@@ -33995,6 +34008,9 @@ export const TokenSentEvent = {
     if (message.note !== "") {
       obj.note = message.note;
     }
+    if (message.extra_attribute !== "") {
+      obj.extra_attribute = message.extra_attribute;
+    }
     return obj;
   },
 
@@ -34008,6 +34024,7 @@ export const TokenSentEvent = {
     message.receiver_id = object.receiver_id ?? "";
     message.amount = object.amount ?? 0;
     message.note = object.note ?? "";
+    message.extra_attribute = object.extra_attribute ?? "";
     return message;
   },
 };
