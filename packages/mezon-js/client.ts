@@ -1649,6 +1649,7 @@ export class Client {
             id: at.id,
             uploader: at.uploader,
             url: at.url,
+            message_id: at.message_id,
             create_time: at.create_time,
             width: at.width,
             height: at.height,
