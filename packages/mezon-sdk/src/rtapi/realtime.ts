@@ -306,8 +306,12 @@ export interface Envelope {
   sd_topic_event?:
     | SdTopicEvent
     | undefined;
-  /**  */
-  follow_event?: FollowEvent | undefined;
+  /** follower list */
+  follow_event?:
+    | FollowEvent
+    | undefined;
+  /** channel app event */
+  channel_app_event?: ChannelAppEvent | undefined;
 }
 
 export interface FollowEvent {
@@ -1327,6 +1331,14 @@ export interface SdTopicEvent {
   message_id: string;
 }
 
+export interface ChannelAppEvent {
+  user_id: string;
+  username: string;
+  clan_id: string;
+  channel_id: string;
+  action: number;
+}
+
 function createBaseEnvelope(): Envelope {
   return {
     cid: "",
@@ -1400,6 +1412,7 @@ function createBaseEnvelope(): Envelope {
     ptt_leaved_event: undefined,
     sd_topic_event: undefined,
     follow_event: undefined,
+    channel_app_event: undefined,
   };
 }
 
@@ -1617,6 +1630,9 @@ export const Envelope = {
     }
     if (message.follow_event !== undefined) {
       FollowEvent.encode(message.follow_event, writer.uint32(570).fork()).ldelim();
+    }
+    if (message.channel_app_event !== undefined) {
+      ChannelAppEvent.encode(message.channel_app_event, writer.uint32(578).fork()).ldelim();
     }
     return writer;
   },
@@ -2125,6 +2141,13 @@ export const Envelope = {
 
           message.follow_event = FollowEvent.decode(reader, reader.uint32());
           continue;
+        case 72:
+          if (tag !== 578) {
+            break;
+          }
+
+          message.channel_app_event = ChannelAppEvent.decode(reader, reader.uint32());
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -2295,6 +2318,9 @@ export const Envelope = {
       ptt_leaved_event: isSet(object.ptt_leaved_event) ? PTTLeavedEvent.fromJSON(object.ptt_leaved_event) : undefined,
       sd_topic_event: isSet(object.sd_topic_event) ? SdTopicEvent.fromJSON(object.sd_topic_event) : undefined,
       follow_event: isSet(object.follow_event) ? FollowEvent.fromJSON(object.follow_event) : undefined,
+      channel_app_event: isSet(object.channel_app_event)
+        ? ChannelAppEvent.fromJSON(object.channel_app_event)
+        : undefined,
     };
   },
 
@@ -2512,6 +2538,9 @@ export const Envelope = {
     }
     if (message.follow_event !== undefined) {
       obj.follow_event = FollowEvent.toJSON(message.follow_event);
+    }
+    if (message.channel_app_event !== undefined) {
+      obj.channel_app_event = ChannelAppEvent.toJSON(message.channel_app_event);
     }
     return obj;
   },
@@ -2747,6 +2776,9 @@ export const Envelope = {
       : undefined;
     message.follow_event = (object.follow_event !== undefined && object.follow_event !== null)
       ? FollowEvent.fromPartial(object.follow_event)
+      : undefined;
+    message.channel_app_event = (object.channel_app_event !== undefined && object.channel_app_event !== null)
+      ? ChannelAppEvent.fromPartial(object.channel_app_event)
       : undefined;
     return message;
   },
@@ -11468,6 +11500,125 @@ export const SdTopicEvent = {
     message.clan_id = object.clan_id ?? "";
     message.channel_id = object.channel_id ?? "";
     message.message_id = object.message_id ?? "";
+    return message;
+  },
+};
+
+function createBaseChannelAppEvent(): ChannelAppEvent {
+  return { user_id: "", username: "", clan_id: "", channel_id: "", action: 0 };
+}
+
+export const ChannelAppEvent = {
+  encode(message: ChannelAppEvent, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.user_id !== "") {
+      writer.uint32(10).string(message.user_id);
+    }
+    if (message.username !== "") {
+      writer.uint32(18).string(message.username);
+    }
+    if (message.clan_id !== "") {
+      writer.uint32(26).string(message.clan_id);
+    }
+    if (message.channel_id !== "") {
+      writer.uint32(34).string(message.channel_id);
+    }
+    if (message.action !== 0) {
+      writer.uint32(40).int32(message.action);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): ChannelAppEvent {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseChannelAppEvent();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.user_id = reader.string();
+          continue;
+        case 2:
+          if (tag !== 18) {
+            break;
+          }
+
+          message.username = reader.string();
+          continue;
+        case 3:
+          if (tag !== 26) {
+            break;
+          }
+
+          message.clan_id = reader.string();
+          continue;
+        case 4:
+          if (tag !== 34) {
+            break;
+          }
+
+          message.channel_id = reader.string();
+          continue;
+        case 5:
+          if (tag !== 40) {
+            break;
+          }
+
+          message.action = reader.int32();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): ChannelAppEvent {
+    return {
+      user_id: isSet(object.user_id) ? globalThis.String(object.user_id) : "",
+      username: isSet(object.username) ? globalThis.String(object.username) : "",
+      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
+      channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "",
+      action: isSet(object.action) ? globalThis.Number(object.action) : 0,
+    };
+  },
+
+  toJSON(message: ChannelAppEvent): unknown {
+    const obj: any = {};
+    if (message.user_id !== "") {
+      obj.user_id = message.user_id;
+    }
+    if (message.username !== "") {
+      obj.username = message.username;
+    }
+    if (message.clan_id !== "") {
+      obj.clan_id = message.clan_id;
+    }
+    if (message.channel_id !== "") {
+      obj.channel_id = message.channel_id;
+    }
+    if (message.action !== 0) {
+      obj.action = Math.round(message.action);
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<ChannelAppEvent>, I>>(base?: I): ChannelAppEvent {
+    return ChannelAppEvent.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<ChannelAppEvent>, I>>(object: I): ChannelAppEvent {
+    const message = createBaseChannelAppEvent();
+    message.user_id = object.user_id ?? "";
+    message.username = object.username ?? "";
+    message.clan_id = object.clan_id ?? "";
+    message.channel_id = object.channel_id ?? "";
+    message.action = object.action ?? 0;
     return message;
   },
 };
