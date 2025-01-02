@@ -3518,6 +3518,8 @@ export interface TokenSentEvent {
   note: string;
   /**  */
   extra_attribute: string;
+  /**  */
+  transaction_id: string;
 }
 
 export interface WithdrawTokenRequest {
@@ -33896,7 +33898,15 @@ export const ListAuditLogRequest = {
 };
 
 function createBaseTokenSentEvent(): TokenSentEvent {
-  return { sender_id: "", sender_name: "", receiver_id: "", amount: 0, note: "", extra_attribute: "" };
+  return {
+    sender_id: "",
+    sender_name: "",
+    receiver_id: "",
+    amount: 0,
+    note: "",
+    extra_attribute: "",
+    transaction_id: "",
+  };
 }
 
 export const TokenSentEvent = {
@@ -33918,6 +33928,9 @@ export const TokenSentEvent = {
     }
     if (message.extra_attribute !== "") {
       writer.uint32(50).string(message.extra_attribute);
+    }
+    if (message.transaction_id !== "") {
+      writer.uint32(58).string(message.transaction_id);
     }
     return writer;
   },
@@ -33971,6 +33984,13 @@ export const TokenSentEvent = {
 
           message.extra_attribute = reader.string();
           continue;
+        case 7:
+          if (tag !== 58) {
+            break;
+          }
+
+          message.transaction_id = reader.string();
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -33988,6 +34008,7 @@ export const TokenSentEvent = {
       amount: isSet(object.amount) ? globalThis.Number(object.amount) : 0,
       note: isSet(object.note) ? globalThis.String(object.note) : "",
       extra_attribute: isSet(object.extra_attribute) ? globalThis.String(object.extra_attribute) : "",
+      transaction_id: isSet(object.transaction_id) ? globalThis.String(object.transaction_id) : "",
     };
   },
 
@@ -34011,6 +34032,9 @@ export const TokenSentEvent = {
     if (message.extra_attribute !== "") {
       obj.extra_attribute = message.extra_attribute;
     }
+    if (message.transaction_id !== "") {
+      obj.transaction_id = message.transaction_id;
+    }
     return obj;
   },
 
@@ -34025,6 +34049,7 @@ export const TokenSentEvent = {
     message.amount = object.amount ?? 0;
     message.note = object.note ?? "";
     message.extra_attribute = object.extra_attribute ?? "";
+    message.transaction_id = object.transaction_id ?? "";
     return message;
   },
 };
