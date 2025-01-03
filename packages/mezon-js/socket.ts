@@ -242,6 +242,8 @@ export interface UserProfileUpdatedEvent {
   channel_id: string;
   // the clan_id
   clan_id: string;
+  // the encrypt_private_key
+  encrypt_private_key: string;
 }
 
 /** An acknowledgement received in response to sending a message on a chat channel. */
