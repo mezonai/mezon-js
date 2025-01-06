@@ -958,6 +958,11 @@ export interface SdTopicEvent {
   message_id: string;
 }
 
+export interface UserStatusEvent {
+  user_id: string;
+  custom_status: string;
+}
+
 /** A socket connection to Mezon server. */
 export interface Socket {
   /** Connection is Open */
@@ -1046,7 +1051,7 @@ export interface Socket {
     mention_everyone?: boolean,
     avatar?: string,
     code?: number,
-    topic_id?: string,
+    topic_id?: string
   ): Promise<ChannelMessageAck>;
 
   /** Send message typing */
@@ -1322,6 +1327,8 @@ export interface Socket {
   onsdtopicevent: (sd_topic_event: SdTopicEvent) => void;
 
   onchannelappevent: (event: ChannelAppEvent) => void;
+
+  onuserstatusevent: (user_status_event: UserStatusEvent) => void;
 }
 
 /** Reports an error received from a socket message. */
@@ -1599,6 +1606,8 @@ export class DefaultSocket implements Socket {
           this.onsdtopicevent(<SdTopicEvent>message.sd_topic_event);
         } else if (message.channel_app_event) {
           this.onchannelappevent(<ChannelAppEvent>message.channel_app_event);
+        } else if (message.user_status_event) {
+          this.onuserstatusevent(<UserStatusEvent>message.user_status_event);
         } else {
           if (this.verbose && window && window.console) {
             console.log("Unrecognized message received: %o", message);
@@ -1990,6 +1999,12 @@ export class DefaultSocket implements Socket {
     }
   }
 
+  onuserstatusevent(user_status_event: UserStatusEvent) {
+    if (this.verbose && window && window.console) {
+      console.log(user_status_event);
+    }
+  }
+
   send(
     message:
       | ChannelJoin
@@ -2113,7 +2128,7 @@ export class DefaultSocket implements Socket {
         mode: mode,
         message_id: message_id,
         is_public: is_public,
-        has_attachment: has_attachment
+        has_attachment: has_attachment,
       },
     });
 
@@ -2182,7 +2197,7 @@ export class DefaultSocket implements Socket {
     mention_everyone?: Boolean,
     avatar?: string,
     code?: number,
-    topic_id?: string,
+    topic_id?: string
   ): Promise<ChannelMessageAck> {
     const response = await this.send({
       channel_message_send: {
@@ -2448,7 +2463,7 @@ export class DefaultSocket implements Socket {
       channel_app_event: {
         clan_id: clan_id,
         channel_id: channel_id,
-        action: action
+        action: action,
       },
     });
     return response.channel_app_event;
