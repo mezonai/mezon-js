@@ -168,7 +168,7 @@ import { WebSocketAdapter, WebSocketAdapterText } from "./web_socket_adapter";
 const DEFAULT_HOST = "127.0.0.1";
 const DEFAULT_PORT = "7350";
 const DEFAULT_SERVER_KEY = "defaultkey";
-const DEFAULT_TIMEOUT_MS = 10000;
+const DEFAULT_TIMEOUT_MS = 30000;
 const DEFAULT_EXPIRED_TIMESPAN_MS = 5 * 60 * 1000;
 
 export enum ChannelType {
