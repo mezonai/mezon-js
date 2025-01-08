@@ -315,7 +315,7 @@ export interface User {
   /** The location set by the user. */
   location?: string;
   /** Additional information stored as a JSON object. */
-  metadata?: {};
+  metadata?: { status?: string; user_status?: string };
   /** Indicates whether the user is currently online. */
   online?: boolean;
   /** The Steam id in the user's account. */
