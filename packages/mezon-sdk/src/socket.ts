@@ -267,8 +267,8 @@ export class DefaultSocket implements Socket {
     return this.send({status_update: {status: status}});
   }
 
-  async writeChatMessage(clan_id: string, channel_id: string, mode: number, is_public: boolean, content: any, mentions?: Array<ApiMessageMention>, attachments?: Array<ApiMessageAttachment>, references?: Array<ApiMessageRef>, anonymous_message?: boolean, mention_everyone?:Boolean, avatar?: string ): Promise<ChannelMessageAck> {
-    const response = await this.send({channel_message_send: {clan_id: clan_id, channel_id: channel_id, mode: mode, is_public: is_public, content: content, mentions: mentions, attachments: attachments, references: references, anonymous_message: anonymous_message, mention_everyone: mention_everyone, avatar: avatar}});
+  async writeChatMessage(clan_id: string, channel_id: string, mode: number, is_public: boolean, content: any, mentions?: Array<ApiMessageMention>, attachments?: Array<ApiMessageAttachment>, references?: Array<ApiMessageRef>, anonymous_message?: boolean, mention_everyone?: boolean, avatar?: string, code?: number, topic_id?: string): Promise<ChannelMessageAck> {
+    const response = await this.send({channel_message_send: {clan_id: clan_id, channel_id: channel_id, mode: mode, is_public: is_public, content: content, mentions: mentions, attachments: attachments, references: references, anonymous_message: anonymous_message, mention_everyone: mention_everyone, avatar: avatar, code, topic_id}});
     return response.channel_message_ack;
   }
 

@@ -764,7 +764,9 @@ export interface Socket {
     references?: Array<ApiMessageRef>,
     anonymous_message?: boolean,
     mention_everyone?: boolean,
-    avatar?: string
+    avatar?: string,
+    code?: number,
+    topic_id?: string
   ): Promise<ChannelMessageAck>;
 
   /** Send message typing */
