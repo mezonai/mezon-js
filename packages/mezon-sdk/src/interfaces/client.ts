@@ -458,6 +458,8 @@ export interface ChannelMessage {
   hide_editted?: boolean;
   //
   is_public?: boolean;
+  //
+  topic_id?: string;
 }
 
 /** A user in the server. */
