@@ -891,60 +891,12 @@ export interface WebrtcSignalingFwd {
   caller_id: string;
 }
 
-export interface JoinPTTChannel {
-  /** channel id */
-  channel_id: string;
-  /** type offer, answer or candidate */
+export interface SFUSignalingFwd {
   data_type: number;
-  /** offer */
   json_data: string;
-  /** receiver id */
-  user_id: string;
-  /** clan id */
-  clan_id: string;
-  /** is talk */
-  is_talk: boolean;
-}
-
-export interface TalkPTTChannel {
-  // user id
-  user_id: string;
-  // channel id
   channel_id: string;
-  // clan id
   clan_id: string;
-  // is talk
-  is_talk: boolean;
-}
-
-/** PTT Joined event */
-export interface PTTLeavedEvent {
-  /** id */
-  id: string;
-  /** The unique identifier of the chat clan. */
-  clan_id: string;
-  /** channel id */
-  channel_id: string;
-  /** user_id */
   user_id: string;
-}
-
-/** PTT Joined event */
-export interface PTTJoinedEvent {
-  /** The unique identifier of the chat clan. */
-  clan_id: string;
-  /** The clan_name */
-  clan_name: string;
-  /** id */
-  id: string;
-  /** ptt participant */
-  participant: string;
-  /** user id */
-  user_id: string;
-  /** channel label */
-  channel_label: string;
-  /** channel id */
-  channel_id: string;
 }
 
 export interface ListActivity {
@@ -1161,6 +1113,14 @@ export interface Socket {
     caller_id: string
   ) => Promise<WebrtcSignalingFwd>;
 
+  forwardSFUSignaling: (
+    user_id: string,
+    data_type: number,
+    json_data: string,
+    channel_id: string,
+    clan_id: string
+  ) => Promise<SFUSignalingFwd>;
+
   makeCallPush: (
     receiverId: string,
     jsonData: string,
@@ -1282,6 +1242,8 @@ export interface Socket {
 
   onwebrtcsignalingfwd: (event: WebrtcSignalingFwd) => void;
 
+  onsfusignalingfwd: (event: SFUSignalingFwd) => void;
+
   oneventcreated: (clan_event_created: ApiCreateEventRequest) => void;
 
   oncoffeegiven: (give_coffee_event: ApiGiveCoffeeEvent) => void;
@@ -1315,14 +1277,6 @@ export interface Socket {
   ontokensent: (token: ApiTokenSentEvent) => void;
 
   onactivityupdated: (list_activity: ListActivity) => void;
-
-  onjoinpttchannel: (join_ptt_channel: JoinPTTChannel) => void;
-
-  ontalkpttchannel: (talk_ptt_channel: TalkPTTChannel) => void;
-
-  onpttchanneljoined: (ptt_joined_event: PTTJoinedEvent) => void;
-
-  onpttchannelleaved: (ptt_leaved_event: PTTLeavedEvent) => void;
 
   onsdtopicevent: (sd_topic_event: SdTopicEvent) => void;
 
@@ -1592,16 +1546,12 @@ export class DefaultSocket implements Socket {
           this.onwebrtcsignalingfwd(
             <WebrtcSignalingFwd>message.webrtc_signaling_fwd
           );
+        } else if (message.sfu_signaling_fwd) {
+          this.onsfusignalingfwd(
+            <SFUSignalingFwd>message.sfu_signaling_fwd
+          );
         } else if (message.list_activity) {
           this.onactivityupdated(<ListActivity>message.list_activity);
-        } else if (message.join_ptt_channel) {
-          this.onjoinpttchannel(<JoinPTTChannel>message.join_ptt_channel);
-        } else if (message.talk_ptt_channel) {
-          this.ontalkpttchannel(<TalkPTTChannel>message.talk_ptt_channel);
-        } else if (message.ptt_joined_event) {
-          this.onpttchanneljoined(<PTTJoinedEvent>message.ptt_joined_event);
-        } else if (message.ptt_leaved_event) {
-          this.onpttchannelleaved(<PTTLeavedEvent>message.ptt_leaved_event);
         } else if (message.sd_topic_event) {
           this.onsdtopicevent(<SdTopicEvent>message.sd_topic_event);
         } else if (message.channel_app_event) {
@@ -1915,18 +1865,6 @@ export class DefaultSocket implements Socket {
     }
   }
 
-  onpttchanneljoined(ptt_joined_event: PTTJoinedEvent) {
-    if (this.verbose && window && window.console) {
-      console.log(ptt_joined_event);
-    }
-  }
-
-  onpttchannelleaved(ptt_leaved_event: PTTLeavedEvent) {
-    if (this.verbose && window && window.console) {
-      console.log(ptt_leaved_event);
-    }
-  }
-
   onpermissionset(permission_set_event: PermissionSet) {
     if (this.verbose && window && window.console) {
       console.log(permission_set_event);
@@ -1969,21 +1907,15 @@ export class DefaultSocket implements Socket {
     }
   }
 
+  onsfusignalingfwd(event: SFUSignalingFwd) {
+    if (this.verbose && window && window.console) {
+      console.log(event);
+    }
+  }
+
   onactivityupdated(list_activity: ListActivity) {
     if (this.verbose && window && window.console) {
       console.log(list_activity);
-    }
-  }
-
-  onjoinpttchannel(join_ptt_channel: JoinPTTChannel) {
-    if (this.verbose && window && window.console) {
-      console.log(join_ptt_channel);
-    }
-  }
-
-  ontalkpttchannel(talk_ptt_channel: TalkPTTChannel) {
-    if (this.verbose && window && window.console) {
-      console.log(talk_ptt_channel);
     }
   }
 
@@ -2393,6 +2325,25 @@ export class DefaultSocket implements Socket {
       },
     });
     return response.webrtc_signaling_fwd;
+  }
+
+  async forwardSFUSignaling(
+    user_id: string,
+    data_type: number,
+    json_data: string,
+    channel_id: string,
+    clan_id: string
+  ): Promise<SFUSignalingFwd> {
+    const response = await this.send({
+      sfu_signaling_fwd: {
+        user_id: user_id,
+        data_type: data_type,
+        json_data: json_data,
+        channel_id: channel_id,
+        clan_id: clan_id,
+      },
+    });
+    return response.sfu_signaling_fwd;
   }
 
   async makeCallPush(
