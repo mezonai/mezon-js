@@ -4753,7 +4753,7 @@ export class Client {
   }
 
   /** List a ptt channel's users. */
-  async listPTTChannelUsers(
+  async listSFUChannelUsers(
     session: Session,
     clanId: string,
     channelId: string,
