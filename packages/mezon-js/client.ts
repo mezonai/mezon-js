@@ -156,7 +156,7 @@ import {
   ApiSdTopicList,
   ApiSdTopicRequest,
   ApiSdTopic,
-  ApiPTTChannelUserList,
+  ApiSFUChannelUserList,
   MezonUpdateEventBody,
 } from "./api.gen";
 
@@ -4761,7 +4761,7 @@ export class Client {
     state?: number,
     limit?: number,
     cursor?: string
-  ): Promise<ApiPTTChannelUserList> {
+  ): Promise<ApiSFUChannelUserList> {
     if (
       this.autoRefreshSession &&
       session.refresh_token &&
@@ -4771,7 +4771,7 @@ export class Client {
     }
 
     return this.apiClient
-      .listPTTChannelUsers(
+      .listSFUChannelUsers(
         session.token,
         clanId,
         channelId,
@@ -4780,17 +4780,17 @@ export class Client {
         state,
         cursor
       )
-      .then((response: ApiPTTChannelUserList) => {
-        var result: ApiPTTChannelUserList = {
-          ptt_channel_users: [],
+      .then((response: ApiSFUChannelUserList) => {
+        var result: ApiSFUChannelUserList = {
+          sfu_channel_users: [],
         };
 
-        if (response.ptt_channel_users == null) {
+        if (response.sfu_channel_users == null) {
           return Promise.resolve(result);
         }
 
-        response.ptt_channel_users!.forEach((gu) => {
-          result.ptt_channel_users!.push({
+        response.sfu_channel_users!.forEach((gu) => {
+          result.sfu_channel_users!.push({
             id: gu.id,
             channel_id: gu.channel_id,
             user_id: gu.user_id,

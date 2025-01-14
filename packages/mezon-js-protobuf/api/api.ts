@@ -3773,7 +3773,7 @@ export interface UpdateOnboardingStepRequest {
 }
 
 /** A list of users belonging to a channel, along with their role. */
-export interface PTTChannelUser {
+export interface SFUChannelUser {
   /** user join id */
   id: string;
   /** user for a channel. */
@@ -3785,9 +3785,9 @@ export interface PTTChannelUser {
 }
 
 /** A list of users belonging to a channel, along with their role. */
-export interface PTTChannelUserList {
+export interface SFUChannelUserList {
   /** list of ptt channel user */
-  ptt_channel_users: PTTChannelUser[];
+  sfu_channel_users: SFUChannelUser[];
 }
 
 export interface WalletLedger {
@@ -36447,12 +36447,12 @@ export const UpdateOnboardingStepRequest = {
   },
 };
 
-function createBasePTTChannelUser(): PTTChannelUser {
+function createBaseSFUChannelUser(): SFUChannelUser {
   return { id: "", user_id: "", channel_id: "", participant: "" };
 }
 
-export const PTTChannelUser = {
-  encode(message: PTTChannelUser, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+export const SFUChannelUser = {
+  encode(message: SFUChannelUser, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.id !== "") {
       writer.uint32(10).string(message.id);
     }
@@ -36468,10 +36468,10 @@ export const PTTChannelUser = {
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): PTTChannelUser {
+  decode(input: _m0.Reader | Uint8Array, length?: number): SFUChannelUser {
     const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBasePTTChannelUser();
+    const message = createBaseSFUChannelUser();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -36512,7 +36512,7 @@ export const PTTChannelUser = {
     return message;
   },
 
-  fromJSON(object: any): PTTChannelUser {
+  fromJSON(object: any): SFUChannelUser {
     return {
       id: isSet(object.id) ? globalThis.String(object.id) : "",
       user_id: isSet(object.user_id) ? globalThis.String(object.user_id) : "",
@@ -36521,7 +36521,7 @@ export const PTTChannelUser = {
     };
   },
 
-  toJSON(message: PTTChannelUser): unknown {
+  toJSON(message: SFUChannelUser): unknown {
     const obj: any = {};
     if (message.id !== "") {
       obj.id = message.id;
@@ -36538,11 +36538,11 @@ export const PTTChannelUser = {
     return obj;
   },
 
-  create<I extends Exact<DeepPartial<PTTChannelUser>, I>>(base?: I): PTTChannelUser {
-    return PTTChannelUser.fromPartial(base ?? ({} as any));
+  create<I extends Exact<DeepPartial<SFUChannelUser>, I>>(base?: I): SFUChannelUser {
+    return SFUChannelUser.fromPartial(base ?? ({} as any));
   },
-  fromPartial<I extends Exact<DeepPartial<PTTChannelUser>, I>>(object: I): PTTChannelUser {
-    const message = createBasePTTChannelUser();
+  fromPartial<I extends Exact<DeepPartial<SFUChannelUser>, I>>(object: I): SFUChannelUser {
+    const message = createBaseSFUChannelUser();
     message.id = object.id ?? "";
     message.user_id = object.user_id ?? "";
     message.channel_id = object.channel_id ?? "";
@@ -36551,22 +36551,22 @@ export const PTTChannelUser = {
   },
 };
 
-function createBasePTTChannelUserList(): PTTChannelUserList {
-  return { ptt_channel_users: [] };
+function createBaseSFUChannelUserList(): SFUChannelUserList {
+  return { sfu_channel_users: [] };
 }
 
-export const PTTChannelUserList = {
-  encode(message: PTTChannelUserList, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    for (const v of message.ptt_channel_users) {
-      PTTChannelUser.encode(v!, writer.uint32(10).fork()).ldelim();
+export const SFUChannelUserList = {
+  encode(message: SFUChannelUserList, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    for (const v of message.sfu_channel_users) {
+      SFUChannelUser.encode(v!, writer.uint32(10).fork()).ldelim();
     }
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): PTTChannelUserList {
+  decode(input: _m0.Reader | Uint8Array, length?: number): SFUChannelUserList {
     const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBasePTTChannelUserList();
+    const message = createBaseSFUChannelUserList();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -36575,7 +36575,7 @@ export const PTTChannelUserList = {
             break;
           }
 
-          message.ptt_channel_users.push(PTTChannelUser.decode(reader, reader.uint32()));
+          message.sfu_channel_users.push(SFUChannelUser.decode(reader, reader.uint32()));
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -36586,28 +36586,28 @@ export const PTTChannelUserList = {
     return message;
   },
 
-  fromJSON(object: any): PTTChannelUserList {
+  fromJSON(object: any): SFUChannelUserList {
     return {
-      ptt_channel_users: globalThis.Array.isArray(object?.ptt_channel_users)
-        ? object.ptt_channel_users.map((e: any) => PTTChannelUser.fromJSON(e))
+      sfu_channel_users: globalThis.Array.isArray(object?.sfu_channel_users)
+        ? object.sfu_channel_users.map((e: any) => SFUChannelUser.fromJSON(e))
         : [],
     };
   },
 
-  toJSON(message: PTTChannelUserList): unknown {
+  toJSON(message: SFUChannelUserList): unknown {
     const obj: any = {};
-    if (message.ptt_channel_users?.length) {
-      obj.ptt_channel_users = message.ptt_channel_users.map((e) => PTTChannelUser.toJSON(e));
+    if (message.sfu_channel_users?.length) {
+      obj.sfu_channel_users = message.sfu_channel_users.map((e) => SFUChannelUser.toJSON(e));
     }
     return obj;
   },
 
-  create<I extends Exact<DeepPartial<PTTChannelUserList>, I>>(base?: I): PTTChannelUserList {
-    return PTTChannelUserList.fromPartial(base ?? ({} as any));
+  create<I extends Exact<DeepPartial<SFUChannelUserList>, I>>(base?: I): SFUChannelUserList {
+    return SFUChannelUserList.fromPartial(base ?? ({} as any));
   },
-  fromPartial<I extends Exact<DeepPartial<PTTChannelUserList>, I>>(object: I): PTTChannelUserList {
-    const message = createBasePTTChannelUserList();
-    message.ptt_channel_users = object.ptt_channel_users?.map((e) => PTTChannelUser.fromPartial(e)) || [];
+  fromPartial<I extends Exact<DeepPartial<SFUChannelUserList>, I>>(object: I): SFUChannelUserList {
+    const message = createBaseSFUChannelUserList();
+    message.sfu_channel_users = object.sfu_channel_users?.map((e) => SFUChannelUser.fromPartial(e)) || [];
     return message;
   },
 };

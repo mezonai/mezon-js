@@ -1777,7 +1777,7 @@ export interface ApiStreamHttpCallbackResponse {
 }
 
 /** A list of users belonging to a channel, along with their role. */
-export interface ApiPTTChannelUser {
+export interface ApiSFUChannelUser {
   //
   channel_id?: string;
   //
@@ -1789,9 +1789,9 @@ export interface ApiPTTChannelUser {
 }
 
 /** A list of users belonging to a channel, along with their role. */
-export interface ApiPTTChannelUserList {
+export interface ApiSFUChannelUserList {
   //
-  ptt_channel_users?: Array<ApiPTTChannelUser>;
+  sfu_channel_users?: Array<ApiSFUChannelUser>;
 }
 
 /**  */
@@ -8129,8 +8129,8 @@ export class MezonApi {
     ]);
   }
 
-  /** List all users in ptt channel. */
-  listPTTChannelUsers(
+  /** List all users in SFU channel. */
+  listSFUChannelUsers(
     bearerToken: string,
     clanId?: string,
     channelId?: string,
@@ -8139,8 +8139,8 @@ export class MezonApi {
     state?: number,
     cursor?: string,
     options: any = {}
-  ): Promise<ApiPTTChannelUserList> {
-    const urlPath = "/v2/ptt_channels/users";
+  ): Promise<ApiSFUChannelUserList> {
+    const urlPath = "/v2/sfu_channels/users";
     const queryParams = new Map<string, any>();
     queryParams.set("clan_id", clanId);
     queryParams.set("channel_id", channelId);
