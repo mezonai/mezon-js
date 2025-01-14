@@ -204,6 +204,12 @@ export enum WebrtcSignalingType {
   WEBRTC_SDP_QUIT = 4,
 }
 
+export enum SFUSignalingType {
+  JOINE = 0,
+  LEAVE = 1,
+  TALK = 2,
+}
+
 /** Response for an RPC function executed on the server. */
 export interface RpcResponse {
   /** The identifier of the function. */
