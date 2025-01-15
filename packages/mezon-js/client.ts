@@ -4168,7 +4168,7 @@ export class Client {
     clanId?: string,
     limit?: number,
     page?: number
-  ): Promise<any> {
+  ): Promise<ApiChannelCanvasListResponse> {
     if (
       this.autoRefreshSession &&
       session.refresh_token &&
@@ -4191,6 +4191,7 @@ export class Client {
         result.clan_id = response.clan_id;
         result.channel_id = response.channel_id;
         result.channel_canvases = response.channel_canvases;
+        result.count = response.count
         return Promise.resolve(result);
       });
   }
