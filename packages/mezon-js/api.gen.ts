@@ -225,7 +225,7 @@ export interface MezonUpdateEventBody {
   //
   channel_id_old?: string;
   //
-  repeat_type?: number; 
+  repeat_type?: number;
 }
 
 /** Update fields in a given role. */
@@ -1148,7 +1148,7 @@ export interface ApiCreateEventRequest {
   //
   event_status?: number;
   //
-  repeat_type?: number;      
+  repeat_type?: number;
   //
   creator_id?: number;
 }
@@ -1514,6 +1514,17 @@ export interface ApiMessageDeleted {
   //
   message_id?: string;
 }
+
+/**  */
+export interface ApiListThreadDecs {
+  //
+  limit?: number;
+  //
+  list_thread?: Array<ApiChannelDescription>;
+  //
+  page?: number;
+}
+
 /**  */
 export interface ApiListUserActivity {
   //
@@ -9465,8 +9476,9 @@ export class MezonApi {
     state?: number,
     clanId?: string,
     threadId?: string,
+    page?: number,
     options: any = {}
-  ): Promise<ApiChannelDescList> {
+  ): Promise<ApiListThreadDecs> {
     if (channelId === null || channelId === undefined) {
       throw new Error(
         "'channelId' is a required parameter but is null or undefined."
@@ -9481,6 +9493,7 @@ export class MezonApi {
     queryParams.set("state", state);
     queryParams.set("clan_id", clanId);
     queryParams.set("thread_id", threadId);
+    queryParams.set("page", page);
 
     let bodyJson: string = "";
 

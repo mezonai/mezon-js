@@ -158,6 +158,7 @@ import {
   ApiSdTopic,
   ApiSFUChannelUserList,
   MezonUpdateEventBody,
+  ApiListThreadDecs,
 } from "./api.gen";
 
 import { Session } from "./session";
@@ -1223,7 +1224,14 @@ export class Client {
     }
 
     return this.apiClient
-      .deleteEvent(session.token, eventId, clanId, creatorId, eventLabel, channelId)
+      .deleteEvent(
+        session.token,
+        eventId,
+        clanId,
+        creatorId,
+        eventLabel,
+        channelId
+      )
       .then((response: any) => {
         return response !== undefined;
       });
@@ -4063,8 +4071,9 @@ export class Client {
     limit?: number,
     state?: number,
     clanId?: string,
-    threadId?: string
-  ): Promise<ApiChannelDescList> {
+    threadId?: string,
+    page?: number
+  ): Promise<ApiListThreadDecs> {
     if (
       this.autoRefreshSession &&
       session.refresh_token &&
@@ -4074,17 +4083,25 @@ export class Client {
     }
 
     return this.apiClient
-      .listThreadDescs(session.token, channelId, limit, state, clanId, threadId)
-      .then((response: ApiChannelDescList) => {
-        var result: ApiChannelDescList = {
-          channeldesc: [],
+      .listThreadDescs(
+        session.token,
+        channelId,
+        limit,
+        state,
+        clanId,
+        threadId,
+        page
+      )
+      .then((response: ApiListThreadDecs) => {
+        var result: ApiListThreadDecs = {
+          list_thread: [],
         };
 
-        if (response.channeldesc == null) {
+        if (response.list_thread == null) {
           return Promise.resolve(result);
         }
 
-        result.channeldesc = response.channeldesc;
+        result.list_thread = response.list_thread;
         return Promise.resolve(result);
       });
   }
