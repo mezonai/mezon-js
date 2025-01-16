@@ -675,6 +675,8 @@ export interface ApiChannelCanvasListResponse {
   channel_id?: string;
   //
   clan_id?: string;
+  //
+  count?: number;
 }
 
 /**  */
@@ -4815,14 +4817,13 @@ export class MezonApi {
   }
 
   /**  */
-  getChannelCanvasList(
-    bearerToken: string,
-    channelId: string,
-    clanId?: string,
-    limit?: number,
-    page?: number,
-    options: any = {}
-  ): Promise<ApiChannelCanvasListResponse> {
+  getChannelCanvasList(bearerToken: string,
+      channelId:string,
+      clanId?:string,
+      limit?:number,
+      page?:number,
+      options: any = {}): Promise<ApiChannelCanvasListResponse> {
+    
     if (channelId === null || channelId === undefined) {
       throw new Error(
         "'channelId' is a required parameter but is null or undefined."
