@@ -1426,6 +1426,8 @@ export interface ApiHashtagDmList {
 
 /** Add link invite users to. */
 export interface ApiInviteUserRes {
+  //
+  channel_desc?: ApiChannelDescription;
   //id channel to add link to.
   channel_id?: string;
   //

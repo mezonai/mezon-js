@@ -1710,7 +1710,11 @@ export interface InviteUserRes {
   /** check user exist */
   user_joined: boolean;
   /** expiry_time */
-  expiry_time: Date | undefined;
+  expiry_time:
+    | Date
+    | undefined;
+  /**  */
+  channel_desc: ChannelDescription | undefined;
 }
 
 /** Add link invite users to. */
@@ -15436,7 +15440,15 @@ export const InviteUserRequest = {
 };
 
 function createBaseInviteUserRes(): InviteUserRes {
-  return { clan_id: "", channel_id: "", clan_name: "", channel_label: "", user_joined: false, expiry_time: undefined };
+  return {
+    clan_id: "",
+    channel_id: "",
+    clan_name: "",
+    channel_label: "",
+    user_joined: false,
+    expiry_time: undefined,
+    channel_desc: undefined,
+  };
 }
 
 export const InviteUserRes = {
@@ -15458,6 +15470,9 @@ export const InviteUserRes = {
     }
     if (message.expiry_time !== undefined) {
       Timestamp.encode(toTimestamp(message.expiry_time), writer.uint32(50).fork()).ldelim();
+    }
+    if (message.channel_desc !== undefined) {
+      ChannelDescription.encode(message.channel_desc, writer.uint32(58).fork()).ldelim();
     }
     return writer;
   },
@@ -15511,6 +15526,13 @@ export const InviteUserRes = {
 
           message.expiry_time = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
           continue;
+        case 7:
+          if (tag !== 58) {
+            break;
+          }
+
+          message.channel_desc = ChannelDescription.decode(reader, reader.uint32());
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -15528,6 +15550,7 @@ export const InviteUserRes = {
       channel_label: isSet(object.channel_label) ? globalThis.String(object.channel_label) : "",
       user_joined: isSet(object.user_joined) ? globalThis.Boolean(object.user_joined) : false,
       expiry_time: isSet(object.expiry_time) ? fromJsonTimestamp(object.expiry_time) : undefined,
+      channel_desc: isSet(object.channel_desc) ? ChannelDescription.fromJSON(object.channel_desc) : undefined,
     };
   },
 
@@ -15551,6 +15574,9 @@ export const InviteUserRes = {
     if (message.expiry_time !== undefined) {
       obj.expiry_time = message.expiry_time.toISOString();
     }
+    if (message.channel_desc !== undefined) {
+      obj.channel_desc = ChannelDescription.toJSON(message.channel_desc);
+    }
     return obj;
   },
 
@@ -15565,6 +15591,9 @@ export const InviteUserRes = {
     message.channel_label = object.channel_label ?? "";
     message.user_joined = object.user_joined ?? false;
     message.expiry_time = object.expiry_time ?? undefined;
+    message.channel_desc = (object.channel_desc !== undefined && object.channel_desc !== null)
+      ? ChannelDescription.fromPartial(object.channel_desc)
+      : undefined;
     return message;
   },
 };

@@ -755,6 +755,10 @@ export interface UserEmojiUsage {
   clan_id: string;
   create_time: string;
 }
+export interface RemoveFriend {
+  // 
+  user_id: string;
+}
 
 export interface AddUserEmojiUsageEvent {
   emoji_id: string;
@@ -1189,6 +1193,8 @@ export interface Socket {
   /** Receive channel removed user event */
   onuserchannelremoved: (user: UserChannelRemovedEvent) => void;
 
+  onremovefriend: (user: RemoveFriend) => void;
+
   /** Receive clan removed user event */
   onuserclanremoved: (user: UserClanRemovedEvent) => void;
 
@@ -1498,6 +1504,10 @@ export class DefaultSocket implements Socket {
           this.onuserchannelremoved(
             <UserChannelRemovedEvent>message.user_channel_removed_event
           );
+        } else if (message.remove_friend) {
+          this.onremovefriend(
+            <RemoveFriend>message.remove_friend
+          );
         } else if (message.user_clan_removed_event) {
           this.onuserclanremoved(
             <UserClanRemovedEvent>message.user_clan_removed_event
@@ -1674,6 +1684,12 @@ export class DefaultSocket implements Socket {
   }
 
   onuserchannelremoved(user: UserChannelRemovedEvent) {
+    if (this.verbose && window && window.console) {
+      console.log(user);
+    }
+  }
+
+  onremovefriend(user: RemoveFriend) {
     if (this.verbose && window && window.console) {
       console.log(user);
     }
