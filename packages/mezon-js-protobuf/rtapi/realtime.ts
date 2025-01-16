@@ -303,7 +303,11 @@ export interface Envelope {
     | UserStatusEvent
     | undefined;
   /** SFU call */
-  sfu_signaling_fwd?: SFUSignalingFwd | undefined;
+  sfu_signaling_fwd?:
+    | SFUSignalingFwd
+    | undefined;
+  /**  */
+  remove_friend?: RemoveFriend | undefined;
 }
 
 export interface FollowEvent {
@@ -682,6 +686,11 @@ export interface Error_ContextEntry {
 export interface Notifications {
   /** Collection of notifications. */
   notifications: Notification[];
+}
+
+export interface RemoveFriend {
+  /**  */
+  user_id: string;
 }
 
 /** Application-level heartbeat and connection check. */
@@ -1364,6 +1373,7 @@ function createBaseEnvelope(): Envelope {
     channel_app_event: undefined,
     user_status_event: undefined,
     sfu_signaling_fwd: undefined,
+    remove_friend: undefined,
   };
 }
 
@@ -1578,6 +1588,9 @@ export const Envelope = {
     }
     if (message.sfu_signaling_fwd !== undefined) {
       SFUSignalingFwd.encode(message.sfu_signaling_fwd, writer.uint32(562).fork()).ldelim();
+    }
+    if (message.remove_friend !== undefined) {
+      RemoveFriend.encode(message.remove_friend, writer.uint32(570).fork()).ldelim();
     }
     return writer;
   },
@@ -2079,6 +2092,13 @@ export const Envelope = {
 
           message.sfu_signaling_fwd = SFUSignalingFwd.decode(reader, reader.uint32());
           continue;
+        case 71:
+          if (tag !== 570) {
+            break;
+          }
+
+          message.remove_friend = RemoveFriend.decode(reader, reader.uint32());
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -2254,6 +2274,7 @@ export const Envelope = {
       sfu_signaling_fwd: isSet(object.sfu_signaling_fwd)
         ? SFUSignalingFwd.fromJSON(object.sfu_signaling_fwd)
         : undefined,
+      remove_friend: isSet(object.remove_friend) ? RemoveFriend.fromJSON(object.remove_friend) : undefined,
     };
   },
 
@@ -2468,6 +2489,9 @@ export const Envelope = {
     }
     if (message.sfu_signaling_fwd !== undefined) {
       obj.sfu_signaling_fwd = SFUSignalingFwd.toJSON(message.sfu_signaling_fwd);
+    }
+    if (message.remove_friend !== undefined) {
+      obj.remove_friend = RemoveFriend.toJSON(message.remove_friend);
     }
     return obj;
   },
@@ -2700,6 +2724,9 @@ export const Envelope = {
       : undefined;
     message.sfu_signaling_fwd = (object.sfu_signaling_fwd !== undefined && object.sfu_signaling_fwd !== null)
       ? SFUSignalingFwd.fromPartial(object.sfu_signaling_fwd)
+      : undefined;
+    message.remove_friend = (object.remove_friend !== undefined && object.remove_friend !== null)
+      ? RemoveFriend.fromPartial(object.remove_friend)
       : undefined;
     return message;
   },
@@ -5445,6 +5472,63 @@ export const Notifications = {
   fromPartial<I extends Exact<DeepPartial<Notifications>, I>>(object: I): Notifications {
     const message = createBaseNotifications();
     message.notifications = object.notifications?.map((e) => Notification.fromPartial(e)) || [];
+    return message;
+  },
+};
+
+function createBaseRemoveFriend(): RemoveFriend {
+  return { user_id: "" };
+}
+
+export const RemoveFriend = {
+  encode(message: RemoveFriend, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.user_id !== "") {
+      writer.uint32(10).string(message.user_id);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): RemoveFriend {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseRemoveFriend();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.user_id = reader.string();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): RemoveFriend {
+    return { user_id: isSet(object.user_id) ? globalThis.String(object.user_id) : "" };
+  },
+
+  toJSON(message: RemoveFriend): unknown {
+    const obj: any = {};
+    if (message.user_id !== "") {
+      obj.user_id = message.user_id;
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<RemoveFriend>, I>>(base?: I): RemoveFriend {
+    return RemoveFriend.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<RemoveFriend>, I>>(object: I): RemoveFriend {
+    const message = createBaseRemoveFriend();
+    message.user_id = object.user_id ?? "";
     return message;
   },
 };
