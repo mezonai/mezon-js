@@ -709,6 +709,8 @@ export interface ApiChannelDescList {
   channeldesc?: Array<ApiChannelDescription>;
   //The cursor to send when retrieving the next page, if any.
   next_cursor?: string;
+  //
+  page?: number;
   //The cursor to send when retrieving the previous page, if any.
   prev_cursor?: string;
 }
@@ -1515,16 +1517,6 @@ export interface ApiMessageDeleted {
   deletor?: string;
   //
   message_id?: string;
-}
-
-/**  */
-export interface ApiListThreadDecs {
-  //
-  limit?: number;
-  //
-  list_thread?: Array<ApiChannelDescription>;
-  //
-  page?: number;
 }
 
 /**  */
@@ -4817,13 +4809,14 @@ export class MezonApi {
   }
 
   /**  */
-  getChannelCanvasList(bearerToken: string,
-      channelId:string,
-      clanId?:string,
-      limit?:number,
-      page?:number,
-      options: any = {}): Promise<ApiChannelCanvasListResponse> {
-    
+  getChannelCanvasList(
+    bearerToken: string,
+    channelId: string,
+    clanId?: string,
+    limit?: number,
+    page?: number,
+    options: any = {}
+  ): Promise<ApiChannelCanvasListResponse> {
     if (channelId === null || channelId === undefined) {
       throw new Error(
         "'channelId' is a required parameter but is null or undefined."
@@ -9479,7 +9472,7 @@ export class MezonApi {
     threadId?: string,
     page?: number,
     options: any = {}
-  ): Promise<ApiListThreadDecs> {
+  ): Promise<ApiChannelDescList> {
     if (channelId === null || channelId === undefined) {
       throw new Error(
         "'channelId' is a required parameter but is null or undefined."
@@ -9519,7 +9512,6 @@ export class MezonApi {
       ),
     ]);
   }
-
   /** Update fields in a given category. */
   updateCategory(
     bearerToken: string,
