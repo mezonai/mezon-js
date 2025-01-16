@@ -158,7 +158,6 @@ import {
   ApiSdTopic,
   ApiSFUChannelUserList,
   MezonUpdateEventBody,
-  ApiListThreadDecs,
 } from "./api.gen";
 
 import { Session } from "./session";
@@ -4073,7 +4072,7 @@ export class Client {
     clanId?: string,
     threadId?: string,
     page?: number
-  ): Promise<ApiListThreadDecs> {
+  ): Promise<ApiChannelDescList> {
     if (
       this.autoRefreshSession &&
       session.refresh_token &&
@@ -4092,16 +4091,16 @@ export class Client {
         threadId,
         page
       )
-      .then((response: ApiListThreadDecs) => {
-        var result: ApiListThreadDecs = {
-          list_thread: [],
+      .then((response: ApiChannelDescList) => {
+        var result: ApiChannelDescList = {
+          channeldesc: [],
         };
 
-        if (response.list_thread == null) {
+        if (response.channeldesc == null) {
           return Promise.resolve(result);
         }
 
-        result.list_thread = response.list_thread;
+        result.channeldesc = response.channeldesc;
         return Promise.resolve(result);
       });
   }
@@ -4191,7 +4190,7 @@ export class Client {
         result.clan_id = response.clan_id;
         result.channel_id = response.channel_id;
         result.channel_canvases = response.channel_canvases;
-        result.count = response.count
+        result.count = response.count;
         return Promise.resolve(result);
       });
   }

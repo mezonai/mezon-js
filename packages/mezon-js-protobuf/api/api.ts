@@ -1922,6 +1922,8 @@ export interface ChannelDescList {
   prev_cursor: string;
   /** Cacheable cursor to list newer channel description. Durable and designed to be stored, unlike next/prev cursors. */
   cacheable_cursor: string;
+  /** Page thread */
+  page: number;
 }
 
 export interface ListThreadRequest {
@@ -3862,12 +3864,6 @@ export interface DeleteSdTopicRequest {
   channel_id: string;
   id: string;
   clan_id: string;
-}
-
-export interface ListThreadDecs {
-  list_thread: ChannelDescription[];
-  page: number;
-  limit: number;
 }
 
 function createBaseAccount(): Account {
@@ -17375,7 +17371,7 @@ export const ChannelDescription = {
 };
 
 function createBaseChannelDescList(): ChannelDescList {
-  return { channeldesc: [], next_cursor: "", prev_cursor: "", cacheable_cursor: "" };
+  return { channeldesc: [], next_cursor: "", prev_cursor: "", cacheable_cursor: "", page: 0 };
 }
 
 export const ChannelDescList = {
@@ -17391,6 +17387,9 @@ export const ChannelDescList = {
     }
     if (message.cacheable_cursor !== "") {
       writer.uint32(34).string(message.cacheable_cursor);
+    }
+    if (message.page !== 0) {
+      writer.uint32(40).int32(message.page);
     }
     return writer;
   },
@@ -17430,6 +17429,13 @@ export const ChannelDescList = {
 
           message.cacheable_cursor = reader.string();
           continue;
+        case 5:
+          if (tag !== 40) {
+            break;
+          }
+
+          message.page = reader.int32();
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -17447,6 +17453,7 @@ export const ChannelDescList = {
       next_cursor: isSet(object.next_cursor) ? globalThis.String(object.next_cursor) : "",
       prev_cursor: isSet(object.prev_cursor) ? globalThis.String(object.prev_cursor) : "",
       cacheable_cursor: isSet(object.cacheable_cursor) ? globalThis.String(object.cacheable_cursor) : "",
+      page: isSet(object.page) ? globalThis.Number(object.page) : 0,
     };
   },
 
@@ -17464,6 +17471,9 @@ export const ChannelDescList = {
     if (message.cacheable_cursor !== "") {
       obj.cacheable_cursor = message.cacheable_cursor;
     }
+    if (message.page !== 0) {
+      obj.page = Math.round(message.page);
+    }
     return obj;
   },
 
@@ -17476,6 +17486,7 @@ export const ChannelDescList = {
     message.next_cursor = object.next_cursor ?? "";
     message.prev_cursor = object.prev_cursor ?? "";
     message.cacheable_cursor = object.cacheable_cursor ?? "";
+    message.page = object.page ?? 0;
     return message;
   },
 };
@@ -37560,97 +37571,6 @@ export const DeleteSdTopicRequest = {
     message.channel_id = object.channel_id ?? "";
     message.id = object.id ?? "";
     message.clan_id = object.clan_id ?? "";
-    return message;
-  },
-};
-
-function createBaseListThreadDecs(): ListThreadDecs {
-  return { list_thread: [], page: 0, limit: 0 };
-}
-
-export const ListThreadDecs = {
-  encode(message: ListThreadDecs, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    for (const v of message.list_thread) {
-      ChannelDescription.encode(v!, writer.uint32(10).fork()).ldelim();
-    }
-    if (message.page !== 0) {
-      writer.uint32(16).int32(message.page);
-    }
-    if (message.limit !== 0) {
-      writer.uint32(24).int32(message.limit);
-    }
-    return writer;
-  },
-
-  decode(input: _m0.Reader | Uint8Array, length?: number): ListThreadDecs {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseListThreadDecs();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
-          if (tag !== 10) {
-            break;
-          }
-
-          message.list_thread.push(ChannelDescription.decode(reader, reader.uint32()));
-          continue;
-        case 2:
-          if (tag !== 16) {
-            break;
-          }
-
-          message.page = reader.int32();
-          continue;
-        case 3:
-          if (tag !== 24) {
-            break;
-          }
-
-          message.limit = reader.int32();
-          continue;
-      }
-      if ((tag & 7) === 4 || tag === 0) {
-        break;
-      }
-      reader.skipType(tag & 7);
-    }
-    return message;
-  },
-
-  fromJSON(object: any): ListThreadDecs {
-    return {
-      list_thread: globalThis.Array.isArray(object?.list_thread)
-        ? object.list_thread.map((e: any) => ChannelDescription.fromJSON(e))
-        : [],
-      page: isSet(object.page) ? globalThis.Number(object.page) : 0,
-      limit: isSet(object.limit) ? globalThis.Number(object.limit) : 0,
-    };
-  },
-
-  toJSON(message: ListThreadDecs): unknown {
-    const obj: any = {};
-    if (message.list_thread?.length) {
-      obj.list_thread = message.list_thread.map((e) => ChannelDescription.toJSON(e));
-    }
-    if (message.page !== 0) {
-      obj.page = Math.round(message.page);
-    }
-    if (message.limit !== 0) {
-      obj.limit = Math.round(message.limit);
-    }
-    return obj;
-  },
-
-  create<I extends Exact<DeepPartial<ListThreadDecs>, I>>(base?: I): ListThreadDecs {
-    return ListThreadDecs.fromPartial(base ?? ({} as any));
-  },
-  fromPartial<I extends Exact<DeepPartial<ListThreadDecs>, I>>(object: I): ListThreadDecs {
-    const message = createBaseListThreadDecs();
-    message.list_thread = object.list_thread?.map((e) => ChannelDescription.fromPartial(e)) || [];
-    message.page = object.page ?? 0;
-    message.limit = object.limit ?? 0;
     return message;
   },
 };
