@@ -175,6 +175,7 @@ export class MezonClient implements Client {
 
   /** Close socket. */
   closeSocket() {
+    console.log("Client sent disconnected.");
     this.isHardDisconnect = true;
     this.socket.close();
   }
@@ -279,7 +280,7 @@ export class MezonClient implements Client {
   }
 
   ondisconnect(e: CloseEvent) {
-    console.log("Disconnected!", e?.reason, "Reconnecting...");
+    console.log("Disconnected!", e?.reason);
     if (this.isHardDisconnect) return;
     this.retriesConnect();
   }
@@ -287,7 +288,8 @@ export class MezonClient implements Client {
   retriesConnect() {
     let retryInterval = 5000; // Initial wait time in milliseconds
     const maxRetryInterval = 60000; // Maximum wait time (60 seconds)
-
+    
+    console.log("Reconnecting...");
     const interval = setInterval(async () => {
         try {
             this.socket = this.createSocket(
@@ -295,6 +297,7 @@ export class MezonClient implements Client {
                 false,
                 new WebSocketAdapterPb()
             );
+            
             await this.authenticate(); 
             clearInterval(interval); // Clear the interval on success
             console.log("Connected successfully!");
