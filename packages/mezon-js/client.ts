@@ -156,7 +156,6 @@ import {
   ApiSdTopicList,
   ApiSdTopicRequest,
   ApiSdTopic,
-  ApiSFUChannelUserList,
   MezonUpdateEventBody,
 } from "./api.gen";
 
@@ -202,12 +201,6 @@ export enum WebrtcSignalingType {
   WEBRTC_SDP_ANSWER = 2,
   WEBRTC_ICE_CANDIDATE = 3,
   WEBRTC_SDP_QUIT = 4,
-}
-
-export enum SFUSignalingType {
-  JOINE = 0,
-  LEAVE = 1,
-  TALK = 2,
 }
 
 /** Response for an RPC function executed on the server. */
@@ -4766,55 +4759,6 @@ export class Client {
       .getUserStatus(session.token)
       .then((response: ApiUserStatus) => {
         return Promise.resolve(response);
-      });
-  }
-
-  /** List a ptt channel's users. */
-  async listSFUChannelUsers(
-    session: Session,
-    clanId: string,
-    channelId: string,
-    channelType: number,
-    state?: number,
-    limit?: number,
-    cursor?: string
-  ): Promise<ApiSFUChannelUserList> {
-    if (
-      this.autoRefreshSession &&
-      session.refresh_token &&
-      session.isexpired((Date.now() + this.expiredTimespanMs) / 1000)
-    ) {
-      await this.sessionRefresh(session);
-    }
-
-    return this.apiClient
-      .listSFUChannelUsers(
-        session.token,
-        clanId,
-        channelId,
-        channelType,
-        limit,
-        state,
-        cursor
-      )
-      .then((response: ApiSFUChannelUserList) => {
-        var result: ApiSFUChannelUserList = {
-          sfu_channel_users: [],
-        };
-
-        if (response.sfu_channel_users == null) {
-          return Promise.resolve(result);
-        }
-
-        response.sfu_channel_users!.forEach((gu) => {
-          result.sfu_channel_users!.push({
-            id: gu.id,
-            channel_id: gu.channel_id,
-            user_id: gu.user_id,
-            participant: gu.participant,
-          });
-        });
-        return Promise.resolve(result);
       });
   }
 
