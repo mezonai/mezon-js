@@ -101,6 +101,9 @@ export class MezonClient implements Client {
 
   /** Send message to channel */
   async sendMessage(clan_id: string, channel_id: string, mode: number, is_public: boolean, msg: ChannelMessageContent, mentions?: Array<ApiMessageMention>, attachments?: Array<ApiMessageAttachment>, ref?: Array<ApiMessageRef>, anonymous_message?: boolean, mention_everyone?: boolean, avatar?: string, code?: number, topic_id?: string) {
+    const messageLength = JSON.stringify(msg).length
+    if (messageLength > 4096*2) 
+      throw "Message exceeds allowed characters";
     const msgACK = await this.socket.writeChatMessage(clan_id, channel_id, mode, is_public, msg, mentions, attachments, ref, anonymous_message, mention_everyone, avatar, code, topic_id);
     return msgACK;
   }
@@ -139,6 +142,9 @@ export class MezonClient implements Client {
     mentions?: Array<ApiMessageMention>,
     attachments?: Array<ApiMessageAttachment>,
     hideEditted?: boolean) {
+    const messageLength = JSON.stringify(content).length
+    if (messageLength > 4096*2) 
+      throw "Message exceeds allowed characters";
     const msgUpdated = await this.socket.updateChatMessage(clan_id, channel_id, mode, is_public, message_id, content, mentions, attachments, hideEditted);
     return msgUpdated;
   }
@@ -389,6 +395,11 @@ export class MezonClient implements Client {
     attachments: Array<ApiMessageAttachment> = [],
     refs: Array<ApiMessageRef> = []
   ) {
+    const messageLength = 
+      JSON.stringify(msg).length + 
+      JSON.stringify(messOptions).length
+    if (messageLength > 4096*2) 
+      throw "Message exceeds allowed characters";
     try {
       const message = {
         clan_id: "",
