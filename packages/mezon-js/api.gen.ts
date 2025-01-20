@@ -2543,6 +2543,8 @@ export interface ApiWebhook {
   //
   id?: string;
   //
+  status?: number;
+  //
   update_time?: string;
   //
   url?: string;

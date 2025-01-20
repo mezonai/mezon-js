@@ -28,6 +28,7 @@ import {
   ApiRpc,
   ApiTokenSentEvent,
   ApiUserActivity,
+  ApiWebhook,
 } from "./api.gen";
 import { Session } from "./session";
 import { ChannelMessage, Notification } from "./client";
@@ -1256,6 +1257,8 @@ export interface Socket {
 
   oneventemoji: (event_emoji: EventEmoji) => void;
 
+  oneventwebhook: (webhook_event: ApiWebhook) => void;
+
   onroleassign: (role_assign_event: RoleAssignedEvent) => void;
 
   onstreamingchannelstarted: (
@@ -1387,6 +1390,8 @@ export class DefaultSocket implements Socket {
           this.onroleevent(message.role_event);
         } else if (message.event_emoji) {
           this.oneventemoji(message.event_emoji);
+        } else if (message.webhook_event) {
+          this.oneventwebhook(message.webhook_event);
         } else if (message.channel_deleted_event) {
           this.onchanneldeleted(message.channel_deleted_event);
         } else if (message.clan_deleted_event) {
@@ -1758,6 +1763,12 @@ export class DefaultSocket implements Socket {
   oneventemoji(eventEmoji: EventEmoji) {
     if (this.verbose && window && window.console) {
       console.log(eventEmoji);
+    }
+  }
+
+  oneventwebhook(webhook_event: ApiWebhook) {
+    if (this.verbose && window && window.console) {
+      console.log(webhook_event);
     }
   }
 
