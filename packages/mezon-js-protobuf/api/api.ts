@@ -3804,14 +3804,14 @@ export interface WalletLedger {
 
 export interface WalletLedgerList {
   wallet_ledger: WalletLedger[];
-  prev_cursor: string;
-  next_cursor: string;
+  count: number;
 }
 
 export interface WalletLedgerListReq {
   limit: number | undefined;
   cursor: string;
   transaction_id: string;
+  page: number | undefined;
 }
 
 export interface SdTopic {
@@ -36665,7 +36665,7 @@ export const WalletLedger = {
 };
 
 function createBaseWalletLedgerList(): WalletLedgerList {
-  return { wallet_ledger: [], prev_cursor: "", next_cursor: "" };
+  return { wallet_ledger: [], count: 0 };
 }
 
 export const WalletLedgerList = {
@@ -36673,11 +36673,8 @@ export const WalletLedgerList = {
     for (const v of message.wallet_ledger) {
       WalletLedger.encode(v!, writer.uint32(10).fork()).ldelim();
     }
-    if (message.prev_cursor !== "") {
-      writer.uint32(18).string(message.prev_cursor);
-    }
-    if (message.next_cursor !== "") {
-      writer.uint32(26).string(message.next_cursor);
+    if (message.count !== 0) {
+      writer.uint32(16).int32(message.count);
     }
     return writer;
   },
@@ -36697,18 +36694,11 @@ export const WalletLedgerList = {
           message.wallet_ledger.push(WalletLedger.decode(reader, reader.uint32()));
           continue;
         case 2:
-          if (tag !== 18) {
+          if (tag !== 16) {
             break;
           }
 
-          message.prev_cursor = reader.string();
-          continue;
-        case 3:
-          if (tag !== 26) {
-            break;
-          }
-
-          message.next_cursor = reader.string();
+          message.count = reader.int32();
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -36724,8 +36714,7 @@ export const WalletLedgerList = {
       wallet_ledger: globalThis.Array.isArray(object?.wallet_ledger)
         ? object.wallet_ledger.map((e: any) => WalletLedger.fromJSON(e))
         : [],
-      prev_cursor: isSet(object.prev_cursor) ? globalThis.String(object.prev_cursor) : "",
-      next_cursor: isSet(object.next_cursor) ? globalThis.String(object.next_cursor) : "",
+      count: isSet(object.count) ? globalThis.Number(object.count) : 0,
     };
   },
 
@@ -36734,11 +36723,8 @@ export const WalletLedgerList = {
     if (message.wallet_ledger?.length) {
       obj.wallet_ledger = message.wallet_ledger.map((e) => WalletLedger.toJSON(e));
     }
-    if (message.prev_cursor !== "") {
-      obj.prev_cursor = message.prev_cursor;
-    }
-    if (message.next_cursor !== "") {
-      obj.next_cursor = message.next_cursor;
+    if (message.count !== 0) {
+      obj.count = Math.round(message.count);
     }
     return obj;
   },
@@ -36749,14 +36735,13 @@ export const WalletLedgerList = {
   fromPartial<I extends Exact<DeepPartial<WalletLedgerList>, I>>(object: I): WalletLedgerList {
     const message = createBaseWalletLedgerList();
     message.wallet_ledger = object.wallet_ledger?.map((e) => WalletLedger.fromPartial(e)) || [];
-    message.prev_cursor = object.prev_cursor ?? "";
-    message.next_cursor = object.next_cursor ?? "";
+    message.count = object.count ?? 0;
     return message;
   },
 };
 
 function createBaseWalletLedgerListReq(): WalletLedgerListReq {
-  return { limit: undefined, cursor: "", transaction_id: "" };
+  return { limit: undefined, cursor: "", transaction_id: "", page: undefined };
 }
 
 export const WalletLedgerListReq = {
@@ -36769,6 +36754,9 @@ export const WalletLedgerListReq = {
     }
     if (message.transaction_id !== "") {
       writer.uint32(26).string(message.transaction_id);
+    }
+    if (message.page !== undefined) {
+      Int32Value.encode({ value: message.page! }, writer.uint32(34).fork()).ldelim();
     }
     return writer;
   },
@@ -36801,6 +36789,13 @@ export const WalletLedgerListReq = {
 
           message.transaction_id = reader.string();
           continue;
+        case 4:
+          if (tag !== 34) {
+            break;
+          }
+
+          message.page = Int32Value.decode(reader, reader.uint32()).value;
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -36815,6 +36810,7 @@ export const WalletLedgerListReq = {
       limit: isSet(object.limit) ? Number(object.limit) : undefined,
       cursor: isSet(object.cursor) ? globalThis.String(object.cursor) : "",
       transaction_id: isSet(object.transaction_id) ? globalThis.String(object.transaction_id) : "",
+      page: isSet(object.page) ? Number(object.page) : undefined,
     };
   },
 
@@ -36829,6 +36825,9 @@ export const WalletLedgerListReq = {
     if (message.transaction_id !== "") {
       obj.transaction_id = message.transaction_id;
     }
+    if (message.page !== undefined) {
+      obj.page = message.page;
+    }
     return obj;
   },
 
@@ -36840,6 +36839,7 @@ export const WalletLedgerListReq = {
     message.limit = object.limit ?? undefined;
     message.cursor = object.cursor ?? "";
     message.transaction_id = object.transaction_id ?? "";
+    message.page = object.page ?? undefined;
     return message;
   },
 };

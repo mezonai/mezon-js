@@ -2521,9 +2521,7 @@ export interface ApiWalletLedger {
 /**  */
 export interface ApiWalletLedgerList {
   //
-  next_cursor?: string;
-  //
-  prev_cursor?: string;
+  count?: number;
   //
   wallet_ledger?: Array<ApiWalletLedger>;
 }
@@ -9845,25 +9843,26 @@ export class MezonApi {
   }
 
   /** Get user status */
-  listWalletLedger(
-    bearerToken: string,
-    limit?: number,
-    cursor?: string,
-    transactionId?: string,
-    options: any = {}
-  ): Promise<ApiWalletLedgerList> {
+  listWalletLedger(bearerToken: string,
+      limit?:number,
+      cursor?:string,
+      transactionId?:string,
+      page?:number,
+      options: any = {}): Promise<ApiWalletLedgerList> {
+    
     const urlPath = "/v2/walletledger";
     const queryParams = new Map<string, any>();
     queryParams.set("limit", limit);
     queryParams.set("cursor", cursor);
     queryParams.set("transaction_id", transactionId);
+    queryParams.set("page", page);
 
-    let bodyJson: string = "";
+    let bodyJson : string = "";
 
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("GET", options, bodyJson);
     if (bearerToken) {
-      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+        fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
     }
 
     return Promise.race([
@@ -9880,7 +9879,7 @@ export class MezonApi {
         setTimeout(reject, this.timeoutMs, "Request timed out.")
       ),
     ]);
-  }
+}
 
   /** create webhook */
   generateWebhook(
