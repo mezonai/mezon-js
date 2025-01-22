@@ -157,6 +157,7 @@ import {
   ApiSdTopicRequest,
   ApiSdTopic,
   MezonUpdateEventBody,
+  ApiTransactionDetail,
 } from "./api.gen";
 
 import { Session } from "./session";
@@ -4759,6 +4760,26 @@ export class Client {
     return this.apiClient
       .getUserStatus(session.token)
       .then((response: ApiUserStatus) => {
+        return Promise.resolve(response);
+      });
+  }
+
+  /** list transaction detail */
+  async listTransactionDetail(
+    session: Session,
+    transId:string
+  ): Promise<ApiTransactionDetail> {  
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired((Date.now() + this.expiredTimespanMs) / 1000)
+    ) {
+      await this.sessionRefresh(session);
+    }
+
+    return this.apiClient
+      .listTransactionDetail(session.token, transId)
+      .then((response: ApiTransactionDetail) => {
         return Promise.resolve(response);
       });
   }
