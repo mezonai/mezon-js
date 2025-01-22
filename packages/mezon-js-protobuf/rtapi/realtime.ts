@@ -25,7 +25,11 @@ import {
   Webhook,
 } from "../api/api";
 import { Timestamp } from "../google/protobuf/timestamp";
-import { BoolValue, Int32Value, StringValue } from "../google/protobuf/wrappers";
+import {
+  BoolValue,
+  Int32Value,
+  StringValue,
+} from "../google/protobuf/wrappers";
 
 export const protobufPackage = "mezon.realtime";
 
@@ -35,284 +39,147 @@ export const protobufPackage = "mezon.realtime";
 export interface Envelope {
   cid: string;
   /** A response from a channel join operation. */
-  channel?:
-    | Channel
-    | undefined;
+  channel?: Channel | undefined;
   /** Join a realtime chat clan */
-  clan_join?:
-    | ClanJoin
-    | undefined;
+  clan_join?: ClanJoin | undefined;
   /** Join a realtime chat channel. */
-  channel_join?:
-    | ChannelJoin
-    | undefined;
+  channel_join?: ChannelJoin | undefined;
   /** Leave a realtime chat channel. */
-  channel_leave?:
-    | ChannelLeave
-    | undefined;
+  channel_leave?: ChannelLeave | undefined;
   /** An incoming message on a realtime chat channel. */
-  channel_message?:
-    | ChannelMessage
-    | undefined;
+  channel_message?: ChannelMessage | undefined;
   /** An acknowledgement received in response to sending a message on a chat channel. */
-  channel_message_ack?:
-    | ChannelMessageAck
-    | undefined;
+  channel_message_ack?: ChannelMessageAck | undefined;
   /** Send a message to a realtime chat channel. */
-  channel_message_send?:
-    | ChannelMessageSend
-    | undefined;
+  channel_message_send?: ChannelMessageSend | undefined;
   /** Update a message previously sent to a realtime chat channel. */
-  channel_message_update?:
-    | ChannelMessageUpdate
-    | undefined;
+  channel_message_update?: ChannelMessageUpdate | undefined;
   /** Remove a message previously sent to a realtime chat channel. */
-  channel_message_remove?:
-    | ChannelMessageRemove
-    | undefined;
+  channel_message_remove?: ChannelMessageRemove | undefined;
   /** Presence update for a particular realtime chat channel. */
-  channel_presence_event?:
-    | ChannelPresenceEvent
-    | undefined;
+  channel_presence_event?: ChannelPresenceEvent | undefined;
   /** Describes an error which occurred on the server. */
-  error?:
-    | Error
-    | undefined;
+  error?: Error | undefined;
   /** Notifications send by the server. */
-  notifications?:
-    | Notifications
-    | undefined;
+  notifications?: Notifications | undefined;
   /** RPC call or response. */
-  rpc?:
-    | Rpc
-    | undefined;
+  rpc?: Rpc | undefined;
   /** An incoming status snapshot for some set of users. */
-  status?:
-    | Status
-    | undefined;
+  status?: Status | undefined;
   /** Start following some set of users to receive their status updates. */
-  status_follow?:
-    | StatusFollow
-    | undefined;
+  status_follow?: StatusFollow | undefined;
   /** An incoming status update. */
-  status_presence_event?:
-    | StatusPresenceEvent
-    | undefined;
+  status_presence_event?: StatusPresenceEvent | undefined;
   /** Stop following some set of users to no longer receive their status updates. */
-  status_unfollow?:
-    | StatusUnfollow
-    | undefined;
+  status_unfollow?: StatusUnfollow | undefined;
   /** Set the user's own status. */
-  status_update?:
-    | StatusUpdate
-    | undefined;
+  status_update?: StatusUpdate | undefined;
   /** A data message delivered over a stream. */
-  stream_data?:
-    | StreamData
-    | undefined;
+  stream_data?: StreamData | undefined;
   /** Presence update for a particular stream. */
-  stream_presence_event?:
-    | StreamPresenceEvent
-    | undefined;
+  stream_presence_event?: StreamPresenceEvent | undefined;
   /** Application-level heartbeat and connection check. */
-  ping?:
-    | Ping
-    | undefined;
+  ping?: Ping | undefined;
   /** Application-level heartbeat and connection check response. */
-  pong?:
-    | Pong
-    | undefined;
+  pong?: Pong | undefined;
   /** User typing event */
-  message_typing_event?:
-    | MessageTypingEvent
-    | undefined;
+  message_typing_event?: MessageTypingEvent | undefined;
   /** Last seen message event */
-  last_seen_message_event?:
-    | LastSeenMessageEvent
-    | undefined;
+  last_seen_message_event?: LastSeenMessageEvent | undefined;
   /** User send reactoin event */
-  message_reaction_event?:
-    | MessageReaction
-    | undefined;
+  message_reaction_event?: MessageReaction | undefined;
   /** user join voice channel */
-  voice_joined_event?:
-    | VoiceJoinedEvent
-    | undefined;
+  voice_joined_event?: VoiceJoinedEvent | undefined;
   /** user leave voice channel */
-  voice_leaved_event?:
-    | VoiceLeavedEvent
-    | undefined;
+  voice_leaved_event?: VoiceLeavedEvent | undefined;
   /** voice channel start */
-  voice_started_event?:
-    | VoiceStartedEvent
-    | undefined;
+  voice_started_event?: VoiceStartedEvent | undefined;
   /** voice channel end */
-  voice_ended_event?:
-    | VoiceEndedEvent
-    | undefined;
+  voice_ended_event?: VoiceEndedEvent | undefined;
   /** channel created event */
-  channel_created_event?:
-    | ChannelCreatedEvent
-    | undefined;
+  channel_created_event?: ChannelCreatedEvent | undefined;
   /** channel deleted event */
-  channel_deleted_event?:
-    | ChannelDeletedEvent
-    | undefined;
+  channel_deleted_event?: ChannelDeletedEvent | undefined;
   /** channel deleted event */
-  channel_updated_event?:
-    | ChannelUpdatedEvent
-    | undefined;
+  channel_updated_event?: ChannelUpdatedEvent | undefined;
   /** Last pin message event */
-  last_pin_message_event?:
-    | LastPinMessageEvent
-    | undefined;
+  last_pin_message_event?: LastPinMessageEvent | undefined;
   /** Update custom status */
-  custom_status_event?:
-    | CustomStatusEvent
-    | undefined;
+  custom_status_event?: CustomStatusEvent | undefined;
   /** User is added to channel event */
-  user_channel_added_event?:
-    | UserChannelAdded
-    | undefined;
+  user_channel_added_event?: UserChannelAdded | undefined;
   /** User is removed to channel event */
-  user_channel_removed_event?:
-    | UserChannelRemoved
-    | undefined;
+  user_channel_removed_event?: UserChannelRemoved | undefined;
   /** User is removed to clan event */
-  user_clan_removed_event?:
-    | UserClanRemoved
-    | undefined;
+  user_clan_removed_event?: UserClanRemoved | undefined;
   /** Clan updated event */
-  clan_updated_event?:
-    | ClanUpdatedEvent
-    | undefined;
+  clan_updated_event?: ClanUpdatedEvent | undefined;
   /** Clan profile updated event */
-  clan_profile_updated_event?:
-    | ClanProfileUpdatedEvent
-    | undefined;
+  clan_profile_updated_event?: ClanProfileUpdatedEvent | undefined;
   /** Check duplicate clan name event */
-  check_name_existed_event?:
-    | CheckNameExistedEvent
-    | undefined;
+  check_name_existed_event?: CheckNameExistedEvent | undefined;
   /** User profile update event */
-  user_profile_updated_event?:
-    | UserProfileUpdatedEvent
-    | undefined;
+  user_profile_updated_event?: UserProfileUpdatedEvent | undefined;
   /** user join clan */
-  add_clan_user_event?:
-    | AddClanUserEvent
-    | undefined;
+  add_clan_user_event?: AddClanUserEvent | undefined;
   /** clan event created */
-  clan_event_created?:
-    | CreateEventRequest
-    | undefined;
+  clan_event_created?: CreateEventRequest | undefined;
   /** role assigned event */
-  role_assign_event?:
-    | RoleAssignedEvent
-    | undefined;
+  role_assign_event?: RoleAssignedEvent | undefined;
   /** clan deleted event */
-  clan_deleted_event?:
-    | ClanDeletedEvent
-    | undefined;
+  clan_deleted_event?: ClanDeletedEvent | undefined;
   /** Give a coffe event */
-  give_coffee_event?:
-    | GiveCoffeeEvent
-    | undefined;
+  give_coffee_event?: GiveCoffeeEvent | undefined;
   /** sticker created event */
-  sticker_create_event?:
-    | StickerCreateEvent
-    | undefined;
+  sticker_create_event?: StickerCreateEvent | undefined;
   /** sticker updated event */
-  sticker_update_event?:
-    | StickerUpdateEvent
-    | undefined;
+  sticker_update_event?: StickerUpdateEvent | undefined;
   /** sticker deleted event */
-  sticker_delete_event?:
-    | StickerDeleteEvent
-    | undefined;
+  sticker_delete_event?: StickerDeleteEvent | undefined;
   /** role created event */
-  role_event?:
-    | RoleEvent
-    | undefined;
+  role_event?: RoleEvent | undefined;
   /** Event emoji */
-  event_emoji?:
-    | EventEmoji
-    | undefined;
+  event_emoji?: EventEmoji | undefined;
   /** user join streaming channel */
-  streaming_joined_event?:
-    | StreamingJoinedEvent
-    | undefined;
+  streaming_joined_event?: StreamingJoinedEvent | undefined;
   /** user leave streaming channel */
-  streaming_leaved_event?:
-    | StreamingLeavedEvent
-    | undefined;
+  streaming_leaved_event?: StreamingLeavedEvent | undefined;
   /** streaming channel start */
-  streaming_started_event?:
-    | StreamingStartedEvent
-    | undefined;
+  streaming_started_event?: StreamingStartedEvent | undefined;
   /** streaming channel end */
-  streaming_ended_event?:
-    | StreamingEndedEvent
-    | undefined;
+  streaming_ended_event?: StreamingEndedEvent | undefined;
   /** set permission of role/user in channel */
-  permission_set_event?:
-    | PermissionSetEvent
-    | undefined;
+  permission_set_event?: PermissionSetEvent | undefined;
   /** permission changed event */
-  permission_changed_event?:
-    | PermissionChangedEvent
-    | undefined;
+  permission_changed_event?: PermissionChangedEvent | undefined;
   /** token is sent event */
   token_sent_event?: TokenSentEvent | undefined;
-  message_button_clicked?:
-    | MessageButtonClicked
-    | undefined;
+  message_button_clicked?: MessageButtonClicked | undefined;
   /** unmute channel event */
-  unmute_event?:
-    | UnmuteEvent
-    | undefined;
+  unmute_event?: UnmuteEvent | undefined;
   /** voice call */
-  webrtc_signaling_fwd?:
-    | WebrtcSignalingFwd
-    | undefined;
+  webrtc_signaling_fwd?: WebrtcSignalingFwd | undefined;
   /** List activity event for each user */
-  list_activity?:
-    | ListActivity
-    | undefined;
+  list_activity?: ListActivity | undefined;
   /** dropdown box selected */
-  dropdown_box_selected?:
-    | DropdownBoxSelected
-    | undefined;
+  dropdown_box_selected?: DropdownBoxSelected | undefined;
   /** IncomingCallPush */
-  incoming_call_push?:
-    | IncomingCallPush
-    | undefined;
+  incoming_call_push?: IncomingCallPush | undefined;
   /** Sd topic event */
-  sd_topic_event?:
-    | SdTopicEvent
-    | undefined;
+  sd_topic_event?: SdTopicEvent | undefined;
   /** follower list */
-  follow_event?:
-    | FollowEvent
-    | undefined;
+  follow_event?: FollowEvent | undefined;
   /** channel app event */
-  channel_app_event?:
-    | ChannelAppEvent
-    | undefined;
+  channel_app_event?: ChannelAppEvent | undefined;
   /** User custom status event */
-  user_status_event?:
-    | UserStatusEvent
-    | undefined;
+  user_status_event?: UserStatusEvent | undefined;
   /**  */
-  remove_friend?:
-    | RemoveFriend
-    | undefined;
+  remove_friend?: RemoveFriend | undefined;
   /**  */
   webhook_event?: Webhook | undefined;
 }
 
-export interface FollowEvent {
-}
+export interface FollowEvent {}
 
 export interface IncomingCallPush {
   receiver_id: string;
@@ -391,9 +258,7 @@ export interface ChannelDescription {
   /** The channel this message belongs to. */
   channel_id: string;
   /** The channel type. */
-  type:
-    | number
-    | undefined;
+  type: number | undefined;
   /** The channel lable */
   channel_label: string;
   /** The channel private */
@@ -433,9 +298,7 @@ export interface Channel {
   /** The users currently in the channel. */
   presences: UserPresence[];
   /** A reference to the current user's presence in the channel. */
-  self:
-    | UserPresence
-    | undefined;
+  self: UserPresence | undefined;
   /** The name of the chat room, or an empty string if this message was not sent through a chat room. */
   chanel_label: string;
   /** The clan logo */
@@ -481,23 +344,15 @@ export interface ChannelMessageAck {
   /** The unique ID assigned to the message. */
   message_id: string;
   /** The code representing a message type or category. */
-  code:
-    | number
-    | undefined;
+  code: number | undefined;
   /** Username of the message sender. */
   username: string;
   /** The UNIX time (for gRPC clients) or ISO string (for REST clients) when the message was created. */
-  create_time:
-    | Date
-    | undefined;
+  create_time: Date | undefined;
   /** The UNIX time (for gRPC clients) or ISO string (for REST clients) when the message was last updated. */
-  update_time:
-    | Date
-    | undefined;
+  update_time: Date | undefined;
   /** True if the message was persisted to the channel's history, false otherwise. */
-  persistent:
-    | boolean
-    | undefined;
+  persistent: boolean | undefined;
   /** The clan logo */
   clan_logo: string;
   /** The category name */
@@ -695,12 +550,10 @@ export interface RemoveFriend {
 }
 
 /** Application-level heartbeat and connection check. */
-export interface Ping {
-}
+export interface Ping {}
 
 /** Application-level heartbeat and connection check response. */
-export interface Pong {
-}
+export interface Pong {}
 
 /** A snapshot of statuses for some set of users. */
 export interface Status {
@@ -890,9 +743,7 @@ export interface ChannelCreatedEvent {
   /** channel private */
   channel_private: number;
   /** channel type */
-  channel_type:
-    | number
-    | undefined;
+  channel_type: number | undefined;
   /** status */
   status: number;
   /** app url */
@@ -978,9 +829,7 @@ export interface ChannelUpdatedEvent {
   /** channel label */
   channel_label: string;
   /** channel type */
-  channel_type:
-    | number
-    | undefined;
+  channel_type: number | undefined;
   /** status */
   status: number;
   /** meeting code */
@@ -1026,13 +875,9 @@ export interface Stream {
 /** A data message delivered over a stream. */
 export interface StreamData {
   /** The stream this data message relates to. */
-  stream:
-    | Stream
-    | undefined;
+  stream: Stream | undefined;
   /** The sender, if any. */
-  sender:
-    | UserPresence
-    | undefined;
+  sender: UserPresence | undefined;
   /** Arbitrary contents of the data message. */
   data: string;
   /** True if this data was delivered reliably, false otherwise. */
@@ -1042,9 +887,7 @@ export interface StreamData {
 /** A set of joins and leaves on a particular stream. */
 export interface StreamPresenceEvent {
   /** The stream this event relates to. */
-  stream:
-    | Stream
-    | undefined;
+  stream: Stream | undefined;
   /** Presences joining the stream as part of this event, if any. */
   joins: UserPresence[];
   /** Presences leaving the stream as part of this event, if any. */
@@ -1062,9 +905,7 @@ export interface UserPresence {
   /** Whether this presence generates persistent data/messages, if applicable for the stream type. */
   persistence: boolean;
   /** A user-set status message for this stream, if applicable. */
-  status:
-    | string
-    | undefined;
+  status: string | undefined;
   /**  */
   is_mobile: boolean;
   /** Metadata */
@@ -1081,14 +922,16 @@ export interface CustomStatusEvent {
   username: string;
   /** the status */
   status: string;
+  /** time reset */
+  time_reset: number;
+  /** no clear */
+  no_clear: boolean;
 }
 
 /** A event when user is added to channel */
 export interface UserChannelAdded {
   /** the channel id */
-  channel_desc:
-    | ChannelDescription1
-    | undefined;
+  channel_desc: ChannelDescription1 | undefined;
   /** the user */
   users: UserProfileRedis[];
   /** the custom status */
@@ -1096,9 +939,7 @@ export interface UserChannelAdded {
   /** the clan id */
   clan_id: string;
   /**  */
-  caller:
-    | UserProfileRedis
-    | undefined;
+  caller: UserProfileRedis | undefined;
   /**  */
   create_time_second: number;
   /**  */
@@ -1379,7 +1220,10 @@ function createBaseEnvelope(): Envelope {
 }
 
 export const Envelope = {
-  encode(message: Envelope, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(
+    message: Envelope,
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
     if (message.cid !== "") {
       writer.uint32(10).string(message.cid);
     }
@@ -1390,34 +1234,61 @@ export const Envelope = {
       ClanJoin.encode(message.clan_join, writer.uint32(26).fork()).ldelim();
     }
     if (message.channel_join !== undefined) {
-      ChannelJoin.encode(message.channel_join, writer.uint32(34).fork()).ldelim();
+      ChannelJoin.encode(
+        message.channel_join,
+        writer.uint32(34).fork()
+      ).ldelim();
     }
     if (message.channel_leave !== undefined) {
-      ChannelLeave.encode(message.channel_leave, writer.uint32(42).fork()).ldelim();
+      ChannelLeave.encode(
+        message.channel_leave,
+        writer.uint32(42).fork()
+      ).ldelim();
     }
     if (message.channel_message !== undefined) {
-      ChannelMessage.encode(message.channel_message, writer.uint32(50).fork()).ldelim();
+      ChannelMessage.encode(
+        message.channel_message,
+        writer.uint32(50).fork()
+      ).ldelim();
     }
     if (message.channel_message_ack !== undefined) {
-      ChannelMessageAck.encode(message.channel_message_ack, writer.uint32(58).fork()).ldelim();
+      ChannelMessageAck.encode(
+        message.channel_message_ack,
+        writer.uint32(58).fork()
+      ).ldelim();
     }
     if (message.channel_message_send !== undefined) {
-      ChannelMessageSend.encode(message.channel_message_send, writer.uint32(66).fork()).ldelim();
+      ChannelMessageSend.encode(
+        message.channel_message_send,
+        writer.uint32(66).fork()
+      ).ldelim();
     }
     if (message.channel_message_update !== undefined) {
-      ChannelMessageUpdate.encode(message.channel_message_update, writer.uint32(74).fork()).ldelim();
+      ChannelMessageUpdate.encode(
+        message.channel_message_update,
+        writer.uint32(74).fork()
+      ).ldelim();
     }
     if (message.channel_message_remove !== undefined) {
-      ChannelMessageRemove.encode(message.channel_message_remove, writer.uint32(82).fork()).ldelim();
+      ChannelMessageRemove.encode(
+        message.channel_message_remove,
+        writer.uint32(82).fork()
+      ).ldelim();
     }
     if (message.channel_presence_event !== undefined) {
-      ChannelPresenceEvent.encode(message.channel_presence_event, writer.uint32(90).fork()).ldelim();
+      ChannelPresenceEvent.encode(
+        message.channel_presence_event,
+        writer.uint32(90).fork()
+      ).ldelim();
     }
     if (message.error !== undefined) {
       Error.encode(message.error, writer.uint32(98).fork()).ldelim();
     }
     if (message.notifications !== undefined) {
-      Notifications.encode(message.notifications, writer.uint32(106).fork()).ldelim();
+      Notifications.encode(
+        message.notifications,
+        writer.uint32(106).fork()
+      ).ldelim();
     }
     if (message.rpc !== undefined) {
       Rpc.encode(message.rpc, writer.uint32(114).fork()).ldelim();
@@ -1426,22 +1297,40 @@ export const Envelope = {
       Status.encode(message.status, writer.uint32(122).fork()).ldelim();
     }
     if (message.status_follow !== undefined) {
-      StatusFollow.encode(message.status_follow, writer.uint32(130).fork()).ldelim();
+      StatusFollow.encode(
+        message.status_follow,
+        writer.uint32(130).fork()
+      ).ldelim();
     }
     if (message.status_presence_event !== undefined) {
-      StatusPresenceEvent.encode(message.status_presence_event, writer.uint32(138).fork()).ldelim();
+      StatusPresenceEvent.encode(
+        message.status_presence_event,
+        writer.uint32(138).fork()
+      ).ldelim();
     }
     if (message.status_unfollow !== undefined) {
-      StatusUnfollow.encode(message.status_unfollow, writer.uint32(146).fork()).ldelim();
+      StatusUnfollow.encode(
+        message.status_unfollow,
+        writer.uint32(146).fork()
+      ).ldelim();
     }
     if (message.status_update !== undefined) {
-      StatusUpdate.encode(message.status_update, writer.uint32(154).fork()).ldelim();
+      StatusUpdate.encode(
+        message.status_update,
+        writer.uint32(154).fork()
+      ).ldelim();
     }
     if (message.stream_data !== undefined) {
-      StreamData.encode(message.stream_data, writer.uint32(162).fork()).ldelim();
+      StreamData.encode(
+        message.stream_data,
+        writer.uint32(162).fork()
+      ).ldelim();
     }
     if (message.stream_presence_event !== undefined) {
-      StreamPresenceEvent.encode(message.stream_presence_event, writer.uint32(170).fork()).ldelim();
+      StreamPresenceEvent.encode(
+        message.stream_presence_event,
+        writer.uint32(170).fork()
+      ).ldelim();
     }
     if (message.ping !== undefined) {
       Ping.encode(message.ping, writer.uint32(178).fork()).ldelim();
@@ -1450,145 +1339,283 @@ export const Envelope = {
       Pong.encode(message.pong, writer.uint32(186).fork()).ldelim();
     }
     if (message.message_typing_event !== undefined) {
-      MessageTypingEvent.encode(message.message_typing_event, writer.uint32(194).fork()).ldelim();
+      MessageTypingEvent.encode(
+        message.message_typing_event,
+        writer.uint32(194).fork()
+      ).ldelim();
     }
     if (message.last_seen_message_event !== undefined) {
-      LastSeenMessageEvent.encode(message.last_seen_message_event, writer.uint32(202).fork()).ldelim();
+      LastSeenMessageEvent.encode(
+        message.last_seen_message_event,
+        writer.uint32(202).fork()
+      ).ldelim();
     }
     if (message.message_reaction_event !== undefined) {
-      MessageReaction.encode(message.message_reaction_event, writer.uint32(210).fork()).ldelim();
+      MessageReaction.encode(
+        message.message_reaction_event,
+        writer.uint32(210).fork()
+      ).ldelim();
     }
     if (message.voice_joined_event !== undefined) {
-      VoiceJoinedEvent.encode(message.voice_joined_event, writer.uint32(218).fork()).ldelim();
+      VoiceJoinedEvent.encode(
+        message.voice_joined_event,
+        writer.uint32(218).fork()
+      ).ldelim();
     }
     if (message.voice_leaved_event !== undefined) {
-      VoiceLeavedEvent.encode(message.voice_leaved_event, writer.uint32(226).fork()).ldelim();
+      VoiceLeavedEvent.encode(
+        message.voice_leaved_event,
+        writer.uint32(226).fork()
+      ).ldelim();
     }
     if (message.voice_started_event !== undefined) {
-      VoiceStartedEvent.encode(message.voice_started_event, writer.uint32(234).fork()).ldelim();
+      VoiceStartedEvent.encode(
+        message.voice_started_event,
+        writer.uint32(234).fork()
+      ).ldelim();
     }
     if (message.voice_ended_event !== undefined) {
-      VoiceEndedEvent.encode(message.voice_ended_event, writer.uint32(242).fork()).ldelim();
+      VoiceEndedEvent.encode(
+        message.voice_ended_event,
+        writer.uint32(242).fork()
+      ).ldelim();
     }
     if (message.channel_created_event !== undefined) {
-      ChannelCreatedEvent.encode(message.channel_created_event, writer.uint32(250).fork()).ldelim();
+      ChannelCreatedEvent.encode(
+        message.channel_created_event,
+        writer.uint32(250).fork()
+      ).ldelim();
     }
     if (message.channel_deleted_event !== undefined) {
-      ChannelDeletedEvent.encode(message.channel_deleted_event, writer.uint32(258).fork()).ldelim();
+      ChannelDeletedEvent.encode(
+        message.channel_deleted_event,
+        writer.uint32(258).fork()
+      ).ldelim();
     }
     if (message.channel_updated_event !== undefined) {
-      ChannelUpdatedEvent.encode(message.channel_updated_event, writer.uint32(266).fork()).ldelim();
+      ChannelUpdatedEvent.encode(
+        message.channel_updated_event,
+        writer.uint32(266).fork()
+      ).ldelim();
     }
     if (message.last_pin_message_event !== undefined) {
-      LastPinMessageEvent.encode(message.last_pin_message_event, writer.uint32(274).fork()).ldelim();
+      LastPinMessageEvent.encode(
+        message.last_pin_message_event,
+        writer.uint32(274).fork()
+      ).ldelim();
     }
     if (message.custom_status_event !== undefined) {
-      CustomStatusEvent.encode(message.custom_status_event, writer.uint32(282).fork()).ldelim();
+      CustomStatusEvent.encode(
+        message.custom_status_event,
+        writer.uint32(282).fork()
+      ).ldelim();
     }
     if (message.user_channel_added_event !== undefined) {
-      UserChannelAdded.encode(message.user_channel_added_event, writer.uint32(290).fork()).ldelim();
+      UserChannelAdded.encode(
+        message.user_channel_added_event,
+        writer.uint32(290).fork()
+      ).ldelim();
     }
     if (message.user_channel_removed_event !== undefined) {
-      UserChannelRemoved.encode(message.user_channel_removed_event, writer.uint32(298).fork()).ldelim();
+      UserChannelRemoved.encode(
+        message.user_channel_removed_event,
+        writer.uint32(298).fork()
+      ).ldelim();
     }
     if (message.user_clan_removed_event !== undefined) {
-      UserClanRemoved.encode(message.user_clan_removed_event, writer.uint32(306).fork()).ldelim();
+      UserClanRemoved.encode(
+        message.user_clan_removed_event,
+        writer.uint32(306).fork()
+      ).ldelim();
     }
     if (message.clan_updated_event !== undefined) {
-      ClanUpdatedEvent.encode(message.clan_updated_event, writer.uint32(314).fork()).ldelim();
+      ClanUpdatedEvent.encode(
+        message.clan_updated_event,
+        writer.uint32(314).fork()
+      ).ldelim();
     }
     if (message.clan_profile_updated_event !== undefined) {
-      ClanProfileUpdatedEvent.encode(message.clan_profile_updated_event, writer.uint32(322).fork()).ldelim();
+      ClanProfileUpdatedEvent.encode(
+        message.clan_profile_updated_event,
+        writer.uint32(322).fork()
+      ).ldelim();
     }
     if (message.check_name_existed_event !== undefined) {
-      CheckNameExistedEvent.encode(message.check_name_existed_event, writer.uint32(330).fork()).ldelim();
+      CheckNameExistedEvent.encode(
+        message.check_name_existed_event,
+        writer.uint32(330).fork()
+      ).ldelim();
     }
     if (message.user_profile_updated_event !== undefined) {
-      UserProfileUpdatedEvent.encode(message.user_profile_updated_event, writer.uint32(338).fork()).ldelim();
+      UserProfileUpdatedEvent.encode(
+        message.user_profile_updated_event,
+        writer.uint32(338).fork()
+      ).ldelim();
     }
     if (message.add_clan_user_event !== undefined) {
-      AddClanUserEvent.encode(message.add_clan_user_event, writer.uint32(346).fork()).ldelim();
+      AddClanUserEvent.encode(
+        message.add_clan_user_event,
+        writer.uint32(346).fork()
+      ).ldelim();
     }
     if (message.clan_event_created !== undefined) {
-      CreateEventRequest.encode(message.clan_event_created, writer.uint32(354).fork()).ldelim();
+      CreateEventRequest.encode(
+        message.clan_event_created,
+        writer.uint32(354).fork()
+      ).ldelim();
     }
     if (message.role_assign_event !== undefined) {
-      RoleAssignedEvent.encode(message.role_assign_event, writer.uint32(362).fork()).ldelim();
+      RoleAssignedEvent.encode(
+        message.role_assign_event,
+        writer.uint32(362).fork()
+      ).ldelim();
     }
     if (message.clan_deleted_event !== undefined) {
-      ClanDeletedEvent.encode(message.clan_deleted_event, writer.uint32(370).fork()).ldelim();
+      ClanDeletedEvent.encode(
+        message.clan_deleted_event,
+        writer.uint32(370).fork()
+      ).ldelim();
     }
     if (message.give_coffee_event !== undefined) {
-      GiveCoffeeEvent.encode(message.give_coffee_event, writer.uint32(378).fork()).ldelim();
+      GiveCoffeeEvent.encode(
+        message.give_coffee_event,
+        writer.uint32(378).fork()
+      ).ldelim();
     }
     if (message.sticker_create_event !== undefined) {
-      StickerCreateEvent.encode(message.sticker_create_event, writer.uint32(386).fork()).ldelim();
+      StickerCreateEvent.encode(
+        message.sticker_create_event,
+        writer.uint32(386).fork()
+      ).ldelim();
     }
     if (message.sticker_update_event !== undefined) {
-      StickerUpdateEvent.encode(message.sticker_update_event, writer.uint32(394).fork()).ldelim();
+      StickerUpdateEvent.encode(
+        message.sticker_update_event,
+        writer.uint32(394).fork()
+      ).ldelim();
     }
     if (message.sticker_delete_event !== undefined) {
-      StickerDeleteEvent.encode(message.sticker_delete_event, writer.uint32(402).fork()).ldelim();
+      StickerDeleteEvent.encode(
+        message.sticker_delete_event,
+        writer.uint32(402).fork()
+      ).ldelim();
     }
     if (message.role_event !== undefined) {
       RoleEvent.encode(message.role_event, writer.uint32(410).fork()).ldelim();
     }
     if (message.event_emoji !== undefined) {
-      EventEmoji.encode(message.event_emoji, writer.uint32(418).fork()).ldelim();
+      EventEmoji.encode(
+        message.event_emoji,
+        writer.uint32(418).fork()
+      ).ldelim();
     }
     if (message.streaming_joined_event !== undefined) {
-      StreamingJoinedEvent.encode(message.streaming_joined_event, writer.uint32(426).fork()).ldelim();
+      StreamingJoinedEvent.encode(
+        message.streaming_joined_event,
+        writer.uint32(426).fork()
+      ).ldelim();
     }
     if (message.streaming_leaved_event !== undefined) {
-      StreamingLeavedEvent.encode(message.streaming_leaved_event, writer.uint32(434).fork()).ldelim();
+      StreamingLeavedEvent.encode(
+        message.streaming_leaved_event,
+        writer.uint32(434).fork()
+      ).ldelim();
     }
     if (message.streaming_started_event !== undefined) {
-      StreamingStartedEvent.encode(message.streaming_started_event, writer.uint32(442).fork()).ldelim();
+      StreamingStartedEvent.encode(
+        message.streaming_started_event,
+        writer.uint32(442).fork()
+      ).ldelim();
     }
     if (message.streaming_ended_event !== undefined) {
-      StreamingEndedEvent.encode(message.streaming_ended_event, writer.uint32(450).fork()).ldelim();
+      StreamingEndedEvent.encode(
+        message.streaming_ended_event,
+        writer.uint32(450).fork()
+      ).ldelim();
     }
     if (message.permission_set_event !== undefined) {
-      PermissionSetEvent.encode(message.permission_set_event, writer.uint32(458).fork()).ldelim();
+      PermissionSetEvent.encode(
+        message.permission_set_event,
+        writer.uint32(458).fork()
+      ).ldelim();
     }
     if (message.permission_changed_event !== undefined) {
-      PermissionChangedEvent.encode(message.permission_changed_event, writer.uint32(466).fork()).ldelim();
+      PermissionChangedEvent.encode(
+        message.permission_changed_event,
+        writer.uint32(466).fork()
+      ).ldelim();
     }
     if (message.token_sent_event !== undefined) {
-      TokenSentEvent.encode(message.token_sent_event, writer.uint32(474).fork()).ldelim();
+      TokenSentEvent.encode(
+        message.token_sent_event,
+        writer.uint32(474).fork()
+      ).ldelim();
     }
     if (message.message_button_clicked !== undefined) {
-      MessageButtonClicked.encode(message.message_button_clicked, writer.uint32(482).fork()).ldelim();
+      MessageButtonClicked.encode(
+        message.message_button_clicked,
+        writer.uint32(482).fork()
+      ).ldelim();
     }
     if (message.unmute_event !== undefined) {
-      UnmuteEvent.encode(message.unmute_event, writer.uint32(490).fork()).ldelim();
+      UnmuteEvent.encode(
+        message.unmute_event,
+        writer.uint32(490).fork()
+      ).ldelim();
     }
     if (message.webrtc_signaling_fwd !== undefined) {
-      WebrtcSignalingFwd.encode(message.webrtc_signaling_fwd, writer.uint32(498).fork()).ldelim();
+      WebrtcSignalingFwd.encode(
+        message.webrtc_signaling_fwd,
+        writer.uint32(498).fork()
+      ).ldelim();
     }
     if (message.list_activity !== undefined) {
-      ListActivity.encode(message.list_activity, writer.uint32(506).fork()).ldelim();
+      ListActivity.encode(
+        message.list_activity,
+        writer.uint32(506).fork()
+      ).ldelim();
     }
     if (message.dropdown_box_selected !== undefined) {
-      DropdownBoxSelected.encode(message.dropdown_box_selected, writer.uint32(514).fork()).ldelim();
+      DropdownBoxSelected.encode(
+        message.dropdown_box_selected,
+        writer.uint32(514).fork()
+      ).ldelim();
     }
     if (message.incoming_call_push !== undefined) {
-      IncomingCallPush.encode(message.incoming_call_push, writer.uint32(522).fork()).ldelim();
+      IncomingCallPush.encode(
+        message.incoming_call_push,
+        writer.uint32(522).fork()
+      ).ldelim();
     }
     if (message.sd_topic_event !== undefined) {
-      SdTopicEvent.encode(message.sd_topic_event, writer.uint32(530).fork()).ldelim();
+      SdTopicEvent.encode(
+        message.sd_topic_event,
+        writer.uint32(530).fork()
+      ).ldelim();
     }
     if (message.follow_event !== undefined) {
-      FollowEvent.encode(message.follow_event, writer.uint32(538).fork()).ldelim();
+      FollowEvent.encode(
+        message.follow_event,
+        writer.uint32(538).fork()
+      ).ldelim();
     }
     if (message.channel_app_event !== undefined) {
-      ChannelAppEvent.encode(message.channel_app_event, writer.uint32(546).fork()).ldelim();
+      ChannelAppEvent.encode(
+        message.channel_app_event,
+        writer.uint32(546).fork()
+      ).ldelim();
     }
     if (message.user_status_event !== undefined) {
-      UserStatusEvent.encode(message.user_status_event, writer.uint32(554).fork()).ldelim();
+      UserStatusEvent.encode(
+        message.user_status_event,
+        writer.uint32(554).fork()
+      ).ldelim();
     }
     if (message.remove_friend !== undefined) {
-      RemoveFriend.encode(message.remove_friend, writer.uint32(562).fork()).ldelim();
+      RemoveFriend.encode(
+        message.remove_friend,
+        writer.uint32(562).fork()
+      ).ldelim();
     }
     if (message.webhook_event !== undefined) {
       Webhook.encode(message.webhook_event, writer.uint32(570).fork()).ldelim();
@@ -1597,7 +1624,8 @@ export const Envelope = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): Envelope {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    const reader =
+      input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseEnvelope();
     while (reader.pos < end) {
@@ -1643,42 +1671,60 @@ export const Envelope = {
             break;
           }
 
-          message.channel_message = ChannelMessage.decode(reader, reader.uint32());
+          message.channel_message = ChannelMessage.decode(
+            reader,
+            reader.uint32()
+          );
           continue;
         case 7:
           if (tag !== 58) {
             break;
           }
 
-          message.channel_message_ack = ChannelMessageAck.decode(reader, reader.uint32());
+          message.channel_message_ack = ChannelMessageAck.decode(
+            reader,
+            reader.uint32()
+          );
           continue;
         case 8:
           if (tag !== 66) {
             break;
           }
 
-          message.channel_message_send = ChannelMessageSend.decode(reader, reader.uint32());
+          message.channel_message_send = ChannelMessageSend.decode(
+            reader,
+            reader.uint32()
+          );
           continue;
         case 9:
           if (tag !== 74) {
             break;
           }
 
-          message.channel_message_update = ChannelMessageUpdate.decode(reader, reader.uint32());
+          message.channel_message_update = ChannelMessageUpdate.decode(
+            reader,
+            reader.uint32()
+          );
           continue;
         case 10:
           if (tag !== 82) {
             break;
           }
 
-          message.channel_message_remove = ChannelMessageRemove.decode(reader, reader.uint32());
+          message.channel_message_remove = ChannelMessageRemove.decode(
+            reader,
+            reader.uint32()
+          );
           continue;
         case 11:
           if (tag !== 90) {
             break;
           }
 
-          message.channel_presence_event = ChannelPresenceEvent.decode(reader, reader.uint32());
+          message.channel_presence_event = ChannelPresenceEvent.decode(
+            reader,
+            reader.uint32()
+          );
           continue;
         case 12:
           if (tag !== 98) {
@@ -1720,14 +1766,20 @@ export const Envelope = {
             break;
           }
 
-          message.status_presence_event = StatusPresenceEvent.decode(reader, reader.uint32());
+          message.status_presence_event = StatusPresenceEvent.decode(
+            reader,
+            reader.uint32()
+          );
           continue;
         case 18:
           if (tag !== 146) {
             break;
           }
 
-          message.status_unfollow = StatusUnfollow.decode(reader, reader.uint32());
+          message.status_unfollow = StatusUnfollow.decode(
+            reader,
+            reader.uint32()
+          );
           continue;
         case 19:
           if (tag !== 154) {
@@ -1748,7 +1800,10 @@ export const Envelope = {
             break;
           }
 
-          message.stream_presence_event = StreamPresenceEvent.decode(reader, reader.uint32());
+          message.stream_presence_event = StreamPresenceEvent.decode(
+            reader,
+            reader.uint32()
+          );
           continue;
         case 22:
           if (tag !== 178) {
@@ -1769,189 +1824,270 @@ export const Envelope = {
             break;
           }
 
-          message.message_typing_event = MessageTypingEvent.decode(reader, reader.uint32());
+          message.message_typing_event = MessageTypingEvent.decode(
+            reader,
+            reader.uint32()
+          );
           continue;
         case 25:
           if (tag !== 202) {
             break;
           }
 
-          message.last_seen_message_event = LastSeenMessageEvent.decode(reader, reader.uint32());
+          message.last_seen_message_event = LastSeenMessageEvent.decode(
+            reader,
+            reader.uint32()
+          );
           continue;
         case 26:
           if (tag !== 210) {
             break;
           }
 
-          message.message_reaction_event = MessageReaction.decode(reader, reader.uint32());
+          message.message_reaction_event = MessageReaction.decode(
+            reader,
+            reader.uint32()
+          );
           continue;
         case 27:
           if (tag !== 218) {
             break;
           }
 
-          message.voice_joined_event = VoiceJoinedEvent.decode(reader, reader.uint32());
+          message.voice_joined_event = VoiceJoinedEvent.decode(
+            reader,
+            reader.uint32()
+          );
           continue;
         case 28:
           if (tag !== 226) {
             break;
           }
 
-          message.voice_leaved_event = VoiceLeavedEvent.decode(reader, reader.uint32());
+          message.voice_leaved_event = VoiceLeavedEvent.decode(
+            reader,
+            reader.uint32()
+          );
           continue;
         case 29:
           if (tag !== 234) {
             break;
           }
 
-          message.voice_started_event = VoiceStartedEvent.decode(reader, reader.uint32());
+          message.voice_started_event = VoiceStartedEvent.decode(
+            reader,
+            reader.uint32()
+          );
           continue;
         case 30:
           if (tag !== 242) {
             break;
           }
 
-          message.voice_ended_event = VoiceEndedEvent.decode(reader, reader.uint32());
+          message.voice_ended_event = VoiceEndedEvent.decode(
+            reader,
+            reader.uint32()
+          );
           continue;
         case 31:
           if (tag !== 250) {
             break;
           }
 
-          message.channel_created_event = ChannelCreatedEvent.decode(reader, reader.uint32());
+          message.channel_created_event = ChannelCreatedEvent.decode(
+            reader,
+            reader.uint32()
+          );
           continue;
         case 32:
           if (tag !== 258) {
             break;
           }
 
-          message.channel_deleted_event = ChannelDeletedEvent.decode(reader, reader.uint32());
+          message.channel_deleted_event = ChannelDeletedEvent.decode(
+            reader,
+            reader.uint32()
+          );
           continue;
         case 33:
           if (tag !== 266) {
             break;
           }
 
-          message.channel_updated_event = ChannelUpdatedEvent.decode(reader, reader.uint32());
+          message.channel_updated_event = ChannelUpdatedEvent.decode(
+            reader,
+            reader.uint32()
+          );
           continue;
         case 34:
           if (tag !== 274) {
             break;
           }
 
-          message.last_pin_message_event = LastPinMessageEvent.decode(reader, reader.uint32());
+          message.last_pin_message_event = LastPinMessageEvent.decode(
+            reader,
+            reader.uint32()
+          );
           continue;
         case 35:
           if (tag !== 282) {
             break;
           }
 
-          message.custom_status_event = CustomStatusEvent.decode(reader, reader.uint32());
+          message.custom_status_event = CustomStatusEvent.decode(
+            reader,
+            reader.uint32()
+          );
           continue;
         case 36:
           if (tag !== 290) {
             break;
           }
 
-          message.user_channel_added_event = UserChannelAdded.decode(reader, reader.uint32());
+          message.user_channel_added_event = UserChannelAdded.decode(
+            reader,
+            reader.uint32()
+          );
           continue;
         case 37:
           if (tag !== 298) {
             break;
           }
 
-          message.user_channel_removed_event = UserChannelRemoved.decode(reader, reader.uint32());
+          message.user_channel_removed_event = UserChannelRemoved.decode(
+            reader,
+            reader.uint32()
+          );
           continue;
         case 38:
           if (tag !== 306) {
             break;
           }
 
-          message.user_clan_removed_event = UserClanRemoved.decode(reader, reader.uint32());
+          message.user_clan_removed_event = UserClanRemoved.decode(
+            reader,
+            reader.uint32()
+          );
           continue;
         case 39:
           if (tag !== 314) {
             break;
           }
 
-          message.clan_updated_event = ClanUpdatedEvent.decode(reader, reader.uint32());
+          message.clan_updated_event = ClanUpdatedEvent.decode(
+            reader,
+            reader.uint32()
+          );
           continue;
         case 40:
           if (tag !== 322) {
             break;
           }
 
-          message.clan_profile_updated_event = ClanProfileUpdatedEvent.decode(reader, reader.uint32());
+          message.clan_profile_updated_event = ClanProfileUpdatedEvent.decode(
+            reader,
+            reader.uint32()
+          );
           continue;
         case 41:
           if (tag !== 330) {
             break;
           }
 
-          message.check_name_existed_event = CheckNameExistedEvent.decode(reader, reader.uint32());
+          message.check_name_existed_event = CheckNameExistedEvent.decode(
+            reader,
+            reader.uint32()
+          );
           continue;
         case 42:
           if (tag !== 338) {
             break;
           }
 
-          message.user_profile_updated_event = UserProfileUpdatedEvent.decode(reader, reader.uint32());
+          message.user_profile_updated_event = UserProfileUpdatedEvent.decode(
+            reader,
+            reader.uint32()
+          );
           continue;
         case 43:
           if (tag !== 346) {
             break;
           }
 
-          message.add_clan_user_event = AddClanUserEvent.decode(reader, reader.uint32());
+          message.add_clan_user_event = AddClanUserEvent.decode(
+            reader,
+            reader.uint32()
+          );
           continue;
         case 44:
           if (tag !== 354) {
             break;
           }
 
-          message.clan_event_created = CreateEventRequest.decode(reader, reader.uint32());
+          message.clan_event_created = CreateEventRequest.decode(
+            reader,
+            reader.uint32()
+          );
           continue;
         case 45:
           if (tag !== 362) {
             break;
           }
 
-          message.role_assign_event = RoleAssignedEvent.decode(reader, reader.uint32());
+          message.role_assign_event = RoleAssignedEvent.decode(
+            reader,
+            reader.uint32()
+          );
           continue;
         case 46:
           if (tag !== 370) {
             break;
           }
 
-          message.clan_deleted_event = ClanDeletedEvent.decode(reader, reader.uint32());
+          message.clan_deleted_event = ClanDeletedEvent.decode(
+            reader,
+            reader.uint32()
+          );
           continue;
         case 47:
           if (tag !== 378) {
             break;
           }
 
-          message.give_coffee_event = GiveCoffeeEvent.decode(reader, reader.uint32());
+          message.give_coffee_event = GiveCoffeeEvent.decode(
+            reader,
+            reader.uint32()
+          );
           continue;
         case 48:
           if (tag !== 386) {
             break;
           }
 
-          message.sticker_create_event = StickerCreateEvent.decode(reader, reader.uint32());
+          message.sticker_create_event = StickerCreateEvent.decode(
+            reader,
+            reader.uint32()
+          );
           continue;
         case 49:
           if (tag !== 394) {
             break;
           }
 
-          message.sticker_update_event = StickerUpdateEvent.decode(reader, reader.uint32());
+          message.sticker_update_event = StickerUpdateEvent.decode(
+            reader,
+            reader.uint32()
+          );
           continue;
         case 50:
           if (tag !== 402) {
             break;
           }
 
-          message.sticker_delete_event = StickerDeleteEvent.decode(reader, reader.uint32());
+          message.sticker_delete_event = StickerDeleteEvent.decode(
+            reader,
+            reader.uint32()
+          );
           continue;
         case 51:
           if (tag !== 410) {
@@ -1972,56 +2108,80 @@ export const Envelope = {
             break;
           }
 
-          message.streaming_joined_event = StreamingJoinedEvent.decode(reader, reader.uint32());
+          message.streaming_joined_event = StreamingJoinedEvent.decode(
+            reader,
+            reader.uint32()
+          );
           continue;
         case 54:
           if (tag !== 434) {
             break;
           }
 
-          message.streaming_leaved_event = StreamingLeavedEvent.decode(reader, reader.uint32());
+          message.streaming_leaved_event = StreamingLeavedEvent.decode(
+            reader,
+            reader.uint32()
+          );
           continue;
         case 55:
           if (tag !== 442) {
             break;
           }
 
-          message.streaming_started_event = StreamingStartedEvent.decode(reader, reader.uint32());
+          message.streaming_started_event = StreamingStartedEvent.decode(
+            reader,
+            reader.uint32()
+          );
           continue;
         case 56:
           if (tag !== 450) {
             break;
           }
 
-          message.streaming_ended_event = StreamingEndedEvent.decode(reader, reader.uint32());
+          message.streaming_ended_event = StreamingEndedEvent.decode(
+            reader,
+            reader.uint32()
+          );
           continue;
         case 57:
           if (tag !== 458) {
             break;
           }
 
-          message.permission_set_event = PermissionSetEvent.decode(reader, reader.uint32());
+          message.permission_set_event = PermissionSetEvent.decode(
+            reader,
+            reader.uint32()
+          );
           continue;
         case 58:
           if (tag !== 466) {
             break;
           }
 
-          message.permission_changed_event = PermissionChangedEvent.decode(reader, reader.uint32());
+          message.permission_changed_event = PermissionChangedEvent.decode(
+            reader,
+            reader.uint32()
+          );
           continue;
         case 59:
           if (tag !== 474) {
             break;
           }
 
-          message.token_sent_event = TokenSentEvent.decode(reader, reader.uint32());
+          message.token_sent_event = TokenSentEvent.decode(
+            reader,
+            reader.uint32()
+          );
           continue;
         case 60:
           if (tag !== 482) {
             break;
           }
 
-          message.message_button_clicked = MessageButtonClicked.decode(reader, reader.uint32());
+          message.message_button_clicked = MessageButtonClicked.decode(
+            reader,
+            reader.uint32()
+          );
           continue;
         case 61:
           if (tag !== 490) {
@@ -2035,7 +2195,10 @@ export const Envelope = {
             break;
           }
 
-          message.webrtc_signaling_fwd = WebrtcSignalingFwd.decode(reader, reader.uint32());
+          message.webrtc_signaling_fwd = WebrtcSignalingFwd.decode(
+            reader,
+            reader.uint32()
+          );
           continue;
         case 63:
           if (tag !== 506) {
@@ -2049,14 +2212,20 @@ export const Envelope = {
             break;
           }
 
-          message.dropdown_box_selected = DropdownBoxSelected.decode(reader, reader.uint32());
+          message.dropdown_box_selected = DropdownBoxSelected.decode(
+            reader,
+            reader.uint32()
+          );
           continue;
         case 65:
           if (tag !== 522) {
             break;
           }
 
-          message.incoming_call_push = IncomingCallPush.decode(reader, reader.uint32());
+          message.incoming_call_push = IncomingCallPush.decode(
+            reader,
+            reader.uint32()
+          );
           continue;
         case 66:
           if (tag !== 530) {
@@ -2077,14 +2246,20 @@ export const Envelope = {
             break;
           }
 
-          message.channel_app_event = ChannelAppEvent.decode(reader, reader.uint32());
+          message.channel_app_event = ChannelAppEvent.decode(
+            reader,
+            reader.uint32()
+          );
           continue;
         case 69:
           if (tag !== 554) {
             break;
           }
 
-          message.user_status_event = UserStatusEvent.decode(reader, reader.uint32());
+          message.user_status_event = UserStatusEvent.decode(
+            reader,
+            reader.uint32()
+          );
           continue;
         case 70:
           if (tag !== 562) {
@@ -2112,11 +2287,21 @@ export const Envelope = {
   fromJSON(object: any): Envelope {
     return {
       cid: isSet(object.cid) ? globalThis.String(object.cid) : "",
-      channel: isSet(object.channel) ? Channel.fromJSON(object.channel) : undefined,
-      clan_join: isSet(object.clan_join) ? ClanJoin.fromJSON(object.clan_join) : undefined,
-      channel_join: isSet(object.channel_join) ? ChannelJoin.fromJSON(object.channel_join) : undefined,
-      channel_leave: isSet(object.channel_leave) ? ChannelLeave.fromJSON(object.channel_leave) : undefined,
-      channel_message: isSet(object.channel_message) ? ChannelMessage.fromJSON(object.channel_message) : undefined,
+      channel: isSet(object.channel)
+        ? Channel.fromJSON(object.channel)
+        : undefined,
+      clan_join: isSet(object.clan_join)
+        ? ClanJoin.fromJSON(object.clan_join)
+        : undefined,
+      channel_join: isSet(object.channel_join)
+        ? ChannelJoin.fromJSON(object.channel_join)
+        : undefined,
+      channel_leave: isSet(object.channel_leave)
+        ? ChannelLeave.fromJSON(object.channel_leave)
+        : undefined,
+      channel_message: isSet(object.channel_message)
+        ? ChannelMessage.fromJSON(object.channel_message)
+        : undefined,
       channel_message_ack: isSet(object.channel_message_ack)
         ? ChannelMessageAck.fromJSON(object.channel_message_ack)
         : undefined,
@@ -2133,16 +2318,26 @@ export const Envelope = {
         ? ChannelPresenceEvent.fromJSON(object.channel_presence_event)
         : undefined,
       error: isSet(object.error) ? Error.fromJSON(object.error) : undefined,
-      notifications: isSet(object.notifications) ? Notifications.fromJSON(object.notifications) : undefined,
+      notifications: isSet(object.notifications)
+        ? Notifications.fromJSON(object.notifications)
+        : undefined,
       rpc: isSet(object.rpc) ? Rpc.fromJSON(object.rpc) : undefined,
       status: isSet(object.status) ? Status.fromJSON(object.status) : undefined,
-      status_follow: isSet(object.status_follow) ? StatusFollow.fromJSON(object.status_follow) : undefined,
+      status_follow: isSet(object.status_follow)
+        ? StatusFollow.fromJSON(object.status_follow)
+        : undefined,
       status_presence_event: isSet(object.status_presence_event)
         ? StatusPresenceEvent.fromJSON(object.status_presence_event)
         : undefined,
-      status_unfollow: isSet(object.status_unfollow) ? StatusUnfollow.fromJSON(object.status_unfollow) : undefined,
-      status_update: isSet(object.status_update) ? StatusUpdate.fromJSON(object.status_update) : undefined,
-      stream_data: isSet(object.stream_data) ? StreamData.fromJSON(object.stream_data) : undefined,
+      status_unfollow: isSet(object.status_unfollow)
+        ? StatusUnfollow.fromJSON(object.status_unfollow)
+        : undefined,
+      status_update: isSet(object.status_update)
+        ? StatusUpdate.fromJSON(object.status_update)
+        : undefined,
+      stream_data: isSet(object.stream_data)
+        ? StreamData.fromJSON(object.stream_data)
+        : undefined,
       stream_presence_event: isSet(object.stream_presence_event)
         ? StreamPresenceEvent.fromJSON(object.stream_presence_event)
         : undefined,
@@ -2229,8 +2424,12 @@ export const Envelope = {
       sticker_delete_event: isSet(object.sticker_delete_event)
         ? StickerDeleteEvent.fromJSON(object.sticker_delete_event)
         : undefined,
-      role_event: isSet(object.role_event) ? RoleEvent.fromJSON(object.role_event) : undefined,
-      event_emoji: isSet(object.event_emoji) ? EventEmoji.fromJSON(object.event_emoji) : undefined,
+      role_event: isSet(object.role_event)
+        ? RoleEvent.fromJSON(object.role_event)
+        : undefined,
+      event_emoji: isSet(object.event_emoji)
+        ? EventEmoji.fromJSON(object.event_emoji)
+        : undefined,
       streaming_joined_event: isSet(object.streaming_joined_event)
         ? StreamingJoinedEvent.fromJSON(object.streaming_joined_event)
         : undefined,
@@ -2249,31 +2448,45 @@ export const Envelope = {
       permission_changed_event: isSet(object.permission_changed_event)
         ? PermissionChangedEvent.fromJSON(object.permission_changed_event)
         : undefined,
-      token_sent_event: isSet(object.token_sent_event) ? TokenSentEvent.fromJSON(object.token_sent_event) : undefined,
+      token_sent_event: isSet(object.token_sent_event)
+        ? TokenSentEvent.fromJSON(object.token_sent_event)
+        : undefined,
       message_button_clicked: isSet(object.message_button_clicked)
         ? MessageButtonClicked.fromJSON(object.message_button_clicked)
         : undefined,
-      unmute_event: isSet(object.unmute_event) ? UnmuteEvent.fromJSON(object.unmute_event) : undefined,
+      unmute_event: isSet(object.unmute_event)
+        ? UnmuteEvent.fromJSON(object.unmute_event)
+        : undefined,
       webrtc_signaling_fwd: isSet(object.webrtc_signaling_fwd)
         ? WebrtcSignalingFwd.fromJSON(object.webrtc_signaling_fwd)
         : undefined,
-      list_activity: isSet(object.list_activity) ? ListActivity.fromJSON(object.list_activity) : undefined,
+      list_activity: isSet(object.list_activity)
+        ? ListActivity.fromJSON(object.list_activity)
+        : undefined,
       dropdown_box_selected: isSet(object.dropdown_box_selected)
         ? DropdownBoxSelected.fromJSON(object.dropdown_box_selected)
         : undefined,
       incoming_call_push: isSet(object.incoming_call_push)
         ? IncomingCallPush.fromJSON(object.incoming_call_push)
         : undefined,
-      sd_topic_event: isSet(object.sd_topic_event) ? SdTopicEvent.fromJSON(object.sd_topic_event) : undefined,
-      follow_event: isSet(object.follow_event) ? FollowEvent.fromJSON(object.follow_event) : undefined,
+      sd_topic_event: isSet(object.sd_topic_event)
+        ? SdTopicEvent.fromJSON(object.sd_topic_event)
+        : undefined,
+      follow_event: isSet(object.follow_event)
+        ? FollowEvent.fromJSON(object.follow_event)
+        : undefined,
       channel_app_event: isSet(object.channel_app_event)
         ? ChannelAppEvent.fromJSON(object.channel_app_event)
         : undefined,
       user_status_event: isSet(object.user_status_event)
         ? UserStatusEvent.fromJSON(object.user_status_event)
         : undefined,
-      remove_friend: isSet(object.remove_friend) ? RemoveFriend.fromJSON(object.remove_friend) : undefined,
-      webhook_event: isSet(object.webhook_event) ? Webhook.fromJSON(object.webhook_event) : undefined,
+      remove_friend: isSet(object.remove_friend)
+        ? RemoveFriend.fromJSON(object.remove_friend)
+        : undefined,
+      webhook_event: isSet(object.webhook_event)
+        ? Webhook.fromJSON(object.webhook_event)
+        : undefined,
     };
   },
 
@@ -2298,19 +2511,29 @@ export const Envelope = {
       obj.channel_message = ChannelMessage.toJSON(message.channel_message);
     }
     if (message.channel_message_ack !== undefined) {
-      obj.channel_message_ack = ChannelMessageAck.toJSON(message.channel_message_ack);
+      obj.channel_message_ack = ChannelMessageAck.toJSON(
+        message.channel_message_ack
+      );
     }
     if (message.channel_message_send !== undefined) {
-      obj.channel_message_send = ChannelMessageSend.toJSON(message.channel_message_send);
+      obj.channel_message_send = ChannelMessageSend.toJSON(
+        message.channel_message_send
+      );
     }
     if (message.channel_message_update !== undefined) {
-      obj.channel_message_update = ChannelMessageUpdate.toJSON(message.channel_message_update);
+      obj.channel_message_update = ChannelMessageUpdate.toJSON(
+        message.channel_message_update
+      );
     }
     if (message.channel_message_remove !== undefined) {
-      obj.channel_message_remove = ChannelMessageRemove.toJSON(message.channel_message_remove);
+      obj.channel_message_remove = ChannelMessageRemove.toJSON(
+        message.channel_message_remove
+      );
     }
     if (message.channel_presence_event !== undefined) {
-      obj.channel_presence_event = ChannelPresenceEvent.toJSON(message.channel_presence_event);
+      obj.channel_presence_event = ChannelPresenceEvent.toJSON(
+        message.channel_presence_event
+      );
     }
     if (message.error !== undefined) {
       obj.error = Error.toJSON(message.error);
@@ -2328,7 +2551,9 @@ export const Envelope = {
       obj.status_follow = StatusFollow.toJSON(message.status_follow);
     }
     if (message.status_presence_event !== undefined) {
-      obj.status_presence_event = StatusPresenceEvent.toJSON(message.status_presence_event);
+      obj.status_presence_event = StatusPresenceEvent.toJSON(
+        message.status_presence_event
+      );
     }
     if (message.status_unfollow !== undefined) {
       obj.status_unfollow = StatusUnfollow.toJSON(message.status_unfollow);
@@ -2340,7 +2565,9 @@ export const Envelope = {
       obj.stream_data = StreamData.toJSON(message.stream_data);
     }
     if (message.stream_presence_event !== undefined) {
-      obj.stream_presence_event = StreamPresenceEvent.toJSON(message.stream_presence_event);
+      obj.stream_presence_event = StreamPresenceEvent.toJSON(
+        message.stream_presence_event
+      );
     }
     if (message.ping !== undefined) {
       obj.ping = Ping.toJSON(message.ping);
@@ -2349,85 +2576,135 @@ export const Envelope = {
       obj.pong = Pong.toJSON(message.pong);
     }
     if (message.message_typing_event !== undefined) {
-      obj.message_typing_event = MessageTypingEvent.toJSON(message.message_typing_event);
+      obj.message_typing_event = MessageTypingEvent.toJSON(
+        message.message_typing_event
+      );
     }
     if (message.last_seen_message_event !== undefined) {
-      obj.last_seen_message_event = LastSeenMessageEvent.toJSON(message.last_seen_message_event);
+      obj.last_seen_message_event = LastSeenMessageEvent.toJSON(
+        message.last_seen_message_event
+      );
     }
     if (message.message_reaction_event !== undefined) {
-      obj.message_reaction_event = MessageReaction.toJSON(message.message_reaction_event);
+      obj.message_reaction_event = MessageReaction.toJSON(
+        message.message_reaction_event
+      );
     }
     if (message.voice_joined_event !== undefined) {
-      obj.voice_joined_event = VoiceJoinedEvent.toJSON(message.voice_joined_event);
+      obj.voice_joined_event = VoiceJoinedEvent.toJSON(
+        message.voice_joined_event
+      );
     }
     if (message.voice_leaved_event !== undefined) {
-      obj.voice_leaved_event = VoiceLeavedEvent.toJSON(message.voice_leaved_event);
+      obj.voice_leaved_event = VoiceLeavedEvent.toJSON(
+        message.voice_leaved_event
+      );
     }
     if (message.voice_started_event !== undefined) {
-      obj.voice_started_event = VoiceStartedEvent.toJSON(message.voice_started_event);
+      obj.voice_started_event = VoiceStartedEvent.toJSON(
+        message.voice_started_event
+      );
     }
     if (message.voice_ended_event !== undefined) {
       obj.voice_ended_event = VoiceEndedEvent.toJSON(message.voice_ended_event);
     }
     if (message.channel_created_event !== undefined) {
-      obj.channel_created_event = ChannelCreatedEvent.toJSON(message.channel_created_event);
+      obj.channel_created_event = ChannelCreatedEvent.toJSON(
+        message.channel_created_event
+      );
     }
     if (message.channel_deleted_event !== undefined) {
-      obj.channel_deleted_event = ChannelDeletedEvent.toJSON(message.channel_deleted_event);
+      obj.channel_deleted_event = ChannelDeletedEvent.toJSON(
+        message.channel_deleted_event
+      );
     }
     if (message.channel_updated_event !== undefined) {
-      obj.channel_updated_event = ChannelUpdatedEvent.toJSON(message.channel_updated_event);
+      obj.channel_updated_event = ChannelUpdatedEvent.toJSON(
+        message.channel_updated_event
+      );
     }
     if (message.last_pin_message_event !== undefined) {
-      obj.last_pin_message_event = LastPinMessageEvent.toJSON(message.last_pin_message_event);
+      obj.last_pin_message_event = LastPinMessageEvent.toJSON(
+        message.last_pin_message_event
+      );
     }
     if (message.custom_status_event !== undefined) {
-      obj.custom_status_event = CustomStatusEvent.toJSON(message.custom_status_event);
+      obj.custom_status_event = CustomStatusEvent.toJSON(
+        message.custom_status_event
+      );
     }
     if (message.user_channel_added_event !== undefined) {
-      obj.user_channel_added_event = UserChannelAdded.toJSON(message.user_channel_added_event);
+      obj.user_channel_added_event = UserChannelAdded.toJSON(
+        message.user_channel_added_event
+      );
     }
     if (message.user_channel_removed_event !== undefined) {
-      obj.user_channel_removed_event = UserChannelRemoved.toJSON(message.user_channel_removed_event);
+      obj.user_channel_removed_event = UserChannelRemoved.toJSON(
+        message.user_channel_removed_event
+      );
     }
     if (message.user_clan_removed_event !== undefined) {
-      obj.user_clan_removed_event = UserClanRemoved.toJSON(message.user_clan_removed_event);
+      obj.user_clan_removed_event = UserClanRemoved.toJSON(
+        message.user_clan_removed_event
+      );
     }
     if (message.clan_updated_event !== undefined) {
-      obj.clan_updated_event = ClanUpdatedEvent.toJSON(message.clan_updated_event);
+      obj.clan_updated_event = ClanUpdatedEvent.toJSON(
+        message.clan_updated_event
+      );
     }
     if (message.clan_profile_updated_event !== undefined) {
-      obj.clan_profile_updated_event = ClanProfileUpdatedEvent.toJSON(message.clan_profile_updated_event);
+      obj.clan_profile_updated_event = ClanProfileUpdatedEvent.toJSON(
+        message.clan_profile_updated_event
+      );
     }
     if (message.check_name_existed_event !== undefined) {
-      obj.check_name_existed_event = CheckNameExistedEvent.toJSON(message.check_name_existed_event);
+      obj.check_name_existed_event = CheckNameExistedEvent.toJSON(
+        message.check_name_existed_event
+      );
     }
     if (message.user_profile_updated_event !== undefined) {
-      obj.user_profile_updated_event = UserProfileUpdatedEvent.toJSON(message.user_profile_updated_event);
+      obj.user_profile_updated_event = UserProfileUpdatedEvent.toJSON(
+        message.user_profile_updated_event
+      );
     }
     if (message.add_clan_user_event !== undefined) {
-      obj.add_clan_user_event = AddClanUserEvent.toJSON(message.add_clan_user_event);
+      obj.add_clan_user_event = AddClanUserEvent.toJSON(
+        message.add_clan_user_event
+      );
     }
     if (message.clan_event_created !== undefined) {
-      obj.clan_event_created = CreateEventRequest.toJSON(message.clan_event_created);
+      obj.clan_event_created = CreateEventRequest.toJSON(
+        message.clan_event_created
+      );
     }
     if (message.role_assign_event !== undefined) {
-      obj.role_assign_event = RoleAssignedEvent.toJSON(message.role_assign_event);
+      obj.role_assign_event = RoleAssignedEvent.toJSON(
+        message.role_assign_event
+      );
     }
     if (message.clan_deleted_event !== undefined) {
-      obj.clan_deleted_event = ClanDeletedEvent.toJSON(message.clan_deleted_event);
+      obj.clan_deleted_event = ClanDeletedEvent.toJSON(
+        message.clan_deleted_event
+      );
     }
     if (message.give_coffee_event !== undefined) {
       obj.give_coffee_event = GiveCoffeeEvent.toJSON(message.give_coffee_event);
     }
     if (message.sticker_create_event !== undefined) {
-      obj.sticker_create_event = StickerCreateEvent.toJSON(message.sticker_create_event);
+      obj.sticker_create_event = StickerCreateEvent.toJSON(
+        message.sticker_create_event
+      );
     }
     if (message.sticker_update_event !== undefined) {
-      obj.sticker_update_event = StickerUpdateEvent.toJSON(message.sticker_update_event);
+      obj.sticker_update_event = StickerUpdateEvent.toJSON(
+        message.sticker_update_event
+      );
     }
     if (message.sticker_delete_event !== undefined) {
-      obj.sticker_delete_event = StickerDeleteEvent.toJSON(message.sticker_delete_event);
+      obj.sticker_delete_event = StickerDeleteEvent.toJSON(
+        message.sticker_delete_event
+      );
     }
     if (message.role_event !== undefined) {
       obj.role_event = RoleEvent.toJSON(message.role_event);
@@ -2436,43 +2713,63 @@ export const Envelope = {
       obj.event_emoji = EventEmoji.toJSON(message.event_emoji);
     }
     if (message.streaming_joined_event !== undefined) {
-      obj.streaming_joined_event = StreamingJoinedEvent.toJSON(message.streaming_joined_event);
+      obj.streaming_joined_event = StreamingJoinedEvent.toJSON(
+        message.streaming_joined_event
+      );
     }
     if (message.streaming_leaved_event !== undefined) {
-      obj.streaming_leaved_event = StreamingLeavedEvent.toJSON(message.streaming_leaved_event);
+      obj.streaming_leaved_event = StreamingLeavedEvent.toJSON(
+        message.streaming_leaved_event
+      );
     }
     if (message.streaming_started_event !== undefined) {
-      obj.streaming_started_event = StreamingStartedEvent.toJSON(message.streaming_started_event);
+      obj.streaming_started_event = StreamingStartedEvent.toJSON(
+        message.streaming_started_event
+      );
     }
     if (message.streaming_ended_event !== undefined) {
-      obj.streaming_ended_event = StreamingEndedEvent.toJSON(message.streaming_ended_event);
+      obj.streaming_ended_event = StreamingEndedEvent.toJSON(
+        message.streaming_ended_event
+      );
     }
     if (message.permission_set_event !== undefined) {
-      obj.permission_set_event = PermissionSetEvent.toJSON(message.permission_set_event);
+      obj.permission_set_event = PermissionSetEvent.toJSON(
+        message.permission_set_event
+      );
     }
     if (message.permission_changed_event !== undefined) {
-      obj.permission_changed_event = PermissionChangedEvent.toJSON(message.permission_changed_event);
+      obj.permission_changed_event = PermissionChangedEvent.toJSON(
+        message.permission_changed_event
+      );
     }
     if (message.token_sent_event !== undefined) {
       obj.token_sent_event = TokenSentEvent.toJSON(message.token_sent_event);
     }
     if (message.message_button_clicked !== undefined) {
-      obj.message_button_clicked = MessageButtonClicked.toJSON(message.message_button_clicked);
+      obj.message_button_clicked = MessageButtonClicked.toJSON(
+        message.message_button_clicked
+      );
     }
     if (message.unmute_event !== undefined) {
       obj.unmute_event = UnmuteEvent.toJSON(message.unmute_event);
     }
     if (message.webrtc_signaling_fwd !== undefined) {
-      obj.webrtc_signaling_fwd = WebrtcSignalingFwd.toJSON(message.webrtc_signaling_fwd);
+      obj.webrtc_signaling_fwd = WebrtcSignalingFwd.toJSON(
+        message.webrtc_signaling_fwd
+      );
     }
     if (message.list_activity !== undefined) {
       obj.list_activity = ListActivity.toJSON(message.list_activity);
     }
     if (message.dropdown_box_selected !== undefined) {
-      obj.dropdown_box_selected = DropdownBoxSelected.toJSON(message.dropdown_box_selected);
+      obj.dropdown_box_selected = DropdownBoxSelected.toJSON(
+        message.dropdown_box_selected
+      );
     }
     if (message.incoming_call_push !== undefined) {
-      obj.incoming_call_push = IncomingCallPush.toJSON(message.incoming_call_push);
+      obj.incoming_call_push = IncomingCallPush.toJSON(
+        message.incoming_call_push
+      );
     }
     if (message.sd_topic_event !== undefined) {
       obj.sd_topic_event = SdTopicEvent.toJSON(message.sd_topic_event);
@@ -2501,232 +2798,332 @@ export const Envelope = {
   fromPartial<I extends Exact<DeepPartial<Envelope>, I>>(object: I): Envelope {
     const message = createBaseEnvelope();
     message.cid = object.cid ?? "";
-    message.channel = (object.channel !== undefined && object.channel !== null)
-      ? Channel.fromPartial(object.channel)
-      : undefined;
-    message.clan_join = (object.clan_join !== undefined && object.clan_join !== null)
-      ? ClanJoin.fromPartial(object.clan_join)
-      : undefined;
-    message.channel_join = (object.channel_join !== undefined && object.channel_join !== null)
-      ? ChannelJoin.fromPartial(object.channel_join)
-      : undefined;
-    message.channel_leave = (object.channel_leave !== undefined && object.channel_leave !== null)
-      ? ChannelLeave.fromPartial(object.channel_leave)
-      : undefined;
-    message.channel_message = (object.channel_message !== undefined && object.channel_message !== null)
-      ? ChannelMessage.fromPartial(object.channel_message)
-      : undefined;
-    message.channel_message_ack = (object.channel_message_ack !== undefined && object.channel_message_ack !== null)
-      ? ChannelMessageAck.fromPartial(object.channel_message_ack)
-      : undefined;
-    message.channel_message_send = (object.channel_message_send !== undefined && object.channel_message_send !== null)
-      ? ChannelMessageSend.fromPartial(object.channel_message_send)
-      : undefined;
+    message.channel =
+      object.channel !== undefined && object.channel !== null
+        ? Channel.fromPartial(object.channel)
+        : undefined;
+    message.clan_join =
+      object.clan_join !== undefined && object.clan_join !== null
+        ? ClanJoin.fromPartial(object.clan_join)
+        : undefined;
+    message.channel_join =
+      object.channel_join !== undefined && object.channel_join !== null
+        ? ChannelJoin.fromPartial(object.channel_join)
+        : undefined;
+    message.channel_leave =
+      object.channel_leave !== undefined && object.channel_leave !== null
+        ? ChannelLeave.fromPartial(object.channel_leave)
+        : undefined;
+    message.channel_message =
+      object.channel_message !== undefined && object.channel_message !== null
+        ? ChannelMessage.fromPartial(object.channel_message)
+        : undefined;
+    message.channel_message_ack =
+      object.channel_message_ack !== undefined &&
+      object.channel_message_ack !== null
+        ? ChannelMessageAck.fromPartial(object.channel_message_ack)
+        : undefined;
+    message.channel_message_send =
+      object.channel_message_send !== undefined &&
+      object.channel_message_send !== null
+        ? ChannelMessageSend.fromPartial(object.channel_message_send)
+        : undefined;
     message.channel_message_update =
-      (object.channel_message_update !== undefined && object.channel_message_update !== null)
+      object.channel_message_update !== undefined &&
+      object.channel_message_update !== null
         ? ChannelMessageUpdate.fromPartial(object.channel_message_update)
         : undefined;
     message.channel_message_remove =
-      (object.channel_message_remove !== undefined && object.channel_message_remove !== null)
+      object.channel_message_remove !== undefined &&
+      object.channel_message_remove !== null
         ? ChannelMessageRemove.fromPartial(object.channel_message_remove)
         : undefined;
     message.channel_presence_event =
-      (object.channel_presence_event !== undefined && object.channel_presence_event !== null)
+      object.channel_presence_event !== undefined &&
+      object.channel_presence_event !== null
         ? ChannelPresenceEvent.fromPartial(object.channel_presence_event)
         : undefined;
-    message.error = (object.error !== undefined && object.error !== null) ? Error.fromPartial(object.error) : undefined;
-    message.notifications = (object.notifications !== undefined && object.notifications !== null)
-      ? Notifications.fromPartial(object.notifications)
-      : undefined;
-    message.rpc = (object.rpc !== undefined && object.rpc !== null) ? Rpc.fromPartial(object.rpc) : undefined;
-    message.status = (object.status !== undefined && object.status !== null)
-      ? Status.fromPartial(object.status)
-      : undefined;
-    message.status_follow = (object.status_follow !== undefined && object.status_follow !== null)
-      ? StatusFollow.fromPartial(object.status_follow)
-      : undefined;
+    message.error =
+      object.error !== undefined && object.error !== null
+        ? Error.fromPartial(object.error)
+        : undefined;
+    message.notifications =
+      object.notifications !== undefined && object.notifications !== null
+        ? Notifications.fromPartial(object.notifications)
+        : undefined;
+    message.rpc =
+      object.rpc !== undefined && object.rpc !== null
+        ? Rpc.fromPartial(object.rpc)
+        : undefined;
+    message.status =
+      object.status !== undefined && object.status !== null
+        ? Status.fromPartial(object.status)
+        : undefined;
+    message.status_follow =
+      object.status_follow !== undefined && object.status_follow !== null
+        ? StatusFollow.fromPartial(object.status_follow)
+        : undefined;
     message.status_presence_event =
-      (object.status_presence_event !== undefined && object.status_presence_event !== null)
+      object.status_presence_event !== undefined &&
+      object.status_presence_event !== null
         ? StatusPresenceEvent.fromPartial(object.status_presence_event)
         : undefined;
-    message.status_unfollow = (object.status_unfollow !== undefined && object.status_unfollow !== null)
-      ? StatusUnfollow.fromPartial(object.status_unfollow)
-      : undefined;
-    message.status_update = (object.status_update !== undefined && object.status_update !== null)
-      ? StatusUpdate.fromPartial(object.status_update)
-      : undefined;
-    message.stream_data = (object.stream_data !== undefined && object.stream_data !== null)
-      ? StreamData.fromPartial(object.stream_data)
-      : undefined;
+    message.status_unfollow =
+      object.status_unfollow !== undefined && object.status_unfollow !== null
+        ? StatusUnfollow.fromPartial(object.status_unfollow)
+        : undefined;
+    message.status_update =
+      object.status_update !== undefined && object.status_update !== null
+        ? StatusUpdate.fromPartial(object.status_update)
+        : undefined;
+    message.stream_data =
+      object.stream_data !== undefined && object.stream_data !== null
+        ? StreamData.fromPartial(object.stream_data)
+        : undefined;
     message.stream_presence_event =
-      (object.stream_presence_event !== undefined && object.stream_presence_event !== null)
+      object.stream_presence_event !== undefined &&
+      object.stream_presence_event !== null
         ? StreamPresenceEvent.fromPartial(object.stream_presence_event)
         : undefined;
-    message.ping = (object.ping !== undefined && object.ping !== null) ? Ping.fromPartial(object.ping) : undefined;
-    message.pong = (object.pong !== undefined && object.pong !== null) ? Pong.fromPartial(object.pong) : undefined;
-    message.message_typing_event = (object.message_typing_event !== undefined && object.message_typing_event !== null)
-      ? MessageTypingEvent.fromPartial(object.message_typing_event)
-      : undefined;
+    message.ping =
+      object.ping !== undefined && object.ping !== null
+        ? Ping.fromPartial(object.ping)
+        : undefined;
+    message.pong =
+      object.pong !== undefined && object.pong !== null
+        ? Pong.fromPartial(object.pong)
+        : undefined;
+    message.message_typing_event =
+      object.message_typing_event !== undefined &&
+      object.message_typing_event !== null
+        ? MessageTypingEvent.fromPartial(object.message_typing_event)
+        : undefined;
     message.last_seen_message_event =
-      (object.last_seen_message_event !== undefined && object.last_seen_message_event !== null)
+      object.last_seen_message_event !== undefined &&
+      object.last_seen_message_event !== null
         ? LastSeenMessageEvent.fromPartial(object.last_seen_message_event)
         : undefined;
     message.message_reaction_event =
-      (object.message_reaction_event !== undefined && object.message_reaction_event !== null)
+      object.message_reaction_event !== undefined &&
+      object.message_reaction_event !== null
         ? MessageReaction.fromPartial(object.message_reaction_event)
         : undefined;
-    message.voice_joined_event = (object.voice_joined_event !== undefined && object.voice_joined_event !== null)
-      ? VoiceJoinedEvent.fromPartial(object.voice_joined_event)
-      : undefined;
-    message.voice_leaved_event = (object.voice_leaved_event !== undefined && object.voice_leaved_event !== null)
-      ? VoiceLeavedEvent.fromPartial(object.voice_leaved_event)
-      : undefined;
-    message.voice_started_event = (object.voice_started_event !== undefined && object.voice_started_event !== null)
-      ? VoiceStartedEvent.fromPartial(object.voice_started_event)
-      : undefined;
-    message.voice_ended_event = (object.voice_ended_event !== undefined && object.voice_ended_event !== null)
-      ? VoiceEndedEvent.fromPartial(object.voice_ended_event)
-      : undefined;
+    message.voice_joined_event =
+      object.voice_joined_event !== undefined &&
+      object.voice_joined_event !== null
+        ? VoiceJoinedEvent.fromPartial(object.voice_joined_event)
+        : undefined;
+    message.voice_leaved_event =
+      object.voice_leaved_event !== undefined &&
+      object.voice_leaved_event !== null
+        ? VoiceLeavedEvent.fromPartial(object.voice_leaved_event)
+        : undefined;
+    message.voice_started_event =
+      object.voice_started_event !== undefined &&
+      object.voice_started_event !== null
+        ? VoiceStartedEvent.fromPartial(object.voice_started_event)
+        : undefined;
+    message.voice_ended_event =
+      object.voice_ended_event !== undefined &&
+      object.voice_ended_event !== null
+        ? VoiceEndedEvent.fromPartial(object.voice_ended_event)
+        : undefined;
     message.channel_created_event =
-      (object.channel_created_event !== undefined && object.channel_created_event !== null)
+      object.channel_created_event !== undefined &&
+      object.channel_created_event !== null
         ? ChannelCreatedEvent.fromPartial(object.channel_created_event)
         : undefined;
     message.channel_deleted_event =
-      (object.channel_deleted_event !== undefined && object.channel_deleted_event !== null)
+      object.channel_deleted_event !== undefined &&
+      object.channel_deleted_event !== null
         ? ChannelDeletedEvent.fromPartial(object.channel_deleted_event)
         : undefined;
     message.channel_updated_event =
-      (object.channel_updated_event !== undefined && object.channel_updated_event !== null)
+      object.channel_updated_event !== undefined &&
+      object.channel_updated_event !== null
         ? ChannelUpdatedEvent.fromPartial(object.channel_updated_event)
         : undefined;
     message.last_pin_message_event =
-      (object.last_pin_message_event !== undefined && object.last_pin_message_event !== null)
+      object.last_pin_message_event !== undefined &&
+      object.last_pin_message_event !== null
         ? LastPinMessageEvent.fromPartial(object.last_pin_message_event)
         : undefined;
-    message.custom_status_event = (object.custom_status_event !== undefined && object.custom_status_event !== null)
-      ? CustomStatusEvent.fromPartial(object.custom_status_event)
-      : undefined;
+    message.custom_status_event =
+      object.custom_status_event !== undefined &&
+      object.custom_status_event !== null
+        ? CustomStatusEvent.fromPartial(object.custom_status_event)
+        : undefined;
     message.user_channel_added_event =
-      (object.user_channel_added_event !== undefined && object.user_channel_added_event !== null)
+      object.user_channel_added_event !== undefined &&
+      object.user_channel_added_event !== null
         ? UserChannelAdded.fromPartial(object.user_channel_added_event)
         : undefined;
     message.user_channel_removed_event =
-      (object.user_channel_removed_event !== undefined && object.user_channel_removed_event !== null)
+      object.user_channel_removed_event !== undefined &&
+      object.user_channel_removed_event !== null
         ? UserChannelRemoved.fromPartial(object.user_channel_removed_event)
         : undefined;
     message.user_clan_removed_event =
-      (object.user_clan_removed_event !== undefined && object.user_clan_removed_event !== null)
+      object.user_clan_removed_event !== undefined &&
+      object.user_clan_removed_event !== null
         ? UserClanRemoved.fromPartial(object.user_clan_removed_event)
         : undefined;
-    message.clan_updated_event = (object.clan_updated_event !== undefined && object.clan_updated_event !== null)
-      ? ClanUpdatedEvent.fromPartial(object.clan_updated_event)
-      : undefined;
+    message.clan_updated_event =
+      object.clan_updated_event !== undefined &&
+      object.clan_updated_event !== null
+        ? ClanUpdatedEvent.fromPartial(object.clan_updated_event)
+        : undefined;
     message.clan_profile_updated_event =
-      (object.clan_profile_updated_event !== undefined && object.clan_profile_updated_event !== null)
+      object.clan_profile_updated_event !== undefined &&
+      object.clan_profile_updated_event !== null
         ? ClanProfileUpdatedEvent.fromPartial(object.clan_profile_updated_event)
         : undefined;
     message.check_name_existed_event =
-      (object.check_name_existed_event !== undefined && object.check_name_existed_event !== null)
+      object.check_name_existed_event !== undefined &&
+      object.check_name_existed_event !== null
         ? CheckNameExistedEvent.fromPartial(object.check_name_existed_event)
         : undefined;
     message.user_profile_updated_event =
-      (object.user_profile_updated_event !== undefined && object.user_profile_updated_event !== null)
+      object.user_profile_updated_event !== undefined &&
+      object.user_profile_updated_event !== null
         ? UserProfileUpdatedEvent.fromPartial(object.user_profile_updated_event)
         : undefined;
-    message.add_clan_user_event = (object.add_clan_user_event !== undefined && object.add_clan_user_event !== null)
-      ? AddClanUserEvent.fromPartial(object.add_clan_user_event)
-      : undefined;
-    message.clan_event_created = (object.clan_event_created !== undefined && object.clan_event_created !== null)
-      ? CreateEventRequest.fromPartial(object.clan_event_created)
-      : undefined;
-    message.role_assign_event = (object.role_assign_event !== undefined && object.role_assign_event !== null)
-      ? RoleAssignedEvent.fromPartial(object.role_assign_event)
-      : undefined;
-    message.clan_deleted_event = (object.clan_deleted_event !== undefined && object.clan_deleted_event !== null)
-      ? ClanDeletedEvent.fromPartial(object.clan_deleted_event)
-      : undefined;
-    message.give_coffee_event = (object.give_coffee_event !== undefined && object.give_coffee_event !== null)
-      ? GiveCoffeeEvent.fromPartial(object.give_coffee_event)
-      : undefined;
-    message.sticker_create_event = (object.sticker_create_event !== undefined && object.sticker_create_event !== null)
-      ? StickerCreateEvent.fromPartial(object.sticker_create_event)
-      : undefined;
-    message.sticker_update_event = (object.sticker_update_event !== undefined && object.sticker_update_event !== null)
-      ? StickerUpdateEvent.fromPartial(object.sticker_update_event)
-      : undefined;
-    message.sticker_delete_event = (object.sticker_delete_event !== undefined && object.sticker_delete_event !== null)
-      ? StickerDeleteEvent.fromPartial(object.sticker_delete_event)
-      : undefined;
-    message.role_event = (object.role_event !== undefined && object.role_event !== null)
-      ? RoleEvent.fromPartial(object.role_event)
-      : undefined;
-    message.event_emoji = (object.event_emoji !== undefined && object.event_emoji !== null)
-      ? EventEmoji.fromPartial(object.event_emoji)
-      : undefined;
+    message.add_clan_user_event =
+      object.add_clan_user_event !== undefined &&
+      object.add_clan_user_event !== null
+        ? AddClanUserEvent.fromPartial(object.add_clan_user_event)
+        : undefined;
+    message.clan_event_created =
+      object.clan_event_created !== undefined &&
+      object.clan_event_created !== null
+        ? CreateEventRequest.fromPartial(object.clan_event_created)
+        : undefined;
+    message.role_assign_event =
+      object.role_assign_event !== undefined &&
+      object.role_assign_event !== null
+        ? RoleAssignedEvent.fromPartial(object.role_assign_event)
+        : undefined;
+    message.clan_deleted_event =
+      object.clan_deleted_event !== undefined &&
+      object.clan_deleted_event !== null
+        ? ClanDeletedEvent.fromPartial(object.clan_deleted_event)
+        : undefined;
+    message.give_coffee_event =
+      object.give_coffee_event !== undefined &&
+      object.give_coffee_event !== null
+        ? GiveCoffeeEvent.fromPartial(object.give_coffee_event)
+        : undefined;
+    message.sticker_create_event =
+      object.sticker_create_event !== undefined &&
+      object.sticker_create_event !== null
+        ? StickerCreateEvent.fromPartial(object.sticker_create_event)
+        : undefined;
+    message.sticker_update_event =
+      object.sticker_update_event !== undefined &&
+      object.sticker_update_event !== null
+        ? StickerUpdateEvent.fromPartial(object.sticker_update_event)
+        : undefined;
+    message.sticker_delete_event =
+      object.sticker_delete_event !== undefined &&
+      object.sticker_delete_event !== null
+        ? StickerDeleteEvent.fromPartial(object.sticker_delete_event)
+        : undefined;
+    message.role_event =
+      object.role_event !== undefined && object.role_event !== null
+        ? RoleEvent.fromPartial(object.role_event)
+        : undefined;
+    message.event_emoji =
+      object.event_emoji !== undefined && object.event_emoji !== null
+        ? EventEmoji.fromPartial(object.event_emoji)
+        : undefined;
     message.streaming_joined_event =
-      (object.streaming_joined_event !== undefined && object.streaming_joined_event !== null)
+      object.streaming_joined_event !== undefined &&
+      object.streaming_joined_event !== null
         ? StreamingJoinedEvent.fromPartial(object.streaming_joined_event)
         : undefined;
     message.streaming_leaved_event =
-      (object.streaming_leaved_event !== undefined && object.streaming_leaved_event !== null)
+      object.streaming_leaved_event !== undefined &&
+      object.streaming_leaved_event !== null
         ? StreamingLeavedEvent.fromPartial(object.streaming_leaved_event)
         : undefined;
     message.streaming_started_event =
-      (object.streaming_started_event !== undefined && object.streaming_started_event !== null)
+      object.streaming_started_event !== undefined &&
+      object.streaming_started_event !== null
         ? StreamingStartedEvent.fromPartial(object.streaming_started_event)
         : undefined;
     message.streaming_ended_event =
-      (object.streaming_ended_event !== undefined && object.streaming_ended_event !== null)
+      object.streaming_ended_event !== undefined &&
+      object.streaming_ended_event !== null
         ? StreamingEndedEvent.fromPartial(object.streaming_ended_event)
         : undefined;
-    message.permission_set_event = (object.permission_set_event !== undefined && object.permission_set_event !== null)
-      ? PermissionSetEvent.fromPartial(object.permission_set_event)
-      : undefined;
+    message.permission_set_event =
+      object.permission_set_event !== undefined &&
+      object.permission_set_event !== null
+        ? PermissionSetEvent.fromPartial(object.permission_set_event)
+        : undefined;
     message.permission_changed_event =
-      (object.permission_changed_event !== undefined && object.permission_changed_event !== null)
+      object.permission_changed_event !== undefined &&
+      object.permission_changed_event !== null
         ? PermissionChangedEvent.fromPartial(object.permission_changed_event)
         : undefined;
-    message.token_sent_event = (object.token_sent_event !== undefined && object.token_sent_event !== null)
-      ? TokenSentEvent.fromPartial(object.token_sent_event)
-      : undefined;
+    message.token_sent_event =
+      object.token_sent_event !== undefined && object.token_sent_event !== null
+        ? TokenSentEvent.fromPartial(object.token_sent_event)
+        : undefined;
     message.message_button_clicked =
-      (object.message_button_clicked !== undefined && object.message_button_clicked !== null)
+      object.message_button_clicked !== undefined &&
+      object.message_button_clicked !== null
         ? MessageButtonClicked.fromPartial(object.message_button_clicked)
         : undefined;
-    message.unmute_event = (object.unmute_event !== undefined && object.unmute_event !== null)
-      ? UnmuteEvent.fromPartial(object.unmute_event)
-      : undefined;
-    message.webrtc_signaling_fwd = (object.webrtc_signaling_fwd !== undefined && object.webrtc_signaling_fwd !== null)
-      ? WebrtcSignalingFwd.fromPartial(object.webrtc_signaling_fwd)
-      : undefined;
-    message.list_activity = (object.list_activity !== undefined && object.list_activity !== null)
-      ? ListActivity.fromPartial(object.list_activity)
-      : undefined;
+    message.unmute_event =
+      object.unmute_event !== undefined && object.unmute_event !== null
+        ? UnmuteEvent.fromPartial(object.unmute_event)
+        : undefined;
+    message.webrtc_signaling_fwd =
+      object.webrtc_signaling_fwd !== undefined &&
+      object.webrtc_signaling_fwd !== null
+        ? WebrtcSignalingFwd.fromPartial(object.webrtc_signaling_fwd)
+        : undefined;
+    message.list_activity =
+      object.list_activity !== undefined && object.list_activity !== null
+        ? ListActivity.fromPartial(object.list_activity)
+        : undefined;
     message.dropdown_box_selected =
-      (object.dropdown_box_selected !== undefined && object.dropdown_box_selected !== null)
+      object.dropdown_box_selected !== undefined &&
+      object.dropdown_box_selected !== null
         ? DropdownBoxSelected.fromPartial(object.dropdown_box_selected)
         : undefined;
-    message.incoming_call_push = (object.incoming_call_push !== undefined && object.incoming_call_push !== null)
-      ? IncomingCallPush.fromPartial(object.incoming_call_push)
-      : undefined;
-    message.sd_topic_event = (object.sd_topic_event !== undefined && object.sd_topic_event !== null)
-      ? SdTopicEvent.fromPartial(object.sd_topic_event)
-      : undefined;
-    message.follow_event = (object.follow_event !== undefined && object.follow_event !== null)
-      ? FollowEvent.fromPartial(object.follow_event)
-      : undefined;
-    message.channel_app_event = (object.channel_app_event !== undefined && object.channel_app_event !== null)
-      ? ChannelAppEvent.fromPartial(object.channel_app_event)
-      : undefined;
-    message.user_status_event = (object.user_status_event !== undefined && object.user_status_event !== null)
-      ? UserStatusEvent.fromPartial(object.user_status_event)
-      : undefined;
-    message.remove_friend = (object.remove_friend !== undefined && object.remove_friend !== null)
-      ? RemoveFriend.fromPartial(object.remove_friend)
-      : undefined;
-    message.webhook_event = (object.webhook_event !== undefined && object.webhook_event !== null)
-      ? Webhook.fromPartial(object.webhook_event)
-      : undefined;
+    message.incoming_call_push =
+      object.incoming_call_push !== undefined &&
+      object.incoming_call_push !== null
+        ? IncomingCallPush.fromPartial(object.incoming_call_push)
+        : undefined;
+    message.sd_topic_event =
+      object.sd_topic_event !== undefined && object.sd_topic_event !== null
+        ? SdTopicEvent.fromPartial(object.sd_topic_event)
+        : undefined;
+    message.follow_event =
+      object.follow_event !== undefined && object.follow_event !== null
+        ? FollowEvent.fromPartial(object.follow_event)
+        : undefined;
+    message.channel_app_event =
+      object.channel_app_event !== undefined &&
+      object.channel_app_event !== null
+        ? ChannelAppEvent.fromPartial(object.channel_app_event)
+        : undefined;
+    message.user_status_event =
+      object.user_status_event !== undefined &&
+      object.user_status_event !== null
+        ? UserStatusEvent.fromPartial(object.user_status_event)
+        : undefined;
+    message.remove_friend =
+      object.remove_friend !== undefined && object.remove_friend !== null
+        ? RemoveFriend.fromPartial(object.remove_friend)
+        : undefined;
+    message.webhook_event =
+      object.webhook_event !== undefined && object.webhook_event !== null
+        ? Webhook.fromPartial(object.webhook_event)
+        : undefined;
     return message;
   },
 };
@@ -2741,7 +3138,8 @@ export const FollowEvent = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): FollowEvent {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    const reader =
+      input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseFollowEvent();
     while (reader.pos < end) {
@@ -2779,7 +3177,10 @@ function createBaseIncomingCallPush(): IncomingCallPush {
 }
 
 export const IncomingCallPush = {
-  encode(message: IncomingCallPush, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(
+    message: IncomingCallPush,
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
     if (message.receiver_id !== "") {
       writer.uint32(10).string(message.receiver_id);
     }
@@ -2796,7 +3197,8 @@ export const IncomingCallPush = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): IncomingCallPush {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    const reader =
+      input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseIncomingCallPush();
     while (reader.pos < end) {
@@ -2841,10 +3243,18 @@ export const IncomingCallPush = {
 
   fromJSON(object: any): IncomingCallPush {
     return {
-      receiver_id: isSet(object.receiver_id) ? globalThis.String(object.receiver_id) : "",
-      json_data: isSet(object.json_data) ? globalThis.String(object.json_data) : "",
-      channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "",
-      caller_id: isSet(object.caller_id) ? globalThis.String(object.caller_id) : "",
+      receiver_id: isSet(object.receiver_id)
+        ? globalThis.String(object.receiver_id)
+        : "",
+      json_data: isSet(object.json_data)
+        ? globalThis.String(object.json_data)
+        : "",
+      channel_id: isSet(object.channel_id)
+        ? globalThis.String(object.channel_id)
+        : "",
+      caller_id: isSet(object.caller_id)
+        ? globalThis.String(object.caller_id)
+        : "",
     };
   },
 
@@ -2865,10 +3275,14 @@ export const IncomingCallPush = {
     return obj;
   },
 
-  create<I extends Exact<DeepPartial<IncomingCallPush>, I>>(base?: I): IncomingCallPush {
+  create<I extends Exact<DeepPartial<IncomingCallPush>, I>>(
+    base?: I
+  ): IncomingCallPush {
     return IncomingCallPush.fromPartial(base ?? ({} as any));
   },
-  fromPartial<I extends Exact<DeepPartial<IncomingCallPush>, I>>(object: I): IncomingCallPush {
+  fromPartial<I extends Exact<DeepPartial<IncomingCallPush>, I>>(
+    object: I
+  ): IncomingCallPush {
     const message = createBaseIncomingCallPush();
     message.receiver_id = object.receiver_id ?? "";
     message.json_data = object.json_data ?? "";
@@ -2879,11 +3293,20 @@ export const IncomingCallPush = {
 };
 
 function createBaseWebrtcSignalingFwd(): WebrtcSignalingFwd {
-  return { receiver_id: "", data_type: 0, json_data: "", channel_id: "", caller_id: "" };
+  return {
+    receiver_id: "",
+    data_type: 0,
+    json_data: "",
+    channel_id: "",
+    caller_id: "",
+  };
 }
 
 export const WebrtcSignalingFwd = {
-  encode(message: WebrtcSignalingFwd, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(
+    message: WebrtcSignalingFwd,
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
     if (message.receiver_id !== "") {
       writer.uint32(10).string(message.receiver_id);
     }
@@ -2903,7 +3326,8 @@ export const WebrtcSignalingFwd = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): WebrtcSignalingFwd {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    const reader =
+      input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseWebrtcSignalingFwd();
     while (reader.pos < end) {
@@ -2955,11 +3379,21 @@ export const WebrtcSignalingFwd = {
 
   fromJSON(object: any): WebrtcSignalingFwd {
     return {
-      receiver_id: isSet(object.receiver_id) ? globalThis.String(object.receiver_id) : "",
-      data_type: isSet(object.data_type) ? globalThis.Number(object.data_type) : 0,
-      json_data: isSet(object.json_data) ? globalThis.String(object.json_data) : "",
-      channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "",
-      caller_id: isSet(object.caller_id) ? globalThis.String(object.caller_id) : "",
+      receiver_id: isSet(object.receiver_id)
+        ? globalThis.String(object.receiver_id)
+        : "",
+      data_type: isSet(object.data_type)
+        ? globalThis.Number(object.data_type)
+        : 0,
+      json_data: isSet(object.json_data)
+        ? globalThis.String(object.json_data)
+        : "",
+      channel_id: isSet(object.channel_id)
+        ? globalThis.String(object.channel_id)
+        : "",
+      caller_id: isSet(object.caller_id)
+        ? globalThis.String(object.caller_id)
+        : "",
     };
   },
 
@@ -2983,10 +3417,14 @@ export const WebrtcSignalingFwd = {
     return obj;
   },
 
-  create<I extends Exact<DeepPartial<WebrtcSignalingFwd>, I>>(base?: I): WebrtcSignalingFwd {
+  create<I extends Exact<DeepPartial<WebrtcSignalingFwd>, I>>(
+    base?: I
+  ): WebrtcSignalingFwd {
     return WebrtcSignalingFwd.fromPartial(base ?? ({} as any));
   },
-  fromPartial<I extends Exact<DeepPartial<WebrtcSignalingFwd>, I>>(object: I): WebrtcSignalingFwd {
+  fromPartial<I extends Exact<DeepPartial<WebrtcSignalingFwd>, I>>(
+    object: I
+  ): WebrtcSignalingFwd {
     const message = createBaseWebrtcSignalingFwd();
     message.receiver_id = object.receiver_id ?? "";
     message.data_type = object.data_type ?? 0;
@@ -2998,11 +3436,20 @@ export const WebrtcSignalingFwd = {
 };
 
 function createBaseSFUSignalingFwd(): SFUSignalingFwd {
-  return { clan_id: "", channel_id: "", data_type: 0, json_data: "", user_id: "" };
+  return {
+    clan_id: "",
+    channel_id: "",
+    data_type: 0,
+    json_data: "",
+    user_id: "",
+  };
 }
 
 export const SFUSignalingFwd = {
-  encode(message: SFUSignalingFwd, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(
+    message: SFUSignalingFwd,
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
     if (message.clan_id !== "") {
       writer.uint32(10).string(message.clan_id);
     }
@@ -3022,7 +3469,8 @@ export const SFUSignalingFwd = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): SFUSignalingFwd {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    const reader =
+      input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseSFUSignalingFwd();
     while (reader.pos < end) {
@@ -3075,9 +3523,15 @@ export const SFUSignalingFwd = {
   fromJSON(object: any): SFUSignalingFwd {
     return {
       clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
-      channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "",
-      data_type: isSet(object.data_type) ? globalThis.Number(object.data_type) : 0,
-      json_data: isSet(object.json_data) ? globalThis.String(object.json_data) : "",
+      channel_id: isSet(object.channel_id)
+        ? globalThis.String(object.channel_id)
+        : "",
+      data_type: isSet(object.data_type)
+        ? globalThis.Number(object.data_type)
+        : 0,
+      json_data: isSet(object.json_data)
+        ? globalThis.String(object.json_data)
+        : "",
       user_id: isSet(object.user_id) ? globalThis.String(object.user_id) : "",
     };
   },
@@ -3102,10 +3556,14 @@ export const SFUSignalingFwd = {
     return obj;
   },
 
-  create<I extends Exact<DeepPartial<SFUSignalingFwd>, I>>(base?: I): SFUSignalingFwd {
+  create<I extends Exact<DeepPartial<SFUSignalingFwd>, I>>(
+    base?: I
+  ): SFUSignalingFwd {
     return SFUSignalingFwd.fromPartial(base ?? ({} as any));
   },
-  fromPartial<I extends Exact<DeepPartial<SFUSignalingFwd>, I>>(object: I): SFUSignalingFwd {
+  fromPartial<I extends Exact<DeepPartial<SFUSignalingFwd>, I>>(
+    object: I
+  ): SFUSignalingFwd {
     const message = createBaseSFUSignalingFwd();
     message.clan_id = object.clan_id ?? "";
     message.channel_id = object.channel_id ?? "";
@@ -3121,7 +3579,10 @@ function createBaseAddClanUserEvent(): AddClanUserEvent {
 }
 
 export const AddClanUserEvent = {
-  encode(message: AddClanUserEvent, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(
+    message: AddClanUserEvent,
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
     if (message.clan_id !== "") {
       writer.uint32(10).string(message.clan_id);
     }
@@ -3132,7 +3593,8 @@ export const AddClanUserEvent = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): AddClanUserEvent {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    const reader =
+      input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseAddClanUserEvent();
     while (reader.pos < end) {
@@ -3164,7 +3626,9 @@ export const AddClanUserEvent = {
   fromJSON(object: any): AddClanUserEvent {
     return {
       clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
-      user: isSet(object.user) ? UserProfileRedis.fromJSON(object.user) : undefined,
+      user: isSet(object.user)
+        ? UserProfileRedis.fromJSON(object.user)
+        : undefined,
     };
   },
 
@@ -3179,25 +3643,38 @@ export const AddClanUserEvent = {
     return obj;
   },
 
-  create<I extends Exact<DeepPartial<AddClanUserEvent>, I>>(base?: I): AddClanUserEvent {
+  create<I extends Exact<DeepPartial<AddClanUserEvent>, I>>(
+    base?: I
+  ): AddClanUserEvent {
     return AddClanUserEvent.fromPartial(base ?? ({} as any));
   },
-  fromPartial<I extends Exact<DeepPartial<AddClanUserEvent>, I>>(object: I): AddClanUserEvent {
+  fromPartial<I extends Exact<DeepPartial<AddClanUserEvent>, I>>(
+    object: I
+  ): AddClanUserEvent {
     const message = createBaseAddClanUserEvent();
     message.clan_id = object.clan_id ?? "";
-    message.user = (object.user !== undefined && object.user !== null)
-      ? UserProfileRedis.fromPartial(object.user)
-      : undefined;
+    message.user =
+      object.user !== undefined && object.user !== null
+        ? UserProfileRedis.fromPartial(object.user)
+        : undefined;
     return message;
   },
 };
 
 function createBaseRoleAssignedEvent(): RoleAssignedEvent {
-  return { ClanId: "", role_id: "", user_ids_assigned: [], user_ids_removed: [] };
+  return {
+    ClanId: "",
+    role_id: "",
+    user_ids_assigned: [],
+    user_ids_removed: [],
+  };
 }
 
 export const RoleAssignedEvent = {
-  encode(message: RoleAssignedEvent, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(
+    message: RoleAssignedEvent,
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
     if (message.ClanId !== "") {
       writer.uint32(10).string(message.ClanId);
     }
@@ -3214,7 +3691,8 @@ export const RoleAssignedEvent = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): RoleAssignedEvent {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    const reader =
+      input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseRoleAssignedEvent();
     while (reader.pos < end) {
@@ -3287,10 +3765,14 @@ export const RoleAssignedEvent = {
     return obj;
   },
 
-  create<I extends Exact<DeepPartial<RoleAssignedEvent>, I>>(base?: I): RoleAssignedEvent {
+  create<I extends Exact<DeepPartial<RoleAssignedEvent>, I>>(
+    base?: I
+  ): RoleAssignedEvent {
     return RoleAssignedEvent.fromPartial(base ?? ({} as any));
   },
-  fromPartial<I extends Exact<DeepPartial<RoleAssignedEvent>, I>>(object: I): RoleAssignedEvent {
+  fromPartial<I extends Exact<DeepPartial<RoleAssignedEvent>, I>>(
+    object: I
+  ): RoleAssignedEvent {
     const message = createBaseRoleAssignedEvent();
     message.ClanId = object.ClanId ?? "";
     message.role_id = object.role_id ?? "";
@@ -3305,7 +3787,10 @@ function createBasePermissionRoleChannel(): PermissionRoleChannel {
 }
 
 export const PermissionRoleChannel = {
-  encode(message: PermissionRoleChannel, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(
+    message: PermissionRoleChannel,
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
     if (message.permission_id !== "") {
       writer.uint32(10).string(message.permission_id);
     }
@@ -3315,8 +3800,12 @@ export const PermissionRoleChannel = {
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): PermissionRoleChannel {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+  decode(
+    input: _m0.Reader | Uint8Array,
+    length?: number
+  ): PermissionRoleChannel {
+    const reader =
+      input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBasePermissionRoleChannel();
     while (reader.pos < end) {
@@ -3347,7 +3836,9 @@ export const PermissionRoleChannel = {
 
   fromJSON(object: any): PermissionRoleChannel {
     return {
-      permission_id: isSet(object.permission_id) ? globalThis.String(object.permission_id) : "",
+      permission_id: isSet(object.permission_id)
+        ? globalThis.String(object.permission_id)
+        : "",
       active: isSet(object.active) ? globalThis.Boolean(object.active) : false,
     };
   },
@@ -3363,10 +3854,14 @@ export const PermissionRoleChannel = {
     return obj;
   },
 
-  create<I extends Exact<DeepPartial<PermissionRoleChannel>, I>>(base?: I): PermissionRoleChannel {
+  create<I extends Exact<DeepPartial<PermissionRoleChannel>, I>>(
+    base?: I
+  ): PermissionRoleChannel {
     return PermissionRoleChannel.fromPartial(base ?? ({} as any));
   },
-  fromPartial<I extends Exact<DeepPartial<PermissionRoleChannel>, I>>(object: I): PermissionRoleChannel {
+  fromPartial<I extends Exact<DeepPartial<PermissionRoleChannel>, I>>(
+    object: I
+  ): PermissionRoleChannel {
     const message = createBasePermissionRoleChannel();
     message.permission_id = object.permission_id ?? "";
     message.active = object.active ?? false;
@@ -3388,7 +3883,10 @@ function createBaseHashtagDm(): HashtagDm {
 }
 
 export const HashtagDm = {
-  encode(message: HashtagDm, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(
+    message: HashtagDm,
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
     if (message.channel_id !== "") {
       writer.uint32(10).string(message.channel_id);
     }
@@ -3417,7 +3915,8 @@ export const HashtagDm = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): HashtagDm {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    const reader =
+      input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseHashtagDm();
     while (reader.pos < end) {
@@ -3490,14 +3989,26 @@ export const HashtagDm = {
 
   fromJSON(object: any): HashtagDm {
     return {
-      channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "",
-      channel_label: isSet(object.channel_label) ? globalThis.String(object.channel_label) : "",
+      channel_id: isSet(object.channel_id)
+        ? globalThis.String(object.channel_id)
+        : "",
+      channel_label: isSet(object.channel_label)
+        ? globalThis.String(object.channel_label)
+        : "",
       clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
-      clan_name: isSet(object.clan_name) ? globalThis.String(object.clan_name) : "",
-      meeting_code: isSet(object.meeting_code) ? globalThis.String(object.meeting_code) : "",
+      clan_name: isSet(object.clan_name)
+        ? globalThis.String(object.clan_name)
+        : "",
+      meeting_code: isSet(object.meeting_code)
+        ? globalThis.String(object.meeting_code)
+        : "",
       type: isSet(object.type) ? globalThis.Number(object.type) : 0,
-      channel_private: isSet(object.channel_private) ? globalThis.Number(object.channel_private) : 0,
-      parrent_id: isSet(object.parrent_id) ? globalThis.String(object.parrent_id) : "",
+      channel_private: isSet(object.channel_private)
+        ? globalThis.Number(object.channel_private)
+        : 0,
+      parrent_id: isSet(object.parrent_id)
+        ? globalThis.String(object.parrent_id)
+        : "",
     };
   },
 
@@ -3533,7 +4044,9 @@ export const HashtagDm = {
   create<I extends Exact<DeepPartial<HashtagDm>, I>>(base?: I): HashtagDm {
     return HashtagDm.fromPartial(base ?? ({} as any));
   },
-  fromPartial<I extends Exact<DeepPartial<HashtagDm>, I>>(object: I): HashtagDm {
+  fromPartial<I extends Exact<DeepPartial<HashtagDm>, I>>(
+    object: I
+  ): HashtagDm {
     const message = createBaseHashtagDm();
     message.channel_id = object.channel_id ?? "";
     message.channel_label = object.channel_label ?? "";
@@ -3562,7 +4075,10 @@ function createBaseChannelDescription(): ChannelDescription {
 }
 
 export const ChannelDescription = {
-  encode(message: ChannelDescription, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(
+    message: ChannelDescription,
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
     if (message.clan_id !== "") {
       writer.uint32(10).string(message.clan_id);
     }
@@ -3570,7 +4086,10 @@ export const ChannelDescription = {
       writer.uint32(18).string(message.channel_id);
     }
     if (message.type !== undefined) {
-      Int32Value.encode({ value: message.type! }, writer.uint32(26).fork()).ldelim();
+      Int32Value.encode(
+        { value: message.type! },
+        writer.uint32(26).fork()
+      ).ldelim();
     }
     if (message.channel_label !== "") {
       writer.uint32(34).string(message.channel_label);
@@ -3588,13 +4107,17 @@ export const ChannelDescription = {
       writer.uint32(66).string(message.parrent_id);
     }
     if (message.last_sent_message !== undefined) {
-      ChannelMessageHeader.encode(message.last_sent_message, writer.uint32(98).fork()).ldelim();
+      ChannelMessageHeader.encode(
+        message.last_sent_message,
+        writer.uint32(98).fork()
+      ).ldelim();
     }
     return writer;
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): ChannelDescription {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    const reader =
+      input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseChannelDescription();
     while (reader.pos < end) {
@@ -3661,7 +4184,10 @@ export const ChannelDescription = {
             break;
           }
 
-          message.last_sent_message = ChannelMessageHeader.decode(reader, reader.uint32());
+          message.last_sent_message = ChannelMessageHeader.decode(
+            reader,
+            reader.uint32()
+          );
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -3675,13 +4201,25 @@ export const ChannelDescription = {
   fromJSON(object: any): ChannelDescription {
     return {
       clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
-      channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "",
+      channel_id: isSet(object.channel_id)
+        ? globalThis.String(object.channel_id)
+        : "",
       type: isSet(object.type) ? Number(object.type) : undefined,
-      channel_label: isSet(object.channel_label) ? globalThis.String(object.channel_label) : "",
-      channel_private: isSet(object.channel_private) ? globalThis.Number(object.channel_private) : 0,
-      meeting_code: isSet(object.meeting_code) ? globalThis.String(object.meeting_code) : "",
-      clan_name: isSet(object.clan_name) ? globalThis.String(object.clan_name) : "",
-      parrent_id: isSet(object.parrent_id) ? globalThis.String(object.parrent_id) : "",
+      channel_label: isSet(object.channel_label)
+        ? globalThis.String(object.channel_label)
+        : "",
+      channel_private: isSet(object.channel_private)
+        ? globalThis.Number(object.channel_private)
+        : 0,
+      meeting_code: isSet(object.meeting_code)
+        ? globalThis.String(object.meeting_code)
+        : "",
+      clan_name: isSet(object.clan_name)
+        ? globalThis.String(object.clan_name)
+        : "",
+      parrent_id: isSet(object.parrent_id)
+        ? globalThis.String(object.parrent_id)
+        : "",
       last_sent_message: isSet(object.last_sent_message)
         ? ChannelMessageHeader.fromJSON(object.last_sent_message)
         : undefined,
@@ -3715,15 +4253,21 @@ export const ChannelDescription = {
       obj.parrent_id = message.parrent_id;
     }
     if (message.last_sent_message !== undefined) {
-      obj.last_sent_message = ChannelMessageHeader.toJSON(message.last_sent_message);
+      obj.last_sent_message = ChannelMessageHeader.toJSON(
+        message.last_sent_message
+      );
     }
     return obj;
   },
 
-  create<I extends Exact<DeepPartial<ChannelDescription>, I>>(base?: I): ChannelDescription {
+  create<I extends Exact<DeepPartial<ChannelDescription>, I>>(
+    base?: I
+  ): ChannelDescription {
     return ChannelDescription.fromPartial(base ?? ({} as any));
   },
-  fromPartial<I extends Exact<DeepPartial<ChannelDescription>, I>>(object: I): ChannelDescription {
+  fromPartial<I extends Exact<DeepPartial<ChannelDescription>, I>>(
+    object: I
+  ): ChannelDescription {
     const message = createBaseChannelDescription();
     message.clan_id = object.clan_id ?? "";
     message.channel_id = object.channel_id ?? "";
@@ -3733,19 +4277,33 @@ export const ChannelDescription = {
     message.meeting_code = object.meeting_code ?? "";
     message.clan_name = object.clan_name ?? "";
     message.parrent_id = object.parrent_id ?? "";
-    message.last_sent_message = (object.last_sent_message !== undefined && object.last_sent_message !== null)
-      ? ChannelMessageHeader.fromPartial(object.last_sent_message)
-      : undefined;
+    message.last_sent_message =
+      object.last_sent_message !== undefined &&
+      object.last_sent_message !== null
+        ? ChannelMessageHeader.fromPartial(object.last_sent_message)
+        : undefined;
     return message;
   },
 };
 
 function createBaseClanEmoji(): ClanEmoji {
-  return { id: "", src: "", shortname: "", category: "", creator_id: "", clan_id: "", logo: "", clan_name: "" };
+  return {
+    id: "",
+    src: "",
+    shortname: "",
+    category: "",
+    creator_id: "",
+    clan_id: "",
+    logo: "",
+    clan_name: "",
+  };
 }
 
 export const ClanEmoji = {
-  encode(message: ClanEmoji, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(
+    message: ClanEmoji,
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
     if (message.id !== "") {
       writer.uint32(10).string(message.id);
     }
@@ -3774,7 +4332,8 @@ export const ClanEmoji = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): ClanEmoji {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    const reader =
+      input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseClanEmoji();
     while (reader.pos < end) {
@@ -3849,12 +4408,20 @@ export const ClanEmoji = {
     return {
       id: isSet(object.id) ? globalThis.String(object.id) : "",
       src: isSet(object.src) ? globalThis.String(object.src) : "",
-      shortname: isSet(object.shortname) ? globalThis.String(object.shortname) : "",
-      category: isSet(object.category) ? globalThis.String(object.category) : "",
-      creator_id: isSet(object.creator_id) ? globalThis.String(object.creator_id) : "",
+      shortname: isSet(object.shortname)
+        ? globalThis.String(object.shortname)
+        : "",
+      category: isSet(object.category)
+        ? globalThis.String(object.category)
+        : "",
+      creator_id: isSet(object.creator_id)
+        ? globalThis.String(object.creator_id)
+        : "",
       clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
       logo: isSet(object.logo) ? globalThis.String(object.logo) : "",
-      clan_name: isSet(object.clan_name) ? globalThis.String(object.clan_name) : "",
+      clan_name: isSet(object.clan_name)
+        ? globalThis.String(object.clan_name)
+        : "",
     };
   },
 
@@ -3890,7 +4457,9 @@ export const ClanEmoji = {
   create<I extends Exact<DeepPartial<ClanEmoji>, I>>(base?: I): ClanEmoji {
     return ClanEmoji.fromPartial(base ?? ({} as any));
   },
-  fromPartial<I extends Exact<DeepPartial<ClanEmoji>, I>>(object: I): ClanEmoji {
+  fromPartial<I extends Exact<DeepPartial<ClanEmoji>, I>>(
+    object: I
+  ): ClanEmoji {
     const message = createBaseClanEmoji();
     message.id = object.id ?? "";
     message.src = object.src ?? "";
@@ -3905,11 +4474,21 @@ export const ClanEmoji = {
 };
 
 function createBaseChannel(): Channel {
-  return { id: "", presences: [], self: undefined, chanel_label: "", clan_logo: "", category_name: "" };
+  return {
+    id: "",
+    presences: [],
+    self: undefined,
+    chanel_label: "",
+    clan_logo: "",
+    category_name: "",
+  };
 }
 
 export const Channel = {
-  encode(message: Channel, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(
+    message: Channel,
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
     if (message.id !== "") {
       writer.uint32(10).string(message.id);
     }
@@ -3932,7 +4511,8 @@ export const Channel = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): Channel {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    const reader =
+      input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseChannel();
     while (reader.pos < end) {
@@ -3996,9 +4576,15 @@ export const Channel = {
         ? object.presences.map((e: any) => UserPresence.fromJSON(e))
         : [],
       self: isSet(object.self) ? UserPresence.fromJSON(object.self) : undefined,
-      chanel_label: isSet(object.chanel_label) ? globalThis.String(object.chanel_label) : "",
-      clan_logo: isSet(object.clan_logo) ? globalThis.String(object.clan_logo) : "",
-      category_name: isSet(object.category_name) ? globalThis.String(object.category_name) : "",
+      chanel_label: isSet(object.chanel_label)
+        ? globalThis.String(object.chanel_label)
+        : "",
+      clan_logo: isSet(object.clan_logo)
+        ? globalThis.String(object.clan_logo)
+        : "",
+      category_name: isSet(object.category_name)
+        ? globalThis.String(object.category_name)
+        : "",
     };
   },
 
@@ -4031,10 +4617,12 @@ export const Channel = {
   fromPartial<I extends Exact<DeepPartial<Channel>, I>>(object: I): Channel {
     const message = createBaseChannel();
     message.id = object.id ?? "";
-    message.presences = object.presences?.map((e) => UserPresence.fromPartial(e)) || [];
-    message.self = (object.self !== undefined && object.self !== null)
-      ? UserPresence.fromPartial(object.self)
-      : undefined;
+    message.presences =
+      object.presences?.map((e) => UserPresence.fromPartial(e)) || [];
+    message.self =
+      object.self !== undefined && object.self !== null
+        ? UserPresence.fromPartial(object.self)
+        : undefined;
     message.chanel_label = object.chanel_label ?? "";
     message.clan_logo = object.clan_logo ?? "";
     message.category_name = object.category_name ?? "";
@@ -4047,7 +4635,10 @@ function createBaseClanJoin(): ClanJoin {
 }
 
 export const ClanJoin = {
-  encode(message: ClanJoin, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(
+    message: ClanJoin,
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
     if (message.clan_id !== "") {
       writer.uint32(10).string(message.clan_id);
     }
@@ -4055,7 +4646,8 @@ export const ClanJoin = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): ClanJoin {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    const reader =
+      input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseClanJoin();
     while (reader.pos < end) {
@@ -4078,7 +4670,9 @@ export const ClanJoin = {
   },
 
   fromJSON(object: any): ClanJoin {
-    return { clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "" };
+    return {
+      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
+    };
   },
 
   toJSON(message: ClanJoin): unknown {
@@ -4104,7 +4698,10 @@ function createBaseChannelJoin(): ChannelJoin {
 }
 
 export const ChannelJoin = {
-  encode(message: ChannelJoin, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(
+    message: ChannelJoin,
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
     if (message.clan_id !== "") {
       writer.uint32(10).string(message.clan_id);
     }
@@ -4121,7 +4718,8 @@ export const ChannelJoin = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): ChannelJoin {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    const reader =
+      input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseChannelJoin();
     while (reader.pos < end) {
@@ -4167,9 +4765,15 @@ export const ChannelJoin = {
   fromJSON(object: any): ChannelJoin {
     return {
       clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
-      channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "",
-      channel_type: isSet(object.channel_type) ? globalThis.Number(object.channel_type) : 0,
-      is_public: isSet(object.is_public) ? globalThis.Boolean(object.is_public) : false,
+      channel_id: isSet(object.channel_id)
+        ? globalThis.String(object.channel_id)
+        : "",
+      channel_type: isSet(object.channel_type)
+        ? globalThis.Number(object.channel_type)
+        : 0,
+      is_public: isSet(object.is_public)
+        ? globalThis.Boolean(object.is_public)
+        : false,
     };
   },
 
@@ -4193,7 +4797,9 @@ export const ChannelJoin = {
   create<I extends Exact<DeepPartial<ChannelJoin>, I>>(base?: I): ChannelJoin {
     return ChannelJoin.fromPartial(base ?? ({} as any));
   },
-  fromPartial<I extends Exact<DeepPartial<ChannelJoin>, I>>(object: I): ChannelJoin {
+  fromPartial<I extends Exact<DeepPartial<ChannelJoin>, I>>(
+    object: I
+  ): ChannelJoin {
     const message = createBaseChannelJoin();
     message.clan_id = object.clan_id ?? "";
     message.channel_id = object.channel_id ?? "";
@@ -4208,7 +4814,10 @@ function createBaseChannelLeave(): ChannelLeave {
 }
 
 export const ChannelLeave = {
-  encode(message: ChannelLeave, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(
+    message: ChannelLeave,
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
     if (message.clan_id !== "") {
       writer.uint32(10).string(message.clan_id);
     }
@@ -4225,7 +4834,8 @@ export const ChannelLeave = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): ChannelLeave {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    const reader =
+      input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseChannelLeave();
     while (reader.pos < end) {
@@ -4271,9 +4881,15 @@ export const ChannelLeave = {
   fromJSON(object: any): ChannelLeave {
     return {
       clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
-      channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "",
-      channel_type: isSet(object.channel_type) ? globalThis.Number(object.channel_type) : 0,
-      is_public: isSet(object.is_public) ? globalThis.Boolean(object.is_public) : false,
+      channel_id: isSet(object.channel_id)
+        ? globalThis.String(object.channel_id)
+        : "",
+      channel_type: isSet(object.channel_type)
+        ? globalThis.Number(object.channel_type)
+        : 0,
+      is_public: isSet(object.is_public)
+        ? globalThis.Boolean(object.is_public)
+        : false,
     };
   },
 
@@ -4294,10 +4910,14 @@ export const ChannelLeave = {
     return obj;
   },
 
-  create<I extends Exact<DeepPartial<ChannelLeave>, I>>(base?: I): ChannelLeave {
+  create<I extends Exact<DeepPartial<ChannelLeave>, I>>(
+    base?: I
+  ): ChannelLeave {
     return ChannelLeave.fromPartial(base ?? ({} as any));
   },
-  fromPartial<I extends Exact<DeepPartial<ChannelLeave>, I>>(object: I): ChannelLeave {
+  fromPartial<I extends Exact<DeepPartial<ChannelLeave>, I>>(
+    object: I
+  ): ChannelLeave {
     const message = createBaseChannelLeave();
     message.clan_id = object.clan_id ?? "";
     message.channel_id = object.channel_id ?? "";
@@ -4322,7 +4942,10 @@ function createBaseChannelMessageAck(): ChannelMessageAck {
 }
 
 export const ChannelMessageAck = {
-  encode(message: ChannelMessageAck, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(
+    message: ChannelMessageAck,
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
     if (message.channel_id !== "") {
       writer.uint32(10).string(message.channel_id);
     }
@@ -4330,19 +4953,31 @@ export const ChannelMessageAck = {
       writer.uint32(18).string(message.message_id);
     }
     if (message.code !== undefined) {
-      Int32Value.encode({ value: message.code! }, writer.uint32(26).fork()).ldelim();
+      Int32Value.encode(
+        { value: message.code! },
+        writer.uint32(26).fork()
+      ).ldelim();
     }
     if (message.username !== "") {
       writer.uint32(34).string(message.username);
     }
     if (message.create_time !== undefined) {
-      Timestamp.encode(toTimestamp(message.create_time), writer.uint32(42).fork()).ldelim();
+      Timestamp.encode(
+        toTimestamp(message.create_time),
+        writer.uint32(42).fork()
+      ).ldelim();
     }
     if (message.update_time !== undefined) {
-      Timestamp.encode(toTimestamp(message.update_time), writer.uint32(50).fork()).ldelim();
+      Timestamp.encode(
+        toTimestamp(message.update_time),
+        writer.uint32(50).fork()
+      ).ldelim();
     }
     if (message.persistent !== undefined) {
-      BoolValue.encode({ value: message.persistent! }, writer.uint32(58).fork()).ldelim();
+      BoolValue.encode(
+        { value: message.persistent! },
+        writer.uint32(58).fork()
+      ).ldelim();
     }
     if (message.clan_logo !== "") {
       writer.uint32(66).string(message.clan_logo);
@@ -4354,7 +4989,8 @@ export const ChannelMessageAck = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): ChannelMessageAck {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    const reader =
+      input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseChannelMessageAck();
     while (reader.pos < end) {
@@ -4393,14 +5029,18 @@ export const ChannelMessageAck = {
             break;
           }
 
-          message.create_time = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
+          message.create_time = fromTimestamp(
+            Timestamp.decode(reader, reader.uint32())
+          );
           continue;
         case 6:
           if (tag !== 50) {
             break;
           }
 
-          message.update_time = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
+          message.update_time = fromTimestamp(
+            Timestamp.decode(reader, reader.uint32())
+          );
           continue;
         case 7:
           if (tag !== 58) {
@@ -4434,15 +5074,31 @@ export const ChannelMessageAck = {
 
   fromJSON(object: any): ChannelMessageAck {
     return {
-      channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "",
-      message_id: isSet(object.message_id) ? globalThis.String(object.message_id) : "",
+      channel_id: isSet(object.channel_id)
+        ? globalThis.String(object.channel_id)
+        : "",
+      message_id: isSet(object.message_id)
+        ? globalThis.String(object.message_id)
+        : "",
       code: isSet(object.code) ? Number(object.code) : undefined,
-      username: isSet(object.username) ? globalThis.String(object.username) : "",
-      create_time: isSet(object.create_time) ? fromJsonTimestamp(object.create_time) : undefined,
-      update_time: isSet(object.update_time) ? fromJsonTimestamp(object.update_time) : undefined,
-      persistent: isSet(object.persistent) ? Boolean(object.persistent) : undefined,
-      clan_logo: isSet(object.clan_logo) ? globalThis.String(object.clan_logo) : "",
-      category_name: isSet(object.category_name) ? globalThis.String(object.category_name) : "",
+      username: isSet(object.username)
+        ? globalThis.String(object.username)
+        : "",
+      create_time: isSet(object.create_time)
+        ? fromJsonTimestamp(object.create_time)
+        : undefined,
+      update_time: isSet(object.update_time)
+        ? fromJsonTimestamp(object.update_time)
+        : undefined,
+      persistent: isSet(object.persistent)
+        ? Boolean(object.persistent)
+        : undefined,
+      clan_logo: isSet(object.clan_logo)
+        ? globalThis.String(object.clan_logo)
+        : "",
+      category_name: isSet(object.category_name)
+        ? globalThis.String(object.category_name)
+        : "",
     };
   },
 
@@ -4478,10 +5134,14 @@ export const ChannelMessageAck = {
     return obj;
   },
 
-  create<I extends Exact<DeepPartial<ChannelMessageAck>, I>>(base?: I): ChannelMessageAck {
+  create<I extends Exact<DeepPartial<ChannelMessageAck>, I>>(
+    base?: I
+  ): ChannelMessageAck {
     return ChannelMessageAck.fromPartial(base ?? ({} as any));
   },
-  fromPartial<I extends Exact<DeepPartial<ChannelMessageAck>, I>>(object: I): ChannelMessageAck {
+  fromPartial<I extends Exact<DeepPartial<ChannelMessageAck>, I>>(
+    object: I
+  ): ChannelMessageAck {
     const message = createBaseChannelMessageAck();
     message.channel_id = object.channel_id ?? "";
     message.message_id = object.message_id ?? "";
@@ -4515,7 +5175,10 @@ function createBaseChannelMessageSend(): ChannelMessageSend {
 }
 
 export const ChannelMessageSend = {
-  encode(message: ChannelMessageSend, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(
+    message: ChannelMessageSend,
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
     if (message.clan_id !== "") {
       writer.uint32(10).string(message.clan_id);
     }
@@ -4559,7 +5222,8 @@ export const ChannelMessageSend = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): ChannelMessageSend {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    const reader =
+      input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseChannelMessageSend();
     while (reader.pos < end) {
@@ -4598,7 +5262,9 @@ export const ChannelMessageSend = {
             break;
           }
 
-          message.attachments.push(MessageAttachment.decode(reader, reader.uint32()));
+          message.attachments.push(
+            MessageAttachment.decode(reader, reader.uint32())
+          );
           continue;
         case 6:
           if (tag !== 50) {
@@ -4668,7 +5334,9 @@ export const ChannelMessageSend = {
   fromJSON(object: any): ChannelMessageSend {
     return {
       clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
-      channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "",
+      channel_id: isSet(object.channel_id)
+        ? globalThis.String(object.channel_id)
+        : "",
       content: isSet(object.content) ? globalThis.String(object.content) : "",
       mentions: globalThis.Array.isArray(object?.mentions)
         ? object.mentions.map((e: any) => MessageMention.fromJSON(e))
@@ -4680,12 +5348,20 @@ export const ChannelMessageSend = {
         ? object.references.map((e: any) => MessageRef.fromJSON(e))
         : [],
       mode: isSet(object.mode) ? globalThis.Number(object.mode) : 0,
-      anonymous_message: isSet(object.anonymous_message) ? globalThis.Boolean(object.anonymous_message) : false,
-      mention_everyone: isSet(object.mention_everyone) ? globalThis.Boolean(object.mention_everyone) : false,
+      anonymous_message: isSet(object.anonymous_message)
+        ? globalThis.Boolean(object.anonymous_message)
+        : false,
+      mention_everyone: isSet(object.mention_everyone)
+        ? globalThis.Boolean(object.mention_everyone)
+        : false,
       avatar: isSet(object.avatar) ? globalThis.String(object.avatar) : "",
-      is_public: isSet(object.is_public) ? globalThis.Boolean(object.is_public) : false,
+      is_public: isSet(object.is_public)
+        ? globalThis.Boolean(object.is_public)
+        : false,
       code: isSet(object.code) ? globalThis.Number(object.code) : 0,
-      topic_id: isSet(object.topic_id) ? globalThis.String(object.topic_id) : "",
+      topic_id: isSet(object.topic_id)
+        ? globalThis.String(object.topic_id)
+        : "",
     };
   },
 
@@ -4704,7 +5380,9 @@ export const ChannelMessageSend = {
       obj.mentions = message.mentions.map((e) => MessageMention.toJSON(e));
     }
     if (message.attachments?.length) {
-      obj.attachments = message.attachments.map((e) => MessageAttachment.toJSON(e));
+      obj.attachments = message.attachments.map((e) =>
+        MessageAttachment.toJSON(e)
+      );
     }
     if (message.references?.length) {
       obj.references = message.references.map((e) => MessageRef.toJSON(e));
@@ -4733,17 +5411,24 @@ export const ChannelMessageSend = {
     return obj;
   },
 
-  create<I extends Exact<DeepPartial<ChannelMessageSend>, I>>(base?: I): ChannelMessageSend {
+  create<I extends Exact<DeepPartial<ChannelMessageSend>, I>>(
+    base?: I
+  ): ChannelMessageSend {
     return ChannelMessageSend.fromPartial(base ?? ({} as any));
   },
-  fromPartial<I extends Exact<DeepPartial<ChannelMessageSend>, I>>(object: I): ChannelMessageSend {
+  fromPartial<I extends Exact<DeepPartial<ChannelMessageSend>, I>>(
+    object: I
+  ): ChannelMessageSend {
     const message = createBaseChannelMessageSend();
     message.clan_id = object.clan_id ?? "";
     message.channel_id = object.channel_id ?? "";
     message.content = object.content ?? "";
-    message.mentions = object.mentions?.map((e) => MessageMention.fromPartial(e)) || [];
-    message.attachments = object.attachments?.map((e) => MessageAttachment.fromPartial(e)) || [];
-    message.references = object.references?.map((e) => MessageRef.fromPartial(e)) || [];
+    message.mentions =
+      object.mentions?.map((e) => MessageMention.fromPartial(e)) || [];
+    message.attachments =
+      object.attachments?.map((e) => MessageAttachment.fromPartial(e)) || [];
+    message.references =
+      object.references?.map((e) => MessageRef.fromPartial(e)) || [];
     message.mode = object.mode ?? 0;
     message.anonymous_message = object.anonymous_message ?? false;
     message.mention_everyone = object.mention_everyone ?? false;
@@ -4771,7 +5456,10 @@ function createBaseChannelMessageUpdate(): ChannelMessageUpdate {
 }
 
 export const ChannelMessageUpdate = {
-  encode(message: ChannelMessageUpdate, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(
+    message: ChannelMessageUpdate,
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
     if (message.clan_id !== "") {
       writer.uint32(10).string(message.clan_id);
     }
@@ -4805,8 +5493,12 @@ export const ChannelMessageUpdate = {
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): ChannelMessageUpdate {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+  decode(
+    input: _m0.Reader | Uint8Array,
+    length?: number
+  ): ChannelMessageUpdate {
+    const reader =
+      input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseChannelMessageUpdate();
     while (reader.pos < end) {
@@ -4852,7 +5544,9 @@ export const ChannelMessageUpdate = {
             break;
           }
 
-          message.attachments.push(MessageAttachment.decode(reader, reader.uint32()));
+          message.attachments.push(
+            MessageAttachment.decode(reader, reader.uint32())
+          );
           continue;
         case 7:
           if (tag !== 56) {
@@ -4894,8 +5588,12 @@ export const ChannelMessageUpdate = {
   fromJSON(object: any): ChannelMessageUpdate {
     return {
       clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
-      channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "",
-      message_id: isSet(object.message_id) ? globalThis.String(object.message_id) : "",
+      channel_id: isSet(object.channel_id)
+        ? globalThis.String(object.channel_id)
+        : "",
+      message_id: isSet(object.message_id)
+        ? globalThis.String(object.message_id)
+        : "",
       content: isSet(object.content) ? globalThis.String(object.content) : "",
       mentions: globalThis.Array.isArray(object?.mentions)
         ? object.mentions.map((e: any) => MessageMention.fromJSON(e))
@@ -4904,9 +5602,15 @@ export const ChannelMessageUpdate = {
         ? object.attachments.map((e: any) => MessageAttachment.fromJSON(e))
         : [],
       mode: isSet(object.mode) ? globalThis.Number(object.mode) : 0,
-      is_public: isSet(object.is_public) ? globalThis.Boolean(object.is_public) : false,
-      hide_editted: isSet(object.hide_editted) ? globalThis.Boolean(object.hide_editted) : false,
-      topic_id: isSet(object.topic_id) ? globalThis.String(object.topic_id) : "",
+      is_public: isSet(object.is_public)
+        ? globalThis.Boolean(object.is_public)
+        : false,
+      hide_editted: isSet(object.hide_editted)
+        ? globalThis.Boolean(object.hide_editted)
+        : false,
+      topic_id: isSet(object.topic_id)
+        ? globalThis.String(object.topic_id)
+        : "",
     };
   },
 
@@ -4928,7 +5632,9 @@ export const ChannelMessageUpdate = {
       obj.mentions = message.mentions.map((e) => MessageMention.toJSON(e));
     }
     if (message.attachments?.length) {
-      obj.attachments = message.attachments.map((e) => MessageAttachment.toJSON(e));
+      obj.attachments = message.attachments.map((e) =>
+        MessageAttachment.toJSON(e)
+      );
     }
     if (message.mode !== 0) {
       obj.mode = Math.round(message.mode);
@@ -4945,17 +5651,23 @@ export const ChannelMessageUpdate = {
     return obj;
   },
 
-  create<I extends Exact<DeepPartial<ChannelMessageUpdate>, I>>(base?: I): ChannelMessageUpdate {
+  create<I extends Exact<DeepPartial<ChannelMessageUpdate>, I>>(
+    base?: I
+  ): ChannelMessageUpdate {
     return ChannelMessageUpdate.fromPartial(base ?? ({} as any));
   },
-  fromPartial<I extends Exact<DeepPartial<ChannelMessageUpdate>, I>>(object: I): ChannelMessageUpdate {
+  fromPartial<I extends Exact<DeepPartial<ChannelMessageUpdate>, I>>(
+    object: I
+  ): ChannelMessageUpdate {
     const message = createBaseChannelMessageUpdate();
     message.clan_id = object.clan_id ?? "";
     message.channel_id = object.channel_id ?? "";
     message.message_id = object.message_id ?? "";
     message.content = object.content ?? "";
-    message.mentions = object.mentions?.map((e) => MessageMention.fromPartial(e)) || [];
-    message.attachments = object.attachments?.map((e) => MessageAttachment.fromPartial(e)) || [];
+    message.mentions =
+      object.mentions?.map((e) => MessageMention.fromPartial(e)) || [];
+    message.attachments =
+      object.attachments?.map((e) => MessageAttachment.fromPartial(e)) || [];
     message.mode = object.mode ?? 0;
     message.is_public = object.is_public ?? false;
     message.hide_editted = object.hide_editted ?? false;
@@ -4965,11 +5677,21 @@ export const ChannelMessageUpdate = {
 };
 
 function createBaseChannelMessageRemove(): ChannelMessageRemove {
-  return { clan_id: "", channel_id: "", message_id: "", mode: 0, is_public: false, has_attachment: false };
+  return {
+    clan_id: "",
+    channel_id: "",
+    message_id: "",
+    mode: 0,
+    is_public: false,
+    has_attachment: false,
+  };
 }
 
 export const ChannelMessageRemove = {
-  encode(message: ChannelMessageRemove, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(
+    message: ChannelMessageRemove,
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
     if (message.clan_id !== "") {
       writer.uint32(10).string(message.clan_id);
     }
@@ -4991,8 +5713,12 @@ export const ChannelMessageRemove = {
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): ChannelMessageRemove {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+  decode(
+    input: _m0.Reader | Uint8Array,
+    length?: number
+  ): ChannelMessageRemove {
+    const reader =
+      input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseChannelMessageRemove();
     while (reader.pos < end) {
@@ -5052,11 +5778,19 @@ export const ChannelMessageRemove = {
   fromJSON(object: any): ChannelMessageRemove {
     return {
       clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
-      channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "",
-      message_id: isSet(object.message_id) ? globalThis.String(object.message_id) : "",
+      channel_id: isSet(object.channel_id)
+        ? globalThis.String(object.channel_id)
+        : "",
+      message_id: isSet(object.message_id)
+        ? globalThis.String(object.message_id)
+        : "",
       mode: isSet(object.mode) ? globalThis.Number(object.mode) : 0,
-      is_public: isSet(object.is_public) ? globalThis.Boolean(object.is_public) : false,
-      has_attachment: isSet(object.has_attachment) ? globalThis.Boolean(object.has_attachment) : false,
+      is_public: isSet(object.is_public)
+        ? globalThis.Boolean(object.is_public)
+        : false,
+      has_attachment: isSet(object.has_attachment)
+        ? globalThis.Boolean(object.has_attachment)
+        : false,
     };
   },
 
@@ -5083,10 +5817,14 @@ export const ChannelMessageRemove = {
     return obj;
   },
 
-  create<I extends Exact<DeepPartial<ChannelMessageRemove>, I>>(base?: I): ChannelMessageRemove {
+  create<I extends Exact<DeepPartial<ChannelMessageRemove>, I>>(
+    base?: I
+  ): ChannelMessageRemove {
     return ChannelMessageRemove.fromPartial(base ?? ({} as any));
   },
-  fromPartial<I extends Exact<DeepPartial<ChannelMessageRemove>, I>>(object: I): ChannelMessageRemove {
+  fromPartial<I extends Exact<DeepPartial<ChannelMessageRemove>, I>>(
+    object: I
+  ): ChannelMessageRemove {
     const message = createBaseChannelMessageRemove();
     message.clan_id = object.clan_id ?? "";
     message.channel_id = object.channel_id ?? "";
@@ -5099,11 +5837,21 @@ export const ChannelMessageRemove = {
 };
 
 function createBaseChannelPresenceEvent(): ChannelPresenceEvent {
-  return { channel_id: "", joins: [], leaves: [], clan_logo: "", category_name: "", mode: 0 };
+  return {
+    channel_id: "",
+    joins: [],
+    leaves: [],
+    clan_logo: "",
+    category_name: "",
+    mode: 0,
+  };
 }
 
 export const ChannelPresenceEvent = {
-  encode(message: ChannelPresenceEvent, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(
+    message: ChannelPresenceEvent,
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
     if (message.channel_id !== "") {
       writer.uint32(10).string(message.channel_id);
     }
@@ -5125,8 +5873,12 @@ export const ChannelPresenceEvent = {
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): ChannelPresenceEvent {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+  decode(
+    input: _m0.Reader | Uint8Array,
+    length?: number
+  ): ChannelPresenceEvent {
+    const reader =
+      input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseChannelPresenceEvent();
     while (reader.pos < end) {
@@ -5185,11 +5937,21 @@ export const ChannelPresenceEvent = {
 
   fromJSON(object: any): ChannelPresenceEvent {
     return {
-      channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "",
-      joins: globalThis.Array.isArray(object?.joins) ? object.joins.map((e: any) => UserPresence.fromJSON(e)) : [],
-      leaves: globalThis.Array.isArray(object?.leaves) ? object.leaves.map((e: any) => UserPresence.fromJSON(e)) : [],
-      clan_logo: isSet(object.clan_logo) ? globalThis.String(object.clan_logo) : "",
-      category_name: isSet(object.category_name) ? globalThis.String(object.category_name) : "",
+      channel_id: isSet(object.channel_id)
+        ? globalThis.String(object.channel_id)
+        : "",
+      joins: globalThis.Array.isArray(object?.joins)
+        ? object.joins.map((e: any) => UserPresence.fromJSON(e))
+        : [],
+      leaves: globalThis.Array.isArray(object?.leaves)
+        ? object.leaves.map((e: any) => UserPresence.fromJSON(e))
+        : [],
+      clan_logo: isSet(object.clan_logo)
+        ? globalThis.String(object.clan_logo)
+        : "",
+      category_name: isSet(object.category_name)
+        ? globalThis.String(object.category_name)
+        : "",
       mode: isSet(object.mode) ? globalThis.Number(object.mode) : 0,
     };
   },
@@ -5217,14 +5979,19 @@ export const ChannelPresenceEvent = {
     return obj;
   },
 
-  create<I extends Exact<DeepPartial<ChannelPresenceEvent>, I>>(base?: I): ChannelPresenceEvent {
+  create<I extends Exact<DeepPartial<ChannelPresenceEvent>, I>>(
+    base?: I
+  ): ChannelPresenceEvent {
     return ChannelPresenceEvent.fromPartial(base ?? ({} as any));
   },
-  fromPartial<I extends Exact<DeepPartial<ChannelPresenceEvent>, I>>(object: I): ChannelPresenceEvent {
+  fromPartial<I extends Exact<DeepPartial<ChannelPresenceEvent>, I>>(
+    object: I
+  ): ChannelPresenceEvent {
     const message = createBaseChannelPresenceEvent();
     message.channel_id = object.channel_id ?? "";
     message.joins = object.joins?.map((e) => UserPresence.fromPartial(e)) || [];
-    message.leaves = object.leaves?.map((e) => UserPresence.fromPartial(e)) || [];
+    message.leaves =
+      object.leaves?.map((e) => UserPresence.fromPartial(e)) || [];
     message.clan_logo = object.clan_logo ?? "";
     message.category_name = object.category_name ?? "";
     message.mode = object.mode ?? 0;
@@ -5245,13 +6012,17 @@ export const Error = {
       writer.uint32(18).string(message.message);
     }
     Object.entries(message.context).forEach(([key, value]) => {
-      Error_ContextEntry.encode({ key: key as any, value }, writer.uint32(26).fork()).ldelim();
+      Error_ContextEntry.encode(
+        { key: key as any, value },
+        writer.uint32(26).fork()
+      ).ldelim();
     });
     return writer;
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): Error {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    const reader =
+      input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseError();
     while (reader.pos < end) {
@@ -5295,10 +6066,13 @@ export const Error = {
       code: isSet(object.code) ? globalThis.Number(object.code) : 0,
       message: isSet(object.message) ? globalThis.String(object.message) : "",
       context: isObject(object.context)
-        ? Object.entries(object.context).reduce<{ [key: string]: string }>((acc, [key, value]) => {
-          acc[key] = String(value);
-          return acc;
-        }, {})
+        ? Object.entries(object.context).reduce<{ [key: string]: string }>(
+            (acc, [key, value]) => {
+              acc[key] = String(value);
+              return acc;
+            },
+            {}
+          )
         : {},
     };
   },
@@ -5330,7 +6104,9 @@ export const Error = {
     const message = createBaseError();
     message.code = object.code ?? 0;
     message.message = object.message ?? "";
-    message.context = Object.entries(object.context ?? {}).reduce<{ [key: string]: string }>((acc, [key, value]) => {
+    message.context = Object.entries(object.context ?? {}).reduce<{
+      [key: string]: string;
+    }>((acc, [key, value]) => {
       if (value !== undefined) {
         acc[key] = globalThis.String(value);
       }
@@ -5345,7 +6121,10 @@ function createBaseError_ContextEntry(): Error_ContextEntry {
 }
 
 export const Error_ContextEntry = {
-  encode(message: Error_ContextEntry, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(
+    message: Error_ContextEntry,
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
     if (message.key !== "") {
       writer.uint32(10).string(message.key);
     }
@@ -5356,7 +6135,8 @@ export const Error_ContextEntry = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): Error_ContextEntry {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    const reader =
+      input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseError_ContextEntry();
     while (reader.pos < end) {
@@ -5403,10 +6183,14 @@ export const Error_ContextEntry = {
     return obj;
   },
 
-  create<I extends Exact<DeepPartial<Error_ContextEntry>, I>>(base?: I): Error_ContextEntry {
+  create<I extends Exact<DeepPartial<Error_ContextEntry>, I>>(
+    base?: I
+  ): Error_ContextEntry {
     return Error_ContextEntry.fromPartial(base ?? ({} as any));
   },
-  fromPartial<I extends Exact<DeepPartial<Error_ContextEntry>, I>>(object: I): Error_ContextEntry {
+  fromPartial<I extends Exact<DeepPartial<Error_ContextEntry>, I>>(
+    object: I
+  ): Error_ContextEntry {
     const message = createBaseError_ContextEntry();
     message.key = object.key ?? "";
     message.value = object.value ?? "";
@@ -5419,7 +6203,10 @@ function createBaseNotifications(): Notifications {
 }
 
 export const Notifications = {
-  encode(message: Notifications, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(
+    message: Notifications,
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
     for (const v of message.notifications) {
       Notification.encode(v!, writer.uint32(10).fork()).ldelim();
     }
@@ -5427,7 +6214,8 @@ export const Notifications = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): Notifications {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    const reader =
+      input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseNotifications();
     while (reader.pos < end) {
@@ -5438,7 +6226,9 @@ export const Notifications = {
             break;
           }
 
-          message.notifications.push(Notification.decode(reader, reader.uint32()));
+          message.notifications.push(
+            Notification.decode(reader, reader.uint32())
+          );
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -5460,17 +6250,24 @@ export const Notifications = {
   toJSON(message: Notifications): unknown {
     const obj: any = {};
     if (message.notifications?.length) {
-      obj.notifications = message.notifications.map((e) => Notification.toJSON(e));
+      obj.notifications = message.notifications.map((e) =>
+        Notification.toJSON(e)
+      );
     }
     return obj;
   },
 
-  create<I extends Exact<DeepPartial<Notifications>, I>>(base?: I): Notifications {
+  create<I extends Exact<DeepPartial<Notifications>, I>>(
+    base?: I
+  ): Notifications {
     return Notifications.fromPartial(base ?? ({} as any));
   },
-  fromPartial<I extends Exact<DeepPartial<Notifications>, I>>(object: I): Notifications {
+  fromPartial<I extends Exact<DeepPartial<Notifications>, I>>(
+    object: I
+  ): Notifications {
     const message = createBaseNotifications();
-    message.notifications = object.notifications?.map((e) => Notification.fromPartial(e)) || [];
+    message.notifications =
+      object.notifications?.map((e) => Notification.fromPartial(e)) || [];
     return message;
   },
 };
@@ -5480,7 +6277,10 @@ function createBaseRemoveFriend(): RemoveFriend {
 }
 
 export const RemoveFriend = {
-  encode(message: RemoveFriend, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(
+    message: RemoveFriend,
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
     if (message.user_id !== "") {
       writer.uint32(10).string(message.user_id);
     }
@@ -5488,7 +6288,8 @@ export const RemoveFriend = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): RemoveFriend {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    const reader =
+      input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseRemoveFriend();
     while (reader.pos < end) {
@@ -5511,7 +6312,9 @@ export const RemoveFriend = {
   },
 
   fromJSON(object: any): RemoveFriend {
-    return { user_id: isSet(object.user_id) ? globalThis.String(object.user_id) : "" };
+    return {
+      user_id: isSet(object.user_id) ? globalThis.String(object.user_id) : "",
+    };
   },
 
   toJSON(message: RemoveFriend): unknown {
@@ -5522,10 +6325,14 @@ export const RemoveFriend = {
     return obj;
   },
 
-  create<I extends Exact<DeepPartial<RemoveFriend>, I>>(base?: I): RemoveFriend {
+  create<I extends Exact<DeepPartial<RemoveFriend>, I>>(
+    base?: I
+  ): RemoveFriend {
     return RemoveFriend.fromPartial(base ?? ({} as any));
   },
-  fromPartial<I extends Exact<DeepPartial<RemoveFriend>, I>>(object: I): RemoveFriend {
+  fromPartial<I extends Exact<DeepPartial<RemoveFriend>, I>>(
+    object: I
+  ): RemoveFriend {
     const message = createBaseRemoveFriend();
     message.user_id = object.user_id ?? "";
     return message;
@@ -5542,7 +6349,8 @@ export const Ping = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): Ping {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    const reader =
+      input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBasePing();
     while (reader.pos < end) {
@@ -5585,7 +6393,8 @@ export const Pong = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): Pong {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    const reader =
+      input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBasePong();
     while (reader.pos < end) {
@@ -5623,7 +6432,10 @@ function createBaseStatus(): Status {
 }
 
 export const Status = {
-  encode(message: Status, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(
+    message: Status,
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
     for (const v of message.presences) {
       UserPresence.encode(v!, writer.uint32(10).fork()).ldelim();
     }
@@ -5631,7 +6443,8 @@ export const Status = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): Status {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    const reader =
+      input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseStatus();
     while (reader.pos < end) {
@@ -5674,7 +6487,8 @@ export const Status = {
   },
   fromPartial<I extends Exact<DeepPartial<Status>, I>>(object: I): Status {
     const message = createBaseStatus();
-    message.presences = object.presences?.map((e) => UserPresence.fromPartial(e)) || [];
+    message.presences =
+      object.presences?.map((e) => UserPresence.fromPartial(e)) || [];
     return message;
   },
 };
@@ -5684,7 +6498,10 @@ function createBaseStatusFollow(): StatusFollow {
 }
 
 export const StatusFollow = {
-  encode(message: StatusFollow, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(
+    message: StatusFollow,
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
     for (const v of message.user_ids) {
       writer.uint32(10).string(v!);
     }
@@ -5695,7 +6512,8 @@ export const StatusFollow = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): StatusFollow {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    const reader =
+      input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseStatusFollow();
     while (reader.pos < end) {
@@ -5726,7 +6544,9 @@ export const StatusFollow = {
 
   fromJSON(object: any): StatusFollow {
     return {
-      user_ids: globalThis.Array.isArray(object?.user_ids) ? object.user_ids.map((e: any) => globalThis.String(e)) : [],
+      user_ids: globalThis.Array.isArray(object?.user_ids)
+        ? object.user_ids.map((e: any) => globalThis.String(e))
+        : [],
       usernames: globalThis.Array.isArray(object?.usernames)
         ? object.usernames.map((e: any) => globalThis.String(e))
         : [],
@@ -5744,10 +6564,14 @@ export const StatusFollow = {
     return obj;
   },
 
-  create<I extends Exact<DeepPartial<StatusFollow>, I>>(base?: I): StatusFollow {
+  create<I extends Exact<DeepPartial<StatusFollow>, I>>(
+    base?: I
+  ): StatusFollow {
     return StatusFollow.fromPartial(base ?? ({} as any));
   },
-  fromPartial<I extends Exact<DeepPartial<StatusFollow>, I>>(object: I): StatusFollow {
+  fromPartial<I extends Exact<DeepPartial<StatusFollow>, I>>(
+    object: I
+  ): StatusFollow {
     const message = createBaseStatusFollow();
     message.user_ids = object.user_ids?.map((e) => e) || [];
     message.usernames = object.usernames?.map((e) => e) || [];
@@ -5760,7 +6584,10 @@ function createBaseStatusPresenceEvent(): StatusPresenceEvent {
 }
 
 export const StatusPresenceEvent = {
-  encode(message: StatusPresenceEvent, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(
+    message: StatusPresenceEvent,
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
     for (const v of message.joins) {
       UserPresence.encode(v!, writer.uint32(18).fork()).ldelim();
     }
@@ -5771,7 +6598,8 @@ export const StatusPresenceEvent = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): StatusPresenceEvent {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    const reader =
+      input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseStatusPresenceEvent();
     while (reader.pos < end) {
@@ -5802,8 +6630,12 @@ export const StatusPresenceEvent = {
 
   fromJSON(object: any): StatusPresenceEvent {
     return {
-      joins: globalThis.Array.isArray(object?.joins) ? object.joins.map((e: any) => UserPresence.fromJSON(e)) : [],
-      leaves: globalThis.Array.isArray(object?.leaves) ? object.leaves.map((e: any) => UserPresence.fromJSON(e)) : [],
+      joins: globalThis.Array.isArray(object?.joins)
+        ? object.joins.map((e: any) => UserPresence.fromJSON(e))
+        : [],
+      leaves: globalThis.Array.isArray(object?.leaves)
+        ? object.leaves.map((e: any) => UserPresence.fromJSON(e))
+        : [],
     };
   },
 
@@ -5818,13 +6650,18 @@ export const StatusPresenceEvent = {
     return obj;
   },
 
-  create<I extends Exact<DeepPartial<StatusPresenceEvent>, I>>(base?: I): StatusPresenceEvent {
+  create<I extends Exact<DeepPartial<StatusPresenceEvent>, I>>(
+    base?: I
+  ): StatusPresenceEvent {
     return StatusPresenceEvent.fromPartial(base ?? ({} as any));
   },
-  fromPartial<I extends Exact<DeepPartial<StatusPresenceEvent>, I>>(object: I): StatusPresenceEvent {
+  fromPartial<I extends Exact<DeepPartial<StatusPresenceEvent>, I>>(
+    object: I
+  ): StatusPresenceEvent {
     const message = createBaseStatusPresenceEvent();
     message.joins = object.joins?.map((e) => UserPresence.fromPartial(e)) || [];
-    message.leaves = object.leaves?.map((e) => UserPresence.fromPartial(e)) || [];
+    message.leaves =
+      object.leaves?.map((e) => UserPresence.fromPartial(e)) || [];
     return message;
   },
 };
@@ -5843,7 +6680,10 @@ function createBaseLastPinMessageEvent(): LastPinMessageEvent {
 }
 
 export const LastPinMessageEvent = {
-  encode(message: LastPinMessageEvent, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(
+    message: LastPinMessageEvent,
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
     if (message.clan_id !== "") {
       writer.uint32(10).string(message.clan_id);
     }
@@ -5872,7 +6712,8 @@ export const LastPinMessageEvent = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): LastPinMessageEvent {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    const reader =
+      input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseLastPinMessageEvent();
     while (reader.pos < end) {
@@ -5946,13 +6787,23 @@ export const LastPinMessageEvent = {
   fromJSON(object: any): LastPinMessageEvent {
     return {
       clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
-      channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "",
-      message_id: isSet(object.message_id) ? globalThis.String(object.message_id) : "",
+      channel_id: isSet(object.channel_id)
+        ? globalThis.String(object.channel_id)
+        : "",
+      message_id: isSet(object.message_id)
+        ? globalThis.String(object.message_id)
+        : "",
       mode: isSet(object.mode) ? globalThis.Number(object.mode) : 0,
       user_id: isSet(object.user_id) ? globalThis.String(object.user_id) : "",
-      timestamp_seconds: isSet(object.timestamp_seconds) ? globalThis.Number(object.timestamp_seconds) : 0,
-      operation: isSet(object.operation) ? globalThis.Number(object.operation) : 0,
-      is_public: isSet(object.is_public) ? globalThis.Boolean(object.is_public) : false,
+      timestamp_seconds: isSet(object.timestamp_seconds)
+        ? globalThis.Number(object.timestamp_seconds)
+        : 0,
+      operation: isSet(object.operation)
+        ? globalThis.Number(object.operation)
+        : 0,
+      is_public: isSet(object.is_public)
+        ? globalThis.Boolean(object.is_public)
+        : false,
     };
   },
 
@@ -5985,10 +6836,14 @@ export const LastPinMessageEvent = {
     return obj;
   },
 
-  create<I extends Exact<DeepPartial<LastPinMessageEvent>, I>>(base?: I): LastPinMessageEvent {
+  create<I extends Exact<DeepPartial<LastPinMessageEvent>, I>>(
+    base?: I
+  ): LastPinMessageEvent {
     return LastPinMessageEvent.fromPartial(base ?? ({} as any));
   },
-  fromPartial<I extends Exact<DeepPartial<LastPinMessageEvent>, I>>(object: I): LastPinMessageEvent {
+  fromPartial<I extends Exact<DeepPartial<LastPinMessageEvent>, I>>(
+    object: I
+  ): LastPinMessageEvent {
     const message = createBaseLastPinMessageEvent();
     message.clan_id = object.clan_id ?? "";
     message.channel_id = object.channel_id ?? "";
@@ -6003,11 +6858,20 @@ export const LastPinMessageEvent = {
 };
 
 function createBaseLastSeenMessageEvent(): LastSeenMessageEvent {
-  return { clan_id: "", channel_id: "", message_id: "", mode: 0, timestamp_seconds: 0 };
+  return {
+    clan_id: "",
+    channel_id: "",
+    message_id: "",
+    mode: 0,
+    timestamp_seconds: 0,
+  };
 }
 
 export const LastSeenMessageEvent = {
-  encode(message: LastSeenMessageEvent, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(
+    message: LastSeenMessageEvent,
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
     if (message.clan_id !== "") {
       writer.uint32(10).string(message.clan_id);
     }
@@ -6026,8 +6890,12 @@ export const LastSeenMessageEvent = {
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): LastSeenMessageEvent {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+  decode(
+    input: _m0.Reader | Uint8Array,
+    length?: number
+  ): LastSeenMessageEvent {
+    const reader =
+      input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseLastSeenMessageEvent();
     while (reader.pos < end) {
@@ -6080,10 +6948,16 @@ export const LastSeenMessageEvent = {
   fromJSON(object: any): LastSeenMessageEvent {
     return {
       clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
-      channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "",
-      message_id: isSet(object.message_id) ? globalThis.String(object.message_id) : "",
+      channel_id: isSet(object.channel_id)
+        ? globalThis.String(object.channel_id)
+        : "",
+      message_id: isSet(object.message_id)
+        ? globalThis.String(object.message_id)
+        : "",
       mode: isSet(object.mode) ? globalThis.Number(object.mode) : 0,
-      timestamp_seconds: isSet(object.timestamp_seconds) ? globalThis.Number(object.timestamp_seconds) : 0,
+      timestamp_seconds: isSet(object.timestamp_seconds)
+        ? globalThis.Number(object.timestamp_seconds)
+        : 0,
     };
   },
 
@@ -6107,10 +6981,14 @@ export const LastSeenMessageEvent = {
     return obj;
   },
 
-  create<I extends Exact<DeepPartial<LastSeenMessageEvent>, I>>(base?: I): LastSeenMessageEvent {
+  create<I extends Exact<DeepPartial<LastSeenMessageEvent>, I>>(
+    base?: I
+  ): LastSeenMessageEvent {
     return LastSeenMessageEvent.fromPartial(base ?? ({} as any));
   },
-  fromPartial<I extends Exact<DeepPartial<LastSeenMessageEvent>, I>>(object: I): LastSeenMessageEvent {
+  fromPartial<I extends Exact<DeepPartial<LastSeenMessageEvent>, I>>(
+    object: I
+  ): LastSeenMessageEvent {
     const message = createBaseLastSeenMessageEvent();
     message.clan_id = object.clan_id ?? "";
     message.channel_id = object.channel_id ?? "";
@@ -6122,11 +7000,20 @@ export const LastSeenMessageEvent = {
 };
 
 function createBaseMessageTypingEvent(): MessageTypingEvent {
-  return { clan_id: "", channel_id: "", sender_id: "", mode: 0, is_public: false };
+  return {
+    clan_id: "",
+    channel_id: "",
+    sender_id: "",
+    mode: 0,
+    is_public: false,
+  };
 }
 
 export const MessageTypingEvent = {
-  encode(message: MessageTypingEvent, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(
+    message: MessageTypingEvent,
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
     if (message.clan_id !== "") {
       writer.uint32(10).string(message.clan_id);
     }
@@ -6146,7 +7033,8 @@ export const MessageTypingEvent = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): MessageTypingEvent {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    const reader =
+      input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseMessageTypingEvent();
     while (reader.pos < end) {
@@ -6199,10 +7087,16 @@ export const MessageTypingEvent = {
   fromJSON(object: any): MessageTypingEvent {
     return {
       clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
-      channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "",
-      sender_id: isSet(object.sender_id) ? globalThis.String(object.sender_id) : "",
+      channel_id: isSet(object.channel_id)
+        ? globalThis.String(object.channel_id)
+        : "",
+      sender_id: isSet(object.sender_id)
+        ? globalThis.String(object.sender_id)
+        : "",
       mode: isSet(object.mode) ? globalThis.Number(object.mode) : 0,
-      is_public: isSet(object.is_public) ? globalThis.Boolean(object.is_public) : false,
+      is_public: isSet(object.is_public)
+        ? globalThis.Boolean(object.is_public)
+        : false,
     };
   },
 
@@ -6226,10 +7120,14 @@ export const MessageTypingEvent = {
     return obj;
   },
 
-  create<I extends Exact<DeepPartial<MessageTypingEvent>, I>>(base?: I): MessageTypingEvent {
+  create<I extends Exact<DeepPartial<MessageTypingEvent>, I>>(
+    base?: I
+  ): MessageTypingEvent {
     return MessageTypingEvent.fromPartial(base ?? ({} as any));
   },
-  fromPartial<I extends Exact<DeepPartial<MessageTypingEvent>, I>>(object: I): MessageTypingEvent {
+  fromPartial<I extends Exact<DeepPartial<MessageTypingEvent>, I>>(
+    object: I
+  ): MessageTypingEvent {
     const message = createBaseMessageTypingEvent();
     message.clan_id = object.clan_id ?? "";
     message.channel_id = object.channel_id ?? "";
@@ -6245,7 +7143,10 @@ function createBaseVoiceLeavedEvent(): VoiceLeavedEvent {
 }
 
 export const VoiceLeavedEvent = {
-  encode(message: VoiceLeavedEvent, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(
+    message: VoiceLeavedEvent,
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
     if (message.id !== "") {
       writer.uint32(10).string(message.id);
     }
@@ -6262,7 +7163,8 @@ export const VoiceLeavedEvent = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): VoiceLeavedEvent {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    const reader =
+      input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseVoiceLeavedEvent();
     while (reader.pos < end) {
@@ -6309,8 +7211,12 @@ export const VoiceLeavedEvent = {
     return {
       id: isSet(object.id) ? globalThis.String(object.id) : "",
       clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
-      voice_channel_id: isSet(object.voice_channel_id) ? globalThis.String(object.voice_channel_id) : "",
-      voice_user_id: isSet(object.voice_user_id) ? globalThis.String(object.voice_user_id) : "",
+      voice_channel_id: isSet(object.voice_channel_id)
+        ? globalThis.String(object.voice_channel_id)
+        : "",
+      voice_user_id: isSet(object.voice_user_id)
+        ? globalThis.String(object.voice_user_id)
+        : "",
     };
   },
 
@@ -6331,10 +7237,14 @@ export const VoiceLeavedEvent = {
     return obj;
   },
 
-  create<I extends Exact<DeepPartial<VoiceLeavedEvent>, I>>(base?: I): VoiceLeavedEvent {
+  create<I extends Exact<DeepPartial<VoiceLeavedEvent>, I>>(
+    base?: I
+  ): VoiceLeavedEvent {
     return VoiceLeavedEvent.fromPartial(base ?? ({} as any));
   },
-  fromPartial<I extends Exact<DeepPartial<VoiceLeavedEvent>, I>>(object: I): VoiceLeavedEvent {
+  fromPartial<I extends Exact<DeepPartial<VoiceLeavedEvent>, I>>(
+    object: I
+  ): VoiceLeavedEvent {
     const message = createBaseVoiceLeavedEvent();
     message.id = object.id ?? "";
     message.clan_id = object.clan_id ?? "";
@@ -6358,7 +7268,10 @@ function createBaseVoiceJoinedEvent(): VoiceJoinedEvent {
 }
 
 export const VoiceJoinedEvent = {
-  encode(message: VoiceJoinedEvent, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(
+    message: VoiceJoinedEvent,
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
     if (message.clan_id !== "") {
       writer.uint32(10).string(message.clan_id);
     }
@@ -6387,7 +7300,8 @@ export const VoiceJoinedEvent = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): VoiceJoinedEvent {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    const reader =
+      input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseVoiceJoinedEvent();
     while (reader.pos < end) {
@@ -6461,13 +7375,23 @@ export const VoiceJoinedEvent = {
   fromJSON(object: any): VoiceJoinedEvent {
     return {
       clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
-      clan_name: isSet(object.clan_name) ? globalThis.String(object.clan_name) : "",
+      clan_name: isSet(object.clan_name)
+        ? globalThis.String(object.clan_name)
+        : "",
       id: isSet(object.id) ? globalThis.String(object.id) : "",
-      participant: isSet(object.participant) ? globalThis.String(object.participant) : "",
+      participant: isSet(object.participant)
+        ? globalThis.String(object.participant)
+        : "",
       user_id: isSet(object.user_id) ? globalThis.String(object.user_id) : "",
-      voice_channel_label: isSet(object.voice_channel_label) ? globalThis.String(object.voice_channel_label) : "",
-      voice_channel_id: isSet(object.voice_channel_id) ? globalThis.String(object.voice_channel_id) : "",
-      last_screenshot: isSet(object.last_screenshot) ? globalThis.String(object.last_screenshot) : "",
+      voice_channel_label: isSet(object.voice_channel_label)
+        ? globalThis.String(object.voice_channel_label)
+        : "",
+      voice_channel_id: isSet(object.voice_channel_id)
+        ? globalThis.String(object.voice_channel_id)
+        : "",
+      last_screenshot: isSet(object.last_screenshot)
+        ? globalThis.String(object.last_screenshot)
+        : "",
     };
   },
 
@@ -6500,10 +7424,14 @@ export const VoiceJoinedEvent = {
     return obj;
   },
 
-  create<I extends Exact<DeepPartial<VoiceJoinedEvent>, I>>(base?: I): VoiceJoinedEvent {
+  create<I extends Exact<DeepPartial<VoiceJoinedEvent>, I>>(
+    base?: I
+  ): VoiceJoinedEvent {
     return VoiceJoinedEvent.fromPartial(base ?? ({} as any));
   },
-  fromPartial<I extends Exact<DeepPartial<VoiceJoinedEvent>, I>>(object: I): VoiceJoinedEvent {
+  fromPartial<I extends Exact<DeepPartial<VoiceJoinedEvent>, I>>(
+    object: I
+  ): VoiceJoinedEvent {
     const message = createBaseVoiceJoinedEvent();
     message.clan_id = object.clan_id ?? "";
     message.clan_name = object.clan_name ?? "";
@@ -6522,7 +7450,10 @@ function createBaseVoiceStartedEvent(): VoiceStartedEvent {
 }
 
 export const VoiceStartedEvent = {
-  encode(message: VoiceStartedEvent, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(
+    message: VoiceStartedEvent,
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
     if (message.id !== "") {
       writer.uint32(10).string(message.id);
     }
@@ -6536,7 +7467,8 @@ export const VoiceStartedEvent = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): VoiceStartedEvent {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    const reader =
+      input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseVoiceStartedEvent();
     while (reader.pos < end) {
@@ -6576,7 +7508,9 @@ export const VoiceStartedEvent = {
     return {
       id: isSet(object.id) ? globalThis.String(object.id) : "",
       clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
-      voice_channel_id: isSet(object.voice_channel_id) ? globalThis.String(object.voice_channel_id) : "",
+      voice_channel_id: isSet(object.voice_channel_id)
+        ? globalThis.String(object.voice_channel_id)
+        : "",
     };
   },
 
@@ -6594,10 +7528,14 @@ export const VoiceStartedEvent = {
     return obj;
   },
 
-  create<I extends Exact<DeepPartial<VoiceStartedEvent>, I>>(base?: I): VoiceStartedEvent {
+  create<I extends Exact<DeepPartial<VoiceStartedEvent>, I>>(
+    base?: I
+  ): VoiceStartedEvent {
     return VoiceStartedEvent.fromPartial(base ?? ({} as any));
   },
-  fromPartial<I extends Exact<DeepPartial<VoiceStartedEvent>, I>>(object: I): VoiceStartedEvent {
+  fromPartial<I extends Exact<DeepPartial<VoiceStartedEvent>, I>>(
+    object: I
+  ): VoiceStartedEvent {
     const message = createBaseVoiceStartedEvent();
     message.id = object.id ?? "";
     message.clan_id = object.clan_id ?? "";
@@ -6611,7 +7549,10 @@ function createBaseVoiceEndedEvent(): VoiceEndedEvent {
 }
 
 export const VoiceEndedEvent = {
-  encode(message: VoiceEndedEvent, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(
+    message: VoiceEndedEvent,
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
     if (message.id !== "") {
       writer.uint32(10).string(message.id);
     }
@@ -6625,7 +7566,8 @@ export const VoiceEndedEvent = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): VoiceEndedEvent {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    const reader =
+      input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseVoiceEndedEvent();
     while (reader.pos < end) {
@@ -6665,7 +7607,9 @@ export const VoiceEndedEvent = {
     return {
       id: isSet(object.id) ? globalThis.String(object.id) : "",
       clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
-      voice_channel_id: isSet(object.voice_channel_id) ? globalThis.String(object.voice_channel_id) : "",
+      voice_channel_id: isSet(object.voice_channel_id)
+        ? globalThis.String(object.voice_channel_id)
+        : "",
     };
   },
 
@@ -6683,10 +7627,14 @@ export const VoiceEndedEvent = {
     return obj;
   },
 
-  create<I extends Exact<DeepPartial<VoiceEndedEvent>, I>>(base?: I): VoiceEndedEvent {
+  create<I extends Exact<DeepPartial<VoiceEndedEvent>, I>>(
+    base?: I
+  ): VoiceEndedEvent {
     return VoiceEndedEvent.fromPartial(base ?? ({} as any));
   },
-  fromPartial<I extends Exact<DeepPartial<VoiceEndedEvent>, I>>(object: I): VoiceEndedEvent {
+  fromPartial<I extends Exact<DeepPartial<VoiceEndedEvent>, I>>(
+    object: I
+  ): VoiceEndedEvent {
     const message = createBaseVoiceEndedEvent();
     message.id = object.id ?? "";
     message.clan_id = object.clan_id ?? "";
@@ -6696,11 +7644,19 @@ export const VoiceEndedEvent = {
 };
 
 function createBaseStreamingLeavedEvent(): StreamingLeavedEvent {
-  return { id: "", clan_id: "", streaming_channel_id: "", streaming_user_id: "" };
+  return {
+    id: "",
+    clan_id: "",
+    streaming_channel_id: "",
+    streaming_user_id: "",
+  };
 }
 
 export const StreamingLeavedEvent = {
-  encode(message: StreamingLeavedEvent, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(
+    message: StreamingLeavedEvent,
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
     if (message.id !== "") {
       writer.uint32(10).string(message.id);
     }
@@ -6716,8 +7672,12 @@ export const StreamingLeavedEvent = {
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): StreamingLeavedEvent {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+  decode(
+    input: _m0.Reader | Uint8Array,
+    length?: number
+  ): StreamingLeavedEvent {
+    const reader =
+      input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseStreamingLeavedEvent();
     while (reader.pos < end) {
@@ -6764,8 +7724,12 @@ export const StreamingLeavedEvent = {
     return {
       id: isSet(object.id) ? globalThis.String(object.id) : "",
       clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
-      streaming_channel_id: isSet(object.streaming_channel_id) ? globalThis.String(object.streaming_channel_id) : "",
-      streaming_user_id: isSet(object.streaming_user_id) ? globalThis.String(object.streaming_user_id) : "",
+      streaming_channel_id: isSet(object.streaming_channel_id)
+        ? globalThis.String(object.streaming_channel_id)
+        : "",
+      streaming_user_id: isSet(object.streaming_user_id)
+        ? globalThis.String(object.streaming_user_id)
+        : "",
     };
   },
 
@@ -6786,10 +7750,14 @@ export const StreamingLeavedEvent = {
     return obj;
   },
 
-  create<I extends Exact<DeepPartial<StreamingLeavedEvent>, I>>(base?: I): StreamingLeavedEvent {
+  create<I extends Exact<DeepPartial<StreamingLeavedEvent>, I>>(
+    base?: I
+  ): StreamingLeavedEvent {
     return StreamingLeavedEvent.fromPartial(base ?? ({} as any));
   },
-  fromPartial<I extends Exact<DeepPartial<StreamingLeavedEvent>, I>>(object: I): StreamingLeavedEvent {
+  fromPartial<I extends Exact<DeepPartial<StreamingLeavedEvent>, I>>(
+    object: I
+  ): StreamingLeavedEvent {
     const message = createBaseStreamingLeavedEvent();
     message.id = object.id ?? "";
     message.clan_id = object.clan_id ?? "";
@@ -6812,7 +7780,10 @@ function createBaseStreamingJoinedEvent(): StreamingJoinedEvent {
 }
 
 export const StreamingJoinedEvent = {
-  encode(message: StreamingJoinedEvent, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(
+    message: StreamingJoinedEvent,
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
     if (message.clan_id !== "") {
       writer.uint32(10).string(message.clan_id);
     }
@@ -6837,8 +7808,12 @@ export const StreamingJoinedEvent = {
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): StreamingJoinedEvent {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+  decode(
+    input: _m0.Reader | Uint8Array,
+    length?: number
+  ): StreamingJoinedEvent {
+    const reader =
+      input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseStreamingJoinedEvent();
     while (reader.pos < end) {
@@ -6905,14 +7880,20 @@ export const StreamingJoinedEvent = {
   fromJSON(object: any): StreamingJoinedEvent {
     return {
       clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
-      clan_name: isSet(object.clan_name) ? globalThis.String(object.clan_name) : "",
+      clan_name: isSet(object.clan_name)
+        ? globalThis.String(object.clan_name)
+        : "",
       id: isSet(object.id) ? globalThis.String(object.id) : "",
-      participant: isSet(object.participant) ? globalThis.String(object.participant) : "",
+      participant: isSet(object.participant)
+        ? globalThis.String(object.participant)
+        : "",
       user_id: isSet(object.user_id) ? globalThis.String(object.user_id) : "",
       streaming_channel_label: isSet(object.streaming_channel_label)
         ? globalThis.String(object.streaming_channel_label)
         : "",
-      streaming_channel_id: isSet(object.streaming_channel_id) ? globalThis.String(object.streaming_channel_id) : "",
+      streaming_channel_id: isSet(object.streaming_channel_id)
+        ? globalThis.String(object.streaming_channel_id)
+        : "",
     };
   },
 
@@ -6942,10 +7923,14 @@ export const StreamingJoinedEvent = {
     return obj;
   },
 
-  create<I extends Exact<DeepPartial<StreamingJoinedEvent>, I>>(base?: I): StreamingJoinedEvent {
+  create<I extends Exact<DeepPartial<StreamingJoinedEvent>, I>>(
+    base?: I
+  ): StreamingJoinedEvent {
     return StreamingJoinedEvent.fromPartial(base ?? ({} as any));
   },
-  fromPartial<I extends Exact<DeepPartial<StreamingJoinedEvent>, I>>(object: I): StreamingJoinedEvent {
+  fromPartial<I extends Exact<DeepPartial<StreamingJoinedEvent>, I>>(
+    object: I
+  ): StreamingJoinedEvent {
     const message = createBaseStreamingJoinedEvent();
     message.clan_id = object.clan_id ?? "";
     message.clan_name = object.clan_name ?? "";
@@ -6959,11 +7944,19 @@ export const StreamingJoinedEvent = {
 };
 
 function createBaseStreamingStartedEvent(): StreamingStartedEvent {
-  return { clan_id: "", channel_id: "", streaming_url: "", is_streaming: false };
+  return {
+    clan_id: "",
+    channel_id: "",
+    streaming_url: "",
+    is_streaming: false,
+  };
 }
 
 export const StreamingStartedEvent = {
-  encode(message: StreamingStartedEvent, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(
+    message: StreamingStartedEvent,
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
     if (message.clan_id !== "") {
       writer.uint32(10).string(message.clan_id);
     }
@@ -6979,8 +7972,12 @@ export const StreamingStartedEvent = {
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): StreamingStartedEvent {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+  decode(
+    input: _m0.Reader | Uint8Array,
+    length?: number
+  ): StreamingStartedEvent {
+    const reader =
+      input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseStreamingStartedEvent();
     while (reader.pos < end) {
@@ -7026,9 +8023,15 @@ export const StreamingStartedEvent = {
   fromJSON(object: any): StreamingStartedEvent {
     return {
       clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
-      channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "",
-      streaming_url: isSet(object.streaming_url) ? globalThis.String(object.streaming_url) : "",
-      is_streaming: isSet(object.is_streaming) ? globalThis.Boolean(object.is_streaming) : false,
+      channel_id: isSet(object.channel_id)
+        ? globalThis.String(object.channel_id)
+        : "",
+      streaming_url: isSet(object.streaming_url)
+        ? globalThis.String(object.streaming_url)
+        : "",
+      is_streaming: isSet(object.is_streaming)
+        ? globalThis.Boolean(object.is_streaming)
+        : false,
     };
   },
 
@@ -7049,10 +8052,14 @@ export const StreamingStartedEvent = {
     return obj;
   },
 
-  create<I extends Exact<DeepPartial<StreamingStartedEvent>, I>>(base?: I): StreamingStartedEvent {
+  create<I extends Exact<DeepPartial<StreamingStartedEvent>, I>>(
+    base?: I
+  ): StreamingStartedEvent {
     return StreamingStartedEvent.fromPartial(base ?? ({} as any));
   },
-  fromPartial<I extends Exact<DeepPartial<StreamingStartedEvent>, I>>(object: I): StreamingStartedEvent {
+  fromPartial<I extends Exact<DeepPartial<StreamingStartedEvent>, I>>(
+    object: I
+  ): StreamingStartedEvent {
     const message = createBaseStreamingStartedEvent();
     message.clan_id = object.clan_id ?? "";
     message.channel_id = object.channel_id ?? "";
@@ -7067,7 +8074,10 @@ function createBaseStreamingEndedEvent(): StreamingEndedEvent {
 }
 
 export const StreamingEndedEvent = {
-  encode(message: StreamingEndedEvent, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(
+    message: StreamingEndedEvent,
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
     if (message.clan_id !== "") {
       writer.uint32(10).string(message.clan_id);
     }
@@ -7078,7 +8088,8 @@ export const StreamingEndedEvent = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): StreamingEndedEvent {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    const reader =
+      input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseStreamingEndedEvent();
     while (reader.pos < end) {
@@ -7110,7 +8121,9 @@ export const StreamingEndedEvent = {
   fromJSON(object: any): StreamingEndedEvent {
     return {
       clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
-      channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "",
+      channel_id: isSet(object.channel_id)
+        ? globalThis.String(object.channel_id)
+        : "",
     };
   },
 
@@ -7125,10 +8138,14 @@ export const StreamingEndedEvent = {
     return obj;
   },
 
-  create<I extends Exact<DeepPartial<StreamingEndedEvent>, I>>(base?: I): StreamingEndedEvent {
+  create<I extends Exact<DeepPartial<StreamingEndedEvent>, I>>(
+    base?: I
+  ): StreamingEndedEvent {
     return StreamingEndedEvent.fromPartial(base ?? ({} as any));
   },
-  fromPartial<I extends Exact<DeepPartial<StreamingEndedEvent>, I>>(object: I): StreamingEndedEvent {
+  fromPartial<I extends Exact<DeepPartial<StreamingEndedEvent>, I>>(
+    object: I
+  ): StreamingEndedEvent {
     const message = createBaseStreamingEndedEvent();
     message.clan_id = object.clan_id ?? "";
     message.channel_id = object.channel_id ?? "";
@@ -7152,7 +8169,10 @@ function createBaseChannelCreatedEvent(): ChannelCreatedEvent {
 }
 
 export const ChannelCreatedEvent = {
-  encode(message: ChannelCreatedEvent, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(
+    message: ChannelCreatedEvent,
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
     if (message.clan_id !== "") {
       writer.uint32(10).string(message.clan_id);
     }
@@ -7175,7 +8195,10 @@ export const ChannelCreatedEvent = {
       writer.uint32(56).int32(message.channel_private);
     }
     if (message.channel_type !== undefined) {
-      Int32Value.encode({ value: message.channel_type! }, writer.uint32(66).fork()).ldelim();
+      Int32Value.encode(
+        { value: message.channel_type! },
+        writer.uint32(66).fork()
+      ).ldelim();
     }
     if (message.status !== 0) {
       writer.uint32(72).int32(message.status);
@@ -7187,7 +8210,8 @@ export const ChannelCreatedEvent = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): ChannelCreatedEvent {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    const reader =
+      input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseChannelCreatedEvent();
     while (reader.pos < end) {
@@ -7247,7 +8271,10 @@ export const ChannelCreatedEvent = {
             break;
           }
 
-          message.channel_type = Int32Value.decode(reader, reader.uint32()).value;
+          message.channel_type = Int32Value.decode(
+            reader,
+            reader.uint32()
+          ).value;
           continue;
         case 9:
           if (tag !== 72) {
@@ -7275,13 +8302,27 @@ export const ChannelCreatedEvent = {
   fromJSON(object: any): ChannelCreatedEvent {
     return {
       clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
-      category_id: isSet(object.category_id) ? globalThis.String(object.category_id) : "",
-      creator_id: isSet(object.creator_id) ? globalThis.String(object.creator_id) : "",
-      parrent_id: isSet(object.parrent_id) ? globalThis.String(object.parrent_id) : "",
-      channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "",
-      channel_label: isSet(object.channel_label) ? globalThis.String(object.channel_label) : "",
-      channel_private: isSet(object.channel_private) ? globalThis.Number(object.channel_private) : 0,
-      channel_type: isSet(object.channel_type) ? Number(object.channel_type) : undefined,
+      category_id: isSet(object.category_id)
+        ? globalThis.String(object.category_id)
+        : "",
+      creator_id: isSet(object.creator_id)
+        ? globalThis.String(object.creator_id)
+        : "",
+      parrent_id: isSet(object.parrent_id)
+        ? globalThis.String(object.parrent_id)
+        : "",
+      channel_id: isSet(object.channel_id)
+        ? globalThis.String(object.channel_id)
+        : "",
+      channel_label: isSet(object.channel_label)
+        ? globalThis.String(object.channel_label)
+        : "",
+      channel_private: isSet(object.channel_private)
+        ? globalThis.Number(object.channel_private)
+        : 0,
+      channel_type: isSet(object.channel_type)
+        ? Number(object.channel_type)
+        : undefined,
       status: isSet(object.status) ? globalThis.Number(object.status) : 0,
       app_url: isSet(object.app_url) ? globalThis.String(object.app_url) : "",
     };
@@ -7322,10 +8363,14 @@ export const ChannelCreatedEvent = {
     return obj;
   },
 
-  create<I extends Exact<DeepPartial<ChannelCreatedEvent>, I>>(base?: I): ChannelCreatedEvent {
+  create<I extends Exact<DeepPartial<ChannelCreatedEvent>, I>>(
+    base?: I
+  ): ChannelCreatedEvent {
     return ChannelCreatedEvent.fromPartial(base ?? ({} as any));
   },
-  fromPartial<I extends Exact<DeepPartial<ChannelCreatedEvent>, I>>(object: I): ChannelCreatedEvent {
+  fromPartial<I extends Exact<DeepPartial<ChannelCreatedEvent>, I>>(
+    object: I
+  ): ChannelCreatedEvent {
     const message = createBaseChannelCreatedEvent();
     message.clan_id = object.clan_id ?? "";
     message.category_id = object.category_id ?? "";
@@ -7354,7 +8399,10 @@ function createBaseRoleEvent(): RoleEvent {
 }
 
 export const RoleEvent = {
-  encode(message: RoleEvent, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(
+    message: RoleEvent,
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
     if (message.role !== undefined) {
       Role.encode(message.role, writer.uint32(10).fork()).ldelim();
     }
@@ -7380,7 +8428,8 @@ export const RoleEvent = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): RoleEvent {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    const reader =
+      input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseRoleEvent();
     while (reader.pos < end) {
@@ -7455,10 +8504,14 @@ export const RoleEvent = {
       user_remove_ids: globalThis.Array.isArray(object?.user_remove_ids)
         ? object.user_remove_ids.map((e: any) => globalThis.String(e))
         : [],
-      active_permission_ids: globalThis.Array.isArray(object?.active_permission_ids)
+      active_permission_ids: globalThis.Array.isArray(
+        object?.active_permission_ids
+      )
         ? object.active_permission_ids.map((e: any) => globalThis.String(e))
         : [],
-      remove_permission_ids: globalThis.Array.isArray(object?.remove_permission_ids)
+      remove_permission_ids: globalThis.Array.isArray(
+        object?.remove_permission_ids
+      )
         ? object.remove_permission_ids.map((e: any) => globalThis.String(e))
         : [],
     };
@@ -7493,25 +8546,41 @@ export const RoleEvent = {
   create<I extends Exact<DeepPartial<RoleEvent>, I>>(base?: I): RoleEvent {
     return RoleEvent.fromPartial(base ?? ({} as any));
   },
-  fromPartial<I extends Exact<DeepPartial<RoleEvent>, I>>(object: I): RoleEvent {
+  fromPartial<I extends Exact<DeepPartial<RoleEvent>, I>>(
+    object: I
+  ): RoleEvent {
     const message = createBaseRoleEvent();
-    message.role = (object.role !== undefined && object.role !== null) ? Role.fromPartial(object.role) : undefined;
+    message.role =
+      object.role !== undefined && object.role !== null
+        ? Role.fromPartial(object.role)
+        : undefined;
     message.status = object.status ?? 0;
     message.user_id = object.user_id ?? "";
     message.user_add_ids = object.user_add_ids?.map((e) => e) || [];
     message.user_remove_ids = object.user_remove_ids?.map((e) => e) || [];
-    message.active_permission_ids = object.active_permission_ids?.map((e) => e) || [];
-    message.remove_permission_ids = object.remove_permission_ids?.map((e) => e) || [];
+    message.active_permission_ids =
+      object.active_permission_ids?.map((e) => e) || [];
+    message.remove_permission_ids =
+      object.remove_permission_ids?.map((e) => e) || [];
     return message;
   },
 };
 
 function createBaseChannelDeletedEvent(): ChannelDeletedEvent {
-  return { clan_id: "", category_id: "", parrent_id: "", channel_id: "", deletor: "" };
+  return {
+    clan_id: "",
+    category_id: "",
+    parrent_id: "",
+    channel_id: "",
+    deletor: "",
+  };
 }
 
 export const ChannelDeletedEvent = {
-  encode(message: ChannelDeletedEvent, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(
+    message: ChannelDeletedEvent,
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
     if (message.clan_id !== "") {
       writer.uint32(10).string(message.clan_id);
     }
@@ -7531,7 +8600,8 @@ export const ChannelDeletedEvent = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): ChannelDeletedEvent {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    const reader =
+      input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseChannelDeletedEvent();
     while (reader.pos < end) {
@@ -7584,9 +8654,15 @@ export const ChannelDeletedEvent = {
   fromJSON(object: any): ChannelDeletedEvent {
     return {
       clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
-      category_id: isSet(object.category_id) ? globalThis.String(object.category_id) : "",
-      parrent_id: isSet(object.parrent_id) ? globalThis.String(object.parrent_id) : "",
-      channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "",
+      category_id: isSet(object.category_id)
+        ? globalThis.String(object.category_id)
+        : "",
+      parrent_id: isSet(object.parrent_id)
+        ? globalThis.String(object.parrent_id)
+        : "",
+      channel_id: isSet(object.channel_id)
+        ? globalThis.String(object.channel_id)
+        : "",
       deletor: isSet(object.deletor) ? globalThis.String(object.deletor) : "",
     };
   },
@@ -7611,10 +8687,14 @@ export const ChannelDeletedEvent = {
     return obj;
   },
 
-  create<I extends Exact<DeepPartial<ChannelDeletedEvent>, I>>(base?: I): ChannelDeletedEvent {
+  create<I extends Exact<DeepPartial<ChannelDeletedEvent>, I>>(
+    base?: I
+  ): ChannelDeletedEvent {
     return ChannelDeletedEvent.fromPartial(base ?? ({} as any));
   },
-  fromPartial<I extends Exact<DeepPartial<ChannelDeletedEvent>, I>>(object: I): ChannelDeletedEvent {
+  fromPartial<I extends Exact<DeepPartial<ChannelDeletedEvent>, I>>(
+    object: I
+  ): ChannelDeletedEvent {
     const message = createBaseChannelDeletedEvent();
     message.clan_id = object.clan_id ?? "";
     message.category_id = object.category_id ?? "";
@@ -7630,7 +8710,10 @@ function createBaseClanDeletedEvent(): ClanDeletedEvent {
 }
 
 export const ClanDeletedEvent = {
-  encode(message: ClanDeletedEvent, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(
+    message: ClanDeletedEvent,
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
     if (message.clan_id !== "") {
       writer.uint32(10).string(message.clan_id);
     }
@@ -7641,7 +8724,8 @@ export const ClanDeletedEvent = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): ClanDeletedEvent {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    const reader =
+      input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseClanDeletedEvent();
     while (reader.pos < end) {
@@ -7688,10 +8772,14 @@ export const ClanDeletedEvent = {
     return obj;
   },
 
-  create<I extends Exact<DeepPartial<ClanDeletedEvent>, I>>(base?: I): ClanDeletedEvent {
+  create<I extends Exact<DeepPartial<ClanDeletedEvent>, I>>(
+    base?: I
+  ): ClanDeletedEvent {
     return ClanDeletedEvent.fromPartial(base ?? ({} as any));
   },
-  fromPartial<I extends Exact<DeepPartial<ClanDeletedEvent>, I>>(object: I): ClanDeletedEvent {
+  fromPartial<I extends Exact<DeepPartial<ClanDeletedEvent>, I>>(
+    object: I
+  ): ClanDeletedEvent {
     const message = createBaseClanDeletedEvent();
     message.clan_id = object.clan_id ?? "";
     message.deletor = object.deletor ?? "";
@@ -7713,7 +8801,10 @@ function createBaseStickerCreateEvent(): StickerCreateEvent {
 }
 
 export const StickerCreateEvent = {
-  encode(message: StickerCreateEvent, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(
+    message: StickerCreateEvent,
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
     if (message.clan_id !== "") {
       writer.uint32(10).string(message.clan_id);
     }
@@ -7742,7 +8833,8 @@ export const StickerCreateEvent = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): StickerCreateEvent {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    const reader =
+      input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseStickerCreateEvent();
     while (reader.pos < end) {
@@ -7817,12 +8909,22 @@ export const StickerCreateEvent = {
     return {
       clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
       source: isSet(object.source) ? globalThis.String(object.source) : "",
-      shortname: isSet(object.shortname) ? globalThis.String(object.shortname) : "",
-      category: isSet(object.category) ? globalThis.String(object.category) : "",
-      creator_id: isSet(object.creator_id) ? globalThis.String(object.creator_id) : "",
-      sticker_id: isSet(object.sticker_id) ? globalThis.String(object.sticker_id) : "",
+      shortname: isSet(object.shortname)
+        ? globalThis.String(object.shortname)
+        : "",
+      category: isSet(object.category)
+        ? globalThis.String(object.category)
+        : "",
+      creator_id: isSet(object.creator_id)
+        ? globalThis.String(object.creator_id)
+        : "",
+      sticker_id: isSet(object.sticker_id)
+        ? globalThis.String(object.sticker_id)
+        : "",
       logo: isSet(object.logo) ? globalThis.String(object.logo) : "",
-      clan_name: isSet(object.clan_name) ? globalThis.String(object.clan_name) : "",
+      clan_name: isSet(object.clan_name)
+        ? globalThis.String(object.clan_name)
+        : "",
     };
   },
 
@@ -7855,10 +8957,14 @@ export const StickerCreateEvent = {
     return obj;
   },
 
-  create<I extends Exact<DeepPartial<StickerCreateEvent>, I>>(base?: I): StickerCreateEvent {
+  create<I extends Exact<DeepPartial<StickerCreateEvent>, I>>(
+    base?: I
+  ): StickerCreateEvent {
     return StickerCreateEvent.fromPartial(base ?? ({} as any));
   },
-  fromPartial<I extends Exact<DeepPartial<StickerCreateEvent>, I>>(object: I): StickerCreateEvent {
+  fromPartial<I extends Exact<DeepPartial<StickerCreateEvent>, I>>(
+    object: I
+  ): StickerCreateEvent {
     const message = createBaseStickerCreateEvent();
     message.clan_id = object.clan_id ?? "";
     message.source = object.source ?? "";
@@ -7877,7 +8983,10 @@ function createBaseStickerUpdateEvent(): StickerUpdateEvent {
 }
 
 export const StickerUpdateEvent = {
-  encode(message: StickerUpdateEvent, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(
+    message: StickerUpdateEvent,
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
     if (message.shortname !== "") {
       writer.uint32(10).string(message.shortname);
     }
@@ -7891,7 +9000,8 @@ export const StickerUpdateEvent = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): StickerUpdateEvent {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    const reader =
+      input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseStickerUpdateEvent();
     while (reader.pos < end) {
@@ -7929,8 +9039,12 @@ export const StickerUpdateEvent = {
 
   fromJSON(object: any): StickerUpdateEvent {
     return {
-      shortname: isSet(object.shortname) ? globalThis.String(object.shortname) : "",
-      sticker_id: isSet(object.sticker_id) ? globalThis.String(object.sticker_id) : "",
+      shortname: isSet(object.shortname)
+        ? globalThis.String(object.shortname)
+        : "",
+      sticker_id: isSet(object.sticker_id)
+        ? globalThis.String(object.sticker_id)
+        : "",
       user_id: isSet(object.user_id) ? globalThis.String(object.user_id) : "",
     };
   },
@@ -7949,10 +9063,14 @@ export const StickerUpdateEvent = {
     return obj;
   },
 
-  create<I extends Exact<DeepPartial<StickerUpdateEvent>, I>>(base?: I): StickerUpdateEvent {
+  create<I extends Exact<DeepPartial<StickerUpdateEvent>, I>>(
+    base?: I
+  ): StickerUpdateEvent {
     return StickerUpdateEvent.fromPartial(base ?? ({} as any));
   },
-  fromPartial<I extends Exact<DeepPartial<StickerUpdateEvent>, I>>(object: I): StickerUpdateEvent {
+  fromPartial<I extends Exact<DeepPartial<StickerUpdateEvent>, I>>(
+    object: I
+  ): StickerUpdateEvent {
     const message = createBaseStickerUpdateEvent();
     message.shortname = object.shortname ?? "";
     message.sticker_id = object.sticker_id ?? "";
@@ -7966,7 +9084,10 @@ function createBaseStickerDeleteEvent(): StickerDeleteEvent {
 }
 
 export const StickerDeleteEvent = {
-  encode(message: StickerDeleteEvent, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(
+    message: StickerDeleteEvent,
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
     if (message.sticker_id !== "") {
       writer.uint32(18).string(message.sticker_id);
     }
@@ -7977,7 +9098,8 @@ export const StickerDeleteEvent = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): StickerDeleteEvent {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    const reader =
+      input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseStickerDeleteEvent();
     while (reader.pos < end) {
@@ -8008,7 +9130,9 @@ export const StickerDeleteEvent = {
 
   fromJSON(object: any): StickerDeleteEvent {
     return {
-      sticker_id: isSet(object.sticker_id) ? globalThis.String(object.sticker_id) : "",
+      sticker_id: isSet(object.sticker_id)
+        ? globalThis.String(object.sticker_id)
+        : "",
       user_id: isSet(object.user_id) ? globalThis.String(object.user_id) : "",
     };
   },
@@ -8024,10 +9148,14 @@ export const StickerDeleteEvent = {
     return obj;
   },
 
-  create<I extends Exact<DeepPartial<StickerDeleteEvent>, I>>(base?: I): StickerDeleteEvent {
+  create<I extends Exact<DeepPartial<StickerDeleteEvent>, I>>(
+    base?: I
+  ): StickerDeleteEvent {
     return StickerDeleteEvent.fromPartial(base ?? ({} as any));
   },
-  fromPartial<I extends Exact<DeepPartial<StickerDeleteEvent>, I>>(object: I): StickerDeleteEvent {
+  fromPartial<I extends Exact<DeepPartial<StickerDeleteEvent>, I>>(
+    object: I
+  ): StickerDeleteEvent {
     const message = createBaseStickerDeleteEvent();
     message.sticker_id = object.sticker_id ?? "";
     message.user_id = object.user_id ?? "";
@@ -8056,7 +9184,10 @@ function createBaseChannelUpdatedEvent(): ChannelUpdatedEvent {
 }
 
 export const ChannelUpdatedEvent = {
-  encode(message: ChannelUpdatedEvent, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(
+    message: ChannelUpdatedEvent,
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
     if (message.clan_id !== "") {
       writer.uint32(10).string(message.clan_id);
     }
@@ -8076,7 +9207,10 @@ export const ChannelUpdatedEvent = {
       writer.uint32(50).string(message.channel_label);
     }
     if (message.channel_type !== undefined) {
-      Int32Value.encode({ value: message.channel_type! }, writer.uint32(58).fork()).ldelim();
+      Int32Value.encode(
+        { value: message.channel_type! },
+        writer.uint32(58).fork()
+      ).ldelim();
     }
     if (message.status !== 0) {
       writer.uint32(64).int32(message.status);
@@ -8106,7 +9240,8 @@ export const ChannelUpdatedEvent = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): ChannelUpdatedEvent {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    const reader =
+      input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseChannelUpdatedEvent();
     while (reader.pos < end) {
@@ -8159,7 +9294,10 @@ export const ChannelUpdatedEvent = {
             break;
           }
 
-          message.channel_type = Int32Value.decode(reader, reader.uint32()).value;
+          message.channel_type = Int32Value.decode(
+            reader,
+            reader.uint32()
+          ).value;
           continue;
         case 8:
           if (tag !== 64) {
@@ -8229,20 +9367,40 @@ export const ChannelUpdatedEvent = {
   fromJSON(object: any): ChannelUpdatedEvent {
     return {
       clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
-      category_id: isSet(object.category_id) ? globalThis.String(object.category_id) : "",
-      creator_id: isSet(object.creator_id) ? globalThis.String(object.creator_id) : "",
-      parrent_id: isSet(object.parrent_id) ? globalThis.String(object.parrent_id) : "",
-      channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "",
-      channel_label: isSet(object.channel_label) ? globalThis.String(object.channel_label) : "",
-      channel_type: isSet(object.channel_type) ? Number(object.channel_type) : undefined,
+      category_id: isSet(object.category_id)
+        ? globalThis.String(object.category_id)
+        : "",
+      creator_id: isSet(object.creator_id)
+        ? globalThis.String(object.creator_id)
+        : "",
+      parrent_id: isSet(object.parrent_id)
+        ? globalThis.String(object.parrent_id)
+        : "",
+      channel_id: isSet(object.channel_id)
+        ? globalThis.String(object.channel_id)
+        : "",
+      channel_label: isSet(object.channel_label)
+        ? globalThis.String(object.channel_label)
+        : "",
+      channel_type: isSet(object.channel_type)
+        ? Number(object.channel_type)
+        : undefined,
       status: isSet(object.status) ? globalThis.Number(object.status) : 0,
-      meeting_code: isSet(object.meeting_code) ? globalThis.String(object.meeting_code) : "",
-      is_error: isSet(object.is_error) ? globalThis.Boolean(object.is_error) : false,
-      channel_private: isSet(object.channel_private) ? globalThis.Boolean(object.channel_private) : false,
+      meeting_code: isSet(object.meeting_code)
+        ? globalThis.String(object.meeting_code)
+        : "",
+      is_error: isSet(object.is_error)
+        ? globalThis.Boolean(object.is_error)
+        : false,
+      channel_private: isSet(object.channel_private)
+        ? globalThis.Boolean(object.channel_private)
+        : false,
       app_url: isSet(object.app_url) ? globalThis.String(object.app_url) : "",
       e2ee: isSet(object.e2ee) ? globalThis.Number(object.e2ee) : 0,
       topic: isSet(object.topic) ? globalThis.String(object.topic) : "",
-      age_restricted: isSet(object.age_restricted) ? globalThis.Number(object.age_restricted) : 0,
+      age_restricted: isSet(object.age_restricted)
+        ? globalThis.Number(object.age_restricted)
+        : 0,
     };
   },
 
@@ -8296,10 +9454,14 @@ export const ChannelUpdatedEvent = {
     return obj;
   },
 
-  create<I extends Exact<DeepPartial<ChannelUpdatedEvent>, I>>(base?: I): ChannelUpdatedEvent {
+  create<I extends Exact<DeepPartial<ChannelUpdatedEvent>, I>>(
+    base?: I
+  ): ChannelUpdatedEvent {
     return ChannelUpdatedEvent.fromPartial(base ?? ({} as any));
   },
-  fromPartial<I extends Exact<DeepPartial<ChannelUpdatedEvent>, I>>(object: I): ChannelUpdatedEvent {
+  fromPartial<I extends Exact<DeepPartial<ChannelUpdatedEvent>, I>>(
+    object: I
+  ): ChannelUpdatedEvent {
     const message = createBaseChannelUpdatedEvent();
     message.clan_id = object.clan_id ?? "";
     message.category_id = object.category_id ?? "";
@@ -8325,7 +9487,10 @@ function createBaseStatusUnfollow(): StatusUnfollow {
 }
 
 export const StatusUnfollow = {
-  encode(message: StatusUnfollow, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(
+    message: StatusUnfollow,
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
     for (const v of message.user_ids) {
       writer.uint32(10).string(v!);
     }
@@ -8333,7 +9498,8 @@ export const StatusUnfollow = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): StatusUnfollow {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    const reader =
+      input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseStatusUnfollow();
     while (reader.pos < end) {
@@ -8357,7 +9523,9 @@ export const StatusUnfollow = {
 
   fromJSON(object: any): StatusUnfollow {
     return {
-      user_ids: globalThis.Array.isArray(object?.user_ids) ? object.user_ids.map((e: any) => globalThis.String(e)) : [],
+      user_ids: globalThis.Array.isArray(object?.user_ids)
+        ? object.user_ids.map((e: any) => globalThis.String(e))
+        : [],
     };
   },
 
@@ -8369,10 +9537,14 @@ export const StatusUnfollow = {
     return obj;
   },
 
-  create<I extends Exact<DeepPartial<StatusUnfollow>, I>>(base?: I): StatusUnfollow {
+  create<I extends Exact<DeepPartial<StatusUnfollow>, I>>(
+    base?: I
+  ): StatusUnfollow {
     return StatusUnfollow.fromPartial(base ?? ({} as any));
   },
-  fromPartial<I extends Exact<DeepPartial<StatusUnfollow>, I>>(object: I): StatusUnfollow {
+  fromPartial<I extends Exact<DeepPartial<StatusUnfollow>, I>>(
+    object: I
+  ): StatusUnfollow {
     const message = createBaseStatusUnfollow();
     message.user_ids = object.user_ids?.map((e) => e) || [];
     return message;
@@ -8384,15 +9556,22 @@ function createBaseStatusUpdate(): StatusUpdate {
 }
 
 export const StatusUpdate = {
-  encode(message: StatusUpdate, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(
+    message: StatusUpdate,
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
     if (message.status !== undefined) {
-      StringValue.encode({ value: message.status! }, writer.uint32(10).fork()).ldelim();
+      StringValue.encode(
+        { value: message.status! },
+        writer.uint32(10).fork()
+      ).ldelim();
     }
     return writer;
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): StatusUpdate {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    const reader =
+      input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseStatusUpdate();
     while (reader.pos < end) {
@@ -8426,10 +9605,14 @@ export const StatusUpdate = {
     return obj;
   },
 
-  create<I extends Exact<DeepPartial<StatusUpdate>, I>>(base?: I): StatusUpdate {
+  create<I extends Exact<DeepPartial<StatusUpdate>, I>>(
+    base?: I
+  ): StatusUpdate {
     return StatusUpdate.fromPartial(base ?? ({} as any));
   },
-  fromPartial<I extends Exact<DeepPartial<StatusUpdate>, I>>(object: I): StatusUpdate {
+  fromPartial<I extends Exact<DeepPartial<StatusUpdate>, I>>(
+    object: I
+  ): StatusUpdate {
     const message = createBaseStatusUpdate();
     message.status = object.status ?? undefined;
     return message;
@@ -8441,7 +9624,10 @@ function createBaseStream(): Stream {
 }
 
 export const Stream = {
-  encode(message: Stream, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(
+    message: Stream,
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
     if (message.mode !== 0) {
       writer.uint32(8).int32(message.mode);
     }
@@ -8458,7 +9644,8 @@ export const Stream = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): Stream {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    const reader =
+      input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseStream();
     while (reader.pos < end) {
@@ -8504,7 +9691,9 @@ export const Stream = {
   fromJSON(object: any): Stream {
     return {
       mode: isSet(object.mode) ? globalThis.Number(object.mode) : 0,
-      channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "",
+      channel_id: isSet(object.channel_id)
+        ? globalThis.String(object.channel_id)
+        : "",
       clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
       label: isSet(object.label) ? globalThis.String(object.label) : "",
     };
@@ -8545,7 +9734,10 @@ function createBaseStreamData(): StreamData {
 }
 
 export const StreamData = {
-  encode(message: StreamData, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(
+    message: StreamData,
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
     if (message.stream !== undefined) {
       Stream.encode(message.stream, writer.uint32(10).fork()).ldelim();
     }
@@ -8562,7 +9754,8 @@ export const StreamData = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): StreamData {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    const reader =
+      input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseStreamData();
     while (reader.pos < end) {
@@ -8608,9 +9801,13 @@ export const StreamData = {
   fromJSON(object: any): StreamData {
     return {
       stream: isSet(object.stream) ? Stream.fromJSON(object.stream) : undefined,
-      sender: isSet(object.sender) ? UserPresence.fromJSON(object.sender) : undefined,
+      sender: isSet(object.sender)
+        ? UserPresence.fromJSON(object.sender)
+        : undefined,
       data: isSet(object.data) ? globalThis.String(object.data) : "",
-      reliable: isSet(object.reliable) ? globalThis.Boolean(object.reliable) : false,
+      reliable: isSet(object.reliable)
+        ? globalThis.Boolean(object.reliable)
+        : false,
     };
   },
 
@@ -8634,14 +9831,18 @@ export const StreamData = {
   create<I extends Exact<DeepPartial<StreamData>, I>>(base?: I): StreamData {
     return StreamData.fromPartial(base ?? ({} as any));
   },
-  fromPartial<I extends Exact<DeepPartial<StreamData>, I>>(object: I): StreamData {
+  fromPartial<I extends Exact<DeepPartial<StreamData>, I>>(
+    object: I
+  ): StreamData {
     const message = createBaseStreamData();
-    message.stream = (object.stream !== undefined && object.stream !== null)
-      ? Stream.fromPartial(object.stream)
-      : undefined;
-    message.sender = (object.sender !== undefined && object.sender !== null)
-      ? UserPresence.fromPartial(object.sender)
-      : undefined;
+    message.stream =
+      object.stream !== undefined && object.stream !== null
+        ? Stream.fromPartial(object.stream)
+        : undefined;
+    message.sender =
+      object.sender !== undefined && object.sender !== null
+        ? UserPresence.fromPartial(object.sender)
+        : undefined;
     message.data = object.data ?? "";
     message.reliable = object.reliable ?? false;
     return message;
@@ -8653,7 +9854,10 @@ function createBaseStreamPresenceEvent(): StreamPresenceEvent {
 }
 
 export const StreamPresenceEvent = {
-  encode(message: StreamPresenceEvent, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(
+    message: StreamPresenceEvent,
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
     if (message.stream !== undefined) {
       Stream.encode(message.stream, writer.uint32(10).fork()).ldelim();
     }
@@ -8667,7 +9871,8 @@ export const StreamPresenceEvent = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): StreamPresenceEvent {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    const reader =
+      input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseStreamPresenceEvent();
     while (reader.pos < end) {
@@ -8706,8 +9911,12 @@ export const StreamPresenceEvent = {
   fromJSON(object: any): StreamPresenceEvent {
     return {
       stream: isSet(object.stream) ? Stream.fromJSON(object.stream) : undefined,
-      joins: globalThis.Array.isArray(object?.joins) ? object.joins.map((e: any) => UserPresence.fromJSON(e)) : [],
-      leaves: globalThis.Array.isArray(object?.leaves) ? object.leaves.map((e: any) => UserPresence.fromJSON(e)) : [],
+      joins: globalThis.Array.isArray(object?.joins)
+        ? object.joins.map((e: any) => UserPresence.fromJSON(e))
+        : [],
+      leaves: globalThis.Array.isArray(object?.leaves)
+        ? object.leaves.map((e: any) => UserPresence.fromJSON(e))
+        : [],
     };
   },
 
@@ -8725,16 +9934,22 @@ export const StreamPresenceEvent = {
     return obj;
   },
 
-  create<I extends Exact<DeepPartial<StreamPresenceEvent>, I>>(base?: I): StreamPresenceEvent {
+  create<I extends Exact<DeepPartial<StreamPresenceEvent>, I>>(
+    base?: I
+  ): StreamPresenceEvent {
     return StreamPresenceEvent.fromPartial(base ?? ({} as any));
   },
-  fromPartial<I extends Exact<DeepPartial<StreamPresenceEvent>, I>>(object: I): StreamPresenceEvent {
+  fromPartial<I extends Exact<DeepPartial<StreamPresenceEvent>, I>>(
+    object: I
+  ): StreamPresenceEvent {
     const message = createBaseStreamPresenceEvent();
-    message.stream = (object.stream !== undefined && object.stream !== null)
-      ? Stream.fromPartial(object.stream)
-      : undefined;
+    message.stream =
+      object.stream !== undefined && object.stream !== null
+        ? Stream.fromPartial(object.stream)
+        : undefined;
     message.joins = object.joins?.map((e) => UserPresence.fromPartial(e)) || [];
-    message.leaves = object.leaves?.map((e) => UserPresence.fromPartial(e)) || [];
+    message.leaves =
+      object.leaves?.map((e) => UserPresence.fromPartial(e)) || [];
     return message;
   },
 };
@@ -8752,7 +9967,10 @@ function createBaseUserPresence(): UserPresence {
 }
 
 export const UserPresence = {
-  encode(message: UserPresence, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(
+    message: UserPresence,
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
     if (message.user_id !== "") {
       writer.uint32(10).string(message.user_id);
     }
@@ -8766,7 +9984,10 @@ export const UserPresence = {
       writer.uint32(32).bool(message.persistence);
     }
     if (message.status !== undefined) {
-      StringValue.encode({ value: message.status! }, writer.uint32(42).fork()).ldelim();
+      StringValue.encode(
+        { value: message.status! },
+        writer.uint32(42).fork()
+      ).ldelim();
     }
     if (message.is_mobile !== false) {
       writer.uint32(48).bool(message.is_mobile);
@@ -8778,7 +9999,8 @@ export const UserPresence = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): UserPresence {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    const reader =
+      input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseUserPresence();
     while (reader.pos < end) {
@@ -8845,12 +10067,22 @@ export const UserPresence = {
   fromJSON(object: any): UserPresence {
     return {
       user_id: isSet(object.user_id) ? globalThis.String(object.user_id) : "",
-      session_id: isSet(object.session_id) ? globalThis.String(object.session_id) : "",
-      username: isSet(object.username) ? globalThis.String(object.username) : "",
-      persistence: isSet(object.persistence) ? globalThis.Boolean(object.persistence) : false,
+      session_id: isSet(object.session_id)
+        ? globalThis.String(object.session_id)
+        : "",
+      username: isSet(object.username)
+        ? globalThis.String(object.username)
+        : "",
+      persistence: isSet(object.persistence)
+        ? globalThis.Boolean(object.persistence)
+        : false,
       status: isSet(object.status) ? String(object.status) : undefined,
-      is_mobile: isSet(object.is_mobile) ? globalThis.Boolean(object.is_mobile) : false,
-      metadata: isSet(object.metadata) ? globalThis.String(object.metadata) : "",
+      is_mobile: isSet(object.is_mobile)
+        ? globalThis.Boolean(object.is_mobile)
+        : false,
+      metadata: isSet(object.metadata)
+        ? globalThis.String(object.metadata)
+        : "",
     };
   },
 
@@ -8880,10 +10112,14 @@ export const UserPresence = {
     return obj;
   },
 
-  create<I extends Exact<DeepPartial<UserPresence>, I>>(base?: I): UserPresence {
+  create<I extends Exact<DeepPartial<UserPresence>, I>>(
+    base?: I
+  ): UserPresence {
     return UserPresence.fromPartial(base ?? ({} as any));
   },
-  fromPartial<I extends Exact<DeepPartial<UserPresence>, I>>(object: I): UserPresence {
+  fromPartial<I extends Exact<DeepPartial<UserPresence>, I>>(
+    object: I
+  ): UserPresence {
     const message = createBaseUserPresence();
     message.user_id = object.user_id ?? "";
     message.session_id = object.session_id ?? "";
@@ -8897,11 +10133,21 @@ export const UserPresence = {
 };
 
 function createBaseCustomStatusEvent(): CustomStatusEvent {
-  return { clan_id: "", user_id: "", username: "", status: "" };
+  return {
+    clan_id: "",
+    user_id: "",
+    username: "",
+    status: "",
+    time_reset: 0,
+    no_clear: false,
+  };
 }
 
 export const CustomStatusEvent = {
-  encode(message: CustomStatusEvent, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(
+    message: CustomStatusEvent,
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
     if (message.clan_id !== "") {
       writer.uint32(10).string(message.clan_id);
     }
@@ -8914,11 +10160,18 @@ export const CustomStatusEvent = {
     if (message.status !== "") {
       writer.uint32(34).string(message.status);
     }
+    if (message.time_reset !== 0) {
+      writer.uint32(40).int32(message.time_reset);
+    }
+    if (message.no_clear !== false) {
+      writer.uint32(48).bool(message.no_clear);
+    }
     return writer;
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): CustomStatusEvent {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    const reader =
+      input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseCustomStatusEvent();
     while (reader.pos < end) {
@@ -8952,6 +10205,20 @@ export const CustomStatusEvent = {
 
           message.status = reader.string();
           continue;
+        case 5:
+          if (tag !== 40) {
+            break;
+          }
+
+          message.time_reset = reader.int32();
+          continue;
+        case 6:
+          if (tag !== 48) {
+            break;
+          }
+
+          message.no_clear = reader.bool();
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -8965,8 +10232,16 @@ export const CustomStatusEvent = {
     return {
       clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
       user_id: isSet(object.user_id) ? globalThis.String(object.user_id) : "",
-      username: isSet(object.username) ? globalThis.String(object.username) : "",
+      username: isSet(object.username)
+        ? globalThis.String(object.username)
+        : "",
       status: isSet(object.status) ? globalThis.String(object.status) : "",
+      time_reset: isSet(object.time_reset)
+        ? globalThis.Number(object.time_reset)
+        : 0,
+      no_clear: isSet(object.no_clear)
+        ? globalThis.Boolean(object.no_clear)
+        : false,
     };
   },
 
@@ -8984,18 +10259,30 @@ export const CustomStatusEvent = {
     if (message.status !== "") {
       obj.status = message.status;
     }
+    if (message.time_reset !== 0) {
+      obj.time_reset = Math.round(message.time_reset);
+    }
+    if (message.no_clear !== false) {
+      obj.no_clear = message.no_clear;
+    }
     return obj;
   },
 
-  create<I extends Exact<DeepPartial<CustomStatusEvent>, I>>(base?: I): CustomStatusEvent {
+  create<I extends Exact<DeepPartial<CustomStatusEvent>, I>>(
+    base?: I
+  ): CustomStatusEvent {
     return CustomStatusEvent.fromPartial(base ?? ({} as any));
   },
-  fromPartial<I extends Exact<DeepPartial<CustomStatusEvent>, I>>(object: I): CustomStatusEvent {
+  fromPartial<I extends Exact<DeepPartial<CustomStatusEvent>, I>>(
+    object: I
+  ): CustomStatusEvent {
     const message = createBaseCustomStatusEvent();
     message.clan_id = object.clan_id ?? "";
     message.user_id = object.user_id ?? "";
     message.username = object.username ?? "";
     message.status = object.status ?? "";
+    message.time_reset = object.time_reset ?? 0;
+    message.no_clear = object.no_clear ?? false;
     return message;
   },
 };
@@ -9013,9 +10300,15 @@ function createBaseUserChannelAdded(): UserChannelAdded {
 }
 
 export const UserChannelAdded = {
-  encode(message: UserChannelAdded, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(
+    message: UserChannelAdded,
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
     if (message.channel_desc !== undefined) {
-      ChannelDescription1.encode(message.channel_desc, writer.uint32(10).fork()).ldelim();
+      ChannelDescription1.encode(
+        message.channel_desc,
+        writer.uint32(10).fork()
+      ).ldelim();
     }
     for (const v of message.users) {
       UserProfileRedis.encode(v!, writer.uint32(18).fork()).ldelim();
@@ -9027,7 +10320,10 @@ export const UserChannelAdded = {
       writer.uint32(34).string(message.clan_id);
     }
     if (message.caller !== undefined) {
-      UserProfileRedis.encode(message.caller, writer.uint32(42).fork()).ldelim();
+      UserProfileRedis.encode(
+        message.caller,
+        writer.uint32(42).fork()
+      ).ldelim();
     }
     if (message.create_time_second !== 0) {
       writer.uint32(48).uint32(message.create_time_second);
@@ -9039,7 +10335,8 @@ export const UserChannelAdded = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): UserChannelAdded {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    const reader =
+      input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseUserChannelAdded();
     while (reader.pos < end) {
@@ -9050,7 +10347,10 @@ export const UserChannelAdded = {
             break;
           }
 
-          message.channel_desc = ChannelDescription1.decode(reader, reader.uint32());
+          message.channel_desc = ChannelDescription1.decode(
+            reader,
+            reader.uint32()
+          );
           continue;
         case 2:
           if (tag !== 18) {
@@ -9105,12 +10405,20 @@ export const UserChannelAdded = {
 
   fromJSON(object: any): UserChannelAdded {
     return {
-      channel_desc: isSet(object.channel_desc) ? ChannelDescription1.fromJSON(object.channel_desc) : undefined,
-      users: globalThis.Array.isArray(object?.users) ? object.users.map((e: any) => UserProfileRedis.fromJSON(e)) : [],
+      channel_desc: isSet(object.channel_desc)
+        ? ChannelDescription1.fromJSON(object.channel_desc)
+        : undefined,
+      users: globalThis.Array.isArray(object?.users)
+        ? object.users.map((e: any) => UserProfileRedis.fromJSON(e))
+        : [],
       status: isSet(object.status) ? globalThis.String(object.status) : "",
       clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
-      caller: isSet(object.caller) ? UserProfileRedis.fromJSON(object.caller) : undefined,
-      create_time_second: isSet(object.create_time_second) ? globalThis.Number(object.create_time_second) : 0,
+      caller: isSet(object.caller)
+        ? UserProfileRedis.fromJSON(object.caller)
+        : undefined,
+      create_time_second: isSet(object.create_time_second)
+        ? globalThis.Number(object.create_time_second)
+        : 0,
       active: isSet(object.active) ? globalThis.Number(object.active) : 0,
     };
   },
@@ -9141,20 +10449,27 @@ export const UserChannelAdded = {
     return obj;
   },
 
-  create<I extends Exact<DeepPartial<UserChannelAdded>, I>>(base?: I): UserChannelAdded {
+  create<I extends Exact<DeepPartial<UserChannelAdded>, I>>(
+    base?: I
+  ): UserChannelAdded {
     return UserChannelAdded.fromPartial(base ?? ({} as any));
   },
-  fromPartial<I extends Exact<DeepPartial<UserChannelAdded>, I>>(object: I): UserChannelAdded {
+  fromPartial<I extends Exact<DeepPartial<UserChannelAdded>, I>>(
+    object: I
+  ): UserChannelAdded {
     const message = createBaseUserChannelAdded();
-    message.channel_desc = (object.channel_desc !== undefined && object.channel_desc !== null)
-      ? ChannelDescription1.fromPartial(object.channel_desc)
-      : undefined;
-    message.users = object.users?.map((e) => UserProfileRedis.fromPartial(e)) || [];
+    message.channel_desc =
+      object.channel_desc !== undefined && object.channel_desc !== null
+        ? ChannelDescription1.fromPartial(object.channel_desc)
+        : undefined;
+    message.users =
+      object.users?.map((e) => UserProfileRedis.fromPartial(e)) || [];
     message.status = object.status ?? "";
     message.clan_id = object.clan_id ?? "";
-    message.caller = (object.caller !== undefined && object.caller !== null)
-      ? UserProfileRedis.fromPartial(object.caller)
-      : undefined;
+    message.caller =
+      object.caller !== undefined && object.caller !== null
+        ? UserProfileRedis.fromPartial(object.caller)
+        : undefined;
     message.create_time_second = object.create_time_second ?? 0;
     message.active = object.active ?? 0;
     return message;
@@ -9166,7 +10481,10 @@ function createBaseUserChannelRemoved(): UserChannelRemoved {
 }
 
 export const UserChannelRemoved = {
-  encode(message: UserChannelRemoved, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(
+    message: UserChannelRemoved,
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
     if (message.channel_id !== "") {
       writer.uint32(10).string(message.channel_id);
     }
@@ -9180,7 +10498,8 @@ export const UserChannelRemoved = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): UserChannelRemoved {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    const reader =
+      input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseUserChannelRemoved();
     while (reader.pos < end) {
@@ -9218,9 +10537,15 @@ export const UserChannelRemoved = {
 
   fromJSON(object: any): UserChannelRemoved {
     return {
-      channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "",
-      user_ids: globalThis.Array.isArray(object?.user_ids) ? object.user_ids.map((e: any) => globalThis.String(e)) : [],
-      channel_type: isSet(object.channel_type) ? globalThis.Number(object.channel_type) : 0,
+      channel_id: isSet(object.channel_id)
+        ? globalThis.String(object.channel_id)
+        : "",
+      user_ids: globalThis.Array.isArray(object?.user_ids)
+        ? object.user_ids.map((e: any) => globalThis.String(e))
+        : [],
+      channel_type: isSet(object.channel_type)
+        ? globalThis.Number(object.channel_type)
+        : 0,
     };
   },
 
@@ -9238,10 +10563,14 @@ export const UserChannelRemoved = {
     return obj;
   },
 
-  create<I extends Exact<DeepPartial<UserChannelRemoved>, I>>(base?: I): UserChannelRemoved {
+  create<I extends Exact<DeepPartial<UserChannelRemoved>, I>>(
+    base?: I
+  ): UserChannelRemoved {
     return UserChannelRemoved.fromPartial(base ?? ({} as any));
   },
-  fromPartial<I extends Exact<DeepPartial<UserChannelRemoved>, I>>(object: I): UserChannelRemoved {
+  fromPartial<I extends Exact<DeepPartial<UserChannelRemoved>, I>>(
+    object: I
+  ): UserChannelRemoved {
     const message = createBaseUserChannelRemoved();
     message.channel_id = object.channel_id ?? "";
     message.user_ids = object.user_ids?.map((e) => e) || [];
@@ -9255,7 +10584,10 @@ function createBaseUserClanRemoved(): UserClanRemoved {
 }
 
 export const UserClanRemoved = {
-  encode(message: UserClanRemoved, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(
+    message: UserClanRemoved,
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
     if (message.clan_id !== "") {
       writer.uint32(10).string(message.clan_id);
     }
@@ -9266,7 +10598,8 @@ export const UserClanRemoved = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): UserClanRemoved {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    const reader =
+      input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseUserClanRemoved();
     while (reader.pos < end) {
@@ -9298,7 +10631,9 @@ export const UserClanRemoved = {
   fromJSON(object: any): UserClanRemoved {
     return {
       clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
-      user_ids: globalThis.Array.isArray(object?.user_ids) ? object.user_ids.map((e: any) => globalThis.String(e)) : [],
+      user_ids: globalThis.Array.isArray(object?.user_ids)
+        ? object.user_ids.map((e: any) => globalThis.String(e))
+        : [],
     };
   },
 
@@ -9313,10 +10648,14 @@ export const UserClanRemoved = {
     return obj;
   },
 
-  create<I extends Exact<DeepPartial<UserClanRemoved>, I>>(base?: I): UserClanRemoved {
+  create<I extends Exact<DeepPartial<UserClanRemoved>, I>>(
+    base?: I
+  ): UserClanRemoved {
     return UserClanRemoved.fromPartial(base ?? ({} as any));
   },
-  fromPartial<I extends Exact<DeepPartial<UserClanRemoved>, I>>(object: I): UserClanRemoved {
+  fromPartial<I extends Exact<DeepPartial<UserClanRemoved>, I>>(
+    object: I
+  ): UserClanRemoved {
     const message = createBaseUserClanRemoved();
     message.clan_id = object.clan_id ?? "";
     message.user_ids = object.user_ids?.map((e) => e) || [];
@@ -9329,7 +10668,10 @@ function createBaseClanUpdatedEvent(): ClanUpdatedEvent {
 }
 
 export const ClanUpdatedEvent = {
-  encode(message: ClanUpdatedEvent, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(
+    message: ClanUpdatedEvent,
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
     if (message.clan_id !== "") {
       writer.uint32(10).string(message.clan_id);
     }
@@ -9343,7 +10685,8 @@ export const ClanUpdatedEvent = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): ClanUpdatedEvent {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    const reader =
+      input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseClanUpdatedEvent();
     while (reader.pos < end) {
@@ -9382,8 +10725,12 @@ export const ClanUpdatedEvent = {
   fromJSON(object: any): ClanUpdatedEvent {
     return {
       clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
-      clan_name: isSet(object.clan_name) ? globalThis.String(object.clan_name) : "",
-      clan_logo: isSet(object.clan_logo) ? globalThis.String(object.clan_logo) : "",
+      clan_name: isSet(object.clan_name)
+        ? globalThis.String(object.clan_name)
+        : "",
+      clan_logo: isSet(object.clan_logo)
+        ? globalThis.String(object.clan_logo)
+        : "",
     };
   },
 
@@ -9401,10 +10748,14 @@ export const ClanUpdatedEvent = {
     return obj;
   },
 
-  create<I extends Exact<DeepPartial<ClanUpdatedEvent>, I>>(base?: I): ClanUpdatedEvent {
+  create<I extends Exact<DeepPartial<ClanUpdatedEvent>, I>>(
+    base?: I
+  ): ClanUpdatedEvent {
     return ClanUpdatedEvent.fromPartial(base ?? ({} as any));
   },
-  fromPartial<I extends Exact<DeepPartial<ClanUpdatedEvent>, I>>(object: I): ClanUpdatedEvent {
+  fromPartial<I extends Exact<DeepPartial<ClanUpdatedEvent>, I>>(
+    object: I
+  ): ClanUpdatedEvent {
     const message = createBaseClanUpdatedEvent();
     message.clan_id = object.clan_id ?? "";
     message.clan_name = object.clan_name ?? "";
@@ -9418,7 +10769,10 @@ function createBaseClanProfileUpdatedEvent(): ClanProfileUpdatedEvent {
 }
 
 export const ClanProfileUpdatedEvent = {
-  encode(message: ClanProfileUpdatedEvent, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(
+    message: ClanProfileUpdatedEvent,
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
     if (message.user_id !== "") {
       writer.uint32(10).string(message.user_id);
     }
@@ -9434,8 +10788,12 @@ export const ClanProfileUpdatedEvent = {
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): ClanProfileUpdatedEvent {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+  decode(
+    input: _m0.Reader | Uint8Array,
+    length?: number
+  ): ClanProfileUpdatedEvent {
+    const reader =
+      input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseClanProfileUpdatedEvent();
     while (reader.pos < end) {
@@ -9481,8 +10839,12 @@ export const ClanProfileUpdatedEvent = {
   fromJSON(object: any): ClanProfileUpdatedEvent {
     return {
       user_id: isSet(object.user_id) ? globalThis.String(object.user_id) : "",
-      clan_nick: isSet(object.clan_nick) ? globalThis.String(object.clan_nick) : "",
-      clan_avatar: isSet(object.clan_avatar) ? globalThis.String(object.clan_avatar) : "",
+      clan_nick: isSet(object.clan_nick)
+        ? globalThis.String(object.clan_nick)
+        : "",
+      clan_avatar: isSet(object.clan_avatar)
+        ? globalThis.String(object.clan_avatar)
+        : "",
       clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
     };
   },
@@ -9504,10 +10866,14 @@ export const ClanProfileUpdatedEvent = {
     return obj;
   },
 
-  create<I extends Exact<DeepPartial<ClanProfileUpdatedEvent>, I>>(base?: I): ClanProfileUpdatedEvent {
+  create<I extends Exact<DeepPartial<ClanProfileUpdatedEvent>, I>>(
+    base?: I
+  ): ClanProfileUpdatedEvent {
     return ClanProfileUpdatedEvent.fromPartial(base ?? ({} as any));
   },
-  fromPartial<I extends Exact<DeepPartial<ClanProfileUpdatedEvent>, I>>(object: I): ClanProfileUpdatedEvent {
+  fromPartial<I extends Exact<DeepPartial<ClanProfileUpdatedEvent>, I>>(
+    object: I
+  ): ClanProfileUpdatedEvent {
     const message = createBaseClanProfileUpdatedEvent();
     message.user_id = object.user_id ?? "";
     message.clan_nick = object.clan_nick ?? "";
@@ -9530,7 +10896,10 @@ function createBaseUserProfileUpdatedEvent(): UserProfileUpdatedEvent {
 }
 
 export const UserProfileUpdatedEvent = {
-  encode(message: UserProfileUpdatedEvent, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(
+    message: UserProfileUpdatedEvent,
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
     if (message.user_id !== "") {
       writer.uint32(10).string(message.user_id);
     }
@@ -9555,8 +10924,12 @@ export const UserProfileUpdatedEvent = {
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): UserProfileUpdatedEvent {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+  decode(
+    input: _m0.Reader | Uint8Array,
+    length?: number
+  ): UserProfileUpdatedEvent {
+    const reader =
+      input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseUserProfileUpdatedEvent();
     while (reader.pos < end) {
@@ -9623,12 +10996,20 @@ export const UserProfileUpdatedEvent = {
   fromJSON(object: any): UserProfileUpdatedEvent {
     return {
       user_id: isSet(object.user_id) ? globalThis.String(object.user_id) : "",
-      display_name: isSet(object.display_name) ? globalThis.String(object.display_name) : "",
+      display_name: isSet(object.display_name)
+        ? globalThis.String(object.display_name)
+        : "",
       avatar: isSet(object.avatar) ? globalThis.String(object.avatar) : "",
-      about_me: isSet(object.about_me) ? globalThis.String(object.about_me) : "",
-      channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "",
+      about_me: isSet(object.about_me)
+        ? globalThis.String(object.about_me)
+        : "",
+      channel_id: isSet(object.channel_id)
+        ? globalThis.String(object.channel_id)
+        : "",
       clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
-      encrypt_private_key: isSet(object.encrypt_private_key) ? globalThis.String(object.encrypt_private_key) : "",
+      encrypt_private_key: isSet(object.encrypt_private_key)
+        ? globalThis.String(object.encrypt_private_key)
+        : "",
     };
   },
 
@@ -9658,10 +11039,14 @@ export const UserProfileUpdatedEvent = {
     return obj;
   },
 
-  create<I extends Exact<DeepPartial<UserProfileUpdatedEvent>, I>>(base?: I): UserProfileUpdatedEvent {
+  create<I extends Exact<DeepPartial<UserProfileUpdatedEvent>, I>>(
+    base?: I
+  ): UserProfileUpdatedEvent {
     return UserProfileUpdatedEvent.fromPartial(base ?? ({} as any));
   },
-  fromPartial<I extends Exact<DeepPartial<UserProfileUpdatedEvent>, I>>(object: I): UserProfileUpdatedEvent {
+  fromPartial<I extends Exact<DeepPartial<UserProfileUpdatedEvent>, I>>(
+    object: I
+  ): UserProfileUpdatedEvent {
     const message = createBaseUserProfileUpdatedEvent();
     message.user_id = object.user_id ?? "";
     message.display_name = object.display_name ?? "";
@@ -9691,7 +11076,10 @@ function createBaseUserProfileRedis(): UserProfileRedis {
 }
 
 export const UserProfileRedis = {
-  encode(message: UserProfileRedis, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(
+    message: UserProfileRedis,
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
     if (message.user_id !== "") {
       writer.uint32(10).string(message.user_id);
     }
@@ -9729,7 +11117,8 @@ export const UserProfileRedis = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): UserProfileRedis {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    const reader =
+      input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseUserProfileRedis();
     while (reader.pos < end) {
@@ -9824,18 +11213,32 @@ export const UserProfileRedis = {
   fromJSON(object: any): UserProfileRedis {
     return {
       user_id: isSet(object.user_id) ? globalThis.String(object.user_id) : "",
-      username: isSet(object.username) ? globalThis.String(object.username) : "",
+      username: isSet(object.username)
+        ? globalThis.String(object.username)
+        : "",
       avatar: isSet(object.avatar) ? globalThis.String(object.avatar) : "",
-      display_name: isSet(object.display_name) ? globalThis.String(object.display_name) : "",
-      about_me: isSet(object.about_me) ? globalThis.String(object.about_me) : "",
-      custom_status: isSet(object.custom_status) ? globalThis.String(object.custom_status) : "",
-      create_time_second: isSet(object.create_time_second) ? globalThis.Number(object.create_time_second) : 0,
+      display_name: isSet(object.display_name)
+        ? globalThis.String(object.display_name)
+        : "",
+      about_me: isSet(object.about_me)
+        ? globalThis.String(object.about_me)
+        : "",
+      custom_status: isSet(object.custom_status)
+        ? globalThis.String(object.custom_status)
+        : "",
+      create_time_second: isSet(object.create_time_second)
+        ? globalThis.Number(object.create_time_second)
+        : 0,
       fcm_tokens: globalThis.Array.isArray(object?.fcm_tokens)
         ? object.fcm_tokens.map((e: any) => FCMTokens.fromJSON(e))
         : [],
       online: isSet(object.online) ? globalThis.Boolean(object.online) : false,
-      metadata: isSet(object.metadata) ? globalThis.String(object.metadata) : "",
-      is_disabled: isSet(object.is_disabled) ? globalThis.Boolean(object.is_disabled) : false,
+      metadata: isSet(object.metadata)
+        ? globalThis.String(object.metadata)
+        : "",
+      is_disabled: isSet(object.is_disabled)
+        ? globalThis.Boolean(object.is_disabled)
+        : false,
     };
   },
 
@@ -9877,10 +11280,14 @@ export const UserProfileRedis = {
     return obj;
   },
 
-  create<I extends Exact<DeepPartial<UserProfileRedis>, I>>(base?: I): UserProfileRedis {
+  create<I extends Exact<DeepPartial<UserProfileRedis>, I>>(
+    base?: I
+  ): UserProfileRedis {
     return UserProfileRedis.fromPartial(base ?? ({} as any));
   },
-  fromPartial<I extends Exact<DeepPartial<UserProfileRedis>, I>>(object: I): UserProfileRedis {
+  fromPartial<I extends Exact<DeepPartial<UserProfileRedis>, I>>(
+    object: I
+  ): UserProfileRedis {
     const message = createBaseUserProfileRedis();
     message.user_id = object.user_id ?? "";
     message.username = object.username ?? "";
@@ -9889,7 +11296,8 @@ export const UserProfileRedis = {
     message.about_me = object.about_me ?? "";
     message.custom_status = object.custom_status ?? "";
     message.create_time_second = object.create_time_second ?? 0;
-    message.fcm_tokens = object.fcm_tokens?.map((e) => FCMTokens.fromPartial(e)) || [];
+    message.fcm_tokens =
+      object.fcm_tokens?.map((e) => FCMTokens.fromPartial(e)) || [];
     message.online = object.online ?? false;
     message.metadata = object.metadata ?? "";
     message.is_disabled = object.is_disabled ?? false;
@@ -9902,7 +11310,10 @@ function createBaseFCMTokens(): FCMTokens {
 }
 
 export const FCMTokens = {
-  encode(message: FCMTokens, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(
+    message: FCMTokens,
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
     if (message.device_id !== "") {
       writer.uint32(10).string(message.device_id);
     }
@@ -9916,7 +11327,8 @@ export const FCMTokens = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): FCMTokens {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    const reader =
+      input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseFCMTokens();
     while (reader.pos < end) {
@@ -9954,9 +11366,15 @@ export const FCMTokens = {
 
   fromJSON(object: any): FCMTokens {
     return {
-      device_id: isSet(object.device_id) ? globalThis.String(object.device_id) : "",
-      token_id: isSet(object.token_id) ? globalThis.String(object.token_id) : "",
-      platform: isSet(object.platform) ? globalThis.String(object.platform) : "",
+      device_id: isSet(object.device_id)
+        ? globalThis.String(object.device_id)
+        : "",
+      token_id: isSet(object.token_id)
+        ? globalThis.String(object.token_id)
+        : "",
+      platform: isSet(object.platform)
+        ? globalThis.String(object.platform)
+        : "",
     };
   },
 
@@ -9977,7 +11395,9 @@ export const FCMTokens = {
   create<I extends Exact<DeepPartial<FCMTokens>, I>>(base?: I): FCMTokens {
     return FCMTokens.fromPartial(base ?? ({} as any));
   },
-  fromPartial<I extends Exact<DeepPartial<FCMTokens>, I>>(object: I): FCMTokens {
+  fromPartial<I extends Exact<DeepPartial<FCMTokens>, I>>(
+    object: I
+  ): FCMTokens {
     const message = createBaseFCMTokens();
     message.device_id = object.device_id ?? "";
     message.token_id = object.token_id ?? "";
@@ -9991,7 +11411,10 @@ function createBaseCheckNameExistedEvent(): CheckNameExistedEvent {
 }
 
 export const CheckNameExistedEvent = {
-  encode(message: CheckNameExistedEvent, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(
+    message: CheckNameExistedEvent,
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
     if (message.name !== "") {
       writer.uint32(10).string(message.name);
     }
@@ -10007,8 +11430,12 @@ export const CheckNameExistedEvent = {
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): CheckNameExistedEvent {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+  decode(
+    input: _m0.Reader | Uint8Array,
+    length?: number
+  ): CheckNameExistedEvent {
+    const reader =
+      input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseCheckNameExistedEvent();
     while (reader.pos < end) {
@@ -10054,7 +11481,9 @@ export const CheckNameExistedEvent = {
   fromJSON(object: any): CheckNameExistedEvent {
     return {
       name: isSet(object.name) ? globalThis.String(object.name) : "",
-      condition_id: isSet(object.condition_id) ? globalThis.String(object.condition_id) : "",
+      condition_id: isSet(object.condition_id)
+        ? globalThis.String(object.condition_id)
+        : "",
       exist: isSet(object.exist) ? globalThis.Boolean(object.exist) : false,
       type: isSet(object.type) ? globalThis.Number(object.type) : 0,
     };
@@ -10077,10 +11506,14 @@ export const CheckNameExistedEvent = {
     return obj;
   },
 
-  create<I extends Exact<DeepPartial<CheckNameExistedEvent>, I>>(base?: I): CheckNameExistedEvent {
+  create<I extends Exact<DeepPartial<CheckNameExistedEvent>, I>>(
+    base?: I
+  ): CheckNameExistedEvent {
     return CheckNameExistedEvent.fromPartial(base ?? ({} as any));
   },
-  fromPartial<I extends Exact<DeepPartial<CheckNameExistedEvent>, I>>(object: I): CheckNameExistedEvent {
+  fromPartial<I extends Exact<DeepPartial<CheckNameExistedEvent>, I>>(
+    object: I
+  ): CheckNameExistedEvent {
     const message = createBaseCheckNameExistedEvent();
     message.name = object.name ?? "";
     message.condition_id = object.condition_id ?? "";
@@ -10091,11 +11524,20 @@ export const CheckNameExistedEvent = {
 };
 
 function createBaseNotificationChannelCategorySetting(): NotificationChannelCategorySetting {
-  return { id: "", channel_category_label: "", notification_setting_type: 0, channel_category_title: "", action: 0 };
+  return {
+    id: "",
+    channel_category_label: "",
+    notification_setting_type: 0,
+    channel_category_title: "",
+    action: 0,
+  };
 }
 
 export const NotificationChannelCategorySetting = {
-  encode(message: NotificationChannelCategorySetting, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(
+    message: NotificationChannelCategorySetting,
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
     if (message.id !== "") {
       writer.uint32(10).string(message.id);
     }
@@ -10114,8 +11556,12 @@ export const NotificationChannelCategorySetting = {
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): NotificationChannelCategorySetting {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+  decode(
+    input: _m0.Reader | Uint8Array,
+    length?: number
+  ): NotificationChannelCategorySetting {
+    const reader =
+      input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseNotificationChannelCategorySetting();
     while (reader.pos < end) {
@@ -10190,7 +11636,9 @@ export const NotificationChannelCategorySetting = {
       obj.channel_category_label = message.channel_category_label;
     }
     if (message.notification_setting_type !== 0) {
-      obj.notification_setting_type = Math.round(message.notification_setting_type);
+      obj.notification_setting_type = Math.round(
+        message.notification_setting_type
+      );
     }
     if (message.channel_category_title !== "") {
       obj.channel_category_title = message.channel_category_title;
@@ -10202,13 +11650,13 @@ export const NotificationChannelCategorySetting = {
   },
 
   create<I extends Exact<DeepPartial<NotificationChannelCategorySetting>, I>>(
-    base?: I,
+    base?: I
   ): NotificationChannelCategorySetting {
     return NotificationChannelCategorySetting.fromPartial(base ?? ({} as any));
   },
-  fromPartial<I extends Exact<DeepPartial<NotificationChannelCategorySetting>, I>>(
-    object: I,
-  ): NotificationChannelCategorySetting {
+  fromPartial<
+    I extends Exact<DeepPartial<NotificationChannelCategorySetting>, I>
+  >(object: I): NotificationChannelCategorySetting {
     const message = createBaseNotificationChannelCategorySetting();
     message.id = object.id ?? "";
     message.channel_category_label = object.channel_category_label ?? "";
@@ -10234,7 +11682,10 @@ function createBaseEventEmoji(): EventEmoji {
 }
 
 export const EventEmoji = {
-  encode(message: EventEmoji, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(
+    message: EventEmoji,
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
     if (message.id !== "") {
       writer.uint32(10).string(message.id);
     }
@@ -10266,7 +11717,8 @@ export const EventEmoji = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): EventEmoji {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    const reader =
+      input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseEventEmoji();
     while (reader.pos < end) {
@@ -10348,13 +11800,19 @@ export const EventEmoji = {
     return {
       id: isSet(object.id) ? globalThis.String(object.id) : "",
       clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
-      short_name: isSet(object.short_name) ? globalThis.String(object.short_name) : "",
+      short_name: isSet(object.short_name)
+        ? globalThis.String(object.short_name)
+        : "",
       source: isSet(object.source) ? globalThis.String(object.source) : "",
-      category: isSet(object.category) ? globalThis.String(object.category) : "",
+      category: isSet(object.category)
+        ? globalThis.String(object.category)
+        : "",
       action: isSet(object.action) ? globalThis.Number(object.action) : 0,
       user_id: isSet(object.user_id) ? globalThis.String(object.user_id) : "",
       logo: isSet(object.logo) ? globalThis.String(object.logo) : "",
-      clan_name: isSet(object.clan_name) ? globalThis.String(object.clan_name) : "",
+      clan_name: isSet(object.clan_name)
+        ? globalThis.String(object.clan_name)
+        : "",
     };
   },
 
@@ -10393,7 +11851,9 @@ export const EventEmoji = {
   create<I extends Exact<DeepPartial<EventEmoji>, I>>(base?: I): EventEmoji {
     return EventEmoji.fromPartial(base ?? ({} as any));
   },
-  fromPartial<I extends Exact<DeepPartial<EventEmoji>, I>>(object: I): EventEmoji {
+  fromPartial<I extends Exact<DeepPartial<EventEmoji>, I>>(
+    object: I
+  ): EventEmoji {
     const message = createBaseEventEmoji();
     message.id = object.id ?? "";
     message.clan_id = object.clan_id ?? "";
@@ -10409,11 +11869,20 @@ export const EventEmoji = {
 };
 
 function createBasePermissionSetEvent(): PermissionSetEvent {
-  return { caller: "", role_id: "", user_id: "", channel_id: "", permission_updates: [] };
+  return {
+    caller: "",
+    role_id: "",
+    user_id: "",
+    channel_id: "",
+    permission_updates: [],
+  };
 }
 
 export const PermissionSetEvent = {
-  encode(message: PermissionSetEvent, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(
+    message: PermissionSetEvent,
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
     if (message.caller !== "") {
       writer.uint32(10).string(message.caller);
     }
@@ -10433,7 +11902,8 @@ export const PermissionSetEvent = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): PermissionSetEvent {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    const reader =
+      input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBasePermissionSetEvent();
     while (reader.pos < end) {
@@ -10472,7 +11942,9 @@ export const PermissionSetEvent = {
             break;
           }
 
-          message.permission_updates.push(PermissionUpdate.decode(reader, reader.uint32()));
+          message.permission_updates.push(
+            PermissionUpdate.decode(reader, reader.uint32())
+          );
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -10488,9 +11960,13 @@ export const PermissionSetEvent = {
       caller: isSet(object.caller) ? globalThis.String(object.caller) : "",
       role_id: isSet(object.role_id) ? globalThis.String(object.role_id) : "",
       user_id: isSet(object.user_id) ? globalThis.String(object.user_id) : "",
-      channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "",
+      channel_id: isSet(object.channel_id)
+        ? globalThis.String(object.channel_id)
+        : "",
       permission_updates: globalThis.Array.isArray(object?.permission_updates)
-        ? object.permission_updates.map((e: any) => PermissionUpdate.fromJSON(e))
+        ? object.permission_updates.map((e: any) =>
+            PermissionUpdate.fromJSON(e)
+          )
         : [],
     };
   },
@@ -10510,31 +11986,48 @@ export const PermissionSetEvent = {
       obj.channel_id = message.channel_id;
     }
     if (message.permission_updates?.length) {
-      obj.permission_updates = message.permission_updates.map((e) => PermissionUpdate.toJSON(e));
+      obj.permission_updates = message.permission_updates.map((e) =>
+        PermissionUpdate.toJSON(e)
+      );
     }
     return obj;
   },
 
-  create<I extends Exact<DeepPartial<PermissionSetEvent>, I>>(base?: I): PermissionSetEvent {
+  create<I extends Exact<DeepPartial<PermissionSetEvent>, I>>(
+    base?: I
+  ): PermissionSetEvent {
     return PermissionSetEvent.fromPartial(base ?? ({} as any));
   },
-  fromPartial<I extends Exact<DeepPartial<PermissionSetEvent>, I>>(object: I): PermissionSetEvent {
+  fromPartial<I extends Exact<DeepPartial<PermissionSetEvent>, I>>(
+    object: I
+  ): PermissionSetEvent {
     const message = createBasePermissionSetEvent();
     message.caller = object.caller ?? "";
     message.role_id = object.role_id ?? "";
     message.user_id = object.user_id ?? "";
     message.channel_id = object.channel_id ?? "";
-    message.permission_updates = object.permission_updates?.map((e) => PermissionUpdate.fromPartial(e)) || [];
+    message.permission_updates =
+      object.permission_updates?.map((e) => PermissionUpdate.fromPartial(e)) ||
+      [];
     return message;
   },
 };
 
 function createBasePermissionChangedEvent(): PermissionChangedEvent {
-  return { user_id: "", channel_id: "", add_permissions: [], remove_permissions: [], default_permissions: [] };
+  return {
+    user_id: "",
+    channel_id: "",
+    add_permissions: [],
+    remove_permissions: [],
+    default_permissions: [],
+  };
 }
 
 export const PermissionChangedEvent = {
-  encode(message: PermissionChangedEvent, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(
+    message: PermissionChangedEvent,
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
     if (message.user_id !== "") {
       writer.uint32(10).string(message.user_id);
     }
@@ -10553,8 +12046,12 @@ export const PermissionChangedEvent = {
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): PermissionChangedEvent {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+  decode(
+    input: _m0.Reader | Uint8Array,
+    length?: number
+  ): PermissionChangedEvent {
+    const reader =
+      input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBasePermissionChangedEvent();
     while (reader.pos < end) {
@@ -10579,21 +12076,27 @@ export const PermissionChangedEvent = {
             break;
           }
 
-          message.add_permissions.push(PermissionUpdate.decode(reader, reader.uint32()));
+          message.add_permissions.push(
+            PermissionUpdate.decode(reader, reader.uint32())
+          );
           continue;
         case 4:
           if (tag !== 34) {
             break;
           }
 
-          message.remove_permissions.push(PermissionUpdate.decode(reader, reader.uint32()));
+          message.remove_permissions.push(
+            PermissionUpdate.decode(reader, reader.uint32())
+          );
           continue;
         case 5:
           if (tag !== 42) {
             break;
           }
 
-          message.default_permissions.push(PermissionUpdate.decode(reader, reader.uint32()));
+          message.default_permissions.push(
+            PermissionUpdate.decode(reader, reader.uint32())
+          );
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -10607,15 +12110,21 @@ export const PermissionChangedEvent = {
   fromJSON(object: any): PermissionChangedEvent {
     return {
       user_id: isSet(object.user_id) ? globalThis.String(object.user_id) : "",
-      channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "",
+      channel_id: isSet(object.channel_id)
+        ? globalThis.String(object.channel_id)
+        : "",
       add_permissions: globalThis.Array.isArray(object?.add_permissions)
         ? object.add_permissions.map((e: any) => PermissionUpdate.fromJSON(e))
         : [],
       remove_permissions: globalThis.Array.isArray(object?.remove_permissions)
-        ? object.remove_permissions.map((e: any) => PermissionUpdate.fromJSON(e))
+        ? object.remove_permissions.map((e: any) =>
+            PermissionUpdate.fromJSON(e)
+          )
         : [],
       default_permissions: globalThis.Array.isArray(object?.default_permissions)
-        ? object.default_permissions.map((e: any) => PermissionUpdate.fromJSON(e))
+        ? object.default_permissions.map((e: any) =>
+            PermissionUpdate.fromJSON(e)
+          )
         : [],
     };
   },
@@ -10629,37 +12138,62 @@ export const PermissionChangedEvent = {
       obj.channel_id = message.channel_id;
     }
     if (message.add_permissions?.length) {
-      obj.add_permissions = message.add_permissions.map((e) => PermissionUpdate.toJSON(e));
+      obj.add_permissions = message.add_permissions.map((e) =>
+        PermissionUpdate.toJSON(e)
+      );
     }
     if (message.remove_permissions?.length) {
-      obj.remove_permissions = message.remove_permissions.map((e) => PermissionUpdate.toJSON(e));
+      obj.remove_permissions = message.remove_permissions.map((e) =>
+        PermissionUpdate.toJSON(e)
+      );
     }
     if (message.default_permissions?.length) {
-      obj.default_permissions = message.default_permissions.map((e) => PermissionUpdate.toJSON(e));
+      obj.default_permissions = message.default_permissions.map((e) =>
+        PermissionUpdate.toJSON(e)
+      );
     }
     return obj;
   },
 
-  create<I extends Exact<DeepPartial<PermissionChangedEvent>, I>>(base?: I): PermissionChangedEvent {
+  create<I extends Exact<DeepPartial<PermissionChangedEvent>, I>>(
+    base?: I
+  ): PermissionChangedEvent {
     return PermissionChangedEvent.fromPartial(base ?? ({} as any));
   },
-  fromPartial<I extends Exact<DeepPartial<PermissionChangedEvent>, I>>(object: I): PermissionChangedEvent {
+  fromPartial<I extends Exact<DeepPartial<PermissionChangedEvent>, I>>(
+    object: I
+  ): PermissionChangedEvent {
     const message = createBasePermissionChangedEvent();
     message.user_id = object.user_id ?? "";
     message.channel_id = object.channel_id ?? "";
-    message.add_permissions = object.add_permissions?.map((e) => PermissionUpdate.fromPartial(e)) || [];
-    message.remove_permissions = object.remove_permissions?.map((e) => PermissionUpdate.fromPartial(e)) || [];
-    message.default_permissions = object.default_permissions?.map((e) => PermissionUpdate.fromPartial(e)) || [];
+    message.add_permissions =
+      object.add_permissions?.map((e) => PermissionUpdate.fromPartial(e)) || [];
+    message.remove_permissions =
+      object.remove_permissions?.map((e) => PermissionUpdate.fromPartial(e)) ||
+      [];
+    message.default_permissions =
+      object.default_permissions?.map((e) => PermissionUpdate.fromPartial(e)) ||
+      [];
     return message;
   },
 };
 
 function createBaseMessageButtonClicked(): MessageButtonClicked {
-  return { message_id: "", channel_id: "", button_id: "", sender_id: "", user_id: "", extra_data: "" };
+  return {
+    message_id: "",
+    channel_id: "",
+    button_id: "",
+    sender_id: "",
+    user_id: "",
+    extra_data: "",
+  };
 }
 
 export const MessageButtonClicked = {
-  encode(message: MessageButtonClicked, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(
+    message: MessageButtonClicked,
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
     if (message.message_id !== "") {
       writer.uint32(10).string(message.message_id);
     }
@@ -10681,8 +12215,12 @@ export const MessageButtonClicked = {
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): MessageButtonClicked {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+  decode(
+    input: _m0.Reader | Uint8Array,
+    length?: number
+  ): MessageButtonClicked {
+    const reader =
+      input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseMessageButtonClicked();
     while (reader.pos < end) {
@@ -10741,12 +12279,22 @@ export const MessageButtonClicked = {
 
   fromJSON(object: any): MessageButtonClicked {
     return {
-      message_id: isSet(object.message_id) ? globalThis.String(object.message_id) : "",
-      channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "",
-      button_id: isSet(object.button_id) ? globalThis.String(object.button_id) : "",
-      sender_id: isSet(object.sender_id) ? globalThis.String(object.sender_id) : "",
+      message_id: isSet(object.message_id)
+        ? globalThis.String(object.message_id)
+        : "",
+      channel_id: isSet(object.channel_id)
+        ? globalThis.String(object.channel_id)
+        : "",
+      button_id: isSet(object.button_id)
+        ? globalThis.String(object.button_id)
+        : "",
+      sender_id: isSet(object.sender_id)
+        ? globalThis.String(object.sender_id)
+        : "",
       user_id: isSet(object.user_id) ? globalThis.String(object.user_id) : "",
-      extra_data: isSet(object.extra_data) ? globalThis.String(object.extra_data) : "",
+      extra_data: isSet(object.extra_data)
+        ? globalThis.String(object.extra_data)
+        : "",
     };
   },
 
@@ -10773,10 +12321,14 @@ export const MessageButtonClicked = {
     return obj;
   },
 
-  create<I extends Exact<DeepPartial<MessageButtonClicked>, I>>(base?: I): MessageButtonClicked {
+  create<I extends Exact<DeepPartial<MessageButtonClicked>, I>>(
+    base?: I
+  ): MessageButtonClicked {
     return MessageButtonClicked.fromPartial(base ?? ({} as any));
   },
-  fromPartial<I extends Exact<DeepPartial<MessageButtonClicked>, I>>(object: I): MessageButtonClicked {
+  fromPartial<I extends Exact<DeepPartial<MessageButtonClicked>, I>>(
+    object: I
+  ): MessageButtonClicked {
     const message = createBaseMessageButtonClicked();
     message.message_id = object.message_id ?? "";
     message.channel_id = object.channel_id ?? "";
@@ -10793,7 +12345,10 @@ function createBaseUnmuteEvent(): UnmuteEvent {
 }
 
 export const UnmuteEvent = {
-  encode(message: UnmuteEvent, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(
+    message: UnmuteEvent,
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
     if (message.channel_id !== "") {
       writer.uint32(10).string(message.channel_id);
     }
@@ -10807,7 +12362,8 @@ export const UnmuteEvent = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): UnmuteEvent {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    const reader =
+      input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseUnmuteEvent();
     while (reader.pos < end) {
@@ -10845,8 +12401,12 @@ export const UnmuteEvent = {
 
   fromJSON(object: any): UnmuteEvent {
     return {
-      channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "",
-      category_id: isSet(object.category_id) ? globalThis.String(object.category_id) : "",
+      channel_id: isSet(object.channel_id)
+        ? globalThis.String(object.channel_id)
+        : "",
+      category_id: isSet(object.category_id)
+        ? globalThis.String(object.category_id)
+        : "",
       clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
     };
   },
@@ -10868,7 +12428,9 @@ export const UnmuteEvent = {
   create<I extends Exact<DeepPartial<UnmuteEvent>, I>>(base?: I): UnmuteEvent {
     return UnmuteEvent.fromPartial(base ?? ({} as any));
   },
-  fromPartial<I extends Exact<DeepPartial<UnmuteEvent>, I>>(object: I): UnmuteEvent {
+  fromPartial<I extends Exact<DeepPartial<UnmuteEvent>, I>>(
+    object: I
+  ): UnmuteEvent {
     const message = createBaseUnmuteEvent();
     message.channel_id = object.channel_id ?? "";
     message.category_id = object.category_id ?? "";
@@ -10882,7 +12444,10 @@ function createBaseListActivity(): ListActivity {
 }
 
 export const ListActivity = {
-  encode(message: ListActivity, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(
+    message: ListActivity,
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
     for (const v of message.acts) {
       UserActivity.encode(v!, writer.uint32(10).fork()).ldelim();
     }
@@ -10890,7 +12455,8 @@ export const ListActivity = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): ListActivity {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    const reader =
+      input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseListActivity();
     while (reader.pos < end) {
@@ -10914,7 +12480,9 @@ export const ListActivity = {
 
   fromJSON(object: any): ListActivity {
     return {
-      acts: globalThis.Array.isArray(object?.acts) ? object.acts.map((e: any) => UserActivity.fromJSON(e)) : [],
+      acts: globalThis.Array.isArray(object?.acts)
+        ? object.acts.map((e: any) => UserActivity.fromJSON(e))
+        : [],
     };
   },
 
@@ -10926,10 +12494,14 @@ export const ListActivity = {
     return obj;
   },
 
-  create<I extends Exact<DeepPartial<ListActivity>, I>>(base?: I): ListActivity {
+  create<I extends Exact<DeepPartial<ListActivity>, I>>(
+    base?: I
+  ): ListActivity {
     return ListActivity.fromPartial(base ?? ({} as any));
   },
-  fromPartial<I extends Exact<DeepPartial<ListActivity>, I>>(object: I): ListActivity {
+  fromPartial<I extends Exact<DeepPartial<ListActivity>, I>>(
+    object: I
+  ): ListActivity {
     const message = createBaseListActivity();
     message.acts = object.acts?.map((e) => UserActivity.fromPartial(e)) || [];
     return message;
@@ -10937,11 +12509,21 @@ export const ListActivity = {
 };
 
 function createBaseDropdownBoxSelected(): DropdownBoxSelected {
-  return { message_id: "", channel_id: "", selectbox_id: "", sender_id: "", user_id: "", values: [] };
+  return {
+    message_id: "",
+    channel_id: "",
+    selectbox_id: "",
+    sender_id: "",
+    user_id: "",
+    values: [],
+  };
 }
 
 export const DropdownBoxSelected = {
-  encode(message: DropdownBoxSelected, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(
+    message: DropdownBoxSelected,
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
     if (message.message_id !== "") {
       writer.uint32(10).string(message.message_id);
     }
@@ -10964,7 +12546,8 @@ export const DropdownBoxSelected = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): DropdownBoxSelected {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    const reader =
+      input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseDropdownBoxSelected();
     while (reader.pos < end) {
@@ -11023,12 +12606,22 @@ export const DropdownBoxSelected = {
 
   fromJSON(object: any): DropdownBoxSelected {
     return {
-      message_id: isSet(object.message_id) ? globalThis.String(object.message_id) : "",
-      channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "",
-      selectbox_id: isSet(object.selectbox_id) ? globalThis.String(object.selectbox_id) : "",
-      sender_id: isSet(object.sender_id) ? globalThis.String(object.sender_id) : "",
+      message_id: isSet(object.message_id)
+        ? globalThis.String(object.message_id)
+        : "",
+      channel_id: isSet(object.channel_id)
+        ? globalThis.String(object.channel_id)
+        : "",
+      selectbox_id: isSet(object.selectbox_id)
+        ? globalThis.String(object.selectbox_id)
+        : "",
+      sender_id: isSet(object.sender_id)
+        ? globalThis.String(object.sender_id)
+        : "",
       user_id: isSet(object.user_id) ? globalThis.String(object.user_id) : "",
-      values: globalThis.Array.isArray(object?.values) ? object.values.map((e: any) => globalThis.String(e)) : [],
+      values: globalThis.Array.isArray(object?.values)
+        ? object.values.map((e: any) => globalThis.String(e))
+        : [],
     };
   },
 
@@ -11055,10 +12648,14 @@ export const DropdownBoxSelected = {
     return obj;
   },
 
-  create<I extends Exact<DeepPartial<DropdownBoxSelected>, I>>(base?: I): DropdownBoxSelected {
+  create<I extends Exact<DeepPartial<DropdownBoxSelected>, I>>(
+    base?: I
+  ): DropdownBoxSelected {
     return DropdownBoxSelected.fromPartial(base ?? ({} as any));
   },
-  fromPartial<I extends Exact<DeepPartial<DropdownBoxSelected>, I>>(object: I): DropdownBoxSelected {
+  fromPartial<I extends Exact<DeepPartial<DropdownBoxSelected>, I>>(
+    object: I
+  ): DropdownBoxSelected {
     const message = createBaseDropdownBoxSelected();
     message.message_id = object.message_id ?? "";
     message.channel_id = object.channel_id ?? "";
@@ -11075,7 +12672,10 @@ function createBaseSdTopicEvent(): SdTopicEvent {
 }
 
 export const SdTopicEvent = {
-  encode(message: SdTopicEvent, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(
+    message: SdTopicEvent,
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
     if (message.id !== "") {
       writer.uint32(10).string(message.id);
     }
@@ -11092,7 +12692,8 @@ export const SdTopicEvent = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): SdTopicEvent {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    const reader =
+      input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseSdTopicEvent();
     while (reader.pos < end) {
@@ -11139,8 +12740,12 @@ export const SdTopicEvent = {
     return {
       id: isSet(object.id) ? globalThis.String(object.id) : "",
       clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
-      channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "",
-      message_id: isSet(object.message_id) ? globalThis.String(object.message_id) : "",
+      channel_id: isSet(object.channel_id)
+        ? globalThis.String(object.channel_id)
+        : "",
+      message_id: isSet(object.message_id)
+        ? globalThis.String(object.message_id)
+        : "",
     };
   },
 
@@ -11161,10 +12766,14 @@ export const SdTopicEvent = {
     return obj;
   },
 
-  create<I extends Exact<DeepPartial<SdTopicEvent>, I>>(base?: I): SdTopicEvent {
+  create<I extends Exact<DeepPartial<SdTopicEvent>, I>>(
+    base?: I
+  ): SdTopicEvent {
     return SdTopicEvent.fromPartial(base ?? ({} as any));
   },
-  fromPartial<I extends Exact<DeepPartial<SdTopicEvent>, I>>(object: I): SdTopicEvent {
+  fromPartial<I extends Exact<DeepPartial<SdTopicEvent>, I>>(
+    object: I
+  ): SdTopicEvent {
     const message = createBaseSdTopicEvent();
     message.id = object.id ?? "";
     message.clan_id = object.clan_id ?? "";
@@ -11179,7 +12788,10 @@ function createBaseChannelAppEvent(): ChannelAppEvent {
 }
 
 export const ChannelAppEvent = {
-  encode(message: ChannelAppEvent, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(
+    message: ChannelAppEvent,
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
     if (message.user_id !== "") {
       writer.uint32(10).string(message.user_id);
     }
@@ -11199,7 +12811,8 @@ export const ChannelAppEvent = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): ChannelAppEvent {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    const reader =
+      input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseChannelAppEvent();
     while (reader.pos < end) {
@@ -11252,9 +12865,13 @@ export const ChannelAppEvent = {
   fromJSON(object: any): ChannelAppEvent {
     return {
       user_id: isSet(object.user_id) ? globalThis.String(object.user_id) : "",
-      username: isSet(object.username) ? globalThis.String(object.username) : "",
+      username: isSet(object.username)
+        ? globalThis.String(object.username)
+        : "",
       clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
-      channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "",
+      channel_id: isSet(object.channel_id)
+        ? globalThis.String(object.channel_id)
+        : "",
       action: isSet(object.action) ? globalThis.Number(object.action) : 0,
     };
   },
@@ -11279,10 +12896,14 @@ export const ChannelAppEvent = {
     return obj;
   },
 
-  create<I extends Exact<DeepPartial<ChannelAppEvent>, I>>(base?: I): ChannelAppEvent {
+  create<I extends Exact<DeepPartial<ChannelAppEvent>, I>>(
+    base?: I
+  ): ChannelAppEvent {
     return ChannelAppEvent.fromPartial(base ?? ({} as any));
   },
-  fromPartial<I extends Exact<DeepPartial<ChannelAppEvent>, I>>(object: I): ChannelAppEvent {
+  fromPartial<I extends Exact<DeepPartial<ChannelAppEvent>, I>>(
+    object: I
+  ): ChannelAppEvent {
     const message = createBaseChannelAppEvent();
     message.user_id = object.user_id ?? "";
     message.username = object.username ?? "";
@@ -11298,7 +12919,10 @@ function createBaseUserStatusEvent(): UserStatusEvent {
 }
 
 export const UserStatusEvent = {
-  encode(message: UserStatusEvent, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(
+    message: UserStatusEvent,
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
     if (message.user_id !== "") {
       writer.uint32(10).string(message.user_id);
     }
@@ -11309,7 +12933,8 @@ export const UserStatusEvent = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): UserStatusEvent {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    const reader =
+      input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseUserStatusEvent();
     while (reader.pos < end) {
@@ -11341,7 +12966,9 @@ export const UserStatusEvent = {
   fromJSON(object: any): UserStatusEvent {
     return {
       user_id: isSet(object.user_id) ? globalThis.String(object.user_id) : "",
-      custom_status: isSet(object.custom_status) ? globalThis.String(object.custom_status) : "",
+      custom_status: isSet(object.custom_status)
+        ? globalThis.String(object.custom_status)
+        : "",
     };
   },
 
@@ -11356,10 +12983,14 @@ export const UserStatusEvent = {
     return obj;
   },
 
-  create<I extends Exact<DeepPartial<UserStatusEvent>, I>>(base?: I): UserStatusEvent {
+  create<I extends Exact<DeepPartial<UserStatusEvent>, I>>(
+    base?: I
+  ): UserStatusEvent {
     return UserStatusEvent.fromPartial(base ?? ({} as any));
   },
-  fromPartial<I extends Exact<DeepPartial<UserStatusEvent>, I>>(object: I): UserStatusEvent {
+  fromPartial<I extends Exact<DeepPartial<UserStatusEvent>, I>>(
+    object: I
+  ): UserStatusEvent {
     const message = createBaseUserStatusEvent();
     message.user_id = object.user_id ?? "";
     message.custom_status = object.custom_status ?? "";
@@ -11367,17 +12998,31 @@ export const UserStatusEvent = {
   },
 };
 
-type Builtin = Date | Function | Uint8Array | string | number | boolean | undefined;
+type Builtin =
+  | Date
+  | Function
+  | Uint8Array
+  | string
+  | number
+  | boolean
+  | undefined;
 
-export type DeepPartial<T> = T extends Builtin ? T
-  : T extends globalThis.Array<infer U> ? globalThis.Array<DeepPartial<U>>
-  : T extends ReadonlyArray<infer U> ? ReadonlyArray<DeepPartial<U>>
-  : T extends {} ? { [K in keyof T]?: DeepPartial<T[K]> }
+export type DeepPartial<T> = T extends Builtin
+  ? T
+  : T extends globalThis.Array<infer U>
+  ? globalThis.Array<DeepPartial<U>>
+  : T extends ReadonlyArray<infer U>
+  ? ReadonlyArray<DeepPartial<U>>
+  : T extends {}
+  ? { [K in keyof T]?: DeepPartial<T[K]> }
   : Partial<T>;
 
 type KeysOfUnion<T> = T extends T ? keyof T : never;
-export type Exact<P, I extends P> = P extends Builtin ? P
-  : P & { [K in keyof P]: Exact<P[K], I[K]> } & { [K in Exclude<keyof I, KeysOfUnion<P>>]: never };
+export type Exact<P, I extends P> = P extends Builtin
+  ? P
+  : P & { [K in keyof P]: Exact<P[K], I[K]> } & {
+      [K in Exclude<keyof I, KeysOfUnion<P>>]: never;
+    };
 
 function toTimestamp(date: Date): Timestamp {
   const seconds = Math.trunc(date.getTime() / 1_000);

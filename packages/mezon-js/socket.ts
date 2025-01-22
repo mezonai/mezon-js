@@ -412,6 +412,10 @@ export interface CustomStatusEvent {
   username: string;
   // the status
   status: string;
+  /** time reset */
+  time_reset: number;
+  /** no clear */
+  no_clear: boolean;
 }
 
 export interface ChannelUpdatedEvent {
@@ -757,7 +761,7 @@ export interface UserEmojiUsage {
   create_time: string;
 }
 export interface RemoveFriend {
-  // 
+  //
   user_id: string;
 }
 
@@ -1058,7 +1062,9 @@ export interface Socket {
   /** Send custom user status */
   writeCustomStatus(
     clan_id: string,
-    status: string
+    status: string,
+    time_reset: number,
+    no_clear: boolean
   ): Promise<CustomStatusEvent>;
 
   /** send voice joined */
@@ -1510,9 +1516,7 @@ export class DefaultSocket implements Socket {
             <UserChannelRemovedEvent>message.user_channel_removed_event
           );
         } else if (message.remove_friend) {
-          this.onremovefriend(
-            <RemoveFriend>message.remove_friend
-          );
+          this.onremovefriend(<RemoveFriend>message.remove_friend);
         } else if (message.user_clan_removed_event) {
           this.onuserclanremoved(
             <UserClanRemovedEvent>message.user_clan_removed_event
@@ -1562,9 +1566,7 @@ export class DefaultSocket implements Socket {
             <WebrtcSignalingFwd>message.webrtc_signaling_fwd
           );
         } else if (message.sfu_signaling_fwd) {
-          this.onsfusignalingfwd(
-            <SFUSignalingFwd>message.sfu_signaling_fwd
-          );
+          this.onsfusignalingfwd(<SFUSignalingFwd>message.sfu_signaling_fwd);
         } else if (message.list_activity) {
           this.onactivityupdated(<ListActivity>message.list_activity);
         } else if (message.sd_topic_event) {
@@ -2312,10 +2314,17 @@ export class DefaultSocket implements Socket {
 
   async writeCustomStatus(
     clan_id: string,
-    status: string
+    status: string,
+    time_reset: number,
+    no_clear: boolean
   ): Promise<CustomStatusEvent> {
     const response = await this.send({
-      custom_status_event: { clan_id: clan_id, status: status },
+      custom_status_event: {
+        clan_id: clan_id,
+        status: status,
+        time_reset: time_reset,
+        no_clear: no_clear,
+      },
     });
     return response.custom_status_event;
   }
