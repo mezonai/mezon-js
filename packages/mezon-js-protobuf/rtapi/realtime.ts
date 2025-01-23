@@ -556,8 +556,8 @@ export interface ChannelMessageUpdate {
   hide_editted: boolean;
   /** topic id */
   topic_id: string;
-  /** topic id */
-  mess_topic_id: string;
+  /** update message topic */
+  is_update_mess_topic: boolean;
 }
 
 /** Remove a message previously sent to a realtime channel. */
@@ -4775,7 +4775,7 @@ function createBaseChannelMessageUpdate(): ChannelMessageUpdate {
     is_public: false,
     hide_editted: false,
     topic_id: "",
-    mess_topic_id: "",
+    is_update_mess_topic: false,
   };
 }
 
@@ -4811,8 +4811,8 @@ export const ChannelMessageUpdate = {
     if (message.topic_id !== "") {
       writer.uint32(82).string(message.topic_id);
     }
-    if (message.mess_topic_id !== "") {
-      writer.uint32(90).string(message.mess_topic_id);
+    if (message.is_update_mess_topic !== false) {
+      writer.uint32(88).bool(message.is_update_mess_topic);
     }
     return writer;
   },
@@ -4895,11 +4895,11 @@ export const ChannelMessageUpdate = {
           message.topic_id = reader.string();
           continue;
         case 11:
-          if (tag !== 90) {
+          if (tag !== 88) {
             break;
           }
 
-          message.mess_topic_id = reader.string();
+          message.is_update_mess_topic = reader.bool();
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -4926,7 +4926,9 @@ export const ChannelMessageUpdate = {
       is_public: isSet(object.is_public) ? globalThis.Boolean(object.is_public) : false,
       hide_editted: isSet(object.hide_editted) ? globalThis.Boolean(object.hide_editted) : false,
       topic_id: isSet(object.topic_id) ? globalThis.String(object.topic_id) : "",
-      mess_topic_id: isSet(object.mess_topic_id) ? globalThis.String(object.mess_topic_id) : "",
+      is_update_mess_topic: isSet(object.is_update_mess_topic)
+        ? globalThis.Boolean(object.is_update_mess_topic)
+        : false,
     };
   },
 
@@ -4962,8 +4964,8 @@ export const ChannelMessageUpdate = {
     if (message.topic_id !== "") {
       obj.topic_id = message.topic_id;
     }
-    if (message.mess_topic_id !== "") {
-      obj.mess_topic_id = message.mess_topic_id;
+    if (message.is_update_mess_topic !== false) {
+      obj.is_update_mess_topic = message.is_update_mess_topic;
     }
     return obj;
   },
@@ -4983,7 +4985,7 @@ export const ChannelMessageUpdate = {
     message.is_public = object.is_public ?? false;
     message.hide_editted = object.hide_editted ?? false;
     message.topic_id = object.topic_id ?? "";
-    message.mess_topic_id = object.mess_topic_id ?? "";
+    message.is_update_mess_topic = object.is_update_mess_topic ?? false;
     return message;
   },
 };
