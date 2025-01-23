@@ -318,6 +318,8 @@ interface ChannelMessageUpdate {
     is_public: boolean;
     //
     topic_id?: string;
+    //
+    mess_topic_id?: string;
   };
 }
 
@@ -338,6 +340,8 @@ interface ChannelMessageRemove {
     is_public: boolean;
     /** attachments */
     has_attachment?: boolean;
+    //
+    topic_id?: string;
   };
 }
 
@@ -447,6 +451,8 @@ export interface ChannelUpdatedEvent {
   topic: string;
   //
   age_restricted: number;
+  //
+  is_active_thread: boolean;
 }
 
 export interface ChannelCreatedEvent {
@@ -972,7 +978,8 @@ export interface Socket {
     mode: number,
     is_public: boolean,
     message_id: string,
-    has_attachment?: boolean
+    has_attachment?: boolean,
+    topic_id?: string
   ): Promise<ChannelMessageAck>;
 
   /** Execute an RPC function to the server. */
@@ -992,7 +999,8 @@ export interface Socket {
     mentions?: Array<ApiMessageMention>,
     attachments?: Array<ApiMessageAttachment>,
     hideEditted?: boolean,
-    topic_id?: string
+    topic_id?: string,
+    mess_topic_id?: string
   ): Promise<ChannelMessageAck>;
 
   /** Update the status for the current user online. */
@@ -2080,7 +2088,8 @@ export class DefaultSocket implements Socket {
     mode: number,
     is_public: boolean,
     message_id: string,
-    has_attachment?: boolean
+    has_attachment?: boolean,
+    topic_id?: string,
   ): Promise<ChannelMessageAck> {
     const response = await this.send({
       channel_message_remove: {
@@ -2090,6 +2099,7 @@ export class DefaultSocket implements Socket {
         message_id: message_id,
         is_public: is_public,
         has_attachment: has_attachment,
+        topic_id: topic_id,
       },
     });
 
@@ -2122,7 +2132,8 @@ export class DefaultSocket implements Socket {
     mentions?: Array<ApiMessageMention>,
     attachments?: Array<ApiMessageAttachment>,
     hideEditted?: boolean,
-    topic_id?: string
+    topic_id?: string,
+    mess_topic_id?: string
   ): Promise<ChannelMessageAck> {
     const response = await this.send({
       channel_message_update: {
@@ -2136,6 +2147,7 @@ export class DefaultSocket implements Socket {
         is_public: is_public,
         hide_editted: hideEditted,
         topic_id: topic_id,
+        mess_topic_id: mess_topic_id,
       },
     });
     return response.channel_message_ack;
