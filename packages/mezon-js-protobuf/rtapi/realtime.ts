@@ -556,6 +556,8 @@ export interface ChannelMessageUpdate {
   hide_editted: boolean;
   /** topic id */
   topic_id: string;
+  /** topic id */
+  mess_topic_id: string;
 }
 
 /** Remove a message previously sent to a realtime channel. */
@@ -572,6 +574,8 @@ export interface ChannelMessageRemove {
   is_public: boolean;
   /** has_attachments. */
   has_attachment: boolean;
+  /**  */
+  topic_id: string;
 }
 
 /** A set of joins and leaves on a particular channel. */
@@ -997,8 +1001,6 @@ export interface ChannelUpdatedEvent {
   topic: string;
   /**  */
   age_restricted: number;
-  /**  */
-  is_active_thread: boolean;
 }
 
 /** Stop receiving status updates for some set of users. */
@@ -4773,6 +4775,7 @@ function createBaseChannelMessageUpdate(): ChannelMessageUpdate {
     is_public: false,
     hide_editted: false,
     topic_id: "",
+    mess_topic_id: "",
   };
 }
 
@@ -4807,6 +4810,9 @@ export const ChannelMessageUpdate = {
     }
     if (message.topic_id !== "") {
       writer.uint32(82).string(message.topic_id);
+    }
+    if (message.mess_topic_id !== "") {
+      writer.uint32(90).string(message.mess_topic_id);
     }
     return writer;
   },
@@ -4888,6 +4894,13 @@ export const ChannelMessageUpdate = {
 
           message.topic_id = reader.string();
           continue;
+        case 11:
+          if (tag !== 90) {
+            break;
+          }
+
+          message.mess_topic_id = reader.string();
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -4913,6 +4926,7 @@ export const ChannelMessageUpdate = {
       is_public: isSet(object.is_public) ? globalThis.Boolean(object.is_public) : false,
       hide_editted: isSet(object.hide_editted) ? globalThis.Boolean(object.hide_editted) : false,
       topic_id: isSet(object.topic_id) ? globalThis.String(object.topic_id) : "",
+      mess_topic_id: isSet(object.mess_topic_id) ? globalThis.String(object.mess_topic_id) : "",
     };
   },
 
@@ -4948,6 +4962,9 @@ export const ChannelMessageUpdate = {
     if (message.topic_id !== "") {
       obj.topic_id = message.topic_id;
     }
+    if (message.mess_topic_id !== "") {
+      obj.mess_topic_id = message.mess_topic_id;
+    }
     return obj;
   },
 
@@ -4966,12 +4983,21 @@ export const ChannelMessageUpdate = {
     message.is_public = object.is_public ?? false;
     message.hide_editted = object.hide_editted ?? false;
     message.topic_id = object.topic_id ?? "";
+    message.mess_topic_id = object.mess_topic_id ?? "";
     return message;
   },
 };
 
 function createBaseChannelMessageRemove(): ChannelMessageRemove {
-  return { clan_id: "", channel_id: "", message_id: "", mode: 0, is_public: false, has_attachment: false };
+  return {
+    clan_id: "",
+    channel_id: "",
+    message_id: "",
+    mode: 0,
+    is_public: false,
+    has_attachment: false,
+    topic_id: "",
+  };
 }
 
 export const ChannelMessageRemove = {
@@ -4993,6 +5019,9 @@ export const ChannelMessageRemove = {
     }
     if (message.has_attachment !== false) {
       writer.uint32(48).bool(message.has_attachment);
+    }
+    if (message.topic_id !== "") {
+      writer.uint32(58).string(message.topic_id);
     }
     return writer;
   },
@@ -5046,6 +5075,13 @@ export const ChannelMessageRemove = {
 
           message.has_attachment = reader.bool();
           continue;
+        case 7:
+          if (tag !== 58) {
+            break;
+          }
+
+          message.topic_id = reader.string();
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -5063,6 +5099,7 @@ export const ChannelMessageRemove = {
       mode: isSet(object.mode) ? globalThis.Number(object.mode) : 0,
       is_public: isSet(object.is_public) ? globalThis.Boolean(object.is_public) : false,
       has_attachment: isSet(object.has_attachment) ? globalThis.Boolean(object.has_attachment) : false,
+      topic_id: isSet(object.topic_id) ? globalThis.String(object.topic_id) : "",
     };
   },
 
@@ -5086,6 +5123,9 @@ export const ChannelMessageRemove = {
     if (message.has_attachment !== false) {
       obj.has_attachment = message.has_attachment;
     }
+    if (message.topic_id !== "") {
+      obj.topic_id = message.topic_id;
+    }
     return obj;
   },
 
@@ -5100,6 +5140,7 @@ export const ChannelMessageRemove = {
     message.mode = object.mode ?? 0;
     message.is_public = object.is_public ?? false;
     message.has_attachment = object.has_attachment ?? false;
+    message.topic_id = object.topic_id ?? "";
     return message;
   },
 };
@@ -8058,7 +8099,6 @@ function createBaseChannelUpdatedEvent(): ChannelUpdatedEvent {
     e2ee: 0,
     topic: "",
     age_restricted: 0,
-    is_active_thread: false,
   };
 }
 
@@ -8108,9 +8148,6 @@ export const ChannelUpdatedEvent = {
     }
     if (message.age_restricted !== 0) {
       writer.uint32(120).int32(message.age_restricted);
-    }
-    if (message.is_active_thread !== false) {
-      writer.uint32(128).bool(message.is_active_thread);
     }
     return writer;
   },
@@ -8227,13 +8264,6 @@ export const ChannelUpdatedEvent = {
 
           message.age_restricted = reader.int32();
           continue;
-        case 16:
-          if (tag !== 128) {
-            break;
-          }
-
-          message.is_active_thread = reader.bool();
-          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -8260,7 +8290,6 @@ export const ChannelUpdatedEvent = {
       e2ee: isSet(object.e2ee) ? globalThis.Number(object.e2ee) : 0,
       topic: isSet(object.topic) ? globalThis.String(object.topic) : "",
       age_restricted: isSet(object.age_restricted) ? globalThis.Number(object.age_restricted) : 0,
-      is_active_thread: isSet(object.is_active_thread) ? globalThis.Boolean(object.is_active_thread) : false,
     };
   },
 
@@ -8311,9 +8340,6 @@ export const ChannelUpdatedEvent = {
     if (message.age_restricted !== 0) {
       obj.age_restricted = Math.round(message.age_restricted);
     }
-    if (message.is_active_thread !== false) {
-      obj.is_active_thread = message.is_active_thread;
-    }
     return obj;
   },
 
@@ -8337,7 +8363,6 @@ export const ChannelUpdatedEvent = {
     message.e2ee = object.e2ee ?? 0;
     message.topic = object.topic ?? "";
     message.age_restricted = object.age_restricted ?? 0;
-    message.is_active_thread = object.is_active_thread ?? false;
     return message;
   },
 };
