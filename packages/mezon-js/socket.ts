@@ -447,6 +447,8 @@ export interface ChannelUpdatedEvent {
   topic: string;
   //
   age_restricted: number;
+  //
+  is_active_thread: boolean;
 }
 
 export interface ChannelCreatedEvent {
