@@ -158,6 +158,7 @@ import {
   ApiSdTopic,
   MezonUpdateEventBody,
   ApiTransactionDetail,
+  ApiGetJoinMezonMeetResponse,
 } from "./api.gen";
 
 import { Session } from "./session";
@@ -4867,4 +4868,25 @@ export class Client {
         return Promise.resolve(response);
       });
   }
+
+  //**list sd topic */
+  async getJoinMezonMeet(
+    session: Session,
+    channelId?:string,
+    roomName?:string,
+  ): Promise<ApiGetJoinMezonMeetResponse> {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired((Date.now() + this.expiredTimespanMs) / 1000)
+    ) {
+      await this.sessionRefresh(session);
+    }
+
+    return this.apiClient
+      .getJoinMezonMeet(session.token, channelId, roomName)
+      .then((response: ApiGetJoinMezonMeetResponse) => {
+        return Promise.resolve(response);
+      });
+    }
 }
