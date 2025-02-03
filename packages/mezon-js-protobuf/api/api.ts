@@ -638,6 +638,8 @@ export interface NotificationInfo {
   clan_name: string;
   /** clan logo */
   clan_logo: string;
+  /**  */
+  channel: ChannelDescription | undefined;
 }
 
 /** Emoji reaction by user */
@@ -1329,6 +1331,8 @@ export interface Notification {
   channel_type: number;
   /**  */
   avatar_url: string;
+  /**  */
+  channel: ChannelDescription | undefined;
 }
 
 /** A collection of zero or more notifications. */
@@ -3867,6 +3871,19 @@ export interface DeleteSdTopicRequest {
   channel_id: string;
   id: string;
   clan_id: string;
+}
+
+export interface GetJoinMezonMeetRequest {
+  channel_id: string;
+  room_name: string;
+}
+
+export interface GetJoinMezonMeetResponse {
+  channel_id: string;
+  user_id: string;
+  user_name: string;
+  room_name: string;
+  token: string;
 }
 
 function createBaseAccount(): Account {
@@ -7982,6 +7999,7 @@ function createBaseNotificationInfo(): NotificationInfo {
     category_name: "",
     clan_name: "",
     clan_logo: "",
+    channel: undefined,
   };
 }
 
@@ -8016,6 +8034,9 @@ export const NotificationInfo = {
     }
     if (message.clan_logo !== "") {
       writer.uint32(82).string(message.clan_logo);
+    }
+    if (message.channel !== undefined) {
+      ChannelDescription.encode(message.channel, writer.uint32(90).fork()).ldelim();
     }
     return writer;
   },
@@ -8097,6 +8118,13 @@ export const NotificationInfo = {
 
           message.clan_logo = reader.string();
           continue;
+        case 11:
+          if (tag !== 90) {
+            break;
+          }
+
+          message.channel = ChannelDescription.decode(reader, reader.uint32());
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -8118,6 +8146,7 @@ export const NotificationInfo = {
       category_name: isSet(object.category_name) ? globalThis.String(object.category_name) : "",
       clan_name: isSet(object.clan_name) ? globalThis.String(object.clan_name) : "",
       clan_logo: isSet(object.clan_logo) ? globalThis.String(object.clan_logo) : "",
+      channel: isSet(object.channel) ? ChannelDescription.fromJSON(object.channel) : undefined,
     };
   },
 
@@ -8153,6 +8182,9 @@ export const NotificationInfo = {
     if (message.clan_logo !== "") {
       obj.clan_logo = message.clan_logo;
     }
+    if (message.channel !== undefined) {
+      obj.channel = ChannelDescription.toJSON(message.channel);
+    }
     return obj;
   },
 
@@ -8171,6 +8203,9 @@ export const NotificationInfo = {
     message.category_name = object.category_name ?? "";
     message.clan_name = object.clan_name ?? "";
     message.clan_logo = object.clan_logo ?? "";
+    message.channel = (object.channel !== undefined && object.channel !== null)
+      ? ChannelDescription.fromPartial(object.channel)
+      : undefined;
     return message;
   },
 };
@@ -12717,6 +12752,7 @@ function createBaseNotification(): Notification {
     channel_id: "",
     channel_type: 0,
     avatar_url: "",
+    channel: undefined,
   };
 }
 
@@ -12754,6 +12790,9 @@ export const Notification = {
     }
     if (message.avatar_url !== "") {
       writer.uint32(90).string(message.avatar_url);
+    }
+    if (message.channel !== undefined) {
+      ChannelDescription.encode(message.channel, writer.uint32(98).fork()).ldelim();
     }
     return writer;
   },
@@ -12842,6 +12881,13 @@ export const Notification = {
 
           message.avatar_url = reader.string();
           continue;
+        case 12:
+          if (tag !== 98) {
+            break;
+          }
+
+          message.channel = ChannelDescription.decode(reader, reader.uint32());
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -12864,6 +12910,7 @@ export const Notification = {
       channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "",
       channel_type: isSet(object.channel_type) ? globalThis.Number(object.channel_type) : 0,
       avatar_url: isSet(object.avatar_url) ? globalThis.String(object.avatar_url) : "",
+      channel: isSet(object.channel) ? ChannelDescription.fromJSON(object.channel) : undefined,
     };
   },
 
@@ -12902,6 +12949,9 @@ export const Notification = {
     if (message.avatar_url !== "") {
       obj.avatar_url = message.avatar_url;
     }
+    if (message.channel !== undefined) {
+      obj.channel = ChannelDescription.toJSON(message.channel);
+    }
     return obj;
   },
 
@@ -12921,6 +12971,9 @@ export const Notification = {
     message.channel_id = object.channel_id ?? "";
     message.channel_type = object.channel_type ?? 0;
     message.avatar_url = object.avatar_url ?? "";
+    message.channel = (object.channel !== undefined && object.channel !== null)
+      ? ChannelDescription.fromPartial(object.channel)
+      : undefined;
     return message;
   },
 };
@@ -37696,6 +37749,199 @@ export const DeleteSdTopicRequest = {
     message.channel_id = object.channel_id ?? "";
     message.id = object.id ?? "";
     message.clan_id = object.clan_id ?? "";
+    return message;
+  },
+};
+
+function createBaseGetJoinMezonMeetRequest(): GetJoinMezonMeetRequest {
+  return { channel_id: "", room_name: "" };
+}
+
+export const GetJoinMezonMeetRequest = {
+  encode(message: GetJoinMezonMeetRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.channel_id !== "") {
+      writer.uint32(10).string(message.channel_id);
+    }
+    if (message.room_name !== "") {
+      writer.uint32(18).string(message.room_name);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): GetJoinMezonMeetRequest {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseGetJoinMezonMeetRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.channel_id = reader.string();
+          continue;
+        case 2:
+          if (tag !== 18) {
+            break;
+          }
+
+          message.room_name = reader.string();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): GetJoinMezonMeetRequest {
+    return {
+      channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "",
+      room_name: isSet(object.room_name) ? globalThis.String(object.room_name) : "",
+    };
+  },
+
+  toJSON(message: GetJoinMezonMeetRequest): unknown {
+    const obj: any = {};
+    if (message.channel_id !== "") {
+      obj.channel_id = message.channel_id;
+    }
+    if (message.room_name !== "") {
+      obj.room_name = message.room_name;
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<GetJoinMezonMeetRequest>, I>>(base?: I): GetJoinMezonMeetRequest {
+    return GetJoinMezonMeetRequest.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<GetJoinMezonMeetRequest>, I>>(object: I): GetJoinMezonMeetRequest {
+    const message = createBaseGetJoinMezonMeetRequest();
+    message.channel_id = object.channel_id ?? "";
+    message.room_name = object.room_name ?? "";
+    return message;
+  },
+};
+
+function createBaseGetJoinMezonMeetResponse(): GetJoinMezonMeetResponse {
+  return { channel_id: "", user_id: "", user_name: "", room_name: "", token: "" };
+}
+
+export const GetJoinMezonMeetResponse = {
+  encode(message: GetJoinMezonMeetResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.channel_id !== "") {
+      writer.uint32(10).string(message.channel_id);
+    }
+    if (message.user_id !== "") {
+      writer.uint32(18).string(message.user_id);
+    }
+    if (message.user_name !== "") {
+      writer.uint32(26).string(message.user_name);
+    }
+    if (message.room_name !== "") {
+      writer.uint32(34).string(message.room_name);
+    }
+    if (message.token !== "") {
+      writer.uint32(42).string(message.token);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): GetJoinMezonMeetResponse {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseGetJoinMezonMeetResponse();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.channel_id = reader.string();
+          continue;
+        case 2:
+          if (tag !== 18) {
+            break;
+          }
+
+          message.user_id = reader.string();
+          continue;
+        case 3:
+          if (tag !== 26) {
+            break;
+          }
+
+          message.user_name = reader.string();
+          continue;
+        case 4:
+          if (tag !== 34) {
+            break;
+          }
+
+          message.room_name = reader.string();
+          continue;
+        case 5:
+          if (tag !== 42) {
+            break;
+          }
+
+          message.token = reader.string();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): GetJoinMezonMeetResponse {
+    return {
+      channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "",
+      user_id: isSet(object.user_id) ? globalThis.String(object.user_id) : "",
+      user_name: isSet(object.user_name) ? globalThis.String(object.user_name) : "",
+      room_name: isSet(object.room_name) ? globalThis.String(object.room_name) : "",
+      token: isSet(object.token) ? globalThis.String(object.token) : "",
+    };
+  },
+
+  toJSON(message: GetJoinMezonMeetResponse): unknown {
+    const obj: any = {};
+    if (message.channel_id !== "") {
+      obj.channel_id = message.channel_id;
+    }
+    if (message.user_id !== "") {
+      obj.user_id = message.user_id;
+    }
+    if (message.user_name !== "") {
+      obj.user_name = message.user_name;
+    }
+    if (message.room_name !== "") {
+      obj.room_name = message.room_name;
+    }
+    if (message.token !== "") {
+      obj.token = message.token;
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<GetJoinMezonMeetResponse>, I>>(base?: I): GetJoinMezonMeetResponse {
+    return GetJoinMezonMeetResponse.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<GetJoinMezonMeetResponse>, I>>(object: I): GetJoinMezonMeetResponse {
+    const message = createBaseGetJoinMezonMeetResponse();
+    message.channel_id = object.channel_id ?? "";
+    message.user_id = object.user_id ?? "";
+    message.user_name = object.user_name ?? "";
+    message.room_name = object.room_name ?? "";
+    message.token = object.token ?? "";
     return message;
   },
 };
