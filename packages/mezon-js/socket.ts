@@ -15,6 +15,7 @@
  */
 
 import {
+  ApiChannelDescription,
   ApiChannelMessageHeader,
   ApiCreateEventRequest,
   ApiGiveCoffeeEvent,
@@ -31,7 +32,7 @@ import {
   ApiWebhook,
 } from "./api.gen";
 import { Session } from "./session";
-import { ChannelMessage, Notification } from "./client";
+import { ChannelMessage } from "./client";
 import { WebSocketAdapter, WebSocketAdapterText } from "./web_socket_adapter";
 import { safeJSONParse } from "./utils";
 
@@ -56,6 +57,29 @@ export interface Presence {
   is_mobile: boolean;
   // Metadata
   metadata: string;
+}
+
+export interface NotificationInfo {
+  /** Category code for this notification. */
+  code?: number;
+  /** Content of the notification in JSON. */
+  content?: {};
+  /** The UNIX time when the notification was created. */
+  create_time?: string;
+  /** ID of the Notification. */
+  id?: string;
+  /** True if this notification was persisted to the database. */
+  persistent?: boolean;
+  /** ID of the sender, if a user. Otherwise 'null'. */
+  sender_id?: string;
+  /** Subject of the notification. */
+  subject?: string;
+  //
+  channel_id?: string;
+  //
+  clan_id?: string;
+  //
+  channel?: ApiChannelDescription;
 }
 
 /** A response from a channel join operation. */
@@ -1160,7 +1184,7 @@ export interface Socket {
   onerror: (evt: Event) => void;
 
   /** Receive notifications from the socket. */
-  onnotification: (notification: Notification) => void;
+  onnotification: (notification: NotificationInfo) => void;
 
   /** Receive status presence updates. */
   onstatuspresence: (statusPresence: StatusPresenceEvent) => void;
@@ -1716,7 +1740,7 @@ export class DefaultSocket implements Socket {
     }
   }
 
-  onnotification(notification: Notification) {
+  onnotification(notification: NotificationInfo) {
     if (this.verbose && window && window.console) {
       console.log(notification);
     }
