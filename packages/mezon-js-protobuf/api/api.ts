@@ -2184,6 +2184,8 @@ export interface NotificationUserChannel {
     | undefined;
   /**  */
   active: number;
+  /**  */
+  channel_id: string;
 }
 
 /** Notification channel */
@@ -19858,7 +19860,7 @@ export const PinMessagesList = {
 };
 
 function createBaseNotificationUserChannel(): NotificationUserChannel {
-  return { id: "", notification_setting_type: 0, time_mute: undefined, active: 0 };
+  return { id: "", notification_setting_type: 0, time_mute: undefined, active: 0, channel_id: "" };
 }
 
 export const NotificationUserChannel = {
@@ -19874,6 +19876,9 @@ export const NotificationUserChannel = {
     }
     if (message.active !== 0) {
       writer.uint32(32).int32(message.active);
+    }
+    if (message.channel_id !== "") {
+      writer.uint32(42).string(message.channel_id);
     }
     return writer;
   },
@@ -19913,6 +19918,13 @@ export const NotificationUserChannel = {
 
           message.active = reader.int32();
           continue;
+        case 5:
+          if (tag !== 42) {
+            break;
+          }
+
+          message.channel_id = reader.string();
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -19930,6 +19942,7 @@ export const NotificationUserChannel = {
         : 0,
       time_mute: isSet(object.time_mute) ? fromJsonTimestamp(object.time_mute) : undefined,
       active: isSet(object.active) ? globalThis.Number(object.active) : 0,
+      channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "",
     };
   },
 
@@ -19947,6 +19960,9 @@ export const NotificationUserChannel = {
     if (message.active !== 0) {
       obj.active = Math.round(message.active);
     }
+    if (message.channel_id !== "") {
+      obj.channel_id = message.channel_id;
+    }
     return obj;
   },
 
@@ -19959,6 +19975,7 @@ export const NotificationUserChannel = {
     message.notification_setting_type = object.notification_setting_type ?? 0;
     message.time_mute = object.time_mute ?? undefined;
     message.active = object.active ?? 0;
+    message.channel_id = object.channel_id ?? "";
     return message;
   },
 };

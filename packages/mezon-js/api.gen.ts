@@ -1743,6 +1743,8 @@ export interface ApiNotificationUserChannel {
   notification_setting_type?: number;
   //
   time_mute?: string;
+  //
+  channel_id?: string;
 }
 
 /**  */
