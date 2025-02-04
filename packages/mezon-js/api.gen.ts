@@ -2838,6 +2838,14 @@ export interface ApiGetJoinMezonMeetResponse {
   user_name?: string;
 }
 
+/**  */
+export interface MezonapiCreateRoomChannelApps {
+  //
+  channel_id?: string;
+  //
+  room_name?: string;
+}
+
 export class MezonApi {
   constructor(
     readonly serverKey: string,
@@ -10829,6 +10837,42 @@ export class MezonApi {
 
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("GET", options, bodyJson);
+    if (bearerToken) {
+        fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+    }
+
+    return Promise.race([
+      fetch(fullUrl, fetchOptions).then((response) => {
+        if (response.status == 204) {
+          return response;
+        } else if (response.status >= 200 && response.status < 300) {
+          return response.json();
+        } else {
+          throw response;
+        }
+      }),
+      new Promise((_, reject) =>
+        setTimeout(reject, this.timeoutMs, "Request timed out.")
+      ),
+    ]);
+  }
+
+  /** create meeting room */
+  createRoomChannelApps(bearerToken: string,
+    body:MezonapiCreateRoomChannelApps,
+    options: any = {}): Promise<MezonapiCreateRoomChannelApps> {
+  
+    if (body === null || body === undefined) {
+      throw new Error("'body' is a required parameter but is null or undefined.");
+    }
+    const urlPath = "/v2/channel-apps/createroom";
+    const queryParams = new Map<string, any>();
+
+    let bodyJson : string = "";
+    bodyJson = JSON.stringify(body || {});
+
+    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
+    const fetchOptions = buildFetchOptions("POST", options, bodyJson);
     if (bearerToken) {
         fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
     }

@@ -159,6 +159,7 @@ import {
   MezonUpdateEventBody,
   ApiTransactionDetail,
   ApiGetJoinMezonMeetResponse,
+  MezonapiCreateRoomChannelApps,
 } from "./api.gen";
 
 import { Session } from "./session";
@@ -4869,7 +4870,7 @@ export class Client {
       });
   }
 
-  //**list sd topic */
+  //**get join mezon meet */
   async getJoinMezonMeet(
     session: Session,
     channelId?:string,
@@ -4886,6 +4887,26 @@ export class Client {
     return this.apiClient
       .getJoinMezonMeet(session.token, channelId, roomName)
       .then((response: ApiGetJoinMezonMeetResponse) => {
+        return Promise.resolve(response);
+      });
+    }
+
+  //**create room channel apps */
+  async createRoomChannelApps(
+    session: Session,
+    body: MezonapiCreateRoomChannelApps
+  ): Promise<MezonapiCreateRoomChannelApps> {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired((Date.now() + this.expiredTimespanMs) / 1000)
+    ) {
+      await this.sessionRefresh(session);
+    }
+
+    return this.apiClient
+      .createRoomChannelApps(session.token, body)
+      .then((response: MezonapiCreateRoomChannelApps) => {
         return Promise.resolve(response);
       });
     }
