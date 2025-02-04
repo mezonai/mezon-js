@@ -17,6 +17,7 @@ import {
   MessageReaction,
   MessageRef,
   Notification,
+  NotificationUserChannel,
   PermissionUpdate,
   Role,
   Rpc,
@@ -308,7 +309,11 @@ export interface Envelope {
     | RemoveFriend
     | undefined;
   /**  */
-  webhook_event?: Webhook | undefined;
+  webhook_event?:
+    | Webhook
+    | undefined;
+  /**  */
+  noti_user_channel?: NotificationUserChannel | undefined;
 }
 
 export interface FollowEvent {
@@ -1383,6 +1388,7 @@ function createBaseEnvelope(): Envelope {
     user_status_event: undefined,
     remove_friend: undefined,
     webhook_event: undefined,
+    noti_user_channel: undefined,
   };
 }
 
@@ -1600,6 +1606,9 @@ export const Envelope = {
     }
     if (message.webhook_event !== undefined) {
       Webhook.encode(message.webhook_event, writer.uint32(570).fork()).ldelim();
+    }
+    if (message.noti_user_channel !== undefined) {
+      NotificationUserChannel.encode(message.noti_user_channel, writer.uint32(578).fork()).ldelim();
     }
     return writer;
   },
@@ -2108,6 +2117,13 @@ export const Envelope = {
 
           message.webhook_event = Webhook.decode(reader, reader.uint32());
           continue;
+        case 72:
+          if (tag !== 578) {
+            break;
+          }
+
+          message.noti_user_channel = NotificationUserChannel.decode(reader, reader.uint32());
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -2282,6 +2298,9 @@ export const Envelope = {
         : undefined,
       remove_friend: isSet(object.remove_friend) ? RemoveFriend.fromJSON(object.remove_friend) : undefined,
       webhook_event: isSet(object.webhook_event) ? Webhook.fromJSON(object.webhook_event) : undefined,
+      noti_user_channel: isSet(object.noti_user_channel)
+        ? NotificationUserChannel.fromJSON(object.noti_user_channel)
+        : undefined,
     };
   },
 
@@ -2499,6 +2518,9 @@ export const Envelope = {
     }
     if (message.webhook_event !== undefined) {
       obj.webhook_event = Webhook.toJSON(message.webhook_event);
+    }
+    if (message.noti_user_channel !== undefined) {
+      obj.noti_user_channel = NotificationUserChannel.toJSON(message.noti_user_channel);
     }
     return obj;
   },
@@ -2734,6 +2756,9 @@ export const Envelope = {
       : undefined;
     message.webhook_event = (object.webhook_event !== undefined && object.webhook_event !== null)
       ? Webhook.fromPartial(object.webhook_event)
+      : undefined;
+    message.noti_user_channel = (object.noti_user_channel !== undefined && object.noti_user_channel !== null)
+      ? NotificationUserChannel.fromPartial(object.noti_user_channel)
       : undefined;
     return message;
   },

@@ -24,6 +24,7 @@ import {
   ApiMessageReaction,
   ApiMessageRef,
   ApiNotification,
+  ApiNotificationUserChannel,
   ApiPermissionUpdate,
   ApiRole,
   ApiRpc,
@@ -1295,6 +1296,8 @@ export interface Socket {
 
   oneventemoji: (event_emoji: EventEmoji) => void;
 
+  oneventnotiuserchannel: (noti_user_channel: ApiNotificationUserChannel) => void;
+
   oneventwebhook: (webhook_event: ApiWebhook) => void;
 
   onroleassign: (role_assign_event: RoleAssignedEvent) => void;
@@ -1428,6 +1431,8 @@ export class DefaultSocket implements Socket {
           this.onroleevent(message.role_event);
         } else if (message.event_emoji) {
           this.oneventemoji(message.event_emoji);
+        } else if (message.noti_user_channel) {
+          this.oneventnotiuserchannel(message.noti_user_channel);
         } else if (message.webhook_event) {
           this.oneventwebhook(message.webhook_event);
         } else if (message.channel_deleted_event) {
@@ -1797,6 +1802,12 @@ export class DefaultSocket implements Socket {
   oneventemoji(eventEmoji: EventEmoji) {
     if (this.verbose && window && window.console) {
       console.log(eventEmoji);
+    }
+  }
+
+  oneventnotiuserchannel(notiUserChannel: ApiNotificationUserChannel) {
+    if (this.verbose && window && window.console) {
+      console.log(notiUserChannel);
     }
   }
 
