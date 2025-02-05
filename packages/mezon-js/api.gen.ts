@@ -774,13 +774,15 @@ export interface ApiChannelDescription {
   //
   user_id?: Array<string>;
   //
-  usernames?: string;
+  usernames?: Array<string>;
   //
   status?: number;
   //
   metadata?: Array<string>;
   //
   about_me?: Array<string>;
+  //
+  display_names?: Array<string>;
 }
 
 /** A message sent on a channel. */
