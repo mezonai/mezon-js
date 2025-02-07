@@ -158,8 +158,10 @@ import {
   ApiSdTopic,
   MezonUpdateEventBody,
   ApiTransactionDetail,
-  ApiGetJoinMezonMeetResponse,
   MezonapiCreateRoomChannelApps,
+  ApiGenerateMeetTokenRequest,
+  ApiGenerateMeetTokenResponse,
+  ApiHandleParticipantMeetStateRequest,
 } from "./api.gen";
 
 import { Session } from "./session";
@@ -4870,27 +4872,6 @@ export class Client {
       });
   }
 
-  //**get join mezon meet */
-  async getJoinMezonMeet(
-    session: Session,
-    channelId?:string,
-    roomName?:string,
-  ): Promise<ApiGetJoinMezonMeetResponse> {
-    if (
-      this.autoRefreshSession &&
-      session.refresh_token &&
-      session.isexpired((Date.now() + this.expiredTimespanMs) / 1000)
-    ) {
-      await this.sessionRefresh(session);
-    }
-
-    return this.apiClient
-      .getJoinMezonMeet(session.token, channelId, roomName)
-      .then((response: ApiGetJoinMezonMeetResponse) => {
-        return Promise.resolve(response);
-      });
-    }
-
   //**create room channel apps */
   async createRoomChannelApps(
     session: Session,
@@ -4908,6 +4889,46 @@ export class Client {
       .createRoomChannelApps(session.token, body)
       .then((response: MezonapiCreateRoomChannelApps) => {
         return Promise.resolve(response);
-      });
+    });
+  }
+
+  /** Generate Meet Token */
+  async generateMeetToken(
+    session: Session,
+    body: ApiGenerateMeetTokenRequest
+  ): Promise<ApiGenerateMeetTokenResponse> {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired((Date.now() + this.expiredTimespanMs) / 1000)
+    ) {
+      await this.sessionRefresh(session);
     }
+
+    return this.apiClient
+      .generateMeetToken(session.token, body)
+      .then((response: ApiGenerateMeetTokenResponse) => {
+        return Promise.resolve(response);
+    });
+  }
+
+  /** Handle participant meet state */
+  async handleParticipantMeetState(
+    session: Session,
+    body:ApiHandleParticipantMeetStateRequest,
+  ): Promise<any> {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired((Date.now() + this.expiredTimespanMs) / 1000)
+    ) {
+      await this.sessionRefresh(session);
+    }
+
+    return this.apiClient
+      .handleParticipantMeetState(session.token, body)
+      .then((response: any) => {
+        return Promise.resolve(response);
+      });
+  }
 }
