@@ -2849,17 +2849,17 @@ export interface ApiGenerateMeetTokenResponse {
 }
 
 /**  */
-export interface ApiMeetRequest {
-  //
-  action?: number;
-  //
-  channel_id?: string;
-  //
+export interface ApiHandleParticipantMeetStateRequest {
+  // clan id
   clan_id?: string;
-  //
-  display_name?: string;
-  //
+  // channel id
+  channel_id?: string;
+  // user id
   user_id?: string;
+  // display name
+  display_name?: string;
+  // state (0: join, 1: leave)
+  state?: number;
 }
 
 export class MezonApi {
@@ -10911,17 +10911,17 @@ export class MezonApi {
       ]);
   }
 
-  /** Handle Meet */
-  handleMeet(
+  /** Handle participant meet state */
+  handleParticipantMeetState(
     bearerToken: string,
-    body:ApiMeetRequest,
+    body:ApiHandleParticipantMeetStateRequest,
     options: any = {}
   ): Promise<any> {
   
     if (body === null || body === undefined) {
       throw new Error("'body' is a required parameter but is null or undefined.");
     }
-    const urlPath = "/v2/meet";
+    const urlPath = "/v2/meet/handle_participant_state";
     const queryParams = new Map<string, any>();
 
     let bodyJson : string = "";

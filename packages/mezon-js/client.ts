@@ -160,8 +160,8 @@ import {
   ApiTransactionDetail,
   MezonapiCreateRoomChannelApps,
   ApiGenerateMeetTokenRequest,
-  ApiMeetRequest,
   ApiGenerateMeetTokenResponse,
+  ApiHandleParticipantMeetStateRequest,
 } from "./api.gen";
 
 import { Session } from "./session";
@@ -4912,10 +4912,10 @@ export class Client {
     });
   }
 
-  /** Handle Meet */
-  async handleMeet(
+  /** Handle participant meet state */
+  async handleParticipantMeetState(
     session: Session,
-    body:ApiMeetRequest,
+    body:ApiHandleParticipantMeetStateRequest,
   ): Promise<any> {
     if (
       this.autoRefreshSession &&
@@ -4926,7 +4926,7 @@ export class Client {
     }
 
     return this.apiClient
-      .handleMeet(session.token, body)
+      .handleParticipantMeetState(session.token, body)
       .then((response: any) => {
         return Promise.resolve(response);
       });
