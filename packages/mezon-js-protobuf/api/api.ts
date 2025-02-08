@@ -3877,22 +3877,31 @@ export interface DeleteSdTopicRequest {
   clan_id: string;
 }
 
-export interface GetJoinMezonMeetRequest {
+export interface GenerateMeetTokenRequest {
   channel_id: string;
   room_name: string;
 }
 
-export interface GetJoinMezonMeetResponse {
-  channel_id: string;
-  user_id: string;
-  user_name: string;
-  room_name: string;
+export interface GenerateMeetTokenResponse {
   token: string;
 }
 
 export interface CreateRoomChannelApps {
   channel_id: string;
   room_name: string;
+}
+
+export interface HandleParticipantMeetStateRequest {
+  /** clan id */
+  clan_id: string;
+  /** channel id */
+  channel_id: string;
+  /** user id */
+  user_id: string;
+  /** display name */
+  display_name: string;
+  /** state (0: join, 1: leave) */
+  state: number;
 }
 
 function createBaseAccount(): Account {
@@ -37799,12 +37808,12 @@ export const DeleteSdTopicRequest = {
   },
 };
 
-function createBaseGetJoinMezonMeetRequest(): GetJoinMezonMeetRequest {
+function createBaseGenerateMeetTokenRequest(): GenerateMeetTokenRequest {
   return { channel_id: "", room_name: "" };
 }
 
-export const GetJoinMezonMeetRequest = {
-  encode(message: GetJoinMezonMeetRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+export const GenerateMeetTokenRequest = {
+  encode(message: GenerateMeetTokenRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.channel_id !== "") {
       writer.uint32(10).string(message.channel_id);
     }
@@ -37814,10 +37823,10 @@ export const GetJoinMezonMeetRequest = {
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): GetJoinMezonMeetRequest {
+  decode(input: _m0.Reader | Uint8Array, length?: number): GenerateMeetTokenRequest {
     const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseGetJoinMezonMeetRequest();
+    const message = createBaseGenerateMeetTokenRequest();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -37844,14 +37853,14 @@ export const GetJoinMezonMeetRequest = {
     return message;
   },
 
-  fromJSON(object: any): GetJoinMezonMeetRequest {
+  fromJSON(object: any): GenerateMeetTokenRequest {
     return {
       channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "",
       room_name: isSet(object.room_name) ? globalThis.String(object.room_name) : "",
     };
   },
 
-  toJSON(message: GetJoinMezonMeetRequest): unknown {
+  toJSON(message: GenerateMeetTokenRequest): unknown {
     const obj: any = {};
     if (message.channel_id !== "") {
       obj.channel_id = message.channel_id;
@@ -37862,78 +37871,38 @@ export const GetJoinMezonMeetRequest = {
     return obj;
   },
 
-  create<I extends Exact<DeepPartial<GetJoinMezonMeetRequest>, I>>(base?: I): GetJoinMezonMeetRequest {
-    return GetJoinMezonMeetRequest.fromPartial(base ?? ({} as any));
+  create<I extends Exact<DeepPartial<GenerateMeetTokenRequest>, I>>(base?: I): GenerateMeetTokenRequest {
+    return GenerateMeetTokenRequest.fromPartial(base ?? ({} as any));
   },
-  fromPartial<I extends Exact<DeepPartial<GetJoinMezonMeetRequest>, I>>(object: I): GetJoinMezonMeetRequest {
-    const message = createBaseGetJoinMezonMeetRequest();
+  fromPartial<I extends Exact<DeepPartial<GenerateMeetTokenRequest>, I>>(object: I): GenerateMeetTokenRequest {
+    const message = createBaseGenerateMeetTokenRequest();
     message.channel_id = object.channel_id ?? "";
     message.room_name = object.room_name ?? "";
     return message;
   },
 };
 
-function createBaseGetJoinMezonMeetResponse(): GetJoinMezonMeetResponse {
-  return { channel_id: "", user_id: "", user_name: "", room_name: "", token: "" };
+function createBaseGenerateMeetTokenResponse(): GenerateMeetTokenResponse {
+  return { token: "" };
 }
 
-export const GetJoinMezonMeetResponse = {
-  encode(message: GetJoinMezonMeetResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.channel_id !== "") {
-      writer.uint32(10).string(message.channel_id);
-    }
-    if (message.user_id !== "") {
-      writer.uint32(18).string(message.user_id);
-    }
-    if (message.user_name !== "") {
-      writer.uint32(26).string(message.user_name);
-    }
-    if (message.room_name !== "") {
-      writer.uint32(34).string(message.room_name);
-    }
+export const GenerateMeetTokenResponse = {
+  encode(message: GenerateMeetTokenResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.token !== "") {
-      writer.uint32(42).string(message.token);
+      writer.uint32(10).string(message.token);
     }
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): GetJoinMezonMeetResponse {
+  decode(input: _m0.Reader | Uint8Array, length?: number): GenerateMeetTokenResponse {
     const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseGetJoinMezonMeetResponse();
+    const message = createBaseGenerateMeetTokenResponse();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
           if (tag !== 10) {
-            break;
-          }
-
-          message.channel_id = reader.string();
-          continue;
-        case 2:
-          if (tag !== 18) {
-            break;
-          }
-
-          message.user_id = reader.string();
-          continue;
-        case 3:
-          if (tag !== 26) {
-            break;
-          }
-
-          message.user_name = reader.string();
-          continue;
-        case 4:
-          if (tag !== 34) {
-            break;
-          }
-
-          message.room_name = reader.string();
-          continue;
-        case 5:
-          if (tag !== 42) {
             break;
           }
 
@@ -37948,45 +37917,23 @@ export const GetJoinMezonMeetResponse = {
     return message;
   },
 
-  fromJSON(object: any): GetJoinMezonMeetResponse {
-    return {
-      channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "",
-      user_id: isSet(object.user_id) ? globalThis.String(object.user_id) : "",
-      user_name: isSet(object.user_name) ? globalThis.String(object.user_name) : "",
-      room_name: isSet(object.room_name) ? globalThis.String(object.room_name) : "",
-      token: isSet(object.token) ? globalThis.String(object.token) : "",
-    };
+  fromJSON(object: any): GenerateMeetTokenResponse {
+    return { token: isSet(object.token) ? globalThis.String(object.token) : "" };
   },
 
-  toJSON(message: GetJoinMezonMeetResponse): unknown {
+  toJSON(message: GenerateMeetTokenResponse): unknown {
     const obj: any = {};
-    if (message.channel_id !== "") {
-      obj.channel_id = message.channel_id;
-    }
-    if (message.user_id !== "") {
-      obj.user_id = message.user_id;
-    }
-    if (message.user_name !== "") {
-      obj.user_name = message.user_name;
-    }
-    if (message.room_name !== "") {
-      obj.room_name = message.room_name;
-    }
     if (message.token !== "") {
       obj.token = message.token;
     }
     return obj;
   },
 
-  create<I extends Exact<DeepPartial<GetJoinMezonMeetResponse>, I>>(base?: I): GetJoinMezonMeetResponse {
-    return GetJoinMezonMeetResponse.fromPartial(base ?? ({} as any));
+  create<I extends Exact<DeepPartial<GenerateMeetTokenResponse>, I>>(base?: I): GenerateMeetTokenResponse {
+    return GenerateMeetTokenResponse.fromPartial(base ?? ({} as any));
   },
-  fromPartial<I extends Exact<DeepPartial<GetJoinMezonMeetResponse>, I>>(object: I): GetJoinMezonMeetResponse {
-    const message = createBaseGetJoinMezonMeetResponse();
-    message.channel_id = object.channel_id ?? "";
-    message.user_id = object.user_id ?? "";
-    message.user_name = object.user_name ?? "";
-    message.room_name = object.room_name ?? "";
+  fromPartial<I extends Exact<DeepPartial<GenerateMeetTokenResponse>, I>>(object: I): GenerateMeetTokenResponse {
+    const message = createBaseGenerateMeetTokenResponse();
     message.token = object.token ?? "";
     return message;
   },
@@ -38062,6 +38009,129 @@ export const CreateRoomChannelApps = {
     const message = createBaseCreateRoomChannelApps();
     message.channel_id = object.channel_id ?? "";
     message.room_name = object.room_name ?? "";
+    return message;
+  },
+};
+
+function createBaseHandleParticipantMeetStateRequest(): HandleParticipantMeetStateRequest {
+  return { clan_id: "", channel_id: "", user_id: "", display_name: "", state: 0 };
+}
+
+export const HandleParticipantMeetStateRequest = {
+  encode(message: HandleParticipantMeetStateRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.clan_id !== "") {
+      writer.uint32(10).string(message.clan_id);
+    }
+    if (message.channel_id !== "") {
+      writer.uint32(18).string(message.channel_id);
+    }
+    if (message.user_id !== "") {
+      writer.uint32(26).string(message.user_id);
+    }
+    if (message.display_name !== "") {
+      writer.uint32(34).string(message.display_name);
+    }
+    if (message.state !== 0) {
+      writer.uint32(40).int32(message.state);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): HandleParticipantMeetStateRequest {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseHandleParticipantMeetStateRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.clan_id = reader.string();
+          continue;
+        case 2:
+          if (tag !== 18) {
+            break;
+          }
+
+          message.channel_id = reader.string();
+          continue;
+        case 3:
+          if (tag !== 26) {
+            break;
+          }
+
+          message.user_id = reader.string();
+          continue;
+        case 4:
+          if (tag !== 34) {
+            break;
+          }
+
+          message.display_name = reader.string();
+          continue;
+        case 5:
+          if (tag !== 40) {
+            break;
+          }
+
+          message.state = reader.int32();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): HandleParticipantMeetStateRequest {
+    return {
+      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
+      channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "",
+      user_id: isSet(object.user_id) ? globalThis.String(object.user_id) : "",
+      display_name: isSet(object.display_name) ? globalThis.String(object.display_name) : "",
+      state: isSet(object.state) ? globalThis.Number(object.state) : 0,
+    };
+  },
+
+  toJSON(message: HandleParticipantMeetStateRequest): unknown {
+    const obj: any = {};
+    if (message.clan_id !== "") {
+      obj.clan_id = message.clan_id;
+    }
+    if (message.channel_id !== "") {
+      obj.channel_id = message.channel_id;
+    }
+    if (message.user_id !== "") {
+      obj.user_id = message.user_id;
+    }
+    if (message.display_name !== "") {
+      obj.display_name = message.display_name;
+    }
+    if (message.state !== 0) {
+      obj.state = Math.round(message.state);
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<HandleParticipantMeetStateRequest>, I>>(
+    base?: I,
+  ): HandleParticipantMeetStateRequest {
+    return HandleParticipantMeetStateRequest.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<HandleParticipantMeetStateRequest>, I>>(
+    object: I,
+  ): HandleParticipantMeetStateRequest {
+    const message = createBaseHandleParticipantMeetStateRequest();
+    message.clan_id = object.clan_id ?? "";
+    message.channel_id = object.channel_id ?? "";
+    message.user_id = object.user_id ?? "";
+    message.display_name = object.display_name ?? "";
+    message.state = object.state ?? 0;
     return message;
   },
 };

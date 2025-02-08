@@ -8309,7 +8309,7 @@ export class MezonApi {
         "'body' is a required parameter but is null or undefined."
       );
     }
-    const urlPath = "/v2/rolechannel/category/{newCategoryId}".replace(
+    const urlPath = "/v2/channel/category/{newCategoryId}".replace(
       "{newCategoryId}",
       encodeURIComponent(String(newCategoryId))
     );
