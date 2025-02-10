@@ -56,12 +56,8 @@ export interface CountClanBadgeResponseBadge {
 export interface MezonChangeChannelCategoryBody {
   //
   channel_id?: string;
-}
-
-/**  */
-export interface MezonChangeChannelCategoryBody {
   //
-  channel_id?: string;
+  clan_id?:string;
 }
 
 /**  */

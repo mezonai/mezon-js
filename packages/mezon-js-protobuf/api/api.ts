@@ -2839,6 +2839,7 @@ export interface ClanStickerDeleteRequest {
 }
 
 export interface ChangeChannelCategoryRequest {
+  clan_id: string;
   channel_id: string;
   new_category_id: string;
 }
@@ -27216,16 +27217,19 @@ export const ClanStickerDeleteRequest = {
 };
 
 function createBaseChangeChannelCategoryRequest(): ChangeChannelCategoryRequest {
-  return { channel_id: "", new_category_id: "" };
+  return { clan_id: "", channel_id: "", new_category_id: "" };
 }
 
 export const ChangeChannelCategoryRequest = {
   encode(message: ChangeChannelCategoryRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.clan_id !== "") {
+      writer.uint32(10).string(message.clan_id);
+    }
     if (message.channel_id !== "") {
-      writer.uint32(10).string(message.channel_id);
+      writer.uint32(18).string(message.channel_id);
     }
     if (message.new_category_id !== "") {
-      writer.uint32(18).string(message.new_category_id);
+      writer.uint32(26).string(message.new_category_id);
     }
     return writer;
   },
@@ -27242,10 +27246,17 @@ export const ChangeChannelCategoryRequest = {
             break;
           }
 
-          message.channel_id = reader.string();
+          message.clan_id = reader.string();
           continue;
         case 2:
           if (tag !== 18) {
+            break;
+          }
+
+          message.channel_id = reader.string();
+          continue;
+        case 3:
+          if (tag !== 26) {
             break;
           }
 
@@ -27262,6 +27273,7 @@ export const ChangeChannelCategoryRequest = {
 
   fromJSON(object: any): ChangeChannelCategoryRequest {
     return {
+      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
       channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "",
       new_category_id: isSet(object.new_category_id) ? globalThis.String(object.new_category_id) : "",
     };
@@ -27269,6 +27281,9 @@ export const ChangeChannelCategoryRequest = {
 
   toJSON(message: ChangeChannelCategoryRequest): unknown {
     const obj: any = {};
+    if (message.clan_id !== "") {
+      obj.clan_id = message.clan_id;
+    }
     if (message.channel_id !== "") {
       obj.channel_id = message.channel_id;
     }
@@ -27283,6 +27298,7 @@ export const ChangeChannelCategoryRequest = {
   },
   fromPartial<I extends Exact<DeepPartial<ChangeChannelCategoryRequest>, I>>(object: I): ChangeChannelCategoryRequest {
     const message = createBaseChangeChannelCategoryRequest();
+    message.clan_id = object.clan_id ?? "";
     message.channel_id = object.channel_id ?? "";
     message.new_category_id = object.new_category_id ?? "";
     return message;
