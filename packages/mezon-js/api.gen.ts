@@ -2098,13 +2098,13 @@ export interface ApiSearchMessageDocument {
   //
   display_name?: string;
   //
-  mention?: string;
+  mentions?: string;
   //The message ID.
   message_id?: string;
   //
-  reaction?: string;
+  reactions?: string;
   //
-  reference?: string;
+  references?: string;
   //The user ID of sender.
   sender_id?: string;
   //
