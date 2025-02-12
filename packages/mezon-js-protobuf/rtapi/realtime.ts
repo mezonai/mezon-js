@@ -1126,6 +1126,8 @@ export interface UserChannelRemoved {
   user_ids: string[];
   /** the channel type */
   channel_type: number;
+  /** the clan id */
+  clan_id: string;
 }
 
 /**  */
@@ -9264,7 +9266,7 @@ export const UserChannelAdded = {
 };
 
 function createBaseUserChannelRemoved(): UserChannelRemoved {
-  return { channel_id: "", user_ids: [], channel_type: 0 };
+  return { channel_id: "", user_ids: [], channel_type: 0, clan_id: "" };
 }
 
 export const UserChannelRemoved = {
@@ -9277,6 +9279,9 @@ export const UserChannelRemoved = {
     }
     if (message.channel_type !== 0) {
       writer.uint32(24).int32(message.channel_type);
+    }
+    if (message.clan_id !== "") {
+      writer.uint32(34).string(message.clan_id);
     }
     return writer;
   },
@@ -9309,6 +9314,13 @@ export const UserChannelRemoved = {
 
           message.channel_type = reader.int32();
           continue;
+        case 4:
+          if (tag !== 34) {
+            break;
+          }
+
+          message.clan_id = reader.string();
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -9323,6 +9335,7 @@ export const UserChannelRemoved = {
       channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "",
       user_ids: globalThis.Array.isArray(object?.user_ids) ? object.user_ids.map((e: any) => globalThis.String(e)) : [],
       channel_type: isSet(object.channel_type) ? globalThis.Number(object.channel_type) : 0,
+      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
     };
   },
 
@@ -9337,6 +9350,9 @@ export const UserChannelRemoved = {
     if (message.channel_type !== 0) {
       obj.channel_type = Math.round(message.channel_type);
     }
+    if (message.clan_id !== "") {
+      obj.clan_id = message.clan_id;
+    }
     return obj;
   },
 
@@ -9348,6 +9364,7 @@ export const UserChannelRemoved = {
     message.channel_id = object.channel_id ?? "";
     message.user_ids = object.user_ids?.map((e) => e) || [];
     message.channel_type = object.channel_type ?? 0;
+    message.clan_id = object.clan_id ?? "";
     return message;
   },
 };
