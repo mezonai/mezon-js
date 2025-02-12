@@ -188,6 +188,8 @@ export interface UserChannelRemovedEvent {
   user_ids: string[];
   // the channel type
   channel_type: number;
+  // the clan id
+  clan_id: string;
 }
 
 export interface UserClanRemovedEvent {
