@@ -16,7 +16,7 @@
 
 import {
   ApiAccount,
-  ApiAccountCustom,
+  ApiAccountMezon,
   ApiAccountDevice,
   ApiAccountEmail,
   ApiAccountFacebook,
@@ -639,19 +639,19 @@ export class Client {
   }
 
   /** Authenticate a user with a custom id against the server. */
-  authenticateCustom(
-    id: string,
+  authenticateMezon(
+    token: string,
     create?: boolean,
     username?: string,
     vars: Record<string, string> = {},
     options: any = {}
   ): Promise<Session> {
     const request = {
-      id: id,
+      token: token,
       vars: vars,
     };
     return this.apiClient
-      .authenticateCustom(
+      .authenticateMezon(
         this.serverkey,
         "",
         request,
@@ -2030,9 +2030,9 @@ export class Client {
   }
 
   /** Add a custom ID to the social profiles on the current user's account. */
-  async linkCustom(
+  async linkMezon(
     session: Session,
-    request: ApiAccountCustom
+    request: ApiAccountMezon
   ): Promise<boolean> {
     if (
       this.autoRefreshSession &&
@@ -2043,7 +2043,7 @@ export class Client {
     }
 
     return this.apiClient
-      .linkCustom(session.token, request)
+      .linkMezon(session.token, request)
       .then((response: any) => {
         return response !== undefined;
       });
@@ -2432,7 +2432,7 @@ export class Client {
   /** Remove custom ID from the social profiles on the current user's account. */
   async unlinkCustom(
     session: Session,
-    request: ApiAccountCustom
+    request: ApiAccountMezon
   ): Promise<boolean> {
     if (
       this.autoRefreshSession &&
@@ -2443,7 +2443,7 @@ export class Client {
     }
 
     return this.apiClient
-      .unlinkCustom(session.token, request)
+      .unlinkMezon(session.token, request)
       .then((response: any) => {
         return response !== undefined;
       });
