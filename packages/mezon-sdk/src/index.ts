@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-export * from "./client";
+export * from "./mezon-client/mezon_client"
 
 export * from "./constants";
 
