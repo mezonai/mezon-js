@@ -358,14 +358,6 @@ export interface ApiAccountApple {
   vars?: Record<string, string>;
 }
 
-/** Send a custom ID to the server. Used with authenticate/link/unlink. */
-export interface ApiAccountCustom {
-  //A custom identifier.
-  id?: string;
-  //Extra information that will be bundled in the session token.
-  vars?: Record<string, string>;
-}
-
 /** Send a device to the server. Used with authenticate/link/unlink and user. */
 export interface ApiAccountDevice {
   //A device identifier. Should be obtained by a platform-specific device API.
@@ -422,6 +414,14 @@ export interface ApiAccountGameCenter {
 
 /** Send a Google token to the server. Used with authenticate/link/unlink. */
 export interface ApiAccountGoogle {
+  //The OAuth token received from Google to access their profile API.
+  token?: string;
+  //Extra information that will be bundled in the session token.
+  vars?: Record<string, string>;
+}
+
+/** Send a Mezon token to the server. Used with authenticate/link/unlink. */
+export interface ApiAccountMezon {
   //The OAuth token received from Google to access their profile API.
   token?: string;
   //Extra information that will be bundled in the session token.
@@ -1539,7 +1539,7 @@ export interface ApiLoginIDResponse {
   //
   user_id?: string;
   //
-  user_name?: string;
+  username?: string;
 }
 
 /**  */
@@ -1631,6 +1631,110 @@ export interface ApiListChannelAppsResponse {
 export interface ApiListStreamingChannelsResponse {
   //
   streaming_channels?: Array<ApiStreamingChannelResponse>;
+}
+
+/**  */
+export interface ApiMezonOauthClient {
+  //
+  access_token_strategy?: string;
+  //
+  allowed_cors_origins?: Array<string>;
+  //
+  audience?: Array<string>;
+  //
+  authorization_code_grant_access_token_lifespan?: string;
+  //
+  authorization_code_grant_id_token_lifespan?: string;
+  //
+  authorization_code_grant_refresh_token_lifespan?: string;
+  //
+  backchannel_logout_session_required?: boolean;
+  //
+  backchannel_logout_uri?: string;
+  //
+  client_credentials_grant_access_token_lifespan?: string;
+  //
+  client_id?: string;
+  //
+  client_name?: string;
+  //
+  client_secret?: string;
+  //
+  client_secret_expires_at?: number;
+  //
+  client_uri?: string;
+  //
+  contacts?: Array<string>;
+  //
+  created_at?: string;
+  //
+  frontchannel_logout_session_required?: boolean;
+  //
+  frontchannel_logout_uri?: string;
+  //
+  grant_types?: Array<string>;
+  //
+  implicit_grant_access_token_lifespan?: string;
+  //
+  implicit_grant_id_token_lifespan?: string;
+  //
+  jwks?: Array<string>;
+  //
+  jwks_uri?: string;
+  //
+  jwt_bearer_grant_access_token_lifespan?: string;
+  //
+  logo_uri?: string;
+  //
+  owner?: string;
+  //
+  policy_uri?: string;
+  //
+  post_logout_redirect_uris?: Array<string>;
+  //
+  redirect_uris?: Array<string>;
+  //
+  refresh_token_grant_access_token_lifespan?: string;
+  //
+  refresh_token_grant_id_token_lifespan?: string;
+  //
+  refresh_token_grant_refresh_token_lifespan?: string;
+  //
+  registration_access_token?: string;
+  //
+  registration_client_uri?: string;
+  //
+  request_object_signing_alg?: string;
+  //
+  request_uris?: Array<string>;
+  //
+  response_types?: Array<string>;
+  //
+  scope?: string;
+  //
+  sector_identifier_uri?: string;
+  //
+  skip_consent?: boolean;
+  //
+  skip_logout_consent?: boolean;
+  //
+  subject_type?: string;
+  //
+  token_endpoint_auth_method?: string;
+  //
+  token_endpoint_auth_signing_alg?: string;
+  //
+  tos_uri?: string;
+  //
+  updated_at?: string;
+  //
+  userinfo_signed_response_alg?: string;
+}
+
+/**  */
+export interface ApiMezonOauthClientList {
+  //
+  list_mezon_oauth_client?: Array<ApiMezonOauthClient>;
 }
 
 /**  */
@@ -3157,51 +3261,6 @@ export class MezonApi {
     ]);
   }
 
-  /** Authenticate a user with a custom id against the server. */
-  authenticateCustom(
-    basicAuthUsername: string,
-    basicAuthPassword: string,
-    account: ApiAccountCustom,
-    create?: boolean,
-    username?: string,
-    options: any = {}
-  ): Promise<ApiSession> {
-    if (account === null || account === undefined) {
-      throw new Error(
-        "'account' is a required parameter but is null or undefined."
-      );
-    }
-    const urlPath = "/v2/account/authenticate/custom";
-    const queryParams = new Map<string, any>();
-    queryParams.set("create", create);
-    queryParams.set("username", username);
-
-    let bodyJson: string = "";
-    bodyJson = JSON.stringify(account || {});
-
-    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
-    const fetchOptions = buildFetchOptions("POST", options, bodyJson);
-    if (basicAuthUsername) {
-      fetchOptions.headers["Authorization"] =
-        "Basic " + encode(basicAuthUsername + ":" + basicAuthPassword);
-    }
-
-    return Promise.race([
-      fetch(fullUrl, fetchOptions).then((response) => {
-        if (response.status == 204) {
-          return response;
-        } else if (response.status >= 200 && response.status < 300) {
-          return response.json();
-        } else {
-          throw response;
-        }
-      }),
-      new Promise((_, reject) =>
-        setTimeout(reject, this.timeoutMs, "Request timed out.")
-      ),
-    ]);
-  }
-
   /** Authenticate a user with a device id against the server. */
   authenticateDevice(
     basicAuthUsername: string,
@@ -3472,6 +3531,47 @@ export class MezonApi {
     ]);
   }
 
+  /** Authenticate a user with Mezon against the server. */
+    authenticateMezon(basicAuthUsername: string,
+      basicAuthPassword: string,
+        account:ApiAccountMezon,
+        create?:boolean,
+        username?:string,
+        options: any = {}): Promise<ApiSession> {
+      
+      if (account === null || account === undefined) {
+        throw new Error("'account' is a required parameter but is null or undefined.");
+      }
+      const urlPath = "/v2/account/authenticate/mezon";
+      const queryParams = new Map<string, any>();
+      queryParams.set("create", create);
+      queryParams.set("username", username);
+  
+      let bodyJson : string = "";
+      bodyJson = JSON.stringify(account || {});
+  
+      const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
+      const fetchOptions = buildFetchOptions("POST", options, bodyJson);
+      if (basicAuthUsername) {
+        fetchOptions.headers["Authorization"] = "Basic " + encode(basicAuthUsername + ":" + basicAuthPassword);
+      }
+  
+      return Promise.race([
+        fetch(fullUrl, fetchOptions).then((response) => {
+          if (response.status == 204) {
+            return response;
+          } else if (response.status >= 200 && response.status < 300) {
+            return response.json();
+          } else {
+            throw response;
+          }
+        }),
+        new Promise((_, reject) =>
+          setTimeout(reject, this.timeoutMs, "Request timed out.")
+        ),
+      ]);
+  }
+
   /** Authenticate a user with Steam against the server. */
   authenticateSteam(
     basicAuthUsername: string,
@@ -3531,45 +3631,6 @@ export class MezonApi {
       );
     }
     const urlPath = "/v2/account/link/apple";
-    const queryParams = new Map<string, any>();
-
-    let bodyJson: string = "";
-    bodyJson = JSON.stringify(body || {});
-
-    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
-    const fetchOptions = buildFetchOptions("POST", options, bodyJson);
-    if (bearerToken) {
-      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-    }
-
-    return Promise.race([
-      fetch(fullUrl, fetchOptions).then((response) => {
-        if (response.status == 204) {
-          return response;
-        } else if (response.status >= 200 && response.status < 300) {
-          return response.json();
-        } else {
-          throw response;
-        }
-      }),
-      new Promise((_, reject) =>
-        setTimeout(reject, this.timeoutMs, "Request timed out.")
-      ),
-    ]);
-  }
-
-  /** Add a custom ID to the social profiles on the current user's account. */
-  linkCustom(
-    bearerToken: string,
-    body: ApiAccountCustom,
-    options: any = {}
-  ): Promise<any> {
-    if (body === null || body === undefined) {
-      throw new Error(
-        "'body' is a required parameter but is null or undefined."
-      );
-    }
-    const urlPath = "/v2/account/link/custom";
     const queryParams = new Map<string, any>();
 
     let bodyJson: string = "";
@@ -3794,6 +3855,42 @@ export class MezonApi {
     ]);
   }
 
+  /** Add a mezon ID to the social profiles on the current user's account. */
+    linkMezon(bearerToken: string,
+        body:ApiAccountMezon,
+        options: any = {}): Promise<any> {
+      
+      if (body === null || body === undefined) {
+        throw new Error("'body' is a required parameter but is null or undefined.");
+      }
+      const urlPath = "/v2/account/link/mezon";
+      const queryParams = new Map<string, any>();
+  
+      let bodyJson : string = "";
+      bodyJson = JSON.stringify(body || {});
+  
+      const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
+      const fetchOptions = buildFetchOptions("POST", options, bodyJson);
+      if (bearerToken) {
+          fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+      }
+  
+      return Promise.race([
+        fetch(fullUrl, fetchOptions).then((response) => {
+          if (response.status == 204) {
+            return response;
+          } else if (response.status >= 200 && response.status < 300) {
+            return response.json();
+          } else {
+            throw response;
+          }
+        }),
+        new Promise((_, reject) =>
+          setTimeout(reject, this.timeoutMs, "Request timed out.")
+        ),
+      ]);
+  }
+
   /** Add Google to the social profiles on the current user's account. */
   linkGoogle(
     bearerToken: string,
@@ -3964,45 +4061,6 @@ export class MezonApi {
       );
     }
     const urlPath = "/v2/account/unlink/apple";
-    const queryParams = new Map<string, any>();
-
-    let bodyJson: string = "";
-    bodyJson = JSON.stringify(body || {});
-
-    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
-    const fetchOptions = buildFetchOptions("POST", options, bodyJson);
-    if (bearerToken) {
-      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-    }
-
-    return Promise.race([
-      fetch(fullUrl, fetchOptions).then((response) => {
-        if (response.status == 204) {
-          return response;
-        } else if (response.status >= 200 && response.status < 300) {
-          return response.json();
-        } else {
-          throw response;
-        }
-      }),
-      new Promise((_, reject) =>
-        setTimeout(reject, this.timeoutMs, "Request timed out.")
-      ),
-    ]);
-  }
-
-  /** Remove the custom ID from the social profiles on the current user's account. */
-  unlinkCustom(
-    bearerToken: string,
-    body: ApiAccountCustom,
-    options: any = {}
-  ): Promise<any> {
-    if (body === null || body === undefined) {
-      throw new Error(
-        "'body' is a required parameter but is null or undefined."
-      );
-    }
-    const urlPath = "/v2/account/unlink/custom";
     const queryParams = new Map<string, any>();
 
     let bodyJson: string = "";
@@ -4262,6 +4320,42 @@ export class MezonApi {
         setTimeout(reject, this.timeoutMs, "Request timed out.")
       ),
     ]);
+  }
+
+  /** Remove the mezon ID from the social profiles on the current user's account. */
+    unlinkMezon(bearerToken: string,
+        body:ApiAccountMezon,
+        options: any = {}): Promise<any> {
+      
+      if (body === null || body === undefined) {
+        throw new Error("'body' is a required parameter but is null or undefined.");
+      }
+      const urlPath = "/v2/account/unlink/mezon";
+      const queryParams = new Map<string, any>();
+  
+      let bodyJson : string = "";
+      bodyJson = JSON.stringify(body || {});
+  
+      const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
+      const fetchOptions = buildFetchOptions("POST", options, bodyJson);
+      if (bearerToken) {
+          fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+      }
+  
+      return Promise.race([
+        fetch(fullUrl, fetchOptions).then((response) => {
+          if (response.status == 204) {
+            return response;
+          } else if (response.status >= 200 && response.status < 300) {
+            return response.json();
+          } else {
+            throw response;
+          }
+        }),
+        new Promise((_, reject) =>
+          setTimeout(reject, this.timeoutMs, "Request timed out.")
+        ),
+      ]);
   }
 
   /** Remove Steam from the social profiles on the current user's account. */
@@ -7504,7 +7598,38 @@ export class MezonApi {
       ),
     ]);
   }
+  
+  /** List mezon OAuth client */
+  listMezonOauthClient(bearerToken: string,
+      options: any = {}): Promise<ApiMezonOauthClientList> {
+    
+    const urlPath = "/v2/mznoauthclient";
+    const queryParams = new Map<string, any>();
 
+    let bodyJson : string = "";
+
+    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
+    const fetchOptions = buildFetchOptions("GET", options, bodyJson);
+    if (bearerToken) {
+        fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+    }
+
+    return Promise.race([
+      fetch(fullUrl, fetchOptions).then((response) => {
+        if (response.status == 204) {
+          return response;
+        } else if (response.status >= 200 && response.status < 300) {
+          return response.json();
+        } else {
+          throw response;
+        }
+      }),
+      new Promise((_, reject) =>
+        setTimeout(reject, this.timeoutMs, "Request timed out.")
+      ),
+    ]);
+  }
+  
   /** set mute notification user channel. */
   setMuteNotificationCategory(
     bearerToken: string,

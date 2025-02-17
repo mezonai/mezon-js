@@ -16,7 +16,7 @@
 
 import {
   ApiAccount,
-  ApiAccountCustom,
+  ApiAccountMezon,
   ApiAccountDevice,
   ApiAccountEmail,
   ApiAccountFacebook,
@@ -162,6 +162,7 @@ import {
   ApiGenerateMeetTokenRequest,
   ApiGenerateMeetTokenResponse,
   ApiHandleParticipantMeetStateRequest,
+  ApiMezonOauthClientList,
 } from "./api.gen";
 
 import { Session } from "./session";
@@ -639,19 +640,19 @@ export class Client {
   }
 
   /** Authenticate a user with a custom id against the server. */
-  authenticateCustom(
-    id: string,
+  authenticateMezon(
+    token: string,
     create?: boolean,
     username?: string,
     vars: Record<string, string> = {},
     options: any = {}
   ): Promise<Session> {
     const request = {
-      id: id,
+      token: token,
       vars: vars,
     };
     return this.apiClient
-      .authenticateCustom(
+      .authenticateMezon(
         this.serverkey,
         "",
         request,
@@ -2030,9 +2031,9 @@ export class Client {
   }
 
   /** Add a custom ID to the social profiles on the current user's account. */
-  async linkCustom(
+  async linkMezon(
     session: Session,
-    request: ApiAccountCustom
+    request: ApiAccountMezon
   ): Promise<boolean> {
     if (
       this.autoRefreshSession &&
@@ -2043,7 +2044,7 @@ export class Client {
     }
 
     return this.apiClient
-      .linkCustom(session.token, request)
+      .linkMezon(session.token, request)
       .then((response: any) => {
         return response !== undefined;
       });
@@ -2432,7 +2433,7 @@ export class Client {
   /** Remove custom ID from the social profiles on the current user's account. */
   async unlinkCustom(
     session: Session,
-    request: ApiAccountCustom
+    request: ApiAccountMezon
   ): Promise<boolean> {
     if (
       this.autoRefreshSession &&
@@ -2443,7 +2444,7 @@ export class Client {
     }
 
     return this.apiClient
-      .unlinkCustom(session.token, request)
+      .unlinkMezon(session.token, request)
       .then((response: any) => {
         return response !== undefined;
       });
@@ -4928,6 +4929,25 @@ export class Client {
     return this.apiClient
       .handleParticipantMeetState(session.token, body)
       .then((response: any) => {
+        return Promise.resolve(response);
+      });
+  }
+
+  //**list webhook belong to the clan */
+  async listMezonOauthClient(
+    session: Session
+  ): Promise<ApiMezonOauthClientList> {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired((Date.now() + this.expiredTimespanMs) / 1000)
+    ) {
+      await this.sessionRefresh(session);
+    }
+
+    return this.apiClient
+      .listMezonOauthClient(session.token)
+      .then((response: ApiMezonOauthClientList) => {
         return Promise.resolve(response);
       });
   }
