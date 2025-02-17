@@ -7598,199 +7598,38 @@ export class MezonApi {
       ),
     ]);
   }
+  
+  /** List mezon OAuth client */
+  listMezonOauthClient(bearerToken: string,
+      options: any = {}): Promise<ApiMezonOauthClientList> {
+    
+    const urlPath = "/v2/mznoauthclient";
+    const queryParams = new Map<string, any>();
 
-  /** Delete mezon OAuth client */
-    deleteMezonOauthClient(bearerToken: string,
-        accessTokenStrategy?:string,
-        allowedCorsOrigins?:Array<string>,
-        audience?:Array<string>,
-        authorizationCodeGrantAccessTokenLifespan?:string,
-        authorizationCodeGrantIdTokenLifespan?:string,
-        authorizationCodeGrantRefreshTokenLifespan?:string,
-        backchannelLogoutSessionRequired?:boolean,
-        backchannelLogoutUri?:string,
-        clientCredentialsGrantAccessTokenLifespan?:string,
-        clientId?:string,
-        clientName?:string,
-        clientSecret?:string,
-        clientSecretExpiresAt?:number,
-        clientUri?:string,
-        contacts?:Array<string>,
-        createdAt?:string,
-        frontchannelLogoutSessionRequired?:boolean,
-        frontchannelLogoutUri?:string,
-        grantTypes?:Array<string>,
-        implicitGrantAccessTokenLifespan?:string,
-        implicitGrantIdTokenLifespan?:string,
-        jwks?:Array<string>,
-        jwksUri?:string,
-        jwtBearerGrantAccessTokenLifespan?:string,
-        logoUri?:string,
-        owner?:string,
-        policyUri?:string,
-        postLogoutRedirectUris?:Array<string>,
-        redirectUris?:Array<string>,
-        refreshTokenGrantAccessTokenLifespan?:string,
-        refreshTokenGrantIdTokenLifespan?:string,
-        refreshTokenGrantRefreshTokenLifespan?:string,
-        registrationAccessToken?:string,
-        registrationClientUri?:string,
-        requestObjectSigningAlg?:string,
-        requestUris?:Array<string>,
-        responseTypes?:Array<string>,
-        scope?:string,
-        sectorIdentifierUri?:string,
-        skipConsent?:boolean,
-        skipLogoutConsent?:boolean,
-        subjectType?:string,
-        tokenEndpointAuthMethod?:string,
-        tokenEndpointAuthSigningAlg?:string,
-        tosUri?:string,
-        updatedAt?:string,
-        userinfoSignedResponseAlg?:string,
-        options: any = {}): Promise<any> {
-      
-      const urlPath = "/v2/mznoauthclient";
-      const queryParams = new Map<string, any>();
-      queryParams.set("access_token_strategy", accessTokenStrategy);
-      queryParams.set("allowed_cors_origins", allowedCorsOrigins);
-      queryParams.set("audience", audience);
-      queryParams.set("authorization_code_grant_access_token_lifespan", authorizationCodeGrantAccessTokenLifespan);
-      queryParams.set("authorization_code_grant_id_token_lifespan", authorizationCodeGrantIdTokenLifespan);
-      queryParams.set("authorization_code_grant_refresh_token_lifespan", authorizationCodeGrantRefreshTokenLifespan);
-      queryParams.set("backchannel_logout_session_required", backchannelLogoutSessionRequired);
-      queryParams.set("backchannel_logout_uri", backchannelLogoutUri);
-      queryParams.set("client_credentials_grant_access_token_lifespan", clientCredentialsGrantAccessTokenLifespan);
-      queryParams.set("client_id", clientId);
-      queryParams.set("client_name", clientName);
-      queryParams.set("client_secret", clientSecret);
-      queryParams.set("client_secret_expires_at", clientSecretExpiresAt);
-      queryParams.set("client_uri", clientUri);
-      queryParams.set("contacts", contacts);
-      queryParams.set("created_at", createdAt);
-      queryParams.set("frontchannel_logout_session_required", frontchannelLogoutSessionRequired);
-      queryParams.set("frontchannel_logout_uri", frontchannelLogoutUri);
-      queryParams.set("grant_types", grantTypes);
-      queryParams.set("implicit_grant_access_token_lifespan", implicitGrantAccessTokenLifespan);
-      queryParams.set("implicit_grant_id_token_lifespan", implicitGrantIdTokenLifespan);
-      queryParams.set("jwks", jwks);
-      queryParams.set("jwks_uri", jwksUri);
-      queryParams.set("jwt_bearer_grant_access_token_lifespan", jwtBearerGrantAccessTokenLifespan);
-      queryParams.set("logo_uri", logoUri);
-      queryParams.set("owner", owner);
-      queryParams.set("policy_uri", policyUri);
-      queryParams.set("post_logout_redirect_uris", postLogoutRedirectUris);
-      queryParams.set("redirect_uris", redirectUris);
-      queryParams.set("refresh_token_grant_access_token_lifespan", refreshTokenGrantAccessTokenLifespan);
-      queryParams.set("refresh_token_grant_id_token_lifespan", refreshTokenGrantIdTokenLifespan);
-      queryParams.set("refresh_token_grant_refresh_token_lifespan", refreshTokenGrantRefreshTokenLifespan);
-      queryParams.set("registration_access_token", registrationAccessToken);
-      queryParams.set("registration_client_uri", registrationClientUri);
-      queryParams.set("request_object_signing_alg", requestObjectSigningAlg);
-      queryParams.set("request_uris", requestUris);
-      queryParams.set("response_types", responseTypes);
-      queryParams.set("scope", scope);
-      queryParams.set("sector_identifier_uri", sectorIdentifierUri);
-      queryParams.set("skip_consent", skipConsent);
-      queryParams.set("skip_logout_consent", skipLogoutConsent);
-      queryParams.set("subject_type", subjectType);
-      queryParams.set("token_endpoint_auth_method", tokenEndpointAuthMethod);
-      queryParams.set("token_endpoint_auth_signing_alg", tokenEndpointAuthSigningAlg);
-      queryParams.set("tos_uri", tosUri);
-      queryParams.set("updated_at", updatedAt);
-      queryParams.set("userinfo_signed_response_alg", userinfoSignedResponseAlg);
-  
-      let bodyJson : string = "";
-  
-      const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
-      const fetchOptions = buildFetchOptions("DELETE", options, bodyJson);
-      if (bearerToken) {
-          fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-      }
-  
-      return Promise.race([
-        fetch(fullUrl, fetchOptions).then((response) => {
-          if (response.status == 204) {
-            return response;
-          } else if (response.status >= 200 && response.status < 300) {
-            return response.json();
-          } else {
-            throw response;
-          }
-        }),
-        new Promise((_, reject) =>
-          setTimeout(reject, this.timeoutMs, "Request timed out.")
-        ),
-      ]);
-  }
-  
-    /** List mezon OAuth client */
-    listMezonOauthClient(bearerToken: string,
-        options: any = {}): Promise<ApiMezonOauthClientList> {
-      
-      const urlPath = "/v2/mznoauthclient";
-      const queryParams = new Map<string, any>();
-  
-      let bodyJson : string = "";
-  
-      const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
-      const fetchOptions = buildFetchOptions("GET", options, bodyJson);
-      if (bearerToken) {
-          fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-      }
-  
-      return Promise.race([
-        fetch(fullUrl, fetchOptions).then((response) => {
-          if (response.status == 204) {
-            return response;
-          } else if (response.status >= 200 && response.status < 300) {
-            return response.json();
-          } else {
-            throw response;
-          }
-        }),
-        new Promise((_, reject) =>
-          setTimeout(reject, this.timeoutMs, "Request timed out.")
-        ),
-      ]);
-  }
-  
-    /** Create mezon OAuth client */
-    createMezonOauthClient(bearerToken: string,
-        body:ApiMezonOauthClient,
-        options: any = {}): Promise<ApiMezonOauthClient> {
-      
-      if (body === null || body === undefined) {
-        throw new Error("'body' is a required parameter but is null or undefined.");
-      }
-      const urlPath = "/v2/mznoauthclient";
-      const queryParams = new Map<string, any>();
-  
-      let bodyJson : string = "";
-      bodyJson = JSON.stringify(body || {});
-  
-      const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
-      const fetchOptions = buildFetchOptions("POST", options, bodyJson);
-      if (bearerToken) {
-          fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-      }
-  
-      return Promise.race([
-        fetch(fullUrl, fetchOptions).then((response) => {
-          if (response.status == 204) {
-            return response;
-          } else if (response.status >= 200 && response.status < 300) {
-            return response.json();
-          } else {
-            throw response;
-          }
-        }),
-        new Promise((_, reject) =>
-          setTimeout(reject, this.timeoutMs, "Request timed out.")
-        ),
-      ]);
-  }
+    let bodyJson : string = "";
 
+    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
+    const fetchOptions = buildFetchOptions("GET", options, bodyJson);
+    if (bearerToken) {
+        fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+    }
+
+    return Promise.race([
+      fetch(fullUrl, fetchOptions).then((response) => {
+        if (response.status == 204) {
+          return response;
+        } else if (response.status >= 200 && response.status < 300) {
+          return response.json();
+        } else {
+          throw response;
+        }
+      }),
+      new Promise((_, reject) =>
+        setTimeout(reject, this.timeoutMs, "Request timed out.")
+      ),
+    ]);
+  }
+  
   /** set mute notification user channel. */
   setMuteNotificationCategory(
     bearerToken: string,

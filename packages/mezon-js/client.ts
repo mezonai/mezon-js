@@ -162,6 +162,7 @@ import {
   ApiGenerateMeetTokenRequest,
   ApiGenerateMeetTokenResponse,
   ApiHandleParticipantMeetStateRequest,
+  ApiMezonOauthClientList,
 } from "./api.gen";
 
 import { Session } from "./session";
@@ -4928,6 +4929,25 @@ export class Client {
     return this.apiClient
       .handleParticipantMeetState(session.token, body)
       .then((response: any) => {
+        return Promise.resolve(response);
+      });
+  }
+
+  //**list webhook belong to the clan */
+  async listMezonOauthClient(
+    session: Session
+  ): Promise<ApiMezonOauthClientList> {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired((Date.now() + this.expiredTimespanMs) / 1000)
+    ) {
+      await this.sessionRefresh(session);
+    }
+
+    return this.apiClient
+      .listMezonOauthClient(session.token)
+      .then((response: ApiMezonOauthClientList) => {
         return Promise.resolve(response);
       });
   }
