@@ -560,12 +560,20 @@ export interface ClanDeletedEvent {
 
 // clan updated event
 export interface ClanUpdatedEvent {
-  // the clan id
+  // clan id
   clan_id: string;
-  // the clan name
+  // clan name
   clan_name: string;
-  // the clan logo
-  clan_logo: string;
+  // logo
+  logo: string;
+  // banner
+  banner: string;
+  // status
+  status: number;
+  // is onboarding
+  is_onboarding: boolean;
+  // welcome channel id
+  welcome_channel_id: string;
 }
 
 export interface ClanProfileUpdatedEvent {
