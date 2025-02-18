@@ -154,8 +154,10 @@ export interface MezonUpdateClanDescBody {
   logo?: string;
   //
   status?: number;
-  // Is onboarding.
+  // is onboarding.
   is_onboarding?: boolean;
+  // welcome channel id.
+  welcome_channel_id?: string;
 }
 
 /**  */
@@ -943,8 +945,10 @@ export interface ApiClanDesc {
   status?: number;
   //
   badge_count?: number;
-  // Is onboarding.
+  // is onboarding.
   is_onboarding?: boolean;
+  // welcome channel id.
+  welcome_channel_id?: string;
 }
 
 /**  */
