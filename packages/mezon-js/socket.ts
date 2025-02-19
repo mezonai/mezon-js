@@ -468,6 +468,8 @@ export interface ChannelUpdatedEvent {
   status: number;
   // meeting code
   meeting_code: string;
+  // channel private
+  channel_private: number;
   // is error
   is_error: boolean;
   // app url
