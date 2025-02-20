@@ -317,6 +317,7 @@ export interface Envelope {
 }
 
 export interface FollowEvent {
+  clan_id: string;
 }
 
 export interface IncomingCallPush {
@@ -2775,11 +2776,14 @@ export const Envelope = {
 };
 
 function createBaseFollowEvent(): FollowEvent {
-  return {};
+  return { clan_id: "" };
 }
 
 export const FollowEvent = {
-  encode(_: FollowEvent, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(message: FollowEvent, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.clan_id !== "") {
+      writer.uint32(10).string(message.clan_id);
+    }
     return writer;
   },
 
@@ -2790,6 +2794,13 @@ export const FollowEvent = {
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.clan_id = reader.string();
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -2799,20 +2810,24 @@ export const FollowEvent = {
     return message;
   },
 
-  fromJSON(_: any): FollowEvent {
-    return {};
+  fromJSON(object: any): FollowEvent {
+    return { clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "" };
   },
 
-  toJSON(_: FollowEvent): unknown {
+  toJSON(message: FollowEvent): unknown {
     const obj: any = {};
+    if (message.clan_id !== "") {
+      obj.clan_id = message.clan_id;
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<FollowEvent>, I>>(base?: I): FollowEvent {
     return FollowEvent.fromPartial(base ?? ({} as any));
   },
-  fromPartial<I extends Exact<DeepPartial<FollowEvent>, I>>(_: I): FollowEvent {
+  fromPartial<I extends Exact<DeepPartial<FollowEvent>, I>>(object: I): FollowEvent {
     const message = createBaseFollowEvent();
+    message.clan_id = object.clan_id ?? "";
     return message;
   },
 };
