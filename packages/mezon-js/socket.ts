@@ -967,6 +967,12 @@ export interface UserStatusEvent {
   custom_status: string;
 }
 
+export interface JoinChannelAppData {
+  user_id : string;
+  username : string;
+  hash: string;
+}
+
 /** A socket connection to Mezon server. */
 export interface Socket {
   /** Connection is Open */
@@ -1345,6 +1351,9 @@ export interface Socket {
   onchannelappevent: (event: ChannelAppEvent) => void;
 
   onuserstatusevent: (user_status_event: UserStatusEvent) => void;
+
+  onJoinChannelAppEvent: (join_channel_app_data: JoinChannelAppData) => void;
+
 }
 
 /** Reports an error received from a socket message. */
@@ -1624,6 +1633,8 @@ export class DefaultSocket implements Socket {
           this.onchannelappevent(<ChannelAppEvent>message.channel_app_event);
         } else if (message.user_status_event) {
           this.onuserstatusevent(<UserStatusEvent>message.user_status_event);
+        } else if (message.join_channel_app_data) {
+          this.onJoinChannelAppEvent(<JoinChannelAppData>message.join_channel_app_data);
         } else {
           if (this.verbose && window && window.console) {
             console.log("Unrecognized message received: %o", message);
@@ -2021,6 +2032,12 @@ export class DefaultSocket implements Socket {
     }
   }
 
+  onJoinChannelAppEvent(join_channel_app_data: JoinChannelAppData) {
+    if (this.verbose && window && window.console) {
+      console.log(join_channel_app_data);
+    }
+  }
+  
   send(
     message:
       | ChannelJoin
