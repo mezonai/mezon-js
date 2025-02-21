@@ -3971,6 +3971,16 @@ export interface SearchThreadRequest {
   label: string;
 }
 
+export interface JoinChannelAppResponse {
+  user_id: string;
+  username: string;
+  hash: string;
+}
+
+export interface JoinChannelAppRequest {
+  channel_id: string;
+}
+
 function createBaseAccount(): Account {
   return {
     user: undefined,
@@ -39261,6 +39271,152 @@ export const SearchThreadRequest = {
     message.clan_id = object.clan_id ?? "";
     message.channel_id = object.channel_id ?? "";
     message.label = object.label ?? "";
+    return message;
+  },
+};
+
+function createBaseJoinChannelAppResponse(): JoinChannelAppResponse {
+  return { user_id: "", username: "", hash: "" };
+}
+
+export const JoinChannelAppResponse = {
+  encode(message: JoinChannelAppResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.user_id !== "") {
+      writer.uint32(10).string(message.user_id);
+    }
+    if (message.username !== "") {
+      writer.uint32(18).string(message.username);
+    }
+    if (message.hash !== "") {
+      writer.uint32(26).string(message.hash);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): JoinChannelAppResponse {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseJoinChannelAppResponse();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.user_id = reader.string();
+          continue;
+        case 2:
+          if (tag !== 18) {
+            break;
+          }
+
+          message.username = reader.string();
+          continue;
+        case 3:
+          if (tag !== 26) {
+            break;
+          }
+
+          message.hash = reader.string();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): JoinChannelAppResponse {
+    return {
+      user_id: isSet(object.user_id) ? globalThis.String(object.user_id) : "",
+      username: isSet(object.username) ? globalThis.String(object.username) : "",
+      hash: isSet(object.hash) ? globalThis.String(object.hash) : "",
+    };
+  },
+
+  toJSON(message: JoinChannelAppResponse): unknown {
+    const obj: any = {};
+    if (message.user_id !== "") {
+      obj.user_id = message.user_id;
+    }
+    if (message.username !== "") {
+      obj.username = message.username;
+    }
+    if (message.hash !== "") {
+      obj.hash = message.hash;
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<JoinChannelAppResponse>, I>>(base?: I): JoinChannelAppResponse {
+    return JoinChannelAppResponse.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<JoinChannelAppResponse>, I>>(object: I): JoinChannelAppResponse {
+    const message = createBaseJoinChannelAppResponse();
+    message.user_id = object.user_id ?? "";
+    message.username = object.username ?? "";
+    message.hash = object.hash ?? "";
+    return message;
+  },
+};
+
+function createBaseJoinChannelAppRequest(): JoinChannelAppRequest {
+  return { channel_id: "" };
+}
+
+export const JoinChannelAppRequest = {
+  encode(message: JoinChannelAppRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.channel_id !== "") {
+      writer.uint32(10).string(message.channel_id);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): JoinChannelAppRequest {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseJoinChannelAppRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.channel_id = reader.string();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): JoinChannelAppRequest {
+    return { channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "" };
+  },
+
+  toJSON(message: JoinChannelAppRequest): unknown {
+    const obj: any = {};
+    if (message.channel_id !== "") {
+      obj.channel_id = message.channel_id;
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<JoinChannelAppRequest>, I>>(base?: I): JoinChannelAppRequest {
+    return JoinChannelAppRequest.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<JoinChannelAppRequest>, I>>(object: I): JoinChannelAppRequest {
+    const message = createBaseJoinChannelAppRequest();
+    message.channel_id = object.channel_id ?? "";
     return message;
   },
 };

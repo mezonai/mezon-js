@@ -163,6 +163,7 @@ import {
   ApiGenerateMeetTokenResponse,
   ApiHandleParticipantMeetStateRequest,
   ApiMezonOauthClientList,
+  ApiJoinChannelAppResponse,
 } from "./api.gen";
 
 import { Session } from "./session";
@@ -4973,4 +4974,23 @@ export class Client {
         return Promise.resolve(response);
       });
   }
+  
+  async joinChannelApp(
+    session: Session,
+    channelId?:string
+  ): Promise<ApiJoinChannelAppResponse> {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired((Date.now() + this.expiredTimespanMs) / 1000)
+    ) {
+      await this.sessionRefresh(session);
+    }
+
+    return this.apiClient
+      .joinChannelApp(session.token, channelId)
+      .then((response: ApiJoinChannelAppResponse) => {
+        return Promise.resolve(response);
+      });
+    }
 }
