@@ -16,7 +16,7 @@
         "build": "npx tsc && node build.mjs"
     },
     "devDependencies": {
-                "ts-proto": "^1.80.1",
+        "ts-proto": "^1.80.1",
         "ts-proto-descriptors": "1.2.1"
     },
     "keywords": [
