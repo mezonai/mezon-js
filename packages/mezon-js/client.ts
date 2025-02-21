@@ -16,7 +16,7 @@
 
 import {
   ApiAccount,
-  ApiAccountCustom,
+  ApiAccountMezon,
   ApiAccountDevice,
   ApiAccountEmail,
   ApiAccountFacebook,
@@ -158,8 +158,11 @@ import {
   ApiSdTopic,
   MezonUpdateEventBody,
   ApiTransactionDetail,
-  ApiGetJoinMezonMeetResponse,
   MezonapiCreateRoomChannelApps,
+  ApiGenerateMeetTokenRequest,
+  ApiGenerateMeetTokenResponse,
+  ApiHandleParticipantMeetStateRequest,
+  ApiMezonOauthClientList,
 } from "./api.gen";
 
 import { Session } from "./session";
@@ -637,19 +640,19 @@ export class Client {
   }
 
   /** Authenticate a user with a custom id against the server. */
-  authenticateCustom(
-    id: string,
+  authenticateMezon(
+    token: string,
     create?: boolean,
     username?: string,
     vars: Record<string, string> = {},
     options: any = {}
   ): Promise<Session> {
     const request = {
-      id: id,
+      token: token,
       vars: vars,
     };
     return this.apiClient
-      .authenticateCustom(
+      .authenticateMezon(
         this.serverkey,
         "",
         request,
@@ -2028,9 +2031,9 @@ export class Client {
   }
 
   /** Add a custom ID to the social profiles on the current user's account. */
-  async linkCustom(
+  async linkMezon(
     session: Session,
-    request: ApiAccountCustom
+    request: ApiAccountMezon
   ): Promise<boolean> {
     if (
       this.autoRefreshSession &&
@@ -2041,7 +2044,7 @@ export class Client {
     }
 
     return this.apiClient
-      .linkCustom(session.token, request)
+      .linkMezon(session.token, request)
       .then((response: any) => {
         return response !== undefined;
       });
@@ -2430,7 +2433,7 @@ export class Client {
   /** Remove custom ID from the social profiles on the current user's account. */
   async unlinkCustom(
     session: Session,
-    request: ApiAccountCustom
+    request: ApiAccountMezon
   ): Promise<boolean> {
     if (
       this.autoRefreshSession &&
@@ -2441,7 +2444,7 @@ export class Client {
     }
 
     return this.apiClient
-      .unlinkCustom(session.token, request)
+      .unlinkMezon(session.token, request)
       .then((response: any) => {
         return response !== undefined;
       });
@@ -4870,27 +4873,6 @@ export class Client {
       });
   }
 
-  //**get join mezon meet */
-  async getJoinMezonMeet(
-    session: Session,
-    channelId?:string,
-    roomName?:string,
-  ): Promise<ApiGetJoinMezonMeetResponse> {
-    if (
-      this.autoRefreshSession &&
-      session.refresh_token &&
-      session.isexpired((Date.now() + this.expiredTimespanMs) / 1000)
-    ) {
-      await this.sessionRefresh(session);
-    }
-
-    return this.apiClient
-      .getJoinMezonMeet(session.token, channelId, roomName)
-      .then((response: ApiGetJoinMezonMeetResponse) => {
-        return Promise.resolve(response);
-      });
-    }
-
   //**create room channel apps */
   async createRoomChannelApps(
     session: Session,
@@ -4908,6 +4890,87 @@ export class Client {
       .createRoomChannelApps(session.token, body)
       .then((response: MezonapiCreateRoomChannelApps) => {
         return Promise.resolve(response);
-      });
+    });
+  }
+
+  /** Generate Meet Token */
+  async generateMeetToken(
+    session: Session,
+    body: ApiGenerateMeetTokenRequest
+  ): Promise<ApiGenerateMeetTokenResponse> {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired((Date.now() + this.expiredTimespanMs) / 1000)
+    ) {
+      await this.sessionRefresh(session);
     }
+
+    return this.apiClient
+      .generateMeetToken(session.token, body)
+      .then((response: ApiGenerateMeetTokenResponse) => {
+        return Promise.resolve(response);
+    });
+  }
+
+  /** Handle participant meet state */
+  async handleParticipantMeetState(
+    session: Session,
+    body:ApiHandleParticipantMeetStateRequest,
+  ): Promise<any> {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired((Date.now() + this.expiredTimespanMs) / 1000)
+    ) {
+      await this.sessionRefresh(session);
+    }
+
+    return this.apiClient
+      .handleParticipantMeetState(session.token, body)
+      .then((response: any) => {
+        return Promise.resolve(response);
+      });
+  }
+
+  //**list webhook belong to the clan */
+  async listMezonOauthClient(
+    session: Session
+  ): Promise<ApiMezonOauthClientList> {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired((Date.now() + this.expiredTimespanMs) / 1000)
+    ) {
+      await this.sessionRefresh(session);
+    }
+
+    return this.apiClient
+      .listMezonOauthClient(session.token)
+      .then((response: ApiMezonOauthClientList) => {
+        return Promise.resolve(response);
+      });
+  }
+
+  //**search thread */
+  async searchThread(
+    session: Session,
+    clanId?:string,
+    channelId?:string,
+    label?:string,
+  ): Promise<ApiChannelDescList> {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired((Date.now() + this.expiredTimespanMs) / 1000)
+    ) {
+      await this.sessionRefresh(session);
+    }
+
+    return this.apiClient
+      .searchThread(session.token, clanId, channelId, label)
+      .then((response: ApiChannelDescList) => {
+        return Promise.resolve(response);
+      });
+  }
 }

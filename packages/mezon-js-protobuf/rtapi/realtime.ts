@@ -1126,6 +1126,8 @@ export interface UserChannelRemoved {
   user_ids: string[];
   /** the channel type */
   channel_type: number;
+  /** the clan_id */
+  clan_id: string;
 }
 
 /**  */
@@ -1138,12 +1140,20 @@ export interface UserClanRemoved {
 
 /** clan updated event */
 export interface ClanUpdatedEvent {
-  /** the clan id */
+  /** clan id */
   clan_id: string;
-  /** the clan name */
+  /** clan name */
   clan_name: string;
-  /** the clan logo */
-  clan_logo: string;
+  /** logo */
+  logo: string;
+  /** banner */
+  banner: string;
+  /** status */
+  status: number;
+  /** is onboarding */
+  is_onboarding: boolean;
+  /** welcome channel id */
+  welcome_channel_id: string;
 }
 
 /** clan profile updated event */
@@ -9264,7 +9274,7 @@ export const UserChannelAdded = {
 };
 
 function createBaseUserChannelRemoved(): UserChannelRemoved {
-  return { channel_id: "", user_ids: [], channel_type: 0 };
+  return { channel_id: "", user_ids: [], channel_type: 0, clan_id: "" };
 }
 
 export const UserChannelRemoved = {
@@ -9277,6 +9287,9 @@ export const UserChannelRemoved = {
     }
     if (message.channel_type !== 0) {
       writer.uint32(24).int32(message.channel_type);
+    }
+    if (message.clan_id !== "") {
+      writer.uint32(34).string(message.clan_id);
     }
     return writer;
   },
@@ -9309,6 +9322,13 @@ export const UserChannelRemoved = {
 
           message.channel_type = reader.int32();
           continue;
+        case 4:
+          if (tag !== 34) {
+            break;
+          }
+
+          message.clan_id = reader.string();
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -9323,6 +9343,7 @@ export const UserChannelRemoved = {
       channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "",
       user_ids: globalThis.Array.isArray(object?.user_ids) ? object.user_ids.map((e: any) => globalThis.String(e)) : [],
       channel_type: isSet(object.channel_type) ? globalThis.Number(object.channel_type) : 0,
+      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
     };
   },
 
@@ -9337,6 +9358,9 @@ export const UserChannelRemoved = {
     if (message.channel_type !== 0) {
       obj.channel_type = Math.round(message.channel_type);
     }
+    if (message.clan_id !== "") {
+      obj.clan_id = message.clan_id;
+    }
     return obj;
   },
 
@@ -9348,6 +9372,7 @@ export const UserChannelRemoved = {
     message.channel_id = object.channel_id ?? "";
     message.user_ids = object.user_ids?.map((e) => e) || [];
     message.channel_type = object.channel_type ?? 0;
+    message.clan_id = object.clan_id ?? "";
     return message;
   },
 };
@@ -9427,7 +9452,7 @@ export const UserClanRemoved = {
 };
 
 function createBaseClanUpdatedEvent(): ClanUpdatedEvent {
-  return { clan_id: "", clan_name: "", clan_logo: "" };
+  return { clan_id: "", clan_name: "", logo: "", banner: "", status: 0, is_onboarding: false, welcome_channel_id: "" };
 }
 
 export const ClanUpdatedEvent = {
@@ -9438,8 +9463,20 @@ export const ClanUpdatedEvent = {
     if (message.clan_name !== "") {
       writer.uint32(18).string(message.clan_name);
     }
-    if (message.clan_logo !== "") {
-      writer.uint32(26).string(message.clan_logo);
+    if (message.logo !== "") {
+      writer.uint32(26).string(message.logo);
+    }
+    if (message.banner !== "") {
+      writer.uint32(34).string(message.banner);
+    }
+    if (message.status !== 0) {
+      writer.uint32(40).int32(message.status);
+    }
+    if (message.is_onboarding !== false) {
+      writer.uint32(48).bool(message.is_onboarding);
+    }
+    if (message.welcome_channel_id !== "") {
+      writer.uint32(58).string(message.welcome_channel_id);
     }
     return writer;
   },
@@ -9470,7 +9507,35 @@ export const ClanUpdatedEvent = {
             break;
           }
 
-          message.clan_logo = reader.string();
+          message.logo = reader.string();
+          continue;
+        case 4:
+          if (tag !== 34) {
+            break;
+          }
+
+          message.banner = reader.string();
+          continue;
+        case 5:
+          if (tag !== 40) {
+            break;
+          }
+
+          message.status = reader.int32();
+          continue;
+        case 6:
+          if (tag !== 48) {
+            break;
+          }
+
+          message.is_onboarding = reader.bool();
+          continue;
+        case 7:
+          if (tag !== 58) {
+            break;
+          }
+
+          message.welcome_channel_id = reader.string();
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -9485,7 +9550,11 @@ export const ClanUpdatedEvent = {
     return {
       clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
       clan_name: isSet(object.clan_name) ? globalThis.String(object.clan_name) : "",
-      clan_logo: isSet(object.clan_logo) ? globalThis.String(object.clan_logo) : "",
+      logo: isSet(object.logo) ? globalThis.String(object.logo) : "",
+      banner: isSet(object.banner) ? globalThis.String(object.banner) : "",
+      status: isSet(object.status) ? globalThis.Number(object.status) : 0,
+      is_onboarding: isSet(object.is_onboarding) ? globalThis.Boolean(object.is_onboarding) : false,
+      welcome_channel_id: isSet(object.welcome_channel_id) ? globalThis.String(object.welcome_channel_id) : "",
     };
   },
 
@@ -9497,8 +9566,20 @@ export const ClanUpdatedEvent = {
     if (message.clan_name !== "") {
       obj.clan_name = message.clan_name;
     }
-    if (message.clan_logo !== "") {
-      obj.clan_logo = message.clan_logo;
+    if (message.logo !== "") {
+      obj.logo = message.logo;
+    }
+    if (message.banner !== "") {
+      obj.banner = message.banner;
+    }
+    if (message.status !== 0) {
+      obj.status = Math.round(message.status);
+    }
+    if (message.is_onboarding !== false) {
+      obj.is_onboarding = message.is_onboarding;
+    }
+    if (message.welcome_channel_id !== "") {
+      obj.welcome_channel_id = message.welcome_channel_id;
     }
     return obj;
   },
@@ -9510,7 +9591,11 @@ export const ClanUpdatedEvent = {
     const message = createBaseClanUpdatedEvent();
     message.clan_id = object.clan_id ?? "";
     message.clan_name = object.clan_name ?? "";
-    message.clan_logo = object.clan_logo ?? "";
+    message.logo = object.logo ?? "";
+    message.banner = object.banner ?? "";
+    message.status = object.status ?? 0;
+    message.is_onboarding = object.is_onboarding ?? false;
+    message.welcome_channel_id = object.welcome_channel_id ?? "";
     return message;
   },
 };
