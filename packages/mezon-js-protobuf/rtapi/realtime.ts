@@ -906,6 +906,8 @@ export interface ChannelCreatedEvent {
   status: number;
   /** app url */
   app_url: string;
+  /** clan_name */
+  clan_name: string;
 }
 
 export interface RoleEvent {
@@ -7230,6 +7232,7 @@ function createBaseChannelCreatedEvent(): ChannelCreatedEvent {
     channel_type: undefined,
     status: 0,
     app_url: "",
+    clan_name: "",
   };
 }
 
@@ -7264,6 +7267,9 @@ export const ChannelCreatedEvent = {
     }
     if (message.app_url !== "") {
       writer.uint32(82).string(message.app_url);
+    }
+    if (message.clan_name !== "") {
+      writer.uint32(90).string(message.clan_name);
     }
     return writer;
   },
@@ -7345,6 +7351,13 @@ export const ChannelCreatedEvent = {
 
           message.app_url = reader.string();
           continue;
+        case 11:
+          if (tag !== 90) {
+            break;
+          }
+
+          message.clan_name = reader.string();
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -7366,6 +7379,7 @@ export const ChannelCreatedEvent = {
       channel_type: isSet(object.channel_type) ? Number(object.channel_type) : undefined,
       status: isSet(object.status) ? globalThis.Number(object.status) : 0,
       app_url: isSet(object.app_url) ? globalThis.String(object.app_url) : "",
+      clan_name: isSet(object.clan_name) ? globalThis.String(object.clan_name) : "",
     };
   },
 
@@ -7401,6 +7415,9 @@ export const ChannelCreatedEvent = {
     if (message.app_url !== "") {
       obj.app_url = message.app_url;
     }
+    if (message.clan_name !== "") {
+      obj.clan_name = message.clan_name;
+    }
     return obj;
   },
 
@@ -7419,6 +7436,7 @@ export const ChannelCreatedEvent = {
     message.channel_type = object.channel_type ?? undefined;
     message.status = object.status ?? 0;
     message.app_url = object.app_url ?? "";
+    message.clan_name = object.clan_name ?? "";
     return message;
   },
 };
