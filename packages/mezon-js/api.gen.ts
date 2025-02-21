@@ -8957,6 +8957,43 @@ export class MezonApi {
       ),
     ]);
   }
+  
+  /**  */
+  searchThread(bearerToken: string,
+    clanId?:string,
+    channelId?:string,
+    label?:string,
+    options: any = {}): Promise<ApiChannelDescList> {
+  
+  const urlPath = "/v2/searchthread";
+  const queryParams = new Map<string, any>();
+  queryParams.set("clan_id", clanId);
+  queryParams.set("channel_id", channelId);
+  queryParams.set("label", label);
+
+  let bodyJson : string = "";
+
+  const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
+  const fetchOptions = buildFetchOptions("GET", options, bodyJson);
+  if (bearerToken) {
+      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+  }
+
+  return Promise.race([
+    fetch(fullUrl, fetchOptions).then((response) => {
+      if (response.status == 204) {
+        return response;
+      } else if (response.status >= 200 && response.status < 300) {
+        return response.json();
+      } else {
+        throw response;
+      }
+    }),
+    new Promise((_, reject) =>
+      setTimeout(reject, this.timeoutMs, "Request timed out.")
+    ),
+  ]);
+}
 
   /** UpdateWallets */
   sendToken(

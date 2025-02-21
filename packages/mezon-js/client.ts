@@ -4951,4 +4951,26 @@ export class Client {
         return Promise.resolve(response);
       });
   }
+
+  //**search thread */
+  async searchThread(
+    session: Session,
+    clanId?:string,
+    channelId?:string,
+    label?:string,
+  ): Promise<ApiChannelDescList> {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired((Date.now() + this.expiredTimespanMs) / 1000)
+    ) {
+      await this.sessionRefresh(session);
+    }
+
+    return this.apiClient
+      .searchThread(session.token, clanId, channelId, label)
+      .then((response: ApiChannelDescList) => {
+        return Promise.resolve(response);
+      });
+  }
 }
