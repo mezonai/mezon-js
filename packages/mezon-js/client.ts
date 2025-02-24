@@ -163,6 +163,7 @@ import {
   ApiGenerateMeetTokenResponse,
   ApiHandleParticipantMeetStateRequest,
   ApiMezonOauthClientList,
+  ApiMezonOauthClient,
 } from "./api.gen";
 
 import { Session } from "./session";
@@ -4948,6 +4949,44 @@ export class Client {
     return this.apiClient
       .listMezonOauthClient(session.token)
       .then((response: ApiMezonOauthClientList) => {
+        return Promise.resolve(response);
+      });
+  }
+
+  async getMezonOauthClient(
+    session: Session,
+    clientId?:string,
+  ): Promise<ApiMezonOauthClient> {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired((Date.now() + this.expiredTimespanMs) / 1000)
+    ) {
+      await this.sessionRefresh(session);
+    }
+
+    return this.apiClient
+      .getMezonOauthClient(session.token, clientId)
+      .then((response: ApiMezonOauthClient) => {
+        return Promise.resolve(response);
+      });
+  }
+
+  async updateMezonOauthClient(
+    session: Session,
+    body:ApiMezonOauthClient,
+  ): Promise<ApiMezonOauthClient> {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired((Date.now() + this.expiredTimespanMs) / 1000)
+    ) {
+      await this.sessionRefresh(session);
+    }
+
+    return this.apiClient
+      .updateMezonOauthClient(session.token, body)
+      .then((response: ApiMezonOauthClient) => {
         return Promise.resolve(response);
       });
   }
