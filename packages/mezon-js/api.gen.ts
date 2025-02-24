@@ -2966,6 +2966,104 @@ export interface ApiHandleParticipantMeetStateRequest {
   state?: number;
 }
 
+/**  */
+export interface ApiMezonOauthClient {
+  //
+  access_token_strategy?: string;
+  //
+  allowed_cors_origins?: Array<string>;
+  //
+  audience?: Array<string>;
+  //
+  authorization_code_grant_access_token_lifespan?: string;
+  //
+  authorization_code_grant_id_token_lifespan?: string;
+  //
+  authorization_code_grant_refresh_token_lifespan?: string;
+  //
+  backchannel_logout_session_required?: boolean;
+  //
+  backchannel_logout_uri?: string;
+  //
+  client_credentials_grant_access_token_lifespan?: string;
+  //
+  client_id?: string;
+  //
+  client_name?: string;
+  //
+  client_secret?: string;
+  //
+  client_secret_expires_at?: number;
+  //
+  client_uri?: string;
+  //
+  contacts?: Array<string>;
+  //
+  created_at?: string;
+  //
+  frontchannel_logout_session_required?: boolean;
+  //
+  frontchannel_logout_uri?: string;
+  //
+  grant_types?: Array<string>;
+  //
+  implicit_grant_access_token_lifespan?: string;
+  //
+  implicit_grant_id_token_lifespan?: string;
+  //
+  jwks?: Array<string>;
+  //
+  jwks_uri?: string;
+  //
+  jwt_bearer_grant_access_token_lifespan?: string;
+  //
+  logo_uri?: string;
+  //
+  owner?: string;
+  //
+  policy_uri?: string;
+  //
+  post_logout_redirect_uris?: Array<string>;
+  //
+  redirect_uris?: Array<string>;
+  //
+  refresh_token_grant_access_token_lifespan?: string;
+  //
+  refresh_token_grant_id_token_lifespan?: string;
+  //
+  refresh_token_grant_refresh_token_lifespan?: string;
+  //
+  registration_access_token?: string;
+  //
+  registration_client_uri?: string;
+  //
+  request_object_signing_alg?: string;
+  //
+  request_uris?: Array<string>;
+  //
+  response_types?: Array<string>;
+  //
+  scope?: string;
+  //
+  sector_identifier_uri?: string;
+  //
+  skip_consent?: boolean;
+  //
+  skip_logout_consent?: boolean;
+  //
+  subject_type?: string;
+  //
+  token_endpoint_auth_method?: string;
+  //
+  token_endpoint_auth_signing_alg?: string;
+  //
+  tos_uri?: string;
+  //
+  updated_at?: string;
+  //
+  userinfo_signed_response_alg?: string;
+}
+
 export class MezonApi {
   constructor(
     readonly serverKey: string,
@@ -11110,4 +11208,75 @@ export class MezonApi {
       ),
     ]);
   }
+
+  /** Create mezon OAuth client */
+  getMezonOauthClient(bearerToken: string,
+    clientId?:string,
+    options: any = {}
+  ): Promise<ApiMezonOauthClient> {
+
+    const urlPath = "/v2/mznoauthclient";
+    const queryParams = new Map<string, any>();
+    queryParams.set("client_id", clientId);
+
+    let bodyJson : string = "";
+
+    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
+    const fetchOptions = buildFetchOptions("GET", options, bodyJson);
+    if (bearerToken) {
+        fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+    }
+
+    return Promise.race([
+      fetch(fullUrl, fetchOptions).then((response) => {
+        if (response.status == 204) {
+          return response;
+        } else if (response.status >= 200 && response.status < 300) {
+          return response.json();
+        } else {
+          throw response;
+        }
+      }),
+      new Promise((_, reject) =>
+        setTimeout(reject, this.timeoutMs, "Request timed out.")
+      ),
+    ]);
+  }
+
+  /** update mezon OAuth */
+  updateMezonOauthClient(bearerToken: string,
+      body:ApiMezonOauthClient,
+      options: any = {}
+    ): Promise<ApiMezonOauthClient> {
+    
+      if (body === null || body === undefined) {
+        throw new Error("'body' is a required parameter but is null or undefined.");
+      }
+      const urlPath = "/v2/mznoauthclient";
+      const queryParams = new Map<string, any>();
+
+      let bodyJson : string = "";
+      bodyJson = JSON.stringify(body || {});
+
+      const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
+      const fetchOptions = buildFetchOptions("PATCH", options, bodyJson);
+      if (bearerToken) {
+          fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+      }
+
+      return Promise.race([
+        fetch(fullUrl, fetchOptions).then((response) => {
+          if (response.status == 204) {
+            return response;
+          } else if (response.status >= 200 && response.status < 300) {
+            return response.json();
+          } else {
+            throw response;
+          }
+        }),
+        new Promise((_, reject) =>
+          setTimeout(reject, this.timeoutMs, "Request timed out.")
+        ),
+      ]);
+    }
 }
