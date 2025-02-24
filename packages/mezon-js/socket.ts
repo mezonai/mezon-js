@@ -505,6 +505,8 @@ export interface ChannelCreatedEvent {
   status: number;
   // app url
   app_url: string;
+  // clan_name
+  clan_name: string;
 }
 
 export interface ChannelDeletedEvent {
