@@ -3064,6 +3064,14 @@ export interface ApiMezonOauthClient {
   userinfo_signed_response_alg?: string;
 }
 
+/**  */
+export interface ApiCreateHashChannelAppsResponse {
+  //
+  hash?: string;
+  //
+  user_id?: string;
+}
+
 export class MezonApi {
   constructor(
     readonly serverKey: string,
@@ -11279,4 +11287,37 @@ export class MezonApi {
         ),
       ]);
     }
+      /**  */
+  generateHashChannelApps(bearerToken: string,
+    appId?:string,
+    options: any = {}
+  ): Promise<ApiCreateHashChannelAppsResponse> {
+  
+    const urlPath = "/v2/channel-apps/hash";
+    const queryParams = new Map<string, any>();
+    queryParams.set("app_id", appId);
+
+    let bodyJson : string = "";
+
+    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
+    const fetchOptions = buildFetchOptions("GET", options, bodyJson);
+    if (bearerToken) {
+        fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+    }
+
+    return Promise.race([
+      fetch(fullUrl, fetchOptions).then((response) => {
+        if (response.status == 204) {
+          return response;
+        } else if (response.status >= 200 && response.status < 300) {
+          return response.json();
+        } else {
+          throw response;
+        }
+      }),
+      new Promise((_, reject) =>
+        setTimeout(reject, this.timeoutMs, "Request timed out.")
+      ),
+    ]);
+  }
 }
