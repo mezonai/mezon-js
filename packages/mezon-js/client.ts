@@ -164,6 +164,7 @@ import {
   ApiHandleParticipantMeetStateRequest,
   ApiMezonOauthClientList,
   ApiMezonOauthClient,
+  ApiCreateHashChannelAppsResponse,
 } from "./api.gen";
 
 import { Session } from "./session";
@@ -5009,6 +5010,26 @@ export class Client {
     return this.apiClient
       .searchThread(session.token, clanId, channelId, label)
       .then((response: ApiChannelDescList) => {
+        return Promise.resolve(response);
+      });
+  }
+
+  //**Generate Hash */
+  async generateHashChannelApps(
+    session: Session,
+    appId?:string,
+  ): Promise<ApiCreateHashChannelAppsResponse> {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired((Date.now() + this.expiredTimespanMs) / 1000)
+    ) {
+      await this.sessionRefresh(session);
+    }
+
+    return this.apiClient
+      .generateHashChannelApps(session.token, appId)
+      .then((response: ApiCreateHashChannelAppsResponse) => {
         return Promise.resolve(response);
       });
   }
