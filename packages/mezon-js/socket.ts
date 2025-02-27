@@ -518,6 +518,8 @@ export interface ChannelDeletedEvent {
   channel_id: string;
   // deletor
   deletor: string;
+  // parrent id
+  parrent_id: string;
 }
 
 export interface StickerCreateEvent {
@@ -975,6 +977,26 @@ export interface JoinChannelAppData {
   hash: string;
 }
 
+/**  */
+export interface ChannelCanvas {
+  //
+  content?: string;
+  //
+  creator_id?: string;
+  //
+  editor_id?: string;
+  //
+  id?: string;
+  //
+  is_default?: boolean;
+  //
+  title?: string;
+  //
+  channel_id?: string;
+  //
+  status?: number;
+}
+
 /** A socket connection to Mezon server. */
 export interface Socket {
   /** Connection is Open */
@@ -1225,6 +1247,8 @@ export interface Socket {
   onheartbeattimeout: () => void;
 
   oncustomstatus: (statusEvent: CustomStatusEvent) => void;
+
+  oncanvasevent: (canvasEvent: ChannelCanvas) => void;
 
   /** Receive channel message. */
   onchannelmessage: (channelMessage: ChannelMessage) => void;
@@ -1561,6 +1585,8 @@ export class DefaultSocket implements Socket {
           );
         } else if (message.custom_status_event) {
           this.oncustomstatus(<CustomStatusEvent>message.custom_status_event);
+        } else if (message.canvas_event) {
+          this.oncanvasevent(<ChannelCanvas>message.canvas_event);
         } else if (message.user_channel_added_event) {
           this.onuserchanneladded(
             <UserChannelAddedEvent>message.user_channel_added_event
@@ -1917,6 +1943,12 @@ export class DefaultSocket implements Socket {
   oncustomstatus(statusEvent: CustomStatusEvent) {
     if (this.verbose && window && window.console) {
       console.log(statusEvent);
+    }
+  }
+
+  oncanvasevent(canvasEvent: ChannelCanvas) {
+    if (this.verbose && window && window.console) {
+      console.log(canvasEvent);
     }
   }
 
