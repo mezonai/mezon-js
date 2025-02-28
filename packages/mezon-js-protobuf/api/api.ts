@@ -3316,6 +3316,8 @@ export interface EditChannelCanvasRequest {
   content: string;
   /** is default */
   is_default: boolean;
+  /** status */
+  status: number;
 }
 
 export interface EditChannelCanvasResponse {
@@ -31505,7 +31507,7 @@ export const MarkAsReadRequest = {
 };
 
 function createBaseEditChannelCanvasRequest(): EditChannelCanvasRequest {
-  return { id: undefined, channel_id: "", clan_id: "", title: "", content: "", is_default: false };
+  return { id: undefined, channel_id: "", clan_id: "", title: "", content: "", is_default: false, status: 0 };
 }
 
 export const EditChannelCanvasRequest = {
@@ -31527,6 +31529,9 @@ export const EditChannelCanvasRequest = {
     }
     if (message.is_default !== false) {
       writer.uint32(48).bool(message.is_default);
+    }
+    if (message.status !== 0) {
+      writer.uint32(56).int32(message.status);
     }
     return writer;
   },
@@ -31580,6 +31585,13 @@ export const EditChannelCanvasRequest = {
 
           message.is_default = reader.bool();
           continue;
+        case 7:
+          if (tag !== 56) {
+            break;
+          }
+
+          message.status = reader.int32();
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -31597,6 +31609,7 @@ export const EditChannelCanvasRequest = {
       title: isSet(object.title) ? globalThis.String(object.title) : "",
       content: isSet(object.content) ? globalThis.String(object.content) : "",
       is_default: isSet(object.is_default) ? globalThis.Boolean(object.is_default) : false,
+      status: isSet(object.status) ? globalThis.Number(object.status) : 0,
     };
   },
 
@@ -31620,6 +31633,9 @@ export const EditChannelCanvasRequest = {
     if (message.is_default !== false) {
       obj.is_default = message.is_default;
     }
+    if (message.status !== 0) {
+      obj.status = Math.round(message.status);
+    }
     return obj;
   },
 
@@ -31634,6 +31650,7 @@ export const EditChannelCanvasRequest = {
     message.title = object.title ?? "";
     message.content = object.content ?? "";
     message.is_default = object.is_default ?? false;
+    message.status = object.status ?? 0;
     return message;
   },
 };
