@@ -1854,8 +1854,8 @@ export interface ChannelMessageHeader {
 export interface ChannelDescription {
   /** The clan of this channel */
   clan_id: string;
-  /** The parrent channel this message belongs to. */
-  parrent_id: string;
+  /** The parent channel this message belongs to. */
+  parent_id: string;
   /** The channel this message belongs to. */
   channel_id: string;
   /** The category of channel */
@@ -1985,8 +1985,8 @@ export interface AddRoleChannelDescRequest {
 export interface CreateChannelDescRequest {
   /** The clan of this channel */
   clan_id: string;
-  /** The parrent channel this message belongs to. */
-  parrent_id: string;
+  /** The parent channel this message belongs to. */
+  parent_id: string;
   /** The channel this message belongs to. */
   channel_id: string;
   /** The category of channel */
@@ -2287,7 +2287,7 @@ export interface HashtagDm {
   /**  */
   channel_private: number;
   /**  */
-  parrent_id: string;
+  parent_id: string;
 }
 
 export interface NotificationChannelCategorySettingList {
@@ -16978,7 +16978,7 @@ export const ChannelMessageHeader = {
 function createBaseChannelDescription(): ChannelDescription {
   return {
     clan_id: "",
-    parrent_id: "",
+    parent_id: "",
     channel_id: "",
     category_id: "",
     category_name: "",
@@ -17016,8 +17016,8 @@ export const ChannelDescription = {
     if (message.clan_id !== "") {
       writer.uint32(10).string(message.clan_id);
     }
-    if (message.parrent_id !== "") {
-      writer.uint32(18).string(message.parrent_id);
+    if (message.parent_id !== "") {
+      writer.uint32(18).string(message.parent_id);
     }
     if (message.channel_id !== "") {
       writer.uint32(26).string(message.channel_id);
@@ -17130,7 +17130,7 @@ export const ChannelDescription = {
             break;
           }
 
-          message.parrent_id = reader.string();
+          message.parent_id = reader.string();
           continue;
         case 3:
           if (tag !== 26) {
@@ -17357,7 +17357,7 @@ export const ChannelDescription = {
   fromJSON(object: any): ChannelDescription {
     return {
       clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
-      parrent_id: isSet(object.parrent_id) ? globalThis.String(object.parrent_id) : "",
+      parent_id: isSet(object.parent_id) ? globalThis.String(object.parent_id) : "",
       channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "",
       category_id: isSet(object.category_id) ? globalThis.String(object.category_id) : "",
       category_name: isSet(object.category_name) ? globalThis.String(object.category_name) : "",
@@ -17409,8 +17409,8 @@ export const ChannelDescription = {
     if (message.clan_id !== "") {
       obj.clan_id = message.clan_id;
     }
-    if (message.parrent_id !== "") {
-      obj.parrent_id = message.parrent_id;
+    if (message.parent_id !== "") {
+      obj.parent_id = message.parent_id;
     }
     if (message.channel_id !== "") {
       obj.channel_id = message.channel_id;
@@ -17508,7 +17508,7 @@ export const ChannelDescription = {
   fromPartial<I extends Exact<DeepPartial<ChannelDescription>, I>>(object: I): ChannelDescription {
     const message = createBaseChannelDescription();
     message.clan_id = object.clan_id ?? "";
-    message.parrent_id = object.parrent_id ?? "";
+    message.parent_id = object.parent_id ?? "";
     message.channel_id = object.channel_id ?? "";
     message.category_id = object.category_id ?? "";
     message.category_name = object.category_name ?? "";
@@ -17997,7 +17997,7 @@ export const AddRoleChannelDescRequest = {
 function createBaseCreateChannelDescRequest(): CreateChannelDescRequest {
   return {
     clan_id: "",
-    parrent_id: "",
+    parent_id: "",
     channel_id: "",
     category_id: "",
     type: undefined,
@@ -18013,8 +18013,8 @@ export const CreateChannelDescRequest = {
     if (message.clan_id !== "") {
       writer.uint32(10).string(message.clan_id);
     }
-    if (message.parrent_id !== "") {
-      writer.uint32(18).string(message.parrent_id);
+    if (message.parent_id !== "") {
+      writer.uint32(18).string(message.parent_id);
     }
     if (message.channel_id !== "") {
       writer.uint32(26).string(message.channel_id);
@@ -18059,7 +18059,7 @@ export const CreateChannelDescRequest = {
             break;
           }
 
-          message.parrent_id = reader.string();
+          message.parent_id = reader.string();
           continue;
         case 3:
           if (tag !== 26) {
@@ -18122,7 +18122,7 @@ export const CreateChannelDescRequest = {
   fromJSON(object: any): CreateChannelDescRequest {
     return {
       clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
-      parrent_id: isSet(object.parrent_id) ? globalThis.String(object.parrent_id) : "",
+      parent_id: isSet(object.parent_id) ? globalThis.String(object.parent_id) : "",
       channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "",
       category_id: isSet(object.category_id) ? globalThis.String(object.category_id) : "",
       type: isSet(object.type) ? Number(object.type) : undefined,
@@ -18138,8 +18138,8 @@ export const CreateChannelDescRequest = {
     if (message.clan_id !== "") {
       obj.clan_id = message.clan_id;
     }
-    if (message.parrent_id !== "") {
-      obj.parrent_id = message.parrent_id;
+    if (message.parent_id !== "") {
+      obj.parent_id = message.parent_id;
     }
     if (message.channel_id !== "") {
       obj.channel_id = message.channel_id;
@@ -18171,7 +18171,7 @@ export const CreateChannelDescRequest = {
   fromPartial<I extends Exact<DeepPartial<CreateChannelDescRequest>, I>>(object: I): CreateChannelDescRequest {
     const message = createBaseCreateChannelDescRequest();
     message.clan_id = object.clan_id ?? "";
-    message.parrent_id = object.parrent_id ?? "";
+    message.parent_id = object.parent_id ?? "";
     message.channel_id = object.channel_id ?? "";
     message.category_id = object.category_id ?? "";
     message.type = object.type ?? undefined;
@@ -20877,7 +20877,7 @@ function createBaseHashtagDm(): HashtagDm {
     meeting_code: "",
     type: 0,
     channel_private: 0,
-    parrent_id: "",
+    parent_id: "",
   };
 }
 
@@ -20904,8 +20904,8 @@ export const HashtagDm = {
     if (message.channel_private !== 0) {
       writer.uint32(56).int32(message.channel_private);
     }
-    if (message.parrent_id !== "") {
-      writer.uint32(66).string(message.parrent_id);
+    if (message.parent_id !== "") {
+      writer.uint32(66).string(message.parent_id);
     }
     return writer;
   },
@@ -20971,7 +20971,7 @@ export const HashtagDm = {
             break;
           }
 
-          message.parrent_id = reader.string();
+          message.parent_id = reader.string();
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -20991,7 +20991,7 @@ export const HashtagDm = {
       meeting_code: isSet(object.meeting_code) ? globalThis.String(object.meeting_code) : "",
       type: isSet(object.type) ? globalThis.Number(object.type) : 0,
       channel_private: isSet(object.channel_private) ? globalThis.Number(object.channel_private) : 0,
-      parrent_id: isSet(object.parrent_id) ? globalThis.String(object.parrent_id) : "",
+      parent_id: isSet(object.parent_id) ? globalThis.String(object.parent_id) : "",
     };
   },
 
@@ -21018,8 +21018,8 @@ export const HashtagDm = {
     if (message.channel_private !== 0) {
       obj.channel_private = Math.round(message.channel_private);
     }
-    if (message.parrent_id !== "") {
-      obj.parrent_id = message.parrent_id;
+    if (message.parent_id !== "") {
+      obj.parent_id = message.parent_id;
     }
     return obj;
   },
@@ -21036,7 +21036,7 @@ export const HashtagDm = {
     message.meeting_code = object.meeting_code ?? "";
     message.type = object.type ?? 0;
     message.channel_private = object.channel_private ?? 0;
-    message.parrent_id = object.parrent_id ?? "";
+    message.parent_id = object.parent_id ?? "";
     return message;
   },
 };

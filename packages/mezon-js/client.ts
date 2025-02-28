@@ -176,7 +176,7 @@ const DEFAULT_HOST = "127.0.0.1";
 const DEFAULT_PORT = "7350";
 const DEFAULT_SERVER_KEY = "defaultkey";
 const DEFAULT_TIMEOUT_MS = 30000;
-const DEFAULT_EXPIRED_TIMESPAN_MS = 5 * 60 * 1000;
+const DEFAULT_EXPIRED_TIMESPAN_MS = 604800000//5 * 60 * 1000;
 
 export enum ChannelType {
   CHANNEL_TYPE_CHANNEL = 1,
@@ -4134,7 +4134,7 @@ export class Client {
     type?: number,
     limit?: number,
     page?: number,
-    channel_label?: string
+    channelLabel?: string
   ): Promise<ApiChannelSettingListResponse> {
     if (
       this.autoRefreshSession &&
@@ -4156,7 +4156,7 @@ export class Client {
         type,
         limit,
         page,
-        channel_label
+        channelLabel
       )
       .then((response: any) => {
         return Promise.resolve(response);

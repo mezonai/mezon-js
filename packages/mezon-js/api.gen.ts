@@ -761,8 +761,8 @@ export interface ApiChannelDescription {
   meeting_code?: string;
   //
   meeting_uri?: string;
-  //The parrent channel this message belongs to.
-  parrent_id?: string;
+  //The parent channel this message belongs to.
+  parent_id?: string;
   //
   is_online?: Array<boolean>;
   //
@@ -1111,8 +1111,8 @@ export interface ApiCreateChannelDescRequest {
   channel_private?: number;
   //
   clan_id?: string;
-  //The parrent channel this message belongs to.
-  parrent_id?: string;
+  //The parent channel this message belongs to.
+  parent_id?: string;
   //The channel type.
   type?: number;
   //The users to add.
@@ -1417,7 +1417,7 @@ export interface ApiHashtagDm {
   //
   meeting_code?: string;
   //
-  parrent_id?: string;
+  parent_id?: string;
   //
   type?: number;
 }
