@@ -691,6 +691,8 @@ export interface ApiEditChannelCanvasRequest {
   is_default?: boolean;
   //
   title?: string;
+  //
+  status?: number;
 }
 
 /**  */
