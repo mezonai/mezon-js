@@ -329,7 +329,7 @@ export class MezonClient implements Client {
     if (
       this.autoRefreshSession &&
       session.refresh_token &&
-      session.isexpired((Date.now() + this.expiredTimespanMs) / 1000)
+      session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh();
     }
@@ -446,7 +446,7 @@ export class MezonClient implements Client {
       if (
         this.autoRefreshSession &&
         session.refresh_token &&
-        session.isexpired((Date.now() + this.expiredTimespanMs) / 1000)
+        session.isexpired(Date.now() / 1000)
       ) {
         await this.sessionRefresh();
       }
@@ -488,7 +488,7 @@ export class MezonClient implements Client {
       if (
         this.autoRefreshSession &&
         session.refresh_token &&
-        session.isexpired((Date.now() + this.expiredTimespanMs) / 1000)
+        session.isexpired(Date.now() / 1000)
       ) {
         await this.sessionRefresh();
       }

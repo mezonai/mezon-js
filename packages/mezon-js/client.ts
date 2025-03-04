@@ -176,7 +176,6 @@ const DEFAULT_HOST = "127.0.0.1";
 const DEFAULT_PORT = "7350";
 const DEFAULT_SERVER_KEY = "defaultkey";
 const DEFAULT_TIMEOUT_MS = 30000;
-const DEFAULT_EXPIRED_TIMESPAN_MS = 5 * 60 * 1000;
 
 export enum ChannelType {
   CHANNEL_TYPE_CHANNEL = 1,
@@ -555,9 +554,6 @@ export interface ApiUpdateRoleRequest {
 
 /** A client for Mezon server. */
 export class Client {
-  /** The expired timespan used to check session lifetime. */
-  public expiredTimespanMs = DEFAULT_EXPIRED_TIMESPAN_MS;
-
   /** The low level API client for Mezon server. */
   private readonly apiClient: MezonApi;
 
@@ -587,7 +583,7 @@ export class Client {
     if (
       this.autoRefreshSession &&
       session.refresh_token &&
-      session.isexpired((Date.now() + this.expiredTimespanMs) / 1000)
+      session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
@@ -608,7 +604,7 @@ export class Client {
     if (
       this.autoRefreshSession &&
       session.refresh_token &&
-      session.isexpired((Date.now() + this.expiredTimespanMs) / 1000)
+      session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
@@ -887,7 +883,7 @@ export class Client {
     if (
       this.autoRefreshSession &&
       session.refresh_token &&
-      session.isexpired((Date.now() + this.expiredTimespanMs) / 1000)
+      session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
@@ -907,7 +903,7 @@ export class Client {
     if (
       this.autoRefreshSession &&
       session.refresh_token &&
-      session.isexpired((Date.now() + this.expiredTimespanMs) / 1000)
+      session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
@@ -923,7 +919,7 @@ export class Client {
     if (
       this.autoRefreshSession &&
       session.refresh_token &&
-      session.isexpired((Date.now() + this.expiredTimespanMs) / 1000)
+      session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
@@ -943,7 +939,7 @@ export class Client {
     if (
       this.autoRefreshSession &&
       session.refresh_token &&
-      session.isexpired((Date.now() + this.expiredTimespanMs) / 1000)
+      session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
@@ -963,7 +959,7 @@ export class Client {
     if (
       this.autoRefreshSession &&
       session.refresh_token &&
-      session.isexpired((Date.now() + this.expiredTimespanMs) / 1000)
+      session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
@@ -983,7 +979,7 @@ export class Client {
     if (
       this.autoRefreshSession &&
       session.refresh_token &&
-      session.isexpired((Date.now() + this.expiredTimespanMs) / 1000)
+      session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
@@ -1003,7 +999,7 @@ export class Client {
     if (
       this.autoRefreshSession &&
       session.refresh_token &&
-      session.isexpired((Date.now() + this.expiredTimespanMs) / 1000)
+      session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
@@ -1023,7 +1019,7 @@ export class Client {
     if (
       this.autoRefreshSession &&
       session.refresh_token &&
-      session.isexpired((Date.now() + this.expiredTimespanMs) / 1000)
+      session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
@@ -1043,7 +1039,7 @@ export class Client {
     if (
       this.autoRefreshSession &&
       session.refresh_token &&
-      session.isexpired((Date.now() + this.expiredTimespanMs) / 1000)
+      session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
@@ -1059,7 +1055,7 @@ export class Client {
     if (
       this.autoRefreshSession &&
       session.refresh_token &&
-      session.isexpired((Date.now() + this.expiredTimespanMs) / 1000)
+      session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
@@ -1097,7 +1093,7 @@ export class Client {
     if (
       this.autoRefreshSession &&
       session.refresh_token &&
-      session.isexpired((Date.now() + this.expiredTimespanMs) / 1000)
+      session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
@@ -1117,7 +1113,7 @@ export class Client {
     if (
       this.autoRefreshSession &&
       session.refresh_token &&
-      session.isexpired((Date.now() + this.expiredTimespanMs) / 1000)
+      session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
@@ -1134,7 +1130,7 @@ export class Client {
     if (
       this.autoRefreshSession &&
       session.refresh_token &&
-      session.isexpired((Date.now() + this.expiredTimespanMs) / 1000)
+      session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
@@ -1156,7 +1152,7 @@ export class Client {
     if (
       this.autoRefreshSession &&
       session.refresh_token &&
-      session.isexpired((Date.now() + this.expiredTimespanMs) / 1000)
+      session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
@@ -1176,7 +1172,7 @@ export class Client {
     if (
       this.autoRefreshSession &&
       session.refresh_token &&
-      session.isexpired((Date.now() + this.expiredTimespanMs) / 1000)
+      session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
@@ -1198,7 +1194,7 @@ export class Client {
     if (
       this.autoRefreshSession &&
       session.refresh_token &&
-      session.isexpired((Date.now() + this.expiredTimespanMs) / 1000)
+      session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
@@ -1222,7 +1218,7 @@ export class Client {
     if (
       this.autoRefreshSession &&
       session.refresh_token &&
-      session.isexpired((Date.now() + this.expiredTimespanMs) / 1000)
+      session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
@@ -1249,7 +1245,7 @@ export class Client {
     if (
       this.autoRefreshSession &&
       session.refresh_token &&
-      session.isexpired((Date.now() + this.expiredTimespanMs) / 1000)
+      session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
@@ -1266,7 +1262,7 @@ export class Client {
     if (
       this.autoRefreshSession &&
       session.refresh_token &&
-      session.isexpired((Date.now() + this.expiredTimespanMs) / 1000)
+      session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
@@ -1283,7 +1279,7 @@ export class Client {
     if (
       this.autoRefreshSession &&
       session.refresh_token &&
-      session.isexpired((Date.now() + this.expiredTimespanMs) / 1000)
+      session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
@@ -1299,7 +1295,7 @@ export class Client {
     if (
       this.autoRefreshSession &&
       session.refresh_token &&
-      session.isexpired((Date.now() + this.expiredTimespanMs) / 1000)
+      session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
@@ -1320,7 +1316,7 @@ export class Client {
     if (
       this.autoRefreshSession &&
       session.refresh_token &&
-      session.isexpired((Date.now() + this.expiredTimespanMs) / 1000)
+      session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
@@ -1342,7 +1338,7 @@ export class Client {
     if (
       this.autoRefreshSession &&
       session.refresh_token &&
-      session.isexpired((Date.now() + this.expiredTimespanMs) / 1000)
+      session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
@@ -1391,7 +1387,7 @@ export class Client {
     if (
       this.autoRefreshSession &&
       session.refresh_token &&
-      session.isexpired((Date.now() + this.expiredTimespanMs) / 1000)
+      session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
@@ -1412,7 +1408,7 @@ export class Client {
     if (
       this.autoRefreshSession &&
       session.refresh_token &&
-      session.isexpired((Date.now() + this.expiredTimespanMs) / 1000)
+      session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
@@ -1437,7 +1433,7 @@ export class Client {
     if (
       this.autoRefreshSession &&
       session.refresh_token &&
-      session.isexpired((Date.now() + this.expiredTimespanMs) / 1000)
+      session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
@@ -1532,7 +1528,7 @@ export class Client {
     if (
       this.autoRefreshSession &&
       session.refresh_token &&
-      session.isexpired((Date.now() + this.expiredTimespanMs) / 1000)
+      session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
@@ -1581,7 +1577,7 @@ export class Client {
     if (
       this.autoRefreshSession &&
       session.refresh_token &&
-      session.isexpired((Date.now() + this.expiredTimespanMs) / 1000)
+      session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
@@ -1635,7 +1631,7 @@ export class Client {
     if (
       this.autoRefreshSession &&
       session.refresh_token &&
-      session.isexpired((Date.now() + this.expiredTimespanMs) / 1000)
+      session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
@@ -1685,7 +1681,7 @@ export class Client {
     if (
       this.autoRefreshSession &&
       session.refresh_token &&
-      session.isexpired((Date.now() + this.expiredTimespanMs) / 1000)
+      session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
@@ -1747,7 +1743,7 @@ export class Client {
     if (
       this.autoRefreshSession &&
       session.refresh_token &&
-      session.isexpired((Date.now() + this.expiredTimespanMs) / 1000)
+      session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
@@ -1788,7 +1784,7 @@ export class Client {
     if (
       this.autoRefreshSession &&
       session.refresh_token &&
-      session.isexpired((Date.now() + this.expiredTimespanMs) / 1000)
+      session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
@@ -1819,7 +1815,7 @@ export class Client {
     if (
       this.autoRefreshSession &&
       session.refresh_token &&
-      session.isexpired((Date.now() + this.expiredTimespanMs) / 1000)
+      session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
@@ -1845,7 +1841,7 @@ export class Client {
     if (
       this.autoRefreshSession &&
       session.refresh_token &&
-      session.isexpired((Date.now() + this.expiredTimespanMs) / 1000)
+      session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
@@ -1862,7 +1858,7 @@ export class Client {
     if (
       this.autoRefreshSession &&
       session.refresh_token &&
-      session.isexpired((Date.now() + this.expiredTimespanMs) / 1000)
+      session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
@@ -1882,7 +1878,7 @@ export class Client {
     if (
       this.autoRefreshSession &&
       session.refresh_token &&
-      session.isexpired((Date.now() + this.expiredTimespanMs) / 1000)
+      session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
@@ -1904,7 +1900,7 @@ export class Client {
     if (
       this.autoRefreshSession &&
       session.refresh_token &&
-      session.isexpired((Date.now() + this.expiredTimespanMs) / 1000)
+      session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
@@ -1925,7 +1921,7 @@ export class Client {
     if (
       this.autoRefreshSession &&
       session.refresh_token &&
-      session.isexpired((Date.now() + this.expiredTimespanMs) / 1000)
+      session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
@@ -1945,7 +1941,7 @@ export class Client {
     if (
       this.autoRefreshSession &&
       session.refresh_token &&
-      session.isexpired((Date.now() + this.expiredTimespanMs) / 1000)
+      session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
@@ -1964,7 +1960,7 @@ export class Client {
     if (
       this.autoRefreshSession &&
       session.refresh_token &&
-      session.isexpired((Date.now() + this.expiredTimespanMs) / 1000)
+      session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
@@ -1984,7 +1980,7 @@ export class Client {
     if (
       this.autoRefreshSession &&
       session.refresh_token &&
-      session.isexpired((Date.now() + this.expiredTimespanMs) / 1000)
+      session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
@@ -2004,7 +2000,7 @@ export class Client {
     if (
       this.autoRefreshSession &&
       session.refresh_token &&
-      session.isexpired((Date.now() + this.expiredTimespanMs) / 1000)
+      session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
@@ -2023,7 +2019,7 @@ export class Client {
     if (
       this.autoRefreshSession &&
       session.refresh_token &&
-      session.isexpired((Date.now() + this.expiredTimespanMs) / 1000)
+      session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
@@ -2043,7 +2039,7 @@ export class Client {
     if (
       this.autoRefreshSession &&
       session.refresh_token &&
-      session.isexpired((Date.now() + this.expiredTimespanMs) / 1000)
+      session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
@@ -2063,7 +2059,7 @@ export class Client {
     if (
       this.autoRefreshSession &&
       session.refresh_token &&
-      session.isexpired((Date.now() + this.expiredTimespanMs) / 1000)
+      session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
@@ -2083,7 +2079,7 @@ export class Client {
     if (
       this.autoRefreshSession &&
       session.refresh_token &&
-      session.isexpired((Date.now() + this.expiredTimespanMs) / 1000)
+      session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
@@ -2103,7 +2099,7 @@ export class Client {
     if (
       this.autoRefreshSession &&
       session.refresh_token &&
-      session.isexpired((Date.now() + this.expiredTimespanMs) / 1000)
+      session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
@@ -2123,7 +2119,7 @@ export class Client {
     if (
       this.autoRefreshSession &&
       session.refresh_token &&
-      session.isexpired((Date.now() + this.expiredTimespanMs) / 1000)
+      session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
@@ -2143,7 +2139,7 @@ export class Client {
     if (
       this.autoRefreshSession &&
       session.refresh_token &&
-      session.isexpired((Date.now() + this.expiredTimespanMs) / 1000)
+      session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
@@ -2163,7 +2159,7 @@ export class Client {
     if (
       this.autoRefreshSession &&
       session.refresh_token &&
-      session.isexpired((Date.now() + this.expiredTimespanMs) / 1000)
+      session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
@@ -2183,7 +2179,7 @@ export class Client {
     if (
       this.autoRefreshSession &&
       session.refresh_token &&
-      session.isexpired((Date.now() + this.expiredTimespanMs) / 1000)
+      session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
@@ -2205,7 +2201,7 @@ export class Client {
     if (
       this.autoRefreshSession &&
       session.refresh_token &&
-      session.isexpired((Date.now() + this.expiredTimespanMs) / 1000)
+      session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
@@ -2264,7 +2260,7 @@ export class Client {
     if (
       this.autoRefreshSession &&
       session.refresh_token &&
-      session.isexpired((Date.now() + this.expiredTimespanMs) / 1000)
+      session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
@@ -2314,7 +2310,7 @@ export class Client {
     if (
       this.autoRefreshSession &&
       session.refresh_token &&
-      session.isexpired((Date.now() + this.expiredTimespanMs) / 1000)
+      session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
@@ -2367,7 +2363,7 @@ export class Client {
     if (
       this.autoRefreshSession &&
       session.refresh_token &&
-      session.isexpired((Date.now() + this.expiredTimespanMs) / 1000)
+      session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
@@ -2427,10 +2423,7 @@ export class Client {
         console.error("Session refresh failed:", error);
         reject(error);
       } finally {
-        const refreshTokenPromiseTimeoutId = setTimeout(() => {
-          this.refreshTokenPromise = null;
-          clearInterval(refreshTokenPromiseTimeoutId);
-        }, 1000);
+        this.refreshTokenPromise = null;
       }
     });
 
@@ -2445,7 +2438,7 @@ export class Client {
     if (
       this.autoRefreshSession &&
       session.refresh_token &&
-      session.isexpired((Date.now() + this.expiredTimespanMs) / 1000)
+      session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
@@ -2465,7 +2458,7 @@ export class Client {
     if (
       this.autoRefreshSession &&
       session.refresh_token &&
-      session.isexpired((Date.now() + this.expiredTimespanMs) / 1000)
+      session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
@@ -2485,7 +2478,7 @@ export class Client {
     if (
       this.autoRefreshSession &&
       session.refresh_token &&
-      session.isexpired((Date.now() + this.expiredTimespanMs) / 1000)
+      session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
@@ -2505,7 +2498,7 @@ export class Client {
     if (
       this.autoRefreshSession &&
       session.refresh_token &&
-      session.isexpired((Date.now() + this.expiredTimespanMs) / 1000)
+      session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
@@ -2525,7 +2518,7 @@ export class Client {
     if (
       this.autoRefreshSession &&
       session.refresh_token &&
-      session.isexpired((Date.now() + this.expiredTimespanMs) / 1000)
+      session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
@@ -2545,7 +2538,7 @@ export class Client {
     if (
       this.autoRefreshSession &&
       session.refresh_token &&
-      session.isexpired((Date.now() + this.expiredTimespanMs) / 1000)
+      session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
@@ -2565,7 +2558,7 @@ export class Client {
     if (
       this.autoRefreshSession &&
       session.refresh_token &&
-      session.isexpired((Date.now() + this.expiredTimespanMs) / 1000)
+      session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
@@ -2585,7 +2578,7 @@ export class Client {
     if (
       this.autoRefreshSession &&
       session.refresh_token &&
-      session.isexpired((Date.now() + this.expiredTimespanMs) / 1000)
+      session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
@@ -2605,7 +2598,7 @@ export class Client {
     if (
       this.autoRefreshSession &&
       session.refresh_token &&
-      session.isexpired((Date.now() + this.expiredTimespanMs) / 1000)
+      session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
@@ -2624,7 +2617,7 @@ export class Client {
     if (
       this.autoRefreshSession &&
       session.refresh_token &&
-      session.isexpired((Date.now() + this.expiredTimespanMs) / 1000)
+      session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
@@ -2645,7 +2638,7 @@ export class Client {
     if (
       this.autoRefreshSession &&
       session.refresh_token &&
-      session.isexpired((Date.now() + this.expiredTimespanMs) / 1000)
+      session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
@@ -2666,7 +2659,7 @@ export class Client {
     if (
       this.autoRefreshSession &&
       session.refresh_token &&
-      session.isexpired((Date.now() + this.expiredTimespanMs) / 1000)
+      session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
@@ -2687,7 +2680,7 @@ export class Client {
     if (
       this.autoRefreshSession &&
       session.refresh_token &&
-      session.isexpired((Date.now() + this.expiredTimespanMs) / 1000)
+      session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
@@ -2708,7 +2701,7 @@ export class Client {
     if (
       this.autoRefreshSession &&
       session.refresh_token &&
-      session.isexpired((Date.now() + this.expiredTimespanMs) / 1000)
+      session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
@@ -2728,7 +2721,7 @@ export class Client {
     if (
       this.autoRefreshSession &&
       session.refresh_token &&
-      session.isexpired((Date.now() + this.expiredTimespanMs) / 1000)
+      session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
@@ -2749,7 +2742,7 @@ export class Client {
     if (
       this.autoRefreshSession &&
       session.refresh_token &&
-      session.isexpired((Date.now() + this.expiredTimespanMs) / 1000)
+      session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
@@ -2770,7 +2763,7 @@ export class Client {
     if (
       this.autoRefreshSession &&
       session.refresh_token &&
-      session.isexpired((Date.now() + this.expiredTimespanMs) / 1000)
+      session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
@@ -2791,7 +2784,7 @@ export class Client {
     if (
       this.autoRefreshSession &&
       session.refresh_token &&
-      session.isexpired((Date.now() + this.expiredTimespanMs) / 1000)
+      session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
@@ -2811,7 +2804,7 @@ export class Client {
     if (
       this.autoRefreshSession &&
       session.refresh_token &&
-      session.isexpired((Date.now() + this.expiredTimespanMs) / 1000)
+      session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
@@ -2831,7 +2824,7 @@ export class Client {
     if (
       this.autoRefreshSession &&
       session.refresh_token &&
-      session.isexpired((Date.now() + this.expiredTimespanMs) / 1000)
+      session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
@@ -2851,7 +2844,7 @@ export class Client {
     if (
       this.autoRefreshSession &&
       session.refresh_token &&
-      session.isexpired((Date.now() + this.expiredTimespanMs) / 1000)
+      session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
@@ -2871,7 +2864,7 @@ export class Client {
     if (
       this.autoRefreshSession &&
       session.refresh_token &&
-      session.isexpired((Date.now() + this.expiredTimespanMs) / 1000)
+      session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
@@ -2891,7 +2884,7 @@ export class Client {
     if (
       this.autoRefreshSession &&
       session.refresh_token &&
-      session.isexpired((Date.now() + this.expiredTimespanMs) / 1000)
+      session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
@@ -2911,7 +2904,7 @@ export class Client {
     if (
       this.autoRefreshSession &&
       session.refresh_token &&
-      session.isexpired((Date.now() + this.expiredTimespanMs) / 1000)
+      session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
@@ -2931,7 +2924,7 @@ export class Client {
     if (
       this.autoRefreshSession &&
       session.refresh_token &&
-      session.isexpired((Date.now() + this.expiredTimespanMs) / 1000)
+      session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
@@ -2951,7 +2944,7 @@ export class Client {
     if (
       this.autoRefreshSession &&
       session.refresh_token &&
-      session.isexpired((Date.now() + this.expiredTimespanMs) / 1000)
+      session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
@@ -2971,7 +2964,7 @@ export class Client {
     if (
       this.autoRefreshSession &&
       session.refresh_token &&
-      session.isexpired((Date.now() + this.expiredTimespanMs) / 1000)
+      session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
@@ -2991,7 +2984,7 @@ export class Client {
     if (
       this.autoRefreshSession &&
       session.refresh_token &&
-      session.isexpired((Date.now() + this.expiredTimespanMs) / 1000)
+      session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
@@ -3010,7 +3003,7 @@ export class Client {
     if (
       this.autoRefreshSession &&
       session.refresh_token &&
-      session.isexpired((Date.now() + this.expiredTimespanMs) / 1000)
+      session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
@@ -3029,7 +3022,7 @@ export class Client {
     if (
       this.autoRefreshSession &&
       session.refresh_token &&
-      session.isexpired((Date.now() + this.expiredTimespanMs) / 1000)
+      session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
@@ -3049,7 +3042,7 @@ export class Client {
     if (
       this.autoRefreshSession &&
       session.refresh_token &&
-      session.isexpired((Date.now() + this.expiredTimespanMs) / 1000)
+      session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
@@ -3069,7 +3062,7 @@ export class Client {
     if (
       this.autoRefreshSession &&
       session.refresh_token &&
-      session.isexpired((Date.now() + this.expiredTimespanMs) / 1000)
+      session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
@@ -3089,7 +3082,7 @@ export class Client {
     if (
       this.autoRefreshSession &&
       session.refresh_token &&
-      session.isexpired((Date.now() + this.expiredTimespanMs) / 1000)
+      session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
@@ -3109,7 +3102,7 @@ export class Client {
     if (
       this.autoRefreshSession &&
       session.refresh_token &&
-      session.isexpired((Date.now() + this.expiredTimespanMs) / 1000)
+      session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
@@ -3130,7 +3123,7 @@ export class Client {
     if (
       this.autoRefreshSession &&
       session.refresh_token &&
-      session.isexpired((Date.now() + this.expiredTimespanMs) / 1000)
+      session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
@@ -3150,7 +3143,7 @@ export class Client {
     if (
       this.autoRefreshSession &&
       session.refresh_token &&
-      session.isexpired((Date.now() + this.expiredTimespanMs) / 1000)
+      session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
@@ -3167,7 +3160,7 @@ export class Client {
     if (
       this.autoRefreshSession &&
       session.refresh_token &&
-      session.isexpired((Date.now() + this.expiredTimespanMs) / 1000)
+      session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
@@ -3188,7 +3181,7 @@ export class Client {
     if (
       this.autoRefreshSession &&
       session.refresh_token &&
-      session.isexpired((Date.now() + this.expiredTimespanMs) / 1000)
+      session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
@@ -3210,7 +3203,7 @@ export class Client {
     if (
       this.autoRefreshSession &&
       session.refresh_token &&
-      session.isexpired((Date.now() + this.expiredTimespanMs) / 1000)
+      session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
@@ -3230,7 +3223,7 @@ export class Client {
     if (
       this.autoRefreshSession &&
       session.refresh_token &&
-      session.isexpired((Date.now() + this.expiredTimespanMs) / 1000)
+      session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
@@ -3251,7 +3244,7 @@ export class Client {
     if (
       this.autoRefreshSession &&
       session.refresh_token &&
-      session.isexpired((Date.now() + this.expiredTimespanMs) / 1000)
+      session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
@@ -3272,7 +3265,7 @@ export class Client {
     if (
       this.autoRefreshSession &&
       session.refresh_token &&
-      session.isexpired((Date.now() + this.expiredTimespanMs) / 1000)
+      session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
@@ -3293,7 +3286,7 @@ export class Client {
     if (
       this.autoRefreshSession &&
       session.refresh_token &&
-      session.isexpired((Date.now() + this.expiredTimespanMs) / 1000)
+      session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
@@ -3313,7 +3306,7 @@ export class Client {
     if (
       this.autoRefreshSession &&
       session.refresh_token &&
-      session.isexpired((Date.now() + this.expiredTimespanMs) / 1000)
+      session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
@@ -3330,7 +3323,7 @@ export class Client {
     if (
       this.autoRefreshSession &&
       session.refresh_token &&
-      session.isexpired((Date.now() + this.expiredTimespanMs) / 1000)
+      session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
@@ -3352,7 +3345,7 @@ export class Client {
     if (
       this.autoRefreshSession &&
       session.refresh_token &&
-      session.isexpired((Date.now() + this.expiredTimespanMs) / 1000)
+      session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
@@ -3373,7 +3366,7 @@ export class Client {
     if (
       this.autoRefreshSession &&
       session.refresh_token &&
-      session.isexpired((Date.now() + this.expiredTimespanMs) / 1000)
+      session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
@@ -3394,7 +3387,7 @@ export class Client {
     if (
       this.autoRefreshSession &&
       session.refresh_token &&
-      session.isexpired((Date.now() + this.expiredTimespanMs) / 1000)
+      session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
@@ -3414,7 +3407,7 @@ export class Client {
     if (
       this.autoRefreshSession &&
       session.refresh_token &&
-      session.isexpired((Date.now() + this.expiredTimespanMs) / 1000)
+      session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
@@ -3430,7 +3423,7 @@ export class Client {
     if (
       this.autoRefreshSession &&
       session.refresh_token &&
-      session.isexpired((Date.now() + this.expiredTimespanMs) / 1000)
+      session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
@@ -3446,7 +3439,7 @@ export class Client {
     if (
       this.autoRefreshSession &&
       session.refresh_token &&
-      session.isexpired((Date.now() + this.expiredTimespanMs) / 1000)
+      session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
@@ -3460,7 +3453,7 @@ export class Client {
     if (
       this.autoRefreshSession &&
       session.refresh_token &&
-      session.isexpired((Date.now() + this.expiredTimespanMs) / 1000)
+      session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
@@ -3476,7 +3469,7 @@ export class Client {
     if (
       this.autoRefreshSession &&
       session.refresh_token &&
-      session.isexpired((Date.now() + this.expiredTimespanMs) / 1000)
+      session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
@@ -3494,7 +3487,7 @@ export class Client {
     if (
       this.autoRefreshSession &&
       session.refresh_token &&
-      session.isexpired((Date.now() + this.expiredTimespanMs) / 1000)
+      session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
@@ -3513,7 +3506,7 @@ export class Client {
     if (
       this.autoRefreshSession &&
       session.refresh_token &&
-      session.isexpired((Date.now() + this.expiredTimespanMs) / 1000)
+      session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
@@ -3532,7 +3525,7 @@ export class Client {
     if (
       this.autoRefreshSession &&
       session.refresh_token &&
-      session.isexpired((Date.now() + this.expiredTimespanMs) / 1000)
+      session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
@@ -3552,7 +3545,7 @@ export class Client {
     if (
       this.autoRefreshSession &&
       session.refresh_token &&
-      session.isexpired((Date.now() + this.expiredTimespanMs) / 1000)
+      session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
@@ -3568,7 +3561,7 @@ export class Client {
     if (
       this.autoRefreshSession &&
       session.refresh_token &&
-      session.isexpired((Date.now() + this.expiredTimespanMs) / 1000)
+      session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
@@ -3587,7 +3580,7 @@ export class Client {
     if (
       this.autoRefreshSession &&
       session.refresh_token &&
-      session.isexpired((Date.now() + this.expiredTimespanMs) / 1000)
+      session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
@@ -3603,7 +3596,7 @@ export class Client {
     if (
       this.autoRefreshSession &&
       session.refresh_token &&
-      session.isexpired((Date.now() + this.expiredTimespanMs) / 1000)
+      session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
@@ -3619,7 +3612,7 @@ export class Client {
     if (
       this.autoRefreshSession &&
       session.refresh_token &&
-      session.isexpired((Date.now() + this.expiredTimespanMs) / 1000)
+      session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
@@ -3635,7 +3628,7 @@ export class Client {
     if (
       this.autoRefreshSession &&
       session.refresh_token &&
-      session.isexpired((Date.now() + this.expiredTimespanMs) / 1000)
+      session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
@@ -3651,7 +3644,7 @@ export class Client {
     if (
       this.autoRefreshSession &&
       session.refresh_token &&
-      session.isexpired((Date.now() + this.expiredTimespanMs) / 1000)
+      session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
@@ -3670,7 +3663,7 @@ export class Client {
     if (
       this.autoRefreshSession &&
       session.refresh_token &&
-      session.isexpired((Date.now() + this.expiredTimespanMs) / 1000)
+      session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
@@ -3695,7 +3688,7 @@ export class Client {
     if (
       this.autoRefreshSession &&
       session.refresh_token &&
-      session.isexpired((Date.now() + this.expiredTimespanMs) / 1000)
+      session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
@@ -3738,7 +3731,7 @@ export class Client {
     if (
       this.autoRefreshSession &&
       session.refresh_token &&
-      session.isexpired((Date.now() + this.expiredTimespanMs) / 1000)
+      session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
@@ -3758,7 +3751,7 @@ export class Client {
     if (
       this.autoRefreshSession &&
       session.refresh_token &&
-      session.isexpired((Date.now() + this.expiredTimespanMs) / 1000)
+      session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
@@ -3794,7 +3787,7 @@ export class Client {
     if (
       this.autoRefreshSession &&
       session.refresh_token &&
-      session.isexpired((Date.now() + this.expiredTimespanMs) / 1000)
+      session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
@@ -3813,7 +3806,7 @@ export class Client {
     if (
       this.autoRefreshSession &&
       session.refresh_token &&
-      session.isexpired((Date.now() + this.expiredTimespanMs) / 1000)
+      session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
@@ -3832,7 +3825,7 @@ export class Client {
     if (
       this.autoRefreshSession &&
       session.refresh_token &&
-      session.isexpired((Date.now() + this.expiredTimespanMs) / 1000)
+      session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
@@ -3851,7 +3844,7 @@ export class Client {
     if (
       this.autoRefreshSession &&
       session.refresh_token &&
-      session.isexpired((Date.now() + this.expiredTimespanMs) / 1000)
+      session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
@@ -3870,7 +3863,7 @@ export class Client {
     if (
       this.autoRefreshSession &&
       session.refresh_token &&
-      session.isexpired((Date.now() + this.expiredTimespanMs) / 1000)
+      session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
@@ -3890,7 +3883,7 @@ export class Client {
     if (
       this.autoRefreshSession &&
       session.refresh_token &&
-      session.isexpired((Date.now() + this.expiredTimespanMs) / 1000)
+      session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
@@ -3906,7 +3899,7 @@ export class Client {
     if (
       this.autoRefreshSession &&
       session.refresh_token &&
-      session.isexpired((Date.now() + this.expiredTimespanMs) / 1000)
+      session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
@@ -3926,7 +3919,7 @@ export class Client {
     if (
       this.autoRefreshSession &&
       session.refresh_token &&
-      session.isexpired((Date.now() + this.expiredTimespanMs) / 1000)
+      session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
@@ -3944,7 +3937,7 @@ export class Client {
     if (
       this.autoRefreshSession &&
       session.refresh_token &&
-      session.isexpired((Date.now() + this.expiredTimespanMs) / 1000)
+      session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
@@ -3962,7 +3955,7 @@ export class Client {
     if (
       this.autoRefreshSession &&
       session.refresh_token &&
-      session.isexpired((Date.now() + this.expiredTimespanMs) / 1000)
+      session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
@@ -3978,7 +3971,7 @@ export class Client {
     if (
       this.autoRefreshSession &&
       session.refresh_token &&
-      session.isexpired((Date.now() + this.expiredTimespanMs) / 1000)
+      session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
@@ -4000,7 +3993,7 @@ export class Client {
     if (
       this.autoRefreshSession &&
       session.refresh_token &&
-      session.isexpired((Date.now() + this.expiredTimespanMs) / 1000)
+      session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
@@ -4025,7 +4018,7 @@ export class Client {
     if (
       this.autoRefreshSession &&
       session.refresh_token &&
-      session.isexpired((Date.now() + this.expiredTimespanMs) / 1000)
+      session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
@@ -4052,7 +4045,7 @@ export class Client {
     if (
       this.autoRefreshSession &&
       session.refresh_token &&
-      session.isexpired((Date.now() + this.expiredTimespanMs) / 1000)
+      session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
@@ -4078,7 +4071,7 @@ export class Client {
     if (
       this.autoRefreshSession &&
       session.refresh_token &&
-      session.isexpired((Date.now() + this.expiredTimespanMs) / 1000)
+      session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
@@ -4103,7 +4096,7 @@ export class Client {
     if (
       this.autoRefreshSession &&
       session.refresh_token &&
-      session.isexpired((Date.now() + this.expiredTimespanMs) / 1000)
+      session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
@@ -4136,7 +4129,7 @@ export class Client {
     if (
       this.autoRefreshSession &&
       session.refresh_token &&
-      session.isexpired((Date.now() + this.expiredTimespanMs) / 1000)
+      session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
@@ -4164,7 +4157,7 @@ export class Client {
     if (
       this.autoRefreshSession &&
       session.refresh_token &&
-      session.isexpired((Date.now() + this.expiredTimespanMs) / 1000)
+      session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
@@ -4198,7 +4191,7 @@ export class Client {
     if (
       this.autoRefreshSession &&
       session.refresh_token &&
-      session.isexpired((Date.now() + this.expiredTimespanMs) / 1000)
+      session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
@@ -4231,7 +4224,7 @@ export class Client {
     if (
       this.autoRefreshSession &&
       session.refresh_token &&
-      session.isexpired((Date.now() + this.expiredTimespanMs) / 1000)
+      session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
@@ -4250,7 +4243,7 @@ export class Client {
     if (
       this.autoRefreshSession &&
       session.refresh_token &&
-      session.isexpired((Date.now() + this.expiredTimespanMs) / 1000)
+      session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
@@ -4272,7 +4265,7 @@ export class Client {
     if (
       this.autoRefreshSession &&
       session.refresh_token &&
-      session.isexpired((Date.now() + this.expiredTimespanMs) / 1000)
+      session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
@@ -4292,7 +4285,7 @@ export class Client {
     if (
       this.autoRefreshSession &&
       session.refresh_token &&
-      session.isexpired((Date.now() + this.expiredTimespanMs) / 1000)
+      session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
@@ -4314,7 +4307,7 @@ export class Client {
     if (
       this.autoRefreshSession &&
       session.refresh_token &&
-      session.isexpired((Date.now() + this.expiredTimespanMs) / 1000)
+      session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
@@ -4330,7 +4323,7 @@ export class Client {
     if (
       this.autoRefreshSession &&
       session.refresh_token &&
-      session.isexpired((Date.now() + this.expiredTimespanMs) / 1000)
+      session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
@@ -4346,7 +4339,7 @@ export class Client {
     if (
       this.autoRefreshSession &&
       session.refresh_token &&
-      session.isexpired((Date.now() + this.expiredTimespanMs) / 1000)
+      session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
@@ -4363,7 +4356,7 @@ export class Client {
     if (
       this.autoRefreshSession &&
       session.refresh_token &&
-      session.isexpired((Date.now() + this.expiredTimespanMs) / 1000)
+      session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
@@ -4413,7 +4406,7 @@ export class Client {
     if (
       this.autoRefreshSession &&
       session.refresh_token &&
-      session.isexpired((Date.now() + this.expiredTimespanMs) / 1000)
+      session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
@@ -4432,7 +4425,7 @@ export class Client {
     if (
       this.autoRefreshSession &&
       session.refresh_token &&
-      session.isexpired((Date.now() + this.expiredTimespanMs) / 1000)
+      session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
@@ -4452,7 +4445,7 @@ export class Client {
     if (
       this.autoRefreshSession &&
       session.refresh_token &&
-      session.isexpired((Date.now() + this.expiredTimespanMs) / 1000)
+      session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
@@ -4471,7 +4464,7 @@ export class Client {
     if (
       this.autoRefreshSession &&
       session.refresh_token &&
-      session.isexpired((Date.now() + this.expiredTimespanMs) / 1000)
+      session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
@@ -4490,7 +4483,7 @@ export class Client {
     if (
       this.autoRefreshSession &&
       session.refresh_token &&
-      session.isexpired((Date.now() + this.expiredTimespanMs) / 1000)
+      session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
@@ -4506,7 +4499,7 @@ export class Client {
     if (
       this.autoRefreshSession &&
       session.refresh_token &&
-      session.isexpired((Date.now() + this.expiredTimespanMs) / 1000)
+      session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
@@ -4528,7 +4521,7 @@ export class Client {
     if (
       this.autoRefreshSession &&
       session.refresh_token &&
-      session.isexpired((Date.now() + this.expiredTimespanMs) / 1000)
+      session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
@@ -4550,7 +4543,7 @@ export class Client {
     if (
       this.autoRefreshSession &&
       session.refresh_token &&
-      session.isexpired((Date.now() + this.expiredTimespanMs) / 1000)
+      session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
@@ -4570,7 +4563,7 @@ export class Client {
     if (
       this.autoRefreshSession &&
       session.refresh_token &&
-      session.isexpired((Date.now() + this.expiredTimespanMs) / 1000)
+      session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
@@ -4589,7 +4582,7 @@ export class Client {
     if (
       this.autoRefreshSession &&
       session.refresh_token &&
-      session.isexpired((Date.now() + this.expiredTimespanMs) / 1000)
+      session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
@@ -4609,7 +4602,7 @@ export class Client {
     if (
       this.autoRefreshSession &&
       session.refresh_token &&
-      session.isexpired((Date.now() + this.expiredTimespanMs) / 1000)
+      session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
@@ -4629,7 +4622,7 @@ export class Client {
     if (
       this.autoRefreshSession &&
       session.refresh_token &&
-      session.isexpired((Date.now() + this.expiredTimespanMs) / 1000)
+      session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
@@ -4649,7 +4642,7 @@ export class Client {
     if (
       this.autoRefreshSession &&
       session.refresh_token &&
-      session.isexpired((Date.now() + this.expiredTimespanMs) / 1000)
+      session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
@@ -4669,7 +4662,7 @@ export class Client {
     if (
       this.autoRefreshSession &&
       session.refresh_token &&
-      session.isexpired((Date.now() + this.expiredTimespanMs) / 1000)
+      session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
@@ -4686,7 +4679,7 @@ export class Client {
     if (
       this.autoRefreshSession &&
       session.refresh_token &&
-      session.isexpired((Date.now() + this.expiredTimespanMs) / 1000)
+      session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
@@ -4707,7 +4700,7 @@ export class Client {
     if (
       this.autoRefreshSession &&
       session.refresh_token &&
-      session.isexpired((Date.now() + this.expiredTimespanMs) / 1000)
+      session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
@@ -4729,7 +4722,7 @@ export class Client {
     if (
       this.autoRefreshSession &&
       session.refresh_token &&
-      session.isexpired((Date.now() + this.expiredTimespanMs) / 1000)
+      session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
@@ -4750,7 +4743,7 @@ export class Client {
     if (
       this.autoRefreshSession &&
       session.refresh_token &&
-      session.isexpired((Date.now() + this.expiredTimespanMs) / 1000)
+      session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
@@ -4767,7 +4760,7 @@ export class Client {
     if (
       this.autoRefreshSession &&
       session.refresh_token &&
-      session.isexpired((Date.now() + this.expiredTimespanMs) / 1000)
+      session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
@@ -4784,7 +4777,7 @@ export class Client {
     if (
       this.autoRefreshSession &&
       session.refresh_token &&
-      session.isexpired((Date.now() + this.expiredTimespanMs) / 1000)
+      session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
@@ -4804,7 +4797,7 @@ export class Client {
     if (
       this.autoRefreshSession &&
       session.refresh_token &&
-      session.isexpired((Date.now() + this.expiredTimespanMs) / 1000)
+      session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
@@ -4827,7 +4820,7 @@ export class Client {
     if (
       this.autoRefreshSession &&
       session.refresh_token &&
-      session.isexpired((Date.now() + this.expiredTimespanMs) / 1000)
+      session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
@@ -4848,7 +4841,7 @@ export class Client {
     if (
       this.autoRefreshSession &&
       session.refresh_token &&
-      session.isexpired((Date.now() + this.expiredTimespanMs) / 1000)
+      session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
@@ -4868,7 +4861,7 @@ export class Client {
     if (
       this.autoRefreshSession &&
       session.refresh_token &&
-      session.isexpired((Date.now() + this.expiredTimespanMs) / 1000)
+      session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
@@ -4888,7 +4881,7 @@ export class Client {
     if (
       this.autoRefreshSession &&
       session.refresh_token &&
-      session.isexpired((Date.now() + this.expiredTimespanMs) / 1000)
+      session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
@@ -4908,7 +4901,7 @@ export class Client {
     if (
       this.autoRefreshSession &&
       session.refresh_token &&
-      session.isexpired((Date.now() + this.expiredTimespanMs) / 1000)
+      session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
@@ -4928,7 +4921,7 @@ export class Client {
     if (
       this.autoRefreshSession &&
       session.refresh_token &&
-      session.isexpired((Date.now() + this.expiredTimespanMs) / 1000)
+      session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
@@ -4948,7 +4941,7 @@ export class Client {
     if (
       this.autoRefreshSession &&
       session.refresh_token &&
-      session.isexpired((Date.now() + this.expiredTimespanMs) / 1000)
+      session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
@@ -4967,7 +4960,7 @@ export class Client {
     if (
       this.autoRefreshSession &&
       session.refresh_token &&
-      session.isexpired((Date.now() + this.expiredTimespanMs) / 1000)
+      session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
@@ -4986,7 +4979,7 @@ export class Client {
     if (
       this.autoRefreshSession &&
       session.refresh_token &&
-      session.isexpired((Date.now() + this.expiredTimespanMs) / 1000)
+      session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
@@ -5005,7 +4998,7 @@ export class Client {
     if (
       this.autoRefreshSession &&
       session.refresh_token &&
-      session.isexpired((Date.now() + this.expiredTimespanMs) / 1000)
+      session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
@@ -5027,7 +5020,7 @@ export class Client {
     if (
       this.autoRefreshSession &&
       session.refresh_token &&
-      session.isexpired((Date.now() + this.expiredTimespanMs) / 1000)
+      session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
@@ -5047,7 +5040,7 @@ export class Client {
     if (
       this.autoRefreshSession &&
       session.refresh_token &&
-      session.isexpired((Date.now() + this.expiredTimespanMs) / 1000)
+      session.isexpired(Date.now() / 1000)
     ) {
       await this.sessionRefresh(session);
     }
