@@ -561,6 +561,9 @@ export class Client {
   /** The low level API client for Mezon server. */
   private readonly apiClient: MezonApi;
 
+  /** thre refreshTokenPromise */
+  private refreshTokenPromise: Promise<Session> | null = null;
+
   constructor(
     readonly serverkey = DEFAULT_SERVER_KEY,
     readonly host = DEFAULT_HOST,
@@ -2404,12 +2407,34 @@ export class Client {
       );
     }
 
-    const apiSession = await this.apiClient.sessionRefresh(this.serverkey, "", {
-      token: session.refresh_token,
-      vars: vars,
+    if (this.refreshTokenPromise) {
+      return this.refreshTokenPromise; // Reuse existing promise
+    }
+
+    this.refreshTokenPromise = new Promise<Session>(async (resolve, reject) => {
+      try {
+        const apiSession = await this.apiClient.sessionRefresh(
+          this.serverkey,
+          "",
+          {
+            token: session.refresh_token,
+            vars: vars,
+          }
+        );
+        session.update(apiSession.token!, apiSession.refresh_token!);
+        resolve(session);
+      } catch (error) {
+        console.error("Session refresh failed:", error);
+        reject(error);
+      } finally {
+        const refreshTokenPromiseTimeoutId = setTimeout(() => {
+          this.refreshTokenPromise = null;
+          clearInterval(refreshTokenPromiseTimeoutId);
+        }, 1000);
+      }
     });
-    session.update(apiSession.token!, apiSession.refresh_token!);
-    return session;
+
+    return this.refreshTokenPromise;
   }
 
   /** Remove the Apple ID from the social profiles on the current user's account. */
