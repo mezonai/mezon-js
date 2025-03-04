@@ -2259,6 +2259,10 @@ export interface ApiSessionLogoutRequest {
   refresh_token?: string;
   //Session token to log out.
   token?: string;
+  // device_id to log out.
+  device_id?: string;
+  // platform 
+  platform?: string;
 }
 
 /** Authenticate against the server with a refresh token. */

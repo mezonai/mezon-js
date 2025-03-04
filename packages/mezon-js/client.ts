@@ -2358,7 +2358,9 @@ export class Client {
   async sessionLogout(
     session: Session,
     token: string,
-    refreshToken: string
+    refreshToken: string,
+    deviceId: string,
+    platform: string
   ): Promise<boolean> {
     if (
       this.autoRefreshSession &&
@@ -2372,6 +2374,8 @@ export class Client {
       .sessionLogout(session.token, {
         refresh_token: refreshToken,
         token: token,
+        device_id: deviceId,
+        platform: platform
       })
       .then((response: any) => {
         return response !== undefined;
