@@ -81,6 +81,8 @@ export interface NotificationInfo {
   clan_id?: string;
   //
   channel?: ApiChannelDescription;
+  //
+  topic_id?: string;
 }
 
 /** A response from a channel join operation. */

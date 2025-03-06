@@ -1334,7 +1334,11 @@ export interface Notification {
   /**  */
   avatar_url: string;
   /**  */
-  channel: ChannelDescription | undefined;
+  channel:
+    | ChannelDescription
+    | undefined;
+  /**  */
+  topic_id: string;
 }
 
 /** A collection of zero or more notifications. */
@@ -12870,6 +12874,7 @@ function createBaseNotification(): Notification {
     channel_type: 0,
     avatar_url: "",
     channel: undefined,
+    topic_id: "",
   };
 }
 
@@ -12910,6 +12915,9 @@ export const Notification = {
     }
     if (message.channel !== undefined) {
       ChannelDescription.encode(message.channel, writer.uint32(98).fork()).ldelim();
+    }
+    if (message.topic_id !== "") {
+      writer.uint32(106).string(message.topic_id);
     }
     return writer;
   },
@@ -13005,6 +13013,13 @@ export const Notification = {
 
           message.channel = ChannelDescription.decode(reader, reader.uint32());
           continue;
+        case 13:
+          if (tag !== 106) {
+            break;
+          }
+
+          message.topic_id = reader.string();
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -13028,6 +13043,7 @@ export const Notification = {
       channel_type: isSet(object.channel_type) ? globalThis.Number(object.channel_type) : 0,
       avatar_url: isSet(object.avatar_url) ? globalThis.String(object.avatar_url) : "",
       channel: isSet(object.channel) ? ChannelDescription.fromJSON(object.channel) : undefined,
+      topic_id: isSet(object.topic_id) ? globalThis.String(object.topic_id) : "",
     };
   },
 
@@ -13069,6 +13085,9 @@ export const Notification = {
     if (message.channel !== undefined) {
       obj.channel = ChannelDescription.toJSON(message.channel);
     }
+    if (message.topic_id !== "") {
+      obj.topic_id = message.topic_id;
+    }
     return obj;
   },
 
@@ -13091,6 +13110,7 @@ export const Notification = {
     message.channel = (object.channel !== undefined && object.channel !== null)
       ? ChannelDescription.fromPartial(object.channel)
       : undefined;
+    message.topic_id = object.topic_id ?? "";
     return message;
   },
 };
