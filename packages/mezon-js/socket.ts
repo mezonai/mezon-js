@@ -163,6 +163,8 @@ export interface UserProfileRedis {
   create_time_second: number;
   /** online */
   online: boolean;
+  /** clans */
+  joined_clans: number[];
 }
 
 /** UserChannelAddedEvent */
