@@ -16,6 +16,7 @@
 
 import {
   ApiChannelDescription,
+  ApiChannelMessage,
   ApiChannelMessageHeader,
   ApiCreateEventRequest,
   ApiGiveCoffeeEvent,
@@ -968,6 +969,9 @@ export interface SdTopicEvent {
   clan_id: string;
   channel_id: string;
   message_id: string;
+  user_id: string;
+  last_sent_message?: ApiChannelMessageHeader;
+  message?: ApiChannelMessage;
 }
 
 export interface UserStatusEvent {
