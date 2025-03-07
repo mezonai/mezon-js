@@ -1780,7 +1780,7 @@ export interface ApiNotification {
   //
   channel_id?: string;
   //
-  channel_type?: string;
+  channel_type?: number;
   //
   clan_id?: string;
   //Category code for this notification.
@@ -1797,6 +1797,12 @@ export interface ApiNotification {
   sender_id?: string;
   //Subject of the notification.
   subject?: string;
+  //category.
+  category?: number;
+  //
+  topic_id?: string;  
+  //
+  channel?: ApiChannelDescription;
 }
 
 /**  */
@@ -7828,11 +7834,13 @@ export class MezonApi {
   deleteNotifications(
     bearerToken: string,
     ids?: Array<string>,
+    category?: number,
     options: any = {}
   ): Promise<any> {
     const urlPath = "/v2/notification";
     const queryParams = new Map<string, any>();
     queryParams.set("ids", ids);
+    queryParams.set("category", category);
 
     let bodyJson: string = "";
 
@@ -7864,7 +7872,7 @@ export class MezonApi {
     limit?: number,
     clanId?: string,
     notificationId?: string,
-    code?: number,
+    category?: number,
     direction?: number,
     options: any = {}
   ): Promise<ApiNotificationList> {
@@ -7873,7 +7881,7 @@ export class MezonApi {
     queryParams.set("limit", limit);
     queryParams.set("clan_id", clanId);
     queryParams.set("notification_id", notificationId);
-    queryParams.set("code", code);
+  queryParams.set("category", category);
     queryParams.set("direction", direction);
 
     let bodyJson: string = "";

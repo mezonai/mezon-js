@@ -1235,7 +1235,7 @@ export interface Socket {
   onerror: (evt: Event) => void;
 
   /** Receive notifications from the socket. */
-  onnotification: (notification: NotificationInfo) => void;
+  onnotification: (notification: ApiNotification) => void;
 
   /** Receive status presence updates. */
   onstatuspresence: (statusPresence: StatusPresenceEvent) => void;
@@ -1804,7 +1804,7 @@ export class DefaultSocket implements Socket {
     }
   }
 
-  onnotification(notification: NotificationInfo) {
+  onnotification(notification: ApiNotification) {
     if (this.verbose && window && window.console) {
       console.log(notification);
     }

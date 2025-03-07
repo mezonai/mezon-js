@@ -1167,7 +1167,8 @@ export class Client {
   /** Delete one or more notifications */
   async deleteNotifications(
     session: Session,
-    ids?: Array<string>
+    ids?: Array<string>,
+    category?: number
   ): Promise<boolean> {
     if (
       this.autoRefreshSession &&
@@ -1178,7 +1179,7 @@ export class Client {
     }
 
     return this.apiClient
-      .deleteNotifications(session.token, ids)
+      .deleteNotifications(session.token, ids, category)
       .then((response: any) => {
         return Promise.resolve(response != undefined);
       });
@@ -2254,9 +2255,9 @@ export class Client {
     clanId: string,
     limit?: number,
     notificationId?: string,
-    code?: number,
+    category?: number,
     direction?: number
-  ): Promise<NotificationList> {
+  ): Promise<ApiNotificationList> {
     if (
       this.autoRefreshSession &&
       session.refresh_token &&
@@ -2271,11 +2272,11 @@ export class Client {
         limit,
         clanId,
         notificationId,
-        code,
+        category,
         direction
       )
       .then((response: ApiNotificationList) => {
-        var result: NotificationList = {
+        var result: ApiNotificationList = {
           cacheable_cursor: response.cacheable_cursor,
           notifications: [],
         };
@@ -2286,13 +2287,14 @@ export class Client {
 
         response.notifications!.forEach((n) => {
           result.notifications!.push({
-            code: n.code ? Number(n.code) : 0,
-            create_time: n.create_time,
             id: n.id,
-            persistent: n.persistent,
-            sender_id: n.sender_id,
             subject: n.subject,
             content: n.content ? safeJSONParse(n.content) : undefined,
+            code: n.code ? Number(n.code) : 0,
+            sender_id: n.sender_id,
+            create_time: n.create_time,
+            persistent: n.persistent,
+            category: n.category,
           });
         });
         return Promise.resolve(result);
