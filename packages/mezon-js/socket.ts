@@ -454,6 +454,13 @@ export interface CustomStatusEvent {
   no_clear: boolean;
 }
 
+export interface UnpinMessageEvent {
+  id: string;
+  message_id: string;
+  channel_id: string;
+  clan_id: string;
+}
+
 export interface ChannelUpdatedEvent {
   // clan id
   clan_id: string;
@@ -1388,6 +1395,7 @@ export interface Socket {
 
   onJoinChannelAppEvent: (join_channel_app_data: JoinChannelAppData) => void;
 
+  onUnpinMessageEvent: (unpin_message_event: UnpinMessageEvent)=> void;
 }
 
 /** Reports an error received from a socket message. */
@@ -1671,6 +1679,8 @@ export class DefaultSocket implements Socket {
           this.onuserstatusevent(<UserStatusEvent>message.user_status_event);
         } else if (message.join_channel_app_data) {
           this.onJoinChannelAppEvent(<JoinChannelAppData>message.join_channel_app_data);
+        }else if (message.unpin_message_event) {
+          this.onUnpinMessageEvent(<UnpinMessageEvent>message.unpin_message_event);
         } else {
           if (this.verbose && window && window.console) {
             console.log("Unrecognized message received: %o", message);
@@ -2080,6 +2090,12 @@ export class DefaultSocket implements Socket {
     }
   }
   
+  onUnpinMessageEvent(unpin_message_event: UnpinMessageEvent) {
+    if (this.verbose && window && window.console) {
+      console.log(unpin_message_event);
+    }
+  }
+
   send(
     message:
       | ChannelJoin
