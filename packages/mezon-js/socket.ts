@@ -1679,7 +1679,7 @@ export class DefaultSocket implements Socket {
           this.onuserstatusevent(<UserStatusEvent>message.user_status_event);
         } else if (message.join_channel_app_data) {
           this.onJoinChannelAppEvent(<JoinChannelAppData>message.join_channel_app_data);
-        }else if (message.unpin_message_event) {
+        } else if (message.unpin_message_event) {
           this.onUnpinMessageEvent(<UnpinMessageEvent>message.unpin_message_event);
         } else {
           if (this.verbose && window && window.console) {
