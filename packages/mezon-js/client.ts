@@ -4981,6 +4981,7 @@ export class Client {
   async getMezonOauthClient(
     session: Session,
     clientId?:string,
+    clientName?:string,
   ): Promise<ApiMezonOauthClient> {
     if (
       this.autoRefreshSession &&
@@ -4991,7 +4992,7 @@ export class Client {
     }
 
     return this.apiClient
-      .getMezonOauthClient(session.token, clientId)
+      .getMezonOauthClient(session.token, clientId, clientName)
       .then((response: ApiMezonOauthClient) => {
         return Promise.resolve(response);
       });
