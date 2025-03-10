@@ -11226,12 +11226,14 @@ export class MezonApi {
   /** Create mezon OAuth client */
   getMezonOauthClient(bearerToken: string,
     clientId?:string,
+    clientName?:string,
     options: any = {}
   ): Promise<ApiMezonOauthClient> {
 
     const urlPath = "/v2/mznoauthclient";
     const queryParams = new Map<string, any>();
     queryParams.set("client_id", clientId);
+    queryParams.set("client_name", clientName);
 
     let bodyJson : string = "";
 
