@@ -16,6 +16,7 @@ export class ChannelManager {
     private sessionManager: SessionManager
   ) {}
 
+  /** Create DM channel with user */
   async createDMchannel(userId: string): Promise<null | ApiChannelDescription> {
     try {
       if (!isValidUserId(userId)) return null;
@@ -50,6 +51,7 @@ export class ChannelManager {
     }
   }
 
+  /** List current user in channel voice */
   async listChannelVoiceUsers(
     clanId: string,
     channelId: string,
@@ -62,10 +64,6 @@ export class ChannelManager {
       console.log("0 < limit <= 500");
       throw new Error("0 < limit <= 500");
     }
-    console.log(
-      "this.sessionManager.getSession()!.token",
-      this.sessionManager.getSession()!.token
-    );
     return this.apiClient
       .listChannelVoiceUsers(
         this.sessionManager.getSession()!.token,

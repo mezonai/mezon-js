@@ -12,6 +12,7 @@ import {
 export class MessageManager {
   constructor(private socketManager: SocketManager) {}
 
+  /** Send message in channel/thread */
   async sendMessage(
     clan_id: string,
     channel_id: string,
@@ -48,6 +49,7 @@ export class MessageManager {
     return msgACK;
   }
 
+  /** Send DM message */
   async sendDMChannelMessage(
     channelDmId: string,
     msg: string,
