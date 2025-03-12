@@ -10,14 +10,12 @@ import {
   ApiMessageRef,
   ChannelMessageContent,
   Client,
-  Socket,
   TokenSentEvent,
 } from "../interfaces";
 import { SocketManager } from "./socket_manager";
 import { MessageManager } from "./message_manager";
 import { ChannelManager } from "./channel_manager";
 import { SessionManager } from "./session_manager";
-import { CloseEvent, ErrorEvent } from "ws";
 import { EventManager } from "./event_manager";
 
 const DEFAULT_HOST = "api.mezon.vn";
@@ -27,14 +25,12 @@ const DEFAULT_SSL = true;
 const DEFAULT_TIMEOUT_MS = 7000;
 
 export class MezonClient implements Client {
-  private socket!: Socket;
   private readonly apiClient: MezonApi;
   private socketManager: SocketManager;
   private messageManager: MessageManager;
   private channelManager: ChannelManager;
   private sessionManager: SessionManager;
   private eventManager: EventManager;
-  private isHardDisconnect: boolean | undefined;
 
   constructor(
     readonly apiKey = DEFAULT_API_KEY,
@@ -48,12 +44,16 @@ export class MezonClient implements Client {
 
     this.apiClient = new MezonApi(apiKey, basePath, timeout);
     this.sessionManager = new SessionManager(this.apiClient);
+    this.eventManager = new EventManager();
     this.socketManager = new SocketManager(
       this.host,
       this.port,
       this.useSSL,
       new WebSocketAdapterPb(),
-      this.sessionManager
+      this.sessionManager,
+      this.apiClient,
+      this.apiKey,
+      this.eventManager
     );
     this.messageManager = new MessageManager(this.socketManager);
     this.channelManager = new ChannelManager(
@@ -61,17 +61,14 @@ export class MezonClient implements Client {
       this.socketManager,
       this.sessionManager
     );
-    this.eventManager = new EventManager();
   }
 
   async authenticate() {
     const sockSession = await this.sessionManager.authenticate(this.apiKey);
     const sessionConnected = await this.socketManager.connect(sockSession);
     if (sessionConnected?.token) {
-      this.socket = this.socketManager.getSocket();
-      await this.connectSocket(sessionConnected.token);
+      await this.socketManager.connectSocket(sessionConnected.token);
     }
-    this.isHardDisconnect = false;
     return "Authenticate success!";
   }
 
@@ -83,47 +80,8 @@ export class MezonClient implements Client {
     this.eventManager.remove(event, func);
   }
 
-  async onerror(evt: ErrorEvent) {
-    console.log(evt);
-    if (this.isHardDisconnect) return;
-    if (this.socket.isOpen()) {
-      await this.socketManager.retriesConnect();
-    }
-  }
-
-  onheartbeattimeout() {
-    console.log("Heartbeat timeout.");
-  }
-
-  ondisconnect(e: CloseEvent) {
-    console.log("Disconnected!", e?.reason);
-    if (this.isHardDisconnect) return;
-    this.socketManager.retriesConnect();
-  }
-
-  private async connectSocket(sessionToken: string) {
-    const clans = await this.apiClient.listClanDescs(sessionToken);
-    clans.clandesc?.forEach(async (clan) => {
-      await this.socket.joinClanChat(clan.clan_id || "");
-    });
-
-    // join direct message
-    await this.socket.joinClanChat("0");
-    ["ondisconnect", "onerror", "onheartbeattimeout"].forEach((event) => {
-      this.socket[event] = (this[event as keyof this] as Function).bind(this);
-    });
-
-    for (const event in Events) {
-      const key = Events[event as keyof typeof Events].toString();
-      this.socket.socketEvents.on(key, (...args: any[]) => {
-        this.eventManager.emit(key, ...args);
-      });
-    }
-  }
-
   closeSocket() {
     this.socketManager.closeSocket();
-    this.isHardDisconnect = true;
     this.eventManager = new EventManager(); // Reset event manager
   }
 
@@ -131,6 +89,7 @@ export class MezonClient implements Client {
     return this.sessionManager.logout();
   }
 
+  /** Send message in channel/thread */
   async sendMessage(
     clan_id: string,
     channel_id: string,
@@ -163,6 +122,7 @@ export class MezonClient implements Client {
     );
   }
 
+  /** Send DM message */
   async sendDMChannelMessage(
     channelDmId: string,
     msg: string,
@@ -179,6 +139,7 @@ export class MezonClient implements Client {
     );
   }
 
+  /** Update message */
   async updateChatMessage(
     clan_id: string,
     channel_id: string,
@@ -203,10 +164,12 @@ export class MezonClient implements Client {
     );
   }
 
+  /** Create DM channel */
   async createDMchannel(userId: string) {
     return this.channelManager.createDMchannel(userId);
   }
 
+  /** List current user in channel voice */
   async listChannelVoiceUsers(
     clanId: string,
     channelId: string,
@@ -231,6 +194,7 @@ export class MezonClient implements Client {
     return this.apiClient.sendToken(session.token, sendTokenData);
   }
 
+  /** React message */
   async reactionMessage(
     id: string,
     clan_id: string,
