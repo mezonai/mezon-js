@@ -246,7 +246,7 @@ export interface ChannelMessage {
   //
   references?: Array<ApiMessageRef>;
   //
-  referenced_message?: ChannelMessage;
+  referenced_message?: string[];
   //True if the message was persisted to the channel's history, false otherwise.
   persistent?: boolean;
   //Message sender, usually a user ID.

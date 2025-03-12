@@ -1527,7 +1527,7 @@ export class DefaultSocket implements Socket {
         } else if (message.stream_data) {
           this.onstreamdata(<StreamData>message.stream_data);
         } else if (message.channel_message) {
-          var content, reactions, mentions, attachments, references;
+          var content, reactions, mentions, attachments, references, referencedMessags;
           try {
             content = safeJSONParse(message.channel_message.content);
           } catch (e) {
@@ -1553,6 +1553,11 @@ export class DefaultSocket implements Socket {
           } catch (e) {
             console.log("references is invalid", e);
           }
+          try {
+            referencedMessags = safeJSONParse(message.channel_message.referenced_message);
+          } catch (e) {
+            console.log("referenced messages is invalid", e);
+          }
           var e: ChannelMessage = {
             id: message.id || message.channel_message.message_id,
             avatar: message.channel_message.avatar,
@@ -1575,6 +1580,7 @@ export class DefaultSocket implements Socket {
             reactions: reactions,
             mentions: mentions,
             attachments: attachments,
+            referenced_message: referencedMessags,
             references: references,
             hide_editted: message.channel_message.hide_editted,
             is_public: message.channel_message.is_public,
