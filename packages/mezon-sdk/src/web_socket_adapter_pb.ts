@@ -15,7 +15,7 @@
  */
 
 import { WebSocketAdapter, SocketCloseHandler, SocketMessageHandler } from "./web_socket_adapter"
-import * as tsproto from "mezon-js-protobuf"
+import * as tsproto from "./rtapi/realtime"
 import WebSocket, { MessageEvent } from "ws";
 
 /**
@@ -55,7 +55,7 @@ export class WebSocketAdapterPb implements WebSocketAdapter {
               try {
                 const buffer: ArrayBuffer = evt.data as ArrayBuffer;
                 const uintBuffer: Uint8Array = new Uint8Array(buffer);
-                const envelope = Envelope.decode(uintBuffer);
+                const envelope = tsproto.Envelope.decode(uintBuffer);
 
                 if (envelope.channel_message) {
                   if (envelope.channel_message.code == undefined) {
