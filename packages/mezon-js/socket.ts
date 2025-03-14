@@ -592,6 +592,8 @@ export interface ClanUpdatedEvent {
   is_onboarding: boolean;
   // welcome channel id
   welcome_channel_id: string;
+  // onboarding_banner.
+  onboarding_banner: string;
 }
 
 export interface ClanProfileUpdatedEvent {

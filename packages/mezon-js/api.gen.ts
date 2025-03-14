@@ -158,6 +158,8 @@ export interface MezonUpdateClanDescBody {
   is_onboarding?: boolean;
   // welcome channel id.
   welcome_channel_id?: string;
+  //Onboarding_banner.
+  onboarding_banner?: string;
 }
 
 /**  */
@@ -951,6 +953,8 @@ export interface ApiClanDesc {
   is_onboarding?: boolean;
   // welcome channel id.
   welcome_channel_id?: string;
+  //Onboarding_banner.
+  onboarding_banner?: string;
 }
 
 /**  */
