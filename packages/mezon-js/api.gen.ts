@@ -3086,6 +3086,8 @@ export interface ApiCreateHashChannelAppsResponse {
   hash?: string;
   //
   user_id?: string;
+  //
+  auth_date?: string;
 }
 
 export class MezonApi {
