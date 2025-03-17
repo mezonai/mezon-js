@@ -1301,6 +1301,16 @@ export interface ApiEmojiListedResponse {
 }
 
 /**  */
+export interface ApiEmojiRecent {
+  //ID of the emoji.
+  emoji_recents_id?: string;
+  //
+  emoji_id?: string;
+  //The UNIX time (for gRPC clients) or ISO string (for REST clients) when the emoji was created.
+  update_time?: string;
+}
+
+/**  */
 export interface ApiEventList {
   //A list of event.
   events?: Array<ApiEventManagement>;
@@ -1630,6 +1640,8 @@ export interface ApiMessageReaction {
   message_id: string;
   //
   topic_id?: string;
+  //
+  emoji_recent_id?: string;
 }
 
 export interface ApiListChannelAppsResponse {
@@ -2732,6 +2744,13 @@ export interface ApiWithdrawTokenRequest {
   amount?: number;
 }
 
+/** A collection of zero or more notifications. */
+export interface MezonapiEmojiRecentList {
+  //Collection of emojiRecents.
+  emoji_recents?: Array<ApiEmojiRecent>;
+}
+
+
 /** Represents an event to be passed through the server to registered event handlers. */
 export interface MezonapiEvent {
   //True if the event came directly from a client call, false otherwise.
@@ -3086,8 +3105,6 @@ export interface ApiCreateHashChannelAppsResponse {
   hash?: string;
   //
   user_id?: string;
-  //
-  auth_date?: string;
 }
 
 export class MezonApi {
@@ -6654,6 +6671,37 @@ export class MezonApi {
 
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("PATCH", options, bodyJson);
+    if (bearerToken) {
+      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+    }
+
+    return Promise.race([
+      fetch(fullUrl, fetchOptions).then((response) => {
+        if (response.status == 204) {
+          return response;
+        } else if (response.status >= 200 && response.status < 300) {
+          return response.json();
+        } else {
+          throw response;
+        }
+      }),
+      new Promise((_, reject) =>
+        setTimeout(reject, this.timeoutMs, "Request timed out.")
+      ),
+    ]);
+  }
+
+  /** get list emoji recent by user id */
+  emojiRecentList(bearerToken: string,
+      options: any = {}): Promise<MezonapiEmojiRecentList> {
+    
+    const urlPath = "/v2/emojirecents";
+    const queryParams = new Map<string, any>();
+
+    let bodyJson : string = "";
+
+    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
+    const fetchOptions = buildFetchOptions("GET", options, bodyJson);
     if (bearerToken) {
       fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
     }

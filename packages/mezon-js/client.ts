@@ -165,6 +165,7 @@ import {
   ApiMezonOauthClientList,
   ApiMezonOauthClient,
   ApiCreateHashChannelAppsResponse,
+  MezonapiEmojiRecentList,
 } from "./api.gen";
 
 import { Session } from "./session";
@@ -3950,6 +3951,24 @@ export class Client {
 
     return this.apiClient
       .getListEmojisByUserId(session.token)
+      .then((response: any) => {
+        return Promise.resolve(response);
+      });
+  }
+
+  async emojiRecentList(
+    session: Session
+  ): Promise<MezonapiEmojiRecentList> {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired(Date.now() / 1000)
+    ) {
+      await this.sessionRefresh(session);
+    }
+
+    return this.apiClient
+      .emojiRecentList(session.token)
       .then((response: any) => {
         return Promise.resolve(response);
       });
