@@ -56,15 +56,18 @@ export class Session implements ISession {
   username?: string;
   user_id?: string;
   vars?: object;
+  is_remember?: boolean;
 
   constructor(
     token: string,
     refresh_token: string,
-    readonly created: boolean) {
+    readonly created: boolean,
+    is_remember: boolean) {
     this.token = token;
     this.refresh_token = refresh_token;
     this.created_at = Math.floor(new Date().getTime() / 1000);
-    this.update(token, refresh_token);
+    this.is_remember = is_remember;
+    this.update(token, refresh_token, is_remember);
   }
 
   isexpired(currenttime: number): boolean {
@@ -75,7 +78,7 @@ export class Session implements ISession {
       return (this.refresh_expires_at! - currenttime) < 0;
   }
 
-  update(token: string, refreshToken: string) {
+  update(token: string, refreshToken: string, isRemember: boolean) {
 
     const tokenParts = token.split('.');
     if (tokenParts.length != 3) {
@@ -99,6 +102,7 @@ export class Session implements ISession {
         const refreshTokenExpiresAt = Math.floor(parseInt(refreshTokenDecoded['exp']));
         this.refresh_expires_at = refreshTokenExpiresAt;
         this.refresh_token = refreshToken;
+        this.is_remember = isRemember;
     }
 
     this.token = token;
@@ -108,7 +112,7 @@ export class Session implements ISession {
     this.vars = tokenDecoded['vrs'];
   }
 
-  static restore(token: string, refreshToken: string): Session {
-    return new Session(token, refreshToken, false);
+  static restore(token: string, refreshToken: string, isRemember: boolean): Session {
+    return new Session(token, refreshToken, false, isRemember);
   }
 }
