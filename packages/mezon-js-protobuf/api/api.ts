@@ -4026,6 +4026,7 @@ export interface GenerateHashChannelAppsRequest {
 export interface GenerateHashChannelAppsResponse {
   hash: string;
   user_id: string;
+  auth_date: string;
 }
 
 function createBaseAccount(): Account {
@@ -39865,7 +39866,7 @@ export const GenerateHashChannelAppsRequest = {
 };
 
 function createBaseGenerateHashChannelAppsResponse(): GenerateHashChannelAppsResponse {
-  return { hash: "", user_id: "" };
+  return { hash: "", user_id: "", auth_date: "" };
 }
 
 export const GenerateHashChannelAppsResponse = {
@@ -39875,6 +39876,9 @@ export const GenerateHashChannelAppsResponse = {
     }
     if (message.user_id !== "") {
       writer.uint32(18).string(message.user_id);
+    }
+    if (message.auth_date !== "") {
+      writer.uint32(26).string(message.auth_date);
     }
     return writer;
   },
@@ -39900,6 +39904,13 @@ export const GenerateHashChannelAppsResponse = {
 
           message.user_id = reader.string();
           continue;
+        case 3:
+          if (tag !== 26) {
+            break;
+          }
+
+          message.auth_date = reader.string();
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -39913,6 +39924,7 @@ export const GenerateHashChannelAppsResponse = {
     return {
       hash: isSet(object.hash) ? globalThis.String(object.hash) : "",
       user_id: isSet(object.user_id) ? globalThis.String(object.user_id) : "",
+      auth_date: isSet(object.auth_date) ? globalThis.String(object.auth_date) : "",
     };
   },
 
@@ -39923,6 +39935,9 @@ export const GenerateHashChannelAppsResponse = {
     }
     if (message.user_id !== "") {
       obj.user_id = message.user_id;
+    }
+    if (message.auth_date !== "") {
+      obj.auth_date = message.auth_date;
     }
     return obj;
   },
@@ -39936,6 +39951,7 @@ export const GenerateHashChannelAppsResponse = {
     const message = createBaseGenerateHashChannelAppsResponse();
     message.hash = object.hash ?? "";
     message.user_id = object.user_id ?? "";
+    message.auth_date = object.auth_date ?? "";
     return message;
   },
 };
