@@ -3102,9 +3102,7 @@ export interface ApiMezonOauthClient {
 /**  */
 export interface ApiCreateHashChannelAppsResponse {
   //
-  hash?: string;
-  //
-  user_id?: string;
+  web_app_data?: string;
 }
 
 export class MezonApi {
