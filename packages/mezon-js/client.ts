@@ -636,7 +636,8 @@ export class Client {
         return new Session(
           apiSession.token || "",
           apiSession.refresh_token || "",
-          apiSession.created || false
+          apiSession.created || false,
+          false
         );
       });
   }
@@ -646,6 +647,7 @@ export class Client {
     token: string,
     create?: boolean,
     username?: string,
+    isRemember?:boolean,
     vars: Record<string, string> = {},
     options: any = {}
   ): Promise<Session> {
@@ -660,13 +662,15 @@ export class Client {
         request,
         create,
         username,
+        isRemember,
         options
       )
       .then((apiSession: ApiSession) => {
         return new Session(
           apiSession.token || "",
           apiSession.refresh_token || "",
-          apiSession.created || false
+          apiSession.created || false,
+          false
         );
       });
   }
@@ -689,7 +693,8 @@ export class Client {
         return new Session(
           apiSession.token || "",
           apiSession.refresh_token || "",
-          apiSession.created || false
+          apiSession.created || false,
+          false
         );
       });
   }
@@ -713,7 +718,8 @@ export class Client {
         return new Session(
           apiSession.token || "",
           apiSession.refresh_token || "",
-          apiSession.created || false
+          apiSession.created || false,
+          false
         );
       });
   }
@@ -744,7 +750,8 @@ export class Client {
         return new Session(
           apiSession.token || "",
           apiSession.refresh_token || "",
-          apiSession.created || false
+          apiSession.created || false,
+          false
         );
       });
   }
@@ -777,7 +784,8 @@ export class Client {
         return new Session(
           apiSession.token || "",
           apiSession.refresh_token || "",
-          apiSession.created || false
+          apiSession.created || false,
+          false
         );
       });
   }
@@ -807,7 +815,8 @@ export class Client {
     return new Session(
       apiSession.token || "",
       apiSession.refresh_token || "",
-      apiSession.created || false
+      apiSession.created || false,
+      false
     );
   }
 
@@ -846,7 +855,8 @@ export class Client {
     return new Session(
       apiSession.token || "",
       apiSession.refresh_token || "",
-      apiSession.created || false
+      apiSession.created || false,
+      false
     );
   }
 
@@ -870,7 +880,8 @@ export class Client {
         return new Session(
           apiSession.token || "",
           apiSession.refresh_token || "",
-          apiSession.created || false
+          apiSession.created || false,
+          false
         );
       });
   }
@@ -2422,9 +2433,10 @@ export class Client {
           {
             token: session.refresh_token,
             vars: vars,
+            is_remember:session.is_remember
           }
         );
-        session.update(apiSession.token!, apiSession.refresh_token!);
+        session.update(apiSession.token!, apiSession.refresh_token!, apiSession.is_remember || false);
         resolve(session);
       } catch (error) {
         console.error("Session refresh failed:", error);
@@ -4420,7 +4432,8 @@ export class Client {
     return new Session(
       apiSession.token || "",
       apiSession.refresh_token || "",
-      apiSession.created || false
+      apiSession.created || false,
+      apiSession.is_remember || false
     );
   }
 

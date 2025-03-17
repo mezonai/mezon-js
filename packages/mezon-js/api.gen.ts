@@ -1073,6 +1073,8 @@ export interface ApiClanUserList {
 
 /**  */
 export interface ApiConfirmLoginRequest {
+  //Whether to enable "Remember Me" for extended session duration.
+  is_remember?: boolean;
   //
   login_id?: string;
 }
@@ -2273,6 +2275,8 @@ export interface ApiSession {
   refresh_token?: string;
   //Authentication credentials.
   token?: string;
+  // Whether to enable "Remember Me" for extended session duration.
+  is_remember?: boolean;
 }
 
 /** Log out a session, invalidate a refresh token, or log out all sessions/refresh tokens for a user. */
@@ -2289,6 +2293,8 @@ export interface ApiSessionLogoutRequest {
 
 /** Authenticate against the server with a refresh token. */
 export interface ApiSessionRefreshRequest {
+  //Whether to enable "Remember Me" for extended session duration.
+  is_remember?: boolean;
   //Refresh token.
   token?: string;
   //Extra information that will be bundled in the session token.
@@ -3675,44 +3681,48 @@ export class MezonApi {
   }
 
   /** Authenticate a user with Mezon against the server. */
-    authenticateMezon(basicAuthUsername: string,
-      basicAuthPassword: string,
-        account:ApiAccountMezon,
-        create?:boolean,
-        username?:string,
-        options: any = {}): Promise<ApiSession> {
-      
-      if (account === null || account === undefined) {
-        throw new Error("'account' is a required parameter but is null or undefined.");
-      }
-      const urlPath = "/v2/account/authenticate/mezon";
-      const queryParams = new Map<string, any>();
-      queryParams.set("create", create);
-      queryParams.set("username", username);
-  
-      let bodyJson : string = "";
-      bodyJson = JSON.stringify(account || {});
-  
-      const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
-      const fetchOptions = buildFetchOptions("POST", options, bodyJson);
-      if (basicAuthUsername) {
-        fetchOptions.headers["Authorization"] = "Basic " + encode(basicAuthUsername + ":" + basicAuthPassword);
-      }
-  
-      return Promise.race([
-        fetch(fullUrl, fetchOptions).then((response) => {
-          if (response.status == 204) {
-            return response;
-          } else if (response.status >= 200 && response.status < 300) {
-            return response.json();
-          } else {
-            throw response;
-          }
-        }),
-        new Promise((_, reject) =>
-          setTimeout(reject, this.timeoutMs, "Request timed out.")
-        ),
-      ]);
+  authenticateMezon(
+    basicAuthUsername: string,
+    basicAuthPassword: string,
+    account:ApiAccountMezon,
+    create?:boolean,
+    username?:string,
+    isRemember?:boolean,
+    options: any = {}
+  ): Promise<ApiSession> {
+    
+    if (account === null || account === undefined) {
+      throw new Error("'account' is a required parameter but is null or undefined.");
+    }
+    const urlPath = "/v2/account/authenticate/mezon";
+    const queryParams = new Map<string, any>();
+    queryParams.set("create", create);
+    queryParams.set("username", username);
+    queryParams.set("is_remember", isRemember);
+
+    let bodyJson : string = "";
+    bodyJson = JSON.stringify(account || {});
+
+    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
+    const fetchOptions = buildFetchOptions("POST", options, bodyJson);
+		if (basicAuthUsername) {
+			fetchOptions.headers["Authorization"] = "Basic " + encode(basicAuthUsername + ":" + basicAuthPassword);
+		}
+
+    return Promise.race([
+      fetch(fullUrl, fetchOptions).then((response) => {
+        if (response.status == 204) {
+          return response;
+        } else if (response.status >= 200 && response.status < 300) {
+          return response.json();
+        } else {
+          throw response;
+        }
+      }),
+      new Promise((_, reject) =>
+        setTimeout(reject, this.timeoutMs, "Request timed out.")
+      ),
+    ]);
   }
 
   /** Authenticate a user with Steam against the server. */
