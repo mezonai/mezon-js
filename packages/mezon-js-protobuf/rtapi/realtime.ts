@@ -322,7 +322,11 @@ export interface Envelope {
     | ChannelCanvas
     | undefined;
   /** unpin message */
-  unpin_message_event?: UnpinMessageEvent | undefined;
+  unpin_message_event?:
+    | UnpinMessageEvent
+    | undefined;
+  /** category event */
+  category_event?: CategoryEvent | undefined;
 }
 
 export interface FollowEvent {
@@ -940,6 +944,19 @@ export interface ChannelCreatedEvent {
   clan_name: string;
 }
 
+export interface CategoryEvent {
+  /** Category creator */
+  creator_id: string;
+  /** the Clan that category belong to */
+  clan_id: string;
+  /** Category name */
+  category_name: string;
+  /**  */
+  id: string;
+  /**  */
+  status: number;
+}
+
 export interface RoleEvent {
   role: Role | undefined;
   status: number;
@@ -1462,6 +1479,7 @@ function createBaseEnvelope(): Envelope {
     join_channel_app_data: undefined,
     canvas_event: undefined,
     unpin_message_event: undefined,
+    category_event: undefined,
   };
 }
 
@@ -1691,6 +1709,9 @@ export const Envelope = {
     }
     if (message.unpin_message_event !== undefined) {
       UnpinMessageEvent.encode(message.unpin_message_event, writer.uint32(602).fork()).ldelim();
+    }
+    if (message.category_event !== undefined) {
+      CategoryEvent.encode(message.category_event, writer.uint32(610).fork()).ldelim();
     }
     return writer;
   },
@@ -2227,6 +2248,13 @@ export const Envelope = {
 
           message.unpin_message_event = UnpinMessageEvent.decode(reader, reader.uint32());
           continue;
+        case 76:
+          if (tag !== 610) {
+            break;
+          }
+
+          message.category_event = CategoryEvent.decode(reader, reader.uint32());
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -2411,6 +2439,7 @@ export const Envelope = {
       unpin_message_event: isSet(object.unpin_message_event)
         ? UnpinMessageEvent.fromJSON(object.unpin_message_event)
         : undefined,
+      category_event: isSet(object.category_event) ? CategoryEvent.fromJSON(object.category_event) : undefined,
     };
   },
 
@@ -2640,6 +2669,9 @@ export const Envelope = {
     }
     if (message.unpin_message_event !== undefined) {
       obj.unpin_message_event = UnpinMessageEvent.toJSON(message.unpin_message_event);
+    }
+    if (message.category_event !== undefined) {
+      obj.category_event = CategoryEvent.toJSON(message.category_event);
     }
     return obj;
   },
@@ -2888,6 +2920,9 @@ export const Envelope = {
       : undefined;
     message.unpin_message_event = (object.unpin_message_event !== undefined && object.unpin_message_event !== null)
       ? UnpinMessageEvent.fromPartial(object.unpin_message_event)
+      : undefined;
+    message.category_event = (object.category_event !== undefined && object.category_event !== null)
+      ? CategoryEvent.fromPartial(object.category_event)
       : undefined;
     return message;
   },
@@ -7742,6 +7777,125 @@ export const ChannelCreatedEvent = {
     message.status = object.status ?? 0;
     message.app_url = object.app_url ?? "";
     message.clan_name = object.clan_name ?? "";
+    return message;
+  },
+};
+
+function createBaseCategoryEvent(): CategoryEvent {
+  return { creator_id: "", clan_id: "", category_name: "", id: "", status: 0 };
+}
+
+export const CategoryEvent = {
+  encode(message: CategoryEvent, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.creator_id !== "") {
+      writer.uint32(10).string(message.creator_id);
+    }
+    if (message.clan_id !== "") {
+      writer.uint32(18).string(message.clan_id);
+    }
+    if (message.category_name !== "") {
+      writer.uint32(26).string(message.category_name);
+    }
+    if (message.id !== "") {
+      writer.uint32(34).string(message.id);
+    }
+    if (message.status !== 0) {
+      writer.uint32(40).int32(message.status);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): CategoryEvent {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseCategoryEvent();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.creator_id = reader.string();
+          continue;
+        case 2:
+          if (tag !== 18) {
+            break;
+          }
+
+          message.clan_id = reader.string();
+          continue;
+        case 3:
+          if (tag !== 26) {
+            break;
+          }
+
+          message.category_name = reader.string();
+          continue;
+        case 4:
+          if (tag !== 34) {
+            break;
+          }
+
+          message.id = reader.string();
+          continue;
+        case 5:
+          if (tag !== 40) {
+            break;
+          }
+
+          message.status = reader.int32();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): CategoryEvent {
+    return {
+      creator_id: isSet(object.creator_id) ? globalThis.String(object.creator_id) : "",
+      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
+      category_name: isSet(object.category_name) ? globalThis.String(object.category_name) : "",
+      id: isSet(object.id) ? globalThis.String(object.id) : "",
+      status: isSet(object.status) ? globalThis.Number(object.status) : 0,
+    };
+  },
+
+  toJSON(message: CategoryEvent): unknown {
+    const obj: any = {};
+    if (message.creator_id !== "") {
+      obj.creator_id = message.creator_id;
+    }
+    if (message.clan_id !== "") {
+      obj.clan_id = message.clan_id;
+    }
+    if (message.category_name !== "") {
+      obj.category_name = message.category_name;
+    }
+    if (message.id !== "") {
+      obj.id = message.id;
+    }
+    if (message.status !== 0) {
+      obj.status = Math.round(message.status);
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<CategoryEvent>, I>>(base?: I): CategoryEvent {
+    return CategoryEvent.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<CategoryEvent>, I>>(object: I): CategoryEvent {
+    const message = createBaseCategoryEvent();
+    message.creator_id = object.creator_id ?? "";
+    message.clan_id = object.clan_id ?? "";
+    message.category_name = object.category_name ?? "";
+    message.id = object.id ?? "";
+    message.status = object.status ?? 0;
     return message;
   },
 };

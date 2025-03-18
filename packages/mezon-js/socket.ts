@@ -525,6 +525,19 @@ export interface ChannelCreatedEvent {
   clan_name: string;
 }
 
+export interface CategoryEvent {
+  // clan id
+  clan_id: string;
+  // category
+  id: string;
+  // creator
+  creator_id: string;
+  // category_name
+  category_name: string;
+  // status
+  status: number;
+}
+
 export interface ChannelDeletedEvent {
   // clan id
   clan_id: string;
@@ -1320,6 +1333,8 @@ export interface Socket {
   // when channel is created
   onchannelcreated: (channelCreated: ChannelCreatedEvent) => void;
 
+  oncategoryevent: (categoryEvent: CategoryEvent) => void;
+
   onroleevent: (roleEvent: RoleEvent) => void;
 
   // when channel is deleted
@@ -1498,6 +1513,8 @@ export class DefaultSocket implements Socket {
           this.onvoiceleaved(message.voice_leaved_event);
         } else if (message.channel_created_event) {
           this.onchannelcreated(message.channel_created_event);
+        } else if (message.category_event) {
+          this.oncategoryevent(message.category_event);
         } else if (message.role_event) {
           this.onroleevent(message.role_event);
         } else if (message.event_emoji) {
@@ -1873,6 +1890,12 @@ export class DefaultSocket implements Socket {
   onchannelcreated(channelCreated: ChannelCreatedEvent) {
     if (this.verbose && window && window.console) {
       console.log(channelCreated);
+    }
+  }
+
+  oncategoryevent(categoryEvent: CategoryEvent) {
+    if (this.verbose && window && window.console) {
+      console.log(categoryEvent);
     }
   }
 
