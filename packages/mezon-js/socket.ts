@@ -245,6 +245,8 @@ export interface LastSeenMessageEvent {
   channel_label: string;
   /** The unique ID of this message. */
   message_id: string;
+  //
+  badge_count: number;
 }
 
 /** User is typing */
@@ -494,6 +496,8 @@ export interface ChannelUpdatedEvent {
   age_restricted: number;
   //
   is_active_thread: boolean;
+  //
+  active: number;
 }
 
 export interface ChannelCreatedEvent {
@@ -1138,7 +1142,8 @@ export interface Socket {
     channel_id: string,
     mode: number,
     message_id: string,
-    timestamp_seconds: number
+    timestamp_seconds: number,
+    badge_count: number
   ): Promise<LastSeenMessageEvent>;
 
   /** Send last pin message */
@@ -2380,7 +2385,8 @@ export class DefaultSocket implements Socket {
     channel_id: string,
     mode: number,
     message_id: string,
-    timestamp_seconds: number
+    timestamp_seconds: number,
+    badge_count: number
   ): Promise<LastSeenMessageEvent> {
     const response = await this.send({
       last_seen_message_event: {
@@ -2389,6 +2395,7 @@ export class DefaultSocket implements Socket {
         mode: mode,
         message_id: message_id,
         timestamp_seconds: timestamp_seconds,
+        badge_count: badge_count,
       },
     });
     return response.last_seen_message_event;
