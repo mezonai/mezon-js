@@ -359,6 +359,8 @@ export interface SessionRefreshRequest {
   token: string;
   /** Extra information that will be bundled in the session token. */
   vars: { [key: string]: string };
+  /** Whether to enable "Remember Me" for extended session duration. */
+  is_remember: boolean | undefined;
 }
 
 export interface SessionRefreshRequest_VarsEntry {
@@ -509,6 +511,8 @@ export interface AuthenticateMezonRequest {
     | undefined;
   /** Set the username on the account at register. Must be unique. */
   username: string;
+  /** Whether to enable "Remember Me" for extended session duration. */
+  is_remember: boolean | undefined;
 }
 
 /** Authenticate against the server with Steam. */
@@ -705,6 +709,8 @@ export interface MessageAttachment {
   width: number;
   /** Attachment width */
   height: number;
+  /** thumbnail */
+  thumbnail: string;
 }
 
 /** Message reference */
@@ -1416,6 +1422,8 @@ export interface Session {
   refresh_token: string;
   /** User id */
   user_id: string;
+  /** Whether to enable "Remember Me" for extended session duration. */
+  is_remember: boolean;
 }
 
 /** Update a user's account details. */
@@ -1529,16 +1537,20 @@ export interface User {
     | undefined;
   /** The Apple Sign In ID in the user's account. */
   apple_id: string;
-  /**  */
+  /** About me */
   about_me: string;
-  /**  */
+  /** Join time */
   join_time:
     | Date
     | undefined;
-  /** platform */
+  /** Platform */
   is_mobile: boolean;
-  /**  */
-  dob: Date | undefined;
+  /** dob */
+  dob:
+    | Date
+    | undefined;
+  /** Mezone id */
+  mezon_id: string;
 }
 
 /** A list of groups belonging to a user, along with the user's role in each group. */
@@ -3514,6 +3526,8 @@ export interface LoginRequest {
 export interface ConfirmLoginRequest {
   /** loginId */
   login_id: string;
+  /** Whether to enable "Remember Me" for extended session duration. */
+  is_remember: boolean | undefined;
 }
 
 export interface SendTokenRequest {
@@ -6149,7 +6163,7 @@ export const AddGroupUsersRequest = {
 };
 
 function createBaseSessionRefreshRequest(): SessionRefreshRequest {
-  return { token: "", vars: {} };
+  return { token: "", vars: {}, is_remember: undefined };
 }
 
 export const SessionRefreshRequest = {
@@ -6160,6 +6174,9 @@ export const SessionRefreshRequest = {
     Object.entries(message.vars).forEach(([key, value]) => {
       SessionRefreshRequest_VarsEntry.encode({ key: key as any, value }, writer.uint32(18).fork()).ldelim();
     });
+    if (message.is_remember !== undefined) {
+      BoolValue.encode({ value: message.is_remember! }, writer.uint32(26).fork()).ldelim();
+    }
     return writer;
   },
 
@@ -6187,6 +6204,13 @@ export const SessionRefreshRequest = {
             message.vars[entry2.key] = entry2.value;
           }
           continue;
+        case 3:
+          if (tag !== 26) {
+            break;
+          }
+
+          message.is_remember = BoolValue.decode(reader, reader.uint32()).value;
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -6205,6 +6229,7 @@ export const SessionRefreshRequest = {
           return acc;
         }, {})
         : {},
+      is_remember: isSet(object.is_remember) ? Boolean(object.is_remember) : undefined,
     };
   },
 
@@ -6222,6 +6247,9 @@ export const SessionRefreshRequest = {
         });
       }
     }
+    if (message.is_remember !== undefined) {
+      obj.is_remember = message.is_remember;
+    }
     return obj;
   },
 
@@ -6237,6 +6265,7 @@ export const SessionRefreshRequest = {
       }
       return acc;
     }, {});
+    message.is_remember = object.is_remember ?? undefined;
     return message;
   },
 };
@@ -7288,7 +7317,7 @@ export const AuthenticateGoogleRequest = {
 };
 
 function createBaseAuthenticateMezonRequest(): AuthenticateMezonRequest {
-  return { account: undefined, create: undefined, username: "" };
+  return { account: undefined, create: undefined, username: "", is_remember: undefined };
 }
 
 export const AuthenticateMezonRequest = {
@@ -7301,6 +7330,9 @@ export const AuthenticateMezonRequest = {
     }
     if (message.username !== "") {
       writer.uint32(26).string(message.username);
+    }
+    if (message.is_remember !== undefined) {
+      BoolValue.encode({ value: message.is_remember! }, writer.uint32(34).fork()).ldelim();
     }
     return writer;
   },
@@ -7333,6 +7365,13 @@ export const AuthenticateMezonRequest = {
 
           message.username = reader.string();
           continue;
+        case 4:
+          if (tag !== 34) {
+            break;
+          }
+
+          message.is_remember = BoolValue.decode(reader, reader.uint32()).value;
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -7347,6 +7386,7 @@ export const AuthenticateMezonRequest = {
       account: isSet(object.account) ? AccountMezon.fromJSON(object.account) : undefined,
       create: isSet(object.create) ? Boolean(object.create) : undefined,
       username: isSet(object.username) ? globalThis.String(object.username) : "",
+      is_remember: isSet(object.is_remember) ? Boolean(object.is_remember) : undefined,
     };
   },
 
@@ -7361,6 +7401,9 @@ export const AuthenticateMezonRequest = {
     if (message.username !== "") {
       obj.username = message.username;
     }
+    if (message.is_remember !== undefined) {
+      obj.is_remember = message.is_remember;
+    }
     return obj;
   },
 
@@ -7374,6 +7417,7 @@ export const AuthenticateMezonRequest = {
       : undefined;
     message.create = object.create ?? undefined;
     message.username = object.username ?? "";
+    message.is_remember = object.is_remember ?? undefined;
     return message;
   },
 };
@@ -8800,7 +8844,7 @@ export const MessageReaction = {
 };
 
 function createBaseMessageAttachment(): MessageAttachment {
-  return { filename: "", size: 0, url: "", filetype: "", width: 0, height: 0 };
+  return { filename: "", size: 0, url: "", filetype: "", width: 0, height: 0, thumbnail: "" };
 }
 
 export const MessageAttachment = {
@@ -8822,6 +8866,9 @@ export const MessageAttachment = {
     }
     if (message.height !== 0) {
       writer.uint32(48).int32(message.height);
+    }
+    if (message.thumbnail !== "") {
+      writer.uint32(58).string(message.thumbnail);
     }
     return writer;
   },
@@ -8875,6 +8922,13 @@ export const MessageAttachment = {
 
           message.height = reader.int32();
           continue;
+        case 7:
+          if (tag !== 58) {
+            break;
+          }
+
+          message.thumbnail = reader.string();
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -8892,6 +8946,7 @@ export const MessageAttachment = {
       filetype: isSet(object.filetype) ? globalThis.String(object.filetype) : "",
       width: isSet(object.width) ? globalThis.Number(object.width) : 0,
       height: isSet(object.height) ? globalThis.Number(object.height) : 0,
+      thumbnail: isSet(object.thumbnail) ? globalThis.String(object.thumbnail) : "",
     };
   },
 
@@ -8915,6 +8970,9 @@ export const MessageAttachment = {
     if (message.height !== 0) {
       obj.height = Math.round(message.height);
     }
+    if (message.thumbnail !== "") {
+      obj.thumbnail = message.thumbnail;
+    }
     return obj;
   },
 
@@ -8929,6 +8987,7 @@ export const MessageAttachment = {
     message.filetype = object.filetype ?? "";
     message.width = object.width ?? 0;
     message.height = object.height ?? 0;
+    message.thumbnail = object.thumbnail ?? "";
     return message;
   },
 };
@@ -13795,7 +13854,7 @@ export const Rpc = {
 };
 
 function createBaseSession(): Session {
-  return { created: false, token: "", refresh_token: "", user_id: "" };
+  return { created: false, token: "", refresh_token: "", user_id: "", is_remember: false };
 }
 
 export const Session = {
@@ -13811,6 +13870,9 @@ export const Session = {
     }
     if (message.user_id !== "") {
       writer.uint32(34).string(message.user_id);
+    }
+    if (message.is_remember !== false) {
+      writer.uint32(40).bool(message.is_remember);
     }
     return writer;
   },
@@ -13850,6 +13912,13 @@ export const Session = {
 
           message.user_id = reader.string();
           continue;
+        case 5:
+          if (tag !== 40) {
+            break;
+          }
+
+          message.is_remember = reader.bool();
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -13865,6 +13934,7 @@ export const Session = {
       token: isSet(object.token) ? globalThis.String(object.token) : "",
       refresh_token: isSet(object.refresh_token) ? globalThis.String(object.refresh_token) : "",
       user_id: isSet(object.user_id) ? globalThis.String(object.user_id) : "",
+      is_remember: isSet(object.is_remember) ? globalThis.Boolean(object.is_remember) : false,
     };
   },
 
@@ -13882,6 +13952,9 @@ export const Session = {
     if (message.user_id !== "") {
       obj.user_id = message.user_id;
     }
+    if (message.is_remember !== false) {
+      obj.is_remember = message.is_remember;
+    }
     return obj;
   },
 
@@ -13894,6 +13967,7 @@ export const Session = {
     message.token = object.token ?? "";
     message.refresh_token = object.refresh_token ?? "";
     message.user_id = object.user_id ?? "";
+    message.is_remember = object.is_remember ?? false;
     return message;
   },
 };
@@ -14372,6 +14446,7 @@ function createBaseUser(): User {
     join_time: undefined,
     is_mobile: false,
     dob: undefined,
+    mezon_id: "",
   };
 }
 
@@ -14439,6 +14514,9 @@ export const User = {
     }
     if (message.dob !== undefined) {
       Timestamp.encode(toTimestamp(message.dob), writer.uint32(170).fork()).ldelim();
+    }
+    if (message.mezon_id !== "") {
+      writer.uint32(178).string(message.mezon_id);
     }
     return writer;
   },
@@ -14597,6 +14675,13 @@ export const User = {
 
           message.dob = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
           continue;
+        case 22:
+          if (tag !== 178) {
+            break;
+          }
+
+          message.mezon_id = reader.string();
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -14629,6 +14714,7 @@ export const User = {
       join_time: isSet(object.join_time) ? fromJsonTimestamp(object.join_time) : undefined,
       is_mobile: isSet(object.is_mobile) ? globalThis.Boolean(object.is_mobile) : false,
       dob: isSet(object.dob) ? fromJsonTimestamp(object.dob) : undefined,
+      mezon_id: isSet(object.mezon_id) ? globalThis.String(object.mezon_id) : "",
     };
   },
 
@@ -14697,6 +14783,9 @@ export const User = {
     if (message.dob !== undefined) {
       obj.dob = message.dob.toISOString();
     }
+    if (message.mezon_id !== "") {
+      obj.mezon_id = message.mezon_id;
+    }
     return obj;
   },
 
@@ -14726,6 +14815,7 @@ export const User = {
     message.join_time = object.join_time ?? undefined;
     message.is_mobile = object.is_mobile ?? false;
     message.dob = object.dob ?? undefined;
+    message.mezon_id = object.mezon_id ?? "";
     return message;
   },
 };
@@ -33736,13 +33826,16 @@ export const LoginRequest = {
 };
 
 function createBaseConfirmLoginRequest(): ConfirmLoginRequest {
-  return { login_id: "" };
+  return { login_id: "", is_remember: undefined };
 }
 
 export const ConfirmLoginRequest = {
   encode(message: ConfirmLoginRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.login_id !== "") {
       writer.uint32(10).string(message.login_id);
+    }
+    if (message.is_remember !== undefined) {
+      BoolValue.encode({ value: message.is_remember! }, writer.uint32(18).fork()).ldelim();
     }
     return writer;
   },
@@ -33761,6 +33854,13 @@ export const ConfirmLoginRequest = {
 
           message.login_id = reader.string();
           continue;
+        case 2:
+          if (tag !== 18) {
+            break;
+          }
+
+          message.is_remember = BoolValue.decode(reader, reader.uint32()).value;
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -33771,13 +33871,19 @@ export const ConfirmLoginRequest = {
   },
 
   fromJSON(object: any): ConfirmLoginRequest {
-    return { login_id: isSet(object.login_id) ? globalThis.String(object.login_id) : "" };
+    return {
+      login_id: isSet(object.login_id) ? globalThis.String(object.login_id) : "",
+      is_remember: isSet(object.is_remember) ? Boolean(object.is_remember) : undefined,
+    };
   },
 
   toJSON(message: ConfirmLoginRequest): unknown {
     const obj: any = {};
     if (message.login_id !== "") {
       obj.login_id = message.login_id;
+    }
+    if (message.is_remember !== undefined) {
+      obj.is_remember = message.is_remember;
     }
     return obj;
   },
@@ -33788,6 +33894,7 @@ export const ConfirmLoginRequest = {
   fromPartial<I extends Exact<DeepPartial<ConfirmLoginRequest>, I>>(object: I): ConfirmLoginRequest {
     const message = createBaseConfirmLoginRequest();
     message.login_id = object.login_id ?? "";
+    message.is_remember = object.is_remember ?? undefined;
     return message;
   },
 };
