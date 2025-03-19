@@ -1521,6 +1521,8 @@ export interface ApiMessageAttachment {
   url?: string;
   //
   width?: number;
+  //
+  thumbnail?: string;
   /** The channel this message belongs to. */
   channel_id?: string;
   // The mode
