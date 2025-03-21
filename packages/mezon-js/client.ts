@@ -166,6 +166,8 @@ import {
   ApiMezonOauthClient,
   ApiCreateHashChannelAppsResponse,
   MezonapiEmojiRecentList,
+  ApiUserEventList,
+  ApiUserEventRequest,
 } from "./api.gen";
 
 import { Session } from "./session";
@@ -5090,4 +5092,65 @@ export class Client {
         return Promise.resolve(response);
       });
   }
+
+  /** List user event */
+  async listUserEvent(
+    session: Session,
+    eventId?:string,
+  ): Promise<ApiUserEventList> {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired(Date.now() / 1000)
+    ) {
+      await this.sessionRefresh(session);
+    }
+
+    return this.apiClient
+      .listUserEvent(session.token, eventId)
+      .then((response: ApiUserEventList) => {
+        return Promise.resolve(response);
+      });
+  }
+
+
+  /** Add user event */
+  async addUserEvent(
+    session: Session,
+    request: ApiUserEventRequest
+  ): Promise<any> {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired(Date.now() / 1000)
+    ) {
+      await this.sessionRefresh(session);
+    }
+
+    return this.apiClient
+      .addUserEvent(session.token, request)
+      .then((response: any) => {
+        return response !== undefined;
+      });
+  }
+
+    /** Delete user event */
+    async deleteUserEvent(
+      session: Session,
+      eventId?:string,
+    ): Promise<any> {
+      if (
+        this.autoRefreshSession &&
+        session.refresh_token &&
+        session.isexpired(Date.now() / 1000)
+      ) {
+        await this.sessionRefresh(session);
+      }
+  
+      return this.apiClient
+        .deleteUserEvent(session.token, eventId)
+        .then((response: any) => {
+          return response !== undefined;
+        });
+    }
 }
