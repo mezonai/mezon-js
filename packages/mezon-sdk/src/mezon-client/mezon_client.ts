@@ -128,14 +128,16 @@ export class MezonClient implements Client {
     msg: string,
     messOptions: { [x: string]: any } = {},
     attachments: Array<any> = [],
-    refs: Array<any> = []
+    refs: Array<any> = [],
+    code?: number
   ) {
     return await this.messageManager.sendDMChannelMessage(
       channelDmId,
       msg,
       messOptions,
       attachments,
-      refs
+      refs,
+      code
     );
   }
 

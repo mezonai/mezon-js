@@ -364,8 +364,8 @@ export interface ChannelUpdatedEvent {
   category_id: string;
   // creator
   creator_id: string;
-  // parrent_id
-  parrent_id: string;
+  // parent_id
+  parent_id: string;
   // channel id
   channel_id: string;
   // channel label
@@ -383,8 +383,8 @@ export interface ChannelCreatedEvent {
   category_id: string;
   // creator
   creator_id: string;
-  // parrent_id
-  parrent_id: string;
+  // parent_id
+  parent_id: string;
   // channel id
   channel_id: string;
   // channel label
@@ -597,7 +597,7 @@ export interface ChannelDescription {
   //
   clan_name?: string;
   //
-  parrent_id?: string;
+  parent_id?: string;
   //
   last_sent_message?: ApiChannelMessageHeader;
 }
@@ -629,7 +629,7 @@ export interface HashtagDm {
   //
   channel_private?: number;
   //
-  parrent_id?: string;
+  parent_id?: string;
 }
 
 export interface NotificationChannelSettingEvent {

@@ -55,7 +55,8 @@ export class MessageManager {
     msg: string,
     messOptions: { [x: string]: any } = {},
     attachments: Array<any> = [],
-    refs: Array<any> = []
+    refs: Array<any> = [],
+    code?: number
   ) {
     const messageLength =
       JSON.stringify(msg).length + JSON.stringify(messOptions).length;
@@ -74,7 +75,6 @@ export class MessageManager {
         { messageContent: msg, ...messOptions, attachments, refs },
         message
       );
-      console.log("mess", mess);
       return await this.sendMessage(
         mess.clan_id,
         mess.channel_id,
@@ -83,7 +83,11 @@ export class MessageManager {
         mess.msg,
         [],
         mess.attachments,
-        refs
+        refs,
+        false,
+        false,
+        '',
+        code
       );
     } catch (error) {
       throw new Error("Can't send message channel DM");
