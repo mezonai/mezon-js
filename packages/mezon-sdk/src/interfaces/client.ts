@@ -83,7 +83,7 @@ export interface ApiCreateChannelDescRequest {
     //
     clan_id?: string;
     //The parrent channel this message belongs to.
-    parrent_id?: string;
+    parent_id?: string;
     //The channel type.
     type?: number;
     //The users to add.

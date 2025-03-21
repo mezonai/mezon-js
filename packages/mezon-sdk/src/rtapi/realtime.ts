@@ -322,7 +322,11 @@ export interface Envelope {
     | ChannelCanvas
     | undefined;
   /** unpin message */
-  unpin_message_event?: UnpinMessageEvent | undefined;
+  unpin_message_event?:
+    | UnpinMessageEvent
+    | undefined;
+  /** category event */
+  category_event?: CategoryEvent | undefined;
 }
 
 export interface FollowEvent {
@@ -793,6 +797,8 @@ export interface LastSeenMessageEvent {
   mode: number;
   /** The timestamp */
   timestamp_seconds: number;
+  /**  */
+  badge_count: number;
 }
 
 /** Message typing event data */
@@ -938,6 +944,19 @@ export interface ChannelCreatedEvent {
   clan_name: string;
 }
 
+export interface CategoryEvent {
+  /** Category creator */
+  creator_id: string;
+  /** the Clan that category belong to */
+  clan_id: string;
+  /** Category name */
+  category_name: string;
+  /**  */
+  id: string;
+  /**  */
+  status: number;
+}
+
 export interface RoleEvent {
   role: Role | undefined;
   status: number;
@@ -1036,6 +1055,8 @@ export interface ChannelUpdatedEvent {
   topic: string;
   /**  */
   age_restricted: number;
+  /**  */
+  active: number;
 }
 
 /** Stop receiving status updates for some set of users. */
@@ -1184,6 +1205,8 @@ export interface ClanUpdatedEvent {
   is_onboarding: boolean;
   /** welcome channel id */
   welcome_channel_id: string;
+  /** onboarding_banner. */
+  onboarding_banner: string;
 }
 
 /** clan profile updated event */
@@ -1242,6 +1265,12 @@ export interface UserProfileRedis {
   is_disabled: boolean;
   /** clans */
   joined_clans: string[];
+  /** public key */
+  pubkey: string;
+  /** mezon id */
+  mezon_id: string;
+  /** app token */
+  app_token: string;
 }
 
 export interface FCMTokens {
@@ -1450,6 +1479,7 @@ function createBaseEnvelope(): Envelope {
     join_channel_app_data: undefined,
     canvas_event: undefined,
     unpin_message_event: undefined,
+    category_event: undefined,
   };
 }
 
@@ -1679,6 +1709,9 @@ export const Envelope = {
     }
     if (message.unpin_message_event !== undefined) {
       UnpinMessageEvent.encode(message.unpin_message_event, writer.uint32(602).fork()).ldelim();
+    }
+    if (message.category_event !== undefined) {
+      CategoryEvent.encode(message.category_event, writer.uint32(610).fork()).ldelim();
     }
     return writer;
   },
@@ -2215,6 +2248,13 @@ export const Envelope = {
 
           message.unpin_message_event = UnpinMessageEvent.decode(reader, reader.uint32());
           continue;
+        case 76:
+          if (tag !== 610) {
+            break;
+          }
+
+          message.category_event = CategoryEvent.decode(reader, reader.uint32());
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -2399,6 +2439,7 @@ export const Envelope = {
       unpin_message_event: isSet(object.unpin_message_event)
         ? UnpinMessageEvent.fromJSON(object.unpin_message_event)
         : undefined,
+      category_event: isSet(object.category_event) ? CategoryEvent.fromJSON(object.category_event) : undefined,
     };
   },
 
@@ -2628,6 +2669,9 @@ export const Envelope = {
     }
     if (message.unpin_message_event !== undefined) {
       obj.unpin_message_event = UnpinMessageEvent.toJSON(message.unpin_message_event);
+    }
+    if (message.category_event !== undefined) {
+      obj.category_event = CategoryEvent.toJSON(message.category_event);
     }
     return obj;
   },
@@ -2876,6 +2920,9 @@ export const Envelope = {
       : undefined;
     message.unpin_message_event = (object.unpin_message_event !== undefined && object.unpin_message_event !== null)
       ? UnpinMessageEvent.fromPartial(object.unpin_message_event)
+      : undefined;
+    message.category_event = (object.category_event !== undefined && object.category_event !== null)
+      ? CategoryEvent.fromPartial(object.category_event)
       : undefined;
     return message;
   },
@@ -6365,7 +6412,7 @@ export const LastPinMessageEvent = {
 };
 
 function createBaseLastSeenMessageEvent(): LastSeenMessageEvent {
-  return { clan_id: "", channel_id: "", message_id: "", mode: 0, timestamp_seconds: 0 };
+  return { clan_id: "", channel_id: "", message_id: "", mode: 0, timestamp_seconds: 0, badge_count: 0 };
 }
 
 export const LastSeenMessageEvent = {
@@ -6384,6 +6431,9 @@ export const LastSeenMessageEvent = {
     }
     if (message.timestamp_seconds !== 0) {
       writer.uint32(40).uint32(message.timestamp_seconds);
+    }
+    if (message.badge_count !== 0) {
+      writer.uint32(48).int32(message.badge_count);
     }
     return writer;
   },
@@ -6430,6 +6480,13 @@ export const LastSeenMessageEvent = {
 
           message.timestamp_seconds = reader.uint32();
           continue;
+        case 6:
+          if (tag !== 48) {
+            break;
+          }
+
+          message.badge_count = reader.int32();
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -6446,6 +6503,7 @@ export const LastSeenMessageEvent = {
       message_id: isSet(object.message_id) ? globalThis.String(object.message_id) : "",
       mode: isSet(object.mode) ? globalThis.Number(object.mode) : 0,
       timestamp_seconds: isSet(object.timestamp_seconds) ? globalThis.Number(object.timestamp_seconds) : 0,
+      badge_count: isSet(object.badge_count) ? globalThis.Number(object.badge_count) : 0,
     };
   },
 
@@ -6466,6 +6524,9 @@ export const LastSeenMessageEvent = {
     if (message.timestamp_seconds !== 0) {
       obj.timestamp_seconds = Math.round(message.timestamp_seconds);
     }
+    if (message.badge_count !== 0) {
+      obj.badge_count = Math.round(message.badge_count);
+    }
     return obj;
   },
 
@@ -6479,6 +6540,7 @@ export const LastSeenMessageEvent = {
     message.message_id = object.message_id ?? "";
     message.mode = object.mode ?? 0;
     message.timestamp_seconds = object.timestamp_seconds ?? 0;
+    message.badge_count = object.badge_count ?? 0;
     return message;
   },
 };
@@ -7719,6 +7781,125 @@ export const ChannelCreatedEvent = {
   },
 };
 
+function createBaseCategoryEvent(): CategoryEvent {
+  return { creator_id: "", clan_id: "", category_name: "", id: "", status: 0 };
+}
+
+export const CategoryEvent = {
+  encode(message: CategoryEvent, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.creator_id !== "") {
+      writer.uint32(10).string(message.creator_id);
+    }
+    if (message.clan_id !== "") {
+      writer.uint32(18).string(message.clan_id);
+    }
+    if (message.category_name !== "") {
+      writer.uint32(26).string(message.category_name);
+    }
+    if (message.id !== "") {
+      writer.uint32(34).string(message.id);
+    }
+    if (message.status !== 0) {
+      writer.uint32(40).int32(message.status);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): CategoryEvent {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseCategoryEvent();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.creator_id = reader.string();
+          continue;
+        case 2:
+          if (tag !== 18) {
+            break;
+          }
+
+          message.clan_id = reader.string();
+          continue;
+        case 3:
+          if (tag !== 26) {
+            break;
+          }
+
+          message.category_name = reader.string();
+          continue;
+        case 4:
+          if (tag !== 34) {
+            break;
+          }
+
+          message.id = reader.string();
+          continue;
+        case 5:
+          if (tag !== 40) {
+            break;
+          }
+
+          message.status = reader.int32();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): CategoryEvent {
+    return {
+      creator_id: isSet(object.creator_id) ? globalThis.String(object.creator_id) : "",
+      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
+      category_name: isSet(object.category_name) ? globalThis.String(object.category_name) : "",
+      id: isSet(object.id) ? globalThis.String(object.id) : "",
+      status: isSet(object.status) ? globalThis.Number(object.status) : 0,
+    };
+  },
+
+  toJSON(message: CategoryEvent): unknown {
+    const obj: any = {};
+    if (message.creator_id !== "") {
+      obj.creator_id = message.creator_id;
+    }
+    if (message.clan_id !== "") {
+      obj.clan_id = message.clan_id;
+    }
+    if (message.category_name !== "") {
+      obj.category_name = message.category_name;
+    }
+    if (message.id !== "") {
+      obj.id = message.id;
+    }
+    if (message.status !== 0) {
+      obj.status = Math.round(message.status);
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<CategoryEvent>, I>>(base?: I): CategoryEvent {
+    return CategoryEvent.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<CategoryEvent>, I>>(object: I): CategoryEvent {
+    const message = createBaseCategoryEvent();
+    message.creator_id = object.creator_id ?? "";
+    message.clan_id = object.clan_id ?? "";
+    message.category_name = object.category_name ?? "";
+    message.id = object.id ?? "";
+    message.status = object.status ?? 0;
+    return message;
+  },
+};
+
 function createBaseRoleEvent(): RoleEvent {
   return {
     role: undefined,
@@ -8430,6 +8611,7 @@ function createBaseChannelUpdatedEvent(): ChannelUpdatedEvent {
     e2ee: 0,
     topic: "",
     age_restricted: 0,
+    active: 0,
   };
 }
 
@@ -8479,6 +8661,9 @@ export const ChannelUpdatedEvent = {
     }
     if (message.age_restricted !== 0) {
       writer.uint32(120).int32(message.age_restricted);
+    }
+    if (message.active !== 0) {
+      writer.uint32(128).int32(message.active);
     }
     return writer;
   },
@@ -8595,6 +8780,13 @@ export const ChannelUpdatedEvent = {
 
           message.age_restricted = reader.int32();
           continue;
+        case 16:
+          if (tag !== 128) {
+            break;
+          }
+
+          message.active = reader.int32();
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -8621,6 +8813,7 @@ export const ChannelUpdatedEvent = {
       e2ee: isSet(object.e2ee) ? globalThis.Number(object.e2ee) : 0,
       topic: isSet(object.topic) ? globalThis.String(object.topic) : "",
       age_restricted: isSet(object.age_restricted) ? globalThis.Number(object.age_restricted) : 0,
+      active: isSet(object.active) ? globalThis.Number(object.active) : 0,
     };
   },
 
@@ -8671,6 +8864,9 @@ export const ChannelUpdatedEvent = {
     if (message.age_restricted !== 0) {
       obj.age_restricted = Math.round(message.age_restricted);
     }
+    if (message.active !== 0) {
+      obj.active = Math.round(message.active);
+    }
     return obj;
   },
 
@@ -8694,6 +8890,7 @@ export const ChannelUpdatedEvent = {
     message.e2ee = object.e2ee ?? 0;
     message.topic = object.topic ?? "";
     message.age_restricted = object.age_restricted ?? 0;
+    message.active = object.active ?? 0;
     return message;
   },
 };
@@ -9748,7 +9945,16 @@ export const UserClanRemoved = {
 };
 
 function createBaseClanUpdatedEvent(): ClanUpdatedEvent {
-  return { clan_id: "", clan_name: "", logo: "", banner: "", status: 0, is_onboarding: false, welcome_channel_id: "" };
+  return {
+    clan_id: "",
+    clan_name: "",
+    logo: "",
+    banner: "",
+    status: 0,
+    is_onboarding: false,
+    welcome_channel_id: "",
+    onboarding_banner: "",
+  };
 }
 
 export const ClanUpdatedEvent = {
@@ -9773,6 +9979,9 @@ export const ClanUpdatedEvent = {
     }
     if (message.welcome_channel_id !== "") {
       writer.uint32(58).string(message.welcome_channel_id);
+    }
+    if (message.onboarding_banner !== "") {
+      writer.uint32(66).string(message.onboarding_banner);
     }
     return writer;
   },
@@ -9833,6 +10042,13 @@ export const ClanUpdatedEvent = {
 
           message.welcome_channel_id = reader.string();
           continue;
+        case 8:
+          if (tag !== 66) {
+            break;
+          }
+
+          message.onboarding_banner = reader.string();
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -9851,6 +10067,7 @@ export const ClanUpdatedEvent = {
       status: isSet(object.status) ? globalThis.Number(object.status) : 0,
       is_onboarding: isSet(object.is_onboarding) ? globalThis.Boolean(object.is_onboarding) : false,
       welcome_channel_id: isSet(object.welcome_channel_id) ? globalThis.String(object.welcome_channel_id) : "",
+      onboarding_banner: isSet(object.onboarding_banner) ? globalThis.String(object.onboarding_banner) : "",
     };
   },
 
@@ -9877,6 +10094,9 @@ export const ClanUpdatedEvent = {
     if (message.welcome_channel_id !== "") {
       obj.welcome_channel_id = message.welcome_channel_id;
     }
+    if (message.onboarding_banner !== "") {
+      obj.onboarding_banner = message.onboarding_banner;
+    }
     return obj;
   },
 
@@ -9892,6 +10112,7 @@ export const ClanUpdatedEvent = {
     message.status = object.status ?? 0;
     message.is_onboarding = object.is_onboarding ?? false;
     message.welcome_channel_id = object.welcome_channel_id ?? "";
+    message.onboarding_banner = object.onboarding_banner ?? "";
     return message;
   },
 };
@@ -10171,6 +10392,9 @@ function createBaseUserProfileRedis(): UserProfileRedis {
     metadata: "",
     is_disabled: false,
     joined_clans: [],
+    pubkey: "",
+    mezon_id: "",
+    app_token: "",
   };
 }
 
@@ -10211,6 +10435,15 @@ export const UserProfileRedis = {
     }
     for (const v of message.joined_clans) {
       writer.uint32(98).string(v!);
+    }
+    if (message.pubkey !== "") {
+      writer.uint32(106).string(message.pubkey);
+    }
+    if (message.mezon_id !== "") {
+      writer.uint32(114).string(message.mezon_id);
+    }
+    if (message.app_token !== "") {
+      writer.uint32(122).string(message.app_token);
     }
     return writer;
   },
@@ -10306,6 +10539,27 @@ export const UserProfileRedis = {
 
           message.joined_clans.push(reader.string());
           continue;
+        case 13:
+          if (tag !== 106) {
+            break;
+          }
+
+          message.pubkey = reader.string();
+          continue;
+        case 14:
+          if (tag !== 114) {
+            break;
+          }
+
+          message.mezon_id = reader.string();
+          continue;
+        case 15:
+          if (tag !== 122) {
+            break;
+          }
+
+          message.app_token = reader.string();
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -10333,6 +10587,9 @@ export const UserProfileRedis = {
       joined_clans: globalThis.Array.isArray(object?.joined_clans)
         ? object.joined_clans.map((e: any) => globalThis.String(e))
         : [],
+      pubkey: isSet(object.pubkey) ? globalThis.String(object.pubkey) : "",
+      mezon_id: isSet(object.mezon_id) ? globalThis.String(object.mezon_id) : "",
+      app_token: isSet(object.app_token) ? globalThis.String(object.app_token) : "",
     };
   },
 
@@ -10374,6 +10631,15 @@ export const UserProfileRedis = {
     if (message.joined_clans?.length) {
       obj.joined_clans = message.joined_clans;
     }
+    if (message.pubkey !== "") {
+      obj.pubkey = message.pubkey;
+    }
+    if (message.mezon_id !== "") {
+      obj.mezon_id = message.mezon_id;
+    }
+    if (message.app_token !== "") {
+      obj.app_token = message.app_token;
+    }
     return obj;
   },
 
@@ -10394,6 +10660,9 @@ export const UserProfileRedis = {
     message.metadata = object.metadata ?? "";
     message.is_disabled = object.is_disabled ?? false;
     message.joined_clans = object.joined_clans?.map((e) => e) || [];
+    message.pubkey = object.pubkey ?? "";
+    message.mezon_id = object.mezon_id ?? "";
+    message.app_token = object.app_token ?? "";
     return message;
   },
 };
