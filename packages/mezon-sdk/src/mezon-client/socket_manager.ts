@@ -7,12 +7,12 @@ import { MezonApi } from "../api";
 import { Events } from "../constants";
 import { ErrorEvent, CloseEvent } from "ws";
 import { EventManager } from "./event_manager";
+import { WebSocketAdapterPb } from "../web_socket_adapter_pb";
 
 export class SocketManager {
   [key: string]: any;
   private socket: Socket;
   private isHardDisconnect: boolean | undefined;
-  
   constructor(
     private host: string,
     private port: string,
@@ -23,11 +23,18 @@ export class SocketManager {
     private apiKey: string,
     private eventManager: EventManager
   ) {
-    this.socket = this.createSocket();
+    this.socket = new DefaultSocket(
+      this.host,
+      this.port,
+      this.useSSL,
+      false,
+      this.adapter
+    );
   }
-  
-  createSocket(): Socket {
-    return new DefaultSocket(
+
+  createSocket() {
+    this.adapter = new WebSocketAdapterPb();
+    this.socket = new DefaultSocket(
       this.host,
       this.port,
       this.useSSL,
@@ -41,9 +48,8 @@ export class SocketManager {
   }
 
   async connect(sockSession: Session) {
-    this.socket = this.createSocket();
     const session = await this.socket.connect(sockSession, true);
-    this.isHardDisconnect = false
+    this.isHardDisconnect = false;
     return session;
   }
 
@@ -57,7 +63,8 @@ export class SocketManager {
   }
 
   async onerror(evt: ErrorEvent) {
-    console.log(evt);
+    console.log("onerror", evt);
+    if (this.isHardDisconnect) return;
     if (this.socket.isOpen()) {
       await this.retriesConnect();
     }
@@ -101,6 +108,7 @@ export class SocketManager {
 
     const interval = setInterval(async () => {
       try {
+        this.createSocket();
         const sockSession = await this.sessionManager.authenticate(this.apiKey);
         const sessionConnected = await this.connect(sockSession);
         if (sessionConnected?.token) {
