@@ -166,7 +166,6 @@ import {
   ApiMezonOauthClient,
   ApiCreateHashChannelAppsResponse,
   MezonapiEmojiRecentList,
-  ApiUserEventList,
   ApiUserEventRequest,
 } from "./api.gen";
 
@@ -5093,27 +5092,6 @@ export class Client {
       });
   }
 
-  /** List user event */
-  async listUserEvent(
-    session: Session,
-    eventId?:string,
-  ): Promise<ApiUserEventList> {
-    if (
-      this.autoRefreshSession &&
-      session.refresh_token &&
-      session.isexpired(Date.now() / 1000)
-    ) {
-      await this.sessionRefresh(session);
-    }
-
-    return this.apiClient
-      .listUserEvent(session.token, eventId)
-      .then((response: ApiUserEventList) => {
-        return Promise.resolve(response);
-      });
-  }
-
-
   /** Add user event */
   async addUserEvent(
     session: Session,
@@ -5137,6 +5115,7 @@ export class Client {
     /** Delete user event */
     async deleteUserEvent(
       session: Session,
+      clanId?:string,
       eventId?:string,
     ): Promise<any> {
       if (
@@ -5148,7 +5127,7 @@ export class Client {
       }
   
       return this.apiClient
-        .deleteUserEvent(session.token, eventId)
+        .deleteUserEvent(session.token, clanId, eventId)
         .then((response: any) => {
           return response !== undefined;
         });
