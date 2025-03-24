@@ -1165,6 +1165,8 @@ export interface ApiCreateEventRequest {
   repeat_type?: number;
   //
   creator_id?: number;
+  //
+  user_id?: string;
 }
 
 /** Create a event within clan. */
@@ -3111,6 +3113,14 @@ export interface ApiMezonOauthClient {
 export interface ApiCreateHashChannelAppsResponse {
   //
   web_app_data?: string;
+}
+
+/**  */
+export interface ApiUserEventRequest {
+  // The ID of the clan to be updated.
+  clan_id?: string;
+  //The ID of the event to be updated.
+  event_id?: string;
 }
 
 export class MezonApi {
@@ -11380,6 +11390,81 @@ export class MezonApi {
 
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("GET", options, bodyJson);
+    if (bearerToken) {
+        fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+    }
+
+    return Promise.race([
+      fetch(fullUrl, fetchOptions).then((response) => {
+        if (response.status == 204) {
+          return response;
+        } else if (response.status >= 200 && response.status < 300) {
+          return response.json();
+        } else {
+          throw response;
+        }
+      }),
+      new Promise((_, reject) =>
+        setTimeout(reject, this.timeoutMs, "Request timed out.")
+      ),
+    ]);
+  }
+
+  /** Add user event */
+  addUserEvent(
+    bearerToken: string,
+    body:ApiUserEventRequest,
+    options: any = {}
+  ): Promise<any> {
+    
+    if (body === null || body === undefined) {
+      throw new Error("'body' is a required parameter but is null or undefined.");
+    }
+    const urlPath = "/v2/userevent";
+    const queryParams = new Map<string, any>();
+
+    let bodyJson : string = "";
+    bodyJson = JSON.stringify(body || {});
+
+    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
+    const fetchOptions = buildFetchOptions("POST", options, bodyJson);
+    if (bearerToken) {
+        fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+    }
+
+    return Promise.race([
+      fetch(fullUrl, fetchOptions).then((response) => {
+        if (response.status == 204) {
+          return response;
+        } else if (response.status >= 200 && response.status < 300) {
+          return response.json();
+        } else {
+          throw response;
+        }
+      }),
+      new Promise((_, reject) =>
+        setTimeout(reject, this.timeoutMs, "Request timed out.")
+      ),
+    ]);
+  }
+
+  /** Delete user event */
+  deleteUserEvent(
+    bearerToken: string,
+    clanId?:string,
+    eventId?:string,
+    options: any = {}
+  ): Promise<any> {
+    
+    const urlPath = "/v2/userevent";
+    const queryParams = new Map<string, any>();
+    queryParams.set("clan_id", clanId);
+    queryParams.set("event_id", eventId);
+
+    let bodyJson : string = "";
+
+    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
+    const fetchOptions = buildFetchOptions("DELETE", options, bodyJson);
     if (bearerToken) {
         fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
     }
