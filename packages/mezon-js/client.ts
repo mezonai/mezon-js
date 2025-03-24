@@ -5092,6 +5092,29 @@ export class Client {
       });
   }
 
+  async registrationPassword(
+    session: Session,
+    email?: string,
+    password?: string
+  ): Promise<ApiSession> {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired(Date.now() / 1000)
+    ) {
+      await this.sessionRefresh(session);
+    }
+
+    return this.apiClient
+      .registrationEmail(session.token, {
+        email: email,
+        password: password
+      })
+      .then((response: ApiSession) => {
+        return Promise.resolve(response);
+      });
+  }
+
   /** Add user event */
   async addUserEvent(
     session: Session,
