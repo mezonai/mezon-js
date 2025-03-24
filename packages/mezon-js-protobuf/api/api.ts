@@ -2430,19 +2430,11 @@ export interface RoleUserList_RoleUser {
   online: boolean;
 }
 
-export interface EventUserList {
-  user_event: EventUserList_EventUser[];
-}
-
-export interface EventUserList_EventUser {
-  /** The id of the user's account. */
-  id: string;
-  /** The username of the user's account. */
-  username: string;
-  /** The display name of the user. */
-  display_name: string;
-  /** A URL for an avatar image. */
-  avatar_url: string;
+export interface UserEventRequest {
+  /** The ID of the clan to be updated. */
+  clan_id: string;
+  /** The ID of the event to be updated. */
+  event_id: string;
 }
 
 export interface ListEventsRequest {
@@ -2483,6 +2475,7 @@ export interface CreateEventRequest {
   action: number;
   repeat_type: number;
   creator_id: string;
+  user_id: string;
 }
 
 /** update a event within clan. */
@@ -22396,22 +22389,25 @@ export const RoleUserList_RoleUser = {
   },
 };
 
-function createBaseEventUserList(): EventUserList {
-  return { user_event: [] };
+function createBaseUserEventRequest(): UserEventRequest {
+  return { clan_id: "", event_id: "" };
 }
 
-export const EventUserList = {
-  encode(message: EventUserList, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    for (const v of message.user_event) {
-      EventUserList_EventUser.encode(v!, writer.uint32(10).fork()).ldelim();
+export const UserEventRequest = {
+  encode(message: UserEventRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.clan_id !== "") {
+      writer.uint32(10).string(message.clan_id);
+    }
+    if (message.event_id !== "") {
+      writer.uint32(18).string(message.event_id);
     }
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): EventUserList {
+  decode(input: _m0.Reader | Uint8Array, length?: number): UserEventRequest {
     const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseEventUserList();
+    const message = createBaseUserEventRequest();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -22420,98 +22416,14 @@ export const EventUserList = {
             break;
           }
 
-          message.user_event.push(EventUserList_EventUser.decode(reader, reader.uint32()));
-          continue;
-      }
-      if ((tag & 7) === 4 || tag === 0) {
-        break;
-      }
-      reader.skipType(tag & 7);
-    }
-    return message;
-  },
-
-  fromJSON(object: any): EventUserList {
-    return {
-      user_event: globalThis.Array.isArray(object?.user_event)
-        ? object.user_event.map((e: any) => EventUserList_EventUser.fromJSON(e))
-        : [],
-    };
-  },
-
-  toJSON(message: EventUserList): unknown {
-    const obj: any = {};
-    if (message.user_event?.length) {
-      obj.user_event = message.user_event.map((e) => EventUserList_EventUser.toJSON(e));
-    }
-    return obj;
-  },
-
-  create<I extends Exact<DeepPartial<EventUserList>, I>>(base?: I): EventUserList {
-    return EventUserList.fromPartial(base ?? ({} as any));
-  },
-  fromPartial<I extends Exact<DeepPartial<EventUserList>, I>>(object: I): EventUserList {
-    const message = createBaseEventUserList();
-    message.user_event = object.user_event?.map((e) => EventUserList_EventUser.fromPartial(e)) || [];
-    return message;
-  },
-};
-
-function createBaseEventUserList_EventUser(): EventUserList_EventUser {
-  return { id: "", username: "", display_name: "", avatar_url: "" };
-}
-
-export const EventUserList_EventUser = {
-  encode(message: EventUserList_EventUser, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.id !== "") {
-      writer.uint32(10).string(message.id);
-    }
-    if (message.username !== "") {
-      writer.uint32(18).string(message.username);
-    }
-    if (message.display_name !== "") {
-      writer.uint32(26).string(message.display_name);
-    }
-    if (message.avatar_url !== "") {
-      writer.uint32(34).string(message.avatar_url);
-    }
-    return writer;
-  },
-
-  decode(input: _m0.Reader | Uint8Array, length?: number): EventUserList_EventUser {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseEventUserList_EventUser();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
-          if (tag !== 10) {
-            break;
-          }
-
-          message.id = reader.string();
+          message.clan_id = reader.string();
           continue;
         case 2:
           if (tag !== 18) {
             break;
           }
 
-          message.username = reader.string();
-          continue;
-        case 3:
-          if (tag !== 26) {
-            break;
-          }
-
-          message.display_name = reader.string();
-          continue;
-        case 4:
-          if (tag !== 34) {
-            break;
-          }
-
-          message.avatar_url = reader.string();
+          message.event_id = reader.string();
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -22522,41 +22434,31 @@ export const EventUserList_EventUser = {
     return message;
   },
 
-  fromJSON(object: any): EventUserList_EventUser {
+  fromJSON(object: any): UserEventRequest {
     return {
-      id: isSet(object.id) ? globalThis.String(object.id) : "",
-      username: isSet(object.username) ? globalThis.String(object.username) : "",
-      display_name: isSet(object.display_name) ? globalThis.String(object.display_name) : "",
-      avatar_url: isSet(object.avatar_url) ? globalThis.String(object.avatar_url) : "",
+      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
+      event_id: isSet(object.event_id) ? globalThis.String(object.event_id) : "",
     };
   },
 
-  toJSON(message: EventUserList_EventUser): unknown {
+  toJSON(message: UserEventRequest): unknown {
     const obj: any = {};
-    if (message.id !== "") {
-      obj.id = message.id;
+    if (message.clan_id !== "") {
+      obj.clan_id = message.clan_id;
     }
-    if (message.username !== "") {
-      obj.username = message.username;
-    }
-    if (message.display_name !== "") {
-      obj.display_name = message.display_name;
-    }
-    if (message.avatar_url !== "") {
-      obj.avatar_url = message.avatar_url;
+    if (message.event_id !== "") {
+      obj.event_id = message.event_id;
     }
     return obj;
   },
 
-  create<I extends Exact<DeepPartial<EventUserList_EventUser>, I>>(base?: I): EventUserList_EventUser {
-    return EventUserList_EventUser.fromPartial(base ?? ({} as any));
+  create<I extends Exact<DeepPartial<UserEventRequest>, I>>(base?: I): UserEventRequest {
+    return UserEventRequest.fromPartial(base ?? ({} as any));
   },
-  fromPartial<I extends Exact<DeepPartial<EventUserList_EventUser>, I>>(object: I): EventUserList_EventUser {
-    const message = createBaseEventUserList_EventUser();
-    message.id = object.id ?? "";
-    message.username = object.username ?? "";
-    message.display_name = object.display_name ?? "";
-    message.avatar_url = object.avatar_url ?? "";
+  fromPartial<I extends Exact<DeepPartial<UserEventRequest>, I>>(object: I): UserEventRequest {
+    const message = createBaseUserEventRequest();
+    message.clan_id = object.clan_id ?? "";
+    message.event_id = object.event_id ?? "";
     return message;
   },
 };
@@ -22843,6 +22745,7 @@ function createBaseCreateEventRequest(): CreateEventRequest {
     action: 0,
     repeat_type: 0,
     creator_id: "",
+    user_id: "",
   };
 }
 
@@ -22889,6 +22792,9 @@ export const CreateEventRequest = {
     }
     if (message.creator_id !== "") {
       writer.uint32(114).string(message.creator_id);
+    }
+    if (message.user_id !== "") {
+      writer.uint32(122).string(message.user_id);
     }
     return writer;
   },
@@ -22998,6 +22904,13 @@ export const CreateEventRequest = {
 
           message.creator_id = reader.string();
           continue;
+        case 15:
+          if (tag !== 122) {
+            break;
+          }
+
+          message.user_id = reader.string();
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -23023,6 +22936,7 @@ export const CreateEventRequest = {
       action: isSet(object.action) ? globalThis.Number(object.action) : 0,
       repeat_type: isSet(object.repeat_type) ? globalThis.Number(object.repeat_type) : 0,
       creator_id: isSet(object.creator_id) ? globalThis.String(object.creator_id) : "",
+      user_id: isSet(object.user_id) ? globalThis.String(object.user_id) : "",
     };
   },
 
@@ -23070,6 +22984,9 @@ export const CreateEventRequest = {
     if (message.creator_id !== "") {
       obj.creator_id = message.creator_id;
     }
+    if (message.user_id !== "") {
+      obj.user_id = message.user_id;
+    }
     return obj;
   },
 
@@ -23092,6 +23009,7 @@ export const CreateEventRequest = {
     message.action = object.action ?? 0;
     message.repeat_type = object.repeat_type ?? 0;
     message.creator_id = object.creator_id ?? "";
+    message.user_id = object.user_id ?? "";
     return message;
   },
 };

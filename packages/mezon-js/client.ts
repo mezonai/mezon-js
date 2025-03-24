@@ -166,6 +166,7 @@ import {
   ApiMezonOauthClient,
   ApiCreateHashChannelAppsResponse,
   MezonapiEmojiRecentList,
+  ApiUserEventRequest,
 } from "./api.gen";
 
 import { Session } from "./session";
@@ -5112,6 +5113,46 @@ export class Client {
       .then((response: ApiSession) => {
         return Promise.resolve(response);
       });
-
   }
+
+  /** Add user event */
+  async addUserEvent(
+    session: Session,
+    request: ApiUserEventRequest
+  ): Promise<any> {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired(Date.now() / 1000)
+    ) {
+      await this.sessionRefresh(session);
+    }
+
+    return this.apiClient
+      .addUserEvent(session.token, request)
+      .then((response: any) => {
+        return response !== undefined;
+      });
+  }
+
+    /** Delete user event */
+    async deleteUserEvent(
+      session: Session,
+      clanId?:string,
+      eventId?:string,
+    ): Promise<any> {
+      if (
+        this.autoRefreshSession &&
+        session.refresh_token &&
+        session.isexpired(Date.now() / 1000)
+      ) {
+        await this.sessionRefresh(session);
+      }
+  
+      return this.apiClient
+        .deleteUserEvent(session.token, clanId, eventId)
+        .then((response: any) => {
+          return response !== undefined;
+        });
+    }
 }
