@@ -535,12 +535,6 @@ export interface ApiUpdateClanProfileRequest {
 export interface ApiUpdateRoleRequest {
   /** The ID of the role to update. */
   role_id: string;
-  title: string | undefined;
-  color: string | undefined;
-  role_icon: string | undefined;
-  description: string | undefined;
-  display_online: number | undefined;
-  allow_mention: number | undefined;
   /** The users to add. */
   add_user_ids: string[];
   /** The permissions to add. */
@@ -552,6 +546,12 @@ export interface ApiUpdateRoleRequest {
   //
   clan_id: string;
   max_permission_id: string;
+  title?: string | undefined;
+  color?: string | undefined;
+  role_icon?: string | undefined;
+  description?: string | undefined;
+  display_online?: number | undefined;
+  allow_mention?: number | undefined;
 }
 
 /** A client for Mezon server. */
