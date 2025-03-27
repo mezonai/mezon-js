@@ -2997,19 +2997,6 @@ export interface ApiGenerateMeetTokenResponse {
   token?: string;
 }
 
-/**  */
-export interface ApiHandleParticipantMeetStateRequest {
-  // clan id
-  clan_id?: string;
-  // channel id
-  channel_id?: string;
-  // user id
-  user_id?: string;
-  // display name
-  display_name?: string;
-  // state (0: join, 1: leave)
-  state?: number;
-}
 
 /**  */
 export interface ApiMezonOauthClient {
@@ -11265,44 +11252,6 @@ export class MezonApi {
           setTimeout(reject, this.timeoutMs, "Request timed out.")
         ),
       ]);
-  }
-
-  /** Handle participant meet state */
-  handleParticipantMeetState(
-    bearerToken: string,
-    body:ApiHandleParticipantMeetStateRequest,
-    options: any = {}
-  ): Promise<any> {
-  
-    if (body === null || body === undefined) {
-      throw new Error("'body' is a required parameter but is null or undefined.");
-    }
-    const urlPath = "/v2/meet/handle_participant_state";
-    const queryParams = new Map<string, any>();
-
-    let bodyJson : string = "";
-    bodyJson = JSON.stringify(body || {});
-
-    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
-    const fetchOptions = buildFetchOptions("POST", options, bodyJson);
-    if (bearerToken) {
-        fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-    }
-
-    return Promise.race([
-      fetch(fullUrl, fetchOptions).then((response) => {
-        if (response.status == 204) {
-          return response;
-        } else if (response.status >= 200 && response.status < 300) {
-          return response.json();
-        } else {
-          throw response;
-        }
-      }),
-      new Promise((_, reject) =>
-        setTimeout(reject, this.timeoutMs, "Request timed out.")
-      ),
-    ]);
   }
 
   /** Create mezon OAuth client */

@@ -161,7 +161,6 @@ import {
   MezonapiCreateRoomChannelApps,
   ApiGenerateMeetTokenRequest,
   ApiGenerateMeetTokenResponse,
-  ApiHandleParticipantMeetStateRequest,
   ApiMezonOauthClientList,
   ApiMezonOauthClient,
   ApiCreateHashChannelAppsResponse,
@@ -4970,26 +4969,6 @@ export class Client {
       .then((response: ApiGenerateMeetTokenResponse) => {
         return Promise.resolve(response);
     });
-  }
-
-  /** Handle participant meet state */
-  async handleParticipantMeetState(
-    session: Session,
-    body:ApiHandleParticipantMeetStateRequest,
-  ): Promise<any> {
-    if (
-      this.autoRefreshSession &&
-      session.refresh_token &&
-      session.isexpired(Date.now() / 1000)
-    ) {
-      await this.sessionRefresh(session);
-    }
-
-    return this.apiClient
-      .handleParticipantMeetState(session.token, body)
-      .then((response: any) => {
-        return Promise.resolve(response);
-      });
   }
 
   //**list webhook belong to the clan */
