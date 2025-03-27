@@ -707,9 +707,12 @@ export class Client {
     vars?: Record<string, string>
   ): Promise<Session> {
     const request = {
-      email: email,
-      password: password,
-      vars: vars,
+      username: username,
+      account: {
+        email: email,
+        password: password,
+        vars: vars,
+      }
     };
 
     return this.apiClient
