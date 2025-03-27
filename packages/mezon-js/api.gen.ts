@@ -1217,6 +1217,8 @@ export interface ApiCreateRoleRequest {
   role_icon?: string;
   //
   title?: string;
+  //
+  order_role?: number;
 }
 
 /** Delete a channel the user has access to. */
@@ -2096,6 +2098,22 @@ export interface ApiRegistrationEmailRequest {
 }
 
 /**  */
+export interface ApiUpdateRoleOrderRequest {
+  //
+  clan_id?: string;
+  //
+  roles?: Array<ApiRoleOrderUpdate>;
+}
+
+/**  */
+export interface ApiRoleOrderUpdate {
+  //
+  order?: number;
+  //
+  role_id?: string;
+}
+
+/**  */
 export interface ApiRole {
   //
   active?: number;
@@ -2129,6 +2147,8 @@ export interface ApiRole {
   slug?: string;
   //
   title?: string;
+  //
+  order_role ?: number;
 }
 
 /** A list of role description, usually a result of a list operation. */
@@ -11430,5 +11450,41 @@ export class MezonApi {
         setTimeout(reject, this.timeoutMs, "Request timed out.")
       ),
     ]);
+  }
+
+    /**  */
+    updateRoleOrder(bearerToken: string,
+        body:ApiUpdateRoleOrderRequest,
+        options: any = {}): Promise<any> {
+      
+      if (body === null || body === undefined) {
+        throw new Error("'body' is a required parameter but is null or undefined.");
+      }
+      const urlPath = "/v2/role/orders";
+      const queryParams = new Map<string, any>();
+  
+      let bodyJson : string = "";
+      bodyJson = JSON.stringify(body || {});
+  
+      const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
+      const fetchOptions = buildFetchOptions("PUT", options, bodyJson);
+      if (bearerToken) {
+          fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+      }
+  
+      return Promise.race([
+        fetch(fullUrl, fetchOptions).then((response) => {
+          if (response.status == 204) {
+            return response;
+          } else if (response.status >= 200 && response.status < 300) {
+            return response.json();
+          } else {
+            throw response;
+          }
+        }),
+        new Promise((_, reject) =>
+          setTimeout(reject, this.timeoutMs, "Request timed out.")
+        ),
+      ]);
   }
 }

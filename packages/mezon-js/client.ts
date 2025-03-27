@@ -166,6 +166,7 @@ import {
   ApiCreateHashChannelAppsResponse,
   MezonapiEmojiRecentList,
   ApiUserEventRequest,
+  ApiUpdateRoleOrderRequest,
 } from "./api.gen";
 
 import { Session } from "./session";
@@ -5137,4 +5138,24 @@ export class Client {
           return response !== undefined;
         });
     }
+
+    async updateRoleOrder(
+      session: Session,
+      request: ApiUpdateRoleOrderRequest
+    ): Promise<any> {
+      if (
+        this.autoRefreshSession &&
+        session.refresh_token &&
+        session.isexpired(Date.now() / 1000)
+      ) {
+        await this.sessionRefresh(session);
+      }
+  
+      return this.apiClient
+        .updateRoleOrder(session.token, request)
+        .then((response: any) => {
+          return Promise.resolve(response);
+        });
+    }
+  
 }

@@ -1835,6 +1835,16 @@ export interface UpdateCategoryOrderRequest {
   categories: CategoryOrderUpdate[];
 }
 
+export interface UpdateRoleOrderRequest {
+  clan_id: string;
+  roles: RoleOrderUpdate[];
+}
+
+export interface RoleOrderUpdate {
+  role_id: string;
+  order: number;
+}
+
 export interface CategoryOrderUpdate {
   category_id: string;
   order: number;
@@ -2138,6 +2148,7 @@ export interface Role {
   role_channel_active: number;
   channel_ids: string[];
   max_level_permission: number;
+  order_role: number;
 }
 
 /** Event clan */
@@ -2457,6 +2468,8 @@ export interface CreateRoleRequest {
   add_user_ids: string[];
   /** The permissions to add. */
   active_permission_ids: string[];
+  /** order role */
+  order_role: number;
 }
 
 /** Create a event within clan. */
@@ -16766,6 +16779,154 @@ export const UpdateCategoryOrderRequest = {
   },
 };
 
+function createBaseUpdateRoleOrderRequest(): UpdateRoleOrderRequest {
+  return { clan_id: "", roles: [] };
+}
+
+export const UpdateRoleOrderRequest = {
+  encode(message: UpdateRoleOrderRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.clan_id !== "") {
+      writer.uint32(10).string(message.clan_id);
+    }
+    for (const v of message.roles) {
+      RoleOrderUpdate.encode(v!, writer.uint32(18).fork()).ldelim();
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): UpdateRoleOrderRequest {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseUpdateRoleOrderRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.clan_id = reader.string();
+          continue;
+        case 2:
+          if (tag !== 18) {
+            break;
+          }
+
+          message.roles.push(RoleOrderUpdate.decode(reader, reader.uint32()));
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): UpdateRoleOrderRequest {
+    return {
+      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
+      roles: globalThis.Array.isArray(object?.roles) ? object.roles.map((e: any) => RoleOrderUpdate.fromJSON(e)) : [],
+    };
+  },
+
+  toJSON(message: UpdateRoleOrderRequest): unknown {
+    const obj: any = {};
+    if (message.clan_id !== "") {
+      obj.clan_id = message.clan_id;
+    }
+    if (message.roles?.length) {
+      obj.roles = message.roles.map((e) => RoleOrderUpdate.toJSON(e));
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<UpdateRoleOrderRequest>, I>>(base?: I): UpdateRoleOrderRequest {
+    return UpdateRoleOrderRequest.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<UpdateRoleOrderRequest>, I>>(object: I): UpdateRoleOrderRequest {
+    const message = createBaseUpdateRoleOrderRequest();
+    message.clan_id = object.clan_id ?? "";
+    message.roles = object.roles?.map((e) => RoleOrderUpdate.fromPartial(e)) || [];
+    return message;
+  },
+};
+
+function createBaseRoleOrderUpdate(): RoleOrderUpdate {
+  return { role_id: "", order: 0 };
+}
+
+export const RoleOrderUpdate = {
+  encode(message: RoleOrderUpdate, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.role_id !== "") {
+      writer.uint32(10).string(message.role_id);
+    }
+    if (message.order !== 0) {
+      writer.uint32(16).int32(message.order);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): RoleOrderUpdate {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseRoleOrderUpdate();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.role_id = reader.string();
+          continue;
+        case 2:
+          if (tag !== 16) {
+            break;
+          }
+
+          message.order = reader.int32();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): RoleOrderUpdate {
+    return {
+      role_id: isSet(object.role_id) ? globalThis.String(object.role_id) : "",
+      order: isSet(object.order) ? globalThis.Number(object.order) : 0,
+    };
+  },
+
+  toJSON(message: RoleOrderUpdate): unknown {
+    const obj: any = {};
+    if (message.role_id !== "") {
+      obj.role_id = message.role_id;
+    }
+    if (message.order !== 0) {
+      obj.order = Math.round(message.order);
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<RoleOrderUpdate>, I>>(base?: I): RoleOrderUpdate {
+    return RoleOrderUpdate.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<RoleOrderUpdate>, I>>(object: I): RoleOrderUpdate {
+    const message = createBaseRoleOrderUpdate();
+    message.role_id = object.role_id ?? "";
+    message.order = object.order ?? 0;
+    return message;
+  },
+};
+
 function createBaseCategoryOrderUpdate(): CategoryOrderUpdate {
   return { category_id: "", order: 0 };
 }
@@ -19165,6 +19326,7 @@ function createBaseRole(): Role {
     role_channel_active: 0,
     channel_ids: [],
     max_level_permission: 0,
+    order_role: 0,
   };
 }
 
@@ -19217,6 +19379,9 @@ export const Role = {
     }
     if (message.max_level_permission !== 0) {
       writer.uint32(128).int32(message.max_level_permission);
+    }
+    if (message.order_role !== 0) {
+      writer.uint32(136).int32(message.order_role);
     }
     return writer;
   },
@@ -19340,6 +19505,13 @@ export const Role = {
 
           message.max_level_permission = reader.int32();
           continue;
+        case 17:
+          if (tag !== 136) {
+            break;
+          }
+
+          message.order_role = reader.int32();
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -19369,6 +19541,7 @@ export const Role = {
         ? object.channel_ids.map((e: any) => globalThis.String(e))
         : [],
       max_level_permission: isSet(object.max_level_permission) ? globalThis.Number(object.max_level_permission) : 0,
+      order_role: isSet(object.order_role) ? globalThis.Number(object.order_role) : 0,
     };
   },
 
@@ -19422,6 +19595,9 @@ export const Role = {
     if (message.max_level_permission !== 0) {
       obj.max_level_permission = Math.round(message.max_level_permission);
     }
+    if (message.order_role !== 0) {
+      obj.order_role = Math.round(message.order_role);
+    }
     return obj;
   },
 
@@ -19450,6 +19626,7 @@ export const Role = {
     message.role_channel_active = object.role_channel_active ?? 0;
     message.channel_ids = object.channel_ids?.map((e) => e) || [];
     message.max_level_permission = object.max_level_permission ?? 0;
+    message.order_role = object.order_role ?? 0;
     return message;
   },
 };
@@ -22532,6 +22709,7 @@ function createBaseCreateRoleRequest(): CreateRoleRequest {
     max_permission_id: "",
     add_user_ids: [],
     active_permission_ids: [],
+    order_role: 0,
   };
 }
 
@@ -22566,6 +22744,9 @@ export const CreateRoleRequest = {
     }
     for (const v of message.active_permission_ids) {
       writer.uint32(82).string(v!);
+    }
+    if (message.order_role !== 0) {
+      writer.uint32(88).int32(message.order_role);
     }
     return writer;
   },
@@ -22647,6 +22828,13 @@ export const CreateRoleRequest = {
 
           message.active_permission_ids.push(reader.string());
           continue;
+        case 11:
+          if (tag !== 88) {
+            break;
+          }
+
+          message.order_role = reader.int32();
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -22672,6 +22860,7 @@ export const CreateRoleRequest = {
       active_permission_ids: globalThis.Array.isArray(object?.active_permission_ids)
         ? object.active_permission_ids.map((e: any) => globalThis.String(e))
         : [],
+      order_role: isSet(object.order_role) ? globalThis.Number(object.order_role) : 0,
     };
   },
 
@@ -22707,6 +22896,9 @@ export const CreateRoleRequest = {
     if (message.active_permission_ids?.length) {
       obj.active_permission_ids = message.active_permission_ids;
     }
+    if (message.order_role !== 0) {
+      obj.order_role = Math.round(message.order_role);
+    }
     return obj;
   },
 
@@ -22725,6 +22917,7 @@ export const CreateRoleRequest = {
     message.max_permission_id = object.max_permission_id ?? "";
     message.add_user_ids = object.add_user_ids?.map((e) => e) || [];
     message.active_permission_ids = object.active_permission_ids?.map((e) => e) || [];
+    message.order_role = object.order_role ?? 0;
     return message;
   },
 };
