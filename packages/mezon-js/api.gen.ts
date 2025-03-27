@@ -534,10 +534,14 @@ export interface ApiAuditLog {
   user_id?: string;
 }
 
-/** Authenticate against the server with a device ID. */
-export interface ApiAuthenticateRequest {
-  //The App account details.
-  account?: ApiAccountApp;
+/** Authenticate against the server with email+password. */
+export interface ApiAuthenticateEmailRequest {
+  //The email account details.
+  account?: ApiAccountEmail;
+  //Register the account if the user does not already exist.
+  create?: boolean;
+  //Set the username on the account at register. Must be unique.
+  username?: string;
 }
 
 /**  */
@@ -3455,30 +3459,24 @@ export class MezonApi {
   }
 
   /** Authenticate a user with an email+password against the server. */
-  authenticateEmail(
-    basicAuthUsername: string,
+  authenticateEmail(basicAuthUsername: string,
     basicAuthPassword: string,
-    account: ApiAccountEmail,
-    username?: string,
-    options: any = {}
-  ): Promise<ApiSession> {
-    if (account === null || account === undefined) {
-      throw new Error(
-        "'account' is a required parameter but is null or undefined."
-      );
+      body:ApiAuthenticateEmailRequest,
+      options: any = {}): Promise<ApiSession> {
+    
+    if (body === null || body === undefined) {
+      throw new Error("'body' is a required parameter but is null or undefined.");
     }
     const urlPath = "/v2/account/authenticate/email";
     const queryParams = new Map<string, any>();
-    queryParams.set("username", username);
 
-    let bodyJson: string = "";
-    bodyJson = JSON.stringify(account || {});
+    let bodyJson : string = "";
+    bodyJson = JSON.stringify(body || {});
 
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("POST", options, bodyJson);
     if (basicAuthUsername) {
-      fetchOptions.headers["Authorization"] =
-        "Basic " + encode(basicAuthUsername + ":" + basicAuthPassword);
+      fetchOptions.headers["Authorization"] = "Basic " + encode(basicAuthUsername + ":" + basicAuthPassword);
     }
 
     return Promise.race([
