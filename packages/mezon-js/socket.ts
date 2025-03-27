@@ -924,6 +924,17 @@ export interface ChannelAppEvent {
   action: number;
 }
 
+export interface HandleParticipantMeetStateEvent {
+  /** clan id */
+  clan_id: string;
+  /** channel id */
+  channel_id: string;
+  /** display name */
+  display_name: string;
+  /** state (0: join, 1: leave) */
+  state: number;
+}
+
 export interface PermissionSet {
   /** Role ID */
   role_id: string;
@@ -1071,6 +1082,14 @@ export interface Socket {
     channel_type: number,
     is_public: boolean
   ): Promise<void>;
+
+  /** handle user join/leave channel voice on the server. */
+  handleParticipantMeetState (
+    clan_id: string,
+    channel_id: string,
+    display_name: string,
+    state: number
+  ): Promise<void> 
 
   /** Remove a chat message from a chat channel on the server. */
   removeChatMessage(
@@ -2223,6 +2242,24 @@ export class DefaultSocket implements Socket {
     });
 
     return response.channel;
+  }
+
+  async handleParticipantMeetState (
+    clan_id: string,
+    channel_id: string,
+    display_name: string,
+    state: number
+  ): Promise<void> {
+    const response = await this.send({
+      handle_participant_meet_state_event: {
+        clan_id: clan_id,
+        channel_id: channel_id,
+        display_name: display_name,
+        state: state,
+      },
+    });
+
+    return response.handle_participant_meet_state_event;
   }
 
   leaveChat(
