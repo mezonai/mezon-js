@@ -500,6 +500,11 @@ export interface ChannelUpdatedEvent {
   active: number;
 }
 
+export interface DeleteAccountEvent {
+  // user id
+  user_id: string;
+}
+
 export interface ChannelCreatedEvent {
   // clan id
   clan_id: string;
@@ -1403,6 +1408,8 @@ export interface Socket {
 
   onroleassign: (role_assign_event: RoleAssignedEvent) => void;
 
+  ondeleteaccount: (deleteAccountEvent: DeleteAccountEvent) => void;
+
   onstreamingchannelstarted: (
     streaming_started_event: StreamingStartedEvent
   ) => void;
@@ -1554,6 +1561,8 @@ export class DefaultSocket implements Socket {
           this.onstickerdeleted(message.sticker_delete_event);
         } else if (message.channel_updated_event) {
           this.onchannelupdated(message.channel_updated_event);
+        } else if (message.delete_account_event) {
+          this.ondeleteaccount(message.delete_account_event);
         } else if (message.clan_profile_updated_event) {
           this.onclanprofileupdated(message.clan_profile_updated_event);
         } else if (message.clan_updated_event) {
@@ -1975,6 +1984,12 @@ export class DefaultSocket implements Socket {
   onchannelupdated(channelUpdated: ChannelUpdatedEvent) {
     if (this.verbose && window && window.console) {
       console.log(channelUpdated);
+    }
+  }
+
+  ondeleteaccount(deleteAccountEvent: DeleteAccountEvent) {
+    if (this.verbose && window && window.console) {
+      console.log(deleteAccountEvent);
     }
   }
 
