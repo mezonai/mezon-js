@@ -789,6 +789,10 @@ export interface ApiChannelDescription {
   about_me?: Array<string>;
   //
   display_names?: Array<string>;
+  //
+  app_url?: string;
+  //
+  app_id?: string;
 }
 
 /** A message sent on a channel. */
