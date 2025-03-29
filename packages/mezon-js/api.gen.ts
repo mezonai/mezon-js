@@ -790,8 +790,6 @@ export interface ApiChannelDescription {
   //
   display_names?: Array<string>;
   //
-  app_url?: string;
-  //
   app_id?: string;
 }
 
