@@ -5157,5 +5157,22 @@ export class Client {
           return Promise.resolve(response);
         });
     }
-  
+    
+    async deleteAccount(
+      session: Session
+    ): Promise<any> {
+      if (
+        this.autoRefreshSession &&
+        session.refresh_token &&
+        session.isexpired(Date.now() / 1000)
+      ) {
+        await this.sessionRefresh(session);
+      }
+
+      return this.apiClient
+        .deleteAccount(session.token)
+        .then((response: ApiMezonOauthClientList) => {
+          return Promise.resolve(response);
+        });
+    }
 }
