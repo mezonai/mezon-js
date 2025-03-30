@@ -167,6 +167,7 @@ import {
   MezonapiEmojiRecentList,
   ApiUserEventRequest,
   ApiUpdateRoleOrderRequest,
+  ApiGenerateMezonMeetResponse,
 } from "./api.gen";
 
 import { Session } from "./session";
@@ -5118,61 +5119,90 @@ export class Client {
       });
   }
 
-    /** Delete user event */
-    async deleteUserEvent(
-      session: Session,
-      clanId?:string,
-      eventId?:string,
-    ): Promise<any> {
-      if (
-        this.autoRefreshSession &&
-        session.refresh_token &&
-        session.isexpired(Date.now() / 1000)
-      ) {
-        await this.sessionRefresh(session);
-      }
-  
-      return this.apiClient
-        .deleteUserEvent(session.token, clanId, eventId)
-        .then((response: any) => {
-          return response !== undefined;
-        });
+  /** Delete user event */
+  async deleteUserEvent(
+    session: Session,
+    clanId?:string,
+    eventId?:string,
+  ): Promise<any> {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired(Date.now() / 1000)
+    ) {
+      await this.sessionRefresh(session);
     }
 
-    async updateRoleOrder(
-      session: Session,
-      request: ApiUpdateRoleOrderRequest
-    ): Promise<any> {
-      if (
-        this.autoRefreshSession &&
-        session.refresh_token &&
-        session.isexpired(Date.now() / 1000)
-      ) {
-        await this.sessionRefresh(session);
-      }
-  
-      return this.apiClient
-        .updateRoleOrder(session.token, request)
-        .then((response: any) => {
-          return Promise.resolve(response);
-        });
-    }
-    
-    async deleteAccount(
-      session: Session
-    ): Promise<any> {
-      if (
-        this.autoRefreshSession &&
-        session.refresh_token &&
-        session.isexpired(Date.now() / 1000)
-      ) {
-        await this.sessionRefresh(session);
-      }
+    return this.apiClient
+      .deleteUserEvent(session.token, clanId, eventId)
+      .then((response: any) => {
+        return response !== undefined;
+      });
+  }
 
-      return this.apiClient
-        .deleteAccount(session.token)
-        .then((response: ApiMezonOauthClientList) => {
-          return Promise.resolve(response);
-        });
+  async updateRoleOrder(
+    session: Session,
+    request: ApiUpdateRoleOrderRequest
+  ): Promise<any> {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired(Date.now() / 1000)
+    ) {
+      await this.sessionRefresh(session);
     }
+
+    return this.apiClient
+      .updateRoleOrder(session.token, request)
+      .then((response: any) => {
+        return Promise.resolve(response);
+      });
+  }
+  
+  async deleteAccount(
+    session: Session
+  ): Promise<any> {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired(Date.now() / 1000)
+    ) {
+      await this.sessionRefresh(session);
+    }
+
+    return this.apiClient
+      .deleteAccount(session.token)
+      .then((response: ApiMezonOauthClientList) => {
+        return Promise.resolve(response);
+      });
+  }
+
+  async createExternalMezonMeet(
+    session: Session
+  ): Promise<ApiGenerateMezonMeetResponse> {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired(Date.now() / 1000)
+    ) {
+      await this.sessionRefresh(session);
+    }
+
+    return this.apiClient
+      .createExternalMezonMeet(session.token)
+      .then((response: ApiGenerateMezonMeetResponse) => {
+        return Promise.resolve(response);
+      });
+  }
+
+  async generateMeetTokenExternal(
+    token:string,
+    displayName?:string,
+  ): Promise<ApiGenerateMeetTokenResponse> {
+    return this.apiClient
+      .generateMeetTokenExternal("", token, displayName)
+      .then((response: ApiGenerateMeetTokenResponse) => {
+        return Promise.resolve(response);
+      });
+  }
 }
