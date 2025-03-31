@@ -1173,6 +1173,10 @@ export interface ApiCreateEventRequest {
   creator_id?: number;
   //
   user_id?: string;
+  //
+  is_private?: boolean;
+  //
+  meet_room?: ApiGenerateMezonMeetResponse;
 }
 
 /** Create a event within clan. */
@@ -1366,6 +1370,10 @@ export interface ApiEventManagement {
   event_status?: number;
   //
   repeat_type?: number;
+  //
+  is_private?: boolean;
+  //
+  meet_room?: ApiGenerateMezonMeetResponse;
 }
 
 /**  */
@@ -1409,9 +1417,15 @@ export interface ApiGetKeyServerResp {
 /**  */
 export interface ApiGenerateMezonMeetResponse {
   //
-  external_link?: string;
+  meet_id?: string;
   //
   room_name?: string;
+  //
+  external_link?: string;
+  //
+  creator_id?: string;
+  //
+  event_id?: string;
 }
 
 /**  */
