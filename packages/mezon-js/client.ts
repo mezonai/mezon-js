@@ -3797,7 +3797,7 @@ export class Client {
             channel_id: gu.channel_id,
             app_id: gu.app_id,
             clan_id: gu.clan_id,
-            url: gu.url,
+            app_url: gu.app_url,
           });
         });
         return Promise.resolve(result);
