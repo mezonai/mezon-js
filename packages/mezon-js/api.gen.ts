@@ -608,7 +608,7 @@ export interface ApiChannelAppResponse {
   //
   id?: string;
   //
-  url?: string;
+  app_url?: string;
 }
 
 /**  */
