@@ -2172,7 +2172,7 @@ export interface ApiRole {
   //
   title?: string;
   //
-  order_role ?: number;
+  order_role?: number;
 }
 
 /** A list of role description, usually a result of a list operation. */
