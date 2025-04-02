@@ -7320,7 +7320,7 @@ export class MezonApi {
     clanId?: string,
     options: any = {}
   ): Promise<ApiNotificationChannelCategorySettingList> {
-    const urlPath = "/v2/getChannelCategoryNotiSettingsList";
+    const urlPath = "/v2/getchannelcategorynotisettingslist";
     const queryParams = new Map<string, any>();
     queryParams.set("clan_id", clanId);
 
