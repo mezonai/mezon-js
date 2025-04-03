@@ -2027,6 +2027,8 @@ export interface ApiPinMessage {
   sender_id?: string;
   //
   username?: string;
+  //
+  attachment?: string;
 }
 
 /**  */
