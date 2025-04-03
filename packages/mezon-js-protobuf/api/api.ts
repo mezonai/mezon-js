@@ -2223,6 +2223,8 @@ export interface PinMessage {
     | undefined;
   /** create time in ms */
   create_time_seconds: number;
+  /** attachment */
+  attachment: string;
 }
 
 export interface PinMessagesList {
@@ -20296,6 +20298,7 @@ function createBasePinMessage(): PinMessage {
     avatar: "",
     create_time: undefined,
     create_time_seconds: 0,
+    attachment: "",
   };
 }
 
@@ -20327,6 +20330,9 @@ export const PinMessage = {
     }
     if (message.create_time_seconds !== 0) {
       writer.uint32(72).uint32(message.create_time_seconds);
+    }
+    if (message.attachment !== "") {
+      writer.uint32(82).string(message.attachment);
     }
     return writer;
   },
@@ -20401,6 +20407,13 @@ export const PinMessage = {
 
           message.create_time_seconds = reader.uint32();
           continue;
+        case 10:
+          if (tag !== 82) {
+            break;
+          }
+
+          message.attachment = reader.string();
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -20421,6 +20434,7 @@ export const PinMessage = {
       avatar: isSet(object.avatar) ? globalThis.String(object.avatar) : "",
       create_time: isSet(object.create_time) ? fromJsonTimestamp(object.create_time) : undefined,
       create_time_seconds: isSet(object.create_time_seconds) ? globalThis.Number(object.create_time_seconds) : 0,
+      attachment: isSet(object.attachment) ? globalThis.String(object.attachment) : "",
     };
   },
 
@@ -20453,6 +20467,9 @@ export const PinMessage = {
     if (message.create_time_seconds !== 0) {
       obj.create_time_seconds = Math.round(message.create_time_seconds);
     }
+    if (message.attachment !== "") {
+      obj.attachment = message.attachment;
+    }
     return obj;
   },
 
@@ -20470,6 +20487,7 @@ export const PinMessage = {
     message.avatar = object.avatar ?? "";
     message.create_time = object.create_time ?? undefined;
     message.create_time_seconds = object.create_time_seconds ?? 0;
+    message.attachment = object.attachment ?? "";
     return message;
   },
 };
