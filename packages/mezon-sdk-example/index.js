@@ -15,14 +15,40 @@
  */
 
 const { MezonClient } = require("mezon-sdk");
+const csv = require('csv-parser')
+const fs = require('fs')
+const results = [];
 
-var client = new MezonClient("736f556c6f764f685162756e53387651");
+fs.createReadStream('datatest.csv')
+  .pipe(csv(['Email', 'Token']))
+  .on('data', (data) => {
+    const username = data.Email.split('@')[0]
+    results.push({'username': username})
+  })
+  .on('end', () => {
+    console.log(results);
+  });
 
-client.authenticate().then(async (e) => {
+var client = new MezonClient("4b6e5665484a4e503757787231536569");
+  client.authenticate().then(async (e) => {
   console.log("authenticated.", e);
-  setInterval(function(){
-    client.sendMessage('0', '0', '1827261634645594112', 4, false, false, {"t": "please add your daily text"}, null, null, null);    
-}, 10);
+
+  var interval = 1000;
+  results.forEach(function (el, index) {
+    setTimeout(async function () {
+      console.log(el);
+
+      const res = await client.sendToken({
+        sender_id: "",
+        sender_name: "KOMU",
+        receiver_id: el.username,
+        amount: 200000,
+        note: "NCCPLUS ho tro thang 3"}
+      );
+      
+    }, index * interval);
+  });
 }).catch(e => {
   console.log("error authenticating.", e);
 });
+
