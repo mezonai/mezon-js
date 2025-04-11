@@ -168,6 +168,7 @@ import {
   ApiUserEventRequest,
   ApiUpdateRoleOrderRequest,
   ApiGenerateMezonMeetResponse,
+  ApiGenerateMeetTokenExternalResponse,
 } from "./api.gen";
 
 import { Session } from "./session";
@@ -5198,10 +5199,10 @@ export class Client {
   async generateMeetTokenExternal(
     token:string,
     displayName?:string,
-  ): Promise<ApiGenerateMeetTokenResponse> {
+  ): Promise<ApiGenerateMeetTokenExternalResponse> {
     return this.apiClient
       .generateMeetTokenExternal("", token, displayName)
-      .then((response: ApiGenerateMeetTokenResponse) => {
+      .then((response: ApiGenerateMeetTokenExternalResponse) => {
         return Promise.resolve(response);
       });
   }
