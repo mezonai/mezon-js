@@ -1429,6 +1429,16 @@ export interface ApiGenerateMezonMeetResponse {
 }
 
 /**  */
+export interface ApiGenerateMeetTokenExternalResponse {
+  //
+  guest_user_id?: string;
+  //
+  token?: string;
+  //
+  guest_access_token?: string;
+}
+
+/**  */
 export interface ApiGetPubKeysResponse {
   //
   pub_keys?: Array<GetPubKeysResponseUserPubKey>;
@@ -11548,7 +11558,8 @@ export class MezonApi {
   generateMeetTokenExternal(bearerToken: string,
       token:string,
       displayName?:string,
-      options: any = {}): Promise<ApiGenerateMeetTokenResponse> {
+      isGuest?:boolean,
+      options: any = {}): Promise<ApiGenerateMeetTokenExternalResponse> {
     
     if (token === null || token === undefined) {
       throw new Error("'token' is a required parameter but is null or undefined.");
@@ -11557,6 +11568,7 @@ export class MezonApi {
         .replace("{token}", encodeURIComponent(String(token)));
     const queryParams = new Map<string, any>();
     queryParams.set("display_name", displayName);
+    queryParams.set("is_guest", isGuest);
 
     let bodyJson : string = "";
 
