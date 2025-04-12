@@ -5199,9 +5199,10 @@ export class Client {
   async generateMeetTokenExternal(
     token:string,
     displayName?:string,
+    isGuest?: boolean
   ): Promise<ApiGenerateMeetTokenExternalResponse> {
     return this.apiClient
-      .generateMeetTokenExternal("", token, displayName)
+      .generateMeetTokenExternal("", token, displayName, isGuest)
       .then((response: ApiGenerateMeetTokenExternalResponse) => {
         return Promise.resolve(response);
       });
