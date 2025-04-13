@@ -80,19 +80,21 @@ export interface ChannelLeave {
 
 /** UserChannelAddedEvent */
 export interface UserChannelAddedEvent {
-  // the channel id
-  channel_desc: ChannelDescription;
-  // the user
+  /** the channel id */
+  channel_desc: ChannelDescription
+  /** the user */
   users: UserProfileRedis[];
-  // the custom status
+  /** the custom status */
   status: string;
-  // the clan id
+  /** the clan id */
   clan_id: string;
-  //
-  caller: UserProfileRedis;
-  //
+  /**  */
+  caller:
+    | UserProfileRedis
+    | undefined;
+  /**  */
   create_time_second: number;
-  //
+  /**  */
   active: number;
 }
 
@@ -111,9 +113,24 @@ export interface UserProfileRedis {
   custom_status: string;
   /** create time */
   create_time_second: number;
-  /** online */
+  /** FCM token */
+  fcm_tokens: FCMTokens[];
+  /** isOnline */
   online: boolean;
+  /** Metadata */
+  metadata: string;
+  /** is disabled */
+  is_disabled: boolean;
+  /** clans */
+  joined_clans: string[];
+  /** public key */
+  pubkey: string;
+  /** mezon id */
+  mezon_id: string;
+  /** app token */
+  app_token: string;
 }
+
 
 
 export interface AddUsers {
@@ -125,11 +142,24 @@ export interface AddUsers {
   username: string;
 }
 
-export interface UserChannelRemovedEvent {
-  // the channel id
+export interface UserChannelRemoved {
+  /** the channel id */
   channel_id: string;
-  // the user_id
+  /** the user */
   user_ids: string[];
+  /** the channel type */
+  channel_type: number;
+  /** the clan_id */
+  clan_id: string;
+}
+
+export interface FCMTokens {
+  /** deviceID to follow. */
+  device_id: string;
+  /** tokenID to follow. */
+  token_id: string;
+  /** platform to follow. */
+  platform: string;
 }
 
 export interface UserClanRemovedEvent {
@@ -358,56 +388,130 @@ export interface CustomStatusEvent {
 }
 
 export interface ChannelUpdatedEvent {
-  // clan id
+  /** clan id */
   clan_id: string;
-  // category
+  /** category */
   category_id: string;
-  // creator
+  /** creator */
   creator_id: string;
-  // parent_id
+  /** parent id */
   parent_id: string;
-  // channel id
+  /** channel id */
   channel_id: string;
-  // channel label
+  /** channel label */
   channel_label: string;
-  // channel type
-  channel_type: number;
-  // status
+  /** channel type */
+  channel_type:
+    | number
+    | undefined;
+  /** status */
   status: number;
+  /** meeting code */
+  meeting_code: string;
+  /** error */
+  is_error: boolean;
+  /** channel private */
+  channel_private: boolean;
+  /** app url */
+  app_url: string;
+  /** e2ee */
+  e2ee: number;
+  /** topic */
+  topic: string;
+  /**  */
+  age_restricted: number;
+  /**  */
+  active: number;
 }
 
 export interface ChannelCreatedEvent {
-  // clan id
+  /** clan id */
   clan_id: string;
-  // category
+  /** category */
   category_id: string;
-  // creator
+  /** creator */
   creator_id: string;
-  // parent_id
+  /** parent id */
   parent_id: string;
-  // channel id
+  /** channel id */
   channel_id: string;
-  // channel label
+  /** channel label */
   channel_label: string;
-  // channel private
+  /** channel private */
   channel_private: number;
-  // channel type
-  channel_type: number;
-  // status
+  /** channel type */
+  channel_type:
+    | number
+    | undefined;
+  /** status */
   status: number;
-  // meeting code
-  meeting_code?: string;
+  /** app url */
+  app_url: string;
+  /** clan_name */
+  clan_name: string;
+}
+
+export interface MessageReaction {
+  /** Reaction id */
+  id: string;
+  /** An emoji id */
+  emoji_id: string;
+  /** An emoji shortname */
+  emoji: string;
+  /** User react to message */
+  sender_id: string;
+  /** Sender name */
+  sender_name: string;
+  /** avatar */
+  sender_avatar: string;
+  /** Action reaction delete or add */
+  action: boolean;
+  /** count of emoji */
+  count: number;
+  /** channel id */
+  channel_id: string;
+  /** message id */
+  message_id: string;
+  /** clan id */
+  clan_id: string;
+  /** mode */
+  mode: number;
+  /** message sender id */
+  message_sender_id: string;
+  /** is public */
+  is_public: boolean;
+  /** topic id */
+  topic_id: string;
+  /** emoji_recent_id */
+  emoji_recent_id: string;
 }
 
 export interface ChannelDeletedEvent {
-  // clan id
+  /** clan id */
   clan_id: string;
-  // category
+  /** category */
   category_id: string;
-  // channel id
+  /** parent id */
+  parent_id: string;
+  /** channel id */
   channel_id: string;
-  // deletor
+  /** deletor */
   deletor: string;
+}
+
+export interface GiveCoffeeEvent {
+  /** sender id */
+  sender_id: string;
+  /** receiver id */
+  receiver_id: string;
+  /** token count */
+  token_count: number;
+  /** message_ref */
+  message_ref_id: string;
+  /** chanel id */
+  channel_id: string;
+  /** clan id */
+  clan_id: string;
 }
 
 // clan updated event
@@ -746,7 +850,9 @@ export interface Socket {
     content: any,
     mentions?: Array<ApiMessageMention>,
     attachments?: Array<ApiMessageAttachment>,
-    hideEditted?: boolean
+    hideEditted?: boolean,
+    topic_id?: string,
+    is_update_msg_topic?: boolean
   ): Promise<ChannelMessageAck>;
 
   /** Update the status for the current user online. */

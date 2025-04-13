@@ -14,7 +14,10 @@
  * limitations under the License.
  */
 
-export * from "./mezon-client/mezon_client"
+// export * from "./mezon-client/mezon_client"
+
+// use MezonClient-v2
+export * from "./mezon-client-v2/client/MezonClient" 
 
 export * from "./constants";
 

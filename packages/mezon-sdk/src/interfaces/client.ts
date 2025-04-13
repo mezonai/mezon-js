@@ -522,16 +522,20 @@ export interface ApiRegisterStreamingChannelResponse {
 }
 
 export interface TokenSentEvent {
-  // sender id
+  /** sender id */
   sender_id: string;
-  // sender name
+  /** sender name */
   sender_name: string;
-  // receiver
+  /** receiver */
   receiver_id: string;
-  // amount of token
+  /** amount of token */
   amount: number;
-  // note of token
-  note?: string;
+  /** note */
+  note: string;
+  /**  */
+  extra_attribute: string;
+  /**  */
+  transaction_id: string;
 }
 
 export interface DropdownBoxSelected {
