@@ -2025,6 +2025,12 @@ export interface ListChannelDescsRequest {
   channel_type: number;
 }
 
+/** List channel description detail */
+export interface ListChannelDetailRequest {
+  /** channel id */
+  channel_id: string;
+}
+
 /** Add a role for channel. */
 export interface AddRoleChannelDescRequest {
   /** This is the role that needs to be added to the channel */
@@ -18458,6 +18464,63 @@ export const ListChannelDescsRequest = {
     message.cursor = object.cursor ?? "";
     message.clan_id = object.clan_id ?? "";
     message.channel_type = object.channel_type ?? 0;
+    return message;
+  },
+};
+
+function createBaseListChannelDetailRequest(): ListChannelDetailRequest {
+  return { channel_id: "" };
+}
+
+export const ListChannelDetailRequest = {
+  encode(message: ListChannelDetailRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.channel_id !== "") {
+      writer.uint32(10).string(message.channel_id);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): ListChannelDetailRequest {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseListChannelDetailRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.channel_id = reader.string();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): ListChannelDetailRequest {
+    return { channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "" };
+  },
+
+  toJSON(message: ListChannelDetailRequest): unknown {
+    const obj: any = {};
+    if (message.channel_id !== "") {
+      obj.channel_id = message.channel_id;
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<ListChannelDetailRequest>, I>>(base?: I): ListChannelDetailRequest {
+    return ListChannelDetailRequest.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<ListChannelDetailRequest>, I>>(object: I): ListChannelDetailRequest {
+    const message = createBaseListChannelDetailRequest();
+    message.channel_id = object.channel_id ?? "";
     return message;
   },
 };
