@@ -1961,7 +1961,7 @@ export interface ChannelDescription {
   /** clan_name */
   clan_name: string;
   /** app url */
-  app_url: string;
+  app_id: string;
   /** channel all message */
   is_mute: boolean;
   /** age restricted */
@@ -2060,7 +2060,7 @@ export interface CreateChannelDescRequest {
   /** The users to add. */
   user_ids: string[];
   /** app url for channel type app */
-  app_url: string | undefined;
+  app_id: string;
 }
 
 /** Delete a channel the user has access to. */
@@ -2082,9 +2082,7 @@ export interface UpdateChannelDescRequest {
     | string
     | undefined;
   /** app url for channel type app */
-  app_url:
-    | string
-    | undefined;
+  app_id: string;
   /** topic */
   topic: string;
   /**  */
@@ -2926,6 +2924,8 @@ export interface App {
   role: number;
   /** about */
   about: string;
+  /** app url */
+  app_url: string;
 }
 
 /** Delete a app. */
@@ -2958,6 +2958,12 @@ export interface AddAppRequest {
   role: number;
   /** Is shadow. */
   is_shadow: boolean;
+  /** App url. */
+  app_url: string;
+  /** app logo */
+  app_logo: string;
+  /** about me */
+  about_me: string;
 }
 
 /** List (and optionally filter) users. */
@@ -2992,6 +2998,8 @@ export interface UpdateAppRequest {
     | undefined;
   /** about the app. */
   about: string;
+  /** App url. */
+  app_url: string;
 }
 
 /** The identifier for an app. */
@@ -17550,7 +17558,7 @@ function createBaseChannelDescription(): ChannelDescription {
     metadata: [],
     about_me: [],
     clan_name: "",
-    app_url: "",
+    app_id: "",
     is_mute: false,
     age_restricted: 0,
     topic: "",
@@ -17638,8 +17646,8 @@ export const ChannelDescription = {
     if (message.clan_name !== "") {
       writer.uint32(202).string(message.clan_name);
     }
-    if (message.app_url !== "") {
-      writer.uint32(210).string(message.app_url);
+    if (message.app_id !== "") {
+      writer.uint32(210).string(message.app_id);
     }
     if (message.is_mute !== false) {
       writer.uint32(216).bool(message.is_mute);
@@ -17856,7 +17864,7 @@ export const ChannelDescription = {
             break;
           }
 
-          message.app_url = reader.string();
+          message.app_id = reader.string();
           continue;
         case 27:
           if (tag !== 216) {
@@ -17941,7 +17949,7 @@ export const ChannelDescription = {
         : [],
       about_me: globalThis.Array.isArray(object?.about_me) ? object.about_me.map((e: any) => globalThis.String(e)) : [],
       clan_name: isSet(object.clan_name) ? globalThis.String(object.clan_name) : "",
-      app_url: isSet(object.app_url) ? globalThis.String(object.app_url) : "",
+      app_id: isSet(object.app_id) ? globalThis.String(object.app_id) : "",
       is_mute: isSet(object.is_mute) ? globalThis.Boolean(object.is_mute) : false,
       age_restricted: isSet(object.age_restricted) ? globalThis.Number(object.age_restricted) : 0,
       topic: isSet(object.topic) ? globalThis.String(object.topic) : "",
@@ -18029,8 +18037,8 @@ export const ChannelDescription = {
     if (message.clan_name !== "") {
       obj.clan_name = message.clan_name;
     }
-    if (message.app_url !== "") {
-      obj.app_url = message.app_url;
+    if (message.app_id !== "") {
+      obj.app_id = message.app_id;
     }
     if (message.is_mute !== false) {
       obj.is_mute = message.is_mute;
@@ -18084,7 +18092,7 @@ export const ChannelDescription = {
     message.metadata = object.metadata?.map((e) => e) || [];
     message.about_me = object.about_me?.map((e) => e) || [];
     message.clan_name = object.clan_name ?? "";
-    message.app_url = object.app_url ?? "";
+    message.app_id = object.app_id ?? "";
     message.is_mute = object.is_mute ?? false;
     message.age_restricted = object.age_restricted ?? 0;
     message.topic = object.topic ?? "";
@@ -18609,7 +18617,7 @@ function createBaseCreateChannelDescRequest(): CreateChannelDescRequest {
     channel_label: "",
     channel_private: 0,
     user_ids: [],
-    app_url: undefined,
+    app_id: "",
   };
 }
 
@@ -18639,8 +18647,8 @@ export const CreateChannelDescRequest = {
     for (const v of message.user_ids) {
       writer.uint32(66).string(v!);
     }
-    if (message.app_url !== undefined) {
-      StringValue.encode({ value: message.app_url! }, writer.uint32(74).fork()).ldelim();
+    if (message.app_id !== "") {
+      writer.uint32(74).string(message.app_id);
     }
     return writer;
   },
@@ -18713,7 +18721,7 @@ export const CreateChannelDescRequest = {
             break;
           }
 
-          message.app_url = StringValue.decode(reader, reader.uint32()).value;
+          message.app_id = reader.string();
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -18734,7 +18742,7 @@ export const CreateChannelDescRequest = {
       channel_label: isSet(object.channel_label) ? globalThis.String(object.channel_label) : "",
       channel_private: isSet(object.channel_private) ? globalThis.Number(object.channel_private) : 0,
       user_ids: globalThis.Array.isArray(object?.user_ids) ? object.user_ids.map((e: any) => globalThis.String(e)) : [],
-      app_url: isSet(object.app_url) ? String(object.app_url) : undefined,
+      app_id: isSet(object.app_id) ? globalThis.String(object.app_id) : "",
     };
   },
 
@@ -18764,8 +18772,8 @@ export const CreateChannelDescRequest = {
     if (message.user_ids?.length) {
       obj.user_ids = message.user_ids;
     }
-    if (message.app_url !== undefined) {
-      obj.app_url = message.app_url;
+    if (message.app_id !== "") {
+      obj.app_id = message.app_id;
     }
     return obj;
   },
@@ -18783,7 +18791,7 @@ export const CreateChannelDescRequest = {
     message.channel_label = object.channel_label ?? "";
     message.channel_private = object.channel_private ?? 0;
     message.user_ids = object.user_ids?.map((e) => e) || [];
-    message.app_url = object.app_url ?? undefined;
+    message.app_id = object.app_id ?? "";
     return message;
   },
 };
@@ -18850,7 +18858,7 @@ function createBaseUpdateChannelDescRequest(): UpdateChannelDescRequest {
     channel_id: "",
     channel_label: undefined,
     category_id: undefined,
-    app_url: undefined,
+    app_id: "",
     topic: "",
     age_restricted: 0,
     e2ee: 0,
@@ -18868,8 +18876,8 @@ export const UpdateChannelDescRequest = {
     if (message.category_id !== undefined) {
       StringValue.encode({ value: message.category_id! }, writer.uint32(26).fork()).ldelim();
     }
-    if (message.app_url !== undefined) {
-      StringValue.encode({ value: message.app_url! }, writer.uint32(34).fork()).ldelim();
+    if (message.app_id !== "") {
+      writer.uint32(34).string(message.app_id);
     }
     if (message.topic !== "") {
       writer.uint32(42).string(message.topic);
@@ -18916,7 +18924,7 @@ export const UpdateChannelDescRequest = {
             break;
           }
 
-          message.app_url = StringValue.decode(reader, reader.uint32()).value;
+          message.app_id = reader.string();
           continue;
         case 5:
           if (tag !== 42) {
@@ -18953,7 +18961,7 @@ export const UpdateChannelDescRequest = {
       channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "",
       channel_label: isSet(object.channel_label) ? String(object.channel_label) : undefined,
       category_id: isSet(object.category_id) ? String(object.category_id) : undefined,
-      app_url: isSet(object.app_url) ? String(object.app_url) : undefined,
+      app_id: isSet(object.app_id) ? globalThis.String(object.app_id) : "",
       topic: isSet(object.topic) ? globalThis.String(object.topic) : "",
       age_restricted: isSet(object.age_restricted) ? globalThis.Number(object.age_restricted) : 0,
       e2ee: isSet(object.e2ee) ? globalThis.Number(object.e2ee) : 0,
@@ -18971,8 +18979,8 @@ export const UpdateChannelDescRequest = {
     if (message.category_id !== undefined) {
       obj.category_id = message.category_id;
     }
-    if (message.app_url !== undefined) {
-      obj.app_url = message.app_url;
+    if (message.app_id !== "") {
+      obj.app_id = message.app_id;
     }
     if (message.topic !== "") {
       obj.topic = message.topic;
@@ -18994,7 +19002,7 @@ export const UpdateChannelDescRequest = {
     message.channel_id = object.channel_id ?? "";
     message.channel_label = object.channel_label ?? undefined;
     message.category_id = object.category_id ?? undefined;
-    message.app_url = object.app_url ?? undefined;
+    message.app_id = object.app_id ?? "";
     message.topic = object.topic ?? "";
     message.age_restricted = object.age_restricted ?? 0;
     message.e2ee = object.e2ee ?? 0;
@@ -28016,6 +28024,7 @@ function createBaseApp(): App {
     token: "",
     role: 0,
     about: "",
+    app_url: "",
   };
 }
 
@@ -28047,6 +28056,9 @@ export const App = {
     }
     if (message.about !== "") {
       writer.uint32(74).string(message.about);
+    }
+    if (message.app_url !== "") {
+      writer.uint32(82).string(message.app_url);
     }
     return writer;
   },
@@ -28121,6 +28133,13 @@ export const App = {
 
           message.about = reader.string();
           continue;
+        case 10:
+          if (tag !== 82) {
+            break;
+          }
+
+          message.app_url = reader.string();
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -28141,6 +28160,7 @@ export const App = {
       token: isSet(object.token) ? globalThis.String(object.token) : "",
       role: isSet(object.role) ? globalThis.Number(object.role) : 0,
       about: isSet(object.about) ? globalThis.String(object.about) : "",
+      app_url: isSet(object.app_url) ? globalThis.String(object.app_url) : "",
     };
   },
 
@@ -28173,6 +28193,9 @@ export const App = {
     if (message.about !== "") {
       obj.about = message.about;
     }
+    if (message.app_url !== "") {
+      obj.app_url = message.app_url;
+    }
     return obj;
   },
 
@@ -28190,6 +28213,7 @@ export const App = {
     message.token = object.token ?? "";
     message.role = object.role ?? 0;
     message.about = object.about ?? "";
+    message.app_url = object.app_url ?? "";
     return message;
   },
 };
@@ -28358,7 +28382,7 @@ export const AppList = {
 };
 
 function createBaseAddAppRequest(): AddAppRequest {
-  return { appname: "", token: "", creator_id: "", role: 0, is_shadow: false };
+  return { appname: "", token: "", creator_id: "", role: 0, is_shadow: false, app_url: "", app_logo: "", about_me: "" };
 }
 
 export const AddAppRequest = {
@@ -28377,6 +28401,15 @@ export const AddAppRequest = {
     }
     if (message.is_shadow !== false) {
       writer.uint32(40).bool(message.is_shadow);
+    }
+    if (message.app_url !== "") {
+      writer.uint32(50).string(message.app_url);
+    }
+    if (message.app_logo !== "") {
+      writer.uint32(58).string(message.app_logo);
+    }
+    if (message.about_me !== "") {
+      writer.uint32(66).string(message.about_me);
     }
     return writer;
   },
@@ -28423,6 +28456,27 @@ export const AddAppRequest = {
 
           message.is_shadow = reader.bool();
           continue;
+        case 6:
+          if (tag !== 50) {
+            break;
+          }
+
+          message.app_url = reader.string();
+          continue;
+        case 7:
+          if (tag !== 58) {
+            break;
+          }
+
+          message.app_logo = reader.string();
+          continue;
+        case 8:
+          if (tag !== 66) {
+            break;
+          }
+
+          message.about_me = reader.string();
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -28439,6 +28493,9 @@ export const AddAppRequest = {
       creator_id: isSet(object.creator_id) ? globalThis.String(object.creator_id) : "",
       role: isSet(object.role) ? globalThis.Number(object.role) : 0,
       is_shadow: isSet(object.is_shadow) ? globalThis.Boolean(object.is_shadow) : false,
+      app_url: isSet(object.app_url) ? globalThis.String(object.app_url) : "",
+      app_logo: isSet(object.app_logo) ? globalThis.String(object.app_logo) : "",
+      about_me: isSet(object.about_me) ? globalThis.String(object.about_me) : "",
     };
   },
 
@@ -28459,6 +28516,15 @@ export const AddAppRequest = {
     if (message.is_shadow !== false) {
       obj.is_shadow = message.is_shadow;
     }
+    if (message.app_url !== "") {
+      obj.app_url = message.app_url;
+    }
+    if (message.app_logo !== "") {
+      obj.app_logo = message.app_logo;
+    }
+    if (message.about_me !== "") {
+      obj.about_me = message.about_me;
+    }
     return obj;
   },
 
@@ -28472,6 +28538,9 @@ export const AddAppRequest = {
     message.creator_id = object.creator_id ?? "";
     message.role = object.role ?? 0;
     message.is_shadow = object.is_shadow ?? false;
+    message.app_url = object.app_url ?? "";
+    message.app_logo = object.app_logo ?? "";
+    message.about_me = object.about_me ?? "";
     return message;
   },
 };
@@ -28566,7 +28635,15 @@ export const ListAppsRequest = {
 };
 
 function createBaseUpdateAppRequest(): UpdateAppRequest {
-  return { id: "", appname: undefined, metadata: undefined, applogo: undefined, token: undefined, about: "" };
+  return {
+    id: "",
+    appname: undefined,
+    metadata: undefined,
+    applogo: undefined,
+    token: undefined,
+    about: "",
+    app_url: "",
+  };
 }
 
 export const UpdateAppRequest = {
@@ -28588,6 +28665,9 @@ export const UpdateAppRequest = {
     }
     if (message.about !== "") {
       writer.uint32(50).string(message.about);
+    }
+    if (message.app_url !== "") {
+      writer.uint32(58).string(message.app_url);
     }
     return writer;
   },
@@ -28641,6 +28721,13 @@ export const UpdateAppRequest = {
 
           message.about = reader.string();
           continue;
+        case 7:
+          if (tag !== 58) {
+            break;
+          }
+
+          message.app_url = reader.string();
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -28658,6 +28745,7 @@ export const UpdateAppRequest = {
       applogo: isSet(object.applogo) ? String(object.applogo) : undefined,
       token: isSet(object.token) ? String(object.token) : undefined,
       about: isSet(object.about) ? globalThis.String(object.about) : "",
+      app_url: isSet(object.app_url) ? globalThis.String(object.app_url) : "",
     };
   },
 
@@ -28681,6 +28769,9 @@ export const UpdateAppRequest = {
     if (message.about !== "") {
       obj.about = message.about;
     }
+    if (message.app_url !== "") {
+      obj.app_url = message.app_url;
+    }
     return obj;
   },
 
@@ -28695,6 +28786,7 @@ export const UpdateAppRequest = {
     message.applogo = object.applogo ?? undefined;
     message.token = object.token ?? undefined;
     message.about = object.about ?? "";
+    message.app_url = object.app_url ?? "";
     return message;
   },
 };

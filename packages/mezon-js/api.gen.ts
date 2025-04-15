@@ -98,16 +98,22 @@ export interface MezonUpdateCategoryBody {
 
 /**  */
 export interface ApiAddAppRequest {
+  //
+  about_me?: string;
+  //
+  app_logo?: string;
+  //App url.
+  app_url?: string;
   //The appname.
   appname?: string;
   //Creator of the app.
   creator_id?: string;
-  //Role of this app.
-  role?: ApiAppRole;
-  //The password.
-  token?: string;
   //Is shadow.
   is_shadow?: boolean;
+  //Role of this app.
+  role?: number;
+  //The password.
+  token?: string;
 }
 
 /**
@@ -483,6 +489,8 @@ export interface ApiApp {
   //
   about?: string;
   //
+  app_url?: string;
+  //
   applogo?: string;
   //
   appname?: string;
@@ -722,13 +730,25 @@ export interface ApiChannelDescList {
 }
 
 /**  */
+export interface ApiAddChannelAppRequest {
+  //App url.
+  app_url?: string;
+  //The appname.
+  appname?: string;
+  //Creator of the app.
+  creator_id?: string;
+  //Role of this app.
+  role?: number;
+  //The password.
+  token?: string;
+}
+
+/**  */
 export interface ApiChannelDescription {
   //
   active?: number;
   //
   age_restricted?: number;
-  //
-  app_url?: string;
   //
   category_id?: string;
   //
@@ -1112,7 +1132,7 @@ export interface ApiCreateCategoryDescRequest {
 /** Create a channel within clan. */
 export interface ApiCreateChannelDescRequest {
   //
-  app_url?: string;
+  app_id?: string;
   //
   category_id?: string;
   //The channel this message belongs to.

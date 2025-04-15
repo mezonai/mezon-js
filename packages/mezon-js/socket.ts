@@ -487,7 +487,7 @@ export interface ChannelUpdatedEvent {
   // is error
   is_error: boolean;
   // app url
-  app_url: string;
+  app_id: string;
   // e2ee
   e2ee: number;
   //
@@ -525,7 +525,7 @@ export interface ChannelCreatedEvent {
   // status
   status: number;
   // app url
-  app_url: string;
+  app_id: string;
   // clan_name
   clan_name: string;
 }
