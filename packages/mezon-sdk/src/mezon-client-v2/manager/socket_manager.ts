@@ -10,6 +10,12 @@ import { Session } from "../../session";
 import { EventManager } from "./event_manager";
 import { Clan } from "../structures/Clan";
 import { MezonClient } from "../client/MezonClient";
+import {
+  ReactMessageData,
+  RemoveMessageData,
+  ReplyMessageData,
+  UpdateMessageData,
+} from "../../interfaces";
 
 export class SocketManager {
   [key: string]: any;
@@ -86,16 +92,17 @@ export class SocketManager {
 
   async connectSocket(sessionToken: string) {
     const clans = await this.apiClient.listClanDescs(sessionToken);
-    console.log("clans", clans);
     clans.clandesc?.forEach(async (clan) => {
       await this.socket.joinClanChat(clan.clan_id || "");
       if (!this.client.clans.get(clan.clan_id!)) {
         const clanObj = new Clan(
           {
-            id: clan.clan_id,
-            name: clan?.clan_name,
+            id: clan.clan_id!,
+            name: clan?.clan_name ?? "unknown",
           },
-          this.client
+          this.client,
+          this.apiClient,
+          sessionToken
         );
         this.client.clans.set(clan.clan_id!, clanObj);
       }
@@ -141,7 +148,7 @@ export class SocketManager {
     }, retryInterval);
   }
 
-  async writeChatMessage(dataWriteMessage: any) {
+  async writeChatMessage(dataWriteMessage: ReplyMessageData) {
     try {
       const msgACK = await this.socket.writeChatMessage(
         dataWriteMessage.clan_id,
@@ -151,7 +158,7 @@ export class SocketManager {
         dataWriteMessage.content,
         dataWriteMessage?.mentions ?? [],
         dataWriteMessage?.attachments ?? [],
-        dataWriteMessage?.ref ?? [],
+        dataWriteMessage?.references ?? [],
         dataWriteMessage?.anonymous_message,
         dataWriteMessage?.mention_everyone,
         dataWriteMessage?.avatar,
@@ -160,12 +167,12 @@ export class SocketManager {
       );
       return msgACK;
     } catch (error) {
-      console.log("errorerror", error);
+      console.log("Error writeChatMessage", error);
       throw error;
     }
   }
 
-  async updateChatMessage(dataUpdateMessage: any) {
+  async updateChatMessage(dataUpdateMessage: UpdateMessageData) {
     try {
       const msgACK = await this.socket.updateChatMessage(
         dataUpdateMessage.clan_id,
@@ -176,16 +183,17 @@ export class SocketManager {
         dataUpdateMessage.content,
         dataUpdateMessage?.mentions ?? [],
         dataUpdateMessage?.attachments ?? [],
+        dataUpdateMessage?.hideEditted ?? false,
         dataUpdateMessage?.topic_id
       );
       return msgACK;
     } catch (error) {
-      console.log("errorerror", error);
+      console.log("Error updateChatMessage", error);
       throw error;
     }
   }
 
-  async writeMessageReaction(dataReactionMessage: any) {
+  async writeMessageReaction(dataReactionMessage: ReactMessageData) {
     try {
       const msgACK = await this.socket.writeMessageReaction(
         dataReactionMessage.id ?? "",
@@ -198,11 +206,27 @@ export class SocketManager {
         dataReactionMessage.emoji,
         dataReactionMessage.count,
         dataReactionMessage.message_sender_id,
-        dataReactionMessage.action_delete
+        dataReactionMessage?.action_delete ?? false
       );
       return msgACK;
     } catch (error) {
-      console.log("errorerror", error);
+      console.log("Error writeMessageReaction", error);
+      throw error;
+    }
+  }
+
+  async removeChatMessage(dataRemoveMessage: RemoveMessageData) {
+    try {
+      const msgACK = await this.socket.removeChatMessage(
+        dataRemoveMessage.clan_id,
+        dataRemoveMessage.channel_id,
+        dataRemoveMessage.mode,
+        dataRemoveMessage.is_public,
+        dataRemoveMessage.message_id
+      );
+      return msgACK;
+    } catch (error) {
+      console.log("Error removeChatMessage", error);
       throw error;
     }
   }

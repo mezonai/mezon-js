@@ -22,7 +22,7 @@ export function convertChanneltypeToChannelMode(channelType: string | number) {
       return ChannelStreamMode.STREAM_MODE_THREAD;
   }
 
-  return false;
+  return 0;
 }
 
 export function isValidUserId(userId: string | number) {
@@ -32,4 +32,8 @@ export function isValidUserId(userId: string | number) {
     return /^\d+$/.test(strId);
   }
   return false;
+}
+
+export function sleep(ms: number) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
 }

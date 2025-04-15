@@ -3,7 +3,10 @@ import Collection from "./Collection";
 export class CacheManager<K, V> {
   public cache: Collection<K, V>;
 
-  constructor(private fetcher: (id: K) => Promise<V>) {
+  constructor(
+    private fetcher: (id: K) => Promise<V>,
+    private maxSize: number = Infinity
+  ) {
     this.cache = new Collection<K, V>();
   }
 
@@ -16,6 +19,10 @@ export class CacheManager<K, V> {
   }
 
   set(id: K, value: V): void {
+    if (this.cache.size >= this.maxSize) {
+      const firstKey = this.cache.firstKey();
+      if (firstKey) this.cache.delete(firstKey);
+    }
     this.cache.set(id, value);
   }
 

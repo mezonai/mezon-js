@@ -1,5 +1,14 @@
-import { ChannelStreamMode } from "../../constants";
-import { SocketManager } from "../manager/socket_manager";
+import { SendTokenData, TokenSentEvent } from "../../interfaces";
+import { Clan } from "./Clan";
+export interface UserInitData {
+  id: string;
+  username: string;
+  clan_nick: string;
+  clan_avatar: string;
+  display_name: string;
+  avartar: string;
+  dmChannelId: string;
+}
 
 export class User {
   public id: string;
@@ -9,22 +18,26 @@ export class User {
   public display_name: string;
   public avartar: string;
   public dmChannelId: string;
+  private clan: Clan;
 
-  public socketManager: SocketManager;
-
-  constructor(public channelObj: any) {
-    this.id = channelObj.id;
-    this.avartar = channelObj.avartar;
-    this.dmChannelId = channelObj?.dmChannelId;
-    this.username = channelObj?.username;
-    this.clan_nick = channelObj?.clan_nick;
-    this.clan_avatar = channelObj?.clan_avatar;
-    this.display_name = channelObj?.display_name;
-    this.socketManager = channelObj?.socketManager;
+  constructor(initUserData: UserInitData, clan: Clan) {
+    this.id = initUserData.id;
+    this.avartar = initUserData.avartar;
+    this.dmChannelId = initUserData?.dmChannelId;
+    this.username = initUserData?.username;
+    this.clan_nick = initUserData?.clan_nick;
+    this.clan_avatar = initUserData?.clan_avatar;
+    this.display_name = initUserData?.display_name;
+    this.clan = clan;
   }
 
-  async send(data: any) {
-    // TODO: add logic send DM 
-    return await this.socketManager.writeChatMessage({ ...data, mode: ChannelStreamMode.STREAM_MODE_DM, is_public: false });
+  async sendToken(sendTokenData: SendTokenData) {
+    const dataSendToken: TokenSentEvent = {
+      receiver_id: this.id,
+      amount: sendTokenData.amount,
+      note: sendTokenData?.note ?? "",
+      extra_attribute: sendTokenData?.extra_attribute ?? "",
+    };
+    return this.clan.apiClient.sendToken(this.clan.sessionToken, dataSendToken);
   }
 }

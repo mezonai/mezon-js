@@ -1,5 +1,3 @@
-// src/utils/Collection.ts
-
 export default class Collection<K, V> extends Map<K, V> {
   constructor(entries?: readonly (readonly [K, V])[] | null) {
     super(entries ?? []);
@@ -28,6 +26,10 @@ export default class Collection<K, V> extends Map<K, V> {
 
   public first(): V | undefined {
     return this.values().next().value;
+  }
+
+  public firstKey(): K | undefined {
+    return this.keys().next().value;
   }
 
   public last(): V | undefined {
