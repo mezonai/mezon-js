@@ -946,8 +946,8 @@ export interface ChannelCreatedEvent {
     | undefined;
   /** status */
   status: number;
-  /** app url */
-  app_url: string;
+  /** app id */
+  app_id: string;
   /** clan_name */
   clan_name: string;
 }
@@ -1056,7 +1056,7 @@ export interface ChannelUpdatedEvent {
   /** channel private */
   channel_private: boolean;
   /** app url */
-  app_url: string;
+  app_id: string;
   /** e2ee */
   e2ee: number;
   /** topic */
@@ -1279,6 +1279,8 @@ export interface UserProfileRedis {
   mezon_id: string;
   /** app token */
   app_token: string;
+  /** app url */
+  app_url: string;
 }
 
 export interface FCMTokens {
@@ -7639,7 +7641,7 @@ function createBaseChannelCreatedEvent(): ChannelCreatedEvent {
     channel_private: 0,
     channel_type: undefined,
     status: 0,
-    app_url: "",
+    app_id: "",
     clan_name: "",
   };
 }
@@ -7673,8 +7675,8 @@ export const ChannelCreatedEvent = {
     if (message.status !== 0) {
       writer.uint32(72).int32(message.status);
     }
-    if (message.app_url !== "") {
-      writer.uint32(82).string(message.app_url);
+    if (message.app_id !== "") {
+      writer.uint32(82).string(message.app_id);
     }
     if (message.clan_name !== "") {
       writer.uint32(90).string(message.clan_name);
@@ -7757,7 +7759,7 @@ export const ChannelCreatedEvent = {
             break;
           }
 
-          message.app_url = reader.string();
+          message.app_id = reader.string();
           continue;
         case 11:
           if (tag !== 90) {
@@ -7786,7 +7788,7 @@ export const ChannelCreatedEvent = {
       channel_private: isSet(object.channel_private) ? globalThis.Number(object.channel_private) : 0,
       channel_type: isSet(object.channel_type) ? Number(object.channel_type) : undefined,
       status: isSet(object.status) ? globalThis.Number(object.status) : 0,
-      app_url: isSet(object.app_url) ? globalThis.String(object.app_url) : "",
+      app_id: isSet(object.app_id) ? globalThis.String(object.app_id) : "",
       clan_name: isSet(object.clan_name) ? globalThis.String(object.clan_name) : "",
     };
   },
@@ -7820,8 +7822,8 @@ export const ChannelCreatedEvent = {
     if (message.status !== 0) {
       obj.status = Math.round(message.status);
     }
-    if (message.app_url !== "") {
-      obj.app_url = message.app_url;
+    if (message.app_id !== "") {
+      obj.app_id = message.app_id;
     }
     if (message.clan_name !== "") {
       obj.clan_name = message.clan_name;
@@ -7843,7 +7845,7 @@ export const ChannelCreatedEvent = {
     message.channel_private = object.channel_private ?? 0;
     message.channel_type = object.channel_type ?? undefined;
     message.status = object.status ?? 0;
-    message.app_url = object.app_url ?? "";
+    message.app_id = object.app_id ?? "";
     message.clan_name = object.clan_name ?? "";
     return message;
   },
@@ -8675,7 +8677,7 @@ function createBaseChannelUpdatedEvent(): ChannelUpdatedEvent {
     meeting_code: "",
     is_error: false,
     channel_private: false,
-    app_url: "",
+    app_id: "",
     e2ee: 0,
     topic: "",
     age_restricted: 0,
@@ -8718,8 +8720,8 @@ export const ChannelUpdatedEvent = {
     if (message.channel_private !== false) {
       writer.uint32(88).bool(message.channel_private);
     }
-    if (message.app_url !== "") {
-      writer.uint32(98).string(message.app_url);
+    if (message.app_id !== "") {
+      writer.uint32(98).string(message.app_id);
     }
     if (message.e2ee !== 0) {
       writer.uint32(104).int32(message.e2ee);
@@ -8825,7 +8827,7 @@ export const ChannelUpdatedEvent = {
             break;
           }
 
-          message.app_url = reader.string();
+          message.app_id = reader.string();
           continue;
         case 13:
           if (tag !== 104) {
@@ -8877,7 +8879,7 @@ export const ChannelUpdatedEvent = {
       meeting_code: isSet(object.meeting_code) ? globalThis.String(object.meeting_code) : "",
       is_error: isSet(object.is_error) ? globalThis.Boolean(object.is_error) : false,
       channel_private: isSet(object.channel_private) ? globalThis.Boolean(object.channel_private) : false,
-      app_url: isSet(object.app_url) ? globalThis.String(object.app_url) : "",
+      app_id: isSet(object.app_id) ? globalThis.String(object.app_id) : "",
       e2ee: isSet(object.e2ee) ? globalThis.Number(object.e2ee) : 0,
       topic: isSet(object.topic) ? globalThis.String(object.topic) : "",
       age_restricted: isSet(object.age_restricted) ? globalThis.Number(object.age_restricted) : 0,
@@ -8920,8 +8922,8 @@ export const ChannelUpdatedEvent = {
     if (message.channel_private !== false) {
       obj.channel_private = message.channel_private;
     }
-    if (message.app_url !== "") {
-      obj.app_url = message.app_url;
+    if (message.app_id !== "") {
+      obj.app_id = message.app_id;
     }
     if (message.e2ee !== 0) {
       obj.e2ee = Math.round(message.e2ee);
@@ -8954,7 +8956,7 @@ export const ChannelUpdatedEvent = {
     message.meeting_code = object.meeting_code ?? "";
     message.is_error = object.is_error ?? false;
     message.channel_private = object.channel_private ?? false;
-    message.app_url = object.app_url ?? "";
+    message.app_id = object.app_id ?? "";
     message.e2ee = object.e2ee ?? 0;
     message.topic = object.topic ?? "";
     message.age_restricted = object.age_restricted ?? 0;
@@ -10463,6 +10465,7 @@ function createBaseUserProfileRedis(): UserProfileRedis {
     pubkey: "",
     mezon_id: "",
     app_token: "",
+    app_url: "",
   };
 }
 
@@ -10512,6 +10515,9 @@ export const UserProfileRedis = {
     }
     if (message.app_token !== "") {
       writer.uint32(122).string(message.app_token);
+    }
+    if (message.app_url !== "") {
+      writer.uint32(130).string(message.app_url);
     }
     return writer;
   },
@@ -10628,6 +10634,13 @@ export const UserProfileRedis = {
 
           message.app_token = reader.string();
           continue;
+        case 16:
+          if (tag !== 130) {
+            break;
+          }
+
+          message.app_url = reader.string();
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -10658,6 +10671,7 @@ export const UserProfileRedis = {
       pubkey: isSet(object.pubkey) ? globalThis.String(object.pubkey) : "",
       mezon_id: isSet(object.mezon_id) ? globalThis.String(object.mezon_id) : "",
       app_token: isSet(object.app_token) ? globalThis.String(object.app_token) : "",
+      app_url: isSet(object.app_url) ? globalThis.String(object.app_url) : "",
     };
   },
 
@@ -10708,6 +10722,9 @@ export const UserProfileRedis = {
     if (message.app_token !== "") {
       obj.app_token = message.app_token;
     }
+    if (message.app_url !== "") {
+      obj.app_url = message.app_url;
+    }
     return obj;
   },
 
@@ -10731,6 +10748,7 @@ export const UserProfileRedis = {
     message.pubkey = object.pubkey ?? "";
     message.mezon_id = object.mezon_id ?? "";
     message.app_token = object.app_token ?? "";
+    message.app_url = object.app_url ?? "";
     return message;
   },
 };
