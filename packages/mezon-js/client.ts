@@ -213,6 +213,8 @@ export enum WebrtcSignalingType {
   WEBRTC_SDP_ANSWER = 2,
   WEBRTC_ICE_CANDIDATE = 3,
   WEBRTC_SDP_QUIT = 4,
+  WEBRTC_SDP_TIMEOUT = 5,
+  WEBRTC_SDP_NOT_AVAILABLE = 6,
 }
 
 /** Response for an RPC function executed on the server. */
