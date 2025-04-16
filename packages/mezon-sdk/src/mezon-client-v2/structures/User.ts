@@ -1,4 +1,5 @@
 import { SendTokenData, TokenSentEvent } from "../../interfaces";
+import { ChannelManager } from "../manager/channel_manager";
 import { Clan } from "./Clan";
 export interface UserInitData {
   id: string;
@@ -19,8 +20,13 @@ export class User {
   public avartar: string;
   public dmChannelId: string;
   private clan: Clan;
+  private readonly channelManager: ChannelManager;
 
-  constructor(initUserData: UserInitData, clan: Clan) {
+  constructor(
+    initUserData: UserInitData,
+    clan: Clan,
+    channelManager: ChannelManager
+  ) {
     this.id = initUserData.id;
     this.avartar = initUserData.avartar;
     this.dmChannelId = initUserData?.dmChannelId;
@@ -29,6 +35,7 @@ export class User {
     this.clan_avatar = initUserData?.clan_avatar;
     this.display_name = initUserData?.display_name;
     this.clan = clan;
+    this.channelManager = channelManager;
   }
 
   async sendToken(sendTokenData: SendTokenData) {
@@ -39,5 +46,10 @@ export class User {
       extra_attribute: sendTokenData?.extra_attribute ?? "",
     };
     return this.clan.apiClient.sendToken(this.clan.sessionToken, dataSendToken);
+  }
+
+  async _createDmChannel() {
+    const dmChannel = await this.channelManager.createDMchannel(this.id);
+    return dmChannel ?? {};
   }
 }

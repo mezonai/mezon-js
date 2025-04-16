@@ -395,7 +395,8 @@ export class MezonApi {
   /** List channels */
   listChannelDescs(
     bearerToken: string,
-    channel_type = 3,
+    channel_type: number,
+    clan_id?: string,
     limit?: number,
     state?: number,
     cursor?: string,
@@ -407,6 +408,9 @@ export class MezonApi {
     queryParams.set("state", state);
     queryParams.set("cursor", cursor);
     queryParams.set("channel_type", channel_type);
+    if (clan_id) {
+      queryParams.set("clan_id", clan_id);
+    }
 
     let bodyJson: string = "";
 

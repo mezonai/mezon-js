@@ -50,4 +50,8 @@ export class CacheManager<K, V> {
   values(): IterableIterator<V> {
     return this.cache.values();
   }
+
+  delete(id: K): boolean {
+    return this.cache.delete(id);
+  }
 }

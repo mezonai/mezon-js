@@ -16,10 +16,12 @@ export class ChannelManager {
     private sessionManager: SessionManager
   ) {}
 
-  public async listAllDmChannels(sessionToken: string) {
+  public async initAllDmChannels(sessionToken: string) {
     if (!sessionToken) return;
-    const channels = await this.apiClient.listChannelDescs(sessionToken);
-    console.log('channels?.channeldesc', channels?.channeldesc)
+    const channels = await this.apiClient.listChannelDescs(
+      sessionToken,
+      ChannelType.CHANNEL_TYPE_DM
+    );
     this.allDmChannels = channels?.channeldesc
       .map((channel: { user_id: string | string[]; channel_id: string }) => {
         if (!channel?.user_id?.length) return;
@@ -29,7 +31,6 @@ export class ChannelManager {
       })
       .filter(Boolean)
       .reduce((acc: any, curr: any) => Object.assign(acc, curr), {});
-    console.log("allDmChannels", this.allDmChannels);
   }
 
   public getAllDmChannels() {

@@ -16,6 +16,7 @@ import {
   ReplyMessageData,
   UpdateMessageData,
 } from "../../interfaces";
+import { AsyncThrottleQueue } from "../utils/AsyncThrottleQueue";
 
 export class SocketManager {
   [key: string]: any;
@@ -30,6 +31,7 @@ export class SocketManager {
     private apiClient: MezonApi,
     private apiKey: string,
     private eventManager: EventManager,
+    private messageQueue: AsyncThrottleQueue,
     private client: MezonClient
   ) {
     this.socket = new DefaultSocket(
@@ -102,7 +104,9 @@ export class SocketManager {
           },
           this.client,
           this.apiClient,
-          sessionToken
+          this,
+          sessionToken,
+          this.messageQueue
         );
         this.client.clans.set(clan.clan_id!, clanObj);
       }

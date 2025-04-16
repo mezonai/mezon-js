@@ -38,6 +38,7 @@ import { CreateEventRequest } from "../../api/api";
 import { isValidUserId, sleep } from "../../utils/helper";
 import { ChannelManager } from "../manager/channel_manager";
 import { User, UserInitData } from "../structures/User";
+import { AsyncThrottleQueue } from "../utils/AsyncThrottleQueue";
 
 const DEFAULT_HOST = "api.mezon.vn";
 const DEFAULT_PORT = "443";
@@ -53,6 +54,7 @@ export class MezonClient extends EventEmitter {
   private readonly sessionManager: SessionManager;
   private clientId: string | undefined;
   private eventManager: EventManager;
+  private messageQueue = new AsyncThrottleQueue();
 
   public clans: CacheManager<string, Clan>;
   public channels: CacheManager<string, TextChannel>;
@@ -86,6 +88,7 @@ export class MezonClient extends EventEmitter {
       this.apiClient,
       this.token,
       this.eventManager,
+      this.messageQueue,
       this
     );
     this.channelManager = new ChannelManager(
@@ -102,7 +105,7 @@ export class MezonClient extends EventEmitter {
     const sessionConnected = await this.socketManager.connect(sockSession);
     if (sessionConnected?.token) {
       await this.socketManager.connectSocket(sessionConnected.token);
-      this.channelManager.listAllDmChannels(sessionConnected.token);
+      await this.channelManager.initAllDmChannels(sessionConnected.token);
     }
     this.emit("ready");
     return "Authenticate success!";
@@ -164,19 +167,47 @@ export class MezonClient extends EventEmitter {
 
   /** Listen to channel created */
   public onChannelCreated(listener: (e: ChannelCreatedEvent) => void): this {
-    this.on(Events.ChannelCreated.toString(), listener);
+    this.on(
+      Events.ChannelCreated.toString(),
+      async (e: ChannelCreatedEvent) => {
+        this._updateCacheChannel(e);
+        listener(e);
+      }
+    );
     return this;
   }
 
   /** Listen to channel updated */
   public onChannelUpdated(listener: (e: ChannelUpdatedEvent) => void): this {
-    this.on(Events.ChannelUpdated.toString(), listener);
+    this.on(
+      Events.ChannelUpdated.toString(),
+      async (e: ChannelUpdatedEvent) => {
+        if (
+          e.channel_type === ChannelType.CHANNEL_TYPE_THREAD &&
+          e.status === 1
+        ) {
+          const socket = this.socketManager.getSocket();
+          await socket.joinChat(e.clan_id, e.channel_id, e.channel_type, false);
+        }
+        this._updateCacheChannel(e);
+        listener(e);
+      }
+    );
     return this;
   }
 
   /** Listen to channel deleted */
   public onChannelDeleted(listener: (e: ChannelDeletedEvent) => void): this {
-    this.on(Events.ChannelDeleted.toString(), listener);
+    this.on(
+      Events.ChannelDeleted.toString(),
+      async (e: ChannelDeletedEvent) => {
+        const clan = this.clans.get(e.clan_id);
+        if (!clan) return;
+        this.channels.delete(e.channel_id!);
+        clan.channels.delete(e.channel_id!);
+        listener(e);
+      }
+    );
     return this;
   }
 
@@ -200,7 +231,18 @@ export class MezonClient extends EventEmitter {
 
   /** Listen to user leaved/removed in the channel */
   public onUserClanRemoved(listener: (e: UserClanRemovedEvent) => void): this {
-    this.on(Events.UserClanRemoved.toString(), listener);
+    this.on(
+      Events.UserClanRemoved.toString(),
+      async (e: UserClanRemovedEvent) => {
+        const clan = this.clans.get(e.clan_id);
+        if (!clan) return;
+        e.user_ids.forEach((user_id: string) => {
+          clan.users.delete(user_id);
+        });
+
+        listener(e);
+      }
+    );
     return this;
   }
 
@@ -208,7 +250,21 @@ export class MezonClient extends EventEmitter {
   public onUserChannelAdded(
     listener: (e: UserChannelAddedEvent) => void
   ): this {
-    this.on(Events.UserChannelAdded.toString(), listener);
+    this.on(
+      Events.UserChannelAdded.toString(),
+      async (e: UserChannelAddedEvent) => {
+        const socket = this.socketManager.getSocket();
+        if (e?.users?.some((user) => user.user_id == this.clientId)) {
+          await socket.joinChat(
+            e.clan_id,
+            e.channel_desc.channel_id!,
+            e.channel_desc.type!,
+            !e.channel_desc.channel_private
+          );
+        }
+        listener(e);
+      }
+    );
     return this;
   }
 
@@ -286,10 +342,11 @@ export class MezonClient extends EventEmitter {
   }
 
   private async _fetchClanFromAPI(id: string): Promise<Clan> {
-    throw Error(`Clan ${id} not in cache!`);
+    throw Error(`Can not find clan ${id}!`);
   }
 
   private async _fetchChannelFromAPI(id: string): Promise<TextChannel> {
+    console.log("_fetchChannelFromAPI", id);
     const session = this.sessionManager.getSession()!;
     const channelDetail = await this.apiClient.listChannelDetail(
       session.token,
@@ -301,7 +358,12 @@ export class MezonClient extends EventEmitter {
     const clanId = channelDetail.clan_id!;
 
     const clan = this.clans.get(clanId)!;
-    const channel = new TextChannel(channelDetail, clan, this.socketManager);
+    const channel = new TextChannel(
+      channelDetail,
+      clan,
+      this.socketManager,
+      this.messageQueue
+    );
     this.channels.set(channel.id!, channel);
     clan.channels.set(channel.id!, channel);
     return channel;
@@ -320,6 +382,9 @@ export class MezonClient extends EventEmitter {
       references,
     } = e;
     if (!clan_id || clan_id === "0") return;
+    const clan = this.clans.get(clan_id);
+    if (!clan) return;
+    await clan.loadChannels();
     const channel = await this.channels.fetch(channel_id);
     const messageRaw: MessageInitData = {
       id: message_id!,
@@ -332,8 +397,12 @@ export class MezonClient extends EventEmitter {
       attachments,
       references,
     };
-
-    const message = new Message(messageRaw, channel, this.socketManager);
+    const message = new Message(
+      messageRaw,
+      channel,
+      this.socketManager,
+      this.messageQueue
+    );
     channel.messages.set(message_id!, message);
   }
 
@@ -349,13 +418,14 @@ export class MezonClient extends EventEmitter {
     } = e;
     const clan = this.clans.get(clan_id!);
     if (clan) {
-      if (clan.users.get(sender_id!) || sender_id === this.clientId) return;
-      const allDmChannel = await this.channelManager.getAllDmChannels();
-      let userDmChannelId = allDmChannel?.[sender_id];
-      if (!userDmChannelId) {
-        userDmChannelId = (await this.channelManager.createDMchannel(sender_id))
-          ?.channel_id;
+      let userCache = clan.users.get(sender_id!);
+      let dmChannelId = userCache?.dmChannelId ?? "";
+
+      if (!userCache && sender_id !== this.clientId) {
+        const allDmChannel = this.channelManager.getAllDmChannels();
+        dmChannelId = allDmChannel?.[sender_id] ?? "";
       }
+
       const userRaw: UserInitData = {
         id: sender_id!,
         username: username!,
@@ -363,11 +433,29 @@ export class MezonClient extends EventEmitter {
         clan_avatar: clan_avatar!,
         avartar: avatar!,
         display_name: display_name!,
-        dmChannelId: userDmChannelId ?? "",
+        dmChannelId,
       };
 
-      const user = new User(userRaw, clan);
+      const user = new User(userRaw, clan, this.channelManager);
       clan.users.set(sender_id!, user);
     }
+  }
+
+  _updateCacheChannel(e: ChannelCreatedEvent | ChannelUpdatedEvent) {
+    const clan = this.clans.get(e.clan_id);
+    if (!clan) return;
+    const channelObj = new TextChannel(
+      {
+        ...e,
+        type: e.channel_type,
+        channel_private: e.channel_private ? 1 : 0,
+      },
+      clan,
+      this.socketManager,
+      this.messageQueue
+    );
+    this.channels.set(e.channel_id!, channelObj);
+    clan.channels.set(e.channel_id!, channelObj);
+    this.socketManager.getSocket().joinChat;
   }
 }

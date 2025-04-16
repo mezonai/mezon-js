@@ -2,6 +2,8 @@ import { MezonApi } from "../../api";
 import { ChannelType } from "../../constants";
 import { ApiVoiceChannelUserList } from "../../interfaces";
 import { MezonClient } from "../client/MezonClient";
+import { SocketManager } from "../manager/socket_manager";
+import { AsyncThrottleQueue } from "../utils/AsyncThrottleQueue";
 import { CacheManager } from "../utils/CacheManager";
 import { TextChannel } from "./TextChannel";
 import { User } from "./User";
@@ -19,18 +21,29 @@ export class Clan {
   public sessionToken: string;
   public apiClient: MezonApi;
 
+  // cache status load channel
+  private _channelsLoaded = false;
+
+  // cache status load channel call api
+  private _loadingPromise: Promise<void> | null = null;
   private readonly client: MezonClient;
+  private readonly socketManager: SocketManager;
+  private readonly messageQueue: AsyncThrottleQueue;
 
   constructor(
     initClanData: ClanInitData,
     client: MezonClient,
     apiClient: MezonApi,
-    sessionToken: string
+    socketManager: SocketManager,
+    sessionToken: string,
+    messageQueue: AsyncThrottleQueue
   ) {
     this.id = initClanData.id;
     this.name = initClanData.name;
     this.client = client;
     this.apiClient = apiClient;
+    this.socketManager = socketManager;
+    this.messageQueue = messageQueue;
     this.sessionToken = sessionToken;
     this.channels = new CacheManager<string, TextChannel>(async (channelId) => {
       return this.client.channels.fetch(channelId);
@@ -40,8 +53,40 @@ export class Clan {
       // TODO: If the channel's user cache is empty,
       // and channel.users.fetch(user_id) is called,
       // this function will be triggered to fetch the user detail from the API.
-      throw Error(`User ${user_id} not in cache!`);
+      throw Error(`User ${user_id} not found in this clan ${this.id}!`);
     });
+  }
+
+  async loadChannels(): Promise<void> {
+    if (this._channelsLoaded) return;
+    if (this._loadingPromise) return this._loadingPromise;
+
+    this._loadingPromise = (async () => {
+      console.log("---------- call api listChannelDescs");
+      const channels = await this.apiClient.listChannelDescs(
+        this.sessionToken,
+        ChannelType.CHANNEL_TYPE_CHANNEL,
+        this.id
+      );
+
+      const validChannels =
+        channels?.channeldesc?.filter((c: any) => Object.keys(c).length > 0) ??
+        [];
+      for (const channel of validChannels) {
+        const channelObj = new TextChannel(
+          { ...channel, type: channel?.channel_type || channel?.type },
+          this,
+          this.socketManager,
+          this.messageQueue
+        );
+        this.channels.set(channel.channel_id!, channelObj);
+        this.client.channels.set(channel.channel_id!, channelObj);
+      }
+
+      this._channelsLoaded = true;
+    })();
+
+    return this._loadingPromise;
   }
 
   async listChannelVoiceUsers(
