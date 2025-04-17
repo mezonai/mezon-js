@@ -60,35 +60,107 @@ export interface MessagePayLoad {
   mentions?: Array<ApiMessageMention>;
   attachments?: Array<ApiMessageAttachment>;
   ref?: Array<ApiMessageRef>;
+  hideEditted?: boolean;
+  topic_id?: string;
 }
 
+export interface ReplyMessageData {
+  clan_id: string;
+  channel_id: string;
+  mode: number;
+  is_public: boolean;
+  content: ChannelMessageContent;
+  mentions?: Array<ApiMessageMention>;
+  attachments?: Array<ApiMessageAttachment>;
+  references?: Array<ApiMessageRef>;
+  anonymous_message?: boolean;
+  mention_everyone?: boolean;
+  avatar?: string;
+  code?: number;
+  topic_id?: string;
+}
+
+export interface UpdateMessageData {
+  clan_id: string;
+  channel_id: string;
+  mode: number;
+  is_public: boolean;
+  message_id: string;
+  content: any;
+  mentions?: Array<ApiMessageMention>;
+  attachments?: Array<ApiMessageAttachment>;
+  hideEditted?: boolean;
+  topic_id?: string;
+  is_update_msg_topic?: boolean;
+}
+
+export interface ReactMessagePayload {
+  id?: string;
+  emoji_id: string;
+  emoji: string;
+  count: number;
+  action_delete?: boolean;
+}
+
+export interface ReactMessageData {
+  id?: string;
+  clan_id: string;
+  channel_id: string;
+  mode: number;
+  is_public: boolean;
+  message_id: string;
+  emoji_id: string;
+  emoji: string;
+  count: number;
+  message_sender_id: string;
+  action_delete?: boolean;
+}
+
+export interface RemoveMessageData {
+  clan_id: string;
+  channel_id: string;
+  mode: number;
+  is_public: boolean;
+  message_id: string;
+}
+
+export interface SendTokenData {
+  amount: number;
+  note?: string;
+  extra_attribute?: string;
+}
+
+export interface SendDmChannelPayload {
+  user_id: string;
+  content: ChannelMessageContent;
+}
 
 export interface MessageUserPayLoad {
   userId: string;
   msg: string;
-  messOptions?: {[x: string]: any} ;
+  messOptions?: { [x: string]: any };
   attachments?: Array<ApiMessageAttachment>;
   refs?: Array<ApiMessageRef>;
 }
 
 export interface ApiCreateChannelDescRequest {
-    //
-    category_id?: string;
-    //The channel this message belongs to.
-    channel_id?: string;
-    //
-    channel_label?: string;
-    //
-    channel_private?: number;
-    //
-    clan_id?: string;
-    //The parrent channel this message belongs to.
-    parent_id?: string;
-    //The channel type.
-    type?: number;
-    //The users to add.
-    user_ids?: Array<string>;
-  }
+  //
+  category_id?: string;
+  //The channel this message belongs to.
+  channel_id?: string;
+  //
+  channel_label?: string;
+  //
+  channel_private?: number;
+  //
+  clan_id?: string;
+  //The parrent channel this message belongs to.
+  parent_id?: string;
+  //The channel type.
+  type?: number;
+  //The users to add.
+  user_ids?: Array<string>;
+}
 
 /**  */
 export interface ApiChannelMessageHeader {
@@ -140,7 +212,7 @@ export interface ApiMessageAttachment {
   //
   width?: number;
   /** The channel this message belongs to. */
-  channel_id?:string;
+  channel_id?: string;
   // The mode
   mode?: number;
   // The channel label
@@ -178,7 +250,7 @@ export interface ApiMessageMention {
   // end position
   e?: number;
   /** The channel this message belongs to. */
-  channel_id?:string;
+  channel_id?: string;
   // The mode
   mode?: number;
   // The channel label
@@ -208,7 +280,7 @@ export interface ApiMessageReaction {
   // count of emoji
   count?: number;
   /** The channel this message belongs to. */
-  channel_id?:string;
+  channel_id?: string;
   // The mode
   mode?: number;
   // The channel label
@@ -222,11 +294,11 @@ export interface ApiMessageRef {
   //
   message_id?: string;
   //
-  message_ref_id?: string;
+  message_ref_id: string;
   //
   ref_type?: number;
   //
-  message_sender_id?: string;
+  message_sender_id: string;
   // original message sendre username
   message_sender_username?: string;
   // original message sender avatar
@@ -234,9 +306,9 @@ export interface ApiMessageRef {
   // original sender clan nick name
   message_sender_clan_nick?: string;
   // original sender display name
-  message_sender_display_name?:string;
+  message_sender_display_name?: string;
   //
-  content?:string;
+  content?: string;
   //
   has_attachment?: boolean;
   /** The channel this message belongs to. */
@@ -264,28 +336,28 @@ export interface ApiVoiceChannelUser {
 }
 
 export interface IEmbedProps {
-	color?: string;
-	title?: string;
-	url?: string;
-	author?: {
-		name: string;
-		icon_url?: string;
-		url?: string;
-	};
-	description?: string;
-	thumbnail?: { url: string };
-	fields?: Array<{ name: string; value: string; inline?: boolean }>;
-	image?: { url: string };
-	timestamp?: string;
-	footer?: { text: string; icon_url?: string };
+  color?: string;
+  title?: string;
+  url?: string;
+  author?: {
+    name: string;
+    icon_url?: string;
+    url?: string;
+  };
+  description?: string;
+  thumbnail?: { url: string };
+  fields?: Array<{ name: string; value: string; inline?: boolean }>;
+  image?: { url: string };
+  timestamp?: string;
+  footer?: { text: string; icon_url?: string };
 }
 
 export enum EButtonMessageStyle {
-	PRIMARY = 1,
-	SECONDARY = 2,
-	SUCCESS = 3,
-	DANGER = 4,
-	LINK = 5
+  PRIMARY = 1,
+  SECONDARY = 2,
+  SUCCESS = 3,
+  DANGER = 4,
+  LINK = 5,
 }
 
 export enum EMessageComponentType {
@@ -297,39 +369,45 @@ export enum EMessageComponentType {
 }
 
 export enum EMessageSelectType {
-	TEXT = 1,
-	USER = 2,
-	ROLE = 3,
-	CHANNEL = 4
+  TEXT = 1,
+  USER = 2,
+  ROLE = 3,
+  CHANNEL = 4,
 }
 
 export interface IButtonMessage {
-	label: string;
-	disable?: boolean;
-	style?: EButtonMessageStyle;
-	url?: string;
+  label: string;
+  disable?: boolean;
+  style?: EButtonMessageStyle;
+  url?: string;
 }
 
 export interface IMessageSelect {
-	// some select specific properties
+  // some select specific properties
 }
 
 export interface IMessageInput {
-	// some input specific properties
+  // some input specific properties
 }
 
 export interface IMessageComponent<T> {
-	type: EMessageComponentType;
-	id: string;
-	component: T;
+  type: EMessageComponentType;
+  id: string;
+  component: T;
 }
 
-export type ButtonComponent = IMessageComponent<IButtonMessage> & { type: EMessageComponentType.BUTTON };
-export type SelectComponent = IMessageComponent<IMessageSelect> & { type: EMessageComponentType.SELECT };
-export type InputComponent = IMessageComponent<IMessageInput> & { type: EMessageComponentType.INPUT };
+export type ButtonComponent = IMessageComponent<IButtonMessage> & {
+  type: EMessageComponentType.BUTTON;
+};
+export type SelectComponent = IMessageComponent<IMessageSelect> & {
+  type: EMessageComponentType.SELECT;
+};
+export type InputComponent = IMessageComponent<IMessageInput> & {
+  type: EMessageComponentType.INPUT;
+};
 
 export interface IMessageActionRow {
-	components: Array<ButtonComponent | SelectComponent | InputComponent>;
+  components: Array<ButtonComponent | SelectComponent | InputComponent>;
 }
 
 export interface ChannelMessageContent {
@@ -341,7 +419,7 @@ export interface ChannelMessageContent {
   mk?: MarkdownOnMessage[];
   vk?: LinkVoiceRoomOnMessage[];
   embed?: IEmbedProps[];
-	components?: IMessageActionRow[] | any;
+  components?: IMessageActionRow[] | any;
 }
 
 export interface StreamingLeavedEvent {
@@ -398,6 +476,12 @@ export interface Markdown {
 export enum EMarkdownType {
   TRIPLE = "t",
   SINGLE = "s",
+  PRE = "pre",
+  CODE = "c",
+  BOLD = "b",
+  LINK = "lk",
+  VOICE_LINK = "vk",
+  LINKYOUTUBE = "lk_yt",
 }
 
 /** A message sent on a channel. */
@@ -522,16 +606,12 @@ export interface ApiRegisterStreamingChannelResponse {
 }
 
 export interface TokenSentEvent {
-  // sender id
-  sender_id: string;
-  // sender name
-  sender_name: string;
-  // receiver
+  sender_id?: string;
+  sender_name?: string;
   receiver_id: string;
-  // amount of token
   amount: number;
-  // note of token
   note?: string;
+  extra_attribute?: string;
 }
 
 export interface DropdownBoxSelected {
@@ -545,8 +625,23 @@ export interface DropdownBoxSelected {
 
 export interface Client {
   authenticate: () => Promise<string>;
-  sendMessage: (clan_id: string, channel_id: string, mode: number, is_public: boolean, msg: ChannelMessageContent, mentions?: Array<ApiMessageMention>, attachments?: Array<ApiMessageAttachment>, ref?: Array<ApiMessageRef>) => Promise<ChannelMessageAck>;
+  sendMessage: (
+    clan_id: string,
+    channel_id: string,
+    mode: number,
+    is_public: boolean,
+    msg: ChannelMessageContent,
+    mentions?: Array<ApiMessageMention>,
+    attachments?: Array<ApiMessageAttachment>,
+    ref?: Array<ApiMessageRef>
+  ) => Promise<ChannelMessageAck>;
   on: (event: Events, func: Function) => void;
   remove: (event: string, func: (...args: any[]) => void) => void;
-  sendDMChannelMessage: (userId: string, msg: string, messOptions: {[x: string]: any}, attachments: Array<ApiMessageAttachment>, refs: Array<ApiMessageRef>) => Promise<ChannelMessageAck>; 
+  sendDMChannelMessage: (
+    userId: string,
+    msg: string,
+    messOptions: { [x: string]: any },
+    attachments: Array<ApiMessageAttachment>,
+    refs: Array<ApiMessageRef>
+  ) => Promise<ChannelMessageAck>;
 }
