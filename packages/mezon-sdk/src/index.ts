@@ -13,11 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-// export * from "./mezon-client/mezon_client"
-
-// use MezonClient-v2
-export * from "./mezon-client-v2/client/MezonClient" 
+export * from "./mezon-client/client/MezonClient" 
 
 export * from "./constants";
 
