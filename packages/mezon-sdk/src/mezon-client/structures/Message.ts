@@ -25,6 +25,7 @@ export interface MessageInitData {
   reactions?: ApiMessageReaction[];
   references?: ApiMessageRef[];
   topic_id?: string;
+  create_time_seconds?: number;
 }
 
 export class Message {
@@ -36,6 +37,7 @@ export class Message {
   public reactions: ApiMessageReaction[] | undefined;
   public references: ApiMessageRef[] | undefined;
   public topic_id: string | undefined;
+  public create_time_seconds: number | undefined;
   public channel: TextChannel;
 
   private readonly socketManager: SocketManager;
@@ -56,12 +58,19 @@ export class Message {
     this.reactions = initMessageData?.reactions;
     this.references = initMessageData?.references;
     this.topic_id = initMessageData?.topic_id;
+    this.create_time_seconds = initMessageData?.create_time_seconds;
     this.channel = channel;
     this.socketManager = socketManager;
     this.messageQueue = messageQueue;
   }
 
-  async reply(content: ChannelMessageContent) {
+  async reply(
+    content: ChannelMessageContent,
+    code?: number,
+    topic_id?: string,
+    anonymous_message?: boolean,
+    mention_everyone?: boolean
+  ) {
     return await this.messageQueue.enqueue(async () => {
       const user = await this.channel.clan.users.fetch(this.sender_id);
       const references: ApiMessageRef[] = [
@@ -81,12 +90,16 @@ export class Message {
         channel_id: this.channel.id!,
         content,
         references,
+        anonymous_message,
+        mention_everyone,
+        code,
+        topic_id: topic_id || this.topic_id,
       };
       return await this.socketManager.writeChatMessage(dataReply);
     });
   }
 
-  async update(content: ChannelMessageContent) {
+  async update(content: ChannelMessageContent, topic_id?: string) {
     return await this.messageQueue.enqueue(() => {
       const dataUpdate: UpdateMessageData = {
         clan_id: this.channel.clan.id,
@@ -95,7 +108,7 @@ export class Message {
         is_public: !this.channel.is_private,
         message_id: this.id,
         content,
-        topic_id: this.topic_id,
+        topic_id: topic_id || this.topic_id,
       };
       return this.socketManager.updateChatMessage(dataUpdate);
     });

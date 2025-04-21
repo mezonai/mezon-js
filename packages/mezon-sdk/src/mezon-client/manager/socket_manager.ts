@@ -94,7 +94,9 @@ export class SocketManager {
 
   async connectSocket(sessionToken: string) {
     const clans = await this.apiClient.listClanDescs(sessionToken);
-    clans.clandesc?.forEach(async (clan) => {
+    const clanList = clans?.clandesc ?? [];
+    clanList.push({ clan_id: "0", clan_name: "" });
+    clanList.forEach(async (clan) => {
       await this.socket.joinClanChat(clan.clan_id || "");
       if (!this.client.clans.get(clan.clan_id!)) {
         const clanObj = new Clan(

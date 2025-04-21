@@ -1,9 +1,7 @@
-import { ChannelStreamMode } from "../../constants";
 import {
   ApiChannelDescription,
   ChannelMessageContent,
   ReplyMessageData,
-  SendDmChannelPayload,
 } from "../../interfaces";
 import { convertChanneltypeToChannelMode } from "../../utils/helper";
 import { SocketManager } from "../manager/socket_manager";
@@ -51,7 +49,13 @@ export class TextChannel {
     this.messageQueue = messageQueue;
   }
 
-  async send(content: ChannelMessageContent) {
+  async send(
+    content: ChannelMessageContent,
+    code?: number,
+    topic_id?: string,
+    anonymous_message?: boolean,
+    mention_everyone?: boolean
+  ) {
     return this.messageQueue.enqueue(async () => {
       const dataSend: ReplyMessageData = {
         clan_id: this.clan.id,
@@ -59,31 +63,12 @@ export class TextChannel {
         mode: convertChanneltypeToChannelMode(this.channel_type!),
         is_public: !this.is_private,
         content,
+        anonymous_message,
+        mention_everyone,
+        code,
+        topic_id,
       };
       return await this.socketManager.writeChatMessage(dataSend);
-    });
-  }
-
-  async sendDM(sendDmPayload: SendDmChannelPayload) {
-    return this.messageQueue.enqueue(async () => {
-      const user = this.clan.users.get(sendDmPayload.user_id);
-      if (!user) throw Error("user not found!");
-      let dmChannelId = user?.dmChannelId;
-      if (!user.dmChannelId) {
-        console.log("--------------- call api createDMchannel");
-        const dmChannel = await user._createDmChannel();
-        user.dmChannelId = dmChannel?.channel_id ?? "";
-      }
-      if (!dmChannelId)
-        throw Error(`Can not get dmChannelId for this user ${user.id}!`);
-      const dataSendDm = {
-        clan_id: "0",
-        channel_id: dmChannelId,
-        mode: ChannelStreamMode.STREAM_MODE_DM,
-        is_public: false,
-        content: sendDmPayload.content,
-      };
-      return await this.socketManager.writeChatMessage(dataSendDm);
     });
   }
 }
