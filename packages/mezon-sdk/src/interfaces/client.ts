@@ -130,11 +130,6 @@ export interface SendTokenData {
   extra_attribute?: string;
 }
 
-export interface SendDmChannelPayload {
-  user_id: string;
-  content: ChannelMessageContent;
-}
-
 export interface MessageUserPayLoad {
   userId: string;
   msg: string;

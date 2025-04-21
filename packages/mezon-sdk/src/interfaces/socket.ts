@@ -140,6 +140,8 @@ export interface AddUsers {
   avatar: string;
   // Username to follow.
   username: string;
+// displayName to follow.
+  display_name: string;
 }
 
 export interface UserChannelRemoved {
