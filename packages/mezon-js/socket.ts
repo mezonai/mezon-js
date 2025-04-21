@@ -261,6 +261,10 @@ export interface MessageTypingEvent {
   sender_id: string;
   // Is public
   is_public: boolean;
+  // sender username
+  sender_username: string;
+  // sender display name
+  sender_display_name: string;
 }
 
 // user profile updated event
@@ -1153,7 +1157,8 @@ export interface Socket {
     clan_id: string,
     channel_id: string,
     mode: number,
-    is_public: boolean
+    is_public: boolean,
+    sender_display_name: string,
   ): Promise<MessageTypingEvent>;
 
   /** Send message reaction */
@@ -2442,7 +2447,8 @@ export class DefaultSocket implements Socket {
     clan_id: string,
     channel_id: string,
     mode: number,
-    is_public: boolean
+    is_public: boolean,
+    sender_display_name: string
   ): Promise<MessageTypingEvent> {
     const response = await this.send({
       message_typing_event: {
@@ -2450,6 +2456,7 @@ export class DefaultSocket implements Socket {
         channel_id: channel_id,
         mode: mode,
         is_public: is_public,
+        sender_display_name: sender_display_name
       },
     });
     return response.message_typing_event;

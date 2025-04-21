@@ -169,6 +169,7 @@ import {
   ApiUpdateRoleOrderRequest,
   ApiGenerateMezonMeetResponse,
   ApiGenerateMeetTokenExternalResponse,
+  ApiUpdateClanOrderRequest,
 } from "./api.gen";
 
 import { Session } from "./session";
@@ -5209,6 +5210,26 @@ export class Client {
       .generateMeetTokenExternal("", token, displayName, isGuest)
       .then((response: ApiGenerateMeetTokenExternalResponse) => {
         return Promise.resolve(response);
+      });
+  }
+
+  /** Update clan order to view. */
+  async updateClanOrder(
+    session: Session,
+    request: ApiUpdateClanOrderRequest
+  ): Promise<boolean> {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired(Date.now() / 1000)
+    ) {
+      await this.sessionRefresh(session);
+    }
+
+    return this.apiClient
+      .updateClanOrder(session.token, request)
+      .then((response: any) => {
+        return response !== undefined;
       });
   }
 }

@@ -821,6 +821,10 @@ export interface MessageTypingEvent {
   mode: number;
   /** is public */
   is_public: boolean;
+  /** sender username */
+  sender_username: string;
+  /** sender display name */
+  sender_display_name: string;
 }
 
 /** Voice Joined event */
@@ -6616,7 +6620,15 @@ export const LastSeenMessageEvent = {
 };
 
 function createBaseMessageTypingEvent(): MessageTypingEvent {
-  return { clan_id: "", channel_id: "", sender_id: "", mode: 0, is_public: false };
+  return {
+    clan_id: "",
+    channel_id: "",
+    sender_id: "",
+    mode: 0,
+    is_public: false,
+    sender_username: "",
+    sender_display_name: "",
+  };
 }
 
 export const MessageTypingEvent = {
@@ -6635,6 +6647,12 @@ export const MessageTypingEvent = {
     }
     if (message.is_public !== false) {
       writer.uint32(40).bool(message.is_public);
+    }
+    if (message.sender_username !== "") {
+      writer.uint32(50).string(message.sender_username);
+    }
+    if (message.sender_display_name !== "") {
+      writer.uint32(58).string(message.sender_display_name);
     }
     return writer;
   },
@@ -6681,6 +6699,20 @@ export const MessageTypingEvent = {
 
           message.is_public = reader.bool();
           continue;
+        case 6:
+          if (tag !== 50) {
+            break;
+          }
+
+          message.sender_username = reader.string();
+          continue;
+        case 7:
+          if (tag !== 58) {
+            break;
+          }
+
+          message.sender_display_name = reader.string();
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -6697,6 +6729,8 @@ export const MessageTypingEvent = {
       sender_id: isSet(object.sender_id) ? globalThis.String(object.sender_id) : "",
       mode: isSet(object.mode) ? globalThis.Number(object.mode) : 0,
       is_public: isSet(object.is_public) ? globalThis.Boolean(object.is_public) : false,
+      sender_username: isSet(object.sender_username) ? globalThis.String(object.sender_username) : "",
+      sender_display_name: isSet(object.sender_display_name) ? globalThis.String(object.sender_display_name) : "",
     };
   },
 
@@ -6717,6 +6751,12 @@ export const MessageTypingEvent = {
     if (message.is_public !== false) {
       obj.is_public = message.is_public;
     }
+    if (message.sender_username !== "") {
+      obj.sender_username = message.sender_username;
+    }
+    if (message.sender_display_name !== "") {
+      obj.sender_display_name = message.sender_display_name;
+    }
     return obj;
   },
 
@@ -6730,6 +6770,8 @@ export const MessageTypingEvent = {
     message.sender_id = object.sender_id ?? "";
     message.mode = object.mode ?? 0;
     message.is_public = object.is_public ?? false;
+    message.sender_username = object.sender_username ?? "";
+    message.sender_display_name = object.sender_display_name ?? "";
     return message;
   },
 };
