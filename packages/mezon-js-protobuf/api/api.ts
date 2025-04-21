@@ -1668,6 +1668,8 @@ export interface ClanDesc {
   welcome_channel_id: string;
   /** Onboarding_banner. */
   onboarding_banner: string;
+  /** clan order */
+  clan_order: number;
 }
 
 /** Clan information */
@@ -1816,6 +1818,16 @@ export interface UpdateClanProfileRequest {
   nick_name: string;
   /** avatar */
   avatar: string;
+}
+
+/** Update Clan Order Request */
+export interface UpdateClanOrderRequest {
+  clans_order: UpdateClanOrderRequest_ClanOrder[];
+}
+
+export interface UpdateClanOrderRequest_ClanOrder {
+  order: number;
+  clan_id: string;
 }
 
 /** Category to group the channel */
@@ -15166,6 +15178,7 @@ function createBaseClanDesc(): ClanDesc {
     is_onboarding: false,
     welcome_channel_id: "",
     onboarding_banner: "",
+    clan_order: 0,
   };
 }
 
@@ -15200,6 +15213,9 @@ export const ClanDesc = {
     }
     if (message.onboarding_banner !== "") {
       writer.uint32(82).string(message.onboarding_banner);
+    }
+    if (message.clan_order !== 0) {
+      writer.uint32(88).int32(message.clan_order);
     }
     return writer;
   },
@@ -15281,6 +15297,13 @@ export const ClanDesc = {
 
           message.onboarding_banner = reader.string();
           continue;
+        case 11:
+          if (tag !== 88) {
+            break;
+          }
+
+          message.clan_order = reader.int32();
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -15302,6 +15325,7 @@ export const ClanDesc = {
       is_onboarding: isSet(object.is_onboarding) ? globalThis.Boolean(object.is_onboarding) : false,
       welcome_channel_id: isSet(object.welcome_channel_id) ? globalThis.String(object.welcome_channel_id) : "",
       onboarding_banner: isSet(object.onboarding_banner) ? globalThis.String(object.onboarding_banner) : "",
+      clan_order: isSet(object.clan_order) ? globalThis.Number(object.clan_order) : 0,
     };
   },
 
@@ -15337,6 +15361,9 @@ export const ClanDesc = {
     if (message.onboarding_banner !== "") {
       obj.onboarding_banner = message.onboarding_banner;
     }
+    if (message.clan_order !== 0) {
+      obj.clan_order = Math.round(message.clan_order);
+    }
     return obj;
   },
 
@@ -15355,6 +15382,7 @@ export const ClanDesc = {
     message.is_onboarding = object.is_onboarding ?? false;
     message.welcome_channel_id = object.welcome_channel_id ?? "";
     message.onboarding_banner = object.onboarding_banner ?? "";
+    message.clan_order = object.clan_order ?? 0;
     return message;
   },
 };
@@ -16608,6 +16636,145 @@ export const UpdateClanProfileRequest = {
     message.clan_id = object.clan_id ?? "";
     message.nick_name = object.nick_name ?? "";
     message.avatar = object.avatar ?? "";
+    return message;
+  },
+};
+
+function createBaseUpdateClanOrderRequest(): UpdateClanOrderRequest {
+  return { clans_order: [] };
+}
+
+export const UpdateClanOrderRequest = {
+  encode(message: UpdateClanOrderRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    for (const v of message.clans_order) {
+      UpdateClanOrderRequest_ClanOrder.encode(v!, writer.uint32(10).fork()).ldelim();
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): UpdateClanOrderRequest {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseUpdateClanOrderRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.clans_order.push(UpdateClanOrderRequest_ClanOrder.decode(reader, reader.uint32()));
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): UpdateClanOrderRequest {
+    return {
+      clans_order: globalThis.Array.isArray(object?.clans_order)
+        ? object.clans_order.map((e: any) => UpdateClanOrderRequest_ClanOrder.fromJSON(e))
+        : [],
+    };
+  },
+
+  toJSON(message: UpdateClanOrderRequest): unknown {
+    const obj: any = {};
+    if (message.clans_order?.length) {
+      obj.clans_order = message.clans_order.map((e) => UpdateClanOrderRequest_ClanOrder.toJSON(e));
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<UpdateClanOrderRequest>, I>>(base?: I): UpdateClanOrderRequest {
+    return UpdateClanOrderRequest.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<UpdateClanOrderRequest>, I>>(object: I): UpdateClanOrderRequest {
+    const message = createBaseUpdateClanOrderRequest();
+    message.clans_order = object.clans_order?.map((e) => UpdateClanOrderRequest_ClanOrder.fromPartial(e)) || [];
+    return message;
+  },
+};
+
+function createBaseUpdateClanOrderRequest_ClanOrder(): UpdateClanOrderRequest_ClanOrder {
+  return { order: 0, clan_id: "" };
+}
+
+export const UpdateClanOrderRequest_ClanOrder = {
+  encode(message: UpdateClanOrderRequest_ClanOrder, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.order !== 0) {
+      writer.uint32(8).int32(message.order);
+    }
+    if (message.clan_id !== "") {
+      writer.uint32(18).string(message.clan_id);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): UpdateClanOrderRequest_ClanOrder {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseUpdateClanOrderRequest_ClanOrder();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 8) {
+            break;
+          }
+
+          message.order = reader.int32();
+          continue;
+        case 2:
+          if (tag !== 18) {
+            break;
+          }
+
+          message.clan_id = reader.string();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): UpdateClanOrderRequest_ClanOrder {
+    return {
+      order: isSet(object.order) ? globalThis.Number(object.order) : 0,
+      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
+    };
+  },
+
+  toJSON(message: UpdateClanOrderRequest_ClanOrder): unknown {
+    const obj: any = {};
+    if (message.order !== 0) {
+      obj.order = Math.round(message.order);
+    }
+    if (message.clan_id !== "") {
+      obj.clan_id = message.clan_id;
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<UpdateClanOrderRequest_ClanOrder>, I>>(
+    base?: I,
+  ): UpdateClanOrderRequest_ClanOrder {
+    return UpdateClanOrderRequest_ClanOrder.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<UpdateClanOrderRequest_ClanOrder>, I>>(
+    object: I,
+  ): UpdateClanOrderRequest_ClanOrder {
+    const message = createBaseUpdateClanOrderRequest_ClanOrder();
+    message.order = object.order ?? 0;
+    message.clan_id = object.clan_id ?? "";
     return message;
   },
 };
