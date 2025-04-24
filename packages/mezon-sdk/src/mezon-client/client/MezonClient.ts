@@ -214,15 +214,16 @@ export class MezonClient extends EventEmitter {
   /** Listen to user send token to each other */
   public onTokenSend(listener: (e: TokenSentEvent) => void): this {
     this.on(Events.TokenSend.toString(), async (e: TokenSentEvent) => {
-      if (e.sender_id !== this.clientId) return;
-      const clan = this.clans.get("0");
-      const receiver = await clan?.users.fetch(e.receiver_id);
-      await receiver?.sendDM(
-        {
-          t: `Funds Transferred: ${e.amount}₫ | ${e.note}`,
-        },
-        TypeMessage.SendToken
-      );
+      if (e.sender_id === this.clientId) {
+        const clan = this.clans.get("0");
+        const receiver = await clan?.users.fetch(e.receiver_id);
+        await receiver?.sendDM(
+          {
+            t: `Funds Transferred: ${e.amount}₫ | ${e.note}`,
+          },
+          TypeMessage.SendToken
+        );
+      }
       listener(e);
     });
     return this;
