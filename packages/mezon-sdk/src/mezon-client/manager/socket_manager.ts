@@ -17,6 +17,7 @@ import {
   UpdateMessageData,
 } from "../../interfaces";
 import { AsyncThrottleQueue } from "../utils/AsyncThrottleQueue";
+import { sleep } from "../../utils/helper";
 
 export class SocketManager {
   [key: string]: any;
@@ -180,6 +181,7 @@ export class SocketManager {
 
   async updateChatMessage(dataUpdateMessage: UpdateMessageData) {
     try {
+      await sleep(1000);
       const msgACK = await this.socket.updateChatMessage(
         dataUpdateMessage.clan_id,
         dataUpdateMessage.channel_id,
