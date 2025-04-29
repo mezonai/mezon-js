@@ -303,6 +303,9 @@ export class MezonClient extends EventEmitter {
     this.on(Events.AddClanUser.toString(), async (e: AddClanUserEvent) => {
       const clan = this.clans.get(e.clan_id);
       if (!clan) return;
+      if (e.user.user_id === this.clientId) {
+        this.socketManager.getSocket().joinClanChat(e.clan_id);
+      }
       const userRaw: UserInitData = {
         id: e.user.user_id!,
         username: e.user.username!,
