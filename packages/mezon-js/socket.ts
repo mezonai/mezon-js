@@ -1207,25 +1207,6 @@ export interface Socket {
     no_clear: boolean
   ): Promise<CustomStatusEvent>;
 
-  /** send voice joined */
-  writeVoiceJoined(
-    id: string,
-    clanId: string,
-    clanName: string,
-    voiceChannelId: string,
-    voiceChannelLabel: string,
-    participant: string,
-    lastScreenshot: string
-  ): Promise<VoiceJoinedEvent>;
-
-  /** send voice leaved */
-  writeVoiceLeaved(
-    id: string,
-    clanId: string,
-    voiceChannelId: string,
-    voiceUserId: string
-  ): Promise<VoiceLeavedEvent>;
-
   /* Set the heartbeat timeout used by the socket to detect if it has lost connectivity to the server. */
   setHeartbeatTimeoutMs(ms: number): void;
 
@@ -2504,46 +2485,6 @@ export class DefaultSocket implements Socket {
       },
     });
     return response.last_pin_message_event;
-  }
-
-  async writeVoiceJoined(
-    id: string,
-    clanId: string,
-    clanName: string,
-    voiceChannelId: string,
-    voiceChannelLabel: string,
-    participant: string,
-    lastScreenshot: string
-  ): Promise<VoiceJoinedEvent> {
-    const response = await this.send({
-      voice_joined_event: {
-        clan_id: clanId,
-        clan_name: clanName,
-        id: id,
-        participant: participant,
-        voice_channel_id: voiceChannelId,
-        voice_channel_label: voiceChannelLabel,
-        last_screenshot: lastScreenshot,
-      },
-    });
-    return response.voice_joined_event;
-  }
-
-  async writeVoiceLeaved(
-    id: string,
-    clanId: string,
-    voiceChannelId: string,
-    voiceUserId: string
-  ): Promise<VoiceLeavedEvent> {
-    const response = await this.send({
-      voice_leaved_event: {
-        id: id,
-        clan_id: clanId,
-        voice_channel_id: voiceChannelId,
-        voice_user_id: voiceUserId,
-      },
-    });
-    return response.voice_leaved_event;
   }
 
   async writeCustomStatus(

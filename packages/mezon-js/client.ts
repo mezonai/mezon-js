@@ -170,6 +170,7 @@ import {
   ApiGenerateMezonMeetResponse,
   ApiGenerateMeetTokenExternalResponse,
   ApiUpdateClanOrderRequest,
+  ApiMessage2InboxRequest,
 } from "./api.gen";
 
 import { Session } from "./session";
@@ -2810,7 +2811,7 @@ export class Client {
     session: Session,
     roleId: string,
     request: MezonUpdateAppBody
-  ): Promise<boolean> {
+  ): Promise<ApiApp> {
     if (
       this.autoRefreshSession &&
       session.refresh_token &&
@@ -2821,8 +2822,8 @@ export class Client {
 
     return this.apiClient
       .updateApp(session.token, roleId, request)
-      .then((response: any) => {
-        return response !== undefined;
+      .then((response: ApiApp) => {
+        return Promise.resolve(response);
       });
   }
 
@@ -3120,6 +3121,26 @@ export class Client {
     return this.apiClient
       .searchMessage(session.token, request)
       .then((response: ApiSearchMessageResponse) => {
+        return Promise.resolve(response);
+      });
+  }
+
+  /** */
+  async createMessage2Inbox(
+    session: Session,
+    request: ApiMessage2InboxRequest
+  ): Promise<ApiChannelMessageHeader> {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired(Date.now() / 1000)
+    ) {
+      await this.sessionRefresh(session);
+    }
+
+    return this.apiClient
+      .createMessage2Inbox(session.token, request)
+      .then((response: ApiChannelMessageHeader) => {
         return Promise.resolve(response);
       });
   }
@@ -3449,7 +3470,7 @@ export class Client {
       });
   }
 
-  async addApp(session: Session, request: ApiAddAppRequest): Promise<boolean> {
+  async addApp(session: Session, request: ApiAddAppRequest): Promise<ApiApp> {
     if (
       this.autoRefreshSession &&
       session.refresh_token &&
@@ -3461,7 +3482,7 @@ export class Client {
     return this.apiClient
       .addApp(session.token, request)
       .then((response: any) => {
-        return response !== undefined;
+        return Promise.resolve(response);
       });
   }
 
