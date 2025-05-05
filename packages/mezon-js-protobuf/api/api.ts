@@ -1905,7 +1905,7 @@ export interface ChannelMessageHeader {
   /** the attachment */
   attachment: string;
   /** the reference */
-  referece: string;
+  reference: string;
   /** the mention */
   mention: string;
   /** the reactions */
@@ -4061,6 +4061,23 @@ export interface GenerateHashChannelAppsRequest {
 
 export interface GenerateHashChannelAppsResponse {
   web_app_data: string;
+}
+
+export interface GetMezonAccountRequest {
+  secret: string;
+  email: string;
+}
+
+export interface Message2InboxRequest {
+  message_id: string;
+  channel_id: string;
+  clan_id: string;
+  avatar: string;
+  content: string;
+  mentions: string;
+  attachments: string;
+  reactions: string;
+  references: string;
 }
 
 function createBaseAccount(): Account {
@@ -17516,7 +17533,7 @@ function createBaseChannelMessageHeader(): ChannelMessageHeader {
     sender_id: "",
     content: "",
     attachment: "",
-    referece: "",
+    reference: "",
     mention: "",
     reaction: "",
     repliers: [],
@@ -17540,8 +17557,8 @@ export const ChannelMessageHeader = {
     if (message.attachment !== "") {
       writer.uint32(42).string(message.attachment);
     }
-    if (message.referece !== "") {
-      writer.uint32(50).string(message.referece);
+    if (message.reference !== "") {
+      writer.uint32(50).string(message.reference);
     }
     if (message.mention !== "") {
       writer.uint32(58).string(message.mention);
@@ -17602,7 +17619,7 @@ export const ChannelMessageHeader = {
             break;
           }
 
-          message.referece = reader.string();
+          message.reference = reader.string();
           continue;
         case 7:
           if (tag !== 58) {
@@ -17641,7 +17658,7 @@ export const ChannelMessageHeader = {
       sender_id: isSet(object.sender_id) ? globalThis.String(object.sender_id) : "",
       content: isSet(object.content) ? globalThis.String(object.content) : "",
       attachment: isSet(object.attachment) ? globalThis.String(object.attachment) : "",
-      referece: isSet(object.referece) ? globalThis.String(object.referece) : "",
+      reference: isSet(object.reference) ? globalThis.String(object.reference) : "",
       mention: isSet(object.mention) ? globalThis.String(object.mention) : "",
       reaction: isSet(object.reaction) ? globalThis.String(object.reaction) : "",
       repliers: globalThis.Array.isArray(object?.repliers) ? object.repliers.map((e: any) => globalThis.String(e)) : [],
@@ -17665,8 +17682,8 @@ export const ChannelMessageHeader = {
     if (message.attachment !== "") {
       obj.attachment = message.attachment;
     }
-    if (message.referece !== "") {
-      obj.referece = message.referece;
+    if (message.reference !== "") {
+      obj.reference = message.reference;
     }
     if (message.mention !== "") {
       obj.mention = message.mention;
@@ -17690,7 +17707,7 @@ export const ChannelMessageHeader = {
     message.sender_id = object.sender_id ?? "";
     message.content = object.content ?? "";
     message.attachment = object.attachment ?? "";
-    message.referece = object.referece ?? "";
+    message.reference = object.reference ?? "";
     message.mention = object.mention ?? "";
     message.reaction = object.reaction ?? "";
     message.repliers = object.repliers?.map((e) => e) || [];
@@ -40462,6 +40479,269 @@ export const GenerateHashChannelAppsResponse = {
   ): GenerateHashChannelAppsResponse {
     const message = createBaseGenerateHashChannelAppsResponse();
     message.web_app_data = object.web_app_data ?? "";
+    return message;
+  },
+};
+
+function createBaseGetMezonAccountRequest(): GetMezonAccountRequest {
+  return { secret: "", email: "" };
+}
+
+export const GetMezonAccountRequest = {
+  encode(message: GetMezonAccountRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.secret !== "") {
+      writer.uint32(10).string(message.secret);
+    }
+    if (message.email !== "") {
+      writer.uint32(18).string(message.email);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): GetMezonAccountRequest {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseGetMezonAccountRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.secret = reader.string();
+          continue;
+        case 2:
+          if (tag !== 18) {
+            break;
+          }
+
+          message.email = reader.string();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): GetMezonAccountRequest {
+    return {
+      secret: isSet(object.secret) ? globalThis.String(object.secret) : "",
+      email: isSet(object.email) ? globalThis.String(object.email) : "",
+    };
+  },
+
+  toJSON(message: GetMezonAccountRequest): unknown {
+    const obj: any = {};
+    if (message.secret !== "") {
+      obj.secret = message.secret;
+    }
+    if (message.email !== "") {
+      obj.email = message.email;
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<GetMezonAccountRequest>, I>>(base?: I): GetMezonAccountRequest {
+    return GetMezonAccountRequest.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<GetMezonAccountRequest>, I>>(object: I): GetMezonAccountRequest {
+    const message = createBaseGetMezonAccountRequest();
+    message.secret = object.secret ?? "";
+    message.email = object.email ?? "";
+    return message;
+  },
+};
+
+function createBaseMessage2InboxRequest(): Message2InboxRequest {
+  return {
+    message_id: "",
+    channel_id: "",
+    clan_id: "",
+    avatar: "",
+    content: "",
+    mentions: "",
+    attachments: "",
+    reactions: "",
+    references: "",
+  };
+}
+
+export const Message2InboxRequest = {
+  encode(message: Message2InboxRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.message_id !== "") {
+      writer.uint32(10).string(message.message_id);
+    }
+    if (message.channel_id !== "") {
+      writer.uint32(18).string(message.channel_id);
+    }
+    if (message.clan_id !== "") {
+      writer.uint32(26).string(message.clan_id);
+    }
+    if (message.avatar !== "") {
+      writer.uint32(34).string(message.avatar);
+    }
+    if (message.content !== "") {
+      writer.uint32(42).string(message.content);
+    }
+    if (message.mentions !== "") {
+      writer.uint32(50).string(message.mentions);
+    }
+    if (message.attachments !== "") {
+      writer.uint32(58).string(message.attachments);
+    }
+    if (message.reactions !== "") {
+      writer.uint32(66).string(message.reactions);
+    }
+    if (message.references !== "") {
+      writer.uint32(74).string(message.references);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): Message2InboxRequest {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseMessage2InboxRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.message_id = reader.string();
+          continue;
+        case 2:
+          if (tag !== 18) {
+            break;
+          }
+
+          message.channel_id = reader.string();
+          continue;
+        case 3:
+          if (tag !== 26) {
+            break;
+          }
+
+          message.clan_id = reader.string();
+          continue;
+        case 4:
+          if (tag !== 34) {
+            break;
+          }
+
+          message.avatar = reader.string();
+          continue;
+        case 5:
+          if (tag !== 42) {
+            break;
+          }
+
+          message.content = reader.string();
+          continue;
+        case 6:
+          if (tag !== 50) {
+            break;
+          }
+
+          message.mentions = reader.string();
+          continue;
+        case 7:
+          if (tag !== 58) {
+            break;
+          }
+
+          message.attachments = reader.string();
+          continue;
+        case 8:
+          if (tag !== 66) {
+            break;
+          }
+
+          message.reactions = reader.string();
+          continue;
+        case 9:
+          if (tag !== 74) {
+            break;
+          }
+
+          message.references = reader.string();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): Message2InboxRequest {
+    return {
+      message_id: isSet(object.message_id) ? globalThis.String(object.message_id) : "",
+      channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "",
+      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
+      avatar: isSet(object.avatar) ? globalThis.String(object.avatar) : "",
+      content: isSet(object.content) ? globalThis.String(object.content) : "",
+      mentions: isSet(object.mentions) ? globalThis.String(object.mentions) : "",
+      attachments: isSet(object.attachments) ? globalThis.String(object.attachments) : "",
+      reactions: isSet(object.reactions) ? globalThis.String(object.reactions) : "",
+      references: isSet(object.references) ? globalThis.String(object.references) : "",
+    };
+  },
+
+  toJSON(message: Message2InboxRequest): unknown {
+    const obj: any = {};
+    if (message.message_id !== "") {
+      obj.message_id = message.message_id;
+    }
+    if (message.channel_id !== "") {
+      obj.channel_id = message.channel_id;
+    }
+    if (message.clan_id !== "") {
+      obj.clan_id = message.clan_id;
+    }
+    if (message.avatar !== "") {
+      obj.avatar = message.avatar;
+    }
+    if (message.content !== "") {
+      obj.content = message.content;
+    }
+    if (message.mentions !== "") {
+      obj.mentions = message.mentions;
+    }
+    if (message.attachments !== "") {
+      obj.attachments = message.attachments;
+    }
+    if (message.reactions !== "") {
+      obj.reactions = message.reactions;
+    }
+    if (message.references !== "") {
+      obj.references = message.references;
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<Message2InboxRequest>, I>>(base?: I): Message2InboxRequest {
+    return Message2InboxRequest.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<Message2InboxRequest>, I>>(object: I): Message2InboxRequest {
+    const message = createBaseMessage2InboxRequest();
+    message.message_id = object.message_id ?? "";
+    message.channel_id = object.channel_id ?? "";
+    message.clan_id = object.clan_id ?? "";
+    message.avatar = object.avatar ?? "";
+    message.content = object.content ?? "";
+    message.mentions = object.mentions ?? "";
+    message.attachments = object.attachments ?? "";
+    message.reactions = object.reactions ?? "";
+    message.references = object.references ?? "";
     return message;
   },
 };
