@@ -386,7 +386,11 @@ export interface AddClanUserEvent {
   /** the clan id */
   clan_id: string;
   /** the user */
-  user: UserProfileRedis | undefined;
+  user:
+    | UserProfileRedis
+    | undefined;
+  /** inviter */
+  invitor: string;
 }
 
 /** On role assign */
@@ -1285,6 +1289,8 @@ export interface UserProfileRedis {
   app_token: string;
   /** app url */
   app_url: string;
+  /** is bot */
+  is_bot: boolean;
 }
 
 export interface FCMTokens {
@@ -3561,7 +3567,7 @@ export const SFUSignalingFwd = {
 };
 
 function createBaseAddClanUserEvent(): AddClanUserEvent {
-  return { clan_id: "", user: undefined };
+  return { clan_id: "", user: undefined, invitor: "" };
 }
 
 export const AddClanUserEvent = {
@@ -3571,6 +3577,9 @@ export const AddClanUserEvent = {
     }
     if (message.user !== undefined) {
       UserProfileRedis.encode(message.user, writer.uint32(18).fork()).ldelim();
+    }
+    if (message.invitor !== "") {
+      writer.uint32(26).string(message.invitor);
     }
     return writer;
   },
@@ -3596,6 +3605,13 @@ export const AddClanUserEvent = {
 
           message.user = UserProfileRedis.decode(reader, reader.uint32());
           continue;
+        case 3:
+          if (tag !== 26) {
+            break;
+          }
+
+          message.invitor = reader.string();
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -3609,6 +3625,7 @@ export const AddClanUserEvent = {
     return {
       clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
       user: isSet(object.user) ? UserProfileRedis.fromJSON(object.user) : undefined,
+      invitor: isSet(object.invitor) ? globalThis.String(object.invitor) : "",
     };
   },
 
@@ -3619,6 +3636,9 @@ export const AddClanUserEvent = {
     }
     if (message.user !== undefined) {
       obj.user = UserProfileRedis.toJSON(message.user);
+    }
+    if (message.invitor !== "") {
+      obj.invitor = message.invitor;
     }
     return obj;
   },
@@ -3632,6 +3652,7 @@ export const AddClanUserEvent = {
     message.user = (object.user !== undefined && object.user !== null)
       ? UserProfileRedis.fromPartial(object.user)
       : undefined;
+    message.invitor = object.invitor ?? "";
     return message;
   },
 };
@@ -10508,6 +10529,7 @@ function createBaseUserProfileRedis(): UserProfileRedis {
     mezon_id: "",
     app_token: "",
     app_url: "",
+    is_bot: false,
   };
 }
 
@@ -10560,6 +10582,9 @@ export const UserProfileRedis = {
     }
     if (message.app_url !== "") {
       writer.uint32(130).string(message.app_url);
+    }
+    if (message.is_bot !== false) {
+      writer.uint32(136).bool(message.is_bot);
     }
     return writer;
   },
@@ -10683,6 +10708,13 @@ export const UserProfileRedis = {
 
           message.app_url = reader.string();
           continue;
+        case 17:
+          if (tag !== 136) {
+            break;
+          }
+
+          message.is_bot = reader.bool();
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -10714,6 +10746,7 @@ export const UserProfileRedis = {
       mezon_id: isSet(object.mezon_id) ? globalThis.String(object.mezon_id) : "",
       app_token: isSet(object.app_token) ? globalThis.String(object.app_token) : "",
       app_url: isSet(object.app_url) ? globalThis.String(object.app_url) : "",
+      is_bot: isSet(object.is_bot) ? globalThis.Boolean(object.is_bot) : false,
     };
   },
 
@@ -10767,6 +10800,9 @@ export const UserProfileRedis = {
     if (message.app_url !== "") {
       obj.app_url = message.app_url;
     }
+    if (message.is_bot !== false) {
+      obj.is_bot = message.is_bot;
+    }
     return obj;
   },
 
@@ -10791,6 +10827,7 @@ export const UserProfileRedis = {
     message.mezon_id = object.mezon_id ?? "";
     message.app_token = object.app_token ?? "";
     message.app_url = object.app_url ?? "";
+    message.is_bot = object.is_bot ?? false;
     return message;
   },
 };
