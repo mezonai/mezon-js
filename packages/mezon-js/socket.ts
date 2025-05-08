@@ -145,6 +145,7 @@ export interface AddClanUserEvent {
   clan_id: string;
   // the user
   user: UserProfileRedis;
+  invitor: string;
 }
 
 export interface UserProfileRedis {
@@ -166,6 +167,14 @@ export interface UserProfileRedis {
   online: boolean;
   /** clans */
   joined_clans: number[];
+  // public key
+  pubkey: string;
+  // mezon id
+  mezon_id: string;
+  // app url
+  app_url: string;
+  // is bot
+  is_bot: boolean;
 }
 
 /** UserChannelAddedEvent */
