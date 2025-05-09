@@ -798,6 +798,7 @@ export interface AddClanUserEvent {
   clan_id: string;
   // the user
   user: AddUsers;
+  invitor: string;
 }
 
 /** A socket connection to Mezon server. */
