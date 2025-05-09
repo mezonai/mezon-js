@@ -138,7 +138,6 @@ export class Clan {
     request: MezonUpdateRoleBody
   ): Promise<boolean> {
     const session = this.sessionToken;
-    console.log('session: ', session);
     return this.apiClient.updateRole(session, roleId, request);
   }
 
