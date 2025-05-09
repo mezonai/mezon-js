@@ -361,6 +361,7 @@ export enum EMessageComponentType {
   INPUT = 3,
   DATEPICKER = 4,
   RADIO = 5,
+  CHECKBOX = 6
 }
 
 export enum EMessageSelectType {
@@ -607,6 +608,145 @@ export interface TokenSentEvent {
   amount: number;
   note?: string;
   extra_attribute?: string;
+}
+
+export interface MezonUpdateRoleBody {
+  //The permissions to add.
+  active_permission_ids?: Array<string>;
+  //The users to add.
+  add_user_ids?: Array<string>;
+  //
+  allow_mention?: number;
+  //
+  clan_id?: string;
+  //
+  color?: string;
+  //
+  description?: string;
+  //
+  display_online?: number;
+  //
+  max_permission_id: string;
+  //The permissions to remove.
+  remove_permission_ids?: Array<string>;
+  //The users to remove.
+  remove_user_ids?: Array<string>;
+  //
+  role_icon?: string;
+  //
+  title?: string;
+}
+
+export interface ApiRoleListEventResponse {
+  //
+  clan_id?: string;
+  //
+  cursor?: string;
+  //
+  limit?: string;
+  //
+  roles?: ApiRoleList;
+  //
+  state?: string;
+}
+
+/** A list of role description, usually a result of a list operation. */
+export interface ApiRoleList {
+  //Cacheable cursor to list newer role description. Durable and designed to be stored, unlike next/prev cursors.
+  cacheable_cursor?: string;
+  //The cursor to send when retrieving the next page, if any.
+  next_cursor?: string;
+  //The cursor to send when retrieving the previous page, if any.
+  prev_cursor?: string;
+  //A list of role.
+  roles?: Array<ApiRole>;
+}
+
+/**  */
+export interface ApiRole {
+  //
+  active?: number;
+  //
+  allow_mention?: number;
+  //
+  channel_ids?: Array<string>;
+  //
+  clan_id?: string;
+  //
+  color?: string;
+  //
+  creator_id?: string;
+  //
+  description?: string;
+  //
+  display_online?: number;
+  //
+  id?: string;
+  //
+  max_level_permission?: number;
+  //
+  permission_list?: ApiPermissionList;
+  //
+  role_channel_active?: number;
+  //
+  role_icon?: string;
+  //
+  role_user_list?: ApiRoleUserList;
+  //
+  slug?: string;
+  //
+  title?: string;
+  //
+  order_role?: number;
+}
+
+export interface ApiPermissionList {
+  //
+  max_level_permission?: number;
+  //A list of permission.
+  permissions?: Array<ApiPermission>;
+}
+
+/**  */
+export interface ApiPermission {
+  //
+  active?: number;
+  //
+  description?: string;
+  //
+  id?: string;
+  //
+  level?: number;
+  //
+  scope?: number;
+  //
+  slug?: string;
+  //
+  title?: string;
+}
+
+export interface ApiRoleUserList {
+  //Cursor for the next page of results, if any.
+  cursor?: string;
+  //role_users pairs for a clan.
+  role_users?: Array<RoleUserListRoleUser>;
+}
+
+export interface RoleUserListRoleUser {
+  //A URL for an avatar image.
+  avatar_url?: string;
+  //The display name of the user.
+  display_name?: string;
+  //The id of the user's account.
+  id?: string;
+  //The language expected to be a tag which follows the BCP-47 spec.
+  lang_tag?: string;
+  //The location set by the user.
+  location?: string;
+  //The timezone set by the user.
+  online?: boolean;
+  //The username of the user's account.
+  username?: string;
 }
 
 export interface DropdownBoxSelected {

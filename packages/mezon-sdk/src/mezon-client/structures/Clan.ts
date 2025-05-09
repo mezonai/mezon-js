@@ -1,6 +1,6 @@
 import { MezonApi } from "../../api";
 import { ChannelType } from "../../constants";
-import { ApiVoiceChannelUserList } from "../../interfaces";
+import { ApiRoleListEventResponse, ApiVoiceChannelUserList, MezonUpdateRoleBody } from "../../interfaces";
 import { MezonClient } from "../client/MezonClient";
 import { SocketManager } from "../manager/socket_manager";
 import { AsyncThrottleQueue } from "../utils/AsyncThrottleQueue";
@@ -131,5 +131,28 @@ export class Clan {
         });
         return Promise.resolve(result);
       });
+  }
+
+  async updateRole(
+    roleId: string,
+    request: MezonUpdateRoleBody
+  ): Promise<boolean> {
+    const session = this.sessionToken;
+    return this.apiClient.updateRole(session, roleId, request);
+  }
+
+  async listRoles(
+    limit?: string,
+    state?: string,
+    cursor?: string
+  ): Promise<ApiRoleListEventResponse> {
+    const session = this.sessionToken;
+    return this.apiClient.listRoles(
+      session,
+      this.id,
+      limit,
+      state,
+      cursor
+    );
   }
 }
