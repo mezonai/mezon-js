@@ -17,13 +17,7 @@
 import {
   ApiAccount,
   ApiAccountMezon,
-  ApiAccountDevice,
   ApiAccountEmail,
-  ApiAccountFacebook,
-  ApiAccountFacebookInstantGame,
-  ApiAccountGoogle,
-  ApiAccountGameCenter,
-  ApiAccountSteam,
   ApiChannelMessageList,
   ApiChannelDescList,
   ApiChannelDescription,
@@ -49,8 +43,6 @@ import {
   ApiUsers,
   MezonApi,
   ApiSession,
-  ApiAccountApple,
-  ApiLinkSteamRequest,
   ApiClanDescProfile,
   ApiClanProfile,
   ApiChannelUserList,
@@ -626,278 +618,6 @@ export class Client {
       });
   }
 
-  /** Authenticate a user with an Apple ID against the server. */
-  async authenticateApple(
-    token: string,
-    create?: boolean,
-    username?: string,
-    vars: Record<string, string> = {},
-    options: any = {}
-  ) {
-    const request = {
-      token: token,
-      vars: vars,
-    };
-
-    return this.apiClient
-      .authenticateApple(this.serverkey, "", request, create, username, options)
-      .then((apiSession: ApiSession) => {
-        return new Session(
-          apiSession.token || "",
-          apiSession.refresh_token || "",
-          apiSession.created || false,
-          false
-        );
-      });
-  }
-
-  /** Authenticate a user with a custom id against the server. */
-  authenticateMezon(
-    token: string,
-    create?: boolean,
-    username?: string,
-    isRemember?:boolean,
-    vars: Record<string, string> = {},
-    options: any = {}
-  ): Promise<Session> {
-    const request = {
-      token: token,
-      vars: vars,
-    };
-    return this.apiClient
-      .authenticateMezon(
-        this.serverkey,
-        "",
-        request,
-        create,
-        username,
-        isRemember,
-        options
-      )
-      .then((apiSession: ApiSession) => {
-        return new Session(
-          apiSession.token || "",
-          apiSession.refresh_token || "",
-          apiSession.created || false,
-          false
-        );
-      });
-  }
-
-  /** Authenticate a user with a device id against the server. */
-  authenticateDevice(
-    id: string,
-    create?: boolean,
-    username?: string,
-    vars?: Record<string, string>
-  ): Promise<Session> {
-    const request = {
-      id: id,
-      vars: vars,
-    };
-
-    return this.apiClient
-      .authenticateDevice(this.serverkey, "", request, create, username)
-      .then((apiSession: ApiSession) => {
-        return new Session(
-          apiSession.token || "",
-          apiSession.refresh_token || "",
-          apiSession.created || false,
-          false
-        );
-      });
-  }
-
-  /** Authenticate a user with an email+password against the server. */
-  authenticateEmail(
-    email: string,
-    password: string,
-    username?: string,
-    vars?: Record<string, string>
-  ): Promise<Session> {
-    const request = {
-      username: username,
-      account: {
-        email: email,
-        password: password,
-        vars: vars,
-      }
-    };
-
-    return this.apiClient
-      .authenticateEmail(this.serverkey, "", request, username)
-      .then((apiSession: ApiSession) => {
-        return new Session(
-          apiSession.token || "",
-          apiSession.refresh_token || "",
-          apiSession.created || false,
-          false
-        );
-      });
-  }
-
-  /** Authenticate a user with a Facebook Instant Game token against the server. */
-  authenticateFacebookInstantGame(
-    signedPlayerInfo: string,
-    create?: boolean,
-    username?: string,
-    vars?: Record<string, string>,
-    options: any = {}
-  ): Promise<Session> {
-    const request = {
-      signed_player_info: signedPlayerInfo,
-      vars: vars,
-    };
-
-    return this.apiClient
-      .authenticateFacebookInstantGame(
-        this.serverkey,
-        "",
-        { signed_player_info: request.signed_player_info, vars: request.vars },
-        create,
-        username,
-        options
-      )
-      .then((apiSession: ApiSession) => {
-        return new Session(
-          apiSession.token || "",
-          apiSession.refresh_token || "",
-          apiSession.created || false,
-          false
-        );
-      });
-  }
-
-  /** Authenticate a user with a Facebook OAuth token against the server. */
-  authenticateFacebook(
-    token: string,
-    create?: boolean,
-    username?: string,
-    sync?: boolean,
-    vars?: Record<string, string>,
-    options: any = {}
-  ): Promise<Session> {
-    const request = {
-      token: token,
-      vars: vars,
-    };
-
-    return this.apiClient
-      .authenticateFacebook(
-        this.serverkey,
-        "",
-        request,
-        create,
-        username,
-        sync,
-        options
-      )
-      .then((apiSession: ApiSession) => {
-        return new Session(
-          apiSession.token || "",
-          apiSession.refresh_token || "",
-          apiSession.created || false,
-          false
-        );
-      });
-  }
-
-  /** Authenticate a user with Google against the server. */
-  async authenticateGoogle(
-    token: string,
-    create?: boolean,
-    username?: string,
-    vars?: Record<string, string>,
-    options: any = {}
-  ): Promise<Session> {
-    const request: ApiAccountGoogle = {
-      token,
-      vars,
-    };
-
-    const apiSession = await this.apiClient.authenticateGoogle(
-      this.serverkey,
-      "",
-      request,
-      create,
-      username,
-      options
-    );
-
-    return new Session(
-      apiSession.token || "",
-      apiSession.refresh_token || "",
-      apiSession.created || false,
-      false
-    );
-  }
-
-  /** Authenticate a user with GameCenter against the server. */
-  async authenticateGameCenter(
-    bundleId: string,
-    playerId: string,
-    publicKeyUrl: string,
-    salt: string,
-    signature: string,
-    timestamp: number,
-    username?: string,
-    create?: boolean,
-    vars?: Record<string, string>,
-    options: any = {}
-  ): Promise<Session> {
-    const request: ApiAccountGameCenter = {
-      bundle_id: bundleId,
-      player_id: playerId,
-      public_key_url: publicKeyUrl,
-      salt,
-      signature,
-      timestamp_seconds: timestamp,
-      vars,
-    };
-
-    const apiSession = await this.apiClient.authenticateGameCenter(
-      this.serverkey,
-      "",
-      request,
-      create,
-      username,
-      options
-    );
-
-    return new Session(
-      apiSession.token || "",
-      apiSession.refresh_token || "",
-      apiSession.created || false,
-      false
-    );
-  }
-
-  /** Authenticate a user with Steam against the server. */
-  async authenticateSteam(
-    token: string,
-    create?: boolean,
-    username?: string,
-    sync?: boolean,
-    vars?: Record<string, string>
-  ): Promise<Session> {
-    const request = {
-      token: token,
-      vars: vars,
-      sync: sync,
-    };
-
-    return this.apiClient
-      .authenticateSteam(this.serverkey, "", request, create, username)
-      .then((apiSession: ApiSession) => {
-        return new Session(
-          apiSession.token || "",
-          apiSession.refresh_token || "",
-          apiSession.created || false,
-          false
-        );
-      });
-  }
-
   /** Block one or more users by ID or username. */
   async blockFriends(
     session: Session,
@@ -1310,47 +1030,6 @@ export class Client {
     }
 
     return this.apiClient.getAccount(session.token);
-  }
-
-  /** Import Facebook friends and add them to a user's account. */
-  async importFacebookFriends(
-    session: Session,
-    request: ApiAccountFacebook
-  ): Promise<boolean> {
-    if (
-      this.autoRefreshSession &&
-      session.refresh_token &&
-      session.isexpired(Date.now() / 1000)
-    ) {
-      await this.sessionRefresh(session);
-    }
-
-    return this.apiClient
-      .importFacebookFriends(session.token, request)
-      .then((response: any) => {
-        return response !== undefined;
-      });
-  }
-
-  /** Import Steam friends and add them to a user's account. */
-  async importSteamFriends(
-    session: Session,
-    request: ApiAccountSteam,
-    reset: boolean
-  ): Promise<boolean> {
-    if (
-      this.autoRefreshSession &&
-      session.refresh_token &&
-      session.isexpired(Date.now() / 1000)
-    ) {
-      await this.sessionRefresh(session);
-    }
-
-    return this.apiClient
-      .importSteamFriends(session.token, request, reset)
-      .then((response: any) => {
-        return response !== undefined;
-      });
   }
 
   /** Fetch zero or more users by ID and/or username. */
@@ -1997,26 +1676,6 @@ export class Client {
       });
   }
 
-  /** Add an Apple ID to the social profiles on the current user's account. */
-  async linkApple(
-    session: Session,
-    request: ApiAccountApple
-  ): Promise<boolean> {
-    if (
-      this.autoRefreshSession &&
-      session.refresh_token &&
-      session.isexpired(Date.now() / 1000)
-    ) {
-      await this.sessionRefresh(session);
-    }
-
-    return this.apiClient
-      .linkApple(session.token, request)
-      .then((response: any) => {
-        return response !== undefined;
-      });
-  }
-
   //
   async closeDirectMess(
     session: Session,
@@ -2076,26 +1735,6 @@ export class Client {
       });
   }
 
-  /** Add a device ID to the social profiles on the current user's account. */
-  async linkDevice(
-    session: Session,
-    request: ApiAccountDevice
-  ): Promise<boolean> {
-    if (
-      this.autoRefreshSession &&
-      session.refresh_token &&
-      session.isexpired(Date.now() / 1000)
-    ) {
-      await this.sessionRefresh(session);
-    }
-
-    return this.apiClient
-      .linkDevice(session.token, request)
-      .then((response: any) => {
-        return response !== undefined;
-      });
-  }
-
   /** Add an email+password to the social profiles on the current user's account. */
   async linkEmail(
     session: Session,
@@ -2111,106 +1750,6 @@ export class Client {
 
     return this.apiClient
       .linkEmail(session.token, request)
-      .then((response: any) => {
-        return response !== undefined;
-      });
-  }
-
-  /** Add Facebook to the social profiles on the current user's account. */
-  async linkFacebook(
-    session: Session,
-    request: ApiAccountFacebook
-  ): Promise<boolean> {
-    if (
-      this.autoRefreshSession &&
-      session.refresh_token &&
-      session.isexpired(Date.now() / 1000)
-    ) {
-      await this.sessionRefresh(session);
-    }
-
-    return this.apiClient
-      .linkFacebook(session.token, request)
-      .then((response: any) => {
-        return response !== undefined;
-      });
-  }
-
-  /** Add Facebook Instant to the social profiles on the current user's account. */
-  async linkFacebookInstantGame(
-    session: Session,
-    request: ApiAccountFacebookInstantGame
-  ): Promise<boolean> {
-    if (
-      this.autoRefreshSession &&
-      session.refresh_token &&
-      session.isexpired(Date.now() / 1000)
-    ) {
-      await this.sessionRefresh(session);
-    }
-
-    return this.apiClient
-      .linkFacebookInstantGame(session.token, request)
-      .then((response: any) => {
-        return response !== undefined;
-      });
-  }
-
-  /** Add Google to the social profiles on the current user's account. */
-  async linkGoogle(
-    session: Session,
-    request: ApiAccountGoogle
-  ): Promise<boolean> {
-    if (
-      this.autoRefreshSession &&
-      session.refresh_token &&
-      session.isexpired(Date.now() / 1000)
-    ) {
-      await this.sessionRefresh(session);
-    }
-
-    return this.apiClient
-      .linkGoogle(session.token, request)
-      .then((response: any) => {
-        return response !== undefined;
-      });
-  }
-
-  /** Add GameCenter to the social profiles on the current user's account. */
-  async linkGameCenter(
-    session: Session,
-    request: ApiAccountGameCenter
-  ): Promise<boolean> {
-    if (
-      this.autoRefreshSession &&
-      session.refresh_token &&
-      session.isexpired(Date.now() / 1000)
-    ) {
-      await this.sessionRefresh(session);
-    }
-
-    return this.apiClient
-      .linkGameCenter(session.token, request)
-      .then((response: any) => {
-        return response !== undefined;
-      });
-  }
-
-  /** Add Steam to the social profiles on the current user's account. */
-  async linkSteam(
-    session: Session,
-    request: ApiLinkSteamRequest
-  ): Promise<boolean> {
-    if (
-      this.autoRefreshSession &&
-      session.refresh_token &&
-      session.isexpired(Date.now() / 1000)
-    ) {
-      await this.sessionRefresh(session);
-    }
-
-    return this.apiClient
-      .linkSteam(session.token, request)
       .then((response: any) => {
         return response !== undefined;
       });
@@ -2461,26 +2000,6 @@ export class Client {
     return this.refreshTokenPromise;
   }
 
-  /** Remove the Apple ID from the social profiles on the current user's account. */
-  async unlinkApple(
-    session: Session,
-    request: ApiAccountApple
-  ): Promise<boolean> {
-    if (
-      this.autoRefreshSession &&
-      session.refresh_token &&
-      session.isexpired(Date.now() / 1000)
-    ) {
-      await this.sessionRefresh(session);
-    }
-
-    return this.apiClient
-      .unlinkApple(session.token, request)
-      .then((response: any) => {
-        return response !== undefined;
-      });
-  }
-
   /** Remove custom ID from the social profiles on the current user's account. */
   async unlinkCustom(
     session: Session,
@@ -2501,26 +2020,6 @@ export class Client {
       });
   }
 
-  /** Remove a device ID from the social profiles on the current user's account. */
-  async unlinkDevice(
-    session: Session,
-    request: ApiAccountDevice
-  ): Promise<boolean> {
-    if (
-      this.autoRefreshSession &&
-      session.refresh_token &&
-      session.isexpired(Date.now() / 1000)
-    ) {
-      await this.sessionRefresh(session);
-    }
-
-    return this.apiClient
-      .unlinkDevice(session.token, request)
-      .then((response: any) => {
-        return response !== undefined;
-      });
-  }
-
   /** Remove an email+password from the social profiles on the current user's account. */
   async unlinkEmail(
     session: Session,
@@ -2536,105 +2035,6 @@ export class Client {
 
     return this.apiClient
       .unlinkEmail(session.token, request)
-      .then((response: any) => {
-        return response !== undefined;
-      });
-  }
-
-  /** Remove Facebook from the social profiles on the current user's account. */
-  async unlinkFacebook(
-    session: Session,
-    request: ApiAccountFacebook
-  ): Promise<boolean> {
-    if (
-      this.autoRefreshSession &&
-      session.refresh_token &&
-      session.isexpired(Date.now() / 1000)
-    ) {
-      await this.sessionRefresh(session);
-    }
-
-    return this.apiClient
-      .unlinkFacebook(session.token, request)
-      .then((response: any) => {
-        return response !== undefined;
-      });
-  }
-
-  /** Remove Facebook Instant social profiles from the current user's account. */
-  async unlinkFacebookInstantGame(
-    session: Session,
-    request: ApiAccountFacebookInstantGame
-  ): Promise<boolean> {
-    if (
-      this.autoRefreshSession &&
-      session.refresh_token &&
-      session.isexpired(Date.now() / 1000)
-    ) {
-      await this.sessionRefresh(session);
-    }
-
-    return this.apiClient
-      .unlinkFacebookInstantGame(session.token, request)
-      .then((response: any) => {
-        return response !== undefined;
-      });
-  }
-
-  /** Remove Google from the social profiles on the current user's account. */
-  async unlinkGoogle(
-    session: Session,
-    request: ApiAccountGoogle
-  ): Promise<boolean> {
-    if (
-      this.autoRefreshSession &&
-      session.refresh_token &&
-      session.isexpired(Date.now() / 1000)
-    ) {
-      await this.sessionRefresh(session);
-    }
-
-    return this.apiClient
-      .unlinkGoogle(session.token, request)
-      .then((response: any) => {
-        return response !== undefined;
-      });
-  }
-
-  /** Remove GameCenter from the social profiles on the current user's account. */
-  async unlinkGameCenter(
-    session: Session,
-    request: ApiAccountGameCenter
-  ): Promise<boolean> {
-    if (
-      this.autoRefreshSession &&
-      session.refresh_token &&
-      session.isexpired(Date.now() / 1000)
-    ) {
-      await this.sessionRefresh(session);
-    }
-
-    return this.apiClient
-      .unlinkGameCenter(session.token, request)
-      .then((response: any) => {
-        return response !== undefined;
-      });
-  }
-
-  /** Remove Steam from the social profiles on the current user's account. */
-  async unlinkSteam(
-    session: Session,
-    request: ApiAccountSteam
-  ): Promise<boolean> {
-    if (
-      this.autoRefreshSession &&
-      session.refresh_token &&
-      session.isexpired(Date.now() / 1000)
-    ) {
-      await this.sessionRefresh(session);
-    }
-    return this.apiClient
-      .unlinkSteam(session.token, request)
       .then((response: any) => {
         return response !== undefined;
       });
