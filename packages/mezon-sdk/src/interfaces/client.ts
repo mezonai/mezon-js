@@ -361,7 +361,7 @@ export enum EMessageComponentType {
   INPUT = 3,
   DATEPICKER = 4,
   RADIO = 5,
-  CHECKBOX = 6
+  ANIMATION = 6
 }
 
 export enum EMessageSelectType {
