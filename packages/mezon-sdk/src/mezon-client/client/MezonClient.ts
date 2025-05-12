@@ -301,8 +301,18 @@ export class MezonClient extends EventEmitter {
   /** Listen to user added in CLAN */
   public onAddClanUser(listener: (e: AddClanUserEvent) => void): this {
     this.on(Events.AddClanUser.toString(), async (e: AddClanUserEvent) => {
-      const clan = this.clans.get(e.clan_id);
-      if (!clan) return;
+      const clanObj = new Clan(
+        {
+          id: e.clan_id!,
+          name: "unknown",
+        },
+        this,
+        this.apiClient,
+        this.socketManager,
+        this.sessionManager.getSession()?.token!,
+        this.messageQueue
+      );
+      this.clans.set(e.clan_id!, clanObj);
       if (e.user.user_id === this.clientId) {
         this.socketManager.getSocket().joinClanChat(e.clan_id);
       }
@@ -317,14 +327,14 @@ export class MezonClient extends EventEmitter {
       };
       const user = new User(
         userRaw,
-        clan,
+        clanObj,
         this.channelManager,
         this.messageQueue,
         this.socketManager
       );
       const dmChannel = await user.createDmChannel();
       user.dmChannelId = dmChannel?.channel_id ?? "";
-      clan.users.set(e.user.user_id!, user);
+      clanObj.users.set(e.user.user_id!, user);
       const clanDm = this.clans.get("0");
       if (!clanDm) return;
       clanDm.users.set(e.user.user_id!, user);
