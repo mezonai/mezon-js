@@ -576,6 +576,70 @@ export class Client {
     this.apiClient = new MezonApi(serverkey, basePath, timeout);
   }
 
+  /** Authenticate a user with a custom id against the server. */
+  authenticateMezon(
+    basePath: string,
+    token: string,
+    create?: boolean,
+    username?: string,
+    isRemember?:boolean,
+    vars: Record<string, string> = {},
+    options: any = {}
+  ): Promise<Session> {
+    const request = {
+      token: token,
+      vars: vars,
+    };
+    return this.apiClient
+      .authenticateMezon(
+        basePath,
+        this.serverkey,
+        "",
+        request,
+        create,
+        username,
+        isRemember,
+        options
+      )
+      .then((apiSession: ApiSession) => {
+        return new Session(
+          apiSession.token || "",
+          apiSession.refresh_token || "",
+          apiSession.created || false,
+          false
+        );
+      });
+  }
+
+  /** Authenticate a user with an email+password against the server. */
+  authenticateEmail(
+    basePath: string,
+    email: string,
+    password: string,
+    username?: string,
+    vars?: Record<string, string>
+  ): Promise<Session> {
+    const request = {
+      username: username,
+      account: {
+        email: email,
+        password: password,
+        vars: vars,
+      }
+    };
+
+    return this.apiClient
+      .authenticateEmail(basePath, this.serverkey, "", request, username)
+      .then((apiSession: ApiSession) => {
+        return new Session(
+          apiSession.token || "",
+          apiSession.refresh_token || "",
+          apiSession.created || false,
+          false
+        );
+      });
+  }
+
   /** Add users to a channel, or accept their join requests. */
   async addChannelUsers(
     session: Session,
@@ -3837,8 +3901,9 @@ export class Client {
       });
   }
 
-  async createQRLogin(requet: ApiLoginRequest): Promise<ApiLoginIDResponse> {
+  async createQRLogin(basePath: string, requet: ApiLoginRequest): Promise<ApiLoginIDResponse> {
     const apiSession = await this.apiClient.createQRLogin(
+      basePath,
       this.serverkey,
       "",
       requet
@@ -3851,9 +3916,11 @@ export class Client {
   }
 
   async checkLoginRequest(
+    basePath: string,
     requet: ApiConfirmLoginRequest
   ): Promise<Session | null> {
     const apiSession = await this.apiClient.checkLoginRequest(
+      basePath,
       this.serverkey,
       "",
       requet
@@ -3870,6 +3937,7 @@ export class Client {
   }
 
   async confirmLogin(
+    basePath: string,
     session: Session,
     body: ApiConfirmLoginRequest
   ): Promise<any> {
@@ -3882,7 +3950,7 @@ export class Client {
     }
 
     return this.apiClient
-      .confirmLogin(session.token, body)
+      .confirmLogin(basePath, session.token, body)
       .then((response: any) => {
         return response;
       });

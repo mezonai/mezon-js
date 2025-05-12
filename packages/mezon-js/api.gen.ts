@@ -2326,6 +2326,7 @@ export interface ApiSession {
   token?: string;
   // Whether to enable "Remember Me" for extended session duration.
   is_remember?: boolean;
+  api_url?: string;
 }
 
 /** Log out a session, invalidate a refresh token, or log out all sessions/refresh tokens for a user. */
@@ -3290,6 +3291,7 @@ export class MezonApi {
 
   /**  */
   checkLoginRequest(
+    basePath: string,
     basicAuthUsername: string,
     basicAuthPassword: string,
     body: ApiConfirmLoginRequest,
@@ -3306,7 +3308,7 @@ export class MezonApi {
     let bodyJson: string = "";
     bodyJson = JSON.stringify(body || {});
 
-    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
+    const fullUrl = this.buildFullUrl(basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("POST", options, bodyJson);
     if (basicAuthUsername) {
       fetchOptions.headers["Authorization"] =
@@ -3331,6 +3333,7 @@ export class MezonApi {
 
   /**  */
   confirmLogin(
+    basePath: string,
     bearerToken: string,
     body: ApiConfirmLoginRequest,
     options: any = {}
@@ -3346,7 +3349,7 @@ export class MezonApi {
     let bodyJson: string = "";
     bodyJson = JSON.stringify(body || {});
 
-    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
+    const fullUrl = this.buildFullUrl(basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("POST", options, bodyJson);
     if (bearerToken) {
       fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
@@ -3370,6 +3373,7 @@ export class MezonApi {
 
   /**  */
   createQRLogin(
+    basePath: string,
     basicAuthUsername: string,
     basicAuthPassword: string,
     body: ApiLoginRequest,
@@ -3386,7 +3390,7 @@ export class MezonApi {
     let bodyJson: string = "";
     bodyJson = JSON.stringify(body || {});
 
-    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
+    const fullUrl = this.buildFullUrl(basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("POST", options, bodyJson);
     if (basicAuthUsername) {
       fetchOptions.headers["Authorization"] =
@@ -3411,7 +3415,9 @@ export class MezonApi {
 
 
   /** Authenticate a user with an email+password against the server. */
-  authenticateEmail(basicAuthUsername: string,
+  authenticateEmail(
+    basePath: string,
+    basicAuthUsername: string,
     basicAuthPassword: string,
       body:ApiAuthenticateEmailRequest,
       options: any = {}): Promise<ApiSession> {
@@ -3425,7 +3431,7 @@ export class MezonApi {
     let bodyJson : string = "";
     bodyJson = JSON.stringify(body || {});
 
-    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
+    const fullUrl = this.buildFullUrl(basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("POST", options, bodyJson);
     if (basicAuthUsername) {
       fetchOptions.headers["Authorization"] = "Basic " + encode(basicAuthUsername + ":" + basicAuthPassword);
@@ -3449,6 +3455,7 @@ export class MezonApi {
 
   /** Authenticate a user with Mezon against the server. */
   authenticateMezon(
+    basePath: string,
     basicAuthUsername: string,
     basicAuthPassword: string,
     account:ApiAccountMezon,
@@ -3470,7 +3477,7 @@ export class MezonApi {
     let bodyJson : string = "";
     bodyJson = JSON.stringify(account || {});
 
-    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
+    const fullUrl = this.buildFullUrl(basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("POST", options, bodyJson);
 		if (basicAuthUsername) {
 			fetchOptions.headers["Authorization"] = "Basic " + encode(basicAuthUsername + ":" + basicAuthPassword);
