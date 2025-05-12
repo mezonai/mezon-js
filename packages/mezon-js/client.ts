@@ -561,15 +561,21 @@ export class Client {
 
   /** thre refreshTokenPromise */
   private refreshTokenPromise: Promise<Session> | null = null;
+  host: string;
+  port: string;
+  useSSL: boolean;
 
   constructor(
     readonly serverkey = DEFAULT_SERVER_KEY,
-    readonly host = DEFAULT_HOST,
-    readonly port = DEFAULT_PORT,
-    readonly useSSL = false,
+    host = DEFAULT_HOST,
+    port = DEFAULT_PORT,
+    useSSL = false,
     readonly timeout = DEFAULT_TIMEOUT_MS,
     readonly autoRefreshSession = true
   ) {
+    this.host = host;
+    this.port = port;
+    this.useSSL = useSSL;
     const scheme = useSSL ? "https://" : "http://";
     const basePath = `${scheme}${host}:${port}`;
 
@@ -604,6 +610,7 @@ export class Client {
           apiSession.token || "",
           apiSession.refresh_token || "",
           apiSession.created || false,
+          apiSession.api_url || "",
           false
         );
       });
@@ -631,14 +638,21 @@ export class Client {
         return new Session(
           apiSession.token || "",
           apiSession.refresh_token || "",
-          apiSession.created || false,
-          false
+          apiSession.created || false,          
+          apiSession.api_url || "",
+          false,
         );
       });
   }
 
   /** set base path */
-  setBasePath(basePath: string) {
+  setBasePath(host: string, port: string, useSSL: boolean) {
+    this.host = host;
+    this.port = port;
+    this.useSSL = useSSL;
+    
+    const scheme = useSSL ? "https://" : "http://";
+    const basePath = `${scheme}${host}:${port}`;    
     return this.apiClient
       .setBasePath(basePath);
   }
@@ -3932,6 +3946,7 @@ export class Client {
       apiSession.token || "",
       apiSession.refresh_token || "",
       apiSession.created || false,
+      apiSession.api_url || "",
       apiSession.is_remember || false
     );
   }
