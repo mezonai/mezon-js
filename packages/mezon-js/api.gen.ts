@@ -3157,11 +3157,18 @@ export interface ApiUserEventRequest {
 }
 
 export class MezonApi {
+  basePath: string;
   constructor(
     readonly serverKey: string,
-    readonly basePath: string,
-    readonly timeoutMs: number
-  ) {}
+    readonly timeoutMs: number,
+    basePath: string,
+  ) {
+    this.basePath = basePath
+  }
+
+  setBasePath(basePath: string) {
+    this.basePath = basePath;
+  }
 
   /** A healthcheck which load balancers can use to check the service. */
   healthcheck(bearerToken: string, options: any = {}): Promise<any> {
@@ -3291,7 +3298,6 @@ export class MezonApi {
 
   /**  */
   checkLoginRequest(
-    basePath: string,
     basicAuthUsername: string,
     basicAuthPassword: string,
     body: ApiConfirmLoginRequest,
@@ -3308,7 +3314,7 @@ export class MezonApi {
     let bodyJson: string = "";
     bodyJson = JSON.stringify(body || {});
 
-    const fullUrl = this.buildFullUrl(basePath, urlPath, queryParams);
+    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("POST", options, bodyJson);
     if (basicAuthUsername) {
       fetchOptions.headers["Authorization"] =
@@ -3333,7 +3339,6 @@ export class MezonApi {
 
   /**  */
   confirmLogin(
-    basePath: string,
     bearerToken: string,
     body: ApiConfirmLoginRequest,
     options: any = {}
@@ -3349,7 +3354,7 @@ export class MezonApi {
     let bodyJson: string = "";
     bodyJson = JSON.stringify(body || {});
 
-    const fullUrl = this.buildFullUrl(basePath, urlPath, queryParams);
+    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("POST", options, bodyJson);
     if (bearerToken) {
       fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
@@ -3373,7 +3378,6 @@ export class MezonApi {
 
   /**  */
   createQRLogin(
-    basePath: string,
     basicAuthUsername: string,
     basicAuthPassword: string,
     body: ApiLoginRequest,
@@ -3390,7 +3394,7 @@ export class MezonApi {
     let bodyJson: string = "";
     bodyJson = JSON.stringify(body || {});
 
-    const fullUrl = this.buildFullUrl(basePath, urlPath, queryParams);
+    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("POST", options, bodyJson);
     if (basicAuthUsername) {
       fetchOptions.headers["Authorization"] =
@@ -3416,7 +3420,6 @@ export class MezonApi {
 
   /** Authenticate a user with an email+password against the server. */
   authenticateEmail(
-    basePath: string,
     basicAuthUsername: string,
     basicAuthPassword: string,
       body:ApiAuthenticateEmailRequest,
@@ -3431,7 +3434,7 @@ export class MezonApi {
     let bodyJson : string = "";
     bodyJson = JSON.stringify(body || {});
 
-    const fullUrl = this.buildFullUrl(basePath, urlPath, queryParams);
+    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("POST", options, bodyJson);
     if (basicAuthUsername) {
       fetchOptions.headers["Authorization"] = "Basic " + encode(basicAuthUsername + ":" + basicAuthPassword);
@@ -3455,7 +3458,6 @@ export class MezonApi {
 
   /** Authenticate a user with Mezon against the server. */
   authenticateMezon(
-    basePath: string,
     basicAuthUsername: string,
     basicAuthPassword: string,
     account:ApiAccountMezon,
@@ -3477,7 +3479,7 @@ export class MezonApi {
     let bodyJson : string = "";
     bodyJson = JSON.stringify(account || {});
 
-    const fullUrl = this.buildFullUrl(basePath, urlPath, queryParams);
+    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("POST", options, bodyJson);
 		if (basicAuthUsername) {
 			fetchOptions.headers["Authorization"] = "Basic " + encode(basicAuthUsername + ":" + basicAuthPassword);

@@ -573,12 +573,11 @@ export class Client {
     const scheme = useSSL ? "https://" : "http://";
     const basePath = `${scheme}${host}:${port}`;
 
-    this.apiClient = new MezonApi(serverkey, basePath, timeout);
+    this.apiClient = new MezonApi(serverkey, timeout, basePath);
   }
 
   /** Authenticate a user with a custom id against the server. */
   authenticateMezon(
-    basePath: string,
     token: string,
     create?: boolean,
     username?: string,
@@ -592,7 +591,6 @@ export class Client {
     };
     return this.apiClient
       .authenticateMezon(
-        basePath,
         this.serverkey,
         "",
         request,
@@ -613,7 +611,6 @@ export class Client {
 
   /** Authenticate a user with an email+password against the server. */
   authenticateEmail(
-    basePath: string,
     email: string,
     password: string,
     username?: string,
@@ -629,7 +626,7 @@ export class Client {
     };
 
     return this.apiClient
-      .authenticateEmail(basePath, this.serverkey, "", request, username)
+      .authenticateEmail(this.serverkey, "", request, username)
       .then((apiSession: ApiSession) => {
         return new Session(
           apiSession.token || "",
@@ -638,6 +635,12 @@ export class Client {
           false
         );
       });
+  }
+
+  /** set base path */
+  setBasePath(basePath: string) {
+    return this.apiClient
+      .setBasePath(basePath);
   }
 
   /** Add users to a channel, or accept their join requests. */
@@ -3901,9 +3904,8 @@ export class Client {
       });
   }
 
-  async createQRLogin(basePath: string, requet: ApiLoginRequest): Promise<ApiLoginIDResponse> {
+  async createQRLogin(requet: ApiLoginRequest): Promise<ApiLoginIDResponse> {
     const apiSession = await this.apiClient.createQRLogin(
-      basePath,
       this.serverkey,
       "",
       requet
@@ -3916,11 +3918,9 @@ export class Client {
   }
 
   async checkLoginRequest(
-    basePath: string,
     requet: ApiConfirmLoginRequest
   ): Promise<Session | null> {
     const apiSession = await this.apiClient.checkLoginRequest(
-      basePath,
       this.serverkey,
       "",
       requet
@@ -3937,7 +3937,6 @@ export class Client {
   }
 
   async confirmLogin(
-    basePath: string,
     session: Session,
     body: ApiConfirmLoginRequest
   ): Promise<any> {
@@ -3950,7 +3949,7 @@ export class Client {
     }
 
     return this.apiClient
-      .confirmLogin(basePath, session.token, body)
+      .confirmLogin(session.token, body)
       .then((response: any) => {
         return response;
       });
