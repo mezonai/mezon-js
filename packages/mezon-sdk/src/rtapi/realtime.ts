@@ -326,7 +326,15 @@ export interface Envelope {
     | UnpinMessageEvent
     | undefined;
   /** category event */
-  category_event?: CategoryEvent | undefined;
+  category_event?:
+    | CategoryEvent
+    | undefined;
+  /** handle join/leave channel voice */
+  handle_participant_meet_state_event?:
+    | HandleParticipantMeetStateEvent
+    | undefined;
+  /** delete acc */
+  delete_account_event?: DeleteAccountEvent | undefined;
 }
 
 export interface FollowEvent {
@@ -378,7 +386,11 @@ export interface AddClanUserEvent {
   /** the clan id */
   clan_id: string;
   /** the user */
-  user: UserProfileRedis | undefined;
+  user:
+    | UserProfileRedis
+    | undefined;
+  /** inviter */
+  invitor: string;
 }
 
 /** On role assign */
@@ -813,6 +825,10 @@ export interface MessageTypingEvent {
   mode: number;
   /** is public */
   is_public: boolean;
+  /** sender username */
+  sender_username: string;
+  /** sender display name */
+  sender_display_name: string;
 }
 
 /** Voice Joined event */
@@ -938,8 +954,8 @@ export interface ChannelCreatedEvent {
     | undefined;
   /** status */
   status: number;
-  /** app url */
-  app_url: string;
+  /** app id */
+  app_id: string;
   /** clan_name */
   clan_name: string;
 }
@@ -1048,7 +1064,7 @@ export interface ChannelUpdatedEvent {
   /** channel private */
   channel_private: boolean;
   /** app url */
-  app_url: string;
+  app_id: string;
   /** e2ee */
   e2ee: number;
   /** topic */
@@ -1271,6 +1287,10 @@ export interface UserProfileRedis {
   mezon_id: string;
   /** app token */
   app_token: string;
+  /** app url */
+  app_url: string;
+  /** is bot */
+  is_bot: boolean;
 }
 
 export interface FCMTokens {
@@ -1402,6 +1422,22 @@ export interface UnpinMessageEvent {
   clan_id: string;
 }
 
+export interface HandleParticipantMeetStateEvent {
+  /** clan id */
+  clan_id: string;
+  /** channel id */
+  channel_id: string;
+  /** display name */
+  display_name: string;
+  /** state (0: join, 1: leave) */
+  state: number;
+}
+
+export interface DeleteAccountEvent {
+  /** user id */
+  user_id: string;
+}
+
 function createBaseEnvelope(): Envelope {
   return {
     cid: "",
@@ -1480,6 +1516,8 @@ function createBaseEnvelope(): Envelope {
     canvas_event: undefined,
     unpin_message_event: undefined,
     category_event: undefined,
+    handle_participant_meet_state_event: undefined,
+    delete_account_event: undefined,
   };
 }
 
@@ -1712,6 +1750,13 @@ export const Envelope = {
     }
     if (message.category_event !== undefined) {
       CategoryEvent.encode(message.category_event, writer.uint32(610).fork()).ldelim();
+    }
+    if (message.handle_participant_meet_state_event !== undefined) {
+      HandleParticipantMeetStateEvent.encode(message.handle_participant_meet_state_event, writer.uint32(618).fork())
+        .ldelim();
+    }
+    if (message.delete_account_event !== undefined) {
+      DeleteAccountEvent.encode(message.delete_account_event, writer.uint32(626).fork()).ldelim();
     }
     return writer;
   },
@@ -2255,6 +2300,20 @@ export const Envelope = {
 
           message.category_event = CategoryEvent.decode(reader, reader.uint32());
           continue;
+        case 77:
+          if (tag !== 618) {
+            break;
+          }
+
+          message.handle_participant_meet_state_event = HandleParticipantMeetStateEvent.decode(reader, reader.uint32());
+          continue;
+        case 78:
+          if (tag !== 626) {
+            break;
+          }
+
+          message.delete_account_event = DeleteAccountEvent.decode(reader, reader.uint32());
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -2440,6 +2499,12 @@ export const Envelope = {
         ? UnpinMessageEvent.fromJSON(object.unpin_message_event)
         : undefined,
       category_event: isSet(object.category_event) ? CategoryEvent.fromJSON(object.category_event) : undefined,
+      handle_participant_meet_state_event: isSet(object.handle_participant_meet_state_event)
+        ? HandleParticipantMeetStateEvent.fromJSON(object.handle_participant_meet_state_event)
+        : undefined,
+      delete_account_event: isSet(object.delete_account_event)
+        ? DeleteAccountEvent.fromJSON(object.delete_account_event)
+        : undefined,
     };
   },
 
@@ -2672,6 +2737,14 @@ export const Envelope = {
     }
     if (message.category_event !== undefined) {
       obj.category_event = CategoryEvent.toJSON(message.category_event);
+    }
+    if (message.handle_participant_meet_state_event !== undefined) {
+      obj.handle_participant_meet_state_event = HandleParticipantMeetStateEvent.toJSON(
+        message.handle_participant_meet_state_event,
+      );
+    }
+    if (message.delete_account_event !== undefined) {
+      obj.delete_account_event = DeleteAccountEvent.toJSON(message.delete_account_event);
     }
     return obj;
   },
@@ -2923,6 +2996,13 @@ export const Envelope = {
       : undefined;
     message.category_event = (object.category_event !== undefined && object.category_event !== null)
       ? CategoryEvent.fromPartial(object.category_event)
+      : undefined;
+    message.handle_participant_meet_state_event =
+      (object.handle_participant_meet_state_event !== undefined && object.handle_participant_meet_state_event !== null)
+        ? HandleParticipantMeetStateEvent.fromPartial(object.handle_participant_meet_state_event)
+        : undefined;
+    message.delete_account_event = (object.delete_account_event !== undefined && object.delete_account_event !== null)
+      ? DeleteAccountEvent.fromPartial(object.delete_account_event)
       : undefined;
     return message;
   },
@@ -3487,7 +3567,7 @@ export const SFUSignalingFwd = {
 };
 
 function createBaseAddClanUserEvent(): AddClanUserEvent {
-  return { clan_id: "", user: undefined };
+  return { clan_id: "", user: undefined, invitor: "" };
 }
 
 export const AddClanUserEvent = {
@@ -3497,6 +3577,9 @@ export const AddClanUserEvent = {
     }
     if (message.user !== undefined) {
       UserProfileRedis.encode(message.user, writer.uint32(18).fork()).ldelim();
+    }
+    if (message.invitor !== "") {
+      writer.uint32(26).string(message.invitor);
     }
     return writer;
   },
@@ -3522,6 +3605,13 @@ export const AddClanUserEvent = {
 
           message.user = UserProfileRedis.decode(reader, reader.uint32());
           continue;
+        case 3:
+          if (tag !== 26) {
+            break;
+          }
+
+          message.invitor = reader.string();
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -3535,6 +3625,7 @@ export const AddClanUserEvent = {
     return {
       clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
       user: isSet(object.user) ? UserProfileRedis.fromJSON(object.user) : undefined,
+      invitor: isSet(object.invitor) ? globalThis.String(object.invitor) : "",
     };
   },
 
@@ -3545,6 +3636,9 @@ export const AddClanUserEvent = {
     }
     if (message.user !== undefined) {
       obj.user = UserProfileRedis.toJSON(message.user);
+    }
+    if (message.invitor !== "") {
+      obj.invitor = message.invitor;
     }
     return obj;
   },
@@ -3558,6 +3652,7 @@ export const AddClanUserEvent = {
     message.user = (object.user !== undefined && object.user !== null)
       ? UserProfileRedis.fromPartial(object.user)
       : undefined;
+    message.invitor = object.invitor ?? "";
     return message;
   },
 };
@@ -6546,7 +6641,15 @@ export const LastSeenMessageEvent = {
 };
 
 function createBaseMessageTypingEvent(): MessageTypingEvent {
-  return { clan_id: "", channel_id: "", sender_id: "", mode: 0, is_public: false };
+  return {
+    clan_id: "",
+    channel_id: "",
+    sender_id: "",
+    mode: 0,
+    is_public: false,
+    sender_username: "",
+    sender_display_name: "",
+  };
 }
 
 export const MessageTypingEvent = {
@@ -6565,6 +6668,12 @@ export const MessageTypingEvent = {
     }
     if (message.is_public !== false) {
       writer.uint32(40).bool(message.is_public);
+    }
+    if (message.sender_username !== "") {
+      writer.uint32(50).string(message.sender_username);
+    }
+    if (message.sender_display_name !== "") {
+      writer.uint32(58).string(message.sender_display_name);
     }
     return writer;
   },
@@ -6611,6 +6720,20 @@ export const MessageTypingEvent = {
 
           message.is_public = reader.bool();
           continue;
+        case 6:
+          if (tag !== 50) {
+            break;
+          }
+
+          message.sender_username = reader.string();
+          continue;
+        case 7:
+          if (tag !== 58) {
+            break;
+          }
+
+          message.sender_display_name = reader.string();
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -6627,6 +6750,8 @@ export const MessageTypingEvent = {
       sender_id: isSet(object.sender_id) ? globalThis.String(object.sender_id) : "",
       mode: isSet(object.mode) ? globalThis.Number(object.mode) : 0,
       is_public: isSet(object.is_public) ? globalThis.Boolean(object.is_public) : false,
+      sender_username: isSet(object.sender_username) ? globalThis.String(object.sender_username) : "",
+      sender_display_name: isSet(object.sender_display_name) ? globalThis.String(object.sender_display_name) : "",
     };
   },
 
@@ -6647,6 +6772,12 @@ export const MessageTypingEvent = {
     if (message.is_public !== false) {
       obj.is_public = message.is_public;
     }
+    if (message.sender_username !== "") {
+      obj.sender_username = message.sender_username;
+    }
+    if (message.sender_display_name !== "") {
+      obj.sender_display_name = message.sender_display_name;
+    }
     return obj;
   },
 
@@ -6660,6 +6791,8 @@ export const MessageTypingEvent = {
     message.sender_id = object.sender_id ?? "";
     message.mode = object.mode ?? 0;
     message.is_public = object.is_public ?? false;
+    message.sender_username = object.sender_username ?? "";
+    message.sender_display_name = object.sender_display_name ?? "";
     return message;
   },
 };
@@ -7571,7 +7704,7 @@ function createBaseChannelCreatedEvent(): ChannelCreatedEvent {
     channel_private: 0,
     channel_type: undefined,
     status: 0,
-    app_url: "",
+    app_id: "",
     clan_name: "",
   };
 }
@@ -7605,8 +7738,8 @@ export const ChannelCreatedEvent = {
     if (message.status !== 0) {
       writer.uint32(72).int32(message.status);
     }
-    if (message.app_url !== "") {
-      writer.uint32(82).string(message.app_url);
+    if (message.app_id !== "") {
+      writer.uint32(82).string(message.app_id);
     }
     if (message.clan_name !== "") {
       writer.uint32(90).string(message.clan_name);
@@ -7689,7 +7822,7 @@ export const ChannelCreatedEvent = {
             break;
           }
 
-          message.app_url = reader.string();
+          message.app_id = reader.string();
           continue;
         case 11:
           if (tag !== 90) {
@@ -7718,7 +7851,7 @@ export const ChannelCreatedEvent = {
       channel_private: isSet(object.channel_private) ? globalThis.Number(object.channel_private) : 0,
       channel_type: isSet(object.channel_type) ? Number(object.channel_type) : undefined,
       status: isSet(object.status) ? globalThis.Number(object.status) : 0,
-      app_url: isSet(object.app_url) ? globalThis.String(object.app_url) : "",
+      app_id: isSet(object.app_id) ? globalThis.String(object.app_id) : "",
       clan_name: isSet(object.clan_name) ? globalThis.String(object.clan_name) : "",
     };
   },
@@ -7752,8 +7885,8 @@ export const ChannelCreatedEvent = {
     if (message.status !== 0) {
       obj.status = Math.round(message.status);
     }
-    if (message.app_url !== "") {
-      obj.app_url = message.app_url;
+    if (message.app_id !== "") {
+      obj.app_id = message.app_id;
     }
     if (message.clan_name !== "") {
       obj.clan_name = message.clan_name;
@@ -7775,7 +7908,7 @@ export const ChannelCreatedEvent = {
     message.channel_private = object.channel_private ?? 0;
     message.channel_type = object.channel_type ?? undefined;
     message.status = object.status ?? 0;
-    message.app_url = object.app_url ?? "";
+    message.app_id = object.app_id ?? "";
     message.clan_name = object.clan_name ?? "";
     return message;
   },
@@ -8607,7 +8740,7 @@ function createBaseChannelUpdatedEvent(): ChannelUpdatedEvent {
     meeting_code: "",
     is_error: false,
     channel_private: false,
-    app_url: "",
+    app_id: "",
     e2ee: 0,
     topic: "",
     age_restricted: 0,
@@ -8650,8 +8783,8 @@ export const ChannelUpdatedEvent = {
     if (message.channel_private !== false) {
       writer.uint32(88).bool(message.channel_private);
     }
-    if (message.app_url !== "") {
-      writer.uint32(98).string(message.app_url);
+    if (message.app_id !== "") {
+      writer.uint32(98).string(message.app_id);
     }
     if (message.e2ee !== 0) {
       writer.uint32(104).int32(message.e2ee);
@@ -8757,7 +8890,7 @@ export const ChannelUpdatedEvent = {
             break;
           }
 
-          message.app_url = reader.string();
+          message.app_id = reader.string();
           continue;
         case 13:
           if (tag !== 104) {
@@ -8809,7 +8942,7 @@ export const ChannelUpdatedEvent = {
       meeting_code: isSet(object.meeting_code) ? globalThis.String(object.meeting_code) : "",
       is_error: isSet(object.is_error) ? globalThis.Boolean(object.is_error) : false,
       channel_private: isSet(object.channel_private) ? globalThis.Boolean(object.channel_private) : false,
-      app_url: isSet(object.app_url) ? globalThis.String(object.app_url) : "",
+      app_id: isSet(object.app_id) ? globalThis.String(object.app_id) : "",
       e2ee: isSet(object.e2ee) ? globalThis.Number(object.e2ee) : 0,
       topic: isSet(object.topic) ? globalThis.String(object.topic) : "",
       age_restricted: isSet(object.age_restricted) ? globalThis.Number(object.age_restricted) : 0,
@@ -8852,8 +8985,8 @@ export const ChannelUpdatedEvent = {
     if (message.channel_private !== false) {
       obj.channel_private = message.channel_private;
     }
-    if (message.app_url !== "") {
-      obj.app_url = message.app_url;
+    if (message.app_id !== "") {
+      obj.app_id = message.app_id;
     }
     if (message.e2ee !== 0) {
       obj.e2ee = Math.round(message.e2ee);
@@ -8886,7 +9019,7 @@ export const ChannelUpdatedEvent = {
     message.meeting_code = object.meeting_code ?? "";
     message.is_error = object.is_error ?? false;
     message.channel_private = object.channel_private ?? false;
-    message.app_url = object.app_url ?? "";
+    message.app_id = object.app_id ?? "";
     message.e2ee = object.e2ee ?? 0;
     message.topic = object.topic ?? "";
     message.age_restricted = object.age_restricted ?? 0;
@@ -10395,6 +10528,8 @@ function createBaseUserProfileRedis(): UserProfileRedis {
     pubkey: "",
     mezon_id: "",
     app_token: "",
+    app_url: "",
+    is_bot: false,
   };
 }
 
@@ -10444,6 +10579,12 @@ export const UserProfileRedis = {
     }
     if (message.app_token !== "") {
       writer.uint32(122).string(message.app_token);
+    }
+    if (message.app_url !== "") {
+      writer.uint32(130).string(message.app_url);
+    }
+    if (message.is_bot !== false) {
+      writer.uint32(136).bool(message.is_bot);
     }
     return writer;
   },
@@ -10560,6 +10701,20 @@ export const UserProfileRedis = {
 
           message.app_token = reader.string();
           continue;
+        case 16:
+          if (tag !== 130) {
+            break;
+          }
+
+          message.app_url = reader.string();
+          continue;
+        case 17:
+          if (tag !== 136) {
+            break;
+          }
+
+          message.is_bot = reader.bool();
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -10590,6 +10745,8 @@ export const UserProfileRedis = {
       pubkey: isSet(object.pubkey) ? globalThis.String(object.pubkey) : "",
       mezon_id: isSet(object.mezon_id) ? globalThis.String(object.mezon_id) : "",
       app_token: isSet(object.app_token) ? globalThis.String(object.app_token) : "",
+      app_url: isSet(object.app_url) ? globalThis.String(object.app_url) : "",
+      is_bot: isSet(object.is_bot) ? globalThis.Boolean(object.is_bot) : false,
     };
   },
 
@@ -10640,6 +10797,12 @@ export const UserProfileRedis = {
     if (message.app_token !== "") {
       obj.app_token = message.app_token;
     }
+    if (message.app_url !== "") {
+      obj.app_url = message.app_url;
+    }
+    if (message.is_bot !== false) {
+      obj.is_bot = message.is_bot;
+    }
     return obj;
   },
 
@@ -10663,6 +10826,8 @@ export const UserProfileRedis = {
     message.pubkey = object.pubkey ?? "";
     message.mezon_id = object.mezon_id ?? "";
     message.app_token = object.app_token ?? "";
+    message.app_url = object.app_url ?? "";
+    message.is_bot = object.is_bot ?? false;
     return message;
   },
 };
@@ -12385,6 +12550,169 @@ export const UnpinMessageEvent = {
     message.message_id = object.message_id ?? "";
     message.channel_id = object.channel_id ?? "";
     message.clan_id = object.clan_id ?? "";
+    return message;
+  },
+};
+
+function createBaseHandleParticipantMeetStateEvent(): HandleParticipantMeetStateEvent {
+  return { clan_id: "", channel_id: "", display_name: "", state: 0 };
+}
+
+export const HandleParticipantMeetStateEvent = {
+  encode(message: HandleParticipantMeetStateEvent, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.clan_id !== "") {
+      writer.uint32(10).string(message.clan_id);
+    }
+    if (message.channel_id !== "") {
+      writer.uint32(18).string(message.channel_id);
+    }
+    if (message.display_name !== "") {
+      writer.uint32(26).string(message.display_name);
+    }
+    if (message.state !== 0) {
+      writer.uint32(32).int32(message.state);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): HandleParticipantMeetStateEvent {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseHandleParticipantMeetStateEvent();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.clan_id = reader.string();
+          continue;
+        case 2:
+          if (tag !== 18) {
+            break;
+          }
+
+          message.channel_id = reader.string();
+          continue;
+        case 3:
+          if (tag !== 26) {
+            break;
+          }
+
+          message.display_name = reader.string();
+          continue;
+        case 4:
+          if (tag !== 32) {
+            break;
+          }
+
+          message.state = reader.int32();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): HandleParticipantMeetStateEvent {
+    return {
+      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
+      channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "",
+      display_name: isSet(object.display_name) ? globalThis.String(object.display_name) : "",
+      state: isSet(object.state) ? globalThis.Number(object.state) : 0,
+    };
+  },
+
+  toJSON(message: HandleParticipantMeetStateEvent): unknown {
+    const obj: any = {};
+    if (message.clan_id !== "") {
+      obj.clan_id = message.clan_id;
+    }
+    if (message.channel_id !== "") {
+      obj.channel_id = message.channel_id;
+    }
+    if (message.display_name !== "") {
+      obj.display_name = message.display_name;
+    }
+    if (message.state !== 0) {
+      obj.state = Math.round(message.state);
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<HandleParticipantMeetStateEvent>, I>>(base?: I): HandleParticipantMeetStateEvent {
+    return HandleParticipantMeetStateEvent.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<HandleParticipantMeetStateEvent>, I>>(
+    object: I,
+  ): HandleParticipantMeetStateEvent {
+    const message = createBaseHandleParticipantMeetStateEvent();
+    message.clan_id = object.clan_id ?? "";
+    message.channel_id = object.channel_id ?? "";
+    message.display_name = object.display_name ?? "";
+    message.state = object.state ?? 0;
+    return message;
+  },
+};
+
+function createBaseDeleteAccountEvent(): DeleteAccountEvent {
+  return { user_id: "" };
+}
+
+export const DeleteAccountEvent = {
+  encode(message: DeleteAccountEvent, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.user_id !== "") {
+      writer.uint32(10).string(message.user_id);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): DeleteAccountEvent {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseDeleteAccountEvent();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.user_id = reader.string();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): DeleteAccountEvent {
+    return { user_id: isSet(object.user_id) ? globalThis.String(object.user_id) : "" };
+  },
+
+  toJSON(message: DeleteAccountEvent): unknown {
+    const obj: any = {};
+    if (message.user_id !== "") {
+      obj.user_id = message.user_id;
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<DeleteAccountEvent>, I>>(base?: I): DeleteAccountEvent {
+    return DeleteAccountEvent.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<DeleteAccountEvent>, I>>(object: I): DeleteAccountEvent {
+    const message = createBaseDeleteAccountEvent();
+    message.user_id = object.user_id ?? "";
     return message;
   },
 };
