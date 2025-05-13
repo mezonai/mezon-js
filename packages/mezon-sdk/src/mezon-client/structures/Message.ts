@@ -1,5 +1,6 @@
 import {
   ApiMessageAttachment,
+  ApiMessageMention,
   ApiMessageReaction,
   ApiMessageRef,
   ChannelMessageContent,
@@ -20,7 +21,7 @@ export interface MessageInitData {
   channel_id: string;
   sender_id: string;
   content: ChannelMessageContent;
-  mentions?: ApiMessageAttachment[];
+  mentions?: Array<ApiMessageMention>;
   attachments?: ApiMessageAttachment[];
   reactions?: ApiMessageReaction[];
   references?: ApiMessageRef[];
