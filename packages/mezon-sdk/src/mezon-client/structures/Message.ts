@@ -21,7 +21,7 @@ export interface MessageInitData {
   channel_id: string;
   sender_id: string;
   content: ChannelMessageContent;
-  mentions?: Array<ApiMessageMention>;
+  mentions?: ApiMessageMention[];
   attachments?: ApiMessageAttachment[];
   reactions?: ApiMessageReaction[];
   references?: ApiMessageRef[];
@@ -33,7 +33,7 @@ export class Message {
   public id: string;
   public sender_id: string;
   public content: ChannelMessageContent;
-  public mentions: ApiMessageAttachment[] | undefined;
+  public mentions: ApiMessageMention[] | undefined;
   public attachments: ApiMessageAttachment[] | undefined;
   public reactions: ApiMessageReaction[] | undefined;
   public references: ApiMessageRef[] | undefined;
