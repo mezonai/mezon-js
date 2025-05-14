@@ -3340,6 +3340,7 @@ export class MezonApi {
   /**  */
   confirmLogin(
     bearerToken: string,
+    basePath: string,
     body: ApiConfirmLoginRequest,
     options: any = {}
   ): Promise<any> {
@@ -3354,7 +3355,7 @@ export class MezonApi {
     let bodyJson: string = "";
     bodyJson = JSON.stringify(body || {});
 
-    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
+    const fullUrl = this.buildFullUrl(basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("POST", options, bodyJson);
     if (bearerToken) {
       fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;

@@ -3953,6 +3953,7 @@ export class Client {
 
   async confirmLogin(
     session: Session,
+    basePath: string,
     body: ApiConfirmLoginRequest
   ): Promise<any> {
     if (
@@ -3964,7 +3965,7 @@ export class Client {
     }
 
     return this.apiClient
-      .confirmLogin(session.token, body)
+      .confirmLogin(session.token, basePath, body)
       .then((response: any) => {
         return response;
       });
