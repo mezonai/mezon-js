@@ -62,6 +62,7 @@ export class Session implements ISession {
     token: string,
     refresh_token: string,
     readonly created: boolean,
+    readonly api_url: string,
     is_remember: boolean) {
     this.token = token;
     this.refresh_token = refresh_token;
@@ -112,7 +113,7 @@ export class Session implements ISession {
     this.vars = tokenDecoded['vrs'];
   }
 
-  static restore(token: string, refreshToken: string, isRemember: boolean): Session {
-    return new Session(token, refreshToken, false, isRemember);
+  static restore(token: string, refreshToken: string, api_url: string, isRemember: boolean): Session {
+    return new Session(token, refreshToken, false, api_url, isRemember);
   }
 }
