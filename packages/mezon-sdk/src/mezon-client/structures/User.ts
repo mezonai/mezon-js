@@ -63,7 +63,7 @@ export class User {
 
   async sendDM(content: ChannelMessageContent, code?: number) {
     return this.messageQueue.enqueue(async () => {
-      if (this.dmChannelId) {
+      if (!this.dmChannelId) {
         const dmChannel = await this.createDmChannel();
         this.dmChannelId = dmChannel?.channel_id ?? "";
       }
