@@ -67,10 +67,12 @@ export class Message {
 
   async reply(
     content: ChannelMessageContent,
-    code?: number,
-    topic_id?: string,
+    mentions?: Array<ApiMessageMention>,
+    attachments?: Array<ApiMessageAttachment>,
+    mention_everyone?: boolean,
     anonymous_message?: boolean,
-    mention_everyone?: boolean
+    topic_id?: string,
+    code?: number,
   ) {
     return await this.messageQueue.enqueue(async () => {
       const user = await this.channel.clan.users.fetch(this.sender_id);
@@ -90,6 +92,8 @@ export class Message {
         is_public: !this.channel.is_private,
         channel_id: this.channel.id!,
         content,
+        mentions,
+        attachments,
         references,
         anonymous_message,
         mention_everyone,

@@ -43,6 +43,7 @@ import { isValidUserId, parseUrlToHostAndSSL, sleep } from "../../utils/helper";
 import { ChannelManager } from "../manager/channel_manager";
 import { User, UserInitData } from "../structures/User";
 import { AsyncThrottleQueue } from "../utils/AsyncThrottleQueue";
+import { Session } from "../../session";
 
 const DEFAULT_HOST = "gw.mezon.ai";
 const DEFAULT_PORT = "443";
@@ -85,9 +86,9 @@ export class MezonClient extends EventEmitter {
     this.initManager(basePath);
   }
 
-  initManager(basePath: string) {
+  initManager(basePath: string, sessionApi?: Session) {
     this.apiClient = new MezonApi(this.token, basePath, this.timeout);
-    this.sessionManager = new SessionManager(this.apiClient);
+    this.sessionManager = new SessionManager(this.apiClient, sessionApi);
     this.socketManager = new SocketManager(
       this.host,
       this.port,
@@ -117,7 +118,7 @@ export class MezonClient extends EventEmitter {
       this.useSSL = dataHost.useSSL;
       const scheme = this.useSSL ? "https://" : "http://";
       const basePath = `${scheme}${this.host}:${this.port}`;
-      this.initManager(basePath);
+      this.initManager(basePath, sessionApi);
     }
 
     this.clientId = sessionApi?.user_id;
@@ -491,6 +492,7 @@ export class MezonClient extends EventEmitter {
       this.socketManager,
       this.messageQueue
     );
+    console.log('channelchannel', channel)
     channel.messages.set(message_id!, message);
   }
 
