@@ -95,6 +95,18 @@ export enum Events {
 
   /** Listen to user accepted call 1-1 */
   WebrtcSignalingFwd = InternalEventsSocket.WebrtcSignalingFwd,
+
+  /** Listen to start voice */
+  VoiceStartedEvent = InternalEventsSocket.VoiceStartedEvent,
+
+  /** Listen to end voice */
+  VoiceEndedEvent = InternalEventsSocket.VoiceEndedEvent,
+
+  /** Listen to user join voice room */
+  VoiceJoinedEvent = InternalEventsSocket.VoiceJoinedEvent,
+
+  /** Listen to user leave voice room */
+  VoiceLeavedEvent = InternalEventsSocket.VoiceLeavedEvent,
 }
 
 export enum ChannelType {

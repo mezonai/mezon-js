@@ -62,7 +62,6 @@ export class Clan {
     if (this._loadingPromise) return this._loadingPromise;
 
     this._loadingPromise = (async () => {
-      console.log("---------- call api listChannelDescs");
       const channels = await this.apiClient.listChannelDescs(
         this.sessionToken,
         ChannelType.CHANNEL_TYPE_CHANNEL,
