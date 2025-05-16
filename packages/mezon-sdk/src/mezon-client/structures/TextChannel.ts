@@ -1,5 +1,7 @@
 import {
   ApiChannelDescription,
+  ApiMessageAttachment,
+  ApiMessageMention,
   ChannelMessageContent,
   ReplyMessageData,
 } from "../../interfaces";
@@ -51,10 +53,12 @@ export class TextChannel {
 
   async send(
     content: ChannelMessageContent,
-    code?: number,
-    topic_id?: string,
+    mentions?: Array<ApiMessageMention>,
+    attachments?: Array<ApiMessageAttachment>,
+    mention_everyone?: boolean,
     anonymous_message?: boolean,
-    mention_everyone?: boolean
+    topic_id?: string,
+    code?: number,
   ) {
     return this.messageQueue.enqueue(async () => {
       const dataSend: ReplyMessageData = {
@@ -63,6 +67,8 @@ export class TextChannel {
         mode: convertChanneltypeToChannelMode(this.channel_type!),
         is_public: !this.is_private,
         content,
+        mentions,
+        attachments,
         anonymous_message,
         mention_everyone,
         code,
