@@ -163,6 +163,8 @@ import {
   ApiGenerateMeetTokenExternalResponse,
   ApiUpdateClanOrderRequest,
   ApiMessage2InboxRequest,
+  ApiListClanDiscover,
+  ApiClanDiscoverRequest,
 } from "./api.gen";
 
 import { Session } from "./session";
@@ -580,6 +582,11 @@ export class Client {
     const basePath = `${scheme}${host}:${port}`;
 
     this.apiClient = new MezonApi(serverkey, timeout, basePath);
+  }
+
+  /** check session isexpired */
+  isexpired(session: Session): boolean {
+    return session.isexpired(Date.now() / 1000)
   }
 
   /** Authenticate a user with a custom id against the server. */
@@ -4734,6 +4741,18 @@ export class Client {
       .updateClanOrder(session.token, request)
       .then((response: any) => {
         return response !== undefined;
+      });
+  }
+
+  /** list clan discover. */
+  listClanDiscover(
+    basePath: string,
+    request: ApiClanDiscoverRequest
+  ): Promise<ApiListClanDiscover> {
+    return this.apiClient
+      .clanDiscover(this.serverkey, "", basePath, request)
+      .then((response: ApiListClanDiscover) => {
+        return Promise.resolve(response);
       });
   }
 }
