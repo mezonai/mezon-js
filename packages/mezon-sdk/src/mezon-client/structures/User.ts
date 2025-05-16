@@ -10,12 +10,12 @@ import { AsyncThrottleQueue } from "../utils/AsyncThrottleQueue";
 import { Clan } from "./Clan";
 export interface UserInitData {
   id: string;
-  username: string;
-  clan_nick: string;
-  clan_avatar: string;
-  display_name: string;
-  avartar: string;
-  dmChannelId: string;
+  username?: string;
+  clan_nick?: string;
+  clan_avatar?: string;
+  display_name?: string;
+  avartar?: string;
+  dmChannelId?: string;
 }
 
 export class User {
@@ -39,12 +39,12 @@ export class User {
     socketManager: SocketManager
   ) {
     this.id = initUserData.id;
-    this.avartar = initUserData.avartar;
-    this.dmChannelId = initUserData?.dmChannelId;
-    this.username = initUserData?.username;
-    this.clan_nick = initUserData?.clan_nick;
-    this.clan_avatar = initUserData?.clan_avatar;
-    this.display_name = initUserData?.display_name;
+    this.avartar = initUserData.avartar ?? '';
+    this.dmChannelId = initUserData?.dmChannelId ?? ''; 
+    this.username = initUserData?.username ?? '';
+    this.clan_nick = initUserData?.clan_nick ?? '';
+    this.clan_avatar = initUserData?.clan_avatar ?? '';
+    this.display_name = initUserData?.display_name ?? '';
     this.clan = clan;
     this.channelManager = channelManager;
     this.messageQueue = messageQueue;
@@ -64,7 +64,6 @@ export class User {
   async sendDM(content: ChannelMessageContent, code?: number) {
     return this.messageQueue.enqueue(async () => {
       if (this.dmChannelId) {
-        console.log("--------------- call api createDMchannel");
         const dmChannel = await this.createDmChannel();
         this.dmChannelId = dmChannel?.channel_id ?? "";
       }

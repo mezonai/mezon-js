@@ -37,3 +37,22 @@ export function isValidUserId(userId: string | number) {
 export function sleep(ms: number) {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
+
+export function parseUrlToHostAndSSL(url: string) {
+  const trimmedUrl = url.trim();
+  const isHttps = trimmedUrl.startsWith("https://");
+  const isHttp = trimmedUrl.startsWith("http://");
+
+  if (isHttps || isHttp) {
+    const withoutScheme = trimmedUrl.replace(/^https?:\/\//, "");
+    return {
+      host: withoutScheme.replace(/\/$/, ""),
+      useSSL: isHttps,
+    };
+  }
+
+  return {
+    host: trimmedUrl.replace(/\/$/, ""),
+    useSSL: false,
+  };
+}
