@@ -161,7 +161,6 @@ export class MezonClient extends EventEmitter {
       }
       return null;
     } catch (e) {
-      console.log(e);
       return null;
     }
   }
@@ -492,7 +491,6 @@ export class MezonClient extends EventEmitter {
       this.socketManager,
       this.messageQueue
     );
-    console.log('channelchannel', channel)
     channel.messages.set(message_id!, message);
   }
 
@@ -520,6 +518,7 @@ export class MezonClient extends EventEmitter {
         }
         const userIds = Object.keys(allDmChannels);
         userIds.forEach((id) => {
+          if (!id) return;
           const user = new User(
             { id, dmChannelId },
             clan,
@@ -527,18 +526,25 @@ export class MezonClient extends EventEmitter {
             this.messageQueue,
             this.socketManager
           );
-          clan.users.set(id!, user);
-          clanDm?.users.set(id!, user);
+          const userDM = clanDm?.users?.get(id);
+          if (!userDM) {
+            clanDm?.users?.set(id, user);
+          }
+          clanDm?.users?.set(id, user);
+          const userClan = clan.users.get(id);
+          if (!userClan) {
+            clan.users.set(id, user);
+          }
         });
       }
 
       const userRaw: UserInitData = {
-        id: sender_id!,
-        username: username!,
-        clan_nick: clan_nick!,
-        clan_avatar: clan_avatar!,
-        avartar: avatar!,
-        display_name: display_name!,
+        id: sender_id,
+        username: username,
+        clan_nick: clan_nick,
+        clan_avatar: clan_avatar,
+        avartar: avatar,
+        display_name: display_name,
         dmChannelId,
       };
 
@@ -549,8 +555,8 @@ export class MezonClient extends EventEmitter {
         this.messageQueue,
         this.socketManager
       );
-      clan.users.set(sender_id!, user);
-      clanDm?.users.set(sender_id!, user);
+      clan.users.set(sender_id, user);
+      clanDm?.users.set(sender_id, user);
     }
   }
 

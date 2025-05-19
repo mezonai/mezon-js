@@ -146,7 +146,7 @@ export class SocketManager {
         console.log("Connected successfully!");
         clearInterval(interval);
       } catch (e) {
-        console.log("Connection failed:", e);
+        console.log("Connection failed!");
         retryInterval = Math.min(retryInterval * 2, maxRetryInterval);
         console.log(`Retrying in ${retryInterval / 1000} seconds...`);
         clearInterval(interval);
@@ -174,7 +174,6 @@ export class SocketManager {
       );
       return msgACK;
     } catch (error) {
-      console.log("Error writeChatMessage", error);
       throw error;
     }
   }
@@ -196,7 +195,6 @@ export class SocketManager {
       );
       return msgACK;
     } catch (error) {
-      console.log("Error updateChatMessage", error);
       throw error;
     }
   }
@@ -218,7 +216,6 @@ export class SocketManager {
       );
       return msgACK;
     } catch (error) {
-      console.log("Error writeMessageReaction", error);
       throw error;
     }
   }
@@ -234,7 +231,6 @@ export class SocketManager {
       );
       return msgACK;
     } catch (error) {
-      console.log("Error removeChatMessage", error);
       throw error;
     }
   }
