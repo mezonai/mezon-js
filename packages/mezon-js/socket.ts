@@ -204,6 +204,8 @@ export interface UserChannelRemovedEvent {
   channel_type: number;
   // the clan id
   clan_id: string;
+  // badge_count
+  badge_counts: number[];
 }
 
 export interface UserClanRemovedEvent {
