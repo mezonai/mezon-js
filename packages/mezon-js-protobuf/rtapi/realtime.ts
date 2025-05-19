@@ -1195,6 +1195,7 @@ export interface UserChannelRemoved {
   channel_type: number;
   /** the clan_id */
   clan_id: string;
+  badge_counts: number[];
 }
 
 /**  */
@@ -9900,7 +9901,7 @@ export const UserChannelAdded = {
 };
 
 function createBaseUserChannelRemoved(): UserChannelRemoved {
-  return { channel_id: "", user_ids: [], channel_type: 0, clan_id: "" };
+  return { channel_id: "", user_ids: [], channel_type: 0, clan_id: "", badge_counts: [] };
 }
 
 export const UserChannelRemoved = {
@@ -9917,6 +9918,11 @@ export const UserChannelRemoved = {
     if (message.clan_id !== "") {
       writer.uint32(34).string(message.clan_id);
     }
+    writer.uint32(50).fork();
+    for (const v of message.badge_counts) {
+      writer.int32(v);
+    }
+    writer.ldelim();
     return writer;
   },
 
@@ -9955,6 +9961,23 @@ export const UserChannelRemoved = {
 
           message.clan_id = reader.string();
           continue;
+        case 6:
+          if (tag === 48) {
+            message.badge_counts.push(reader.int32());
+
+            continue;
+          }
+
+          if (tag === 50) {
+            const end2 = reader.uint32() + reader.pos;
+            while (reader.pos < end2) {
+              message.badge_counts.push(reader.int32());
+            }
+
+            continue;
+          }
+
+          break;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -9970,6 +9993,9 @@ export const UserChannelRemoved = {
       user_ids: globalThis.Array.isArray(object?.user_ids) ? object.user_ids.map((e: any) => globalThis.String(e)) : [],
       channel_type: isSet(object.channel_type) ? globalThis.Number(object.channel_type) : 0,
       clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
+      badge_counts: globalThis.Array.isArray(object?.badge_counts)
+        ? object.badge_counts.map((e: any) => globalThis.Number(e))
+        : [],
     };
   },
 
@@ -9987,6 +10013,9 @@ export const UserChannelRemoved = {
     if (message.clan_id !== "") {
       obj.clan_id = message.clan_id;
     }
+    if (message.badge_counts?.length) {
+      obj.badge_counts = message.badge_counts.map((e) => Math.round(e));
+    }
     return obj;
   },
 
@@ -9999,6 +10028,7 @@ export const UserChannelRemoved = {
     message.user_ids = object.user_ids?.map((e) => e) || [];
     message.channel_type = object.channel_type ?? 0;
     message.clan_id = object.clan_id ?? "";
+    message.badge_counts = object.badge_counts?.map((e) => e) || [];
     return message;
   },
 };

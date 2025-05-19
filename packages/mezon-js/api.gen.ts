@@ -3156,6 +3156,48 @@ export interface ApiUserEventRequest {
   event_id?: string;
 }
 
+/**  */
+export interface ApiClanDiscover {
+  //
+  about?: string;
+  //
+  banner?: string;
+  //
+  clan_id?: string;
+  //
+  clan_logo?: string;
+  //
+  clan_name?: string;
+  //
+  description?: string;
+  //
+  invite_id?: string;
+  //
+  online_members?: number;
+  //
+  total_members?: number;
+  //
+  verified?: boolean;
+}
+
+/**  */
+export interface ApiListClanDiscover {
+  //
+  clan_discover?: Array<ApiClanDiscover>;
+  //
+  page?: number;
+  //
+  page_count?: number;
+}
+
+/**  */
+export interface ApiClanDiscoverRequest {
+  //
+  item_per_page?: number;
+  //
+  page_number?: number;
+}
+
 export class MezonApi {
   basePath: string;
   constructor(
@@ -10726,6 +10768,44 @@ export class MezonApi {
     const fetchOptions = buildFetchOptions("PUT", options, bodyJson);
     if (bearerToken) {
         fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+    }
+
+    return Promise.race([
+      fetch(fullUrl, fetchOptions).then((response) => {
+        if (response.status == 204) {
+          return response;
+        } else if (response.status >= 200 && response.status < 300) {
+          return response.json();
+        } else {
+          throw response;
+        }
+      }),
+      new Promise((_, reject) =>
+        setTimeout(reject, this.timeoutMs, "Request timed out.")
+      ),
+    ]);
+  }
+
+  /** Discover mezon clan. */
+  clanDiscover(basicAuthUsername: string,
+    basicAuthPassword: string,
+      basePath: string,
+      body:ApiClanDiscoverRequest,
+      options: any = {}): Promise<ApiListClanDiscover> {
+    
+    if (body === null || body === undefined) {
+      throw new Error("'body' is a required parameter but is null or undefined.");
+    }
+    const urlPath = "/v2/clan/discover";
+    const queryParams = new Map<string, any>();
+
+    let bodyJson : string = "";
+    bodyJson = JSON.stringify(body || {});
+
+    const fullUrl = this.buildFullUrl(basePath, urlPath, queryParams);
+    const fetchOptions = buildFetchOptions("POST", options, bodyJson);
+    if (basicAuthUsername) {
+      fetchOptions.headers["Authorization"] = "Basic " + encode(basicAuthUsername + ":" + basicAuthPassword);
     }
 
     return Promise.race([
