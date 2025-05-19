@@ -508,10 +508,10 @@ export class MezonClient extends EventEmitter {
     if (clan) {
       let userCache = clan.users.get(sender_id!);
       let dmChannelId = userCache?.dmChannelId ?? "";
-      let clanDm: Clan | undefined;
+      let clanDm = this.clans.get("0");
+      const allDmChannels = this.channelManager.getAllDmChannels();
 
       if (!userCache && sender_id !== this.clientId) {
-        const allDmChannels = this.channelManager.getAllDmChannels();
         dmChannelId = allDmChannels?.[sender_id] ?? "";
         if (dmChannelId) {
           clanDm = this.clans.get("0");
@@ -520,7 +520,7 @@ export class MezonClient extends EventEmitter {
         userIds.forEach((id) => {
           if (!id) return;
           const user = new User(
-            { id, dmChannelId },
+            { id, dmChannelId: allDmChannels?.[id] ?? "" },
             clan,
             this.channelManager,
             this.messageQueue,
@@ -530,7 +530,6 @@ export class MezonClient extends EventEmitter {
           if (!userDM) {
             clanDm?.users?.set(id, user);
           }
-          clanDm?.users?.set(id, user);
           const userClan = clan.users.get(id);
           if (!userClan) {
             clan.users.set(id, user);
@@ -545,7 +544,7 @@ export class MezonClient extends EventEmitter {
         clan_avatar: clan_avatar,
         avartar: avatar,
         display_name: display_name,
-        dmChannelId,
+        dmChannelId: allDmChannels?.[sender_id] ?? "",
       };
 
       const user = new User(
