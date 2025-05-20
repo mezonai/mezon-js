@@ -359,7 +359,7 @@ export interface ApiAccount {
   //The UNIX time (for gRPC clients) or ISO string (for REST clients) when the user's email was verified.
   verify_time?: string;
   //The user's wallet data.
-  wallet?: number;
+  wallet?: string;
 }
 
 /** Send a app token to the server. Used with authenticate/link/unlink. */
@@ -10676,6 +10676,7 @@ export class MezonApi {
 
   /** handler external mezon meet */
   generateMeetTokenExternal(bearerToken: string,
+      basePath: string,
       token:string,
       displayName?:string,
       isGuest?:boolean,
@@ -10692,7 +10693,7 @@ export class MezonApi {
 
     let bodyJson : string = "";
 
-    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
+    const fullUrl = this.buildFullUrl(basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("POST", options, bodyJson);
     if (bearerToken) {
         fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
