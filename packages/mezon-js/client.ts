@@ -4713,12 +4713,13 @@ export class Client {
   }
 
   async generateMeetTokenExternal(
+    basePath: string,
     token:string,
     displayName?:string,
     isGuest?: boolean
   ): Promise<ApiGenerateMeetTokenExternalResponse> {
     return this.apiClient
-      .generateMeetTokenExternal("", token, displayName, isGuest)
+      .generateMeetTokenExternal("", basePath, token, displayName, isGuest)
       .then((response: ApiGenerateMeetTokenExternalResponse) => {
         return Promise.resolve(response);
       });
