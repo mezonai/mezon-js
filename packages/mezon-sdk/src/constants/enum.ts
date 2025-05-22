@@ -36,6 +36,7 @@ export enum InternalEventsSocket {
   StreamingLeavedEvent = "streaming_leaved_event",
   DropdownBoxSelected = "dropdown_box_selected",
   WebrtcSignalingFwd = "webrtc_signaling_fwd",
+  Notifications = "notifications",
 }
 
 export enum Events {
@@ -107,6 +108,9 @@ export enum Events {
 
   /** Listen to user leave voice room */
   VoiceLeavedEvent = InternalEventsSocket.VoiceLeavedEvent,
+
+  /** Listen to add friend */
+  Notifications = InternalEventsSocket.Notifications,
 }
 
 export enum ChannelType {

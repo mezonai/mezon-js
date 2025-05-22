@@ -4,7 +4,6 @@ import { Events } from "../../constants";
 import { DefaultSocket } from "../../socket";
 import { WebSocketAdapter } from "../../web_socket_adapter";
 import { WebSocketAdapterPb } from "../../web_socket_adapter_pb";
-import { SessionManager } from "./session_manager";
 import { Socket } from "../../interfaces/socket";
 import { Session } from "../../session";
 import { EventManager } from "./event_manager";
@@ -18,22 +17,23 @@ import {
 } from "../../interfaces";
 import { AsyncThrottleQueue } from "../utils/AsyncThrottleQueue";
 import { sleep } from "../../utils/helper";
+import { MessageDatabase } from "../../sqlite/MessageDatabase";
 
 export class SocketManager {
   [key: string]: any;
   private socket: Socket;
   private isHardDisconnect: boolean | undefined;
+  private isRetrying = false;
   constructor(
     private host: string,
     private port: string,
     private useSSL: boolean,
     private adapter: WebSocketAdapter,
-    private sessionManager: SessionManager,
     private apiClient: MezonApi,
-    private apiKey: string,
     private eventManager: EventManager,
     private messageQueue: AsyncThrottleQueue,
-    private client: MezonClient
+    private client: MezonClient,
+    private messageDB: MessageDatabase
   ) {
     this.socket = new DefaultSocket(
       this.host,
@@ -66,7 +66,7 @@ export class SocketManager {
   }
 
   closeSocket() {
-    this.isHardDisconnect = true;
+    // this.isHardDisconnect = true;
     this.socket.close();
     console.log("eventManager", this.eventManager);
   }
@@ -109,7 +109,8 @@ export class SocketManager {
           this.apiClient,
           this,
           sessionToken,
-          this.messageQueue
+          this.messageQueue,
+          this.messageDB
         );
         this.client.clans.set(clan.clan_id!, clanObj);
       }
@@ -130,29 +131,31 @@ export class SocketManager {
   }
 
   async retriesConnect(): Promise<void> {
+    if (this.isRetrying) return;
+    this.isRetrying = true;
+
     let retryInterval = 5000;
     const maxRetryInterval = 60000;
 
     console.log("Reconnecting...");
 
-    const interval = setInterval(async () => {
+    const retry = async () => {
       try {
-        this.createSocket();
-        const sockSession = await this.sessionManager.authenticate(this.apiKey);
-        const sessionConnected = await this.connect(sockSession);
-        if (sessionConnected?.token) {
-          await this.connectSocket(sessionConnected.token);
-        }
+        const sessionStr = await this.client.login();
+        console.log("Reconnected session:", sessionStr);
+
+        this.isRetrying = false;
         console.log("Connected successfully!");
-        clearInterval(interval);
       } catch (e) {
-        console.log("Connection failed!");
+        console.log("Connection failed!", e);
         retryInterval = Math.min(retryInterval * 2, maxRetryInterval);
         console.log(`Retrying in ${retryInterval / 1000} seconds...`);
-        clearInterval(interval);
-        setTimeout(() => this.retriesConnect(), retryInterval);
+
+        setTimeout(retry, retryInterval);
       }
-    }, retryInterval);
+    };
+
+    retry();
   }
 
   async writeChatMessage(dataWriteMessage: ReplyMessageData) {

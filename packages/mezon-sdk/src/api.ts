@@ -641,4 +641,78 @@ export class MezonApi {
       ),
     ]);
   }
-};
+
+  getListFriends(
+    bearerToken: string,
+    limit = 1000,
+    state?: string,
+    cursor?: string,
+    options: any = {}
+  ): Promise<any> {
+    const urlPath = "/v2/friend";
+    const queryParams = new Map<string, any>();
+    queryParams.set("limit", limit);
+    queryParams.set("state", state);
+    queryParams.set("cursor", cursor);
+
+    let bodyJson: string = "";
+
+    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
+    const fetchOptions = buildFetchOptions("GET", options, bodyJson);
+    if (bearerToken) {
+      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+    }
+
+    return Promise.race([
+      fetch(fullUrl, fetchOptions).then((response) => {
+        if (response.status == 204) {
+          return response;
+        } else if (response.status >= 200 && response.status < 300) {
+          return response.json();
+        } else {
+          throw response;
+        }
+      }),
+      new Promise((_, reject) =>
+        setTimeout(reject, this.timeoutMs, "Request timed out.")
+      ),
+    ]);
+  }
+
+  requestFriend(
+    bearerToken: string,
+    usernames: string,
+    ids?: string,
+    options: any = {}
+  ): Promise<any> {
+    const urlPath = "/v2/friend";
+    const queryParams = new Map<string, any>();
+    queryParams.set("usernames", usernames);
+    if (ids) {
+      queryParams.set("ids", ids);
+    }
+
+    let bodyJson: string = "";
+
+    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
+    const fetchOptions = buildFetchOptions("POST", options, bodyJson);
+    if (bearerToken) {
+      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+    }
+
+    return Promise.race([
+      fetch(fullUrl, fetchOptions).then((response) => {
+        if (response.status == 204) {
+          return response;
+        } else if (response.status >= 200 && response.status < 300) {
+          return response.json();
+        } else {
+          throw response;
+        }
+      }),
+      new Promise((_, reject) =>
+        setTimeout(reject, this.timeoutMs, "Request timed out.")
+      ),
+    ]);
+  }
+}

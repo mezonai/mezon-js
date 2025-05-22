@@ -5,6 +5,7 @@ import {
   ChannelMessageContent,
   ReplyMessageData,
 } from "../../interfaces";
+import { MessageDatabase } from "../../sqlite/MessageDatabase";
 import { convertChanneltypeToChannelMode } from "../../utils/helper";
 import { SocketManager } from "../manager/socket_manager";
 import { AsyncThrottleQueue } from "../utils/AsyncThrottleQueue";
@@ -26,12 +27,14 @@ export class TextChannel {
 
   private readonly socketManager: SocketManager;
   private readonly messageQueue: AsyncThrottleQueue;
+  private messageDB: MessageDatabase;
 
   constructor(
     initChannelData: ApiChannelDescription,
     clan: Clan,
     socketManager: SocketManager,
-    messageQueue: AsyncThrottleQueue
+    messageQueue: AsyncThrottleQueue,
+    messageDB: MessageDatabase
   ) {
     this.id = initChannelData.channel_id;
     this.name = initChannelData.channel_label;
@@ -42,13 +45,21 @@ export class TextChannel {
     this.parent_id = initChannelData?.parent_id ?? "";
     this.clan = clan;
     this.messages = new CacheManager<string, Message>(async (message_id) => {
-      // TODO: If the channel's message cache is empty,
-      // and channel.messages.fetch(message_id) is called,
-      // this function will be triggered to fetch the message detail from the API.
-      throw Error(`Message ${message_id} not found on channel ${this.id}!`);
+      const messageDb = this.messageDB.getMessageById(message_id, this.id!);
+      if (!messageDb) {
+        throw Error(`Message ${message_id} not found on channel ${this.id}!`);
+      }
+      const newMessage = new Message(
+        messageDb,
+        this,
+        this.socketManager,
+        this.messageQueue
+      );
+      return newMessage;
     }, 200);
     this.socketManager = socketManager;
     this.messageQueue = messageQueue;
+    this.messageDB = messageDB;
   }
 
   async send(
@@ -58,7 +69,7 @@ export class TextChannel {
     mention_everyone?: boolean,
     anonymous_message?: boolean,
     topic_id?: string,
-    code?: number,
+    code?: number
   ) {
     return this.messageQueue.enqueue(async () => {
       const dataSend: ReplyMessageData = {

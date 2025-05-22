@@ -1,6 +1,6 @@
 {
   "name": "mezon-sdk",
-  "version": "2.7.95",
+  "version": "2.7.96",
   "description": "Mezon typescript SDK.",
   "files": ["dist/**"],
   "main": "dist/cjs/index.js",
@@ -23,6 +23,7 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "@types/better-sqlite3": "^7.6.13",
     "@types/jest": "^28.1.8",
     "@types/node": "^18.6.1",
     "@typescript-eslint/eslint-plugin": "^5.31.0",
@@ -47,6 +48,7 @@
     "jest-cucumber": "^3.0.1",
     "npm-run-all": "^4.1.5",
     "base64-arraybuffer": "^1.0.2",
+    "better-sqlite3": "^11.10.0",
     "js-base64": "^3.7.4",
     "ws": "^8.18.0"
   }
