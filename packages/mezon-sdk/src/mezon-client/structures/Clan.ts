@@ -1,12 +1,17 @@
 import { MezonApi } from "../../api";
 import { ChannelType } from "../../constants";
-import { ApiRoleListEventResponse, ApiVoiceChannelUserList, MezonUpdateRoleBody } from "../../interfaces";
+import {
+  ApiRoleListEventResponse,
+  ApiVoiceChannelUserList,
+  MezonUpdateRoleBody,
+} from "../../interfaces";
+import { MessageDatabase } from "../../sqlite/MessageDatabase";
 import { MezonClient } from "../client/MezonClient";
 import { SocketManager } from "../manager/socket_manager";
 import { AsyncThrottleQueue } from "../utils/AsyncThrottleQueue";
 import { CacheManager } from "../utils/CacheManager";
 import { TextChannel } from "./TextChannel";
-import { User } from "./User";
+import { User, UserInitData } from "./User";
 
 interface ClanInitData {
   id: string;
@@ -29,6 +34,7 @@ export class Clan {
   private readonly client: MezonClient;
   private readonly socketManager: SocketManager;
   private readonly messageQueue: AsyncThrottleQueue;
+  private readonly messageDB: MessageDatabase;
 
   constructor(
     initClanData: ClanInitData,
@@ -36,7 +42,8 @@ export class Clan {
     apiClient: MezonApi,
     socketManager: SocketManager,
     sessionToken: string,
-    messageQueue: AsyncThrottleQueue
+    messageQueue: AsyncThrottleQueue,
+    messageDB: MessageDatabase
   ) {
     this.id = initClanData.id;
     this.name = initClanData.name;
@@ -45,15 +52,28 @@ export class Clan {
     this.socketManager = socketManager;
     this.messageQueue = messageQueue;
     this.sessionToken = sessionToken;
+    this.messageDB = messageDB;
     this.channels = new CacheManager<string, TextChannel>(async (channelId) => {
       return this.client.channels.fetch(channelId);
     });
 
     this.users = new CacheManager<string, User>(async (user_id) => {
-      // TODO: If the channel's user cache is empty,
-      // and channel.users.fetch(user_id) is called,
-      // this function will be triggered to fetch the user detail from the API.
-      throw Error(`User ${user_id} not found in this clan ${this.id}!`);
+      const dmChannel = await this.client.createDMchannel(user_id);
+      if (!dmChannel || !dmChannel?.channel_id) {
+        throw Error(`User ${user_id} not found in this clan ${this.id}!`);
+      }
+      const userRaw: UserInitData = {
+        id: user_id,
+        dmChannelId: dmChannel.channel_id,
+      };
+      const user = new User(
+        userRaw,
+        this,
+        this.messageQueue,
+        this.socketManager
+      );
+      this.users.set(user_id, user);
+      return user;
     });
   }
 
@@ -76,7 +96,8 @@ export class Clan {
           { ...channel, type: channel?.channel_type || channel?.type },
           this,
           this.socketManager,
-          this.messageQueue
+          this.messageQueue,
+          this.messageDB
         );
         this.channels.set(channel.channel_id!, channelObj);
         this.client.channels.set(channel.channel_id!, channelObj);
@@ -146,12 +167,6 @@ export class Clan {
     cursor?: string
   ): Promise<ApiRoleListEventResponse> {
     const session = this.sessionToken;
-    return this.apiClient.listRoles(
-      session,
-      this.id,
-      limit,
-      state,
-      cursor
-    );
+    return this.apiClient.listRoles(session, this.id, limit, state, cursor);
   }
 }

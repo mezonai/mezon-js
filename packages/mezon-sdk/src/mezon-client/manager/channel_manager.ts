@@ -22,7 +22,7 @@ export class ChannelManager {
       sessionToken,
       ChannelType.CHANNEL_TYPE_DM
     );
-    if (!channels?.channeldesc) return;
+    if (!channels?.channeldesc || !channels?.channeldesc?.length) return;
     this.allDmChannels = channels?.channeldesc
       .map((channel: { user_id: string | string[]; channel_id: string }) => {
         if (!channel?.user_id?.length) return;

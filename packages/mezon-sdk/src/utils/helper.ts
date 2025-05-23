@@ -38,21 +38,15 @@ export function sleep(ms: number) {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
-export function parseUrlToHostAndSSL(url: string) {
-  const trimmedUrl = url.trim();
-  const isHttps = trimmedUrl.startsWith("https://");
-  const isHttp = trimmedUrl.startsWith("http://");
-
-  if (isHttps || isHttp) {
-    const withoutScheme = trimmedUrl.replace(/^https?:\/\//, "");
-    return {
-      host: withoutScheme.replace(/\/$/, ""),
-      useSSL: isHttps,
-    };
-  }
-
+export function parseUrlToHostAndSSL(urlStr: string): {
+  host: string;
+  port: string;
+  useSSL: boolean;
+} {
+  const url = new URL(urlStr);
   return {
-    host: trimmedUrl.replace(/\/$/, ""),
-    useSSL: false,
+    host: url.hostname,
+    port: url.port || (url.protocol === "https:" ? "443" : "80"),
+    useSSL: url.protocol === "https:",
   };
 }

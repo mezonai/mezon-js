@@ -27,24 +27,24 @@ export class User {
   public avartar: string;
   public dmChannelId: string;
   private clan: Clan;
-  private readonly channelManager: ChannelManager;
+  private readonly channelManager: ChannelManager | undefined;
   private readonly messageQueue: AsyncThrottleQueue;
   private readonly socketManager: SocketManager;
 
   constructor(
     initUserData: UserInitData,
     clan: Clan,
-    channelManager: ChannelManager,
     messageQueue: AsyncThrottleQueue,
-    socketManager: SocketManager
+    socketManager: SocketManager,
+    channelManager?: ChannelManager
   ) {
     this.id = initUserData.id;
-    this.avartar = initUserData.avartar ?? '';
-    this.dmChannelId = initUserData?.dmChannelId ?? ''; 
-    this.username = initUserData?.username ?? '';
-    this.clan_nick = initUserData?.clan_nick ?? '';
-    this.clan_avatar = initUserData?.clan_avatar ?? '';
-    this.display_name = initUserData?.display_name ?? '';
+    this.avartar = initUserData.avartar ?? "";
+    this.dmChannelId = initUserData?.dmChannelId ?? "";
+    this.username = initUserData?.username ?? "";
+    this.clan_nick = initUserData?.clan_nick ?? "";
+    this.clan_avatar = initUserData?.clan_avatar ?? "";
+    this.display_name = initUserData?.display_name ?? "";
     this.clan = clan;
     this.channelManager = channelManager;
     this.messageQueue = messageQueue;
@@ -58,7 +58,14 @@ export class User {
       note: sendTokenData?.note ?? "",
       extra_attribute: sendTokenData?.extra_attribute ?? "",
     };
-    return this.clan.apiClient.sendToken(this.clan.sessionToken, dataSendToken);
+    try {
+      return this.clan.apiClient.sendToken(
+        this.clan.sessionToken,
+        dataSendToken
+      );
+    } catch (error) {
+      console.log("Error sendToken");
+    }
   }
 
   async sendDM(content: ChannelMessageContent, code?: number) {
@@ -82,7 +89,12 @@ export class User {
   }
 
   async createDmChannel() {
-    const dmChannel = await this.channelManager.createDMchannel(this.id);
-    return dmChannel ?? {};
+    try {
+      const dmChannel = await this.channelManager?.createDMchannel(this.id);
+      return dmChannel ?? {};
+    } catch (error) {
+      console.log("Error createDmChannel User");
+      return null;
+    }
   }
 }
