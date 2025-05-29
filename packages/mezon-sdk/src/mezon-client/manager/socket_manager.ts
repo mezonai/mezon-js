@@ -60,13 +60,13 @@ export class SocketManager {
   }
 
   async connect(sockSession: Session) {
-    const session = await this.socket.connect(sockSession, true);
     this.isHardDisconnect = false;
+    const session = await this.socket.connect(sockSession, true);
     return session;
   }
 
   closeSocket() {
-    // this.isHardDisconnect = true;
+    this.isHardDisconnect = true;
     this.socket.close();
     console.log("eventManager", this.eventManager);
   }
