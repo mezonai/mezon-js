@@ -715,4 +715,45 @@ export class MezonApi {
       ),
     ]);
   }
+
+  /** list transaction detail */
+  listTransactionDetail(
+    bearerToken: string,
+    transId: string,
+    options: any = {}
+  ): Promise<any> {
+    if (transId === null || transId === undefined) {
+      throw new Error(
+        "'transId' is a required parameter but is null or undefined."
+      );
+    }
+    const urlPath = "/v2/transaction/{transId}".replace(
+      "{transId}",
+      encodeURIComponent(String(transId))
+    );
+    const queryParams = new Map<string, any>();
+
+    let bodyJson: string = "";
+
+    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
+    const fetchOptions = buildFetchOptions("GET", options, bodyJson);
+    if (bearerToken) {
+      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+    }
+
+    return Promise.race([
+      fetch(fullUrl, fetchOptions).then((response) => {
+        if (response.status == 204) {
+          return response;
+        } else if (response.status >= 200 && response.status < 300) {
+          return response.json();
+        } else {
+          throw response;
+        }
+      }),
+      new Promise((_, reject) =>
+        setTimeout(reject, this.timeoutMs, "Request timed out.")
+      ),
+    ]);
+  }
 }

@@ -608,6 +608,7 @@ export interface TokenSentEvent {
   amount: number;
   note?: string;
   extra_attribute?: string;
+  transaction_id?: string;
 }
 
 export interface MezonUpdateRoleBody {
