@@ -97,4 +97,9 @@ export class User {
       return null;
     }
   }
+
+  async listTransactionDetail(transactionId: string): Promise<any> {
+    const session = this.clan.sessionToken;
+    return this.clan.apiClient.listTransactionDetail(session, transactionId);
+  }
 }
