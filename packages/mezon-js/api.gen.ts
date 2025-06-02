@@ -359,7 +359,7 @@ export interface ApiAccount {
   //The UNIX time (for gRPC clients) or ISO string (for REST clients) when the user's email was verified.
   verify_time?: string;
   //The user's wallet data.
-  wallet?: string;
+  wallet?: number;
 }
 
 /** Send a app token to the server. Used with authenticate/link/unlink. */
@@ -5679,6 +5679,7 @@ export class MezonApi {
     token?: string,
     deviceId?: string,
     platform?: string,
+    voipToken?: string,
     options: any = {}
   ): Promise<ApiRegistFcmDeviceTokenResponse> {
     const urlPath = "/v2/devicetoken";
@@ -5686,6 +5687,7 @@ export class MezonApi {
     queryParams.set("token", token);
     queryParams.set("device_id", deviceId);
     queryParams.set("platform", platform);
+    queryParams.set("voip_token", voipToken);
 
     let bodyJson: string = "";
 
