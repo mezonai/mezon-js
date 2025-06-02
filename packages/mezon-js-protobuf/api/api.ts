@@ -843,6 +843,8 @@ export interface RegistFcmDeviceTokenRequest {
   device_id: string;
   /**  */
   platform: string;
+  /** voip token for IOS */
+  voip_token: string;
 }
 
 export interface RegistFcmDeviceTokenResponse {
@@ -8637,7 +8639,7 @@ export const ClanUserList_ClanUser = {
 };
 
 function createBaseRegistFcmDeviceTokenRequest(): RegistFcmDeviceTokenRequest {
-  return { token: "", device_id: "", platform: "" };
+  return { token: "", device_id: "", platform: "", voip_token: "" };
 }
 
 export const RegistFcmDeviceTokenRequest = {
@@ -8650,6 +8652,9 @@ export const RegistFcmDeviceTokenRequest = {
     }
     if (message.platform !== "") {
       writer.uint32(26).string(message.platform);
+    }
+    if (message.voip_token !== "") {
+      writer.uint32(34).string(message.voip_token);
     }
     return writer;
   },
@@ -8682,6 +8687,13 @@ export const RegistFcmDeviceTokenRequest = {
 
           message.platform = reader.string();
           continue;
+        case 4:
+          if (tag !== 34) {
+            break;
+          }
+
+          message.voip_token = reader.string();
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -8696,6 +8708,7 @@ export const RegistFcmDeviceTokenRequest = {
       token: isSet(object.token) ? globalThis.String(object.token) : "",
       device_id: isSet(object.device_id) ? globalThis.String(object.device_id) : "",
       platform: isSet(object.platform) ? globalThis.String(object.platform) : "",
+      voip_token: isSet(object.voip_token) ? globalThis.String(object.voip_token) : "",
     };
   },
 
@@ -8710,6 +8723,9 @@ export const RegistFcmDeviceTokenRequest = {
     if (message.platform !== "") {
       obj.platform = message.platform;
     }
+    if (message.voip_token !== "") {
+      obj.voip_token = message.voip_token;
+    }
     return obj;
   },
 
@@ -8721,6 +8737,7 @@ export const RegistFcmDeviceTokenRequest = {
     message.token = object.token ?? "";
     message.device_id = object.device_id ?? "";
     message.platform = object.platform ?? "";
+    message.voip_token = object.voip_token ?? "";
     return message;
   },
 };

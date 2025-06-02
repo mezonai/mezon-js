@@ -348,6 +348,12 @@ interface ChannelMessageSend {
   };
 }
 
+interface EphemeralMessageSend {
+  ephemeral_message_send: {
+
+  }
+}
+
 /** Update a message previously sent to a realtime chat channel. */
 interface ChannelMessageUpdate {
   channel_message_update: {
@@ -1062,6 +1068,72 @@ export interface ChannelCanvas {
   status?: number;
 }
 
+function CreateChannelMessageFromEvent(message: any) {
+  var content, reactions, mentions, attachments, references, referencedMessags;
+  try {
+    content = safeJSONParse(message.channel_message.content);
+  } catch (e) {
+    console.log("content is invalid", e);
+  }
+  try {
+    reactions = safeJSONParse(message.channel_message.reactions);
+  } catch (e) {
+    console.log("reactions is invalid", e);
+  }
+  try {
+    mentions = safeJSONParse(message.channel_message.mentions);
+  } catch (e) {
+    console.log("mentions is invalid", e);
+  }
+  try {
+    attachments = safeJSONParse(message.channel_message.attachments);
+  } catch (e) {
+    console.log("attachments is invalid", e);
+  }
+  try {
+    references = safeJSONParse(message.channel_message.references);
+  } catch (e) {
+    console.log("references is invalid", e);
+  }
+  try {
+    referencedMessags = safeJSONParse(message.channel_message.referenced_message);
+  } catch (e) {
+    console.log("referenced messages is invalid", e);
+  }
+  var e: ChannelMessage = {
+    id: message.id || message.channel_message.message_id,
+    avatar: message.channel_message.avatar,
+    channel_id: message.channel_message.channel_id,
+    mode: message.channel_message.mode,
+    channel_label: message.channel_message.channel_label,
+    clan_id: message.channel_message.clan_id,
+    code: message.channel_message.code,
+    create_time: message.channel_message.create_time,
+    message_id: message.channel_message.message_id,
+    sender_id: message.channel_message.sender_id,
+    update_time: message.channel_message.update_time,
+    clan_logo: message.channel_message.clan_logo,
+    category_name: message.channel_message.category_name,
+    username: message.channel_message.username,
+    clan_nick: message.channel_message.clan_nick,
+    clan_avatar: message.channel_message.clan_avatar,
+    display_name: message.channel_message.display_name,
+    content: content,
+    reactions: reactions,
+    mentions: mentions,
+    attachments: attachments,
+    referenced_message: referencedMessags,
+    references: references,
+    hide_editted: message.channel_message.hide_editted,
+    is_public: message.channel_message.is_public,
+    create_time_seconds: message.channel_message.create_time_seconds,
+    update_time_seconds: message.channel_message.update_time_seconds,
+    topic_id: message.channel_message.topic_id,
+  };
+
+  return e;
+}
+
 /** A socket connection to Mezon server. */
 export interface Socket {
   /** Connection is Open */
@@ -1148,6 +1220,24 @@ export interface Socket {
 
   /** Send a chat message to a chat channel on the server. */
   writeChatMessage(
+    clan_id: string,
+    channel_id: string,
+    mode: number,
+    is_public: boolean,
+    content?: any,
+    mentions?: Array<ApiMessageMention>,
+    attachments?: Array<ApiMessageAttachment>,
+    references?: Array<ApiMessageRef>,
+    anonymous_message?: boolean,
+    mention_everyone?: boolean,
+    avatar?: string,
+    code?: number,
+    topic_id?: string
+  ): Promise<ChannelMessageAck>;
+
+  /** Send a chat message to a chat channel on the server. */
+  writeEphemeralMessage(
+    receiver_id: string,
     clan_id: string,
     channel_id: string,
     mode: number,
@@ -1309,6 +1399,9 @@ export interface Socket {
 
   /** Receive channel message. */
   onchannelmessage: (channelMessage: ChannelMessage) => void;
+
+  /** Receive channel message. */
+  onephemeralmessage: (ephemeralMessage: ChannelMessage) => void;
 
   /** Receive typing event */
   onmessagetyping: (messageTypingEvent: MessageTypingEvent) => void;
@@ -1576,69 +1669,12 @@ export class DefaultSocket implements Socket {
           );
         } else if (message.stream_data) {
           this.onstreamdata(<StreamData>message.stream_data);
-        } else if (message.channel_message) {
-          var content, reactions, mentions, attachments, references, referencedMessags;
-          try {
-            content = safeJSONParse(message.channel_message.content);
-          } catch (e) {
-            console.log("content is invalid", e);
-          }
-          try {
-            reactions = safeJSONParse(message.channel_message.reactions);
-          } catch (e) {
-            console.log("reactions is invalid", e);
-          }
-          try {
-            mentions = safeJSONParse(message.channel_message.mentions);
-          } catch (e) {
-            console.log("mentions is invalid", e);
-          }
-          try {
-            attachments = safeJSONParse(message.channel_message.attachments);
-          } catch (e) {
-            console.log("attachments is invalid", e);
-          }
-          try {
-            references = safeJSONParse(message.channel_message.references);
-          } catch (e) {
-            console.log("references is invalid", e);
-          }
-          try {
-            referencedMessags = safeJSONParse(message.channel_message.referenced_message);
-          } catch (e) {
-            console.log("referenced messages is invalid", e);
-          }
-          var e: ChannelMessage = {
-            id: message.id || message.channel_message.message_id,
-            avatar: message.channel_message.avatar,
-            channel_id: message.channel_message.channel_id,
-            mode: message.channel_message.mode,
-            channel_label: message.channel_message.channel_label,
-            clan_id: message.channel_message.clan_id,
-            code: message.channel_message.code,
-            create_time: message.channel_message.create_time,
-            message_id: message.channel_message.message_id,
-            sender_id: message.channel_message.sender_id,
-            update_time: message.channel_message.update_time,
-            clan_logo: message.channel_message.clan_logo,
-            category_name: message.channel_message.category_name,
-            username: message.channel_message.username,
-            clan_nick: message.channel_message.clan_nick,
-            clan_avatar: message.channel_message.clan_avatar,
-            display_name: message.channel_message.display_name,
-            content: content,
-            reactions: reactions,
-            mentions: mentions,
-            attachments: attachments,
-            referenced_message: referencedMessags,
-            references: references,
-            hide_editted: message.channel_message.hide_editted,
-            is_public: message.channel_message.is_public,
-            create_time_seconds: message.channel_message.create_time_seconds,
-            update_time_seconds: message.channel_message.update_time_seconds,
-            topic_id: message.channel_message.topic_id,
-          };
-          this.onchannelmessage(e);
+        } else if (message.channel_message) {          
+          const channelMessage = CreateChannelMessageFromEvent(message);
+          this.onchannelmessage(channelMessage);
+        } else if (message.ephemeral_message_send) {
+          const channelMessage = CreateChannelMessageFromEvent(message);
+          this.onephemeralmessage(channelMessage);
         } else if (message.message_typing_event) {
           this.onmessagetyping(
             <MessageTypingEvent>message.message_typing_event
@@ -1825,6 +1861,12 @@ export class DefaultSocket implements Socket {
   onchannelmessage(channelMessage: ChannelMessage) {
     if (this.verbose && window && window.console) {
       console.log(channelMessage);
+    }
+  }
+
+  onephemeralmessage(ephemeralMessage: ChannelMessage) {
+    if (this.verbose && window && window.console) {
+      console.log(ephemeralMessage)
     }
   }
 
@@ -2183,7 +2225,8 @@ export class DefaultSocket implements Socket {
       | IncomingCallPush
       | MessageButtonClicked
       | DropdownBoxSelected
-      | ChannelAppEvent,
+      | ChannelAppEvent
+      | EphemeralMessageSend,
     sendTimeout = DefaultSocket.DefaultSendTimeoutMs
   ): Promise<any> {
     const untypedMessage = message as any;
@@ -2200,6 +2243,10 @@ export class DefaultSocket implements Socket {
           untypedMessage.channel_message_update.content = JSON.stringify(
             untypedMessage.channel_message_update.content
           );
+        } else if (untypedMessage.ephemeral_message_send) {
+          untypedMessage.ephemeral_message_send.message.content = JSON.stringify(
+            untypedMessage.ephemeral_message_send.message?.content
+          ); 
         }
 
         const cid = this.generatecid();
@@ -2363,6 +2410,45 @@ export class DefaultSocket implements Socket {
 
   updateStatus(status?: string): Promise<void> {
     return this.send({ status_update: { status: status } });
+  }
+
+  async writeEphemeralMessage(
+    receiver_id: string,
+    clan_id: string,
+    channel_id: string,
+    mode: number,
+    is_public: boolean,
+    content: any,
+    mentions?: Array<ApiMessageMention>,
+    attachments?: Array<ApiMessageAttachment>,
+    references?: Array<ApiMessageRef>,
+    anonymous_message?: boolean,
+    mention_everyone?: Boolean,
+    avatar?: string,
+    code?: number,
+    topic_id?: string
+  ): Promise<ChannelMessageAck> {
+    const response = await this.send({
+      ephemeral_message_send: {
+        receiver_id: receiver_id,
+        message: {
+          clan_id: clan_id,
+          channel_id: channel_id,
+          mode: mode,
+          is_public: is_public,
+          content: content,
+          mentions: mentions,
+          attachments: attachments,
+          references: references,
+          anonymous_message: anonymous_message,
+          mention_everyone: mention_everyone,
+          avatar: avatar,
+          code: code,
+          topic_id: topic_id,
+        }
+      }
+    });
+    return response.channel_message_ack;
   }
 
   async writeChatMessage(
@@ -2666,3 +2752,4 @@ export class DefaultSocket implements Socket {
     setTimeout(() => this.pingPong(), this._heartbeatTimeoutMs);
   }
 }
+

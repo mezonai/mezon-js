@@ -313,7 +313,10 @@ export interface Envelope {
     | Webhook
     | undefined;
   /**  */
-  noti_user_channel?: NotificationUserChannel | undefined;
+  noti_user_channel?:
+    | NotificationUserChannel
+    | undefined;
+  /**  */
   join_channel_app_data?:
     | JoinChannelAppData
     | undefined;
@@ -334,7 +337,11 @@ export interface Envelope {
     | HandleParticipantMeetStateEvent
     | undefined;
   /** delete acc */
-  delete_account_event?: DeleteAccountEvent | undefined;
+  delete_account_event?:
+    | DeleteAccountEvent
+    | undefined;
+  /** ephemeral message send */
+  ephemeral_message_send?: EphemeralMessageSend | undefined;
 }
 
 export interface FollowEvent {
@@ -551,6 +558,11 @@ export interface ChannelMessageAck {
   clan_logo: string;
   /** The category name */
   category_name: string;
+}
+
+export interface EphemeralMessageSend {
+  message: ChannelMessage | undefined;
+  receiver_id: string;
 }
 
 /** Send a message to a realtime channel. */
@@ -1292,6 +1304,8 @@ export interface UserProfileRedis {
   app_url: string;
   /** is bot */
   is_bot: boolean;
+  /** for call DM iOS */
+  voip_token: string;
 }
 
 export interface FCMTokens {
@@ -1519,6 +1533,7 @@ function createBaseEnvelope(): Envelope {
     category_event: undefined,
     handle_participant_meet_state_event: undefined,
     delete_account_event: undefined,
+    ephemeral_message_send: undefined,
   };
 }
 
@@ -1758,6 +1773,9 @@ export const Envelope = {
     }
     if (message.delete_account_event !== undefined) {
       DeleteAccountEvent.encode(message.delete_account_event, writer.uint32(626).fork()).ldelim();
+    }
+    if (message.ephemeral_message_send !== undefined) {
+      EphemeralMessageSend.encode(message.ephemeral_message_send, writer.uint32(634).fork()).ldelim();
     }
     return writer;
   },
@@ -2315,6 +2333,13 @@ export const Envelope = {
 
           message.delete_account_event = DeleteAccountEvent.decode(reader, reader.uint32());
           continue;
+        case 79:
+          if (tag !== 634) {
+            break;
+          }
+
+          message.ephemeral_message_send = EphemeralMessageSend.decode(reader, reader.uint32());
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -2505,6 +2530,9 @@ export const Envelope = {
         : undefined,
       delete_account_event: isSet(object.delete_account_event)
         ? DeleteAccountEvent.fromJSON(object.delete_account_event)
+        : undefined,
+      ephemeral_message_send: isSet(object.ephemeral_message_send)
+        ? EphemeralMessageSend.fromJSON(object.ephemeral_message_send)
         : undefined,
     };
   },
@@ -2746,6 +2774,9 @@ export const Envelope = {
     }
     if (message.delete_account_event !== undefined) {
       obj.delete_account_event = DeleteAccountEvent.toJSON(message.delete_account_event);
+    }
+    if (message.ephemeral_message_send !== undefined) {
+      obj.ephemeral_message_send = EphemeralMessageSend.toJSON(message.ephemeral_message_send);
     }
     return obj;
   },
@@ -3005,6 +3036,10 @@ export const Envelope = {
     message.delete_account_event = (object.delete_account_event !== undefined && object.delete_account_event !== null)
       ? DeleteAccountEvent.fromPartial(object.delete_account_event)
       : undefined;
+    message.ephemeral_message_send =
+      (object.ephemeral_message_send !== undefined && object.ephemeral_message_send !== null)
+        ? EphemeralMessageSend.fromPartial(object.ephemeral_message_send)
+        : undefined;
     return message;
   },
 };
@@ -4958,6 +4993,82 @@ export const ChannelMessageAck = {
     message.persistent = object.persistent ?? undefined;
     message.clan_logo = object.clan_logo ?? "";
     message.category_name = object.category_name ?? "";
+    return message;
+  },
+};
+
+function createBaseEphemeralMessageSend(): EphemeralMessageSend {
+  return { message: undefined, receiver_id: "" };
+}
+
+export const EphemeralMessageSend = {
+  encode(message: EphemeralMessageSend, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.message !== undefined) {
+      ChannelMessage.encode(message.message, writer.uint32(10).fork()).ldelim();
+    }
+    if (message.receiver_id !== "") {
+      writer.uint32(18).string(message.receiver_id);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): EphemeralMessageSend {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseEphemeralMessageSend();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.message = ChannelMessage.decode(reader, reader.uint32());
+          continue;
+        case 2:
+          if (tag !== 18) {
+            break;
+          }
+
+          message.receiver_id = reader.string();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): EphemeralMessageSend {
+    return {
+      message: isSet(object.message) ? ChannelMessage.fromJSON(object.message) : undefined,
+      receiver_id: isSet(object.receiver_id) ? globalThis.String(object.receiver_id) : "",
+    };
+  },
+
+  toJSON(message: EphemeralMessageSend): unknown {
+    const obj: any = {};
+    if (message.message !== undefined) {
+      obj.message = ChannelMessage.toJSON(message.message);
+    }
+    if (message.receiver_id !== "") {
+      obj.receiver_id = message.receiver_id;
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<EphemeralMessageSend>, I>>(base?: I): EphemeralMessageSend {
+    return EphemeralMessageSend.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<EphemeralMessageSend>, I>>(object: I): EphemeralMessageSend {
+    const message = createBaseEphemeralMessageSend();
+    message.message = (object.message !== undefined && object.message !== null)
+      ? ChannelMessage.fromPartial(object.message)
+      : undefined;
+    message.receiver_id = object.receiver_id ?? "";
     return message;
   },
 };
@@ -10560,6 +10671,7 @@ function createBaseUserProfileRedis(): UserProfileRedis {
     app_token: "",
     app_url: "",
     is_bot: false,
+    voip_token: "",
   };
 }
 
@@ -10615,6 +10727,9 @@ export const UserProfileRedis = {
     }
     if (message.is_bot !== false) {
       writer.uint32(136).bool(message.is_bot);
+    }
+    if (message.voip_token !== "") {
+      writer.uint32(146).string(message.voip_token);
     }
     return writer;
   },
@@ -10745,6 +10860,13 @@ export const UserProfileRedis = {
 
           message.is_bot = reader.bool();
           continue;
+        case 18:
+          if (tag !== 146) {
+            break;
+          }
+
+          message.voip_token = reader.string();
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -10777,6 +10899,7 @@ export const UserProfileRedis = {
       app_token: isSet(object.app_token) ? globalThis.String(object.app_token) : "",
       app_url: isSet(object.app_url) ? globalThis.String(object.app_url) : "",
       is_bot: isSet(object.is_bot) ? globalThis.Boolean(object.is_bot) : false,
+      voip_token: isSet(object.voip_token) ? globalThis.String(object.voip_token) : "",
     };
   },
 
@@ -10833,6 +10956,9 @@ export const UserProfileRedis = {
     if (message.is_bot !== false) {
       obj.is_bot = message.is_bot;
     }
+    if (message.voip_token !== "") {
+      obj.voip_token = message.voip_token;
+    }
     return obj;
   },
 
@@ -10858,6 +10984,7 @@ export const UserProfileRedis = {
     message.app_token = object.app_token ?? "";
     message.app_url = object.app_url ?? "";
     message.is_bot = object.is_bot ?? false;
+    message.voip_token = object.voip_token ?? "";
     return message;
   },
 };

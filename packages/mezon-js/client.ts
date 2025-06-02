@@ -1708,7 +1708,8 @@ export class Client {
     session: Session,
     tokenId: string,
     deviceId: string,
-    platform: string
+    platform: string,
+    voipToken?: string
   ): Promise<ApiRegistFcmDeviceTokenResponse> {
     if (
       this.autoRefreshSession &&
@@ -1719,7 +1720,7 @@ export class Client {
     }
 
     return this.apiClient
-      .registFCMDeviceToken(session.token, tokenId, deviceId, platform)
+      .registFCMDeviceToken(session.token, tokenId, deviceId, platform, voipToken)
       .then((response: any) => {
         return Promise.resolve(response);
       });
