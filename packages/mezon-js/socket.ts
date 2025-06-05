@@ -350,7 +350,35 @@ interface ChannelMessageSend {
 
 interface EphemeralMessageSend {
   ephemeral_message_send: {
-
+    receiver_id: string,
+    message: {
+      /** Clan Id */
+      clan_id: string;
+      /** The server-assigned channel ID. */
+      channel_id: string;
+      // The mode
+      mode: number;
+      // channel label
+      channel_label: string;
+      /** The content payload. */
+      content: any;
+      //
+      mentions?: Array<ApiMessageMention>;
+      //
+      attachments?: Array<ApiMessageAttachment>;
+      //
+      anonymous_message?: boolean;
+      //
+      mention_everyone?: boolean;
+      //
+      avatar: string;
+      // Is public
+      is_public: boolean;
+      // code
+      code: number;
+      //
+      topic_id?: string;
+    }
   }
 }
 
@@ -865,6 +893,11 @@ export interface UserEmojiUsage {
   create_time: string;
 }
 export interface RemoveFriend {
+  //
+  user_id: string;
+}
+
+export interface BlockFriend {
   //
   user_id: string;
 }
@@ -1429,6 +1462,8 @@ export interface Socket {
 
   onremovefriend: (user: RemoveFriend) => void;
 
+  onblockfriend: (user: BlockFriend) => void;
+
   /** Receive clan removed user event */
   onuserclanremoved: (user: UserClanRemovedEvent) => void;
 
@@ -1709,6 +1744,8 @@ export class DefaultSocket implements Socket {
           this.onuserchannelremoved(
             <UserChannelRemovedEvent>message.user_channel_removed_event
           );
+        } else if (message.block_friend) {
+          this.onblockfriend(<BlockFriend>message.block_friend);
         } else if (message.remove_friend) {
           this.onremovefriend(<RemoveFriend>message.remove_friend);
         } else if (message.user_clan_removed_event) {
@@ -1901,6 +1938,12 @@ export class DefaultSocket implements Socket {
   }
 
   onremovefriend(user: RemoveFriend) {
+    if (this.verbose && window && window.console) {
+      console.log(user);
+    }
+  }
+
+  onblockfriend(user: BlockFriend) {
     if (this.verbose && window && window.console) {
       console.log(user);
     }

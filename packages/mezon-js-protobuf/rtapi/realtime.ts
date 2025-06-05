@@ -341,7 +341,11 @@ export interface Envelope {
     | DeleteAccountEvent
     | undefined;
   /** ephemeral message send */
-  ephemeral_message_send?: EphemeralMessageSend | undefined;
+  ephemeral_message_send?:
+    | EphemeralMessageSend
+    | undefined;
+  /** block friend */
+  block_friend?: BlockFriend | undefined;
 }
 
 export interface FollowEvent {
@@ -755,6 +759,11 @@ export interface Notifications {
 }
 
 export interface RemoveFriend {
+  /**  */
+  user_id: string;
+}
+
+export interface BlockFriend {
   /**  */
   user_id: string;
 }
@@ -1534,6 +1543,7 @@ function createBaseEnvelope(): Envelope {
     handle_participant_meet_state_event: undefined,
     delete_account_event: undefined,
     ephemeral_message_send: undefined,
+    block_friend: undefined,
   };
 }
 
@@ -1776,6 +1786,9 @@ export const Envelope = {
     }
     if (message.ephemeral_message_send !== undefined) {
       EphemeralMessageSend.encode(message.ephemeral_message_send, writer.uint32(634).fork()).ldelim();
+    }
+    if (message.block_friend !== undefined) {
+      BlockFriend.encode(message.block_friend, writer.uint32(642).fork()).ldelim();
     }
     return writer;
   },
@@ -2340,6 +2353,13 @@ export const Envelope = {
 
           message.ephemeral_message_send = EphemeralMessageSend.decode(reader, reader.uint32());
           continue;
+        case 80:
+          if (tag !== 642) {
+            break;
+          }
+
+          message.block_friend = BlockFriend.decode(reader, reader.uint32());
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -2534,6 +2554,7 @@ export const Envelope = {
       ephemeral_message_send: isSet(object.ephemeral_message_send)
         ? EphemeralMessageSend.fromJSON(object.ephemeral_message_send)
         : undefined,
+      block_friend: isSet(object.block_friend) ? BlockFriend.fromJSON(object.block_friend) : undefined,
     };
   },
 
@@ -2777,6 +2798,9 @@ export const Envelope = {
     }
     if (message.ephemeral_message_send !== undefined) {
       obj.ephemeral_message_send = EphemeralMessageSend.toJSON(message.ephemeral_message_send);
+    }
+    if (message.block_friend !== undefined) {
+      obj.block_friend = BlockFriend.toJSON(message.block_friend);
     }
     return obj;
   },
@@ -3040,6 +3064,9 @@ export const Envelope = {
       (object.ephemeral_message_send !== undefined && object.ephemeral_message_send !== null)
         ? EphemeralMessageSend.fromPartial(object.ephemeral_message_send)
         : undefined;
+    message.block_friend = (object.block_friend !== undefined && object.block_friend !== null)
+      ? BlockFriend.fromPartial(object.block_friend)
+      : undefined;
     return message;
   },
 };
@@ -6143,6 +6170,63 @@ export const RemoveFriend = {
   },
   fromPartial<I extends Exact<DeepPartial<RemoveFriend>, I>>(object: I): RemoveFriend {
     const message = createBaseRemoveFriend();
+    message.user_id = object.user_id ?? "";
+    return message;
+  },
+};
+
+function createBaseBlockFriend(): BlockFriend {
+  return { user_id: "" };
+}
+
+export const BlockFriend = {
+  encode(message: BlockFriend, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.user_id !== "") {
+      writer.uint32(10).string(message.user_id);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): BlockFriend {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseBlockFriend();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.user_id = reader.string();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): BlockFriend {
+    return { user_id: isSet(object.user_id) ? globalThis.String(object.user_id) : "" };
+  },
+
+  toJSON(message: BlockFriend): unknown {
+    const obj: any = {};
+    if (message.user_id !== "") {
+      obj.user_id = message.user_id;
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<BlockFriend>, I>>(base?: I): BlockFriend {
+    return BlockFriend.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<BlockFriend>, I>>(object: I): BlockFriend {
+    const message = createBaseBlockFriend();
     message.user_id = object.user_id ?? "";
     return message;
   },
