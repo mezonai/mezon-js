@@ -353,6 +353,8 @@ export interface Friend {
   state?: number;
   /** The user object. */
   user?: User;
+  //Source ID
+  source_id?: string;
 }
 
 /** A collection of zero or more friends of the user. */
@@ -1895,6 +1897,7 @@ export class Client {
                 : undefined,
             },
             state: f.state,
+            source_id: f.source_id,
           });
         });
         return Promise.resolve(result);

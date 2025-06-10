@@ -1365,6 +1365,8 @@ export interface ApiFriend {
   update_time?: string;
   //The user object.
   user?: ApiUser;
+  //Source ID
+  source_id?: string;
 }
 
 /** A collection of zero or more friends of the user. */

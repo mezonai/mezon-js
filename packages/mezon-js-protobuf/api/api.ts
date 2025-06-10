@@ -545,7 +545,11 @@ export interface Friend {
     | number
     | undefined;
   /** Time of the latest relationship update. */
-  update_time: Date | undefined;
+  update_time:
+    | Date
+    | undefined;
+  /** source id */
+  source_id: string;
 }
 
 /** The friendship status. */
@@ -6967,7 +6971,7 @@ export const Event_PropertiesEntry = {
 };
 
 function createBaseFriend(): Friend {
-  return { user: undefined, state: undefined, update_time: undefined };
+  return { user: undefined, state: undefined, update_time: undefined, source_id: "" };
 }
 
 export const Friend = {
@@ -6980,6 +6984,9 @@ export const Friend = {
     }
     if (message.update_time !== undefined) {
       Timestamp.encode(toTimestamp(message.update_time), writer.uint32(26).fork()).ldelim();
+    }
+    if (message.source_id !== "") {
+      writer.uint32(34).string(message.source_id);
     }
     return writer;
   },
@@ -7012,6 +7019,13 @@ export const Friend = {
 
           message.update_time = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
           continue;
+        case 4:
+          if (tag !== 34) {
+            break;
+          }
+
+          message.source_id = reader.string();
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -7026,6 +7040,7 @@ export const Friend = {
       user: isSet(object.user) ? User.fromJSON(object.user) : undefined,
       state: isSet(object.state) ? Number(object.state) : undefined,
       update_time: isSet(object.update_time) ? fromJsonTimestamp(object.update_time) : undefined,
+      source_id: isSet(object.source_id) ? globalThis.String(object.source_id) : "",
     };
   },
 
@@ -7040,6 +7055,9 @@ export const Friend = {
     if (message.update_time !== undefined) {
       obj.update_time = message.update_time.toISOString();
     }
+    if (message.source_id !== "") {
+      obj.source_id = message.source_id;
+    }
     return obj;
   },
 
@@ -7051,6 +7069,7 @@ export const Friend = {
     message.user = (object.user !== undefined && object.user !== null) ? User.fromPartial(object.user) : undefined;
     message.state = object.state ?? undefined;
     message.update_time = object.update_time ?? undefined;
+    message.source_id = object.source_id ?? "";
     return message;
   },
 };
