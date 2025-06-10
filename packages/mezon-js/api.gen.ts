@@ -2193,7 +2193,7 @@ export interface ApiRoleListEventResponse {
   //
   cursor?: string;
   //
-  limit?: string;
+  limit?: number;
   //
   roles?: ApiRoleList;
   //
@@ -7867,8 +7867,8 @@ export class MezonApi {
   listRoles(
     bearerToken: string,
     clanId?: string,
-    limit?: string,
-    state?: string,
+    limit?: number,
+    state?: number,
     cursor?: string,
     options: any = {}
   ): Promise<ApiRoleListEventResponse> {

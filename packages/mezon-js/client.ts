@@ -3547,8 +3547,8 @@ export class Client {
   async listRoles(
     session: Session,
     clanId?: string,
-    limit?: string,
-    state?: string,
+    limit?: number,
+    state?: number,
     cursor?: string
   ): Promise<ApiRoleListEventResponse> {
     if (
