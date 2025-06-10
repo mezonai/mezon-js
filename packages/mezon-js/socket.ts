@@ -1057,14 +1057,6 @@ export interface WebrtcSignalingFwd {
   caller_id: string;
 }
 
-export interface SFUSignalingFwd {
-  data_type: number;
-  json_data: string;
-  channel_id: string;
-  clan_id: string;
-  user_id: string;
-}
-
 export interface ListActivity {
   acts: ApiUserActivity[];
 }
@@ -1393,14 +1385,6 @@ export interface Socket {
     caller_id: string
   ) => Promise<WebrtcSignalingFwd>;
 
-  forwardSFUSignaling: (
-    user_id: string,
-    data_type: number,
-    json_data: string,
-    channel_id: string,
-    clan_id: string
-  ) => Promise<SFUSignalingFwd>;
-
   makeCallPush: (
     receiverId: string,
     jsonData: string,
@@ -1533,9 +1517,7 @@ export interface Socket {
 
   onwebrtcsignalingfwd: (event: WebrtcSignalingFwd) => void;
 
-  onVoiceReactionMessage: (event: VoiceReactionSend) => void;
-
-  onsfusignalingfwd: (event: SFUSignalingFwd) => void;
+  onvoicereactionmessage: (event: VoiceReactionSend) => void;
 
   oneventcreated: (clan_event_created: ApiCreateEventRequest) => void;
 
@@ -1660,9 +1642,9 @@ export class DefaultSocket implements Socket {
     };
 
     this.adapter.onMessage = async (message: any) => {
-      if (this.verbose && window && window.console) {
+      //if (this.verbose && window && window.console) {
         console.log("Response: %o", JSON.stringify(message));
-      }
+      //}
       /** Inbound message from server. */
       if (!message.cid) {
         if (message.notifications) {
@@ -1809,15 +1791,13 @@ export class DefaultSocket implements Socket {
             <DropdownBoxSelected>message.dropdown_box_selected
           );
         } else if (message.voice_reaction_send) {
-          this.onVoiceReactionMessage(
+          this.onvoicereactionmessage(
             <VoiceReactionSend>message.voice_reaction_send
           );
         } else if (message.webrtc_signaling_fwd) {
           this.onwebrtcsignalingfwd(
             <WebrtcSignalingFwd>message.webrtc_signaling_fwd
           );
-        } else if (message.sfu_signaling_fwd) {
-          this.onsfusignalingfwd(<SFUSignalingFwd>message.sfu_signaling_fwd);
         } else if (message.list_activity) {
           this.onactivityupdated(<ListActivity>message.list_activity);
         } else if (message.sd_topic_event) {
@@ -2221,19 +2201,13 @@ export class DefaultSocket implements Socket {
     }
   }
 
-  onVoiceReactionMessage(event: VoiceReactionSend) {
+  onvoicereactionmessage(event: VoiceReactionSend) {
     if (this.verbose && window && window.console) {
       console.log(event);
     }
   }
 
   onwebrtcsignalingfwd(event: WebrtcSignalingFwd) {
-    if (this.verbose && window && window.console) {
-      console.log(event);
-    }
-  }
-
-  onsfusignalingfwd(event: SFUSignalingFwd) {
     if (this.verbose && window && window.console) {
       console.log(event);
     }
@@ -2716,25 +2690,6 @@ export class DefaultSocket implements Socket {
       },
     });
     return response.webrtc_signaling_fwd;
-  }
-
-  async forwardSFUSignaling(
-    user_id: string,
-    data_type: number,
-    json_data: string,
-    channel_id: string,
-    clan_id: string
-  ): Promise<SFUSignalingFwd> {
-    const response = await this.send({
-      sfu_signaling_fwd: {
-        user_id: user_id,
-        data_type: data_type,
-        json_data: json_data,
-        channel_id: channel_id,
-        clan_id: clan_id,
-      },
-    });
-    return response.sfu_signaling_fwd;
   }
 
   async makeCallPush(
