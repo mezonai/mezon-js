@@ -345,7 +345,11 @@ export interface Envelope {
     | EphemeralMessageSend
     | undefined;
   /** block friend */
-  block_friend?: BlockFriend | undefined;
+  block_friend?:
+    | BlockFriend
+    | undefined;
+  /** voice reaction message */
+  voice_reaction_send?: VoiceReactionSend | undefined;
 }
 
 export interface FollowEvent {
@@ -567,6 +571,15 @@ export interface ChannelMessageAck {
 export interface EphemeralMessageSend {
   message: ChannelMessage | undefined;
   receiver_id: string;
+}
+
+export interface VoiceReactionSend {
+  /** list emoji */
+  emojis: string[];
+  /** channel_id */
+  channel_id: string;
+  /** sender id */
+  sender_id: string;
 }
 
 /** Send a message to a realtime channel. */
@@ -1544,6 +1557,7 @@ function createBaseEnvelope(): Envelope {
     delete_account_event: undefined,
     ephemeral_message_send: undefined,
     block_friend: undefined,
+    voice_reaction_send: undefined,
   };
 }
 
@@ -1789,6 +1803,9 @@ export const Envelope = {
     }
     if (message.block_friend !== undefined) {
       BlockFriend.encode(message.block_friend, writer.uint32(642).fork()).ldelim();
+    }
+    if (message.voice_reaction_send !== undefined) {
+      VoiceReactionSend.encode(message.voice_reaction_send, writer.uint32(650).fork()).ldelim();
     }
     return writer;
   },
@@ -2360,6 +2377,13 @@ export const Envelope = {
 
           message.block_friend = BlockFriend.decode(reader, reader.uint32());
           continue;
+        case 81:
+          if (tag !== 650) {
+            break;
+          }
+
+          message.voice_reaction_send = VoiceReactionSend.decode(reader, reader.uint32());
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -2555,6 +2579,9 @@ export const Envelope = {
         ? EphemeralMessageSend.fromJSON(object.ephemeral_message_send)
         : undefined,
       block_friend: isSet(object.block_friend) ? BlockFriend.fromJSON(object.block_friend) : undefined,
+      voice_reaction_send: isSet(object.voice_reaction_send)
+        ? VoiceReactionSend.fromJSON(object.voice_reaction_send)
+        : undefined,
     };
   },
 
@@ -2801,6 +2828,9 @@ export const Envelope = {
     }
     if (message.block_friend !== undefined) {
       obj.block_friend = BlockFriend.toJSON(message.block_friend);
+    }
+    if (message.voice_reaction_send !== undefined) {
+      obj.voice_reaction_send = VoiceReactionSend.toJSON(message.voice_reaction_send);
     }
     return obj;
   },
@@ -3066,6 +3096,9 @@ export const Envelope = {
         : undefined;
     message.block_friend = (object.block_friend !== undefined && object.block_friend !== null)
       ? BlockFriend.fromPartial(object.block_friend)
+      : undefined;
+    message.voice_reaction_send = (object.voice_reaction_send !== undefined && object.voice_reaction_send !== null)
+      ? VoiceReactionSend.fromPartial(object.voice_reaction_send)
       : undefined;
     return message;
   },
@@ -5096,6 +5129,95 @@ export const EphemeralMessageSend = {
       ? ChannelMessage.fromPartial(object.message)
       : undefined;
     message.receiver_id = object.receiver_id ?? "";
+    return message;
+  },
+};
+
+function createBaseVoiceReactionSend(): VoiceReactionSend {
+  return { emojis: [], channel_id: "", sender_id: "" };
+}
+
+export const VoiceReactionSend = {
+  encode(message: VoiceReactionSend, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    for (const v of message.emojis) {
+      writer.uint32(10).string(v!);
+    }
+    if (message.channel_id !== "") {
+      writer.uint32(18).string(message.channel_id);
+    }
+    if (message.sender_id !== "") {
+      writer.uint32(26).string(message.sender_id);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): VoiceReactionSend {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseVoiceReactionSend();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.emojis.push(reader.string());
+          continue;
+        case 2:
+          if (tag !== 18) {
+            break;
+          }
+
+          message.channel_id = reader.string();
+          continue;
+        case 3:
+          if (tag !== 26) {
+            break;
+          }
+
+          message.sender_id = reader.string();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): VoiceReactionSend {
+    return {
+      emojis: globalThis.Array.isArray(object?.emojis) ? object.emojis.map((e: any) => globalThis.String(e)) : [],
+      channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "",
+      sender_id: isSet(object.sender_id) ? globalThis.String(object.sender_id) : "",
+    };
+  },
+
+  toJSON(message: VoiceReactionSend): unknown {
+    const obj: any = {};
+    if (message.emojis?.length) {
+      obj.emojis = message.emojis;
+    }
+    if (message.channel_id !== "") {
+      obj.channel_id = message.channel_id;
+    }
+    if (message.sender_id !== "") {
+      obj.sender_id = message.sender_id;
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<VoiceReactionSend>, I>>(base?: I): VoiceReactionSend {
+    return VoiceReactionSend.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<VoiceReactionSend>, I>>(object: I): VoiceReactionSend {
+    const message = createBaseVoiceReactionSend();
+    message.emojis = object.emojis?.map((e) => e) || [];
+    message.channel_id = object.channel_id ?? "";
+    message.sender_id = object.sender_id ?? "";
     return message;
   },
 };

@@ -1040,6 +1040,15 @@ export interface IncomingCallPush {
   caller_id: string;
 }
 
+export interface VoiceReactionSend {
+  // list emojis
+  emojis: Array<string>;
+  // channel_id
+  channel_id: string;
+  // sender id
+  sender_id: string;
+}
+
 export interface WebrtcSignalingFwd {
   receiver_id: string;
   data_type: number;
@@ -1371,6 +1380,11 @@ export interface Socket {
     value: Array<string>
   ) => Promise<DropdownBoxSelected>;
 
+  writeVoiceReaction: (
+    emojis: Array<string>,
+    channel_id: string
+  ) => Promise<VoiceReactionSend>
+
   forwardWebrtcSignaling: (
     receiverId: string,
     dataType: number,
@@ -1518,6 +1532,8 @@ export interface Socket {
   onmessagedropdownboxselected: (event: DropdownBoxSelected) => void;
 
   onwebrtcsignalingfwd: (event: WebrtcSignalingFwd) => void;
+
+  onVoiceReactionMessage: (event: VoiceReactionSend) => void;
 
   onsfusignalingfwd: (event: SFUSignalingFwd) => void;
 
@@ -1791,6 +1807,10 @@ export class DefaultSocket implements Socket {
         } else if (message.dropdown_box_selected) {
           this.onmessagedropdownboxselected(
             <DropdownBoxSelected>message.dropdown_box_selected
+          );
+        } else if (message.voice_reaction_send) {
+          this.onVoiceReactionMessage(
+            <VoiceReactionSend>message.voice_reaction_send
           );
         } else if (message.webrtc_signaling_fwd) {
           this.onwebrtcsignalingfwd(
@@ -2201,6 +2221,12 @@ export class DefaultSocket implements Socket {
     }
   }
 
+  onVoiceReactionMessage(event: VoiceReactionSend) {
+    if (this.verbose && window && window.console) {
+      console.log(event);
+    }
+  }
+
   onwebrtcsignalingfwd(event: WebrtcSignalingFwd) {
     if (this.verbose && window && window.console) {
       console.log(event);
@@ -2269,7 +2295,8 @@ export class DefaultSocket implements Socket {
       | MessageButtonClicked
       | DropdownBoxSelected
       | ChannelAppEvent
-      | EphemeralMessageSend,
+      | EphemeralMessageSend
+      | VoiceReactionSend,
     sendTimeout = DefaultSocket.DefaultSendTimeoutMs
   ): Promise<any> {
     const untypedMessage = message as any;
@@ -2657,6 +2684,19 @@ export class DefaultSocket implements Socket {
       },
     });
     return response.check_name_existed_event;
+  }
+
+  async writeVoiceReaction(
+    emojis: Array<string>,
+    channel_id: string
+  ): Promise<VoiceReactionSend> {
+    const response = await this.send({
+      voice_reaction_send: {
+        emojis: emojis,
+        channel_id: channel_id
+      }
+    });
+    return response.voice_reaction_send;
   }
 
   async forwardWebrtcSignaling(
