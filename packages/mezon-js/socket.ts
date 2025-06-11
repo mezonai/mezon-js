@@ -1049,6 +1049,15 @@ export interface VoiceReactionSend {
   sender_id: string;
 }
 
+export interface MarkAsRead {
+   // channel id
+  channel_id: string;
+  // category_id
+  category_id: string;
+  // clan id
+  clan_id: string;
+}
+
 export interface WebrtcSignalingFwd {
   receiver_id: string;
   data_type: number;
@@ -1519,6 +1528,8 @@ export interface Socket {
 
   onvoicereactionmessage: (event: VoiceReactionSend) => void;
 
+  onmarkasread: (event: MarkAsRead) => void;
+
   oneventcreated: (clan_event_created: ApiCreateEventRequest) => void;
 
   oncoffeegiven: (give_coffee_event: ApiGiveCoffeeEvent) => void;
@@ -1789,6 +1800,10 @@ export class DefaultSocket implements Socket {
         } else if (message.dropdown_box_selected) {
           this.onmessagedropdownboxselected(
             <DropdownBoxSelected>message.dropdown_box_selected
+          );
+        } else if (message.mark_as_read) {
+          this.onmarkasread(
+            <MarkAsRead>message.mark_as_read
           );
         } else if (message.voice_reaction_send) {
           this.onvoicereactionmessage(
@@ -2198,6 +2213,12 @@ export class DefaultSocket implements Socket {
   onmessagedropdownboxselected(msg: DropdownBoxSelected) {
     if (this.verbose && window && window.console) {
       console.log(msg);
+    }
+  }
+
+  onmarkasread(event: MarkAsRead) {
+    if (this.verbose && window && window.console) {
+      console.log(event);
     }
   }
 
