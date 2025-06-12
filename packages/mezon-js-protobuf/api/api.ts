@@ -2473,6 +2473,7 @@ export interface ClanSticker {
   clan_id: string;
   logo: string;
   clan_name: string;
+  media_type: number;
 }
 
 export interface AllUsersAddChannelRequest {
@@ -2593,6 +2594,8 @@ export interface ClanStickerAddRequest {
   clan_id: number;
   /** UNIQUE include type number */
   id: string;
+  /** media type for image or audio */
+  media_type: number;
 }
 
 export interface ClanStickerListByClanIdRequest {
@@ -22959,6 +22962,7 @@ function createBaseClanSticker(): ClanSticker {
     clan_id: "",
     logo: "",
     clan_name: "",
+    media_type: 0,
   };
 }
 
@@ -22990,6 +22994,9 @@ export const ClanSticker = {
     }
     if (message.clan_name !== "") {
       writer.uint32(74).string(message.clan_name);
+    }
+    if (message.media_type !== 0) {
+      writer.uint32(80).int32(message.media_type);
     }
     return writer;
   },
@@ -23064,6 +23071,13 @@ export const ClanSticker = {
 
           message.clan_name = reader.string();
           continue;
+        case 10:
+          if (tag !== 80) {
+            break;
+          }
+
+          message.media_type = reader.int32();
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -23084,6 +23098,7 @@ export const ClanSticker = {
       clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
       logo: isSet(object.logo) ? globalThis.String(object.logo) : "",
       clan_name: isSet(object.clan_name) ? globalThis.String(object.clan_name) : "",
+      media_type: isSet(object.media_type) ? globalThis.Number(object.media_type) : 0,
     };
   },
 
@@ -23116,6 +23131,9 @@ export const ClanSticker = {
     if (message.clan_name !== "") {
       obj.clan_name = message.clan_name;
     }
+    if (message.media_type !== 0) {
+      obj.media_type = Math.round(message.media_type);
+    }
     return obj;
   },
 
@@ -23133,6 +23151,7 @@ export const ClanSticker = {
     message.clan_id = object.clan_id ?? "";
     message.logo = object.logo ?? "";
     message.clan_name = object.clan_name ?? "";
+    message.media_type = object.media_type ?? 0;
     return message;
   },
 };
@@ -24688,7 +24707,7 @@ export const CheckDuplicateClanNameResponse = {
 };
 
 function createBaseClanStickerAddRequest(): ClanStickerAddRequest {
-  return { source: "", shortname: "", category: "", clan_id: 0, id: "" };
+  return { source: "", shortname: "", category: "", clan_id: 0, id: "", media_type: 0 };
 }
 
 export const ClanStickerAddRequest = {
@@ -24707,6 +24726,9 @@ export const ClanStickerAddRequest = {
     }
     if (message.id !== "") {
       writer.uint32(42).string(message.id);
+    }
+    if (message.media_type !== 0) {
+      writer.uint32(48).int32(message.media_type);
     }
     return writer;
   },
@@ -24753,6 +24775,13 @@ export const ClanStickerAddRequest = {
 
           message.id = reader.string();
           continue;
+        case 6:
+          if (tag !== 48) {
+            break;
+          }
+
+          message.media_type = reader.int32();
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -24769,6 +24798,7 @@ export const ClanStickerAddRequest = {
       category: isSet(object.category) ? globalThis.String(object.category) : "",
       clan_id: isSet(object.clan_id) ? globalThis.Number(object.clan_id) : 0,
       id: isSet(object.id) ? globalThis.String(object.id) : "",
+      media_type: isSet(object.media_type) ? globalThis.Number(object.media_type) : 0,
     };
   },
 
@@ -24789,6 +24819,9 @@ export const ClanStickerAddRequest = {
     if (message.id !== "") {
       obj.id = message.id;
     }
+    if (message.media_type !== 0) {
+      obj.media_type = Math.round(message.media_type);
+    }
     return obj;
   },
 
@@ -24802,6 +24835,7 @@ export const ClanStickerAddRequest = {
     message.category = object.category ?? "";
     message.clan_id = object.clan_id ?? 0;
     message.id = object.id ?? "";
+    message.media_type = object.media_type ?? 0;
     return message;
   },
 };

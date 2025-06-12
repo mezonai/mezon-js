@@ -573,7 +573,7 @@ export interface ChannelMessageAck {
 }
 
 export interface EphemeralMessageSend {
-  message: ChannelMessage | undefined;
+  message: ChannelMessageSend | undefined;
   receiver_id: string;
 }
 
@@ -5095,7 +5095,7 @@ function createBaseEphemeralMessageSend(): EphemeralMessageSend {
 export const EphemeralMessageSend = {
   encode(message: EphemeralMessageSend, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.message !== undefined) {
-      ChannelMessage.encode(message.message, writer.uint32(10).fork()).ldelim();
+      ChannelMessageSend.encode(message.message, writer.uint32(10).fork()).ldelim();
     }
     if (message.receiver_id !== "") {
       writer.uint32(18).string(message.receiver_id);
@@ -5115,7 +5115,7 @@ export const EphemeralMessageSend = {
             break;
           }
 
-          message.message = ChannelMessage.decode(reader, reader.uint32());
+          message.message = ChannelMessageSend.decode(reader, reader.uint32());
           continue;
         case 2:
           if (tag !== 18) {
@@ -5135,7 +5135,7 @@ export const EphemeralMessageSend = {
 
   fromJSON(object: any): EphemeralMessageSend {
     return {
-      message: isSet(object.message) ? ChannelMessage.fromJSON(object.message) : undefined,
+      message: isSet(object.message) ? ChannelMessageSend.fromJSON(object.message) : undefined,
       receiver_id: isSet(object.receiver_id) ? globalThis.String(object.receiver_id) : "",
     };
   },
@@ -5143,7 +5143,7 @@ export const EphemeralMessageSend = {
   toJSON(message: EphemeralMessageSend): unknown {
     const obj: any = {};
     if (message.message !== undefined) {
-      obj.message = ChannelMessage.toJSON(message.message);
+      obj.message = ChannelMessageSend.toJSON(message.message);
     }
     if (message.receiver_id !== "") {
       obj.receiver_id = message.receiver_id;
@@ -5157,7 +5157,7 @@ export const EphemeralMessageSend = {
   fromPartial<I extends Exact<DeepPartial<EphemeralMessageSend>, I>>(object: I): EphemeralMessageSend {
     const message = createBaseEphemeralMessageSend();
     message.message = (object.message !== undefined && object.message !== null)
-      ? ChannelMessage.fromPartial(object.message)
+      ? ChannelMessageSend.fromPartial(object.message)
       : undefined;
     message.receiver_id = object.receiver_id ?? "";
     return message;
