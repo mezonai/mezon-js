@@ -2473,6 +2473,7 @@ export interface ClanSticker {
   clan_id: string;
   logo: string;
   clan_name: string;
+  media_type: number;
 }
 
 export interface AllUsersAddChannelRequest {
@@ -2593,6 +2594,8 @@ export interface ClanStickerAddRequest {
   clan_id: number;
   /** UNIQUE include type number */
   id: string;
+  /** media type for image or audio */
+  media_type: number;
 }
 
 export interface ClanStickerListByClanIdRequest {
@@ -2910,18 +2913,18 @@ export interface RoleListEventRequest {
   /** clan id */
   clan_id: string;
   /** limit */
-  limit: string;
+  limit: number;
   /** state */
-  state: string;
+  state: number;
   /** cursor */
   cursor: string;
 }
 
 export interface RoleListEventResponse {
   /** limit */
-  limit: string;
+  limit: number;
   /** state */
-  state: string;
+  state: number;
   /** cursor */
   cursor: string;
   /** clan_id */
@@ -22959,6 +22962,7 @@ function createBaseClanSticker(): ClanSticker {
     clan_id: "",
     logo: "",
     clan_name: "",
+    media_type: 0,
   };
 }
 
@@ -22990,6 +22994,9 @@ export const ClanSticker = {
     }
     if (message.clan_name !== "") {
       writer.uint32(74).string(message.clan_name);
+    }
+    if (message.media_type !== 0) {
+      writer.uint32(80).int32(message.media_type);
     }
     return writer;
   },
@@ -23064,6 +23071,13 @@ export const ClanSticker = {
 
           message.clan_name = reader.string();
           continue;
+        case 10:
+          if (tag !== 80) {
+            break;
+          }
+
+          message.media_type = reader.int32();
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -23084,6 +23098,7 @@ export const ClanSticker = {
       clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
       logo: isSet(object.logo) ? globalThis.String(object.logo) : "",
       clan_name: isSet(object.clan_name) ? globalThis.String(object.clan_name) : "",
+      media_type: isSet(object.media_type) ? globalThis.Number(object.media_type) : 0,
     };
   },
 
@@ -23116,6 +23131,9 @@ export const ClanSticker = {
     if (message.clan_name !== "") {
       obj.clan_name = message.clan_name;
     }
+    if (message.media_type !== 0) {
+      obj.media_type = Math.round(message.media_type);
+    }
     return obj;
   },
 
@@ -23133,6 +23151,7 @@ export const ClanSticker = {
     message.clan_id = object.clan_id ?? "";
     message.logo = object.logo ?? "";
     message.clan_name = object.clan_name ?? "";
+    message.media_type = object.media_type ?? 0;
     return message;
   },
 };
@@ -24688,7 +24707,7 @@ export const CheckDuplicateClanNameResponse = {
 };
 
 function createBaseClanStickerAddRequest(): ClanStickerAddRequest {
-  return { source: "", shortname: "", category: "", clan_id: 0, id: "" };
+  return { source: "", shortname: "", category: "", clan_id: 0, id: "", media_type: 0 };
 }
 
 export const ClanStickerAddRequest = {
@@ -24707,6 +24726,9 @@ export const ClanStickerAddRequest = {
     }
     if (message.id !== "") {
       writer.uint32(42).string(message.id);
+    }
+    if (message.media_type !== 0) {
+      writer.uint32(48).int32(message.media_type);
     }
     return writer;
   },
@@ -24753,6 +24775,13 @@ export const ClanStickerAddRequest = {
 
           message.id = reader.string();
           continue;
+        case 6:
+          if (tag !== 48) {
+            break;
+          }
+
+          message.media_type = reader.int32();
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -24769,6 +24798,7 @@ export const ClanStickerAddRequest = {
       category: isSet(object.category) ? globalThis.String(object.category) : "",
       clan_id: isSet(object.clan_id) ? globalThis.Number(object.clan_id) : 0,
       id: isSet(object.id) ? globalThis.String(object.id) : "",
+      media_type: isSet(object.media_type) ? globalThis.Number(object.media_type) : 0,
     };
   },
 
@@ -24789,6 +24819,9 @@ export const ClanStickerAddRequest = {
     if (message.id !== "") {
       obj.id = message.id;
     }
+    if (message.media_type !== 0) {
+      obj.media_type = Math.round(message.media_type);
+    }
     return obj;
   },
 
@@ -24802,6 +24835,7 @@ export const ClanStickerAddRequest = {
     message.category = object.category ?? "";
     message.clan_id = object.clan_id ?? 0;
     message.id = object.id ?? "";
+    message.media_type = object.media_type ?? 0;
     return message;
   },
 };
@@ -27768,7 +27802,7 @@ export const AllUserClans = {
 };
 
 function createBaseRoleListEventRequest(): RoleListEventRequest {
-  return { clan_id: "", limit: "", state: "", cursor: "" };
+  return { clan_id: "", limit: 0, state: 0, cursor: "" };
 }
 
 export const RoleListEventRequest = {
@@ -27776,11 +27810,11 @@ export const RoleListEventRequest = {
     if (message.clan_id !== "") {
       writer.uint32(10).string(message.clan_id);
     }
-    if (message.limit !== "") {
-      writer.uint32(18).string(message.limit);
+    if (message.limit !== 0) {
+      writer.uint32(16).int32(message.limit);
     }
-    if (message.state !== "") {
-      writer.uint32(26).string(message.state);
+    if (message.state !== 0) {
+      writer.uint32(24).int32(message.state);
     }
     if (message.cursor !== "") {
       writer.uint32(34).string(message.cursor);
@@ -27803,18 +27837,18 @@ export const RoleListEventRequest = {
           message.clan_id = reader.string();
           continue;
         case 2:
-          if (tag !== 18) {
+          if (tag !== 16) {
             break;
           }
 
-          message.limit = reader.string();
+          message.limit = reader.int32();
           continue;
         case 3:
-          if (tag !== 26) {
+          if (tag !== 24) {
             break;
           }
 
-          message.state = reader.string();
+          message.state = reader.int32();
           continue;
         case 4:
           if (tag !== 34) {
@@ -27835,8 +27869,8 @@ export const RoleListEventRequest = {
   fromJSON(object: any): RoleListEventRequest {
     return {
       clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
-      limit: isSet(object.limit) ? globalThis.String(object.limit) : "",
-      state: isSet(object.state) ? globalThis.String(object.state) : "",
+      limit: isSet(object.limit) ? globalThis.Number(object.limit) : 0,
+      state: isSet(object.state) ? globalThis.Number(object.state) : 0,
       cursor: isSet(object.cursor) ? globalThis.String(object.cursor) : "",
     };
   },
@@ -27846,11 +27880,11 @@ export const RoleListEventRequest = {
     if (message.clan_id !== "") {
       obj.clan_id = message.clan_id;
     }
-    if (message.limit !== "") {
-      obj.limit = message.limit;
+    if (message.limit !== 0) {
+      obj.limit = Math.round(message.limit);
     }
-    if (message.state !== "") {
-      obj.state = message.state;
+    if (message.state !== 0) {
+      obj.state = Math.round(message.state);
     }
     if (message.cursor !== "") {
       obj.cursor = message.cursor;
@@ -27864,24 +27898,24 @@ export const RoleListEventRequest = {
   fromPartial<I extends Exact<DeepPartial<RoleListEventRequest>, I>>(object: I): RoleListEventRequest {
     const message = createBaseRoleListEventRequest();
     message.clan_id = object.clan_id ?? "";
-    message.limit = object.limit ?? "";
-    message.state = object.state ?? "";
+    message.limit = object.limit ?? 0;
+    message.state = object.state ?? 0;
     message.cursor = object.cursor ?? "";
     return message;
   },
 };
 
 function createBaseRoleListEventResponse(): RoleListEventResponse {
-  return { limit: "", state: "", cursor: "", clanId: "", roles: undefined };
+  return { limit: 0, state: 0, cursor: "", clanId: "", roles: undefined };
 }
 
 export const RoleListEventResponse = {
   encode(message: RoleListEventResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.limit !== "") {
-      writer.uint32(10).string(message.limit);
+    if (message.limit !== 0) {
+      writer.uint32(8).int32(message.limit);
     }
-    if (message.state !== "") {
-      writer.uint32(18).string(message.state);
+    if (message.state !== 0) {
+      writer.uint32(16).int32(message.state);
     }
     if (message.cursor !== "") {
       writer.uint32(26).string(message.cursor);
@@ -27903,18 +27937,18 @@ export const RoleListEventResponse = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 10) {
+          if (tag !== 8) {
             break;
           }
 
-          message.limit = reader.string();
+          message.limit = reader.int32();
           continue;
         case 2:
-          if (tag !== 18) {
+          if (tag !== 16) {
             break;
           }
 
-          message.state = reader.string();
+          message.state = reader.int32();
           continue;
         case 3:
           if (tag !== 26) {
@@ -27948,8 +27982,8 @@ export const RoleListEventResponse = {
 
   fromJSON(object: any): RoleListEventResponse {
     return {
-      limit: isSet(object.limit) ? globalThis.String(object.limit) : "",
-      state: isSet(object.state) ? globalThis.String(object.state) : "",
+      limit: isSet(object.limit) ? globalThis.Number(object.limit) : 0,
+      state: isSet(object.state) ? globalThis.Number(object.state) : 0,
       cursor: isSet(object.cursor) ? globalThis.String(object.cursor) : "",
       clanId: isSet(object.clanId) ? globalThis.String(object.clanId) : "",
       roles: isSet(object.roles) ? RoleList.fromJSON(object.roles) : undefined,
@@ -27958,11 +27992,11 @@ export const RoleListEventResponse = {
 
   toJSON(message: RoleListEventResponse): unknown {
     const obj: any = {};
-    if (message.limit !== "") {
-      obj.limit = message.limit;
+    if (message.limit !== 0) {
+      obj.limit = Math.round(message.limit);
     }
-    if (message.state !== "") {
-      obj.state = message.state;
+    if (message.state !== 0) {
+      obj.state = Math.round(message.state);
     }
     if (message.cursor !== "") {
       obj.cursor = message.cursor;
@@ -27981,8 +28015,8 @@ export const RoleListEventResponse = {
   },
   fromPartial<I extends Exact<DeepPartial<RoleListEventResponse>, I>>(object: I): RoleListEventResponse {
     const message = createBaseRoleListEventResponse();
-    message.limit = object.limit ?? "";
-    message.state = object.state ?? "";
+    message.limit = object.limit ?? 0;
+    message.state = object.state ?? 0;
     message.cursor = object.cursor ?? "";
     message.clanId = object.clanId ?? "";
     message.roles = (object.roles !== undefined && object.roles !== null)

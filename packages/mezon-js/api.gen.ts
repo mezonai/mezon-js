@@ -1018,6 +1018,8 @@ export interface ApiClanSticker {
   shortname?: string;
   //
   source?: string;
+  // 
+  media_type?: number;
 }
 
 /**  */
@@ -1032,6 +1034,8 @@ export interface ApiClanStickerAddRequest {
   shortname?: string;
   //
   source?: string;
+  //
+  media_type?: number;
 }
 
 /** A list of users belonging to a clan, along with their role. */

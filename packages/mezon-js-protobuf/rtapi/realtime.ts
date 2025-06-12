@@ -349,7 +349,11 @@ export interface Envelope {
     | BlockFriend
     | undefined;
   /** voice reaction message */
-  voice_reaction_send?: VoiceReactionSend | undefined;
+  voice_reaction_send?:
+    | VoiceReactionSend
+    | undefined;
+  /** Mark As Read */
+  mark_as_read?: MarkAsRead | undefined;
 }
 
 export interface FollowEvent {
@@ -569,7 +573,7 @@ export interface ChannelMessageAck {
 }
 
 export interface EphemeralMessageSend {
-  message: ChannelMessage | undefined;
+  message: ChannelMessageSend | undefined;
   receiver_id: string;
 }
 
@@ -580,6 +584,15 @@ export interface VoiceReactionSend {
   channel_id: string;
   /** sender id */
   sender_id: string;
+}
+
+export interface MarkAsRead {
+  /** channel id */
+  channel_id: string;
+  /** category_id */
+  category_id: string;
+  /** clan id */
+  clan_id: string;
 }
 
 /** Send a message to a realtime channel. */
@@ -1558,6 +1571,7 @@ function createBaseEnvelope(): Envelope {
     ephemeral_message_send: undefined,
     block_friend: undefined,
     voice_reaction_send: undefined,
+    mark_as_read: undefined,
   };
 }
 
@@ -1806,6 +1820,9 @@ export const Envelope = {
     }
     if (message.voice_reaction_send !== undefined) {
       VoiceReactionSend.encode(message.voice_reaction_send, writer.uint32(650).fork()).ldelim();
+    }
+    if (message.mark_as_read !== undefined) {
+      MarkAsRead.encode(message.mark_as_read, writer.uint32(658).fork()).ldelim();
     }
     return writer;
   },
@@ -2384,6 +2401,13 @@ export const Envelope = {
 
           message.voice_reaction_send = VoiceReactionSend.decode(reader, reader.uint32());
           continue;
+        case 82:
+          if (tag !== 658) {
+            break;
+          }
+
+          message.mark_as_read = MarkAsRead.decode(reader, reader.uint32());
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -2582,6 +2606,7 @@ export const Envelope = {
       voice_reaction_send: isSet(object.voice_reaction_send)
         ? VoiceReactionSend.fromJSON(object.voice_reaction_send)
         : undefined,
+      mark_as_read: isSet(object.mark_as_read) ? MarkAsRead.fromJSON(object.mark_as_read) : undefined,
     };
   },
 
@@ -2831,6 +2856,9 @@ export const Envelope = {
     }
     if (message.voice_reaction_send !== undefined) {
       obj.voice_reaction_send = VoiceReactionSend.toJSON(message.voice_reaction_send);
+    }
+    if (message.mark_as_read !== undefined) {
+      obj.mark_as_read = MarkAsRead.toJSON(message.mark_as_read);
     }
     return obj;
   },
@@ -3099,6 +3127,9 @@ export const Envelope = {
       : undefined;
     message.voice_reaction_send = (object.voice_reaction_send !== undefined && object.voice_reaction_send !== null)
       ? VoiceReactionSend.fromPartial(object.voice_reaction_send)
+      : undefined;
+    message.mark_as_read = (object.mark_as_read !== undefined && object.mark_as_read !== null)
+      ? MarkAsRead.fromPartial(object.mark_as_read)
       : undefined;
     return message;
   },
@@ -5064,7 +5095,7 @@ function createBaseEphemeralMessageSend(): EphemeralMessageSend {
 export const EphemeralMessageSend = {
   encode(message: EphemeralMessageSend, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.message !== undefined) {
-      ChannelMessage.encode(message.message, writer.uint32(10).fork()).ldelim();
+      ChannelMessageSend.encode(message.message, writer.uint32(10).fork()).ldelim();
     }
     if (message.receiver_id !== "") {
       writer.uint32(18).string(message.receiver_id);
@@ -5084,7 +5115,7 @@ export const EphemeralMessageSend = {
             break;
           }
 
-          message.message = ChannelMessage.decode(reader, reader.uint32());
+          message.message = ChannelMessageSend.decode(reader, reader.uint32());
           continue;
         case 2:
           if (tag !== 18) {
@@ -5104,7 +5135,7 @@ export const EphemeralMessageSend = {
 
   fromJSON(object: any): EphemeralMessageSend {
     return {
-      message: isSet(object.message) ? ChannelMessage.fromJSON(object.message) : undefined,
+      message: isSet(object.message) ? ChannelMessageSend.fromJSON(object.message) : undefined,
       receiver_id: isSet(object.receiver_id) ? globalThis.String(object.receiver_id) : "",
     };
   },
@@ -5112,7 +5143,7 @@ export const EphemeralMessageSend = {
   toJSON(message: EphemeralMessageSend): unknown {
     const obj: any = {};
     if (message.message !== undefined) {
-      obj.message = ChannelMessage.toJSON(message.message);
+      obj.message = ChannelMessageSend.toJSON(message.message);
     }
     if (message.receiver_id !== "") {
       obj.receiver_id = message.receiver_id;
@@ -5126,7 +5157,7 @@ export const EphemeralMessageSend = {
   fromPartial<I extends Exact<DeepPartial<EphemeralMessageSend>, I>>(object: I): EphemeralMessageSend {
     const message = createBaseEphemeralMessageSend();
     message.message = (object.message !== undefined && object.message !== null)
-      ? ChannelMessage.fromPartial(object.message)
+      ? ChannelMessageSend.fromPartial(object.message)
       : undefined;
     message.receiver_id = object.receiver_id ?? "";
     return message;
@@ -5218,6 +5249,95 @@ export const VoiceReactionSend = {
     message.emojis = object.emojis?.map((e) => e) || [];
     message.channel_id = object.channel_id ?? "";
     message.sender_id = object.sender_id ?? "";
+    return message;
+  },
+};
+
+function createBaseMarkAsRead(): MarkAsRead {
+  return { channel_id: "", category_id: "", clan_id: "" };
+}
+
+export const MarkAsRead = {
+  encode(message: MarkAsRead, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.channel_id !== "") {
+      writer.uint32(10).string(message.channel_id);
+    }
+    if (message.category_id !== "") {
+      writer.uint32(18).string(message.category_id);
+    }
+    if (message.clan_id !== "") {
+      writer.uint32(26).string(message.clan_id);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): MarkAsRead {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseMarkAsRead();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.channel_id = reader.string();
+          continue;
+        case 2:
+          if (tag !== 18) {
+            break;
+          }
+
+          message.category_id = reader.string();
+          continue;
+        case 3:
+          if (tag !== 26) {
+            break;
+          }
+
+          message.clan_id = reader.string();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): MarkAsRead {
+    return {
+      channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "",
+      category_id: isSet(object.category_id) ? globalThis.String(object.category_id) : "",
+      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
+    };
+  },
+
+  toJSON(message: MarkAsRead): unknown {
+    const obj: any = {};
+    if (message.channel_id !== "") {
+      obj.channel_id = message.channel_id;
+    }
+    if (message.category_id !== "") {
+      obj.category_id = message.category_id;
+    }
+    if (message.clan_id !== "") {
+      obj.clan_id = message.clan_id;
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<MarkAsRead>, I>>(base?: I): MarkAsRead {
+    return MarkAsRead.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<MarkAsRead>, I>>(object: I): MarkAsRead {
+    const message = createBaseMarkAsRead();
+    message.channel_id = object.channel_id ?? "";
+    message.category_id = object.category_id ?? "";
+    message.clan_id = object.clan_id ?? "";
     return message;
   },
 };
