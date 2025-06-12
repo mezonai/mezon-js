@@ -1653,9 +1653,9 @@ export class DefaultSocket implements Socket {
     };
 
     this.adapter.onMessage = async (message: any) => {
-      //if (this.verbose && window && window.console) {
+      if (this.verbose && window && window.console) {
         console.log("Response: %o", JSON.stringify(message));
-      //}
+      }
       /** Inbound message from server. */
       if (!message.cid) {
         if (message.notifications) {
