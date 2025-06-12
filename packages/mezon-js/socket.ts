@@ -2513,7 +2513,7 @@ export class DefaultSocket implements Socket {
         }
       }
     });
-    return response.channel_message_ack;
+    return response.ephemeral_message_send;
   }
 
   async writeChatMessage(
