@@ -2,7 +2,9 @@ import {
   ApiChannelDescription,
   ApiMessageAttachment,
   ApiMessageMention,
+  ApiMessageRef,
   ChannelMessageContent,
+  EphemeralMessageData,
   ReplyMessageData,
 } from "../../interfaces";
 import { MessageDatabase } from "../../sqlite/MessageDatabase";
@@ -86,6 +88,52 @@ export class TextChannel {
         topic_id,
       };
       return await this.socketManager.writeChatMessage(dataSend);
+    });
+  }
+
+  async sendEphemeral(
+    receiver_id: string,
+    content: any,
+    reference_message_id?: string,
+    mentions?: Array<ApiMessageMention>,
+    attachments?: Array<ApiMessageAttachment>,
+    mention_everyone?: boolean,
+    anonymous_message?: boolean,
+    topic_id?: string,
+    code?: number
+  ) {
+    return this.messageQueue.enqueue(async () => {
+      let references: ApiMessageRef[] = [];
+      if (reference_message_id) {
+        let messageRef = await this.messages.fetch(reference_message_id);
+        const user = await this.clan.users.fetch(messageRef.sender_id);
+        references = [
+          {
+            message_ref_id: messageRef.id,
+            message_sender_id: messageRef.sender_id,
+            message_sender_username:
+              user.clan_nick || user.display_name || user.username,
+            mesages_sender_avatar: user.clan_avatar || user.avartar,
+            content: JSON.stringify(messageRef.content),
+          },
+        ];
+      }
+      const dataSend: EphemeralMessageData = {
+        receiver_id,
+        clan_id: this.clan.id,
+        channel_id: this.id!,
+        mode: convertChanneltypeToChannelMode(this.channel_type!),
+        is_public: !this.is_private,
+        content,
+        mentions,
+        attachments,
+        references: references ?? [],
+        anonymous_message,
+        mention_everyone,
+        code,
+        topic_id,
+      };
+      return await this.socketManager.writeEphemeralMessage(dataSend);
     });
   }
 }

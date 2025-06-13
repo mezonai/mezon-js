@@ -16,11 +16,13 @@ import { User, UserInitData } from "./User";
 interface ClanInitData {
   id: string;
   name: string;
+  welcome_channel_id: string;
 }
 
 export class Clan {
   public id: string;
   public name: string;
+  public welcome_channel_id: string;
   public channels: CacheManager<string, TextChannel>;
   public users: CacheManager<string, User>;
   public sessionToken: string;
@@ -47,6 +49,7 @@ export class Clan {
   ) {
     this.id = initClanData.id;
     this.name = initClanData.name;
+    this.welcome_channel_id = initClanData.welcome_channel_id
     this.client = client;
     this.apiClient = apiClient;
     this.socketManager = socketManager;

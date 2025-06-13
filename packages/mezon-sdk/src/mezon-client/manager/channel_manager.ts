@@ -24,8 +24,8 @@ export class ChannelManager {
     );
     if (!channels?.channeldesc || !channels?.channeldesc?.length) return;
     this.allDmChannels = channels?.channeldesc
-      .map((channel: { user_id: string | string[]; channel_id: string }) => {
-        if (!channel?.user_id?.length) return;
+      .map((channel: { user_id: string | string[]; channel_id: string; type?: number; }) => {
+        if (!channel?.user_id?.length || channel?.type !== ChannelType.CHANNEL_TYPE_DM) return;
         return {
           [channel.user_id[0]]: channel.channel_id,
         };
