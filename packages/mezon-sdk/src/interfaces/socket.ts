@@ -862,6 +862,24 @@ export interface Socket {
   updateStatus(status?: string): Promise<void>;
 
   /** Send a chat message to a chat channel on the server. */
+  writeEphemeralMessage(
+    receiver_id: string,
+    clan_id: string,
+    channel_id: string,
+    mode: number,
+    is_public: boolean,
+    content?: any,
+    mentions?: Array<ApiMessageMention>,
+    attachments?: Array<ApiMessageAttachment>,
+    references?: Array<ApiMessageRef>,
+    anonymous_message?: boolean,
+    mention_everyone?: boolean,
+    avatar?: string,
+    code?: number,
+    topic_id?: string
+  ): Promise<ChannelMessageAck>;
+
+  /** Send a chat message to a chat channel on the server. */
   writeChatMessage(
     clan_id: string,
     channel_id: string,

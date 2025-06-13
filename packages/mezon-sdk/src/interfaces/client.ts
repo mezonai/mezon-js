@@ -64,6 +64,23 @@ export interface MessagePayLoad {
   topic_id?: string;
 }
 
+export interface EphemeralMessageData {
+  receiver_id: string;
+  clan_id: string;
+  channel_id: string;
+  mode: number;
+  is_public: boolean;
+  content: any;
+  mentions?: Array<ApiMessageMention>;
+  attachments?: Array<ApiMessageAttachment>;
+  references?: Array<ApiMessageRef>;
+  anonymous_message?: boolean;
+  mention_everyone?: boolean;
+  avatar?: string;
+  code?: number;
+  topic_id?: string;
+}
+
 export interface ReplyMessageData {
   clan_id: string;
   channel_id: string;

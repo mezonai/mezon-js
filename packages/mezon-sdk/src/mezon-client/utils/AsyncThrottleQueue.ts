@@ -1,37 +1,47 @@
-const MESSAGE_PER_SECSON = 20;
+const MAX_PER_SECSON = 80;
 
 export class AsyncThrottleQueue {
-  private queue: (() => Promise<void>)[] = [];
-  private isProcessing = false;
+  private timestamps: number[] = [];
+  private queue: (() => void)[] = [];
+  private isRunning = false;
 
-  constructor(private interval: number = MESSAGE_PER_SECSON) {}
+  constructor(private maxPerSecond = MAX_PER_SECSON) {
+    this.start();
+  }
 
   enqueue<T>(task: () => Promise<T>): Promise<T> {
     return new Promise<T>((resolve, reject) => {
-      this.queue.push(async () => {
-        try {
-          const result = await task();
-          resolve(result);
-        } catch (err) {
-          reject(err);
-        }
+      this.queue.push(() => {
+        task().then(resolve).catch(reject);
       });
-
-      if (!this.isProcessing) {
-        this.processQueue();
-      }
     });
   }
 
-  private async processQueue() {
-    this.isProcessing = true;
-    while (this.queue.length > 0) {
-      const task = this.queue.shift();
-      if (task) {
-        await task();
-        await new Promise((r) => setTimeout(r, this.interval));
+  private start() {
+    if (this.isRunning) return;
+    this.isRunning = true;
+
+    const loop = async () => {
+      while (true) {
+        this.cleanupTimestamps();
+
+        if (this.queue.length > 0 && this.timestamps.length < this.maxPerSecond) {
+          const task = this.queue.shift();
+          if (task) {
+            this.timestamps.push(Date.now());
+            task();
+          }
+        }
+
+        await new Promise((r) => setTimeout(r, 10));
       }
-    }
-    this.isProcessing = false;
+    };
+
+    loop();
+  }
+
+  private cleanupTimestamps() {
+    const now = Date.now();
+    this.timestamps = this.timestamps.filter(t => now - t < 1000);
   }
 }

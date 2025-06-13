@@ -313,7 +313,10 @@ export interface Envelope {
     | Webhook
     | undefined;
   /**  */
-  noti_user_channel?: NotificationUserChannel | undefined;
+  noti_user_channel?:
+    | NotificationUserChannel
+    | undefined;
+  /**  */
   join_channel_app_data?:
     | JoinChannelAppData
     | undefined;
@@ -334,7 +337,23 @@ export interface Envelope {
     | HandleParticipantMeetStateEvent
     | undefined;
   /** delete acc */
-  delete_account_event?: DeleteAccountEvent | undefined;
+  delete_account_event?:
+    | DeleteAccountEvent
+    | undefined;
+  /** ephemeral message send */
+  ephemeral_message_send?:
+    | EphemeralMessageSend
+    | undefined;
+  /** block friend */
+  block_friend?:
+    | BlockFriend
+    | undefined;
+  /** voice reaction message */
+  voice_reaction_send?:
+    | VoiceReactionSend
+    | undefined;
+  /** Mark As Read */
+  mark_as_read?: MarkAsRead | undefined;
 }
 
 export interface FollowEvent {
@@ -553,6 +572,29 @@ export interface ChannelMessageAck {
   category_name: string;
 }
 
+export interface EphemeralMessageSend {
+  message: ChannelMessageSend | undefined;
+  receiver_id: string;
+}
+
+export interface VoiceReactionSend {
+  /** list emoji */
+  emojis: string[];
+  /** channel_id */
+  channel_id: string;
+  /** sender id */
+  sender_id: string;
+}
+
+export interface MarkAsRead {
+  /** channel id */
+  channel_id: string;
+  /** category_id */
+  category_id: string;
+  /** clan id */
+  clan_id: string;
+}
+
 /** Send a message to a realtime channel. */
 export interface ChannelMessageSend {
   /** The clan that channel belong to. */
@@ -743,6 +785,11 @@ export interface Notifications {
 }
 
 export interface RemoveFriend {
+  /**  */
+  user_id: string;
+}
+
+export interface BlockFriend {
   /**  */
   user_id: string;
 }
@@ -1195,6 +1242,7 @@ export interface UserChannelRemoved {
   channel_type: number;
   /** the clan_id */
   clan_id: string;
+  badge_counts: number[];
 }
 
 /**  */
@@ -1291,6 +1339,8 @@ export interface UserProfileRedis {
   app_url: string;
   /** is bot */
   is_bot: boolean;
+  /** for call DM iOS */
+  voip_token: string;
 }
 
 export interface FCMTokens {
@@ -1518,6 +1568,10 @@ function createBaseEnvelope(): Envelope {
     category_event: undefined,
     handle_participant_meet_state_event: undefined,
     delete_account_event: undefined,
+    ephemeral_message_send: undefined,
+    block_friend: undefined,
+    voice_reaction_send: undefined,
+    mark_as_read: undefined,
   };
 }
 
@@ -1757,6 +1811,18 @@ export const Envelope = {
     }
     if (message.delete_account_event !== undefined) {
       DeleteAccountEvent.encode(message.delete_account_event, writer.uint32(626).fork()).ldelim();
+    }
+    if (message.ephemeral_message_send !== undefined) {
+      EphemeralMessageSend.encode(message.ephemeral_message_send, writer.uint32(634).fork()).ldelim();
+    }
+    if (message.block_friend !== undefined) {
+      BlockFriend.encode(message.block_friend, writer.uint32(642).fork()).ldelim();
+    }
+    if (message.voice_reaction_send !== undefined) {
+      VoiceReactionSend.encode(message.voice_reaction_send, writer.uint32(650).fork()).ldelim();
+    }
+    if (message.mark_as_read !== undefined) {
+      MarkAsRead.encode(message.mark_as_read, writer.uint32(658).fork()).ldelim();
     }
     return writer;
   },
@@ -2314,6 +2380,34 @@ export const Envelope = {
 
           message.delete_account_event = DeleteAccountEvent.decode(reader, reader.uint32());
           continue;
+        case 79:
+          if (tag !== 634) {
+            break;
+          }
+
+          message.ephemeral_message_send = EphemeralMessageSend.decode(reader, reader.uint32());
+          continue;
+        case 80:
+          if (tag !== 642) {
+            break;
+          }
+
+          message.block_friend = BlockFriend.decode(reader, reader.uint32());
+          continue;
+        case 81:
+          if (tag !== 650) {
+            break;
+          }
+
+          message.voice_reaction_send = VoiceReactionSend.decode(reader, reader.uint32());
+          continue;
+        case 82:
+          if (tag !== 658) {
+            break;
+          }
+
+          message.mark_as_read = MarkAsRead.decode(reader, reader.uint32());
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -2505,6 +2599,14 @@ export const Envelope = {
       delete_account_event: isSet(object.delete_account_event)
         ? DeleteAccountEvent.fromJSON(object.delete_account_event)
         : undefined,
+      ephemeral_message_send: isSet(object.ephemeral_message_send)
+        ? EphemeralMessageSend.fromJSON(object.ephemeral_message_send)
+        : undefined,
+      block_friend: isSet(object.block_friend) ? BlockFriend.fromJSON(object.block_friend) : undefined,
+      voice_reaction_send: isSet(object.voice_reaction_send)
+        ? VoiceReactionSend.fromJSON(object.voice_reaction_send)
+        : undefined,
+      mark_as_read: isSet(object.mark_as_read) ? MarkAsRead.fromJSON(object.mark_as_read) : undefined,
     };
   },
 
@@ -2745,6 +2847,18 @@ export const Envelope = {
     }
     if (message.delete_account_event !== undefined) {
       obj.delete_account_event = DeleteAccountEvent.toJSON(message.delete_account_event);
+    }
+    if (message.ephemeral_message_send !== undefined) {
+      obj.ephemeral_message_send = EphemeralMessageSend.toJSON(message.ephemeral_message_send);
+    }
+    if (message.block_friend !== undefined) {
+      obj.block_friend = BlockFriend.toJSON(message.block_friend);
+    }
+    if (message.voice_reaction_send !== undefined) {
+      obj.voice_reaction_send = VoiceReactionSend.toJSON(message.voice_reaction_send);
+    }
+    if (message.mark_as_read !== undefined) {
+      obj.mark_as_read = MarkAsRead.toJSON(message.mark_as_read);
     }
     return obj;
   },
@@ -3003,6 +3117,19 @@ export const Envelope = {
         : undefined;
     message.delete_account_event = (object.delete_account_event !== undefined && object.delete_account_event !== null)
       ? DeleteAccountEvent.fromPartial(object.delete_account_event)
+      : undefined;
+    message.ephemeral_message_send =
+      (object.ephemeral_message_send !== undefined && object.ephemeral_message_send !== null)
+        ? EphemeralMessageSend.fromPartial(object.ephemeral_message_send)
+        : undefined;
+    message.block_friend = (object.block_friend !== undefined && object.block_friend !== null)
+      ? BlockFriend.fromPartial(object.block_friend)
+      : undefined;
+    message.voice_reaction_send = (object.voice_reaction_send !== undefined && object.voice_reaction_send !== null)
+      ? VoiceReactionSend.fromPartial(object.voice_reaction_send)
+      : undefined;
+    message.mark_as_read = (object.mark_as_read !== undefined && object.mark_as_read !== null)
+      ? MarkAsRead.fromPartial(object.mark_as_read)
       : undefined;
     return message;
   },
@@ -4961,6 +5088,260 @@ export const ChannelMessageAck = {
   },
 };
 
+function createBaseEphemeralMessageSend(): EphemeralMessageSend {
+  return { message: undefined, receiver_id: "" };
+}
+
+export const EphemeralMessageSend = {
+  encode(message: EphemeralMessageSend, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.message !== undefined) {
+      ChannelMessageSend.encode(message.message, writer.uint32(10).fork()).ldelim();
+    }
+    if (message.receiver_id !== "") {
+      writer.uint32(18).string(message.receiver_id);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): EphemeralMessageSend {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseEphemeralMessageSend();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.message = ChannelMessageSend.decode(reader, reader.uint32());
+          continue;
+        case 2:
+          if (tag !== 18) {
+            break;
+          }
+
+          message.receiver_id = reader.string();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): EphemeralMessageSend {
+    return {
+      message: isSet(object.message) ? ChannelMessageSend.fromJSON(object.message) : undefined,
+      receiver_id: isSet(object.receiver_id) ? globalThis.String(object.receiver_id) : "",
+    };
+  },
+
+  toJSON(message: EphemeralMessageSend): unknown {
+    const obj: any = {};
+    if (message.message !== undefined) {
+      obj.message = ChannelMessageSend.toJSON(message.message);
+    }
+    if (message.receiver_id !== "") {
+      obj.receiver_id = message.receiver_id;
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<EphemeralMessageSend>, I>>(base?: I): EphemeralMessageSend {
+    return EphemeralMessageSend.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<EphemeralMessageSend>, I>>(object: I): EphemeralMessageSend {
+    const message = createBaseEphemeralMessageSend();
+    message.message = (object.message !== undefined && object.message !== null)
+      ? ChannelMessageSend.fromPartial(object.message)
+      : undefined;
+    message.receiver_id = object.receiver_id ?? "";
+    return message;
+  },
+};
+
+function createBaseVoiceReactionSend(): VoiceReactionSend {
+  return { emojis: [], channel_id: "", sender_id: "" };
+}
+
+export const VoiceReactionSend = {
+  encode(message: VoiceReactionSend, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    for (const v of message.emojis) {
+      writer.uint32(10).string(v!);
+    }
+    if (message.channel_id !== "") {
+      writer.uint32(18).string(message.channel_id);
+    }
+    if (message.sender_id !== "") {
+      writer.uint32(26).string(message.sender_id);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): VoiceReactionSend {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseVoiceReactionSend();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.emojis.push(reader.string());
+          continue;
+        case 2:
+          if (tag !== 18) {
+            break;
+          }
+
+          message.channel_id = reader.string();
+          continue;
+        case 3:
+          if (tag !== 26) {
+            break;
+          }
+
+          message.sender_id = reader.string();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): VoiceReactionSend {
+    return {
+      emojis: globalThis.Array.isArray(object?.emojis) ? object.emojis.map((e: any) => globalThis.String(e)) : [],
+      channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "",
+      sender_id: isSet(object.sender_id) ? globalThis.String(object.sender_id) : "",
+    };
+  },
+
+  toJSON(message: VoiceReactionSend): unknown {
+    const obj: any = {};
+    if (message.emojis?.length) {
+      obj.emojis = message.emojis;
+    }
+    if (message.channel_id !== "") {
+      obj.channel_id = message.channel_id;
+    }
+    if (message.sender_id !== "") {
+      obj.sender_id = message.sender_id;
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<VoiceReactionSend>, I>>(base?: I): VoiceReactionSend {
+    return VoiceReactionSend.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<VoiceReactionSend>, I>>(object: I): VoiceReactionSend {
+    const message = createBaseVoiceReactionSend();
+    message.emojis = object.emojis?.map((e) => e) || [];
+    message.channel_id = object.channel_id ?? "";
+    message.sender_id = object.sender_id ?? "";
+    return message;
+  },
+};
+
+function createBaseMarkAsRead(): MarkAsRead {
+  return { channel_id: "", category_id: "", clan_id: "" };
+}
+
+export const MarkAsRead = {
+  encode(message: MarkAsRead, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.channel_id !== "") {
+      writer.uint32(10).string(message.channel_id);
+    }
+    if (message.category_id !== "") {
+      writer.uint32(18).string(message.category_id);
+    }
+    if (message.clan_id !== "") {
+      writer.uint32(26).string(message.clan_id);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): MarkAsRead {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseMarkAsRead();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.channel_id = reader.string();
+          continue;
+        case 2:
+          if (tag !== 18) {
+            break;
+          }
+
+          message.category_id = reader.string();
+          continue;
+        case 3:
+          if (tag !== 26) {
+            break;
+          }
+
+          message.clan_id = reader.string();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): MarkAsRead {
+    return {
+      channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "",
+      category_id: isSet(object.category_id) ? globalThis.String(object.category_id) : "",
+      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
+    };
+  },
+
+  toJSON(message: MarkAsRead): unknown {
+    const obj: any = {};
+    if (message.channel_id !== "") {
+      obj.channel_id = message.channel_id;
+    }
+    if (message.category_id !== "") {
+      obj.category_id = message.category_id;
+    }
+    if (message.clan_id !== "") {
+      obj.clan_id = message.clan_id;
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<MarkAsRead>, I>>(base?: I): MarkAsRead {
+    return MarkAsRead.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<MarkAsRead>, I>>(object: I): MarkAsRead {
+    const message = createBaseMarkAsRead();
+    message.channel_id = object.channel_id ?? "";
+    message.category_id = object.category_id ?? "";
+    message.clan_id = object.clan_id ?? "";
+    return message;
+  },
+};
+
 function createBaseChannelMessageSend(): ChannelMessageSend {
   return {
     clan_id: "",
@@ -6031,6 +6412,63 @@ export const RemoveFriend = {
   },
   fromPartial<I extends Exact<DeepPartial<RemoveFriend>, I>>(object: I): RemoveFriend {
     const message = createBaseRemoveFriend();
+    message.user_id = object.user_id ?? "";
+    return message;
+  },
+};
+
+function createBaseBlockFriend(): BlockFriend {
+  return { user_id: "" };
+}
+
+export const BlockFriend = {
+  encode(message: BlockFriend, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.user_id !== "") {
+      writer.uint32(10).string(message.user_id);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): BlockFriend {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseBlockFriend();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.user_id = reader.string();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): BlockFriend {
+    return { user_id: isSet(object.user_id) ? globalThis.String(object.user_id) : "" };
+  },
+
+  toJSON(message: BlockFriend): unknown {
+    const obj: any = {};
+    if (message.user_id !== "") {
+      obj.user_id = message.user_id;
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<BlockFriend>, I>>(base?: I): BlockFriend {
+    return BlockFriend.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<BlockFriend>, I>>(object: I): BlockFriend {
+    const message = createBaseBlockFriend();
     message.user_id = object.user_id ?? "";
     return message;
   },
@@ -9900,7 +10338,7 @@ export const UserChannelAdded = {
 };
 
 function createBaseUserChannelRemoved(): UserChannelRemoved {
-  return { channel_id: "", user_ids: [], channel_type: 0, clan_id: "" };
+  return { channel_id: "", user_ids: [], channel_type: 0, clan_id: "", badge_counts: [] };
 }
 
 export const UserChannelRemoved = {
@@ -9917,6 +10355,11 @@ export const UserChannelRemoved = {
     if (message.clan_id !== "") {
       writer.uint32(34).string(message.clan_id);
     }
+    writer.uint32(50).fork();
+    for (const v of message.badge_counts) {
+      writer.int32(v);
+    }
+    writer.ldelim();
     return writer;
   },
 
@@ -9955,6 +10398,23 @@ export const UserChannelRemoved = {
 
           message.clan_id = reader.string();
           continue;
+        case 6:
+          if (tag === 48) {
+            message.badge_counts.push(reader.int32());
+
+            continue;
+          }
+
+          if (tag === 50) {
+            const end2 = reader.uint32() + reader.pos;
+            while (reader.pos < end2) {
+              message.badge_counts.push(reader.int32());
+            }
+
+            continue;
+          }
+
+          break;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -9970,6 +10430,9 @@ export const UserChannelRemoved = {
       user_ids: globalThis.Array.isArray(object?.user_ids) ? object.user_ids.map((e: any) => globalThis.String(e)) : [],
       channel_type: isSet(object.channel_type) ? globalThis.Number(object.channel_type) : 0,
       clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
+      badge_counts: globalThis.Array.isArray(object?.badge_counts)
+        ? object.badge_counts.map((e: any) => globalThis.Number(e))
+        : [],
     };
   },
 
@@ -9987,6 +10450,9 @@ export const UserChannelRemoved = {
     if (message.clan_id !== "") {
       obj.clan_id = message.clan_id;
     }
+    if (message.badge_counts?.length) {
+      obj.badge_counts = message.badge_counts.map((e) => Math.round(e));
+    }
     return obj;
   },
 
@@ -9999,6 +10465,7 @@ export const UserChannelRemoved = {
     message.user_ids = object.user_ids?.map((e) => e) || [];
     message.channel_type = object.channel_type ?? 0;
     message.clan_id = object.clan_id ?? "";
+    message.badge_counts = object.badge_counts?.map((e) => e) || [];
     return message;
   },
 };
@@ -10530,6 +10997,7 @@ function createBaseUserProfileRedis(): UserProfileRedis {
     app_token: "",
     app_url: "",
     is_bot: false,
+    voip_token: "",
   };
 }
 
@@ -10585,6 +11053,9 @@ export const UserProfileRedis = {
     }
     if (message.is_bot !== false) {
       writer.uint32(136).bool(message.is_bot);
+    }
+    if (message.voip_token !== "") {
+      writer.uint32(146).string(message.voip_token);
     }
     return writer;
   },
@@ -10715,6 +11186,13 @@ export const UserProfileRedis = {
 
           message.is_bot = reader.bool();
           continue;
+        case 18:
+          if (tag !== 146) {
+            break;
+          }
+
+          message.voip_token = reader.string();
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -10747,6 +11225,7 @@ export const UserProfileRedis = {
       app_token: isSet(object.app_token) ? globalThis.String(object.app_token) : "",
       app_url: isSet(object.app_url) ? globalThis.String(object.app_url) : "",
       is_bot: isSet(object.is_bot) ? globalThis.Boolean(object.is_bot) : false,
+      voip_token: isSet(object.voip_token) ? globalThis.String(object.voip_token) : "",
     };
   },
 
@@ -10803,6 +11282,9 @@ export const UserProfileRedis = {
     if (message.is_bot !== false) {
       obj.is_bot = message.is_bot;
     }
+    if (message.voip_token !== "") {
+      obj.voip_token = message.voip_token;
+    }
     return obj;
   },
 
@@ -10828,6 +11310,7 @@ export const UserProfileRedis = {
     message.app_token = object.app_token ?? "";
     message.app_url = object.app_url ?? "";
     message.is_bot = object.is_bot ?? false;
+    message.voip_token = object.voip_token ?? "";
     return message;
   },
 };

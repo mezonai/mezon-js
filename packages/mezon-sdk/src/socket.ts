@@ -15,13 +15,14 @@
  */
 
 import WebSocket, { CloseEvent, ErrorEvent } from "ws";
-import { ApiMessageAttachment, ApiMessageMention, ApiMessageReaction, ApiMessageRef, Channel, ChannelDescListEvent, ChannelJoin, ChannelLeave, ChannelMessageAck, ChannelMessageRemove, ChannelMessageSend, ChannelMessageUpdate, ClanJoin, ClanNameExistedEvent, CustomStatusEvent, EmojiListedEvent, HashtagDmListEvent, LastPinMessageEvent, LastSeenMessageEvent, MessageTypingEvent, NotificationCategorySettingEvent, NotificationChannelSettingEvent, NotificationClanSettingEvent, NotifiReactMessageEvent, Ping, Rpc, Socket, SocketError, StatusFollow, StatusUnfollow, StatusUpdate, StrickerListedEvent, TokenSentEvent, VoiceJoinedEvent, VoiceLeavedEvent } from "./interfaces";
+import { ApiMessageAttachment, ApiMessageMention, ApiMessageReaction, ApiMessageRef, Channel, ChannelDescListEvent, ChannelJoin, ChannelLeave, ChannelMessageAck, ChannelMessageRemove, ChannelMessageSend, ChannelMessageUpdate, ClanJoin, ClanNameExistedEvent, CustomStatusEvent, DropdownBoxSelected, EmojiListedEvent, HashtagDmListEvent, LastPinMessageEvent, LastSeenMessageEvent, MessageTypingEvent, NotificationCategorySettingEvent, NotificationChannelSettingEvent, NotificationClanSettingEvent, NotifiReactMessageEvent, Ping, Rpc, Socket, SocketError, StatusFollow, StatusUnfollow, StatusUpdate, StrickerListedEvent, TokenSentEvent, VoiceJoinedEvent, VoiceLeavedEvent } from "./interfaces";
 import {Session} from "./session";
 import { WebSocketAdapter, WebSocketAdapterText } from "./web_socket_adapter";
 import { InternalEventsSocket } from "./constants";
 import { EventEmitter } from "stream";
 import { formatFunction } from "./utils/format_message_input";
 import HandleEvent from './message-socket-events';
+import { WebrtcSignalingFwd, IncomingCallPush, MessageButtonClicked, ChannelAppEvent, EphemeralMessageSend } from "./rtapi/realtime";
 
 /** Stores function references for resolve/reject with a DOM Promise. */
 interface PromiseExecutor {
@@ -184,7 +185,8 @@ export class DefaultSocket implements Socket {
 
 
   send(message: ChannelJoin | ChannelLeave | ChannelMessageSend | ChannelMessageUpdate | CustomStatusEvent |
-    ChannelMessageRemove | MessageTypingEvent | LastSeenMessageEvent | Rpc | StatusFollow | StatusUnfollow | StatusUpdate | Ping, sendTimeout = DefaultSocket.DefaultSendTimeoutMs): Promise<any> {
+    ChannelMessageRemove | MessageTypingEvent | LastSeenMessageEvent | Rpc | StatusFollow | StatusUnfollow | StatusUpdate | Ping |
+    WebrtcSignalingFwd | IncomingCallPush | MessageButtonClicked | DropdownBoxSelected | ChannelAppEvent | EphemeralMessageSend, sendTimeout = DefaultSocket.DefaultSendTimeoutMs): Promise<any> {
     const untypedMessage = message as any;
 
     return new Promise<void>((resolve, reject) => {
@@ -193,9 +195,18 @@ export class DefaultSocket implements Socket {
       }
       else {
         if (untypedMessage.channel_message_send) {
-          untypedMessage.channel_message_send.content = JSON.stringify(untypedMessage.channel_message_send.content);
+          untypedMessage.channel_message_send.content = JSON.stringify(
+            untypedMessage.channel_message_send.content
+          );
         } else if (untypedMessage.channel_message_update) {
-          untypedMessage.channel_message_update.content = JSON.stringify(untypedMessage.channel_message_update.content);
+          untypedMessage.channel_message_update.content = JSON.stringify(
+            untypedMessage.channel_message_update.content
+          );
+        } else if (untypedMessage.ephemeral_message_send) {
+          untypedMessage.ephemeral_message_send.message.content =
+            JSON.stringify(
+              untypedMessage.ephemeral_message_send.message?.content
+            );
         }
 
         const cid = this.generatecid();
@@ -265,6 +276,51 @@ export class DefaultSocket implements Socket {
 
   updateStatus(status?: string): Promise<void> {
     return this.send({status_update: {status: status}});
+  }
+
+  async writeEphemeralMessage(
+    receiver_id: string,
+    clan_id: string,
+    channel_id: string,
+    mode: number,
+    is_public: boolean,
+    content: any,
+    mentions?: Array<ApiMessageMention>,
+    attachments?: Array<ApiMessageAttachment>,
+    references?: Array<ApiMessageRef>,
+    anonymous_message?: boolean,
+    mention_everyone?: Boolean,
+    avatar?: string,
+    code?: number,
+    topic_id?: string
+  ): Promise<ChannelMessageAck> {
+    try {
+      const response = await this.send({
+      ephemeral_message_send: {
+        receiver_id: receiver_id,
+        message: {
+          clan_id: clan_id,
+          channel_id: channel_id,
+          mode: mode,
+          is_public: is_public,
+          content: content,
+          mentions: mentions ?? [],
+          attachments: attachments ?? [],
+          references: references ?? [],
+          anonymous_message: anonymous_message,
+          mention_everyone: mention_everyone,
+          avatar: avatar,
+          code: code,
+          topic_id: topic_id,
+        }
+      }
+    });
+    return response.channel_message;
+    } catch (error) {
+      console.log('writeEphemeralMessage', error)
+      throw error
+    }
+    
   }
 
   async writeChatMessage(clan_id: string, channel_id: string, mode: number, is_public: boolean, content: any, mentions?: Array<ApiMessageMention>, attachments?: Array<ApiMessageAttachment>, references?: Array<ApiMessageRef>, anonymous_message?: boolean, mention_everyone?: boolean, avatar?: string, code?: number, topic_id?: string): Promise<ChannelMessageAck> {
