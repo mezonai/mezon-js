@@ -10,6 +10,7 @@ import { EventManager } from "./event_manager";
 import { Clan } from "../structures/Clan";
 import { MezonClient } from "../client/MezonClient";
 import {
+  EphemeralMessageData,
   ReactMessageData,
   RemoveMessageData,
   ReplyMessageData,
@@ -104,6 +105,7 @@ export class SocketManager {
           {
             id: clan.clan_id!,
             name: clan?.clan_name ?? "unknown",
+            welcome_channel_id: clan?.welcome_channel_id ?? ''
           },
           this.client,
           this.apiClient,
@@ -141,8 +143,7 @@ export class SocketManager {
 
     const retry = async () => {
       try {
-        const sessionStr = await this.client.login();
-        console.log("Reconnected session:", sessionStr);
+        await this.client.login();
 
         this.isRetrying = false;
         console.log("Connected successfully!");
@@ -161,6 +162,30 @@ export class SocketManager {
   async writeChatMessage(dataWriteMessage: ReplyMessageData) {
     try {
       const msgACK = await this.socket.writeChatMessage(
+        dataWriteMessage.clan_id,
+        dataWriteMessage.channel_id,
+        dataWriteMessage.mode,
+        dataWriteMessage.is_public,
+        dataWriteMessage.content,
+        dataWriteMessage?.mentions ?? [],
+        dataWriteMessage?.attachments ?? [],
+        dataWriteMessage?.references ?? [],
+        dataWriteMessage?.anonymous_message,
+        dataWriteMessage?.mention_everyone,
+        dataWriteMessage?.avatar,
+        dataWriteMessage?.code,
+        dataWriteMessage?.topic_id
+      );
+      return msgACK;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async writeEphemeralMessage(dataWriteMessage: EphemeralMessageData) {
+    try {
+      const msgACK = await this.socket.writeEphemeralMessage(
+        dataWriteMessage.receiver_id,
         dataWriteMessage.clan_id,
         dataWriteMessage.channel_id,
         dataWriteMessage.mode,

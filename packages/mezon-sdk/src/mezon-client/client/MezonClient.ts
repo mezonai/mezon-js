@@ -373,44 +373,59 @@ export class MezonClient extends EventEmitter {
   /** Listen to user added in CLAN */
   public onAddClanUser(listener: (e: AddClanUserEvent) => void): this {
     this.on(Events.AddClanUser.toString(), async (e: AddClanUserEvent) => {
-      const clanObj = new Clan(
-        {
-          id: e.clan_id!,
-          name: "unknown",
-        },
-        this,
-        this.apiClient,
-        this.socketManager,
-        this.sessionManager.getSession()?.token!,
-        this.messageQueue,
-        this.messageDB
-      );
-      this.clans.set(e.clan_id!, clanObj);
       if (e.user.user_id === this.clientId) {
         this.socketManager.getSocket().joinClanChat(e.clan_id);
+        const clan = this.clans.get(e.clan_id);
+        if (!clan) {
+          const clanObj = new Clan(
+            {
+              id: e.clan_id!,
+              name: "unknown",
+              welcome_channel_id: "",
+            },
+            this,
+            this.apiClient,
+            this.socketManager,
+            this.sessionManager.getSession()?.token!,
+            this.messageQueue,
+            this.messageDB
+          );
+          await clanObj.loadChannels();
+          this.clans.set(e.clan_id, clanObj);
+        }
+      } else {
+        const userRaw: UserInitData = {
+          id: e.user.user_id!,
+          username: e.user.username!,
+          clan_nick: "",
+          clan_avatar: "",
+          avartar: e.user.avatar!,
+          display_name: e.user.display_name,
+          dmChannelId: "",
+        };
+        const clan = this.clans.get(e.clan_id);
+        if (clan) {
+          const user = new User(
+            userRaw,
+            clan,
+            this.messageQueue,
+            this.socketManager,
+            this.channelManager
+          );
+          clan.users.set(e.user.user_id!, user);
+        }
+        const clanDm = this.clans.get("0");
+        if (clanDm) {
+          const user = new User(
+            userRaw,
+            clanDm,
+            this.messageQueue,
+            this.socketManager,
+            this.channelManager
+          );
+          clanDm.users.set(e.user.user_id!, user);
+        }
       }
-      const userRaw: UserInitData = {
-        id: e.user.user_id!,
-        username: e.user.username!,
-        clan_nick: "",
-        clan_avatar: "",
-        avartar: e.user.avatar!,
-        display_name: e.user.display_name,
-        dmChannelId: "",
-      };
-      const user = new User(
-        userRaw,
-        clanObj,
-        this.messageQueue,
-        this.socketManager,
-        this.channelManager
-      );
-      const dmChannel = await user.createDmChannel();
-      user.dmChannelId = dmChannel?.channel_id ?? "";
-      clanObj.users.set(e.user.user_id!, user);
-      const clanDm = this.clans.get("0");
-      if (!clanDm) return;
-      clanDm.users.set(e.user.user_id!, user);
       listener(e);
     });
     return this;
