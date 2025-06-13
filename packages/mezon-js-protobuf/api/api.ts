@@ -3579,8 +3579,15 @@ export interface WalletLedgerList {
 }
 
 export interface WalletLedgerListReq {
-  limit: number | undefined;
-  cursor: string;
+  limit:
+    | number
+    | undefined;
+  /**
+   * filter = 0 for all
+   * filter = 1 for sent
+   * filter = 2 for recieve
+   */
+  filter: number;
   transaction_id: string;
   page: number | undefined;
 }
@@ -34558,7 +34565,7 @@ export const WalletLedgerList = {
 };
 
 function createBaseWalletLedgerListReq(): WalletLedgerListReq {
-  return { limit: undefined, cursor: "", transaction_id: "", page: undefined };
+  return { limit: undefined, filter: 0, transaction_id: "", page: undefined };
 }
 
 export const WalletLedgerListReq = {
@@ -34566,8 +34573,8 @@ export const WalletLedgerListReq = {
     if (message.limit !== undefined) {
       Int32Value.encode({ value: message.limit! }, writer.uint32(10).fork()).ldelim();
     }
-    if (message.cursor !== "") {
-      writer.uint32(18).string(message.cursor);
+    if (message.filter !== 0) {
+      writer.uint32(16).int32(message.filter);
     }
     if (message.transaction_id !== "") {
       writer.uint32(26).string(message.transaction_id);
@@ -34593,11 +34600,11 @@ export const WalletLedgerListReq = {
           message.limit = Int32Value.decode(reader, reader.uint32()).value;
           continue;
         case 2:
-          if (tag !== 18) {
+          if (tag !== 16) {
             break;
           }
 
-          message.cursor = reader.string();
+          message.filter = reader.int32();
           continue;
         case 3:
           if (tag !== 26) {
@@ -34625,7 +34632,7 @@ export const WalletLedgerListReq = {
   fromJSON(object: any): WalletLedgerListReq {
     return {
       limit: isSet(object.limit) ? Number(object.limit) : undefined,
-      cursor: isSet(object.cursor) ? globalThis.String(object.cursor) : "",
+      filter: isSet(object.filter) ? globalThis.Number(object.filter) : 0,
       transaction_id: isSet(object.transaction_id) ? globalThis.String(object.transaction_id) : "",
       page: isSet(object.page) ? Number(object.page) : undefined,
     };
@@ -34636,8 +34643,8 @@ export const WalletLedgerListReq = {
     if (message.limit !== undefined) {
       obj.limit = message.limit;
     }
-    if (message.cursor !== "") {
-      obj.cursor = message.cursor;
+    if (message.filter !== 0) {
+      obj.filter = Math.round(message.filter);
     }
     if (message.transaction_id !== "") {
       obj.transaction_id = message.transaction_id;
@@ -34654,7 +34661,7 @@ export const WalletLedgerListReq = {
   fromPartial<I extends Exact<DeepPartial<WalletLedgerListReq>, I>>(object: I): WalletLedgerListReq {
     const message = createBaseWalletLedgerListReq();
     message.limit = object.limit ?? undefined;
-    message.cursor = object.cursor ?? "";
+    message.filter = object.filter ?? 0;
     message.transaction_id = object.transaction_id ?? "";
     message.page = object.page ?? undefined;
     return message;

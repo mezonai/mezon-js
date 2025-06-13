@@ -9468,7 +9468,7 @@ export class MezonApi {
   /** Get user status */
   listWalletLedger(bearerToken: string,
       limit?:number,
-      cursor?:string,
+      filter?:number,
       transactionId?:string,
       page?:number,
       options: any = {}): Promise<ApiWalletLedgerList> {
@@ -9476,7 +9476,7 @@ export class MezonApi {
     const urlPath = "/v2/walletledger";
     const queryParams = new Map<string, any>();
     queryParams.set("limit", limit);
-    queryParams.set("cursor", cursor);
+    queryParams.set("filter", filter);
     queryParams.set("transaction_id", transactionId);
     queryParams.set("page", page);
 

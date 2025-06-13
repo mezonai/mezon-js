@@ -4377,7 +4377,7 @@ export class Client {
   async listWalletLedger(
     session: Session,
     limit?: number,
-    cursor?: string,
+    filter?: number,
     transactionId?: string,
     page?: number
   ): Promise<ApiWalletLedgerList> {
@@ -4390,7 +4390,7 @@ export class Client {
     }
 
     return this.apiClient
-      .listWalletLedger(session.token, limit, cursor, transactionId, page)
+      .listWalletLedger(session.token, limit, filter, transactionId, page)
       .then((response: ApiWalletLedgerList) => {
         return Promise.resolve(response);
       });
