@@ -165,6 +165,8 @@ import {
   ApiMessage2InboxRequest,
   ApiListClanDiscover,
   ApiClanDiscoverRequest,
+  ApiQuickMenuAccessList,
+  ApiQuickMenuAccessRequest,
 } from "./api.gen";
 
 import { Session } from "./session";
@@ -4377,7 +4379,7 @@ export class Client {
   async listWalletLedger(
     session: Session,
     limit?: number,
-    cursor?: string,
+    filter?: number,
     transactionId?: string,
     page?: number
   ): Promise<ApiWalletLedgerList> {
@@ -4390,7 +4392,7 @@ export class Client {
     }
 
     return this.apiClient
-      .listWalletLedger(session.token, limit, cursor, transactionId, page)
+      .listWalletLedger(session.token, limit, filter, transactionId, page)
       .then((response: ApiWalletLedgerList) => {
         return Promise.resolve(response);
       });
@@ -4750,7 +4752,7 @@ export class Client {
   }
 
   /** list clan discover. */
-  listClanDiscover(
+  async listClanDiscover(
     basePath: string,
     request: ApiClanDiscoverRequest
   ): Promise<ApiListClanDiscover> {
@@ -4758,6 +4760,82 @@ export class Client {
       .clanDiscover(this.serverkey, "", basePath, request)
       .then((response: ApiListClanDiscover) => {
         return Promise.resolve(response);
+      });
+  }
+
+  async listQuickMenuAccess(
+    session: Session,
+    botId: string
+  ): Promise<ApiQuickMenuAccessList> {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired(Date.now() / 1000)
+    ) {
+      await this.sessionRefresh(session);
+    }
+
+    return this.apiClient
+      .listQuickMenuAccess(session.token, botId)
+      .then((response: ApiQuickMenuAccessList) => {
+        return Promise.resolve(response);
+      });
+  }
+
+  async deleteQuickMenuAccess(
+    session: Session,
+    id: string
+  ): Promise<any> {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired(Date.now() / 1000)
+    ) {
+      await this.sessionRefresh(session);
+    }
+
+    return this.apiClient
+      .deleteQuickMenuAccess(session.token, id)
+      .then((response: any) => {
+        return response !== undefined;
+      });
+  }
+
+  async addQuickMenuAccess(
+    session: Session,
+    request: ApiQuickMenuAccessRequest
+  ): Promise<any> {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired(Date.now() / 1000)
+    ) {
+      await this.sessionRefresh(session);
+    }
+
+    return this.apiClient
+      .addQuickMenuAccess(session.token, request)
+      .then((response: any) => {
+        return response !== undefined;
+      });
+  }
+
+  async updateQuickMenuAccess(
+    session: Session,
+    request: ApiQuickMenuAccessRequest
+  ): Promise<any> {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired(Date.now() / 1000)
+    ) {
+      await this.sessionRefresh(session);
+    }
+
+    return this.apiClient
+      .updateQuickMenuAccess(session.token, request)
+      .then((response: any) => {
+        return response !== undefined;
       });
   }
 }

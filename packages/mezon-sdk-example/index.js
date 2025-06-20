@@ -15,39 +15,21 @@
  */
 
 const { MezonClient } = require("mezon-sdk");
-const csv = require('csv-parser')
-const fs = require('fs')
 const results = [];
 
-fs.createReadStream('datatest.csv')
-  .pipe(csv(['Email', 'Token']))
-  .on('data', (data) => {
-    const username = data.Email.split('@')[0]
-    results.push({'username': username})
-  })
-  .on('end', () => {
-    console.log(results);
-  });
-
-var client = new MezonClient("4b6e5665484a4e503757787231536569");
-  client.authenticate().then(async (e) => {
+var client = new MezonClient("tokenid");
+  client.login().then(async (e) => {
   console.log("authenticated.", e);
 
-  var interval = 1000;
-  results.forEach(function (el, index) {
-    setTimeout(async function () {
-      console.log(el);
+ 
+  const res = await client.sendToken({
+    sender_id: "senderid",
+    sender_name: "sendername",
+    receiver_id: "receiverid",
+    amount: 100000000,
+    note: "chuyen tien"}
+  );
 
-      const res = await client.sendToken({
-        sender_id: "",
-        sender_name: "KOMU",
-        receiver_id: el.username,
-        amount: 200000,
-        note: "NCCPLUS ho tro thang 3"}
-      );
-      
-    }, index * interval);
-  });
 }).catch(e => {
   console.log("error authenticating.", e);
 });

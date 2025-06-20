@@ -1440,9 +1440,6 @@ export interface Socket {
   /** Receive channel message. */
   onchannelmessage: (channelMessage: ChannelMessage) => void;
 
-  /** Receive channel message. */
-  onephemeralmessage: (ephemeralMessage: ChannelMessage) => void;
-
   /** Receive typing event */
   onmessagetyping: (messageTypingEvent: MessageTypingEvent) => void;
 
@@ -1716,9 +1713,6 @@ export class DefaultSocket implements Socket {
         } else if (message.channel_message) {          
           const channelMessage = CreateChannelMessageFromEvent(message);
           this.onchannelmessage(channelMessage);
-        } else if (message.ephemeral_message_send) {
-          const channelMessage = CreateChannelMessageFromEvent(message);
-          this.onephemeralmessage(channelMessage);
         } else if (message.message_typing_event) {
           this.onmessagetyping(
             <MessageTypingEvent>message.message_typing_event
@@ -1913,12 +1907,6 @@ export class DefaultSocket implements Socket {
   onchannelmessage(channelMessage: ChannelMessage) {
     if (this.verbose && window && window.console) {
       console.log(channelMessage);
-    }
-  }
-
-  onephemeralmessage(ephemeralMessage: ChannelMessage) {
-    if (this.verbose && window && window.console) {
-      console.log(ephemeralMessage)
     }
   }
 
