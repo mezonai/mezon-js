@@ -2493,6 +2493,7 @@ export interface ClanEmojiCreateRequest {
   shortname: string;
   category: string;
   id: string;
+  is_for_sale: boolean;
 }
 
 export interface ClanEmojiGetByClanIdRequest {
@@ -2596,6 +2597,8 @@ export interface ClanStickerAddRequest {
   id: string;
   /** media type for image or audio */
   media_type: number;
+  /** is for sale */
+  is_for_sale: boolean;
 }
 
 export interface ClanStickerListByClanIdRequest {
@@ -3310,9 +3313,11 @@ export interface TokenSentEvent {
   transaction_id: string;
 }
 
-export interface WithdrawTokenRequest {
-  /** amount of token */
-  amount: number;
+export interface UnlockItemRequest {
+  /** item id */
+  item_id: string;
+  /** item type */
+  item_type: number;
 }
 
 export interface ListOnboardingRequest {
@@ -23350,7 +23355,7 @@ export const AllUsersAddChannelResponse = {
 };
 
 function createBaseClanEmojiCreateRequest(): ClanEmojiCreateRequest {
-  return { clan_id: "", source: "", shortname: "", category: "", id: "" };
+  return { clan_id: "", source: "", shortname: "", category: "", id: "", is_for_sale: false };
 }
 
 export const ClanEmojiCreateRequest = {
@@ -23369,6 +23374,9 @@ export const ClanEmojiCreateRequest = {
     }
     if (message.id !== "") {
       writer.uint32(42).string(message.id);
+    }
+    if (message.is_for_sale !== false) {
+      writer.uint32(48).bool(message.is_for_sale);
     }
     return writer;
   },
@@ -23415,6 +23423,13 @@ export const ClanEmojiCreateRequest = {
 
           message.id = reader.string();
           continue;
+        case 6:
+          if (tag !== 48) {
+            break;
+          }
+
+          message.is_for_sale = reader.bool();
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -23431,6 +23446,7 @@ export const ClanEmojiCreateRequest = {
       shortname: isSet(object.shortname) ? globalThis.String(object.shortname) : "",
       category: isSet(object.category) ? globalThis.String(object.category) : "",
       id: isSet(object.id) ? globalThis.String(object.id) : "",
+      is_for_sale: isSet(object.is_for_sale) ? globalThis.Boolean(object.is_for_sale) : false,
     };
   },
 
@@ -23451,6 +23467,9 @@ export const ClanEmojiCreateRequest = {
     if (message.id !== "") {
       obj.id = message.id;
     }
+    if (message.is_for_sale !== false) {
+      obj.is_for_sale = message.is_for_sale;
+    }
     return obj;
   },
 
@@ -23464,6 +23483,7 @@ export const ClanEmojiCreateRequest = {
     message.shortname = object.shortname ?? "";
     message.category = object.category ?? "";
     message.id = object.id ?? "";
+    message.is_for_sale = object.is_for_sale ?? false;
     return message;
   },
 };
@@ -24737,7 +24757,7 @@ export const CheckDuplicateClanNameResponse = {
 };
 
 function createBaseClanStickerAddRequest(): ClanStickerAddRequest {
-  return { source: "", shortname: "", category: "", clan_id: "", id: "", media_type: 0 };
+  return { source: "", shortname: "", category: "", clan_id: "", id: "", media_type: 0, is_for_sale: false };
 }
 
 export const ClanStickerAddRequest = {
@@ -24759,6 +24779,9 @@ export const ClanStickerAddRequest = {
     }
     if (message.media_type !== 0) {
       writer.uint32(48).int32(message.media_type);
+    }
+    if (message.is_for_sale !== false) {
+      writer.uint32(56).bool(message.is_for_sale);
     }
     return writer;
   },
@@ -24812,6 +24835,13 @@ export const ClanStickerAddRequest = {
 
           message.media_type = reader.int32();
           continue;
+        case 7:
+          if (tag !== 56) {
+            break;
+          }
+
+          message.is_for_sale = reader.bool();
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -24829,6 +24859,7 @@ export const ClanStickerAddRequest = {
       clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
       id: isSet(object.id) ? globalThis.String(object.id) : "",
       media_type: isSet(object.media_type) ? globalThis.Number(object.media_type) : 0,
+      is_for_sale: isSet(object.is_for_sale) ? globalThis.Boolean(object.is_for_sale) : false,
     };
   },
 
@@ -24852,6 +24883,9 @@ export const ClanStickerAddRequest = {
     if (message.media_type !== 0) {
       obj.media_type = Math.round(message.media_type);
     }
+    if (message.is_for_sale !== false) {
+      obj.is_for_sale = message.is_for_sale;
+    }
     return obj;
   },
 
@@ -24866,6 +24900,7 @@ export const ClanStickerAddRequest = {
     message.clan_id = object.clan_id ?? "";
     message.id = object.id ?? "";
     message.media_type = object.media_type ?? 0;
+    message.is_for_sale = object.is_for_sale ?? false;
     return message;
   },
 };
@@ -32016,31 +32051,41 @@ export const TokenSentEvent = {
   },
 };
 
-function createBaseWithdrawTokenRequest(): WithdrawTokenRequest {
-  return { amount: 0 };
+function createBaseUnlockItemRequest(): UnlockItemRequest {
+  return { item_id: "", item_type: 0 };
 }
 
-export const WithdrawTokenRequest = {
-  encode(message: WithdrawTokenRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.amount !== 0) {
-      writer.uint32(8).int32(message.amount);
+export const UnlockItemRequest = {
+  encode(message: UnlockItemRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.item_id !== "") {
+      writer.uint32(10).string(message.item_id);
+    }
+    if (message.item_type !== 0) {
+      writer.uint32(16).int32(message.item_type);
     }
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): WithdrawTokenRequest {
+  decode(input: _m0.Reader | Uint8Array, length?: number): UnlockItemRequest {
     const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseWithdrawTokenRequest();
+    const message = createBaseUnlockItemRequest();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 8) {
+          if (tag !== 10) {
             break;
           }
 
-          message.amount = reader.int32();
+          message.item_id = reader.string();
+          continue;
+        case 2:
+          if (tag !== 16) {
+            break;
+          }
+
+          message.item_type = reader.int32();
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -32051,24 +32096,31 @@ export const WithdrawTokenRequest = {
     return message;
   },
 
-  fromJSON(object: any): WithdrawTokenRequest {
-    return { amount: isSet(object.amount) ? globalThis.Number(object.amount) : 0 };
+  fromJSON(object: any): UnlockItemRequest {
+    return {
+      item_id: isSet(object.item_id) ? globalThis.String(object.item_id) : "",
+      item_type: isSet(object.item_type) ? globalThis.Number(object.item_type) : 0,
+    };
   },
 
-  toJSON(message: WithdrawTokenRequest): unknown {
+  toJSON(message: UnlockItemRequest): unknown {
     const obj: any = {};
-    if (message.amount !== 0) {
-      obj.amount = Math.round(message.amount);
+    if (message.item_id !== "") {
+      obj.item_id = message.item_id;
+    }
+    if (message.item_type !== 0) {
+      obj.item_type = Math.round(message.item_type);
     }
     return obj;
   },
 
-  create<I extends Exact<DeepPartial<WithdrawTokenRequest>, I>>(base?: I): WithdrawTokenRequest {
-    return WithdrawTokenRequest.fromPartial(base ?? ({} as any));
+  create<I extends Exact<DeepPartial<UnlockItemRequest>, I>>(base?: I): UnlockItemRequest {
+    return UnlockItemRequest.fromPartial(base ?? ({} as any));
   },
-  fromPartial<I extends Exact<DeepPartial<WithdrawTokenRequest>, I>>(object: I): WithdrawTokenRequest {
-    const message = createBaseWithdrawTokenRequest();
-    message.amount = object.amount ?? 0;
+  fromPartial<I extends Exact<DeepPartial<UnlockItemRequest>, I>>(object: I): UnlockItemRequest {
+    const message = createBaseUnlockItemRequest();
+    message.item_id = object.item_id ?? "";
+    message.item_type = object.item_type ?? 0;
     return message;
   },
 };
