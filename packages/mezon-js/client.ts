@@ -130,7 +130,6 @@ import {
   MezonapiListAuditLog,
   ApiTokenSentEvent,
   MezonDeleteWebhookByIdBody,
-  ApiWithdrawTokenRequest,
   ApiListOnboardingResponse,
   ApiCreateOnboardingRequest,
   MezonUpdateOnboardingBody,
@@ -167,6 +166,7 @@ import {
   ApiClanDiscoverRequest,
   ApiQuickMenuAccessList,
   ApiQuickMenuAccessRequest,
+  ApiUnlockItemRequest,
 } from "./api.gen";
 
 import { Session } from "./session";
@@ -3153,7 +3153,7 @@ export class Client {
       });
   }
 
-  async givecoffee(session: Session, request: ApiGiveCoffeeEvent) {
+  async givecoffee(session: Session, request: ApiGiveCoffeeEvent): Promise<any> {
     if (
       this.autoRefreshSession &&
       session.refresh_token &&
@@ -3164,12 +3164,12 @@ export class Client {
 
     return this.apiClient
       .giveMeACoffee(session.token, request)
-      .then((response: ApiAppList) => {
+      .then((response: any) => {
         return response !== undefined;
       });
   }
 
-  async sendToken(session: Session, request: ApiTokenSentEvent) {
+  async sendToken(session: Session, request: ApiTokenSentEvent): Promise<any> {
     if (
       this.autoRefreshSession &&
       session.refresh_token &&
@@ -3180,24 +3180,8 @@ export class Client {
 
     return this.apiClient
       .sendToken(session.token, request)
-      .then((response: ApiTokenSentEvent) => {
-        return Promise.resolve(response);
-      });
-  }
-
-  async withdrawToken(session: Session, request: ApiWithdrawTokenRequest) {
-    if (
-      this.autoRefreshSession &&
-      session.refresh_token &&
-      session.isexpired(Date.now() / 1000)
-    ) {
-      await this.sessionRefresh(session);
-    }
-
-    return this.apiClient
-      .withdrawToken(session.token, request)
-      .then((response: ApiTokenSentEvent) => {
-        return Promise.resolve(response);
+      .then((response: any) => {
+        return response !== undefined
       });
   }
 
@@ -4836,6 +4820,22 @@ export class Client {
       .updateQuickMenuAccess(session.token, request)
       .then((response: any) => {
         return response !== undefined;
+      });
+  }
+
+  async unlockItem(session: Session, request: ApiUnlockItemRequest): Promise<any> {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired(Date.now() / 1000)
+    ) {
+      await this.sessionRefresh(session);
+    }
+
+    return this.apiClient
+      .unlockItem(session.token, request)
+      .then((response: any) => {
+        return response !== undefined
       });
   }
 }

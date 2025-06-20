@@ -984,6 +984,8 @@ export interface ApiClanEmojiCreateRequest {
   shortname?: string;
   //
   source?: string;
+  //
+  is_for_sale?: boolean;
 }
 
 /** Get clan profile. */
@@ -1036,6 +1038,8 @@ export interface ApiClanStickerAddRequest {
   source?: string;
   //
   media_type?: number;
+  //
+  is_for_sale?: boolean;
 }
 
 /** A list of users belonging to a clan, along with their role. */
@@ -2833,12 +2837,6 @@ export interface ApiWebhookListResponse {
   webhooks?: Array<ApiWebhook>;
 }
 
-/**  */
-export interface ApiWithdrawTokenRequest {
-  //
-  amount?: number;
-}
-
 /** A collection of zero or more notifications. */
 export interface MezonapiEmojiRecentList {
   //Collection of emojiRecents.
@@ -3082,6 +3080,13 @@ export interface ApiGenerateMeetTokenResponse {
   token?: string;
 }
 
+/**  */
+export interface ApiUnlockItemRequest {
+  //
+  item_id?: string;
+  //
+  item_type?: number;
+}
 
 /**  */
 export interface ApiMezonOauthClient {
@@ -9774,45 +9779,6 @@ export class MezonApi {
     ]);
   }
 
-  /** WithdrawToken */
-  withdrawToken(
-    bearerToken: string,
-    body: ApiWithdrawTokenRequest,
-    options: any = {}
-  ): Promise<any> {
-    if (body === null || body === undefined) {
-      throw new Error(
-        "'body' is a required parameter but is null or undefined."
-      );
-    }
-    const urlPath = "/v2/withdrawtoken";
-    const queryParams = new Map<string, any>();
-
-    let bodyJson: string = "";
-    bodyJson = JSON.stringify(body || {});
-
-    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
-    const fetchOptions = buildFetchOptions("POST", options, bodyJson);
-    if (bearerToken) {
-      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-    }
-
-    return Promise.race([
-      fetch(fullUrl, fetchOptions).then((response) => {
-        if (response.status == 204) {
-          return response;
-        } else if (response.status >= 200 && response.status < 300) {
-          return response.json();
-        } else {
-          throw response;
-        }
-      }),
-      new Promise((_, reject) =>
-        setTimeout(reject, this.timeoutMs, "Request timed out.")
-      ),
-    ]);
-  }
-
   /**  */
   getChannelCanvasDetail(
     bearerToken: string,
@@ -10990,6 +10956,42 @@ export class MezonApi {
   
       const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
       const fetchOptions = buildFetchOptions("PUT", options, bodyJson);
+      if (bearerToken) {
+          fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+      }
+  
+      return Promise.race([
+        fetch(fullUrl, fetchOptions).then((response) => {
+          if (response.status == 204) {
+            return response;
+          } else if (response.status >= 200 && response.status < 300) {
+            return response.json();
+          } else {
+            throw response;
+          }
+        }),
+        new Promise((_, reject) =>
+          setTimeout(reject, this.timeoutMs, "Request timed out.")
+        ),
+      ]);
+  }
+
+  /** UnlockItem */
+    unlockItem(bearerToken: string,
+        body:ApiUnlockItemRequest,
+        options: any = {}): Promise<any> {
+      
+      if (body === null || body === undefined) {
+        throw new Error("'body' is a required parameter but is null or undefined.");
+      }
+      const urlPath = "/v2/unlockitem";
+      const queryParams = new Map<string, any>();
+  
+      let bodyJson : string = "";
+      bodyJson = JSON.stringify(body || {});
+  
+      const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
+      const fetchOptions = buildFetchOptions("POST", options, bodyJson);
       if (bearerToken) {
           fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
       }
