@@ -2672,6 +2672,39 @@ export interface ApiUserActivity {
   user_id?: string;
 }
 
+
+/**  */
+export interface ApiQuickMenuAccess {
+  //
+  action_msg?: string;
+  //
+  background?: string;
+  //
+  bot_id?: string;
+  //
+  id?: string;
+  //
+  menu_name?: string;
+}
+
+/**  */
+export interface ApiQuickMenuAccessList {
+  //
+  list_menus?: Array<ApiQuickMenuAccess>;
+}
+
+/**  */
+export interface ApiQuickMenuAccessRequest {
+  //
+  action_msg?: string;
+  //
+  background?: string;
+  //
+  id?: string;
+  //
+  menu_name?: string;
+}
+
 /**  */
 export interface ApiUserPermissionInChannelListResponse {
   //
@@ -10831,5 +10864,149 @@ export class MezonApi {
         setTimeout(reject, this.timeoutMs, "Request timed out.")
       ),
     ]);
+  }
+
+  /**  */
+    deleteQuickMenuAccess(bearerToken: string,
+        id?:string,
+        menuName?:string,
+        background?:string,
+        actionMsg?:string,
+        options: any = {}): Promise<any> {
+      
+      const urlPath = "/v2/quickmenuaccess";
+      const queryParams = new Map<string, any>();
+      queryParams.set("id", id);
+      queryParams.set("menu_name", menuName);
+      queryParams.set("background", background);
+      queryParams.set("action_msg", actionMsg);
+  
+      let bodyJson : string = "";
+  
+      const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
+      const fetchOptions = buildFetchOptions("DELETE", options, bodyJson);
+      if (bearerToken) {
+          fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+      }
+  
+      return Promise.race([
+        fetch(fullUrl, fetchOptions).then((response) => {
+          if (response.status == 204) {
+            return response;
+          } else if (response.status >= 200 && response.status < 300) {
+            return response.json();
+          } else {
+            throw response;
+          }
+        }),
+        new Promise((_, reject) =>
+          setTimeout(reject, this.timeoutMs, "Request timed out.")
+        ),
+      ]);
+  }
+  
+    /**  */
+    listQuickMenuAccess(bearerToken: string,
+        botId?:string,
+        options: any = {}): Promise<ApiQuickMenuAccessList> {
+      
+      const urlPath = "/v2/quickmenuaccess";
+      const queryParams = new Map<string, any>();
+      queryParams.set("bot_id", botId);
+  
+      let bodyJson : string = "";
+  
+      const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
+      const fetchOptions = buildFetchOptions("GET", options, bodyJson);
+      if (bearerToken) {
+          fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+      }
+  
+      return Promise.race([
+        fetch(fullUrl, fetchOptions).then((response) => {
+          if (response.status == 204) {
+            return response;
+          } else if (response.status >= 200 && response.status < 300) {
+            return response.json();
+          } else {
+            throw response;
+          }
+        }),
+        new Promise((_, reject) =>
+          setTimeout(reject, this.timeoutMs, "Request timed out.")
+        ),
+      ]);
+  }
+  
+    /**  */
+    addQuickMenuAccess(bearerToken: string,
+        body:ApiQuickMenuAccessRequest,
+        options: any = {}): Promise<any> {
+      
+      if (body === null || body === undefined) {
+        throw new Error("'body' is a required parameter but is null or undefined.");
+      }
+      const urlPath = "/v2/quickmenuaccess";
+      const queryParams = new Map<string, any>();
+  
+      let bodyJson : string = "";
+      bodyJson = JSON.stringify(body || {});
+  
+      const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
+      const fetchOptions = buildFetchOptions("POST", options, bodyJson);
+      if (bearerToken) {
+          fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+      }
+  
+      return Promise.race([
+        fetch(fullUrl, fetchOptions).then((response) => {
+          if (response.status == 204) {
+            return response;
+          } else if (response.status >= 200 && response.status < 300) {
+            return response.json();
+          } else {
+            throw response;
+          }
+        }),
+        new Promise((_, reject) =>
+          setTimeout(reject, this.timeoutMs, "Request timed out.")
+        ),
+      ]);
+  }
+  
+    /**  */
+    updateQuickMenuAccess(bearerToken: string,
+        body:ApiQuickMenuAccessRequest,
+        options: any = {}): Promise<any> {
+      
+      if (body === null || body === undefined) {
+        throw new Error("'body' is a required parameter but is null or undefined.");
+      }
+      const urlPath = "/v2/quickmenuaccess";
+      const queryParams = new Map<string, any>();
+  
+      let bodyJson : string = "";
+      bodyJson = JSON.stringify(body || {});
+  
+      const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
+      const fetchOptions = buildFetchOptions("PUT", options, bodyJson);
+      if (bearerToken) {
+          fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+      }
+  
+      return Promise.race([
+        fetch(fullUrl, fetchOptions).then((response) => {
+          if (response.status == 204) {
+            return response;
+          } else if (response.status >= 200 && response.status < 300) {
+            return response.json();
+          } else {
+            throw response;
+          }
+        }),
+        new Promise((_, reject) =>
+          setTimeout(reject, this.timeoutMs, "Request timed out.")
+        ),
+      ]);
   }
 }

@@ -2591,7 +2591,7 @@ export interface ClanStickerAddRequest {
   source: string;
   shortname: string;
   category: string;
-  clan_id: number;
+  clan_id: string;
   /** UNIQUE include type number */
   id: string;
   /** media type for image or audio */
@@ -3720,7 +3720,7 @@ export interface MezonOauthClient {
 }
 
 export interface MezonOauthClientList {
-  listMezonOauthClient: MezonOauthClient[];
+  list_mezon_oauth_client: MezonOauthClient[];
 }
 
 export interface GetMezonOauthClientRequest {
@@ -3780,6 +3780,29 @@ export interface AccountMezon {
 export interface AccountMezon_VarsEntry {
   key: string;
   value: string;
+}
+
+export interface QuickMenuAccessRequest {
+  id: string;
+  menu_name: string;
+  background: string;
+  action_msg: string;
+}
+
+export interface QuickMenuAccess {
+  id: string;
+  bot_id: string;
+  menu_name: string;
+  background: string;
+  action_msg: string;
+}
+
+export interface ListQuickMenuAccessRequest {
+  bot_id: string;
+}
+
+export interface QuickMenuAccessList {
+  list_menus: QuickMenuAccess[];
 }
 
 function createBaseAccount(): Account {
@@ -24714,7 +24737,7 @@ export const CheckDuplicateClanNameResponse = {
 };
 
 function createBaseClanStickerAddRequest(): ClanStickerAddRequest {
-  return { source: "", shortname: "", category: "", clan_id: 0, id: "", media_type: 0 };
+  return { source: "", shortname: "", category: "", clan_id: "", id: "", media_type: 0 };
 }
 
 export const ClanStickerAddRequest = {
@@ -24728,8 +24751,8 @@ export const ClanStickerAddRequest = {
     if (message.category !== "") {
       writer.uint32(26).string(message.category);
     }
-    if (message.clan_id !== 0) {
-      writer.uint32(32).int64(message.clan_id);
+    if (message.clan_id !== "") {
+      writer.uint32(34).string(message.clan_id);
     }
     if (message.id !== "") {
       writer.uint32(42).string(message.id);
@@ -24769,11 +24792,11 @@ export const ClanStickerAddRequest = {
           message.category = reader.string();
           continue;
         case 4:
-          if (tag !== 32) {
+          if (tag !== 34) {
             break;
           }
 
-          message.clan_id = longToNumber(reader.int64() as Long);
+          message.clan_id = reader.string();
           continue;
         case 5:
           if (tag !== 42) {
@@ -24803,7 +24826,7 @@ export const ClanStickerAddRequest = {
       source: isSet(object.source) ? globalThis.String(object.source) : "",
       shortname: isSet(object.shortname) ? globalThis.String(object.shortname) : "",
       category: isSet(object.category) ? globalThis.String(object.category) : "",
-      clan_id: isSet(object.clan_id) ? globalThis.Number(object.clan_id) : 0,
+      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
       id: isSet(object.id) ? globalThis.String(object.id) : "",
       media_type: isSet(object.media_type) ? globalThis.Number(object.media_type) : 0,
     };
@@ -24820,8 +24843,8 @@ export const ClanStickerAddRequest = {
     if (message.category !== "") {
       obj.category = message.category;
     }
-    if (message.clan_id !== 0) {
-      obj.clan_id = Math.round(message.clan_id);
+    if (message.clan_id !== "") {
+      obj.clan_id = message.clan_id;
     }
     if (message.id !== "") {
       obj.id = message.id;
@@ -24840,7 +24863,7 @@ export const ClanStickerAddRequest = {
     message.source = object.source ?? "";
     message.shortname = object.shortname ?? "";
     message.category = object.category ?? "";
-    message.clan_id = object.clan_id ?? 0;
+    message.clan_id = object.clan_id ?? "";
     message.id = object.id ?? "";
     message.media_type = object.media_type ?? 0;
     return message;
@@ -36691,12 +36714,12 @@ export const MezonOauthClient = {
 };
 
 function createBaseMezonOauthClientList(): MezonOauthClientList {
-  return { listMezonOauthClient: [] };
+  return { list_mezon_oauth_client: [] };
 }
 
 export const MezonOauthClientList = {
   encode(message: MezonOauthClientList, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    for (const v of message.listMezonOauthClient) {
+    for (const v of message.list_mezon_oauth_client) {
       MezonOauthClient.encode(v!, writer.uint32(10).fork()).ldelim();
     }
     return writer;
@@ -36714,7 +36737,7 @@ export const MezonOauthClientList = {
             break;
           }
 
-          message.listMezonOauthClient.push(MezonOauthClient.decode(reader, reader.uint32()));
+          message.list_mezon_oauth_client.push(MezonOauthClient.decode(reader, reader.uint32()));
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -36727,16 +36750,16 @@ export const MezonOauthClientList = {
 
   fromJSON(object: any): MezonOauthClientList {
     return {
-      listMezonOauthClient: globalThis.Array.isArray(object?.listMezonOauthClient)
-        ? object.listMezonOauthClient.map((e: any) => MezonOauthClient.fromJSON(e))
+      list_mezon_oauth_client: globalThis.Array.isArray(object?.list_mezon_oauth_client)
+        ? object.list_mezon_oauth_client.map((e: any) => MezonOauthClient.fromJSON(e))
         : [],
     };
   },
 
   toJSON(message: MezonOauthClientList): unknown {
     const obj: any = {};
-    if (message.listMezonOauthClient?.length) {
-      obj.listMezonOauthClient = message.listMezonOauthClient.map((e) => MezonOauthClient.toJSON(e));
+    if (message.list_mezon_oauth_client?.length) {
+      obj.list_mezon_oauth_client = message.list_mezon_oauth_client.map((e) => MezonOauthClient.toJSON(e));
     }
     return obj;
   },
@@ -36746,7 +36769,7 @@ export const MezonOauthClientList = {
   },
   fromPartial<I extends Exact<DeepPartial<MezonOauthClientList>, I>>(object: I): MezonOauthClientList {
     const message = createBaseMezonOauthClientList();
-    message.listMezonOauthClient = object.listMezonOauthClient?.map((e) => MezonOauthClient.fromPartial(e)) || [];
+    message.list_mezon_oauth_client = object.list_mezon_oauth_client?.map((e) => MezonOauthClient.fromPartial(e)) || [];
     return message;
   },
 };
@@ -37566,6 +37589,347 @@ export const AccountMezon_VarsEntry = {
     const message = createBaseAccountMezon_VarsEntry();
     message.key = object.key ?? "";
     message.value = object.value ?? "";
+    return message;
+  },
+};
+
+function createBaseQuickMenuAccessRequest(): QuickMenuAccessRequest {
+  return { id: "", menu_name: "", background: "", action_msg: "" };
+}
+
+export const QuickMenuAccessRequest = {
+  encode(message: QuickMenuAccessRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.id !== "") {
+      writer.uint32(10).string(message.id);
+    }
+    if (message.menu_name !== "") {
+      writer.uint32(18).string(message.menu_name);
+    }
+    if (message.background !== "") {
+      writer.uint32(26).string(message.background);
+    }
+    if (message.action_msg !== "") {
+      writer.uint32(34).string(message.action_msg);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): QuickMenuAccessRequest {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseQuickMenuAccessRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.id = reader.string();
+          continue;
+        case 2:
+          if (tag !== 18) {
+            break;
+          }
+
+          message.menu_name = reader.string();
+          continue;
+        case 3:
+          if (tag !== 26) {
+            break;
+          }
+
+          message.background = reader.string();
+          continue;
+        case 4:
+          if (tag !== 34) {
+            break;
+          }
+
+          message.action_msg = reader.string();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): QuickMenuAccessRequest {
+    return {
+      id: isSet(object.id) ? globalThis.String(object.id) : "",
+      menu_name: isSet(object.menu_name) ? globalThis.String(object.menu_name) : "",
+      background: isSet(object.background) ? globalThis.String(object.background) : "",
+      action_msg: isSet(object.action_msg) ? globalThis.String(object.action_msg) : "",
+    };
+  },
+
+  toJSON(message: QuickMenuAccessRequest): unknown {
+    const obj: any = {};
+    if (message.id !== "") {
+      obj.id = message.id;
+    }
+    if (message.menu_name !== "") {
+      obj.menu_name = message.menu_name;
+    }
+    if (message.background !== "") {
+      obj.background = message.background;
+    }
+    if (message.action_msg !== "") {
+      obj.action_msg = message.action_msg;
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<QuickMenuAccessRequest>, I>>(base?: I): QuickMenuAccessRequest {
+    return QuickMenuAccessRequest.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<QuickMenuAccessRequest>, I>>(object: I): QuickMenuAccessRequest {
+    const message = createBaseQuickMenuAccessRequest();
+    message.id = object.id ?? "";
+    message.menu_name = object.menu_name ?? "";
+    message.background = object.background ?? "";
+    message.action_msg = object.action_msg ?? "";
+    return message;
+  },
+};
+
+function createBaseQuickMenuAccess(): QuickMenuAccess {
+  return { id: "", bot_id: "", menu_name: "", background: "", action_msg: "" };
+}
+
+export const QuickMenuAccess = {
+  encode(message: QuickMenuAccess, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.id !== "") {
+      writer.uint32(10).string(message.id);
+    }
+    if (message.bot_id !== "") {
+      writer.uint32(18).string(message.bot_id);
+    }
+    if (message.menu_name !== "") {
+      writer.uint32(26).string(message.menu_name);
+    }
+    if (message.background !== "") {
+      writer.uint32(34).string(message.background);
+    }
+    if (message.action_msg !== "") {
+      writer.uint32(42).string(message.action_msg);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): QuickMenuAccess {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseQuickMenuAccess();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.id = reader.string();
+          continue;
+        case 2:
+          if (tag !== 18) {
+            break;
+          }
+
+          message.bot_id = reader.string();
+          continue;
+        case 3:
+          if (tag !== 26) {
+            break;
+          }
+
+          message.menu_name = reader.string();
+          continue;
+        case 4:
+          if (tag !== 34) {
+            break;
+          }
+
+          message.background = reader.string();
+          continue;
+        case 5:
+          if (tag !== 42) {
+            break;
+          }
+
+          message.action_msg = reader.string();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): QuickMenuAccess {
+    return {
+      id: isSet(object.id) ? globalThis.String(object.id) : "",
+      bot_id: isSet(object.bot_id) ? globalThis.String(object.bot_id) : "",
+      menu_name: isSet(object.menu_name) ? globalThis.String(object.menu_name) : "",
+      background: isSet(object.background) ? globalThis.String(object.background) : "",
+      action_msg: isSet(object.action_msg) ? globalThis.String(object.action_msg) : "",
+    };
+  },
+
+  toJSON(message: QuickMenuAccess): unknown {
+    const obj: any = {};
+    if (message.id !== "") {
+      obj.id = message.id;
+    }
+    if (message.bot_id !== "") {
+      obj.bot_id = message.bot_id;
+    }
+    if (message.menu_name !== "") {
+      obj.menu_name = message.menu_name;
+    }
+    if (message.background !== "") {
+      obj.background = message.background;
+    }
+    if (message.action_msg !== "") {
+      obj.action_msg = message.action_msg;
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<QuickMenuAccess>, I>>(base?: I): QuickMenuAccess {
+    return QuickMenuAccess.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<QuickMenuAccess>, I>>(object: I): QuickMenuAccess {
+    const message = createBaseQuickMenuAccess();
+    message.id = object.id ?? "";
+    message.bot_id = object.bot_id ?? "";
+    message.menu_name = object.menu_name ?? "";
+    message.background = object.background ?? "";
+    message.action_msg = object.action_msg ?? "";
+    return message;
+  },
+};
+
+function createBaseListQuickMenuAccessRequest(): ListQuickMenuAccessRequest {
+  return { bot_id: "" };
+}
+
+export const ListQuickMenuAccessRequest = {
+  encode(message: ListQuickMenuAccessRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.bot_id !== "") {
+      writer.uint32(10).string(message.bot_id);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): ListQuickMenuAccessRequest {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseListQuickMenuAccessRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.bot_id = reader.string();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): ListQuickMenuAccessRequest {
+    return { bot_id: isSet(object.bot_id) ? globalThis.String(object.bot_id) : "" };
+  },
+
+  toJSON(message: ListQuickMenuAccessRequest): unknown {
+    const obj: any = {};
+    if (message.bot_id !== "") {
+      obj.bot_id = message.bot_id;
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<ListQuickMenuAccessRequest>, I>>(base?: I): ListQuickMenuAccessRequest {
+    return ListQuickMenuAccessRequest.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<ListQuickMenuAccessRequest>, I>>(object: I): ListQuickMenuAccessRequest {
+    const message = createBaseListQuickMenuAccessRequest();
+    message.bot_id = object.bot_id ?? "";
+    return message;
+  },
+};
+
+function createBaseQuickMenuAccessList(): QuickMenuAccessList {
+  return { list_menus: [] };
+}
+
+export const QuickMenuAccessList = {
+  encode(message: QuickMenuAccessList, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    for (const v of message.list_menus) {
+      QuickMenuAccess.encode(v!, writer.uint32(10).fork()).ldelim();
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): QuickMenuAccessList {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseQuickMenuAccessList();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.list_menus.push(QuickMenuAccess.decode(reader, reader.uint32()));
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): QuickMenuAccessList {
+    return {
+      list_menus: globalThis.Array.isArray(object?.list_menus)
+        ? object.list_menus.map((e: any) => QuickMenuAccess.fromJSON(e))
+        : [],
+    };
+  },
+
+  toJSON(message: QuickMenuAccessList): unknown {
+    const obj: any = {};
+    if (message.list_menus?.length) {
+      obj.list_menus = message.list_menus.map((e) => QuickMenuAccess.toJSON(e));
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<QuickMenuAccessList>, I>>(base?: I): QuickMenuAccessList {
+    return QuickMenuAccessList.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<QuickMenuAccessList>, I>>(object: I): QuickMenuAccessList {
+    const message = createBaseQuickMenuAccessList();
+    message.list_menus = object.list_menus?.map((e) => QuickMenuAccess.fromPartial(e)) || [];
     return message;
   },
 };
