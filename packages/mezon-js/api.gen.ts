@@ -2676,7 +2676,6 @@ export interface ApiUserActivity {
   user_id?: string;
 }
 
-
 /**  */
 export interface ApiQuickMenuAccess {
   //
@@ -2685,6 +2684,8 @@ export interface ApiQuickMenuAccess {
   background?: string;
   //
   bot_id?: string;
+  //
+  channel_id?: string;
   //
   id?: string;
   //
@@ -2703,6 +2704,10 @@ export interface ApiQuickMenuAccessRequest {
   action_msg?: string;
   //
   background?: string;
+  //
+  bot_id?: string;
+  //
+  channel_id?: string;
   //
   id?: string;
   //

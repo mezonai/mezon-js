@@ -3789,6 +3789,8 @@ export interface AccountMezon_VarsEntry {
 
 export interface QuickMenuAccessRequest {
   id: string;
+  bot_id: string;
+  channel_id: string;
   menu_name: string;
   background: string;
   action_msg: string;
@@ -3797,6 +3799,7 @@ export interface QuickMenuAccessRequest {
 export interface QuickMenuAccess {
   id: string;
   bot_id: string;
+  channel_id: string;
   menu_name: string;
   background: string;
   action_msg: string;
@@ -37646,7 +37649,7 @@ export const AccountMezon_VarsEntry = {
 };
 
 function createBaseQuickMenuAccessRequest(): QuickMenuAccessRequest {
-  return { id: "", menu_name: "", background: "", action_msg: "" };
+  return { id: "", bot_id: "", channel_id: "", menu_name: "", background: "", action_msg: "" };
 }
 
 export const QuickMenuAccessRequest = {
@@ -37654,14 +37657,20 @@ export const QuickMenuAccessRequest = {
     if (message.id !== "") {
       writer.uint32(10).string(message.id);
     }
+    if (message.bot_id !== "") {
+      writer.uint32(18).string(message.bot_id);
+    }
+    if (message.channel_id !== "") {
+      writer.uint32(26).string(message.channel_id);
+    }
     if (message.menu_name !== "") {
-      writer.uint32(18).string(message.menu_name);
+      writer.uint32(34).string(message.menu_name);
     }
     if (message.background !== "") {
-      writer.uint32(26).string(message.background);
+      writer.uint32(42).string(message.background);
     }
     if (message.action_msg !== "") {
-      writer.uint32(34).string(message.action_msg);
+      writer.uint32(50).string(message.action_msg);
     }
     return writer;
   },
@@ -37685,17 +37694,31 @@ export const QuickMenuAccessRequest = {
             break;
           }
 
-          message.menu_name = reader.string();
+          message.bot_id = reader.string();
           continue;
         case 3:
           if (tag !== 26) {
             break;
           }
 
-          message.background = reader.string();
+          message.channel_id = reader.string();
           continue;
         case 4:
           if (tag !== 34) {
+            break;
+          }
+
+          message.menu_name = reader.string();
+          continue;
+        case 5:
+          if (tag !== 42) {
+            break;
+          }
+
+          message.background = reader.string();
+          continue;
+        case 6:
+          if (tag !== 50) {
             break;
           }
 
@@ -37713,6 +37736,8 @@ export const QuickMenuAccessRequest = {
   fromJSON(object: any): QuickMenuAccessRequest {
     return {
       id: isSet(object.id) ? globalThis.String(object.id) : "",
+      bot_id: isSet(object.bot_id) ? globalThis.String(object.bot_id) : "",
+      channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "",
       menu_name: isSet(object.menu_name) ? globalThis.String(object.menu_name) : "",
       background: isSet(object.background) ? globalThis.String(object.background) : "",
       action_msg: isSet(object.action_msg) ? globalThis.String(object.action_msg) : "",
@@ -37723,6 +37748,12 @@ export const QuickMenuAccessRequest = {
     const obj: any = {};
     if (message.id !== "") {
       obj.id = message.id;
+    }
+    if (message.bot_id !== "") {
+      obj.bot_id = message.bot_id;
+    }
+    if (message.channel_id !== "") {
+      obj.channel_id = message.channel_id;
     }
     if (message.menu_name !== "") {
       obj.menu_name = message.menu_name;
@@ -37742,6 +37773,8 @@ export const QuickMenuAccessRequest = {
   fromPartial<I extends Exact<DeepPartial<QuickMenuAccessRequest>, I>>(object: I): QuickMenuAccessRequest {
     const message = createBaseQuickMenuAccessRequest();
     message.id = object.id ?? "";
+    message.bot_id = object.bot_id ?? "";
+    message.channel_id = object.channel_id ?? "";
     message.menu_name = object.menu_name ?? "";
     message.background = object.background ?? "";
     message.action_msg = object.action_msg ?? "";
@@ -37750,7 +37783,7 @@ export const QuickMenuAccessRequest = {
 };
 
 function createBaseQuickMenuAccess(): QuickMenuAccess {
-  return { id: "", bot_id: "", menu_name: "", background: "", action_msg: "" };
+  return { id: "", bot_id: "", channel_id: "", menu_name: "", background: "", action_msg: "" };
 }
 
 export const QuickMenuAccess = {
@@ -37761,14 +37794,17 @@ export const QuickMenuAccess = {
     if (message.bot_id !== "") {
       writer.uint32(18).string(message.bot_id);
     }
+    if (message.channel_id !== "") {
+      writer.uint32(26).string(message.channel_id);
+    }
     if (message.menu_name !== "") {
-      writer.uint32(26).string(message.menu_name);
+      writer.uint32(34).string(message.menu_name);
     }
     if (message.background !== "") {
-      writer.uint32(34).string(message.background);
+      writer.uint32(42).string(message.background);
     }
     if (message.action_msg !== "") {
-      writer.uint32(42).string(message.action_msg);
+      writer.uint32(50).string(message.action_msg);
     }
     return writer;
   },
@@ -37799,17 +37835,24 @@ export const QuickMenuAccess = {
             break;
           }
 
-          message.menu_name = reader.string();
+          message.channel_id = reader.string();
           continue;
         case 4:
           if (tag !== 34) {
             break;
           }
 
-          message.background = reader.string();
+          message.menu_name = reader.string();
           continue;
         case 5:
           if (tag !== 42) {
+            break;
+          }
+
+          message.background = reader.string();
+          continue;
+        case 6:
+          if (tag !== 50) {
             break;
           }
 
@@ -37828,6 +37871,7 @@ export const QuickMenuAccess = {
     return {
       id: isSet(object.id) ? globalThis.String(object.id) : "",
       bot_id: isSet(object.bot_id) ? globalThis.String(object.bot_id) : "",
+      channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "",
       menu_name: isSet(object.menu_name) ? globalThis.String(object.menu_name) : "",
       background: isSet(object.background) ? globalThis.String(object.background) : "",
       action_msg: isSet(object.action_msg) ? globalThis.String(object.action_msg) : "",
@@ -37841,6 +37885,9 @@ export const QuickMenuAccess = {
     }
     if (message.bot_id !== "") {
       obj.bot_id = message.bot_id;
+    }
+    if (message.channel_id !== "") {
+      obj.channel_id = message.channel_id;
     }
     if (message.menu_name !== "") {
       obj.menu_name = message.menu_name;
@@ -37861,6 +37908,7 @@ export const QuickMenuAccess = {
     const message = createBaseQuickMenuAccess();
     message.id = object.id ?? "";
     message.bot_id = object.bot_id ?? "";
+    message.channel_id = object.channel_id ?? "";
     message.menu_name = object.menu_name ?? "";
     message.background = object.background ?? "";
     message.action_msg = object.action_msg ?? "";
