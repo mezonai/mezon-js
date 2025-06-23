@@ -11043,22 +11043,19 @@ export class MezonApi {
       ]);
   }
 
-  /** UnlockItem */
+  /** For sale items */
     listForSaleItems(bearerToken: string,
-        body:ApiListForSaleItemsRequest,
+        page?:number,
         options: any = {}): Promise<ApiForSaleItemList> {
       
-      if (body === null || body === undefined) {
-        throw new Error("'body' is a required parameter but is null or undefined.");
-      }
       const urlPath = "/v2/forsale";
       const queryParams = new Map<string, any>();
+      queryParams.set("page", page);
   
       let bodyJson : string = "";
-      bodyJson = JSON.stringify(body || {});
   
       const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
-      const fetchOptions = buildFetchOptions("POST", options, bodyJson);
+      const fetchOptions = buildFetchOptions("GET", options, bodyJson);
       if (bearerToken) {
           fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
       }
