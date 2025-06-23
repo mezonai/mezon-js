@@ -3234,6 +3234,26 @@ export interface ApiClanDiscover {
 }
 
 /**  */
+export interface ApiListForSaleItemsRequest {
+  //
+  page?: number;
+}
+
+/**  */
+export interface ApiForSaleItem {
+  //
+  preview_url?: string;
+  //
+  type?: number;
+}
+
+/**  */
+export interface ApiForSaleItemList {
+  //
+  for_sale_items?: Array<ApiForSaleItem>;
+}
+
+/**  */
 export interface ApiListClanDiscover {
   //
   clan_discover?: Array<ApiClanDiscover>;
@@ -10996,6 +11016,42 @@ export class MezonApi {
         throw new Error("'body' is a required parameter but is null or undefined.");
       }
       const urlPath = "/v2/unlockitem";
+      const queryParams = new Map<string, any>();
+  
+      let bodyJson : string = "";
+      bodyJson = JSON.stringify(body || {});
+  
+      const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
+      const fetchOptions = buildFetchOptions("POST", options, bodyJson);
+      if (bearerToken) {
+          fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+      }
+  
+      return Promise.race([
+        fetch(fullUrl, fetchOptions).then((response) => {
+          if (response.status == 204) {
+            return response;
+          } else if (response.status >= 200 && response.status < 300) {
+            return response.json();
+          } else {
+            throw response;
+          }
+        }),
+        new Promise((_, reject) =>
+          setTimeout(reject, this.timeoutMs, "Request timed out.")
+        ),
+      ]);
+  }
+
+  /** UnlockItem */
+    listForSaleItems(bearerToken: string,
+        body:ApiListForSaleItemsRequest,
+        options: any = {}): Promise<ApiForSaleItemList> {
+      
+      if (body === null || body === undefined) {
+        throw new Error("'body' is a required parameter but is null or undefined.");
+      }
+      const urlPath = "/v2/forsale";
       const queryParams = new Map<string, any>();
   
       let bodyJson : string = "";

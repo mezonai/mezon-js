@@ -3816,6 +3816,19 @@ export interface QuickMenuAccessList {
   list_menus: QuickMenuAccess[];
 }
 
+export interface ListForSaleItemsRequest {
+  page: number;
+}
+
+export interface ForSaleItem {
+  type: number;
+  preview_url: string;
+}
+
+export interface ForSaleItemList {
+  for_sale_items: ForSaleItem[];
+}
+
 function createBaseAccount(): Account {
   return {
     user: undefined,
@@ -38080,6 +38093,198 @@ export const QuickMenuAccessList = {
   fromPartial<I extends Exact<DeepPartial<QuickMenuAccessList>, I>>(object: I): QuickMenuAccessList {
     const message = createBaseQuickMenuAccessList();
     message.list_menus = object.list_menus?.map((e) => QuickMenuAccess.fromPartial(e)) || [];
+    return message;
+  },
+};
+
+function createBaseListForSaleItemsRequest(): ListForSaleItemsRequest {
+  return { page: 0 };
+}
+
+export const ListForSaleItemsRequest = {
+  encode(message: ListForSaleItemsRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.page !== 0) {
+      writer.uint32(8).int32(message.page);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): ListForSaleItemsRequest {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseListForSaleItemsRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 8) {
+            break;
+          }
+
+          message.page = reader.int32();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): ListForSaleItemsRequest {
+    return { page: isSet(object.page) ? globalThis.Number(object.page) : 0 };
+  },
+
+  toJSON(message: ListForSaleItemsRequest): unknown {
+    const obj: any = {};
+    if (message.page !== 0) {
+      obj.page = Math.round(message.page);
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<ListForSaleItemsRequest>, I>>(base?: I): ListForSaleItemsRequest {
+    return ListForSaleItemsRequest.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<ListForSaleItemsRequest>, I>>(object: I): ListForSaleItemsRequest {
+    const message = createBaseListForSaleItemsRequest();
+    message.page = object.page ?? 0;
+    return message;
+  },
+};
+
+function createBaseForSaleItem(): ForSaleItem {
+  return { type: 0, preview_url: "" };
+}
+
+export const ForSaleItem = {
+  encode(message: ForSaleItem, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.type !== 0) {
+      writer.uint32(8).int32(message.type);
+    }
+    if (message.preview_url !== "") {
+      writer.uint32(18).string(message.preview_url);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): ForSaleItem {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseForSaleItem();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 8) {
+            break;
+          }
+
+          message.type = reader.int32();
+          continue;
+        case 2:
+          if (tag !== 18) {
+            break;
+          }
+
+          message.preview_url = reader.string();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): ForSaleItem {
+    return {
+      type: isSet(object.type) ? globalThis.Number(object.type) : 0,
+      preview_url: isSet(object.preview_url) ? globalThis.String(object.preview_url) : "",
+    };
+  },
+
+  toJSON(message: ForSaleItem): unknown {
+    const obj: any = {};
+    if (message.type !== 0) {
+      obj.type = Math.round(message.type);
+    }
+    if (message.preview_url !== "") {
+      obj.preview_url = message.preview_url;
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<ForSaleItem>, I>>(base?: I): ForSaleItem {
+    return ForSaleItem.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<ForSaleItem>, I>>(object: I): ForSaleItem {
+    const message = createBaseForSaleItem();
+    message.type = object.type ?? 0;
+    message.preview_url = object.preview_url ?? "";
+    return message;
+  },
+};
+
+function createBaseForSaleItemList(): ForSaleItemList {
+  return { for_sale_items: [] };
+}
+
+export const ForSaleItemList = {
+  encode(message: ForSaleItemList, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    for (const v of message.for_sale_items) {
+      ForSaleItem.encode(v!, writer.uint32(10).fork()).ldelim();
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): ForSaleItemList {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseForSaleItemList();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.for_sale_items.push(ForSaleItem.decode(reader, reader.uint32()));
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): ForSaleItemList {
+    return {
+      for_sale_items: globalThis.Array.isArray(object?.for_sale_items)
+        ? object.for_sale_items.map((e: any) => ForSaleItem.fromJSON(e))
+        : [],
+    };
+  },
+
+  toJSON(message: ForSaleItemList): unknown {
+    const obj: any = {};
+    if (message.for_sale_items?.length) {
+      obj.for_sale_items = message.for_sale_items.map((e) => ForSaleItem.toJSON(e));
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<ForSaleItemList>, I>>(base?: I): ForSaleItemList {
+    return ForSaleItemList.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<ForSaleItemList>, I>>(object: I): ForSaleItemList {
+    const message = createBaseForSaleItemList();
+    message.for_sale_items = object.for_sale_items?.map((e) => ForSaleItem.fromPartial(e)) || [];
     return message;
   },
 };

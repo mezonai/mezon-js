@@ -167,6 +167,8 @@ import {
   ApiQuickMenuAccessList,
   ApiQuickMenuAccessRequest,
   ApiUnlockItemRequest,
+  ApiListForSaleItemsRequest,
+  ApiForSaleItemList,
 } from "./api.gen";
 
 import { Session } from "./session";
@@ -4837,6 +4839,23 @@ export class Client {
       .unlockItem(session.token, request)
       .then((response: any) => {
         return response !== undefined
+      });
+  }
+
+  async listForSaleItems(session: Session, 
+    request: ApiListForSaleItemsRequest): Promise<ApiForSaleItemList> {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired(Date.now() / 1000)
+    ) {
+      await this.sessionRefresh(session);
+    }
+
+    return this.apiClient
+      .listForSaleItems(session.token, request)
+      .then((response: ApiForSaleItemList) => {
+        return Promise.resolve(response);
       });
   }
 }
