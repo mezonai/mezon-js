@@ -3790,6 +3790,7 @@ export interface AccountMezon_VarsEntry {
 export interface QuickMenuAccessRequest {
   id: string;
   bot_id: string;
+  clan_id: string;
   channel_id: string;
   menu_name: string;
   background: string;
@@ -3799,6 +3800,7 @@ export interface QuickMenuAccessRequest {
 export interface QuickMenuAccess {
   id: string;
   bot_id: string;
+  clan_id: string;
   channel_id: string;
   menu_name: string;
   background: string;
@@ -3807,6 +3809,7 @@ export interface QuickMenuAccess {
 
 export interface ListQuickMenuAccessRequest {
   bot_id: string;
+  channel_id: string;
 }
 
 export interface QuickMenuAccessList {
@@ -37649,7 +37652,7 @@ export const AccountMezon_VarsEntry = {
 };
 
 function createBaseQuickMenuAccessRequest(): QuickMenuAccessRequest {
-  return { id: "", bot_id: "", channel_id: "", menu_name: "", background: "", action_msg: "" };
+  return { id: "", bot_id: "", clan_id: "", channel_id: "", menu_name: "", background: "", action_msg: "" };
 }
 
 export const QuickMenuAccessRequest = {
@@ -37660,17 +37663,20 @@ export const QuickMenuAccessRequest = {
     if (message.bot_id !== "") {
       writer.uint32(18).string(message.bot_id);
     }
+    if (message.clan_id !== "") {
+      writer.uint32(26).string(message.clan_id);
+    }
     if (message.channel_id !== "") {
-      writer.uint32(26).string(message.channel_id);
+      writer.uint32(34).string(message.channel_id);
     }
     if (message.menu_name !== "") {
-      writer.uint32(34).string(message.menu_name);
+      writer.uint32(42).string(message.menu_name);
     }
     if (message.background !== "") {
-      writer.uint32(42).string(message.background);
+      writer.uint32(50).string(message.background);
     }
     if (message.action_msg !== "") {
-      writer.uint32(50).string(message.action_msg);
+      writer.uint32(58).string(message.action_msg);
     }
     return writer;
   },
@@ -37701,24 +37707,31 @@ export const QuickMenuAccessRequest = {
             break;
           }
 
-          message.channel_id = reader.string();
+          message.clan_id = reader.string();
           continue;
         case 4:
           if (tag !== 34) {
             break;
           }
 
-          message.menu_name = reader.string();
+          message.channel_id = reader.string();
           continue;
         case 5:
           if (tag !== 42) {
             break;
           }
 
-          message.background = reader.string();
+          message.menu_name = reader.string();
           continue;
         case 6:
           if (tag !== 50) {
+            break;
+          }
+
+          message.background = reader.string();
+          continue;
+        case 7:
+          if (tag !== 58) {
             break;
           }
 
@@ -37737,6 +37750,7 @@ export const QuickMenuAccessRequest = {
     return {
       id: isSet(object.id) ? globalThis.String(object.id) : "",
       bot_id: isSet(object.bot_id) ? globalThis.String(object.bot_id) : "",
+      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
       channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "",
       menu_name: isSet(object.menu_name) ? globalThis.String(object.menu_name) : "",
       background: isSet(object.background) ? globalThis.String(object.background) : "",
@@ -37751,6 +37765,9 @@ export const QuickMenuAccessRequest = {
     }
     if (message.bot_id !== "") {
       obj.bot_id = message.bot_id;
+    }
+    if (message.clan_id !== "") {
+      obj.clan_id = message.clan_id;
     }
     if (message.channel_id !== "") {
       obj.channel_id = message.channel_id;
@@ -37774,6 +37791,7 @@ export const QuickMenuAccessRequest = {
     const message = createBaseQuickMenuAccessRequest();
     message.id = object.id ?? "";
     message.bot_id = object.bot_id ?? "";
+    message.clan_id = object.clan_id ?? "";
     message.channel_id = object.channel_id ?? "";
     message.menu_name = object.menu_name ?? "";
     message.background = object.background ?? "";
@@ -37783,7 +37801,7 @@ export const QuickMenuAccessRequest = {
 };
 
 function createBaseQuickMenuAccess(): QuickMenuAccess {
-  return { id: "", bot_id: "", channel_id: "", menu_name: "", background: "", action_msg: "" };
+  return { id: "", bot_id: "", clan_id: "", channel_id: "", menu_name: "", background: "", action_msg: "" };
 }
 
 export const QuickMenuAccess = {
@@ -37794,17 +37812,20 @@ export const QuickMenuAccess = {
     if (message.bot_id !== "") {
       writer.uint32(18).string(message.bot_id);
     }
+    if (message.clan_id !== "") {
+      writer.uint32(26).string(message.clan_id);
+    }
     if (message.channel_id !== "") {
-      writer.uint32(26).string(message.channel_id);
+      writer.uint32(34).string(message.channel_id);
     }
     if (message.menu_name !== "") {
-      writer.uint32(34).string(message.menu_name);
+      writer.uint32(42).string(message.menu_name);
     }
     if (message.background !== "") {
-      writer.uint32(42).string(message.background);
+      writer.uint32(50).string(message.background);
     }
     if (message.action_msg !== "") {
-      writer.uint32(50).string(message.action_msg);
+      writer.uint32(58).string(message.action_msg);
     }
     return writer;
   },
@@ -37835,24 +37856,31 @@ export const QuickMenuAccess = {
             break;
           }
 
-          message.channel_id = reader.string();
+          message.clan_id = reader.string();
           continue;
         case 4:
           if (tag !== 34) {
             break;
           }
 
-          message.menu_name = reader.string();
+          message.channel_id = reader.string();
           continue;
         case 5:
           if (tag !== 42) {
             break;
           }
 
-          message.background = reader.string();
+          message.menu_name = reader.string();
           continue;
         case 6:
           if (tag !== 50) {
+            break;
+          }
+
+          message.background = reader.string();
+          continue;
+        case 7:
+          if (tag !== 58) {
             break;
           }
 
@@ -37871,6 +37899,7 @@ export const QuickMenuAccess = {
     return {
       id: isSet(object.id) ? globalThis.String(object.id) : "",
       bot_id: isSet(object.bot_id) ? globalThis.String(object.bot_id) : "",
+      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
       channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "",
       menu_name: isSet(object.menu_name) ? globalThis.String(object.menu_name) : "",
       background: isSet(object.background) ? globalThis.String(object.background) : "",
@@ -37885,6 +37914,9 @@ export const QuickMenuAccess = {
     }
     if (message.bot_id !== "") {
       obj.bot_id = message.bot_id;
+    }
+    if (message.clan_id !== "") {
+      obj.clan_id = message.clan_id;
     }
     if (message.channel_id !== "") {
       obj.channel_id = message.channel_id;
@@ -37908,6 +37940,7 @@ export const QuickMenuAccess = {
     const message = createBaseQuickMenuAccess();
     message.id = object.id ?? "";
     message.bot_id = object.bot_id ?? "";
+    message.clan_id = object.clan_id ?? "";
     message.channel_id = object.channel_id ?? "";
     message.menu_name = object.menu_name ?? "";
     message.background = object.background ?? "";
@@ -37917,13 +37950,16 @@ export const QuickMenuAccess = {
 };
 
 function createBaseListQuickMenuAccessRequest(): ListQuickMenuAccessRequest {
-  return { bot_id: "" };
+  return { bot_id: "", channel_id: "" };
 }
 
 export const ListQuickMenuAccessRequest = {
   encode(message: ListQuickMenuAccessRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.bot_id !== "") {
       writer.uint32(10).string(message.bot_id);
+    }
+    if (message.channel_id !== "") {
+      writer.uint32(18).string(message.channel_id);
     }
     return writer;
   },
@@ -37942,6 +37978,13 @@ export const ListQuickMenuAccessRequest = {
 
           message.bot_id = reader.string();
           continue;
+        case 2:
+          if (tag !== 18) {
+            break;
+          }
+
+          message.channel_id = reader.string();
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -37952,13 +37995,19 @@ export const ListQuickMenuAccessRequest = {
   },
 
   fromJSON(object: any): ListQuickMenuAccessRequest {
-    return { bot_id: isSet(object.bot_id) ? globalThis.String(object.bot_id) : "" };
+    return {
+      bot_id: isSet(object.bot_id) ? globalThis.String(object.bot_id) : "",
+      channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "",
+    };
   },
 
   toJSON(message: ListQuickMenuAccessRequest): unknown {
     const obj: any = {};
     if (message.bot_id !== "") {
       obj.bot_id = message.bot_id;
+    }
+    if (message.channel_id !== "") {
+      obj.channel_id = message.channel_id;
     }
     return obj;
   },
@@ -37969,6 +38018,7 @@ export const ListQuickMenuAccessRequest = {
   fromPartial<I extends Exact<DeepPartial<ListQuickMenuAccessRequest>, I>>(object: I): ListQuickMenuAccessRequest {
     const message = createBaseListQuickMenuAccessRequest();
     message.bot_id = object.bot_id ?? "";
+    message.channel_id = object.channel_id ?? "";
     return message;
   },
 };
