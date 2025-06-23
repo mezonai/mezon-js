@@ -167,7 +167,6 @@ import {
   ApiQuickMenuAccessList,
   ApiQuickMenuAccessRequest,
   ApiUnlockItemRequest,
-  ApiListForSaleItemsRequest,
   ApiForSaleItemList,
 } from "./api.gen";
 
@@ -4843,7 +4842,7 @@ export class Client {
   }
 
   async listForSaleItems(session: Session, 
-    request: ApiListForSaleItemsRequest): Promise<ApiForSaleItemList> {
+    page?: number): Promise<ApiForSaleItemList> {
     if (
       this.autoRefreshSession &&
       session.refresh_token &&
@@ -4853,7 +4852,7 @@ export class Client {
     }
 
     return this.apiClient
-      .listForSaleItems(session.token, request)
+      .listForSaleItems(session.token, page)
       .then((response: ApiForSaleItemList) => {
         return Promise.resolve(response);
       });
