@@ -970,6 +970,8 @@ export interface ApiClanEmoji {
   shortname?: string;
   //
   src?: string;
+  //
+  is_for_sale?: boolean;
 }
 
 /**  */
@@ -1022,6 +1024,8 @@ export interface ApiClanSticker {
   source?: string;
   // 
   media_type?: number;
+  //
+  is_for_sale?: boolean;
 }
 
 /**  */
