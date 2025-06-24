@@ -547,6 +547,8 @@ export interface ChannelUpdatedEvent {
   is_active_thread: boolean;
   //
   active: number;
+  //
+  count_mess_unread: number;
 }
 
 export interface DeleteAccountEvent {
@@ -778,6 +780,8 @@ export interface ClanSticker {
   logo?: string;
   //
   clan_name?: string;
+  //
+  is_for_sale?: boolean;
 }
 
 export interface RoleEvent {
@@ -820,6 +824,8 @@ export interface ClanEmoji {
   clan_name?: string;
   //
   clan_id?: string;
+  //
+  is_for_sale?: boolean;
 }
 
 /**  */
