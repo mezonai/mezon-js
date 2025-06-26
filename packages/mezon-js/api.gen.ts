@@ -3094,11 +3094,17 @@ export interface ApiGenerateMeetTokenResponse {
 }
 
 /**  */
-export interface ApiUnlockItemRequest {
+export interface ApiUnlockedItemRequest {
   //
   item_id?: string;
   //
   item_type?: number;
+}
+
+/**  */
+export interface ApiUnlockedItemResponse {
+  //
+  source?: string;
 }
 
 /**  */
@@ -11013,8 +11019,8 @@ export class MezonApi {
 
   /** UnlockItem */
     unlockItem(bearerToken: string,
-        body:ApiUnlockItemRequest,
-        options: any = {}): Promise<any> {
+        body:ApiUnlockedItemRequest,
+        options: any = {}): Promise<ApiUnlockedItemResponse> {
       
       if (body === null || body === undefined) {
         throw new Error("'body' is a required parameter but is null or undefined.");

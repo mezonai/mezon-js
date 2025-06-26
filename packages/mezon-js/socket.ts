@@ -1053,6 +1053,8 @@ export interface VoiceReactionSend {
   channel_id: string;
   // sender id
   sender_id: string;
+  // media type
+  media_type: number;
 }
 
 export interface MarkAsRead {

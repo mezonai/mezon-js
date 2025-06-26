@@ -166,8 +166,9 @@ import {
   ApiClanDiscoverRequest,
   ApiQuickMenuAccessList,
   ApiQuickMenuAccessRequest,
-  ApiUnlockItemRequest,
+  ApiUnlockedItemRequest,
   ApiForSaleItemList,
+  ApiUnlockedItemResponse,
 } from "./api.gen";
 
 import { Session } from "./session";
@@ -4825,7 +4826,7 @@ export class Client {
       });
   }
 
-  async unlockItem(session: Session, request: ApiUnlockItemRequest): Promise<any> {
+  async unlockItem(session: Session, request: ApiUnlockedItemRequest): Promise<ApiUnlockedItemResponse> {
     if (
       this.autoRefreshSession &&
       session.refresh_token &&
@@ -4836,8 +4837,8 @@ export class Client {
 
     return this.apiClient
       .unlockItem(session.token, request)
-      .then((response: any) => {
-        return response !== undefined
+      .then((response: ApiUnlockedItemResponse) => {
+         return Promise.resolve(response);
       });
   }
 
