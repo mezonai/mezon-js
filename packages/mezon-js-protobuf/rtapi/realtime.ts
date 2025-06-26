@@ -584,6 +584,8 @@ export interface VoiceReactionSend {
   channel_id: string;
   /** sender id */
   sender_id: string;
+  /** type */
+  media_type: number;
 }
 
 export interface MarkAsRead {
@@ -1120,6 +1122,8 @@ export interface ChannelUpdatedEvent {
   age_restricted: number;
   /**  */
   active: number;
+  /** count message unread */
+  count_mess_unread: number;
 }
 
 /** Stop receiving status updates for some set of users. */
@@ -5165,7 +5169,7 @@ export const EphemeralMessageSend = {
 };
 
 function createBaseVoiceReactionSend(): VoiceReactionSend {
-  return { emojis: [], channel_id: "", sender_id: "" };
+  return { emojis: [], channel_id: "", sender_id: "", media_type: 0 };
 }
 
 export const VoiceReactionSend = {
@@ -5178,6 +5182,9 @@ export const VoiceReactionSend = {
     }
     if (message.sender_id !== "") {
       writer.uint32(26).string(message.sender_id);
+    }
+    if (message.media_type !== 0) {
+      writer.uint32(32).int32(message.media_type);
     }
     return writer;
   },
@@ -5210,6 +5217,13 @@ export const VoiceReactionSend = {
 
           message.sender_id = reader.string();
           continue;
+        case 4:
+          if (tag !== 32) {
+            break;
+          }
+
+          message.media_type = reader.int32();
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -5224,6 +5238,7 @@ export const VoiceReactionSend = {
       emojis: globalThis.Array.isArray(object?.emojis) ? object.emojis.map((e: any) => globalThis.String(e)) : [],
       channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "",
       sender_id: isSet(object.sender_id) ? globalThis.String(object.sender_id) : "",
+      media_type: isSet(object.media_type) ? globalThis.Number(object.media_type) : 0,
     };
   },
 
@@ -5238,6 +5253,9 @@ export const VoiceReactionSend = {
     if (message.sender_id !== "") {
       obj.sender_id = message.sender_id;
     }
+    if (message.media_type !== 0) {
+      obj.media_type = Math.round(message.media_type);
+    }
     return obj;
   },
 
@@ -5249,6 +5267,7 @@ export const VoiceReactionSend = {
     message.emojis = object.emojis?.map((e) => e) || [];
     message.channel_id = object.channel_id ?? "";
     message.sender_id = object.sender_id ?? "";
+    message.media_type = object.media_type ?? 0;
     return message;
   },
 };
@@ -9183,6 +9202,7 @@ function createBaseChannelUpdatedEvent(): ChannelUpdatedEvent {
     topic: "",
     age_restricted: 0,
     active: 0,
+    count_mess_unread: 0,
   };
 }
 
@@ -9235,6 +9255,9 @@ export const ChannelUpdatedEvent = {
     }
     if (message.active !== 0) {
       writer.uint32(128).int32(message.active);
+    }
+    if (message.count_mess_unread !== 0) {
+      writer.uint32(136).int32(message.count_mess_unread);
     }
     return writer;
   },
@@ -9358,6 +9381,13 @@ export const ChannelUpdatedEvent = {
 
           message.active = reader.int32();
           continue;
+        case 17:
+          if (tag !== 136) {
+            break;
+          }
+
+          message.count_mess_unread = reader.int32();
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -9385,6 +9415,7 @@ export const ChannelUpdatedEvent = {
       topic: isSet(object.topic) ? globalThis.String(object.topic) : "",
       age_restricted: isSet(object.age_restricted) ? globalThis.Number(object.age_restricted) : 0,
       active: isSet(object.active) ? globalThis.Number(object.active) : 0,
+      count_mess_unread: isSet(object.count_mess_unread) ? globalThis.Number(object.count_mess_unread) : 0,
     };
   },
 
@@ -9438,6 +9469,9 @@ export const ChannelUpdatedEvent = {
     if (message.active !== 0) {
       obj.active = Math.round(message.active);
     }
+    if (message.count_mess_unread !== 0) {
+      obj.count_mess_unread = Math.round(message.count_mess_unread);
+    }
     return obj;
   },
 
@@ -9462,6 +9496,7 @@ export const ChannelUpdatedEvent = {
     message.topic = object.topic ?? "";
     message.age_restricted = object.age_restricted ?? 0;
     message.active = object.active ?? 0;
+    message.count_mess_unread = object.count_mess_unread ?? 0;
     return message;
   },
 };

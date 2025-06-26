@@ -2453,6 +2453,8 @@ export interface ClanEmoji {
   logo: string;
   /** clan name */
   clan_name: string;
+  /** is for sale */
+  is_for_sale: boolean;
 }
 
 export interface EmojiListedResponse {
@@ -2474,6 +2476,8 @@ export interface ClanSticker {
   logo: string;
   clan_name: string;
   media_type: number;
+  /** is for sale */
+  is_for_sale: boolean;
 }
 
 export interface AllUsersAddChannelRequest {
@@ -3318,6 +3322,10 @@ export interface UnlockItemRequest {
   item_id: string;
   /** item type */
   item_type: number;
+}
+
+export interface UnlockedItemResponse {
+  source: string;
 }
 
 export interface ListOnboardingRequest {
@@ -22720,7 +22728,17 @@ export const RegistrationEmailRequest_VarsEntry = {
 };
 
 function createBaseClanEmoji(): ClanEmoji {
-  return { id: "", src: "", shortname: "", category: "", creator_id: "", clan_id: "", logo: "", clan_name: "" };
+  return {
+    id: "",
+    src: "",
+    shortname: "",
+    category: "",
+    creator_id: "",
+    clan_id: "",
+    logo: "",
+    clan_name: "",
+    is_for_sale: false,
+  };
 }
 
 export const ClanEmoji = {
@@ -22748,6 +22766,9 @@ export const ClanEmoji = {
     }
     if (message.clan_name !== "") {
       writer.uint32(66).string(message.clan_name);
+    }
+    if (message.is_for_sale !== false) {
+      writer.uint32(72).bool(message.is_for_sale);
     }
     return writer;
   },
@@ -22815,6 +22836,13 @@ export const ClanEmoji = {
 
           message.clan_name = reader.string();
           continue;
+        case 9:
+          if (tag !== 72) {
+            break;
+          }
+
+          message.is_for_sale = reader.bool();
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -22834,6 +22862,7 @@ export const ClanEmoji = {
       clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
       logo: isSet(object.logo) ? globalThis.String(object.logo) : "",
       clan_name: isSet(object.clan_name) ? globalThis.String(object.clan_name) : "",
+      is_for_sale: isSet(object.is_for_sale) ? globalThis.Boolean(object.is_for_sale) : false,
     };
   },
 
@@ -22863,6 +22892,9 @@ export const ClanEmoji = {
     if (message.clan_name !== "") {
       obj.clan_name = message.clan_name;
     }
+    if (message.is_for_sale !== false) {
+      obj.is_for_sale = message.is_for_sale;
+    }
     return obj;
   },
 
@@ -22879,6 +22911,7 @@ export const ClanEmoji = {
     message.clan_id = object.clan_id ?? "";
     message.logo = object.logo ?? "";
     message.clan_name = object.clan_name ?? "";
+    message.is_for_sale = object.is_for_sale ?? false;
     return message;
   },
 };
@@ -23017,6 +23050,7 @@ function createBaseClanSticker(): ClanSticker {
     logo: "",
     clan_name: "",
     media_type: 0,
+    is_for_sale: false,
   };
 }
 
@@ -23051,6 +23085,9 @@ export const ClanSticker = {
     }
     if (message.media_type !== 0) {
       writer.uint32(80).int32(message.media_type);
+    }
+    if (message.is_for_sale !== false) {
+      writer.uint32(88).bool(message.is_for_sale);
     }
     return writer;
   },
@@ -23132,6 +23169,13 @@ export const ClanSticker = {
 
           message.media_type = reader.int32();
           continue;
+        case 11:
+          if (tag !== 88) {
+            break;
+          }
+
+          message.is_for_sale = reader.bool();
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -23153,6 +23197,7 @@ export const ClanSticker = {
       logo: isSet(object.logo) ? globalThis.String(object.logo) : "",
       clan_name: isSet(object.clan_name) ? globalThis.String(object.clan_name) : "",
       media_type: isSet(object.media_type) ? globalThis.Number(object.media_type) : 0,
+      is_for_sale: isSet(object.is_for_sale) ? globalThis.Boolean(object.is_for_sale) : false,
     };
   },
 
@@ -23188,6 +23233,9 @@ export const ClanSticker = {
     if (message.media_type !== 0) {
       obj.media_type = Math.round(message.media_type);
     }
+    if (message.is_for_sale !== false) {
+      obj.is_for_sale = message.is_for_sale;
+    }
     return obj;
   },
 
@@ -23206,6 +23254,7 @@ export const ClanSticker = {
     message.logo = object.logo ?? "";
     message.clan_name = object.clan_name ?? "";
     message.media_type = object.media_type ?? 0;
+    message.is_for_sale = object.is_for_sale ?? false;
     return message;
   },
 };
@@ -32140,6 +32189,63 @@ export const UnlockItemRequest = {
     const message = createBaseUnlockItemRequest();
     message.item_id = object.item_id ?? "";
     message.item_type = object.item_type ?? 0;
+    return message;
+  },
+};
+
+function createBaseUnlockedItemResponse(): UnlockedItemResponse {
+  return { source: "" };
+}
+
+export const UnlockedItemResponse = {
+  encode(message: UnlockedItemResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.source !== "") {
+      writer.uint32(10).string(message.source);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): UnlockedItemResponse {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseUnlockedItemResponse();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.source = reader.string();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): UnlockedItemResponse {
+    return { source: isSet(object.source) ? globalThis.String(object.source) : "" };
+  },
+
+  toJSON(message: UnlockedItemResponse): unknown {
+    const obj: any = {};
+    if (message.source !== "") {
+      obj.source = message.source;
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<UnlockedItemResponse>, I>>(base?: I): UnlockedItemResponse {
+    return UnlockedItemResponse.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<UnlockedItemResponse>, I>>(object: I): UnlockedItemResponse {
+    const message = createBaseUnlockedItemResponse();
+    message.source = object.source ?? "";
     return message;
   },
 };
