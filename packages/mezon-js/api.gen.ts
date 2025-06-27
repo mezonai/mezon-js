@@ -2658,6 +2658,8 @@ export interface ApiUser {
   update_time?: string;
   //The username of the user's account.
   username?: string;
+  // list nick name
+  list_nick_names?: Array<string>;
 }
 
 /**  */
