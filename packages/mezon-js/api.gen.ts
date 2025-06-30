@@ -2853,7 +2853,7 @@ export interface ApiWebhookListResponse {
 }
 
 /** A collection of zero or more notifications. */
-export interface MezonapiEmojiRecentList {
+export interface ApiEmojiRecentList {
   //Collection of emojiRecents.
   emoji_recents?: Array<ApiEmojiRecent>;
 }
@@ -6007,7 +6007,7 @@ export class MezonApi {
 
   /** get list emoji recent by user id */
   emojiRecentList(bearerToken: string,
-      options: any = {}): Promise<MezonapiEmojiRecentList> {
+      options: any = {}): Promise<ApiEmojiRecentList> {
     
     const urlPath = "/v2/emojirecents";
     const queryParams = new Map<string, any>();

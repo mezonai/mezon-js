@@ -1237,6 +1237,8 @@ export interface User {
     | undefined;
   /** Mezone id */
   mezon_id: string;
+  /** list clan nick name */
+  list_nick_names: string[];
 }
 
 /** A list of groups belonging to a user, along with the user's role in each group. */
@@ -11291,6 +11293,7 @@ function createBaseUser(): User {
     is_mobile: false,
     dob: undefined,
     mezon_id: "",
+    list_nick_names: [],
   };
 }
 
@@ -11361,6 +11364,9 @@ export const User = {
     }
     if (message.mezon_id !== "") {
       writer.uint32(178).string(message.mezon_id);
+    }
+    for (const v of message.list_nick_names) {
+      writer.uint32(186).string(v!);
     }
     return writer;
   },
@@ -11526,6 +11532,13 @@ export const User = {
 
           message.mezon_id = reader.string();
           continue;
+        case 23:
+          if (tag !== 186) {
+            break;
+          }
+
+          message.list_nick_names.push(reader.string());
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -11559,6 +11572,9 @@ export const User = {
       is_mobile: isSet(object.is_mobile) ? globalThis.Boolean(object.is_mobile) : false,
       dob: isSet(object.dob) ? fromJsonTimestamp(object.dob) : undefined,
       mezon_id: isSet(object.mezon_id) ? globalThis.String(object.mezon_id) : "",
+      list_nick_names: globalThis.Array.isArray(object?.list_nick_names)
+        ? object.list_nick_names.map((e: any) => globalThis.String(e))
+        : [],
     };
   },
 
@@ -11630,6 +11646,9 @@ export const User = {
     if (message.mezon_id !== "") {
       obj.mezon_id = message.mezon_id;
     }
+    if (message.list_nick_names?.length) {
+      obj.list_nick_names = message.list_nick_names;
+    }
     return obj;
   },
 
@@ -11660,6 +11679,7 @@ export const User = {
     message.is_mobile = object.is_mobile ?? false;
     message.dob = object.dob ?? undefined;
     message.mezon_id = object.mezon_id ?? "";
+    message.list_nick_names = object.list_nick_names?.map((e) => e) || [];
     return message;
   },
 };

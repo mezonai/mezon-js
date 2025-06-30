@@ -155,7 +155,7 @@ import {
   ApiMezonOauthClientList,
   ApiMezonOauthClient,
   ApiCreateHashChannelAppsResponse,
-  MezonapiEmojiRecentList,
+  ApiEmojiRecentList,
   ApiUserEventRequest,
   ApiUpdateRoleOrderRequest,
   ApiGenerateMezonMeetResponse,
@@ -3482,7 +3482,7 @@ export class Client {
 
   async emojiRecentList(
     session: Session
-  ): Promise<MezonapiEmojiRecentList> {
+  ): Promise<ApiEmojiRecentList> {
     if (
       this.autoRefreshSession &&
       session.refresh_token &&

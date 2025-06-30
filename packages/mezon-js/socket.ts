@@ -15,23 +15,49 @@
  */
 
 import {
+  ApiAllUsersAddChannelResponse,
+  ApiChannelAttachmentList,
+  ApiChannelDescList,
   ApiChannelDescription,
   ApiChannelMessage,
   ApiChannelMessageHeader,
+  ApiChannelMessageList,
+  ApiChannelSettingListResponse,
+  ApiChannelUserList,
+  ApiClanDescList,
   ApiCreateEventRequest,
+  ApiEmojiListedResponse,
   ApiGiveCoffeeEvent,
+  ApiHashtagDmList,
+  ApiListClanWebhookResponse,
+  ApiListFavoriteChannelResponse,
   ApiMessageAttachment,
   ApiMessageMention,
   ApiMessageReaction,
   ApiMessageRef,
   ApiNotification,
+  ApiNotificationChannel,
+  ApiNotificationChannelCategorySettingList,
+  ApiNotificationList,
+  ApiNotificationSetting,
   ApiNotificationUserChannel,
+  ApiNotifiReactMessage,
+  ApiPermissionList,
+  ApiPermissionRoleChannelListEventResponse,
   ApiPermissionUpdate,
   ApiRole,
+  ApiRoleList,
+  ApiRoleListEventResponse,
+  ApiRoleUserList,
   ApiRpc,
+  ApiStickerListedResponse,
   ApiTokenSentEvent,
   ApiUserActivity,
+  ApiUserPermissionInChannelListResponse,
+  ApiVoiceChannelUserList,
   ApiWebhook,
+  ApiWebhookListResponse,
+  ApiEmojiRecentList,
 } from "./api.gen";
 import { Session } from "./session";
 import { ChannelMessage } from "./client";
@@ -1119,6 +1145,61 @@ export interface ChannelCanvas {
   status?: number;
 }
 
+export interface ListDataSocket {
+  api_name?: string;
+  list_clan_req?: any;
+  clan_desc_list?: ApiClanDescList;
+  list_thread_req?: any;
+  channel_desc_list?: ApiChannelDescList;
+  list_channel_users_uc_req?: any;
+  channel_users_uc_list?: ApiAllUsersAddChannelResponse;
+  list_channel_detail_req?: any;
+  channel_desc?: ApiChannelDescription;
+  list_channel_req?: any;
+  list_channel_message_req?: any;
+  channel_message_list?: ApiChannelMessageList;
+  list_channel_users_req?: any;
+  voice_user_list?: ApiVoiceChannelUserList;
+  channel_user_list?: ApiChannelUserList;
+  list_channel_attachment_req?: any;
+  channel_attachment_list?: ApiChannelAttachmentList;
+  hashtag_dm_req?: any;
+  hashtag_dm_list?: ApiHashtagDmList;
+  channel_setting_req?: any;
+  channel_setting_list?: ApiChannelSettingListResponse;
+  favorite_channel_req?: any;
+  favorite_channel_list?: ApiListFavoriteChannelResponse;
+  search_thread_req?: any;
+  notification_channel?: ApiNotificationChannel;
+  notificaion_user_channel?: ApiNotificationUserChannel;
+  notification_category?: any;
+  notification_clan?: any;
+  notification_setting?: ApiNotificationSetting;
+  notification_message?: ApiNotifiReactMessage;
+  noti_channel_cat_setting_list?: ApiNotificationChannelCategorySettingList;
+  list_notification_req?: any;
+  notification_list?: ApiNotificationList;
+  sticker_list?: ApiStickerListedResponse;
+  emoji_recent_list?: ApiEmojiRecentList;
+  clan_webhook_req?: any;
+  clan_webhook_list?: ApiListClanWebhookResponse;
+  webhook_list_req?: any;
+  webhook_list?: ApiWebhookListResponse;
+  permission_list_req?: any;
+  permission_list?: ApiPermissionList;
+  role_user_req?: any;
+  role_user_list?: ApiRoleUserList;
+  permission_user_req?: any;
+  role_list?: ApiRoleList;
+  role_list_event_req?: any;
+  role_event_list?: ApiRoleListEventResponse;
+  user_permission_req?: any;
+  user_permission_list?: ApiUserPermissionInChannelListResponse;
+  permission_role_req?: any;
+  permission_role_list?: ApiPermissionRoleChannelListEventResponse;
+  emoji_list?: ApiEmojiListedResponse;
+}
+
 function CreateChannelMessageFromEvent(message: any) {
   var content, reactions, mentions, attachments, references, referencedMessags;
   try {
@@ -1414,6 +1495,10 @@ export interface Socket {
     channel_id: string,
     action: number
   ) => Promise<ChannelAppEvent>;
+
+  listDataSocket(
+    request: ListDataSocket
+  ): Promise<any>;
 
   /** Handle disconnect events received from the socket. */
   ondisconnect: (evt: Event) => void;
@@ -2287,7 +2372,8 @@ export class DefaultSocket implements Socket {
       | DropdownBoxSelected
       | ChannelAppEvent
       | EphemeralMessageSend
-      | VoiceReactionSend,
+      | VoiceReactionSend
+      | ListDataSocket,
     sendTimeout = DefaultSocket.DefaultSendTimeoutMs
   ): Promise<any> {
     const untypedMessage = message as any;
@@ -2781,6 +2867,15 @@ export class DefaultSocket implements Socket {
       },
     });
     return response.channel_app_event;
+  }
+
+  async listDataSocket(
+    request: ListDataSocket
+  ): Promise<any> {
+    const response = await this.send({
+      list_data_socket: request,
+    });
+    return response.list_data_socket;
   }
 
   private async pingPong(): Promise<void> {
