@@ -1,8 +1,6 @@
 {
   "name": "mezon-js",
-
-  "version": "2.12.35",
-
+  "version": "2.12.37",
   "scripts": {
     "build": "npx tsc && npx rollup -c --bundleConfigAsCjs && node build.mjs"
   },
@@ -38,7 +36,7 @@
   "dependencies": {
     "@scarf/scarf": "^1.1.1",
     "base64-arraybuffer": "^1.0.2",
-    "esbuild": "^0.19.11",
+    "esbuild": "^0.25.5",
     "js-base64": "^3.7.4",
     "whatwg-fetch": "^3.6.2"
   },
