@@ -23,9 +23,12 @@ import {
   DefaultNotificationCategory,
   EmojiListedResponse,
   EmojiRecentList,
+  FriendList,
   GiveCoffeeEvent,
   HashtagDmList,
   HashtagDmListRequest,
+  ListChannelAppsRequest,
+  ListChannelAppsResponse,
   ListChannelAttachmentRequest,
   ListChannelDescsRequest,
   ListChannelDetailRequest,
@@ -36,11 +39,13 @@ import {
   ListClanWebhookResponse,
   ListFavoriteChannelRequest,
   ListFavoriteChannelResponse,
+  ListFriendsRequest,
   ListNotificationsRequest,
   ListPermissionOfUsersRequest,
   ListPermissionsRequest,
   ListRoleUsersRequest,
   ListThreadRequest,
+  ListUserActivity,
   MessageAttachment,
   MessageMention,
   MessageReaction,
@@ -1598,6 +1603,11 @@ export interface ListDataSocket {
   permission_role_req: PermissionRoleChannelListEventRequest | undefined;
   permission_role_list: PermissionRoleChannelListEventResponse | undefined;
   emoji_list: EmojiListedResponse | undefined;
+  list_friend_req: ListFriendsRequest | undefined;
+  friend_list: FriendList | undefined;
+  list_apps_req: ListChannelAppsRequest | undefined;
+  channel_apps_list: ListChannelAppsResponse | undefined;
+  user_activity_list: ListUserActivity | undefined;
 }
 
 function createBaseEnvelope(): Envelope {
@@ -13415,6 +13425,11 @@ function createBaseListDataSocket(): ListDataSocket {
     permission_role_req: undefined,
     permission_role_list: undefined,
     emoji_list: undefined,
+    list_friend_req: undefined,
+    friend_list: undefined,
+    list_apps_req: undefined,
+    channel_apps_list: undefined,
+    user_activity_list: undefined,
   };
 }
 
@@ -13576,6 +13591,21 @@ export const ListDataSocket = {
     }
     if (message.emoji_list !== undefined) {
       EmojiListedResponse.encode(message.emoji_list, writer.uint32(418).fork()).ldelim();
+    }
+    if (message.list_friend_req !== undefined) {
+      ListFriendsRequest.encode(message.list_friend_req, writer.uint32(426).fork()).ldelim();
+    }
+    if (message.friend_list !== undefined) {
+      FriendList.encode(message.friend_list, writer.uint32(434).fork()).ldelim();
+    }
+    if (message.list_apps_req !== undefined) {
+      ListChannelAppsRequest.encode(message.list_apps_req, writer.uint32(442).fork()).ldelim();
+    }
+    if (message.channel_apps_list !== undefined) {
+      ListChannelAppsResponse.encode(message.channel_apps_list, writer.uint32(450).fork()).ldelim();
+    }
+    if (message.user_activity_list !== undefined) {
+      ListUserActivity.encode(message.user_activity_list, writer.uint32(458).fork()).ldelim();
     }
     return writer;
   },
@@ -13954,6 +13984,41 @@ export const ListDataSocket = {
 
           message.emoji_list = EmojiListedResponse.decode(reader, reader.uint32());
           continue;
+        case 53:
+          if (tag !== 426) {
+            break;
+          }
+
+          message.list_friend_req = ListFriendsRequest.decode(reader, reader.uint32());
+          continue;
+        case 54:
+          if (tag !== 434) {
+            break;
+          }
+
+          message.friend_list = FriendList.decode(reader, reader.uint32());
+          continue;
+        case 55:
+          if (tag !== 442) {
+            break;
+          }
+
+          message.list_apps_req = ListChannelAppsRequest.decode(reader, reader.uint32());
+          continue;
+        case 56:
+          if (tag !== 450) {
+            break;
+          }
+
+          message.channel_apps_list = ListChannelAppsResponse.decode(reader, reader.uint32());
+          continue;
+        case 57:
+          if (tag !== 458) {
+            break;
+          }
+
+          message.user_activity_list = ListUserActivity.decode(reader, reader.uint32());
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -14093,6 +14158,15 @@ export const ListDataSocket = {
         ? PermissionRoleChannelListEventResponse.fromJSON(object.permission_role_list)
         : undefined,
       emoji_list: isSet(object.emoji_list) ? EmojiListedResponse.fromJSON(object.emoji_list) : undefined,
+      list_friend_req: isSet(object.list_friend_req) ? ListFriendsRequest.fromJSON(object.list_friend_req) : undefined,
+      friend_list: isSet(object.friend_list) ? FriendList.fromJSON(object.friend_list) : undefined,
+      list_apps_req: isSet(object.list_apps_req) ? ListChannelAppsRequest.fromJSON(object.list_apps_req) : undefined,
+      channel_apps_list: isSet(object.channel_apps_list)
+        ? ListChannelAppsResponse.fromJSON(object.channel_apps_list)
+        : undefined,
+      user_activity_list: isSet(object.user_activity_list)
+        ? ListUserActivity.fromJSON(object.user_activity_list)
+        : undefined,
     };
   },
 
@@ -14255,6 +14329,21 @@ export const ListDataSocket = {
     }
     if (message.emoji_list !== undefined) {
       obj.emoji_list = EmojiListedResponse.toJSON(message.emoji_list);
+    }
+    if (message.list_friend_req !== undefined) {
+      obj.list_friend_req = ListFriendsRequest.toJSON(message.list_friend_req);
+    }
+    if (message.friend_list !== undefined) {
+      obj.friend_list = FriendList.toJSON(message.friend_list);
+    }
+    if (message.list_apps_req !== undefined) {
+      obj.list_apps_req = ListChannelAppsRequest.toJSON(message.list_apps_req);
+    }
+    if (message.channel_apps_list !== undefined) {
+      obj.channel_apps_list = ListChannelAppsResponse.toJSON(message.channel_apps_list);
+    }
+    if (message.user_activity_list !== undefined) {
+      obj.user_activity_list = ListUserActivity.toJSON(message.user_activity_list);
     }
     return obj;
   },
@@ -14429,6 +14518,21 @@ export const ListDataSocket = {
       : undefined;
     message.emoji_list = (object.emoji_list !== undefined && object.emoji_list !== null)
       ? EmojiListedResponse.fromPartial(object.emoji_list)
+      : undefined;
+    message.list_friend_req = (object.list_friend_req !== undefined && object.list_friend_req !== null)
+      ? ListFriendsRequest.fromPartial(object.list_friend_req)
+      : undefined;
+    message.friend_list = (object.friend_list !== undefined && object.friend_list !== null)
+      ? FriendList.fromPartial(object.friend_list)
+      : undefined;
+    message.list_apps_req = (object.list_apps_req !== undefined && object.list_apps_req !== null)
+      ? ListChannelAppsRequest.fromPartial(object.list_apps_req)
+      : undefined;
+    message.channel_apps_list = (object.channel_apps_list !== undefined && object.channel_apps_list !== null)
+      ? ListChannelAppsResponse.fromPartial(object.channel_apps_list)
+      : undefined;
+    message.user_activity_list = (object.user_activity_list !== undefined && object.user_activity_list !== null)
+      ? ListUserActivity.fromPartial(object.user_activity_list)
       : undefined;
     return message;
   },
