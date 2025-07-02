@@ -833,6 +833,7 @@ export interface EventEmoji {
   user_id: string;
   logo: string;
   clan_name: string;
+  is_for_sale: boolean;
 }
 
 /**  */
