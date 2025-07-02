@@ -1449,6 +1449,7 @@ export interface EventEmoji {
   user_id: string;
   logo: string;
   clan_name: string;
+  is_for_sale: boolean;
 }
 
 export interface PermissionSetEvent {
@@ -11819,6 +11820,7 @@ function createBaseEventEmoji(): EventEmoji {
     user_id: "",
     logo: "",
     clan_name: "",
+    is_for_sale: false,
   };
 }
 
@@ -11850,6 +11852,9 @@ export const EventEmoji = {
     }
     if (message.clan_name !== "") {
       writer.uint32(74).string(message.clan_name);
+    }
+    if (message.is_for_sale !== false) {
+      writer.uint32(80).bool(message.is_for_sale);
     }
     return writer;
   },
@@ -11924,6 +11929,13 @@ export const EventEmoji = {
 
           message.clan_name = reader.string();
           continue;
+        case 10:
+          if (tag !== 80) {
+            break;
+          }
+
+          message.is_for_sale = reader.bool();
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -11944,6 +11956,7 @@ export const EventEmoji = {
       user_id: isSet(object.user_id) ? globalThis.String(object.user_id) : "",
       logo: isSet(object.logo) ? globalThis.String(object.logo) : "",
       clan_name: isSet(object.clan_name) ? globalThis.String(object.clan_name) : "",
+      is_for_sale: isSet(object.is_for_sale) ? globalThis.Boolean(object.is_for_sale) : false,
     };
   },
 
@@ -11976,6 +11989,9 @@ export const EventEmoji = {
     if (message.clan_name !== "") {
       obj.clan_name = message.clan_name;
     }
+    if (message.is_for_sale !== false) {
+      obj.is_for_sale = message.is_for_sale;
+    }
     return obj;
   },
 
@@ -11993,6 +12009,7 @@ export const EventEmoji = {
     message.user_id = object.user_id ?? "";
     message.logo = object.logo ?? "";
     message.clan_name = object.clan_name ?? "";
+    message.is_for_sale = object.is_for_sale ?? false;
     return message;
   },
 };
