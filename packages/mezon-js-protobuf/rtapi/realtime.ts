@@ -9,6 +9,8 @@ import _m0 from "protobufjs/minimal";
 import {
   AllUsersAddChannelRequest,
   AllUsersAddChannelResponse,
+  CategoryDesc,
+  CategoryDescList,
   ChannelAttachmentList,
   ChannelDescList,
   ChannelDescription as ChannelDescription1,
@@ -19,10 +21,12 @@ import {
   ChannelSettingListResponse,
   ChannelUserList,
   ClanDescList,
+  ClanUserList,
   CreateEventRequest,
   DefaultNotificationCategory,
   EmojiListedResponse,
   EmojiRecentList,
+  EventList,
   FriendList,
   GiveCoffeeEvent,
   HashtagDmList,
@@ -35,8 +39,10 @@ import {
   ListChannelMessagesRequest,
   ListChannelUsersRequest,
   ListClanDescRequest,
+  ListClanUsersRequest,
   ListClanWebhookRequest,
   ListClanWebhookResponse,
+  ListEventsRequest,
   ListFavoriteChannelRequest,
   ListFavoriteChannelResponse,
   ListFriendsRequest,
@@ -70,6 +76,7 @@ import {
   Rpc,
   SearchThreadRequest,
   StickerListedResponse,
+  StreamingChannelUserList,
   TokenSentEvent,
   UserActivity,
   UserPermissionInChannelListRequest,
@@ -1609,6 +1616,13 @@ export interface ListDataSocket {
   list_apps_req: ListChannelAppsRequest | undefined;
   channel_apps_list: ListChannelAppsResponse | undefined;
   user_activity_list: ListUserActivity | undefined;
+  list_clan_user_req: ListClanUsersRequest | undefined;
+  clan_user_list: ClanUserList | undefined;
+  list_event_req: ListEventsRequest | undefined;
+  event_list: EventList | undefined;
+  list_category_req: CategoryDesc | undefined;
+  category_list: CategoryDescList | undefined;
+  stream_user_list: StreamingChannelUserList | undefined;
 }
 
 function createBaseEnvelope(): Envelope {
@@ -13447,6 +13461,13 @@ function createBaseListDataSocket(): ListDataSocket {
     list_apps_req: undefined,
     channel_apps_list: undefined,
     user_activity_list: undefined,
+    list_clan_user_req: undefined,
+    clan_user_list: undefined,
+    list_event_req: undefined,
+    event_list: undefined,
+    list_category_req: undefined,
+    category_list: undefined,
+    stream_user_list: undefined,
   };
 }
 
@@ -13623,6 +13644,27 @@ export const ListDataSocket = {
     }
     if (message.user_activity_list !== undefined) {
       ListUserActivity.encode(message.user_activity_list, writer.uint32(458).fork()).ldelim();
+    }
+    if (message.list_clan_user_req !== undefined) {
+      ListClanUsersRequest.encode(message.list_clan_user_req, writer.uint32(466).fork()).ldelim();
+    }
+    if (message.clan_user_list !== undefined) {
+      ClanUserList.encode(message.clan_user_list, writer.uint32(474).fork()).ldelim();
+    }
+    if (message.list_event_req !== undefined) {
+      ListEventsRequest.encode(message.list_event_req, writer.uint32(482).fork()).ldelim();
+    }
+    if (message.event_list !== undefined) {
+      EventList.encode(message.event_list, writer.uint32(490).fork()).ldelim();
+    }
+    if (message.list_category_req !== undefined) {
+      CategoryDesc.encode(message.list_category_req, writer.uint32(498).fork()).ldelim();
+    }
+    if (message.category_list !== undefined) {
+      CategoryDescList.encode(message.category_list, writer.uint32(506).fork()).ldelim();
+    }
+    if (message.stream_user_list !== undefined) {
+      StreamingChannelUserList.encode(message.stream_user_list, writer.uint32(514).fork()).ldelim();
     }
     return writer;
   },
@@ -14036,6 +14078,55 @@ export const ListDataSocket = {
 
           message.user_activity_list = ListUserActivity.decode(reader, reader.uint32());
           continue;
+        case 58:
+          if (tag !== 466) {
+            break;
+          }
+
+          message.list_clan_user_req = ListClanUsersRequest.decode(reader, reader.uint32());
+          continue;
+        case 59:
+          if (tag !== 474) {
+            break;
+          }
+
+          message.clan_user_list = ClanUserList.decode(reader, reader.uint32());
+          continue;
+        case 60:
+          if (tag !== 482) {
+            break;
+          }
+
+          message.list_event_req = ListEventsRequest.decode(reader, reader.uint32());
+          continue;
+        case 61:
+          if (tag !== 490) {
+            break;
+          }
+
+          message.event_list = EventList.decode(reader, reader.uint32());
+          continue;
+        case 62:
+          if (tag !== 498) {
+            break;
+          }
+
+          message.list_category_req = CategoryDesc.decode(reader, reader.uint32());
+          continue;
+        case 63:
+          if (tag !== 506) {
+            break;
+          }
+
+          message.category_list = CategoryDescList.decode(reader, reader.uint32());
+          continue;
+        case 64:
+          if (tag !== 514) {
+            break;
+          }
+
+          message.stream_user_list = StreamingChannelUserList.decode(reader, reader.uint32());
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -14183,6 +14274,17 @@ export const ListDataSocket = {
         : undefined,
       user_activity_list: isSet(object.user_activity_list)
         ? ListUserActivity.fromJSON(object.user_activity_list)
+        : undefined,
+      list_clan_user_req: isSet(object.list_clan_user_req)
+        ? ListClanUsersRequest.fromJSON(object.list_clan_user_req)
+        : undefined,
+      clan_user_list: isSet(object.clan_user_list) ? ClanUserList.fromJSON(object.clan_user_list) : undefined,
+      list_event_req: isSet(object.list_event_req) ? ListEventsRequest.fromJSON(object.list_event_req) : undefined,
+      event_list: isSet(object.event_list) ? EventList.fromJSON(object.event_list) : undefined,
+      list_category_req: isSet(object.list_category_req) ? CategoryDesc.fromJSON(object.list_category_req) : undefined,
+      category_list: isSet(object.category_list) ? CategoryDescList.fromJSON(object.category_list) : undefined,
+      stream_user_list: isSet(object.stream_user_list)
+        ? StreamingChannelUserList.fromJSON(object.stream_user_list)
         : undefined,
     };
   },
@@ -14361,6 +14463,27 @@ export const ListDataSocket = {
     }
     if (message.user_activity_list !== undefined) {
       obj.user_activity_list = ListUserActivity.toJSON(message.user_activity_list);
+    }
+    if (message.list_clan_user_req !== undefined) {
+      obj.list_clan_user_req = ListClanUsersRequest.toJSON(message.list_clan_user_req);
+    }
+    if (message.clan_user_list !== undefined) {
+      obj.clan_user_list = ClanUserList.toJSON(message.clan_user_list);
+    }
+    if (message.list_event_req !== undefined) {
+      obj.list_event_req = ListEventsRequest.toJSON(message.list_event_req);
+    }
+    if (message.event_list !== undefined) {
+      obj.event_list = EventList.toJSON(message.event_list);
+    }
+    if (message.list_category_req !== undefined) {
+      obj.list_category_req = CategoryDesc.toJSON(message.list_category_req);
+    }
+    if (message.category_list !== undefined) {
+      obj.category_list = CategoryDescList.toJSON(message.category_list);
+    }
+    if (message.stream_user_list !== undefined) {
+      obj.stream_user_list = StreamingChannelUserList.toJSON(message.stream_user_list);
     }
     return obj;
   },
@@ -14550,6 +14673,27 @@ export const ListDataSocket = {
       : undefined;
     message.user_activity_list = (object.user_activity_list !== undefined && object.user_activity_list !== null)
       ? ListUserActivity.fromPartial(object.user_activity_list)
+      : undefined;
+    message.list_clan_user_req = (object.list_clan_user_req !== undefined && object.list_clan_user_req !== null)
+      ? ListClanUsersRequest.fromPartial(object.list_clan_user_req)
+      : undefined;
+    message.clan_user_list = (object.clan_user_list !== undefined && object.clan_user_list !== null)
+      ? ClanUserList.fromPartial(object.clan_user_list)
+      : undefined;
+    message.list_event_req = (object.list_event_req !== undefined && object.list_event_req !== null)
+      ? ListEventsRequest.fromPartial(object.list_event_req)
+      : undefined;
+    message.event_list = (object.event_list !== undefined && object.event_list !== null)
+      ? EventList.fromPartial(object.event_list)
+      : undefined;
+    message.list_category_req = (object.list_category_req !== undefined && object.list_category_req !== null)
+      ? CategoryDesc.fromPartial(object.list_category_req)
+      : undefined;
+    message.category_list = (object.category_list !== undefined && object.category_list !== null)
+      ? CategoryDescList.fromPartial(object.category_list)
+      : undefined;
+    message.stream_user_list = (object.stream_user_list !== undefined && object.stream_user_list !== null)
+      ? StreamingChannelUserList.fromPartial(object.stream_user_list)
       : undefined;
     return message;
   },
