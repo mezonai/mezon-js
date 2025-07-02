@@ -58,6 +58,9 @@ import {
   ApiWebhook,
   ApiWebhookListResponse,
   ApiEmojiRecentList,
+  ApiFriendList,
+  ApiListChannelAppsResponse,
+  ApiListUserActivity,
 } from "./api.gen";
 import { Session } from "./session";
 import { ChannelMessage } from "./client";
@@ -1198,6 +1201,11 @@ export interface ListDataSocket {
   permission_role_req?: any;
   permission_role_list?: ApiPermissionRoleChannelListEventResponse;
   emoji_list?: ApiEmojiListedResponse;
+  list_friend_req?: any;
+  friend_list?: ApiFriendList;
+  list_apps_req?: any;
+  channel_apps_list?: ApiListChannelAppsResponse;
+  user_activity_list?: ApiListUserActivity;
 }
 
 function CreateChannelMessageFromEvent(message: any) {
