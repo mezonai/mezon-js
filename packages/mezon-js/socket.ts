@@ -1451,17 +1451,11 @@ export interface Socket {
     message_id: string,
     timestamp_seconds: number,
     operation: number,
-    // avatar
     message_sender_avatar: string,
-    // message sender id
     message_sender_id: string,
-    // message sender username
     message_sender_username: string,
-    // message content
     message_content: string,
-    // attachment
     message_attachment: string,
-    // create time
     message_created_time: string,
   ): Promise<LastPinMessageEvent>;
 
@@ -2749,17 +2743,11 @@ export class DefaultSocket implements Socket {
     message_id: string,
     timestamp_seconds: number,
     operation: number,
-    // avatar
     message_sender_avatar: string,
-    // message sender id
     message_sender_id: string,
-    // message sender username
     message_sender_username: string,
-    // message content
     message_content: string,
-    // attachment
     message_attachment: string,
-    // create time
     message_created_time: string,
   ): Promise<LastPinMessageEvent> {
     const response = await this.send({
