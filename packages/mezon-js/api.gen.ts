@@ -88,6 +88,8 @@ export interface MezonUpdateAppBody {
   metadata?: string;
   //Token.
   token?: string;
+  //Shadow true|false
+  is_shadow?:string;
 }
 
 /**  */

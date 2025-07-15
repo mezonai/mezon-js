@@ -909,6 +909,18 @@ export interface LastPinMessageEvent {
   operation: number;
   /** is public */
   is_public: boolean;
+  /** avatar */
+  message_sender_avatar: string;
+  /** message sender id */
+  message_sender_id: string;
+  /** message sender username */
+  message_sender_username: string;
+  /** message content */
+  message_content: string;
+  /** attachment */
+  message_attachment: string;
+  /** create time */
+  message_created_time: string;
 }
 
 /** Last seen message by user */
@@ -6951,6 +6963,12 @@ function createBaseLastPinMessageEvent(): LastPinMessageEvent {
     timestamp_seconds: 0,
     operation: 0,
     is_public: false,
+    message_sender_avatar: "",
+    message_sender_id: "",
+    message_sender_username: "",
+    message_content: "",
+    message_attachment: "",
+    message_created_time: "",
   };
 }
 
@@ -6979,6 +6997,24 @@ export const LastPinMessageEvent = {
     }
     if (message.is_public !== false) {
       writer.uint32(64).bool(message.is_public);
+    }
+    if (message.message_sender_avatar !== "") {
+      writer.uint32(74).string(message.message_sender_avatar);
+    }
+    if (message.message_sender_id !== "") {
+      writer.uint32(82).string(message.message_sender_id);
+    }
+    if (message.message_sender_username !== "") {
+      writer.uint32(90).string(message.message_sender_username);
+    }
+    if (message.message_content !== "") {
+      writer.uint32(98).string(message.message_content);
+    }
+    if (message.message_attachment !== "") {
+      writer.uint32(106).string(message.message_attachment);
+    }
+    if (message.message_created_time !== "") {
+      writer.uint32(114).string(message.message_created_time);
     }
     return writer;
   },
@@ -7046,6 +7082,48 @@ export const LastPinMessageEvent = {
 
           message.is_public = reader.bool();
           continue;
+        case 9:
+          if (tag !== 74) {
+            break;
+          }
+
+          message.message_sender_avatar = reader.string();
+          continue;
+        case 10:
+          if (tag !== 82) {
+            break;
+          }
+
+          message.message_sender_id = reader.string();
+          continue;
+        case 11:
+          if (tag !== 90) {
+            break;
+          }
+
+          message.message_sender_username = reader.string();
+          continue;
+        case 12:
+          if (tag !== 98) {
+            break;
+          }
+
+          message.message_content = reader.string();
+          continue;
+        case 13:
+          if (tag !== 106) {
+            break;
+          }
+
+          message.message_attachment = reader.string();
+          continue;
+        case 14:
+          if (tag !== 114) {
+            break;
+          }
+
+          message.message_created_time = reader.string();
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -7065,6 +7143,14 @@ export const LastPinMessageEvent = {
       timestamp_seconds: isSet(object.timestamp_seconds) ? globalThis.Number(object.timestamp_seconds) : 0,
       operation: isSet(object.operation) ? globalThis.Number(object.operation) : 0,
       is_public: isSet(object.is_public) ? globalThis.Boolean(object.is_public) : false,
+      message_sender_avatar: isSet(object.message_sender_avatar) ? globalThis.String(object.message_sender_avatar) : "",
+      message_sender_id: isSet(object.message_sender_id) ? globalThis.String(object.message_sender_id) : "",
+      message_sender_username: isSet(object.message_sender_username)
+        ? globalThis.String(object.message_sender_username)
+        : "",
+      message_content: isSet(object.message_content) ? globalThis.String(object.message_content) : "",
+      message_attachment: isSet(object.message_attachment) ? globalThis.String(object.message_attachment) : "",
+      message_created_time: isSet(object.message_created_time) ? globalThis.String(object.message_created_time) : "",
     };
   },
 
@@ -7094,6 +7180,24 @@ export const LastPinMessageEvent = {
     if (message.is_public !== false) {
       obj.is_public = message.is_public;
     }
+    if (message.message_sender_avatar !== "") {
+      obj.message_sender_avatar = message.message_sender_avatar;
+    }
+    if (message.message_sender_id !== "") {
+      obj.message_sender_id = message.message_sender_id;
+    }
+    if (message.message_sender_username !== "") {
+      obj.message_sender_username = message.message_sender_username;
+    }
+    if (message.message_content !== "") {
+      obj.message_content = message.message_content;
+    }
+    if (message.message_attachment !== "") {
+      obj.message_attachment = message.message_attachment;
+    }
+    if (message.message_created_time !== "") {
+      obj.message_created_time = message.message_created_time;
+    }
     return obj;
   },
 
@@ -7110,6 +7214,12 @@ export const LastPinMessageEvent = {
     message.timestamp_seconds = object.timestamp_seconds ?? 0;
     message.operation = object.operation ?? 0;
     message.is_public = object.is_public ?? false;
+    message.message_sender_avatar = object.message_sender_avatar ?? "";
+    message.message_sender_id = object.message_sender_id ?? "";
+    message.message_sender_username = object.message_sender_username ?? "";
+    message.message_content = object.message_content ?? "";
+    message.message_attachment = object.message_attachment ?? "";
+    message.message_created_time = object.message_created_time ?? "";
     return message;
   },
 };

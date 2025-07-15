@@ -2729,6 +2729,8 @@ export interface UpdateAppRequest {
   about: string;
   /** App url. */
   app_url: string;
+  /** need update or not */
+  is_shadow: string;
 }
 
 /** The identifier for an app. */
@@ -25979,6 +25981,7 @@ function createBaseUpdateAppRequest(): UpdateAppRequest {
     token: undefined,
     about: "",
     app_url: "",
+    is_shadow: "",
   };
 }
 
@@ -26004,6 +26007,9 @@ export const UpdateAppRequest = {
     }
     if (message.app_url !== "") {
       writer.uint32(58).string(message.app_url);
+    }
+    if (message.is_shadow !== "") {
+      writer.uint32(74).string(message.is_shadow);
     }
     return writer;
   },
@@ -26064,6 +26070,13 @@ export const UpdateAppRequest = {
 
           message.app_url = reader.string();
           continue;
+        case 9:
+          if (tag !== 74) {
+            break;
+          }
+
+          message.is_shadow = reader.string();
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -26082,6 +26095,7 @@ export const UpdateAppRequest = {
       token: isSet(object.token) ? String(object.token) : undefined,
       about: isSet(object.about) ? globalThis.String(object.about) : "",
       app_url: isSet(object.app_url) ? globalThis.String(object.app_url) : "",
+      is_shadow: isSet(object.is_shadow) ? globalThis.String(object.is_shadow) : "",
     };
   },
 
@@ -26108,6 +26122,9 @@ export const UpdateAppRequest = {
     if (message.app_url !== "") {
       obj.app_url = message.app_url;
     }
+    if (message.is_shadow !== "") {
+      obj.is_shadow = message.is_shadow;
+    }
     return obj;
   },
 
@@ -26123,6 +26140,7 @@ export const UpdateAppRequest = {
     message.token = object.token ?? undefined;
     message.about = object.about ?? "";
     message.app_url = object.app_url ?? "";
+    message.is_shadow = object.is_shadow ?? "";
     return message;
   },
 };
