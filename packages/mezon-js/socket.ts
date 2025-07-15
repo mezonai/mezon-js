@@ -262,6 +262,18 @@ export interface LastPinMessageEvent {
   is_public: boolean;
   // clan Id
   clan_id: string;
+  // avatar
+  message_sender_avatar: string;
+  // message sender id
+  message_sender_id: string;
+  // message sender username
+  message_sender_username: string;
+  // message content
+  message_content: string;
+  // attachment
+  message_attachment: string;
+  // create time
+  message_created_time: string;
 }
 
 export interface UnmuteEvent {
@@ -1438,7 +1450,19 @@ export interface Socket {
     is_public: boolean,
     message_id: string,
     timestamp_seconds: number,
-    operation: number
+    operation: number,
+    // avatar
+    message_sender_avatar: string,
+    // message sender id
+    message_sender_id: string,
+    // message sender username
+    message_sender_username: string,
+    // message content
+    message_content: string,
+    // attachment
+    message_attachment: string,
+    // create time
+    message_created_time: string,
   ): Promise<LastPinMessageEvent>;
 
   /** Send custom user status */
@@ -2724,7 +2748,19 @@ export class DefaultSocket implements Socket {
     is_public: boolean,
     message_id: string,
     timestamp_seconds: number,
-    operation: number
+    operation: number,
+    // avatar
+    message_sender_avatar: string,
+    // message sender id
+    message_sender_id: string,
+    // message sender username
+    message_sender_username: string,
+    // message content
+    message_content: string,
+    // attachment
+    message_attachment: string,
+    // create time
+    message_created_time: string,
   ): Promise<LastPinMessageEvent> {
     const response = await this.send({
       last_pin_message_event: {
@@ -2735,6 +2771,12 @@ export class DefaultSocket implements Socket {
         message_id: message_id,
         timestamp_seconds: timestamp_seconds,
         operation: operation,
+        message_sender_avatar: message_sender_avatar,
+        message_sender_id: message_sender_id,
+        message_sender_username: message_sender_username,
+        message_content: message_content,
+        message_attachment: message_attachment,
+        message_created_time: message_created_time,
       },
     });
     return response.last_pin_message_event;
