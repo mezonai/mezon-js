@@ -1429,7 +1429,8 @@ export interface Socket {
     message_sender_id: string,
     action_delete: boolean,
     topic_id?: string,
-    emoji_recent_id?: string
+    emoji_recent_id?: string,
+    sender_name?: string
   ): Promise<ApiMessageReaction>;
 
   /** Send last seen message */
@@ -1451,17 +1452,11 @@ export interface Socket {
     message_id: string,
     timestamp_seconds: number,
     operation: number,
-    // avatar
     message_sender_avatar: string,
-    // message sender id
     message_sender_id: string,
-    // message sender username
     message_sender_username: string,
-    // message content
     message_content: string,
-    // attachment
     message_attachment: string,
-    // create time
     message_created_time: string,
   ): Promise<LastPinMessageEvent>;
 
@@ -2679,7 +2674,8 @@ export class DefaultSocket implements Socket {
     message_sender_id: string,
     action_delete: boolean,
     topic_id?: string,
-    emoji_recent_id?: string
+    emoji_recent_id?: string,
+    sender_name?: string
   ): Promise<ApiMessageReaction> {
     const response = await this.send({
       message_reaction_event: {
@@ -2695,7 +2691,8 @@ export class DefaultSocket implements Socket {
         message_sender_id: message_sender_id,
         action: action_delete,
         topic_id: topic_id,
-        emoji_recent_id: emoji_recent_id
+        emoji_recent_id: emoji_recent_id,
+        sender_name: sender_name
       },
     });
     return response.message_reaction_event;
@@ -2749,17 +2746,11 @@ export class DefaultSocket implements Socket {
     message_id: string,
     timestamp_seconds: number,
     operation: number,
-    // avatar
     message_sender_avatar: string,
-    // message sender id
     message_sender_id: string,
-    // message sender username
     message_sender_username: string,
-    // message content
     message_content: string,
-    // attachment
     message_attachment: string,
-    // create time
     message_created_time: string,
   ): Promise<LastPinMessageEvent> {
     const response = await this.send({
