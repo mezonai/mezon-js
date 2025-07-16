@@ -1429,7 +1429,8 @@ export interface Socket {
     message_sender_id: string,
     action_delete: boolean,
     topic_id?: string,
-    emoji_recent_id?: string
+    emoji_recent_id?: string,
+    sender_name?: string
   ): Promise<ApiMessageReaction>;
 
   /** Send last seen message */
@@ -2673,7 +2674,8 @@ export class DefaultSocket implements Socket {
     message_sender_id: string,
     action_delete: boolean,
     topic_id?: string,
-    emoji_recent_id?: string
+    emoji_recent_id?: string,
+    sender_name?: string
   ): Promise<ApiMessageReaction> {
     const response = await this.send({
       message_reaction_event: {
@@ -2689,7 +2691,8 @@ export class DefaultSocket implements Socket {
         message_sender_id: message_sender_id,
         action: action_delete,
         topic_id: topic_id,
-        emoji_recent_id: emoji_recent_id
+        emoji_recent_id: emoji_recent_id,
+        sender_name: sender_name
       },
     });
     return response.message_reaction_event;
