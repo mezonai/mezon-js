@@ -389,6 +389,40 @@ interface ChannelMessageSend {
   };
 }
 
+interface QuickMenuEvent {
+  quick_menu_event: {
+    menu_name: string,
+    message: {
+      /** Clan Id */
+      clan_id: string;
+      /** The server-assigned channel ID. */
+      channel_id: string;
+      // The mode
+      mode: number;
+      // channel label
+      channel_label: string;
+      /** The content payload. */
+      content: any;
+      //
+      mentions?: Array<ApiMessageMention>;
+      //
+      attachments?: Array<ApiMessageAttachment>;
+      //
+      anonymous_message?: boolean;
+      //
+      mention_everyone?: boolean;
+      //
+      avatar: string;
+      // Is public
+      is_public: boolean;
+      // code
+      code: number;
+      //
+      topic_id?: string;
+    }
+  }
+}
+
 interface EphemeralMessageSend {
   ephemeral_message_send: {
     receiver_id: string,
@@ -1406,6 +1440,24 @@ export interface Socket {
     topic_id?: string
   ): Promise<ChannelMessageAck>;
 
+  /** Send a quick menu event to a chat channel on the server. */
+  writeQuickMenuEvent(
+    menu_name: string,
+    clan_id: string,
+    channel_id: string,
+    mode: number,
+    is_public: boolean,
+    content?: any,
+    mentions?: Array<ApiMessageMention>,
+    attachments?: Array<ApiMessageAttachment>,
+    references?: Array<ApiMessageRef>,
+    anonymous_message?: boolean,
+    mention_everyone?: boolean,
+    avatar?: string,
+    code?: number,
+    topic_id?: string
+  ): Promise<QuickMenuEvent>;
+
   /** Send message typing */
   writeMessageTyping(
     clan_id: string,
@@ -1694,9 +1746,11 @@ export interface Socket {
 
   onuserstatusevent: (user_status_event: UserStatusEvent) => void;
 
-  onJoinChannelAppEvent: (join_channel_app_data: JoinChannelAppData) => void;
+  onjoinchannelappevent: (join_channel_app_data: JoinChannelAppData) => void;
 
-  onUnpinMessageEvent: (unpin_message_event: UnpinMessageEvent)=> void;
+  onunpinmessageevent: (unpin_message_event: UnpinMessageEvent)=> void;
+
+  onquickmenuevent: (event: QuickMenuEvent) => void;
 }
 
 /** Reports an error received from a socket message. */
@@ -1937,9 +1991,11 @@ export class DefaultSocket implements Socket {
         } else if (message.user_status_event) {
           this.onuserstatusevent(<UserStatusEvent>message.user_status_event);
         } else if (message.join_channel_app_data) {
-          this.onJoinChannelAppEvent(<JoinChannelAppData>message.join_channel_app_data);
+          this.onjoinchannelappevent(<JoinChannelAppData>message.join_channel_app_data);
         } else if (message.unpin_message_event) {
-          this.onUnpinMessageEvent(<UnpinMessageEvent>message.unpin_message_event);
+          this.onunpinmessageevent(<UnpinMessageEvent>message.unpin_message_event);
+        } else if (message.quick_menu_event) {
+          this.onquickmenuevent(<QuickMenuEvent>message.quick_menu_event);
         } else {
           if (this.verbose && window && window.console) {
             console.log("Unrecognized message received: %o", message);
@@ -2367,15 +2423,21 @@ export class DefaultSocket implements Socket {
     }
   }
 
-  onJoinChannelAppEvent(join_channel_app_data: JoinChannelAppData) {
+  onjoinchannelappevent(join_channel_app_data: JoinChannelAppData) {
     if (this.verbose && window && window.console) {
       console.log(join_channel_app_data);
     }
   }
   
-  onUnpinMessageEvent(unpin_message_event: UnpinMessageEvent) {
+  onunpinmessageevent(unpin_message_event: UnpinMessageEvent) {
     if (this.verbose && window && window.console) {
       console.log(unpin_message_event);
+    }
+  }
+
+  onquickmenuevent(event: QuickMenuEvent) {
+    if (this.verbose && window && window.console) {
+      console.log(event);
     }
   }
 
@@ -2401,7 +2463,8 @@ export class DefaultSocket implements Socket {
       | ChannelAppEvent
       | EphemeralMessageSend
       | VoiceReactionSend
-      | ListDataSocket,
+      | ListDataSocket
+      | QuickMenuEvent,
     sendTimeout = DefaultSocket.DefaultSendTimeoutMs
   ): Promise<any> {
     const untypedMessage = message as any;
@@ -2421,6 +2484,10 @@ export class DefaultSocket implements Socket {
         } else if (untypedMessage.ephemeral_message_send) {
           untypedMessage.ephemeral_message_send.message.content = JSON.stringify(
             untypedMessage.ephemeral_message_send.message?.content
+          ); 
+        } else if (untypedMessage.quick_menu_event) {
+          untypedMessage.quick_menu_event.message.content = JSON.stringify(
+            untypedMessage.quick_menu_event.message?.content
           ); 
         }
 
@@ -2585,6 +2652,45 @@ export class DefaultSocket implements Socket {
 
   updateStatus(status?: string): Promise<void> {
     return this.send({ status_update: { status: status } });
+  }
+
+  async writeQuickMenuEvent(
+    menu_name: string,
+    clan_id: string,
+    channel_id: string,
+    mode: number,
+    is_public: boolean,
+    content: any,
+    mentions?: Array<ApiMessageMention>,
+    attachments?: Array<ApiMessageAttachment>,
+    references?: Array<ApiMessageRef>,
+    anonymous_message?: boolean,
+    mention_everyone?: Boolean,
+    avatar?: string,
+    code?: number,
+    topic_id?: string
+  ): Promise<QuickMenuEvent> {
+    const response = await this.send({
+      quick_menu_event: {
+        menu_name: menu_name,
+        message: {
+          clan_id: clan_id,
+          channel_id: channel_id,
+          mode: mode,
+          is_public: is_public,
+          content: content,
+          mentions: mentions,
+          attachments: attachments,
+          references: references,
+          anonymous_message: anonymous_message,
+          mention_everyone: mention_everyone,
+          avatar: avatar,
+          code: code,
+          topic_id: topic_id,
+        }
+      }
+    });
+    return response.ephemeral_message_send;
   }
 
   async writeEphemeralMessage(

@@ -418,7 +418,11 @@ export interface Envelope {
     | MarkAsRead
     | undefined;
   /** list socket data */
-  list_data_socket?: ListDataSocket | undefined;
+  list_data_socket?:
+    | ListDataSocket
+    | undefined;
+  /** quick menu event */
+  quick_menu_event?: QuickMenuDataEvent | undefined;
 }
 
 export interface FollowEvent {
@@ -640,6 +644,11 @@ export interface ChannelMessageAck {
 export interface EphemeralMessageSend {
   message: ChannelMessageSend | undefined;
   receiver_id: string;
+}
+
+export interface QuickMenuDataEvent {
+  menu_name: string;
+  message: ChannelMessageSend | undefined;
 }
 
 export interface VoiceReactionSend {
@@ -1722,6 +1731,7 @@ function createBaseEnvelope(): Envelope {
     voice_reaction_send: undefined,
     mark_as_read: undefined,
     list_data_socket: undefined,
+    quick_menu_event: undefined,
   };
 }
 
@@ -1976,6 +1986,9 @@ export const Envelope = {
     }
     if (message.list_data_socket !== undefined) {
       ListDataSocket.encode(message.list_data_socket, writer.uint32(666).fork()).ldelim();
+    }
+    if (message.quick_menu_event !== undefined) {
+      QuickMenuDataEvent.encode(message.quick_menu_event, writer.uint32(674).fork()).ldelim();
     }
     return writer;
   },
@@ -2568,6 +2581,13 @@ export const Envelope = {
 
           message.list_data_socket = ListDataSocket.decode(reader, reader.uint32());
           continue;
+        case 84:
+          if (tag !== 674) {
+            break;
+          }
+
+          message.quick_menu_event = QuickMenuDataEvent.decode(reader, reader.uint32());
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -2768,6 +2788,9 @@ export const Envelope = {
         : undefined,
       mark_as_read: isSet(object.mark_as_read) ? MarkAsRead.fromJSON(object.mark_as_read) : undefined,
       list_data_socket: isSet(object.list_data_socket) ? ListDataSocket.fromJSON(object.list_data_socket) : undefined,
+      quick_menu_event: isSet(object.quick_menu_event)
+        ? QuickMenuDataEvent.fromJSON(object.quick_menu_event)
+        : undefined,
     };
   },
 
@@ -3023,6 +3046,9 @@ export const Envelope = {
     }
     if (message.list_data_socket !== undefined) {
       obj.list_data_socket = ListDataSocket.toJSON(message.list_data_socket);
+    }
+    if (message.quick_menu_event !== undefined) {
+      obj.quick_menu_event = QuickMenuDataEvent.toJSON(message.quick_menu_event);
     }
     return obj;
   },
@@ -3297,6 +3323,9 @@ export const Envelope = {
       : undefined;
     message.list_data_socket = (object.list_data_socket !== undefined && object.list_data_socket !== null)
       ? ListDataSocket.fromPartial(object.list_data_socket)
+      : undefined;
+    message.quick_menu_event = (object.quick_menu_event !== undefined && object.quick_menu_event !== null)
+      ? QuickMenuDataEvent.fromPartial(object.quick_menu_event)
       : undefined;
     return message;
   },
@@ -5327,6 +5356,82 @@ export const EphemeralMessageSend = {
       ? ChannelMessageSend.fromPartial(object.message)
       : undefined;
     message.receiver_id = object.receiver_id ?? "";
+    return message;
+  },
+};
+
+function createBaseQuickMenuDataEvent(): QuickMenuDataEvent {
+  return { menu_name: "", message: undefined };
+}
+
+export const QuickMenuDataEvent = {
+  encode(message: QuickMenuDataEvent, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.menu_name !== "") {
+      writer.uint32(10).string(message.menu_name);
+    }
+    if (message.message !== undefined) {
+      ChannelMessageSend.encode(message.message, writer.uint32(18).fork()).ldelim();
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): QuickMenuDataEvent {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseQuickMenuDataEvent();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.menu_name = reader.string();
+          continue;
+        case 2:
+          if (tag !== 18) {
+            break;
+          }
+
+          message.message = ChannelMessageSend.decode(reader, reader.uint32());
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): QuickMenuDataEvent {
+    return {
+      menu_name: isSet(object.menu_name) ? globalThis.String(object.menu_name) : "",
+      message: isSet(object.message) ? ChannelMessageSend.fromJSON(object.message) : undefined,
+    };
+  },
+
+  toJSON(message: QuickMenuDataEvent): unknown {
+    const obj: any = {};
+    if (message.menu_name !== "") {
+      obj.menu_name = message.menu_name;
+    }
+    if (message.message !== undefined) {
+      obj.message = ChannelMessageSend.toJSON(message.message);
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<QuickMenuDataEvent>, I>>(base?: I): QuickMenuDataEvent {
+    return QuickMenuDataEvent.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<QuickMenuDataEvent>, I>>(object: I): QuickMenuDataEvent {
+    const message = createBaseQuickMenuDataEvent();
+    message.menu_name = object.menu_name ?? "";
+    message.message = (object.message !== undefined && object.message !== null)
+      ? ChannelMessageSend.fromPartial(object.message)
+      : undefined;
     return message;
   },
 };

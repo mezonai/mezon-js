@@ -2700,6 +2700,8 @@ export interface ApiQuickMenuAccess {
   id?: string;
   //
   menu_name?: string;
+  //
+  menu_type?: number;
 }
 
 /**  */
@@ -2724,6 +2726,8 @@ export interface ApiQuickMenuAccessRequest {
   id?: string;
   //
   menu_name?: string;
+  //
+  menu_type?:number;
 }
 
 /**  */
@@ -10918,12 +10922,14 @@ export class MezonApi {
     listQuickMenuAccess(bearerToken: string,
         botId?:string,
         channelId?:string,
+        menuType?:number,
         options: any = {}): Promise<ApiQuickMenuAccessList> {
       
       const urlPath = "/v2/quickmenuaccess";
       const queryParams = new Map<string, any>();
       queryParams.set("bot_id", botId);
       queryParams.set("channel_id", channelId);
+      queryParams.set("menu_type", menuType);
   
       let bodyJson : string = "";
   
