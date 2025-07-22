@@ -3799,16 +3799,6 @@ export interface AccountMezon_VarsEntry {
   value: string;
 }
 
-export interface QuickMenuAccessRequest {
-  id: string;
-  bot_id: string;
-  clan_id: string;
-  channel_id: string;
-  menu_name: string;
-  background: string;
-  action_msg: string;
-}
-
 export interface QuickMenuAccess {
   id: string;
   bot_id: string;
@@ -3817,11 +3807,13 @@ export interface QuickMenuAccess {
   menu_name: string;
   background: string;
   action_msg: string;
+  menu_type: number;
 }
 
 export interface ListQuickMenuAccessRequest {
   bot_id: string;
   channel_id: string;
+  menu_type: number;
 }
 
 export interface QuickMenuAccessList {
@@ -37808,157 +37800,17 @@ export const AccountMezon_VarsEntry = {
   },
 };
 
-function createBaseQuickMenuAccessRequest(): QuickMenuAccessRequest {
-  return { id: "", bot_id: "", clan_id: "", channel_id: "", menu_name: "", background: "", action_msg: "" };
-}
-
-export const QuickMenuAccessRequest = {
-  encode(message: QuickMenuAccessRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.id !== "") {
-      writer.uint32(10).string(message.id);
-    }
-    if (message.bot_id !== "") {
-      writer.uint32(18).string(message.bot_id);
-    }
-    if (message.clan_id !== "") {
-      writer.uint32(26).string(message.clan_id);
-    }
-    if (message.channel_id !== "") {
-      writer.uint32(34).string(message.channel_id);
-    }
-    if (message.menu_name !== "") {
-      writer.uint32(42).string(message.menu_name);
-    }
-    if (message.background !== "") {
-      writer.uint32(50).string(message.background);
-    }
-    if (message.action_msg !== "") {
-      writer.uint32(58).string(message.action_msg);
-    }
-    return writer;
-  },
-
-  decode(input: _m0.Reader | Uint8Array, length?: number): QuickMenuAccessRequest {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseQuickMenuAccessRequest();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
-          if (tag !== 10) {
-            break;
-          }
-
-          message.id = reader.string();
-          continue;
-        case 2:
-          if (tag !== 18) {
-            break;
-          }
-
-          message.bot_id = reader.string();
-          continue;
-        case 3:
-          if (tag !== 26) {
-            break;
-          }
-
-          message.clan_id = reader.string();
-          continue;
-        case 4:
-          if (tag !== 34) {
-            break;
-          }
-
-          message.channel_id = reader.string();
-          continue;
-        case 5:
-          if (tag !== 42) {
-            break;
-          }
-
-          message.menu_name = reader.string();
-          continue;
-        case 6:
-          if (tag !== 50) {
-            break;
-          }
-
-          message.background = reader.string();
-          continue;
-        case 7:
-          if (tag !== 58) {
-            break;
-          }
-
-          message.action_msg = reader.string();
-          continue;
-      }
-      if ((tag & 7) === 4 || tag === 0) {
-        break;
-      }
-      reader.skipType(tag & 7);
-    }
-    return message;
-  },
-
-  fromJSON(object: any): QuickMenuAccessRequest {
-    return {
-      id: isSet(object.id) ? globalThis.String(object.id) : "",
-      bot_id: isSet(object.bot_id) ? globalThis.String(object.bot_id) : "",
-      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
-      channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "",
-      menu_name: isSet(object.menu_name) ? globalThis.String(object.menu_name) : "",
-      background: isSet(object.background) ? globalThis.String(object.background) : "",
-      action_msg: isSet(object.action_msg) ? globalThis.String(object.action_msg) : "",
-    };
-  },
-
-  toJSON(message: QuickMenuAccessRequest): unknown {
-    const obj: any = {};
-    if (message.id !== "") {
-      obj.id = message.id;
-    }
-    if (message.bot_id !== "") {
-      obj.bot_id = message.bot_id;
-    }
-    if (message.clan_id !== "") {
-      obj.clan_id = message.clan_id;
-    }
-    if (message.channel_id !== "") {
-      obj.channel_id = message.channel_id;
-    }
-    if (message.menu_name !== "") {
-      obj.menu_name = message.menu_name;
-    }
-    if (message.background !== "") {
-      obj.background = message.background;
-    }
-    if (message.action_msg !== "") {
-      obj.action_msg = message.action_msg;
-    }
-    return obj;
-  },
-
-  create<I extends Exact<DeepPartial<QuickMenuAccessRequest>, I>>(base?: I): QuickMenuAccessRequest {
-    return QuickMenuAccessRequest.fromPartial(base ?? ({} as any));
-  },
-  fromPartial<I extends Exact<DeepPartial<QuickMenuAccessRequest>, I>>(object: I): QuickMenuAccessRequest {
-    const message = createBaseQuickMenuAccessRequest();
-    message.id = object.id ?? "";
-    message.bot_id = object.bot_id ?? "";
-    message.clan_id = object.clan_id ?? "";
-    message.channel_id = object.channel_id ?? "";
-    message.menu_name = object.menu_name ?? "";
-    message.background = object.background ?? "";
-    message.action_msg = object.action_msg ?? "";
-    return message;
-  },
-};
-
 function createBaseQuickMenuAccess(): QuickMenuAccess {
-  return { id: "", bot_id: "", clan_id: "", channel_id: "", menu_name: "", background: "", action_msg: "" };
+  return {
+    id: "",
+    bot_id: "",
+    clan_id: "",
+    channel_id: "",
+    menu_name: "",
+    background: "",
+    action_msg: "",
+    menu_type: 0,
+  };
 }
 
 export const QuickMenuAccess = {
@@ -37983,6 +37835,9 @@ export const QuickMenuAccess = {
     }
     if (message.action_msg !== "") {
       writer.uint32(58).string(message.action_msg);
+    }
+    if (message.menu_type !== 0) {
+      writer.uint32(64).int32(message.menu_type);
     }
     return writer;
   },
@@ -38043,6 +37898,13 @@ export const QuickMenuAccess = {
 
           message.action_msg = reader.string();
           continue;
+        case 8:
+          if (tag !== 64) {
+            break;
+          }
+
+          message.menu_type = reader.int32();
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -38061,6 +37923,7 @@ export const QuickMenuAccess = {
       menu_name: isSet(object.menu_name) ? globalThis.String(object.menu_name) : "",
       background: isSet(object.background) ? globalThis.String(object.background) : "",
       action_msg: isSet(object.action_msg) ? globalThis.String(object.action_msg) : "",
+      menu_type: isSet(object.menu_type) ? globalThis.Number(object.menu_type) : 0,
     };
   },
 
@@ -38087,6 +37950,9 @@ export const QuickMenuAccess = {
     if (message.action_msg !== "") {
       obj.action_msg = message.action_msg;
     }
+    if (message.menu_type !== 0) {
+      obj.menu_type = Math.round(message.menu_type);
+    }
     return obj;
   },
 
@@ -38102,12 +37968,13 @@ export const QuickMenuAccess = {
     message.menu_name = object.menu_name ?? "";
     message.background = object.background ?? "";
     message.action_msg = object.action_msg ?? "";
+    message.menu_type = object.menu_type ?? 0;
     return message;
   },
 };
 
 function createBaseListQuickMenuAccessRequest(): ListQuickMenuAccessRequest {
-  return { bot_id: "", channel_id: "" };
+  return { bot_id: "", channel_id: "", menu_type: 0 };
 }
 
 export const ListQuickMenuAccessRequest = {
@@ -38117,6 +37984,9 @@ export const ListQuickMenuAccessRequest = {
     }
     if (message.channel_id !== "") {
       writer.uint32(18).string(message.channel_id);
+    }
+    if (message.menu_type !== 0) {
+      writer.uint32(24).int32(message.menu_type);
     }
     return writer;
   },
@@ -38142,6 +38012,13 @@ export const ListQuickMenuAccessRequest = {
 
           message.channel_id = reader.string();
           continue;
+        case 3:
+          if (tag !== 24) {
+            break;
+          }
+
+          message.menu_type = reader.int32();
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -38155,6 +38032,7 @@ export const ListQuickMenuAccessRequest = {
     return {
       bot_id: isSet(object.bot_id) ? globalThis.String(object.bot_id) : "",
       channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "",
+      menu_type: isSet(object.menu_type) ? globalThis.Number(object.menu_type) : 0,
     };
   },
 
@@ -38166,6 +38044,9 @@ export const ListQuickMenuAccessRequest = {
     if (message.channel_id !== "") {
       obj.channel_id = message.channel_id;
     }
+    if (message.menu_type !== 0) {
+      obj.menu_type = Math.round(message.menu_type);
+    }
     return obj;
   },
 
@@ -38176,6 +38057,7 @@ export const ListQuickMenuAccessRequest = {
     const message = createBaseListQuickMenuAccessRequest();
     message.bot_id = object.bot_id ?? "";
     message.channel_id = object.channel_id ?? "";
+    message.menu_type = object.menu_type ?? 0;
     return message;
   },
 };
