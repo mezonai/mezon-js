@@ -1237,6 +1237,8 @@ export interface User {
     | undefined;
   /** Mezone id */
   mezon_id: string;
+  /** list clan nick name */
+  list_nick_names: string[];
 }
 
 /** A list of groups belonging to a user, along with the user's role in each group. */
@@ -2453,6 +2455,8 @@ export interface ClanEmoji {
   logo: string;
   /** clan name */
   clan_name: string;
+  /** is for sale */
+  is_for_sale: boolean;
 }
 
 export interface EmojiListedResponse {
@@ -2474,6 +2478,8 @@ export interface ClanSticker {
   logo: string;
   clan_name: string;
   media_type: number;
+  /** is for sale */
+  is_for_sale: boolean;
 }
 
 export interface AllUsersAddChannelRequest {
@@ -2493,6 +2499,7 @@ export interface ClanEmojiCreateRequest {
   shortname: string;
   category: string;
   id: string;
+  is_for_sale: boolean;
 }
 
 export interface ClanEmojiGetByClanIdRequest {
@@ -2591,11 +2598,13 @@ export interface ClanStickerAddRequest {
   source: string;
   shortname: string;
   category: string;
-  clan_id: number;
+  clan_id: string;
   /** UNIQUE include type number */
   id: string;
   /** media type for image or audio */
   media_type: number;
+  /** is for sale */
+  is_for_sale: boolean;
 }
 
 export interface ClanStickerListByClanIdRequest {
@@ -2720,6 +2729,8 @@ export interface UpdateAppRequest {
   about: string;
   /** App url. */
   app_url: string;
+  /** need update or not */
+  is_shadow: string;
 }
 
 /** The identifier for an app. */
@@ -3310,9 +3321,15 @@ export interface TokenSentEvent {
   transaction_id: string;
 }
 
-export interface WithdrawTokenRequest {
-  /** amount of token */
-  amount: number;
+export interface UnlockItemRequest {
+  /** item id */
+  item_id: string;
+  /** item type */
+  item_type: number;
+}
+
+export interface UnlockedItemResponse {
+  source: string;
 }
 
 export interface ListOnboardingRequest {
@@ -3579,8 +3596,15 @@ export interface WalletLedgerList {
 }
 
 export interface WalletLedgerListReq {
-  limit: number | undefined;
-  cursor: string;
+  limit:
+    | number
+    | undefined;
+  /**
+   * filter = 0 for all
+   * filter = 1 for sent
+   * filter = 2 for recieve
+   */
+  filter: number;
   transaction_id: string;
   page: number | undefined;
 }
@@ -3713,7 +3737,7 @@ export interface MezonOauthClient {
 }
 
 export interface MezonOauthClientList {
-  listMezonOauthClient: MezonOauthClient[];
+  list_mezon_oauth_client: MezonOauthClient[];
 }
 
 export interface GetMezonOauthClientRequest {
@@ -3773,6 +3797,54 @@ export interface AccountMezon {
 export interface AccountMezon_VarsEntry {
   key: string;
   value: string;
+}
+
+export interface QuickMenuAccess {
+  id: string;
+  bot_id: string;
+  clan_id: string;
+  channel_id: string;
+  menu_name: string;
+  background: string;
+  action_msg: string;
+  menu_type: number;
+}
+
+export interface ListQuickMenuAccessRequest {
+  bot_id: string;
+  channel_id: string;
+  menu_type: number;
+}
+
+export interface QuickMenuAccessList {
+  list_menus: QuickMenuAccess[];
+}
+
+export interface ListForSaleItemsRequest {
+  page: number;
+}
+
+export interface ForSaleItem {
+  type: number;
+  preview_url: string;
+}
+
+export interface ForSaleItemList {
+  for_sale_items: ForSaleItem[];
+}
+
+export interface ListChannelMemberRequest {
+  channel_id: string;
+  clan_id: string;
+}
+
+export interface ChannelMemberDetail {
+  member_id: string;
+  added_by: string;
+}
+
+export interface ChannelMemberList {
+  channel_members: ChannelMemberDetail[];
 }
 
 function createBaseAccount(): Account {
@@ -11229,6 +11301,7 @@ function createBaseUser(): User {
     is_mobile: false,
     dob: undefined,
     mezon_id: "",
+    list_nick_names: [],
   };
 }
 
@@ -11299,6 +11372,9 @@ export const User = {
     }
     if (message.mezon_id !== "") {
       writer.uint32(178).string(message.mezon_id);
+    }
+    for (const v of message.list_nick_names) {
+      writer.uint32(186).string(v!);
     }
     return writer;
   },
@@ -11464,6 +11540,13 @@ export const User = {
 
           message.mezon_id = reader.string();
           continue;
+        case 23:
+          if (tag !== 186) {
+            break;
+          }
+
+          message.list_nick_names.push(reader.string());
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -11497,6 +11580,9 @@ export const User = {
       is_mobile: isSet(object.is_mobile) ? globalThis.Boolean(object.is_mobile) : false,
       dob: isSet(object.dob) ? fromJsonTimestamp(object.dob) : undefined,
       mezon_id: isSet(object.mezon_id) ? globalThis.String(object.mezon_id) : "",
+      list_nick_names: globalThis.Array.isArray(object?.list_nick_names)
+        ? object.list_nick_names.map((e: any) => globalThis.String(e))
+        : [],
     };
   },
 
@@ -11568,6 +11654,9 @@ export const User = {
     if (message.mezon_id !== "") {
       obj.mezon_id = message.mezon_id;
     }
+    if (message.list_nick_names?.length) {
+      obj.list_nick_names = message.list_nick_names;
+    }
     return obj;
   },
 
@@ -11598,6 +11687,7 @@ export const User = {
     message.is_mobile = object.is_mobile ?? false;
     message.dob = object.dob ?? undefined;
     message.mezon_id = object.mezon_id ?? "";
+    message.list_nick_names = object.list_nick_names?.map((e) => e) || [];
     return message;
   },
 };
@@ -22666,7 +22756,17 @@ export const RegistrationEmailRequest_VarsEntry = {
 };
 
 function createBaseClanEmoji(): ClanEmoji {
-  return { id: "", src: "", shortname: "", category: "", creator_id: "", clan_id: "", logo: "", clan_name: "" };
+  return {
+    id: "",
+    src: "",
+    shortname: "",
+    category: "",
+    creator_id: "",
+    clan_id: "",
+    logo: "",
+    clan_name: "",
+    is_for_sale: false,
+  };
 }
 
 export const ClanEmoji = {
@@ -22694,6 +22794,9 @@ export const ClanEmoji = {
     }
     if (message.clan_name !== "") {
       writer.uint32(66).string(message.clan_name);
+    }
+    if (message.is_for_sale !== false) {
+      writer.uint32(72).bool(message.is_for_sale);
     }
     return writer;
   },
@@ -22761,6 +22864,13 @@ export const ClanEmoji = {
 
           message.clan_name = reader.string();
           continue;
+        case 9:
+          if (tag !== 72) {
+            break;
+          }
+
+          message.is_for_sale = reader.bool();
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -22780,6 +22890,7 @@ export const ClanEmoji = {
       clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
       logo: isSet(object.logo) ? globalThis.String(object.logo) : "",
       clan_name: isSet(object.clan_name) ? globalThis.String(object.clan_name) : "",
+      is_for_sale: isSet(object.is_for_sale) ? globalThis.Boolean(object.is_for_sale) : false,
     };
   },
 
@@ -22809,6 +22920,9 @@ export const ClanEmoji = {
     if (message.clan_name !== "") {
       obj.clan_name = message.clan_name;
     }
+    if (message.is_for_sale !== false) {
+      obj.is_for_sale = message.is_for_sale;
+    }
     return obj;
   },
 
@@ -22825,6 +22939,7 @@ export const ClanEmoji = {
     message.clan_id = object.clan_id ?? "";
     message.logo = object.logo ?? "";
     message.clan_name = object.clan_name ?? "";
+    message.is_for_sale = object.is_for_sale ?? false;
     return message;
   },
 };
@@ -22963,6 +23078,7 @@ function createBaseClanSticker(): ClanSticker {
     logo: "",
     clan_name: "",
     media_type: 0,
+    is_for_sale: false,
   };
 }
 
@@ -22997,6 +23113,9 @@ export const ClanSticker = {
     }
     if (message.media_type !== 0) {
       writer.uint32(80).int32(message.media_type);
+    }
+    if (message.is_for_sale !== false) {
+      writer.uint32(88).bool(message.is_for_sale);
     }
     return writer;
   },
@@ -23078,6 +23197,13 @@ export const ClanSticker = {
 
           message.media_type = reader.int32();
           continue;
+        case 11:
+          if (tag !== 88) {
+            break;
+          }
+
+          message.is_for_sale = reader.bool();
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -23099,6 +23225,7 @@ export const ClanSticker = {
       logo: isSet(object.logo) ? globalThis.String(object.logo) : "",
       clan_name: isSet(object.clan_name) ? globalThis.String(object.clan_name) : "",
       media_type: isSet(object.media_type) ? globalThis.Number(object.media_type) : 0,
+      is_for_sale: isSet(object.is_for_sale) ? globalThis.Boolean(object.is_for_sale) : false,
     };
   },
 
@@ -23134,6 +23261,9 @@ export const ClanSticker = {
     if (message.media_type !== 0) {
       obj.media_type = Math.round(message.media_type);
     }
+    if (message.is_for_sale !== false) {
+      obj.is_for_sale = message.is_for_sale;
+    }
     return obj;
   },
 
@@ -23152,6 +23282,7 @@ export const ClanSticker = {
     message.logo = object.logo ?? "";
     message.clan_name = object.clan_name ?? "";
     message.media_type = object.media_type ?? 0;
+    message.is_for_sale = object.is_for_sale ?? false;
     return message;
   },
 };
@@ -23320,7 +23451,7 @@ export const AllUsersAddChannelResponse = {
 };
 
 function createBaseClanEmojiCreateRequest(): ClanEmojiCreateRequest {
-  return { clan_id: "", source: "", shortname: "", category: "", id: "" };
+  return { clan_id: "", source: "", shortname: "", category: "", id: "", is_for_sale: false };
 }
 
 export const ClanEmojiCreateRequest = {
@@ -23339,6 +23470,9 @@ export const ClanEmojiCreateRequest = {
     }
     if (message.id !== "") {
       writer.uint32(42).string(message.id);
+    }
+    if (message.is_for_sale !== false) {
+      writer.uint32(48).bool(message.is_for_sale);
     }
     return writer;
   },
@@ -23385,6 +23519,13 @@ export const ClanEmojiCreateRequest = {
 
           message.id = reader.string();
           continue;
+        case 6:
+          if (tag !== 48) {
+            break;
+          }
+
+          message.is_for_sale = reader.bool();
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -23401,6 +23542,7 @@ export const ClanEmojiCreateRequest = {
       shortname: isSet(object.shortname) ? globalThis.String(object.shortname) : "",
       category: isSet(object.category) ? globalThis.String(object.category) : "",
       id: isSet(object.id) ? globalThis.String(object.id) : "",
+      is_for_sale: isSet(object.is_for_sale) ? globalThis.Boolean(object.is_for_sale) : false,
     };
   },
 
@@ -23421,6 +23563,9 @@ export const ClanEmojiCreateRequest = {
     if (message.id !== "") {
       obj.id = message.id;
     }
+    if (message.is_for_sale !== false) {
+      obj.is_for_sale = message.is_for_sale;
+    }
     return obj;
   },
 
@@ -23434,6 +23579,7 @@ export const ClanEmojiCreateRequest = {
     message.shortname = object.shortname ?? "";
     message.category = object.category ?? "";
     message.id = object.id ?? "";
+    message.is_for_sale = object.is_for_sale ?? false;
     return message;
   },
 };
@@ -24707,7 +24853,7 @@ export const CheckDuplicateClanNameResponse = {
 };
 
 function createBaseClanStickerAddRequest(): ClanStickerAddRequest {
-  return { source: "", shortname: "", category: "", clan_id: 0, id: "", media_type: 0 };
+  return { source: "", shortname: "", category: "", clan_id: "", id: "", media_type: 0, is_for_sale: false };
 }
 
 export const ClanStickerAddRequest = {
@@ -24721,14 +24867,17 @@ export const ClanStickerAddRequest = {
     if (message.category !== "") {
       writer.uint32(26).string(message.category);
     }
-    if (message.clan_id !== 0) {
-      writer.uint32(32).int64(message.clan_id);
+    if (message.clan_id !== "") {
+      writer.uint32(34).string(message.clan_id);
     }
     if (message.id !== "") {
       writer.uint32(42).string(message.id);
     }
     if (message.media_type !== 0) {
       writer.uint32(48).int32(message.media_type);
+    }
+    if (message.is_for_sale !== false) {
+      writer.uint32(56).bool(message.is_for_sale);
     }
     return writer;
   },
@@ -24762,11 +24911,11 @@ export const ClanStickerAddRequest = {
           message.category = reader.string();
           continue;
         case 4:
-          if (tag !== 32) {
+          if (tag !== 34) {
             break;
           }
 
-          message.clan_id = longToNumber(reader.int64() as Long);
+          message.clan_id = reader.string();
           continue;
         case 5:
           if (tag !== 42) {
@@ -24782,6 +24931,13 @@ export const ClanStickerAddRequest = {
 
           message.media_type = reader.int32();
           continue;
+        case 7:
+          if (tag !== 56) {
+            break;
+          }
+
+          message.is_for_sale = reader.bool();
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -24796,9 +24952,10 @@ export const ClanStickerAddRequest = {
       source: isSet(object.source) ? globalThis.String(object.source) : "",
       shortname: isSet(object.shortname) ? globalThis.String(object.shortname) : "",
       category: isSet(object.category) ? globalThis.String(object.category) : "",
-      clan_id: isSet(object.clan_id) ? globalThis.Number(object.clan_id) : 0,
+      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
       id: isSet(object.id) ? globalThis.String(object.id) : "",
       media_type: isSet(object.media_type) ? globalThis.Number(object.media_type) : 0,
+      is_for_sale: isSet(object.is_for_sale) ? globalThis.Boolean(object.is_for_sale) : false,
     };
   },
 
@@ -24813,14 +24970,17 @@ export const ClanStickerAddRequest = {
     if (message.category !== "") {
       obj.category = message.category;
     }
-    if (message.clan_id !== 0) {
-      obj.clan_id = Math.round(message.clan_id);
+    if (message.clan_id !== "") {
+      obj.clan_id = message.clan_id;
     }
     if (message.id !== "") {
       obj.id = message.id;
     }
     if (message.media_type !== 0) {
       obj.media_type = Math.round(message.media_type);
+    }
+    if (message.is_for_sale !== false) {
+      obj.is_for_sale = message.is_for_sale;
     }
     return obj;
   },
@@ -24833,9 +24993,10 @@ export const ClanStickerAddRequest = {
     message.source = object.source ?? "";
     message.shortname = object.shortname ?? "";
     message.category = object.category ?? "";
-    message.clan_id = object.clan_id ?? 0;
+    message.clan_id = object.clan_id ?? "";
     message.id = object.id ?? "";
     message.media_type = object.media_type ?? 0;
+    message.is_for_sale = object.is_for_sale ?? false;
     return message;
   },
 };
@@ -25826,6 +25987,7 @@ function createBaseUpdateAppRequest(): UpdateAppRequest {
     token: undefined,
     about: "",
     app_url: "",
+    is_shadow: "",
   };
 }
 
@@ -25851,6 +26013,9 @@ export const UpdateAppRequest = {
     }
     if (message.app_url !== "") {
       writer.uint32(58).string(message.app_url);
+    }
+    if (message.is_shadow !== "") {
+      writer.uint32(74).string(message.is_shadow);
     }
     return writer;
   },
@@ -25911,6 +26076,13 @@ export const UpdateAppRequest = {
 
           message.app_url = reader.string();
           continue;
+        case 9:
+          if (tag !== 74) {
+            break;
+          }
+
+          message.is_shadow = reader.string();
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -25929,6 +26101,7 @@ export const UpdateAppRequest = {
       token: isSet(object.token) ? String(object.token) : undefined,
       about: isSet(object.about) ? globalThis.String(object.about) : "",
       app_url: isSet(object.app_url) ? globalThis.String(object.app_url) : "",
+      is_shadow: isSet(object.is_shadow) ? globalThis.String(object.is_shadow) : "",
     };
   },
 
@@ -25955,6 +26128,9 @@ export const UpdateAppRequest = {
     if (message.app_url !== "") {
       obj.app_url = message.app_url;
     }
+    if (message.is_shadow !== "") {
+      obj.is_shadow = message.is_shadow;
+    }
     return obj;
   },
 
@@ -25970,6 +26146,7 @@ export const UpdateAppRequest = {
     message.token = object.token ?? undefined;
     message.about = object.about ?? "";
     message.app_url = object.app_url ?? "";
+    message.is_shadow = object.is_shadow ?? "";
     return message;
   },
 };
@@ -31986,31 +32163,41 @@ export const TokenSentEvent = {
   },
 };
 
-function createBaseWithdrawTokenRequest(): WithdrawTokenRequest {
-  return { amount: 0 };
+function createBaseUnlockItemRequest(): UnlockItemRequest {
+  return { item_id: "", item_type: 0 };
 }
 
-export const WithdrawTokenRequest = {
-  encode(message: WithdrawTokenRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.amount !== 0) {
-      writer.uint32(8).int32(message.amount);
+export const UnlockItemRequest = {
+  encode(message: UnlockItemRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.item_id !== "") {
+      writer.uint32(10).string(message.item_id);
+    }
+    if (message.item_type !== 0) {
+      writer.uint32(16).int32(message.item_type);
     }
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): WithdrawTokenRequest {
+  decode(input: _m0.Reader | Uint8Array, length?: number): UnlockItemRequest {
     const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseWithdrawTokenRequest();
+    const message = createBaseUnlockItemRequest();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 8) {
+          if (tag !== 10) {
             break;
           }
 
-          message.amount = reader.int32();
+          message.item_id = reader.string();
+          continue;
+        case 2:
+          if (tag !== 16) {
+            break;
+          }
+
+          message.item_type = reader.int32();
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -32021,24 +32208,88 @@ export const WithdrawTokenRequest = {
     return message;
   },
 
-  fromJSON(object: any): WithdrawTokenRequest {
-    return { amount: isSet(object.amount) ? globalThis.Number(object.amount) : 0 };
+  fromJSON(object: any): UnlockItemRequest {
+    return {
+      item_id: isSet(object.item_id) ? globalThis.String(object.item_id) : "",
+      item_type: isSet(object.item_type) ? globalThis.Number(object.item_type) : 0,
+    };
   },
 
-  toJSON(message: WithdrawTokenRequest): unknown {
+  toJSON(message: UnlockItemRequest): unknown {
     const obj: any = {};
-    if (message.amount !== 0) {
-      obj.amount = Math.round(message.amount);
+    if (message.item_id !== "") {
+      obj.item_id = message.item_id;
+    }
+    if (message.item_type !== 0) {
+      obj.item_type = Math.round(message.item_type);
     }
     return obj;
   },
 
-  create<I extends Exact<DeepPartial<WithdrawTokenRequest>, I>>(base?: I): WithdrawTokenRequest {
-    return WithdrawTokenRequest.fromPartial(base ?? ({} as any));
+  create<I extends Exact<DeepPartial<UnlockItemRequest>, I>>(base?: I): UnlockItemRequest {
+    return UnlockItemRequest.fromPartial(base ?? ({} as any));
   },
-  fromPartial<I extends Exact<DeepPartial<WithdrawTokenRequest>, I>>(object: I): WithdrawTokenRequest {
-    const message = createBaseWithdrawTokenRequest();
-    message.amount = object.amount ?? 0;
+  fromPartial<I extends Exact<DeepPartial<UnlockItemRequest>, I>>(object: I): UnlockItemRequest {
+    const message = createBaseUnlockItemRequest();
+    message.item_id = object.item_id ?? "";
+    message.item_type = object.item_type ?? 0;
+    return message;
+  },
+};
+
+function createBaseUnlockedItemResponse(): UnlockedItemResponse {
+  return { source: "" };
+}
+
+export const UnlockedItemResponse = {
+  encode(message: UnlockedItemResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.source !== "") {
+      writer.uint32(10).string(message.source);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): UnlockedItemResponse {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseUnlockedItemResponse();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.source = reader.string();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): UnlockedItemResponse {
+    return { source: isSet(object.source) ? globalThis.String(object.source) : "" };
+  },
+
+  toJSON(message: UnlockedItemResponse): unknown {
+    const obj: any = {};
+    if (message.source !== "") {
+      obj.source = message.source;
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<UnlockedItemResponse>, I>>(base?: I): UnlockedItemResponse {
+    return UnlockedItemResponse.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<UnlockedItemResponse>, I>>(object: I): UnlockedItemResponse {
+    const message = createBaseUnlockedItemResponse();
+    message.source = object.source ?? "";
     return message;
   },
 };
@@ -34558,7 +34809,7 @@ export const WalletLedgerList = {
 };
 
 function createBaseWalletLedgerListReq(): WalletLedgerListReq {
-  return { limit: undefined, cursor: "", transaction_id: "", page: undefined };
+  return { limit: undefined, filter: 0, transaction_id: "", page: undefined };
 }
 
 export const WalletLedgerListReq = {
@@ -34566,8 +34817,8 @@ export const WalletLedgerListReq = {
     if (message.limit !== undefined) {
       Int32Value.encode({ value: message.limit! }, writer.uint32(10).fork()).ldelim();
     }
-    if (message.cursor !== "") {
-      writer.uint32(18).string(message.cursor);
+    if (message.filter !== 0) {
+      writer.uint32(16).int32(message.filter);
     }
     if (message.transaction_id !== "") {
       writer.uint32(26).string(message.transaction_id);
@@ -34593,11 +34844,11 @@ export const WalletLedgerListReq = {
           message.limit = Int32Value.decode(reader, reader.uint32()).value;
           continue;
         case 2:
-          if (tag !== 18) {
+          if (tag !== 16) {
             break;
           }
 
-          message.cursor = reader.string();
+          message.filter = reader.int32();
           continue;
         case 3:
           if (tag !== 26) {
@@ -34625,7 +34876,7 @@ export const WalletLedgerListReq = {
   fromJSON(object: any): WalletLedgerListReq {
     return {
       limit: isSet(object.limit) ? Number(object.limit) : undefined,
-      cursor: isSet(object.cursor) ? globalThis.String(object.cursor) : "",
+      filter: isSet(object.filter) ? globalThis.Number(object.filter) : 0,
       transaction_id: isSet(object.transaction_id) ? globalThis.String(object.transaction_id) : "",
       page: isSet(object.page) ? Number(object.page) : undefined,
     };
@@ -34636,8 +34887,8 @@ export const WalletLedgerListReq = {
     if (message.limit !== undefined) {
       obj.limit = message.limit;
     }
-    if (message.cursor !== "") {
-      obj.cursor = message.cursor;
+    if (message.filter !== 0) {
+      obj.filter = Math.round(message.filter);
     }
     if (message.transaction_id !== "") {
       obj.transaction_id = message.transaction_id;
@@ -34654,7 +34905,7 @@ export const WalletLedgerListReq = {
   fromPartial<I extends Exact<DeepPartial<WalletLedgerListReq>, I>>(object: I): WalletLedgerListReq {
     const message = createBaseWalletLedgerListReq();
     message.limit = object.limit ?? undefined;
-    message.cursor = object.cursor ?? "";
+    message.filter = object.filter ?? 0;
     message.transaction_id = object.transaction_id ?? "";
     message.page = object.page ?? undefined;
     return message;
@@ -36684,12 +36935,12 @@ export const MezonOauthClient = {
 };
 
 function createBaseMezonOauthClientList(): MezonOauthClientList {
-  return { listMezonOauthClient: [] };
+  return { list_mezon_oauth_client: [] };
 }
 
 export const MezonOauthClientList = {
   encode(message: MezonOauthClientList, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    for (const v of message.listMezonOauthClient) {
+    for (const v of message.list_mezon_oauth_client) {
       MezonOauthClient.encode(v!, writer.uint32(10).fork()).ldelim();
     }
     return writer;
@@ -36707,7 +36958,7 @@ export const MezonOauthClientList = {
             break;
           }
 
-          message.listMezonOauthClient.push(MezonOauthClient.decode(reader, reader.uint32()));
+          message.list_mezon_oauth_client.push(MezonOauthClient.decode(reader, reader.uint32()));
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -36720,16 +36971,16 @@ export const MezonOauthClientList = {
 
   fromJSON(object: any): MezonOauthClientList {
     return {
-      listMezonOauthClient: globalThis.Array.isArray(object?.listMezonOauthClient)
-        ? object.listMezonOauthClient.map((e: any) => MezonOauthClient.fromJSON(e))
+      list_mezon_oauth_client: globalThis.Array.isArray(object?.list_mezon_oauth_client)
+        ? object.list_mezon_oauth_client.map((e: any) => MezonOauthClient.fromJSON(e))
         : [],
     };
   },
 
   toJSON(message: MezonOauthClientList): unknown {
     const obj: any = {};
-    if (message.listMezonOauthClient?.length) {
-      obj.listMezonOauthClient = message.listMezonOauthClient.map((e) => MezonOauthClient.toJSON(e));
+    if (message.list_mezon_oauth_client?.length) {
+      obj.list_mezon_oauth_client = message.list_mezon_oauth_client.map((e) => MezonOauthClient.toJSON(e));
     }
     return obj;
   },
@@ -36739,7 +36990,7 @@ export const MezonOauthClientList = {
   },
   fromPartial<I extends Exact<DeepPartial<MezonOauthClientList>, I>>(object: I): MezonOauthClientList {
     const message = createBaseMezonOauthClientList();
-    message.listMezonOauthClient = object.listMezonOauthClient?.map((e) => MezonOauthClient.fromPartial(e)) || [];
+    message.list_mezon_oauth_client = object.list_mezon_oauth_client?.map((e) => MezonOauthClient.fromPartial(e)) || [];
     return message;
   },
 };
@@ -37559,6 +37810,730 @@ export const AccountMezon_VarsEntry = {
     const message = createBaseAccountMezon_VarsEntry();
     message.key = object.key ?? "";
     message.value = object.value ?? "";
+    return message;
+  },
+};
+
+function createBaseQuickMenuAccess(): QuickMenuAccess {
+  return {
+    id: "",
+    bot_id: "",
+    clan_id: "",
+    channel_id: "",
+    menu_name: "",
+    background: "",
+    action_msg: "",
+    menu_type: 0,
+  };
+}
+
+export const QuickMenuAccess = {
+  encode(message: QuickMenuAccess, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.id !== "") {
+      writer.uint32(10).string(message.id);
+    }
+    if (message.bot_id !== "") {
+      writer.uint32(18).string(message.bot_id);
+    }
+    if (message.clan_id !== "") {
+      writer.uint32(26).string(message.clan_id);
+    }
+    if (message.channel_id !== "") {
+      writer.uint32(34).string(message.channel_id);
+    }
+    if (message.menu_name !== "") {
+      writer.uint32(42).string(message.menu_name);
+    }
+    if (message.background !== "") {
+      writer.uint32(50).string(message.background);
+    }
+    if (message.action_msg !== "") {
+      writer.uint32(58).string(message.action_msg);
+    }
+    if (message.menu_type !== 0) {
+      writer.uint32(64).int32(message.menu_type);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): QuickMenuAccess {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseQuickMenuAccess();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.id = reader.string();
+          continue;
+        case 2:
+          if (tag !== 18) {
+            break;
+          }
+
+          message.bot_id = reader.string();
+          continue;
+        case 3:
+          if (tag !== 26) {
+            break;
+          }
+
+          message.clan_id = reader.string();
+          continue;
+        case 4:
+          if (tag !== 34) {
+            break;
+          }
+
+          message.channel_id = reader.string();
+          continue;
+        case 5:
+          if (tag !== 42) {
+            break;
+          }
+
+          message.menu_name = reader.string();
+          continue;
+        case 6:
+          if (tag !== 50) {
+            break;
+          }
+
+          message.background = reader.string();
+          continue;
+        case 7:
+          if (tag !== 58) {
+            break;
+          }
+
+          message.action_msg = reader.string();
+          continue;
+        case 8:
+          if (tag !== 64) {
+            break;
+          }
+
+          message.menu_type = reader.int32();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): QuickMenuAccess {
+    return {
+      id: isSet(object.id) ? globalThis.String(object.id) : "",
+      bot_id: isSet(object.bot_id) ? globalThis.String(object.bot_id) : "",
+      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
+      channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "",
+      menu_name: isSet(object.menu_name) ? globalThis.String(object.menu_name) : "",
+      background: isSet(object.background) ? globalThis.String(object.background) : "",
+      action_msg: isSet(object.action_msg) ? globalThis.String(object.action_msg) : "",
+      menu_type: isSet(object.menu_type) ? globalThis.Number(object.menu_type) : 0,
+    };
+  },
+
+  toJSON(message: QuickMenuAccess): unknown {
+    const obj: any = {};
+    if (message.id !== "") {
+      obj.id = message.id;
+    }
+    if (message.bot_id !== "") {
+      obj.bot_id = message.bot_id;
+    }
+    if (message.clan_id !== "") {
+      obj.clan_id = message.clan_id;
+    }
+    if (message.channel_id !== "") {
+      obj.channel_id = message.channel_id;
+    }
+    if (message.menu_name !== "") {
+      obj.menu_name = message.menu_name;
+    }
+    if (message.background !== "") {
+      obj.background = message.background;
+    }
+    if (message.action_msg !== "") {
+      obj.action_msg = message.action_msg;
+    }
+    if (message.menu_type !== 0) {
+      obj.menu_type = Math.round(message.menu_type);
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<QuickMenuAccess>, I>>(base?: I): QuickMenuAccess {
+    return QuickMenuAccess.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<QuickMenuAccess>, I>>(object: I): QuickMenuAccess {
+    const message = createBaseQuickMenuAccess();
+    message.id = object.id ?? "";
+    message.bot_id = object.bot_id ?? "";
+    message.clan_id = object.clan_id ?? "";
+    message.channel_id = object.channel_id ?? "";
+    message.menu_name = object.menu_name ?? "";
+    message.background = object.background ?? "";
+    message.action_msg = object.action_msg ?? "";
+    message.menu_type = object.menu_type ?? 0;
+    return message;
+  },
+};
+
+function createBaseListQuickMenuAccessRequest(): ListQuickMenuAccessRequest {
+  return { bot_id: "", channel_id: "", menu_type: 0 };
+}
+
+export const ListQuickMenuAccessRequest = {
+  encode(message: ListQuickMenuAccessRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.bot_id !== "") {
+      writer.uint32(10).string(message.bot_id);
+    }
+    if (message.channel_id !== "") {
+      writer.uint32(18).string(message.channel_id);
+    }
+    if (message.menu_type !== 0) {
+      writer.uint32(24).int32(message.menu_type);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): ListQuickMenuAccessRequest {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseListQuickMenuAccessRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.bot_id = reader.string();
+          continue;
+        case 2:
+          if (tag !== 18) {
+            break;
+          }
+
+          message.channel_id = reader.string();
+          continue;
+        case 3:
+          if (tag !== 24) {
+            break;
+          }
+
+          message.menu_type = reader.int32();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): ListQuickMenuAccessRequest {
+    return {
+      bot_id: isSet(object.bot_id) ? globalThis.String(object.bot_id) : "",
+      channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "",
+      menu_type: isSet(object.menu_type) ? globalThis.Number(object.menu_type) : 0,
+    };
+  },
+
+  toJSON(message: ListQuickMenuAccessRequest): unknown {
+    const obj: any = {};
+    if (message.bot_id !== "") {
+      obj.bot_id = message.bot_id;
+    }
+    if (message.channel_id !== "") {
+      obj.channel_id = message.channel_id;
+    }
+    if (message.menu_type !== 0) {
+      obj.menu_type = Math.round(message.menu_type);
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<ListQuickMenuAccessRequest>, I>>(base?: I): ListQuickMenuAccessRequest {
+    return ListQuickMenuAccessRequest.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<ListQuickMenuAccessRequest>, I>>(object: I): ListQuickMenuAccessRequest {
+    const message = createBaseListQuickMenuAccessRequest();
+    message.bot_id = object.bot_id ?? "";
+    message.channel_id = object.channel_id ?? "";
+    message.menu_type = object.menu_type ?? 0;
+    return message;
+  },
+};
+
+function createBaseQuickMenuAccessList(): QuickMenuAccessList {
+  return { list_menus: [] };
+}
+
+export const QuickMenuAccessList = {
+  encode(message: QuickMenuAccessList, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    for (const v of message.list_menus) {
+      QuickMenuAccess.encode(v!, writer.uint32(10).fork()).ldelim();
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): QuickMenuAccessList {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseQuickMenuAccessList();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.list_menus.push(QuickMenuAccess.decode(reader, reader.uint32()));
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): QuickMenuAccessList {
+    return {
+      list_menus: globalThis.Array.isArray(object?.list_menus)
+        ? object.list_menus.map((e: any) => QuickMenuAccess.fromJSON(e))
+        : [],
+    };
+  },
+
+  toJSON(message: QuickMenuAccessList): unknown {
+    const obj: any = {};
+    if (message.list_menus?.length) {
+      obj.list_menus = message.list_menus.map((e) => QuickMenuAccess.toJSON(e));
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<QuickMenuAccessList>, I>>(base?: I): QuickMenuAccessList {
+    return QuickMenuAccessList.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<QuickMenuAccessList>, I>>(object: I): QuickMenuAccessList {
+    const message = createBaseQuickMenuAccessList();
+    message.list_menus = object.list_menus?.map((e) => QuickMenuAccess.fromPartial(e)) || [];
+    return message;
+  },
+};
+
+function createBaseListForSaleItemsRequest(): ListForSaleItemsRequest {
+  return { page: 0 };
+}
+
+export const ListForSaleItemsRequest = {
+  encode(message: ListForSaleItemsRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.page !== 0) {
+      writer.uint32(8).int32(message.page);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): ListForSaleItemsRequest {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseListForSaleItemsRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 8) {
+            break;
+          }
+
+          message.page = reader.int32();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): ListForSaleItemsRequest {
+    return { page: isSet(object.page) ? globalThis.Number(object.page) : 0 };
+  },
+
+  toJSON(message: ListForSaleItemsRequest): unknown {
+    const obj: any = {};
+    if (message.page !== 0) {
+      obj.page = Math.round(message.page);
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<ListForSaleItemsRequest>, I>>(base?: I): ListForSaleItemsRequest {
+    return ListForSaleItemsRequest.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<ListForSaleItemsRequest>, I>>(object: I): ListForSaleItemsRequest {
+    const message = createBaseListForSaleItemsRequest();
+    message.page = object.page ?? 0;
+    return message;
+  },
+};
+
+function createBaseForSaleItem(): ForSaleItem {
+  return { type: 0, preview_url: "" };
+}
+
+export const ForSaleItem = {
+  encode(message: ForSaleItem, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.type !== 0) {
+      writer.uint32(8).int32(message.type);
+    }
+    if (message.preview_url !== "") {
+      writer.uint32(18).string(message.preview_url);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): ForSaleItem {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseForSaleItem();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 8) {
+            break;
+          }
+
+          message.type = reader.int32();
+          continue;
+        case 2:
+          if (tag !== 18) {
+            break;
+          }
+
+          message.preview_url = reader.string();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): ForSaleItem {
+    return {
+      type: isSet(object.type) ? globalThis.Number(object.type) : 0,
+      preview_url: isSet(object.preview_url) ? globalThis.String(object.preview_url) : "",
+    };
+  },
+
+  toJSON(message: ForSaleItem): unknown {
+    const obj: any = {};
+    if (message.type !== 0) {
+      obj.type = Math.round(message.type);
+    }
+    if (message.preview_url !== "") {
+      obj.preview_url = message.preview_url;
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<ForSaleItem>, I>>(base?: I): ForSaleItem {
+    return ForSaleItem.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<ForSaleItem>, I>>(object: I): ForSaleItem {
+    const message = createBaseForSaleItem();
+    message.type = object.type ?? 0;
+    message.preview_url = object.preview_url ?? "";
+    return message;
+  },
+};
+
+function createBaseForSaleItemList(): ForSaleItemList {
+  return { for_sale_items: [] };
+}
+
+export const ForSaleItemList = {
+  encode(message: ForSaleItemList, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    for (const v of message.for_sale_items) {
+      ForSaleItem.encode(v!, writer.uint32(10).fork()).ldelim();
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): ForSaleItemList {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseForSaleItemList();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.for_sale_items.push(ForSaleItem.decode(reader, reader.uint32()));
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): ForSaleItemList {
+    return {
+      for_sale_items: globalThis.Array.isArray(object?.for_sale_items)
+        ? object.for_sale_items.map((e: any) => ForSaleItem.fromJSON(e))
+        : [],
+    };
+  },
+
+  toJSON(message: ForSaleItemList): unknown {
+    const obj: any = {};
+    if (message.for_sale_items?.length) {
+      obj.for_sale_items = message.for_sale_items.map((e) => ForSaleItem.toJSON(e));
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<ForSaleItemList>, I>>(base?: I): ForSaleItemList {
+    return ForSaleItemList.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<ForSaleItemList>, I>>(object: I): ForSaleItemList {
+    const message = createBaseForSaleItemList();
+    message.for_sale_items = object.for_sale_items?.map((e) => ForSaleItem.fromPartial(e)) || [];
+    return message;
+  },
+};
+
+function createBaseListChannelMemberRequest(): ListChannelMemberRequest {
+  return { channel_id: "", clan_id: "" };
+}
+
+export const ListChannelMemberRequest = {
+  encode(message: ListChannelMemberRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.channel_id !== "") {
+      writer.uint32(10).string(message.channel_id);
+    }
+    if (message.clan_id !== "") {
+      writer.uint32(18).string(message.clan_id);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): ListChannelMemberRequest {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseListChannelMemberRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.channel_id = reader.string();
+          continue;
+        case 2:
+          if (tag !== 18) {
+            break;
+          }
+
+          message.clan_id = reader.string();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): ListChannelMemberRequest {
+    return {
+      channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "",
+      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
+    };
+  },
+
+  toJSON(message: ListChannelMemberRequest): unknown {
+    const obj: any = {};
+    if (message.channel_id !== "") {
+      obj.channel_id = message.channel_id;
+    }
+    if (message.clan_id !== "") {
+      obj.clan_id = message.clan_id;
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<ListChannelMemberRequest>, I>>(base?: I): ListChannelMemberRequest {
+    return ListChannelMemberRequest.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<ListChannelMemberRequest>, I>>(object: I): ListChannelMemberRequest {
+    const message = createBaseListChannelMemberRequest();
+    message.channel_id = object.channel_id ?? "";
+    message.clan_id = object.clan_id ?? "";
+    return message;
+  },
+};
+
+function createBaseChannelMemberDetail(): ChannelMemberDetail {
+  return { member_id: "", added_by: "" };
+}
+
+export const ChannelMemberDetail = {
+  encode(message: ChannelMemberDetail, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.member_id !== "") {
+      writer.uint32(10).string(message.member_id);
+    }
+    if (message.added_by !== "") {
+      writer.uint32(18).string(message.added_by);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): ChannelMemberDetail {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseChannelMemberDetail();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.member_id = reader.string();
+          continue;
+        case 2:
+          if (tag !== 18) {
+            break;
+          }
+
+          message.added_by = reader.string();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): ChannelMemberDetail {
+    return {
+      member_id: isSet(object.member_id) ? globalThis.String(object.member_id) : "",
+      added_by: isSet(object.added_by) ? globalThis.String(object.added_by) : "",
+    };
+  },
+
+  toJSON(message: ChannelMemberDetail): unknown {
+    const obj: any = {};
+    if (message.member_id !== "") {
+      obj.member_id = message.member_id;
+    }
+    if (message.added_by !== "") {
+      obj.added_by = message.added_by;
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<ChannelMemberDetail>, I>>(base?: I): ChannelMemberDetail {
+    return ChannelMemberDetail.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<ChannelMemberDetail>, I>>(object: I): ChannelMemberDetail {
+    const message = createBaseChannelMemberDetail();
+    message.member_id = object.member_id ?? "";
+    message.added_by = object.added_by ?? "";
+    return message;
+  },
+};
+
+function createBaseChannelMemberList(): ChannelMemberList {
+  return { channel_members: [] };
+}
+
+export const ChannelMemberList = {
+  encode(message: ChannelMemberList, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    for (const v of message.channel_members) {
+      ChannelMemberDetail.encode(v!, writer.uint32(10).fork()).ldelim();
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): ChannelMemberList {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseChannelMemberList();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.channel_members.push(ChannelMemberDetail.decode(reader, reader.uint32()));
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): ChannelMemberList {
+    return {
+      channel_members: globalThis.Array.isArray(object?.channel_members)
+        ? object.channel_members.map((e: any) => ChannelMemberDetail.fromJSON(e))
+        : [],
+    };
+  },
+
+  toJSON(message: ChannelMemberList): unknown {
+    const obj: any = {};
+    if (message.channel_members?.length) {
+      obj.channel_members = message.channel_members.map((e) => ChannelMemberDetail.toJSON(e));
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<ChannelMemberList>, I>>(base?: I): ChannelMemberList {
+    return ChannelMemberList.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<ChannelMemberList>, I>>(object: I): ChannelMemberList {
+    const message = createBaseChannelMemberList();
+    message.channel_members = object.channel_members?.map((e) => ChannelMemberDetail.fromPartial(e)) || [];
     return message;
   },
 };
