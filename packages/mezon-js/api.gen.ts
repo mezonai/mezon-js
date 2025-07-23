@@ -3289,6 +3289,21 @@ export interface ApiClanDiscoverRequest {
   page_number?: number;
 }
 
+/**  */
+export interface ApiChannelMemberDetail {
+  //
+  added_by?: string;
+  //
+  member_id?: string;
+}
+
+/**  */
+export interface ApiChannelMemberList {
+  //
+  channel_members?: Array<ApiChannelMemberDetail>;
+}
+
+
 export class MezonApi {
   basePath: string;
   constructor(
@@ -11071,6 +11086,41 @@ export class MezonApi {
       const urlPath = "/v2/forsale";
       const queryParams = new Map<string, any>();
       queryParams.set("page", page);
+  
+      let bodyJson : string = "";
+  
+      const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
+      const fetchOptions = buildFetchOptions("GET", options, bodyJson);
+      if (bearerToken) {
+          fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+      }
+  
+      return Promise.race([
+        fetch(fullUrl, fetchOptions).then((response) => {
+          if (response.status == 204) {
+            return response;
+          } else if (response.status >= 200 && response.status < 300) {
+            return response.json();
+          } else {
+            throw response;
+          }
+        }),
+        new Promise((_, reject) =>
+          setTimeout(reject, this.timeoutMs, "Request timed out.")
+        ),
+      ]);
+  }
+
+  /**  */
+    listChannelMember(bearerToken: string,
+        channelId?:string,
+        clanId?:string,
+        options: any = {}): Promise<ApiChannelMemberList> {
+      
+      const urlPath = "/v2/listchannelmember";
+      const queryParams = new Map<string, any>();
+      queryParams.set("channel_id", channelId);
+      queryParams.set("clan_id", clanId);
   
       let bodyJson : string = "";
   

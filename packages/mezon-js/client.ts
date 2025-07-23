@@ -169,6 +169,7 @@ import {
   ApiUnlockedItemRequest,
   ApiForSaleItemList,
   ApiUnlockedItemResponse,
+  ApiChannelMemberList,
 } from "./api.gen";
 
 import { Session } from "./session";
@@ -4855,6 +4856,26 @@ export class Client {
     return this.apiClient
       .listForSaleItems(session.token, page)
       .then((response: ApiForSaleItemList) => {
+        return Promise.resolve(response);
+      });
+  }
+
+  async listChannelMember(
+    session: Session,
+    channelId:string,
+    clanId:string,
+  ): Promise<ApiChannelMemberList> {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired(Date.now() / 1000)
+    ) {
+      await this.sessionRefresh(session);
+    }
+
+    return this.apiClient
+      .listChannelMember(session.token, channelId, clanId)
+      .then((response: ApiChannelMemberList) => {
         return Promise.resolve(response);
       });
   }
