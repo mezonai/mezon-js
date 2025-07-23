@@ -169,7 +169,6 @@ import {
   ApiUnlockedItemRequest,
   ApiForSaleItemList,
   ApiUnlockedItemResponse,
-  ApiChannelMemberList,
 } from "./api.gen";
 
 import { Session } from "./session";
@@ -1411,6 +1410,7 @@ export class Client {
             clan_nick: gu.clan_nick,
             id: gu.id,
             clan_id: gu.clan_id,
+            added_by: gu.added_by
           });
         });
         return Promise.resolve(result);
@@ -4860,23 +4860,4 @@ export class Client {
       });
   }
 
-  async listChannelMember(
-    session: Session,
-    channelId:string,
-    clanId:string,
-  ): Promise<ApiChannelMemberList> {
-    if (
-      this.autoRefreshSession &&
-      session.refresh_token &&
-      session.isexpired(Date.now() / 1000)
-    ) {
-      await this.sessionRefresh(session);
-    }
-
-    return this.apiClient
-      .listChannelMember(session.token, channelId, clanId)
-      .then((response: ApiChannelMemberList) => {
-        return Promise.resolve(response);
-      });
-  }
 }
