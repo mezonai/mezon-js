@@ -104,7 +104,12 @@ export class Message {
     });
   }
 
-  async update(content: ChannelMessageContent, topic_id?: string) {
+  async update(
+    content: ChannelMessageContent,
+    mentions?: Array<ApiMessageMention>,
+    attachments?: Array<ApiMessageAttachment>,
+    topic_id?: string
+  ) {
     return await this.messageQueue.enqueue(() => {
       const dataUpdate: UpdateMessageData = {
         clan_id: this.channel.clan.id,
@@ -113,6 +118,8 @@ export class Message {
         is_public: !this.channel.is_private,
         message_id: this.id,
         content,
+        mentions,
+        attachments,
         topic_id: topic_id || this.topic_id,
       };
       return this.socketManager.updateChatMessage(dataUpdate);
