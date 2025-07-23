@@ -353,10 +353,6 @@ export interface Envelope {
   sd_topic_event?:
     | SdTopicEvent
     | undefined;
-  /** follower list */
-  follow_event?:
-    | FollowEvent
-    | undefined;
   /** channel app event */
   channel_app_event?:
     | ChannelAppEvent
@@ -423,9 +419,6 @@ export interface Envelope {
     | undefined;
   /** quick menu event */
   quick_menu_event?: QuickMenuDataEvent | undefined;
-}
-
-export interface FollowEvent {
 }
 
 export interface ChannelCanvas {
@@ -1714,7 +1707,6 @@ function createBaseEnvelope(): Envelope {
     dropdown_box_selected: undefined,
     incoming_call_push: undefined,
     sd_topic_event: undefined,
-    follow_event: undefined,
     channel_app_event: undefined,
     user_status_event: undefined,
     remove_friend: undefined,
@@ -1935,60 +1927,57 @@ export const Envelope = {
     if (message.sd_topic_event !== undefined) {
       SdTopicEvent.encode(message.sd_topic_event, writer.uint32(530).fork()).ldelim();
     }
-    if (message.follow_event !== undefined) {
-      FollowEvent.encode(message.follow_event, writer.uint32(538).fork()).ldelim();
-    }
     if (message.channel_app_event !== undefined) {
-      ChannelAppEvent.encode(message.channel_app_event, writer.uint32(546).fork()).ldelim();
+      ChannelAppEvent.encode(message.channel_app_event, writer.uint32(538).fork()).ldelim();
     }
     if (message.user_status_event !== undefined) {
-      UserStatusEvent.encode(message.user_status_event, writer.uint32(554).fork()).ldelim();
+      UserStatusEvent.encode(message.user_status_event, writer.uint32(546).fork()).ldelim();
     }
     if (message.remove_friend !== undefined) {
-      RemoveFriend.encode(message.remove_friend, writer.uint32(562).fork()).ldelim();
+      RemoveFriend.encode(message.remove_friend, writer.uint32(554).fork()).ldelim();
     }
     if (message.webhook_event !== undefined) {
-      Webhook.encode(message.webhook_event, writer.uint32(570).fork()).ldelim();
+      Webhook.encode(message.webhook_event, writer.uint32(562).fork()).ldelim();
     }
     if (message.noti_user_channel !== undefined) {
-      NotificationUserChannel.encode(message.noti_user_channel, writer.uint32(578).fork()).ldelim();
+      NotificationUserChannel.encode(message.noti_user_channel, writer.uint32(570).fork()).ldelim();
     }
     if (message.join_channel_app_data !== undefined) {
-      JoinChannelAppData.encode(message.join_channel_app_data, writer.uint32(586).fork()).ldelim();
+      JoinChannelAppData.encode(message.join_channel_app_data, writer.uint32(578).fork()).ldelim();
     }
     if (message.canvas_event !== undefined) {
-      ChannelCanvas.encode(message.canvas_event, writer.uint32(594).fork()).ldelim();
+      ChannelCanvas.encode(message.canvas_event, writer.uint32(586).fork()).ldelim();
     }
     if (message.unpin_message_event !== undefined) {
-      UnpinMessageEvent.encode(message.unpin_message_event, writer.uint32(602).fork()).ldelim();
+      UnpinMessageEvent.encode(message.unpin_message_event, writer.uint32(594).fork()).ldelim();
     }
     if (message.category_event !== undefined) {
-      CategoryEvent.encode(message.category_event, writer.uint32(610).fork()).ldelim();
+      CategoryEvent.encode(message.category_event, writer.uint32(602).fork()).ldelim();
     }
     if (message.handle_participant_meet_state_event !== undefined) {
-      HandleParticipantMeetStateEvent.encode(message.handle_participant_meet_state_event, writer.uint32(618).fork())
+      HandleParticipantMeetStateEvent.encode(message.handle_participant_meet_state_event, writer.uint32(610).fork())
         .ldelim();
     }
     if (message.delete_account_event !== undefined) {
-      DeleteAccountEvent.encode(message.delete_account_event, writer.uint32(626).fork()).ldelim();
+      DeleteAccountEvent.encode(message.delete_account_event, writer.uint32(618).fork()).ldelim();
     }
     if (message.ephemeral_message_send !== undefined) {
-      EphemeralMessageSend.encode(message.ephemeral_message_send, writer.uint32(634).fork()).ldelim();
+      EphemeralMessageSend.encode(message.ephemeral_message_send, writer.uint32(626).fork()).ldelim();
     }
     if (message.block_friend !== undefined) {
-      BlockFriend.encode(message.block_friend, writer.uint32(642).fork()).ldelim();
+      BlockFriend.encode(message.block_friend, writer.uint32(634).fork()).ldelim();
     }
     if (message.voice_reaction_send !== undefined) {
-      VoiceReactionSend.encode(message.voice_reaction_send, writer.uint32(650).fork()).ldelim();
+      VoiceReactionSend.encode(message.voice_reaction_send, writer.uint32(642).fork()).ldelim();
     }
     if (message.mark_as_read !== undefined) {
-      MarkAsRead.encode(message.mark_as_read, writer.uint32(658).fork()).ldelim();
+      MarkAsRead.encode(message.mark_as_read, writer.uint32(650).fork()).ldelim();
     }
     if (message.list_data_socket !== undefined) {
-      ListDataSocket.encode(message.list_data_socket, writer.uint32(666).fork()).ldelim();
+      ListDataSocket.encode(message.list_data_socket, writer.uint32(658).fork()).ldelim();
     }
     if (message.quick_menu_event !== undefined) {
-      QuickMenuDataEvent.encode(message.quick_menu_event, writer.uint32(674).fork()).ldelim();
+      QuickMenuDataEvent.encode(message.quick_menu_event, writer.uint32(666).fork()).ldelim();
     }
     return writer;
   },
@@ -2467,122 +2456,115 @@ export const Envelope = {
             break;
           }
 
-          message.follow_event = FollowEvent.decode(reader, reader.uint32());
+          message.channel_app_event = ChannelAppEvent.decode(reader, reader.uint32());
           continue;
         case 68:
           if (tag !== 546) {
             break;
           }
 
-          message.channel_app_event = ChannelAppEvent.decode(reader, reader.uint32());
+          message.user_status_event = UserStatusEvent.decode(reader, reader.uint32());
           continue;
         case 69:
           if (tag !== 554) {
             break;
           }
 
-          message.user_status_event = UserStatusEvent.decode(reader, reader.uint32());
+          message.remove_friend = RemoveFriend.decode(reader, reader.uint32());
           continue;
         case 70:
           if (tag !== 562) {
             break;
           }
 
-          message.remove_friend = RemoveFriend.decode(reader, reader.uint32());
+          message.webhook_event = Webhook.decode(reader, reader.uint32());
           continue;
         case 71:
           if (tag !== 570) {
             break;
           }
 
-          message.webhook_event = Webhook.decode(reader, reader.uint32());
+          message.noti_user_channel = NotificationUserChannel.decode(reader, reader.uint32());
           continue;
         case 72:
           if (tag !== 578) {
             break;
           }
 
-          message.noti_user_channel = NotificationUserChannel.decode(reader, reader.uint32());
+          message.join_channel_app_data = JoinChannelAppData.decode(reader, reader.uint32());
           continue;
         case 73:
           if (tag !== 586) {
             break;
           }
 
-          message.join_channel_app_data = JoinChannelAppData.decode(reader, reader.uint32());
+          message.canvas_event = ChannelCanvas.decode(reader, reader.uint32());
           continue;
         case 74:
           if (tag !== 594) {
             break;
           }
 
-          message.canvas_event = ChannelCanvas.decode(reader, reader.uint32());
+          message.unpin_message_event = UnpinMessageEvent.decode(reader, reader.uint32());
           continue;
         case 75:
           if (tag !== 602) {
             break;
           }
 
-          message.unpin_message_event = UnpinMessageEvent.decode(reader, reader.uint32());
+          message.category_event = CategoryEvent.decode(reader, reader.uint32());
           continue;
         case 76:
           if (tag !== 610) {
             break;
           }
 
-          message.category_event = CategoryEvent.decode(reader, reader.uint32());
+          message.handle_participant_meet_state_event = HandleParticipantMeetStateEvent.decode(reader, reader.uint32());
           continue;
         case 77:
           if (tag !== 618) {
             break;
           }
 
-          message.handle_participant_meet_state_event = HandleParticipantMeetStateEvent.decode(reader, reader.uint32());
+          message.delete_account_event = DeleteAccountEvent.decode(reader, reader.uint32());
           continue;
         case 78:
           if (tag !== 626) {
             break;
           }
 
-          message.delete_account_event = DeleteAccountEvent.decode(reader, reader.uint32());
+          message.ephemeral_message_send = EphemeralMessageSend.decode(reader, reader.uint32());
           continue;
         case 79:
           if (tag !== 634) {
             break;
           }
 
-          message.ephemeral_message_send = EphemeralMessageSend.decode(reader, reader.uint32());
+          message.block_friend = BlockFriend.decode(reader, reader.uint32());
           continue;
         case 80:
           if (tag !== 642) {
             break;
           }
 
-          message.block_friend = BlockFriend.decode(reader, reader.uint32());
+          message.voice_reaction_send = VoiceReactionSend.decode(reader, reader.uint32());
           continue;
         case 81:
           if (tag !== 650) {
             break;
           }
 
-          message.voice_reaction_send = VoiceReactionSend.decode(reader, reader.uint32());
+          message.mark_as_read = MarkAsRead.decode(reader, reader.uint32());
           continue;
         case 82:
           if (tag !== 658) {
             break;
           }
 
-          message.mark_as_read = MarkAsRead.decode(reader, reader.uint32());
+          message.list_data_socket = ListDataSocket.decode(reader, reader.uint32());
           continue;
         case 83:
           if (tag !== 666) {
-            break;
-          }
-
-          message.list_data_socket = ListDataSocket.decode(reader, reader.uint32());
-          continue;
-        case 84:
-          if (tag !== 674) {
             break;
           }
 
@@ -2753,7 +2735,6 @@ export const Envelope = {
         ? IncomingCallPush.fromJSON(object.incoming_call_push)
         : undefined,
       sd_topic_event: isSet(object.sd_topic_event) ? SdTopicEvent.fromJSON(object.sd_topic_event) : undefined,
-      follow_event: isSet(object.follow_event) ? FollowEvent.fromJSON(object.follow_event) : undefined,
       channel_app_event: isSet(object.channel_app_event)
         ? ChannelAppEvent.fromJSON(object.channel_app_event)
         : undefined,
@@ -2993,9 +2974,6 @@ export const Envelope = {
     }
     if (message.sd_topic_event !== undefined) {
       obj.sd_topic_event = SdTopicEvent.toJSON(message.sd_topic_event);
-    }
-    if (message.follow_event !== undefined) {
-      obj.follow_event = FollowEvent.toJSON(message.follow_event);
     }
     if (message.channel_app_event !== undefined) {
       obj.channel_app_event = ChannelAppEvent.toJSON(message.channel_app_event);
@@ -3270,9 +3248,6 @@ export const Envelope = {
     message.sd_topic_event = (object.sd_topic_event !== undefined && object.sd_topic_event !== null)
       ? SdTopicEvent.fromPartial(object.sd_topic_event)
       : undefined;
-    message.follow_event = (object.follow_event !== undefined && object.follow_event !== null)
-      ? FollowEvent.fromPartial(object.follow_event)
-      : undefined;
     message.channel_app_event = (object.channel_app_event !== undefined && object.channel_app_event !== null)
       ? ChannelAppEvent.fromPartial(object.channel_app_event)
       : undefined;
@@ -3327,49 +3302,6 @@ export const Envelope = {
     message.quick_menu_event = (object.quick_menu_event !== undefined && object.quick_menu_event !== null)
       ? QuickMenuDataEvent.fromPartial(object.quick_menu_event)
       : undefined;
-    return message;
-  },
-};
-
-function createBaseFollowEvent(): FollowEvent {
-  return {};
-}
-
-export const FollowEvent = {
-  encode(_: FollowEvent, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    return writer;
-  },
-
-  decode(input: _m0.Reader | Uint8Array, length?: number): FollowEvent {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseFollowEvent();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-      }
-      if ((tag & 7) === 4 || tag === 0) {
-        break;
-      }
-      reader.skipType(tag & 7);
-    }
-    return message;
-  },
-
-  fromJSON(_: any): FollowEvent {
-    return {};
-  },
-
-  toJSON(_: FollowEvent): unknown {
-    const obj: any = {};
-    return obj;
-  },
-
-  create<I extends Exact<DeepPartial<FollowEvent>, I>>(base?: I): FollowEvent {
-    return FollowEvent.fromPartial(base ?? ({} as any));
-  },
-  fromPartial<I extends Exact<DeepPartial<FollowEvent>, I>>(_: I): FollowEvent {
-    const message = createBaseFollowEvent();
     return message;
   },
 };
