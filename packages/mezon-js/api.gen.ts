@@ -20,6 +20,8 @@ export interface ChannelUserListChannelUser {
   thread_id?: string;
   //User.
   user_id?: string;
+  //Added by
+  added_by?: string;
 }
 
 /** A single user-role pair. */
