@@ -4753,7 +4753,8 @@ export class Client {
   async listQuickMenuAccess(
     session: Session,
     botId: string,
-    channelId: string
+    channelId: string,
+    menuType: number
   ): Promise<ApiQuickMenuAccessList> {
     if (
       this.autoRefreshSession &&
@@ -4764,7 +4765,7 @@ export class Client {
     }
 
     return this.apiClient
-      .listQuickMenuAccess(session.token, botId, channelId)
+      .listQuickMenuAccess(session.token, botId, channelId, menuType)
       .then((response: ApiQuickMenuAccessList) => {
         return Promise.resolve(response);
       });
