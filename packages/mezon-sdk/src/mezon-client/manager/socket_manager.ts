@@ -104,7 +104,7 @@ export class SocketManager {
           {
             id: clan.clan_id!,
             name: clan?.clan_name ?? "unknown",
-            welcome_channel_id: clan?.welcome_channel_id ?? ''
+            welcome_channel_id: clan?.welcome_channel_id ?? "",
           },
           this.client,
           this.apiClient,

@@ -20,6 +20,7 @@ import {
   DropdownBoxSelected,
   GiveCoffeeEvent,
   MessageReaction,
+  QuickMenuEvent,
   StreamingJoinedEvent,
   StreamingLeavedEvent,
   TokenSentEvent,
@@ -187,7 +188,7 @@ export class MezonClient extends EventEmitter {
           return channelDM;
         }
       } catch (error: any) {
-        console.log("error createDMchannel", error?.status);
+        console.log("error createDMchannel", userId, error?.status);
       }
 
       return null;
@@ -492,6 +493,11 @@ export class MezonClient extends EventEmitter {
 
   public onVoiceLeavedEvent(listener: (e: VoiceLeavedEvent) => void): this {
     this.on(Events.VoiceLeavedEvent.toString(), listener);
+    return this;
+  }
+
+  public onQuickMenuEvent(listener: (e: QuickMenuEvent) => void): this {
+    this.on(Events.QuickMenu.toString(), listener);
     return this;
   }
 

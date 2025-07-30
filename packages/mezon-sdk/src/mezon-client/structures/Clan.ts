@@ -49,7 +49,7 @@ export class Clan {
   ) {
     this.id = initClanData.id;
     this.name = initClanData.name;
-    this.welcome_channel_id = initClanData.welcome_channel_id
+    this.welcome_channel_id = initClanData.welcome_channel_id;
     this.client = client;
     this.apiClient = apiClient;
     this.socketManager = socketManager;
@@ -78,6 +78,10 @@ export class Clan {
       this.users.set(user_id, user);
       return user;
     });
+  }
+
+  getClientId() {
+    return this.client.clientId;
   }
 
   async loadChannels(): Promise<void> {

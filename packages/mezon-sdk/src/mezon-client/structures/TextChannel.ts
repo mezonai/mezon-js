@@ -3,12 +3,17 @@ import {
   ApiMessageAttachment,
   ApiMessageMention,
   ApiMessageRef,
+  ApiQuickMenuAccessPayload,
+  ApiQuickMenuAccessRequest,
   ChannelMessageContent,
   EphemeralMessageData,
   ReplyMessageData,
 } from "../../interfaces";
 import { MessageDatabase } from "../../sqlite/MessageDatabase";
-import { convertChanneltypeToChannelMode } from "../../utils/helper";
+import {
+  convertChanneltypeToChannelMode,
+  generateSnowflakeId,
+} from "../../utils/helper";
 import { SocketManager } from "../manager/socket_manager";
 import { AsyncThrottleQueue } from "../utils/AsyncThrottleQueue";
 import { CacheManager } from "../utils/CacheManager";
@@ -135,5 +140,28 @@ export class TextChannel {
       };
       return await this.socketManager.writeEphemeralMessage(dataSend);
     });
+  }
+
+  async addQuickMenuAccess(body: ApiQuickMenuAccessPayload) {
+    const id = generateSnowflakeId();
+    const bot_id = this.clan.getClientId();
+    const payload: ApiQuickMenuAccessRequest = {
+      channel_id: body?.channel_id ?? "0",
+      clan_id: body?.clan_id ?? "0",
+      menu_type: body?.menu_type ?? 1,
+      action_msg: body.action_msg,
+      background: body?.background ?? "",
+      menu_name: body.menu_name,
+      id,
+      bot_id,
+    };
+    try {
+      return await this.clan.apiClient.addQuickMenuAccess(
+        this.clan.sessionToken,
+        payload
+      );
+    } catch (error) {
+      throw error;
+    }
   }
 }

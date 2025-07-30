@@ -801,6 +801,76 @@ export interface AddClanUserEvent {
   invitor: string;
 }
 
+export interface QuickMenuEvent {
+  quick_menu_event: {
+    menu_name: string,
+    message: {
+      /** Clan Id */
+      clan_id: string;
+      /** The server-assigned channel ID. */
+      channel_id: string;
+      // The mode
+      mode: number;
+      // channel label
+      channel_label: string;
+      /** The content payload. */
+      content: any;
+      //
+      mentions?: Array<ApiMessageMention>;
+      //
+      attachments?: Array<ApiMessageAttachment>;
+      //
+      anonymous_message?: boolean;
+      //
+      mention_everyone?: boolean;
+      //
+      avatar: string;
+      // Is public
+      is_public: boolean;
+      // code
+      code: number;
+      //
+      topic_id?: string;
+    }
+  }
+}
+
+/** Quick Menu Access Request*/
+export interface ApiQuickMenuAccessRequest {
+  //
+  action_msg?: string;
+  //
+  background?: string;
+  //
+  bot_id?: string;
+  //
+  channel_id?: string;
+  //
+  clan_id?: string;
+  //
+  id?: string;
+  //
+  menu_name?: string;
+  //
+  menu_type?:number;
+}
+
+/** Quick Menu Access Payload*/
+export interface ApiQuickMenuAccessPayload {
+  //
+  action_msg: string;
+  //
+  background?: string;
+  //
+  channel_id?: string;
+  //
+  clan_id?: string;
+  //
+  menu_name: string;
+  //
+  menu_type?: number;
+}
+
 /** A socket connection to Mezon server. */
 export interface Socket {
   [key: string]: any;

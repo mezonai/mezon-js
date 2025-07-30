@@ -37,6 +37,7 @@ export enum InternalEventsSocket {
   DropdownBoxSelected = "dropdown_box_selected",
   WebrtcSignalingFwd = "webrtc_signaling_fwd",
   Notifications = "notifications",
+  QuickMenu = "quick_menu_event"
 }
 
 export enum Events {
@@ -111,6 +112,9 @@ export enum Events {
 
   /** Listen to add friend */
   Notifications = InternalEventsSocket.Notifications,
+
+  /** Listen to add quick menu */
+  QuickMenu = InternalEventsSocket.QuickMenu
 }
 
 export enum ChannelType {
@@ -146,5 +150,6 @@ export enum TypeMessage {
 	MessageBuzz = 8,
 	Topic = 9,
 	AuditLog = 10,
-	SendToken = 11
+	SendToken = 11,
+  Ephemeral = 12
 }
