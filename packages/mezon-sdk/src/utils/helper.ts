@@ -4,6 +4,9 @@ import {
   InternalEventsSocket,
 } from "../constants";
 
+let sequence = BigInt("0");
+let lastTimestamp = BigInt("0");
+
 export function convertInternalEventToEvents(
   input: InternalEventsSocket
 ): string {
@@ -49,4 +52,27 @@ export function parseUrlToHostAndSSL(urlStr: string): {
     port: url.port || (url.protocol === "https:" ? "443" : "80"),
     useSSL: url.protocol === "https:",
   };
+}
+
+export function generateSnowflakeId(): string {
+  const epoch = BigInt("1577836800000");
+  const timestamp = BigInt(Date.now().toString());
+
+  if (timestamp === lastTimestamp) {
+    sequence = sequence + BigInt("1");
+  } else {
+    sequence = BigInt("0");
+    lastTimestamp = timestamp;
+  }
+
+  const workerId = BigInt("1");
+  const dataCenterId = BigInt("1");
+
+  const snowflakeId =
+    ((timestamp - epoch) << BigInt("22")) |
+    (dataCenterId << BigInt("17")) |
+    (workerId << BigInt("12")) |
+    sequence;
+
+  return snowflakeId.toString();
 }

@@ -762,6 +762,8 @@ export interface ChannelUserList_ChannelUser {
   clan_avatar: string;
   /** clan Id */
   clan_id: string;
+  /** added by */
+  added_by: string;
 }
 
 /** A list of users belonging to a channel, along with their role. */
@@ -3831,20 +3833,6 @@ export interface ForSaleItem {
 
 export interface ForSaleItemList {
   for_sale_items: ForSaleItem[];
-}
-
-export interface ListChannelMemberRequest {
-  channel_id: string;
-  clan_id: string;
-}
-
-export interface ChannelMemberDetail {
-  member_id: string;
-  added_by: string;
-}
-
-export interface ChannelMemberList {
-  channel_members: ChannelMemberDetail[];
 }
 
 function createBaseAccount(): Account {
@@ -7943,7 +7931,7 @@ export const ChannelUserList = {
 };
 
 function createBaseChannelUserList_ChannelUser(): ChannelUserList_ChannelUser {
-  return { user_id: "", role_id: [], id: "", thread_id: "", clan_nick: "", clan_avatar: "", clan_id: "" };
+  return { user_id: "", role_id: [], id: "", thread_id: "", clan_nick: "", clan_avatar: "", clan_id: "", added_by: "" };
 }
 
 export const ChannelUserList_ChannelUser = {
@@ -7968,6 +7956,9 @@ export const ChannelUserList_ChannelUser = {
     }
     if (message.clan_id !== "") {
       writer.uint32(58).string(message.clan_id);
+    }
+    if (message.added_by !== "") {
+      writer.uint32(66).string(message.added_by);
     }
     return writer;
   },
@@ -8028,6 +8019,13 @@ export const ChannelUserList_ChannelUser = {
 
           message.clan_id = reader.string();
           continue;
+        case 8:
+          if (tag !== 66) {
+            break;
+          }
+
+          message.added_by = reader.string();
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -8046,6 +8044,7 @@ export const ChannelUserList_ChannelUser = {
       clan_nick: isSet(object.clan_nick) ? globalThis.String(object.clan_nick) : "",
       clan_avatar: isSet(object.clan_avatar) ? globalThis.String(object.clan_avatar) : "",
       clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
+      added_by: isSet(object.added_by) ? globalThis.String(object.added_by) : "",
     };
   },
 
@@ -8072,6 +8071,9 @@ export const ChannelUserList_ChannelUser = {
     if (message.clan_id !== "") {
       obj.clan_id = message.clan_id;
     }
+    if (message.added_by !== "") {
+      obj.added_by = message.added_by;
+    }
     return obj;
   },
 
@@ -8087,6 +8089,7 @@ export const ChannelUserList_ChannelUser = {
     message.clan_nick = object.clan_nick ?? "";
     message.clan_avatar = object.clan_avatar ?? "";
     message.clan_id = object.clan_id ?? "";
+    message.added_by = object.added_by ?? "";
     return message;
   },
 };
@@ -38325,215 +38328,6 @@ export const ForSaleItemList = {
   fromPartial<I extends Exact<DeepPartial<ForSaleItemList>, I>>(object: I): ForSaleItemList {
     const message = createBaseForSaleItemList();
     message.for_sale_items = object.for_sale_items?.map((e) => ForSaleItem.fromPartial(e)) || [];
-    return message;
-  },
-};
-
-function createBaseListChannelMemberRequest(): ListChannelMemberRequest {
-  return { channel_id: "", clan_id: "" };
-}
-
-export const ListChannelMemberRequest = {
-  encode(message: ListChannelMemberRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.channel_id !== "") {
-      writer.uint32(10).string(message.channel_id);
-    }
-    if (message.clan_id !== "") {
-      writer.uint32(18).string(message.clan_id);
-    }
-    return writer;
-  },
-
-  decode(input: _m0.Reader | Uint8Array, length?: number): ListChannelMemberRequest {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseListChannelMemberRequest();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
-          if (tag !== 10) {
-            break;
-          }
-
-          message.channel_id = reader.string();
-          continue;
-        case 2:
-          if (tag !== 18) {
-            break;
-          }
-
-          message.clan_id = reader.string();
-          continue;
-      }
-      if ((tag & 7) === 4 || tag === 0) {
-        break;
-      }
-      reader.skipType(tag & 7);
-    }
-    return message;
-  },
-
-  fromJSON(object: any): ListChannelMemberRequest {
-    return {
-      channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "",
-      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
-    };
-  },
-
-  toJSON(message: ListChannelMemberRequest): unknown {
-    const obj: any = {};
-    if (message.channel_id !== "") {
-      obj.channel_id = message.channel_id;
-    }
-    if (message.clan_id !== "") {
-      obj.clan_id = message.clan_id;
-    }
-    return obj;
-  },
-
-  create<I extends Exact<DeepPartial<ListChannelMemberRequest>, I>>(base?: I): ListChannelMemberRequest {
-    return ListChannelMemberRequest.fromPartial(base ?? ({} as any));
-  },
-  fromPartial<I extends Exact<DeepPartial<ListChannelMemberRequest>, I>>(object: I): ListChannelMemberRequest {
-    const message = createBaseListChannelMemberRequest();
-    message.channel_id = object.channel_id ?? "";
-    message.clan_id = object.clan_id ?? "";
-    return message;
-  },
-};
-
-function createBaseChannelMemberDetail(): ChannelMemberDetail {
-  return { member_id: "", added_by: "" };
-}
-
-export const ChannelMemberDetail = {
-  encode(message: ChannelMemberDetail, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.member_id !== "") {
-      writer.uint32(10).string(message.member_id);
-    }
-    if (message.added_by !== "") {
-      writer.uint32(18).string(message.added_by);
-    }
-    return writer;
-  },
-
-  decode(input: _m0.Reader | Uint8Array, length?: number): ChannelMemberDetail {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseChannelMemberDetail();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
-          if (tag !== 10) {
-            break;
-          }
-
-          message.member_id = reader.string();
-          continue;
-        case 2:
-          if (tag !== 18) {
-            break;
-          }
-
-          message.added_by = reader.string();
-          continue;
-      }
-      if ((tag & 7) === 4 || tag === 0) {
-        break;
-      }
-      reader.skipType(tag & 7);
-    }
-    return message;
-  },
-
-  fromJSON(object: any): ChannelMemberDetail {
-    return {
-      member_id: isSet(object.member_id) ? globalThis.String(object.member_id) : "",
-      added_by: isSet(object.added_by) ? globalThis.String(object.added_by) : "",
-    };
-  },
-
-  toJSON(message: ChannelMemberDetail): unknown {
-    const obj: any = {};
-    if (message.member_id !== "") {
-      obj.member_id = message.member_id;
-    }
-    if (message.added_by !== "") {
-      obj.added_by = message.added_by;
-    }
-    return obj;
-  },
-
-  create<I extends Exact<DeepPartial<ChannelMemberDetail>, I>>(base?: I): ChannelMemberDetail {
-    return ChannelMemberDetail.fromPartial(base ?? ({} as any));
-  },
-  fromPartial<I extends Exact<DeepPartial<ChannelMemberDetail>, I>>(object: I): ChannelMemberDetail {
-    const message = createBaseChannelMemberDetail();
-    message.member_id = object.member_id ?? "";
-    message.added_by = object.added_by ?? "";
-    return message;
-  },
-};
-
-function createBaseChannelMemberList(): ChannelMemberList {
-  return { channel_members: [] };
-}
-
-export const ChannelMemberList = {
-  encode(message: ChannelMemberList, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    for (const v of message.channel_members) {
-      ChannelMemberDetail.encode(v!, writer.uint32(10).fork()).ldelim();
-    }
-    return writer;
-  },
-
-  decode(input: _m0.Reader | Uint8Array, length?: number): ChannelMemberList {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseChannelMemberList();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
-          if (tag !== 10) {
-            break;
-          }
-
-          message.channel_members.push(ChannelMemberDetail.decode(reader, reader.uint32()));
-          continue;
-      }
-      if ((tag & 7) === 4 || tag === 0) {
-        break;
-      }
-      reader.skipType(tag & 7);
-    }
-    return message;
-  },
-
-  fromJSON(object: any): ChannelMemberList {
-    return {
-      channel_members: globalThis.Array.isArray(object?.channel_members)
-        ? object.channel_members.map((e: any) => ChannelMemberDetail.fromJSON(e))
-        : [],
-    };
-  },
-
-  toJSON(message: ChannelMemberList): unknown {
-    const obj: any = {};
-    if (message.channel_members?.length) {
-      obj.channel_members = message.channel_members.map((e) => ChannelMemberDetail.toJSON(e));
-    }
-    return obj;
-  },
-
-  create<I extends Exact<DeepPartial<ChannelMemberList>, I>>(base?: I): ChannelMemberList {
-    return ChannelMemberList.fromPartial(base ?? ({} as any));
-  },
-  fromPartial<I extends Exact<DeepPartial<ChannelMemberList>, I>>(object: I): ChannelMemberList {
-    const message = createBaseChannelMemberList();
-    message.channel_members = object.channel_members?.map((e) => ChannelMemberDetail.fromPartial(e)) || [];
     return message;
   },
 };
