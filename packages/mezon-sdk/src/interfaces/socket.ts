@@ -862,8 +862,6 @@ export interface ApiQuickMenuAccessPayload {
   //
   background?: string;
   //
-  channel_id?: string;
-  //
   clan_id?: string;
   //
   menu_name: string;

@@ -146,7 +146,7 @@ export class TextChannel {
     const id = generateSnowflakeId();
     const bot_id = this.clan.getClientId();
     const payload: ApiQuickMenuAccessRequest = {
-      channel_id: body?.channel_id ?? "0",
+      channel_id: "0",
       clan_id: body?.clan_id ?? "0",
       menu_type: body?.menu_type ?? 1,
       action_msg: body.action_msg,
@@ -159,6 +159,18 @@ export class TextChannel {
       return await this.clan.apiClient.addQuickMenuAccess(
         this.clan.sessionToken,
         payload
+      );
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async deleteQuickMenuAccess(botId?: string) {
+    const botIdPayload = botId ?? this.clan.getClientId();
+    try {
+      return await this.clan.apiClient.deleteQuickMenuAccess(
+        this.clan.sessionToken,
+        botIdPayload
       );
     } catch (error) {
       throw error;
