@@ -795,4 +795,39 @@ export class MezonApi {
       ),
     ]);
   }
+
+  /** deleteQuickMenuAccess */
+  deleteQuickMenuAccess(
+    bearerToken: string,
+    botId?: string,
+    options: any = {}
+  ): Promise<any> {
+    const urlPath = "/v2/quickmenuaccess";
+    const queryParams = new Map<string, any>();
+
+    queryParams.set("botId", botId);
+
+    let bodyJson: string = "";
+
+    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
+    const fetchOptions = buildFetchOptions("DELETE", options, bodyJson);
+    if (bearerToken) {
+      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+    }
+
+    return Promise.race([
+      fetch(fullUrl, fetchOptions).then((response) => {
+        if (response.status == 204) {
+          return response;
+        } else if (response.status >= 200 && response.status < 300) {
+          return response.json();
+        } else {
+          throw response;
+        }
+      }),
+      new Promise((_, reject) =>
+        setTimeout(reject, this.timeoutMs, "Request timed out.")
+      ),
+    ]);
+  }
 }
