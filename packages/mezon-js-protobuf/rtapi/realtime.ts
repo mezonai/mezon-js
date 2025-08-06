@@ -1210,6 +1210,10 @@ export interface ChannelUpdatedEvent {
   active: number;
   /** count message unread */
   count_mess_unread: number;
+  /** The users to add. */
+  user_ids: string[];
+  /** This is the role that needs to be added to the channel */
+  role_ids: string[];
 }
 
 /** Stop receiving status updates for some set of users. */
@@ -9569,6 +9573,8 @@ function createBaseChannelUpdatedEvent(): ChannelUpdatedEvent {
     age_restricted: 0,
     active: 0,
     count_mess_unread: 0,
+    user_ids: [],
+    role_ids: [],
   };
 }
 
@@ -9624,6 +9630,12 @@ export const ChannelUpdatedEvent = {
     }
     if (message.count_mess_unread !== 0) {
       writer.uint32(136).int32(message.count_mess_unread);
+    }
+    for (const v of message.user_ids) {
+      writer.uint32(146).string(v!);
+    }
+    for (const v of message.role_ids) {
+      writer.uint32(154).string(v!);
     }
     return writer;
   },
@@ -9754,6 +9766,20 @@ export const ChannelUpdatedEvent = {
 
           message.count_mess_unread = reader.int32();
           continue;
+        case 18:
+          if (tag !== 146) {
+            break;
+          }
+
+          message.user_ids.push(reader.string());
+          continue;
+        case 19:
+          if (tag !== 154) {
+            break;
+          }
+
+          message.role_ids.push(reader.string());
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -9782,6 +9808,8 @@ export const ChannelUpdatedEvent = {
       age_restricted: isSet(object.age_restricted) ? globalThis.Number(object.age_restricted) : 0,
       active: isSet(object.active) ? globalThis.Number(object.active) : 0,
       count_mess_unread: isSet(object.count_mess_unread) ? globalThis.Number(object.count_mess_unread) : 0,
+      user_ids: globalThis.Array.isArray(object?.user_ids) ? object.user_ids.map((e: any) => globalThis.String(e)) : [],
+      role_ids: globalThis.Array.isArray(object?.role_ids) ? object.role_ids.map((e: any) => globalThis.String(e)) : [],
     };
   },
 
@@ -9838,6 +9866,12 @@ export const ChannelUpdatedEvent = {
     if (message.count_mess_unread !== 0) {
       obj.count_mess_unread = Math.round(message.count_mess_unread);
     }
+    if (message.user_ids?.length) {
+      obj.user_ids = message.user_ids;
+    }
+    if (message.role_ids?.length) {
+      obj.role_ids = message.role_ids;
+    }
     return obj;
   },
 
@@ -9863,6 +9897,8 @@ export const ChannelUpdatedEvent = {
     message.age_restricted = object.age_restricted ?? 0;
     message.active = object.active ?? 0;
     message.count_mess_unread = object.count_mess_unread ?? 0;
+    message.user_ids = object.user_ids?.map((e) => e) || [];
+    message.role_ids = object.role_ids?.map((e) => e) || [];
     return message;
   },
 };
