@@ -624,6 +624,10 @@ export interface ChannelUpdatedEvent {
   active: number;
   //
   count_mess_unread: number;
+    //
+  role_ids?: Array<string>;
+  //The users to add.
+  user_ids?: Array<string>;
 }
 
 export interface DeleteAccountEvent {

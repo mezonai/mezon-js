@@ -503,19 +503,6 @@ export interface ApiLeaveChannelRequest {
   channel_id: string;
 }
 
-/** Update Clan information */
-export interface ApiUpdateClanDescRequest {
-  clan_id: string;
-  /** Clan creator */
-  creator_id: string;
-  /** Clan name */
-  clan_name: string;
-  /** Clan logo */
-  logo: string;
-  /** Clan banner */
-  banner: string;
-}
-
 /** Update Clan profile information */
 export interface ApiUpdateClanDescProfileRequest {
   /** Clan id */
@@ -2686,7 +2673,10 @@ export class Client {
   //** */
   async deletePinMessage(
     session: Session,
-    message_id: string
+    id?: string,
+    messageId?: string,
+    channelId?: string,
+    clanId?: string
   ): Promise<boolean> {
     if (
       this.autoRefreshSession &&
@@ -2697,7 +2687,7 @@ export class Client {
     }
 
     return this.apiClient
-      .deletePinMessage(session.token, message_id)
+      .deletePinMessage(session.token, id, messageId, channelId, clanId)
       .then((response: any) => {
         return response !== undefined;
       });

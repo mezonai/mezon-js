@@ -172,6 +172,10 @@ export interface MezonUpdateClanDescBody {
   welcome_channel_id?: string;
   //Onboarding_banner.
   onboarding_banner?: string;
+  // is community.
+  is_community?: boolean;
+  // community banner
+  community_banner?: string;
 }
 
 /**  */
@@ -932,6 +936,10 @@ export interface ApiClanDesc {
   welcome_channel_id?: string;
   //Onboarding_banner.
   onboarding_banner?: string;
+    // is community.
+  is_community?: boolean;
+  // community banner
+  community_banner?: string;
 }
 
 /**  */
@@ -7611,12 +7619,18 @@ export class MezonApi {
   /**  */
   deletePinMessage(
     bearerToken: string,
+    id?: string,
     messageId?: string,
+    channelId?: string,
+    clanId?: string,
     options: any = {}
   ): Promise<any> {
     const urlPath = "/v2/pinmessage/delete";
     const queryParams = new Map<string, any>();
+    queryParams.set("id", id);
     queryParams.set("message_id", messageId);
+    queryParams.set("channel_id", channelId);
+    queryParams.set("clan_id", clanId);
 
     let bodyJson: string = "";
 
