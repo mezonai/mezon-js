@@ -176,6 +176,10 @@ export interface MezonUpdateClanDescBody {
   is_community?: boolean;
   // community banner
   community_banner?: string;
+  // description
+  description?: string;
+  // about
+  about?: string;
 }
 
 /**  */
@@ -10907,7 +10911,7 @@ export class MezonApi {
       const urlPath = "/v2/quickmenuaccess";
       const queryParams = new Map<string, any>();
       queryParams.set("id", id);
-      queryParams.set("id", botId);
+      queryParams.set("bot_id", botId);
       queryParams.set("menu_name", menuName);
       queryParams.set("background", background);
       queryParams.set("action_msg", actionMsg);
