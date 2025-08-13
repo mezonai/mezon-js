@@ -500,6 +500,10 @@ interface ChannelMessageRemove {
     has_attachment?: boolean;
     //
     topic_id?: string;
+    // mentions
+    mentions: string;
+    // references
+    references: string;
   };
 }
 
@@ -1382,7 +1386,9 @@ export interface Socket {
     is_public: boolean,
     message_id: string,
     has_attachment?: boolean,
-    topic_id?: string
+    topic_id?: string,
+    mentions?:string,
+    references?: string
   ): Promise<ChannelMessageAck>;
 
   /** Execute an RPC function to the server. */
@@ -2591,6 +2597,8 @@ export class DefaultSocket implements Socket {
     message_id: string,
     has_attachment?: boolean,
     topic_id?: string,
+    mentions?: string,
+    references?: string
   ): Promise<ChannelMessageAck> {
     const response = await this.send({
       channel_message_remove: {
@@ -2601,6 +2609,8 @@ export class DefaultSocket implements Socket {
         is_public: is_public,
         has_attachment: has_attachment,
         topic_id: topic_id,
+        mentions: mentions,
+        references: references
       },
     });
 

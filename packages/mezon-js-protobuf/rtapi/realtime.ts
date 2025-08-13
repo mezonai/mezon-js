@@ -743,6 +743,10 @@ export interface ChannelMessageRemove {
   has_attachment: boolean;
   /**  */
   topic_id: string;
+  /** Message mention */
+  mentions: string;
+  /** Message reference */
+  references: string;
 }
 
 /** A set of joins and leaves on a particular channel. */
@@ -6126,6 +6130,8 @@ function createBaseChannelMessageRemove(): ChannelMessageRemove {
     is_public: false,
     has_attachment: false,
     topic_id: "",
+    mentions: "",
+    references: "",
   };
 }
 
@@ -6151,6 +6157,12 @@ export const ChannelMessageRemove = {
     }
     if (message.topic_id !== "") {
       writer.uint32(58).string(message.topic_id);
+    }
+    if (message.mentions !== "") {
+      writer.uint32(66).string(message.mentions);
+    }
+    if (message.references !== "") {
+      writer.uint32(74).string(message.references);
     }
     return writer;
   },
@@ -6211,6 +6223,20 @@ export const ChannelMessageRemove = {
 
           message.topic_id = reader.string();
           continue;
+        case 8:
+          if (tag !== 66) {
+            break;
+          }
+
+          message.mentions = reader.string();
+          continue;
+        case 9:
+          if (tag !== 74) {
+            break;
+          }
+
+          message.references = reader.string();
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -6229,6 +6255,8 @@ export const ChannelMessageRemove = {
       is_public: isSet(object.is_public) ? globalThis.Boolean(object.is_public) : false,
       has_attachment: isSet(object.has_attachment) ? globalThis.Boolean(object.has_attachment) : false,
       topic_id: isSet(object.topic_id) ? globalThis.String(object.topic_id) : "",
+      mentions: isSet(object.mentions) ? globalThis.String(object.mentions) : "",
+      references: isSet(object.references) ? globalThis.String(object.references) : "",
     };
   },
 
@@ -6255,6 +6283,12 @@ export const ChannelMessageRemove = {
     if (message.topic_id !== "") {
       obj.topic_id = message.topic_id;
     }
+    if (message.mentions !== "") {
+      obj.mentions = message.mentions;
+    }
+    if (message.references !== "") {
+      obj.references = message.references;
+    }
     return obj;
   },
 
@@ -6270,6 +6304,8 @@ export const ChannelMessageRemove = {
     message.is_public = object.is_public ?? false;
     message.has_attachment = object.has_attachment ?? false;
     message.topic_id = object.topic_id ?? "";
+    message.mentions = object.mentions ?? "";
+    message.references = object.references ?? "";
     return message;
   },
 };
