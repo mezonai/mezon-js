@@ -1421,7 +1421,13 @@ export interface UpdateClanDescRequest {
     | boolean
     | undefined;
   /** Community banner. */
-  community_banner: string | undefined;
+  community_banner:
+    | string
+    | undefined;
+  /** string description */
+  description: string;
+  /** about */
+  about: string;
 }
 
 /** Delete a clan the user has access to. */
@@ -12586,6 +12592,8 @@ function createBaseUpdateClanDescRequest(): UpdateClanDescRequest {
     onboarding_banner: undefined,
     is_community: undefined,
     community_banner: undefined,
+    description: "",
+    about: "",
   };
 }
 
@@ -12620,6 +12628,12 @@ export const UpdateClanDescRequest = {
     }
     if (message.community_banner !== undefined) {
       StringValue.encode({ value: message.community_banner! }, writer.uint32(82).fork()).ldelim();
+    }
+    if (message.description !== "") {
+      writer.uint32(90).string(message.description);
+    }
+    if (message.about !== "") {
+      writer.uint32(98).string(message.about);
     }
     return writer;
   },
@@ -12701,6 +12715,20 @@ export const UpdateClanDescRequest = {
 
           message.community_banner = StringValue.decode(reader, reader.uint32()).value;
           continue;
+        case 11:
+          if (tag !== 90) {
+            break;
+          }
+
+          message.description = reader.string();
+          continue;
+        case 12:
+          if (tag !== 98) {
+            break;
+          }
+
+          message.about = reader.string();
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -12722,6 +12750,8 @@ export const UpdateClanDescRequest = {
       onboarding_banner: isSet(object.onboarding_banner) ? String(object.onboarding_banner) : undefined,
       is_community: isSet(object.is_community) ? Boolean(object.is_community) : undefined,
       community_banner: isSet(object.community_banner) ? String(object.community_banner) : undefined,
+      description: isSet(object.description) ? globalThis.String(object.description) : "",
+      about: isSet(object.about) ? globalThis.String(object.about) : "",
     };
   },
 
@@ -12757,6 +12787,12 @@ export const UpdateClanDescRequest = {
     if (message.community_banner !== undefined) {
       obj.community_banner = message.community_banner;
     }
+    if (message.description !== "") {
+      obj.description = message.description;
+    }
+    if (message.about !== "") {
+      obj.about = message.about;
+    }
     return obj;
   },
 
@@ -12775,6 +12811,8 @@ export const UpdateClanDescRequest = {
     message.onboarding_banner = object.onboarding_banner ?? undefined;
     message.is_community = object.is_community ?? undefined;
     message.community_banner = object.community_banner ?? undefined;
+    message.description = object.description ?? "";
+    message.about = object.about ?? "";
     return message;
   },
 };

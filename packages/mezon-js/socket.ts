@@ -478,6 +478,8 @@ interface ChannelMessageUpdate {
     topic_id?: string;
     //
     is_update_msg_topic?: boolean;
+    //
+    old_mentions?: string;
   };
 }
 
@@ -500,6 +502,10 @@ interface ChannelMessageRemove {
     has_attachment?: boolean;
     //
     topic_id?: string;
+    // mentions
+    mentions: string;
+    // references
+    references: string;
   };
 }
 
@@ -1382,7 +1388,9 @@ export interface Socket {
     is_public: boolean,
     message_id: string,
     has_attachment?: boolean,
-    topic_id?: string
+    topic_id?: string,
+    mentions?:string,
+    references?: string
   ): Promise<ChannelMessageAck>;
 
   /** Execute an RPC function to the server. */
@@ -1403,7 +1411,8 @@ export interface Socket {
     attachments?: Array<ApiMessageAttachment>,
     hideEditted?: boolean,
     topic_id?: string,
-    is_update_msg_topic?: boolean
+    is_update_msg_topic?: boolean,
+    old_mentions?: string
   ): Promise<ChannelMessageAck>;
 
   /** Update the status for the current user online. */
@@ -2591,6 +2600,8 @@ export class DefaultSocket implements Socket {
     message_id: string,
     has_attachment?: boolean,
     topic_id?: string,
+    mentions?: string,
+    references?: string
   ): Promise<ChannelMessageAck> {
     const response = await this.send({
       channel_message_remove: {
@@ -2601,6 +2612,8 @@ export class DefaultSocket implements Socket {
         is_public: is_public,
         has_attachment: has_attachment,
         topic_id: topic_id,
+        mentions: mentions,
+        references: references
       },
     });
 
@@ -2634,7 +2647,8 @@ export class DefaultSocket implements Socket {
     attachments?: Array<ApiMessageAttachment>,
     hideEditted?: boolean,
     topic_id?: string,
-    is_update_msg_topic?: boolean
+    is_update_msg_topic?: boolean,
+    old_mentions?: string
   ): Promise<ChannelMessageAck> {
     const response = await this.send({
       channel_message_update: {
@@ -2649,6 +2663,7 @@ export class DefaultSocket implements Socket {
         hide_editted: hideEditted,
         topic_id: topic_id,
         is_update_msg_topic: is_update_msg_topic,
+        old_mentions: old_mentions
       },
     });
     return response.channel_message_ack;
