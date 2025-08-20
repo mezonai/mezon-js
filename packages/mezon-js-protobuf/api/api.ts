@@ -3861,6 +3861,15 @@ export interface ForSaleItemList {
   for_sale_items: ForSaleItem[];
 }
 
+export interface IsFollowerRequest {
+  username: string;
+}
+
+export interface IsFollowerResponse {
+  username: string;
+  is_follower: boolean;
+}
+
 function createBaseAccount(): Account {
   return {
     user: undefined,
@@ -38497,6 +38506,137 @@ export const ForSaleItemList = {
   fromPartial<I extends Exact<DeepPartial<ForSaleItemList>, I>>(object: I): ForSaleItemList {
     const message = createBaseForSaleItemList();
     message.for_sale_items = object.for_sale_items?.map((e) => ForSaleItem.fromPartial(e)) || [];
+    return message;
+  },
+};
+
+function createBaseIsFollowerRequest(): IsFollowerRequest {
+  return { username: "" };
+}
+
+export const IsFollowerRequest = {
+  encode(message: IsFollowerRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.username !== "") {
+      writer.uint32(10).string(message.username);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): IsFollowerRequest {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseIsFollowerRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.username = reader.string();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): IsFollowerRequest {
+    return { username: isSet(object.username) ? globalThis.String(object.username) : "" };
+  },
+
+  toJSON(message: IsFollowerRequest): unknown {
+    const obj: any = {};
+    if (message.username !== "") {
+      obj.username = message.username;
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<IsFollowerRequest>, I>>(base?: I): IsFollowerRequest {
+    return IsFollowerRequest.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<IsFollowerRequest>, I>>(object: I): IsFollowerRequest {
+    const message = createBaseIsFollowerRequest();
+    message.username = object.username ?? "";
+    return message;
+  },
+};
+
+function createBaseIsFollowerResponse(): IsFollowerResponse {
+  return { username: "", is_follower: false };
+}
+
+export const IsFollowerResponse = {
+  encode(message: IsFollowerResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.username !== "") {
+      writer.uint32(10).string(message.username);
+    }
+    if (message.is_follower !== false) {
+      writer.uint32(16).bool(message.is_follower);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): IsFollowerResponse {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseIsFollowerResponse();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.username = reader.string();
+          continue;
+        case 2:
+          if (tag !== 16) {
+            break;
+          }
+
+          message.is_follower = reader.bool();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): IsFollowerResponse {
+    return {
+      username: isSet(object.username) ? globalThis.String(object.username) : "",
+      is_follower: isSet(object.is_follower) ? globalThis.Boolean(object.is_follower) : false,
+    };
+  },
+
+  toJSON(message: IsFollowerResponse): unknown {
+    const obj: any = {};
+    if (message.username !== "") {
+      obj.username = message.username;
+    }
+    if (message.is_follower !== false) {
+      obj.is_follower = message.is_follower;
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<IsFollowerResponse>, I>>(base?: I): IsFollowerResponse {
+    return IsFollowerResponse.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<IsFollowerResponse>, I>>(object: I): IsFollowerResponse {
+    const message = createBaseIsFollowerResponse();
+    message.username = object.username ?? "";
+    message.is_follower = object.is_follower ?? false;
     return message;
   },
 };

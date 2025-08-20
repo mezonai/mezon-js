@@ -751,7 +751,7 @@ export interface ApiChannelDescription {
   //
   is_online?: Array<boolean>;
   //
-  topic?: string;
+  avatar_url?: string;
   //The channel type.
   type?: number;
   //
@@ -3301,6 +3301,20 @@ export interface ApiClanDiscoverRequest {
   item_per_page?: number;
   //
   page_number?: number;
+}
+
+/**  */
+export interface ApiIsFollowerRequest {
+  //
+  username?: string;
+}
+
+/**  */
+export interface ApiIsFollowerResponse {
+  //
+  is_follower?: boolean;
+  //
+  username?: string;
 }
 
 export class MezonApi {
@@ -11098,6 +11112,42 @@ export class MezonApi {
   
       const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
       const fetchOptions = buildFetchOptions("GET", options, bodyJson);
+      if (bearerToken) {
+          fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+      }
+  
+      return Promise.race([
+        fetch(fullUrl, fetchOptions).then((response) => {
+          if (response.status == 204) {
+            return response;
+          } else if (response.status >= 200 && response.status < 300) {
+            return response.json();
+          } else {
+            throw response;
+          }
+        }),
+        new Promise((_, reject) =>
+          setTimeout(reject, this.timeoutMs, "Request timed out.")
+        ),
+      ]);
+  }
+
+  /**  */
+    isFollower(bearerToken: string,
+        body:ApiIsFollowerRequest,
+        options: any = {}): Promise<ApiIsFollowerResponse> {
+      
+      if (body === null || body === undefined) {
+        throw new Error("'body' is a required parameter but is null or undefined.");
+      }
+      const urlPath = "/v2/follower";
+      const queryParams = new Map<string, any>();
+  
+      let bodyJson : string = "";
+      bodyJson = JSON.stringify(body || {});
+  
+      const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
+      const fetchOptions = buildFetchOptions("POST", options, bodyJson);
       if (bearerToken) {
           fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
       }
