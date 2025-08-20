@@ -751,7 +751,7 @@ export interface ApiChannelDescription {
   //
   is_online?: Array<boolean>;
   //
-  avatar_url?: string;
+  topic?: string;
   //The channel type.
   type?: number;
   //

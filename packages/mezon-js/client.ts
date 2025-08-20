@@ -478,7 +478,7 @@ export interface ApiUpdateChannelDescRequest {
   //
   e2ee?: number;
   //
-  avatar_url?: string;
+  topic?: string;
   //
   age_restricted?: number;
 }
