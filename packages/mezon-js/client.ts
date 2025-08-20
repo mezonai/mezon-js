@@ -169,6 +169,8 @@ import {
   ApiUnlockedItemRequest,
   ApiForSaleItemList,
   ApiUnlockedItemResponse,
+  ApiIsFollowerResponse,
+  ApiIsFollowerRequest,
 } from "./api.gen";
 
 import { Session } from "./session";
@@ -476,7 +478,7 @@ export interface ApiUpdateChannelDescRequest {
   //
   e2ee?: number;
   //
-  topic?: string;
+  avatar_url?: string;
   //
   age_restricted?: number;
 }
@@ -4847,6 +4849,23 @@ export class Client {
     return this.apiClient
       .listForSaleItems(session.token, page)
       .then((response: ApiForSaleItemList) => {
+        return Promise.resolve(response);
+      });
+  }
+
+  async isFollower(session: Session, 
+    req: ApiIsFollowerRequest): Promise<ApiIsFollowerResponse> {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired(Date.now() / 1000)
+    ) {
+      await this.sessionRefresh(session);
+    }
+
+    return this.apiClient
+      .isFollower(session.token, req)
+      .then((response: ApiIsFollowerResponse) => {
         return Promise.resolve(response);
       });
   }
