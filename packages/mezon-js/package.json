@@ -1,6 +1,6 @@
 {
   "name": "mezon-js",
-  "version": "2.12.59",
+  "version": "2.12.60",
   "scripts": {
     "build": "npx tsc && npx rollup -c --bundleConfigAsCjs && node build.mjs"
   },

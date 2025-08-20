@@ -3306,7 +3306,7 @@ export interface ApiClanDiscoverRequest {
 /**  */
 export interface ApiIsFollowerRequest {
   //
-  username?: string;
+  follow_id?: string;
 }
 
 /**  */
@@ -3314,7 +3314,7 @@ export interface ApiIsFollowerResponse {
   //
   is_follower?: boolean;
   //
-  username?: string;
+  follow_id?: string;
 }
 
 export class MezonApi {
