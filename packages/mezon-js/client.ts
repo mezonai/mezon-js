@@ -2335,19 +2335,10 @@ export class Client {
 
   /** Get link invite user */
   async getLinkInvite(
-    session: Session,
     inviteId: string
   ): Promise<ApiInviteUserRes> {
-    if (
-      this.autoRefreshSession &&
-      session.refresh_token &&
-      session.isexpired(Date.now() / 1000)
-    ) {
-      await this.sessionRefresh(session);
-    }
-
     return this.apiClient
-      .getLinkInvite(session.token, inviteId)
+      .getLinkInvite( this.serverkey, "", inviteId)
       .then((response: ApiInviteUserRes) => {
         return Promise.resolve(response);
       });

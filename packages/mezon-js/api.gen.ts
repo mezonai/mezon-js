@@ -6890,7 +6890,8 @@ export class MezonApi {
 
   /** Add users to a channel. */
   getLinkInvite(
-    bearerToken: string,
+    basicAuthUsername: string,
+    basicAuthPassword: string,
     inviteId: string,
     options: any = {}
   ): Promise<ApiInviteUserRes> {
@@ -6909,8 +6910,9 @@ export class MezonApi {
 
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("GET", options, bodyJson);
-    if (bearerToken) {
-      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+    if (basicAuthUsername) {
+      fetchOptions.headers["Authorization"] =
+        "Basic " + encode(basicAuthUsername + ":" + basicAuthPassword);
     }
 
     return Promise.race([
