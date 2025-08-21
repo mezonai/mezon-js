@@ -751,7 +751,7 @@ export interface ApiChannelDescription {
   //
   is_online?: Array<boolean>;
   //
-  avatar_url?: string;
+  topic?: string;
   //The channel type.
   type?: number;
   //
@@ -3306,7 +3306,7 @@ export interface ApiClanDiscoverRequest {
 /**  */
 export interface ApiIsFollowerRequest {
   //
-  username?: string;
+  follow_id?: string;
 }
 
 /**  */
@@ -3314,7 +3314,7 @@ export interface ApiIsFollowerResponse {
   //
   is_follower?: boolean;
   //
-  username?: string;
+  follow_id?: string;
 }
 
 export class MezonApi {
@@ -6890,7 +6890,8 @@ export class MezonApi {
 
   /** Add users to a channel. */
   getLinkInvite(
-    bearerToken: string,
+    basicAuthUsername: string,
+    basicAuthPassword: string,
     inviteId: string,
     options: any = {}
   ): Promise<ApiInviteUserRes> {
@@ -6909,8 +6910,9 @@ export class MezonApi {
 
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("GET", options, bodyJson);
-    if (bearerToken) {
-      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+    if (basicAuthUsername) {
+      fetchOptions.headers["Authorization"] =
+        "Basic " + encode(basicAuthUsername + ":" + basicAuthPassword);
     }
 
     return Promise.race([
