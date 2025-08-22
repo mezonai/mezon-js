@@ -422,7 +422,11 @@ export interface Envelope {
     | ListDataSocket
     | undefined;
   /** quick menu event */
-  quick_menu_event?: QuickMenuDataEvent | undefined;
+  quick_menu_event?:
+    | QuickMenuDataEvent
+    | undefined;
+  /** unblock friend */
+  un_block_friend?: UnblockFriend | undefined;
 }
 
 export interface FollowEvent {
@@ -872,6 +876,11 @@ export interface RemoveFriend {
 }
 
 export interface BlockFriend {
+  /**  */
+  user_id: string;
+}
+
+export interface UnblockFriend {
   /**  */
   user_id: string;
 }
@@ -1742,6 +1751,7 @@ function createBaseEnvelope(): Envelope {
     mark_as_read: undefined,
     list_data_socket: undefined,
     quick_menu_event: undefined,
+    un_block_friend: undefined,
   };
 }
 
@@ -1999,6 +2009,9 @@ export const Envelope = {
     }
     if (message.quick_menu_event !== undefined) {
       QuickMenuDataEvent.encode(message.quick_menu_event, writer.uint32(674).fork()).ldelim();
+    }
+    if (message.un_block_friend !== undefined) {
+      UnblockFriend.encode(message.un_block_friend, writer.uint32(682).fork()).ldelim();
     }
     return writer;
   },
@@ -2598,6 +2611,13 @@ export const Envelope = {
 
           message.quick_menu_event = QuickMenuDataEvent.decode(reader, reader.uint32());
           continue;
+        case 85:
+          if (tag !== 682) {
+            break;
+          }
+
+          message.un_block_friend = UnblockFriend.decode(reader, reader.uint32());
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -2801,6 +2821,7 @@ export const Envelope = {
       quick_menu_event: isSet(object.quick_menu_event)
         ? QuickMenuDataEvent.fromJSON(object.quick_menu_event)
         : undefined,
+      un_block_friend: isSet(object.un_block_friend) ? UnblockFriend.fromJSON(object.un_block_friend) : undefined,
     };
   },
 
@@ -3059,6 +3080,9 @@ export const Envelope = {
     }
     if (message.quick_menu_event !== undefined) {
       obj.quick_menu_event = QuickMenuDataEvent.toJSON(message.quick_menu_event);
+    }
+    if (message.un_block_friend !== undefined) {
+      obj.un_block_friend = UnblockFriend.toJSON(message.un_block_friend);
     }
     return obj;
   },
@@ -3336,6 +3360,9 @@ export const Envelope = {
       : undefined;
     message.quick_menu_event = (object.quick_menu_event !== undefined && object.quick_menu_event !== null)
       ? QuickMenuDataEvent.fromPartial(object.quick_menu_event)
+      : undefined;
+    message.un_block_friend = (object.un_block_friend !== undefined && object.un_block_friend !== null)
+      ? UnblockFriend.fromPartial(object.un_block_friend)
       : undefined;
     return message;
   },
@@ -6814,6 +6841,63 @@ export const BlockFriend = {
   },
   fromPartial<I extends Exact<DeepPartial<BlockFriend>, I>>(object: I): BlockFriend {
     const message = createBaseBlockFriend();
+    message.user_id = object.user_id ?? "";
+    return message;
+  },
+};
+
+function createBaseUnblockFriend(): UnblockFriend {
+  return { user_id: "" };
+}
+
+export const UnblockFriend = {
+  encode(message: UnblockFriend, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.user_id !== "") {
+      writer.uint32(10).string(message.user_id);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): UnblockFriend {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseUnblockFriend();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.user_id = reader.string();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): UnblockFriend {
+    return { user_id: isSet(object.user_id) ? globalThis.String(object.user_id) : "" };
+  },
+
+  toJSON(message: UnblockFriend): unknown {
+    const obj: any = {};
+    if (message.user_id !== "") {
+      obj.user_id = message.user_id;
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<UnblockFriend>, I>>(base?: I): UnblockFriend {
+    return UnblockFriend.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<UnblockFriend>, I>>(object: I): UnblockFriend {
+    const message = createBaseUnblockFriend();
     message.user_id = object.user_id ?? "";
     return message;
   },
