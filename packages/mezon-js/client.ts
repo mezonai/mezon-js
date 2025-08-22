@@ -722,6 +722,27 @@ export class Client {
       });
   }
 
+  /** Block one or more users by ID or username. */
+  async unblockFriends(
+    session: Session,
+    ids?: Array<string>,
+    usernames?: Array<string>
+  ): Promise<boolean> {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired(Date.now() / 1000)
+    ) {
+      await this.sessionRefresh(session);
+    }
+
+    return this.apiClient
+      .unblockFriends(session.token, ids, usernames)
+      .then((response: any) => {
+        return Promise.resolve(response != undefined);
+      });
+  }
+
   /** Create a new group with the current user as the creator and superadmin. */
   async uploadAttachmentFile(
     session: Session,
