@@ -994,6 +994,11 @@ export interface BlockFriend {
   user_id: string;
 }
 
+export interface UnblockFriend {
+  //
+  user_id: string;
+}
+
 export interface AddUserEmojiUsageEvent {
   emoji_id: string;
   clan_id: string;
@@ -1654,6 +1659,8 @@ export interface Socket {
 
   onblockfriend: (user: BlockFriend) => void;
 
+  onunblockfriend: (user: UnblockFriend) => void;
+
   /** Receive clan removed user event */
   onuserclanremoved: (user: UserClanRemovedEvent) => void;
 
@@ -1937,6 +1944,8 @@ export class DefaultSocket implements Socket {
           );
         } else if (message.block_friend) {
           this.onblockfriend(<BlockFriend>message.block_friend);
+        } else if (message.un_block_friend) {
+          this.onblockfriend(<BlockFriend>message.block_friend);
         } else if (message.remove_friend) {
           this.onremovefriend(<RemoveFriend>message.remove_friend);
         } else if (message.user_clan_removed_event) {
@@ -2137,6 +2146,12 @@ export class DefaultSocket implements Socket {
   }
 
   onblockfriend(user: BlockFriend) {
+    if (this.verbose && window && window.console) {
+      console.log(user);
+    }
+  }
+
+  onunblockfriend(user: UnblockFriend) {
     if (this.verbose && window && window.console) {
       console.log(user);
     }

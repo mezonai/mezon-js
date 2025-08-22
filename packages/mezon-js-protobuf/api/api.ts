@@ -3862,11 +3862,11 @@ export interface ForSaleItemList {
 }
 
 export interface IsFollowerRequest {
-  username: string;
+  follow_id: string;
 }
 
 export interface IsFollowerResponse {
-  username: string;
+  follow_id: string;
   is_follower: boolean;
 }
 
@@ -38511,13 +38511,13 @@ export const ForSaleItemList = {
 };
 
 function createBaseIsFollowerRequest(): IsFollowerRequest {
-  return { username: "" };
+  return { follow_id: "" };
 }
 
 export const IsFollowerRequest = {
   encode(message: IsFollowerRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.username !== "") {
-      writer.uint32(10).string(message.username);
+    if (message.follow_id !== "") {
+      writer.uint32(10).string(message.follow_id);
     }
     return writer;
   },
@@ -38534,7 +38534,7 @@ export const IsFollowerRequest = {
             break;
           }
 
-          message.username = reader.string();
+          message.follow_id = reader.string();
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -38546,13 +38546,13 @@ export const IsFollowerRequest = {
   },
 
   fromJSON(object: any): IsFollowerRequest {
-    return { username: isSet(object.username) ? globalThis.String(object.username) : "" };
+    return { follow_id: isSet(object.follow_id) ? globalThis.String(object.follow_id) : "" };
   },
 
   toJSON(message: IsFollowerRequest): unknown {
     const obj: any = {};
-    if (message.username !== "") {
-      obj.username = message.username;
+    if (message.follow_id !== "") {
+      obj.follow_id = message.follow_id;
     }
     return obj;
   },
@@ -38562,19 +38562,19 @@ export const IsFollowerRequest = {
   },
   fromPartial<I extends Exact<DeepPartial<IsFollowerRequest>, I>>(object: I): IsFollowerRequest {
     const message = createBaseIsFollowerRequest();
-    message.username = object.username ?? "";
+    message.follow_id = object.follow_id ?? "";
     return message;
   },
 };
 
 function createBaseIsFollowerResponse(): IsFollowerResponse {
-  return { username: "", is_follower: false };
+  return { follow_id: "", is_follower: false };
 }
 
 export const IsFollowerResponse = {
   encode(message: IsFollowerResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.username !== "") {
-      writer.uint32(10).string(message.username);
+    if (message.follow_id !== "") {
+      writer.uint32(10).string(message.follow_id);
     }
     if (message.is_follower !== false) {
       writer.uint32(16).bool(message.is_follower);
@@ -38594,7 +38594,7 @@ export const IsFollowerResponse = {
             break;
           }
 
-          message.username = reader.string();
+          message.follow_id = reader.string();
           continue;
         case 2:
           if (tag !== 16) {
@@ -38614,15 +38614,15 @@ export const IsFollowerResponse = {
 
   fromJSON(object: any): IsFollowerResponse {
     return {
-      username: isSet(object.username) ? globalThis.String(object.username) : "",
+      follow_id: isSet(object.follow_id) ? globalThis.String(object.follow_id) : "",
       is_follower: isSet(object.is_follower) ? globalThis.Boolean(object.is_follower) : false,
     };
   },
 
   toJSON(message: IsFollowerResponse): unknown {
     const obj: any = {};
-    if (message.username !== "") {
-      obj.username = message.username;
+    if (message.follow_id !== "") {
+      obj.follow_id = message.follow_id;
     }
     if (message.is_follower !== false) {
       obj.is_follower = message.is_follower;
@@ -38635,7 +38635,7 @@ export const IsFollowerResponse = {
   },
   fromPartial<I extends Exact<DeepPartial<IsFollowerResponse>, I>>(object: I): IsFollowerResponse {
     const message = createBaseIsFollowerResponse();
-    message.username = object.username ?? "";
+    message.follow_id = object.follow_id ?? "";
     message.is_follower = object.is_follower ?? false;
     return message;
   },
