@@ -2840,6 +2840,8 @@ export interface ApiWebhook {
   url?: string;
   //
   webhook_name?: string;
+  //
+  clan_id?: string;
 }
 
 /**  */

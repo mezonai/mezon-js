@@ -2558,6 +2558,7 @@ export interface Webhook {
   update_time: string;
   avatar: string;
   status: number;
+  clan_id: string;
 }
 
 export interface WebhookCreateRequest {
@@ -24012,6 +24013,7 @@ function createBaseWebhook(): Webhook {
     update_time: "",
     avatar: "",
     status: 0,
+    clan_id: "",
   };
 }
 
@@ -24046,6 +24048,9 @@ export const Webhook = {
     }
     if (message.status !== 0) {
       writer.uint32(80).int32(message.status);
+    }
+    if (message.clan_id !== "") {
+      writer.uint32(90).string(message.clan_id);
     }
     return writer;
   },
@@ -24127,6 +24132,13 @@ export const Webhook = {
 
           message.status = reader.int32();
           continue;
+        case 11:
+          if (tag !== 90) {
+            break;
+          }
+
+          message.clan_id = reader.string();
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -24148,6 +24160,7 @@ export const Webhook = {
       update_time: isSet(object.update_time) ? globalThis.String(object.update_time) : "",
       avatar: isSet(object.avatar) ? globalThis.String(object.avatar) : "",
       status: isSet(object.status) ? globalThis.Number(object.status) : 0,
+      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
     };
   },
 
@@ -24183,6 +24196,9 @@ export const Webhook = {
     if (message.status !== 0) {
       obj.status = Math.round(message.status);
     }
+    if (message.clan_id !== "") {
+      obj.clan_id = message.clan_id;
+    }
     return obj;
   },
 
@@ -24201,6 +24217,7 @@ export const Webhook = {
     message.update_time = object.update_time ?? "";
     message.avatar = object.avatar ?? "";
     message.status = object.status ?? 0;
+    message.clan_id = object.clan_id ?? "";
     return message;
   },
 };
