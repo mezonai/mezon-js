@@ -1945,7 +1945,7 @@ export class DefaultSocket implements Socket {
         } else if (message.block_friend) {
           this.onblockfriend(<BlockFriend>message.block_friend);
         } else if (message.un_block_friend) {
-          this.onunblockfriend(<BlockFriend>message.block_friend);
+          this.onunblockfriend(<BlockFriend>message.un_block_friend);
         } else if (message.remove_friend) {
           this.onremovefriend(<RemoveFriend>message.remove_friend);
         } else if (message.user_clan_removed_event) {
