@@ -180,6 +180,8 @@ export interface MezonUpdateClanDescBody {
   description?: string;
   // about
   about?: string;
+  // short url for community
+  short_url?: string;
 }
 
 /**  */
@@ -3265,6 +3267,8 @@ export interface ApiClanDiscover {
   total_members?: number;
   //
   verified?: boolean;
+  //
+  short_url?: string;
 }
 
 /**  */
