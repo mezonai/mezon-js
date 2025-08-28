@@ -180,6 +180,8 @@ export interface MezonUpdateClanDescBody {
   description?: string;
   // about
   about?: string;
+  // short url for community
+  short_url?: string;
 }
 
 /**  */
@@ -950,22 +952,6 @@ export interface ApiClanDesc {
 export interface ApiClanDescList {
   //A list of channel.
   clandesc?: Array<ApiClanDesc>;
-}
-
-/**  */
-export interface ApiClanDescProfile {
-  //
-  avatar_url?: string;
-  //
-  clan_id?: string;
-  //
-  creator_id?: string;
-  //
-  nick_name?: string;
-  //
-  profile_banner?: string;
-  //
-  profile_theme?: string;
 }
 
 /**  */
@@ -3265,6 +3251,8 @@ export interface ApiClanDiscover {
   total_members?: number;
   //
   verified?: boolean;
+  //
+  short_url?: string;
 }
 
 /**  */
@@ -3300,6 +3288,8 @@ export interface ApiListClanDiscover {
 /**  */
 export interface ApiClanDiscoverRequest {
   //
+  clan_id?: string;
+  //
   item_per_page?: number;
   //
   page_number?: number;
@@ -3317,6 +3307,14 @@ export interface ApiIsFollowerResponse {
   is_follower?: boolean;
   //
   follow_id?: string;
+}
+
+/**  */
+export interface ApiTransferOwnershipRequest {
+  //
+  clan_id?: string;
+  //
+  new_owner_id?: string;
 }
 
 export class MezonApi {
@@ -5556,95 +5554,6 @@ export class MezonApi {
 
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("GET", options, bodyJson);
-    if (bearerToken) {
-      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-    }
-
-    return Promise.race([
-      fetch(fullUrl, fetchOptions).then((response) => {
-        if (response.status == 204) {
-          return response;
-        } else if (response.status >= 200 && response.status < 300) {
-          return response.json();
-        } else {
-          throw response;
-        }
-      }),
-      new Promise((_, reject) =>
-        setTimeout(reject, this.timeoutMs, "Request timed out.")
-      ),
-    ]);
-  }
-
-  /** Get a clan desc profile */
-  getClanDescProfile(
-    bearerToken: string,
-    clanId: string,
-    options: any = {}
-  ): Promise<ApiClanDescProfile> {
-    if (clanId === null || clanId === undefined) {
-      throw new Error(
-        "'clanId' is a required parameter but is null or undefined."
-      );
-    }
-    const urlPath = "/v2/clandescprofile/{clanId}".replace(
-      "{clanId}",
-      encodeURIComponent(String(clanId))
-    );
-    const queryParams = new Map<string, any>();
-
-    let bodyJson: string = "";
-
-    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
-    const fetchOptions = buildFetchOptions("GET", options, bodyJson);
-    if (bearerToken) {
-      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-    }
-
-    return Promise.race([
-      fetch(fullUrl, fetchOptions).then((response) => {
-        if (response.status == 204) {
-          return response;
-        } else if (response.status >= 200 && response.status < 300) {
-          return response.json();
-        } else {
-          throw response;
-        }
-      }),
-      new Promise((_, reject) =>
-        setTimeout(reject, this.timeoutMs, "Request timed out.")
-      ),
-    ]);
-  }
-
-  /** Update fields in a given clan profile. */
-  updateClanDescProfile(
-    bearerToken: string,
-    clanId: string,
-    body: {},
-    options: any = {}
-  ): Promise<any> {
-    if (clanId === null || clanId === undefined) {
-      throw new Error(
-        "'clanId' is a required parameter but is null or undefined."
-      );
-    }
-    if (body === null || body === undefined) {
-      throw new Error(
-        "'body' is a required parameter but is null or undefined."
-      );
-    }
-    const urlPath = "/v2/clandescprofile/{clanId}".replace(
-      "{clanId}",
-      encodeURIComponent(String(clanId))
-    );
-    const queryParams = new Map<string, any>();
-
-    let bodyJson: string = "";
-    bodyJson = JSON.stringify(body || {});
-
-    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
-    const fetchOptions = buildFetchOptions("PUT", options, bodyJson);
     if (bearerToken) {
       fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
     }
@@ -11180,6 +11089,42 @@ export class MezonApi {
         throw new Error("'body' is a required parameter but is null or undefined.");
       }
       const urlPath = "/v2/follower";
+      const queryParams = new Map<string, any>();
+  
+      let bodyJson : string = "";
+      bodyJson = JSON.stringify(body || {});
+  
+      const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
+      const fetchOptions = buildFetchOptions("POST", options, bodyJson);
+      if (bearerToken) {
+          fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+      }
+  
+      return Promise.race([
+        fetch(fullUrl, fetchOptions).then((response) => {
+          if (response.status == 204) {
+            return response;
+          } else if (response.status >= 200 && response.status < 300) {
+            return response.json();
+          } else {
+            throw response;
+          }
+        }),
+        new Promise((_, reject) =>
+          setTimeout(reject, this.timeoutMs, "Request timed out.")
+        ),
+      ]);
+  }
+
+  /**  */
+    transferOwnership(bearerToken: string,
+        body:ApiTransferOwnershipRequest,
+        options: any = {}): Promise<any> {
+      
+      if (body === null || body === undefined) {
+        throw new Error("'body' is a required parameter but is null or undefined.");
+      }
+      const urlPath = "/v2/transfer/ownership";
       const queryParams = new Map<string, any>();
   
       let bodyJson : string = "";
