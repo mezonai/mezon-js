@@ -3304,6 +3304,8 @@ export interface ApiListClanDiscover {
 /**  */
 export interface ApiClanDiscoverRequest {
   //
+  clan_id?: string;
+  //
   item_per_page?: number;
   //
   page_number?: number;
@@ -3321,6 +3323,14 @@ export interface ApiIsFollowerResponse {
   is_follower?: boolean;
   //
   follow_id?: string;
+}
+
+/**  */
+export interface ApiTransferOwnershipRequest {
+  //
+  clan_id?: string;
+  //
+  new_owner_id?: string;
 }
 
 export class MezonApi {
@@ -11184,6 +11194,42 @@ export class MezonApi {
         throw new Error("'body' is a required parameter but is null or undefined.");
       }
       const urlPath = "/v2/follower";
+      const queryParams = new Map<string, any>();
+  
+      let bodyJson : string = "";
+      bodyJson = JSON.stringify(body || {});
+  
+      const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
+      const fetchOptions = buildFetchOptions("POST", options, bodyJson);
+      if (bearerToken) {
+          fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+      }
+  
+      return Promise.race([
+        fetch(fullUrl, fetchOptions).then((response) => {
+          if (response.status == 204) {
+            return response;
+          } else if (response.status >= 200 && response.status < 300) {
+            return response.json();
+          } else {
+            throw response;
+          }
+        }),
+        new Promise((_, reject) =>
+          setTimeout(reject, this.timeoutMs, "Request timed out.")
+        ),
+      ]);
+  }
+
+  /**  */
+    transferOwnership(bearerToken: string,
+        body:ApiTransferOwnershipRequest,
+        options: any = {}): Promise<any> {
+      
+      if (body === null || body === undefined) {
+        throw new Error("'body' is a required parameter but is null or undefined.");
+      }
+      const urlPath = "/v2/transfer/ownership";
       const queryParams = new Map<string, any>();
   
       let bodyJson : string = "";

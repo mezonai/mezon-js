@@ -171,6 +171,7 @@ import {
   ApiUnlockedItemResponse,
   ApiIsFollowerResponse,
   ApiIsFollowerRequest,
+  ApiTransferOwnershipRequest,
 } from "./api.gen";
 
 import { Session } from "./session";
@@ -4879,6 +4880,23 @@ export class Client {
       .isFollower(session.token, req)
       .then((response: ApiIsFollowerResponse) => {
         return Promise.resolve(response);
+      });
+  }
+
+  async transferOwnership(session: Session, 
+    req: ApiTransferOwnershipRequest): Promise<any> {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired(Date.now() / 1000)
+    ) {
+      await this.sessionRefresh(session);
+    }
+
+    return this.apiClient
+      .transferOwnership(session.token, req)
+      .then((response: any) => {
+        return response !== undefined;
       });
   }
 
