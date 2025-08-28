@@ -955,22 +955,6 @@ export interface ApiClanDescList {
 }
 
 /**  */
-export interface ApiClanDescProfile {
-  //
-  avatar_url?: string;
-  //
-  clan_id?: string;
-  //
-  creator_id?: string;
-  //
-  nick_name?: string;
-  //
-  profile_banner?: string;
-  //
-  profile_theme?: string;
-}
-
-/**  */
 export interface ApiClanEmoji {
   //
   category?: string;
@@ -5570,95 +5554,6 @@ export class MezonApi {
 
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("GET", options, bodyJson);
-    if (bearerToken) {
-      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-    }
-
-    return Promise.race([
-      fetch(fullUrl, fetchOptions).then((response) => {
-        if (response.status == 204) {
-          return response;
-        } else if (response.status >= 200 && response.status < 300) {
-          return response.json();
-        } else {
-          throw response;
-        }
-      }),
-      new Promise((_, reject) =>
-        setTimeout(reject, this.timeoutMs, "Request timed out.")
-      ),
-    ]);
-  }
-
-  /** Get a clan desc profile */
-  getClanDescProfile(
-    bearerToken: string,
-    clanId: string,
-    options: any = {}
-  ): Promise<ApiClanDescProfile> {
-    if (clanId === null || clanId === undefined) {
-      throw new Error(
-        "'clanId' is a required parameter but is null or undefined."
-      );
-    }
-    const urlPath = "/v2/clandescprofile/{clanId}".replace(
-      "{clanId}",
-      encodeURIComponent(String(clanId))
-    );
-    const queryParams = new Map<string, any>();
-
-    let bodyJson: string = "";
-
-    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
-    const fetchOptions = buildFetchOptions("GET", options, bodyJson);
-    if (bearerToken) {
-      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-    }
-
-    return Promise.race([
-      fetch(fullUrl, fetchOptions).then((response) => {
-        if (response.status == 204) {
-          return response;
-        } else if (response.status >= 200 && response.status < 300) {
-          return response.json();
-        } else {
-          throw response;
-        }
-      }),
-      new Promise((_, reject) =>
-        setTimeout(reject, this.timeoutMs, "Request timed out.")
-      ),
-    ]);
-  }
-
-  /** Update fields in a given clan profile. */
-  updateClanDescProfile(
-    bearerToken: string,
-    clanId: string,
-    body: {},
-    options: any = {}
-  ): Promise<any> {
-    if (clanId === null || clanId === undefined) {
-      throw new Error(
-        "'clanId' is a required parameter but is null or undefined."
-      );
-    }
-    if (body === null || body === undefined) {
-      throw new Error(
-        "'body' is a required parameter but is null or undefined."
-      );
-    }
-    const urlPath = "/v2/clandescprofile/{clanId}".replace(
-      "{clanId}",
-      encodeURIComponent(String(clanId))
-    );
-    const queryParams = new Map<string, any>();
-
-    let bodyJson: string = "";
-    bodyJson = JSON.stringify(body || {});
-
-    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
-    const fetchOptions = buildFetchOptions("PUT", options, bodyJson);
     if (bearerToken) {
       fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
     }

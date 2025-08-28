@@ -43,7 +43,6 @@ import {
   ApiUsers,
   MezonApi,
   ApiSession,
-  ApiClanDescProfile,
   ApiClanProfile,
   ApiChannelUserList,
   ApiClanUserList,
@@ -1744,26 +1743,6 @@ export class Client {
       });
   }
 
-  /** Get a clan desc profile */
-  async getClanDescProfile(
-    session: Session,
-    clanId: string
-  ): Promise<ApiClanDescProfile> {
-    if (
-      this.autoRefreshSession &&
-      session.refresh_token &&
-      session.isexpired(Date.now() / 1000)
-    ) {
-      await this.sessionRefresh(session);
-    }
-
-    return this.apiClient
-      .getClanDescProfile(session.token, clanId)
-      .then((response: ApiClanDescProfile) => {
-        return Promise.resolve(response);
-      });
-  }
-
   async getUserProfileOnClan(
     session: Session,
     clanId: string
@@ -2226,27 +2205,6 @@ export class Client {
 
     return this.apiClient
       .updateCategory(session.token, clanId, request)
-      .then((response: any) => {
-        return response !== undefined;
-      });
-  }
-
-  /** Update fields in a given clan profile. */
-  async updateClanDescProfile(
-    session: Session,
-    clanId: string,
-    request: ApiUpdateClanDescProfileRequest
-  ): Promise<boolean> {
-    if (
-      this.autoRefreshSession &&
-      session.refresh_token &&
-      session.isexpired(Date.now() / 1000)
-    ) {
-      await this.sessionRefresh(session);
-    }
-
-    return this.apiClient
-      .updateClanDescProfile(session.token, clanId, request)
       .then((response: any) => {
         return response !== undefined;
       });
