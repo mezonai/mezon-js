@@ -433,6 +433,9 @@ export interface ChannelMessageContent {
   vk?: LinkVoiceRoomOnMessage[];
   embed?: IEmbedProps[];
   components?: IMessageActionRow[] | any;
+  songUrl?: string; 
+  meetingCode?: string; 
+  token?: string; 
 }
 
 export interface StreamingLeavedEvent {
