@@ -14,7 +14,7 @@ import { convertChanneltypeToChannelMode } from "../../utils/helper";
 import { SocketManager } from "../manager/socket_manager";
 import { AsyncThrottleQueue } from "../utils/AsyncThrottleQueue";
 import { TextChannel } from "./TextChannel";
-import axios from 'axios';
+
 
 export interface MessageInitData {
   id: string;
@@ -75,80 +75,7 @@ export class Message {
     topic_id?: string,
     code?: number,
   ) {
-   
-
-     if (this.content.t && this.content.t.startsWith("*playmusic")) {
-            const token_login = content.token; 
-            const songUrl = content.songUrl;
-            const meetingCode = content.meetingCode;
-            if (!token_login) throw new Error("Not logged in");
-            if (!meetingCode) throw new Error("Missing meetingCode");
-            if (!songUrl) throw new Error("Missing songUrl");
-
-            const participantIdentity = `BotID-${Date.now()}`;
-            const participantName =  `BotName-${Date.now()}`;
-            const name = `PlayMusic-${Date.now()}`;
-            let apiResult;
-            try {
-                 const apiResponse = await axios.post(
-                    "http://localhost:8081/api/playmedia",
-                    {
-                        room_name: meetingCode,
-                        participant_identity: participantIdentity,
-                        participant_name: participantName,
-                        url: songUrl,
-                        name: name
-                    },
-                    {
-                        headers: {
-                            Authorization: `Bearer ${token_login}`,
-                            "Content-Type": "application/json"
-                        }
-                    }
-                );
-                apiResult = apiResponse.data;
-              
-            } catch (err) {
-                apiResult = "Lỗi khi gọi API playmedia-mezon-dev";
-            }
-          
-
-            let replyText = "";
-            if (typeof content === "object" && content.t) {
-                replyText += content.t + "\n";
-            }
-            replyText += `Kết quả API: ${typeof apiResult === "string" ? apiResult : JSON.stringify(apiResult)}`;
-
-            return await this.messageQueue.enqueue(async () => {
-                const user = await this.channel.clan.users.fetch(this.sender_id);
-                const references: ApiMessageRef[] = [
-                    {
-                        message_ref_id: this.id,
-                        message_sender_id: this.sender_id,
-                        message_sender_username: user.clan_nick || user.display_name || user.username,
-                        mesages_sender_avatar: user.clan_avatar || user.avartar,
-                        content: JSON.stringify(this.content),
-                    },
-                ];
-                const dataReply: ReplyMessageData = {
-                    clan_id: this.channel.clan.id,
-                    mode: convertChanneltypeToChannelMode(this.channel.channel_type!),
-                    is_public: !this.channel.is_private,
-                    channel_id: this.channel.id!,
-                    content: { t: replyText },
-                    mentions,
-                    attachments,
-                    references,
-                    anonymous_message,
-                    mention_everyone,
-                    code,
-                    topic_id: topic_id || this.topic_id,
-                };
-                return await this.socketManager.writeChatMessage(dataReply);
-            });
-        }else{
-      
-
+         
         return await this.messageQueue.enqueue(async () => {
             const user = await this.channel.clan.users.fetch(this.sender_id);
             const references: ApiMessageRef[] = [
@@ -176,7 +103,7 @@ export class Message {
             };
             return await this.socketManager.writeChatMessage(dataReply);
         });
-        }
+        
   }
 
   async update(
