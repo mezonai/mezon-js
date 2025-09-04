@@ -15,7 +15,6 @@ import { SocketManager } from "../manager/socket_manager";
 import { AsyncThrottleQueue } from "../utils/AsyncThrottleQueue";
 import { TextChannel } from "./TextChannel";
 
-
 export interface MessageInitData {
   id: string;
   clan_id: string;
@@ -75,35 +74,34 @@ export class Message {
     topic_id?: string,
     code?: number,
   ) {
-         
-        return await this.messageQueue.enqueue(async () => {
-            const user = await this.channel.clan.users.fetch(this.sender_id);
-            const references: ApiMessageRef[] = [
-                {
-                    message_ref_id: this.id,
-                    message_sender_id: this.sender_id,
-                    message_sender_username: user.clan_nick || user.display_name || user.username,
-                    mesages_sender_avatar: user.clan_avatar || user.avartar,
-                    content: JSON.stringify(this.content),
-                },
-            ];
-            const dataReply: ReplyMessageData =  {
-                clan_id: this.channel.clan.id,
-                mode: convertChanneltypeToChannelMode(this.channel.channel_type!),
-                is_public: !this.channel.is_private,
-                channel_id: this.channel.id!,
-                content,
-                mentions,
-                attachments,
-                references,
-                anonymous_message,
-                mention_everyone,
-                code,
-                topic_id: topic_id || this.topic_id,
-            };
-            return await this.socketManager.writeChatMessage(dataReply);
-        });
-        
+    return await this.messageQueue.enqueue(async () => {
+      const user = await this.channel.clan.users.fetch(this.sender_id);
+      const references: ApiMessageRef[] = [
+        {
+          message_ref_id: this.id,
+          message_sender_id: this.sender_id,
+          message_sender_username:
+            user.clan_nick || user.display_name || user.username,
+          mesages_sender_avatar: user.clan_avatar || user.avartar,
+          content: JSON.stringify(this.content),
+        },
+      ];
+      const dataReply: ReplyMessageData = {
+        clan_id: this.channel.clan.id,
+        mode: convertChanneltypeToChannelMode(this.channel.channel_type!),
+        is_public: !this.channel.is_private,
+        channel_id: this.channel.id!,
+        content,
+        mentions,
+        attachments,
+        references,
+        anonymous_message,
+        mention_everyone,
+        code,
+        topic_id: topic_id || this.topic_id,
+      };
+      return await this.socketManager.writeChatMessage(dataReply);
+    });
   }
 
   async update(

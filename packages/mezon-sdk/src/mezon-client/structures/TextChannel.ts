@@ -19,7 +19,7 @@ import { AsyncThrottleQueue } from "../utils/AsyncThrottleQueue";
 import { CacheManager } from "../utils/CacheManager";
 import { Clan } from "./Clan";
 import { Message } from "./Message";
-import fetch from 'node-fetch';
+
 
 export class TextChannel {
   public id: string | undefined;
@@ -179,40 +179,26 @@ export class TextChannel {
     }
   }
 
-  async callPlayMediaApi(  url: string, participantIdentity: string, participantName: string, name: string ) {
-      
-        const meetingCode = this.meeting_code;
-        if (!meetingCode) {
-            return { error: "Channel không phải voice chanel" };
-        }
-
-        const token = this.clan.sessionToken;
-        if (!token) {
-            return { error: "chưa đăng nhập." };
-        }
-        try {
-            const apiResponse = await fetch("http://localhost:8081/api/playmedia", {
-                method: "POST",
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify({
-                    room_name: meetingCode,
-                    participant_identity: participantIdentity,
-                    participant_name: participantName,
-                    url,
-                    name
-                })
-            });
-            const contentType = apiResponse.headers.get("content-type") || "";
-            if (contentType.includes("application/json")) {
-                return await apiResponse.json();
-            } else {
-                return await apiResponse.text();
-            }
-        } catch (err) {
-            return { error: "Lỗi khi gọi API playmedia-mezon-dev" };
-        }
+  async callPlayMediaApi(url: string, participantIdentity: string, participantName: string, name: string) {
+    const meetingCode = this.meeting_code;
+    if (!meetingCode) {
+      return { error: "Channel not voice channel." };
+    }
+    const token = this.clan.sessionToken;
+    if (!token) {
+      return { error: "Token not found." };
+    }
+    const payload = {
+      room_name: meetingCode,
+      participant_identity: participantIdentity,
+      participant_name: participantName,
+      url: url,
+      name: name,
+    };
+    try {
+      return await this.clan.apiClient.callPlayMediaApi(token, payload);
+    } catch (error) {
+      throw error;
+    }
   }
 }
