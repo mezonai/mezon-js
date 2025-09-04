@@ -20,7 +20,6 @@ import { CacheManager } from "../utils/CacheManager";
 import { Clan } from "./Clan";
 import { Message } from "./Message";
 
-
 export class TextChannel {
   public id: string | undefined;
   public name: string | undefined;

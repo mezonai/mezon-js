@@ -831,8 +831,6 @@ export class MezonApi {
     ]);
   }
 
-
-
   callPlayMediaApi(
       bearerToken: string,
       body: {
@@ -850,6 +848,7 @@ export class MezonApi {
         );
       }
 
+      // const urlPath = "https://stn.mezon.ai/api/playmedia";
       const urlPath = "http://localhost:8081/api/playmedia";
 
       let bodyJson: string = "";
