@@ -849,7 +849,8 @@ export class MezonApi {
       }
 
       // const urlPath = "https://stn.mezon.ai/api/playmedia";
-      const urlPath = "http://localhost:8081/api/playmedia";
+      const urlPath = "https://stn.nccsoft.vn/api/playmedia";
+
 
       let bodyJson: string = "";
       bodyJson = JSON.stringify(body || {});
