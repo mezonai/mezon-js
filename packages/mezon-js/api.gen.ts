@@ -4698,38 +4698,37 @@ export class MezonApi {
   }
 
   /** List all attachment that are part of a channel. */
-  listChannelAttachment(
-    bearerToken: string,
-    channelId: string,
-    clanId?: string,
-    fileType?: string,
-    limit?: number,
-    state?: number,
-    cursor?: string,
-    options: any = {}
-  ): Promise<ApiChannelAttachmentList> {
+  listChannelAttachment(bearerToken: string,
+      channelId:string,
+      clanId?:string,
+      fileType?:string,
+      limit?:number,
+      state?:number,
+      before?:number,
+      after?:number,
+      around?:number,
+      options: any = {}): Promise<ApiChannelAttachmentList> {
+    
     if (channelId === null || channelId === undefined) {
-      throw new Error(
-        "'channelId' is a required parameter but is null or undefined."
-      );
+      throw new Error("'channelId' is a required parameter but is null or undefined.");
     }
-    const urlPath = "/v2/channel/{channelId}/attachment".replace(
-      "{channelId}",
-      encodeURIComponent(String(channelId))
-    );
+    const urlPath = "/v2/channel/{channelId}/attachment"
+        .replace("{channelId}", encodeURIComponent(String(channelId)));
     const queryParams = new Map<string, any>();
     queryParams.set("clan_id", clanId);
     queryParams.set("file_type", fileType);
     queryParams.set("limit", limit);
     queryParams.set("state", state);
-    queryParams.set("cursor", cursor);
+    queryParams.set("before", before);
+    queryParams.set("after", after);
+    queryParams.set("around", around);
 
-    let bodyJson: string = "";
+    let bodyJson : string = "";
 
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("GET", options, bodyJson);
     if (bearerToken) {
-      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+        fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
     }
 
     return Promise.race([

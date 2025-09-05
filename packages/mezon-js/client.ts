@@ -1435,7 +1435,8 @@ export class Client {
     fileType: string,
     state?: number,
     limit?: number,
-    cursor?: string
+    before?: number,
+    after?: number,
   ): Promise<ApiChannelAttachmentList> {
     if (
       this.autoRefreshSession &&
@@ -1453,7 +1454,8 @@ export class Client {
         fileType,
         limit,
         state,
-        cursor
+        before,
+        after,
       )
       .then((response: ApiChannelAttachmentList) => {
         var result: ApiChannelAttachmentList = {
