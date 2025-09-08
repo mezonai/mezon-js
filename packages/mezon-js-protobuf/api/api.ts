@@ -3705,6 +3705,7 @@ export interface GenerateMeetTokenRequest {
 export interface MeetParticipantRequest {
   username: string;
   room_name: string;
+  channel_id: string;
   clan_id: string;
 }
 
@@ -36056,7 +36057,7 @@ export const GenerateMeetTokenRequest = {
 };
 
 function createBaseMeetParticipantRequest(): MeetParticipantRequest {
-  return { username: "", room_name: "", clan_id: "" };
+  return { username: "", room_name: "", channel_id: "", clan_id: "" };
 }
 
 export const MeetParticipantRequest = {
@@ -36067,8 +36068,11 @@ export const MeetParticipantRequest = {
     if (message.room_name !== "") {
       writer.uint32(18).string(message.room_name);
     }
+    if (message.channel_id !== "") {
+      writer.uint32(26).string(message.channel_id);
+    }
     if (message.clan_id !== "") {
-      writer.uint32(26).string(message.clan_id);
+      writer.uint32(34).string(message.clan_id);
     }
     return writer;
   },
@@ -36099,6 +36103,13 @@ export const MeetParticipantRequest = {
             break;
           }
 
+          message.channel_id = reader.string();
+          continue;
+        case 4:
+          if (tag !== 34) {
+            break;
+          }
+
           message.clan_id = reader.string();
           continue;
       }
@@ -36114,6 +36125,7 @@ export const MeetParticipantRequest = {
     return {
       username: isSet(object.username) ? globalThis.String(object.username) : "",
       room_name: isSet(object.room_name) ? globalThis.String(object.room_name) : "",
+      channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "",
       clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
     };
   },
@@ -36125,6 +36137,9 @@ export const MeetParticipantRequest = {
     }
     if (message.room_name !== "") {
       obj.room_name = message.room_name;
+    }
+    if (message.channel_id !== "") {
+      obj.channel_id = message.channel_id;
     }
     if (message.clan_id !== "") {
       obj.clan_id = message.clan_id;
@@ -36139,6 +36154,7 @@ export const MeetParticipantRequest = {
     const message = createBaseMeetParticipantRequest();
     message.username = object.username ?? "";
     message.room_name = object.room_name ?? "";
+    message.channel_id = object.channel_id ?? "";
     message.clan_id = object.clan_id ?? "";
     return message;
   },

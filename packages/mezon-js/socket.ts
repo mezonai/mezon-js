@@ -765,6 +765,14 @@ export interface ClanProfileUpdatedEvent {
   clan_id: string;
 }
 
+export interface MeetParticipantEvent { 
+  username: string;
+  room_name: string;
+  channel_id: string;
+  clan_id: string;
+  action: number;
+}
+
 /** Stream identifier */
 export interface StreamId {
   /** The type of stream (e.g. chat). */
@@ -1732,7 +1740,9 @@ export interface Socket {
 
   onroleassign: (role_assign_event: RoleAssignedEvent) => void;
 
-  ondeleteaccount: (deleteAccountEvent: DeleteAccountEvent) => void;
+  ondeleteaccount: (delete_account_event: DeleteAccountEvent) => void;
+
+  onmeetparticipantevent: (event: MeetParticipantEvent) => void;
 
   onstreamingchannelstarted: (
     streaming_started_event: StreamingStartedEvent
@@ -2018,6 +2028,8 @@ export class DefaultSocket implements Socket {
           this.onunpinmessageevent(<UnpinMessageEvent>message.unpin_message_event);
         } else if (message.quick_menu_event) {
           this.onquickmenuevent(<QuickMenuEvent>message.quick_menu_event);
+        } else if (message.meet_participant_event) {
+          this.onmeetparticipantevent(<MeetParticipantEvent>message.meet_participant_event);
         } else {
           if (this.verbose && window && window.console) {
             console.log("Unrecognized message received: %o", message);
@@ -2464,6 +2476,12 @@ export class DefaultSocket implements Socket {
   }
 
   onquickmenuevent(event: QuickMenuEvent) {
+    if (this.verbose && window && window.console) {
+      console.log(event);
+    }
+  }
+
+  onmeetparticipantevent(event: MeetParticipantEvent) {
     if (this.verbose && window && window.console) {
       console.log(event);
     }

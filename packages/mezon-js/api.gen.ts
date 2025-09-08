@@ -1424,9 +1424,11 @@ export interface ApiGenerateMeetTokenExternalResponse {
 /**  */
 export interface ApiMeetParticipantRequest {
   //
-  room_id?: string;
+  room_name?: string;
   //
   username?: string;
+  //
+  channel_id?: string;
   //
   clan_id?: string;
 }
