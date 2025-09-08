@@ -178,7 +178,7 @@ export class TextChannel {
     }
   }
 
-  async callPlayMediaApi(url: string, participantIdentity: string, participantName: string, name: string) {
+  async playMedia(url: string, participantIdentity: string, participantName: string, name: string) {
     const meetingCode = this.meeting_code;
     if (!meetingCode) {
       return { error: "Channel not voice channel." };
@@ -195,7 +195,7 @@ export class TextChannel {
       name: name,
     };
     try {
-      return await this.clan.apiClient.callPlayMediaApi(token, payload);
+      return await this.clan.apiClient.playMedia(token, payload);
     } catch (error) {
       throw error;
     }

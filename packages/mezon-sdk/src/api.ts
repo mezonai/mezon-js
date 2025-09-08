@@ -831,7 +831,7 @@ export class MezonApi {
     ]);
   }
 
-  callPlayMediaApi(
+  playMedia(
       bearerToken: string,
       body: {
         room_name: string;
