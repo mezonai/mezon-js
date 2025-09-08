@@ -1422,6 +1422,18 @@ export interface ApiGenerateMeetTokenExternalResponse {
 }
 
 /**  */
+export interface ApiMeetParticipantRequest {
+  //
+  room_name?: string;
+  //
+  username?: string;
+  //
+  channel_id?: string;
+  //
+  clan_id?: string;
+}
+
+/**  */
 export interface ApiGetPubKeysResponse {
   //
   pub_keys?: Array<GetPubKeysResponseUserPubKey>;
@@ -4698,38 +4710,37 @@ export class MezonApi {
   }
 
   /** List all attachment that are part of a channel. */
-  listChannelAttachment(
-    bearerToken: string,
-    channelId: string,
-    clanId?: string,
-    fileType?: string,
-    limit?: number,
-    state?: number,
-    cursor?: string,
-    options: any = {}
-  ): Promise<ApiChannelAttachmentList> {
+  listChannelAttachment(bearerToken: string,
+      channelId:string,
+      clanId?:string,
+      fileType?:string,
+      limit?:number,
+      state?:number,
+      before?:number,
+      after?:number,
+      around?:number,
+      options: any = {}): Promise<ApiChannelAttachmentList> {
+    
     if (channelId === null || channelId === undefined) {
-      throw new Error(
-        "'channelId' is a required parameter but is null or undefined."
-      );
+      throw new Error("'channelId' is a required parameter but is null or undefined.");
     }
-    const urlPath = "/v2/channel/{channelId}/attachment".replace(
-      "{channelId}",
-      encodeURIComponent(String(channelId))
-    );
+    const urlPath = "/v2/channel/{channelId}/attachment"
+        .replace("{channelId}", encodeURIComponent(String(channelId)));
     const queryParams = new Map<string, any>();
     queryParams.set("clan_id", clanId);
     queryParams.set("file_type", fileType);
     queryParams.set("limit", limit);
     queryParams.set("state", state);
-    queryParams.set("cursor", cursor);
+    queryParams.set("before", before);
+    queryParams.set("after", after);
+    queryParams.set("around", around);
 
-    let bodyJson: string = "";
+    let bodyJson : string = "";
 
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("GET", options, bodyJson);
     if (bearerToken) {
-      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+        fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
     }
 
     return Promise.race([
@@ -10730,6 +10741,78 @@ export class MezonApi {
     let bodyJson : string = "";
 
     const fullUrl = this.buildFullUrl(basePath, urlPath, queryParams);
+    const fetchOptions = buildFetchOptions("POST", options, bodyJson);
+    if (bearerToken) {
+        fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+    }
+
+    return Promise.race([
+      fetch(fullUrl, fetchOptions).then((response) => {
+        if (response.status == 204) {
+          return response;
+        } else if (response.status >= 200 && response.status < 300) {
+          return response.json();
+        } else {
+          throw response;
+        }
+      }),
+      new Promise((_, reject) =>
+        setTimeout(reject, this.timeoutMs, "Request timed out.")
+      ),
+    ]);
+  }
+
+  /** mute participant in the room */
+  muteParticipantMezonMeet(bearerToken: string,
+      body:ApiMeetParticipantRequest,
+      options: any = {}): Promise<any> {
+    
+    if (body === null || body === undefined) {
+      throw new Error("'body' is a required parameter but is null or undefined.");
+    }
+    const urlPath = "/v2/meet/participant/mute";
+    const queryParams = new Map<string, any>();
+
+    let bodyJson : string = "";
+    bodyJson = JSON.stringify(body || {});
+
+    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
+    const fetchOptions = buildFetchOptions("POST", options, bodyJson);
+    if (bearerToken) {
+        fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+    }
+
+    return Promise.race([
+      fetch(fullUrl, fetchOptions).then((response) => {
+        if (response.status == 204) {
+          return response;
+        } else if (response.status >= 200 && response.status < 300) {
+          return response.json();
+        } else {
+          throw response;
+        }
+      }),
+      new Promise((_, reject) =>
+        setTimeout(reject, this.timeoutMs, "Request timed out.")
+      ),
+    ]);
+  }
+  
+  /** Remove participant out the room */
+  removeParticipantMezonMeet(bearerToken: string,
+      body:ApiMeetParticipantRequest,
+      options: any = {}): Promise<any> {
+    
+    if (body === null || body === undefined) {
+      throw new Error("'body' is a required parameter but is null or undefined.");
+    }
+    const urlPath = "/v2/meet/participant/remove";
+    const queryParams = new Map<string, any>();
+
+    let bodyJson : string = "";
+    bodyJson = JSON.stringify(body || {});
+
+    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("POST", options, bodyJson);
     if (bearerToken) {
         fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;

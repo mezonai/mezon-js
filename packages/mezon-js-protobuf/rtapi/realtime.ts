@@ -426,7 +426,11 @@ export interface Envelope {
     | QuickMenuDataEvent
     | undefined;
   /** unblock friend */
-  un_block_friend?: UnblockFriend | undefined;
+  un_block_friend?:
+    | UnblockFriend
+    | undefined;
+  /** mezon meet participant event */
+  meet_participant_event?: MeetParticipantEvent | undefined;
 }
 
 export interface FollowEvent {
@@ -1665,6 +1669,14 @@ export interface ListDataSocket {
   stream_user_list: StreamingChannelUserList | undefined;
 }
 
+export interface MeetParticipantEvent {
+  username: string;
+  room_name: string;
+  channel_id: string;
+  clan_id: string;
+  action: number;
+}
+
 function createBaseEnvelope(): Envelope {
   return {
     cid: "",
@@ -1752,6 +1764,7 @@ function createBaseEnvelope(): Envelope {
     list_data_socket: undefined,
     quick_menu_event: undefined,
     un_block_friend: undefined,
+    meet_participant_event: undefined,
   };
 }
 
@@ -2012,6 +2025,9 @@ export const Envelope = {
     }
     if (message.un_block_friend !== undefined) {
       UnblockFriend.encode(message.un_block_friend, writer.uint32(682).fork()).ldelim();
+    }
+    if (message.meet_participant_event !== undefined) {
+      MeetParticipantEvent.encode(message.meet_participant_event, writer.uint32(690).fork()).ldelim();
     }
     return writer;
   },
@@ -2618,6 +2634,13 @@ export const Envelope = {
 
           message.un_block_friend = UnblockFriend.decode(reader, reader.uint32());
           continue;
+        case 86:
+          if (tag !== 690) {
+            break;
+          }
+
+          message.meet_participant_event = MeetParticipantEvent.decode(reader, reader.uint32());
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -2822,6 +2845,9 @@ export const Envelope = {
         ? QuickMenuDataEvent.fromJSON(object.quick_menu_event)
         : undefined,
       un_block_friend: isSet(object.un_block_friend) ? UnblockFriend.fromJSON(object.un_block_friend) : undefined,
+      meet_participant_event: isSet(object.meet_participant_event)
+        ? MeetParticipantEvent.fromJSON(object.meet_participant_event)
+        : undefined,
     };
   },
 
@@ -3083,6 +3109,9 @@ export const Envelope = {
     }
     if (message.un_block_friend !== undefined) {
       obj.un_block_friend = UnblockFriend.toJSON(message.un_block_friend);
+    }
+    if (message.meet_participant_event !== undefined) {
+      obj.meet_participant_event = MeetParticipantEvent.toJSON(message.meet_participant_event);
     }
     return obj;
   },
@@ -3364,6 +3393,10 @@ export const Envelope = {
     message.un_block_friend = (object.un_block_friend !== undefined && object.un_block_friend !== null)
       ? UnblockFriend.fromPartial(object.un_block_friend)
       : undefined;
+    message.meet_participant_event =
+      (object.meet_participant_event !== undefined && object.meet_participant_event !== null)
+        ? MeetParticipantEvent.fromPartial(object.meet_participant_event)
+        : undefined;
     return message;
   },
 };
@@ -15084,6 +15117,125 @@ export const ListDataSocket = {
     message.stream_user_list = (object.stream_user_list !== undefined && object.stream_user_list !== null)
       ? StreamingChannelUserList.fromPartial(object.stream_user_list)
       : undefined;
+    return message;
+  },
+};
+
+function createBaseMeetParticipantEvent(): MeetParticipantEvent {
+  return { username: "", room_name: "", channel_id: "", clan_id: "", action: 0 };
+}
+
+export const MeetParticipantEvent = {
+  encode(message: MeetParticipantEvent, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.username !== "") {
+      writer.uint32(10).string(message.username);
+    }
+    if (message.room_name !== "") {
+      writer.uint32(18).string(message.room_name);
+    }
+    if (message.channel_id !== "") {
+      writer.uint32(26).string(message.channel_id);
+    }
+    if (message.clan_id !== "") {
+      writer.uint32(34).string(message.clan_id);
+    }
+    if (message.action !== 0) {
+      writer.uint32(40).int32(message.action);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): MeetParticipantEvent {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseMeetParticipantEvent();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.username = reader.string();
+          continue;
+        case 2:
+          if (tag !== 18) {
+            break;
+          }
+
+          message.room_name = reader.string();
+          continue;
+        case 3:
+          if (tag !== 26) {
+            break;
+          }
+
+          message.channel_id = reader.string();
+          continue;
+        case 4:
+          if (tag !== 34) {
+            break;
+          }
+
+          message.clan_id = reader.string();
+          continue;
+        case 5:
+          if (tag !== 40) {
+            break;
+          }
+
+          message.action = reader.int32();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): MeetParticipantEvent {
+    return {
+      username: isSet(object.username) ? globalThis.String(object.username) : "",
+      room_name: isSet(object.room_name) ? globalThis.String(object.room_name) : "",
+      channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "",
+      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
+      action: isSet(object.action) ? globalThis.Number(object.action) : 0,
+    };
+  },
+
+  toJSON(message: MeetParticipantEvent): unknown {
+    const obj: any = {};
+    if (message.username !== "") {
+      obj.username = message.username;
+    }
+    if (message.room_name !== "") {
+      obj.room_name = message.room_name;
+    }
+    if (message.channel_id !== "") {
+      obj.channel_id = message.channel_id;
+    }
+    if (message.clan_id !== "") {
+      obj.clan_id = message.clan_id;
+    }
+    if (message.action !== 0) {
+      obj.action = Math.round(message.action);
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<MeetParticipantEvent>, I>>(base?: I): MeetParticipantEvent {
+    return MeetParticipantEvent.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<MeetParticipantEvent>, I>>(object: I): MeetParticipantEvent {
+    const message = createBaseMeetParticipantEvent();
+    message.username = object.username ?? "";
+    message.room_name = object.room_name ?? "";
+    message.channel_id = object.channel_id ?? "";
+    message.clan_id = object.clan_id ?? "";
+    message.action = object.action ?? 0;
     return message;
   },
 };

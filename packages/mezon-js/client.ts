@@ -171,6 +171,7 @@ import {
   ApiIsFollowerResponse,
   ApiIsFollowerRequest,
   ApiTransferOwnershipRequest,
+  ApiMeetParticipantRequest,
 } from "./api.gen";
 
 import { Session } from "./session";
@@ -1435,7 +1436,8 @@ export class Client {
     fileType: string,
     state?: number,
     limit?: number,
-    cursor?: string
+    before?: number,
+    after?: number,
   ): Promise<ApiChannelAttachmentList> {
     if (
       this.autoRefreshSession &&
@@ -1453,7 +1455,8 @@ export class Client {
         fileType,
         limit,
         state,
-        cursor
+        before,
+        after,
       )
       .then((response: ApiChannelAttachmentList) => {
         var result: ApiChannelAttachmentList = {
@@ -4645,7 +4648,7 @@ export class Client {
 
     return this.apiClient
       .deleteAccount(session.token)
-      .then((response: ApiMezonOauthClientList) => {
+      .then((response: any) => {
         return Promise.resolve(response);
       });
   }
@@ -4677,6 +4680,44 @@ export class Client {
     return this.apiClient
       .generateMeetTokenExternal("", basePath, token, displayName, isGuest)
       .then((response: ApiGenerateMeetTokenExternalResponse) => {
+        return Promise.resolve(response);
+      });
+  }
+
+  async removeMezonMeetParticipant(
+    session: Session,
+    request: ApiMeetParticipantRequest
+  ): Promise<any> {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired(Date.now() / 1000)
+    ) {
+      await this.sessionRefresh(session);
+    }
+
+    return this.apiClient
+      .removeParticipantMezonMeet(session.token, request)
+      .then((response: any) => {
+        return Promise.resolve(response);
+      });
+  }
+
+  async muteMezonMeetParticipant(
+    session: Session,
+    request: ApiMeetParticipantRequest
+  ): Promise<any> {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired(Date.now() / 1000)
+    ) {
+      await this.sessionRefresh(session);
+    }
+
+    return this.apiClient
+      .muteParticipantMezonMeet(session.token, request)
+      .then((response: any) => {
         return Promise.resolve(response);
       });
   }
