@@ -1427,6 +1427,8 @@ export interface ApiMeetParticipantRequest {
   room_name?: string;
   //
   user_id?: string;
+  //
+  clan_id?: string;
 }
 
 /**  */
