@@ -374,6 +374,10 @@ export interface ApiAccount {
   verify_time?: string;
   //The user's wallet data.
   wallet?: number;
+  //
+  mmn_address?: string;
+  //
+  mmn_encrypt_private_key?: string;
 }
 
 /** Send a app token to the server. Used with authenticate/link/unlink. */
@@ -830,6 +834,8 @@ export interface ApiChannelMessage {
   hide_editted?: boolean;
   //
   topic_id?: string;
+  //
+  sender_mmn_address?: string;
 }
 
 /**  */
@@ -1028,6 +1034,8 @@ export interface ApiClanSticker {
   media_type?: number;
   //
   is_for_sale?: boolean;
+  //
+  creator_mmn_address?: string;
 }
 
 /**  */
@@ -2674,6 +2682,8 @@ export interface ApiUser {
   username?: string;
   // list nick name
   list_nick_names?: Array<string>;
+  //
+  mmn_address?: string;
 }
 
 /**  */
@@ -3328,6 +3338,15 @@ export interface ApiTransferOwnershipRequest {
   //
   new_owner_id?: string;
 }
+
+/**  */
+export interface ApiStoreWalletKeyRequest {
+  //
+  address?: string;
+  //
+  enc_privkey?: string;
+}
+
 
 export class MezonApi {
   basePath: string;
@@ -11235,4 +11254,39 @@ export class MezonApi {
       ]);
   }
 
+    /** Store wallet key */
+    storeWalletKey(bearerToken: string,
+      body:ApiStoreWalletKeyRequest,
+      options: any = {}): Promise<any> {
+    
+    if (body === null || body === undefined) {
+      throw new Error("'body' is a required parameter but is null or undefined.");
+    }
+    const urlPath = "/v2/wallet/key";
+    const queryParams = new Map<string, any>();
+
+    let bodyJson : string = "";
+    bodyJson = JSON.stringify(body || {});
+
+    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
+    const fetchOptions = buildFetchOptions("POST", options, bodyJson);
+    if (bearerToken) {
+        fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+    }
+
+    return Promise.race([
+      fetch(fullUrl, fetchOptions).then((response) => {
+        if (response.status == 204) {
+          return response;
+        } else if (response.status >= 200 && response.status < 300) {
+          return response.json();
+        } else {
+          throw response;
+        }
+      }),
+      new Promise((_, reject) =>
+        setTimeout(reject, this.timeoutMs, "Request timed out.")
+      ),
+    ]);
+  }
 }
