@@ -946,6 +946,12 @@ export interface ApiClanDesc {
   is_community?: boolean;
   // community banner
   community_banner?: string;
+  // description
+  description?: string;
+  // about
+  about?: string;
+  // short url for community
+  short_url?: string;
 }
 
 /**  */
