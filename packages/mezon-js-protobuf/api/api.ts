@@ -1383,6 +1383,12 @@ export interface ClanDesc {
   is_community: boolean;
   /** community banner */
   community_banner: string;
+  /** description */
+  description: string;
+  /** about */
+  about: string;
+  /** short_url */
+  short_url: string;
 }
 
 /** Clan information */
@@ -12279,6 +12285,9 @@ function createBaseClanDesc(): ClanDesc {
     clan_order: 0,
     is_community: false,
     community_banner: "",
+    description: "",
+    about: "",
+    short_url: "",
   };
 }
 
@@ -12322,6 +12331,15 @@ export const ClanDesc = {
     }
     if (message.community_banner !== "") {
       writer.uint32(106).string(message.community_banner);
+    }
+    if (message.description !== "") {
+      writer.uint32(114).string(message.description);
+    }
+    if (message.about !== "") {
+      writer.uint32(122).string(message.about);
+    }
+    if (message.short_url !== "") {
+      writer.uint32(130).string(message.short_url);
     }
     return writer;
   },
@@ -12424,6 +12442,27 @@ export const ClanDesc = {
 
           message.community_banner = reader.string();
           continue;
+        case 14:
+          if (tag !== 114) {
+            break;
+          }
+
+          message.description = reader.string();
+          continue;
+        case 15:
+          if (tag !== 122) {
+            break;
+          }
+
+          message.about = reader.string();
+          continue;
+        case 16:
+          if (tag !== 130) {
+            break;
+          }
+
+          message.short_url = reader.string();
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -12448,6 +12487,9 @@ export const ClanDesc = {
       clan_order: isSet(object.clan_order) ? globalThis.Number(object.clan_order) : 0,
       is_community: isSet(object.is_community) ? globalThis.Boolean(object.is_community) : false,
       community_banner: isSet(object.community_banner) ? globalThis.String(object.community_banner) : "",
+      description: isSet(object.description) ? globalThis.String(object.description) : "",
+      about: isSet(object.about) ? globalThis.String(object.about) : "",
+      short_url: isSet(object.short_url) ? globalThis.String(object.short_url) : "",
     };
   },
 
@@ -12492,6 +12534,15 @@ export const ClanDesc = {
     if (message.community_banner !== "") {
       obj.community_banner = message.community_banner;
     }
+    if (message.description !== "") {
+      obj.description = message.description;
+    }
+    if (message.about !== "") {
+      obj.about = message.about;
+    }
+    if (message.short_url !== "") {
+      obj.short_url = message.short_url;
+    }
     return obj;
   },
 
@@ -12513,6 +12564,9 @@ export const ClanDesc = {
     message.clan_order = object.clan_order ?? 0;
     message.is_community = object.is_community ?? false;
     message.community_banner = object.community_banner ?? "";
+    message.description = object.description ?? "";
+    message.about = object.about ?? "";
+    message.short_url = object.short_url ?? "";
     return message;
   },
 };

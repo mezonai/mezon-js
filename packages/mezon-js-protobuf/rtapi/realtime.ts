@@ -430,7 +430,11 @@ export interface Envelope {
     | UnblockFriend
     | undefined;
   /** mezon meet participant event */
-  meet_participant_event?: MeetParticipantEvent | undefined;
+  meet_participant_event?:
+    | MeetParticipantEvent
+    | undefined;
+  /** tranfer ownership event */
+  transfer_ownership_event?: TransferOwnershipEvent | undefined;
 }
 
 export interface FollowEvent {
@@ -1384,6 +1388,14 @@ export interface ClanUpdatedEvent {
   welcome_channel_id: string;
   /** onboarding_banner. */
   onboarding_banner: string;
+  /** community banner */
+  community_banner: string;
+  /** is community */
+  is_community: boolean;
+  /** about */
+  about: string;
+  /** description */
+  description: string;
 }
 
 /** clan profile updated event */
@@ -1595,6 +1607,8 @@ export interface HandleParticipantMeetStateEvent {
   display_name: string;
   /** state (0: join, 1: leave) */
   state: number;
+  /** room name */
+  room_name: string;
 }
 
 export interface DeleteAccountEvent {
@@ -1675,6 +1689,12 @@ export interface MeetParticipantEvent {
   channel_id: string;
   clan_id: string;
   action: number;
+}
+
+export interface TransferOwnershipEvent {
+  clan_id: string;
+  prev_owner: string;
+  curr_owner: string;
 }
 
 function createBaseEnvelope(): Envelope {
@@ -1765,6 +1785,7 @@ function createBaseEnvelope(): Envelope {
     quick_menu_event: undefined,
     un_block_friend: undefined,
     meet_participant_event: undefined,
+    transfer_ownership_event: undefined,
   };
 }
 
@@ -2028,6 +2049,9 @@ export const Envelope = {
     }
     if (message.meet_participant_event !== undefined) {
       MeetParticipantEvent.encode(message.meet_participant_event, writer.uint32(690).fork()).ldelim();
+    }
+    if (message.transfer_ownership_event !== undefined) {
+      TransferOwnershipEvent.encode(message.transfer_ownership_event, writer.uint32(698).fork()).ldelim();
     }
     return writer;
   },
@@ -2641,6 +2665,13 @@ export const Envelope = {
 
           message.meet_participant_event = MeetParticipantEvent.decode(reader, reader.uint32());
           continue;
+        case 87:
+          if (tag !== 698) {
+            break;
+          }
+
+          message.transfer_ownership_event = TransferOwnershipEvent.decode(reader, reader.uint32());
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -2847,6 +2878,9 @@ export const Envelope = {
       un_block_friend: isSet(object.un_block_friend) ? UnblockFriend.fromJSON(object.un_block_friend) : undefined,
       meet_participant_event: isSet(object.meet_participant_event)
         ? MeetParticipantEvent.fromJSON(object.meet_participant_event)
+        : undefined,
+      transfer_ownership_event: isSet(object.transfer_ownership_event)
+        ? TransferOwnershipEvent.fromJSON(object.transfer_ownership_event)
         : undefined,
     };
   },
@@ -3112,6 +3146,9 @@ export const Envelope = {
     }
     if (message.meet_participant_event !== undefined) {
       obj.meet_participant_event = MeetParticipantEvent.toJSON(message.meet_participant_event);
+    }
+    if (message.transfer_ownership_event !== undefined) {
+      obj.transfer_ownership_event = TransferOwnershipEvent.toJSON(message.transfer_ownership_event);
     }
     return obj;
   },
@@ -3396,6 +3433,10 @@ export const Envelope = {
     message.meet_participant_event =
       (object.meet_participant_event !== undefined && object.meet_participant_event !== null)
         ? MeetParticipantEvent.fromPartial(object.meet_participant_event)
+        : undefined;
+    message.transfer_ownership_event =
+      (object.transfer_ownership_event !== undefined && object.transfer_ownership_event !== null)
+        ? TransferOwnershipEvent.fromPartial(object.transfer_ownership_event)
         : undefined;
     return message;
   },
@@ -11162,6 +11203,10 @@ function createBaseClanUpdatedEvent(): ClanUpdatedEvent {
     is_onboarding: false,
     welcome_channel_id: "",
     onboarding_banner: "",
+    community_banner: "",
+    is_community: false,
+    about: "",
+    description: "",
   };
 }
 
@@ -11190,6 +11235,18 @@ export const ClanUpdatedEvent = {
     }
     if (message.onboarding_banner !== "") {
       writer.uint32(66).string(message.onboarding_banner);
+    }
+    if (message.community_banner !== "") {
+      writer.uint32(74).string(message.community_banner);
+    }
+    if (message.is_community !== false) {
+      writer.uint32(80).bool(message.is_community);
+    }
+    if (message.about !== "") {
+      writer.uint32(90).string(message.about);
+    }
+    if (message.description !== "") {
+      writer.uint32(98).string(message.description);
     }
     return writer;
   },
@@ -11257,6 +11314,34 @@ export const ClanUpdatedEvent = {
 
           message.onboarding_banner = reader.string();
           continue;
+        case 9:
+          if (tag !== 74) {
+            break;
+          }
+
+          message.community_banner = reader.string();
+          continue;
+        case 10:
+          if (tag !== 80) {
+            break;
+          }
+
+          message.is_community = reader.bool();
+          continue;
+        case 11:
+          if (tag !== 90) {
+            break;
+          }
+
+          message.about = reader.string();
+          continue;
+        case 12:
+          if (tag !== 98) {
+            break;
+          }
+
+          message.description = reader.string();
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -11276,6 +11361,10 @@ export const ClanUpdatedEvent = {
       is_onboarding: isSet(object.is_onboarding) ? globalThis.Boolean(object.is_onboarding) : false,
       welcome_channel_id: isSet(object.welcome_channel_id) ? globalThis.String(object.welcome_channel_id) : "",
       onboarding_banner: isSet(object.onboarding_banner) ? globalThis.String(object.onboarding_banner) : "",
+      community_banner: isSet(object.community_banner) ? globalThis.String(object.community_banner) : "",
+      is_community: isSet(object.is_community) ? globalThis.Boolean(object.is_community) : false,
+      about: isSet(object.about) ? globalThis.String(object.about) : "",
+      description: isSet(object.description) ? globalThis.String(object.description) : "",
     };
   },
 
@@ -11305,6 +11394,18 @@ export const ClanUpdatedEvent = {
     if (message.onboarding_banner !== "") {
       obj.onboarding_banner = message.onboarding_banner;
     }
+    if (message.community_banner !== "") {
+      obj.community_banner = message.community_banner;
+    }
+    if (message.is_community !== false) {
+      obj.is_community = message.is_community;
+    }
+    if (message.about !== "") {
+      obj.about = message.about;
+    }
+    if (message.description !== "") {
+      obj.description = message.description;
+    }
     return obj;
   },
 
@@ -11321,6 +11422,10 @@ export const ClanUpdatedEvent = {
     message.is_onboarding = object.is_onboarding ?? false;
     message.welcome_channel_id = object.welcome_channel_id ?? "";
     message.onboarding_banner = object.onboarding_banner ?? "";
+    message.community_banner = object.community_banner ?? "";
+    message.is_community = object.is_community ?? false;
+    message.about = object.about ?? "";
+    message.description = object.description ?? "";
     return message;
   },
 };
@@ -13662,7 +13767,7 @@ export const UnpinMessageEvent = {
 };
 
 function createBaseHandleParticipantMeetStateEvent(): HandleParticipantMeetStateEvent {
-  return { clan_id: "", channel_id: "", display_name: "", state: 0 };
+  return { clan_id: "", channel_id: "", display_name: "", state: 0, room_name: "" };
 }
 
 export const HandleParticipantMeetStateEvent = {
@@ -13678,6 +13783,9 @@ export const HandleParticipantMeetStateEvent = {
     }
     if (message.state !== 0) {
       writer.uint32(32).int32(message.state);
+    }
+    if (message.room_name !== "") {
+      writer.uint32(42).string(message.room_name);
     }
     return writer;
   },
@@ -13717,6 +13825,13 @@ export const HandleParticipantMeetStateEvent = {
 
           message.state = reader.int32();
           continue;
+        case 5:
+          if (tag !== 42) {
+            break;
+          }
+
+          message.room_name = reader.string();
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -13732,6 +13847,7 @@ export const HandleParticipantMeetStateEvent = {
       channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "",
       display_name: isSet(object.display_name) ? globalThis.String(object.display_name) : "",
       state: isSet(object.state) ? globalThis.Number(object.state) : 0,
+      room_name: isSet(object.room_name) ? globalThis.String(object.room_name) : "",
     };
   },
 
@@ -13749,6 +13865,9 @@ export const HandleParticipantMeetStateEvent = {
     if (message.state !== 0) {
       obj.state = Math.round(message.state);
     }
+    if (message.room_name !== "") {
+      obj.room_name = message.room_name;
+    }
     return obj;
   },
 
@@ -13763,6 +13882,7 @@ export const HandleParticipantMeetStateEvent = {
     message.channel_id = object.channel_id ?? "";
     message.display_name = object.display_name ?? "";
     message.state = object.state ?? 0;
+    message.room_name = object.room_name ?? "";
     return message;
   },
 };
@@ -15236,6 +15356,95 @@ export const MeetParticipantEvent = {
     message.channel_id = object.channel_id ?? "";
     message.clan_id = object.clan_id ?? "";
     message.action = object.action ?? 0;
+    return message;
+  },
+};
+
+function createBaseTransferOwnershipEvent(): TransferOwnershipEvent {
+  return { clan_id: "", prev_owner: "", curr_owner: "" };
+}
+
+export const TransferOwnershipEvent = {
+  encode(message: TransferOwnershipEvent, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.clan_id !== "") {
+      writer.uint32(10).string(message.clan_id);
+    }
+    if (message.prev_owner !== "") {
+      writer.uint32(18).string(message.prev_owner);
+    }
+    if (message.curr_owner !== "") {
+      writer.uint32(26).string(message.curr_owner);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): TransferOwnershipEvent {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseTransferOwnershipEvent();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.clan_id = reader.string();
+          continue;
+        case 2:
+          if (tag !== 18) {
+            break;
+          }
+
+          message.prev_owner = reader.string();
+          continue;
+        case 3:
+          if (tag !== 26) {
+            break;
+          }
+
+          message.curr_owner = reader.string();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): TransferOwnershipEvent {
+    return {
+      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
+      prev_owner: isSet(object.prev_owner) ? globalThis.String(object.prev_owner) : "",
+      curr_owner: isSet(object.curr_owner) ? globalThis.String(object.curr_owner) : "",
+    };
+  },
+
+  toJSON(message: TransferOwnershipEvent): unknown {
+    const obj: any = {};
+    if (message.clan_id !== "") {
+      obj.clan_id = message.clan_id;
+    }
+    if (message.prev_owner !== "") {
+      obj.prev_owner = message.prev_owner;
+    }
+    if (message.curr_owner !== "") {
+      obj.curr_owner = message.curr_owner;
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<TransferOwnershipEvent>, I>>(base?: I): TransferOwnershipEvent {
+    return TransferOwnershipEvent.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<TransferOwnershipEvent>, I>>(object: I): TransferOwnershipEvent {
+    const message = createBaseTransferOwnershipEvent();
+    message.clan_id = object.clan_id ?? "";
+    message.prev_owner = object.prev_owner ?? "";
+    message.curr_owner = object.curr_owner ?? "";
     return message;
   },
 };
