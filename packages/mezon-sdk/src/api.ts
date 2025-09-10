@@ -830,4 +830,48 @@ export class MezonApi {
       ),
     ]);
   }
+
+  playMedia(
+      bearerToken: string,
+      body: {
+        room_name: string;
+        participant_identity: string;
+        participant_name: string;
+        url: string;
+        name: string;
+      },
+      options: any = {}
+    ): Promise<any> {
+      if (body === null || body === undefined) {
+        throw new Error(
+          "'body' is a required parameter but is null or undefined."
+        );
+      }
+
+      const urlPath = "https://stn.mezon.ai/api/playmedia";
+
+      let bodyJson: string = "";
+      bodyJson = JSON.stringify(body || {});
+
+      const fetchOptions = buildFetchOptions("POST", options, bodyJson);
+
+      if (bearerToken) {
+        fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+      }
+      return Promise.race([
+        fetch(urlPath, fetchOptions).then((response) => {
+          if (response.status == 204) {
+            return response;
+          } else if (response.status >= 200 && response.status < 300) {
+            return response.json();
+          } else {
+            throw response;
+          }
+        }),
+        new Promise((_, reject) =>
+          setTimeout(reject, this.timeoutMs, "Request timed out.")
+        ),
+      ]);
+  }
+  
 }

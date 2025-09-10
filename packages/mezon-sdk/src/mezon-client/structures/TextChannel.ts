@@ -28,7 +28,7 @@ export class TextChannel {
   public category_id: string | undefined;
   public category_name: string | undefined;
   public parent_id: string | undefined;
-
+  public meeting_code: string | undefined;
   public clan: Clan;
   public messages: CacheManager<string, Message>;
 
@@ -50,6 +50,7 @@ export class TextChannel {
     this.category_id = initChannelData?.category_id ?? "";
     this.category_name = initChannelData?.category_name ?? "";
     this.parent_id = initChannelData?.parent_id ?? "";
+    this.meeting_code = initChannelData?.meeting_code ?? "";
     this.clan = clan;
     this.messages = new CacheManager<string, Message>(async (message_id) => {
       const messageDb = this.messageDB.getMessageById(message_id, this.id!);
@@ -172,6 +173,29 @@ export class TextChannel {
         this.clan.sessionToken,
         botIdPayload
       );
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async playMedia(url: string, participantIdentity: string, participantName: string, name: string) {
+    const meetingCode = this.meeting_code;
+    if (!meetingCode) {
+      return { error: "Channel not voice channel." };
+    }
+    const token = this.clan.sessionToken;
+    if (!token) {
+      return { error: "Token not found." };
+    }
+    const payload = {
+      room_name: meetingCode,
+      participant_identity: participantIdentity,
+      participant_name: participantName,
+      url: url,
+      name: name,
+    };
+    try {
+      return await this.clan.apiClient.playMedia(token, payload);
     } catch (error) {
       throw error;
     }
