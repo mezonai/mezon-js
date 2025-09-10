@@ -389,6 +389,12 @@ interface ChannelMessageSend {
   };
 }
 
+interface TransferOwnershipEvent {
+  clan_id: string;
+  prev_owner: string;
+  curr_owner: string;
+}
+
 interface QuickMenuEvent {
   quick_menu_event: {
     menu_name: string,
@@ -1097,6 +1103,8 @@ export interface HandleParticipantMeetStateEvent {
   display_name: string;
   /** state (0: join, 1: leave) */
   state: number;
+  /** room name */
+  room_name: string;
 }
 
 export interface PermissionSet {
@@ -1390,7 +1398,8 @@ export interface Socket {
     clan_id: string,
     channel_id: string,
     display_name: string,
-    state: number
+    state: number,
+    room_name: string
   ): Promise<void> 
 
   /** Remove a chat message from a chat channel on the server. */
@@ -1781,6 +1790,8 @@ export interface Socket {
   onunpinmessageevent: (unpin_message_event: UnpinMessageEvent)=> void;
 
   onquickmenuevent: (event: QuickMenuEvent) => void;
+
+  ontransferownership: (event: TransferOwnershipEvent) => void;
 }
 
 /** Reports an error received from a socket message. */
@@ -2030,6 +2041,8 @@ export class DefaultSocket implements Socket {
           this.onquickmenuevent(<QuickMenuEvent>message.quick_menu_event);
         } else if (message.meet_participant_event) {
           this.onmeetparticipantevent(<MeetParticipantEvent>message.meet_participant_event);
+        } else if (message.transfer_ownership_event) {
+          this.ontransferownership(<TransferOwnershipEvent>message.transfer_ownership_event);
         } else {
           if (this.verbose && window && window.console) {
             console.log("Unrecognized message received: %o", message);
@@ -2481,6 +2494,12 @@ export class DefaultSocket implements Socket {
     }
   }
 
+  ontransferownership(event: TransferOwnershipEvent) {
+    if (this.verbose && window && window.console) {
+      console.log(event);
+    }
+  }
+
   onmeetparticipantevent(event: MeetParticipantEvent) {
     if (this.verbose && window && window.console) {
       console.log(event);
@@ -2595,7 +2614,8 @@ export class DefaultSocket implements Socket {
     clan_id: string,
     channel_id: string,
     display_name: string,
-    state: number
+    state: number,
+    room_name: string,
   ): Promise<void> {
     const response = await this.send({
       handle_participant_meet_state_event: {
@@ -2603,6 +2623,7 @@ export class DefaultSocket implements Socket {
         channel_id: channel_id,
         display_name: display_name,
         state: state,
+        room_name: room_name,
       },
     });
 
