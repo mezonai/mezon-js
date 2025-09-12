@@ -2569,6 +2569,8 @@ export interface ApiUpdateAccountRequest {
   timezone?: string;
   //The username of the user's account.
   username?: string;
+  //The email of the user's account.
+  email?: string;
 }
 
 /**  */
