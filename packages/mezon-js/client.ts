@@ -346,6 +346,8 @@ export interface User {
   username?: string;
   //
   is_mobile?: boolean;
+  // mmn_address
+  mmn_address?: string;
 }
 
 /** A collection of zero or more users. */
@@ -1893,6 +1895,7 @@ export class Client {
               metadata: f.user!.metadata
                 ? safeJSONParse(f.user!.metadata!)
                 : undefined,
+              mmn_address: f.user!.mmn_address,
             },
             state: f.state,
             source_id: f.source_id,
