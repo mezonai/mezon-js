@@ -374,6 +374,8 @@ export interface ApiAccount {
   verify_time?: string;
   //The user's wallet data.
   wallet?: number;
+  // MMN information
+  mmn_encrypt_private_key: string;
 }
 
 /** Send a app token to the server. Used with authenticate/link/unlink. */
@@ -2682,6 +2684,8 @@ export interface ApiUser {
   username?: string;
   // list nick name
   list_nick_names?: Array<string>;
+   // MMN address
+  wallet_address?: string
 }
 
 /**  */
@@ -2800,6 +2804,14 @@ export interface ApiVoiceChannelUser {
 export interface ApiVoiceChannelUserList {
   //
   voice_channel_users?: Array<ApiVoiceChannelUser>;
+}
+
+/**  */
+export interface ApiStoreWalletKeyRequest {
+  //
+  address?: string;
+  //
+  enc_privkey?: string;
 }
 
 /**  */
@@ -9531,6 +9543,42 @@ export class MezonApi {
 
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("GET", options, bodyJson);
+    if (bearerToken) {
+        fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+    }
+
+    return Promise.race([
+      fetch(fullUrl, fetchOptions).then((response) => {
+        if (response.status == 204) {
+          return response;
+        } else if (response.status >= 200 && response.status < 300) {
+          return response.json();
+        } else {
+          throw response;
+        }
+      }),
+      new Promise((_, reject) =>
+        setTimeout(reject, this.timeoutMs, "Request timed out.")
+      ),
+    ]);
+  }
+
+  /** Store wallet key */
+  storeWalletKey(bearerToken: string,
+      body:ApiStoreWalletKeyRequest,
+      options: any = {}): Promise<any> {
+    
+    if (body === null || body === undefined) {
+      throw new Error("'body' is a required parameter but is null or undefined.");
+    }
+    const urlPath = "/v2/wallet/key";
+    const queryParams = new Map<string, any>();
+
+    let bodyJson : string = "";
+    bodyJson = JSON.stringify(body || {});
+
+    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
+    const fetchOptions = buildFetchOptions("POST", options, bodyJson);
     if (bearerToken) {
         fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
     }

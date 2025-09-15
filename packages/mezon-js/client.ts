@@ -172,6 +172,7 @@ import {
   ApiIsFollowerRequest,
   ApiTransferOwnershipRequest,
   ApiMeetParticipantRequest,
+  ApiStoreWalletKeyRequest,
 } from "./api.gen";
 
 import { Session } from "./session";
@@ -4894,6 +4895,23 @@ export class Client {
 
     return this.apiClient
       .transferOwnership(session.token, req)
+      .then((response: any) => {
+        return response !== undefined;
+      });
+  }
+
+  async createMmnWallet(session: Session, 
+    req: ApiStoreWalletKeyRequest): Promise<any> {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired(Date.now() / 1000)
+    ) {
+      await this.sessionRefresh(session);
+    }
+
+    return this.apiClient
+      .storeWalletKey(session.token, req)
       .then((response: any) => {
         return response !== undefined;
       });
