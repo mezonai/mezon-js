@@ -347,7 +347,7 @@ export interface ApiVoiceChannelUser {
   user_id?: string;
 }
 
-export interface IEmbedProps {
+export interface IInteractiveMessageProps {
   color?: string;
   title?: string;
   url?: string;
@@ -358,10 +358,46 @@ export interface IEmbedProps {
   };
   description?: string;
   thumbnail?: { url: string };
-  fields?: Array<{ name: string; value: string; inline?: boolean }>;
-  image?: { url: string };
+  fields?: Array<{
+    name: string;
+    value: string;
+    inline?: boolean;
+    options?: any[];
+    inputs?: {};
+    max_options?: number;
+  }>;
+  image?: { url: string; width?: string; height?: string };
   timestamp?: string;
   footer?: { text: string; icon_url?: string };
+}
+
+export interface InputFieldOption {
+  defaultValue?: string | number;
+  type?: string;
+  textarea?: boolean;
+  disabled?: boolean;
+}
+
+export interface SelectFieldOption {
+  label: string;
+  value: string;
+}
+
+export interface RadioFieldOption {
+  label: string;
+  value: string;
+  name?: string; // Apply when use mutiple choice
+  description?: string;
+  style?: EButtonMessageStyle;
+  disabled?: boolean;
+}
+
+export interface AnimationConfig {
+  url_image: string;
+  url_position: string;
+  pool: string[];
+  repeat?: number;
+  duration?: number;
 }
 
 export enum EButtonMessageStyle {
@@ -378,7 +414,8 @@ export enum EMessageComponentType {
   INPUT = 3,
   DATEPICKER = 4,
   RADIO = 5,
-  ANIMATION = 6
+  ANIMATION = 6,
+  GRID = 7,
 }
 
 export enum EMessageSelectType {
@@ -431,7 +468,7 @@ export interface ChannelMessageContent {
   lk?: LinkOnMessage[];
   mk?: MarkdownOnMessage[];
   vk?: LinkVoiceRoomOnMessage[];
-  embed?: IEmbedProps[];
+  embed?: IInteractiveMessageProps[];
   components?: IMessageActionRow[] | any;
 }
 

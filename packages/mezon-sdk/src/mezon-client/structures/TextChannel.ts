@@ -1,3 +1,4 @@
+import { TypeMessage } from "../../constants";
 import {
   ApiChannelDescription,
   ApiMessageAttachment,
@@ -106,7 +107,7 @@ export class TextChannel {
     mention_everyone?: boolean,
     anonymous_message?: boolean,
     topic_id?: string,
-    code?: number
+    code: number = TypeMessage.Ephemeral
   ) {
     return this.messageQueue.enqueue(async () => {
       let references: ApiMessageRef[] = [];

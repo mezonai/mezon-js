@@ -422,7 +422,15 @@ export interface Envelope {
     | ListDataSocket
     | undefined;
   /** quick menu event */
-  quick_menu_event?: QuickMenuDataEvent | undefined;
+  quick_menu_event?:
+    | QuickMenuDataEvent
+    | undefined;
+  /** unblock friend */
+  un_block_friend?:
+    | UnblockFriend
+    | undefined;
+  /** mezon meet participant event */
+  meet_participant_event?: MeetParticipantEvent | undefined;
 }
 
 export interface FollowEvent {
@@ -725,6 +733,8 @@ export interface ChannelMessageUpdate {
   topic_id: string;
   /** update message topic */
   is_update_msg_topic: boolean;
+  /** old mentions */
+  old_mentions: string;
 }
 
 /** Remove a message previously sent to a realtime channel. */
@@ -743,6 +753,10 @@ export interface ChannelMessageRemove {
   has_attachment: boolean;
   /**  */
   topic_id: string;
+  /** Message mention */
+  mentions: string;
+  /** Message reference */
+  references: string;
 }
 
 /** A set of joins and leaves on a particular channel. */
@@ -866,6 +880,11 @@ export interface RemoveFriend {
 }
 
 export interface BlockFriend {
+  /**  */
+  user_id: string;
+}
+
+export interface UnblockFriend {
   /**  */
   user_id: string;
 }
@@ -1210,6 +1229,10 @@ export interface ChannelUpdatedEvent {
   active: number;
   /** count message unread */
   count_mess_unread: number;
+  /** The users to add. */
+  user_ids: string[];
+  /** This is the role that needs to be added to the channel */
+  role_ids: string[];
 }
 
 /** Stop receiving status updates for some set of users. */
@@ -1646,6 +1669,14 @@ export interface ListDataSocket {
   stream_user_list: StreamingChannelUserList | undefined;
 }
 
+export interface MeetParticipantEvent {
+  username: string;
+  room_name: string;
+  channel_id: string;
+  clan_id: string;
+  action: number;
+}
+
 function createBaseEnvelope(): Envelope {
   return {
     cid: "",
@@ -1732,6 +1763,8 @@ function createBaseEnvelope(): Envelope {
     mark_as_read: undefined,
     list_data_socket: undefined,
     quick_menu_event: undefined,
+    un_block_friend: undefined,
+    meet_participant_event: undefined,
   };
 }
 
@@ -1989,6 +2022,12 @@ export const Envelope = {
     }
     if (message.quick_menu_event !== undefined) {
       QuickMenuDataEvent.encode(message.quick_menu_event, writer.uint32(674).fork()).ldelim();
+    }
+    if (message.un_block_friend !== undefined) {
+      UnblockFriend.encode(message.un_block_friend, writer.uint32(682).fork()).ldelim();
+    }
+    if (message.meet_participant_event !== undefined) {
+      MeetParticipantEvent.encode(message.meet_participant_event, writer.uint32(690).fork()).ldelim();
     }
     return writer;
   },
@@ -2588,6 +2627,20 @@ export const Envelope = {
 
           message.quick_menu_event = QuickMenuDataEvent.decode(reader, reader.uint32());
           continue;
+        case 85:
+          if (tag !== 682) {
+            break;
+          }
+
+          message.un_block_friend = UnblockFriend.decode(reader, reader.uint32());
+          continue;
+        case 86:
+          if (tag !== 690) {
+            break;
+          }
+
+          message.meet_participant_event = MeetParticipantEvent.decode(reader, reader.uint32());
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -2790,6 +2843,10 @@ export const Envelope = {
       list_data_socket: isSet(object.list_data_socket) ? ListDataSocket.fromJSON(object.list_data_socket) : undefined,
       quick_menu_event: isSet(object.quick_menu_event)
         ? QuickMenuDataEvent.fromJSON(object.quick_menu_event)
+        : undefined,
+      un_block_friend: isSet(object.un_block_friend) ? UnblockFriend.fromJSON(object.un_block_friend) : undefined,
+      meet_participant_event: isSet(object.meet_participant_event)
+        ? MeetParticipantEvent.fromJSON(object.meet_participant_event)
         : undefined,
     };
   },
@@ -3049,6 +3106,12 @@ export const Envelope = {
     }
     if (message.quick_menu_event !== undefined) {
       obj.quick_menu_event = QuickMenuDataEvent.toJSON(message.quick_menu_event);
+    }
+    if (message.un_block_friend !== undefined) {
+      obj.un_block_friend = UnblockFriend.toJSON(message.un_block_friend);
+    }
+    if (message.meet_participant_event !== undefined) {
+      obj.meet_participant_event = MeetParticipantEvent.toJSON(message.meet_participant_event);
     }
     return obj;
   },
@@ -3327,6 +3390,13 @@ export const Envelope = {
     message.quick_menu_event = (object.quick_menu_event !== undefined && object.quick_menu_event !== null)
       ? QuickMenuDataEvent.fromPartial(object.quick_menu_event)
       : undefined;
+    message.un_block_friend = (object.un_block_friend !== undefined && object.un_block_friend !== null)
+      ? UnblockFriend.fromPartial(object.un_block_friend)
+      : undefined;
+    message.meet_participant_event =
+      (object.meet_participant_event !== undefined && object.meet_participant_event !== null)
+        ? MeetParticipantEvent.fromPartial(object.meet_participant_event)
+        : undefined;
     return message;
   },
 };
@@ -5901,6 +5971,7 @@ function createBaseChannelMessageUpdate(): ChannelMessageUpdate {
     hide_editted: false,
     topic_id: "",
     is_update_msg_topic: false,
+    old_mentions: "",
   };
 }
 
@@ -5938,6 +6009,9 @@ export const ChannelMessageUpdate = {
     }
     if (message.is_update_msg_topic !== false) {
       writer.uint32(88).bool(message.is_update_msg_topic);
+    }
+    if (message.old_mentions !== "") {
+      writer.uint32(98).string(message.old_mentions);
     }
     return writer;
   },
@@ -6026,6 +6100,13 @@ export const ChannelMessageUpdate = {
 
           message.is_update_msg_topic = reader.bool();
           continue;
+        case 12:
+          if (tag !== 98) {
+            break;
+          }
+
+          message.old_mentions = reader.string();
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -6052,6 +6133,7 @@ export const ChannelMessageUpdate = {
       hide_editted: isSet(object.hide_editted) ? globalThis.Boolean(object.hide_editted) : false,
       topic_id: isSet(object.topic_id) ? globalThis.String(object.topic_id) : "",
       is_update_msg_topic: isSet(object.is_update_msg_topic) ? globalThis.Boolean(object.is_update_msg_topic) : false,
+      old_mentions: isSet(object.old_mentions) ? globalThis.String(object.old_mentions) : "",
     };
   },
 
@@ -6090,6 +6172,9 @@ export const ChannelMessageUpdate = {
     if (message.is_update_msg_topic !== false) {
       obj.is_update_msg_topic = message.is_update_msg_topic;
     }
+    if (message.old_mentions !== "") {
+      obj.old_mentions = message.old_mentions;
+    }
     return obj;
   },
 
@@ -6109,6 +6194,7 @@ export const ChannelMessageUpdate = {
     message.hide_editted = object.hide_editted ?? false;
     message.topic_id = object.topic_id ?? "";
     message.is_update_msg_topic = object.is_update_msg_topic ?? false;
+    message.old_mentions = object.old_mentions ?? "";
     return message;
   },
 };
@@ -6122,6 +6208,8 @@ function createBaseChannelMessageRemove(): ChannelMessageRemove {
     is_public: false,
     has_attachment: false,
     topic_id: "",
+    mentions: "",
+    references: "",
   };
 }
 
@@ -6147,6 +6235,12 @@ export const ChannelMessageRemove = {
     }
     if (message.topic_id !== "") {
       writer.uint32(58).string(message.topic_id);
+    }
+    if (message.mentions !== "") {
+      writer.uint32(66).string(message.mentions);
+    }
+    if (message.references !== "") {
+      writer.uint32(74).string(message.references);
     }
     return writer;
   },
@@ -6207,6 +6301,20 @@ export const ChannelMessageRemove = {
 
           message.topic_id = reader.string();
           continue;
+        case 8:
+          if (tag !== 66) {
+            break;
+          }
+
+          message.mentions = reader.string();
+          continue;
+        case 9:
+          if (tag !== 74) {
+            break;
+          }
+
+          message.references = reader.string();
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -6225,6 +6333,8 @@ export const ChannelMessageRemove = {
       is_public: isSet(object.is_public) ? globalThis.Boolean(object.is_public) : false,
       has_attachment: isSet(object.has_attachment) ? globalThis.Boolean(object.has_attachment) : false,
       topic_id: isSet(object.topic_id) ? globalThis.String(object.topic_id) : "",
+      mentions: isSet(object.mentions) ? globalThis.String(object.mentions) : "",
+      references: isSet(object.references) ? globalThis.String(object.references) : "",
     };
   },
 
@@ -6251,6 +6361,12 @@ export const ChannelMessageRemove = {
     if (message.topic_id !== "") {
       obj.topic_id = message.topic_id;
     }
+    if (message.mentions !== "") {
+      obj.mentions = message.mentions;
+    }
+    if (message.references !== "") {
+      obj.references = message.references;
+    }
     return obj;
   },
 
@@ -6266,6 +6382,8 @@ export const ChannelMessageRemove = {
     message.is_public = object.is_public ?? false;
     message.has_attachment = object.has_attachment ?? false;
     message.topic_id = object.topic_id ?? "";
+    message.mentions = object.mentions ?? "";
+    message.references = object.references ?? "";
     return message;
   },
 };
@@ -6756,6 +6874,63 @@ export const BlockFriend = {
   },
   fromPartial<I extends Exact<DeepPartial<BlockFriend>, I>>(object: I): BlockFriend {
     const message = createBaseBlockFriend();
+    message.user_id = object.user_id ?? "";
+    return message;
+  },
+};
+
+function createBaseUnblockFriend(): UnblockFriend {
+  return { user_id: "" };
+}
+
+export const UnblockFriend = {
+  encode(message: UnblockFriend, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.user_id !== "") {
+      writer.uint32(10).string(message.user_id);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): UnblockFriend {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseUnblockFriend();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.user_id = reader.string();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): UnblockFriend {
+    return { user_id: isSet(object.user_id) ? globalThis.String(object.user_id) : "" };
+  },
+
+  toJSON(message: UnblockFriend): unknown {
+    const obj: any = {};
+    if (message.user_id !== "") {
+      obj.user_id = message.user_id;
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<UnblockFriend>, I>>(base?: I): UnblockFriend {
+    return UnblockFriend.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<UnblockFriend>, I>>(object: I): UnblockFriend {
+    const message = createBaseUnblockFriend();
     message.user_id = object.user_id ?? "";
     return message;
   },
@@ -9569,6 +9744,8 @@ function createBaseChannelUpdatedEvent(): ChannelUpdatedEvent {
     age_restricted: 0,
     active: 0,
     count_mess_unread: 0,
+    user_ids: [],
+    role_ids: [],
   };
 }
 
@@ -9624,6 +9801,12 @@ export const ChannelUpdatedEvent = {
     }
     if (message.count_mess_unread !== 0) {
       writer.uint32(136).int32(message.count_mess_unread);
+    }
+    for (const v of message.user_ids) {
+      writer.uint32(146).string(v!);
+    }
+    for (const v of message.role_ids) {
+      writer.uint32(154).string(v!);
     }
     return writer;
   },
@@ -9754,6 +9937,20 @@ export const ChannelUpdatedEvent = {
 
           message.count_mess_unread = reader.int32();
           continue;
+        case 18:
+          if (tag !== 146) {
+            break;
+          }
+
+          message.user_ids.push(reader.string());
+          continue;
+        case 19:
+          if (tag !== 154) {
+            break;
+          }
+
+          message.role_ids.push(reader.string());
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -9782,6 +9979,8 @@ export const ChannelUpdatedEvent = {
       age_restricted: isSet(object.age_restricted) ? globalThis.Number(object.age_restricted) : 0,
       active: isSet(object.active) ? globalThis.Number(object.active) : 0,
       count_mess_unread: isSet(object.count_mess_unread) ? globalThis.Number(object.count_mess_unread) : 0,
+      user_ids: globalThis.Array.isArray(object?.user_ids) ? object.user_ids.map((e: any) => globalThis.String(e)) : [],
+      role_ids: globalThis.Array.isArray(object?.role_ids) ? object.role_ids.map((e: any) => globalThis.String(e)) : [],
     };
   },
 
@@ -9838,6 +10037,12 @@ export const ChannelUpdatedEvent = {
     if (message.count_mess_unread !== 0) {
       obj.count_mess_unread = Math.round(message.count_mess_unread);
     }
+    if (message.user_ids?.length) {
+      obj.user_ids = message.user_ids;
+    }
+    if (message.role_ids?.length) {
+      obj.role_ids = message.role_ids;
+    }
     return obj;
   },
 
@@ -9863,6 +10068,8 @@ export const ChannelUpdatedEvent = {
     message.age_restricted = object.age_restricted ?? 0;
     message.active = object.active ?? 0;
     message.count_mess_unread = object.count_mess_unread ?? 0;
+    message.user_ids = object.user_ids?.map((e) => e) || [];
+    message.role_ids = object.role_ids?.map((e) => e) || [];
     return message;
   },
 };
@@ -14910,6 +15117,125 @@ export const ListDataSocket = {
     message.stream_user_list = (object.stream_user_list !== undefined && object.stream_user_list !== null)
       ? StreamingChannelUserList.fromPartial(object.stream_user_list)
       : undefined;
+    return message;
+  },
+};
+
+function createBaseMeetParticipantEvent(): MeetParticipantEvent {
+  return { username: "", room_name: "", channel_id: "", clan_id: "", action: 0 };
+}
+
+export const MeetParticipantEvent = {
+  encode(message: MeetParticipantEvent, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.username !== "") {
+      writer.uint32(10).string(message.username);
+    }
+    if (message.room_name !== "") {
+      writer.uint32(18).string(message.room_name);
+    }
+    if (message.channel_id !== "") {
+      writer.uint32(26).string(message.channel_id);
+    }
+    if (message.clan_id !== "") {
+      writer.uint32(34).string(message.clan_id);
+    }
+    if (message.action !== 0) {
+      writer.uint32(40).int32(message.action);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): MeetParticipantEvent {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseMeetParticipantEvent();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.username = reader.string();
+          continue;
+        case 2:
+          if (tag !== 18) {
+            break;
+          }
+
+          message.room_name = reader.string();
+          continue;
+        case 3:
+          if (tag !== 26) {
+            break;
+          }
+
+          message.channel_id = reader.string();
+          continue;
+        case 4:
+          if (tag !== 34) {
+            break;
+          }
+
+          message.clan_id = reader.string();
+          continue;
+        case 5:
+          if (tag !== 40) {
+            break;
+          }
+
+          message.action = reader.int32();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): MeetParticipantEvent {
+    return {
+      username: isSet(object.username) ? globalThis.String(object.username) : "",
+      room_name: isSet(object.room_name) ? globalThis.String(object.room_name) : "",
+      channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "",
+      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
+      action: isSet(object.action) ? globalThis.Number(object.action) : 0,
+    };
+  },
+
+  toJSON(message: MeetParticipantEvent): unknown {
+    const obj: any = {};
+    if (message.username !== "") {
+      obj.username = message.username;
+    }
+    if (message.room_name !== "") {
+      obj.room_name = message.room_name;
+    }
+    if (message.channel_id !== "") {
+      obj.channel_id = message.channel_id;
+    }
+    if (message.clan_id !== "") {
+      obj.clan_id = message.clan_id;
+    }
+    if (message.action !== 0) {
+      obj.action = Math.round(message.action);
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<MeetParticipantEvent>, I>>(base?: I): MeetParticipantEvent {
+    return MeetParticipantEvent.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<MeetParticipantEvent>, I>>(object: I): MeetParticipantEvent {
+    const message = createBaseMeetParticipantEvent();
+    message.username = object.username ?? "";
+    message.room_name = object.room_name ?? "";
+    message.channel_id = object.channel_id ?? "";
+    message.clan_id = object.clan_id ?? "";
+    message.action = object.action ?? 0;
     return message;
   },
 };
