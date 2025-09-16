@@ -969,11 +969,11 @@ export interface ListChannelAttachmentRequest {
     | number
     | undefined;
   /** An optional previous id for page. */
-  before: string;
+  before: number;
   /** An optional next id for page. */
-  after: string;
+  after: number;
   /** An optional around id for page. */
-  around: string;
+  around: number;
 }
 
 /** List all users that are part of a clan. */
@@ -1147,7 +1147,9 @@ export interface UpdateAccountRequest {
     | Date
     | undefined;
   /** logo url */
-  logo: string;
+  logo:
+    | string
+    | undefined;
   /** splash screen */
   splash_screen: string;
   /** e2ee encrypt private key */
@@ -1377,6 +1379,10 @@ export interface ClanDesc {
   onboarding_banner: string;
   /** clan order */
   clan_order: number;
+  /** is community */
+  is_community: boolean;
+  /** community banner */
+  community_banner: string;
 }
 
 /** Clan information */
@@ -1397,7 +1403,9 @@ export interface UpdateClanDescRequest {
   /** Clan logo */
   logo: string;
   /** Clan banner */
-  banner: string;
+  banner:
+    | string
+    | undefined;
   /** Clan status */
   status: number;
   /** Is onboarding. */
@@ -1407,7 +1415,23 @@ export interface UpdateClanDescRequest {
   /** Welcome channel id. */
   welcome_channel_id: string;
   /** Onboarding_banner. */
-  onboarding_banner: string;
+  onboarding_banner:
+    | string
+    | undefined;
+  /** Enable community. */
+  is_community:
+    | boolean
+    | undefined;
+  /** Community banner. */
+  community_banner:
+    | string
+    | undefined;
+  /** string description */
+  description: string;
+  /** about */
+  about: string;
+  /** short url for community */
+  short_url: string | undefined;
 }
 
 /** Delete a clan the user has access to. */
@@ -1923,7 +1947,13 @@ export interface NotificationSetting {
 /**  */
 export interface DeletePinMessage {
   /**  */
+  id: string;
+  /**  */
   message_id: string;
+  /**  */
+  channel_id: string;
+  /**  */
+  clan_id: string;
 }
 
 /**  */
@@ -2379,11 +2409,11 @@ export interface SearchMessageDocument {
   /** The message ID. */
   message_id: string;
   /** The channel ID. */
-  channel_id: number;
+  channel_id: string;
   /** The clan ID. */
-  clan_id: number;
+  clan_id: string;
   /** The user ID of sender. */
-  sender_id: number;
+  sender_id: string;
   /** Message content */
   content: string;
   /** Mention users */
@@ -2532,6 +2562,7 @@ export interface Webhook {
   update_time: string;
   avatar: string;
   status: number;
+  clan_id: string;
 }
 
 export interface WebhookCreateRequest {
@@ -3317,9 +3348,9 @@ export interface TokenSentEvent {
   amount: number;
   /** note */
   note: string;
-  /**  */
+  /** extra attribute */
   extra_attribute: string;
-  /**  */
+  /** transaction id */
   transaction_id: string;
 }
 
@@ -3671,6 +3702,13 @@ export interface GenerateMeetTokenRequest {
   room_name: string;
 }
 
+export interface MeetParticipantRequest {
+  username: string;
+  room_name: string;
+  channel_id: string;
+  clan_id: string;
+}
+
 export interface GenerateMeetTokenResponse {
   token: string;
 }
@@ -3833,6 +3871,20 @@ export interface ForSaleItem {
 
 export interface ForSaleItemList {
   for_sale_items: ForSaleItem[];
+}
+
+export interface IsFollowerRequest {
+  follow_id: string;
+}
+
+export interface IsFollowerResponse {
+  follow_id: string;
+  is_follower: boolean;
+}
+
+export interface TransferOwnershipRequest {
+  clan_id: string;
+  new_owner_id: string;
 }
 
 function createBaseAccount(): Account {
@@ -9530,9 +9582,9 @@ function createBaseListChannelAttachmentRequest(): ListChannelAttachmentRequest 
     file_type: "",
     limit: undefined,
     state: undefined,
-    before: "",
-    after: "",
-    around: "",
+    before: 0,
+    after: 0,
+    around: 0,
   };
 }
 
@@ -9553,14 +9605,14 @@ export const ListChannelAttachmentRequest = {
     if (message.state !== undefined) {
       Int32Value.encode({ value: message.state! }, writer.uint32(42).fork()).ldelim();
     }
-    if (message.before !== "") {
-      writer.uint32(50).string(message.before);
+    if (message.before !== 0) {
+      writer.uint32(48).uint32(message.before);
     }
-    if (message.after !== "") {
-      writer.uint32(58).string(message.after);
+    if (message.after !== 0) {
+      writer.uint32(56).uint32(message.after);
     }
-    if (message.around !== "") {
-      writer.uint32(66).string(message.around);
+    if (message.around !== 0) {
+      writer.uint32(64).uint32(message.around);
     }
     return writer;
   },
@@ -9608,25 +9660,25 @@ export const ListChannelAttachmentRequest = {
           message.state = Int32Value.decode(reader, reader.uint32()).value;
           continue;
         case 6:
-          if (tag !== 50) {
+          if (tag !== 48) {
             break;
           }
 
-          message.before = reader.string();
+          message.before = reader.uint32();
           continue;
         case 7:
-          if (tag !== 58) {
+          if (tag !== 56) {
             break;
           }
 
-          message.after = reader.string();
+          message.after = reader.uint32();
           continue;
         case 8:
-          if (tag !== 66) {
+          if (tag !== 64) {
             break;
           }
 
-          message.around = reader.string();
+          message.around = reader.uint32();
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -9644,9 +9696,9 @@ export const ListChannelAttachmentRequest = {
       file_type: isSet(object.file_type) ? globalThis.String(object.file_type) : "",
       limit: isSet(object.limit) ? Number(object.limit) : undefined,
       state: isSet(object.state) ? Number(object.state) : undefined,
-      before: isSet(object.before) ? globalThis.String(object.before) : "",
-      after: isSet(object.after) ? globalThis.String(object.after) : "",
-      around: isSet(object.around) ? globalThis.String(object.around) : "",
+      before: isSet(object.before) ? globalThis.Number(object.before) : 0,
+      after: isSet(object.after) ? globalThis.Number(object.after) : 0,
+      around: isSet(object.around) ? globalThis.Number(object.around) : 0,
     };
   },
 
@@ -9667,14 +9719,14 @@ export const ListChannelAttachmentRequest = {
     if (message.state !== undefined) {
       obj.state = message.state;
     }
-    if (message.before !== "") {
-      obj.before = message.before;
+    if (message.before !== 0) {
+      obj.before = Math.round(message.before);
     }
-    if (message.after !== "") {
-      obj.after = message.after;
+    if (message.after !== 0) {
+      obj.after = Math.round(message.after);
     }
-    if (message.around !== "") {
-      obj.around = message.around;
+    if (message.around !== 0) {
+      obj.around = Math.round(message.around);
     }
     return obj;
   },
@@ -9689,9 +9741,9 @@ export const ListChannelAttachmentRequest = {
     message.file_type = object.file_type ?? "";
     message.limit = object.limit ?? undefined;
     message.state = object.state ?? undefined;
-    message.before = object.before ?? "";
-    message.after = object.after ?? "";
-    message.around = object.around ?? "";
+    message.before = object.before ?? 0;
+    message.after = object.after ?? 0;
+    message.around = object.around ?? 0;
     return message;
   },
 };
@@ -10839,7 +10891,7 @@ function createBaseUpdateAccountRequest(): UpdateAccountRequest {
     timezone: undefined,
     about_me: "",
     dob: undefined,
-    logo: "",
+    logo: undefined,
     splash_screen: "",
     encrypt_private_key: "",
   };
@@ -10871,8 +10923,8 @@ export const UpdateAccountRequest = {
     if (message.dob !== undefined) {
       Timestamp.encode(toTimestamp(message.dob), writer.uint32(66).fork()).ldelim();
     }
-    if (message.logo !== "") {
-      writer.uint32(74).string(message.logo);
+    if (message.logo !== undefined) {
+      StringValue.encode({ value: message.logo! }, writer.uint32(74).fork()).ldelim();
     }
     if (message.splash_screen !== "") {
       writer.uint32(82).string(message.splash_screen);
@@ -10951,7 +11003,7 @@ export const UpdateAccountRequest = {
             break;
           }
 
-          message.logo = reader.string();
+          message.logo = StringValue.decode(reader, reader.uint32()).value;
           continue;
         case 10:
           if (tag !== 82) {
@@ -10986,7 +11038,7 @@ export const UpdateAccountRequest = {
       timezone: isSet(object.timezone) ? String(object.timezone) : undefined,
       about_me: isSet(object.about_me) ? globalThis.String(object.about_me) : "",
       dob: isSet(object.dob) ? fromJsonTimestamp(object.dob) : undefined,
-      logo: isSet(object.logo) ? globalThis.String(object.logo) : "",
+      logo: isSet(object.logo) ? String(object.logo) : undefined,
       splash_screen: isSet(object.splash_screen) ? globalThis.String(object.splash_screen) : "",
       encrypt_private_key: isSet(object.encrypt_private_key) ? globalThis.String(object.encrypt_private_key) : "",
     };
@@ -11018,7 +11070,7 @@ export const UpdateAccountRequest = {
     if (message.dob !== undefined) {
       obj.dob = message.dob.toISOString();
     }
-    if (message.logo !== "") {
+    if (message.logo !== undefined) {
       obj.logo = message.logo;
     }
     if (message.splash_screen !== "") {
@@ -11043,7 +11095,7 @@ export const UpdateAccountRequest = {
     message.timezone = object.timezone ?? undefined;
     message.about_me = object.about_me ?? "";
     message.dob = object.dob ?? undefined;
-    message.logo = object.logo ?? "";
+    message.logo = object.logo ?? undefined;
     message.splash_screen = object.splash_screen ?? "";
     message.encrypt_private_key = object.encrypt_private_key ?? "";
     return message;
@@ -12225,6 +12277,8 @@ function createBaseClanDesc(): ClanDesc {
     welcome_channel_id: "",
     onboarding_banner: "",
     clan_order: 0,
+    is_community: false,
+    community_banner: "",
   };
 }
 
@@ -12262,6 +12316,12 @@ export const ClanDesc = {
     }
     if (message.clan_order !== 0) {
       writer.uint32(88).int32(message.clan_order);
+    }
+    if (message.is_community !== false) {
+      writer.uint32(96).bool(message.is_community);
+    }
+    if (message.community_banner !== "") {
+      writer.uint32(106).string(message.community_banner);
     }
     return writer;
   },
@@ -12350,6 +12410,20 @@ export const ClanDesc = {
 
           message.clan_order = reader.int32();
           continue;
+        case 12:
+          if (tag !== 96) {
+            break;
+          }
+
+          message.is_community = reader.bool();
+          continue;
+        case 13:
+          if (tag !== 106) {
+            break;
+          }
+
+          message.community_banner = reader.string();
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -12372,6 +12446,8 @@ export const ClanDesc = {
       welcome_channel_id: isSet(object.welcome_channel_id) ? globalThis.String(object.welcome_channel_id) : "",
       onboarding_banner: isSet(object.onboarding_banner) ? globalThis.String(object.onboarding_banner) : "",
       clan_order: isSet(object.clan_order) ? globalThis.Number(object.clan_order) : 0,
+      is_community: isSet(object.is_community) ? globalThis.Boolean(object.is_community) : false,
+      community_banner: isSet(object.community_banner) ? globalThis.String(object.community_banner) : "",
     };
   },
 
@@ -12410,6 +12486,12 @@ export const ClanDesc = {
     if (message.clan_order !== 0) {
       obj.clan_order = Math.round(message.clan_order);
     }
+    if (message.is_community !== false) {
+      obj.is_community = message.is_community;
+    }
+    if (message.community_banner !== "") {
+      obj.community_banner = message.community_banner;
+    }
     return obj;
   },
 
@@ -12429,6 +12511,8 @@ export const ClanDesc = {
     message.welcome_channel_id = object.welcome_channel_id ?? "";
     message.onboarding_banner = object.onboarding_banner ?? "";
     message.clan_order = object.clan_order ?? 0;
+    message.is_community = object.is_community ?? false;
+    message.community_banner = object.community_banner ?? "";
     return message;
   },
 };
@@ -12527,11 +12611,16 @@ function createBaseUpdateClanDescRequest(): UpdateClanDescRequest {
     clan_id: "",
     clan_name: "",
     logo: "",
-    banner: "",
+    banner: undefined,
     status: 0,
     is_onboarding: undefined,
     welcome_channel_id: "",
-    onboarding_banner: "",
+    onboarding_banner: undefined,
+    is_community: undefined,
+    community_banner: undefined,
+    description: "",
+    about: "",
+    short_url: undefined,
   };
 }
 
@@ -12546,8 +12635,8 @@ export const UpdateClanDescRequest = {
     if (message.logo !== "") {
       writer.uint32(26).string(message.logo);
     }
-    if (message.banner !== "") {
-      writer.uint32(34).string(message.banner);
+    if (message.banner !== undefined) {
+      StringValue.encode({ value: message.banner! }, writer.uint32(34).fork()).ldelim();
     }
     if (message.status !== 0) {
       writer.uint32(40).int32(message.status);
@@ -12558,8 +12647,23 @@ export const UpdateClanDescRequest = {
     if (message.welcome_channel_id !== "") {
       writer.uint32(58).string(message.welcome_channel_id);
     }
-    if (message.onboarding_banner !== "") {
-      writer.uint32(66).string(message.onboarding_banner);
+    if (message.onboarding_banner !== undefined) {
+      StringValue.encode({ value: message.onboarding_banner! }, writer.uint32(66).fork()).ldelim();
+    }
+    if (message.is_community !== undefined) {
+      BoolValue.encode({ value: message.is_community! }, writer.uint32(74).fork()).ldelim();
+    }
+    if (message.community_banner !== undefined) {
+      StringValue.encode({ value: message.community_banner! }, writer.uint32(82).fork()).ldelim();
+    }
+    if (message.description !== "") {
+      writer.uint32(90).string(message.description);
+    }
+    if (message.about !== "") {
+      writer.uint32(98).string(message.about);
+    }
+    if (message.short_url !== undefined) {
+      StringValue.encode({ value: message.short_url! }, writer.uint32(106).fork()).ldelim();
     }
     return writer;
   },
@@ -12597,7 +12701,7 @@ export const UpdateClanDescRequest = {
             break;
           }
 
-          message.banner = reader.string();
+          message.banner = StringValue.decode(reader, reader.uint32()).value;
           continue;
         case 5:
           if (tag !== 40) {
@@ -12625,7 +12729,42 @@ export const UpdateClanDescRequest = {
             break;
           }
 
-          message.onboarding_banner = reader.string();
+          message.onboarding_banner = StringValue.decode(reader, reader.uint32()).value;
+          continue;
+        case 9:
+          if (tag !== 74) {
+            break;
+          }
+
+          message.is_community = BoolValue.decode(reader, reader.uint32()).value;
+          continue;
+        case 10:
+          if (tag !== 82) {
+            break;
+          }
+
+          message.community_banner = StringValue.decode(reader, reader.uint32()).value;
+          continue;
+        case 11:
+          if (tag !== 90) {
+            break;
+          }
+
+          message.description = reader.string();
+          continue;
+        case 12:
+          if (tag !== 98) {
+            break;
+          }
+
+          message.about = reader.string();
+          continue;
+        case 13:
+          if (tag !== 106) {
+            break;
+          }
+
+          message.short_url = StringValue.decode(reader, reader.uint32()).value;
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -12641,11 +12780,16 @@ export const UpdateClanDescRequest = {
       clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
       clan_name: isSet(object.clan_name) ? globalThis.String(object.clan_name) : "",
       logo: isSet(object.logo) ? globalThis.String(object.logo) : "",
-      banner: isSet(object.banner) ? globalThis.String(object.banner) : "",
+      banner: isSet(object.banner) ? String(object.banner) : undefined,
       status: isSet(object.status) ? globalThis.Number(object.status) : 0,
       is_onboarding: isSet(object.is_onboarding) ? Boolean(object.is_onboarding) : undefined,
       welcome_channel_id: isSet(object.welcome_channel_id) ? globalThis.String(object.welcome_channel_id) : "",
-      onboarding_banner: isSet(object.onboarding_banner) ? globalThis.String(object.onboarding_banner) : "",
+      onboarding_banner: isSet(object.onboarding_banner) ? String(object.onboarding_banner) : undefined,
+      is_community: isSet(object.is_community) ? Boolean(object.is_community) : undefined,
+      community_banner: isSet(object.community_banner) ? String(object.community_banner) : undefined,
+      description: isSet(object.description) ? globalThis.String(object.description) : "",
+      about: isSet(object.about) ? globalThis.String(object.about) : "",
+      short_url: isSet(object.short_url) ? String(object.short_url) : undefined,
     };
   },
 
@@ -12660,7 +12804,7 @@ export const UpdateClanDescRequest = {
     if (message.logo !== "") {
       obj.logo = message.logo;
     }
-    if (message.banner !== "") {
+    if (message.banner !== undefined) {
       obj.banner = message.banner;
     }
     if (message.status !== 0) {
@@ -12672,8 +12816,23 @@ export const UpdateClanDescRequest = {
     if (message.welcome_channel_id !== "") {
       obj.welcome_channel_id = message.welcome_channel_id;
     }
-    if (message.onboarding_banner !== "") {
+    if (message.onboarding_banner !== undefined) {
       obj.onboarding_banner = message.onboarding_banner;
+    }
+    if (message.is_community !== undefined) {
+      obj.is_community = message.is_community;
+    }
+    if (message.community_banner !== undefined) {
+      obj.community_banner = message.community_banner;
+    }
+    if (message.description !== "") {
+      obj.description = message.description;
+    }
+    if (message.about !== "") {
+      obj.about = message.about;
+    }
+    if (message.short_url !== undefined) {
+      obj.short_url = message.short_url;
     }
     return obj;
   },
@@ -12686,11 +12845,16 @@ export const UpdateClanDescRequest = {
     message.clan_id = object.clan_id ?? "";
     message.clan_name = object.clan_name ?? "";
     message.logo = object.logo ?? "";
-    message.banner = object.banner ?? "";
+    message.banner = object.banner ?? undefined;
     message.status = object.status ?? 0;
     message.is_onboarding = object.is_onboarding ?? undefined;
     message.welcome_channel_id = object.welcome_channel_id ?? "";
-    message.onboarding_banner = object.onboarding_banner ?? "";
+    message.onboarding_banner = object.onboarding_banner ?? undefined;
+    message.is_community = object.is_community ?? undefined;
+    message.community_banner = object.community_banner ?? undefined;
+    message.description = object.description ?? "";
+    message.about = object.about ?? "";
+    message.short_url = object.short_url ?? undefined;
     return message;
   },
 };
@@ -17554,13 +17718,22 @@ export const NotificationSetting = {
 };
 
 function createBaseDeletePinMessage(): DeletePinMessage {
-  return { message_id: "" };
+  return { id: "", message_id: "", channel_id: "", clan_id: "" };
 }
 
 export const DeletePinMessage = {
   encode(message: DeletePinMessage, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.id !== "") {
+      writer.uint32(10).string(message.id);
+    }
     if (message.message_id !== "") {
-      writer.uint32(10).string(message.message_id);
+      writer.uint32(18).string(message.message_id);
+    }
+    if (message.channel_id !== "") {
+      writer.uint32(26).string(message.channel_id);
+    }
+    if (message.clan_id !== "") {
+      writer.uint32(34).string(message.clan_id);
     }
     return writer;
   },
@@ -17577,7 +17750,28 @@ export const DeletePinMessage = {
             break;
           }
 
+          message.id = reader.string();
+          continue;
+        case 2:
+          if (tag !== 18) {
+            break;
+          }
+
           message.message_id = reader.string();
+          continue;
+        case 3:
+          if (tag !== 26) {
+            break;
+          }
+
+          message.channel_id = reader.string();
+          continue;
+        case 4:
+          if (tag !== 34) {
+            break;
+          }
+
+          message.clan_id = reader.string();
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -17589,13 +17783,27 @@ export const DeletePinMessage = {
   },
 
   fromJSON(object: any): DeletePinMessage {
-    return { message_id: isSet(object.message_id) ? globalThis.String(object.message_id) : "" };
+    return {
+      id: isSet(object.id) ? globalThis.String(object.id) : "",
+      message_id: isSet(object.message_id) ? globalThis.String(object.message_id) : "",
+      channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "",
+      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
+    };
   },
 
   toJSON(message: DeletePinMessage): unknown {
     const obj: any = {};
+    if (message.id !== "") {
+      obj.id = message.id;
+    }
     if (message.message_id !== "") {
       obj.message_id = message.message_id;
+    }
+    if (message.channel_id !== "") {
+      obj.channel_id = message.channel_id;
+    }
+    if (message.clan_id !== "") {
+      obj.clan_id = message.clan_id;
     }
     return obj;
   },
@@ -17605,7 +17813,10 @@ export const DeletePinMessage = {
   },
   fromPartial<I extends Exact<DeepPartial<DeletePinMessage>, I>>(object: I): DeletePinMessage {
     const message = createBaseDeletePinMessage();
+    message.id = object.id ?? "";
     message.message_id = object.message_id ?? "";
+    message.channel_id = object.channel_id ?? "";
+    message.clan_id = object.clan_id ?? "";
     return message;
   },
 };
@@ -22120,9 +22331,9 @@ export const FilterParam = {
 function createBaseSearchMessageDocument(): SearchMessageDocument {
   return {
     message_id: "",
-    channel_id: 0,
-    clan_id: 0,
-    sender_id: 0,
+    channel_id: "",
+    clan_id: "",
+    sender_id: "",
     content: "",
     mentions: "",
     reactions: "",
@@ -22144,14 +22355,14 @@ export const SearchMessageDocument = {
     if (message.message_id !== "") {
       writer.uint32(10).string(message.message_id);
     }
-    if (message.channel_id !== 0) {
-      writer.uint32(16).int64(message.channel_id);
+    if (message.channel_id !== "") {
+      writer.uint32(18).string(message.channel_id);
     }
-    if (message.clan_id !== 0) {
-      writer.uint32(24).int64(message.clan_id);
+    if (message.clan_id !== "") {
+      writer.uint32(26).string(message.clan_id);
     }
-    if (message.sender_id !== 0) {
-      writer.uint32(32).int64(message.sender_id);
+    if (message.sender_id !== "") {
+      writer.uint32(34).string(message.sender_id);
     }
     if (message.content !== "") {
       writer.uint32(42).string(message.content);
@@ -22210,25 +22421,25 @@ export const SearchMessageDocument = {
           message.message_id = reader.string();
           continue;
         case 2:
-          if (tag !== 16) {
+          if (tag !== 18) {
             break;
           }
 
-          message.channel_id = longToNumber(reader.int64() as Long);
+          message.channel_id = reader.string();
           continue;
         case 3:
-          if (tag !== 24) {
+          if (tag !== 26) {
             break;
           }
 
-          message.clan_id = longToNumber(reader.int64() as Long);
+          message.clan_id = reader.string();
           continue;
         case 4:
-          if (tag !== 32) {
+          if (tag !== 34) {
             break;
           }
 
-          message.sender_id = longToNumber(reader.int64() as Long);
+          message.sender_id = reader.string();
           continue;
         case 5:
           if (tag !== 42) {
@@ -22333,9 +22544,9 @@ export const SearchMessageDocument = {
   fromJSON(object: any): SearchMessageDocument {
     return {
       message_id: isSet(object.message_id) ? globalThis.String(object.message_id) : "",
-      channel_id: isSet(object.channel_id) ? globalThis.Number(object.channel_id) : 0,
-      clan_id: isSet(object.clan_id) ? globalThis.Number(object.clan_id) : 0,
-      sender_id: isSet(object.sender_id) ? globalThis.Number(object.sender_id) : 0,
+      channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "",
+      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
+      sender_id: isSet(object.sender_id) ? globalThis.String(object.sender_id) : "",
       content: isSet(object.content) ? globalThis.String(object.content) : "",
       mentions: isSet(object.mentions) ? globalThis.String(object.mentions) : "",
       reactions: isSet(object.reactions) ? globalThis.String(object.reactions) : "",
@@ -22359,14 +22570,14 @@ export const SearchMessageDocument = {
     if (message.message_id !== "") {
       obj.message_id = message.message_id;
     }
-    if (message.channel_id !== 0) {
-      obj.channel_id = Math.round(message.channel_id);
+    if (message.channel_id !== "") {
+      obj.channel_id = message.channel_id;
     }
-    if (message.clan_id !== 0) {
-      obj.clan_id = Math.round(message.clan_id);
+    if (message.clan_id !== "") {
+      obj.clan_id = message.clan_id;
     }
-    if (message.sender_id !== 0) {
-      obj.sender_id = Math.round(message.sender_id);
+    if (message.sender_id !== "") {
+      obj.sender_id = message.sender_id;
     }
     if (message.content !== "") {
       obj.content = message.content;
@@ -22416,9 +22627,9 @@ export const SearchMessageDocument = {
   fromPartial<I extends Exact<DeepPartial<SearchMessageDocument>, I>>(object: I): SearchMessageDocument {
     const message = createBaseSearchMessageDocument();
     message.message_id = object.message_id ?? "";
-    message.channel_id = object.channel_id ?? 0;
-    message.clan_id = object.clan_id ?? 0;
-    message.sender_id = object.sender_id ?? 0;
+    message.channel_id = object.channel_id ?? "";
+    message.clan_id = object.clan_id ?? "";
+    message.sender_id = object.sender_id ?? "";
     message.content = object.content ?? "";
     message.mentions = object.mentions ?? "";
     message.reactions = object.reactions ?? "";
@@ -23834,6 +24045,7 @@ function createBaseWebhook(): Webhook {
     update_time: "",
     avatar: "",
     status: 0,
+    clan_id: "",
   };
 }
 
@@ -23868,6 +24080,9 @@ export const Webhook = {
     }
     if (message.status !== 0) {
       writer.uint32(80).int32(message.status);
+    }
+    if (message.clan_id !== "") {
+      writer.uint32(90).string(message.clan_id);
     }
     return writer;
   },
@@ -23949,6 +24164,13 @@ export const Webhook = {
 
           message.status = reader.int32();
           continue;
+        case 11:
+          if (tag !== 90) {
+            break;
+          }
+
+          message.clan_id = reader.string();
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -23970,6 +24192,7 @@ export const Webhook = {
       update_time: isSet(object.update_time) ? globalThis.String(object.update_time) : "",
       avatar: isSet(object.avatar) ? globalThis.String(object.avatar) : "",
       status: isSet(object.status) ? globalThis.Number(object.status) : 0,
+      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
     };
   },
 
@@ -24005,6 +24228,9 @@ export const Webhook = {
     if (message.status !== 0) {
       obj.status = Math.round(message.status);
     }
+    if (message.clan_id !== "") {
+      obj.clan_id = message.clan_id;
+    }
     return obj;
   },
 
@@ -24023,6 +24249,7 @@ export const Webhook = {
     message.update_time = object.update_time ?? "";
     message.avatar = object.avatar ?? "";
     message.status = object.status ?? 0;
+    message.clan_id = object.clan_id ?? "";
     return message;
   },
 };
@@ -35829,6 +36056,110 @@ export const GenerateMeetTokenRequest = {
   },
 };
 
+function createBaseMeetParticipantRequest(): MeetParticipantRequest {
+  return { username: "", room_name: "", channel_id: "", clan_id: "" };
+}
+
+export const MeetParticipantRequest = {
+  encode(message: MeetParticipantRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.username !== "") {
+      writer.uint32(10).string(message.username);
+    }
+    if (message.room_name !== "") {
+      writer.uint32(18).string(message.room_name);
+    }
+    if (message.channel_id !== "") {
+      writer.uint32(26).string(message.channel_id);
+    }
+    if (message.clan_id !== "") {
+      writer.uint32(34).string(message.clan_id);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): MeetParticipantRequest {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseMeetParticipantRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.username = reader.string();
+          continue;
+        case 2:
+          if (tag !== 18) {
+            break;
+          }
+
+          message.room_name = reader.string();
+          continue;
+        case 3:
+          if (tag !== 26) {
+            break;
+          }
+
+          message.channel_id = reader.string();
+          continue;
+        case 4:
+          if (tag !== 34) {
+            break;
+          }
+
+          message.clan_id = reader.string();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): MeetParticipantRequest {
+    return {
+      username: isSet(object.username) ? globalThis.String(object.username) : "",
+      room_name: isSet(object.room_name) ? globalThis.String(object.room_name) : "",
+      channel_id: isSet(object.channel_id) ? globalThis.String(object.channel_id) : "",
+      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
+    };
+  },
+
+  toJSON(message: MeetParticipantRequest): unknown {
+    const obj: any = {};
+    if (message.username !== "") {
+      obj.username = message.username;
+    }
+    if (message.room_name !== "") {
+      obj.room_name = message.room_name;
+    }
+    if (message.channel_id !== "") {
+      obj.channel_id = message.channel_id;
+    }
+    if (message.clan_id !== "") {
+      obj.clan_id = message.clan_id;
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<MeetParticipantRequest>, I>>(base?: I): MeetParticipantRequest {
+    return MeetParticipantRequest.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<MeetParticipantRequest>, I>>(object: I): MeetParticipantRequest {
+    const message = createBaseMeetParticipantRequest();
+    message.username = object.username ?? "";
+    message.room_name = object.room_name ?? "";
+    message.channel_id = object.channel_id ?? "";
+    message.clan_id = object.clan_id ?? "";
+    return message;
+  },
+};
+
 function createBaseGenerateMeetTokenResponse(): GenerateMeetTokenResponse {
   return { token: "" };
 }
@@ -38328,6 +38659,211 @@ export const ForSaleItemList = {
   fromPartial<I extends Exact<DeepPartial<ForSaleItemList>, I>>(object: I): ForSaleItemList {
     const message = createBaseForSaleItemList();
     message.for_sale_items = object.for_sale_items?.map((e) => ForSaleItem.fromPartial(e)) || [];
+    return message;
+  },
+};
+
+function createBaseIsFollowerRequest(): IsFollowerRequest {
+  return { follow_id: "" };
+}
+
+export const IsFollowerRequest = {
+  encode(message: IsFollowerRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.follow_id !== "") {
+      writer.uint32(10).string(message.follow_id);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): IsFollowerRequest {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseIsFollowerRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.follow_id = reader.string();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): IsFollowerRequest {
+    return { follow_id: isSet(object.follow_id) ? globalThis.String(object.follow_id) : "" };
+  },
+
+  toJSON(message: IsFollowerRequest): unknown {
+    const obj: any = {};
+    if (message.follow_id !== "") {
+      obj.follow_id = message.follow_id;
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<IsFollowerRequest>, I>>(base?: I): IsFollowerRequest {
+    return IsFollowerRequest.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<IsFollowerRequest>, I>>(object: I): IsFollowerRequest {
+    const message = createBaseIsFollowerRequest();
+    message.follow_id = object.follow_id ?? "";
+    return message;
+  },
+};
+
+function createBaseIsFollowerResponse(): IsFollowerResponse {
+  return { follow_id: "", is_follower: false };
+}
+
+export const IsFollowerResponse = {
+  encode(message: IsFollowerResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.follow_id !== "") {
+      writer.uint32(10).string(message.follow_id);
+    }
+    if (message.is_follower !== false) {
+      writer.uint32(16).bool(message.is_follower);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): IsFollowerResponse {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseIsFollowerResponse();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.follow_id = reader.string();
+          continue;
+        case 2:
+          if (tag !== 16) {
+            break;
+          }
+
+          message.is_follower = reader.bool();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): IsFollowerResponse {
+    return {
+      follow_id: isSet(object.follow_id) ? globalThis.String(object.follow_id) : "",
+      is_follower: isSet(object.is_follower) ? globalThis.Boolean(object.is_follower) : false,
+    };
+  },
+
+  toJSON(message: IsFollowerResponse): unknown {
+    const obj: any = {};
+    if (message.follow_id !== "") {
+      obj.follow_id = message.follow_id;
+    }
+    if (message.is_follower !== false) {
+      obj.is_follower = message.is_follower;
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<IsFollowerResponse>, I>>(base?: I): IsFollowerResponse {
+    return IsFollowerResponse.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<IsFollowerResponse>, I>>(object: I): IsFollowerResponse {
+    const message = createBaseIsFollowerResponse();
+    message.follow_id = object.follow_id ?? "";
+    message.is_follower = object.is_follower ?? false;
+    return message;
+  },
+};
+
+function createBaseTransferOwnershipRequest(): TransferOwnershipRequest {
+  return { clan_id: "", new_owner_id: "" };
+}
+
+export const TransferOwnershipRequest = {
+  encode(message: TransferOwnershipRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.clan_id !== "") {
+      writer.uint32(10).string(message.clan_id);
+    }
+    if (message.new_owner_id !== "") {
+      writer.uint32(18).string(message.new_owner_id);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): TransferOwnershipRequest {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseTransferOwnershipRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.clan_id = reader.string();
+          continue;
+        case 2:
+          if (tag !== 18) {
+            break;
+          }
+
+          message.new_owner_id = reader.string();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): TransferOwnershipRequest {
+    return {
+      clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
+      new_owner_id: isSet(object.new_owner_id) ? globalThis.String(object.new_owner_id) : "",
+    };
+  },
+
+  toJSON(message: TransferOwnershipRequest): unknown {
+    const obj: any = {};
+    if (message.clan_id !== "") {
+      obj.clan_id = message.clan_id;
+    }
+    if (message.new_owner_id !== "") {
+      obj.new_owner_id = message.new_owner_id;
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<TransferOwnershipRequest>, I>>(base?: I): TransferOwnershipRequest {
+    return TransferOwnershipRequest.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<TransferOwnershipRequest>, I>>(object: I): TransferOwnershipRequest {
+    const message = createBaseTransferOwnershipRequest();
+    message.clan_id = object.clan_id ?? "";
+    message.new_owner_id = object.new_owner_id ?? "";
     return message;
   },
 };

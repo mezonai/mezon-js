@@ -106,7 +106,7 @@ export class TextChannel {
     mention_everyone?: boolean,
     anonymous_message?: boolean,
     topic_id?: string,
-    code?: number
+    code: number = 12
   ) {
     return this.messageQueue.enqueue(async () => {
       let references: ApiMessageRef[] = [];

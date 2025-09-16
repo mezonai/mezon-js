@@ -270,7 +270,7 @@ export class MezonClient extends EventEmitter {
         const receiver = await clan?.users.fetch(e.receiver_id);
         await receiver?.sendDM(
           {
-            t: `Funds Transferred: ${e.amount}₫ | ${e.note}`,
+            t: `Funds Transferred: ${(+e.amount).toLocaleString()}₫ | ${e.note}`,
           },
           TypeMessage.SendToken
         );
