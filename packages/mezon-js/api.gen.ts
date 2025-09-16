@@ -374,8 +374,6 @@ export interface ApiAccount {
   verify_time?: string;
   //The user's wallet data.
   wallet?: number;
-  // MMN information
-  mmn_encrypt_private_key: string;
 }
 
 /** Send a app token to the server. Used with authenticate/link/unlink. */
@@ -2642,8 +2640,6 @@ export interface ApiUploadAttachmentRequest {
 export interface ApiUser {
   //
   about_me?: string;
-  //The Apple Sign In ID in the user's account.
-  apple_id?: string;
   //A URL for an avatar image.
   avatar_url?: string;
   //
@@ -2654,12 +2650,6 @@ export interface ApiUser {
   display_name?: string;
   //Number of related edges to this user.
   edge_count?: number;
-  //The Facebook id in the user's account.
-  facebook_id?: string;
-  //The Apple Game Center in of the user's account.
-  gamecenter_id?: string;
-  //The Google id in the user's account.
-  google_id?: string;
   //The id of the user's account.
   id?: string;
   //
@@ -2674,18 +2664,16 @@ export interface ApiUser {
   metadata?: string;
   //Indicates whether the user is currently online.
   online?: boolean;
-  //The Steam id in the user's account.
-  steam_id?: string;
   //The timezone set by the user.
   timezone?: string;
   //The UNIX time (for gRPC clients) or ISO string (for REST clients) when the user was last updated.
   update_time?: string;
   //The username of the user's account.
   username?: string;
+  // mezon_id
+  mezon_id?: string;
   // list nick name
   list_nick_names?: Array<string>;
-   // MMN address
-  wallet_address?: string
 }
 
 /**  */
