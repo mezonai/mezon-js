@@ -374,6 +374,8 @@ export interface ApiAccount {
   verify_time?: string;
   //The user's wallet data.
   wallet?: number;
+  //Password is setted
+  password_setted?: boolean;
 }
 
 /** Send a app token to the server. Used with authenticate/link/unlink. */
@@ -2148,6 +2150,8 @@ export interface ApiRegistrationEmailRequest {
   email?: string;
   //A password for the user account.
   password?: string;
+  //A old password for the user account.
+  old_password?: string;
   //Set the username on the account at register. Must be unique.
   username?: string;
   //Extra information that will be bundled in the session token.
