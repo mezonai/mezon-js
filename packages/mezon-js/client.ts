@@ -173,6 +173,7 @@ import {
   ApiTransferOwnershipRequest,
   ApiMeetParticipantRequest,
   ApiStoreWalletKeyRequest,
+  ApiLinkAccountConfirmRequest,
 } from "./api.gen";
 
 import { Session } from "./session";
@@ -1170,14 +1171,10 @@ export class Client {
             create_time: u.create_time,
             display_name: u.display_name,
             edge_count: u.edge_count ? Number(u.edge_count) : 0,
-            facebook_id: u.facebook_id,
-            gamecenter_id: u.gamecenter_id,
-            google_id: u.google_id,
             id: u.id,
             lang_tag: u.lang_tag,
             location: u.location,
             online: u.online,
-            steam_id: u.steam_id,
             timezone: u.timezone,
             update_time: u.update_time,
             username: u.username,
@@ -1519,15 +1516,11 @@ export class Client {
               create_time: gu.user!.create_time,
               display_name: gu.user!.display_name,
               edge_count: gu.user!.edge_count ? Number(gu.user!.edge_count) : 0,
-              facebook_id: gu.user!.facebook_id,
-              gamecenter_id: gu.user!.gamecenter_id,
-              google_id: gu.user!.google_id,
               id: gu.user!.id,
               lang_tag: gu.user!.lang_tag,
               location: gu.user!.location,
               online: gu.user!.online,
               is_mobile: gu.user?.is_mobile,
-              steam_id: gu.user!.steam_id,
               timezone: gu.user!.timezone,
               update_time: gu.user!.update_time,
               username: gu.user!.username,
@@ -1805,11 +1798,30 @@ export class Client {
       });
   }
 
+  async confirmLinkMezonOTP(
+    session: Session,
+    request:  ApiLinkAccountConfirmRequest,
+  ): Promise<any> {
+    if (
+      this.autoRefreshSession &&
+      session.refresh_token &&
+      session.isexpired(Date.now() / 1000)
+    ) {
+      await this.sessionRefresh(session);
+    }
+
+    return this.apiClient
+      .confirmLinkMezonOTP(session.token, request)
+      .then((response: any) => {
+        return response !== undefined;
+      });
+  }
+
   /** Add a custom ID to the social profiles on the current user's account. */
   async linkMezon(
     session: Session,
     request: ApiAccountMezon
-  ): Promise<boolean> {
+  ): Promise<ApiLinkAccountConfirmRequest> {
     if (
       this.autoRefreshSession &&
       session.refresh_token &&
@@ -1820,8 +1832,8 @@ export class Client {
 
     return this.apiClient
       .linkMezon(session.token, request)
-      .then((response: any) => {
-        return response !== undefined;
+      .then((response: ApiLinkAccountConfirmRequest) => {
+        return Promise.resolve(response);
       });
   }
 
@@ -1878,15 +1890,11 @@ export class Client {
               avatar_url: f.user!.avatar_url,
               create_time: f.user!.create_time,
               display_name: f.user!.display_name,
-              edge_count: f.user!.edge_count ? Number(f.user!.edge_count) : 0,
-              facebook_id: f.user!.facebook_id,
-              gamecenter_id: f.user!.gamecenter_id,
-              google_id: f.user!.google_id,
+              edge_count: f.user!.edge_count ? Number(f.user!.edge_count) : 0,              
               id: f.user!.id,
               lang_tag: f.user!.lang_tag,
               location: f.user!.location,
               online: f.user!.online,
-              steam_id: f.user!.steam_id,
               timezone: f.user!.timezone,
               update_time: f.user!.update_time,
               username: f.user!.username,

@@ -394,6 +394,8 @@ export interface ApiAccountEmail {
   email?: string;
   //A password for the user account.  Ignored with unlink operations.
   password?: string;
+  // Old email
+  prev_email?: string;
   //Extra information that will be bundled in the session token.
   vars?: Record<string, string>;
 }
@@ -3322,6 +3324,16 @@ export interface ApiIsFollowerRequest {
 }
 
 /**  */
+export interface ApiLinkAccountConfirmRequest {
+  //
+  otp_code?: string;
+  //
+  req_id?: string;
+  //
+  status?: number;
+}
+
+/**  */
 export interface ApiIsFollowerResponse {
   //
   is_follower?: boolean;
@@ -3688,7 +3700,7 @@ export class MezonApi {
     bearerToken: string,
     body: ApiAccountEmail,
     options: any = {}
-  ): Promise<any> {
+  ): Promise<ApiLinkAccountConfirmRequest> {
     if (body === null || body === undefined) {
       throw new Error(
         "'body' is a required parameter but is null or undefined."
@@ -3725,12 +3737,48 @@ export class MezonApi {
   /** Add a mezon ID to the social profiles on the current user's account. */
     linkMezon(bearerToken: string,
         body:ApiAccountMezon,
-        options: any = {}): Promise<any> {
+        options: any = {}): Promise<ApiLinkAccountConfirmRequest> {
       
       if (body === null || body === undefined) {
         throw new Error("'body' is a required parameter but is null or undefined.");
       }
       const urlPath = "/v2/account/link/mezon";
+      const queryParams = new Map<string, any>();
+  
+      let bodyJson : string = "";
+      bodyJson = JSON.stringify(body || {});
+  
+      const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
+      const fetchOptions = buildFetchOptions("POST", options, bodyJson);
+      if (bearerToken) {
+          fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+      }
+  
+      return Promise.race([
+        fetch(fullUrl, fetchOptions).then((response) => {
+          if (response.status == 204) {
+            return response;
+          } else if (response.status >= 200 && response.status < 300) {
+            return response.json();
+          } else {
+            throw response;
+          }
+        }),
+        new Promise((_, reject) =>
+          setTimeout(reject, this.timeoutMs, "Request timed out.")
+        ),
+      ]);
+  }
+
+  /**  */
+    confirmLinkMezonOTP(bearerToken: string,
+        body:ApiLinkAccountConfirmRequest,
+        options: any = {}): Promise<any> {
+      
+      if (body === null || body === undefined) {
+        throw new Error("'body' is a required parameter but is null or undefined.");
+      }
+      const urlPath = "/v2/account/link/confirm";
       const queryParams = new Map<string, any>();
   
       let bodyJson : string = "";
