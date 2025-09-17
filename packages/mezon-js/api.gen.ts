@@ -400,7 +400,7 @@ export interface ApiAccountEmail {
 
 /** Send a Mezon token to the server. Used with authenticate/link/unlink. */
 export interface ApiAccountMezon {
-  //The OAuth token received from Google to access their profile API.
+  //The phone number
   token?: string;
   //Extra information that will be bundled in the session token.
   vars?: Record<string, string>;
