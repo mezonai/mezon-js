@@ -560,6 +560,8 @@ export interface ApiListChannelAppsResponse {
 
 /** Update fields in a given channel. */
 export interface ApiChangeChannelPrivateRequest {
+  //The clan id
+  clan_id?: string;
   //The ID of the channel to update.
   channel_id?: string;
   //
@@ -4598,6 +4600,7 @@ export class MezonApi {
   /**  */
   removeChannelFavorite(
     bearerToken: string,
+    clanId: string,
     channelId: string,
     options: any = {}
   ): Promise<any> {
@@ -4611,6 +4614,7 @@ export class MezonApi {
       encodeURIComponent(String(channelId))
     );
     const queryParams = new Map<string, any>();
+    queryParams.set("clan_id", clanId);
 
     let bodyJson: string = "";
 
@@ -4915,6 +4919,7 @@ export class MezonApi {
   /** Leave a channel the user is a member of. */
   leaveThread(
     bearerToken: string,
+    clanId: string,
     channelId: string,
     options: any = {}
   ): Promise<any> {
@@ -4928,6 +4933,7 @@ export class MezonApi {
       encodeURIComponent(String(channelId))
     );
     const queryParams = new Map<string, any>();
+    queryParams.set("clan_id", clanId);
 
     let bodyJson: string = "";
 
@@ -5166,8 +5172,8 @@ export class MezonApi {
 
   /** Delete a channel by ID. */
   deleteChannelDesc(bearerToken: string,
-      channelId:string,
-      clanId?:string,
+      clanId: string,
+      channelId: string,      
       options: any = {}): Promise<any> {
     
     if (channelId === null || channelId === undefined) {
@@ -5205,6 +5211,7 @@ export class MezonApi {
   /** Update fields in a given channel. */
   updateChannelDesc(
     bearerToken: string,
+    clanId: string,
     channelId: string,
     body: {},
     options: any = {}
@@ -5224,6 +5231,7 @@ export class MezonApi {
       encodeURIComponent(String(channelId))
     );
     const queryParams = new Map<string, any>();
+    queryParams.set("clan_id", clanId);
 
     let bodyJson: string = "";
     bodyJson = JSON.stringify(body || {});
@@ -9330,44 +9338,6 @@ export class MezonApi {
 
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("POST", options, bodyJson);
-    if (bearerToken) {
-      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-    }
-
-    return Promise.race([
-      fetch(fullUrl, fetchOptions).then((response) => {
-        if (response.status == 204) {
-          return response;
-        } else if (response.status >= 200 && response.status < 300) {
-          return response.json();
-        } else {
-          throw response;
-        }
-      }),
-      new Promise((_, reject) =>
-        setTimeout(reject, this.timeoutMs, "Request timed out.")
-      ),
-    ]);
-  }
-
-  /** Fetch zero or more users by ID and/or username. */
-  getUsers(
-    bearerToken: string,
-    ids?: Array<string>,
-    usernames?: Array<string>,
-    facebookIds?: Array<string>,
-    options: any = {}
-  ): Promise<ApiUsers> {
-    const urlPath = "/v2/user";
-    const queryParams = new Map<string, any>();
-    queryParams.set("ids", ids);
-    queryParams.set("usernames", usernames);
-    queryParams.set("facebook_ids", facebookIds);
-
-    let bodyJson: string = "";
-
-    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
-    const fetchOptions = buildFetchOptions("GET", options, bodyJson);
     if (bearerToken) {
       fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
     }

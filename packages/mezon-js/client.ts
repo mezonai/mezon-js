@@ -40,7 +40,6 @@ import {
   ApiNotificationList,
   ApiRpc,
   ApiUpdateAccountRequest,
-  ApiUsers,
   MezonApi,
   ApiSession,
   ApiClanProfile,
@@ -320,14 +319,6 @@ export interface User {
   display_name?: string;
   /** Number of related edges to this user. */
   edge_count?: number;
-  /** The Facebook id in the user's account. */
-  facebook_id?: string;
-  /** The Facebook Instant Game ID in the user's account. */
-  facebook_instant_game_id?: string;
-  /** The Apple Game Center in of the user's account. */
-  gamecenter_id?: string;
-  /** The Google id in the user's account. */
-  google_id?: string;
   /** The id of the user's account. */
   id?: string;
   /** The language expected to be a tag which follows the BCP-47 spec. */
@@ -338,8 +329,6 @@ export interface User {
   metadata?: { status?: string; user_status?: string };
   /** Indicates whether the user is currently online. */
   online?: boolean;
-  /** The Steam id in the user's account. */
-  steam_id?: string;
   /** The timezone set by the user. */
   timezone?: string;
   /** The UNIX time when the user was last updated. */
@@ -1138,52 +1127,6 @@ export class Client {
     }
 
     return this.apiClient.getAccount(session.token);
-  }
-
-  /** Fetch zero or more users by ID and/or username. */
-  async getUsers(
-    session: Session,
-    ids?: Array<string>,
-    usernames?: Array<string>,
-    facebookIds?: Array<string>
-  ): Promise<Users> {
-    if (
-      this.autoRefreshSession &&
-      session.refresh_token &&
-      session.isexpired(Date.now() / 1000)
-    ) {
-      await this.sessionRefresh(session);
-    }
-
-    return this.apiClient
-      .getUsers(session.token, ids, usernames, facebookIds)
-      .then((response: ApiUsers) => {
-        var result: Users = {
-          users: [],
-        };
-
-        if (response.users == null) {
-          return Promise.resolve(result);
-        }
-
-        response.users!.forEach((u) => {
-          result.users!.push({
-            avatar_url: u.avatar_url,
-            create_time: u.create_time,
-            display_name: u.display_name,
-            edge_count: u.edge_count ? Number(u.edge_count) : 0,
-            id: u.id,
-            lang_tag: u.lang_tag,
-            location: u.location,
-            online: u.online,
-            timezone: u.timezone,
-            update_time: u.update_time,
-            username: u.username,
-            metadata: u.metadata ? safeJSONParse(u.metadata) : undefined,
-          });
-        });
-        return Promise.resolve(result);
-      });
   }
 
   /** Kick a set of users from a clan. */
@@ -2163,6 +2106,7 @@ export class Client {
   /** Update fields in a given channel */
   async updateChannelDesc(
     session: Session,
+    clanId: string,
     channelId: string,
     request: ApiUpdateChannelDescRequest
   ): Promise<boolean> {
@@ -2175,7 +2119,7 @@ export class Client {
     }
 
     return this.apiClient
-      .updateChannelDesc(session.token, channelId, request)
+      .updateChannelDesc(session.token, clanId, channelId, request)
       .then((response: any) => {
         return response !== undefined;
       });
@@ -3651,7 +3595,7 @@ export class Client {
       });
   }
 
-  async leaveThread(session: Session, channelId: string): Promise<any> {
+  async leaveThread(session: Session, clanId: string, channelId: string): Promise<any> {
     if (
       this.autoRefreshSession &&
       session.refresh_token &&
@@ -3661,7 +3605,7 @@ export class Client {
     }
 
     return this.apiClient
-      .leaveThread(session.token, channelId)
+      .leaveThread(session.token, clanId, channelId)
       .then((response: any) => {
         return Promise.resolve(response);
       });
@@ -3828,6 +3772,7 @@ export class Client {
 
   async removeFavoriteChannel(
     session: Session,
+    clanId: string,
     channelId: string
   ): Promise<any> {
     if (
@@ -3839,7 +3784,7 @@ export class Client {
     }
 
     return this.apiClient
-      .removeChannelFavorite(session.token, channelId)
+      .removeChannelFavorite(session.token, clanId, channelId)
       .then((response: any) => {
         return response;
       });
