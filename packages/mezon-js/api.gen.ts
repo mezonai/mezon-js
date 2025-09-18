@@ -374,6 +374,8 @@ export interface ApiAccount {
   verify_time?: string;
   //The user's wallet data.
   wallet?: number;
+  //Password is setted
+  password_setted?: boolean;
 }
 
 /** Send a app token to the server. Used with authenticate/link/unlink. */
@@ -394,13 +396,15 @@ export interface ApiAccountEmail {
   email?: string;
   //A password for the user account.  Ignored with unlink operations.
   password?: string;
+  // Old email
+  prev_email?: string;
   //Extra information that will be bundled in the session token.
   vars?: Record<string, string>;
 }
 
 /** Send a Mezon token to the server. Used with authenticate/link/unlink. */
 export interface ApiAccountMezon {
-  //The OAuth token received from Google to access their profile API.
+  //The phone number
   token?: string;
   //Extra information that will be bundled in the session token.
   vars?: Record<string, string>;
@@ -556,6 +560,8 @@ export interface ApiListChannelAppsResponse {
 
 /** Update fields in a given channel. */
 export interface ApiChangeChannelPrivateRequest {
+  //The clan id
+  clan_id?: string;
   //The ID of the channel to update.
   channel_id?: string;
   //
@@ -1216,6 +1222,8 @@ export interface ApiCreateRoleRequest {
 
 /** Delete a channel the user has access to. */
 export interface ApiDeleteChannelDescRequest {
+  //The clan id
+  clan_id?: string;
   //The id of a channel.
   channel_id?: string;
 }
@@ -2146,6 +2154,8 @@ export interface ApiRegistrationEmailRequest {
   email?: string;
   //A password for the user account.
   password?: string;
+  //A old password for the user account.
+  old_password?: string;
   //Set the username on the account at register. Must be unique.
   username?: string;
   //Extra information that will be bundled in the session token.
@@ -3322,6 +3332,16 @@ export interface ApiIsFollowerRequest {
 }
 
 /**  */
+export interface ApiLinkAccountConfirmRequest {
+  //
+  otp_code?: string;
+  //
+  req_id?: string;
+  //
+  status?: number;
+}
+
+/**  */
 export interface ApiIsFollowerResponse {
   //
   is_follower?: boolean;
@@ -3688,7 +3708,7 @@ export class MezonApi {
     bearerToken: string,
     body: ApiAccountEmail,
     options: any = {}
-  ): Promise<any> {
+  ): Promise<ApiLinkAccountConfirmRequest> {
     if (body === null || body === undefined) {
       throw new Error(
         "'body' is a required parameter but is null or undefined."
@@ -3725,12 +3745,48 @@ export class MezonApi {
   /** Add a mezon ID to the social profiles on the current user's account. */
     linkMezon(bearerToken: string,
         body:ApiAccountMezon,
-        options: any = {}): Promise<any> {
+        options: any = {}): Promise<ApiLinkAccountConfirmRequest> {
       
       if (body === null || body === undefined) {
         throw new Error("'body' is a required parameter but is null or undefined.");
       }
       const urlPath = "/v2/account/link/mezon";
+      const queryParams = new Map<string, any>();
+  
+      let bodyJson : string = "";
+      bodyJson = JSON.stringify(body || {});
+  
+      const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
+      const fetchOptions = buildFetchOptions("POST", options, bodyJson);
+      if (bearerToken) {
+          fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+      }
+  
+      return Promise.race([
+        fetch(fullUrl, fetchOptions).then((response) => {
+          if (response.status == 204) {
+            return response;
+          } else if (response.status >= 200 && response.status < 300) {
+            return response.json();
+          } else {
+            throw response;
+          }
+        }),
+        new Promise((_, reject) =>
+          setTimeout(reject, this.timeoutMs, "Request timed out.")
+        ),
+      ]);
+  }
+
+  /**  */
+    confirmLinkMezonOTP(bearerToken: string,
+        body:ApiLinkAccountConfirmRequest,
+        options: any = {}): Promise<any> {
+      
+      if (body === null || body === undefined) {
+        throw new Error("'body' is a required parameter but is null or undefined.");
+      }
+      const urlPath = "/v2/account/link/confirm";
       const queryParams = new Map<string, any>();
   
       let bodyJson : string = "";
@@ -4544,6 +4600,7 @@ export class MezonApi {
   /**  */
   removeChannelFavorite(
     bearerToken: string,
+    clanId: string,
     channelId: string,
     options: any = {}
   ): Promise<any> {
@@ -4557,6 +4614,7 @@ export class MezonApi {
       encodeURIComponent(String(channelId))
     );
     const queryParams = new Map<string, any>();
+    queryParams.set("clan_id", clanId);
 
     let bodyJson: string = "";
 
@@ -4861,6 +4919,7 @@ export class MezonApi {
   /** Leave a channel the user is a member of. */
   leaveThread(
     bearerToken: string,
+    clanId: string,
     channelId: string,
     options: any = {}
   ): Promise<any> {
@@ -4874,6 +4933,7 @@ export class MezonApi {
       encodeURIComponent(String(channelId))
     );
     const queryParams = new Map<string, any>();
+    queryParams.set("clan_id", clanId);
 
     let bodyJson: string = "";
 
@@ -5111,28 +5171,25 @@ export class MezonApi {
   }
 
   /** Delete a channel by ID. */
-  deleteChannelDesc(
-    bearerToken: string,
-    channelId: string,
-    options: any = {}
-  ): Promise<any> {
+  deleteChannelDesc(bearerToken: string,
+      clanId: string,
+      channelId: string,      
+      options: any = {}): Promise<any> {
+    
     if (channelId === null || channelId === undefined) {
-      throw new Error(
-        "'channelId' is a required parameter but is null or undefined."
-      );
+      throw new Error("'channelId' is a required parameter but is null or undefined.");
     }
-    const urlPath = "/v2/channeldesc/{channelId}".replace(
-      "{channelId}",
-      encodeURIComponent(String(channelId))
-    );
+    const urlPath = "/v2/channeldesc/{channelId}"
+        .replace("{channelId}", encodeURIComponent(String(channelId)));
     const queryParams = new Map<string, any>();
+    queryParams.set("clan_id", clanId);
 
-    let bodyJson: string = "";
+    let bodyJson : string = "";
 
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("DELETE", options, bodyJson);
     if (bearerToken) {
-      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+        fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
     }
 
     return Promise.race([
@@ -5154,6 +5211,7 @@ export class MezonApi {
   /** Update fields in a given channel. */
   updateChannelDesc(
     bearerToken: string,
+    clanId: string,
     channelId: string,
     body: {},
     options: any = {}
@@ -5173,6 +5231,7 @@ export class MezonApi {
       encodeURIComponent(String(channelId))
     );
     const queryParams = new Map<string, any>();
+    queryParams.set("clan_id", clanId);
 
     let bodyJson: string = "";
     bodyJson = JSON.stringify(body || {});
@@ -9279,44 +9338,6 @@ export class MezonApi {
 
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("POST", options, bodyJson);
-    if (bearerToken) {
-      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-    }
-
-    return Promise.race([
-      fetch(fullUrl, fetchOptions).then((response) => {
-        if (response.status == 204) {
-          return response;
-        } else if (response.status >= 200 && response.status < 300) {
-          return response.json();
-        } else {
-          throw response;
-        }
-      }),
-      new Promise((_, reject) =>
-        setTimeout(reject, this.timeoutMs, "Request timed out.")
-      ),
-    ]);
-  }
-
-  /** Fetch zero or more users by ID and/or username. */
-  getUsers(
-    bearerToken: string,
-    ids?: Array<string>,
-    usernames?: Array<string>,
-    facebookIds?: Array<string>,
-    options: any = {}
-  ): Promise<ApiUsers> {
-    const urlPath = "/v2/user";
-    const queryParams = new Map<string, any>();
-    queryParams.set("ids", ids);
-    queryParams.set("usernames", usernames);
-    queryParams.set("facebook_ids", facebookIds);
-
-    let bodyJson: string = "";
-
-    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
-    const fetchOptions = buildFetchOptions("GET", options, bodyJson);
     if (bearerToken) {
       fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
     }
