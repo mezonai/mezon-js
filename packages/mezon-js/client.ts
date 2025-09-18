@@ -959,6 +959,7 @@ export class Client {
   /** Delete a channel by ID. */
   async deleteChannelDesc(
     session: Session,
+    clanId: string,
     channelId: string
   ): Promise<boolean> {
     if (
@@ -970,7 +971,7 @@ export class Client {
     }
 
     return this.apiClient
-      .deleteChannelDesc(session.token, channelId)
+      .deleteChannelDesc(session.token, clanId, channelId)
       .then((response: any) => {
         return response !== undefined;
       });

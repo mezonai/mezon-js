@@ -1220,6 +1220,8 @@ export interface ApiCreateRoleRequest {
 
 /** Delete a channel the user has access to. */
 export interface ApiDeleteChannelDescRequest {
+  //The clan id
+  clan_id?: string;
   //The id of a channel.
   channel_id?: string;
 }
@@ -5163,28 +5165,25 @@ export class MezonApi {
   }
 
   /** Delete a channel by ID. */
-  deleteChannelDesc(
-    bearerToken: string,
-    channelId: string,
-    options: any = {}
-  ): Promise<any> {
+  deleteChannelDesc(bearerToken: string,
+      channelId:string,
+      clanId?:string,
+      options: any = {}): Promise<any> {
+    
     if (channelId === null || channelId === undefined) {
-      throw new Error(
-        "'channelId' is a required parameter but is null or undefined."
-      );
+      throw new Error("'channelId' is a required parameter but is null or undefined.");
     }
-    const urlPath = "/v2/channeldesc/{channelId}".replace(
-      "{channelId}",
-      encodeURIComponent(String(channelId))
-    );
+    const urlPath = "/v2/channeldesc/{channelId}"
+        .replace("{channelId}", encodeURIComponent(String(channelId)));
     const queryParams = new Map<string, any>();
+    queryParams.set("clan_id", clanId);
 
-    let bodyJson: string = "";
+    let bodyJson : string = "";
 
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("DELETE", options, bodyJson);
     if (bearerToken) {
-      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+        fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
     }
 
     return Promise.race([
