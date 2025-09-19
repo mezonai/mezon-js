@@ -1820,7 +1820,7 @@ export class Client {
   async linkEmail(
     session: Session,
     request: ApiAccountEmail
-  ): Promise<boolean> {
+  ): Promise<ApiLinkAccountConfirmRequest> {
     if (
       this.autoRefreshSession &&
       session.refresh_token &&
@@ -1831,8 +1831,8 @@ export class Client {
 
     return this.apiClient
       .linkEmail(session.token, request)
-      .then((response: any) => {
-        return response !== undefined;
+      .then((response: ApiLinkAccountConfirmRequest) => {
+        return Promise.resolve(response);
       });
   }
 
