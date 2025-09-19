@@ -611,6 +611,43 @@ export class Client {
   }
 
   /** Authenticate a user with an email+password against the server. */
+  authenticateEmailOTPRequest(
+    email: string,
+    username?: string,
+    vars?: Record<string, string>
+  ): Promise<ApiLinkAccountConfirmRequest> {
+    const request = {
+      username: username,
+      account: {
+        email: email,
+        vars: vars,
+      }
+    };
+
+    return this.apiClient
+      .AuthenticateEmailOTPRequest(this.serverkey, "", request, username)
+      .then((response: ApiLinkAccountConfirmRequest) => {
+        return Promise.resolve(response);
+      });
+  }
+
+  async confirmEmailOTP(
+    request:  ApiLinkAccountConfirmRequest,
+  ): Promise<Session> {    
+    return this.apiClient
+      .confirmEmailOTP(this.serverkey, "", request)
+      .then((apiSession: ApiSession) => {
+        return new Session(
+          apiSession.token || "",
+          apiSession.refresh_token || "",
+          apiSession.created || false,          
+          apiSession.api_url || "",
+          false,
+        );
+      });
+  }
+
+  /** Authenticate a user with an email+password against the server. */
   authenticateEmail(
     email: string,
     password: string,
@@ -1745,7 +1782,7 @@ export class Client {
   async confirmLinkMezonOTP(
     session: Session,
     request:  ApiLinkAccountConfirmRequest,
-  ): Promise<any> {
+  ): Promise<ApiSession>{
     if (
       this.autoRefreshSession &&
       session.refresh_token &&
@@ -1755,10 +1792,7 @@ export class Client {
     }
 
     return this.apiClient
-      .confirmLinkMezonOTP(session.token, request)
-      .then((response: any) => {
-        return response !== undefined;
-      });
+      .confirmLinkMezonOTP(session.token, request);
   }
 
   /** Add a custom ID to the social profiles on the current user's account. */
@@ -4510,7 +4544,8 @@ export class Client {
   async registrationPassword(
     session: Session,
     email?: string,
-    password?: string
+    password?: string,
+    oldPassword?: string,
   ): Promise<ApiSession> {
     if (
       this.autoRefreshSession &&
@@ -4523,7 +4558,8 @@ export class Client {
     return this.apiClient
       .registrationEmail(session.token, {
         email: email,
-        password: password
+        password: password,
+        old_password: oldPassword
       })
       .then((response: ApiSession) => {
         return Promise.resolve(response);

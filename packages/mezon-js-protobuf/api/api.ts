@@ -613,16 +613,6 @@ export interface FriendList {
 }
 
 /** Fetch a batch of zero or more users from the server. */
-export interface GetUsersRequest {
-  /** The account id of a user. */
-  ids: string[];
-  /** The account username of a user. */
-  usernames: string[];
-  /** The Facebook ID of a user. */
-  facebook_ids: string[];
-}
-
-/** Fetch a batch of zero or more users from the server. */
 export interface UpdateUsersRequest {
   /** The account username of a user. */
   display_name: string;
@@ -7298,99 +7288,6 @@ export const FriendList = {
     const message = createBaseFriendList();
     message.friends = object.friends?.map((e) => Friend.fromPartial(e)) || [];
     message.cursor = object.cursor ?? "";
-    return message;
-  },
-};
-
-function createBaseGetUsersRequest(): GetUsersRequest {
-  return { ids: [], usernames: [], facebook_ids: [] };
-}
-
-export const GetUsersRequest = {
-  encode(message: GetUsersRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    for (const v of message.ids) {
-      writer.uint32(10).string(v!);
-    }
-    for (const v of message.usernames) {
-      writer.uint32(18).string(v!);
-    }
-    for (const v of message.facebook_ids) {
-      writer.uint32(26).string(v!);
-    }
-    return writer;
-  },
-
-  decode(input: _m0.Reader | Uint8Array, length?: number): GetUsersRequest {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseGetUsersRequest();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
-          if (tag !== 10) {
-            break;
-          }
-
-          message.ids.push(reader.string());
-          continue;
-        case 2:
-          if (tag !== 18) {
-            break;
-          }
-
-          message.usernames.push(reader.string());
-          continue;
-        case 3:
-          if (tag !== 26) {
-            break;
-          }
-
-          message.facebook_ids.push(reader.string());
-          continue;
-      }
-      if ((tag & 7) === 4 || tag === 0) {
-        break;
-      }
-      reader.skipType(tag & 7);
-    }
-    return message;
-  },
-
-  fromJSON(object: any): GetUsersRequest {
-    return {
-      ids: globalThis.Array.isArray(object?.ids) ? object.ids.map((e: any) => globalThis.String(e)) : [],
-      usernames: globalThis.Array.isArray(object?.usernames)
-        ? object.usernames.map((e: any) => globalThis.String(e))
-        : [],
-      facebook_ids: globalThis.Array.isArray(object?.facebook_ids)
-        ? object.facebook_ids.map((e: any) => globalThis.String(e))
-        : [],
-    };
-  },
-
-  toJSON(message: GetUsersRequest): unknown {
-    const obj: any = {};
-    if (message.ids?.length) {
-      obj.ids = message.ids;
-    }
-    if (message.usernames?.length) {
-      obj.usernames = message.usernames;
-    }
-    if (message.facebook_ids?.length) {
-      obj.facebook_ids = message.facebook_ids;
-    }
-    return obj;
-  },
-
-  create<I extends Exact<DeepPartial<GetUsersRequest>, I>>(base?: I): GetUsersRequest {
-    return GetUsersRequest.fromPartial(base ?? ({} as any));
-  },
-  fromPartial<I extends Exact<DeepPartial<GetUsersRequest>, I>>(object: I): GetUsersRequest {
-    const message = createBaseGetUsersRequest();
-    message.ids = object.ids?.map((e) => e) || [];
-    message.usernames = object.usernames?.map((e) => e) || [];
-    message.facebook_ids = object.facebook_ids?.map((e) => e) || [];
     return message;
   },
 };
