@@ -410,6 +410,14 @@ export interface ApiAccountMezon {
   vars?: Record<string, string>;
 }
 
+/** Send a Mezon token to the server. Used with authenticate/link/unlink. */
+export interface ApiLinkAccountMezon {
+  //The phone number
+  phone_number?: string;
+  //Extra information that will be bundled in the session token.
+  vars?: Record<string, string>;
+}
+
 
 /**  */
 export interface ApiAddFavoriteChannelRequest {
@@ -3818,7 +3826,7 @@ export class MezonApi {
   /**  */
   confirmLinkMezonOTP(bearerToken: string,
       body:ApiLinkAccountConfirmRequest,
-      options: any = {}): Promise<ApiSession> {
+    options: any = {}): Promise<ApiSession> {
     
     if (body === null || body === undefined) {
       throw new Error("'body' is a required parameter but is null or undefined.");
