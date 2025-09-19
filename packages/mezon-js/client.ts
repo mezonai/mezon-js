@@ -173,6 +173,7 @@ import {
   ApiMeetParticipantRequest,
   ApiStoreWalletKeyRequest,
   ApiLinkAccountConfirmRequest,
+  ApiLinkAccountMezon,
 } from "./api.gen";
 
 import { Session } from "./session";
@@ -610,7 +611,7 @@ export class Client {
       });
   }
 
-  /** Authenticate a user with an email+password against the server. */
+  /** Authenticate a user with an email+otp against the server. */
   authenticateEmailOTPRequest(
     email: string,
     username?: string,
@@ -1798,7 +1799,7 @@ export class Client {
   /** Add a custom ID to the social profiles on the current user's account. */
   async linkMezon(
     session: Session,
-    request: ApiAccountMezon
+    request: ApiLinkAccountMezon
   ): Promise<ApiLinkAccountConfirmRequest> {
     if (
       this.autoRefreshSession &&

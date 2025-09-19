@@ -410,6 +410,14 @@ export interface ApiAccountMezon {
   vars?: Record<string, string>;
 }
 
+/** Send a Mezon token to the server. Used with authenticate/link/unlink. */
+export interface ApiLinkAccountMezon {
+  //The phone number
+  phone_number?: string;
+  //Extra information that will be bundled in the session token.
+  vars?: Record<string, string>;
+}
+
 
 /**  */
 export interface ApiAddFavoriteChannelRequest {
@@ -3816,39 +3824,39 @@ export class MezonApi {
   }
 
   /**  */
-  confirmLinkMezonOTP(bearerToken: string,
-      body:ApiLinkAccountConfirmRequest,
+    confirmLinkMezonOTP(bearerToken: string,
+        body:ApiLinkAccountConfirmRequest,
       options: any = {}): Promise<ApiSession> {
-    
-    if (body === null || body === undefined) {
-      throw new Error("'body' is a required parameter but is null or undefined.");
-    }
-    const urlPath = "/v2/account/link/confirm";
-    const queryParams = new Map<string, any>();
-
-    let bodyJson : string = "";
-    bodyJson = JSON.stringify(body || {});
-
-    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
-    const fetchOptions = buildFetchOptions("POST", options, bodyJson);
-    if (bearerToken) {
-        fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
-    }
-
-    return Promise.race([
-      fetch(fullUrl, fetchOptions).then((response) => {
-        if (response.status == 204) {
-          return response;
-        } else if (response.status >= 200 && response.status < 300) {
-          return response.json();
-        } else {
-          throw response;
-        }
-      }),
-      new Promise((_, reject) =>
-        setTimeout(reject, this.timeoutMs, "Request timed out.")
-      ),
-    ]);
+      
+      if (body === null || body === undefined) {
+        throw new Error("'body' is a required parameter but is null or undefined.");
+      }
+      const urlPath = "/v2/account/link/confirm";
+      const queryParams = new Map<string, any>();
+  
+      let bodyJson : string = "";
+      bodyJson = JSON.stringify(body || {});
+  
+      const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
+      const fetchOptions = buildFetchOptions("POST", options, bodyJson);
+      if (bearerToken) {
+          fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+      }
+  
+      return Promise.race([
+        fetch(fullUrl, fetchOptions).then((response) => {
+          if (response.status == 204) {
+            return response;
+          } else if (response.status >= 200 && response.status < 300) {
+            return response.json();
+          } else {
+            throw response;
+          }
+        }),
+        new Promise((_, reject) =>
+          setTimeout(reject, this.timeoutMs, "Request timed out.")
+        ),
+      ]);
   }
 
   /**  */
