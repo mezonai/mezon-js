@@ -190,7 +190,6 @@ export enum ChannelType {
   CHANNEL_TYPE_CHANNEL = 1,
   CHANNEL_TYPE_GROUP = 2,
   CHANNEL_TYPE_DM = 3,
-  CHANNEL_TYPE_GMEET_VOICE = 4,
   CHANNEL_TYPE_FORUM = 5,
   CHANNEL_TYPE_STREAMING = 6,
   CHANNEL_TYPE_THREAD = 7,
@@ -2141,7 +2140,6 @@ export class Client {
   /** Update fields in a given channel */
   async updateChannelDesc(
     session: Session,
-    clanId: string,
     channelId: string,
     request: ApiUpdateChannelDescRequest
   ): Promise<boolean> {
@@ -2154,7 +2152,7 @@ export class Client {
     }
 
     return this.apiClient
-      .updateChannelDesc(session.token, clanId, channelId, request)
+      .updateChannelDesc(session.token, channelId, request)
       .then((response: any) => {
         return response !== undefined;
       });

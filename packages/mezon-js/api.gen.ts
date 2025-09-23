@@ -4681,30 +4681,25 @@ export class MezonApi {
   }
 
   /**  */
-  removeChannelFavorite(
-    bearerToken: string,
-    clanId: string,
-    channelId: string,
-    options: any = {}
-  ): Promise<any> {
+  removeChannelFavorite(bearerToken: string,
+      channelId:string,
+      clanId?:string,
+      options: any = {}): Promise<any> {
+    
     if (channelId === null || channelId === undefined) {
-      throw new Error(
-        "'channelId' is a required parameter but is null or undefined."
-      );
+      throw new Error("'channelId' is a required parameter but is null or undefined.");
     }
-    const urlPath = "/v2/channel/favorite/{channelId}".replace(
-      "{channelId}",
-      encodeURIComponent(String(channelId))
-    );
+    const urlPath = "/v2/channel/favorite/{channelId}"
+        .replace("{channelId}", encodeURIComponent(String(channelId)));
     const queryParams = new Map<string, any>();
     queryParams.set("clan_id", clanId);
 
-    let bodyJson: string = "";
+    let bodyJson : string = "";
 
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("DELETE", options, bodyJson);
     if (bearerToken) {
-      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+        fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
     }
 
     return Promise.race([
@@ -5000,30 +4995,25 @@ export class MezonApi {
   }
 
   /** Leave a channel the user is a member of. */
-  leaveThread(
-    bearerToken: string,
-    clanId: string,
-    channelId: string,
-    options: any = {}
-  ): Promise<any> {
+  leaveThread(bearerToken: string,
+      channelId:string,
+      clanId?:string,
+      options: any = {}): Promise<any> {
+    
     if (channelId === null || channelId === undefined) {
-      throw new Error(
-        "'channelId' is a required parameter but is null or undefined."
-      );
+      throw new Error("'channelId' is a required parameter but is null or undefined.");
     }
-    const urlPath = "/v2/channel/{channelId}/leave".replace(
-      "{channelId}",
-      encodeURIComponent(String(channelId))
-    );
+    const urlPath = "/v2/channel/{channelId}/leave"
+        .replace("{channelId}", encodeURIComponent(String(channelId)));
     const queryParams = new Map<string, any>();
     queryParams.set("clan_id", clanId);
 
-    let bodyJson: string = "";
+    let bodyJson : string = "";
 
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("POST", options, bodyJson);
     if (bearerToken) {
-      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+        fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
     }
 
     return Promise.race([
@@ -5255,8 +5245,8 @@ export class MezonApi {
 
   /** Delete a channel by ID. */
   deleteChannelDesc(bearerToken: string,
-      clanId: string,
-      channelId: string,      
+      channelId:string,
+      clanId?:string,
       options: any = {}): Promise<any> {
     
     if (channelId === null || channelId === undefined) {
@@ -5292,37 +5282,28 @@ export class MezonApi {
   }
 
   /** Update fields in a given channel. */
-  updateChannelDesc(
-    bearerToken: string,
-    clanId: string,
-    channelId: string,
-    body: {},
-    options: any = {}
-  ): Promise<any> {
+  updateChannelDesc(bearerToken: string,
+      channelId:string,
+      body:MezonUpdateChannelDescBody,
+      options: any = {}): Promise<any> {
+    
     if (channelId === null || channelId === undefined) {
-      throw new Error(
-        "'channelId' is a required parameter but is null or undefined."
-      );
+      throw new Error("'channelId' is a required parameter but is null or undefined.");
     }
     if (body === null || body === undefined) {
-      throw new Error(
-        "'body' is a required parameter but is null or undefined."
-      );
+      throw new Error("'body' is a required parameter but is null or undefined.");
     }
-    const urlPath = "/v2/channeldesc/{channelId}".replace(
-      "{channelId}",
-      encodeURIComponent(String(channelId))
-    );
+    const urlPath = "/v2/channeldesc/{channelId}"
+        .replace("{channelId}", encodeURIComponent(String(channelId)));
     const queryParams = new Map<string, any>();
-    queryParams.set("clan_id", clanId);
 
-    let bodyJson: string = "";
+    let bodyJson : string = "";
     bodyJson = JSON.stringify(body || {});
 
     const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
     const fetchOptions = buildFetchOptions("PUT", options, bodyJson);
     if (bearerToken) {
-      fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
+        fetchOptions.headers["Authorization"] = "Bearer " + bearerToken;
     }
 
     return Promise.race([
