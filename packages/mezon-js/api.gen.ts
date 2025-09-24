@@ -390,6 +390,12 @@ export interface ApiAccountApp {
   vars?: Record<string, string>;
 }
 
+export interface ApiAccountSMS {
+  phoneno: string;
+  //Extra information that will be bundled in the session token.
+  vars?: Record<string, string>;
+}
+
 /** Send an email with password to the server. Used with authenticate/link/unlink. */
 export interface ApiAccountEmail {
   //A valid RFC-5322 email address.
@@ -513,6 +519,16 @@ export interface ApiAuditLog {
   time_log?: string;
   //
   user_id?: string;
+}
+
+/** Authenticate against the server with email+password. */
+export interface ApiAuthenticateSMSRequest {
+  //The email account details.
+  account?: ApiAccountSMS;
+  //Register the account if the user does not already exist.
+  create?: boolean;
+  //Set the username on the account at register. Must be unique.
+  username?: string;
 }
 
 /** Authenticate against the server with email+password. */
@@ -1022,6 +1038,8 @@ export interface ApiClanProfile {
   nick_name?: string;
   //
   user_id?: string;
+  //
+  about?: string;
 }
 
 /**  */
@@ -3609,6 +3627,44 @@ export class MezonApi {
     if (basicAuthUsername) {
       fetchOptions.headers["Authorization"] =
         "Basic " + encode(basicAuthUsername + ":" + basicAuthPassword);
+    }
+
+    return Promise.race([
+      fetch(fullUrl, fetchOptions).then((response) => {
+        if (response.status == 204) {
+          return response;
+        } else if (response.status >= 200 && response.status < 300) {
+          return response.json();
+        } else {
+          throw response;
+        }
+      }),
+      new Promise((_, reject) =>
+        setTimeout(reject, this.timeoutMs, "Request timed out.")
+      ),
+    ]);
+  }
+
+  /** Authenticate a user with an SMS against the server. */
+  AuthenticateSMSOTPRequest(
+    basicAuthUsername: string,
+    basicAuthPassword: string,
+      body:ApiAuthenticateSMSRequest,
+      options: any = {}): Promise<ApiLinkAccountConfirmRequest> {
+    
+    if (body === null || body === undefined) {
+      throw new Error("'body' is a required parameter but is null or undefined.");
+    }
+    const urlPath = "/v2/account/authenticate/smsotp";
+    const queryParams = new Map<string, any>();
+
+    let bodyJson : string = "";
+    bodyJson = JSON.stringify(body || {});
+
+    const fullUrl = this.buildFullUrl(this.basePath, urlPath, queryParams);
+    const fetchOptions = buildFetchOptions("POST", options, bodyJson);
+    if (basicAuthUsername) {
+      fetchOptions.headers["Authorization"] = "Basic " + encode(basicAuthUsername + ":" + basicAuthPassword);
     }
 
     return Promise.race([

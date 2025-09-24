@@ -758,6 +758,8 @@ export interface ClanUpdatedEvent {
   welcome_channel_id: string;
   // onboarding_banner.
   onboarding_banner: string;
+  // about
+  about: string;
 }
 
 export interface ClanProfileUpdatedEvent {
