@@ -1133,7 +1133,9 @@ export interface UpdateAccountRequest {
     | string
     | undefined;
   /** update about me */
-  about_me: string;
+  about_me:
+    | string
+    | undefined;
   /** date of birth */
   dob:
     | Date
@@ -1143,7 +1145,9 @@ export interface UpdateAccountRequest {
     | string
     | undefined;
   /** splash screen */
-  splash_screen: string;
+  splash_screen:
+    | string
+    | undefined;
   /** e2ee encrypt private key */
   encrypt_private_key: string;
   /** The email of the user's account. */
@@ -1375,6 +1379,8 @@ export interface ClanDesc {
   about: string;
   /** short_url */
   short_url: string;
+  /** prevent anonymous */
+  prevent_anonymous: boolean;
 }
 
 /** Clan information */
@@ -1420,10 +1426,14 @@ export interface UpdateClanDescRequest {
     | undefined;
   /** string description */
   description: string;
-  /** about */
+  /** About */
   about: string;
-  /** short url for community */
-  short_url: string | undefined;
+  /** Short url for community */
+  short_url:
+    | string
+    | undefined;
+  /** Prevent anonymous */
+  prevent_anonymous: boolean;
 }
 
 /** Delete a clan the user has access to. */
@@ -10825,10 +10835,10 @@ function createBaseUpdateAccountRequest(): UpdateAccountRequest {
     lang_tag: undefined,
     location: undefined,
     timezone: undefined,
-    about_me: "",
+    about_me: undefined,
     dob: undefined,
     logo: undefined,
-    splash_screen: "",
+    splash_screen: undefined,
     encrypt_private_key: "",
     email: undefined,
   };
@@ -10854,8 +10864,8 @@ export const UpdateAccountRequest = {
     if (message.timezone !== undefined) {
       StringValue.encode({ value: message.timezone! }, writer.uint32(50).fork()).ldelim();
     }
-    if (message.about_me !== "") {
-      writer.uint32(58).string(message.about_me);
+    if (message.about_me !== undefined) {
+      StringValue.encode({ value: message.about_me! }, writer.uint32(58).fork()).ldelim();
     }
     if (message.dob !== undefined) {
       Timestamp.encode(toTimestamp(message.dob), writer.uint32(66).fork()).ldelim();
@@ -10863,8 +10873,8 @@ export const UpdateAccountRequest = {
     if (message.logo !== undefined) {
       StringValue.encode({ value: message.logo! }, writer.uint32(74).fork()).ldelim();
     }
-    if (message.splash_screen !== "") {
-      writer.uint32(82).string(message.splash_screen);
+    if (message.splash_screen !== undefined) {
+      StringValue.encode({ value: message.splash_screen! }, writer.uint32(82).fork()).ldelim();
     }
     if (message.encrypt_private_key !== "") {
       writer.uint32(90).string(message.encrypt_private_key);
@@ -10929,7 +10939,7 @@ export const UpdateAccountRequest = {
             break;
           }
 
-          message.about_me = reader.string();
+          message.about_me = StringValue.decode(reader, reader.uint32()).value;
           continue;
         case 8:
           if (tag !== 66) {
@@ -10950,7 +10960,7 @@ export const UpdateAccountRequest = {
             break;
           }
 
-          message.splash_screen = reader.string();
+          message.splash_screen = StringValue.decode(reader, reader.uint32()).value;
           continue;
         case 11:
           if (tag !== 90) {
@@ -10983,10 +10993,10 @@ export const UpdateAccountRequest = {
       lang_tag: isSet(object.lang_tag) ? String(object.lang_tag) : undefined,
       location: isSet(object.location) ? String(object.location) : undefined,
       timezone: isSet(object.timezone) ? String(object.timezone) : undefined,
-      about_me: isSet(object.about_me) ? globalThis.String(object.about_me) : "",
+      about_me: isSet(object.about_me) ? String(object.about_me) : undefined,
       dob: isSet(object.dob) ? fromJsonTimestamp(object.dob) : undefined,
       logo: isSet(object.logo) ? String(object.logo) : undefined,
-      splash_screen: isSet(object.splash_screen) ? globalThis.String(object.splash_screen) : "",
+      splash_screen: isSet(object.splash_screen) ? String(object.splash_screen) : undefined,
       encrypt_private_key: isSet(object.encrypt_private_key) ? globalThis.String(object.encrypt_private_key) : "",
       email: isSet(object.email) ? String(object.email) : undefined,
     };
@@ -11012,7 +11022,7 @@ export const UpdateAccountRequest = {
     if (message.timezone !== undefined) {
       obj.timezone = message.timezone;
     }
-    if (message.about_me !== "") {
+    if (message.about_me !== undefined) {
       obj.about_me = message.about_me;
     }
     if (message.dob !== undefined) {
@@ -11021,7 +11031,7 @@ export const UpdateAccountRequest = {
     if (message.logo !== undefined) {
       obj.logo = message.logo;
     }
-    if (message.splash_screen !== "") {
+    if (message.splash_screen !== undefined) {
       obj.splash_screen = message.splash_screen;
     }
     if (message.encrypt_private_key !== "") {
@@ -11044,10 +11054,10 @@ export const UpdateAccountRequest = {
     message.lang_tag = object.lang_tag ?? undefined;
     message.location = object.location ?? undefined;
     message.timezone = object.timezone ?? undefined;
-    message.about_me = object.about_me ?? "";
+    message.about_me = object.about_me ?? undefined;
     message.dob = object.dob ?? undefined;
     message.logo = object.logo ?? undefined;
-    message.splash_screen = object.splash_screen ?? "";
+    message.splash_screen = object.splash_screen ?? undefined;
     message.encrypt_private_key = object.encrypt_private_key ?? "";
     message.email = object.email ?? undefined;
     return message;
@@ -12170,6 +12180,7 @@ function createBaseClanDesc(): ClanDesc {
     description: "",
     about: "",
     short_url: "",
+    prevent_anonymous: false,
   };
 }
 
@@ -12222,6 +12233,9 @@ export const ClanDesc = {
     }
     if (message.short_url !== "") {
       writer.uint32(130).string(message.short_url);
+    }
+    if (message.prevent_anonymous !== false) {
+      writer.uint32(136).bool(message.prevent_anonymous);
     }
     return writer;
   },
@@ -12345,6 +12359,13 @@ export const ClanDesc = {
 
           message.short_url = reader.string();
           continue;
+        case 17:
+          if (tag !== 136) {
+            break;
+          }
+
+          message.prevent_anonymous = reader.bool();
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -12372,6 +12393,7 @@ export const ClanDesc = {
       description: isSet(object.description) ? globalThis.String(object.description) : "",
       about: isSet(object.about) ? globalThis.String(object.about) : "",
       short_url: isSet(object.short_url) ? globalThis.String(object.short_url) : "",
+      prevent_anonymous: isSet(object.prevent_anonymous) ? globalThis.Boolean(object.prevent_anonymous) : false,
     };
   },
 
@@ -12425,6 +12447,9 @@ export const ClanDesc = {
     if (message.short_url !== "") {
       obj.short_url = message.short_url;
     }
+    if (message.prevent_anonymous !== false) {
+      obj.prevent_anonymous = message.prevent_anonymous;
+    }
     return obj;
   },
 
@@ -12449,6 +12474,7 @@ export const ClanDesc = {
     message.description = object.description ?? "";
     message.about = object.about ?? "";
     message.short_url = object.short_url ?? "";
+    message.prevent_anonymous = object.prevent_anonymous ?? false;
     return message;
   },
 };
@@ -12557,6 +12583,7 @@ function createBaseUpdateClanDescRequest(): UpdateClanDescRequest {
     description: "",
     about: "",
     short_url: undefined,
+    prevent_anonymous: false,
   };
 }
 
@@ -12600,6 +12627,9 @@ export const UpdateClanDescRequest = {
     }
     if (message.short_url !== undefined) {
       StringValue.encode({ value: message.short_url! }, writer.uint32(106).fork()).ldelim();
+    }
+    if (message.prevent_anonymous !== false) {
+      writer.uint32(112).bool(message.prevent_anonymous);
     }
     return writer;
   },
@@ -12702,6 +12732,13 @@ export const UpdateClanDescRequest = {
 
           message.short_url = StringValue.decode(reader, reader.uint32()).value;
           continue;
+        case 14:
+          if (tag !== 112) {
+            break;
+          }
+
+          message.prevent_anonymous = reader.bool();
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -12726,6 +12763,7 @@ export const UpdateClanDescRequest = {
       description: isSet(object.description) ? globalThis.String(object.description) : "",
       about: isSet(object.about) ? globalThis.String(object.about) : "",
       short_url: isSet(object.short_url) ? String(object.short_url) : undefined,
+      prevent_anonymous: isSet(object.prevent_anonymous) ? globalThis.Boolean(object.prevent_anonymous) : false,
     };
   },
 
@@ -12770,6 +12808,9 @@ export const UpdateClanDescRequest = {
     if (message.short_url !== undefined) {
       obj.short_url = message.short_url;
     }
+    if (message.prevent_anonymous !== false) {
+      obj.prevent_anonymous = message.prevent_anonymous;
+    }
     return obj;
   },
 
@@ -12791,6 +12832,7 @@ export const UpdateClanDescRequest = {
     message.description = object.description ?? "";
     message.about = object.about ?? "";
     message.short_url = object.short_url ?? undefined;
+    message.prevent_anonymous = object.prevent_anonymous ?? false;
     return message;
   },
 };
