@@ -5052,8 +5052,8 @@ export class MezonApi {
 
   /** Leave a channel the user is a member of. */
   leaveThread(bearerToken: string,
-      clanId:string,  
-      channelId:string,      
+      channelId:string,
+      clanId?:string,
       options: any = {}): Promise<any> {
     
     if (channelId === null || channelId === undefined) {
