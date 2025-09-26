@@ -434,7 +434,11 @@ export interface Envelope {
     | MeetParticipantEvent
     | undefined;
   /** tranfer ownership event */
-  transfer_ownership_event?: TransferOwnershipEvent | undefined;
+  transfer_ownership_event?:
+    | TransferOwnershipEvent
+    | undefined;
+  /** Add friend event */
+  add_friend?: AddFriend | undefined;
 }
 
 export interface FollowEvent {
@@ -876,6 +880,17 @@ export interface Error_ContextEntry {
 export interface Notifications {
   /** Collection of notifications. */
   notifications: Notification[];
+}
+
+export interface AddFriend {
+  /** user id */
+  user_id: string;
+  /** username */
+  username: string;
+  /** display name */
+  display_name: string;
+  /** avatar */
+  avatar: string;
 }
 
 export interface RemoveFriend {
@@ -1786,6 +1801,7 @@ function createBaseEnvelope(): Envelope {
     un_block_friend: undefined,
     meet_participant_event: undefined,
     transfer_ownership_event: undefined,
+    add_friend: undefined,
   };
 }
 
@@ -2052,6 +2068,9 @@ export const Envelope = {
     }
     if (message.transfer_ownership_event !== undefined) {
       TransferOwnershipEvent.encode(message.transfer_ownership_event, writer.uint32(698).fork()).ldelim();
+    }
+    if (message.add_friend !== undefined) {
+      AddFriend.encode(message.add_friend, writer.uint32(706).fork()).ldelim();
     }
     return writer;
   },
@@ -2672,6 +2691,13 @@ export const Envelope = {
 
           message.transfer_ownership_event = TransferOwnershipEvent.decode(reader, reader.uint32());
           continue;
+        case 88:
+          if (tag !== 706) {
+            break;
+          }
+
+          message.add_friend = AddFriend.decode(reader, reader.uint32());
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -2882,6 +2908,7 @@ export const Envelope = {
       transfer_ownership_event: isSet(object.transfer_ownership_event)
         ? TransferOwnershipEvent.fromJSON(object.transfer_ownership_event)
         : undefined,
+      add_friend: isSet(object.add_friend) ? AddFriend.fromJSON(object.add_friend) : undefined,
     };
   },
 
@@ -3149,6 +3176,9 @@ export const Envelope = {
     }
     if (message.transfer_ownership_event !== undefined) {
       obj.transfer_ownership_event = TransferOwnershipEvent.toJSON(message.transfer_ownership_event);
+    }
+    if (message.add_friend !== undefined) {
+      obj.add_friend = AddFriend.toJSON(message.add_friend);
     }
     return obj;
   },
@@ -3438,6 +3468,9 @@ export const Envelope = {
       (object.transfer_ownership_event !== undefined && object.transfer_ownership_event !== null)
         ? TransferOwnershipEvent.fromPartial(object.transfer_ownership_event)
         : undefined;
+    message.add_friend = (object.add_friend !== undefined && object.add_friend !== null)
+      ? AddFriend.fromPartial(object.add_friend)
+      : undefined;
     return message;
   },
 };
@@ -6802,6 +6835,110 @@ export const Notifications = {
   fromPartial<I extends Exact<DeepPartial<Notifications>, I>>(object: I): Notifications {
     const message = createBaseNotifications();
     message.notifications = object.notifications?.map((e) => Notification.fromPartial(e)) || [];
+    return message;
+  },
+};
+
+function createBaseAddFriend(): AddFriend {
+  return { user_id: "", username: "", display_name: "", avatar: "" };
+}
+
+export const AddFriend = {
+  encode(message: AddFriend, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.user_id !== "") {
+      writer.uint32(10).string(message.user_id);
+    }
+    if (message.username !== "") {
+      writer.uint32(18).string(message.username);
+    }
+    if (message.display_name !== "") {
+      writer.uint32(26).string(message.display_name);
+    }
+    if (message.avatar !== "") {
+      writer.uint32(34).string(message.avatar);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): AddFriend {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseAddFriend();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.user_id = reader.string();
+          continue;
+        case 2:
+          if (tag !== 18) {
+            break;
+          }
+
+          message.username = reader.string();
+          continue;
+        case 3:
+          if (tag !== 26) {
+            break;
+          }
+
+          message.display_name = reader.string();
+          continue;
+        case 4:
+          if (tag !== 34) {
+            break;
+          }
+
+          message.avatar = reader.string();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): AddFriend {
+    return {
+      user_id: isSet(object.user_id) ? globalThis.String(object.user_id) : "",
+      username: isSet(object.username) ? globalThis.String(object.username) : "",
+      display_name: isSet(object.display_name) ? globalThis.String(object.display_name) : "",
+      avatar: isSet(object.avatar) ? globalThis.String(object.avatar) : "",
+    };
+  },
+
+  toJSON(message: AddFriend): unknown {
+    const obj: any = {};
+    if (message.user_id !== "") {
+      obj.user_id = message.user_id;
+    }
+    if (message.username !== "") {
+      obj.username = message.username;
+    }
+    if (message.display_name !== "") {
+      obj.display_name = message.display_name;
+    }
+    if (message.avatar !== "") {
+      obj.avatar = message.avatar;
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<AddFriend>, I>>(base?: I): AddFriend {
+    return AddFriend.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<AddFriend>, I>>(object: I): AddFriend {
+    const message = createBaseAddFriend();
+    message.user_id = object.user_id ?? "";
+    message.username = object.username ?? "";
+    message.display_name = object.display_name ?? "";
+    message.avatar = object.avatar ?? "";
     return message;
   },
 };

@@ -1537,6 +1537,8 @@ export interface ClanProfile {
   avatar: string;
   /** id clan */
   clan_id: string;
+  /** about clan */
+  about: string;
 }
 
 /** information user by clan requset */
@@ -13611,7 +13613,7 @@ export const LinkInviteUser = {
 };
 
 function createBaseClanProfile(): ClanProfile {
-  return { user_id: "", nick_name: "", avatar: "", clan_id: "" };
+  return { user_id: "", nick_name: "", avatar: "", clan_id: "", about: "" };
 }
 
 export const ClanProfile = {
@@ -13627,6 +13629,9 @@ export const ClanProfile = {
     }
     if (message.clan_id !== "") {
       writer.uint32(34).string(message.clan_id);
+    }
+    if (message.about !== "") {
+      writer.uint32(42).string(message.about);
     }
     return writer;
   },
@@ -13666,6 +13671,13 @@ export const ClanProfile = {
 
           message.clan_id = reader.string();
           continue;
+        case 5:
+          if (tag !== 42) {
+            break;
+          }
+
+          message.about = reader.string();
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -13681,6 +13693,7 @@ export const ClanProfile = {
       nick_name: isSet(object.nick_name) ? globalThis.String(object.nick_name) : "",
       avatar: isSet(object.avatar) ? globalThis.String(object.avatar) : "",
       clan_id: isSet(object.clan_id) ? globalThis.String(object.clan_id) : "",
+      about: isSet(object.about) ? globalThis.String(object.about) : "",
     };
   },
 
@@ -13698,6 +13711,9 @@ export const ClanProfile = {
     if (message.clan_id !== "") {
       obj.clan_id = message.clan_id;
     }
+    if (message.about !== "") {
+      obj.about = message.about;
+    }
     return obj;
   },
 
@@ -13710,6 +13726,7 @@ export const ClanProfile = {
     message.nick_name = object.nick_name ?? "";
     message.avatar = object.avatar ?? "";
     message.clan_id = object.clan_id ?? "";
+    message.about = object.about ?? "";
     return message;
   },
 };
