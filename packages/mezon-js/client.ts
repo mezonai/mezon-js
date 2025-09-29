@@ -611,6 +611,27 @@ export class Client {
   }
 
   /** Authenticate a user with an email+otp against the server. */
+  authenticateSMSOTPRequest(
+    phoneno: string,
+    username?: string,
+    vars?: Record<string, string>
+  ): Promise<ApiLinkAccountConfirmRequest> {
+    const request = {
+      username: username,
+      account: {
+        phoneno: phoneno,
+        vars: vars,
+      }
+    };
+
+    return this.apiClient
+      .AuthenticateSMSOTPRequest(this.serverkey, "", request, username)
+      .then((response: ApiLinkAccountConfirmRequest) => {
+        return Promise.resolve(response);
+      });
+  }
+
+  /** Authenticate a user with an email+otp against the server. */
   authenticateEmailOTPRequest(
     email: string,
     username?: string,

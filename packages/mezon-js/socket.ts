@@ -758,6 +758,8 @@ export interface ClanUpdatedEvent {
   welcome_channel_id: string;
   // onboarding_banner.
   onboarding_banner: string;
+  // about
+  about: string;
 }
 
 export interface ClanProfileUpdatedEvent {
@@ -997,6 +999,17 @@ export interface UserEmojiUsage {
   emoji_id: string;
   clan_id: string;
   create_time: string;
+}
+
+export interface AddFriend {
+  //
+  user_id: string;// user id
+  // username
+  username: string;
+  // display name
+  display_name: string;
+  // avatar
+  avatar: string;
 }
 export interface RemoveFriend {
   //
@@ -1672,6 +1685,8 @@ export interface Socket {
   /** Receive channel removed user event */
   onuserchannelremoved: (user: UserChannelRemovedEvent) => void;
 
+  onaddfriend: (user: AddFriend) => void;
+
   onremovefriend: (user: RemoveFriend) => void;
 
   onblockfriend: (user: BlockFriend) => void;
@@ -1967,6 +1982,8 @@ export class DefaultSocket implements Socket {
           this.onblockfriend(<BlockFriend>message.block_friend);
         } else if (message.un_block_friend) {
           this.onunblockfriend(<BlockFriend>message.un_block_friend);
+        } else if (message.add_friend) {
+          this.onaddfriend(<AddFriend>message.add_friend);
         } else if (message.remove_friend) {
           this.onremovefriend(<RemoveFriend>message.remove_friend);
         } else if (message.user_clan_removed_event) {
@@ -2159,6 +2176,12 @@ export class DefaultSocket implements Socket {
   }
 
   onuserchannelremoved(user: UserChannelRemovedEvent) {
+    if (this.verbose && window && window.console) {
+      console.log(user);
+    }
+  }
+
+  onaddfriend(user: AddFriend) {
     if (this.verbose && window && window.console) {
       console.log(user);
     }
