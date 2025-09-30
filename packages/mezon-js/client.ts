@@ -571,6 +571,15 @@ export class Client {
     this.apiClient = new MezonApi(serverkey, timeout, basePath);
   }
 
+  /**
+   * Called when a token refresh is initiated.
+   * This is a placeholder method that subclasses or instances can override
+   * to perform actions before or after the refresh logic.
+   */
+  onRefreshToken(session: ApiSession): void {
+    console.log(`Token refresh occurred. Token: ${session.token}`);
+  }
+
   /** check session isexpired */
   isexpired(session: Session): boolean {
     return session.isexpired(Date.now() / 1000)
@@ -2086,6 +2095,7 @@ export class Client {
           }
         );
         session.update(apiSession.token!, apiSession.refresh_token!, apiSession.is_remember || false);
+        this.onRefreshToken(apiSession);
         resolve(session);
       } catch (error) {
         console.error("Session refresh failed:", error);
