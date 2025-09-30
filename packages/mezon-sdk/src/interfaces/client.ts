@@ -1,3 +1,4 @@
+import { ExtraInfo } from "mmn-client-js";
 import { Events } from "../constants/enum";
 import { ChannelMessageAck } from "./socket";
 
@@ -653,6 +654,29 @@ export interface ApiRegisterStreamingChannelResponse {
   clan_id?: string;
   //
   streaming_url?: string;
+}
+
+/**  */
+export interface ApiGetZkProofRequest {
+  user_id: string;
+  ephemeral_public_key: string;
+  jwt: string;
+  address: string;
+}
+
+export interface APISentTokenRequest {
+  sender_id: string;
+  sender_name?: string;
+  receiver_id: string;
+  amount: number;
+  note?: string;
+  extra_attribute?: ExtraInfo;
+  nonce: number;
+  timestamp?: number;
+  public_key: string;
+  private_key: string;
+  zk_proof: string;
+  zk_pub: string;
 }
 
 export interface TokenSentEvent {

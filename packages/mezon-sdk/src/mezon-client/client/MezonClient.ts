@@ -13,6 +13,8 @@ import { WebSocketAdapterPb } from "../../web_socket_adapter_pb";
 import {
   AddClanUserEvent,
   ApiCreateChannelDescRequest,
+  ApiGetZkProofRequest,
+  APISentTokenRequest,
   ChannelCreatedEvent,
   ChannelDeletedEvent,
   ChannelMessage,
@@ -47,6 +49,7 @@ import { User, UserInitData } from "../structures/User";
 import { AsyncThrottleQueue } from "../utils/AsyncThrottleQueue";
 import { Session } from "../../session";
 import { MessageDatabase } from "../../sqlite/MessageDatabase";
+import { MmnClient, ZkClient } from "mmn-client-js";
 
 const DEFAULT_HOST = "gw.mezon.ai";
 const DEFAULT_PORT = "443";
@@ -61,7 +64,11 @@ export class MezonClient extends EventEmitter {
   public useSSL: boolean;
   public port: string;
   public loginBasePath: string | undefined;
+  public mmnApiUrl: string | undefined;
+  public zkApiUrl: string | undefined;
   private apiClient!: MezonApi;
+  private mmnClient!: MmnClient;
+  private zkClient!: ZkClient;
   private socketManager!: SocketManager;
   private channelManager!: ChannelManager;
   private sessionManager!: SessionManager;
@@ -77,7 +84,9 @@ export class MezonClient extends EventEmitter {
     host = DEFAULT_HOST,
     port = DEFAULT_PORT,
     useSSL = DEFAULT_SSL,
-    readonly timeout = DEFAULT_TIMEOUT_MS
+    readonly timeout = DEFAULT_TIMEOUT_MS,
+    mmnApiUrl?: string,
+    zkApiUrl?: string
   ) {
     super();
     const scheme = useSSL ? "https://" : "http://";
@@ -86,6 +95,8 @@ export class MezonClient extends EventEmitter {
     this.useSSL = useSSL;
     this.port = port;
     this.loginBasePath = `${scheme}${host}:${port}`;
+    this.mmnApiUrl = mmnApiUrl;
+    this.zkApiUrl = zkApiUrl;
     this.messageDB = new MessageDatabase();
   }
 
@@ -111,6 +122,18 @@ export class MezonClient extends EventEmitter {
       this.socketManager,
       this.sessionManager
     );
+    if (this.mmnApiUrl) {
+      this.mmnClient = new MmnClient({
+        baseUrl: this.mmnApiUrl,
+        timeout: this.timeout,
+      });
+    }
+    if (this.zkApiUrl) {
+      this.zkClient = new ZkClient({
+        endpoint: this.zkApiUrl,
+        timeout: this.timeout,
+      });
+    }
   }
 
   /** Login bot */
@@ -197,9 +220,61 @@ export class MezonClient extends EventEmitter {
     }
   }
 
-  async sendToken(sendTokenData: TokenSentEvent) {
-    const session = this.sessionManager.getSession()!;
-    return this.apiClient.sendToken(session.token, sendTokenData);
+  async getEphemeralKeyPair() {
+    if (!this.mmnClient) {
+      throw new Error("MmnClient not initialized");
+    }
+
+    return this.mmnClient.generateEphemeralKeyPair();
+  }
+
+  async getAddress(user_id: string) {
+    if (!this.mmnClient) {
+      throw new Error("MmnClient not initialized");
+    }
+
+    return this.mmnClient.getAddressFromUserId(user_id);
+  }
+
+  async getZkProofs(data: ApiGetZkProofRequest) {
+    if (!this.zkClient) {
+      throw new Error("ZkClient not initialized");
+    }
+    const req = {
+      userId: data.user_id,
+      jwt: data.jwt,
+      address: data.address,
+      ephemeralPublicKey: data.ephemeral_public_key,
+    };
+
+    return this.zkClient.getZkProofs(req);
+  }
+
+  async getCurrentNonce(user_id: string, tag?: "latest" | "pending") {
+    if (!this.mmnClient) {
+      throw new Error("MmnClient not initialized");
+    }
+
+    return this.mmnClient.getCurrentNonce(user_id, tag || "pending");
+  }
+
+  async sendToken(tokenEvent: APISentTokenRequest) {
+    if (!this.mmnClient) {
+      throw new Error("MmnClient not initialized");
+    }
+
+    return this.mmnClient.sendTransaction({
+      sender: tokenEvent.sender_id,
+      recipient: tokenEvent.receiver_id,
+      amount: this.mmnClient.scaleAmountToDecimals(tokenEvent.amount),
+      nonce: tokenEvent.nonce,
+      textData: tokenEvent.note,
+      extraInfo: tokenEvent.extra_attribute,
+      publicKey: tokenEvent.public_key,
+      privateKey: tokenEvent.private_key,
+      zkProof: tokenEvent.zk_proof,
+      zkPub: tokenEvent.zk_pub,
+    });
   }
 
   /** Listen to messages user sends on the  channel, thread */

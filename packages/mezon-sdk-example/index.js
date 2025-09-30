@@ -14,23 +14,105 @@
  * limitations under the License.
  */
 
-const { MezonClient } = require("mezon-sdk");
-const results = [];
+const { MezonClient } = require('mezon-sdk');
 
-var client = new MezonClient("tokenid");
-  client.login().then(async (e) => {
-  console.log("authenticated.", e);
+var client = new MezonClient(
+  'tokenid',
+  'host',
+  'port',
+  true,
+  3000,
+  'https://mmn-api.mezon',
+  'https://zk-api.mezon'
+);
 
- 
-  const res = await client.sendToken({
-    sender_id: "senderid",
-    sender_name: "sendername",
-    receiver_id: "receiverid",
-    amount: 100000000,
-    note: "chuyen tien"}
-  );
+/**
+ * Enhanced token transfer function with all required steps
+ */
+async function transferTokensExample(senderId, receiverId, amount, note) {
+  try {
+    const keyPair = await client.getEphemeralKeyPair();
 
-}).catch(e => {
-  console.log("error authenticating.", e);
-});
+    const recipientAddress = await client.getAddress(receiverId);
 
+    const nonce = await client.getCurrentNonce(senderId, 'pending');
+
+    const session = client.sessionManager.getSession();
+
+    const zkProofs = await client.getZkProofs({
+      user_id: senderId,
+      jwt: session.token,
+      address: recipientAddress,
+      ephemeral_public_key: keyPair.publicKey,
+    });
+
+    const tokenEvent = {
+      sender_id: senderId,
+      receiver_id: receiverId,
+      amount: amount,
+      note: note || 'Token transfer via SDK example',
+      nonce: nonce,
+      public_key: keyPair.publicKey,
+      private_key: keyPair.privateKey,
+      zk_proof: zkProofs.zkProof,
+      zk_pub: zkProofs.zkPub,
+      extra_attribute: JSON.stringify({
+        timestamp: Date.now(),
+        transaction_type: 'p2p_transfer',
+        sdk_version: '1.0.0',
+        example_app: true,
+      }),
+    };
+    const result = await client.sendToken(tokenEvent);
+
+    console.log('✅ Token transfer completed successfully!');
+
+    return result;
+  } catch (error) {
+    console.error('❌ Token transfer failed:', error.message);
+    throw error;
+  }
+}
+
+/**
+ * Setup event listeners
+ */
+function setupEventListeners() {
+  console.log('👂 Setting up event listeners...');
+
+  client.onTokenSend((event) => {
+    console.log('💰 Token transfer event detected:', {
+      type: 'transfer',
+      from: event.sender_id,
+      to: event.receiver_id,
+      amount: `${parseFloat(event.amount).toLocaleString()}₫`,
+      note: event.note,
+      timestamp: new Date().toISOString(),
+    });
+  });
+
+  console.log('✅ Event listeners configured');
+}
+
+/**
+ * Main execution
+ */
+async function main() {
+  try {
+    await client.login();
+
+    setupEventListeners();
+
+    await transferTokensExample(
+      'sender_user_id', // Replace with actual sender ID
+      'receiver_user_id', // Replace with actual receiver ID
+      '50000', // Amount in smallest unit
+      'Payment for SDK example demo'
+    );
+
+    console.log('\n🎉 All examples completed successfully!');
+  } catch (error) {
+    console.error('💥 Main execution failed:', error.message);
+    process.exit(1);
+  }
+}

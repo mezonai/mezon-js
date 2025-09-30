@@ -1,5 +1,4 @@
-Mezon JavaScript Client
-========================
+# Mezon JavaScript Client
 
 > JavaScript client for Mezon server written in TypeScript. For browser and React Native projects.
 
@@ -13,18 +12,18 @@ You'll need access to an instance of the Mezon server before you can connect wit
 
 1. Import the client into your project. It's [available on NPM](https://www.npmjs/package/mezon-sdk).
 
-  ```shell
-  npm install mezon-sdk
-  ```
+```shell
+npm install mezon-sdk
+```
 
 You'll now see the code in the "node_modules" folder and package listed in your "package.json".
 
 2. Use the connection credentials to build a client object.
 
-  ```js
-  import {Client} from "mezon-sdk";
-  const client = new Client("apiKey");
-  ```
+```js
+import { Client } from 'mezon-sdk';
+const client = new Client('apiKey');
+```
 
 ## Usage
 
@@ -37,11 +36,13 @@ To authenticate with the Mezon server you must provide an identifier for the use
 ```js
 const appId = "<AppId>";
 
-client.authenticate(appId)
-  .then(session => {
+client
+  .authenticate(appId)
+  .then((session) => {
     _session = session;
     console.info("Authenticated:", session);
-  }).catch(error => {
+  })
+  .catch((error) => {
     console.error("Error:", error);
   });
 ```
@@ -55,7 +56,10 @@ console.info(session.token); // raw JWT token
 console.info(session.refreshToken); // refresh token
 console.info("Session has expired?", session.isexpired(Date.now() / 1000));
 const expiresAt = session.expires_at;
-console.warn("Session will expire at:", new Date(expiresAt * 1000).toISOString());
+console.warn(
+  "Session will expire at:",
+  new Date(expiresAt * 1000).toISOString()
+);
 ```
 
 It is recommended to store the auth token from the session and check at startup if it has expired. If the token has expired you must reauthenticate. The expiry time of the token can be changed as a setting in the server.
@@ -69,29 +73,98 @@ let session = satorijs.Session.restore(authtoken, refreshtoken);
 
 // Check whether a session is close to expiry.
 
-const unixTimeInFuture = Date.now() + 8.64e+7; // one day from now
+const unixTimeInFuture = Date.now() + 8.64e7; // one day from now
 
 if (session.isexpired(unixTimeInFuture / 1000)) {
-    try
-    {
-        session = await client.sessionRefresh(session);
-    }
-    catch (e)
-    {
-        console.info("Session can no longer be refreshed. Must reauthenticate!");
-    }
+  try {
+    session = await client.sessionRefresh(session);
+  } catch (e) {
+    console.info("Session can no longer be refreshed. Must reauthenticate!");
+  }
 }
 ```
 
 ### Requests
 
-The client includes lots of builtin APIs for various featyures of the Mezon server. These can be accessed with the methods which return Promise objects.
+The client includes lots of builtin APIs for various features of the Mezon server. These can be accessed with the methods which return Promise objects.
 
 Most requests are sent with a session object which authorizes the client.
 
 ```js
 const flags = await client.getFlags(session);
 console.info("Flags:", flags);
+```
+
+### Token Transfers
+
+The mezon-sdk supports secure token transfers using the **Mezon Money Network (MMN)** with zero-knowledge proofs for enhanced privacy and security.
+
+#### Required Steps for Token Transfer
+
+Before sending tokens, you must complete these steps to gather the required data:
+
+**Step 1: Generate Ephemeral Key Pair**
+
+```js
+const keyPair = await client.getEphemeralKeyPair();
+// Returns: { publicKey: string, privateKey: string }
+```
+
+**Step 2: Get Recipient Wallet Address**
+
+```js
+const address = await client.getAddress(senderId);
+// Returns: string (wallet address)
+```
+
+**Step 3: Fetch Current Nonce**
+
+```js
+const nonce = await client.getCurrentNonce(senderId, 'pending');
+// Returns: number (transaction sequence)
+```
+
+**Step 4: Generate Zero-Knowledge Proof**
+
+```js
+const session = client.sessionManager.getSession();
+const zkProofs = await client.getZkProofs({
+  user_id: senderId,
+  jwt: session.token,
+  address: address,
+  ephemeral_public_key: keyPair.publicKey,
+});
+// Returns: { zkProof: string, zkPub: string }
+```
+
+**Step 5: Execute Token Transfer**
+
+```js
+const tokenEvent = {
+  ...,
+  nonce: nonce + 1
+};
+
+const result = await client.sendToken(tokenEvent);
+// Returns: { transactionId: string, status: string, ... }
+```
+
+#### Setting Up the Client for Token Transfers
+
+```js
+import { MezonClient } from 'mezon-sdk';
+
+const client = new MezonClient(
+  'token_id',
+  'host',
+  'port',
+  true,
+  "mmn-api",
+  "zk-api"
+);
+
+// Login to initialize session
+await client.login();
 ```
 
 ## Contribute
