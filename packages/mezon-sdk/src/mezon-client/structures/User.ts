@@ -1,8 +1,8 @@
 import { ChannelStreamMode } from "../../constants";
 import {
-  ChannelMessageContent,
-  SendTokenData,
-  TokenSentEvent,
+  ApiGetZkProofRequest,
+  APISentTokenRequest,
+  ChannelMessageContent
 } from "../../interfaces";
 import { ChannelManager } from "../manager/channel_manager";
 import { SocketManager } from "../manager/socket_manager";
@@ -51,20 +51,65 @@ export class User {
     this.socketManager = socketManager;
   }
 
-  async sendToken(sendTokenData: SendTokenData) {
-    const dataSendToken: TokenSentEvent = {
-      receiver_id: this.id,
-      amount: sendTokenData.amount,
-      note: sendTokenData?.note ?? "",
-      extra_attribute: sendTokenData?.extra_attribute ?? "",
+  async getEphemeralKeyPair() {
+    if (!this.clan.mmnClient) {
+      throw new Error("MmnClient not initialized");
+    }
+
+    return this.clan.mmnClient.generateEphemeralKeyPair();
+  }
+
+  async getAddress(user_id: string) {
+    if (!this.clan.mmnClient) {
+      throw new Error("MmnClient not initialized");
+    }
+
+    return this.clan.mmnClient.getAddressFromUserId(user_id);
+  }
+
+  async getZkProofs(data: ApiGetZkProofRequest) {
+    if (!this.clan.zkClient) {
+      throw new Error("ZkClient not initialized");
+    }
+    const req = {
+      userId: data.user_id,
+      jwt: data.jwt,
+      address: data.address,
+      ephemeralPublicKey: data.ephemeral_public_key,
     };
+
+    return this.clan.zkClient.getZkProofs(req);
+  }
+
+  async getCurrentNonce(user_id: string, tag?: "latest" | "pending") {
+    if (!this.clan.mmnClient) {
+      throw new Error("MmnClient not initialized");
+    }
+
+    return this.clan.mmnClient.getCurrentNonce(user_id, tag || "pending");
+  }
+
+  async sendToken(tokenEvent: APISentTokenRequest) {
+    if (!this.clan.mmnClient) {
+      throw new Error("MmnClient not initialized");
+    }
+
     try {
-      return this.clan.apiClient.sendToken(
-        this.clan.sessionToken,
-        dataSendToken
-      );
+      return this.clan.mmnClient.sendTransaction({
+        sender: tokenEvent.sender_id,
+        recipient: tokenEvent.receiver_id,
+        amount: this.clan.mmnClient.scaleAmountToDecimals(tokenEvent.amount),
+        nonce: tokenEvent.nonce,
+        textData: tokenEvent.note,
+        extraInfo: tokenEvent.extra_attribute,
+        publicKey: tokenEvent.public_key,
+        privateKey: tokenEvent.private_key,
+        zkProof: tokenEvent.zk_proof,
+        zkPub: tokenEvent.zk_pub,
+      });
     } catch (error) {
       console.log("Error sendToken");
+      return null;
     }
   }
 
