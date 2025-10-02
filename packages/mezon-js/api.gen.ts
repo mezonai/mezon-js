@@ -744,8 +744,6 @@ export interface ApiChannelDescription {
   category_id?: string;
   //
   category_name?: string;
-  //
-  channel_avatar?: Array<string>;
   //The channel this message belongs to.
   channel_id?: string;
   //
@@ -777,31 +775,27 @@ export interface ApiChannelDescription {
   //
   meeting_code?: string;
   //
-  meeting_uri?: string;
+  channel_avatar?: string;
   //The parent channel this message belongs to.
   parent_id?: string;
-  //
-  is_online?: Array<boolean>;
-  //
-  topic?: string;
   //The channel type.
   type?: number;
   //
   update_time_seconds?: number;
   //
-  user_id?: Array<string>;
+  app_id?: string;
+  //
+  topic?: string;
+  //
+  user_ids?: Array<string>;
   //
   usernames?: Array<string>;
   //
-  status?: number;
-  //
-  metadata?: Array<string>;
-  //
-  about_me?: Array<string>;
-  //
   display_names?: Array<string>;
   //
-  app_id?: string;
+  onlines?: Array<boolean>;
+  // DM status
+  avatars?: Array<string>;
 }
 
 /** A message sent on a channel. */
@@ -3916,7 +3910,7 @@ export class MezonApi {
   }
 
   /**  */
-  confirmEmailOTP(
+  confirmAuthenticateOTP(
     basicAuthUsername: string,
     basicAuthPassword: string,
       body:ApiLinkAccountConfirmRequest,

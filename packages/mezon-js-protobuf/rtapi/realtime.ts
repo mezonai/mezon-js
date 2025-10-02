@@ -1455,16 +1455,14 @@ export interface UserProfileRedis {
   display_name: string;
   /** about me */
   about_me: string;
-  /** custom status */
-  custom_status: string;
+  /** user status */
+  user_status: string;
   /** create time */
   create_time_second: number;
   /** FCM token */
   fcm_tokens: FCMTokens[];
   /** isOnline */
   online: boolean;
-  /** Metadata */
-  metadata: string;
   /** is disabled */
   is_disabled: boolean;
   /** clans */
@@ -11835,11 +11833,10 @@ function createBaseUserProfileRedis(): UserProfileRedis {
     avatar: "",
     display_name: "",
     about_me: "",
-    custom_status: "",
+    user_status: "",
     create_time_second: 0,
     fcm_tokens: [],
     online: false,
-    metadata: "",
     is_disabled: false,
     joined_clans: [],
     pubkey: "",
@@ -11868,8 +11865,8 @@ export const UserProfileRedis = {
     if (message.about_me !== "") {
       writer.uint32(42).string(message.about_me);
     }
-    if (message.custom_status !== "") {
-      writer.uint32(50).string(message.custom_status);
+    if (message.user_status !== "") {
+      writer.uint32(50).string(message.user_status);
     }
     if (message.create_time_second !== 0) {
       writer.uint32(56).uint32(message.create_time_second);
@@ -11880,32 +11877,29 @@ export const UserProfileRedis = {
     if (message.online !== false) {
       writer.uint32(72).bool(message.online);
     }
-    if (message.metadata !== "") {
-      writer.uint32(82).string(message.metadata);
-    }
     if (message.is_disabled !== false) {
-      writer.uint32(88).bool(message.is_disabled);
+      writer.uint32(80).bool(message.is_disabled);
     }
     for (const v of message.joined_clans) {
-      writer.uint32(98).string(v!);
+      writer.uint32(90).string(v!);
     }
     if (message.pubkey !== "") {
-      writer.uint32(106).string(message.pubkey);
+      writer.uint32(98).string(message.pubkey);
     }
     if (message.mezon_id !== "") {
-      writer.uint32(114).string(message.mezon_id);
+      writer.uint32(106).string(message.mezon_id);
     }
     if (message.app_token !== "") {
-      writer.uint32(122).string(message.app_token);
+      writer.uint32(114).string(message.app_token);
     }
     if (message.app_url !== "") {
-      writer.uint32(130).string(message.app_url);
+      writer.uint32(122).string(message.app_url);
     }
     if (message.is_bot !== false) {
-      writer.uint32(136).bool(message.is_bot);
+      writer.uint32(128).bool(message.is_bot);
     }
     if (message.voip_token !== "") {
-      writer.uint32(146).string(message.voip_token);
+      writer.uint32(138).string(message.voip_token);
     }
     return writer;
   },
@@ -11957,7 +11951,7 @@ export const UserProfileRedis = {
             break;
           }
 
-          message.custom_status = reader.string();
+          message.user_status = reader.string();
           continue;
         case 7:
           if (tag !== 56) {
@@ -11981,63 +11975,56 @@ export const UserProfileRedis = {
           message.online = reader.bool();
           continue;
         case 10:
-          if (tag !== 82) {
-            break;
-          }
-
-          message.metadata = reader.string();
-          continue;
-        case 11:
-          if (tag !== 88) {
+          if (tag !== 80) {
             break;
           }
 
           message.is_disabled = reader.bool();
+          continue;
+        case 11:
+          if (tag !== 90) {
+            break;
+          }
+
+          message.joined_clans.push(reader.string());
           continue;
         case 12:
           if (tag !== 98) {
             break;
           }
 
-          message.joined_clans.push(reader.string());
+          message.pubkey = reader.string();
           continue;
         case 13:
           if (tag !== 106) {
             break;
           }
 
-          message.pubkey = reader.string();
+          message.mezon_id = reader.string();
           continue;
         case 14:
           if (tag !== 114) {
             break;
           }
 
-          message.mezon_id = reader.string();
+          message.app_token = reader.string();
           continue;
         case 15:
           if (tag !== 122) {
             break;
           }
 
-          message.app_token = reader.string();
-          continue;
-        case 16:
-          if (tag !== 130) {
-            break;
-          }
-
           message.app_url = reader.string();
           continue;
-        case 17:
-          if (tag !== 136) {
+        case 16:
+          if (tag !== 128) {
             break;
           }
 
           message.is_bot = reader.bool();
           continue;
-        case 18:
-          if (tag !== 146) {
+        case 17:
+          if (tag !== 138) {
             break;
           }
 
@@ -12059,13 +12046,12 @@ export const UserProfileRedis = {
       avatar: isSet(object.avatar) ? globalThis.String(object.avatar) : "",
       display_name: isSet(object.display_name) ? globalThis.String(object.display_name) : "",
       about_me: isSet(object.about_me) ? globalThis.String(object.about_me) : "",
-      custom_status: isSet(object.custom_status) ? globalThis.String(object.custom_status) : "",
+      user_status: isSet(object.user_status) ? globalThis.String(object.user_status) : "",
       create_time_second: isSet(object.create_time_second) ? globalThis.Number(object.create_time_second) : 0,
       fcm_tokens: globalThis.Array.isArray(object?.fcm_tokens)
         ? object.fcm_tokens.map((e: any) => FCMTokens.fromJSON(e))
         : [],
       online: isSet(object.online) ? globalThis.Boolean(object.online) : false,
-      metadata: isSet(object.metadata) ? globalThis.String(object.metadata) : "",
       is_disabled: isSet(object.is_disabled) ? globalThis.Boolean(object.is_disabled) : false,
       joined_clans: globalThis.Array.isArray(object?.joined_clans)
         ? object.joined_clans.map((e: any) => globalThis.String(e))
@@ -12096,8 +12082,8 @@ export const UserProfileRedis = {
     if (message.about_me !== "") {
       obj.about_me = message.about_me;
     }
-    if (message.custom_status !== "") {
-      obj.custom_status = message.custom_status;
+    if (message.user_status !== "") {
+      obj.user_status = message.user_status;
     }
     if (message.create_time_second !== 0) {
       obj.create_time_second = Math.round(message.create_time_second);
@@ -12107,9 +12093,6 @@ export const UserProfileRedis = {
     }
     if (message.online !== false) {
       obj.online = message.online;
-    }
-    if (message.metadata !== "") {
-      obj.metadata = message.metadata;
     }
     if (message.is_disabled !== false) {
       obj.is_disabled = message.is_disabled;
@@ -12148,11 +12131,10 @@ export const UserProfileRedis = {
     message.avatar = object.avatar ?? "";
     message.display_name = object.display_name ?? "";
     message.about_me = object.about_me ?? "";
-    message.custom_status = object.custom_status ?? "";
+    message.user_status = object.user_status ?? "";
     message.create_time_second = object.create_time_second ?? 0;
     message.fcm_tokens = object.fcm_tokens?.map((e) => FCMTokens.fromPartial(e)) || [];
     message.online = object.online ?? false;
-    message.metadata = object.metadata ?? "";
     message.is_disabled = object.is_disabled ?? false;
     message.joined_clans = object.joined_clans?.map((e) => e) || [];
     message.pubkey = object.pubkey ?? "";
