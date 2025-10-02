@@ -317,6 +317,8 @@ export interface MessageTypingEvent {
   sender_username: string;
   // sender display name
   sender_display_name: string;
+  // topic id
+  topic_id?: string;
 }
 
 // user profile updated event
@@ -1513,6 +1515,7 @@ export interface Socket {
     mode: number,
     is_public: boolean,
     sender_display_name: string,
+    topic_id?: string
   ): Promise<MessageTypingEvent>;
 
   /** Send message reaction */
@@ -2905,7 +2908,8 @@ export class DefaultSocket implements Socket {
     channel_id: string,
     mode: number,
     is_public: boolean,
-    sender_display_name: string
+    sender_display_name: string,
+    topic_id?: string
   ): Promise<MessageTypingEvent> {
     const response = await this.send({
       message_typing_event: {
@@ -2913,7 +2917,8 @@ export class DefaultSocket implements Socket {
         channel_id: channel_id,
         mode: mode,
         is_public: is_public,
-        sender_display_name: sender_display_name
+        sender_display_name: sender_display_name,
+        topic_id: topic_id
       },
     });
     return response.message_typing_event;
