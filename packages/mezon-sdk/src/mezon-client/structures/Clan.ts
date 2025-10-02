@@ -1,3 +1,4 @@
+import { MmnClient, ZkClient } from "mmn-client-js";
 import { MezonApi } from "../../api";
 import { ChannelType } from "../../constants";
 import {
@@ -27,6 +28,8 @@ export class Clan {
   public users: CacheManager<string, User>;
   public sessionToken: string;
   public apiClient: MezonApi;
+  public mmnClient!: MmnClient;
+  public zkClient!: ZkClient;
 
   // cache status load channel
   private _channelsLoaded = false;
@@ -45,7 +48,9 @@ export class Clan {
     socketManager: SocketManager,
     sessionToken: string,
     messageQueue: AsyncThrottleQueue,
-    messageDB: MessageDatabase
+    messageDB: MessageDatabase,
+    mmnApiUrl?: string,
+    zkApiUrl?: string
   ) {
     this.id = initClanData.id;
     this.name = initClanData.name;
@@ -78,6 +83,17 @@ export class Clan {
       this.users.set(user_id, user);
       return user;
     });
+
+    if (mmnApiUrl) {
+      this.mmnClient = new MmnClient({
+        baseUrl: mmnApiUrl,
+      });
+    }
+    if (zkApiUrl) {
+      this.zkClient = new ZkClient({
+        endpoint: zkApiUrl,
+      });
+    }
   }
 
   getClientId() {
