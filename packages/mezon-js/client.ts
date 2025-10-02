@@ -576,7 +576,7 @@ export class Client {
    * This is a placeholder method that subclasses or instances can override
    * to perform actions before or after the refresh logic.
    */
-  onRefreshToken(session: ApiSession): void {
+  onRefreshSession(session: ApiSession): void {
     console.log(`Token refresh occurred. Token: ${session.token}`);
   }
 
@@ -665,7 +665,7 @@ export class Client {
     request:  ApiLinkAccountConfirmRequest,
   ): Promise<Session> {    
     return this.apiClient
-      .confirmEmailOTP(this.serverkey, "", request)
+      .confirmAuthenticateOTP(this.serverkey, "", request)
       .then((apiSession: ApiSession) => {
         return new Session(
           apiSession.token || "",
@@ -2095,7 +2095,7 @@ export class Client {
           }
         );
         session.update(apiSession.token!, apiSession.refresh_token!, apiSession.is_remember || false);
-        this.onRefreshToken(apiSession);
+        this.onRefreshSession(apiSession);
         resolve(session);
       } catch (error) {
         console.error("Session refresh failed:", error);

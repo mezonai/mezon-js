@@ -620,114 +620,6 @@ export interface UpdateUsersRequest {
   avatar_url: string;
 }
 
-/** A group in the server. */
-export interface Group {
-  /** The id of a group. */
-  id: string;
-  /** The id of the user who created the group. */
-  creator_id: string;
-  /** The unique name of the group. */
-  name: string;
-  /** A description for the group. */
-  description: string;
-  /** The language expected to be a tag which follows the BCP-47 spec. */
-  lang_tag: string;
-  /** Additional information stored as a JSON object. */
-  metadata: string;
-  /** A URL for an avatar image. */
-  avatar_url: string;
-  /** Anyone can join open groups, otherwise only admins can accept members. */
-  open:
-    | boolean
-    | undefined;
-  /** The current count of all members in the group. */
-  edge_count: number;
-  /** The maximum number of members allowed. */
-  max_count: number;
-  /** The UNIX time (for gRPC clients) or ISO string (for REST clients) when the group was created. */
-  create_time:
-    | Date
-    | undefined;
-  /** The UNIX time (for gRPC clients) or ISO string (for REST clients) when the group was last updated. */
-  update_time: Date | undefined;
-}
-
-/** One or more groups returned from a listing operation. */
-export interface GroupList {
-  /** One or more groups. */
-  groups: Group[];
-  /** A cursor used to get the next page. */
-  cursor: string;
-}
-
-/** A list of users belonging to a group, along with their role. */
-export interface GroupUserList {
-  /** User-role pairs for a group. */
-  group_users: GroupUserList_GroupUser[];
-  /** Cursor for the next page of results, if any. */
-  cursor: string;
-}
-
-/** A single user-role pair. */
-export interface GroupUserList_GroupUser {
-  /** User. */
-  user:
-    | User
-    | undefined;
-  /** Their relationship to the group. */
-  state: number | undefined;
-}
-
-/** The group role status. */
-export enum GroupUserList_GroupUser_State {
-  /** SUPERADMIN - The user is a superadmin with full control of the group. */
-  SUPERADMIN = 0,
-  /** ADMIN - The user is an admin with additional privileges. */
-  ADMIN = 1,
-  /** MEMBER - The user is a regular member. */
-  MEMBER = 2,
-  /** JOIN_REQUEST - The user has requested to join the group */
-  JOIN_REQUEST = 3,
-  UNRECOGNIZED = -1,
-}
-
-export function groupUserList_GroupUser_StateFromJSON(object: any): GroupUserList_GroupUser_State {
-  switch (object) {
-    case 0:
-    case "SUPERADMIN":
-      return GroupUserList_GroupUser_State.SUPERADMIN;
-    case 1:
-    case "ADMIN":
-      return GroupUserList_GroupUser_State.ADMIN;
-    case 2:
-    case "MEMBER":
-      return GroupUserList_GroupUser_State.MEMBER;
-    case 3:
-    case "JOIN_REQUEST":
-      return GroupUserList_GroupUser_State.JOIN_REQUEST;
-    case -1:
-    case "UNRECOGNIZED":
-    default:
-      return GroupUserList_GroupUser_State.UNRECOGNIZED;
-  }
-}
-
-export function groupUserList_GroupUser_StateToJSON(object: GroupUserList_GroupUser_State): string {
-  switch (object) {
-    case GroupUserList_GroupUser_State.SUPERADMIN:
-      return "SUPERADMIN";
-    case GroupUserList_GroupUser_State.ADMIN:
-      return "ADMIN";
-    case GroupUserList_GroupUser_State.MEMBER:
-      return "MEMBER";
-    case GroupUserList_GroupUser_State.JOIN_REQUEST:
-      return "JOIN_REQUEST";
-    case GroupUserList_GroupUser_State.UNRECOGNIZED:
-    default:
-      return "UNRECOGNIZED";
-  }
-}
-
 /** A list of users belonging to a channel, along with their role. */
 export interface ChannelUserList {
   /** User-role pairs for a channel. */
@@ -1202,7 +1094,7 @@ export interface User {
   /** The timezone set by the user. */
   timezone: string;
   /** Additional information stored as a JSON object. */
-  metadata: string;
+  user_status: string;
   /** Indicates whether the user is currently online. */
   online: boolean;
   /** The phone number */
@@ -1233,74 +1125,6 @@ export interface User {
   mezon_id: string;
   /** list clan nick name */
   list_nick_names: string[];
-}
-
-/** A list of groups belonging to a user, along with the user's role in each group. */
-export interface UserGroupList {
-  /** Group-role pairs for a user. */
-  user_groups: UserGroupList_UserGroup[];
-  /** Cursor for the next page of results, if any. */
-  cursor: string;
-}
-
-/** A single group-role pair. */
-export interface UserGroupList_UserGroup {
-  /** Group. */
-  group:
-    | Group
-    | undefined;
-  /** The user's relationship to the group. */
-  state: number | undefined;
-}
-
-/** The group role status. */
-export enum UserGroupList_UserGroup_State {
-  /** SUPERADMIN - The user is a superadmin with full control of the group. */
-  SUPERADMIN = 0,
-  /** ADMIN - The user is an admin with additional privileges. */
-  ADMIN = 1,
-  /** MEMBER - The user is a regular member. */
-  MEMBER = 2,
-  /** JOIN_REQUEST - The user has requested to join the group */
-  JOIN_REQUEST = 3,
-  UNRECOGNIZED = -1,
-}
-
-export function userGroupList_UserGroup_StateFromJSON(object: any): UserGroupList_UserGroup_State {
-  switch (object) {
-    case 0:
-    case "SUPERADMIN":
-      return UserGroupList_UserGroup_State.SUPERADMIN;
-    case 1:
-    case "ADMIN":
-      return UserGroupList_UserGroup_State.ADMIN;
-    case 2:
-    case "MEMBER":
-      return UserGroupList_UserGroup_State.MEMBER;
-    case 3:
-    case "JOIN_REQUEST":
-      return UserGroupList_UserGroup_State.JOIN_REQUEST;
-    case -1:
-    case "UNRECOGNIZED":
-    default:
-      return UserGroupList_UserGroup_State.UNRECOGNIZED;
-  }
-}
-
-export function userGroupList_UserGroup_StateToJSON(object: UserGroupList_UserGroup_State): string {
-  switch (object) {
-    case UserGroupList_UserGroup_State.SUPERADMIN:
-      return "SUPERADMIN";
-    case UserGroupList_UserGroup_State.ADMIN:
-      return "ADMIN";
-    case UserGroupList_UserGroup_State.MEMBER:
-      return "MEMBER";
-    case UserGroupList_UserGroup_State.JOIN_REQUEST:
-      return "JOIN_REQUEST";
-    case UserGroupList_UserGroup_State.UNRECOGNIZED:
-    default:
-      return "UNRECOGNIZED";
-  }
 }
 
 /** A collection of zero or more users. */
@@ -1673,10 +1497,6 @@ export interface ChannelDescription {
   channel_label: string;
   /** The channel private */
   channel_private: number;
-  /** The channel avatar */
-  channel_avatar: string[];
-  /** The user id */
-  user_id: string[];
   /** last message id */
   last_sent_message:
     | ChannelMessageHeader
@@ -1685,8 +1505,6 @@ export interface ChannelDescription {
   last_seen_message:
     | ChannelMessageHeader
     | undefined;
-  /** status */
-  is_online: boolean[];
   /** meeting code */
   meeting_code: string;
   /** count message unread */
@@ -1695,18 +1513,12 @@ export interface ChannelDescription {
   active: number;
   /** last pin message */
   last_pin_message: string;
-  /** the usernames */
-  usernames: string[];
   /** creator name */
   creator_name: string;
   /** create time ms */
   create_time_seconds: number;
   /** update time ms */
   update_time_seconds: number;
-  /** Additional information stored as a JSON object. */
-  metadata: string[];
-  /** about_me */
-  about_me: string[];
   /** clan_name */
   clan_name: string;
   /** app url */
@@ -1715,12 +1527,22 @@ export interface ChannelDescription {
   is_mute: boolean;
   /** age restricted */
   age_restricted: number;
-  /** topic */
-  topic: string;
+  /** channel avatar */
+  channel_avatar: string;
   /** e2ee */
   e2ee: number;
-  /** display name */
+  /** channel description topic */
+  topic: string;
+  /** List DM user ids */
+  user_ids: string[];
+  /** List DM usernames */
+  usernames: string[];
+  /** List DM diplay names */
   display_names: string[];
+  /** DM status */
+  onlines: boolean[];
+  /** DM avatars */
+  avatars: string[];
 }
 
 /** A list of channel description, usually a result of a list operation. */
@@ -7378,467 +7200,6 @@ export const UpdateUsersRequest = {
   },
 };
 
-function createBaseGroup(): Group {
-  return {
-    id: "",
-    creator_id: "",
-    name: "",
-    description: "",
-    lang_tag: "",
-    metadata: "",
-    avatar_url: "",
-    open: undefined,
-    edge_count: 0,
-    max_count: 0,
-    create_time: undefined,
-    update_time: undefined,
-  };
-}
-
-export const Group = {
-  encode(message: Group, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.id !== "") {
-      writer.uint32(10).string(message.id);
-    }
-    if (message.creator_id !== "") {
-      writer.uint32(18).string(message.creator_id);
-    }
-    if (message.name !== "") {
-      writer.uint32(26).string(message.name);
-    }
-    if (message.description !== "") {
-      writer.uint32(34).string(message.description);
-    }
-    if (message.lang_tag !== "") {
-      writer.uint32(42).string(message.lang_tag);
-    }
-    if (message.metadata !== "") {
-      writer.uint32(50).string(message.metadata);
-    }
-    if (message.avatar_url !== "") {
-      writer.uint32(58).string(message.avatar_url);
-    }
-    if (message.open !== undefined) {
-      BoolValue.encode({ value: message.open! }, writer.uint32(66).fork()).ldelim();
-    }
-    if (message.edge_count !== 0) {
-      writer.uint32(72).int32(message.edge_count);
-    }
-    if (message.max_count !== 0) {
-      writer.uint32(80).int32(message.max_count);
-    }
-    if (message.create_time !== undefined) {
-      Timestamp.encode(toTimestamp(message.create_time), writer.uint32(90).fork()).ldelim();
-    }
-    if (message.update_time !== undefined) {
-      Timestamp.encode(toTimestamp(message.update_time), writer.uint32(98).fork()).ldelim();
-    }
-    return writer;
-  },
-
-  decode(input: _m0.Reader | Uint8Array, length?: number): Group {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseGroup();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
-          if (tag !== 10) {
-            break;
-          }
-
-          message.id = reader.string();
-          continue;
-        case 2:
-          if (tag !== 18) {
-            break;
-          }
-
-          message.creator_id = reader.string();
-          continue;
-        case 3:
-          if (tag !== 26) {
-            break;
-          }
-
-          message.name = reader.string();
-          continue;
-        case 4:
-          if (tag !== 34) {
-            break;
-          }
-
-          message.description = reader.string();
-          continue;
-        case 5:
-          if (tag !== 42) {
-            break;
-          }
-
-          message.lang_tag = reader.string();
-          continue;
-        case 6:
-          if (tag !== 50) {
-            break;
-          }
-
-          message.metadata = reader.string();
-          continue;
-        case 7:
-          if (tag !== 58) {
-            break;
-          }
-
-          message.avatar_url = reader.string();
-          continue;
-        case 8:
-          if (tag !== 66) {
-            break;
-          }
-
-          message.open = BoolValue.decode(reader, reader.uint32()).value;
-          continue;
-        case 9:
-          if (tag !== 72) {
-            break;
-          }
-
-          message.edge_count = reader.int32();
-          continue;
-        case 10:
-          if (tag !== 80) {
-            break;
-          }
-
-          message.max_count = reader.int32();
-          continue;
-        case 11:
-          if (tag !== 90) {
-            break;
-          }
-
-          message.create_time = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
-          continue;
-        case 12:
-          if (tag !== 98) {
-            break;
-          }
-
-          message.update_time = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
-          continue;
-      }
-      if ((tag & 7) === 4 || tag === 0) {
-        break;
-      }
-      reader.skipType(tag & 7);
-    }
-    return message;
-  },
-
-  fromJSON(object: any): Group {
-    return {
-      id: isSet(object.id) ? globalThis.String(object.id) : "",
-      creator_id: isSet(object.creator_id) ? globalThis.String(object.creator_id) : "",
-      name: isSet(object.name) ? globalThis.String(object.name) : "",
-      description: isSet(object.description) ? globalThis.String(object.description) : "",
-      lang_tag: isSet(object.lang_tag) ? globalThis.String(object.lang_tag) : "",
-      metadata: isSet(object.metadata) ? globalThis.String(object.metadata) : "",
-      avatar_url: isSet(object.avatar_url) ? globalThis.String(object.avatar_url) : "",
-      open: isSet(object.open) ? Boolean(object.open) : undefined,
-      edge_count: isSet(object.edge_count) ? globalThis.Number(object.edge_count) : 0,
-      max_count: isSet(object.max_count) ? globalThis.Number(object.max_count) : 0,
-      create_time: isSet(object.create_time) ? fromJsonTimestamp(object.create_time) : undefined,
-      update_time: isSet(object.update_time) ? fromJsonTimestamp(object.update_time) : undefined,
-    };
-  },
-
-  toJSON(message: Group): unknown {
-    const obj: any = {};
-    if (message.id !== "") {
-      obj.id = message.id;
-    }
-    if (message.creator_id !== "") {
-      obj.creator_id = message.creator_id;
-    }
-    if (message.name !== "") {
-      obj.name = message.name;
-    }
-    if (message.description !== "") {
-      obj.description = message.description;
-    }
-    if (message.lang_tag !== "") {
-      obj.lang_tag = message.lang_tag;
-    }
-    if (message.metadata !== "") {
-      obj.metadata = message.metadata;
-    }
-    if (message.avatar_url !== "") {
-      obj.avatar_url = message.avatar_url;
-    }
-    if (message.open !== undefined) {
-      obj.open = message.open;
-    }
-    if (message.edge_count !== 0) {
-      obj.edge_count = Math.round(message.edge_count);
-    }
-    if (message.max_count !== 0) {
-      obj.max_count = Math.round(message.max_count);
-    }
-    if (message.create_time !== undefined) {
-      obj.create_time = message.create_time.toISOString();
-    }
-    if (message.update_time !== undefined) {
-      obj.update_time = message.update_time.toISOString();
-    }
-    return obj;
-  },
-
-  create<I extends Exact<DeepPartial<Group>, I>>(base?: I): Group {
-    return Group.fromPartial(base ?? ({} as any));
-  },
-  fromPartial<I extends Exact<DeepPartial<Group>, I>>(object: I): Group {
-    const message = createBaseGroup();
-    message.id = object.id ?? "";
-    message.creator_id = object.creator_id ?? "";
-    message.name = object.name ?? "";
-    message.description = object.description ?? "";
-    message.lang_tag = object.lang_tag ?? "";
-    message.metadata = object.metadata ?? "";
-    message.avatar_url = object.avatar_url ?? "";
-    message.open = object.open ?? undefined;
-    message.edge_count = object.edge_count ?? 0;
-    message.max_count = object.max_count ?? 0;
-    message.create_time = object.create_time ?? undefined;
-    message.update_time = object.update_time ?? undefined;
-    return message;
-  },
-};
-
-function createBaseGroupList(): GroupList {
-  return { groups: [], cursor: "" };
-}
-
-export const GroupList = {
-  encode(message: GroupList, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    for (const v of message.groups) {
-      Group.encode(v!, writer.uint32(10).fork()).ldelim();
-    }
-    if (message.cursor !== "") {
-      writer.uint32(18).string(message.cursor);
-    }
-    return writer;
-  },
-
-  decode(input: _m0.Reader | Uint8Array, length?: number): GroupList {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseGroupList();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
-          if (tag !== 10) {
-            break;
-          }
-
-          message.groups.push(Group.decode(reader, reader.uint32()));
-          continue;
-        case 2:
-          if (tag !== 18) {
-            break;
-          }
-
-          message.cursor = reader.string();
-          continue;
-      }
-      if ((tag & 7) === 4 || tag === 0) {
-        break;
-      }
-      reader.skipType(tag & 7);
-    }
-    return message;
-  },
-
-  fromJSON(object: any): GroupList {
-    return {
-      groups: globalThis.Array.isArray(object?.groups) ? object.groups.map((e: any) => Group.fromJSON(e)) : [],
-      cursor: isSet(object.cursor) ? globalThis.String(object.cursor) : "",
-    };
-  },
-
-  toJSON(message: GroupList): unknown {
-    const obj: any = {};
-    if (message.groups?.length) {
-      obj.groups = message.groups.map((e) => Group.toJSON(e));
-    }
-    if (message.cursor !== "") {
-      obj.cursor = message.cursor;
-    }
-    return obj;
-  },
-
-  create<I extends Exact<DeepPartial<GroupList>, I>>(base?: I): GroupList {
-    return GroupList.fromPartial(base ?? ({} as any));
-  },
-  fromPartial<I extends Exact<DeepPartial<GroupList>, I>>(object: I): GroupList {
-    const message = createBaseGroupList();
-    message.groups = object.groups?.map((e) => Group.fromPartial(e)) || [];
-    message.cursor = object.cursor ?? "";
-    return message;
-  },
-};
-
-function createBaseGroupUserList(): GroupUserList {
-  return { group_users: [], cursor: "" };
-}
-
-export const GroupUserList = {
-  encode(message: GroupUserList, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    for (const v of message.group_users) {
-      GroupUserList_GroupUser.encode(v!, writer.uint32(10).fork()).ldelim();
-    }
-    if (message.cursor !== "") {
-      writer.uint32(18).string(message.cursor);
-    }
-    return writer;
-  },
-
-  decode(input: _m0.Reader | Uint8Array, length?: number): GroupUserList {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseGroupUserList();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
-          if (tag !== 10) {
-            break;
-          }
-
-          message.group_users.push(GroupUserList_GroupUser.decode(reader, reader.uint32()));
-          continue;
-        case 2:
-          if (tag !== 18) {
-            break;
-          }
-
-          message.cursor = reader.string();
-          continue;
-      }
-      if ((tag & 7) === 4 || tag === 0) {
-        break;
-      }
-      reader.skipType(tag & 7);
-    }
-    return message;
-  },
-
-  fromJSON(object: any): GroupUserList {
-    return {
-      group_users: globalThis.Array.isArray(object?.group_users)
-        ? object.group_users.map((e: any) => GroupUserList_GroupUser.fromJSON(e))
-        : [],
-      cursor: isSet(object.cursor) ? globalThis.String(object.cursor) : "",
-    };
-  },
-
-  toJSON(message: GroupUserList): unknown {
-    const obj: any = {};
-    if (message.group_users?.length) {
-      obj.group_users = message.group_users.map((e) => GroupUserList_GroupUser.toJSON(e));
-    }
-    if (message.cursor !== "") {
-      obj.cursor = message.cursor;
-    }
-    return obj;
-  },
-
-  create<I extends Exact<DeepPartial<GroupUserList>, I>>(base?: I): GroupUserList {
-    return GroupUserList.fromPartial(base ?? ({} as any));
-  },
-  fromPartial<I extends Exact<DeepPartial<GroupUserList>, I>>(object: I): GroupUserList {
-    const message = createBaseGroupUserList();
-    message.group_users = object.group_users?.map((e) => GroupUserList_GroupUser.fromPartial(e)) || [];
-    message.cursor = object.cursor ?? "";
-    return message;
-  },
-};
-
-function createBaseGroupUserList_GroupUser(): GroupUserList_GroupUser {
-  return { user: undefined, state: undefined };
-}
-
-export const GroupUserList_GroupUser = {
-  encode(message: GroupUserList_GroupUser, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.user !== undefined) {
-      User.encode(message.user, writer.uint32(10).fork()).ldelim();
-    }
-    if (message.state !== undefined) {
-      Int32Value.encode({ value: message.state! }, writer.uint32(18).fork()).ldelim();
-    }
-    return writer;
-  },
-
-  decode(input: _m0.Reader | Uint8Array, length?: number): GroupUserList_GroupUser {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseGroupUserList_GroupUser();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
-          if (tag !== 10) {
-            break;
-          }
-
-          message.user = User.decode(reader, reader.uint32());
-          continue;
-        case 2:
-          if (tag !== 18) {
-            break;
-          }
-
-          message.state = Int32Value.decode(reader, reader.uint32()).value;
-          continue;
-      }
-      if ((tag & 7) === 4 || tag === 0) {
-        break;
-      }
-      reader.skipType(tag & 7);
-    }
-    return message;
-  },
-
-  fromJSON(object: any): GroupUserList_GroupUser {
-    return {
-      user: isSet(object.user) ? User.fromJSON(object.user) : undefined,
-      state: isSet(object.state) ? Number(object.state) : undefined,
-    };
-  },
-
-  toJSON(message: GroupUserList_GroupUser): unknown {
-    const obj: any = {};
-    if (message.user !== undefined) {
-      obj.user = User.toJSON(message.user);
-    }
-    if (message.state !== undefined) {
-      obj.state = message.state;
-    }
-    return obj;
-  },
-
-  create<I extends Exact<DeepPartial<GroupUserList_GroupUser>, I>>(base?: I): GroupUserList_GroupUser {
-    return GroupUserList_GroupUser.fromPartial(base ?? ({} as any));
-  },
-  fromPartial<I extends Exact<DeepPartial<GroupUserList_GroupUser>, I>>(object: I): GroupUserList_GroupUser {
-    const message = createBaseGroupUserList_GroupUser();
-    message.user = (object.user !== undefined && object.user !== null) ? User.fromPartial(object.user) : undefined;
-    message.state = object.state ?? undefined;
-    return message;
-  },
-};
-
 function createBaseChannelUserList(): ChannelUserList {
   return { channel_users: [], cursor: "", channel_id: "" };
 }
@@ -11305,7 +10666,7 @@ function createBaseUser(): User {
     lang_tag: "",
     location: "",
     timezone: "",
-    metadata: "",
+    user_status: "",
     online: false,
     phone_number: "",
     edge_count: 0,
@@ -11343,8 +10704,8 @@ export const User = {
     if (message.timezone !== "") {
       writer.uint32(58).string(message.timezone);
     }
-    if (message.metadata !== "") {
-      writer.uint32(66).string(message.metadata);
+    if (message.user_status !== "") {
+      writer.uint32(66).string(message.user_status);
     }
     if (message.online !== false) {
       writer.uint32(72).bool(message.online);
@@ -11443,7 +10804,7 @@ export const User = {
             break;
           }
 
-          message.metadata = reader.string();
+          message.user_status = reader.string();
           continue;
         case 9:
           if (tag !== 72) {
@@ -11540,7 +10901,7 @@ export const User = {
       lang_tag: isSet(object.lang_tag) ? globalThis.String(object.lang_tag) : "",
       location: isSet(object.location) ? globalThis.String(object.location) : "",
       timezone: isSet(object.timezone) ? globalThis.String(object.timezone) : "",
-      metadata: isSet(object.metadata) ? globalThis.String(object.metadata) : "",
+      user_status: isSet(object.user_status) ? globalThis.String(object.user_status) : "",
       online: isSet(object.online) ? globalThis.Boolean(object.online) : false,
       phone_number: isSet(object.phone_number) ? globalThis.String(object.phone_number) : "",
       edge_count: isSet(object.edge_count) ? globalThis.Number(object.edge_count) : 0,
@@ -11580,8 +10941,8 @@ export const User = {
     if (message.timezone !== "") {
       obj.timezone = message.timezone;
     }
-    if (message.metadata !== "") {
-      obj.metadata = message.metadata;
+    if (message.user_status !== "") {
+      obj.user_status = message.user_status;
     }
     if (message.online !== false) {
       obj.online = message.online;
@@ -11631,7 +10992,7 @@ export const User = {
     message.lang_tag = object.lang_tag ?? "";
     message.location = object.location ?? "";
     message.timezone = object.timezone ?? "";
-    message.metadata = object.metadata ?? "";
+    message.user_status = object.user_status ?? "";
     message.online = object.online ?? false;
     message.phone_number = object.phone_number ?? "";
     message.edge_count = object.edge_count ?? 0;
@@ -11643,156 +11004,6 @@ export const User = {
     message.dob = object.dob ?? undefined;
     message.mezon_id = object.mezon_id ?? "";
     message.list_nick_names = object.list_nick_names?.map((e) => e) || [];
-    return message;
-  },
-};
-
-function createBaseUserGroupList(): UserGroupList {
-  return { user_groups: [], cursor: "" };
-}
-
-export const UserGroupList = {
-  encode(message: UserGroupList, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    for (const v of message.user_groups) {
-      UserGroupList_UserGroup.encode(v!, writer.uint32(10).fork()).ldelim();
-    }
-    if (message.cursor !== "") {
-      writer.uint32(18).string(message.cursor);
-    }
-    return writer;
-  },
-
-  decode(input: _m0.Reader | Uint8Array, length?: number): UserGroupList {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseUserGroupList();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
-          if (tag !== 10) {
-            break;
-          }
-
-          message.user_groups.push(UserGroupList_UserGroup.decode(reader, reader.uint32()));
-          continue;
-        case 2:
-          if (tag !== 18) {
-            break;
-          }
-
-          message.cursor = reader.string();
-          continue;
-      }
-      if ((tag & 7) === 4 || tag === 0) {
-        break;
-      }
-      reader.skipType(tag & 7);
-    }
-    return message;
-  },
-
-  fromJSON(object: any): UserGroupList {
-    return {
-      user_groups: globalThis.Array.isArray(object?.user_groups)
-        ? object.user_groups.map((e: any) => UserGroupList_UserGroup.fromJSON(e))
-        : [],
-      cursor: isSet(object.cursor) ? globalThis.String(object.cursor) : "",
-    };
-  },
-
-  toJSON(message: UserGroupList): unknown {
-    const obj: any = {};
-    if (message.user_groups?.length) {
-      obj.user_groups = message.user_groups.map((e) => UserGroupList_UserGroup.toJSON(e));
-    }
-    if (message.cursor !== "") {
-      obj.cursor = message.cursor;
-    }
-    return obj;
-  },
-
-  create<I extends Exact<DeepPartial<UserGroupList>, I>>(base?: I): UserGroupList {
-    return UserGroupList.fromPartial(base ?? ({} as any));
-  },
-  fromPartial<I extends Exact<DeepPartial<UserGroupList>, I>>(object: I): UserGroupList {
-    const message = createBaseUserGroupList();
-    message.user_groups = object.user_groups?.map((e) => UserGroupList_UserGroup.fromPartial(e)) || [];
-    message.cursor = object.cursor ?? "";
-    return message;
-  },
-};
-
-function createBaseUserGroupList_UserGroup(): UserGroupList_UserGroup {
-  return { group: undefined, state: undefined };
-}
-
-export const UserGroupList_UserGroup = {
-  encode(message: UserGroupList_UserGroup, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.group !== undefined) {
-      Group.encode(message.group, writer.uint32(10).fork()).ldelim();
-    }
-    if (message.state !== undefined) {
-      Int32Value.encode({ value: message.state! }, writer.uint32(18).fork()).ldelim();
-    }
-    return writer;
-  },
-
-  decode(input: _m0.Reader | Uint8Array, length?: number): UserGroupList_UserGroup {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseUserGroupList_UserGroup();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
-          if (tag !== 10) {
-            break;
-          }
-
-          message.group = Group.decode(reader, reader.uint32());
-          continue;
-        case 2:
-          if (tag !== 18) {
-            break;
-          }
-
-          message.state = Int32Value.decode(reader, reader.uint32()).value;
-          continue;
-      }
-      if ((tag & 7) === 4 || tag === 0) {
-        break;
-      }
-      reader.skipType(tag & 7);
-    }
-    return message;
-  },
-
-  fromJSON(object: any): UserGroupList_UserGroup {
-    return {
-      group: isSet(object.group) ? Group.fromJSON(object.group) : undefined,
-      state: isSet(object.state) ? Number(object.state) : undefined,
-    };
-  },
-
-  toJSON(message: UserGroupList_UserGroup): unknown {
-    const obj: any = {};
-    if (message.group !== undefined) {
-      obj.group = Group.toJSON(message.group);
-    }
-    if (message.state !== undefined) {
-      obj.state = message.state;
-    }
-    return obj;
-  },
-
-  create<I extends Exact<DeepPartial<UserGroupList_UserGroup>, I>>(base?: I): UserGroupList_UserGroup {
-    return UserGroupList_UserGroup.fromPartial(base ?? ({} as any));
-  },
-  fromPartial<I extends Exact<DeepPartial<UserGroupList_UserGroup>, I>>(object: I): UserGroupList_UserGroup {
-    const message = createBaseUserGroupList_UserGroup();
-    message.group = (object.group !== undefined && object.group !== null) ? Group.fromPartial(object.group) : undefined;
-    message.state = object.state ?? undefined;
     return message;
   },
 };
@@ -14946,28 +14157,27 @@ function createBaseChannelDescription(): ChannelDescription {
     creator_id: "",
     channel_label: "",
     channel_private: 0,
-    channel_avatar: [],
-    user_id: [],
     last_sent_message: undefined,
     last_seen_message: undefined,
-    is_online: [],
     meeting_code: "",
     count_mess_unread: 0,
     active: 0,
     last_pin_message: "",
-    usernames: [],
     creator_name: "",
     create_time_seconds: 0,
     update_time_seconds: 0,
-    metadata: [],
-    about_me: [],
     clan_name: "",
     app_id: "",
     is_mute: false,
     age_restricted: 0,
-    topic: "",
+    channel_avatar: "",
     e2ee: 0,
+    topic: "",
+    user_ids: [],
+    usernames: [],
     display_names: [],
+    onlines: [],
+    avatars: [],
   };
 }
 
@@ -15000,73 +14210,70 @@ export const ChannelDescription = {
     if (message.channel_private !== 0) {
       writer.uint32(72).int32(message.channel_private);
     }
-    for (const v of message.channel_avatar) {
-      writer.uint32(82).string(v!);
-    }
-    for (const v of message.user_id) {
-      writer.uint32(90).string(v!);
-    }
     if (message.last_sent_message !== undefined) {
-      ChannelMessageHeader.encode(message.last_sent_message, writer.uint32(98).fork()).ldelim();
+      ChannelMessageHeader.encode(message.last_sent_message, writer.uint32(82).fork()).ldelim();
     }
     if (message.last_seen_message !== undefined) {
-      ChannelMessageHeader.encode(message.last_seen_message, writer.uint32(106).fork()).ldelim();
+      ChannelMessageHeader.encode(message.last_seen_message, writer.uint32(90).fork()).ldelim();
     }
-    writer.uint32(114).fork();
-    for (const v of message.is_online) {
+    if (message.meeting_code !== "") {
+      writer.uint32(98).string(message.meeting_code);
+    }
+    if (message.count_mess_unread !== 0) {
+      writer.uint32(104).int32(message.count_mess_unread);
+    }
+    if (message.active !== 0) {
+      writer.uint32(112).int32(message.active);
+    }
+    if (message.last_pin_message !== "") {
+      writer.uint32(122).string(message.last_pin_message);
+    }
+    if (message.creator_name !== "") {
+      writer.uint32(130).string(message.creator_name);
+    }
+    if (message.create_time_seconds !== 0) {
+      writer.uint32(136).uint32(message.create_time_seconds);
+    }
+    if (message.update_time_seconds !== 0) {
+      writer.uint32(144).uint32(message.update_time_seconds);
+    }
+    if (message.clan_name !== "") {
+      writer.uint32(154).string(message.clan_name);
+    }
+    if (message.app_id !== "") {
+      writer.uint32(162).string(message.app_id);
+    }
+    if (message.is_mute !== false) {
+      writer.uint32(168).bool(message.is_mute);
+    }
+    if (message.age_restricted !== 0) {
+      writer.uint32(176).int32(message.age_restricted);
+    }
+    if (message.channel_avatar !== "") {
+      writer.uint32(186).string(message.channel_avatar);
+    }
+    if (message.e2ee !== 0) {
+      writer.uint32(192).int32(message.e2ee);
+    }
+    if (message.topic !== "") {
+      writer.uint32(202).string(message.topic);
+    }
+    for (const v of message.user_ids) {
+      writer.uint32(210).string(v!);
+    }
+    for (const v of message.usernames) {
+      writer.uint32(218).string(v!);
+    }
+    for (const v of message.display_names) {
+      writer.uint32(226).string(v!);
+    }
+    writer.uint32(234).fork();
+    for (const v of message.onlines) {
       writer.bool(v);
     }
     writer.ldelim();
-    if (message.meeting_code !== "") {
-      writer.uint32(122).string(message.meeting_code);
-    }
-    if (message.count_mess_unread !== 0) {
-      writer.uint32(128).int32(message.count_mess_unread);
-    }
-    if (message.active !== 0) {
-      writer.uint32(136).int32(message.active);
-    }
-    if (message.last_pin_message !== "") {
-      writer.uint32(146).string(message.last_pin_message);
-    }
-    for (const v of message.usernames) {
-      writer.uint32(154).string(v!);
-    }
-    if (message.creator_name !== "") {
-      writer.uint32(162).string(message.creator_name);
-    }
-    if (message.create_time_seconds !== 0) {
-      writer.uint32(168).uint32(message.create_time_seconds);
-    }
-    if (message.update_time_seconds !== 0) {
-      writer.uint32(176).uint32(message.update_time_seconds);
-    }
-    for (const v of message.metadata) {
-      writer.uint32(186).string(v!);
-    }
-    for (const v of message.about_me) {
-      writer.uint32(194).string(v!);
-    }
-    if (message.clan_name !== "") {
-      writer.uint32(202).string(message.clan_name);
-    }
-    if (message.app_id !== "") {
-      writer.uint32(210).string(message.app_id);
-    }
-    if (message.is_mute !== false) {
-      writer.uint32(216).bool(message.is_mute);
-    }
-    if (message.age_restricted !== 0) {
-      writer.uint32(224).int32(message.age_restricted);
-    }
-    if (message.topic !== "") {
-      writer.uint32(234).string(message.topic);
-    }
-    if (message.e2ee !== 0) {
-      writer.uint32(240).int32(message.e2ee);
-    }
-    for (const v of message.display_names) {
-      writer.uint32(250).string(v!);
+    for (const v of message.avatars) {
+      writer.uint32(242).string(v!);
     }
     return writer;
   },
@@ -15146,164 +14353,157 @@ export const ChannelDescription = {
             break;
           }
 
-          message.channel_avatar.push(reader.string());
+          message.last_sent_message = ChannelMessageHeader.decode(reader, reader.uint32());
           continue;
         case 11:
           if (tag !== 90) {
             break;
           }
 
-          message.user_id.push(reader.string());
+          message.last_seen_message = ChannelMessageHeader.decode(reader, reader.uint32());
           continue;
         case 12:
           if (tag !== 98) {
             break;
           }
 
-          message.last_sent_message = ChannelMessageHeader.decode(reader, reader.uint32());
+          message.meeting_code = reader.string();
           continue;
         case 13:
-          if (tag !== 106) {
+          if (tag !== 104) {
             break;
           }
 
-          message.last_seen_message = ChannelMessageHeader.decode(reader, reader.uint32());
+          message.count_mess_unread = reader.int32();
           continue;
         case 14:
-          if (tag === 112) {
-            message.is_online.push(reader.bool());
-
-            continue;
+          if (tag !== 112) {
+            break;
           }
 
-          if (tag === 114) {
-            const end2 = reader.uint32() + reader.pos;
-            while (reader.pos < end2) {
-              message.is_online.push(reader.bool());
-            }
-
-            continue;
-          }
-
-          break;
+          message.active = reader.int32();
+          continue;
         case 15:
           if (tag !== 122) {
             break;
           }
 
-          message.meeting_code = reader.string();
+          message.last_pin_message = reader.string();
           continue;
         case 16:
-          if (tag !== 128) {
+          if (tag !== 130) {
             break;
           }
 
-          message.count_mess_unread = reader.int32();
+          message.creator_name = reader.string();
           continue;
         case 17:
           if (tag !== 136) {
             break;
           }
 
-          message.active = reader.int32();
+          message.create_time_seconds = reader.uint32();
           continue;
         case 18:
-          if (tag !== 146) {
+          if (tag !== 144) {
             break;
           }
 
-          message.last_pin_message = reader.string();
+          message.update_time_seconds = reader.uint32();
           continue;
         case 19:
           if (tag !== 154) {
             break;
           }
 
-          message.usernames.push(reader.string());
+          message.clan_name = reader.string();
           continue;
         case 20:
           if (tag !== 162) {
             break;
           }
 
-          message.creator_name = reader.string();
+          message.app_id = reader.string();
           continue;
         case 21:
           if (tag !== 168) {
             break;
           }
 
-          message.create_time_seconds = reader.uint32();
+          message.is_mute = reader.bool();
           continue;
         case 22:
           if (tag !== 176) {
             break;
           }
 
-          message.update_time_seconds = reader.uint32();
+          message.age_restricted = reader.int32();
           continue;
         case 23:
           if (tag !== 186) {
             break;
           }
 
-          message.metadata.push(reader.string());
+          message.channel_avatar = reader.string();
           continue;
         case 24:
-          if (tag !== 194) {
+          if (tag !== 192) {
             break;
           }
 
-          message.about_me.push(reader.string());
+          message.e2ee = reader.int32();
           continue;
         case 25:
           if (tag !== 202) {
             break;
           }
 
-          message.clan_name = reader.string();
+          message.topic = reader.string();
           continue;
         case 26:
           if (tag !== 210) {
             break;
           }
 
-          message.app_id = reader.string();
+          message.user_ids.push(reader.string());
           continue;
         case 27:
-          if (tag !== 216) {
+          if (tag !== 218) {
             break;
           }
 
-          message.is_mute = reader.bool();
+          message.usernames.push(reader.string());
           continue;
         case 28:
-          if (tag !== 224) {
-            break;
-          }
-
-          message.age_restricted = reader.int32();
-          continue;
-        case 29:
-          if (tag !== 234) {
-            break;
-          }
-
-          message.topic = reader.string();
-          continue;
-        case 30:
-          if (tag !== 240) {
-            break;
-          }
-
-          message.e2ee = reader.int32();
-          continue;
-        case 31:
-          if (tag !== 250) {
+          if (tag !== 226) {
             break;
           }
 
           message.display_names.push(reader.string());
+          continue;
+        case 29:
+          if (tag === 232) {
+            message.onlines.push(reader.bool());
+
+            continue;
+          }
+
+          if (tag === 234) {
+            const end2 = reader.uint32() + reader.pos;
+            while (reader.pos < end2) {
+              message.onlines.push(reader.bool());
+            }
+
+            continue;
+          }
+
+          break;
+        case 30:
+          if (tag !== 242) {
+            break;
+          }
+
+          message.avatars.push(reader.string());
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -15325,42 +14525,37 @@ export const ChannelDescription = {
       creator_id: isSet(object.creator_id) ? globalThis.String(object.creator_id) : "",
       channel_label: isSet(object.channel_label) ? globalThis.String(object.channel_label) : "",
       channel_private: isSet(object.channel_private) ? globalThis.Number(object.channel_private) : 0,
-      channel_avatar: globalThis.Array.isArray(object?.channel_avatar)
-        ? object.channel_avatar.map((e: any) => globalThis.String(e))
-        : [],
-      user_id: globalThis.Array.isArray(object?.user_id) ? object.user_id.map((e: any) => globalThis.String(e)) : [],
       last_sent_message: isSet(object.last_sent_message)
         ? ChannelMessageHeader.fromJSON(object.last_sent_message)
         : undefined,
       last_seen_message: isSet(object.last_seen_message)
         ? ChannelMessageHeader.fromJSON(object.last_seen_message)
         : undefined,
-      is_online: globalThis.Array.isArray(object?.is_online)
-        ? object.is_online.map((e: any) => globalThis.Boolean(e))
-        : [],
       meeting_code: isSet(object.meeting_code) ? globalThis.String(object.meeting_code) : "",
       count_mess_unread: isSet(object.count_mess_unread) ? globalThis.Number(object.count_mess_unread) : 0,
       active: isSet(object.active) ? globalThis.Number(object.active) : 0,
       last_pin_message: isSet(object.last_pin_message) ? globalThis.String(object.last_pin_message) : "",
-      usernames: globalThis.Array.isArray(object?.usernames)
-        ? object.usernames.map((e: any) => globalThis.String(e))
-        : [],
       creator_name: isSet(object.creator_name) ? globalThis.String(object.creator_name) : "",
       create_time_seconds: isSet(object.create_time_seconds) ? globalThis.Number(object.create_time_seconds) : 0,
       update_time_seconds: isSet(object.update_time_seconds) ? globalThis.Number(object.update_time_seconds) : 0,
-      metadata: globalThis.Array.isArray(object?.metadata)
-        ? object.metadata.map((e: any) => globalThis.String(e))
-        : [],
-      about_me: globalThis.Array.isArray(object?.about_me) ? object.about_me.map((e: any) => globalThis.String(e)) : [],
       clan_name: isSet(object.clan_name) ? globalThis.String(object.clan_name) : "",
       app_id: isSet(object.app_id) ? globalThis.String(object.app_id) : "",
       is_mute: isSet(object.is_mute) ? globalThis.Boolean(object.is_mute) : false,
       age_restricted: isSet(object.age_restricted) ? globalThis.Number(object.age_restricted) : 0,
-      topic: isSet(object.topic) ? globalThis.String(object.topic) : "",
+      channel_avatar: isSet(object.channel_avatar) ? globalThis.String(object.channel_avatar) : "",
       e2ee: isSet(object.e2ee) ? globalThis.Number(object.e2ee) : 0,
+      topic: isSet(object.topic) ? globalThis.String(object.topic) : "",
+      user_ids: globalThis.Array.isArray(object?.user_ids) ? object.user_ids.map((e: any) => globalThis.String(e)) : [],
+      usernames: globalThis.Array.isArray(object?.usernames)
+        ? object.usernames.map((e: any) => globalThis.String(e))
+        : [],
       display_names: globalThis.Array.isArray(object?.display_names)
         ? object.display_names.map((e: any) => globalThis.String(e))
         : [],
+      onlines: globalThis.Array.isArray(object?.onlines)
+        ? object.onlines.map((e: any) => globalThis.Boolean(e))
+        : [],
+      avatars: globalThis.Array.isArray(object?.avatars) ? object.avatars.map((e: any) => globalThis.String(e)) : [],
     };
   },
 
@@ -15393,20 +14588,11 @@ export const ChannelDescription = {
     if (message.channel_private !== 0) {
       obj.channel_private = Math.round(message.channel_private);
     }
-    if (message.channel_avatar?.length) {
-      obj.channel_avatar = message.channel_avatar;
-    }
-    if (message.user_id?.length) {
-      obj.user_id = message.user_id;
-    }
     if (message.last_sent_message !== undefined) {
       obj.last_sent_message = ChannelMessageHeader.toJSON(message.last_sent_message);
     }
     if (message.last_seen_message !== undefined) {
       obj.last_seen_message = ChannelMessageHeader.toJSON(message.last_seen_message);
-    }
-    if (message.is_online?.length) {
-      obj.is_online = message.is_online;
     }
     if (message.meeting_code !== "") {
       obj.meeting_code = message.meeting_code;
@@ -15420,9 +14606,6 @@ export const ChannelDescription = {
     if (message.last_pin_message !== "") {
       obj.last_pin_message = message.last_pin_message;
     }
-    if (message.usernames?.length) {
-      obj.usernames = message.usernames;
-    }
     if (message.creator_name !== "") {
       obj.creator_name = message.creator_name;
     }
@@ -15431,12 +14614,6 @@ export const ChannelDescription = {
     }
     if (message.update_time_seconds !== 0) {
       obj.update_time_seconds = Math.round(message.update_time_seconds);
-    }
-    if (message.metadata?.length) {
-      obj.metadata = message.metadata;
-    }
-    if (message.about_me?.length) {
-      obj.about_me = message.about_me;
     }
     if (message.clan_name !== "") {
       obj.clan_name = message.clan_name;
@@ -15450,14 +14627,29 @@ export const ChannelDescription = {
     if (message.age_restricted !== 0) {
       obj.age_restricted = Math.round(message.age_restricted);
     }
-    if (message.topic !== "") {
-      obj.topic = message.topic;
+    if (message.channel_avatar !== "") {
+      obj.channel_avatar = message.channel_avatar;
     }
     if (message.e2ee !== 0) {
       obj.e2ee = Math.round(message.e2ee);
     }
+    if (message.topic !== "") {
+      obj.topic = message.topic;
+    }
+    if (message.user_ids?.length) {
+      obj.user_ids = message.user_ids;
+    }
+    if (message.usernames?.length) {
+      obj.usernames = message.usernames;
+    }
     if (message.display_names?.length) {
       obj.display_names = message.display_names;
+    }
+    if (message.onlines?.length) {
+      obj.onlines = message.onlines;
+    }
+    if (message.avatars?.length) {
+      obj.avatars = message.avatars;
     }
     return obj;
   },
@@ -15476,32 +14668,31 @@ export const ChannelDescription = {
     message.creator_id = object.creator_id ?? "";
     message.channel_label = object.channel_label ?? "";
     message.channel_private = object.channel_private ?? 0;
-    message.channel_avatar = object.channel_avatar?.map((e) => e) || [];
-    message.user_id = object.user_id?.map((e) => e) || [];
     message.last_sent_message = (object.last_sent_message !== undefined && object.last_sent_message !== null)
       ? ChannelMessageHeader.fromPartial(object.last_sent_message)
       : undefined;
     message.last_seen_message = (object.last_seen_message !== undefined && object.last_seen_message !== null)
       ? ChannelMessageHeader.fromPartial(object.last_seen_message)
       : undefined;
-    message.is_online = object.is_online?.map((e) => e) || [];
     message.meeting_code = object.meeting_code ?? "";
     message.count_mess_unread = object.count_mess_unread ?? 0;
     message.active = object.active ?? 0;
     message.last_pin_message = object.last_pin_message ?? "";
-    message.usernames = object.usernames?.map((e) => e) || [];
     message.creator_name = object.creator_name ?? "";
     message.create_time_seconds = object.create_time_seconds ?? 0;
     message.update_time_seconds = object.update_time_seconds ?? 0;
-    message.metadata = object.metadata?.map((e) => e) || [];
-    message.about_me = object.about_me?.map((e) => e) || [];
     message.clan_name = object.clan_name ?? "";
     message.app_id = object.app_id ?? "";
     message.is_mute = object.is_mute ?? false;
     message.age_restricted = object.age_restricted ?? 0;
-    message.topic = object.topic ?? "";
+    message.channel_avatar = object.channel_avatar ?? "";
     message.e2ee = object.e2ee ?? 0;
+    message.topic = object.topic ?? "";
+    message.user_ids = object.user_ids?.map((e) => e) || [];
+    message.usernames = object.usernames?.map((e) => e) || [];
     message.display_names = object.display_names?.map((e) => e) || [];
+    message.onlines = object.onlines?.map((e) => e) || [];
+    message.avatars = object.avatars?.map((e) => e) || [];
     return message;
   },
 };
