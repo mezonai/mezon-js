@@ -1093,8 +1093,10 @@ export interface User {
   location: string;
   /** The timezone set by the user. */
   timezone: string;
-  /** Additional information stored as a JSON object. */
+  /** custom status */
   user_status: string;
+  /** online, offline, invisible, idle, do not disturb */
+  status: string;
   /** Indicates whether the user is currently online. */
   online: boolean;
   /** The phone number */
@@ -1664,6 +1666,8 @@ export interface UpdateChannelDescRequest {
   age_restricted: number;
   /**  */
   e2ee: number;
+  /** channel avatar */
+  channel_avatar: string;
 }
 
 /** Update fields in a given channel. */
@@ -10667,6 +10671,7 @@ function createBaseUser(): User {
     location: "",
     timezone: "",
     user_status: "",
+    status: "",
     online: false,
     phone_number: "",
     edge_count: 0,
@@ -10707,38 +10712,41 @@ export const User = {
     if (message.user_status !== "") {
       writer.uint32(66).string(message.user_status);
     }
+    if (message.status !== "") {
+      writer.uint32(74).string(message.status);
+    }
     if (message.online !== false) {
-      writer.uint32(72).bool(message.online);
+      writer.uint32(80).bool(message.online);
     }
     if (message.phone_number !== "") {
-      writer.uint32(82).string(message.phone_number);
+      writer.uint32(90).string(message.phone_number);
     }
     if (message.edge_count !== 0) {
-      writer.uint32(88).int32(message.edge_count);
+      writer.uint32(96).int32(message.edge_count);
     }
     if (message.create_time !== undefined) {
-      Timestamp.encode(toTimestamp(message.create_time), writer.uint32(98).fork()).ldelim();
+      Timestamp.encode(toTimestamp(message.create_time), writer.uint32(106).fork()).ldelim();
     }
     if (message.update_time !== undefined) {
-      Timestamp.encode(toTimestamp(message.update_time), writer.uint32(106).fork()).ldelim();
+      Timestamp.encode(toTimestamp(message.update_time), writer.uint32(114).fork()).ldelim();
     }
     if (message.about_me !== "") {
-      writer.uint32(114).string(message.about_me);
+      writer.uint32(122).string(message.about_me);
     }
     if (message.join_time !== undefined) {
-      Timestamp.encode(toTimestamp(message.join_time), writer.uint32(122).fork()).ldelim();
+      Timestamp.encode(toTimestamp(message.join_time), writer.uint32(130).fork()).ldelim();
     }
     if (message.is_mobile !== false) {
-      writer.uint32(128).bool(message.is_mobile);
+      writer.uint32(136).bool(message.is_mobile);
     }
     if (message.dob !== undefined) {
-      Timestamp.encode(toTimestamp(message.dob), writer.uint32(138).fork()).ldelim();
+      Timestamp.encode(toTimestamp(message.dob), writer.uint32(146).fork()).ldelim();
     }
     if (message.mezon_id !== "") {
-      writer.uint32(146).string(message.mezon_id);
+      writer.uint32(154).string(message.mezon_id);
     }
     for (const v of message.list_nick_names) {
-      writer.uint32(154).string(v!);
+      writer.uint32(162).string(v!);
     }
     return writer;
   },
@@ -10807,77 +10815,84 @@ export const User = {
           message.user_status = reader.string();
           continue;
         case 9:
-          if (tag !== 72) {
+          if (tag !== 74) {
+            break;
+          }
+
+          message.status = reader.string();
+          continue;
+        case 10:
+          if (tag !== 80) {
             break;
           }
 
           message.online = reader.bool();
           continue;
-        case 10:
-          if (tag !== 82) {
+        case 11:
+          if (tag !== 90) {
             break;
           }
 
           message.phone_number = reader.string();
           continue;
-        case 11:
-          if (tag !== 88) {
+        case 12:
+          if (tag !== 96) {
             break;
           }
 
           message.edge_count = reader.int32();
-          continue;
-        case 12:
-          if (tag !== 98) {
-            break;
-          }
-
-          message.create_time = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
           continue;
         case 13:
           if (tag !== 106) {
             break;
           }
 
-          message.update_time = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
+          message.create_time = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
           continue;
         case 14:
           if (tag !== 114) {
             break;
           }
 
-          message.about_me = reader.string();
+          message.update_time = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
           continue;
         case 15:
           if (tag !== 122) {
             break;
           }
 
-          message.join_time = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
+          message.about_me = reader.string();
           continue;
         case 16:
-          if (tag !== 128) {
+          if (tag !== 130) {
+            break;
+          }
+
+          message.join_time = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
+          continue;
+        case 17:
+          if (tag !== 136) {
             break;
           }
 
           message.is_mobile = reader.bool();
-          continue;
-        case 17:
-          if (tag !== 138) {
-            break;
-          }
-
-          message.dob = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
           continue;
         case 18:
           if (tag !== 146) {
             break;
           }
 
-          message.mezon_id = reader.string();
+          message.dob = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
           continue;
         case 19:
           if (tag !== 154) {
+            break;
+          }
+
+          message.mezon_id = reader.string();
+          continue;
+        case 20:
+          if (tag !== 162) {
             break;
           }
 
@@ -10902,6 +10917,7 @@ export const User = {
       location: isSet(object.location) ? globalThis.String(object.location) : "",
       timezone: isSet(object.timezone) ? globalThis.String(object.timezone) : "",
       user_status: isSet(object.user_status) ? globalThis.String(object.user_status) : "",
+      status: isSet(object.status) ? globalThis.String(object.status) : "",
       online: isSet(object.online) ? globalThis.Boolean(object.online) : false,
       phone_number: isSet(object.phone_number) ? globalThis.String(object.phone_number) : "",
       edge_count: isSet(object.edge_count) ? globalThis.Number(object.edge_count) : 0,
@@ -10943,6 +10959,9 @@ export const User = {
     }
     if (message.user_status !== "") {
       obj.user_status = message.user_status;
+    }
+    if (message.status !== "") {
+      obj.status = message.status;
     }
     if (message.online !== false) {
       obj.online = message.online;
@@ -10993,6 +11012,7 @@ export const User = {
     message.location = object.location ?? "";
     message.timezone = object.timezone ?? "";
     message.user_status = object.user_status ?? "";
+    message.status = object.status ?? "";
     message.online = object.online ?? false;
     message.phone_number = object.phone_number ?? "";
     message.edge_count = object.edge_count ?? 0;
@@ -15475,6 +15495,7 @@ function createBaseUpdateChannelDescRequest(): UpdateChannelDescRequest {
     topic: "",
     age_restricted: 0,
     e2ee: 0,
+    channel_avatar: "",
   };
 }
 
@@ -15503,6 +15524,9 @@ export const UpdateChannelDescRequest = {
     }
     if (message.e2ee !== 0) {
       writer.uint32(64).int32(message.e2ee);
+    }
+    if (message.channel_avatar !== "") {
+      writer.uint32(74).string(message.channel_avatar);
     }
     return writer;
   },
@@ -15570,6 +15594,13 @@ export const UpdateChannelDescRequest = {
 
           message.e2ee = reader.int32();
           continue;
+        case 9:
+          if (tag !== 74) {
+            break;
+          }
+
+          message.channel_avatar = reader.string();
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -15589,6 +15620,7 @@ export const UpdateChannelDescRequest = {
       topic: isSet(object.topic) ? globalThis.String(object.topic) : "",
       age_restricted: isSet(object.age_restricted) ? globalThis.Number(object.age_restricted) : 0,
       e2ee: isSet(object.e2ee) ? globalThis.Number(object.e2ee) : 0,
+      channel_avatar: isSet(object.channel_avatar) ? globalThis.String(object.channel_avatar) : "",
     };
   },
 
@@ -15618,6 +15650,9 @@ export const UpdateChannelDescRequest = {
     if (message.e2ee !== 0) {
       obj.e2ee = Math.round(message.e2ee);
     }
+    if (message.channel_avatar !== "") {
+      obj.channel_avatar = message.channel_avatar;
+    }
     return obj;
   },
 
@@ -15634,6 +15669,7 @@ export const UpdateChannelDescRequest = {
     message.topic = object.topic ?? "";
     message.age_restricted = object.age_restricted ?? 0;
     message.e2ee = object.e2ee ?? 0;
+    message.channel_avatar = object.channel_avatar ?? "";
     return message;
   },
 };

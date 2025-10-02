@@ -2691,7 +2691,9 @@ export interface ApiUser {
   //The location set by the user.
   location?: string;
   //Additional information stored as a JSON object.
-  metadata?: string;
+  user_status?: string;
+  // online, offline, invisible, idle, do not disturb
+  status?: string;
   //Indicates whether the user is currently online.
   online?: boolean;
   //The timezone set by the user.

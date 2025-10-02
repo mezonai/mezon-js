@@ -1002,6 +1002,8 @@ export interface MessageTypingEvent {
   sender_username: string;
   /** sender display name */
   sender_display_name: string;
+  /** topic id */
+  topic_id: string;
 }
 
 /** Voice Joined event */
@@ -1457,6 +1459,8 @@ export interface UserProfileRedis {
   about_me: string;
   /** user status */
   user_status: string;
+  /** status online, offline, invisible, idle, do not disturb */
+  status: string;
   /** create time */
   create_time_second: number;
   /** FCM token */
@@ -7823,6 +7827,7 @@ function createBaseMessageTypingEvent(): MessageTypingEvent {
     is_public: false,
     sender_username: "",
     sender_display_name: "",
+    topic_id: "",
   };
 }
 
@@ -7848,6 +7853,9 @@ export const MessageTypingEvent = {
     }
     if (message.sender_display_name !== "") {
       writer.uint32(58).string(message.sender_display_name);
+    }
+    if (message.topic_id !== "") {
+      writer.uint32(66).string(message.topic_id);
     }
     return writer;
   },
@@ -7908,6 +7916,13 @@ export const MessageTypingEvent = {
 
           message.sender_display_name = reader.string();
           continue;
+        case 8:
+          if (tag !== 66) {
+            break;
+          }
+
+          message.topic_id = reader.string();
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -7926,6 +7941,7 @@ export const MessageTypingEvent = {
       is_public: isSet(object.is_public) ? globalThis.Boolean(object.is_public) : false,
       sender_username: isSet(object.sender_username) ? globalThis.String(object.sender_username) : "",
       sender_display_name: isSet(object.sender_display_name) ? globalThis.String(object.sender_display_name) : "",
+      topic_id: isSet(object.topic_id) ? globalThis.String(object.topic_id) : "",
     };
   },
 
@@ -7952,6 +7968,9 @@ export const MessageTypingEvent = {
     if (message.sender_display_name !== "") {
       obj.sender_display_name = message.sender_display_name;
     }
+    if (message.topic_id !== "") {
+      obj.topic_id = message.topic_id;
+    }
     return obj;
   },
 
@@ -7967,6 +7986,7 @@ export const MessageTypingEvent = {
     message.is_public = object.is_public ?? false;
     message.sender_username = object.sender_username ?? "";
     message.sender_display_name = object.sender_display_name ?? "";
+    message.topic_id = object.topic_id ?? "";
     return message;
   },
 };
@@ -11834,6 +11854,7 @@ function createBaseUserProfileRedis(): UserProfileRedis {
     display_name: "",
     about_me: "",
     user_status: "",
+    status: "",
     create_time_second: 0,
     fcm_tokens: [],
     online: false,
@@ -11868,38 +11889,41 @@ export const UserProfileRedis = {
     if (message.user_status !== "") {
       writer.uint32(50).string(message.user_status);
     }
+    if (message.status !== "") {
+      writer.uint32(58).string(message.status);
+    }
     if (message.create_time_second !== 0) {
-      writer.uint32(56).uint32(message.create_time_second);
+      writer.uint32(64).uint32(message.create_time_second);
     }
     for (const v of message.fcm_tokens) {
-      FCMTokens.encode(v!, writer.uint32(66).fork()).ldelim();
+      FCMTokens.encode(v!, writer.uint32(74).fork()).ldelim();
     }
     if (message.online !== false) {
-      writer.uint32(72).bool(message.online);
+      writer.uint32(80).bool(message.online);
     }
     if (message.is_disabled !== false) {
-      writer.uint32(80).bool(message.is_disabled);
+      writer.uint32(88).bool(message.is_disabled);
     }
     for (const v of message.joined_clans) {
-      writer.uint32(90).string(v!);
+      writer.uint32(98).string(v!);
     }
     if (message.pubkey !== "") {
-      writer.uint32(98).string(message.pubkey);
+      writer.uint32(106).string(message.pubkey);
     }
     if (message.mezon_id !== "") {
-      writer.uint32(106).string(message.mezon_id);
+      writer.uint32(114).string(message.mezon_id);
     }
     if (message.app_token !== "") {
-      writer.uint32(114).string(message.app_token);
+      writer.uint32(122).string(message.app_token);
     }
     if (message.app_url !== "") {
-      writer.uint32(122).string(message.app_url);
+      writer.uint32(130).string(message.app_url);
     }
     if (message.is_bot !== false) {
-      writer.uint32(128).bool(message.is_bot);
+      writer.uint32(136).bool(message.is_bot);
     }
     if (message.voip_token !== "") {
-      writer.uint32(138).string(message.voip_token);
+      writer.uint32(146).string(message.voip_token);
     }
     return writer;
   },
@@ -11954,77 +11978,84 @@ export const UserProfileRedis = {
           message.user_status = reader.string();
           continue;
         case 7:
-          if (tag !== 56) {
+          if (tag !== 58) {
+            break;
+          }
+
+          message.status = reader.string();
+          continue;
+        case 8:
+          if (tag !== 64) {
             break;
           }
 
           message.create_time_second = reader.uint32();
           continue;
-        case 8:
-          if (tag !== 66) {
+        case 9:
+          if (tag !== 74) {
             break;
           }
 
           message.fcm_tokens.push(FCMTokens.decode(reader, reader.uint32()));
-          continue;
-        case 9:
-          if (tag !== 72) {
-            break;
-          }
-
-          message.online = reader.bool();
           continue;
         case 10:
           if (tag !== 80) {
             break;
           }
 
-          message.is_disabled = reader.bool();
+          message.online = reader.bool();
           continue;
         case 11:
-          if (tag !== 90) {
+          if (tag !== 88) {
             break;
           }
 
-          message.joined_clans.push(reader.string());
+          message.is_disabled = reader.bool();
           continue;
         case 12:
           if (tag !== 98) {
             break;
           }
 
-          message.pubkey = reader.string();
+          message.joined_clans.push(reader.string());
           continue;
         case 13:
           if (tag !== 106) {
             break;
           }
 
-          message.mezon_id = reader.string();
+          message.pubkey = reader.string();
           continue;
         case 14:
           if (tag !== 114) {
             break;
           }
 
-          message.app_token = reader.string();
+          message.mezon_id = reader.string();
           continue;
         case 15:
           if (tag !== 122) {
             break;
           }
 
-          message.app_url = reader.string();
+          message.app_token = reader.string();
           continue;
         case 16:
-          if (tag !== 128) {
+          if (tag !== 130) {
+            break;
+          }
+
+          message.app_url = reader.string();
+          continue;
+        case 17:
+          if (tag !== 136) {
             break;
           }
 
           message.is_bot = reader.bool();
           continue;
-        case 17:
-          if (tag !== 138) {
+        case 18:
+          if (tag !== 146) {
             break;
           }
 
@@ -12047,6 +12078,7 @@ export const UserProfileRedis = {
       display_name: isSet(object.display_name) ? globalThis.String(object.display_name) : "",
       about_me: isSet(object.about_me) ? globalThis.String(object.about_me) : "",
       user_status: isSet(object.user_status) ? globalThis.String(object.user_status) : "",
+      status: isSet(object.status) ? globalThis.String(object.status) : "",
       create_time_second: isSet(object.create_time_second) ? globalThis.Number(object.create_time_second) : 0,
       fcm_tokens: globalThis.Array.isArray(object?.fcm_tokens)
         ? object.fcm_tokens.map((e: any) => FCMTokens.fromJSON(e))
@@ -12084,6 +12116,9 @@ export const UserProfileRedis = {
     }
     if (message.user_status !== "") {
       obj.user_status = message.user_status;
+    }
+    if (message.status !== "") {
+      obj.status = message.status;
     }
     if (message.create_time_second !== 0) {
       obj.create_time_second = Math.round(message.create_time_second);
@@ -12132,6 +12167,7 @@ export const UserProfileRedis = {
     message.display_name = object.display_name ?? "";
     message.about_me = object.about_me ?? "";
     message.user_status = object.user_status ?? "";
+    message.status = object.status ?? "";
     message.create_time_second = object.create_time_second ?? 0;
     message.fcm_tokens = object.fcm_tokens?.map((e) => FCMTokens.fromPartial(e)) || [];
     message.online = object.online ?? false;

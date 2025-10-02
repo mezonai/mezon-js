@@ -473,6 +473,8 @@ export interface ApiUpdateChannelDescRequest {
   topic?: string;
   //
   age_restricted?: number;
+  //
+  channel_avatar?: string;
 }
 
 /** Add users to a channel. */
@@ -1535,8 +1537,8 @@ export class Client {
               timezone: gu.user!.timezone,
               update_time: gu.user!.update_time,
               username: gu.user!.username,
-              metadata: gu.user!.metadata
-                ? safeJSONParse(gu.user!.metadata!)
+              user_status: gu.user!.user_status
+                ? safeJSONParse(gu.user!.user_status!)
                 : undefined,
             },
             role_id: gu!.role_id,
@@ -1907,8 +1909,8 @@ export class Client {
               update_time: f.user!.update_time,
               username: f.user!.username,
               is_mobile: f.user?.is_mobile,
-              metadata: f.user!.metadata
-                ? safeJSONParse(f.user!.metadata!)
+              metadata: f.user!.user_status
+                ? safeJSONParse(f.user!.user_status!)
                 : undefined,
             },
             state: f.state,
