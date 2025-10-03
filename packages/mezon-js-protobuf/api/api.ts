@@ -1095,8 +1095,6 @@ export interface User {
   timezone: string;
   /** custom status */
   user_status: string;
-  /** online, offline, invisible, idle, do not disturb */
-  status: string;
   /** Indicates whether the user is currently online. */
   online: boolean;
   /** The phone number */
@@ -1127,6 +1125,8 @@ export interface User {
   mezon_id: string;
   /** list clan nick name */
   list_nick_names: string[];
+  /** online, offline, invisible, idle, do not disturb */
+  status: string;
 }
 
 /** A collection of zero or more users. */
@@ -1499,6 +1499,10 @@ export interface ChannelDescription {
   channel_label: string;
   /** The channel private */
   channel_private: number;
+  /** DM avatars */
+  avatars: string[];
+  /** List DM user ids */
+  user_ids: string[];
   /** last message id */
   last_sent_message:
     | ChannelMessageHeader
@@ -1507,6 +1511,8 @@ export interface ChannelDescription {
   last_seen_message:
     | ChannelMessageHeader
     | undefined;
+  /** DM status */
+  onlines: boolean[];
   /** meeting code */
   meeting_code: string;
   /** count message unread */
@@ -1515,36 +1521,30 @@ export interface ChannelDescription {
   active: number;
   /** last pin message */
   last_pin_message: string;
+  /** List DM usernames */
+  usernames: string[];
   /** creator name */
   creator_name: string;
   /** create time ms */
   create_time_seconds: number;
   /** update time ms */
   update_time_seconds: number;
+  /** List DM diplay names */
+  display_names: string[];
+  /** channel avatar */
+  channel_avatar: string;
   /** clan_name */
   clan_name: string;
-  /** app url */
+  /** app id */
   app_id: string;
   /** channel all message */
   is_mute: boolean;
   /** age restricted */
   age_restricted: number;
-  /** channel avatar */
-  channel_avatar: string;
-  /** e2ee */
-  e2ee: number;
   /** channel description topic */
   topic: string;
-  /** List DM user ids */
-  user_ids: string[];
-  /** List DM usernames */
-  usernames: string[];
-  /** List DM diplay names */
-  display_names: string[];
-  /** DM status */
-  onlines: boolean[];
-  /** DM avatars */
-  avatars: string[];
+  /** e2ee */
+  e2ee: number;
 }
 
 /** A list of channel description, usually a result of a list operation. */
@@ -10671,7 +10671,6 @@ function createBaseUser(): User {
     location: "",
     timezone: "",
     user_status: "",
-    status: "",
     online: false,
     phone_number: "",
     edge_count: 0,
@@ -10683,6 +10682,7 @@ function createBaseUser(): User {
     dob: undefined,
     mezon_id: "",
     list_nick_names: [],
+    status: "",
   };
 }
 
@@ -10712,41 +10712,41 @@ export const User = {
     if (message.user_status !== "") {
       writer.uint32(66).string(message.user_status);
     }
-    if (message.status !== "") {
-      writer.uint32(74).string(message.status);
-    }
     if (message.online !== false) {
-      writer.uint32(80).bool(message.online);
+      writer.uint32(72).bool(message.online);
     }
     if (message.phone_number !== "") {
-      writer.uint32(90).string(message.phone_number);
+      writer.uint32(82).string(message.phone_number);
     }
     if (message.edge_count !== 0) {
-      writer.uint32(96).int32(message.edge_count);
+      writer.uint32(88).int32(message.edge_count);
     }
     if (message.create_time !== undefined) {
-      Timestamp.encode(toTimestamp(message.create_time), writer.uint32(106).fork()).ldelim();
+      Timestamp.encode(toTimestamp(message.create_time), writer.uint32(98).fork()).ldelim();
     }
     if (message.update_time !== undefined) {
-      Timestamp.encode(toTimestamp(message.update_time), writer.uint32(114).fork()).ldelim();
+      Timestamp.encode(toTimestamp(message.update_time), writer.uint32(106).fork()).ldelim();
     }
     if (message.about_me !== "") {
-      writer.uint32(122).string(message.about_me);
+      writer.uint32(114).string(message.about_me);
     }
     if (message.join_time !== undefined) {
-      Timestamp.encode(toTimestamp(message.join_time), writer.uint32(130).fork()).ldelim();
+      Timestamp.encode(toTimestamp(message.join_time), writer.uint32(122).fork()).ldelim();
     }
     if (message.is_mobile !== false) {
-      writer.uint32(136).bool(message.is_mobile);
+      writer.uint32(128).bool(message.is_mobile);
     }
     if (message.dob !== undefined) {
-      Timestamp.encode(toTimestamp(message.dob), writer.uint32(146).fork()).ldelim();
+      Timestamp.encode(toTimestamp(message.dob), writer.uint32(138).fork()).ldelim();
     }
     if (message.mezon_id !== "") {
-      writer.uint32(154).string(message.mezon_id);
+      writer.uint32(146).string(message.mezon_id);
     }
     for (const v of message.list_nick_names) {
-      writer.uint32(162).string(v!);
+      writer.uint32(154).string(v!);
+    }
+    if (message.status !== "") {
+      writer.uint32(162).string(message.status);
     }
     return writer;
   },
@@ -10815,88 +10815,88 @@ export const User = {
           message.user_status = reader.string();
           continue;
         case 9:
-          if (tag !== 74) {
-            break;
-          }
-
-          message.status = reader.string();
-          continue;
-        case 10:
-          if (tag !== 80) {
+          if (tag !== 72) {
             break;
           }
 
           message.online = reader.bool();
           continue;
-        case 11:
-          if (tag !== 90) {
+        case 10:
+          if (tag !== 82) {
             break;
           }
 
           message.phone_number = reader.string();
           continue;
-        case 12:
-          if (tag !== 96) {
+        case 11:
+          if (tag !== 88) {
             break;
           }
 
           message.edge_count = reader.int32();
+          continue;
+        case 12:
+          if (tag !== 98) {
+            break;
+          }
+
+          message.create_time = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
           continue;
         case 13:
           if (tag !== 106) {
             break;
           }
 
-          message.create_time = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
+          message.update_time = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
           continue;
         case 14:
           if (tag !== 114) {
             break;
           }
 
-          message.update_time = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
+          message.about_me = reader.string();
           continue;
         case 15:
           if (tag !== 122) {
             break;
           }
 
-          message.about_me = reader.string();
-          continue;
-        case 16:
-          if (tag !== 130) {
-            break;
-          }
-
           message.join_time = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
           continue;
-        case 17:
-          if (tag !== 136) {
+        case 16:
+          if (tag !== 128) {
             break;
           }
 
           message.is_mobile = reader.bool();
+          continue;
+        case 17:
+          if (tag !== 138) {
+            break;
+          }
+
+          message.dob = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
           continue;
         case 18:
           if (tag !== 146) {
             break;
           }
 
-          message.dob = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
+          message.mezon_id = reader.string();
           continue;
         case 19:
           if (tag !== 154) {
             break;
           }
 
-          message.mezon_id = reader.string();
+          message.list_nick_names.push(reader.string());
           continue;
         case 20:
           if (tag !== 162) {
             break;
           }
 
-          message.list_nick_names.push(reader.string());
+          message.status = reader.string();
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -10917,7 +10917,6 @@ export const User = {
       location: isSet(object.location) ? globalThis.String(object.location) : "",
       timezone: isSet(object.timezone) ? globalThis.String(object.timezone) : "",
       user_status: isSet(object.user_status) ? globalThis.String(object.user_status) : "",
-      status: isSet(object.status) ? globalThis.String(object.status) : "",
       online: isSet(object.online) ? globalThis.Boolean(object.online) : false,
       phone_number: isSet(object.phone_number) ? globalThis.String(object.phone_number) : "",
       edge_count: isSet(object.edge_count) ? globalThis.Number(object.edge_count) : 0,
@@ -10931,6 +10930,7 @@ export const User = {
       list_nick_names: globalThis.Array.isArray(object?.list_nick_names)
         ? object.list_nick_names.map((e: any) => globalThis.String(e))
         : [],
+      status: isSet(object.status) ? globalThis.String(object.status) : "",
     };
   },
 
@@ -10959,9 +10959,6 @@ export const User = {
     }
     if (message.user_status !== "") {
       obj.user_status = message.user_status;
-    }
-    if (message.status !== "") {
-      obj.status = message.status;
     }
     if (message.online !== false) {
       obj.online = message.online;
@@ -10996,6 +10993,9 @@ export const User = {
     if (message.list_nick_names?.length) {
       obj.list_nick_names = message.list_nick_names;
     }
+    if (message.status !== "") {
+      obj.status = message.status;
+    }
     return obj;
   },
 
@@ -11012,7 +11012,6 @@ export const User = {
     message.location = object.location ?? "";
     message.timezone = object.timezone ?? "";
     message.user_status = object.user_status ?? "";
-    message.status = object.status ?? "";
     message.online = object.online ?? false;
     message.phone_number = object.phone_number ?? "";
     message.edge_count = object.edge_count ?? 0;
@@ -11024,6 +11023,7 @@ export const User = {
     message.dob = object.dob ?? undefined;
     message.mezon_id = object.mezon_id ?? "";
     message.list_nick_names = object.list_nick_names?.map((e) => e) || [];
+    message.status = object.status ?? "";
     return message;
   },
 };
@@ -14177,27 +14177,27 @@ function createBaseChannelDescription(): ChannelDescription {
     creator_id: "",
     channel_label: "",
     channel_private: 0,
+    avatars: [],
+    user_ids: [],
     last_sent_message: undefined,
     last_seen_message: undefined,
+    onlines: [],
     meeting_code: "",
     count_mess_unread: 0,
     active: 0,
     last_pin_message: "",
+    usernames: [],
     creator_name: "",
     create_time_seconds: 0,
     update_time_seconds: 0,
+    display_names: [],
+    channel_avatar: "",
     clan_name: "",
     app_id: "",
     is_mute: false,
     age_restricted: 0,
-    channel_avatar: "",
-    e2ee: 0,
     topic: "",
-    user_ids: [],
-    usernames: [],
-    display_names: [],
-    onlines: [],
-    avatars: [],
+    e2ee: 0,
   };
 }
 
@@ -14230,70 +14230,70 @@ export const ChannelDescription = {
     if (message.channel_private !== 0) {
       writer.uint32(72).int32(message.channel_private);
     }
-    if (message.last_sent_message !== undefined) {
-      ChannelMessageHeader.encode(message.last_sent_message, writer.uint32(82).fork()).ldelim();
-    }
-    if (message.last_seen_message !== undefined) {
-      ChannelMessageHeader.encode(message.last_seen_message, writer.uint32(90).fork()).ldelim();
-    }
-    if (message.meeting_code !== "") {
-      writer.uint32(98).string(message.meeting_code);
-    }
-    if (message.count_mess_unread !== 0) {
-      writer.uint32(104).int32(message.count_mess_unread);
-    }
-    if (message.active !== 0) {
-      writer.uint32(112).int32(message.active);
-    }
-    if (message.last_pin_message !== "") {
-      writer.uint32(122).string(message.last_pin_message);
-    }
-    if (message.creator_name !== "") {
-      writer.uint32(130).string(message.creator_name);
-    }
-    if (message.create_time_seconds !== 0) {
-      writer.uint32(136).uint32(message.create_time_seconds);
-    }
-    if (message.update_time_seconds !== 0) {
-      writer.uint32(144).uint32(message.update_time_seconds);
-    }
-    if (message.clan_name !== "") {
-      writer.uint32(154).string(message.clan_name);
-    }
-    if (message.app_id !== "") {
-      writer.uint32(162).string(message.app_id);
-    }
-    if (message.is_mute !== false) {
-      writer.uint32(168).bool(message.is_mute);
-    }
-    if (message.age_restricted !== 0) {
-      writer.uint32(176).int32(message.age_restricted);
-    }
-    if (message.channel_avatar !== "") {
-      writer.uint32(186).string(message.channel_avatar);
-    }
-    if (message.e2ee !== 0) {
-      writer.uint32(192).int32(message.e2ee);
-    }
-    if (message.topic !== "") {
-      writer.uint32(202).string(message.topic);
+    for (const v of message.avatars) {
+      writer.uint32(82).string(v!);
     }
     for (const v of message.user_ids) {
-      writer.uint32(210).string(v!);
+      writer.uint32(90).string(v!);
     }
-    for (const v of message.usernames) {
-      writer.uint32(218).string(v!);
+    if (message.last_sent_message !== undefined) {
+      ChannelMessageHeader.encode(message.last_sent_message, writer.uint32(98).fork()).ldelim();
     }
-    for (const v of message.display_names) {
-      writer.uint32(226).string(v!);
+    if (message.last_seen_message !== undefined) {
+      ChannelMessageHeader.encode(message.last_seen_message, writer.uint32(106).fork()).ldelim();
     }
-    writer.uint32(234).fork();
+    writer.uint32(114).fork();
     for (const v of message.onlines) {
       writer.bool(v);
     }
     writer.ldelim();
-    for (const v of message.avatars) {
-      writer.uint32(242).string(v!);
+    if (message.meeting_code !== "") {
+      writer.uint32(122).string(message.meeting_code);
+    }
+    if (message.count_mess_unread !== 0) {
+      writer.uint32(128).int32(message.count_mess_unread);
+    }
+    if (message.active !== 0) {
+      writer.uint32(136).int32(message.active);
+    }
+    if (message.last_pin_message !== "") {
+      writer.uint32(146).string(message.last_pin_message);
+    }
+    for (const v of message.usernames) {
+      writer.uint32(154).string(v!);
+    }
+    if (message.creator_name !== "") {
+      writer.uint32(162).string(message.creator_name);
+    }
+    if (message.create_time_seconds !== 0) {
+      writer.uint32(168).uint32(message.create_time_seconds);
+    }
+    if (message.update_time_seconds !== 0) {
+      writer.uint32(176).uint32(message.update_time_seconds);
+    }
+    for (const v of message.display_names) {
+      writer.uint32(186).string(v!);
+    }
+    if (message.channel_avatar !== "") {
+      writer.uint32(194).string(message.channel_avatar);
+    }
+    if (message.clan_name !== "") {
+      writer.uint32(202).string(message.clan_name);
+    }
+    if (message.app_id !== "") {
+      writer.uint32(210).string(message.app_id);
+    }
+    if (message.is_mute !== false) {
+      writer.uint32(216).bool(message.is_mute);
+    }
+    if (message.age_restricted !== 0) {
+      writer.uint32(224).int32(message.age_restricted);
+    }
+    if (message.topic !== "") {
+      writer.uint32(234).string(message.topic);
+    }
+    if (message.e2ee !== 0) {
+      writer.uint32(240).int32(message.e2ee);
     }
     return writer;
   },
@@ -14373,142 +14373,37 @@ export const ChannelDescription = {
             break;
           }
 
-          message.last_sent_message = ChannelMessageHeader.decode(reader, reader.uint32());
+          message.avatars.push(reader.string());
           continue;
         case 11:
           if (tag !== 90) {
             break;
           }
 
-          message.last_seen_message = ChannelMessageHeader.decode(reader, reader.uint32());
+          message.user_ids.push(reader.string());
           continue;
         case 12:
           if (tag !== 98) {
             break;
           }
 
-          message.meeting_code = reader.string();
+          message.last_sent_message = ChannelMessageHeader.decode(reader, reader.uint32());
           continue;
         case 13:
-          if (tag !== 104) {
+          if (tag !== 106) {
             break;
           }
 
-          message.count_mess_unread = reader.int32();
+          message.last_seen_message = ChannelMessageHeader.decode(reader, reader.uint32());
           continue;
         case 14:
-          if (tag !== 112) {
-            break;
-          }
-
-          message.active = reader.int32();
-          continue;
-        case 15:
-          if (tag !== 122) {
-            break;
-          }
-
-          message.last_pin_message = reader.string();
-          continue;
-        case 16:
-          if (tag !== 130) {
-            break;
-          }
-
-          message.creator_name = reader.string();
-          continue;
-        case 17:
-          if (tag !== 136) {
-            break;
-          }
-
-          message.create_time_seconds = reader.uint32();
-          continue;
-        case 18:
-          if (tag !== 144) {
-            break;
-          }
-
-          message.update_time_seconds = reader.uint32();
-          continue;
-        case 19:
-          if (tag !== 154) {
-            break;
-          }
-
-          message.clan_name = reader.string();
-          continue;
-        case 20:
-          if (tag !== 162) {
-            break;
-          }
-
-          message.app_id = reader.string();
-          continue;
-        case 21:
-          if (tag !== 168) {
-            break;
-          }
-
-          message.is_mute = reader.bool();
-          continue;
-        case 22:
-          if (tag !== 176) {
-            break;
-          }
-
-          message.age_restricted = reader.int32();
-          continue;
-        case 23:
-          if (tag !== 186) {
-            break;
-          }
-
-          message.channel_avatar = reader.string();
-          continue;
-        case 24:
-          if (tag !== 192) {
-            break;
-          }
-
-          message.e2ee = reader.int32();
-          continue;
-        case 25:
-          if (tag !== 202) {
-            break;
-          }
-
-          message.topic = reader.string();
-          continue;
-        case 26:
-          if (tag !== 210) {
-            break;
-          }
-
-          message.user_ids.push(reader.string());
-          continue;
-        case 27:
-          if (tag !== 218) {
-            break;
-          }
-
-          message.usernames.push(reader.string());
-          continue;
-        case 28:
-          if (tag !== 226) {
-            break;
-          }
-
-          message.display_names.push(reader.string());
-          continue;
-        case 29:
-          if (tag === 232) {
+          if (tag === 112) {
             message.onlines.push(reader.bool());
 
             continue;
           }
 
-          if (tag === 234) {
+          if (tag === 114) {
             const end2 = reader.uint32() + reader.pos;
             while (reader.pos < end2) {
               message.onlines.push(reader.bool());
@@ -14518,12 +14413,117 @@ export const ChannelDescription = {
           }
 
           break;
-        case 30:
-          if (tag !== 242) {
+        case 15:
+          if (tag !== 122) {
             break;
           }
 
-          message.avatars.push(reader.string());
+          message.meeting_code = reader.string();
+          continue;
+        case 16:
+          if (tag !== 128) {
+            break;
+          }
+
+          message.count_mess_unread = reader.int32();
+          continue;
+        case 17:
+          if (tag !== 136) {
+            break;
+          }
+
+          message.active = reader.int32();
+          continue;
+        case 18:
+          if (tag !== 146) {
+            break;
+          }
+
+          message.last_pin_message = reader.string();
+          continue;
+        case 19:
+          if (tag !== 154) {
+            break;
+          }
+
+          message.usernames.push(reader.string());
+          continue;
+        case 20:
+          if (tag !== 162) {
+            break;
+          }
+
+          message.creator_name = reader.string();
+          continue;
+        case 21:
+          if (tag !== 168) {
+            break;
+          }
+
+          message.create_time_seconds = reader.uint32();
+          continue;
+        case 22:
+          if (tag !== 176) {
+            break;
+          }
+
+          message.update_time_seconds = reader.uint32();
+          continue;
+        case 23:
+          if (tag !== 186) {
+            break;
+          }
+
+          message.display_names.push(reader.string());
+          continue;
+        case 24:
+          if (tag !== 194) {
+            break;
+          }
+
+          message.channel_avatar = reader.string();
+          continue;
+        case 25:
+          if (tag !== 202) {
+            break;
+          }
+
+          message.clan_name = reader.string();
+          continue;
+        case 26:
+          if (tag !== 210) {
+            break;
+          }
+
+          message.app_id = reader.string();
+          continue;
+        case 27:
+          if (tag !== 216) {
+            break;
+          }
+
+          message.is_mute = reader.bool();
+          continue;
+        case 28:
+          if (tag !== 224) {
+            break;
+          }
+
+          message.age_restricted = reader.int32();
+          continue;
+        case 29:
+          if (tag !== 234) {
+            break;
+          }
+
+          message.topic = reader.string();
+          continue;
+        case 30:
+          if (tag !== 240) {
+            break;
+          }
+
+          message.e2ee = reader.int32();
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -14545,37 +14545,35 @@ export const ChannelDescription = {
       creator_id: isSet(object.creator_id) ? globalThis.String(object.creator_id) : "",
       channel_label: isSet(object.channel_label) ? globalThis.String(object.channel_label) : "",
       channel_private: isSet(object.channel_private) ? globalThis.Number(object.channel_private) : 0,
+      avatars: globalThis.Array.isArray(object?.avatars) ? object.avatars.map((e: any) => globalThis.String(e)) : [],
+      user_ids: globalThis.Array.isArray(object?.user_ids) ? object.user_ids.map((e: any) => globalThis.String(e)) : [],
       last_sent_message: isSet(object.last_sent_message)
         ? ChannelMessageHeader.fromJSON(object.last_sent_message)
         : undefined,
       last_seen_message: isSet(object.last_seen_message)
         ? ChannelMessageHeader.fromJSON(object.last_seen_message)
         : undefined,
+      onlines: globalThis.Array.isArray(object?.onlines) ? object.onlines.map((e: any) => globalThis.Boolean(e)) : [],
       meeting_code: isSet(object.meeting_code) ? globalThis.String(object.meeting_code) : "",
       count_mess_unread: isSet(object.count_mess_unread) ? globalThis.Number(object.count_mess_unread) : 0,
       active: isSet(object.active) ? globalThis.Number(object.active) : 0,
       last_pin_message: isSet(object.last_pin_message) ? globalThis.String(object.last_pin_message) : "",
+      usernames: globalThis.Array.isArray(object?.usernames)
+        ? object.usernames.map((e: any) => globalThis.String(e))
+        : [],
       creator_name: isSet(object.creator_name) ? globalThis.String(object.creator_name) : "",
       create_time_seconds: isSet(object.create_time_seconds) ? globalThis.Number(object.create_time_seconds) : 0,
       update_time_seconds: isSet(object.update_time_seconds) ? globalThis.Number(object.update_time_seconds) : 0,
+      display_names: globalThis.Array.isArray(object?.display_names)
+        ? object.display_names.map((e: any) => globalThis.String(e))
+        : [],
+      channel_avatar: isSet(object.channel_avatar) ? globalThis.String(object.channel_avatar) : "",
       clan_name: isSet(object.clan_name) ? globalThis.String(object.clan_name) : "",
       app_id: isSet(object.app_id) ? globalThis.String(object.app_id) : "",
       is_mute: isSet(object.is_mute) ? globalThis.Boolean(object.is_mute) : false,
       age_restricted: isSet(object.age_restricted) ? globalThis.Number(object.age_restricted) : 0,
-      channel_avatar: isSet(object.channel_avatar) ? globalThis.String(object.channel_avatar) : "",
-      e2ee: isSet(object.e2ee) ? globalThis.Number(object.e2ee) : 0,
       topic: isSet(object.topic) ? globalThis.String(object.topic) : "",
-      user_ids: globalThis.Array.isArray(object?.user_ids) ? object.user_ids.map((e: any) => globalThis.String(e)) : [],
-      usernames: globalThis.Array.isArray(object?.usernames)
-        ? object.usernames.map((e: any) => globalThis.String(e))
-        : [],
-      display_names: globalThis.Array.isArray(object?.display_names)
-        ? object.display_names.map((e: any) => globalThis.String(e))
-        : [],
-      onlines: globalThis.Array.isArray(object?.onlines)
-        ? object.onlines.map((e: any) => globalThis.Boolean(e))
-        : [],
-      avatars: globalThis.Array.isArray(object?.avatars) ? object.avatars.map((e: any) => globalThis.String(e)) : [],
+      e2ee: isSet(object.e2ee) ? globalThis.Number(object.e2ee) : 0,
     };
   },
 
@@ -14608,11 +14606,20 @@ export const ChannelDescription = {
     if (message.channel_private !== 0) {
       obj.channel_private = Math.round(message.channel_private);
     }
+    if (message.avatars?.length) {
+      obj.avatars = message.avatars;
+    }
+    if (message.user_ids?.length) {
+      obj.user_ids = message.user_ids;
+    }
     if (message.last_sent_message !== undefined) {
       obj.last_sent_message = ChannelMessageHeader.toJSON(message.last_sent_message);
     }
     if (message.last_seen_message !== undefined) {
       obj.last_seen_message = ChannelMessageHeader.toJSON(message.last_seen_message);
+    }
+    if (message.onlines?.length) {
+      obj.onlines = message.onlines;
     }
     if (message.meeting_code !== "") {
       obj.meeting_code = message.meeting_code;
@@ -14626,6 +14633,9 @@ export const ChannelDescription = {
     if (message.last_pin_message !== "") {
       obj.last_pin_message = message.last_pin_message;
     }
+    if (message.usernames?.length) {
+      obj.usernames = message.usernames;
+    }
     if (message.creator_name !== "") {
       obj.creator_name = message.creator_name;
     }
@@ -14634,6 +14644,12 @@ export const ChannelDescription = {
     }
     if (message.update_time_seconds !== 0) {
       obj.update_time_seconds = Math.round(message.update_time_seconds);
+    }
+    if (message.display_names?.length) {
+      obj.display_names = message.display_names;
+    }
+    if (message.channel_avatar !== "") {
+      obj.channel_avatar = message.channel_avatar;
     }
     if (message.clan_name !== "") {
       obj.clan_name = message.clan_name;
@@ -14647,29 +14663,11 @@ export const ChannelDescription = {
     if (message.age_restricted !== 0) {
       obj.age_restricted = Math.round(message.age_restricted);
     }
-    if (message.channel_avatar !== "") {
-      obj.channel_avatar = message.channel_avatar;
-    }
-    if (message.e2ee !== 0) {
-      obj.e2ee = Math.round(message.e2ee);
-    }
     if (message.topic !== "") {
       obj.topic = message.topic;
     }
-    if (message.user_ids?.length) {
-      obj.user_ids = message.user_ids;
-    }
-    if (message.usernames?.length) {
-      obj.usernames = message.usernames;
-    }
-    if (message.display_names?.length) {
-      obj.display_names = message.display_names;
-    }
-    if (message.onlines?.length) {
-      obj.onlines = message.onlines;
-    }
-    if (message.avatars?.length) {
-      obj.avatars = message.avatars;
+    if (message.e2ee !== 0) {
+      obj.e2ee = Math.round(message.e2ee);
     }
     return obj;
   },
@@ -14688,31 +14686,31 @@ export const ChannelDescription = {
     message.creator_id = object.creator_id ?? "";
     message.channel_label = object.channel_label ?? "";
     message.channel_private = object.channel_private ?? 0;
+    message.avatars = object.avatars?.map((e) => e) || [];
+    message.user_ids = object.user_ids?.map((e) => e) || [];
     message.last_sent_message = (object.last_sent_message !== undefined && object.last_sent_message !== null)
       ? ChannelMessageHeader.fromPartial(object.last_sent_message)
       : undefined;
     message.last_seen_message = (object.last_seen_message !== undefined && object.last_seen_message !== null)
       ? ChannelMessageHeader.fromPartial(object.last_seen_message)
       : undefined;
+    message.onlines = object.onlines?.map((e) => e) || [];
     message.meeting_code = object.meeting_code ?? "";
     message.count_mess_unread = object.count_mess_unread ?? 0;
     message.active = object.active ?? 0;
     message.last_pin_message = object.last_pin_message ?? "";
+    message.usernames = object.usernames?.map((e) => e) || [];
     message.creator_name = object.creator_name ?? "";
     message.create_time_seconds = object.create_time_seconds ?? 0;
     message.update_time_seconds = object.update_time_seconds ?? 0;
+    message.display_names = object.display_names?.map((e) => e) || [];
+    message.channel_avatar = object.channel_avatar ?? "";
     message.clan_name = object.clan_name ?? "";
     message.app_id = object.app_id ?? "";
     message.is_mute = object.is_mute ?? false;
     message.age_restricted = object.age_restricted ?? 0;
-    message.channel_avatar = object.channel_avatar ?? "";
-    message.e2ee = object.e2ee ?? 0;
     message.topic = object.topic ?? "";
-    message.user_ids = object.user_ids?.map((e) => e) || [];
-    message.usernames = object.usernames?.map((e) => e) || [];
-    message.display_names = object.display_names?.map((e) => e) || [];
-    message.onlines = object.onlines?.map((e) => e) || [];
-    message.avatars = object.avatars?.map((e) => e) || [];
+    message.e2ee = object.e2ee ?? 0;
     return message;
   },
 };
