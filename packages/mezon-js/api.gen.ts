@@ -796,6 +796,8 @@ export interface ApiChannelDescription {
   onlines?: Array<boolean>;
   // DM status
   avatars?: Array<string>;
+  // member count
+  member_count?: number;
 }
 
 /** A message sent on a channel. */

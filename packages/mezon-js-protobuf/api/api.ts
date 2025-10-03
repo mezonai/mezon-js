@@ -1545,6 +1545,8 @@ export interface ChannelDescription {
   topic: string;
   /** e2ee */
   e2ee: number;
+  /** channel member count */
+  member_count: number;
 }
 
 /** A list of channel description, usually a result of a list operation. */
@@ -14198,6 +14200,7 @@ function createBaseChannelDescription(): ChannelDescription {
     age_restricted: 0,
     topic: "",
     e2ee: 0,
+    member_count: 0,
   };
 }
 
@@ -14294,6 +14297,9 @@ export const ChannelDescription = {
     }
     if (message.e2ee !== 0) {
       writer.uint32(240).int32(message.e2ee);
+    }
+    if (message.member_count !== 0) {
+      writer.uint32(248).int32(message.member_count);
     }
     return writer;
   },
@@ -14525,6 +14531,13 @@ export const ChannelDescription = {
 
           message.e2ee = reader.int32();
           continue;
+        case 31:
+          if (tag !== 248) {
+            break;
+          }
+
+          message.member_count = reader.int32();
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -14574,6 +14587,7 @@ export const ChannelDescription = {
       age_restricted: isSet(object.age_restricted) ? globalThis.Number(object.age_restricted) : 0,
       topic: isSet(object.topic) ? globalThis.String(object.topic) : "",
       e2ee: isSet(object.e2ee) ? globalThis.Number(object.e2ee) : 0,
+      member_count: isSet(object.member_count) ? globalThis.Number(object.member_count) : 0,
     };
   },
 
@@ -14669,6 +14683,9 @@ export const ChannelDescription = {
     if (message.e2ee !== 0) {
       obj.e2ee = Math.round(message.e2ee);
     }
+    if (message.member_count !== 0) {
+      obj.member_count = Math.round(message.member_count);
+    }
     return obj;
   },
 
@@ -14711,6 +14728,7 @@ export const ChannelDescription = {
     message.age_restricted = object.age_restricted ?? 0;
     message.topic = object.topic ?? "";
     message.e2ee = object.e2ee ?? 0;
+    message.member_count = object.member_count ?? 0;
     return message;
   },
 };
